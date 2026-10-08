@@ -92,8 +92,11 @@ const hexEmail = (name) => `u${Buffer.from(name.toLowerCase(), 'utf8').toString(
 
 /** Avança diálogos: escolhe a primeira opção quando houver escolha; senão Enter. */
 async function advanceDialogue(page) {
-  const choices = page.locator('[aria-label="Escolhas de diálogo"] button')
+  const choices = page.locator('[aria-label="Escolhas de diálogo"] button, [aria-label="Escolha o que dizer"] button')
   if (await choices.count()) return tryClick(choices.first())
+  // Respostas de perfil no prólogo (nome, gênero…) são botões "▸ opção" sem grupo.
+  const option = page.locator('main button').filter({ hasText: '▸' })
+  if (await option.count()) return tryClick(option.first())
   const input = page.locator('main input:visible').first()
   if (await input.count()) {
     await input.fill('Aurora').catch(() => {})
@@ -156,29 +159,12 @@ if (want('novato')) {
     await wait(1500)
     await shot(page, '04-tutorial-fim')
   })
-  // Aula da Coruja (primeira visita ao app Cartas): raridades, coleções e numeração vêm de cards.ts.
-  await step('coruja', async () => {
-    const exact = page.getByRole('button', { name: 'Cartas', exact: true })
-    if (!(await tryClick(exact.first(), 3000))) await btn(page, 'Cartas').click({ timeout: 3000 })
-    await wait(2500)
-    for (let i = 0; i < 26; i++) {
-      if (i === 3 || i === 5 || i === 18 || i === 20) await shot(page, `05-coruja-${String(i).padStart(2, '0')}`)
-      // Quiz: responde a raridade certa (Rara) para seguir.
-      const quiz = page.getByRole('button', { name: /^Rara$/ })
-      if (await quiz.count()) await tryClick(quiz.first())
-      await page.evaluate(() => document.activeElement instanceof HTMLElement && document.activeElement.blur()).catch(() => {})
-      await page.keyboard.press('Enter')
-      await wait(900)
-      await page.keyboard.press('Enter')
-      await wait(500)
-    }
-  })
   await ctx.close()
 }
 
 // ── 2. Contas prontas com save avançado ───────────────────────────────────────────────
 const now = Date.now()
-const makeSave = (cards) => ({
+const makeSave = (cards, extra = {}) => ({
   v: 1,
   welcomed: true,
   timerEndsAt: now + 51 * 3600_000 + 17 * 60_000,
@@ -190,9 +176,10 @@ const makeSave = (cards) => ({
   owlMet: true,
   javaliMet: true,
   seenApps: ['record', 'pulso', 'mensagens', 'cartas', 'trocas', 'ajustes', 'jogos'],
+  ...extra,
 })
 
-async function account(name, invite, cards, kind = 'phone') {
+async function account(name, invite, cards, kind = 'phone', extra = {}) {
   const d = await device(kind)
   await d.page.goto(BASE, { waitUntil: 'networkidle' })
   const up = await api(d.page, '/api/auth/sign-up/email', { email: hexEmail(name), password: 'teste123', name, username: name, displayUsername: name }, { 'x-devo-invite': invite })
@@ -200,7 +187,7 @@ async function account(name, invite, cards, kind = 'phone') {
     const inn = await api(d.page, '/api/auth/sign-in/username', { username: name, password: 'teste123' })
     if (inn.status >= 400) manifest.errors.push({ step: `${name}-auth`, error: `signup ${up.status} ${up.text}; signin ${inn.status}` })
   }
-  const saved = await api(d.page, '/api/save', makeSave(cards))
+  const saved = await api(d.page, '/api/save', makeSave(cards, extra))
   if (saved.status >= 400) manifest.errors.push({ step: `${name}-save`, error: `${saved.status} ${saved.text}` })
   return d
 }
@@ -361,6 +348,40 @@ if (want('sistema') || want('apps') || want('jogos')) {
       })
     }
   }
+  await ctx.close()
+}
+
+// ── 2b. Primeiras visitas: aula da Coruja, apresentação do Javali, retrato do Herdeiro ───────
+if (want('apps')) {
+  const { ctx, page } = await account('Visitante', 'DEVO-TEST-0003', VET_CARDS, 'phone', { owlMet: false, javaliMet: false })
+  await step('coruja', async () => {
+    await openApp(page, 'Cartas')
+    for (let i = 0; i < 26; i++) {
+      if ([1, 3, 5, 16, 18].includes(i)) await shot(page, `26-coruja-${String(i).padStart(2, '0')}`)
+      const quiz = page.getByRole('button', { name: /^Rara$/ })
+      if (await quiz.count()) await tryClick(quiz.first())
+      await page.evaluate(() => document.activeElement instanceof HTMLElement && document.activeElement.blur()).catch(() => {})
+      await page.keyboard.press('Enter')
+      await wait(700)
+      await page.keyboard.press('Enter')
+      await wait(500)
+    }
+  })
+  await step('javali-intro', async () => {
+    await openApp(page, 'Sala de Jogos')
+    for (let i = 0; i < 4; i++) {
+      await shot(page, `27-javali-${i}`)
+      await tryClick(page.getByRole('button', { name: /continuar/i }).last())
+      await wait(900)
+    }
+  })
+  await step('herdeiro', async () => {
+    await openApp(page, 'Mensagens')
+    if (await tryClick(page.getByRole('button', { name: /herdeiro/i }).first())) {
+      await wait(1500)
+      await shot(page, '28-mensagens-herdeiro')
+    }
+  })
   await ctx.close()
 }
 

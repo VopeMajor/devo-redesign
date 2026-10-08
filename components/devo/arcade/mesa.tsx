@@ -10,6 +10,7 @@ import { GAMES, type GameId } from '@/lib/devo/arcade/games'
 import { playSfx } from '@/lib/devo/audio'
 import { cn } from '@/lib/utils'
 import { useNow } from '../hooks'
+import { JavaliArt } from '../npc-art/javali'
 import { useDevo } from '../state/devo-store'
 import { ArcadeChat } from './arcade-chat'
 import { type ArcadeView, BET_OPTIONS, BET_RESERVE_MIN, eventTimeLabel, formatMinutes, registerEvent, useApplyTime } from './arcade-shared'
@@ -205,7 +206,7 @@ function Hero({
 
       <div className="relative flex items-end gap-4">
         <div className="relative hidden h-28 shrink-0 @xl:block" style={{ aspectRatio: '1000 / 444' }}>
-          <Image src="/images/npc/javali.webp" alt="Javali, anfitrião da Sala de Jogos" fill sizes="260px" className="object-contain object-bottom drop-shadow-[0_6px_18px_rgba(0,0,0,0.6)]" />
+          <JavaliArt pose="table" title="Javali, anfitrião da Sala de Jogos" className="absolute inset-0 size-full drop-shadow-[0_6px_18px_rgba(0,0,0,0.6)]" />
         </div>
         <div className="min-w-0">
           <p className="text-[10px] uppercase tracking-[0.4em] text-[#8fa6ff]/80">DEVO · Entretenimento</p>
@@ -214,7 +215,7 @@ function Hero({
           </h2>
           <p className="mt-2 text-[11px] uppercase tracking-[0.3em] text-foreground/55">Jogue. Aposte. Sobreviva.</p>
           <p className="mt-2 text-xs italic text-foreground/50">
-            <span className="not-italic text-[#c9a8f0]">Javali:</span> {line}
+            <span className="not-italic text-[#d8b25a]">Javali:</span> {line}
           </p>
         </div>
       </div>

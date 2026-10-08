@@ -25,6 +25,22 @@ function Portraits({ speaker, expression }: { speaker: string; expression: Expre
     <>
       {INTRO_SPEAKERS.map((id) => {
         const npc = getNpc(id)
+        if (npc.art) {
+          const Art = npc.art
+          const exprs = npc.artExpressions ?? ['neutral']
+          const target = exprs.includes(expression) ? expression : 'neutral'
+          return exprs.map((expr) => {
+            const visible = id === speaker && expr === target
+            return (
+              <Art
+                key={`${id}-${expr}`}
+                expression={expr}
+                title={visible ? `${npc.name}, ${npc.title}` : undefined}
+                className={cn('absolute inset-0 size-full transition-opacity duration-500', PORTRAIT_STYLE[npc.portraitStyle], visible ? 'opacity-100' : 'opacity-0')}
+              />
+            )
+          })
+        }
         const fallback = npc.portraits.neutral
         return (Object.entries(npc.portraits) as [Expression, string][]).map(([expr, src]) => {
           const target = npc.portraits[expression] ? expression : 'neutral'

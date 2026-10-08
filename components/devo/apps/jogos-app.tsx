@@ -504,10 +504,10 @@ function Agenda({
         })}
       </ol>
 
-      <div className="flex items-start gap-3 border border-[#a07ad8]/40 bg-[#160f1f]/90 p-3">
-        <Crown className="mt-0.5 size-4 shrink-0 text-[#c9a8f0]" aria-hidden="true" />
+      <div className="flex items-start gap-3 border border-[#d8b25a]/40 bg-[#0e1324]/90 p-3">
+        <Crown className="mt-0.5 size-4 shrink-0 text-[#d8b25a]" aria-hidden="true" />
         <p className="text-sm italic leading-relaxed text-foreground/70">
-          <span className="mb-0.5 block text-[10px] not-italic uppercase tracking-[0.3em] text-[#c9a8f0]">Javali</span>
+          <span className="mb-0.5 block text-[10px] not-italic uppercase tracking-[0.3em] text-[#d8b25a]">Javali</span>
           Aqui ninguém aposta dinheiro. Aposta-se Tempo. Muito mais divertido.
         </p>
       </div>
