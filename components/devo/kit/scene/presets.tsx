@@ -567,7 +567,7 @@ function TribunalPreset({ intensity, alert, lite }: PresetProps) {
   const perTier = lite ? 9 : 11
   const total = perTier * 2
   const seatGeo = useDisposable(() => new THREE.BoxGeometry(0.9, 1.1, 0.7))
-  const seatMat = useDisposable(() => new THREE.MeshStandardMaterial({ color: '#2c3658', roughness: 0.7, metalness: 0.3, emissive: '#0a0f24', emissiveIntensity: 0.7 }))
+  const seatMat = useDisposable(() => new THREE.MeshStandardMaterial({ color: '#262a36', roughness: 0.75, metalness: 0.35, emissive: '#07090f', emissiveIntensity: 0.5 }))
   const plateGeo = useDisposable(() => new THREE.PlaneGeometry(0.5, 0.1))
   const plateMat = useDisposable(() => new THREE.MeshBasicMaterial({ color: DV_COLOR.paper, toneMapped: false }))
   const dialTex = useDisposable(() => makeDialTexture({ size: lite ? 768 : 1024, numerals: 'roman', color: DV_COLOR.gold }), [lite])
@@ -654,7 +654,7 @@ function TribunalPreset({ intensity, alert, lite }: PresetProps) {
         <meshStandardMaterial color={DV_COLOR.gold} metalness={0.9} roughness={0.3} emissive={DV_COLOR.goldDeep} emissiveIntensity={0.6} />
       </mesh>
       <mesh ref={judge} geometry={starGeo} position={[0, 2.1, 0]}>
-        <meshStandardMaterial color="#eef1fb" metalness={0.5} roughness={0.25} emissive="#c01e2c" emissiveIntensity={0.9} />
+        <meshStandardMaterial color="#f3e9e4" metalness={0.6} roughness={0.22} emissive="#8a1420" emissiveIntensity={0.7} />
       </mesh>
       <Dust count={lite ? 70 : 150} color="#ffb3b8" area={[10, 6, 10]} center={[0, 3, -1]} speed={0.06} size={0.05} opacity={0.4 * intensity} />
     </>

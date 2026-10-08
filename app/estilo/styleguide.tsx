@@ -460,7 +460,7 @@ function StyleGuideBody() {
             { at: 1450, label: 'Despertando', tone: 'system' as const, direction: 'forward' as const },
           ].map((f) => (
             <div key={f.at} className="relative h-[240px] overflow-hidden border border-dv-line bg-dv-ink-2">
-              <div className="absolute inset-0 origin-top-left scale-[0.5] [height:200%] [width:200%]">
+              <div className="absolute inset-0 origin-top-left scale-[0.3] [height:333.4%] [width:333.4%]">
                 <Curtain state={{ ...f, seq: f.at }} freezeAt={f.at} />
               </div>
             </div>
