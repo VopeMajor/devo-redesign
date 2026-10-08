@@ -146,7 +146,8 @@ export function LandingScreen({
           </div>
 
           <div className="mt-5 flex w-full flex-col gap-3">
-            <div className="animate-dv-rise [animation-delay:700ms]">
+            {/* Só opacidade (sem transform): o botão fica estável para toque e para o roteiro de captura. */}
+            <div className="animate-dv-fade [animation-delay:500ms]">
             <Button
               variant="primary"
               size="lg"
@@ -161,7 +162,7 @@ export function LandingScreen({
               Começar
             </Button>
             </div>
-            <div className="animate-dv-rise [animation-delay:780ms]">
+            <div className="animate-dv-fade [animation-delay:560ms]">
             <Button
               variant="secondary"
               size="lg"

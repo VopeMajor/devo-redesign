@@ -260,6 +260,7 @@ contêiner — a landing mede o herói e passa), `dim` 0..1 (véu escuro p/ cont
 - Primeira pintura = fallback estático (gradiente + desenho SVG do preset). WebGL carrega depois
   via `next/dynamic` (`ssr:false`) em `requestIdleCallback`, e entra com fade de 700ms.
 - DPR ≤ 1.5 (≤ 1.25 no celular), `antialias` desligado no celular, sem sombras, sem stencil.
+- No celular renderiza sob demanda a 30 qps (`Ticker`), metade do custo do loop contínuo.
 - Pausa (`frameloop="never"`) com aba oculta ou fora da tela; `prefers-reduced-motion` → `demand`.
 - Fallback definitivo se: sem WebGL, erro no React (boundary), `webglcontextlost`, ou > 7s.
 - Texturas desenhadas em `<canvas>` e descartadas ao desmontar (`useDisposable`).
@@ -309,6 +310,7 @@ Checklist antes de pedir captura:
 - [ ] Cores pela regra do §2 (nenhum vermelho decorativo, nenhum ouro em ação).
 - [ ] Todo tempo em `TimeDigits`/`Countdown`.
 - [ ] Botões do kit (≥ 44px) com nomes acessíveis **iguais aos de antes** (o roteiro de captura usa).
+- [ ] Ações principais entram só com opacidade (`fade`), sem transform, para ficarem tocáveis na hora.
 - [ ] Entrada coreografada (§7), nada aparece seco.
 - [ ] `SceneBackdrop` com `dim` suficiente para AA no texto por cima.
 - [ ] Área segura (`dv-safe-top`, `dv-safe-bottom`, `dv-safe-x`).

@@ -1,6 +1,7 @@
 'use client'
 
-import { Canvas } from '@react-three/fiber'
+import { Canvas, useThree } from '@react-three/fiber'
+import { useEffect } from 'react'
 import * as THREE from 'three'
 import { PRESETS, PRESET_CAMERA } from './presets'
 import type { SceneFocus, ScenePreset } from './types'
@@ -29,11 +30,13 @@ export default function SceneCanvas({
   onFail: () => void
 }) {
   const Preset = PRESETS[preset]
+  // No celular: renderiza sob demanda a 30 qps (metade do custo; o movimento é lento de propósito).
+  const throttle = lite && frameloop === 'always'
   const cam = PRESET_CAMERA[preset]
   return (
     <Canvas
       dpr={lite ? [1, 1.25] : [1, 1.5]}
-      frameloop={frameloop}
+      frameloop={throttle ? 'demand' : frameloop}
       camera={{ position: cam.position, fov: cam.fov, near: 0.1, far: 80 }}
       gl={{ antialias: !lite, alpha: true, powerPreference: 'high-performance', stencil: false, depth: true }}
       onCreated={({ gl }) => {
@@ -51,7 +54,18 @@ export default function SceneCanvas({
       style={{ position: 'absolute', inset: 0 }}
       aria-hidden="true"
     >
+      {throttle && <Ticker fps={30} />}
       <Preset intensity={intensity} alert={alert} focus={focus} lite={lite} />
     </Canvas>
   )
+}
+
+/** Pede um quadro a cada 1/fps s (usado com frameloop="demand"). */
+function Ticker({ fps }: { fps: number }) {
+  const invalidate = useThree((s) => s.invalidate)
+  useEffect(() => {
+    const id = window.setInterval(() => invalidate(), 1000 / fps)
+    return () => window.clearInterval(id)
+  }, [fps, invalidate])
+  return null
 }
