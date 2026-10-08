@@ -3,17 +3,17 @@
 import { X } from 'lucide-react'
 import { useContext, useState } from 'react'
 import { playSfx } from '@/lib/devo/audio'
-import { RARITY_META, getCard } from '@/lib/devo/cards'
+import { RARITIES, RARITY_META, getCard, getCardMeta } from '@/lib/devo/cards'
 import type { Rarity } from '@/lib/devo/types'
 import { cn } from '@/lib/utils'
 import { OsNavContext } from '../os/os-nav'
-import { AcquireTile, ArtCard, CardShuffler, CountLabel, DeckHeading, MAX_COPIES, ShufflerHeading, stackInventory } from '../shared/deck-panel'
+import { AcquireTile, ArtCard, CardShuffler, CountLabel, DeckHeading, ShufflerHeading, stackInventory } from '../shared/deck-panel'
 import { CardFace } from '../shared/devo-card'
 import { useDevo } from '../state/devo-store'
 import { useBackHandler } from '../use-back-handler'
 import { CorujaIntro } from './coruja-intro'
 
-const FILTERS: (Rarity | 'todas')[] = ['todas', 'comum', 'incomum', 'rara', 'lendaria']
+const FILTERS: (Rarity | 'todas')[] = ['todas', ...RARITIES]
 
 export function CartasApp() {
   const { state } = useDevo()
@@ -83,7 +83,7 @@ export function CartasApp() {
                         setSelected(owned.uid)
                       }}
                       className="block w-full transition-transform duration-300 hover:-translate-y-1 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1f3bff]"
-                      aria-label={`Ver ${getCard(s.cardId).name}: ${s.count} de ${MAX_COPIES}`}
+                      aria-label={`Ver ${getCard(s.cardId).name}: ${s.count} ${s.count === 1 ? 'cópia' : 'cópias'}`}
                     >
                       <ArtCard cardId={s.cardId} className="w-full" />
                     </button>
@@ -140,12 +140,16 @@ export function CartasApp() {
 function CardDetail({ cardId, origin }: { cardId: string; origin: string }) {
   const card = getCard(cardId)
   const rarity = RARITY_META[card.rarity]
+  const meta = getCardMeta(cardId)
   return (
     <div className="flex w-full max-w-xl flex-col items-center gap-6 @lg:flex-row">
       <CardFace cardId={cardId} size="lg" className="w-64 max-w-full shrink-0 @lg:w-72" />
       <div className="flex flex-col gap-3 text-center @lg:text-left">
         <p className="text-[11px] uppercase tracking-[0.3em]" style={{ color: rarity.color }}>
-          {rarity.label} · {card.type} · {card.numeral}
+          {rarity.label} · {card.type}
+        </p>
+        <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-muted-foreground">
+          {meta.collection} · {meta.orderLabel} · {meta.serial}
         </p>
         <h3 className="text-3xl text-foreground">{card.name}</h3>
         <p className="leading-relaxed text-foreground/85">{card.effect}</p>

@@ -72,6 +72,9 @@ export type Room = {
   id: string
   number: number
   status: RoomStatus
+  /** Condição da sala (regras em `lib/devo/trade-rooms.ts`). */
+  rule: import('./trade-rooms').RoomRule
+  /** Rótulo da condição, igual a `ROOM_RULES[rule].label`. */
   condition: string
 }
 
@@ -95,7 +98,7 @@ export type TradeSession = {
   myAccept: boolean
   partnerAccept: boolean
   partnerTyping: boolean
-  endReason?: 'completed' | 'partner-left' | 'cancelled'
+  endReason?: 'completed' | 'partner-left' | 'cancelled' | 'forfeit'
 }
 
 export type Phase = 'landing' | 'intro' | 'os'

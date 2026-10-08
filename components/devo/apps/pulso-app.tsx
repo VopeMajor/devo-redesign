@@ -1,10 +1,12 @@
 'use client'
 
+import { useEffect, useRef } from 'react'
+import useSWR from 'swr'
+import { arcadeFetcher, arcadeKey, type PlayerStats } from '@/lib/devo/arcade/client'
+import { PULSE_CRITICAL_MS, pulseRemaining, pulseRing } from '@/lib/devo/pulse'
 import { formatDuration, useNow } from '../hooks'
 import { useDevo } from '../state/devo-store'
 import { Panel, SectionLabel } from './app-ui'
-
-const TOTAL_MS = 72 * 3600 * 1000
 
 const RULES = [
   'Cada jogador possui um timer no pulso. Quando ele zera, o jogador morre.',
@@ -16,12 +18,16 @@ const RULES = [
 export function PulsoApp() {
   const { state } = useDevo()
   const now = useNow(1000)
-  const remaining = Math.max(0, state.timerEndsAt - now)
-  const ratio = remaining / TOTAL_MS
-  const critical = remaining < 6 * 3600 * 1000
+  // Mesma fonte e mesmo formato da barra de status e do cartão da home (lib/devo/pulse.ts).
+  const remaining = pulseRemaining(state.timerEndsAt, now)
+  const { ratio, excess } = pulseRing(remaining)
+  const critical = remaining < PULSE_CRITICAL_MS
   const r = 92
   const circ = 2 * Math.PI * r
+  const outer = r + 10
+  const outerCirc = 2 * Math.PI * outer
   const seconds = Math.floor(remaining / 1000) % 60
+  const { data: stats } = useSWR<PlayerStats>(state.arcadeUnlocked ? arcadeKey('stats') : null, arcadeFetcher, { revalidateOnFocus: false })
 
   return (
     <div className="devo-scroll h-full overflow-y-auto @container">
@@ -30,7 +36,20 @@ export function PulsoApp() {
           <div className="relative grid size-56 place-items-center">
             <svg viewBox="0 0 220 220" className="absolute inset-0 -rotate-90" aria-hidden="true">
               <circle cx="110" cy="110" r={r} fill="none" stroke="rgba(236,238,242,0.1)" strokeWidth="2" />
-              <circle cx="110" cy="110" r={r + 10} fill="none" stroke="rgba(236,238,242,0.08)" strokeWidth="1" strokeDasharray="2 6" />
+              <circle cx="110" cy="110" r={outer} fill="none" stroke="rgba(236,238,242,0.08)" strokeWidth="1" strokeDasharray="2 6" />
+              {excess > 0 && (
+                <circle
+                  cx="110"
+                  cy="110"
+                  r={outer}
+                  fill="none"
+                  stroke="#d8b25a"
+                  strokeWidth="1.5"
+                  strokeDasharray={outerCirc}
+                  strokeDashoffset={outerCirc * (1 - excess)}
+                  aria-hidden="true"
+                />
+              )}
               <circle
                 cx="110"
                 cy="110"
@@ -43,15 +62,7 @@ export function PulsoApp() {
                 strokeDashoffset={circ * (1 - ratio)}
                 className="drop-shadow-[0_0_8px_var(--primary)] transition-[stroke-dashoffset] duration-1000"
               />
-              <line
-                x1="110"
-                y1="110"
-                x2="110"
-                y2="24"
-                stroke="rgba(236,238,242,0.5)"
-                strokeWidth="1"
-                transform={`rotate(${seconds * 6 + 90} 110 110)`}
-              />
+              <SweepHand timerEndsAt={state.timerEndsAt} />
             </svg>
             <div className="relative text-center">
               <p className="text-[11px] uppercase tracking-[0.35em] text-muted-foreground">Restante</p>
@@ -61,6 +72,7 @@ export function PulsoApp() {
               <p className={critical ? 'mt-2 text-xs uppercase tracking-[0.3em] text-primary animate-blink' : 'mt-2 text-xs uppercase tracking-[0.3em] text-foreground/60'}>
                 {critical ? 'Crítico' : 'Estável'}
               </p>
+              {excess > 0 && <p className="mt-1 text-[10px] uppercase tracking-[0.25em] text-[#d8b25a]">Acima de 72h</p>}
             </div>
           </div>
           <div className="flex w-full items-end justify-center gap-[3px]" aria-hidden="true">
@@ -78,7 +90,7 @@ export function PulsoApp() {
           <div className="grid grid-cols-3 gap-3">
             <Stat label="Cartas" value={state.inventory.length} />
             <Stat label="Trocas" value={state.tradesCompleted} />
-            <Stat label="Jogos" value={0} />
+            <Stat label="Jogos" value={state.arcadeUnlocked ? (stats?.games ?? '—') : 0} />
           </div>
           <Panel>
             <SectionLabel>Regras do pulso</SectionLabel>
@@ -98,7 +110,27 @@ export function PulsoApp() {
   )
 }
 
-function Stat({ label, value }: { label: string; value: number }) {
+/**
+ * Ponteiro de segundos contínuo (antes saltava de segundo em segundo e "voltava" a cada minuto).
+ * Gira no sentido da contagem regressiva, atualizado por requestAnimationFrame sem re-render.
+ */
+function SweepHand({ timerEndsAt }: { timerEndsAt: number }) {
+  const ref = useRef<SVGLineElement>(null)
+  useEffect(() => {
+    let raf = 0
+    const tick = () => {
+      const left = Math.max(0, timerEndsAt - Date.now())
+      const angle = ((left % 60_000) / 60_000) * 360
+      ref.current?.setAttribute('transform', `rotate(${angle + 90} 110 110)`)
+      if (left > 0) raf = requestAnimationFrame(tick)
+    }
+    tick()
+    return () => cancelAnimationFrame(raf)
+  }, [timerEndsAt])
+  return <line ref={ref} x1="110" y1="110" x2="110" y2="24" stroke="rgba(236,238,242,0.5)" strokeWidth="1" />
+}
+
+function Stat({ label, value }: { label: string; value: number | string }) {
   return (
     <Panel className="p-3 text-center">
       <p className="text-2xl text-foreground">{value}</p>

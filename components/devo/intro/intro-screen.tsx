@@ -9,6 +9,7 @@ import { withName } from '@/lib/devo/player-name'
 import { cn } from '@/lib/utils'
 import { Sparkle } from '../ornaments'
 import { CathedralBackdrop, Embers } from '../shared/atmosphere'
+import { useAdvanceKeys } from '../hooks'
 import { SoundToggle } from '../shared/sound-toggle'
 import { TutorialVisualPanel } from './tutorial-visuals'
 
@@ -86,16 +87,7 @@ export function IntroScreen({ onFinish, playerName }: { onFinish: () => void; pl
     setShown(0)
   }, [done, last, line.text.length, onFinish])
 
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault()
-        advance()
-      }
-    }
-    window.addEventListener('keydown', onKey)
-    return () => window.removeEventListener('keydown', onKey)
-  }, [advance])
+  useAdvanceKeys(advance)
 
   return (
     <main className="relative flex h-dvh overflow-hidden bg-background text-foreground animate-[devo-fade-in_1.2s_ease-out_both]">

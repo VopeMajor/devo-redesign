@@ -9,6 +9,7 @@ import {
   isGameId,
   type MatchStart,
   rankReward,
+  rankingPoints,
   type Reward,
   rng,
 } from './games'
@@ -296,7 +297,8 @@ export type LeaderRow = { rank: number; name: string; score: number; wins: numbe
 
 export async function leaderboard(week: number, _now: number, meId: string) {
   const real = await q<{ player_id: string; name: string; score: number; wins: number }>(
-    `SELECT s.player_id, p.name, s.score, s.wins FROM arcade_week_scores s JOIN players p ON p.id = s.player_id WHERE s.week_start = $1 AND s.score > 0`,
+    `SELECT s.player_id, p.name, s.score, s.wins FROM arcade_week_scores s JOIN players p ON p.id = s.player_id
+     WHERE s.week_start = $1 AND s.score > 0 AND NOT p.is_test`,
     [weekKey(week)],
   )
   const rows = real.map((r) => ({ name: r.name, score: r.score, wins: r.wins, isBot: false, isMe: r.player_id === meId }))
@@ -379,7 +381,7 @@ async function gameRankings(player: Player, week: number, now: number): Promise<
       `SELECT m.game_id, m.player_id, p.name, sum(m.points)::int AS points,
               coalesce(sum(m.points) FILTER (WHERE m.finished_at >= $2), 0)::int AS today, count(*)::int AS games
        FROM arcade_matches m JOIN players p ON p.id = m.player_id
-       WHERE m.finished_at >= $1 AND m.mode <> 'treino'
+       WHERE m.finished_at >= $1 AND m.mode <> 'treino' AND NOT p.is_test
        GROUP BY m.game_id, m.player_id, p.name`,
       [new Date(week), new Date(dayStart)],
     ),
@@ -403,7 +405,24 @@ async function gameRankings(player: Player, week: number, now: number): Promise<
   return out
 }
 
+/** Conta de teste (players.is_test): fica fora de ranking, apostas, prêmios e destaques. */
+export async function isTestPlayer(playerId: string) {
+  const [row] = await q<{ is_test: boolean }>('SELECT is_test FROM players WHERE id = $1', [playerId])
+  return !!row?.is_test
+}
+
+/** Nomes de contas de teste inscritas nesses eventos (para esconder confrontos delas nas apostas). */
+async function testEntryNames(eventIds: string[]) {
+  if (!eventIds.length) return new Set<string>()
+  const rows = await q<{ event_id: string; name: string }>(
+    'SELECT e.event_id, e.name FROM arcade_entries e JOIN players p ON p.id = e.player_id WHERE e.event_id = ANY($1) AND p.is_test',
+    [eventIds],
+  )
+  return new Set(rows.map((r) => `${r.event_id}:${r.name}`))
+}
+
 async function pendingClaim(player: Player, now: number) {
+  if (await isTestPlayer(player.id)) return null
   const prev = weekStartMs(now) - WEEK
   const [mine] = await q<{ score: number; games: number }>('SELECT score, games FROM arcade_week_scores WHERE week_start = $1 AND player_id = $2', [weekKey(prev), player.id])
   if (!mine || mine.score <= 0 || mine.games < MIN_WEEK_GAMES) return null
@@ -493,7 +512,9 @@ async function duelViews(eventIds: string[], player: Player): Promise<DuelView[]
   const duelIds = duels.map((d) => d.id)
   const [pools, myBets, humans] = await Promise.all([
     q<{ duel_id: string; pick_name: string; total: number; n: number }>(
-      'SELECT duel_id, pick_name, sum(amount)::int AS total, count(*)::int AS n FROM arcade_bets WHERE duel_id = ANY($1) GROUP BY duel_id, pick_name',
+      `SELECT b.duel_id, b.pick_name, sum(b.amount)::int AS total, count(*)::int AS n
+         FROM arcade_bets b JOIN players p ON p.id = b.player_id
+        WHERE b.duel_id = ANY($1) AND NOT p.is_test GROUP BY b.duel_id, b.pick_name`,
       [duelIds],
     ),
     q<{ duel_id: string; pick_name: string; amount: number; odds: string; status: string; payout: number }>(
@@ -607,10 +628,14 @@ export async function getBetBoard(player: Player) {
     return s === 'LOCKED' || s === 'LIVE' || (s === 'FINISHED' && now - e.ends_at.getTime() < 2 * DAY)
   })
   const views = await eventViews(relevant, player, now)
-  const duels = await duelViews(
-    relevant.map((e) => e.id),
-    player,
-  )
+  const testNames = await testEntryNames(relevant.map((e) => e.id))
+  // Confrontos com conta de teste não aparecem nas apostas nem no destaque da Mesa.
+  const duels = (
+    await duelViews(
+      relevant.map((e) => e.id),
+      player,
+    )
+  ).filter((d) => !d.sides.some((side) => testNames.has(`${d.eventId}:${side.name}`)))
   const history = await q<{ id: string; pick_name: string; amount: number; odds: string; status: string; payout: number; created_at: Date; game_id: GameId; number: number; slot: number }>(
     `SELECT b.id, b.pick_name, b.amount, b.odds, b.status, b.payout, b.created_at, e.game_id, e.number, d.slot
      FROM arcade_bets b JOIN arcade_duels d ON d.id = b.duel_id JOIN arcade_events e ON e.id = d.event_id
@@ -649,6 +674,8 @@ export async function placeBet(player: Player, duelId: string, pick: string, raw
   if (status !== 'LOCKED' && status !== 'LIVE') throw new ArcadeError('As apostas não estão abertas para essa partida.')
   const [inside] = await q('SELECT 1 FROM arcade_entries WHERE event_id = $1 AND player_id = $2', [e.id, player.id])
   if (inside) throw new ArcadeError('Participantes não podem apostar na própria partida.')
+  const testNames = await testEntryNames([e.id])
+  if (testNames.has(`${e.id}:${d.a_name}`) || testNames.has(`${e.id}:${d.b_name}`)) throw new ArcadeError('Esse confronto não aceita apostas.')
   await ensureProfile(player.id)
   const [view] = (await duelViews([e.id], player)).filter((x) => x.id === duelId)
   const odds = view?.sides.find((s) => s.name === pick)?.odds ?? 1.5
@@ -676,6 +703,7 @@ export async function placeBet(player: Player, duelId: string, pick: string, raw
 
 /** Tutorial contra o bot: não vale score, ranking nem Tempo. */
 export async function startTutorial(player: Player, gameId: GameId): Promise<MatchStart> {
+  if (GAMES[gameId].status === 'em-breve') throw new ArcadeError('Este jogo ainda não está disponível.')
   const opponent = { name: TUTORIAL_OPPONENT, rating: 1000 }
   const seed = Math.floor(Math.random() * 2 ** 31)
   const [m] = await q<{ id: string; started_at: Date }>(
@@ -712,9 +740,9 @@ export async function recordMatchResult(
       ? await q<{ reward: Reward }>('SELECT e.reward FROM arcade_duels d JOIN arcade_events e ON e.id = d.event_id WHERE d.id = $1', [r.duelId], c)
       : []
     reward = r.result === 'win' ? (ev?.reward ?? {}) : { score: 50 }
-    awarded = score + (reward.score ?? 0)
+    awarded = rankingPoints('evento', score, r.result, reward.score ?? 0)
   } else {
-    awarded = Math.min(250, Math.round(score * 0.2)) + (r.result === 'win' ? 40 : r.result === 'draw' ? 20 : 10)
+    awarded = rankingPoints('casual', score, r.result)
   }
   await q(
     `INSERT INTO arcade_matches (player_id, game_id, mode, duel_id, opponent_name, opponent_rating, seed, started_at, finished_at, result, score, stats, points)
@@ -871,6 +899,21 @@ export async function postChat(player: Player, channel: string, rawBody: string)
   }
   return { ok: true }
 }
+
+/**
+ * Contagem leve para o app Pulso: partidas reais concluídas (sem treino). Não mexe no livro-caixa
+ * de Tempo (diferente do dashboard, que entrega créditos pendentes).
+ */
+export async function getPlayerStats(player: Player) {
+  const [row] = await q<{ total: number; week: number }>(
+    `SELECT count(*)::int AS total, count(*) FILTER (WHERE finished_at >= $2)::int AS week
+       FROM arcade_matches WHERE player_id = $1 AND finished_at IS NOT NULL AND mode <> 'treino'`,
+    [player.id, new Date(weekStartMs())],
+  )
+  return { games: row?.total ?? 0, weekGames: row?.week ?? 0 }
+}
+
+export type PlayerStats = Awaited<ReturnType<typeof getPlayerStats>>
 
 export type BorderTier = 'padrao' | 'azul' | 'prata' | 'ouro' | 'dealer'
 

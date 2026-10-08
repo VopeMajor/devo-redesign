@@ -156,6 +156,23 @@ if (want('novato')) {
     await wait(1500)
     await shot(page, '04-tutorial-fim')
   })
+  // Aula da Coruja (primeira visita ao app Cartas): raridades, coleções e numeração vêm de cards.ts.
+  await step('coruja', async () => {
+    const exact = page.getByRole('button', { name: 'Cartas', exact: true })
+    if (!(await tryClick(exact.first(), 3000))) await btn(page, 'Cartas').click({ timeout: 3000 })
+    await wait(2500)
+    for (let i = 0; i < 26; i++) {
+      if (i === 3 || i === 5 || i === 18 || i === 20) await shot(page, `05-coruja-${String(i).padStart(2, '0')}`)
+      // Quiz: responde a raridade certa (Rara) para seguir.
+      const quiz = page.getByRole('button', { name: /^Rara$/ })
+      if (await quiz.count()) await tryClick(quiz.first())
+      await page.evaluate(() => document.activeElement instanceof HTMLElement && document.activeElement.blur()).catch(() => {})
+      await page.keyboard.press('Enter')
+      await wait(900)
+      await page.keyboard.press('Enter')
+      await wait(500)
+    }
+  })
   await ctx.close()
 }
 
@@ -261,12 +278,33 @@ if (want('sistema') || want('apps') || want('jogos')) {
     await step('trocas', async () => {
       await openApp(page, 'Sala de Trocas')
       await shot(page, '24-trocas')
-      if (await tryClick(page.getByRole('button', { name: /01/ }).first())) {
-        await wait(2500)
+      // Sala 1 (Às cegas): regra explicada ao entrar, raridade oculta, frases prontas.
+      if (await tryClick(page.getByRole('button', { name: /^Sala 1,/ }).first())) {
+        await wait(1500)
         await shot(page, '24-trocas-sala')
-        await page.mouse.wheel(0, 700)
+        await tryClick(page.getByRole('button', { name: /^Colocar / }).first())
+        await wait(7500)
+        await shot(page, '24-trocas-sala-negociando')
+        await tryClick(page.getByRole('button', { name: 'Qual o tipo da sua carta?' }).first())
+        await wait(3800)
+        await shot(page, '24-trocas-sala-frase')
+        await tryClick(btn(page, /abandonar|sair/i))
+        await wait(800)
+        await tryClick(btn(page, /voltar ao corredor/i))
+        await wait(800)
+      }
+      // Sala 3 (Sem retorno): sair depois de pôr a carta pede confirmação e custa a carta.
+      if (await tryClick(page.getByRole('button', { name: /^Sala 3,/ }).first())) {
+        await wait(1200)
+        await shot(page, '24-trocas-sem-retorno')
+        await tryClick(page.getByRole('button', { name: /^Colocar / }).first())
+        await wait(800)
+        await tryClick(btn(page, /^abandonar$/i))
         await wait(600)
-        await shot(page, '24-trocas-sala-scroll')
+        await shot(page, '24-trocas-sem-retorno-confirmar')
+        await tryClick(btn(page, /perder a carta/i))
+        await wait(800)
+        await shot(page, '24-trocas-sem-retorno-perdeu')
       }
     })
     await step('ajustes', async () => {
@@ -275,6 +313,16 @@ if (want('sistema') || want('apps') || want('jogos')) {
       await page.mouse.wheel(0, 800)
       await wait(600)
       await shot(page, '25-ajustes-scroll')
+      // Reiniciar sessão: dois passos, salva no servidor, não pede convite.
+      await btn(page, 'Reiniciar sessão', true).click({ timeout: 3000 })
+      await wait(500)
+      await page.mouse.wheel(0, 800)
+      await shot(page, '25-ajustes-reiniciar-confirmar')
+      await btn(page, 'Sim, reiniciar', true).click({ timeout: 3000 })
+      await wait(2500)
+      await shot(page, '25-ajustes-reiniciar-feito')
+      await openApp(page, 'Pulso')
+      await shot(page, '25-ajustes-reiniciar-pulso')
     })
   }
 

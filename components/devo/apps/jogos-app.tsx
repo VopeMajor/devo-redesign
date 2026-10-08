@@ -32,7 +32,7 @@ import {
   roomToStart,
   startTutorial,
 } from '@/lib/devo/arcade/client'
-import { GAMES, type GameId, PATENTES, patenteIndex, rankReward } from '@/lib/devo/arcade/games'
+import { GAMES, type GameId, PATENTES, patenteIndex, RANKING_RULE_CASUAL, RANKING_RULE_EVENT, rankReward } from '@/lib/devo/arcade/games'
 import { cn } from '@/lib/utils'
 import { GAME_COMPONENTS } from '../arcade/game-loader'
 import { useNow } from '../hooks'
@@ -337,7 +337,7 @@ function Header({ data }: { data?: Dashboard }) {
       <h2 className="sr-only">Sala de Jogos</h2>
       <dl className="flex flex-wrap gap-1.5">
         <Stat label="Seu Tempo" value={formatCountdown(Math.max(0, state.timerEndsAt - now))} icon={Hourglass} gold />
-        <Stat label="Score" value={me ? formatPoints(me.score) : '—'} icon={Swords} />
+        <Stat label="Pontos" value={me ? formatPoints(me.score) : '—'} icon={Swords} />
         <Stat label="Posição" value={me?.rank ? `#${me.rank}` : '—'} icon={Crown} />
         <Stat label="Reset" value={data ? formatCountdown(data.week.resetsAt - now) : '—'} icon={Timer} />
       </dl>
@@ -883,13 +883,18 @@ function ResultScreen({ run, onClose }: { run: Running; onClose: () => void }) {
           {GAMES[run.start.gameId as GameId].name} vs {run.start.opponent.name}
         </p>
         <dl className="grid w-full grid-cols-2 gap-2">
-          <ResultStat label="Score" value={formatPoints(o.score)} />
-          <ResultStat label="Oponente" value={formatPoints(o.oppScore)} />
-          <ResultStat label={o.bonusLabel || 'Bônus'} value={`+${formatPoints(o.bonus)}`} />
+          {/* Placar = o número do HUD, igual ao gravado pelo servidor. Pontos de ranking = o que entra no ranking (rankingPoints). */}
+          <ResultStat label="Seu placar" value={formatPoints(o.score)} />
+          <ResultStat label="Placar do oponente" value={formatPoints(o.oppScore)} />
+          <ResultStat label="Pontos de ranking" value={f.tutorial ? 'Treino' : `+${formatPoints(f.awarded)}`} />
           <ResultStat label="Tempo ganho" value={`+${formatMinutes(f.timeGainMin)}`} gold />
           <ResultStat label="Pontos na semana" value={formatPoints(f.weekScore)} />
           <ResultStat label="Posição" value={f.rank ? `#${f.rank}` : '—'} />
         </dl>
+        {o.bonusLabel && <p className="-mt-2 font-mono text-[11px] uppercase tracking-[0.25em] text-foreground/50">{o.bonusLabel}</p>}
+        <p className="-mt-2 text-[11px] leading-relaxed text-foreground/45">
+          {f.tutorial ? 'Treino contra o bot não vale ranking nem Tempo.' : run.start.mode === 'evento' ? RANKING_RULE_EVENT : RANKING_RULE_CASUAL}
+        </p>
         <button type="button" onClick={onClose} className="border border-[#6f8cff] px-6 py-2.5 text-xs uppercase tracking-[0.3em] text-[#6f8cff] hover:bg-[#6f8cff]/10">
           Voltar à mesa
         </button>

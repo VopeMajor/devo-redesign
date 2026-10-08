@@ -5,6 +5,7 @@ import {
   GAMES,
   MEMORY_PHASES,
   MEMORY_TOTAL_MS,
+  memoryAfterMiss,
   memoryDeck,
   memoryPairPoints,
   rng,
@@ -316,7 +317,7 @@ async function applyAction(c: PoolClient, room: RoomRow, side: Side, action: Act
     if (now - s.lastAt[side] < 220) return
     s.lastAt[side] = now
     if (action.type === 'miss') {
-      s.score[side] -= 50
+      s.score[side] = memoryAfterMiss(s.score[side])
       s.combo[side] = 0
       s.misses[side] += 1
     } else if (action.type === 'pair') {
@@ -461,6 +462,7 @@ async function matchWaitingRoom(player: Player, roomId: string) {
 }
 
 export async function queueCasual(player: Player, gameId: GameId) {
+  if (GAMES[gameId].status === 'em-breve') throw new ArcadeError('Este jogo ainda não está disponível.')
   return tx(async (c) => {
     await lockQueue(c, gameId)
     const [mine] = await q<RoomRow>(

@@ -40,7 +40,7 @@ export const GAMES: Record<GameId, GameMeta> = {
       'Os dois competem pelo mesmo tabuleiro em tempo real.',
       'Par encontrado pelo oponente sai do seu tabuleiro.',
     ],
-    scoring: ['Par: +100', 'Erro: -50', 'Combo multiplica o par seguinte'],
+    scoring: ['Par: +100', 'Erro: -50 (o placar nunca fica negativo)', 'Combo soma +50 por par seguido (até +300)'],
     accent: '#c9a227',
     thumbnail: '/images/arcade/banner-memory-rush.png',
     status: 'disponivel',
@@ -217,6 +217,28 @@ export function memoryDeck(seed: number, phase: number) {
 export function memoryPairPoints(combo: number) {
   return 100 + 50 * (Math.min(combo, 5) - 1)
 }
+
+export const MEMORY_MISS_PENALTY = 50
+
+/** Placar depois de um erro. Mesma regra no navegador (tutorial) e no servidor: nunca abaixo de zero. */
+export function memoryAfterMiss(score: number) {
+  return Math.max(0, score - MEMORY_MISS_PENALTY)
+}
+
+/**
+ * Duas grandezas diferentes, com nomes fixos na interface:
+ * - **Placar** (`score`): o número do jogo, o mesmo que aparece no HUD durante a partida e que o
+ *   servidor grava em `arcade_matches.score` (limitado a 0..maxScore).
+ * - **Pontos de ranking** (`points`): o que entra no ranking da semana (`arcade_matches.points` e
+ *   `arcade_week_scores.score`). Calculado só aqui.
+ */
+export function rankingPoints(mode: 'casual' | 'evento', score: number, result: 'win' | 'loss' | 'draw', eventBonus = 0) {
+  if (mode === 'evento') return score + eventBonus
+  return Math.min(250, Math.round(score * 0.2)) + (result === 'win' ? 40 : result === 'draw' ? 20 : 10)
+}
+
+export const RANKING_RULE_CASUAL = 'Pontos de ranking = 20% do placar (até 250) + 40 por vitória, 20 por empate ou 10 por derrota.'
+export const RANKING_RULE_EVENT = 'Em evento, pontos de ranking = placar + bônus do evento.'
 
 /** 0..1 — quão forte é o bot (rating 800..1600). */
 export function botSkill(rating: number) {

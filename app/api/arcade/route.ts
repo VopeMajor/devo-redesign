@@ -9,6 +9,7 @@ import {
   getDashboard,
   getEvent,
   getMiniProfile,
+  getPlayerStats,
   placeBet,
   postChat,
   registerEntry,
@@ -37,6 +38,7 @@ export async function GET(req: Request) {
   try {
     if (view === 'dashboard') return Response.json(await getDashboard(player))
     if (view === 'bets') return Response.json(await getBetBoard(player))
+    if (view === 'stats') return Response.json(await getPlayerStats(player))
     if (view === 'event') {
       const id = url.searchParams.get('id') ?? ''
       if (!/^[0-9a-f-]{36}$/i.test(id)) throw new ArcadeError('ID inválido.')

@@ -50,6 +50,7 @@ export function InvitePanel() {
   const { data, error, isLoading, mutate } = useSWR(KEY, fetcher)
   const [role, setRole] = useState<PlayerRole>('player')
   const [note, setNote] = useState('')
+  const [test, setTest] = useState(false)
   const [busy, setBusy] = useState(false)
   const [fresh, setFresh] = useState<string | null>(null)
   const [actionError, setActionError] = useState<string | null>(null)
@@ -58,7 +59,7 @@ export function InvitePanel() {
     setBusy(true)
     setActionError(null)
     try {
-      const res = await post({ action: 'create', role, note })
+      const res = await post({ action: 'create', role, note, test })
       setFresh(res.code ?? null)
       setNote('')
       await mutate()
@@ -123,6 +124,12 @@ export function InvitePanel() {
               className="h-9 border border-border bg-background px-3 text-sm outline-none focus:border-primary"
             />
           </label>
+          {data?.role === 'admin' && (
+            <label className="flex h-9 items-center gap-2 font-mono text-[10px] uppercase tracking-[0.16em] text-foreground/70">
+              <input type="checkbox" checked={test} onChange={(e) => setTest(e.target.checked)} className="accent-[var(--primary)]" />
+              Conta de teste
+            </label>
+          )}
           <button
             type="button"
             onClick={create}
@@ -184,6 +191,11 @@ function InviteRow({ invite: i, showCreator, onRevoke }: { invite: Invite; showC
         <div className="flex flex-wrap items-center gap-2">
           <span className={cn('font-mono text-sm tracking-[0.08em]', used && 'line-through')}>{i.code}</span>
           <span className="border border-border px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-[0.16em] text-foreground/70">{ROLE_LABEL[i.role]}</span>
+          {i.isTest && (
+            <span className="border border-dashed border-border px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-[0.16em] text-foreground/60" title="Fora de ranking, apostas e prêmios">
+              Teste
+            </span>
+          )}
           <span className={cn('font-mono text-[9px] uppercase tracking-[0.16em]', used ? 'text-foreground/60' : 'text-primary')}>
             {used ? 'Usado' : 'Disponível'}
           </span>

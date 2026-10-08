@@ -1,8 +1,8 @@
 import type { GameId } from './games'
 import type { BombState, ChessState, MemoryState, RoomPoll } from './rooms'
-import type { Dashboard, MatchFinish, MatchStart, getBetBoard, getEvent } from './server'
+import type { Dashboard, MatchFinish, MatchStart, PlayerStats, getBetBoard, getEvent } from './server'
 
-export type { BombState, ChessState, Dashboard, MatchFinish, MatchStart, MemoryState, RoomPoll }
+export type { BombState, ChessState, Dashboard, MatchFinish, MatchStart, MemoryState, PlayerStats, RoomPoll }
 export type BetBoard = Awaited<ReturnType<typeof getBetBoard>>
 export type EventDetail = Awaited<ReturnType<typeof getEvent>>
 export type ChatLine = { id: string; author: string; body: string; at: number; bot: boolean; pid?: string; role?: string }
