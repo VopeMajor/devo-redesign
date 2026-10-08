@@ -143,10 +143,14 @@ if (want('novato')) {
     await page.locator('#devo-pass2').fill('teste123')
     await shot(page, '02-acesso-preenchido')
     // A cortina "Despertando" dispara logo depois do recarregamento: a espera começa antes do Enter.
-    const awake = page.getByRole('status').filter({ hasText: 'Despertando' }).first().waitFor({ timeout: 20000 }).then(() => true, () => false)
     await page.keyboard.press('Enter')
-    await awake
-    await wait(450)
+    // Atravessa o recarregamento: procura o rótulo da cortina a cada 100ms (até 20s).
+    for (let k = 0; k < 200; k++) {
+      const seen = await page.getByText('Despertando', { exact: true }).count().catch(() => 0)
+      if (seen) break
+      await wait(100)
+    }
+    await wait(400)
     await shot(page, '03-transicao-despertando')
     await wait(3000)
   })
@@ -185,9 +189,13 @@ if (want('novato')) {
     await shot(page, '04-tutorial-fim')
   })
   // Revelação da Sala de Jogos: save com os 5 apps iniciais vistos e a sala ainda trancada.
+  // Página nova (a anterior, no sistema, poderia salvar por cima do save preparado).
   await step('sala-de-jogos-revelacao', async () => {
+    await page.close()
+    const p2 = await ctx.newPage()
+    await p2.goto(BASE, { waitUntil: 'networkidle' })
     const t = Date.now()
-    await api(page, '/api/save', {
+    await api(p2, '/api/save', {
       v: 1,
       welcomed: true,
       timerEndsAt: t + 70 * 3600_000,
@@ -198,11 +206,12 @@ if (want('novato')) {
       arcadeUnlocked: false,
       seenApps: ['pulso', 'mensagens', 'cartas', 'trocas', 'ajustes'],
     })
-    await page.goto(BASE, { waitUntil: 'networkidle' })
+    await p2.goto(BASE, { waitUntil: 'networkidle' })
     await wait(1000)
-    await btn(page, 'Continuar').click({ timeout: 15000 })
-    await wait(3700)
-    await shot(page, '05-sala-de-jogos-revelacao')
+    await btn(p2, 'Continuar').click({ timeout: 15000 })
+    await p2.getByText('Novo aplicativo desbloqueado').first().waitFor({ timeout: 12000 })
+    await wait(1500)
+    await shot(p2, '05-sala-de-jogos-revelacao')
   })
   await ctx.close()
 }
