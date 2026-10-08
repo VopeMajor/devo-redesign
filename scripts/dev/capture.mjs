@@ -332,10 +332,12 @@ if (want('sistema') || want('apps') || want('jogos')) {
         await wait(1800)
         await shot(page, `31-jogos-${tab.toLowerCase()}`)
         if (tab !== 'Apostas') {
-          await page.mouse.move(195, 600)
-          await page.mouse.wheel(0, 800)
-          await wait(700)
+          await page.evaluate(() => document.querySelector('[role="tabpanel"]')?.scrollBy(0, 760))
+          await wait(900)
           await shot(page, `31-jogos-${tab.toLowerCase()}-scroll`)
+          await page.evaluate(() => document.querySelector('[role="tabpanel"]')?.scrollBy(0, 760))
+          await wait(900)
+          await shot(page, `31-jogos-${tab.toLowerCase()}-scroll2`)
         }
         if (tab === 'Ranking' && (await tryClick(page.getByRole('button', { name: 'Memory Rush', exact: true }).first()))) {
           await wait(1200)
@@ -371,13 +373,17 @@ if (want('sistema') || want('apps') || want('jogos')) {
     })
     await step('jogos-mesa-fim', async () => {
       await openApp(page, 'Sala de Jogos')
-      await page.mouse.move(195, 600)
-      await page.mouse.wheel(0, 2600)
-      await wait(800)
-      await shot(page, '30-jogos-mesa-scroll3')
-      await page.mouse.wheel(0, 1600)
-      await wait(800)
-      await shot(page, '30-jogos-mesa-chat')
+      const panel = () => page.evaluate((y) => document.querySelector('[role="tabpanel"]')?.scrollBy(0, y), 760)
+      for (const name of ['30-jogos-mesa-scroll3', '30-jogos-mesa-scroll4', '30-jogos-mesa-scroll5', '30-jogos-mesa-chat']) {
+        await panel()
+        await wait(900)
+        if (name === '30-jogos-mesa-scroll3') {
+          await panel()
+          await panel()
+          await wait(600)
+        }
+        await shot(page, name)
+      }
     })
     // Apresentação do Javali para quem nunca entrou na sala.
     await step('jogos-javali', async () => {

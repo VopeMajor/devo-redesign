@@ -230,7 +230,7 @@ function Hero({
     <Frame as="section" aria-label="Próxima partida" tone="gold" ornate glow pad="none" cutSize={16} className="animate-dv-cut-in">
       {/* banner do jogo, cortado em diagonal */}
       <div className="relative h-40 overflow-hidden [clip-path:polygon(0_0,100%_0,100%_74%,0_100%)] @2xl:h-52">
-        <Image src={g.thumbnail} alt="" fill priority sizes="(min-width: 1024px) 680px, 100vw" className="object-cover object-[72%_center]" />
+        <Image src={g.thumbnail} alt="" fill priority sizes="(min-width: 1024px) 680px, 100vw" className="origin-right scale-[1.75] object-cover object-right" />
         <span aria-hidden="true" className="absolute inset-0 bg-[linear-gradient(180deg,rgba(5,7,13,0.15)_0%,rgba(5,7,13,0.35)_55%,var(--dv-ink-2)_100%)]" />
         <span aria-hidden="true" className="absolute -bottom-6 left-[-10%] h-10 w-[70%] -skew-x-[18deg] bg-dv-cobalt-deep/70 blur-[1px]" />
         <div className="absolute inset-x-4 top-4 flex items-center justify-between gap-2">

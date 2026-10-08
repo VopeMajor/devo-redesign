@@ -40,7 +40,7 @@ export function Searching({ gameId, duel, onCancel }: { gameId: GameId; duel: bo
           <span className="absolute left-[68%] top-[30%] size-2 animate-dv-blink rounded-full bg-dv-cobalt-text shadow-[0_0_10px_var(--dv-cobalt)]" />
           <span className="absolute left-[24%] top-[62%] size-1.5 animate-dv-blink rounded-full bg-dv-gold [animation-delay:-0.5s]" />
           <span className="dv-cut absolute inset-[34%] overflow-hidden" style={{ '--dv-cut': '12px' } as CSSProperties}>
-            <Image src={g.thumbnail} alt="" fill sizes="80px" className="object-cover object-[72%_center]" />
+            <Image src={g.thumbnail} alt="" fill sizes="80px" className="origin-right scale-[1.8] object-cover object-right" />
           </span>
         </div>
 
@@ -88,9 +88,9 @@ export function ResultScreen({ run, onClose }: { run: Running; onClose: () => vo
           <Kicker tone={loss ? 'blood' : 'gold'} className="animate-dv-fade">
             {g.name} · vs {run.start.opponent.name}
           </Kicker>
-          <div className="relative mt-6 min-h-[8.5rem]">
+          <div className="relative mt-6 min-h-[11rem]">
             <h1 className="relative w-fit animate-dv-cut-in font-impact text-[76px] font-bold uppercase leading-[0.85] tracking-[0.01em] text-white [text-shadow:0_4px_0_rgba(0,0,0,0.45)] -skew-x-[8deg]">{title}</h1>
-            <div className="absolute -right-1 top-2">
+            <div className="absolute -right-1 top-[4.6rem]">
               {win ? (
                 <Stamp shape="round" tone="gold" text="Vitória" ring="DEVO · SALA DE JOGOS · A CASA AGRADECE ·" size={104} rotate={12} animate />
               ) : loss ? (

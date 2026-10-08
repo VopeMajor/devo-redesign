@@ -107,7 +107,7 @@ export function Agenda({
         <Frame as="section" aria-labelledby="hoje" tone="gold" ornate glow pad="none" className="animate-dv-cut-in overflow-hidden">
           <div className="relative">
             <div aria-hidden="true" className="absolute inset-y-0 right-0 w-[55%] overflow-hidden [clip-path:polygon(28%_0,100%_0,100%_100%,0_100%)]">
-              <Image src={GAMES[featured.gameId].thumbnail} alt="" fill sizes="50vw" className="object-cover object-right opacity-45" />
+              <Image src={GAMES[featured.gameId].thumbnail} alt="" fill sizes="50vw" className="origin-right scale-[1.4] object-cover object-right opacity-45" />
               <span className="absolute inset-0 bg-gradient-to-r from-dv-ink-2 via-dv-ink-2/50 to-transparent" />
             </div>
             <div className="relative flex flex-col gap-3 p-5">
@@ -579,9 +579,8 @@ export function Apostas() {
 
   return (
     <div className="flex flex-col gap-6">
-      <Frame as="section" aria-label="Seu Tempo" tone="blood" pad="md" className="animate-dv-cut-in">
-        <span aria-hidden="true" className="dv-hazard absolute right-3 top-3 h-2.5 w-16 opacity-80" />
-        <Kicker tone="blood">Livro de apostas · a moeda é a sua vida</Kicker>
+      <Frame as="section" aria-label="Seu Tempo" variant="alert" pad="md" className="animate-dv-cut-in">
+        <Kicker tone="blood">Livro de apostas</Kicker>
         <div className="mt-3 flex items-center gap-3">
           <GlyphHourglass className="size-7 shrink-0 text-dv-cobalt-text" />
           <div>
