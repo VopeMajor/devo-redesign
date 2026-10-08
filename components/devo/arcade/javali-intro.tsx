@@ -1,7 +1,7 @@
 'use client'
 
-import { Coins, Crown, Dices, GraduationCap, Hourglass, Radio, Timer, Trophy } from 'lucide-react'
-import { useState } from 'react'
+import { type CSSProperties, useState } from 'react'
+import { Badge, FrameCorners, GlyphArrow, GlyphDiamond, GlyphHourglass, Kicker } from '@/components/devo/kit'
 import { GAMES, PATENTES } from '@/lib/devo/arcade/games'
 import { playSfx } from '@/lib/devo/audio'
 import { cn } from '@/lib/utils'
@@ -19,22 +19,22 @@ const SCRIPT: { text: string; frame: Frame; visual?: Visual }[] = [
   { text: 'Eu sou o Javali, anfitrião desta casa. Ninguém joga aqui sem antes ouvir as regras da casa. E as regras da casa sou eu.', frame: 'point' },
   { text: 'Primeiro, o mais importante: aqui ninguém aposta dinheiro. Aposta-se Tempo. O seu relógio, lá em cima, é tudo o que você tem.', frame: 'point', visual: 'tempo' },
   { text: 'Ganhe e ele cresce. Perca... bem, digamos que ele encolhe. Quando zera, a festa acaba para você. Simples, não?', frame: 'door' },
-  { text: 'No Lobby ficam as mesas. Cada uma com seu jogo, cada jogo com seu adversário de carne e osso.', frame: 'table', visual: 'jogos' },
-  { text: 'Inseguro? Não se acanhe. Toda mesa tem um Tutorial. Treine à vontade, que lá a casa não cobra nada.', frame: 'door', visual: 'tutorial' },
-  { text: 'Na Agenda você encontra as partidas marcadas e os torneios. Inscreva-se a tempo, porque eu não espero ninguém.', frame: 'door' },
-  { text: 'Cada vitória rende pontos de Score. Pontos sobem sua Patente e sua posição no Ranking.', frame: 'point', visual: 'ranking' },
+  { text: 'Na Mesa ficam os jogos. Cada um com seu adversário de carne e osso.', frame: 'table', visual: 'jogos' },
+  { text: 'Inseguro? Não se acanhe. Todo jogo tem um Tutorial. Treine à vontade, que lá a casa não cobra nada.', frame: 'door', visual: 'tutorial' },
+  { text: 'Na Agenda você encontra as partidas marcadas e os torneios. Inscreva-se a tempo, porque eu não espero ninguém.', frame: 'door', visual: 'agenda' },
+  { text: 'Cada vitória rende pontos. Pontos sobem sua Patente e sua posição no Ranking.', frame: 'point', visual: 'ranking' },
   { text: 'Toda semana o Ranking zera. Os melhores colocados levam prêmios antes do reset. Fique de olho no relógio do Reset.', frame: 'table' },
-  { text: 'Prefere assistir? Nas Apostas você aposta Tempo em quem vai vencer as partidas dos outros. Lucro sem suar a camisa.', frame: 'point' },
+  { text: 'Prefere assistir? Nas Apostas você aposta Tempo em quem vai vencer as partidas dos outros. Lucro sem suar a camisa.', frame: 'point', visual: 'apostas' },
   { text: 'E no Chat você conversa com os outros Records da sala. Provoque, negocie, faça amigos. Ou inimigos. Eu adoro os dois.', frame: 'door', visual: 'chat' },
   { text: 'Isso é tudo, querido. Puxe uma cadeira e lembre-se: a casa sempre agradece.', frame: 'table' },
 ]
 
-const TABS: { visual: Visual; label: string; icon: typeof Dices }[] = [
-  { visual: 'jogos', label: 'Lobby', icon: Dices },
-  { visual: 'agenda', label: 'Agenda', icon: Timer },
-  { visual: 'ranking', label: 'Ranking', icon: Trophy },
-  { visual: 'apostas', label: 'Apostas', icon: Coins },
-  { visual: 'chat', label: 'Chat', icon: Radio },
+const SECTIONS: { visual: Visual; label: string }[] = [
+  { visual: 'jogos', label: 'Mesa' },
+  { visual: 'agenda', label: 'Agenda' },
+  { visual: 'ranking', label: 'Ranking' },
+  { visual: 'apostas', label: 'Apostas' },
+  { visual: 'chat', label: 'Chat' },
 ]
 
 export function JavaliIntro() {
@@ -47,6 +47,7 @@ export function JavaliIntro() {
   const finish = () => {
     if (leaving) return
     setLeaving(true)
+    playSfx('whoosh')
     window.setTimeout(() => dispatch({ type: 'JAVALI_MET' }), 700)
   }
 
@@ -63,61 +64,84 @@ export function JavaliIntro() {
       aria-modal="true"
       aria-label="Javali apresenta a Sala de Jogos"
       className={cn(
-        'absolute inset-0 z-40 flex flex-col overflow-hidden bg-[#070912]/95 backdrop-blur-sm transition-opacity duration-700',
+        'absolute inset-0 z-40 flex animate-dv-fade flex-col overflow-hidden bg-[radial-gradient(120%_70%_at_50%_0%,#151d3d,var(--dv-ink)_65%)] transition-opacity duration-700',
         leaving && 'opacity-0',
       )}
     >
-      <span aria-hidden="true" className="javali-spot pointer-events-none absolute inset-x-0 top-0 mx-auto h-[70%] w-[28rem] max-w-full bg-[radial-gradient(ellipse_at_top,rgba(216,178,90,0.22),transparent_70%)]" />
+      {/* holofote dourado sobre o anfitrião e piso xadrez da casa */}
+      <span aria-hidden="true" className="javali-spot pointer-events-none absolute inset-x-0 top-0 mx-auto h-[75%] w-[30rem] max-w-full bg-[radial-gradient(ellipse_at_top,rgba(236,212,154,0.26),transparent_70%)]" />
+      <span aria-hidden="true" className="dv-checker pointer-events-none absolute inset-x-[-40%] bottom-[-10%] h-[45%] opacity-40 [mask-image:linear-gradient(to_top,black,transparent)] [transform:perspective(520px)_rotateX(62deg)]" />
 
-      <button
-        type="button"
-        onClick={finish}
-        className="absolute right-3 top-3 z-10 font-sans text-[10px] uppercase tracking-[0.3em] text-foreground/40 transition-colors hover:text-foreground"
-      >
-        Pular
-      </button>
-
-      <div className="relative flex min-h-0 flex-1 flex-col items-center justify-end gap-4 px-4 pt-10">
-        {step.visual && (
-          <div key={step.visual} className="animate-pop">
-            <Visual visual={step.visual} />
-          </div>
-        )}
-        <div className="relative mb-2 aspect-[12/5] max-h-[42vh] w-full max-w-2xl shrink-0 overflow-hidden border-y-[10px] border-black bg-black shadow-[0_10px_40px_rgba(0,0,0,0.7)]">
-          {FRAMES.map((name) => {
-            const active = name === step.frame
-            return (
-              <JavaliArt
-                key={name}
-                pose={name}
-                scene
-                fit="slice"
-                wink={name === 'point' && index % 2 === 1}
-                title={active ? 'Javali, anfitrião da Sala de Jogos' : undefined}
-                className={cn('absolute inset-0 size-full transition-opacity duration-300', active ? 'opacity-100' : 'opacity-0')}
-              />
-            )
-          })}
-          <span aria-hidden="true" className="pointer-events-none absolute inset-0 shadow-[inset_0_0_60px_rgba(0,0,0,0.65)]" />
-        </div>
-      </div>
-      <span aria-hidden="true" className="relative h-4 shrink-0 border-t-2 border-[#d8b25a]/50 bg-[linear-gradient(to_bottom,#14204a,#0a0e1e)]" />
-
-      <div className="relative shrink-0 p-3 md:p-4">
+      <div className="relative flex shrink-0 items-center justify-between px-4 pt-2">
+        <Kicker tone="gold">
+          A casa recebe · {index + 1}/{SCRIPT.length}
+        </Kicker>
         <button
           type="button"
-          onClick={advance}
-          className="group mx-auto flex w-full max-w-2xl flex-col gap-1.5 border border-[#d8b25a]/45 bg-[#0e1324] p-4 text-left focus-visible:outline-2 focus-visible:outline-[#d8b25a]"
+          onClick={finish}
+          className="dv-focus -mr-2 inline-flex min-h-11 items-center px-3 font-mono text-[11px] uppercase tracking-[0.22em] text-dv-text-3 transition-colors hover:text-dv-text"
         >
-          <span className="text-[10px] uppercase tracking-[0.3em] text-[#d8b25a]">Javali</span>
-          <span key={index} className="animate-pop text-[15px] leading-relaxed text-foreground/90 md:text-base">
+          Pular
+        </button>
+      </div>
+
+      <div className="relative flex min-h-0 flex-1 flex-col items-center justify-end gap-4 px-4 pt-2">
+        <div className="flex min-h-[4.5rem] items-end justify-center">
+          {step.visual && (
+            <div key={step.visual} className="animate-dv-pop">
+              <VisualCue visual={step.visual} />
+            </div>
+          )}
+        </div>
+        {/* palco: a cena ocupa a largura e o anfitrião fica grande no centro */}
+        <div className="relative isolate aspect-[5/4] max-h-[48vh] w-full max-w-xl shrink-0" style={{ '--dv-cut': '18px' } as CSSProperties}>
+          <span aria-hidden="true" className="dv-cut absolute inset-0 -z-10 bg-[linear-gradient(135deg,var(--dv-gold-bright),var(--dv-gold-deep)_30%,var(--dv-gold)_60%,var(--dv-gold-deep))]" />
+          <div className="dv-cut absolute inset-[2px] overflow-hidden bg-black" style={{ '--dv-cut': '17px' } as CSSProperties}>
+            {FRAMES.map((name) => {
+              const active = name === step.frame
+              return (
+                <JavaliArt
+                  key={name}
+                  pose={name}
+                  scene
+                  fit="slice"
+                  wink={name === 'point' && index % 2 === 1}
+                  title={active ? 'Javali, anfitrião da Sala de Jogos' : undefined}
+                  className={cn('absolute inset-0 size-full transition-[opacity,transform] duration-500', active ? 'scale-100 opacity-100' : 'scale-[1.04] opacity-0')}
+                />
+              )
+            })}
+            <span aria-hidden="true" className="pointer-events-none absolute inset-0 shadow-[inset_0_0_70px_rgba(0,0,0,0.75)]" />
+          </div>
+          <FrameCorners tone="gold" size={26} inset={4} />
+          {/* placa com o nome */}
+          <div className="absolute -bottom-4 left-4 flex items-end">
+            <span className="relative">
+              <span aria-hidden="true" className="absolute -left-2 bottom-[8%] h-[40%] w-[calc(100%+1rem)] -skew-x-[18deg] bg-dv-cobalt-deep" />
+              <span className="relative font-impact text-[40px] font-bold uppercase leading-none text-white [text-shadow:0_2px_0_rgba(0,0,0,0.6)]">Javali</span>
+            </span>
+            <span className="dv-label mb-1 ml-3 bg-dv-ink/70 px-1 text-[10px] text-dv-gold">Anfitrião</span>
+          </div>
+        </div>
+      </div>
+
+      <div className="relative shrink-0 p-3 pt-7">
+        <button type="button" onClick={advance} className="dv-focus group relative isolate mx-auto flex w-full max-w-xl flex-col gap-2 p-4 text-left" style={{ '--dv-cut': '14px' } as CSSProperties}>
+          <span aria-hidden="true" className="dv-cut-diag absolute inset-0 -z-10 bg-[linear-gradient(135deg,var(--dv-gold),var(--dv-gold-deep)_45%,var(--dv-line-strong))]" />
+          <span aria-hidden="true" className="dv-cut-diag absolute inset-px -z-10 bg-[linear-gradient(180deg,var(--dv-ink-3),var(--dv-ink)_90%)]" style={{ '--dv-cut': '13.6px' } as CSSProperties} />
+          <span key={index} className="animate-dv-fade font-body text-[17px] leading-relaxed text-dv-text">
             {step.text}
           </span>
-          <span className="flex items-center justify-between font-sans text-[10px] uppercase tracking-[0.25em] text-foreground/40">
-            <span className="tabular-nums">
-              {index + 1}/{SCRIPT.length}
+          <span className="flex items-center justify-between gap-3">
+            <span aria-hidden="true" className="flex gap-1">
+              {SCRIPT.map((_, i) => (
+                <span key={i} className={cn('h-1 w-2.5 -skew-x-[30deg] transition-colors', i < index ? 'bg-dv-gold/60' : i === index ? 'bg-dv-gold-bright' : 'bg-dv-line-strong')} />
+              ))}
             </span>
-            <span className="transition-colors group-hover:text-[#d8b25a]">{last ? 'Puxar a cadeira' : 'Continuar'} ›</span>
+            <span className="flex items-center gap-2 font-display text-[13px] font-semibold uppercase tracking-[0.2em] text-dv-gold transition-colors group-hover:text-dv-gold-bright">
+              {last ? 'Puxar a cadeira' : 'Continuar'}
+              <GlyphArrow className="size-4 transition-transform group-hover:translate-x-0.5" />
+            </span>
           </span>
         </button>
       </div>
@@ -125,66 +149,56 @@ export function JavaliIntro() {
   )
 }
 
-function Pill({ icon: Icon, label, active }: { icon: typeof Dices; label: string; active?: boolean }) {
-  return (
-    <span
-      className={cn(
-        'flex items-center gap-1.5 border px-3 py-1.5 text-[11px] uppercase tracking-[0.25em]',
-        active ? 'border-[#6f8cff] bg-[#6f8cff]/10 text-[#a9bcff]' : 'border-foreground/15 text-foreground/40',
-      )}
-    >
-      <Icon className="size-3.5" aria-hidden="true" />
-      {label}
-    </span>
-  )
-}
-
-function Visual({ visual }: { visual: Visual }) {
+function VisualCue({ visual }: { visual: Visual }) {
   if (visual === 'tempo') {
     return (
-      <div className="flex items-center gap-3 border border-[#6f8cff]/50 bg-[#6f8cff]/10 px-4 py-2 shadow-[0_0_24px_rgba(111,140,255,0.25)]">
-        <Hourglass className="size-5 text-[#6f8cff]" aria-hidden="true" />
+      <div className="relative isolate flex items-center gap-3 px-4 py-2.5" style={{ '--dv-cut': '10px' } as CSSProperties}>
+        <span aria-hidden="true" className="dv-cut-diag absolute inset-0 -z-10 bg-dv-cobalt" />
+        <span aria-hidden="true" className="dv-cut-diag absolute inset-px -z-10 bg-[linear-gradient(180deg,#14287a,var(--dv-ink))]" style={{ '--dv-cut': '9.6px' } as CSSProperties} />
+        <GlyphHourglass className="size-6 text-dv-cobalt-text" />
         <div className="leading-tight">
-          <p className="text-[9px] uppercase tracking-[0.3em] text-foreground/50">Seu Tempo</p>
-          <p className="font-mono text-xl tabular-nums text-[#a9bcff]">71:59:42</p>
+          <p className="dv-label text-[10px] text-dv-text-3">Seu Tempo</p>
+          <p className="font-impact text-[26px] font-semibold tabular-nums text-dv-cobalt-text">71:59:42</p>
         </div>
       </div>
     )
   }
   if (visual === 'jogos') {
     return (
-      <ul className="flex max-w-lg flex-wrap justify-center gap-2" aria-label="Jogos">
+      <ul className="flex max-w-lg flex-wrap justify-center gap-1.5" aria-label="Jogos">
         {Object.values(GAMES).map((g) => (
-          <li key={g.name} className="border border-[#d8b25a]/40 bg-black/40 px-3 py-1.5 font-serif text-sm tracking-wide text-foreground/85">
-            {g.name}
+          <li key={g.name}>
+            <Badge tone="gold">{g.name}</Badge>
           </li>
         ))}
       </ul>
     )
   }
   if (visual === 'tutorial') {
-    return <Pill icon={GraduationCap} label="Tutorial" active />
+    return (
+      <Badge tone="cobalt" dot>
+        Tutorial · treino grátis
+      </Badge>
+    )
   }
   if (visual === 'ranking') {
     return (
-      <div className="flex flex-col items-center gap-2">
-        <Pill icon={Trophy} label="Ranking" active />
-        <ol className="flex max-w-lg flex-wrap justify-center gap-1.5" aria-label="Patentes">
-          {PATENTES.map((p, i) => (
-            <li key={p.name} className="flex items-center gap-1 text-[11px] uppercase tracking-[0.15em] text-foreground/60">
-              {i === PATENTES.length - 1 && <Crown className="size-3 text-[#d8b25a]" aria-hidden="true" />}
-              {p.name}
-              {i < PATENTES.length - 1 && <span aria-hidden="true" className="text-foreground/25">›</span>}
-            </li>
-          ))}
-        </ol>
-      </div>
+      <ol className="flex max-w-lg flex-wrap justify-center gap-x-1.5 gap-y-1" aria-label="Patentes">
+        {PATENTES.map((p, i) => (
+          <li key={p.name} className={cn('flex items-center gap-1 font-mono text-[11px] uppercase tracking-[0.12em]', i === PATENTES.length - 1 ? 'text-dv-gold-bright' : 'text-dv-text-2')}>
+            {p.name}
+            {i < PATENTES.length - 1 && <GlyphDiamond filled className="size-1.5 text-dv-text-3" />}
+          </li>
+        ))}
+      </ol>
     )
   }
   return (
     <div className="flex flex-wrap justify-center gap-1.5">
-      {TABS.map((t) => (
-        <Pill key={t.visual} icon={t.icon} label={t.label} active={t.visual === visual} />
+      {SECTIONS.map((t) => (
+        <Badge key={t.visual} tone={t.visual === visual ? 'cobalt' : 'neutral'}>
+          {t.label}
+        </Badge>
       ))}
     </div>
   )
