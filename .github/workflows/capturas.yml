@@ -56,10 +56,8 @@ jobs:
           mkdir -p /tmp/pw && echo '{}' > /tmp/pw/package.json && npm i --prefix /tmp/pw playwright@1.56.1
           npx --prefix /tmp/pw playwright install --with-deps chromium
       - name: Capturas
-        run: PLAYWRIGHT_FROM=/tmp/pw/package.json node scripts/dev/capture.mjs 2>&1 | tee capture.log
+        run: CAPTURE_ONLY="$(cat .capture-only 2>/dev/null || true)" PLAYWRIGHT_FROM=/tmp/pw/package.json node scripts/dev/capture.mjs 2>&1 | tee capture.log
         continue-on-error: true
-        env:
-          CAPTURE_ONLY: ${{ vars.CAPTURE_ONLY }}
       - name: Logs
         if: always()
         run: mkdir -p shots && cp -f build.log typecheck.log server.log capture.log shots/ 2>/dev/null || true

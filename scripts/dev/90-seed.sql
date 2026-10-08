@@ -42,3 +42,10 @@ ON CONFLICT DO NOTHING;
 INSERT INTO arcade_chat (channel, author, player_id, body)
 SELECT 'lobby', p.name, p.id, b FROM players p
 JOIN (VALUES ('Corvo', 'Alguém aposta contra mim hoje?'), ('Ísis', 'Xadrez de novo? Sábado eu volto.'), ('Nyx', 'Perdi 4 horas no blefe. Não repitam.')) AS m(n, b) ON m.n = p.name;
+
+-- Placar geral da semana (ranking "Geral").
+INSERT INTO arcade_week_scores (week_start, player_id, score, wins, games)
+SELECT date_trunc('week', now() AT TIME ZONE 'America/Sao_Paulo')::date, m.player_id, sum(m.points)::int,
+       count(*) FILTER (WHERE m.result = 'win')::int, count(*)::int
+FROM arcade_matches m GROUP BY m.player_id
+ON CONFLICT DO NOTHING;
