@@ -195,7 +195,7 @@ async function account(name, invite, cards, kind = 'phone', extra = {}) {
 async function enterOS(page) {
   await page.goto(BASE, { waitUntil: 'networkidle' })
   await wait(1000)
-  await btn(page, 'Continuar').click({ timeout: 4000 })
+  await btn(page, 'Continuar').click({ timeout: 15000 })
   await wait(3600)
 }
 
