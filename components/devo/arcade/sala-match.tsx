@@ -94,7 +94,7 @@ export function ResultScreen({ run, onClose }: { run: Running; onClose: () => vo
               {win ? (
                 <Stamp shape="round" tone="gold" text="Vitória" ring="DEVO · SALA DE JOGOS · A CASA AGRADECE ·" size={104} rotate={12} animate />
               ) : loss ? (
-                <Stamp tone="blood" text="Perdeu" size={110} rotate={-10} animate />
+                <Stamp tone="gold" text="Perdeu" size={110} rotate={-10} animate />
               ) : (
                 <Stamp tone="cobalt" text="Empate" size={110} rotate={-8} animate />
               )}

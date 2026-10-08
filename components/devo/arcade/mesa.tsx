@@ -142,7 +142,7 @@ export function Mesa({
 
         <Frame as="section" aria-label="Chat da mesa" pad="md" className="flex min-w-0 flex-col @4xl:self-start">
           <SectionHeader kicker="Ao vivo na sala" title="Chat da mesa" size="sm" as="h3" className="mb-3" />
-          <ArcadeChat channel="lobby" className="h-[24rem] min-h-0" />
+          <ArcadeChat channel="lobby" className="h-[20rem] min-h-0" />
         </Frame>
       </div>
       {sheet.node}
@@ -232,6 +232,7 @@ function Hero({
       <div className="relative h-40 overflow-hidden [clip-path:polygon(0_0,100%_0,100%_74%,0_100%)] @2xl:h-52">
         <Image src={g.thumbnail} alt="" fill priority sizes="(min-width: 1024px) 680px, 100vw" className="origin-right scale-[1.75] object-cover object-right" />
         <span aria-hidden="true" className="absolute inset-0 bg-[linear-gradient(180deg,rgba(5,7,13,0.15)_0%,rgba(5,7,13,0.35)_55%,var(--dv-ink-2)_100%)]" />
+        <span aria-hidden="true" className="absolute inset-y-0 left-0 w-1/3 bg-[linear-gradient(90deg,var(--dv-ink-2),transparent)]" />
         <span aria-hidden="true" className="absolute -bottom-6 left-[-10%] h-10 w-[70%] -skew-x-[18deg] bg-dv-cobalt-deep/70 blur-[1px]" />
         <div className="absolute inset-x-4 top-4 flex items-center justify-between gap-2">
           <Badge tone={badge.tone} live={badge.live} dot={!badge.live}>

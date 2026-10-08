@@ -279,7 +279,7 @@ function AgendaEvent({
           </span>
         )}
       </div>
-      <div className="flex flex-wrap items-center gap-2 border-t border-dv-line px-3 py-2">
+      <div className="-mt-1 flex flex-wrap items-center gap-2 px-3 pb-2">
         {e.status === 'REGISTRATION' &&
           (e.joined ? (
             <Badge tone="cobalt" dot>
@@ -375,7 +375,7 @@ export function Ranking({ data, view, onView }: { data: Dashboard; view: RankVie
               data.me.rank && data.me.rank > 10
                 ? { rank: data.me.rank, name: data.me.name, isMe: true, sub: `${data.me.wins} vitórias`, points: data.me.score }
                 : !data.me.rank
-                  ? { rank: 0, name: data.me.name, isMe: true, sub: 'Ainda sem pontos nesta semana', points: data.me.score }
+                  ? { rank: 0, name: data.me.name, isMe: true, sub: 'Sem pontos ainda', points: data.me.score }
                   : null
             }
           />
