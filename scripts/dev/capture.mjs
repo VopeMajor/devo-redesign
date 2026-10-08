@@ -235,6 +235,64 @@ if (want('sistema') || want('apps') || want('jogos')) {
         }
       }
     })
+    // Record (área): foto com recorte, Shuffler embaralhando, cartaz → dossiê do caso, mesa do Dealer.
+    await step('record-detalhes', async () => {
+      const tab = (name) => page.getByRole('tab', { name: new RegExp(name, 'i') }).first()
+      await tryClick(tab('Record File'))
+      await wait(1200)
+      const file = page.locator('input[type=file][accept*="image"]').first()
+      if (await file.count()) {
+        await file.setInputFiles('public/images/devo-sigil.png')
+        await wait(1500)
+        await shot(page, '20-record-foto-ajuste')
+        await tryClick(btn(page, 'Salvar foto', true))
+        await wait(3000)
+        await shot(page, '20-record-foto')
+      }
+      const shuffler = btn(page, 'Ativar o Card Shuffler', true)
+      if (await shuffler.count()) {
+        await shuffler.scrollIntoViewIfNeeded().catch(() => {})
+        await wait(600)
+        await tryClick(shuffler)
+        await wait(800)
+        await shot(page, '20-record-shuffler')
+        await wait(1600)
+      }
+      await page.getByLabel('Arquivo de casos').first().scrollIntoViewIfNeeded().catch(() => {})
+      await page.locator('#dv-history').first().scrollIntoViewIfNeeded().catch(() => {})
+      await wait(800)
+      await shot(page, '20-record-arquivo')
+      if (await tryClick(tab('Deadly Votes'))) {
+        await wait(1500)
+        await page.mouse.wheel(0, 900)
+        await wait(800)
+        await shot(page, '20-record-deadly-votes-scroll')
+        await page.mouse.wheel(0, -2000)
+        await wait(500)
+        if (await tryClick(btn(page, 'Ver dossiê do caso'))) {
+          await wait(1500)
+          await shot(page, '20-record-dossie')
+          await tryClick(btn(page, 'Todos os Deadly Votes'))
+          await wait(800)
+        }
+      }
+      if (await tryClick(tab('Convites'))) {
+        await wait(1500)
+        await page.getByRole('heading', { name: /Mesa do Dealer/i }).first().scrollIntoViewIfNeeded().catch(() => {})
+        await wait(1200)
+        await shot(page, '20-record-dealer')
+        if (await tryClick(btn(page, /Registrar resultados/))) {
+          await wait(900)
+          await shot(page, '20-record-dealer-resultados')
+        }
+        const conv = page.getByRole('button', { name: 'Convocar', exact: true }).first()
+        await conv.scrollIntoViewIfNeeded().catch(() => {})
+        if (await tryClick(conv)) {
+          await wait(900)
+          await shot(page, '20-record-dealer-convocar')
+        }
+      }
+    })
     await step('pulso', async () => {
       await openApp(page, 'Pulso')
       await shot(page, '21-pulso')

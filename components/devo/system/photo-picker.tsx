@@ -1,9 +1,10 @@
 'use client'
 
-import { Camera, Check, Loader2, RotateCcw, Trash2, X, ZoomIn, ZoomOut } from 'lucide-react'
-import { useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } from 'react'
+import { Camera, RotateCcw, Trash2, ZoomIn, ZoomOut } from 'lucide-react'
+import { type CSSProperties, useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } from 'react'
 import { createPortal } from 'react-dom'
-import { cn } from '@/lib/utils'
+import { Button, Frame, FrameCorners, GlyphCheck, GlyphClip, GlyphClose, IconButton, Spinner } from '@/components/devo/kit'
+import { playSfx } from '@/lib/devo/audio'
 import { recordAction } from './use-deadly-votes'
 
 const OUT_W = 480
@@ -66,91 +67,84 @@ function PhotoCropper({ bitmap, url, onCancel, onConfirm }: { bitmap: ImageBitma
   const zoomTo = (z: number) => setClamped({ ...crop, zoom: Math.min(MAX_ZOOM, Math.max(1, z)) })
 
   return createPortal(
-    <div className="dv-dark fixed inset-0 z-[130] grid place-items-center bg-black/80 p-4 backdrop-blur-sm" onClick={onCancel}>
-      <div
-        role="dialog"
-        aria-modal="true"
-        aria-label="Ajustar foto do perfil"
-        onClick={(e) => e.stopPropagation()}
-        className="flex w-full max-w-sm flex-col border border-white/15 bg-[#0a0c11] text-foreground"
-      >
-        <header className="flex items-center justify-between border-b border-white/10 px-4 py-2.5">
-          <span className="flex items-baseline gap-2.5">
-            <span className="font-serif text-base uppercase tracking-[0.05em]">Ajustar foto</span>
-            <span lang="ja" className="text-[9px] tracking-[0.25em] text-foreground/45">
-              トリミング
-            </span>
-          </span>
-          <button type="button" onClick={onCancel} aria-label="Cancelar" className="grid size-8 place-items-center text-foreground/55 hover:text-foreground">
-            <X className="size-4" />
-          </button>
-        </header>
+    <div className="fixed inset-0 z-[130] grid animate-dv-fade place-items-center bg-[rgba(5,7,13,0.82)] p-4 backdrop-blur-sm" onClick={onCancel}>
+      <div role="dialog" aria-modal="true" aria-label="Ajustar foto do perfil" onClick={(e) => e.stopPropagation()} className="w-full max-w-sm animate-dv-pop">
+        <Frame tone="cobalt" pad="none" cutSize={16} glow>
+          <header className="flex items-center justify-between gap-3 border-b border-dv-line px-4 py-2">
+            <div>
+              <p className="dv-label text-[10px] text-dv-cobalt-text">Record File · Foto</p>
+              <p className="flex items-baseline gap-2.5 font-display text-[18px] font-semibold uppercase tracking-[0.08em] text-dv-text">
+                Ajustar foto
+                <span lang="ja" className="font-sans text-[11px] font-normal tracking-[0.22em] text-dv-text-3">
+                  トリミング
+                </span>
+              </p>
+            </div>
+            <IconButton label="Cancelar" variant="ghost" onClick={onCancel} sfx="close">
+              <GlyphClose />
+            </IconButton>
+          </header>
 
-        <div className="flex flex-col items-center gap-4 p-5">
-          <div
-            className="relative cursor-grab touch-none select-none overflow-hidden border border-dv-blue-light/60 bg-black active:cursor-grabbing"
-            style={{ width: FRAME_W, height: FRAME_H, boxShadow: '0 0 0 9999px rgba(0,0,0,0.0), 0 0 30px -8px #6f8cff' }}
-            onPointerDown={onDown}
-            onPointerMove={onMove}
-            onPointerUp={() => (drag.current = null)}
-            onPointerCancel={() => (drag.current = null)}
-            onWheel={(e) => zoomTo(crop.zoom * (e.deltaY < 0 ? 1.08 : 1 / 1.08))}
-          >
-            {/* biome-ignore lint/performance/noImgElement: prévia local via object URL */}
-            <img
-              src={url}
-              alt="Prévia da foto"
-              draggable={false}
-              className="pointer-events-none absolute left-1/2 top-1/2 max-w-none"
-              style={{
-                width: bitmap.width * s,
-                height: bitmap.height * s,
-                transform: `translate(calc(-50% + ${crop.x}px), calc(-50% + ${crop.y}px))`,
-              }}
-            />
-            <span aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,transparent_33%,rgba(255,255,255,0.12)_33%,rgba(255,255,255,0.12)_calc(33%+1px),transparent_calc(33%+1px),transparent_66%,rgba(255,255,255,0.12)_66%,rgba(255,255,255,0.12)_calc(66%+1px),transparent_calc(66%+1px)),linear-gradient(to_bottom,transparent_33%,rgba(255,255,255,0.12)_33%,rgba(255,255,255,0.12)_calc(33%+1px),transparent_calc(33%+1px),transparent_66%,rgba(255,255,255,0.12)_66%,rgba(255,255,255,0.12)_calc(66%+1px),transparent_calc(66%+1px))]" />
+          <div className="flex flex-col items-center gap-3 p-5">
+            <div className="relative bg-[#fbf8f0] p-1.5 pb-5 shadow-[0_10px_24px_rgba(0,0,0,0.5)]">
+              <div
+                className="relative cursor-grab touch-none select-none overflow-hidden bg-black active:cursor-grabbing"
+                style={{ width: FRAME_W, height: FRAME_H }}
+                onPointerDown={onDown}
+                onPointerMove={onMove}
+                onPointerUp={() => (drag.current = null)}
+                onPointerCancel={() => (drag.current = null)}
+                onWheel={(e) => zoomTo(crop.zoom * (e.deltaY < 0 ? 1.08 : 1 / 1.08))}
+              >
+                {/* biome-ignore lint/performance/noImgElement: prévia local via object URL */}
+                <img
+                  src={url}
+                  alt="Prévia da foto"
+                  draggable={false}
+                  className="pointer-events-none absolute left-1/2 top-1/2 max-w-none"
+                  style={{
+                    width: bitmap.width * s,
+                    height: bitmap.height * s,
+                    transform: `translate(calc(-50% + ${crop.x}px), calc(-50% + ${crop.y}px))`,
+                  }}
+                />
+                <span aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,transparent_33%,rgba(255,255,255,0.14)_33%,rgba(255,255,255,0.14)_calc(33%+1px),transparent_calc(33%+1px),transparent_66%,rgba(255,255,255,0.14)_66%,rgba(255,255,255,0.14)_calc(66%+1px),transparent_calc(66%+1px)),linear-gradient(to_bottom,transparent_33%,rgba(255,255,255,0.14)_33%,rgba(255,255,255,0.14)_calc(33%+1px),transparent_calc(33%+1px),transparent_66%,rgba(255,255,255,0.14)_66%,rgba(255,255,255,0.14)_calc(66%+1px),transparent_calc(66%+1px))]" />
+                <FrameCorners tone="cobalt" size={18} inset={4} />
+              </div>
+              <GlyphClip className="absolute -top-4 left-4 size-8 -rotate-12 text-dv-gold" />
+            </div>
+
+            <p className="dv-label text-center text-[10px] text-dv-text-3">Arraste para posicionar · pince ou role para zoom</p>
+
+            <div className="flex w-full items-center gap-1">
+              <IconButton label="Diminuir zoom" variant="ghost" onClick={() => zoomTo(crop.zoom / 1.2)}>
+                <ZoomOut strokeWidth={1.4} />
+              </IconButton>
+              <input
+                type="range"
+                min={1}
+                max={MAX_ZOOM}
+                step={0.01}
+                value={crop.zoom}
+                onChange={(e) => zoomTo(Number(e.target.value))}
+                aria-label="Zoom"
+                className="h-11 flex-1 accent-[var(--dv-cobalt)]"
+              />
+              <IconButton label="Aumentar zoom" variant="ghost" onClick={() => zoomTo(crop.zoom * 1.2)}>
+                <ZoomIn strokeWidth={1.4} />
+              </IconButton>
+            </div>
           </div>
 
-          <p className="text-[10px] uppercase tracking-[0.25em] text-foreground/45">Arraste para posicionar · role para zoom</p>
-
-          <div className="flex w-full items-center gap-3">
-            <button type="button" onClick={() => zoomTo(crop.zoom / 1.2)} aria-label="Diminuir zoom" className="text-foreground/60 hover:text-foreground">
-              <ZoomOut className="size-4" />
-            </button>
-            <input
-              type="range"
-              min={1}
-              max={MAX_ZOOM}
-              step={0.01}
-              value={crop.zoom}
-              onChange={(e) => zoomTo(Number(e.target.value))}
-              aria-label="Zoom"
-              className="flex-1 accent-[#6f8cff]"
-            />
-            <button type="button" onClick={() => zoomTo(crop.zoom * 1.2)} aria-label="Aumentar zoom" className="text-foreground/60 hover:text-foreground">
-              <ZoomIn className="size-4" />
-            </button>
-          </div>
-        </div>
-
-        <footer className="flex items-center gap-2 border-t border-white/10 p-3">
-          <button
-            type="button"
-            onClick={() => setCrop({ zoom: 1, x: 0, y: 0 })}
-            className="flex items-center gap-1.5 px-3 py-2 text-[10px] uppercase tracking-[0.2em] text-foreground/60 hover:text-foreground"
-          >
-            <RotateCcw className="size-3.5" aria-hidden="true" />
-            Redefinir
-          </button>
-          <button
-            type="button"
-            onClick={() => onConfirm(renderCrop(bitmap, crop))}
-            className="ml-auto flex items-center gap-1.5 border border-dv-blue-light bg-dv-blue px-4 py-2 text-[10px] uppercase tracking-[0.2em] text-white hover:brightness-110"
-          >
-            <Check className="size-3.5" aria-hidden="true" />
-            Salvar foto
-          </button>
-        </footer>
+          <footer className="flex items-center gap-2 border-t border-dv-line p-3">
+            <Button variant="ghost" size="sm" onClick={() => setCrop({ zoom: 1, x: 0, y: 0 })} icon={<RotateCcw strokeWidth={1.4} />}>
+              Redefinir
+            </Button>
+            <Button size="sm" className="ml-auto" sfx="confirm" onClick={() => onConfirm(renderCrop(bitmap, crop))} icon={<GlyphCheck />}>
+              Salvar foto
+            </Button>
+          </footer>
+        </Frame>
       </div>
     </div>,
     document.body,
@@ -184,24 +178,33 @@ export function PhotoPicker({ hasPhoto, onChanged }: { hasPhoto: boolean; onChan
     }
   }
 
-  const btn =
-    'grid size-8 place-items-center border border-white/30 bg-dv-black/70 text-white backdrop-blur-sm transition-colors hover:border-dv-blue-light hover:bg-dv-blue disabled:opacity-60'
-
   return (
-    <div className="flex flex-col items-end gap-1">
-      <div className="flex gap-1">
-        {hasPhoto && (
-          <button type="button" disabled={busy} onClick={() => send(null)} className={btn} aria-label="Remover foto">
-            <Trash2 className="size-3.5" aria-hidden="true" />
-          </button>
-        )}
-        <button type="button" disabled={busy} onClick={() => input.current?.click()} className={cn(btn, 'w-auto gap-1.5 px-2.5')} aria-label="Escolher foto do perfil">
-          {busy ? <Loader2 className="size-3.5 animate-spin" aria-hidden="true" /> : <Camera className="size-3.5" aria-hidden="true" />}
-          <span className="font-mono text-[9px] uppercase tracking-[0.18em]">{hasPhoto ? 'Trocar' : 'Foto'}</span>
+    <div className="flex flex-col gap-1.5">
+      <div className="flex gap-1.5">
+        <button
+          type="button"
+          disabled={busy}
+          onClick={() => {
+            playSfx('open')
+            input.current?.click()
+          }}
+          aria-label="Escolher foto do perfil"
+          aria-busy={busy || undefined}
+          style={{ '--dv-cut': '8px' } as CSSProperties}
+          className="dv-focus dv-cut group relative flex h-11 min-w-0 flex-1 items-center justify-center gap-2 bg-dv-ink px-2 text-white transition-transform duration-[120ms] enabled:active:scale-[0.97] disabled:opacity-60"
+        >
+          <span aria-hidden="true" className="dv-cut absolute inset-0 shadow-[inset_0_0_0_1px_rgba(125,151,255,0.45)] transition-colors group-enabled:group-hover:bg-dv-cobalt-dim" style={{ '--dv-cut': '8px' } as CSSProperties} />
+          {busy ? <Spinner className="relative size-4" /> : <Camera className="relative size-4 shrink-0 text-dv-cobalt-text" strokeWidth={1.4} aria-hidden="true" />}
+          <span className="relative truncate font-mono text-[11px] uppercase tracking-[0.14em]">{hasPhoto ? 'Trocar' : 'Foto'}</span>
         </button>
+        {hasPhoto && (
+          <IconButton label="Remover foto" variant="secondary" disabled={busy} onClick={() => send(null)}>
+            <Trash2 strokeWidth={1.4} />
+          </IconButton>
+        )}
       </div>
       {error && (
-        <p role="alert" className="max-w-40 bg-dv-black/80 px-2 py-1 text-right font-mono text-[9px] text-destructive">
+        <p role="alert" className="font-mono text-[11px] leading-snug text-dv-blood">
           {error}
         </p>
       )}

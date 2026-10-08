@@ -18,7 +18,17 @@ export type DeadlyVote = {
   participants: number
   joined: boolean
   outcome: 'sobreviveu' | 'eliminado' | null
+  /** Resultado público do caso (contagem de registros de sobrevivência e eliminação). */
+  survivors: number
+  eliminated: number
 }
+
+export type VoteOutcome = 'sobreviveu' | 'eliminado'
+
+/** Visão do Dealer/Admin: todos os Deadly Votes recentes com a lista de inscritos. */
+export type StaffEntry = { playerId: string; name: string; outcome: VoteOutcome | null }
+export type StaffVote = DeadlyVote & { entries: StaffEntry[] }
+export type StaffBoard = { votes: StaffVote[] }
 
 export type RecordPayload = { role: PlayerRole; avatarVersion: number | null; votes: DeadlyVote[] }
 
