@@ -1,20 +1,24 @@
 'use client'
 
-import { Bell, Maximize2, Minimize2, Minus, X } from 'lucide-react'
+import { Maximize2, Minimize2, Minus, X } from 'lucide-react'
 import { createContext, useCallback, useContext, useEffect, useRef, useState, type PointerEvent as RPointerEvent } from 'react'
 import { playSfx } from '@/lib/devo/audio'
 import type { AppId } from '@/lib/devo/types'
 import { cn } from '@/lib/utils'
 import { formatClock, formatDuration, useNow } from '../hooks'
-import { Sparkle } from '../ornaments'
-import { CathedralBackdrop, Embers } from '../shared/atmosphere'
+import { IconButton } from '../kit/button'
+import { GlyphHourglass, toRoman } from '../kit/glyphs'
+import { SceneBackdrop } from '../kit/scene'
+import { TimeDigits } from '../kit/time'
+import { Kicker } from '../kit/typography'
+import { DeadlyVoteSymbol } from '../system/symbol'
 import { SoundToggle } from '../shared/sound-toggle'
 import { useDevo } from '../state/devo-store'
 import { useBackHandler } from '../use-back-handler'
-import { getApp, visibleApps } from './apps'
+import { appIndex, getApp, visibleApps } from './apps'
 import { AppGlyphTile, Badge } from './app-icon'
 import { NotificationList, ToastStack } from './notifications'
-import { pulseRemaining } from '@/lib/devo/pulse'
+import { PULSE_CRITICAL_MS, pulseRemaining } from '@/lib/devo/pulse'
 import { useOsNav } from './os-nav'
 
 type Win = { id: AppId; x: number; y: number; z: number; minimized: boolean; maximized: boolean }
@@ -84,19 +88,24 @@ export function DesktopShell() {
 
   const totalUnread = Object.values(state.unread).reduce<number>((a, b) => a + (b ?? 0), 0)
   const remaining = pulseRemaining(state.timerEndsAt, now)
+  const critical = remaining < PULSE_CRITICAL_MS
 
   return (
-    <div className="fixed inset-0 overflow-hidden bg-background text-foreground" onPointerDown={() => setSelected(null)}>
-      <CathedralBackdrop dim={0.72} />
-      <Embers className="opacity-60" />
+    <div className="fixed inset-0 overflow-hidden bg-dv-ink text-dv-text" onPointerDown={() => setSelected(null)}>
+      {/* Cena viva só com a mesa livre; com janelas abertas fica no quadro estático (os apps podem ter a sua). */}
+      <SceneBackdrop preset="cathedral" intensity={0.8} dim={visible.length ? 0.5 : 0.25} alert={critical} staticOnly={visible.length > 0} />
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 grid place-items-center">
-        <p className="select-none font-serif uppercase tracking-[0.08em] text-[22vw] leading-none text-foreground/[0.035]">Devo</p>
+        <div className="flex flex-col items-center gap-4 opacity-[0.07]">
+          <DeadlyVoteSymbol className="size-56 text-dv-gold" />
+          <p className="select-none font-serif text-[12vw] uppercase leading-none tracking-[0.08em] text-dv-text">Devo</p>
+        </div>
       </div>
 
       <header
-        className="absolute inset-x-0 top-0 z-40 flex items-center justify-between gap-4 border-b border-foreground/15 bg-background/80 px-4 backdrop-blur-md"
+        className="absolute inset-x-0 top-0 z-40 flex items-center justify-between gap-4 bg-[linear-gradient(180deg,rgba(17,26,46,0.92),rgba(5,7,13,0.88))] px-4 backdrop-blur-md"
         style={{ height: TOP }}
       >
+        <span aria-hidden="true" className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-dv-gold/60 via-dv-gold/20 to-transparent" />
         <div className="flex items-center gap-4">
           <button
             type="button"
@@ -106,35 +115,33 @@ export function DesktopShell() {
               setPanel((p) => (p === 'devo' ? 'none' : 'devo'))
             }}
             aria-expanded={panel === 'devo'}
-            className="flex items-center gap-2 text-foreground hover:text-primary"
+            className="dv-focus flex h-10 items-center gap-2 text-dv-text transition-colors hover:text-dv-gold-bright"
           >
-            <Sparkle className="size-3 text-primary" />
-            <span className="font-serif uppercase tracking-[0.08em] text-xl leading-none">Devo</span>
+            <DeadlyVoteSymbol variant="mark" className="size-5 text-dv-gold" />
+            <span className="font-serif text-xl uppercase leading-none tracking-[0.08em]">Devo</span>
           </button>
-          <span className="text-[11px] uppercase tracking-[0.3em] text-muted-foreground">{top ? getApp(top.id).name : 'Área de trabalho'}</span>
+          <span className="dv-label text-[11px] text-dv-text-3">{top ? getApp(top.id).name : 'Área de trabalho'}</span>
         </div>
         <div className="flex items-center gap-5 text-sm">
-          <span className={cn('flex items-center gap-2 font-mono tabular-nums', remaining < 6 * 3600000 ? 'text-primary animate-blink' : 'text-primary')}>
-            <span className="size-1.5 rounded-full bg-primary shadow-[0_0_8px_var(--primary)] animate-blink" aria-hidden="true" />
-            <span className="sr-only">Tempo restante: </span>
-            {formatDuration(remaining)}
+          <span className={cn('flex items-center gap-2', critical ? 'text-dv-blood-text' : 'text-dv-cobalt-text')}>
+            <GlyphHourglass className={cn('size-4', critical && 'animate-dv-blink')} />
+            <TimeDigits value={formatDuration(remaining)} size="sm" tone={critical ? 'blood' : 'cobalt'} flip={false} blinkColon={critical} label="Tempo restante" />
           </span>
-          <SoundToggle compact />
-          <button
-            type="button"
+          <SoundToggle compact className="min-h-10 min-w-10 justify-center text-dv-gold/80 hover:text-dv-gold-bright" />
+          <IconButton
+            label="Central de avisos"
+            variant="ghost"
+            badge={totalUnread}
             onPointerDown={(e) => e.stopPropagation()}
             onClick={() => {
               playSfx('click')
               setPanel((p) => (p === 'notifications' ? 'none' : 'notifications'))
             }}
             aria-expanded={panel === 'notifications'}
-            aria-label="Central de avisos"
-            className="relative text-foreground/70 hover:text-foreground"
           >
-            <Bell className="size-4" />
-            <Badge count={totalUnread} className="-right-2 -top-2 min-w-4 text-[9px] leading-4" />
-          </button>
-          <span className="font-mono text-foreground/70 tabular-nums">{formatClock(now)}</span>
+            <BellGlyph />
+          </IconButton>
+          <span className="dv-tabular font-mono text-[13px] text-dv-text-2">{formatClock(now)}</span>
         </div>
       </header>
 
@@ -150,7 +157,7 @@ export function DesktopShell() {
           </div>
         )}
       </nav>
-      <p className="absolute bottom-[64px] left-5 z-10 w-24 text-center text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Clique duplo</p>
+      <p className="dv-label absolute bottom-[64px] left-5 z-10 w-24 text-center text-[10px] text-dv-text-3">Clique duplo</p>
 
       {wins.map((w) => (
         <Window
@@ -169,18 +176,25 @@ export function DesktopShell() {
       {panel === 'notifications' && (
         <div
           onPointerDown={(e) => e.stopPropagation()}
-          className="absolute right-3 z-50 w-96 border border-foreground/20 bg-card/95 backdrop-blur-md animate-pop"
+          className="animate-dv-rise absolute right-3 z-50 w-[400px] pt-3"
           style={{ top: TOP + 8, height: 'min(70vh, 560px)' }}
         >
-          <NotificationList onOpen={openApp} />
+          <GlassBack />
+          <NotificationList onOpen={openApp} className="relative" />
         </div>
       )}
 
       {panel === 'devo' && (
-        <div onPointerDown={(e) => e.stopPropagation()} className="absolute left-3 z-50 w-72 border border-foreground/20 bg-card/95 p-4 backdrop-blur-md animate-pop" style={{ top: TOP + 8 }}>
-          <p className="font-serif uppercase tracking-[0.08em] text-3xl text-foreground">Devo</p>
-          <p className="text-[11px] uppercase tracking-[0.3em] text-muted-foreground">Sistema dentro do sistema · 0.1</p>
-          <div className="mt-4 flex flex-col">
+        <div onPointerDown={(e) => e.stopPropagation()} className="animate-dv-rise absolute left-3 z-50 w-80 p-5" style={{ top: TOP + 8 }}>
+          <GlassBack />
+          <div className="relative flex items-center gap-3">
+            <DeadlyVoteSymbol className="size-11 text-dv-gold" />
+            <div>
+              <p className="font-serif text-3xl uppercase leading-none tracking-[0.08em] text-dv-text">Devo</p>
+              <Kicker tone="gold" className="mt-1.5">Sistema dentro do sistema · 0.1</Kicker>
+            </div>
+          </div>
+          <div className="relative mt-4 flex flex-col">
             <MenuRow onClick={() => openApp('ajustes')}>Ajustes do sistema</MenuRow>
             <MenuRow onClick={nav.exitToLanding}>Voltar à tela inicial</MenuRow>
             <MenuRow onClick={() => openApp('ajustes')} danger>
@@ -191,10 +205,11 @@ export function DesktopShell() {
       )}
 
       <footer
-        className="absolute inset-x-0 bottom-0 z-40 flex items-center justify-center gap-2 border-t border-foreground/15 bg-background/85 px-4 backdrop-blur-md"
+        className="absolute inset-x-0 bottom-0 z-40 flex items-center justify-center gap-2 bg-[linear-gradient(0deg,rgba(17,26,46,0.92),rgba(5,7,13,0.86))] px-4 backdrop-blur-md"
         style={{ height: BOTTOM }}
       >
-        {wins.length === 0 && <p className="text-[11px] uppercase tracking-[0.3em] text-muted-foreground">Nenhuma janela aberta</p>}
+        <span aria-hidden="true" className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-dv-gold/45 to-transparent" />
+        {wins.length === 0 && <p className="dv-label text-[11px] text-dv-text-3">Nenhuma janela aberta</p>}
         {wins.map((w) => {
           const app = getApp(w.id)
           const isTop = top?.id === w.id
@@ -208,13 +223,13 @@ export function DesktopShell() {
                 else focus(w.id)
               }}
               className={cn(
-                'relative flex h-9 items-center gap-2 border px-3 text-sm transition-colors',
-                isTop ? 'border-foreground/40 bg-foreground/10 text-foreground' : 'border-foreground/10 text-foreground/60 hover:text-foreground',
+                'dv-focus group relative flex h-10 items-center gap-2.5 pl-1.5 pr-4 font-display text-[13px] font-semibold tracking-[0.04em] transition-colors',
+                isTop ? 'bg-dv-cobalt-dim/80 text-dv-text' : 'text-dv-text-2 hover:bg-white/[0.04] hover:text-dv-text',
               )}
             >
-              <app.icon className="size-4" strokeWidth={1.4} aria-hidden="true" />
+              <AppGlyphTile app={app} size="xs" selected={isTop} />
               {app.name}
-              <span aria-hidden="true" className={cn('absolute inset-x-3 -bottom-px h-px', isTop ? 'bg-primary' : w.minimized ? 'bg-transparent' : 'bg-foreground/30')} />
+              <span aria-hidden="true" className={cn('absolute inset-x-2 -bottom-px h-[2px]', isTop ? 'bg-dv-cobalt shadow-[0_0_8px_var(--dv-cobalt)]' : w.minimized ? 'bg-transparent' : 'bg-dv-text-3')} />
             </button>
           )
         })}
@@ -250,15 +265,15 @@ function DesktopIcon({
       onDoubleClick={() => onOpen(app.id)}
       onKeyDown={(e) => e.key === 'Enter' && onOpen(app.id)}
       className={cn(
-        'group relative flex h-[96px] w-24 flex-col items-center gap-2 border border-transparent px-1 py-2 transition-colors focus-visible:outline-none',
-        selected ? 'border-foreground/25 bg-foreground/10' : 'hover:bg-foreground/5',
+        'dv-focus group relative flex h-[96px] w-24 flex-col items-center gap-2 px-1 py-2 transition-colors',
+        selected ? 'bg-dv-cobalt-dim/60 shadow-[inset_0_0_0_1px_var(--dv-cobalt)]' : 'hover:bg-white/[0.05]',
       )}
     >
       <span className="relative">
-        <AppGlyphTile app={app} className="transition-transform duration-300 group-hover:-translate-y-0.5" />
+        <AppGlyphTile app={app} selected={selected} className="transition-transform duration-300 group-hover:-translate-y-0.5" />
         <Badge count={unread} />
       </span>
-      <span className="text-center text-[13px] leading-tight text-foreground/90 [text-shadow:0_1px_4px_#000]">{app.name}</span>
+      <span className="text-center font-display text-[12px] font-semibold leading-tight tracking-[0.04em] text-dv-text [text-shadow:0_1px_6px_#000]">{app.name}</span>
     </button>
   )
 }
@@ -268,7 +283,10 @@ function MenuRow({ children, onClick, danger }: { children: React.ReactNode; onC
     <button
       type="button"
       onClick={onClick}
-      className={cn('border-b border-foreground/10 py-2.5 text-left text-sm transition-colors last:border-0', danger ? 'text-primary hover:text-primary/80' : 'text-foreground/85 hover:text-foreground')}
+      className={cn(
+        'dv-focus border-b border-dv-line py-3 text-left font-display text-[14px] font-semibold tracking-[0.04em] transition-colors last:border-0',
+        danger ? 'text-dv-blood-text hover:text-white' : 'text-dv-text-2 hover:text-dv-gold-bright',
+      )}
     >
       {children}
     </button>
@@ -326,8 +344,10 @@ function Window({
         onFocus()
       }}
       className={cn(
-        'absolute flex flex-col overflow-hidden border bg-[#090b12]/95 backdrop-blur-md animate-pop transition-[box-shadow,border-color]',
-        active ? 'border-foreground/35 shadow-[0_30px_80px_-20px_rgba(0,0,0,0.95),0_0_0_1px_rgba(22,71,255,0.25)]' : 'border-foreground/15 shadow-[0_20px_50px_-20px_rgba(0,0,0,0.9)]',
+        'animate-dv-pop absolute flex flex-col overflow-hidden border bg-dv-ink/95 backdrop-blur-md transition-[box-shadow,border-color]',
+        active
+          ? 'border-dv-cobalt/60 shadow-[0_30px_80px_-20px_rgba(0,0,0,0.95),0_0_32px_-10px_rgba(49,93,255,0.6)]'
+          : 'border-dv-line-strong shadow-[0_20px_50px_-20px_rgba(0,0,0,0.9)]',
         win.minimized && 'hidden',
       )}
       style={style}
@@ -337,12 +357,22 @@ function Window({
         onPointerMove={onMove}
         onPointerUp={onUp}
         onDoubleClick={() => onPatch({ maximized: !win.maximized })}
-        className={cn('flex h-10 shrink-0 cursor-grab touch-none select-none items-center justify-between gap-3 border-b px-3 active:cursor-grabbing', active ? 'border-foreground/20 bg-gradient-to-r from-[#0f2366] via-[#15171c] to-[#15171c]' : 'border-foreground/10 bg-[#15171c]')}
+        className={cn(
+          'relative flex h-11 shrink-0 cursor-grab touch-none select-none items-center justify-between gap-3 pl-2 pr-2 active:cursor-grabbing',
+          active ? 'bg-[linear-gradient(90deg,#13235e,var(--dv-ink-3)_45%,var(--dv-ink-2))]' : 'bg-dv-ink-2',
+        )}
       >
-        <span className="flex items-center gap-2">
-          <app.icon className={cn('size-4', active ? 'text-primary' : 'text-foreground/50')} strokeWidth={1.4} aria-hidden="true" />
-          <span className="text-[12px] uppercase tracking-[0.3em] text-foreground/90">{app.name}</span>
-          <span className="hidden text-[11px] italic text-muted-foreground sm:inline">— {app.subtitle}</span>
+        <span aria-hidden="true" className="absolute inset-x-0 bottom-0 h-px">
+          <span className={cn('absolute inset-0 bg-gradient-to-r', active ? 'from-dv-gold/70 via-dv-gold/25 to-transparent' : 'from-dv-line-strong to-transparent')} />
+          {active && <span className="absolute -top-[1px] left-[14%] h-[3px] w-7 bg-dv-cobalt" />}
+        </span>
+        <span className="flex min-w-0 items-center gap-2.5">
+          <AppGlyphTile app={app} size="xs" selected={active} />
+          <span className={cn('font-display text-[14px] font-semibold uppercase tracking-[0.1em]', active ? 'text-dv-text' : 'text-dv-text-2')}>{app.name}</span>
+          <span className="hidden truncate font-body text-[13px] italic text-dv-text-3 sm:inline">— {app.subtitle}</span>
+        </span>
+        <span aria-hidden="true" className="ml-auto mr-2 font-impact text-[18px] font-semibold leading-none text-transparent [-webkit-text-stroke:0.8px_var(--dv-gold)]">
+          {toRoman(appIndex(win.id))}
         </span>
         <span className="flex items-center gap-1">
           <WinButton label="Minimizar" onClick={() => onPatch({ minimized: true })}>
@@ -369,10 +399,33 @@ function WinButton({ label, onClick, children, danger }: { label: string; onClic
       type="button"
       aria-label={label}
       onClick={onClick}
-      className={cn('grid size-7 place-items-center border border-transparent text-foreground/60 transition-colors hover:border-foreground/20 hover:text-foreground', danger && 'hover:border-primary/60 hover:bg-primary/20')}
+      className={cn(
+        'dv-focus grid size-8 place-items-center text-dv-text-3 transition-colors hover:bg-white/[0.08] hover:text-dv-text',
+        danger && 'hover:bg-dv-blood hover:text-white',
+      )}
     >
       {children}
     </button>
+  )
+}
+
+/** Fundo de vidro chanfrado dos painéis suspensos (menu DEVO, central de avisos). */
+function GlassBack() {
+  return (
+    <span aria-hidden="true" className="pointer-events-none absolute inset-0 [--dv-cut:14px]">
+      <span className="dv-cut absolute inset-0 bg-[linear-gradient(135deg,var(--dv-gold-bright),var(--dv-gold-deep)_30%,var(--dv-gold)_60%,var(--dv-gold-deep))] opacity-70" />
+      <span className="dv-cut absolute inset-px bg-[linear-gradient(180deg,rgba(17,26,46,0.97),rgba(5,7,13,0.97))] backdrop-blur-xl [--dv-cut:13.6px]" />
+    </span>
+  )
+}
+
+function BellGlyph() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round" aria-hidden="true">
+      <path d="M6 16.5V11a6 6 0 0 1 12 0v5.5l1.6 1.8H4.4Z" />
+      <path d="M10 20.6a2 2 0 0 0 4 0" strokeLinecap="round" />
+      <path d="M12 3v2" strokeLinecap="round" />
+    </svg>
   )
 }
 

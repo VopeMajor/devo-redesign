@@ -219,6 +219,41 @@ if (want('sistema') || want('apps') || want('jogos')) {
       await wait(900)
       await shot(page, '10-home-avisos')
     })
+    // Transição de abrir/voltar (quadro no meio da animação).
+    await step('home-transicao', async () => {
+      await enterOS(page)
+      await page.getByRole('button', { name: 'Mensagens', exact: true }).first().click({ timeout: 3000 })
+      await wait(170)
+      await shot(page, '11-transicao-abrir')
+      await wait(1500)
+      await btn(page, 'Voltar ao início', true).click({ timeout: 3000 })
+      await wait(140)
+      await shot(page, '11-transicao-voltar')
+    })
+    // Estados do pulso: crítico (< 6h, com avisos na central) e acima de 72h.
+    await step('pulso-estados', async () => {
+      const t = Date.now()
+      const notes = [
+        { id: 'cap-n1', appId: 'pulso', title: 'Tempo crítico', body: 'Menos de 6 horas restantes. Jogue para recuperar horas.', createdAt: t - 60_000, tone: 'danger' },
+        { id: 'cap-n2', appId: 'mensagens', title: 'O Rato', body: 'Dica do Anfitrião: a Sala de Trocas está aberta.', createdAt: t - 600_000 },
+        { id: 'cap-n3', appId: 'cartas', title: 'Nova carta', body: 'Ampulheta foi adicionada ao seu inventário.', createdAt: t - 3_600_000 },
+      ]
+      await api(page, '/api/save', makeSave(VET_CARDS, { timerEndsAt: t + 4 * 3600_000 + 12 * 60_000, notifications: notes }))
+      await enterOS(page)
+      await shot(page, '10-home-critico')
+      await page.getByLabel('Abrir central de avisos').first().click({ timeout: 3000 })
+      await wait(900)
+      await shot(page, '10-home-avisos-lista')
+      await page.getByLabel('Fechar central de avisos').first().click({ timeout: 3000 })
+      await wait(400)
+      await page.getByRole('button', { name: 'Pulso', exact: true }).first().click({ timeout: 3000 })
+      await wait(2600)
+      await shot(page, '21-pulso-critico')
+      await api(page, '/api/save', makeSave(VET_CARDS, { timerEndsAt: Date.now() + 90 * 3600_000 }))
+      await openApp(page, 'Pulso')
+      await shot(page, '21-pulso-excedente')
+      await api(page, '/api/save', makeSave(VET_CARDS))
+    })
   }
 
   if (want('apps')) {
@@ -248,6 +283,12 @@ if (want('sistema') || want('apps') || want('jogos')) {
       if (await tryClick(page.getByRole('button', { name: /o rato/i }).first())) {
         await wait(1800)
         await shot(page, '22-mensagens-conversa')
+        if (await tryClick(page.locator('[aria-label="Escolhas de diálogo"] button').first())) {
+          await wait(1300)
+          await shot(page, '22-mensagens-digitando')
+          await wait(4500)
+          await shot(page, '22-mensagens-resposta')
+        }
       }
     })
     await step('cartas', async () => {
@@ -489,6 +530,21 @@ if (want('desktop')) {
     await page.goto(BASE, { waitUntil: 'networkidle' })
     await wait(2000)
     await shot(page, '90-desktop-landing')
+    await ctx.close()
+  })
+  await step('desktop-os', async () => {
+    const { ctx, page } = await account('Mesa', 'DEVO-TEST-0004', VET_CARDS, 'desktop')
+    await enterOS(page)
+    await shot(page, '92-desktop-os')
+    await page.getByRole('button', { name: 'Pulso', exact: true }).first().dblclick({ timeout: 3000 })
+    await wait(2000)
+    await shot(page, '92-desktop-pulso')
+    await page.getByRole('button', { name: 'Mensagens', exact: true }).first().dblclick({ timeout: 3000 })
+    await wait(2000)
+    await shot(page, '92-desktop-janelas')
+    await page.getByRole('button', { name: 'Central de avisos' }).first().click({ timeout: 3000 })
+    await wait(900)
+    await shot(page, '92-desktop-avisos')
     await ctx.close()
   })
 }
