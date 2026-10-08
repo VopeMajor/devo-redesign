@@ -306,11 +306,14 @@ export function PrologueScreen({ playerName, onFinish: onDone }: { playerName: s
           act ? (
             <p className="dv-label flex items-center gap-2 text-[10px] text-dv-text-2">
               <span className="font-impact text-[15px] leading-none tracking-normal text-dv-gold">{toRoman(act.n)}</span>
-              <span className="truncate">Prólogo · {act.title}</span>
+              <span className="truncate">{act.title}</span>
             </p>
           ) : null
         }
       />
+
+      {/* Véu inferior: o texto sempre sobre fundo escuro, sem esconder a cena. */}
+      <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-[46%] bg-gradient-to-t from-black/90 via-black/55 to-transparent" />
 
       <div className="absolute inset-x-0 bottom-0 z-20 mx-auto flex w-full max-w-3xl flex-col gap-2.5 px-4 pb-[max(env(safe-area-inset-bottom),1.25rem)] lg:pb-10">
         {itemGet && (

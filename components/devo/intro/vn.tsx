@@ -161,7 +161,7 @@ export function ChoiceStrip({
         aria-hidden="true"
         className={cn(
           'dv-cut-diag dv-sheen absolute inset-px -z-10 overflow-hidden transition-colors duration-[220ms]',
-          muted ? 'bg-dv-ink/85' : 'bg-[linear-gradient(90deg,rgba(10,15,28,0.94),rgba(5,7,13,0.9))] group-hover:bg-[linear-gradient(90deg,var(--dv-cobalt-dim),rgba(10,15,28,0.94))]',
+          muted ? 'bg-dv-ink' : 'bg-[linear-gradient(90deg,var(--dv-ink-3),var(--dv-ink-2)_40%,var(--dv-ink))] group-hover:bg-[linear-gradient(90deg,var(--dv-cobalt-dim),rgba(10,15,28,0.94))]',
         )}
         style={{ '--dv-cut': '11.6px' } as CSSProperties}
       />
@@ -205,8 +205,8 @@ export function ChoiceHeader({ children }: { children: ReactNode }) {
 export function VnTopBar({ chapter, skipLabel, onSkip }: { chapter: ReactNode; skipLabel: string; onSkip: () => void }) {
   return (
     <div className="dv-safe-top pointer-events-none absolute inset-x-0 top-0 z-30 flex items-start justify-between bg-gradient-to-b from-black/70 to-transparent px-4 pb-8">
-      <div className="pointer-events-auto min-w-0 pt-2.5">{chapter}</div>
-      <div className="pointer-events-auto flex items-center gap-1">
+      <div className="pointer-events-auto min-w-0 flex-1 pr-2 pt-3">{chapter}</div>
+      <div className="pointer-events-auto flex shrink-0 items-center">
         <SoundToggle compact className="min-h-11 min-w-11 justify-center text-dv-text-2 hover:text-dv-text" />
         <button
           type="button"
@@ -214,7 +214,7 @@ export function VnTopBar({ chapter, skipLabel, onSkip }: { chapter: ReactNode; s
             playSfx('whoosh')
             onSkip()
           }}
-          className="dv-focus group flex min-h-11 items-center gap-2 px-2 font-mono text-[11px] uppercase tracking-[0.22em] text-dv-text-2 transition-colors hover:text-dv-text"
+          className="dv-focus group flex min-h-11 items-center gap-2 whitespace-nowrap px-2 font-mono text-[11px] uppercase tracking-[0.18em] text-dv-text-2 transition-colors hover:text-dv-text"
         >
           {skipLabel}
           <GlyphArrow className="size-4 transition-transform group-hover:translate-x-0.5" />

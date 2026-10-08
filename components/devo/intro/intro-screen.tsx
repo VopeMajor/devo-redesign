@@ -120,7 +120,7 @@ export function IntroScreen({ onFinish, playerName }: { onFinish: () => void; pl
         chapter={
           <p className="dv-label flex items-center gap-2 text-[10px] text-dv-text-2">
             <span className="font-impact text-[15px] leading-none tracking-normal text-dv-gold">{toRoman(index + 1)}</span>
-            <span className="truncate">Tutorial · Deadly Vote</span>
+            <span className="truncate">Deadly Vote</span>
           </p>
         }
       />

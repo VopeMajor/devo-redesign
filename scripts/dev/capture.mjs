@@ -144,28 +144,34 @@ if (want('novato')) {
     await shot(page, '02-acesso-preenchido')
     await page.keyboard.press('Enter')
     await page.waitForLoadState('networkidle')
-    await wait(400)
+    // Espera a cortina "Despertando" (dispara depois do recarregamento) e fotografa no meio dela.
+    await page.getByRole('status').filter({ hasText: 'Despertando' }).first().waitFor({ timeout: 10000 }).catch(() => {})
+    await wait(450)
     await shot(page, '03-transicao-despertando')
-    await wait(3500)
+    await wait(3000)
   })
   await step('prologo', async () => {
     // O prólogo tem ~60 falas (cada uma: 1 Enter completa o texto, outro avança). Foto a cada 5 passos.
     let n = 0
     for (let i = 0; i < 220; i++) {
-      if (i % 5 === 0) await shot(page, `03-prologo-${String(n++).padStart(2, '0')}`)
       await wait(800)
+      if (i % 5 === 0) await shot(page, `03-prologo-${String(n++).padStart(2, '0')}`)
       await advanceDialogue(page)
+      const curtain = page.getByRole('status').filter({ hasText: 'Deadly Vote' })
+      if (await curtain.count()) {
+        await wait(350)
+        await shot(page, '03-transicao-deadly-vote')
+        break
+      }
       if (!(await page.getByText(/pular prólogo/i).count())) break
     }
-    await wait(150)
-    await shot(page, '03-transicao-deadly-vote')
   })
   await step('tutorial', async () => {
     await wait(2500)
     let n = 0
     for (let i = 0; i < 90; i++) {
-      if (i % 3 === 0) await shot(page, `04-tutorial-${String(n++).padStart(2, '0')}`)
       await wait(900)
+      if (i % 3 === 0) await shot(page, `04-tutorial-${String(n++).padStart(2, '0')}`)
       const later = btn(page, /^depois$/i)
       if (await later.count()) {
         await wait(900)
@@ -177,6 +183,26 @@ if (want('novato')) {
     }
     await wait(1500)
     await shot(page, '04-tutorial-fim')
+  })
+  // Revelação da Sala de Jogos: save com os 5 apps iniciais vistos e a sala ainda trancada.
+  await step('sala-de-jogos-revelacao', async () => {
+    const t = Date.now()
+    await api(page, '/api/save', {
+      v: 1,
+      welcomed: true,
+      timerEndsAt: t + 70 * 3600_000,
+      inventory: [],
+      notifications: [],
+      threads: [],
+      tradesCompleted: 0,
+      arcadeUnlocked: false,
+      seenApps: ['pulso', 'mensagens', 'cartas', 'trocas', 'ajustes'],
+    })
+    await page.goto(BASE, { waitUntil: 'networkidle' })
+    await wait(1000)
+    await btn(page, 'Continuar').click({ timeout: 15000 })
+    await wait(3700)
+    await shot(page, '05-sala-de-jogos-revelacao')
   })
   await ctx.close()
 }
