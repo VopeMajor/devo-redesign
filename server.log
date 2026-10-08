@@ -1,0 +1,7 @@
+$ next start
+▲ Next.js 16.3.3
+- Local:         http://localhost:3000
+- Network:       http://10.1.0.214:3000
+✓ Ready in 164ms
+✓ Running next.config.mjs took 16ms
+[2m2026-10-08T20:52:16.727Z[0m [33mWARN[0m [1m[Better Auth]:[0m User not found
