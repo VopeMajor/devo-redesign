@@ -235,7 +235,7 @@ export function DesktopShell() {
         })}
       </footer>
 
-      <ToastStack onOpen={openApp} className="right-3 top-[50px] w-80" />
+      <ToastStack onOpen={openApp} className={cn('right-3 top-[50px] w-80', panel === 'notifications' && 'hidden')} />
     </div>
   )
 }

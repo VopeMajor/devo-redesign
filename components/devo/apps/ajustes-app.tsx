@@ -35,7 +35,7 @@ export function AjustesApp() {
           <div className="flex items-center gap-4">
             <DeadlyVoteSymbol className="size-16 shrink-0 text-dv-gold" />
             <div className="min-w-0">
-              <Kicker tone="gold">Sistema dentro do sistema</Kicker>
+              <Kicker tone="gold">Sistema · Operador</Kicker>
               <p className="mt-1.5 font-display text-[26px] font-semibold uppercase leading-none tracking-[0.06em] text-dv-text">Devo 0.1</p>
               <p className="dv-label mt-2 text-[10px] text-dv-text-3">Experimental · Record System</p>
             </div>

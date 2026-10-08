@@ -65,25 +65,26 @@ export function PulsoApp() {
 
           <div className="animate-dv-pop relative mt-3 grid aspect-square w-[min(88vw,330px)] place-items-center [animation-delay:120ms]">
             <PulseDial remaining={remaining} timerEndsAt={state.timerEndsAt} critical={critical} className="absolute inset-0 size-full" />
-            <div className="relative flex flex-col items-center text-center">
-              <p className={cn('dv-label text-[10px]', critical ? 'text-dv-blood-text' : 'text-dv-text-3')}>Restante</p>
+            <div className="relative flex flex-col items-center px-6 py-5 text-center">
+              <span aria-hidden="true" className="absolute inset-0 -z-0 rounded-full bg-[radial-gradient(closest-side,rgba(5,7,13,0.92),rgba(5,7,13,0.7)_60%,transparent)]" />
+              <p className={cn('dv-label relative text-[10px]', critical ? 'text-dv-blood-text' : 'text-dv-text-3')}>Restante</p>
               <TimeDigits
                 value={formatDuration(remaining)}
                 size="lg"
                 tone={critical ? 'blood' : 'text'}
                 blinkColon={critical}
                 label="Tempo restante"
-                className="mt-1.5 text-[40px] [text-shadow:0_2px_16px_rgba(5,7,13,0.95)]"
+                className="relative mt-1.5 text-[40px] [text-shadow:0_2px_16px_rgba(5,7,13,0.95)]"
               />
               <p
                 className={cn(
-                  'mt-2 font-display text-[13px] font-semibold uppercase tracking-[0.32em]',
-                  critical ? 'animate-dv-blink text-dv-blood-text' : 'text-dv-cobalt-text',
+                  'relative mt-2 font-display text-[13px] font-semibold uppercase tracking-[0.32em]',
+                  critical ? 'text-dv-blood-text [text-shadow:0_0_12px_rgba(213,31,43,0.8)]' : 'text-dv-cobalt-text',
                 )}
               >
                 {critical ? 'Crítico' : 'Estável'}
               </p>
-              {excess > 0 && <p className="dv-label mt-1 text-[10px] text-dv-gold-bright">Acima de 72h</p>}
+              {excess > 0 && <p className="dv-label relative mt-1 text-[10px] text-dv-gold-bright">Acima de 72h</p>}
             </div>
           </div>
 
