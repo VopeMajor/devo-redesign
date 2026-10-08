@@ -18,9 +18,10 @@ const SIZE: Record<TimeSize, string> = {
 
 const TONE: Record<TimeTone, string> = {
   text: 'text-dv-text',
-  cobalt: 'text-dv-cobalt-text [text-shadow:0_0_18px_rgba(49,93,255,0.55)]',
-  gold: 'text-dv-gold-bright [text-shadow:0_0_14px_rgba(236,212,154,0.35)]',
-  blood: 'text-dv-blood-text [text-shadow:0_0_18px_rgba(213,31,43,0.7)]',
+  // Brilho como drop-shadow no número inteiro (fica fora da máscara das casas; text-shadow seria cortado).
+  cobalt: 'text-dv-cobalt-text [filter:drop-shadow(0_0_10px_rgba(49,93,255,0.6))]',
+  gold: 'text-dv-gold-bright [filter:drop-shadow(0_0_8px_rgba(236,212,154,0.4))]',
+  blood: 'text-dv-blood-text [filter:drop-shadow(0_0_10px_rgba(213,31,43,0.75))]',
   paper: 'text-dv-paper-ink',
 }
 
@@ -54,12 +55,12 @@ function DigitCell({ c, flip }: { c: string; flip: boolean }) {
   }
   const animating = flip && out.current !== null && seq.current > 0
   return (
-    <span className="relative inline-block w-[0.6em] text-center [clip-path:inset(-0.06em_-0.5em)]">
-      <span key={`in${seq.current}`} className={cn('inline-block', animating && 'animate-dv-digit-in')}>
+    <span className="relative block h-[1em] w-[0.6em] overflow-x-visible overflow-y-clip text-center leading-[1em]">
+      <span key={`in${seq.current}`} className={cn('block h-[1em]', animating && 'animate-dv-digit-in')}>
         {c}
       </span>
       {animating && (
-        <span key={`out${seq.current}`} aria-hidden="true" className="animate-dv-digit-out pointer-events-none absolute inset-x-0 top-0 text-center motion-reduce:hidden">
+        <span key={`out${seq.current}`} aria-hidden="true" className="animate-dv-digit-out pointer-events-none absolute inset-x-0 top-0 block h-[1em] text-center motion-reduce:hidden">
           {out.current}
         </span>
       )}
@@ -101,9 +102,9 @@ export function TimeDigits({
 }) {
   const tokens = tokenize(value)
   let group = -1
-  const unitClass = cn('dv-label mt-1.5 block whitespace-nowrap text-center text-[10px] font-normal leading-none tracking-[0.16em] [text-shadow:none]', unitsTone ?? (tone === 'blood' ? 'text-dv-blood-text' : tone === 'paper' ? 'text-dv-paper-ink/60' : 'text-dv-text-3'))
+  const unitClass = cn('dv-label mt-1.5 block whitespace-nowrap text-center text-[10px] font-normal leading-none tracking-[0.16em]', unitsTone ?? (tone === 'blood' ? 'text-dv-blood-text' : tone === 'paper' ? 'text-dv-paper-ink/60' : 'text-dv-text-3'))
   return (
-    <span className={cn('inline-flex font-impact font-semibold leading-none', units ? 'items-start' : 'items-baseline', SIZE[size], TONE[tone], className)}>
+    <span className={cn('inline-flex items-start font-impact font-semibold leading-[1em]', SIZE[size], TONE[tone], className)}>
       <span className="sr-only">
         {label ? `${label}: ` : ''}
         {value}
@@ -112,13 +113,13 @@ export function TimeDigits({
         if (t.kind === 'digits') {
           group += 1
           const digits = (
-            <span className="inline-flex items-baseline">
+            <span className="flex items-start">
               {t.text.split('').map((c, i) => (
                 <DigitCell key={i} c={c} flip={flip} />
               ))}
             </span>
           )
-          if (!units) return <span key={ti} aria-hidden="true" className="inline-flex items-baseline">{digits}</span>
+          if (!units) return <span key={ti} aria-hidden="true" className="flex items-start">{digits}</span>
           return (
             <span key={ti} aria-hidden="true" className="inline-flex flex-col items-center">
               {digits}
@@ -127,18 +128,17 @@ export function TimeDigits({
           )
         }
         const sep = t.kind === 'sep'
-        const glyph = (
-          <span
-            className={cn(
-              'inline-block text-center',
-              sep ? 'w-[0.34em] -translate-y-[0.06em] opacity-70' : t.text.trim() === '' ? 'w-[0.28em]' : 'px-[0.04em] text-[0.55em] font-medium uppercase tracking-[0.06em] opacity-75',
-              sep && blinkColon && 'animate-dv-blink',
-            )}
-          >
-            {t.text}
+        // Separadores e sufixos ("d", "h") ocupam a mesma caixa de 1em das casas; sufixo pousa na base.
+        const glyph = sep ? (
+          <span className={cn('block h-[1em] w-[0.34em] -translate-y-[0.06em] text-center opacity-70', blinkColon && 'animate-dv-blink')}>{t.text}</span>
+        ) : t.text.trim() === '' ? (
+          <span className="block h-[1em] w-[0.28em]" />
+        ) : (
+          <span className="flex h-[1em] items-end px-[0.04em] pb-[0.13em]">
+            <span className="text-[0.55em] font-medium uppercase leading-none tracking-[0.06em] opacity-75">{t.text}</span>
           </span>
         )
-        if (!units) return <span key={ti} aria-hidden="true" className="inline-flex items-baseline">{glyph}</span>
+        if (!units) return <span key={ti} aria-hidden="true" className="flex items-start">{glyph}</span>
         return (
           <span key={ti} aria-hidden="true" className="inline-flex flex-col items-center">
             {glyph}

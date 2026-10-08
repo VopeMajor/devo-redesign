@@ -269,9 +269,9 @@ function SigilPreset({ intensity, alert, focus, lite }: PresetProps) {
   const hoursTex = useDisposable(() => makeDialTexture({ size: lite ? 512 : 768, numerals: 'hours72', ticks: 72, color: DV_COLOR.cobaltText, inner: 0.6 }), [lite])
   const glowTex = useDisposable(() => makeGlowTexture(128))
   const starGeo = useDisposable(() => makeStarGeometry(1, 0.1))
-  const starMat = useRimMaterial({ color: '#b9c8ff', rim: '#7d97ff', rimPower: 2.4, rimStrength: 1.6, metalness: 1, roughness: 0.2, emissive: '#0b1a4d', emissiveIntensity: 0.35 })
+  const starMat = useRimMaterial({ color: '#8ea4ff', rim: '#9fb4ff', rimPower: 2.4, rimStrength: 1.5, metalness: 1, roughness: 0.26, emissive: '#0b1a4d', emissiveIntensity: 0.4 })
   const v = useMemo(() => new THREE.Vector3(), [])
-  useEnvironment(1.1)
+  useEnvironment(0.9)
 
   useFrame((state, delta) => {
     const dt = Math.min(delta, 0.1)

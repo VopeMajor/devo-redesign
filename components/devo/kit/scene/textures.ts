@@ -255,7 +255,7 @@ export function makeEnvTexture() {
   }
   blob(w * 0.2, h * 0.5, 90, 'rgba(236,212,154,0.9)')
   blob(w * 0.72, h * 0.22, 70, 'rgba(160,185,255,1)')
-  blob(w * 0.45, h * 0.12, 26, 'rgba(255,255,255,1)')
+  blob(w * 0.45, h * 0.12, 26, 'rgba(220,228,255,0.6)')
   blob(w * 0.92, h * 0.45, 40, 'rgba(255,255,255,0.8)')
   const t = new THREE.CanvasTexture(c)
   t.mapping = THREE.EquirectangularReflectionMapping
