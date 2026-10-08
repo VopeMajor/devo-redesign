@@ -130,7 +130,7 @@ export function TimeDigits({
         const sep = t.kind === 'sep'
         // Separadores e sufixos ("d", "h") ocupam a mesma caixa de 1em das casas; sufixo pousa na base.
         const glyph = sep ? (
-          <span className={cn('block h-[1em] w-[0.34em] -translate-y-[0.06em] text-center opacity-70', blinkColon && 'animate-dv-blink')}>{t.text}</span>
+          <span className={cn('block h-[1em] w-[0.34em] -translate-y-[0.14em] text-center opacity-70', blinkColon && 'animate-dv-blink')}>{t.text}</span>
         ) : t.text.trim() === '' ? (
           <span className="block h-[1em] w-[0.28em]" />
         ) : (
