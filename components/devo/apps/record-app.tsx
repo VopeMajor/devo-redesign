@@ -2,6 +2,7 @@
 
 import { type CSSProperties, useCallback, useState } from 'react'
 import {
+  PaperField,
   Badge,
   Button,
   Countdown,
@@ -433,15 +434,6 @@ function VoteDetail({
         </div>
       </Frame>
     </article>
-  )
-}
-
-function PaperField({ label, value, danger }: { label: string; value: string; danger?: boolean }) {
-  return (
-    <div className="min-w-0">
-      <dt className="dv-label text-[10px] text-dv-paper-ink/60">{label}</dt>
-      <dd className={cn('mt-1 font-display text-[15px] font-semibold uppercase tracking-[0.06em] dv-tabular', danger && 'text-dv-blood')}>{value}</dd>
-    </div>
   )
 }
 

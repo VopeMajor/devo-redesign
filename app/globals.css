@@ -325,6 +325,13 @@
   min-height: 100dvh;
   overscroll-behavior: none;
   }
+  /* As fontes servidas pelo Google Fonts (via next/font) vêm com hinting (ttfautohint). No Chromium
+     do Linux o hinting arredonda o avanço de cada glifo para pixels inteiros e abre buracos depois de
+     "s", "m" etc. ("Ajus tes", "is so"). geometricPrecision desliga o hinting e posiciona o texto em
+     subpixel em todas as plataformas. Não remova. */
+  html {
+    text-rendering: geometricPrecision;
+  }
   body {
   @apply bg-background text-foreground;
   -webkit-tap-highlight-color: transparent;
@@ -655,6 +662,8 @@
   --animate-dv-fade: dv-fade var(--dv-dur-3) ease-out both;
   --animate-dv-stamp: dv-stamp 520ms var(--dv-ease-snap) both;
   --animate-dv-digit: dv-digit 360ms var(--dv-ease-out) both;
+  --animate-dv-digit-in: dv-digit-in 380ms var(--dv-ease-out) both;
+  --animate-dv-digit-out: dv-digit-out 380ms var(--dv-ease-out) both;
   --animate-dv-sheet-up: dv-sheet-up var(--dv-dur-4) var(--dv-ease-out) both;
   --animate-dv-sheet-down: dv-sheet-down var(--dv-dur-3) var(--dv-ease-in) both;
   --animate-dv-toast-in: dv-toast-in var(--dv-dur-4) var(--dv-ease-out) both;
@@ -695,6 +704,15 @@
 @keyframes dv-digit {
   from { opacity: 0; transform: translateY(-55%) rotateX(70deg); }
   to { opacity: 1; transform: none; }
+}
+/* Virada mascarada do TimeDigits: o novo entra de cima, o antigo sai por baixo (ambos visíveis). */
+@keyframes dv-digit-in {
+  from { transform: translateY(-62%); }
+  to { transform: none; }
+}
+@keyframes dv-digit-out {
+  from { transform: none; opacity: 1; }
+  to { transform: translateY(62%); opacity: 0; }
 }
 @keyframes dv-sheet-up {
   from { transform: translateY(104%); }

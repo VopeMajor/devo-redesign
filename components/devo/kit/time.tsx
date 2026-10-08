@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, type ReactNode } from 'react'
+import { useEffect, useRef } from 'react'
 import { playSfx } from '@/lib/devo/audio'
 import { cn } from '@/lib/utils'
 import { formatDuration, useNow } from '../hooks'
@@ -24,10 +24,54 @@ const TONE: Record<TimeTone, string> = {
   paper: 'text-dv-paper-ink',
 }
 
+type Token = { kind: 'digits'; text: string } | { kind: 'sep'; text: string } | { kind: 'text'; text: string }
+
+/** Quebra "51:16:50" / "3d 22h" em grupos de dígitos, separadores ":" e texto. */
+function tokenize(value: string): Token[] {
+  const out: Token[] = []
+  for (const c of value) {
+    const kind = c >= '0' && c <= '9' ? 'digits' : c === ':' ? 'sep' : 'text'
+    const last = out[out.length - 1]
+    if (last && last.kind === kind && kind !== 'sep') last.text += c
+    else out.push({ kind, text: c } as Token)
+  }
+  return out
+}
+
+/**
+ * Uma casa de dígito: largura fixa (0.6em) e máscara vertical. Na troca, o dígito novo desce de cima
+ * enquanto o antigo sai por baixo, os dois DENTRO da casa — nunca há quadro sem dígito nem dígito
+ * vazando para fora. Sem `flip` (ou com movimento reduzido) troca seca.
+ */
+function DigitCell({ c, flip }: { c: string; flip: boolean }) {
+  const last = useRef(c)
+  const out = useRef<string | null>(null)
+  const seq = useRef(0)
+  if (last.current !== c) {
+    out.current = last.current
+    last.current = c
+    seq.current += 1
+  }
+  const animating = flip && out.current !== null && seq.current > 0
+  return (
+    <span className="relative inline-block w-[0.6em] text-center [clip-path:inset(-0.06em_-0.5em)]">
+      <span key={`in${seq.current}`} className={cn('inline-block', animating && 'animate-dv-digit-in')}>
+        {c}
+      </span>
+      {animating && (
+        <span key={`out${seq.current}`} aria-hidden="true" className="animate-dv-digit-out pointer-events-none absolute inset-x-0 top-0 text-center motion-reduce:hidden">
+          {out.current}
+        </span>
+      )}
+    </span>
+  )
+}
+
 /**
  * Dígitos de tempo com largura fixa por caractere (tabular de verdade, em qualquer fonte) e
- * "virada" curta no dígito que mudou. Fonte de impacto (Oswald). `value` é o texto final
+ * virada mascarada no dígito que mudou. Fonte de impacto (Oswald). `value` é o texto final
  * ("51:16:50", "3d 22h"). Leitores de tela recebem o texto inteiro uma vez (sem aria-live).
+ * `units` põe um rótulo centralizado sob cada grupo de dígitos (ex.: ['Dias','Horas','Min','Seg']).
  */
 export function TimeDigits({
   value,
@@ -35,6 +79,8 @@ export function TimeDigits({
   tone = 'text',
   flip = true,
   blinkColon = false,
+  units,
+  unitsTone,
   className,
   label,
 }: {
@@ -45,49 +91,67 @@ export function TimeDigits({
   flip?: boolean
   /** Separadores ":" piscam (use só em um relógio por tela). */
   blinkColon?: boolean
+  /** Rótulos sob cada grupo de dígitos, na ordem. */
+  units?: string[]
+  /** Cor dos rótulos (padrão: texto 3; sangue quando o tom é blood). */
+  unitsTone?: string
   className?: string
   /** Prefixo para leitores de tela ("Tempo restante"). */
   label?: string
 }) {
-  const chars = value.split('')
+  const tokens = tokenize(value)
+  let group = -1
+  const unitClass = cn('dv-label mt-1.5 block whitespace-nowrap text-center text-[10px] font-normal leading-none tracking-[0.16em] [text-shadow:none]', unitsTone ?? (tone === 'blood' ? 'text-dv-blood-text' : tone === 'paper' ? 'text-dv-paper-ink/60' : 'text-dv-text-3'))
   return (
-    <span className={cn('inline-flex items-baseline font-impact font-semibold leading-none [perspective:400px]', SIZE[size], TONE[tone], className)}>
+    <span className={cn('inline-flex font-impact font-semibold leading-none', units ? 'items-start' : 'items-baseline', SIZE[size], TONE[tone], className)}>
       <span className="sr-only">
         {label ? `${label}: ` : ''}
         {value}
       </span>
-      <span aria-hidden="true" className="inline-flex items-baseline">
-        {chars.map((c, i) => {
-          const digit = c >= '0' && c <= '9'
-          if (!digit) {
-            const sep = c === ':'
-            return (
-              <span
-                key={`s${i}`}
-                className={cn(
-                  'inline-block text-center',
-                  sep ? 'w-[0.34em] -translate-y-[0.06em] opacity-70' : c === ' ' ? 'w-[0.28em]' : 'w-auto px-[0.04em] text-[0.55em] font-medium uppercase tracking-[0.06em] opacity-75',
-                  sep && blinkColon && 'animate-dv-blink',
-                )}
-              >
-                {c}
-              </span>
-            )
-          }
-          return (
-            <span key={`d${i}-${c}`} className={cn('inline-block w-[0.6em] text-center', flip && 'animate-dv-digit')}>
-              {c}
+      {tokens.map((t, ti) => {
+        if (t.kind === 'digits') {
+          group += 1
+          const digits = (
+            <span className="inline-flex items-baseline">
+              {t.text.split('').map((c, i) => (
+                <DigitCell key={i} c={c} flip={flip} />
+              ))}
             </span>
           )
-        })}
-      </span>
+          if (!units) return <span key={ti} aria-hidden="true" className="inline-flex items-baseline">{digits}</span>
+          return (
+            <span key={ti} aria-hidden="true" className="inline-flex flex-col items-center">
+              {digits}
+              <span className={unitClass}>{units[group] ?? ''}</span>
+            </span>
+          )
+        }
+        const sep = t.kind === 'sep'
+        const glyph = (
+          <span
+            className={cn(
+              'inline-block text-center',
+              sep ? 'w-[0.34em] -translate-y-[0.06em] opacity-70' : t.text.trim() === '' ? 'w-[0.28em]' : 'px-[0.04em] text-[0.55em] font-medium uppercase tracking-[0.06em] opacity-75',
+              sep && blinkColon && 'animate-dv-blink',
+            )}
+          >
+            {t.text}
+          </span>
+        )
+        if (!units) return <span key={ti} aria-hidden="true" className="inline-flex items-baseline">{glyph}</span>
+        return (
+          <span key={ti} aria-hidden="true" className="inline-flex flex-col items-center">
+            {glyph}
+          </span>
+        )
+      })}
     </span>
   )
 }
 
 /**
  * Contagem regressiva até `endsAt` (epoch ms). Fica vermelha e pulsa abaixo de `criticalMs`
- * (padrão 6h) e toca `heartbeat` uma vez ao cruzar o limite. `units` mostra H/MIN/SEG embaixo.
+ * (padrão 6h) e toca `heartbeat` uma vez ao cruzar o limite. `units` põe rótulos sob cada par.
  */
 export function Countdown({
   endsAt,
@@ -105,7 +169,8 @@ export function Countdown({
   size?: TimeSize
   tone?: TimeTone
   criticalMs?: number
-  units?: boolean
+  /** true = Horas/Min/Seg; ou a lista de rótulos (um por grupo de dígitos). */
+  units?: boolean | string[]
   sound?: boolean
   label?: string
   className?: string
@@ -126,23 +191,11 @@ export function Countdown({
   }, [critical, onCritical, sound])
 
   const text = render ? render(remaining) : formatDuration(remaining)
+  const unitLabels = units === true ? ['Horas', 'Min', 'Seg'] : Array.isArray(units) ? units : undefined
   return (
     <span role="timer" className={cn('inline-flex flex-col', className)}>
-      <TimeDigits value={text} size={size} tone={critical ? 'blood' : tone} label={label} blinkColon={critical} />
-      {units && !render && <TimeUnits critical={critical} size={size} />}
+      <TimeDigits value={text} size={size} tone={critical ? 'blood' : tone} label={label} blinkColon={critical} units={unitLabels} />
     </span>
   )
 }
 
-/** Rótulos centralizados sob cada par de dígitos (mesma grade em em: 2×0.6em + 0.34em). */
-function TimeUnits({ critical, size }: { critical: boolean; size: TimeSize }): ReactNode {
-  return (
-    <span aria-hidden="true" className={cn('mt-1 grid grid-cols-[1.2em_0.34em_1.2em_0.34em_1.2em] leading-none', SIZE[size])}>
-      {['Horas', '', 'Min', '', 'Seg'].map((u, i) => (
-        <span key={i} className={cn('dv-label text-center text-[10px] tracking-[0.18em]', critical ? 'text-dv-blood-text' : 'text-dv-text-3')}>
-          {u}
-        </span>
-      ))}
-    </span>
-  )
-}

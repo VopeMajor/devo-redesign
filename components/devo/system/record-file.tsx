@@ -1,7 +1,7 @@
 'use client'
 
 import type { CSSProperties, ReactNode } from 'react'
-import { Frame, GlyphClip, GlyphClock, GlyphHourglass, Stamp, TimeDigits } from '@/components/devo/kit'
+import { Frame, GlyphClip, GlyphClock, GlyphHourglass, Stamp, StatusSeal, TimeDigits } from '@/components/devo/kit'
 import { lifeClock } from '@/lib/devo/deadly-votes'
 import { SHUFFLER_LABEL } from '@/lib/devo/shuffler'
 import { cn } from '@/lib/utils'
@@ -190,24 +190,6 @@ function Field({ label, children }: { label: string; children: ReactNode }) {
       <dt className="dv-label text-[10px] text-dv-paper-ink/60">{label}</dt>
       <dd className="flex">{children}</dd>
     </div>
-  )
-}
-
-/** Selo de status sobre papel: cobalto (ativo), sangue (crítico), tinta (inativo). */
-function StatusSeal({ tone, children }: { tone: SystemTone; children: ReactNode }) {
-  return (
-    <span
-      className={cn(
-        'dv-cut-diag inline-flex h-7 items-center gap-2 px-2.5 font-mono text-[11px] font-medium uppercase tracking-[0.18em]',
-        tone === 'active' && 'bg-dv-cobalt-deep text-white',
-        tone === 'critical' && 'bg-dv-blood text-white',
-        tone === 'idle' && 'bg-dv-paper-ink/10 text-dv-paper-ink',
-      )}
-      style={{ '--dv-cut': '6px' } as CSSProperties}
-    >
-      <span aria-hidden="true" className={cn('size-1.5 rounded-full bg-current', tone === 'critical' && 'animate-dv-blink')} />
-      {children}
-    </span>
   )
 }
 

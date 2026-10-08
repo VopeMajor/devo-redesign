@@ -8,6 +8,7 @@ import { cn } from '@/lib/utils'
 import { Button } from '../kit/button'
 import { GlyphAlert, GlyphArrow, GlyphCheck, GlyphClip } from '../kit/glyphs'
 import { Stamp } from '../kit/stamp'
+import { useVisibleViewport } from '../kit/viewport'
 
 export type AccessMode = 'invite' | 'login'
 type Step = 'code' | 'register' | 'login'
@@ -62,27 +63,6 @@ function fieldOf(message: string): FieldId | null {
 function internalEmail(name: string) {
   const hex = Array.from(new TextEncoder().encode(name.toLowerCase()), (b) => b.toString(16).padStart(2, '0')).join('')
   return `u${hex}@jogador.devo`
-}
-
-/**
- * Área visível de verdade (descontando o teclado do celular). O documento ocupa só essa área,
- * então a barra de ações (sticky) fica sempre acima do teclado.
- */
-function useVisibleViewport() {
-  const [box, setBox] = useState<{ h: number; top: number; keyboard: boolean } | null>(null)
-  useEffect(() => {
-    const vv = window.visualViewport
-    if (!vv) return
-    const update = () => setBox({ h: vv.height, top: vv.offsetTop, keyboard: vv.height < window.innerHeight * 0.78 })
-    update()
-    vv.addEventListener('resize', update)
-    vv.addEventListener('scroll', update)
-    return () => {
-      vv.removeEventListener('resize', update)
-      vv.removeEventListener('scroll', update)
-    }
-  }, [])
-  return box
 }
 
 const STEP_META: Record<Step, { index: string; of: string; stamp: string; ring: string }> = {

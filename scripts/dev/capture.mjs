@@ -625,51 +625,6 @@ if (want('partidas')) {
   await B.ctx.close()
 }
 
-// ── 3a. Diagnóstico tipográfico (temporário, kit/r2) ─────────────────────────────────────
-if (want('fontdiag')) {
-  await step('fontdiag', async () => {
-    const { ctx, page } = await device()
-    await page.goto(`${BASE}/estilo`, { waitUntil: 'networkidle' })
-    await wait(2500)
-    const info = await page.evaluate(async () => {
-      await document.fonts.ready
-      const T = 'Você pode mudar isso depois em Ajustes. A casa está de olho. Pulso sincronizado, restantes, sabedoria.'
-      const fams = ['var(--font-card-body)', 'var(--font-plex-sans)', 'var(--font-cormorant)', 'var(--font-oswald)']
-      const vars = [
-        ['auto', ''],
-        ['geo', 'text-rendering:geometricPrecision'],
-        ['nolig', 'font-variant-ligatures:none'],
-        ['nokern', 'font-kerning:none'],
-        ['wght', 'font-variation-settings:"wght" 400'],
-        ['synth', 'font-synthesis:none;font-optical-sizing:none'],
-      ]
-      const root = document.createElement('div')
-      root.id = 'fontdiag'
-      root.style.cssText = 'position:fixed;inset:0;z-index:999;background:#0a0f1c;color:#ddd;overflow:auto;padding:8px;font-size:14px'
-      for (const f of fams) for (const [n, css] of vars) {
-        const l = document.createElement('div'); l.textContent = f + ' · ' + n; l.style.cssText = 'font:10px monospace;color:#7d97ff'
-        const p = document.createElement('p'); p.textContent = T; p.style.cssText = `font-family:${f};margin:0 0 4px;${css}`
-        root.append(l, p)
-      }
-      document.body.append(root)
-      const faces = []
-      document.fonts.forEach((ff) => faces.push(`${ff.family} ${ff.weight} ${ff.style} ${ff.status}`))
-      const body = getComputedStyle(document.body)
-      return { faces, rendering: body.textRendering, smoothing: body.webkitFontSmoothing, feat: body.fontFeatureSettings, kern: body.fontKerning, lig: body.fontVariantLigatures }
-    })
-    manifest.fontdiag = info
-    await wait(500)
-    await shot(page, '70-fontdiag-a')
-    await page.evaluate(() => (document.getElementById('fontdiag').scrollTop = 800))
-    await wait(300)
-    await shot(page, '70-fontdiag-b')
-    await page.evaluate(() => (document.getElementById('fontdiag').scrollTop = 1600))
-    await wait(300)
-    await shot(page, '70-fontdiag-c')
-    await ctx.close()
-  })
-}
-
 // ── 3b. Vitrine da identidade (/estilo; requer DEVO_STYLEGUIDE=1 em produção) ─────────────
 if (want('estilo')) {
   await step('estilo', async () => {
@@ -677,7 +632,7 @@ if (want('estilo')) {
     await page.goto(`${BASE}/estilo`, { waitUntil: 'networkidle' })
     await wait(3500)
     await shot(page, '80-estilo-00-topo')
-    for (const id of ['cores', 'tipografia', 'botoes', 'molduras', 'selos', 'navegacao', 'avisos', 'cartas', 'movimento']) {
+    for (const id of ['cores', 'tipografia', 'botoes', 'molduras', 'selos', 'navegacao', 'avisos', 'cartas', 'movimento', 'retratos']) {
       await page.locator(`[data-estilo="${id}"]`).scrollIntoViewIfNeeded({ timeout: 3000 }).catch(() => {})
       await page.evaluate((i) => document.querySelector(`[data-estilo="${i}"]`)?.scrollIntoView({ block: 'start' }), id)
       await wait(1200)
@@ -686,6 +641,14 @@ if (want('estilo')) {
     await page.mouse.wheel(0, 760)
     await wait(900)
     await shot(page, '80-estilo-movimento-2')
+    // Virada dos dígitos: vários quadros seguidos do relógio acelerado (nenhum pode faltar dígito).
+    await page.evaluate(() => document.querySelector('[data-estilo="selos"]')?.scrollIntoView({ block: 'start' }))
+    await page.mouse.wheel(0, 700)
+    await wait(600)
+    for (let i = 0; i < 4; i++) {
+      await shot(page, `80-estilo-digitos-${i}`)
+      await wait(120)
+    }
     // Estado pressionado/foco num botão (teclado).
     await page.evaluate(() => document.querySelector('[data-estilo="botoes"]')?.scrollIntoView({ block: 'start' }))
     await wait(400)

@@ -229,3 +229,69 @@ export function makeDoorTexture(seed = 0) {
   ctx.fillRect(w * 0.78 - 3, 152, 6, 14)
   return finish(c)
 }
+
+/**
+ * Ambiente equiretangular desenhado (céu cobalto, faixa dourada no horizonte e "softboxes").
+ * Dá reflexo aos metais sem HDR externo; o three gera o PMREM sozinho ao usar em scene.environment.
+ */
+export function makeEnvTexture() {
+  const w = 512
+  const h = 256
+  const { c, ctx } = canvas(w, h)
+  const g = ctx.createLinearGradient(0, 0, 0, h)
+  g.addColorStop(0, '#3a52c8')
+  g.addColorStop(0.42, '#121a3c')
+  g.addColorStop(0.5, '#2a2416')
+  g.addColorStop(0.56, '#0b1022')
+  g.addColorStop(1, '#030409')
+  ctx.fillStyle = g
+  ctx.fillRect(0, 0, w, h)
+  const blob = (x: number, y: number, r: number, color: string) => {
+    const rg = ctx.createRadialGradient(x, y, 0, x, y, r)
+    rg.addColorStop(0, color)
+    rg.addColorStop(1, 'rgba(0,0,0,0)')
+    ctx.fillStyle = rg
+    ctx.fillRect(x - r, y - r, r * 2, r * 2)
+  }
+  blob(w * 0.2, h * 0.5, 90, 'rgba(236,212,154,0.9)')
+  blob(w * 0.72, h * 0.22, 70, 'rgba(160,185,255,1)')
+  blob(w * 0.45, h * 0.12, 26, 'rgba(255,255,255,1)')
+  blob(w * 0.92, h * 0.45, 40, 'rgba(255,255,255,0.8)')
+  const t = new THREE.CanvasTexture(c)
+  t.mapping = THREE.EquirectangularReflectionMapping
+  t.colorSpace = THREE.SRGBColorSpace
+  t.needsUpdate = true
+  return t
+}
+
+/** Névoa em manchas (planos de bruma que escondem a geometria ao longe). Branca; tinja no material. */
+export function makeMistTexture(seed = 1) {
+  const w = 512
+  const h = 128
+  const { c, ctx } = canvas(w, h)
+  let s = seed * 9301 + 49297
+  const rnd = () => ((s = (s * 9301 + 49297) % 233280) / 233280)
+  for (let i = 0; i < 28; i++) {
+    const x = rnd() * w
+    const y = h * (0.35 + rnd() * 0.4)
+    const r = 30 + rnd() * 70
+    const rg = ctx.createRadialGradient(x, y, 0, x, y, r)
+    rg.addColorStop(0, `rgba(255,255,255,${0.18 + rnd() * 0.22})`)
+    rg.addColorStop(1, 'rgba(255,255,255,0)')
+    ctx.fillStyle = rg
+    ctx.fillRect(x - r, y - r, r * 2, r * 2)
+  }
+  // apaga as bordas superior/inferior para não haver linha reta
+  const fade = ctx.createLinearGradient(0, 0, 0, h)
+  fade.addColorStop(0, 'rgba(0,0,0,1)')
+  fade.addColorStop(0.3, 'rgba(0,0,0,0)')
+  fade.addColorStop(0.7, 'rgba(0,0,0,0)')
+  fade.addColorStop(1, 'rgba(0,0,0,1)')
+  ctx.globalCompositeOperation = 'destination-out'
+  ctx.fillStyle = fade
+  ctx.fillRect(0, 0, w, h)
+  const t = new THREE.CanvasTexture(c)
+  t.wrapS = THREE.RepeatWrapping
+  t.needsUpdate = true
+  return t
+}

@@ -4,7 +4,8 @@ import { useFrame, useThree } from '@react-three/fiber'
 import { useEffect, useLayoutEffect, useMemo, useRef } from 'react'
 import * as THREE from 'three'
 import { DV_COLOR } from '../tokens'
-import { makeCardBackTexture, makeCheckerTexture, makeDialTexture, makeDoorTexture, makeGlowTexture, makeShaftTexture } from './textures'
+import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js'
+import { makeCardBackTexture, makeCheckerTexture, makeDialTexture, makeDoorTexture, makeEnvTexture, makeGlowTexture, makeMistTexture, makeShaftTexture } from './textures'
 import type { SceneFocus, ScenePreset } from './types'
 
 export type PresetProps = {
@@ -137,6 +138,116 @@ function makeStarGeometry(r = 1, depth = 0.08) {
   return g
 }
 
+/** Ambiente refletido nos metais (sigil, tribunal). Desfaz ao desmontar. */
+function useEnvironment(intensity = 1) {
+  const scene = useThree((s) => s.scene)
+  const env = useDisposable(() => makeEnvTexture())
+  useEffect(() => {
+    const prev = scene.environment
+    scene.environment = env
+    scene.environmentIntensity = intensity
+    return () => {
+      scene.environment = prev
+    }
+  }, [scene, env, intensity])
+}
+
+/**
+ * Metal com brilho de borda (fresnel): o contorno acende na cor `rim` conforme a superfície vira de
+ * lado para a câmera. É um MeshStandardMaterial com 3 linhas a mais no shader — custo desprezível.
+ */
+function useRimMaterial({ color, rim, rimPower = 2.2, rimStrength = 1.4, metalness = 0.95, roughness = 0.24, emissive = '#000000', emissiveIntensity = 0 }: {
+  color: string
+  rim: string
+  rimPower?: number
+  rimStrength?: number
+  metalness?: number
+  roughness?: number
+  emissive?: string
+  emissiveIntensity?: number
+}) {
+  const mat = useDisposable(() => {
+    const m = new THREE.MeshStandardMaterial({ color, metalness, roughness, emissive, emissiveIntensity, envMapIntensity: 1.3 })
+    const uniforms = { uRim: { value: new THREE.Color(rim).multiplyScalar(rimStrength) }, uRimPow: { value: rimPower } }
+    m.onBeforeCompile = (shader) => {
+      Object.assign(shader.uniforms, uniforms)
+      shader.fragmentShader = shader.fragmentShader
+        .replace('#include <common>', '#include <common>\nuniform vec3 uRim;\nuniform float uRimPow;')
+        .replace(
+          '#include <emissivemap_fragment>',
+          '#include <emissivemap_fragment>\n{ float rimF = pow(1.0 - clamp(abs(dot(normal, normalize(vViewPosition))), 0.0, 1.0), uRimPow); totalEmissiveRadiance += uRim * rimF; }',
+        )
+    }
+    m.customProgramCacheKey = () => `dv-rim-${rimPower}`
+    return m
+  }, [color, rim, rimPower, rimStrength, metalness, roughness, emissive, emissiveIntensity])
+  return mat
+}
+
+/** Coluna com caneluras, base moldurada e capitel com ábaco (uma geometria só, instanciável). */
+function makeColumnGeometry(lite: boolean) {
+  const seg = lite ? 24 : 36
+  const flutes = 12
+  const shaft = new THREE.CylinderGeometry(0.34, 0.4, 8.8, seg, 6, true)
+  const p = shaft.getAttribute('position') as THREE.BufferAttribute
+  for (let i = 0; i < p.count; i++) {
+    const x = p.getX(i)
+    const z = p.getZ(i)
+    const a = Math.atan2(z, x)
+    const k = 1 - 0.07 * Math.pow(Math.max(0, Math.cos(a * flutes)), 0.6)
+    p.setX(i, x * k)
+    p.setZ(i, z * k)
+  }
+  shaft.translate(0, 0.6 + 4.4, 0)
+  shaft.deleteAttribute('uv')
+  shaft.computeVertexNormals()
+  const parts: THREE.BufferGeometry[] = [shaft]
+  const ring = (rTop: number, rBot: number, h: number, y: number) => {
+    const g = new THREE.CylinderGeometry(rTop, rBot, h, seg, 1)
+    g.translate(0, y, 0)
+    g.deleteAttribute('uv')
+    parts.push(g)
+  }
+  // base: plinto + toro
+  ring(0.58, 0.58, 0.28, 0.14)
+  ring(0.46, 0.52, 0.16, 0.36)
+  ring(0.42, 0.44, 0.12, 0.52)
+  // capitel: colarinho, equino que se abre e ábaco quadrado
+  ring(0.4, 0.37, 0.12, 9.46)
+  ring(0.56, 0.4, 0.36, 9.7)
+  const abacus = new THREE.BoxGeometry(1.2, 0.2, 1.2)
+  abacus.translate(0, 9.98, 0)
+  abacus.deleteAttribute('uv')
+  parts.push(abacus)
+  const merged = mergeGeometries(parts.map((g) => g.toNonIndexed()))!
+  parts.forEach((g) => g.dispose())
+  merged.computeBoundingSphere()
+  return merged
+}
+
+/** Faixas de bruma em camadas que se arrastam devagar (escondem fundos e bases). */
+function MistLayers({ layers, color, opacity }: { layers: { y: number; z: number; w: number; h: number; speed: number }[]; color: string; opacity: number }) {
+  const texA = useDisposable(() => makeMistTexture(3))
+  const texB = useDisposable(() => makeMistTexture(7))
+  const group = useRef<THREE.Group>(null)
+  useFrame((_, delta) => {
+    group.current?.children.forEach((c, i) => {
+      const m = (c as THREE.Mesh).material as THREE.MeshBasicMaterial
+      if (m.map) m.map.offset.x += Math.min(delta, 0.1) * layers[i].speed
+    })
+  })
+  return (
+    <group ref={group}>
+      {layers.map((l, i) => (
+        <mesh key={i} position={[0, l.y, l.z]}>
+          <planeGeometry args={[l.w, l.h]} />
+          <meshBasicMaterial map={i % 2 ? texB : texA} color={color} transparent opacity={opacity} depthWrite={false} fog={false} toneMapped={false} />
+        </mesh>
+      ))}
+    </group>
+  )
+}
+
 /* ─────────────────────────────── SIGIL (landing/acesso) ─────────────────────────────── */
 
 function SigilPreset({ intensity, alert, focus, lite }: PresetProps) {
@@ -158,7 +269,9 @@ function SigilPreset({ intensity, alert, focus, lite }: PresetProps) {
   const hoursTex = useDisposable(() => makeDialTexture({ size: lite ? 512 : 768, numerals: 'hours72', ticks: 72, color: DV_COLOR.cobaltText, inner: 0.6 }), [lite])
   const glowTex = useDisposable(() => makeGlowTexture(128))
   const starGeo = useDisposable(() => makeStarGeometry(1, 0.1))
+  const starMat = useRimMaterial({ color: '#b9c8ff', rim: '#7d97ff', rimPower: 2.4, rimStrength: 1.6, metalness: 1, roughness: 0.2, emissive: '#0b1a4d', emissiveIntensity: 0.35 })
   const v = useMemo(() => new THREE.Vector3(), [])
+  useEnvironment(1.1)
 
   useFrame((state, delta) => {
     const dt = Math.min(delta, 0.1)
@@ -241,7 +354,7 @@ function SigilPreset({ intensity, alert, focus, lite }: PresetProps) {
           <group ref={orbit} rotation={[0, 0, -0.42]} position={[0, 0, 0.06]}>
             <mesh scale={[1.08, 0.38, 1]}>
               <torusGeometry args={[1, 0.022, 8, lite ? 96 : 140]} />
-              <meshStandardMaterial color="#eef1fb" metalness={0.4} roughness={0.3} emissive="#24348c" emissiveIntensity={0.5} />
+              <meshStandardMaterial color="#dfe6ff" metalness={0.9} roughness={0.25} emissive="#24348c" emissiveIntensity={0.35} />
             </mesh>
             <mesh ref={moon}>
               <sphereGeometry args={[0.06, 16, 12]} />
@@ -249,9 +362,7 @@ function SigilPreset({ intensity, alert, focus, lite }: PresetProps) {
             </mesh>
           </group>
           {/* estrela do sigilo + olho */}
-          <mesh ref={star} geometry={starGeo}>
-            <meshStandardMaterial color="#eef1fb" metalness={0.55} roughness={0.22} emissive="#1a2a80" emissiveIntensity={0.45} />
-          </mesh>
+          <mesh ref={star} geometry={starGeo} material={starMat} />
           <mesh>
             <circleGeometry args={[0.07, 24]} />
             <meshBasicMaterial color={DV_COLOR.cobalt} toneMapped={false} />
@@ -271,8 +382,8 @@ function CathedralPreset({ intensity, alert, lite }: PresetProps) {
   const cards = useRef<THREE.Group>(null)
   const shafts = useRef<THREE.Group>(null)
   const count = lite ? 12 : 16
-  const pillarGeo = useDisposable(() => new THREE.CylinderGeometry(0.34, 0.42, 16, 10))
-  const pillarMat = useDisposable(() => new THREE.MeshStandardMaterial({ color: '#3a4670', roughness: 0.85, metalness: 0.1, emissive: '#0c1430', emissiveIntensity: 0.6 }))
+  const pillarGeo = useDisposable(() => makeColumnGeometry(lite), [lite])
+  const pillarMat = useDisposable(() => new THREE.MeshStandardMaterial({ color: '#4a5680', roughness: 0.78, metalness: 0.12, emissive: '#0a1128', emissiveIntensity: 0.5, flatShading: false }))
   const shaftTex = useDisposable(() => makeShaftTexture())
   const cardTex = useDisposable(() => makeCardBackTexture())
   const cardData = useMemo(
@@ -294,7 +405,7 @@ function CathedralPreset({ intensity, alert, lite }: PresetProps) {
     for (let i = 0; i < count; i++) {
       const side = i % 2 ? 1 : -1
       const row = Math.floor(i / 2)
-      m.makeTranslation(side * 3.1, 6, 2 - row * 5)
+      m.makeTranslation(side * 3.1, 0, 2 - row * 5)
       pillars.current.setMatrixAt(i, m)
     }
     pillars.current.instanceMatrix.needsUpdate = true
@@ -327,6 +438,24 @@ function CathedralPreset({ intensity, alert, lite }: PresetProps) {
       <pointLight position={[0, 3, 2]} intensity={30 * intensity} distance={14} decay={1.4} color={DV_COLOR.goldBright} />
       <AlertLight alert={alert} position={[0, 5, 0]} power={40} />
       <instancedMesh ref={pillars} args={[pillarGeo, pillarMat, count]} />
+      {/* arquitrave sobre as colunas */}
+      {[-1, 1].map((side) => (
+        <mesh key={side} position={[side * 3.1, 10.35, -14]}>
+          <boxGeometry args={[1.3, 0.5, 44]} />
+          <meshStandardMaterial color="#2a3354" roughness={0.85} />
+        </mesh>
+      ))}
+      <MistLayers
+        color="#9fb2ff"
+        opacity={0.42 * intensity}
+        layers={[
+          { y: 0.9, z: 1, w: 16, h: 3, speed: 0.008 },
+          { y: 1.4, z: -6, w: 18, h: 4, speed: -0.006 },
+          { y: 2.4, z: -13, w: 20, h: 6, speed: 0.005 },
+          { y: 9.6, z: -8, w: 20, h: 5, speed: -0.004 },
+          { y: 5, z: -24, w: 26, h: 12, speed: 0.003 },
+        ]}
+      />
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, -12]}>
         <planeGeometry args={[14, 50]} />
         <meshStandardMaterial color="#1a2340" roughness={0.4} metalness={0.35} />
@@ -572,6 +701,8 @@ function TribunalPreset({ intensity, alert, lite }: PresetProps) {
   const plateMat = useDisposable(() => new THREE.MeshBasicMaterial({ color: DV_COLOR.paper, toneMapped: false }))
   const dialTex = useDisposable(() => makeDialTexture({ size: lite ? 768 : 1024, numerals: 'roman', color: DV_COLOR.gold }), [lite])
   const starGeo = useDisposable(() => makeStarGeometry(0.55, 0.08))
+  const judgeMat = useRimMaterial({ color: '#e9dcd8', rim: '#ff3a48', rimPower: 2, rimStrength: 1.8, metalness: 1, roughness: 0.22, emissive: '#3a0a12', emissiveIntensity: 0.4 })
+  useEnvironment(0.8)
 
   useLayoutEffect(() => {
     const m = new THREE.Matrix4()
@@ -653,9 +784,7 @@ function TribunalPreset({ intensity, alert, lite }: PresetProps) {
         <torusGeometry args={[0.56, 0.015, 6, 48]} />
         <meshStandardMaterial color={DV_COLOR.gold} metalness={0.9} roughness={0.3} emissive={DV_COLOR.goldDeep} emissiveIntensity={0.6} />
       </mesh>
-      <mesh ref={judge} geometry={starGeo} position={[0, 2.1, 0]}>
-        <meshStandardMaterial color="#f3e9e4" metalness={0.6} roughness={0.22} emissive="#8a1420" emissiveIntensity={0.7} />
-      </mesh>
+      <mesh ref={judge} geometry={starGeo} material={judgeMat} position={[0, 2.1, 0]} />
       <Dust count={lite ? 70 : 150} color="#ffb3b8" area={[10, 6, 10]} center={[0, 3, -1]} speed={0.06} size={0.05} opacity={0.4 * intensity} />
     </>
   )

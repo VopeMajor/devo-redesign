@@ -45,6 +45,9 @@ import {
   type TicketData,
 } from '@/components/devo/kit'
 import { DeadlyVoteSymbol } from '@/components/devo/system/symbol'
+import { HerdeiroArt } from '@/components/devo/npc-art/herdeiro'
+import { MelissaArt } from '@/components/devo/npc-art/melissa'
+import { OddsBar, PaperField, Plaque, PortraitFrame, StatusSeal } from '@/components/devo/kit'
 
 const COLORS: { group: string; items: { name: string; v: string; use: string }[] }[] = [
   {
@@ -328,6 +331,10 @@ function StyleGuideBody() {
             <Countdown endsAt={endsAt} size="lg" units />
           </div>
           <div>
+            <p className="dv-label mb-2 text-[10px] text-dv-text-3">TimeDigits · units (D:H:M:S, Record)</p>
+            <FastClock />
+          </div>
+          <div>
             <p className="dv-label mb-2 text-[10px] text-dv-text-3">Countdown · crítico (&lt; 6h)</p>
             <Countdown endsAt={critEndsAt} size="lg" units sound={false} />
           </div>
@@ -489,7 +496,42 @@ function StyleGuideBody() {
         </div>
       </Section>
 
-      <Section id="cenas" index="X" kicker="3D" title="Cenas">
+      <Section id="retratos" index="X" kicker="Elenco" title="Retratos">
+        <p className="mb-4 font-body text-[15px] text-dv-text-2">Mesmo tratamento para raster e SVG: luz de borda na silhueta, grão, vinheta e base que se dissolve.</p>
+        <div className="grid grid-cols-2 gap-x-4 gap-y-6">
+          <PortraitFrame src="/images/npc/rat-host-v2.png" alt="O Rato, anfitrião" name="O Rato" role="Anfitrião" tone="gold" ornate className="w-full" />
+          <PortraitFrame alt="Herdeiro" name="Herdeiro" role="Desconhecido" tone="cobalt" className="w-full">
+            <HerdeiroArt />
+          </PortraitFrame>
+          <PortraitFrame alt="Melissa" name="Melissa" role="Prólogo" tone="blood" shape="rect" className="w-full">
+            <MelissaArt />
+          </PortraitFrame>
+          <PortraitFrame src="/images/npc/coruja.png" alt="A Coruja" name="Coruja" role="Mestra das cartas" tone="neutral" shape="round" className="w-full" />
+        </div>
+        <p className="dv-label mb-3 mt-8 text-[10px] text-dv-text-3">Plaque · OddsBar (da Sala de Jogos)</p>
+        <dl className="grid grid-cols-3 gap-2">
+          <Plaque label="Tempo" tone="cobalt">2d 3h</Plaque>
+          <Plaque label="Pontos" tone="gold">1.240</Plaque>
+          <Plaque label="Posição">#4</Plaque>
+        </dl>
+        <div className="mt-4">
+          <OddsBar a={62} b={38} />
+        </div>
+        <p className="dv-label mb-3 mt-8 text-[10px] text-dv-text-3">StatusSeal · PaperField (do Record)</p>
+        <Frame variant="paper" pad="md">
+          <div className="flex flex-wrap gap-2">
+            <StatusSeal tone="active">Ativo</StatusSeal>
+            <StatusSeal tone="critical">Crítico</StatusSeal>
+            <StatusSeal tone="idle">Inativo</StatusSeal>
+          </div>
+          <dl className="mt-4 grid grid-cols-2 gap-4">
+            <PaperField label="Participantes" value="12 / 16" />
+            <PaperField label="Seu registro" value="Eliminado" danger />
+          </dl>
+        </Frame>
+      </Section>
+
+      <Section id="cenas" index="XI" kicker="3D" title="Cenas">
         <div className="mb-4 flex items-center gap-3">
           <Chip selected={alert} onClick={() => setAlert((a) => !a)} icon={<GlyphAlert />}>
             Modo alerta
@@ -515,4 +557,19 @@ function StyleGuideBody() {
       <Curtain state={curtain} />
     </main>
   )
+}
+
+/** Relógio acelerado (dígitos virando várias vezes por segundo) para provar a máscara da virada. */
+function FastClock() {
+  const [n, setN] = useState(2 * 86400 + 3 * 3600 + 16 * 60 + 37)
+  useEffect(() => {
+    const id = window.setInterval(() => setN((v) => v - 7), 350)
+    return () => window.clearInterval(id)
+  }, [])
+  const d = Math.floor(n / 86400)
+  const h = Math.floor((n % 86400) / 3600)
+  const m = Math.floor((n % 3600) / 60)
+  const sec = n % 60
+  const v = [d, h, m, sec].map((x) => String(x).padStart(2, '0')).join(':')
+  return <TimeDigits value={v} size="lg" tone="cobalt" units={['Dias', 'Horas', 'Min', 'Seg']} label="Tempo de vida" />
 }

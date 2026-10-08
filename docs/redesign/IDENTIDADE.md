@@ -71,6 +71,11 @@ texto < 14px (use `--dv-cobalt-deep`); texto `--dv-text-3` abaixo de 11px.
 
 ## 3. Tipografia
 
+> **Renderização:** `html { text-rendering: geometricPrecision }` (globals.css) é obrigatório. As
+> fontes do Google Fonts vêm com hinting; no Chromium do Linux isso arredonda o avanço de cada glifo
+> e abre buracos ("Ajus tes", "is so"). Não sobrescreva `text-rendering` em componentes.
+
+
 | Papel | Fonte | Classe | Tamanho (mobile) | Notas |
 |---|---|---|---|---|
 | Impacto | **Oswald** 500–700 | `font-impact` | 56–64px (herói), 28–44px (números) | Números de tempo, placares, índices, títulos de 1–2 palavras. Sempre caixa-alta. Pode `-skew-x-[8deg]`. |
@@ -131,10 +136,14 @@ com `strokeWidth={1.4}`.
 | `Divider` | Separador ornamental (`star`, `filigree`, `clock`, `stitch`). |
 | `Badge` / `Chip` | Selo de estado (não clicável, `live` pisca); filtro alternável `aria-pressed`. |
 | `Stat` / `StatGrid` | Número de impacto com rótulo e régua colorida (em `<dl>`). |
-| `TimeDigits` / `Countdown` | Dígitos de largura fixa com virada; contagem até `endsAt` que fica vermelha < 6h. |
+| `TimeDigits` / `Countdown` | Dígitos de largura fixa (0.6em por casa) com virada **mascarada** (o novo desce, o antigo sai por baixo, sempre dentro da casa); `units={['Dias','Horas','Min','Seg']}` centraliza um rótulo sob cada grupo. `Countdown units` (= Horas/Min/Seg) ou lista própria; fica vermelho < 6h. |
 | `Sheet` / `Dialog` | Folha que sobe do rodapé (centraliza ≥ 640px); `Dialog` sempre central. Esc, foco preso. |
 | `Toast` / `ToastStack` | Aviso visual com corte diagonal (tons system/gold/alert); a fila é de quem usa. |
 | `Ticket` / `RewardStrip` | Tiras de papel numeradas penduradas num varal (claimed/today/upcoming/locked/missed) — check-in. |
+| `PortraitFrame` | Retrato de NPC com tratamento único para PNG/WebP (`src`) e SVG (`children`): luz de borda na silhueta, grão, vinheta, base que se dissolve; `name`/`role` em plaqueta; `shape` arch/rect/round; `tone`. |
+| `Plaque` / `OddsBar` | Placa metálica de status (em `<dl>`); barra de proporção cobalto × ouro (odds, votos). |
+| `StatusSeal` / `PaperField` | Selo de status sobre papel (active/critical/idle); campo impresso rótulo+valor para documentos. |
+| `useVisibleViewport` | Altura visível real (desconta o teclado do celular) para barras de ação fixas em formulários. |
 | `CardFrame` | Carta 5:7 com moldura metálica, índice, verso oficial (`face="back"`), `holo`, `selected`. |
 | `Stamp` | Carimbo de tinta `rect` ou `round` (com anel de texto); `animate` para a batida. |
 | `Reveal` / `Stagger` | Entrada de um bloco / cascata de filhos (`cut`, `rise`, `left`, `right`, `pop`, `fade`; `inView`). |
@@ -155,6 +164,24 @@ com `strokeWidth={1.4}`.
 | Bloqueado (conteúdo) | `GlyphKeyhole` + `Badge` "Bloqueado" | — |
 
 ---
+
+### Retratos de NPC (regra)
+
+Todo NPC aparece dentro de `PortraitFrame` (ou, em cena cheia, com o mesmo tratamento: mesma luz
+de borda e base em degradê). Nunca mostre o PNG/SVG "cru" com corte reto embaixo nem com fundo
+próprio retangular. Tom: `gold` anfitriões/casa, `cobalt` sistema/aliados, `blood` ameaça,
+`neutral` mentores. Enquadre com `position` (raster) e `scale`.
+
+```tsx
+<PortraitFrame src="/images/npc/rat-host-v2.png" alt="O Rato, anfitrião" name="O Rato" role="Anfitrião" tone="gold" />
+<PortraitFrame alt="Herdeiro" tone="cobalt"><HerdeiroArt /></PortraitFrame>
+```
+
+### Peças que continuam nas áreas (candidatas, não movidas)
+
+- `VsSplit` (`arcade/mesa.tsx`): depende do tipo `Duel` e das apostas — vira kit quando outra área
+  precisar de um confronto A × B; a forma visual é `Frame` + `OddsBar` + dois `Monogram`.
+- `Monogram`, `JavaliMedallion`, `AstrolabeDial` (`arcade/sala-ui.tsx`): específicos da Sala de Jogos.
 
 ## 7. Movimento
 
@@ -255,6 +282,11 @@ Props: `intensity` 0..1 (padrão 0.8; abaixe em telas com muito texto), `alert` 
 1.6Hz — ligue em tempo crítico/eliminação), `focus` (só `sigil`: `{x,y,size}` em frações do
 contêiner — a landing mede o herói e passa), `dim` 0..1 (véu escuro p/ contraste, padrão 0.25),
 `lazy` (só monta quando aparece), `staticOnly`.
+
+**Materiais:** metais usam o ambiente desenhado (`makeEnvTexture`, sem HDR externo) e o brilho de
+borda fresnel (`useRimMaterial`) — a estrela do sigilo é metal cobalto com contorno aceso; a do
+tribunal, prata com contorno vermelho. Colunas da catedral têm caneluras, base e capitel numa
+geometria instanciada, e faixas de bruma em camadas (`MistLayers`) escondem fundo e topo.
 
 **Garantias de desempenho (já implementadas):**
 - Primeira pintura = fallback estático (gradiente + desenho SVG do preset). WebGL carrega depois
