@@ -1,7 +1,6 @@
 'use client'
 
 import { useState } from 'react'
-import Image from 'next/image'
 import type { CSSProperties } from 'react'
 import { Bell, ExternalLink, MonitorDown, Smartphone } from 'lucide-react'
 import { playSfx } from '@/lib/devo/audio'
@@ -11,6 +10,7 @@ import { Badge } from '../kit/badge'
 import { Button } from '../kit/button'
 import { Frame } from '../kit/frame'
 import { Stagger } from '../kit/reveal'
+import { PortraitFrame } from '../kit/portrait'
 import { Sheet } from '../kit/sheet'
 
 function InstallSteps({ isIos, isAndroid, inIframe }: { isIos: boolean; isAndroid: boolean; inIframe: boolean }) {
@@ -115,9 +115,7 @@ export function PwaOffer({ onClose }: { onClose: () => void }) {
     >
       {/* Fala do Anfitrião: retrato em losango + bilhete */}
       <div className="animate-dv-rise flex items-start gap-3">
-        <span className="relative grid size-16 shrink-0 place-items-center overflow-hidden border border-dv-gold/60 bg-dv-ink-3 [clip-path:polygon(50%_0,100%_50%,50%_100%,0_50%)]">
-          <Image src="/images/npc/rat-host-v2.png" alt="O Anfitrião" width={64} height={64} className="size-full object-cover object-top" />
-        </span>
+        <PortraitFrame src="/images/npc/rat-host-v2.png" alt="O Anfitrião" shape="round" tone="gold" position="50% 6%" className="w-16" />
         <div className="min-w-0 flex-1">
           <p className="dv-label text-[10px] text-dv-gold">O Anfitrião</p>
           <p className="mt-1 font-body text-[16px] italic leading-relaxed text-dv-text-2">

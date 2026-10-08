@@ -203,6 +203,28 @@
 }
 .en-countdown { transform-origin: left; animation: en-countdown linear both; }
 
+
+/* ── Prólogo: abertura ───────────────────────────────────────────────────────────────── */
+@keyframes en-ignite {
+  0% { opacity: 0; transform: scale(0.86); filter: brightness(0.4) blur(2px); }
+  45% { opacity: 0.6; }
+  100% { opacity: 0.92; transform: none; filter: none; }
+}
+.en-ignite { animation: en-ignite 2600ms var(--dv-ease-out) 300ms both; }
+
+@keyframes en-lid-top { from { transform: none; } to { transform: translateY(-102%); } }
+@keyframes en-lid-bottom { from { transform: none; } to { transform: translateY(102%); } }
+/* Duas piscadas curtas antes de abrir de vez. */
+@keyframes en-blink-top { 0% { transform: none; } 30% { transform: translateY(-70%); } 42% { transform: translateY(-20%); } 100% { transform: translateY(-102%); } }
+@keyframes en-blink-bottom { 0% { transform: none; } 30% { transform: translateY(70%); } 42% { transform: translateY(20%); } 100% { transform: translateY(102%); } }
+.en-lid-top { animation: en-blink-top 1600ms var(--dv-ease-out) 250ms both; }
+.en-lid-bottom { animation: en-blink-bottom 1600ms var(--dv-ease-out) 250ms both; }
+
+/* Texto do primeiro quadro entra depois que os olhos abrem. */
+.en-after-eyes { animation-delay: 1500ms !important; }
+
 @media (prefers-reduced-motion: reduce) {
   [class^='en-'], [class*=' en-'] { animation: none !important; }
+  /* sem animação, as pálpebras ficariam fechadas: some com elas */
+  .en-lid-top, .en-lid-bottom { display: none; }
 }

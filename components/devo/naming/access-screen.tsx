@@ -82,7 +82,7 @@ export function AccessScreen({
   onCancel,
 }: {
   mode: AccessMode
-  onAuthenticated: (kind: 'registered' | 'logged-in') => void
+  onAuthenticated: (kind: 'registered' | 'logged-in', name: string) => void
   onCancel: () => void
 }) {
   const [step, setStep] = useState<Step>(mode === 'login' ? 'login' : 'code')
@@ -159,14 +159,14 @@ export function AccessScreen({
         )
         if (err) return fail(signupError(err))
         playSfx('confirm')
-        onAuthenticated('registered')
+        onAuthenticated('registered', name)
         return
       }
 
       const { error: err } = await authClient.signIn.username({ username: name, password })
       if (err) return fail('Usuário ou senha incorretos.', 'pass')
       playSfx('confirm')
-      onAuthenticated('logged-in')
+      onAuthenticated('logged-in', name)
     } catch {
       fail('O sistema não respondeu. Tente novamente.', null)
     } finally {
@@ -218,11 +218,11 @@ export function AccessScreen({
       style={{ top: view?.top ?? 0, height: view ? view.h : '100dvh' }}
     >
       {/* Véu: a cena do sigilo continua viva atrás do documento. */}
-      <div aria-hidden="true" className="animate-dv-fade absolute inset-0 bg-[radial-gradient(130%_90%_at_50%_28%,rgba(5,7,13,0.25),rgba(5,7,13,0.9)_70%)]" />
+      <div aria-hidden="true" className="animate-dv-fade absolute inset-0 bg-[linear-gradient(180deg,rgba(5,7,13,0.1)_0%,rgba(5,7,13,0.45)_42%,rgba(5,7,13,0.92)_100%)]" />
 
-      <div className="devo-scroll relative min-h-0 flex-1 overflow-y-auto overscroll-contain">
-        <form onSubmit={submit} noValidate className="relative mx-auto flex min-h-full w-full max-w-md flex-col justify-center px-4 pb-4 pt-[max(env(safe-area-inset-top),1.5rem)]">
-          <div className="en-doc-in relative mt-3 drop-shadow-[0_34px_40px_rgba(0,0,0,0.8)]">
+      <div className="relative min-h-0 flex-1">
+        <form onSubmit={submit} noValidate className="relative mx-auto flex h-full w-full max-w-md flex-col justify-end px-4 pb-[max(env(safe-area-inset-bottom),14px)] pt-[max(env(safe-area-inset-top),20px)] sm:justify-center">
+          <div className="en-doc-in relative mt-4 flex max-h-full min-h-0 flex-col drop-shadow-[0_34px_40px_rgba(0,0,0,0.8)]">
             {/* Papel marfim com canto dobrado */}
             <div aria-hidden="true" className="absolute inset-0 overflow-hidden [clip-path:polygon(0_0,calc(100%-28px)_0,100%_28px,100%_100%,0_100%)]">
               <div className="dv-paper-bg absolute inset-0" />
@@ -243,13 +243,13 @@ export function AccessScreen({
             <span aria-hidden="true" className="absolute -top-2.5 left-7 h-16 w-5 bg-[linear-gradient(90deg,#0d2bb8,var(--dv-cobalt-deep)_50%,#0d2bb8)] shadow-[0_3px_6px_rgba(0,0,0,0.35)] [clip-path:polygon(0_0,100%_0,100%_100%,50%_80%,0_100%)]" />
             <GlyphClip className="absolute -top-4 left-[3.4rem] size-9 rotate-[18deg] text-[#8d93a3] drop-shadow-[0_2px_1px_rgba(0,0,0,0.35)]" />
 
-            <div className="relative px-6 pb-2 pt-9 text-dv-paper-ink sm:px-8">
+            <div className="devo-scroll relative min-h-0 flex-1 overflow-y-auto overscroll-contain px-6 pb-4 pt-9 text-dv-paper-ink sm:px-8">
               {/* Cabeçalho do formulário */}
               <div className="flex items-start justify-between gap-3 pl-12">
                 <p className="dv-label text-[10px] leading-relaxed text-dv-paper-ink/70">
                   Companhia de Despertados
                   <br />
-                  <span className="text-dv-cobalt-deep">Admissão · DEVO</span>
+                  <span className="text-dv-paper-ink">Admissão · DEVO</span>
                 </p>
                 <p className="dv-label shrink-0 text-right text-[10px] leading-relaxed text-dv-paper-ink/60">
                   Form. A-72
@@ -391,6 +391,13 @@ export function AccessScreen({
 
                 {step === 'register' && (
                   <>
+                    {/* Linha de assinatura: o nome digitado vira a assinatura do documento. */}
+                    <div aria-hidden="true" className="mt-4 flex items-end gap-3">
+                      <span className="dv-label pb-1 text-[10px] text-dv-paper-ink/60">Assinatura</span>
+                      <span className="relative min-h-10 flex-1 truncate border-b border-dv-paper-ink/45 px-1 pb-1 font-serif text-[26px] italic leading-[1.25] text-dv-cobalt-deep">
+                        {name}
+                      </span>
+                    </div>
                     <ul className="mt-5 flex flex-col gap-2 border-l-2 border-dv-paper-ink/15 pl-3" aria-label="Requisitos">
                       {[
                         { ok: name.length > 0, text: 'Nome: do jeito que quiser, com espaços e acentos (só não pode repetir)' },
@@ -412,13 +419,6 @@ export function AccessScreen({
                         </li>
                       ))}
                     </ul>
-                    {/* Linha de assinatura: o nome digitado vira a assinatura do documento. */}
-                    <div aria-hidden="true" className="mt-5 flex items-end gap-3">
-                      <span className="dv-label pb-1 text-[10px] text-dv-paper-ink/60">Assinatura</span>
-                      <span className="relative min-h-9 flex-1 truncate border-b border-dv-paper-ink/45 pb-0.5 font-serif text-[26px] italic leading-none text-dv-cobalt-deep">
-                        {name}
-                      </span>
-                    </div>
                   </>
                 )}
               </div>
@@ -439,7 +439,7 @@ export function AccessScreen({
             </div>
 
             {/* Ações: presas ao rodapé da área visível — o teclado nunca cobre o botão. */}
-            <div className="sticky bottom-0 z-10 px-6 pb-[max(env(safe-area-inset-bottom),14px)] pt-3 sm:px-8">
+            <div className="relative z-10 shrink-0 px-6 pb-3 pt-3 sm:px-8">
               <span aria-hidden="true" className="dv-paper-bg absolute inset-0" />
               <span aria-hidden="true" className="pointer-events-none absolute inset-x-0 -top-5 h-5 bg-gradient-to-t from-[var(--dv-paper)] to-transparent" />
               <span aria-hidden="true" className="absolute inset-x-6 top-0 border-t border-dashed border-dv-paper-ink/25" />
@@ -515,7 +515,7 @@ function DocField({
         htmlFor={id}
         className={cn(
           'dv-label flex items-center justify-between text-[11px] transition-colors',
-          error ? 'text-[#a3121c]' : 'text-dv-paper-ink/70 group-focus-within/field:text-dv-cobalt-deep',
+          error ? 'text-[#a3121c]' : 'text-dv-paper-ink/75 group-focus-within/field:text-dv-paper-ink',
         )}
       >
         <span>{label}</span>
@@ -526,8 +526,8 @@ function DocField({
             </>
           )}
           {ok && (
-            <span className="flex items-center gap-1 text-dv-cobalt-deep">
-              <GlyphCheck className="size-3.5" /> Ok
+            <span className="flex items-center gap-1 text-dv-paper-ink/75">
+              <GlyphCheck className="size-3.5 text-dv-cobalt-deep" /> Ok
             </span>
           )}
         </span>

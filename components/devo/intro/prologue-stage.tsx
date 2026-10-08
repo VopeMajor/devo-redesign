@@ -4,6 +4,7 @@ import Image from 'next/image'
 import { useEffect, useRef, type CSSProperties, type ReactNode } from 'react'
 import type { MelissaMood, StageId } from '@/lib/devo/prologue-script'
 import { cn } from '@/lib/utils'
+import { PortraitFrame } from '../kit/portrait'
 import { MelissaArt } from '../npc-art/melissa'
 import { DeadlyVoteSymbol } from '../system/symbol'
 import { Embers } from '../shared/atmosphere'
@@ -42,6 +43,7 @@ function Puppet({
             height={h}
             priority={priority}
             className="h-full w-auto max-w-none drop-shadow-[4px_6px_0_rgba(40,22,18,0.4)]"
+            style={{ filter: RIM_GOLD }}
           />
         </div>
       </div>
@@ -127,7 +129,26 @@ function usePointerParallax() {
 const FAR: CSSProperties = { transform: 'translate3d(calc(var(--px, 0) * -10px), calc(var(--py, 0) * -6px), 0)', transition: 'transform 600ms var(--dv-ease-out)' }
 const NEAR: CSSProperties = { transform: 'translate3d(calc(var(--px, 0) * 18px), calc(var(--py, 0) * 8px), 0)', transition: 'transform 600ms var(--dv-ease-out)' }
 
-export function PrologueStage({ stage, mood, speaking = false }: { stage: StageId; mood: MelissaMood; speaking?: boolean }) {
+/** Presença da Melissa: fora, silhueta se aproximando, ou em cena. */
+export type MelissaPresence = 'off' | 'approach' | 'on'
+
+/** Luz de borda comum do elenco (mesma do PortraitFrame do kit): contorno claro + halo. */
+const RIM_GOLD = 'drop-shadow(-1.5px -1px 0 rgba(236,212,154,0.5)) drop-shadow(0 0 12px rgba(236,212,154,0.22))'
+
+export function PrologueStage({
+  stage,
+  mood,
+  speaking = false,
+  melissa = 'off',
+  opening = false,
+}: {
+  stage: StageId
+  mood: MelissaMood
+  speaking?: boolean
+  melissa?: MelissaPresence
+  /** Primeiro quadro do prólogo: pálpebras abrindo sobre o sigilo. */
+  opening?: boolean
+}) {
   const root = usePointerParallax()
   const melissaRef = useRef<HTMLDivElement>(null)
   const prevMood = useRef(mood)
@@ -150,7 +171,7 @@ export function PrologueStage({ stage, mood, speaking = false }: { stage: StageI
   const omen = stage === 'omen' || tripped || fallen
   const deathOn = stage === 'death' || stage === 'fire'
   const fireOn = stage === 'fire' || stage === 'rise'
-  const melissaOn = stage === 'mine'
+  const melissaOn = stage === 'mine' && melissa !== 'off'
   const mineOn = stage === 'mine' || stage === 'phone'
   const mirrorOn = stage === 'void' || stage === 'voice'
 
@@ -165,6 +186,27 @@ export function PrologueStage({ stage, mood, speaking = false }: { stage: StageI
 
   return (
     <div ref={root} className="absolute inset-0 overflow-hidden bg-black">
+      {/* Escuridão / vazio: o sigilo acende devagar no fundo, poeira na luz que cai do alto. */}
+      <Layer on={stage === 'dark' || stage === 'void' || stage === 'voice'}>
+        <div className="absolute inset-0 bg-[radial-gradient(60%_45%_at_50%_0%,rgba(125,151,255,0.22),transparent_70%),radial-gradient(80%_60%_at_50%_42%,rgba(11,26,77,0.7),rgba(2,3,7,1)_75%)]" />
+        <div className="absolute inset-x-[22%] top-0 h-[70%] bg-[linear-gradient(180deg,rgba(236,238,242,0.12),transparent)] [clip-path:polygon(38%_0,62%_0,100%_100%,0_100%)] blur-md" />
+        <div className="absolute left-1/2 top-[34%] size-[min(64vw,280px)] -translate-x-1/2 -translate-y-1/2" style={NEAR}>
+          <svg viewBox="0 0 200 200" aria-hidden="true" className="en-sweep-hand-slow absolute inset-0 size-full text-dv-gold" fill="none" stroke="currentColor">
+            <circle cx="100" cy="100" r="96" strokeWidth="0.6" opacity="0.4" />
+            <ellipse cx="100" cy="100" rx="96" ry="34" strokeWidth="0.7" opacity="0.35" strokeDasharray="2 5" />
+            {Array.from({ length: 60 }, (_, i) => {
+              const a = (i / 60) * Math.PI * 2
+              const r1 = i % 5 === 0 ? 84 : 88
+              return <line key={i} x1={100 + Math.sin(a) * r1} y1={100 - Math.cos(a) * r1} x2={100 + Math.sin(a) * 92} y2={100 - Math.cos(a) * 92} strokeWidth={i % 5 === 0 ? 1.2 : 0.5} opacity="0.5" />
+            })}
+          </svg>
+          <div className="en-ignite absolute inset-[26%] text-dv-text">
+            <DeadlyVoteSymbol variant="mark" className="size-full drop-shadow-[0_0_24px_rgba(49,93,255,0.9)]" />
+          </div>
+        </div>
+        <Embers className="opacity-70" />
+      </Layer>
+
       {/* Teatro de papel */}
       <Layer on={theater}>
         <div
@@ -230,7 +272,7 @@ export function PrologueStage({ stage, mood, speaking = false }: { stage: StageI
           style={{ bottom: deathOn ? '12%' : '-60%', opacity: deathOn ? 1 : 0 }}
         >
           <div className="h-full origin-bottom animate-[pr-sway_6s_ease-in-out_infinite]">
-            <Image src="/images/prologue/death.webp" alt="A Morte estendendo a mão" width={469} height={717} className="h-full w-auto max-w-none drop-shadow-[0_0_40px_rgba(0,0,0,0.9)]" />
+            <Image src="/images/prologue/death.webp" alt="A Morte estendendo a mão" width={469} height={717} className="h-full w-auto max-w-none" style={{ filter: `${RIM_GOLD} drop-shadow(0 0 40px rgba(0,0,0,0.9))` }} />
           </div>
         </div>
       </Layer>
@@ -258,7 +300,7 @@ export function PrologueStage({ stage, mood, speaking = false }: { stage: StageI
           muted
           loop
           playsInline
-          className={cn('absolute inset-0 size-full object-contain transition-[filter,opacity] duration-1000', stage === 'voice' ? 'opacity-40 blur-[2px]' : 'opacity-90')}
+          className={cn('absolute inset-0 size-full object-contain mix-blend-screen transition-[filter,opacity] duration-1000', stage === 'voice' ? 'opacity-40 blur-[2px]' : 'opacity-90')}
         />
       </Layer>
       <div
@@ -288,28 +330,28 @@ export function PrologueStage({ stage, mood, speaking = false }: { stage: StageI
         <div className="absolute inset-0 animate-[devo-flicker_3s_ease-in-out_infinite] bg-[radial-gradient(ellipse_70%_60%_at_50%_40%,rgba(255,140,50,0.1),transparent_70%)]" />
         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-black/30" />
       </Layer>
-      {/* Melissa: entra pela direita com a luz subindo; fica mais escura quando não é ela quem fala. */}
-      <div className="absolute inset-x-0 bottom-0 mx-auto h-[min(88dvh,820px)] max-w-3xl lg:left-[8%] lg:right-auto lg:w-[42vw]" style={NEAR}>
+      {/* Melissa: mesmo tratamento de retrato do elenco (PortraitFrame). Só entra depois da fala de cenário:
+          primeiro como silhueta se aproximando, depois em luz; escurece quando não é ela quem fala. */}
       <div
-        ref={melissaRef}
-        className={cn(
-          'absolute inset-0 transition-[opacity,transform,filter] duration-[700ms] ease-[var(--dv-ease-out)]',
-          melissaOn ? 'translate-x-0 opacity-100' : 'translate-x-[14%] opacity-0',
-          melissaOn && !speaking ? 'brightness-[0.62] saturate-[0.8]' : 'brightness-100',
-        )}
+        className="absolute inset-x-0 bottom-[25%] flex justify-center lg:bottom-[12%] lg:left-[6%] lg:right-auto lg:w-[36vw]"
+        style={NEAR}
       >
-        {(['neutral', 'soft', 'serious'] as MelissaMood[]).map((m) => (
-          <MelissaArt
-            key={m}
-            mood={m}
-            title={m === mood && melissaOn ? 'Melissa, da Companhia de Despertados' : undefined}
-            className={cn(
-              'absolute inset-0 size-full transition-opacity duration-500 drop-shadow-[0_0_40px_rgba(0,0,0,0.9)] [mask-image:linear-gradient(to_bottom,black_72%,transparent_100%)]',
-              m === mood ? 'opacity-100' : 'opacity-0',
-            )}
-          />
-        ))}
-      </div>
+        <div
+          ref={melissaRef}
+          className={cn(
+            'w-[min(72vw,320px)] transition-[opacity,transform,filter] duration-[800ms] ease-[var(--dv-ease-out)] lg:w-full lg:max-w-[440px]',
+            melissaOn ? 'translate-x-0 opacity-100' : 'translate-x-[14%] opacity-0',
+            melissa === 'approach' ? 'brightness-[0.08]' : melissaOn && !speaking ? 'brightness-[0.62] saturate-[0.8]' : 'brightness-100',
+          )}
+        >
+          <PortraitFrame alt={melissaOn ? 'Melissa, da Companhia de Despertados' : ''} tone="cobalt" ornate scale={1.55} className="w-full">
+            <div className="relative size-full">
+              {(['neutral', 'soft', 'serious'] as MelissaMood[]).map((m) => (
+                <MelissaArt key={m} mood={m} className={cn('absolute inset-0 size-full transition-opacity duration-500', m === mood ? 'opacity-100' : 'opacity-0')} />
+              ))}
+            </div>
+          </PortraitFrame>
+        </div>
       </div>
 
       {/* Celular */}
@@ -322,6 +364,18 @@ export function PrologueStage({ stage, mood, speaking = false }: { stage: StageI
           <span className="dv-label text-[11px] text-dv-text-2">Devo</span>
         </div>
       </Layer>
+
+      {/* Grade de cor comum a todas as cenas (livro ilustrado, pintura, vetor): mesma noite cobalto. */}
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(11,26,77,0.28),rgba(11,26,77,0.08)_40%,rgba(5,7,13,0.5))] mix-blend-multiply" />
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[rgba(49,93,255,0.07)] mix-blend-soft-light" />
+
+      {/* Abrir os olhos: pálpebras se afastam no primeiro quadro. */}
+      {opening && (
+        <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-10">
+          <span className="en-lid-top absolute inset-x-0 top-0 h-1/2 bg-black shadow-[0_20px_40px_rgba(0,0,0,0.9)]" />
+          <span className="en-lid-bottom absolute inset-x-0 bottom-0 h-1/2 bg-black shadow-[0_-20px_40px_rgba(0,0,0,0.9)]" />
+        </div>
+      )}
 
       {/* Grão de papel e vinheta */}
       <div aria-hidden="true" className="pointer-events-none absolute inset-[-10%] animate-[pr-grain_0.5s_steps(3)_infinite] opacity-[0.08] mix-blend-overlay [background-image:radial-gradient(rgba(255,255,255,0.9)_1px,transparent_1px)] [background-size:3px_3px]" />

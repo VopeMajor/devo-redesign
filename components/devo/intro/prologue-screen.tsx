@@ -55,6 +55,8 @@ const STAGE_SFX: Partial<Record<StageId, Sfx>> = {
 type Profile = Partial<Record<ProfileField, string>>
 
 type Act = { n: number; title: string }
+/** A Melissa só aparece depois da fala de cenário: na fala anterior à primeira dela, como silhueta. */
+const FIRST_MELISSA = PROLOGUE.findIndex((b) => b.kind === 'line' && b.line.who === 'melissa')
 /** Metadado de encenação: em que "ato" cada cenário fica (cartão de ato e capítulo no topo). */
 const STAGE_ACT: Partial<Record<StageId, Act>> = {
   rumor: { n: 1, title: 'O rumor' },
@@ -78,7 +80,7 @@ const STAGE_ACT: Partial<Record<StageId, Act>> = {
 /** Cartão de ato: faixa diagonal corta a tela, número de impacto, sai na mesma direção. Não bloqueia toques. */
 function ActCard({ act }: { act: Act }) {
   return (
-    <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-[26%] z-40 h-36 overflow-hidden">
+    <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-[9%] z-40 h-36 overflow-hidden">
       <span className="en-act-band absolute inset-y-6 -left-[10%] w-[120%] bg-[linear-gradient(90deg,transparent,rgba(5,7,13,0.92)_12%,rgba(5,7,13,0.92)_88%,transparent)]">
         <span className="absolute inset-x-0 top-0 h-[2px] bg-dv-gold/80" />
         <span className="absolute inset-x-0 bottom-0 h-[3px] bg-dv-cobalt-deep" />
@@ -289,7 +291,22 @@ export function PrologueScreen({ playerName, onFinish: onDone }: { playerName: s
 
   return (
     <main className="relative h-dvh overflow-hidden bg-black text-dv-text">
-      <PrologueStage stage={beat.stage} mood={mood} speaking={line?.who === 'melissa'} />
+      <PrologueStage
+        stage={beat.stage}
+        mood={mood}
+        speaking={line?.who === 'melissa'}
+        melissa={index >= FIRST_MELISSA ? 'on' : index === FIRST_MELISSA - 1 ? 'approach' : 'off'}
+        opening={index === 0}
+      />
+
+      {/* Primeiro quadro: onde o jogador está. Entra quando os olhos abrem. */}
+      {index === 0 && (
+        <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-[56%] z-20 flex flex-col items-center gap-2 text-center">
+          <span className="dv-label animate-dv-fade en-after-eyes text-[11px] text-dv-gold">Prólogo</span>
+          <span className="animate-dv-cut-in en-after-eyes font-display text-[26px] font-semibold uppercase tracking-[0.1em] text-dv-text">Um lugar sem relógio</span>
+          <span className="animate-dv-fade en-after-eyes font-body text-[16px] italic text-dv-text-2">Antes do primeiro voto. Antes do seu nome.</span>
+        </div>
+      )}
 
       {slash && (
         <div key={`slash-${index}`} aria-hidden="true" className="pointer-events-none absolute inset-0 z-20 overflow-hidden">
@@ -332,7 +349,7 @@ export function PrologueScreen({ playerName, onFinish: onDone }: { playerName: s
             type="button"
             onClick={advance}
             aria-label={done ? 'Continuar' : 'Mostrar texto completo'}
-            className={cn('en-box-in dv-focus relative block w-full text-left', speaker && 'mt-6')}
+            className={cn('en-box-in dv-focus relative block w-full text-left', speaker && 'mt-6', index === 0 && 'en-after-eyes')}
           >
             {paper ? (
               <span className="relative block -rotate-[0.6deg]">

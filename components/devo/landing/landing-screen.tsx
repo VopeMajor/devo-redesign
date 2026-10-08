@@ -83,11 +83,11 @@ export function LandingScreen({
 
   return (
     <main ref={mainRef} className="relative flex min-h-dvh flex-col overflow-hidden bg-dv-ink text-dv-text lg:h-dvh">
-      <SceneBackdrop preset="sigil" intensity={0.9} focus={focus} dim={veiled ? 0.45 : 0.08} />
-      <ScreenFrame tone="gold" className="animate-dv-fade" />
+      <SceneBackdrop preset="sigil" intensity={0.9} focus={focus} dim={veiled ? 0.18 : 0.08} />
+      <ScreenFrame tone="gold" className={cn('transition-opacity duration-[360ms]', veiled && 'opacity-0')} />
 
       {/* Barra superior: identidade do sistema + som */}
-      <header className="dv-safe-top relative z-20 flex items-center justify-between px-7 pt-3">
+      <header className={cn('dv-safe-top relative z-20 flex items-center justify-between px-7 pt-3 transition-opacity duration-[360ms]', veiled && 'pointer-events-none opacity-0')}>
         <p className="dv-label animate-dv-fade text-[11px] text-dv-text-2">
           Devo<span className="text-dv-cobalt-text">.System</span>
         </p>
