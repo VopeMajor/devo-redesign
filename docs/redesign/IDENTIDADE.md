@@ -261,6 +261,7 @@ contêiner — a landing mede o herói e passa), `dim` 0..1 (véu escuro p/ cont
   via `next/dynamic` (`ssr:false`) em `requestIdleCallback`, e entra com fade de 700ms.
 - DPR ≤ 1.5 (≤ 1.25 no celular), `antialias` desligado no celular, sem sombras, sem stencil.
 - No celular renderiza sob demanda a 30 qps (`Ticker`), metade do custo do loop contínuo.
+- Renderizador por software (SwiftShader/llvmpipe, detectado por `WEBGL_debug_renderer_info`): DPR 0.75 e 15 qps.
 - Pausa (`frameloop="never"`) com aba oculta ou fora da tela; `prefers-reduced-motion` → `demand`.
 - Fallback definitivo se: sem WebGL, erro no React (boundary), `webglcontextlost`, ou > 7s.
 - Texturas desenhadas em `<canvas>` e descartadas ao desmontar (`useDisposable`).

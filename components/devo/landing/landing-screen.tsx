@@ -102,12 +102,12 @@ export function LandingScreen({
           </Kicker>
 
           <h1 className="relative mt-3 flex flex-col items-center">
-            <span className="animate-dv-cut-in block font-serif text-[62px] font-medium uppercase leading-[0.84] tracking-[0.02em] text-dv-text [animation-delay:280ms] [text-shadow:0_4px_30px_rgba(5,7,13,0.9)]">
+            <span className="animate-dv-cut-in block font-serif text-[62px] font-medium uppercase leading-[0.84] lg:text-[96px] tracking-[0.02em] text-dv-text [animation-delay:280ms] [text-shadow:0_4px_30px_rgba(5,7,13,0.9)]">
               Deadly{' '}
             </span>
             <span className="relative block [animation-delay:360ms] animate-dv-cut-in">
               <span aria-hidden="true" className="absolute -inset-x-6 bottom-[16%] top-[30%] -skew-x-[18deg] bg-[linear-gradient(90deg,transparent,var(--dv-cobalt-deep)_18%,var(--dv-cobalt-deep)_82%,transparent)] opacity-80" />
-              <span className="relative block font-serif text-[62px] font-medium uppercase leading-[0.84] tracking-[0.02em] text-dv-text [text-shadow:0_4px_30px_rgba(5,7,13,0.7)]">
+              <span className="relative block font-serif text-[62px] font-medium uppercase leading-[0.84] lg:text-[96px] tracking-[0.02em] text-dv-text [text-shadow:0_4px_30px_rgba(5,7,13,0.7)]">
                 Vote
               </span>
             </span>

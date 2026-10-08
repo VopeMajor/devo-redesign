@@ -16,6 +16,7 @@ export default function SceneCanvas({
   alert,
   focus,
   lite,
+  soft = false,
   frameloop,
   onReady,
   onFail,
@@ -25,17 +26,19 @@ export default function SceneCanvas({
   alert: boolean
   focus?: SceneFocus
   lite: boolean
+  /** Renderizador por software: DPR 0.75 e 15 qps. */
+  soft?: boolean
   frameloop: 'always' | 'demand' | 'never'
   onReady: () => void
   onFail: () => void
 }) {
   const Preset = PRESETS[preset]
   // No celular: renderiza sob demanda a 30 qps (metade do custo; o movimento é lento de propósito).
-  const throttle = lite && frameloop === 'always'
+  const throttle = (lite || soft) && frameloop === 'always'
   const cam = PRESET_CAMERA[preset]
   return (
     <Canvas
-      dpr={lite ? [1, 1.25] : [1, 1.5]}
+      dpr={soft ? 0.75 : lite ? [1, 1.25] : [1, 1.5]}
       frameloop={throttle ? 'demand' : frameloop}
       camera={{ position: cam.position, fov: cam.fov, near: 0.1, far: 80 }}
       gl={{ antialias: !lite, alpha: true, powerPreference: 'high-performance', stencil: false, depth: true }}
@@ -54,7 +57,7 @@ export default function SceneCanvas({
       style={{ position: 'absolute', inset: 0 }}
       aria-hidden="true"
     >
-      {throttle && <Ticker fps={30} />}
+      {throttle && <Ticker fps={soft ? 15 : 30} />}
       <Preset intensity={intensity} alert={alert} focus={focus} lite={lite} />
     </Canvas>
   )

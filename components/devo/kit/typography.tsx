@@ -105,9 +105,11 @@ export function ImpactTitle({
 }) {
   const band = tone === 'blood' ? 'bg-dv-blood' : tone === 'gold' ? 'bg-dv-gold' : 'bg-dv-cobalt-deep'
   return (
-    <div className={cn('relative inline-flex flex-col items-start', className)}>
-      <span aria-hidden="true" className={cn('absolute -left-3 bottom-[18%] h-[38%] w-[calc(100%+1.5rem)] -skew-x-[18deg] opacity-90', band)} />
-      <Tag className="relative font-impact text-[56px] font-bold uppercase leading-[0.86] tracking-[0.01em] text-dv-text [text-shadow:0_2px_0_rgba(0,0,0,0.5)]">{children}</Tag>
+    <div className={cn('relative flex w-fit max-w-full flex-col items-start self-start', className)}>
+      <span className="relative">
+        <span aria-hidden="true" className={cn('absolute -left-3 bottom-[8%] h-[34%] w-[calc(100%+1.5rem)] -skew-x-[18deg] opacity-90', band)} />
+        <Tag className="relative font-impact text-[56px] font-bold uppercase leading-[0.86] tracking-[0.01em] text-dv-text [text-shadow:0_2px_0_rgba(0,0,0,0.5)]">{children}</Tag>
+      </span>
       {sub && <span className="dv-label relative mt-2 text-dv-text-2">{sub}</span>}
     </div>
   )

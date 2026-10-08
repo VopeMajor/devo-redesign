@@ -62,7 +62,7 @@ async function step(name, fn) {
   try {
     await fn()
   } catch (e) {
-    manifest.errors.push({ step: name, error: String(e).slice(0, 500) })
+    manifest.errors.push({ step: name, error: String(e).slice(0, 1500) })
   }
 }
 

@@ -25,12 +25,18 @@ class SceneBoundary extends Component<{ onError: () => void; children: ReactNode
   }
 }
 
-function supportsWebGL() {
+/** 'none' = sem WebGL; 'soft' = renderizador por software (SwiftShader/llvmpipe): modo econômico. */
+function webglTier(): 'none' | 'soft' | 'gpu' {
   try {
     const c = document.createElement('canvas')
-    return !!(c.getContext('webgl2') || c.getContext('webgl'))
+    const gl = (c.getContext('webgl2') || c.getContext('webgl')) as WebGLRenderingContext | null
+    if (!gl) return 'none'
+    const info = gl.getExtension('WEBGL_debug_renderer_info')
+    const renderer = String(info ? gl.getParameter(info.UNMASKED_RENDERER_WEBGL) : gl.getParameter(gl.RENDERER))
+    gl.getExtension('WEBGL_lose_context')?.loseContext()
+    return /swiftshader|llvmpipe|software|basic render/i.test(renderer) ? 'soft' : 'gpu'
   } catch {
-    return false
+    return 'none'
   }
 }
 
@@ -64,6 +70,7 @@ export function SceneBackdrop({ preset, intensity = 0.8, alert = false, focus, d
   const [failed, setFailed] = useState(false)
   const [visible, setVisible] = useState(true)
   const [onScreen, setOnScreen] = useState(!lazy)
+  const [soft, setSoft] = useState(false)
   const reduced = useMediaQuery('(prefers-reduced-motion: reduce)')
   const coarse = useMediaQuery('(pointer: coarse)')
   const narrow = useMediaQuery('(max-width: 767px)')
@@ -90,10 +97,12 @@ export function SceneBackdrop({ preset, intensity = 0.8, alert = false, focus, d
   useEffect(() => {
     if (staticOnly || failed || mount) return
     if (lazy && !onScreen) return
-    if (!supportsWebGL()) {
+    const tier = webglTier()
+    if (tier === 'none') {
       setFailed(true)
       return
     }
+    setSoft(tier === 'soft')
     const w = window as Window & { requestIdleCallback?: (cb: () => void, o?: { timeout: number }) => number; cancelIdleCallback?: (id: number) => void }
     let id = 0
     if (w.requestIdleCallback) id = w.requestIdleCallback(() => setMount(true), { timeout: 700 })
@@ -125,7 +134,8 @@ export function SceneBackdrop({ preset, intensity = 0.8, alert = false, focus, d
               intensity={Math.max(0, Math.min(1, intensity))}
               alert={alert}
               focus={focus}
-              lite={lite}
+              lite={lite || soft}
+              soft={soft}
               frameloop={frameloop}
               onReady={() => setReady(true)}
               onFail={() => setFailed(true)}
