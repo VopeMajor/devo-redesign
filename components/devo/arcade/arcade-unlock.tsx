@@ -39,8 +39,8 @@ export function ArcadeUnlock() {
       onClick={() => dispatch({ type: 'ARCADE_REVEAL_DONE' })}
     >
       {/* Faixas de corte (ouro = conquista) e raios atrás do selo. */}
-      <span aria-hidden="true" className="en-unlock-band absolute left-[-20%] top-[38%] h-28 w-[140%] bg-[linear-gradient(90deg,transparent,rgba(124,95,42,0.55)_20%,rgba(201,164,92,0.6)_50%,rgba(124,95,42,0.55)_80%,transparent)]" />
-      <span aria-hidden="true" className="en-unlock-band absolute left-[-20%] top-[38%] mt-[118px] h-[3px] w-[140%] bg-dv-cobalt [animation-delay:120ms]" />
+      <span aria-hidden="true" className="en-unlock-band absolute left-[-20%] top-[27%] h-28 w-[140%] bg-[linear-gradient(90deg,transparent,rgba(124,95,42,0.4)_20%,rgba(201,164,92,0.45)_50%,rgba(124,95,42,0.4)_80%,transparent)]" />
+      <span aria-hidden="true" className="en-unlock-band absolute left-[-20%] top-[27%] mt-[112px] h-[3px] w-[140%] bg-dv-cobalt [animation-delay:120ms]" />
       <span
         aria-hidden="true"
         className="en-rays pointer-events-none absolute left-1/2 top-[40%] -ml-[220px] -mt-[220px] size-[440px] opacity-50"
@@ -50,22 +50,21 @@ export function ArcadeUnlock() {
       <div className="relative flex w-full max-w-sm flex-col items-center gap-5 px-6 text-center">
         <p className="dv-label animate-dv-fade text-[11px] text-dv-gold-bright">Novo aplicativo desbloqueado</p>
 
-        <Frame tone="gold" ornate glow pad="lg" className="en-icon-in [animation-delay:350ms]">
-          <span className="grid size-20 place-items-center text-dv-gold-bright">
-            <ArcadeGlyph />
+        <div className="relative">
+          <Frame tone="gold" ornate glow pad="lg" className="en-icon-in [animation-delay:350ms]">
+            <span className="grid size-20 place-items-center text-dv-gold-bright">
+              <ArcadeGlyph />
+            </span>
+          </Frame>
+          <span className="absolute -right-20 -top-5">
+            <Stamp text="Liberado" tone="cobalt" size={96} rotate={-12} animate className="[animation-delay:1100ms]" />
           </span>
-        </Frame>
+        </div>
 
         <div className="animate-dv-cut-in [animation-delay:700ms]">
           <ImpactTitle tone="gold" className="self-center" as="h2">
             Sala de Jogos
           </ImpactTitle>
-        </div>
-
-        <div className="relative -mt-2 h-0 w-full">
-          <span className="absolute -top-28 right-0">
-            <Stamp text="Liberado" tone="cobalt" size={110} rotate={-12} animate className="[animation-delay:1100ms]" />
-          </span>
         </div>
 
         <p className="animate-dv-rise max-w-xs font-body text-[16px] italic leading-relaxed text-dv-text-2 [animation-delay:1000ms]">

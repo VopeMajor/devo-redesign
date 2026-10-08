@@ -65,8 +65,9 @@
 .en-plate-in { animation: en-plate-in 420ms var(--dv-ease-out) both; }
 
 @keyframes en-box-in {
-  from { opacity: 0; transform: translateY(18px); clip-path: polygon(0 0, 0 0, -10% 100%, -10% 100%); }
-  to { opacity: 1; transform: none; clip-path: polygon(0 0, 110% 0, 100% 100%, -10% 100%); }
+  /* O topo do recorte fica bem acima da caixa: a placa do falante (-22px) nunca é cortada. */
+  from { opacity: 0; transform: translateY(18px); clip-path: polygon(0 -60px, 0 -60px, -10% 120%, -10% 120%); }
+  to { opacity: 1; transform: none; clip-path: polygon(0 -60px, 120% -60px, 110% 120%, -10% 120%); }
 }
 .en-box-in { animation: en-box-in 460ms var(--dv-ease-out) both; }
 

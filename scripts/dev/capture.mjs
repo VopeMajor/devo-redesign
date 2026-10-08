@@ -142,10 +142,10 @@ if (want('novato')) {
     await page.locator('#devo-pass').fill('teste123')
     await page.locator('#devo-pass2').fill('teste123')
     await shot(page, '02-acesso-preenchido')
+    // A cortina "Despertando" dispara logo depois do recarregamento: a espera começa antes do Enter.
+    const awake = page.getByRole('status').filter({ hasText: 'Despertando' }).first().waitFor({ timeout: 20000 }).then(() => true, () => false)
     await page.keyboard.press('Enter')
-    await page.waitForLoadState('networkidle')
-    // Espera a cortina "Despertando" (dispara depois do recarregamento) e fotografa no meio dela.
-    await page.getByRole('status').filter({ hasText: 'Despertando' }).first().waitFor({ timeout: 10000 }).catch(() => {})
+    await awake
     await wait(450)
     await shot(page, '03-transicao-despertando')
     await wait(3000)
