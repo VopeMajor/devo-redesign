@@ -287,7 +287,7 @@ export function AccessScreen({
                 size={88}
                 rotate={14}
                 animate
-                className={cn('pointer-events-none absolute right-3 top-14 opacity-80 transition-opacity', keyboard && 'opacity-0')}
+                className={cn('pointer-events-none absolute right-3 top-[5.6rem] opacity-80 transition-opacity', keyboard && 'opacity-0')}
               />
 
               <div key={step} className="animate-dv-cut-in [animation-delay:60ms]">

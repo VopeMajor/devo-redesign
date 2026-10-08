@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useSyncExternalStore } from 'react'
+import { useEffect, useRef, useSyncExternalStore, type CSSProperties } from 'react'
 
 /**
  * O botão voltar do aparelho fecha a camada do topo (janela, conversa, modal).
@@ -92,7 +92,13 @@ export function BackExitHint() {
       className={`pointer-events-none fixed inset-x-0 bottom-24 z-[100] flex justify-center transition-opacity duration-200 ${visible ? 'opacity-100' : 'opacity-0'}`}
     >
       {visible && (
-        <span className="rounded-full border border-border bg-card/95 px-4 py-2 text-sm text-foreground shadow-lg">
+        <span
+          className="animate-dv-toast-in relative isolate flex items-center gap-2.5 py-2.5 pl-4 pr-5 font-sans text-[14px] text-dv-text shadow-[0_12px_28px_rgba(0,0,0,0.6)]"
+          style={{ '--dv-cut': '10px' } as CSSProperties}
+        >
+          <span aria-hidden="true" className="dv-cut-diag absolute inset-0 -z-10 bg-[linear-gradient(135deg,#8ea6ff,var(--dv-cobalt)_40%,var(--dv-cobalt-dim))]" />
+          <span aria-hidden="true" className="dv-cut-diag absolute inset-px -z-10 bg-[linear-gradient(180deg,var(--dv-ink-3),var(--dv-ink))]" style={{ '--dv-cut': '9.6px' } as CSSProperties} />
+          <span aria-hidden="true" className="h-4 w-[3px] bg-dv-cobalt" />
           Pressione voltar de novo para sair
         </span>
       )}

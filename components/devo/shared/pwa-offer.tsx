@@ -2,10 +2,16 @@
 
 import { useState } from 'react'
 import Image from 'next/image'
-import { Bell, Check, ExternalLink, MonitorDown, Smartphone } from 'lucide-react'
+import type { CSSProperties } from 'react'
+import { Bell, ExternalLink, MonitorDown, Smartphone } from 'lucide-react'
 import { playSfx } from '@/lib/devo/audio'
 import { promptInstall, requestNotifications, usePwa } from '@/lib/devo/pwa'
-import { ActionButton } from '../apps/app-ui'
+import { cn } from '@/lib/utils'
+import { Badge } from '../kit/badge'
+import { Button } from '../kit/button'
+import { Frame } from '../kit/frame'
+import { Stagger } from '../kit/reveal'
+import { Sheet } from '../kit/sheet'
 
 function InstallSteps({ isIos, isAndroid, inIframe }: { isIos: boolean; isAndroid: boolean; inIframe: boolean }) {
   if (inIframe) {
@@ -66,8 +72,6 @@ export function PwaOffer({ onClose }: { onClose: () => void }) {
   const canNotify = permission === 'default'
   const notifyBlocked = permission === 'denied'
 
-  const finish = onClose
-
   const run = async (action: () => Promise<unknown>) => {
     playSfx('click')
     setBusy(true)
@@ -87,115 +91,105 @@ export function PwaOffer({ onClose }: { onClose: () => void }) {
   const InstallIcon = isMobile ? Smartphone : MonitorDown
 
   return (
-    <div
-      className="fixed inset-0 z-[90] flex items-end justify-center bg-black/70 p-4 backdrop-blur-sm sm:items-center"
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="pwa-offer-title"
+    <Sheet
+      open
+      onClose={onClose}
+      kicker="Cortesia do Anfitrião"
+      title="Uma última cortesia"
+      footer={
+        <div className="flex w-full items-center justify-between gap-3">
+          <p className="font-sans text-[12px] leading-snug text-dv-text-3">Você pode mudar isso depois em Ajustes.</p>
+          <Button
+            variant="secondary"
+            size="sm"
+            disabled={busy}
+            onClick={() => {
+              playSfx('click')
+              onClose()
+            }}
+          >
+            {installed && permission === 'granted' ? 'Continuar' : 'Depois'}
+          </Button>
+        </div>
+      }
     >
-      <div className="relative flex w-full max-w-xl items-end gap-3 animate-[devo-fade-in_0.5s_ease-out_both]">
-        <Image
-          src="/images/npc/rat-host-v2.png"
-          alt="O Anfitrião"
-          width={160}
-          height={240}
-          className="hidden h-60 w-auto shrink-0 object-contain drop-shadow-[0_0_24px_rgba(0,0,0,0.8)] sm:block"
-        />
-        <div className="relative max-h-[85dvh] flex-1 overflow-y-auto border border-foreground/20 bg-card/95 p-5 shadow-[0_0_40px_-12px_var(--primary)]">
-          <div className="mb-3 flex items-center gap-3">
-            <Image
-              src="/images/npc/rat-host-v2.png"
-              alt=""
-              width={48}
-              height={48}
-              className="size-12 rounded-full border border-foreground/20 object-cover object-top sm:hidden"
-            />
-            <p id="pwa-offer-title" className="text-[11px] uppercase tracking-[0.4em] text-primary">
-              O Anfitrião
-            </p>
-          </div>
-          <p className="text-sm leading-relaxed text-foreground">
-            Uma última cortesia. Deixe o DEVO na sua tela e permita que eu te chame. Assim, quando algo acontecer aqui dentro, você saberá
-            antes de todos.
+      {/* Fala do Anfitrião: retrato em losango + bilhete */}
+      <div className="animate-dv-rise flex items-start gap-3">
+        <span className="relative grid size-16 shrink-0 place-items-center overflow-hidden border border-dv-gold/60 bg-dv-ink-3 [clip-path:polygon(50%_0,100%_50%,50%_100%,0_50%)]">
+          <Image src="/images/npc/rat-host-v2.png" alt="O Anfitrião" width={64} height={64} className="size-full object-cover object-top" />
+        </span>
+        <div className="min-w-0 flex-1">
+          <p className="dv-label text-[10px] text-dv-gold">O Anfitrião</p>
+          <p className="mt-1 font-body text-[16px] italic leading-relaxed text-dv-text-2">
+            Deixe o DEVO na sua tela e permita que eu te chame. Assim, quando algo acontecer aqui dentro, você saberá antes de todos.
           </p>
-
-          <ul className="mt-4 flex flex-col gap-2">
-            <li className="flex flex-col gap-2 border border-foreground/15 bg-background/40 p-3">
-              <div className="flex items-center gap-3">
-                <InstallIcon className="size-5 shrink-0 text-primary" aria-hidden="true" />
-                <div className="flex-1">
-                  <p className="text-sm text-foreground">{isMobile ? 'Ícone na tela inicial' : 'Atalho na área de trabalho'}</p>
-                  <p className="text-xs text-muted-foreground">Abre o jogo em tela cheia, como um app.</p>
-                </div>
-                {installed ? (
-                  <span className="flex items-center gap-1 text-xs text-muted-foreground">
-                    <Check className="size-3.5" aria-hidden="true" /> Instalado
-                  </span>
-                ) : inIframe ? (
-                  <a
-                    href="/"
-                    target="_blank"
-                    rel="noopener"
-                    onClick={() => playSfx('click')}
-                    className="flex items-center gap-1.5 border border-primary/70 bg-primary/15 px-3 py-1.5 text-xs uppercase tracking-[0.2em] text-foreground hover:bg-primary/25"
-                  >
-                    <ExternalLink className="size-3.5" aria-hidden="true" /> Abrir
-                  </a>
-                ) : (
-                  <ActionButton tone="primary" disabled={busy} onClick={handleInstall} aria-expanded={!installEvent ? showSteps : undefined}>
-                    {installEvent ? 'Instalar' : 'Como?'}
-                  </ActionButton>
-                )}
-              </div>
-              {!installed && (showSteps || inIframe) && (
-                <div className="border-t border-foreground/10 pt-2 text-xs leading-relaxed text-muted-foreground">
-                  <InstallSteps isIos={isIos} isAndroid={isAndroid} inIframe={inIframe} />
-                </div>
-              )}
-            </li>
-
-            <li className="flex items-center gap-3 border border-foreground/15 bg-background/40 p-3">
-              <Bell className="size-5 shrink-0 text-primary" aria-hidden="true" />
-              <div className="flex-1">
-                <p className="text-sm text-foreground">Notificações</p>
-                <p className="text-xs text-muted-foreground">
-                  {notifyBlocked
-                    ? 'Bloqueadas. Libere nas permissões do navegador.'
-                    : permission === 'unsupported'
-                      ? isIos
-                        ? 'No iPhone, instale o ícone primeiro e abra por ele.'
-                        : 'Este navegador não suporta notificações.'
-                      : 'Avisos de mensagens, trocas e do seu tempo.'}
-                </p>
-              </div>
-              {permission === 'granted' ? (
-                <span className="flex items-center gap-1 text-xs text-muted-foreground">
-                  <Check className="size-3.5" aria-hidden="true" /> Ativadas
-                </span>
-              ) : (
-                canNotify && (
-                  <ActionButton tone="primary" disabled={busy} onClick={() => run(requestNotifications)}>
-                    Ativar
-                  </ActionButton>
-                )
-              )}
-            </li>
-          </ul>
-
-          <div className="mt-4 flex items-center justify-between gap-3">
-            <p className="text-[11px] text-muted-foreground">Você pode mudar isso depois em Ajustes.</p>
-            <ActionButton
-              disabled={busy}
-              onClick={() => {
-                playSfx('click')
-                finish()
-              }}
-            >
-              {installed && permission === 'granted' ? 'Continuar' : 'Depois'}
-            </ActionButton>
-          </div>
         </div>
       </div>
-    </div>
+
+      <Stagger className="mt-4 flex flex-col gap-2.5" delay={160}>
+        <Frame pad="sm" tone={installed ? 'cobalt' : 'neutral'}>
+          <div className="flex items-center gap-3">
+            <span className="dv-cut grid size-11 shrink-0 place-items-center bg-dv-cobalt-dim text-dv-cobalt-text" style={{ '--dv-cut': '8px' } as CSSProperties}>
+              <InstallIcon className="size-5" strokeWidth={1.4} aria-hidden="true" />
+            </span>
+            <div className="min-w-0 flex-1">
+              <p className="font-display text-[14px] font-semibold uppercase tracking-[0.06em] text-dv-text">{isMobile ? 'Ícone na tela inicial' : 'Atalho na área de trabalho'}</p>
+              <p className="font-sans text-[13px] text-dv-text-2">Abre o jogo em tela cheia, como um app.</p>
+            </div>
+            {installed ? (
+              <Badge tone="cobalt">Instalado</Badge>
+            ) : inIframe ? (
+              <a
+                href="/"
+                target="_blank"
+                rel="noopener"
+                onClick={() => playSfx('click')}
+                className="dv-focus flex min-h-11 items-center gap-1.5 px-2 font-display text-[12px] font-semibold uppercase tracking-[0.2em] text-dv-cobalt-text"
+              >
+                <ExternalLink className="size-4" strokeWidth={1.4} aria-hidden="true" /> Abrir
+              </a>
+            ) : (
+              <Button size="sm" disabled={busy} onClick={handleInstall} aria-expanded={!installEvent ? showSteps : undefined}>
+                {installEvent ? 'Instalar' : 'Como?'}
+              </Button>
+            )}
+          </div>
+          {!installed && (showSteps || inIframe) && (
+            <div className="animate-dv-rise mt-3 border-t border-dv-line pt-3 font-sans text-[13px] leading-relaxed text-dv-text-2 [&_span]:text-dv-text">
+              <InstallSteps isIos={isIos} isAndroid={isAndroid} inIframe={inIframe} />
+            </div>
+          )}
+        </Frame>
+
+        <Frame pad="sm" tone={permission === 'granted' ? 'cobalt' : 'neutral'}>
+          <div className="flex items-center gap-3">
+            <span className="dv-cut grid size-11 shrink-0 place-items-center bg-dv-cobalt-dim text-dv-cobalt-text" style={{ '--dv-cut': '8px' } as CSSProperties}>
+              <Bell className="size-5" strokeWidth={1.4} aria-hidden="true" />
+            </span>
+            <div className="min-w-0 flex-1">
+              <p className="font-display text-[14px] font-semibold uppercase tracking-[0.06em] text-dv-text">Notificações</p>
+              <p className={cn('font-sans text-[13px]', notifyBlocked ? 'text-dv-blood-text' : 'text-dv-text-2')}>
+                {notifyBlocked
+                  ? 'Bloqueadas. Libere nas permissões do navegador.'
+                  : permission === 'unsupported'
+                    ? isIos
+                      ? 'No iPhone, instale o ícone primeiro e abra por ele.'
+                      : 'Este navegador não suporta notificações.'
+                    : 'Avisos de mensagens, trocas e do seu tempo.'}
+              </p>
+            </div>
+            {permission === 'granted' ? (
+              <Badge tone="cobalt">Ativadas</Badge>
+            ) : (
+              canNotify && (
+                <Button size="sm" disabled={busy} onClick={() => run(requestNotifications)}>
+                  Ativar
+                </Button>
+              )
+            )}
+          </div>
+        </Frame>
+      </Stagger>
+    </Sheet>
   )
 }
