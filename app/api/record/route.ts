@@ -1,5 +1,5 @@
 import { getCurrentPlayer } from '@/app/actions/player'
-import { createVote, getRecord, joinVote, leaveVote, RecordError, setAvatar, setEntryOutcome, setVoteStatus } from '@/lib/devo/record-server'
+import { createVote, getRecord, getStaffBoard, joinVote, leaveVote, RecordError, setAvatar, setEntryOutcome, setVoteStatus } from '@/lib/devo/record-server'
 
 export const dynamic = 'force-dynamic'
 
@@ -9,10 +9,12 @@ function fail(err: unknown) {
   return Response.json({ ok: false, error: 'Falha no servidor do Record.' }, { status: 500 })
 }
 
-export async function GET() {
+export async function GET(req: Request) {
   const player = await getCurrentPlayer()
   if (!player) return Response.json({ ok: false, error: 'Sessão ausente.' }, { status: 401 })
   try {
+    // ?view=staff → Mesa do Dealer (todos os votos com inscritos); exige Dealer/Admin.
+    if (new URL(req.url).searchParams.get('view') === 'staff') return Response.json(await getStaffBoard(player.id))
     return Response.json(await getRecord(player.id))
   } catch (err) {
     return fail(err)

@@ -1,5 +1,5 @@
 import { pool } from '@/lib/db'
-import type { DeadlyVote, DeadlyVoteStatus, PlayerRole, RecordPayload } from './deadly-votes'
+import type { DeadlyVote, DeadlyVoteStatus, PlayerRole, RecordPayload, StaffBoard, StaffEntry } from './deadly-votes'
 
 export class RecordError extends Error {
   constructor(
@@ -29,6 +29,8 @@ type VoteRow = {
   participants: number
   joined_at: Date | null
   outcome: 'sobreviveu' | 'eliminado' | null
+  survivors: string | number
+  eliminated: string | number
 }
 
 function toVote(r: VoteRow): DeadlyVote {
@@ -45,8 +47,15 @@ function toVote(r: VoteRow): DeadlyVote {
     participants: Number(r.participants),
     joined: r.joined_at !== null,
     outcome: r.outcome,
+    survivors: Number(r.survivors ?? 0),
+    eliminated: Number(r.eliminated ?? 0),
   }
 }
+
+/** Colunas comuns: inscritos e resultado público (sobreviventes / eliminados) de cada caso. */
+const VOTE_COUNTS = `(SELECT count(*) FROM deadly_vote_entries c WHERE c.vote_id = v.id) AS participants,
+              (SELECT count(*) FROM deadly_vote_entries c WHERE c.vote_id = v.id AND c.outcome = 'sobreviveu') AS survivors,
+              (SELECT count(*) FROM deadly_vote_entries c WHERE c.vote_id = v.id AND c.outcome = 'eliminado') AS eliminated`
 
 export async function getRecord(playerId: string): Promise<RecordPayload> {
   const [me] = (
@@ -56,11 +65,13 @@ export async function getRecord(playerId: string): Promise<RecordPayload> {
   const votes = (
     await pool.query<VoteRow>(
       `SELECT v.id, v.number, v.title, v.arc, v.briefing, v.status, v.starts_at, v.ends_at, v.max_participants,
-              (SELECT count(*) FROM deadly_vote_entries c WHERE c.vote_id = v.id) AS participants,
+              ${VOTE_COUNTS},
               e.joined_at, e.outcome
          FROM deadly_votes v
          LEFT JOIN deadly_vote_entries e ON e.vote_id = v.id AND e.player_id = $1
-        WHERE e.player_id IS NOT NULL OR v.status IN ('convocado', 'em-progresso')
+        -- Histórico público: convocações abertas, votos em andamento e casos encerrados
+        -- (exceto cancelados de que o participante não fez parte).
+        WHERE e.player_id IS NOT NULL OR v.status <> 'cancelado'
         ORDER BY v.starts_at DESC
         LIMIT 100`,
       [playerId],
@@ -127,6 +138,39 @@ export async function getAvatar(playerId: string) {
 async function requireStaff(playerId: string) {
   const [me] = (await pool.query<{ role: string }>('SELECT role FROM players WHERE id = $1', [playerId])).rows
   if (me?.role !== 'dealer' && me?.role !== 'admin') throw new RecordError('Acesso restrito ao Dealer.', 403)
+}
+
+/** Mesa do Dealer: votos recentes (todos os estados) com os inscritos e o resultado de cada um. */
+export async function getStaffBoard(playerId: string): Promise<StaffBoard> {
+  await requireStaff(playerId)
+  const votes = (
+    await pool.query<VoteRow>(
+      `SELECT v.id, v.number, v.title, v.arc, v.briefing, v.status, v.starts_at, v.ends_at, v.max_participants,
+              ${VOTE_COUNTS},
+              NULL::timestamptz AS joined_at, NULL::text AS outcome
+         FROM deadly_votes v
+        ORDER BY (v.status IN ('convocado', 'em-progresso')) DESC, v.starts_at DESC
+        LIMIT 30`,
+    )
+  ).rows
+  if (!votes.length) return { votes: [] }
+  const entries = (
+    await pool.query<{ vote_id: string; player_id: string; name: string | null; outcome: 'sobreviveu' | 'eliminado' | null }>(
+      `SELECT e.vote_id, e.player_id, p.name, e.outcome
+         FROM deadly_vote_entries e
+         JOIN players p ON p.id = e.player_id
+        WHERE e.vote_id = ANY($1::uuid[])
+        ORDER BY e.joined_at`,
+      [votes.map((v) => v.id)],
+    )
+  ).rows
+  const byVote = new Map<string, StaffEntry[]>()
+  for (const e of entries) {
+    const list = byVote.get(e.vote_id) ?? []
+    list.push({ playerId: e.player_id, name: e.name ?? 'Sem nome', outcome: e.outcome })
+    byVote.set(e.vote_id, list)
+  }
+  return { votes: votes.map((r) => ({ ...toVote(r), entries: byVote.get(r.id) ?? [] })) }
 }
 
 const text = (v: unknown, max: number) => (typeof v === 'string' ? v.trim().slice(0, max) : '')

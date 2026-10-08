@@ -1,16 +1,21 @@
-import { AlertTriangle, ArrowRight } from 'lucide-react'
 import type { ReactNode } from 'react'
+import { GlyphAlert, GlyphArrow, Kicker, SectionHeader } from '@/components/devo/kit'
 import { cn } from '@/lib/utils'
+
+/**
+ * Peças pequenas do Record (Deadly Vote Record System) sobre o kit "Tribunal do Relógio".
+ * Superfície padrão: ink. Peças em papel ficam nos próprios componentes (record-file, histórico).
+ */
 
 /** Microtipografia técnica: códigos de sistema, seções, coordenadas. */
 export function SystemLabel({ children, className }: { children: ReactNode; className?: string }) {
-  return <span className={cn('font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground', className)}>{children}</span>
+  return <span className={cn('dv-label text-[10px] text-dv-text-3', className)}>{children}</span>
 }
 
 export function RecordID({ value, className }: { value: string; className?: string }) {
   return (
-    <span className={cn('font-mono text-[11px] uppercase tracking-[0.12em] text-foreground/80', className)}>
-      <span className="text-muted-foreground">ID.RECORD: </span>
+    <span className={cn('font-mono text-[11px] uppercase tracking-[0.12em] text-dv-text-2', className)}>
+      <span className="text-dv-text-3">ID.RECORD: </span>
       {value}
     </span>
   )
@@ -22,69 +27,76 @@ export function SystemStatus({ tone, children, className }: { tone: SystemTone; 
   return (
     <span
       className={cn(
-        'inline-flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.2em]',
-        tone === 'active' && 'text-primary',
-        tone === 'critical' && 'text-destructive',
-        tone === 'idle' && 'text-muted-foreground',
+        'inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.2em]',
+        tone === 'active' && 'text-dv-cobalt-text',
+        tone === 'critical' && 'text-dv-blood-text',
+        tone === 'idle' && 'text-dv-text-3',
         className,
       )}
     >
       <span
         aria-hidden="true"
-        className={cn('size-1.5 rounded-full', tone === 'active' && 'bg-primary', tone === 'critical' && 'bg-destructive dv-pulse', tone === 'idle' && 'bg-muted-foreground')}
+        className={cn('size-1.5 rounded-full bg-current', tone === 'critical' && 'animate-dv-blink')}
       />
       {children}
     </span>
   )
 }
 
-/** Divisor técnico: índice de seção, linha com marcações e rótulo opcional. */
-export function TechnicalDivider({ index, label, className, animated }: { index?: string; label?: string; className?: string; animated?: boolean }) {
+/** Divisor técnico: índice de seção, régua com marcações e rótulo opcional. */
+export function TechnicalDivider({ index, label, className }: { index?: string; label?: string; className?: string; animated?: boolean }) {
   return (
-    <div aria-hidden="true" className={cn('flex items-center gap-3 text-muted-foreground', className)}>
-      {index && <span className="font-mono text-[10px] tracking-[0.2em]">{index}</span>}
-      <span className={cn('relative h-px flex-1 bg-border', animated && 'dv-line')}>
-        <span className="absolute -top-[3px] left-0 h-[7px] w-px bg-foreground/40" />
-        <span className="absolute -top-[3px] right-0 h-[7px] w-px bg-foreground/40" />
-        <span className="absolute -top-px left-[38%] h-[3px] w-6 bg-primary/70" />
-      </span>
-      {label && <span className="font-mono text-[10px] uppercase tracking-[0.2em]">{label}</span>}
+    <div aria-hidden="true" className={cn('flex items-center gap-3 text-dv-text-3', className)}>
+      {index && <span className="font-impact text-[18px] font-semibold leading-none text-dv-gold dv-tabular">{index}</span>}
+      <span
+        className="h-2.5 flex-1 opacity-70"
+        style={{
+          background:
+            'repeating-linear-gradient(90deg, var(--dv-gold) 0 1px, transparent 1px 8px) bottom/100% 5px no-repeat, linear-gradient(var(--dv-line-strong), var(--dv-line-strong)) bottom/100% 1px no-repeat',
+        }}
+      />
+      {label && <span className="dv-label text-[10px]">{label}</span>}
     </div>
   )
 }
 
-/** Título editorial de seção: serif + rótulo japonês discreto + ação opcional. */
-export function SectionHeading({ title, jp, action, className, as: Tag = 'h2' }: { title: string; jp?: string; action?: ReactNode; className?: string; as?: 'h2' | 'h3' }) {
-  return (
-    <div className={cn('flex items-end justify-between gap-4 border-b border-border pb-2', className)}>
-      <Tag className="flex items-baseline gap-3 font-serif text-2xl uppercase leading-none tracking-[0.02em] text-foreground">
-        {title}
-        {jp && (
-          <span lang="ja" className="font-sans text-[10px] normal-case tracking-[0.2em] text-muted-foreground">
-            {jp}
-          </span>
-        )}
-      </Tag>
-      {action}
-    </div>
-  )
+/** Título de seção do Record: usa o SectionHeader do kit (índice romano, kicker, eco japonês). */
+export function SectionHeading({
+  title,
+  jp,
+  kicker,
+  index,
+  action,
+  className,
+  as = 'h2',
+}: {
+  title: string
+  jp?: string
+  kicker?: string
+  index?: string
+  action?: ReactNode
+  className?: string
+  as?: 'h2' | 'h3'
+}) {
+  return <SectionHeader index={index} kicker={kicker} title={title} jp={jp} action={action} size="sm" as={as} className={className} />
 }
 
+/** Ação em texto com seta (ver tudo, abrir). Alvo de 44px. */
 export function LinkAction({ children, onClick, disabled }: { children: ReactNode; onClick?: () => void; disabled?: boolean }) {
   return (
     <button
       type="button"
       onClick={onClick}
       disabled={disabled}
-      className="dv-trace inline-flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.18em] text-primary transition-colors hover:text-primary/80 disabled:cursor-default disabled:opacity-40"
+      className="dv-focus group inline-flex min-h-11 items-center gap-1.5 font-mono text-[11px] uppercase tracking-[0.16em] text-dv-cobalt-text transition-colors hover:text-dv-text disabled:cursor-default disabled:opacity-40"
     >
       {children}
-      <ArrowRight className="size-3" aria-hidden="true" />
+      <GlyphArrow className="size-3.5 transition-transform group-enabled:group-hover:translate-x-0.5" />
     </button>
   )
 }
 
-/** Painel escuro de alerta: usado apenas para perigo real (tempo crítico, avisos de risco). */
+/** Painel de alerta: apenas para perigo real (tempo crítico, avisos de risco). */
 export function CriticalAlert({
   source,
   title,
@@ -101,24 +113,23 @@ export function CriticalAlert({
   className?: string
 }) {
   return (
-    <div role="alert" className={cn('dv-dark relative overflow-hidden border border-destructive/40 bg-background text-foreground', className)}>
-      <span aria-hidden="true" className="absolute inset-y-0 left-0 w-0.5 bg-destructive" />
+    <div role="alert" className={cn('dv-cut relative overflow-hidden bg-[linear-gradient(160deg,var(--dv-blood-deep),#1a0507_45%,var(--dv-ink))] text-dv-text', className)}>
+      <span aria-hidden="true" className="absolute inset-y-0 left-0 w-1 bg-dv-blood" />
       <div className="flex items-start gap-4 p-4 pl-5">
-        <AlertTriangle className="mt-0.5 size-6 shrink-0 text-destructive" strokeWidth={1.4} aria-hidden="true" />
+        <GlyphAlert className="mt-0.5 size-6 shrink-0 text-dv-blood-text" />
         <div className="min-w-0 flex-1">
           <div className="flex items-center justify-between gap-3">
-            <SystemLabel>{source}</SystemLabel>
-            {time && <SystemLabel className="tabular-nums">{time}</SystemLabel>}
+            <Kicker tone="blood" glyph={false}>
+              {source}
+            </Kicker>
+            {time && <SystemLabel className="dv-tabular">{time}</SystemLabel>}
           </div>
-          <p className="mt-1 font-mono text-[13px] uppercase tracking-[0.12em] text-destructive">{title}</p>
-          <p className="mt-1 text-[13px] leading-relaxed text-foreground/75">{body}</p>
+          <p className="mt-1 font-display text-[15px] font-semibold uppercase tracking-[0.08em] text-dv-blood-text">{title}</p>
+          <p className="mt-1 font-body text-[15px] leading-relaxed text-dv-text-2">{body}</p>
           {action && <div className="mt-3">{action}</div>}
         </div>
       </div>
-      <span
-        aria-hidden="true"
-        className="absolute bottom-2 right-3 h-3 w-16 bg-[repeating-linear-gradient(-55deg,var(--dv-red)_0_3px,transparent_3px_7px)] opacity-80"
-      />
+      <span aria-hidden="true" className="dv-hazard absolute bottom-2 right-3 h-2.5 w-16 opacity-80" />
     </div>
   )
 }
