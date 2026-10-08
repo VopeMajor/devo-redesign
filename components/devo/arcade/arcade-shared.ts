@@ -31,9 +31,10 @@ export function formatMinutes(min: number) {
 export async function registerEvent(id: string, onChange: () => void) {
   try {
     await arcadePost({ action: 'register', eventId: id })
-    playSfx('send')
+    playSfx('confirm')
     onChange()
   } catch (e) {
+    playSfx('error')
     window.alert((e as Error).message)
   }
 }
