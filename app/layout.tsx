@@ -7,6 +7,7 @@ import {
   EB_Garamond,
   IBM_Plex_Mono,
   IBM_Plex_Sans,
+  Oswald,
   UnifrakturMaguntia,
 } from 'next/font/google'
 import './globals.css'
@@ -31,6 +32,13 @@ const serif = Cormorant_Garamond({
   subsets: ['latin'],
   weight: ['400', '500', '600'],
   variable: '--font-cormorant',
+})
+
+/** Fonte de impacto do "Tribunal do Relógio": números grandes e títulos curtos (ver IDENTIDADE.md). */
+const impact = Oswald({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-oswald',
 })
 
 const blackletter = UnifrakturMaguntia({
@@ -69,7 +77,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="pt-BR" className={`${serif.variable} ${blackletter.variable} ${sans.variable} ${mono.variable} ${cardBanner.variable} ${cardTitle.variable} ${cardBody.variable}`}>
+    <html lang="pt-BR" className={`${serif.variable} ${blackletter.variable} ${sans.variable} ${mono.variable} ${cardBanner.variable} ${cardTitle.variable} ${cardBody.variable} ${impact.variable}`}>
       <head>
         {/* O navegador dispara beforeinstallprompt antes do React hidratar; guardamos o evento para o botão de instalar. */}
         <script

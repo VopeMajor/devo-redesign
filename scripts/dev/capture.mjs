@@ -342,6 +342,74 @@ if (want('partidas')) {
   await B.ctx.close()
 }
 
+// ── 3b. Vitrine da identidade (/estilo; requer DEVO_STYLEGUIDE=1 em produção) ─────────────
+if (want('estilo')) {
+  await step('estilo', async () => {
+    const { ctx, page } = await device()
+    await page.goto(`${BASE}/estilo`, { waitUntil: 'networkidle' })
+    await wait(3500)
+    await shot(page, '80-estilo-00-topo')
+    for (const id of ['cores', 'tipografia', 'botoes', 'molduras', 'selos', 'navegacao', 'avisos', 'cartas', 'movimento']) {
+      await page.locator(`[data-estilo="${id}"]`).scrollIntoViewIfNeeded({ timeout: 3000 }).catch(() => {})
+      await page.evaluate((i) => document.querySelector(`[data-estilo="${i}"]`)?.scrollIntoView({ block: 'start' }), id)
+      await wait(1200)
+      await shot(page, `80-estilo-${id}`)
+    }
+    // Estado pressionado/foco num botão (teclado).
+    await page.evaluate(() => document.querySelector('[data-estilo="botoes"]')?.scrollIntoView({ block: 'start' }))
+    await wait(400)
+    await page.keyboard.press('Tab')
+    await page.locator('[data-estilo="botoes"] button').first().focus().catch(() => {})
+    await wait(500)
+    await shot(page, '80-estilo-botoes-foco')
+    // Folha (Sheet) aberta.
+    await tryClick(btn(page, 'Abrir folha'))
+    await wait(900)
+    await shot(page, '81-estilo-sheet')
+    await page.keyboard.press('Escape')
+    await wait(600)
+    await tryClick(btn(page, 'Abrir diálogo'))
+    await wait(900)
+    await shot(page, '81-estilo-dialog')
+    await page.keyboard.press('Escape')
+    await wait(600)
+    // Cortina em três momentos.
+    await page.evaluate(() => document.querySelector('[data-estilo="movimento"]')?.scrollIntoView({ block: 'start' }))
+    await wait(400)
+    for (const [label, slug] of [['Cortina · avançar', 'avancar'], ['Cortina · alerta', 'alerta']]) {
+      if (await tryClick(btn(page, label))) {
+        await wait(260)
+        await shot(page, `82-estilo-cortina-${slug}-a`)
+        await wait(500)
+        await shot(page, `82-estilo-cortina-${slug}-b`)
+        await wait(1300)
+      }
+    }
+    // Cenas 3D: cada preset, normal e alerta.
+    for (const p of ['sigil', 'cathedral', 'table', 'corridor', 'tribunal']) {
+      await page.evaluate((i) => document.querySelector(`[data-estilo-preset="${i}"]`)?.scrollIntoView({ block: 'center' }), p)
+      await wait(3500)
+      await shot(page, `83-estilo-cena-${p}`)
+    }
+    if (await tryClick(btn(page, 'Modo alerta'))) {
+      await page.evaluate(() => document.querySelector('[data-estilo-preset="tribunal"]')?.scrollIntoView({ block: 'center' }))
+      await wait(2500)
+      await shot(page, '83-estilo-cena-tribunal-alerta')
+      await page.evaluate(() => document.querySelector('[data-estilo-preset="table"]')?.scrollIntoView({ block: 'center' }))
+      await wait(2000)
+      await shot(page, '83-estilo-cena-table-alerta')
+    }
+    await ctx.close()
+  })
+  await step('estilo-desktop', async () => {
+    const { ctx, page } = await device('desktop')
+    await page.goto(`${BASE}/estilo`, { waitUntil: 'networkidle' })
+    await wait(3500)
+    await shot(page, '91-desktop-estilo')
+    await ctx.close()
+  })
+}
+
 // ── 4. Uma referência no desktop ────────────────────────────────────────────────────────
 if (want('desktop')) {
   await step('desktop', async () => {

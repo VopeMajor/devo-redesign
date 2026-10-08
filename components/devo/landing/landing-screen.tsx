@@ -1,17 +1,25 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { playSfx, preloadMusic } from '@/lib/devo/audio'
 import { enterFullscreen } from '@/lib/devo/fullscreen'
 import { formatDuration } from '../hooks'
-import { MenuButton } from '../menu-button'
-import { DiamondStar, Divider, PageFrame, Sparkle } from '../ornaments'
-import { CathedralBackdrop, Embers } from '../shared/atmosphere'
+import { Button } from '../kit/button'
+import { ScreenFrame } from '../kit/frame'
+import { GlyphHourglass } from '../kit/glyphs'
+import { SceneBackdrop, type SceneFocus } from '../kit/scene'
+import { TimeDigits } from '../kit/time'
+import { Divider, Kicker } from '../kit/typography'
 import { SoundToggle } from '../shared/sound-toggle'
-import { DeadlyVoteSymbol } from '../system/symbol'
 
 const START_MS = 72 * 3600 * 1000
+const useIso = typeof window === 'undefined' ? useEffect : useLayoutEffect
 
+/**
+ * Tela inicial — prova da identidade "Tribunal do Relógio".
+ * O astrolábio 3D (preset `sigil`) é posicionado exatamente atrás do bloco `hero`, medido em tempo real.
+ * Funções preservadas: Começar (sempre pede convite), Continuar, Sair, som, dica "toque para ouvir".
+ */
 export function LandingScreen({
   playerName,
   canContinue,
@@ -27,6 +35,9 @@ export function LandingScreen({
 }) {
   const [awake, setAwake] = useState(false)
   const [elapsed, setElapsed] = useState(0)
+  const mainRef = useRef<HTMLElement>(null)
+  const heroRef = useRef<HTMLDivElement>(null)
+  const [focus, setFocus] = useState<SceneFocus | undefined>(undefined)
 
   useEffect(() => {
     preloadMusic()
@@ -41,58 +52,83 @@ export function LandingScreen({
     }
   }, [])
 
+  // Mede o hero para centralizar o astrolábio 3D (e o desenho de fallback) nele.
+  useIso(() => {
+    const main = mainRef.current
+    const hero = heroRef.current
+    if (!main || !hero) return
+    const measure = () => {
+      const m = main.getBoundingClientRect()
+      const h = hero.getBoundingClientRect()
+      if (!m.width || !m.height) return
+      const d = Math.min(h.width * 0.94, h.height * 1.02)
+      setFocus({
+        x: (h.left - m.left + h.width / 2) / m.width,
+        y: (h.top - m.top + h.height / 2) / m.height,
+        size: d / Math.min(m.width, m.height),
+      })
+    }
+    measure()
+    if (typeof ResizeObserver === 'undefined') return
+    const ro = new ResizeObserver(measure)
+    ro.observe(main)
+    ro.observe(hero)
+    return () => ro.disconnect()
+  }, [])
+
   return (
-    <main className="relative flex min-h-dvh flex-col overflow-hidden bg-background text-foreground">
-      <CathedralBackdrop dim={0.5} />
-      <Embers />
-      <PageFrame />
+    <main ref={mainRef} className="relative flex min-h-dvh flex-col overflow-hidden bg-dv-ink text-dv-text lg:h-dvh">
+      <SceneBackdrop preset="sigil" intensity={0.9} focus={focus} dim={0.08} />
+      <ScreenFrame tone="gold" />
 
-      <div className="relative z-10 mx-auto flex w-full max-w-7xl flex-1 flex-col items-center justify-center gap-6 px-6 py-12 lg:flex-row lg:gap-16 lg:px-16">
-        <figure className="relative w-[min(68vw,300px)] shrink-0 animate-rise lg:w-[min(36vw,440px)]">
-          <DiamondStar className="absolute -top-7 left-1/2 z-10 h-12 w-8 -translate-x-1/2" />
-          <div className="relative aspect-square rounded-full border border-foreground/40 p-2">
-            <div className="relative grid size-full place-items-center overflow-hidden rounded-full border border-foreground/20 bg-[radial-gradient(circle_at_50%_45%,rgba(22,71,255,0.32),transparent_62%)]">
-              <DeadlyVoteSymbol
-                variant="full"
-                animated
-                className="size-[78%] animate-[devo-breathe_9s_ease-in-out_infinite] text-foreground drop-shadow-[0_0_28px_rgba(49,93,255,0.55)]"
-              />
-              <span className="sr-only">Símbolo do Deadly Vote: estrela de quatro pontas atravessada por uma órbita</span>
-              <div className="absolute inset-0 bg-[radial-gradient(circle,transparent_58%,var(--background)_100%)]" />
-              <span aria-hidden="true" className="absolute inset-x-0 top-0 h-1/3 animate-[devo-scan_7s_linear_infinite] bg-gradient-to-b from-transparent via-foreground/[0.06] to-transparent" />
-            </div>
-            {['-left-1.5 top-1/2', '-right-1.5 top-1/2'].map((p) => (
-              <Sparkle key={p} className={`absolute size-3 text-foreground/70 ${p}`} />
-            ))}
-          </div>
-          <figcaption className="mt-3 text-center font-mono text-[11px] uppercase tracking-[0.4em] text-muted-foreground">A verdade é um voto</figcaption>
-        </figure>
+      {/* Barra superior: identidade do sistema + som */}
+      <header className="dv-safe-top relative z-20 flex items-center justify-between px-7 pt-3">
+        <p className="dv-label text-[11px] text-dv-text-2">
+          Devo<span className="text-dv-cobalt-text">.System</span>
+        </p>
+        <SoundToggle compact className="-mr-2 min-h-11 min-w-11 justify-center text-dv-gold/80 hover:text-dv-gold-bright" />
+      </header>
 
-        <section className="flex w-full max-w-md flex-col items-center text-center animate-rise [animation-delay:0.2s]">
-          <Divider />
-          <p className="mt-4 font-mono text-[11px] uppercase tracking-[0.45em] text-foreground/70">
-            Devo<span className="text-primary">.System</span>
-          </p>
+      <div className="relative z-10 mx-auto flex w-full max-w-6xl flex-1 flex-col items-center px-7 pb-[max(env(safe-area-inset-bottom),1.25rem)] lg:flex-row lg:gap-16 lg:px-16">
+        {/* Hero: o astrolábio 3D fica atrás deste bloco. */}
+        <div ref={heroRef} className="relative flex min-h-[210px] w-full flex-1 items-end justify-center lg:h-full lg:min-h-0 lg:items-center">
+          <span className="sr-only">Símbolo do Deadly Vote: estrela de quatro pontas atravessada por uma órbita, dentro de um astrolábio</span>
+        </div>
+
+        <section className="flex w-full max-w-sm shrink-0 flex-col items-center text-center lg:max-w-md">
+          <Kicker tone="gold" className="animate-dv-fade justify-center [animation-delay:200ms]">
+            A verdade é um voto
+          </Kicker>
 
           <h1 className="relative mt-3 flex flex-col items-center">
-            <span aria-hidden="true" className="absolute inset-x-[-10%] top-1/2 h-1/2 -translate-y-1/2 rounded-full bg-primary/30 blur-3xl" />
-            <span className="relative block font-serif text-6xl font-medium uppercase leading-[0.9] tracking-[0.02em] text-foreground sm:text-7xl lg:text-8xl">
-              Deadly Vote
+            <span className="animate-dv-cut-in block font-serif text-[62px] font-medium uppercase leading-[0.84] tracking-[0.02em] text-dv-text [animation-delay:280ms] [text-shadow:0_4px_30px_rgba(5,7,13,0.9)]">
+              Deadly{' '}
             </span>
-            <span className="relative mt-3 block font-sans text-sm font-medium uppercase tracking-[0.6em] text-primary sm:text-base">Record System</span>
-            <span lang="ja" className="relative mt-1 block text-[11px] tracking-[0.3em] text-muted-foreground">
+            <span className="relative block [animation-delay:360ms] animate-dv-cut-in">
+              <span aria-hidden="true" className="absolute -inset-x-6 bottom-[16%] top-[30%] -skew-x-[18deg] bg-[linear-gradient(90deg,transparent,var(--dv-cobalt-deep)_18%,var(--dv-cobalt-deep)_82%,transparent)] opacity-80" />
+              <span className="relative block font-serif text-[62px] font-medium uppercase leading-[0.84] tracking-[0.02em] text-dv-text [text-shadow:0_4px_30px_rgba(5,7,13,0.7)]">
+                Vote
+              </span>
+            </span>
+            <span className="animate-dv-fade mt-3 block font-sans text-[13px] font-medium uppercase tracking-[0.62em] text-dv-cobalt-text [animation-delay:480ms]">
+              Record System
+            </span>
+            <span lang="ja" className="mt-1 block text-[11px] tracking-[0.3em] text-dv-text-3">
               デッドリーボート・記録
             </span>
           </h1>
 
-          <p className="mt-2 text-balance text-lg italic text-foreground/80 sm:text-xl">O tempo é a vida. O jogo é a única fonte dela.</p>
+          <p className="animate-dv-fade mt-3 text-balance font-serif text-[18px] italic leading-snug text-dv-text-2 [animation-delay:560ms]">
+            O tempo é a vida. O jogo é a única fonte dela.
+          </p>
+
           {playerName && (
-            <p className="mt-3 text-[11px] uppercase tracking-[0.35em] text-primary">
-              Bem-vindo de volta, <span className="text-foreground">{playerName}</span>
+            <p className="mt-2.5 text-[11px] uppercase tracking-[0.3em] text-dv-cobalt-text">
+              Bem-vindo de volta, <span className="text-dv-text">{playerName}</span>
               {onSignOut && (
                 <>
                   {' · '}
-                  <button type="button" onClick={onSignOut} className="text-foreground/50 underline-offset-4 hover:text-foreground hover:underline">
+                  <button type="button" onClick={onSignOut} className="dv-focus inline-flex min-h-11 items-center px-1 text-dv-text-3 underline-offset-4 hover:text-dv-text hover:underline">
                     Sair
                   </button>
                 </>
@@ -100,15 +136,20 @@ export function LandingScreen({
             </p>
           )}
 
-          <div className="mt-6 flex items-center gap-3 border border-primary/40 bg-background/60 px-4 py-2 font-mono tabular-nums text-primary shadow-[0_0_24px_-8px_var(--primary)]">
-            <span className="size-1.5 animate-blink rounded-full bg-primary" aria-hidden="true" />
-            <span className="sr-only">Tempo no pulso: </span>
-            {formatDuration(START_MS - elapsed)}
+          {/* Relógio do pulso: 72h — moldura de "bilhete" com filete dourado. */}
+          <div className="animate-dv-rise relative mt-4 flex items-center gap-3 px-5 py-2 [animation-delay:620ms]">
+            <span aria-hidden="true" className="absolute inset-0 border-y border-dv-gold/45 bg-[linear-gradient(90deg,transparent,rgba(10,15,28,0.85)_18%,rgba(10,15,28,0.85)_82%,transparent)]" />
+            <GlyphHourglass className="relative size-5 text-dv-gold" />
+            <span className="dv-label relative text-[10px] text-dv-text-3">Pulso</span>
+            <TimeDigits value={formatDuration(START_MS - elapsed)} size="md" tone="cobalt" label="Tempo no pulso" className="relative" />
           </div>
 
-          <div className="mt-8 flex w-full max-w-xs flex-col gap-4">
-            <MenuButton
+          <div className="mt-5 flex w-full flex-col gap-3">
+            <div className="animate-dv-rise [animation-delay:700ms]">
+            <Button
               variant="primary"
+              size="lg"
+              block
               onMouseEnter={() => awake && playSfx('hover')}
               onClick={() => {
                 playSfx('whoosh')
@@ -117,8 +158,13 @@ export function LandingScreen({
               }}
             >
               Começar
-            </MenuButton>
-            <MenuButton
+            </Button>
+            </div>
+            <div className="animate-dv-rise [animation-delay:780ms]">
+            <Button
+              variant="secondary"
+              size="lg"
+              block
               disabled={!canContinue}
               onMouseEnter={() => awake && canContinue && playSfx('hover')}
               onClick={() => {
@@ -128,15 +174,14 @@ export function LandingScreen({
               }}
             >
               Continuar
-            </MenuButton>
+            </Button>
+            </div>
           </div>
 
-          <div className="mt-8 flex flex-col items-center gap-2">
-            <SoundToggle />
-            <p className="h-4 text-[11px] uppercase tracking-[0.3em] text-muted-foreground" aria-live="polite">
-              {awake ? '' : 'Toque em qualquer lugar para ouvir'}
-            </p>
-          </div>
+          <Divider variant="clock" tone="gold" className="mt-4 w-full max-w-[220px] opacity-70" />
+          <p className="mt-2 h-4 text-[11px] uppercase tracking-[0.3em] text-dv-text-3" aria-live="polite">
+            {awake ? '' : 'Toque em qualquer lugar para ouvir'}
+          </p>
         </section>
       </div>
     </main>

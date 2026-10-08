@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { playMusic, startAmbient, stopMusic, unlockAudio } from '@/lib/devo/audio'
 import { IntroScreen } from './intro/intro-screen'
 import { PrologueScreen } from './intro/prologue-screen'
@@ -15,6 +15,7 @@ import type { SaveData } from '@/lib/devo/save'
 import { BackExitHint, useBackHandler } from './use-back-handler'
 import { ArcadeUnlock } from './arcade/arcade-unlock'
 import { PwaOffer } from './shared/pwa-offer'
+import { Curtain, useCurtain } from './kit/transition'
 
 export function DevoExperience({ initialPlayerName, initialSave }: { initialPlayerName: string | null; initialSave: SaveData | null }) {
   return (
@@ -27,11 +28,11 @@ export function DevoExperience({ initialPlayerName, initialSave }: { initialPlay
 
 function DevoRoot() {
   const { state, dispatch } = useDevo()
-  const [curtain, setCurtain] = useState<string | null>(null)
+  // Cortina única (kit/transition): ação em 850ms, some em 1800ms, ignora cliques duplos.
+  const { curtain, run } = useCurtain()
   const [naming, setNaming] = useState<AccessMode | null>(null)
   const [offerPwa, setOfferPwa] = useState(false)
   const [prologue, setPrologue] = useState(true)
-  const busy = useRef(false)
 
   useEffect(() => {
     const wake = () => {
@@ -46,16 +47,13 @@ function DevoRoot() {
     }
   }, [])
 
-  const transition = useCallback((label: string, action: () => void) => {
-    if (busy.current) return
-    busy.current = true
-    setCurtain(label)
-    window.setTimeout(action, 850)
-    window.setTimeout(() => {
-      setCurtain(null)
-      busy.current = false
-    }, 1800)
-  }, [])
+  const transition = useCallback(
+    (label: string, action: () => void) => {
+      // "Saindo" volta para a tela inicial: lâminas no sentido contrário.
+      run(label, action, { direction: label === 'Saindo' ? 'back' : 'forward' })
+    },
+    [run],
+  )
 
   const beginSession = useCallback(() => {
     playMusic()
@@ -141,12 +139,7 @@ function DevoRoot() {
         />
       )}
 
-      {curtain && (
-        <div className="fixed inset-0 z-[100] grid place-items-center bg-black animate-[devo-curtain_1.8s_ease-in-out_both]" role="status" aria-live="assertive">
-          <span aria-hidden="true" className="absolute inset-x-0 top-1/2 h-px origin-left bg-primary shadow-[0_0_20px_var(--primary)] animate-[devo-slash_0.9s_ease-out_both]" />
-          <p className="relative mt-16 text-[11px] uppercase tracking-[0.5em] text-foreground/70">{curtain}</p>
-        </div>
-      )}
+      <Curtain state={curtain} />
     </>
   )
 }
