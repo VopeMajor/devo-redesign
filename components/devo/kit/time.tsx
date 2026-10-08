@@ -55,7 +55,7 @@ function DigitCell({ c, flip }: { c: string; flip: boolean }) {
   }
   const animating = flip && out.current !== null && seq.current > 0
   return (
-    <span className="relative block h-[1em] w-[0.6em] overflow-x-visible overflow-y-clip text-center leading-[1em]">
+    <span className="relative block h-[1em] w-[0.6em] overflow-hidden text-center leading-[1em]">
       <span key={`in${seq.current}`} className={cn('block h-[1em]', animating && 'animate-dv-digit-in')}>
         {c}
       </span>
