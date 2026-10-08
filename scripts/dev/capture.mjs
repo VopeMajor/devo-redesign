@@ -90,19 +90,27 @@ async function api(page, path, body, headers = {}) {
 
 const hexEmail = (name) => `u${Buffer.from(name.toLowerCase(), 'utf8').toString('hex')}@jogador.devo`
 
-/** Avança diálogos: escolhe a primeira opção quando houver escolha; senão Enter. */
+/** Avança diálogos: preenche campos de resposta; escolhe a primeira opção quando houver escolha; senão Enter. */
 async function advanceDialogue(page) {
-  const choices = page.locator('[aria-label="Escolhas de diálogo"] button, [aria-label="Escolha o que dizer"] button')
-  if (await choices.count()) return tryClick(choices.first())
-  // Respostas de perfil no prólogo (nome, gênero…) são botões "▸ opção" sem grupo.
-  const option = page.locator('main button').filter({ hasText: '▸' })
-  if (await option.count()) return tryClick(option.first())
-  const input = page.locator('main input:visible').first()
-  if (await input.count()) {
-    await input.fill('Aurora').catch(() => {})
-    await page.keyboard.press('Enter')
+  // Campos de perfil no prólogo (rosto: dois campos; idade: numérico). Preenche todos e envia.
+  const inputs = page.locator('main input:visible')
+  const n = await inputs.count()
+  if (n) {
+    for (let k = 0; k < n; k++) {
+      const el = inputs.nth(k)
+      const numeric = (await el.getAttribute('inputmode').catch(() => null)) === 'numeric'
+      await el.fill(numeric ? '27' : 'Aurora').catch(() => {})
+    }
+    await inputs.nth(n - 1).press('Enter').catch(() => {})
     return true
   }
+  const choices = page.locator(
+    '[aria-label="Escolhas de diálogo"] button:not([disabled]), [aria-label="Escolha o que dizer"] button:not([disabled]), [aria-label="Sua resposta"] button:not([disabled])',
+  )
+  if (await choices.count()) return tryClick(choices.first())
+  // Respostas de perfil antigas (botões "▸ opção" sem grupo).
+  const option = page.locator('main button').filter({ hasText: '▸' })
+  if (await option.count()) return tryClick(option.first())
   await page.keyboard.press('Enter')
   return true
 }
@@ -141,20 +149,31 @@ if (want('novato')) {
     await wait(3500)
   })
   await step('prologo', async () => {
-    for (let i = 0; i < 40; i++) {
-      if (i % 2 === 0) await shot(page, `03-prologo-${String(i / 2).padStart(2, '0')}`)
-      await wait(1400)
+    // O prólogo tem ~60 falas (cada uma: 1 Enter completa o texto, outro avança). Foto a cada 5 passos.
+    let n = 0
+    for (let i = 0; i < 220; i++) {
+      if (i % 5 === 0) await shot(page, `03-prologo-${String(n++).padStart(2, '0')}`)
+      await wait(800)
       await advanceDialogue(page)
       if (!(await page.getByText(/pular prólogo/i).count())) break
     }
+    await wait(150)
+    await shot(page, '03-transicao-deadly-vote')
   })
   await step('tutorial', async () => {
     await wait(2500)
-    for (let i = 0; i < 40; i++) {
-      if (i % 2 === 0) await shot(page, `04-tutorial-${String(i / 2).padStart(2, '0')}`)
-      await wait(1400)
-      if (await tryClick(btn(page, /^depois$/i))) break
-      await advanceDialogue(page)
+    let n = 0
+    for (let i = 0; i < 90; i++) {
+      if (i % 3 === 0) await shot(page, `04-tutorial-${String(n++).padStart(2, '0')}`)
+      await wait(900)
+      const later = btn(page, /^depois$/i)
+      if (await later.count()) {
+        await wait(900)
+        await shot(page, '04-tutorial-pwa')
+        await tryClick(later, 1500)
+        break
+      }
+      if (await page.getByText(/pular introdução/i).count()) await advanceDialogue(page)
     }
     await wait(1500)
     await shot(page, '04-tutorial-fim')

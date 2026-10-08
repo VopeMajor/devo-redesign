@@ -15,7 +15,24 @@ import type { SaveData } from '@/lib/devo/save'
 import { BackExitHint, useBackHandler } from './use-back-handler'
 import { ArcadeUnlock } from './arcade/arcade-unlock'
 import { PwaOffer } from './shared/pwa-offer'
-import { Curtain, useCurtain } from './kit/transition'
+import { Curtain, useCurtain, type CurtainOptions } from './kit/transition'
+import './landing/entrada.css'
+
+/**
+ * Cada cortina tem tom e direção coerentes com o que acontece (IDENTIDADE.md §8):
+ * - Despertando: ouro, avança (nascimento do Record, a sessão começa).
+ * - Reconectando: sistema, avança (volta ao aparelho).
+ * - Saindo: sistema, volta (lâminas no sentido contrário).
+ * - Deadly Vote: alerta, avança, som de revelação (o jogo mortal se apresenta).
+ * - Inicializando DEVO: sistema, avança (o aparelho liga).
+ */
+const CURTAIN_STYLE: Record<string, CurtainOptions> = {
+  Despertando: { tone: 'gold', direction: 'forward' },
+  Reconectando: { tone: 'system', direction: 'forward' },
+  Saindo: { tone: 'system', direction: 'back' },
+  'Deadly Vote': { tone: 'alert', direction: 'forward', sfx: 'reveal' },
+  'Inicializando DEVO': { tone: 'system', direction: 'forward' },
+}
 
 export function DevoExperience({ initialPlayerName, initialSave }: { initialPlayerName: string | null; initialSave: SaveData | null }) {
   return (
@@ -49,8 +66,7 @@ function DevoRoot() {
 
   const transition = useCallback(
     (label: string, action: () => void) => {
-      // "Saindo" volta para a tela inicial: lâminas no sentido contrário.
-      run(label, action, { direction: label === 'Saindo' ? 'back' : 'forward' })
+      run(label, action, CURTAIN_STYLE[label] ?? {})
     },
     [run],
   )
@@ -93,6 +109,7 @@ function DevoRoot() {
         <LandingScreen
           playerName={state.playerName}
           canContinue
+          veiled={naming !== null}
           onStart={start}
           onSignOut={state.playerName ? signOut : undefined}
           onContinue={() => {
