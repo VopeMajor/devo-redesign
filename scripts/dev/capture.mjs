@@ -193,7 +193,8 @@ if (want('novato')) {
   await step('sala-de-jogos-revelacao', async () => {
     await page.close()
     const p2 = await ctx.newPage()
-    await p2.goto(BASE, { waitUntil: 'networkidle' })
+    // Uma página que não é o app (mesma origem, mesmos cookies): nada salva por cima do save preparado.
+    await p2.goto(`${BASE}/images/card-back.png`)
     const t = Date.now()
     await api(p2, '/api/save', {
       v: 1,
@@ -205,7 +206,7 @@ if (want('novato')) {
       tradesCompleted: 0,
       arcadeUnlocked: false,
       seenApps: ['pulso', 'mensagens', 'cartas', 'trocas', 'ajustes'],
-    })
+    }).then((r) => r.status >= 400 && manifest.errors.push({ step: 'sala-de-jogos-save', error: `${r.status} ${r.text}` }))
     await p2.goto(BASE, { waitUntil: 'networkidle' })
     await wait(1000)
     await btn(p2, 'Continuar').click({ timeout: 15000 })
