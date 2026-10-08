@@ -5,7 +5,7 @@ import { type CSSProperties, type ReactNode, useState } from 'react'
 import useSWR, { mutate as globalMutate } from 'swr'
 import { Badge, Button, Frame, GlyphCheck, GlyphGavel, Panel, Reveal, Spinner } from '@/components/devo/kit'
 import { playSfx } from '@/lib/devo/audio'
-import { DEADLY_VOTE_STATUS, type DeadlyVoteStatus, type StaffBoard, type StaffVote, type VoteOutcome, voteTitle } from '@/lib/devo/deadly-votes'
+import { arcLabel, DEADLY_VOTE_STATUS, type DeadlyVoteStatus, type StaffBoard, type StaffVote, type VoteOutcome, voteTitle } from '@/lib/devo/deadly-votes'
 import { cn } from '@/lib/utils'
 import { STATUS_BADGE, tallyText } from './deadly-vote-history'
 import { RECORD_KEY, recordAction } from './use-deadly-votes'
@@ -225,7 +225,7 @@ function StaffVoteCard({ vote: v, onAction }: { vote: StaffVote; onAction: (body
         <div className="min-w-0 flex-1">
           <p className="truncate font-display text-[15px] font-semibold uppercase tracking-[0.06em] text-dv-text">{voteTitle(v)}</p>
           <p className="truncate font-sans text-[12px] text-dv-text-3">
-            {v.arc ? `${v.title} · ` : ''}
+            {v.arc ? `${arcLabel(v.arc)} · ` : ''}
             {new Date(v.startsAt).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' })}
           </p>
           <div className="mt-1.5 flex flex-wrap gap-1.5">

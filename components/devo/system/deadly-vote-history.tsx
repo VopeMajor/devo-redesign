@@ -2,7 +2,7 @@
 
 import type { CSSProperties } from 'react'
 import { Badge, type BadgeTone, GlyphArrow, GlyphGavel } from '@/components/devo/kit'
-import { DEADLY_VOTE_STATUS, type DeadlyVoteEntry, type DeadlyVoteStatus, formatVoteDate, OUTCOME_LABEL } from '@/lib/devo/deadly-votes'
+import { arcLabel, DEADLY_VOTE_STATUS, type DeadlyVoteEntry, type DeadlyVoteStatus, formatVoteDate, OUTCOME_LABEL } from '@/lib/devo/deadly-votes'
 import { cn } from '@/lib/utils'
 import { LinkAction, SectionHeading } from './primitives'
 
@@ -94,7 +94,7 @@ export function DeadlyVoteHistoryItem({ entry, onSelect, index = 0 }: { entry: D
   const live = entry.status === 'em-progresso'
   const closed = entry.status === 'concluido' || entry.status === 'falha'
   const tally = closed ? tallyText(v.survivors, v.eliminated) : null
-  const sub = v.arc ? v.title : null
+  const sub = arcLabel(v.arc)
   const content = (
     <>
       {/* Aba de papel com o número do caso */}

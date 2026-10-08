@@ -201,7 +201,6 @@ export function CardShuffler({ synced, onShuffle, className }: { synced: boolean
                   fontSize="8.5"
                   fill="#c9a45c"
                   letterSpacing="0.5"
-                  transform={`rotate(${i * 30} ${100 + Math.sin(a) * 80} ${100 - Math.cos(a) * 80})`}
                   style={{ fontFamily: 'var(--font-display, serif)' }}
                 >
                   {n}

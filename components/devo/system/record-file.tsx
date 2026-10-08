@@ -101,7 +101,7 @@ export function RecordFile({
               </figcaption>
             </div>
             <GlyphClip className="absolute -top-5 left-3 size-10 -rotate-12 text-dv-gold-deep drop-shadow-[0_1px_0_rgba(255,255,255,0.6)]" />
-            <div className="pointer-events-none absolute -bottom-4 right-0">
+            <div className="pointer-events-none absolute bottom-5 -right-3">
               {eliminated ? (
                 <Stamp text="Eliminado" tone="blood" rotate={-14} size={96} animate />
               ) : data.critical ? (
