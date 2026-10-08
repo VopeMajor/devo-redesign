@@ -1,7 +1,10 @@
 // Capturas no tamanho de celular para revisão visual (roda no CI contra o banco de teste).
 // Gera shots/<nome>.png e shots/manifest.json com erros de console de cada etapa.
 import { mkdirSync, writeFileSync } from 'node:fs'
-import { chromium } from 'playwright'
+import { createRequire } from 'node:module'
+// ESM ignora NODE_PATH: resolve o Playwright instalado fora do projeto (ou no próprio projeto).
+const require = createRequire(process.env.PLAYWRIGHT_FROM ?? import.meta.url)
+const { chromium } = require('playwright')
 
 const BASE = process.env.CAPTURE_URL ?? 'http://localhost:3000'
 const OUT = 'shots'
@@ -37,7 +40,7 @@ async function phone() {
 
 async function shot(page, name, note = '') {
   try {
-    await page.screenshot({ path: `${OUT}/${name}.png` })
+    await page.screenshot({ path: `${OUT}/${name}.jpg`, type: 'jpeg', quality: 82 })
     manifest.shots.push({ name, note, url: page.url() })
   } catch (e) {
     manifest.errors.push({ step: name, error: String(e).slice(0, 300) })

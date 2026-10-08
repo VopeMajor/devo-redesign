@@ -9,6 +9,9 @@ concurrency:
   group: capturas-${{ github.ref }}
   cancel-in-progress: true
 
+permissions:
+  contents: write
+
 jobs:
   capturas:
     runs-on: ubuntu-latest
@@ -50,18 +53,24 @@ jobs:
           npx -y wait-on@8 http://localhost:3000 -t 120000
       - name: Playwright
         run: |
-          npm i --no-save --prefix /tmp/pw playwright@1.56.1
+          mkdir -p /tmp/pw && echo '{}' > /tmp/pw/package.json && npm i --prefix /tmp/pw playwright@1.56.1
           npx --prefix /tmp/pw playwright install --with-deps chromium
       - name: Capturas
-        run: NODE_PATH=/tmp/pw/node_modules node scripts/dev/capture.mjs
+        run: PLAYWRIGHT_FROM=/tmp/pw/package.json node scripts/dev/capture.mjs 2>&1 | tee capture.log
+        continue-on-error: true
         env:
           CAPTURE_ONLY: ${{ vars.CAPTURE_ONLY }}
       - name: Logs
         if: always()
-        run: mkdir -p shots && cp -f build.log typecheck.log server.log shots/ 2>/dev/null || true
-      - uses: actions/upload-artifact@v4
+        run: mkdir -p shots && cp -f build.log typecheck.log server.log capture.log shots/ 2>/dev/null || true
+      - name: Publicar capturas na branch capturas/<branch>
         if: always()
-        with:
-          name: capturas
-          path: shots/
-          retention-days: 14
+        run: |
+          BR="capturas/${GITHUB_REF_NAME}"
+          SHA=$(git rev-parse --short HEAD)
+          cd shots
+          echo "$GITHUB_SHA" > SOURCE_SHA
+          git init -q -b "$BR"
+          git config user.name "devo-ci"; git config user.email "ci@devo.local"
+          git add -A && git commit -qm "capturas de ${SHA}"
+          git push -f "https://x-access-token:${{ github.token }}@github.com/${GITHUB_REPOSITORY}.git" "$BR:$BR"
