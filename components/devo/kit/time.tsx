@@ -40,9 +40,10 @@ function tokenize(value: string): Token[] {
 }
 
 /**
- * Uma casa de dígito: largura fixa (0.6em) e máscara vertical. Na troca, o dígito novo desce de cima
- * enquanto o antigo sai por baixo, os dois DENTRO da casa — nunca há quadro sem dígito nem dígito
- * vazando para fora. Sem `flip` (ou com movimento reduzido) troca seca.
+ * Uma casa de dígito: largura fixa (0.6em) e máscara justa à altura do algarismo (0.12em–0.95em da
+ * caixa de 1em). Na troca o dígito novo rola de cima e o antigo sai por baixo, deslocados exatamente
+ * uma altura de algarismo (como um contador): nunca se sobrepõem, nunca vazam da linha e sempre há
+ * dígito visível. Sem `flip` (ou com movimento reduzido) troca seca.
  */
 function DigitCell({ c, flip }: { c: string; flip: boolean }) {
   const last = useRef(c)
@@ -55,7 +56,7 @@ function DigitCell({ c, flip }: { c: string; flip: boolean }) {
   }
   const animating = flip && out.current !== null && seq.current > 0
   return (
-    <span className="relative block h-[1em] w-[0.6em] overflow-hidden text-center leading-[1em]">
+    <span className="relative block h-[1em] w-[0.6em] text-center leading-[1em] [clip-path:inset(0.12em_0_0.05em_0)]">
       <span key={`in${seq.current}`} className={cn('block h-[1em]', animating && 'animate-dv-digit-in')}>
         {c}
       </span>

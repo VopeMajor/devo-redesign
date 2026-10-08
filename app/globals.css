@@ -705,14 +705,14 @@
   from { opacity: 0; transform: translateY(-55%) rotateX(70deg); }
   to { opacity: 1; transform: none; }
 }
-/* Virada mascarada do TimeDigits: o novo entra de cima, o antigo sai por baixo (ambos visíveis). */
+/* Virada do TimeDigits (contador): o novo entra de cima, o antigo sai por baixo, uma altura de algarismo. */
 @keyframes dv-digit-in {
-  from { transform: translateY(-62%); }
+  from { transform: translateY(-0.86em); }
   to { transform: none; }
 }
 @keyframes dv-digit-out {
   from { transform: none; opacity: 1; }
-  to { transform: translateY(62%); opacity: 0; }
+  to { transform: translateY(0.86em); opacity: 0.4; }
 }
 @keyframes dv-sheet-up {
   from { transform: translateY(104%); }
