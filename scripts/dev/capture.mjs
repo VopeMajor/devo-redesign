@@ -150,7 +150,7 @@ if (want('novato')) {
       if (seen) break
       await wait(100)
     }
-    await wait(400)
+    await wait(650)
     await shot(page, '03-transicao-despertando')
     await wait(3000)
   })
@@ -163,7 +163,7 @@ if (want('novato')) {
       await advanceDialogue(page)
       const curtain = page.getByRole('status').filter({ hasText: 'Deadly Vote' })
       if (await curtain.count()) {
-        await wait(350)
+        await wait(650)
         await shot(page, '03-transicao-deadly-vote')
         break
       }
