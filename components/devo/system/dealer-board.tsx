@@ -70,13 +70,19 @@ export function DealerBoard() {
       cut="diag"
       pad="md"
       aria-label="Mesa do Dealer"
-      action={
-        <Button size="sm" variant={creating ? 'ghost' : 'secondary'} aria-expanded={creating} onClick={() => setCreating((v) => !v)} sfx="click" icon={creating ? undefined : <Plus strokeWidth={1.6} />}>
-          {creating ? 'Fechar' : 'Convocar'}
-        </Button>
-      }
     >
       <p className="font-body text-[15px] leading-relaxed text-dv-text-2">Convoque, conduza e registre o resultado de cada Deadly Vote. Tudo aqui aparece no Record dos participantes.</p>
+      <Button
+        size="sm"
+        variant={creating ? 'ghost' : 'secondary'}
+        aria-expanded={creating}
+        onClick={() => setCreating((v) => !v)}
+        sfx="click"
+        icon={creating ? undefined : <Plus strokeWidth={1.6} />}
+        className="mt-3"
+      >
+        {creating ? 'Fechar' : 'Convocar'}
+      </Button>
 
       {creating && (
         <Reveal variant="rise">

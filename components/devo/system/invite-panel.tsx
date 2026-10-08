@@ -179,8 +179,12 @@ export function InvitePanel() {
         cut="diag"
         pad="md"
         aria-label="Convites emitidos"
-        action={data ? <Badge tone="cobalt">{available} disponíveis</Badge> : undefined}
       >
+        {data && (
+          <Badge tone="cobalt" className="mb-3">
+            {available} disponíveis
+          </Badge>
+        )}
         {isLoading ? (
           <p className="flex items-center gap-2 font-body text-[15px] text-dv-text-2">
             <Spinner className="size-4 text-dv-cobalt-text" /> Carregando…

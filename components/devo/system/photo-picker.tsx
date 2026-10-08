@@ -191,11 +191,11 @@ export function PhotoPicker({ hasPhoto, onChanged }: { hasPhoto: boolean; onChan
           aria-label="Escolher foto do perfil"
           aria-busy={busy || undefined}
           style={{ '--dv-cut': '8px' } as CSSProperties}
-          className="dv-focus dv-cut group relative flex h-11 min-w-0 flex-1 items-center justify-center gap-2 bg-dv-ink px-2 text-white transition-transform duration-[120ms] enabled:active:scale-[0.97] disabled:opacity-60"
+          className="dv-focus dv-cut group relative flex h-11 min-w-0 flex-1 items-center justify-center gap-1.5 bg-dv-ink px-1.5 text-white transition-transform duration-[120ms] enabled:active:scale-[0.97] disabled:opacity-60"
         >
           <span aria-hidden="true" className="dv-cut absolute inset-0 shadow-[inset_0_0_0_1px_rgba(125,151,255,0.45)] transition-colors group-enabled:group-hover:bg-dv-cobalt-dim" style={{ '--dv-cut': '8px' } as CSSProperties} />
           {busy ? <Spinner className="relative size-4" /> : <Camera className="relative size-4 shrink-0 text-dv-cobalt-text" strokeWidth={1.4} aria-hidden="true" />}
-          <span className="relative truncate font-mono text-[11px] uppercase tracking-[0.14em]">{hasPhoto ? 'Trocar' : 'Foto'}</span>
+          <span className="relative whitespace-nowrap font-mono text-[11px] uppercase tracking-[0.08em]">{hasPhoto ? 'Trocar' : 'Foto'}</span>
         </button>
         {hasPhoto && (
           <IconButton label="Remover foto" variant="secondary" disabled={busy} onClick={() => send(null)}>

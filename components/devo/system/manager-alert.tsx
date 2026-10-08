@@ -166,7 +166,7 @@ export function ManagerAlert({ signals, className, empty }: { signals: ManagerSi
           <div className="min-w-0 flex-1">
             <div className="flex items-center justify-between gap-3">
               <Kicker tone={meta.kicker} glyph={false} className="text-[10px]">
-                {current.source} · {meta.label}
+                {critical ? `${current.source} · ${meta.label}` : current.source}
               </Kicker>
               <span className="font-mono text-[11px] text-dv-text-3 dv-tabular">{hhmm(current.at)}</span>
             </div>

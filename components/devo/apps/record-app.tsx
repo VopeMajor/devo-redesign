@@ -20,7 +20,7 @@ import {
   Tabs,
   type TabItem,
 } from '@/components/devo/kit'
-import { DEADLY_VOTE_STATUS, type DeadlyVote, type DeadlyVoteStatus, OUTCOME_LABEL, recordIdFor, voteTitle } from '@/lib/devo/deadly-votes'
+import { arcLabel, DEADLY_VOTE_STATUS, type DeadlyVote, type DeadlyVoteStatus, OUTCOME_LABEL, recordIdFor, voteTitle } from '@/lib/devo/deadly-votes'
 import { shufflerStatus } from '@/lib/devo/shuffler'
 import { cn } from '@/lib/utils'
 import { useNow } from '../hooks'
@@ -98,7 +98,9 @@ export function RecordApp() {
       <div className="devo-scroll absolute inset-0 overflow-y-auto">
         <div className="relative mx-auto flex max-w-3xl flex-col gap-4 px-4 pb-10 pt-4 @2xl:px-6">
           <header className="flex animate-dv-fade items-center justify-between gap-3">
-            <Kicker tone="gold">Arquivo recuperado · {data.recordId}</Kicker>
+            <Kicker tone="gold">
+              Arquivo recuperado · <span className="whitespace-nowrap">{data.recordId}</span>
+            </Kicker>
             {role && role !== 'player' && <Badge tone="cobalt">{ROLE_LABEL[role]}</Badge>}
           </header>
 
@@ -111,7 +113,7 @@ export function RecordApp() {
               setSelected(null)
             }}
             fill
-            className="-mx-1 [&_[role=tab]]:px-2 [&_[role=tab]]:text-[12px] [&_[role=tab]]:tracking-[0.12em]"
+            className="-mx-1 [&_[role=tab]]:flex-auto [&_[role=tab]]:gap-1.5 [&_[role=tab]]:whitespace-nowrap [&_[role=tab]]:px-1.5 [&_[role=tab]]:text-[11.5px] [&_[role=tab]]:tracking-[0.08em] @md:[&_[role=tab]]:px-3 @md:[&_[role=tab]]:text-[13px] @md:[&_[role=tab]]:tracking-[0.14em]"
             panelClassName="pt-5"
           >
             {tab === 'invites' && isStaff ? (
@@ -266,8 +268,8 @@ function ConvocationPoster({
           )}
         </div>
 
-        <h3 className="mt-5 font-display text-[24px] font-semibold uppercase leading-tight tracking-[0.05em] text-dv-text">{voteTitle(vote)}</h3>
-        {vote.arc && <p className="font-body text-[16px] italic text-dv-text-2">{vote.title}</p>}
+        {vote.arc && <p className="mt-5 dv-label text-[10px] text-dv-gold">{arcLabel(vote.arc)}</p>}
+        <h3 className={cn('font-display text-[24px] font-semibold uppercase leading-tight tracking-[0.05em] text-dv-text text-balance', vote.arc ? 'mt-1' : 'mt-5')}>{vote.title}</h3>
 
         <div className="mt-4 grid grid-cols-[1fr_auto] items-end gap-4 border-t border-dv-line pt-4">
           <div className="min-w-0">
@@ -368,8 +370,8 @@ function VoteDetail({
       <Frame variant="paper" ornate cutSize={16} pad="none" className="drop-shadow-[0_18px_30px_rgba(0,0,0,0.55)]">
         <header className="px-5 pb-4 pt-5">
           <p className="dv-label text-[10px] text-dv-paper-ink/65">Deadly Vote #{String(vote.number).padStart(3, '0')} · Dossiê do caso</p>
-          <h2 className="mt-2 font-display text-[28px] font-semibold uppercase leading-[1.05] tracking-[0.04em] text-balance">{voteTitle(vote)}</h2>
-          {vote.arc && <p className="mt-1 font-body text-[16px] italic text-dv-paper-ink/75">{vote.title}</p>}
+          <h2 className="mt-2 font-display text-[28px] font-semibold uppercase leading-[1.05] tracking-[0.04em] text-balance">{vote.title}</h2>
+          {vote.arc && <p className="mt-1 font-body text-[16px] italic text-dv-paper-ink/75">{arcLabel(vote.arc)}</p>}
           <div className="mt-3">
             <span
               className={cn(

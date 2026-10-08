@@ -188,8 +188,8 @@ export function CardShuffler({ synced, onShuffle, className }: { synced: boolean
             ))}
           </g>
 
-          {/* mostrador romano */}
-          <g style={spin(90, 2.2)}>
+          {/* mostrador romano: limbo fixo (os numerais nunca ficam de cabeça para baixo) */}
+          <g>
             {NUMERALS.map((n, i) => {
               const a = (i * 30 * Math.PI) / 180
               return (
@@ -295,9 +295,9 @@ export function ShufflerHeading() {
   return (
     <h3 className="flex flex-col gap-0.5">
       <span className="dv-label text-[10px] text-dv-gold">Mecanismo · Embaralhar</span>
-      <span className="flex items-baseline gap-2.5 font-display text-[20px] font-semibold uppercase tracking-[0.08em] text-dv-text">
-        Card Shuffler
-        <span className="font-sans text-[11px] font-normal tracking-[0.2em] text-dv-text-3" lang="ja">
+      <span className="flex flex-wrap items-baseline gap-x-2.5 font-display text-[20px] font-semibold uppercase tracking-[0.08em] text-dv-text">
+        <span className="whitespace-nowrap">Card Shuffler</span>
+        <span className="whitespace-nowrap font-sans text-[11px] font-normal tracking-[0.2em] text-dv-text-3" lang="ja">
           カード・シャッフラー
         </span>
       </span>
@@ -309,9 +309,9 @@ export function DeckHeading() {
   return (
     <h3 className="flex flex-col gap-0.5">
       <span className="dv-label text-[10px] text-dv-gold">Inventário</span>
-      <span className="flex items-baseline gap-2.5 font-display text-[20px] font-semibold uppercase tracking-[0.08em] text-dv-text">
-        Cartas DEVO
-        <span className="font-sans text-[11px] font-normal tracking-[0.2em] text-dv-text-3" lang="ja">
+      <span className="flex flex-wrap items-baseline gap-x-2.5 font-display text-[20px] font-semibold uppercase tracking-[0.08em] text-dv-text">
+        <span className="whitespace-nowrap">Cartas DEVO</span>
+        <span className="whitespace-nowrap font-sans text-[11px] font-normal tracking-[0.2em] text-dv-text-3" lang="ja">
           デボカード
         </span>
       </span>
@@ -342,7 +342,7 @@ export function DeckPanel({ inventory, shufflerSynced, limit = 4, onViewAll, onA
               <button
                 type="button"
                 onClick={onViewAll}
-                className="dv-focus group inline-flex min-h-11 items-center gap-1.5 font-mono text-[11px] uppercase tracking-[0.16em] text-dv-cobalt-text hover:text-dv-text"
+                className="dv-focus group inline-flex min-h-11 shrink-0 items-center gap-1.5 whitespace-nowrap font-mono text-[11px] uppercase tracking-[0.12em] text-dv-cobalt-text hover:text-dv-text"
               >
                 Ver todas
                 <GlyphArrow className="size-3.5 transition-transform group-hover:translate-x-0.5" />

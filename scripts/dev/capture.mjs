@@ -258,16 +258,27 @@ if (want('sistema') || want('apps') || want('jogos')) {
         await shot(page, '20-record-shuffler')
         await wait(1600)
       }
-      await page.getByLabel('Arquivo de casos').first().scrollIntoViewIfNeeded().catch(() => {})
-      await page.locator('#dv-history').first().scrollIntoViewIfNeeded().catch(() => {})
+      await page
+        .locator('section[aria-labelledby="dv-history"]')
+        .first()
+        .evaluate((el) => el.scrollIntoView({ block: 'start' }))
+        .catch(() => {})
       await wait(800)
       await shot(page, '20-record-arquivo')
       if (await tryClick(tab('Deadly Votes'))) {
         await wait(1500)
-        await page.mouse.wheel(0, 900)
+        await page
+          .locator('section[aria-labelledby="dv-history"]')
+          .first()
+          .evaluate((el) => el.scrollIntoView({ block: 'start' }))
+          .catch(() => {})
         await wait(800)
         await shot(page, '20-record-deadly-votes-scroll')
-        await page.mouse.wheel(0, -2000)
+        await page
+          .getByRole('tablist', { name: 'Seções do registro' })
+          .first()
+          .evaluate((el) => el.scrollIntoView({ block: 'start' }))
+          .catch(() => {})
         await wait(500)
         if (await tryClick(btn(page, 'Ver dossiê do caso'))) {
           await wait(1500)

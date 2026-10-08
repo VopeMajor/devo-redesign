@@ -52,12 +52,19 @@ export const DEADLY_VOTE_STATUS: Record<DeadlyVoteStatus, { label: string; dange
 
 export const OUTCOME_LABEL = { sobreviveu: 'Sobreviveu', eliminado: 'Eliminado' } as const
 
+/** Nome do caso: o título do Deadly Vote (o arco aparece como linha de apoio). */
 export function voteTitle(v: DeadlyVote) {
-  return v.arc ? `${v.arc} Arc` : v.title
+  return v.title
+}
+
+/** Arco legível: "Fallen" → "Fallen Arc"; "Arco I" fica como está. */
+export function arcLabel(arc: string | null | undefined) {
+  if (!arc) return null
+  return /\barcos?\b|\barc\b/i.test(arc) ? arc : `${arc} Arc`
 }
 
 export function toEntry(v: DeadlyVote): DeadlyVoteEntry {
-  const parts = [v.arc ? v.title : null, v.outcome ? OUTCOME_LABEL[v.outcome] : null]
+  const parts = [arcLabel(v.arc), v.outcome ? OUTCOME_LABEL[v.outcome] : null]
   if (!v.joined && v.status === 'convocado') parts.push('Inscrições abertas')
   if (v.maxParticipants) parts.push(`${v.participants}/${v.maxParticipants} participantes`)
   return { id: v.id, at: v.startsAt, title: voteTitle(v), detail: parts.filter(Boolean).join(' · ') || undefined, status: v.status, vote: v }

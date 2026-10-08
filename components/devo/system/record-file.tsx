@@ -70,9 +70,9 @@ export function RecordFile({
 
       {/* Faixa diagonal do sistema */}
       <div aria-hidden="true" className="relative mx-5 h-6 overflow-hidden">
-        <span className="absolute inset-y-0 -left-2 right-12 -skew-x-[18deg] bg-dv-cobalt-deep" />
-        <span className="absolute inset-y-0 right-0 w-9 -skew-x-[18deg] bg-dv-cobalt-deep/35" />
-        <span className="relative flex h-full items-center pl-2 font-mono text-[10px] uppercase tracking-[0.24em] text-white">
+        <span className="absolute inset-y-0 -left-2 right-10 -skew-x-[18deg] bg-dv-cobalt-deep" />
+        <span className="absolute inset-y-0 right-0 w-7 -skew-x-[18deg] bg-dv-cobalt-deep/35" />
+        <span className="relative flex h-full items-center whitespace-nowrap pl-2 font-mono text-[10px] uppercase tracking-[0.16em] text-white">
           Arquivo confidencial · {data.recordId}
         </span>
       </div>
@@ -101,7 +101,7 @@ export function RecordFile({
               </figcaption>
             </div>
             <GlyphClip className="absolute -top-5 left-3 size-10 -rotate-12 text-dv-gold-deep drop-shadow-[0_1px_0_rgba(255,255,255,0.6)]" />
-            <div className="pointer-events-none absolute -bottom-5 -right-6">
+            <div className="pointer-events-none absolute -bottom-4 right-0">
               {eliminated ? (
                 <Stamp text="Eliminado" tone="blood" rotate={-14} size={96} animate />
               ) : data.critical ? (
