@@ -5,6 +5,7 @@ import { useEffect, useRef, useState, type FormEvent } from 'react'
 import { playSfx } from '@/lib/devo/audio'
 import { RARITY_META, getCard } from '@/lib/devo/cards'
 import { partnerReply } from '@/lib/devo/trade-bots'
+import { QUICK_PHRASES, ROOM_RULES, TRADE_PROTOCOL, type RoomRuleMeta } from '@/lib/devo/trade-rooms'
 import type { Room, TradeSession } from '@/lib/devo/types'
 import { cn } from '@/lib/utils'
 import { Sparkle } from '../ornaments'
@@ -18,13 +19,7 @@ const STATUS_META: Record<Room['status'], { label: string; dot: string }> = {
   sua: { label: 'Sua sala', dot: 'bg-[#6f8cff]' },
 }
 
-const RULES = [
-  'Escolha uma sala livre e coloque uma carta no SEU ESPAÇO.',
-  'Outro jogador entra e coloca uma carta no espaço dele.',
-  'As duas cartas ficam ocultas. Só a raridade é garantida: ela é a mesma.',
-  'Conversem, negociem, mintam. Se ambos aceitarem, a troca é final.',
-  'Se alguém abandonar a sala, as cartas voltam aos donos.',
-]
+const RULES = TRADE_PROTOCOL
 
 export function TrocasApp() {
   const { state } = useDevo()
@@ -60,7 +55,7 @@ function Lobby() {
                     playSfx('open')
                     dispatch({ type: 'TRADE_ENTER', roomId: room.id })
                   }}
-                  aria-label={`Sala ${room.number}, ${meta.label}, ${room.condition}`}
+                  aria-label={`Sala ${room.number}, ${meta.label}, ${room.condition}: ${ROOM_RULES[room.rule].summary}`}
                   className={cn(
                     'group relative flex aspect-[3/4] w-full flex-col justify-between overflow-hidden border p-3 text-left transition-all duration-300',
                     free
@@ -118,14 +113,22 @@ const STAGE_TEXT: Record<TradeSession['stage'], string> = {
 function TradeRoom({ trade }: { trade: TradeSession }) {
   const { state, dispatch } = useDevo()
   const room = state.rooms.find((r) => r.id === trade.roomId)
-  const silent = room?.condition === 'Silêncio'
-  const rarity = trade.myCard ? RARITY_META[getCard(trade.myCard.cardId).rarity] : null
+  const rule = ROOM_RULES[room?.rule ?? 'mesma-raridade']
+  const rarity = trade.myCard && rule.showRarity ? RARITY_META[getCard(trade.myCard.cardId).rarity] : null
+  const partnerRarity = trade.partnerCardId && rule.showRarity ? RARITY_META[getCard(trade.partnerCardId).rarity] : null
   const revealed = trade.stage === 'revealing' || trade.stage === 'done'
   const finished = trade.stage === 'done' || trade.stage === 'abandoned'
+  const forfeitRisk = rule.forfeitOnLeave && !finished && !!trade.myCard
+  const [confirmLeave, setConfirmLeave] = useState(false)
 
   const leave = () => {
+    if (forfeitRisk && !confirmLeave) {
+      playSfx('click')
+      setConfirmLeave(true)
+      return
+    }
     playSfx('close')
-    if (!finished && trade.myCard) dispatch({ type: 'TRADE_CANCEL' })
+    if (!finished && trade.myCard) dispatch({ type: 'TRADE_CANCEL', forfeit: rule.forfeitOnLeave })
     dispatch({ type: 'TRADE_EXIT' })
   }
 
@@ -143,9 +146,10 @@ function TradeRoom({ trade }: { trade: TradeSession }) {
           </div>
           <ActionButton tone="danger" onClick={leave}>
             <LogOut className="size-3.5" />
-            {finished ? 'Sair' : 'Abandonar'}
+            {finished ? 'Sair' : confirmLeave ? 'Sair e perder a carta' : 'Abandonar'}
           </ActionButton>
         </header>
+        <RoomRuleBanner rule={rule} expanded={trade.stage === 'placing'} />
 
         <div className="relative flex flex-1 flex-col items-center justify-between gap-4 bg-[radial-gradient(ellipse_at_center,rgba(22,71,255,0.12),transparent_65%)] px-5 py-6">
           <Seat
@@ -166,7 +170,16 @@ function TradeRoom({ trade }: { trade: TradeSession }) {
             <span className="h-px flex-1 bg-gradient-to-r from-transparent to-foreground/30" />
             <span className="flex items-center gap-2 text-[11px] uppercase tracking-[0.3em]">
               <Sparkle className="size-2.5 text-primary" />
-              {rarity ? <span style={{ color: rarity.color }}>{rarity.label}</span> : 'Mesa'}
+              {rarity ? (
+                <span style={{ color: rarity.color }}>
+                  {rule.sameRarity ? `${rarity.label} · garantida` : `Sua: ${rarity.label}`}
+                  {!rule.sameRarity && partnerRarity && <span style={{ color: partnerRarity.color }}>{` · Dele: ${partnerRarity.label}`}</span>}
+                </span>
+              ) : trade.myCard ? (
+                'Raridade oculta'
+              ) : (
+                'Mesa'
+              )}
               <Sparkle className="size-2.5 text-primary" />
             </span>
             <span className="h-px flex-1 bg-gradient-to-l from-transparent to-foreground/30" />
@@ -184,7 +197,7 @@ function TradeRoom({ trade }: { trade: TradeSession }) {
         <TradeFooter trade={trade} onLeave={leave} />
       </section>
 
-      <TradeChat trade={trade} silent={silent} />
+      <TradeChat trade={trade} rule={rule} />
     </div>
   )
 }
@@ -291,7 +304,11 @@ function TradeFooter({ trade, onLeave }: { trade: TradeSession; onLeave: () => v
     return (
       <div className="flex flex-wrap items-center justify-between gap-3 border-t border-foreground/10 p-4 animate-pop">
         <p className="text-muted-foreground">
-          {trade.endReason === 'partner-left' ? 'O outro jogador fugiu. Sua carta voltou para você.' : 'Troca cancelada.'}
+          {trade.endReason === 'partner-left'
+            ? 'O outro jogador fugiu. Sua carta voltou para você.'
+            : trade.endReason === 'forfeit'
+              ? 'Você saiu de uma sala Sem retorno. Sua carta ficou na mesa.'
+              : 'Troca cancelada.'}
         </p>
         <ActionButton onClick={onLeave}>Voltar ao corredor</ActionButton>
       </div>
@@ -322,10 +339,11 @@ function TradeFooter({ trade, onLeave }: { trade: TradeSession; onLeave: () => v
   )
 }
 
-function TradeChat({ trade, silent }: { trade: TradeSession; silent: boolean }) {
+function TradeChat({ trade, rule }: { trade: TradeSession; rule: RoomRuleMeta }) {
   const { dispatch } = useDevo()
   const [draft, setDraft] = useState('')
   const listRef = useRef<HTMLDivElement>(null)
+  const silent = rule.chat === 'nenhum'
   const canChat = trade.stage === 'negotiating' && !silent
 
   useEffect(() => {
@@ -334,7 +352,10 @@ function TradeChat({ trade, silent }: { trade: TradeSession; silent: boolean }) 
 
   const send = (e: FormEvent) => {
     e.preventDefault()
-    const text = draft.trim()
+    say(draft.trim())
+  }
+
+  const say = (text: string) => {
     if (!text || !canChat || !trade.partner || !trade.partnerCardId) return
     const { partner, partnerCardId } = trade
     setDraft('')
@@ -349,7 +370,7 @@ function TradeChat({ trade, silent }: { trade: TradeSession; silent: boolean }) 
   return (
     <aside className="flex h-64 shrink-0 flex-col border-t border-foreground/10 bg-background/40 @3xl:h-auto @3xl:w-80 @3xl:border-l @3xl:border-t-0" aria-label="Conversa da sala">
       <p className="border-b border-foreground/10 px-4 py-2.5 text-[11px] uppercase tracking-[0.3em] text-muted-foreground">
-        {silent ? 'Sala do silêncio · chat bloqueado' : 'Canal da sala'}
+        {silent ? 'Sala do silêncio · chat bloqueado' : rule.chat === 'frases' ? 'Canal da sala · frases prontas' : 'Canal da sala · chat livre'}
       </p>
       <div ref={listRef} className="devo-scroll flex flex-1 flex-col gap-2.5 overflow-y-auto p-4" aria-live="polite">
         {trade.chat.length === 0 && (
@@ -371,28 +392,62 @@ function TradeChat({ trade, silent }: { trade: TradeSession; silent: boolean }) 
           </div>
         )}
       </div>
-      <form onSubmit={send} className="flex items-center gap-2 border-t border-foreground/10 p-3">
-        <label htmlFor="trade-chat" className="sr-only">
-          Mensagem para o outro jogador
-        </label>
-        <input
-          id="trade-chat"
-          value={draft}
-          onChange={(e) => setDraft(e.target.value)}
-          disabled={!canChat}
-          placeholder={canChat ? 'Pergunte sobre a carta…' : 'Chat indisponível'}
-          autoComplete="off"
-          className="min-w-0 flex-1 border border-foreground/20 bg-background/60 px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:border-foreground/50 focus:outline-none disabled:opacity-50"
-        />
-        <button
-          type="submit"
-          disabled={!canChat}
-          className="grid size-9 place-items-center border border-primary/60 text-primary transition-colors enabled:hover:bg-primary/15 disabled:opacity-40"
-          aria-label="Enviar"
-        >
-          <Send className="size-4" />
-        </button>
-      </form>
+      {rule.chat === 'frases' ? (
+        <div className="flex flex-wrap gap-1.5 border-t border-foreground/10 p-3" role="group" aria-label="Frases prontas">
+          {QUICK_PHRASES.map((p) => (
+            <button
+              key={p}
+              type="button"
+              disabled={!canChat}
+              onClick={() => say(p)}
+              className="border border-foreground/20 px-2.5 py-1.5 text-xs text-foreground/85 transition-colors enabled:hover:border-primary/60 disabled:opacity-40"
+            >
+              {p}
+            </button>
+          ))}
+        </div>
+      ) : (
+        <form onSubmit={send} className="flex items-center gap-2 border-t border-foreground/10 p-3">
+          <label htmlFor="trade-chat" className="sr-only">
+            Mensagem para o outro jogador
+          </label>
+          <input
+            id="trade-chat"
+            value={draft}
+            onChange={(e) => setDraft(e.target.value)}
+            disabled={!canChat}
+            placeholder={canChat ? 'Pergunte sobre a carta…' : 'Chat indisponível'}
+            autoComplete="off"
+            className="min-w-0 flex-1 border border-foreground/20 bg-background/60 px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:border-foreground/50 focus:outline-none disabled:opacity-50"
+          />
+          <button
+            type="submit"
+            disabled={!canChat}
+            className="grid size-9 place-items-center border border-primary/60 text-primary transition-colors enabled:hover:bg-primary/15 disabled:opacity-40"
+            aria-label="Enviar"
+          >
+            <Send className="size-4" />
+          </button>
+        </form>
+      )}
     </aside>
+  )
+}
+
+/** Explica a condição da sala ao entrar (completa enquanto escolhe a carta, depois em uma linha). */
+function RoomRuleBanner({ rule, expanded }: { rule: RoomRuleMeta; expanded: boolean }) {
+  return (
+    <div className="border-b border-foreground/10 bg-primary/5 px-5 py-2.5" aria-label={`Regra da sala: ${rule.label}`}>
+      <p className="text-[11px] uppercase tracking-[0.2em] text-foreground/80">
+        <span className="text-primary">{rule.label}</span> · {rule.summary}
+      </p>
+      {expanded && (
+        <ul className="mt-1.5 flex list-disc flex-col gap-0.5 pl-4 text-xs leading-relaxed text-muted-foreground">
+          {rule.details.map((d) => (
+            <li key={d}>{d}</li>
+          ))}
+        </ul>
+      )}
+    </div>
   )
 }

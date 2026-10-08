@@ -10,6 +10,7 @@ import { GAMES, type GameId } from '@/lib/devo/arcade/games'
 import { playSfx } from '@/lib/devo/audio'
 import { cn } from '@/lib/utils'
 import { useNow } from '../hooks'
+import { JavaliArt } from '../npc-art/javali'
 import { useDevo } from '../state/devo-store'
 import { ArcadeChat } from './arcade-chat'
 import { type ArcadeView, BET_OPTIONS, BET_RESERVE_MIN, eventTimeLabel, formatMinutes, registerEvent, useApplyTime } from './arcade-shared'
@@ -205,7 +206,7 @@ function Hero({
 
       <div className="relative flex items-end gap-4">
         <div className="relative hidden h-28 shrink-0 @xl:block" style={{ aspectRatio: '1000 / 444' }}>
-          <Image src="/images/npc/javali.webp" alt="Javali, anfitrião da Sala de Jogos" fill sizes="260px" className="object-contain object-bottom drop-shadow-[0_6px_18px_rgba(0,0,0,0.6)]" />
+          <JavaliArt pose="table" title="Javali, anfitrião da Sala de Jogos" className="absolute inset-0 size-full drop-shadow-[0_6px_18px_rgba(0,0,0,0.6)]" />
         </div>
         <div className="min-w-0">
           <p className="text-[10px] uppercase tracking-[0.4em] text-[#8fa6ff]/80">DEVO · Entretenimento</p>
@@ -214,7 +215,7 @@ function Hero({
           </h2>
           <p className="mt-2 text-[11px] uppercase tracking-[0.3em] text-foreground/55">Jogue. Aposte. Sobreviva.</p>
           <p className="mt-2 text-xs italic text-foreground/50">
-            <span className="not-italic text-[#c9a8f0]">Javali:</span> {line}
+            <span className="not-italic text-[#d8b25a]">Javali:</span> {line}
           </p>
         </div>
       </div>
@@ -310,15 +311,18 @@ function GameCard({
   onTutorial: () => void
 }) {
   const g = GAMES[gameId]
-  const status = !event
-    ? { text: 'Sem evento na semana', cls: 'text-foreground/45', icon: Lock }
+  const soon = g.status === 'em-breve'
+  // Duas coisas diferentes no mesmo card: o EVENTO agendado da semana (com inscrição) e a PARTIDA
+  // LIVRE (fila casual, botão Jogar). Antes o "Em breve" do evento aparecia colado ao Jogar ativo.
+  const eventStatus = !event
+    ? { text: 'Nenhum evento esta semana', cls: 'text-foreground/45', icon: null }
     : event.status === 'LIVE'
       ? { text: 'Ao vivo', cls: 'text-[#b8c6ff]', icon: Radio }
       : event.joined
         ? { text: 'Inscrito', cls: 'text-emerald-300', icon: null }
         : event.status === 'REGISTRATION'
           ? { text: 'Inscrições abertas', cls: 'text-[#8fa6ff]', icon: null }
-          : { text: 'Em breve', cls: 'text-foreground/50', icon: Lock }
+          : { text: 'Inscrições ainda fechadas', cls: 'text-foreground/50', icon: Lock }
   return (
     <article className="group relative flex flex-col overflow-hidden border border-[#6f8cff]/25 bg-[#080a14] transition-all hover:-translate-y-0.5 hover:border-[#6f8cff]/70 hover:shadow-[0_10px_30px_rgba(111,140,255,0.18)]">
       <div className="relative aspect-[4/3] overflow-hidden border-b border-[#6f8cff]/20">
@@ -337,24 +341,30 @@ function GameCard({
         <span className="border border-foreground/20 bg-black/50 px-1.5 py-0.5 text-[9px] uppercase tracking-[0.15em] text-foreground/70">{g.players} jogadores</span>
         <span className="border border-foreground/20 bg-black/50 px-1.5 py-0.5 text-[9px] uppercase tracking-[0.15em] text-foreground/70">~{Math.max(1, Math.round(g.durationSec / 60))} min</span>
       </div>
-      <p className="mt-2 font-mono text-[10px] tracking-[0.18em] text-foreground/55">{event ? eventTimeLabel(event.startsAt) : `Melhor: ${formatPoints(best)}`}</p>
-      <p className={cn('mt-1 flex items-center gap-1.5 text-[10px] font-medium uppercase tracking-[0.18em]', status.cls)}>
-        {status.icon && <status.icon className="size-3" aria-hidden="true" />}
-        {status.text}
+      <div className="mt-2 border-l border-foreground/15 pl-2" aria-label="Próximo evento">
+        <p className="text-[9px] uppercase tracking-[0.22em] text-foreground/40">Próximo evento</p>
+        {event && <p className="font-mono text-[10px] tracking-[0.18em] text-foreground/55">{eventTimeLabel(event.startsAt)}</p>}
+        <p className={cn('flex items-center gap-1.5 text-[10px] font-medium uppercase tracking-[0.18em]', eventStatus.cls)}>
+          {eventStatus.icon && <eventStatus.icon className="size-3" aria-hidden="true" />}
+          {eventStatus.text}
+        </p>
+      </div>
+      <p className="mt-2 text-[9px] uppercase tracking-[0.22em] text-foreground/40">
+        Partida livre · {soon ? <span className="text-foreground/60">Em breve</span> : `Melhor: ${formatPoints(best)}`}
       </p>
       <div className="mt-2.5 flex items-center gap-2">
         <button
           type="button"
-          disabled={busy}
+          disabled={busy || soon}
           onClick={onPlay}
           className="flex flex-1 items-center justify-center gap-1.5 border border-[#6f8cff]/70 bg-[#1647ff]/15 px-2 py-1.5 text-[10px] uppercase tracking-[0.2em] text-[#c9d4ff] transition-colors hover:bg-[#1647ff]/30 disabled:opacity-50"
         >
           <Users className="size-3" aria-hidden="true" />
-          Jogar
+          {soon ? 'Em breve' : 'Jogar'}
         </button>
         <button
           type="button"
-          disabled={busy}
+          disabled={busy || soon}
           onClick={onTutorial}
           className="px-1 py-1.5 text-[10px] uppercase tracking-[0.2em] text-foreground/50 underline-offset-4 hover:text-foreground hover:underline disabled:opacity-50"
         >

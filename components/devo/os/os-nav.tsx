@@ -7,6 +7,7 @@ export type OsNav = {
   open: (id: AppId) => void
   layout: 'desktop' | 'phone'
   exitToLanding: () => void
+  /** Abre Ajustes na confirmação de "Reiniciar sessão". */
   restart: () => void
 }
 

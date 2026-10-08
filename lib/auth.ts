@@ -115,20 +115,22 @@ export const auth = betterAuth({
         },
         after: async (user, ctx) => {
           const code = normalizeInvite(headerOf(ctx, INVITE_HEADER))
-          const { rows } = await pool.query<{ role: string }>(
-            'UPDATE invite_codes SET used_by_user = $2 WHERE code = $1 RETURNING role',
+          const { rows } = await pool.query<{ role: string; is_test: boolean }>(
+            'UPDATE invite_codes SET used_by_user = $2 WHERE code = $1 RETURNING role, is_test',
             [code, user.id],
           )
           const role = rows[0]?.role ?? 'player'
+          // Convite de teste gera conta de teste (fora de ranking, apostas e prêmios). Ver scripts/test-accounts-migration.sql.
+          const isTest = !!rows[0]?.is_test
           const legacyId = legacyPlayerId(headerOf(ctx, 'cookie'))
           if (legacyId) {
             const linked = await pool.query(
-              'UPDATE players SET user_id = $2, name = $3, role = CASE WHEN $4 = \'player\' THEN role ELSE $4 END WHERE id = $1 AND user_id IS NULL',
-              [legacyId, user.id, user.name, role],
+              'UPDATE players SET user_id = $2, name = $3, role = CASE WHEN $4 = \'player\' THEN role ELSE $4 END, is_test = is_test OR $5 WHERE id = $1 AND user_id IS NULL',
+              [legacyId, user.id, user.name, role, isTest],
             )
             if (linked.rowCount) return
           }
-          await pool.query('INSERT INTO players (name, role, user_id) VALUES ($1, $2, $3)', [user.name, role, user.id])
+          await pool.query('INSERT INTO players (name, role, user_id, is_test) VALUES ($1, $2, $3, $4)', [user.name, role, user.id, isTest])
         },
       },
     },

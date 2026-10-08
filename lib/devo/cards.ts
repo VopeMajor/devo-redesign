@@ -1,11 +1,18 @@
 import type { CardDef, OwnedCard, Rarity } from './types'
 
-export const RARITY_META: Record<Rarity, { label: string; color: string; order: number }> = {
-  comum: { label: 'Comum', color: '#cbbfa8', order: 0 },
-  incomum: { label: 'Incomum', color: '#b08350', order: 1 },
-  rara: { label: 'Rara', color: '#d4161f', order: 2 },
-  lendaria: { label: 'Lendária', color: '#d8b25a', order: 3 },
+/**
+ * Fonte única das raridades. Nomes, cores e ordem usados em qualquer tela (Cartas, Record, Trocas,
+ * aula da Coruja) saem daqui. `plural` serve para textos corridos.
+ */
+export const RARITY_META: Record<Rarity, { label: string; plural: string; color: string; order: number }> = {
+  comum: { label: 'Comum', plural: 'Comuns', color: '#cbbfa8', order: 0 },
+  incomum: { label: 'Incomum', plural: 'Incomuns', color: '#b08350', order: 1 },
+  rara: { label: 'Rara', plural: 'Raras', color: '#d4161f', order: 2 },
+  lendaria: { label: 'Lendária', plural: 'Lendárias', color: '#d8b25a', order: 3 },
 }
+
+/** Raridades da mais comum para a mais rara. */
+export const RARITIES: Rarity[] = (Object.keys(RARITY_META) as Rarity[]).sort((a, b) => RARITY_META[a].order - RARITY_META[b].order)
 
 export const CARDS: CardDef[] = [
   { id: 'fosforo', name: 'Fósforo', numeral: 'I', rarity: 'comum', type: 'Ataque', glyph: 'flame', effect: 'Queima uma carta comum do oponente durante um jogo.', flavor: 'Uma chama pequena basta para um quarto escuro.' },
@@ -72,16 +79,37 @@ export function getCardRadius(id: string): string {
   return CARD_RADIUS[id] ?? '—'
 }
 
-export type CardMeta = { collection: string; order: number; collectionSize: number; serial: string }
+/** Coleções Arcanas (nome + quantidade de cartas), na ordem oficial. */
+export function getCollections(): { name: string; size: number; cards: string[] }[] {
+  return ARCANA_COLLECTIONS.map((c) => ({ name: c.name, size: c.cards.length, cards: [...c.cards] }))
+}
+
+/**
+ * Numeração oficial de uma carta — fonte única para qualquer tela.
+ * - `order`/`collectionSize`/`orderLabel`: posição na Coleção Arcana ("02/04").
+ * - `universal`/`serial`: lugar no Compêndio (todas as cartas), "№ 007".
+ */
+export type CardMeta = {
+  collection: string
+  order: number
+  collectionSize: number
+  orderLabel: string
+  universal: number
+  serial: string
+}
 
 export function getCardMeta(id: string): CardMeta {
   const collection = ARCANA_COLLECTIONS.find((c) => c.cards.includes(id)) ?? { name: 'Compêndio', cards: [id] }
   const universal = CARDS.findIndex((c) => c.id === id) + 1
+  const order = collection.cards.indexOf(id) + 1
+  const pad = (n: number) => String(n).padStart(2, '0')
   return {
     collection: collection.name,
-    order: collection.cards.indexOf(id) + 1,
+    order,
     collectionSize: collection.cards.length,
-    serial: `${String(Math.floor(universal / 1000)).padStart(3, '0')}.${String(universal * 137 + 4000).padStart(3, '0')}`,
+    orderLabel: `${pad(order)}/${pad(collection.cards.length)}`,
+    universal,
+    serial: `№ ${String(universal).padStart(3, '0')}`,
   }
 }
 

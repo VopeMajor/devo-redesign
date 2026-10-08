@@ -11,6 +11,7 @@ import {
   type StageId,
 } from '@/lib/devo/prologue-script'
 import { cn } from '@/lib/utils'
+import { useAdvanceKeys } from '../hooks'
 import { SoundToggle } from '../shared/sound-toggle'
 import { PrologueStage } from './prologue-stage'
 
@@ -253,16 +254,7 @@ export function PrologueScreen({ playerName, onFinish: onDone }: { playerName: s
     next()
   }, [line, done, finish, replies, beat, explored.length, next])
 
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if ((e.key === 'Enter' || e.key === ' ') && !(e.target instanceof HTMLInputElement)) {
-        e.preventDefault()
-        advance()
-      }
-    }
-    window.addEventListener('keydown', onKey)
-    return () => window.removeEventListener('keydown', onKey)
-  }, [advance])
+  useAdvanceKeys(advance)
 
   const choose = (label: string, reply: Line[]) => {
     playSfx('confirm')

@@ -4,6 +4,7 @@ import { Plus } from 'lucide-react'
 import { useEffect, useRef, useState, type PointerEvent } from 'react'
 import { playSfx } from '@/lib/devo/audio'
 import { getCard, RARITY_META } from '@/lib/devo/cards'
+import { shufflerStatus, type ShufflerPhase } from '@/lib/devo/shuffler'
 import type { OwnedCard } from '@/lib/devo/types'
 import { cn } from '@/lib/utils'
 import { CardFace } from './devo-card'
@@ -24,11 +25,16 @@ export function ArtCard({ cardId, className }: { cardId: string; className?: str
   return <CardFace cardId={cardId} className={className} />
 }
 
+/**
+ * Quantidade de cópias que o jogador tem. Não é numeração de coleção (essa vem de `getCardMeta`):
+ * antes aparecia "01/20", que se confundia com a ordem na coleção.
+ */
 export function CountLabel({ count, className }: { count: number; className?: string }) {
   return (
-    <p className={cn('flex items-baseline gap-1 font-serif leading-none', className)}>
-      <span className="text-2xl tabular-nums">{String(count).padStart(2, '0')}</span>
-      <span className="text-xs opacity-50">/{MAX_COPIES}</span>
+    <p className={cn('flex items-baseline gap-1 font-serif leading-none', className)} title={`Você tem ${count} de no máximo ${MAX_COPIES} cópias`}>
+      <span className="text-xs opacity-60">×</span>
+      <span className="text-2xl tabular-nums">{count}</span>
+      <span className="font-sans text-[9px] uppercase tracking-[0.14em] opacity-50">{count === 1 ? 'cópia' : 'cópias'}</span>
     </p>
   )
 }
@@ -52,7 +58,7 @@ export function AcquireTile({ onClick, className }: { onClick?: () => void; clas
 const TICKS = Array.from({ length: 72 }, (_, i) => i)
 const STRIAE = Array.from({ length: 40 }, (_, i) => i)
 
-type ShufflerState = 'idle' | 'shuffling' | 'synced'
+type ShufflerState = ShufflerPhase
 
 export function CardShuffler({ synced, onShuffle, className }: { synced: boolean; onShuffle?: () => void; className?: string }) {
   const [look, setLook] = useState({ x: 0, y: 0 })
@@ -84,7 +90,7 @@ export function CardShuffler({ synced, onShuffle, className }: { synced: boolean
   }
 
   const shuffling = phase === 'shuffling'
-  const status = !synced ? 'Dormente' : shuffling ? 'Embaralhando' : phase === 'synced' ? 'Sincronia completa' : 'Sincronizado'
+  const status = shufflerStatus(synced, phase)
   const spin = (normal: number, fast: number, reverse = false) => ({
     transformBox: 'fill-box' as const,
     transformOrigin: 'center',
@@ -103,7 +109,7 @@ export function CardShuffler({ synced, onShuffle, className }: { synced: boolean
           setLook({ x: 0, y: 0 })
         }}
         disabled={!synced}
-        aria-label={synced ? 'Ativar o Card Shuffler' : 'Card Shuffler dormente'}
+        aria-label={synced ? 'Ativar o Card Shuffler' : `Card Shuffler ${shufflerStatus(false).toLowerCase()}`}
         className="group relative mx-auto aspect-square w-full max-w-[11rem] rounded-full outline-none focus-visible:ring-2 focus-visible:ring-[#1f3bff] focus-visible:ring-offset-4 focus-visible:ring-offset-[#0a0d18] disabled:cursor-not-allowed"
       >
         <svg viewBox="0 0 200 200" className={cn('size-full transition-[filter] duration-500', !synced && 'grayscale opacity-50')} aria-hidden="true">
@@ -254,7 +260,7 @@ export function DeckPanel({ inventory, shufflerSynced, limit = 4, onViewAll, onA
                 type="button"
                 onClick={() => onSelect?.(s.cardId)}
                 disabled={!onSelect}
-                aria-label={`${getCard(s.cardId).name}: ${s.count} de ${MAX_COPIES}`}
+                aria-label={`${getCard(s.cardId).name}: ${s.count} ${s.count === 1 ? 'cópia' : 'cópias'}`}
                 className="block transition-transform duration-300 enabled:hover:-translate-y-1 focus-visible:outline-2 focus-visible:outline-[#1f3bff]"
               >
                 <ArtCard cardId={s.cardId} />

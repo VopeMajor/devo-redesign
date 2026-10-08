@@ -1,7 +1,8 @@
 'use client'
 
 import { useEffect } from 'react'
-import { getCard, randomCardOfRarity } from '@/lib/devo/cards'
+import { getCard } from '@/lib/devo/cards'
+import { partnerCardFor, ROOM_RULES } from '@/lib/devo/trade-rooms'
 import { getNpc } from '@/lib/devo/npcs'
 import { withName } from '@/lib/devo/player-name'
 import { makePartner, partnerLine } from '@/lib/devo/trade-bots'
@@ -75,7 +76,9 @@ export function useDevoEngine() {
     return () => window.clearInterval(id)
   }, [dispatch])
 
-  const silent = trade ? state.rooms.find((r) => r.id === trade.roomId)?.condition === 'Silêncio' : false
+  const roomRule = trade ? state.rooms.find((r) => r.id === trade.roomId)?.rule : undefined
+  // Fala espontânea do parceiro só onde existe chat (frases prontas ou livre).
+  const silent = roomRule ? ROOM_RULES[roomRule].chat === 'nenhum' : false
 
   useEffect(() => {
     if (stage !== 'waiting' || !trade?.myCard) return
@@ -84,7 +87,7 @@ export function useDevoEngine() {
     timers.push(
       window.setTimeout(() => {
         const partner = makePartner()
-        const card = randomCardOfRarity(rarity)
+        const card = partnerCardFor(roomRule ?? 'mesma-raridade', rarity)
         dispatch({ type: 'TRADE_PARTNER_JOIN', partner, partnerCardId: card.id })
         notify({ appId: 'trocas', title: 'Sala de Trocas', body: `${partner.handle} entrou na sua sala e colocou uma carta na mesa.` })
         playSfx('notify')

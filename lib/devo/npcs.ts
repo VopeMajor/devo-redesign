@@ -1,4 +1,10 @@
+import type { ComponentType } from 'react'
+import { HerdeiroArt } from '@/components/devo/npc-art/herdeiro'
+
 export type Expression = 'neutral' | 'smirk'
+
+/** Retrato desenhado no projeto (SVG como componente React), no lugar de uma imagem. */
+export type NpcArtProps = { expression?: Expression; crop?: 'face'; className?: string; title?: string }
 
 /**
  * Uma escolha de diálogo. Depois de feita, a resposta fica registrada para sempre
@@ -25,6 +31,10 @@ export type NpcDef = {
   name: string
   title: string
   portraits: Partial<Record<Expression, string>>
+  /** Arte original em SVG (tem prioridade sobre `portraits`). */
+  art?: ComponentType<NpcArtProps>
+  /** Expressões que a arte sabe desenhar. */
+  artExpressions?: Expression[]
   /** 'cutout' para PNGs recortados; 'blend' para ilustrações com fundo escuro. */
   portraitStyle: 'cutout' | 'blend'
   choices: DialogueChoice[]
@@ -39,10 +49,9 @@ export const NPCS: Record<string, NpcDef> = {
     name: 'O Herdeiro',
     title: 'Herdeiro Absoluto',
     portraitStyle: 'cutout',
-    portraits: {
-      neutral: '/images/npc/heir-v3-neutral.png',
-      smirk: '/images/npc/heir-v3-smirk.png',
-    },
+    portraits: {},
+    art: HerdeiroArt,
+    artExpressions: ['neutral', 'smirk'],
     choices: [
       {
         id: 'quem',

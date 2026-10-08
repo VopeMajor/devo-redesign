@@ -9,6 +9,7 @@ import { withName } from '@/lib/devo/player-name'
 import { cn } from '@/lib/utils'
 import { Sparkle } from '../ornaments'
 import { CathedralBackdrop, Embers } from '../shared/atmosphere'
+import { useAdvanceKeys } from '../hooks'
 import { SoundToggle } from '../shared/sound-toggle'
 import { TutorialVisualPanel } from './tutorial-visuals'
 
@@ -24,6 +25,22 @@ function Portraits({ speaker, expression }: { speaker: string; expression: Expre
     <>
       {INTRO_SPEAKERS.map((id) => {
         const npc = getNpc(id)
+        if (npc.art) {
+          const Art = npc.art
+          const exprs = npc.artExpressions ?? ['neutral']
+          const target = exprs.includes(expression) ? expression : 'neutral'
+          return exprs.map((expr) => {
+            const visible = id === speaker && expr === target
+            return (
+              <Art
+                key={`${id}-${expr}`}
+                expression={expr}
+                title={visible ? `${npc.name}, ${npc.title}` : undefined}
+                className={cn('absolute inset-0 size-full transition-opacity duration-500', PORTRAIT_STYLE[npc.portraitStyle], visible ? 'opacity-100' : 'opacity-0')}
+              />
+            )
+          })
+        }
         const fallback = npc.portraits.neutral
         return (Object.entries(npc.portraits) as [Expression, string][]).map(([expr, src]) => {
           const target = npc.portraits[expression] ? expression : 'neutral'
@@ -86,16 +103,7 @@ export function IntroScreen({ onFinish, playerName }: { onFinish: () => void; pl
     setShown(0)
   }, [done, last, line.text.length, onFinish])
 
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault()
-        advance()
-      }
-    }
-    window.addEventListener('keydown', onKey)
-    return () => window.removeEventListener('keydown', onKey)
-  }, [advance])
+  useAdvanceKeys(advance)
 
   return (
     <main className="relative flex h-dvh overflow-hidden bg-background text-foreground animate-[devo-fade-in_1.2s_ease-out_both]">

@@ -4,6 +4,8 @@ import { showSystemNotification } from '@/lib/devo/pwa'
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useReducer, useRef, type ReactNode } from 'react'
 import { makeOwned, starterInventory } from '@/lib/devo/cards'
+import { PULSE_START_HOURS } from '@/lib/devo/pulse'
+import { ROOM_LAYOUT, ROOM_RULES } from '@/lib/devo/trade-rooms'
 import type { SaveData } from '@/lib/devo/save'
 import type {
   AppId,
@@ -17,7 +19,7 @@ import type {
   TradeSession,
 } from '@/lib/devo/types'
 
-const START_HOURS = 72
+const START_HOURS = PULSE_START_HOURS
 
 export type DevoState = {
   phase: Phase
@@ -73,16 +75,16 @@ type Action =
   | { type: 'TRADE_REVEAL' }
   | { type: 'TRADE_COMPLETE' }
   | { type: 'TRADE_PARTNER_LEAVE' }
-  | { type: 'TRADE_CANCEL' }
+  | { type: 'TRADE_CANCEL'; forfeit?: boolean }
   | { type: 'TRADE_EXIT' }
-
-const ROOM_CONDITIONS = ['Às cegas', 'Mesma raridade', 'Sem retorno', 'Chat liberado', 'Às cegas', 'Mesma raridade', 'Silêncio', 'Às cegas']
+  | { type: 'RESTART_SESSION'; at: number; inventory: OwnedCard[] }
 
 function initialRooms(): Room[] {
-  return ROOM_CONDITIONS.map((condition, i) => ({
+  return ROOM_LAYOUT.map((rule, i) => ({
     id: `sala-${i + 1}`,
     number: i + 1,
-    condition,
+    rule,
+    condition: ROOM_RULES[rule].label,
     status: [1, 4, 6].includes(i) ? 'ocupada' : 'livre',
   }))
 }
@@ -134,6 +136,19 @@ function reducer(state: DevoState, action: Action): DevoState {
   switch (action.type) {
     case 'SET_PHASE':
       return { ...state, phase: action.phase }
+    case 'RESTART_SESSION':
+      // Mantém conta, conversas e tutoriais vistos; zera cartas, trocas e avisos e devolve o pulso a 72h.
+      return {
+        ...state,
+        timerEndsAt: action.at + START_HOURS * 3600 * 1000,
+        inventory: action.inventory,
+        trade: null,
+        tradesCompleted: 0,
+        rooms: initialRooms(),
+        notifications: [],
+        toasts: [],
+        unread: {},
+      }
     case 'START_SESSION':
       return { ...freshState('intro', state.playerName), hasSession: true }
     case 'SET_PLAYER':
@@ -252,14 +267,17 @@ function reducer(state: DevoState, action: Action): DevoState {
     case 'TRADE_CANCEL': {
       const t = state.trade
       if (!t || t.stage === 'done' || t.stage === 'abandoned') return state
+      // Sala "Sem retorno": quem sai depois de pôr a carta perde a carta.
+      const forfeit = action.type === 'TRADE_CANCEL' && !!action.forfeit && !!t.myCard
       return {
         ...state,
-        inventory: t.myCard ? [t.myCard, ...state.inventory] : state.inventory,
+        inventory: t.myCard && !forfeit ? [t.myCard, ...state.inventory] : state.inventory,
         trade: {
           ...t,
+          myCard: forfeit ? null : t.myCard,
           stage: 'abandoned',
           partnerTyping: false,
-          endReason: action.type === 'TRADE_CANCEL' ? 'cancelled' : 'partner-left',
+          endReason: forfeit ? 'forfeit' : action.type === 'TRADE_CANCEL' ? 'cancelled' : 'partner-left',
         },
       }
     }
@@ -276,6 +294,8 @@ type DevoContextValue = {
   state: DevoState
   dispatch: React.Dispatch<Action>
   notify: (item: Omit<NotificationItem, 'id' | 'createdAt'>) => void
+  /** Reinicia a sessão (cartas → kit inicial, pulso → 72h) e grava no servidor na hora. */
+  restartSession: () => Promise<boolean>
 }
 
 const DevoContext = createContext<DevoContextValue | null>(null)
@@ -333,7 +353,7 @@ function postSave(state: DevoState) {
     headers: { 'content-type': 'application/json' },
     body: JSON.stringify(toSave(state)),
     keepalive: true,
-  }).catch(() => {})
+  }).catch(() => null)
 }
 
 /** Grava o progresso no servidor pouco depois de cada mudança e ao sair da página. */
@@ -378,7 +398,17 @@ export function DevoProvider({
     dispatch({ type: 'NOTIFY', item: { ...item, id: nextId('n'), createdAt: Date.now() } })
     showSystemNotification(item.title, item.body)
   }, [])
-  const value = useMemo(() => ({ state, dispatch, notify }), [state, notify])
+  const stateRef = useRef(state)
+  stateRef.current = state
+  const restartSession = useCallback(async () => {
+    const action: Action = { type: 'RESTART_SESSION', at: Date.now(), inventory: starterInventory() }
+    const next = reducer(stateRef.current, action)
+    dispatch(action)
+    if (!next.hasSession || !next.playerName) return true
+    const res = await postSave(next)
+    return !!res && res.ok
+  }, [])
+  const value = useMemo(() => ({ state, dispatch, notify, restartSession }), [state, notify, restartSession])
   return <DevoContext.Provider value={value}>{children}</DevoContext.Provider>
 }
 

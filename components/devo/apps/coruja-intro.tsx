@@ -3,8 +3,9 @@
 import { ChevronLeft, ChevronRight, FastForward, Gem, HelpCircle, Shield, Sparkles, Swords } from 'lucide-react'
 import { useCallback, useEffect, useState, type ReactNode } from 'react'
 import { playSfx } from '@/lib/devo/audio'
-import { RARITY_META } from '@/lib/devo/cards'
+import { RARITIES, RARITY_META, getCardMeta, getCollections } from '@/lib/devo/cards'
 import { cn } from '@/lib/utils'
+import { useAdvanceKeys } from '../hooks'
 import { CardFace } from '../shared/devo-card'
 import { useDevo } from '../state/devo-store'
 import { CorujaSprite, type CorujaExpression } from './coruja-sprite'
@@ -28,7 +29,7 @@ const SCRIPT: Step[] = [
   line('Apresentação', 'Um Record, hm? Você não é nada mal. Até que gosto. Que rosto interessante.', 'warai'),
   line('Apresentação', 'Eu me chamo Coruja, mas pode me chamar como bem quiser.', 'warai2'),
   line('Apresentação', 'Estas são as Cartas Devo. Você já deve ter ouvido falar delas, não é?', 'majime', 'cards'),
-  line('Raridades', 'As Cartas Devo são separadas por diferentes tipos de raridade: Comuns, Raras, Muito Raras e Ultra-Raras.', 'majime', 'rarities'),
+  line('Raridades', `As Cartas Devo são separadas por diferentes tipos de raridade: ${RARITIES.map((r) => RARITY_META[r].plural).join(', ').replace(/, ([^,]*)$/, ' e $1')}.`, 'majime', 'rarities'),
   line('Raridades', 'Essas últimas sendo mais… raras. Repetitivo, não?', 'komaru', 'rarities'),
   line('Raridades', 'Por sorte, todas também estão separadas por cores. Você pode saber a raridade de uma apenas notando esse detalhe.', 'warai', 'rarities'),
   line('Raridades', 'Vamos ver se você prestou atenção.', 'warai2', 'rarities'),
@@ -42,7 +43,7 @@ const SCRIPT: Step[] = [
   line('Funções', 'Além da raridade atribuída, existem outras formas de distribuição detalhadas no sistema. Algumas cartas são feitas para suporte, outras para ataques.', 'majime', 'roles'),
   line('Funções', 'Há até mesmo aquelas que parecem ser completamente inúteis, mas isso é pura questão de perspectiva.', 'warai', 'roles'),
   line('Coleções', 'A Coleção Arcana também é um fator importante para uma Carta.', 'majime', 'collections'),
-  line('Coleções', 'Diferentes tipos de Carta ocupam diferentes Coleções Arcanas, como Os Zodíaco, Cultura Egípcia e O Pequeno Príncipe.', 'warai', 'collections'),
+  line('Coleções', `Diferentes tipos de Carta ocupam diferentes Coleções Arcanas, como ${getCollections().slice(0, 3).map((c) => c.name).join(', ').replace(/, ([^,]*)$/, ' e $1')}.`, 'warai', 'collections'),
   line('Coleções', 'Toda Carta contém um número que representa sua Ordem na Coleção. O outro, mais contido, é o universal de série: seu lugar no que chamamos de Compêndio.', 'majime', 'numbers'),
   line('Coleções', 'Isso pode representar formas úteis ou até um pouco estranhas de se usar uma carta em conexão com outra, como combinações, apoio ou até descarte.', 'komaru', 'collections'),
   line('Coleções', 'Por conta disso, muitos Records buscam reunir o máximo possível de Cartas de uma mesma Coleção Arcana.', 'majime', 'collections'),
@@ -57,19 +58,22 @@ const QUESTIONS: { id: string; prompt: string; reply: string; face: CorujaExpres
   { id: 'sair', prompt: 'Não existe mesmo uma forma de sair desse lugar?', reply: 'Quem sabe…?', face: 'warai2' },
 ]
 
-const RARITY_TIERS = [
-  { id: 'comum', label: 'Comum', color: RARITY_META.comum.color, hint: 'O que circula de mão em mão.' },
-  { id: 'rara', label: 'Rara', color: RARITY_META.incomum.color, hint: 'Já vale uma boa conversa.' },
-  { id: 'muito-rara', label: 'Muito Rara', color: RARITY_META.rara.color, hint: 'Poucos aceitam trocá-la.' },
-  { id: 'ultra', label: 'Ultra-Rara', color: RARITY_META.lendaria.color, hint: 'Gente já mentiu por menos.' },
-]
+// Nomes, cores e ordem vêm de RARITY_META (lib/devo/cards.ts); aqui só as falas da Coruja.
+const RARITY_HINTS: Record<(typeof RARITIES)[number], string> = {
+  comum: 'O que circula de mão em mão.',
+  incomum: 'Já vale uma boa conversa.',
+  rara: 'Poucos aceitam trocá-la.',
+  lendaria: 'Gente já mentiu por menos.',
+}
+
+const RARITY_TIERS = RARITIES.map((r) => ({ id: r as string, label: RARITY_META[r].label, color: RARITY_META[r].color, hint: RARITY_HINTS[r] }))
 
 const SECRET_TIERS = [
   { id: 'unica', label: 'Única', color: '#e9e4f7', hint: 'Existe apenas uma.' },
   { id: 'promo', label: 'Promocional', color: '#8f6bff', hint: 'Nenhum jogo comum a entrega.' },
 ]
 
-const QUIZ_TARGET = RARITY_TIERS[2]
+const QUIZ_TARGET = RARITY_TIERS.find((t) => t.id === 'rara') ?? RARITY_TIERS[0]
 
 const TYPE_SPEED_MS = 18
 
@@ -165,20 +169,7 @@ export function CorujaIntro() {
     setIndex(prev)
   }, [leaving, index])
 
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (e.target instanceof HTMLButtonElement && (e.key === 'Enter' || e.key === ' ')) return
-      if (e.key === 'Enter' || e.key === ' ' || e.key === 'ArrowRight') {
-        e.preventDefault()
-        advance()
-      } else if (e.key === 'ArrowLeft') {
-        e.preventDefault()
-        back()
-      }
-    }
-    window.addEventListener('keydown', onKey)
-    return () => window.removeEventListener('keydown', onKey)
-  }, [advance, back])
+  useAdvanceKeys(advance, { onBack: back, arrows: true })
 
   const ask = (q: (typeof QUESTIONS)[number]) => {
     playSfx('click')
@@ -472,13 +463,9 @@ function SceneVisual({ visual, sampleCards, quiz }: { visual: Visual; sampleCard
   if (visual === 'collections') {
     return (
       <ul className="flex flex-col items-stretch gap-2">
-        {[
-          { name: 'Os Zodíaco', count: '12 cartas' },
-          { name: 'Cultura Egípcia', count: '9 cartas' },
-          { name: 'O Pequeno Príncipe', count: '7 cartas' },
-        ].map((c, i) => (
+        {getCollections().map((c) => ({ name: c.name, count: `${c.size} cartas` })).map((c, i) => (
           <li key={c.name} className="flex items-center gap-4 rounded-sm border border-[#d8b25a]/30 bg-[#140f0a]/80 px-4 py-2 animate-pop" style={{ animationDelay: `${i * 140}ms` }}>
-            <span className="grid size-8 place-items-center rounded-full border border-[#d8b25a]/60 font-serif text-sm text-[#f6dc93]">{['I', 'II', 'III'][i]}</span>
+            <span className="grid size-8 place-items-center rounded-full border border-[#d8b25a]/60 font-serif text-sm text-[#f6dc93]">{['I', 'II', 'III', 'IV', 'V', 'VI'][i] ?? i + 1}</span>
             <span className="flex-1 font-serif text-lg text-[#e6ebf7]/90">{c.name}</span>
             <span className="text-[10px] uppercase tracking-[0.2em] text-[#aab6dc]/55">{c.count}</span>
           </li>
@@ -486,19 +473,22 @@ function SceneVisual({ visual, sampleCards, quiz }: { visual: Visual; sampleCard
       </ul>
     )
   }
+  const sampleId = sampleCards[0] ?? 'ampulheta'
+  const sampleMeta = getCardMeta(sampleId)
   return (
     <div className="flex items-center gap-5">
       <div className="w-24 @md:w-28">
-        <CardFace cardId={sampleCards[0] ?? 'ampulheta'} size="sm" />
+        <CardFace cardId={sampleId} size="sm" />
       </div>
       <dl className="flex flex-col gap-3">
         <div className="border-l-2 border-[#d8b25a] pl-3">
           <dt className="text-[10px] uppercase tracking-[0.25em] text-[#aab6dc]/60">Ordem na Coleção</dt>
-          <dd className="font-serif text-3xl text-[#f6dc93]">07</dd>
+          <dd className="font-serif text-3xl text-[#f6dc93]">{sampleMeta.orderLabel}</dd>
+          <dd className="text-[10px] uppercase tracking-[0.2em] text-[#aab6dc]/60">{sampleMeta.collection}</dd>
         </div>
         <div className="border-l-2 border-foreground/25 pl-3">
           <dt className="text-[10px] uppercase tracking-[0.25em] text-[#aab6dc]/60">Série universal</dt>
-          <dd className="font-mono text-sm text-[#aab6dc]/80">№ 004.218</dd>
+          <dd className="font-mono text-sm text-[#aab6dc]/80">{sampleMeta.serial}</dd>
         </div>
       </dl>
     </div>

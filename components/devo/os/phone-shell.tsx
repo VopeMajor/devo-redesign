@@ -12,6 +12,7 @@ import { useDevo } from '../state/devo-store'
 import { useBackHandler } from '../use-back-handler'
 import { getApp } from './apps'
 import { AppGlyphTile, Badge } from './app-icon'
+import { pulseRemaining } from '@/lib/devo/pulse'
 import { NotificationList, ToastStack } from './notifications'
 
 /** Apps da grade e do dock são listas distintas para não repetir ícones. */
@@ -22,7 +23,7 @@ export function PhoneShell({ current, onOpen, onHome }: { current: AppId | null;
   const { state, dispatch } = useDevo()
   const [shade, setShade] = useState(false)
   const now = useNow(1000)
-  const remaining = state.timerEndsAt - now
+  const remaining = pulseRemaining(state.timerEndsAt, now)
 
   useEffect(() => {
     if (current) dispatch({ type: 'READ_APP', appId: current })

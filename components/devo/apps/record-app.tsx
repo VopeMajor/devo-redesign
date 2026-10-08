@@ -3,6 +3,7 @@
 import { ArrowLeft, Loader2, Users } from 'lucide-react'
 import { useCallback, useState } from 'react'
 import { DEADLY_VOTE_STATUS, type DeadlyVote, type DeadlyVoteStatus, OUTCOME_LABEL, recordIdFor, voteTitle } from '@/lib/devo/deadly-votes'
+import { shufflerStatus } from '@/lib/devo/shuffler'
 import { cn } from '@/lib/utils'
 import { useNow } from '../hooks'
 import { useOsNav } from '../os/os-nav'
@@ -30,7 +31,7 @@ export function useRecordData(avatarVersion: number | null = null): RecordFileDa
     remainingMs: remaining,
     critical,
     arcano: null,
-    shuffler: state.arcadeUnlocked ? 'Desperto' : null,
+    shuffler: state.arcadeUnlocked ? shufflerStatus(true) : null,
     photoUrl: avatarVersion ? `/api/record/avatar?v=${avatarVersion}` : null,
     stats: [
       { label: 'Cartas', value: state.inventory.length },

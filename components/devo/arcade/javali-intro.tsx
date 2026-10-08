@@ -1,23 +1,18 @@
 'use client'
 
 import { Coins, Crown, Dices, GraduationCap, Hourglass, Radio, Timer, Trophy } from 'lucide-react'
-import Image from 'next/image'
 import { useState } from 'react'
 import { GAMES, PATENTES } from '@/lib/devo/arcade/games'
 import { playSfx } from '@/lib/devo/audio'
 import { cn } from '@/lib/utils'
+import { JavaliArt, type JavaliPose } from '../npc-art/javali'
 import { useDevo } from '../state/devo-store'
 
-type Frame = 'table' | 'door' | 'point'
+type Frame = JavaliPose
 type Visual = 'tempo' | 'jogos' | 'tutorial' | 'agenda' | 'ranking' | 'apostas' | 'chat'
 
-const FRAME_ART: Record<Frame, { src: string; position: string }> = {
-  table: { src: '/images/npc/javali-scene-table.webp', position: '50% 40%' },
-  door: { src: '/images/npc/javali-scene-door.webp', position: '60% 35%' },
-  point: { src: '/images/npc/javali-scene-point.webp', position: '35% 35%' },
-}
-
-const FRAMES = Object.keys(FRAME_ART) as Frame[]
+// Cenas desenhadas no projeto (components/devo/npc-art/javali-svg.ts), uma por pose.
+const FRAMES: Frame[] = ['table', 'door', 'point']
 
 const SCRIPT: { text: string; frame: Frame; visual?: Visual }[] = [
   { text: 'Ora, ora! Um rosto novo na minha mesa. Entre, entre, querido. Bem-vindo à Sala de Jogos!', frame: 'table' },
@@ -68,11 +63,11 @@ export function JavaliIntro() {
       aria-modal="true"
       aria-label="Javali apresenta a Sala de Jogos"
       className={cn(
-        'absolute inset-0 z-40 flex flex-col overflow-hidden bg-[#08060d]/95 backdrop-blur-sm transition-opacity duration-700',
+        'absolute inset-0 z-40 flex flex-col overflow-hidden bg-[#070912]/95 backdrop-blur-sm transition-opacity duration-700',
         leaving && 'opacity-0',
       )}
     >
-      <span aria-hidden="true" className="javali-spot pointer-events-none absolute inset-x-0 top-0 mx-auto h-[70%] w-[28rem] max-w-full bg-[radial-gradient(ellipse_at_top,rgba(201,168,240,0.32),transparent_70%)]" />
+      <span aria-hidden="true" className="javali-spot pointer-events-none absolute inset-x-0 top-0 mx-auto h-[70%] w-[28rem] max-w-full bg-[radial-gradient(ellipse_at_top,rgba(216,178,90,0.22),transparent_70%)]" />
 
       <button
         type="button"
@@ -90,37 +85,31 @@ export function JavaliIntro() {
         )}
         <div className="relative mb-2 aspect-[12/5] max-h-[42vh] w-full max-w-2xl shrink-0 overflow-hidden border-y-[10px] border-black bg-black shadow-[0_10px_40px_rgba(0,0,0,0.7)]">
           {FRAMES.map((name) => {
-            const art = FRAME_ART[name]
             const active = name === step.frame
             return (
-              <Image
+              <JavaliArt
                 key={name}
-                src={art.src}
-                alt={active ? 'Javali' : ''}
-                aria-hidden={active ? undefined : true}
-                fill
-                priority
-                sizes="(max-width: 768px) 100vw, 672px"
-                style={{ objectPosition: art.position }}
-                className={cn(
-                  'object-cover sepia-[0.15] transition-opacity duration-300',
-                  active ? 'opacity-100' : 'opacity-0',
-                )}
+                pose={name}
+                scene
+                fit="slice"
+                wink={name === 'point' && index % 2 === 1}
+                title={active ? 'Javali, anfitrião da Sala de Jogos' : undefined}
+                className={cn('absolute inset-0 size-full transition-opacity duration-300', active ? 'opacity-100' : 'opacity-0')}
               />
             )
           })}
           <span aria-hidden="true" className="pointer-events-none absolute inset-0 shadow-[inset_0_0_60px_rgba(0,0,0,0.65)]" />
         </div>
       </div>
-      <span aria-hidden="true" className="relative h-4 shrink-0 border-t-2 border-[#c9a8f0]/50 bg-[linear-gradient(to_bottom,#3a2150,#1a0f24)]" />
+      <span aria-hidden="true" className="relative h-4 shrink-0 border-t-2 border-[#d8b25a]/50 bg-[linear-gradient(to_bottom,#14204a,#0a0e1e)]" />
 
       <div className="relative shrink-0 p-3 md:p-4">
         <button
           type="button"
           onClick={advance}
-          className="group mx-auto flex w-full max-w-2xl flex-col gap-1.5 border border-[#a07ad8]/50 bg-[#160f1f] p-4 text-left focus-visible:outline-2 focus-visible:outline-[#c9a8f0]"
+          className="group mx-auto flex w-full max-w-2xl flex-col gap-1.5 border border-[#d8b25a]/45 bg-[#0e1324] p-4 text-left focus-visible:outline-2 focus-visible:outline-[#d8b25a]"
         >
-          <span className="text-[10px] uppercase tracking-[0.3em] text-[#c9a8f0]">Javali</span>
+          <span className="text-[10px] uppercase tracking-[0.3em] text-[#d8b25a]">Javali</span>
           <span key={index} className="animate-pop text-[15px] leading-relaxed text-foreground/90 md:text-base">
             {step.text}
           </span>
@@ -128,7 +117,7 @@ export function JavaliIntro() {
             <span className="tabular-nums">
               {index + 1}/{SCRIPT.length}
             </span>
-            <span className="transition-colors group-hover:text-[#c9a8f0]">{last ? 'Puxar a cadeira' : 'Continuar'} ›</span>
+            <span className="transition-colors group-hover:text-[#d8b25a]">{last ? 'Puxar a cadeira' : 'Continuar'} ›</span>
           </span>
         </button>
       </div>
@@ -166,7 +155,7 @@ function Visual({ visual }: { visual: Visual }) {
     return (
       <ul className="flex max-w-lg flex-wrap justify-center gap-2" aria-label="Jogos">
         {Object.values(GAMES).map((g) => (
-          <li key={g.name} className="border border-[#c9a8f0]/40 bg-black/40 px-3 py-1.5 font-serif text-sm tracking-wide text-foreground/85">
+          <li key={g.name} className="border border-[#d8b25a]/40 bg-black/40 px-3 py-1.5 font-serif text-sm tracking-wide text-foreground/85">
             {g.name}
           </li>
         ))}

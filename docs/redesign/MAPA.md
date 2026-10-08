@@ -51,15 +51,15 @@ Servidor dos jogos/salas: `lib/devo/arcade/server.ts`, `rooms.ts`, `client.ts`, 
 `public/images/` — `background.png` (catedral), `card-back.png`, `cards/*` (artes de tipo), `arcade/*`
 (banners dos jogos), `chess/*`, `npc/*`, `prologue/*`, `stickers/*`. Vídeos em `public/videos`.
 
-**Arte de terceiros que precisa sair** (bug do teste): `npc/melissa-*.png` (personagem de outro jogo),
-`npc/javali*.webp` e `npc/king-dice.png` (personagem de outro jogo). Também de terceiros e devem ser
-trocados: `npc/heir-v3-*.png` (Herdeiro). A substituição deve ser arte ORIGINAL (SVG/Three.js feito à mão
-no projeto), mantendo o nome, o papel e a personalidade do NPC.
+Retratos de Melissa, Javali e Herdeiro são arte original em SVG (`components/devo/npc-art/`), não imagens.
+A arte de terceiros que existia (`npc/melissa-*`, `npc/javali*`, `npc/king-dice`, `npc/heir-v3-*`) foi removida.
 
 ## Captura e teste
 
-- CI: `.github/workflows/capturas.yml` — Postgres de teste (`scripts/dev/*.sql`), build, servidor,
+- CI: `.github/workflows/capturas.yml` — Postgres de teste (`scripts/dev/00-base.sql`, migrações de `scripts/*.sql`
+  incluindo `test-accounts-migration.sql`, depois `scripts/dev/90-seed.sql`), build, servidor,
   roteiro `scripts/dev/capture.mjs` (390×844 @2x), publica em `capturas/<branch>`.
 - `.capture-only` (na raiz, opcional) restringe grupos: `novato,sistema,apps,jogos,partidas,desktop`.
   **Remover antes de mesclar.**
-- Convites de teste: `DEVO-TEST-0001…0004`, admin `DEVO-TEST-ADM1`.
+- Convites de teste: `DEVO-TEST-0001…0004`, admin `DEVO-TEST-ADM1` (contas normais, aparecem no ranking).
+  `DEVO-QA-0001` gera conta de teste (`is_test`, fora de ranking/apostas/prêmios). Conta seed `QA_Teste` prova o filtro.

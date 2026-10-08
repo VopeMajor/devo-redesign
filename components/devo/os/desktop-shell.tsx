@@ -14,6 +14,7 @@ import { useBackHandler } from '../use-back-handler'
 import { getApp, visibleApps } from './apps'
 import { AppGlyphTile, Badge } from './app-icon'
 import { NotificationList, ToastStack } from './notifications'
+import { pulseRemaining } from '@/lib/devo/pulse'
 import { useOsNav } from './os-nav'
 
 type Win = { id: AppId; x: number; y: number; z: number; minimized: boolean; maximized: boolean }
@@ -82,7 +83,7 @@ export function DesktopShell() {
   }
 
   const totalUnread = Object.values(state.unread).reduce<number>((a, b) => a + (b ?? 0), 0)
-  const remaining = state.timerEndsAt - now
+  const remaining = pulseRemaining(state.timerEndsAt, now)
 
   return (
     <div className="fixed inset-0 overflow-hidden bg-background text-foreground" onPointerDown={() => setSelected(null)}>
@@ -182,8 +183,8 @@ export function DesktopShell() {
           <div className="mt-4 flex flex-col">
             <MenuRow onClick={() => openApp('ajustes')}>Ajustes do sistema</MenuRow>
             <MenuRow onClick={nav.exitToLanding}>Voltar à tela inicial</MenuRow>
-            <MenuRow onClick={nav.restart} danger>
-              Reiniciar sessão
+            <MenuRow onClick={() => openApp('ajustes')} danger>
+              Reiniciar sessão…
             </MenuRow>
           </div>
         </div>

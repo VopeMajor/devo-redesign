@@ -3,6 +3,7 @@
 import { UserRound } from 'lucide-react'
 import type { ReactNode } from 'react'
 import { lifeClock } from '@/lib/devo/deadly-votes'
+import { SHUFFLER_LABEL } from '@/lib/devo/shuffler'
 import { cn } from '@/lib/utils'
 import { RecordID, SystemLabel, SystemStatus, type SystemTone } from './primitives'
 import { DeadlyVoteSymbol } from './symbol'
@@ -116,7 +117,7 @@ export function RecordFile({
           <div className="mt-auto flex flex-wrap items-end justify-between gap-3">
             <Field label="Shuffler">
               <span className={cn('font-mono text-[13px] uppercase tracking-[0.12em]', data.shuffler ? 'text-primary' : 'text-muted-foreground')}>
-                {data.shuffler ?? 'Adormecido'}
+                {data.shuffler ?? SHUFFLER_LABEL.dormant}
               </span>
             </Field>
             {action}

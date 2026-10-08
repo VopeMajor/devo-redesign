@@ -4,6 +4,7 @@ import Image from 'next/image'
 import type { CSSProperties, ReactNode } from 'react'
 import type { MelissaMood, StageId } from '@/lib/devo/prologue-script'
 import { cn } from '@/lib/utils'
+import { MelissaArt } from '../npc-art/melissa'
 import { Embers } from '../shared/atmosphere'
 import { CelFire } from './cel-fire'
 
@@ -245,14 +246,12 @@ export function PrologueStage({ stage, mood }: { stage: StageId; mood: MelissaMo
         )}
       >
         {(['neutral', 'soft', 'serious'] as MelissaMood[]).map((m) => (
-          <Image
+          <MelissaArt
             key={m}
-            src={`/images/npc/melissa-${m}.png`}
-            alt={m === mood && melissaOn ? 'Melissa, da Companhia de Despertados' : ''}
-            fill
-            sizes="(min-width: 1024px) 42vw, 90vw"
+            mood={m}
+            title={m === mood && melissaOn ? 'Melissa, da Companhia de Despertados' : undefined}
             className={cn(
-              'object-contain object-bottom transition-opacity duration-500 drop-shadow-[0_0_40px_rgba(0,0,0,0.9)] [mask-image:linear-gradient(to_bottom,black_72%,transparent_100%)]',
+              'absolute inset-0 size-full transition-opacity duration-500 drop-shadow-[0_0_40px_rgba(0,0,0,0.9)] [mask-image:linear-gradient(to_bottom,black_72%,transparent_100%)]',
               m === mood ? 'opacity-100' : 'opacity-0',
             )}
           />

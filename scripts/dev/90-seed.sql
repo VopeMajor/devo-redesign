@@ -7,6 +7,13 @@ INSERT INTO invite_codes (code, role, note) VALUES
   ('DEVO-TEST-0004', 'player', 'teste local')
 ON CONFLICT (code) DO NOTHING;
 
+-- Os convites acima geram as contas do roteiro de captura (Veterano, Rival, Aurora). Elas NÃO são
+-- contas de teste (is_test = false) para continuarem aparecendo no ranking das capturas.
+UPDATE invite_codes SET is_test = false WHERE code LIKE 'DEVO-TEST-%';
+-- Convite que gera conta de teste (scripts/test-accounts-migration.sql).
+INSERT INTO invite_codes (code, role, note, is_test) VALUES ('DEVO-QA-0001', 'player', 'conta de teste (QA)', true)
+ON CONFLICT (code) DO NOTHING;
+
 INSERT INTO players (id, name, role) VALUES
   ('00000000-0000-4000-8000-000000000001', 'Corvo',   'player'),
   ('00000000-0000-4000-8000-000000000002', 'Ísis',    'player'),
@@ -14,6 +21,11 @@ INSERT INTO players (id, name, role) VALUES
   ('00000000-0000-4000-8000-000000000004', 'Nyx',     'player'),
   ('00000000-0000-4000-8000-000000000005', 'Lírio',   'player'),
   ('00000000-0000-4000-8000-000000000006', 'Narrador', 'dealer')
+ON CONFLICT DO NOTHING;
+
+-- Conta de teste com pontuação altíssima: se aparecer no ranking (geral ou por jogo), o filtro quebrou.
+INSERT INTO players (id, name, role, is_test) VALUES
+  ('00000000-0000-4000-8000-000000000007', 'QA_Teste', 'player', true)
 ON CONFLICT DO NOTHING;
 
 INSERT INTO arcade_profiles (player_id, chips)
@@ -29,6 +41,12 @@ FROM players p
 CROSS JOIN (VALUES ('chess'), ('memory-rush'), ('hot-bomb'), ('bluff')) AS g(game)
 CROSS JOIN generate_series(1, 4) AS n
 WHERE p.role = 'player' AND p.id::text LIKE '00000000-0000-4000-8000-%';
+
+INSERT INTO arcade_matches (player_id, game_id, mode, opponent_name, opponent_rating, seed, started_at, finished_at, result, score, points)
+SELECT '00000000-0000-4000-8000-000000000007', g.game, 'casual', 'Rival', 1000, 1, now() - (n || ' hours')::interval,
+       now() - (n || ' hours')::interval + interval '6 minutes', 'win', 2500, 9000
+FROM (VALUES ('chess'), ('memory-rush'), ('hot-bomb'), ('bluff')) AS g(game)
+CROSS JOIN generate_series(1, 3) AS n;
 
 INSERT INTO deadly_votes (title, arc, briefing, status, starts_at, ends_at, max_participants, created_by) VALUES
   ('A Sala Sem Relógio', 'Arco I', 'Doze pessoas. Uma porta. O tempo de todos é um só.', 'concluido', now() - interval '3 days', now() - interval '3 days' + interval '2 hours', 12, '00000000-0000-4000-8000-000000000006'),

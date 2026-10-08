@@ -15,9 +15,12 @@ import { TypingDots } from './app-ui'
 function Avatar({ npcId, className }: { npcId: string; className?: string }) {
   const npc = getNpc(npcId)
   const src = npc.portraits.neutral
+  const Art = npc.art
   return (
     <span className={cn('relative grid size-10 shrink-0 place-items-center overflow-hidden rounded-full border border-foreground/25 bg-secondary', className)}>
-      {src ? (
+      {Art ? (
+        <Art crop="face" className="absolute inset-0 size-full" />
+      ) : src ? (
         <Image src={src} alt="" fill sizes="48px" className="object-cover object-top" />
       ) : (
         <span className="font-serif uppercase tracking-[0.08em] text-lg text-primary">?</span>

@@ -12,6 +12,8 @@ export type Invite = {
   createdBy: string | null
   usedAt: string | null
   usedBy: string | null
+  /** Convite de conta de teste (fora de ranking, apostas e prêmios). */
+  isTest: boolean
 }
 
 export type InvitesPayload = { role: PlayerRole; canGrant: PlayerRole[]; invites: Invite[] }
@@ -41,12 +43,13 @@ type Row = {
   creator: string | null
   used_at: Date | null
   used_name: string | null
+  is_test: boolean
 }
 
 export async function listInvites(playerId: string): Promise<InvitesPayload> {
   const role = await staffRole(playerId)
   const { rows } = await pool.query<Row>(
-    `SELECT i.code, i.role, i.note, i.created_at, c.name AS creator, i.used_at, u.name AS used_name
+    `SELECT i.code, i.role, i.note, i.created_at, c.name AS creator, i.used_at, u.name AS used_name, i.is_test
        FROM invite_codes i
        LEFT JOIN players c ON c.id = i.created_by
        LEFT JOIN players u ON u.user_id = i.used_by_user
@@ -66,6 +69,7 @@ export async function listInvites(playerId: string): Promise<InvitesPayload> {
       createdBy: r.creator,
       usedAt: r.used_at?.toISOString() ?? null,
       usedBy: r.used_name,
+      isTest: !!r.is_test,
     })),
   }
 }
@@ -75,11 +79,13 @@ export async function createInvite(playerId: string, input: Record<string, unkno
   const want = ROLES.includes(input.role as PlayerRole) ? (input.role as PlayerRole) : 'player'
   if (!grantable(role).includes(want)) throw new RecordError('Você só pode gerar convites de jogador.', 403)
   const note = typeof input.note === 'string' ? input.note.trim().slice(0, 60) || null : null
+  // Só o admin marca convites de teste.
+  const isTest = role === 'admin' && input.test === true
   for (let attempt = 0; attempt < 5; attempt++) {
     const code = newCode()
     const { rowCount } = await pool.query(
-      'INSERT INTO invite_codes (code, role, note, created_by) VALUES ($1, $2, $3, $4) ON CONFLICT (code) DO NOTHING',
-      [code, want, note, playerId],
+      'INSERT INTO invite_codes (code, role, note, created_by, is_test) VALUES ($1, $2, $3, $4, $5) ON CONFLICT (code) DO NOTHING',
+      [code, want, note, playerId, isTest],
     )
     if (rowCount) return code
   }
