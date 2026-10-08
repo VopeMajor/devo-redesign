@@ -423,9 +423,22 @@ if (want('sistema') || want('apps') || want('jogos')) {
     for (const tab of ['Agenda', 'Ranking', 'Apostas']) {
       await step(`jogos-${tab}`, async () => {
         await openApp(page, 'Sala de Jogos')
-        await btn(page, tab, true).click({ timeout: 3000 })
+        // As seções da Sala de Jogos são abas do kit (role="tab").
+        await page.getByRole('tab', { name: tab, exact: true }).first().click({ timeout: 3000 })
         await wait(1800)
         await shot(page, `31-jogos-${tab.toLowerCase()}`)
+        if (tab !== 'Apostas') {
+          await page.evaluate(() => document.querySelector('[role="tabpanel"]')?.scrollBy(0, 760))
+          await wait(900)
+          await shot(page, `31-jogos-${tab.toLowerCase()}-scroll`)
+          await page.evaluate(() => document.querySelector('[role="tabpanel"]')?.scrollBy(0, 760))
+          await wait(900)
+          await shot(page, `31-jogos-${tab.toLowerCase()}-scroll2`)
+        }
+        if (tab === 'Ranking' && (await tryClick(page.getByRole('button', { name: 'Memory Rush', exact: true }).first()))) {
+          await wait(1200)
+          await shot(page, '31-jogos-ranking-jogo')
+        }
       })
     }
     // Tutoriais contra o bot.
@@ -443,6 +456,42 @@ if (want('sistema') || want('apps') || want('jogos')) {
         await shot(page, `32-tutorial-${slug}-c`)
       })
     }
+    // Fila "Procurando oponente" (sozinho na fila) e cancelar.
+    await step('jogos-fila', async () => {
+      await openApp(page, 'Sala de Jogos')
+      const card = page.locator('[aria-label="Jogos da semana"] > *').filter({ hasText: /Memory Rush/i }).first()
+      await card.getByRole('button', { name: /jogar/i }).first().click({ timeout: 3000 })
+      await wait(2500)
+      await shot(page, '33-jogos-fila')
+      await btn(page, 'Cancelar', true).click({ timeout: 3000 })
+      await wait(800)
+      await shot(page, '33-jogos-fila-cancelada')
+    })
+    await step('jogos-mesa-fim', async () => {
+      await openApp(page, 'Sala de Jogos')
+      const panel = () => page.evaluate((y) => document.querySelector('[role="tabpanel"]')?.scrollBy(0, y), 760)
+      for (const name of ['30-jogos-mesa-scroll3', '30-jogos-mesa-scroll4', '30-jogos-mesa-scroll5', '30-jogos-mesa-chat']) {
+        await panel()
+        await wait(900)
+        if (name === '30-jogos-mesa-scroll3') {
+          await panel()
+          await panel()
+          await wait(600)
+        }
+        await shot(page, name)
+      }
+    })
+    // Apresentação do Javali para quem nunca entrou na sala.
+    await step('jogos-javali', async () => {
+      const g = await account('Convidado', 'DEVO-TEST-0004', VET_CARDS, 'phone', { javaliMet: false })
+      await openApp(g.page, 'Sala de Jogos')
+      for (let i = 0; i < 4; i++) {
+        await shot(g.page, `34-javali-${i}`)
+        await tryClick(g.page.getByRole('button', { name: /continuar/i }).last())
+        await wait(900)
+      }
+      await g.ctx.close()
+    })
   }
   await ctx.close()
 }

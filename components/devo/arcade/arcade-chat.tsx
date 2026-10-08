@@ -1,15 +1,15 @@
 'use client'
 
-import { Send } from 'lucide-react'
 import { useEffect, useRef, useState, type ReactNode } from 'react'
 import useSWR from 'swr'
+import { IconButton } from '@/components/devo/kit'
 import { playSfx } from '@/lib/devo/audio'
 import { arcadeFetcher, arcadeKey, arcadePost, type ChatLine } from '@/lib/devo/arcade/client'
 import { REACTION_PREFIX } from '@/lib/devo/arcade/reactions'
 import { cn } from '@/lib/utils'
 import { useOpenProfile } from './mini-profile'
 
-const NAME_COLORS = ['#6f8cff', '#8fa6ff', '#e2b95c', '#5fd3a5', '#c08bff', '#5ec8e8', '#ff9d5c', '#e86fb0']
+const NAME_COLORS = ['#7d97ff', '#a9bbff', '#ecd49a', '#7fdcb6', '#c9a6ff', '#7fd3ec', '#ffb07f', '#f08cc0']
 
 export function nameColor(name: string) {
   let h = 0
@@ -32,23 +32,23 @@ export function ChatMessage({ m, compact }: { m: ChatLine; compact?: boolean }) 
     </span>
   )
   return (
-    <p className={cn('break-words leading-snug', compact ? 'text-[13px]' : 'text-sm')}>
-      {!compact && <time className="mr-1.5 font-mono text-[10px] tabular-nums text-foreground/30">{time}</time>}
+    <p className={cn('break-words font-body leading-snug', compact ? 'text-[14px]' : 'text-[15px]')}>
+      {!compact && <time className="mr-2 font-mono text-[11px] tabular-nums text-dv-text-3">{time}</time>}
       {staff && (
-        <span title="Dealer" className="mr-1 inline-grid size-4 place-items-center bg-[#8fa6ff] align-[-2px] font-mono text-[9px] font-bold text-black">
+        <span title="Dealer" className="mr-1.5 inline-grid size-[18px] place-items-center bg-dv-gold align-[-3px] font-mono text-[10px] font-bold text-dv-ink">
           D
         </span>
       )}
-      {m.bot && <span className="mr-1 inline-block border border-foreground/25 px-1 align-[1px] font-mono text-[8px] uppercase text-foreground/50">bot</span>}
+      {m.bot && <span className="mr-1.5 inline-block border border-dv-line-strong px-1 align-[1px] font-mono text-[10px] uppercase text-dv-text-3">bot</span>}
       {m.pid && openProfile ? (
-        <button type="button" onClick={() => openProfile(m.pid as string)} className="rounded-sm hover:underline focus-visible:outline focus-visible:outline-1" aria-label={`Ver perfil de ${m.author}`}>
+        <button type="button" onClick={() => openProfile(m.pid as string)} className="dv-focus -my-2 inline py-2 hover:underline" aria-label={`Ver perfil de ${m.author}`}>
           {name}
         </button>
       ) : (
         name
       )}
-      <span className="text-foreground/50">: </span>
-      <span className="text-foreground/85">{m.body}</span>
+      <span className="text-dv-text-3">: </span>
+      <span className="text-dv-text">{m.body}</span>
     </p>
   )
 }
@@ -92,10 +92,10 @@ export function ArcadeChat({
 
   return (
     <div className={cn('flex min-h-0 flex-col gap-2', className)}>
-      <ul ref={listRef} className="flex min-h-0 flex-1 flex-col gap-1.5 overflow-y-auto pr-1" aria-live="polite">
-        {count === 0 && <li className="py-6 text-center text-xs text-foreground/40">Bem-vindo ao chat. Seja o primeiro a falar.</li>}
+      <ul ref={listRef} className="devo-scroll flex min-h-0 flex-1 flex-col gap-1 overflow-y-auto pr-1" aria-live="polite">
+        {count === 0 && <li className="py-6 text-center font-body text-[15px] text-dv-text-3">Bem-vindo ao chat. Seja o primeiro a falar.</li>}
         {lines.map((m) => (
-          <li key={m.id} className="rounded-sm px-1 py-0.5 hover:bg-white/[0.04]">
+          <li key={m.id} className="animate-dv-fade border-l border-transparent px-2 py-1 hover:border-dv-gold/50 hover:bg-white/[0.03]">
             <ChatMessage m={m} />
           </li>
         ))}
@@ -117,11 +117,14 @@ export function ArcadeChat({
           maxLength={200}
           placeholder={placeholder}
           aria-label="Mensagem"
-          className="min-w-0 flex-1 border border-foreground/20 bg-black/50 px-3 py-2 text-sm outline-none focus:border-[#6f8cff]/60"
+          className="min-h-11 min-w-0 flex-1 border border-dv-line-strong bg-dv-ink/80 px-3 font-body text-[16px] text-dv-text outline-none placeholder:text-dv-text-3 focus:border-dv-cobalt"
         />
-        <button type="submit" className="border border-[#6f8cff]/60 px-3 text-[#6f8cff] hover:bg-[#6f8cff]/10" aria-label="Enviar">
-          <Send className="size-4" />
-        </button>
+        <IconButton type="submit" label="Enviar" variant="primary">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" aria-hidden="true">
+            <path d="M3 11.5 L21 3 L14.5 21 L11.5 13 Z" />
+            <path d="M11.5 13 L21 3" />
+          </svg>
+        </IconButton>
       </form>
     </div>
   )

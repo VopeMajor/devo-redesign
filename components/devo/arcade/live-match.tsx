@@ -113,15 +113,15 @@ export function LiveMatchLayer({ channel }: { channel: string }) {
         aria-expanded={open}
         aria-label={open ? 'Fechar chat ao vivo' : 'Abrir chat ao vivo'}
         className={cn(
-          'relative flex h-8 items-center gap-1.5 border px-2.5 text-[10px] uppercase tracking-[0.25em] transition-colors',
-          open ? 'border-[#8fa6ff]/70 bg-[#8fa6ff]/10 text-[#8fa6ff]' : 'border-foreground/20 text-foreground/70 hover:border-[#8fa6ff]/60 hover:text-foreground',
+          'dv-focus relative flex h-11 min-w-11 items-center justify-center gap-1.5 border px-2.5 font-mono text-[10px] uppercase tracking-[0.2em] transition-colors',
+          open ? 'border-dv-cobalt bg-dv-cobalt-dim text-dv-cobalt-text' : 'border-dv-line-strong bg-dv-ink/60 text-dv-text-2 hover:border-dv-cobalt hover:text-dv-text',
         )}
       >
-        <span aria-hidden="true" className="size-1.5 animate-pulse rounded-full bg-[#8fa6ff] shadow-[0_0_8px_#8fa6ff]" />
-        <MessageSquare className="size-3.5" aria-hidden="true" />
+        <span aria-hidden="true" className="size-1.5 animate-dv-blink rounded-full bg-dv-cobalt shadow-[0_0_8px_var(--dv-cobalt)]" />
+        <MessageSquare className="size-4" strokeWidth={1.4} aria-hidden="true" />
         <span className="hidden sm:inline">Ao vivo</span>
         {unread > 0 && !open && (
-          <span className="absolute -right-1.5 -top-1.5 grid min-w-4 place-items-center rounded-full bg-[#8fa6ff] px-1 font-mono text-[9px] text-black">
+          <span className="absolute -right-1.5 -top-1.5 grid min-w-5 place-items-center rounded-full border border-dv-ink bg-dv-blood px-1 font-mono text-[10px] leading-5 text-white">
             {unread > 9 ? '9+' : unread}
           </span>
         )}
@@ -143,7 +143,7 @@ export function LiveMatchLayer({ channel }: { channel: string }) {
         {!open && toasts.length > 0 && (
           <ul className="pointer-events-none absolute bottom-3 left-3 z-[26] flex max-w-[min(20rem,70%)] flex-col gap-1">
             {toasts.map((m) => (
-              <li key={m.id} className="dv-enter border-l-2 bg-black/70 px-2.5 py-1.5 backdrop-blur-sm" style={{ borderColor: '#8fa6ff' }}>
+              <li key={m.id} className="animate-dv-toast-in border-l-2 border-dv-cobalt bg-dv-ink/85 px-3 py-2 backdrop-blur-sm">
                 <ChatMessage m={m} compact />
               </li>
             ))}
@@ -153,22 +153,22 @@ export function LiveMatchLayer({ channel }: { channel: string }) {
         {open && (
           <aside
             aria-label="Chat ao vivo da partida"
-            className="absolute inset-x-0 bottom-0 z-30 flex h-[62%] flex-col border-t border-[#8fa6ff]/30 bg-[#0b0d12]/95 backdrop-blur-md sm:inset-x-auto sm:inset-y-0 sm:right-0 sm:h-auto sm:w-80 sm:border-l sm:border-t-0"
+            className="absolute inset-x-0 bottom-0 z-30 flex h-[66%] animate-dv-sheet-up flex-col border-t-2 border-dv-gold/60 bg-dv-ink-2/95 backdrop-blur-md sm:inset-x-auto sm:inset-y-0 sm:right-0 sm:h-auto sm:w-80 sm:animate-dv-slide-left sm:border-l sm:border-t-0"
           >
-            <header className="flex items-center gap-2 border-b border-white/10 px-3 py-2">
-              <span className="flex items-center gap-1.5 bg-[#8fa6ff] px-1.5 py-0.5 font-mono text-[9px] font-bold uppercase tracking-[0.2em] text-black">
-                <span aria-hidden="true" className="size-1.5 animate-pulse rounded-full bg-black" />
+            <header className="flex items-center gap-2 border-b border-dv-line py-1 pl-3 pr-1">
+              <span className="flex items-center gap-1.5 bg-dv-cobalt px-1.5 py-0.5 font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-white">
+                <span aria-hidden="true" className="size-1.5 animate-dv-blink rounded-full bg-white" />
                 Live
               </span>
-              <span className="text-[10px] uppercase tracking-[0.3em] text-foreground/70">Chat da partida</span>
-              <span className="ml-auto font-mono text-[10px] tabular-nums text-foreground/45" title="Participantes no chat">
+              <span className="font-display text-[13px] font-semibold uppercase tracking-[0.14em] text-dv-text">Chat da partida</span>
+              <span className="ml-auto font-mono text-[11px] tabular-nums text-dv-text-3" title="Participantes no chat">
                 {viewers} no chat
               </span>
-              <button type="button" onClick={toggle} aria-label="Fechar chat" className="grid size-7 place-items-center text-foreground/50 hover:text-foreground">
+              <button type="button" onClick={toggle} aria-label="Fechar chat" className="dv-focus grid size-11 place-items-center text-dv-text-3 hover:text-dv-text">
                 <X className="size-4" />
               </button>
             </header>
-            <p className="border-b border-white/5 px-3 py-1.5 text-[9px] uppercase tracking-[0.25em] text-foreground/35">
+            <p className="dv-label border-b border-dv-line px-3 py-1.5 text-[10px] text-dv-text-3">
               As mensagens somem quando a partida acaba
             </p>
             <ArcadeChat
@@ -189,7 +189,7 @@ export function LiveMatchLayer({ channel }: { channel: string }) {
                 type="button"
                 onClick={() => react(id)}
                 aria-label={`Reagir: ${REACTIONS[id].label}`}
-                className="grid size-9 place-items-center rounded-full border border-white/10 bg-black/50 opacity-60 backdrop-blur-sm transition hover:scale-110 hover:opacity-100"
+                className="grid size-11 place-items-center rounded-full border border-dv-line-strong bg-dv-ink/60 opacity-70 backdrop-blur-sm transition hover:scale-110 hover:opacity-100"
               >
                 <ReactionGlyph id={id} className="size-4 text-[11px]" />
               </button>
@@ -203,16 +203,16 @@ export function LiveMatchLayer({ channel }: { channel: string }) {
 
 function ReactionBar({ onReact }: { onReact: (id: ReactionId) => void }) {
   return (
-    <div className="grid grid-cols-8 gap-1 border-y border-white/10 py-1.5" role="group" aria-label="Reações">
+    <div className="grid grid-cols-8 gap-0.5 border-y border-dv-line py-1" role="group" aria-label="Reações">
       {REACTION_IDS.map((id) => (
         <button
           key={id}
           type="button"
           onClick={() => onReact(id)}
           aria-label={`Reagir: ${REACTIONS[id].label}`}
-          className="grid h-8 place-items-center rounded-sm transition hover:scale-110 hover:bg-white/5"
+          className="dv-focus grid h-11 place-items-center transition enabled:active:scale-90 hover:bg-white/5"
         >
-          <ReactionGlyph id={id} className="size-4 text-[11px]" />
+          <ReactionGlyph id={id} className="size-5 text-[12px]" />
         </button>
       ))}
     </div>

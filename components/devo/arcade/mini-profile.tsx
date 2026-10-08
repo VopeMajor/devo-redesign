@@ -1,7 +1,7 @@
 'use client'
 
 import { UserRound, X } from 'lucide-react'
-import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from 'react'
+import { type CSSProperties, createContext, useCallback, useContext, useEffect, useState, type ReactNode } from 'react'
 import { createPortal } from 'react-dom'
 import useSWR from 'swr'
 import { arcadeFetcher, arcadeKey, type BorderTier, type MiniProfile } from '@/lib/devo/arcade/client'
@@ -53,19 +53,19 @@ function MiniProfileDialog({ pid, onClose }: { pid: string; onClose: () => void 
   return createPortal(
     <div className="fixed inset-0 z-[120] grid place-items-center overflow-y-auto bg-black/75 p-3 backdrop-blur-sm sm:p-4" onClick={onClose}>
       <div className="flex w-full min-w-0 max-w-[22rem] flex-col gap-1.5 sm:max-w-[40rem]" onClick={(e) => e.stopPropagation()}>
-        <span className="px-1 font-sans text-[9px] font-semibold uppercase tracking-[0.32em] text-white/55">DEVO.System</span>
+        <span className="px-1 font-sans text-[10px] font-semibold uppercase tracking-[0.32em] text-white/55">DEVO.System</span>
         <article
+          style={{ '--dv-cut': '14px', borderColor: `${tier.color}99`, boxShadow: `0 0 0 1px #000, 0 0 60px -12px ${tier.glow}, inset 0 0 40px -20px ${tier.glow}` } as CSSProperties}
           role="dialog"
           aria-modal="true"
           aria-label={data ? `Perfil de ${data.name}` : 'Perfil do jogador'}
-          className="dv-dark relative w-full overflow-hidden rounded-md border bg-[#04071a] text-[#e8ecf8]"
-          style={{ borderColor: `${tier.color}99`, boxShadow: `0 0 0 1px #000, 0 0 60px -12px ${tier.glow}, inset 0 0 40px -20px ${tier.glow}` }}
+          className="dv-dark dv-cut relative w-full animate-dv-pop overflow-hidden border bg-[linear-gradient(170deg,var(--dv-ink-3),var(--dv-ink)_60%)] text-dv-text"
         >
           <button
             type="button"
             onClick={onClose}
             aria-label="Fechar perfil"
-            className="absolute right-2 top-2 z-20 grid size-7 place-items-center rounded-sm text-white/50 transition-colors hover:bg-white/10 hover:text-white"
+            className="dv-focus absolute right-1 top-1 z-20 grid size-11 place-items-center text-dv-text-2 transition-colors hover:bg-white/10 hover:text-white"
           >
             <X className="size-4" />
           </button>
@@ -117,11 +117,11 @@ function ProfileBody({ data, tier }: { data: MiniProfile; tier: (typeof BORDER_M
 
       <div className="relative flex min-w-0 flex-1 flex-col sm:ml-[38%]">
         <div className="relative flex min-w-0 flex-col gap-1 px-4 pb-3 pt-3 pr-10 sm:gap-1.5 sm:px-5 sm:pb-4 sm:pt-5 sm:pr-12">
-          <span className="mb-1 inline-flex w-fit items-center gap-1.5 border px-1.5 py-0.5 font-sans text-[8px] font-semibold uppercase tracking-[0.22em]" style={{ borderColor: `${tier.color}66`, color: tier.color }}>
+          <span className="mb-1 inline-flex w-fit items-center gap-1.5 border px-1.5 py-0.5 font-sans text-[10px] font-semibold uppercase tracking-[0.22em]" style={{ borderColor: `${tier.color}66`, color: tier.color }}>
             <span aria-hidden="true" className="size-1 rounded-full" style={{ background: tier.color, boxShadow: `0 0 6px ${tier.color}` }} />
             {ROLE_LABEL[data.role] ?? data.role}
           </span>
-          <p className="truncate font-sans text-[1.35rem] font-medium sm:text-[1.9rem] uppercase leading-none tracking-[0.02em] text-white">{data.name}</p>
+          <p className="truncate font-impact text-[1.6rem] font-semibold sm:text-[2.1rem] uppercase leading-none tracking-[0.02em] text-white">{data.name}</p>
           <p className="font-sans text-[10px] font-medium uppercase tracking-[0.18em] text-white/60">
             ID.Record: <span className="font-mono tracking-[0.12em] text-white/85">{recordId(data.id)}</span>
           </p>
@@ -151,7 +151,7 @@ function ProfileBody({ data, tier }: { data: MiniProfile; tier: (typeof BORDER_M
 
         <div className="relative flex min-w-0 flex-1 flex-wrap items-end justify-between gap-3 px-4 py-3 sm:px-5 sm:py-4">
           <div className="flex flex-col gap-1.5">
-            <span className="font-sans text-[9px] font-semibold uppercase tracking-[0.22em] text-white/55">Borda</span>
+            <span className="font-sans text-[10px] font-semibold uppercase tracking-[0.22em] text-white/55">Borda</span>
             <span className="flex items-center gap-2 font-mono text-base uppercase leading-none sm:text-lg tracking-[0.06em]" style={{ color: tier.color }}>
               {tier.label.split(' · ')[0].replace('Borda ', '')}
               <span aria-hidden="true" className="grid size-5 place-items-center rounded-full border" style={{ borderColor: tier.color, boxShadow: `0 0 10px ${tier.glow}` }}>
@@ -159,11 +159,11 @@ function ProfileBody({ data, tier }: { data: MiniProfile; tier: (typeof BORDER_M
               </span>
             </span>
             {tier.label.includes(' · ') && (
-              <span className="font-sans text-[9px] uppercase tracking-[0.2em] text-white/45">{tier.label.split(' · ')[1]}</span>
+              <span className="font-sans text-[10px] uppercase tracking-[0.2em] text-white/45">{tier.label.split(' · ')[1]}</span>
             )}
           </div>
           <div
-            className="flex min-w-0 max-w-full items-center gap-3 rounded-sm border px-3 py-2 font-sans text-[9px] font-semibold uppercase tracking-[0.18em]"
+            className="flex min-w-0 max-w-full items-center gap-3 dv-cut-diag border px-3 py-2 font-sans text-[10px] font-semibold uppercase tracking-[0.18em]"
             style={{ borderColor: `${tier.color}55`, color: '#c9d4ff', background: `${tier.color}0d` }}
           >
             <span className="flex min-w-0 flex-col gap-0.5">
@@ -181,10 +181,10 @@ function ProfileBody({ data, tier }: { data: MiniProfile; tier: (typeof BORDER_M
 function Cell({ label, children, className, sub }: { label: string; children: ReactNode; className?: string; sub?: string }) {
   return (
     <div className={cn('flex min-w-0 flex-col gap-1.5 px-2.5 py-2.5 sm:gap-2 sm:px-5 sm:py-3.5', className)}>
-      <dt className="font-sans text-[8px] font-semibold uppercase leading-tight tracking-[0.12em] text-white/55 sm:text-[9px] sm:tracking-[0.18em]">{label}</dt>
+      <dt className="font-sans text-[10px] font-semibold uppercase leading-tight tracking-[0.12em] text-white/55  sm:tracking-[0.18em]">{label}</dt>
       <dd className="flex flex-col gap-1 font-mono text-lg tabular-nums leading-none sm:text-2xl">
         {children}
-        {sub && <span className="truncate font-sans text-[7px] uppercase tracking-[0.14em] text-white/45 sm:text-[8px] sm:tracking-[0.24em]">{sub}</span>}
+        {sub && <span className="truncate font-sans text-[10px] uppercase tracking-[0.14em] text-white/45  sm:tracking-[0.24em]">{sub}</span>}
       </dd>
     </div>
   )
