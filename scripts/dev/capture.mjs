@@ -90,19 +90,27 @@ async function api(page, path, body, headers = {}) {
 
 const hexEmail = (name) => `u${Buffer.from(name.toLowerCase(), 'utf8').toString('hex')}@jogador.devo`
 
-/** Avança diálogos: escolhe a primeira opção quando houver escolha; senão Enter. */
+/** Avança diálogos: preenche campos de resposta; escolhe a primeira opção quando houver escolha; senão Enter. */
 async function advanceDialogue(page) {
-  const choices = page.locator('[aria-label="Escolhas de diálogo"] button, [aria-label="Escolha o que dizer"] button')
-  if (await choices.count()) return tryClick(choices.first())
-  // Respostas de perfil no prólogo (nome, gênero…) são botões "▸ opção" sem grupo.
-  const option = page.locator('main button').filter({ hasText: '▸' })
-  if (await option.count()) return tryClick(option.first())
-  const input = page.locator('main input:visible').first()
-  if (await input.count()) {
-    await input.fill('Aurora').catch(() => {})
-    await page.keyboard.press('Enter')
+  // Campos de perfil no prólogo (rosto: dois campos; idade: numérico). Preenche todos e envia.
+  const inputs = page.locator('main input:visible')
+  const n = await inputs.count()
+  if (n) {
+    for (let k = 0; k < n; k++) {
+      const el = inputs.nth(k)
+      const numeric = (await el.getAttribute('inputmode').catch(() => null)) === 'numeric'
+      await el.fill(numeric ? '27' : 'Aurora').catch(() => {})
+    }
+    await inputs.nth(n - 1).press('Enter').catch(() => {})
     return true
   }
+  const choices = page.locator(
+    '[aria-label="Escolhas de diálogo"] button:not([disabled]), [aria-label="Escolha o que dizer"] button:not([disabled]), [aria-label="Sua resposta"] button:not([disabled])',
+  )
+  if (await choices.count()) return tryClick(choices.first())
+  // Respostas de perfil antigas (botões "▸ opção" sem grupo).
+  const option = page.locator('main button').filter({ hasText: '▸' })
+  if (await option.count()) return tryClick(option.first())
   await page.keyboard.press('Enter')
   return true
 }
@@ -134,30 +142,77 @@ if (want('novato')) {
     await page.locator('#devo-pass').fill('teste123')
     await page.locator('#devo-pass2').fill('teste123')
     await shot(page, '02-acesso-preenchido')
+    // A cortina "Despertando" dispara logo depois do recarregamento: a espera começa antes do Enter.
     await page.keyboard.press('Enter')
-    await page.waitForLoadState('networkidle')
-    await wait(400)
+    // Atravessa o recarregamento: procura o rótulo da cortina a cada 100ms (até 20s).
+    for (let k = 0; k < 200; k++) {
+      const seen = await page.getByText('Despertando', { exact: true }).count().catch(() => 0)
+      if (seen) break
+      await wait(100)
+    }
+    await wait(300)
     await shot(page, '03-transicao-despertando')
-    await wait(3500)
+    await wait(3000)
   })
   await step('prologo', async () => {
-    for (let i = 0; i < 40; i++) {
-      if (i % 2 === 0) await shot(page, `03-prologo-${String(i / 2).padStart(2, '0')}`)
-      await wait(1400)
+    // O prólogo tem ~60 falas (cada uma: 1 Enter completa o texto, outro avança). Foto a cada 5 passos.
+    let n = 0
+    for (let i = 0; i < 220; i++) {
+      await wait(800)
+      if (i % 5 === 0) await shot(page, `03-prologo-${String(n++).padStart(2, '0')}`)
       await advanceDialogue(page)
+      const curtain = page.getByRole('status').filter({ hasText: 'Deadly Vote' })
+      if (await curtain.count()) {
+        await wait(650)
+        await shot(page, '03-transicao-deadly-vote')
+        break
+      }
       if (!(await page.getByText(/pular prólogo/i).count())) break
     }
   })
   await step('tutorial', async () => {
     await wait(2500)
-    for (let i = 0; i < 40; i++) {
-      if (i % 2 === 0) await shot(page, `04-tutorial-${String(i / 2).padStart(2, '0')}`)
-      await wait(1400)
-      if (await tryClick(btn(page, /^depois$/i))) break
-      await advanceDialogue(page)
+    let n = 0
+    for (let i = 0; i < 90; i++) {
+      await wait(900)
+      if (i % 3 === 0) await shot(page, `04-tutorial-${String(n++).padStart(2, '0')}`)
+      const later = btn(page, /^depois$/i)
+      if (await later.count()) {
+        await wait(900)
+        await shot(page, '04-tutorial-pwa')
+        await tryClick(later, 1500)
+        break
+      }
+      if (await page.getByText(/pular introdução/i).count()) await advanceDialogue(page)
     }
     await wait(1500)
     await shot(page, '04-tutorial-fim')
+  })
+  // Revelação da Sala de Jogos: save com os 5 apps iniciais vistos e a sala ainda trancada.
+  // Página nova (a anterior, no sistema, poderia salvar por cima do save preparado).
+  await step('sala-de-jogos-revelacao', async () => {
+    await page.close()
+    const p2 = await ctx.newPage()
+    // Uma página que não é o app (mesma origem, mesmos cookies): nada salva por cima do save preparado.
+    await p2.goto(`${BASE}/images/card-back.png`)
+    const t = Date.now()
+    await api(p2, '/api/save', {
+      v: 1,
+      welcomed: true,
+      timerEndsAt: t + 70 * 3600_000,
+      inventory: [],
+      notifications: [],
+      threads: [],
+      tradesCompleted: 0,
+      arcadeUnlocked: false,
+      seenApps: ['pulso', 'mensagens', 'cartas', 'trocas', 'ajustes'],
+    }).then((r) => r.status >= 400 && manifest.errors.push({ step: 'sala-de-jogos-save', error: `${r.status} ${r.text}` }))
+    await p2.goto(BASE, { waitUntil: 'networkidle' })
+    await wait(1000)
+    await btn(p2, 'Continuar').click({ timeout: 15000 })
+    await p2.getByText('Novo aplicativo desbloqueado').first().waitFor({ timeout: 12000 })
+    await wait(1500)
+    await shot(p2, '05-sala-de-jogos-revelacao')
   })
   await ctx.close()
 }

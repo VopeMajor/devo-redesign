@@ -1,53 +1,49 @@
 'use client'
 
-import { Check, DoorClosed, DoorOpen, Gem, Layers, Lock, MessageSquare, Pointer, Repeat, Search, Timer } from 'lucide-react'
-import { useEffect, useState, type ReactNode } from 'react'
+import { useEffect, useState, type CSSProperties, type ReactNode } from 'react'
 import type { TutorialVisual } from '@/lib/devo/intro-script'
 import { cn } from '@/lib/utils'
+import { formatDuration } from '../hooks'
+import { GlyphCard, GlyphCheck, GlyphClock, GlyphDiamond, GlyphHourglass, GlyphKeyhole, GlyphSpark, toRoman } from '../kit/glyphs'
+import { Stamp } from '../kit/stamp'
+import { TimeDigits } from '../kit/time'
 import { CardBack, CardFace } from '../shared/devo-card'
+import { DeadlyVoteSymbol } from '../system/symbol'
 
-const GOLD = '#d8b25a'
+/**
+ * Ilustrações do tutorial como DIAGRAMAS DO SISTEMA DEVO: prancheta cobalto com grade, marcas de
+ * registro, linhas de cota e legendas mono. Ouro só no que se admira; vermelho só onde se morre.
+ */
 
-/** A mão que aponta e "toca" no elemento explicado. */
-function PointingHand({ className }: { className?: string }) {
+/** Marca de toque: onde o jogador tocaria (anel que pulsa + ponto). */
+function TapMark({ className }: { className?: string }) {
   return (
-    <span className={cn('pointer-events-none absolute z-20', className)} aria-hidden="true">
-      <span className="absolute -left-1 -top-1 size-6 rounded-full border-2 border-[#d8b25a] animate-ping-slow" />
-      <Pointer className="size-9 fill-[#f4ead2] text-[#1a1208] drop-shadow-[0_4px_10px_rgba(0,0,0,0.9)] animate-tap" strokeWidth={1.4} />
+    <span aria-hidden="true" className={cn('pointer-events-none absolute z-20 size-7', className)}>
+      <span className="en-ping absolute inset-0 rounded-full border-2 border-dv-cobalt-text" />
+      <span className="en-tap absolute inset-[7px] rounded-full bg-dv-text shadow-[0_0_12px_rgba(125,151,255,0.9)]" />
+    </span>
+  )
+}
+
+/** Linha de cota com rótulo: liga uma peça do diagrama à legenda. */
+function Callout({ label, className, tone = 'cobalt', side = 'right' }: { label: string; className?: string; tone?: 'cobalt' | 'gold' | 'blood'; side?: 'left' | 'right' }) {
+  const color = tone === 'gold' ? 'text-dv-gold' : tone === 'blood' ? 'text-dv-blood-text' : 'text-dv-cobalt-text'
+  return (
+    <span aria-hidden="true" className={cn('pointer-events-none absolute flex items-center gap-1.5', side === 'left' && 'flex-row-reverse', color, className)}>
+      <span className="size-1.5 rotate-45 bg-current" />
+      <span className="h-px w-6 bg-current opacity-70" />
+      <span className="dv-label whitespace-nowrap text-[10px]">{label}</span>
     </span>
   )
 }
 
 function Caption({ children }: { children: ReactNode }) {
   return (
-    <p className="flex items-center gap-3 text-center text-[11px] uppercase tracking-[0.3em] text-[#e9dcbc]/70">
-      <span className="h-px w-6 bg-gradient-to-r from-transparent to-[#d8b25a]/70" aria-hidden="true" />
+    <p className="dv-label flex items-center gap-2.5 text-center text-[10px] text-dv-text-2">
+      <span className="h-px w-5 bg-gradient-to-r from-transparent to-dv-gold/70" aria-hidden="true" />
       {children}
-      <span className="h-px w-6 bg-gradient-to-l from-transparent to-[#d8b25a]/70" aria-hidden="true" />
+      <span className="h-px w-5 bg-gradient-to-l from-transparent to-dv-gold/70" aria-hidden="true" />
     </p>
-  )
-}
-
-/** Cantoneira dourada usada nas molduras do tutorial. */
-function Corner({ className }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 40 40" className={cn('pointer-events-none absolute size-9', className)} aria-hidden="true">
-      <path d="M2 38 V10 Q2 2 10 2 H38" fill="none" stroke={GOLD} strokeWidth="1.6" />
-      <path d="M7 38 V13 Q7 7 13 7 H38" fill="none" stroke={GOLD} strokeWidth=".7" opacity=".6" />
-      <path d="M10 10 L14 6 L18 10 L14 14Z" fill={GOLD} />
-    </svg>
-  )
-}
-
-function Velvet({ children, className }: { children: ReactNode; className?: string }) {
-  return (
-    <div
-      className={cn('relative rounded-xl border border-[#d8b25a]/50 p-4 shadow-[inset_0_0_40px_rgba(0,0,0,0.8),0_12px_30px_-10px_rgba(0,0,0,0.9)]', className)}
-      style={{ background: 'radial-gradient(ellipse at 50% 40%, #1f3a2c, #0d1a14 70%, #070d0a)' }}
-    >
-      <span className="pointer-events-none absolute inset-1.5 rounded-lg border border-dashed border-[#d8b25a]/20" aria-hidden="true" />
-      {children}
-    </div>
   )
 }
 
@@ -57,72 +53,132 @@ function useCountdown(start: number) {
     const id = window.setInterval(() => setSecs((s) => (s > 0 ? s - 1 : start)), 1000)
     return () => window.clearInterval(id)
   }, [start])
-  const h = Math.floor(secs / 3600)
-  const m = Math.floor((secs % 3600) / 60)
-  const s = secs % 60
-  return { label: [h, m, s].map((n) => String(n).padStart(2, '0')).join(':'), secs }
+  return secs
+}
+
+/** Régua do pulso (72 marcas) com o arco do tempo restante. */
+function PulseRing({ ratio }: { ratio: number }) {
+  const r = 54
+  const c = 2 * Math.PI * r
+  return (
+    <svg viewBox="0 0 132 132" aria-hidden="true" className="absolute inset-0 size-full">
+      <circle cx="66" cy="66" r="62" fill="none" stroke="var(--dv-gold)" strokeOpacity="0.45" strokeWidth="0.8" />
+      {Array.from({ length: 72 }, (_, i) => {
+        const a = (i / 72) * Math.PI * 2
+        const long = i % 6 === 0
+        return (
+          <line
+            key={i}
+            x1={66 + Math.sin(a) * (long ? 57 : 59)}
+            y1={66 - Math.cos(a) * (long ? 57 : 59)}
+            x2={66 + Math.sin(a) * 62}
+            y2={66 - Math.cos(a) * 62}
+            stroke="var(--dv-gold)"
+            strokeOpacity={long ? 0.9 : 0.4}
+            strokeWidth={long ? 1.2 : 0.6}
+          />
+        )
+      })}
+      <circle cx="66" cy="66" r={r - 6} fill="none" stroke="rgba(236,238,242,0.12)" strokeWidth="3" />
+      <circle
+        cx="66"
+        cy="66"
+        r={r - 6}
+        fill="none"
+        stroke="var(--dv-cobalt)"
+        strokeWidth="3"
+        strokeDasharray={`${(2 * Math.PI * (r - 6)) * ratio} ${c}`}
+        transform="rotate(-90 66 66)"
+        style={{ filter: 'drop-shadow(0 0 4px rgba(49,93,255,0.8))' }}
+      />
+    </svg>
+  )
 }
 
 function WristVisual() {
-  const { label, secs } = useCountdown(72 * 3600 - 1)
+  const secs = useCountdown(72 * 3600 - 1)
   return (
-    <div className="flex flex-col items-center gap-5">
-      <div className="relative flex h-28 w-72 items-center justify-center rounded-[3rem] border border-[#d8b25a]/40 bg-[linear-gradient(180deg,#2a211c,#120e0c_60%,#070505)] shadow-[inset_0_3px_14px_rgba(0,0,0,0.95),0_14px_30px_-10px_rgba(0,0,0,0.9)]">
-        {[0, 1, 2, 3].map((i) => (
-          <span key={i} className={cn('absolute size-1.5 rounded-full bg-[#d8b25a]/70 shadow-[0_0_4px_#d8b25a]', i < 2 ? 'top-3' : 'bottom-3', i % 2 ? 'right-10' : 'left-10')} aria-hidden="true" />
-        ))}
-        <div className="relative flex flex-col items-center gap-1 rounded-md border border-primary/80 bg-[#04070f] px-5 py-2 shadow-[0_0_30px_-4px_var(--color-primary),inset_0_0_14px_rgba(49,93,255,0.25)]">
-          <span className="flex items-center gap-1.5 text-[9px] uppercase tracking-[0.35em] text-primary">
-            <Timer className="size-3" aria-hidden="true" />
-            Pulso
+    <div className="flex flex-col items-center gap-4">
+      <div className="relative flex h-40 w-72 items-center justify-center">
+        {/* pulseira */}
+        <span aria-hidden="true" className="absolute inset-x-0 top-1/2 h-16 -translate-y-1/2 bg-[linear-gradient(180deg,var(--dv-ink-4),var(--dv-ink-2)_70%)] [clip-path:polygon(4%_0,96%_0,100%_50%,96%_100%,4%_100%,0_50%)]" />
+        <span aria-hidden="true" className="absolute inset-x-6 top-1/2 -translate-y-[26px] border-t border-dashed border-dv-gold/35" />
+        <span aria-hidden="true" className="absolute inset-x-6 top-1/2 translate-y-[26px] border-t border-dashed border-dv-gold/35" />
+        {/* mostrador */}
+        <div className="relative grid size-[136px] place-items-center rounded-full bg-[radial-gradient(circle,var(--dv-ink-3),var(--dv-ink)_72%)] shadow-[0_0_30px_rgba(49,93,255,0.3)]">
+          <PulseRing ratio={secs / (72 * 3600)} />
+          <span className="relative flex flex-col items-center gap-0.5">
+            <span className="dv-label text-[9px] text-dv-cobalt-text">Pulso</span>
+            <TimeDigits value={formatDuration(secs * 1000)} size="sm" tone="text" label="Tempo no pulso" />
           </span>
-          <span className="font-mono text-3xl tabular-nums tracking-wider text-[#e8eeff] [text-shadow:0_0_12px_rgba(120,150,255,0.8)]">{label}</span>
-          <span key={secs} className="absolute -right-8 top-1 font-mono text-xs text-dv-red animate-[devo-drift-away_1s_ease-out_both]">-1s</span>
         </div>
-        <PointingHand className="-bottom-6 right-10" />
+        <Callout label="72h = vida" className="right-0 top-2" tone="gold" side="left" />
+        <Callout label="Zero = fim" className="bottom-2 left-0" tone="blood" />
+        <TapMark className="bottom-7 right-16" />
       </div>
-      <svg viewBox="0 0 200 24" className="w-56" aria-hidden="true">
-        <path d="M0 12 H70 L78 4 L86 20 L94 12 H200" fill="none" stroke="var(--color-dv-red)" strokeWidth="1.5" className="[stroke-dasharray:240] animate-[dv-line_1.4s_linear_infinite]" />
-      </svg>
       <Caption>Tempo restante = vida restante</Caption>
     </div>
   )
 }
 
-const DEVICE_APPS = [
-  { icon: Timer, label: 'Pulso', badge: null },
-  { icon: Layers, label: 'Cartas', badge: '3' },
-  { icon: Repeat, label: 'Trocas', badge: '!' },
-  { icon: MessageSquare, label: 'Mensagens', badge: '2' },
-]
+function AppTile({ label, children, badge, delay }: { label: string; children: ReactNode; badge?: string; delay: number }) {
+  return (
+    <div className="animate-dv-pop relative flex flex-col items-center gap-1" style={{ animationDelay: `${delay}ms` }}>
+      <span className="dv-cut grid size-12 place-items-center bg-[linear-gradient(160deg,var(--dv-ink-4),var(--dv-ink-2))] text-dv-text shadow-[inset_0_1px_0_rgba(255,255,255,0.12)]" style={{ '--dv-cut': '9px' } as CSSProperties}>
+        <span className="flex size-6 [&>svg]:size-full">{children}</span>
+      </span>
+      {badge && <span className="dv-tabular absolute -right-1 -top-1 grid size-4 place-items-center rounded-full bg-dv-blood font-mono text-[9px] text-white">{badge}</span>}
+      <span className="font-sans text-[10px] text-dv-text-2">{label}</span>
+    </div>
+  )
+}
+
+function TradeGlyph() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M4 8h14M14 4l4 4-4 4M20 16H6M10 12l-4 4 4 4" />
+    </svg>
+  )
+}
+function ChatGlyph() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round" aria-hidden="true">
+      <path d="M4 5h16v11H10l-4 3.5V16H4Z" />
+      <path d="M8 9.5h8M8 12.5h5" strokeLinecap="round" />
+    </svg>
+  )
+}
 
 function DeviceVisual() {
   return (
-    <div className="flex flex-col items-center gap-5">
-      <div className="relative w-48 rounded-[1.8rem] border-2 border-[#d8b25a]/50 bg-[linear-gradient(160deg,#141a2b,#06080f)] p-1.5 shadow-[0_24px_40px_-12px_rgba(0,0,0,0.95),0_0_40px_-16px_var(--color-primary)]">
-        <div className="relative overflow-hidden rounded-[1.4rem] border border-foreground/10 bg-[radial-gradient(ellipse_at_50%_0%,#13246b,#05070e_70%)] p-3">
-          <div className="mb-3 flex items-center justify-between text-[9px] uppercase tracking-[0.25em] text-foreground/60">
-            <span className="text-[#d8b25a]">Devo</span>
-            <span className="font-mono text-dv-red">71:59:12</span>
+    <div className="flex flex-col items-center gap-4">
+      <div className="relative w-72">
+        <div className="relative mx-auto w-44 rounded-[1.6rem] border border-dv-line-strong bg-[linear-gradient(160deg,var(--dv-ink-3),var(--dv-ink))] p-1.5 shadow-[0_20px_40px_-12px_rgba(0,0,0,0.95),0_0_40px_-16px_var(--dv-cobalt)]">
+          <div className="relative overflow-hidden rounded-[1.2rem] bg-[radial-gradient(ellipse_at_50%_0%,var(--dv-cobalt-dim),var(--dv-ink)_70%)] p-3">
+            <div className="mb-3 flex items-center justify-between">
+              <DeadlyVoteSymbol variant="mark" className="size-4 text-dv-text" />
+              <span className="dv-tabular font-impact text-[12px] tracking-[0.04em] text-dv-cobalt-text">71:59:12</span>
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <AppTile label="Pulso" delay={0}>
+                <GlyphClock />
+              </AppTile>
+              <AppTile label="Cartas" badge="3" delay={120}>
+                <GlyphCard />
+              </AppTile>
+              <AppTile label="Trocas" delay={240}>
+                <TradeGlyph />
+              </AppTile>
+              <AppTile label="Mensagens" badge="2" delay={360}>
+                <ChatGlyph />
+              </AppTile>
+            </div>
+            <div className="mx-auto mt-3 h-1 w-10 rounded-full bg-dv-text-3" />
           </div>
-          <div className="grid grid-cols-2 gap-3">
-            {DEVICE_APPS.map(({ icon: Icon, label, badge }, i) => (
-              <div key={label} className="flex flex-col items-center gap-1 animate-pop" style={{ animationDelay: `${i * 140}ms` }}>
-                <span className="relative grid size-12 place-items-center rounded-2xl border border-[#d8b25a]/40 bg-[linear-gradient(160deg,#20294a,#0b0f1e)] shadow-[inset_0_1px_0_rgba(255,255,255,0.12)]">
-                  <Icon className="size-5 text-[#f1e3bd]" strokeWidth={1.4} aria-hidden="true" />
-                  {badge && (
-                    <span className="absolute -right-1.5 -top-1.5 grid size-4 place-items-center rounded-full bg-dv-red text-[9px] font-semibold text-white shadow-[0_0_8px_var(--color-dv-red)]">
-                      {badge}
-                    </span>
-                  )}
-                </span>
-                <span className="text-[9px] tracking-wide text-foreground/75">{label}</span>
-              </div>
-            ))}
-          </div>
-          <div className="mx-auto mt-4 h-1 w-12 rounded-full bg-foreground/30" />
         </div>
-        <PointingHand className="bottom-16 right-5" />
+        <Callout label="Pulso" className="right-0 top-5" side="left" />
+        <Callout label="Apps" className="left-0 top-24" />
+        <TapMark className="bottom-14 right-[5.4rem]" />
       </div>
       <Caption>Um sistema dentro do sistema</Caption>
     </div>
@@ -132,22 +188,20 @@ function DeviceVisual() {
 function CardsVisual() {
   const ids = ['ampulheta', 'mascara', 'chave']
   return (
-    <div className="flex flex-col items-center gap-5">
+    <div className="flex flex-col items-center gap-4">
       <div className="relative flex h-52 w-72 items-end justify-center">
-        <span className="absolute inset-x-6 bottom-0 h-16 rounded-full bg-[radial-gradient(ellipse,rgba(216,178,90,0.35),transparent_70%)] blur-md" aria-hidden="true" />
+        <span className="absolute inset-x-8 bottom-1 h-12 rounded-[50%] bg-[radial-gradient(ellipse,rgba(201,164,92,0.3),transparent_70%)] blur-md" aria-hidden="true" />
         {ids.map((id, i) => (
-          <div
-            key={id}
-            className={cn('-mx-4 w-24 origin-bottom animate-pop transition-transform', i === 1 && 'z-10 drop-shadow-[0_0_18px_rgba(216,178,90,0.55)]')}
-            style={{ transform: `rotate(${(i - 1) * 14}deg) translateY(${i === 1 ? -16 : 0}px)`, animationDelay: `${i * 160}ms` }}
-          >
-            <CardFace cardId={id} size="sm" />
+          <div key={id} className="-mx-4 w-24" style={{ transform: `rotate(${(i - 1) * 14}deg) translateY(${i === 1 ? -16 : 0}px)`, transformOrigin: 'bottom center', zIndex: i === 1 ? 10 : 1 }}>
+            <div className={cn('animate-dv-rise', i === 1 && 'drop-shadow-[0_0_18px_rgba(201,164,92,0.5)]')} style={{ animationDelay: `${i * 140}ms` }}>
+              <CardFace cardId={id} size="sm" />
+            </div>
           </div>
         ))}
-        <PointingHand className="-bottom-4 left-[55%]" />
+        <TapMark className="bottom-6 left-[55%]" />
       </div>
-      <span className="flex items-center gap-2 rounded-full border border-[#d8b25a]/50 bg-black/50 px-3 py-1 text-[10px] uppercase tracking-[0.3em] text-[#e9dcbc]">
-        <Layers className="size-3 text-[#d8b25a]" aria-hidden="true" />
+      <span className="dv-cut-diag flex items-center gap-2 bg-dv-ink-3 px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.22em] text-dv-gold-bright" style={{ '--dv-cut': '8px' } as CSSProperties}>
+        <GlyphCard className="size-3.5 text-dv-gold" />
         Inventário · 3 cartas
       </span>
       <Caption>Ferramentas, armas ou moeda de troca</Caption>
@@ -159,38 +213,42 @@ const ROOMS = ['livre', 'ocupada', 'livre', 'ocupada', 'livre', 'ocupada'] as co
 
 function RoomsVisual() {
   return (
-    <div className="flex flex-col items-center gap-5">
+    <div className="flex flex-col items-center gap-4">
       <div className="relative grid grid-cols-3 gap-3">
         {ROOMS.map((status, i) => {
           const chosen = i === 2
           const free = status === 'livre'
-          const Icon = chosen ? DoorOpen : free ? DoorClosed : Lock
           return (
             <div
               key={i}
               className={cn(
-                'relative flex h-24 w-20 flex-col items-center justify-between rounded-t-[2.2rem] border px-2 pb-2 pt-4 transition-all',
-                free ? 'border-[#d8b25a]/45 bg-[linear-gradient(180deg,#2a1e14,#120c08)]' : 'border-foreground/10 bg-[#0a0a0c] opacity-45 grayscale',
-                chosen && 'border-[#d8b25a] bg-[linear-gradient(180deg,#3b2a12,#160f08)] shadow-[0_0_26px_-4px_rgba(216,178,90,0.7)]',
+                'relative flex h-24 w-20 flex-col items-center justify-between px-2 pb-2 pt-3 [clip-path:polygon(0_22%,50%_0,100%_22%,100%_100%,0_100%)]',
+                chosen
+                  ? 'bg-[linear-gradient(180deg,var(--dv-cobalt),var(--dv-cobalt-dim)_55%,var(--dv-ink-2))]'
+                  : free
+                    ? 'bg-[linear-gradient(180deg,var(--dv-ink-4),var(--dv-ink-2))]'
+                    : 'bg-dv-ink-2 opacity-50',
               )}
             >
-              <Icon className={cn('size-6', chosen ? 'text-[#f6dc93]' : free ? 'text-[#d8b25a]/80' : 'text-foreground/40')} strokeWidth={1.3} aria-hidden="true" />
-              <span className="font-serif text-[11px] tracking-[0.15em] text-[#e9dcbc]">{`Sala ${String(i + 1).padStart(2, '0')}`}</span>
-              <span className={cn('flex items-center gap-1 text-[9px] uppercase tracking-[0.2em]', free ? 'text-emerald-300/80' : 'text-dv-red/80')}>
-                <span className={cn('size-1.5 rounded-full', free ? 'bg-emerald-300/80 shadow-[0_0_6px_#6ee7b7]' : 'bg-dv-red/80')} />
-                {status}
-              </span>
-              {chosen && (
-                <span className="absolute -bottom-3 rounded-sm border border-[#d8b25a] bg-[#1a1208] px-2 py-0.5 text-[9px] uppercase tracking-[0.25em] text-[#f6dc93] animate-pop">
-                  Entrar
-                </span>
-              )}
+              <span className={cn('mt-2 font-impact text-[22px] leading-none', chosen ? 'text-white' : free ? 'text-dv-text' : 'text-dv-text-3')}>{toRoman(i + 1)}</span>
+              {free ? <span className={cn('size-1.5 rotate-45', chosen ? 'bg-dv-gold-bright' : 'bg-dv-cobalt-text')} aria-hidden="true" /> : <GlyphKeyhole className="size-4 text-dv-text-3" />}
+              <span className={cn('dv-label text-[9px] tracking-[0.14em]', chosen ? 'text-white' : free ? 'text-dv-cobalt-text' : 'text-dv-text-3')}>{chosen ? 'Entrar' : status}</span>
             </div>
           )
         })}
-        <PointingHand className="right-3 top-14" />
+        <TapMark className="right-5 top-10" />
       </div>
       <Caption>Uma negociação por sala</Caption>
+    </div>
+  )
+}
+
+/** Mesa de troca: prancheta escura com moldura tracejada. */
+function Table({ children, className }: { children: ReactNode; className?: string }) {
+  return (
+    <div className={cn('dv-cut relative bg-[radial-gradient(ellipse_at_50%_40%,var(--dv-ink-4),var(--dv-ink-2)_70%)] p-4 shadow-[inset_0_0_30px_rgba(0,0,0,0.8)]', className)} style={{ '--dv-cut': '14px' } as CSSProperties}>
+      <span className="pointer-events-none absolute inset-2 border border-dashed border-dv-gold/20" aria-hidden="true" />
+      {children}
     </div>
   )
 }
@@ -198,47 +256,31 @@ function RoomsVisual() {
 function Slot({ label, children, highlight }: { label: string; children?: ReactNode; highlight?: boolean }) {
   return (
     <div className="flex flex-col items-center gap-2">
-      <div
-        className={cn(
-          'grid aspect-[9/20] w-[5.5rem] place-items-center rounded-[0.6rem] border-2 border-dashed p-1',
-          highlight ? 'border-[#d8b25a]/80 bg-[#d8b25a]/10 shadow-[inset_0_0_20px_rgba(216,178,90,0.25)]' : 'border-foreground/20 bg-black/30',
-        )}
-      >
-        {children}
-      </div>
-      <span className={cn('text-[10px] uppercase tracking-[0.25em]', highlight ? 'text-[#f6dc93]' : 'text-[#e9dcbc]/50')}>{label}</span>
+      <div className={cn('grid aspect-[9/20] w-[5.5rem] place-items-center border-2 border-dashed p-1', highlight ? 'border-dv-cobalt-text/80 bg-dv-cobalt-dim/40' : 'border-dv-line-strong bg-black/30')}>{children}</div>
+      <span className={cn('dv-label text-[10px]', highlight ? 'text-dv-cobalt-text' : 'text-dv-text-3')}>{label}</span>
     </div>
-  )
-}
-
-function UnknownPlayer() {
-  return (
-    <span className="flex flex-col items-center gap-1 text-[#e9dcbc]/35">
-      <span className="font-serif text-4xl animate-pulse">?</span>
-      <span className="text-[8px] uppercase tracking-[0.3em]">Vazio</span>
-    </span>
   )
 }
 
 function SlotVisual() {
   return (
-    <div className="flex flex-col items-center gap-5">
-      <Velvet>
-        <div className="relative flex items-start gap-8 px-2">
+    <div className="flex flex-col items-center gap-4">
+      <Table>
+        <div className="relative flex items-start gap-6 px-1">
           <Slot label="Seu espaço" highlight>
             <div className="w-full animate-drop">
               <CardFace cardId="mascara" size="sm" />
             </div>
           </Slot>
-          <span className="mt-20 font-serif text-lg text-[#d8b25a]/70" aria-hidden="true">
-            vs
+          <span className="mt-20 -skew-x-[8deg] font-impact text-[22px] text-dv-gold" aria-hidden="true">
+            VS
           </span>
           <Slot label="Outro jogador">
-            <UnknownPlayer />
+            <span className="font-impact text-[40px] text-dv-text-3">?</span>
           </Slot>
-          <PointingHand className="left-16 top-24" />
+          <TapMark className="left-14 top-24" />
         </div>
-      </Velvet>
+      </Table>
       <Caption>Você não escolhe o que ele oferece</Caption>
     </div>
   )
@@ -246,26 +288,35 @@ function SlotVisual() {
 
 function ClockVisual() {
   return (
-    <div className="flex flex-col items-center gap-5">
-      <div className="relative grid size-40 place-items-center rounded-full border-2 border-[#d8b25a]/60 bg-[radial-gradient(circle,#1a1424,#07060a_70%)] shadow-[0_0_40px_-10px_rgba(216,178,90,0.5),inset_0_0_30px_rgba(0,0,0,0.9)]">
-        <span className="absolute inset-2 rounded-full border border-dashed border-[#d8b25a]/30 animate-[pr-rays_30s_linear_infinite]" aria-hidden="true" />
-        {Array.from({ length: 12 }).map((_, i) => (
-          <span key={i} className="absolute h-full w-px py-3" style={{ transform: `rotate(${i * 30}deg)` }} aria-hidden="true">
-            <span className={cn('block w-px bg-[#d8b25a]', i % 3 === 0 ? 'h-3' : 'h-1.5 opacity-60')} />
-          </span>
-        ))}
-        <span className="absolute h-1/2 w-full animate-[spin_4s_linear_infinite]" aria-hidden="true">
-          <span className="absolute bottom-0 left-1/2 h-14 w-0.5 -translate-x-1/2 rounded-full bg-gradient-to-t from-[#d8b25a] to-[#f6dc93] shadow-[0_0_8px_#d8b25a]" />
-        </span>
-        <span className="relative grid size-12 place-items-center rounded-full border border-[#d8b25a]/60 bg-black">
-          <Search className="size-5 text-[#f6dc93]" strokeWidth={1.4} aria-hidden="true" />
+    <div className="flex flex-col items-center gap-4">
+      <div className="relative grid size-44 place-items-center">
+        <svg viewBox="0 0 160 160" className="absolute inset-0 size-full text-dv-gold" fill="none" stroke="currentColor" aria-hidden="true">
+          <circle cx="80" cy="80" r="76" strokeWidth="1" opacity="0.5" />
+          <circle cx="80" cy="80" r="56" strokeWidth="0.8" opacity="0.35" />
+          <g className="en-sweep-hand-slow">
+            <ellipse cx="80" cy="80" rx="74" ry="30" stroke="var(--dv-cobalt-text)" strokeWidth="0.8" opacity="0.6" strokeDasharray="2 4" />
+          </g>
+          {Array.from({ length: 12 }, (_, i) => {
+            const a = (i / 12) * Math.PI * 2
+            return (
+              <text key={i} x={80 + Math.sin(a) * 66} y={80 - Math.cos(a) * 66 + 3} textAnchor="middle" fill="currentColor" stroke="none" fontSize="8" style={{ fontFamily: 'var(--font-card-title)' }}>
+                {toRoman(i === 0 ? 12 : i)}
+              </text>
+            )
+          })}
+          <g className="en-sweep-hand">
+            <line x1="80" y1="80" x2="80" y2="28" stroke="var(--dv-cobalt-text)" strokeWidth="2" strokeLinecap="round" />
+          </g>
+        </svg>
+        <span className="relative grid size-12 place-items-center rounded-full border border-dv-gold/60 bg-dv-ink">
+          <GlyphHourglass className="size-5 text-dv-gold-bright" />
         </span>
       </div>
-      <p className="flex items-center gap-1 text-xs uppercase tracking-[0.3em] text-[#e9dcbc]">
+      <p className="dv-label flex items-center gap-1 text-[11px] text-dv-text">
         Procurando oponente
         {[0, 1, 2].map((i) => (
-          <span key={i} className="animate-blink" style={{ animationDelay: `${i * 200}ms` }}>
-            .
+          <span key={i} className="en-typing inline-block" style={{ animationDelay: `${i * 160}ms` }} aria-hidden="true">
+            ·
           </span>
         ))}
       </p>
@@ -275,22 +326,22 @@ function ClockVisual() {
 
 function HiddenVisual() {
   return (
-    <div className="flex flex-col items-center gap-5">
-      <Velvet className="px-6">
+    <div className="flex flex-col items-center gap-4">
+      <Table className="px-6">
         <div className="flex items-center gap-6">
           {['Sua carta', 'Carta dele'].map((label, i) => (
             <div key={label} className="flex flex-col items-center gap-2">
               <div className={cn('relative w-24', i === 0 ? '-rotate-3' : 'rotate-3')}>
                 <CardBack />
-                <span className="absolute inset-0 grid place-items-center font-serif text-5xl text-[#f6dc93] drop-shadow-[0_0_14px_rgba(216,178,90,0.9)] animate-pulse">?</span>
+                <span className="absolute inset-0 grid place-items-center font-impact text-[44px] text-dv-gold-bright drop-shadow-[0_0_14px_rgba(201,164,92,0.9)]">?</span>
               </div>
-              <span className="text-[10px] uppercase tracking-[0.25em] text-[#e9dcbc]/60">{label}</span>
+              <span className="dv-label text-[10px] text-dv-text-2">{label}</span>
             </div>
           ))}
         </div>
-      </Velvet>
-      <span className="flex items-center gap-2 rounded-full border border-[#8fa8ff]/60 bg-[#0b1440]/70 px-3 py-1 text-[10px] uppercase tracking-[0.3em] text-[#a9bcff] shadow-[0_0_18px_-6px_#6f8cff]">
-        <Gem className="size-3" aria-hidden="true" />
+      </Table>
+      <span className="dv-cut-diag flex items-center gap-2 bg-dv-cobalt-dim px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.22em] text-dv-cobalt-text" style={{ '--dv-cut': '8px' } as CSSProperties}>
+        <GlyphDiamond className="size-3" filled />
         Mesma raridade
       </span>
     </div>
@@ -306,10 +357,8 @@ const CHAT = [
 function Avatar({ me }: { me: boolean }) {
   return (
     <span
-      className={cn(
-        'grid size-7 shrink-0 place-items-center rounded-full border text-[10px] font-semibold',
-        me ? 'border-primary/70 bg-primary/20 text-[#c9d4ff]' : 'border-[#d8b25a]/60 bg-[#2a1e10] text-[#f6dc93]',
-      )}
+      className={cn('dv-cut grid size-7 shrink-0 place-items-center font-mono text-[9px]', me ? 'bg-dv-cobalt-dim text-dv-cobalt-text' : 'bg-dv-ink-4 text-dv-gold-bright')}
+      style={{ '--dv-cut': '6px' } as CSSProperties}
       aria-hidden="true"
     >
       {me ? 'EU' : '?'}
@@ -319,31 +368,26 @@ function Avatar({ me }: { me: boolean }) {
 
 function ChatVisual() {
   return (
-    <div className="flex w-72 flex-col gap-3">
-      <div className="flex items-center justify-between border-b border-[#d8b25a]/30 pb-2 text-[10px] uppercase tracking-[0.3em] text-[#e9dcbc]/60">
-        <span>Sala 03 · Chat</span>
-        <span className="flex items-center gap-1 text-emerald-300/80">
-          <span className="size-1.5 rounded-full bg-emerald-300 shadow-[0_0_6px_#6ee7b7]" />2 na sala
+    <div className="flex w-72 flex-col gap-2.5">
+      <div className="flex items-center justify-between border-b border-dv-line pb-2">
+        <span className="dv-label text-[10px] text-dv-text-2">Sala III · Chat</span>
+        <span className="dv-label flex items-center gap-1.5 text-[10px] text-dv-cobalt-text">
+          <span className="size-1.5 animate-dv-blink rounded-full bg-dv-cobalt-text" />2 na sala
         </span>
       </div>
       {CHAT.map((m, i) => (
-        <div key={i} className={cn('flex items-end gap-2 animate-pop', m.me && 'flex-row-reverse')} style={{ animationDelay: `${i * 500}ms` }}>
+        <div key={i} className={cn('animate-dv-rise flex items-end gap-2', m.me && 'flex-row-reverse')} style={{ animationDelay: `${i * 420}ms` }}>
           <Avatar me={m.me} />
-          <p
-            className={cn(
-              'max-w-[78%] rounded-2xl px-3 py-1.5 text-sm',
-              m.me ? 'rounded-br-sm border border-primary/50 bg-primary/20' : 'rounded-bl-sm border border-[#d8b25a]/30 bg-[#1d160e]',
-            )}
-          >
+          <p className={cn('dv-cut-diag max-w-[78%] px-3 py-1.5 font-sans text-[13px] text-dv-text', m.me ? 'bg-dv-cobalt-dim' : 'bg-dv-ink-3')} style={{ '--dv-cut': '8px' } as CSSProperties}>
             {m.text}
           </p>
         </div>
       ))}
-      <div className="flex items-center gap-2 animate-pop" style={{ animationDelay: '1600ms' }}>
+      <div className="animate-dv-rise flex items-center gap-2 [animation-delay:1400ms]">
         <Avatar me={false} />
-        <span className="flex gap-1 rounded-2xl rounded-bl-sm border border-[#d8b25a]/30 bg-[#1d160e] px-3 py-2.5" aria-label="Digitando">
+        <span className="dv-cut-diag flex gap-1 bg-dv-ink-3 px-3 py-2.5" style={{ '--dv-cut': '8px' } as CSSProperties} aria-label="Digitando">
           {[0, 1, 2].map((i) => (
-            <span key={i} className="size-1.5 rounded-full bg-[#e9dcbc]/70 animate-bounce" style={{ animationDelay: `${i * 150}ms` }} />
+            <span key={i} className="en-typing size-1.5 rounded-full bg-dv-text-2" style={{ animationDelay: `${i * 150}ms` }} />
           ))}
         </span>
       </div>
@@ -358,37 +402,42 @@ function Seal({ who, lit, delay }: { who: string; lit: boolean; delay: number })
       <span
         className={cn(
           'relative grid size-20 place-items-center rounded-full border-2 transition-all duration-500',
-          lit
-            ? 'border-[#f6dc93] bg-[radial-gradient(circle_at_35%_30%,#c43a2c,#6e1414_70%)] shadow-[0_0_30px_-4px_rgba(196,58,44,0.8)]'
-            : 'border-foreground/20 bg-[radial-gradient(circle_at_35%_30%,#2a2a30,#0c0c10_70%)]',
+          lit ? 'border-dv-cobalt-text bg-[radial-gradient(circle_at_35%_30%,var(--dv-cobalt),var(--dv-cobalt-dim)_75%)] shadow-[0_0_30px_-4px_rgba(49,93,255,0.8)]' : 'border-dv-line-strong bg-dv-ink-3',
         )}
         style={{ transitionDelay: `${delay}ms` }}
       >
-        <span className="absolute inset-1.5 rounded-full border border-dashed border-[#f6dc93]/40" aria-hidden="true" />
-        <Check className={cn('size-8 transition-opacity', lit ? 'text-[#f6dc93] opacity-100' : 'opacity-20')} strokeWidth={2.4} aria-hidden="true" />
+        <span className="absolute inset-1.5 rounded-full border border-dashed border-white/25" aria-hidden="true" />
+        <GlyphCheck className={cn('size-8 transition-opacity duration-500', lit ? 'text-white opacity-100' : 'opacity-20')} style={{ transitionDelay: `${delay}ms` }} />
       </span>
-      <span className="text-[10px] uppercase tracking-[0.25em] text-[#e9dcbc]/70">{who}</span>
+      <span className="dv-label text-[10px] text-dv-text-2">{who}</span>
     </div>
   )
 }
 
 function AcceptVisual() {
   const [lit, setLit] = useState(false)
+  const [sealed, setSealed] = useState(false)
   useEffect(() => {
-    const id = window.setTimeout(() => setLit(true), 400)
-    return () => window.clearTimeout(id)
+    const a = window.setTimeout(() => setLit(true), 400)
+    const b = window.setTimeout(() => setSealed(true), 1600)
+    return () => {
+      window.clearTimeout(a)
+      window.clearTimeout(b)
+    }
   }, [])
   return (
-    <div className="flex flex-col items-center gap-5">
-      <div className="relative flex items-center gap-6">
+    <div className="flex flex-col items-center gap-4">
+      <div className="relative flex items-center gap-5 pb-4">
         <Seal who="Você" lit={lit} delay={0} />
-        <span className={cn('h-px w-12 transition-colors duration-700', lit ? 'bg-[#d8b25a]' : 'bg-foreground/20')} style={{ transitionDelay: '900ms' }} aria-hidden="true" />
+        <span className={cn('h-px w-12 transition-colors duration-700', lit ? 'bg-dv-gold' : 'bg-dv-line')} style={{ transitionDelay: '900ms' }} aria-hidden="true" />
         <Seal who="Outro jogador" lit={lit} delay={900} />
-        <PointingHand className="left-12 top-12" />
+        <TapMark className="left-12 top-12" />
+        {sealed && (
+          <span className="absolute -bottom-6 left-1/2 -translate-x-1/2">
+            <Stamp text="Troca selada" tone="gold" size={150} rotate={-6} animate />
+          </span>
+        )}
       </div>
-      <span className={cn('rounded-sm border px-4 py-1 text-[11px] uppercase tracking-[0.35em] transition-all duration-500', lit ? 'border-[#d8b25a] text-[#f6dc93]' : 'border-transparent text-transparent')} style={{ transitionDelay: '1300ms' }}>
-        Troca selada
-      </span>
       <Caption>Os dois precisam aceitar</Caption>
     </div>
   )
@@ -401,16 +450,16 @@ function RevealVisual() {
     return () => window.clearTimeout(id)
   }, [])
   return (
-    <div className="relative flex flex-col items-center gap-5">
+    <div className="relative flex flex-col items-center gap-4">
       <div className="relative flex gap-5">
         <span
-          className="pointer-events-none absolute left-1/2 top-1/2 size-72 -translate-x-1/2 -translate-y-1/2 animate-[pr-rays_14s_linear_infinite] opacity-60"
-          style={{ background: 'repeating-conic-gradient(rgba(216,178,90,0.35) 0 6deg, transparent 6deg 18deg)', maskImage: 'radial-gradient(circle, black 20%, transparent 70%)' }}
+          className="en-rays pointer-events-none absolute left-1/2 top-1/2 -ml-36 -mt-36 size-72 opacity-60"
+          style={{ background: 'repeating-conic-gradient(rgba(201,164,92,0.35) 0 6deg, transparent 6deg 18deg)', maskImage: 'radial-gradient(circle, black 20%, transparent 70%)' }}
           aria-hidden="true"
         />
         {['ampulheta', 'tesoura'].map((id, i) => (
           <div key={id} className={cn('relative w-24 [perspective:800px]', i === 0 ? '-rotate-6' : 'rotate-6')}>
-            <div className={cn('relative transition-transform duration-700 [transform-style:preserve-3d]', flipped ? '' : '[transform:rotateY(180deg)]')}>
+            <div className={cn('relative transition-transform duration-700 [transform-style:preserve-3d]', flipped ? '' : '[transform:rotateY(180deg)]')} style={{ transitionDelay: `${i * 160}ms` }}>
               <div className="[backface-visibility:hidden]">
                 <CardFace cardId={id} size="sm" />
               </div>
@@ -421,7 +470,9 @@ function RevealVisual() {
           </div>
         ))}
       </div>
-      <span className="absolute top-14 font-serif text-6xl uppercase tracking-[0.06em] text-[#f6dc93] [-webkit-text-stroke:1px_#5a1a0e] drop-shadow-[0_0_24px_rgba(216,90,40,0.9)] animate-kabum">Kabum!</span>
+      <span aria-hidden="true" className="en-kabum absolute top-14 font-impact text-[56px] font-bold uppercase leading-none tracking-[0.02em] text-dv-gold-bright [-webkit-text-stroke:1.5px_var(--dv-ink)] [text-shadow:4px_4px_0_var(--dv-cobalt-deep)]">
+        Kabum!
+      </span>
       <Caption>Sem devoluções</Caption>
     </div>
   )
@@ -429,21 +480,22 @@ function RevealVisual() {
 
 function LostVisual() {
   return (
-    <div className="flex flex-col items-center gap-5">
-      <div className="relative flex h-44 w-72 items-center justify-start overflow-hidden rounded-xl border border-[#d8b25a]/30 bg-[radial-gradient(ellipse_at_30%_50%,#1a1520,#060508_75%)] pl-8">
-        <span className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_85%_40%,rgba(200,190,230,0.18),transparent_60%)] animate-[devo-mist_8s_ease-in-out_infinite]" aria-hidden="true" />
-        <div className="w-20 animate-drift-away">
+    <div className="flex flex-col items-center gap-4">
+      <div className="dv-cut relative flex h-44 w-72 items-center justify-start overflow-hidden bg-[radial-gradient(ellipse_at_30%_50%,var(--dv-ink-4),var(--dv-ink)_75%)] pl-8" style={{ '--dv-cut': '14px' } as CSSProperties}>
+        <span className="pointer-events-none absolute inset-0 animate-[devo-mist_8s_ease-in-out_infinite] bg-[radial-gradient(ellipse_at_85%_40%,rgba(125,151,255,0.18),transparent_60%)]" aria-hidden="true" />
+        <div className="en-drift w-20">
           <CardFace cardId="coroa" size="sm" />
         </div>
         {[
-          ['right-8 top-6', 'text-3xl'],
-          ['bottom-6 right-16', 'text-2xl'],
-          ['right-24 top-10', 'text-xl'],
+          ['right-8 top-6', 'text-[34px]'],
+          ['bottom-8 right-16', 'text-[26px]'],
+          ['right-24 top-10', 'text-[20px]'],
         ].map(([pos, size], i) => (
-          <span key={i} className={cn('absolute font-serif text-[#e9dcbc]/25 animate-pulse', pos, size)} style={{ animationDelay: `${i * 400}ms` }} aria-hidden="true">
+          <span key={i} className={cn('absolute font-impact text-dv-text-3 animate-dv-alert', pos, size)} style={{ animationDelay: `${i * 400}ms` }} aria-hidden="true">
             ?
           </span>
         ))}
+        <Callout label="Paradeiro desconhecido" className="bottom-3 right-3" side="left" />
       </div>
       <Caption>Em qualquer lugar. Nas mãos de qualquer pessoa.</Caption>
     </div>
@@ -453,42 +505,43 @@ function LostVisual() {
 function MessagesVisual() {
   return (
     <div className="flex w-72 flex-col gap-3">
-      <p className="self-start rounded-2xl rounded-bl-sm border border-[#d8b25a]/30 bg-[#1d160e] px-3 py-2 text-sm">Fale logo. Meu tempo vale mais que o seu.</p>
+      <p className="dv-cut-diag animate-dv-rise self-start bg-dv-ink-3 px-3 py-2 font-body text-[14px] text-dv-text" style={{ '--dv-cut': '8px' } as CSSProperties}>
+        Fale logo. Meu tempo vale mais que o seu.
+      </p>
       <div className="relative flex flex-col gap-1.5">
         {['Quem é você, afinal?', 'Você pode me ajudar?', 'Nada. Esqueça.'].map((c, i) => (
           <span
             key={c}
             className={cn(
-              'flex items-center gap-3 rounded-sm border px-3 py-1.5 text-sm animate-pop',
-              i === 0 ? 'border-[#d8b25a] bg-[#d8b25a]/15 text-[#f6dc93] shadow-[0_0_16px_-6px_#d8b25a]' : 'border-foreground/15 bg-black/30 text-foreground/65',
+              'dv-cut-diag animate-dv-slide-left flex items-center gap-3 px-3 py-1.5 font-body text-[14px]',
+              i === 0 ? 'bg-dv-cobalt-dim text-dv-text shadow-[inset_3px_0_0_var(--dv-cobalt)]' : 'bg-dv-ink-2 text-dv-text-2',
             )}
-            style={{ animationDelay: `${i * 140}ms` }}
+            style={{ animationDelay: `${200 + i * 120}ms`, '--dv-cut': '8px' } as CSSProperties}
           >
-            <span className={cn('grid size-5 place-items-center rounded-sm border font-mono text-[10px]', i === 0 ? 'border-[#d8b25a]' : 'border-foreground/25')}>{i + 1}</span>
+            <span className={cn('font-impact text-[14px]', i === 0 ? 'text-dv-cobalt-text' : 'text-dv-text-3')}>{toRoman(i + 1)}</span>
             {c}
-            {i === 0 && <span className="ml-auto text-[#d8b25a]" aria-hidden="true">◆</span>}
           </span>
         ))}
-        <PointingHand className="right-8 top-4" />
+        <TapMark className="right-8 top-1" />
       </div>
       <Caption>Cada pergunta, uma resposta</Caption>
     </div>
   )
 }
 
-const VISUALS: Record<TutorialVisual, () => ReactNode> = {
-  wrist: WristVisual,
-  device: DeviceVisual,
-  cards: CardsVisual,
-  rooms: RoomsVisual,
-  slot: SlotVisual,
-  clock: ClockVisual,
-  hidden: HiddenVisual,
-  chat: ChatVisual,
-  accept: AcceptVisual,
-  reveal: RevealVisual,
-  lost: LostVisual,
-  messages: MessagesVisual,
+const VISUALS: Record<TutorialVisual, { view: () => ReactNode; system: string }> = {
+  wrist: { view: WristVisual, system: 'Pulso' },
+  device: { view: DeviceVisual, system: 'Aparelho DEVO' },
+  cards: { view: CardsVisual, system: 'Cartas' },
+  rooms: { view: RoomsVisual, system: 'Sala de Trocas' },
+  slot: { view: SlotVisual, system: 'Sala de Trocas' },
+  clock: { view: ClockVisual, system: 'Sala de Trocas' },
+  hidden: { view: HiddenVisual, system: 'Sala de Trocas' },
+  chat: { view: ChatVisual, system: 'Sala de Trocas' },
+  accept: { view: AcceptVisual, system: 'Sala de Trocas' },
+  reveal: { view: RevealVisual, system: 'Sala de Trocas' },
+  lost: { view: LostVisual, system: 'Sala de Trocas' },
+  messages: { view: MessagesVisual, system: 'Mensagens' },
 }
 
 function StepBanner({ step }: { step: string }) {
@@ -496,30 +549,52 @@ function StepBanner({ step }: { step: string }) {
   const num = match?.[1]
   const text = match?.[2] ?? step
   return (
-    <figcaption className="absolute -top-5 left-1/2 flex -translate-x-1/2 items-center whitespace-nowrap">
+    <figcaption className="animate-dv-cut-in absolute -top-6 left-3 right-3 z-10 flex items-center">
       {num && (
-        <span className="relative z-10 -mr-3 grid size-10 place-items-center rounded-full border-2 border-[#d8b25a] bg-[radial-gradient(circle_at_35%_30%,#3a2a12,#120c06)] font-serif text-lg text-[#f6dc93] shadow-[0_0_16px_-2px_rgba(216,178,90,0.7)]">
-          {num}
+        <span className="relative z-10 grid h-12 w-11 -skew-x-[8deg] place-items-center bg-dv-gold font-impact text-[30px] font-bold leading-none text-dv-ink shadow-[3px_3px_0_rgba(0,0,0,0.6)]">
+          <span className="skew-x-[8deg]">{num}</span>
         </span>
       )}
-      <span className="border-y border-r border-[#d8b25a]/70 bg-gradient-to-b from-[#2a1e10] to-[#0e0a06] py-1.5 pl-6 pr-5 text-[11px] uppercase tracking-[0.3em] text-[#f1e3bd] [clip-path:polygon(0_0,100%_0,calc(100%-10px)_50%,100%_100%,0_100%)]">
-        {num ? `Etapa · ${text}` : text}
+      <span className="-ml-1 flex min-w-0 flex-col bg-[linear-gradient(90deg,var(--dv-ink-4),var(--dv-ink-2))] py-1.5 pl-4 pr-5 shadow-[3px_3px_0_rgba(0,0,0,0.6)] [clip-path:polygon(0_0,100%_0,calc(100%-10px)_100%,0_100%)]">
+        <span className="dv-label text-[9px] text-dv-gold">Etapa</span>
+        <span className="truncate font-display text-[14px] font-semibold uppercase tracking-[0.08em] text-dv-text">{text}</span>
       </span>
     </figcaption>
   )
 }
 
-export function TutorialVisualPanel({ visual, step }: { visual: TutorialVisual; step?: string }) {
-  const Visual = VISUALS[visual]
+/** Prancheta do diagrama: grade cobalto, marcas de registro, cabeçalho "Fig." e linha de varredura. */
+export function TutorialVisualPanel({ visual, step, index = 1 }: { visual: TutorialVisual; step?: string; index?: number }) {
+  const { view: Visual, system } = VISUALS[visual]
   return (
-    <figure className="relative flex flex-col items-center gap-4 rounded-sm border border-[#d8b25a]/40 bg-[radial-gradient(ellipse_at_50%_0%,rgba(40,30,18,0.92),rgba(8,8,12,0.94)_70%)] px-8 pb-7 pt-10 shadow-[0_30px_60px_-20px_rgba(0,0,0,0.95),0_0_60px_-30px_rgba(216,178,90,0.6)] backdrop-blur-md animate-pop lg:[zoom:1.25] xl:[zoom:1.35]">
-      <span className="pointer-events-none absolute inset-1.5 rounded-sm border border-[#d8b25a]/15" aria-hidden="true" />
-      <Corner className="left-0 top-0" />
-      <Corner className="right-0 top-0 rotate-90" />
-      <Corner className="bottom-0 right-0 rotate-180" />
-      <Corner className="bottom-0 left-0 -rotate-90" />
+    <figure className="animate-dv-pop relative lg:[zoom:1.25] xl:[zoom:1.35]">
+      <span aria-hidden="true" className="dv-cut absolute inset-0 bg-[linear-gradient(135deg,#8ea6ff,var(--dv-cobalt)_35%,var(--dv-cobalt-dim)_70%,var(--dv-cobalt))]" style={{ '--dv-cut': '16px' } as CSSProperties} />
+      <span
+        aria-hidden="true"
+        className="dv-cut absolute inset-px overflow-hidden bg-[rgba(5,7,13,0.94)] [background-image:linear-gradient(rgba(49,93,255,0.08)_1px,transparent_1px),linear-gradient(90deg,rgba(49,93,255,0.08)_1px,transparent_1px)] [background-size:16px_16px]"
+        style={{ '--dv-cut': '15.6px' } as CSSProperties}
+      >
+        <span className="en-scan absolute inset-x-0 top-0 h-8 bg-gradient-to-b from-transparent via-[rgba(49,93,255,0.14)] to-transparent" />
+      </span>
+      {/* marcas de registro */}
+      {['left-3 top-3', 'right-3 top-3', 'bottom-3 left-3', 'bottom-3 right-3'].map((p) => (
+        <span key={p} aria-hidden="true" className={cn('absolute size-3 text-dv-cobalt-text/70', p)}>
+          <span className="absolute left-1/2 top-0 h-full w-px bg-current" />
+          <span className="absolute left-0 top-1/2 h-px w-full bg-current" />
+        </span>
+      ))}
       {step && <StepBanner step={step} />}
-      <Visual />
+      <div className={cn('relative flex flex-col items-center gap-3 px-7 pb-6', step ? 'pt-10' : 'pt-5')}>
+        <div className="dv-label flex w-full items-center gap-3 text-[10px] text-dv-text-3">
+          <span className="flex items-center gap-1.5 text-dv-cobalt-text">
+            <GlyphSpark className="size-2.5" />
+            Fig. {toRoman(index)}
+          </span>
+          <span className="h-px flex-1 bg-dv-line" aria-hidden="true" />
+          <span>{system}</span>
+        </div>
+        <Visual />
+      </div>
     </figure>
   )
 }

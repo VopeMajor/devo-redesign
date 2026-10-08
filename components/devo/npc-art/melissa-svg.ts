@@ -10,44 +10,55 @@ export type MelissaMood = 'neutral' | 'soft' | 'serious'
 
 export const MELISSA_VIEWBOX = '0 0 600 900'
 
-function face(mood: MelissaMood) {
+/** Olho aberto: pálpebra com cílio na ponta, íris em degradê cobalto, pupila e dois brilhos. */
+function openEye(cx: number, flip: boolean, iris: string, narrow = false) {
+  const d = flip ? -1 : 1
+  const x = (v: number) => cx + v * d
+  const top = narrow ? 252 : 246
+  return `
+    <path d="M${x(-19)} 260 Q${x(-2)} ${top - 4} ${x(19)} ${top + 6} Q${x(4)} 274 ${x(-19)} 260 Z" fill="#fbf6ef"/>
+    <ellipse cx="${cx}" cy="261" rx="10.5" ry="${narrow ? 10 : 12.5}" fill="url(#${iris})"/>
+    <ellipse cx="${cx}" cy="262" rx="5" ry="6" fill="#0c0d1a"/>
+    <circle cx="${x(-4)}" cy="255" r="3.2" fill="#fff"/>
+    <circle cx="${x(4)}" cy="267" r="1.6" fill="#fff" opacity="0.8"/>
+    <path d="M${x(-21)} 261 Q${x(-2)} ${top - 6} ${x(20)} ${top + 4} L${x(26)} ${top - 1} L${x(19)} ${top + 9} Q${x(0)} ${top - 1} ${x(-19)} 263 Z" fill="${ART.ink}"/>
+    ${narrow ? `<path d="M${x(-19)} 258 Q${x(0)} ${top + 2} ${x(19)} ${top + 9}" fill="none" stroke="#c9a88a" stroke-width="2" opacity="0.8"/>` : ''}
+    <path d="M${x(-15)} 273 Q${x(0)} 278 ${x(15)} 271" fill="none" stroke="${ART.ink}" stroke-opacity="0.45" stroke-width="1.6" stroke-linecap="round"/>`
+}
+
+function face(mood: MelissaMood, iris: string) {
   const ink = ART.ink
+  const blush = `
+      <ellipse cx="254" cy="290" rx="15" ry="6" fill="${ART.red}" opacity="${mood === 'soft' ? 0.18 : 0.08}"/>
+      <ellipse cx="346" cy="290" rx="15" ry="6" fill="${ART.red}" opacity="${mood === 'soft' ? 0.18 : 0.08}"/>`
   if (mood === 'soft') {
     return `
-      <path d="M244 226 Q268 214 290 224" fill="none" stroke="#2a1f22" stroke-width="5" stroke-linecap="round"/>
-      <path d="M312 224 Q334 214 356 226" fill="none" stroke="#2a1f22" stroke-width="5" stroke-linecap="round"/>
-      <path d="M252 258 Q270 246 288 258" fill="none" stroke="${ink}" stroke-width="5" stroke-linecap="round"/>
-      <path d="M312 258 Q330 246 348 258" fill="none" stroke="${ink}" stroke-width="5" stroke-linecap="round"/>
-      <path d="M254 262 Q270 270 286 263" fill="none" stroke="${ink}" stroke-opacity="0.35" stroke-width="2"/>
-      <path d="M314 263 Q330 270 346 262" fill="none" stroke="${ink}" stroke-opacity="0.35" stroke-width="2"/>
-      <ellipse cx="256" cy="284" rx="14" ry="6" fill="${ART.red}" opacity="0.12"/>
-      <ellipse cx="344" cy="284" rx="14" ry="6" fill="${ART.red}" opacity="0.12"/>
-      <path d="M284 304 Q300 314 316 304" fill="none" stroke="#7a3a3a" stroke-width="4" stroke-linecap="round"/>`
+      <path d="M246 228 Q268 218 290 226" fill="none" stroke="#2a1f22" stroke-width="4.5" stroke-linecap="round"/>
+      <path d="M310 226 Q332 218 354 228" fill="none" stroke="#2a1f22" stroke-width="4.5" stroke-linecap="round"/>
+      <path d="M250 262 Q270 246 290 260" fill="none" stroke="${ink}" stroke-width="5" stroke-linecap="round"/>
+      <path d="M290 260 L296 256" stroke="${ink}" stroke-width="3" stroke-linecap="round"/>
+      <path d="M310 260 Q330 246 350 262" fill="none" stroke="${ink}" stroke-width="5" stroke-linecap="round"/>
+      <path d="M310 260 L304 256" stroke="${ink}" stroke-width="3" stroke-linecap="round"/>
+      ${blush}
+      <path d="M284 304 Q300 315 316 304" fill="none" stroke="#8a3d40" stroke-width="3.5" stroke-linecap="round"/>
+      <path d="M292 309 Q300 312 308 309" fill="none" stroke="#c46a6a" stroke-width="2" stroke-linecap="round" opacity="0.6"/>`
   }
   if (mood === 'serious') {
     return `
-      <path d="M244 222 L290 234" fill="none" stroke="#2a1f22" stroke-width="6" stroke-linecap="round"/>
-      <path d="M356 222 L310 234" fill="none" stroke="#2a1f22" stroke-width="6" stroke-linecap="round"/>
-      <path d="M252 256 Q270 248 288 256 Q270 262 252 256 Z" fill="${ink}"/>
-      <path d="M312 256 Q330 248 348 256 Q330 262 312 256 Z" fill="${ink}"/>
-      <path d="M250 252 Q270 244 290 252" fill="none" stroke="${ink}" stroke-width="4" stroke-linecap="round"/>
-      <path d="M310 252 Q330 244 350 252" fill="none" stroke="${ink}" stroke-width="4" stroke-linecap="round"/>
-      <circle cx="274" cy="255" r="1.8" fill="${ART.cobaltSoft}"/>
-      <circle cx="334" cy="255" r="1.8" fill="${ART.cobaltSoft}"/>
-      <path d="M286 309 Q300 305 314 309" fill="none" stroke="#6a3434" stroke-width="4" stroke-linecap="round"/>
-      <path d="M262 236 L284 240" stroke="${ink}" stroke-opacity="0.25" stroke-width="2" stroke-linecap="round"/>
-      <path d="M338 236 L316 240" stroke="${ink}" stroke-opacity="0.25" stroke-width="2" stroke-linecap="round"/>`
+      <path d="M244 230 L290 238" fill="none" stroke="#2a1f22" stroke-width="5.5" stroke-linecap="round"/>
+      <path d="M356 230 L310 238" fill="none" stroke="#2a1f22" stroke-width="5.5" stroke-linecap="round"/>
+      ${openEye(270, false, iris, true)}
+      ${openEye(330, true, iris, true)}
+      ${blush}
+      <path d="M287 309 Q300 305 313 309" fill="none" stroke="#6a3434" stroke-width="3.5" stroke-linecap="round"/>`
   }
   return `
-    <path d="M244 224 Q268 216 290 226" fill="none" stroke="#2a1f22" stroke-width="5" stroke-linecap="round"/>
-    <path d="M310 226 Q332 216 356 224" fill="none" stroke="#2a1f22" stroke-width="5" stroke-linecap="round"/>
-    <path d="M252 256 Q270 242 288 256 Q270 266 252 256 Z" fill="${ink}"/>
-    <path d="M312 256 Q330 242 348 256 Q330 266 312 256 Z" fill="${ink}"/>
-    <path d="M249 253 Q270 238 291 252" fill="none" stroke="${ink}" stroke-width="4" stroke-linecap="round"/>
-    <path d="M309 252 Q330 238 351 253" fill="none" stroke="${ink}" stroke-width="4" stroke-linecap="round"/>
-    <circle cx="274" cy="253" r="2.4" fill="${ART.cobaltSoft}"/>
-    <circle cx="334" cy="253" r="2.4" fill="${ART.cobaltSoft}"/>
-    <path d="M286 306 Q300 309 314 306" fill="none" stroke="#7a3a3a" stroke-width="4" stroke-linecap="round"/>`
+    <path d="M246 228 Q268 220 290 228" fill="none" stroke="#2a1f22" stroke-width="4.5" stroke-linecap="round"/>
+    <path d="M310 228 Q332 220 354 228" fill="none" stroke="#2a1f22" stroke-width="4.5" stroke-linecap="round"/>
+    ${openEye(270, false, iris)}
+    ${openEye(330, true, iris)}
+    ${blush}
+    <path d="M288 307 Q300 312 312 307" fill="none" stroke="#7a3a3a" stroke-width="3.2" stroke-linecap="round"/>`
 }
 
 /** Conteúdo interno do <svg viewBox="0 0 600 900">. `uid` torna os ids de gradiente únicos. */
@@ -57,6 +68,7 @@ export function melissaMarkup(mood: MelissaMood, uid = 'm') {
   const skin = artId('mel-skin', uid)
   const hair = artId('mel-hair', uid)
   const rim = artId('mel-rim', uid)
+  const iris = artId('mel-iris', uid)
   return `
   <defs>
     <linearGradient id="${coat}" x1="0" y1="0" x2="0" y2="1">
@@ -76,6 +88,11 @@ export function melissaMarkup(mood: MelissaMood, uid = 'm') {
     <linearGradient id="${hair}" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0" stop-color="#2b1d24"/>
       <stop offset="1" stop-color="#0f0b10"/>
+    </linearGradient>
+    <linearGradient id="${iris}" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1a1a3a"/>
+      <stop offset="0.6" stop-color="#2c3f8f"/>
+      <stop offset="1" stop-color="${ART.cobaltSoft}"/>
     </linearGradient>
     <linearGradient id="${rim}" x1="0" y1="0" x2="1" y2="0">
       <stop offset="0" stop-color="${ART.cobalt}" stop-opacity="0"/>
@@ -133,7 +150,9 @@ export function melissaMarkup(mood: MelissaMood, uid = 'm') {
   <path d="M226 236 C226 172 262 140 300 140 C340 140 374 172 374 236 C374 296 340 334 300 338 C260 334 226 296 226 236 Z" fill="url(#${skin})"/>
   <path d="M240 290 C254 318 276 334 300 338 C324 334 346 318 360 290 C348 324 326 344 300 346 C274 344 252 324 240 290 Z" fill="${ART.skinShade}" opacity="0.5"/>
   <path d="M300 268 L294 290 Q300 294 306 290" fill="none" stroke="${ART.skinShade}" stroke-width="3" stroke-linecap="round"/>
-  ${face(mood)}
+  <!-- sombra da franja na testa -->
+  <path d="M232 236 C252 222 300 214 340 182 C356 196 370 214 374 236 C350 214 330 214 300 226 C276 234 250 240 232 246 Z" fill="${ART.skinShade}" opacity="0.45"/>
+  ${face(mood, iris)}
 
   <!-- cabelo (frente): franja lateral e mechas na altura do queixo -->
   <path d="M220 246 C214 168 258 124 312 126 C360 128 392 168 384 232 C376 206 360 186 340 176 C326 196 292 214 252 218 C240 226 234 238 232 250 Z" fill="url(#${hair})"/>
@@ -141,6 +160,9 @@ export function melissaMarkup(mood: MelissaMood, uid = 'm') {
   <path d="M226 230 C220 280 222 320 236 352 L212 350 C202 314 204 270 212 236 Z" fill="url(#${hair})"/>
   <path d="M376 222 C384 270 382 318 366 352 L390 350 C400 312 398 268 390 230 Z" fill="url(#${hair})"/>
   <path d="M286 150 C318 146 352 162 368 196" fill="none" stroke="#4a3440" stroke-width="3" stroke-opacity="0.8" stroke-linecap="round"/>
+  <!-- brilho do cabelo -->
+  <path d="M248 168 C270 144 316 136 352 150" fill="none" stroke="#7a5f70" stroke-width="7" stroke-opacity="0.35" stroke-linecap="round"/>
+  <path d="M232 260 C230 290 232 318 240 340 M370 254 C374 286 372 316 362 340" fill="none" stroke="#4a3440" stroke-width="2" stroke-opacity="0.6" stroke-linecap="round"/>
   <!-- grampo dourado -->
   <rect x="344" y="196" width="26" height="6" rx="3" transform="rotate(32 357 199)" fill="${ART.gold}"/>
 `

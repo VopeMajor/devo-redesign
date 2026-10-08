@@ -1,10 +1,11 @@
 'use client'
 
 import Image from 'next/image'
-import type { CSSProperties, ReactNode } from 'react'
+import { useEffect, useRef, type CSSProperties, type ReactNode } from 'react'
 import type { MelissaMood, StageId } from '@/lib/devo/prologue-script'
 import { cn } from '@/lib/utils'
 import { MelissaArt } from '../npc-art/melissa'
+import { DeadlyVoteSymbol } from '../system/symbol'
 import { Embers } from '../shared/atmosphere'
 import { CelFire } from './cel-fire'
 
@@ -100,7 +101,47 @@ function Layer({ on, children, className }: { on: boolean; children: ReactNode; 
   )
 }
 
-export function PrologueStage({ stage, mood }: { stage: StageId; mood: MelissaMood }) {
+/** Parallax pelo ponteiro (desktop): camadas longe/perto andam em sentidos opostos (vars --px/--py, −1..1). */
+function usePointerParallax() {
+  const ref = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    const el = ref.current
+    if (!el || !window.matchMedia('(pointer: fine)').matches || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    let raf = 0
+    const onMove = (e: PointerEvent) => {
+      cancelAnimationFrame(raf)
+      raf = requestAnimationFrame(() => {
+        el.style.setProperty('--px', ((e.clientX / window.innerWidth) * 2 - 1).toFixed(3))
+        el.style.setProperty('--py', ((e.clientY / window.innerHeight) * 2 - 1).toFixed(3))
+      })
+    }
+    window.addEventListener('pointermove', onMove, { passive: true })
+    return () => {
+      cancelAnimationFrame(raf)
+      window.removeEventListener('pointermove', onMove)
+    }
+  }, [])
+  return ref
+}
+
+const FAR: CSSProperties = { transform: 'translate3d(calc(var(--px, 0) * -10px), calc(var(--py, 0) * -6px), 0)', transition: 'transform 600ms var(--dv-ease-out)' }
+const NEAR: CSSProperties = { transform: 'translate3d(calc(var(--px, 0) * 18px), calc(var(--py, 0) * 8px), 0)', transition: 'transform 600ms var(--dv-ease-out)' }
+
+export function PrologueStage({ stage, mood, speaking = false }: { stage: StageId; mood: MelissaMood; speaking?: boolean }) {
+  const root = usePointerParallax()
+  const melissaRef = useRef<HTMLDivElement>(null)
+  const prevMood = useRef(mood)
+  // Troca de expressão: além do cross-fade, um "respiro" curto do retrato.
+  useEffect(() => {
+    if (prevMood.current === mood) return
+    prevMood.current = mood
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    melissaRef.current?.animate?.([{ transform: 'translateY(0) scale(1)' }, { transform: 'translateY(-6px) scale(1.012)' }, { transform: 'translateY(0) scale(1)' }], {
+      duration: 380,
+      easing: 'cubic-bezier(0.16,1,0.3,1)',
+    })
+  }, [mood])
+
   const theater = THEATER.includes(stage)
   const kids = KIDS.includes(stage)
   const together = TOGETHER.includes(stage)
@@ -123,14 +164,18 @@ export function PrologueStage({ stage, mood }: { stage: StageId; mood: MelissaMo
   })
 
   return (
-    <div className="absolute inset-0 overflow-hidden bg-black">
+    <div ref={root} className="absolute inset-0 overflow-hidden bg-black">
       {/* Teatro de papel */}
       <Layer on={theater}>
         <div
           className={cn('absolute inset-0 transition-[filter] duration-1000', tripped && 'animate-[pr-shake_0.6s_ease-out_both]')}
           style={{ filter: omen ? 'grayscale(0.75) sepia(0.3) contrast(1.15) brightness(0.75)' : 'none' }}
         >
-          <Image src="/images/prologue/wallpaper.webp" alt="" fill priority sizes="100vw" className="object-cover" />
+          <div className="absolute -inset-[4%]" style={FAR}>
+            <div className="en-cam-far absolute inset-0">
+              <Image src="/images/prologue/wallpaper.webp" alt="" fill priority sizes="100vw" className="object-cover" />
+            </div>
+          </div>
 
           <Puppet
             src="/images/prologue/girl.webp"
@@ -235,14 +280,22 @@ export function PrologueStage({ stage, mood }: { stage: StageId; mood: MelissaMo
 
       {/* Mina */}
       <Layer on={mineOn}>
-        <Image src="/images/prologue/mine.webp" alt="" fill sizes="100vw" className={cn('object-cover transition-[filter] duration-700', stage === 'phone' && 'blur-sm brightness-50')} />
+        <div className="absolute -inset-[4%]" style={FAR}>
+          <div className="en-cam-far absolute inset-0">
+            <Image src="/images/prologue/mine.webp" alt="" fill sizes="100vw" className={cn('object-cover transition-[filter] duration-700', stage === 'phone' && 'blur-sm brightness-50')} />
+          </div>
+        </div>
         <div className="absolute inset-0 animate-[devo-flicker_3s_ease-in-out_infinite] bg-[radial-gradient(ellipse_70%_60%_at_50%_40%,rgba(255,140,50,0.1),transparent_70%)]" />
         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-black/30" />
       </Layer>
+      {/* Melissa: entra pela direita com a luz subindo; fica mais escura quando não é ela quem fala. */}
+      <div className="absolute inset-x-0 bottom-0 mx-auto h-[min(88dvh,820px)] max-w-3xl lg:left-[8%] lg:right-auto lg:w-[42vw]" style={NEAR}>
       <div
+        ref={melissaRef}
         className={cn(
-          'absolute inset-x-0 bottom-0 mx-auto h-[min(88dvh,820px)] max-w-3xl transition-[opacity,transform] duration-700 ease-out lg:left-[8%] lg:right-auto lg:w-[42vw]',
-          melissaOn ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0',
+          'absolute inset-0 transition-[opacity,transform,filter] duration-[700ms] ease-[var(--dv-ease-out)]',
+          melissaOn ? 'translate-x-0 opacity-100' : 'translate-x-[14%] opacity-0',
+          melissaOn && !speaking ? 'brightness-[0.62] saturate-[0.8]' : 'brightness-100',
         )}
       >
         {(['neutral', 'soft', 'serious'] as MelissaMood[]).map((m) => (
@@ -257,15 +310,16 @@ export function PrologueStage({ stage, mood }: { stage: StageId; mood: MelissaMo
           />
         ))}
       </div>
+      </div>
 
       {/* Celular */}
       <Layer on={stage === 'phone'} className="grid place-items-center">
-        <div className="relative -mt-24 flex h-[min(52dvh,420px)] aspect-[9/18] flex-col items-center justify-center gap-3 rounded-[2rem] border-4 border-[#20232c] bg-gradient-to-b from-[#0b1a4d] to-[#05070d] shadow-[0_0_80px_rgba(111,140,255,0.35)]">
+        <div className="relative -mt-24 flex h-[min(52dvh,420px)] aspect-[9/18] flex-col items-center justify-center gap-3 rounded-[2rem] border-4 border-[#20232c] bg-gradient-to-b from-dv-cobalt-dim to-dv-ink shadow-[0_0_80px_rgba(49,93,255,0.35)]">
           <span className="absolute top-3 h-1.5 w-12 rounded-full bg-[#20232c]" />
-          <span className="grid size-16 animate-[pr-buzz_2.4s_ease-in-out_infinite] place-items-center rounded-2xl border border-[#6f8cff]/60 bg-[#6f8cff]/15 font-[family-name:var(--font-unifraktur)] text-3xl text-foreground shadow-[0_0_30px_rgba(111,140,255,0.5)]">
-            D
+          <span className="dv-cut grid size-16 animate-[pr-buzz_2.4s_ease-in-out_infinite] place-items-center bg-[linear-gradient(160deg,var(--dv-cobalt),var(--dv-cobalt-dim))] text-dv-text shadow-[0_0_30px_rgba(49,93,255,0.5)]" style={{ '--dv-cut': '12px' } as CSSProperties}>
+            <DeadlyVoteSymbol variant="mark" className="size-10" />
           </span>
-          <span className="text-[11px] uppercase tracking-[0.4em] text-foreground/80">Devo</span>
+          <span className="dv-label text-[11px] text-dv-text-2">Devo</span>
         </div>
       </Layer>
 

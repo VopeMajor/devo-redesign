@@ -1,0 +1,208 @@
+/*
+ * Área ENTRADA (landing, acesso, prólogo, tutorial, oferta de PWA, revelação da Sala de Jogos).
+ * Keyframes locais da área — o kit/globals.css não é editado aqui. Prefixo `en-`.
+ * Todas as classes `en-*` param com prefers-reduced-motion (fim do arquivo).
+ * Curvas e durações seguem IDENTIDADE.md §7.
+ */
+
+/* ── Landing ─────────────────────────────────────────────────────────────────────────── */
+@keyframes en-band-in {
+  from { transform: scaleX(0) skewX(-18deg); opacity: 0; }
+  to { transform: scaleX(1) skewX(-18deg); opacity: 0.85; }
+}
+.en-band-in { transform-origin: left center; animation: en-band-in 520ms var(--dv-ease-cut) both; }
+
+@keyframes en-sweep {
+  0% { transform: translateX(-130%) skewX(-18deg); opacity: 0; }
+  20% { opacity: 1; }
+  100% { transform: translateX(260%) skewX(-18deg); opacity: 0; }
+}
+.en-sweep { animation: en-sweep 1100ms var(--dv-ease-out) both; }
+
+@keyframes en-rule-in {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+.en-rule-in { transform-origin: center; animation: en-rule-in 520ms var(--dv-ease-cut) both; }
+
+/* ── Acesso (documento de admissão) ──────────────────────────────────────────────────── */
+@keyframes en-doc-in {
+  from { opacity: 0; transform: translateY(56px) rotate(-2.4deg) scale(0.97); }
+  to { opacity: 1; transform: rotate(-0.4deg); }
+}
+.en-doc-in { animation: en-doc-in 620ms var(--dv-ease-out) both; }
+
+/* Faixa diagonal que atravessa o papel na troca convite → cadastro (corte). */
+@keyframes en-wipe {
+  0% { transform: translateX(-140%) skewX(-16deg); }
+  45% { transform: translateX(0) skewX(-16deg); }
+  55% { transform: translateX(0) skewX(-16deg); }
+  100% { transform: translateX(140%) skewX(-16deg); }
+}
+.en-wipe { animation: en-wipe 760ms var(--dv-ease-cut) both; }
+.en-wipe-back { animation: en-wipe 760ms var(--dv-ease-cut) reverse both; }
+
+@keyframes en-shake {
+  0%, 100% { transform: none; }
+  20% { transform: translateX(-6px); }
+  40% { transform: translateX(5px); }
+  60% { transform: translateX(-3px); }
+  80% { transform: translateX(2px); }
+}
+.en-shake { animation: en-shake 360ms ease-out both; }
+
+/* ── Visual novel (prólogo e tutorial) ───────────────────────────────────────────────── */
+@keyframes en-bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(4px); }
+}
+.en-bob { animation: en-bob 900ms ease-in-out infinite; }
+
+@keyframes en-plate-in {
+  from { opacity: 0; transform: translateX(-24px) skewX(-14deg); clip-path: inset(0 100% 0 0); }
+  to { opacity: 1; transform: skewX(-14deg); clip-path: inset(0 0 0 0); }
+}
+.en-plate-in { animation: en-plate-in 420ms var(--dv-ease-out) both; }
+
+@keyframes en-box-in {
+  /* O topo do recorte fica bem acima da caixa: a placa do falante (-22px) nunca é cortada. */
+  from { opacity: 0; transform: translateY(18px); clip-path: polygon(0 -60px, 0 -60px, -10% 120%, -10% 120%); }
+  to { opacity: 1; transform: none; clip-path: polygon(0 -60px, 120% -60px, 110% 120%, -10% 120%); }
+}
+.en-box-in { animation: en-box-in 460ms var(--dv-ease-out) both; }
+
+@keyframes en-portrait-in-r {
+  from { opacity: 0; transform: translateX(14%) scale(0.98); filter: brightness(0.2); }
+  to { opacity: 1; transform: none; filter: none; }
+}
+@keyframes en-portrait-in-l {
+  from { opacity: 0; transform: translateX(-14%) scale(0.98); filter: brightness(0.2); }
+  to { opacity: 1; transform: none; filter: none; }
+}
+.en-portrait-in-r { animation: en-portrait-in-r 640ms var(--dv-ease-out) both; }
+.en-portrait-in-l { animation: en-portrait-in-l 640ms var(--dv-ease-out) both; }
+
+/* Câmera "respirando": dá profundidade às cenas paradas (camadas em velocidades diferentes). */
+@keyframes en-cam-far {
+  0% { transform: scale(1.06) translate3d(-1.2%, 0.6%, 0); }
+  100% { transform: scale(1.1) translate3d(1.2%, -0.8%, 0); }
+}
+@keyframes en-cam-near {
+  0% { transform: translate3d(1.4%, 0, 0); }
+  100% { transform: translate3d(-1.4%, -0.4%, 0); }
+}
+.en-cam-far { animation: en-cam-far 22s ease-in-out infinite alternate; will-change: transform; }
+.en-cam-near { animation: en-cam-near 22s ease-in-out infinite alternate; will-change: transform; }
+
+/* Cartão de ato: faixa corta a tela, segura e sai na mesma direção. */
+@keyframes en-act-band {
+  0% { transform: translateX(-120%) skewX(-16deg); }
+  22%, 74% { transform: translateX(0) skewX(-16deg); }
+  100% { transform: translateX(120%) skewX(-16deg); }
+}
+@keyframes en-act-text {
+  0%, 14% { opacity: 0; transform: translateX(-40px); clip-path: inset(0 100% 0 0); }
+  28%, 70% { opacity: 1; transform: none; clip-path: inset(0 0 0 0); }
+  84%, 100% { opacity: 0; transform: translateX(40px); clip-path: inset(0 0 0 100%); }
+}
+.en-act-band { animation: en-act-band 2000ms var(--dv-ease-cut) both; }
+.en-act-text { animation: en-act-text 2000ms var(--dv-ease-out) both; }
+
+/* Corte vermelho (só em momentos de perigo: a queda). */
+@keyframes en-slash {
+  0% { transform: translateX(-120%) rotate(-16deg); opacity: 1; }
+  40% { transform: translateX(0) rotate(-16deg); opacity: 1; }
+  100% { transform: translateX(0) rotate(-16deg); opacity: 0; }
+}
+.en-slash { animation: en-slash 900ms var(--dv-ease-cut) both; }
+
+@keyframes en-glint {
+  0% { opacity: 0; }
+  12% { opacity: 0.55; }
+  100% { opacity: 0; }
+}
+.en-glint { animation: en-glint 1200ms ease-out both; }
+
+@keyframes en-item {
+  0% { opacity: 0; transform: translateX(-40px) skewX(8deg); clip-path: polygon(0 0, 0 0, -12% 100%, -12% 100%); }
+  14% { opacity: 1; transform: none; clip-path: polygon(0 0, 112% 0, 100% 100%, -12% 100%); }
+  86% { opacity: 1; transform: none; }
+  100% { opacity: 0; transform: translateX(30px); }
+}
+.en-item { animation: en-item 3200ms var(--dv-ease-out) both; }
+
+/* ── Diagramas do tutorial ───────────────────────────────────────────────────────────── */
+@keyframes en-scan {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(1400%); }
+}
+.en-scan { animation: en-scan 3.6s linear infinite; }
+
+@keyframes en-draw {
+  from { stroke-dashoffset: 1; }
+  to { stroke-dashoffset: 0; }
+}
+.en-draw { stroke-dasharray: 1; animation: en-draw 900ms var(--dv-ease-out) both; }
+
+@keyframes en-tap {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  45% { transform: translate(-3px, -3px) scale(1); }
+  55% { transform: translate(-3px, -3px) scale(0.9); }
+}
+.en-tap { animation: en-tap 1.6s ease-in-out infinite; }
+
+@keyframes en-ping {
+  0% { transform: scale(0.6); opacity: 0.9; }
+  100% { transform: scale(2); opacity: 0; }
+}
+.en-ping { animation: en-ping 1.6s ease-out infinite; }
+
+@keyframes en-sweep-hand { to { transform: rotate(360deg); } }
+.en-sweep-hand { animation: en-sweep-hand 6s linear infinite; transform-origin: 50% 50%; }
+.en-sweep-hand-slow { animation: en-sweep-hand 40s linear infinite; transform-origin: 50% 50%; }
+
+@keyframes en-drift {
+  0% { opacity: 1; transform: translate(0, 0) rotate(-4deg); filter: blur(0); }
+  100% { opacity: 0; transform: translate(150px, -24px) rotate(14deg); filter: blur(3px); }
+}
+.en-drift { animation: en-drift 3.2s ease-in 0.4s infinite; }
+
+@keyframes en-kabum {
+  0% { opacity: 0; transform: scale(2.4) rotate(-8deg); }
+  55% { opacity: 1; transform: scale(0.94) rotate(-8deg); }
+  100% { opacity: 1; transform: scale(1) rotate(-8deg); }
+}
+.en-kabum { animation: en-kabum 520ms var(--dv-ease-snap) 760ms both; }
+
+@keyframes en-typing {
+  0%, 60%, 100% { transform: translateY(0); opacity: 0.5; }
+  30% { transform: translateY(-3px); opacity: 1; }
+}
+.en-typing { animation: en-typing 1.1s ease-in-out infinite; }
+
+/* ── Eventos (revelação da Sala de Jogos) ────────────────────────────────────────────── */
+@keyframes en-rays { to { transform: rotate(360deg); } }
+.en-rays { animation: en-rays 24s linear infinite; }
+
+@keyframes en-unlock-band {
+  0% { transform: translateX(-130%) skewX(-16deg); }
+  30%, 100% { transform: translateX(0) skewX(-16deg); }
+}
+.en-unlock-band { animation: en-unlock-band 900ms var(--dv-ease-cut) both; }
+
+@keyframes en-icon-in {
+  0% { opacity: 0; transform: scale(0.4) rotate(-45deg); }
+  60% { opacity: 1; transform: scale(1.08) rotate(4deg); }
+  100% { opacity: 1; transform: none; }
+}
+.en-icon-in { animation: en-icon-in 700ms var(--dv-ease-snap) both; }
+
+@keyframes en-countdown {
+  from { transform: scaleX(1); }
+  to { transform: scaleX(0); }
+}
+.en-countdown { transform-origin: left; animation: en-countdown linear both; }
+
+@media (prefers-reduced-motion: reduce) {
+  [class^='en-'], [class*=' en-'] { animation: none !important; }
+}
