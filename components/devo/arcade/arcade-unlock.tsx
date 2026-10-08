@@ -56,7 +56,7 @@ export function ArcadeUnlock() {
               <ArcadeGlyph />
             </span>
           </Frame>
-          <span className="absolute -right-20 -top-5">
+          <span className="absolute -bottom-7 -right-24">
             <Stamp text="Liberado" tone="cobalt" size={96} rotate={-12} animate className="[animation-delay:1100ms]" />
           </span>
         </div>
