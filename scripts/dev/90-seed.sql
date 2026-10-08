@@ -4,7 +4,12 @@ INSERT INTO invite_codes (code, role, note) VALUES
   ('DEVO-TEST-0001', 'player', 'teste local'),
   ('DEVO-TEST-0002', 'player', 'teste local'),
   ('DEVO-TEST-0003', 'player', 'teste local'),
-  ('DEVO-TEST-0004', 'player', 'teste local')
+  ('DEVO-TEST-0004', 'player', 'teste local'),
+  ('DEVO-TEST-0005', 'player', 'teste local'),
+  ('DEVO-TEST-0006', 'player', 'teste local'),
+  ('DEVO-TEST-0007', 'player', 'teste local'),
+  ('DEVO-TEST-0008', 'player', 'teste local'),
+  ('DEVO-TEST-0009', 'player', 'teste local')
 ON CONFLICT (code) DO NOTHING;
 
 -- Os convites acima geram as contas do roteiro de captura (Veterano, Rival, Aurora). Elas NÃO são

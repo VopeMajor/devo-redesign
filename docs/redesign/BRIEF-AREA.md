@@ -53,3 +53,6 @@ responda de novo com o mesmo relatório.
 - Branch, último commit, pasta local com as capturas desse commit (SOURCE_SHA conferido).
 - Lista das capturas da sua área (nomes) que o crítico deve olhar.
 - O que mudou (bullets), funções preservadas conferidas, limitações, candidatos ao kit.
+
+## Convites de teste por conta do roteiro
+0001 Aurora (novato) · 0002 Rival · 0003 Visitante · 0004 Convidado · 0005 Mesa (desktop) · ADM1 Veterano · 0006–0009 livres (reserve aqui antes de usar).

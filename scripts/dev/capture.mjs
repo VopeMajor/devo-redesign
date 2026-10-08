@@ -714,7 +714,7 @@ if (want('desktop')) {
     await ctx.close()
   })
   await step('desktop-os', async () => {
-    const { ctx, page } = await account('Mesa', 'DEVO-TEST-0004', VET_CARDS, 'desktop')
+    const { ctx, page } = await account('Mesa', 'DEVO-TEST-0005', VET_CARDS, 'desktop')
     await enterOS(page)
     await shot(page, '92-desktop-os')
     await page.getByRole('button', { name: 'Pulso', exact: true }).first().dblclick({ timeout: 3000 })
