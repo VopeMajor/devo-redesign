@@ -121,7 +121,6 @@ export function GlyphClose({ className, ...p }: GlyphProps) {
   return (
     <svg viewBox="0 0 24 24" aria-hidden="true" className={base(className)} fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" {...p}>
       <path d="M6 6 L18 18 M18 6 L6 18" />
-      <path d="M12 2.5 L13 4 L12 5.5 L11 4 Z" fill="currentColor" stroke="none" />
     </svg>
   )
 }

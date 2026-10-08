@@ -355,6 +355,9 @@ if (want('estilo')) {
       await wait(1200)
       await shot(page, `80-estilo-${id}`)
     }
+    await page.mouse.wheel(0, 760)
+    await wait(900)
+    await shot(page, '80-estilo-movimento-2')
     // Estado pressionado/foco num botão (teclado).
     await page.evaluate(() => document.querySelector('[data-estilo="botoes"]')?.scrollIntoView({ block: 'start' }))
     await wait(400)

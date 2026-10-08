@@ -272,15 +272,15 @@ function CathedralPreset({ intensity, alert, lite }: PresetProps) {
   const shafts = useRef<THREE.Group>(null)
   const count = lite ? 12 : 16
   const pillarGeo = useDisposable(() => new THREE.CylinderGeometry(0.34, 0.42, 16, 10))
-  const pillarMat = useDisposable(() => new THREE.MeshStandardMaterial({ color: '#1b2238', roughness: 0.92, metalness: 0.05 }))
+  const pillarMat = useDisposable(() => new THREE.MeshStandardMaterial({ color: '#3a4670', roughness: 0.85, metalness: 0.1, emissive: '#0c1430', emissiveIntensity: 0.6 }))
   const shaftTex = useDisposable(() => makeShaftTexture())
   const cardTex = useDisposable(() => makeCardBackTexture())
   const cardData = useMemo(
     () =>
       Array.from({ length: lite ? 9 : 14 }, (_, i) => ({
         x: (Math.random() - 0.5) * 6,
-        y: 1.2 + Math.random() * 5,
-        z: -5 - Math.random() * 22,
+        y: 1.4 + Math.random() * 4.5,
+        z: -2.5 - Math.random() * 16,
         r: Math.random() * Math.PI * 2,
         s: 0.15 + Math.random() * 0.25,
         k: i,
@@ -311,23 +311,25 @@ function CathedralPreset({ intensity, alert, lite }: PresetProps) {
     })
     shafts.current?.children.forEach((s, i) => {
       const m = (s as THREE.Mesh).material as THREE.MeshBasicMaterial
-      m.opacity = (0.1 + 0.07 * Math.sin(t * 0.35 + i * 1.7)) * intensity
+      m.opacity = (0.2 + 0.1 * Math.sin(t * 0.35 + i * 1.7)) * intensity
     })
   })
 
   return (
     <>
       <color attach="background" args={[DV_COLOR.ink]} />
-      <fog attach="fog" args={[DV_COLOR.ink, 4, 34]} />
+      <fog attach="fog" args={['#070b18', 6, 36]} />
       <CameraRig pos={[0, 1.6, 8]} look={[0, 3.2, -16]} drift={0.35} />
-      <ambientLight intensity={0.35} color="#8090c0" />
-      <directionalLight position={[2, 10, -6]} intensity={1.2 * intensity} color="#c9d4ff" />
-      <pointLight position={[0, 6, -10]} intensity={14 * intensity} distance={26} color={DV_COLOR.cobalt} />
+      <ambientLight intensity={0.9} color="#7f90d0" />
+      <hemisphereLight args={['#9fb2ff', '#0a0f1c', 0.8]} />
+      <directionalLight position={[2, 10, -6]} intensity={2.4 * intensity} color="#c9d4ff" />
+      <pointLight position={[0, 6, -10]} intensity={90 * intensity} distance={30} decay={1.4} color={DV_COLOR.cobalt} />
+      <pointLight position={[0, 3, 2]} intensity={30 * intensity} distance={14} decay={1.4} color={DV_COLOR.goldBright} />
       <AlertLight alert={alert} position={[0, 5, 0]} power={40} />
       <instancedMesh ref={pillars} args={[pillarGeo, pillarMat, count]} />
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, -12]}>
         <planeGeometry args={[14, 50]} />
-        <meshStandardMaterial color="#0c1222" roughness={0.55} metalness={0.2} />
+        <meshStandardMaterial color="#1a2340" roughness={0.4} metalness={0.35} />
       </mesh>
       <group ref={shafts}>
         {[-1.6, 0.8, 2.2, -0.4].map((x, i) => (
@@ -340,8 +342,8 @@ function CathedralPreset({ intensity, alert, lite }: PresetProps) {
       <group ref={cards}>
         {cardData.map((d) => (
           <mesh key={d.k} position={[d.x, d.y, d.z]} rotation={[0.2, d.r, 0]}>
-            <planeGeometry args={[0.62, 0.87]} />
-            <meshStandardMaterial map={cardTex} side={THREE.DoubleSide} roughness={0.5} metalness={0.3} emissive="#1a2550" emissiveIntensity={0.6} />
+            <planeGeometry args={[0.9, 1.26]} />
+            <meshStandardMaterial map={cardTex} emissiveMap={cardTex} side={THREE.DoubleSide} roughness={0.5} metalness={0.3} emissive="#ffffff" emissiveIntensity={0.55} />
           </mesh>
         ))}
       </group>
@@ -565,7 +567,7 @@ function TribunalPreset({ intensity, alert, lite }: PresetProps) {
   const perTier = lite ? 9 : 11
   const total = perTier * 2
   const seatGeo = useDisposable(() => new THREE.BoxGeometry(0.9, 1.1, 0.7))
-  const seatMat = useDisposable(() => new THREE.MeshStandardMaterial({ color: '#141b2e', roughness: 0.8, metalness: 0.2 }))
+  const seatMat = useDisposable(() => new THREE.MeshStandardMaterial({ color: '#2c3658', roughness: 0.7, metalness: 0.3, emissive: '#0a0f24', emissiveIntensity: 0.7 }))
   const plateGeo = useDisposable(() => new THREE.PlaneGeometry(0.5, 0.1))
   const plateMat = useDisposable(() => new THREE.MeshBasicMaterial({ color: DV_COLOR.paper, toneMapped: false }))
   const dialTex = useDisposable(() => makeDialTexture({ size: lite ? 768 : 1024, numerals: 'roman', color: DV_COLOR.gold }), [lite])
@@ -613,8 +615,8 @@ function TribunalPreset({ intensity, alert, lite }: PresetProps) {
     }
     if (floorDial.current) floorDial.current.rotation.z += dt * 0.02
     if (top.current) {
-      top.current.intensity = (22 + p * 50) * intensity
-      top.current.color.setRGB(0.55 + p * 0.45, 0.12 + (1 - p) * 0.12, 0.16 + (1 - p) * 0.1)
+      top.current.intensity = (160 + p * 260) * intensity
+      top.current.color.setRGB(0.75 + p * 0.25, 0.16 + (1 - p) * 0.12, 0.2 + (1 - p) * 0.1)
     }
     plateMat.color.setRGB(0.94, 0.9 - p * 0.7, 0.82 - p * 0.7)
   })
@@ -622,13 +624,15 @@ function TribunalPreset({ intensity, alert, lite }: PresetProps) {
   return (
     <>
       <color attach="background" args={['#04050a']} />
-      <fog attach="fog" args={['#04050a', 7, 20]} />
-      <CameraRig pos={[0, 3.4, 9.2]} look={[0, 1.2, -1.5]} orbit={0.22} drift={0.12} />
-      <ambientLight intensity={0.22} color="#6b78a8" />
-      <pointLight position={[-6, 3, 2]} intensity={7 * intensity} distance={14} color={DV_COLOR.cobalt} />
-      <pointLight position={[6, 3, 2]} intensity={5 * intensity} distance={14} color={DV_COLOR.cobaltDeep} />
+      <fog attach="fog" args={['#04050a', 8, 22]} />
+      <CameraRig pos={[0, 3.2, 8.4]} look={[0, 1.3, -1.5]} orbit={0.22} drift={0.12} />
+      <ambientLight intensity={0.7} color="#6b78a8" />
+      <hemisphereLight args={['#8a9cff', '#05060a', 0.5]} />
+      <pointLight position={[-6, 3, 2]} intensity={60 * intensity} distance={16} decay={1.4} color={DV_COLOR.cobalt} />
+      <pointLight position={[6, 3, 2]} intensity={45 * intensity} distance={16} decay={1.4} color={DV_COLOR.cobaltDeep} />
+      <pointLight position={[0, 2.6, -6]} intensity={40 * intensity} distance={12} decay={1.4} color="#ff3a48" />
       <primitive object={target} position={[0, 0, 0]} />
-      <spotLight ref={top} position={[0, 9, 1]} angle={0.42} penumbra={0.7} decay={1.1} distance={20} intensity={22} color="#8c1f2a" />
+      <spotLight ref={top} position={[0, 9, 1]} angle={0.5} penumbra={0.6} decay={1.2} distance={22} intensity={160} color="#c0303c" />
       <instancedMesh ref={seats} args={[seatGeo, seatMat, total]} />
       <instancedMesh ref={plates} args={[plateGeo, plateMat, total]} />
       {/* piso: disco escuro + mostrador gravado */}
@@ -638,7 +642,7 @@ function TribunalPreset({ intensity, alert, lite }: PresetProps) {
       </mesh>
       <mesh ref={floorDial} rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.01, 0]}>
         <planeGeometry args={[7.5, 7.5]} />
-        <meshBasicMaterial map={dialTex} transparent opacity={0.45 * intensity} depthWrite={false} toneMapped={false} />
+        <meshBasicMaterial map={dialTex} transparent opacity={0.8 * intensity} depthWrite={false} toneMapped={false} />
       </mesh>
       {/* púlpito central e o juiz (estrela do sigilo) */}
       <mesh position={[0, 0.5, 0]}>
@@ -650,7 +654,7 @@ function TribunalPreset({ intensity, alert, lite }: PresetProps) {
         <meshStandardMaterial color={DV_COLOR.gold} metalness={0.9} roughness={0.3} emissive={DV_COLOR.goldDeep} emissiveIntensity={0.6} />
       </mesh>
       <mesh ref={judge} geometry={starGeo} position={[0, 2.1, 0]}>
-        <meshStandardMaterial color="#eef1fb" metalness={0.6} roughness={0.2} emissive="#3a0a12" emissiveIntensity={0.5} />
+        <meshStandardMaterial color="#eef1fb" metalness={0.5} roughness={0.25} emissive="#c01e2c" emissiveIntensity={0.9} />
       </mesh>
       <Dust count={lite ? 70 : 150} color="#ffb3b8" area={[10, 6, 10]} center={[0, 3, -1]} speed={0.06} size={0.05} opacity={0.4 * intensity} />
     </>

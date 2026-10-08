@@ -95,7 +95,7 @@ export function CardFrame({
       {holo && (
         <span
           aria-hidden="true"
-          className="pointer-events-none absolute inset-[3px] rounded-[6%/4.3%] opacity-60 mix-blend-color-dodge transition-[background-position] duration-500"
+          className="pointer-events-none absolute inset-[3px] rounded-[6%/4.3%] opacity-35 mix-blend-color-dodge transition-[background-position] duration-500"
           style={{
             backgroundImage:
               'linear-gradient(115deg, transparent 20%, rgba(125,151,255,0.35) 36%, rgba(236,212,154,0.4) 46%, rgba(255,90,99,0.22) 54%, transparent 70%)',

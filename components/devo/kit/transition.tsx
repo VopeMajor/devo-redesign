@@ -94,17 +94,32 @@ const SLAB: Record<CurtainTone, { lead: string; slab: string; ring: string; line
  * Cobre a tela em ~470ms, segura o rótulo com um mostrador girando e sai na mesma direção.
  * Com prefers-reduced-motion vira um esmaecer simples (mesma duração).
  */
-export function Curtain({ state, className }: { state: CurtainState | null; className?: string }) {
+export function Curtain({
+  state,
+  className,
+  freezeAt,
+}: {
+  state: CurtainState | null
+  className?: string
+  /** Só vitrine: congela a cortina neste instante (ms) e a desenha dentro do contêiner (absolute). */
+  freezeAt?: number
+}) {
   if (!state) return null
+  const frozen = typeof freezeAt === 'number'
   const s = SLAB[state.tone]
   const back = state.direction === 'back'
-  const vars = { '--dv-curtain-skew': back ? '14deg' : '-14deg' } as CSSProperties
+  const vars = { '--dv-curtain-skew': back ? '14deg' : '-14deg', ...(frozen ? { '--dv-curtain-at': `${freezeAt}ms` } : {}) } as CSSProperties
   return (
     <div
       key={state.seq}
-      role="status"
-      aria-live="assertive"
-      className={cn('fixed inset-0 z-[100] overflow-hidden motion-reduce:bg-dv-ink motion-reduce:dv-curtain-reduced', className)}
+      role={frozen ? undefined : 'status'}
+      aria-live={frozen ? undefined : 'assertive'}
+      aria-hidden={frozen || undefined}
+      className={cn(
+        'inset-0 overflow-hidden',
+        frozen ? 'dv-curtain-frozen absolute z-0' : 'fixed z-[100] motion-reduce:bg-dv-ink motion-reduce:dv-curtain-reduced',
+        className,
+      )}
       style={vars}
     >
       {/* Tudo espelhado no modo "back" para as lâminas virem da direita. */}
@@ -121,12 +136,12 @@ export function Curtain({ state, className }: { state: CurtainState | null; clas
 
       {/* Centro: mostrador + rótulo. Não espelha (o texto precisa ler normal). */}
       <div className="absolute inset-0 flex flex-col items-center justify-center gap-5 px-6">
-        <div aria-hidden="true" className={cn('dv-curtain-ring relative size-[148px]', s.ring)}>
+        <div aria-hidden="true" className={cn('dv-curtain-ring relative size-[188px]', s.ring)}>
           <CurtainDial />
           <DeadlyVoteSymbol variant="mark" className="absolute inset-[30%] text-dv-text drop-shadow-[0_0_14px_rgba(49,93,255,0.7)]" />
         </div>
         <div className="dv-curtain-label flex flex-col items-center">
-          <p className="font-display text-[22px] font-semibold uppercase tracking-[0.32em] text-dv-text [text-shadow:0_0_24px_rgba(0,0,0,0.9)]">{state.label}</p>
+          <p className="font-display text-[24px] font-semibold uppercase tracking-[0.3em] text-dv-text [text-shadow:0_0_24px_rgba(0,0,0,0.9)]">{state.label}</p>
           <span aria-hidden="true" className="relative mt-3 h-px w-40 bg-white/15">
             <span className={cn('dv-curtain-progress absolute inset-0', s.line)} />
           </span>

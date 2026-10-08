@@ -31,7 +31,7 @@ const PERFORATION = {
 } as CSSProperties
 
 const STATE_LABEL: Record<TicketState, string> = {
-  claimed: 'Resgatado',
+  claimed: 'Feito',
   today: 'Resgatar',
   upcoming: 'Em breve',
   locked: 'Bloqueado',
@@ -116,7 +116,7 @@ export function Ticket({
       ) : (
         <span
           className={cn(
-            'flex min-h-9 items-center justify-center gap-1 font-mono text-[10px] uppercase tracking-[0.12em]',
+            'flex min-h-9 items-center justify-center gap-1 font-mono text-[10px] uppercase tracking-[0.04em]',
             state === 'claimed' && 'bg-dv-cobalt-dim text-dv-cobalt-text',
             state === 'today' && 'bg-dv-gold-deep text-dv-paper',
             state === 'upcoming' && 'bg-dv-ink-3 text-dv-text-3',
@@ -124,7 +124,7 @@ export function Ticket({
             state === 'missed' && 'bg-dv-blood-deep text-dv-blood-text',
           )}
         >
-          {state === 'claimed' && <GlyphCheck className="size-3" />}
+          {state === 'claimed' && <GlyphCheck className="size-3 shrink-0" />}
           {STATE_LABEL[state]}
         </span>
       )}

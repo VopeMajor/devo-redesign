@@ -56,8 +56,15 @@ export function Tabs<V extends string>({
 
   useIso(() => {
     measure()
+    // Rola só a lista de abas (nunca a página) para mostrar a aba ativa.
     const el = refs.current.get(value)
-    el?.scrollIntoView?.({ block: 'nearest', inline: 'nearest' })
+    const list = listRef.current
+    if (el && list) {
+      const left = el.offsetLeft - 16
+      const right = el.offsetLeft + el.offsetWidth + 16 - list.clientWidth
+      if (list.scrollLeft > left) list.scrollLeft = left
+      else if (list.scrollLeft < right) list.scrollLeft = right
+    }
   }, [measure, value])
 
   useEffect(() => {

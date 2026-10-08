@@ -452,6 +452,32 @@ function StyleGuideBody() {
             </Frame>
           ))}
         </Stagger>
+        <p className="dv-label mb-2 mt-8 text-[10px] text-dv-text-3">Cortina congelada · 260ms · 900ms · 1450ms</p>
+        <div className="grid grid-cols-3 gap-2">
+          {[
+            { at: 260, label: 'Despertando', tone: 'system' as const, direction: 'forward' as const },
+            { at: 900, label: 'Despertando', tone: 'system' as const, direction: 'forward' as const },
+            { at: 1450, label: 'Despertando', tone: 'system' as const, direction: 'forward' as const },
+          ].map((f) => (
+            <div key={f.at} className="relative h-[240px] overflow-hidden border border-dv-line bg-dv-ink-2">
+              <div className="absolute inset-0 origin-top-left scale-[0.5] [height:200%] [width:200%]">
+                <Curtain state={{ ...f, seq: f.at }} freezeAt={f.at} />
+              </div>
+            </div>
+          ))}
+        </div>
+        <div className="mt-2 grid grid-cols-2 gap-2">
+          {[
+            { at: 900, label: 'Saindo', tone: 'system' as const, direction: 'back' as const },
+            { at: 900, label: 'Deadly Vote', tone: 'alert' as const, direction: 'forward' as const },
+          ].map((f) => (
+            <div key={f.label} className="relative h-[300px] overflow-hidden border border-dv-line bg-dv-ink-2">
+              <div className="absolute inset-0 origin-top-left scale-[0.5] [height:200%] [width:200%]">
+                <Curtain state={{ ...f, seq: 1 }} freezeAt={f.at} />
+              </div>
+            </div>
+          ))}
+        </div>
         <div className="mt-6 flex flex-wrap gap-3">
           <Button onClick={() => run('Despertando', () => {})}>Cortina · avançar</Button>
           <Button variant="secondary" onClick={() => run('Saindo', () => {}, { direction: 'back' })}>

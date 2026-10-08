@@ -105,7 +105,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
             style={{ '--dv-cut': `${s.cut - 0.5}px` } as CSSProperties}
           />
           {variant === 'primary' && (
-            <span aria-hidden="true" className="absolute inset-y-[22%] left-[14%] -z-10 w-[18%] -skew-x-[24deg] bg-white/[0.07] transition-transform duration-[360ms] ease-out group-enabled:group-hover:translate-x-[260%]" />
+            <span aria-hidden="true" className="dv-cut-hex absolute inset-x-px top-px -z-10 h-1/2 bg-gradient-to-b from-white/[0.14] to-transparent" style={{ '--dv-cut': `${s.cut - 0.5}px` } as CSSProperties} />
           )}
           {variant === 'primary' && (
             <span aria-hidden="true" className="pointer-events-none absolute inset-x-6 -bottom-2 -z-20 h-4 rounded-[50%] bg-dv-cobalt/50 blur-lg transition-opacity group-disabled:opacity-0" />

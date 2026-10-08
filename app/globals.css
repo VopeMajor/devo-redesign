@@ -742,19 +742,19 @@
   100% { transform: translateX(170%) skewX(var(--dv-curtain-skew, -14deg)); }
 }
 @keyframes dv-curtain-label {
-  0%, 24% { opacity: 0; transform: translateX(-26px); clip-path: inset(0 100% 0 0); }
-  36% { opacity: 1; transform: none; clip-path: inset(0 0 0 0); }
-  64% { opacity: 1; transform: none; clip-path: inset(0 0 0 0); }
+  0%, 16% { opacity: 0; transform: translateX(-26px); clip-path: inset(0 100% 0 0); }
+  28% { opacity: 1; transform: none; clip-path: inset(0 0 0 0); }
+  66% { opacity: 1; transform: none; clip-path: inset(0 0 0 0); }
   74%, 100% { opacity: 0; transform: translateX(26px); clip-path: inset(0 0 0 100%); }
 }
 @keyframes dv-curtain-ring {
-  0%, 22% { opacity: 0; transform: scale(0.7) rotate(-60deg); }
-  38% { opacity: 1; transform: scale(1) rotate(0); }
+  0%, 14% { opacity: 0; transform: scale(0.7) rotate(-60deg); }
+  30% { opacity: 1; transform: scale(1) rotate(0); }
   66% { opacity: 1; transform: scale(1.02) rotate(18deg); }
   76%, 100% { opacity: 0; transform: scale(1.25) rotate(30deg); }
 }
 @keyframes dv-curtain-progress {
-  0%, 30% { transform: scaleX(0); }
+  0%, 24% { transform: scaleX(0); }
   66%, 100% { transform: scaleX(1); }
 }
 @keyframes dv-curtain-fade {
@@ -767,6 +767,8 @@
 .dv-curtain-label { animation: dv-curtain-label var(--dv-curtain) var(--dv-ease-out) both; }
 .dv-curtain-ring { animation: dv-curtain-ring var(--dv-curtain) var(--dv-ease-out) both; }
 .dv-curtain-progress { transform-origin: left; animation: dv-curtain-progress var(--dv-curtain) linear both; }
+/* Quadro congelado da cortina (vitrine /estilo): --dv-curtain-at = instante mostrado. */
+.dv-curtain-frozen, .dv-curtain-frozen * { animation-play-state: paused !important; animation-delay: calc(-1 * var(--dv-curtain-at, 900ms)) !important; }
 @utility dv-curtain-reduced { animation: dv-curtain-fade var(--dv-curtain) ease-in-out both; }
 
 /* ── Utilitários ── */

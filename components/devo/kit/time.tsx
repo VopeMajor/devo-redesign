@@ -129,17 +129,20 @@ export function Countdown({
   return (
     <span role="timer" className={cn('inline-flex flex-col', className)}>
       <TimeDigits value={text} size={size} tone={critical ? 'blood' : tone} label={label} blinkColon={critical} />
-      {units && !render && <TimeUnits critical={critical} />}
+      {units && !render && <TimeUnits critical={critical} size={size} />}
     </span>
   )
 }
 
-function TimeUnits({ critical }: { critical: boolean }): ReactNode {
+/** Rótulos centralizados sob cada par de dígitos (mesma grade em em: 2×0.6em + 0.34em). */
+function TimeUnits({ critical, size }: { critical: boolean; size: TimeSize }): ReactNode {
   return (
-    <span aria-hidden="true" className={cn('dv-label mt-1.5 grid grid-cols-3 text-[10px]', critical ? 'text-dv-blood-text' : 'text-dv-text-3')}>
-      <span>Horas</span>
-      <span className="text-center">Min</span>
-      <span className="text-right">Seg</span>
+    <span aria-hidden="true" className={cn('mt-1 grid grid-cols-[1.2em_0.34em_1.2em_0.34em_1.2em] leading-none', SIZE[size])}>
+      {['Horas', '', 'Min', '', 'Seg'].map((u, i) => (
+        <span key={i} className={cn('dv-label text-center text-[10px] tracking-[0.18em]', critical ? 'text-dv-blood-text' : 'text-dv-text-3')}>
+          {u}
+        </span>
+      ))}
     </span>
   )
 }

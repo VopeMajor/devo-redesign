@@ -37,7 +37,8 @@ export function LandingScreen({
   const [elapsed, setElapsed] = useState(0)
   const mainRef = useRef<HTMLElement>(null)
   const heroRef = useRef<HTMLDivElement>(null)
-  const [focus, setFocus] = useState<SceneFocus | undefined>(undefined)
+  // Estimativa para a primeira pintura (SSR) no celular; corrigida pela medição após hidratar.
+  const [focus, setFocus] = useState<SceneFocus | undefined>({ x: 0.5, y: 0.25, size: 0.84 })
 
   useEffect(() => {
     preloadMusic()
@@ -179,7 +180,7 @@ export function LandingScreen({
           </div>
 
           <Divider variant="clock" tone="gold" className="mt-4 w-full max-w-[220px] opacity-70" />
-          <p className="mt-2 h-4 text-[11px] uppercase tracking-[0.3em] text-dv-text-3" aria-live="polite">
+          <p className="dv-label mt-2 h-4 text-[10px] tracking-[0.2em] text-dv-text-3" aria-live="polite">
             {awake ? '' : 'Toque em qualquer lugar para ouvir'}
           </p>
         </section>
