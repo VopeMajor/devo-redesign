@@ -150,7 +150,7 @@ if (want('novato')) {
       if (seen) break
       await wait(100)
     }
-    await wait(300)
+    await wait(750)
     await shot(page, '03-transicao-despertando')
     await wait(3000)
   })
