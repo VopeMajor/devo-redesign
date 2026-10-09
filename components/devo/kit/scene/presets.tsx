@@ -819,7 +819,7 @@ function TribunalPreset({ intensity, alert, lite }: PresetProps) {
   const starGeo = useDisposable(() => makeStarGeometry(0.55, 0.08))
   const floorTex = useDisposable(() => makeMarbleTexture({ kind: 'black', size: lite ? 512 : 1024, seed: 9, repeat: [2, 2] }), [lite])
   const pulpitTex = useDisposable(() => makeMarbleTexture({ kind: 'black', size: 256, seed: 4 }))
-  const judgeMat = useRimMaterial({ color: '#e9e8e5', rim: '#d0303c', rimPower: 2, rimStrength: 1.8, metalness: 1, roughness: 0.22, emissive: '#3a0a12', emissiveIntensity: 0.4 })
+  const judgeMat = useRimMaterial({ color: '#e9e8e5', rim: '#ece5d8', rimPower: 2, rimStrength: 1.4, metalness: 1, roughness: 0.22, emissive: '#1f1f22', emissiveIntensity: 0.4 })
   useEnvironment(0.8)
 
   useLayoutEffect(() => {
@@ -864,8 +864,9 @@ function TribunalPreset({ intensity, alert, lite }: PresetProps) {
     }
     if (floorDial.current) floorDial.current.rotation.z += dt * 0.02
     if (top.current) {
-      top.current.intensity = (160 + p * 260) * intensity
-      top.current.color.setRGB(0.75 + p * 0.25, 0.16 + (1 - p) * 0.12, 0.2 + (1 - p) * 0.1)
+      top.current.intensity = (90 + p * 330) * intensity
+      // aço frio em repouso; rubi só durante o alerta
+      top.current.color.setRGB(0.86 - p * 0.22, 0.85 - p * 0.78, 0.82 - p * 0.7)
     }
     plateMat.color.setRGB(0.94, 0.9 - p * 0.7, 0.82 - p * 0.7)
   })
@@ -879,9 +880,9 @@ function TribunalPreset({ intensity, alert, lite }: PresetProps) {
       <hemisphereLight args={['#b7b3c9', '#070609', 0.5]} />
       <pointLight position={[-6, 3, 2]} intensity={60 * intensity} distance={16} decay={1.4} color={DV_COLOR.violet} />
       <pointLight position={[6, 3, 2]} intensity={45 * intensity} distance={16} decay={1.4} color={DV_COLOR.cobaltDeep} />
-      <pointLight position={[0, 2.6, -6]} intensity={40 * intensity} distance={12} decay={1.4} color="#c42a36" />
+      <pointLight position={[0, 2.6, -6]} intensity={30 * intensity} distance={12} decay={1.4} color={DV_COLOR.violet} />
       <primitive object={target} position={[0, 0, 0]} />
-      <spotLight ref={top} position={[0, 9, 1]} angle={0.5} penumbra={0.6} decay={1.2} distance={22} intensity={160} color="#c0303c" />
+      <spotLight ref={top} position={[0, 9, 1]} angle={0.5} penumbra={0.6} decay={1.2} distance={22} intensity={160} color="#dbd8d2" />
       <instancedMesh ref={seats} args={[seatGeo, seatMat, total]} />
       <instancedMesh ref={plates} args={[plateGeo, plateMat, total]} />
       {/* piso: disco escuro + mostrador gravado */}

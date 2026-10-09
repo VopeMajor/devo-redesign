@@ -9,7 +9,7 @@ const BASE: Record<ScenePreset, string> = {
   cathedral: 'bg-[linear-gradient(180deg,#1c1c20_0%,#111113_55%,var(--dv-ink)_100%)]',
   table: 'bg-[radial-gradient(60%_50%_at_50%_45%,#2b2830_0%,#0e0d13_55%,var(--dv-ink)_100%)]',
   corridor: 'bg-[radial-gradient(30%_30%_at_50%_44%,#2a2933_0%,#131217_50%,var(--dv-ink)_100%)]',
-  tribunal: 'bg-[radial-gradient(55%_40%_at_50%_30%,#3f060b_0%,#14070c_50%,#070609_100%)]',
+  tribunal: 'bg-[radial-gradient(55%_40%_at_50%_30%,#2c2c31_0%,#121214_50%,#0a0a0b_100%)]',
   clockhall: 'bg-[radial-gradient(75%_50%_at_50%_30%,#3c3b4a_0%,#19181f_48%,#0e0d12_100%)]',
 }
 
@@ -125,7 +125,7 @@ function TribunalArt({ alert }: { alert?: boolean }) {
         )}
         <ellipse cx="50" cy="48" rx="30" ry="6" fill="none" stroke="rgba(186,176,159,0.35)" strokeWidth="0.3" />
       </svg>
-      <div className={cn('absolute left-1/2 top-0 h-[70%] w-[50%] -translate-x-1/2 bg-[linear-gradient(180deg,rgba(170,20,32,0.35),transparent)] [clip-path:polygon(40%_0,60%_0,100%_100%,0_100%)]', alert && 'animate-dv-alert')} />
+      <div className={cn('absolute left-1/2 top-0 h-[70%] w-[50%] -translate-x-1/2 [clip-path:polygon(40%_0,60%_0,100%_100%,0_100%)]', alert ? 'animate-dv-alert bg-[linear-gradient(180deg,rgba(163,18,31,0.35),transparent)]' : 'bg-[linear-gradient(180deg,rgba(219,216,210,0.16),transparent)]')} />
     </>
   )
 }
