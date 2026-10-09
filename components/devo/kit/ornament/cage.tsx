@@ -53,7 +53,7 @@ export function CageFrame({
   const bars = open ? BARS_ALL.filter((x) => x < 120 || x > 180) : BARS_ALL
   const bar = (x: number) => `M${x} ${BASE_Y} L${x} ${DOME_Y} Q${x} ${f(APEX[1] + Math.abs(x - 150) * 0.05)} ${APEX[0]} ${APEX[1]}`
   const beltY = 214
-  const beltX = [66, 108, 150, 192, 234]
+  const beltX = open ? [66, 108, 192, 234] : [66, 108, 150, 192, 234]
   const [g1, g2] = gems === 'onyx' ? ['#f2f0ec', '#121016'] : ['#aaa5d6', '#1c1b33']
   return (
     <div className={cn('relative isolate aspect-[300/420]', className)}>
@@ -107,7 +107,7 @@ export function CageFrame({
             <path d={`M${x} ${beltY - 18} L${x + 11} ${beltY} L${x} ${beltY + 18} L${x - 11} ${beltY} Z`} fill={paint} />
             <path d={`M${x} ${beltY - 14} L${x + 8} ${beltY} L${x} ${beltY + 14} L${x - 8} ${beltY} Z`} fill={i % 2 ? g1 : g2} />
             <path d={`M${x} ${beltY - 14} L${x + 8} ${beltY} L${x} ${beltY} Z`} fill={i % 2 ? '#ffffff' : '#4a4656'} opacity="0.5" />
-            {i < beltX.length - 1 && <Star4 cx={x + 21} cy={beltY} r={6.5} paint={paint} />}
+            {i < beltX.length - 1 && beltX[i + 1] - x < 50 && <Star4 cx={x + 21} cy={beltY} r={6.5} paint={paint} />}
           </g>
         ))}
         {/* estrelas soltas na cúpula */}
@@ -133,16 +133,17 @@ export function CageFrame({
             <circle cx={x} cy="300" r="4.5" />
           </g>
         ))}
-        {/* fita lavanda drapeada (frente) */}
+        {/* fita lavanda drapeada pela coluna esquerda e pela base (não cruza o conteúdo) */}
         {ribbon && (
           <g>
             <path
-              d="M14 152 C34 176 26 214 52 236 C84 262 120 236 152 262 C186 290 214 300 236 336 C246 352 262 362 286 366 L280 384 C252 380 234 368 222 350 C200 318 176 304 146 282 C116 260 82 286 46 256 C18 232 26 190 6 166 Z"
+              d="M12 150 C26 170 16 210 28 250 C38 290 30 330 46 360 C66 392 120 394 170 392 C214 390 250 384 284 392 L282 404 C246 398 214 404 170 405 C116 407 58 404 36 370 C18 340 26 296 16 254 C6 214 14 176 4 160 Z"
               fill={`url(#${rid})`}
             />
-            <path d="M14 152 C34 176 26 214 52 236 C84 262 120 236 152 262 C186 290 214 300 236 336 C246 352 262 362 286 366" stroke={paint} strokeWidth="0.8" strokeDasharray="1.5 3" opacity="0.8" />
+            <path d="M12 150 C26 170 16 210 28 250 C38 290 30 330 46 360 C66 392 120 394 170 392 C214 390 250 384 284 392" stroke={paint} strokeWidth="0.8" strokeDasharray="1.5 3" opacity="0.8" />
             {/* laço de fita no ombro esquerdo */}
-            <path d="M14 152 C2 140 -4 150 4 158 C-6 162 -2 174 10 166 Z" fill="#8c88b8" opacity="0.9" />
+            <path d="M12 150 C0 138 -6 148 2 156 C-8 160 -4 172 8 164 Z" fill="#8c88b8" opacity="0.9" />
+            <path d="M12 150 C24 136 30 146 22 154 C32 158 28 170 16 162 Z" fill="#8c88b8" opacity="0.9" />
           </g>
         )}
       </svg>

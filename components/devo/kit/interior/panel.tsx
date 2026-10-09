@@ -129,8 +129,8 @@ export function PaperSheet({
   innerClassName,
   as: Tag = 'div',
 }: {
-  /** Código do documento (ex.: hudCode('perfil')). */
-  code?: string
+  /** Código do documento (ex.: hudCode('perfil')); `false` esconde (quando a tela já tem o seu). */
+  code?: string | false
   sub?: string
   children?: ReactNode
   /** Réguas e marcas nas margens. */
@@ -141,7 +141,7 @@ export function PaperSheet({
   innerClassName?: string
   as?: 'div' | 'main' | 'section'
 }) {
-  const c = code ?? hudCode('devo')
+  const c = code === false ? null : (code ?? hudCode('devo'))
   return (
     <Tag className={cn('dv-interior dv-cold-paper relative isolate min-h-full', className)}>
       {rulers && (
@@ -152,9 +152,11 @@ export function PaperSheet({
           <HudCross className="absolute right-2 top-2" />
           <HudCross className="absolute bottom-2 left-2" />
           <HudCross className="absolute bottom-2 right-2" />
-          <div className="absolute right-3 top-3">
-            <HudCode code={c} sub={sub ?? 'DV_MS_2024_0518'} />
-          </div>
+          {c && (
+            <div className="absolute right-3 top-3">
+              <HudCode code={c} sub={sub ?? 'DV_MS_2024_0518'} />
+            </div>
+          )}
           {/* mancha de retícula violeta no canto (tinta de impressão) */}
           <span className="dv-halftone absolute -right-10 top-28 size-40 rounded-full text-in-violet opacity-[0.16] [mask-image:radial-gradient(closest-side,#000,transparent)]" />
           {/* xadrez de mármore quase invisível no pé da folha */}

@@ -599,10 +599,10 @@ function TablePreset({ intensity, alert, lite }: PresetProps) {
   const swords = useMemo(
     () =>
       [
-        { p: [-1.62, -0.25, -1.3], r: [0.1, 0.4, 0.3], s: 1.05 },
-        { p: [1.75, -0.3, -1.1], r: [-0.05, -0.3, -0.26], s: 1.15 },
-        { p: [1.45, 0.05, 1.5], r: [0.32, 0.2, -0.14], s: 0.9 },
-        ...(lite ? [] : [{ p: [-2.3, -0.3, 1.0], r: [0.2, 0.9, 0.42], s: 1 }]),
+        { p: [-1.5, -0.35, -1.25], r: [0.12, 0.4, 0.3], s: 1.45 },
+        { p: [1.6, -0.4, -1.05], r: [-0.05, -0.3, -0.26], s: 1.55 },
+        { p: [1.35, 0.0, 1.35], r: [0.3, 0.2, -0.16], s: 1.2 },
+        ...(lite ? [] : [{ p: [-2.2, -0.4, 0.9], r: [0.2, 0.9, 0.4], s: 1.35 }]),
       ] as { p: [number, number, number]; r: [number, number, number]; s: number }[],
     [lite],
   )
@@ -1045,7 +1045,7 @@ function ClockhallPreset({ intensity, alert, lite }: PresetProps) {
   const pillarMat = useDisposable(() => new THREE.MeshStandardMaterial({ color: '#4a4856', roughness: 0.55, metalness: 0.1, emissive: '#100e1c', emissiveIntensity: 0.6 }))
   const balusterGeo = useDisposable(() => new THREE.LatheGeometry([[0, 0], [0.1, 0], [0.1, 0.06], [0.05, 0.12], [0.09, 0.4], [0.05, 0.62], [0.07, 0.7], [0.1, 0.74], [0.1, 0.8], [0, 0.8]].map(([x, y]) => new THREE.Vector2(x, y)), 8))
   const stoneMat = useDisposable(() => new THREE.MeshStandardMaterial({ color: '#2a2834', roughness: 0.6, metalness: 0.15, emissive: '#0c0b14', emissiveIntensity: 0.5 }))
-  const brass = useRimMaterial({ color: DV_COLOR.gold, rim: DV_COLOR.goldBright, rimPower: 2, rimStrength: 0.9, metalness: 1, roughness: 0.32, emissive: DV_COLOR.goldDeep, emissiveIntensity: 0.35 })
+  const brass = useRimMaterial({ color: DV_COLOR.gold, rim: DV_COLOR.goldBright, rimPower: 2, rimStrength: 1.1, metalness: 0.9, roughness: 0.3, emissive: DV_COLOR.goldDeep, emissiveIntensity: 0.8 })
   const glassMat = useDisposable(() => new THREE.MeshBasicMaterial({ color: '#efe2bf', transparent: true, opacity: 0.55, toneMapped: false }))
   const rubyMat = useDisposable(() => new THREE.MeshStandardMaterial({ color: DV_COLOR.blood, emissive: '#5a0710', emissiveIntensity: 0.9, roughness: 0.1, metalness: 0.4 }))
   useEnvironment(0.7)
@@ -1088,10 +1088,10 @@ function ClockhallPreset({ intensity, alert, lite }: PresetProps) {
     // câmera: recua em tela retrato para o mostrador caber; deriva lenta
     const aspect = size.width / Math.max(1, size.height)
     const tanH = Math.tan(THREE.MathUtils.degToRad(48 / 2)) * aspect
-    const dist = THREE.MathUtils.clamp(6.6 / tanH, 14, 30)
+    const dist = THREE.MathUtils.clamp(9 / tanH, 21, 34)
     const cam = state.camera
-    cam.position.set(Math.sin(t * 0.05) * 0.5, 2.6 + Math.cos(t * 0.07) * 0.15, DIAL_Z + dist)
-    cam.lookAt(look.set(0, aspect < 1 ? 6.2 : 6.8, DIAL_Z))
+    cam.position.set(Math.sin(t * 0.05) * 0.6, 4.4 + Math.cos(t * 0.07) * 0.15, DIAL_Z + dist)
+    cam.lookAt(look.set(0, 6.6, DIAL_Z))
     if (fog.current) {
       fog.current.near = dist * 0.6
       fog.current.far = dist + 22
@@ -1158,7 +1158,7 @@ function ClockhallPreset({ intensity, alert, lite }: PresetProps) {
       <fog ref={fog} attach="fog" args={['#14132a', 12, 40]} />
       <ambientLight intensity={0.55} color="#8c88b8" />
       <hemisphereLight args={['#aaa5d6', '#0a090d', 0.6]} />
-      <directionalLight position={[2, 12, 10]} intensity={1.1 * intensity} color="#d9d6ea" />
+      <directionalLight position={[2, 12, 10]} intensity={1.7 * intensity} color="#e6e4f0" />
       <pointLight position={[0, 4, -5]} intensity={45 * intensity} distance={20} decay={1.4} color={DV_COLOR.violet} />
       <pointLight position={[-4.4, 10.5, -6.5]} intensity={10 * intensity} distance={10} decay={1.5} color="#efe2bf" />
       {!lite && <pointLight position={[4.9, 12, -7.5]} intensity={8 * intensity} distance={10} decay={1.5} color="#efe2bf" />}

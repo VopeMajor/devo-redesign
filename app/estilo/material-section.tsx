@@ -132,7 +132,7 @@ export function OrnamentShowcase() {
         <Lantern chain={40} className="absolute left-3 top-0 w-12" />
         <Lantern chain={90} className="absolute right-4 top-0 w-10" style={{ animationDelay: '-2.5s' }} />
         <CheckerFloor tilt={66} cell={46} className="!h-[30%]" />
-        <p className="dv-label absolute bottom-2 left-3 text-[10px] text-dv-text-2">RomanDial · Lantern · CheckerFloor</p>
+        <p className="dv-label absolute right-3 top-2 text-[10px] text-dv-text-2">RomanDial · Lantern · CheckerFloor</p>
       </div>
 
       {/* pequenos */}

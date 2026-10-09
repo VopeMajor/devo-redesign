@@ -6,7 +6,7 @@ import { PerfilModelo } from '../interior-models'
 /** Tela-modelo do Perfil no interior: PaperSheet + painéis do kit + BottomNav. */
 export function PerfilPage() {
   return (
-    <PaperSheet as="main" code="DV_R084_0518" className="min-h-dvh">
+    <PaperSheet as="main" code={false} className="min-h-dvh">
       <PerfilModelo />
     </PaperSheet>
   )

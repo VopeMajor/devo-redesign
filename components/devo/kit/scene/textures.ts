@@ -305,7 +305,7 @@ function seeded(seed: number) {
 }
 
 /** Desenha veios num contexto: caminhos aleatórios suaves, finos, com halo leve. */
-function drawVeins(ctx: CanvasRenderingContext2D, w: number, h: number, color: string, count: number, seed: number, width = 1.2) {
+function drawVeins(ctx: CanvasRenderingContext2D, w: number, h: number, color: string, count: number, seed: number, width = 1.2, alpha = 1) {
   const rnd = seeded(seed)
   ctx.save()
   ctx.lineCap = 'round'
@@ -317,10 +317,10 @@ function drawVeins(ctx: CanvasRenderingContext2D, w: number, h: number, color: s
     const steps = 18 + Math.floor(rnd() * 26)
     const lw = width * (0.35 + rnd() * 1.1)
     ctx.strokeStyle = color
-    ctx.globalAlpha = 0.25 + rnd() * 0.55
+    ctx.globalAlpha = (0.25 + rnd() * 0.55) * alpha
     ctx.lineWidth = lw
     ctx.shadowColor = color
-    ctx.shadowBlur = lw * 3
+    ctx.shadowBlur = lw * 1.5
     ctx.beginPath()
     ctx.moveTo(x, y)
     for (let k = 0; k < steps; k++) {
@@ -374,7 +374,7 @@ function marbleCanvas(size: number, kind: 'white' | 'black', seed: number) {
     drawVeins(ctx, size, size, 'rgba(110,108,116,1)', Math.round(size / 40), seed, size / 300)
     drawVeins(ctx, size, size, 'rgba(176,154,108,1)', 2, seed + 3, size / 500)
   } else {
-    drawVeins(ctx, size, size, 'rgba(226,224,230,1)', Math.round(size / 50), seed, size / 340)
+    drawVeins(ctx, size, size, 'rgba(176,172,186,1)', Math.round(size / 60), seed, size / 420, 0.55)
     drawVeins(ctx, size, size, 'rgba(176,154,108,1)', 2, seed + 5, size / 500)
   }
   return { c, ctx }

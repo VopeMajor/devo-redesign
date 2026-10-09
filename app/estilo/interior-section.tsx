@@ -27,10 +27,12 @@ const SWATCHES = [
   { name: 'papel-2', v: '#d9d6d0', use: 'faixas' },
   { name: 'painel', v: '#0a090d', use: 'painéis' },
   { name: 'painel-2', v: '#15131b', use: 'elevado' },
-  { name: 'cobalto', v: '#34409e', use: 'tinta / blocos' },
-  { name: 'cobalto·escuro', v: '#8f9cf0', use: 'texto no painel' },
+  { name: 'índigo', v: '#34409e', use: 'tinta / blocos' },
+  { name: 'índigo·escuro', v: '#8f9cf0', use: 'texto no painel' },
+  { name: 'porcelana', v: '#f4f2ee', use: 'painel claro' },
+  { name: 'latão', v: '#a08a5e', use: 'filete (não texto)' },
   { name: 'alerta', v: '#a3121f', use: 'só alerta' },
-  { name: 'ouro', v: '#6a5530', use: 'só lendária' },
+  { name: 'latão escuro', v: '#6a5530', use: 'só lendária' },
 ]
 
 function Label({ children }: { children: string }) {
@@ -45,11 +47,11 @@ export function InteriorSection({ run }: { run: (label: string, action: () => vo
   const [hub2, setHub2] = useState('record')
   return (
     <section id="interior" data-estilo="interior" aria-label="Interior" className="border-t border-dv-line">
-      <PaperSheet code="DV_R084_0518" sub="DV_ST_2024_INT">
+      <PaperSheet code={false}>
         <InteriorHeader />
         <div className="px-4 pb-10">
           <p className="font-sans text-[14px] leading-relaxed text-in-fg-2">
-            Interior do DEVO: papel frio com retícula, tinta cobalto, painéis pretos e linhas de HUD. Vermelho só alerta, ouro só raridade lendária. Escopo{' '}
+            Interior do DEVO: papel frio com retícula e xadrez sutil, painéis de veludo preto com filete de latão, tinta índigo do sistema e linhas de HUD. Rubi só alerta, latão no metal e na raridade lendária. Escopo{' '}
             <code className="font-mono text-[12px] text-in-accent">.dv-interior</code>.
           </p>
 
