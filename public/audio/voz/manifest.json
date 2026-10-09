@@ -1,0 +1,569 @@
+{
+ "version": 1,
+ "formats": [
+  "ogg",
+  "m4a"
+ ],
+ "lines": {
+  "pr-001": {
+   "cast": "narrator",
+   "voice": "pm_alex",
+   "hash": "f12a550512c44d8a",
+   "duration": 2.773,
+   "engine": "kokoro"
+  },
+  "pr-002": {
+   "cast": "narrator",
+   "voice": "pm_alex",
+   "hash": "d710a552a4b4f970",
+   "duration": 7.157,
+   "engine": "kokoro"
+  },
+  "pr-003": {
+   "cast": "narrator",
+   "voice": "pm_alex",
+   "hash": "40be92456e96ee5b",
+   "duration": 6.856,
+   "engine": "kokoro"
+  },
+  "pr-004": {
+   "cast": "narrator",
+   "voice": "pm_alex",
+   "hash": "ff9aeba5857c33af",
+   "duration": 9.357,
+   "engine": "kokoro"
+  },
+  "pr-005": {
+   "cast": "narrator",
+   "voice": "pm_alex",
+   "hash": "924b1d4f54fb69fd",
+   "duration": 7.556,
+   "engine": "kokoro"
+  },
+  "pr-006": {
+   "cast": "narrator",
+   "voice": "pm_alex",
+   "hash": "e132da1be0aa84d5",
+   "duration": 1.702,
+   "engine": "kokoro"
+  },
+  "pr-007": {
+   "cast": "narrator",
+   "voice": "pm_alex",
+   "hash": "bdac29d0712ce189",
+   "duration": 1.998,
+   "engine": "kokoro"
+  },
+  "pr-009": {
+   "cast": "narrator",
+   "voice": "pm_alex",
+   "hash": "9b20ef0b084710db",
+   "duration": 3.457,
+   "engine": "kokoro"
+  },
+  "pr-010": {
+   "cast": "narrator",
+   "voice": "pm_alex",
+   "hash": "5a9e232809bfa60b",
+   "duration": 5.556,
+   "engine": "kokoro"
+  },
+  "pr-011": {
+   "cast": "narrator",
+   "voice": "pm_alex",
+   "hash": "a8eb9464cdace051",
+   "duration": 2.998,
+   "engine": "kokoro"
+  },
+  "pr-012": {
+   "cast": "narrator",
+   "voice": "pm_alex",
+   "hash": "1574a7582a2258c8",
+   "duration": 2.548,
+   "engine": "kokoro"
+  },
+  "pr-013": {
+   "cast": "narrator",
+   "voice": "pm_alex",
+   "hash": "f3fd033a715b8b7b",
+   "duration": 3.357,
+   "engine": "kokoro"
+  },
+  "pr-014": {
+   "cast": "narrator",
+   "voice": "pm_alex",
+   "hash": "3c2d40adfa5c4b8a",
+   "duration": 3.023,
+   "engine": "kokoro"
+  },
+  "pr-015": {
+   "cast": "narrator",
+   "voice": "pm_alex",
+   "hash": "75c3e67c8cac6975",
+   "duration": 3.656,
+   "engine": "kokoro"
+  },
+  "pr-016": {
+   "cast": "narrator",
+   "voice": "pm_alex",
+   "hash": "03be6fab16774dd6",
+   "duration": 4.756,
+   "engine": "kokoro"
+  },
+  "pr-017": {
+   "cast": "narrator",
+   "voice": "pm_alex",
+   "hash": "7a2cb957a7a4806d",
+   "duration": 2.398,
+   "engine": "kokoro"
+  },
+  "pr-019-0-0": {
+   "cast": "narrator",
+   "voice": "pm_alex",
+   "hash": "6f2151e86193f309",
+   "duration": 1.171,
+   "engine": "kokoro"
+  },
+  "pr-020-0-0": {
+   "cast": "narrator",
+   "voice": "pm_alex",
+   "hash": "1cab65889a58511a",
+   "duration": 9.357,
+   "engine": "kokoro"
+  },
+  "pr-020-2-0": {
+   "cast": "narrator",
+   "voice": "pm_alex",
+   "hash": "53e43167dbc326e0",
+   "duration": 1.973,
+   "engine": "kokoro"
+  },
+  "pr-021": {
+   "cast": "narrator",
+   "voice": "pm_alex",
+   "hash": "6fb1d885d9a8b026",
+   "duration": 4.556,
+   "engine": "kokoro"
+  },
+  "pr-022": {
+   "cast": "voice",
+   "voice": "pm_santa",
+   "hash": "6a373874acd73b55",
+   "duration": 7.957,
+   "engine": "kokoro"
+  },
+  "pr-023-0-0": {
+   "cast": "voice",
+   "voice": "pm_santa",
+   "hash": "72f5e793318ca68e",
+   "duration": 4.957,
+   "engine": "kokoro"
+  },
+  "pr-023-1-0": {
+   "cast": "voice",
+   "voice": "pm_santa",
+   "hash": "808791563890b3be",
+   "duration": 6.856,
+   "engine": "kokoro"
+  },
+  "pr-024": {
+   "cast": "narrator",
+   "voice": "pm_alex",
+   "hash": "fe13d2b288c598fa",
+   "duration": 3.857,
+   "engine": "kokoro"
+  },
+  "pr-025-0-0": {
+   "cast": "narrator",
+   "voice": "pm_alex",
+   "hash": "79c256ef55128905",
+   "duration": 1.679,
+   "engine": "kokoro"
+  },
+  "pr-025-1-0": {
+   "cast": "voice",
+   "voice": "pm_santa",
+   "hash": "8c79334049386148",
+   "duration": 2.323,
+   "engine": "kokoro"
+  },
+  "pr-027": {
+   "cast": "narrator",
+   "voice": "pm_alex",
+   "hash": "bbccc51057a42db9",
+   "duration": 8.257,
+   "engine": "kokoro"
+  },
+  "pr-028": {
+   "cast": "narrator",
+   "voice": "pm_alex",
+   "hash": "289f875e67153690",
+   "duration": 2.123,
+   "engine": "kokoro"
+  },
+  "pr-029": {
+   "cast": "melissa",
+   "voice": "pf_dora",
+   "hash": "e54c955da06a1e75",
+   "duration": 5.356,
+   "engine": "kokoro"
+  },
+  "pr-031": {
+   "cast": "melissa",
+   "voice": "pf_dora",
+   "hash": "1a1d2eca446b91a4",
+   "duration": 2.773,
+   "engine": "kokoro"
+  },
+  "pr-033": {
+   "cast": "melissa",
+   "voice": "pf_dora",
+   "hash": "48ee20a60b7c6929",
+   "duration": 2.119,
+   "engine": "kokoro"
+  },
+  "pr-035": {
+   "cast": "melissa",
+   "voice": "pf_dora",
+   "hash": "189b9b71691ccb6d",
+   "duration": 2.647,
+   "engine": "kokoro"
+  },
+  "pr-036": {
+   "cast": "system",
+   "voice": "pf_dora",
+   "hash": "834aef7d4d2570d9",
+   "duration": 17.357,
+   "engine": "kokoro"
+  },
+  "pr-037": {
+   "cast": "system",
+   "voice": "pf_dora",
+   "hash": "09418f1e533d057f",
+   "duration": 14.056,
+   "engine": "kokoro"
+  },
+  "pr-038": {
+   "cast": "system",
+   "voice": "pf_dora",
+   "hash": "881f7f04e06c1976",
+   "duration": 9.556,
+   "engine": "kokoro"
+  },
+  "pr-040": {
+   "cast": "melissa",
+   "voice": "pf_dora",
+   "hash": "e1a666c00efd546e",
+   "duration": 2.502,
+   "engine": "kokoro"
+  },
+  "pr-041": {
+   "cast": "melissa",
+   "voice": "pf_dora",
+   "hash": "f1ef2725a2f52515",
+   "duration": 3.857,
+   "engine": "kokoro"
+  },
+  "pr-042-0-0": {
+   "cast": "melissa",
+   "voice": "pf_dora",
+   "hash": "336e7fe2700f269a",
+   "duration": 11.457,
+   "engine": "kokoro"
+  },
+  "pr-042-1-0": {
+   "cast": "melissa",
+   "voice": "pf_dora",
+   "hash": "855d13fdf8aad965",
+   "duration": 3.457,
+   "engine": "kokoro"
+  },
+  "pr-042-2-0": {
+   "cast": "melissa",
+   "voice": "pf_dora",
+   "hash": "bea478926fe894b0",
+   "duration": 1.313,
+   "engine": "kokoro"
+  },
+  "pr-042-2-1": {
+   "cast": "melissa",
+   "voice": "pf_dora",
+   "hash": "34417d9526f08d75",
+   "duration": 10.656,
+   "engine": "kokoro"
+  },
+  "pr-043": {
+   "cast": "narrator",
+   "voice": "pm_alex",
+   "hash": "44a5e06694c00c59",
+   "duration": 7.957,
+   "engine": "kokoro"
+  },
+  "pr-044-0-0": {
+   "cast": "melissa",
+   "voice": "pf_dora",
+   "hash": "2feb7ecac22e0c8e",
+   "duration": 10.957,
+   "engine": "kokoro"
+  },
+  "pr-044-1-0": {
+   "cast": "melissa",
+   "voice": "pf_dora",
+   "hash": "2feb7ecac22e0c8e",
+   "duration": 10.957,
+   "engine": "kokoro"
+  },
+  "pr-044-2-0": {
+   "cast": "melissa",
+   "voice": "pf_dora",
+   "hash": "2feb7ecac22e0c8e",
+   "duration": 10.957,
+   "engine": "kokoro"
+  },
+  "pr-045": {
+   "cast": "narrator",
+   "voice": "pm_alex",
+   "hash": "ea9404a9ef618911",
+   "duration": 3.756,
+   "engine": "kokoro"
+  },
+  "pr-046": {
+   "cast": "narrator",
+   "voice": "pm_alex",
+   "hash": "24496fb4e3506550",
+   "duration": 5.457,
+   "engine": "kokoro"
+  },
+  "pr-047": {
+   "cast": "narrator",
+   "voice": "pm_alex",
+   "hash": "6cbf7be6a53cba62",
+   "duration": 1.673,
+   "engine": "kokoro"
+  },
+  "pr-048": {
+   "cast": "melissa",
+   "voice": "pf_dora",
+   "hash": "f88ddee420416f0a",
+   "duration": 11.156,
+   "engine": "kokoro"
+  },
+  "pr-049-0-0": {
+   "cast": "melissa",
+   "voice": "pf_dora",
+   "hash": "6b8310ddeaa95226",
+   "duration": 2.598,
+   "engine": "kokoro"
+  },
+  "pr-049-1-0": {
+   "cast": "melissa",
+   "voice": "pf_dora",
+   "hash": "035ce56ac6904dd5",
+   "duration": 5.356,
+   "engine": "kokoro"
+  },
+  "pr-049-2-0": {
+   "cast": "melissa",
+   "voice": "pf_dora",
+   "hash": "e0eab639867e4386",
+   "duration": 11.957,
+   "engine": "kokoro"
+  },
+  "pr-050": {
+   "cast": "narrator",
+   "voice": "pm_alex",
+   "hash": "98d92484b56b60ee",
+   "duration": 5.056,
+   "engine": "kokoro"
+  },
+  "pr-051": {
+   "cast": "melissa",
+   "voice": "pf_dora",
+   "hash": "9542c4b514a1f4a8",
+   "duration": 3.457,
+   "engine": "kokoro"
+  },
+  "pr-052": {
+   "cast": "narrator",
+   "voice": "pm_alex",
+   "hash": "5499e09db030bd51",
+   "duration": 2.523,
+   "engine": "kokoro"
+  },
+  "pr-053": {
+   "cast": "melissa",
+   "voice": "pf_dora",
+   "hash": "48ed752ffcfc934f",
+   "duration": 10.257,
+   "engine": "kokoro"
+  },
+  "pr-054-0-0": {
+   "cast": "melissa",
+   "voice": "pf_dora",
+   "hash": "570887e59588900e",
+   "duration": 2.044,
+   "engine": "kokoro"
+  },
+  "pr-054-1-0": {
+   "cast": "melissa",
+   "voice": "pf_dora",
+   "hash": "0d803f20882e861a",
+   "duration": 15.056,
+   "engine": "kokoro"
+  },
+  "pr-055-0-0": {
+   "cast": "melissa",
+   "voice": "pf_dora",
+   "hash": "964458e548d81104",
+   "duration": 10.857,
+   "engine": "kokoro"
+  },
+  "pr-055-1-0": {
+   "cast": "melissa",
+   "voice": "pf_dora",
+   "hash": "8b18b91873c6ab59",
+   "duration": 2.245,
+   "engine": "kokoro"
+  },
+  "pr-055-2-0": {
+   "cast": "melissa",
+   "voice": "pf_dora",
+   "hash": "d37b268f79c30c6b",
+   "duration": 5.657,
+   "engine": "kokoro"
+  },
+  "rato-risada": {
+   "cast": "rato",
+   "voice": "pm_santa",
+   "hash": "bb477663e60d5423",
+   "duration": 1.327,
+   "engine": "kokoro"
+  },
+  "tu-00": {
+   "cast": "herdeiro",
+   "voice": "pm_alex",
+   "hash": "cf9f786d8ed862c4",
+   "duration": 6.356,
+   "engine": "kokoro"
+  },
+  "tu-01": {
+   "cast": "herdeiro",
+   "voice": "pm_alex",
+   "hash": "4f197b1e3d4ec501",
+   "duration": 6.457,
+   "engine": "kokoro"
+  },
+  "tu-02": {
+   "cast": "herdeiro",
+   "voice": "pm_alex",
+   "hash": "6eceabfc5ecf3d99",
+   "duration": 5.856,
+   "engine": "kokoro"
+  },
+  "tu-03": {
+   "cast": "herdeiro",
+   "voice": "pm_alex",
+   "hash": "7a9d18d0d7478f34",
+   "duration": 5.756,
+   "engine": "kokoro"
+  },
+  "tu-04": {
+   "cast": "herdeiro",
+   "voice": "pm_alex",
+   "hash": "460c855667954c27",
+   "duration": 5.056,
+   "engine": "kokoro"
+  },
+  "tu-05": {
+   "cast": "herdeiro",
+   "voice": "pm_alex",
+   "hash": "582d8ec62e709e06",
+   "duration": 6.056,
+   "engine": "kokoro"
+  },
+  "tu-06": {
+   "cast": "rato",
+   "voice": "pm_santa",
+   "hash": "78b7424cc89a8083",
+   "duration": 8.457,
+   "engine": "kokoro"
+  },
+  "tu-07": {
+   "cast": "rato",
+   "voice": "pm_santa",
+   "hash": "463cbcd366b8cfd2",
+   "duration": 6.856,
+   "engine": "kokoro"
+  },
+  "tu-08": {
+   "cast": "rato",
+   "voice": "pm_santa",
+   "hash": "a97f28b1adcc808e",
+   "duration": 9.357,
+   "engine": "kokoro"
+  },
+  "tu-09": {
+   "cast": "rato",
+   "voice": "pm_santa",
+   "hash": "013cf5b701e0c29e",
+   "duration": 8.656,
+   "engine": "kokoro"
+  },
+  "tu-10": {
+   "cast": "rato",
+   "voice": "pm_santa",
+   "hash": "21bede1daa36b0b5",
+   "duration": 7.056,
+   "engine": "kokoro"
+  },
+  "tu-11": {
+   "cast": "rato",
+   "voice": "pm_santa",
+   "hash": "6ca3cd6a1c8270f7",
+   "duration": 8.257,
+   "engine": "kokoro"
+  },
+  "tu-12": {
+   "cast": "rato",
+   "voice": "pm_santa",
+   "hash": "b452e50a6380e5d9",
+   "duration": 7.056,
+   "engine": "kokoro"
+  },
+  "tu-13": {
+   "cast": "rato",
+   "voice": "pm_santa",
+   "hash": "f2684857f9869331",
+   "duration": 6.056,
+   "engine": "kokoro"
+  },
+  "tu-14": {
+   "cast": "rato",
+   "voice": "pm_santa",
+   "hash": "e44d92db695ee604",
+   "duration": 7.356,
+   "engine": "kokoro"
+  },
+  "tu-15": {
+   "cast": "rato",
+   "voice": "pm_santa",
+   "hash": "2ce2e9917e115bd3",
+   "duration": 8.457,
+   "engine": "kokoro"
+  },
+  "tu-16": {
+   "cast": "herdeiro",
+   "voice": "pm_alex",
+   "hash": "3abc50a336203077",
+   "duration": 8.056,
+   "engine": "kokoro"
+  },
+  "tu-17": {
+   "cast": "herdeiro",
+   "voice": "pm_alex",
+   "hash": "480b6dd45341ca02",
+   "duration": 3.011,
+   "engine": "kokoro"
+  }
+ }
+}
