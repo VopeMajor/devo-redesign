@@ -446,7 +446,7 @@ function CathedralPreset({ intensity, alert, lite }: PresetProps) {
       <CameraRig pos={[0, 1.6, 8]} look={[0, 3.2, -16]} drift={0.35} />
       <ambientLight intensity={0.9} color="#8c88b8" />
       <hemisphereLight args={['#aaa5d6', '#121016', 0.8]} />
-      <directionalLight position={[2, 10, -6]} intensity={2.4 * intensity} color="#d4d8f6" />
+      <directionalLight position={[2, 10, -6]} intensity={2.4 * intensity} color="#e0def0" />
       <pointLight position={[0, 6, -10]} intensity={90 * intensity} distance={30} decay={1.4} color={DV_COLOR.violet} />
       <pointLight position={[0, 3, 2]} intensity={30 * intensity} distance={14} decay={1.4} color={DV_COLOR.goldBright} />
       <AlertLight alert={alert} position={[0, 5, 0]} power={40} />
@@ -1058,8 +1058,7 @@ function ClockhallPreset({ intensity, alert, lite }: PresetProps) {
         { p: [-4.4, 17, -6.5], c: 5.4, ph: 0 },
         { p: [4.9, 17, -7.5], c: 4.2, ph: 1.7 },
         { p: [-7.6, 17, -3], c: 7.6, ph: 3.1 },
-        { p: [7.2, 17, -2.4], c: 6.6, ph: 4.4 },
-        ...(lite ? [] : [{ p: [-1.6, 17, -9.5], c: 2.4, ph: 2.2 }, { p: [2.6, 17, -4], c: 8.4, ph: 5.3 }]),
+        ...(lite ? [] : [{ p: [7.2, 17, -2.4], c: 6.6, ph: 4.4 }, { p: [-1.6, 17, -9.5], c: 2.4, ph: 2.2 }, { p: [2.6, 17, -4], c: 8.4, ph: 5.3 }]),
       ] as { p: [number, number, number]; c: number; ph: number }[],
     [lite],
   )
@@ -1195,7 +1194,7 @@ function ClockhallPreset({ intensity, alert, lite }: PresetProps) {
       </group>
 
       {/* vitrais em ogiva nas laterais */}
-      {[-10.5, 10.5, -16.6, 16.6].map((x) => (
+      {(lite ? [-10.5, 10.5] : [-10.5, 10.5, -16.6, 16.6]).map((x) => (
         <group key={x} position={[x, 1.6, -11.9]}>
           <mesh geometry={ogiveFrameGeo} position={[0, -0.3, -0.05]}>
             <meshStandardMaterial color="#0d0c14" roughness={0.9} />

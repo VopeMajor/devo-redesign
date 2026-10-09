@@ -48,48 +48,25 @@ import { DeadlyVoteSymbol } from '@/components/devo/system/symbol'
 import { OddsBar, PaperField, Plaque, PortraitFrame, StatusSeal } from '@/components/devo/kit'
 import { portraitFrameProps } from '@/lib/devo/npcs'
 import { InteriorSection } from './interior-section'
+import { MaterialGrid, OrnamentShowcase, PaletteGrid } from './material-section'
 
 const COLORS: { group: string; items: { name: string; v: string; use: string }[] }[] = [
   {
-    group: 'Noite (fundos)',
-    items: [
-      { name: '--dv-ink', v: '#0a090d', use: 'fundo de tela' },
-      { name: '--dv-ink-2', v: '#121016', use: 'superfície' },
-      { name: '--dv-ink-3', v: '#1b1824', use: 'superfície alta' },
-      { name: '--dv-ink-4', v: '#282436', use: 'realce' },
-    ],
-  },
-  {
-    group: 'Cobalto (sistema)',
+    group: 'Índigo-marinho (sistema)',
     items: [
       { name: '--dv-cobalt', v: '#4152c0', use: 'ação, foco' },
-      { name: '--dv-cobalt-deep', v: '#34409e', use: 'faixas, papel' },
+      { name: '--dv-cobalt-deep', v: '#2f3c9c', use: 'faixas, papel' },
       { name: '--dv-cobalt-dim', v: '#161a40', use: 'fundo ativo' },
       { name: '--dv-cobalt-text', v: '#9ea8ee', use: 'texto AA' },
     ],
   },
   {
-    group: 'Ouro (ornamento)',
+    group: 'Texto e linhas',
     items: [
-      { name: '--dv-gold', v: '#b09a6c', use: 'filetes' },
-      { name: '--dv-gold-bright', v: '#e3d5ac', use: 'brilho' },
-      { name: '--dv-gold-deep', v: '#5e4d33', use: 'sombra' },
-    ],
-  },
-  {
-    group: 'Papel (documentos)',
-    items: [
-      { name: '--dv-paper', v: '#ece9e3', use: 'Record, tiras' },
-      { name: '--dv-paper-2', v: '#dbd7cf', use: 'dobra' },
-      { name: '--dv-paper-ink', v: '#1c1a22', use: 'texto no papel' },
-    ],
-  },
-  {
-    group: 'Sangue (só perigo)',
-    items: [
-      { name: '--dv-blood', v: '#a3121f', use: 'alerta' },
-      { name: '--dv-blood-deep', v: '#3f060b', use: 'fundo alerta' },
-      { name: '--dv-blood-text', v: '#ff6670', use: 'texto AA' },
+      { name: '--dv-text', v: '#eeecef', use: 'texto' },
+      { name: '--dv-violet-text', v: '#aaa5d6', use: 'lavanda AA' },
+      { name: '--dv-blood-text', v: '#ff6670', use: 'alerta AA' },
+      { name: '--dv-paper-ink', v: '#141217', use: 'texto no papel' },
     ],
   },
 ]
@@ -104,6 +81,7 @@ const TICKETS: TicketData[] = [
 ]
 
 const PRESETS: { id: ScenePreset; name: string; where: string }[] = [
+  { id: 'clockhall', name: 'clockhall', where: 'Jornada (cena-chave)' },
   { id: 'sigil', name: 'sigil', where: 'Landing, acesso' },
   { id: 'cathedral', name: 'cathedral', where: 'Sistema (home)' },
   { id: 'table', name: 'table', where: 'Sala de Jogos' },
@@ -152,20 +130,22 @@ function StyleGuideBody() {
     <main className="dv-ink-bg min-h-dvh text-dv-text">
       {/* Abertura */}
       <header className="relative h-[520px] overflow-hidden">
-        <SceneBackdrop preset="sigil" intensity={0.85} focus={{ x: 0.5, y: 0.36, size: 0.82 }} dim={0.1} />
+        <SceneBackdrop preset="clockhall" intensity={0.85} dim={0.08} />
         <div className="dv-safe-top relative z-10 flex h-full flex-col justify-end px-5 pb-8">
           <Kicker>Guia vivo · docs/redesign/IDENTIDADE.md</Kicker>
           <ImpactTitle className="mt-3" sub="Identidade visual comum do DEVO">
             Tribunal do Relógio
           </ImpactTitle>
           <p className="mt-4 max-w-md font-body text-[15px] leading-relaxed text-dv-text-2">
-            Um jogo mortal elegante. O tempo é a moeda e o juiz. Cobalto é o sistema, ouro é o ornamento, papel é o documento, vermelho é o perigo.
+            Um jogo mortal elegante. O tempo é a moeda e o juiz. Veludo e porcelana são a base, latão é o metal, a noite violeta é o ar, índigo é o sistema e rubi é a joia que avisa o perigo.
           </p>
         </div>
       </header>
 
       <Section id="cores" index="I" kicker="Tokens" title="Cores">
-        <div className="grid gap-6">
+        <p className="dv-label mb-2 text-[10px] text-dv-gold">Paleta das refs do dono · IDENTIDADE.md §0</p>
+        <PaletteGrid />
+        <div className="mt-6 grid gap-6">
           {COLORS.map((g) => (
             <div key={g.group}>
               <p className="dv-label mb-2 text-[10px] text-dv-gold">{g.group}</p>
@@ -184,6 +164,13 @@ function StyleGuideBody() {
               </div>
             </div>
           ))}
+        </div>
+      </Section>
+
+      <Section id="material" index="I·b" kicker="Material" title="Material e ornamento">
+        <MaterialGrid />
+        <div className="mt-8">
+          <OrnamentShowcase />
         </div>
       </Section>
 

@@ -94,7 +94,7 @@ export function BottomNav<V extends string>({
                     )
                   ) : null}
                 </span>
-                <span className={cn('relative max-w-full truncate px-1 font-sans text-[10px] font-medium uppercase tracking-[0.12em]', active && 'text-[#d4d8f6]')}>{it.label}</span>
+                <span className={cn('relative max-w-full truncate px-1 font-sans text-[10px] font-medium uppercase tracking-[0.12em]', active && 'text-[#e0def0]')}>{it.label}</span>
               </button>
             </li>
           )

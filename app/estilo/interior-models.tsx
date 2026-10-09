@@ -9,6 +9,7 @@ import {
   Badge,
   BottomNav,
   Button,
+  CageFrame,
   CobaltTabs,
   DuotoneArt,
   FUTURE_SYSTEMS,
@@ -25,6 +26,7 @@ import {
   PanelLink,
   RecordPanel,
   RecordTitle,
+  SigilStar,
   Stat,
   StatGrid,
   TimeDigits,
@@ -67,11 +69,18 @@ export const HUBS: BottomNavItem<Hub>[] = [
   { value: 'avisos', label: 'Avisos', icon: <IconAvisos />, badge: true },
 ]
 
-export function RecordFilePanel() {
+/** `caged` = retrato dentro da gaiola de latão (perfil: o ornamento-herói da tela). */
+export function RecordFilePanel({ caged = false }: { caged?: boolean }) {
   return (
-    <RecordPanel title="Record File" jp="レコード・ファイル" action={{ label: 'Ver perfil', onClick: () => {} }} chamfer>
-      <div className="grid grid-cols-[42%_1fr] gap-4">
-        <DuotoneArt src="/images/npc/shade.png" alt="Retrato do participante em tinta azul" position="50% 12%" className="aspect-[3/4] [clip-path:polygon(0_0,100%_0,100%_100%,14%_100%,0_88%)]" />
+    <RecordPanel title="Record File" jp="レコード・ファイル" action={{ label: 'Ver perfil', onClick: () => {} }} chamfer ornate={caged}>
+      <div className={caged ? 'grid grid-cols-[46%_1fr] gap-3' : 'grid grid-cols-[42%_1fr] gap-4'}>
+        {caged ? (
+          <CageFrame className="-mt-1 w-full">
+            <DuotoneArt src="/images/npc/shade.png" alt="Retrato do participante em duotom violeta" tone="violet" position="50% 10%" className="size-full !bg-transparent" />
+          </CageFrame>
+        ) : (
+          <DuotoneArt src="/images/npc/shade.png" alt="Retrato do participante em tinta índigo" position="50% 12%" className="aspect-[3/4] [clip-path:polygon(0_0,100%_0,100%_100%,14%_100%,0_88%)]" />
+        )}
         <dl className="flex min-w-0 flex-col gap-3">
           <div>
             <dt className="sr-only">Nome</dt>
@@ -103,7 +112,9 @@ export function RecordFilePanel() {
 export function ArcanoPanel() {
   return (
     <RecordPanel title="Arcano" variant="cobalt" headerRight={<Badge tone="cobalt">Rank S</Badge>}>
-      <p className="font-serif text-[30px] font-light uppercase leading-none tracking-[0.04em] text-in-fg">O Voto</p>
+      <p className="flex items-center gap-2.5 font-serif text-[30px] font-light uppercase leading-none tracking-[0.04em] text-in-fg">
+        <SigilStar tone="brass" className="size-5 shrink-0" />O Voto
+      </p>
       <div className="mt-4 flex items-center justify-between">
         <RecordTitle title="Virtudes" size="sm" as="h3" className="[&>span:first-child]:text-in-accent" />
         <HudCode code="ATB_06" tone="muted" />
@@ -218,7 +229,7 @@ export function PerfilModelo() {
         />
       </div>
       <div className="flex flex-col gap-4 px-4 pb-28 pt-4">
-        <RecordFilePanel />
+        <RecordFilePanel caged />
         <ArcanoPanel />
         <CartasPanel />
         <VotesPanel />

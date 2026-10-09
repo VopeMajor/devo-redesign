@@ -34,7 +34,7 @@ const SIZE: Record<ButtonSize, { h: string; text: string; px: string; cut: numbe
 }
 
 const LINE: Record<ButtonVariant, string> = {
-  primary: 'bg-[linear-gradient(100deg,#a9bbff,var(--dv-cobalt)_30%,var(--dv-cobalt-deep)_70%,#a9bbff)]',
+  primary: 'bg-[linear-gradient(100deg,#c3c6ee,var(--dv-cobalt)_30%,var(--dv-cobalt-deep)_70%,#c3c6ee)]',
   secondary: 'bg-[linear-gradient(100deg,var(--dv-line-strong),rgba(238,236,239,0.55)_50%,var(--dv-line-strong))] group-enabled:group-hover:bg-[linear-gradient(100deg,var(--dv-gold-deep),var(--dv-gold-bright)_50%,var(--dv-gold-deep))]',
   ghost: '',
   danger: 'bg-[linear-gradient(100deg,var(--dv-blood-text),var(--dv-blood)_45%,var(--dv-blood-deep))]',
@@ -53,7 +53,7 @@ const INTERIOR: Record<ButtonVariant, string> = {
   primary: 'dv-cut-diag bg-in-accent-fill text-white enabled:hover:bg-[#2a58ff] enabled:hover:shadow-[0_0_22px_-4px_rgba(52,64,158,0.8)]',
   secondary: 'dv-cut-diag bg-in-fg text-in-bg enabled:hover:bg-in-accent-fill enabled:hover:text-white',
   ghost: 'px-2 text-in-accent underline decoration-in-accent/40 underline-offset-[6px] enabled:hover:decoration-in-accent',
-  danger: 'dv-cut-diag bg-[#a3121f] text-white enabled:hover:bg-[#de1d28]',
+  danger: 'dv-cut-diag bg-[#a3121f] text-white enabled:hover:bg-[#c01a28]',
 }
 
 const TEXT: Record<ButtonVariant, string> = {

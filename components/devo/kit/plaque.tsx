@@ -2,7 +2,7 @@ import type { CSSProperties, ReactNode } from 'react'
 import { cn } from '@/lib/utils'
 
 const PLAQUE_LINE = {
-  cobalt: 'bg-[linear-gradient(135deg,#a9bbff,var(--dv-cobalt)_35%,var(--dv-cobalt-dim)_75%,var(--dv-cobalt))]',
+  cobalt: 'bg-[linear-gradient(135deg,#c3c6ee,var(--dv-cobalt)_35%,var(--dv-cobalt-dim)_75%,var(--dv-cobalt))]',
   gold: 'bg-[linear-gradient(135deg,var(--dv-gold-bright),var(--dv-gold-deep)_35%,var(--dv-gold)_65%,var(--dv-gold-deep))]',
   neutral: 'bg-[linear-gradient(135deg,rgba(238,236,239,0.42),var(--dv-line-strong)_40%,rgba(238,236,239,0.12))]',
   blood: 'bg-[linear-gradient(135deg,var(--dv-blood-text),var(--dv-blood)_45%,var(--dv-blood-deep))]',

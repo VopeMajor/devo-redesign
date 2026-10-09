@@ -11,13 +11,13 @@ export type CardSize = 'sm' | 'md' | 'lg'
 const WIDTH: Record<CardSize, string> = { sm: 'w-[92px]', md: 'w-[148px]', lg: 'w-[220px]' }
 
 const BORDER: Record<CardTone, string> = {
-  neutral: 'from-[#cfd3dc] via-[#6c7180] to-[#cfd3dc]',
-  cobalt: 'from-[#a9bbff] via-[var(--dv-cobalt-deep)] to-[#a9bbff]',
+  neutral: 'from-[#d9d6e0] via-[#6e6a7a] to-[#d9d6e0]',
+  cobalt: 'from-[#c3c6ee] via-[var(--dv-cobalt-deep)] to-[#c3c6ee]',
   gold: 'from-[var(--dv-gold-bright)] via-[var(--dv-gold-deep)] to-[var(--dv-gold-bright)]',
   blood: 'from-[var(--dv-blood-text)] via-[var(--dv-blood-deep)] to-[var(--dv-blood-text)]',
 }
 const ACCENT: Record<CardTone, string> = {
-  neutral: 'text-[#d9dce3]',
+  neutral: 'text-[#e0dde6]',
   cobalt: 'text-dv-cobalt-text',
   gold: 'text-dv-gold-bright',
   blood: 'text-dv-blood-text',

@@ -658,7 +658,7 @@ if (want('estilo')) {
     await page.goto(`${BASE}/estilo`, { waitUntil: 'networkidle' })
     await wait(3500)
     await shot(page, '80-estilo-00-topo')
-    for (const id of ['cores', 'tipografia', 'botoes', 'molduras', 'selos', 'navegacao', 'avisos', 'cartas', 'movimento', 'retratos']) {
+    for (const id of ['cores', 'material', 'tipografia', 'botoes', 'molduras', 'selos', 'navegacao', 'avisos', 'cartas', 'movimento', 'retratos']) {
       await page.locator(`[data-estilo="${id}"]`).scrollIntoViewIfNeeded({ timeout: 3000 }).catch(() => {})
       await page.evaluate((i) => document.querySelector(`[data-estilo="${i}"]`)?.scrollIntoView({ block: 'start' }), id)
       await wait(1200)
@@ -667,6 +667,15 @@ if (want('estilo')) {
     await page.mouse.wheel(0, 760)
     await wait(900)
     await shot(page, '80-estilo-movimento-2')
+    // Paleta e materiais (§0): mais dois quadros de cada.
+    for (const [id, n] of [['cores', 2], ['material', 3]]) {
+      await page.evaluate((i) => document.querySelector(`[data-estilo="${i}"]`)?.scrollIntoView({ block: 'start' }), id)
+      for (let k = 2; k <= n; k++) {
+        await page.mouse.wheel(0, 760)
+        await wait(900)
+        await shot(page, `80-estilo-${id}-${k}`)
+      }
+    }
     // Virada dos dígitos: vários quadros seguidos do relógio acelerado (nenhum pode faltar dígito).
     await page.evaluate(() => document.querySelector('[data-estilo="selos"]')?.scrollIntoView({ block: 'start' }))
     await page.mouse.wheel(0, 700)
@@ -706,7 +715,7 @@ if (want('estilo')) {
       }
     }
     // Cenas 3D: cada preset, normal e alerta.
-    for (const p of ['sigil', 'cathedral', 'table', 'corridor', 'tribunal']) {
+    for (const p of ['clockhall', 'sigil', 'cathedral', 'table', 'corridor', 'tribunal']) {
       await page.evaluate((i) => document.querySelector(`[data-estilo-preset="${i}"]`)?.scrollIntoView({ block: 'center' }), p)
       await wait(3500)
       await shot(page, `83-estilo-cena-${p}`)
