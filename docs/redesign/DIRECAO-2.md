@@ -100,7 +100,7 @@ quando o status for "em andamento" (não inscritos não veem o link).
   pm_santa), pós-processada por personagem (Rato sinistro, voz "???" com eco, Melissa natural), arquivos em
   `public/audio/voz/`, legendas sincronizadas, botão de dublagem liga/desliga; fallback para `speechSynthesis` do aparelho.
 
-## 6. Ajustes do dono (09/10 11h)
+## 6. Ajustes do dono (09/10 11h e 13h53)
 - **Paleta ainda não está 100%.** A referência-mestra de cor é `refs/ref-xadrez-marmore.png` (tabuleiro de mármore com
   espadas): **mármore negro e mármore branco com veios cinza** como base dominante (preto/branco/cinzas neutros, não azul),
   **metal champanhe-prateado** (aço escovado com leve tom dourado-claro, não ouro amarelo), **ametista** pequena nas joias
@@ -110,4 +110,10 @@ quando o status for "em andamento" (não inscritos não veem o link).
   ornamental (ref `refs/ref-emblemas-icones.png`: estrelas de 4 pontas, laços, chaves, asas, bússola, lua, coroas, linhas finas
   com remates pontiagudos). Um emblema próprio por app (Record, Pulso, Mensagens, Cartas, Sala de Trocas, Ajustes, Sala de
   Jogos) e para os 6 sistemas futuros, todos da mesma família, desenhados por nós (originais).
+- Reforço (13h53): o dono confirmou que a paleta ainda não chegou a 100% e que os ícones devem ser minimalistas e
+  sofisticados, sem fundo, na linha de `refs/ref-emblemas-icones.png`.
 - NPCs ficam para depois. Sprites como PNG transparente normal, sem fundo de moldura (já é o padrão do `PortraitFrame`).
+
+## 7. Supervisão
+As áreas continuam no ciclo com o crítico até atingir o patamar refinado que o dono deseja (não basta "aprovado
+por média"): o crítico deve ser exigente com acabamento, paleta e coesão.
