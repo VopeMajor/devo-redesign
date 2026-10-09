@@ -263,6 +263,8 @@ function DesktopIcon({
         onSelect(app.id)
       }}
       onDoubleClick={() => onOpen(app.id)}
+      aria-label={app.name}
+      title={unread ? `${app.name} · ${unread} não lidas` : app.name}
       onKeyDown={(e) => e.key === 'Enter' && onOpen(app.id)}
       className={cn(
         'dv-focus group relative flex h-[96px] w-24 flex-col items-center gap-2 px-1 py-2 transition-colors',
