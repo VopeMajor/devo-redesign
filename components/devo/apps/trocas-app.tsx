@@ -34,10 +34,10 @@ import { TypingDots } from './app-ui'
  * rubi só na perda. As regras de cada sala vêm de `lib/devo/trade-rooms.ts` (fonte única).
  */
 
-const STATUS_META: Record<Room['status'], { label: string; note: string }> = {
-  livre: { label: 'Livre', note: 'A fechadura está acesa.' },
-  ocupada: { label: 'Ocupada', note: 'Alguém negocia lá dentro.' },
-  sua: { label: 'Sua sala', note: 'Sua carta espera na mesa.' },
+const STATUS_META: Record<Room['status'], { label: string }> = {
+  livre: { label: 'Livre' },
+  ocupada: { label: 'Ocupada' },
+  sua: { label: 'Sua sala' },
 }
 
 const pad2 = (n: number) => String(n).padStart(2, '0')
@@ -142,21 +142,6 @@ function Door({ room, onEnter }: { room: Room; onEnter: () => void }) {
       aria-label={`Sala ${room.number}, ${meta.label}, ${room.condition}: ${rule.summary}`}
       className={cn('dv-focus group relative flex w-full flex-col text-left outline-none', free ? 'cursor-pointer' : 'cursor-not-allowed')}
     >
-      {/* lintel: número e estado */}
-      <span className="flex items-center justify-between gap-2 px-0.5 pb-2 font-mono text-[10px] uppercase tracking-[0.2em]">
-        <span className="text-dv-text-3">Nº {pad2(room.number)}</span>
-        <span className={cn('flex items-center gap-1.5', free ? 'text-dv-gold-bright' : mine ? 'text-dv-amethyst-text' : 'text-dv-text-3')}>
-          <span
-            aria-hidden="true"
-            className={cn(
-              'size-1.5 rotate-45',
-              free ? 'bg-dv-gold-bright shadow-[0_0_8px_rgba(255,246,230,0.9)]' : mine ? 'bg-dv-amethyst shadow-[0_0_8px_rgba(138,124,200,0.9)]' : 'border border-current',
-            )}
-          />
-          {meta.label}
-        </span>
-      </span>
-
       {/* a porta */}
       <span
         className={cn(
@@ -182,6 +167,22 @@ function Door({ room, onEnter }: { room: Room; onEnter: () => void }) {
           )}
         >
           {pad2(room.number)}
+        </span>
+        {/* estado gravado no painel baixo da porta */}
+        <span
+          aria-hidden="true"
+          className={cn(
+            'absolute inset-x-0 top-[89.3%] flex -translate-y-1/2 items-center justify-center gap-1.5 font-mono text-[10px] uppercase leading-none tracking-[0.2em]',
+            free ? 'text-dv-gold-bright' : mine ? 'text-dv-amethyst-text' : 'text-dv-text-3',
+          )}
+        >
+          <span
+            className={cn(
+              'size-1.5 rotate-45',
+              free ? 'bg-dv-gold-bright shadow-[0_0_8px_rgba(255,246,230,0.9)]' : mine ? 'bg-dv-amethyst shadow-[0_0_8px_rgba(138,124,200,0.9)]' : 'border border-current',
+            )}
+          />
+          {meta.label}
         </span>
       </span>
 
@@ -366,6 +367,14 @@ function TradeRoom({ trade }: { trade: TradeSession }) {
   const [confirmLeave, setConfirmLeave] = useState(false)
   const [lostCardId, setLostCardId] = useState<string | null>(null)
   const number = pad2(room?.number ?? 0)
+  const tableRef = useRef<HTMLDivElement>(null)
+
+  // Quando algo acontece na mesa (alguém senta, as cartas viram, a sala esvazia), a mesa volta ao centro do olhar.
+  useEffect(() => {
+    if (trade.stage === 'placing') return
+    const reduce = typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
+    tableRef.current?.scrollIntoView({ block: 'start', behavior: reduce ? 'auto' : 'smooth' })
+  }, [trade.stage])
 
   const exit = () => {
     playSfx('close')
@@ -394,23 +403,27 @@ function TradeRoom({ trade }: { trade: TradeSession }) {
   return (
     <div className="mx-auto flex max-w-5xl flex-col gap-4 px-4 pb-8 pt-4 @2xl:px-6 @3xl:grid @3xl:grid-cols-[minmax(0,1fr)_20rem] @3xl:items-start @3xl:gap-5">
       <section aria-label="Mesa de troca" className="flex min-w-0 flex-col gap-4">
-        <header className="flex items-start justify-between gap-3">
-          <div className="min-w-0">
-            <Kicker className="animate-dv-fade">
+        <header>
+          <div className="flex min-h-11 items-center justify-between gap-3">
+            <Kicker className="min-w-0 animate-dv-fade">
               Sala {number} · {room?.condition}
             </Kicker>
-            <p className="mt-2 animate-dv-cut-in font-display text-[20px] font-semibold uppercase leading-tight tracking-[0.06em] text-dv-text" aria-live="polite">
-              {STAGE_TEXT[trade.stage]}
-            </p>
+            <Button variant={forfeitRisk ? 'danger' : 'secondary'} size="sm" onClick={leave} className="shrink-0">
+              {finished ? 'Sair' : 'Abandonar'}
+            </Button>
           </div>
-          <Button variant={forfeitRisk ? 'danger' : 'secondary'} size="sm" onClick={leave} className="shrink-0">
-            {finished ? 'Sair' : 'Abandonar'}
-          </Button>
+          <p key={trade.stage} className="mt-1 animate-dv-cut-in font-display text-[21px] font-semibold uppercase leading-tight tracking-[0.06em] text-dv-text" aria-live="polite">
+            {STAGE_TEXT[trade.stage]}
+          </p>
         </header>
 
         <RoomRuleBanner rule={rule} ruleKey={ruleKey} expanded={trade.stage === 'placing'} />
 
-        <TradeTable trade={trade} rule={rule} lostCardId={lostCardId} />
+        {trade.stage === 'placing' && <CardPicker />}
+
+        <div ref={tableRef} className="scroll-mt-3">
+          <TradeTable trade={trade} rule={rule} lostCardId={lostCardId} />
+        </div>
 
         <TradeActions trade={trade} rule={rule} lostCardId={lostCardId} onExit={exit} />
       </section>
@@ -453,12 +466,14 @@ function RoomRuleBanner({ rule, ruleKey, expanded }: { rule: RoomRuleMeta; ruleK
       aria-label={`Regra da sala: ${rule.label}`}
       className="relative isolate animate-dv-cut-in overflow-hidden border border-dv-line-strong bg-[linear-gradient(100deg,rgba(44,44,49,0.95),rgba(21,21,23,0.92)_55%,rgba(12,12,14,0.9))] [animation-delay:120ms]"
     >
-      {/* faixa diagonal de aço com o sigilo da condição */}
-      <span aria-hidden="true" className="absolute inset-y-0 -left-3 -z-10 w-[4.25rem] -skew-x-[14deg] bg-[linear-gradient(180deg,#ece5d8,#bab09f_45%,#6b6357)] opacity-95" />
-      <span aria-hidden="true" className="absolute inset-y-0 left-[3.6rem] -z-10 w-px -skew-x-[14deg] bg-dv-amethyst/70" />
-      <div className="flex items-center gap-4 py-2.5 pl-3 pr-4">
-        <RuleSigil rule={ruleKey} className="size-7 shrink-0 text-dv-ink" />
-        <div className="min-w-0 pl-2">
+      <div className="flex items-stretch">
+        {/* faixa diagonal de aço com o sigilo da condição */}
+        <span aria-hidden="true" className="relative grid w-[4.6rem] shrink-0 place-items-center">
+          <span className="absolute inset-0 bg-dv-amethyst/80 [clip-path:polygon(0_0,100%_0,calc(100%-14px)_100%,0_100%)]" />
+          <span className="absolute inset-y-0 left-0 right-px bg-[linear-gradient(180deg,#ece5d8,#bab09f_50%,#7a7266)] [clip-path:polygon(0_0,calc(100%-1px)_0,calc(100%-15px)_100%,0_100%)]" />
+          <RuleSigil rule={ruleKey} className="relative size-7 -translate-x-1 text-dv-ink" />
+        </span>
+        <div className="min-w-0 py-2.5 pl-3 pr-4">
           <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-dv-text-3">Regra da sala</p>
           <p className="mt-0.5 flex flex-wrap items-baseline gap-x-2">
             <span className="font-display text-[16px] font-semibold uppercase tracking-[0.12em] text-dv-text">{rule.label}</span>
@@ -467,7 +482,7 @@ function RoomRuleBanner({ rule, ruleKey, expanded }: { rule: RoomRuleMeta; ruleK
         </div>
       </div>
       {expanded && (
-        <ul className="flex flex-col gap-1.5 border-t border-dv-line px-4 pb-3 pt-2.5 pl-[4.75rem]">
+        <ul className="flex flex-col gap-1.5 border-t border-dv-line px-4 pb-3 pt-2.5">
           {rule.details.map((d) => (
             <li key={d} className="flex gap-2 font-body text-[14px] leading-snug text-dv-text-2">
               <span aria-hidden="true" className="mt-[7px] size-1.5 shrink-0 rotate-45 border border-dv-gold" />
@@ -486,8 +501,10 @@ function TradeTable({ trade, rule, lostCardId }: { trade: TradeSession; rule: Ro
   const revealed = revealing || trade.stage === 'done'
   const partnerLeft = trade.endReason === 'partner-left'
   const forfeited = trade.endReason === 'forfeit'
-  const myRarity = trade.myCard && rule.showRarity ? RARITY_META[getCard(trade.myCard.cardId).rarity] : null
-  const theirRarity = trade.partnerCardId && rule.showRarity && !partnerLeft ? RARITY_META[getCard(trade.partnerCardId).rarity] : null
+  // Às cegas: nenhuma raridade até a revelação; depois dela, as duas ficam à vista.
+  const showRarity = rule.showRarity || revealed
+  const myRarity = trade.myCard && showRarity ? RARITY_META[getCard(trade.myCard.cardId).rarity] : null
+  const theirRarity = trade.partnerCardId && showRarity && !partnerLeft ? RARITY_META[getCard(trade.partnerCardId).rarity] : null
 
   return (
     <div className="relative isolate">
@@ -530,6 +547,7 @@ function TradeTable({ trade, rule, lostCardId }: { trade: TradeSession; rule: Ro
             present
             mine
             accepted={trade.myAccept}
+            left={forfeited}
             note={forfeited ? 'Perdida' : trade.stage === 'done' ? 'Entregue' : trade.myCard ? 'O outro vê o verso' : undefined}
           >
             {forfeited && lostCardId ? (
@@ -550,7 +568,7 @@ function TradeTable({ trade, rule, lostCardId }: { trade: TradeSession; rule: Ro
         {/* plaqueta da raridade */}
         <div className="relative flex items-center justify-center gap-2 border-t border-dv-line px-3 py-2.5 font-mono text-[10.5px] uppercase tracking-[0.18em]">
           {myRarity ? (
-            rule.sameRarity ? (
+            rule.sameRarity && !revealed ? (
               <span className="flex items-center gap-2 text-dv-text-2">
                 <RarityMark color={myRarity.color} />
                 <span className="text-dv-text">{myRarity.label}</span> · garantida nas duas
@@ -612,6 +630,7 @@ function Seat({
   mine,
   note,
   spotlight,
+  left,
   children,
 }: {
   label: string
@@ -621,6 +640,7 @@ function Seat({
   mine?: boolean
   note?: string
   spotlight?: boolean
+  left?: boolean
   children: ReactNode
 }) {
   return (
@@ -632,13 +652,9 @@ function Seat({
         <span aria-hidden="true" className={cn('absolute -left-px -top-px size-2 border-l border-t', mine ? 'border-dv-amethyst-text' : 'border-dv-gold')} />
         <span aria-hidden="true" className={cn('absolute -bottom-px -right-px size-2 border-b border-r', mine ? 'border-dv-amethyst-text' : 'border-dv-gold')} />
         {children}
-        {accepted && (
-          <span className="absolute -bottom-3 left-1/2 -translate-x-1/2">
-            <Stamp text="Aceitou" tone="gold" size={78} rotate={mine ? 8 : -8} animate />
-          </span>
-        )}
       </div>
       <p className={cn('mt-1 max-w-full truncate font-display text-[14px] font-semibold tracking-[0.06em]', present ? 'text-dv-text' : 'text-dv-text-3')}>{name}</p>
+      {present && (
       <p
         className={cn(
           'flex h-6 items-center gap-1.5 px-2 font-mono text-[10px] uppercase tracking-[0.18em]',
@@ -646,8 +662,9 @@ function Seat({
         )}
       >
         {accepted && <GlyphCheck className="size-3" />}
-        {accepted ? 'Aceitou' : present ? 'Indeciso' : '—'}
+        {accepted ? 'Aceitou' : left ? 'Saiu' : 'Indeciso'}
       </p>
+      )}
       {note && <p className="font-body text-[12.5px] italic text-dv-text-3">{note}</p>}
     </div>
   )
@@ -672,37 +689,41 @@ function EmptySlot({ waiting, label }: { waiting?: boolean; label?: string }) {
   )
 }
 
-function TradeActions({ trade, rule, lostCardId, onExit }: { trade: TradeSession; rule: RoomRuleMeta; lostCardId: string | null; onExit: () => void }) {
+/** Mão do jogador: escolha a carta que vai para o seu espaço. */
+function CardPicker() {
   const { state, dispatch } = useDevo()
+  return (
+    <div className="animate-dv-rise">
+      <p className="dv-label flex items-center gap-2 text-dv-gold">
+        <SigilStar tone="current" className="size-2.5" />
+        Escolha a carta que vai à mesa
+      </p>
+      <ul className="devo-scroll -mx-4 mt-3 flex snap-x gap-3 overflow-x-auto px-4 pb-3 pt-2" aria-label="Suas cartas">
+        {state.inventory.map((c) => (
+          <li key={c.uid} className="shrink-0 snap-start">
+            <button
+              type="button"
+              onClick={() => {
+                playSfx('card-select')
+                dispatch({ type: 'TRADE_PLACE', uid: c.uid })
+              }}
+              className="dv-focus block transition-transform duration-[var(--dv-dur-2)] ease-[var(--dv-ease-out)] hover:-translate-y-1.5 focus-visible:-translate-y-1.5 active:scale-[0.97]"
+              aria-label={`Colocar ${getCard(c.cardId).name} na mesa`}
+            >
+              <CardFace cardId={c.cardId} size="sm" className="w-[76px]" />
+            </button>
+          </li>
+        ))}
+        {state.inventory.length === 0 && <li className="font-body text-[15px] italic text-dv-text-3">Você não tem cartas para trocar.</li>}
+      </ul>
+    </div>
+  )
+}
 
-  if (trade.stage === 'placing') {
-    return (
-      <div className="animate-dv-rise">
-        <p className="dv-label flex items-center gap-2 text-dv-gold">
-          <SigilStar tone="current" className="size-2.5" />
-          Escolha a carta que vai à mesa
-        </p>
-        <ul className="devo-scroll -mx-4 mt-3 flex snap-x gap-3 overflow-x-auto px-4 pb-3 pt-2" aria-label="Suas cartas">
-          {state.inventory.map((c) => (
-            <li key={c.uid} className="shrink-0 snap-start">
-              <button
-                type="button"
-                onClick={() => {
-                  playSfx('card-select')
-                  dispatch({ type: 'TRADE_PLACE', uid: c.uid })
-                }}
-                className="dv-focus block transition-transform duration-[var(--dv-dur-2)] ease-[var(--dv-ease-out)] hover:-translate-y-1.5 focus-visible:-translate-y-1.5 active:scale-[0.97]"
-                aria-label={`Colocar ${getCard(c.cardId).name} na mesa`}
-              >
-                <CardFace cardId={c.cardId} size="sm" className="w-[76px]" />
-              </button>
-            </li>
-          ))}
-          {state.inventory.length === 0 && <li className="font-body text-[15px] italic text-dv-text-3">Você não tem cartas para trocar.</li>}
-        </ul>
-      </div>
-    )
-  }
+function TradeActions({ trade, rule, lostCardId, onExit }: { trade: TradeSession; rule: RoomRuleMeta; lostCardId: string | null; onExit: () => void }) {
+  const { dispatch } = useDevo()
+
+  if (trade.stage === 'placing') return null
 
   if (trade.stage === 'done' && trade.partnerCardId) {
     const card = getCard(trade.partnerCardId)
@@ -756,6 +777,7 @@ function TradeActions({ trade, rule, lostCardId, onExit }: { trade: TradeSession
         <span aria-hidden="true" className="mt-[7px] size-1.5 shrink-0 rotate-45 bg-dv-gold" />
         {status}
       </p>
+      {trade.stage !== 'revealing' && (
       <Button
         block
         size="lg"
@@ -768,6 +790,7 @@ function TradeActions({ trade, rule, lostCardId, onExit }: { trade: TradeSession
       >
         Aceitar troca
       </Button>
+      )}
       {rule.forfeitOnLeave && trade.stage !== 'revealing' && (
         <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-dv-blood-text">Sem retorno · sair agora custa a sua carta</p>
       )}
