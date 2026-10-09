@@ -100,20 +100,25 @@ export function JavaliIntro() {
               const active = name === step.frame
               const art = npcPortrait('javali', name)
               if (!art) return null
+              // Cena larga num palco alto: a cena inteira (contain) sobre um fundo da própria cena, desfocado,
+              // em vez de recortar só o rosto.
               return (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
+                <div
                   key={name}
-                  src={art.src}
-                  alt={active ? 'Javali, anfitrião da Sala de Jogos' : ''}
                   aria-hidden={active ? undefined : true}
-                  draggable={false}
-                  style={{ objectPosition: art.position }}
-                  className={cn(
-                    'absolute inset-0 size-full object-cover contrast-[1.05] saturate-[0.92] transition-[opacity,transform] duration-500',
-                    active ? 'scale-100 opacity-100' : 'scale-[1.04] opacity-0',
-                  )}
-                />
+                  className={cn('absolute inset-0 transition-[opacity,transform] duration-500', active ? 'scale-100 opacity-100' : 'scale-[1.04] opacity-0')}
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={art.src} alt="" draggable={false} className="absolute inset-0 size-full scale-110 object-cover opacity-45 blur-xl" />
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={art.src}
+                    alt={active ? 'Javali, anfitrião da Sala de Jogos' : ''}
+                    draggable={false}
+                    style={{ objectPosition: art.position }}
+                    className="absolute inset-0 size-full object-contain contrast-[1.05] saturate-[0.92] [-webkit-mask-image:linear-gradient(to_bottom,transparent,#000_8%,#000_92%,transparent)] [mask-image:linear-gradient(to_bottom,transparent,#000_8%,#000_92%,transparent)]"
+                  />
+                </div>
               )
             })}
             {/* luz de borda e vinheta: o mesmo tratamento do PortraitFrame */}
