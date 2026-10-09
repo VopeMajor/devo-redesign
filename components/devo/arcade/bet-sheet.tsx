@@ -13,7 +13,7 @@ import { Monogram } from './sala-ui'
 export type Duel = BetBoard['events'][number]['duels'][number]
 
 /** Abre a folha de aposta para um duelo; devolve o gatilho e o nó a renderizar. */
-export function useBetSheet(onDone: () => void) {
+export function useBetSheet(onDone: () => void, initialAmount?: number) {
   const [target, setTarget] = useState<{ duel: Duel; pick: string } | null>(null)
   const [open, setOpen] = useState(false)
   return {
@@ -29,19 +29,36 @@ export function useBetSheet(onDone: () => void) {
         onPick={(pick) => setTarget({ ...target, pick })}
         onClose={() => setOpen(false)}
         onDone={onDone}
+        initialAmount={initialAmount}
       />
     ) : null,
   }
 }
 
-function BetSheet({ open, duel, pick, onPick, onClose, onDone }: { open: boolean; duel: Duel; pick: string; onPick: (p: string) => void; onClose: () => void; onDone: () => void }) {
+function BetSheet({
+  open,
+  duel,
+  pick,
+  onPick,
+  onClose,
+  onDone,
+  initialAmount,
+}: {
+  open: boolean
+  duel: Duel
+  pick: string
+  onPick: (p: string) => void
+  onClose: () => void
+  onDone: () => void
+  initialAmount?: number
+}) {
   const { state } = useDevo()
   const now = useNow(1000)
   const applyTime = useApplyTime()
   const remainingMs = Math.max(0, state.timerEndsAt - now)
   const remainingMin = Math.floor(remainingMs / 60_000)
   const affordable = (v: number) => remainingMin - v >= BET_RESERVE_MIN
-  const [amount, setAmount] = useState(() => BET_OPTIONS.find(affordable) ?? BET_OPTIONS[0])
+  const [amount, setAmount] = useState(() => (initialAmount && affordable(initialAmount) ? initialAmount : (BET_OPTIONS.find(affordable) ?? BET_OPTIONS[0])))
   const [error, setError] = useState('')
   const [sending, setSending] = useState(false)
   const side = duel.sides.find((s) => s.name === pick) ?? duel.sides[0]

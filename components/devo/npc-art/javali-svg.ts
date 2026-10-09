@@ -24,8 +24,30 @@ const GLOVE = '#16131a'
 function mask(uid: string, wink = false) {
   const metal = artId('jav-metal', uid)
   const eye = artId('jav-eye', uid)
+  const clip = artId('jav-clip', uid)
+  const hl = artId('jav-hl', uid)
+  const side = artId('jav-side', uid)
+  const grain = artId('jav-grain', uid)
+  const SKULL = 'M512 150 C506 98 548 74 600 74 C652 74 694 98 688 150 C684 184 664 204 646 214 L554 214 C536 204 516 184 512 150 Z'
+  const SNOUT = 'M556 170 C556 160 644 160 644 170 L654 232 C654 252 546 252 546 232 Z'
   return `
   <defs>
+    <clipPath id="${clip}"><path d="${SKULL}"/><path d="${SNOUT}"/></clipPath>
+    <radialGradient id="${hl}" cx="0.4" cy="0.22" r="0.6">
+      <stop offset="0" stop-color="#fff6dc" stop-opacity="0.6"/>
+      <stop offset="0.45" stop-color="#fff6dc" stop-opacity="0.12"/>
+      <stop offset="1" stop-color="#fff6dc" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="${side}" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#1c1006" stop-opacity="0.75"/>
+      <stop offset="0.3" stop-color="#1c1006" stop-opacity="0"/>
+      <stop offset="0.7" stop-color="#1c1006" stop-opacity="0"/>
+      <stop offset="1" stop-color="#1c1006" stop-opacity="0.85"/>
+    </linearGradient>
+    <filter id="${grain}" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" seed="4"/>
+      <feColorMatrix values="0 0 0 0 0.22  0 0 0 0 0.14  0 0 0 0 0.05  0 0 0 0.55 -0.12"/>
+    </filter>
     <linearGradient id="${metal}" x1="0" y1="0" x2="0" y2="1">
       <stop offset="0" stop-color="${ART.goldLight}"/>
       <stop offset="0.45" stop-color="${BRONZE}"/>
@@ -54,9 +76,9 @@ function mask(uid: string, wink = false) {
     wink
       ? `<path d="M614 148 Q632 140 652 146" fill="none" stroke="#0b0b12" stroke-width="5" stroke-linecap="round"/>`
       : `<path d="M614 146 Q634 130 652 146 Q634 156 614 146 Z" fill="#0b0b12"/>
-         <circle cx="633" cy="145" r="12" fill="url(#${eye})"/><circle cx="633" cy="145" r="3" fill="#e8f0ff"/>`
+         <circle cx="633" cy="145" r="7" fill="url(#${eye})"/><circle cx="633" cy="145" r="3.2" fill="#0b1440"/><circle cx="635" cy="143" r="1.4" fill="#e8f0ff"/>`
   }
-  <circle cx="567" cy="145" r="12" fill="url(#${eye})"/><circle cx="567" cy="145" r="3" fill="#e8f0ff"/>
+  <circle cx="567" cy="145" r="7" fill="url(#${eye})"/><circle cx="567" cy="145" r="3.2" fill="#0b1440"/><circle cx="569" cy="143" r="1.4" fill="#e8f0ff"/>
   <path d="M542 132 L590 140 M658 132 L610 140" stroke="${BRONZE_DARK}" stroke-width="5" stroke-linecap="round"/>
   <!-- focinho -->
   <path d="M556 170 C556 160 644 160 644 170 L654 232 C654 252 546 252 546 232 Z" fill="url(#${metal})" stroke="${BRONZE_DARK}" stroke-width="3"/>
@@ -64,6 +86,16 @@ function mask(uid: string, wink = false) {
   <ellipse cx="600" cy="232" rx="36" ry="16" fill="#c49a58"/>
   <ellipse cx="586" cy="233" rx="7" ry="9" fill="#1d1712"/>
   <ellipse cx="614" cy="233" rx="7" ry="9" fill="#1d1712"/>
+  <!-- volume do metal: sombra lateral, brilho de cima e martelado -->
+  <g clip-path="url(#${clip})" pointer-events="none">
+    <rect x="500" y="70" width="200" height="190" fill="url(#${side})"/>
+    <ellipse cx="600" cy="214" rx="92" ry="14" fill="#1c1006" opacity="0.35"/>
+    <ellipse cx="600" cy="166" rx="60" ry="10" fill="#1c1006" opacity="0.28"/>
+    <rect x="500" y="70" width="200" height="190" fill="url(#${hl})"/>
+    <rect x="500" y="70" width="200" height="190" filter="url(#${grain})" opacity="0.6"/>
+    <path d="M530 112 C548 90 572 82 600 82" fill="none" stroke="#fff3d0" stroke-opacity="0.55" stroke-width="3" stroke-linecap="round"/>
+    <path d="M562 176 C572 168 600 166 614 168" fill="none" stroke="#fff3d0" stroke-opacity="0.35" stroke-width="2.5" stroke-linecap="round"/>
+  </g>
   <!-- presas de marfim -->
   <path d="M552 236 C534 232 524 214 528 192 C536 210 546 220 562 224 Z" fill="${ART.ivory}" stroke="${ART.ivoryShade}" stroke-width="2"/>
   <path d="M648 236 C666 232 676 214 672 192 C664 210 654 220 638 224 Z" fill="${ART.ivory}" stroke="${ART.ivoryShade}" stroke-width="2"/>

@@ -504,6 +504,17 @@ if (want('sistema') || want('apps') || want('jogos')) {
           await wait(900)
           await shot(page, `31-jogos-${tab.toLowerCase()}-scroll2`)
         }
+        if (tab === 'Apostas') {
+          await page.evaluate(() => document.querySelector('[role="tabpanel"]')?.scrollBy(0, 560))
+          await wait(800)
+          await shot(page, '31-jogos-apostas-duelos')
+          if (await tryClick(page.getByRole('button', { name: /^Apostar em / }).first())) {
+            await wait(1200)
+            await shot(page, '31-jogos-apostas-folha')
+            await page.keyboard.press('Escape')
+            await wait(600)
+          }
+        }
         if (tab === 'Ranking' && (await tryClick(page.getByRole('button', { name: 'Memory Rush', exact: true }).first()))) {
           await wait(1200)
           await shot(page, '31-jogos-ranking-jogo')

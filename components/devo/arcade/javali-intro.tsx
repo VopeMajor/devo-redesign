@@ -1,11 +1,12 @@
 'use client'
 
 import { type CSSProperties, useState } from 'react'
-import { Badge, FrameCorners, GlyphArrow, GlyphDiamond, GlyphHourglass, Kicker } from '@/components/devo/kit'
+import { Badge, FrameCorners, GlyphArrow, GlyphDiamond, GlyphHourglass, Kicker, TimeDigits } from '@/components/devo/kit'
 import { GAMES, PATENTES } from '@/lib/devo/arcade/games'
 import { playSfx } from '@/lib/devo/audio'
 import { cn } from '@/lib/utils'
 import { JavaliArt, type JavaliPose } from '../npc-art/javali'
+import { formatDuration, useNow } from '../hooks'
 import { useDevo } from '../state/devo-store'
 
 type Frame = JavaliPose
@@ -85,16 +86,14 @@ export function JavaliIntro() {
         </button>
       </div>
 
-      <div className="relative flex min-h-0 flex-1 flex-col items-center justify-end gap-4 px-4 pt-2">
-        <div className="flex min-h-[4.5rem] items-end justify-center">
-          {step.visual && (
-            <div key={step.visual} className="animate-dv-pop">
-              <VisualCue visual={step.visual} />
-            </div>
-          )}
-        </div>
-        {/* palco: a cena ocupa a largura e o anfitrião fica grande no centro */}
-        <div className="relative isolate aspect-[5/4] max-h-[48vh] w-full max-w-xl shrink-0" style={{ '--dv-cut': '18px' } as CSSProperties}>
+      {/* o relógio do jogador fica à vista desde o primeiro passo */}
+      <div className="relative flex shrink-0 justify-center px-4 pt-1">
+        <TempoCue />
+      </div>
+
+      {/* palco: ocupa todo o espaço livre, mesmo enquadramento em todos os passos */}
+      <div className="relative flex min-h-0 flex-1 flex-col px-4 pt-3">
+        <div className="relative isolate mx-auto min-h-[220px] w-full max-w-xl flex-1" style={{ '--dv-cut': '18px' } as CSSProperties}>
           <span aria-hidden="true" className="dv-cut absolute inset-0 -z-10 bg-[linear-gradient(135deg,var(--dv-gold-bright),var(--dv-gold-deep)_30%,var(--dv-gold)_60%,var(--dv-gold-deep))]" />
           <div className="dv-cut absolute inset-[2px] overflow-hidden bg-black" style={{ '--dv-cut': '17px' } as CSSProperties}>
             {FRAMES.map((name) => {
@@ -111,7 +110,15 @@ export function JavaliIntro() {
                 />
               )
             })}
-            <span aria-hidden="true" className="pointer-events-none absolute inset-0 shadow-[inset_0_0_70px_rgba(0,0,0,0.75)]" />
+            {/* luz de borda e vinheta: o mesmo tratamento do PortraitFrame */}
+            <span aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(60%_45%_at_50%_28%,rgba(236,212,154,0.16),transparent_70%)] mix-blend-screen" />
+            <span aria-hidden="true" className="devo-grain pointer-events-none absolute inset-0 opacity-[0.1] mix-blend-overlay" />
+            <span aria-hidden="true" className="pointer-events-none absolute inset-0 shadow-[inset_0_0_80px_rgba(0,0,0,0.8)]" />
+            {step.visual && step.visual !== 'tempo' && (
+              <div key={step.visual} className="absolute inset-x-3 top-3 flex animate-dv-pop justify-center">
+                <VisualCue visual={step.visual} />
+              </div>
+            )}
           </div>
           <FrameCorners tone="gold" size={26} inset={4} />
           {/* placa com o nome */}
@@ -149,20 +156,24 @@ export function JavaliIntro() {
   )
 }
 
-function VisualCue({ visual }: { visual: Visual }) {
-  if (visual === 'tempo') {
-    return (
-      <div className="relative isolate flex items-center gap-3 px-4 py-2.5" style={{ '--dv-cut': '10px' } as CSSProperties}>
-        <span aria-hidden="true" className="dv-cut-diag absolute inset-0 -z-10 bg-dv-cobalt" />
-        <span aria-hidden="true" className="dv-cut-diag absolute inset-px -z-10 bg-[linear-gradient(180deg,#14287a,var(--dv-ink))]" style={{ '--dv-cut': '9.6px' } as CSSProperties} />
-        <GlyphHourglass className="size-6 text-dv-cobalt-text" />
-        <div className="leading-tight">
-          <p className="dv-label text-[10px] text-dv-text-3">Seu Tempo</p>
-          <p className="font-impact text-[26px] font-semibold tabular-nums text-dv-cobalt-text">71:59:42</p>
-        </div>
+/** Relógio do jogador (o mesmo TimeDigits da barra de status), sempre visível na apresentação. */
+function TempoCue() {
+  const { state } = useDevo()
+  const now = useNow(1000)
+  return (
+    <div className="relative isolate flex items-center gap-3 px-4 py-2" style={{ '--dv-cut': '10px' } as CSSProperties}>
+      <span aria-hidden="true" className="dv-cut-diag absolute inset-0 -z-10 bg-dv-cobalt/80" />
+      <span aria-hidden="true" className="dv-cut-diag absolute inset-px -z-10 bg-[linear-gradient(180deg,#14287a,var(--dv-ink))]" style={{ '--dv-cut': '9.6px' } as CSSProperties} />
+      <GlyphHourglass className="size-5 text-dv-cobalt-text" />
+      <div className="leading-tight">
+        <p className="dv-label text-[10px] text-dv-text-3">Seu Tempo</p>
+        <TimeDigits value={formatDuration(Math.max(0, state.timerEndsAt - now))} size="sm" tone="cobalt" label="Seu Tempo" />
       </div>
-    )
-  }
+    </div>
+  )
+}
+
+function VisualCue({ visual }: { visual: Visual }) {
   if (visual === 'jogos') {
     return (
       <ul className="flex max-w-lg flex-wrap justify-center gap-1.5" aria-label="Jogos">
