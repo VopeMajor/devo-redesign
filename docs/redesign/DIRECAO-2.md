@@ -96,6 +96,6 @@ quando o status for "em andamento" (não inscritos não veem o link).
 - **Som**: na fala do "KABUM!" do tutorial, efeito sonoro de explosão/impacto; ao fim da fala do Rato, a risadinha dele
   ("hihihi"). Efeitos sonoros nos momentos fortes da cutscene.
 - **Cutscene (prólogo)**: usar a atual como base e aprimorar (direção de cena, ritmo, cortes, luz, câmera, música).
-  **Dublagem**: voz em todas as falas. Geração no CI com TTS neural livre em pt-BR (ex.: Kokoro: pf_dora/pm_alex/
+  **Dublagem (OPCIONAL, só na cutscene inicial/prólogo)**: se falhar demais, desconsiderar sem atrasar o resto. Voz nas falas do prólogo. Geração no CI com TTS neural livre em pt-BR (ex.: Kokoro: pf_dora/pm_alex/
   pm_santa), pós-processada por personagem (Rato sinistro, voz "???" com eco, Melissa natural), arquivos em
   `public/audio/voz/`, legendas sincronizadas, botão de dublagem liga/desliga; fallback para `speechSynthesis` do aparelho.
