@@ -1,16 +1,16 @@
 'use client'
 
-import { ChevronLeft, ChevronRight, FastForward, Gem, HelpCircle, Shield, Sparkles, Swords } from 'lucide-react'
-import { useCallback, useEffect, useState, type ReactNode } from 'react'
+import { Check, ChevronLeft, ChevronRight, FastForward, HelpCircle, Shield, Swords } from 'lucide-react'
+import { useCallback, useEffect, useState, type CSSProperties, type ReactNode } from 'react'
 import { playSfx } from '@/lib/devo/audio'
+import { BrassCorners, HudRule } from '@/components/devo/kit'
 import { RARITIES, RARITY_META, getCardMeta, getCollections } from '@/lib/devo/cards'
+import type { Rarity } from '@/lib/devo/types'
 import { cn } from '@/lib/utils'
 import { useAdvanceKeys } from '../hooks'
-import { CardFace } from '../shared/devo-card'
+import { CardFace, RARITY_SKIN, RarityGem, RarityPips } from '../shared/devo-card'
 import { useDevo } from '../state/devo-store'
 import { CorujaSprite, type CorujaExpression } from './coruja-sprite'
-
-const GOLD = '#d8b25a'
 
 type Visual = 'cards' | 'rarities' | 'secret' | 'roles' | 'collections' | 'numbers'
 type Chapter = 'Apresentação' | 'Raridades' | 'Segredos' | 'Funções' | 'Coleções'
@@ -66,11 +66,12 @@ const RARITY_HINTS: Record<(typeof RARITIES)[number], string> = {
   lendaria: 'Gente já mentiu por menos.',
 }
 
-const RARITY_TIERS = RARITIES.map((r) => ({ id: r as string, label: RARITY_META[r].label, color: RARITY_META[r].color, hint: RARITY_HINTS[r] }))
+const RARITY_TIERS = RARITIES.map((r) => ({ id: r as Rarity, label: RARITY_META[r].label, hint: RARITY_HINTS[r] }))
 
+// As duas raridades "secretas" não existem no inventário: pedras próprias, fora de RARITY_META.
 const SECRET_TIERS = [
-  { id: 'unica', label: 'Única', color: '#e9e4f7', hint: 'Existe apenas uma.' },
-  { id: 'promo', label: 'Promocional', color: '#8f6bff', hint: 'Nenhum jogo comum a entrega.' },
+  { id: 'unica', label: 'Única', hint: 'Existe apenas uma.', gem: ['#ffffff', '#f1f0ee', '#b9b6c4'] as const },
+  { id: 'promo', label: 'Promocional', hint: 'Nenhum jogo comum a entrega.', gem: ['#efeafd', '#6f63b0', '#1d1838'] as const },
 ]
 
 const QUIZ_TARGET = RARITY_TIERS.find((t) => t.id === 'rara') ?? RARITY_TIERS[0]
@@ -189,24 +190,24 @@ export function CorujaIntro() {
       role="dialog"
       aria-modal="true"
       aria-label="Coruja"
-      className={cn('absolute inset-0 z-20 flex flex-col overflow-hidden bg-[#05060c] transition-opacity duration-700', leaving && 'opacity-0')}
+      className={cn('dv-interior-dark absolute inset-0 z-20 flex animate-dv-fade flex-col overflow-hidden bg-[#0a0a0c] transition-opacity duration-700', leaving && 'opacity-0')}
     >
-      <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_70%_30%,rgba(216,178,90,0.12),transparent_60%),radial-gradient(ellipse_at_20%_80%,rgba(138,124,200,0.08),transparent_55%)]" />
-      <div aria-hidden="true" className="pointer-events-none absolute inset-0 opacity-[0.07] [background-image:radial-gradient(#d8b25a_1px,transparent_1px)] [background-size:22px_22px]" />
+      {/* salão de mármore negro: veios, luz de vela fria vinda do alto e xadrez quase invisível no chão */}
+      <div aria-hidden="true" className="dv-marble-dark pointer-events-none absolute inset-0 opacity-80" />
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(70%_45%_at_50%_18%,rgba(236,229,216,0.09),transparent_70%),radial-gradient(60%_40%_at_15%_85%,rgba(111,107,130,0.14),transparent_70%)]" />
+      <div aria-hidden="true" className="dv-checker-faint pointer-events-none absolute inset-x-0 bottom-0 h-2/5 opacity-50 [mask-image:linear-gradient(to_top,#000,transparent)]" />
 
       <header className="relative z-10 flex items-center gap-3 px-4 pt-3 @md:px-5">
         <ol className="flex flex-1 items-center gap-1.5" aria-label="Lições">
           {CHAPTERS.map((c, i) => (
-            <li key={c} className="flex flex-1 flex-col gap-1">
+            <li key={c} className="flex flex-1 flex-col gap-1.5">
               <span
                 className={cn(
-                  'h-1 rounded-full transition-all duration-500',
-                  i < chapterIndex ? 'bg-[#d8b25a]' : i === chapterIndex ? 'bg-[#f6dc93] shadow-[0_0_10px_#d8b25a]' : 'bg-foreground/15',
+                  'relative h-[3px] transition-all duration-500',
+                  i < chapterIndex ? 'bg-[#a59d90]' : i === chapterIndex ? 'bg-[#eeedeb] shadow-[0_0_10px_rgba(138,124,200,0.8)]' : 'bg-white/15',
                 )}
               />
-              <span className={cn('hidden truncate text-[9px] uppercase tracking-[0.25em] @lg:block', i === chapterIndex ? 'text-[#f6dc93]' : 'text-foreground/35')}>
-                {c}
-              </span>
+              <span className={cn('hidden truncate font-sans text-[10px] font-medium uppercase tracking-[0.16em] @lg:block', i === chapterIndex ? 'text-[#eeedeb]' : 'text-white/40')}>{c}</span>
               <span className="sr-only">{i < chapterIndex ? 'concluída' : i === chapterIndex ? 'atual' : 'pendente'}</span>
             </li>
           ))}
@@ -217,16 +218,20 @@ export function CorujaIntro() {
             playSfx('click')
             finish()
           }}
-          className="flex items-center gap-1.5 rounded-sm border border-foreground/15 bg-black/40 px-2.5 py-1 text-[10px] uppercase tracking-[0.25em] text-foreground/55 transition-colors hover:border-[#d8b25a]/60 hover:text-[#f6dc93]"
+          className="dv-focus flex min-h-11 items-center gap-1.5 px-3 font-sans text-[10px] font-medium uppercase tracking-[0.18em] text-white/60 shadow-[inset_0_0_0_1px_rgba(238,237,235,0.22)] transition-colors hover:text-white hover:shadow-[inset_0_0_0_1px_#bab09f]"
         >
-          <FastForward className="size-3" aria-hidden="true" />
+          <FastForward className="size-3.5" aria-hidden="true" />
           Pular
         </button>
       </header>
 
+      <p className="relative z-10 px-4 pt-2 font-sans text-[10px] font-medium uppercase tracking-[0.2em] text-white/55 @lg:hidden" aria-hidden="true">
+        Lição {ROMAN_CH[chapterIndex]} · {step.chapter}
+      </p>
+
       <div className="relative flex min-h-0 flex-1 items-center justify-center p-4 @2xl:pr-[40%]">
         {visual && (
-          <div key={visual} className="relative animate-pop">
+          <div key={visual} className="relative z-10 w-full max-w-md animate-dv-rise">
             <SceneFrame>
               <SceneVisual visual={visual} sampleCards={sampleCards} quiz={step.kind === 'quiz' ? { picked: quiz?.picked ?? null, correct: !!quiz?.correct, onAnswer: answer } : null} />
             </SceneFrame>
@@ -239,26 +244,26 @@ export function CorujaIntro() {
         className={cn(
           'pointer-events-none absolute bottom-0 right-1/2 h-[78%] w-[22rem] translate-x-1/2 transition-all duration-700 @2xl:right-0 @2xl:h-[96%] @2xl:w-[46%] @2xl:translate-x-0',
           step.kind === 'system' && 'opacity-0 blur-sm',
-          visual && 'opacity-25 @2xl:opacity-100',
+          visual && 'opacity-[0.22] @2xl:opacity-100',
         )}
         style={{ maskImage: 'linear-gradient(to top, transparent 0%, #000 18%)' }}
       >
-        <CorujaSprite expression={face} className="h-full w-full drop-shadow-[0_0_30px_rgba(216,178,90,0.15)]" />
+        <CorujaSprite expression={face} className="h-full w-full drop-shadow-[0_0_30px_rgba(236,229,216,0.08)]" />
       </div>
 
-      <div className="relative z-10 p-3 @md:p-5">
+      <div className="relative z-10 px-3 pb-3 @md:px-5 @md:pb-5">
         <DialogueBox speaker={step.kind === 'system' ? null : 'Coruja'}>
           {step.kind === 'system' ? (
-            <p className="py-3 text-center font-sans text-xs uppercase tracking-[0.3em] text-[#aab6dc]/75">{typer.shown}</p>
+            <p className="py-3 text-center font-sans text-[12px] font-medium uppercase tracking-[0.24em] text-white/70">{typer.shown}</p>
           ) : (
-            <p className="min-h-[3.5rem] font-serif text-lg leading-relaxed text-[#e6ebf7] @md:text-xl" aria-live="polite">
+            <p className="min-h-[3.5rem] font-serif text-[19px] leading-relaxed text-[#eeedeb] @md:text-xl" aria-live="polite">
               {spoken ? (
                 <>
                   {typer.shown}
-                  {!typer.done && <span className="ml-0.5 inline-block h-5 w-px translate-y-1 animate-blink bg-[#f6dc93]" aria-hidden="true" />}
+                  {!typer.done && <span className="ml-0.5 inline-block h-5 w-px translate-y-1 animate-blink bg-[#cbc5e8]" aria-hidden="true" />}
                 </>
               ) : (
-                <span className="italic text-[#aab6dc]/70">Pergunte o que quiser. Ou não.</span>
+                <span className="italic text-white/60">Pergunte o que quiser. Ou não.</span>
               )}
             </p>
           )}
@@ -273,11 +278,11 @@ export function CorujaIntro() {
                       type="button"
                       onClick={() => ask(q)}
                       className={cn(
-                        'group flex h-full w-full items-center gap-2.5 rounded-sm border px-3 py-2 text-left text-sm transition-all hover:-translate-y-0.5',
-                        done ? 'border-foreground/10 bg-black/30 text-foreground/45' : 'border-[#d8b25a]/35 bg-[#1a140c]/80 text-[#e6ebf7]/90 hover:border-[#d8b25a] hover:bg-[#d8b25a]/10',
+                        'dv-focus group flex h-full min-h-11 w-full items-center gap-2.5 px-3 py-2 text-left font-sans text-[14px] leading-snug transition-colors',
+                        done ? 'text-white/45 shadow-[inset_0_0_0_1px_rgba(238,237,235,0.1)]' : 'text-[#eeedeb] shadow-[inset_0_0_0_1px_rgba(238,237,235,0.28)] hover:bg-white/[0.05] hover:shadow-[inset_0_0_0_1px_#bab09f]',
                       )}
                     >
-                      <HelpCircle className={cn('size-4 shrink-0', done ? 'text-foreground/30' : 'text-[#d8b25a]')} aria-hidden="true" />
+                      <HelpCircle className={cn('size-4 shrink-0', done ? 'text-white/30' : 'text-[#cbc5e8]')} aria-hidden="true" />
                       {q.prompt}
                       {done && <span className="sr-only"> (já perguntado)</span>}
                     </button>
@@ -287,28 +292,29 @@ export function CorujaIntro() {
             </ul>
           )}
 
-          <div className="mt-3 flex items-center justify-between gap-3 border-t border-[#d8b25a]/15 pt-2.5">
+          <div className="mt-3 flex items-center justify-between gap-3 border-t border-white/10 pt-2.5">
             <button
               type="button"
               onClick={back}
               disabled={index === 0}
-              className="flex items-center gap-1 text-[10px] uppercase tracking-[0.25em] text-[#aab6dc]/55 transition-colors hover:text-[#f6dc93] disabled:pointer-events-none disabled:opacity-0"
+              className="dv-focus flex min-h-11 items-center gap-1 pr-2 font-sans text-[11px] font-medium uppercase tracking-[0.18em] text-white/55 transition-colors hover:text-white disabled:pointer-events-none disabled:opacity-0"
             >
-              <ChevronLeft className="size-3.5" aria-hidden="true" />
+              <ChevronLeft className="size-4" aria-hidden="true" />
               Voltar
             </button>
-            <span className="hidden items-center gap-2 text-[9px] uppercase tracking-[0.25em] text-[#aab6dc]/35 @md:flex" aria-hidden="true">
-              <kbd className="rounded-sm border border-foreground/20 px-1.5 py-0.5 font-mono">Espaço</kbd>
+            <span className="hidden items-center gap-2 font-sans text-[10px] uppercase tracking-[0.18em] text-white/40 @md:flex" aria-hidden="true">
+              <kbd className="px-1.5 py-0.5 font-mono shadow-[inset_0_0_0_1px_rgba(238,237,235,0.25)]">Espaço</kbd>
               avançar
             </span>
             <button
               type="button"
               onClick={advance}
               disabled={typer.done && blocked}
-              className="flex items-center gap-1.5 rounded-sm border border-[#d8b25a]/60 bg-[#d8b25a]/15 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.25em] text-[#f1dfae] transition-colors hover:bg-[#d8b25a]/25 disabled:cursor-not-allowed disabled:opacity-40"
+              className="dv-focus dv-cut-diag flex min-h-11 items-center gap-1.5 bg-[#eeedeb] px-5 font-sans text-[12px] font-semibold uppercase tracking-[0.2em] text-[#0c0c0e] transition-[background-color,box-shadow] hover:bg-white hover:shadow-[0_0_22px_-4px_rgba(138,124,200,0.8)] disabled:cursor-not-allowed disabled:opacity-40"
+              style={{ '--dv-cut': '10px' } as CSSProperties}
             >
               {!typer.done ? 'Mostrar' : blocked ? 'Responda' : isLast ? 'Fechar' : 'Continuar'}
-              <ChevronRight className="size-3.5" aria-hidden="true" />
+              <ChevronRight className="size-4" aria-hidden="true" />
             </button>
           </div>
         </DialogueBox>
@@ -317,25 +323,15 @@ export function CorujaIntro() {
   )
 }
 
-function Corner({ className }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 40 40" className={cn('pointer-events-none absolute size-7', className)} aria-hidden="true">
-      <path d="M2 38 V10 Q2 2 10 2 H38" fill="none" stroke={GOLD} strokeWidth="1.6" />
-      <path d="M10 10 L14 6 L18 10 L14 14Z" fill={GOLD} />
-    </svg>
-  )
-}
+const ROMAN_CH = ['I', 'II', 'III', 'IV', 'V']
 
+/** Caixa de fala: veludo negro, filete de aço por dentro e plaqueta de porcelana com o nome. */
 function DialogueBox({ speaker, children }: { speaker: string | null; children: ReactNode }) {
   return (
-    <div className="relative rounded-sm border border-[#d8b25a]/45 bg-[linear-gradient(180deg,rgba(18,16,24,0.96),rgba(7,8,14,0.97))] px-4 pb-3 pt-5 shadow-[0_20px_50px_-20px_rgba(0,0,0,1),inset_0_0_30px_rgba(0,0,0,0.6)] backdrop-blur-md @md:px-6">
-      <span className="pointer-events-none absolute inset-1 rounded-sm border border-[#d8b25a]/10" aria-hidden="true" />
-      <Corner className="left-0 top-0" />
-      <Corner className="right-0 top-0 rotate-90" />
-      <Corner className="bottom-0 right-0 rotate-180" />
-      <Corner className="bottom-0 left-0 -rotate-90" />
+    <div className="dv-record-panel relative px-4 pb-2 pt-6 shadow-[0_24px_50px_-20px_rgba(0,0,0,1)] @md:px-6">
+      <BrassCorners size={22} inset={3} />
       {speaker && (
-        <span className="absolute -top-3.5 left-6 flex items-center gap-2 border border-[#d8b25a] bg-[linear-gradient(180deg,#3a2a12,#140e07)] px-4 py-1 font-serif text-sm uppercase tracking-[0.3em] text-[#f6dc93] shadow-[0_0_16px_-4px_rgba(216,178,90,0.8)] [clip-path:polygon(8px_0,calc(100%-8px)_0,100%_50%,calc(100%-8px)_100%,8px_100%,0_50%)]">
+        <span className="dv-porcelain absolute -top-3.5 left-5 flex items-center gap-2 px-4 py-1 font-serif text-[15px] uppercase tracking-[0.3em] text-[#0c0c0e] shadow-[0_6px_14px_-6px_rgba(0,0,0,0.9),inset_0_0_0_1px_rgba(13,13,15,0.25)] [clip-path:polygon(8px_0,calc(100%-8px)_0,100%_50%,calc(100%-8px)_100%,8px_100%,0_50%)]">
           {speaker}
         </span>
       )}
@@ -344,42 +340,78 @@ function DialogueBox({ speaker, children }: { speaker: string | null; children: 
   )
 }
 
+/** Vitrine da lição: painel de veludo com régua de HUD no topo. */
 function SceneFrame({ children }: { children: ReactNode }) {
   return (
-    <div className="relative rounded-sm border border-[#d8b25a]/35 bg-[radial-gradient(ellipse_at_50%_0%,rgba(40,30,18,0.85),rgba(8,8,12,0.9)_70%)] px-6 py-6 shadow-[0_30px_60px_-20px_rgba(0,0,0,0.95),0_0_60px_-30px_rgba(216,178,90,0.6)] @md:px-8">
-      <Corner className="left-0 top-0" />
-      <Corner className="right-0 top-0 rotate-90" />
-      <Corner className="bottom-0 right-0 rotate-180" />
-      <Corner className="bottom-0 left-0 -rotate-90" />
+    <div className="dv-record-panel relative px-5 pb-5 pt-4 shadow-[0_30px_60px_-24px_rgba(0,0,0,0.95)] @md:px-7">
+      <HudRule label="Cartas DEVO · aula" code="OWL" className="mb-4 opacity-80" />
       {children}
     </div>
   )
 }
 
-type Tier = { id: string; label: string; color: string; hint: string }
-
-function TierGem({ tier, active, onSelect, state }: { tier: Tier; active?: boolean; onSelect?: () => void; state?: 'right' | 'wrong' | null }) {
-  const Comp = onSelect ? 'button' : 'div'
+/** Pedra + nome + losangos (+ dica). Como botão (quiz) mostra só o nome, para não entregar a resposta. */
+function TierTile({
+  rarity,
+  label,
+  hint,
+  gem,
+  onSelect,
+  state,
+}: {
+  rarity?: Rarity
+  label: string
+  hint?: string
+  gem?: readonly [string, string, string]
+  onSelect?: () => void
+  state?: 'right' | 'wrong' | null
+}) {
+  const light = rarity ? RARITY_SKIN[rarity].light : '#eeedeb'
+  if (onSelect) {
+    return (
+      <button
+        type="button"
+        onClick={onSelect}
+        className={cn(
+          'dv-focus relative flex min-h-12 w-full items-center justify-center px-2 font-sans text-[12px] font-medium uppercase tracking-[0.16em] transition-colors',
+          state === 'right'
+            ? 'bg-[#eeedeb] text-[#0c0c0e] shadow-[0_0_20px_-4px_rgba(138,124,200,0.8)]'
+            : state === 'wrong'
+              ? 'text-[#ff8a92] shadow-[inset_0_0_0_1px_#a3121f]'
+              : 'text-[#eeedeb] shadow-[inset_0_0_0_1px_rgba(238,237,235,0.28)] hover:bg-white/[0.05] hover:shadow-[inset_0_0_0_1px_#bab09f]',
+        )}
+      >
+        {label}
+        {state === 'right' && <Check className="absolute right-2.5 size-4" aria-hidden="true" />}
+      </button>
+    )
+  }
   return (
-    <Comp
-      {...(onSelect ? { type: 'button' as const, onClick: onSelect } : {})}
-      className={cn(
-        'group flex w-28 flex-col items-center gap-2 rounded-sm border px-2 pb-2.5 pt-3 text-center transition-all',
-        onSelect && 'hover:-translate-y-1',
-        state === 'right' ? 'border-emerald-300/80 bg-emerald-300/10' : state === 'wrong' ? 'border-dv-red/80 bg-dv-red/10' : 'border-foreground/10 bg-black/30 hover:border-foreground/30',
-        active && 'border-[#d8b25a]/70',
-      )}
-    >
-      <span
-        className="relative size-10 rotate-45 rounded-[3px] transition-transform group-hover:scale-110"
-        style={{ background: `linear-gradient(135deg, #ffffffaa, ${tier.color} 40%, ${tier.color}88)`, boxShadow: `0 0 18px ${tier.color}aa, inset 0 0 6px #0008` }}
-        aria-hidden="true"
-      />
-      <span className="mt-1 font-sans text-[11px] font-semibold uppercase tracking-[0.18em]" style={{ color: onSelect ? '#e6ebf7' : tier.color }}>
-        {tier.label}
+    <div className="flex flex-col items-center gap-2 px-2 pb-3 pt-3.5 text-center shadow-[inset_0_0_0_1px_rgba(238,237,235,0.12)]">
+      {rarity ? <RarityGem rarity={rarity} className="h-12 w-8" /> : gem ? <LooseGem colors={gem} className="h-12 w-8" /> : null}
+      <span className="mt-0.5 font-sans text-[12px] font-semibold uppercase tracking-[0.18em]" style={{ color: light }}>
+        {label}
       </span>
-      {!onSelect && <span className="text-[10px] leading-snug text-[#aab6dc]/65">{tier.hint}</span>}
-    </Comp>
+      {rarity && <RarityPips rarity={rarity} className="text-[9px]" style={{ color: light }} />}
+      {hint && <span className="font-serif text-[14px] italic leading-snug text-white/65">{hint}</span>}
+    </div>
+  )
+}
+
+/** Pedra avulsa (raridades secretas): mesmo desenho do RarityGem, com engaste de prata. */
+function LooseGem({ colors, className }: { colors: readonly [string, string, string]; className?: string }) {
+  const [hi, mid, lo] = colors
+  return (
+    <svg viewBox="0 0 32 48" className={cn('drop-shadow-[0_2px_3px_rgba(0,0,0,0.45)]', className)} aria-hidden="true">
+      <path d="M16 0.8 L31.2 24 L16 47.2 L0.8 24 Z" fill="#c9c6d0" />
+      <path d="M16 3.8 L28.4 24 L16 44.2 L3.6 24 Z" fill="#0a090e" />
+      <path d="M16 5 L27.2 24 L16 24 Z" fill={mid} />
+      <path d="M16 5 L4.8 24 L16 24 Z" fill={hi} />
+      <path d="M4.8 24 L16 43 L16 24 Z" fill={mid} />
+      <path d="M27.2 24 L16 43 L16 24 Z" fill={lo} />
+      <path d="M16 15 L21.5 24 L16 33 L10.5 24 Z" fill={mid} />
+      <path d="M10 15 L12 13 L13 17 Z" fill="#fff" opacity="0.85" />
+    </svg>
   )
 }
 
@@ -389,17 +421,15 @@ function SceneVisual({ visual, sampleCards, quiz }: { visual: Visual; sampleCard
   if (quiz) {
     return (
       <div className="flex flex-col items-center gap-5">
-        <span
-          className="size-16 rotate-45 rounded-md animate-pulse"
-          style={{ background: `linear-gradient(135deg, #ffffffaa, ${QUIZ_TARGET.color} 40%, ${QUIZ_TARGET.color}88)`, boxShadow: `0 0 34px ${QUIZ_TARGET.color}` }}
-          aria-label="Pedra de raridade misteriosa"
-          role="img"
-        />
-        <div className="flex flex-wrap justify-center gap-2">
+        <div className="relative grid place-items-center">
+          <span aria-hidden="true" className="absolute size-28 rounded-full bg-[radial-gradient(closest-side,rgba(138,124,200,0.35),transparent)] animate-dv-breathe" />
+          <RarityGem rarity={QUIZ_TARGET.id} title="Pedra de raridade misteriosa" className="relative h-24 w-16" />
+        </div>
+        <div className="grid w-full grid-cols-2 gap-2">
           {RARITY_TIERS.map((t) => (
-            <TierGem
+            <TierTile
               key={t.id}
-              tier={{ ...t, color: '#8a8fa3' }}
+              label={t.label}
               onSelect={() => quiz.onAnswer(t.id)}
               state={quiz.picked === t.id ? (quiz.correct ? 'right' : 'wrong') : quiz.correct && t.id === QUIZ_TARGET.id ? 'right' : null}
             />
@@ -410,51 +440,65 @@ function SceneVisual({ visual, sampleCards, quiz }: { visual: Visual; sampleCard
   }
   if (visual === 'cards') {
     return (
-      <div className="relative flex h-56 items-end justify-center gap-3">
-        <span className="absolute inset-x-4 bottom-0 h-14 rounded-full bg-[radial-gradient(ellipse,rgba(216,178,90,0.35),transparent_70%)] blur-md" aria-hidden="true" />
+      <div className="relative flex h-56 items-end justify-center">
+        <span className="absolute inset-x-6 bottom-0 h-12 rounded-[50%] bg-[radial-gradient(closest-side,rgba(236,229,216,0.18),transparent)] blur-md" aria-hidden="true" />
         {sampleCards.map((id, i) => (
-          <div key={id} className={cn('-mx-3 w-20 origin-bottom animate-pop @md:w-24', i === 1 && 'z-10 drop-shadow-[0_0_18px_rgba(216,178,90,0.55)]')} style={{ transform: `rotate(${(i - 1) * 12}deg) translateY(${i === 1 ? -14 : 0}px)`, animationDelay: `${i * 140}ms` }}>
+          <div
+            key={id}
+            className={cn('-mx-2.5 w-[5.6rem] origin-bottom animate-dv-rise @md:w-24', i === 1 && 'z-10')}
+            style={{ transform: `rotate(${(i - 1) * 11}deg) translateY(${i === 1 ? -14 : 0}px)`, animationDelay: `${i * 120}ms` }}
+          >
             <CardFace cardId={id} size="sm" />
           </div>
         ))}
       </div>
     )
   }
-  if (visual === 'rarities' || visual === 'secret') {
-    const tiers = visual === 'rarities' ? RARITY_TIERS : SECRET_TIERS
+  if (visual === 'rarities') {
     return (
       <div className="flex flex-col items-center gap-4">
-        <div className="flex max-w-lg flex-wrap justify-center gap-2">
-          {tiers.map((t, i) => (
-            <div key={t.id} className="animate-pop" style={{ animationDelay: `${i * 120}ms` }}>
-              <TierGem tier={t} />
+        <div className="grid w-full grid-cols-2 gap-2">
+          {RARITY_TIERS.map((t, i) => (
+            <div key={t.id} className="animate-dv-rise" style={{ animationDelay: `${i * 90}ms` }}>
+              <TierTile rarity={t.id} label={t.label} hint={t.hint} />
             </div>
           ))}
         </div>
-        <span className="flex items-center gap-2 text-[10px] uppercase tracking-[0.3em] text-[#e9dcbc]/60">
-          {visual === 'secret' ? <Sparkles className="size-3 text-[#d8b25a]" aria-hidden="true" /> : <Gem className="size-3 text-[#d8b25a]" aria-hidden="true" />}
-          {visual === 'secret' ? 'Raridades ocultas' : 'A cor revela a raridade'}
-        </span>
+        <span className="font-sans text-[10px] font-medium uppercase tracking-[0.2em] text-white/60">A cor e os losangos revelam a raridade</span>
+      </div>
+    )
+  }
+  if (visual === 'secret') {
+    return (
+      <div className="flex flex-col items-center gap-4">
+        <div className="grid w-full grid-cols-2 gap-2">
+          {SECRET_TIERS.map((t, i) => (
+            <div key={t.id} className="animate-dv-rise" style={{ animationDelay: `${i * 110}ms` }}>
+              <TierTile label={t.label} hint={t.hint} gem={t.gem} />
+            </div>
+          ))}
+        </div>
+        <span className="font-sans text-[10px] font-medium uppercase tracking-[0.2em] text-white/60">Raridades ocultas</span>
       </div>
     )
   }
   if (visual === 'roles') {
     const roles = [
-      { label: 'Suporte', color: '#5f86ff', icon: Shield, hint: 'Protege e prolonga.' },
-      { label: 'Ataque', color: '#d4161f', icon: Swords, hint: 'Tira de quem tem.' },
-      { label: 'Inútil?', color: '#8a8fa3', icon: HelpCircle, hint: 'Depende de quem olha.' },
+      { label: 'Suporte', icon: Shield, hint: 'Protege e prolonga.' },
+      { label: 'Ataque', icon: Swords, hint: 'Tira de quem tem.' },
+      { label: 'Inútil?', icon: HelpCircle, hint: 'Depende de quem olha.' },
     ]
     return (
-      <div className="flex flex-wrap justify-center gap-3">
-        {roles.map(({ label, color, icon: Icon, hint }, i) => (
-          <div key={label} className="flex w-28 flex-col items-center gap-2 rounded-sm border bg-black/30 px-2 py-3 text-center animate-pop" style={{ borderColor: `${color}66`, animationDelay: `${i * 120}ms` }}>
-            <span className="grid size-11 place-items-center rounded-full border" style={{ borderColor: color, boxShadow: `0 0 16px -2px ${color}` }}>
-              <Icon className="size-5" style={{ color }} aria-hidden="true" />
+      <div className="grid grid-cols-3 gap-2">
+        {roles.map(({ label, icon: Icon, hint }, i) => (
+          <div key={label} className="flex animate-dv-rise flex-col items-center gap-2 px-1.5 pb-3 pt-3.5 text-center shadow-[inset_0_0_0_1px_rgba(238,237,235,0.12)]" style={{ animationDelay: `${i * 100}ms` }}>
+            <span className="grid size-12 place-items-center rounded-full p-[2px]" style={{ background: RARITY_SKIN.incomum.frame }}>
+              <span className="grid size-full place-items-center rounded-full bg-[radial-gradient(circle_at_50%_35%,#2c2c31,#0c0c0e_72%)] text-[#eeedeb]">
+                <Icon className="size-5" strokeWidth={1.4} aria-hidden="true" />
+              </span>
             </span>
-            <span className="text-[11px] font-semibold uppercase tracking-[0.2em]" style={{ color }}>
-              {label}
-            </span>
-            <span className="text-[10px] text-[#aab6dc]/65">{hint}</span>
+            <span className="font-sans text-[11px] font-semibold uppercase tracking-[0.16em] text-[#eeedeb]">{label}</span>
+            <span className="font-serif text-[13px] italic leading-snug text-white/65">{hint}</span>
           </div>
         ))}
       </div>
@@ -462,12 +506,14 @@ function SceneVisual({ visual, sampleCards, quiz }: { visual: Visual; sampleCard
   }
   if (visual === 'collections') {
     return (
-      <ul className="flex flex-col items-stretch gap-2">
-        {getCollections().map((c) => ({ name: c.name, count: `${c.size} cartas` })).map((c, i) => (
-          <li key={c.name} className="flex items-center gap-4 rounded-sm border border-[#d8b25a]/30 bg-[#140f0a]/80 px-4 py-2 animate-pop" style={{ animationDelay: `${i * 140}ms` }}>
-            <span className="grid size-8 place-items-center rounded-full border border-[#d8b25a]/60 font-serif text-sm text-[#f6dc93]">{['I', 'II', 'III', 'IV', 'V', 'VI'][i] ?? i + 1}</span>
-            <span className="flex-1 font-serif text-lg text-[#e6ebf7]/90">{c.name}</span>
-            <span className="text-[10px] uppercase tracking-[0.2em] text-[#aab6dc]/55">{c.count}</span>
+      <ul className="flex flex-col">
+        {getCollections().map((c, i) => (
+          <li key={c.name} className={cn('flex animate-dv-rise items-center gap-3 py-2.5', i > 0 && 'border-t border-white/10')} style={{ animationDelay: `${i * 100}ms` }}>
+            <span className="grid size-9 shrink-0 place-items-center rounded-full p-[1.5px]" style={{ background: RARITY_SKIN.incomum.frame }}>
+              <span className="grid size-full place-items-center rounded-full bg-[#0c0c0e] font-serif text-[15px] text-[#eeedeb]">{ROMAN_CH[i] ?? i + 1}</span>
+            </span>
+            <span className="flex-1 font-serif text-[19px] leading-tight text-[#eeedeb]">{c.name}</span>
+            <span className="font-mono text-[11px] uppercase tracking-[0.12em] text-white/60">{c.size} cartas</span>
           </li>
         ))}
       </ul>
@@ -477,18 +523,18 @@ function SceneVisual({ visual, sampleCards, quiz }: { visual: Visual; sampleCard
   const sampleMeta = getCardMeta(sampleId)
   return (
     <div className="flex items-center gap-5">
-      <div className="w-24 @md:w-28">
+      <div className="w-28 shrink-0 @md:w-32">
         <CardFace cardId={sampleId} size="sm" />
       </div>
-      <dl className="flex flex-col gap-3">
-        <div className="border-l-2 border-[#d8b25a] pl-3">
-          <dt className="text-[10px] uppercase tracking-[0.25em] text-[#aab6dc]/60">Ordem na Coleção</dt>
-          <dd className="font-serif text-3xl text-[#f6dc93]">{sampleMeta.orderLabel}</dd>
-          <dd className="text-[10px] uppercase tracking-[0.2em] text-[#aab6dc]/60">{sampleMeta.collection}</dd>
+      <dl className="flex min-w-0 flex-col gap-4">
+        <div className="border-l border-[#bab09f] pl-3">
+          <dt className="font-sans text-[10px] font-medium uppercase tracking-[0.18em] text-white/60">Ordem na Coleção</dt>
+          <dd className="font-serif text-[34px] font-light leading-none tabular-nums text-[#eeedeb]">{sampleMeta.orderLabel}</dd>
+          <dd className="mt-1 font-sans text-[11px] uppercase tracking-[0.14em] text-white/65">{sampleMeta.collection}</dd>
         </div>
-        <div className="border-l-2 border-foreground/25 pl-3">
-          <dt className="text-[10px] uppercase tracking-[0.25em] text-[#aab6dc]/60">Série universal</dt>
-          <dd className="font-mono text-sm text-[#aab6dc]/80">{sampleMeta.serial}</dd>
+        <div className="border-l border-white/25 pl-3">
+          <dt className="font-sans text-[10px] font-medium uppercase tracking-[0.18em] text-white/60">Série universal</dt>
+          <dd className="font-mono text-[14px] tracking-[0.08em] text-white/80">{sampleMeta.serial}</dd>
         </div>
       </dl>
     </div>

@@ -451,7 +451,38 @@ if (want('sistema') || want('apps') || want('jogos')) {
       if (await tryClick(card)) {
         await wait(1500)
         await shot(page, '23-cartas-detalhe')
+        const dlg = page.getByRole('dialog').last()
+        // Ficha da carta (rola o diálogo) e o verso.
+        await page.mouse.move(195, 600)
+        await page.mouse.wheel(0, 600)
+        await wait(600)
+        await shot(page, '23-cartas-detalhe-ficha')
+        if (await tryClick(dlg.getByRole('button', { name: 'Verso', exact: true }).first())) {
+          await page.mouse.wheel(0, -900)
+          await wait(250)
+          await shot(page, '23-cartas-detalhe-girando')
+          await wait(900)
+          await shot(page, '23-cartas-detalhe-verso')
+        }
+        await tryClick(dlg.getByRole('button', { name: 'Fechar', exact: true }).first())
+        await wait(500)
       }
+      // Filtro por raridade: Lendárias (moldura champanhe + holografia).
+      if (await tryClick(page.getByRole('radio', { name: /Lendária/ }).first())) {
+        await page.locator('[aria-label="Cartas DEVO"]').first().scrollIntoViewIfNeeded().catch(() => {})
+        await wait(1200)
+        await shot(page, '23-cartas-lendarias')
+        if (await tryClick(page.locator('[aria-label="Cartas DEVO"] button').first())) {
+          await wait(1500)
+          await shot(page, '23-cartas-detalhe-lendaria')
+          await tryClick(page.getByRole('dialog').last().getByRole('button', { name: 'Fechar', exact: true }).first())
+          await wait(400)
+        }
+        await tryClick(page.getByRole('radio', { name: /Todas/ }).first())
+      }
+      await page.mouse.wheel(0, 1400)
+      await wait(700)
+      await shot(page, '23-cartas-colecoes')
     })
     await step('trocas', async () => {
       await openApp(page, 'Sala de Trocas')
@@ -608,7 +639,7 @@ if (want('apps')) {
   await step('coruja', async () => {
     await openApp(page, 'Cartas')
     for (let i = 0; i < 26; i++) {
-      if ([1, 3, 5, 16, 18].includes(i)) await shot(page, `26-coruja-${String(i).padStart(2, '0')}`)
+      if ([1, 3, 5, 7, 11, 14, 16, 18].includes(i)) await shot(page, `26-coruja-${String(i).padStart(2, '0')}`)
       const quiz = page.getByRole('button', { name: /^Rara$/ })
       if (await quiz.count()) await tryClick(quiz.first())
       await page.evaluate(() => document.activeElement instanceof HTMLElement && document.activeElement.blur()).catch(() => {})
