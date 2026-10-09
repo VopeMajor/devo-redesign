@@ -429,3 +429,16 @@ export function EmblemMark({
     </span>
   )
 }
+
+/** Todos os emblemas por nome (apps, BottomNav e sistemas futuros). */
+export const EMBLEMS = { ...APP_EMBLEMS, ...SYSTEM_EMBLEMS, votes: EmblemVotes, avisos: EmblemAvisos } as const
+export type EmblemName = keyof typeof EMBLEMS
+
+/**
+ * Emblema por nome: `<Emblem name="record" className="size-12" metal />`. Sem fundo; o estado ativo ou
+ * pressionado é luz do próprio traço (use `EmblemMark` ou `group-active:` no pai), nunca uma caixa.
+ */
+export function Emblem({ name, ...p }: { name: EmblemName } & EmblemProps) {
+  const E = EMBLEMS[name]
+  return <E {...p} />
+}

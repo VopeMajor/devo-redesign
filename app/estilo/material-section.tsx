@@ -235,12 +235,12 @@ export function EmblemShowcase() {
         <EmblemGrid items={systems} />
       </div>
       <div>
-        <p className="dv-label mb-3 text-[10px] text-dv-gold">Tamanhos · 28 · 40 · 56</p>
+        <p className="dv-label mb-3 text-[10px] text-dv-gold">Tamanhos · 24 · 40 · 72</p>
         <div className="flex items-end gap-5">
-          {[28, 40, 56].map((n) => (
+          {[24, 40, 72].map((n) => (
             <EmblemMark key={n} emblem={APP_EMBLEMS.record} size={n} />
           ))}
-          {[28, 40, 56].map((n) => (
+          {[24, 40, 72].map((n) => (
             <EmblemMark key={`j${n}`} emblem={APP_EMBLEMS.jogos} size={n} />
           ))}
         </div>
@@ -270,5 +270,21 @@ export function EmblemShowcase() {
         ))}
       </div>
     </div>
+  )
+}
+
+/**
+ * Amostra do tabuleiro (ref-mestra de cor: refs/ref-xadrez-marmore.png) desenhada com o kit:
+ * mármore negro e branco com veios cinza, rejunte e espadas em aço champanhe, ametista na guarda.
+ */
+export function BoardSample() {
+  return (
+    <figure className="relative h-[280px] overflow-hidden border border-dv-line bg-[radial-gradient(80%_60%_at_50%_30%,#2a2a2e,var(--dv-ink)_75%)]">
+      <CheckerFloor tilt={56} cell={58} className="!h-[78%]" />
+      <Sword className="absolute bottom-[14%] left-[10%] h-[66%] rotate-[18deg]" gem="glass" />
+      <Sword className="absolute bottom-[20%] right-[12%] h-[58%] -rotate-[14deg]" gem="glass" />
+      <FacetGem tone="night" className="absolute left-[21%] top-[27%] h-5 rotate-[18deg]" />
+      <figcaption className="dv-label absolute left-3 top-2 text-[10px] text-dv-text-2">Amostra · mármore, aço champanhe, ametista</figcaption>
+    </figure>
   )
 }

@@ -48,7 +48,7 @@ import { DeadlyVoteSymbol } from '@/components/devo/system/symbol'
 import { OddsBar, PaperField, Plaque, PortraitFrame, StatusSeal } from '@/components/devo/kit'
 import { portraitFrameProps } from '@/lib/devo/npcs'
 import { InteriorSection } from './interior-section'
-import { EmblemShowcase, MaterialGrid, OrnamentShowcase, PaletteGrid } from './material-section'
+import { BoardSample, EmblemShowcase, MaterialGrid, OrnamentShowcase, PaletteGrid } from './material-section'
 
 const COLORS: { group: string; items: { name: string; v: string; use: string }[] }[] = [
   {
@@ -143,8 +143,11 @@ function StyleGuideBody() {
       </header>
 
       <Section id="cores" index="I" kicker="Tokens" title="Cores">
-        <p className="dv-label mb-2 text-[10px] text-dv-gold">Paleta das refs do dono · IDENTIDADE.md §0</p>
-        <PaletteGrid />
+        <p className="dv-label mb-2 text-[10px] text-dv-gold">Paleta · ref-mestra: o tabuleiro de mármore · IDENTIDADE.md §0</p>
+        <div className="grid gap-4 lg:grid-cols-[1fr_1.4fr]">
+          <BoardSample />
+          <PaletteGrid />
+        </div>
         <div className="mt-6 grid gap-6">
           {COLORS.map((g) => (
             <div key={g.group}>

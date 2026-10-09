@@ -181,7 +181,7 @@
   --dv-cobalt: #5a4f8f;
   --dv-cobalt-deep: #463d78;
   --dv-cobalt-dim: #1e1b2b;
-  --dv-cobalt-text: #cbc5e8;
+  --dv-cobalt-text: #dcd9e4;
   /* Metal champanhe-prateado (aço escovado, leve dourado-claro; nunca amarelo): filigrana, molduras, conquistas. */
   --dv-gold: #bab09f;
   --dv-gold-bright: #ece5d8;
@@ -960,7 +960,7 @@
   --in-fg-3: #58585e;
   --in-line: rgba(13,13,15, 0.16);
   --in-line-strong: rgba(13,13,15, 0.42);
-  --in-accent: #4a4180;      /* tinta ametista: links e acento pequeno sobre papel (AA) */
+  --in-accent: #3d3858;      /* grafite-ametista: links e acento pequeno sobre papel (AA) */
   --in-accent-fill: #1c1c1f; /* bloco ativo monocromático (aba, chip) — texto branco */
   --in-data: #2a2a2e;        /* barras e marcadores de dados (preto/prata) */
   --in-accent-glow: rgba(138,124,200, 0.45);
@@ -1002,7 +1002,7 @@
   --in-fg-3: rgba(238,237,235, 0.56);
   --in-line: rgba(238,237,235, 0.13);
   --in-line-strong: rgba(238,237,235, 0.34);
-  --in-accent: #d4cfee;      /* ametista-prata legível em texto pequeno sobre o veludo */
+  --in-accent: #e0dde8;      /* prata com sopro de ametista: texto ativo sobre o veludo */
   --in-accent-fill: #4e4580;
   --in-data: #dcd9d3;
   --in-accent-glow: rgba(138,124,200, 0.55);
