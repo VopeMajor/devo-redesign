@@ -56,9 +56,7 @@ export function SpeakerPlate({ name, title, tone = 'cobalt', avatar }: { name: s
   return (
     <span className="absolute -top-[22px] left-3 z-10 flex items-end gap-2" aria-hidden="true">
       {avatar && (
-        <span className="relative -mb-1 grid size-12 place-items-center overflow-hidden border border-dv-gold/70 bg-dv-ink-2 [clip-path:polygon(50%_0,100%_50%,50%_100%,0_50%)]">
-          {avatar}
-        </span>
+        <span className="relative -mb-2 block w-12">{avatar}</span>
       )}
       <span className={cn('en-plate-in relative flex items-center px-5 py-1.5 shadow-[4px_4px_0_rgba(0,0,0,0.55)]', p.fill)}>
         <span className={cn('absolute inset-y-0 left-0 w-[3px]', p.edge)} />

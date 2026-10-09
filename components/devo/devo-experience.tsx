@@ -148,9 +148,20 @@ function DevoRoot() {
         <AccessScreen
           mode={naming}
           onCancel={() => setNaming(null)}
-          onAuthenticated={(kind) => {
-            if (kind === 'registered') window.sessionStorage.setItem(AUTO_START_KEY, '1')
-            // A full reload lets the server read the new session and hydrate the player's saved progress.
+          onAuthenticated={(kind, name) => {
+            if (kind === 'registered') {
+              // Cadastro novo: sem recarregar e sem passar pela landing. A cortina "Despertando" cobre o
+              // documento e termina direto no prólogo (a sessão já está no cookie; o save nasce agora).
+              playMusic()
+              transition('Despertando', () => {
+                setNaming(null)
+                dispatch({ type: 'SET_PLAYER', name })
+                setPrologue(true)
+                dispatch({ type: 'START_SESSION' })
+              })
+              return
+            }
+            // Login: recarrega para o servidor hidratar o progresso salvo.
             window.location.reload()
           }}
         />

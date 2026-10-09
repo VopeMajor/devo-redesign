@@ -152,10 +152,10 @@ function ChatGlyph() {
 function DeviceVisual() {
   return (
     <div className="flex flex-col items-center gap-4">
-      <div className="relative w-72">
+      <div className="relative mt-5 w-72">
         <div className="relative mx-auto w-44 rounded-[1.6rem] border border-dv-line-strong bg-[linear-gradient(160deg,var(--dv-ink-3),var(--dv-ink))] p-1.5 shadow-[0_20px_40px_-12px_rgba(0,0,0,0.95),0_0_40px_-16px_var(--dv-cobalt)]">
           <div className="relative overflow-hidden rounded-[1.2rem] bg-[radial-gradient(ellipse_at_50%_0%,var(--dv-cobalt-dim),var(--dv-ink)_70%)] p-3">
-            <div className="mb-3 flex items-center justify-between">
+            <div className="mb-3 flex items-center justify-between gap-3">
               <DeadlyVoteSymbol variant="mark" className="size-4 text-dv-text" />
               <span className="dv-tabular font-impact text-[12px] tracking-[0.04em] text-dv-cobalt-text">71:59:12</span>
             </div>
@@ -176,7 +176,7 @@ function DeviceVisual() {
             <div className="mx-auto mt-3 h-1 w-10 rounded-full bg-dv-text-3" />
           </div>
         </div>
-        <Callout label="Pulso" className="right-0 top-5" side="left" />
+        <Callout label="Pulso" className="-top-6 right-6" side="left" />
         <Callout label="Apps" className="left-0 top-24" />
         <TapMark className="bottom-14 right-[5.4rem]" />
       </div>

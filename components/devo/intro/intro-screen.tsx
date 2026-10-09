@@ -1,69 +1,43 @@
 'use client'
 
-import Image from 'next/image'
 import { useCallback, useEffect, useState } from 'react'
 import { playSfx } from '@/lib/devo/audio'
-import { INTRO_SCRIPT, INTRO_SPEAKERS } from '@/lib/devo/intro-script'
+import { INTRO_SCRIPT } from '@/lib/devo/intro-script'
 import { getNpc, type Expression } from '@/lib/devo/npcs'
 import { withName } from '@/lib/devo/player-name'
 import { cn } from '@/lib/utils'
 import { useAdvanceKeys } from '../hooks'
 import { GlyphSpark, toRoman } from '../kit/glyphs'
+import { PortraitFrame } from '../kit/portrait'
 import { SceneBackdrop } from '../kit/scene'
 import { TutorialVisualPanel } from './tutorial-visuals'
 import { AdvanceIndicator, DialogueShell, SpeakerPlate, VnTopBar, useTypewriter } from './vn'
 
 const CHAR_MS = 24
 
-const PORTRAIT_STYLE = {
-  cutout: 'drop-shadow-[0_0_40px_rgba(0,0,0,0.9)] [mask-image:linear-gradient(to_bottom,black_70%,transparent_100%)]',
-  blend: 'mix-blend-lighten [mask-image:radial-gradient(ellipse_34%_50%_at_50%_45%,black_35%,transparent_90%)]',
-}
+/** Tom do retrato por falante (IDENTIDADE › Retratos de NPC): casa = ouro, sistema/aliado = cobalto. */
+const TONE: Record<string, 'gold' | 'cobalt'> = { rato: 'gold', herdeiro: 'cobalt' }
 
-function Portraits({ speaker, expression }: { speaker: string; expression: Expression }) {
-  return (
-    <>
-      {INTRO_SPEAKERS.map((id) => {
-        const npc = getNpc(id)
-        if (npc.art) {
-          const Art = npc.art
-          const exprs = npc.artExpressions ?? ['neutral']
-          const target = exprs.includes(expression) ? expression : 'neutral'
-          return exprs.map((expr) => {
-            const visible = id === speaker && expr === target
-            return (
-              <Art
-                key={`${id}-${expr}`}
-                expression={expr}
-                title={visible ? `${npc.name}, ${npc.title}` : undefined}
-                className={cn('absolute inset-0 size-full transition-opacity duration-500', PORTRAIT_STYLE[npc.portraitStyle], visible ? 'opacity-100' : 'opacity-0')}
-              />
-            )
-          })
-        }
-        const fallback = npc.portraits.neutral
-        return (Object.entries(npc.portraits) as [Expression, string][]).map(([expr, src]) => {
-          const target = npc.portraits[expression] ? expression : 'neutral'
-          const visible = id === speaker && expr === target && Boolean(fallback)
-          return (
-            <Image
-              key={`${id}-${expr}`}
-              src={src}
-              alt={visible ? `${npc.name}, ${npc.title}` : ''}
-              fill
-              priority={id === INTRO_SPEAKERS[0]}
-              sizes="(min-width: 1024px) 40vw, 80vw"
-              className={cn(
-                'object-contain object-bottom transition-opacity duration-500',
-                PORTRAIT_STYLE[npc.portraitStyle],
-                visible ? 'opacity-100' : 'opacity-0',
-              )}
-            />
-          )
-        })
-      })}
-    </>
-  )
+/** Retrato do falante no PortraitFrame do kit (mesma luz, contorno, grão e base para raster e SVG). */
+function Portrait({ speaker, expression, className }: { speaker: string; expression: Expression; className?: string }) {
+  const npc = getNpc(speaker)
+  const alt = `${npc.name}, ${npc.title}`
+  if (npc.art) {
+    const Art = npc.art
+    const exprs = npc.artExpressions ?? ['neutral']
+    const target = exprs.includes(expression) ? expression : 'neutral'
+    return (
+      <PortraitFrame alt={alt} tone={TONE[speaker] ?? 'cobalt'} ornate scale={1.45} className={className}>
+        <div className="relative size-full">
+          {exprs.map((expr) => (
+            <Art key={expr} expression={expr} className={cn('absolute inset-0 size-full transition-opacity duration-500', expr === target ? 'opacity-100' : 'opacity-0')} />
+          ))}
+        </div>
+      </PortraitFrame>
+    )
+  }
+  const src = npc.portraits[expression] ?? npc.portraits.neutral
+  return <PortraitFrame src={src} alt={alt} tone={TONE[speaker] ?? 'gold'} ornate position="50% 8%" className={className} />
 }
 
 /** Lado de entrada do retrato por falante (o Herdeiro vem da esquerda, o Rato da direita). */
@@ -73,11 +47,15 @@ function PlateAvatar({ speaker, expression }: { speaker: string; expression: Exp
   const npc = getNpc(speaker)
   if (npc.art) {
     const Art = npc.art
-    return <Art expression={expression} crop="face" className="size-full scale-[1.4]" />
+    return (
+      <PortraitFrame alt="" shape="round" tone={TONE[speaker] ?? 'cobalt'} className="w-12">
+        <Art expression={expression} crop="face" />
+      </PortraitFrame>
+    )
   }
   const src = npc.portraits.neutral
   if (!src) return null
-  return <Image src={src} alt="" width={48} height={48} className="size-full object-cover object-top" />
+  return <PortraitFrame src={src} alt="" shape="round" tone={TONE[speaker] ?? 'gold'} position="50% 6%" className="w-12" />
 }
 
 export function IntroScreen({ onFinish, playerName }: { onFinish: () => void; playerName: string | null }) {
@@ -139,15 +117,13 @@ export function IntroScreen({ onFinish, playerName }: { onFinish: () => void; pl
             {/* Retrato ancorado à caixa: em cima dela no celular, à esquerda no desktop. Entra pelo lado do falante. */}
             <div
               className={cn(
-                'pointer-events-none absolute inset-x-0 bottom-full -mb-10 h-[min(44dvh,380px)] transition-[opacity,transform] duration-500 ease-out',
-                'lg:inset-x-auto lg:-bottom-8 lg:right-full lg:mb-0 lg:mr-2 lg:h-[min(84dvh,760px)] lg:w-[min(34vw,480px)]',
+                'pointer-events-none absolute inset-x-0 bottom-full mb-4 flex justify-center transition-[opacity,transform] duration-500 ease-out',
+                'lg:inset-x-auto lg:bottom-0 lg:right-full lg:mb-0 lg:mr-8 lg:w-[min(30vw,400px)]',
                 line.visual ? 'translate-y-6 opacity-0 lg:translate-y-0 lg:opacity-100' : 'translate-y-0 opacity-100',
               )}
             >
-              <div key={line.speaker} className={cn('relative h-full w-full', ENTER_FROM[line.speaker] === 'l' ? 'en-portrait-in-l' : 'en-portrait-in-r')}>
-                <div className="relative h-full w-full lg:animate-[devo-float_9s_ease-in-out_infinite]">
-                  <Portraits speaker={line.speaker} expression={line.expression} />
-                </div>
+              <div key={line.speaker} className={cn('w-[min(58vw,240px)] lg:w-full', ENTER_FROM[line.speaker] === 'l' ? 'en-portrait-in-l' : 'en-portrait-in-r')}>
+                <Portrait speaker={line.speaker} expression={line.expression} className="w-full" />
               </div>
             </div>
 
