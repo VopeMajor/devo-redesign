@@ -261,7 +261,8 @@ function HomeScreen({
   const apps: AppId[] = state.arcadeUnlocked ? [...HOME_APPS, 'jogos'] : HOME_APPS
   const latest = state.notifications[0]
   return (
-    <div className="devo-scroll absolute inset-0 flex flex-col overflow-y-auto overflow-x-hidden px-4 pb-2 pt-3">
+    <div className="absolute inset-0 flex flex-col">
+    <div className="devo-scroll flex min-h-0 flex-1 flex-col overflow-y-auto overflow-x-hidden px-4 pt-3">
       <header className="animate-dv-fade flex items-center justify-between gap-3 px-1">
         <div className="min-w-0">
           <Kicker tone="gold">Record System · sessão ativa</Kicker>
@@ -324,12 +325,14 @@ function HomeScreen({
         ) : null}
       </section>
 
-      <div className="flex shrink-0 grow flex-col items-center justify-end gap-2 pb-4 pt-5 text-center">
+      <div className="flex shrink-0 grow flex-col items-center justify-end gap-2 pb-3 pt-5 text-center">
         <Divider variant="filigree" tone="gold" className="animate-dv-fade w-56 opacity-60 [animation-delay:520ms]" />
         <p className="animate-dv-fade dv-label text-[10px] tracking-[0.42em] text-dv-text-3 [animation-delay:560ms]">O tempo é a vida</p>
       </div>
 
-      <nav aria-label="Dock" className="animate-dv-rise shrink-0 [animation-delay:420ms]">
+    </div>
+
+      <nav aria-label="Dock" className="animate-dv-rise shrink-0 px-4 pb-2 [animation-delay:420ms]">
         <Frame variant="ink" cutSize={14} pad="none" innerClassName="px-2 pb-2 pt-3" className="drop-shadow-[0_-10px_24px_rgba(0,0,0,0.6)]">
           <ul className="grid grid-cols-3">
             {DOCK_APPS.map((id, i) => (

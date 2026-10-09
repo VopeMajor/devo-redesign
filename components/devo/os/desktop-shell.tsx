@@ -93,13 +93,7 @@ export function DesktopShell() {
   return (
     <div className="fixed inset-0 overflow-hidden bg-dv-ink text-dv-text" onPointerDown={() => setSelected(null)}>
       {/* Cena viva só com a mesa livre; com janelas abertas fica no quadro estático (os apps podem ter a sua). */}
-      <SceneBackdrop preset="cathedral" intensity={0.8} dim={visible.length ? 0.5 : 0.25} alert={critical} staticOnly={visible.length > 0} />
-      <div aria-hidden="true" className="pointer-events-none absolute inset-0 grid place-items-center">
-        <div className="flex flex-col items-center gap-4 opacity-[0.07]">
-          <DeadlyVoteSymbol className="size-56 text-dv-gold" />
-          <p className="select-none font-serif text-[12vw] uppercase leading-none tracking-[0.08em] text-dv-text">Devo</p>
-        </div>
-      </div>
+      <SceneBackdrop preset="cathedral" intensity={0.8} dim={visible.length ? 0.55 : 0.4} alert={critical} staticOnly={visible.length > 0} />
 
       <header
         className="absolute inset-x-0 top-0 z-40 flex items-center justify-between gap-4 bg-[linear-gradient(180deg,rgba(17,26,46,0.92),rgba(5,7,13,0.88))] px-4 backdrop-blur-md"
