@@ -1,0 +1,1068 @@
+{
+  "base": "http://localhost:3000",
+  "shots": [
+    {
+      "name": "01-landing",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "01-landing-scroll",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "02-transicao-acesso",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "02-acesso-convite",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "02-acesso-cadastro",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "02-acesso-preenchido",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "03-transicao-despertando",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "03-prologo-00",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "03-prologo-01",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "03-prologo-02",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "03-prologo-03",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "03-prologo-04",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "03-prologo-05",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "03-prologo-06",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "03-prologo-07",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "03-prologo-08",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "03-prologo-09",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "03-prologo-10",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "03-prologo-11",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "03-prologo-12",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "03-prologo-13",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "03-prologo-14",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "03-prologo-aparencia",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "03-prologo-aparencia-auto",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "03-prologo-15",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "03-prologo-16",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "03-prologo-17",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "03-prologo-18",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "03-prologo-19",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "03-prologo-20",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "03-prologo-21",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "03-prologo-22",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "03-prologo-23",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "03-prologo-24",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "03-transicao-deadly-vote",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "04-tutorial-00",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "04-tutorial-01",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "04-tutorial-02",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "04-tutorial-03",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "04-tutorial-04",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "04-tutorial-05",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "04-tutorial-06",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "04-tutorial-07",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "04-tutorial-08",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "04-tutorial-09",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "04-tutorial-pwa",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "04-tutorial-fim",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "05-sala-de-jogos-revelacao",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "10-home",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "10-home-avisos",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "11-transicao-abrir",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "11-transicao-voltar",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "10-home-critico",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "10-home-avisos-lista",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "21-pulso-critico",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "21-pulso-excedente",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "20-record",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "20-record-scroll",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "20-record-deadly-votes",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "20-record-convites",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "20-record-foto-ajuste",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "20-record-foto",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "20-record-shuffler",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "20-record-arquivo",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "20-record-deadly-votes-scroll",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "20-record-dossie",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "20-record-dealer",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "20-record-dealer-resultados",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "20-record-dealer-convocar",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "21-pulso",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "21-pulso-scroll",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "22-mensagens",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "22-mensagens-conversa",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "22-mensagens-digitando",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "22-mensagens-resposta",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "23-cartas",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "23-cartas-scroll",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "23-cartas-detalhe",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "23-cartas-detalhe-ficha",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "23-cartas-detalhe-girando",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "23-cartas-detalhe-verso",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "23-cartas-colecoes",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "24-trocas",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "24-trocas-sala",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "24-trocas-sala-negociando",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "24-trocas-sala-frase",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "24-trocas-sem-retorno",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "24-trocas-sem-retorno-confirmar",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "24-trocas-sem-retorno-perdeu",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "25-ajustes",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "25-ajustes-scroll",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "25-ajustes-reiniciar-confirmar",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "25-ajustes-reiniciar-feito",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "25-ajustes-reiniciar-pulso",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "26-coruja-01",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "26-coruja-03",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "26-coruja-05",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "26-coruja-07",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "26-coruja-11",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "26-coruja-14",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "26-coruja-16",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "26-coruja-18",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "27-javali-0",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "27-javali-1",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "27-javali-2",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "27-javali-3",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "28-mensagens-herdeiro",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "80-estilo-00-topo",
+      "note": "",
+      "url": "http://localhost:3000/estilo"
+    },
+    {
+      "name": "80-estilo-cores",
+      "note": "",
+      "url": "http://localhost:3000/estilo"
+    },
+    {
+      "name": "80-estilo-material",
+      "note": "",
+      "url": "http://localhost:3000/estilo"
+    },
+    {
+      "name": "80-estilo-emblemas",
+      "note": "",
+      "url": "http://localhost:3000/estilo"
+    },
+    {
+      "name": "80-estilo-tipografia",
+      "note": "",
+      "url": "http://localhost:3000/estilo"
+    },
+    {
+      "name": "80-estilo-botoes",
+      "note": "",
+      "url": "http://localhost:3000/estilo"
+    },
+    {
+      "name": "80-estilo-molduras",
+      "note": "",
+      "url": "http://localhost:3000/estilo"
+    },
+    {
+      "name": "80-estilo-selos",
+      "note": "",
+      "url": "http://localhost:3000/estilo"
+    },
+    {
+      "name": "80-estilo-navegacao",
+      "note": "",
+      "url": "http://localhost:3000/estilo"
+    },
+    {
+      "name": "80-estilo-avisos",
+      "note": "",
+      "url": "http://localhost:3000/estilo"
+    },
+    {
+      "name": "80-estilo-cartas",
+      "note": "",
+      "url": "http://localhost:3000/estilo"
+    },
+    {
+      "name": "80-estilo-movimento",
+      "note": "",
+      "url": "http://localhost:3000/estilo"
+    },
+    {
+      "name": "80-estilo-retratos",
+      "note": "",
+      "url": "http://localhost:3000/estilo"
+    },
+    {
+      "name": "80-estilo-movimento-2",
+      "note": "",
+      "url": "http://localhost:3000/estilo"
+    },
+    {
+      "name": "80-estilo-cores-2",
+      "note": "",
+      "url": "http://localhost:3000/estilo"
+    },
+    {
+      "name": "80-estilo-material-2",
+      "note": "",
+      "url": "http://localhost:3000/estilo"
+    },
+    {
+      "name": "80-estilo-material-3",
+      "note": "",
+      "url": "http://localhost:3000/estilo"
+    },
+    {
+      "name": "80-estilo-emblemas-2",
+      "note": "",
+      "url": "http://localhost:3000/estilo"
+    },
+    {
+      "name": "80-estilo-digitos-0",
+      "note": "",
+      "url": "http://localhost:3000/estilo"
+    },
+    {
+      "name": "80-estilo-digitos-1",
+      "note": "",
+      "url": "http://localhost:3000/estilo"
+    },
+    {
+      "name": "80-estilo-digitos-2",
+      "note": "",
+      "url": "http://localhost:3000/estilo"
+    },
+    {
+      "name": "80-estilo-digitos-3",
+      "note": "",
+      "url": "http://localhost:3000/estilo"
+    },
+    {
+      "name": "80-estilo-teste-digitos-congelados",
+      "note": "",
+      "url": "http://localhost:3000/estilo"
+    },
+    {
+      "name": "80-estilo-teste-caixa-alta",
+      "note": "",
+      "url": "http://localhost:3000/estilo"
+    },
+    {
+      "name": "80-estilo-botoes-foco",
+      "note": "",
+      "url": "http://localhost:3000/estilo"
+    },
+    {
+      "name": "81-estilo-sheet",
+      "note": "",
+      "url": "http://localhost:3000/estilo"
+    },
+    {
+      "name": "81-estilo-dialog",
+      "note": "",
+      "url": "http://localhost:3000/estilo"
+    },
+    {
+      "name": "82-estilo-cortina-avancar-a",
+      "note": "",
+      "url": "http://localhost:3000/estilo"
+    },
+    {
+      "name": "82-estilo-cortina-avancar-b",
+      "note": "",
+      "url": "http://localhost:3000/estilo"
+    },
+    {
+      "name": "82-estilo-cortina-alerta-a",
+      "note": "",
+      "url": "http://localhost:3000/estilo"
+    },
+    {
+      "name": "82-estilo-cortina-alerta-b",
+      "note": "",
+      "url": "http://localhost:3000/estilo"
+    },
+    {
+      "name": "83-estilo-cena-clockhall",
+      "note": "",
+      "url": "http://localhost:3000/estilo"
+    },
+    {
+      "name": "83-estilo-cena-sigil",
+      "note": "",
+      "url": "http://localhost:3000/estilo"
+    },
+    {
+      "name": "83-estilo-cena-cathedral",
+      "note": "",
+      "url": "http://localhost:3000/estilo"
+    },
+    {
+      "name": "83-estilo-cena-table",
+      "note": "",
+      "url": "http://localhost:3000/estilo"
+    },
+    {
+      "name": "83-estilo-cena-corridor",
+      "note": "",
+      "url": "http://localhost:3000/estilo"
+    },
+    {
+      "name": "83-estilo-cena-tribunal",
+      "note": "",
+      "url": "http://localhost:3000/estilo"
+    },
+    {
+      "name": "83-estilo-cena-tribunal-alerta",
+      "note": "",
+      "url": "http://localhost:3000/estilo"
+    },
+    {
+      "name": "83-estilo-cena-table-alerta",
+      "note": "",
+      "url": "http://localhost:3000/estilo"
+    },
+    {
+      "name": "84-interior",
+      "note": "",
+      "url": "http://localhost:3000/estilo"
+    },
+    {
+      "name": "84-interior-abas",
+      "note": "",
+      "url": "http://localhost:3000/estilo"
+    },
+    {
+      "name": "84-interior-controles",
+      "note": "",
+      "url": "http://localhost:3000/estilo"
+    },
+    {
+      "name": "84-interior-paineis",
+      "note": "",
+      "url": "http://localhost:3000/estilo"
+    },
+    {
+      "name": "84-interior-cartas",
+      "note": "",
+      "url": "http://localhost:3000/estilo"
+    },
+    {
+      "name": "84-interior-reservados",
+      "note": "",
+      "url": "http://localhost:3000/estilo"
+    },
+    {
+      "name": "84-interior-nav",
+      "note": "",
+      "url": "http://localhost:3000/estilo"
+    },
+    {
+      "name": "84-interior-fronteira",
+      "note": "",
+      "url": "http://localhost:3000/estilo"
+    },
+    {
+      "name": "84-interior-paineis-2",
+      "note": "",
+      "url": "http://localhost:3000/estilo"
+    },
+    {
+      "name": "84-interior-reservados-2",
+      "note": "",
+      "url": "http://localhost:3000/estilo"
+    },
+    {
+      "name": "85-fronteira-a",
+      "note": "",
+      "url": "http://localhost:3000/estilo"
+    },
+    {
+      "name": "85-fronteira-b",
+      "note": "",
+      "url": "http://localhost:3000/estilo"
+    },
+    {
+      "name": "86-perfil-00",
+      "note": "",
+      "url": "http://localhost:3000/estilo/perfil"
+    },
+    {
+      "name": "86-perfil-01",
+      "note": "",
+      "url": "http://localhost:3000/estilo/perfil"
+    },
+    {
+      "name": "86-perfil-02",
+      "note": "",
+      "url": "http://localhost:3000/estilo/perfil"
+    },
+    {
+      "name": "86-perfil-03",
+      "note": "",
+      "url": "http://localhost:3000/estilo/perfil"
+    },
+    {
+      "name": "86-perfil-04",
+      "note": "",
+      "url": "http://localhost:3000/estilo/perfil"
+    },
+    {
+      "name": "86-perfil-05",
+      "note": "",
+      "url": "http://localhost:3000/estilo/perfil"
+    },
+    {
+      "name": "93-desktop-perfil",
+      "note": "",
+      "url": "http://localhost:3000/estilo/perfil"
+    },
+    {
+      "name": "91-desktop-estilo",
+      "note": "",
+      "url": "http://localhost:3000/estilo"
+    }
+  ],
+  "errors": [],
+  "console": [
+    {
+      "page": "http://localhost:3000/",
+      "text": "HTTP 404",
+      "src": "http://localhost:3000/_vercel/insights/script.js"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "src": "http://localhost:3000/_vercel/insights/script.js"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "HTTP 404",
+      "src": "http://localhost:3000/_vercel/insights/script.js"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "src": "http://localhost:3000/_vercel/insights/script.js"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "HTTP 404",
+      "src": "http://localhost:3000/_vercel/insights/script.js"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "src": "http://localhost:3000/_vercel/insights/script.js"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "HTTP 404",
+      "src": "http://localhost:3000/_vercel/insights/script.js"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "src": "http://localhost:3000/_vercel/insights/script.js"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "HTTP 404",
+      "src": "http://localhost:3000/_vercel/insights/script.js"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "src": "http://localhost:3000/_vercel/insights/script.js"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "HTTP 404",
+      "src": "http://localhost:3000/_vercel/insights/script.js"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "src": "http://localhost:3000/_vercel/insights/script.js"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "HTTP 404",
+      "src": "http://localhost:3000/_vercel/insights/script.js"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "src": "http://localhost:3000/_vercel/insights/script.js"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "HTTP 404",
+      "src": "http://localhost:3000/_vercel/insights/script.js"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "src": "http://localhost:3000/_vercel/insights/script.js"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "HTTP 404",
+      "src": "http://localhost:3000/_vercel/insights/script.js"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "src": "http://localhost:3000/_vercel/insights/script.js"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "HTTP 404",
+      "src": "http://localhost:3000/_vercel/insights/script.js"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "src": "http://localhost:3000/_vercel/insights/script.js"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "HTTP 404",
+      "src": "http://localhost:3000/_vercel/insights/script.js"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "src": "http://localhost:3000/_vercel/insights/script.js"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "HTTP 404",
+      "src": "http://localhost:3000/_vercel/insights/script.js"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "src": "http://localhost:3000/_vercel/insights/script.js"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "HTTP 404",
+      "src": "http://localhost:3000/_vercel/insights/script.js"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "src": "http://localhost:3000/_vercel/insights/script.js"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "HTTP 404",
+      "src": "http://localhost:3000/_vercel/insights/script.js"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "src": "http://localhost:3000/_vercel/insights/script.js"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "HTTP 404",
+      "src": "http://localhost:3000/_vercel/insights/script.js"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "src": "http://localhost:3000/_vercel/insights/script.js"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "HTTP 404",
+      "src": "http://localhost:3000/_vercel/insights/script.js"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "src": "http://localhost:3000/_vercel/insights/script.js"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "HTTP 404",
+      "src": "http://localhost:3000/_vercel/insights/script.js"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "src": "http://localhost:3000/_vercel/insights/script.js"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "HTTP 404",
+      "src": "http://localhost:3000/_vercel/insights/script.js"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "src": "http://localhost:3000/_vercel/insights/script.js"
+    },
+    {
+      "page": "http://localhost:3000/estilo",
+      "text": "HTTP 404",
+      "src": "http://localhost:3000/_vercel/insights/script.js"
+    },
+    {
+      "page": "http://localhost:3000/estilo",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "src": "http://localhost:3000/_vercel/insights/script.js"
+    },
+    {
+      "page": "http://localhost:3000/estilo",
+      "text": "HTTP 404",
+      "src": "http://localhost:3000/_vercel/insights/script.js"
+    },
+    {
+      "page": "http://localhost:3000/estilo",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "src": "http://localhost:3000/_vercel/insights/script.js"
+    },
+    {
+      "page": "http://localhost:3000/estilo/perfil",
+      "text": "HTTP 404",
+      "src": "http://localhost:3000/_vercel/insights/script.js"
+    },
+    {
+      "page": "http://localhost:3000/estilo/perfil",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "src": "http://localhost:3000/_vercel/insights/script.js"
+    },
+    {
+      "page": "http://localhost:3000/estilo/perfil",
+      "text": "HTTP 404",
+      "src": "http://localhost:3000/_vercel/insights/script.js"
+    },
+    {
+      "page": "http://localhost:3000/estilo/perfil",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "src": "http://localhost:3000/_vercel/insights/script.js"
+    },
+    {
+      "page": "http://localhost:3000/estilo",
+      "text": "HTTP 404",
+      "src": "http://localhost:3000/_vercel/insights/script.js"
+    },
+    {
+      "page": "http://localhost:3000/estilo",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "src": "http://localhost:3000/_vercel/insights/script.js"
+    }
+  ]
+}
