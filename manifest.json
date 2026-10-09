@@ -1,0 +1,323 @@
+{
+  "base": "http://localhost:3000",
+  "shots": [
+    {
+      "name": "01-landing",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "01-landing-scroll",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "02-transicao-acesso",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "02-acesso-convite",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "02-acesso-cadastro",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "02-acesso-preenchido",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "03-transicao-despertando",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "03-prologo-00",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "03-prologo-01",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "03-prologo-02",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "03-prologo-03",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "03-prologo-04",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "03-prologo-05",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "03-prologo-06",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "03-prologo-07",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "03-prologo-08",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "03-prologo-09",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "03-prologo-10",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "03-prologo-11",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "03-prologo-12",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "03-prologo-13",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "03-prologo-14",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "03-prologo-aparencia",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "03-prologo-aparencia-auto",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "03-prologo-15",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "03-prologo-16",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "03-prologo-17",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "03-prologo-18",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "03-prologo-19",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "03-prologo-20",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "03-prologo-21",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "03-prologo-22",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "03-prologo-23",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "03-prologo-24",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "03-transicao-deadly-vote",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "04-tutorial-00",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "04-tutorial-01",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "04-tutorial-02",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "04-tutorial-03",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "04-tutorial-04",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "04-tutorial-05",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "04-tutorial-06",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "04-tutorial-07",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "04-tutorial-08",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "04-tutorial-09",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "04-tutorial-pwa",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "04-tutorial-fim",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "05-sala-de-jogos-revelacao",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "90-desktop-landing",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "92-desktop-os",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "92-desktop-pulso",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "92-desktop-janelas",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "92-desktop-avisos",
+      "note": "",
+      "url": "http://localhost:3000/"
+    }
+  ],
+  "errors": [],
+  "console": [
+    {
+      "page": "http://localhost:3000/",
+      "text": "HTTP 404",
+      "src": "http://localhost:3000/_vercel/insights/script.js"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "src": "http://localhost:3000/_vercel/insights/script.js"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "HTTP 404",
+      "src": "http://localhost:3000/_vercel/insights/script.js"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "src": "http://localhost:3000/_vercel/insights/script.js"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "HTTP 404",
+      "src": "http://localhost:3000/_vercel/insights/script.js"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "src": "http://localhost:3000/_vercel/insights/script.js"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "HTTP 404",
+      "src": "http://localhost:3000/_vercel/insights/script.js"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "src": "http://localhost:3000/_vercel/insights/script.js"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "HTTP 404",
+      "src": "http://localhost:3000/_vercel/insights/script.js"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "src": "http://localhost:3000/_vercel/insights/script.js"
+    }
+  ]
+}
