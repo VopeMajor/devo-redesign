@@ -1088,10 +1088,10 @@ function ClockhallPreset({ intensity, alert, lite }: PresetProps) {
     // câmera: recua em tela retrato para o mostrador caber; deriva lenta
     const aspect = size.width / Math.max(1, size.height)
     const tanH = Math.tan(THREE.MathUtils.degToRad(48 / 2)) * aspect
-    const dist = THREE.MathUtils.clamp(9 / tanH, 21, 34)
+    const dist = THREE.MathUtils.clamp(9 / tanH, 23, 34)
     const cam = state.camera
-    cam.position.set(Math.sin(t * 0.05) * 0.6, 4.4 + Math.cos(t * 0.07) * 0.15, DIAL_Z + dist)
-    cam.lookAt(look.set(0, 6.6, DIAL_Z))
+    cam.position.set(Math.sin(t * 0.05) * 0.6, 5.4 + Math.cos(t * 0.07) * 0.15, DIAL_Z + dist)
+    cam.lookAt(look.set(0, 5.4, DIAL_Z))
     if (fog.current) {
       fog.current.near = dist * 0.6
       fog.current.far = dist + 22
