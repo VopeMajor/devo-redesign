@@ -483,6 +483,39 @@ if (want('sistema') || want('apps') || want('jogos')) {
         await tryClick(btn(page, /perder a carta/i))
         await wait(800)
         await shot(page, '24-trocas-sem-retorno-perdeu')
+        await tryClick(btn(page, /voltar ao corredor/i))
+        await wait(1000)
+      }
+      // Corredor rolado até o Protocolo.
+      await page.mouse.move(195, 500)
+      await page.mouse.wheel(0, 1600)
+      await wait(900)
+      await shot(page, '24-trocas-scroll')
+      await page.mouse.wheel(0, -4000)
+      await wait(500)
+      // Aceitar e revelar numa sala livre qualquer (o parceiro pode desistir: depende da sorte).
+      if (await tryClick(page.locator('button[aria-label^="Sala "]:not([disabled])').first())) {
+        await wait(1200)
+        await tryClick(page.getByRole('button', { name: /^Colocar / }).first())
+        await wait(7500)
+        if (await tryClick(btn(page, 'Aceitar troca', true), 1500)) {
+          await wait(800)
+          await shot(page, '24-trocas-aceitou')
+          const revealing = await page
+            .getByText('Revelando cartas…')
+            .first()
+            .waitFor({ timeout: 8000 })
+            .then(() => true)
+            .catch(() => false)
+          if (revealing) {
+            await wait(900)
+            await shot(page, '24-trocas-revelacao')
+            await wait(3200)
+            await shot(page, '24-trocas-revelada')
+          }
+          await tryClick(btn(page, /voltar ao corredor/i))
+          await wait(800)
+        }
       }
     })
     await step('ajustes', async () => {
