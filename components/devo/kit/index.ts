@@ -26,3 +26,4 @@ export { PortraitFrame, type PortraitShape, type PortraitTone } from './portrait
 export { useVisibleViewport } from './viewport'
 export * from './interior'
 export * from './ornament'
+export * from './emblems'

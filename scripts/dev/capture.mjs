@@ -660,7 +660,7 @@ if (want('estilo')) {
     await page.goto(`${BASE}/estilo`, { waitUntil: 'networkidle' })
     await wait(3500)
     await shot(page, '80-estilo-00-topo')
-    for (const id of ['cores', 'material', 'tipografia', 'botoes', 'molduras', 'selos', 'navegacao', 'avisos', 'cartas', 'movimento', 'retratos']) {
+    for (const id of ['cores', 'material', 'emblemas', 'tipografia', 'botoes', 'molduras', 'selos', 'navegacao', 'avisos', 'cartas', 'movimento', 'retratos']) {
       await page.locator(`[data-estilo="${id}"]`).scrollIntoViewIfNeeded({ timeout: 3000 }).catch(() => {})
       await page.evaluate((i) => document.querySelector(`[data-estilo="${i}"]`)?.scrollIntoView({ block: 'start' }), id)
       await wait(1200)
@@ -670,7 +670,7 @@ if (want('estilo')) {
     await wait(900)
     await shot(page, '80-estilo-movimento-2')
     // Paleta e materiais (§0): mais dois quadros de cada.
-    for (const [id, n] of [['cores', 2], ['material', 3]]) {
+    for (const [id, n] of [['cores', 2], ['material', 3], ['emblemas', 2]]) {
       await page.evaluate((i) => document.querySelector(`[data-estilo="${i}"]`)?.scrollIntoView({ block: 'start' }), id)
       for (let k = 2; k <= n; k++) {
         await page.mouse.wheel(0, 760)

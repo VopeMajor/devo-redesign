@@ -42,9 +42,9 @@ export function RomanDial({
       {glass && (
         <defs>
           <radialGradient id={sky} cx="0.5" cy="0.42" r="0.6">
-            <stop offset="0" stopColor="#5a5f8c" />
-            <stop offset="0.55" stopColor="#34365a" />
-            <stop offset="1" stopColor="#1c1b33" />
+            <stop offset="0" stopColor="#56556a" />
+            <stop offset="0.55" stopColor="#2b2a35" />
+            <stop offset="1" stopColor="#19181f" />
           </radialGradient>
         </defs>
       )}
@@ -101,7 +101,7 @@ export function RomanDial({
             <path d={`M${C} ${C - 168} L${C + 5} ${C - 157} L${C} ${C - 146} L${C - 5} ${C - 157} Z`} fill={paint} />
           </g>
           <circle cx={C} cy={C} r="7" fill={paint} />
-          <circle cx={C} cy={C} r="2.6" fill="#0a090d" />
+          <circle cx={C} cy={C} r="2.6" fill="#0c0c0e" />
         </g>
       )}
     </svg>
@@ -164,7 +164,7 @@ export function CheckerFloor({ tilt = 64, cell = 56, className, style }: { tilt?
         }}
       />
       {/* brilho do piso encerado */}
-      <div className="absolute inset-x-[20%] bottom-[10%] h-[50%] bg-[radial-gradient(50%_50%_at_50%_60%,rgba(170,165,214,0.22),transparent_70%)]" />
+      <div className="absolute inset-x-[20%] bottom-[10%] h-[50%] bg-[radial-gradient(50%_50%_at_50%_60%,rgba(183,179,201,0.22),transparent_70%)]" />
     </div>
   )
 }
@@ -176,21 +176,21 @@ export function CheckerFloor({ tilt = 64, cell = 56, className, style }: { tilt?
 export function Sword({ tone = 'brass', gem = 'night', className, ...p }: { tone?: MetalTone; gem?: 'night' | 'blood' | 'glass' } & SVGProps<SVGSVGElement>) {
   const { paint, defs } = useMetal(tone)
   const steel = useMetal('silver')
-  const G = { night: '#6c6899', blood: '#a3121f', glass: '#e8e6f2' }[gem]
+  const G = { night: '#6f6b82', blood: '#a3121f', glass: '#e8e6f2' }[gem]
   return (
     <svg viewBox="0 0 40 220" aria-hidden="true" className={className} {...p}>
       {defs}
       {steel.defs}
       {/* lâmina */}
       <path d="M20 214 L14.5 196 L15.5 58 L24.5 58 L25.5 196 Z" fill={steel.paint} />
-      <path d="M20 200 L20 60" stroke="#0a090d" strokeWidth="0.8" opacity="0.35" />
+      <path d="M20 200 L20 60" stroke="#0c0c0e" strokeWidth="0.8" opacity="0.35" />
       {/* guarda */}
       <path d="M3 52 C8 49 12 52 16 52 L24 52 C28 52 32 49 37 52 C33 55 29 58 24 58 L16 58 C11 58 7 55 3 52 Z" fill={paint} />
       <circle cx="3" cy="52" r="2.4" fill={paint} />
       <circle cx="37" cy="52" r="2.4" fill={paint} />
       <path d="M20 47 L24 54 L20 61 L16 54 Z" fill={G} stroke={paint} strokeWidth="0.8" />
       {/* punho */}
-      <rect x="17.4" y="20" width="5.2" height="28" rx="1.4" fill="#16141b" />
+      <rect x="17.4" y="20" width="5.2" height="28" rx="1.4" fill="#161618" />
       {Array.from({ length: 6 }, (_, i) => (
         <path key={i} d={`M17.4 ${23 + i * 4.4} L22.6 ${25.4 + i * 4.4}`} stroke={paint} strokeWidth="0.7" />
       ))}
@@ -231,8 +231,8 @@ export function Lantern({ tone = 'brass', lit = true, sway = true, chain = 60, c
       <defs>
         <radialGradient id={gid} cx="0.5" cy="0.6" r="0.6">
           <stop offset="0" stopColor="#fff4dc" stopOpacity="0.95" />
-          <stop offset="0.35" stopColor="#e3d5ac" stopOpacity="0.55" />
-          <stop offset="1" stopColor="#e3d5ac" stopOpacity="0" />
+          <stop offset="0.35" stopColor="#ece5d8" stopOpacity="0.55" />
+          <stop offset="1" stopColor="#ece5d8" stopOpacity="0" />
         </radialGradient>
       </defs>
       {/* corrente */}
@@ -249,7 +249,7 @@ export function Lantern({ tone = 'brass', lit = true, sway = true, chain = 60, c
         <path d="M14 26 L30 14 L46 26 Z" fill={paint} />
         <rect x="12" y="25" width="36" height="4" fill={paint} />
         {/* vidros em ogiva */}
-        <path d="M16 29 L16 70 L44 70 L44 29" fill={lit ? 'rgba(227,213,172,0.16)' : 'rgba(170,165,214,0.08)'} stroke={paint} strokeWidth="1.6" />
+        <path d="M16 29 L16 70 L44 70 L44 29" fill={lit ? 'rgba(236,229,216,0.16)' : 'rgba(183,179,201,0.08)'} stroke={paint} strokeWidth="1.6" />
         <path d="M30 29 L30 70" stroke={paint} strokeWidth="1" />
         <path d="M16 44 C16 34 23 31 30 31 C37 31 44 34 44 44" stroke={paint} strokeWidth="0.9" fill="none" />
         {/* chama */}
@@ -274,7 +274,7 @@ export function SigilLozenge({ tone = 'brass', filled = false, className, ...p }
     <svg viewBox="0 0 24 32" aria-hidden="true" className={className} {...p}>
       {defs}
       <path d="M12 1 L23 16 L12 31 L1 16 Z" fill={filled ? paint : 'none'} stroke={paint} strokeWidth="1.2" />
-      <path d="M12 8 C12.3 13.2 13.4 14.4 17.5 16 C13.4 17.6 12.3 18.8 12 24 C11.7 18.8 10.6 17.6 6.5 16 C10.6 14.4 11.7 13.2 12 8 Z" fill={filled ? '#0a090d' : paint} />
+      <path d="M12 8 C12.3 13.2 13.4 14.4 17.5 16 C13.4 17.6 12.3 18.8 12 24 C11.7 18.8 10.6 17.6 6.5 16 C10.6 14.4 11.7 13.2 12 8 Z" fill={filled ? '#0c0c0e' : paint} />
     </svg>
   )
 }

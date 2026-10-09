@@ -7,10 +7,10 @@ export type PortraitShape = 'arch' | 'rect' | 'round'
 
 /** Luz de borda (segue o contorno do PNG/SVG via drop-shadow) e brilho de fundo por tom. */
 const RIM: Record<PortraitTone, { rim: string; glow: string; line: string; floor: string }> = {
-  cobalt: { rim: '158,168,238', glow: 'rgba(65,82,192,0.42)', line: 'border-dv-cobalt-text/45', floor: 'rgba(65,82,192,0.45)' },
-  gold: { rim: '227,213,172', glow: 'rgba(176,154,108,0.32)', line: 'border-dv-gold/55', floor: 'rgba(176,154,108,0.4)' },
+  cobalt: { rim: '158,168,238', glow: 'rgba(138,124,200,0.42)', line: 'border-dv-cobalt-text/45', floor: 'rgba(138,124,200,0.45)' },
+  gold: { rim: '227,213,172', glow: 'rgba(186,176,159,0.32)', line: 'border-dv-gold/55', floor: 'rgba(186,176,159,0.4)' },
   blood: { rim: '255,102,112', glow: 'rgba(170,20,32,0.38)', line: 'border-dv-blood/55', floor: 'rgba(170,20,32,0.45)' },
-  neutral: { rim: '238,236,239', glow: 'rgba(238,236,239,0.12)', line: 'border-dv-line-strong', floor: 'rgba(238,236,239,0.2)' },
+  neutral: { rim: '238,236,239', glow: 'rgba(238,237,235,0.12)', line: 'border-dv-line-strong', floor: 'rgba(238,237,235,0.2)' },
 }
 
 const SHAPE: Record<PortraitShape, string> = {

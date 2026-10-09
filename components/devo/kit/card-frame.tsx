@@ -12,7 +12,7 @@ const WIDTH: Record<CardSize, string> = { sm: 'w-[92px]', md: 'w-[148px]', lg: '
 
 const BORDER: Record<CardTone, string> = {
   neutral: 'from-[#d9d6e0] via-[#6e6a7a] to-[#d9d6e0]',
-  cobalt: 'from-[#c3c6ee] via-[var(--dv-cobalt-deep)] to-[#c3c6ee]',
+  cobalt: 'from-[#dcd7f0] via-[var(--dv-cobalt-deep)] to-[#dcd7f0]',
   gold: 'from-[var(--dv-gold-bright)] via-[var(--dv-gold-deep)] to-[var(--dv-gold-bright)]',
   blood: 'from-[var(--dv-blood-text)] via-[var(--dv-blood-deep)] to-[var(--dv-blood-text)]',
 }
@@ -98,13 +98,13 @@ export function CardFrame({
           className="pointer-events-none absolute inset-[3px] rounded-[6%/4.3%] opacity-35 mix-blend-color-dodge transition-[background-position] duration-500"
           style={{
             backgroundImage:
-              'linear-gradient(115deg, transparent 20%, rgba(158,168,238,0.35) 36%, rgba(227,213,172,0.4) 46%, rgba(255,90,99,0.22) 54%, transparent 70%)',
+              'linear-gradient(115deg, transparent 20%, rgba(203,197,232,0.35) 36%, rgba(236,229,216,0.4) 46%, rgba(255,90,99,0.22) 54%, transparent 70%)',
             backgroundSize: '250% 250%',
             backgroundPosition: 'var(--hx, 30%) var(--hy, 30%)',
           }}
         />
       )}
-      {selected && <span aria-hidden="true" className="pointer-events-none absolute -inset-[3px] rounded-[8%/6%] shadow-[0_0_0_2px_var(--dv-cobalt),0_0_22px_rgba(65,82,192,0.7)]" />}
+      {selected && <span aria-hidden="true" className="pointer-events-none absolute -inset-[3px] rounded-[8%/6%] shadow-[0_0_0_2px_var(--dv-cobalt),0_0_22px_rgba(138,124,200,0.7)]" />}
     </>
   )
 

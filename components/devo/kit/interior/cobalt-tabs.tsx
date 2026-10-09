@@ -89,7 +89,7 @@ export function CobaltTabs<V extends string>({
               className={cn(
                 'dv-focus relative flex min-h-11 shrink-0 items-center justify-center gap-1.5 px-4 font-sans text-[11px] font-medium uppercase tracking-[0.14em] transition-colors duration-200',
                 fill && 'flex-1',
-                active ? 'bg-in-accent-fill text-white shadow-[0_0_18px_-4px_rgba(52,64,158,0.7)]' : 'text-in-fg-2 enabled:hover:bg-in-accent-fill/10 enabled:hover:text-in-fg',
+                active ? 'bg-in-accent-fill text-white shadow-[0_0_18px_-4px_rgba(138,124,200,0.7)]' : 'text-in-fg-2 enabled:hover:bg-in-accent-fill/10 enabled:hover:text-in-fg',
                 'disabled:cursor-not-allowed disabled:opacity-40',
               )}
             >

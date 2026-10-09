@@ -5,10 +5,10 @@ import { cn } from '@/lib/utils'
 
 /** Mapas de gradiente (sombra → meio → luz), em 0..1 por canal. */
 const MAPS = {
-  // veludo → índigo-marinho do sistema → porcelana (padrão do Record)
-  cobalt: { r: [0.039, 0.204, 0.949], g: [0.035, 0.251, 0.941], b: [0.051, 0.62, 0.925] },
-  // veludo → lavanda da noite → porcelana (retrato, arte de destaque: o "toque violeta")
-  violet: { r: [0.039, 0.302, 0.949], g: [0.035, 0.278, 0.941], b: [0.051, 0.565, 0.925] },
+  // veludo → grafite com sopro de ametista → porcelana (padrão do Record: tinta quase p/b)
+  cobalt: { r: [0.047, 0.32, 0.945], g: [0.047, 0.31, 0.94], b: [0.055, 0.37, 0.93] },
+  // veludo → ametista → porcelana (retrato, arte de destaque: o toque frio)
+  violet: { r: [0.047, 0.36, 0.945], g: [0.047, 0.32, 0.94], b: [0.055, 0.52, 0.93] },
   // preto e branco puro, cinza de mármore no meio (gravura)
   mono: { r: [0.039, 0.35, 0.949], g: [0.035, 0.35, 0.941], b: [0.051, 0.37, 0.925] },
   // veludo → rubi → porcelana (só em contexto de perigo)

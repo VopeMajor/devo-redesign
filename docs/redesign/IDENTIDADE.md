@@ -11,69 +11,94 @@ brilhos sutis, microinterações). Nada de copiar telas, personagens, logos, íc
 
 ---
 
-## 0. Paleta, material e ornamento (Direção 2 §0 — prioridade sobre o resto do guia)
+## 0. Paleta, material e ornamento (Direção 2 §0 e §6 — prioridade sobre o resto do guia)
 
-A paleta saiu das últimas refs do dono (`refs/ref-gotico-figurino.png`, `ref-valsa-relogio.png`,
-`ref-gaiola-ouro.png`, `ref-xadrez-marmore.png` e os figurinos `refs/npc/npc-ref-01…13.jpg`), por
-amostragem dos pixels (PIL, quantização por corte mediano + acentos por faixa de matiz). É
-**monocromática na base** (veludo × porcelana, mármore preto e branco), com **latão dessaturado** no
-metal, **noite azul-violeta** no ar, **índigo-marinho** discreto para o sistema e **rubi** só como joia
-ou alerta. O cobalto elétrico (#1647ff) saiu: o token `--dv-cobalt` continua com o mesmo nome e papel
-(interação), agora em índigo-marinho.
+**Referência-mestra de cor: `refs/ref-xadrez-marmore.png`** (tabuleiro de mármore com espadas; Direção 2
+§6). As demais refs do dono (figurino gótico, valsa do relógio, gaiola, figurinos de NPC) dão material e
+motivo. Cores amostradas dos pixels (PIL): casas pretas `#1e1f21`–`#4f4f4f`, casas brancas
+`#cecece`–`#f6f5f3`, veios `#797c81`, lâminas `#968c82` → `#c8c0b5` → `#ebe1d8`, pedras da guarda em
+ametista. **Base = mármore negro e branco com veios cinza, neutros (sem azul nas superfícies)**;
+**metal = aço champanhe-prateado** (não ouro amarelo); **ametista pequena** é o único acento frio
+(joia, estado ativo, foco); **rubi só alerta**; a noite azul-violeta é só atmosfera discreta nas cenas.
+Os nomes antigos dos tokens (`--dv-gold`, `--dv-cobalt`, `--in-accent`…) continuam valendo, com os
+valores novos: todas as telas herdam.
 
 | Cor | Hex | Token | Papel | De qual ref veio |
 |---|---|---|---|---|
-| Veludo (tinta) | `#0a090d` | `--dv-ink`, `--in-panel` | fundo, painéis pretos | figurino (preto `#1f1d1e`), NPCs 01/08 |
-| Veludo alto | `#1b1824` | `--dv-ink-3` | superfície elevada | sombras da valsa (`#222128`) |
-| Mármore negro | `#2e2f34` | `--dv-marble-black` | pedra, piso, tabuleiro | xadrez (`#3e3f41`) |
-| Veio / cinza mármore | `#8a8986` | `--dv-marble-vein` | veios, linhas | xadrez (`#777674`), figurino (`#868182`) |
-| Porcelana | `#f2f0ec` | `--dv-porcelain`, `--in-porcelain` | renda, superfície clara, texto claro | figurino (`#e4e0e1`), NPC 12 |
-| Papel frio | `#ece9e3` / `#e8e6e2` | `--dv-paper`, `--in-paper` | documento, fundo do interior | Record + figurino |
-| Noite | `#1c1b33` | `--dv-night` | atmosfera, céu, halo de cena | valsa, céu do relógio (`#322c35`/`#42445d`) |
-| Noite alta | `#34365a` | `--dv-night-2` | topo de gradiente de cena | valsa (`#42445d`) |
-| Lavanda acinzentada | `#6c6899` | `--dv-violet` (texto: `#aaa5d6`) | duotom, tecido, luz de cena | fita da gaiola (`#6f6984`), valsa (`#645c76`) |
-| Índigo do sistema | `#4152c0` | `--dv-cobalt` (texto: `#9ea8ee`) | foco, botão primário, dados | NPCs 06/11 (marinho `#1f2f85`) clareado p/ AA |
-| Marinho | `#2f3c9c` / `#34409e` | `--dv-cobalt-deep`, `--in-accent-fill` | aba ativa, bloco, barras | NPCs 06/11 (`#38468c`) |
-| Latão | `#b09a6c` | `--dv-gold`, `--in-brass` | metal, filigrana, molduras | gaiola (`#b59d82`), xadrez (`#b0a496`) |
-| Latão claro | `#e3d5ac` | `--dv-gold-bright` | reflexo do metal, poeira | engrenagens da valsa (`#cfb798`) |
-| Latão escuro | `#5e4d33` / `#6a5530` | `--dv-gold-deep`, `--in-gold` | sombra do metal; texto de raridade no papel | gaiola (`#6e6557`), NPC 04 |
-| Rubi | `#a3121f` | `--dv-blood`, `--in-alert` | joia, gota, alerta | valsa (`#882127`), NPC 05 (`#670001`) |
-| Vinho | `#3f060b` | `--dv-blood-deep` | fundo de alerta | NPC 13 (`#512123`) |
+| Mármore negro (veludo) | `#0c0c0e` | `--dv-ink`, `--in-panel` | fundo de tela, painéis pretos | casas pretas do tabuleiro |
+| Mármore negro 2/3/4 | `#151517` / `#1f1f22` / `#2c2c31` | `--dv-ink-2…4` | superfícies | tabuleiro (`#1e1f21`, `#34302f`) |
+| Pedra negra | `#38393c` | `--dv-marble-black` | pedra, piso, tabuleiro | tabuleiro (`#434449`) |
+| Veio cinza | `#8f8e8b` | `--dv-marble-vein` | veios, linhas | tabuleiro (`#797c81`), figurino |
+| Mármore branco (porcelana) | `#f1f0ee` | `--dv-porcelain` | superfície clara, renda | casas brancas (`#ebe9ec`) |
+| Papel frio | `#e9e8e5` / `#e7e6e3` | `--dv-paper`, `--in-paper` | documento, fundo do interior | tabuleiro (`#dddddd`), Record |
+| Texto | `#eeedeb` | `--dv-text` | texto sobre o negro | casas brancas |
+| Aço champanhe | `#bab09f` | `--dv-gold`, `--in-brass` | metal, filigrana, molduras, conquista | lâminas (`#ada79b`) |
+| Reflexo do aço | `#ece5d8` | `--dv-gold-bright` | brilho do metal, poeira | lâminas (`#ebe1d8`) |
+| Sombra do aço | `#6b6357` / `#5f584d` | `--dv-gold-deep`, `--in-gold` | sombra do metal; texto de raridade no papel | guardas (`#7b6f63`) |
+| Ametista | `#8a7cc8` | `--dv-amethyst` | joia, foco, halo de ativo | pedras da guarda |
+| Ametista clara | `#c2b9ec` / `#cbc5e8` | `--dv-amethyst-text`, `--dv-cobalt-text` | dado/rótulo ativo pequeno | reflexo das pedras |
+| Ametista fumê | `#5a4f8f` / `#463d78` / `#4e4580` | `--dv-cobalt`, `--dv-cobalt-deep`, `--in-accent-fill` (painel) | bloco de estado ativo (texto branco) | pedras na sombra |
+| Ametista tinta | `#4a4180` | `--in-accent` (papel) | link e acento pequeno sobre papel | idem |
+| Bloco ativo do papel | `#1c1c1f` | `--in-accent-fill` (papel) | aba/chip ativo: preto com texto branco | casas pretas |
+| Dados | `#2a2a2e` / `#dcd9d3` | `--in-data` | barras e marcadores (preto no papel, prata no painel) | tabuleiro |
+| Noite (atmosfera) | `#19181f` / `#2b2a35` | `--dv-night`, `--dv-night-2` | SÓ luz/sombra de cena | valsa |
+| Lavanda cinza | `#6f6b82` / `#b7b3c9` | `--dv-violet`, `--dv-violet-text` | luz de cena, tecido | valsa, gaiola |
+| Rubi / vinho | `#a3121f` / `#3f060b` | `--dv-blood`, `--dv-blood-deep`, `--in-alert` | só alerta, aviso, eliminação | valsa, NPCs 05/13 |
 
-**Contraste (WCAG AA, conferido):** porcelana sobre veludo 16.9 · índigo-texto `#9ea8ee` sobre veludo
-8.8 · lavanda `#aaa5d6` sobre veludo 8.6 · latão `#b09a6c` sobre veludo 7.3 · branco sobre índigo
-`#4152c0` 6.6 · tinta `#2e3a94` sobre papel 7.8 · rubi sobre papel 6.3 · latão escuro `#6a5530` sobre
-papel 5.7 · cinza `#565a66` sobre papel 5.5.
+**Contraste (WCAG AA, conferido):** texto sobre negro 16.7 · ametista clara `#cbc5e8` sobre negro
+11.8 · aço `#bab09f` sobre negro 9.1 · branco sobre `#5a4f8f` 7.1 · branco sobre bloco `#1c1c1f` 17 ·
+ametista tinta `#4a4180` sobre papel 7.1 · aço escuro `#5f584d` sobre papel 5.6 · cinza `#58585e` sobre
+papel 5.7 · rubi sobre papel 6.3.
 
 ### Regras de uso
-1. **Base preto e branco.** Toda tela começa em veludo + porcelana (ou papel frio no interior). Cor é
-   exceção: se não sabe, não use.
-2. **Latão só no metal.** Filetes, filigrana, molduras, engrenagens, numerais, conquistas e raridade.
-   Nunca em botão de ação nem em texto longo. Nunca amarelo: use os tokens (dessaturados).
-3. **Noite violeta é ar, não tinta.** Fundos de cena, halos, duotom de destaque, tecido. Texto
-   pequeno em lavanda só com `--dv-violet-text`.
-4. **Índigo é o sistema.** Foco, seleção, aba ativa, dados, barras de progresso. Discreto; nunca
-   decorativo.
-5. **Rubi é joia ou perigo.** Uma gota/pedra pequena por tela como ornamento (`BloodDrop`,
-   `FacetGem tone="blood"`); fora isso, só alerta, tempo crítico e eliminação.
+1. **Preto, branco e cinza primeiro.** Toda tela começa em mármore negro + branco (ou papel frio no
+   interior). Superfície nunca é azul nem violeta.
+2. **Metal é aço champanhe.** Filetes, filigrana, molduras, engrenagens, numerais, conquistas. Nunca
+   amarelo, nunca em botão de ação nem em texto longo.
+3. **Ametista é pequena.** Joia, foco, halo do item ativo, um dado em destaque. Estado ativo = branco/
+   prata + um toque de ametista; bloco de aba ativa no papel é preto.
+4. **Rubi é perigo.** Alerta, tempo crítico, eliminação e selo de aviso (pequeno).
+5. **Noite violeta é só atmosfera.** Luz e sombra nas cenas 3D; nunca fundo de tela.
 6. **Dose de ornamento (luxo gótico contido):** por tela, **1 ornamento-herói** (`CageFrame`,
    `RomanDial`, `CrossedSwords` ou a cena 3D com mostrador) + **no máximo 2 blocos com filigrana**
    (`ornate`, `BrassCorners`, `FrameCorners`) + **1 laço ou renda**. Ornamento nunca cobre texto e
    nunca anima rápido (engrenagens ≥ 60 s/volta, ponteiros ≥ 4 min/volta, lanterna 7 s).
 7. **Materiais leves.** Tudo é CSS/SVG/canvas procedural; nada de imagens de textura externas.
 
+### Emblemas (ícones de app e de sistema — `kit/emblems.tsx`)
+Sem fundo, ladrilho ou moldura (ref. `refs/ref-emblemas-icones.png`, só como estilo): silhueta
+branca/prata cheia com recortes, agulhas em losango como remate, estrelas de 4 pontas, simetria.
+viewBox 48, legíveis de 28 a 56 px. `metal` pinta com gradiente de aço; sem ele, `currentColor`.
+
+| Emblema | App/sistema | Motivo |
+|---|---|---|
+| `EmblemRecord` | Record | olho do registro com a estrela na íris |
+| `EmblemPulso` | Pulso | ampulheta no anel com agulhas cardeais |
+| `EmblemMensagens` | Mensagens | carta alada com selo de estrela |
+| `EmblemCartas` | Cartas | leque de cartas, a da frente com a estrela vazada |
+| `EmblemTrocas` | Sala de Trocas | chaves cruzadas com losango |
+| `EmblemAjustes` | Ajustes | bússola de oito agulhas |
+| `EmblemJogos` | Sala de Jogos | coroa de cinco pontas |
+| `EmblemVotes` / `EmblemAvisos` | Deadly Votes / Avisos | espadas cruzadas / lanterna |
+| `EmblemTorres` · `EmblemPoco` · `EmblemVirtudes` · `EmblemArcanos` · `EmblemCorporacoes` · `EmblemMascaras` | sistemas futuros | torre-agulha · lua sobre o poço · asas com auréola · estrela com órbita · escudo · máscara de baile |
+
+Estados (`EmblemMark`, ou o `group` do botão pai): repouso em prata; pressionado encolhe 4% com
+brilho de metal champanhe; ativo com halo de ametista embaixo; aviso = selo rubi pequeno (losango ou
+contador); bloqueado = cinza a 60% com cadeado. O shell (`os/app-icon.tsx`), a `BottomNav`, os
+`Icon*` do interior e o `LockedFeature` já usam os emblemas.
+
 ### Materiais (utilitários em `app/globals.css`)
 | Classe | Material | Uso |
 |---|---|---|
-| `dv-velvet` | veludo preto: micro-textura de pelo, brilho na borda superior, sombra violeta no pé | painel-herói escuro |
-| `dv-record-panel` | o mesmo veludo + filete de latão por dentro | `RecordPanel` escuro (automático) |
+| `dv-velvet` | veludo/mármore negro: micro-textura, brilho na borda superior | painel-herói escuro |
+| `dv-record-panel` | o mesmo veludo + filete de aço champanhe por dentro | `RecordPanel` escuro (automático) |
 | `dv-porcelain` | esmalte claro com reflexo e grão finíssimo | cartão claro, plaqueta, renda |
-| `dv-cold-paper` | papel frio com retícula violeta e pauta de HUD | fundo do interior (`PaperSheet`) |
-| `dv-marble` / `dv-marble-dark` | mármore branco/negro com veios cinza e um veio de latão (SVG procedural) | pedestal, faixa, tampo |
-| `dv-checker-marble` | xadrez de mármore p/b com rejunte de latão | piso, tabuleiro |
+| `dv-cold-paper` | papel frio neutro com retícula e pauta de HUD | fundo do interior (`PaperSheet`) |
+| `dv-marble` / `dv-marble-dark` | mármore branco/negro com veios cinza e um veio de aço (SVG procedural) | pedestal, faixa, tampo |
+| `dv-checker-marble` | xadrez de mármore p/b com rejunte de aço champanhe | piso, tabuleiro |
 | `dv-checker-faint` | xadrez quase invisível | textura do papel/porcelana |
-| `dv-brass` / `dv-brass-text` / `dv-brass-edge` | latão escovado (preenchimento, texto, filete de 1px) | plaquetas, numerais grandes, molduras |
-| `dv-night-sky` | céu do relógio: noite violeta com halo | atrás de heróis da Jornada |
+| `dv-brass` / `dv-brass-text` / `dv-brass-edge` | aço champanhe escovado (preenchimento, texto, filete de 1px) | plaquetas, numerais grandes, molduras |
+| `dv-night-sky` | céu do relógio: sombra violeta discreta com halo | atrás de heróis da Jornada (atmosfera) |
 
 ### Ornamentos (`components/devo/kit/ornament`)
 | Componente | O que é |
@@ -115,33 +140,34 @@ Classes Tailwind: `bg-dv-ink`, `text-dv-gold`, `border-dv-line`, etc. (prefixo `
 
 | Token | Valor | Classe | Uso — e só isso |
 |---|---|---|---|
-| `--dv-ink` | `#0a090d` | `bg-dv-ink` | Fundo de tela |
-| `--dv-ink-2` | `#121016` | `bg-dv-ink-2` | Superfície (painel) |
-| `--dv-ink-3` | `#1b1824` | `bg-dv-ink-3` | Superfície alta, topo de gradiente |
-| `--dv-ink-4` | `#282436` | `bg-dv-ink-4` | Realce de superfície |
-| `--dv-cobalt` | `#4152c0` | `bg-dv-cobalt` | **Sistema/interação**: botão primário, aba ativa, foco, seleção |
-| `--dv-cobalt-deep` | `#2f3c9c` | `bg-dv-cobalt-deep` | Faixas diagonais, carimbo cobalto, acento sobre papel |
-| `--dv-cobalt-dim` | `#161a40` | `bg-dv-cobalt-dim` | Fundo de item selecionado |
-| `--dv-cobalt-text` | `#9ea8ee` | `text-dv-cobalt-text` | Texto cobalto **pequeno** sobre ink (AA) |
-| `--dv-gold` | `#b09a6c` | `text-dv-gold` | **Ornamento**: filetes, filigrana, kicker, conquista, ícone de recompensa |
-| `--dv-gold-bright` | `#e3d5ac` | `text-dv-gold-bright` | Brilho do ouro, número de conquista |
-| `--dv-gold-deep` | `#5e4d33` | `bg-dv-gold-deep` | Sombra do metal |
-| `--dv-paper` | `#ece9e3` | `bg-dv-paper` / `dv-paper-bg` | **Documento**: Record, verso de regras, tiras, bilhetes, polaroides |
-| `--dv-paper-2` | `#dbd7cf` | | Dobra/sombra do papel |
-| `--dv-paper-ink` | `#141217` | `text-dv-paper-ink` | Texto sobre papel |
+| `--dv-ink` | `#0c0c0e` | `bg-dv-ink` | Fundo de tela |
+| `--dv-ink-2` | `#151517` | `bg-dv-ink-2` | Superfície (painel) |
+| `--dv-ink-3` | `#1f1f22` | `bg-dv-ink-3` | Superfície alta, topo de gradiente |
+| `--dv-ink-4` | `#2c2c31` | `bg-dv-ink-4` | Realce de superfície |
+| `--dv-cobalt` | `#5a4f8f` | `bg-dv-cobalt` | **Sistema/interação** (ametista fumê, discreta): bloco de estado ativo com texto branco, foco |
+| `--dv-cobalt-deep` | `#463d78` | `bg-dv-cobalt-deep` | Faixas diagonais, carimbo cobalto, acento sobre papel |
+| `--dv-cobalt-dim` | `#1e1b2b` | `bg-dv-cobalt-dim` | Fundo de item selecionado |
+| `--dv-cobalt-text` | `#cbc5e8` | `text-dv-cobalt-text` | Texto cobalto **pequeno** sobre ink (AA) |
+| `--dv-gold` | `#bab09f` | `text-dv-gold` | **Metal (aço champanhe)**: filetes, filigrana, kicker, conquista, ícone de recompensa |
+| `--dv-gold-bright` | `#ece5d8` | `text-dv-gold-bright` | Brilho do ouro, número de conquista |
+| `--dv-gold-deep` | `#6b6357` | `bg-dv-gold-deep` | Sombra do metal |
+| `--dv-paper` | `#e9e8e5` | `bg-dv-paper` / `dv-paper-bg` | **Documento**: Record, verso de regras, tiras, bilhetes, polaroides |
+| `--dv-paper-2` | `#d9d8d4` | | Dobra/sombra do papel |
+| `--dv-paper-ink` | `#141416` | `text-dv-paper-ink` | Texto sobre papel |
 | `--dv-blood` | `#a3121f` | `bg-dv-blood` | **Só perigo**: tempo crítico, eliminação, alerta, badge de não lidos |
 | `--dv-blood-deep` | `#3f060b` | | Fundo de alerta |
 | `--dv-blood-text` | `#ff6670` | `text-dv-blood-text` | Texto vermelho sobre ink (AA) |
-| `--dv-text` | `#eeecef` | `text-dv-text` | Texto principal |
+| `--dv-text` | `#eeedeb` | `text-dv-text` | Texto principal |
 | `--dv-text-2` | 74% | `text-dv-text-2` | Texto secundário (corpo longo) |
 | `--dv-text-3` | 56% | `text-dv-text-3` | Rótulos, metadados (mín. 11px) |
 | `--dv-line` | 14% | `border-dv-line` | Divisões |
 | `--dv-line-strong` | 32% | `border-dv-line-strong` | Bordas de controles |
-| `--dv-line-gold` | ouro 60% | `border-dv-line-gold` | Filete dourado |
-| `--dv-night` / `--dv-night-2` | `#1c1b33` / `#34365a` | `bg-dv-night` | Atmosfera (céu, halo de cena). Nunca texto |
-| `--dv-violet` / `--dv-violet-text` | `#6c6899` / `#aaa5d6` | `text-dv-violet-text` | Lavanda: duotom, tecido, luz; `-text` = AA sobre veludo |
-| `--dv-porcelain` / `-2` / `-ink` | `#f2f0ec` / `#e0ddd8` / `#121016` | `bg-dv-porcelain` | Metade clara da base (renda, superfície clara) |
-| `--dv-marble-vein` / `--dv-marble-black` | `#8a8986` / `#2e2f34` | | Mármore (veios, pedra negra) |
+| `--dv-amethyst` / `-text` / `-deep` | `#8a7cc8` / `#c2b9ec` / `#4e4580` | `text-dv-amethyst-text` | Único acento frio: joia, foco, halo de ativo |
+| `--dv-line-gold` | aço 60% | `border-dv-line-gold` | Filete dourado |
+| `--dv-night` / `--dv-night-2` | `#19181f` / `#2b2a35` | `bg-dv-night` | Atmosfera (céu, halo de cena). Nunca texto |
+| `--dv-violet` / `--dv-violet-text` | `#6f6b82` / `#b7b3c9` | `text-dv-violet-text` | Lavanda: duotom, tecido, luz; `-text` = AA sobre veludo |
+| `--dv-porcelain` / `-2` / `-ink` | `#f2f0ec` / `#e0ddd8` / `#151517` | `bg-dv-porcelain` | Metade clara da base (renda, superfície clara) |
+| `--dv-marble-vein` / `--dv-marble-black` | `#8f8e8b` / `#38393c` | | Mármore (veios, pedra negra) |
 
 Outros: `--dv-glow-cobalt|gold|blood` (box-shadow), `--dv-shadow-1|2`, `--dv-cut` (10px) /
 `--dv-cut-lg` (18px), curvas e durações (§7), `--dv-curtain` (1800ms).

@@ -56,7 +56,7 @@ export function Stat({
           {unit && <span className="font-mono text-[11px] font-normal uppercase tracking-[0.12em] text-in-fg-3">{unit}</span>}
         </dd>
         {hint && <dd className="mt-1.5 font-sans text-[11px] uppercase tracking-[0.08em] text-in-fg-3">{hint}</dd>}
-        <span aria-hidden="true" className="mt-2 block h-px w-8 bg-in-accent-fill" />
+        <span aria-hidden="true" className="mt-2 block h-px w-8 bg-in-data" />
       </div>
     )
   }

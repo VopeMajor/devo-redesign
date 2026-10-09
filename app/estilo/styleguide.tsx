@@ -48,25 +48,25 @@ import { DeadlyVoteSymbol } from '@/components/devo/system/symbol'
 import { OddsBar, PaperField, Plaque, PortraitFrame, StatusSeal } from '@/components/devo/kit'
 import { portraitFrameProps } from '@/lib/devo/npcs'
 import { InteriorSection } from './interior-section'
-import { MaterialGrid, OrnamentShowcase, PaletteGrid } from './material-section'
+import { BoardSample, EmblemShowcase, MaterialGrid, OrnamentShowcase, PaletteGrid } from './material-section'
 
 const COLORS: { group: string; items: { name: string; v: string; use: string }[] }[] = [
   {
-    group: 'Índigo-marinho (sistema)',
+    group: 'Sistema (ametista, discreto)',
     items: [
-      { name: '--dv-cobalt', v: '#4152c0', use: 'ação, foco' },
-      { name: '--dv-cobalt-deep', v: '#2f3c9c', use: 'faixas, papel' },
-      { name: '--dv-cobalt-dim', v: '#161a40', use: 'fundo ativo' },
-      { name: '--dv-cobalt-text', v: '#9ea8ee', use: 'texto AA' },
+      { name: '--dv-cobalt', v: '#5a4f8f', use: 'ação, foco' },
+      { name: '--dv-cobalt-deep', v: '#463d78', use: 'faixas, papel' },
+      { name: '--dv-cobalt-dim', v: '#1e1b2b', use: 'fundo ativo' },
+      { name: '--dv-cobalt-text', v: '#cbc5e8', use: 'texto AA' },
     ],
   },
   {
     group: 'Texto e linhas',
     items: [
-      { name: '--dv-text', v: '#eeecef', use: 'texto' },
-      { name: '--dv-violet-text', v: '#aaa5d6', use: 'lavanda AA' },
+      { name: '--dv-text', v: '#eeedeb', use: 'texto' },
+      { name: '--dv-violet-text', v: '#b7b3c9', use: 'lavanda AA' },
       { name: '--dv-blood-text', v: '#ff6670', use: 'alerta AA' },
-      { name: '--dv-paper-ink', v: '#141217', use: 'texto no papel' },
+      { name: '--dv-paper-ink', v: '#141416', use: 'texto no papel' },
     ],
   },
 ]
@@ -137,14 +137,17 @@ function StyleGuideBody() {
             Tribunal do Relógio
           </ImpactTitle>
           <p className="mt-4 max-w-md font-body text-[15px] leading-relaxed text-dv-text-2">
-            Um jogo mortal elegante. O tempo é a moeda e o juiz. Veludo e porcelana são a base, latão é o metal, a noite violeta é o ar, índigo é o sistema e rubi é a joia que avisa o perigo.
+            Um jogo mortal elegante. O tempo é a moeda e o juiz. Mármore negro e branco são a base, o aço champanhe é o metal, a ametista marca o que está ativo e o rubi avisa o perigo.
           </p>
         </div>
       </header>
 
       <Section id="cores" index="I" kicker="Tokens" title="Cores">
-        <p className="dv-label mb-2 text-[10px] text-dv-gold">Paleta das refs do dono · IDENTIDADE.md §0</p>
-        <PaletteGrid />
+        <p className="dv-label mb-2 text-[10px] text-dv-gold">Paleta · ref-mestra: o tabuleiro de mármore · IDENTIDADE.md §0</p>
+        <div className="grid gap-4 lg:grid-cols-[1fr_1.4fr]">
+          <BoardSample />
+          <PaletteGrid />
+        </div>
         <div className="mt-6 grid gap-6">
           {COLORS.map((g) => (
             <div key={g.group}>
@@ -172,6 +175,10 @@ function StyleGuideBody() {
         <div className="mt-8">
           <OrnamentShowcase />
         </div>
+      </Section>
+
+      <Section id="emblemas" index="I·c" kicker="Ícones" title="Emblemas">
+        <EmblemShowcase />
       </Section>
 
       <Section id="tipografia" index="II" kicker="Escala" title="Tipografia">

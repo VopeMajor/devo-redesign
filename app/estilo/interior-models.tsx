@@ -141,7 +141,7 @@ export function CartasPanel() {
               src={c.src}
               alt={`Carta ${c.name}`}
               contrast={1.15}
-              className={i === 0 ? 'aspect-[5/7] w-full shadow-[0_0_0_2px_var(--in-accent-fill),0_0_16px_rgba(52,64,158,0.6)]' : 'aspect-[5/7] w-full shadow-[0_0_0_1px_var(--in-line-strong)]'}
+              className={i === 0 ? 'aspect-[5/7] w-full shadow-[0_0_0_2px_var(--in-accent-fill),0_0_16px_rgba(138,124,200,0.6)]' : 'aspect-[5/7] w-full shadow-[0_0_0_1px_var(--in-line-strong)]'}
             />
             <p className="mt-1.5 font-serif text-[18px] font-light leading-none text-in-fg tabular-nums">
               {String(c.n).padStart(2, '0')}

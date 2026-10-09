@@ -31,6 +31,9 @@
   --color-dv-night-2: var(--dv-night-2);
   --color-dv-violet: var(--dv-violet);
   --color-dv-violet-text: var(--dv-violet-text);
+  --color-dv-amethyst: var(--dv-amethyst);
+  --color-dv-amethyst-text: var(--dv-amethyst-text);
+  --color-dv-amethyst-deep: var(--dv-amethyst-deep);
   --color-dv-porcelain: var(--dv-porcelain);
   --color-dv-porcelain-2: var(--dv-porcelain-2);
   --color-dv-porcelain-ink: var(--dv-porcelain-ink);
@@ -71,6 +74,7 @@
   --color-in-panel-2: var(--in-panel-2);
   --color-in-paper: var(--in-paper);
   --color-in-violet: var(--in-violet);
+  --color-in-data: var(--in-data);
   --color-in-brass: var(--in-brass);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
@@ -114,104 +118,108 @@
 
 :root {
   color-scheme: dark;
-  --background: #0a090d;
-  --foreground: #eeecef;
-  --card: #15131b;
-  --card-foreground: #eeecef;
-  --popover: #15131b;
-  --popover-foreground: #eeecef;
-  --primary: #4152c0;
+  --background: #0c0c0e;
+  --foreground: #eeedeb;
+  --card: #161618;
+  --card-foreground: #eeedeb;
+  --popover: #161618;
+  --popover-foreground: #eeedeb;
+  --primary: #5a4f8f;
   --primary-foreground: #ffffff;
-  --secondary: #1b1824;
-  --secondary-foreground: #eeecef;
-  --muted: #1b1824;
-  --muted-foreground: #8f8b96;
-  --accent: #201e3a;
-  --accent-foreground: #eeecef;
+  --secondary: #1f1f22;
+  --secondary-foreground: #eeedeb;
+  --muted: #1f1f22;
+  --muted-foreground: #8e8d92;
+  --accent: #23212c;
+  --accent-foreground: #eeedeb;
   --destructive: #a3121f;
-  --border: rgba(238, 236, 239, 0.18);
-  --input: rgba(238, 236, 239, 0.18);
-  --ring: #4152c0;
-  --chart-1: #4152c0;
-  --chart-2: #eeecef;
-  --chart-3: #8f8b96;
-  --chart-4: #232c74;
-  --chart-5: #201e3a;
+  --border: rgba(238,237,235, 0.18);
+  --input: rgba(238,237,235, 0.18);
+  --ring: #5a4f8f;
+  --chart-1: #5a4f8f;
+  --chart-2: #eeedeb;
+  --chart-3: #8e8d92;
+  --chart-4: #463d78;
+  --chart-5: #23212c;
   --radius: 0.375rem;
-  --sidebar: #15131b;
-  --sidebar-foreground: #eeecef;
-  --sidebar-primary: #4152c0;
+  --sidebar: #161618;
+  --sidebar-foreground: #eeedeb;
+  --sidebar-primary: #5a4f8f;
   --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #201e3a;
-  --sidebar-accent-foreground: #eeecef;
-  --sidebar-border: rgba(238, 236, 239, 0.14);
-  --sidebar-ring: #4152c0;
+  --sidebar-accent: #23212c;
+  --sidebar-accent-foreground: #eeedeb;
+  --sidebar-border: rgba(238,237,235, 0.14);
+  --sidebar-ring: #5a4f8f;
 
-  --dv-background: #d9d6d0;
-  --dv-surface: #e8e6e2;
-  --dv-black: #0a090d;
-  --dv-graphite: #15131b;
-  --dv-blue: #34409e;
-  --dv-blue-dark: #232c74;
-  --dv-blue-light: #4152c0;
+  --dv-background: #d6d5d1;
+  --dv-surface: #e7e6e3;
+  --dv-black: #0c0c0e;
+  --dv-graphite: #161618;
+  --dv-blue: #463d78;
+  --dv-blue-dark: #463d78;
+  --dv-blue-light: #5a4f8f;
   --dv-muted: #aba8ad;
   --dv-border: #c4c1bd;
   --dv-red: #a3121f;
 
   /* ── Tribunal do Relógio: tokens semânticos (regra de uso em docs/redesign/IDENTIDADE.md §0 e §2) ──
-     Paleta tirada das refs do dono (refs/ref-gotico-figurino, ref-valsa-relogio, ref-gaiola-ouro,
-     ref-xadrez-marmore): base monocromática (veludo preto × porcelana), latão dessaturado, noite
-     azul-violeta como atmosfera, rubi só como joia/alerta, índigo-marinho discreto para o sistema. */
-  /* Veludo preto (tinta): fundos e superfícies, do mais fundo ao mais alto. Neutro com um sopro violeta. */
-  --dv-ink: #0a090d;
-  --dv-ink-2: #121016;
-  --dv-ink-3: #1b1824;
-  --dv-ink-4: #282436;
-  /* Noite azul-violeta (céu do relógio, salão): SÓ atmosfera, halos e fundos de cena. Nunca texto longo. */
-  --dv-night: #1c1b33;
-  --dv-night-2: #34365a;
-  /* Lavanda acinzentada (a fita da gaiola): duotom, brilho de cena, detalhe de tecido. */
-  --dv-violet: #6c6899;
-  --dv-violet-text: #aaa5d6;
-  /* Índigo-marinho do sistema (o antigo "cobalto"): interação e dados. `-text` = AA p/ texto pequeno sobre ink. */
-  --dv-cobalt: #4152c0;
-  --dv-cobalt-deep: #2f3c9c;
-  --dv-cobalt-dim: #161a40;
-  --dv-cobalt-text: #9ea8ee;
-  /* Ouro antigo / latão (dessaturado, nunca amarelo): metal, filigrana, molduras, conquistas. Nunca ação primária. */
-  --dv-gold: #b09a6c;
-  --dv-gold-bright: #e3d5ac;
-  --dv-gold-deep: #5e4d33;
+     Referência-mestra de cor: refs/ref-xadrez-marmore.png (Direção 2 §6). Base = mármore negro e
+     branco com veios cinza (neutros, sem azul); metal = champanhe-prateado (aço escovado com leve
+     dourado-claro); ametista pequena como único acento frio; rubi só alerta; noite violeta só atmosfera. */
+  /* Mármore negro / veludo: fundos e superfícies, do mais fundo ao mais alto. Neutro. */
+  --dv-ink: #0c0c0e;
+  --dv-ink-2: #151517;
+  --dv-ink-3: #1f1f22;
+  --dv-ink-4: #2c2c31;
+  /* Noite (sombra violeta discreta): SÓ atmosfera de cena — luz, sombra, halo. Nunca fundo de tela nem texto. */
+  --dv-night: #19181f;
+  --dv-night-2: #2b2a35;
+  /* Lavanda acinzentada: brilho de cena, detalhe de tecido. */
+  --dv-violet: #6f6b82;
+  --dv-violet-text: #b7b3c9;
+  /* Sistema (o antigo "cobalto"): ametista fumê para blocos de estado ativo; `-text` = prata-ametista para dados pequenos. */
+  --dv-cobalt: #5a4f8f;
+  --dv-cobalt-deep: #463d78;
+  --dv-cobalt-dim: #1e1b2b;
+  --dv-cobalt-text: #dcd9e4;
+  /* Metal champanhe-prateado (aço escovado, leve dourado-claro; nunca amarelo): filigrana, molduras, conquistas. */
+  --dv-gold: #bab09f;
+  --dv-gold-bright: #ece5d8;
+  --dv-gold-deep: #6b6357;
   /* Papel frio (Record, verso de cartas, tiras, bilhetes, polaroides). */
-  --dv-paper: #ece9e3;
-  --dv-paper-2: #dbd7cf;
-  --dv-paper-ink: #141217;
+  --dv-paper: #e9e8e5;
+  --dv-paper-2: #d9d8d4;
+  --dv-paper-ink: #141416;
   /* Porcelana / marfim frio: a metade clara da base monocromática (renda, xadrez, superfícies claras). */
-  --dv-porcelain: #f2f0ec;
-  --dv-porcelain-2: #e0ddd8;
-  --dv-porcelain-ink: #121016;
+  --dv-porcelain: #f1f0ee;
+  --dv-porcelain-2: #dfdedb;
+  --dv-porcelain-ink: #151517;
   /* Mármore: cinza dos veios e da pedra negra (piso xadrez, tabuleiro). */
-  --dv-marble-vein: #8a8986;
-  --dv-marble-black: #2e2f34;
+  --dv-marble-vein: #8f8e8b;
+  --dv-marble-black: #38393c;
+  /* Ametista (joias da guarda das espadas): o ÚNICO acento frio. Estado ativo, foco, joia. Pequeno. */
+  --dv-amethyst: #8a7cc8;
+  --dv-amethyst-text: #c2b9ec;
+  --dv-amethyst-deep: #4e4580;
   /* Rubi: só joia/gota de detalhe e perigo real. */
   --dv-blood: #a3121f;
   --dv-blood-deep: #3f060b;
   --dv-blood-text: #ff6670;
   /* Texto sobre ink (branco porcelana). */
-  --dv-text: #eeecef;
-  --dv-text-2: rgba(238, 236, 239, 0.74);
-  --dv-text-3: rgba(238, 236, 239, 0.56);
+  --dv-text: #eeedeb;
+  --dv-text-2: rgba(238,237,235, 0.74);
+  --dv-text-3: rgba(238,237,235, 0.56);
   /* Linhas. */
-  --dv-line: rgba(238, 236, 239, 0.14);
-  --dv-line-strong: rgba(238, 236, 239, 0.32);
-  --dv-line-gold: rgba(176, 154, 108, 0.6);
+  --dv-line: rgba(238,237,235, 0.14);
+  --dv-line-strong: rgba(238,237,235, 0.32);
+  --dv-line-gold: rgba(186,176,159, 0.6);
   /* Brilhos e sombras. */
-  --dv-glow-cobalt: 0 0 28px -6px rgba(65, 82, 192, 0.75);
-  --dv-glow-gold: 0 0 22px -8px rgba(227, 213, 172, 0.7);
+  --dv-glow-cobalt: 0 0 28px -6px rgba(138,124,200, 0.6);
+  --dv-glow-gold: 0 0 22px -8px rgba(236,229,216, 0.7);
   --dv-glow-blood: 0 0 30px -6px rgba(163, 18, 31, 0.85);
   --dv-glow-violet: 0 0 40px -8px rgba(140, 134, 200, 0.6);
-  --dv-shadow-1: 0 1px 0 rgba(238, 236, 239, 0.06) inset, 0 12px 32px -16px rgba(0, 0, 0, 0.9);
-  --dv-shadow-2: 0 1px 0 rgba(238, 236, 239, 0.08) inset, 0 24px 60px -20px rgba(0, 0, 0, 0.95);
+  --dv-shadow-1: 0 1px 0 rgba(238,237,235, 0.06) inset, 0 12px 32px -16px rgba(0, 0, 0, 0.9);
+  --dv-shadow-2: 0 1px 0 rgba(238,237,235, 0.08) inset, 0 24px 60px -20px rgba(0, 0, 0, 0.95);
   /* Geometria. */
   --dv-cut: 10px;
   --dv-cut-lg: 18px;
@@ -241,7 +249,7 @@
   --secondary: #cdd1d7;
   --secondary-foreground: var(--dv-black);
   --muted: #cdd1d7;
-  --muted-foreground: #565a66;
+  --muted-foreground: #58585e;
   --accent: #c9d2f2;
   --accent-foreground: var(--dv-blue-dark);
   --destructive: var(--dv-red);
@@ -255,22 +263,22 @@
 .dv-dark {
   color-scheme: dark;
   --background: var(--dv-black);
-  --foreground: #eeecef;
+  --foreground: #eeedeb;
   --card: var(--dv-graphite);
-  --card-foreground: #eeecef;
+  --card-foreground: #eeedeb;
   --popover: var(--dv-graphite);
-  --popover-foreground: #eeecef;
+  --popover-foreground: #eeedeb;
   --primary: var(--dv-blue-light);
   --primary-foreground: #ffffff;
-  --secondary: #1b1824;
-  --secondary-foreground: #eeecef;
-  --muted: #1b1824;
-  --muted-foreground: #8f8b96;
-  --accent: #201e3a;
-  --accent-foreground: #eeecef;
+  --secondary: #1f1f22;
+  --secondary-foreground: #eeedeb;
+  --muted: #1f1f22;
+  --muted-foreground: #8e8d92;
+  --accent: #23212c;
+  --accent-foreground: #eeedeb;
   --destructive: var(--dv-red);
-  --border: rgba(238, 236, 239, 0.14);
-  --input: rgba(238, 236, 239, 0.18);
+  --border: rgba(238,237,235, 0.14);
+  --input: rgba(238,237,235, 0.18);
   --ring: var(--dv-blue-light);
 }
 
@@ -278,13 +286,13 @@
   background-color: var(--dv-background);
   background-image:
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.04 0 0 0 0 0.05 0 0 0 0 0.08 0 0 0 0.09 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"),
-    linear-gradient(to right, rgba(52, 64, 158, 0.045) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(52, 64, 158, 0.045) 1px, transparent 1px);
+    linear-gradient(to right, rgba(13,13,15, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(13,13,15, 0.04) 1px, transparent 1px);
   background-size: 220px 220px, 48px 48px, 48px 48px;
 }
 
 .dv-scanlines {
-  background-image: repeating-linear-gradient(to bottom, rgba(238, 236, 239, 0.035) 0 1px, transparent 1px 3px);
+  background-image: repeating-linear-gradient(to bottom, rgba(238,237,235, 0.035) 0 1px, transparent 1px 3px);
 }
 
 @keyframes dv-line {
@@ -628,7 +636,7 @@
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
 }
 
-.devo-scroll { scrollbar-width: thin; scrollbar-color: rgba(238, 236, 239, 0.2) transparent; }
+.devo-scroll { scrollbar-width: thin; scrollbar-color: rgba(238,237,235, 0.2) transparent; }
 
 @media (prefers-reduced-motion: reduce) {
   .animate-ember, .animate-rise, .animate-float, .animate-flicker, .animate-mist, .animate-pop, .animate-blink, .animate-tap, .animate-ping-slow, .animate-drift-away { animation: none; }
@@ -868,9 +876,9 @@
 @utility dv-ink-bg {
   background-color: var(--dv-ink);
   background-image:
-    radial-gradient(120% 70% at 50% 0%, rgba(108, 104, 153, 0.16), transparent 60%),
-    radial-gradient(80% 50% at 50% 0%, rgba(42, 72, 214, 0.1), transparent 70%),
-    radial-gradient(90% 60% at 50% 110%, rgba(176, 154, 108, 0.07), transparent 70%);
+    radial-gradient(120% 70% at 50% 0%, rgba(238,237,235, 0.05), transparent 60%),
+    radial-gradient(80% 50% at 50% 0%, rgba(111,107,130, 0.07), transparent 70%),
+    radial-gradient(90% 60% at 50% 110%, rgba(186,176,159, 0.07), transparent 70%);
 }
 /* Papel marfim com grão e pauta leve (documentos). */
 @utility dv-paper-bg {
@@ -878,7 +886,7 @@
   background-color: var(--dv-paper);
   background-image:
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.35 0 0 0 0 0.27 0 0 0 0 0.12 0 0 0 0.16 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"),
-    linear-gradient(to bottom, transparent 23px, rgba(52, 64, 158, 0.07) 23px, rgba(52, 64, 158, 0.07) 24px);
+    linear-gradient(to bottom, transparent 23px, rgba(13,13,15, 0.06) 23px, rgba(13,13,15, 0.06) 24px);
   background-size: 180px 180px, 100% 24px;
 }
 /* Costura tracejada interna (diário). */
@@ -894,8 +902,8 @@
 @utility dv-checker {
   background-color: var(--dv-ink-2);
   background-image:
-    linear-gradient(45deg, rgba(243, 241, 236, 0.07) 25%, transparent 25%, transparent 75%, rgba(243, 241, 236, 0.07) 75%),
-    linear-gradient(45deg, rgba(243, 241, 236, 0.07) 25%, transparent 25%, transparent 75%, rgba(243, 241, 236, 0.07) 75%);
+    linear-gradient(45deg, rgba(241,240,238, 0.07) 25%, transparent 25%, transparent 75%, rgba(241,240,238, 0.07) 75%),
+    linear-gradient(45deg, rgba(241,240,238, 0.07) 25%, transparent 25%, transparent 75%, rgba(241,240,238, 0.07) 75%);
   background-size: 32px 32px;
   background-position: 0 0, 16px 16px;
 }
@@ -939,46 +947,47 @@
 .dv-interior {
   color-scheme: light;
   /* superfícies fixas (iguais nos dois escopos) */
-  --in-paper: #e8e6e2;
-  --in-paper-2: #d9d6d0;
-  --in-porcelain: #f4f2ee;
-  --in-panel: #0a090d;   /* preto aveludado */
-  --in-panel-2: #15131b;
+  --in-paper: #e7e6e3;
+  --in-paper-2: #d6d5d1;
+  --in-porcelain: #f3f2f0;
+  --in-panel: #0c0c0e;   /* preto aveludado */
+  --in-panel-2: #161618;
   /* semânticos do escopo PAPEL */
   --in-bg: var(--in-paper);
   --in-bg-2: var(--in-paper-2);
-  --in-fg: #0c0b10;
-  --in-fg-2: rgba(12, 11, 16, 0.74);
-  --in-fg-3: #565a66;
-  --in-line: rgba(12, 11, 16, 0.16);
-  --in-line-strong: rgba(12, 11, 16, 0.42);
-  --in-accent: #2e3a94;      /* tinta índigo-marinho do sistema (texto AA 7.8 sobre papel) */
-  --in-accent-fill: #34409e; /* blocos sólidos (abas, barras) — texto branco 8.9 */
-  --in-accent-glow: rgba(52, 64, 158, 0.55);
-  --in-violet: #4d4790;      /* só toque de duotom / atmosfera */
+  --in-fg: #0d0d0f;
+  --in-fg-2: rgba(13,13,15, 0.74);
+  --in-fg-3: #58585e;
+  --in-line: rgba(13,13,15, 0.16);
+  --in-line-strong: rgba(13,13,15, 0.42);
+  --in-accent: #3d3858;      /* grafite-ametista: links e acento pequeno sobre papel (AA) */
+  --in-accent-fill: #1c1c1f; /* bloco ativo monocromático (aba, chip) — texto branco */
+  --in-data: #2a2a2e;        /* barras e marcadores de dados (preto/prata) */
+  --in-accent-glow: rgba(138,124,200, 0.45);
+  --in-violet: #5d5970;      /* só toque de duotom / atmosfera */
   --in-alert: #a3121f;       /* só alerta / joia */
-  --in-gold: #6a5530;        /* latão escuro: só raridade lendária / conquista (texto AA 5.7) */
-  --in-brass: #a08a5e;       /* filete de latão (decorativo, não texto) */
-  --in-glow: 0 0 18px rgba(52, 64, 158, 0.45);
+  --in-gold: #5f584d;        /* latão escuro: só raridade lendária / conquista (texto AA 5.7) */
+  --in-brass: #a59d90;       /* filete de latão (decorativo, não texto) */
+  --in-glow: 0 0 18px rgba(138,124,200, 0.4);
   /* shadcn dentro do interior */
   --background: var(--in-paper);
-  --foreground: #0c0b10;
+  --foreground: #0d0d0f;
   --card: #f1efeb;
-  --card-foreground: #0c0b10;
+  --card-foreground: #0d0d0f;
   --popover: #f1efeb;
-  --popover-foreground: #0c0b10;
-  --primary: #34409e;
+  --popover-foreground: #0d0d0f;
+  --primary: #463d78;
   --primary-foreground: #ffffff;
   --secondary: var(--in-paper-2);
-  --secondary-foreground: #0c0b10;
+  --secondary-foreground: #0d0d0f;
   --muted: var(--in-paper-2);
-  --muted-foreground: #565a66;
-  --accent: #d3d5ea;
-  --accent-foreground: #2e3a94;
+  --muted-foreground: #58585e;
+  --accent: #dcd9e8;
+  --accent-foreground: #4a4180;
   --destructive: #a3121f;
-  --border: rgba(12, 11, 16, 0.16);
-  --input: rgba(12, 11, 16, 0.24);
-  --ring: #34409e;
+  --border: rgba(13,13,15, 0.16);
+  --input: rgba(13,13,15, 0.24);
+  --ring: #463d78;
   color: var(--in-fg);
   font-family: var(--font-sans);
 }
@@ -988,34 +997,35 @@
   color-scheme: dark;
   --in-bg: var(--in-panel);
   --in-bg-2: var(--in-panel-2);
-  --in-fg: #eeecef;
-  --in-fg-2: rgba(238, 236, 239, 0.76);
-  --in-fg-3: rgba(238, 236, 239, 0.56);
-  --in-line: rgba(238, 236, 239, 0.13);
-  --in-line-strong: rgba(238, 236, 239, 0.34);
-  --in-accent: #8f9cf0;      /* índigo legível em texto pequeno sobre o veludo (AA 7.7) */
-  --in-accent-fill: #34409e;
-  --in-accent-glow: rgba(65, 82, 192, 0.65);
-  --in-violet: #aaa5d6;
+  --in-fg: #eeedeb;
+  --in-fg-2: rgba(238,237,235, 0.76);
+  --in-fg-3: rgba(238,237,235, 0.56);
+  --in-line: rgba(238,237,235, 0.13);
+  --in-line-strong: rgba(238,237,235, 0.34);
+  --in-accent: #e0dde8;      /* prata com sopro de ametista: texto ativo sobre o veludo */
+  --in-accent-fill: #4e4580;
+  --in-data: #dcd9d3;
+  --in-accent-glow: rgba(138,124,200, 0.55);
+  --in-violet: #b7b3c9;
   --in-alert: #ff5a64;
-  --in-gold: #cdb684;
-  --in-brass: #b09a6c;
-  --in-glow: 0 0 22px rgba(65, 82, 192, 0.6);
-  --in-panel: #0a090d;
-  --in-panel-2: #15131b;
-  --in-paper: #e8e6e2;
+  --in-gold: #d6cdbd;
+  --in-brass: #bab09f;
+  --in-glow: 0 0 22px rgba(138,124,200, 0.5);
+  --in-panel: #0c0c0e;
+  --in-panel-2: #161618;
+  --in-paper: #e7e6e3;
   color: var(--in-fg);
 }
 
 /* Papel frio com retícula de impressão, grão e pauta de HUD muito leve. */
 @utility dv-cold-paper {
-  background-color: var(--in-paper, #e8e6e2);
+  background-color: var(--in-paper, #e7e6e3);
   background-image:
     radial-gradient(120% 50% at 50% 0%, rgba(255, 255, 255, 0.55), transparent 70%),
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.95' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.06 0 0 0 0 0.05 0 0 0 0 0.1 0 0 0 0.1 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"),
-    radial-gradient(rgba(77, 71, 144, 0.06) 0.8px, transparent 1.2px),
-    linear-gradient(to right, rgba(12, 11, 16, 0.04) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(12, 11, 16, 0.04) 1px, transparent 1px);
+    radial-gradient(rgba(13,13,15, 0.05) 0.8px, transparent 1.2px),
+    linear-gradient(to right, rgba(13,13,15, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(13,13,15, 0.04) 1px, transparent 1px);
   background-size: auto, 200px 200px, 5px 5px, 64px 64px, 64px 64px;
 }
 /* Retícula (meio-tom) cobalto para cantos e manchas de tinta. */
@@ -1025,19 +1035,19 @@
 }
 /* Painel preto do Record = veludo (cantos retos; adicione dv-cut-diag para um chanfro). */
 @utility dv-record-panel {
-  background-color: var(--in-panel, #0a090d);
+  background-color: var(--in-panel, #0c0c0e);
   background-image:
-    radial-gradient(120% 60% at 18% 0%, rgba(170, 165, 214, 0.08), transparent 60%),
+    radial-gradient(120% 60% at 18% 0%, rgba(238,237,235, 0.06), transparent 60%),
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='v'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.6 0.9' numOctaves='2' seed='4' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.9 0 0 0 0 0.88 0 0 0 0 0.95 0 0 0 0.075 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23v)'/%3E%3C/svg%3E"),
     linear-gradient(180deg, rgba(255, 255, 255, 0.035), transparent 34%, rgba(0, 0, 0, 0.25));
   background-size: auto, 160px 160px, auto;
   /* filete de latão + reflexo de borda do veludo + sombra violeta no pé */
   box-shadow:
-    inset 0 0 0 1px rgba(176, 154, 108, 0.42),
-    inset 0 0 0 2px rgba(10, 9, 13, 0.9),
-    inset 0 1px 0 2px rgba(227, 213, 172, 0.1),
-    inset 0 -24px 40px -30px rgba(108, 104, 153, 0.3),
-    0 18px 40px -24px rgba(10, 9, 13, 0.85);
+    inset 0 0 0 1px rgba(186,176,159, 0.42),
+    inset 0 0 0 2px rgba(12,12,14, 0.9),
+    inset 0 1px 0 2px rgba(236,229,216, 0.1),
+    inset 0 -24px 40px -30px rgba(111,107,130, 0.14),
+    0 18px 40px -24px rgba(12,12,14, 0.85);
 }
 
 /* Fronteira Jornada → Interior: folha de registro impressa/escaneada (Curtain tone="interior"). */
@@ -1087,7 +1097,7 @@
    ════════════════════════════════════════════════════════════════════════════════════════ */
 :root {
   --dv-velvet: #0b0a0e;
-  --dv-brass-grad: linear-gradient(135deg, #f1e9d2 0%, #8e7a57 22%, #d2c098 44%, #54452e 66%, #b5a075 84%, #f1e9d2 100%);
+  --dv-brass-grad: linear-gradient(135deg, #f4efe6 0%, #9a9184 22%, #dcd5c8 44%, #5d564c 66%, #bdb4a5 84%, #f4efe6 100%);
   --dv-marble-white: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='420' height='420'%3E%3Cfilter id='m' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.0045 0.0105' numOctaves='5' seed='11' stitchTiles='stitch' result='n'/%3E%3CfeColorMatrix in='n' type='matrix' values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  1.4 0 0 0 -0.2' result='a'/%3E%3CfeComponentTransfer in='a' result='v1'%3E%3CfeFuncA type='table' tableValues='0 0 0 0 0 0 0 0.15 1 0.15 0 0 0 0 0 0 0 0 0 0'/%3E%3C/feComponentTransfer%3E%3CfeColorMatrix in='v1' type='matrix' values='0 0 0 0 0.2  0 0 0 0 0.2  0 0 0 0 0.26  0 0 0 0.45 0' result='c1'/%3E%3CfeComponentTransfer in='a' result='v2'%3E%3CfeFuncA type='table' tableValues='0 0 0 0 0 0 0 0 0 0 0 0 0.2 1 0.2 0 0 0 0 0'/%3E%3C/feComponentTransfer%3E%3CfeColorMatrix in='v2' type='matrix' values='0 0 0 0 0.45  0 0 0 0 0.38  0 0 0 0 0.25  0 0 0 0.3 0' result='c2'/%3E%3CfeColorMatrix in='n' type='matrix' values='0 0 0 0 0.35  0 0 0 0 0.36  0 0 0 0 0.42  0 0 0 0.09 0' result='c3'/%3E%3CfeMerge%3E%3CfeMergeNode in='c3'/%3E%3CfeMergeNode in='c2'/%3E%3CfeMergeNode in='c1'/%3E%3C/feMerge%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23m)'/%3E%3C/svg%3E");
   --dv-marble-dark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='420' height='420'%3E%3Cfilter id='m' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.0045 0.0105' numOctaves='5' seed='11' stitchTiles='stitch' result='n'/%3E%3CfeColorMatrix in='n' type='matrix' values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  1.4 0 0 0 -0.2' result='a'/%3E%3CfeComponentTransfer in='a' result='v1'%3E%3CfeFuncA type='table' tableValues='0 0 0 0 0 0 0 0.15 1 0.15 0 0 0 0 0 0 0 0 0 0'/%3E%3C/feComponentTransfer%3E%3CfeColorMatrix in='v1' type='matrix' values='0 0 0 0 0.78  0 0 0 0 0.76  0 0 0 0 0.84  0 0 0 0.26 0' result='c1'/%3E%3CfeComponentTransfer in='a' result='v2'%3E%3CfeFuncA type='table' tableValues='0 0 0 0 0 0 0 0 0 0 0 0 0.2 1 0.2 0 0 0 0 0'/%3E%3C/feComponentTransfer%3E%3CfeColorMatrix in='v2' type='matrix' values='0 0 0 0 0.72  0 0 0 0 0.62  0 0 0 0 0.42  0 0 0 0.3 0' result='c2'/%3E%3CfeColorMatrix in='n' type='matrix' values='0 0 0 0 0.5  0 0 0 0 0.48  0 0 0 0 0.6  0 0 0 0.06 0' result='c3'/%3E%3CfeMerge%3E%3CfeMergeNode in='c3'/%3E%3CfeMergeNode in='c2'/%3E%3CfeMergeNode in='c1'/%3E%3C/feMerge%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23m)'/%3E%3C/svg%3E");
 }
@@ -1095,14 +1105,14 @@
 @utility dv-velvet {
   background-color: var(--dv-velvet);
   background-image:
-    radial-gradient(130% 70% at 20% -10%, rgba(170, 165, 214, 0.09), transparent 60%),
+    radial-gradient(130% 70% at 20% -10%, rgba(238,237,235, 0.07), transparent 60%),
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='v'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.6 0.9' numOctaves='2' seed='4' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.9 0 0 0 0 0.88 0 0 0 0 0.95 0 0 0 0.075 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23v)'/%3E%3C/svg%3E"),
     linear-gradient(180deg, rgba(255, 255, 255, 0.035), transparent 34%, rgba(0, 0, 0, 0.3));
   background-size: auto, 160px 160px, auto;
   box-shadow:
-    inset 0 1px 0 rgba(227, 213, 172, 0.18),
+    inset 0 1px 0 rgba(236,229,216, 0.18),
     inset 0 0 0 1px rgba(255, 255, 255, 0.035),
-    inset 0 -28px 44px -32px rgba(108, 104, 153, 0.28);
+    inset 0 -28px 44px -32px rgba(111,107,130, 0.12);
 }
 /* Porcelana fria: esmalte claro com reflexo e grão finíssimo (superfícies claras, renda, cartões). */
 @utility dv-porcelain {
@@ -1110,7 +1120,7 @@
   background-color: var(--dv-porcelain);
   background-image:
     radial-gradient(90% 60% at 30% 0%, rgba(255, 255, 255, 0.9), transparent 55%),
-    radial-gradient(70% 50% at 100% 100%, rgba(77, 71, 144, 0.06), transparent 70%),
+    radial-gradient(70% 50% at 100% 100%, rgba(13,13,15, 0.04), transparent 70%),
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.1 0 0 0 0 0.1 0 0 0 0 0.16 0 0 0 0.06 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23p)'/%3E%3C/svg%3E");
   background-size: auto, auto, 200px 200px;
   box-shadow: inset 0 1px 0 #fff, inset 0 0 0 1px rgba(18, 16, 22, 0.08);
@@ -1123,48 +1133,48 @@
 }
 /* Mármore negro com veios porcelana e latão. */
 @utility dv-marble-dark {
-  background-color: #0c0b10;
-  background-image: radial-gradient(120% 80% at 80% 0%, rgba(108, 104, 153, 0.12), transparent 60%), var(--dv-marble-dark);
+  background-color: #0d0d0f;
+  background-image: radial-gradient(120% 80% at 80% 0%, rgba(238,237,235, 0.05), transparent 60%), var(--dv-marble-dark);
   background-size: auto, 420px 420px;
 }
 /* Latão polido/escovado: preenchimento metálico (plaquetas, filetes grossos, botões de conquista). */
 @utility dv-brass {
-  color: #1a1408;
+  color: #1a1916;
   background-image: repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.07) 0 1px, transparent 1px 3px), var(--dv-brass-grad);
-  box-shadow: inset 0 1px 0 rgba(255, 246, 220, 0.6), inset 0 -1px 0 rgba(40, 28, 8, 0.5);
+  box-shadow: inset 0 1px 0 rgba(255,252,245, 0.6), inset 0 -1px 0 rgba(30,28,24, 0.5);
 }
 /* Texto em latão (títulos de conquista, numerais romanos grandes). */
 @utility dv-brass-text {
   color: var(--dv-gold);
-  background-image: linear-gradient(180deg, #f1e9d2 0%, #c2ae84 45%, #6e5b3c 70%, #cdbb93 100%);
+  background-image: linear-gradient(180deg, #f4efe6 0%, #cfc6b6 45%, #71695c 70%, #d8d0c2 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 /* Filete de latão de 1px por dentro da borda (moldura de painel/retrato). */
 @utility dv-brass-edge {
-  box-shadow: inset 0 0 0 1px rgba(176, 154, 108, 0.7), inset 0 0 0 2px rgba(10, 9, 13, 0.9), inset 0 0 0 3px rgba(227, 213, 172, 0.18);
+  box-shadow: inset 0 0 0 1px rgba(186,176,159, 0.7), inset 0 0 0 2px rgba(12,12,14, 0.9), inset 0 0 0 3px rgba(236,229,216, 0.18);
 }
 /* Xadrez de mármore preto e branco com rejunte de latão (piso, tabuleiro). */
 @utility dv-checker-marble {
-  background-color: #0c0b10;
+  background-color: #0d0d0f;
   background-image:
-    linear-gradient(90deg, rgba(176, 154, 108, 0.55) 1px, transparent 1px),
-    linear-gradient(0deg, rgba(176, 154, 108, 0.55) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(186,176,159, 0.55) 1px, transparent 1px),
+    linear-gradient(0deg, rgba(186,176,159, 0.55) 1px, transparent 1px),
     conic-gradient(#e9e6e1 25%, transparent 0 50%, #e9e6e1 0 75%, transparent 0),
     var(--dv-marble-dark);
   background-size: 48px 48px, 48px 48px, 96px 96px, 420px 420px;
 }
 /* Xadrez sutil para fundos claros (papel do interior, porcelana): quase só textura. */
 @utility dv-checker-faint {
-  background-image: conic-gradient(rgba(12, 11, 16, 0.055) 25%, transparent 0 50%, rgba(12, 11, 16, 0.055) 0 75%, transparent 0);
+  background-image: conic-gradient(rgba(13,13,15, 0.055) 25%, transparent 0 50%, rgba(13,13,15, 0.055) 0 75%, transparent 0);
   background-size: 28px 28px;
 }
 /* Céu do relógio: noite azul-violeta com halo (atmosfera da Jornada atrás de heróis). */
 @utility dv-night-sky {
   background-color: var(--dv-ink);
   background-image:
-    radial-gradient(60% 45% at 50% 30%, rgba(108, 104, 153, 0.35), transparent 70%),
+    radial-gradient(60% 45% at 50% 30%, rgba(111,107,130, 0.35), transparent 70%),
     radial-gradient(90% 70% at 50% 20%, var(--dv-night-2), transparent 75%),
     linear-gradient(180deg, var(--dv-night) 0%, var(--dv-ink) 85%);
 }

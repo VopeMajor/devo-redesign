@@ -11,12 +11,12 @@ export type MetalTone = 'brass' | 'silver' | 'current'
 
 const STOPS: Record<Exclude<MetalTone, 'current'>, [number, string][]> = {
   brass: [
-    [0, '#f1e9d2'],
-    [0.22, '#94805c'],
-    [0.45, '#d6c59e'],
-    [0.66, '#54452e'],
-    [0.86, '#b8a378'],
-    [1, '#f1e9d2'],
+    [0, '#f4efe6'],
+    [0.22, '#9a9184'],
+    [0.45, '#dcd5c8'],
+    [0.66, '#5d564c'],
+    [0.86, '#bdb4a5'],
+    [1, '#f4efe6'],
   ],
   silver: [
     [0, '#ffffff'],
@@ -68,7 +68,7 @@ export function FiligreeCorner({ tone = 'brass', className, style, ...p }: { ton
       <g fill={paint}>
         {/* losango do vértice */}
         <path d="M8.2 2.6 L13.8 8.2 L8.2 13.8 L2.6 8.2 Z" />
-        <path d="M8.2 5.6 L10.8 8.2 L8.2 10.8 L5.6 8.2 Z" fill="#0a090d" opacity="0.55" />
+        <path d="M8.2 5.6 L10.8 8.2 L8.2 10.8 L5.6 8.2 Z" fill="#0c0c0e" opacity="0.55" />
         {/* estrela de 4 pontas */}
         <path d="M24 17.2 C24.3 20.4 24.9 21 28 21.3 C24.9 21.6 24.3 22.2 24 25.4 C23.7 22.2 23.1 21.6 20 21.3 C23.1 21 23.7 20.4 24 17.2 Z" transform="translate(-0.5 -0.5)" />
         <circle cx="43.5" cy="5.5" r="1" />
@@ -113,7 +113,7 @@ export function SigilStar({ className, tone = 'current', ...p }: { tone?: MetalT
 export function OrnamentBand({ count = 5, tone = 'brass', gem = 'onyx', className }: { count?: number; tone?: MetalTone; gem?: 'onyx' | 'glass' | 'blood' | 'night'; className?: string }) {
   const { paint, defs } = useMetal(tone)
   const W = count * 40
-  const GEM: Record<string, [string, string]> = { onyx: ['#2a2733', '#0a090d'], glass: ['#ffffff', '#b9b4d6'], blood: ['#ff6b74', '#5a0710'], night: ['#6c6899', '#1c1b33'] }
+  const GEM: Record<string, [string, string]> = { onyx: ['#2a2a2e', '#0c0c0e'], glass: ['#ffffff', '#b9b4d6'], blood: ['#ff6b74', '#5a0710'], night: ['#6f6b82', '#19181f'] }
   const [g1, g2] = GEM[gem]
   return (
     <svg viewBox={`0 0 ${W} 24`} preserveAspectRatio="xMidYMid meet" aria-hidden="true" className={cn('h-6 w-full', className)}>

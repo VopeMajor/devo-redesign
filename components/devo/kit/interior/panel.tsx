@@ -101,12 +101,12 @@ export function RecordPanel({
         <header
           className={cn(
             'relative flex items-center justify-between gap-3 px-4 pb-2.5 pt-3.5',
-            variant === 'cobalt' && 'bg-[linear-gradient(100deg,var(--in-accent-fill)_0%,#3b3772_55%,transparent_100%)] pb-3',
+            variant === 'cobalt' && 'bg-[linear-gradient(100deg,rgba(238,237,235,0.12)_0%,rgba(138,124,200,0.14)_45%,transparent_100%)] pb-3 shadow-[inset_3px_0_0_var(--dv-amethyst)]',
           )}
         >
           <RecordTitle title={title} jp={jp} className={variant === 'cobalt' ? '[&_span]:!text-white' : undefined} />
           {headerRight ?? (action && <PanelLink {...action} className={variant === 'cobalt' ? '!text-white' : undefined} />)}
-          <span aria-hidden="true" className={cn('absolute inset-x-4 bottom-0 h-px', dark ? 'bg-[linear-gradient(90deg,var(--in-brass)_0%,rgba(176,154,108,0.35)_45%,transparent_100%)]' : 'bg-in-line')} />
+          <span aria-hidden="true" className={cn('absolute inset-x-4 bottom-0 h-px', dark ? 'bg-[linear-gradient(90deg,var(--in-brass)_0%,rgba(186,176,159,0.35)_45%,transparent_100%)]' : 'bg-in-line')} />
         </header>
       )}
       {ornate && <BrassCorners size={dark ? 26 : 22} inset={3} />}

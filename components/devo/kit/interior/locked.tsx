@@ -68,16 +68,24 @@ export function LockedFeature({
           </p>
           <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-in-fg-3">{hint}</p>
         </div>
-        {icon && <span aria-hidden="true" className="flex size-5 items-center text-in-fg-3 [&>svg]:size-full">{icon}</span>}
+        {icon && <span aria-hidden="true" className="flex size-7 items-center text-in-fg-3 [&>svg]:size-full">{icon}</span>}
       </div>
     )
   }
   return (
     <div role="group" aria-label={`${name}: bloqueado. ${hint}`} className={cn('relative flex min-h-[132px] flex-col items-center justify-center gap-2 px-2 py-3 text-center shadow-[inset_0_0_0_1px_var(--in-line-strong)]', className)}>
       <span aria-hidden="true" className="absolute inset-[5px] border border-dashed border-in-line" />
-      {icon && <span aria-hidden="true" className="absolute left-2.5 top-2.5 flex size-4 items-center text-in-fg-3 [&>svg]:size-full">{icon}</span>}
       <span aria-hidden="true" className="absolute right-2.5 top-2.5 font-mono text-[8px] uppercase tracking-[0.16em] text-in-fg-3">Reservado</span>
-      <LockedNode size={52} />
+      {icon ? (
+        <span aria-hidden="true" className="relative grid size-[52px] place-items-center text-in-fg-2 [&>svg]:size-full">
+          <span className="contents opacity-55">{icon}</span>
+          <span className="absolute -bottom-1 -right-1 grid size-5 place-items-center bg-in-bg text-in-fg-2 shadow-[inset_0_0_0_1px_var(--in-line-strong)]">
+            <IconLock className="size-3.5" />
+          </span>
+        </span>
+      ) : (
+        <LockedNode size={52} />
+      )}
       <p className="font-serif text-[16px] font-light uppercase leading-tight tracking-[0.03em] text-in-fg">{name}</p>
       <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-in-fg-3">{hint}</p>
     </div>
