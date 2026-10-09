@@ -45,9 +45,8 @@ import {
   type TicketData,
 } from '@/components/devo/kit'
 import { DeadlyVoteSymbol } from '@/components/devo/system/symbol'
-import { HerdeiroArt } from '@/components/devo/npc-art/herdeiro'
-import { MelissaArt } from '@/components/devo/npc-art/melissa'
 import { OddsBar, PaperField, Plaque, PortraitFrame, StatusSeal } from '@/components/devo/kit'
+import { portraitFrameProps } from '@/lib/devo/npcs'
 
 const COLORS: { group: string; items: { name: string; v: string; use: string }[] }[] = [
   {
@@ -500,12 +499,8 @@ function StyleGuideBody() {
         <p className="mb-4 font-body text-[15px] text-dv-text-2">Mesmo tratamento para raster e SVG: luz de borda na silhueta, grão, vinheta e base que se dissolve.</p>
         <div className="grid grid-cols-2 gap-x-4 gap-y-6">
           <PortraitFrame src="/images/npc/rat-host-v2.png" alt="O Rato, anfitrião" name="O Rato" role="Anfitrião" tone="gold" ornate className="w-full" />
-          <PortraitFrame alt="Herdeiro" name="Herdeiro" role="Desconhecido" tone="cobalt" className="w-full">
-            <HerdeiroArt />
-          </PortraitFrame>
-          <PortraitFrame alt="Melissa" name="Melissa" role="Prólogo" tone="blood" shape="rect" className="w-full">
-            <MelissaArt />
-          </PortraitFrame>
+          <PortraitFrame {...(portraitFrameProps('herdeiro') ?? {})} alt="Herdeiro" name="Herdeiro" role="Desconhecido" tone="cobalt" className="w-full" />
+          <PortraitFrame {...(portraitFrameProps('melissa') ?? {})} alt="Melissa" name="Melissa" role="Prólogo" tone="blood" shape="rect" className="w-full" />
           <PortraitFrame src="/images/npc/coruja.png" alt="A Coruja" name="Coruja" role="Mestra das cartas" tone="neutral" shape="round" className="w-full" />
         </div>
         <p className="dv-label mb-3 mt-8 text-[10px] text-dv-text-3">Plaque · OddsBar (da Sala de Jogos)</p>

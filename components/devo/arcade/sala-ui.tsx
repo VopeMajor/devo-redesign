@@ -8,7 +8,7 @@ import type { CSSProperties, ReactNode } from 'react'
 import { GlyphArrow, PortraitFrame } from '@/components/devo/kit'
 import type { GameId } from '@/lib/devo/arcade/games'
 import { cn } from '@/lib/utils'
-import { JavaliArt } from '../npc-art/javali'
+import { portraitFrameProps } from '@/lib/devo/npcs'
 
 /* ── Placa de status (cabeçalho) ─────────────────────────────────────────────────────── */
 
@@ -96,9 +96,16 @@ export function JavaliPortrait({
   title?: string
 }) {
   return (
-    <PortraitFrame alt={title} tone="gold" shape={shape} name={name} role={role} ornate={ornate} scale={shape === 'round' ? 1.55 : 1.08} className={className}>
-      <JavaliArt pose="table" fit="slice" />
-    </PortraitFrame>
+    <PortraitFrame
+      {...(portraitFrameProps('javali', 'neutral', shape === 'round' ? 'face' : 'bust') ?? {})}
+      alt={title}
+      tone="gold"
+      shape={shape}
+      name={name}
+      role={role}
+      ornate={ornate}
+      className={className}
+    />
   )
 }
 

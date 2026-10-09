@@ -129,6 +129,11 @@ Cada item: causa confirmada no código → mudança → arquivos.
 - **Rodar no Neon** depois de `auth-migration.sql`.
 
 ### 11. Sprites de terceiros
+- **Revertido a pedido do dono (08/10): sprites originais temporários até os OCs.** Os arquivos `npc/melissa-*`,
+  `npc/javali*`, `npc/king-dice.png` e `npc/heir-v3-*` voltaram, sempre dentro do `PortraitFrame` do kit. Um único
+  mapa de retratos por NPC/expressão (`NPC_PORTRAITS` + `portraitFrameProps()` em `lib/devo/npcs.ts`) concentra caminhos
+  e enquadramento: trocar pelos OCs é trocar só esse mapa. `components/devo/npc-art/` foi apagado.
+- *Histórico (substituído):*
 - **Mudança:** removidos `npc/melissa-*.png`, `npc/javali*.webp`, `npc/king-dice.png`, `npc/heir-v3-*.png` e
   `arcade/javali-host.tsx` (sem uso). Arte original em SVG como componentes: `components/devo/npc-art/` —
   Melissa (neutral/soft/serious; uniforme da Companhia de Despertados com mantelete e broche do olho), Javali

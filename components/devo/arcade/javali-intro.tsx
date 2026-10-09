@@ -5,14 +5,14 @@ import { Badge, FrameCorners, GlyphArrow, GlyphDiamond, GlyphHourglass, Kicker, 
 import { GAMES, PATENTES } from '@/lib/devo/arcade/games'
 import { playSfx } from '@/lib/devo/audio'
 import { cn } from '@/lib/utils'
-import { JavaliArt, type JavaliPose } from '../npc-art/javali'
+import { npcPortrait } from '@/lib/devo/npcs'
 import { formatDuration, useNow } from '../hooks'
 import { useDevo } from '../state/devo-store'
 
-type Frame = JavaliPose
+type Frame = 'table' | 'door' | 'point'
 type Visual = 'tempo' | 'jogos' | 'tutorial' | 'agenda' | 'ranking' | 'apostas' | 'chat'
 
-// Cenas desenhadas no projeto (components/devo/npc-art/javali-svg.ts), uma por pose.
+// Cenas do Javali, uma por pose (mapa de retratos em lib/devo/npcs.ts).
 const FRAMES: Frame[] = ['table', 'door', 'point']
 
 const SCRIPT: { text: string; frame: Frame; visual?: Visual }[] = [
@@ -98,15 +98,21 @@ export function JavaliIntro() {
           <div className="dv-cut absolute inset-[2px] overflow-hidden bg-black" style={{ '--dv-cut': '17px' } as CSSProperties}>
             {FRAMES.map((name) => {
               const active = name === step.frame
+              const art = npcPortrait('javali', name)
+              if (!art) return null
               return (
-                <JavaliArt
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
                   key={name}
-                  pose={name}
-                  scene
-                  fit="slice"
-                  wink={name === 'point' && index % 2 === 1}
-                  title={active ? 'Javali, anfitrião da Sala de Jogos' : undefined}
-                  className={cn('absolute inset-0 size-full transition-[opacity,transform] duration-500', active ? 'scale-100 opacity-100' : 'scale-[1.04] opacity-0')}
+                  src={art.src}
+                  alt={active ? 'Javali, anfitrião da Sala de Jogos' : ''}
+                  aria-hidden={active ? undefined : true}
+                  draggable={false}
+                  style={{ objectPosition: art.position }}
+                  className={cn(
+                    'absolute inset-0 size-full object-cover contrast-[1.05] saturate-[0.92] transition-[opacity,transform] duration-500',
+                    active ? 'scale-100 opacity-100' : 'scale-[1.04] opacity-0',
+                  )}
                 />
               )
             })}

@@ -51,8 +51,8 @@ Servidor dos jogos/salas: `lib/devo/arcade/server.ts`, `rooms.ts`, `client.ts`, 
 `public/images/` — `background.png` (catedral), `card-back.png`, `cards/*` (artes de tipo), `arcade/*`
 (banners dos jogos), `chess/*`, `npc/*`, `prologue/*`, `stickers/*`. Vídeos em `public/videos`.
 
-Retratos de Melissa, Javali e Herdeiro são arte original em SVG (`components/devo/npc-art/`), não imagens.
-A arte de terceiros que existia (`npc/melissa-*`, `npc/javali*`, `npc/king-dice`, `npc/heir-v3-*`) foi removida.
+Retratos de NPC: mapa único em `lib/devo/npcs.ts` (`NPC_PORTRAITS`, `portraitFrameProps()`), sempre exibidos no
+`PortraitFrame` do kit. Melissa, Javali e Herdeiro usam sprites de outros jogos TEMPORÁRIOS (decisão do dono, até os OCs).
 
 ## Captura e teste
 

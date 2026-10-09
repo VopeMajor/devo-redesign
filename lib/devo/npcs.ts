@@ -1,10 +1,66 @@
-import type { ComponentType } from 'react'
-import { HerdeiroArt } from '@/components/devo/npc-art/herdeiro'
-
 export type Expression = 'neutral' | 'smirk'
 
-/** Retrato desenhado no projeto (SVG como componente React), no lugar de uma imagem. */
-export type NpcArtProps = { expression?: Expression; crop?: 'face'; className?: string; title?: string }
+/**
+ * Um retrato e o seu enquadramento no `PortraitFrame` do kit.
+ * `position` = object-position (onde está o rosto); `scale` = zoom do busto (moldura em arco);
+ * `faceScale` = zoom para medalhões/avatares redondos (o kit amplia a partir de 50% 20%).
+ */
+export type PortraitArt = { src: string; position?: string; scale?: number; faceScale?: number }
+
+/**
+ * MAPA ÚNICO DE RETRATOS por NPC e expressão/pose. Para trocar o elenco (ex.: pelos OCs do dono),
+ * troque só os caminhos e o enquadramento aqui; as telas leem tudo por `npcPortrait()`.
+ *
+ * Sprites atuais são TEMPORÁRIOS (de outros jogos), mantidos a pedido do dono até os OCs
+ * (docs/redesign/DIRECAO-2.md › 1).
+ */
+export const NPC_PORTRAITS = {
+  melissa: {
+    neutral: { src: '/images/npc/melissa-neutral.png', position: '70% 0%', scale: 1.4, faceScale: 2 },
+    soft: { src: '/images/npc/melissa-soft.png', position: '50% 0%', scale: 1, faceScale: 1.6 },
+    serious: { src: '/images/npc/melissa-serious.png', position: '50% 0%', scale: 1, faceScale: 1.6 },
+  },
+  herdeiro: {
+    neutral: { src: '/images/npc/heir-v3-neutral.png', position: '50% 0%', scale: 1.15, faceScale: 3 },
+    smirk: { src: '/images/npc/heir-v3-smirk.png', position: '50% 0%', scale: 1.15, faceScale: 3 },
+  },
+  rato: {
+    neutral: { src: '/images/npc/rat-host-v2.png', position: '50% 8%', scale: 1, faceScale: 1.15 },
+  },
+  coruja: {
+    neutral: { src: '/images/npc/coruja/warai.webp', position: '50% 12%', scale: 1, faceScale: 1.15 },
+  },
+  javali: {
+    /** Debruçado na mesa (Mesa, medalhão, placas). */
+    neutral: { src: '/images/npc/javali.webp', position: '56% 0%', scale: 1, faceScale: 1.5 },
+    grin: { src: '/images/npc/javali-grin.webp', position: '56% 0%', scale: 1, faceScale: 1.5 },
+    wink: { src: '/images/npc/javali-wink.webp', position: '56% 0%', scale: 1, faceScale: 1.5 },
+    tap: { src: '/images/npc/javali-tap.webp', position: '56% 0%', scale: 1, faceScale: 1.5 },
+    /** De pé, corpo inteiro. */
+    standing: { src: '/images/npc/king-dice.png', position: '50% 0%', scale: 1, faceScale: 2.4 },
+    /** Cenas da apresentação da Sala de Jogos (palco largo, não arco). */
+    table: { src: '/images/npc/javali-scene-table.webp', position: '50% 40%' },
+    door: { src: '/images/npc/javali-scene-door.webp', position: '60% 35%' },
+    point: { src: '/images/npc/javali-scene-point.webp', position: '35% 35%' },
+  },
+} satisfies Record<string, Record<string, PortraitArt>>
+
+export type PortraitNpc = keyof typeof NPC_PORTRAITS
+export type PortraitPose<N extends PortraitNpc> = keyof (typeof NPC_PORTRAITS)[N]
+
+/** Retrato de um NPC numa expressão/pose; cai para `neutral` se a pose não existir. */
+export function npcPortrait(npc: string, pose = 'neutral'): PortraitArt | null {
+  const set = (NPC_PORTRAITS as Record<string, Record<string, PortraitArt>>)[npc]
+  if (!set) return null
+  return set[pose] ?? set.neutral ?? null
+}
+
+/** Props prontas para o `PortraitFrame`: busto (`bust`) ou rosto em medalhão (`face`). */
+export function portraitFrameProps(npc: string, pose = 'neutral', crop: 'bust' | 'face' = 'bust') {
+  const art = npcPortrait(npc, pose)
+  if (!art) return null
+  return { src: art.src, position: art.position ?? '50% 0%', scale: crop === 'face' ? (art.faceScale ?? 1.5) : (art.scale ?? 1) }
+}
 
 /**
  * Uma escolha de diálogo. Depois de feita, a resposta fica registrada para sempre
@@ -30,11 +86,8 @@ export type NpcDef = {
   id: string
   name: string
   title: string
-  portraits: Partial<Record<Expression, string>>
-  /** Arte original em SVG (tem prioridade sobre `portraits`). */
-  art?: ComponentType<NpcArtProps>
-  /** Expressões que a arte sabe desenhar. */
-  artExpressions?: Expression[]
+  /** Expressões que o NPC tem no mapa `NPC_PORTRAITS` (vazio = sem retrato). */
+  expressions: Expression[]
   /** 'cutout' para PNGs recortados; 'blend' para ilustrações com fundo escuro. */
   portraitStyle: 'cutout' | 'blend'
   choices: DialogueChoice[]
@@ -49,9 +102,7 @@ export const NPCS: Record<string, NpcDef> = {
     name: 'O Herdeiro',
     title: 'Herdeiro Absoluto',
     portraitStyle: 'cutout',
-    portraits: {},
-    art: HerdeiroArt,
-    artExpressions: ['neutral', 'smirk'],
+    expressions: ['neutral', 'smirk'],
     choices: [
       {
         id: 'quem',
@@ -81,7 +132,7 @@ export const NPCS: Record<string, NpcDef> = {
     name: 'O Rato',
     title: 'Anfitrião',
     portraitStyle: 'cutout',
-    portraits: { neutral: '/images/npc/rat-host-v2.png' },
+    expressions: ['neutral'],
     choices: [
       {
         id: 'regras',
@@ -111,7 +162,7 @@ export const NPCS: Record<string, NpcDef> = {
     name: 'Coruja',
     title: 'Guardiã das Cartas',
     portraitStyle: 'blend',
-    portraits: { neutral: '/images/npc/coruja/warai.webp' },
+    expressions: ['neutral'],
     hidden: true,
     doneText: 'Não há mais nada aqui.',
     choices: [
@@ -139,7 +190,7 @@ export const NPCS: Record<string, NpcDef> = {
     name: '???',
     title: 'Remetente desconhecido',
     portraitStyle: 'blend',
-    portraits: {},
+    expressions: [],
     choices: [
       {
         id: 'quem',

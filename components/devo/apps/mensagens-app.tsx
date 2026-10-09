@@ -3,7 +3,7 @@
 import Image from 'next/image'
 import { useEffect, useRef, useState, type CSSProperties } from 'react'
 import { playSfx } from '@/lib/devo/audio'
-import { availableChoices, getNpc, STICKER_PREFIX, stickerSrc, type DialogueChoice } from '@/lib/devo/npcs'
+import { availableChoices, getNpc, npcPortrait, portraitFrameProps, STICKER_PREFIX, stickerSrc, type DialogueChoice } from '@/lib/devo/npcs'
 import { withName } from '@/lib/devo/player-name'
 import { cn } from '@/lib/utils'
 import { formatClock } from '../hooks'
@@ -34,15 +34,11 @@ const PORTRAIT_TONE: Record<string, PortraitTone> = { rato: 'gold', herdeiro: 'c
 
 /** Retrato redondo do remetente com o tratamento do kit (PortraitFrame: luz de borda, base dissolvida). */
 function Portrait({ npcId, size = 52, className }: { npcId: string; size?: number; className?: string }) {
-  const npc = getNpc(npcId)
-  const src = npc.portraits.neutral
-  const Art = npc.art
+  const art = portraitFrameProps(npcId, 'neutral', 'face')
   return (
     <span aria-hidden="true" className={cn('shrink-0', className)} style={{ width: size }}>
-      <PortraitFrame alt="" src={Art ? undefined : src} tone={PORTRAIT_TONE[npcId] ?? 'neutral'} shape="round" position="50% 12%" scale={Art ? 1 : 1.15} className="w-full">
-        {Art ? (
-          <Art crop="face" className="size-full" />
-        ) : src ? null : (
+      <PortraitFrame alt="" {...(art ?? {})} tone={PORTRAIT_TONE[npcId] ?? 'neutral'} shape="round" className="w-full">
+        {art ? null : (
           <span className="grid size-full place-items-center font-impact text-[26px] font-bold text-dv-text-2 [text-shadow:2px_0_0_rgba(213,31,43,0.6),-2px_0_0_rgba(49,93,255,0.6)]">?</span>
         )}
       </PortraitFrame>
@@ -209,8 +205,7 @@ function Conversation({ threadId, onBack }: { threadId: string; onBack: () => vo
     })
   }
 
-  const Art = npc.art
-  const portrait = npc.portraits.neutral
+  const portrait = npcPortrait(npc.id)?.src
 
   return (
     <section className="animate-dv-slide-left relative isolate flex min-w-0 flex-1 flex-col overflow-hidden" aria-label={`Conversa com ${npc.name}`}>
@@ -218,9 +213,7 @@ function Conversation({ threadId, onBack }: { threadId: string; onBack: () => vo
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10">
         <div className="absolute inset-0 bg-[radial-gradient(70%_50%_at_85%_35%,rgba(49,93,255,0.16),transparent_70%)]" />
         <div className="absolute -right-12 top-10 h-[62%] w-[78%] opacity-[0.17] [-webkit-mask-image:radial-gradient(ellipse_55%_50%_at_60%_42%,#000_35%,transparent_78%)] [mask-image:radial-gradient(ellipse_55%_50%_at_60%_42%,#000_35%,transparent_78%)]">
-          {Art ? (
-            <Art className="size-full" />
-          ) : portrait ? (
+          {portrait ? (
             <Image src={portrait} alt="" fill sizes="320px" className="object-contain object-right-top" />
           ) : (
             <span className="absolute right-6 top-0 font-impact text-[260px] font-bold leading-none text-dv-text/60">?</span>
