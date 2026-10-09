@@ -99,3 +99,15 @@ quando o status for "em andamento" (não inscritos não veem o link).
   **Dublagem (OPCIONAL, só na cutscene inicial/prólogo)**: se falhar demais, desconsiderar sem atrasar o resto. Voz nas falas do prólogo. Geração no CI com TTS neural livre em pt-BR (ex.: Kokoro: pf_dora/pm_alex/
   pm_santa), pós-processada por personagem (Rato sinistro, voz "???" com eco, Melissa natural), arquivos em
   `public/audio/voz/`, legendas sincronizadas, botão de dublagem liga/desliga; fallback para `speechSynthesis` do aparelho.
+
+## 6. Ajustes do dono (09/10 11h)
+- **Paleta ainda não está 100%.** A referência-mestra de cor é `refs/ref-xadrez-marmore.png` (tabuleiro de mármore com
+  espadas): **mármore negro e mármore branco com veios cinza** como base dominante (preto/branco/cinzas neutros, não azul),
+  **metal champanhe-prateado** (aço escovado com leve tom dourado-claro, não ouro amarelo), **ametista** pequena nas joias
+  como único acento frio, rubi só alerta. A noite azul-violeta vira só atmosfera discreta (luz/sombra), não a cor de
+  fundo das telas. O azul-marinho/índigo de sistema sai do protagonismo: estados ativos em branco/prata/ametista.
+- **Ícones dos apps**: minimalistas e sofisticados, SEM fundo/ladrilho — emblemas de linha branca/prata em estilo sigilo
+  ornamental (ref `refs/ref-emblemas-icones.png`: estrelas de 4 pontas, laços, chaves, asas, bússola, lua, coroas, linhas finas
+  com remates pontiagudos). Um emblema próprio por app (Record, Pulso, Mensagens, Cartas, Sala de Trocas, Ajustes, Sala de
+  Jogos) e para os 6 sistemas futuros, todos da mesma família, desenhados por nós (originais).
+- NPCs ficam para depois. Sprites como PNG transparente normal, sem fundo de moldura (já é o padrão do `PortraitFrame`).
