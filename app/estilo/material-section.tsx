@@ -2,12 +2,16 @@
 
 import type { ReactNode } from 'react'
 import {
+  APP_EMBLEMS,
   BloodDrop,
   Bow,
   BrassCorners,
   CageFrame,
   CheckerFloor,
   CrossedSwords,
+  EmblemAvisos,
+  EmblemMark,
+  EmblemVotes,
   FacetGem,
   FiligreeCorner,
   Gear,
@@ -18,6 +22,8 @@ import {
   SigilLozenge,
   SigilStar,
   Sword,
+  SYSTEM_EMBLEMS,
+  type EmblemComponent,
 } from '@/components/devo/kit'
 import { portraitFrameProps } from '@/lib/devo/npcs'
 
@@ -29,21 +35,21 @@ const MELISSA = portraitFrameProps('melissa')
  */
 
 export const PALETTE: { name: string; token: string; v: string; role: string; ref: string; dark?: boolean }[] = [
-  { name: 'Veludo', token: '--dv-ink', v: '#0a090d', role: 'fundo, painel', ref: 'figurino, NPCs', dark: true },
-  { name: 'Veludo alto', token: '--dv-ink-3', v: '#1b1824', role: 'superfície', ref: 'valsa (sombras)', dark: true },
-  { name: 'Mármore negro', token: '--dv-marble-black', v: '#2e2f34', role: 'pedra, piso', ref: 'xadrez', dark: true },
-  { name: 'Veio', token: '--dv-marble-vein', v: '#8a8986', role: 'veios, linhas', ref: 'xadrez' },
-  { name: 'Porcelana', token: '--dv-porcelain', v: '#f2f0ec', role: 'renda, superfície clara', ref: 'figurino' },
-  { name: 'Papel frio', token: '--dv-paper', v: '#ece9e3', role: 'documento, interior', ref: 'Record + figurino' },
-  { name: 'Noite', token: '--dv-night', v: '#1c1b33', role: 'atmosfera, céu', ref: 'valsa (céu do relógio)', dark: true },
-  { name: 'Noite alta', token: '--dv-night-2', v: '#34365a', role: 'halo de cena', ref: 'valsa', dark: true },
-  { name: 'Lavanda', token: '--dv-violet', v: '#6c6899', role: 'duotom, tecido', ref: 'gaiola (fita)', dark: true },
-  { name: 'Índigo', token: '--dv-cobalt', v: '#4152c0', role: 'sistema, foco', ref: 'NPCs (marinho)', dark: true },
-  { name: 'Marinho', token: '--dv-cobalt-deep', v: '#2f3c9c', role: 'bloco, aba ativa', ref: 'NPCs 06/11', dark: true },
-  { name: 'Latão', token: '--dv-gold', v: '#b09a6c', role: 'metal, filigrana', ref: 'gaiola, xadrez' },
-  { name: 'Latão claro', token: '--dv-gold-bright', v: '#e3d5ac', role: 'reflexo do metal', ref: 'valsa (engrenagens)' },
-  { name: 'Latão escuro', token: '--dv-gold-deep', v: '#5e4d33', role: 'sombra do metal', ref: 'gaiola', dark: true },
-  { name: 'Rubi', token: '--dv-blood', v: '#a3121f', role: 'joia, alerta', ref: 'valsa, NPCs 05/13', dark: true },
+  { name: 'Mármore negro', token: '--dv-ink', v: '#0c0c0e', role: 'fundo, painel (veludo)', ref: 'casas pretas do tabuleiro', dark: true },
+  { name: 'Mármore negro alto', token: '--dv-ink-3', v: '#1f1f22', role: 'superfície elevada', ref: 'tabuleiro (#1e1f21)', dark: true },
+  { name: 'Pedra negra', token: '--dv-marble-black', v: '#38393c', role: 'pedra, piso', ref: 'tabuleiro (#434449)', dark: true },
+  { name: 'Veio cinza', token: '--dv-marble-vein', v: '#8f8e8b', role: 'veios, linhas', ref: 'tabuleiro (#797c81)' },
+  { name: 'Mármore branco', token: '--dv-porcelain', v: '#f1f0ee', role: 'superfície clara, texto', ref: 'casas brancas (#ebe9ec)' },
+  { name: 'Papel frio', token: '--dv-paper', v: '#e9e8e5', role: 'documento, interior', ref: 'tabuleiro (#dddddd)' },
+  { name: 'Champanhe-prata', token: '--dv-gold', v: '#bab09f', role: 'metal, filigrana', ref: 'lâminas (#ada79b)' },
+  { name: 'Reflexo do aço', token: '--dv-gold-bright', v: '#ece5d8', role: 'brilho do metal', ref: 'lâminas (#ebe1d8)' },
+  { name: 'Sombra do aço', token: '--dv-gold-deep', v: '#6b6357', role: 'sombra do metal', ref: 'guardas (#7b6f63)', dark: true },
+  { name: 'Ametista', token: '--dv-amethyst', v: '#8a7cc8', role: 'joia, ativo, foco', ref: 'pedras da guarda', dark: true },
+  { name: 'Ametista clara', token: '--dv-amethyst-text', v: '#c2b9ec', role: 'texto/dado ativo', ref: 'reflexo das pedras' },
+  { name: 'Ametista fumê', token: '--dv-cobalt', v: '#5a4f8f', role: 'bloco de estado ativo', ref: 'pedras na sombra', dark: true },
+  { name: 'Noite', token: '--dv-night', v: '#19181f', role: 'só atmosfera de cena', ref: 'valsa (sombra)', dark: true },
+  { name: 'Lavanda cinza', token: '--dv-violet', v: '#6f6b82', role: 'luz de cena', ref: 'valsa', dark: true },
+  { name: 'Rubi', token: '--dv-blood', v: '#a3121f', role: 'só alerta e aviso', ref: 'valsa, NPCs', dark: true },
   { name: 'Vinho', token: '--dv-blood-deep', v: '#3f060b', role: 'fundo de alerta', ref: 'NPC 13', dark: true },
 ]
 
@@ -62,7 +68,7 @@ export function PaletteGrid() {
       {PALETTE.map((c) => (
         <div key={c.token} className="border border-dv-line bg-dv-ink-2">
           <div className="flex h-14 items-end justify-end p-1.5" style={{ background: c.v }}>
-            <span className="font-mono text-[10px]" style={{ color: c.dark ? '#eeecef' : '#121016' }}>
+            <span className="font-mono text-[10px]" style={{ color: c.dark ? '#eeedeb' : '#151517' }}>
               {c.v}
             </span>
           </div>
@@ -91,7 +97,7 @@ export function MaterialGrid() {
       <Swatch label="Mármore · dv-marble" className="dv-marble" />
       <Swatch label="Mármore negro · dv-marble-dark" className="dv-marble-dark" />
       <Swatch label="Latão · dv-brass" className="dv-brass">
-        <span className="absolute inset-0 grid place-items-center font-card-title text-[22px] font-semibold tracking-[0.12em] text-[#1a1408]">XII</span>
+        <span className="absolute inset-0 grid place-items-center font-card-title text-[22px] font-semibold tracking-[0.12em] text-[#1a1916]">XII</span>
       </Swatch>
       <Swatch label="Xadrez · dv-checker-marble" className="dv-checker-marble" />
       <Swatch label="Céu · dv-night-sky" className="dv-night-sky">
@@ -178,6 +184,90 @@ export function OrnamentShowcase() {
         <p className="dv-label text-[10px] text-dv-gold">Veludo · BrassCorners</p>
         <p className="mt-2 font-display text-[26px] uppercase leading-none text-dv-text">Salão do Relógio</p>
         <p className="mt-2 max-w-sm font-body text-[14px] leading-relaxed text-dv-text-2">Ouro só no metal. Um ornamento-herói por tela e no máximo dois blocos com filigrana.</p>
+      </div>
+    </div>
+  )
+}
+
+const APP_NAMES: Record<keyof typeof APP_EMBLEMS, string> = {
+  record: 'Record',
+  pulso: 'Pulso',
+  mensagens: 'Mensagens',
+  cartas: 'Cartas',
+  trocas: 'Sala de Trocas',
+  ajustes: 'Ajustes',
+  jogos: 'Sala de Jogos',
+}
+const SYSTEM_NAMES: Record<keyof typeof SYSTEM_EMBLEMS, string> = {
+  torres: 'Torres de Ruptura',
+  poco: 'Poço dos Desejos',
+  virtudes: 'Virtudes',
+  arcanos: 'Arcanos',
+  corporacoes: 'Corporações',
+  mascaras: 'Salão das Máscaras',
+}
+
+function EmblemGrid({ items }: { items: [string, EmblemComponent][] }) {
+  return (
+    <ul className="grid grid-cols-3 gap-x-2 gap-y-5 sm:grid-cols-4">
+      {items.map(([name, E]) => (
+        <li key={name} className="flex flex-col items-center gap-2 text-center">
+          <EmblemMark emblem={E} size={52} />
+          <span className="dv-label text-[10px] leading-tight text-dv-text-2">{name}</span>
+        </li>
+      ))}
+    </ul>
+  )
+}
+
+/** Emblemas (Direção 2 §6): apps, sistemas futuros, tamanhos e estados. Sem fundo, sem ladrilho. */
+export function EmblemShowcase() {
+  const apps = Object.entries(APP_EMBLEMS).map(([k, E]) => [APP_NAMES[k as keyof typeof APP_EMBLEMS], E] as [string, EmblemComponent])
+  const systems = Object.entries(SYSTEM_EMBLEMS).map(([k, E]) => [SYSTEM_NAMES[k as keyof typeof SYSTEM_EMBLEMS], E] as [string, EmblemComponent])
+  return (
+    <div className="grid gap-8">
+      <div>
+        <p className="dv-label mb-4 text-[10px] text-dv-gold">Apps</p>
+        <EmblemGrid items={[...apps, ['Deadly Votes', EmblemVotes], ['Avisos', EmblemAvisos]]} />
+      </div>
+      <div>
+        <p className="dv-label mb-4 text-[10px] text-dv-gold">Sistemas futuros</p>
+        <EmblemGrid items={systems} />
+      </div>
+      <div>
+        <p className="dv-label mb-3 text-[10px] text-dv-gold">Tamanhos · 28 · 40 · 56</p>
+        <div className="flex items-end gap-5">
+          {[28, 40, 56].map((n) => (
+            <EmblemMark key={n} emblem={APP_EMBLEMS.record} size={n} />
+          ))}
+          {[28, 40, 56].map((n) => (
+            <EmblemMark key={`j${n}`} emblem={APP_EMBLEMS.jogos} size={n} />
+          ))}
+        </div>
+      </div>
+      <div>
+        <p className="dv-label mb-3 text-[10px] text-dv-gold">Estados</p>
+        <div className="grid grid-cols-5 gap-2 text-center">
+          {(
+            [
+              ['Repouso', { state: 'rest' }],
+              ['Pressionado', { state: 'pressed' }],
+              ['Ativo', { state: 'selected' }],
+              ['Aviso', { state: 'rest', badge: 3 }],
+              ['Bloqueado', { state: 'locked' }],
+            ] as const
+          ).map(([label, o]) => (
+            <div key={label} className="flex flex-col items-center gap-2">
+              <EmblemMark emblem={APP_EMBLEMS.mensagens} size={48} {...o} />
+              <span className="dv-label text-[9px] text-dv-text-3">{label}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+      <div className="dv-cold-paper flex items-center justify-around px-4 py-5 text-[#141416]">
+        {Object.values(APP_EMBLEMS).map((E, i) => (
+          <E key={i} className="size-9" />
+        ))}
       </div>
     </div>
   )

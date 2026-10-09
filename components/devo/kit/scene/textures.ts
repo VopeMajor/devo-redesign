@@ -208,21 +208,21 @@ export function makeDoorTexture(seed = 0) {
   const { c, ctx } = canvas(w, h)
   const g = ctx.createLinearGradient(0, 0, w, 0)
   g.addColorStop(0, '#0e0d14')
-  g.addColorStop(0.5, '#1b1824')
+  g.addColorStop(0.5, '#1f1f22')
   g.addColorStop(1, '#0c0b11')
   ctx.fillStyle = g
   ctx.fillRect(0, 0, w, h)
-  ctx.strokeStyle = 'rgba(176,154,108,0.55)'
+  ctx.strokeStyle = 'rgba(186,176,159,0.55)'
   ctx.lineWidth = 2
   ctx.strokeRect(12, 14, w - 24, 96)
   ctx.strokeRect(12, 124, w - 24, 118)
   // número da porta
-  ctx.fillStyle = 'rgba(227,213,172,0.85)'
+  ctx.fillStyle = 'rgba(236,229,216,0.85)'
   ctx.font = '600 22px Cinzel, Georgia, serif'
   ctx.textAlign = 'center'
   ctx.fillText(String((seed % 8) + 1).padStart(2, '0'), w / 2, 66)
   // fechadura
-  ctx.fillStyle = 'rgba(236,233,227,0.95)'
+  ctx.fillStyle = 'rgba(233,232,229,0.95)'
   ctx.beginPath()
   ctx.arc(w * 0.78, 150, 6, 0, Math.PI * 2)
   ctx.fill()
@@ -239,8 +239,8 @@ export function makeEnvTexture() {
   const h = 256
   const { c, ctx } = canvas(w, h)
   const g = ctx.createLinearGradient(0, 0, 0, h)
-  g.addColorStop(0, '#4a4c7a')
-  g.addColorStop(0.42, '#1c1b33')
+  g.addColorStop(0, '#4a4952')
+  g.addColorStop(0.42, '#19181f')
   g.addColorStop(0.5, '#2c2618')
   g.addColorStop(0.56, '#121019')
   g.addColorStop(1, '#050407')
@@ -253,8 +253,8 @@ export function makeEnvTexture() {
     ctx.fillStyle = rg
     ctx.fillRect(x - r, y - r, r * 2, r * 2)
   }
-  blob(w * 0.2, h * 0.5, 90, 'rgba(227,213,172,0.85)')
-  blob(w * 0.72, h * 0.22, 70, 'rgba(170,165,214,1)')
+  blob(w * 0.2, h * 0.5, 90, 'rgba(236,229,216,0.85)')
+  blob(w * 0.72, h * 0.22, 70, 'rgba(183,179,201,1)')
   blob(w * 0.45, h * 0.12, 26, 'rgba(242,240,236,0.6)')
   blob(w * 0.92, h * 0.45, 40, 'rgba(255,255,255,0.8)')
   const t = new THREE.CanvasTexture(c)
@@ -372,10 +372,10 @@ function marbleCanvas(size: number, kind: 'white' | 'black', seed: number) {
   }
   if (kind === 'white') {
     drawVeins(ctx, size, size, 'rgba(110,108,116,1)', Math.round(size / 40), seed, size / 300)
-    drawVeins(ctx, size, size, 'rgba(176,154,108,1)', 2, seed + 3, size / 500)
+    drawVeins(ctx, size, size, 'rgba(186,176,159,1)', 2, seed + 3, size / 500)
   } else {
     drawVeins(ctx, size, size, 'rgba(176,172,186,1)', Math.round(size / 60), seed, size / 420, 0.55)
-    drawVeins(ctx, size, size, 'rgba(176,154,108,1)', 2, seed + 5, size / 500)
+    drawVeins(ctx, size, size, 'rgba(186,176,159,1)', 2, seed + 5, size / 500)
   }
   return { c, ctx }
 }
@@ -408,7 +408,7 @@ export function makeMarbleCheckerTexture({ size = 1024, cells = 4, grout = true,
       ctx.fillRect(x * s, y * s, 2, s)
     }
   if (grout) {
-    ctx.strokeStyle = 'rgba(176,154,108,0.85)'
+    ctx.strokeStyle = 'rgba(186,176,159,0.85)'
     ctx.lineWidth = Math.max(2, size / 400)
     for (let i = 0; i <= cells; i++) {
       ctx.beginPath()
@@ -427,10 +427,10 @@ export function makeSkyDiscTexture(size = 512) {
   const { c, ctx } = canvas(size)
   const R = size / 2
   const g = ctx.createRadialGradient(R, R * 0.85, 0, R, R, R)
-  g.addColorStop(0, '#6a6f9e')
-  g.addColorStop(0.45, '#3e4170')
-  g.addColorStop(0.85, '#1f1e3a')
-  g.addColorStop(1, '#141329')
+  g.addColorStop(0, '#5d5c6c')
+  g.addColorStop(0.45, '#3c3b4a')
+  g.addColorStop(0.85, '#1d1c26')
+  g.addColorStop(1, '#121118')
   ctx.fillStyle = g
   ctx.beginPath()
   ctx.arc(R, R, R, 0, Math.PI * 2)
@@ -440,7 +440,7 @@ export function makeSkyDiscTexture(size = 512) {
     const a = rnd() * Math.PI * 2
     const r = Math.sqrt(rnd()) * R * 0.96
     ctx.globalAlpha = 0.25 + rnd() * 0.65
-    ctx.fillStyle = rnd() < 0.2 ? '#e3d5ac' : '#f2f0ec'
+    ctx.fillStyle = rnd() < 0.2 ? '#ece5d8' : '#f1f0ee'
     const d = rnd() < 0.08 ? 2.2 : 1.1
     ctx.fillRect(R + Math.cos(a) * r, R + Math.sin(a) * r, d, d)
   }
@@ -454,12 +454,12 @@ export function makeGothicWindowTexture() {
   const h = 256
   const { c, ctx } = canvas(w, h)
   const g = ctx.createLinearGradient(0, 0, 0, h)
-  g.addColorStop(0, '#5a5f8c')
-  g.addColorStop(0.6, '#2c2d4d')
-  g.addColorStop(1, '#16152a')
+  g.addColorStop(0, '#56556a')
+  g.addColorStop(0.6, '#2b2a36')
+  g.addColorStop(1, '#16151c')
   ctx.fillStyle = g
   ctx.fillRect(0, 0, w, h)
-  ctx.strokeStyle = 'rgba(10,9,13,0.75)'
+  ctx.strokeStyle = 'rgba(12,12,14,0.75)'
   ctx.lineWidth = 2
   for (let i = -h; i < w + h; i += 18) {
     ctx.beginPath()

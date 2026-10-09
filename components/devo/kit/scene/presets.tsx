@@ -282,7 +282,7 @@ function SigilPreset({ intensity, alert, focus, lite }: PresetProps) {
   const hoursTex = useDisposable(() => makeDialTexture({ size: lite ? 512 : 768, numerals: 'hours72', ticks: 72, color: DV_COLOR.violetText, inner: 0.6 }), [lite])
   const glowTex = useDisposable(() => makeGlowTexture(128))
   const starGeo = useDisposable(() => makeStarGeometry(1, 0.1))
-  const starMat = useRimMaterial({ color: '#d9d6ea', rim: '#aaa5d6', rimPower: 2.4, rimStrength: 1.4, metalness: 1, roughness: 0.24, emissive: '#1c1b33', emissiveIntensity: 0.4 })
+  const starMat = useRimMaterial({ color: '#e0dfdc', rim: '#b7b3c9', rimPower: 2.4, rimStrength: 1.4, metalness: 1, roughness: 0.24, emissive: '#19181f', emissiveIntensity: 0.4 })
   const v = useMemo(() => new THREE.Vector3(), [])
   useEnvironment(0.9)
 
@@ -367,7 +367,7 @@ function SigilPreset({ intensity, alert, focus, lite }: PresetProps) {
           <group ref={orbit} rotation={[0, 0, -0.42]} position={[0, 0, 0.06]}>
             <mesh scale={[1.08, 0.38, 1]}>
               <torusGeometry args={[1, 0.022, 8, lite ? 96 : 140]} />
-              <meshStandardMaterial color="#e6e4f0" metalness={0.9} roughness={0.25} emissive={DV_COLOR.night2} emissiveIntensity={0.35} />
+              <meshStandardMaterial color="#ebeae8" metalness={0.9} roughness={0.25} emissive={DV_COLOR.night2} emissiveIntensity={0.35} />
             </mesh>
             <mesh ref={moon}>
               <sphereGeometry args={[0.06, 16, 12]} />
@@ -444,9 +444,9 @@ function CathedralPreset({ intensity, alert, lite }: PresetProps) {
       <color attach="background" args={[DV_COLOR.ink]} />
       <fog attach="fog" args={['#0e0c18', 6, 36]} />
       <CameraRig pos={[0, 1.6, 8]} look={[0, 3.2, -16]} drift={0.35} />
-      <ambientLight intensity={0.9} color="#8c88b8" />
-      <hemisphereLight args={['#aaa5d6', '#121016', 0.8]} />
-      <directionalLight position={[2, 10, -6]} intensity={2.4 * intensity} color="#e0def0" />
+      <ambientLight intensity={0.9} color="#9c99ad" />
+      <hemisphereLight args={['#b7b3c9', '#151517', 0.8]} />
+      <directionalLight position={[2, 10, -6]} intensity={2.4 * intensity} color="#e6e5e2" />
       <pointLight position={[0, 6, -10]} intensity={90 * intensity} distance={30} decay={1.4} color={DV_COLOR.violet} />
       <pointLight position={[0, 3, 2]} intensity={30 * intensity} distance={14} decay={1.4} color={DV_COLOR.goldBright} />
       <AlertLight alert={alert} position={[0, 5, 0]} power={40} />
@@ -455,11 +455,11 @@ function CathedralPreset({ intensity, alert, lite }: PresetProps) {
       {[-1, 1].map((side) => (
         <mesh key={side} position={[side * 3.1, 10.35, -14]}>
           <boxGeometry args={[1.3, 0.5, 44]} />
-          <meshStandardMaterial color="#2a2836" roughness={0.85} />
+          <meshStandardMaterial color="#2a2a2e" roughness={0.85} />
         </mesh>
       ))}
       <MistLayers
-        color="#aaa5d6"
+        color="#b7b3c9"
         opacity={0.42 * intensity}
         layers={[
           { y: 0.9, z: 1, w: 16, h: 3, speed: 0.008 },
@@ -471,13 +471,13 @@ function CathedralPreset({ intensity, alert, lite }: PresetProps) {
       />
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, -12]}>
         <planeGeometry args={[14, 50]} />
-        <meshStandardMaterial color="#1b1824" roughness={0.4} metalness={0.35} />
+        <meshStandardMaterial color="#1f1f22" roughness={0.4} metalness={0.35} />
       </mesh>
       <group ref={shafts}>
         {[-1.6, 0.8, 2.2, -0.4].map((x, i) => (
           <mesh key={i} position={[x, 7, -6 - i * 4]} rotation={[0, 0, 0.32]}>
             <planeGeometry args={[1.1 + (i % 2) * 0.6, 16]} />
-            <meshBasicMaterial map={shaftTex} color={i % 2 ? '#e6e4f0' : DV_COLOR.violetText} transparent opacity={0.12} depthWrite={false} blending={THREE.AdditiveBlending} side={THREE.DoubleSide} toneMapped={false} />
+            <meshBasicMaterial map={shaftTex} color={i % 2 ? '#ebeae8' : DV_COLOR.violetText} transparent opacity={0.12} depthWrite={false} blending={THREE.AdditiveBlending} side={THREE.DoubleSide} toneMapped={false} />
           </mesh>
         ))}
       </group>
@@ -489,7 +489,7 @@ function CathedralPreset({ intensity, alert, lite }: PresetProps) {
           </mesh>
         ))}
       </group>
-      <Dust count={lite ? 100 : 220} color="#e3d5ac" area={[8, 10, 26]} center={[0, 4, -10]} speed={0.1} size={0.08} opacity={0.6 * intensity} />
+      <Dust count={lite ? 100 : 220} color="#ece5d8" area={[8, 10, 26]} center={[0, 4, -10]} speed={0.1} size={0.08} opacity={0.6 * intensity} />
     </>
   )
 }
@@ -570,21 +570,21 @@ function TablePreset({ intensity, alert, lite }: PresetProps) {
   const sideTex = useDisposable(() => makeMarbleTexture({ kind: 'black', size: 256, seed: 6, repeat: [4, 0.25] }))
   const floorTex = useDisposable(() => makeMarbleTexture({ kind: 'black', size: lite ? 512 : 768, seed: 2, repeat: [3, 3] }), [lite])
   const boardMats = useDisposable(() => {
-    const side = new THREE.MeshStandardMaterial({ map: sideTex, color: '#8a8896', roughness: 0.35, metalness: 0.1 })
+    const side = new THREE.MeshStandardMaterial({ map: sideTex, color: '#8c8b90', roughness: 0.35, metalness: 0.1 })
     const top = new THREE.MeshStandardMaterial({ map: boardTex, roughness: 0.22, metalness: 0.08 })
     const arr = [side, side, top, side, side, side]
     return Object.assign(arr, { dispose: () => [side, top].forEach((m) => m.dispose()) })
   }, [boardTex, sideTex])
   const cardTex = useDisposable(() => makeCardBackTexture())
   const glowTex = useDisposable(() => makeGlowTexture(128))
-  const steel = useRimMaterial({ color: '#d9d8e0', rim: '#e6e4f0', rimPower: 2.6, rimStrength: 0.9, metalness: 1, roughness: 0.2 })
+  const steel = useRimMaterial({ color: '#d9d8e0', rim: '#ebeae8', rimPower: 2.6, rimStrength: 0.9, metalness: 1, roughness: 0.2 })
   const brass = useRimMaterial({ color: DV_COLOR.gold, rim: DV_COLOR.goldBright, rimPower: 2.2, rimStrength: 0.8, metalness: 1, roughness: 0.3, emissive: DV_COLOR.goldDeep, emissiveIntensity: 0.25 })
-  const grip = useDisposable(() => new THREE.MeshStandardMaterial({ color: '#16141b', roughness: 0.6, metalness: 0.2 }))
+  const grip = useDisposable(() => new THREE.MeshStandardMaterial({ color: '#161618', roughness: 0.6, metalness: 0.2 }))
   const gem = useDisposable(() => new THREE.MeshStandardMaterial({ color: DV_COLOR.violet, emissive: DV_COLOR.night2, emissiveIntensity: 0.8, roughness: 0.1, metalness: 0.3 }))
   const kingGeo = useDisposable(() => makePieceGeometry('king'))
   const pawnGeo = useDisposable(() => makePieceGeometry('pawn'))
-  const blackPiece = useDisposable(() => new THREE.MeshStandardMaterial({ color: '#16141b', roughness: 0.18, metalness: 0.35 }))
-  const whitePiece = useDisposable(() => new THREE.MeshStandardMaterial({ color: '#ece9e3', roughness: 0.3, metalness: 0.05 }))
+  const blackPiece = useDisposable(() => new THREE.MeshStandardMaterial({ color: '#161618', roughness: 0.18, metalness: 0.35 }))
+  const whitePiece = useDisposable(() => new THREE.MeshStandardMaterial({ color: '#e9e8e5', roughness: 0.3, metalness: 0.05 }))
   useEnvironment(0.7)
   const pulse = useAlertPulse(alert)
   const cards = useMemo(
@@ -629,36 +629,36 @@ function TablePreset({ intensity, alert, lite }: PresetProps) {
       <color attach="background" args={[DV_COLOR.ink]} />
       <fog attach="fog" args={[DV_COLOR.ink, 6, 17]} />
       <CameraRig pos={[0, 4.4, 5.6]} look={[0, 0, 0]} drift={0.15} />
-      <ambientLight intensity={0.3} color="#8c88b8" />
-      <hemisphereLight args={['#aaa5d6', '#0a090d', 0.35]} />
+      <ambientLight intensity={0.3} color="#9c99ad" />
+      <hemisphereLight args={['#b7b3c9', '#0c0c0e', 0.35]} />
       <pointLight position={[-4, 2.5, -3]} intensity={14 * intensity} distance={12} decay={1.4} color={DV_COLOR.violet} />
       <primitive object={target} position={[0, 0, 0]} />
       <group ref={lamp} position={[0, 3.4, 0]}>
         <mesh position={[0, 2, 0]}>
           <cylinderGeometry args={[0.008, 0.008, 4, 4]} />
-          <meshBasicMaterial color="#2a2733" />
+          <meshBasicMaterial color="#2a2a2e" />
         </mesh>
         <mesh>
           <coneGeometry args={[0.5, 0.42, 32, 1, true]} />
-          <meshStandardMaterial color="#121016" metalness={0.6} roughness={0.4} side={THREE.DoubleSide} />
+          <meshStandardMaterial color="#151517" metalness={0.6} roughness={0.4} side={THREE.DoubleSide} />
         </mesh>
         <mesh position={[0, -0.21, 0]} rotation={[Math.PI / 2, 0, 0]} material={brass}>
           <torusGeometry args={[0.5, 0.014, 6, 48]} />
         </mesh>
         <sprite position={[0, -0.18, 0]} scale={[0.7, 0.7, 1]}>
-          <spriteMaterial map={glowTex} color="#fbf4e4" transparent depthWrite={false} blending={THREE.AdditiveBlending} toneMapped={false} />
+          <spriteMaterial map={glowTex} color="#f8f5ee" transparent depthWrite={false} blending={THREE.AdditiveBlending} toneMapped={false} />
         </sprite>
         {/* cone de luz visível */}
         <mesh position={[0, -1.75, 0]}>
           <coneGeometry args={[2.1, 3.1, 40, 1, true]} />
-          <meshBasicMaterial color="#f2ead6" transparent opacity={0.04 * intensity} depthWrite={false} blending={THREE.AdditiveBlending} side={THREE.DoubleSide} toneMapped={false} />
+          <meshBasicMaterial color="#f1ede4" transparent opacity={0.04 * intensity} depthWrite={false} blending={THREE.AdditiveBlending} side={THREE.DoubleSide} toneMapped={false} />
         </mesh>
-        <spotLight ref={spot} position={[0, -0.15, 0]} angle={0.66} penumbra={0.6} decay={1.2} distance={12} intensity={38} color="#f4ecd8" />
+        <spotLight ref={spot} position={[0, -0.15, 0]} angle={0.66} penumbra={0.6} decay={1.2} distance={12} intensity={38} color="#f2eee6" />
       </group>
       {/* chão de mármore negro */}
       <mesh rotation={[-Math.PI / 2, 0, 0]}>
         <planeGeometry args={[24, 24]} />
-        <meshStandardMaterial map={floorTex} color="#6a6876" roughness={0.42} metalness={0.15} />
+        <meshStandardMaterial map={floorTex} color="#6c6b70" roughness={0.42} metalness={0.15} />
       </mesh>
       {/* tabuleiro (placa de mármore) */}
       <mesh position={[0, 0.12, 0]} material={boardMats}>
@@ -708,7 +708,7 @@ function CorridorPreset({ intensity, alert, lite }: PresetProps) {
     return tex
   })
   const floorTex = useDisposable(() => {
-    const t = makeCheckerTexture({ light: '#6b6a70', dark: '#0a090d', cells: 8 })
+    const t = makeCheckerTexture({ light: '#6b6a70', dark: '#0c0c0e', cells: 8 })
     t.wrapS = t.wrapT = THREE.RepeatWrapping
     t.repeat.set(2, 16)
     return t
@@ -735,8 +735,8 @@ function CorridorPreset({ intensity, alert, lite }: PresetProps) {
       <color attach="background" args={[DV_COLOR.ink]} />
       <fog attach="fog" args={[DV_COLOR.ink, 3, lite ? 20 : 28]} />
       <CameraRig pos={[0, 1.45, 4]} look={[0, 1.3, -20]} drift={0.06} />
-      <ambientLight intensity={0.3} color="#7a7699" />
-      <pointLight position={[0, 2.6, -2]} intensity={6 * intensity} distance={10} color="#f2e8cf" />
+      <ambientLight intensity={0.3} color="#858393" />
+      <pointLight position={[0, 2.6, -2]} intensity={6 * intensity} distance={10} color="#f0ebe0" />
       <pointLight position={[0, 2.4, -14]} intensity={10 * intensity} distance={16} color={DV_COLOR.violet} />
       <AlertLight alert={alert} position={[0, 2.5, -4]} power={26} />
       <group ref={rig}>
@@ -747,7 +747,7 @@ function CorridorPreset({ intensity, alert, lite }: PresetProps) {
               {[-1, 1].map((side) => (
                 <group key={side} position={[side * 1.6, 1.2, z]} rotation={[0, -side * Math.PI / 2, 0]}>
                   <mesh geometry={doorGeos[(i * 2 + (side > 0 ? 1 : 0)) % 8]}>
-                    <meshStandardMaterial map={doorTex} roughness={0.7} metalness={0.2} emissive="#16142a" emissiveIntensity={0.5} />
+                    <meshStandardMaterial map={doorTex} roughness={0.7} metalness={0.2} emissive="#17161d" emissiveIntensity={0.5} />
                   </mesh>
                   {/* batentes */}
                   <mesh position={[-0.66, 0, 0.02]}>
@@ -769,7 +769,7 @@ function CorridorPreset({ intensity, alert, lite }: PresetProps) {
               ))}
               {i % 2 === 0 && (
                 <sprite position={[0, 2.75, z]} scale={[0.5, 0.5, 1]}>
-                  <spriteMaterial map={glowTex} color="#efe2bf" transparent opacity={0.8 * intensity} depthWrite={false} blending={THREE.AdditiveBlending} toneMapped={false} />
+                  <spriteMaterial map={glowTex} color="#efe9dc" transparent opacity={0.8 * intensity} depthWrite={false} blending={THREE.AdditiveBlending} toneMapped={false} />
                 </sprite>
               )}
             </group>
@@ -782,19 +782,19 @@ function CorridorPreset({ intensity, alert, lite }: PresetProps) {
       </mesh>
       <mesh rotation={[Math.PI / 2, 0, 0]} position={[0, 2.95, -14]}>
         <planeGeometry args={[3.2, 40]} />
-        <meshStandardMaterial color="#0a090d" roughness={1} />
+        <meshStandardMaterial color="#0c0c0e" roughness={1} />
       </mesh>
       {/* porta final, com a fechadura acesa */}
       <group position={[0, 1.3, -34]}>
         <mesh>
           <planeGeometry args={[2.2, 2.9]} />
-          <meshStandardMaterial color="#15131b" emissive="#16142a" emissiveIntensity={0.8} />
+          <meshStandardMaterial color="#161618" emissive="#17161d" emissiveIntensity={0.8} />
         </mesh>
         <sprite position={[0, -0.05, 0.1]} scale={[1.6, 1.6, 1]}>
           <spriteMaterial map={glowTex} color={DV_COLOR.paper} transparent opacity={0.9 * intensity} depthWrite={false} blending={THREE.AdditiveBlending} toneMapped={false} />
         </sprite>
       </group>
-      <Dust count={lite ? 60 : 120} color="#e3d5ac" area={[3, 3, 20]} center={[0, 1.5, -8]} speed={0.04} size={0.04} opacity={0.5 * intensity} />
+      <Dust count={lite ? 60 : 120} color="#ece5d8" area={[3, 3, 20]} center={[0, 1.5, -8]} speed={0.04} size={0.04} opacity={0.5 * intensity} />
     </>
   )
 }
@@ -812,14 +812,14 @@ function TribunalPreset({ intensity, alert, lite }: PresetProps) {
   const perTier = lite ? 9 : 11
   const total = perTier * 2
   const seatGeo = useDisposable(() => new THREE.BoxGeometry(0.9, 1.1, 0.7))
-  const seatMat = useDisposable(() => new THREE.MeshStandardMaterial({ color: '#221f2a', roughness: 0.7, metalness: 0.3, emissive: '#0a090d', emissiveIntensity: 0.5 }))
+  const seatMat = useDisposable(() => new THREE.MeshStandardMaterial({ color: '#221f2a', roughness: 0.7, metalness: 0.3, emissive: '#0c0c0e', emissiveIntensity: 0.5 }))
   const plateGeo = useDisposable(() => new THREE.PlaneGeometry(0.5, 0.1))
   const plateMat = useDisposable(() => new THREE.MeshBasicMaterial({ color: DV_COLOR.paper, toneMapped: false }))
   const dialTex = useDisposable(() => makeDialTexture({ size: lite ? 768 : 1024, numerals: 'roman', color: DV_COLOR.gold }), [lite])
   const starGeo = useDisposable(() => makeStarGeometry(0.55, 0.08))
   const floorTex = useDisposable(() => makeMarbleTexture({ kind: 'black', size: lite ? 512 : 1024, seed: 9, repeat: [2, 2] }), [lite])
   const pulpitTex = useDisposable(() => makeMarbleTexture({ kind: 'black', size: 256, seed: 4 }))
-  const judgeMat = useRimMaterial({ color: '#ece9e3', rim: '#d0303c', rimPower: 2, rimStrength: 1.8, metalness: 1, roughness: 0.22, emissive: '#3a0a12', emissiveIntensity: 0.4 })
+  const judgeMat = useRimMaterial({ color: '#e9e8e5', rim: '#d0303c', rimPower: 2, rimStrength: 1.8, metalness: 1, roughness: 0.22, emissive: '#3a0a12', emissiveIntensity: 0.4 })
   useEnvironment(0.8)
 
   useLayoutEffect(() => {
@@ -875,8 +875,8 @@ function TribunalPreset({ intensity, alert, lite }: PresetProps) {
       <color attach="background" args={['#070609']} />
       <fog attach="fog" args={['#070609', 8, 22]} />
       <CameraRig pos={[0, 3.2, 8.4]} look={[0, 1.3, -1.5]} orbit={0.22} drift={0.12} />
-      <ambientLight intensity={0.7} color="#7a7699" />
-      <hemisphereLight args={['#aaa5d6', '#070609', 0.5]} />
+      <ambientLight intensity={0.7} color="#858393" />
+      <hemisphereLight args={['#b7b3c9', '#070609', 0.5]} />
       <pointLight position={[-6, 3, 2]} intensity={60 * intensity} distance={16} decay={1.4} color={DV_COLOR.violet} />
       <pointLight position={[6, 3, 2]} intensity={45 * intensity} distance={16} decay={1.4} color={DV_COLOR.cobaltDeep} />
       <pointLight position={[0, 2.6, -6]} intensity={40 * intensity} distance={12} decay={1.4} color="#c42a36" />
@@ -896,14 +896,14 @@ function TribunalPreset({ intensity, alert, lite }: PresetProps) {
       {/* púlpito central e o juiz (estrela do sigilo) */}
       <mesh position={[0, 0.5, 0]}>
         <cylinderGeometry args={[0.55, 0.7, 1, 24]} />
-        <meshStandardMaterial map={pulpitTex} color="#8a8896" metalness={0.2} roughness={0.35} />
+        <meshStandardMaterial map={pulpitTex} color="#8c8b90" metalness={0.2} roughness={0.35} />
       </mesh>
       <mesh position={[0, 1.01, 0]} rotation={[Math.PI / 2, 0, 0]}>
         <torusGeometry args={[0.56, 0.015, 6, 48]} />
         <meshStandardMaterial color={DV_COLOR.gold} metalness={0.9} roughness={0.3} emissive={DV_COLOR.goldDeep} emissiveIntensity={0.6} />
       </mesh>
       <mesh ref={judge} geometry={starGeo} material={judgeMat} position={[0, 2.1, 0]} />
-      <Dust count={lite ? 70 : 150} color="#e3d5ac" area={[10, 6, 10]} center={[0, 3, -1]} speed={0.06} size={0.05} opacity={0.4 * intensity} />
+      <Dust count={lite ? 70 : 150} color="#ece5d8" area={[10, 6, 10]} center={[0, 3, -1]} speed={0.06} size={0.05} opacity={0.4 * intensity} />
     </>
   )
 }
@@ -994,7 +994,7 @@ function Lantern3D({ position, chain, phase, brass, glowTex, glassMat, intensity
           <coneGeometry args={[0.05, 0.16, 4]} />
         </mesh>
         <sprite position={[0, -0.48, 0]} scale={[1.9, 1.9, 1]}>
-          <spriteMaterial map={glowTex} color="#efe2bf" transparent opacity={0.75 * intensity} depthWrite={false} blending={THREE.AdditiveBlending} toneMapped={false} />
+          <spriteMaterial map={glowTex} color="#efe9dc" transparent opacity={0.75 * intensity} depthWrite={false} blending={THREE.AdditiveBlending} toneMapped={false} />
         </sprite>
       </group>
     </group>
@@ -1027,7 +1027,7 @@ function ClockhallPreset({ intensity, alert, lite }: PresetProps) {
   const R = 6.1
 
   const skyTex = useDisposable(() => makeSkyDiscTexture(lite ? 512 : 1024), [lite])
-  const dialTex = useDisposable(() => makeDialTexture({ size: lite ? 1024 : 2048, numerals: 'roman', ticks: 60, color: '#ddcfa6', inner: 0.6 }), [lite])
+  const dialTex = useDisposable(() => makeDialTexture({ size: lite ? 1024 : 2048, numerals: 'roman', ticks: 60, color: '#e2dccf', inner: 0.6 }), [lite])
   const floorDialTex = useDisposable(() => makeDialTexture({ size: 1024, numerals: 'roman', ticks: 60, color: DV_COLOR.gold, inner: 0.55 }))
   const floorTex = useDisposable(() => {
     const t = makeMarbleCheckerTexture({ size: lite ? 768 : 1024, cells: 4, seed: 31 })
@@ -1042,11 +1042,11 @@ function ClockhallPreset({ intensity, alert, lite }: PresetProps) {
   const gearGeoA = useDisposable(() => makeGearGeometry(1.25, 18, 0.12))
   const gearGeoB = useDisposable(() => makeGearGeometry(0.8, 12, 0.1))
   const pillarGeo = useDisposable(() => makeColumnGeometry(lite), [lite])
-  const pillarMat = useDisposable(() => new THREE.MeshStandardMaterial({ color: '#4a4856', roughness: 0.55, metalness: 0.1, emissive: '#100e1c', emissiveIntensity: 0.6 }))
+  const pillarMat = useDisposable(() => new THREE.MeshStandardMaterial({ color: '#4a4a50', roughness: 0.55, metalness: 0.1, emissive: '#100e1c', emissiveIntensity: 0.6 }))
   const balusterGeo = useDisposable(() => new THREE.LatheGeometry([[0, 0], [0.1, 0], [0.1, 0.06], [0.05, 0.12], [0.09, 0.4], [0.05, 0.62], [0.07, 0.7], [0.1, 0.74], [0.1, 0.8], [0, 0.8]].map(([x, y]) => new THREE.Vector2(x, y)), 8))
   const stoneMat = useDisposable(() => new THREE.MeshStandardMaterial({ color: '#2a2834', roughness: 0.6, metalness: 0.15, emissive: '#0c0b14', emissiveIntensity: 0.5 }))
   const brass = useRimMaterial({ color: DV_COLOR.gold, rim: DV_COLOR.goldBright, rimPower: 2, rimStrength: 1.1, metalness: 0.9, roughness: 0.3, emissive: DV_COLOR.goldDeep, emissiveIntensity: 0.8 })
-  const glassMat = useDisposable(() => new THREE.MeshBasicMaterial({ color: '#efe2bf', transparent: true, opacity: 0.55, toneMapped: false }))
+  const glassMat = useDisposable(() => new THREE.MeshBasicMaterial({ color: '#efe9dc', transparent: true, opacity: 0.55, toneMapped: false }))
   const rubyMat = useDisposable(() => new THREE.MeshStandardMaterial({ color: DV_COLOR.blood, emissive: '#5a0710', emissiveIntensity: 0.9, roughness: 0.1, metalness: 0.4 }))
   useEnvironment(0.7)
 
@@ -1154,24 +1154,24 @@ function ClockhallPreset({ intensity, alert, lite }: PresetProps) {
 
   return (
     <>
-      <color attach="background" args={['#100f1d']} />
-      <fog ref={fog} attach="fog" args={['#14132a', 12, 40]} />
-      <ambientLight intensity={0.55} color="#8c88b8" />
-      <hemisphereLight args={['#aaa5d6', '#0a090d', 0.6]} />
-      <directionalLight position={[2, 12, 10]} intensity={1.7 * intensity} color="#e6e4f0" />
+      <color attach="background" args={['#0f0e13']} />
+      <fog ref={fog} attach="fog" args={['#141318', 12, 40]} />
+      <ambientLight intensity={0.55} color="#9c99ad" />
+      <hemisphereLight args={['#b7b3c9', '#0c0c0e', 0.6]} />
+      <directionalLight position={[2, 12, 10]} intensity={1.7 * intensity} color="#ebeae8" />
       <pointLight position={[0, 4, -5]} intensity={45 * intensity} distance={20} decay={1.4} color={DV_COLOR.violet} />
-      <pointLight position={[-4.4, 10.5, -6.5]} intensity={10 * intensity} distance={10} decay={1.5} color="#efe2bf" />
-      {!lite && <pointLight position={[4.9, 12, -7.5]} intensity={8 * intensity} distance={10} decay={1.5} color="#efe2bf" />}
+      <pointLight position={[-4.4, 10.5, -6.5]} intensity={10 * intensity} distance={10} decay={1.5} color="#efe9dc" />
+      {!lite && <pointLight position={[4.9, 12, -7.5]} intensity={8 * intensity} distance={10} decay={1.5} color="#efe9dc" />}
       <AlertLight alert={alert} position={[0, 5, -4]} power={30} />
 
       {/* parede do fundo */}
       <mesh position={[0, 9, -12.2]}>
         <planeGeometry args={[60, 30]} />
-        <meshStandardMaterial color="#17152a" roughness={0.9} />
+        <meshStandardMaterial color="#151419" roughness={0.9} />
       </mesh>
       {/* arco gótico que emoldura o mostrador */}
       <mesh position={[0, 0, -12.1]} scale={[5.4, 2.25, 1]} geometry={ogiveFrameGeo}>
-        <meshStandardMaterial color="#1f1d34" roughness={0.8} emissive="#16142a" emissiveIntensity={0.6} />
+        <meshStandardMaterial color="#1d1c22" roughness={0.8} emissive="#17161d" emissiveIntensity={0.6} />
       </mesh>
       {/* mostrador e engrenagens */}
       <group position={[0, DIAL_Y, DIAL_Z]}>
@@ -1184,7 +1184,7 @@ function ClockhallPreset({ intensity, alert, lite }: PresetProps) {
           <group key={i} position={[Math.sin(a) * (R + 0.2), -Math.cos(a) * (R + 0.2), 0.2]}>
             <mesh position={[0, -0.5, 0]}>
               <cylinderGeometry args={[0.008, 0.008, 1, 3]} />
-              <meshBasicMaterial color="#5e4d33" />
+              <meshBasicMaterial color="#6b6357" />
             </mesh>
             <mesh position={[0, -1.08, 0]} scale={[0.7, 1.3, 0.7]} material={rubyMat}>
               <octahedronGeometry args={[0.12, 0]} />
@@ -1228,14 +1228,14 @@ function ClockhallPreset({ intensity, alert, lite }: PresetProps) {
         <group position={[0, DIAL_Y, DIAL_Z]}>{dial(hourB, minB, true)}</group>
         {lanterns.slice(0, 4).map((l, i) => (
           <sprite key={i} position={[l.p[0], l.p[1] - l.c - 0.48, l.p[2]]} scale={[1.6, 1.6, 1]}>
-            <spriteMaterial map={glowTex} color="#efe2bf" transparent opacity={0.5 * intensity} depthWrite={false} blending={THREE.AdditiveBlending} toneMapped={false} />
+            <spriteMaterial map={glowTex} color="#efe9dc" transparent opacity={0.5 * intensity} depthWrite={false} blending={THREE.AdditiveBlending} toneMapped={false} />
           </sprite>
         ))}
       </group>
       {/* piso xadrez de mármore (semitransparente = espelho encerado) */}
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, -2]} renderOrder={1}>
         <planeGeometry args={[60, 40]} />
-        <meshStandardMaterial map={floorTex} color="#b4b1c4" roughness={0.18} metalness={0.15} transparent opacity={0.74} />
+        <meshStandardMaterial map={floorTex} color="#c4c3c0" roughness={0.18} metalness={0.15} transparent opacity={0.74} />
       </mesh>
       {/* mostrador gravado no piso */}
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.02, -2.5]} renderOrder={2}>

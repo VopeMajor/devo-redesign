@@ -54,7 +54,7 @@ export function CageFrame({
   const bar = (x: number) => `M${x} ${BASE_Y} L${x} ${DOME_Y} Q${x} ${f(APEX[1] + Math.abs(x - 150) * 0.05)} ${APEX[0]} ${APEX[1]}`
   const beltY = 214
   const beltX = open ? [66, 108, 192, 234] : [66, 108, 150, 192, 234]
-  const [g1, g2] = gems === 'onyx' ? ['#f2f0ec', '#121016'] : ['#aaa5d6', '#1c1b33']
+  const [g1, g2] = gems === 'onyx' ? ['#f1f0ee', '#151517'] : ['#b7b3c9', '#19181f']
   return (
     <div className={cn('relative isolate aspect-[300/420]', className)}>
       {/* conteúdo: janela em ogiva atrás das grades */}
@@ -62,18 +62,18 @@ export function CageFrame({
         className={cn('absolute overflow-hidden bg-dv-ink', innerClassName)}
         style={{ left: `${(42 / 300) * 100}%`, right: `${(42 / 300) * 100}%`, top: `${(70 / 420) * 100}%`, bottom: `${((420 - BASE_Y) / 420) * 100}%`, borderRadius: '999px 999px 2px 2px' }}
       >
-        {glow && <span aria-hidden="true" className="absolute inset-0 -z-10 bg-[radial-gradient(70%_50%_at_50%_35%,rgba(108,104,153,0.55),transparent_75%),linear-gradient(180deg,#1c1b33,#0a090d)]" />}
+        {glow && <span aria-hidden="true" className="absolute inset-0 -z-10 bg-[radial-gradient(70%_50%_at_50%_35%,rgba(111,107,130,0.55),transparent_75%),linear-gradient(180deg,#19181f,#0c0c0e)]" />}
         {children}
-        <span aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_40%,transparent_55%,rgba(10,9,13,0.55)_100%)]" />
+        <span aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_40%,transparent_55%,rgba(12,12,14,0.55)_100%)]" />
       </div>
 
       <svg viewBox="0 0 300 420" aria-hidden="true" className="pointer-events-none absolute inset-0 size-full overflow-visible drop-shadow-[0_2px_3px_rgba(0,0,0,0.55)]" fill="none">
         {defs}
         <defs>
           <linearGradient id={rid} x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0" stopColor="#8c88b8" stopOpacity="0.85" />
-            <stop offset="0.5" stopColor="#6c6899" stopOpacity="0.75" />
-            <stop offset="1" stopColor="#34365a" stopOpacity="0.85" />
+            <stop offset="0" stopColor="#9c99ad" stopOpacity="0.85" />
+            <stop offset="0.5" stopColor="#6f6b82" stopOpacity="0.75" />
+            <stop offset="1" stopColor="#2b2a35" stopOpacity="0.85" />
           </linearGradient>
         </defs>
         {/* lanças cruzadas atrás da coroa */}
@@ -106,7 +106,7 @@ export function CageFrame({
           <g key={x}>
             <path d={`M${x} ${beltY - 18} L${x + 11} ${beltY} L${x} ${beltY + 18} L${x - 11} ${beltY} Z`} fill={paint} />
             <path d={`M${x} ${beltY - 14} L${x + 8} ${beltY} L${x} ${beltY + 14} L${x - 8} ${beltY} Z`} fill={i % 2 ? g1 : g2} />
-            <path d={`M${x} ${beltY - 14} L${x + 8} ${beltY} L${x} ${beltY} Z`} fill={i % 2 ? '#ffffff' : '#4a4656'} opacity="0.5" />
+            <path d={`M${x} ${beltY - 14} L${x + 8} ${beltY} L${x} ${beltY} Z`} fill={i % 2 ? '#ffffff' : '#4c4c52'} opacity="0.5" />
             {i < beltX.length - 1 && beltX[i + 1] - x < 50 && <Star4 cx={x + 21} cy={beltY} r={6.5} paint={paint} />}
           </g>
         ))}
@@ -142,8 +142,8 @@ export function CageFrame({
             />
             <path d="M12 150 C26 170 16 210 28 250 C38 290 30 330 46 360 C66 392 120 394 170 392 C214 390 250 384 284 392" stroke={paint} strokeWidth="0.8" strokeDasharray="1.5 3" opacity="0.8" />
             {/* laço de fita no ombro esquerdo */}
-            <path d="M12 150 C0 138 -6 148 2 156 C-8 160 -4 172 8 164 Z" fill="#8c88b8" opacity="0.9" />
-            <path d="M12 150 C24 136 30 146 22 154 C32 158 28 170 16 162 Z" fill="#8c88b8" opacity="0.9" />
+            <path d="M12 150 C0 138 -6 148 2 156 C-8 160 -4 172 8 164 Z" fill="#9c99ad" opacity="0.9" />
+            <path d="M12 150 C24 136 30 146 22 154 C32 158 28 170 16 162 Z" fill="#9c99ad" opacity="0.9" />
           </g>
         )}
       </svg>

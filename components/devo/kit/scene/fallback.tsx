@@ -5,12 +5,12 @@ import { CheckerFloor, Lantern, RomanDial, Sword } from '../ornament/motifs'
 import type { SceneFocus, ScenePreset } from './types'
 
 const BASE: Record<ScenePreset, string> = {
-  sigil: 'bg-[radial-gradient(70%_45%_at_50%_38%,#2c2b4f_0%,#16152a_42%,var(--dv-ink)_100%)]',
-  cathedral: 'bg-[linear-gradient(180deg,#1c1b33_0%,#0f0e1a_55%,var(--dv-ink)_100%)]',
+  sigil: 'bg-[radial-gradient(70%_45%_at_50%_38%,#28273a_0%,#16151c_42%,var(--dv-ink)_100%)]',
+  cathedral: 'bg-[linear-gradient(180deg,#19181f_0%,#0f0e1a_55%,var(--dv-ink)_100%)]',
   table: 'bg-[radial-gradient(60%_50%_at_50%_45%,#2b2830_0%,#0e0d13_55%,var(--dv-ink)_100%)]',
-  corridor: 'bg-[radial-gradient(30%_30%_at_50%_44%,#2e2c52_0%,#121122_50%,var(--dv-ink)_100%)]',
+  corridor: 'bg-[radial-gradient(30%_30%_at_50%_44%,#2a2933_0%,#131217_50%,var(--dv-ink)_100%)]',
   tribunal: 'bg-[radial-gradient(55%_40%_at_50%_30%,#3f060b_0%,#14070c_50%,#070609_100%)]',
-  clockhall: 'bg-[radial-gradient(75%_50%_at_50%_30%,#3e4170_0%,#1c1b33_48%,#0d0c17_100%)]',
+  clockhall: 'bg-[radial-gradient(75%_50%_at_50%_30%,#3c3b4a_0%,#19181f_48%,#0e0d12_100%)]',
 }
 
 /**
@@ -62,10 +62,10 @@ function SigilArt({ focus }: { focus?: SceneFocus }) {
       className="absolute aspect-square -translate-x-1/2 -translate-y-1/2"
       style={{ left: `${f.x * 100}%`, top: `${f.y * 100}%`, width: `min(${f.size * 100}vw, ${f.size * 100}vh)` }}
     >
-      <div className="absolute inset-0 rounded-full bg-[radial-gradient(circle,rgba(65,82,192,0.35),transparent_62%)]" />
+      <div className="absolute inset-0 rounded-full bg-[radial-gradient(circle,rgba(138,124,200,0.35),transparent_62%)]" />
       <Dial className="animate-dv-spin-slow absolute inset-0 text-dv-gold/70" />
       <div className="absolute inset-[18%] rounded-full border border-dv-cobalt-text/40" />
-      <DeadlyVoteSymbol variant="mark" className="absolute inset-[30%] text-dv-text drop-shadow-[0_0_24px_rgba(65,82,192,0.7)]" />
+      <DeadlyVoteSymbol variant="mark" className="absolute inset-[30%] text-dv-text drop-shadow-[0_0_24px_rgba(138,124,200,0.7)]" />
     </div>
   )
 }
@@ -73,12 +73,12 @@ function SigilArt({ focus }: { focus?: SceneFocus }) {
 function CathedralArt() {
   return (
     <>
-      <div className="absolute inset-y-0 left-[8%] w-[14%] bg-gradient-to-b from-[#26243a] to-transparent opacity-70" />
-      <div className="absolute inset-y-0 right-[8%] w-[14%] bg-gradient-to-b from-[#26243a] to-transparent opacity-70" />
-      <div className="absolute inset-y-0 left-[28%] w-[8%] bg-gradient-to-b from-[#1c1a2c] to-transparent opacity-60" />
-      <div className="absolute inset-y-0 right-[28%] w-[8%] bg-gradient-to-b from-[#1c1a2c] to-transparent opacity-60" />
-      <div className="absolute -top-[10%] left-[34%] h-[90%] w-[10%] rotate-[18deg] bg-gradient-to-b from-[rgba(158,168,238,0.28)] to-transparent blur-md" />
-      <div className="absolute -top-[10%] left-[52%] h-[80%] w-[6%] rotate-[18deg] bg-gradient-to-b from-[rgba(230,228,240,0.2)] to-transparent blur-md" />
+      <div className="absolute inset-y-0 left-[8%] w-[14%] bg-gradient-to-b from-[#242329] to-transparent opacity-70" />
+      <div className="absolute inset-y-0 right-[8%] w-[14%] bg-gradient-to-b from-[#242329] to-transparent opacity-70" />
+      <div className="absolute inset-y-0 left-[28%] w-[8%] bg-gradient-to-b from-[#1c1b20] to-transparent opacity-60" />
+      <div className="absolute inset-y-0 right-[28%] w-[8%] bg-gradient-to-b from-[#1c1b20] to-transparent opacity-60" />
+      <div className="absolute -top-[10%] left-[34%] h-[90%] w-[10%] rotate-[18deg] bg-gradient-to-b from-[rgba(203,197,232,0.28)] to-transparent blur-md" />
+      <div className="absolute -top-[10%] left-[52%] h-[80%] w-[6%] rotate-[18deg] bg-gradient-to-b from-[rgba(235,234,232,0.2)] to-transparent blur-md" />
     </>
   )
 }
@@ -105,7 +105,7 @@ function CorridorArt() {
         const h = 50 * k
         return <rect key={i} x={50 - w} y={44 - h * 0.6} width={w * 2} height={h * 1.2} opacity={1 - i * 0.12} vectorEffect="non-scaling-stroke" />
       })}
-      <circle cx="50" cy="44" r="1.2" fill="rgba(236,233,227,0.8)" stroke="none" />
+      <circle cx="50" cy="44" r="1.2" fill="rgba(233,232,229,0.8)" stroke="none" />
     </svg>
   )
 }
@@ -113,7 +113,7 @@ function CorridorArt() {
 function TribunalArt({ alert }: { alert?: boolean }) {
   return (
     <>
-      <svg viewBox="0 0 100 60" preserveAspectRatio="xMidYMid slice" className="absolute inset-x-0 bottom-0 h-[70%] w-full text-[#1d2440]" fill="currentColor">
+      <svg viewBox="0 0 100 60" preserveAspectRatio="xMidYMid slice" className="absolute inset-x-0 bottom-0 h-[70%] w-full text-[#232227]" fill="currentColor">
         {Array.from({ length: 2 }, (_, tier) =>
           Array.from({ length: 11 }, (_, i) => {
             const a = -1.2 + (i / 10) * 2.4
@@ -123,7 +123,7 @@ function TribunalArt({ alert }: { alert?: boolean }) {
             return <rect key={`${tier}-${i}`} x={x - 2.2} y={y - 3} width="4.4" height="5" opacity={0.9 - tier * 0.25} />
           }),
         )}
-        <ellipse cx="50" cy="48" rx="30" ry="6" fill="none" stroke="rgba(176,154,108,0.35)" strokeWidth="0.3" />
+        <ellipse cx="50" cy="48" rx="30" ry="6" fill="none" stroke="rgba(186,176,159,0.35)" strokeWidth="0.3" />
       </svg>
       <div className={cn('absolute left-1/2 top-0 h-[70%] w-[50%] -translate-x-1/2 bg-[linear-gradient(180deg,rgba(170,20,32,0.35),transparent)] [clip-path:polygon(40%_0,60%_0,100%_100%,0_100%)]', alert && 'animate-dv-alert')} />
     </>

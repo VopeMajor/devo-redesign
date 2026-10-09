@@ -15,10 +15,10 @@ export function GradeBar({ label, grade, value, locked = false, className }: { l
         <p className="font-sans text-[11px] font-medium uppercase tracking-[0.14em] text-in-fg-2">{label}</p>
         <div className="relative mt-2 h-[3px]" role="meter" aria-label={label} aria-valuemin={0} aria-valuemax={100} aria-valuenow={locked ? undefined : Math.round(v * 100)} aria-valuetext={locked ? 'não revelado' : grade}>
           <span aria-hidden="true" className={cn('absolute inset-x-0 top-1/2 h-px -translate-y-1/2', locked ? 'bg-[repeating-linear-gradient(90deg,var(--in-line-strong)_0_3px,transparent_3px_6px)]' : 'bg-in-line')} />
-          {!locked && <span aria-hidden="true" className="absolute inset-y-0 left-0 bg-in-accent-fill shadow-[0_0_8px_var(--in-accent-glow)]" style={{ width: `${v * 100}%` }} />}
+          {!locked && <span aria-hidden="true" className="absolute inset-y-0 left-0 bg-in-data shadow-[0_0_8px_var(--in-accent-glow)]" style={{ width: `${v * 100}%` }} />}
         </div>
       </div>
-      <span aria-hidden="true" className={cn('w-9 shrink-0 text-right font-serif text-[24px] font-light leading-none', locked ? 'text-in-fg-3' : 'text-in-accent')}>
+      <span aria-hidden="true" className={cn('w-9 shrink-0 text-right font-serif text-[24px] font-light leading-none', locked ? 'text-in-fg-3' : 'text-in-fg')}>
         {locked ? '—' : grade}
       </span>
     </div>

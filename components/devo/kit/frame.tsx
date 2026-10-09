@@ -52,8 +52,8 @@ export type FrameProps = HTMLAttributes<HTMLElement> & {
 const PAD = { none: '', sm: 'p-3', md: 'p-4', lg: 'p-6' } as const
 
 const GLOW: Record<FrameTone, string> = {
-  gold: 'drop-shadow-[0_0_14px_rgba(227,213,172,0.22)]',
-  cobalt: 'drop-shadow-[0_0_18px_rgba(65,82,192,0.4)]',
+  gold: 'drop-shadow-[0_0_14px_rgba(236,229,216,0.22)]',
+  cobalt: 'drop-shadow-[0_0_18px_rgba(138,124,200,0.4)]',
   neutral: 'drop-shadow-[0_10px_24px_rgba(0,0,0,0.6)]',
   blood: 'drop-shadow-[0_0_18px_rgba(170,20,32,0.45)]',
 }

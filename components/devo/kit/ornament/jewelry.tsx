@@ -8,11 +8,11 @@ export type GemTone = 'glass' | 'onyx' | 'blood' | 'night' | 'cobalt'
 
 /** Luz → meio → sombra de cada pedra. */
 const GEM: Record<GemTone, [string, string, string]> = {
-  glass: ['#ffffff', '#d9d6ea', '#8e88b4'],
-  onyx: ['#4a4656', '#16141d', '#030205'],
+  glass: ['#ffffff', '#e0dfdc', '#8e88b4'],
+  onyx: ['#4c4c52', '#16141d', '#030205'],
   blood: ['#ff8a92', '#c0142a', '#3d040a'],
-  night: ['#b3a9f0', '#4d4790', '#120f2e'],
-  cobalt: ['#b8c3ff', '#4152c0', '#0b1240'],
+  night: ['#b3a9f0', '#5d5970', '#120f2e'],
+  cobalt: ['#d6cff5', '#5a4f8f', '#1a1530'],
 }
 
 /**
@@ -70,8 +70,8 @@ export function BloodDrop({ className, ...p }: SVGProps<SVGSVGElement>) {
  */
 export function LaceEdge({ side = 'bottom', tone = 'porcelain', height = 18, className }: { side?: 'top' | 'bottom'; tone?: 'porcelain' | 'ink'; height?: number; className?: string }) {
   const id = `dv-lace-${useId().replace(/[^a-zA-Z0-9]/g, '')}`
-  const c = tone === 'porcelain' ? '#f6f4ef' : '#0c0b10'
-  const shade = tone === 'porcelain' ? 'rgba(18,16,22,0.28)' : 'rgba(238,236,239,0.22)'
+  const c = tone === 'porcelain' ? '#f6f4ef' : '#0d0d0f'
+  const shade = tone === 'porcelain' ? 'rgba(18,16,22,0.28)' : 'rgba(238,237,235,0.22)'
   return (
     <svg aria-hidden="true" className={cn('pointer-events-none block w-full', side === 'top' && '-scale-y-100', className)} style={{ height }}>
       <defs>
@@ -101,9 +101,9 @@ export function LaceEdge({ side = 'bottom', tone = 'porcelain', height = 18, cla
  * plaqueta, o canto de um retrato ou um selo de conquista — 1 por tela.
  */
 export function Bow({ tone = 'ink', className, ...p }: { tone?: 'ink' | 'porcelain' } & SVGProps<SVGSVGElement>) {
-  const fill = tone === 'ink' ? '#0c0b10' : '#f2f0ec'
-  const edge = tone === 'ink' ? '#f2f0ec' : '#0c0b10'
-  const fold = tone === 'ink' ? '#26232f' : '#d9d6cf'
+  const fill = tone === 'ink' ? '#0d0d0f' : '#f1f0ee'
+  const edge = tone === 'ink' ? '#f1f0ee' : '#0d0d0f'
+  const fold = tone === 'ink' ? '#28282c' : '#d9d6cf'
   return (
     <svg viewBox="0 0 64 48" aria-hidden="true" className={cn('drop-shadow-[0_2px_2px_rgba(0,0,0,0.35)]', className)} {...p}>
       {/* caudas */}

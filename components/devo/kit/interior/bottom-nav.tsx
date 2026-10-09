@@ -16,8 +16,8 @@ export type BottomNavItem<V extends string = string> = {
 }
 
 /**
- * Barra inferior do interior (celular): preta, ícones finos com rótulo; o ativo vira um bloco de luz
- * índigo com filete superior de latão. Selo vermelho para avisos. Itens `locked` ficam apagados com cadeado
+ * Barra inferior do interior (celular): veludo preto, emblemas de prata sem fundo com rótulo; o ativo
+ * acende em branco com halo de ametista e filete superior de metal champanhe. Selo vermelho para avisos. Itens `locked` ficam apagados com cadeado
  * (anunciam "bloqueado" e chamam `onLocked`, sem navegar). Respeita a área segura.
  */
 export function BottomNav<V extends string>({
@@ -67,17 +67,17 @@ export function BottomNav<V extends string>({
                   onChange(it.value)
                 }}
                 className={cn(
-                  'dv-focus group relative flex h-16 w-full flex-col items-center justify-center gap-1.5 overflow-hidden transition-colors duration-200',
+                  'dv-focus group relative flex h-16 w-full flex-col items-center justify-center gap-1 overflow-hidden transition-colors duration-200',
                   active ? 'text-white' : it.locked ? 'text-in-fg-3/70' : 'text-in-fg-2 hover:text-in-fg',
                 )}
               >
                 {active && (
                   <>
-                    <span aria-hidden="true" className="absolute inset-0 bg-[linear-gradient(180deg,rgba(65,82,192,0.5),rgba(77,71,144,0.2)_70%,transparent)]" />
-                    <span aria-hidden="true" className="absolute inset-x-0 top-0 h-[2px] bg-[linear-gradient(90deg,transparent,var(--in-brass)_20%,#e3d5ac_50%,var(--in-brass)_80%,transparent)] shadow-[0_0_12px_1px_rgba(143,156,240,0.7)]" />
+                    <span aria-hidden="true" className="absolute inset-0 bg-[radial-gradient(60%_70%_at_50%_100%,rgba(138,124,200,0.32),transparent_75%),linear-gradient(180deg,rgba(238,237,235,0.08),transparent_70%)]" />
+                    <span aria-hidden="true" className="absolute inset-x-0 top-0 h-[2px] bg-[linear-gradient(90deg,transparent,var(--in-brass)_20%,#ece5d8_50%,var(--in-brass)_80%,transparent)] shadow-[0_0_12px_1px_rgba(194,185,236,0.6)]" />
                   </>
                 )}
-                <span className={cn('relative flex size-6 items-center justify-center [&>svg]:size-full', active && 'drop-shadow-[0_0_6px_rgba(158,168,238,0.9)]', it.locked && 'opacity-60')}>
+                <span className={cn('relative flex size-7 items-center justify-center [&>svg]:size-full group-active:drop-shadow-[0_0_8px_rgba(236,229,216,0.85)]', active && 'drop-shadow-[0_0_6px_rgba(194,185,236,0.8)]', it.locked && 'opacity-60')}>
                   {it.icon}
                   {it.locked && (
                     <span aria-hidden="true" className="absolute -bottom-1 -right-1.5 grid size-3.5 place-items-center bg-in-panel text-in-fg-2">
@@ -90,11 +90,11 @@ export function BottomNav<V extends string>({
                         {it.badge > 99 ? '99+' : it.badge}
                       </span>
                     ) : (
-                      <span aria-hidden="true" className="absolute -right-1 -top-0.5 size-2 rounded-full bg-in-alert shadow-[0_0_8px_var(--in-alert)]" />
+                      <span aria-hidden="true" className="absolute -right-1 -top-0.5 size-2 rotate-45 bg-in-alert shadow-[0_0_8px_var(--in-alert)]" />
                     )
                   ) : null}
                 </span>
-                <span className={cn('relative max-w-full truncate px-1 font-sans text-[10px] font-medium uppercase tracking-[0.12em]', active && 'text-[#e0def0]')}>{it.label}</span>
+                <span className={cn('relative max-w-full truncate px-1 font-sans text-[10px] font-medium uppercase tracking-[0.12em]', active && 'text-[#e6e5e2]')}>{it.label}</span>
               </button>
             </li>
           )
