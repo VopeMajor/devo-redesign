@@ -25,7 +25,7 @@ const SHAPE: Record<PortraitShape, string> = {
  * grão, vinheta e BASE QUE SE DISSOLVE em degradê (nunca o corte reto do arquivo).
  *
  *   <PortraitFrame src="/images/npc/rato.png" alt="O Rato" name="O Rato" role="Anfitrião" tone="gold" />
- *   <PortraitFrame alt="Melissa" tone="cobalt"><MelissaArt /></PortraitFrame>
+ *   <PortraitFrame {...portraitFrameProps('melissa', 'soft')} alt="Melissa" tone="cobalt" />  // mapa em lib/devo/npcs.ts
  */
 export function PortraitFrame({
   src,

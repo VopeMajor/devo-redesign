@@ -21,7 +21,6 @@ import {
   arcadeFetcher,
   arcadeKey,
   arcadePost,
-  formatCountdown,
   formatPoints,
   joinDuel,
   leaveRoom,
@@ -172,9 +171,9 @@ export function JogosApp() {
       <div className="relative flex h-full min-h-0 flex-col overflow-hidden bg-dv-ink text-dv-text">
         {!running && <SalaScene endsAt={state.timerEndsAt} />}
 
-        <div className="relative z-10 shrink-0 px-3 pt-3">
+        <div className="relative z-10 shrink-0 px-4 pt-3">
           <h2 className="sr-only">Sala de Jogos</h2>
-          <Header data={data} endsAt={state.timerEndsAt} />
+          <Header data={data} />
         </div>
 
         <Tabs
@@ -183,8 +182,8 @@ export function JogosApp() {
           value={tab}
           onValueChange={changeTab}
           fill
-          className="relative z-10 mt-1.5 flex min-h-0 flex-1 flex-col [&_[role=tab]]:px-2 [&_[role=tab]]:text-[12px] [&_[role=tab]]:tracking-[0.14em]"
-          panelClassName="devo-scroll relative min-h-0 flex-1 overflow-y-auto overscroll-contain px-3 pb-10 pt-4"
+          className="relative z-10 mt-1.5 flex min-h-0 flex-1 flex-col [&>div:first-child]:mx-4 [&_[role=tab]]:px-2 [&_[role=tab]]:text-[12px] [&_[role=tab]]:tracking-[0.14em]"
+          panelClassName="devo-scroll relative min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 pb-10 pt-4"
         >
           {error && <p className="mb-3 border border-dv-blood/60 bg-dv-blood-deep/40 p-3 font-body text-[15px] text-dv-blood-text">{error.message}</p>}
           {!data && !error && (
@@ -294,22 +293,20 @@ function GameRunner({ run, settings, onFinish, onQuit }: { run: Running; setting
   )
 }
 
-/** Placas de status: Tempo (o que está em jogo), Pontos, Posição e Reset do ranking. */
-function Header({ data, endsAt }: { data?: Dashboard; endsAt: number }) {
+/**
+ * Placas de status da Sala. O Tempo do jogador já está na pílula da barra de status (shell), então
+ * aqui ficam só Pontos, Posição e Reset — o Reset em TimeDigits HH:MM:SS, o mesmo formato do sistema.
+ */
+function Header({ data }: { data?: Dashboard }) {
   const me = data?.me
-  const now = useNow(1000)
-  const critical = endsAt - now > 0 && endsAt - now <= CRITICAL_MS
   return (
-    <dl className="grid animate-dv-fade grid-cols-4 gap-1.5">
-      <Plaque label="Tempo" tone={critical ? 'blood' : 'cobalt'}>
-        <Countdown endsAt={endsAt} size="sm" sound={false} label="Seu Tempo" render={(ms) => formatCountdown(ms)} />
-      </Plaque>
+    <dl className="grid animate-dv-fade grid-cols-[1fr_1fr_1.35fr] gap-1.5">
       <Plaque label="Pontos" tone="gold">
         <span className={cn(me && me.score > 0 ? 'text-dv-gold-bright' : 'text-dv-text')}>{me ? formatPoints(me.score) : '—'}</span>
       </Plaque>
       <Plaque label="Posição">{me?.rank ? `#${me.rank}` : '—'}</Plaque>
-      <Plaque label="Reset">
-        {data ? <Countdown endsAt={data.week.resetsAt} size="sm" tone="text" sound={false} criticalMs={0} label="Reset do ranking" render={(ms) => formatCountdown(ms)} /> : '—'}
+      <Plaque label="Reset do ranking">
+        {data ? <Countdown endsAt={data.week.resetsAt} size="sm" tone="text" sound={false} criticalMs={0} label="Reset do ranking" /> : '—'}
       </Plaque>
     </dl>
   )

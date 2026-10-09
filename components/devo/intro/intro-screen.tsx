@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { playSfx } from '@/lib/devo/audio'
 import { INTRO_SCRIPT } from '@/lib/devo/intro-script'
-import { getNpc, type Expression } from '@/lib/devo/npcs'
+import { getNpc, portraitFrameProps, type Expression } from '@/lib/devo/npcs'
 import { withName } from '@/lib/devo/player-name'
 import { cn } from '@/lib/utils'
 import { useAdvanceKeys } from '../hooks'
@@ -18,44 +18,35 @@ const CHAR_MS = 24
 /** Tom do retrato por falante (IDENTIDADE › Retratos de NPC): casa = ouro, sistema/aliado = cobalto. */
 const TONE: Record<string, 'gold' | 'cobalt'> = { rato: 'gold', herdeiro: 'cobalt' }
 
-/** Retrato do falante no PortraitFrame do kit (mesma luz, contorno, grão e base para raster e SVG). */
+/** Retrato do falante no PortraitFrame do kit; todas as expressões ficam montadas e trocam por opacidade. */
 function Portrait({ speaker, expression, className }: { speaker: string; expression: Expression; className?: string }) {
   const npc = getNpc(speaker)
   const alt = `${npc.name}, ${npc.title}`
-  if (npc.art) {
-    const Art = npc.art
-    const exprs = npc.artExpressions ?? ['neutral']
-    const target = exprs.includes(expression) ? expression : 'neutral'
-    return (
-      <PortraitFrame alt={alt} tone={TONE[speaker] ?? 'cobalt'} ornate scale={1.45} className={className}>
-        <div className="relative size-full">
-          {exprs.map((expr) => (
-            <Art key={expr} expression={expr} className={cn('absolute inset-0 size-full transition-opacity duration-500', expr === target ? 'opacity-100' : 'opacity-0')} />
-          ))}
-        </div>
-      </PortraitFrame>
-    )
-  }
-  const src = npc.portraits[expression] ?? npc.portraits.neutral
-  return <PortraitFrame src={src} alt={alt} tone={TONE[speaker] ?? 'gold'} ornate position="50% 8%" className={className} />
+  const exprs = npc.expressions.length ? npc.expressions : (['neutral'] as Expression[])
+  const target = exprs.includes(expression) ? expression : 'neutral'
+  return (
+    <div className={cn('relative', className)}>
+      {exprs.map((expr) => {
+        const art = portraitFrameProps(speaker, expr)
+        if (!art) return null
+        const on = expr === target
+        return (
+          <div key={expr} className={cn('transition-opacity duration-500', on ? 'relative opacity-100' : 'absolute inset-0 opacity-0')} aria-hidden={on ? undefined : true}>
+            <PortraitFrame {...art} alt={on ? alt : ''} tone={TONE[speaker] ?? 'gold'} ornate className="w-full" />
+          </div>
+        )
+      })}
+    </div>
+  )
 }
 
 /** Lado de entrada do retrato por falante (o Herdeiro vem da esquerda, o Rato da direita). */
 const ENTER_FROM: Record<string, 'l' | 'r'> = { herdeiro: 'l', rato: 'r' }
 
 function PlateAvatar({ speaker, expression }: { speaker: string; expression: Expression }) {
-  const npc = getNpc(speaker)
-  if (npc.art) {
-    const Art = npc.art
-    return (
-      <PortraitFrame alt="" shape="round" tone={TONE[speaker] ?? 'cobalt'} className="w-12">
-        <Art expression={expression} crop="face" />
-      </PortraitFrame>
-    )
-  }
-  const src = npc.portraits.neutral
-  if (!src) return null
-  return <PortraitFrame src={src} alt="" shape="round" tone={TONE[speaker] ?? 'gold'} position="50% 6%" className="w-12" />
+  const art = portraitFrameProps(speaker, expression, 'face')
+  if (!art) return null
+  return <PortraitFrame {...art} alt="" shape="round" tone={TONE[speaker] ?? 'gold'} className="w-12" />
 }
 
 export function IntroScreen({ onFinish, playerName }: { onFinish: () => void; playerName: string | null }) {

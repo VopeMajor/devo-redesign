@@ -72,3 +72,20 @@ SELECT date_trunc('week', now() AT TIME ZONE 'America/Sao_Paulo')::date, m.playe
        count(*) FILTER (WHERE m.result = 'win')::int, count(*)::int
 FROM arcade_matches m GROUP BY m.player_id
 ON CONFLICT DO NOTHING;
+
+-- Confronto aberto para apostas (Sala de Jogos): evento com inscrições fechadas e começo em 3h
+-- (status LOCKED → apostas abertas), já travado, com dois duelos entre jogadores seed.
+WITH ev AS (
+  INSERT INTO arcade_events (game_id, label, starts_at, registration_opens_at, registration_closes_at, ends_at, max_players, reward, rules, locked_at)
+  VALUES ('chess', 'Duelo da Casa', now() + interval '3 hours', now() - interval '1 day', now() - interval '10 minutes',
+          now() + interval '5 hours', 4, '{"hours": 2}'::jsonb, 'Exibição da casa: dois duelos de Living Chess. Apostas abertas até o começo.', now())
+  RETURNING id
+), ent AS (
+  INSERT INTO arcade_entries (event_id, name, player_id, rating)
+  SELECT ev.id, p.name, p.id, r FROM ev, players p
+  JOIN (VALUES ('Ísis', 1180), ('Nyx', 1120), ('Corvo', 1060), ('Lírio', 1000)) AS x(n, r) ON x.n = p.name
+  RETURNING event_id
+)
+INSERT INTO arcade_duels (event_id, slot, a_name, b_name, a_rating, b_rating)
+SELECT ev.id, d.slot, d.a, d.b, d.ra, d.rb FROM ev,
+  (VALUES (0, 'Ísis', 'Nyx', 1180, 1120), (1, 'Corvo', 'Lírio', 1060, 1000)) AS d(slot, a, b, ra, rb);

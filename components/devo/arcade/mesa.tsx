@@ -26,7 +26,7 @@ import { useNow } from '../hooks'
 import { ArcadeChat } from './arcade-chat'
 import { type ArcadeView, eventTimeLabel, formatMinutes, registerEvent, useApplyTime } from './arcade-shared'
 import { type Duel, useBetSheet } from './bet-sheet'
-import { JavaliMedallion, Monogram, MoreLink, OddsBar } from './sala-ui'
+import { GAME_ART, JavaliPortrait, Monogram, MoreLink, OddsBar } from './sala-ui'
 
 export { useBetSheet, type Duel }
 
@@ -88,11 +88,10 @@ export function Mesa({
 
   return (
     <div className="@container flex flex-col gap-5">
-      <HostStrip />
-
       <div className="grid gap-6 @4xl:grid-cols-[minmax(0,1fr)_19rem]">
         <div className="flex min-w-0 flex-col gap-6">
           <Hero event={next} busy={busy} onPlay={onPlay} onJoinEvent={onJoinEvent} onChange={onChange} onAgenda={() => onView('agenda')} />
+          <HostStrip />
 
           {data.claim && (
             <Frame tone="gold" glow pad="md" className="animate-dv-rise">
@@ -155,14 +154,14 @@ export function Mesa({
 function HostStrip() {
   const [line] = useState(() => HOST_LINES[Math.floor(Math.random() * HOST_LINES.length)])
   return (
-    <div className="flex animate-dv-fade items-center gap-3.5">
-      <JavaliMedallion size={60} title="Javali, anfitrião da Sala de Jogos" />
+    <div className="flex animate-dv-fade items-center gap-4">
+      <JavaliPortrait className="w-[96px]" />
       <div className="min-w-0 flex-1">
         <p className="dv-label flex flex-wrap items-center gap-x-2 text-[10px] text-dv-gold">
           <span>Javali · anfitrião</span>
           <span className="text-dv-text-3">Jogue. Aposte. Sobreviva.</span>
         </p>
-        <p className="mt-1 font-body text-[16px] italic leading-snug text-dv-text-2">“{line}”</p>
+        <p className="mt-1.5 font-body text-[17px] italic leading-snug text-dv-text">“{line}”</p>
       </div>
     </div>
   )
@@ -229,11 +228,11 @@ function Hero({
   return (
     <Frame as="section" aria-label="Próxima partida" tone="gold" ornate glow pad="none" cutSize={16} className="animate-dv-cut-in">
       {/* banner do jogo, cortado em diagonal */}
-      <div className="relative h-40 overflow-hidden [clip-path:polygon(0_0,100%_0,100%_74%,0_100%)] @2xl:h-52">
-        <Image src={g.thumbnail} alt="" fill priority sizes="(min-width: 1024px) 680px, 100vw" className="origin-right scale-[1.75] object-cover object-right" />
-        <span aria-hidden="true" className="absolute inset-0 bg-[linear-gradient(180deg,rgba(5,7,13,0.15)_0%,rgba(5,7,13,0.35)_55%,var(--dv-ink-2)_100%)]" />
-        <span aria-hidden="true" className="absolute inset-y-0 left-0 w-1/3 bg-[linear-gradient(90deg,var(--dv-ink-2),transparent)]" />
-        <span aria-hidden="true" className="absolute -bottom-6 left-[-10%] h-10 w-[70%] -skew-x-[18deg] bg-dv-cobalt-deep/70 blur-[1px]" />
+      <div
+        className="relative m-[3px] mb-0 h-32 overflow-hidden [clip-path:polygon(15px_0,calc(100%-15px)_0,100%_15px,100%_76%,0_100%,0_15px)] @2xl:h-48"
+      >
+        <Image src={GAME_ART[event.gameId].src} alt="" fill priority sizes="(min-width: 1024px) 680px, 100vw" className="object-cover" style={{ objectPosition: GAME_ART[event.gameId].position }} />
+        <span aria-hidden="true" className="absolute inset-0 bg-[linear-gradient(180deg,rgba(5,7,13,0.25)_0%,rgba(5,7,13,0.2)_50%,var(--dv-ink-2)_100%)]" />
         <div className="absolute inset-x-4 top-4 flex items-center justify-between gap-2">
           <Badge tone={badge.tone} live={badge.live} dot={!badge.live}>
             {badge.text}
@@ -242,18 +241,23 @@ function Hero({
         </div>
       </div>
 
-      <div className="relative -mt-4 px-5 pb-5">
-        <Kicker tone="gold">{isLive ? 'Acontecendo agora' : 'Próxima partida'}</Kicker>
-        <h3 className="relative mt-2 w-fit max-w-full">
+      <div className="relative -mt-3 px-5 pb-5">
+        <div className="flex items-center justify-between gap-2">
+          <Kicker tone="gold">{isLive ? 'Acontecendo agora' : 'Próxima partida'}</Kicker>
+          <MoreLink label="Agenda" onClick={onAgenda} />
+        </div>
+        <h3 className="relative mt-0.5 w-fit max-w-full">
           <span aria-hidden="true" className="absolute -left-2 bottom-[10%] h-[32%] w-[calc(100%+1rem)] -skew-x-[18deg] bg-dv-cobalt-deep/90" />
           <span className="relative block font-impact text-[40px] font-bold uppercase leading-[0.9] tracking-[0.01em] text-dv-text [text-shadow:0_2px_0_rgba(0,0,0,0.5)] @2xl:text-[52px]">
             {event.label ?? g.name}
           </span>
         </h3>
-        <p className="dv-label mt-2.5 text-[11px] text-dv-text-2">{eventTimeLabel(event.startsAt)}</p>
-        <p className="mt-2 font-body text-[15px] italic leading-snug text-dv-text-2">{g.tagline}</p>
+        <p className="mt-2 flex flex-wrap items-baseline gap-x-3 font-body text-[15px] italic leading-snug text-dv-text-2">
+          <span className="dv-label not-italic text-[11px] text-dv-text">{eventTimeLabel(event.startsAt)}</span>
+          {g.tagline}
+        </p>
 
-        <div className="mt-5">
+        <div className="mt-4">
           {isLive ? (
             <p className="flex items-center gap-3 font-impact text-[40px] font-bold uppercase leading-none text-dv-cobalt-text [text-shadow:0_0_18px_rgba(49,93,255,0.6)]">
               <span aria-hidden="true" className="size-3 animate-dv-blink rounded-full bg-dv-cobalt shadow-[0_0_14px_var(--dv-cobalt)]" />
@@ -275,7 +279,7 @@ function Hero({
           )}
         </div>
 
-        <dl className="mt-5 grid grid-cols-2 gap-4 border-t border-dv-line pt-4">
+        <dl className="mt-4 grid grid-cols-2 gap-4 border-t border-dv-line pt-3">
           <div>
             <dt className="dv-label text-[10px] text-dv-text-3">Jogadores</dt>
             <dd className="mt-1 font-impact text-[22px] font-semibold leading-none dv-tabular">
@@ -292,14 +296,9 @@ function Hero({
           </div>
         </dl>
 
-        <div className="mt-5 flex flex-col gap-2">
-          <Button block size="lg" disabled={busy || action.kind === 'done'} onClick={run} sfx={action.kind === 'register' ? 'confirm' : 'click'} icon={action.kind === 'done' ? <GlyphCheck /> : undefined}>
-            {action.label}
-          </Button>
-          <div className="flex justify-end">
-            <MoreLink label="Agenda" onClick={onAgenda} />
-          </div>
-        </div>
+        <Button block size="lg" className="mt-4" disabled={busy || action.kind === 'done'} onClick={run} sfx={action.kind === 'register' ? 'confirm' : 'click'} icon={action.kind === 'done' ? <GlyphCheck /> : undefined}>
+          {action.label}
+        </Button>
       </div>
     </Frame>
   )
@@ -354,11 +353,12 @@ function GameCard({
 
       <div className="dv-cut relative m-[5px] mb-0 aspect-[4/3] overflow-hidden" style={{ '--dv-cut': '10px' } as CSSProperties}>
         <Image
-          src={g.thumbnail}
+          src={GAME_ART[gameId].src}
           alt=""
           fill
           sizes="(min-width: 1024px) 240px, 50vw"
-          className="origin-[72%_50%] scale-[1.16] object-cover object-right transition-transform duration-500 group-hover:scale-[1.22]"
+          className="object-cover transition-transform duration-500 group-hover:scale-[1.06]"
+          style={{ objectPosition: GAME_ART[gameId].position }}
         />
         <span aria-hidden="true" className="absolute inset-0 bg-[linear-gradient(0deg,var(--dv-ink-2)_0%,rgba(10,15,28,0)_55%)]" />
         {/* índice de canto, como numa carta */}

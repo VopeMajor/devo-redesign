@@ -2,14 +2,14 @@
 
 import Image from 'next/image'
 import { type CSSProperties, useState } from 'react'
-import { Badge, Button, Frame, Kicker, SceneBackdrop, ScreenFrame, Stamp, TimeDigits } from '@/components/devo/kit'
+import { Button, Frame, Kicker, SceneBackdrop, ScreenFrame, Stamp, TimeDigits } from '@/components/devo/kit'
 import type { GameOutcome, MatchFinish, MatchStart } from '@/lib/devo/arcade/client'
 import { formatPoints } from '@/lib/devo/arcade/client'
 import { GAMES, type GameId, RANKING_RULE_CASUAL, RANKING_RULE_EVENT } from '@/lib/devo/arcade/games'
 import { cn } from '@/lib/utils'
 import { useNow } from '../hooks'
 import { formatMinutes } from './arcade-shared'
-import { Monogram } from './sala-ui'
+import { GAME_ART, JavaliPortrait, Monogram } from './sala-ui'
 
 export type Running = { start: MatchStart; finish?: MatchFinish & { outcome: GameOutcome }; error?: string }
 
@@ -40,7 +40,7 @@ export function Searching({ gameId, duel, onCancel }: { gameId: GameId; duel: bo
           <span className="absolute left-[68%] top-[30%] size-2 animate-dv-blink rounded-full bg-dv-cobalt-text shadow-[0_0_10px_var(--dv-cobalt)]" />
           <span className="absolute left-[24%] top-[62%] size-1.5 animate-dv-blink rounded-full bg-dv-gold [animation-delay:-0.5s]" />
           <span className="dv-cut absolute inset-[34%] overflow-hidden" style={{ '--dv-cut': '12px' } as CSSProperties}>
-            <Image src={g.thumbnail} alt="" fill sizes="80px" className="origin-right scale-[1.8] object-cover object-right" />
+            <Image src={GAME_ART[gameId].src} alt="" fill sizes="80px" className="object-cover" style={{ objectPosition: GAME_ART[gameId].position }} />
           </span>
         </div>
 
@@ -74,18 +74,21 @@ export function ResultScreen({ run, onClose }: { run: Running; onClose: () => vo
   const loss = !win && !draw
   const g = GAMES[run.start.gameId as GameId]
   const title = win ? 'Vitória' : draw ? 'Empate' : 'Derrota'
-  const band = win ? 'bg-dv-cobalt-deep' : loss ? 'bg-dv-blood' : 'bg-dv-ink-4'
+  // Vermelho só quando a derrota custa Tempo. Treino nunca é alerta: ink com faixa neutra/cobalto.
+  const costly = loss && !f.tutorial
+  const band = win ? 'bg-dv-cobalt-deep' : costly ? 'bg-dv-blood' : f.tutorial ? 'bg-[linear-gradient(90deg,var(--dv-cobalt-dim),#1b2a6e_60%,var(--dv-ink-4))]' : 'bg-dv-ink-4'
+  const javali = run.start.mode === 'treino' || /javali/i.test(run.start.opponent.name)
   return (
-    <div className="relative h-full overflow-hidden">
-      <SceneBackdrop preset="table" intensity={0.5} dim={0.6} alert={loss} />
-      <ScreenFrame tone={win ? 'gold' : loss ? 'blood' : 'cobalt'} />
+    <div className="relative flex h-full flex-col overflow-hidden">
+      <SceneBackdrop preset="table" intensity={0.5} dim={0.6} alert={costly} />
+      <ScreenFrame tone={win ? 'gold' : costly ? 'blood' : 'cobalt'} />
       {/* corte diagonal que atravessa a tela */}
       <span aria-hidden="true" className={cn('pointer-events-none absolute left-[-30%] top-[13%] h-32 w-[160%] -rotate-[14deg] animate-dv-cut-in opacity-90', band)} />
       <span aria-hidden="true" className="pointer-events-none absolute left-[-30%] top-[13%] h-32 w-[160%] -rotate-[14deg] translate-y-[8.5rem] border-t border-dv-gold/60" />
 
-      <div className="devo-scroll relative z-10 flex h-full flex-col items-center overflow-y-auto px-6 pb-10 pt-[max(env(safe-area-inset-top),2.5rem)]">
-        <div className="w-full max-w-md">
-          <Kicker tone={loss ? 'blood' : 'gold'} className="animate-dv-fade">
+      <div className="devo-scroll relative z-10 flex h-full flex-col items-center overflow-y-auto px-6 pb-[max(env(safe-area-inset-bottom),2rem)] pt-[max(env(safe-area-inset-top),2.5rem)]">
+        <div className="flex w-full max-w-md flex-1 flex-col">
+          <Kicker tone={costly ? 'blood' : 'gold'} className="animate-dv-fade">
             {g.name} · vs {run.start.opponent.name}
           </Kicker>
           <div className="relative mt-6 min-h-[11rem]">
@@ -93,17 +96,12 @@ export function ResultScreen({ run, onClose }: { run: Running; onClose: () => vo
             <div className="absolute -right-1 top-[4.6rem]">
               {win ? (
                 <Stamp shape="round" tone="gold" text="Vitória" ring="DEVO · SALA DE JOGOS · A CASA AGRADECE ·" size={104} rotate={12} animate />
-              ) : loss ? (
-                <Stamp tone="gold" text="Perdeu" size={110} rotate={-10} animate />
-              ) : (
+              ) : f.tutorial ? (
+                <Stamp shape="round" tone="cobalt" text="Treino" ring="SEM CUSTO · SEM RANKING · SEM TEMPO ·" size={104} rotate={-10} animate />
+              ) : loss ? null : (
                 <Stamp tone="cobalt" text="Empate" size={110} rotate={-8} animate />
               )}
             </div>
-            {f.tutorial && (
-              <Badge tone="neutral" className="mt-3">
-                Treino
-              </Badge>
-            )}
           </div>
 
           {/* placar: o número do HUD, igual ao gravado pelo servidor */}
@@ -117,7 +115,7 @@ export function ResultScreen({ run, onClose }: { run: Running; onClose: () => vo
               ×
             </span>
             <div className="flex flex-col items-end gap-2 text-right">
-              <Monogram name={run.start.opponent.name} size="md" tone={loss ? 'neutral' : 'ghost'} />
+              {javali ? <JavaliPortrait shape="round" className="w-12" title={run.start.opponent.name} /> : <Monogram name={run.start.opponent.name} size="md" tone="neutral" />}
               <dt className="dv-label text-[10px] text-dv-text-3">Placar do oponente</dt>
               <dd className={cn('font-impact text-[52px] font-bold leading-none dv-tabular', loss ? 'text-dv-text' : 'text-dv-text-2')}>{formatPoints(o.oppScore)}</dd>
             </div>
@@ -128,11 +126,11 @@ export function ResultScreen({ run, onClose }: { run: Running; onClose: () => vo
             </p>
           )}
 
-          <Frame pad="md" tone={win ? 'gold' : loss ? 'blood' : 'neutral'} className="mt-6 animate-dv-rise [animation-delay:320ms]">
+          <Frame pad="md" tone={win ? 'gold' : costly ? 'blood' : 'cobalt'} className="mt-6 animate-dv-rise [animation-delay:320ms]">
             {/* Pontos de ranking = o que entra no ranking (rankingPoints), não o placar. */}
             <dl className="grid grid-cols-2 gap-x-4 gap-y-4">
-              <ResultStat label="Pontos de ranking" value={f.tutorial ? 'Treino' : `+${formatPoints(f.awarded)}`} tone="cobalt" />
-              <ResultStat label="Tempo ganho" value={`+${formatMinutes(f.timeGainMin)}`} tone="gold" />
+              <ResultStat label="Pontos de ranking" value={f.tutorial ? '—' : `+${formatPoints(f.awarded)}`} tone="cobalt" hint={f.tutorial ? 'não conta no treino' : undefined} />
+              <ResultStat label="Tempo ganho" value={f.tutorial ? '—' : `+${formatMinutes(f.timeGainMin)}`} tone="gold" hint={f.tutorial ? 'treino é de graça' : undefined} />
               <ResultStat label="Pontos na semana" value={formatPoints(f.weekScore)} />
               <ResultStat label="Posição" value={f.rank ? `#${f.rank}` : '—'} />
             </dl>
@@ -141,7 +139,14 @@ export function ResultScreen({ run, onClose }: { run: Running; onClose: () => vo
             </p>
           </Frame>
 
-          <div className="mt-6 animate-dv-fade [animation-delay:450ms]">
+          <div className="mt-auto flex animate-dv-fade flex-col gap-4 pt-6 [animation-delay:450ms]">
+            <div className="flex items-center gap-3">
+              <JavaliPortrait shape="round" className="w-12" />
+              <p className="font-body text-[16px] italic leading-snug text-dv-text-2">
+                <span className="dv-label mb-0.5 block text-[10px] not-italic text-dv-gold">Javali</span>
+                {f.tutorial ? 'Treino é por conta da casa. A próxima, querido, vale Tempo.' : win ? 'A casa agradece o espetáculo.' : costly ? 'O relógio cobra. A casa só observa.' : 'Empate não paga a casa. Tente de novo.'}
+              </p>
+            </div>
             <Button block size="lg" onClick={onClose} sfx="close">
               Voltar à mesa
             </Button>
@@ -152,12 +157,13 @@ export function ResultScreen({ run, onClose }: { run: Running; onClose: () => vo
   )
 }
 
-function ResultStat({ label, value, tone }: { label: string; value: string; tone?: 'cobalt' | 'gold' }) {
+function ResultStat({ label, value, tone, hint }: { label: string; value: string; tone?: 'cobalt' | 'gold'; hint?: string }) {
   return (
     <div className="relative pl-3">
       <span aria-hidden="true" className={cn('absolute bottom-1 left-0 top-1 w-[2px]', tone === 'cobalt' ? 'bg-dv-cobalt' : tone === 'gold' ? 'bg-dv-gold' : 'bg-dv-line-strong')} />
       <dt className="dv-label text-[10px] text-dv-text-3">{label}</dt>
       <dd className={cn('mt-1 font-impact text-[26px] font-semibold leading-none dv-tabular', tone === 'cobalt' ? 'text-dv-cobalt-text' : tone === 'gold' ? 'text-dv-gold-bright' : 'text-dv-text')}>{value}</dd>
+      {hint && <dd className="mt-1 font-body text-[13px] italic text-dv-text-3">{hint}</dd>}
     </div>
   )
 }

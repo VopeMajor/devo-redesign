@@ -3,9 +3,9 @@
 import Image from 'next/image'
 import { useEffect, useRef, type CSSProperties, type ReactNode } from 'react'
 import type { MelissaMood, StageId } from '@/lib/devo/prologue-script'
+import { portraitFrameProps } from '@/lib/devo/npcs'
 import { cn } from '@/lib/utils'
 import { PortraitFrame } from '../kit/portrait'
-import { MelissaArt } from '../npc-art/melissa'
 import { DeadlyVoteSymbol } from '../system/symbol'
 import { Embers } from '../shared/atmosphere'
 import { CelFire } from './cel-fire'
@@ -344,13 +344,23 @@ export function PrologueStage({
             melissa === 'approach' ? 'brightness-[0.08]' : melissaOn && !speaking ? 'brightness-[0.62] saturate-[0.8]' : 'brightness-100',
           )}
         >
-          <PortraitFrame alt={melissaOn ? 'Melissa, da Companhia de Despertados' : ''} tone="cobalt" ornate scale={1.55} className="w-full">
-            <div className="relative size-full">
-              {(['neutral', 'soft', 'serious'] as MelissaMood[]).map((m) => (
-                <MelissaArt key={m} mood={m} className={cn('absolute inset-0 size-full transition-opacity duration-500', m === mood ? 'opacity-100' : 'opacity-0')} />
-              ))}
-            </div>
-          </PortraitFrame>
+          {/* uma moldura por expressão (mapa em lib/devo/npcs.ts), trocadas por opacidade */}
+          <div className="relative">
+            {(['neutral', 'soft', 'serious'] as MelissaMood[]).map((m) => {
+              const on = m === mood
+              return (
+                <div key={m} className={cn('transition-opacity duration-500', on ? 'relative opacity-100' : 'absolute inset-0 opacity-0')}>
+                  <PortraitFrame
+                    {...(portraitFrameProps('melissa', m) ?? {})}
+                    alt={melissaOn && on ? 'Melissa, da Companhia de Despertados' : ''}
+                    tone="cobalt"
+                    ornate
+                    className="w-full"
+                  />
+                </div>
+              )
+            })}
+          </div>
         </div>
       </div>
 

@@ -5,9 +5,10 @@
  * daqui foi para o kit (Plaque, OddsBar); Medallion, VsSplit e AstrolabeDial seguem aqui (ver IDENTIDADE.md).
  */
 import type { CSSProperties, ReactNode } from 'react'
-import { GlyphArrow } from '@/components/devo/kit'
+import { GlyphArrow, PortraitFrame } from '@/components/devo/kit'
+import type { GameId } from '@/lib/devo/arcade/games'
 import { cn } from '@/lib/utils'
-import { JavaliArt } from '../npc-art/javali'
+import { portraitFrameProps } from '@/lib/devo/npcs'
 
 /* ── Placa de status (cabeçalho) ─────────────────────────────────────────────────────── */
 
@@ -73,28 +74,57 @@ export function Monogram({
   )
 }
 
-/* ── Medalhão do Javali (recorte do rosto da arte original) ─────────────────────────── */
+/* ── Retrato do Javali (PortraitFrame do kit, mesmo tratamento do elenco) ───────────── */
 
-/** Rosto do anfitrião num octógono com filete dourado. `size` em px. */
-export function JavaliMedallion({ size = 56, className, title }: { size?: number; className?: string; title?: string }) {
-  // Janela de recorte na arte (viewBox 1200×500, pose "table"): x 470–730, y 18–278.
-  const s = size / 260
+/**
+ * Javali no `PortraitFrame` (luz de borda, grão, vinheta, base em degradê). `shape="round"` com zoom
+ * no rosto serve de medalhão; `arch` mostra busto e mesa.
+ */
+export function JavaliPortrait({
+  shape = 'arch',
+  name,
+  role,
+  ornate,
+  className,
+  title = 'Javali, anfitrião da Sala de Jogos',
+}: {
+  shape?: 'arch' | 'round' | 'rect'
+  name?: string
+  role?: string
+  ornate?: boolean
+  className?: string
+  title?: string
+}) {
   return (
-    <span
-      role={title ? 'img' : undefined}
-      aria-label={title}
-      aria-hidden={title ? undefined : true}
-      className={cn('relative isolate block shrink-0', className)}
-      style={{ width: size, height: size, '--dv-cut': `${Math.round(size * 0.24)}px` } as CSSProperties}
-    >
-      <span className={cn('dv-cut absolute inset-0 -z-10', PLAQUE_LINE.gold)} />
-      <span className="dv-cut absolute inset-[2px] -z-10 overflow-hidden bg-[radial-gradient(90%_80%_at_50%_30%,#1f2a55,var(--dv-ink)_75%)]">
-        <span className="absolute" style={{ width: 1200 * s, height: 500 * s, left: -470 * s, top: -18 * s }}>
-          <JavaliArt pose="table" className="size-full" />
-        </span>
-      </span>
+    <PortraitFrame
+      {...(portraitFrameProps('javali', 'neutral', shape === 'round' ? 'face' : 'bust') ?? {})}
+      alt={title}
+      tone="gold"
+      shape={shape}
+      name={name}
+      role={role}
+      ornate={ornate}
+      className={className}
+    />
+  )
+}
+
+/** Compatibilidade: medalhão redondo do Javali com `size` em px. */
+export function JavaliMedallion({ size = 56, className, title }: { size?: number; className?: string; title?: string }) {
+  return (
+    <span className={cn('block shrink-0', className)} style={{ width: size }}>
+      <JavaliPortrait shape="round" className="w-full" title={title} />
     </span>
   )
+}
+
+/* ── Arte dos jogos (cenas sem texto nem cursor, para cartaz e cartas) ──────────────── */
+
+export const GAME_ART: Record<GameId, { src: string; position: string }> = {
+  'memory-rush': { src: '/images/arcade/memory-rush.jpg', position: '50% 45%' },
+  chess: { src: '/images/arcade/chess.jpg', position: '45% 50%' },
+  'hot-bomb': { src: '/images/arcade/hot-bomb.jpg', position: '50% 55%' },
+  bluff: { src: '/images/arcade/bluff.png', position: '45% 70%' },
 }
 
 /* ── Link pequeno "ver mais" (≥ 44px de toque) ───────────────────────────────────────── */
