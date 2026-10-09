@@ -3,7 +3,7 @@ import { cn } from '@/lib/utils'
 const rand = (i: number) => Math.abs((Math.sin(i * 12.9898) * 43758.5453) % 1)
 
 const LAYERS = [
-  { color: '#9e0f2a', stroke: '#2a0a0a', count: 9, min: 120, max: 190, seed: 1 },
+  { color: 'var(--dv-blood)', stroke: '#2a0a0a', count: 9, min: 120, max: 190, seed: 1 },
   { color: '#ff4f12', stroke: 'none', count: 11, min: 85, max: 145, seed: 40 },
   { color: '#ffb52e', stroke: 'none', count: 13, min: 45, max: 95, seed: 90 },
   { color: '#ffe066', stroke: 'none', count: 9, min: 14, max: 40, seed: 150 },

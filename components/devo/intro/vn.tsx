@@ -90,10 +90,10 @@ export function DubToggle({ className }: { className?: string }) {
 export type PlateTone = 'cobalt' | 'gold' | 'void' | 'system'
 
 const PLATE: Record<PlateTone, { fill: string; edge: string; name: string }> = {
-  cobalt: { fill: 'bg-[linear-gradient(100deg,#0d1f7a,var(--dv-cobalt-deep)_60%,#3d63ff)]', edge: 'bg-dv-gold', name: 'text-white' },
-  gold: { fill: 'bg-[linear-gradient(100deg,var(--dv-gold-deep),#a8833e_55%,var(--dv-gold))]', edge: 'bg-dv-gold-bright', name: 'text-dv-ink' },
+  cobalt: { fill: 'bg-[linear-gradient(100deg,var(--dv-night),var(--dv-cobalt-deep)_60%,var(--dv-cobalt))]', edge: 'bg-dv-gold', name: 'text-white' },
+  gold: { fill: 'bg-[linear-gradient(100deg,var(--dv-gold-deep),#8a7650_55%,var(--dv-gold))]', edge: 'bg-dv-gold-bright', name: 'text-dv-ink' },
   void: { fill: 'bg-[linear-gradient(100deg,#000,var(--dv-ink-3)_70%,var(--dv-ink-4))]', edge: 'bg-dv-gold', name: 'text-dv-gold-bright' },
-  system: { fill: 'bg-[linear-gradient(100deg,var(--dv-ink),var(--dv-cobalt-dim)_70%,#14307a)]', edge: 'bg-dv-cobalt-text', name: 'text-dv-cobalt-text' },
+  system: { fill: 'bg-[linear-gradient(100deg,var(--dv-ink),var(--dv-cobalt-dim)_70%,var(--dv-cobalt-deep))]', edge: 'bg-dv-cobalt-text', name: 'text-dv-cobalt-text' },
 }
 
 /** Placa do falante: paralelogramo inclinado que entra com corte a cada troca de falante. */
@@ -146,14 +146,14 @@ export function DialogueShell({
     tone === 'gold'
       ? 'bg-[linear-gradient(135deg,var(--dv-gold-bright),var(--dv-gold-deep)_30%,var(--dv-gold)_60%,var(--dv-gold-deep))]'
       : tone === 'cobalt'
-        ? 'bg-[linear-gradient(135deg,#8ea6ff,var(--dv-cobalt)_35%,var(--dv-cobalt-dim)_70%,var(--dv-cobalt))]'
+        ? 'bg-[linear-gradient(135deg,var(--dv-amethyst-text),var(--dv-cobalt)_35%,var(--dv-cobalt-dim)_70%,var(--dv-cobalt))]'
         : 'bg-dv-line-strong'
   return (
     <span className={cn('relative block', className)} style={{ '--dv-cut': '16px', ...style } as CSSProperties}>
       <span aria-hidden="true" className={cn('dv-cut-diag absolute inset-0', line)} />
       <span
         aria-hidden="true"
-        className="dv-cut-diag absolute inset-px bg-[linear-gradient(180deg,rgba(17,26,46,0.94),rgba(10,15,28,0.95)_45%,rgba(5,7,13,0.97))] backdrop-blur-md"
+        className="dv-cut-diag absolute inset-px bg-[linear-gradient(180deg,color-mix(in_oklab,var(--dv-ink-3)_94%,transparent),color-mix(in_oklab,var(--dv-ink-2)_95%,transparent)_45%,color-mix(in_oklab,var(--dv-ink)_97%,transparent))] backdrop-blur-md"
         style={{ '--dv-cut': '15.6px' } as CSSProperties}
       />
       <span aria-hidden="true" className="absolute inset-x-[12%] top-px h-px bg-gradient-to-r from-transparent via-white/25 to-transparent" />
@@ -198,14 +198,14 @@ export function ChoiceStrip({
         aria-hidden="true"
         className={cn(
           'dv-cut-diag absolute inset-0 -z-10 transition-colors duration-[220ms]',
-          muted ? 'bg-dv-line-strong' : 'bg-[linear-gradient(100deg,rgba(236,238,242,0.45),rgba(236,238,242,0.15))] group-hover:bg-[linear-gradient(100deg,#8ea6ff,var(--dv-cobalt))] group-focus-visible:bg-[linear-gradient(100deg,#8ea6ff,var(--dv-cobalt))]',
+          muted ? 'bg-dv-line-strong' : 'bg-[linear-gradient(100deg,color-mix(in_oklab,var(--dv-porcelain)_45%,transparent),color-mix(in_oklab,var(--dv-porcelain)_15%,transparent))] group-hover:bg-[linear-gradient(100deg,var(--dv-amethyst-text),var(--dv-cobalt))] group-focus-visible:bg-[linear-gradient(100deg,var(--dv-amethyst-text),var(--dv-cobalt))]',
         )}
       />
       <span
         aria-hidden="true"
         className={cn(
           'dv-cut-diag dv-sheen absolute inset-px -z-10 overflow-hidden transition-colors duration-[220ms]',
-          muted ? 'bg-dv-ink' : 'bg-[linear-gradient(90deg,var(--dv-ink-3),var(--dv-ink-2)_40%,var(--dv-ink))] group-hover:bg-[linear-gradient(90deg,var(--dv-cobalt-dim),rgba(10,15,28,0.94))]',
+          muted ? 'bg-dv-ink' : 'bg-[linear-gradient(90deg,var(--dv-ink-3),var(--dv-ink-2)_40%,var(--dv-ink))] group-hover:bg-[linear-gradient(90deg,var(--dv-cobalt-dim),color-mix(in_oklab,var(--dv-ink-2)_94%,transparent))]',
         )}
         style={{ '--dv-cut': '11.6px' } as CSSProperties}
       />
@@ -246,12 +246,12 @@ export function ChoiceHeader({ children }: { children: ReactNode }) {
 }
 
 /** Barra superior da encenação: capítulo à esquerda; som e "pular" à direita (discretos, ≥44px). */
-export function VnTopBar({ chapter, skipLabel, onSkip }: { chapter: ReactNode; skipLabel: string; onSkip: () => void }) {
+export function VnTopBar({ chapter, skipLabel, onSkip, dub = false }: { chapter: ReactNode; skipLabel: string; onSkip: () => void; /** Mostra o botão Dublagem (só no prólogo). */ dub?: boolean }) {
   return (
     <div className="dv-safe-top pointer-events-none absolute inset-x-0 top-0 z-30 flex items-start justify-between bg-gradient-to-b from-black/70 to-transparent px-4 pb-8">
       <div className="pointer-events-auto min-w-0 flex-1 pr-2 pt-3">{chapter}</div>
       <div className="pointer-events-auto flex shrink-0 items-center">
-        <DubToggle />
+        {dub && <DubToggle />}
         <SoundToggle compact className="min-h-11 min-w-11 justify-center text-dv-text-2 hover:text-dv-text" />
         <button
           type="button"

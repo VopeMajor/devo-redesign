@@ -96,7 +96,7 @@ export function BackExitHint() {
           className="animate-dv-toast-in relative isolate flex items-center gap-2.5 py-2.5 pl-4 pr-5 font-sans text-[14px] text-dv-text shadow-[0_12px_28px_rgba(0,0,0,0.6)]"
           style={{ '--dv-cut': '10px' } as CSSProperties}
         >
-          <span aria-hidden="true" className="dv-cut-diag absolute inset-0 -z-10 bg-[linear-gradient(135deg,#8ea6ff,var(--dv-cobalt)_40%,var(--dv-cobalt-dim))]" />
+          <span aria-hidden="true" className="dv-cut-diag absolute inset-0 -z-10 bg-[linear-gradient(135deg,var(--dv-amethyst-text),var(--dv-cobalt)_40%,var(--dv-cobalt-dim))]" />
           <span aria-hidden="true" className="dv-cut-diag absolute inset-px -z-10 bg-[linear-gradient(180deg,var(--dv-ink-3),var(--dv-ink))]" style={{ '--dv-cut': '9.6px' } as CSSProperties} />
           <span aria-hidden="true" className="h-4 w-[3px] bg-dv-cobalt" />
           Pressione voltar de novo para sair

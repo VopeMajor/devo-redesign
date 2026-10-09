@@ -225,7 +225,7 @@ export function AccessScreen({
       style={{ top: view?.top ?? 0, height: view ? view.h : '100dvh' }}
     >
       {/* Véu: a cena do sigilo continua viva atrás do documento. */}
-      <div aria-hidden="true" className="animate-dv-fade absolute inset-0 bg-[linear-gradient(180deg,rgba(5,7,13,0.1)_0%,rgba(5,7,13,0.45)_42%,rgba(5,7,13,0.92)_100%)]" />
+      <div aria-hidden="true" className="animate-dv-fade absolute inset-0 bg-[linear-gradient(180deg,color-mix(in_oklab,var(--dv-ink)_10%,transparent)_0%,color-mix(in_oklab,var(--dv-ink)_45%,transparent)_42%,color-mix(in_oklab,var(--dv-ink)_92%,transparent)_100%)]" />
 
       <div className="relative min-h-0 flex-1">
         <form onSubmit={submit} noValidate className="relative mx-auto flex h-full w-full max-w-md flex-col justify-end px-4 pb-[max(env(safe-area-inset-bottom),14px)] pt-[max(env(safe-area-inset-top),20px)] sm:justify-center">
@@ -233,22 +233,22 @@ export function AccessScreen({
             {/* Papel marfim com canto dobrado */}
             <div aria-hidden="true" className="absolute inset-0 overflow-hidden [clip-path:polygon(0_0,calc(100%-28px)_0,100%_28px,100%_100%,0_100%)]">
               <div className="dv-paper-bg absolute inset-0" />
-              <div className="absolute inset-0 bg-[radial-gradient(120%_70%_at_20%_0%,rgba(255,255,255,0.35),transparent_60%),radial-gradient(90%_60%_at_100%_100%,rgba(124,95,42,0.18),transparent_70%)]" />
+              <div className="absolute inset-0 bg-[radial-gradient(120%_70%_at_20%_0%,rgba(255,255,255,0.35),transparent_60%),radial-gradient(90%_60%_at_100%_100%,color-mix(in_oklab,var(--dv-gold-deep)_18%,transparent),transparent_70%)]" />
               {/* Corte diagonal entre etapas */}
               {wipe && (
                 <span key={wipe.seq} className={cn('absolute -inset-y-[10%] left-[-20%] w-[140%]', wipe.back ? 'en-wipe-back' : 'en-wipe')}>
-                  <span className="absolute inset-0 bg-[linear-gradient(90deg,#0d1f7a,var(--dv-cobalt-deep)_55%,#5b78ff)]" />
+                  <span className="absolute inset-0 bg-[linear-gradient(90deg,var(--dv-night),var(--dv-cobalt-deep)_55%,var(--dv-violet))]" />
                   <span className="absolute inset-y-0 left-0 w-[2px] bg-dv-gold" />
                   <span className="absolute inset-y-0 right-0 w-[2px] bg-dv-gold" />
                 </span>
               )}
             </div>
-            <span aria-hidden="true" className="absolute right-0 top-0 size-7 bg-[linear-gradient(225deg,transparent_50%,var(--dv-paper-2)_50%,#cdbd98)] shadow-[-2px_2px_4px_rgba(0,0,0,0.25)]" />
+            <span aria-hidden="true" className="absolute right-0 top-0 size-7 bg-[linear-gradient(225deg,transparent_50%,var(--dv-paper-2)_50%,var(--dv-gold))] shadow-[-2px_2px_4px_rgba(0,0,0,0.25)]" />
             {/* Costura do diário */}
             <span aria-hidden="true" className="pointer-events-none absolute inset-[9px] border border-dashed border-dv-paper-ink/25 [clip-path:polygon(0_0,calc(100%-22px)_0,100%_22px,100%_100%,0_100%)]" />
             {/* Fita marcadora + clipe */}
-            <span aria-hidden="true" className="absolute -top-2.5 left-7 h-16 w-5 bg-[linear-gradient(90deg,#0d2bb8,var(--dv-cobalt-deep)_50%,#0d2bb8)] shadow-[0_3px_6px_rgba(0,0,0,0.35)] [clip-path:polygon(0_0,100%_0,100%_100%,50%_80%,0_100%)]" />
-            <GlyphClip className="absolute -top-4 left-[3.4rem] size-9 rotate-[18deg] text-[#8d93a3] drop-shadow-[0_2px_1px_rgba(0,0,0,0.35)]" />
+            <span aria-hidden="true" className="absolute -top-2.5 left-7 h-16 w-5 bg-[linear-gradient(90deg,var(--dv-cobalt-deep),var(--dv-cobalt-deep)_50%,var(--dv-cobalt-deep))] shadow-[0_3px_6px_rgba(0,0,0,0.35)] [clip-path:polygon(0_0,100%_0,100%_100%,50%_80%,0_100%)]" />
+            <GlyphClip className="absolute -top-4 left-[3.4rem] size-9 rotate-[18deg] text-[var(--dv-marble-vein)] drop-shadow-[0_2px_1px_rgba(0,0,0,0.35)]" />
 
             <div className="devo-scroll relative min-h-0 flex-1 overflow-y-auto overscroll-contain px-6 pb-4 pt-9 text-dv-paper-ink sm:px-8">
               {/* Cabeçalho do formulário */}
@@ -461,7 +461,7 @@ export function AccessScreen({
                 className={cn(
                   'mt-4 flex min-h-6 items-start gap-2',
                   error
-                    ? 'border-l-[3px] border-dv-blood bg-[rgba(213,31,43,0.08)] px-3 py-2 font-sans text-[14px] leading-snug text-[#a3121c]'
+                    ? 'border-l-[3px] border-dv-blood bg-[color-mix(in_oklab,var(--dv-blood)_8%,transparent)] px-3 py-2 font-sans text-[14px] leading-snug text-[var(--dv-blood)]'
                     : 'dv-label text-[10px] text-dv-paper-ink/60',
                 )}
               >
@@ -547,7 +547,7 @@ function DocField({
         htmlFor={id}
         className={cn(
           'dv-label flex items-center justify-between text-[11px] transition-colors',
-          error ? 'text-[#a3121c]' : 'text-dv-paper-ink/75 group-focus-within/field:text-dv-paper-ink',
+          error ? 'text-[var(--dv-blood)]' : 'text-dv-paper-ink/75 group-focus-within/field:text-dv-paper-ink',
         )}
       >
         <span>{label}</span>
@@ -582,7 +582,7 @@ function DocField({
             'w-full border-b-2 bg-white/35 py-3 pl-3 font-sans text-[17px] text-dv-paper-ink outline-none transition-[border-color,background-color] duration-[220ms] placeholder:text-dv-paper-ink/40',
             secret ? 'pr-14' : 'pr-10',
             error
-              ? 'border-dv-blood bg-[rgba(213,31,43,0.06)]'
+              ? 'border-dv-blood bg-[color-mix(in_oklab,var(--dv-blood)_6%,transparent)]'
               : ok
                 ? 'border-dv-cobalt-deep/70 focus:border-dv-cobalt-deep focus:bg-white/60'
                 : 'border-dv-paper-ink/35 focus:border-dv-cobalt-deep focus:bg-white/60',
@@ -606,7 +606,7 @@ function DocField({
         {overlay}
       </div>
       {message && (
-        <p id={`${id}-msg`} className={cn('mt-1.5 font-sans text-[13px] leading-snug', error ? 'text-[#a3121c]' : 'text-dv-paper-ink/70')}>
+        <p id={`${id}-msg`} className={cn('mt-1.5 font-sans text-[13px] leading-snug', error ? 'text-[var(--dv-blood)]' : 'text-dv-paper-ink/70')}>
           {message}
         </p>
       )}

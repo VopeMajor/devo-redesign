@@ -176,10 +176,10 @@ export function speakLine({ id, text, cast, onEnd }: { id: string; text: string;
   return ms
 }
 
-/** Risadinha do Rato: a dublada (com tratamento) ou a sintetizada. */
+/** Risadinha do Rato (efeito, não depende do botão Dublagem): a gerada com tratamento ou a sintetizada. */
 export function playRatoLaugh() {
   if (isMuted()) return
-  if (readDub() && manifest?.lines[RATO_LAUGH_ID]) {
+  if (manifest?.lines[RATO_LAUGH_ID]) {
     const a = new Audio(`${BASE}/${RATO_LAUGH_ID}.${format()}`)
     a.volume = 0.9
     void a.play().catch(() => playSfx('laugh'))

@@ -159,7 +159,7 @@
 
 @keyframes en-sweep-hand { to { transform: rotate(360deg); } }
 .en-sweep-hand { animation: en-sweep-hand 6s linear infinite; transform-origin: 50% 50%; }
-.en-sweep-hand-slow { animation: en-sweep-hand 40s linear infinite; transform-origin: 50% 50%; }
+.en-sweep-hand-slow { animation: en-sweep-hand 120s linear infinite; transform-origin: 50% 50%; }
 
 @keyframes en-drift {
   0% { opacity: 1; transform: translate(0, 0) rotate(-4deg); filter: blur(0); }
@@ -228,3 +228,11 @@
   /* sem animação, as pálpebras ficariam fechadas: some com elas */
   .en-lid-top, .en-lid-bottom { display: none; }
 }
+
+/* Corte seco entre atos do prólogo: um quadro preto que abre devagar (não bloqueia toques). */
+@keyframes en-cut {
+  0%, 18% { opacity: 1; }
+  100% { opacity: 0; }
+}
+.en-cut { animation: en-cut 700ms var(--dv-ease-in) both; }
+@media (prefers-reduced-motion: reduce) { .en-cut { animation: none; opacity: 0; } }

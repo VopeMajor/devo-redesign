@@ -39,7 +39,7 @@ const STAGE_TRACK: Partial<Record<StageId, PrologueTrack>> = {
   fire: 'dread',
   rise: 'dread',
   void: 'void',
-  voice: 'void',
+  voice: 'hall',
   mine: 'mine',
   phone: 'mine',
 }
@@ -51,9 +51,15 @@ const STAGE_SFX: Partial<Record<StageId, Sfx>> = {
   death: 'bell',
   fire: 'ignite',
   rise: 'crackle',
-  void: 'shimmer',
-  voice: 'whisper',
+  void: 'crack',
+  voice: 'toll',
   mine: 'drip',
+}
+
+const STAGE_SFX_AFTER: Partial<Record<StageId, [Sfx, number]>> = {
+  void: ['shimmer', 420],
+  voice: ['whisper', 1400],
+  phone: ['tick', 300],
 }
 
 type Profile = Partial<Record<ProfileField, string>>
@@ -85,7 +91,7 @@ const STAGE_ACT: Partial<Record<StageId, Act>> = {
 function ActCard({ act }: { act: Act }) {
   return (
     <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-[9%] z-40 h-36 overflow-hidden">
-      <span className="en-act-band absolute inset-y-6 -left-[10%] w-[120%] bg-[linear-gradient(90deg,transparent,rgba(5,7,13,0.92)_12%,rgba(5,7,13,0.92)_88%,transparent)]">
+      <span className="en-act-band absolute inset-y-6 -left-[10%] w-[120%] bg-[linear-gradient(90deg,transparent,color-mix(in_oklab,var(--dv-ink)_92%,transparent)_12%,color-mix(in_oklab,var(--dv-ink)_92%,transparent)_88%,transparent)]">
         <span className="absolute inset-x-0 top-0 h-[2px] bg-dv-gold/80" />
         <span className="absolute inset-x-0 bottom-0 h-[3px] bg-dv-cobalt-deep" />
       </span>
@@ -304,6 +310,9 @@ export function PrologueScreen({ playerName, onFinish: onDone }: { playerName: s
     else if (stage === 'dark' && index > 0) setPrologueMusic(null)
     const sfx = STAGE_SFX[stage]
     if (sfx) playSfx(sfx)
+    // Segunda camada de som em alguns cortes: o espelho cintila depois de trincar; a Voz sussurra depois da badalada.
+    const after = STAGE_SFX_AFTER[stage]
+    if (after) window.setTimeout(() => playSfx(after[0]), after[1])
   }, [beat.stage, index])
 
   useEffect(() => {
@@ -401,14 +410,16 @@ export function PrologueScreen({ playerName, onFinish: onDone }: { playerName: s
 
       {slash && (
         <div key={`slash-${index}`} aria-hidden="true" className="pointer-events-none absolute inset-0 z-20 overflow-hidden">
-          <span className="en-slash absolute left-[-20%] top-[44%] h-3 w-[140%] bg-dv-blood shadow-[0_0_30px_rgba(213,31,43,0.9)]" />
+          <span className="en-slash absolute left-[-20%] top-[44%] h-3 w-[140%] bg-dv-blood shadow-[0_0_30px_color-mix(in_oklab,var(--dv-blood)_90%,transparent)]" />
         </div>
       )}
-      {glint && <div key={`glint-${index}`} aria-hidden="true" className="en-glint pointer-events-none absolute inset-0 z-20 bg-[radial-gradient(circle_at_50%_40%,rgba(125,151,255,0.9),transparent_60%)]" />}
+      {glint && <div key={`glint-${index}`} aria-hidden="true" className="en-glint pointer-events-none absolute inset-0 z-20 bg-[radial-gradient(circle_at_50%_40%,color-mix(in_oklab,var(--dv-amethyst)_90%,transparent),transparent_60%)]" />}
+      {act && <div key={`cut-${act.n}`} aria-hidden="true" className="en-cut pointer-events-none absolute inset-0 z-[35] bg-black" />}
       {act && <ActCard key={`act-${act.n}`} act={act} />}
 
       <VnTopBar
         skipLabel="Pular prólogo"
+        dub
         onSkip={onFinish}
         chapter={
           act ? (
@@ -425,7 +436,7 @@ export function PrologueScreen({ playerName, onFinish: onDone }: { playerName: s
 
       <div className="absolute inset-x-0 bottom-0 z-20 mx-auto flex w-full max-w-3xl flex-col gap-2.5 px-4 pb-[max(env(safe-area-inset-bottom),1.25rem)] lg:pb-10">
         {itemGet && (
-          <div key={`item-${index}`} aria-hidden="true" className="en-item mb-2 flex items-center gap-3 self-start border-l-[3px] border-dv-gold bg-[linear-gradient(90deg,rgba(124,95,42,0.9),rgba(10,15,28,0.92))] py-2 pl-3 pr-5 shadow-[0_10px_24px_rgba(0,0,0,0.6)] [clip-path:polygon(0_0,100%_0,calc(100%-12px)_100%,0_100%)]">
+          <div key={`item-${index}`} aria-hidden="true" className="en-item mb-2 flex items-center gap-3 self-start border-l-[3px] border-dv-gold bg-[linear-gradient(90deg,color-mix(in_oklab,var(--dv-gold-deep)_90%,transparent),color-mix(in_oklab,var(--dv-ink-2)_92%,transparent))] py-2 pl-3 pr-5 shadow-[0_10px_24px_rgba(0,0,0,0.6)] [clip-path:polygon(0_0,100%_0,calc(100%-12px)_100%,0_100%)]">
             <GlyphCard className="size-6 text-dv-gold-bright" />
             <span className="flex flex-col">
               <span className="dv-label text-[10px] text-dv-gold-bright">Item adquirido</span>
@@ -446,7 +457,7 @@ export function PrologueScreen({ playerName, onFinish: onDone }: { playerName: s
               <span className="relative block -rotate-[0.6deg]">
                 <span
                   aria-hidden="true"
-                  className="dv-paper-bg absolute inset-0 shadow-[6px_8px_0_rgba(5,7,13,0.6)] [clip-path:polygon(0_4%,3%_0,40%_3%,70%_0,100%_5%,99%_60%,100%_100%,60%_97%,30%_100%,0_96%,1%_50%)]"
+                  className="dv-paper-bg absolute inset-0 shadow-[6px_8px_0_color-mix(in_oklab,var(--dv-ink)_60%,transparent)] [clip-path:polygon(0_4%,3%_0,40%_3%,70%_0,100%_5%,99%_60%,100%_100%,60%_97%,30%_100%,0_96%,1%_50%)]"
                 />
                 <span aria-hidden="true" className="pointer-events-none absolute inset-[8px] border border-dashed border-dv-paper-ink/25" />
                 <span className="relative block px-6 pb-4 pt-5">

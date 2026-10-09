@@ -40,7 +40,7 @@ export function MenuButton({ variant = 'secondary', className, children, ...prop
           className={cn(
             'flex items-center justify-center gap-4 px-8 py-3.5 text-base sm:text-lg',
             isPrimary
-              ? 'bg-gradient-to-b from-[#0b1a4d] to-[#0b0e16] text-foreground group-hover:from-[#0f2366]'
+              ? 'bg-gradient-to-b from-[var(--dv-night)] to-[var(--dv-ink)] text-foreground group-hover:from-[var(--dv-night-2)]'
               : 'bg-background/95 text-foreground/80 group-hover:text-foreground',
           )}
           style={{ clipPath: CHAMFER }}

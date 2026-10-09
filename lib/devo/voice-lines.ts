@@ -1,12 +1,11 @@
 /**
- * Dublagem (DIRECAO-2 §5): lista ÚNICA das falas dubladas, com ids estáveis.
+ * Dublagem (DIRECAO-2 §5, só o prólogo): lista ÚNICA das falas dubladas, com ids estáveis.
  * Usada pelo gerador do CI (scripts/voz/exportar.ts → gerar.py) e pelo player do jogo (lib/devo/voice.ts).
  * Não importa nada de React/DOM: roda no Node (tsx) e no navegador.
  *
  * Ids:
  *   pr-012        fala da batida 12 do prólogo
  *   pr-021-1-0    resposta 0 da opção 1 da escolha na batida 21
- *   tu-07         fala 7 do tutorial
  *   rato-risada   risadinha do Rato (fim da fala dele no tutorial)
  */
 import { INTRO_SCRIPT } from './intro-script'
@@ -58,7 +57,7 @@ export function buildVoiceLines(): VoiceLine[] {
       beat.options.forEach((o, oi) => o.reply.forEach((r, ri) => push(prologueLineId(i, oi, ri), r.who, r.text)))
     }
   })
-  INTRO_SCRIPT.forEach((l, i) => push(tutorialLineId(i), l.speaker === 'rato' ? 'rato' : 'herdeiro', l.text))
+  // Dublagem só na cutscene inicial (DIRECAO-2 §5): o tutorial não tem voz, só a risadinha do Rato (efeito).
   out.push({ id: RATO_LAUGH_ID, cast: 'rato', text: 'Hihihi!', tts: 'Hi, hi, hi, hi!' })
   return out
 }

@@ -1,18 +1,20 @@
-# Dublagem da Entrada (prólogo e tutorial)
+# Dublagem da Entrada (só o prólogo)
 
-DIRECAO-2 §5: todas as falas do prólogo e do tutorial têm voz. As vozes são geradas no CI com um TTS neural
+DIRECAO-2 §5 (revisão do dono): a dublagem é OPCIONAL e fica só na cutscene inicial (prólogo). O tutorial
+não tem voz; dele só sai a risadinha do Rato, tratada como efeito sonoro (toca mesmo com a Dublagem desligada,
+respeita o mudo). As vozes são geradas no CI com um TTS neural
 livre em pt-BR e versionadas em `public/audio/voz/`.
 
 ## Como funciona
 
 | Peça | Arquivo |
 |---|---|
-| Lista única de falas e ids | `lib/devo/voice-lines.ts` (`pr-012`, `pr-021-1-0`, `tu-07`, `rato-risada`) |
+| Lista única de falas e ids | `lib/devo/voice-lines.ts` (`pr-012`, `pr-021-1-0`, `rato-risada`) |
 | Exportar falas → JSON | `scripts/voz/exportar.ts` (`npx -y tsx scripts/voz/exportar.ts`) |
 | Gerar vozes + tratamento | `scripts/voz/gerar.py` (Kokoro → ffmpeg → `.ogg` Opus 40k + `.m4a` AAC 56k) |
 | Workflow | `.github/workflows/dublagem.yml` (manual ou quando os roteiros mudam) |
 | Player no jogo | `lib/devo/voice.ts` (arquivo → `speechSynthesis` pt-BR de reserva) |
-| Botão | "Dublagem" na barra superior do prólogo/tutorial, ao lado do som (`DubToggle` em `intro/vn.tsx`) |
+| Botão | "Dublagem" na barra superior do prólogo, ao lado do som (`DubToggle` em `intro/vn.tsx`, `VnTopBar dub`) |
 
 - O workflow commita os arquivos de volta na branch com `[skip ci]` (não dispara capturas nem a si mesmo).
   O log vai para a branch `dublagem-log/<branch>` (`dublagem.log`, `motor.log`, `manifest.json`, `arquivos.txt`).
@@ -32,8 +34,8 @@ livre em pt-BR e versionadas em `public/audio/voz/`.
 | Melissa | `pf_dora` | natural, presença em 3,2 kHz |
 | ??? (Antiga Voz) | `pm_santa` (0,9×) | tom −16%, passa-baixa 3,6 kHz, eco de catedral (160/310 ms) |
 | DEVO · Sistema | `pf_dora` (0,97×) | rádio/terminal: banda 320–3400 Hz, saturação leve, eco curto |
-| Herdeiro | `pm_alex` (0,94×) | tom −8%, grave reforçado, sala pequena |
-| Rato | `pm_santa` (1,06×) | tom +20%, tremolo, saturação leve (sinistro); a risadinha usa o mesmo tratamento |
+| Herdeiro | — | sem voz (tutorial não é dublado) |
+| Rato | `pm_santa` (1,06×) | só a risadinha do tutorial: tom +20%, tremolo, saturação leve (sinistro) |
 
 ## Licenças
 
@@ -49,7 +51,6 @@ livre em pt-BR e versionadas em `public/audio/voz/`.
 
 - A prosódia em pt-BR do Kokoro é competente mas não é de ator: entonação às vezes plana, e "…" vira pausa
   curta. Interjeições como "Huuummm" e "Hihihi" saem sintéticas.
-- As três vozes base são poucas para o elenco: o tratamento diferencia Narrador/Herdeiro (mesma base) e
-  Melissa/Sistema (mesma base).
+- As três vozes base são poucas para o elenco: o tratamento diferencia Melissa/Sistema (mesma base).
 - Falas com o nome do personagem omitem o nome na voz.
 - iPhone/Safari usa `.m4a`; os demais, `.ogg` (Opus).

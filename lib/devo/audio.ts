@@ -42,6 +42,12 @@ export type Sfx =
   | 'shimmer'
   /** Impacto grave curto (cortes de cena, cartão de ato). */
   | 'thud'
+  /** Badalada do relógio gigante (o salão do relógio aparece). */
+  | 'toll'
+  /** Tique-taque seco de relojoaria. */
+  | 'tick'
+  /** Vidro do espelho trincando. */
+  | 'crack'
 
 let ctx: AudioContext | null = null
 let master: GainNode | null = null
@@ -154,6 +160,26 @@ export function playSfx(kind: Sfx) {
     case 'thud':
       tone(55, 0.6, { gain: 0.32, slideTo: 32 })
       noise(0.25, { gain: 0.14, freq: 180, q: 0.7 })
+      break
+    case 'toll':
+      // martelo no bronze + parciais de sino grave com batimento lento + sub
+      noise(0.05, { gain: 0.22, freq: 1800, q: 0.8 })
+      ;[1, 2.0, 2.4, 3.0, 4.2, 5.4].forEach((p, i) => {
+        tone(98 * p, 6.5 - i * 0.8, { gain: 0.09 / (i + 1), attack: 0.003 })
+        tone(98 * p * 1.004, 6 - i * 0.8, { gain: 0.05 / (i + 1), attack: 0.003 })
+      })
+      tone(49, 4.5, { gain: 0.16, attack: 0.02, slideTo: 46 })
+      break
+    case 'tick':
+      noise(0.025, { gain: 0.09, freq: 4200, q: 6 })
+      tone(2100, 0.03, { gain: 0.02, type: 'square' })
+      noise(0.025, { gain: 0.07, freq: 3100, q: 6, delay: 0.5 })
+      tone(1600, 0.03, { gain: 0.016, type: 'square', delay: 0.5 })
+      break
+    case 'crack':
+      for (let i = 0; i < 7; i++) noise(0.02 + Math.random() * 0.05, { gain: 0.12 + Math.random() * 0.1, freq: 3000 + Math.random() * 4000, q: 3, delay: i * 0.035 + Math.random() * 0.02 })
+      tone(2600, 0.5, { gain: 0.03, slideTo: 1400, delay: 0.05 })
+      noise(0.6, { gain: 0.05, freq: 6000, q: 2, delay: 0.1, sweepTo: 3000 })
       break
     case 'hover':
       tone(1400, 0.05, { gain: 0.018, type: 'triangle' })
@@ -591,11 +617,13 @@ export function stopAmbient() {
 }
 
 /** Trilha de caixinha de música do prólogo, sintetizada em tempo real. */
-export type PrologueTrack = 'tale' | 'dread' | 'void' | 'mine'
+/** `hall` = valsa lenta do salão do relógio, com tique-taque no compasso. */
+export type PrologueTrack = 'tale' | 'dread' | 'void' | 'mine' | 'hall'
 
 const PRO_MELODY = [81, 84, 88, 86, 84, 83, 84, 81, 76, 77, 76, 74, 76, 80, 83, 86, 84, 83, 81, 0, 76, 81, 0, 0]
 const PRO_BASS = [45, 43, 45, 50, 40, 40, 45, 45]
-const PRO_TRACKS: Record<PrologueTrack, { beat: number; shift: number; level: number; cutoff: number; melody: boolean; drone: boolean; warp: number }> = {
+const PRO_TRACKS: Record<PrologueTrack, { beat: number; shift: number; level: number; cutoff: number; melody: boolean; drone: boolean; warp: number; tick?: boolean }> = {
+  hall: { beat: 0.78, shift: -12, level: 0.75, cutoff: 2600, melody: true, drone: true, warp: 0.008, tick: true },
   tale: { beat: 0.55, shift: 0, level: 0.9, cutoff: 7000, melody: true, drone: false, warp: 0 },
   dread: { beat: 0.9, shift: -12, level: 0.85, cutoff: 1900, melody: true, drone: true, warp: 0.014 },
   void: { beat: 1.1, shift: 0, level: 0.7, cutoff: 1400, melody: false, drone: true, warp: 0.006 },
@@ -630,6 +658,23 @@ function scheduleProStep() {
     const root = PRO_BASS[bar] + 12 + Math.min(cfg.shift, 0)
     if (beatInBar === 0) musicBox(midiHz(root), t, pro.filter, 0.035)
     else musicBox(midiHz(root + (beatInBar === 1 ? 7 : 12)), t, pro.filter, 0.014)
+  }
+
+  if (cfg.tick) {
+    // tique-taque de relojoaria no tempo da valsa (forte no 1, leve no 2 e 3)
+    const src = ctx.createBufferSource()
+    src.buffer = noiseBuffer(ctx, 0.04)
+    const f = ctx.createBiquadFilter()
+    f.type = 'bandpass'
+    f.frequency.value = beatInBar === 0 ? 2200 : 1700
+    f.Q.value = 7
+    const g = ctx.createGain()
+    g.gain.setValueAtTime(0.0001, t)
+    g.gain.exponentialRampToValueAtTime(beatInBar === 0 ? 0.11 : 0.06, t + 0.004)
+    g.gain.exponentialRampToValueAtTime(0.0001, t + 0.035)
+    src.connect(f).connect(g).connect(pro.filter)
+    src.start(t)
+    src.stop(t + 0.05)
   }
 
   if (cfg.drone && beatInBar === 0 && bar % 2 === 0) {

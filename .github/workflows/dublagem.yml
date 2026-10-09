@@ -1,6 +1,6 @@
 name: Dublagem
 
-# Gera a voz de todas as falas do prólogo e do tutorial (DIRECAO-2 §5) com TTS neural livre em pt-BR
+# Gera a voz das falas do prólogo (cutscene inicial, DIRECAO-2 §5) e a risadinha do Rato com TTS neural livre em pt-BR
 # e commita os arquivos em public/audio/voz/ na própria branch. Ver docs/redesign/DUBLAGEM.md.
 # O commit de volta leva [skip ci] e só toca public/audio/voz → não dispara este nem o de capturas (sem loop).
 
@@ -78,7 +78,7 @@ jobs:
         run: |
           du -sh public/audio/voz
           ls public/audio/voz | wc -l
-          for f in public/audio/voz/pr-001.ogg public/audio/voz/tu-00.ogg public/audio/voz/rato-risada.ogg; do
+          for f in public/audio/voz/pr-001.ogg public/audio/voz/pr-024.ogg public/audio/voz/rato-risada.ogg; do
             ffprobe -v error -show_entries format=duration:stream=codec_name,sample_rate -of compact "$f" || true
           done
 

@@ -3,8 +3,8 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { playSfx } from '@/lib/devo/audio'
 import { INTRO_SCRIPT } from '@/lib/devo/intro-script'
-import { isDubbingOn, loadVoiceManifest, playRatoLaugh } from '@/lib/devo/voice'
-import { LAST_RATO_LINE, tutorialLineId } from '@/lib/devo/voice-lines'
+import { loadVoiceManifest, playRatoLaugh } from '@/lib/devo/voice'
+import { LAST_RATO_LINE } from '@/lib/devo/voice-lines'
 import { getNpc, portraitFrameProps, type Expression } from '@/lib/devo/npcs'
 import { withName } from '@/lib/devo/player-name'
 import { cn } from '@/lib/utils'
@@ -13,7 +13,7 @@ import { GlyphSpark, toRoman } from '../kit/glyphs'
 import { PortraitFrame } from '../kit/portrait'
 import { SceneBackdrop } from '../kit/scene'
 import { TutorialVisualPanel } from './tutorial-visuals'
-import { AdvanceIndicator, DialogueShell, SpeakerPlate, VnTopBar, useTypewriter, useVoicedLine } from './vn'
+import { AdvanceIndicator, DialogueShell, SpeakerPlate, VnTopBar, useTypewriter } from './vn'
 
 const CHAR_MS = 24
 
@@ -57,13 +57,8 @@ export function IntroScreen({ onFinish, playerName }: { onFinish: () => void; pl
   const line = { ...script, text: withName(script.text, playerName) }
   const npc = getNpc(line.speaker)
   const isLastRato = index === LAST_RATO_LINE
-  const charMs = useVoicedLine(
-    { id: tutorialLineId(index), text: line.text, cast: line.speaker === 'rato' ? 'rato' : 'herdeiro' },
-    CHAR_MS,
-    // A risadinha do Rato fecha a última fala dele.
-    isLastRato ? () => window.setTimeout(playRatoLaugh, 120) : undefined,
-  )
-  const { shown, done, finish } = useTypewriter(line.text, charMs)
+  // Sem dublagem no tutorial (DIRECAO-2 §5: voz só na cutscene inicial).
+  const { shown, done, finish } = useTypewriter(line.text, CHAR_MS)
 
   useEffect(() => {
     void loadVoiceManifest()
@@ -76,12 +71,13 @@ export function IntroScreen({ onFinish, playerName }: { onFinish: () => void; pl
     return () => window.clearTimeout(t)
   }, [index, line.visual])
 
-  // Sem dublagem (ou sem voz), a risadinha ainda acontece quando a fala do Rato termina de aparecer.
+  // A risadinha do Rato ("hihihi") fecha a última fala dele, quando o texto termina de aparecer.
   const laughed = useRef(-1)
   useEffect(() => {
-    if (!isLastRato || !done || laughed.current === index || isDubbingOn()) return
+    if (!isLastRato || !done || laughed.current === index) return
     laughed.current = index
-    playRatoLaugh()
+    const t = window.setTimeout(playRatoLaugh, 160)
+    return () => window.clearTimeout(t)
   }, [done, isLastRato, index])
   const last = index === INTRO_SCRIPT.length - 1
   const total = INTRO_SCRIPT.length
@@ -108,8 +104,8 @@ export function IntroScreen({ onFinish, playerName }: { onFinish: () => void; pl
 
   return (
     <main className="relative flex h-dvh overflow-hidden bg-dv-ink text-dv-text">
-      <SceneBackdrop preset="cathedral" intensity={0.6} dim={0.5} />
-      <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(120%_60%_at_50%_100%,rgba(5,7,13,0.9),transparent_60%)]" />
+      <SceneBackdrop preset="clockhall" intensity={0.65} dim={0.5} />
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(120%_60%_at_50%_100%,color-mix(in_oklab,var(--dv-ink)_90%,transparent),transparent_60%)]" />
 
       <VnTopBar
         skipLabel="Pular introdução"
@@ -149,7 +145,7 @@ export function IntroScreen({ onFinish, playerName }: { onFinish: () => void; pl
             {line.unlock && (
               <p
                 key={`u-${index}`}
-                className="animate-dv-toast-in relative z-10 mb-8 flex w-fit items-center gap-2.5 border-l-[3px] border-dv-gold bg-[linear-gradient(90deg,rgba(124,95,42,0.85),rgba(10,15,28,0.92))] py-1.5 pl-3 pr-5 font-mono text-[11px] uppercase tracking-[0.22em] text-dv-gold-bright shadow-[0_8px_20px_rgba(0,0,0,0.55)] [clip-path:polygon(0_0,100%_0,calc(100%-10px)_100%,0_100%)]"
+                className="animate-dv-toast-in relative z-10 mb-8 flex w-fit items-center gap-2.5 border-l-[3px] border-dv-gold bg-[linear-gradient(90deg,color-mix(in_oklab,var(--dv-gold-deep)_85%,transparent),color-mix(in_oklab,var(--dv-ink-2)_92%,transparent))] py-1.5 pl-3 pr-5 font-mono text-[11px] uppercase tracking-[0.22em] text-dv-gold-bright shadow-[0_8px_20px_rgba(0,0,0,0.55)] [clip-path:polygon(0_0,100%_0,calc(100%-10px)_100%,0_100%)]"
               >
                 <GlyphSpark className="size-3" />
                 Sistema apresentado: {line.unlock}

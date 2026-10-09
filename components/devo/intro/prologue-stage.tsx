@@ -6,6 +6,7 @@ import type { MelissaMood, StageId } from '@/lib/devo/prologue-script'
 import { portraitFrameProps } from '@/lib/devo/npcs'
 import { cn } from '@/lib/utils'
 import { PortraitFrame } from '../kit/portrait'
+import { SceneBackdrop } from '../kit/scene'
 import { DeadlyVoteSymbol } from '../system/symbol'
 import { Embers } from '../shared/atmosphere'
 import { CelFire } from './cel-fire'
@@ -68,7 +69,7 @@ function FloorCrack({ cracked, open }: { cracked: boolean; open: boolean }) {
         <radialGradient id="pr-chasm" cx="50%" cy="50%" r="55%">
           <stop offset="0%" stopColor="#000" />
           <stop offset="75%" stopColor="#050203" />
-          <stop offset="100%" stopColor="#3a0a0e" />
+          <stop offset="100%" stopColor="var(--dv-blood-deep)" />
         </radialGradient>
       </defs>
       <g
@@ -156,7 +157,7 @@ const LETTERBOX: StageId[] = ['rumor', 'kids', 'boy', 'girl', 'hands', 'omen', '
 export type MelissaPresence = 'off' | 'approach' | 'on'
 
 /** Luz de borda comum do elenco (mesma do PortraitFrame do kit): contorno claro + halo. */
-const RIM_GOLD = 'drop-shadow(-1.5px -1px 0 rgba(236,212,154,0.5)) drop-shadow(0 0 12px rgba(236,212,154,0.22))'
+const RIM_GOLD = 'drop-shadow(-1.5px -1px 0 color-mix(in oklab,var(--dv-gold-bright) 50%,transparent)) drop-shadow(0 0 12px color-mix(in oklab,var(--dv-gold-bright) 22%,transparent))'
 
 export function PrologueStage({
   stage,
@@ -197,7 +198,10 @@ export function PrologueStage({
   const melissaOn = stage === 'mine' && melissa !== 'off'
   const letterbox = LETTERBOX.includes(stage)
   const mineOn = stage === 'mine' || stage === 'phone'
-  const mirrorOn = stage === 'void' || stage === 'voice'
+  const mirrorOn = stage === 'void'
+  // Salão do relógio (cena 3D-chave da Jornada): monta já no vazio (carrega escondido) e aparece com a Voz.
+  const hallMounted = stage === 'void' || stage === 'voice'
+  const hallOn = stage === 'voice'
 
   const focus = (who: 'boy' | 'girl') =>
     stage === 'boy' ? (who === 'boy' ? 1.12 : 0.92) : stage === 'girl' ? (who === 'girl' ? 1.12 : 0.92) : 1
@@ -214,8 +218,8 @@ export function PrologueStage({
       <div className="absolute inset-0 transition-transform duration-[2600ms] ease-[cubic-bezier(.33,0,.15,1)] motion-reduce:transition-none" style={{ transform: camera(stage), transformOrigin: '50% 55%' }}>
       {/* Escuridão / vazio: o sigilo acende devagar no fundo, poeira na luz que cai do alto. */}
       <Layer on={stage === 'dark' || stage === 'void' || stage === 'voice'}>
-        <div className="absolute inset-0 bg-[radial-gradient(60%_45%_at_50%_0%,rgba(125,151,255,0.22),transparent_70%),radial-gradient(80%_60%_at_50%_42%,rgba(11,26,77,0.7),rgba(2,3,7,1)_75%)]" />
-        <div className="absolute inset-x-[22%] top-0 h-[70%] bg-[linear-gradient(180deg,rgba(236,238,242,0.12),transparent)] [clip-path:polygon(38%_0,62%_0,100%_100%,0_100%)] blur-md" />
+        <div className="absolute inset-0 bg-[radial-gradient(60%_45%_at_50%_0%,color-mix(in_oklab,var(--dv-amethyst)_22%,transparent),transparent_70%),radial-gradient(80%_60%_at_50%_42%,color-mix(in_oklab,var(--dv-night)_70%,transparent),var(--dv-ink)_75%)]" />
+        <div className="absolute inset-x-[22%] top-0 h-[70%] bg-[linear-gradient(180deg,color-mix(in_oklab,var(--dv-porcelain)_12%,transparent),transparent)] [clip-path:polygon(38%_0,62%_0,100%_100%,0_100%)] blur-md" />
         <div className="absolute left-1/2 top-[34%] size-[min(64vw,280px)] -translate-x-1/2 -translate-y-1/2" style={NEAR}>
           <svg viewBox="0 0 200 200" aria-hidden="true" className="en-sweep-hand-slow absolute inset-0 size-full text-dv-gold" fill="none" stroke="currentColor">
             <circle cx="100" cy="100" r="96" strokeWidth="0.6" opacity="0.4" />
@@ -227,7 +231,7 @@ export function PrologueStage({
             })}
           </svg>
           <div className="en-ignite absolute inset-[26%] text-dv-text">
-            <DeadlyVoteSymbol variant="mark" className="size-full drop-shadow-[0_0_24px_rgba(49,93,255,0.9)]" />
+            <DeadlyVoteSymbol variant="mark" className="size-full drop-shadow-[0_0_24px_color-mix(in_oklab,var(--dv-amethyst)_90%,transparent)]" />
           </div>
         </div>
         <Embers className="opacity-70" />
@@ -287,12 +291,12 @@ export function PrologueStage({
             </div>
           </div>
         </div>
-        {tripped && <div className="absolute inset-0 animate-[pr-flash_0.9s_ease-out_both] bg-[#7a0c12]" />}
+        {tripped && <div className="absolute inset-0 animate-[pr-flash_0.9s_ease-out_both] bg-[var(--dv-blood-deep)]" />}
       </Layer>
 
       {/* A morte */}
       <Layer on={deathOn || stage === 'abyss'}>
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_40%_55%_at_50%_55%,rgba(239,228,210,0.14),transparent_70%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_40%_55%_at_50%_55%,color-mix(in_oklab,var(--dv-gold-bright)_14%,transparent),transparent_70%)]" />
         <div
           className="absolute left-1/2 h-[66%] -translate-x-1/2 transition-[bottom,opacity] duration-[1800ms] ease-out"
           style={{ bottom: deathOn ? '12%' : '-60%', opacity: deathOn ? 1 : 0 }}
@@ -318,6 +322,20 @@ export function PrologueStage({
         <Embers className="opacity-90" />
       </Layer>
 
+      {/* O salão do relógio: a luz que a Voz promete. Entra de longe (câmera recua) com uma badalada. */}
+      {hallMounted && (
+        <div
+          aria-hidden="true"
+          className={cn(
+            'absolute inset-0 transition-[opacity,transform,filter] duration-[2600ms] ease-[cubic-bezier(.2,.7,.2,1)] motion-reduce:transition-none',
+            hallOn ? 'scale-100 opacity-100 blur-0' : 'scale-[1.22] opacity-0 blur-sm',
+          )}
+        >
+          <SceneBackdrop preset="clockhall" intensity={0.8} dim={0.22} />
+          <div className="absolute inset-x-[18%] top-0 h-[78%] bg-[linear-gradient(180deg,color-mix(in_oklab,var(--dv-gold-bright)_16%,transparent),transparent)] [clip-path:polygon(40%_0,60%_0,100%_100%,0_100%)] blur-lg" />
+        </div>
+      )}
+
       {/* O espelho e a voz */}
       <Layer on={mirrorOn}>
         <video
@@ -326,7 +344,7 @@ export function PrologueStage({
           muted
           loop
           playsInline
-          className={cn('absolute inset-0 size-full object-contain mix-blend-screen transition-[filter,opacity] duration-1000', stage === 'voice' ? 'opacity-40 blur-[2px]' : 'opacity-90')}
+          className="absolute inset-0 size-full object-contain opacity-90 mix-blend-screen"
         />
       </Layer>
       <div
@@ -341,7 +359,7 @@ export function PrologueStage({
             alt="A Antiga Voz: uma silhueta sem rosto envolta em sombra, com um sol eclipsado dourado no peito e ornamentos góticos como auréola"
             fill
             sizes="100vw"
-            className="object-cover mix-blend-lighten [mask-image:radial-gradient(ellipse_34%_42%_at_50%_46%,black_45%,transparent_100%)] sm:object-contain"
+            className="object-cover [mask-image:radial-gradient(ellipse_38%_44%_at_50%_44%,black_40%,transparent_100%)] sm:object-contain"
           />
         </div>
       </div>
@@ -392,9 +410,9 @@ export function PrologueStage({
 
       {/* Celular */}
       <Layer on={stage === 'phone'} className="grid place-items-center">
-        <div className="relative -mt-24 flex h-[min(52dvh,420px)] aspect-[9/18] flex-col items-center justify-center gap-3 rounded-[2rem] border-4 border-[#20232c] bg-gradient-to-b from-dv-cobalt-dim to-dv-ink shadow-[0_0_80px_rgba(49,93,255,0.35)]">
-          <span className="absolute top-3 h-1.5 w-12 rounded-full bg-[#20232c]" />
-          <span className="dv-cut grid size-16 animate-[pr-buzz_2.4s_ease-in-out_infinite] place-items-center bg-[linear-gradient(160deg,var(--dv-cobalt),var(--dv-cobalt-dim))] text-dv-text shadow-[0_0_30px_rgba(49,93,255,0.5)]" style={{ '--dv-cut': '12px' } as CSSProperties}>
+        <div className="relative -mt-24 flex h-[min(52dvh,420px)] aspect-[9/18] flex-col items-center justify-center gap-3 rounded-[2rem] border-4 border-[var(--dv-night-2)] bg-gradient-to-b from-dv-cobalt-dim to-dv-ink shadow-[0_0_80px_color-mix(in_oklab,var(--dv-amethyst)_35%,transparent)]">
+          <span className="absolute top-3 h-1.5 w-12 rounded-full bg-[var(--dv-night-2)]" />
+          <span className="dv-cut grid size-16 animate-[pr-buzz_2.4s_ease-in-out_infinite] place-items-center bg-[linear-gradient(160deg,var(--dv-cobalt),var(--dv-cobalt-dim))] text-dv-text shadow-[0_0_30px_color-mix(in_oklab,var(--dv-amethyst)_50%,transparent)]" style={{ '--dv-cut': '12px' } as CSSProperties}>
             <DeadlyVoteSymbol variant="mark" className="size-10" />
           </span>
           <span className="dv-label text-[11px] text-dv-text-2">Devo</span>
@@ -407,9 +425,9 @@ export function PrologueStage({
       <div aria-hidden="true" className={cn('pointer-events-none absolute inset-x-0 top-0 z-[5] h-[7dvh] bg-black transition-transform duration-[900ms] ease-[var(--dv-ease-out)]', letterbox ? 'translate-y-0' : '-translate-y-full')} />
       <div aria-hidden="true" className={cn('pointer-events-none absolute inset-x-0 bottom-0 z-[5] h-[7dvh] bg-black transition-transform duration-[900ms] ease-[var(--dv-ease-out)]', letterbox ? 'translate-y-0' : 'translate-y-full')} />
 
-      {/* Grade de cor comum a todas as cenas (livro ilustrado, pintura, vetor): mesma noite cobalto. */}
-      <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(11,26,77,0.28),rgba(11,26,77,0.08)_40%,rgba(5,7,13,0.5))] mix-blend-multiply" />
-      <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[rgba(49,93,255,0.07)] mix-blend-soft-light" />
+      {/* Grade de cor comum a todas as cenas (livro ilustrado, pintura, vetor): a mesma noite violeta. */}
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,color-mix(in_oklab,var(--dv-night)_28%,transparent),color-mix(in_oklab,var(--dv-night)_8%,transparent)_40%,color-mix(in_oklab,var(--dv-ink)_50%,transparent))] mix-blend-multiply" />
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[color-mix(in_oklab,var(--dv-violet)_9%,transparent)] mix-blend-soft-light" />
 
       {/* Abrir os olhos: pálpebras se afastam no primeiro quadro. */}
       {opening && (

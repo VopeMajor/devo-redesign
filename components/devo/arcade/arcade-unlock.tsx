@@ -34,7 +34,7 @@ export function ArcadeUnlock() {
   return (
     <div
       role="alert"
-      className="fixed inset-0 z-[90] grid cursor-pointer place-items-center overflow-hidden bg-[rgba(3,4,8,0.82)] backdrop-blur-[3px] animate-dv-fade"
+      className="fixed inset-0 z-[90] grid cursor-pointer place-items-center overflow-hidden bg-[color-mix(in_oklab,var(--dv-ink)_82%,transparent)] backdrop-blur-[3px] animate-dv-fade"
       onClick={() => dispatch({ type: 'ARCADE_REVEAL_DONE' })}
     >
       {/* Raios atrás do selo (dissolvem em círculo, sem borda reta) e filete cobalto que corta a tela. */}
@@ -42,7 +42,7 @@ export function ArcadeUnlock() {
         aria-hidden="true"
         className="en-rays pointer-events-none absolute left-1/2 top-[34%] -ml-[300px] -mt-[300px] size-[600px] opacity-55"
         style={{
-          background: 'repeating-conic-gradient(rgba(236,212,154,0.26) 0 5deg, transparent 5deg 15deg)',
+          background: 'repeating-conic-gradient(color-mix(in oklab,var(--dv-gold-bright) 26%,transparent) 0 5deg, transparent 5deg 15deg)',
           WebkitMaskImage: 'radial-gradient(circle, #000 8%, transparent 48%)',
           maskImage: 'radial-gradient(circle, #000 8%, transparent 48%)',
         }}
@@ -65,7 +65,7 @@ export function ArcadeUnlock() {
 
         {/* Título: faixa de ouro ESCURO atrás das duas linhas inteiras (texto branco com contraste AA). */}
         <h2 className="animate-dv-cut-in relative px-6 py-2 [animation-delay:700ms]">
-          <span aria-hidden="true" className="absolute inset-0 -skew-x-[14deg] bg-[linear-gradient(90deg,#3a2a10,var(--dv-gold-deep)_45%,#3a2a10)] shadow-[0_10px_30px_rgba(0,0,0,0.6)]">
+          <span aria-hidden="true" className="absolute inset-0 -skew-x-[14deg] bg-[linear-gradient(90deg,color-mix(in_oklab,var(--dv-gold-deep)_35%,var(--dv-ink)),var(--dv-gold-deep)_45%,color-mix(in_oklab,var(--dv-gold-deep)_35%,var(--dv-ink)))] shadow-[0_10px_30px_rgba(0,0,0,0.6)]">
             <span className="absolute inset-x-0 top-0 h-px bg-dv-gold-bright/70" />
             <span className="absolute inset-x-0 bottom-0 h-[3px] bg-dv-cobalt" />
           </span>

@@ -20,7 +20,7 @@ function TapMark({ className }: { className?: string }) {
   return (
     <span aria-hidden="true" className={cn('pointer-events-none absolute z-20 size-7', className)}>
       <span className="en-ping absolute inset-0 rounded-full border-2 border-dv-cobalt-text" />
-      <span className="en-tap absolute inset-[7px] rounded-full bg-dv-text shadow-[0_0_12px_rgba(125,151,255,0.9)]" />
+      <span className="en-tap absolute inset-[7px] rounded-full bg-dv-text shadow-[0_0_12px_color-mix(in_oklab,var(--dv-amethyst)_90%,transparent)]" />
     </span>
   )
 }
@@ -79,7 +79,7 @@ function PulseRing({ ratio }: { ratio: number }) {
           />
         )
       })}
-      <circle cx="66" cy="66" r={r - 6} fill="none" stroke="rgba(236,238,242,0.12)" strokeWidth="3" />
+      <circle cx="66" cy="66" r={r - 6} fill="none" stroke="color-mix(in oklab,var(--dv-porcelain) 12%,transparent)" strokeWidth="3" />
       <circle
         cx="66"
         cy="66"
@@ -89,7 +89,7 @@ function PulseRing({ ratio }: { ratio: number }) {
         strokeWidth="3"
         strokeDasharray={`${(2 * Math.PI * (r - 6)) * ratio} ${c}`}
         transform="rotate(-90 66 66)"
-        style={{ filter: 'drop-shadow(0 0 4px rgba(49,93,255,0.8))' }}
+        style={{ filter: 'drop-shadow(0 0 4px color-mix(in oklab,var(--dv-amethyst) 80%,transparent))' }}
       />
     </svg>
   )
@@ -105,7 +105,7 @@ function WristVisual() {
         <span aria-hidden="true" className="absolute inset-x-6 top-1/2 -translate-y-[26px] border-t border-dashed border-dv-gold/35" />
         <span aria-hidden="true" className="absolute inset-x-6 top-1/2 translate-y-[26px] border-t border-dashed border-dv-gold/35" />
         {/* mostrador */}
-        <div className="relative grid size-[136px] place-items-center rounded-full bg-[radial-gradient(circle,var(--dv-ink-3),var(--dv-ink)_72%)] shadow-[0_0_30px_rgba(49,93,255,0.3)]">
+        <div className="relative grid size-[136px] place-items-center rounded-full bg-[radial-gradient(circle,var(--dv-ink-3),var(--dv-ink)_72%)] shadow-[0_0_30px_color-mix(in_oklab,var(--dv-amethyst)_30%,transparent)]">
           <PulseRing ratio={secs / (72 * 3600)} />
           <span className="relative flex flex-col items-center gap-0.5">
             <span className="dv-label text-[9px] text-dv-cobalt-text">Pulso</span>
@@ -190,10 +190,10 @@ function CardsVisual() {
   return (
     <div className="flex flex-col items-center gap-4">
       <div className="relative flex h-52 w-72 items-end justify-center">
-        <span className="absolute inset-x-8 bottom-1 h-12 rounded-[50%] bg-[radial-gradient(ellipse,rgba(201,164,92,0.3),transparent_70%)] blur-md" aria-hidden="true" />
+        <span className="absolute inset-x-8 bottom-1 h-12 rounded-[50%] bg-[radial-gradient(ellipse,color-mix(in_oklab,var(--dv-gold)_30%,transparent),transparent_70%)] blur-md" aria-hidden="true" />
         {ids.map((id, i) => (
           <div key={id} className="-mx-4 w-24" style={{ transform: `rotate(${(i - 1) * 14}deg) translateY(${i === 1 ? -16 : 0}px)`, transformOrigin: 'bottom center', zIndex: i === 1 ? 10 : 1 }}>
-            <div className={cn('animate-dv-rise', i === 1 && 'drop-shadow-[0_0_18px_rgba(201,164,92,0.5)]')} style={{ animationDelay: `${i * 140}ms` }}>
+            <div className={cn('animate-dv-rise', i === 1 && 'drop-shadow-[0_0_18px_color-mix(in_oklab,var(--dv-gold)_50%,transparent)]')} style={{ animationDelay: `${i * 140}ms` }}>
               <CardFace cardId={id} size="sm" />
             </div>
           </div>
@@ -333,7 +333,7 @@ function HiddenVisual() {
             <div key={label} className="flex flex-col items-center gap-2">
               <div className={cn('relative w-24', i === 0 ? '-rotate-3' : 'rotate-3')}>
                 <CardBack />
-                <span className="absolute inset-0 grid place-items-center font-impact text-[44px] text-dv-gold-bright drop-shadow-[0_0_14px_rgba(201,164,92,0.9)]">?</span>
+                <span className="absolute inset-0 grid place-items-center font-impact text-[44px] text-dv-gold-bright drop-shadow-[0_0_14px_color-mix(in_oklab,var(--dv-gold)_90%,transparent)]">?</span>
               </div>
               <span className="dv-label text-[10px] text-dv-text-2">{label}</span>
             </div>
@@ -402,7 +402,7 @@ function Seal({ who, lit, delay }: { who: string; lit: boolean; delay: number })
       <span
         className={cn(
           'relative grid size-20 place-items-center rounded-full border-2 transition-all duration-500',
-          lit ? 'border-dv-cobalt-text bg-[radial-gradient(circle_at_35%_30%,var(--dv-cobalt),var(--dv-cobalt-dim)_75%)] shadow-[0_0_30px_-4px_rgba(49,93,255,0.8)]' : 'border-dv-line-strong bg-dv-ink-3',
+          lit ? 'border-dv-cobalt-text bg-[radial-gradient(circle_at_35%_30%,var(--dv-cobalt),var(--dv-cobalt-dim)_75%)] shadow-[0_0_30px_-4px_color-mix(in_oklab,var(--dv-amethyst)_80%,transparent)]' : 'border-dv-line-strong bg-dv-ink-3',
         )}
         style={{ transitionDelay: `${delay}ms` }}
       >
@@ -454,7 +454,7 @@ function RevealVisual() {
       <div className="relative flex gap-5">
         <span
           className="en-rays pointer-events-none absolute left-1/2 top-1/2 -ml-36 -mt-36 size-72 opacity-60"
-          style={{ background: 'repeating-conic-gradient(rgba(201,164,92,0.35) 0 6deg, transparent 6deg 18deg)', maskImage: 'radial-gradient(circle, black 20%, transparent 70%)' }}
+          style={{ background: 'repeating-conic-gradient(color-mix(in oklab,var(--dv-gold) 35%,transparent) 0 6deg, transparent 6deg 18deg)', maskImage: 'radial-gradient(circle, black 20%, transparent 70%)' }}
           aria-hidden="true"
         />
         {['ampulheta', 'tesoura'].map((id, i) => (
@@ -482,7 +482,7 @@ function LostVisual() {
   return (
     <div className="flex flex-col items-center gap-4">
       <div className="dv-cut relative flex h-44 w-72 items-center justify-start overflow-hidden bg-[radial-gradient(ellipse_at_30%_50%,var(--dv-ink-4),var(--dv-ink)_75%)] pl-8" style={{ '--dv-cut': '14px' } as CSSProperties}>
-        <span className="pointer-events-none absolute inset-0 animate-[devo-mist_8s_ease-in-out_infinite] bg-[radial-gradient(ellipse_at_85%_40%,rgba(125,151,255,0.18),transparent_60%)]" aria-hidden="true" />
+        <span className="pointer-events-none absolute inset-0 animate-[devo-mist_8s_ease-in-out_infinite] bg-[radial-gradient(ellipse_at_85%_40%,color-mix(in_oklab,var(--dv-amethyst)_18%,transparent),transparent_60%)]" aria-hidden="true" />
         <div className="en-drift w-20">
           <CardFace cardId="coroa" size="sm" />
         </div>
@@ -568,13 +568,13 @@ export function TutorialVisualPanel({ visual, step, index = 1 }: { visual: Tutor
   const { view: Visual, system } = VISUALS[visual]
   return (
     <figure className="animate-dv-pop relative lg:[zoom:1.25] xl:[zoom:1.35]">
-      <span aria-hidden="true" className="dv-cut absolute inset-0 bg-[linear-gradient(135deg,#8ea6ff,var(--dv-cobalt)_35%,var(--dv-cobalt-dim)_70%,var(--dv-cobalt))]" style={{ '--dv-cut': '16px' } as CSSProperties} />
+      <span aria-hidden="true" className="dv-cut absolute inset-0 bg-[linear-gradient(135deg,var(--dv-amethyst-text),var(--dv-cobalt)_35%,var(--dv-cobalt-dim)_70%,var(--dv-cobalt))]" style={{ '--dv-cut': '16px' } as CSSProperties} />
       <span
         aria-hidden="true"
-        className="dv-cut absolute inset-px overflow-hidden bg-[rgba(5,7,13,0.94)] [background-image:linear-gradient(rgba(49,93,255,0.08)_1px,transparent_1px),linear-gradient(90deg,rgba(49,93,255,0.08)_1px,transparent_1px)] [background-size:16px_16px]"
+        className="dv-cut absolute inset-px overflow-hidden bg-[color-mix(in_oklab,var(--dv-ink)_94%,transparent)] [background-image:linear-gradient(color-mix(in_oklab,var(--dv-amethyst)_8%,transparent)_1px,transparent_1px),linear-gradient(90deg,color-mix(in_oklab,var(--dv-amethyst)_8%,transparent)_1px,transparent_1px)] [background-size:16px_16px]"
         style={{ '--dv-cut': '15.6px' } as CSSProperties}
       >
-        <span className="en-scan absolute inset-x-0 top-0 h-8 bg-gradient-to-b from-transparent via-[rgba(49,93,255,0.14)] to-transparent" />
+        <span className="en-scan absolute inset-x-0 top-0 h-8 bg-gradient-to-b from-transparent via-[color-mix(in_oklab,var(--dv-amethyst)_14%,transparent)] to-transparent" />
       </span>
       {/* marcas de registro */}
       {['left-3 top-3', 'right-3 top-3', 'bottom-3 left-3', 'bottom-3 right-3'].map((p) => (

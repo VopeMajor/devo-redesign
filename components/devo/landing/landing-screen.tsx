@@ -116,7 +116,7 @@ export function LandingScreen({
 
           {/* 150–500ms: título-marca em dois cortes + faixa cobalto + brilho que atravessa */}
           <h1 className="relative mt-3 flex flex-col items-center">
-            <span className="animate-dv-cut-in block font-serif text-[62px] font-medium uppercase leading-[0.84] tracking-[0.02em] text-dv-text [animation-delay:150ms] [text-shadow:0_4px_30px_rgba(5,7,13,0.9)] lg:text-[96px]">
+            <span className="animate-dv-cut-in block font-serif text-[62px] font-medium uppercase leading-[0.84] tracking-[0.02em] text-dv-text [animation-delay:150ms] [text-shadow:0_4px_30px_color-mix(in_oklab,var(--dv-ink)_90%,transparent)] lg:text-[96px]">
               Deadly{' '}
             </span>
             <span className="relative block overflow-visible">
@@ -124,12 +124,12 @@ export function LandingScreen({
                 aria-hidden="true"
                 className="en-band-in absolute -inset-x-6 bottom-[16%] top-[30%] bg-[linear-gradient(90deg,transparent,var(--dv-cobalt-deep)_18%,var(--dv-cobalt-deep)_82%,transparent)] [animation-delay:300ms]"
               />
-              <span className="animate-dv-cut-in relative block font-serif text-[62px] font-medium uppercase leading-[0.84] tracking-[0.02em] text-dv-text [animation-delay:230ms] [text-shadow:0_4px_30px_rgba(5,7,13,0.7)] lg:text-[96px]">
+              <span className="animate-dv-cut-in relative block font-serif text-[62px] font-medium uppercase leading-[0.84] tracking-[0.02em] text-dv-text [animation-delay:230ms] [text-shadow:0_4px_30px_color-mix(in_oklab,var(--dv-ink)_70%,transparent)] lg:text-[96px]">
                 Vote
               </span>
             </span>
             <span aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
-              <span className="en-sweep absolute inset-y-0 left-0 w-1/4 bg-[linear-gradient(90deg,transparent,rgba(236,212,154,0.35),transparent)] mix-blend-screen [animation-delay:520ms]" />
+              <span className="en-sweep absolute inset-y-0 left-0 w-1/4 bg-[linear-gradient(90deg,transparent,color-mix(in_oklab,var(--dv-gold-bright)_35%,transparent),transparent)] mix-blend-screen [animation-delay:520ms]" />
             </span>
             <span className="animate-dv-fade mt-3 block font-sans text-[13px] font-medium uppercase tracking-[0.62em] text-dv-cobalt-text [animation-delay:380ms]">
               Record System
@@ -160,7 +160,7 @@ export function LandingScreen({
 
           {/* Relógio do pulso: 72h — "bilhete" com filetes dourados que se abrem do centro. */}
           <div className="animate-dv-rise relative mt-4 flex items-center gap-3 px-5 py-2 [animation-delay:500ms]">
-            <span aria-hidden="true" className="absolute inset-0 bg-[linear-gradient(90deg,transparent,rgba(10,15,28,0.85)_18%,rgba(10,15,28,0.85)_82%,transparent)]" />
+            <span aria-hidden="true" className="absolute inset-0 bg-[linear-gradient(90deg,transparent,color-mix(in_oklab,var(--dv-ink-2)_85%,transparent)_18%,color-mix(in_oklab,var(--dv-ink-2)_85%,transparent)_82%,transparent)]" />
             <span aria-hidden="true" className="en-rule-in absolute inset-x-0 top-0 h-px bg-[linear-gradient(90deg,transparent,var(--dv-gold)_20%,var(--dv-gold)_80%,transparent)] opacity-60 [animation-delay:540ms]" />
             <span aria-hidden="true" className="en-rule-in absolute inset-x-0 bottom-0 h-px bg-[linear-gradient(90deg,transparent,var(--dv-gold)_20%,var(--dv-gold)_80%,transparent)] opacity-60 [animation-delay:600ms]" />
             <GlyphHourglass className="relative size-5 text-dv-gold" />
