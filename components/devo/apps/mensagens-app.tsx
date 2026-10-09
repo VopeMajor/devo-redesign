@@ -12,6 +12,8 @@ import { IconButton } from '../kit/button'
 import { Frame } from '../kit/frame'
 import { GlyphArrow, GlyphKeyhole, toRoman } from '../kit/glyphs'
 import { Kicker } from '../kit/typography'
+import { PortraitFrame, type PortraitTone } from '../kit/portrait'
+import { useShellBack } from '../os/app-back'
 import { nextId, useDevo } from '../state/devo-store'
 import { useBackHandler } from '../use-back-handler'
 import { TypingDots } from './app-ui'
@@ -21,12 +23,6 @@ type Accent = 'gold' | 'cobalt' | 'paper' | 'neutral'
 const ACCENT: Record<string, Accent> = { rato: 'gold', herdeiro: 'cobalt', coruja: 'paper', desconhecido: 'neutral' }
 const accentOf = (npcId: string): Accent => ACCENT[npcId] ?? 'neutral'
 
-const RING: Record<Accent, string> = {
-  gold: 'bg-[linear-gradient(135deg,var(--dv-gold-bright),var(--dv-gold-deep)_40%,var(--dv-gold)_70%,var(--dv-gold-deep))]',
-  cobalt: 'bg-[linear-gradient(135deg,#a9bbff,var(--dv-cobalt)_45%,var(--dv-cobalt-deep))]',
-  paper: 'bg-[linear-gradient(135deg,var(--dv-paper),var(--dv-paper-2)_50%,var(--dv-gold-deep))]',
-  neutral: 'bg-dv-line-strong',
-}
 const NAME: Record<Accent, string> = {
   gold: 'text-dv-gold',
   cobalt: 'text-dv-cobalt-text',
@@ -34,28 +30,22 @@ const NAME: Record<Accent, string> = {
   neutral: 'text-dv-text-2',
 }
 
-/** Retrato octogonal com filete na cor do remetente. */
+const PORTRAIT_TONE: Record<string, PortraitTone> = { rato: 'gold', herdeiro: 'cobalt', coruja: 'neutral', desconhecido: 'blood' }
+
+/** Retrato redondo do remetente com o tratamento do kit (PortraitFrame: luz de borda, base dissolvida). */
 function Portrait({ npcId, size = 52, className }: { npcId: string; size?: number; className?: string }) {
   const npc = getNpc(npcId)
   const src = npc.portraits.neutral
   const Art = npc.art
-  const cut = Math.round(size * 0.24)
   return (
-    <span
-      aria-hidden="true"
-      className={cn('relative isolate grid shrink-0 place-items-center', className)}
-      style={{ width: size, height: size, '--dv-cut': `${cut}px` } as CSSProperties}
-    >
-      <span className={cn('dv-cut absolute inset-0 -z-10', RING[accentOf(npcId)])} />
-      <span className="dv-cut absolute inset-[1.5px] -z-10 overflow-hidden bg-[radial-gradient(circle_at_50%_30%,var(--dv-ink-4),var(--dv-ink))]" style={{ '--dv-cut': `${cut - 1}px` } as CSSProperties}>
+    <span aria-hidden="true" className={cn('shrink-0', className)} style={{ width: size }}>
+      <PortraitFrame alt="" src={Art ? undefined : src} tone={PORTRAIT_TONE[npcId] ?? 'neutral'} shape="round" position="50% 12%" scale={Art ? 1 : 1.15} className="w-full">
         {Art ? (
-          <Art crop="face" className="absolute inset-0 size-full" />
-        ) : src ? (
-          <Image src={src} alt="" fill sizes={`${size}px`} className="object-cover object-top" />
-        ) : (
-          <span className="absolute inset-0 grid place-items-center font-impact text-[26px] font-bold text-dv-text-2 [text-shadow:2px_0_0_rgba(213,31,43,0.6),-2px_0_0_rgba(49,93,255,0.6)]">?</span>
+          <Art crop="face" className="size-full" />
+        ) : src ? null : (
+          <span className="grid size-full place-items-center font-impact text-[26px] font-bold text-dv-text-2 [text-shadow:2px_0_0_rgba(213,31,43,0.6),-2px_0_0_rgba(49,93,255,0.6)]">?</span>
         )}
-      </span>
+      </PortraitFrame>
     </span>
   )
 }
@@ -181,6 +171,8 @@ function Conversation({ threadId, onBack }: { threadId: string; onBack: () => vo
   const listRef = useRef<HTMLDivElement>(null)
   const choices = availableChoices(npc, thread.answered)
   useBackHandler(true, onBack)
+  // No celular o voltar do cabeçalho do shell vira "Voltar para conversas" (uma seta só).
+  const shellBack = useShellBack(true, onBack, 'Voltar para conversas')
 
   useEffect(() => {
     listRef.current?.scrollTo({ top: listRef.current.scrollHeight, behavior: 'smooth' })
@@ -225,7 +217,7 @@ function Conversation({ threadId, onBack }: { threadId: string; onBack: () => vo
       {/* retrato grande ao fundo, como numa cena */}
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10">
         <div className="absolute inset-0 bg-[radial-gradient(70%_50%_at_85%_35%,rgba(49,93,255,0.16),transparent_70%)]" />
-        <div className="absolute -right-12 top-10 h-[62%] w-[78%] opacity-[0.17] [mask-image:linear-gradient(90deg,transparent,#000_45%)]">
+        <div className="absolute -right-12 top-10 h-[62%] w-[78%] opacity-[0.17] [-webkit-mask-image:radial-gradient(ellipse_55%_50%_at_60%_42%,#000_35%,transparent_78%)] [mask-image:radial-gradient(ellipse_55%_50%_at_60%_42%,#000_35%,transparent_78%)]">
           {Art ? (
             <Art className="size-full" />
           ) : portrait ? (
@@ -237,10 +229,12 @@ function Conversation({ threadId, onBack }: { threadId: string; onBack: () => vo
       </div>
 
       <header className="relative flex items-center gap-3 bg-dv-ink/70 px-2 py-2.5 backdrop-blur-md">
-        <IconButton label="Voltar para conversas" variant="ghost" onClick={onBack} className="@xl:hidden">
-          <GlyphArrow className="rotate-180" />
-        </IconButton>
-        <Portrait npcId={thread.npcId} size={46} className="@xl:ml-2" />
+        {!shellBack && (
+          <IconButton label="Voltar para conversas" variant="ghost" onClick={onBack} className="@xl:hidden">
+            <GlyphArrow className="rotate-180" />
+          </IconButton>
+        )}
+        <Portrait npcId={thread.npcId} size={46} className={shellBack ? 'ml-2' : '@xl:ml-2'} />
         <div className="min-w-0 flex-1">
           <p className="truncate font-display text-[18px] font-semibold uppercase leading-none tracking-[0.06em] text-dv-text">{npc.name}</p>
           <p className={cn('dv-label mt-1.5 text-[10px]', NAME[accent])}>{thread.typing ? 'digitando…' : npc.title}</p>
@@ -267,7 +261,7 @@ function Conversation({ threadId, onBack }: { threadId: string; onBack: () => vo
       </div>
 
       <div className="relative border-t border-dv-line bg-dv-ink/85 px-3 pb-3 pt-3 backdrop-blur-md">
-        <p className="dv-label mb-2.5 px-1 text-[10px] text-dv-text-3">{choices.length ? 'Escolha o que perguntar · a resposta não muda' : 'Nada mais a perguntar'}</p>
+        <p className="dv-label mb-2.5 px-1 text-[10px] text-dv-text-3">{choices.length ? 'Escolha o que perguntar' : 'Nada mais a perguntar'}</p>
         {choices.length > 0 ? (
           <ul className="flex flex-col gap-2" aria-label="Escolhas de diálogo">
             {choices.map((c, i) => (
@@ -277,15 +271,21 @@ function Conversation({ threadId, onBack }: { threadId: string; onBack: () => vo
                   disabled={pending}
                   onClick={() => ask(c)}
                   className="dv-focus group relative isolate flex min-h-12 w-full items-center gap-3 py-2 pl-3 pr-4 text-left transition-transform duration-200 enabled:hover:translate-x-1 enabled:active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-45 disabled:grayscale"
-                  style={{ '--dv-cut': '10px', rotate: `${i % 2 ? 0.5 : -0.5}deg` } as CSSProperties}
+                  style={{ '--dv-cut': '10px' } as CSSProperties}
                 >
-                  <span aria-hidden="true" className="dv-cut-diag dv-paper-bg absolute inset-0 -z-10 shadow-[0_8px_18px_-10px_rgba(0,0,0,0.9)]" />
-                  <span aria-hidden="true" className="absolute inset-y-1.5 left-11 -z-10 border-l border-dashed border-dv-paper-ink/25" />
-                  <span aria-hidden="true" className="w-7 shrink-0 text-center font-impact text-[20px] font-semibold leading-none text-dv-cobalt-deep">
+                  <span aria-hidden="true" className="dv-cut-diag absolute inset-0 -z-10 bg-[linear-gradient(100deg,#a9bbff,var(--dv-cobalt)_35%,var(--dv-cobalt-deep))]" />
+                  <span
+                    aria-hidden="true"
+                    className="dv-cut-diag dv-sheen absolute inset-px -z-10 overflow-hidden bg-[linear-gradient(100deg,#13235e,var(--dv-cobalt-dim)_55%,var(--dv-ink-2))] transition-colors group-enabled:group-hover:bg-[linear-gradient(100deg,#1b3bd6,#0f2380_55%,var(--dv-ink-2))]"
+                    style={{ '--dv-cut': '9.6px' } as CSSProperties}
+                  />
+                  <span aria-hidden="true" className="dv-cut-diag absolute inset-px -z-10 bg-white opacity-0 transition-opacity duration-[120ms] group-enabled:group-active:opacity-15" style={{ '--dv-cut': '9.6px' } as CSSProperties} />
+                  <span aria-hidden="true" className="absolute inset-y-2 left-11 -z-10 border-l border-dv-cobalt-text/30" />
+                  <span aria-hidden="true" className="w-7 shrink-0 text-center font-impact text-[20px] font-semibold leading-none text-dv-cobalt-text">
                     {toRoman(i + 1)}
                   </span>
-                  <span className="flex-1 pl-2 font-body text-[16px] leading-snug text-dv-paper-ink">{c.prompt}</span>
-                  <GlyphArrow aria-hidden="true" className="size-4 shrink-0 text-dv-paper-ink/60 transition-transform group-enabled:group-hover:translate-x-0.5" />
+                  <span className="flex-1 pl-2 font-body text-[16px] leading-snug text-dv-text">{c.prompt}</span>
+                  <GlyphArrow aria-hidden="true" className="size-4 shrink-0 text-dv-cobalt-text transition-transform group-enabled:group-hover:translate-x-0.5" />
                 </button>
               </li>
             ))}

@@ -277,13 +277,28 @@ if (want('sistema') || want('apps') || want('jogos')) {
     // Transição de abrir/voltar (quadro no meio da animação).
     await step('home-transicao', async () => {
       await enterOS(page)
+      // Congela as animações (WAAPI/CSS) a ~45% para provar a direção do movimento no quadro.
+      const freeze = (p) =>
+        page.evaluate((pct) => {
+          for (const a of document.getAnimations()) {
+            const t = a.effect?.getComputedTiming?.()
+            const d = typeof t?.duration === 'number' ? t.duration : 0
+            if (d > 200 && d < 700) {
+              a.pause()
+              a.currentTime = d * pct
+            }
+          }
+        }, p)
+      const resume = () => page.evaluate(() => document.getAnimations().forEach((a) => a.playState === 'paused' && a.finish()))
       await page.getByRole('button', { name: 'Mensagens', exact: true }).first().click({ timeout: 3000 })
-      await wait(170)
+      await freeze(0.4)
       await shot(page, '11-transicao-abrir')
+      await resume()
       await wait(1500)
       await btn(page, 'Voltar ao início', true).click({ timeout: 3000 })
-      await wait(140)
+      await freeze(0.45)
       await shot(page, '11-transicao-voltar')
+      await resume()
     })
     // Estados do pulso: crítico (< 6h, com avisos na central) e acima de 72h.
     await step('pulso-estados', async () => {
