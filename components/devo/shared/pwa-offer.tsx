@@ -5,7 +5,6 @@ import type { CSSProperties } from 'react'
 import { Bell, ExternalLink, MonitorDown, Smartphone } from 'lucide-react'
 import { playSfx } from '@/lib/devo/audio'
 import { promptInstall, requestNotifications, usePwa } from '@/lib/devo/pwa'
-import { cn } from '@/lib/utils'
 import { Badge } from '../kit/badge'
 import { Button } from '../kit/button'
 import { Frame } from '../kit/frame'
@@ -166,7 +165,7 @@ export function PwaOffer({ onClose }: { onClose: () => void }) {
             </span>
             <div className="min-w-0 flex-1">
               <p className="font-display text-[14px] font-semibold uppercase tracking-[0.06em] text-dv-text">Notificações</p>
-              <p className={cn('font-sans text-[13px]', notifyBlocked ? 'text-dv-blood-text' : 'text-dv-text-2')}>
+              <p className="font-sans text-[13px] text-dv-text-2">
                 {notifyBlocked
                   ? 'Bloqueadas. Libere nas permissões do navegador.'
                   : permission === 'unsupported'
@@ -178,6 +177,8 @@ export function PwaOffer({ onClose }: { onClose: () => void }) {
             </div>
             {permission === 'granted' ? (
               <Badge tone="cobalt">Ativadas</Badge>
+            ) : notifyBlocked ? (
+              <Badge tone="neutral">Bloqueadas</Badge>
             ) : (
               canNotify && (
                 <Button size="sm" disabled={busy} onClick={() => run(requestNotifications)}>
