@@ -1,0 +1,483 @@
+{
+  "base": "http://localhost:3000",
+  "shots": [
+    {
+      "name": "10-home",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "10-home-avisos",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "11-transicao-abrir",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "11-transicao-voltar",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "10-home-critico",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "10-home-avisos-lista",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "21-pulso-critico",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "21-pulso-excedente",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "20-record",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "20-record-scroll",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "20-record-deadly-votes",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "20-record-convites",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "20-record-foto-ajuste",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "20-record-foto",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "20-record-shuffler",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "20-record-arquivo",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "20-record-deadly-votes-scroll",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "20-record-dossie",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "20-record-dealer",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "20-record-dealer-resultados",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "20-record-dealer-convocar",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "21-pulso",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "21-pulso-scroll",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "22-mensagens",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "22-mensagens-conversa",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "22-mensagens-digitando",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "22-mensagens-resposta",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "23-cartas",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "23-cartas-scroll",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "23-cartas-detalhe",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "24-trocas",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "24-trocas-sala",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "24-trocas-sala-negociando",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "24-trocas-sala-frase",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "24-trocas-sem-retorno",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "24-trocas-sem-retorno-confirmar",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "24-trocas-sem-retorno-perdeu",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "25-ajustes",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "25-ajustes-scroll",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "25-ajustes-reiniciar-confirmar",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "25-ajustes-reiniciar-feito",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "25-ajustes-reiniciar-pulso",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "26-coruja-01",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "26-coruja-03",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "26-coruja-05",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "26-coruja-16",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "26-coruja-18",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "27-javali-0",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "27-javali-1",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "27-javali-2",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "27-javali-3",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "28-mensagens-herdeiro",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "90-desktop-landing",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "92-desktop-os",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "92-desktop-pulso",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "92-desktop-janelas",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "92-desktop-avisos",
+      "note": "",
+      "url": "http://localhost:3000/"
+    }
+  ],
+  "errors": [],
+  "console": [
+    {
+      "page": "http://localhost:3000/",
+      "text": "HTTP 404",
+      "src": "http://localhost:3000/_vercel/insights/script.js"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "src": "http://localhost:3000/_vercel/insights/script.js"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "HTTP 404",
+      "src": "http://localhost:3000/_vercel/insights/script.js"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "src": "http://localhost:3000/_vercel/insights/script.js"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "HTTP 404",
+      "src": "http://localhost:3000/_vercel/insights/script.js"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "src": "http://localhost:3000/_vercel/insights/script.js"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "HTTP 404",
+      "src": "http://localhost:3000/_vercel/insights/script.js"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "src": "http://localhost:3000/_vercel/insights/script.js"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "HTTP 404",
+      "src": "http://localhost:3000/_vercel/insights/script.js"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "src": "http://localhost:3000/_vercel/insights/script.js"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "HTTP 404",
+      "src": "http://localhost:3000/_vercel/insights/script.js"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "src": "http://localhost:3000/_vercel/insights/script.js"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "HTTP 404",
+      "src": "http://localhost:3000/_vercel/insights/script.js"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "src": "http://localhost:3000/_vercel/insights/script.js"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "HTTP 404",
+      "src": "http://localhost:3000/_vercel/insights/script.js"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "src": "http://localhost:3000/_vercel/insights/script.js"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "HTTP 404",
+      "src": "http://localhost:3000/_vercel/insights/script.js"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "src": "http://localhost:3000/_vercel/insights/script.js"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "HTTP 404",
+      "src": "http://localhost:3000/_vercel/insights/script.js"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "src": "http://localhost:3000/_vercel/insights/script.js"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "HTTP 404",
+      "src": "http://localhost:3000/_vercel/insights/script.js"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "src": "http://localhost:3000/_vercel/insights/script.js"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "HTTP 404",
+      "src": "http://localhost:3000/_vercel/insights/script.js"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "src": "http://localhost:3000/_vercel/insights/script.js"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "HTTP 404",
+      "src": "http://localhost:3000/_vercel/insights/script.js"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "src": "http://localhost:3000/_vercel/insights/script.js"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "HTTP 404",
+      "src": "http://localhost:3000/_vercel/insights/script.js"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "src": "http://localhost:3000/_vercel/insights/script.js"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "HTTP 404",
+      "src": "http://localhost:3000/_vercel/insights/script.js"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "src": "http://localhost:3000/_vercel/insights/script.js"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "HTTP 404",
+      "src": "http://localhost:3000/_vercel/insights/script.js"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "src": "http://localhost:3000/_vercel/insights/script.js"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "HTTP 404",
+      "src": "http://localhost:3000/_vercel/insights/script.js"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "src": "http://localhost:3000/_vercel/insights/script.js"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "HTTP 404",
+      "src": "http://localhost:3000/_vercel/insights/script.js"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "src": "http://localhost:3000/_vercel/insights/script.js"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "HTTP 404",
+      "src": "http://localhost:3000/_vercel/insights/script.js"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "src": "http://localhost:3000/_vercel/insights/script.js"
+    }
+  ]
+}
