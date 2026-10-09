@@ -1,0 +1,36 @@
+$ next build
+▲ Next.js 16.3.3 (Turbopack)
+✓ Running next.config.mjs took 13ms
+⚠ No build cache found. Please configure build caching for faster rebuilds. Read more: https://nextjs.org/docs/messages/no-cache
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 9.8s
+  Skipping validation of types
+  Finished TypeScript config validation in 17ms ...
+  Collecting page data using 3 workers ...
+  Generating static pages using 3 workers (0/8) ...
+  Generating static pages using 3 workers (2/8) 
+  Generating static pages using 3 workers (4/8) 
+  Generating static pages using 3 workers (6/8) 
+✓ Generating static pages using 3 workers (8/8) in 365ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ƒ /
+├ ○ /_not-found
+├ ƒ /api/arcade
+├ ƒ /api/auth/[...all]
+├ ƒ /api/cron/pulse
+├ ƒ /api/invites
+├ ƒ /api/push
+├ ƒ /api/push/test
+├ ƒ /api/record
+├ ƒ /api/record/avatar
+├ ƒ /api/save
+├ ƒ /estilo
+└ ○ /manifest.webmanifest
+
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+
