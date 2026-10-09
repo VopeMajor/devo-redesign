@@ -74,3 +74,28 @@ quando começa, o dealer manda o link do grupo do WhatsApp, que aparece para os 
 não iniciado (convocado), em andamento, encerrado (concluído), cancelado, falha. Precisa de: campo de link do
 WhatsApp (migração em `scripts/`), o dealer informa/edita o link, inscritos veem o botão "Entrar no grupo"
 quando o status for "em andamento" (não inscritos não veem o link).
+
+## 5. Entrada: personagem, aparência, som e dublagem (dono, 09/10 08h)
+- **Convite/cadastro** pede DOIS nomes: **nome do jogador** (login/conta) e **nome do personagem** (como os NPCs chamam
+  o jogador durante todo o jogo). Persistir o nome do personagem (migração em `scripts/`, ex.: `players.character_name`),
+  e trocar TODAS as falas/telas que hoje usam o nome da conta como nome de tratamento pelo nome do personagem.
+- **Aparência (prólogo)**: duas opções de "segunda aparência": **2D/3D** (personagem de anime/jogo) ou **real**
+  (celebridade/ator). O sistema intervém com este diálogo (texto do dono, só com revisão leve):
+  > Confuso sobre essa parte? Não se preocupe! No DEVO existem diferentes formas de jogar, e por isso é preciso
+  > escolher uma segunda aparência, real ou 2D. Embora você seja obrigado a escolher uma aparência aqui, não será
+  > obrigado a participar de jogos nos quais se sinta desconfortável com o uso do segundo avatar, caso isso aconteça.
+  >
+  > Não sabe qual aparência escolher? Basta tocar em **Seleção automática**! Temos uma lista com diversas aparências
+  > preparadas. E, se mudar de ideia mais tarde, não se preocupe: será possível trocar de aparência por afinidade
+  > dentro do jogo, mas apenas uma vez.
+  >
+  > Lembrete: sua aparência não precisa ser parecida com a original, mas deve ter idade aproximada e ser do mesmo sexo.
+  > Apenas aparências humanas são permitidas.
+  Precisa: escolha do tipo (2D/3D ou Real), campo do nome da aparência, botão "Seleção automática" (lista preparada por
+  tipo, sexo e faixa etária), regra de 1 troca posterior guardada no perfil (`appearanceChangesLeft = 1`).
+- **Som**: na fala do "KABUM!" do tutorial, efeito sonoro de explosão/impacto; ao fim da fala do Rato, a risadinha dele
+  ("hihihi"). Efeitos sonoros nos momentos fortes da cutscene.
+- **Cutscene (prólogo)**: usar a atual como base e aprimorar (direção de cena, ritmo, cortes, luz, câmera, música).
+  **Dublagem (OPCIONAL, só na cutscene inicial/prólogo)**: se falhar demais, desconsiderar sem atrasar o resto. Voz nas falas do prólogo. Geração no CI com TTS neural livre em pt-BR (ex.: Kokoro: pf_dora/pm_alex/
+  pm_santa), pós-processada por personagem (Rato sinistro, voz "???" com eco, Melissa natural), arquivos em
+  `public/audio/voz/`, legendas sincronizadas, botão de dublagem liga/desliga; fallback para `speechSynthesis` do aparelho.
