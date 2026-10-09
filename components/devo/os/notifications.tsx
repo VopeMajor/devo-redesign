@@ -124,8 +124,8 @@ export function NotificationList({ onOpen, className }: { onOpen: (id: AppId) =>
     <div className={cn('flex h-full min-h-0 flex-col', className)}>
       <div className="flex items-end justify-between gap-3 px-4 pb-3 pt-1">
         <div>
-          <Kicker tone="gold">Sistema · {count === 0 ? 'nenhum aviso' : `${count} ${count === 1 ? 'aviso' : 'avisos'}`}</Kicker>
-          <p className="mt-1.5 font-display text-[22px] font-semibold uppercase leading-none tracking-[0.06em] text-dv-text">Central de avisos</p>
+          <Kicker tone="gold">{count === 0 ? 'Nenhum aviso' : `${count} ${count === 1 ? 'aviso' : 'avisos'}`}</Kicker>
+          <p className="mt-1.5 whitespace-nowrap font-display text-[20px] font-semibold uppercase leading-none tracking-[0.05em] text-dv-text">Central de avisos</p>
         </div>
         <Button
           variant="secondary"
@@ -152,7 +152,7 @@ export function NotificationList({ onOpen, className }: { onOpen: (id: AppId) =>
               <span aria-hidden="true" className="absolute inset-2 rounded-full border border-dashed border-dv-gold/30 animate-dv-spin-slow" />
               <GlyphClock className="size-9 text-dv-gold" />
             </span>
-            <p className="font-display text-[22px] font-semibold uppercase tracking-[0.08em] text-dv-text">Silêncio. Por enquanto.</p>
+            <p className="font-display text-[19px] font-semibold uppercase tracking-[0.06em] text-dv-text">Silêncio. Por enquanto.</p>
             <p className="max-w-[17rem] font-body text-[15px] italic leading-snug text-dv-text-2">Nenhum aviso do sistema. Quando o Anfitrião falar, aparece aqui.</p>
             <Divider variant="clock" tone="gold" className="mt-1 w-44 opacity-70" />
           </li>

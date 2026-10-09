@@ -324,7 +324,7 @@ function HomeScreen({
         ) : null}
       </section>
 
-      <div className="flex min-h-4 flex-1 flex-col items-center justify-end gap-2 pb-4 pt-5 text-center">
+      <div className="flex shrink-0 grow flex-col items-center justify-end gap-2 pb-4 pt-5 text-center">
         <Divider variant="filigree" tone="gold" className="animate-dv-fade w-56 opacity-60 [animation-delay:520ms]" />
         <p className="animate-dv-fade dv-label text-[10px] tracking-[0.42em] text-dv-text-3 [animation-delay:560ms]">O tempo é a vida</p>
       </div>
@@ -558,8 +558,6 @@ function AppLayer({
       aria-label={app.name}
       className={cn('absolute inset-0 z-20 flex flex-col overflow-hidden bg-dv-ink shadow-[-30px_0_50px_-20px_rgba(0,0,0,0.9)]', leaving && 'pointer-events-none')}
     >
-      {/* corte diagonal de entrada na borda esquerda */}
-      <span aria-hidden="true" className="pointer-events-none absolute inset-y-0 left-0 z-30 w-[3px] bg-gradient-to-b from-dv-cobalt via-dv-cobalt/40 to-transparent" />
       <header className="relative flex h-[60px] shrink-0 items-center gap-2.5 bg-[linear-gradient(180deg,var(--dv-ink-3),var(--dv-ink-2))] pl-1.5 pr-4">
         <IconButton label={back ? back.label : 'Voltar ao início'} variant="ghost" onClick={back ? back.run : onBack}>
           <GlyphArrow className="rotate-180" />
