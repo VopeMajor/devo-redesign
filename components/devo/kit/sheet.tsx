@@ -118,7 +118,7 @@ export function Sheet({
           onClose()
         }}
         className={cn(
-          'absolute inset-0 cursor-default bg-[rgba(3,4,8,0.72)] backdrop-blur-[3px]',
+          'absolute inset-0 cursor-default bg-[rgba(8,8,10,0.72)] backdrop-blur-[3px]',
           closing ? 'opacity-0 transition-opacity duration-300' : 'animate-dv-fade',
         )}
       />
@@ -153,7 +153,7 @@ export function Sheet({
           className={cn(
             'absolute inset-x-px top-px',
             center ? 'bottom-px dv-cut' : 'bottom-0 [clip-path:polygon(17.6px_0,calc(100%-17.6px)_0,100%_17.6px,100%_100%,0_100%,0_17.6px)] sm:bottom-px sm:dv-cut',
-            paper ? 'dv-paper-bg' : tone === 'alert' ? 'bg-[linear-gradient(180deg,#2a070b,var(--dv-ink)_45%)]' : 'bg-[linear-gradient(180deg,var(--dv-ink-3),var(--dv-ink-2)_30%,var(--dv-ink))]',
+            paper ? 'dv-paper-bg' : tone === 'alert' ? 'bg-[linear-gradient(180deg,#1f1517,var(--dv-ink)_45%)]' : 'bg-[linear-gradient(180deg,var(--dv-ink-3),var(--dv-ink-2)_30%,var(--dv-ink))]',
           )}
           style={{ '--dv-cut': '17.6px' } as CSSProperties}
         />

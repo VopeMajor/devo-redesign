@@ -444,8 +444,8 @@ export function VsSplit({ duel, onBet, big = false, closed = false }: { duel: Du
               className={cn(
                 'absolute inset-0 -z-10',
                 left
-                  ? '[clip-path:polygon(0_0,100%_0,86%_100%,0_100%)] bg-[linear-gradient(110deg,#17307f_0%,var(--dv-cobalt-dim)_55%,rgba(11,26,77,0.4)_100%)]'
-                  : '[clip-path:polygon(14%_0,100%_0,100%_100%,0_100%)] bg-[linear-gradient(250deg,#3a2c12_0%,#1d170b_55%,rgba(29,23,11,0.4)_100%)]',
+                  ? '[clip-path:polygon(0_0,100%_0,86%_100%,0_100%)] bg-[linear-gradient(110deg,#3a3a40_0%,#1b1a20_55%,rgba(27,26,32,0.4)_100%)]'
+                  : '[clip-path:polygon(14%_0,100%_0,100%_100%,0_100%)] bg-[linear-gradient(250deg,#3d3a33_0%,#1d1b18_55%,rgba(29,27,24,0.4)_100%)]',
                 'transition-[filter] duration-200 group-enabled:group-hover:brightness-125',
               )}
             />

@@ -2,7 +2,7 @@ import type { CSSProperties, ReactNode } from 'react'
 import { cn } from '@/lib/utils'
 
 const PLAQUE_LINE = {
-  cobalt: 'bg-[linear-gradient(135deg,#dcd7f0,var(--dv-cobalt)_35%,var(--dv-cobalt-dim)_75%,var(--dv-cobalt))]',
+  cobalt: 'bg-[linear-gradient(135deg,#ffffff,#9a97a3_35%,#ecebef_60%,#5b5863)]',
   gold: 'bg-[linear-gradient(135deg,var(--dv-gold-bright),var(--dv-gold-deep)_35%,var(--dv-gold)_65%,var(--dv-gold-deep))]',
   neutral: 'bg-[linear-gradient(135deg,rgba(238,237,235,0.42),var(--dv-line-strong)_40%,rgba(238,237,235,0.12))]',
   blood: 'bg-[linear-gradient(135deg,var(--dv-blood-text),var(--dv-blood)_45%,var(--dv-blood-deep))]',
@@ -27,16 +27,16 @@ export function Plaque({ label, tone = 'neutral', children, className }: { label
   )
 }
 
-/** Barra de proporção entre dois lados (odds, votos): cobalto × ouro com corte diagonal no encontro. */
+/** Barra de proporção entre dois lados (odds, votos): mármore branco × aço, com corte diagonal no encontro. */
 export function OddsBar({ a, b, thin, labelA, labelB }: { a: number; b: number; thin?: boolean; labelA?: string; labelB?: string }) {
   return (
     <div>
       <div className={cn('mb-1 flex justify-between font-mono tabular-nums', thin ? 'text-[11px]' : 'text-[12px]')}>
-        <span className="text-dv-cobalt-text">{labelA ?? `${a}% do público`}</span>
+        <span className="text-dv-text">{labelA ?? `${a}% do público`}</span>
         <span className="text-dv-gold">{labelB ?? `${b}%`}</span>
       </div>
       <div className={cn('relative flex overflow-hidden bg-dv-ink-4', thin ? 'h-1' : 'h-1.5')}>
-        <span className="h-full bg-[linear-gradient(90deg,var(--dv-cobalt-deep),var(--dv-cobalt))] transition-[width] duration-500" style={{ width: `${a}%` }} />
+        <span className="h-full bg-[linear-gradient(90deg,#bdbab4,#f1f0ee)] transition-[width] duration-500" style={{ width: `${a}%` }} />
         <span aria-hidden="true" className="h-full w-[3px] -skew-x-[30deg] bg-dv-ink" />
         <span className="h-full flex-1 bg-[linear-gradient(90deg,var(--dv-gold-deep),var(--dv-gold))]" />
       </div>
