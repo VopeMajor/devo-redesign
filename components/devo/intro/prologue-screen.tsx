@@ -189,20 +189,20 @@ function ProfileInput({
   field,
   playerName,
   gender,
-  age,
+  knownAge,
   onSubmit,
   onAppearance,
 }: {
   field: ProfileField
   playerName: string
   gender?: string
-  age?: number
+  knownAge?: number
   onSubmit: (value: string) => void
   onAppearance: (kind: AppearanceKind, name: string, auto: boolean) => void
 }) {
   const [age, setAge] = useState('')
   if (field === 'name') return <ChoiceStrip index={0} label={playerName} onClick={() => onSubmit(playerName)} />
-  if (field === 'face') return <FaceInput gender={gender} age={age} onSubmit={onAppearance} />
+  if (field === 'face') return <FaceInput gender={gender} age={knownAge} onSubmit={onAppearance} />
   if (field === 'gender') {
     return (
       <div className="grid gap-2 sm:grid-cols-2">
@@ -505,7 +505,7 @@ export function PrologueScreen({ playerName, onFinish: onDone }: { playerName: s
               field={beat.field}
               playerName={playerName ?? 'Record'}
               gender={profile.gender}
-              age={profile.age ? Number(profile.age) : undefined}
+              knownAge={profile.age ? Number(profile.age) : undefined}
               onSubmit={(v) => submitProfile(beat.field, v)}
               onAppearance={submitAppearance}
             />

@@ -34,7 +34,7 @@ CAST = {
     # Sistema DEVO: voz de rádio/terminal (banda estreita + grão digital).
     "system": {
         "voice": "pf_dora",
-        "speed": 1.04,
+        "speed": 0.97,
         "fx": f"highpass=f=320,lowpass=f=3400,asoftclip=type=tanh:threshold=0.5,aecho=0.6:0.35:14:0.3,{LOUD}",
     },
     # Herdeiro: mais grave e seco, sala pequena.

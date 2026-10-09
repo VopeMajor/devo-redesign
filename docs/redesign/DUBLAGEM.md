@@ -31,7 +31,7 @@ livre em pt-BR e versionadas em `public/audio/voz/`.
 | Narrador | `pm_alex` (0,96×) | neutro: passa-alta, compressor, loudnorm −17 LUFS |
 | Melissa | `pf_dora` | natural, presença em 3,2 kHz |
 | ??? (Antiga Voz) | `pm_santa` (0,9×) | tom −16%, passa-baixa 3,6 kHz, eco de catedral (160/310 ms) |
-| DEVO · Sistema | `pf_dora` (1,04×) | rádio/terminal: banda 320–3400 Hz, saturação leve, eco curto |
+| DEVO · Sistema | `pf_dora` (0,97×) | rádio/terminal: banda 320–3400 Hz, saturação leve, eco curto |
 | Herdeiro | `pm_alex` (0,94×) | tom −8%, grave reforçado, sala pequena |
 | Rato | `pm_santa` (1,06×) | tom +20%, tremolo, saturação leve (sinistro); a risadinha usa o mesmo tratamento |
 
