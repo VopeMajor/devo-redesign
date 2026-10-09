@@ -278,11 +278,11 @@ if (want('sistema') || want('apps') || want('jogos')) {
     await step('home-transicao', async () => {
       await enterOS(page)
       await page.getByRole('button', { name: 'Mensagens', exact: true }).first().click({ timeout: 3000 })
-      await wait(170)
+      await wait(40)
       await shot(page, '11-transicao-abrir')
       await wait(1500)
       await btn(page, 'Voltar ao início', true).click({ timeout: 3000 })
-      await wait(140)
+      await wait(60)
       await shot(page, '11-transicao-voltar')
     })
     // Estados do pulso: crítico (< 6h, com avisos na central) e acima de 72h.

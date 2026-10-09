@@ -55,6 +55,14 @@ export function PulseDial({
           <stop offset="0.65" stopColor="#0a0f1c" stopOpacity="0.92" />
           <stop offset="1" stopColor="#05070d" stopOpacity="0.96" />
         </radialGradient>
+        {/* no herói, órbita e ponteiro somem na faixa dos dígitos (máscara com borda suave) */}
+        <filter id={`b-${uid}`} x="-20%" y="-20%" width="140%" height="140%">
+          <feGaussianBlur stdDeviation="9" />
+        </filter>
+        <mask id={`m-${uid}`} maskUnits="userSpaceOnUse" x="0" y="0" width="320" height="320">
+          <rect x="0" y="0" width="320" height="320" fill="#fff" />
+          {hero && <ellipse cx="160" cy="160" rx="118" ry="52" fill="#000" filter={`url(#b-${uid})`} />}
+        </mask>
       </defs>
 
       {/* face */}
@@ -118,9 +126,11 @@ export function PulseDial({
         })}
 
       {/* anel armilar girando devagar */}
+      <g mask={`url(#m-${uid})`}>
       <g className="origin-center animate-dv-spin-slow [transform-box:view-box]">
         <ellipse cx={C} cy={C} rx={hero ? 100 : 96} ry={hero ? 34 : 36} transform={`rotate(-24 ${C} ${C})`} stroke="var(--dv-gold)" strokeWidth="0.8" opacity="0.45" />
         <circle cx={C + (hero ? 91 : 88)} cy={C - 40} r="2.6" fill="var(--dv-gold-bright)" opacity="0.8" />
+      </g>
       </g>
 
       {/* anel do tempo (72h) */}
@@ -146,7 +156,9 @@ export function PulseDial({
       )}
       <circle cx={C} cy={C} r={R_ARC - 12} stroke="rgba(125,151,255,0.22)" strokeWidth="0.8" strokeDasharray="2 4" />
 
-      <SweepHand timerEndsAt={timerEndsAt} length={R_ARC - 6} critical={critical} />
+      <g mask={`url(#m-${uid})`}>
+        <SweepHand timerEndsAt={timerEndsAt} length={R_ARC - 6} critical={critical} />
+      </g>
 
       {!hero && (
         <g>
@@ -158,7 +170,7 @@ export function PulseDial({
           <circle cx={C} cy={C} r="5" fill={arc} />
         </g>
       )}
-      <circle cx={C} cy={C} r={hero ? 4 : 3} fill="var(--dv-gold-bright)" />
+      {!hero && <circle cx={C} cy={C} r="3" fill="var(--dv-gold-bright)" />}
     </svg>
   )
 }

@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties } from 'react'
+import { useEffect, useLayoutEffect, useMemo, useRef, useState, type CSSProperties } from 'react'
 import { playSfx } from '@/lib/devo/audio'
 import { PULSE_CRITICAL_MS, pulseRemaining, pulseRing } from '@/lib/devo/pulse'
 import type { AppId } from '@/lib/devo/types'
@@ -16,6 +16,9 @@ import { Divider, Kicker } from '../kit/typography'
 import { SoundToggle } from '../shared/sound-toggle'
 import { useDevo } from '../state/devo-store'
 import { DeadlyVoteSymbol } from '../system/symbol'
+import { useDeadlyVotes } from '../system/use-deadly-votes'
+import { formatVoteDate } from '@/lib/devo/deadly-votes'
+import { AppBackContext, type AppBack } from './app-back'
 import { useBackHandler } from '../use-back-handler'
 import { appIndex, getApp, type AppDef } from './apps'
 import { AppGlyphTile, Badge } from './app-icon'
@@ -29,7 +32,9 @@ const DOCK_APPS: AppId[] = ['mensagens', 'trocas', 'ajustes']
 /** Altura da barra de status (sem a área segura). */
 const STATUS_H = 44
 
-type Origin = { x: number; y: number } | null
+/** Duração da entrada/saída de um app (ms). */
+const ENTER_MS = 420
+const EXIT_MS = 320
 
 export function PhoneShell({ current, onOpen, onHome }: { current: AppId | null; onOpen: (id: AppId) => void; onHome: () => void }) {
   const { state, dispatch } = useDevo()
@@ -42,13 +47,30 @@ export function PhoneShell({ current, onOpen, onHome }: { current: AppId | null;
   // Camada do app: continua montada durante a animação de saída.
   const [shown, setShown] = useState<AppId | null>(current)
   const [leaving, setLeaving] = useState(false)
-  const origin = useRef<Origin>(null)
+  // Durante a entrada a home continua por baixo (o app desliza da direita por cima dela).
+  const [entering, setEntering] = useState(false)
+  const [appBack, setAppBack] = useState<AppBack>(null)
+  const backCtx = useMemo(() => ({ set: setAppBack }), [])
+  // Avisos só depois que a home terminou de entrar.
+  const [toastsReady, setToastsReady] = useState(false)
+  useEffect(() => {
+    const t = window.setTimeout(() => setToastsReady(true), 1400)
+    return () => window.clearTimeout(t)
+  }, [])
 
   useEffect(() => {
     if (current) {
+      if (!shown) {
+        setEntering(true)
+        const t = window.setTimeout(() => setEntering(false), ENTER_MS + 40)
+        setShown(current)
+        setLeaving(false)
+        return () => window.clearTimeout(t)
+      }
       setShown(current)
       setLeaving(false)
     } else if (shown) {
+      setEntering(false)
       setLeaving(true)
     }
   }, [current]) // eslint-disable-line react-hooks/exhaustive-deps
@@ -67,11 +89,10 @@ export function PhoneShell({ current, onOpen, onHome }: { current: AppId | null;
   })
   useBackHandler(shade, () => setShade(false))
 
-  /** Abre um app. `from` = retângulo do ícone tocado (o app "cresce" dele); sem ele, entra da direita. */
-  const open = (id: AppId, from?: DOMRect) => {
+  /** Abre um app: entra da direita por cima da home e volta para a direita ao fechar. */
+  const open = (id: AppId) => {
     playSfx('open')
     setShade(false)
-    origin.current = from ? { x: from.left + from.width / 2, y: from.top + from.height / 2 } : null
     onOpen(id)
   }
 
@@ -86,25 +107,27 @@ export function PhoneShell({ current, onOpen, onHome }: { current: AppId | null;
   return (
     <div className="fixed inset-0 flex flex-col overflow-hidden bg-dv-ink text-dv-text">
       {/* Uma cena só: viva na home; com um app aberto fica no quadro estático (o app pode ter a sua). */}
-      <SceneBackdrop preset="cathedral" intensity={0.75} dim={current ? 0.55 : 0.3} alert={critical} staticOnly={!!current} />
+      <SceneBackdrop preset="cathedral" intensity={0.75} dim={current && !entering ? 0.55 : 0.3} alert={critical} staticOnly={!!current && !entering} />
 
       <StatusBar now={now} remaining={remaining} critical={critical} unread={totalUnread} expanded={shade} onToggle={() => setShade((s) => !s)} />
 
       <div className="relative z-10 min-h-0 flex-1">
-        {!current && <HomeScreen remaining={remaining} critical={critical} onOpen={open} onShowNotices={() => setShade(true)} />}
+        {(!current || entering) && <HomeScreen remaining={remaining} critical={critical} onOpen={open} onShowNotices={() => setShade(true)} />}
         {app && (
-          <AppLayer
-            key={app.id}
-            app={app}
-            origin={origin.current}
-            leaving={leaving}
-            reduced={reduced}
-            onBack={goHome}
-            onExited={() => {
-              setShown(null)
-              setLeaving(false)
-            }}
-          />
+          <AppBackContext.Provider value={backCtx}>
+            <AppLayer
+              key={app.id}
+              app={app}
+              leaving={leaving}
+              reduced={reduced}
+              back={appBack}
+              onBack={goHome}
+              onExited={() => {
+                setShown(null)
+                setLeaving(false)
+              }}
+            />
+          </AppBackContext.Provider>
         )}
       </div>
 
@@ -126,7 +149,14 @@ export function PhoneShell({ current, onOpen, onHome }: { current: AppId | null;
 
       {shade && <Shade remaining={remaining} critical={critical} reduced={reduced} onClose={() => setShade(false)} onOpen={open} />}
 
-      <ToastStack onOpen={(id) => open(id)} className={cn('inset-x-3 top-[calc(env(safe-area-inset-top)+52px)]', shade && 'hidden')} />
+      {/* Um aviso por vez, embaixo (nunca sobre o cabeçalho nem sobre o herói/estado crítico). */}
+      <ToastStack
+        onOpen={(id) => open(id)}
+        compact
+        max={1}
+        hold={!toastsReady || shade}
+        className={cn('inset-x-3', current ? 'bottom-[calc(env(safe-area-inset-bottom)+36px)]' : 'bottom-[calc(env(safe-area-inset-bottom)+148px)]')}
+      />
     </div>
   )
 }
@@ -224,7 +254,7 @@ function HomeScreen({
 }: {
   remaining: number
   critical: boolean
-  onOpen: (id: AppId, from?: DOMRect) => void
+  onOpen: (id: AppId) => void
   onShowNotices: () => void
 }) {
   const { state } = useDevo()
@@ -243,7 +273,7 @@ function HomeScreen({
       </header>
 
       <div className="animate-dv-cut-in mt-3 [animation-delay:120ms]">
-        <PulseCard remaining={remaining} critical={critical} onOpen={(from) => onOpen('pulso', from)} />
+        <PulseCard remaining={remaining} critical={critical} onOpen={() => onOpen('pulso')} />
       </div>
 
       <section aria-label="Aplicativos" className="mt-5">
@@ -258,38 +288,49 @@ function HomeScreen({
         </ul>
       </section>
 
-      {latest && (
-        <button
-          type="button"
-          onClick={() => {
-            playSfx('click')
-            onShowNotices()
-          }}
-          className="dv-focus animate-dv-rise group relative isolate mt-5 flex w-full items-center gap-3 py-2.5 pl-4 pr-3 text-left [animation-delay:480ms]"
-          style={{ '--dv-cut': '10px' } as CSSProperties}
-        >
-          <span aria-hidden="true" className={cn('dv-cut-diag absolute inset-0 -z-10', latest.tone === 'danger' ? 'bg-dv-blood/55' : 'bg-dv-line-strong/70')} />
-          <span aria-hidden="true" className="dv-cut-diag absolute inset-px -z-10 bg-[color-mix(in_oklab,var(--dv-ink-2)_82%,transparent)] backdrop-blur-sm group-hover:bg-dv-ink-3" style={{ '--dv-cut': '9.6px' } as CSSProperties} />
-          <span aria-hidden="true" className={cn('absolute inset-y-2.5 left-0 w-[2px]', latest.tone === 'danger' ? 'bg-dv-blood' : 'bg-dv-cobalt')} />
-          <span className="min-w-0 flex-1">
-            <span className="dv-label flex justify-between gap-2 text-[10px]">
-              <span className="text-dv-cobalt-text">Último aviso · {getApp(latest.appId).name}</span>
-              <span className="dv-tabular text-dv-text-3">{formatClock(latest.createdAt)}</span>
-            </span>
-            <span className="mt-1 block truncate font-display text-[14px] font-semibold tracking-[0.02em] text-dv-text">{latest.title}</span>
-            <span className="block truncate font-body text-[14px] text-dv-text-2">{latest.body}</span>
-          </span>
-          <GlyphArrow className="size-4 shrink-0 text-dv-text-3 transition-transform group-hover:translate-x-0.5" />
-        </button>
-      )}
+      <section aria-label="Agora" className="mt-5 flex flex-col gap-2">
+        <div className="animate-dv-fade flex items-center gap-3 px-1 [animation-delay:360ms]">
+          <span className="dv-label text-[10px] text-dv-text-3">Agora</span>
+          <span aria-hidden="true" className="h-px flex-1 bg-gradient-to-r from-dv-line-strong to-transparent" />
+        </div>
+        <div className="animate-dv-rise [animation-delay:420ms]">
+          <SummonsCard onOpen={() => onOpen('record')} />
+        </div>
+        {latest ? (
+          <div className="animate-dv-rise [animation-delay:480ms]">
+            <HomeStrip
+              tone={latest.tone === 'danger' ? 'alert' : 'system'}
+              kicker={`Último aviso · ${getApp(latest.appId).name}`}
+              time={formatClock(latest.createdAt)}
+              title={latest.title}
+              body={latest.body}
+              onClick={() => {
+                playSfx('click')
+                onShowNotices()
+              }}
+            />
+          </div>
+        ) : state.arcadeUnlocked ? (
+          <div className="animate-dv-rise [animation-delay:480ms]">
+            <HomeStrip
+              tone="gold"
+              kicker="Sala de Jogos · mesa aberta"
+              title="Ganhe horas jogando"
+              body="Memory Rush, Living Chess, Bomba Quente e Blefe."
+              onClick={() => onOpen('jogos')}
+              label="Ir para a Sala de Jogos"
+            />
+          </div>
+        ) : null}
+      </section>
 
-      <div className="flex min-h-6 flex-1 flex-col items-center justify-end gap-2 pb-4 pt-6 text-center">
+      <div className="flex min-h-4 flex-1 flex-col items-center justify-end gap-2 pb-4 pt-5 text-center">
         <Divider variant="filigree" tone="gold" className="animate-dv-fade w-56 opacity-60 [animation-delay:520ms]" />
         <p className="animate-dv-fade dv-label text-[10px] tracking-[0.42em] text-dv-text-3 [animation-delay:560ms]">O tempo é a vida</p>
       </div>
 
       <nav aria-label="Dock" className="animate-dv-rise shrink-0 [animation-delay:420ms]">
-        <Frame variant="glass" cutSize={14} pad="none" innerClassName="px-2 pb-2 pt-3">
+        <Frame variant="ink" cutSize={14} pad="none" innerClassName="px-2 pb-2 pt-3" className="drop-shadow-[0_-10px_24px_rgba(0,0,0,0.6)]">
           <ul className="grid grid-cols-3">
             {DOCK_APPS.map((id, i) => (
               <PhoneIcon key={id} id={id} onOpen={onOpen} unread={state.unread[id]} delay={480 + i * 60} />
@@ -301,45 +342,119 @@ function HomeScreen({
   )
 }
 
-/** Cartão-herói "Tempo restante": mostrador de astrolábio à direita, dígitos de impacto à esquerda. */
-function PulseCard({ remaining, critical, onOpen }: { remaining: number; critical: boolean; onOpen: (from: DOMRect) => void }) {
+/** Faixa chanfrada da home (último aviso, atalho). */
+function HomeStrip({
+  tone,
+  kicker,
+  time,
+  title,
+  body,
+  onClick,
+  label,
+}: {
+  tone: 'system' | 'alert' | 'gold'
+  kicker: string
+  time?: string
+  title: string
+  body?: string
+  onClick: () => void
+  label?: string
+}) {
+  const line = tone === 'alert' ? 'bg-dv-blood/60' : tone === 'gold' ? 'bg-dv-gold/50' : 'bg-dv-line-strong'
+  const bar = tone === 'alert' ? 'bg-dv-blood' : tone === 'gold' ? 'bg-dv-gold' : 'bg-dv-cobalt'
+  const kick = tone === 'alert' ? 'text-dv-blood-text' : tone === 'gold' ? 'text-dv-gold' : 'text-dv-cobalt-text'
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-label={label}
+      className="dv-focus group relative isolate flex min-h-14 w-full items-center gap-3 py-2.5 pl-4 pr-3 text-left transition-transform duration-[120ms] active:scale-[0.985]"
+      style={{ '--dv-cut': '10px' } as CSSProperties}
+    >
+      <span aria-hidden="true" className={cn('dv-cut-diag absolute inset-0 -z-10', line)} />
+      <span aria-hidden="true" className="dv-cut-diag absolute inset-px -z-10 bg-[linear-gradient(100deg,var(--dv-ink-3),var(--dv-ink-2)_70%)] group-hover:bg-dv-ink-3" style={{ '--dv-cut': '9.6px' } as CSSProperties} />
+      <span aria-hidden="true" className={cn('absolute inset-y-2.5 left-0 w-[2px]', bar)} />
+      <span className="min-w-0 flex-1">
+        <span className="dv-label flex justify-between gap-2 text-[10px]">
+          <span className={kick}>{kicker}</span>
+          {time && <span className="dv-tabular text-dv-text-3">{time}</span>}
+        </span>
+        <span className="mt-1 block truncate font-display text-[14px] font-semibold tracking-[0.02em] text-dv-text">{title}</span>
+        {body && <span className="block truncate font-body text-[14px] text-dv-text-2">{body}</span>}
+      </span>
+      <GlyphArrow className="size-4 shrink-0 text-dv-text-3 transition-transform group-hover:translate-x-0.5" />
+    </button>
+  )
+}
+
+/** Próxima convocação de Deadly Vote (lida do Record). Abre o Record. */
+function SummonsCard({ onOpen }: { onOpen: () => void }) {
+  const { entries, isLoading } = useDeadlyVotes()
+  const next = entries.find((e) => e.status === 'em-progresso' || e.status === 'convocado')?.vote
+  const live = next?.status === 'em-progresso'
+  return (
+    <button
+      type="button"
+      onClick={() => {
+        playSfx('open')
+        onOpen()
+      }}
+      aria-label={next ? `Deadly Vote ${next.number}: ${next.title}. Abrir o Record` : 'Nenhuma convocação ativa. Abrir o Record'}
+      className="dv-focus group block w-full text-left transition-transform duration-[120ms] active:scale-[0.985]"
+    >
+      <Frame tone={live ? 'blood' : 'neutral'} cutSize={12} pad="none" innerClassName="flex items-center gap-3 py-3 pl-3 pr-3">
+        <span aria-hidden="true" className="relative grid size-12 shrink-0 place-items-center">
+          <span className="dv-cut absolute inset-0 bg-[linear-gradient(135deg,var(--dv-gold-bright),var(--dv-gold-deep)_45%,var(--dv-gold))] [--dv-cut:12px]" />
+          <span className="dv-cut absolute inset-px bg-dv-ink-2 [--dv-cut:11.6px]" />
+          <span className="relative font-impact text-[20px] font-semibold leading-none text-dv-gold-bright dv-tabular">{next ? String(next.number).padStart(2, '0') : '—'}</span>
+        </span>
+        <span className="min-w-0 flex-1">
+          <span className="dv-label flex items-center gap-2 text-[10px]">
+            <span className={live ? 'text-dv-blood-text' : 'text-dv-gold'}>{live ? 'Deadly Vote · em progresso' : 'Próxima convocação'}</span>
+          </span>
+          <span className="mt-1 block truncate font-display text-[15px] font-semibold uppercase tracking-[0.04em] text-dv-text">
+            {next ? next.title : isLoading ? 'Consultando o Record…' : 'Nenhuma convocação ativa'}
+          </span>
+          <span className="block truncate font-body text-[14px] text-dv-text-2">
+            {next ? `${formatVoteDate(next.startsAt)}${next.joined ? ' · você está inscrito' : ' · inscrições abertas'}` : 'O Dealer convoca pelo Record. Fique atento.'}
+          </span>
+        </span>
+        {next && (next.joined ? <KitBadge tone="cobalt" dot>Inscrito</KitBadge> : live ? <KitBadge tone="blood" live>Ao vivo</KitBadge> : null)}
+        <GlyphArrow className="size-4 shrink-0 text-dv-text-3 transition-transform group-hover:translate-x-0.5" />
+      </Frame>
+    </button>
+  )
+}
+
+/** Cartão-herói "Tempo restante": dígitos de impacto à esquerda, mostrador inteiro à direita. */
+function PulseCard({ remaining, critical, onOpen }: { remaining: number; critical: boolean; onOpen: () => void }) {
   const { state } = useDevo()
   const { excess } = pulseRing(remaining)
   const text = formatDuration(remaining)
   return (
     <button
       type="button"
-      onClick={(e) => onOpen(e.currentTarget.getBoundingClientRect())}
+      onClick={onOpen}
       aria-label={`Tempo restante ${text}. Abrir o relógio do pulso`}
       className="dv-focus group block w-full text-left transition-transform duration-[120ms] active:scale-[0.985]"
     >
-      <Frame variant="glass" tone={critical ? 'blood' : 'gold'} ornate glow cutSize={16} pad="none" innerClassName="min-h-[212px]">
-        {/* mostrador recortado pela moldura */}
-        <span aria-hidden="true" className="dv-cut pointer-events-none absolute inset-px overflow-hidden" style={{ '--dv-cut': '15.6px' } as CSSProperties}>
-          <PulseDial
-            remaining={remaining}
-            timerEndsAt={state.timerEndsAt}
-            critical={critical}
-            variant="compact"
-            className="absolute -right-[58px] top-1/2 size-[214px] -translate-y-1/2 opacity-95"
-          />
-          <span className="absolute inset-0 bg-[linear-gradient(90deg,rgba(10,15,28,0.94)_0%,rgba(10,15,28,0.78)_46%,transparent_72%)]" />
-          {critical && <span className="animate-dv-alert absolute inset-0 bg-[radial-gradient(80%_80%_at_0%_100%,rgba(213,31,43,0.28),transparent_70%)]" />}
-        </span>
-
-        <span className="relative flex min-h-[212px] flex-col justify-between p-5 pr-3">
-          <span className="block">
-            <Kicker tone={critical ? 'blood' : 'gold'}>Tempo restante</Kicker>
-            <span className="mt-3 block">
-              <TimeDigits value={text} size="lg" tone={critical ? 'blood' : 'text'} blinkColon={critical} className="[text-shadow:0_2px_18px_rgba(5,7,13,0.9)]" />
-            </span>
-            <span aria-hidden="true" className="mt-1 grid w-fit grid-cols-[1.2em_0.34em_1.2em_0.34em_1.2em] text-[44px] leading-none">
-              {['Horas', '', 'Min', '', 'Seg'].map((u, i) => (
-                <span key={i} className={cn('dv-label text-center text-[10px] tracking-[0.16em]', critical ? 'text-dv-blood-text' : 'text-dv-text-3')}>
-                  {u}
-                </span>
-              ))}
-            </span>
+      <Frame variant="glass" tone={critical ? 'blood' : 'gold'} ornate glow cutSize={16} pad="none" innerClassName="flex min-h-[196px] items-center gap-2 py-5 pl-5 pr-3">
+        {critical && (
+          <span aria-hidden="true" className="dv-cut pointer-events-none absolute inset-px overflow-hidden [--dv-cut:15.6px]">
+            <span className="animate-dv-alert absolute inset-0 bg-[radial-gradient(80%_80%_at_0%_100%,rgba(213,31,43,0.28),transparent_70%)]" />
+          </span>
+        )}
+        <span className="relative flex min-w-0 flex-1 flex-col">
+          <Kicker tone={critical ? 'blood' : 'gold'}>Tempo restante</Kicker>
+          <span className="mt-3 block">
+            <TimeDigits value={text} size="lg" tone={critical ? 'blood' : 'text'} blinkColon={critical} className="text-[40px]" />
+          </span>
+          <span aria-hidden="true" className="mt-1 grid w-fit grid-cols-[1.2em_0.34em_1.2em_0.34em_1.2em] text-[40px] leading-none">
+            {['Horas', '', 'Min', '', 'Seg'].map((u, i) => (
+              <span key={i} className={cn('dv-label text-center text-[10px] tracking-[0.14em]', critical ? 'text-dv-blood-text' : 'text-dv-text-3')}>
+                {u}
+              </span>
+            ))}
           </span>
           <span className="mt-4 flex flex-wrap items-center gap-2">
             {critical ? (
@@ -351,10 +466,13 @@ function PulseCard({ remaining, critical, onOpen }: { remaining: number; critica
                 Estável
               </KitBadge>
             )}
-            {excess > 0 && <KitBadge tone="gold">Acima de 72h</KitBadge>}
-            <span className="dv-label flex items-center gap-1 text-[10px] text-dv-text-3 transition-colors group-hover:text-dv-text-2">
-              Abrir pulso <GlyphArrow className="size-3.5" />
-            </span>
+            {excess > 0 && <KitBadge tone="gold">+72h</KitBadge>}
+          </span>
+        </span>
+        <span aria-hidden="true" className="relative grid size-[136px] shrink-0 place-items-center">
+          <PulseDial remaining={remaining} timerEndsAt={state.timerEndsAt} critical={critical} variant="compact" className="size-full" />
+          <span className="dv-label absolute -bottom-3 left-1/2 flex -translate-x-1/2 items-center gap-1 whitespace-nowrap text-[10px] text-dv-text-3 transition-colors group-hover:text-dv-text-2">
+            Abrir <GlyphArrow className="size-3" />
           </span>
         </span>
       </Frame>
@@ -362,17 +480,17 @@ function PulseCard({ remaining, critical, onOpen }: { remaining: number; critica
   )
 }
 
-function PhoneIcon({ id, onOpen, unread, delay = 0 }: { id: AppId; onOpen: (id: AppId, from?: DOMRect) => void; unread?: number; delay?: number }) {
+function PhoneIcon({ id, onOpen, unread, delay = 0 }: { id: AppId; onOpen: (id: AppId) => void; unread?: number; delay?: number }) {
   const app = getApp(id)
   return (
     <li className="animate-dv-pop" style={{ animationDelay: `${delay}ms` }}>
       <button
         type="button"
-        onClick={(e) => onOpen(id, e.currentTarget.querySelector('[data-tile]')?.getBoundingClientRect())}
-        className="dv-focus group flex w-full flex-col items-center gap-2 rounded-none py-1 transition-transform duration-[120ms] ease-out active:scale-[0.92]"
+        onClick={() => onOpen(id)}
+        className="dv-focus group flex w-full flex-col items-center gap-2 py-1 transition-transform duration-[120ms] ease-out active:scale-[0.92]"
         aria-label={app.name}
       >
-        <span data-tile className="relative transition-transform duration-200 group-hover:-translate-y-0.5">
+        <span className="relative transition-transform duration-200 group-hover:-translate-y-0.5">
           <AppGlyphTile app={app} />
           <Badge count={unread} />
         </span>
@@ -384,23 +502,23 @@ function PhoneIcon({ id, onOpen, unread, delay = 0 }: { id: AppId; onOpen: (id: 
   )
 }
 
-/* ── Camada do app (abre do ícone, volta para ele) ─────────────────────────────────────────── */
+/* ── Camada do app (entra da direita, sai para a direita) ─────────────────────────────────── */
 
 const EASE_OUT = 'cubic-bezier(0.16,1,0.3,1)'
 const EASE_IN = 'cubic-bezier(0.6,0,0.9,0.4)'
 
 function AppLayer({
   app,
-  origin,
   leaving,
   reduced,
+  back,
   onBack,
   onExited,
 }: {
   app: AppDef
-  origin: Origin
   leaving: boolean
   reduced: boolean
+  back: AppBack
   onBack: () => void
   onExited: () => void
 }) {
@@ -408,27 +526,16 @@ function AppLayer({
   const exited = useRef(onExited)
   exited.current = onExited
 
-  const frames = (el: HTMLElement): Keyframe[] => {
-    if (origin) {
-      const r = el.getBoundingClientRect()
-      el.style.transformOrigin = `${origin.x - r.left}px ${origin.y - r.top}px`
-      return [
-        { transform: 'scale(0.14)', opacity: 0, filter: 'brightness(1.9)' },
-        { transform: 'scale(0.7)', opacity: 1, offset: 0.45 },
-        { transform: 'none', opacity: 1, filter: 'brightness(1)' },
-      ]
-    }
-    el.style.transformOrigin = '100% 50%'
-    return [
-      { transform: 'translateX(44px) skewX(-5deg)', opacity: 0 },
-      { transform: 'none', opacity: 1 },
-    ]
-  }
-
   useLayoutEffect(() => {
     const el = ref.current
     if (!el || reduced || typeof el.animate !== 'function') return
-    const anim = el.animate(frames(el), { duration: 460, easing: EASE_OUT })
+    const anim = el.animate(
+      [
+        { transform: 'translateX(100%)', boxShadow: '-40px 0 60px -20px rgba(0,0,0,0)' },
+        { transform: 'translateX(0)', boxShadow: '-40px 0 60px -20px rgba(0,0,0,0.9)' },
+      ],
+      { duration: ENTER_MS, easing: EASE_OUT },
+    )
     return () => anim.cancel()
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -439,11 +546,7 @@ function AppLayer({
       exited.current()
       return
     }
-    const anim = el.animate([...frames(el)].reverse().map((f) => (typeof f.offset === 'number' ? { ...f, offset: 1 - f.offset } : f)), {
-      duration: 280,
-      easing: EASE_IN,
-      fill: 'forwards',
-    })
+    const anim = el.animate([{ transform: 'translateX(0)' }, { transform: 'translateX(100%)' }], { duration: EXIT_MS, easing: EASE_IN, fill: 'forwards' })
     anim.onfinish = () => exited.current()
     return () => anim.cancel()
   }, [leaving]) // eslint-disable-line react-hooks/exhaustive-deps
@@ -453,10 +556,12 @@ function AppLayer({
     <section
       ref={ref}
       aria-label={app.name}
-      className={cn('absolute inset-0 z-20 flex flex-col overflow-hidden bg-dv-ink/80', leaving && 'pointer-events-none')}
+      className={cn('absolute inset-0 z-20 flex flex-col overflow-hidden bg-dv-ink shadow-[-30px_0_50px_-20px_rgba(0,0,0,0.9)]', leaving && 'pointer-events-none')}
     >
-      <header className="relative flex h-[60px] shrink-0 items-center gap-2.5 bg-[linear-gradient(180deg,rgba(17,26,46,0.92),rgba(10,15,28,0.88))] pl-1.5 pr-4 backdrop-blur-md">
-        <IconButton label="Voltar ao início" variant="ghost" onClick={onBack}>
+      {/* corte diagonal de entrada na borda esquerda */}
+      <span aria-hidden="true" className="pointer-events-none absolute inset-y-0 left-0 z-30 w-[3px] bg-gradient-to-b from-dv-cobalt via-dv-cobalt/40 to-transparent" />
+      <header className="relative flex h-[60px] shrink-0 items-center gap-2.5 bg-[linear-gradient(180deg,var(--dv-ink-3),var(--dv-ink-2))] pl-1.5 pr-4">
+        <IconButton label={back ? back.label : 'Voltar ao início'} variant="ghost" onClick={back ? back.run : onBack}>
           <GlyphArrow className="rotate-180" />
         </IconButton>
         <AppGlyphTile app={app} size="sm" />
@@ -467,13 +572,9 @@ function AppLayer({
         <span aria-hidden="true" className="font-impact -skew-x-[8deg] text-[30px] font-semibold leading-none text-transparent [-webkit-text-stroke:1px_var(--dv-gold)]">
           {index}
         </span>
-        <span aria-hidden="true" className="absolute inset-x-0 bottom-0 h-px">
-          <span className="absolute inset-0 bg-gradient-to-r from-dv-gold/70 via-dv-gold/25 to-transparent" />
-          <span className="absolute -top-[3px] left-0 h-[7px] w-px bg-dv-gold" />
-          <span className="absolute -top-[1px] left-[18%] h-[3px] w-7 bg-dv-cobalt" />
-        </span>
+        <span aria-hidden="true" className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-dv-gold/60 to-transparent" />
       </header>
-      <div className="relative min-h-0 flex-1">
+      <div className="relative min-h-0 flex-1 pt-2">
         <app.Component />
       </div>
     </section>

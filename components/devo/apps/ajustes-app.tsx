@@ -30,23 +30,24 @@ export function AjustesApp() {
   return (
     <div className="devo-scroll h-full overflow-y-auto">
       <Stagger className="flex flex-col gap-4 px-4 pb-8 pt-4" step={70}>
-        {/* Herói: placa de identificação do sistema */}
-        <Frame tone="gold" ornate glow pad="lg" cutSize={16}>
-          <div className="flex items-center gap-4">
-            <DeadlyVoteSymbol className="size-16 shrink-0 text-dv-gold" />
-            <div className="min-w-0">
-              <Kicker tone="gold">Sistema · Operador</Kicker>
-              <p className="mt-1.5 font-display text-[26px] font-semibold uppercase leading-none tracking-[0.06em] text-dv-text">Devo 0.1</p>
-              <p className="dv-label mt-2 text-[10px] text-dv-text-3">Experimental · Record System</p>
-            </div>
+        <Panel>
+          <SectionLabel>Áudio</SectionLabel>
+          <div className="mt-2 flex items-center justify-between gap-3">
+            <p className="font-body text-[15px] text-dv-text-2">Trilha e sons de interface</p>
+            <SoundToggle />
           </div>
-          <dl className="mt-4 divide-y divide-dv-line border-t border-dv-line">
+        </Panel>
+
+        <PwaPanel />
+
+        <Panel>
+          <SectionLabel>Sistema</SectionLabel>
+          <dl className="mt-1 divide-y divide-dv-line">
             <Row label="Versão">DEVO 0.1 · experimental</Row>
             <Row label="Interface">{layout === 'desktop' ? 'Área de trabalho' : 'Smartphone'}</Row>
             <Row label="Operador">O Anfitrião</Row>
-            {state.playerName && <Row label="Jogador">{state.playerName}</Row>}
           </dl>
-          <div className="mt-4 flex flex-wrap gap-2">
+          <div className="mt-3 flex flex-wrap gap-2">
             <Button
               variant="secondary"
               size="sm"
@@ -58,21 +59,21 @@ export function AjustesApp() {
               Limpar notificações
             </Button>
           </div>
-        </Frame>
-
-        <Panel>
-          <SectionLabel>Áudio</SectionLabel>
-          <div className="mt-2 flex items-center justify-between gap-3">
-            <p className="font-body text-[15px] text-dv-text-2">Trilha e sons de interface</p>
-            <SoundToggle />
-          </div>
         </Panel>
 
-        <PwaPanel />
-
-        <Frame tone="blood" pad="md" cutSize={12}>
-          <Kicker tone="blood">Sessão</Kicker>
-          <p className="mt-3 font-body text-[15px] leading-relaxed text-dv-text-2">
+        {/* Herói: a sessão (o que está em jogo) */}
+        <Frame tone="blood" ornate glow pad="lg" cutSize={16}>
+          <div className="flex items-center gap-4">
+            <DeadlyVoteSymbol className="size-14 shrink-0 text-dv-gold" />
+            <div className="min-w-0">
+              <Kicker tone="blood">Sessão</Kicker>
+              <p className="mt-1.5 truncate font-display text-[24px] font-semibold uppercase leading-none tracking-[0.06em] text-dv-text">{state.playerName || 'Jogador'}</p>
+              <p className="dv-label mt-2 text-[10px] text-dv-text-3">
+                {state.inventory.length} cartas · {state.tradesCompleted} trocas
+              </p>
+            </div>
+          </div>
+          <p className="mt-4 font-body text-[15px] leading-relaxed text-dv-text-2">
             Reiniciar apaga suas cartas (você recebe de novo o kit inicial), zera as trocas e devolve o pulso a {PULSE_START_HOURS} horas. Sua conta continua a
             mesma. O Anfitrião vai fingir que não viu.
           </p>
