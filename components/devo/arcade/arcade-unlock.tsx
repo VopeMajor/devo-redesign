@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react'
 import { playSfx } from '@/lib/devo/audio'
-import { Frame } from '../kit/frame'
+import { EmblemJogos } from '../kit/emblems'
 import { Stamp } from '../kit/stamp'
 import { useDevo } from '../state/devo-store'
 
@@ -53,11 +53,13 @@ export function ArcadeUnlock() {
         <p className="dv-label animate-dv-fade text-[12px] text-dv-gold-bright">Novo aplicativo desbloqueado</p>
 
         <div className="relative">
-          <Frame tone="gold" ornate glow pad="lg" className="en-icon-in [animation-delay:350ms]">
-            <span className="grid size-20 place-items-center text-dv-gold-bright">
-              <ArcadeGlyph />
-            </span>
-          </Frame>
+          {/* Emblema da Sala de Jogos (família dos ícones do sistema): sem ladrilho, só o metal e um halo. */}
+          <span className="en-icon-in relative grid size-32 place-items-center [animation-delay:350ms]">
+            <span aria-hidden="true" className="absolute inset-[-30%] rounded-full bg-[radial-gradient(circle,color-mix(in_oklab,var(--dv-amethyst)_34%,transparent),color-mix(in_oklab,var(--dv-gold-bright)_8%,transparent)_45%,transparent_70%)]" />
+            <span aria-hidden="true" className="absolute inset-[6%] rounded-full border border-dv-gold/35" />
+            <span aria-hidden="true" className="absolute inset-[14%] rounded-full border border-dashed border-dv-gold/20" />
+            <EmblemJogos metal className="relative size-24 drop-shadow-[0_0_14px_color-mix(in_oklab,var(--dv-gold-bright)_40%,transparent)]" />
+          </span>
           <span className="absolute -right-[7.5rem] top-1/2 -translate-y-1/2">
             <Stamp text="Liberado" tone="cobalt" size={96} rotate={-12} animate className="[animation-delay:1100ms]" />
           </span>
@@ -88,21 +90,5 @@ export function ArcadeUnlock() {
         </div>
       </div>
     </div>
-  )
-}
-
-/** Ícone da Sala de Jogos: carta e dado sobrepostos (traço do kit). */
-function ArcadeGlyph() {
-  return (
-    <svg viewBox="0 0 48 48" className="size-full" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" aria-hidden="true">
-      <rect x="7" y="8" width="20" height="28" rx="2" transform="rotate(-10 17 22)" />
-      <path d="M17 16 L21 22 L17 28 L13 22 Z" fill="currentColor" stroke="none" transform="rotate(-10 17 22)" />
-      <rect x="23" y="20" width="18" height="18" rx="3" transform="rotate(12 32 29)" />
-      <g fill="currentColor" stroke="none" transform="rotate(12 32 29)">
-        <circle cx="27.5" cy="24.5" r="1.6" />
-        <circle cx="32" cy="29" r="1.6" />
-        <circle cx="36.5" cy="33.5" r="1.6" />
-      </g>
-    </svg>
   )
 }

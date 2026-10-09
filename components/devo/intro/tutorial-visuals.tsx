@@ -108,7 +108,7 @@ function WristVisual() {
         <div className="relative grid size-[136px] place-items-center rounded-full bg-[radial-gradient(circle,var(--dv-ink-3),var(--dv-ink)_72%)] shadow-[0_0_30px_color-mix(in_oklab,var(--dv-amethyst)_30%,transparent)]">
           <PulseRing ratio={secs / (72 * 3600)} />
           <span className="relative flex flex-col items-center gap-0.5">
-            <span className="dv-label text-[9px] text-dv-cobalt-text">Pulso</span>
+            <span className="dv-label text-[10px] text-dv-cobalt-text">Pulso</span>
             <TimeDigits value={formatDuration(secs * 1000)} size="sm" tone="text" label="Tempo no pulso" />
           </span>
         </div>
@@ -232,7 +232,7 @@ function RoomsVisual() {
             >
               <span className={cn('mt-2 font-impact text-[22px] leading-none', chosen ? 'text-white' : free ? 'text-dv-text' : 'text-dv-text-3')}>{toRoman(i + 1)}</span>
               {free ? <span className={cn('size-1.5 rotate-45', chosen ? 'bg-dv-gold-bright' : 'bg-dv-cobalt-text')} aria-hidden="true" /> : <GlyphKeyhole className="size-4 text-dv-text-3" />}
-              <span className={cn('dv-label text-[9px] tracking-[0.14em]', chosen ? 'text-white' : free ? 'text-dv-cobalt-text' : 'text-dv-text-3')}>{chosen ? 'Entrar' : status}</span>
+              <span className={cn('dv-label text-[10px] tracking-[0.12em]', chosen ? 'text-white' : free ? 'text-dv-cobalt-text' : 'text-dv-text-3')}>{chosen ? 'Entrar' : status}</span>
             </div>
           )
         })}
@@ -357,7 +357,7 @@ const CHAT = [
 function Avatar({ me }: { me: boolean }) {
   return (
     <span
-      className={cn('dv-cut grid size-7 shrink-0 place-items-center font-mono text-[9px]', me ? 'bg-dv-cobalt-dim text-dv-cobalt-text' : 'bg-dv-ink-4 text-dv-gold-bright')}
+      className={cn('dv-cut grid size-7 shrink-0 place-items-center font-mono text-[10px]', me ? 'bg-dv-cobalt-dim text-dv-cobalt-text' : 'bg-dv-ink-4 text-dv-gold-bright')}
       style={{ '--dv-cut': '6px' } as CSSProperties}
       aria-hidden="true"
     >
@@ -556,8 +556,8 @@ function StepBanner({ step }: { step: string }) {
         </span>
       )}
       <span className="-ml-1 flex min-w-0 flex-col bg-[linear-gradient(90deg,var(--dv-ink-4),var(--dv-ink-2))] py-1.5 pl-4 pr-5 shadow-[3px_3px_0_rgba(0,0,0,0.6)] [clip-path:polygon(0_0,100%_0,calc(100%-10px)_100%,0_100%)]">
-        <span className="dv-label text-[9px] text-dv-gold">Etapa</span>
-        <span className="truncate font-display text-[14px] font-semibold uppercase tracking-[0.08em] text-dv-text">{text}</span>
+        <span className="dv-label text-[10px] text-dv-gold">Etapa</span>
+        <span className="whitespace-nowrap font-display text-[13px] font-semibold uppercase tracking-[0.04em] text-dv-text">{text}</span>
       </span>
     </figcaption>
   )
@@ -568,7 +568,7 @@ export function TutorialVisualPanel({ visual, step, index = 1 }: { visual: Tutor
   const { view: Visual, system } = VISUALS[visual]
   return (
     <figure className="animate-dv-pop relative lg:[zoom:1.25] xl:[zoom:1.35]">
-      <span aria-hidden="true" className="dv-cut absolute inset-0 bg-[linear-gradient(135deg,var(--dv-amethyst-text),var(--dv-cobalt)_35%,var(--dv-cobalt-dim)_70%,var(--dv-cobalt))]" style={{ '--dv-cut': '16px' } as CSSProperties} />
+      <span aria-hidden="true" className="dv-cut absolute inset-0 bg-[linear-gradient(135deg,var(--dv-gold-bright),var(--dv-gold-deep)_32%,var(--dv-marble-black)_62%,var(--dv-gold)_88%,var(--dv-amethyst))]" style={{ '--dv-cut': '16px' } as CSSProperties} />
       <span
         aria-hidden="true"
         className="dv-cut absolute inset-px overflow-hidden bg-[color-mix(in_oklab,var(--dv-ink)_94%,transparent)] [background-image:linear-gradient(color-mix(in_oklab,var(--dv-amethyst)_8%,transparent)_1px,transparent_1px),linear-gradient(90deg,color-mix(in_oklab,var(--dv-amethyst)_8%,transparent)_1px,transparent_1px)] [background-size:16px_16px]"
@@ -578,7 +578,7 @@ export function TutorialVisualPanel({ visual, step, index = 1 }: { visual: Tutor
       </span>
       {/* marcas de registro */}
       {['left-3 top-3', 'right-3 top-3', 'bottom-3 left-3', 'bottom-3 right-3'].map((p) => (
-        <span key={p} aria-hidden="true" className={cn('absolute size-3 text-dv-cobalt-text/70', p)}>
+        <span key={p} aria-hidden="true" className={cn('absolute size-3 text-dv-gold/70', p)}>
           <span className="absolute left-1/2 top-0 h-full w-px bg-current" />
           <span className="absolute left-0 top-1/2 h-px w-full bg-current" />
         </span>

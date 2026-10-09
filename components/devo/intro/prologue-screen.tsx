@@ -143,7 +143,9 @@ function FaceInput({ gender, age, onSubmit }: { gender?: string; age?: number; o
             }}
             className={cn(
               'dv-focus dv-cut-diag flex min-h-12 flex-col items-start justify-center px-3 py-2 text-left transition-colors duration-[220ms]',
-              kind === k ? 'bg-dv-cobalt-dim text-dv-text shadow-[inset_3px_0_0_var(--dv-cobalt)]' : 'bg-dv-ink-2/90 text-dv-text-2 hover:bg-dv-ink-3',
+              kind === k
+                ? 'bg-dv-ink-3 text-dv-text shadow-[inset_3px_0_0_var(--dv-amethyst),inset_0_0_0_1px_color-mix(in_oklab,var(--dv-gold-bright)_38%,transparent),0_0_22px_-8px_var(--dv-amethyst)]'
+                : 'bg-dv-ink-2/90 text-dv-text-2 hover:bg-dv-ink-3',
             )}
             style={{ '--dv-cut': '10px' } as CSSProperties}
           >
@@ -423,9 +425,9 @@ export function PrologueScreen({ playerName, onFinish: onDone }: { playerName: s
         onSkip={onFinish}
         chapter={
           act ? (
-            <p className="dv-label flex items-center gap-2 text-[10px] text-dv-text-2">
+            <p className="dv-label flex items-start gap-2 text-[10px] text-dv-text-2">
               <span className="font-impact text-[15px] leading-none tracking-normal text-dv-gold">{toRoman(act.n)}</span>
-              <span className="truncate">{act.title}</span>
+              <span className="pt-px leading-[1.35] [text-wrap:balance]">{act.title}</span>
             </p>
           ) : null
         }

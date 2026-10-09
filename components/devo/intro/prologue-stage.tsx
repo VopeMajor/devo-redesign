@@ -159,6 +159,12 @@ export type MelissaPresence = 'off' | 'approach' | 'on'
 /** Luz de borda comum do elenco (mesma do PortraitFrame do kit): contorno claro + halo. */
 const RIM_GOLD = 'drop-shadow(-1.5px -1px 0 color-mix(in oklab,var(--dv-gold-bright) 50%,transparent)) drop-shadow(0 0 12px color-mix(in oklab,var(--dv-gold-bright) 22%,transparent))'
 
+/** Riscos de poeira subindo no abismo (sensação de queda): [esquerda %, altura %, duração ms, atraso ms]. */
+const ABYSS_STREAKS: [number, number, number, number][] = Array.from({ length: 16 }, (_, i) => {
+  const r = (n: number) => ((Math.sin(i * 12.9898 + n * 78.233) * 43758.5453) % 1 + 1) % 1
+  return [4 + r(1) * 92, 8 + r(2) * 16, 700 + r(3) * 900, -r(4) * 1600]
+})
+
 export function PrologueStage({
   stage,
   mood,
@@ -294,6 +300,35 @@ export function PrologueStage({
         {tripped && <div className="absolute inset-0 animate-[pr-flash_0.9s_ease-out_both] bg-[var(--dv-blood-deep)]" />}
       </Layer>
 
+      {/* O abismo: a fenda de luz encolhe lá em cima, poeira sobe (queda), dois vultos pequenos giram no escuro. */}
+      <Layer on={stage === 'abyss'}>
+        {(stage === 'abyss' || stage === 'death') && (
+        <>
+        <div className="en-rift absolute left-1/2 top-[8%] h-[24%] w-[44%] -translate-x-1/2">
+          <div className="absolute -inset-[60%] bg-[radial-gradient(ellipse_26%_44%_at_50%_34%,color-mix(in_oklab,var(--dv-gold-bright)_20%,transparent),transparent_70%)]" />
+          <div className="absolute inset-0 bg-dv-gold-bright/85 blur-[0.6px] [clip-path:polygon(47%_0,57%_0,53%_20%,62%_38%,52%_60%,58%_100%,47%_72%,40%_47%,50%_27%)]" />
+        </div>
+        {ABYSS_STREAKS.map(([left, h, dur, delay], i) => (
+          <span
+            key={i}
+            className="en-streak absolute bottom-0 w-px bg-[linear-gradient(180deg,transparent,color-mix(in_oklab,var(--dv-text)_32%,transparent),transparent)]"
+            style={{ left: `${left}%`, height: `${h}%`, animationDuration: `${dur}ms`, animationDelay: `${delay}ms` }}
+          />
+        ))}
+        {(
+          [
+            ['/images/prologue/girl.webp', 312, 706, '34%', 'en-fall-a'],
+            ['/images/prologue/boy.webp', 242, 705, '56%', 'en-fall-b'],
+          ] as const
+        ).map(([src, w, h, left, anim]) => (
+          <div key={src} className={cn('absolute top-[34%] h-[15%]', anim)} style={{ left }}>
+            <Image src={src} alt="" width={w} height={h} className="h-full w-auto max-w-none brightness-0" style={{ filter: `brightness(0) ${RIM_GOLD}` }} />
+          </div>
+        ))}
+        </>
+        )}
+      </Layer>
+
       {/* A morte */}
       <Layer on={deathOn || stage === 'abyss'}>
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_40%_55%_at_50%_55%,color-mix(in_oklab,var(--dv-gold-bright)_14%,transparent),transparent_70%)]" />
@@ -383,17 +418,34 @@ export function PrologueStage({
         <div
           ref={melissaRef}
           className={cn(
-            'w-[min(72vw,320px)] transition-[opacity,transform,filter] duration-[800ms] ease-[var(--dv-ease-out)] lg:w-full lg:max-w-[440px]',
+            'relative w-[min(72vw,320px)] transition-[opacity,transform,filter] duration-[800ms] ease-[var(--dv-ease-out)] lg:w-full lg:max-w-[440px]',
             melissaOn ? 'translate-x-0 opacity-100' : 'translate-x-[14%] opacity-0',
-            melissa === 'approach' ? 'brightness-[0.08]' : melissaOn && !speaking ? 'brightness-[0.62] saturate-[0.8]' : 'brightness-100',
+            melissaOn && !speaking && melissa !== 'approach' ? 'brightness-[0.62] saturate-[0.8]' : 'brightness-100',
           )}
         >
+          {/* Aproximação: só a silhueta do sprite (sem a moldura), com luz de borda; a moldura acende depois. */}
+          <div
+            aria-hidden="true"
+            className={cn(
+              'pointer-events-none absolute inset-0 z-10 transition-opacity duration-700 [mask-image:linear-gradient(180deg,#000_62%,transparent_96%)]',
+              melissa === 'approach' ? 'opacity-100' : 'opacity-0',
+            )}
+          >
+            <Image
+              src={portraitFrameProps('melissa', 'neutral')?.src ?? '/images/npc/melissa-neutral.png'}
+              alt=""
+              fill
+              sizes="320px"
+              className="object-contain object-bottom"
+              style={{ filter: `brightness(0) ${RIM_GOLD}` }}
+            />
+          </div>
           {/* uma moldura por expressão (mapa em lib/devo/npcs.ts), trocadas por opacidade */}
           <div className="relative">
             {(['neutral', 'soft', 'serious'] as MelissaMood[]).map((m) => {
               const on = m === mood
               return (
-                <div key={m} className={cn('transition-opacity duration-500', on ? 'relative opacity-100' : 'absolute inset-0 opacity-0')}>
+                <div key={m} className={cn('transition-opacity duration-500', on ? 'relative' : 'absolute inset-0', on && melissa !== 'approach' ? 'opacity-100' : 'opacity-0')}>
                   <PortraitFrame
                     {...(portraitFrameProps('melissa', m) ?? {})}
                     alt={melissaOn && on ? 'Melissa, da Companhia de Despertados' : ''}
@@ -410,10 +462,11 @@ export function PrologueStage({
 
       {/* Celular */}
       <Layer on={stage === 'phone'} className="grid place-items-center">
-        <div className="relative -mt-24 flex h-[min(52dvh,420px)] aspect-[9/18] flex-col items-center justify-center gap-3 rounded-[2rem] border-4 border-[var(--dv-night-2)] bg-gradient-to-b from-dv-cobalt-dim to-dv-ink shadow-[0_0_80px_color-mix(in_oklab,var(--dv-amethyst)_35%,transparent)]">
-          <span className="absolute top-3 h-1.5 w-12 rounded-full bg-[var(--dv-night-2)]" />
-          <span className="dv-cut grid size-16 animate-[pr-buzz_2.4s_ease-in-out_infinite] place-items-center bg-[linear-gradient(160deg,var(--dv-cobalt),var(--dv-cobalt-dim))] text-dv-text shadow-[0_0_30px_color-mix(in_oklab,var(--dv-amethyst)_50%,transparent)]" style={{ '--dv-cut': '12px' } as CSSProperties}>
-            <DeadlyVoteSymbol variant="mark" className="size-10" />
+        <div className="relative -mt-24 flex h-[min(52dvh,420px)] aspect-[9/18] flex-col items-center justify-center gap-3 rounded-[2rem] border-4 border-dv-ink-4 bg-gradient-to-b from-dv-ink-3 to-dv-ink shadow-[0_0_80px_color-mix(in_oklab,var(--dv-amethyst)_28%,transparent)] ring-1 ring-dv-gold/30">
+          <span className="absolute top-3 h-1.5 w-12 rounded-full bg-dv-ink-4" />
+          <span className="relative grid size-20 animate-[pr-buzz_2.4s_ease-in-out_infinite] place-items-center text-dv-porcelain">
+            <span aria-hidden="true" className="absolute inset-0 rounded-full bg-[radial-gradient(circle,color-mix(in_oklab,var(--dv-amethyst)_30%,transparent),transparent_68%)]" />
+            <DeadlyVoteSymbol variant="mark" className="relative size-14 drop-shadow-[0_0_10px_color-mix(in_oklab,var(--dv-gold-bright)_45%,transparent)]" />
           </span>
           <span className="dv-label text-[11px] text-dv-text-2">Devo</span>
         </div>
@@ -434,6 +487,8 @@ export function PrologueStage({
         <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-10">
           <span className="en-lid-top absolute inset-x-0 top-0 h-1/2 bg-black shadow-[0_20px_40px_rgba(0,0,0,0.9)]" />
           <span className="en-lid-bottom absolute inset-x-0 bottom-0 h-1/2 bg-black shadow-[0_-20px_40px_rgba(0,0,0,0.9)]" />
+          {/* fresta de luz entre as pálpebras: o primeiro quadro nunca é só preto */}
+          <span className="en-slit absolute inset-x-[6%] top-1/2 h-[3px] -translate-y-1/2 bg-[linear-gradient(90deg,transparent,color-mix(in_oklab,var(--dv-gold-bright)_85%,transparent)_30%,var(--dv-porcelain)_50%,color-mix(in_oklab,var(--dv-gold-bright)_85%,transparent)_70%,transparent)] shadow-[0_0_24px_4px_color-mix(in_oklab,var(--dv-violet-text)_45%,transparent)]" />
         </div>
       )}
 

@@ -79,8 +79,10 @@ export function DubToggle({ className }: { className?: string }) {
       className={cn('dv-focus group flex min-h-11 min-w-11 items-center justify-center gap-1.5 px-1.5 font-mono text-[10px] uppercase tracking-[0.16em] transition-colors', on ? 'text-dv-text-2 hover:text-dv-text' : 'text-dv-text-3 hover:text-dv-text-2', className)}
     >
       <svg viewBox="0 0 24 24" aria-hidden="true" className="size-4" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M5 9h3l4-3.5v13L8 15H5Z" />
-        {on ? <path d="M15.5 9.5a3.5 3.5 0 0 1 0 5M18 7a7 7 0 0 1 0 10" /> : <path d="M16 9.5l5 5M21 9.5l-5 5" />}
+        {/* microfone de estúdio (diferente do alto-falante do som geral) */}
+        <rect x="9" y="3" width="6" height="11" rx="3" />
+        <path d="M6 11a6 6 0 0 0 12 0M12 17v4M9 21h6" />
+        {!on && <path d="M4 4l16 16" />}
       </svg>
       <span className="hidden min-[400px]:inline">Dublagem</span>
     </button>
@@ -91,7 +93,7 @@ export type PlateTone = 'cobalt' | 'gold' | 'void' | 'system'
 
 const PLATE: Record<PlateTone, { fill: string; edge: string; name: string }> = {
   cobalt: { fill: 'bg-[linear-gradient(100deg,var(--dv-night),var(--dv-cobalt-deep)_60%,var(--dv-cobalt))]', edge: 'bg-dv-gold', name: 'text-white' },
-  gold: { fill: 'bg-[linear-gradient(100deg,var(--dv-gold-deep),#8a7650_55%,var(--dv-gold))]', edge: 'bg-dv-gold-bright', name: 'text-dv-ink' },
+  gold: { fill: 'bg-[linear-gradient(100deg,var(--dv-gold-deep),color-mix(in_oklab,var(--dv-gold)_60%,var(--dv-gold-deep))_55%,var(--dv-gold))]', edge: 'bg-dv-gold-bright', name: 'text-dv-ink' },
   void: { fill: 'bg-[linear-gradient(100deg,#000,var(--dv-ink-3)_70%,var(--dv-ink-4))]', edge: 'bg-dv-gold', name: 'text-dv-gold-bright' },
   system: { fill: 'bg-[linear-gradient(100deg,var(--dv-ink),var(--dv-cobalt-dim)_70%,var(--dv-cobalt-deep))]', edge: 'bg-dv-cobalt-text', name: 'text-dv-cobalt-text' },
 }

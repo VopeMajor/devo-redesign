@@ -147,21 +147,30 @@ if (want('novato')) {
     // A cortina "Despertando" dispara logo depois do recarregamento: a espera começa antes do Enter.
     await page.keyboard.press('Enter')
     // Atravessa o recarregamento: procura o rótulo da cortina a cada 100ms (até 20s).
-    for (let k = 0; k < 200; k++) {
-      const seen = await page.getByText('Despertando', { exact: true }).count().catch(() => 0)
-      if (seen) break
-      await wait(100)
-    }
-    await wait(750)
+    // A cortina é um role=status com o rótulo; espera ela entrar (até 20s) e fotografa no meio (lâmina cobrindo).
+    await page.getByRole('status').filter({ hasText: 'Despertando' }).first().waitFor({ timeout: 20000 }).catch(() => {})
+    await wait(600)
     await shot(page, '03-transicao-despertando')
     await wait(3000)
   })
   await step('prologo', async () => {
     // O prólogo tem ~60 falas (cada uma: 1 Enter completa o texto, outro avança). Foto a cada 5 passos.
     let n = 0
+    let seenLook = false
     for (let i = 0; i < 220; i++) {
       await wait(800)
       if (i % 5 === 0) await shot(page, `03-prologo-${String(n++).padStart(2, '0')}`)
+      // Escolha da segunda aparência (DIRECAO-2 §5): foto do painel antes e depois da Seleção automática.
+      if (!seenLook && (await page.getByRole('radiogroup', { name: 'Tipo de aparência' }).count())) {
+        seenLook = true
+        await wait(700)
+        await shot(page, '03-prologo-aparencia')
+        await tryClick(btn(page, 'Seleção automática'), 1500)
+        await wait(500)
+        await shot(page, '03-prologo-aparencia-auto')
+        await tryClick(btn(page, 'Responder', true), 1500)
+        continue
+      }
       await advanceDialogue(page)
       const curtain = page.getByRole('status').filter({ hasText: 'Deadly Vote' })
       if (await curtain.count()) {

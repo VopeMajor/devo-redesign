@@ -236,3 +236,23 @@
 }
 .en-cut { animation: en-cut 700ms var(--dv-ease-in) both; }
 @media (prefers-reduced-motion: reduce) { .en-cut { animation: none; opacity: 0; } }
+
+/* Fresta de luz do primeiro quadro do prólogo: acende e se abre com as pálpebras. */
+@keyframes en-slit {
+  0% { opacity: 0; transform: translateY(-50%) scaleX(0.2); }
+  20% { opacity: 1; transform: translateY(-50%) scaleX(1); }
+  70% { opacity: 0.9; }
+  100% { opacity: 0; transform: translateY(-50%) scaleX(1.1) scaleY(6); }
+}
+.en-slit { animation: en-slit 1900ms var(--dv-ease-out) both; }
+
+/* O abismo: a fenda encolhe lá em cima; poeira sobe; os vultos giram devagar caindo. */
+@keyframes en-rift { from { transform: translateX(-50%) scale(1); opacity: 1; } to { transform: translateX(-50%) scale(0.45); opacity: 0.55; } }
+.en-rift { animation: en-rift 9s cubic-bezier(.2,.6,.3,1) both; transform-origin: 50% 0; }
+@keyframes en-streak { from { transform: translateY(110%); } to { transform: translateY(-640%); } }
+.en-streak { animation: en-streak 1200ms linear infinite; }
+@keyframes en-fall-a { from { transform: translateY(-28%) rotate(-10deg) scale(1.15); } to { transform: translateY(70%) rotate(24deg) scale(0.62); } }
+@keyframes en-fall-b { from { transform: translateY(-40%) rotate(8deg) scale(1.1); } to { transform: translateY(95%) rotate(-30deg) scale(0.55); } }
+.en-fall-a { animation: en-fall-a 10s cubic-bezier(.25,.4,.4,1) both; }
+.en-fall-b { animation: en-fall-b 11s cubic-bezier(.25,.4,.4,1) both; }
+@media (prefers-reduced-motion: reduce) { .en-slit, .en-streak { display: none; } }
