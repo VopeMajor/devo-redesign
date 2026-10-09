@@ -342,7 +342,7 @@ function Window({
       className={cn(
         'animate-dv-pop absolute flex flex-col overflow-hidden border bg-dv-ink/95 backdrop-blur-md transition-[box-shadow,border-color]',
         active
-          ? 'border-dv-cobalt/60 shadow-[0_30px_80px_-20px_rgba(0,0,0,0.95),0_0_32px_-10px_rgba(49,93,255,0.6)]'
+          ? 'border-dv-cobalt/60 shadow-[0_30px_80px_-20px_rgba(0,0,0,0.95),0_0_32px_-10px_rgba(138,124,200,0.6)]'
           : 'border-dv-line-strong shadow-[0_20px_50px_-20px_rgba(0,0,0,0.9)]',
         win.minimized && 'hidden',
       )}
@@ -355,7 +355,7 @@ function Window({
         onDoubleClick={() => onPatch({ maximized: !win.maximized })}
         className={cn(
           'relative flex h-11 shrink-0 cursor-grab touch-none select-none items-center justify-between gap-3 pl-2 pr-2 active:cursor-grabbing',
-          active ? 'bg-[linear-gradient(90deg,#13235e,var(--dv-ink-3)_45%,var(--dv-ink-2))]' : 'bg-dv-ink-2',
+          active ? 'bg-[linear-gradient(90deg,#2b2540,var(--dv-ink-3)_45%,var(--dv-ink-2))]' : 'bg-dv-ink-2',
         )}
       >
         <span aria-hidden="true" className="absolute inset-x-0 bottom-0 h-px">

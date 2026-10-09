@@ -45,7 +45,7 @@ export function PulsoApp() {
           'pointer-events-none absolute inset-x-0 top-0 h-[520px]',
           critical
             ? 'animate-dv-alert bg-[radial-gradient(60%_50%_at_50%_40%,rgba(213,31,43,0.28),transparent_70%)]'
-            : 'bg-[radial-gradient(60%_50%_at_50%_40%,rgba(49,93,255,0.22),transparent_70%)]',
+            : 'bg-[radial-gradient(60%_50%_at_50%_40%,rgba(138,124,200,0.22),transparent_70%)]',
         )}
       />
       <div className="relative flex flex-col gap-5 px-4 pb-8 pt-4 @2xl:flex-row @2xl:items-start @2xl:gap-8 @2xl:px-6">

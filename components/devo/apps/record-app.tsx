@@ -296,7 +296,7 @@ function ConvocationPoster({
             {Array.from({ length: slots }, (_, i) => (
               <span
                 key={i}
-                className={cn('h-2 flex-1 -skew-x-[20deg]', i < filled ? (full ? 'bg-dv-blood' : 'bg-dv-cobalt shadow-[0_0_6px_rgba(49,93,255,0.6)]') : 'bg-dv-ink-4')}
+                className={cn('h-2 flex-1 -skew-x-[20deg]', i < filled ? (full ? 'bg-dv-blood' : 'bg-dv-cobalt shadow-[0_0_6px_rgba(138,124,200,0.6)]') : 'bg-dv-ink-4')}
               />
             ))}
           </div>

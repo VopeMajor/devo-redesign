@@ -42,7 +42,7 @@ const LINE: Record<ButtonVariant, string> = {
 
 const FILL: Record<ButtonVariant, string> = {
   primary:
-    'bg-[linear-gradient(180deg,#1b3bd6_0%,#0f2380_48%,#0a1446_100%)] group-enabled:group-hover:bg-[linear-gradient(180deg,#2448f0_0%,#13299a_48%,#0b1852_100%)]',
+    'bg-[linear-gradient(180deg,#5a4f8f_0%,#3b3366_48%,#1f1b38_100%)] group-enabled:group-hover:bg-[linear-gradient(180deg,#6b5fa8_0%,#463d78_48%,#262044_100%)]',
   secondary: 'bg-[linear-gradient(180deg,var(--dv-ink-3),var(--dv-ink))]',
   ghost: '',
   danger: 'bg-[linear-gradient(180deg,#8a0f18_0%,#4a0a0f_60%,#22060a_100%)] group-enabled:group-hover:bg-[linear-gradient(180deg,#a5131d_0%,#5a0a10_60%,#2a060a_100%)]',

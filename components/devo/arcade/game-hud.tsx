@@ -27,8 +27,8 @@ export function PopLayer({ pops }: { pops: Pop[] }) {
           key={p.id}
           className={cn(
             'animate-[devo-pop_0.35s_ease-out] font-mono text-2xl font-bold uppercase tracking-[0.2em] [text-shadow:0_0_18px_currentColor] md:text-3xl',
-            p.tone === 'gold' && 'text-[#6f8cff]',
-            p.tone === 'red' && 'text-[#8fa6ff]',
+            p.tone === 'gold' && 'text-[#c2b9ec]',
+            p.tone === 'red' && 'text-[#c2b9ec]',
             p.tone === 'white' && 'text-foreground',
           )}
         >
@@ -96,12 +96,12 @@ export function ScoreChip({ label, value, active, tone = 'me' }: { label: string
     <div
       className={cn(
         'flex min-w-0 flex-col border px-2.5 py-1 transition-colors',
-        tone === 'me' ? 'border-[#6f8cff]/40' : 'border-primary/40',
-        active && (tone === 'me' ? 'bg-[#6f8cff]/10' : 'bg-primary/15'),
+        tone === 'me' ? 'border-[#c2b9ec]/40' : 'border-primary/40',
+        active && (tone === 'me' ? 'bg-[#c2b9ec]/10' : 'bg-primary/15'),
       )}
     >
       <span className="truncate text-[9px] uppercase tracking-[0.25em] text-foreground/50">{label}</span>
-      <span className={cn('font-mono text-base tabular-nums leading-tight', tone === 'me' ? 'text-[#6f8cff]' : 'text-[#8fa6ff]')}>{value}</span>
+      <span className={cn('font-mono text-base tabular-nums leading-tight', tone === 'me' ? 'text-[#c2b9ec]' : 'text-[#c2b9ec]')}>{value}</span>
     </div>
   )
 }

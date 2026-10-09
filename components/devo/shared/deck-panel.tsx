@@ -147,19 +147,19 @@ export function CardShuffler({ synced, onShuffle, className }: { synced: boolean
               <stop offset="100%" stopColor="#ecd49a" />
             </linearGradient>
             <radialGradient id="dvshuf-face" cx="50%" cy="45%" r="60%">
-              <stop offset="0%" stopColor="#13235e" />
+              <stop offset="0%" stopColor="#2b2540" />
               <stop offset="70%" stopColor="#0a0f1c" />
               <stop offset="100%" stopColor="#05070d" />
             </radialGradient>
             <radialGradient id="dvshuf-iris" cx="50%" cy="50%" r="50%">
               <stop offset="0%" stopColor="#d6e0ff" />
               <stop offset="25%" stopColor="#7d97ff" />
-              <stop offset="62%" stopColor="#1647ff" />
+              <stop offset="62%" stopColor="#8a7cc8" />
               <stop offset="100%" stopColor="#0b1a4d" />
             </radialGradient>
             <radialGradient id="dvshuf-glow" cx="50%" cy="50%" r="50%">
-              <stop offset="55%" stopColor="#315dff" stopOpacity="0.35" />
-              <stop offset="100%" stopColor="#315dff" stopOpacity="0" />
+              <stop offset="55%" stopColor="#8a7cc8" stopOpacity="0.35" />
+              <stop offset="100%" stopColor="#8a7cc8" stopOpacity="0" />
             </radialGradient>
           </defs>
 
@@ -212,7 +212,7 @@ export function CardShuffler({ synced, onShuffle, className }: { synced: boolean
 
           {/* anéis armilares (cobalto) */}
           <g style={spin(40, 1.6, true)}>
-            <ellipse cx="100" cy="100" rx="66" ry="20" fill="none" stroke="#315dff" strokeOpacity="0.75" strokeWidth="1.1" transform="rotate(-24 100 100)" />
+            <ellipse cx="100" cy="100" rx="66" ry="20" fill="none" stroke="#8a7cc8" strokeOpacity="0.75" strokeWidth="1.1" transform="rotate(-24 100 100)" />
             <circle cx="160.3" cy="73.2" r="2.4" fill="#7d97ff" />
           </g>
           <g style={spin(55, 2, false)}>
@@ -241,8 +241,8 @@ export function CardShuffler({ synced, onShuffle, className }: { synced: boolean
                     }
                   >
                     <rect x="-7" y="-10" width="14" height="20" rx="1.2" fill="#efe6d2" stroke="#c9a45c" strokeWidth="0.8" />
-                    <rect x="-5" y="-8" width="10" height="16" rx="0.6" fill="none" stroke="#1647ff" strokeOpacity="0.55" strokeWidth="0.5" />
-                    <path d="M0 -4.5 L3 0 L0 4.5 L-3 0 Z" fill="#1647ff" />
+                    <rect x="-5" y="-8" width="10" height="16" rx="0.6" fill="none" stroke="#8a7cc8" strokeOpacity="0.55" strokeWidth="0.5" />
+                    <path d="M0 -4.5 L3 0 L0 4.5 L-3 0 Z" fill="#8a7cc8" />
                   </g>
                 </g>
               )

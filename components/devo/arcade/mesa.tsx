@@ -259,7 +259,7 @@ function Hero({
 
         <div className="mt-4">
           {isLive ? (
-            <p className="flex items-center gap-3 font-impact text-[40px] font-bold uppercase leading-none text-dv-cobalt-text [text-shadow:0_0_18px_rgba(49,93,255,0.6)]">
+            <p className="flex items-center gap-3 font-impact text-[40px] font-bold uppercase leading-none text-dv-cobalt-text [text-shadow:0_0_18px_rgba(138,124,200,0.6)]">
               <span aria-hidden="true" className="size-3 animate-dv-blink rounded-full bg-dv-cobalt shadow-[0_0_14px_var(--dv-cobalt)]" />
               Ao vivo
             </p>

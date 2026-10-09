@@ -12,10 +12,10 @@ import { roomOutcome, useOnlineGate, useRoom } from '../use-room'
 
 const SYMBOLS: { icon: LucideIcon; color: string }[] = [
   { icon: Skull, color: '#eceef2' },
-  { icon: Crown, color: '#6f8cff' },
+  { icon: Crown, color: '#c2b9ec' },
   { icon: Dice5, color: '#c9a7ff' },
   { icon: Spade, color: '#9fb4ff' },
-  { icon: Heart, color: '#8fa6ff' },
+  { icon: Heart, color: '#c2b9ec' },
   { icon: Club, color: '#7fe0a6' },
   { icon: Diamond, color: '#ffb36b' },
   { icon: Moon, color: '#b8d8ff' },
@@ -271,12 +271,12 @@ export default function MemoryRush({ start, onFinish, onQuit }: GameProps) {
       accent={meta.accent}
       onQuit={onQuit}
       top={
-        <span className={cn('font-mono text-lg tabular-nums', lastTen ? 'animate-pulse text-[#8fa6ff]' : 'text-foreground')}>
+        <span className={cn('font-mono text-lg tabular-nums', lastTen ? 'animate-pulse text-[#c2b9ec]' : 'text-foreground')}>
           {String(Math.floor(secs / 60)).padStart(2, '0')}:{String(secs % 60).padStart(2, '0')}
         </span>
       }
     >
-      <div className={cn('pointer-events-none absolute inset-0 z-0 transition-opacity duration-500', lastTen ? 'opacity-100' : 'opacity-0')} style={{ boxShadow: 'inset 0 0 120px #1647ff66' }} />
+      <div className={cn('pointer-events-none absolute inset-0 z-0 transition-opacity duration-500', lastTen ? 'opacity-100' : 'opacity-0')} style={{ boxShadow: 'inset 0 0 120px #8a7cc866' }} />
       <div className="relative z-10 flex shrink-0 items-stretch gap-2 px-3 pt-3">
         <ScoreChip label="Você" value={shownScore(me.score)} active={diff >= 0} />
         <div className="flex flex-1 flex-col items-center justify-center text-center">
@@ -284,7 +284,7 @@ export default function MemoryRush({ start, onFinish, onQuit }: GameProps) {
             {me.pairs} x {opp.pairs} pares · combo x{Math.max(1, Math.min(me.combo, 5))}
           </span>
           {status && (
-            <span className={cn('mt-0.5 font-mono text-[11px] uppercase tracking-[0.2em]', diff < 0 ? 'text-[#8fa6ff]' : 'text-[#6f8cff]')}>{status}</span>
+            <span className={cn('mt-0.5 font-mono text-[11px] uppercase tracking-[0.2em]', diff < 0 ? 'text-[#c2b9ec]' : 'text-[#c2b9ec]')}>{status}</span>
           )}
         </div>
         <ScoreChip label={start.opponent.name} value={shownScore(opp.score)} active={diff < 0} tone="opp" />
@@ -313,13 +313,13 @@ export default function MemoryRush({ start, onFinish, onQuit }: GameProps) {
                     oppFlash.includes(c.id) && 'animate-pulse',
                   )}
                 >
-                  <span className="absolute inset-0 grid place-items-center border border-[#315dff]/30 bg-gradient-to-br from-[#1b1310] to-[#0c0807] [backface-visibility:hidden]">
-                    <span className="size-1/3 rotate-45 border border-[#315dff]/40" />
+                  <span className="absolute inset-0 grid place-items-center border border-[#8a7cc8]/30 bg-gradient-to-br from-[#1b1310] to-[#0c0807] [backface-visibility:hidden]">
+                    <span className="size-1/3 rotate-45 border border-[#8a7cc8]/40" />
                   </span>
                   <span
                     className={cn(
                       'absolute inset-0 grid place-items-center border bg-[#140f0d] [backface-visibility:hidden] [transform:rotateY(180deg)]',
-                      c.owner === 'me' ? 'border-[#6f8cff]' : c.owner === 'opp' || peek ? 'border-primary' : 'border-foreground/40',
+                      c.owner === 'me' ? 'border-[#c2b9ec]' : c.owner === 'opp' || peek ? 'border-primary' : 'border-foreground/40',
                     )}
                   >
                     <S.icon className="size-1/2" style={{ color: S.color }} strokeWidth={1.6} />

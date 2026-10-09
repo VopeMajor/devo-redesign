@@ -51,7 +51,7 @@ export function PulseDial({
           <stop offset="1" stopColor="var(--dv-gold-bright)" />
         </linearGradient>
         <radialGradient id={`f-${uid}`} cx="0.5" cy="0.42" r="0.6">
-          <stop offset="0" stopColor={critical ? '#3a0a12' : '#13235e'} stopOpacity="0.95" />
+          <stop offset="0" stopColor={critical ? '#3a0a12' : '#2b2540'} stopOpacity="0.95" />
           <stop offset="0.65" stopColor="#0a0f1c" stopOpacity="0.92" />
           <stop offset="1" stopColor="#05070d" stopOpacity="0.96" />
         </radialGradient>
@@ -144,7 +144,7 @@ export function PulseDial({
         strokeDasharray={arcCirc}
         strokeDashoffset={arcCirc * (1 - ratio)}
         transform={`rotate(-90 ${C} ${C})`}
-        style={{ filter: `drop-shadow(0 0 7px ${critical ? 'rgba(213,31,43,0.9)' : 'rgba(49,93,255,0.9)'})` }}
+        style={{ filter: `drop-shadow(0 0 7px ${critical ? 'rgba(213,31,43,0.9)' : 'rgba(138,124,200,0.9)'})` }}
         className="transition-[stroke-dashoffset] duration-1000 ease-linear"
       />
       {ratio > 0 && (

@@ -15,7 +15,7 @@ const REACTIONS: Record<ReactionId, { label: string; icon?: LucideIcon; text?: s
   caveira: { label: 'Caveira', icon: Skull, color: '#e8e8ee' },
   kkk: { label: 'Risada', text: 'KKK', color: '#e2b95c' },
   choque: { label: 'Choque', icon: Zap, color: '#5ec8e8' },
-  coracao: { label: 'Coração', icon: Heart, color: '#8fa6ff' },
+  coracao: { label: 'Coração', icon: Heart, color: '#c2b9ec' },
   f: { label: 'F', text: 'F', color: '#c08bff' },
   rato: { label: 'Rato', icon: Rat, color: '#8a90a0' },
 }

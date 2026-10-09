@@ -39,7 +39,7 @@ function Portrait({ npcId, size = 52, className }: { npcId: string; size?: numbe
     <span aria-hidden="true" className={cn('shrink-0', className)} style={{ width: size }}>
       <PortraitFrame alt="" {...(art ?? {})} tone={PORTRAIT_TONE[npcId] ?? 'neutral'} shape="round" className="w-full">
         {art ? null : (
-          <span className="grid size-full place-items-center font-impact text-[26px] font-bold text-dv-text-2 [text-shadow:2px_0_0_rgba(213,31,43,0.6),-2px_0_0_rgba(49,93,255,0.6)]">?</span>
+          <span className="grid size-full place-items-center font-impact text-[26px] font-bold text-dv-text-2 [text-shadow:2px_0_0_rgba(213,31,43,0.6),-2px_0_0_rgba(138,124,200,0.6)]">?</span>
         )}
       </PortraitFrame>
     </span>
@@ -211,7 +211,7 @@ function Conversation({ threadId, onBack }: { threadId: string; onBack: () => vo
     <section className="animate-dv-slide-left relative isolate flex min-w-0 flex-1 flex-col overflow-hidden" aria-label={`Conversa com ${npc.name}`}>
       {/* retrato grande ao fundo, como numa cena */}
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10">
-        <div className="absolute inset-0 bg-[radial-gradient(70%_50%_at_85%_35%,rgba(49,93,255,0.16),transparent_70%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(70%_50%_at_85%_35%,rgba(138,124,200,0.16),transparent_70%)]" />
         <div className="absolute -right-12 top-10 h-[62%] w-[78%] opacity-[0.17] [-webkit-mask-image:radial-gradient(ellipse_55%_50%_at_60%_42%,#000_35%,transparent_78%)] [mask-image:radial-gradient(ellipse_55%_50%_at_60%_42%,#000_35%,transparent_78%)]">
           {portrait ? (
             <Image src={portrait} alt="" fill sizes="320px" className="object-contain object-right-top" />
@@ -269,7 +269,7 @@ function Conversation({ threadId, onBack }: { threadId: string; onBack: () => vo
                   <span aria-hidden="true" className="dv-cut-diag absolute inset-0 -z-10 bg-[linear-gradient(100deg,#a9bbff,var(--dv-cobalt)_35%,var(--dv-cobalt-deep))]" />
                   <span
                     aria-hidden="true"
-                    className="dv-cut-diag dv-sheen absolute inset-px -z-10 overflow-hidden bg-[linear-gradient(100deg,#13235e,var(--dv-cobalt-dim)_55%,var(--dv-ink-2))] transition-colors group-enabled:group-hover:bg-[linear-gradient(100deg,#1b3bd6,#0f2380_55%,var(--dv-ink-2))]"
+                    className="dv-cut-diag dv-sheen absolute inset-px -z-10 overflow-hidden bg-[linear-gradient(100deg,#2b2540,var(--dv-cobalt-dim)_55%,var(--dv-ink-2))] transition-colors group-enabled:group-hover:bg-[linear-gradient(100deg,#5a4f8f,#3b3366_55%,var(--dv-ink-2))]"
                     style={{ '--dv-cut': '9.6px' } as CSSProperties}
                   />
                   <span aria-hidden="true" className="dv-cut-diag absolute inset-px -z-10 bg-white opacity-0 transition-opacity duration-[120ms] group-enabled:group-active:opacity-15" style={{ '--dv-cut': '9.6px' } as CSSProperties} />

@@ -193,12 +193,12 @@ export function Agenda({
                 className={cn('relative flex animate-dv-rise gap-3 py-2', past && 'opacity-50')}
                 style={{ animationDelay: `${Math.min(i, 7) * 60}ms` }}
               >
-                {isNow && <span aria-hidden="true" className="absolute inset-y-0 -left-3 -right-3 -z-0 bg-[linear-gradient(90deg,rgba(49,93,255,0.22),rgba(49,93,255,0.05)_70%,transparent)]" />}
+                {isNow && <span aria-hidden="true" className="absolute inset-y-0 -left-3 -right-3 -z-0 bg-[linear-gradient(90deg,rgba(138,124,200,0.22),rgba(138,124,200,0.05)_70%,transparent)]" />}
                 <span
                   className={cn(
                     'relative grid size-11 shrink-0 place-items-center rounded-full border font-mono text-[11px] tracking-[0.08em]',
                     isNow
-                      ? 'border-dv-cobalt bg-dv-cobalt-dim text-white shadow-[0_0_18px_rgba(49,93,255,0.6)]'
+                      ? 'border-dv-cobalt bg-dv-cobalt-dim text-white shadow-[0_0_18px_rgba(138,124,200,0.6)]'
                       : 'border-dv-gold/50 bg-dv-ink text-dv-gold',
                   )}
                 >

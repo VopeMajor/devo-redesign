@@ -36,7 +36,7 @@ export function Searching({ gameId, duel, onCancel }: { gameId: GameId; duel: bo
               <span className={cn('absolute left-0 top-0 w-px bg-dv-gold', i % 3 === 0 ? 'h-3' : 'h-1.5 opacity-60')} />
             </span>
           ))}
-          <span className="absolute inset-0 animate-dv-spin rounded-full bg-[conic-gradient(from_0deg,rgba(49,93,255,0.55),rgba(49,93,255,0)_28%,transparent_100%)] [animation-duration:2.6s]" />
+          <span className="absolute inset-0 animate-dv-spin rounded-full bg-[conic-gradient(from_0deg,rgba(138,124,200,0.55),rgba(138,124,200,0)_28%,transparent_100%)] [animation-duration:2.6s]" />
           <span className="absolute left-[68%] top-[30%] size-2 animate-dv-blink rounded-full bg-dv-cobalt-text shadow-[0_0_10px_var(--dv-cobalt)]" />
           <span className="absolute left-[24%] top-[62%] size-1.5 animate-dv-blink rounded-full bg-dv-gold [animation-delay:-0.5s]" />
           <span className="dv-cut absolute inset-[34%] overflow-hidden" style={{ '--dv-cut': '12px' } as CSSProperties}>

@@ -191,7 +191,7 @@ export function CorujaIntro() {
       aria-label="Coruja"
       className={cn('absolute inset-0 z-20 flex flex-col overflow-hidden bg-[#05060c] transition-opacity duration-700', leaving && 'opacity-0')}
     >
-      <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_70%_30%,rgba(216,178,90,0.12),transparent_60%),radial-gradient(ellipse_at_20%_80%,rgba(49,93,255,0.08),transparent_55%)]" />
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_70%_30%,rgba(216,178,90,0.12),transparent_60%),radial-gradient(ellipse_at_20%_80%,rgba(138,124,200,0.08),transparent_55%)]" />
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 opacity-[0.07] [background-image:radial-gradient(#d8b25a_1px,transparent_1px)] [background-size:22px_22px]" />
 
       <header className="relative z-10 flex items-center gap-3 px-4 pt-3 @md:px-5">

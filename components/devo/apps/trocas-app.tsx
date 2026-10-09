@@ -16,7 +16,7 @@ import { ActionButton, Panel, SectionLabel, TypingDots } from './app-ui'
 const STATUS_META: Record<Room['status'], { label: string; dot: string }> = {
   livre: { label: 'Livre', dot: 'bg-foreground/70' },
   ocupada: { label: 'Ocupada', dot: 'bg-primary' },
-  sua: { label: 'Sua sala', dot: 'bg-[#6f8cff]' },
+  sua: { label: 'Sua sala', dot: 'bg-[#c2b9ec]' },
 }
 
 const RULES = TRADE_PROTOCOL
@@ -151,7 +151,7 @@ function TradeRoom({ trade }: { trade: TradeSession }) {
         </header>
         <RoomRuleBanner rule={rule} expanded={trade.stage === 'placing'} />
 
-        <div className="relative flex flex-1 flex-col items-center justify-between gap-4 bg-[radial-gradient(ellipse_at_center,rgba(22,71,255,0.12),transparent_65%)] px-5 py-6">
+        <div className="relative flex flex-1 flex-col items-center justify-between gap-4 bg-[radial-gradient(ellipse_at_center,rgba(138,124,200,0.12),transparent_65%)] px-5 py-6">
           <Seat
             label="Espaço do outro"
             name={trade.partner?.handle ?? 'Vazio'}
@@ -231,7 +231,7 @@ function Seat({
         <p
           className={cn(
             'flex items-center gap-1.5 border px-2 py-0.5 text-[10px] uppercase tracking-[0.25em] transition-colors',
-            accepted ? 'border-[#6f8cff]/70 text-[#6f8cff]' : 'border-foreground/15 text-muted-foreground',
+            accepted ? 'border-[#c2b9ec]/70 text-[#c2b9ec]' : 'border-foreground/15 text-muted-foreground',
           )}
         >
           {accepted && <Check className="size-3" />}

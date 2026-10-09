@@ -41,7 +41,7 @@ const LINE = {
   danger: 'bg-[linear-gradient(100deg,var(--dv-blood-text),var(--dv-blood)_45%,var(--dv-blood-deep))]',
 } as const
 const FILL = {
-  primary: 'bg-[linear-gradient(180deg,#1b3bd6_0%,#0f2380_48%,#0a1446_100%)]',
+  primary: 'bg-[linear-gradient(180deg,#5a4f8f_0%,#3b3366_48%,#1f1b38_100%)]',
   ghost: 'bg-[linear-gradient(180deg,var(--dv-ink-3),var(--dv-ink))]',
   danger: 'bg-[linear-gradient(180deg,#8a0f18_0%,#4a0a0f_60%,#22060a_100%)]',
 } as const

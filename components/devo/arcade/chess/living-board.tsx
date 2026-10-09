@@ -818,7 +818,7 @@ function TitanLights() {
         shadow-mapSize={[2048, 2048]}
         shadow-bias={-0.0004}
       />
-      <pointLight position={[-9, 6, -9]} intensity={0.7 * LEGACY} distance={40} decay={1} color="#6f8cff" />
+      <pointLight position={[-9, 6, -9]} intensity={0.7 * LEGACY} distance={40} decay={1} color="#c2b9ec" />
     </>
   )
 }

@@ -10,10 +10,10 @@ import { cn } from '@/lib/utils'
 
 export const BORDER_META: Record<BorderTier, { label: string; color: string; glow: string }> = {
   padrao: { label: 'Borda Padrão', color: '#5b6170', glow: 'transparent' },
-  azul: { label: 'Borda Azul · Top 10', color: '#6f8cff', glow: '#6f8cff66' },
+  azul: { label: 'Borda Azul · Top 10', color: '#c2b9ec', glow: '#c2b9ec66' },
   prata: { label: 'Borda Prata · Top 3', color: '#d3dae8', glow: '#d3dae855' },
   ouro: { label: 'Borda Ouro · #1 da semana', color: '#e2b95c', glow: '#e2b95c77' },
-  dealer: { label: 'Borda Dealer', color: '#8fa6ff', glow: '#8fa6ff66' },
+  dealer: { label: 'Borda Dealer', color: '#c2b9ec', glow: '#c2b9ec66' },
 }
 
 const ROLE_LABEL: Record<string, string> = { player: 'Participante', dealer: 'Dealer', admin: 'Administrador' }
@@ -142,7 +142,7 @@ function ProfileBody({ data, tier }: { data: MiniProfile; tier: (typeof BORDER_M
             )}
           </Cell>
           <Cell label="Deadly Votes" className="border-l border-white/10" sub={`S ${data.deadlyVotes.survived} · E ${data.deadlyVotes.eliminated}`}>
-            <span className="text-[#8fa6ff]">{String(data.deadlyVotes.total).padStart(2, '0')}</span>
+            <span className="text-[#c2b9ec]">{String(data.deadlyVotes.total).padStart(2, '0')}</span>
           </Cell>
           <Cell label="Vitórias" className="border-l border-white/10" sub={`${data.week.games} partidas`}>
             <span className="text-white">{String(data.week.wins).padStart(2, '0')}</span>
