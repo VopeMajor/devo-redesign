@@ -17,7 +17,7 @@ import { prologueLineId } from '@/lib/devo/voice-lines'
 import { useAdvanceKeys } from '../hooks'
 import { useDevo } from '../state/devo-store'
 import { Button } from '../kit/button'
-import { GlyphCard, toRoman } from '../kit/glyphs'
+import { GlyphCard, GlyphSpark, toRoman } from '../kit/glyphs'
 import { PrologueStage } from './prologue-stage'
 import { AdvanceIndicator, ChoiceHeader, ChoiceStrip, DialogueShell, SpeakerPlate, VnTopBar, useTypewriter, useVoicedLine } from './vn'
 
@@ -154,10 +154,25 @@ function FaceInput({ gender, age, onSubmit }: { gender?: string; age?: number; o
           </button>
         ))}
       </div>
-      <div className="flex min-w-0 flex-col gap-1.5">
-        <label htmlFor="pr-appearance" className="dv-label text-[10px] text-dv-text-2">
-          Nome da aparência
-        </label>
+      <div className="flex min-w-0 flex-col gap-1">
+        <div className="flex items-end justify-between gap-2">
+          <label htmlFor="pr-appearance" className="dv-label pb-1 text-[10px] text-dv-text-2">
+            Nome da aparência
+          </label>
+          {/* Seleção automática: lista preparada por tipo, sexo e faixa etária (sorteia outra a cada toque). */}
+          <button
+            type="button"
+            onClick={() => {
+              playSfx('card')
+              setName(autoAppearance(kind, gender, age, name))
+              setAuto(true)
+            }}
+            className="dv-focus group -mr-1 flex min-h-11 items-center gap-1.5 px-1 font-mono text-[11px] uppercase tracking-[0.14em] text-dv-gold-bright transition-colors hover:text-dv-text"
+          >
+            <GlyphSpark className="size-3 transition-transform duration-[360ms] group-hover:rotate-90 group-active:scale-90" />
+            <span className="border-b border-dv-gold/50 pb-px">Seleção automática</span>
+          </button>
+        </div>
         <input
           id="pr-appearance"
           autoFocus
@@ -171,23 +186,11 @@ function FaceInput({ gender, age, onSubmit }: { gender?: string; age?: number; o
           placeholder={kind === 'art' ? `Ex.: ${pool[0] ?? 'personagem'}` : `Ex.: ${pool[0] ?? 'ator ou atriz'}`}
           className={fieldClass}
         />
+        {auto && <span className="dv-label pt-1 text-[10px] text-dv-amethyst-text">Escolhida da lista · toque de novo para sortear outra</span>}
       </div>
-      <div className="flex items-center justify-between gap-2">
-        <Button
-          variant="secondary"
-          size="sm"
-          sfx="card"
-          onClick={() => {
-            setName(autoAppearance(kind, gender, age, name))
-            setAuto(true)
-          }}
-        >
-          Seleção automática
-        </Button>
-        <Button type="submit" size="sm" disabled={!valid} sfx="confirm">
-          Responder
-        </Button>
-      </div>
+      <Button type="submit" size="md" block disabled={!valid} sfx="confirm">
+        Responder
+      </Button>
       <p className="font-sans text-[12px] leading-snug text-dv-text-3">Você poderá trocar de aparência por afinidade dentro do jogo, uma única vez.</p>
     </form>
   )
@@ -427,7 +430,7 @@ export function PrologueScreen({ playerName, onFinish: onDone }: { playerName: s
           act ? (
             <p className="dv-label flex items-start gap-2 text-[10px] text-dv-text-2">
               <span className="font-impact text-[15px] leading-none tracking-normal text-dv-gold">{toRoman(act.n)}</span>
-              <span className="pt-px leading-[1.35] [text-wrap:balance]">{act.title}</span>
+              <span className="pt-px leading-[1.35] tracking-[0.12em]">{act.title}</span>
             </p>
           ) : null
         }

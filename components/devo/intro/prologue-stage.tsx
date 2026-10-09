@@ -304,7 +304,7 @@ export function PrologueStage({
       <Layer on={stage === 'abyss'}>
         {(stage === 'abyss' || stage === 'death') && (
         <>
-        <div className="en-rift absolute left-1/2 top-[8%] h-[24%] w-[44%] -translate-x-1/2">
+        <div className="en-rift absolute left-1/2 top-[13%] h-[24%] w-[44%] -translate-x-1/2">
           <div className="absolute -inset-[60%] bg-[radial-gradient(ellipse_26%_44%_at_50%_34%,color-mix(in_oklab,var(--dv-gold-bright)_20%,transparent),transparent_70%)]" />
           <div className="absolute inset-0 bg-dv-gold-bright/85 blur-[0.6px] [clip-path:polygon(47%_0,57%_0,53%_20%,62%_38%,52%_60%,58%_100%,47%_72%,40%_47%,50%_27%)]" />
         </div>
