@@ -1,8 +1,10 @@
 'use client'
 
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { playSfx } from '@/lib/devo/audio'
 import { INTRO_SCRIPT } from '@/lib/devo/intro-script'
+import { isDubbingOn, loadVoiceManifest, playRatoLaugh } from '@/lib/devo/voice'
+import { LAST_RATO_LINE, tutorialLineId } from '@/lib/devo/voice-lines'
 import { getNpc, portraitFrameProps, type Expression } from '@/lib/devo/npcs'
 import { withName } from '@/lib/devo/player-name'
 import { cn } from '@/lib/utils'
@@ -11,7 +13,7 @@ import { GlyphSpark, toRoman } from '../kit/glyphs'
 import { PortraitFrame } from '../kit/portrait'
 import { SceneBackdrop } from '../kit/scene'
 import { TutorialVisualPanel } from './tutorial-visuals'
-import { AdvanceIndicator, DialogueShell, SpeakerPlate, VnTopBar, useTypewriter } from './vn'
+import { AdvanceIndicator, DialogueShell, SpeakerPlate, VnTopBar, useTypewriter, useVoicedLine } from './vn'
 
 const CHAR_MS = 24
 
@@ -54,7 +56,33 @@ export function IntroScreen({ onFinish, playerName }: { onFinish: () => void; pl
   const script = INTRO_SCRIPT[index]
   const line = { ...script, text: withName(script.text, playerName) }
   const npc = getNpc(line.speaker)
-  const { shown, done, finish } = useTypewriter(line.text, CHAR_MS)
+  const isLastRato = index === LAST_RATO_LINE
+  const charMs = useVoicedLine(
+    { id: tutorialLineId(index), text: line.text, cast: line.speaker === 'rato' ? 'rato' : 'herdeiro' },
+    CHAR_MS,
+    // A risadinha do Rato fecha a última fala dele.
+    isLastRato ? () => window.setTimeout(playRatoLaugh, 120) : undefined,
+  )
+  const { shown, done, finish } = useTypewriter(line.text, charMs)
+
+  useEffect(() => {
+    void loadVoiceManifest()
+  }, [])
+
+  // KABUM!: explosão no mesmo instante em que o letreiro bate no diagrama (en-kabum: 760ms).
+  useEffect(() => {
+    if (line.visual !== 'reveal') return
+    const t = window.setTimeout(() => playSfx('explosion'), 760)
+    return () => window.clearTimeout(t)
+  }, [index, line.visual])
+
+  // Sem dublagem (ou sem voz), a risadinha ainda acontece quando a fala do Rato termina de aparecer.
+  const laughed = useRef(-1)
+  useEffect(() => {
+    if (!isLastRato || !done || laughed.current === index || isDubbingOn()) return
+    laughed.current = index
+    playRatoLaugh()
+  }, [done, isLastRato, index])
   const last = index === INTRO_SCRIPT.length - 1
   const total = INTRO_SCRIPT.length
 

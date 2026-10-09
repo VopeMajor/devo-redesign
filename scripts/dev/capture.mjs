@@ -139,6 +139,8 @@ if (want('novato')) {
     await wait(1500)
     await shot(page, '02-acesso-cadastro')
     await page.locator('#devo-user').fill('Aurora')
+    // Nome do personagem (DIRECAO-2 §5): é como os NPCs chamam o jogador.
+    await page.locator('#devo-char').fill('Lune Arcanjo')
     await page.locator('#devo-pass').fill('teste123')
     await page.locator('#devo-pass2').fill('teste123')
     await shot(page, '02-acesso-preenchido')

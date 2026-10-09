@@ -32,6 +32,16 @@ export type Sfx =
   | 'heartbeat'
   | 'whisper'
   | 'drip'
+  /** Explosão/impacto (o "KABUM!" do tutorial). */
+  | 'explosion'
+  /** Risadinha do Rato sintetizada (reserva quando não há a dublada). */
+  | 'laugh'
+  /** Corte de lâmina (faixa vermelha da queda). */
+  | 'slash'
+  /** Brilho de vidro/espelho. */
+  | 'shimmer'
+  /** Impacto grave curto (cortes de cena, cartão de ato). */
+  | 'thud'
 
 let ctx: AudioContext | null = null
 let master: GainNode | null = null
@@ -117,6 +127,34 @@ function noise(dur: number, opts: NoiseOpts = {}) {
 export function playSfx(kind: Sfx) {
   if (muted) return
   switch (kind) {
+    case 'explosion':
+      // estalo + corpo grave + cauda de detritos
+      noise(0.08, { gain: 0.5, freq: 2400, q: 0.5 })
+      noise(1.4, { gain: 0.42, freq: 380, q: 0.4, sweepTo: 60 })
+      noise(0.9, { gain: 0.2, freq: 1600, q: 0.8, delay: 0.05, sweepTo: 300 })
+      tone(62, 1.2, { gain: 0.42, type: 'sine', slideTo: 28 })
+      tone(124, 0.5, { gain: 0.16, type: 'triangle', slideTo: 40 })
+      noise(1.2, { gain: 0.06, freq: 5200, q: 3, delay: 0.25, sweepTo: 2600 })
+      break
+    case 'laugh':
+      // "hi-hi-hi-hi" agudo e nasal, cada vez mais alto
+      ;[0, 0.13, 0.26, 0.39].forEach((d, i) => {
+        tone(820 + i * 40, 0.09, { type: 'square', gain: 0.03 + i * 0.006, slideTo: 980 + i * 50, delay: d })
+        noise(0.06, { gain: 0.03, freq: 3600, q: 4, delay: d })
+      })
+      break
+    case 'slash':
+      noise(0.28, { gain: 0.3, freq: 5200, q: 1.2, sweepTo: 900 })
+      tone(1900, 0.2, { gain: 0.05, type: 'sawtooth', slideTo: 420 })
+      break
+    case 'shimmer':
+      ;[1568, 1976, 2349, 3136].forEach((f, i) => tone(f, 1.4, { gain: 0.025, delay: i * 0.07, attack: 0.02 }))
+      noise(1.2, { gain: 0.04, freq: 7000, q: 6, sweepTo: 4000 })
+      break
+    case 'thud':
+      tone(55, 0.6, { gain: 0.32, slideTo: 32 })
+      noise(0.25, { gain: 0.14, freq: 180, q: 0.7 })
+      break
     case 'hover':
       tone(1400, 0.05, { gain: 0.018, type: 'triangle' })
       break
@@ -605,6 +643,16 @@ function scheduleProStep() {
   pro.next += cfg.beat
 }
 
+let proDucked = false
+/** Abaixa a trilha do prólogo enquanto uma fala dublada toca (e volta ao fim). */
+export function duckPrologueMusic(on: boolean) {
+  proDucked = on
+  if (!pro || !ctx) return
+  const level = PRO_TRACKS[pro.track].level * (on ? 0.38 : 1)
+  pro.bus.gain.cancelScheduledValues(ctx.currentTime)
+  pro.bus.gain.setTargetAtTime(level, ctx.currentTime, on ? 0.12 : 0.6)
+}
+
 export function setPrologueMusic(track: PrologueTrack | null) {
   const c = ensure()
   if (!c || !master || pro?.track === track) return
@@ -623,7 +671,7 @@ export function setPrologueMusic(track: PrologueTrack | null) {
   const cfg = PRO_TRACKS[track]
   const bus = c.createGain()
   bus.gain.setValueAtTime(0.0001, c.currentTime)
-  bus.gain.exponentialRampToValueAtTime(cfg.level, c.currentTime + 1.6)
+  bus.gain.exponentialRampToValueAtTime(cfg.level * (proDucked ? 0.38 : 1), c.currentTime + 1.6)
   const filter = c.createBiquadFilter()
   filter.type = 'lowpass'
   filter.frequency.value = cfg.cutoff

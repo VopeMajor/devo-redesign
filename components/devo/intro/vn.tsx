@@ -1,6 +1,8 @@
 'use client'
 
 import { useEffect, useState, type CSSProperties, type ReactNode } from 'react'
+import { setDubbing, speakLine, stopVoice, useDubbing } from '@/lib/devo/voice'
+import type { VoiceCast } from '@/lib/devo/voice-lines'
 import { playSfx } from '@/lib/devo/audio'
 import { cn } from '@/lib/utils'
 import { GlyphArrow, GlyphDiamond, toRoman } from '../kit/glyphs'
@@ -42,12 +44,56 @@ export function useTypewriter(text: string, charMs = 28) {
   return { shown, done, finish: () => setState({ text, shown: text.length }) }
 }
 
-export type PlateTone = 'cobalt' | 'gold' | 'void'
+/**
+ * Fala dublada: toca a voz da linha e devolve a velocidade da digitação para o texto acompanhar a fala
+ * (a última letra cai ~10% antes do fim do áudio). Sem voz, usa `fallbackMs`.
+ */
+export function useVoicedLine(line: { id: string; text: string; cast: VoiceCast } | null, fallbackMs: number, onEnd?: () => void) {
+  const [charMs, setCharMs] = useState(fallbackMs)
+  const dub = useDubbing()
+  const id = line?.id
+  const text = line?.text
+  useEffect(() => {
+    if (!line || !id || !text) {
+      setCharMs(fallbackMs)
+      return
+    }
+    const ms = speakLine({ id, text, cast: line.cast, onEnd })
+    setCharMs(ms ? Math.max(14, Math.min(90, (ms * 0.9) / Math.max(1, text.length))) : fallbackMs)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id, text, dub])
+  useEffect(() => () => stopVoice(), [])
+  return charMs
+}
+
+/** Botão "Dublagem" (liga/desliga as vozes; o som geral continua no outro botão). */
+export function DubToggle({ className }: { className?: string }) {
+  const on = useDubbing()
+  return (
+    <button
+      type="button"
+      onClick={() => setDubbing(!on)}
+      aria-pressed={on}
+      aria-label={on ? 'Desligar dublagem' : 'Ligar dublagem'}
+      title="Dublagem"
+      className={cn('dv-focus group flex min-h-11 min-w-11 items-center justify-center gap-1.5 px-1.5 font-mono text-[10px] uppercase tracking-[0.16em] transition-colors', on ? 'text-dv-text-2 hover:text-dv-text' : 'text-dv-text-3 hover:text-dv-text-2', className)}
+    >
+      <svg viewBox="0 0 24 24" aria-hidden="true" className="size-4" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M5 9h3l4-3.5v13L8 15H5Z" />
+        {on ? <path d="M15.5 9.5a3.5 3.5 0 0 1 0 5M18 7a7 7 0 0 1 0 10" /> : <path d="M16 9.5l5 5M21 9.5l-5 5" />}
+      </svg>
+      <span className="hidden min-[400px]:inline">Dublagem</span>
+    </button>
+  )
+}
+
+export type PlateTone = 'cobalt' | 'gold' | 'void' | 'system'
 
 const PLATE: Record<PlateTone, { fill: string; edge: string; name: string }> = {
   cobalt: { fill: 'bg-[linear-gradient(100deg,#0d1f7a,var(--dv-cobalt-deep)_60%,#3d63ff)]', edge: 'bg-dv-gold', name: 'text-white' },
   gold: { fill: 'bg-[linear-gradient(100deg,var(--dv-gold-deep),#a8833e_55%,var(--dv-gold))]', edge: 'bg-dv-gold-bright', name: 'text-dv-ink' },
   void: { fill: 'bg-[linear-gradient(100deg,#000,var(--dv-ink-3)_70%,var(--dv-ink-4))]', edge: 'bg-dv-gold', name: 'text-dv-gold-bright' },
+  system: { fill: 'bg-[linear-gradient(100deg,var(--dv-ink),var(--dv-cobalt-dim)_70%,#14307a)]', edge: 'bg-dv-cobalt-text', name: 'text-dv-cobalt-text' },
 }
 
 /** Placa do falante: paralelogramo inclinado que entra com corte a cada troca de falante. */
@@ -205,6 +251,7 @@ export function VnTopBar({ chapter, skipLabel, onSkip }: { chapter: ReactNode; s
     <div className="dv-safe-top pointer-events-none absolute inset-x-0 top-0 z-30 flex items-start justify-between bg-gradient-to-b from-black/70 to-transparent px-4 pb-8">
       <div className="pointer-events-auto min-w-0 flex-1 pr-2 pt-3">{chapter}</div>
       <div className="pointer-events-auto flex shrink-0 items-center">
+        <DubToggle />
         <SoundToggle compact className="min-h-11 min-w-11 justify-center text-dv-text-2 hover:text-dv-text" />
         <button
           type="button"

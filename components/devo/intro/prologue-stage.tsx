@@ -129,6 +129,29 @@ function usePointerParallax() {
 const FAR: CSSProperties = { transform: 'translate3d(calc(var(--px, 0) * -10px), calc(var(--py, 0) * -6px), 0)', transition: 'transform 600ms var(--dv-ease-out)' }
 const NEAR: CSSProperties = { transform: 'translate3d(calc(var(--px, 0) * 18px), calc(var(--py, 0) * 8px), 0)', transition: 'transform 600ms var(--dv-ease-out)' }
 
+/** Enquadramento por cena: escala e deslocamento (direção de câmera). */
+const CAMERA: Partial<Record<StageId, [number, number, number]>> = {
+  rumor: [1, 0, 0],
+  kids: [1.04, 0, -1],
+  boy: [1.12, -4, -2],
+  girl: [1.12, 4, -2],
+  hands: [1.06, 0, -1],
+  omen: [1.14, 0, 2],
+  trip: [1.2, 0, 3],
+  fall: [1.08, 0, -4],
+  abyss: [1.22, 0, 0],
+  death: [1.1, 0, 2],
+  fire: [1.04, 0, 0],
+  rise: [1.14, 0, -3],
+  voice: [1.08, 0, 1],
+  phone: [1.12, 0, -2],
+}
+function camera(stage: StageId) {
+  const [s, x, y] = CAMERA[stage] ?? [1, 0, 0]
+  return `scale(${s}) translate3d(${x}%, ${y}%, 0)`
+}
+const LETTERBOX: StageId[] = ['rumor', 'kids', 'boy', 'girl', 'hands', 'omen', 'trip', 'fall', 'abyss', 'death', 'fire', 'rise']
+
 /** Presença da Melissa: fora, silhueta se aproximando, ou em cena. */
 export type MelissaPresence = 'off' | 'approach' | 'on'
 
@@ -172,6 +195,7 @@ export function PrologueStage({
   const deathOn = stage === 'death' || stage === 'fire'
   const fireOn = stage === 'fire' || stage === 'rise'
   const melissaOn = stage === 'mine' && melissa !== 'off'
+  const letterbox = LETTERBOX.includes(stage)
   const mineOn = stage === 'mine' || stage === 'phone'
   const mirrorOn = stage === 'void' || stage === 'voice'
 
@@ -186,6 +210,8 @@ export function PrologueStage({
 
   return (
     <div ref={root} className="absolute inset-0 overflow-hidden bg-black">
+      {/* Câmera: cada cena tem enquadramento próprio (empurra, aproxima, desce), com transição lenta. */}
+      <div className="absolute inset-0 transition-transform duration-[2600ms] ease-[cubic-bezier(.33,0,.15,1)] motion-reduce:transition-none" style={{ transform: camera(stage), transformOrigin: '50% 55%' }}>
       {/* Escuridão / vazio: o sigilo acende devagar no fundo, poeira na luz que cai do alto. */}
       <Layer on={stage === 'dark' || stage === 'void' || stage === 'voice'}>
         <div className="absolute inset-0 bg-[radial-gradient(60%_45%_at_50%_0%,rgba(125,151,255,0.22),transparent_70%),radial-gradient(80%_60%_at_50%_42%,rgba(11,26,77,0.7),rgba(2,3,7,1)_75%)]" />
@@ -374,6 +400,12 @@ export function PrologueStage({
           <span className="dv-label text-[11px] text-dv-text-2">Devo</span>
         </div>
       </Layer>
+
+      </div>
+
+      {/* Barras de cinema nas cenas narradas (teatro, morte, fogo). */}
+      <div aria-hidden="true" className={cn('pointer-events-none absolute inset-x-0 top-0 z-[5] h-[7dvh] bg-black transition-transform duration-[900ms] ease-[var(--dv-ease-out)]', letterbox ? 'translate-y-0' : '-translate-y-full')} />
+      <div aria-hidden="true" className={cn('pointer-events-none absolute inset-x-0 bottom-0 z-[5] h-[7dvh] bg-black transition-transform duration-[900ms] ease-[var(--dv-ease-out)]', letterbox ? 'translate-y-0' : 'translate-y-full')} />
 
       {/* Grade de cor comum a todas as cenas (livro ilustrado, pintura, vetor): mesma noite cobalto. */}
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(11,26,77,0.28),rgba(11,26,77,0.08)_40%,rgba(5,7,13,0.5))] mix-blend-multiply" />

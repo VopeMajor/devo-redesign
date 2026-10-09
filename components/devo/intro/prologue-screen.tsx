@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState, type CSSProperties } from 'react'
 import { playMusic, playSfx, setPrologueMusic, stopMusic, type PrologueTrack, type Sfx } from '@/lib/devo/audio'
 import {
   GENDER_OPTIONS,
@@ -11,16 +11,20 @@ import {
   type StageId,
 } from '@/lib/devo/prologue-script'
 import { cn } from '@/lib/utils'
+import { APPEARANCE_KIND_LABEL, autoAppearance, appearancePool, type AppearanceKind } from '@/lib/devo/appearances'
+import { loadVoiceManifest } from '@/lib/devo/voice'
+import { prologueLineId } from '@/lib/devo/voice-lines'
 import { useAdvanceKeys } from '../hooks'
+import { useDevo } from '../state/devo-store'
 import { Button } from '../kit/button'
 import { GlyphCard, toRoman } from '../kit/glyphs'
 import { PrologueStage } from './prologue-stage'
-import { AdvanceIndicator, ChoiceHeader, ChoiceStrip, DialogueShell, SpeakerPlate, VnTopBar, useTypewriter } from './vn'
+import { AdvanceIndicator, ChoiceHeader, ChoiceStrip, DialogueShell, SpeakerPlate, VnTopBar, useTypewriter, useVoicedLine } from './vn'
 
 const CHAR_MS = 28
 const PAPER_STAGES: StageId[] = ['rumor', 'kids', 'boy', 'girl', 'hands', 'omen', 'trip', 'fall']
-const SPEAKER_NAME = { voice: '???', melissa: 'Melissa' } as const
-const SPEAKER_TONE = { voice: 'void', melissa: 'cobalt' } as const
+const SPEAKER_NAME = { voice: '???', melissa: 'Melissa', system: 'DEVO · Sistema' } as const
+const SPEAKER_TONE = { voice: 'void', melissa: 'cobalt', system: 'system' } as const
 const STAGE_TRACK: Partial<Record<StageId, PrologueTrack>> = {
   rumor: 'tale',
   kids: 'tale',
@@ -47,7 +51,7 @@ const STAGE_SFX: Partial<Record<StageId, Sfx>> = {
   death: 'bell',
   fire: 'ignite',
   rise: 'crackle',
-  void: 'heartbeat',
+  void: 'shimmer',
   voice: 'whisper',
   mine: 'drip',
 }
@@ -98,58 +102,107 @@ function ActCard({ act }: { act: Act }) {
   )
 }
 
-const FACE_BOXES = [
-  { id: 'art', label: 'Rosto 2D', placeholder: 'Personagem de anime' },
-  { id: 'real', label: 'Rosto Real Life', placeholder: 'Celebridade' },
-] as const
-
 const fieldClass =
   'w-full border-b-2 border-dv-line-strong bg-dv-ink-2/85 px-3 py-3 font-sans text-[16px] text-dv-text outline-none backdrop-blur-md transition-colors placeholder:text-dv-text-3 focus:border-dv-cobalt focus:bg-dv-cobalt-dim/60'
 
-function FaceInput({ onSubmit }: { onSubmit: (value: string) => void }) {
-  const [values, setValues] = useState({ real: '', art: '' })
-  const real = values.real.trim()
-  const art = values.art.trim()
-  const valid = Boolean(real && art)
+/**
+ * Segunda aparência (DIRECAO-2 §5): tipo 2D/3D ou Real, nome da aparência e "Seleção automática"
+ * (lista preparada por tipo, sexo e faixa etária — lib/devo/appearances.ts).
+ */
+function FaceInput({ gender, age, onSubmit }: { gender?: string; age?: number; onSubmit: (kind: AppearanceKind, name: string, auto: boolean) => void }) {
+  const [kind, setKind] = useState<AppearanceKind>('art')
+  const [name, setName] = useState('')
+  const [auto, setAuto] = useState(false)
+  const valid = name.trim().length > 0
+  const pool = appearancePool(kind, gender, age)
   return (
     <form
       className="animate-dv-rise flex flex-col gap-3"
       onSubmit={(e) => {
         e.preventDefault()
-        if (!valid) return
-        onSubmit(`2D: ${art} | Real Life: ${real}`)
+        if (valid) onSubmit(kind, name.trim(), auto)
       }}
     >
-      <div className="grid grid-cols-2 gap-2">
-        {FACE_BOXES.map((box, i) => (
-          <div key={box.id} className="flex min-w-0 flex-col gap-1.5">
-            <label htmlFor={`pr-face-${box.id}`} className="dv-label text-[10px] text-dv-text-2">
-              {box.label}
-            </label>
-            <input
-              id={`pr-face-${box.id}`}
-              autoFocus={i === 0}
-              maxLength={80}
-              autoComplete="off"
-              value={values[box.id]}
-              onChange={(e) => setValues((v) => ({ ...v, [box.id]: e.target.value }))}
-              placeholder={box.placeholder}
-              className={fieldClass}
-            />
-          </div>
+      <div role="radiogroup" aria-label="Tipo de aparência" className="grid grid-cols-2 gap-2">
+        {(['art', 'real'] as AppearanceKind[]).map((k) => (
+          <button
+            key={k}
+            type="button"
+            role="radio"
+            aria-checked={kind === k}
+            onClick={() => {
+              playSfx('card-select')
+              setKind(k)
+              if (auto) setName(autoAppearance(k, gender, age))
+            }}
+            className={cn(
+              'dv-focus dv-cut-diag flex min-h-12 flex-col items-start justify-center px-3 py-2 text-left transition-colors duration-[220ms]',
+              kind === k ? 'bg-dv-cobalt-dim text-dv-text shadow-[inset_3px_0_0_var(--dv-cobalt)]' : 'bg-dv-ink-2/90 text-dv-text-2 hover:bg-dv-ink-3',
+            )}
+            style={{ '--dv-cut': '10px' } as CSSProperties}
+          >
+            <span className="font-display text-[15px] font-semibold uppercase tracking-[0.12em]">{APPEARANCE_KIND_LABEL[k]}</span>
+            <span className="font-sans text-[12px] text-dv-text-3">{k === 'art' ? 'Anime, jogo, animação' : 'Ator, atriz, celebridade'}</span>
+          </button>
         ))}
       </div>
-      <Button type="submit" size="sm" disabled={!valid} className="self-end" sfx="confirm">
-        Responder
-      </Button>
+      <div className="flex min-w-0 flex-col gap-1.5">
+        <label htmlFor="pr-appearance" className="dv-label text-[10px] text-dv-text-2">
+          Nome da aparência
+        </label>
+        <input
+          id="pr-appearance"
+          autoFocus
+          maxLength={80}
+          autoComplete="off"
+          value={name}
+          onChange={(e) => {
+            setName(e.target.value)
+            setAuto(false)
+          }}
+          placeholder={kind === 'art' ? `Ex.: ${pool[0] ?? 'personagem'}` : `Ex.: ${pool[0] ?? 'ator ou atriz'}`}
+          className={fieldClass}
+        />
+      </div>
+      <div className="flex items-center justify-between gap-2">
+        <Button
+          variant="secondary"
+          size="sm"
+          sfx="card"
+          onClick={() => {
+            setName(autoAppearance(kind, gender, age, name))
+            setAuto(true)
+          }}
+        >
+          Seleção automática
+        </Button>
+        <Button type="submit" size="sm" disabled={!valid} sfx="confirm">
+          Responder
+        </Button>
+      </div>
+      <p className="font-sans text-[12px] leading-snug text-dv-text-3">Você poderá trocar de aparência por afinidade dentro do jogo, uma única vez.</p>
     </form>
   )
 }
 
-function ProfileInput({ field, playerName, onSubmit }: { field: ProfileField; playerName: string; onSubmit: (value: string) => void }) {
+function ProfileInput({
+  field,
+  playerName,
+  gender,
+  age,
+  onSubmit,
+  onAppearance,
+}: {
+  field: ProfileField
+  playerName: string
+  gender?: string
+  age?: number
+  onSubmit: (value: string) => void
+  onAppearance: (kind: AppearanceKind, name: string, auto: boolean) => void
+}) {
   const [age, setAge] = useState('')
   if (field === 'name') return <ChoiceStrip index={0} label={playerName} onClick={() => onSubmit(playerName)} />
-  if (field === 'face') return <FaceInput onSubmit={onSubmit} />
+  if (field === 'face') return <FaceInput gender={gender} age={age} onSubmit={onAppearance} />
   if (field === 'gender') {
     return (
       <div className="grid gap-2 sm:grid-cols-2">
@@ -203,7 +256,13 @@ export function PrologueScreen({ playerName, onFinish: onDone }: { playerName: s
     stopMusic()
     return () => setPrologueMusic(null)
   }, [])
+  const { dispatch } = useDevo()
+  useEffect(() => {
+    void loadVoiceManifest()
+  }, [])
   const [replies, setReplies] = useState<Line[]>([])
+  /** Qual opção gerou as respostas atuais (para achar o id da fala dublada). */
+  const [replyFrom, setReplyFrom] = useState<{ option: number; total: number } | null>(null)
   const [explored, setExplored] = useState<string[]>([])
   const [profile, setProfile] = useState<Profile>({})
   const [mood, setMood] = useState<MelissaMood>('neutral')
@@ -213,7 +272,14 @@ export function PrologueScreen({ playerName, onFinish: onDone }: { playerName: s
   const fill = (t: string) => t.replaceAll('{nome}', name)
   const line: Line | null = replies[0] ?? (beat.kind === 'line' ? beat.line : null)
   const text = line ? fill(line.text) : ''
-  const { shown, done, finish } = useTypewriter(text, CHAR_MS)
+  const lineId = !line
+    ? null
+    : replies.length > 0 && replyFrom
+      ? prologueLineId(index, replyFrom.option, replyFrom.total - replies.length)
+      : prologueLineId(index)
+  // A legenda/voz do aparelho usa o texto já com o nome do personagem; a voz gerada omite o nome.
+  const charMs = useVoicedLine(line && lineId ? { id: lineId, text, cast: line.who } : null, CHAR_MS)
+  const { shown, done, finish } = useTypewriter(text, charMs)
 
   const next = useCallback(() => {
     if (index >= PROLOGUE.length - 1) {
@@ -268,6 +334,8 @@ export function PrologueScreen({ playerName, onFinish: onDone }: { playerName: s
 
   const choose = (label: string, reply: Line[]) => {
     playSfx('confirm')
+    const option = beat.kind === 'choice' ? beat.options.findIndex((o) => o.label === label) : 0
+    setReplyFrom({ option, total: reply.length })
     setExplored((e) => [...e, label])
     setReplies(reply)
   }
@@ -275,6 +343,16 @@ export function PrologueScreen({ playerName, onFinish: onDone }: { playerName: s
   const submitProfile = (field: ProfileField, value: string) => {
     playSfx('confirm')
     setProfile((p) => ({ ...p, [field]: value }))
+    // Idade e gênero vão para o perfil salvo (a Seleção automática usa os dois).
+    if (field === 'age') dispatch({ type: 'SET_PROFILE', patch: { age: Number(value) } })
+    if (field === 'gender') dispatch({ type: 'SET_PROFILE', patch: { gender: value } })
+    next()
+  }
+
+  const submitAppearance = (kind: AppearanceKind, appearance: string, auto: boolean) => {
+    playSfx('confirm')
+    setProfile((p) => ({ ...p, face: `${kind === 'art' ? '2D/3D' : 'Real'}: ${appearance}` }))
+    dispatch({ type: 'SET_PROFILE', patch: { appearance: { kind, name: appearance, auto, chosenAt: Date.now() }, appearanceChangesLeft: 1 } })
     next()
   }
 
@@ -288,6 +366,19 @@ export function PrologueScreen({ playerName, onFinish: onDone }: { playerName: s
   const itemGet = beat.kind === 'line' && beat.sfx === 'card' && replies.length === 0
   const glint = beat.kind === 'line' && beat.sfx === 'reveal' && replies.length === 0
   const slash = beat.kind === 'line' && beat.sfx === 'crush'
+
+  // Momentos fortes da cutscene: corte vermelho, brilho do aparelho, entrada de cada ato.
+  const actN = act?.n ?? 0
+  const lastActSfx = useRef(0)
+  useEffect(() => {
+    if (slash) window.setTimeout(() => playSfx('slash'), 60)
+    if (glint) playSfx('shimmer')
+  }, [index]) // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => {
+    if (!actN || lastActSfx.current === actN) return
+    lastActSfx.current = actN
+    playSfx('thud')
+  }, [actN])
 
   return (
     <main className="relative h-dvh overflow-hidden bg-black text-dv-text">
@@ -409,7 +500,15 @@ export function PrologueScreen({ playerName, onFinish: onDone }: { playerName: s
         {!line && beat.kind === 'input' && (
           <div className="flex flex-col gap-2" role="group" aria-label="Sua resposta">
             <ChoiceHeader>Você responde</ChoiceHeader>
-            <ProfileInput key={beat.field} field={beat.field} playerName={playerName ?? 'Record'} onSubmit={(v) => submitProfile(beat.field, v)} />
+            <ProfileInput
+              key={beat.field}
+              field={beat.field}
+              playerName={playerName ?? 'Record'}
+              gender={profile.gender}
+              age={profile.age ? Number(profile.age) : undefined}
+              onSubmit={(v) => submitProfile(beat.field, v)}
+              onAppearance={submitAppearance}
+            />
           </div>
         )}
       </div>
