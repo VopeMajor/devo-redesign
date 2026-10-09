@@ -235,6 +235,8 @@ export function EmblemVotes(p: EmblemProps) {
       <path d={circle(7.8, 40.2, 2)} />
       <path d={circle(40.2, 40.2, 2)} />
       <path d={star(24, 22.5, 6.4, 0.2)} />
+      <Line d="M12 41.5Q24 47.5 36 41.5" w={1.4} />
+      <path d={star(24, 45, 2.6, 0.18)} />
     </Svg>
   )
 }
@@ -249,6 +251,10 @@ export function EmblemAvisos(p: EmblemProps) {
       <path d="M24 18.6Q28.2 23.4 26.6 26.6Q24 29.6 21.4 26.6Q19.8 23.4 24 18.6Z" />
       <path d="M14.6 31.6H33.4L30.2 35.4H17.8Z" />
       <path d={needle(24, 35.4, 24, 46.5, 1.7, 0.3)} />
+      <path d={needle(16.5, 22, 6, 17, 1.2, 0.35)} />
+      <path d={needle(31.5, 22, 42, 17, 1.2, 0.35)} />
+      <path d={needle(16.5, 27, 7, 30, 1, 0.35)} />
+      <path d={needle(31.5, 27, 41, 30, 1, 0.35)} />
     </Svg>
   )
 }

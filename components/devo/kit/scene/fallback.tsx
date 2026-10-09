@@ -6,7 +6,7 @@ import type { SceneFocus, ScenePreset } from './types'
 
 const BASE: Record<ScenePreset, string> = {
   sigil: 'bg-[radial-gradient(70%_45%_at_50%_38%,#28273a_0%,#16151c_42%,var(--dv-ink)_100%)]',
-  cathedral: 'bg-[linear-gradient(180deg,#19181f_0%,#0f0e1a_55%,var(--dv-ink)_100%)]',
+  cathedral: 'bg-[linear-gradient(180deg,#1c1c20_0%,#111113_55%,var(--dv-ink)_100%)]',
   table: 'bg-[radial-gradient(60%_50%_at_50%_45%,#2b2830_0%,#0e0d13_55%,var(--dv-ink)_100%)]',
   corridor: 'bg-[radial-gradient(30%_30%_at_50%_44%,#2a2933_0%,#131217_50%,var(--dv-ink)_100%)]',
   tribunal: 'bg-[radial-gradient(55%_40%_at_50%_30%,#3f060b_0%,#14070c_50%,#070609_100%)]',

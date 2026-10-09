@@ -396,7 +396,7 @@ function CathedralPreset({ intensity, alert, lite }: PresetProps) {
   const shafts = useRef<THREE.Group>(null)
   const count = lite ? 12 : 16
   const pillarGeo = useDisposable(() => makeColumnGeometry(lite), [lite])
-  const pillarMat = useDisposable(() => new THREE.MeshStandardMaterial({ color: '#6a6878', roughness: 0.62, metalness: 0.1, emissive: '#141224', emissiveIntensity: 0.5, flatShading: false }))
+  const pillarMat = useDisposable(() => new THREE.MeshStandardMaterial({ color: '#6e6e72', roughness: 0.62, metalness: 0.1, emissive: '#151517', emissiveIntensity: 0.5, flatShading: false }))
   const shaftTex = useDisposable(() => makeShaftTexture())
   const cardTex = useDisposable(() => makeCardBackTexture())
   const cardData = useMemo(
@@ -444,10 +444,10 @@ function CathedralPreset({ intensity, alert, lite }: PresetProps) {
       <color attach="background" args={[DV_COLOR.ink]} />
       <fog attach="fog" args={['#0e0c18', 6, 36]} />
       <CameraRig pos={[0, 1.6, 8]} look={[0, 3.2, -16]} drift={0.35} />
-      <ambientLight intensity={0.9} color="#9c99ad" />
-      <hemisphereLight args={['#b7b3c9', '#151517', 0.8]} />
+      <ambientLight intensity={0.9} color="#a3a2a8" />
+      <hemisphereLight args={['#c9c7cf', '#151517', 0.8]} />
       <directionalLight position={[2, 10, -6]} intensity={2.4 * intensity} color="#e6e5e2" />
-      <pointLight position={[0, 6, -10]} intensity={90 * intensity} distance={30} decay={1.4} color={DV_COLOR.violet} />
+      <pointLight position={[0, 6, -10]} intensity={80 * intensity} distance={30} decay={1.4} color="#a9a6b4" />
       <pointLight position={[0, 3, 2]} intensity={30 * intensity} distance={14} decay={1.4} color={DV_COLOR.goldBright} />
       <AlertLight alert={alert} position={[0, 5, 0]} power={40} />
       <instancedMesh ref={pillars} args={[pillarGeo, pillarMat, count]} />
@@ -459,7 +459,7 @@ function CathedralPreset({ intensity, alert, lite }: PresetProps) {
         </mesh>
       ))}
       <MistLayers
-        color="#b7b3c9"
+        color="#c4c3c8"
         opacity={0.42 * intensity}
         layers={[
           { y: 0.9, z: 1, w: 16, h: 3, speed: 0.008 },
@@ -1042,7 +1042,7 @@ function ClockhallPreset({ intensity, alert, lite }: PresetProps) {
   const gearGeoA = useDisposable(() => makeGearGeometry(1.25, 18, 0.12))
   const gearGeoB = useDisposable(() => makeGearGeometry(0.8, 12, 0.1))
   const pillarGeo = useDisposable(() => makeColumnGeometry(lite), [lite])
-  const pillarMat = useDisposable(() => new THREE.MeshStandardMaterial({ color: '#4a4a50', roughness: 0.55, metalness: 0.1, emissive: '#100e1c', emissiveIntensity: 0.6 }))
+  const pillarMat = useDisposable(() => new THREE.MeshStandardMaterial({ color: '#4a4a50', roughness: 0.55, metalness: 0.1, emissive: '#111114', emissiveIntensity: 0.6 }))
   const balusterGeo = useDisposable(() => new THREE.LatheGeometry([[0, 0], [0.1, 0], [0.1, 0.06], [0.05, 0.12], [0.09, 0.4], [0.05, 0.62], [0.07, 0.7], [0.1, 0.74], [0.1, 0.8], [0, 0.8]].map(([x, y]) => new THREE.Vector2(x, y)), 8))
   const stoneMat = useDisposable(() => new THREE.MeshStandardMaterial({ color: '#2a2834', roughness: 0.6, metalness: 0.15, emissive: '#0c0b14', emissiveIntensity: 0.5 }))
   const brass = useRimMaterial({ color: DV_COLOR.gold, rim: DV_COLOR.goldBright, rimPower: 2, rimStrength: 1.1, metalness: 0.9, roughness: 0.3, emissive: DV_COLOR.goldDeep, emissiveIntensity: 0.8 })
