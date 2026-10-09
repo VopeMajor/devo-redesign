@@ -145,10 +145,10 @@ export function SceneBackdrop({ preset, intensity = 0.8, alert = false, focus, d
       )}
       {/* Camadas de acabamento: escurecer, vinheta, grão e pulso de alerta. */}
       {dim > 0 && <div className="absolute inset-0 bg-dv-ink" style={{ opacity: dim }} />}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_45%,rgba(2,3,7,0.85)_100%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_45%,rgba(4,3,6,0.85)_100%)]" />
       <div className="devo-grain absolute inset-0 opacity-[0.06] mix-blend-overlay" />
       {alert && (
-        <div className="animate-dv-alert absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_40%,rgba(213,31,43,0.35)_100%)] motion-reduce:opacity-60" />
+        <div className="animate-dv-alert absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_40%,rgba(170,20,32,0.35)_100%)] motion-reduce:opacity-60" />
       )}
     </div>
   )

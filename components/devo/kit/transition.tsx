@@ -7,7 +7,8 @@ import { DeadlyVoteSymbol } from '../system/symbol'
 import { toRoman } from './glyphs'
 import { CURTAIN_MS, CURTAIN_SWAP_MS } from './tokens'
 
-export type CurtainTone = 'system' | 'alert' | 'gold'
+/** `interior` = fronteira Jornada → Interior: folha de registro impressa/escaneada sobre a tela. */
+export type CurtainTone = 'system' | 'alert' | 'gold' | 'interior'
 /** forward = lâminas entram pela esquerda e saem pela direita (avançar); back = espelhado (voltar/sair). */
 export type CurtainDirection = 'forward' | 'back'
 
@@ -68,9 +69,9 @@ export function useCurtain() {
   return { curtain, run, isBusy: () => busy.current }
 }
 
-const SLAB: Record<CurtainTone, { lead: string; slab: string; ring: string; line: string }> = {
+const SLAB: Record<Exclude<CurtainTone, 'interior'>, { lead: string; slab: string; ring: string; line: string }> = {
   system: {
-    lead: 'bg-[linear-gradient(90deg,#0d1f7a,var(--dv-cobalt-deep)_60%,#7d97ff)]',
+    lead: 'bg-[linear-gradient(90deg,#0d1f7a,var(--dv-cobalt-deep)_60%,#9ea8ee)]',
     slab: 'bg-[linear-gradient(90deg,var(--dv-ink)_0%,#070b18_60%,var(--dv-ink-2)_100%)]',
     ring: 'text-dv-cobalt-text',
     line: 'bg-dv-gold',
@@ -106,7 +107,8 @@ export function Curtain({
 }) {
   if (!state) return null
   const frozen = typeof freezeAt === 'number'
-  const s = SLAB[state.tone]
+  if (state.tone === 'interior') return <PrintCurtain state={state} frozen={frozen} freezeAt={freezeAt} className={className} />
+  const s = SLAB[state.tone as Exclude<CurtainTone, 'interior'>]
   const back = state.direction === 'back'
   const vars = { '--dv-curtain-skew': back ? '14deg' : '-14deg', ...(frozen ? { '--dv-curtain-at': `${freezeAt}ms` } : {}) } as CSSProperties
   return (
@@ -138,7 +140,7 @@ export function Curtain({
       <div className="absolute inset-0 flex flex-col items-center justify-center gap-5 px-6">
         <div aria-hidden="true" className={cn('dv-curtain-ring relative size-[188px]', s.ring)}>
           <CurtainDial />
-          <DeadlyVoteSymbol variant="mark" className="absolute inset-[30%] text-dv-text drop-shadow-[0_0_14px_rgba(49,93,255,0.7)]" />
+          <DeadlyVoteSymbol variant="mark" className="absolute inset-[30%] text-dv-text drop-shadow-[0_0_14px_rgba(65,82,192,0.7)]" />
         </div>
         <div className="dv-curtain-label flex flex-col items-center">
           <p className="font-display text-[24px] font-semibold uppercase tracking-[0.3em] text-dv-text [text-shadow:0_0_24px_rgba(0,0,0,0.9)]">{state.label}</p>
@@ -195,5 +197,61 @@ function CurtainDial() {
         )
       })}
     </svg>
+  )
+}
+
+/**
+ * Fronteira da noite para o papel: uma folha de registro desce sobre a tela (a borda é a cabeça de
+ * leitura, um filete cobalto aceso), as linhas do formulário são "impressas", o rótulo aparece em
+ * serifada fina e tudo se dissolve no interior (que também é papel — sem salto de cor).
+ */
+function PrintCurtain({ state, frozen, freezeAt, className }: { state: CurtainState; frozen: boolean; freezeAt?: number; className?: string }) {
+  const code = `DV_R${String((state.label.length * 37) % 1000).padStart(3, '0')}_${String(state.seq % 10000).padStart(4, '0')}`
+  return (
+    <div
+      key={state.seq}
+      role={frozen ? undefined : 'status'}
+      aria-live={frozen ? undefined : 'assertive'}
+      aria-hidden={frozen || undefined}
+      className={cn('inset-0 overflow-hidden', frozen ? 'dv-curtain-frozen absolute z-0' : 'fixed z-[100]', className)}
+      style={frozen ? ({ '--dv-curtain-at': `${freezeAt}ms` } as CSSProperties) : undefined}
+    >
+      <div className="dv-print-out absolute inset-0">
+        <div className="dv-print-feed dv-interior dv-cold-paper absolute inset-0 shadow-[0_30px_60px_rgba(0,0,0,0.6)]">
+          {/* margens de HUD */}
+          <div aria-hidden="true" className="absolute inset-x-5 top-[max(env(safe-area-inset-top),20px)] flex items-start justify-between font-mono text-[10px] uppercase tracking-[0.16em] text-in-fg-3">
+            <span>
+              DEVO<span className="text-in-accent">.SYSTEM</span>
+            </span>
+            <span className="text-right leading-relaxed">
+              {code}
+              <br />
+              <span className="text-[8px]">Registro em impressão</span>
+            </span>
+          </div>
+          {/* linhas do formulário sendo impressas */}
+          <div aria-hidden="true" className="dv-print-ink absolute inset-x-5 top-[18%] bottom-[18%] bg-[repeating-linear-gradient(to_bottom,transparent_0_31px,var(--in-line)_31px_32px)]" />
+          <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 px-8">
+            <div aria-hidden="true" className="dv-print-ink relative grid size-20 place-items-center">
+              <span className="absolute inset-0 rounded-full border border-in-accent/50" />
+              <span className="absolute inset-2 rounded-full border border-dashed border-in-accent/40" />
+              <DeadlyVoteSymbol variant="mark" className="size-11 text-in-accent" />
+            </div>
+            <p className="dv-print-ink text-center font-serif text-[34px] font-light uppercase leading-none tracking-[0.06em] text-in-fg">{state.label}</p>
+            <p aria-hidden="true" className="dv-print-ink font-mono text-[10px] uppercase tracking-[0.2em] text-in-fg-3">
+              Deadly Vote · Record System
+            </p>
+            <span aria-hidden="true" className="relative mt-1 h-[3px] w-48 bg-in-line">
+              <span className="dv-print-bar absolute inset-0 bg-in-accent-fill shadow-[0_0_10px_rgba(52,64,158,0.7)]" />
+            </span>
+          </div>
+          {/* cabeça de leitura: borda inferior acesa enquanto a folha desce */}
+          <div aria-hidden="true" className="dv-print-night absolute inset-x-0 bottom-0">
+            <span className="absolute inset-x-0 bottom-0 h-24 bg-[linear-gradient(to_top,rgba(52,64,158,0.28),transparent)]" />
+            <span className="absolute inset-x-0 bottom-0 h-[3px] bg-[#8f9cf0] shadow-[0_0_18px_4px_rgba(65,82,192,0.85)]" />
+          </div>
+        </div>
+      </div>
+    </div>
   )
 }

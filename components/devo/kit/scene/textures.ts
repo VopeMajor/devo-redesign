@@ -207,22 +207,22 @@ export function makeDoorTexture(seed = 0) {
   const h = 256
   const { c, ctx } = canvas(w, h)
   const g = ctx.createLinearGradient(0, 0, w, 0)
-  g.addColorStop(0, '#0c1120')
-  g.addColorStop(0.5, '#141c33')
-  g.addColorStop(1, '#0a0e1a')
+  g.addColorStop(0, '#0e0d14')
+  g.addColorStop(0.5, '#1b1824')
+  g.addColorStop(1, '#0c0b11')
   ctx.fillStyle = g
   ctx.fillRect(0, 0, w, h)
-  ctx.strokeStyle = 'rgba(201,164,92,0.55)'
+  ctx.strokeStyle = 'rgba(176,154,108,0.55)'
   ctx.lineWidth = 2
   ctx.strokeRect(12, 14, w - 24, 96)
   ctx.strokeRect(12, 124, w - 24, 118)
   // número da porta
-  ctx.fillStyle = 'rgba(236,212,154,0.85)'
+  ctx.fillStyle = 'rgba(227,213,172,0.85)'
   ctx.font = '600 22px Cinzel, Georgia, serif'
   ctx.textAlign = 'center'
   ctx.fillText(String((seed % 8) + 1).padStart(2, '0'), w / 2, 66)
   // fechadura
-  ctx.fillStyle = 'rgba(239,230,210,0.95)'
+  ctx.fillStyle = 'rgba(236,233,227,0.95)'
   ctx.beginPath()
   ctx.arc(w * 0.78, 150, 6, 0, Math.PI * 2)
   ctx.fill()
@@ -231,7 +231,7 @@ export function makeDoorTexture(seed = 0) {
 }
 
 /**
- * Ambiente equiretangular desenhado (céu cobalto, faixa dourada no horizonte e "softboxes").
+ * Ambiente equiretangular desenhado (céu violeta, faixa dourada no horizonte e "softboxes").
  * Dá reflexo aos metais sem HDR externo; o three gera o PMREM sozinho ao usar em scene.environment.
  */
 export function makeEnvTexture() {
@@ -239,11 +239,11 @@ export function makeEnvTexture() {
   const h = 256
   const { c, ctx } = canvas(w, h)
   const g = ctx.createLinearGradient(0, 0, 0, h)
-  g.addColorStop(0, '#3a52c8')
-  g.addColorStop(0.42, '#121a3c')
-  g.addColorStop(0.5, '#2a2416')
-  g.addColorStop(0.56, '#0b1022')
-  g.addColorStop(1, '#030409')
+  g.addColorStop(0, '#4a4c7a')
+  g.addColorStop(0.42, '#1c1b33')
+  g.addColorStop(0.5, '#2c2618')
+  g.addColorStop(0.56, '#121019')
+  g.addColorStop(1, '#050407')
   ctx.fillStyle = g
   ctx.fillRect(0, 0, w, h)
   const blob = (x: number, y: number, r: number, color: string) => {
@@ -253,9 +253,9 @@ export function makeEnvTexture() {
     ctx.fillStyle = rg
     ctx.fillRect(x - r, y - r, r * 2, r * 2)
   }
-  blob(w * 0.2, h * 0.5, 90, 'rgba(236,212,154,0.9)')
-  blob(w * 0.72, h * 0.22, 70, 'rgba(160,185,255,1)')
-  blob(w * 0.45, h * 0.12, 26, 'rgba(220,228,255,0.6)')
+  blob(w * 0.2, h * 0.5, 90, 'rgba(227,213,172,0.85)')
+  blob(w * 0.72, h * 0.22, 70, 'rgba(170,165,214,1)')
+  blob(w * 0.45, h * 0.12, 26, 'rgba(242,240,236,0.6)')
   blob(w * 0.92, h * 0.45, 40, 'rgba(255,255,255,0.8)')
   const t = new THREE.CanvasTexture(c)
   t.mapping = THREE.EquirectangularReflectionMapping
@@ -294,4 +294,187 @@ export function makeMistTexture(seed = 1) {
   t.wrapS = THREE.RepeatWrapping
   t.needsUpdate = true
   return t
+}
+
+/* ─────────────────────────────── mármore (procedural) ─────────────────────────────── */
+
+/** Gerador pseudoaleatório com semente (mármore igual em todo carregamento). */
+function seeded(seed: number) {
+  let s = seed * 9301 + 49297
+  return () => ((s = (s * 9301 + 49297) % 233280) / 233280)
+}
+
+/** Desenha veios num contexto: caminhos aleatórios suaves, finos, com halo leve. */
+function drawVeins(ctx: CanvasRenderingContext2D, w: number, h: number, color: string, count: number, seed: number, width = 1.2, alpha = 1) {
+  const rnd = seeded(seed)
+  ctx.save()
+  ctx.lineCap = 'round'
+  ctx.lineJoin = 'round'
+  for (let i = 0; i < count; i++) {
+    let x = rnd() * w
+    let y = rnd() * h
+    let a = rnd() * Math.PI * 2
+    const steps = 18 + Math.floor(rnd() * 26)
+    const lw = width * (0.35 + rnd() * 1.1)
+    ctx.strokeStyle = color
+    ctx.globalAlpha = (0.25 + rnd() * 0.55) * alpha
+    ctx.lineWidth = lw
+    ctx.shadowColor = color
+    ctx.shadowBlur = lw * 1.5
+    ctx.beginPath()
+    ctx.moveTo(x, y)
+    for (let k = 0; k < steps; k++) {
+      a += (rnd() - 0.5) * 0.9
+      const len = 6 + rnd() * 16
+      x += Math.cos(a) * len
+      y += Math.sin(a) * len
+      ctx.lineTo(x, y)
+      // ramificação ocasional (veio fino)
+      if (rnd() < 0.08) {
+        ctx.save()
+        ctx.globalAlpha *= 0.6
+        ctx.lineWidth = lw * 0.5
+        ctx.moveTo(x, y)
+        let bx = x
+        let by = y
+        let ba = a + (rnd() - 0.5) * 2
+        for (let j = 0; j < 6; j++) {
+          ba += (rnd() - 0.5) * 0.8
+          bx += Math.cos(ba) * 8
+          by += Math.sin(ba) * 8
+          ctx.lineTo(bx, by)
+        }
+        ctx.moveTo(x, y)
+        ctx.restore()
+      }
+    }
+    ctx.stroke()
+  }
+  ctx.restore()
+}
+
+/** Placa de mármore (branco ou negro) com nuvens e veios, em canvas. */
+function marbleCanvas(size: number, kind: 'white' | 'black', seed: number) {
+  const { c, ctx } = canvas(size)
+  ctx.fillStyle = kind === 'white' ? '#e7e5e1' : '#1d1d22'
+  ctx.fillRect(0, 0, size, size)
+  // nuvens
+  const rnd = seeded(seed + 7)
+  for (let i = 0; i < 14; i++) {
+    const x = rnd() * size
+    const y = rnd() * size
+    const r = size * (0.1 + rnd() * 0.3)
+    const rg = ctx.createRadialGradient(x, y, 0, x, y, r)
+    rg.addColorStop(0, kind === 'white' ? 'rgba(170,168,176,0.14)' : 'rgba(80,78,96,0.22)')
+    rg.addColorStop(1, 'rgba(0,0,0,0)')
+    ctx.fillStyle = rg
+    ctx.fillRect(x - r, y - r, r * 2, r * 2)
+  }
+  if (kind === 'white') {
+    drawVeins(ctx, size, size, 'rgba(110,108,116,1)', Math.round(size / 40), seed, size / 300)
+    drawVeins(ctx, size, size, 'rgba(176,154,108,1)', 2, seed + 3, size / 500)
+  } else {
+    drawVeins(ctx, size, size, 'rgba(176,172,186,1)', Math.round(size / 60), seed, size / 420, 0.55)
+    drawVeins(ctx, size, size, 'rgba(176,154,108,1)', 2, seed + 5, size / 500)
+  }
+  return { c, ctx }
+}
+
+/** Mármore liso (pedra única) — tampo, pedestal, colunas. */
+export function makeMarbleTexture({ kind = 'white', size = 512, seed = 3, repeat = [1, 1] as [number, number] } = {}) {
+  const { c } = marbleCanvas(size, kind as 'white' | 'black', seed)
+  return finish(c, { repeat })
+}
+
+/**
+ * Xadrez de mármore branco/negro com rejunte de latão (piso do salão, tabuleiro). Cada casa é
+ * uma pedra própria (veios não continuam entre casas). `cells` por lado.
+ */
+export function makeMarbleCheckerTexture({ size = 1024, cells = 4, grout = true, seed = 11 }: { size?: number; cells?: number; grout?: boolean; seed?: number } = {}) {
+  const white = marbleCanvas(size, 'white', seed).c
+  const black = marbleCanvas(size, 'black', seed + 1).c
+  const { c, ctx } = canvas(size)
+  const s = size / cells
+  for (let y = 0; y < cells; y++)
+    for (let x = 0; x < cells; x++) {
+      // cada casa recorta um trecho diferente da placa, para não repetir o mesmo veio
+      const src = (x + y) % 2 ? black : white
+      const ox = ((x * 3 + y * 5) % cells) * s
+      const oy = ((x * 7 + y * 2) % cells) * s
+      ctx.drawImage(src, ox, oy, s, s, x * s, y * s, s, s)
+      // bisel leve: borda clara em cima/esquerda
+      ctx.fillStyle = (x + y) % 2 ? 'rgba(255,255,255,0.05)' : 'rgba(255,255,255,0.35)'
+      ctx.fillRect(x * s, y * s, s, 2)
+      ctx.fillRect(x * s, y * s, 2, s)
+    }
+  if (grout) {
+    ctx.strokeStyle = 'rgba(176,154,108,0.85)'
+    ctx.lineWidth = Math.max(2, size / 400)
+    for (let i = 0; i <= cells; i++) {
+      ctx.beginPath()
+      ctx.moveTo(i * s, 0)
+      ctx.lineTo(i * s, size)
+      ctx.moveTo(0, i * s)
+      ctx.lineTo(size, i * s)
+      ctx.stroke()
+    }
+  }
+  return finish(c, { repeat: [1, 1] })
+}
+
+/** Céu noturno visto pelo vidro do relógio: disco azul-violeta com estrelas e brilho central. */
+export function makeSkyDiscTexture(size = 512) {
+  const { c, ctx } = canvas(size)
+  const R = size / 2
+  const g = ctx.createRadialGradient(R, R * 0.85, 0, R, R, R)
+  g.addColorStop(0, '#6a6f9e')
+  g.addColorStop(0.45, '#3e4170')
+  g.addColorStop(0.85, '#1f1e3a')
+  g.addColorStop(1, '#141329')
+  ctx.fillStyle = g
+  ctx.beginPath()
+  ctx.arc(R, R, R, 0, Math.PI * 2)
+  ctx.fill()
+  const rnd = seeded(5)
+  for (let i = 0; i < 160; i++) {
+    const a = rnd() * Math.PI * 2
+    const r = Math.sqrt(rnd()) * R * 0.96
+    ctx.globalAlpha = 0.25 + rnd() * 0.65
+    ctx.fillStyle = rnd() < 0.2 ? '#e3d5ac' : '#f2f0ec'
+    const d = rnd() < 0.08 ? 2.2 : 1.1
+    ctx.fillRect(R + Math.cos(a) * r, R + Math.sin(a) * r, d, d)
+  }
+  ctx.globalAlpha = 1
+  return finish(c)
+}
+
+/** Vitral de ogiva (janela gótica acesa): gradiente noite com caixilhos em losango. */
+export function makeGothicWindowTexture() {
+  const w = 128
+  const h = 256
+  const { c, ctx } = canvas(w, h)
+  const g = ctx.createLinearGradient(0, 0, 0, h)
+  g.addColorStop(0, '#5a5f8c')
+  g.addColorStop(0.6, '#2c2d4d')
+  g.addColorStop(1, '#16152a')
+  ctx.fillStyle = g
+  ctx.fillRect(0, 0, w, h)
+  ctx.strokeStyle = 'rgba(10,9,13,0.75)'
+  ctx.lineWidth = 2
+  for (let i = -h; i < w + h; i += 18) {
+    ctx.beginPath()
+    ctx.moveTo(i, 0)
+    ctx.lineTo(i + h, h)
+    ctx.moveTo(i + h, 0)
+    ctx.lineTo(i, h)
+    ctx.stroke()
+  }
+  ctx.lineWidth = 5
+  ctx.beginPath()
+  ctx.moveTo(w / 2, 0)
+  ctx.lineTo(w / 2, h)
+  ctx.moveTo(0, h * 0.55)
+  ctx.lineTo(w, h * 0.55)
+  ctx.stroke()
+  return finish(c)
 }

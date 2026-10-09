@@ -7,10 +7,10 @@ export type PortraitShape = 'arch' | 'rect' | 'round'
 
 /** Luz de borda (segue o contorno do PNG/SVG via drop-shadow) e brilho de fundo por tom. */
 const RIM: Record<PortraitTone, { rim: string; glow: string; line: string; floor: string }> = {
-  cobalt: { rim: '125,151,255', glow: 'rgba(49,93,255,0.42)', line: 'border-dv-cobalt-text/45', floor: 'rgba(49,93,255,0.45)' },
-  gold: { rim: '236,212,154', glow: 'rgba(201,164,92,0.32)', line: 'border-dv-gold/55', floor: 'rgba(201,164,92,0.4)' },
-  blood: { rim: '255,90,99', glow: 'rgba(213,31,43,0.38)', line: 'border-dv-blood/55', floor: 'rgba(213,31,43,0.45)' },
-  neutral: { rim: '236,238,242', glow: 'rgba(236,238,242,0.12)', line: 'border-dv-line-strong', floor: 'rgba(236,238,242,0.2)' },
+  cobalt: { rim: '158,168,238', glow: 'rgba(65,82,192,0.42)', line: 'border-dv-cobalt-text/45', floor: 'rgba(65,82,192,0.45)' },
+  gold: { rim: '227,213,172', glow: 'rgba(176,154,108,0.32)', line: 'border-dv-gold/55', floor: 'rgba(176,154,108,0.4)' },
+  blood: { rim: '255,102,112', glow: 'rgba(170,20,32,0.38)', line: 'border-dv-blood/55', floor: 'rgba(170,20,32,0.45)' },
+  neutral: { rim: '238,236,239', glow: 'rgba(238,236,239,0.12)', line: 'border-dv-line-strong', floor: 'rgba(238,236,239,0.2)' },
 }
 
 const SHAPE: Record<PortraitShape, string> = {
@@ -38,6 +38,7 @@ export function PortraitFrame({
   ornate = false,
   position = '50% 0%',
   scale = 1,
+  backdrop = false,
   className,
 }: {
   /** Imagem raster. Use `children` para arte em SVG/React. */
@@ -57,6 +58,11 @@ export function PortraitFrame({
   position?: string
   /** Zoom da arte (1 = cabe inteira). */
   scale?: number
+  /**
+   * Fundo de moldura (noite, brilho, grão, vinheta, filete e luz de borda). Desligado por padrão:
+   * a pedido do dono, o sprite aparece como PNG transparente normal, só com a base dissolvida.
+   */
+  backdrop?: boolean
   className?: string
 }) {
   const t = RIM[tone]
@@ -64,15 +70,17 @@ export function PortraitFrame({
     // a base some em degradê; topo e laterais ficam inteiros
     WebkitMaskImage: 'linear-gradient(to bottom, #000 0%, #000 58%, rgba(0,0,0,0.55) 78%, transparent 97%)',
     maskImage: 'linear-gradient(to bottom, #000 0%, #000 58%, rgba(0,0,0,0.55) 78%, transparent 97%)',
-    filter: `drop-shadow(-1.5px -1px 0 rgba(${t.rim},0.55)) drop-shadow(1px 0 0 rgba(${t.rim},0.25)) drop-shadow(0 0 10px rgba(${t.rim},0.28)) contrast(1.05) saturate(0.92)`,
+    filter: backdrop
+      ? `drop-shadow(-1.5px -1px 0 rgba(${t.rim},0.55)) drop-shadow(1px 0 0 rgba(${t.rim},0.25)) drop-shadow(0 0 10px rgba(${t.rim},0.28)) contrast(1.05) saturate(0.92)`
+      : undefined,
     transform: scale !== 1 ? `scale(${scale})` : undefined,
     transformOrigin: '50% 20%',
   }
   return (
     <figure className={cn('relative w-[160px] shrink-0', className)}>
-      <div role="img" aria-label={alt} className={cn('relative isolate overflow-hidden bg-dv-ink', SHAPE[shape])}>
-        {/* fundo: noite + brilho do tom atrás da cabeça */}
-        <span aria-hidden="true" className="absolute inset-0 -z-10" style={{ background: `radial-gradient(70% 55% at 50% 32%, ${t.glow}, transparent 70%), linear-gradient(180deg, var(--dv-ink-3), var(--dv-ink) 85%)` }} />
+      <div role="img" aria-label={alt} className={cn('relative isolate overflow-hidden', backdrop && 'bg-dv-ink', SHAPE[shape])}>
+        {/* fundo: noite + brilho do tom atrás da cabeça (só com backdrop) */}
+        {backdrop && <span aria-hidden="true" className="absolute inset-0 -z-10" style={{ background: `radial-gradient(70% 55% at 50% 32%, ${t.glow}, transparent 70%), linear-gradient(180deg, var(--dv-ink-3), var(--dv-ink) 85%)` }} />}
         {/* arte */}
         <div aria-hidden="true" className="absolute inset-0" style={art}>
           {src ? (
@@ -82,16 +90,20 @@ export function PortraitFrame({
             <div className="size-full [&>svg]:size-full">{children}</div>
           )}
         </div>
-        {/* chão: halo do tom onde a base dissolveu */}
-        <span aria-hidden="true" className="pointer-events-none absolute inset-x-[-10%] bottom-[-14%] h-[34%]" style={{ background: `radial-gradient(50% 50% at 50% 50%, ${t.floor}, transparent 70%)` }} />
-        {/* grão + vinheta */}
-        <span aria-hidden="true" className="devo-grain pointer-events-none absolute inset-0 opacity-[0.1] mix-blend-overlay" />
-        <span aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_40%,transparent_55%,rgba(2,3,7,0.7)_100%)]" />
-        {/* filete */}
-        <span aria-hidden="true" className={cn('pointer-events-none absolute inset-0 border', t.line, SHAPE[shape].replace(/aspect-\S+/, ''))} />
-        <span aria-hidden="true" className={cn('pointer-events-none absolute inset-[5px] border border-white/[0.06]', SHAPE[shape].replace(/aspect-\S+/, ''))} />
+        {backdrop && (
+          <>
+            {/* chão: halo do tom onde a base dissolveu */}
+            <span aria-hidden="true" className="pointer-events-none absolute inset-x-[-10%] bottom-[-14%] h-[34%]" style={{ background: `radial-gradient(50% 50% at 50% 50%, ${t.floor}, transparent 70%)` }} />
+            {/* grão + vinheta */}
+            <span aria-hidden="true" className="devo-grain pointer-events-none absolute inset-0 opacity-[0.1] mix-blend-overlay" />
+            <span aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_40%,transparent_55%,rgba(4,3,6,0.7)_100%)]" />
+            {/* filete */}
+            <span aria-hidden="true" className={cn('pointer-events-none absolute inset-0 border', t.line, SHAPE[shape].replace(/aspect-\S+/, ''))} />
+            <span aria-hidden="true" className={cn('pointer-events-none absolute inset-[5px] border border-white/[0.06]', SHAPE[shape].replace(/aspect-\S+/, ''))} />
+          </>
+        )}
       </div>
-      {ornate && <FrameCorners tone={tone === 'neutral' ? 'gold' : tone} size={20} inset={-4} />}
+      {backdrop && ornate && <FrameCorners tone={tone === 'neutral' ? 'gold' : tone} size={20} inset={-4} />}
       {(name || role) && (
         <figcaption className="relative -mt-5 flex flex-col items-center text-center">
           {name && (

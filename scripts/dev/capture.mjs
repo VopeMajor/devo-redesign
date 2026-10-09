@@ -660,7 +660,7 @@ if (want('estilo')) {
     await page.goto(`${BASE}/estilo`, { waitUntil: 'networkidle' })
     await wait(3500)
     await shot(page, '80-estilo-00-topo')
-    for (const id of ['cores', 'tipografia', 'botoes', 'molduras', 'selos', 'navegacao', 'avisos', 'cartas', 'movimento', 'retratos']) {
+    for (const id of ['cores', 'material', 'tipografia', 'botoes', 'molduras', 'selos', 'navegacao', 'avisos', 'cartas', 'movimento', 'retratos']) {
       await page.locator(`[data-estilo="${id}"]`).scrollIntoViewIfNeeded({ timeout: 3000 }).catch(() => {})
       await page.evaluate((i) => document.querySelector(`[data-estilo="${i}"]`)?.scrollIntoView({ block: 'start' }), id)
       await wait(1200)
@@ -669,6 +669,15 @@ if (want('estilo')) {
     await page.mouse.wheel(0, 760)
     await wait(900)
     await shot(page, '80-estilo-movimento-2')
+    // Paleta e materiais (§0): mais dois quadros de cada.
+    for (const [id, n] of [['cores', 2], ['material', 3]]) {
+      await page.evaluate((i) => document.querySelector(`[data-estilo="${i}"]`)?.scrollIntoView({ block: 'start' }), id)
+      for (let k = 2; k <= n; k++) {
+        await page.mouse.wheel(0, 760)
+        await wait(900)
+        await shot(page, `80-estilo-${id}-${k}`)
+      }
+    }
     // Virada dos dígitos: vários quadros seguidos do relógio acelerado (nenhum pode faltar dígito).
     await page.evaluate(() => document.querySelector('[data-estilo="selos"]')?.scrollIntoView({ block: 'start' }))
     await page.mouse.wheel(0, 700)
@@ -708,7 +717,7 @@ if (want('estilo')) {
       }
     }
     // Cenas 3D: cada preset, normal e alerta.
-    for (const p of ['sigil', 'cathedral', 'table', 'corridor', 'tribunal']) {
+    for (const p of ['clockhall', 'sigil', 'cathedral', 'table', 'corridor', 'tribunal']) {
       await page.evaluate((i) => document.querySelector(`[data-estilo-preset="${i}"]`)?.scrollIntoView({ block: 'center' }), p)
       await wait(3500)
       await shot(page, `83-estilo-cena-${p}`)
@@ -722,6 +731,49 @@ if (want('estilo')) {
       await shot(page, '83-estilo-cena-table-alerta')
     }
     await ctx.close()
+  })
+  await step('estilo-interior', async () => {
+    const { ctx, page } = await device()
+    await page.goto(`${BASE}/estilo`, { waitUntil: 'networkidle' })
+    await wait(2500)
+    for (const id of ['interior', 'interior-abas', 'interior-controles', 'interior-paineis', 'interior-cartas', 'interior-reservados', 'interior-nav', 'interior-fronteira']) {
+      await page.evaluate((i) => document.querySelector(`[data-estilo="${i}"]`)?.scrollIntoView({ block: 'start' }), id)
+      await wait(900)
+      await shot(page, `84-${id}`)
+    }
+    await page.evaluate(() => document.querySelector('[data-estilo="interior-paineis"]')?.scrollIntoView({ block: 'start' }))
+    await page.mouse.wheel(0, 760)
+    await wait(700)
+    await shot(page, '84-interior-paineis-2')
+    await page.evaluate(() => document.querySelector('[data-estilo="interior-reservados"]')?.scrollIntoView({ block: 'start' }))
+    await page.mouse.wheel(0, 760)
+    await wait(700)
+    await shot(page, '84-interior-reservados-2')
+    // Fronteira ao vivo.
+    await page.evaluate(() => document.querySelector('[data-estilo="interior-fronteira"]')?.scrollIntoView({ block: 'start' }))
+    await wait(400)
+    if (await tryClick(btn(page, 'Ver fronteira'))) {
+      await wait(250)
+      await shot(page, '85-fronteira-a')
+      await wait(350)
+      await shot(page, '85-fronteira-b')
+      await wait(1600)
+    }
+    // Tela-modelo do Perfil.
+    await page.goto(`${BASE}/estilo/perfil`, { waitUntil: 'networkidle' })
+    await wait(2000)
+    await shot(page, '86-perfil-00')
+    for (let i = 1; i <= 5; i++) {
+      await page.mouse.wheel(0, 700)
+      await wait(700)
+      await shot(page, `86-perfil-0${i}`)
+    }
+    await ctx.close()
+    const d = await device('desktop')
+    await d.page.goto(`${BASE}/estilo/perfil`, { waitUntil: 'networkidle' })
+    await wait(2000)
+    await shot(d.page, '93-desktop-perfil')
+    await d.ctx.close()
   })
   await step('estilo-desktop', async () => {
     const { ctx, page } = await device('desktop')

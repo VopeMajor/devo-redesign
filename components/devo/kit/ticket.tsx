@@ -76,7 +76,7 @@ export function Ticket({
           'relative flex flex-1 flex-col items-center px-1.5 pb-2 pt-3',
           locked ? 'bg-[linear-gradient(180deg,#3b3a3f,#26252b)] text-dv-text-3' : 'dv-paper-bg',
           dim && 'saturate-[0.4] brightness-[0.82]',
-          today && 'shadow-[0_0_0_1.5px_var(--dv-gold),0_14px_30px_-10px_rgba(236,212,154,0.55)]',
+          today && 'shadow-[0_0_0_1.5px_var(--dv-gold),0_14px_30px_-10px_rgba(227,213,172,0.55)]',
         )}
         style={PERFORATION}
       >

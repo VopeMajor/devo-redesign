@@ -16,6 +16,8 @@ type Base = Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'type'> & {
   loading?: boolean
   /** Som ao clicar (veja DV_SFX em tokens.ts). Padrão: nenhum. */
   sfx?: Sfx | false
+  /** `interior` = estética do Record (blocos retos, sans caixa-alta, cobalto sólido). Inverte sozinho em painel preto. */
+  theme?: 'jornada' | 'interior'
 }
 
 export type ButtonProps = Base & {
@@ -32,8 +34,8 @@ const SIZE: Record<ButtonSize, { h: string; text: string; px: string; cut: numbe
 }
 
 const LINE: Record<ButtonVariant, string> = {
-  primary: 'bg-[linear-gradient(100deg,#a9bbff,var(--dv-cobalt)_30%,var(--dv-cobalt-deep)_70%,#a9bbff)]',
-  secondary: 'bg-[linear-gradient(100deg,var(--dv-line-strong),rgba(236,238,242,0.55)_50%,var(--dv-line-strong))] group-enabled:group-hover:bg-[linear-gradient(100deg,var(--dv-gold-deep),var(--dv-gold-bright)_50%,var(--dv-gold-deep))]',
+  primary: 'bg-[linear-gradient(100deg,#c3c6ee,var(--dv-cobalt)_30%,var(--dv-cobalt-deep)_70%,#c3c6ee)]',
+  secondary: 'bg-[linear-gradient(100deg,var(--dv-line-strong),rgba(238,236,239,0.55)_50%,var(--dv-line-strong))] group-enabled:group-hover:bg-[linear-gradient(100deg,var(--dv-gold-deep),var(--dv-gold-bright)_50%,var(--dv-gold-deep))]',
   ghost: '',
   danger: 'bg-[linear-gradient(100deg,var(--dv-blood-text),var(--dv-blood)_45%,var(--dv-blood-deep))]',
 }
@@ -44,6 +46,14 @@ const FILL: Record<ButtonVariant, string> = {
   secondary: 'bg-[linear-gradient(180deg,var(--dv-ink-3),var(--dv-ink))]',
   ghost: '',
   danger: 'bg-[linear-gradient(180deg,#8a0f18_0%,#4a0a0f_60%,#22060a_100%)] group-enabled:group-hover:bg-[linear-gradient(180deg,#a5131d_0%,#5a0a10_60%,#2a060a_100%)]',
+}
+
+/** Interior: primary = bloco cobalto; secondary = bloco na cor do texto (preto no papel, claro no painel); ghost = link cobalto; danger = vermelho com faixa. */
+const INTERIOR: Record<ButtonVariant, string> = {
+  primary: 'dv-cut-diag bg-in-accent-fill text-white enabled:hover:bg-[#2a58ff] enabled:hover:shadow-[0_0_22px_-4px_rgba(52,64,158,0.8)]',
+  secondary: 'dv-cut-diag bg-in-fg text-in-bg enabled:hover:bg-in-accent-fill enabled:hover:text-white',
+  ghost: 'px-2 text-in-accent underline decoration-in-accent/40 underline-offset-[6px] enabled:hover:decoration-in-accent',
+  danger: 'dv-cut-diag bg-[#a3121f] text-white enabled:hover:bg-[#c01a28]',
 }
 
 const TEXT: Record<ButtonVariant, string> = {
@@ -59,9 +69,48 @@ const TEXT: Record<ButtonVariant, string> = {
  * foco (anel cobalto) · desabilitado (dessaturado, 45%) · carregando (relógio girando, aria-busy).
  */
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button(
-  { variant = 'primary', size = 'md', loading = false, sfx, icon, iconRight, block, className, children, disabled, onClick, type = 'button', style, ...rest },
+  { variant = 'primary', size = 'md', loading = false, sfx, icon, iconRight, block, className, children, disabled, onClick, type = 'button', style, theme = 'jornada', ...rest },
   ref,
 ) {
+  if (theme === 'interior') {
+    return (
+      <button
+        ref={ref}
+        type={type}
+        disabled={disabled || loading}
+        aria-busy={loading || undefined}
+        onClick={(e) => {
+          if (loading) return
+          if (sfx) playSfx(sfx)
+          onClick?.(e)
+        }}
+        style={{ '--dv-cut': '8px', ...style } as CSSProperties}
+        className={cn(
+          'group relative isolate inline-flex select-none items-center justify-center gap-2.5 overflow-hidden font-sans font-medium uppercase',
+          'transition-[transform,background-color,color,box-shadow] duration-[120ms] ease-out enabled:active:scale-[0.97] dv-focus disabled:cursor-not-allowed',
+          'disabled:[&:not([aria-busy])]:opacity-40',
+          size === 'sm' ? 'min-h-11 px-4 text-[11px] tracking-[0.16em]' : size === 'md' ? 'min-h-12 px-6 text-[12px] tracking-[0.18em]' : 'min-h-14 px-8 text-[13px] tracking-[0.2em]',
+          INTERIOR[variant],
+          block && 'w-full',
+          className,
+        )}
+        {...rest}
+      >
+        {variant === 'danger' && <span aria-hidden="true" className="dv-hazard absolute inset-y-0 right-0 w-14 opacity-50 [background-image:repeating-linear-gradient(-55deg,rgba(255,255,255,0.35)_0_4px,transparent_4px_9px)]" />}
+        <span className={cn('relative flex items-center gap-2.5', loading && 'invisible')}>
+          {icon && <span className="flex size-[1.25em] items-center [&>svg]:size-full">{icon}</span>}
+          {children}
+          {iconRight ? <span className="flex size-[1.25em] items-center [&>svg]:size-full">{iconRight}</span> : variant !== 'ghost' && <span aria-hidden="true" className="text-[1.25em] leading-none opacity-70">›</span>}
+        </span>
+        {loading && (
+          <span className="absolute inset-0 flex items-center justify-center">
+            <Spinner className="size-5" />
+            <span className="sr-only">Carregando</span>
+          </span>
+        )}
+      </button>
+    )
+  }
   const s = SIZE[size]
   const isGhost = variant === 'ghost'
   const handle = (e: MouseEvent<HTMLButtonElement>) => {
