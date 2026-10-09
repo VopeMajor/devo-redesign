@@ -6,6 +6,7 @@ import useSWR from 'swr'
 import {
   Badge,
   Button,
+  CRITICAL_MS,
   Chip,
   Countdown,
   Divider,
@@ -22,13 +23,14 @@ import {
 } from '@/components/devo/kit'
 import { type BetBoard, type Dashboard, type EventDetail, arcadeFetcher, arcadeKey, formatCountdown, formatPoints } from '@/lib/devo/arcade/client'
 import { GAMES, type GameId, PATENTES, patenteIndex, rankReward } from '@/lib/devo/arcade/games'
+import { playSfx } from '@/lib/devo/audio'
 import { cn } from '@/lib/utils'
 import { formatDuration, useNow } from '../hooks'
 import { useDevo } from '../state/devo-store'
-import { BET_RESERVE_MIN, SP_TZ, formatMinutes, registerEvent, useApplyTime } from './arcade-shared'
+import { BET_OPTIONS, BET_RESERVE_MIN, SP_TZ, formatMinutes, registerEvent, useApplyTime } from './arcade-shared'
 import { useBetSheet } from './bet-sheet'
 import { eventBadge, VsSplit } from './mesa'
-import { AstrolabeDial, JavaliMedallion, Monogram, OddsBar } from './sala-ui'
+import { AstrolabeDial, GAME_ART, JavaliMedallion, Monogram, OddsBar } from './sala-ui'
 
 type EventView = Dashboard['events'][number]
 
@@ -107,7 +109,7 @@ export function Agenda({
         <Frame as="section" aria-labelledby="hoje" tone="gold" ornate glow pad="none" className="animate-dv-cut-in overflow-hidden">
           <div className="relative">
             <div aria-hidden="true" className="absolute inset-y-0 right-0 w-[55%] overflow-hidden [clip-path:polygon(28%_0,100%_0,100%_100%,0_100%)]">
-              <Image src={GAMES[featured.gameId].thumbnail} alt="" fill sizes="50vw" className="origin-right scale-[1.4] object-cover object-right opacity-45" />
+              <Image src={GAME_ART[featured.gameId].src} alt="" fill sizes="50vw" className="object-cover opacity-50" style={{ objectPosition: GAME_ART[featured.gameId].position }} />
               <span className="absolute inset-0 bg-gradient-to-r from-dv-ink-2 via-dv-ink-2/50 to-transparent" />
             </div>
             <div className="relative flex flex-col gap-3 p-5">
@@ -253,7 +255,7 @@ function AgendaEvent({
     <Frame pad="none" tone={e.status === 'LIVE' ? 'cobalt' : big ? 'gold' : 'neutral'} cut="diag" cutSize={10}>
       <div className="flex items-start gap-3 p-3">
         <span className="dv-cut relative size-14 shrink-0 overflow-hidden" style={{ '--dv-cut': '8px' } as CSSProperties}>
-          <Image src={GAMES[e.gameId].thumbnail} alt="" fill sizes="56px" className="object-cover object-[78%_center]" />
+          <Image src={GAME_ART[e.gameId].src} alt="" fill sizes="56px" className="object-cover" style={{ objectPosition: GAME_ART[e.gameId].position }} />
         </span>
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
@@ -419,16 +421,16 @@ export function Ranking({ data, view, onView }: { data: Dashboard; view: RankVie
 }
 
 const PODIUM = {
-  1: { tone: 'gold' as const, h: 'h-28', num: 'text-[44px] text-dv-gold-bright', line: 'border-dv-gold' },
-  2: { tone: 'silver' as const, h: 'h-20', num: 'text-[30px] text-[#dfe3ec]', line: 'border-[#c9cfdb]' },
-  3: { tone: 'bronze' as const, h: 'h-14', num: 'text-[26px] text-[#d9a06a]', line: 'border-[#b77b45]' },
+  1: { tone: 'gold' as const, h: 'h-20', num: 'text-[38px] text-dv-gold-bright', line: 'border-dv-gold' },
+  2: { tone: 'silver' as const, h: 'h-14', num: 'text-[26px] text-[#dfe3ec]', line: 'border-[#c9cfdb]' },
+  3: { tone: 'bronze' as const, h: 'h-10', num: 'text-[22px] text-[#d9a06a]', line: 'border-[#b77b45]' },
 }
 
 function Podium({ rows }: { rows: RankRow[] }) {
   if (!rows.length) return <p className="font-body text-[15px] text-dv-text-2">Ninguém pontuou nesta semana ainda.</p>
   const order = [rows[1], rows[0], rows[2]].filter(Boolean)
   return (
-    <ol aria-label="Pódio" className="relative grid grid-cols-3 items-end gap-2 pt-6">
+    <ol aria-label="Pódio" className="relative grid grid-cols-3 items-end gap-2 pt-2">
       {/* holofote sobre o 1º */}
       <span aria-hidden="true" className="pointer-events-none absolute left-1/2 top-0 h-full w-1/2 -translate-x-1/2 bg-[radial-gradient(60%_80%_at_50%_0%,rgba(236,212,154,0.22),transparent_70%)]" />
       {order.map((r) => {
@@ -444,7 +446,7 @@ function Podium({ rows }: { rows: RankRow[] }) {
                 <path d="M2 18 L6 4 L14 12 L20 2 L26 12 L34 4 L38 18 Z" fill="currentColor" opacity="0.9" />
               </svg>
             )}
-            <Monogram name={r.name} size={r.rank === 1 ? 'xl' : 'lg'} tone={r.isMe ? 'cobalt' : p.tone} />
+            <Monogram name={r.name} size={r.rank === 1 ? 'lg' : 'md'} tone={r.isMe ? 'cobalt' : p.tone} />
             <span className={cn('mt-2 max-w-full truncate font-display text-[15px] font-semibold uppercase tracking-[0.04em]', r.isMe ? 'text-dv-cobalt-text' : 'text-dv-text')}>
               {r.isMe ? `${r.name} (você)` : r.name}
             </span>
@@ -530,18 +532,20 @@ function GameRank({ data, gameId }: { data: Dashboard; gameId: GameId }) {
             {formatPoints(points)} pts{r.me ? ` · #${r.me.rank}` : ''}
           </span>
         </div>
-        <h3 className="mt-2 font-impact text-[40px] font-bold uppercase leading-none -skew-x-[6deg]">{cur.name}</h3>
-        <p className="mt-1 font-mono text-[12px] text-dv-text-2">{nextP ? `faltam ${formatPoints(nextP.min - points)} pts para ${nextP.name}` : 'Patente máxima'}</p>
-        <div className="mt-3 h-1.5 bg-dv-ink-4" role="progressbar" aria-valuenow={pct} aria-valuemin={0} aria-valuemax={100} aria-label="Progresso da patente">
+        <div className="mt-1.5 flex flex-wrap items-baseline gap-x-3">
+          <h3 className="font-impact text-[30px] font-bold uppercase leading-none -skew-x-[6deg]">{cur.name}</h3>
+          <p className="font-mono text-[12px] text-dv-text-2">{nextP ? `faltam ${formatPoints(nextP.min - points)} pts para ${nextP.name}` : 'Patente máxima'}</p>
+        </div>
+        <div className="mt-2.5 h-1.5 bg-dv-ink-4" role="progressbar" aria-valuenow={pct} aria-valuemin={0} aria-valuemax={100} aria-label="Progresso da patente">
           <div className="h-full bg-[linear-gradient(90deg,var(--dv-cobalt-deep),var(--dv-cobalt-text))]" style={{ width: `${pct}%` }} />
         </div>
-        <ol className="mt-3 grid grid-cols-3 gap-1">
+        <ol className="mt-2.5 grid grid-cols-3 gap-1">
           {PATENTES.map((p, i) => (
             <li
               key={p.name}
               aria-current={i === idx ? 'step' : undefined}
               className={cn(
-                'border px-1 py-1.5 text-center font-mono text-[10px] uppercase tracking-[0.08em] break-words',
+                'border px-1 py-1 text-center font-mono text-[10px] uppercase tracking-[0.08em] break-words',
                 i === idx ? 'border-dv-cobalt bg-dv-cobalt-dim text-white' : i < idx ? 'border-dv-line-strong text-dv-text-2' : 'border-dv-line text-dv-text-3',
               )}
             >
@@ -549,7 +553,7 @@ function GameRank({ data, gameId }: { data: Dashboard; gameId: GameId }) {
             </li>
           ))}
         </ol>
-        <p className="mt-3 font-body text-[14px] text-dv-text-2">
+        <p className="mt-2 font-body text-[14px] text-dv-text-2">
           Maior título alcançado: <span className="text-dv-gold-bright">{r.bestWeek > 0 ? permanent.name : '—'}</span>
         </p>
       </Frame>
@@ -572,28 +576,68 @@ export function Apostas() {
   const { state } = useDevo()
   const now = useNow(1000)
   const { data, mutate } = useSWR<BetBoard>(arcadeKey('bets'), arcadeFetcher, { refreshInterval: 20_000, onSuccess: (d) => applyTime(d) })
-  const sheet = useBetSheet(() => mutate())
+  const [amount, setAmount] = useState(15)
+  const sheet = useBetSheet(() => mutate(), amount)
   const remaining = Math.max(0, state.timerEndsAt - now)
+  const remainingMin = Math.floor(remaining / 60_000)
+  const critical = remaining > 0 && remaining <= CRITICAL_MS
   const open = data?.events.filter((e) => e.duels.length > 0) ?? []
   const closed = data?.events.filter((e) => e.duels.length === 0) ?? []
+  const bettable = open.some((e) => (e.status === 'LOCKED' || e.status === 'LIVE') && e.duels.some((d) => !d.winner && !d.myBet))
+  const reason = !data ? 'Abrindo o livro…' : bettable ? 'Escolha o valor e toque num lado do confronto.' : 'Sem confronto aberto agora — o valor fica guardado para a próxima.'
 
   return (
     <div className="flex flex-col gap-6">
-      <Frame as="section" aria-label="Seu Tempo" variant="alert" pad="md" className="animate-dv-cut-in">
-        <Kicker tone="blood">Livro de apostas</Kicker>
+      <Frame as="section" aria-label="Seu Tempo" tone="gold" pad="md" className="animate-dv-cut-in">
+        <Kicker tone="gold">Livro de apostas · a moeda é Tempo</Kicker>
         <div className="mt-3 flex items-center gap-3">
-          <GlyphHourglass className="size-7 shrink-0 text-dv-cobalt-text" />
+          <GlyphHourglass className={cn('size-7 shrink-0', critical ? 'text-dv-blood-text' : 'text-dv-cobalt-text')} />
           <div>
             <p className="dv-label text-[10px] text-dv-text-3">Seu Tempo</p>
-            <TimeDigits value={formatDuration(remaining)} size="lg" tone={remaining <= 6 * 3_600_000 ? 'blood' : 'cobalt'} label="Seu Tempo" flip={false} />
+            <TimeDigits value={formatDuration(remaining)} size="lg" tone={critical ? 'blood' : 'cobalt'} label="Seu Tempo" flip={false} />
           </div>
         </div>
-        <p className="mt-3 flex gap-2.5 font-body text-[15px] leading-relaxed text-dv-text-2">
-          <GlyphAlert className="mt-1 size-4 shrink-0 text-dv-blood-text" />
-          <span>
-            A moeda aqui é o seu Tempo de vida. Ganhou, o prêmio volta ao relógio multiplicado pela odd. Perdeu, ele some. Você sempre precisa manter ao menos {BET_RESERVE_MIN}min.
-          </span>
+        <p className="mt-3 font-body text-[15px] leading-relaxed text-dv-text-2">
+          Ganhou, o prêmio volta ao relógio multiplicado pela odd. Perdeu, o valor some do seu pulso.
         </p>
+
+        <div className="mt-4 border-t border-dv-line pt-4">
+          <p id="apostar-rotulo" className="dv-label text-[10px] text-dv-text-3">
+            Apostar
+          </p>
+          <div role="radiogroup" aria-labelledby="apostar-rotulo" aria-describedby="apostar-motivo" className="mt-2 grid grid-cols-3 gap-1.5">
+            {BET_OPTIONS.map((v) => {
+              const on = amount === v
+              const afford = remainingMin - v >= BET_RESERVE_MIN
+              return (
+                <button
+                  key={v}
+                  type="button"
+                  role="radio"
+                  aria-checked={on}
+                  disabled={!bettable || !afford}
+                  onClick={() => {
+                    playSfx('click')
+                    setAmount(v)
+                  }}
+                  className={cn(
+                    'dv-focus min-h-11 -skew-x-[8deg] border font-impact text-[17px] font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-45',
+                    on ? 'border-dv-cobalt bg-dv-cobalt-dim text-white shadow-[0_0_14px_-4px_var(--dv-cobalt)]' : 'border-dv-line-strong bg-dv-ink-2 text-dv-text enabled:hover:border-dv-text-3',
+                  )}
+                >
+                  <span className="inline-block skew-x-[8deg]">{formatMinutes(v)}</span>
+                </button>
+              )
+            })}
+          </div>
+          <p id="apostar-motivo" className="mt-2 font-body text-[14px] text-dv-text-2">
+            {reason}
+          </p>
+          <p className="mt-2 flex items-start gap-2 font-body text-[14px] leading-snug text-dv-blood-text">
+            <GlyphAlert className="mt-0.5 size-4 shrink-0" />
+            Você sempre precisa manter ao menos {BET_RESERVE_MIN}min no relógio.
+          </p>
+        </div>
       </Frame>
 
       {!data ? (
@@ -604,7 +648,9 @@ export function Apostas() {
       ) : (
         <>
           {open.length === 0 && (
-            <p className="font-body text-[16px] leading-relaxed text-dv-text-2">Nenhum confronto aberto para apostas agora. Volte quando uma partida fechar as inscrições.</p>
+            <Frame pad="md">
+              <p className="font-body text-[16px] leading-relaxed text-dv-text-2">Nenhum confronto aberto para apostas agora. Volte quando uma partida fechar as inscrições.</p>
+            </Frame>
           )}
           {open.map((ev) => (
             <section key={ev.id} aria-label={GAMES[ev.gameId].name} className="animate-dv-rise">
