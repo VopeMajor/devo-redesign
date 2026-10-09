@@ -710,6 +710,49 @@ if (want('estilo')) {
     }
     await ctx.close()
   })
+  await step('estilo-interior', async () => {
+    const { ctx, page } = await device()
+    await page.goto(`${BASE}/estilo`, { waitUntil: 'networkidle' })
+    await wait(2500)
+    for (const id of ['interior', 'interior-abas', 'interior-controles', 'interior-paineis', 'interior-cartas', 'interior-reservados', 'interior-nav', 'interior-fronteira']) {
+      await page.evaluate((i) => document.querySelector(`[data-estilo="${i}"]`)?.scrollIntoView({ block: 'start' }), id)
+      await wait(900)
+      await shot(page, `84-${id}`)
+    }
+    await page.evaluate(() => document.querySelector('[data-estilo="interior-paineis"]')?.scrollIntoView({ block: 'start' }))
+    await page.mouse.wheel(0, 760)
+    await wait(700)
+    await shot(page, '84-interior-paineis-2')
+    await page.evaluate(() => document.querySelector('[data-estilo="interior-reservados"]')?.scrollIntoView({ block: 'start' }))
+    await page.mouse.wheel(0, 760)
+    await wait(700)
+    await shot(page, '84-interior-reservados-2')
+    // Fronteira ao vivo.
+    await page.evaluate(() => document.querySelector('[data-estilo="interior-fronteira"]')?.scrollIntoView({ block: 'start' }))
+    await wait(400)
+    if (await tryClick(btn(page, 'Ver fronteira'))) {
+      await wait(250)
+      await shot(page, '85-fronteira-a')
+      await wait(350)
+      await shot(page, '85-fronteira-b')
+      await wait(1600)
+    }
+    // Tela-modelo do Perfil.
+    await page.goto(`${BASE}/estilo/perfil`, { waitUntil: 'networkidle' })
+    await wait(2000)
+    await shot(page, '86-perfil-00')
+    for (let i = 1; i <= 5; i++) {
+      await page.mouse.wheel(0, 700)
+      await wait(700)
+      await shot(page, `86-perfil-0${i}`)
+    }
+    await ctx.close()
+    const d = await device('desktop')
+    await d.page.goto(`${BASE}/estilo/perfil`, { waitUntil: 'networkidle' })
+    await wait(2000)
+    await shot(d.page, '93-desktop-perfil')
+    await d.ctx.close()
+  })
   await step('estilo-desktop', async () => {
     const { ctx, page } = await device('desktop')
     await page.goto(`${BASE}/estilo`, { waitUntil: 'networkidle' })

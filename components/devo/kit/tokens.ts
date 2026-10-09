@@ -67,3 +67,17 @@ export const DV_SFX = {
 } as const satisfies Record<string, Sfx>
 
 export type DvSfxIntent = keyof typeof DV_SFX
+
+/** Interior (estética do Record) — espelho de .dv-interior / .dv-interior-dark em globals.css. */
+export const DV_INTERIOR = {
+  paper: '#e3e5e8',
+  paper2: '#d6d9dc',
+  panel: '#090b0f',
+  panel2: '#15171c',
+  ink: '#0b0d12',
+  cobalt: '#1647ff',
+  cobaltOnDark: '#5b7bff',
+  alert: '#c8151f',
+  alertOnDark: '#ff4d57',
+  goldOnPaper: '#7a5a1c',
+} as const

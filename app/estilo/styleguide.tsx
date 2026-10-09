@@ -48,6 +48,7 @@ import { DeadlyVoteSymbol } from '@/components/devo/system/symbol'
 import { HerdeiroArt } from '@/components/devo/npc-art/herdeiro'
 import { MelissaArt } from '@/components/devo/npc-art/melissa'
 import { OddsBar, PaperField, Plaque, PortraitFrame, StatusSeal } from '@/components/devo/kit'
+import { InteriorSection } from './interior-section'
 
 const COLORS: { group: string; items: { name: string; v: string; use: string }[] }[] = [
   {
@@ -495,6 +496,8 @@ function StyleGuideBody() {
           </Button>
         </div>
       </Section>
+
+      <InteriorSection run={run} />
 
       <Section id="retratos" index="X" kicker="Elenco" title="Retratos">
         <p className="mb-4 font-body text-[15px] text-dv-text-2">Mesmo tratamento para raster e SVG: luz de borda na silhueta, grão, vinheta e base que se dissolve.</p>

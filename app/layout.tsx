@@ -30,7 +30,8 @@ const mono = IBM_Plex_Mono({
 
 const serif = Cormorant_Garamond({
   subsets: ['latin'],
-  weight: ['400', '500', '600'],
+  // 300 = serifada fina dos títulos do interior (RECORD FILE, CARTAS DEVO)
+  weight: ['300', '400', '500', '600'],
   variable: '--font-cormorant',
 })
 

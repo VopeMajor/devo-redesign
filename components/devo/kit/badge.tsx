@@ -44,8 +44,30 @@ export function Chip({
   className,
   onClick,
   tone = 'cobalt',
+  theme = 'jornada',
   ...rest
-}: Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'type'> & { selected?: boolean; icon?: ReactNode; tone?: 'cobalt' | 'gold' }) {
+}: Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'type'> & { selected?: boolean; icon?: ReactNode; tone?: 'cobalt' | 'gold'; theme?: 'jornada' | 'interior' }) {
+  if (theme === 'interior') {
+    return (
+      <button
+        type="button"
+        aria-pressed={selected}
+        onClick={(e) => {
+          playSfx('card-select')
+          onClick?.(e)
+        }}
+        className={cn(
+          'dv-focus inline-flex min-h-11 items-center gap-2 px-3.5 font-sans text-[11px] font-medium uppercase tracking-[0.14em] transition-colors duration-150 enabled:active:scale-[0.96] disabled:opacity-40',
+          selected ? 'bg-in-accent-fill text-white shadow-[0_0_14px_-4px_rgba(22,71,255,0.8)]' : 'text-in-fg-2 shadow-[inset_0_0_0_1px_var(--in-line-strong)] enabled:hover:text-in-fg enabled:hover:shadow-[inset_0_0_0_1px_var(--in-fg-2)]',
+          className,
+        )}
+        {...rest}
+      >
+        {icon && <span className="flex size-3.5 items-center [&>svg]:size-full">{icon}</span>}
+        {children}
+      </button>
+    )
+  }
   return (
     <button
       type="button"
