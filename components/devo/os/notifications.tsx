@@ -28,8 +28,8 @@ function LiveToast({ item, onOpen, compact }: { item: NotificationItem; onOpen: 
   if (compact) {
     return (
       <li className="animate-dv-toast-in pointer-events-auto relative w-full max-w-sm drop-shadow-[0_12px_22px_rgba(0,0,0,0.75)]" role={danger ? 'alert' : 'status'} style={{ '--dv-cut': '10px' } as CSSProperties}>
-        <span aria-hidden="true" className={cn('dv-cut-diag absolute inset-0', danger ? 'bg-dv-blood/70' : 'bg-dv-cobalt/60')} />
-        <span aria-hidden="true" className={cn('dv-cut-diag absolute inset-px', danger ? 'bg-[linear-gradient(100deg,#3a080d,var(--dv-ink-2)_60%)]' : 'bg-[linear-gradient(100deg,var(--dv-ink-3),var(--dv-ink-2)_60%)]')} style={{ '--dv-cut': '9.6px' } as CSSProperties} />
+        <span aria-hidden="true" className={cn('dv-cut-diag absolute inset-0', danger ? 'bg-[linear-gradient(100deg,var(--dv-blood),var(--dv-line-strong)_40%)]' : 'bg-[linear-gradient(100deg,var(--dv-gold),var(--dv-line-strong)_45%)]')} />
+        <span aria-hidden="true" className={cn('dv-cut-diag absolute inset-px', 'bg-[linear-gradient(100deg,var(--dv-ink-3),var(--dv-ink-2)_60%)]')} style={{ '--dv-cut': '9.6px' } as CSSProperties} />
         <div className="relative flex min-h-12 items-center gap-2.5 pl-3">
           <button
             type="button"
@@ -42,7 +42,7 @@ function LiveToast({ item, onOpen, compact }: { item: NotificationItem; onOpen: 
           >
             <AppGlyphTile app={app} size="xs" />
             <span className="min-w-0 flex-1">
-              <span className={cn('dv-label block text-[10px]', danger ? 'text-dv-blood-text' : 'text-dv-cobalt-text')}>{app.name}</span>
+              <span className={cn('dv-label block text-[10px]', danger ? 'text-dv-blood-text' : 'text-dv-text-2')}>{app.name}</span>
               <span className="block truncate font-display text-[14px] font-semibold tracking-[0.02em] text-dv-text">{item.title}</span>
             </span>
           </button>
@@ -50,7 +50,7 @@ function LiveToast({ item, onOpen, compact }: { item: NotificationItem; onOpen: 
             <GlyphClose className="size-4" />
           </button>
         </div>
-        <span aria-hidden="true" className={cn('pointer-events-none absolute bottom-0 left-3 right-4 h-px origin-left [animation:devo-shrink_5.2s_linear_forwards]', danger ? 'bg-dv-blood' : 'bg-dv-cobalt')} />
+        <span aria-hidden="true" className={cn('pointer-events-none absolute bottom-0 left-3 right-4 h-px origin-left [animation:devo-shrink_5.2s_linear_forwards]', danger ? 'bg-dv-blood' : 'bg-dv-gold')} />
       </li>
     )
   }
@@ -78,7 +78,7 @@ function LiveToast({ item, onOpen, compact }: { item: NotificationItem; onOpen: 
       />
       <span
         aria-hidden="true"
-        className={cn('pointer-events-none absolute bottom-0 left-3 right-4 h-px origin-left [animation:devo-shrink_5.2s_linear_forwards]', danger ? 'bg-dv-blood' : 'bg-dv-cobalt')}
+        className={cn('pointer-events-none absolute bottom-0 left-3 right-4 h-px origin-left [animation:devo-shrink_5.2s_linear_forwards]', danger ? 'bg-dv-blood' : 'bg-dv-gold')}
       />
     </li>
   )
@@ -142,7 +142,7 @@ export function NotificationList({ onOpen, className }: { onOpen: (id: AppId) =>
       </div>
       <div aria-hidden="true" className="relative mx-4 h-px">
         <span className="absolute inset-0 bg-gradient-to-r from-dv-gold/70 via-dv-gold/25 to-transparent" />
-        <span className="absolute -top-[1px] left-[18%] h-[3px] w-7 bg-dv-cobalt" />
+        <span className="absolute -top-[1px] left-[18%] h-[3px] w-7 bg-dv-gold" />
       </div>
       <ul className="devo-scroll flex min-h-0 flex-1 flex-col gap-2 overflow-y-auto px-3 py-3">
         {count === 0 && (
@@ -168,7 +168,7 @@ export function NotificationList({ onOpen, className }: { onOpen: (id: AppId) =>
                 className="dv-focus group relative isolate flex w-full items-start gap-3 py-3 pl-4 pr-3 text-left transition-transform duration-[120ms] active:scale-[0.985]"
                 style={{ '--dv-cut': '10px' } as CSSProperties}
               >
-                <span aria-hidden="true" className={cn('dv-cut-diag absolute inset-0 -z-10', danger ? 'bg-dv-blood/60' : 'bg-dv-line')} />
+                <span aria-hidden="true" className={cn('dv-cut-diag absolute inset-0 -z-10', danger ? 'bg-[linear-gradient(100deg,var(--dv-blood),var(--dv-line)_40%)]' : 'bg-dv-line')} />
                 <span
                   aria-hidden="true"
                   className={cn(
@@ -177,11 +177,11 @@ export function NotificationList({ onOpen, className }: { onOpen: (id: AppId) =>
                   )}
                   style={{ '--dv-cut': '9.6px' } as CSSProperties}
                 />
-                <span aria-hidden="true" className={cn('absolute inset-y-3 left-0 w-[2px]', danger ? 'bg-dv-blood' : 'bg-dv-cobalt')} />
+                <span aria-hidden="true" className={cn('absolute inset-y-3 left-0 w-[2px]', danger ? 'bg-dv-blood' : 'bg-dv-gold')} />
                 <AppGlyphTile app={app} size="sm" />
                 <span className="min-w-0 flex-1">
                   <span className="dv-label flex justify-between gap-2 text-[10px]">
-                    <span className={danger ? 'text-dv-blood-text' : 'text-dv-cobalt-text'}>{app.name}</span>
+                    <span className={danger ? 'text-dv-blood-text' : 'text-dv-text-2'}>{app.name}</span>
                     <span className="dv-tabular text-dv-text-3">{formatClock(n.createdAt)}</span>
                   </span>
                   <span className="mt-1 block font-display text-[15px] font-semibold leading-snug tracking-[0.02em] text-dv-text">{n.title}</span>

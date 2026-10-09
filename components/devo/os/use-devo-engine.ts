@@ -38,7 +38,7 @@ export function useDevoEngine() {
     dispatch({ type: 'MARK_WELCOMED' })
     const timers: number[] = []
     timers.push(
-      window.setTimeout(() => notify({ appId: 'pulso', title: 'Pulso sincronizado', body: '72:00:00 restantes. O relógio começou.', tone: 'danger' }), WELCOME_PULSE_MS),
+      window.setTimeout(() => notify({ appId: 'pulso', title: 'Pulso sincronizado', body: '72:00:00 restantes. O relógio começou.' }), WELCOME_PULSE_MS),
     )
     for (const w of WELCOME) {
       const text = withName(w.text, callName(state))

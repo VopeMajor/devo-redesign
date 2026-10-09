@@ -34,7 +34,7 @@ const SIZE: Record<ButtonSize, { h: string; text: string; px: string; cut: numbe
 }
 
 const LINE: Record<ButtonVariant, string> = {
-  primary: 'bg-[linear-gradient(100deg,#dcd7f0,var(--dv-cobalt)_30%,var(--dv-cobalt-deep)_70%,#dcd7f0)]',
+  primary: 'bg-[linear-gradient(100deg,#f4efe6,#9a9184_28%,#ece5d8_55%,#6b6357_80%,#dcd5c8)]',
   secondary: 'bg-[linear-gradient(100deg,var(--dv-line-strong),rgba(238,237,235,0.55)_50%,var(--dv-line-strong))] group-enabled:group-hover:bg-[linear-gradient(100deg,var(--dv-gold-deep),var(--dv-gold-bright)_50%,var(--dv-gold-deep))]',
   ghost: '',
   danger: 'bg-[linear-gradient(100deg,var(--dv-blood-text),var(--dv-blood)_45%,var(--dv-blood-deep))]',
@@ -42,25 +42,25 @@ const LINE: Record<ButtonVariant, string> = {
 
 const FILL: Record<ButtonVariant, string> = {
   primary:
-    'bg-[linear-gradient(180deg,#5a4f8f_0%,#3b3366_48%,#1f1b38_100%)] group-enabled:group-hover:bg-[linear-gradient(180deg,#6b5fa8_0%,#463d78_48%,#262044_100%)]',
+    'bg-[linear-gradient(180deg,#f6f5f3_0%,#e7e5e1_52%,#cdcac4_100%)] group-enabled:group-hover:bg-[linear-gradient(180deg,#ffffff_0%,#efede9_52%,#d9d6d0_100%)]',
   secondary: 'bg-[linear-gradient(180deg,var(--dv-ink-3),var(--dv-ink))]',
   ghost: '',
-  danger: 'bg-[linear-gradient(180deg,#8a0f18_0%,#4a0a0f_60%,#22060a_100%)] group-enabled:group-hover:bg-[linear-gradient(180deg,#a5131d_0%,#5a0a10_60%,#2a060a_100%)]',
+  danger: 'bg-[linear-gradient(180deg,var(--dv-ink-3),var(--dv-ink))] group-enabled:group-hover:bg-[linear-gradient(180deg,#2a1417,var(--dv-ink))]',
 }
 
-/** Interior: primary = bloco cobalto; secondary = bloco na cor do texto (preto no papel, claro no painel); ghost = link cobalto; danger = vermelho com faixa. */
+/** Interior: primary = bloco na cor do texto (negro no papel, porcelana no painel); secondary = contorno; ghost = link; danger = contorno rubi. Ametista só no brilho do foco/hover. */
 const INTERIOR: Record<ButtonVariant, string> = {
-  primary: 'dv-cut-diag bg-in-accent-fill text-white enabled:hover:bg-[#2c2c31] enabled:hover:shadow-[0_0_22px_-4px_rgba(138,124,200,0.8)]',
-  secondary: 'dv-cut-diag bg-in-fg text-in-bg enabled:hover:bg-in-accent-fill enabled:hover:text-white',
+  primary: 'dv-cut-diag bg-in-fg text-in-bg enabled:hover:shadow-[0_0_22px_-6px_rgba(138,124,200,0.7)]',
+  secondary: 'dv-cut-diag text-in-fg shadow-[inset_0_0_0_1px_var(--in-fg)] enabled:hover:bg-in-fg enabled:hover:text-in-bg',
   ghost: 'px-2 text-in-accent underline decoration-in-accent/40 underline-offset-[6px] enabled:hover:decoration-in-accent',
-  danger: 'dv-cut-diag bg-[#a3121f] text-white enabled:hover:bg-[#c01a28]',
+  danger: 'dv-cut-diag text-in-alert shadow-[inset_0_0_0_1px_var(--in-alert)] enabled:hover:bg-in-alert enabled:hover:text-white',
 }
 
 const TEXT: Record<ButtonVariant, string> = {
-  primary: 'text-white',
+  primary: 'text-[#0c0c0e]',
   secondary: 'text-dv-text group-enabled:group-hover:text-dv-gold-bright',
   ghost: 'text-dv-text-2 group-enabled:group-hover:text-dv-text',
-  danger: 'text-white',
+  danger: 'text-dv-blood-text',
 }
 
 /**
@@ -96,7 +96,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
         )}
         {...rest}
       >
-        {variant === 'danger' && <span aria-hidden="true" className="dv-hazard absolute inset-y-0 right-0 w-14 opacity-50 [background-image:repeating-linear-gradient(-55deg,rgba(255,255,255,0.35)_0_4px,transparent_4px_9px)]" />}
+        {variant === 'danger' && <span aria-hidden="true" className="dv-hazard absolute inset-y-0 right-0 w-14 opacity-50 [background-image:repeating-linear-gradient(-55deg,rgba(163,18,31,0.7)_0_4px,transparent_4px_9px)]" />}
         <span className={cn('relative flex items-center gap-2.5', loading && 'invisible')}>
           {icon && <span className="flex size-[1.25em] items-center [&>svg]:size-full">{icon}</span>}
           {children}
@@ -154,15 +154,15 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
             style={{ '--dv-cut': `${s.cut - 0.5}px` } as CSSProperties}
           />
           {variant === 'primary' && (
-            <span aria-hidden="true" className="dv-cut-hex absolute inset-px -z-10 bg-[linear-gradient(180deg,rgba(255,255,255,0.14),transparent_50%)]" style={{ '--dv-cut': `${s.cut - 0.5}px` } as CSSProperties} />
+            <span aria-hidden="true" className="dv-cut-hex absolute inset-px -z-10 bg-[linear-gradient(180deg,rgba(255,255,255,0.7),transparent_45%)]" style={{ '--dv-cut': `${s.cut - 0.5}px` } as CSSProperties} />
           )}
           {variant === 'primary' && (
-            <span aria-hidden="true" className="pointer-events-none absolute inset-x-6 -bottom-2 -z-20 h-4 rounded-[50%] bg-dv-cobalt/50 blur-lg transition-opacity group-disabled:opacity-0" />
+            <span aria-hidden="true" className="pointer-events-none absolute inset-x-6 -bottom-2 -z-20 h-4 rounded-[50%] bg-[rgba(236,229,216,0.18)] blur-lg group-focus-visible:bg-[rgba(138,124,200,0.45)] transition-opacity group-disabled:opacity-0" />
           )}
         </>
       )}
       {isGhost && (
-        <span aria-hidden="true" className="absolute inset-x-3 bottom-2 h-px origin-left scale-x-0 bg-dv-cobalt-text transition-transform duration-[360ms] ease-out group-enabled:group-hover:scale-x-100 group-focus-visible:scale-x-100" />
+        <span aria-hidden="true" className="absolute inset-x-3 bottom-2 h-px origin-left scale-x-0 bg-dv-gold-bright transition-transform duration-[360ms] ease-out group-enabled:group-hover:scale-x-100 group-focus-visible:scale-x-100" />
       )}
       <span className={cn('relative flex items-center justify-center gap-3 py-2', TEXT[variant], loading && 'invisible')}>
         {variant === 'secondary' && !icon && <GlyphDiamond className="size-2.5 text-dv-gold/80" filled />}

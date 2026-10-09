@@ -82,7 +82,7 @@ export function RecordFile({
         <div className="flex min-w-0 flex-col gap-4">
           <figure className="relative" style={{ transform: 'rotate(-2.4deg)' } as CSSProperties}>
             <div className="bg-[#fbf8f0] p-1.5 pb-6 shadow-[0_6px_14px_rgba(28,26,34,0.28),0_0_0_1px_rgba(28,26,34,0.08)]">
-              <div className="relative aspect-[3/4] overflow-hidden bg-[linear-gradient(170deg,#1b2a7a,var(--dv-cobalt-dim)_55%,var(--dv-ink))]">
+              <div className="relative aspect-[3/4] overflow-hidden bg-[linear-gradient(170deg,#232228,var(--dv-cobalt-dim)_55%,var(--dv-ink))]">
                 {data.photoUrl ? (
                   // biome-ignore lint/performance/noImgElement: foto enviada pelo usuário, servida pela API privada
                   <img src={data.photoUrl} alt={`Foto de ${data.name}`} className="absolute inset-0 size-full object-cover" />
@@ -199,7 +199,7 @@ function LifePlate({ remainingMs, critical }: { remainingMs: number; critical: b
   return (
     <div
       className={cn(
-        'dv-cut relative overflow-hidden bg-[linear-gradient(180deg,var(--dv-ink-3),var(--dv-ink))] px-4 pb-3 pt-3 text-dv-text shadow-[inset_0_0_0_1px_rgba(125,151,255,0.25)]',
+        'dv-cut relative overflow-hidden bg-[linear-gradient(180deg,var(--dv-ink-3),var(--dv-ink))] px-4 pb-3 pt-3 text-dv-text shadow-[inset_0_0_0_1px_rgba(212,209,220,0.25)]',
         critical && 'shadow-[inset_0_0_0_1px_rgba(255,90,99,0.6)]',
       )}
       style={{ '--dv-cut': '10px' } as CSSProperties}

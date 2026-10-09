@@ -121,7 +121,7 @@ export function Ticket({
             state === 'today' && 'bg-dv-gold-deep text-dv-paper',
             state === 'upcoming' && 'bg-dv-ink-3 text-dv-text-3',
             state === 'locked' && 'bg-dv-ink-2 text-dv-text-3',
-            state === 'missed' && 'bg-dv-blood-deep text-dv-blood-text',
+            state === 'missed' && 'bg-dv-ink-3 text-dv-blood-text',
           )}
         >
           {state === 'claimed' && <GlyphCheck className="size-3 shrink-0" />}

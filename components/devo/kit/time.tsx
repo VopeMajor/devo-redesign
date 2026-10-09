@@ -40,31 +40,29 @@ function tokenize(value: string): Token[] {
 }
 
 /**
- * Uma casa de dígito: largura fixa (0.6em) e máscara justa à altura do algarismo (0.12em–0.95em da
- * caixa de 1em). Na troca o dígito novo rola de cima e o antigo sai por baixo, deslocados exatamente
- * uma altura de algarismo (como um contador): nunca se sobrepõem, nunca vazam da linha e sempre há
- * dígito visível. Sem `flip` (ou com movimento reduzido) troca seca.
+ * Uma casa de dígito: largura fixa (0.6em), caixa de 1em. Na troca existe UM algarismo só (o novo):
+ * ele assenta de cima com um leve brilho (opacidade 0.3→1, 0.1em de queda). Nunca há dois
+ * algarismos sobrepostos, nem resto do antigo, nem traço em nenhum quadro da animação.
+ * `freeze` (0..1) congela a animação naquele ponto — só para o teste visual da vitrine.
  */
-function DigitCell({ c, flip }: { c: string; flip: boolean }) {
+function DigitCell({ c, flip, freeze }: { c: string; flip: boolean; freeze?: number }) {
   const last = useRef(c)
-  const out = useRef<string | null>(null)
   const seq = useRef(0)
   if (last.current !== c) {
-    out.current = last.current
     last.current = c
     seq.current += 1
   }
-  const animating = flip && out.current !== null && seq.current > 0
+  const frozen = freeze !== undefined
+  const animating = flip && (seq.current > 0 || frozen)
   return (
-    <span className="relative block h-[1em] w-[0.6em] text-center leading-[1em] [clip-path:inset(0.12em_0_0.05em_0)]">
-      <span key={`in${seq.current}`} className={cn('block h-[1em]', animating && 'animate-dv-digit-in')}>
+    <span className="relative block h-[1em] w-[0.6em] text-center leading-[1em]">
+      <span
+        key={seq.current}
+        className={cn('block h-[1em]', animating && 'animate-dv-digit-in motion-reduce:animate-none')}
+        style={frozen ? { animationDelay: `${-Math.round(freeze * 380)}ms`, animationPlayState: 'paused' } : undefined}
+      >
         {c}
       </span>
-      {animating && (
-        <span key={`out${seq.current}`} aria-hidden="true" className="animate-dv-digit-out pointer-events-none absolute inset-x-0 top-0 block h-[1em] text-center motion-reduce:hidden">
-          {out.current}
-        </span>
-      )}
     </span>
   )
 }
@@ -85,6 +83,7 @@ export function TimeDigits({
   unitsTone,
   className,
   label,
+  freeze,
 }: {
   value: string
   size?: TimeSize
@@ -100,6 +99,8 @@ export function TimeDigits({
   className?: string
   /** Prefixo para leitores de tela ("Tempo restante"). */
   label?: string
+  /** Teste visual: congela a virada de todos os dígitos no ponto 0..1 da animação. */
+  freeze?: number
 }) {
   const tokens = tokenize(value)
   let group = -1
@@ -116,7 +117,7 @@ export function TimeDigits({
           const digits = (
             <span className="flex items-start">
               {t.text.split('').map((c, i) => (
-                <DigitCell key={i} c={c} flip={flip} />
+                <DigitCell key={i} c={c} flip={flip} freeze={freeze} />
               ))}
             </span>
           )

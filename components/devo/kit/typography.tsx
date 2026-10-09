@@ -80,7 +80,7 @@ export function SectionHeader({
       <div aria-hidden="true" className="relative mt-2.5 h-px">
         <span className={cn('absolute inset-0', paper ? 'bg-dv-paper-ink/25' : 'bg-gradient-to-r from-dv-gold/70 via-dv-gold/25 to-transparent')} />
         <span className={cn('absolute -top-[3px] left-0 h-[7px] w-px', paper ? 'bg-dv-paper-ink/50' : 'bg-dv-gold')} />
-        <span className={cn('absolute -top-[1px] left-[18%] h-[3px] w-7', paper ? 'bg-dv-cobalt-deep/70' : 'bg-dv-cobalt')} />
+        <span className={cn('absolute -top-[1px] left-[18%] h-[3px] w-7', paper ? 'bg-dv-paper-ink/70' : 'bg-dv-amethyst')} />
       </div>
     </header>
   )

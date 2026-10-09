@@ -7,10 +7,10 @@ import { cn } from '@/lib/utils'
 export type BadgeTone = 'cobalt' | 'gold' | 'paper' | 'blood' | 'neutral'
 
 const BADGE: Record<BadgeTone, string> = {
-  cobalt: 'bg-dv-cobalt-dim text-dv-cobalt-text [--line:var(--dv-cobalt)]',
-  gold: 'bg-[#1d170b] text-dv-gold-bright [--line:var(--dv-gold)]',
+  cobalt: 'bg-dv-ink-3 text-dv-text [--line:var(--dv-amethyst)]',
+  gold: 'bg-[#1d1b18] text-dv-gold-bright [--line:var(--dv-gold)]',
   paper: 'bg-dv-paper text-dv-paper-ink [--line:var(--dv-gold-deep)]',
-  blood: 'bg-dv-blood-deep text-dv-blood-text [--line:var(--dv-blood)]',
+  blood: 'bg-dv-ink-3 text-dv-blood-text [--line:var(--dv-blood)]',
   neutral: 'bg-dv-ink-3 text-dv-text-2 [--line:var(--dv-line-strong)]',
 }
 
@@ -89,8 +89,8 @@ export function Chip({
           'absolute inset-x-0 inset-y-1.5 -z-0 -skew-x-[14deg] border transition-colors duration-200',
           selected
             ? tone === 'gold'
-              ? 'border-dv-gold bg-[#2a2010] shadow-[0_0_14px_-4px_var(--dv-gold)]'
-              : 'border-dv-cobalt bg-dv-cobalt-dim shadow-[0_0_14px_-4px_var(--dv-cobalt)]'
+              ? 'border-dv-gold bg-[#22201c] shadow-[0_0_14px_-4px_var(--dv-gold)]'
+              : 'border-dv-gold-bright bg-dv-ink-3 text-dv-text shadow-[0_0_14px_-4px_rgba(138,124,200,0.7)]'
             : 'border-dv-line-strong bg-dv-ink-2/80 group-enabled:group-hover:border-dv-text-3',
         )}
       />

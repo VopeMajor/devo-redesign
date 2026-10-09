@@ -7,18 +7,19 @@ import { GlyphAlert, GlyphClose, GlyphDiamond, GlyphSpark } from './glyphs'
 export type ToastTone = 'system' | 'gold' | 'alert'
 
 const ACCENT: Record<ToastTone, string> = {
-  system: 'bg-dv-cobalt',
-  gold: 'bg-dv-gold',
+  system: 'bg-dv-gold',
+  gold: 'bg-dv-gold-bright',
   alert: 'bg-dv-blood',
 }
 const KICK: Record<ToastTone, string> = {
-  system: 'text-dv-cobalt-text',
-  gold: 'text-dv-gold',
+  system: 'text-dv-text-2',
+  gold: 'text-dv-gold-bright',
   alert: 'text-dv-blood-text',
 }
 
 /**
- * Aviso visual curto. Entra com corte diagonal da esquerda. A lógica de fila fica com quem usa
+ * Aviso visual curto em mármore negro com filete de aço. Rubi só em `alert` e só no filete/ícone
+ * (confirmação positiva nunca é `alert`). Entra com corte diagonal da esquerda. A lógica de fila fica com quem usa
  * (ex.: os/notifications.tsx); este componente só desenha. Use `role="status"` (padrão) para
  * avisos e `role="alert"` só para perigo.
  */
@@ -51,10 +52,10 @@ export function Toast({
       className={cn('animate-dv-toast-in relative isolate w-full max-w-sm drop-shadow-[0_14px_24px_rgba(0,0,0,0.6)]', className)}
       style={{ '--dv-cut': '12px', ...style } as CSSProperties}
     >
-      <span aria-hidden="true" className={cn('dv-cut-diag absolute inset-0 -z-10', tone === 'alert' ? 'bg-dv-blood/70' : 'bg-dv-line-strong')} />
+      <span aria-hidden="true" className={cn('dv-cut-diag absolute inset-0 -z-10', tone === 'alert' ? 'bg-[linear-gradient(100deg,var(--dv-blood),var(--dv-line-strong)_40%)]' : 'bg-[linear-gradient(100deg,var(--dv-gold),var(--dv-line-strong)_45%)]')} />
       <span
         aria-hidden="true"
-        className={cn('dv-cut-diag absolute inset-px -z-10', tone === 'alert' ? 'bg-[linear-gradient(100deg,#3a080d,var(--dv-ink-2)_55%)]' : 'bg-[linear-gradient(100deg,var(--dv-ink-3),var(--dv-ink-2)_60%)]')}
+        className={cn('dv-cut-diag absolute inset-px -z-10', 'bg-[linear-gradient(100deg,var(--dv-ink-3),var(--dv-ink-2)_60%)]')}
         style={{ '--dv-cut': '11.6px' } as CSSProperties}
       />
       <span aria-hidden="true" className={cn('absolute inset-y-3 left-0 w-[3px]', ACCENT[tone])} />

@@ -726,6 +726,12 @@ if (want('estilo')) {
       await shot(page, `80-estilo-digitos-${i}`)
       await wait(120)
     }
+    // Testes visuais: dígitos congelados no meio da virada e caixa-alta espaçada.
+    for (const t of ['digitos-congelados', 'caixa-alta']) {
+      await page.evaluate((i) => document.querySelector(`[data-estilo-test="${i}"]`)?.scrollIntoView({ block: 'center' }), t)
+      await wait(700)
+      await shot(page, `80-estilo-teste-${t}`)
+    }
     // Estado pressionado/foco num botão (teclado).
     await page.evaluate(() => document.querySelector('[data-estilo="botoes"]')?.scrollIntoView({ block: 'start' }))
     await wait(400)

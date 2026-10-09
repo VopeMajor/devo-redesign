@@ -11,7 +11,7 @@ const VALUE: Record<StatTone, string> = {
 }
 const RULE: Record<StatTone, string> = {
   text: 'bg-dv-line-strong',
-  cobalt: 'bg-dv-cobalt',
+  cobalt: 'bg-dv-amethyst',
   gold: 'bg-dv-gold',
   blood: 'bg-dv-blood',
 }

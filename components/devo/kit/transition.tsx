@@ -78,7 +78,7 @@ const SLAB: Record<Exclude<CurtainTone, 'interior'>, { lead: string; slab: strin
   },
   gold: {
     lead: 'bg-[linear-gradient(90deg,var(--dv-gold-deep),var(--dv-gold)_60%,var(--dv-gold-bright))]',
-    slab: 'bg-[linear-gradient(90deg,var(--dv-ink)_0%,#0d0b08_60%,var(--dv-ink-2)_100%)]',
+    slab: 'bg-[linear-gradient(90deg,var(--dv-ink)_0%,#0f0f10_60%,var(--dv-ink-2)_100%)]',
     ring: 'text-dv-gold',
     line: 'bg-dv-cobalt',
   },

@@ -147,15 +147,15 @@ export function CardShuffler({ synced, onShuffle, className }: { synced: boolean
               <stop offset="100%" stopColor="#ecd49a" />
             </linearGradient>
             <radialGradient id="dvshuf-face" cx="50%" cy="45%" r="60%">
-              <stop offset="0%" stopColor="#2b2540" />
+              <stop offset="0%" stopColor="#232228" />
               <stop offset="70%" stopColor="#0a0f1c" />
               <stop offset="100%" stopColor="#05070d" />
             </radialGradient>
             <radialGradient id="dvshuf-iris" cx="50%" cy="50%" r="50%">
               <stop offset="0%" stopColor="#d6e0ff" />
-              <stop offset="25%" stopColor="#7d97ff" />
+              <stop offset="25%" stopColor="#d4d1dc" />
               <stop offset="62%" stopColor="#8a7cc8" />
-              <stop offset="100%" stopColor="#0b1a4d" />
+              <stop offset="100%" stopColor="#232228" />
             </radialGradient>
             <radialGradient id="dvshuf-glow" cx="50%" cy="50%" r="50%">
               <stop offset="55%" stopColor="#8a7cc8" stopOpacity="0.35" />
@@ -180,7 +180,7 @@ export function CardShuffler({ synced, onShuffle, className }: { synced: boolean
                 y1={i % 6 === 0 ? 4.5 : 6.5}
                 x2="100"
                 y2="10.5"
-                stroke={i % 6 === 0 ? '#ecd49a' : '#7d97ff'}
+                stroke={i % 6 === 0 ? '#ecd49a' : '#d4d1dc'}
                 strokeOpacity={i % 6 === 0 ? 0.95 : 0.45}
                 strokeWidth={i % 6 === 0 ? 1.2 : 0.6}
                 transform={`rotate(${i * 5} 100 100)`}
@@ -213,10 +213,10 @@ export function CardShuffler({ synced, onShuffle, className }: { synced: boolean
           {/* anéis armilares (cobalto) */}
           <g style={spin(40, 1.6, true)}>
             <ellipse cx="100" cy="100" rx="66" ry="20" fill="none" stroke="#8a7cc8" strokeOpacity="0.75" strokeWidth="1.1" transform="rotate(-24 100 100)" />
-            <circle cx="160.3" cy="73.2" r="2.4" fill="#7d97ff" />
+            <circle cx="160.3" cy="73.2" r="2.4" fill="#d4d1dc" />
           </g>
           <g style={spin(55, 2, false)}>
-            <ellipse cx="100" cy="100" rx="66" ry="14" fill="none" stroke="#7d97ff" strokeOpacity="0.4" strokeWidth="0.8" strokeDasharray="10 4 2 4" transform="rotate(38 100 100)" />
+            <ellipse cx="100" cy="100" rx="66" ry="14" fill="none" stroke="#d4d1dc" strokeOpacity="0.4" strokeWidth="0.8" strokeDasharray="10 4 2 4" transform="rotate(38 100 100)" />
           </g>
 
           {/* cartas em órbita */}
@@ -251,8 +251,8 @@ export function CardShuffler({ synced, onShuffle, className }: { synced: boolean
 
           {/* ponteiros */}
           <g style={spin(60, 0.6)}>
-            <line x1="100" y1="100" x2="100" y2="24" stroke="#7d97ff" strokeWidth="0.9" strokeLinecap="round" />
-            <circle cx="100" cy="24" r="1.6" fill="#7d97ff" />
+            <line x1="100" y1="100" x2="100" y2="24" stroke="#d4d1dc" strokeWidth="0.9" strokeLinecap="round" />
+            <circle cx="100" cy="24" r="1.6" fill="#d4d1dc" />
           </g>
           <g style={spin(720, 4)}>
             <path d="M100 100 L97 92 L100 46 L103 92 Z" fill="url(#dvshuf-gold)" />
@@ -263,7 +263,7 @@ export function CardShuffler({ synced, onShuffle, className }: { synced: boolean
             <circle cx="100" cy="100" r="31" fill="#05070d" stroke="url(#dvshuf-gold)" strokeWidth="2.2" />
             <circle cx="100" cy="100" r="25" fill="url(#dvshuf-iris)" />
             <circle cx="100" cy="100" r="19" fill="none" stroke="#d6e0ff" strokeOpacity="0.35" strokeWidth="0.5" strokeDasharray="1.5 2.5" />
-            <circle cx="100" cy="100" r={shuffling ? 4.5 : hover ? 7 : 9} fill="#01030d" stroke="#7d97ff" strokeOpacity="0.7" strokeWidth="0.8" style={{ transition: 'r 400ms cubic-bezier(.2,.8,.2,1)' }} />
+            <circle cx="100" cy="100" r={shuffling ? 4.5 : hover ? 7 : 9} fill="#01030d" stroke="#d4d1dc" strokeOpacity="0.7" strokeWidth="0.8" style={{ transition: 'r 400ms cubic-bezier(.2,.8,.2,1)' }} />
             <circle cx="100" cy="100" r="1.8" fill="#d6e0ff" />
             <ellipse cx="92" cy="92" rx="4" ry="2.3" fill="#ffffff" opacity="0.6" transform="rotate(-30 92 92)" />
           </g>

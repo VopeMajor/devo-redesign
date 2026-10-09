@@ -47,6 +47,7 @@ import {
 import { DeadlyVoteSymbol } from '@/components/devo/system/symbol'
 import { OddsBar, PaperField, Plaque, PortraitFrame, StatusSeal } from '@/components/devo/kit'
 import { portraitFrameProps } from '@/lib/devo/npcs'
+import { CardBack, CardFace } from '@/components/devo/shared/devo-card'
 import { InteriorSection } from './interior-section'
 import { BoardSample, EmblemShowcase, MaterialGrid, OrnamentShowcase, PaletteGrid } from './material-section'
 
@@ -183,6 +184,12 @@ function StyleGuideBody() {
 
       <Section id="tipografia" index="II" kicker="Escala" title="Tipografia">
         <div className="space-y-5">
+          <div data-estilo-test="caixa-alta">
+            <p className="dv-label text-[10px] text-dv-text-3">Teste · caixa-alta espaçada (sem buracos depois de “U”, espaço entre palavras visível)</p>
+            <p className="mt-2 font-display text-[11px] font-semibold uppercase tracking-[0.06em]">O Relógio Parado · Olho que Tudo Vê · Moeda de Duas Caras · Ampulheta Invertida</p>
+            <p className="mt-1 font-serif text-[11px] uppercase tracking-[0.2em]">Mesma raridade · Nem a raridade é revelada.</p>
+            <p className="mt-1 font-sans text-[10px] uppercase tracking-[0.18em]">Dado Viciado · Coroa do Anfitrião · Lâminas Cruzadas</p>
+          </div>
           <div>
             <p className="dv-label text-[10px] text-dv-text-3">Impacto · Oswald 600 · 56/64px · números e títulos curtos</p>
             <p className="font-impact text-[56px] font-semibold uppercase leading-none">Eliminado</p>
@@ -328,6 +335,14 @@ function StyleGuideBody() {
             <p className="dv-label mb-2 text-[10px] text-dv-text-3">TimeDigits · units (D:H:M:S, Record)</p>
             <FastClock />
           </div>
+          <div data-estilo-test="digitos-congelados">
+            <p className="dv-label mb-2 text-[10px] text-dv-text-3">Teste · virada congelada em 0 · 25 · 50 · 75 · 100% (um algarismo por casa, sem fantasma)</p>
+            <div className="flex flex-wrap gap-x-5 gap-y-2">
+              {[0, 0.25, 0.5, 0.75, 1].map((t) => (
+                <TimeDigits key={t} value="23:53:11" size="lg" tone="cobalt" freeze={t} label={`Congelado ${t * 100}%`} />
+              ))}
+            </div>
+          </div>
           <div>
             <p className="dv-label mb-2 text-[10px] text-dv-text-3">Countdown · crítico (&lt; 6h)</p>
             <Countdown endsAt={critEndsAt} size="lg" units sound={false} />
@@ -414,6 +429,14 @@ function StyleGuideBody() {
       </Section>
 
       <Section id="cartas" index="VIII" kicker="Itens" title="Cartas e tiras">
+        <p className="dv-label mb-3 text-[10px] text-dv-text-3">Carta DEVO · padrão único (shared/devo-card) · comum · rara · lendária · verso</p>
+        <div className="mb-8 grid grid-cols-4 gap-2">
+          <CardFace cardId="fosforo" className="w-full" />
+          <CardFace cardId="mascara" className="w-full" />
+          <CardFace cardId="coroa" className="w-full" />
+          <CardBack className="w-full" />
+        </div>
+        <p className="dv-label mb-3 text-[10px] text-dv-text-3">CardFrame (kit) · a mesma matéria para itens e prêmios</p>
         <Stagger className="flex flex-wrap gap-3" variant="rise">
           <CardFrame title="Fósforo" index="01" tone="neutral">
             <span className="grid size-full place-items-center text-dv-text-2">

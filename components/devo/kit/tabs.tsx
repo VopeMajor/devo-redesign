@@ -130,7 +130,7 @@ export function Tabs<V extends string>({
                   'disabled:cursor-not-allowed disabled:opacity-40',
                 )}
               >
-                {it.icon && <span className={cn('flex size-4 items-center [&>svg]:size-full', active ? 'text-dv-cobalt-text' : '')}>{it.icon}</span>}
+                {it.icon && <span className={cn('flex size-4 items-center [&>svg]:size-full', active ? 'text-dv-text' : '')}>{it.icon}</span>}
                 <span>{it.label}</span>
                 {typeof it.count === 'number' && it.count > 0 && (
                   <span className="dv-tabular grid min-w-5 place-items-center bg-dv-blood px-1 font-mono text-[10px] leading-5 tracking-normal text-white">{it.count}</span>
@@ -144,7 +144,7 @@ export function Tabs<V extends string>({
             className="pointer-events-none absolute bottom-0 left-0 h-[3px] transition-[transform,width] duration-[360ms] ease-[cubic-bezier(0.16,1,0.3,1)] motion-reduce:transition-none"
             style={{ width: bar?.w ?? 0, transform: `translateX(${bar?.x ?? 0}px)`, opacity: bar ? 1 : 0 }}
           >
-            <span className="absolute inset-x-2 inset-y-0 -skew-x-[30deg] bg-dv-cobalt shadow-[0_0_12px_rgba(138,124,200,0.8)]" />
+            <span className="absolute inset-x-2 inset-y-0 -skew-x-[30deg] bg-[linear-gradient(90deg,var(--dv-gold-deep),var(--dv-gold-bright)_50%,var(--dv-gold-deep))] shadow-[0_0_10px_rgba(138,124,200,0.45)]" />
             <span className="absolute -top-[3px] left-1/2 size-[7px] -translate-x-1/2 rotate-45 border border-dv-ink bg-dv-gold" />
           </span>
         </div>

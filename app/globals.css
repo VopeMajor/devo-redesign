@@ -178,9 +178,9 @@
   --dv-violet: #6f6b82;
   --dv-violet-text: #b7b3c9;
   /* Sistema (o antigo "cobalto"): ametista fumê para blocos de estado ativo; `-text` = prata-ametista para dados pequenos. */
-  --dv-cobalt: #5a4f8f;
-  --dv-cobalt-deep: #463d78;
-  --dv-cobalt-dim: #1e1b2b;
+  --dv-cobalt: #36353d;
+  --dv-cobalt-deep: #26252b;
+  --dv-cobalt-dim: #1b1a20;
   --dv-cobalt-text: #dcd9e4;
   /* Metal champanhe-prateado (aço escovado, leve dourado-claro; nunca amarelo): filigrana, molduras, conquistas. */
   --dv-gold: #bab09f;
@@ -756,10 +756,10 @@
   from { opacity: 0; transform: translateY(-55%) rotateX(70deg); }
   to { opacity: 1; transform: none; }
 }
-/* Virada do TimeDigits (contador): o novo entra de cima, o antigo sai por baixo, uma altura de algarismo. */
+/* Virada do TimeDigits: um algarismo só (o novo) assenta de cima com brilho; nunca há sobreposição. */
 @keyframes dv-digit-in {
-  from { transform: translateY(-0.86em); }
-  to { transform: none; }
+  from { opacity: 0.3; transform: translateY(-0.1em); }
+  to { opacity: 1; transform: none; }
 }
 @keyframes dv-digit-out {
   from { transform: none; opacity: 1; }
@@ -865,11 +865,11 @@
   letter-spacing: 0.22em;
   text-transform: uppercase;
 }
-/* Foco visível padrão: anel cobalto deslocado. */
+/* Foco visível padrão: anel ametista deslocado (o único acento frio). */
 @utility dv-focus {
   outline: none;
   &:focus-visible {
-    outline: 2px solid var(--dv-cobalt-text);
+    outline: 2px solid var(--dv-amethyst-text);
     outline-offset: 3px;
   }
 }
@@ -1003,7 +1003,7 @@
   --in-line: rgba(238,237,235, 0.13);
   --in-line-strong: rgba(238,237,235, 0.34);
   --in-accent: #e0dde8;      /* prata com sopro de ametista: texto ativo sobre o veludo */
-  --in-accent-fill: #4e4580;
+  --in-accent-fill: #34343a;
   --in-data: #dcd9d3;
   --in-accent-glow: rgba(138,124,200, 0.55);
   --in-violet: #b7b3c9;
@@ -1197,4 +1197,15 @@
 .dv-hand-hour { transform-box: view-box; transform-origin: 50% 50%; animation: dv-spin 2880s linear infinite; }
 @media (prefers-reduced-motion: reduce) {
   .dv-lantern-sway, .dv-flame, .dv-gear-cw, .dv-gear-ccw, .dv-hand-min, .dv-hand-hour { animation: none !important; }
+}
+
+/* ── Tipografia em caixa-alta (blindagem global; crítica r2 "QU E TU DO", "Nema raridade") ──
+   Com tracking, os pares de kerning e as ligaduras das fontes do Google abriam buracos depois de "U"
+   e o espaço entre palavras ficava do tamanho do espaço entre letras. Regra única: caixa-alta sem
+   kerning nem ligaduras e com espaço de palavra proporcional. Não sobrescreva em componentes. */
+.uppercase,
+.dv-label {
+  font-kerning: none;
+  font-variant-ligatures: none;
+  word-spacing: 0.14em;
 }

@@ -358,8 +358,9 @@ export function CardFace({
           </span>
         </span>
 
-        <span aria-hidden="true" className="absolute inset-x-[7cqw] top-[101cqw] flex h-[16cqw] items-start justify-center text-center">
-          <span className="line-clamp-2 font-display text-[7cqw] font-semibold uppercase leading-[1.08] tracking-[0.05em] text-[#eeedeb]">{card.name}</span>
+        {/* Nome só quando a carta é grande o bastante (≥ 10 px efetivos); na miniatura ele vem embaixo, fora da carta. */}
+        <span aria-hidden="true" className="absolute inset-x-[6cqw] top-[100cqw] hidden h-[18cqw] items-start justify-center text-center @min-[150px]:flex">
+          <span className="line-clamp-2 pt-[0.14em] font-display text-[max(10px,6.6cqw)] font-semibold uppercase leading-[1.2] tracking-[0.06em] text-[#eeedeb]">{card.name}</span>
         </span>
         <span aria-hidden="true" className="absolute inset-x-[7cqw] top-[118cqw] hidden items-center justify-center gap-[2cqw] whitespace-nowrap font-sans text-[3.6cqw] font-medium uppercase tracking-[0.18em] @min-[130px]:flex" style={{ color: skin.light }}>
           <span className="h-px flex-1 bg-current opacity-40" />
