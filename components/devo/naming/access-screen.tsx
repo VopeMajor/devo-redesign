@@ -12,7 +12,7 @@ import { useVisibleViewport } from '../kit/viewport'
 
 export type AccessMode = 'invite' | 'login'
 type Step = 'code' | 'register' | 'login'
-type FieldId = 'code' | 'user' | 'pass' | 'pass2'
+type FieldId = 'code' | 'user' | 'char' | 'pass' | 'pass2'
 type Status = 'idle' | 'ok' | 'error'
 
 const USERNAME_MAX = 40
@@ -25,6 +25,8 @@ function cleanName(value: string) {
   return value.trim().replace(/\s+/g, ' ')
 }
 const INVITE_HEADER = 'x-devo-invite'
+const CHARACTER_HEADER = 'x-devo-character'
+const CHARACTER_MAX = 40
 
 const SIGNUP_ERRORS: Record<string, string> = {
   INVITE_INVALID: 'Esse código acabou de ser usado. Peça outro.',
@@ -52,6 +54,7 @@ function signupError(err: { code?: string; message?: string } | null | undefined
 
 /** Qual campo a mensagem de erro aponta (para marcar o campo em vermelho). */
 function fieldOf(message: string): FieldId | null {
+  if (/personagem/i.test(message)) return 'char'
   if (/nome/i.test(message)) return 'user'
   if (/não conferem/i.test(message)) return 'pass2'
   if (/senha/i.test(message)) return 'pass'
@@ -82,12 +85,13 @@ export function AccessScreen({
   onCancel,
 }: {
   mode: AccessMode
-  onAuthenticated: (kind: 'registered' | 'logged-in', name: string) => void
+  onAuthenticated: (kind: 'registered' | 'logged-in', name: string, character?: string) => void
   onCancel: () => void
 }) {
   const [step, setStep] = useState<Step>(mode === 'login' ? 'login' : 'code')
   const [code, setCode] = useState('')
   const [username, setUsername] = useState('')
+  const [character, setCharacter] = useState('')
   const [password, setPassword] = useState('')
   const [confirm, setConfirm] = useState('')
   const [error, setError] = useState<string | null>(null)
@@ -152,14 +156,16 @@ export function AccessScreen({
       if (password.length < 6) return fail('A senha precisa ter pelo menos 6 caracteres.', 'pass')
 
       if (step === 'register') {
+        const hero = cleanName(character)
+        if (!hero) return fail('Dê um nome ao seu personagem.', 'char')
         if (password !== confirm) return fail('As senhas não conferem.', 'pass2')
         const { error: err } = await authClient.signUp.email(
           { email: internalEmail(name), password, name, username: name, displayUsername: name },
-          { headers: { [INVITE_HEADER]: code } },
+          { headers: { [INVITE_HEADER]: code, [CHARACTER_HEADER]: encodeURIComponent(hero) } },
         )
         if (err) return fail(signupError(err))
         playSfx('confirm')
-        onAuthenticated('registered', name)
+        onAuthenticated('registered', name, hero)
         return
       }
 
@@ -179,14 +185,14 @@ export function AccessScreen({
     step === 'code'
       ? 'O DEVO só abre para quem foi chamado. Digite o código que você recebeu.'
       : step === 'register'
-        ? 'Diga como quer ser chamado (nome e sobrenome, se quiser) e escolha uma senha para voltar.'
+        ? 'Escolha o nome do jogador (é com ele que você entra) e o nome do personagem: é assim que todos no DEVO vão chamar você.'
         : 'Entre com o nome e a senha que você escolheu.'
 
   const name = cleanName(username)
   const canSubmit =
     step === 'code'
       ? code.trim().length >= 6
-      : name.length > 0 && password.length >= 6 && (step === 'login' || confirm.length > 0)
+      : name.length > 0 && password.length >= 6 && (step === 'login' || (confirm.length > 0 && cleanName(character).length > 0))
 
   // Estado de cada campo: erro (servidor ou validação local), ok (requisito cumprido) ou neutro.
   const passShort = password.length > 0 && password.length < 6
@@ -194,6 +200,7 @@ export function AccessScreen({
   const status: Record<FieldId, Status> = {
     code: errorField === 'code' ? 'error' : accepted ? 'ok' : 'idle',
     user: errorField === 'user' ? 'error' : name.length > 0 ? 'ok' : 'idle',
+    char: errorField === 'char' ? 'error' : cleanName(character).length > 0 ? 'ok' : 'idle',
     pass: errorField === 'pass' || (touched.pass && passShort) ? 'error' : step === 'register' && password.length >= 6 ? 'ok' : 'idle',
     pass2: errorField === 'pass2' || mismatch ? 'error' : confirm.length > 0 && confirm === password ? 'ok' : 'idle',
   }
@@ -325,7 +332,7 @@ export function AccessScreen({
                     <>
                       <DocField
                         id="devo-user"
-                        label="Seu nome"
+                        label={step === 'register' ? 'Nome do jogador · login' : 'Seu nome'}
                         status={status.user}
                         shake={errorField === 'user' ? errorSeq : 0}
                         inputProps={{
@@ -345,6 +352,30 @@ export function AccessScreen({
                           className: 'font-body text-[19px]',
                         }}
                       />
+                      {step === 'register' && (
+                        <DocField
+                          id="devo-char"
+                          label="Nome do personagem"
+                          status={status.char}
+                          shake={errorField === 'char' ? errorSeq : 0}
+                          message="Como os NPCs vão chamar você. Pode ser diferente do login."
+                          inputProps={{
+                            autoComplete: 'off',
+                            autoCapitalize: 'words',
+                            spellCheck: false,
+                            maxLength: CHARACTER_MAX,
+                            value: character,
+                            onChange: (e) => {
+                              setCharacter(e.target.value)
+                              clearError()
+                              playSfx('type')
+                            },
+                            onFocus: (e) => focusIntoView(e.currentTarget),
+                            placeholder: 'Ex.: Lune Arcanjo',
+                            className: 'font-serif text-[21px] italic',
+                          }}
+                        />
+                      )}
                       <DocField
                         id="devo-pass"
                         label="Senha"
@@ -395,12 +426,13 @@ export function AccessScreen({
                     <div aria-hidden="true" className="mt-4 flex items-end gap-3">
                       <span className="dv-label pb-1 text-[10px] text-dv-paper-ink/60">Assinatura</span>
                       <span className="relative min-h-10 flex-1 truncate border-b border-dv-paper-ink/45 px-1 pb-1 font-serif text-[26px] italic leading-[1.25] text-dv-cobalt-deep">
-                        {name}
+                        {cleanName(character) || name}
                       </span>
                     </div>
                     <ul className="mt-5 flex flex-col gap-2 border-l-2 border-dv-paper-ink/15 pl-3" aria-label="Requisitos">
                       {[
-                        { ok: name.length > 0, text: 'Nome: do jeito que quiser, com espaços e acentos (só não pode repetir)' },
+                        { ok: name.length > 0, text: 'Nome do jogador: do jeito que quiser, com espaços e acentos (só não pode repetir)' },
+                        { ok: cleanName(character).length > 0, text: 'Nome do personagem: como você será chamado no jogo' },
                         { ok: password.length >= 6, text: 'Senha: pelo menos 6 caracteres (qualquer símbolo vale)' },
                         { ok: confirm.length > 0 && confirm === password, text: 'As duas senhas são iguais' },
                       ].map((r) => (

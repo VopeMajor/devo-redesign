@@ -11,7 +11,7 @@ import { Stagger } from '../kit/reveal'
 import { PwaPanel } from '../shared/pwa-panel'
 import { SoundToggle } from '../shared/sound-toggle'
 import { useOsNav } from '../os/os-nav'
-import { useDevo } from '../state/devo-store'
+import { callName, useDevo } from '../state/devo-store'
 import { DeadlyVoteSymbol } from '../system/symbol'
 import { Panel, SectionLabel } from './app-ui'
 
@@ -67,7 +67,10 @@ export function AjustesApp() {
             <DeadlyVoteSymbol className="size-14 shrink-0 text-dv-gold" />
             <div className="min-w-0">
               <Kicker tone="blood">Sessão</Kicker>
-              <p className="mt-1.5 truncate font-display text-[24px] font-semibold uppercase leading-none tracking-[0.06em] text-dv-text">{state.playerName || 'Jogador'}</p>
+              <p className="mt-1.5 truncate font-display text-[24px] font-semibold uppercase leading-none tracking-[0.06em] text-dv-text">{callName(state) || 'Jogador'}</p>
+              {state.characterName && state.playerName && state.characterName !== state.playerName && (
+                <p className="dv-label mt-1.5 truncate text-[10px] text-dv-text-3">Conta · {state.playerName}</p>
+              )}
               <p className="dv-label mt-2 text-[10px] text-dv-text-3">
                 {state.inventory.length} cartas · {state.tradesCompleted} trocas
               </p>

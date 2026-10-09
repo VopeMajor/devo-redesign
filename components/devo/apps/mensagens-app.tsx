@@ -14,7 +14,7 @@ import { GlyphArrow, GlyphKeyhole, toRoman } from '../kit/glyphs'
 import { Kicker } from '../kit/typography'
 import { PortraitFrame, type PortraitTone } from '../kit/portrait'
 import { useShellBack } from '../os/app-back'
-import { nextId, useDevo } from '../state/devo-store'
+import { callName, nextId, useDevo } from '../state/devo-store'
 import { useBackHandler } from '../use-back-handler'
 import { TypingDots } from './app-ui'
 
@@ -196,7 +196,7 @@ function Conversation({ threadId, onBack }: { threadId: string; onBack: () => vo
           type: 'THREAD_MESSAGE',
           threadId,
           countUnread: false,
-          message: { id: nextId('m'), from: npc.id, text: withName(line, state.playerName), at: Date.now() },
+          message: { id: nextId('m'), from: npc.id, text: withName(line, callName(state)), at: Date.now() },
         })
         playSfx('notify')
         if (i === choice.reply.length - 1) setPending(false)

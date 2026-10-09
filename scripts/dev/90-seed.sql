@@ -89,3 +89,6 @@ WITH ev AS (
 INSERT INTO arcade_duels (event_id, slot, a_name, b_name, a_rating, b_rating)
 SELECT ev.id, d.slot, d.a, d.b, d.ra, d.rb FROM ev,
   (VALUES (0, 'Ísis', 'Nyx', 1180, 1120), (1, 'Corvo', 'Lírio', 1060, 1000)) AS d(slot, a, b, ra, rb);
+
+-- Nome do personagem (scripts/character-name-migration.sql): contas do seed usam o nome da conta.
+UPDATE players SET character_name = name WHERE character_name IS NULL;

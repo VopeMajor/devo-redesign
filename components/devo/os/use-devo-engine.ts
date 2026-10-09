@@ -7,7 +7,7 @@ import { getNpc } from '@/lib/devo/npcs'
 import { withName } from '@/lib/devo/player-name'
 import { makePartner, partnerLine } from '@/lib/devo/trade-bots'
 import { playSfx } from '@/lib/devo/audio'
-import { nextId, useDevo } from '../state/devo-store'
+import { callName, nextId, useDevo } from '../state/devo-store'
 
 type Welcome = { delay: number; threadId: string; npcId: string; text: string }
 
@@ -41,7 +41,7 @@ export function useDevoEngine() {
       window.setTimeout(() => notify({ appId: 'pulso', title: 'Pulso sincronizado', body: '72:00:00 restantes. O relógio começou.', tone: 'danger' }), WELCOME_PULSE_MS),
     )
     for (const w of WELCOME) {
-      const text = withName(w.text, state.playerName)
+      const text = withName(w.text, callName(state))
       timers.push(window.setTimeout(() => dispatch({ type: 'THREAD_TYPING', threadId: w.threadId, typing: true }), w.delay - 1300))
       timers.push(
         window.setTimeout(() => {

@@ -1,3 +1,4 @@
+import { sanitizeProfile, type PlayerProfile } from './appearances'
 import type { ChatMessage, NotificationItem, OwnedCard } from './types'
 
 export type SavedThread = {
@@ -19,6 +20,10 @@ export type SaveData = {
   seenApps?: string[]
   owlMet?: boolean
   javaliMet?: boolean
+  /** Nome do personagem (como os NPCs chamam o jogador). Espelho do players.character_name. */
+  characterName?: string
+  /** Perfil do prólogo: idade, gênero, segunda aparência e trocas restantes. */
+  profile?: PlayerProfile
 }
 
 export const MAX_SAVE_BYTES = 60_000
@@ -79,6 +84,8 @@ export function sanitizeSave(raw: unknown): SaveData | null {
     arcadeUnlocked: raw.arcadeUnlocked === true,
     owlMet: raw.owlMet === true,
     javaliMet: raw.javaliMet === true,
+    characterName: str(raw.characterName, 40).trim() || undefined,
+    profile: raw.profile === undefined ? undefined : sanitizeProfile(raw.profile),
     seenApps: Array.isArray(raw.seenApps) ? raw.seenApps.filter((x): x is string => typeof x === 'string').slice(0, 12).map((x) => x.slice(0, 20)) : [],
   }
 }

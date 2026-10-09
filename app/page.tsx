@@ -1,5 +1,6 @@
 import { eq } from 'drizzle-orm'
 import { getCurrentPlayer } from '@/app/actions/player'
+import { getCharacterName } from '@/lib/devo/character-server'
 import { DevoExperience } from '@/components/devo/devo-experience'
 import { db } from '@/lib/db'
 import { playerSaves } from '@/lib/db/schema'
@@ -16,6 +17,6 @@ async function loadSave(playerId: string): Promise<SaveData | null> {
 
 export default async function Page() {
   const player = await getCurrentPlayer()
-  const save = player ? await loadSave(player.id) : null
-  return <DevoExperience initialPlayerName={player?.name ?? null} initialSave={save} />
+  const [save, characterName] = player ? await Promise.all([loadSave(player.id), getCharacterName(player.id)]) : [null, null]
+  return <DevoExperience initialPlayerName={player?.name ?? null} initialCharacterName={characterName} initialSave={save} />
 }

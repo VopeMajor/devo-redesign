@@ -1,0 +1,109 @@
+name: Dublagem
+
+# Gera a voz de todas as falas do prólogo e do tutorial (DIRECAO-2 §5) com TTS neural livre em pt-BR
+# e commita os arquivos em public/audio/voz/ na própria branch. Ver docs/redesign/DUBLAGEM.md.
+# O commit de volta leva [skip ci] e só toca public/audio/voz → não dispara este nem o de capturas (sem loop).
+
+on:
+  workflow_dispatch:
+  push:
+    branches-ignore: [main]
+    paths:
+      - lib/devo/prologue-script.ts
+      - lib/devo/intro-script.ts
+      - lib/devo/voice-lines.ts
+      - scripts/voz/**
+      - .github/workflows/dublagem.yml
+
+concurrency:
+  group: dublagem-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  dublar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+          cache-dependency-path: .github/workflows/dublagem.yml
+
+      - name: Sistema (espeak-ng para a fonética pt-BR, ffmpeg para o tratamento)
+        run: sudo apt-get update -q && sudo apt-get install -y -q espeak-ng ffmpeg
+
+      - name: Cache do modelo (Hugging Face)
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/huggingface
+          key: hf-kokoro-82m-v1
+
+      - name: Kokoro (CPU)
+        id: kokoro
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          {
+            pip install -q torch --index-url https://download.pytorch.org/whl/cpu
+            pip install -q "kokoro>=0.9.4" soundfile numpy
+            python -c "from kokoro import KPipeline; KPipeline(lang_code='p'); print('kokoro ok')"
+          } 2>&1 | tee motor.log
+
+      - name: Piper (reserva, só se o Kokoro falhar)
+        if: steps.kokoro.outcome != 'success'
+        run: |
+          pip install -q piper-tts
+          base=https://huggingface.co/rhasspy/piper-voices/resolve/main/pt/pt_BR/faber/medium
+          curl -sSL -o pt_BR-faber-medium.onnx "$base/pt_BR-faber-medium.onnx"
+          curl -sSL -o pt_BR-faber-medium.onnx.json "$base/pt_BR-faber-medium.onnx.json"
+          echo "PIPER_MODEL=$PWD/pt_BR-faber-medium.onnx" >> "$GITHUB_ENV"
+
+      - name: Falas (dos roteiros)
+        run: npx -y tsx scripts/voz/exportar.ts > /tmp/linhas.json && python -c "import json;print(len(json.load(open('/tmp/linhas.json'))),'falas')"
+
+      - name: Gerar vozes
+        run: |
+          set -o pipefail
+          python scripts/voz/gerar.py /tmp/linhas.json public/audio/voz 2>&1 | tee dublagem.log
+
+      - name: Conferência (ffprobe)
+        run: |
+          du -sh public/audio/voz
+          ls public/audio/voz | wc -l
+          for f in public/audio/voz/pr-001.ogg public/audio/voz/tu-00.ogg public/audio/voz/rato-risada.ogg; do
+            ffprobe -v error -show_entries format=duration:stream=codec_name,sample_rate -of compact "$f" || true
+          done
+
+      - name: Commit de volta na branch
+        run: |
+          git config user.name "devo-dublagem"
+          git config user.email "dublagem@devo.local"
+          git add public/audio/voz
+          if git diff --cached --quiet; then echo "nada mudou"; exit 0; fi
+          git commit -qm "Dublagem: vozes geradas ($(git rev-parse --short HEAD)) [skip ci]"
+          for i in 1 2 3; do
+            git pull -q --rebase origin "$GITHUB_REF_NAME" && git push -q origin "HEAD:$GITHUB_REF_NAME" && exit 0
+            sleep 5
+          done
+          exit 1
+
+      - name: Publicar log em dublagem-log/<branch>
+        if: always()
+        run: |
+          mkdir -p /tmp/dublog && cd /tmp/dublog
+          cp -f "$GITHUB_WORKSPACE/dublagem.log" . 2>/dev/null || echo "sem log (falhou antes de gerar)" > dublagem.log
+          cp -f "$GITHUB_WORKSPACE/motor.log" . 2>/dev/null || true
+          cp -f "$GITHUB_WORKSPACE/public/audio/voz/manifest.json" . 2>/dev/null || true
+          ls -la "$GITHUB_WORKSPACE/public/audio/voz" > arquivos.txt 2>/dev/null || true
+          echo "$GITHUB_SHA ${{ job.status }}" > SOURCE_SHA
+          git init -q -b log && git config user.name "devo-dublagem" && git config user.email "dublagem@devo.local"
+          git add -A && git commit -qm "log da dublagem"
+          git push -qf "https://x-access-token:${{ github.token }}@github.com/${GITHUB_REPOSITORY}.git" "log:dublagem-log/${GITHUB_REF_NAME}"

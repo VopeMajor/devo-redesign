@@ -14,7 +14,7 @@ import { SceneBackdrop } from '../kit/scene'
 import { TimeDigits } from '../kit/time'
 import { Divider, Kicker } from '../kit/typography'
 import { SoundToggle } from '../shared/sound-toggle'
-import { useDevo } from '../state/devo-store'
+import { callName, useDevo } from '../state/devo-store'
 import { DeadlyVoteSymbol } from '../system/symbol'
 import { useDeadlyVotes } from '../system/use-deadly-votes'
 import { formatVoteDate } from '@/lib/devo/deadly-votes'
@@ -267,7 +267,7 @@ function HomeScreen({
         <div className="min-w-0">
           <Kicker tone="gold">Record System · sessão ativa</Kicker>
           <p className="mt-1 truncate font-body text-[15px] italic text-dv-text-2">
-            Bem-vindo de volta{state.playerName ? <>, <span className="not-italic text-dv-text">{state.playerName}</span></> : null}.
+            Bem-vindo de volta{callName(state) ? <>, <span className="not-italic text-dv-text">{callName(state)}</span></> : null}.
           </p>
         </div>
         <DeadlyVoteSymbol className="size-9 shrink-0 text-dv-gold/80" />

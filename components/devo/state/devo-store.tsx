@@ -4,6 +4,7 @@ import { showSystemNotification } from '@/lib/devo/pwa'
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useReducer, useRef, type ReactNode } from 'react'
 import { makeOwned, starterInventory } from '@/lib/devo/cards'
+import { EMPTY_PROFILE, type Appearance, type PlayerProfile } from '@/lib/devo/appearances'
 import { PULSE_START_HOURS } from '@/lib/devo/pulse'
 import { ROOM_LAYOUT, ROOM_RULES } from '@/lib/devo/trade-rooms'
 import type { SaveData } from '@/lib/devo/save'
@@ -23,7 +24,12 @@ const START_HOURS = PULSE_START_HOURS
 
 export type DevoState = {
   phase: Phase
+  /** Nome da conta (login). */
   playerName: string | null
+  /** Nome do personagem: como os NPCs e as telas tratam o jogador (DIRECAO-2 §5). */
+  characterName: string | null
+  /** Perfil do prólogo (idade, gênero, segunda aparência, trocas restantes). */
+  profile: PlayerProfile
   hasSession: boolean
   welcomed: boolean
   timerEndsAt: number
@@ -55,6 +61,9 @@ type Action =
   | { type: 'SET_PHASE'; phase: Phase }
   | { type: 'START_SESSION' }
   | { type: 'SET_PLAYER'; name: string }
+  | { type: 'SET_CHARACTER'; name: string }
+  | { type: 'SET_PROFILE'; patch: Partial<PlayerProfile> }
+  | { type: 'CHANGE_APPEARANCE'; appearance: Appearance }
   | { type: 'MARK_WELCOMED' }
   | { type: 'NOTIFY'; item: NotificationItem }
   | { type: 'DISMISS_TOAST'; id: string }
@@ -98,10 +107,12 @@ function initialThreads(): Thread[] {
   ]
 }
 
-function freshState(phase: Phase = 'landing', playerName: string | null = null): DevoState {
+function freshState(phase: Phase = 'landing', playerName: string | null = null, characterName: string | null = null): DevoState {
   return {
     phase,
     playerName,
+    characterName,
+    profile: { ...EMPTY_PROFILE },
     hasSession: false,
     welcomed: false,
     timerEndsAt: Date.now() + START_HOURS * 3600 * 1000,
@@ -150,9 +161,22 @@ function reducer(state: DevoState, action: Action): DevoState {
         unread: {},
       }
     case 'START_SESSION':
-      return { ...freshState('intro', state.playerName), hasSession: true }
+      return { ...freshState('intro', state.playerName, state.characterName), hasSession: true }
     case 'SET_PLAYER':
       return { ...state, playerName: action.name }
+    case 'SET_CHARACTER':
+      return { ...state, characterName: action.name.trim() || state.characterName }
+    case 'SET_PROFILE':
+      return { ...state, profile: { ...state.profile, ...action.patch } }
+    case 'CHANGE_APPEARANCE': {
+      // Troca "por afinidade": só uma vez depois da escolha do prólogo.
+      if (!state.profile.appearance || state.profile.appearanceChangesLeft <= 0) return state
+      const history = [...(state.profile.appearanceHistory ?? []), state.profile.appearance].slice(-5)
+      return {
+        ...state,
+        profile: { ...state.profile, appearance: action.appearance, appearanceChangesLeft: state.profile.appearanceChangesLeft - 1, appearanceHistory: history },
+      }
+    }
     case 'MARK_WELCOMED':
       return { ...state, welcomed: true }
     case 'OWL_MET':
@@ -296,6 +320,13 @@ type DevoContextValue = {
   notify: (item: Omit<NotificationItem, 'id' | 'createdAt'>) => void
   /** Reinicia a sessão (cartas → kit inicial, pulso → 72h) e grava no servidor na hora. */
   restartSession: () => Promise<boolean>
+  /** Troca de aparência por afinidade (só 1 vez depois do prólogo). */
+  changeAppearance: (appearance: Omit<Appearance, 'chosenAt'>) => boolean
+}
+
+/** Como os NPCs e as telas chamam o jogador: nome do personagem; a conta só como reserva. */
+export function callName(state: Pick<DevoState, 'characterName' | 'playerName'>) {
+  return state.characterName || state.playerName
 }
 
 const DevoContext = createContext<DevoContextValue | null>(null)
@@ -306,13 +337,14 @@ export function nextId(prefix = 'id') {
   return `${prefix}-${Date.now().toString(36)}-${idCounter}`
 }
 
-function hydrate(playerName: string | null, save: SaveData | null): DevoState {
-  const base = freshState('landing', playerName)
+function hydrate(playerName: string | null, save: SaveData | null, characterName: string | null = null): DevoState {
+  const base = freshState('landing', playerName, characterName ?? save?.characterName ?? null)
   if (!save || !playerName) return base
   const savedThreads = new Map(save.threads.map((t) => [t.id, t]))
   return {
     ...base,
     hasSession: true,
+    profile: save.profile ?? base.profile,
     welcomed: save.welcomed,
     timerEndsAt: save.timerEndsAt || base.timerEndsAt,
     inventory: save.inventory,
@@ -343,6 +375,8 @@ function toSave(state: DevoState): SaveData {
     seenApps: state.seenApps,
     owlMet: state.owlMet,
     javaliMet: state.javaliMet,
+    characterName: state.characterName ?? undefined,
+    profile: state.profile,
     threads: state.threads.map((th) => ({ id: th.id, messages: th.messages, unread: th.unread, answered: th.answered })),
   }
 }
@@ -361,13 +395,13 @@ function useAutosave(state: DevoState) {
   const latest = useRef(state)
   latest.current = state
   const enabled = state.hasSession && !!state.playerName
-  const { welcomed, timerEndsAt, inventory, notifications, threads, tradesCompleted, trade, arcadeUnlocked, seenApps, owlMet, javaliMet } = state
+  const { welcomed, timerEndsAt, inventory, notifications, threads, tradesCompleted, trade, arcadeUnlocked, seenApps, owlMet, javaliMet, characterName, profile } = state
 
   useEffect(() => {
     if (!enabled) return
     const id = window.setTimeout(() => postSave(latest.current), 1200)
     return () => window.clearTimeout(id)
-  }, [enabled, welcomed, timerEndsAt, inventory, notifications, threads, tradesCompleted, trade?.myCard, arcadeUnlocked, seenApps, owlMet, javaliMet])
+  }, [enabled, welcomed, timerEndsAt, inventory, notifications, threads, tradesCompleted, trade?.myCard, arcadeUnlocked, seenApps, owlMet, javaliMet, characterName, profile])
 
   useEffect(() => {
     if (!enabled) return
@@ -386,13 +420,15 @@ function useAutosave(state: DevoState) {
 export function DevoProvider({
   children,
   initialPlayerName = null,
+  initialCharacterName = null,
   initialSave = null,
 }: {
   children: ReactNode
   initialPlayerName?: string | null
+  initialCharacterName?: string | null
   initialSave?: SaveData | null
 }) {
-  const [state, dispatch] = useReducer(reducer, undefined, () => hydrate(initialPlayerName, initialSave))
+  const [state, dispatch] = useReducer(reducer, undefined, () => hydrate(initialPlayerName, initialSave, initialCharacterName))
   useAutosave(state)
   const notify = useCallback<DevoContextValue['notify']>((item) => {
     dispatch({ type: 'NOTIFY', item: { ...item, id: nextId('n'), createdAt: Date.now() } })
@@ -408,7 +444,14 @@ export function DevoProvider({
     const res = await postSave(next)
     return !!res && res.ok
   }, [])
-  const value = useMemo(() => ({ state, dispatch, notify, restartSession }), [state, notify, restartSession])
+  /** Troca de aparência por afinidade (1 vez). Retorna false se não houver troca disponível. Tela: Record/perfil. */
+  const changeAppearance = useCallback((appearance: Omit<Appearance, 'chosenAt'>) => {
+    const p = stateRef.current.profile
+    if (!p.appearance || p.appearanceChangesLeft <= 0) return false
+    dispatch({ type: 'CHANGE_APPEARANCE', appearance: { ...appearance, chosenAt: Date.now() } })
+    return true
+  }, [])
+  const value = useMemo(() => ({ state, dispatch, notify, restartSession, changeAppearance }), [state, notify, restartSession, changeAppearance])
   return <DevoContext.Provider value={value}>{children}</DevoContext.Provider>
 }
 

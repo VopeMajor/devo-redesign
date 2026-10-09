@@ -4,6 +4,18 @@ import { username } from 'better-auth/plugins'
 import { pool } from '@/lib/db'
 
 export const INVITE_HEADER = 'x-devo-invite'
+/** Nome do personagem no cadastro (codificado com encodeURIComponent: cabeçalhos HTTP não aceitam acento). */
+export const CHARACTER_HEADER = 'x-devo-character'
+
+export function decodeCharacterName(raw: string | null | undefined) {
+  if (!raw) return null
+  try {
+    const name = decodeURIComponent(raw).trim().replace(/\s+/g, ' ').slice(0, 40)
+    return name || null
+  } catch {
+    return null
+  }
+}
 const LEGACY_COOKIE = 'devo_player'
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 
@@ -123,14 +135,24 @@ export const auth = betterAuth({
           // Convite de teste gera conta de teste (fora de ranking, apostas e prêmios). Ver scripts/test-accounts-migration.sql.
           const isTest = !!rows[0]?.is_test
           const legacyId = legacyPlayerId(headerOf(ctx, 'cookie'))
+          const character = decodeCharacterName(headerOf(ctx, CHARACTER_HEADER)) ?? user.name
+          // Grava o nome do personagem sem derrubar o cadastro se a coluna ainda não existir (migração pendente).
+          const saveCharacter = async () => {
+            try {
+              await pool.query('UPDATE players SET character_name = $2 WHERE user_id = $1', [user.id, character])
+            } catch {
+              /* scripts/character-name-migration.sql ainda não rodou */
+            }
+          }
           if (legacyId) {
             const linked = await pool.query(
               'UPDATE players SET user_id = $2, name = $3, role = CASE WHEN $4 = \'player\' THEN role ELSE $4 END, is_test = is_test OR $5 WHERE id = $1 AND user_id IS NULL',
               [legacyId, user.id, user.name, role, isTest],
             )
-            if (linked.rowCount) return
+            if (linked.rowCount) return saveCharacter()
           }
           await pool.query('INSERT INTO players (name, role, user_id, is_test) VALUES ($1, $2, $3, $4)', [user.name, role, user.id, isTest])
+          await saveCharacter()
         },
       },
     },

@@ -18,7 +18,8 @@ export type StageId =
   | 'phone'
 
 export type MelissaMood = 'neutral' | 'soft' | 'serious'
-export type Speaker = 'narrator' | 'voice' | 'melissa'
+/** `system` = o próprio DEVO intervindo na cena (caixa de sistema, voz sintética). */
+export type Speaker = 'narrator' | 'voice' | 'melissa' | 'system'
 
 export type Line = { who: Speaker; text: string; mood?: MelissaMood }
 
@@ -42,6 +43,7 @@ const mel = (text: string, mood: MelissaMood = 'neutral', stage: StageId = 'mine
   line: { who: 'melissa', text, mood },
 })
 const m = (text: string, mood: MelissaMood = 'neutral'): Line => ({ who: 'melissa', text, mood })
+const sys = (text: string, stage: StageId = 'mine'): Beat => ({ kind: 'line', stage, line: { who: 'system', text } })
 
 export const FACE_OPTIONS = ['Sério e marcado', 'Gentil e cansado', 'Pálido e comum', 'Difícil de lembrar']
 export const GENDER_OPTIONS = ['Masculino', 'Feminino', 'Prefiro não dizer']
@@ -105,12 +107,16 @@ export const PROLOGUE: Beat[] = [
   n('mine', 'Alguém parece se aproximar.'),
   mel('Olá, Record. Eu estive te esperando. Parece que você é o último da lista. Qual o seu nome?'),
   { kind: 'input', stage: 'mine', field: 'name' },
-  mel('É um nome complicado. E como é o seu rosto?', 'soft'),
-  { kind: 'input', stage: 'mine', field: 'face' },
-  mel('Huuummm. E qual a sua idade?', 'soft'),
+  mel('É um nome complicado. E qual a sua idade?', 'soft'),
   { kind: 'input', stage: 'mine', field: 'age' },
-  mel('Certo… Então, por fim, me diga seu gênero.'),
+  mel('Certo… E me diga seu gênero.'),
   { kind: 'input', stage: 'mine', field: 'gender' },
+  mel('Huuummm. Então, por fim: como é o seu rosto?', 'soft'),
+  // Intervenção do sistema sobre a "segunda aparência" (texto do dono, DIRECAO-2 §5, revisão leve).
+  sys('Confuso sobre essa parte? Não se preocupe! No DEVO existem diferentes formas de jogar, e por isso é preciso escolher uma segunda aparência, real ou 2D. Embora seja obrigatório escolher uma aparência aqui, você não será obrigado a participar de jogos em que se sinta desconfortável com o uso do segundo avatar.'),
+  sys('Não sabe qual aparência escolher? Basta tocar em Seleção automática! Temos uma lista com diversas aparências preparadas. E, se mudar de ideia mais tarde, será possível trocar de aparência por afinidade dentro do jogo, mas apenas uma vez.'),
+  sys('Lembrete: sua aparência não precisa ser parecida com a original, mas deve ter idade aproximada e ser do mesmo sexo. Apenas aparências humanas são permitidas.'),
+  { kind: 'input', stage: 'mine', field: 'face' },
   mel('Curioso. Bem curioso. Tudo certo!', 'soft'),
   mel('Então, {nome}, você precisa se apressar. Seu jogo já vai começar.', 'serious'),
   {

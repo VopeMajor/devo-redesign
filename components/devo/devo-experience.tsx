@@ -10,7 +10,7 @@ import { authClient } from '@/lib/auth-client'
 
 const AUTO_START_KEY = 'devo_auto_start'
 import { DevoOS } from './os/devo-os'
-import { DevoProvider, useDevo } from './state/devo-store'
+import { callName, DevoProvider, useDevo } from './state/devo-store'
 import type { SaveData } from '@/lib/devo/save'
 import { BackExitHint, useBackHandler } from './use-back-handler'
 import { ArcadeUnlock } from './arcade/arcade-unlock'
@@ -34,9 +34,17 @@ const CURTAIN_STYLE: Record<string, CurtainOptions> = {
   'Inicializando DEVO': { tone: 'system', direction: 'forward' },
 }
 
-export function DevoExperience({ initialPlayerName, initialSave }: { initialPlayerName: string | null; initialSave: SaveData | null }) {
+export function DevoExperience({
+  initialPlayerName,
+  initialCharacterName = null,
+  initialSave,
+}: {
+  initialPlayerName: string | null
+  initialCharacterName?: string | null
+  initialSave: SaveData | null
+}) {
   return (
-    <DevoProvider initialPlayerName={initialPlayerName} initialSave={initialSave}>
+    <DevoProvider initialPlayerName={initialPlayerName} initialCharacterName={initialCharacterName} initialSave={initialSave}>
       <DevoRoot />
       <BackExitHint />
     </DevoProvider>
@@ -107,7 +115,7 @@ function DevoRoot() {
     <>
       {state.phase === 'landing' && (
         <LandingScreen
-          playerName={state.playerName}
+          playerName={callName(state)}
           canContinue
           veiled={naming !== null}
           onStart={start}
@@ -127,11 +135,11 @@ function DevoRoot() {
         />
       )}
       {state.phase === 'intro' && prologue && (
-        <PrologueScreen playerName={state.playerName} onFinish={() => transition('Deadly Vote', () => setPrologue(false))} />
+        <PrologueScreen playerName={callName(state)} onFinish={() => transition('Deadly Vote', () => setPrologue(false))} />
       )}
       {state.phase === 'intro' && !prologue && (
         <IntroScreen
-          playerName={state.playerName}
+          playerName={callName(state)}
           onFinish={() =>
             transition('Inicializando DEVO', () => {
               dispatch({ type: 'SET_PHASE', phase: 'os' })
@@ -148,7 +156,7 @@ function DevoRoot() {
         <AccessScreen
           mode={naming}
           onCancel={() => setNaming(null)}
-          onAuthenticated={(kind, name) => {
+          onAuthenticated={(kind, name, character) => {
             if (kind === 'registered') {
               // Cadastro novo: sem recarregar e sem passar pela landing. A cortina "Despertando" cobre o
               // documento e termina direto no prólogo (a sessão já está no cookie; o save nasce agora).
@@ -156,6 +164,7 @@ function DevoRoot() {
               transition('Despertando', () => {
                 setNaming(null)
                 dispatch({ type: 'SET_PLAYER', name })
+                if (character) dispatch({ type: 'SET_CHARACTER', name: character })
                 setPrologue(true)
                 dispatch({ type: 'START_SESSION' })
               })

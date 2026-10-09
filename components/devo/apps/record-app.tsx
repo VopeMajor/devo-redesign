@@ -27,7 +27,7 @@ import { cn } from '@/lib/utils'
 import { useNow } from '../hooks'
 import { useOsNav } from '../os/os-nav'
 import { DeckPanel } from '../shared/deck-panel'
-import { useDevo } from '../state/devo-store'
+import { callName, useDevo } from '../state/devo-store'
 import { DealerBoard } from '../system/dealer-board'
 import { DeadlyVoteHistory, STATUS_BADGE, tallyText } from '../system/deadly-vote-history'
 import { InvitePanel } from '../system/invite-panel'
@@ -45,7 +45,7 @@ export function useRecordData(avatarVersion: number | null = null): RecordFileDa
   const remaining = Math.max(0, state.timerEndsAt - now)
   const critical = remaining < CRITICAL_MS
   return {
-    name: state.playerName ?? 'Não identificado',
+    name: callName(state) ?? 'Não identificado',
     recordId: recordIdFor(state.playerName),
     status: remaining === 0 ? { label: 'Eliminado', tone: 'critical' } : critical ? { label: 'Crítico', tone: 'critical' } : { label: 'Ativo', tone: 'active' },
     remainingMs: remaining,

@@ -41,7 +41,7 @@ jobs:
         run: pnpm install --no-frozen-lockfile
       - name: Banco de teste
         run: |
-          for f in scripts/dev/00-base.sql scripts/deadly-votes-migration.sql scripts/auth-migration.sql scripts/arcade-migration.sql scripts/arcade-points-migration.sql scripts/arcade-rooms-migration.sql scripts/test-accounts-migration.sql scripts/dev/90-seed.sql; do
+          for f in scripts/dev/00-base.sql scripts/deadly-votes-migration.sql scripts/auth-migration.sql scripts/arcade-migration.sql scripts/arcade-points-migration.sql scripts/arcade-rooms-migration.sql scripts/test-accounts-migration.sql scripts/character-name-migration.sql scripts/dev/90-seed.sql; do
             psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -q -f "$f"
           done
       - name: Tipos
