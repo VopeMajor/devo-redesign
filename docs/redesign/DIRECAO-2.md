@@ -2,6 +2,30 @@
 
 Estas decisões têm prioridade sobre IDENTIDADE.md e sobre críticas anteriores quando houver conflito.
 
+## 0. A identidade do DEVO (ref. do dono, 23h28) — vale para TUDO
+Refs: `refs/ref-gotico-figurino.png`, `refs/ref-valsa-relogio.png`, `refs/ref-gaiola-ouro.png`,
+`refs/ref-xadrez-marmore.png` (somam-se às refs anteriores de Alice, astrolábio, diário e Record).
+"É o que espero para a identidade visual do DEVO. Mantenha a alta qualidade."
+- **Paleta**: preto aveludado e branco porcelana como base (monocromático), xadrez preto/branco;
+  **ouro antigo/latão** em metal, filigrana e molduras; **noite azul-violeta profunda** como atmosfera
+  (céu do relógio, salão); **vermelho-sangue** só como joia/gota (detalhe) e alerta; cobalto continua
+  como tinta de sistema (interações, dados) — mais escuro/marinho, conversando com a noite violeta.
+- **Materiais**: renda e babados brancos, laços pretos, veludo, porcelana, mármore branco e negro com
+  veios e rachaduras, latão polido, vidro facetado (losangos), papel frio do Record.
+- **Motivos**: tabuleiro de xadrez/piso xadrez, mostrador de relógio gigante com numerais romanos,
+  engrenagens, gaiola dourada (prisão elegante), espadas cravadas, estrelas de 4 pontas e losangos
+  (já são o sigilo do DEVO), laços, cruz/rosário, coelho de pelúcia, tesoura e talheres de prata (Alice),
+  lanternas pendentes, arcos góticos, marionetes/fios.
+- **Sensação**: gótico delicado (lolita monocromática) + relojoaria + salão de valsa assombrado; luxo
+  ameaçador. Sem copiar personagens, roupas ou cenas das refs: são material e motivo.
+- **Como combina com o Record (seção 2)**: o layout/estrutura do interior segue as refs do Record
+  (painéis, linha do tempo, abas, barra inferior, HUD), e esta seção define o MATERIAL e o ORNAMENTO:
+  painéis pretos aveludados com filete de latão e cantos com filigrana; fundo de papel frio/porcelana
+  com renda e xadrez sutis; arte em duotom pode ser preto/branco com toque cobalto ou violeta;
+  raridades e conquistas em ouro; alerta em vermelho-joia.
+- **Jornada**: mantém a noite cinematográfica, agora com o salão do relógio (mostrador gigante,
+  arcos góticos, lanternas, piso xadrez em mármore) como cenário 3D-chave.
+
 ## 1. NPCs: voltam os sprites originais (temporários)
 Os sprites originais ficam até o dono trocar por OCs próprios: Melissa (`npc/melissa-*.png`), Javali
 (`npc/javali*.webp`, `npc/king-dice.png`) e Herdeiro (`npc/heir-v3-*.png`). Restaurar os arquivos e o uso
