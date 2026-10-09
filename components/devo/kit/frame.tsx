@@ -1,6 +1,7 @@
 import type { CSSProperties, HTMLAttributes, ReactNode } from 'react'
 import { cn } from '@/lib/utils'
 import { CornerFiligree } from './glyphs'
+import { FiligreeCorner } from './ornament/brass'
 import { SectionHeader } from './typography'
 
 export type FrameVariant = 'ink' | 'paper' | 'alert' | 'glass'
@@ -51,10 +52,10 @@ export type FrameProps = HTMLAttributes<HTMLElement> & {
 const PAD = { none: '', sm: 'p-3', md: 'p-4', lg: 'p-6' } as const
 
 const GLOW: Record<FrameTone, string> = {
-  gold: 'drop-shadow-[0_0_14px_rgba(236,212,154,0.22)]',
-  cobalt: 'drop-shadow-[0_0_18px_rgba(49,93,255,0.4)]',
+  gold: 'drop-shadow-[0_0_14px_rgba(227,213,172,0.22)]',
+  cobalt: 'drop-shadow-[0_0_18px_rgba(65,82,192,0.4)]',
   neutral: 'drop-shadow-[0_10px_24px_rgba(0,0,0,0.6)]',
-  blood: 'drop-shadow-[0_0_18px_rgba(213,31,43,0.45)]',
+  blood: 'drop-shadow-[0_0_18px_rgba(170,20,32,0.45)]',
 }
 
 /**
@@ -106,11 +107,16 @@ export function FrameCorners({ tone = 'gold', size = 22, inset = 3, className }:
     { s: { right: inset, bottom: inset }, r: 180 },
     { s: { left: inset, bottom: inset }, r: 270 },
   ]
+  // Ouro = filigrana de latão (metal com gradiente); os outros tons seguem o desenho em linha.
   return (
     <span aria-hidden="true" className={cn('pointer-events-none absolute inset-0', color, className)}>
-      {pos.map((p) => (
-        <CornerFiligree key={p.r} className="absolute" style={{ ...p.s, width: size, height: size, transform: `rotate(${p.r}deg)` }} />
-      ))}
+      {pos.map((p) =>
+        tone === 'gold' ? (
+          <FiligreeCorner key={p.r} className="absolute drop-shadow-[0_1px_1px_rgba(0,0,0,0.6)]" style={{ ...p.s, width: size + 6, height: size + 6, transform: `rotate(${p.r}deg)` }} />
+        ) : (
+          <CornerFiligree key={p.r} className="absolute" style={{ ...p.s, width: size, height: size, transform: `rotate(${p.r}deg)` }} />
+        ),
+      )}
     </span>
   )
 }

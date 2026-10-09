@@ -144,7 +144,7 @@ export function Tabs<V extends string>({
             className="pointer-events-none absolute bottom-0 left-0 h-[3px] transition-[transform,width] duration-[360ms] ease-[cubic-bezier(0.16,1,0.3,1)] motion-reduce:transition-none"
             style={{ width: bar?.w ?? 0, transform: `translateX(${bar?.x ?? 0}px)`, opacity: bar ? 1 : 0 }}
           >
-            <span className="absolute inset-x-2 inset-y-0 -skew-x-[30deg] bg-dv-cobalt shadow-[0_0_12px_rgba(49,93,255,0.8)]" />
+            <span className="absolute inset-x-2 inset-y-0 -skew-x-[30deg] bg-dv-cobalt shadow-[0_0_12px_rgba(65,82,192,0.8)]" />
             <span className="absolute -top-[3px] left-1/2 size-[7px] -translate-x-1/2 rotate-45 border border-dv-ink bg-dv-gold" />
           </span>
         </div>

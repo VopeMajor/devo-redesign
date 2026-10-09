@@ -23,14 +23,14 @@ import {
 import { ArcanoPanel, CartasPanel, HUBS, HUBS_WITH_LOCKED, InteriorHeader, RecordFilePanel, VotesPanel, type Hub } from './interior-models'
 
 const SWATCHES = [
-  { name: 'papel', v: '#e3e5e8', use: 'fundo' },
-  { name: 'papel-2', v: '#d6d9dc', use: 'faixas' },
-  { name: 'painel', v: '#090b0f', use: 'painéis' },
-  { name: 'painel-2', v: '#15171c', use: 'elevado' },
-  { name: 'cobalto', v: '#1647ff', use: 'tinta / blocos' },
-  { name: 'cobalto·escuro', v: '#5b7bff', use: 'texto no painel' },
-  { name: 'alerta', v: '#c8151f', use: 'só alerta' },
-  { name: 'ouro', v: '#7a5a1c', use: 'só lendária' },
+  { name: 'papel', v: '#e8e6e2', use: 'fundo' },
+  { name: 'papel-2', v: '#d9d6d0', use: 'faixas' },
+  { name: 'painel', v: '#0a090d', use: 'painéis' },
+  { name: 'painel-2', v: '#15131b', use: 'elevado' },
+  { name: 'cobalto', v: '#34409e', use: 'tinta / blocos' },
+  { name: 'cobalto·escuro', v: '#8f9cf0', use: 'texto no painel' },
+  { name: 'alerta', v: '#a3121f', use: 'só alerta' },
+  { name: 'ouro', v: '#6a5530', use: 'só lendária' },
 ]
 
 function Label({ children }: { children: string }) {

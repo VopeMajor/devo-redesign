@@ -17,7 +17,7 @@ export type BottomNavItem<V extends string = string> = {
 
 /**
  * Barra inferior do interior (celular): preta, ícones finos com rótulo; o ativo vira um bloco de luz
- * cobalto com filete superior. Selo vermelho para avisos. Itens `locked` ficam apagados com cadeado
+ * índigo com filete superior de latão. Selo vermelho para avisos. Itens `locked` ficam apagados com cadeado
  * (anunciam "bloqueado" e chamam `onLocked`, sem navegar). Respeita a área segura.
  */
 export function BottomNav<V extends string>({
@@ -42,7 +42,7 @@ export function BottomNav<V extends string>({
     <nav
       aria-label={label}
       className={cn(
-        'dv-interior-dark z-40 bg-in-panel pb-[env(safe-area-inset-bottom)] shadow-[0_-1px_0_var(--in-line-strong),0_-18px_40px_-20px_rgba(0,0,0,0.6)]',
+        'dv-interior-dark dv-record-panel z-40 pb-[env(safe-area-inset-bottom)]',
         position === 'fixed' ? 'fixed inset-x-0 bottom-0' : 'relative',
         className,
       )}
@@ -73,11 +73,11 @@ export function BottomNav<V extends string>({
               >
                 {active && (
                   <>
-                    <span aria-hidden="true" className="absolute inset-0 bg-[linear-gradient(180deg,rgba(22,71,255,0.55),rgba(22,71,255,0.18)_70%,transparent)]" />
-                    <span aria-hidden="true" className="absolute inset-x-0 top-0 h-[2px] bg-[#5b7bff] shadow-[0_0_14px_2px_rgba(49,93,255,0.9)]" />
+                    <span aria-hidden="true" className="absolute inset-0 bg-[linear-gradient(180deg,rgba(65,82,192,0.5),rgba(77,71,144,0.2)_70%,transparent)]" />
+                    <span aria-hidden="true" className="absolute inset-x-0 top-0 h-[2px] bg-[linear-gradient(90deg,transparent,var(--in-brass)_20%,#e3d5ac_50%,var(--in-brass)_80%,transparent)] shadow-[0_0_12px_1px_rgba(143,156,240,0.7)]" />
                   </>
                 )}
-                <span className={cn('relative flex size-6 items-center justify-center [&>svg]:size-full', active && 'drop-shadow-[0_0_6px_rgba(125,151,255,0.9)]', it.locked && 'opacity-60')}>
+                <span className={cn('relative flex size-6 items-center justify-center [&>svg]:size-full', active && 'drop-shadow-[0_0_6px_rgba(158,168,238,0.9)]', it.locked && 'opacity-60')}>
                   {it.icon}
                   {it.locked && (
                     <span aria-hidden="true" className="absolute -bottom-1 -right-1.5 grid size-3.5 place-items-center bg-in-panel text-in-fg-2">
@@ -94,7 +94,7 @@ export function BottomNav<V extends string>({
                     )
                   ) : null}
                 </span>
-                <span className={cn('relative max-w-full truncate px-1 font-sans text-[10px] font-medium uppercase tracking-[0.12em]', active && 'text-[#c9d4ff]')}>{it.label}</span>
+                <span className={cn('relative max-w-full truncate px-1 font-sans text-[10px] font-medium uppercase tracking-[0.12em]', active && 'text-[#d4d8f6]')}>{it.label}</span>
               </button>
             </li>
           )

@@ -19,9 +19,9 @@ const SIZE: Record<TimeSize, string> = {
 const TONE: Record<TimeTone, string> = {
   text: 'text-dv-text',
   // Brilho como drop-shadow no número inteiro (fica fora da máscara das casas; text-shadow seria cortado).
-  cobalt: 'text-dv-cobalt-text [filter:drop-shadow(0_0_10px_rgba(49,93,255,0.6))]',
-  gold: 'text-dv-gold-bright [filter:drop-shadow(0_0_8px_rgba(236,212,154,0.4))]',
-  blood: 'text-dv-blood-text [filter:drop-shadow(0_0_10px_rgba(213,31,43,0.75))]',
+  cobalt: 'text-dv-cobalt-text [filter:drop-shadow(0_0_10px_rgba(65,82,192,0.6))]',
+  gold: 'text-dv-gold-bright [filter:drop-shadow(0_0_8px_rgba(227,213,172,0.4))]',
+  blood: 'text-dv-blood-text [filter:drop-shadow(0_0_10px_rgba(170,20,32,0.75))]',
   paper: 'text-dv-paper-ink',
 }
 

@@ -71,7 +71,7 @@ export function useCurtain() {
 
 const SLAB: Record<Exclude<CurtainTone, 'interior'>, { lead: string; slab: string; ring: string; line: string }> = {
   system: {
-    lead: 'bg-[linear-gradient(90deg,#0d1f7a,var(--dv-cobalt-deep)_60%,#7d97ff)]',
+    lead: 'bg-[linear-gradient(90deg,#0d1f7a,var(--dv-cobalt-deep)_60%,#9ea8ee)]',
     slab: 'bg-[linear-gradient(90deg,var(--dv-ink)_0%,#070b18_60%,var(--dv-ink-2)_100%)]',
     ring: 'text-dv-cobalt-text',
     line: 'bg-dv-gold',
@@ -140,7 +140,7 @@ export function Curtain({
       <div className="absolute inset-0 flex flex-col items-center justify-center gap-5 px-6">
         <div aria-hidden="true" className={cn('dv-curtain-ring relative size-[188px]', s.ring)}>
           <CurtainDial />
-          <DeadlyVoteSymbol variant="mark" className="absolute inset-[30%] text-dv-text drop-shadow-[0_0_14px_rgba(49,93,255,0.7)]" />
+          <DeadlyVoteSymbol variant="mark" className="absolute inset-[30%] text-dv-text drop-shadow-[0_0_14px_rgba(65,82,192,0.7)]" />
         </div>
         <div className="dv-curtain-label flex flex-col items-center">
           <p className="font-display text-[24px] font-semibold uppercase tracking-[0.3em] text-dv-text [text-shadow:0_0_24px_rgba(0,0,0,0.9)]">{state.label}</p>
@@ -242,13 +242,13 @@ function PrintCurtain({ state, frozen, freezeAt, className }: { state: CurtainSt
               Deadly Vote · Record System
             </p>
             <span aria-hidden="true" className="relative mt-1 h-[3px] w-48 bg-in-line">
-              <span className="dv-print-bar absolute inset-0 bg-in-accent-fill shadow-[0_0_10px_rgba(22,71,255,0.7)]" />
+              <span className="dv-print-bar absolute inset-0 bg-in-accent-fill shadow-[0_0_10px_rgba(52,64,158,0.7)]" />
             </span>
           </div>
           {/* cabeça de leitura: borda inferior acesa enquanto a folha desce */}
           <div aria-hidden="true" className="dv-print-night absolute inset-x-0 bottom-0">
-            <span className="absolute inset-x-0 bottom-0 h-24 bg-[linear-gradient(to_top,rgba(22,71,255,0.28),transparent)]" />
-            <span className="absolute inset-x-0 bottom-0 h-[3px] bg-[#5b7bff] shadow-[0_0_18px_4px_rgba(49,93,255,0.85)]" />
+            <span className="absolute inset-x-0 bottom-0 h-24 bg-[linear-gradient(to_top,rgba(52,64,158,0.28),transparent)]" />
+            <span className="absolute inset-x-0 bottom-0 h-[3px] bg-[#8f9cf0] shadow-[0_0_18px_4px_rgba(65,82,192,0.85)]" />
           </div>
         </div>
       </div>

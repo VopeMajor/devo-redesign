@@ -1,5 +1,7 @@
 import type { CSSProperties, MouseEventHandler, ReactNode } from 'react'
 import { cn } from '@/lib/utils'
+import { BrassCorners } from '../ornament/brass'
+import { LaceEdge } from '../ornament/jewelry'
 import { HudCode, HudCross, HudRule, hudCode } from './hud'
 
 export type PanelAction = { label: string; onClick?: MouseEventHandler<HTMLButtonElement>; href?: string }
@@ -59,6 +61,7 @@ export function RecordPanel({
   pad = 'md',
   as: Tag = 'section',
   headerRight,
+  ornate = false,
   className,
   bodyClassName,
   children,
@@ -74,6 +77,8 @@ export function RecordPanel({
   as?: 'section' | 'div' | 'article' | 'aside'
   /** Substitui a ação (ex.: selo REC, contador). */
   headerRight?: ReactNode
+  /** Cantos de filigrana em latão (painel-foco da tela; no máximo 2 por tela). */
+  ornate?: boolean
   className?: string
   bodyClassName?: string
   children?: ReactNode
@@ -86,7 +91,7 @@ export function RecordPanel({
       aria-label={title}
       className={cn(
         'relative min-w-0',
-        dark ? 'dv-interior-dark dv-record-panel' : 'bg-[#eef0f3] shadow-[inset_0_0_0_1px_var(--in-line-strong)]',
+        dark ? 'dv-interior-dark dv-record-panel' : 'bg-[color:var(--in-porcelain)] bg-[radial-gradient(90%_60%_at_25%_0%,rgba(255,255,255,0.9),transparent_60%)] shadow-[inset_0_0_0_1px_var(--in-line-strong),inset_0_1px_0_#fff]',
         chamfer && 'dv-cut-diag',
         className,
       )}
@@ -101,9 +106,10 @@ export function RecordPanel({
         >
           <RecordTitle title={title} jp={jp} className={variant === 'cobalt' ? '[&_span]:!text-white' : undefined} />
           {headerRight ?? (action && <PanelLink {...action} className={variant === 'cobalt' ? '!text-white' : undefined} />)}
-          <span aria-hidden="true" className="absolute inset-x-4 bottom-0 h-px bg-in-line" />
+          <span aria-hidden="true" className={cn('absolute inset-x-4 bottom-0 h-px', dark ? 'bg-[linear-gradient(90deg,var(--in-brass)_0%,rgba(176,154,108,0.35)_45%,transparent_100%)]' : 'bg-in-line')} />
         </header>
       )}
+      {ornate && <BrassCorners size={dark ? 26 : 22} inset={3} />}
       <div className={cn(title ? 'pt-3' : pad === 'none' ? '' : 'pt-4', p, bodyClassName)}>{children}</div>
     </Tag>
   )
@@ -118,6 +124,7 @@ export function PaperSheet({
   sub,
   children,
   rulers = true,
+  lace = true,
   className,
   innerClassName,
   as: Tag = 'div',
@@ -128,6 +135,8 @@ export function PaperSheet({
   children?: ReactNode
   /** Réguas e marcas nas margens. */
   rulers?: boolean
+  /** Renda de borda (gravada, quase invisível) no topo da folha. */
+  lace?: boolean
   className?: string
   innerClassName?: string
   as?: 'div' | 'main' | 'section'
@@ -146,8 +155,15 @@ export function PaperSheet({
           <div className="absolute right-3 top-3">
             <HudCode code={c} sub={sub ?? 'DV_MS_2024_0518'} />
           </div>
-          {/* mancha de retícula cobalto no canto (tinta de impressão) */}
-          <span className="dv-halftone absolute -right-10 top-28 size-40 rounded-full text-in-accent opacity-[0.16] [mask-image:radial-gradient(closest-side,#000,transparent)]" />
+          {/* mancha de retícula violeta no canto (tinta de impressão) */}
+          <span className="dv-halftone absolute -right-10 top-28 size-40 rounded-full text-in-violet opacity-[0.16] [mask-image:radial-gradient(closest-side,#000,transparent)]" />
+          {/* xadrez de mármore quase invisível no pé da folha */}
+          <span className="dv-checker-faint absolute inset-x-0 bottom-0 h-[40%] [mask-image:linear-gradient(to_top,#000,transparent)]" />
+        </div>
+      )}
+      {lace && (
+        <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 -z-10 opacity-[0.09]">
+          <LaceEdge tone="ink" height={14} />
         </div>
       )}
       <div className={cn('relative', innerClassName)}>{children}</div>

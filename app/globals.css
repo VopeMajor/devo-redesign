@@ -27,6 +27,15 @@
   --color-dv-ink-2: var(--dv-ink-2);
   --color-dv-ink-3: var(--dv-ink-3);
   --color-dv-ink-4: var(--dv-ink-4);
+  --color-dv-night: var(--dv-night);
+  --color-dv-night-2: var(--dv-night-2);
+  --color-dv-violet: var(--dv-violet);
+  --color-dv-violet-text: var(--dv-violet-text);
+  --color-dv-porcelain: var(--dv-porcelain);
+  --color-dv-porcelain-2: var(--dv-porcelain-2);
+  --color-dv-porcelain-ink: var(--dv-porcelain-ink);
+  --color-dv-marble-vein: var(--dv-marble-vein);
+  --color-dv-marble-black: var(--dv-marble-black);
   --color-dv-cobalt: var(--dv-cobalt);
   --color-dv-cobalt-deep: var(--dv-cobalt-deep);
   --color-dv-cobalt-dim: var(--dv-cobalt-dim);
@@ -61,6 +70,8 @@
   --color-in-panel: var(--in-panel);
   --color-in-panel-2: var(--in-panel-2);
   --color-in-paper: var(--in-paper);
+  --color-in-violet: var(--in-violet);
+  --color-in-brass: var(--in-brass);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -103,87 +114,104 @@
 
 :root {
   color-scheme: dark;
-  --background: #090b0f;
-  --foreground: #eceef2;
-  --card: #15171c;
-  --card-foreground: #eceef2;
-  --popover: #15171c;
-  --popover-foreground: #eceef2;
-  --primary: #315dff;
+  --background: #0a090d;
+  --foreground: #eeecef;
+  --card: #15131b;
+  --card-foreground: #eeecef;
+  --popover: #15131b;
+  --popover-foreground: #eeecef;
+  --primary: #4152c0;
   --primary-foreground: #ffffff;
-  --secondary: #1d2027;
-  --secondary-foreground: #eceef2;
-  --muted: #1d2027;
-  --muted-foreground: #8a909c;
-  --accent: #1a2350;
-  --accent-foreground: #eceef2;
-  --destructive: #d51f2b;
-  --border: rgba(236, 238, 242, 0.18);
-  --input: rgba(236, 238, 242, 0.18);
-  --ring: #315dff;
-  --chart-1: #315dff;
-  --chart-2: #eceef2;
-  --chart-3: #8a909c;
-  --chart-4: #082baa;
-  --chart-5: #1a2350;
+  --secondary: #1b1824;
+  --secondary-foreground: #eeecef;
+  --muted: #1b1824;
+  --muted-foreground: #8f8b96;
+  --accent: #201e3a;
+  --accent-foreground: #eeecef;
+  --destructive: #a3121f;
+  --border: rgba(238, 236, 239, 0.18);
+  --input: rgba(238, 236, 239, 0.18);
+  --ring: #4152c0;
+  --chart-1: #4152c0;
+  --chart-2: #eeecef;
+  --chart-3: #8f8b96;
+  --chart-4: #232c74;
+  --chart-5: #201e3a;
   --radius: 0.375rem;
-  --sidebar: #15171c;
-  --sidebar-foreground: #eceef2;
-  --sidebar-primary: #315dff;
+  --sidebar: #15131b;
+  --sidebar-foreground: #eeecef;
+  --sidebar-primary: #4152c0;
   --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #1a2350;
-  --sidebar-accent-foreground: #eceef2;
-  --sidebar-border: rgba(236, 238, 242, 0.14);
-  --sidebar-ring: #315dff;
+  --sidebar-accent: #201e3a;
+  --sidebar-accent-foreground: #eeecef;
+  --sidebar-border: rgba(238, 236, 239, 0.14);
+  --sidebar-ring: #4152c0;
 
-  --dv-background: #d6d9dc;
-  --dv-surface: #e3e5e8;
-  --dv-black: #090b0f;
-  --dv-graphite: #15171c;
-  --dv-blue: #1647ff;
-  --dv-blue-dark: #082baa;
-  --dv-blue-light: #315dff;
-  --dv-muted: #a8adb8;
-  --dv-border: #bfc4cd;
-  --dv-red: #d51f2b;
+  --dv-background: #d9d6d0;
+  --dv-surface: #e8e6e2;
+  --dv-black: #0a090d;
+  --dv-graphite: #15131b;
+  --dv-blue: #34409e;
+  --dv-blue-dark: #232c74;
+  --dv-blue-light: #4152c0;
+  --dv-muted: #aba8ad;
+  --dv-border: #c4c1bd;
+  --dv-red: #a3121f;
 
-  /* ── Tribunal do Relógio: tokens semânticos (regra de uso em docs/redesign/IDENTIDADE.md) ── */
-  /* Noite azul-preta: fundos e superfícies, do mais fundo ao mais alto. */
-  --dv-ink: #05070d;
-  --dv-ink-2: #0a0f1c;
-  --dv-ink-3: #111a2e;
-  --dv-ink-4: #1a2440;
-  /* Cobalto elétrico: sistema e interação. `-text` é a versão AA para texto pequeno sobre ink. */
-  --dv-cobalt: #315dff;
-  --dv-cobalt-deep: #1647ff;
-  --dv-cobalt-dim: #0b1a4d;
-  --dv-cobalt-text: #7d97ff;
-  /* Ouro antigo: filigrana, molduras, conquistas. Nunca para ação primária. */
-  --dv-gold: #c9a45c;
-  --dv-gold-bright: #ecd49a;
-  --dv-gold-deep: #7c5f2a;
-  /* Papel marfim: documentos (Record, verso de cartas, tiras, bilhetes, polaroides). */
-  --dv-paper: #efe6d2;
-  --dv-paper-2: #e2d5b8;
-  --dv-paper-ink: #1c1a22;
-  /* Vermelho sangue: só perigo, tempo crítico, eliminação, alerta. */
-  --dv-blood: #d51f2b;
-  --dv-blood-deep: #5a0a10;
-  --dv-blood-text: #ff5a63;
-  /* Texto sobre ink. */
-  --dv-text: #eceef2;
-  --dv-text-2: rgba(236, 238, 242, 0.74);
-  --dv-text-3: rgba(236, 238, 242, 0.56);
+  /* ── Tribunal do Relógio: tokens semânticos (regra de uso em docs/redesign/IDENTIDADE.md §0 e §2) ──
+     Paleta tirada das refs do dono (refs/ref-gotico-figurino, ref-valsa-relogio, ref-gaiola-ouro,
+     ref-xadrez-marmore): base monocromática (veludo preto × porcelana), latão dessaturado, noite
+     azul-violeta como atmosfera, rubi só como joia/alerta, índigo-marinho discreto para o sistema. */
+  /* Veludo preto (tinta): fundos e superfícies, do mais fundo ao mais alto. Neutro com um sopro violeta. */
+  --dv-ink: #0a090d;
+  --dv-ink-2: #121016;
+  --dv-ink-3: #1b1824;
+  --dv-ink-4: #282436;
+  /* Noite azul-violeta (céu do relógio, salão): SÓ atmosfera, halos e fundos de cena. Nunca texto longo. */
+  --dv-night: #1c1b33;
+  --dv-night-2: #34365a;
+  /* Lavanda acinzentada (a fita da gaiola): duotom, brilho de cena, detalhe de tecido. */
+  --dv-violet: #6c6899;
+  --dv-violet-text: #aaa5d6;
+  /* Índigo-marinho do sistema (o antigo "cobalto"): interação e dados. `-text` = AA p/ texto pequeno sobre ink. */
+  --dv-cobalt: #4152c0;
+  --dv-cobalt-deep: #2f3c9c;
+  --dv-cobalt-dim: #161a40;
+  --dv-cobalt-text: #9ea8ee;
+  /* Ouro antigo / latão (dessaturado, nunca amarelo): metal, filigrana, molduras, conquistas. Nunca ação primária. */
+  --dv-gold: #b09a6c;
+  --dv-gold-bright: #e3d5ac;
+  --dv-gold-deep: #5e4d33;
+  /* Papel frio (Record, verso de cartas, tiras, bilhetes, polaroides). */
+  --dv-paper: #ece9e3;
+  --dv-paper-2: #dbd7cf;
+  --dv-paper-ink: #141217;
+  /* Porcelana / marfim frio: a metade clara da base monocromática (renda, xadrez, superfícies claras). */
+  --dv-porcelain: #f2f0ec;
+  --dv-porcelain-2: #e0ddd8;
+  --dv-porcelain-ink: #121016;
+  /* Mármore: cinza dos veios e da pedra negra (piso xadrez, tabuleiro). */
+  --dv-marble-vein: #8a8986;
+  --dv-marble-black: #2e2f34;
+  /* Rubi: só joia/gota de detalhe e perigo real. */
+  --dv-blood: #a3121f;
+  --dv-blood-deep: #3f060b;
+  --dv-blood-text: #ff6670;
+  /* Texto sobre ink (branco porcelana). */
+  --dv-text: #eeecef;
+  --dv-text-2: rgba(238, 236, 239, 0.74);
+  --dv-text-3: rgba(238, 236, 239, 0.56);
   /* Linhas. */
-  --dv-line: rgba(236, 238, 242, 0.14);
-  --dv-line-strong: rgba(236, 238, 242, 0.32);
-  --dv-line-gold: rgba(201, 164, 92, 0.6);
+  --dv-line: rgba(238, 236, 239, 0.14);
+  --dv-line-strong: rgba(238, 236, 239, 0.32);
+  --dv-line-gold: rgba(176, 154, 108, 0.6);
   /* Brilhos e sombras. */
-  --dv-glow-cobalt: 0 0 28px -6px rgba(49, 93, 255, 0.75);
-  --dv-glow-gold: 0 0 22px -8px rgba(236, 212, 154, 0.7);
-  --dv-glow-blood: 0 0 30px -6px rgba(213, 31, 43, 0.8);
-  --dv-shadow-1: 0 1px 0 rgba(236, 238, 242, 0.06) inset, 0 12px 32px -16px rgba(0, 0, 0, 0.9);
-  --dv-shadow-2: 0 1px 0 rgba(236, 238, 242, 0.08) inset, 0 24px 60px -20px rgba(0, 0, 0, 0.95);
+  --dv-glow-cobalt: 0 0 28px -6px rgba(65, 82, 192, 0.75);
+  --dv-glow-gold: 0 0 22px -8px rgba(227, 213, 172, 0.7);
+  --dv-glow-blood: 0 0 30px -6px rgba(163, 18, 31, 0.85);
+  --dv-glow-violet: 0 0 40px -8px rgba(140, 134, 200, 0.6);
+  --dv-shadow-1: 0 1px 0 rgba(238, 236, 239, 0.06) inset, 0 12px 32px -16px rgba(0, 0, 0, 0.9);
+  --dv-shadow-2: 0 1px 0 rgba(238, 236, 239, 0.08) inset, 0 24px 60px -20px rgba(0, 0, 0, 0.95);
   /* Geometria. */
   --dv-cut: 10px;
   --dv-cut-lg: 18px;
@@ -213,7 +241,7 @@
   --secondary: #cdd1d7;
   --secondary-foreground: var(--dv-black);
   --muted: #cdd1d7;
-  --muted-foreground: #565c69;
+  --muted-foreground: #565a66;
   --accent: #c9d2f2;
   --accent-foreground: var(--dv-blue-dark);
   --destructive: var(--dv-red);
@@ -227,22 +255,22 @@
 .dv-dark {
   color-scheme: dark;
   --background: var(--dv-black);
-  --foreground: #eceef2;
+  --foreground: #eeecef;
   --card: var(--dv-graphite);
-  --card-foreground: #eceef2;
+  --card-foreground: #eeecef;
   --popover: var(--dv-graphite);
-  --popover-foreground: #eceef2;
+  --popover-foreground: #eeecef;
   --primary: var(--dv-blue-light);
   --primary-foreground: #ffffff;
-  --secondary: #1d2027;
-  --secondary-foreground: #eceef2;
-  --muted: #1d2027;
-  --muted-foreground: #8a909c;
-  --accent: #1a2350;
-  --accent-foreground: #eceef2;
+  --secondary: #1b1824;
+  --secondary-foreground: #eeecef;
+  --muted: #1b1824;
+  --muted-foreground: #8f8b96;
+  --accent: #201e3a;
+  --accent-foreground: #eeecef;
   --destructive: var(--dv-red);
-  --border: rgba(236, 238, 242, 0.14);
-  --input: rgba(236, 238, 242, 0.18);
+  --border: rgba(238, 236, 239, 0.14);
+  --input: rgba(238, 236, 239, 0.18);
   --ring: var(--dv-blue-light);
 }
 
@@ -250,13 +278,13 @@
   background-color: var(--dv-background);
   background-image:
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.04 0 0 0 0 0.05 0 0 0 0 0.08 0 0 0 0.09 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"),
-    linear-gradient(to right, rgba(22, 71, 255, 0.045) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(22, 71, 255, 0.045) 1px, transparent 1px);
+    linear-gradient(to right, rgba(52, 64, 158, 0.045) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(52, 64, 158, 0.045) 1px, transparent 1px);
   background-size: 220px 220px, 48px 48px, 48px 48px;
 }
 
 .dv-scanlines {
-  background-image: repeating-linear-gradient(to bottom, rgba(236, 238, 242, 0.035) 0 1px, transparent 1px 3px);
+  background-image: repeating-linear-gradient(to bottom, rgba(238, 236, 239, 0.035) 0 1px, transparent 1px 3px);
 }
 
 @keyframes dv-line {
@@ -600,7 +628,7 @@
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
 }
 
-.devo-scroll { scrollbar-width: thin; scrollbar-color: rgba(236,238,242, 0.2) transparent; }
+.devo-scroll { scrollbar-width: thin; scrollbar-color: rgba(238, 236, 239, 0.2) transparent; }
 
 @media (prefers-reduced-motion: reduce) {
   .animate-ember, .animate-rise, .animate-float, .animate-flicker, .animate-mist, .animate-pop, .animate-blink, .animate-tap, .animate-ping-slow, .animate-drift-away { animation: none; }
@@ -840,8 +868,9 @@
 @utility dv-ink-bg {
   background-color: var(--dv-ink);
   background-image:
-    radial-gradient(120% 70% at 50% 0%, rgba(49, 93, 255, 0.16), transparent 60%),
-    radial-gradient(90% 60% at 50% 110%, rgba(201, 164, 92, 0.08), transparent 70%);
+    radial-gradient(120% 70% at 50% 0%, rgba(108, 104, 153, 0.16), transparent 60%),
+    radial-gradient(80% 50% at 50% 0%, rgba(42, 72, 214, 0.1), transparent 70%),
+    radial-gradient(90% 60% at 50% 110%, rgba(176, 154, 108, 0.07), transparent 70%);
 }
 /* Papel marfim com grão e pauta leve (documentos). */
 @utility dv-paper-bg {
@@ -849,7 +878,7 @@
   background-color: var(--dv-paper);
   background-image:
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.35 0 0 0 0 0.27 0 0 0 0 0.12 0 0 0 0.16 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"),
-    linear-gradient(to bottom, transparent 23px, rgba(22, 71, 255, 0.07) 23px, rgba(22, 71, 255, 0.07) 24px);
+    linear-gradient(to bottom, transparent 23px, rgba(52, 64, 158, 0.07) 23px, rgba(52, 64, 158, 0.07) 24px);
   background-size: 180px 180px, 100% 24px;
 }
 /* Costura tracejada interna (diário). */
@@ -865,8 +894,8 @@
 @utility dv-checker {
   background-color: var(--dv-ink-2);
   background-image:
-    linear-gradient(45deg, rgba(239, 230, 210, 0.08) 25%, transparent 25%, transparent 75%, rgba(239, 230, 210, 0.08) 75%),
-    linear-gradient(45deg, rgba(239, 230, 210, 0.08) 25%, transparent 25%, transparent 75%, rgba(239, 230, 210, 0.08) 75%);
+    linear-gradient(45deg, rgba(243, 241, 236, 0.07) 25%, transparent 25%, transparent 75%, rgba(243, 241, 236, 0.07) 75%),
+    linear-gradient(45deg, rgba(243, 241, 236, 0.07) 25%, transparent 25%, transparent 75%, rgba(243, 241, 236, 0.07) 75%);
   background-size: 32px 32px;
   background-position: 0 0, 16px 16px;
 }
@@ -910,89 +939,105 @@
 .dv-interior {
   color-scheme: light;
   /* superfícies fixas (iguais nos dois escopos) */
-  --in-paper: #e3e5e8;
-  --in-paper-2: #d6d9dc;
-  --in-panel: #090b0f;
-  --in-panel-2: #15171c;
+  --in-paper: #e8e6e2;
+  --in-paper-2: #d9d6d0;
+  --in-porcelain: #f4f2ee;
+  --in-panel: #0a090d;   /* preto aveludado */
+  --in-panel-2: #15131b;
   /* semânticos do escopo PAPEL */
   --in-bg: var(--in-paper);
   --in-bg-2: var(--in-paper-2);
-  --in-fg: #0b0d12;
-  --in-fg-2: rgba(11, 13, 18, 0.74);
-  --in-fg-3: #565c69;
-  --in-line: rgba(11, 13, 18, 0.16);
-  --in-line-strong: rgba(11, 13, 18, 0.42);
-  --in-accent: #1647ff;      /* tinta cobalto (texto AA 4.9 sobre papel) */
-  --in-accent-fill: #1647ff; /* blocos sólidos (abas, barras) — texto branco 6.2 */
-  --in-alert: #c8151f;       /* só alerta */
-  --in-gold: #7a5a1c;        /* só raridade lendária / conquista */
-  --in-glow: 0 0 18px rgba(22, 71, 255, 0.45);
+  --in-fg: #0c0b10;
+  --in-fg-2: rgba(12, 11, 16, 0.74);
+  --in-fg-3: #565a66;
+  --in-line: rgba(12, 11, 16, 0.16);
+  --in-line-strong: rgba(12, 11, 16, 0.42);
+  --in-accent: #2e3a94;      /* tinta índigo-marinho do sistema (texto AA 7.8 sobre papel) */
+  --in-accent-fill: #34409e; /* blocos sólidos (abas, barras) — texto branco 8.9 */
+  --in-accent-glow: rgba(52, 64, 158, 0.55);
+  --in-violet: #4d4790;      /* só toque de duotom / atmosfera */
+  --in-alert: #a3121f;       /* só alerta / joia */
+  --in-gold: #6a5530;        /* latão escuro: só raridade lendária / conquista (texto AA 5.7) */
+  --in-brass: #a08a5e;       /* filete de latão (decorativo, não texto) */
+  --in-glow: 0 0 18px rgba(52, 64, 158, 0.45);
   /* shadcn dentro do interior */
   --background: var(--in-paper);
-  --foreground: #0b0d12;
-  --card: #eef0f3;
-  --card-foreground: #0b0d12;
-  --popover: #eef0f3;
-  --popover-foreground: #0b0d12;
-  --primary: #1647ff;
+  --foreground: #0c0b10;
+  --card: #f1efeb;
+  --card-foreground: #0c0b10;
+  --popover: #f1efeb;
+  --popover-foreground: #0c0b10;
+  --primary: #34409e;
   --primary-foreground: #ffffff;
   --secondary: var(--in-paper-2);
-  --secondary-foreground: #0b0d12;
+  --secondary-foreground: #0c0b10;
   --muted: var(--in-paper-2);
-  --muted-foreground: #565c69;
-  --accent: #c9d2f2;
-  --accent-foreground: #082baa;
-  --destructive: #c8151f;
-  --border: rgba(11, 13, 18, 0.16);
-  --input: rgba(11, 13, 18, 0.24);
-  --ring: #1647ff;
+  --muted-foreground: #565a66;
+  --accent: #d3d5ea;
+  --accent-foreground: #2e3a94;
+  --destructive: #a3121f;
+  --border: rgba(12, 11, 16, 0.16);
+  --input: rgba(12, 11, 16, 0.24);
+  --ring: #34409e;
   color: var(--in-fg);
   font-family: var(--font-sans);
 }
-/* Painel preto dentro do interior (RecordPanel, BottomNav, visores). */
+/* Painel preto aveludado dentro do interior (RecordPanel, BottomNav, visores). */
 .dv-interior-dark,
 .dv-interior .dv-interior-dark {
   color-scheme: dark;
   --in-bg: var(--in-panel);
   --in-bg-2: var(--in-panel-2);
-  --in-fg: #eceef2;
-  --in-fg-2: rgba(236, 238, 242, 0.76);
-  --in-fg-3: rgba(236, 238, 242, 0.56);
-  --in-line: rgba(236, 238, 242, 0.13);
-  --in-line-strong: rgba(236, 238, 242, 0.34);
-  --in-accent: #5b7bff;      /* cobalto legível em texto pequeno sobre preto (AA 5.4) */
-  --in-accent-fill: #1647ff;
-  --in-alert: #ff4d57;
-  --in-gold: #d6b46a;
-  --in-glow: 0 0 22px rgba(49, 93, 255, 0.6);
-  --in-panel: #090b0f;
-  --in-panel-2: #15171c;
-  --in-paper: #e3e5e8;
+  --in-fg: #eeecef;
+  --in-fg-2: rgba(238, 236, 239, 0.76);
+  --in-fg-3: rgba(238, 236, 239, 0.56);
+  --in-line: rgba(238, 236, 239, 0.13);
+  --in-line-strong: rgba(238, 236, 239, 0.34);
+  --in-accent: #8f9cf0;      /* índigo legível em texto pequeno sobre o veludo (AA 7.7) */
+  --in-accent-fill: #34409e;
+  --in-accent-glow: rgba(65, 82, 192, 0.65);
+  --in-violet: #aaa5d6;
+  --in-alert: #ff5a64;
+  --in-gold: #cdb684;
+  --in-brass: #b09a6c;
+  --in-glow: 0 0 22px rgba(65, 82, 192, 0.6);
+  --in-panel: #0a090d;
+  --in-panel-2: #15131b;
+  --in-paper: #e8e6e2;
   color: var(--in-fg);
 }
 
 /* Papel frio com retícula de impressão, grão e pauta de HUD muito leve. */
 @utility dv-cold-paper {
-  background-color: var(--in-paper, #e3e5e8);
+  background-color: var(--in-paper, #e8e6e2);
   background-image:
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.95' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.05 0 0 0 0 0.07 0 0 0 0 0.12 0 0 0 0.11 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"),
-    radial-gradient(rgba(22, 71, 255, 0.07) 0.8px, transparent 1.2px),
-    linear-gradient(to right, rgba(11, 13, 18, 0.045) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(11, 13, 18, 0.045) 1px, transparent 1px);
-  background-size: 200px 200px, 5px 5px, 64px 64px, 64px 64px;
+    radial-gradient(120% 50% at 50% 0%, rgba(255, 255, 255, 0.55), transparent 70%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.95' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.06 0 0 0 0 0.05 0 0 0 0 0.1 0 0 0 0.1 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"),
+    radial-gradient(rgba(77, 71, 144, 0.06) 0.8px, transparent 1.2px),
+    linear-gradient(to right, rgba(12, 11, 16, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(12, 11, 16, 0.04) 1px, transparent 1px);
+  background-size: auto, 200px 200px, 5px 5px, 64px 64px, 64px 64px;
 }
 /* Retícula (meio-tom) cobalto para cantos e manchas de tinta. */
 @utility dv-halftone {
   background-image: radial-gradient(currentColor 0.9px, transparent 1.3px);
   background-size: 6px 6px;
 }
-/* Painel preto do Record (cantos retos; adicione dv-cut-diag para um chanfro). */
+/* Painel preto do Record = veludo (cantos retos; adicione dv-cut-diag para um chanfro). */
 @utility dv-record-panel {
-  background-color: var(--in-panel, #090b0f);
+  background-color: var(--in-panel, #0a090d);
   background-image:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.03), transparent 30%),
-    repeating-linear-gradient(to bottom, rgba(236, 238, 242, 0.022) 0 1px, transparent 1px 3px);
-  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.05) inset, 0 18px 40px -24px rgba(9, 11, 15, 0.8);
+    radial-gradient(120% 60% at 18% 0%, rgba(170, 165, 214, 0.08), transparent 60%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='v'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.6 0.9' numOctaves='2' seed='4' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.9 0 0 0 0 0.88 0 0 0 0 0.95 0 0 0 0.075 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23v)'/%3E%3C/svg%3E"),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.035), transparent 34%, rgba(0, 0, 0, 0.25));
+  background-size: auto, 160px 160px, auto;
+  /* filete de latão + reflexo de borda do veludo + sombra violeta no pé */
+  box-shadow:
+    inset 0 0 0 1px rgba(176, 154, 108, 0.42),
+    inset 0 0 0 2px rgba(10, 9, 13, 0.9),
+    inset 0 1px 0 2px rgba(227, 213, 172, 0.1),
+    inset 0 -24px 40px -30px rgba(108, 104, 153, 0.3),
+    0 18px 40px -24px rgba(10, 9, 13, 0.85);
 }
 
 /* Fronteira Jornada → Interior: folha de registro impressa/escaneada (Curtain tone="interior"). */
@@ -1033,4 +1078,113 @@
 @media (prefers-reduced-motion: reduce) {
   .dv-print-feed, .dv-print-scan, .dv-print-ink, .dv-print-bar { animation: none !important; }
   .dv-print-night { animation: none !important; opacity: 0; }
+}
+
+/* ════════════════════════════════════════════════════════════════════════════════════════
+   MATERIAL E ORNAMENTO (Direção 2 §0) — docs/redesign/IDENTIDADE.md §0.
+   Materiais desenhados aqui (sem imagens externas): veludo, porcelana, mármore, latão, xadrez.
+   Componentes de ornamento: components/devo/kit/ornament/*. Regra de dose no guia.
+   ════════════════════════════════════════════════════════════════════════════════════════ */
+:root {
+  --dv-velvet: #0b0a0e;
+  --dv-brass-grad: linear-gradient(135deg, #f1e9d2 0%, #8e7a57 22%, #d2c098 44%, #54452e 66%, #b5a075 84%, #f1e9d2 100%);
+  --dv-marble-white: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='420' height='420'%3E%3Cfilter id='m' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.0045 0.0105' numOctaves='5' seed='11' stitchTiles='stitch' result='n'/%3E%3CfeColorMatrix in='n' type='matrix' values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  1.4 0 0 0 -0.2' result='a'/%3E%3CfeComponentTransfer in='a' result='v1'%3E%3CfeFuncA type='table' tableValues='0 0 0 0 0 0 0 0.15 1 0.15 0 0 0 0 0 0 0 0 0 0'/%3E%3C/feComponentTransfer%3E%3CfeColorMatrix in='v1' type='matrix' values='0 0 0 0 0.2  0 0 0 0 0.2  0 0 0 0 0.26  0 0 0 0.45 0' result='c1'/%3E%3CfeComponentTransfer in='a' result='v2'%3E%3CfeFuncA type='table' tableValues='0 0 0 0 0 0 0 0 0 0 0 0 0.2 1 0.2 0 0 0 0 0'/%3E%3C/feComponentTransfer%3E%3CfeColorMatrix in='v2' type='matrix' values='0 0 0 0 0.45  0 0 0 0 0.38  0 0 0 0 0.25  0 0 0 0.3 0' result='c2'/%3E%3CfeColorMatrix in='n' type='matrix' values='0 0 0 0 0.35  0 0 0 0 0.36  0 0 0 0 0.42  0 0 0 0.09 0' result='c3'/%3E%3CfeMerge%3E%3CfeMergeNode in='c3'/%3E%3CfeMergeNode in='c2'/%3E%3CfeMergeNode in='c1'/%3E%3C/feMerge%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23m)'/%3E%3C/svg%3E");
+  --dv-marble-dark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='420' height='420'%3E%3Cfilter id='m' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.0045 0.0105' numOctaves='5' seed='11' stitchTiles='stitch' result='n'/%3E%3CfeColorMatrix in='n' type='matrix' values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  1.4 0 0 0 -0.2' result='a'/%3E%3CfeComponentTransfer in='a' result='v1'%3E%3CfeFuncA type='table' tableValues='0 0 0 0 0 0 0 0.15 1 0.15 0 0 0 0 0 0 0 0 0 0'/%3E%3C/feComponentTransfer%3E%3CfeColorMatrix in='v1' type='matrix' values='0 0 0 0 0.86  0 0 0 0 0.84  0 0 0 0 0.9  0 0 0 0.55 0' result='c1'/%3E%3CfeComponentTransfer in='a' result='v2'%3E%3CfeFuncA type='table' tableValues='0 0 0 0 0 0 0 0 0 0 0 0 0.2 1 0.2 0 0 0 0 0'/%3E%3C/feComponentTransfer%3E%3CfeColorMatrix in='v2' type='matrix' values='0 0 0 0 0.72  0 0 0 0 0.62  0 0 0 0 0.42  0 0 0 0.35 0' result='c2'/%3E%3CfeColorMatrix in='n' type='matrix' values='0 0 0 0 0.5  0 0 0 0 0.48  0 0 0 0 0.6  0 0 0 0.06 0' result='c3'/%3E%3CfeMerge%3E%3CfeMergeNode in='c3'/%3E%3CfeMergeNode in='c2'/%3E%3CfeMergeNode in='c1'/%3E%3C/feMerge%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23m)'/%3E%3C/svg%3E");
+}
+/* Veludo preto: micro-textura de pelo (nap) + brilho de borda superior. Para painéis do herói. */
+@utility dv-velvet {
+  background-color: var(--dv-velvet);
+  background-image:
+    radial-gradient(130% 70% at 20% -10%, rgba(170, 165, 214, 0.09), transparent 60%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='v'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.6 0.9' numOctaves='2' seed='4' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.9 0 0 0 0 0.88 0 0 0 0 0.95 0 0 0 0.075 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23v)'/%3E%3C/svg%3E"),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.035), transparent 34%, rgba(0, 0, 0, 0.3));
+  background-size: auto, 160px 160px, auto;
+  box-shadow:
+    inset 0 1px 0 rgba(227, 213, 172, 0.18),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.035),
+    inset 0 -28px 44px -32px rgba(108, 104, 153, 0.28);
+}
+/* Porcelana fria: esmalte claro com reflexo e grão finíssimo (superfícies claras, renda, cartões). */
+@utility dv-porcelain {
+  color: var(--dv-porcelain-ink);
+  background-color: var(--dv-porcelain);
+  background-image:
+    radial-gradient(90% 60% at 30% 0%, rgba(255, 255, 255, 0.9), transparent 55%),
+    radial-gradient(70% 50% at 100% 100%, rgba(77, 71, 144, 0.06), transparent 70%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.1 0 0 0 0 0.1 0 0 0 0 0.16 0 0 0 0.06 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23p)'/%3E%3C/svg%3E");
+  background-size: auto, auto, 200px 200px;
+  box-shadow: inset 0 1px 0 #fff, inset 0 0 0 1px rgba(18, 16, 22, 0.08);
+}
+/* Mármore branco com veios cinza e um veio de latão (procedural, uma imagem SVG cacheada). */
+@utility dv-marble {
+  background-color: #eceae6;
+  background-image: radial-gradient(120% 80% at 20% 10%, rgba(255, 255, 255, 0.7), transparent 60%), var(--dv-marble-white);
+  background-size: auto, 420px 420px;
+}
+/* Mármore negro com veios porcelana e latão. */
+@utility dv-marble-dark {
+  background-color: #0c0b10;
+  background-image: radial-gradient(120% 80% at 80% 0%, rgba(108, 104, 153, 0.12), transparent 60%), var(--dv-marble-dark);
+  background-size: auto, 420px 420px;
+}
+/* Latão polido/escovado: preenchimento metálico (plaquetas, filetes grossos, botões de conquista). */
+@utility dv-brass {
+  color: #1a1408;
+  background-image: repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.07) 0 1px, transparent 1px 3px), var(--dv-brass-grad);
+  box-shadow: inset 0 1px 0 rgba(255, 246, 220, 0.6), inset 0 -1px 0 rgba(40, 28, 8, 0.5);
+}
+/* Texto em latão (títulos de conquista, numerais romanos grandes). */
+@utility dv-brass-text {
+  color: var(--dv-gold);
+  background-image: linear-gradient(180deg, #f1e9d2 0%, #c2ae84 45%, #6e5b3c 70%, #cdbb93 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+/* Filete de latão de 1px por dentro da borda (moldura de painel/retrato). */
+@utility dv-brass-edge {
+  box-shadow: inset 0 0 0 1px rgba(176, 154, 108, 0.7), inset 0 0 0 2px rgba(10, 9, 13, 0.9), inset 0 0 0 3px rgba(227, 213, 172, 0.18);
+}
+/* Xadrez de mármore preto e branco com rejunte de latão (piso, tabuleiro). */
+@utility dv-checker-marble {
+  background-color: #0c0b10;
+  background-image:
+    linear-gradient(90deg, rgba(176, 154, 108, 0.55) 1px, transparent 1px),
+    linear-gradient(0deg, rgba(176, 154, 108, 0.55) 1px, transparent 1px),
+    conic-gradient(#e9e6e1 25%, transparent 0 50%, #e9e6e1 0 75%, transparent 0),
+    var(--dv-marble-dark);
+  background-size: 48px 48px, 48px 48px, 96px 96px, 420px 420px;
+}
+/* Xadrez sutil para fundos claros (papel do interior, porcelana): quase só textura. */
+@utility dv-checker-faint {
+  background-image: conic-gradient(rgba(12, 11, 16, 0.055) 25%, transparent 0 50%, rgba(12, 11, 16, 0.055) 0 75%, transparent 0);
+  background-size: 28px 28px;
+}
+/* Céu do relógio: noite azul-violeta com halo (atmosfera da Jornada atrás de heróis). */
+@utility dv-night-sky {
+  background-color: var(--dv-ink);
+  background-image:
+    radial-gradient(60% 45% at 50% 30%, rgba(108, 104, 153, 0.35), transparent 70%),
+    radial-gradient(90% 70% at 50% 20%, var(--dv-night-2), transparent 75%),
+    linear-gradient(180deg, var(--dv-night) 0%, var(--dv-ink) 85%);
+}
+
+/* Lanterna pendente: balanço e chama. */
+@keyframes dv-lantern-sway {
+  0%, 100% { transform: rotate(-2.2deg); }
+  50% { transform: rotate(2.2deg); }
+}
+@keyframes dv-flame {
+  0%, 100% { opacity: 0.85; transform: scale(1); }
+  30% { opacity: 1; transform: scale(1.06, 1.1); }
+  60% { opacity: 0.75; transform: scale(0.96, 0.94); }
+}
+.dv-lantern-sway { transform-origin: 50% 0; animation: dv-lantern-sway 7s ease-in-out infinite; }
+.dv-flame { transform-origin: 50% 70%; animation: dv-flame 2.6s ease-in-out infinite; }
+.dv-gear-cw { transform-box: fill-box; transform-origin: center; animation: dv-spin 90s linear infinite; }
+.dv-gear-ccw { transform-box: fill-box; transform-origin: center; animation: dv-spin 60s linear infinite reverse; }
+.dv-hand-min { transform-box: view-box; transform-origin: 50% 50%; animation: dv-spin 240s linear infinite; }
+.dv-hand-hour { transform-box: view-box; transform-origin: 50% 50%; animation: dv-spin 2880s linear infinite; }
+@media (prefers-reduced-motion: reduce) {
+  .dv-lantern-sway, .dv-flame, .dv-gear-cw, .dv-gear-ccw, .dv-hand-min, .dv-hand-hour { animation: none !important; }
 }

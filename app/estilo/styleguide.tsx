@@ -53,43 +53,43 @@ const COLORS: { group: string; items: { name: string; v: string; use: string }[]
   {
     group: 'Noite (fundos)',
     items: [
-      { name: '--dv-ink', v: '#05070d', use: 'fundo de tela' },
-      { name: '--dv-ink-2', v: '#0a0f1c', use: 'superfície' },
-      { name: '--dv-ink-3', v: '#111a2e', use: 'superfície alta' },
-      { name: '--dv-ink-4', v: '#1a2440', use: 'realce' },
+      { name: '--dv-ink', v: '#0a090d', use: 'fundo de tela' },
+      { name: '--dv-ink-2', v: '#121016', use: 'superfície' },
+      { name: '--dv-ink-3', v: '#1b1824', use: 'superfície alta' },
+      { name: '--dv-ink-4', v: '#282436', use: 'realce' },
     ],
   },
   {
     group: 'Cobalto (sistema)',
     items: [
-      { name: '--dv-cobalt', v: '#315dff', use: 'ação, foco' },
-      { name: '--dv-cobalt-deep', v: '#1647ff', use: 'faixas, papel' },
-      { name: '--dv-cobalt-dim', v: '#0b1a4d', use: 'fundo ativo' },
-      { name: '--dv-cobalt-text', v: '#7d97ff', use: 'texto AA' },
+      { name: '--dv-cobalt', v: '#4152c0', use: 'ação, foco' },
+      { name: '--dv-cobalt-deep', v: '#34409e', use: 'faixas, papel' },
+      { name: '--dv-cobalt-dim', v: '#161a40', use: 'fundo ativo' },
+      { name: '--dv-cobalt-text', v: '#9ea8ee', use: 'texto AA' },
     ],
   },
   {
     group: 'Ouro (ornamento)',
     items: [
-      { name: '--dv-gold', v: '#c9a45c', use: 'filetes' },
-      { name: '--dv-gold-bright', v: '#ecd49a', use: 'brilho' },
-      { name: '--dv-gold-deep', v: '#7c5f2a', use: 'sombra' },
+      { name: '--dv-gold', v: '#b09a6c', use: 'filetes' },
+      { name: '--dv-gold-bright', v: '#e3d5ac', use: 'brilho' },
+      { name: '--dv-gold-deep', v: '#5e4d33', use: 'sombra' },
     ],
   },
   {
     group: 'Papel (documentos)',
     items: [
-      { name: '--dv-paper', v: '#efe6d2', use: 'Record, tiras' },
-      { name: '--dv-paper-2', v: '#e2d5b8', use: 'dobra' },
+      { name: '--dv-paper', v: '#ece9e3', use: 'Record, tiras' },
+      { name: '--dv-paper-2', v: '#dbd7cf', use: 'dobra' },
       { name: '--dv-paper-ink', v: '#1c1a22', use: 'texto no papel' },
     ],
   },
   {
     group: 'Sangue (só perigo)',
     items: [
-      { name: '--dv-blood', v: '#d51f2b', use: 'alerta' },
-      { name: '--dv-blood-deep', v: '#5a0a10', use: 'fundo alerta' },
-      { name: '--dv-blood-text', v: '#ff5a63', use: 'texto AA' },
+      { name: '--dv-blood', v: '#a3121f', use: 'alerta' },
+      { name: '--dv-blood-deep', v: '#3f060b', use: 'fundo alerta' },
+      { name: '--dv-blood-text', v: '#ff6670', use: 'texto AA' },
     ],
   },
 ]

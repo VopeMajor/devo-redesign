@@ -5,19 +5,23 @@ import { cn } from '@/lib/utils'
 
 /** Mapas de gradiente (sombra → meio → luz), em 0..1 por canal. */
 const MAPS = {
-  // preto do painel → cobalto do Record → papel frio
-  cobalt: { r: [0.035, 0.086, 0.93], g: [0.043, 0.278, 0.94], b: [0.059, 1, 0.955] },
-  // preto → vermelho de alerta → papel (só em contexto de perigo)
-  blood: { r: [0.035, 0.84, 0.95], g: [0.043, 0.12, 0.93], b: [0.059, 0.17, 0.93] },
+  // veludo → índigo-marinho do sistema → porcelana (padrão do Record)
+  cobalt: { r: [0.039, 0.204, 0.949], g: [0.035, 0.251, 0.941], b: [0.051, 0.62, 0.925] },
+  // veludo → lavanda da noite → porcelana (retrato, arte de destaque: o "toque violeta")
+  violet: { r: [0.039, 0.302, 0.949], g: [0.035, 0.278, 0.941], b: [0.051, 0.565, 0.925] },
+  // preto e branco puro, cinza de mármore no meio (gravura)
+  mono: { r: [0.039, 0.35, 0.949], g: [0.035, 0.35, 0.941], b: [0.051, 0.37, 0.925] },
+  // veludo → rubi → porcelana (só em contexto de perigo)
+  blood: { r: [0.039, 0.639, 0.949], g: [0.035, 0.071, 0.941], b: [0.051, 0.122, 0.925] },
   // tinta: preto → grafite → papel (neutro, para cartas bloqueadas)
-  ink: { r: [0.035, 0.32, 0.93], g: [0.043, 0.34, 0.94], b: [0.059, 0.4, 0.955] },
+  ink: { r: [0.039, 0.32, 0.91], g: [0.035, 0.31, 0.9], b: [0.051, 0.36, 0.89] },
 } as const
 
 export type DuotoneTone = keyof typeof MAPS
 
 /**
  * Arte em duotom (estilo tinta/mangá do Record): converte qualquer imagem ou SVG para o mapa
- * preto → cobalto → papel com um filtro SVG (feColorMatrix + feComponentTransfer). Use em cartas,
+ * preto → índigo (ou lavanda, `violet`; ou cinza, `mono`) → porcelana com um filtro SVG (feColorMatrix + feComponentTransfer). Use em cartas,
  * retratos e banners DENTRO do interior. `halftone` adiciona retícula de impressão por cima.
  */
 export function DuotoneArt({

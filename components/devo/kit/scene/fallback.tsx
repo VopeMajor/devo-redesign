@@ -1,14 +1,16 @@
 import { cn } from '@/lib/utils'
 import { DeadlyVoteSymbol } from '../../system/symbol'
 import { toRoman } from '../glyphs'
+import { CheckerFloor, Lantern, RomanDial, Sword } from '../ornament/motifs'
 import type { SceneFocus, ScenePreset } from './types'
 
 const BASE: Record<ScenePreset, string> = {
-  sigil: 'bg-[radial-gradient(70%_45%_at_50%_38%,#13235e_0%,#0a1230_40%,var(--dv-ink)_100%)]',
-  cathedral: 'bg-[linear-gradient(180deg,#0d1430_0%,#080c1b_55%,var(--dv-ink)_100%)]',
-  table: 'bg-[radial-gradient(60%_50%_at_50%_45%,#2a2418_0%,#0d0e14_55%,var(--dv-ink)_100%)]',
-  corridor: 'bg-[radial-gradient(30%_30%_at_50%_44%,#1c2b66_0%,#0a0f22_50%,var(--dv-ink)_100%)]',
-  tribunal: 'bg-[radial-gradient(55%_40%_at_50%_30%,#3a0a12_0%,#12060b_50%,#04050a_100%)]',
+  sigil: 'bg-[radial-gradient(70%_45%_at_50%_38%,#2c2b4f_0%,#16152a_42%,var(--dv-ink)_100%)]',
+  cathedral: 'bg-[linear-gradient(180deg,#1c1b33_0%,#0f0e1a_55%,var(--dv-ink)_100%)]',
+  table: 'bg-[radial-gradient(60%_50%_at_50%_45%,#2b2830_0%,#0e0d13_55%,var(--dv-ink)_100%)]',
+  corridor: 'bg-[radial-gradient(30%_30%_at_50%_44%,#2e2c52_0%,#121122_50%,var(--dv-ink)_100%)]',
+  tribunal: 'bg-[radial-gradient(55%_40%_at_50%_30%,#3f060b_0%,#14070c_50%,#070609_100%)]',
+  clockhall: 'bg-[radial-gradient(75%_50%_at_50%_30%,#3e4170_0%,#1c1b33_48%,#0d0c17_100%)]',
 }
 
 /**
@@ -24,6 +26,7 @@ export function SceneFallback({ preset, focus, alert, showArt }: { preset: Scene
         {preset === 'table' && <TableArt />}
         {preset === 'corridor' && <CorridorArt />}
         {preset === 'tribunal' && <TribunalArt alert={alert} />}
+        {preset === 'clockhall' && <ClockhallArt />}
       </div>
     </div>
   )
@@ -59,10 +62,10 @@ function SigilArt({ focus }: { focus?: SceneFocus }) {
       className="absolute aspect-square -translate-x-1/2 -translate-y-1/2"
       style={{ left: `${f.x * 100}%`, top: `${f.y * 100}%`, width: `min(${f.size * 100}vw, ${f.size * 100}vh)` }}
     >
-      <div className="absolute inset-0 rounded-full bg-[radial-gradient(circle,rgba(49,93,255,0.35),transparent_62%)]" />
+      <div className="absolute inset-0 rounded-full bg-[radial-gradient(circle,rgba(65,82,192,0.35),transparent_62%)]" />
       <Dial className="animate-dv-spin-slow absolute inset-0 text-dv-gold/70" />
       <div className="absolute inset-[18%] rounded-full border border-dv-cobalt-text/40" />
-      <DeadlyVoteSymbol variant="mark" className="absolute inset-[30%] text-dv-text drop-shadow-[0_0_24px_rgba(49,93,255,0.7)]" />
+      <DeadlyVoteSymbol variant="mark" className="absolute inset-[30%] text-dv-text drop-shadow-[0_0_24px_rgba(65,82,192,0.7)]" />
     </div>
   )
 }
@@ -70,12 +73,12 @@ function SigilArt({ focus }: { focus?: SceneFocus }) {
 function CathedralArt() {
   return (
     <>
-      <div className="absolute inset-y-0 left-[8%] w-[14%] bg-gradient-to-b from-[#1b2340] to-transparent opacity-70" />
-      <div className="absolute inset-y-0 right-[8%] w-[14%] bg-gradient-to-b from-[#1b2340] to-transparent opacity-70" />
-      <div className="absolute inset-y-0 left-[28%] w-[8%] bg-gradient-to-b from-[#151c33] to-transparent opacity-60" />
-      <div className="absolute inset-y-0 right-[28%] w-[8%] bg-gradient-to-b from-[#151c33] to-transparent opacity-60" />
-      <div className="absolute -top-[10%] left-[34%] h-[90%] w-[10%] rotate-[18deg] bg-gradient-to-b from-[rgba(125,151,255,0.28)] to-transparent blur-md" />
-      <div className="absolute -top-[10%] left-[52%] h-[80%] w-[6%] rotate-[18deg] bg-gradient-to-b from-[rgba(201,212,255,0.2)] to-transparent blur-md" />
+      <div className="absolute inset-y-0 left-[8%] w-[14%] bg-gradient-to-b from-[#26243a] to-transparent opacity-70" />
+      <div className="absolute inset-y-0 right-[8%] w-[14%] bg-gradient-to-b from-[#26243a] to-transparent opacity-70" />
+      <div className="absolute inset-y-0 left-[28%] w-[8%] bg-gradient-to-b from-[#1c1a2c] to-transparent opacity-60" />
+      <div className="absolute inset-y-0 right-[28%] w-[8%] bg-gradient-to-b from-[#1c1a2c] to-transparent opacity-60" />
+      <div className="absolute -top-[10%] left-[34%] h-[90%] w-[10%] rotate-[18deg] bg-gradient-to-b from-[rgba(158,168,238,0.28)] to-transparent blur-md" />
+      <div className="absolute -top-[10%] left-[52%] h-[80%] w-[6%] rotate-[18deg] bg-gradient-to-b from-[rgba(230,228,240,0.2)] to-transparent blur-md" />
     </>
   )
 }
@@ -83,12 +86,12 @@ function CathedralArt() {
 function TableArt() {
   return (
     <>
-      <div className="absolute inset-x-[-30%] bottom-[-10%] h-[70%] [perspective:500px]">
-        <div className="dv-checker absolute inset-0 origin-bottom [transform:rotateX(62deg)] [background-size:64px_64px] [background-position:0_0,32px_32px] opacity-90" />
-      </div>
-      <div className="absolute left-1/2 top-[34%] h-[50%] w-[70%] -translate-x-1/2 bg-[radial-gradient(50%_50%_at_50%_70%,rgba(255,233,194,0.28),transparent_70%)]" />
+      <CheckerFloor tilt={60} cell={44} className="!h-[62%]" />
+      <div className="absolute left-1/2 top-[30%] h-[56%] w-[80%] -translate-x-1/2 bg-[radial-gradient(50%_50%_at_50%_70%,rgba(242,234,214,0.22),transparent_70%)]" />
+      <Sword className="absolute bottom-[12%] left-[12%] h-[52%] rotate-[14deg]" />
+      <Sword className="absolute bottom-[16%] right-[14%] h-[46%] -rotate-[12deg]" gem="glass" />
       <div className="absolute left-1/2 top-0 h-[22%] w-px -translate-x-1/2 bg-white/20" />
-      <div className="absolute left-1/2 top-[22%] h-6 w-20 -translate-x-1/2 rounded-t-full border-b-2 border-dv-gold bg-[#141a2c]" />
+      <div className="absolute left-1/2 top-[22%] h-6 w-20 -translate-x-1/2 rounded-t-full border-b-2 border-dv-gold bg-dv-ink-2" />
     </>
   )
 }
@@ -102,7 +105,7 @@ function CorridorArt() {
         const h = 50 * k
         return <rect key={i} x={50 - w} y={44 - h * 0.6} width={w * 2} height={h * 1.2} opacity={1 - i * 0.12} vectorEffect="non-scaling-stroke" />
       })}
-      <circle cx="50" cy="44" r="1.2" fill="rgba(239,230,210,0.8)" stroke="none" />
+      <circle cx="50" cy="44" r="1.2" fill="rgba(236,233,227,0.8)" stroke="none" />
     </svg>
   )
 }
@@ -120,9 +123,22 @@ function TribunalArt({ alert }: { alert?: boolean }) {
             return <rect key={`${tier}-${i}`} x={x - 2.2} y={y - 3} width="4.4" height="5" opacity={0.9 - tier * 0.25} />
           }),
         )}
-        <ellipse cx="50" cy="48" rx="30" ry="6" fill="none" stroke="rgba(201,164,92,0.35)" strokeWidth="0.3" />
+        <ellipse cx="50" cy="48" rx="30" ry="6" fill="none" stroke="rgba(176,154,108,0.35)" strokeWidth="0.3" />
       </svg>
-      <div className={cn('absolute left-1/2 top-0 h-[70%] w-[50%] -translate-x-1/2 bg-[linear-gradient(180deg,rgba(213,31,43,0.35),transparent)] [clip-path:polygon(40%_0,60%_0,100%_100%,0_100%)]', alert && 'animate-dv-alert')} />
+      <div className={cn('absolute left-1/2 top-0 h-[70%] w-[50%] -translate-x-1/2 bg-[linear-gradient(180deg,rgba(170,20,32,0.35),transparent)] [clip-path:polygon(40%_0,60%_0,100%_100%,0_100%)]', alert && 'animate-dv-alert')} />
+    </>
+  )
+}
+
+function ClockhallArt() {
+  return (
+    <>
+      <div className="absolute left-1/2 top-[6%] aspect-square w-[min(118vw,78vh)] -translate-x-1/2 opacity-90">
+        <RomanDial glass className="size-full" />
+      </div>
+      <CheckerFloor tilt={66} cell={52} className="!h-[30%]" />
+      <Lantern chain={70} className="absolute left-[10%] top-0 w-[11%] min-w-10 opacity-90" />
+      <Lantern chain={130} className="absolute right-[12%] top-0 w-[9%] min-w-8 opacity-80" style={{ animationDelay: '-3s' }} />
     </>
   )
 }

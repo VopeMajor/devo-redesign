@@ -7,10 +7,10 @@ export type PortraitShape = 'arch' | 'rect' | 'round'
 
 /** Luz de borda (segue o contorno do PNG/SVG via drop-shadow) e brilho de fundo por tom. */
 const RIM: Record<PortraitTone, { rim: string; glow: string; line: string; floor: string }> = {
-  cobalt: { rim: '125,151,255', glow: 'rgba(49,93,255,0.42)', line: 'border-dv-cobalt-text/45', floor: 'rgba(49,93,255,0.45)' },
-  gold: { rim: '236,212,154', glow: 'rgba(201,164,92,0.32)', line: 'border-dv-gold/55', floor: 'rgba(201,164,92,0.4)' },
-  blood: { rim: '255,90,99', glow: 'rgba(213,31,43,0.38)', line: 'border-dv-blood/55', floor: 'rgba(213,31,43,0.45)' },
-  neutral: { rim: '236,238,242', glow: 'rgba(236,238,242,0.12)', line: 'border-dv-line-strong', floor: 'rgba(236,238,242,0.2)' },
+  cobalt: { rim: '125,151,255', glow: 'rgba(65,82,192,0.42)', line: 'border-dv-cobalt-text/45', floor: 'rgba(65,82,192,0.45)' },
+  gold: { rim: '236,212,154', glow: 'rgba(176,154,108,0.32)', line: 'border-dv-gold/55', floor: 'rgba(176,154,108,0.4)' },
+  blood: { rim: '255,90,99', glow: 'rgba(170,20,32,0.38)', line: 'border-dv-blood/55', floor: 'rgba(170,20,32,0.45)' },
+  neutral: { rim: '236,238,242', glow: 'rgba(238,236,239,0.12)', line: 'border-dv-line-strong', floor: 'rgba(238,236,239,0.2)' },
 }
 
 const SHAPE: Record<PortraitShape, string> = {
@@ -86,7 +86,7 @@ export function PortraitFrame({
         <span aria-hidden="true" className="pointer-events-none absolute inset-x-[-10%] bottom-[-14%] h-[34%]" style={{ background: `radial-gradient(50% 50% at 50% 50%, ${t.floor}, transparent 70%)` }} />
         {/* grão + vinheta */}
         <span aria-hidden="true" className="devo-grain pointer-events-none absolute inset-0 opacity-[0.1] mix-blend-overlay" />
-        <span aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_40%,transparent_55%,rgba(2,3,7,0.7)_100%)]" />
+        <span aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_40%,transparent_55%,rgba(4,3,6,0.7)_100%)]" />
         {/* filete */}
         <span aria-hidden="true" className={cn('pointer-events-none absolute inset-0 border', t.line, SHAPE[shape].replace(/aspect-\S+/, ''))} />
         <span aria-hidden="true" className={cn('pointer-events-none absolute inset-[5px] border border-white/[0.06]', SHAPE[shape].replace(/aspect-\S+/, ''))} />
