@@ -17,16 +17,20 @@ import {
   VenetianMask,
   type LucideIcon,
 } from "lucide-react";
-import { useId } from "react";
-import {
-  ARCHETYPE_BY_TYPE,
-  getCard,
-  getCardMeta,
-  getCardRadius,
-  RARITY_META,
-} from "@/lib/devo/cards";
-import type { CardType, GlyphName } from "@/lib/devo/types";
+import type { CSSProperties, ReactNode } from "react";
+import { DuotoneArt, type DuotoneTone } from "@/components/devo/kit";
+import { ARCHETYPE_BY_TYPE, getCard, getCardMeta, getCardRadius, RARITY_META } from "@/lib/devo/cards";
+import type { CardType, GlyphName, Rarity } from "@/lib/devo/types";
 import { cn } from "@/lib/utils";
+import { DeadlyVoteSymbol } from "../system/symbol";
+
+/*
+ * Carta DEVO — peça de colecionador em mármore negro, aço e arte em duotom.
+ * Proporção 5:7. Tudo é medido em `cqw` (largura da própria carta): a mesma carta serve de
+ * miniatura na grade do Record (~70px) e de peça de inspeção no detalhe (~260px). Textos pequenos
+ * só aparecem quando a carta tem largura para eles (container queries).
+ * Nomes e ordem das raridades vêm de lib/devo/cards.ts; aqui fica só a "pele" visual de cada uma.
+ */
 
 export const GLYPHS: Record<GlyphName, LucideIcon> = {
   hourglass: Hourglass,
@@ -55,6 +59,172 @@ export const TYPE_ART: Record<CardType, string> = {
   Tempo: "/images/cards/tempo.png",
 };
 
+/** Recorte da arte de tipo para cada carta (cartas do mesmo tipo mostram detalhes diferentes). */
+const CROP: Record<string, { pos: string; zoom?: number }> = {
+  fosforo: { pos: "50% 22%", zoom: 1.25 },
+  laminas: { pos: "50% 52%" },
+  cranio: { pos: "48% 18%", zoom: 1.5 },
+  escudo: { pos: "40% 62%", zoom: 1.2 },
+  coracao: { pos: "50% 12%" },
+  chave: { pos: "50% 86%", zoom: 1.35 },
+  porta: { pos: "50% 78%" },
+  olho: { pos: "50% 30%", zoom: 1.15 },
+  contrato: { pos: "50% 52%" },
+  ampulheta: { pos: "30% 78%", zoom: 1.45 },
+  relogio: { pos: "80% 78%", zoom: 1.5 },
+  tesoura: { pos: "45% 30%", zoom: 1.2 },
+  moeda: { pos: "55% 58%", zoom: 1.6 },
+  dado: { pos: "40% 52%" },
+  mascara: { pos: "72% 70%", zoom: 1.55 },
+  coroa: { pos: "50% 10%" },
+};
+
+export type RaritySkin = {
+  /** Quantidade de losangos (a raridade nunca depende só da cor). */
+  pips: number;
+  /** Metal da moldura (gradiente CSS). */
+  frame: string;
+  /** Filete interno. */
+  filet: string;
+  /** Texto sobre papel (AA). */
+  ink: string;
+  /** Texto sobre o veludo (AA). */
+  light: string;
+  glow: string;
+  duo: DuotoneTone;
+  /** Pedra da raridade: luz, meio, sombra. */
+  gem: [string, string, string];
+};
+
+/**
+ * Pele de cada raridade na paleta do mármore: ferro → prata → ametista → champanhe.
+ * Ouro/champanhe só na Lendária; rubi nunca (é alerta).
+ */
+export const RARITY_SKIN: Record<Rarity, RaritySkin> = {
+  comum: {
+    pips: 1,
+    frame: "linear-gradient(150deg,#77767b 0%,#2c2c31 32%,#8f8e8b 52%,#1f1f22 74%,#5d5c61 100%)",
+    filet: "#8f8e8b",
+    ink: "#45454b",
+    light: "#c4c3c7",
+    glow: "rgba(200,198,204,0.25)",
+    duo: "ink",
+    gem: ["#6a6a70", "#26262b", "#08080a"],
+  },
+  incomum: {
+    pips: 2,
+    frame: "linear-gradient(150deg,#ffffff 0%,#9a97a3 24%,#ecebef 48%,#5b5863 72%,#f3f1f6 100%)",
+    filet: "#dcdae2",
+    ink: "#3f3e46",
+    light: "#eceaf0",
+    glow: "rgba(236,234,240,0.35)",
+    duo: "mono",
+    gem: ["#ffffff", "#d9d7de", "#76737f"],
+  },
+  rara: {
+    pips: 3,
+    frame: "linear-gradient(150deg,#f3f1f6 0%,#8e8b98 22%,#d8d3ee 44%,#4e4580 64%,#c2b9ec 84%,#f3f1f6 100%)",
+    filet: "#a99de0",
+    ink: "#4a4180",
+    light: "#cbc5e8",
+    glow: "rgba(138,124,200,0.55)",
+    duo: "violet",
+    gem: ["#e4defb", "#8a7cc8", "#2a2350"],
+  },
+  lendaria: {
+    pips: 4,
+    frame: "linear-gradient(150deg,#f4efe6 0%,#9a9184 20%,#ece5d8 40%,#5d564c 62%,#d8d0c2 82%,#f4efe6 100%)",
+    filet: "#d6cdbd",
+    ink: "#5f584d",
+    light: "#ece5d8",
+    glow: "rgba(236,229,216,0.55)",
+    duo: "mono",
+    gem: ["#fffaf0", "#d6cdbd", "#6b6357"],
+  },
+};
+
+/** Arco ogival (polígono em %): laterais retas e dois arcos que se encontram numa ponta. */
+const ARCH = (() => {
+  const rise = 17; // % da altura ocupada pelo arco
+  const c = 74; // raio do arco (em % da largura): define o quão pontudo fica
+  const end = Math.acos(1 - 50 / c);
+  const pts: [number, number][] = [
+    [0, 100],
+    [0, rise],
+  ];
+  const n = 14;
+  const at = (i: number) => {
+    const a = (end * i) / n;
+    return [c - c * Math.cos(a), rise * (1 - Math.sin(a) / Math.sin(end))] as const;
+  };
+  for (let i = 1; i <= n; i++) {
+    const [x, y] = at(i);
+    pts.push([x, y]);
+  }
+  for (let i = n - 1; i >= 1; i--) {
+    const [x, y] = at(i);
+    pts.push([100 - x, y]);
+  }
+  pts.push([100, rise], [100, 100]);
+  return pts.map(([x, y]) => [Number(x.toFixed(2)), Number(y.toFixed(2))] as const);
+})();
+const ARCH_CLIP = `polygon(${ARCH.map(([x, y]) => `${x}% ${y}%`).join(",")})`;
+const ARCH_PATH = `M${ARCH.map(([x, y]) => `${x} ${y}`).join(" L")} Z`;
+
+const STAR4 = "M12 0.5 C12.6 8.6 15.4 11.4 23.5 12 C15.4 12.6 12.6 15.4 12 23.5 C11.4 15.4 8.6 12.6 0.5 12 C8.6 11.4 11.4 8.6 12 0.5 Z";
+
+/** Animações da carta (escopo pelo prefixo dvcard-). */
+export const CARD_CSS = `
+@keyframes dvcard-sheen { 0% { background-position: 120% 0 } 55%,100% { background-position: -40% 0 } }
+@keyframes dvcard-holo { 0% { background-position: 0% 30%, 0 0 } 50% { background-position: 100% 70%, 0 0 } 100% { background-position: 0% 30%, 0 0 } }
+.dvcard-holo { animation: dvcard-holo 9s ease-in-out infinite; }
+.dvcard-holo[data-follow] { animation: none; }
+.dvcard-sheen { animation: dvcard-sheen 7s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) { .dvcard-holo, .dvcard-sheen { animation: none !important } }
+`;
+
+/** Losangos de raridade (1–4 cheios). Herdam a cor do texto. */
+export function RarityPips({ rarity, className, style }: { rarity: Rarity; className?: string; style?: CSSProperties }) {
+  const n = RARITY_SKIN[rarity].pips;
+  return (
+    <span aria-hidden="true" className={cn("inline-flex items-center gap-[0.28em]", className)} style={style}>
+      {Array.from({ length: 4 }, (_, i) => (
+        <svg key={i} viewBox="0 0 10 14" className="h-[1em] w-[0.72em] shrink-0">
+          <path d="M5 0.8 L9.2 7 L5 13.2 L0.8 7 Z" fill={i < n ? "currentColor" : "none"} stroke="currentColor" strokeWidth="1" opacity={i < n ? 1 : 0.4} />
+        </svg>
+      ))}
+    </span>
+  );
+}
+
+/** Pedra facetada da raridade (losango com engaste de aço; champanhe só na Lendária). */
+export function RarityGem({ rarity, className, title }: { rarity: Rarity; className?: string; title?: string }) {
+  const [hi, mid, lo] = RARITY_SKIN[rarity].gem;
+  const metal = rarity === "lendaria" ? ["#f4efe6", "#8a8173", "#ece5d8"] : ["#ffffff", "#77747f", "#e6e4ea"];
+  const id = `dvgem-${rarity}`;
+  return (
+    <svg viewBox="0 0 32 48" className={cn("drop-shadow-[0_2px_3px_rgba(0,0,0,0.45)]", className)} role={title ? "img" : undefined} aria-hidden={title ? undefined : true} aria-label={title}>
+      <defs>
+        <linearGradient id={id} x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stopColor={metal[0]} />
+          <stop offset=".5" stopColor={metal[1]} />
+          <stop offset="1" stopColor={metal[2]} />
+        </linearGradient>
+      </defs>
+      <path d="M16 0.8 L31.2 24 L16 47.2 L0.8 24 Z" fill={`url(#${id})`} />
+      <path d="M16 3.8 L28.4 24 L16 44.2 L3.6 24 Z" fill="#0a090e" />
+      <path d="M16 5 L27.2 24 L16 24 Z" fill={mid} />
+      <path d="M16 5 L4.8 24 L16 24 Z" fill={hi} />
+      <path d="M4.8 24 L16 43 L16 24 Z" fill={mid} />
+      <path d="M27.2 24 L16 43 L16 24 Z" fill={lo} />
+      <path d="M16 15 L21.5 24 L16 33 L10.5 24 Z" fill={mid} />
+      <path d="M16 15 L21.5 24 L16 24 Z" fill={hi} opacity="0.4" />
+      <path d="M16 24 L10.5 24 L16 33 Z" fill={lo} opacity="0.45" />
+      <path d="M16 5 L16 15 M4.8 24 L10.5 24 M27.2 24 L21.5 24 M16 43 L16 33" stroke="#fff" strokeWidth="0.35" opacity="0.5" />
+      <path d="M10 15 L12 13 L13 17 Z" fill="#fff" opacity="0.85" />
+    </svg>
+  );
+}
 
 type DevoCardProps = {
   cardId?: string | null;
@@ -69,444 +239,58 @@ const SIZES = {
   lg: "w-48",
 };
 
-const GOLD = "#d8b25a";
-const GOLD_DEEP = "#9a7428";
-const CREAM = "#f3e8c9";
-const INK = "#2b1610";
-const CRIMSON = "#7a0d14";
-const NAVY = "#0b1a4d";
+const CARD_SHELL = "relative aspect-[5/7] [container-type:inline-size]";
 
-const CARD_SHELL = "relative aspect-[9/20] [container-type:inline-size]";
-const CARD_BODY = "absolute inset-0 overflow-hidden rounded-[5cqw] p-[4.5cqw]";
-
-const CRIMSON_TEXTURE = {
-  backgroundColor: CRIMSON,
-  backgroundImage: `radial-gradient(circle at 20% 15%, #a3141d 0 1px, transparent 2px), radial-gradient(circle at 70% 60%, #4d070c 0 1px, transparent 2px), radial-gradient(ellipse at 50% 0%, #9e1820, transparent 60%), radial-gradient(ellipse at 50% 100%, #4a060b, transparent 60%)`,
-  backgroundSize: "7px 7px, 9px 9px, 100% 100%, 100% 100%",
-};
-
-function StarPoints({
-  points,
-  outer,
-  inner,
-  cx = 50,
-  cy = 50,
-}: {
-  points: number;
-  outer: number;
-  inner: number;
-  cx?: number;
-  cy?: number;
-}) {
-  return Array.from({ length: points * 2 }, (_, i) => {
-    const a = (i * Math.PI) / points - Math.PI / 2;
-    const r = i % 2 === 0 ? outer : inner;
-    return `${cx + r * Math.cos(a)},${cy + r * Math.sin(a)}`;
-  }).join(" ");
-}
-
-function CompassCrest({ className }: { className?: string }) {
+/** Moldura metálica + bisel + veludo interno (comum à frente e ao verso). */
+function Shell({ frame, filet, glow, children }: { frame: string; filet: string; glow?: string; children: ReactNode }) {
   return (
-    <svg viewBox="0 0 100 100" className={className} aria-hidden="true">
-      <polygon
-        points={StarPoints({ points: 16, outer: 50, inner: 30 })}
-        fill={CRIMSON}
-        stroke={GOLD}
-        strokeWidth="1.2"
+    <>
+      <span
+        aria-hidden="true"
+        className="absolute inset-0 rounded-[5cqw]"
+        style={{ background: frame, boxShadow: `inset 0 1px 0 rgba(255,255,255,0.3), 0 10px 26px -14px rgba(0,0,0,0.9)${glow ? `, 0 0 14px -4px ${glow}` : ""}` }}
       />
-      <circle
-        cx="50"
-        cy="50"
-        r="30"
-        fill={NAVY}
-        stroke={GOLD}
-        strokeWidth="2"
-      />
-      <circle
-        cx="50"
-        cy="50"
-        r="26"
-        fill="none"
-        stroke={GOLD}
-        strokeWidth="0.6"
-        strokeDasharray="1.5 2"
-      />
-      <polygon
-        points={StarPoints({ points: 8, outer: 25, inner: 7 })}
-        fill={GOLD}
-        stroke={GOLD_DEEP}
-        strokeWidth="0.6"
-      />
-      <polygon
-        points={StarPoints({ points: 4, outer: 25, inner: 4 })}
-        fill="#f7e7b0"
-      />
-    </svg>
+      <span aria-hidden="true" className="absolute inset-[1.5cqw] rounded-[3.9cqw] shadow-[0_0_0_0.5px_rgba(0,0,0,0.55),inset_0_0_0_0.5px_rgba(255,255,255,0.18)]" />
+      <span className="absolute inset-[2.6cqw] overflow-hidden rounded-[3.2cqw] bg-[#0c0c0e] shadow-[inset_0_0_0_0.5px_rgba(0,0,0,0.9)]">
+        {children}
+        <span aria-hidden="true" className="pointer-events-none absolute inset-[1.8cqw] rounded-[2cqw] border-solid opacity-40" style={{ borderColor: filet, borderWidth: "max(0.5px, 0.3cqw)" }} />
+      </span>
+    </>
   );
 }
 
-function SideStar({ className }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 100 100" className={className} aria-hidden="true">
-      <polygon
-        points={StarPoints({ points: 6, outer: 48, inner: 22 })}
-        fill={GOLD}
-        stroke={GOLD_DEEP}
-        strokeWidth="3"
-      />
-      <polygon
-        points={StarPoints({ points: 6, outer: 28, inner: 12 })}
-        fill="#f7e7b0"
-      />
-    </svg>
-  );
-}
-
-function CrescentMoon({ className }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 60 40" className={className} aria-hidden="true">
-      <path
-        d="M8 6 A24 24 0 0 0 52 6 A20 20 0 0 1 8 6 Z"
-        fill={GOLD}
-        stroke={GOLD_DEEP}
-        strokeWidth="1.2"
-      />
-    </svg>
-  );
-}
-
-const FACE_W = 420;
-const FACE_H = 940;
-const FACE_INK = "#3a2214";
-const FACE_INK_SOFT = "#4a2f1d";
-const TITLE_MAX = 232;
-
-function box(left: number, top: number, width: number, height: number) {
-  return {
-    left: `${(left / FACE_W) * 100}%`,
-    top: `${(top / FACE_H) * 100}%`,
-    width: `${(width / FACE_W) * 100}%`,
-    height: `${(height / FACE_H) * 100}%`,
-  };
-}
-
-const px = (n: number) => `${(n / FACE_W) * 100}cqw`;
-
-const WINDOW_PATH =
-  "M75 606 L75 415 C75 402 84 394 84 380 C84 366 75 358 75 345 L75 150 C75 132 70 116 62 104 C59 101 58 100 60 98 C66 96 73 92 73 84 C73 76 68 72 66 64 C64 58 66 52 72 54 C74 55 75 57 78 58 L128 58 C148 59 158 93 210 95 C262 93 272 59 292 58 L342 58 C345 57 346 55 348 54 C354 52 356 58 354 64 C352 72 347 76 347 84 C347 92 354 96 360 98 C362 100 361 101 358 104 C350 116 345 132 345 150 L345 345 C345 358 336 366 336 380 C336 394 345 402 345 415 L345 606 C345 624 336 630 320 634 C310 637 306 644 296 646 L124 646 C114 644 110 637 100 634 C84 630 75 624 75 606 Z";
-const PETAL_PATH =
-  "M48 36 C57 37 66 39 72 43 C76 47 78 51 78 56 L70 58 C64 60 61 64 59 72 C54 60 50 48 48 36Z";
-const LOWER_HALF_PATH =
-  "M82 680 C64 683 51 690 51 704 L51 888 C51 898 57 903 67 903 L134 903 C144 903 149 897 147 892 C145 887 138 887 137 892 M150 895 C156 902 168 905 192 903";
-const MIRROR = "translate(420 0) scale(-1 1)";
-
-function FaceFrame({ uid, art, title }: { uid: string; art: string; title: string }) {
-  const id = (name: string) => `${uid}-${name}`;
-  const ref = (name: string) => `url(#${id(name)})`;
-  const fitTitle = title.length * 11.2 > TITLE_MAX;
-
-  const star4 = (x: number, y: number, s: number) => (
-    <use href={`#${id("star4")}`} x={x} y={y} width={s} height={s} />
-  );
-
-  return (
-    <svg
-      viewBox={`0 0 ${FACE_W} ${FACE_H}`}
-      className="absolute inset-0 block size-full"
-      aria-hidden="true"
-    >
-      <defs>
-        <linearGradient id={id("gold")} x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#fde49a" />
-          <stop offset=".45" stopColor="#e9b546" />
-          <stop offset="1" stopColor="#b47a1b" />
-        </linearGradient>
-        <linearGradient id={id("goldSide")} x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0" stopColor="#c38a24" />
-          <stop offset=".5" stopColor="#f6d576" />
-          <stop offset="1" stopColor="#c38a24" />
-        </linearGradient>
-        <linearGradient id={id("flame")} x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stopColor="#eaa042" />
-          <stop offset=".5" stopColor="#c73d2c" />
-          <stop offset="1" stopColor="#7d1e2a" />
-        </linearGradient>
-        <linearGradient id={id("ribbon")} x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#f6dc93" />
-          <stop offset=".55" stopColor="#e8bd5e" />
-          <stop offset="1" stopColor="#c99230" />
-        </linearGradient>
-        <linearGradient id={id("ribbonBack")} x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0" stopColor="#b98227" />
-          <stop offset=".55" stopColor="#e2b555" />
-          <stop offset="1" stopColor="#9a6619" />
-        </linearGradient>
-        <radialGradient id={id("orangeGlow")} cx=".3" cy=".25" r=".95">
-          <stop offset="0" stopColor="#f7a744" />
-          <stop offset=".6" stopColor="#ec8a29" />
-          <stop offset="1" stopColor="#d86f1c" />
-        </radialGradient>
-        <radialGradient id={id("paper")} cx=".5" cy=".4" r=".75">
-          <stop offset="0" stopColor="#faf1d9" />
-          <stop offset=".7" stopColor="#f3e5c3" />
-          <stop offset="1" stopColor="#e8d4a6" />
-        </radialGradient>
-        <filter id={id("mottle")} x="0" y="0" width="100%" height="100%">
-          <feTurbulence type="fractalNoise" baseFrequency=".035" numOctaves="4" seed="7" result="n1" />
-          <feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="3" result="n2" />
-          <feColorMatrix in="n1" values="0 0 0 0 .78  0 0 0 0 .33  0 0 0 0 .05  0 0 0 1.4 -.55" result="blot" />
-          <feColorMatrix in="n2" values="0 0 0 0 .55  0 0 0 0 .22  0 0 0 0 .03  0 0 0 .7 -.1" result="grain" />
-          <feMerge>
-            <feMergeNode in="blot" />
-            <feMergeNode in="grain" />
-          </feMerge>
-        </filter>
-        <filter id={id("paperGrain")} x="0" y="0" width="100%" height="100%">
-          <feTurbulence type="fractalNoise" baseFrequency=".8" numOctaves="2" seed="11" />
-          <feColorMatrix values="0 0 0 0 .45  0 0 0 0 .3  0 0 0 0 .12  0 0 0 .2 0" />
-        </filter>
-        <path id={id("window")} d={WINDOW_PATH} />
-        <clipPath id={id("clipWindow")}>
-          <path d={WINDOW_PATH} />
-        </clipPath>
-        <path id={id("petal")} d={PETAL_PATH} />
-        <path id={id("lowerHalf")} d={LOWER_HALF_PATH} />
-        <clipPath id={id("moonOuter")}>
-          <circle cx="200.5" cy="902" r="20.5" />
-        </clipPath>
-        <mask id={id("moonCut")} maskUnits="userSpaceOnUse" x="170.5" y="874" width="60" height="60">
-          <rect x="170.5" y="874" width="60" height="60" fill="#fff" />
-          <circle cx="190.5" cy="899" r="17" fill="#000" />
-        </mask>
-        <symbol id={id("star4")} viewBox="-10 -10 20 20" overflow="visible">
-          <path
-            d="M0-10 C1-3 3-1 10 0 C3 1 1 3 0 10 C-1 3 -3 1 -10 0 C-3-1 -1-3 0-10Z"
-            fill={ref("gold")}
-            stroke="#4a2c0c"
-            strokeWidth="1"
-            strokeLinejoin="round"
-          />
-          <path d="M0-10 L0 10 M-10 0 L10 0" stroke="#8d5c12" strokeWidth=".7" />
-        </symbol>
-        <symbol id={id("star6")} viewBox="-26 -26 52 52" overflow="visible">
-          <g strokeLinejoin="round">
-            <path d="M0-25 L6.8-11.8 20.8-12 13.6 0 20.8 12 6.8 11.8 0 25 -6.8 11.8 -20.8 12 -13.6 0 -20.8-12 -6.8-11.8Z" fill="#f2c962" />
-            <path d="M0-25 L6.8-11.8 0 0Z M20.8-12 L13.6 0 0 0Z M20.8 12 L6.8 11.8 0 0Z M0 25 L-6.8 11.8 0 0Z M-20.8 12 L-13.6 0 0 0Z M-20.8-12 L-6.8-11.8 0 0Z" fill="#c18a2a" />
-            <path d="M0-25 L6.8-11.8 20.8-12 13.6 0 20.8 12 6.8 11.8 0 25 -6.8 11.8 -20.8 12 -13.6 0 -20.8-12 -6.8-11.8Z" fill="none" stroke={FACE_INK} strokeWidth="1.6" />
-            <path d="M0-25 0 25 M-20.8-12 20.8 12 M-20.8 12 20.8-12" stroke={FACE_INK} strokeWidth=".9" />
-            <circle r="1.6" fill={FACE_INK} />
-          </g>
-        </symbol>
-        <symbol id={id("star8")} viewBox="-34 -34 68 68" overflow="visible">
-          <g stroke={FACE_INK} strokeWidth="1" strokeLinejoin="round">
-            <path d="M15-15 L4 0 15 15 0 4 -15 15 -4 0 -15-15 0-4Z" fill="#e2ad45" />
-            <path d="M15-15 L4 0 0 0Z M15 15 L0 4 0 0Z M-15 15 L-4 0 0 0Z M-15-15 L0-4 0 0Z" fill="#a46c18" />
-            <path d="M0-33 L5.5-5.5 33 0 5.5 5.5 0 33 -5.5 5.5 -33 0 -5.5-5.5Z" fill="#f6d06a" />
-            <path d="M0-33 L5.5-5.5 0 0Z M33 0 L5.5 5.5 0 0Z M0 33 L-5.5 5.5 0 0Z M-33 0 L-5.5-5.5 0 0Z" fill="#c18a2a" />
-          </g>
-        </symbol>
-        <path id={id("titleCurve")} d="M84 674 Q210 701 336 674" fill="none" />
-      </defs>
-
-      <rect width={FACE_W} height={FACE_H} fill={ref("orangeGlow")} />
-      <rect width={FACE_W} height={FACE_H} filter={ref("mottle")} opacity=".9" />
-
-      <rect x="37.5" y="15" width="345" height="905" rx="15" fill={ref("paper")} />
-      <rect x="37.5" y="15" width="345" height="905" rx="15" filter={ref("paperGrain")} />
-      <rect x="37.5" y="15" width="345" height="905" rx="15" fill="none" stroke={FACE_INK} strokeWidth="1.6" />
-      <rect x="41.5" y="19" width="337" height="897" rx="12" fill="none" stroke="#b98a3a" strokeWidth=".7" opacity=".6" />
-
-      <use href={`#${id("window")}`} fill="#2a1838" />
-      <image
-        href={art}
-        x="75"
-        y="54"
-        width="285"
-        height="592"
-        preserveAspectRatio="xMidYMid slice"
-        clipPath={ref("clipWindow")}
-      />
-      <path d={WINDOW_PATH} fill="#1a0a3a" opacity=".22" />
-
-      <g stroke={FACE_INK} strokeWidth="1.3" strokeLinejoin="round">
-        <use href={`#${id("petal")}`} fill="#5b2b4c" />
-        <use href={`#${id("petal")}`} fill="#5b2b4c" transform={MIRROR} />
-      </g>
-      <g fill="none" stroke={ref("gold")} strokeWidth="2.2" strokeLinecap="round">
-        <path d="M51 40 C54 50 57 58 60 66" />
-        <path d="M369 40 C366 50 363 58 360 66" />
-      </g>
-
-      <use href={`#${id("window")}`} fill="none" stroke={FACE_INK} strokeWidth="8.5" strokeLinejoin="round" />
-      <use href={`#${id("window")}`} fill="none" stroke={ref("goldSide")} strokeWidth="6" strokeLinejoin="round" />
-      <use href={`#${id("window")}`} fill="none" stroke="#fff3c8" strokeWidth=".9" strokeLinejoin="round" opacity=".55" />
-
-      <g stroke={FACE_INK} strokeWidth="1" strokeLinejoin="round">
-        <path d="M182 30 C168 28 150 28 136 27 C120 26 104 30 88 29 C102 35 120 35 134 35 C150 35 166 37 180 40Z" fill={ref("flame")} />
-        <path d="M238 30 C252 28 270 28 284 27 C300 26 316 30 332 29 C318 35 300 35 286 35 C270 35 254 37 240 40Z" fill={ref("flame")} />
-        <path d="M182 24 C166 14 150 10 136 14 C122 18 106 12 92 14 C84 15 78 17 72 19 C86 23 100 25 112 23 C128 21 140 25 152 27 C162 29 172 30 182 32Z" fill={ref("gold")} />
-        <path d="M238 24 C254 14 270 10 284 14 C298 18 314 12 328 14 C336 15 342 17 348 19 C334 23 320 25 308 23 C292 21 280 25 268 27 C258 29 248 30 238 32Z" fill={ref("gold")} />
-        <path d="M180 49 C164 51 148 54 136 60 C126 64 118 66 108 66 C120 71 134 70 144 66 C156 62 168 60 182 58Z" fill={ref("flame")} />
-        <path d="M240 49 C256 51 272 54 284 60 C294 64 302 66 312 66 C300 71 286 70 276 66 C264 62 252 60 238 58Z" fill={ref("flame")} />
-        <path d="M183 56 C170 60 160 66 150 70 C142 74 134 74 125 72 C136 79 150 79 160 75 C170 71 178 67 187 64Z" fill={ref("gold")} />
-        <path d="M237 56 C250 60 260 66 270 70 C278 74 286 74 295 72 C284 79 270 79 260 75 C250 71 242 67 233 64Z" fill={ref("gold")} />
-        <path d="M80 40 L180 29 L180 40Z" fill="#f7d873" />
-        <path d="M80 40 L180 40 L180 51Z" fill="#c38a24" />
-        <path d="M340 40 L240 29 L240 40Z" fill="#f7d873" />
-        <path d="M340 40 L240 40 L240 51Z" fill="#c38a24" />
-        <path d="M134 102 L170 58 L184 70Z" fill="#f7d873" />
-        <path d="M134 102 L184 70 L198 82Z" fill="#c38a24" />
-        <path d="M286 102 L250 58 L236 70Z" fill="#f7d873" />
-        <path d="M286 102 L236 70 L222 82Z" fill="#c38a24" />
-        <path d="M203 76 C195 92 212 100 203 115 C197 127 210 134 206 152 C217 137 208 126 215 114 C223 100 207 92 217 76Z" fill={ref("flame")} />
-        <path d="M210 82 C205 94 216 101 209 114 C205 122 211 130 209 140" fill="none" stroke="#f3c45a" strokeWidth="1.3" />
-      </g>
-
-      <g transform="translate(210 39)">
-        <circle r="40" fill={FACE_INK} />
-        <circle r="38.8" fill={ref("gold")} />
-        <circle r="34.5" fill="#5c2647" stroke={FACE_INK} strokeWidth="1.2" />
-        <g fill="#7a3557">
-          <path d="M0 0 L0-34 A34 34 0 0 1 24-24Z" />
-          <path d="M0 0 L34 0 A34 34 0 0 1 24 24Z" />
-          <path d="M0 0 L0 34 A34 34 0 0 1 -24 24Z" />
-          <path d="M0 0 L-34 0 A34 34 0 0 1 -24-24Z" />
-        </g>
-        <circle r="27" fill="none" stroke="#d9a440" strokeWidth=".6" strokeDasharray="2 3" opacity=".7" />
-        <g fill="#f8dc86">
-          <circle cx="-18" cy="-13" r=".9" />
-          <circle cx="14" cy="-20" r=".7" />
-          <circle cx="22" cy="9" r=".9" />
-          <circle cx="-12" cy="19" r=".7" />
-          <circle cx="7" cy="25" r=".6" />
-          <circle cx="-25" cy="4" r=".6" />
-        </g>
-        <use href={`#${id("star8")}`} x="-34" y="-34" width="68" height="68" />
-      </g>
-
-      <use href={`#${id("star6")}`} x="33" y="355" width="52" height="52" />
-      <use href={`#${id("star6")}`} x="335" y="355" width="52" height="52" />
-
-      <g fill="none" strokeLinejoin="round" strokeLinecap="round">
-        <g stroke={FACE_INK} strokeWidth="7">
-          <use href={`#${id("lowerHalf")}`} />
-          <use href={`#${id("lowerHalf")}`} transform={MIRROR} />
-        </g>
-        <g stroke={ref("gold")} strokeWidth="4.6">
-          <use href={`#${id("lowerHalf")}`} />
-          <use href={`#${id("lowerHalf")}`} transform={MIRROR} />
-        </g>
-        <g stroke="#fff3c8" strokeWidth=".8" opacity=".5">
-          <use href={`#${id("lowerHalf")}`} />
-          <use href={`#${id("lowerHalf")}`} transform={MIRROR} />
-        </g>
-      </g>
-
-      <g stroke="#4a2c18" strokeWidth=".9" fill="none" strokeLinecap="round">
-        <path d="M66 698 H354" />
-        <path d="M60 705 V888 M360 705 V888" />
-        <path d="M66 768 H354 M66 845 H354" />
-        <path d="M157.5 703 V764 M265 703 V764" />
-        <path d="M157.5 772 V886" />
-      </g>
-      {star4(52, 690, 16)}
-      {star4(352, 690, 16)}
-      {star4(51, 759, 18)}
-      {star4(351, 759, 18)}
-      {star4(51, 836, 18)}
-      {star4(351, 836, 18)}
-      {star4(58.5, 885, 11)}
-      {star4(350.5, 885, 11)}
-
-      <g>
-        <circle cx="200.5" cy="902" r="20.5" fill={ref("gold")} mask={ref("moonCut")} />
-        <circle cx="200.5" cy="902" r="20.5" fill="none" stroke={FACE_INK} strokeWidth="1.4" mask={ref("moonCut")} />
-        <circle cx="190.5" cy="899" r="17" fill="none" stroke={FACE_INK} strokeWidth="1.4" clipPath={ref("moonOuter")} />
-        <path d="M213.5 888 C221.5 898 219.5 912 209.5 918" fill="none" stroke="#fff3c8" strokeWidth="1.2" opacity=".55" strokeLinecap="round" />
-      </g>
-
-      <g stroke={FACE_INK} strokeWidth="1.3" strokeLinejoin="round">
-        <path d="M86 649 C80 636 78 626 72 620 L56 616 C54 636 54 660 58 678 L82 685Z" fill={ref("ribbonBack")} />
-        <path d="M334 649 C340 636 342 626 348 620 L364 616 C366 636 366 660 362 678 L338 685Z" fill={ref("ribbonBack")} />
-        <path d="M56 616 C46 616 43 607 47 601 C51 595 62 595 66 601 C70 607 66 614 60 612 C56 611 56 606 60 606" fill={ref("ribbon")} />
-        <path d="M364 616 C374 616 377 607 373 601 C369 595 358 595 354 601 C350 607 354 614 360 612 C364 611 364 606 360 606" fill={ref("ribbon")} />
-        <path d="M56 616 L72 620" fill="none" />
-        <path d="M364 616 L348 620" fill="none" />
-        <path d="M80 647 Q210 671 340 647 L340 684 Q210 711 80 684Z" fill={ref("ribbon")} />
-      </g>
-      <path d="M84 653 Q210 676 336 653" fill="none" stroke="#fff3c8" strokeWidth="1" opacity=".7" />
-      <path d="M84 679 Q210 705 336 679" fill="none" stroke="#a8721e" strokeWidth=".7" opacity=".55" />
-      <text
-        textAnchor="middle"
-        fill="#3b1d12"
-        style={{ fontFamily: "var(--font-card-banner), Georgia, serif", fontWeight: 700, fontSize: 25, letterSpacing: 0.3 }}
-        {...(fitTitle ? { textLength: TITLE_MAX, lengthAdjust: "spacingAndGlyphs" } : {})}
-      >
-        <textPath href={`#${id("titleCurve")}`} startOffset="50%">
-          {title}
-        </textPath>
-      </text>
-      {star4(205, 654, 10)}
-      {star4(204, 692, 12)}
-
-      <g fill="none" stroke={FACE_INK} strokeLinejoin="round" strokeLinecap="round">
-        <g transform="translate(108.5 731)" strokeWidth="1.15">
-          <path d="M-15-7 V9 C-9 7.6 -3.5 8 0 10.4 C3.5 8 9 7.6 15 9 V-7" />
-          <path d="M0-7.2 C-3.6-9.4 -8.4-9.8 -13-8.6 V7 C-8.4 5.9 -3.6 6.3 0 8.4Z" fill="#f5e8c8" />
-          <path d="M0-7.2 C3.6-9.4 8.4-9.8 13-8.6 V7 C8.4 5.9 3.6 6.3 0 8.4Z" fill="#f5e8c8" />
-        </g>
-        <g transform="translate(210.5 733)" strokeWidth="1.15">
-          <circle r="9.6" fill="#f5e8c8" />
-          <circle r="7.6" strokeWidth=".6" />
-          <path d="M-2 -9.6 V-11.8 H2 V-9.6" />
-          <circle cy="-13.4" r="1.6" strokeWidth=".9" />
-          <g strokeWidth=".55">
-            <path d="M0-7.6v1.4M0 7.6v-1.4M-7.6 0h1.4M7.6 0h-1.4" />
-            <path d="M3.8-6.6l-.5.9M6.6-3.8l-.9.5M6.6 3.8l-.9-.5M3.8 6.6l-.5-.9M-3.8 6.6l.5-.9M-6.6 3.8l.9-.5M-6.6-3.8l.9.5M-3.8-6.6l.5.9" />
-          </g>
-          <path d="M0 0 L-1.5-5.4 M0 0 L3.6 1.8" strokeWidth="1.15" />
-          <circle r=".9" fill={FACE_INK} stroke="none" />
-        </g>
-        <g transform="translate(314 737)" strokeWidth=".75">
-          <circle r="7.8" />
-          <path d="M0-15.5 L2.5-2.5 0 0Z M15.5 0 L2.5 2.5 0 0Z M0 15.5 L-2.5 2.5 0 0Z M-15.5 0 L-2.5-2.5 0 0Z" fill={FACE_INK} />
-          <path d="M0-15.5 L-2.5-2.5 0 0Z M15.5 0 L2.5-2.5 0 0Z M0 15.5 L2.5 2.5 0 0Z M-15.5 0 L-2.5 2.5 0 0Z" fill="#f5e8c8" />
-          <path d="M8.6-8.6 L1.8 0 0 0Z M8.6 8.6 L0 1.8 0 0Z M-8.6 8.6 L-1.8 0 0 0Z M-8.6-8.6 L0-1.8 0 0Z" fill="#6e2424" />
-          <path d="M8.6-8.6 L0-1.8 0 0Z M8.6 8.6 L1.8 0 0 0Z M-8.6 8.6 L0 1.8 0 0Z M-8.6-8.6 L-1.8 0 0 0Z" fill="#b5503f" />
-          <circle r="1.3" fill="#f5e8c8" />
-        </g>
-        <g transform="translate(98 877)" strokeWidth=".8">
-          <circle r="11.5" />
-          <circle r="8.4" />
-          <circle r="5.4" />
-          <circle r="2.4" />
-          <path d="M0-15v6 M0 9v6 M-15 0h6 M9 0h6" />
-          <path d="M-11.5-11.5l2.5 2.5 M11.5-11.5l-2.5 2.5 M-11.5 11.5l2.5-2.5 M11.5 11.5l-2.5-2.5" strokeWidth=".6" />
-          <circle r=".9" fill={FACE_INK} stroke="none" />
-        </g>
-      </g>
-    </svg>
-  );
-}
-
-const FACE_LABEL =
-  "absolute flex items-center justify-center overflow-hidden whitespace-nowrap text-center uppercase leading-[1.5] [font-variant-numeric:lining-nums]";
-const FACE_VALUE =
-  "absolute flex items-center justify-center overflow-hidden text-center uppercase leading-[1.3] [font-variant-numeric:lining-nums]";
-const LABEL_FONT = { fontFamily: "var(--font-card-title), Georgia, serif", fontWeight: 600, letterSpacing: "0.07em" } as const;
-const VALUE_FONT = { fontFamily: "var(--font-card-title), Georgia, serif", fontWeight: 500, letterSpacing: "0.05em" } as const;
-
+/** Verso oficial: mármore negro, treliça de losangos em aço champanhe e o sigilo num medalhão. */
 export function CardBack({ className }: { className?: string }) {
   return (
-    <div className={cn(CARD_SHELL, className)}>
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src="/images/cards/back.svg"
-        alt=""
-        aria-hidden="true"
-        draggable={false}
-        className="absolute inset-0 h-full w-full select-none"
-      />
+    <div className={cn(CARD_SHELL, "select-none", className)} role="img" aria-label="Verso de uma Carta DEVO">
+      <Shell frame={RARITY_SKIN.lendaria.frame} filet="#d6cdbd">
+        <span aria-hidden="true" className="dv-marble-dark absolute inset-0" />
+        <span
+          aria-hidden="true"
+          className="absolute inset-[5cqw] opacity-55"
+          style={{
+            backgroundImage:
+              "linear-gradient(60deg, transparent 48.8%, #a59d90 49.4%, #a59d90 50.6%, transparent 51.2%), linear-gradient(-60deg, transparent 48.8%, #a59d90 49.4%, #a59d90 50.6%, transparent 51.2%)",
+            backgroundSize: "16cqw 27.7cqw",
+            backgroundPosition: "center",
+            maskImage: "radial-gradient(70% 58% at 50% 50%, #000 35%, transparent 100%)",
+            WebkitMaskImage: "radial-gradient(70% 58% at 50% 50%, #000 35%, transparent 100%)",
+          }}
+        />
+        <span aria-hidden="true" className="absolute left-1/2 top-1/2 aspect-square w-[54%] -translate-x-1/2 -translate-y-1/2 rounded-full p-[1.1cqw]" style={{ background: RARITY_SKIN.lendaria.frame, boxShadow: "0 0 6cqw rgba(0,0,0,0.9)" }}>
+          <span className="grid size-full place-items-center rounded-full bg-[radial-gradient(circle_at_50%_38%,#2c2c31,#0c0c0e_70%)] text-[#ece5d8] shadow-[inset_0_0_0_0.6cqw_rgba(0,0,0,0.8)]">
+            <DeadlyVoteSymbol variant="full" className="size-[80%]" />
+          </span>
+        </span>
+        {["top-[6.5cqw]", "bottom-[6.5cqw]"].map((p) => (
+          <svg key={p} aria-hidden="true" viewBox="0 0 24 24" className={cn("absolute left-1/2 size-[8cqw] -translate-x-1/2 text-[#d6cdbd]", p)}>
+            <path d={STAR4} fill="currentColor" />
+          </svg>
+        ))}
+        <span aria-hidden="true" className="absolute inset-x-0 bottom-[17cqw] hidden text-center font-mono text-[3.4cqw] uppercase tracking-[0.4em] text-[#a59d90] @min-[140px]:block">
+          Deadly · Vote
+        </span>
+      </Shell>
     </div>
   );
 }
@@ -514,112 +298,110 @@ export function CardBack({ className }: { className?: string }) {
 export function CardFace({
   cardId,
   className,
+  holo,
 }: {
   cardId: string;
   size?: DevoCardProps["size"];
   className?: string;
+  /** `true` liga o brilho holográfico (segue --hx/--hy do ancestral); padrão: só nas Lendárias. */
+  holo?: boolean;
 }) {
   const card = getCard(cardId);
   const meta = getCardMeta(cardId);
   const rarity = RARITY_META[card.rarity];
+  const skin = RARITY_SKIN[card.rarity];
   const radius = getCardRadius(cardId);
   const archetype = ARCHETYPE_BY_TYPE[card.type];
   const Glyph = GLYPHS[card.glyph];
-  const uid = `card${useId().replace(/[^a-zA-Z0-9]/g, "")}`;
+  const crop = CROP[cardId] ?? { pos: "50% 30%" };
+  const legendary = card.rarity === "lendaria";
+  const shine = holo ?? legendary;
 
   return (
     <article
-      className={cn(
-        "relative aspect-[420/940] overflow-hidden rounded-[3.1cqw] shadow-[0_10px_30px_-12px_rgba(0,0,0,0.8)] [container-type:inline-size]",
-        className,
-      )}
-      style={{ color: FACE_INK }}
-      aria-label={`${card.name}. Arquétipo ${archetype}. Coleção ${meta.collection}. Raridade ${rarity.label}. Função: ${card.effect} Raio: ${radius}.`}
+      className={cn(CARD_SHELL, "select-none", className)}
+      aria-label={`${card.name}. Arquétipo ${archetype}. Coleção ${meta.collection}, ordem ${meta.orderLabel}, série ${meta.serial}. Raridade ${rarity.label}. Função: ${card.effect} Raio: ${radius}.`}
     >
-      <FaceFrame uid={uid} art={TYPE_ART[card.type]} title={card.name} />
+      <style>{CARD_CSS}</style>
+      <Shell frame={skin.frame} filet={skin.filet} glow={legendary ? skin.glow : undefined}>
+        <span aria-hidden="true" className="dv-marble-dark absolute inset-0 opacity-90" />
 
-      <div className="pointer-events-none absolute grid place-items-center" style={box(75, 150, 270, 400)}>
-        <Glyph
-          className="size-[24cqw] text-[#f7e7b0] opacity-80 drop-shadow-[0_0_6px_rgba(216,178,90,0.9)]"
-          strokeWidth={1.1}
+        {/* janela ogival com a arte em duotom */}
+        <span aria-hidden="true" className="absolute inset-x-[5.5cqw] top-[5.5cqw] h-[84cqw]">
+          <span className="absolute inset-0 overflow-hidden" style={{ clipPath: ARCH_CLIP }}>
+            <span className="absolute inset-0" style={{ transform: `scale(${crop.zoom ?? 1})`, transformOrigin: crop.pos }}>
+              <DuotoneArt src={TYPE_ART[card.type]} alt="" tone={skin.duo} position={crop.pos} contrast={1.3} className="size-full" />
+            </span>
+            {legendary && <span className="absolute inset-0 mix-blend-color" style={{ background: "linear-gradient(180deg,#ece5d8,#8a8173)", opacity: 0.4 }} />}
+            <span className="absolute inset-0 bg-[radial-gradient(120%_90%_at_50%_30%,transparent_45%,rgba(12,12,14,0.75)_100%)]" />
+            <span className="absolute inset-x-0 bottom-0 h-[40%] bg-[linear-gradient(to_top,rgba(12,12,14,0.95),transparent)]" />
+          </span>
+          <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="absolute inset-0 size-full overflow-visible">
+            <path d={ARCH_PATH} fill="none" stroke={skin.filet} strokeWidth="1.1" vectorEffect="non-scaling-stroke" opacity="0.85" />
+          </svg>
+          <span className="absolute left-[3.4cqw] top-[20cqw] font-display text-[6.2cqw] font-semibold leading-none [text-shadow:0_1px_2px_#000]" style={{ color: skin.light }}>
+            {card.numeral}
+          </span>
+          <span className="absolute right-[3cqw] top-[20cqw] [filter:drop-shadow(0_1px_1px_#000)]" style={{ color: skin.light }}>
+            <RarityPips rarity={card.rarity} className="flex-col text-[4.4cqw]" />
+          </span>
+        </span>
+
+        {/* medalhão do glifo, cravado no pé da janela */}
+        <span
           aria-hidden="true"
+          className="absolute left-1/2 top-[79cqw] aspect-square w-[19cqw] -translate-x-1/2 rounded-full p-[1cqw]"
+          style={{ background: skin.frame, boxShadow: `0 0 5cqw ${skin.glow}, 0 1cqw 2cqw rgba(0,0,0,0.8)` }}
+        >
+          <span className="grid size-full place-items-center rounded-full bg-[radial-gradient(circle_at_50%_35%,#2c2c31,#0c0c0e_72%)]" style={{ color: skin.light }}>
+            <Glyph className="size-[56%]" strokeWidth={1.4} />
+          </span>
+        </span>
+
+        <span aria-hidden="true" className="absolute inset-x-[7cqw] top-[101cqw] flex h-[16cqw] items-start justify-center text-center">
+          <span className="line-clamp-2 font-display text-[7cqw] font-semibold uppercase leading-[1.08] tracking-[0.05em] text-[#eeedeb]">{card.name}</span>
+        </span>
+        <span aria-hidden="true" className="absolute inset-x-[7cqw] top-[118cqw] hidden items-center justify-center gap-[2cqw] whitespace-nowrap font-sans text-[3.6cqw] font-medium uppercase tracking-[0.18em] @min-[130px]:flex" style={{ color: skin.light }}>
+          <span className="h-px flex-1 bg-current opacity-40" />
+          {card.type} · {archetype}
+          <span className="h-px flex-1 bg-current opacity-40" />
+        </span>
+        <span aria-hidden="true" className="absolute inset-x-[7cqw] bottom-[4.4cqw] hidden items-baseline justify-between font-mono text-[3.2cqw] uppercase tracking-[0.1em] text-[#eeedeb]/60 @min-[150px]:flex">
+          <span>{meta.serial}</span>
+          <span className="truncate px-[1.5cqw]">{meta.collection}</span>
+          <span>{meta.orderLabel}</span>
+        </span>
+
+        {/* reflexo do esmalte (todas) e holografia contida (Lendárias ou inspeção) */}
+        <span
+          aria-hidden="true"
+          className="dvcard-sheen pointer-events-none absolute inset-0 mix-blend-screen"
+          style={{ backgroundImage: "linear-gradient(105deg, transparent 38%, rgba(255,255,255,0.10) 46%, rgba(255,255,255,0.02) 52%, transparent 60%)", backgroundSize: "250% 100%", backgroundPosition: "120% 0" }}
         />
-      </div>
-
-      <div className={FACE_LABEL} style={{ ...box(62, 703, 94, 16), ...LABEL_FONT, fontSize: px(8.6) }}>Arquétipo</div>
-      <div className={FACE_LABEL} style={{ ...box(159, 703, 104, 16), ...LABEL_FONT, fontSize: px(8.6) }}>Coleção</div>
-      <div className={FACE_LABEL} style={{ ...box(267, 703, 91, 16), ...LABEL_FONT, fontSize: px(8.6) }}>Raridade</div>
-
-      <div className={FACE_VALUE} style={{ ...box(62, 744, 94, 20), ...VALUE_FONT, fontSize: px(archetype.length > 18 ? 6.6 : 7.8) }}>
-        <span className="line-clamp-2">{archetype}</span>
-      </div>
-      <div className={FACE_VALUE} style={{ ...box(159, 743, 104, 27), ...VALUE_FONT, fontSize: px(meta.collection.length > 26 ? 6.8 : 7.8) }}>
-        <span className="line-clamp-2">{meta.collection}</span>
-      </div>
-      <div className={FACE_VALUE} style={{ ...box(267, 753, 91, 16), ...VALUE_FONT, fontSize: px(7.8) }}>
-        <span className="line-clamp-1">{rarity.label}</span>
-      </div>
-
-      <div className={FACE_LABEL} style={{ ...box(60, 776, 97, 16), ...LABEL_FONT, fontSize: px(8.6) }}>Função</div>
-      <div className="absolute grid place-items-center" style={box(88, 796, 41, 38)}>
-        <Glyph className="size-full p-[0.6cqw]" strokeWidth={1.2} aria-hidden="true" />
-      </div>
-      <p
-        className="absolute overflow-hidden text-left"
-        style={{
-          ...box(165, 774, 189, 68),
-          fontFamily: "var(--font-card-body), Georgia, serif",
-          fontSize: px(card.effect.length > 200 ? 7.4 : card.effect.length > 140 ? 8.2 : 8.9),
-          lineHeight: 1.22,
-          color: FACE_INK_SOFT,
-        }}
-      >
-        {card.effect}
-      </p>
-
-      <div className={FACE_LABEL} style={{ ...box(76, 847, 45, 16), ...LABEL_FONT, fontSize: px(8.6) }}>Raio</div>
-      <div
-        className="absolute flex items-center justify-center whitespace-nowrap uppercase leading-none [font-variant-numeric:lining-nums]"
-        style={{ ...box(116, 862, 34, 15), ...LABEL_FONT, fontWeight: 600, fontSize: px(radius.length > 4 ? 8.4 : 11.5) }}
-      >
-        {radius}
-      </div>
-      <p
-        className="absolute flex items-center justify-center overflow-hidden text-center italic"
-        style={{
-          ...box(162, 849, 194, 30),
-          fontFamily: "var(--font-card-body), Georgia, serif",
-          fontSize: px(card.flavor.length > 70 ? 9.6 : 11.4),
-          lineHeight: 1.14,
-          color: FACE_INK_SOFT,
-        }}
-      >
-        <span className="line-clamp-2">{`“${card.flavor}”`}</span>
-      </p>
+        {shine && (
+          <span
+            aria-hidden="true"
+            data-follow={holo ? "" : undefined}
+            className="dvcard-holo pointer-events-none absolute inset-0 opacity-[0.42] mix-blend-color-dodge"
+            style={{
+              backgroundImage:
+                "linear-gradient(115deg, transparent 18%, rgba(203,197,232,0.38) 34%, rgba(236,229,216,0.45) 44%, rgba(170,214,220,0.22) 52%, rgba(203,197,232,0.3) 60%, transparent 76%), repeating-linear-gradient(135deg, rgba(255,255,255,0.05) 0 1px, transparent 1px 4px)",
+              backgroundSize: "260% 260%, auto",
+              backgroundPosition: "var(--hx, 30%) var(--hy, 30%), 0 0",
+            }}
+          />
+        )}
+      </Shell>
     </article>
   );
 }
 
-export function DevoCard({
-  cardId,
-  faceDown = false,
-  size = "md",
-  className,
-}: DevoCardProps) {
+export function DevoCard({ cardId, faceDown = false, size = "md", className }: DevoCardProps) {
   const showFace = !faceDown && cardId;
   return (
     <div className={cn("[perspective:900px]", SIZES[size], className)}>
-      <div
-        className={cn(
-          "relative transition-transform duration-700 [transform-style:preserve-3d]",
-          showFace
-            ? "[transform:rotateY(0deg)]"
-            : "[transform:rotateY(180deg)]",
-        )}
-      >
-        <div className="[backface-visibility:hidden]">
-          {cardId ? <CardFace cardId={cardId} /> : <CardBack />}
-        </div>
+      <div className={cn("relative transition-transform duration-700 [transform-style:preserve-3d]", showFace ? "[transform:rotateY(0deg)]" : "[transform:rotateY(180deg)]")}>
+        <div className="[backface-visibility:hidden]">{cardId ? <CardFace cardId={cardId} /> : <CardBack />}</div>
         <div className="absolute inset-0 [backface-visibility:hidden] [transform:rotateY(180deg)]">
           <CardBack className="h-full" />
         </div>
