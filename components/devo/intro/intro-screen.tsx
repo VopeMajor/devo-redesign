@@ -8,6 +8,7 @@ import { LAST_RATO_LINE } from '@/lib/devo/voice-lines'
 import { getNpc, portraitFrameProps, type Expression } from '@/lib/devo/npcs'
 import { withName } from '@/lib/devo/player-name'
 import { cn } from '@/lib/utils'
+import Image from 'next/image'
 import { useAdvanceKeys } from '../hooks'
 import { GlyphSpark, toRoman } from '../kit/glyphs'
 import { PortraitFrame } from '../kit/portrait'
@@ -17,8 +18,8 @@ import { AdvanceIndicator, DialogueShell, SpeakerPlate, VnTopBar, useTypewriter 
 
 const CHAR_MS = 24
 
-/** Tom do retrato por falante (IDENTIDADE › Retratos de NPC): casa = ouro, sistema/aliado = cobalto. */
-const TONE: Record<string, 'gold' | 'cobalt'> = { rato: 'gold', herdeiro: 'cobalt' }
+/** Tom do retrato por falante: todos em aço champanhe (paleta do mármore; ametista só como acento). */
+const TONE: Record<string, 'gold' | 'cobalt'> = { rato: 'gold', herdeiro: 'gold' }
 
 /** Retrato do falante no PortraitFrame do kit; todas as expressões ficam montadas e trocam por opacidade. */
 function Portrait({ speaker, expression, className }: { speaker: string; expression: Expression; className?: string }) {
@@ -49,6 +50,22 @@ function PlateAvatar({ speaker, expression }: { speaker: string; expression: Exp
   const art = portraitFrameProps(speaker, expression, 'face')
   if (!art) return null
   return <PortraitFrame {...art} alt="" shape="round" tone={TONE[speaker] ?? 'gold'} className="w-12" />
+}
+
+/** Selo "Sistema apresentado": plaqueta negra com filete de aço; a estrela em ametista é o único acento. */
+function UnlockSeal({ name, className }: { name: string; className?: string }) {
+  return (
+    <p
+      className={cn(
+        'animate-dv-toast-in relative z-10 flex w-fit items-center gap-2.5 bg-[linear-gradient(90deg,#1f1f22,#151517_70%,rgba(21,21,23,0.92))] py-1.5 pl-3 pr-5 font-mono text-[11px] uppercase tracking-[0.22em] text-dv-porcelain shadow-[0_8px_20px_rgba(0,0,0,0.55),inset_0_0_0_1px_rgba(186,176,159,0.4)] [clip-path:polygon(0_0,100%_0,calc(100%-10px)_100%,0_100%)]',
+        className,
+      )}
+    >
+      <span aria-hidden="true" className="absolute inset-y-0 left-0 w-[3px] bg-[linear-gradient(180deg,#ece5d8,#bab09f_50%,#6b6357)]" />
+      <GlyphSpark className="size-3 text-dv-amethyst" />
+      <span className="text-dv-text-3">Sistema apresentado:</span> {name}
+    </p>
+  )
 }
 
 export function IntroScreen({ onFinish, playerName }: { onFinish: () => void; playerName: string | null }) {
@@ -104,7 +121,15 @@ export function IntroScreen({ onFinish, playerName }: { onFinish: () => void; pl
 
   return (
     <main className="relative flex h-dvh overflow-hidden bg-dv-ink text-dv-text">
-      <SceneBackdrop preset="clockhall" intensity={0.65} dim={0.5} />
+      {/* Ponte "subindo à superfície": a pedra da mina desce e some enquanto o salão do relógio desce
+          do alto para o lugar (a câmera sobe da mina para o salão). */}
+      <div aria-hidden="true" className="en-hall-in absolute inset-0">
+        <SceneBackdrop preset="clockhall" intensity={0.65} dim={0.5} />
+      </div>
+      <div aria-hidden="true" className="en-surface pointer-events-none absolute inset-0 z-[1] overflow-hidden">
+        <Image src="/images/prologue/mine.webp" alt="" fill sizes="100vw" className="object-cover" style={{ filter: 'grayscale(0.9) sepia(0.12) brightness(0.42) contrast(1.05)' }} />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black" />
+      </div>
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(120%_60%_at_50%_100%,color-mix(in_oklab,var(--dv-ink)_90%,transparent),transparent_60%)]" />
 
       <VnTopBar
@@ -120,12 +145,14 @@ export function IntroScreen({ onFinish, playerName }: { onFinish: () => void; pl
 
       <div className="relative z-10 mx-auto flex w-full max-w-7xl flex-col lg:pl-[min(34vw,480px)] lg:pr-10">
         <div className="relative flex min-h-0 flex-1 flex-col px-4 pb-[max(env(safe-area-inset-bottom),1.25rem)] pt-16 lg:px-0 lg:pb-8 lg:pt-14">
-          <div className="flex min-h-0 flex-1 items-center justify-center py-4">
+          <div className="flex min-h-0 flex-1 flex-col items-center justify-center gap-5 py-4">
             {line.visual && (
-              <div key={`v-${index}`} className="origin-center [@media(max-height:760px)]:scale-[0.86] [@media(max-height:640px)]:scale-[0.72]">
+              <div key={`v-${index}`} className="origin-center [@media(max-height:760px)]:scale-[0.86] [@media(max-height:640px)]:scale-[0.72] [@media(min-height:820px)_and_(max-width:600px)]:mt-6 [@media(min-height:820px)_and_(max-width:600px)]:scale-[1.06]">
                 <TutorialVisualPanel visual={line.visual} step={line.step} index={index + 1} />
               </div>
             )}
+            {/* Com figura: o selo vira legenda logo abaixo dela (não fica colado à fala). */}
+            {line.visual && line.unlock && <UnlockSeal key={`u-${index}`} name={line.unlock} />}
           </div>
 
           <div className="relative">
@@ -142,21 +169,13 @@ export function IntroScreen({ onFinish, playerName }: { onFinish: () => void; pl
               </div>
             </div>
 
-            {line.unlock && (
-              <p
-                key={`u-${index}`}
-                className="animate-dv-toast-in relative z-10 mb-8 flex w-fit items-center gap-2.5 border-l-[3px] border-dv-gold bg-[linear-gradient(90deg,color-mix(in_oklab,var(--dv-gold-deep)_85%,transparent),color-mix(in_oklab,var(--dv-ink-2)_92%,transparent))] py-1.5 pl-3 pr-5 font-mono text-[11px] uppercase tracking-[0.22em] text-dv-gold-bright shadow-[0_8px_20px_rgba(0,0,0,0.55)] [clip-path:polygon(0_0,100%_0,calc(100%-10px)_100%,0_100%)]"
-              >
-                <GlyphSpark className="size-3" />
-                Sistema apresentado: {line.unlock}
-              </p>
-            )}
+            {line.unlock && !line.visual && <UnlockSeal key={`u-${index}`} name={line.unlock} className="mb-8" />}
 
             <button
               type="button"
               onClick={advance}
               aria-label={done ? (last ? 'Entrar no DEVO' : 'Próxima fala') : 'Mostrar fala completa'}
-              className={cn('dv-focus relative z-10 block w-full text-left', !line.unlock && 'mt-6')}
+              className={cn('dv-focus relative z-10 block w-full text-left', !(line.unlock && !line.visual) && 'mt-6')}
             >
               <DialogueShell tone="gold">
                 <SpeakerPlate
@@ -176,7 +195,7 @@ export function IntroScreen({ onFinish, playerName }: { onFinish: () => void; pl
                       {String(index + 1).padStart(2, '0')}/{String(total).padStart(2, '0')}
                     </span>
                     <span className="relative h-[3px] flex-1 bg-dv-line">
-                      <span className="absolute inset-y-0 left-0 bg-[linear-gradient(90deg,var(--dv-cobalt-deep),var(--dv-cobalt-text))] transition-[width] duration-500 ease-out" style={{ width: `${((index + 1) / total) * 100}%` }} />
+                      <span className="absolute inset-y-0 left-0 bg-[linear-gradient(90deg,var(--dv-gold-deep),var(--dv-porcelain))] transition-[width] duration-500 ease-out" style={{ width: `${((index + 1) / total) * 100}%` }} />
                       {Array.from({ length: total - 1 }, (_, i) => (
                         <span key={i} className="absolute -top-[2px] h-[7px] w-px bg-dv-ink" style={{ left: `${((i + 1) / total) * 100}%` }} />
                       ))}

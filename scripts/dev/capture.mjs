@@ -184,6 +184,7 @@ if (want('novato')) {
   await step('tutorial', async () => {
     await wait(2500)
     let n = 0
+    let seenBorder = false
     for (let i = 0; i < 90; i++) {
       await wait(900)
       if (i % 3 === 0) await shot(page, `04-tutorial-${String(n++).padStart(2, '0')}`)
@@ -195,6 +196,13 @@ if (want('novato')) {
         break
       }
       if (await page.getByText(/pular introdução/i).count()) await advanceDialogue(page)
+      // Fronteira noite → papel (DIRECAO-2 §2): a folha de registro sendo impressa, no meio da cortina.
+      const border = page.getByRole('status').filter({ hasText: 'Inicializando DEVO' })
+      if (!seenBorder && (await border.count())) {
+        seenBorder = true
+        await wait(520)
+        await shot(page, '04-transicao-sistema')
+      }
     }
     await wait(1500)
     await shot(page, '04-tutorial-fim')

@@ -353,8 +353,8 @@ export function PrologueStage({
       </Layer>
       <Layer on={fireOn} className="pointer-events-none">
         <CelFire className={cn('h-[58%] transition-transform duration-[1400ms] ease-out', fireOn ? 'translate-y-0' : 'translate-y-full')} />
-        <div className="absolute inset-0 animate-[devo-flicker_0.4s_steps(2)_infinite] bg-[#ff5a1f]/10 mix-blend-screen" />
-        <Embers className="opacity-90" />
+        {/* tremor de luz fria do fogo gravado (sem laranja) */}
+        <div className="absolute inset-0 animate-[devo-flicker_0.4s_steps(2)_infinite] bg-[radial-gradient(ellipse_80%_60%_at_50%_100%,rgba(241,240,238,0.08),transparent_70%)] mix-blend-screen" />
       </Layer>
 
       {/* O salão do relógio: a luz que a Voz promete. Entra de longe (câmera recua) com uma badalada. */}
@@ -403,10 +403,19 @@ export function PrologueStage({
       <Layer on={mineOn}>
         <div className="absolute -inset-[4%]" style={FAR}>
           <div className="en-cam-far absolute inset-0">
-            <Image src="/images/prologue/mine.webp" alt="" fill sizes="100vw" className={cn('object-cover transition-[filter] duration-700', stage === 'phone' && 'blur-sm brightness-50')} />
+            <Image
+              src="/images/prologue/mine.webp"
+              alt=""
+              fill
+              sizes="100vw"
+              className="object-cover transition-[filter] duration-700"
+              // Pedra cinza-quente quase neutra (rodada 2 › correção 7): a Melissa é a única mancha de cor.
+              style={{ filter: stage === 'phone' ? 'grayscale(0.9) sepia(0.12) brightness(0.42) contrast(1.05) blur(4px)' : 'grayscale(0.88) sepia(0.14) brightness(0.8) contrast(1.08)' }}
+            />
           </div>
         </div>
-        <div className="absolute inset-0 animate-[devo-flicker_3s_ease-in-out_infinite] bg-[radial-gradient(ellipse_70%_60%_at_50%_40%,rgba(255,140,50,0.1),transparent_70%)]" />
+        {/* o calor fica só no foco da lanterna/tocha da parede */}
+        <div className="absolute inset-0 animate-[devo-flicker_3s_ease-in-out_infinite] bg-[radial-gradient(circle_at_19%_47%,rgba(255,176,96,0.30),rgba(255,150,70,0.10)_9%,transparent_22%)] mix-blend-screen" />
         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-black/30" />
       </Layer>
       {/* Melissa: mesmo tratamento de retrato do elenco (PortraitFrame). Só entra depois da fala de cenário:
@@ -449,7 +458,7 @@ export function PrologueStage({
                   <PortraitFrame
                     {...(portraitFrameProps('melissa', m) ?? {})}
                     alt={melissaOn && on ? 'Melissa, da Companhia de Despertados' : ''}
-                    tone="cobalt"
+                    tone="gold"
                     ornate
                     className="w-full"
                   />
@@ -460,15 +469,40 @@ export function PrologueStage({
         </div>
       </div>
 
-      {/* Celular */}
+      {/* Celular: objeto do mundo — moldura de aço, vidro facetado, reflexo do mostrador; o sigilo acende. */}
       <Layer on={stage === 'phone'} className="grid place-items-center">
-        <div className="relative -mt-24 flex h-[min(52dvh,420px)] aspect-[9/18] flex-col items-center justify-center gap-3 rounded-[2rem] border-4 border-dv-ink-4 bg-gradient-to-b from-dv-ink-3 to-dv-ink shadow-[0_0_80px_color-mix(in_oklab,var(--dv-amethyst)_28%,transparent)] ring-1 ring-dv-gold/30">
-          <span className="absolute top-3 h-1.5 w-12 rounded-full bg-dv-ink-4" />
-          <span className="relative grid size-20 animate-[pr-buzz_2.4s_ease-in-out_infinite] place-items-center text-dv-porcelain">
-            <span aria-hidden="true" className="absolute inset-0 rounded-full bg-[radial-gradient(circle,color-mix(in_oklab,var(--dv-amethyst)_30%,transparent),transparent_68%)]" />
-            <DeadlyVoteSymbol variant="mark" className="relative size-14 drop-shadow-[0_0_10px_color-mix(in_oklab,var(--dv-gold-bright)_45%,transparent)]" />
-          </span>
-          <span className="dv-label text-[11px] text-dv-text-2">Devo</span>
+        <div className={cn('relative -mt-24 aspect-[9/18] h-[min(52dvh,420px)]', stage === 'phone' && 'en-phone-rise')}>
+          {/* moldura de aço escovado */}
+          <span aria-hidden="true" className="absolute inset-0 rounded-[2.1rem] bg-[linear-gradient(135deg,#ece5d8,#6b6357_22%,#bab09f_48%,#5f584d_72%,#d6cdbd)] shadow-[0_30px_60px_-10px_rgba(0,0,0,0.95),0_0_0_1px_rgba(0,0,0,0.6)]" />
+          <span aria-hidden="true" className="absolute inset-[3px] rounded-[1.95rem] bg-[linear-gradient(160deg,#2c2c31,#0c0c0e_60%)]" />
+          {/* vidro: tela negra com reflexo do mostrador e facetas em losango */}
+          <div className="absolute inset-[9px] overflow-hidden rounded-[1.6rem] bg-[radial-gradient(120%_70%_at_50%_42%,#1f1f22,#0c0c0e_70%)]">
+            <svg viewBox="0 0 200 200" aria-hidden="true" className="absolute left-1/2 top-[42%] w-[150%] -translate-x-1/2 -translate-y-1/2 text-[#bab09f] opacity-[0.16]" fill="none" stroke="currentColor">
+              <circle cx="100" cy="100" r="96" strokeWidth="0.8" />
+              <circle cx="100" cy="100" r="72" strokeWidth="0.5" />
+              {Array.from({ length: 12 }, (_, i) => {
+                const a = (i / 12) * Math.PI * 2
+                return <line key={i} x1={100 + Math.sin(a) * 80} y1={100 - Math.cos(a) * 80} x2={100 + Math.sin(a) * 92} y2={100 - Math.cos(a) * 92} strokeWidth="1.4" />
+              })}
+            </svg>
+            <span aria-hidden="true" className="absolute inset-0 opacity-[0.07] [background-image:linear-gradient(60deg,transparent_49.5%,#ece5d8_49.5%,#ece5d8_50.5%,transparent_50.5%),linear-gradient(-60deg,transparent_49.5%,#ece5d8_49.5%,#ece5d8_50.5%,transparent_50.5%)] [background-size:34px_58px]" />
+            <span aria-hidden="true" className="en-phone-glare absolute -inset-y-10 left-[-60%] w-[46%] rotate-[18deg] bg-[linear-gradient(90deg,transparent,rgba(241,240,238,0.14),transparent)]" />
+            <div className="absolute inset-0 flex flex-col items-center justify-center gap-3">
+              <span className="relative grid size-24 place-items-center text-dv-porcelain">
+                <span aria-hidden="true" className="en-sigil-halo absolute -inset-4 rounded-full bg-[radial-gradient(circle,rgba(241,240,238,0.22),rgba(138,124,200,0.14)_45%,transparent_70%)]" />
+                <svg viewBox="0 0 100 100" aria-hidden="true" className="absolute inset-0 size-full text-[#bab09f]" fill="none" stroke="currentColor">
+                  <circle cx="50" cy="50" r="46" strokeWidth="0.8" strokeDasharray="2 3"/>
+                  <circle cx="50" cy="50" r="40" strokeWidth="1" pathLength={1} strokeDasharray="1" className="en-ring-draw" />
+                </svg>
+                <DeadlyVoteSymbol variant="mark" className="en-sigil-ignite relative size-14" />
+              </span>
+              <span className="dv-label en-sigil-label text-[11px] tracking-[0.42em] text-dv-text-2">Devo</span>
+            </div>
+          </div>
+          {/* reflexo do vidro na borda superior */}
+          <span aria-hidden="true" className="absolute inset-x-[14%] top-[10px] h-px bg-gradient-to-r from-transparent via-white/40 to-transparent" />
+          {/* alto-falante */}
+          <span aria-hidden="true" className="absolute left-1/2 top-[16px] h-1 w-10 -translate-x-1/2 rounded-full bg-[#38393c]" />
         </div>
       </Layer>
 
@@ -478,9 +512,8 @@ export function PrologueStage({
       <div aria-hidden="true" className={cn('pointer-events-none absolute inset-x-0 top-0 z-[5] h-[7dvh] bg-black transition-transform duration-[900ms] ease-[var(--dv-ease-out)]', letterbox ? 'translate-y-0' : '-translate-y-full')} />
       <div aria-hidden="true" className={cn('pointer-events-none absolute inset-x-0 bottom-0 z-[5] h-[7dvh] bg-black transition-transform duration-[900ms] ease-[var(--dv-ease-out)]', letterbox ? 'translate-y-0' : 'translate-y-full')} />
 
-      {/* Grade de cor comum a todas as cenas (livro ilustrado, pintura, vetor): a mesma noite violeta. */}
-      <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,color-mix(in_oklab,var(--dv-night)_28%,transparent),color-mix(in_oklab,var(--dv-night)_8%,transparent)_40%,color-mix(in_oklab,var(--dv-ink)_50%,transparent))] mix-blend-multiply" />
-      <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[color-mix(in_oklab,var(--dv-violet)_9%,transparent)] mix-blend-soft-light" />
+      {/* Grade de cor comum a todas as cenas: sombra da noite só como atmosfera discreta (paleta do mármore). */}
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,color-mix(in_oklab,var(--dv-night)_18%,transparent),color-mix(in_oklab,var(--dv-night)_8%,transparent)_40%,color-mix(in_oklab,var(--dv-ink)_50%,transparent))] mix-blend-multiply" />
 
       {/* Abrir os olhos: pálpebras se afastam no primeiro quadro. */}
       {opening && (

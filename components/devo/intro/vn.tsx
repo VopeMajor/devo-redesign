@@ -91,26 +91,31 @@ export function DubToggle({ className }: { className?: string }) {
 
 export type PlateTone = 'cobalt' | 'gold' | 'void' | 'system'
 
-const PLATE: Record<PlateTone, { fill: string; edge: string; name: string }> = {
-  cobalt: { fill: 'bg-[linear-gradient(100deg,var(--dv-night),var(--dv-cobalt-deep)_60%,var(--dv-cobalt))]', edge: 'bg-dv-gold', name: 'text-white' },
-  gold: { fill: 'bg-[linear-gradient(100deg,var(--dv-gold-deep),color-mix(in_oklab,var(--dv-gold)_60%,var(--dv-gold-deep))_55%,var(--dv-gold))]', edge: 'bg-dv-gold-bright', name: 'text-dv-ink' },
-  void: { fill: 'bg-[linear-gradient(100deg,#000,var(--dv-ink-3)_70%,var(--dv-ink-4))]', edge: 'bg-dv-gold', name: 'text-dv-gold-bright' },
-  system: { fill: 'bg-[linear-gradient(100deg,var(--dv-ink),var(--dv-cobalt-dim)_70%,var(--dv-cobalt-deep))]', edge: 'bg-dv-cobalt-text', name: 'text-dv-cobalt-text' },
+/**
+ * Placa do falante: negra com filete de aço e o nome em porcelana — a mesma para todos (rodada 2 ›
+ * correção 6). O tom só muda o detalhe: a voz "???" tem o nome em aço; o sistema ganha um losango
+ * ametista pequeno (o único acento frio da placa).
+ */
+const PLATE_NAME: Record<PlateTone, string> = {
+  cobalt: 'text-dv-porcelain',
+  gold: 'text-dv-porcelain',
+  void: 'text-dv-gold-bright',
+  system: 'text-dv-porcelain',
 }
 
 /** Placa do falante: paralelogramo inclinado que entra com corte a cada troca de falante. */
 export function SpeakerPlate({ name, title, tone = 'cobalt', avatar }: { name: string; title?: string; tone?: PlateTone; avatar?: ReactNode }) {
-  const p = PLATE[tone]
   return (
     <span className="absolute -top-[22px] left-3 z-10 flex items-end gap-2" aria-hidden="true">
-      {avatar && (
-        <span className="relative -mb-2 block w-12">{avatar}</span>
-      )}
-      <span className={cn('en-plate-in relative flex items-center px-5 py-1.5 shadow-[4px_4px_0_rgba(0,0,0,0.55)]', p.fill)}>
-        <span className={cn('absolute inset-y-0 left-0 w-[3px]', p.edge)} />
-        <span className="flex skew-x-[14deg] items-baseline gap-2.5">
-          <span className={cn('font-display text-[15px] font-semibold uppercase tracking-[0.18em]', p.name)}>{name}</span>
-          {title && <span className={cn('font-body text-[13px] italic', tone === 'gold' ? 'text-dv-ink/70' : 'text-white/65')}>{title}</span>}
+      {avatar && <span className="relative -mb-2 block w-12">{avatar}</span>}
+      <span className="en-plate-in relative flex items-center bg-[linear-gradient(100deg,#0c0c0e,#151517_55%,#1f1f22)] px-5 py-1.5 shadow-[4px_4px_0_rgba(0,0,0,0.55),inset_0_0_0_1px_rgba(186,176,159,0.5)]">
+        {/* filete de aço: topo aceso, base em sombra */}
+        <span className="absolute inset-x-0 top-0 h-px bg-[linear-gradient(90deg,#6b6357,#ece5d8_40%,#bab09f_70%,#6b6357)]" />
+        <span className="absolute inset-y-0 left-0 w-[3px] bg-[linear-gradient(180deg,#ece5d8,#bab09f_50%,#6b6357)]" />
+        <span className="flex skew-x-[14deg] items-center gap-2.5">
+          {tone === 'system' && <span className="size-1.5 rotate-45 bg-dv-amethyst shadow-[0_0_6px_rgba(138,124,200,0.8)]" />}
+          <span className={cn('font-display text-[15px] font-semibold uppercase tracking-[0.18em]', PLATE_NAME[tone])}>{name}</span>
+          {title && <span className="font-body text-[13px] italic text-dv-text-3">{title}</span>}
         </span>
       </span>
     </span>
@@ -119,7 +124,7 @@ export function SpeakerPlate({ name, title, tone = 'cobalt', avatar }: { name: s
 
 /** Indicador de avanço: losango que respira e seta que quica. Some enquanto o texto ainda escreve. */
 export function AdvanceIndicator({ visible, label, tone = 'cobalt' }: { visible: boolean; label?: string; tone?: 'cobalt' | 'paper' | 'gold' }) {
-  const color = tone === 'paper' ? 'text-dv-cobalt-deep' : tone === 'gold' ? 'text-dv-gold-bright' : 'text-dv-cobalt-text'
+  const color = tone === 'paper' ? 'text-dv-paper-ink' : tone === 'gold' ? 'text-dv-gold-bright' : 'text-dv-text-2'
   return (
     <span aria-hidden="true" className={cn('flex items-center gap-2 transition-opacity duration-[220ms]', visible ? 'opacity-100' : 'opacity-0', color)}>
       {label && <span className="dv-label text-[10px]">{label}</span>}
@@ -144,18 +149,21 @@ export function DialogueShell({
   children: ReactNode
   style?: CSSProperties
 }) {
+  // Filete de aço champanhe (todas as caixas: uma linguagem só). `cobalt` mantém o aço com um
+  // toque de ametista no canto; `neutral` é só a linha cinza.
   const line =
-    tone === 'gold'
-      ? 'bg-[linear-gradient(135deg,var(--dv-gold-bright),var(--dv-gold-deep)_30%,var(--dv-gold)_60%,var(--dv-gold-deep))]'
+    tone === 'neutral'
+      ? 'bg-dv-line-strong'
       : tone === 'cobalt'
-        ? 'bg-[linear-gradient(135deg,var(--dv-amethyst-text),var(--dv-cobalt)_35%,var(--dv-cobalt-dim)_70%,var(--dv-cobalt))]'
-        : 'bg-dv-line-strong'
+        ? 'bg-[linear-gradient(135deg,#ece5d8,#6b6357_30%,#bab09f_62%,#5f584d_88%,#8a7cc8)]'
+        : 'bg-[linear-gradient(135deg,#ece5d8,#6b6357_30%,#bab09f_62%,#5f584d)]'
   return (
     <span className={cn('relative block', className)} style={{ '--dv-cut': '16px', ...style } as CSSProperties}>
       <span aria-hidden="true" className={cn('dv-cut-diag absolute inset-0', line)} />
+      {/* vidro negro OPACO (sem backdrop-blur: no meio de uma transição ele deixava a caixa bege e borrada) */}
       <span
         aria-hidden="true"
-        className="dv-cut-diag absolute inset-px bg-[linear-gradient(180deg,color-mix(in_oklab,var(--dv-ink-3)_94%,transparent),color-mix(in_oklab,var(--dv-ink-2)_95%,transparent)_45%,color-mix(in_oklab,var(--dv-ink)_97%,transparent))] backdrop-blur-md"
+        className="dv-cut-diag absolute inset-px bg-[linear-gradient(180deg,#1f1f22,#151517_45%,#0c0c0e)]"
         style={{ '--dv-cut': '15.6px' } as CSSProperties}
       />
       <span aria-hidden="true" className="absolute inset-x-[12%] top-px h-px bg-gradient-to-r from-transparent via-white/25 to-transparent" />
@@ -200,14 +208,14 @@ export function ChoiceStrip({
         aria-hidden="true"
         className={cn(
           'dv-cut-diag absolute inset-0 -z-10 transition-colors duration-[220ms]',
-          muted ? 'bg-dv-line-strong' : 'bg-[linear-gradient(100deg,color-mix(in_oklab,var(--dv-porcelain)_45%,transparent),color-mix(in_oklab,var(--dv-porcelain)_15%,transparent))] group-hover:bg-[linear-gradient(100deg,var(--dv-amethyst-text),var(--dv-cobalt))] group-focus-visible:bg-[linear-gradient(100deg,var(--dv-amethyst-text),var(--dv-cobalt))]',
+          muted ? 'bg-dv-line-strong' : 'bg-[linear-gradient(100deg,color-mix(in_oklab,var(--dv-porcelain)_45%,transparent),color-mix(in_oklab,var(--dv-porcelain)_15%,transparent))] group-hover:bg-[linear-gradient(100deg,#ece5d8,#bab09f_50%,#6b6357)] group-focus-visible:bg-[linear-gradient(100deg,#ece5d8,#bab09f_50%,#6b6357)]',
         )}
       />
       <span
         aria-hidden="true"
         className={cn(
           'dv-cut-diag dv-sheen absolute inset-px -z-10 overflow-hidden transition-colors duration-[220ms]',
-          muted ? 'bg-dv-ink' : 'bg-[linear-gradient(90deg,var(--dv-ink-3),var(--dv-ink-2)_40%,var(--dv-ink))] group-hover:bg-[linear-gradient(90deg,var(--dv-cobalt-dim),color-mix(in_oklab,var(--dv-ink-2)_94%,transparent))]',
+          muted ? 'bg-dv-ink' : 'bg-[linear-gradient(90deg,var(--dv-ink-3),var(--dv-ink-2)_40%,var(--dv-ink))] group-hover:bg-[linear-gradient(90deg,var(--dv-ink-4),var(--dv-ink-2)_60%)] group-hover:shadow-[inset_3px_0_0_var(--dv-amethyst)] group-focus-visible:shadow-[inset_3px_0_0_var(--dv-amethyst)]',
         )}
         style={{ '--dv-cut': '11.6px' } as CSSProperties}
       />
@@ -215,7 +223,7 @@ export function ChoiceStrip({
         aria-hidden="true"
         className={cn(
           'flex w-12 shrink-0 items-center justify-center font-impact text-[22px] font-semibold leading-none -skew-x-[8deg] transition-colors',
-          muted ? 'text-dv-text-3' : 'text-dv-cobalt-text group-hover:text-white',
+          muted ? 'text-dv-text-3' : 'text-dv-gold group-hover:text-dv-gold-bright',
         )}
       >
         {muted ? <GlyphArrow className="size-5 skew-x-[8deg]" /> : toRoman(index + 1)}
@@ -240,7 +248,7 @@ export function ChoiceStrip({
 export function ChoiceHeader({ children }: { children: ReactNode }) {
   return (
     <p className="dv-label animate-dv-fade flex items-center gap-2 text-[10px] text-dv-text-2">
-      <GlyphDiamond className="size-2.5 text-dv-cobalt-text" filled />
+      <GlyphDiamond className="size-2.5 text-dv-amethyst" filled />
       {children}
       <span className="h-px flex-1 bg-gradient-to-r from-dv-line-strong to-transparent" aria-hidden="true" />
     </p>

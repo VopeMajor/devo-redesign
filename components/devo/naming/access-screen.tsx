@@ -5,7 +5,7 @@ import { checkInviteCode } from '@/app/actions/player'
 import { authClient } from '@/lib/auth-client'
 import { playSfx } from '@/lib/devo/audio'
 import { cn } from '@/lib/utils'
-import { Button } from '../kit/button'
+import { EntradaButton } from '../landing/entrada-button'
 import { GlyphAlert, GlyphArrow, GlyphCheck, GlyphClip } from '../kit/glyphs'
 import { Stamp } from '../kit/stamp'
 import { useVisibleViewport } from '../kit/viewport'
@@ -237,7 +237,7 @@ export function AccessScreen({
               {/* Corte diagonal entre etapas */}
               {wipe && (
                 <span key={wipe.seq} className={cn('absolute -inset-y-[10%] left-[-20%] w-[140%]', wipe.back ? 'en-wipe-back' : 'en-wipe')}>
-                  <span className="absolute inset-0 bg-[linear-gradient(90deg,var(--dv-night),var(--dv-cobalt-deep)_55%,var(--dv-violet))]" />
+                  <span className="dv-marble-dark absolute inset-0" />
                   <span className="absolute inset-y-0 left-0 w-[2px] bg-dv-gold" />
                   <span className="absolute inset-y-0 right-0 w-[2px] bg-dv-gold" />
                 </span>
@@ -247,7 +247,7 @@ export function AccessScreen({
             {/* Costura do diário */}
             <span aria-hidden="true" className="pointer-events-none absolute inset-[9px] border border-dashed border-dv-paper-ink/25 [clip-path:polygon(0_0,calc(100%-22px)_0,100%_22px,100%_100%,0_100%)]" />
             {/* Fita marcadora + clipe */}
-            <span aria-hidden="true" className="absolute -top-2.5 left-7 h-16 w-5 bg-[linear-gradient(90deg,var(--dv-cobalt-deep),var(--dv-cobalt-deep)_50%,var(--dv-cobalt-deep))] shadow-[0_3px_6px_rgba(0,0,0,0.35)] [clip-path:polygon(0_0,100%_0,100%_100%,50%_80%,0_100%)]" />
+            <span aria-hidden="true" className="absolute -top-2.5 left-7 h-16 w-5 bg-[linear-gradient(90deg,#0c0c0e,#2c2c31_50%,#0c0c0e)] shadow-[inset_1px_0_0_rgba(186,176,159,0.55),inset_-1px_0_0_rgba(186,176,159,0.55),0_3px_6px_rgba(0,0,0,0.35)] [clip-path:polygon(0_0,100%_0,100%_100%,50%_80%,0_100%)]" />
             <GlyphClip className="absolute -top-4 left-[3.4rem] size-9 rotate-[18deg] text-[var(--dv-marble-vein)] drop-shadow-[0_2px_1px_rgba(0,0,0,0.35)]" />
 
             <div className="devo-scroll relative min-h-0 flex-1 overflow-y-auto overscroll-contain px-6 pb-4 pt-9 text-dv-paper-ink sm:px-8">
@@ -476,9 +476,9 @@ export function AccessScreen({
               <span aria-hidden="true" className="pointer-events-none absolute inset-x-0 -top-5 h-5 bg-gradient-to-t from-[var(--dv-paper)] to-transparent" />
               <span aria-hidden="true" className="absolute inset-x-6 top-0 border-t border-dashed border-dv-paper-ink/25" />
               <div className="relative flex flex-col items-center gap-1">
-                <Button type="submit" variant="primary" size="lg" block loading={pending} disabled={pending || accepted || !canSubmit}>
+                <EntradaButton type="submit" tone="ink" size="lg" block loading={pending} disabled={pending || accepted || !canSubmit}>
                   {step === 'code' ? 'Validar' : step === 'register' ? 'Assinar' : 'Entrar'}
-                </Button>
+                </EntradaButton>
                 <button
                   type="button"
                   onClick={() => {

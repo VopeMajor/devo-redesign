@@ -16,7 +16,7 @@ import { loadVoiceManifest } from '@/lib/devo/voice'
 import { prologueLineId } from '@/lib/devo/voice-lines'
 import { useAdvanceKeys } from '../hooks'
 import { useDevo } from '../state/devo-store'
-import { Button } from '../kit/button'
+import { EntradaButton } from '../landing/entrada-button'
 import { GlyphCard, GlyphSpark, toRoman } from '../kit/glyphs'
 import { PrologueStage } from './prologue-stage'
 import { AdvanceIndicator, ChoiceHeader, ChoiceStrip, DialogueShell, SpeakerPlate, VnTopBar, useTypewriter, useVoicedLine } from './vn'
@@ -93,14 +93,14 @@ function ActCard({ act }: { act: Act }) {
     <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-[9%] z-40 h-36 overflow-hidden">
       <span className="en-act-band absolute inset-y-6 -left-[10%] w-[120%] bg-[linear-gradient(90deg,transparent,color-mix(in_oklab,var(--dv-ink)_92%,transparent)_12%,color-mix(in_oklab,var(--dv-ink)_92%,transparent)_88%,transparent)]">
         <span className="absolute inset-x-0 top-0 h-[2px] bg-dv-gold/80" />
-        <span className="absolute inset-x-0 bottom-0 h-[3px] bg-dv-cobalt-deep" />
+        <span className="absolute inset-x-0 bottom-0 h-px bg-[linear-gradient(90deg,transparent,#6b6357_20%,#bab09f_50%,#6b6357_80%,transparent)]" />
       </span>
       <div className="en-act-text relative flex h-full items-center justify-center gap-4">
         <span className="font-impact text-[64px] font-bold uppercase leading-none text-transparent -skew-x-[8deg] [-webkit-text-stroke:1.5px_var(--dv-gold)]">
           {toRoman(act.n)}
         </span>
         <span className="flex flex-col">
-          <span className="dv-label text-[10px] text-dv-cobalt-text">Prólogo · Ato {toRoman(act.n)}</span>
+          <span className="dv-label text-[10px] text-dv-gold">Prólogo · Ato {toRoman(act.n)}</span>
           <span className="font-display text-[26px] font-semibold uppercase leading-tight tracking-[0.08em] text-dv-text">{act.title}</span>
         </span>
       </div>
@@ -109,7 +109,7 @@ function ActCard({ act }: { act: Act }) {
 }
 
 const fieldClass =
-  'w-full border-b-2 border-dv-line-strong bg-dv-ink-2/85 px-3 py-3 font-sans text-[16px] text-dv-text outline-none backdrop-blur-md transition-colors placeholder:text-dv-text-3 focus:border-dv-cobalt focus:bg-dv-cobalt-dim/60'
+  'w-full border-b-2 border-dv-line-strong bg-dv-ink-2/85 px-3 py-3 font-sans text-[16px] text-dv-text outline-none backdrop-blur-md transition-colors placeholder:text-dv-text-3 focus:border-dv-gold-bright focus:bg-dv-ink-3'
 
 /**
  * Segunda aparência (DIRECAO-2 §5): tipo 2D/3D ou Real, nome da aparência e "Seleção automática"
@@ -188,9 +188,9 @@ function FaceInput({ gender, age, onSubmit }: { gender?: string; age?: number; o
         />
         {auto && <span className="dv-label pt-1 text-[10px] text-dv-amethyst-text">Escolhida da lista · toque de novo para sortear outra</span>}
       </div>
-      <Button type="submit" size="md" block disabled={!valid} sfx="confirm">
+      <EntradaButton type="submit" tone="porcelain" size="md" block disabled={!valid} sfx="confirm">
         Responder
-      </Button>
+      </EntradaButton>
       <p className="font-sans text-[12px] leading-snug text-dv-text-3">Você poderá trocar de aparência por afinidade dentro do jogo, uma única vez.</p>
     </form>
   )
@@ -246,10 +246,38 @@ function ProfileInput({
           className={cn(fieldClass, 'font-impact text-[22px] tracking-[0.08em]')}
         />
       </div>
-      <Button type="submit" size="sm" disabled={!valid} sfx="confirm">
+      <EntradaButton type="submit" tone="porcelain" size="sm" disabled={!valid} sfx="confirm">
         Responder
-      </Button>
+      </EntradaButton>
     </form>
+  )
+}
+
+/** Linha do rasgo da folha (ato I → ato II): um zigue-zague vertical no meio da caixa. */
+const TEAR_LINE = [
+  [52, 0], [49, 12], [54, 24], [47, 37], [53, 50], [48, 63], [55, 76], [49, 88], [52, 100],
+] as const
+const TEAR_LEFT = `polygon(0 0, ${TEAR_LINE.map(([x, y]) => `${x}% ${y}%`).join(', ')}, 0 100%)`
+const TEAR_RIGHT = `polygon(100% 0, ${TEAR_LINE.map(([x, y]) => `${x}% ${y}%`).join(', ')}, 100% 100%)`
+
+/** Caixa do ato I: papel creme pautado, levemente torto, com costura tracejada. */
+function PaperBox({ text, done, live = false }: { text: string; done: boolean; live?: boolean }) {
+  return (
+    <span className="relative block -rotate-[0.6deg]">
+      <span
+        aria-hidden="true"
+        className="dv-paper-bg absolute inset-0 shadow-[6px_8px_0_color-mix(in_oklab,var(--dv-ink)_60%,transparent)] [clip-path:polygon(0_4%,3%_0,40%_3%,70%_0,100%_5%,99%_60%,100%_100%,60%_97%,30%_100%,0_96%,1%_50%)]"
+      />
+      <span aria-hidden="true" className="pointer-events-none absolute inset-[8px] border border-dashed border-dv-paper-ink/25" />
+      <span className="relative block px-6 pb-4 pt-5">
+        <span aria-live={live ? 'polite' : undefined} className="block min-h-[3.25rem] text-pretty font-body text-[18px] leading-relaxed text-dv-paper-ink">
+          {text}
+        </span>
+        <span className="mt-1 flex justify-end">
+          <AdvanceIndicator visible={done} tone="paper" />
+        </span>
+      </span>
+    </span>
   )
 }
 
@@ -371,6 +399,23 @@ export function PrologueScreen({ playerName, onFinish: onDone }: { playerName: s
   }
 
   const paper = PAPER_STAGES.includes(beat.stage) && line?.who === 'narrator'
+  const lastPaper = useRef('')
+  const wasPaper = useRef(false)
+  const [tear, setTear] = useState<{ text: string; seq: number } | null>(null)
+  useEffect(() => {
+    if (!line || !text) return
+    if (paper) lastPaper.current = text
+    else if (wasPaper.current) {
+      setTear({ text: lastPaper.current, seq: index })
+      playSfx('card')
+    }
+    wasPaper.current = paper
+  }, [index, paper, line, text])
+  useEffect(() => {
+    if (!tear) return
+    const t = window.setTimeout(() => setTear(null), 1400)
+    return () => window.clearTimeout(t)
+  }, [tear])
   const speaker = line && line.who !== 'narrator' ? line.who : null
   const choosing = !line && beat.kind === 'choice'
   const pending = choosing ? beat.options.filter((o) => !explored.includes(o.label)) : []
@@ -418,7 +463,7 @@ export function PrologueScreen({ playerName, onFinish: onDone }: { playerName: s
           <span className="en-slash absolute left-[-20%] top-[44%] h-3 w-[140%] bg-dv-blood shadow-[0_0_30px_color-mix(in_oklab,var(--dv-blood)_90%,transparent)]" />
         </div>
       )}
-      {glint && <div key={`glint-${index}`} aria-hidden="true" className="en-glint pointer-events-none absolute inset-0 z-20 bg-[radial-gradient(circle_at_50%_40%,color-mix(in_oklab,var(--dv-amethyst)_90%,transparent),transparent_60%)]" />}
+      {glint && <div key={`glint-${index}`} aria-hidden="true" className="en-glint pointer-events-none absolute inset-0 z-20 bg-[radial-gradient(circle_at_50%_40%,rgba(241,240,238,0.55),color-mix(in_oklab,var(--dv-amethyst)_22%,transparent)_30%,transparent_60%)]" />}
       {act && <div key={`cut-${act.n}`} aria-hidden="true" className="en-cut pointer-events-none absolute inset-0 z-[35] bg-black" />}
       {act && <ActCard key={`act-${act.n}`} act={act} />}
 
@@ -450,30 +495,28 @@ export function PrologueScreen({ playerName, onFinish: onDone }: { playerName: s
           </div>
         )}
 
+        {/* Fim do ato I: a folha de papel rasga ao meio e cai na fenda; o vidro negro do ato II sobe. */}
+        {tear && (
+          <div key={tear.seq} aria-hidden="true" className="pointer-events-none absolute inset-x-4 bottom-[max(env(safe-area-inset-bottom),1.25rem)] z-30 lg:bottom-10">
+            <div className="en-tear-l" style={{ clipPath: TEAR_LEFT }}>
+              <PaperBox text={tear.text} done={false} />
+            </div>
+            <div className="en-tear-r absolute inset-0" style={{ clipPath: TEAR_RIGHT }}>
+              <PaperBox text={tear.text} done={false} />
+            </div>
+          </div>
+        )}
+
         {line && text && (
           <button
             key={`${index}-${replies.length}`}
             type="button"
             onClick={advance}
             aria-label={done ? 'Continuar' : 'Mostrar texto completo'}
-            className={cn('en-box-in dv-focus relative block w-full text-left', speaker && 'mt-6', index === 0 && 'en-after-eyes')}
+            className={cn('en-box-in dv-focus relative block w-full text-left', speaker && 'mt-6', index === 0 && 'en-after-eyes', tear && 'en-box-late')}
           >
             {paper ? (
-              <span className="relative block -rotate-[0.6deg]">
-                <span
-                  aria-hidden="true"
-                  className="dv-paper-bg absolute inset-0 shadow-[6px_8px_0_color-mix(in_oklab,var(--dv-ink)_60%,transparent)] [clip-path:polygon(0_4%,3%_0,40%_3%,70%_0,100%_5%,99%_60%,100%_100%,60%_97%,30%_100%,0_96%,1%_50%)]"
-                />
-                <span aria-hidden="true" className="pointer-events-none absolute inset-[8px] border border-dashed border-dv-paper-ink/25" />
-                <span className="relative block px-6 pb-4 pt-5">
-                  <span aria-live="polite" className="block min-h-[3.25rem] text-pretty font-body text-[18px] leading-relaxed text-dv-paper-ink">
-                    {text.slice(0, shown)}
-                  </span>
-                  <span className="mt-1 flex justify-end">
-                    <AdvanceIndicator visible={done} tone="paper" />
-                  </span>
-                </span>
-              </span>
+              <PaperBox text={text.slice(0, shown)} done={done} live />
             ) : (
               <DialogueShell tone={speaker === 'melissa' ? 'cobalt' : 'gold'}>
                 {speaker && <SpeakerPlate key={speaker} name={SPEAKER_NAME[speaker]} tone={SPEAKER_TONE[speaker]} />}
@@ -486,7 +529,7 @@ export function PrologueScreen({ playerName, onFinish: onDone }: { playerName: s
                     )}
                   >
                     {text.slice(0, shown)}
-                    {!done && <span aria-hidden="true" className="ml-0.5 inline-block h-4 w-[2px] translate-y-0.5 animate-dv-blink bg-dv-cobalt-text" />}
+                    {!done && <span aria-hidden="true" className="ml-0.5 inline-block h-4 w-[2px] translate-y-0.5 animate-dv-blink bg-dv-porcelain" />}
                   </span>
                   <span className={cn('mt-1.5 flex items-center', speaker ? 'justify-between' : 'justify-center')}>
                     {speaker && (

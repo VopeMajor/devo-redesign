@@ -256,3 +256,61 @@
 .en-fall-a { animation: en-fall-a 10s cubic-bezier(.25,.4,.4,1) both; }
 .en-fall-b { animation: en-fall-b 11s cubic-bezier(.25,.4,.4,1) both; }
 @media (prefers-reduced-motion: reduce) { .en-slit, .en-streak { display: none; } }
+
+/* ── Prólogo: o aparelho como objeto do mundo (rodada 2 › correção 10) ──────────────── */
+@keyframes en-phone-rise {
+  from { opacity: 0; transform: translateY(40px) rotate(-3deg) scale(0.94); filter: brightness(0.3); }
+  to { opacity: 1; transform: none; filter: none; }
+}
+.en-phone-rise { animation: en-phone-rise 1100ms var(--dv-ease-out) both; }
+@keyframes en-phone-glare { 0%, 55% { transform: translateX(0) rotate(18deg); } 100% { transform: translateX(420%) rotate(18deg); } }
+.en-phone-glare { animation: en-phone-glare 5.5s var(--dv-ease-in-out, ease-in-out) 1.2s infinite; }
+/* O sigilo acende: escuro → aço → porcelana com halo, e o anel se desenha em volta. */
+@keyframes en-sigil-ignite {
+  0% { opacity: 0.15; filter: brightness(0.3) drop-shadow(0 0 0 transparent); transform: scale(0.9); }
+  45% { opacity: 1; filter: brightness(1.5) drop-shadow(0 0 16px rgba(241,240,238,0.9)); transform: scale(1.04); }
+  100% { opacity: 1; filter: brightness(1) drop-shadow(0 0 10px rgba(236,229,216,0.55)); transform: none; }
+}
+.en-sigil-ignite { animation: en-sigil-ignite 1600ms var(--dv-ease-out) 700ms both; }
+@keyframes en-sigil-halo { 0%, 100% { opacity: 0.55; transform: scale(0.96); } 50% { opacity: 1; transform: scale(1.06); } }
+.en-sigil-halo { animation: en-sigil-halo 2.8s ease-in-out 1.6s infinite both; }
+@keyframes en-ring-draw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+.en-ring-draw { animation: en-ring-draw 1400ms var(--dv-ease-out) 900ms both; }
+@keyframes en-sigil-label { from { opacity: 0; letter-spacing: 0.9em; } to { opacity: 1; } }
+.en-sigil-label { animation: en-sigil-label 900ms var(--dv-ease-out) 1500ms both; }
+
+/* ── Prólogo: fim do ato I — a folha de papel rasga e cai na fenda (rodada 2 › correção 8) ── */
+@keyframes en-tear-l {
+  0% { transform: rotate(-0.6deg); opacity: 1; }
+  18% { transform: translate(-4px, 4px) rotate(-2.5deg); opacity: 1; }
+  100% { transform: translate(-60px, 62vh) rotate(-22deg); opacity: 0; }
+}
+@keyframes en-tear-r {
+  0% { transform: rotate(-0.6deg); opacity: 1; }
+  22% { transform: translate(5px, 2px) rotate(2deg); opacity: 1; }
+  100% { transform: translate(70px, 58vh) rotate(26deg); opacity: 0; }
+}
+.en-tear-l { animation: en-tear-l 1050ms cubic-bezier(.55,0,.8,.4) both; transform-origin: 30% 0; }
+.en-tear-r { animation: en-tear-r 1150ms cubic-bezier(.55,0,.8,.4) 60ms both; transform-origin: 70% 0; }
+.en-box-late { animation-delay: 620ms !important; }
+
+/* ── Tutorial: KABUM em porcelana com contorno negro e um corte rubi curto ─────────────── */
+@keyframes en-kabum-cut {
+  0% { transform: translateX(-120%) skewX(-24deg); opacity: 0; }
+  40% { opacity: 1; }
+  100% { transform: translateX(0) skewX(-24deg); opacity: 1; }
+}
+.en-kabum-cut { animation: en-kabum-cut 260ms var(--dv-ease-cut) 900ms both; }
+
+/* ── Saída do tutorial: o salão sobe (ponte "subindo à superfície") ──────────────────── */
+@keyframes en-surface {
+  0% { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(42%); }
+}
+.en-surface { animation: en-surface 1900ms cubic-bezier(.5,0,.3,1) 500ms both; }
+@keyframes en-hall-in {
+  from { opacity: 0; transform: translateY(-14%) scale(1.06); filter: blur(4px) brightness(0.4); }
+  to { opacity: 1; transform: none; filter: none; }
+}
+.en-hall-in { animation: en-hall-in 2000ms var(--dv-ease-out) 450ms both; }
+@media (prefers-reduced-motion: reduce) { .en-surface, .en-tear-l, .en-tear-r { display: none; } }
