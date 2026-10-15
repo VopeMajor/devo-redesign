@@ -1,0 +1,228 @@
+{
+  "base": "http://localhost:3000",
+  "shots": [
+    {
+      "name": "40-partida-memory-rush-fila",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "40-partida-memory-rush-a1",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "40-partida-memory-rush-b1",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "40-partida-memory-rush-a2",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "40-partida-memory-rush-b2",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "40-partida-living-chess-reconexao-A",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "40-partida-living-chess-fila",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "40-partida-living-chess-a1",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "40-partida-living-chess-b1",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "40-partida-living-chess-a2",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "40-partida-living-chess-b2",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "40-partida-bomba-quente-reconexao-A",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "40-partida-bomba-quente-fila",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "40-partida-bomba-quente-a1",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "40-partida-bomba-quente-b1",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "40-partida-bomba-quente-a2",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "40-partida-bomba-quente-b2",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "40-partida-blefe-reconexao-A",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "40-partida-blefe-fila",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "40-partida-blefe-a1",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "40-partida-blefe-b1",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "40-partida-blefe-a2",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "40-partida-blefe-b2",
+      "note": "",
+      "url": "http://localhost:3000/"
+    }
+  ],
+  "errors": [],
+  "console": [
+    {
+      "page": "http://localhost:3000/",
+      "text": "HTTP 404",
+      "src": "http://localhost:3000/_vercel/insights/script.js"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "src": "http://localhost:3000/_vercel/insights/script.js"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "HTTP 404",
+      "src": "http://localhost:3000/_vercel/insights/script.js"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "src": "http://localhost:3000/_vercel/insights/script.js"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "HTTP 404",
+      "src": "http://localhost:3000/_vercel/insights/script.js"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "src": "http://localhost:3000/_vercel/insights/script.js"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "HTTP 404",
+      "src": "http://localhost:3000/_vercel/insights/script.js"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "src": "http://localhost:3000/_vercel/insights/script.js"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "HTTP 404",
+      "src": "http://localhost:3000/_vercel/insights/script.js"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "src": "http://localhost:3000/_vercel/insights/script.js"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "HTTP 404",
+      "src": "http://localhost:3000/_vercel/insights/script.js"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "src": "http://localhost:3000/_vercel/insights/script.js"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "HTTP 404",
+      "src": "http://localhost:3000/_vercel/insights/script.js"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "src": "http://localhost:3000/_vercel/insights/script.js"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "HTTP 404",
+      "src": "http://localhost:3000/_vercel/insights/script.js"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "src": "http://localhost:3000/_vercel/insights/script.js"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "Permissions policy violation: compute-pressure is not allowed in this document.",
+      "src": "https://www.youtube.com/s/player/0229cd64/player_embed_es6.vflset/pt_BR/base.js"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "HTTP 404",
+      "src": "http://localhost:3000/_vercel/insights/script.js"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "src": "http://localhost:3000/_vercel/insights/script.js"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "HTTP 404",
+      "src": "http://localhost:3000/_vercel/insights/script.js"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "src": "http://localhost:3000/_vercel/insights/script.js"
+    }
+  ]
+}
