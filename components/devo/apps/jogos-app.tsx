@@ -170,7 +170,8 @@ export function JogosApp() {
   return (
     <MiniProfileHost>
       <div className="relative flex h-full min-h-0 flex-col overflow-hidden bg-dv-ink text-dv-text">
-        {!running && <SalaScene endsAt={state.timerEndsAt} quiet={tab !== 'mesa'} />}
+        {/* na fila, o radar cobre a sala: a cena 3D dá lugar ao fundo em CSS (sem desfocar WebGL ao vivo) */}
+        {!running && <SalaScene endsAt={state.timerEndsAt} quiet={tab !== 'mesa' || !!queue} />}
 
         <div className="relative z-10 shrink-0 px-4 pt-3">
           <h2 className="sr-only">Sala de Jogos</h2>
@@ -286,12 +287,12 @@ function SalaScene({ endsAt, quiet }: { endsAt: number; quiet?: boolean }) {
 function QuietRoom({ alert }: { alert: boolean }) {
   return (
     <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden bg-dv-ink">
-      <span className="absolute inset-0 opacity-60" style={MARBLE_INK} />
+      <span className="absolute inset-0 opacity-40" style={MARBLE_INK} />
       <span
         className="absolute inset-x-[-60%] bottom-[-6%] h-[52%] origin-bottom [transform:perspective(560px)_rotateX(64deg)]"
         style={{
           backgroundImage:
-            'linear-gradient(90deg, rgba(186,176,159,0.16) 1px, transparent 1px), linear-gradient(0deg, rgba(186,176,159,0.16) 1px, transparent 1px), conic-gradient(#202023 25%, #0d0d0f 0 50%, #202023 0 75%, #0d0d0f 0)',
+            'linear-gradient(90deg, rgba(186,176,159,0.16) 1px, transparent 1px), linear-gradient(0deg, rgba(186,176,159,0.16) 1px, transparent 1px), conic-gradient(#26262a 25%, #0d0d0f 0 50%, #26262a 0 75%, #0d0d0f 0)',
           backgroundSize: '96px 96px, 96px 96px, 192px 192px',
           backgroundPosition: 'center bottom',
           maskImage: 'linear-gradient(0deg, #000 0%, rgba(0,0,0,0.55) 45%, transparent 92%)',
