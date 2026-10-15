@@ -30,6 +30,7 @@ import { useDevo } from '../state/devo-store'
 import { BET_OPTIONS, BET_RESERVE_MIN, SP_TZ, formatMinutes, registerEvent, useApplyTime } from './arcade-shared'
 import { useBetSheet } from './bet-sheet'
 import { eventBadge, VsSplit } from './mesa'
+import { MARBLE_INK } from './sala-marble'
 import { AstrolabeDial, GAME_ART, GAME_ART_TONE, JavaliMedallion, Monogram, OddsBar } from './sala-ui'
 
 type EventView = Dashboard['events'][number]
@@ -437,7 +438,7 @@ function Podium({ rows }: { rows: RankRow[] }) {
     <ol aria-label="Pódio" className="relative isolate grid grid-cols-3 items-end gap-2 px-2 pt-3">
       {/* palco: painel negro com piso de mármore e holofote sobre o 1º */}
       <span aria-hidden="true" className="dv-cut absolute inset-0 -z-10 bg-[linear-gradient(180deg,rgba(12,12,14,0.92),rgba(12,12,14,0.96))] shadow-[inset_0_0_0_1px_var(--dv-line)]" style={{ '--dv-cut': '12px' } as CSSProperties} />
-      <span aria-hidden="true" className="dv-marble-dark absolute inset-x-0 bottom-0 -z-10 h-6 border-t border-dv-gold/40" />
+      <span aria-hidden="true" style={MARBLE_INK} className="absolute inset-x-0 bottom-0 -z-10 h-6 border-t border-dv-gold/40" />
       <span aria-hidden="true" className="pointer-events-none absolute left-1/2 top-0 -z-10 h-full w-1/2 -translate-x-1/2 bg-[radial-gradient(60%_80%_at_50%_0%,rgba(236,229,216,0.2),transparent_70%)]" />
       {order.map((r) => {
         const p = PODIUM[Math.min(3, Math.max(1, r.rank)) as 1 | 2 | 3]

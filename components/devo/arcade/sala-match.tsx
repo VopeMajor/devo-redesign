@@ -9,6 +9,7 @@ import { cn } from '@/lib/utils'
 import { useNow } from '../hooks'
 import { formatMinutes } from './arcade-shared'
 import { GameEmblem } from './sala-emblems'
+import { MARBLE_INK } from './sala-marble'
 import { JavaliPortrait, Monogram } from './sala-ui'
 
 export type Running = { start: MatchStart; finish?: MatchFinish & { outcome: GameOutcome }; error?: string }
@@ -79,14 +80,14 @@ export function ResultScreen({ run, onClose }: { run: Running; onClose: () => vo
   const costly = loss && !f.tutorial
   // Faixa diagonal: vitória em aço champanhe; derrota que custa Tempo em rubi; treino, empate e
   // derrota sem custo em mármore negro com veio de aço.
-  const band = win ? 'bg-[linear-gradient(100deg,#8a8276,#5f584d_35%,#3a3631_70%,#5f584d)]' : costly ? 'bg-dv-blood' : 'dv-marble-dark'
+  const band = win ? 'bg-[linear-gradient(100deg,#8a8276,#5f584d_35%,#3a3631_70%,#5f584d)]' : costly ? 'bg-dv-blood' : ''
   const javali = run.start.mode === 'treino' || /javali/i.test(run.start.opponent.name)
   return (
     <div className="relative flex h-full flex-col overflow-hidden">
       <SceneBackdrop preset="table" intensity={0.5} dim={0.6} alert={costly} />
       <ScreenFrame tone={costly ? 'blood' : 'gold'} />
       {/* corte diagonal que atravessa a tela */}
-      <span aria-hidden="true" className={cn('pointer-events-none absolute left-[-30%] top-[13%] h-32 w-[160%] -rotate-[14deg] animate-dv-cut-in opacity-90', band)} />
+      <span aria-hidden="true" className={cn('pointer-events-none absolute left-[-30%] top-[13%] h-32 w-[160%] -rotate-[14deg] animate-dv-cut-in opacity-90', band)} style={!win && !costly ? MARBLE_INK : undefined} />
       <span aria-hidden="true" className="pointer-events-none absolute left-[-30%] top-[13%] h-32 w-[160%] -rotate-[14deg] border-y border-dv-gold/70" />
       <span aria-hidden="true" className="pointer-events-none absolute left-[-30%] top-[13%] h-32 w-[160%] -rotate-[14deg] translate-y-[8.5rem] border-t border-dv-gold/40" />
 

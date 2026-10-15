@@ -10,6 +10,7 @@ import { Mesa } from '@/components/devo/arcade/mesa'
 import { MiniProfileHost } from '@/components/devo/arcade/mini-profile'
 import { ResultScreen, type Running, Searching } from '@/components/devo/arcade/sala-match'
 import { Agenda, Apostas, Ranking, type RankView } from '@/components/devo/arcade/sala-tabs'
+import { MARBLE_INK } from '@/components/devo/arcade/sala-marble'
 import { Plaque } from '@/components/devo/arcade/sala-ui'
 import { Button, CRITICAL_MS, Countdown, Curtain, SceneBackdrop, Spinner, Tabs, Toast, ToastStack, useCurtain } from '@/components/devo/kit'
 import {
@@ -272,7 +273,36 @@ export function JogosApp() {
 function SalaScene({ endsAt, quiet }: { endsAt: number; quiet?: boolean }) {
   const now = useNow(10_000)
   const left = endsAt - now
-  return <SceneBackdrop preset="table" intensity={quiet ? 0.45 : 0.65} dim={quiet ? 0.78 : 0.5} alert={left > 0 && left <= CRITICAL_MS} />
+  const alert = left > 0 && left <= CRITICAL_MS
+  if (quiet) return <QuietRoom alert={alert} />
+  return <SceneBackdrop preset="table" intensity={0.65} dim={0.5} alert={alert} />
+}
+
+/**
+ * Fundo das abas de leitura: a mesma sala, desenhada em CSS (nítida em qualquer DPR), sem o 3D
+ * rasterizado por trás do texto. Mármore negro de veio cinza e piso xadrez em perspectiva sumindo no
+ * escuro; rubi só quando o Tempo do jogador está crítico.
+ */
+function QuietRoom({ alert }: { alert: boolean }) {
+  return (
+    <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden bg-dv-ink">
+      <span className="absolute inset-0 opacity-60" style={MARBLE_INK} />
+      <span
+        className="absolute inset-x-[-60%] bottom-[-6%] h-[52%] origin-bottom [transform:perspective(560px)_rotateX(64deg)]"
+        style={{
+          backgroundImage:
+            'linear-gradient(90deg, rgba(186,176,159,0.16) 1px, transparent 1px), linear-gradient(0deg, rgba(186,176,159,0.16) 1px, transparent 1px), conic-gradient(#202023 25%, #0d0d0f 0 50%, #202023 0 75%, #0d0d0f 0)',
+          backgroundSize: '96px 96px, 96px 96px, 192px 192px',
+          backgroundPosition: 'center bottom',
+          maskImage: 'linear-gradient(0deg, #000 0%, rgba(0,0,0,0.55) 45%, transparent 92%)',
+          WebkitMaskImage: 'linear-gradient(0deg, #000 0%, rgba(0,0,0,0.55) 45%, transparent 92%)',
+        }}
+      />
+      <span className="absolute inset-0 bg-[radial-gradient(85%_40%_at_50%_0%,rgba(236,229,216,0.07),transparent_70%)]" />
+      <span className="absolute inset-0 bg-[radial-gradient(120%_70%_at_50%_45%,transparent_40%,rgba(12,12,14,0.85)_100%)]" />
+      {alert && <span className="absolute inset-x-0 bottom-0 h-1/3 bg-[radial-gradient(60%_80%_at_50%_100%,rgba(163,18,31,0.2),transparent_70%)]" />}
+    </div>
+  )
 }
 
 function useArcadeAmbience(inGame: boolean) {

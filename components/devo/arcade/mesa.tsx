@@ -27,6 +27,7 @@ import { ArcadeChat } from './arcade-chat'
 import { type ArcadeView, eventTimeLabel, formatMinutes, registerEvent, useApplyTime } from './arcade-shared'
 import { type Duel, useBetSheet } from './bet-sheet'
 import { GAME_ART, GAME_ART_TONE, JavaliPortrait, Monogram, MoreLink, OddsBar } from './sala-ui'
+import { MARBLE_INK, MARBLE_PORCELAIN } from './sala-marble'
 
 export { useBetSheet, type Duel }
 
@@ -454,9 +455,10 @@ export function VsSplit({ duel, onBet, big = false, closed = false }: { duel: Du
               className={cn(
                 'absolute -z-10 transition-[filter] duration-200 group-enabled:group-hover:brightness-110',
                 left
-                  ? 'dv-marble-dark inset-y-px left-px right-[2px] [clip-path:polygon(0_0,100%_0,86%_100%,0_100%)]'
-                  : 'dv-marble inset-y-px left-[2px] right-px [clip-path:polygon(14%_0,100%_0,100%_100%,0_100%)]',
+                  ? 'inset-y-px left-px right-[2px] [clip-path:polygon(0_0,100%_0,86%_100%,0_100%)]'
+                  : 'inset-y-px left-[2px] right-px [clip-path:polygon(14%_0,100%_0,100%_100%,0_100%)]',
               )}
+              style={left ? MARBLE_INK : MARBLE_PORCELAIN}
             />
             {/* luz de lanterna no canto externo */}
             <span

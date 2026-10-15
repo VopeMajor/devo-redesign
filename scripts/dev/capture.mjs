@@ -707,10 +707,16 @@ if (want('partidas')) {
   for (const game of ['Memory Rush', 'Living Chess', 'Bomba Quente', 'Blefe']) {
     const slug = game.toLowerCase().replace(/\s+/g, '-')
     await step(`partida-${slug}`, async () => {
-      for (const { page } of [A, B]) {
+      for (const [who, { page }] of [['A', A], ['B', B]]) {
         await openApp(page, 'Sala de Jogos')
         const card = page.locator('[aria-label="Jogos da semana"] > *').filter({ hasText: new RegExp(game, 'i') }).first()
-        await card.getByRole('button', { name: /jogar/i }).first().click({ timeout: 3000 })
+        try {
+          await card.getByRole('button', { name: /jogar/i }).first().click({ timeout: 6000 })
+        } catch (e) {
+          // Diagnóstico: o que a conta estava vendo quando "Jogar" não respondeu.
+          await shot(page, `40-partida-${slug}-sem-jogar-${who}`)
+          throw e
+        }
         await wait(800)
       }
       await shot(A.page, `40-partida-${slug}-fila`)

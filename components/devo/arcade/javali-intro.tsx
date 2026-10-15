@@ -8,6 +8,7 @@ import { cn } from '@/lib/utils'
 import { npcPortrait } from '@/lib/devo/npcs'
 import { formatDuration, useNow } from '../hooks'
 import { useDevo } from '../state/devo-store'
+import { MARBLE_INK } from './sala-marble'
 
 /** Pose do Javali (sprites transparentes do mapa de retratos em lib/devo/npcs.ts). */
 type Frame = 'neutral' | 'grin' | 'wink' | 'tap'
@@ -127,7 +128,7 @@ export function JavaliIntro() {
             })}
             {/* a mesa: tampo de mármore negro com filete de aço, sobre ela as cartas e as fichas */}
             <div aria-hidden="true" className="absolute inset-x-0 bottom-0 h-[24%]">
-              <span className="dv-marble-dark absolute inset-0 border-t border-dv-gold/70 shadow-[inset_0_10px_18px_-8px_rgba(236,229,216,0.18)]" />
+              <span style={MARBLE_INK} className="absolute inset-0 border-t border-dv-gold/70 shadow-[inset_0_10px_18px_-8px_rgba(236,229,216,0.18)]" />
               <span className="absolute inset-x-0 top-[3px] h-px bg-dv-gold/25" />
               <span className="absolute left-[8%] top-[22%] h-[46%] w-[13%] -rotate-[10deg] dv-cut bg-dv-porcelain shadow-[0_4px_8px_rgba(0,0,0,0.6)]" style={{ '--dv-cut': '3px' } as CSSProperties} />
               <span className="absolute left-[15%] top-[26%] h-[46%] w-[13%] rotate-[6deg] dv-cut bg-[linear-gradient(160deg,#2c2c31,#151517)] shadow-[0_4px_8px_rgba(0,0,0,0.6),inset_0_0_0_1px_rgba(186,176,159,0.6)]" style={{ '--dv-cut': '3px' } as CSSProperties} />

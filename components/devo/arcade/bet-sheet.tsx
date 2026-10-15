@@ -8,6 +8,7 @@ import { cn } from '@/lib/utils'
 import { formatDuration, useNow } from '../hooks'
 import { useDevo } from '../state/devo-store'
 import { BET_OPTIONS, BET_RESERVE_MIN, formatMinutes, useApplyTime } from './arcade-shared'
+import { MARBLE_PORCELAIN } from './sala-marble'
 import { Monogram } from './sala-ui'
 
 export type Duel = BetBoard['events'][number]['duels'][number]
@@ -128,8 +129,8 @@ function BetSheet({
               />
               <span
                 aria-hidden="true"
-                className={cn('dv-cut absolute inset-[1.5px] -z-10', on ? 'dv-marble' : 'bg-dv-ink-2')}
-                style={{ '--dv-cut': '11.4px' } as CSSProperties}
+                className={cn('dv-cut absolute inset-[1.5px] -z-10', !on && 'bg-dv-ink-2')}
+                style={{ '--dv-cut': '11.4px', ...(on ? MARBLE_PORCELAIN : null) } as CSSProperties}
               />
               {on && <span aria-hidden="true" className="pointer-events-none absolute inset-x-6 -bottom-2 -z-20 h-4 rounded-[50%] bg-[rgba(138,124,200,0.55)] blur-lg" />}
               <Monogram name={s.name} size="md" tone={on ? 'ivory' : 'neutral'} />
