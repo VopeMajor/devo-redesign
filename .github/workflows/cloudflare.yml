@@ -1,11 +1,8 @@
 name: Cloudflare
 
-# Build do DEVO para Cloudflare Workers via OpenNext, medição do tamanho do Worker e deploy.
-# Passo a passo para o dono: docs/DEPLOY-CLOUDFLARE.md.
-#
-# - push em main            → build + medição + deploy em produção (se os segredos existirem)
-# - push em infra/cloudflare → só build + medição (para validar a migração)
-# - manual (workflow_dispatch) → escolha "producao" (deploy) ou "somente-build"
+# Verificação do build do DEVO para Cloudflare Workers via OpenNext (tamanho do Worker, avisos, startup).
+# O DEPLOY é feito pela própria Cloudflare (Workers Builds, repositório conectado no painel) — ver
+# docs/DEPLOY-CLOUDFLARE.md. Este workflow nunca publica: só confere o build.
 #
 # Sem CLOUDFLARE_API_TOKEN/CLOUDFLARE_ACCOUNT_ID (ou sem DATABASE_URL/BETTER_AUTH_SECRET) o workflow
 # não falha: faz só o build + medição. O relatório (tamanho, avisos, logs) vai sempre para a branch
@@ -13,14 +10,8 @@ name: Cloudflare
 
 on:
   push:
-    branches: [main, infra/cloudflare]
+    branches: [infra/cloudflare]
   workflow_dispatch:
-    inputs:
-      ambiente:
-        description: 'O que fazer'
-        type: choice
-        options: [producao, somente-build]
-        default: producao
 
 concurrency:
   group: cloudflare-${{ github.ref }}
@@ -57,8 +48,6 @@ jobs:
         run: |
           mkdir -p report
           WANT=build
-          if [ "$GITHUB_EVENT_NAME" = "push" ] && [ "$GITHUB_REF_NAME" = "main" ]; then WANT=deploy; fi
-          if [ "$GITHUB_EVENT_NAME" = "workflow_dispatch" ] && [ "${{ inputs.ambiente }}" = "producao" ]; then WANT=deploy; fi
           MISSING=""
           for v in CLOUDFLARE_API_TOKEN CLOUDFLARE_ACCOUNT_ID RT_DATABASE_URL RT_BETTER_AUTH_SECRET; do
             [ -n "${!v}" ] || MISSING="$MISSING ${v#RT_}"

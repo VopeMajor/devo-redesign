@@ -1,111 +1,92 @@
 # Deploy do DEVO na Cloudflare (Workers + OpenNext)
 
 O DEVO sai da Vercel/v0 e passa a rodar como um **Cloudflare Worker** gerado pelo
-[OpenNext](https://opennext.js.org/cloudflare). O banco continua no **Neon**; a Cloudflare só muda a
-forma de conectar (de preferência pelo **Hyperdrive**). O endereço fica no subdomínio grátis:
+[OpenNext](https://opennext.js.org/cloudflare). O banco continua no **Neon**. O endereço fica no
+subdomínio grátis:
 
 ```
 https://devo.<seu-subdominio>.workers.dev
 ```
 
-Quem faz build e deploy é o GitHub Actions (`.github/workflows/cloudflare.yml`). Você não precisa
-instalar nada no computador.
+Quem faz build e deploy é a própria Cloudflare (**Workers Builds**): você conecta o repositório do
+GitHub no painel uma vez e cada push na branch de produção publica sozinho. Você não precisa instalar
+nada no computador nem criar token de API.
 
 ---
 
 ## Resumo do que você vai fazer (uma vez)
 
 1. Criar a conta na Cloudflare e escolher o subdomínio `workers.dev`.
-2. Criar um **token de API** e copiar o **Account ID**.
-3. (Recomendado) Criar o **Hyperdrive** apontando para o Neon, **com cache desligado**.
-4. Cadastrar os **segredos** no GitHub.
-5. Disparar o workflow **Cloudflare** (ou dar merge em `main`).
+2. Conectar o repositório `VopeMajor/devo-redesign` no painel (Workers Builds).
+3. Cadastrar os segredos do app no Worker.
+4. (Opcional) Criar o Hyperdrive para o Neon e me mandar o ID.
 
 ---
 
 ## 1. Conta e subdomínio `workers.dev`
 
-1. Crie a conta em <https://dash.cloudflare.com/sign-up> (plano Free serve para começar).
+1. Crie a conta em <https://dash.cloudflare.com/sign-up> (o plano Free serve para começar).
 2. No painel, abra **Workers e Pages** (Compute → Workers). Na primeira visita a Cloudflare pede para
    escolher o **subdomínio** da conta (ex.: `vope`). O app vai ficar em `https://devo.vope.workers.dev`.
-   Sem esse subdomínio o deploy sobe, mas não fica acessível.
 
-## 2. Token de API e Account ID
+## 2. Conectar o GitHub (Workers Builds)
 
-**Account ID**: no painel, menu da conta (canto superior) → **Account home** → os três pontinhos ao
-lado do nome da conta → **Copy account ID**. (Também aparece na barra lateral da página do Workers.)
+1. **Workers e Pages** → **Create** → aba **Workers** → **Import a repository**.
+2. **Connect GitHub** → autorize o app da Cloudflare na conta **VopeMajor** e dê acesso ao repositório
+   **devo-redesign**. Selecione-o.
+3. Preencha a configuração:
 
-**Token** (o GitHub usa para publicar):
+| Campo | Valor |
+| --- | --- |
+| Project name | `devo` (tem que ser exatamente este; é o `name` do `wrangler.jsonc`) |
+| Production branch | `redesign` (a versão nova do DEVO; troque para `main` quando o redesign for mesclado lá) |
+| Build command | `pnpm exec opennextjs-cloudflare build` |
+| Deploy command | `pnpm exec wrangler deploy` |
+| Non-production branch deploy command | `pnpm exec wrangler versions upload` |
+| Root directory | `/` (deixe em branco) |
 
-1. Painel → **Manage account** → **Account API tokens** → **Create Token**.
-2. Use o modelo **Edit Cloudflare Workers**.
-3. Em **Account Resources**, deixe só a sua conta. Em **Zone Resources**, pode deixar
-   "All zones" (não há domínio próprio) ou restringir.
-4. Se for usar o Hyperdrive (passo 3), acrescente a permissão **Account · Hyperdrive · Edit**
-   (para o deploy conseguir ligar o Worker ao Hyperdrive).
-5. **Continue to summary** → **Create Token** → copie o token (ele só aparece uma vez).
+4. Em **Advanced settings → Build variables**, acrescente `NEXT_TELEMETRY_DISABLED` = `1`.
+   (Opcional: `NEXT_PUBLIC_CF_WEB_ANALYTICS_TOKEN` com o token do Web Analytics, se quiser estatísticas.)
+5. **Deploy**. O primeiro build leva alguns minutos. Ele vai subir, mas o jogo só funciona depois do
+   passo 3 (sem banco e sem segredo de login a página dá erro).
 
-## 3. Hyperdrive para o Neon (recomendado)
+## 3. Segredos do app (no Worker)
+
+Painel → Workers → **devo** → **Settings** → **Variables and Secrets** → **Add**:
+
+| Nome | Tipo | Valor |
+| --- | --- | --- |
+| `DATABASE_URL` | Secret | a connection string do Neon que o app usa hoje (a mesma da Vercel/v0) |
+| `BETTER_AUTH_SECRET` | Secret | **o mesmo valor que está na Vercel** (se mudar, todo mundo é deslogado) |
+| `CRON_SECRET` | Secret | qualquer texto longo aleatório; protege `/api/cron/pulse` |
+| `DEVO_PUBLIC_URL` | Text | `https://devo.<seu-subdominio>.workers.dev` |
+
+Para pegar os valores atuais: projeto na Vercel → **Settings** → **Environment Variables** (ou o
+painel de variáveis do v0). Depois de salvar, vá em **Deployments** e faça **Retry deployment** do
+último deploy (ou dê qualquer push na branch) para o Worker subir já com os segredos.
+
+O `wrangler.jsonc` tem `keep_vars: true`, então os deploys automáticos não apagam o que você cadastrou.
+
+## 4. Hyperdrive para o Neon (opcional, recomendado)
 
 O Hyperdrive mantém conexões quentes com o Neon perto do Worker; sem ele cada requisição abre uma
-conexão TLS nova até o Neon. O app funciona nos dois casos: se `HYPERDRIVE_ID` não estiver
-configurado, ele usa `DATABASE_URL` direto.
+conexão nova até o Neon (funciona, só é mais lento).
 
-1. No **Neon** (<https://console.neon.tech>): projeto do DEVO → **Roles** → **New Role**
-   (ex.: `hyperdrive-user`), copie a senha. Dê a ela as mesmas permissões do usuário atual no banco
-   (ou use o usuário dono do banco, se preferir). Em **Connection Details**, escolha esse role e
-   **desmarque "Connection pooling"** (o Hyperdrive precisa do host direto, sem `-pooler`).
-   Copie a connection string (`postgres://hyperdrive-user:SENHA@ep-....neon.tech/neondb?sslmode=require`).
-2. Na **Cloudflare**: painel → **Storage & databases** → **Hyperdrive** → **Create configuration**.
-   Nome `devo-neon`, cole a connection string.
-3. **Desligue o cache de consultas** ("Caching" → desativado). Isso é obrigatório para o DEVO: o
-   Hyperdrive guarda resultados de `SELECT` por até 60 s e não invalida quando há escrita, o que
-   quebraria sessão, saves, salas do arcade e votos.
-   - Pelo terminal (alternativa): `npx wrangler hyperdrive create devo-neon --connection-string="postgres://..." --caching-disabled`
-4. Copie o **ID** da configuração (aparece na página dela). Ele vai para o GitHub como `HYPERDRIVE_ID`.
+1. No **Neon** (<https://console.neon.tech>): **Connection Details** → **desmarque "Connection pooling"**
+   (o Hyperdrive precisa do host direto, sem `-pooler`) e copie a connection string.
+2. Na **Cloudflare**: **Storage & databases** → **Hyperdrive** → **Create configuration** → nome
+   `devo-neon` → cole a connection string.
+3. **Desligue o cache de consultas** ("Caching" desativado). Obrigatório: o cache guarda `SELECT` por até
+   60 s e quebraria sessão, saves, salas do arcade e votos.
+4. Copie o **ID** da configuração e me mande (não é segredo). Eu ligo no `wrangler.jsonc` e o próximo
+   deploy já passa a usar.
 
-## 4. Segredos e variáveis no GitHub
+## Verificação do build no GitHub
 
-Repositório → **Settings** → **Secrets and variables** → **Actions**.
-
-**Secrets** (aba "Secrets" → **New repository secret**):
-
-| Nome | Obrigatório | Valor |
-| --- | --- | --- |
-| `CLOUDFLARE_API_TOKEN` | sim | token do passo 2 |
-| `CLOUDFLARE_ACCOUNT_ID` | sim | Account ID do passo 2 |
-| `DATABASE_URL` | sim | connection string do Neon que o app usa hoje (a mesma da Vercel). É o caminho usado quando não há Hyperdrive. |
-| `BETTER_AUTH_SECRET` | sim | **o mesmo valor da Vercel** (se mudar, todo mundo é deslogado) |
-| `CRON_SECRET` | recomendado | qualquer texto longo aleatório; protege `/api/cron/pulse` |
-| `HYPERDRIVE_ID` | recomendado | ID do passo 3 (pode ser *variable* também; não é sigiloso) |
-
-**Variables** (aba "Variables", todas opcionais):
-
-| Nome | Para quê |
-| --- | --- |
-| `DEVO_PUBLIC_URL` | endereço público, ex. `https://devo.vope.workers.dev`. Se ficar vazio, o workflow descobre sozinho pelo subdomínio da conta. |
-| `CF_WEB_ANALYTICS_TOKEN` | liga o Cloudflare Web Analytics (painel → Analytics & Logs → Web Analytics → Add a site → copie o token do snippet). Vazio = desligado. |
-
-O workflow envia `DATABASE_URL`, `BETTER_AUTH_SECRET` e `CRON_SECRET` para o Worker como *secrets*
-a cada deploy (`wrangler deploy --secrets-file`) e `DEVO_PUBLIC_URL` como variável. Nada disso fica no
-repositório.
-
-Para pegar os valores atuais da Vercel: projeto na Vercel → **Settings** → **Environment Variables**.
-
-## 5. Publicar
-
-- **Automático**: todo push/merge em `main` faz build + deploy de produção.
-- **Manual**: GitHub → **Actions** → **Cloudflare** → **Run workflow** → escolha a branch e
-  `producao` (publica) ou `somente-build` (só confere o build e mede o tamanho).
-
-Sem os segredos obrigatórios o workflow não falha: ele só faz o build e a medição.
-
-Cada execução publica um relatório (tamanho do Worker, avisos, log do deploy, teste rápido das
-páginas) na branch **`infra-logs/cloudflare`**, arquivo `RELATORIO.md`.
-
-Depois do primeiro deploy, abra `https://devo.<subdominio>.workers.dev`, faça login com uma conta
-existente e confira o jogo. As chaves de notificação (VAPID) continuam as do banco, então as
-inscrições de push que já existem seguem valendo.
+O workflow `.github/workflows/cloudflare.yml` só confere o build (tamanho do Worker, avisos,
+inicialização) a cada push na branch `infra/cloudflare` ou quando disparado à mão. Ele **não publica**.
+O relatório fica na branch `infra-logs/cloudflare`, arquivo `RELATORIO.md`. Último resultado: Worker
+com ~10,4 MB (limite 64 MiB) e ~22 ms de CPU na inicialização.
 
 ## Cron (lembrete diário do pulso)
 
@@ -159,4 +140,4 @@ O Neon continua com o plano dele, cobrado à parte como hoje.
 - `cloudflare/worker.ts` — entrada do Worker: `fetch` do OpenNext + `scheduled` do cron.
 - `lib/db/index.ts` — conexão por requisição no Worker (Hyperdrive ou `DATABASE_URL`), pool global no Node.
 - `lib/webpush.ts` — Web Push com Web Crypto (substitui o pacote `web-push`).
-- `.github/workflows/cloudflare.yml` — build, medição, deploy e relatório.
+- `.github/workflows/cloudflare.yml` — verificação do build e relatório (o deploy é do Workers Builds).

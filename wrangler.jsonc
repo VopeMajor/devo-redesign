@@ -12,6 +12,8 @@
     "global_fetch_strictly_public"
   ],
   "workers_dev": true,
+  // Variáveis e segredos cadastrados no painel (Settings → Variables and Secrets) sobrevivem a cada deploy.
+  "keep_vars": true,
   "preview_urls": false,
   "assets": {
     "directory": ".open-next/assets",
@@ -33,7 +35,7 @@
   "observability": {
     "enabled": true
   }
-  // Hyperdrive (Neon): o workflow .github/workflows/cloudflare.yml acrescenta
-  //   "hyperdrive": [{ "binding": "HYPERDRIVE", "id": "<HYPERDRIVE_ID>" }]
-  // quando o segredo/variável HYPERDRIVE_ID existe no GitHub. Sem ele, o app usa DATABASE_URL direto.
+  // Hyperdrive (Neon), opcional: depois de criar a configuração no painel (cache DESLIGADO), descomente e
+  // ponha o ID (não é segredo). Sem ele, o app conecta no Neon direto pelo segredo DATABASE_URL.
+  // , "hyperdrive": [{ "binding": "HYPERDRIVE", "id": "<HYPERDRIVE_ID>" }]
 }
