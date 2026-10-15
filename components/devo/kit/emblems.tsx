@@ -136,14 +136,14 @@ export function EmblemPulso(p: EmblemProps) {
 export function EmblemMensagens(p: EmblemProps) {
   // Peso igualado ao de Trocas/Record (rodada 3 do Sistema): agulhas finas e curtas, envelope em filete.
   const feathers: [number, number, number, number, number][] = [
-    [15.5, 20.5, 4.5, 12.5, 1.15],
-    [15.5, 24, 3, 20.6, 1.05],
-    [15.5, 27.5, 5.5, 28.5, 0.95],
+    [15.5, 20.5, 4.5, 12.5, 1.3],
+    [15.5, 24, 3, 20.6, 1.2],
+    [15.5, 27.5, 5.5, 28.5, 1.1],
   ]
   return (
     <Svg {...p}>
-      <Line d="M15.5 16H32.5V32H15.5Z" w={1.8} />
-      <Line d="M15.5 16L24 24.2L32.5 16" w={1.3} />
+      <Line d="M15.5 16H32.5V32H15.5Z" w={2.1} />
+      <Line d="M15.5 16L24 24.2L32.5 16" w={1.6} />
       <Cut d={circle(24, 25.2, 3.4) + star(24, 25.2, 2.3, 0.16)} />
       {feathers.map(([x1, y1, x2, y2, w]) => (
         <g key={y1}>
@@ -221,7 +221,7 @@ export function EmblemAjustes(p: EmblemProps) {
 export function EmblemJogos(p: EmblemProps) {
   return (
     <Svg {...p}>
-      <Line d="M12.4 31.6L9.4 17.6L17.6 24.4L24 13.4L30.4 24.4L38.6 17.6L35.6 31.6Z" w={1.8} />
+      <Line d="M12.4 31.6L9.4 17.6L17.6 24.4L24 13.4L30.4 24.4L38.6 17.6L35.6 31.6Z" w={2.1} />
       <path d={lozenge(24, 25.2, 2.4, 3.6)} />
       <path d={lozenge(16.2, 28.2, 1.1, 1.5)} />
       <path d={lozenge(31.8, 28.2, 1.1, 1.5)} />
@@ -229,8 +229,8 @@ export function EmblemJogos(p: EmblemProps) {
       <path d={star(9, 14.6, 2.8, 0.2)} />
       <path d={star(39, 14.6, 2.8, 0.2)} />
       <path d={star(24, 7, 4.8, 0.18)} />
-      <Line d="M9 41H39" w={1.2} />
-      <path d={needle(24, 41, 24, 47, 1.1, 0.3)} />
+      <Line d="M9 41H39" w={1.4} />
+      <path d={needle(24, 41, 24, 47, 1.25, 0.3)} />
     </Svg>
   )
 }

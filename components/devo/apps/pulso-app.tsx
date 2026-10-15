@@ -71,6 +71,7 @@ export function PulsoApp() {
                 value={formatDuration(remaining)}
                 size="lg"
                 tone={critical ? 'blood' : 'text'}
+                flip={false}
                 blinkColon={critical}
                 label="Tempo restante"
                 className="relative mt-1.5 text-[40px] [text-shadow:0_2px_16px_rgba(0,0,0,0.95)]"

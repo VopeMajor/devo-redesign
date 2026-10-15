@@ -7,6 +7,17 @@ import { cn } from '@/lib/utils'
  * prata com ponto ametista. Candidatos ao kit (ver relatório da rodada 3).
  */
 
+/**
+ * Mármore negro do shell em imagem raster (public/images/os/marmore-negro.webp, gerada por
+ * scripts/dev/gen-marmore.py): pedra #121214 com veios cinza neutros, sem o veio de latão do
+ * mármore global. Uma imagem decodificada uma vez; o SVG com feTurbulence era refeito na
+ * pintura e travava a página no renderizador por software (abrir o Pulso, clicar na home).
+ * Candidato ao kit (substitui a utilidade global de mármore negro).
+ */
+export const MARBLE_INK = 'bg-[#121214] bg-[url(/images/os/marmore-negro.webp)] bg-[length:560px_560px]'
+/** Mármore branco (porcelana com veio cinza): balão do jogador, superfícies claras. */
+export const MARBLE_PORCELAIN = 'bg-[#ecebe8] bg-[url(/images/os/marmore-branco.webp)] bg-[length:560px_560px]'
+
 type SlabEdge = 'steel' | 'blood' | 'line'
 
 const EDGE: Record<SlabEdge, string> = {
@@ -44,7 +55,7 @@ export function MarbleSlab({
       {...rest}
     >
       <span aria-hidden="true" className={cn('dv-cut pointer-events-none absolute inset-0 -z-10', EDGE[edge])} />
-      <span aria-hidden="true" className="dv-cut dv-marble-dark pointer-events-none absolute inset-px -z-10" style={{ '--dv-cut': `${Math.max(0, cut - 0.4)}px` } as CSSProperties} />
+      <span aria-hidden="true" className={cn('dv-cut pointer-events-none absolute inset-px -z-10', MARBLE_INK)} style={{ '--dv-cut': `${Math.max(0, cut - 0.4)}px` } as CSSProperties} />
       {/* luz rasante no tampo (polimento) */}
       <span
         aria-hidden="true"

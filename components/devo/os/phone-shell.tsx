@@ -105,6 +105,8 @@ export function PhoneShell({ current, onOpen, onHome }: { current: AppId | null;
 
   const app = shown ? getApp(shown) : null
   const totalUnread = Object.values(state.unread).reduce<number>((a, b) => a + (b ?? 0), 0)
+  const toastHold = !toastsReady || shade
+  const toastOpen = !toastHold && state.toasts.length > 0
 
   return (
     <div className="fixed inset-0 flex flex-col overflow-hidden bg-dv-ink text-dv-text">
@@ -114,6 +116,23 @@ export function PhoneShell({ current, onOpen, onHome }: { current: AppId | null;
       {critical && <CriticalVignette />}
 
       <StatusBar now={now} remaining={remaining} critical={critical} unread={totalUnread} expanded={shade} onToggle={() => setShade((s) => !s)} />
+
+      {/*
+        Regra única de aviso do shell: um por vez, numa faixa que se abre LOGO ABAIXO da barra de status
+        e empurra a tela para baixo (no fluxo, não por cima): nunca cobre conteúdo, herói, dock ou
+        cabeçalho de app. Rubi só para aviso de perigo; confirmação é aço.
+      */}
+      <div
+        className={cn(
+          'relative z-20 grid shrink-0 transition-[grid-template-rows] ease-out',
+          reduced ? 'duration-0' : 'duration-300',
+          toastOpen ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]',
+        )}
+      >
+        <div className="min-h-0 overflow-hidden">
+          <ToastStack onOpen={(id) => open(id)} compact inline max={1} hold={toastHold} className="px-3 pb-2 pt-2" />
+        </div>
+      </div>
 
       <div className="relative z-10 min-h-0 flex-1">
         {(!current || entering) && <HomeScreen remaining={remaining} critical={critical} onOpen={open} onShowNotices={() => setShade(true)} />}
@@ -154,17 +173,6 @@ export function PhoneShell({ current, onOpen, onHome }: { current: AppId | null;
 
       {shade && <Shade remaining={remaining} critical={critical} reduced={reduced} onClose={() => setShade(false)} onOpen={open} />}
 
-      {/*
-        Regra única de aviso do shell: um por vez, no TOPO, logo abaixo da barra de status, sobre a faixa
-        do cabeçalho (do app ou da saudação da home) — nunca sobre o conteúdo, o herói ou o dock.
-      */}
-      <ToastStack
-        onOpen={(id) => open(id)}
-        compact
-        max={1}
-        hold={!toastsReady || shade}
-        className="inset-x-3 top-[calc(env(safe-area-inset-top)+50px)]"
-      />
     </div>
   )
 }
@@ -197,7 +205,7 @@ function StatusBar({
       aria-label="Abrir central de avisos"
       className="dv-focus relative z-30 w-full shrink-0 pt-[env(safe-area-inset-top)] text-left"
     >
-      <span aria-hidden="true" className="absolute inset-0 bg-[linear-gradient(180deg,rgba(10,10,12,0.94),rgba(10,10,12,0.6))] backdrop-blur-[2px]" />
+      <span aria-hidden="true" className="absolute inset-0 bg-[linear-gradient(180deg,rgba(10,10,12,0.94),rgba(10,10,12,0.72))]" />
       <span className="relative flex items-center justify-between gap-2 px-4" style={{ height: STATUS_H }}>
         <span className="dv-tabular w-[72px] font-mono text-[13px] text-dv-text-2">{formatClock(now)}</span>
 
@@ -287,7 +295,7 @@ function HomeScreen({
 
       <section aria-label="Aplicativos" className="relative mt-5">
         {/* Véu atrás da grade: as cartas que flutuam na cena não passam atrás dos rótulos (< 15%). */}
-        <span aria-hidden="true" className="pointer-events-none absolute -inset-x-4 -bottom-3 top-6 -z-10 bg-[linear-gradient(180deg,transparent,rgba(12,12,14,0.88)_22%,rgba(12,12,14,0.88)_80%,transparent)]" />
+        <span aria-hidden="true" className="pointer-events-none absolute -inset-x-4 -bottom-4 -top-7 -z-10 bg-[linear-gradient(180deg,transparent,rgba(12,12,14,0.9)_16%,rgba(12,12,14,0.9)_84%,transparent)]" />
         <div className="animate-dv-fade flex items-center gap-3 px-1 [animation-delay:220ms]">
           <span className="dv-label text-[10px] text-dv-text-3">Aplicativos</span>
           <span aria-hidden="true" className="h-px flex-1 bg-gradient-to-r from-dv-line-strong to-transparent" />
@@ -387,7 +395,7 @@ function HomeStrip({
       style={{ '--dv-cut': '10px' } as CSSProperties}
     >
       <span aria-hidden="true" className={cn('dv-cut-diag absolute inset-0 -z-10', line)} />
-      <span aria-hidden="true" className="dv-cut-diag dv-marble-dark absolute inset-px -z-10" style={{ '--dv-cut': '9.6px' } as CSSProperties} />
+      <span aria-hidden="true" className="dv-cut-diag bg-[#121214] bg-[url(/images/os/marmore-negro.webp)] bg-[length:560px_560px] absolute inset-px -z-10" style={{ '--dv-cut': '9.6px' } as CSSProperties} />
       <span aria-hidden="true" className="dv-cut-diag absolute inset-px -z-10 bg-[linear-gradient(100deg,rgba(255,255,255,0.05),transparent_45%,rgba(0,0,0,0.3))] transition-colors group-hover:bg-white/[0.04]" style={{ '--dv-cut': '9.6px' } as CSSProperties} />
       <span aria-hidden="true" className={cn('absolute inset-y-2.5 left-0 w-[2px]', bar)} />
       <span className="min-w-0 flex-1">
@@ -466,7 +474,7 @@ function PulseCard({ remaining, critical, onOpen }: { remaining: number; critica
         <span className="relative flex min-w-0 flex-1 flex-col">
           <Kicker tone={critical ? 'blood' : 'gold'}>Tempo restante</Kicker>
           <span className="mt-3 block">
-            <TimeDigits value={text} size="lg" tone={critical ? 'blood' : 'text'} blinkColon={critical} className="text-[40px] [text-shadow:0_2px_10px_rgba(0,0,0,0.8)]" />
+            <TimeDigits value={text} size="lg" tone={critical ? 'blood' : 'text'} flip={false} blinkColon={critical} className="text-[40px] [text-shadow:0_2px_10px_rgba(0,0,0,0.8)]" />
           </span>
           <span aria-hidden="true" className="mt-1 grid w-fit grid-cols-[1.2em_0.34em_1.2em_0.34em_1.2em] text-[40px] leading-none">
             {['Horas', '', 'Min', '', 'Seg'].map((u, i) => (
@@ -572,8 +580,21 @@ function PhoneIcon({ id, onOpen, unread, delay = 0 }: { id: AppId; onOpen: (id: 
 
 const EASE_OUT = 'cubic-bezier(0.16,1,0.3,1)'
 const EASE_IN = 'cubic-bezier(0.6,0,0.9,0.4)'
+/**
+ * Filete de 3px colado à borda diagonal da folha (mesmo recorte da folha em cada instante): a linha de
+ * aço que "corta" a tela. Some no fim da passagem.
+ */
+function edgeFrames(entering: boolean): Keyframe[] {
+  const at = (p: number) => `polygon(0 0, 3px 0, calc(${(34 * (1 - p)).toFixed(2)}% + 3px) 100%, ${(34 * (1 - p)).toFixed(2)}% 100%)`
+  const f: Keyframe[] = [
+    { opacity: 1, clipPath: at(0), offset: 0 },
+    { opacity: 1, clipPath: at(0.85), offset: 0.85 },
+    { opacity: 0, clipPath: at(1), offset: 1 },
+  ]
+  return entering ? f : f.map((k) => ({ ...k, offset: 1 - (k.offset as number) })).reverse()
+}
 /** Recuo da borda de ataque na base (corte diagonal da folha do app). */
-const DIAG = '22%'
+const DIAG = '34%'
 
 function AppLayer({
   app,
@@ -593,6 +614,7 @@ function AppLayer({
   onExited: () => void
 }) {
   const ref = useRef<HTMLElement>(null)
+  const edge = useRef<HTMLSpanElement>(null)
   const exited = useRef(onExited)
   exited.current = onExited
   const entered = useRef(onEntered)
@@ -613,8 +635,12 @@ function AppLayer({
       ],
       { duration: ENTER_MS, easing: EASE_OUT },
     )
+    const line = edge.current?.animate(edgeFrames(true), { duration: ENTER_MS, easing: EASE_OUT, fill: 'forwards' })
     anim.onfinish = () => entered.current()
-    return () => anim.cancel()
+    return () => {
+      anim.cancel()
+      line?.cancel()
+    }
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
@@ -631,8 +657,12 @@ function AppLayer({
       ],
       { duration: EXIT_MS, easing: EASE_IN, fill: 'forwards' },
     )
+    const line = edge.current?.animate(edgeFrames(false), { duration: EXIT_MS, easing: EASE_IN, fill: 'forwards' })
     anim.onfinish = () => exited.current()
-    return () => anim.cancel()
+    return () => {
+      anim.cancel()
+      line?.cancel()
+    }
   }, [leaving]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const index = toRoman(appIndex(app.id))
@@ -659,6 +689,8 @@ function AppLayer({
       <div className="relative min-h-0 flex-1 pt-2">
         <app.Component />
       </div>
+      {/* filete de aço na borda de ataque do corte diagonal (só aparece durante a passagem) */}
+      <span ref={edge} aria-hidden="true" className="pointer-events-none absolute inset-0 z-30 bg-[linear-gradient(180deg,#f4efe6,#bab09f_40%,#6b6357_75%,#ece5d8)] opacity-0" />
     </section>
   )
 }
@@ -695,10 +727,10 @@ function Shade({
   const top = `calc(env(safe-area-inset-top) + ${STATUS_H}px)`
   return (
     <>
-      <div aria-hidden="true" onClick={onClose} className="animate-dv-fade absolute inset-x-0 bottom-0 z-30 bg-black/70 backdrop-blur-[2px]" style={{ top }} />
+      <div aria-hidden="true" onClick={onClose} className="animate-dv-fade absolute inset-x-0 bottom-0 z-30 bg-black/75" style={{ top }} />
       <div ref={ref} className="absolute inset-x-0 z-40 flex max-h-[82%] flex-col" style={{ top }}>
         {/* folha de mármore negro com veio, filete de aço embaixo */}
-        <span aria-hidden="true" className="dv-marble-dark absolute inset-0" />
+        <span aria-hidden="true" className="bg-[#121214] bg-[url(/images/os/marmore-negro.webp)] bg-[length:560px_560px] absolute inset-0" />
         <span aria-hidden="true" className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.25),transparent_30%,rgba(0,0,0,0.35))]" />
         <span aria-hidden="true" className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-dv-gold/70 to-transparent" />
         <span aria-hidden="true" className="absolute inset-x-0 bottom-[3px] h-px bg-gradient-to-r from-transparent via-dv-gold/25 to-transparent" />

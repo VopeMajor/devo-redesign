@@ -44,7 +44,7 @@ export function PulseDial({
   return (
     <span className={cn('relative block', className)} aria-hidden="true">
       {/* mostrador de mármore negro (pedra com veio) atrás do aço */}
-      <span className="dv-marble-dark absolute inset-[3.75%] rounded-full shadow-[inset_0_0_0_1px_rgba(0,0,0,0.6),inset_0_18px_40px_rgba(0,0,0,0.55)]" />
+      <span className="bg-[#121214] bg-[url(/images/os/marmore-negro.webp)] bg-[length:560px_560px] absolute inset-[3.75%] rounded-full shadow-[inset_0_0_0_1px_rgba(0,0,0,0.6),inset_0_18px_40px_rgba(0,0,0,0.55)]" />
       <span
         className={cn(
           'absolute inset-[3.75%] rounded-full',
@@ -69,13 +69,17 @@ export function PulseDial({
           <stop offset="0.62" stopColor="#8f877a" />
           <stop offset="1" stopColor="#ece5d8" />
         </linearGradient>
-        {/* no herói, órbita e ponteiro somem na faixa dos dígitos (máscara com borda suave) */}
-        <filter id={`b-${uid}`} x="-20%" y="-20%" width="140%" height="140%">
-          <feGaussianBlur stdDeviation="9" />
-        </filter>
+        {/*
+          No herói, órbita e ponteiro somem na faixa dos dígitos (máscara com borda suave por gradiente
+          radial; sem filtro de desfoque, que era refeito a cada quadro do ponteiro).
+        */}
+        <radialGradient id={`r-${uid}`}>
+          <stop offset="0.62" stopColor="#000" />
+          <stop offset="1" stopColor="#000" stopOpacity="0" />
+        </radialGradient>
         <mask id={`m-${uid}`} maskUnits="userSpaceOnUse" x="0" y="0" width="320" height="320">
           <rect x="0" y="0" width="320" height="320" fill="#fff" />
-          {hero && <ellipse cx="160" cy="160" rx="118" ry="52" fill="#000" filter={`url(#b-${uid})`} />}
+          {hero && <ellipse cx="160" cy="160" rx="136" ry="66" fill={`url(#r-${uid})`} />}
         </mask>
       </defs>
 
@@ -92,7 +96,6 @@ export function PulseDial({
           strokeDasharray={exCirc}
           strokeDashoffset={exCirc * (1 - excess)}
           transform={`rotate(-90 ${C} ${C})`}
-          className="drop-shadow-[0_0_6px_rgba(236,229,216,0.6)]"
         />
       )}
 
@@ -148,6 +151,18 @@ export function PulseDial({
       <circle cx={C} cy={C} r={R_ARC} stroke="rgba(236,229,216,0.09)" strokeWidth={hero ? 7 : 8} />
       <circle cx={C} cy={C} r={R_ARC + (hero ? 5 : 6)} stroke="rgba(236,229,216,0.14)" strokeWidth="0.6" />
       <circle cx={C} cy={C} r={R_ARC - (hero ? 5 : 6)} stroke="rgba(236,229,216,0.1)" strokeWidth="0.6" />
+      {/* brilho do anel: traço largo e translúcido por baixo (sem filtro drop-shadow) */}
+      <circle
+        cx={C}
+        cy={C}
+        r={R_ARC}
+        stroke={critical ? 'rgba(213,31,43,0.28)' : 'rgba(236,229,216,0.12)'}
+        strokeWidth={hero ? 12 : 13}
+        strokeDasharray={arcCirc}
+        strokeDashoffset={arcCirc * (1 - ratio)}
+        transform={`rotate(-90 ${C} ${C})`}
+        className="transition-[stroke-dashoffset] duration-1000 ease-linear"
+      />
       <circle
         cx={C}
         cy={C}
@@ -157,14 +172,15 @@ export function PulseDial({
         strokeDasharray={arcCirc}
         strokeDashoffset={arcCirc * (1 - ratio)}
         transform={`rotate(-90 ${C} ${C})`}
-        style={{ filter: `drop-shadow(0 0 ${critical ? 7 : 4}px ${critical ? 'rgba(213,31,43,0.9)' : 'rgba(236,229,216,0.45)'})` }}
         className="transition-[stroke-dashoffset] duration-1000 ease-linear"
       />
       {ratio > 0 && (
         <path
           d={`M${end.x} ${end.y - 6} L${end.x + 4.5} ${end.y} L${end.x} ${end.y + 6} L${end.x - 4.5} ${end.y} Z`}
           fill={now}
-          style={{ filter: `drop-shadow(0 0 5px ${critical ? 'rgba(213,31,43,0.9)' : 'rgba(138,124,200,0.95)'})` }}
+          stroke={critical ? 'rgba(213,31,43,0.45)' : 'rgba(138,124,200,0.5)'}
+          strokeWidth="3"
+          paintOrder="stroke"
           transform={`rotate(${(endA * 180) / Math.PI} ${end.x} ${end.y})`}
         />
       )}

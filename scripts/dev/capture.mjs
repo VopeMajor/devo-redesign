@@ -268,17 +268,11 @@ async function enterOS(page) {
 async function openApp(page, label) {
   await enterOS(page)
   const exact = page.getByRole('button', { name: label, exact: true })
-  // Espera o ícone existir (a home pode demorar a montar depois da cortina) antes de desistir.
-  await exact.first().waitFor({ state: 'attached', timeout: 8000 }).catch(() => {})
-  if (!(await tryClick(exact.first(), 3000))) await btn(page, label).click({ timeout: 3000 })
+  // O nome acessível do ícone é o nome do app (aria-label). No CI (WebGL por software) a página pode
+  // ficar ocupada alguns segundos montando a cena 3D da home: espera o ícone visível e dá folga ao clique.
+  await exact.first().waitFor({ state: 'visible', timeout: 15000 }).catch(() => {})
+  if (!(await tryClick(exact.first(), 8000))) await btn(page, label).click({ timeout: 8000 })
   await wait(2600)
-}
-
-/** Diagnóstico de etapa: captura a tela e guarda a árvore acessível no manifest. */
-async function diag(page, name) {
-  await shot(page, name)
-  const tree = await page.locator('body').ariaSnapshot({ timeout: 3000 }).catch((e) => `ariaSnapshot falhou: ${e}`)
-  manifest.errors.push({ step: `${name}-arvore`, error: String(tree).slice(0, 6000) })
 }
 
 const VET_CARDS = ['fosforo', 'escudo', 'moeda', 'dado', 'ampulheta', 'olho', 'relogio', 'laminas', 'chave', 'coroa']
@@ -322,13 +316,15 @@ if (want('sistema') || want('apps') || want('jogos')) {
           for (const a of w.__dvFrozen ?? []) a.finish()
           w.__dvFrozen = []
         })
-      await freeze(0.4)
+      // abrir: ease-out → aos 14% do tempo a folha está a ~meio caminho, com o corte diagonal visível
+      await freeze(0.14)
       await page.getByRole('button', { name: 'Mensagens', exact: true }).first().click({ timeout: 3000 })
       await wait(250)
       await shot(page, '11-transicao-abrir')
       await resume()
       await wait(1500)
-      await freeze(0.45)
+      // voltar: ease-in → aos 62% do tempo a folha já saiu ~40% para a direita
+      await freeze(0.62)
       await btn(page, 'Voltar ao início', true).click({ timeout: 3000 })
       await wait(250)
       await shot(page, '11-transicao-voltar')
@@ -676,6 +672,8 @@ if (want('sistema') || want('apps') || want('jogos')) {
     })
     // Apresentação do Javali para quem nunca entrou na sala.
     await step('jogos-javali', async () => {
+      // a Mesa do Veterano (cena 3D) fica parada enquanto a segunda conta tira as capturas
+      await page.goto('about:blank').catch(() => {})
       const g = await account('Convidado', 'DEVO-TEST-0004', VET_CARDS, 'phone', { javaliMet: false })
       await openApp(g.page, 'Sala de Jogos')
       for (let i = 0; i < 4; i++) {
@@ -730,16 +728,29 @@ if (want('partidas')) {
   for (const game of ['Memory Rush', 'Living Chess', 'Bomba Quente', 'Blefe']) {
     const slug = game.toLowerCase().replace(/\s+/g, '-')
     await step(`partida-${slug}`, async () => {
-      for (const [who, { page }] of [['a', A], ['b', B]]) {
+      // Sai da partida anterior nas duas contas: dois 3D (jogo + sala) ao mesmo tempo no WebGL por
+      // software do CI travam a página e o clique em "Jogar"/"Sala de Jogos" estoura o tempo.
+      for (const { page } of [A, B]) await page.goto('about:blank').catch(() => {})
+      for (const [who, { page }] of [['A', A], ['B', B]]) {
+        await openApp(page, 'Sala de Jogos')
+        const card = page.locator('[aria-label="Jogos da semana"] > *').filter({ hasText: new RegExp(game, 'i') }).first()
         try {
-          await openApp(page, 'Sala de Jogos')
-          const card = page.locator('[aria-label="Jogos da semana"] > *').filter({ hasText: new RegExp(game, 'i') }).first()
-          await card.getByRole('button', { name: /jogar/i }).first().click({ timeout: 8000 })
+          await card.getByRole('button', { name: /jogar/i }).first().click({ timeout: 12000 })
         } catch (e) {
-          await diag(page, `40-partida-${slug}-diag-${who}`)
+          // Diagnóstico: o que a conta estava vendo quando "Jogar" não respondeu.
+          await shot(page, `40-partida-${slug}-sem-jogar-${who}`)
           throw e
         }
-        await wait(800)
+        // Quem saiu da partida anterior sem fechar volta para a sala dela (reconexão) e cai no
+        // resultado: fecha o resultado e entra de novo na fila do jogo certo.
+        const back = page.getByRole('button', { name: /voltar à mesa/i })
+        if (await back.first().waitFor({ state: 'visible', timeout: 5000 }).then(() => true, () => false)) {
+          await shot(page, `40-partida-${slug}-reconexao-${who}`)
+          await tryClick(back.first(), 4000)
+          await wait(1500)
+          await card.getByRole('button', { name: /jogar/i }).first().click({ timeout: 12000 })
+          await wait(800)
+        }
       }
       await shot(A.page, `40-partida-${slug}-fila`)
       await wait(6000)

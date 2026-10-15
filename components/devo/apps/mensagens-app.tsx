@@ -157,7 +157,7 @@ export function MensagensApp() {
         <Conversation key={active.id} threadId={active.id} onBack={() => setActiveId(null)} />
       ) : (
         <div className="relative isolate hidden flex-1 flex-col items-center justify-center gap-4 overflow-hidden p-6 text-center @xl:flex">
-          <span aria-hidden="true" className="dv-marble-dark absolute inset-0 -z-10 opacity-70" />
+          <span aria-hidden="true" className="bg-[#121214] bg-[url(/images/os/marmore-negro.webp)] bg-[length:560px_560px] absolute inset-0 -z-10 opacity-70" />
           <EmblemMensagens metal className="size-16 opacity-80 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]" />
           <p className="dv-label text-[11px] text-dv-gold">Canal seguro</p>
           <p className="max-w-[18rem] font-body text-[16px] italic leading-snug text-dv-text-2">Escolha uma conversa. Cuidado com quem responde.</p>
@@ -221,7 +221,7 @@ function Conversation({ threadId, onBack }: { threadId: string; onBack: () => vo
       {/* retrato grande ao fundo, como numa cena */}
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10">
         {/* mármore negro com veio; o retrato do remetente fica como gravura cinza, quase apagada */}
-        <div className="dv-marble-dark absolute inset-0" />
+        <div className="bg-[#121214] bg-[url(/images/os/marmore-negro.webp)] bg-[length:560px_560px] absolute inset-0" />
         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.35),rgba(12,12,14,0.15)_40%,rgba(0,0,0,0.45))]" />
         <div className="absolute -right-12 top-10 h-[62%] w-[78%] opacity-[0.1] grayscale [-webkit-mask-image:radial-gradient(ellipse_55%_50%_at_60%_42%,#000_35%,transparent_78%)] [mask-image:radial-gradient(ellipse_55%_50%_at_60%_42%,#000_35%,transparent_78%)]">
           {portrait ? (
@@ -232,7 +232,7 @@ function Conversation({ threadId, onBack }: { threadId: string; onBack: () => vo
         </div>
       </div>
 
-      <header className="relative flex items-center gap-3 bg-dv-ink/70 px-2 py-2.5 backdrop-blur-md">
+      <header className="relative flex items-center gap-3 bg-[rgba(12,12,14,0.86)] px-2 py-2.5">
         {!shellBack && (
           <IconButton label="Voltar para conversas" variant="ghost" onClick={onBack} className="@xl:hidden">
             <GlyphArrow className="rotate-180" />
@@ -264,7 +264,7 @@ function Conversation({ threadId, onBack }: { threadId: string; onBack: () => vo
         )}
       </div>
 
-      <div className="relative border-t border-dv-line bg-dv-ink/85 px-3 pb-3 pt-3 backdrop-blur-md">
+      <div className="relative border-t border-dv-line bg-[rgba(12,12,14,0.94)] px-3 pb-3 pt-3">
         <p className="dv-label mb-2.5 px-1 text-[10px] text-dv-text-3">{choices.length ? 'Escolha o que perguntar' : 'Nada mais a perguntar'}</p>
         {choices.length > 0 ? (
           <ul className="flex flex-col gap-2" aria-label="Escolhas de diálogo">

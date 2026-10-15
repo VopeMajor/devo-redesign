@@ -27,7 +27,7 @@ function LiveToast({ item, onOpen, compact }: { item: NotificationItem; onOpen: 
   const dismiss = () => dispatch({ type: 'DISMISS_TOAST', id: item.id })
   if (compact) {
     return (
-      <li className="animate-dv-toast-in pointer-events-auto relative w-full max-w-sm drop-shadow-[0_12px_22px_rgba(0,0,0,0.75)]" role={danger ? 'alert' : 'status'} style={{ '--dv-cut': '10px' } as CSSProperties}>
+      <li className="animate-dv-toast-in pointer-events-auto relative w-full drop-shadow-[0_10px_18px_rgba(0,0,0,0.6)]" role={danger ? 'alert' : 'status'} style={{ '--dv-cut': '10px' } as CSSProperties}>
         <span
           aria-hidden="true"
           className={cn(
@@ -35,7 +35,7 @@ function LiveToast({ item, onOpen, compact }: { item: NotificationItem; onOpen: 
             danger ? 'bg-dv-blood/80' : 'bg-[linear-gradient(100deg,#f4efe6,#6b6357_30%,#bab09f_60%,#5f584d_85%,#ece5d8)]',
           )}
         />
-        <span aria-hidden="true" className="dv-cut-diag dv-marble-dark absolute inset-px" style={{ '--dv-cut': '9.6px' } as CSSProperties} />
+        <span aria-hidden="true" className="dv-cut-diag bg-[#121214] bg-[url(/images/os/marmore-negro.webp)] bg-[length:560px_560px] absolute inset-px" style={{ '--dv-cut': '9.6px' } as CSSProperties} />
         <span
           aria-hidden="true"
           className={cn('dv-cut-diag absolute inset-px', danger ? 'bg-[linear-gradient(100deg,rgba(63,6,11,0.85),rgba(12,12,14,0.4)_60%)]' : 'bg-[linear-gradient(100deg,rgba(255,255,255,0.05),rgba(0,0,0,0.25))]')}
@@ -98,25 +98,28 @@ function LiveToast({ item, onOpen, compact }: { item: NotificationItem; onOpen: 
 /**
  * Pilha de avisos. `max` limita quantos aparecem juntos (os demais esperam a vez; o tempo de cada
  * um só corre quando ele aparece). `hold` segura todos (ex.: enquanto a home entra).
- * `compact` = tira de uma linha (celular).
+ * `compact` = tira de uma linha (celular). `inline` = no fluxo da página (faixa sob a barra de status
+ * do celular, que empurra a tela), em vez de flutuar por cima.
  */
 export function ToastStack({
   onOpen,
   className,
   compact,
+  inline = false,
   max = 3,
   hold = false,
 }: {
   onOpen: (id: AppId) => void
   className?: string
   compact?: boolean
+  inline?: boolean
   max?: number
   hold?: boolean
 }) {
   const { state } = useDevo()
   const list = hold ? [] : state.toasts.slice(0, max)
   return (
-    <ol aria-live="polite" aria-label="Notificações recentes" className={cn('pointer-events-none fixed z-50 flex flex-col items-center gap-2', className)}>
+    <ol aria-live="polite" aria-label="Notificações recentes" className={cn('pointer-events-none flex flex-col items-center gap-2', inline ? 'relative' : 'fixed z-50', className)}>
       {list.map((t) => (
         <LiveToast key={t.id} item={t} onOpen={onOpen} compact={compact} />
       ))}

@@ -101,13 +101,15 @@ export function DesktopShell() {
         fica vermelha: a vinheta rubi pulsa nas bordas.
       */}
       <SceneBackdrop preset="clockhall" intensity={0.85} dim={visible.length ? 0.55 : 0.2} staticOnly={visible.length > 0} />
+      {/* O salão vem da Jornada (noite azul-violeta); no interior ele fica no mármore: tira a cor da cena. */}
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[#808080] mix-blend-saturation" />
       {critical && (
         <div aria-hidden="true" className="animate-dv-alert pointer-events-none absolute inset-0 z-[1] bg-[radial-gradient(110%_90%_at_50%_50%,transparent_62%,rgba(163,18,31,0.3)_90%,rgba(63,6,11,0.55)_100%)]" />
       )}
       <PulseWidget remaining={remaining} critical={critical} onOpen={() => openApp('pulso')} />
 
       <header
-        className="absolute inset-x-0 top-0 z-40 flex items-center justify-between gap-4 bg-[linear-gradient(180deg,rgba(21,21,23,0.94),rgba(10,10,12,0.9))] px-4 backdrop-blur-md"
+        className="absolute inset-x-0 top-0 z-40 flex items-center justify-between gap-4 bg-[linear-gradient(180deg,rgba(21,21,23,0.94),rgba(10,10,12,0.96))] px-4"
         style={{ height: TOP }}
       >
         <span aria-hidden="true" className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-dv-gold/60 via-dv-gold/20 to-transparent" />
@@ -210,7 +212,7 @@ export function DesktopShell() {
       )}
 
       <footer
-        className="absolute inset-x-0 bottom-0 z-40 flex items-center justify-center gap-2 bg-[linear-gradient(0deg,rgba(21,21,23,0.94),rgba(10,10,12,0.88))] px-4 backdrop-blur-md"
+        className="absolute inset-x-0 bottom-0 z-40 flex items-center justify-center gap-2 bg-[linear-gradient(0deg,rgba(21,21,23,0.94),rgba(10,10,12,0.96))] px-4"
         style={{ height: BOTTOM }}
       >
         <span aria-hidden="true" className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-dv-gold/45 to-transparent" />
@@ -266,7 +268,7 @@ function PulseWidget({ remaining, critical, onOpen }: { remaining: number; criti
         <FrameCorners tone={critical ? 'blood' : 'gold'} size={18} />
         <span className="min-w-0 flex-1">
           <Kicker tone={critical ? 'blood' : 'gold'}>Tempo restante</Kicker>
-          <TimeDigits value={text} size="lg" tone={critical ? 'blood' : 'text'} blinkColon={critical} className="mt-2 text-[34px]" />
+          <TimeDigits value={text} size="lg" tone={critical ? 'blood' : 'text'} flip={false} blinkColon={critical} className="mt-2 text-[34px]" />
           <span className="mt-3 flex items-center gap-2">
             {critical ? (
               <StateSeal tone="blood" live>
@@ -390,7 +392,7 @@ function Window({
         onFocus()
       }}
       className={cn(
-        'animate-dv-pop absolute flex flex-col overflow-hidden border bg-dv-ink/95 backdrop-blur-md transition-[box-shadow,border-color]',
+        'animate-dv-pop absolute flex flex-col overflow-hidden border bg-dv-ink transition-[box-shadow,border-color]',
         active
           ? 'border-dv-gold/55 shadow-[0_30px_80px_-20px_rgba(0,0,0,0.95),0_0_28px_-12px_rgba(236,229,216,0.35)]'
           : 'border-dv-line-strong shadow-[0_20px_50px_-20px_rgba(0,0,0,0.9)]',
@@ -460,7 +462,7 @@ function GlassBack() {
   return (
     <span aria-hidden="true" className="pointer-events-none absolute inset-0 [--dv-cut:14px]">
       <span className="dv-cut absolute inset-0 bg-[linear-gradient(135deg,var(--dv-gold-bright),var(--dv-gold-deep)_30%,var(--dv-gold)_60%,var(--dv-gold-deep))] opacity-70" />
-      <span className="dv-cut dv-marble-dark absolute inset-px [--dv-cut:13.6px]" />
+      <span className="dv-cut bg-[#121214] bg-[url(/images/os/marmore-negro.webp)] bg-[length:560px_560px] absolute inset-px [--dv-cut:13.6px]" />
       <span className="dv-cut absolute inset-px bg-[linear-gradient(180deg,rgba(0,0,0,0.2),rgba(0,0,0,0.4))] [--dv-cut:13.6px]" />
     </span>
   )
