@@ -623,6 +623,9 @@ if (want('sistema') || want('apps') || want('jogos')) {
         await wait(5000)
         await shot(page, `32-tutorial-${slug}-b`)
         await wait(8000)
+        // Se o resultado acabou de abrir, deixa a entrada (faixa, placar, painel) assentar antes do quadro.
+        const done = page.getByRole('button', { name: /voltar à mesa/i })
+        if (await done.count()) await wait(2500)
         await shot(page, `32-tutorial-${slug}-c`)
       })
     }
@@ -725,7 +728,7 @@ if (want('partidas')) {
         // Quem saiu da partida anterior sem fechar volta para a sala dela (reconexão) e cai no
         // resultado: fecha o resultado e entra de novo na fila do jogo certo.
         const back = page.getByRole('button', { name: /voltar à mesa/i })
-        if (await back.first().waitFor({ state: 'visible', timeout: 5000 }).then(() => true, () => false)) {
+        if (await back.first().waitFor({ state: 'visible', timeout: 15000 }).then(() => true, () => false)) {
           await shot(page, `40-partida-${slug}-reconexao-${who}`)
           await tryClick(back.first(), 4000)
           await wait(1500)
