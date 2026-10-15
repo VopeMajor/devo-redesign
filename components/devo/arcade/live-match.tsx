@@ -10,13 +10,13 @@ import { cn } from '@/lib/utils'
 import { ArcadeChat, ChatMessage, useChatLines } from './arcade-chat'
 
 const REACTIONS: Record<ReactionId, { label: string; icon?: LucideIcon; text?: string; color: string }> = {
-  gg: { label: 'GG', text: 'GG', color: '#5fd3a5' },
-  fogo: { label: 'Fogo', icon: Flame, color: '#ff9d5c' },
+  gg: { label: 'GG', text: 'GG', color: '#f1f0ee' },
+  fogo: { label: 'Fogo', icon: Flame, color: '#ff6670' },
   caveira: { label: 'Caveira', icon: Skull, color: '#e8e8ee' },
-  kkk: { label: 'Risada', text: 'KKK', color: '#e2b95c' },
-  choque: { label: 'Choque', icon: Zap, color: '#5ec8e8' },
+  kkk: { label: 'Risada', text: 'KKK', color: '#bab09f' },
+  choque: { label: 'Choque', icon: Zap, color: '#ece5d8' },
   coracao: { label: 'Coração', icon: Heart, color: '#c2b9ec' },
-  f: { label: 'F', text: 'F', color: '#c08bff' },
+  f: { label: 'F', text: 'F', color: '#cbc5e8' },
   rato: { label: 'Rato', icon: Rat, color: '#8a90a0' },
 }
 
@@ -114,10 +114,10 @@ export function LiveMatchLayer({ channel }: { channel: string }) {
         aria-label={open ? 'Fechar chat ao vivo' : 'Abrir chat ao vivo'}
         className={cn(
           'dv-focus relative flex h-11 min-w-11 items-center justify-center gap-1.5 border px-2.5 font-mono text-[10px] uppercase tracking-[0.2em] transition-colors',
-          open ? 'border-dv-cobalt bg-dv-cobalt-dim text-dv-cobalt-text' : 'border-dv-line-strong bg-dv-ink/60 text-dv-text-2 hover:border-dv-cobalt hover:text-dv-text',
+          open ? 'border-dv-gold-bright bg-dv-ink-3 text-dv-text' : 'border-dv-line-strong bg-dv-ink/60 text-dv-text-2 hover:border-dv-gold hover:text-dv-text',
         )}
       >
-        <span aria-hidden="true" className="size-1.5 animate-dv-blink rounded-full bg-dv-cobalt shadow-[0_0_8px_var(--dv-cobalt)]" />
+        <span aria-hidden="true" className="size-1.5 animate-dv-blink rotate-45 bg-dv-amethyst shadow-[0_0_8px_var(--dv-amethyst)]" />
         <MessageSquare className="size-4" strokeWidth={1.4} aria-hidden="true" />
         <span className="hidden sm:inline">Ao vivo</span>
         {unread > 0 && !open && (
@@ -143,7 +143,7 @@ export function LiveMatchLayer({ channel }: { channel: string }) {
         {!open && toasts.length > 0 && (
           <ul className="pointer-events-none absolute bottom-3 left-3 z-[26] flex max-w-[min(20rem,70%)] flex-col gap-1">
             {toasts.map((m) => (
-              <li key={m.id} className="animate-dv-toast-in border-l-2 border-dv-cobalt bg-dv-ink/85 px-3 py-2 backdrop-blur-sm">
+              <li key={m.id} className="animate-dv-toast-in border-l-2 border-dv-gold bg-dv-ink/85 px-3 py-2 backdrop-blur-sm">
                 <ChatMessage m={m} compact />
               </li>
             ))}
@@ -156,7 +156,7 @@ export function LiveMatchLayer({ channel }: { channel: string }) {
             className="absolute inset-x-0 bottom-0 z-30 flex h-[66%] animate-dv-sheet-up flex-col border-t-2 border-dv-gold/60 bg-dv-ink-2/95 backdrop-blur-md sm:inset-x-auto sm:inset-y-0 sm:right-0 sm:h-auto sm:w-80 sm:animate-dv-slide-left sm:border-l sm:border-t-0"
           >
             <header className="flex items-center gap-2 border-b border-dv-line py-1 pl-3 pr-1">
-              <span className="flex items-center gap-1.5 bg-dv-cobalt px-1.5 py-0.5 font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-white">
+              <span className="flex items-center gap-1.5 bg-dv-porcelain px-1.5 py-0.5 font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-dv-porcelain-ink">
                 <span aria-hidden="true" className="size-1.5 animate-dv-blink rounded-full bg-white" />
                 Live
               </span>

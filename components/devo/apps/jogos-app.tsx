@@ -10,6 +10,7 @@ import { Mesa } from '@/components/devo/arcade/mesa'
 import { MiniProfileHost } from '@/components/devo/arcade/mini-profile'
 import { ResultScreen, type Running, Searching } from '@/components/devo/arcade/sala-match'
 import { Agenda, Apostas, Ranking, type RankView } from '@/components/devo/arcade/sala-tabs'
+import { MARBLE_INK } from '@/components/devo/arcade/sala-marble'
 import { Plaque } from '@/components/devo/arcade/sala-ui'
 import { Button, CRITICAL_MS, Countdown, Curtain, SceneBackdrop, Spinner, Tabs, Toast, ToastStack, useCurtain } from '@/components/devo/kit'
 import {
@@ -169,7 +170,8 @@ export function JogosApp() {
   return (
     <MiniProfileHost>
       <div className="relative flex h-full min-h-0 flex-col overflow-hidden bg-dv-ink text-dv-text">
-        {!running && <SalaScene endsAt={state.timerEndsAt} />}
+        {/* na fila, o radar cobre a sala: a cena 3D dá lugar ao fundo em CSS (sem desfocar WebGL ao vivo) */}
+        {!running && <SalaScene endsAt={state.timerEndsAt} quiet={tab !== 'mesa' || !!queue} />}
 
         <div className="relative z-10 shrink-0 px-4 pt-3">
           <h2 className="sr-only">Sala de Jogos</h2>
@@ -264,11 +266,44 @@ export function JogosApp() {
   )
 }
 
-/** Cena 3D da mesa atrás de tudo; pulsa em vermelho quando o Tempo do jogador fica crítico. */
-function SalaScene({ endsAt }: { endsAt: number }) {
+/**
+ * Cena 3D da mesa atrás de tudo; pulsa em vermelho quando o Tempo do jogador fica crítico. Nas abas
+ * de leitura (Agenda, Ranking, Apostas) a cena recua (`quiet`): mais véu e menos luz, para o texto
+ * nunca disputar com as casas do tabuleiro.
+ */
+function SalaScene({ endsAt, quiet }: { endsAt: number; quiet?: boolean }) {
   const now = useNow(10_000)
   const left = endsAt - now
-  return <SceneBackdrop preset="table" intensity={0.65} dim={0.5} alert={left > 0 && left <= CRITICAL_MS} />
+  const alert = left > 0 && left <= CRITICAL_MS
+  if (quiet) return <QuietRoom alert={alert} />
+  return <SceneBackdrop preset="table" intensity={0.65} dim={0.5} alert={alert} />
+}
+
+/**
+ * Fundo das abas de leitura: a mesma sala, desenhada em CSS (nítida em qualquer DPR), sem o 3D
+ * rasterizado por trás do texto. Mármore negro de veio cinza e piso xadrez em perspectiva sumindo no
+ * escuro; rubi só quando o Tempo do jogador está crítico.
+ */
+function QuietRoom({ alert }: { alert: boolean }) {
+  return (
+    <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden bg-dv-ink">
+      <span className="absolute inset-0 opacity-40" style={MARBLE_INK} />
+      <span
+        className="absolute inset-x-[-60%] bottom-[-6%] h-[52%] origin-bottom [transform:perspective(560px)_rotateX(64deg)]"
+        style={{
+          backgroundImage:
+            'linear-gradient(90deg, rgba(186,176,159,0.16) 1px, transparent 1px), linear-gradient(0deg, rgba(186,176,159,0.16) 1px, transparent 1px), conic-gradient(#26262a 25%, #0d0d0f 0 50%, #26262a 0 75%, #0d0d0f 0)',
+          backgroundSize: '96px 96px, 96px 96px, 192px 192px',
+          backgroundPosition: 'center bottom',
+          maskImage: 'linear-gradient(0deg, #000 0%, rgba(0,0,0,0.55) 45%, transparent 92%)',
+          WebkitMaskImage: 'linear-gradient(0deg, #000 0%, rgba(0,0,0,0.55) 45%, transparent 92%)',
+        }}
+      />
+      <span className="absolute inset-0 bg-[radial-gradient(85%_40%_at_50%_0%,rgba(236,229,216,0.07),transparent_70%)]" />
+      <span className="absolute inset-0 bg-[radial-gradient(120%_70%_at_50%_45%,transparent_40%,rgba(12,12,14,0.85)_100%)]" />
+      {alert && <span className="absolute inset-x-0 bottom-0 h-1/3 bg-[radial-gradient(60%_80%_at_50%_100%,rgba(163,18,31,0.2),transparent_70%)]" />}
+    </div>
+  )
 }
 
 function useArcadeAmbience(inGame: boolean) {
@@ -305,8 +340,8 @@ function Header({ data }: { data?: Dashboard }) {
         <span className={cn(me && me.score > 0 ? 'text-dv-gold-bright' : 'text-dv-text')}>{me ? formatPoints(me.score) : '—'}</span>
       </Plaque>
       <Plaque label="Posição">{me?.rank ? `#${me.rank}` : '—'}</Plaque>
-      <Plaque label="Reset do ranking">
-        {data ? <Countdown endsAt={data.week.resetsAt} size="sm" tone="text" sound={false} criticalMs={0} label="Reset do ranking" /> : '—'}
+      <Plaque label="Ranking zera">
+        {data ? <Countdown endsAt={data.week.resetsAt} size="sm" tone="text" sound={false} criticalMs={0} label="Ranking zera em" /> : '—'}
       </Plaque>
     </dl>
   )
