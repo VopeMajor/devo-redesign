@@ -1,4 +1,3 @@
-import { Analytics } from '@vercel/analytics/next'
 import type { Metadata, Viewport } from 'next'
 import {
   Almendra,
@@ -11,6 +10,12 @@ import {
   UnifrakturMaguntia,
 } from 'next/font/google'
 import './globals.css'
+
+/**
+ * Cloudflare Web Analytics (opcional, sem cookies). Desligado se não houver token no build
+ * (`NEXT_PUBLIC_CF_WEB_ANALYTICS_TOKEN`, ver docs/DEPLOY-CLOUDFLARE.md).
+ */
+const cfBeaconToken = process.env.NEXT_PUBLIC_CF_WEB_ANALYTICS_TOKEN?.trim()
 
 const cardBanner = Almendra({ subsets: ['latin'], weight: '700', variable: '--font-card-banner' })
 const cardTitle = Cinzel({ subsets: ['latin'], weight: ['500', '600', '700'], variable: '--font-card-title' })
@@ -90,7 +95,13 @@ export default function RootLayout({
       </head>
       <body className="font-serif antialiased">
         {children}
-        {process.env.NODE_ENV === 'production' && <Analytics />}
+        {process.env.NODE_ENV === 'production' && cfBeaconToken && (
+          <script
+            defer
+            src="https://static.cloudflareinsights.com/beacon.min.js"
+            data-cf-beacon={JSON.stringify({ token: cfBeaconToken })}
+          />
+        )}
       </body>
     </html>
   )

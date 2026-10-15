@@ -3,3 +3,14 @@ pmOnFail: ignore
 minimumReleaseAgeExclude:
   - '@next/*'
   - next
+  # OpenNext 1.20.12 / @opennextjs/aws 4.1.11 saíram junto com a correção de segurança do Next 16.4.1
+  # (14/10/2026) e são as primeiras versões que aceitam o Next 16.4.
+  - '@opennextjs/cloudflare'
+  - '@opennextjs/aws'
+
+# Scripts de instalação revisados (pnpm bloqueia os não listados). esbuild e workerd vêm do wrangler/OpenNext;
+# sharp (puxado pelo miniflare) não precisa compilar: usa os binários prontos de @img/sharp-*.
+allowBuilds:
+  esbuild: true
+  workerd: true
+  sharp: false
