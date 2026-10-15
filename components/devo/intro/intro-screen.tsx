@@ -131,10 +131,11 @@ export function IntroScreen({ onFinish, playerName }: { onFinish: () => void; pl
           do alto para o lugar (a câmera sobe da mina para o salão). */}
       <div aria-hidden="true" className="en-hall-in absolute inset-0">
         <SceneBackdrop preset="clockhall" intensity={0.65} dim={0.5} />
-        {/* Mármore, não noite: tira ~80% da saturação do salão (o céu índigo do preset vira grafite).
-            A noite violeta fica só como resto de luz. Candidato ao kit: `tone="marble"` no SceneBackdrop. */}
-        <div className="absolute inset-0 bg-[#7a7a7a] opacity-80 mix-blend-saturation" />
       </div>
+      {/* Mármore, não noite: tira ~80% da saturação do salão (o céu índigo do preset vira grafite).
+          A noite violeta fica só como resto de luz. Fica FORA da camada animada (en-hall-in), para a
+          mistura não ser refeita junto com a animação. Candidato ao kit: `tone="marble"` no SceneBackdrop. */}
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[#7a7a7a] opacity-80 mix-blend-saturation" />
       <div aria-hidden="true" className="en-surface pointer-events-none absolute inset-0 z-[1] overflow-hidden">
         <Image src="/images/prologue/mine.webp" alt="" fill sizes="100vw" className="object-cover" style={{ filter: 'grayscale(0.9) sepia(0.12) brightness(0.42) contrast(1.05)' }} />
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black" />

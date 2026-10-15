@@ -219,6 +219,7 @@ if (want('novato')) {
     await wait(2500)
     let n = 0
     let seenBorder = false
+    let seenKabum = false
     for (let i = 0; i < 90; i++) {
       await wait(900)
       if (i % 3 === 0) await shot(page, `04-tutorial-${String(n++).padStart(2, '0')}`)
@@ -230,6 +231,12 @@ if (want('novato')) {
         break
       }
       if (await page.getByText(/pular introdução/i).count()) await advanceDialogue(page)
+      // KABUM! (troca sem volta): letreiro em porcelana com o corte rubi, depois que ele bate no diagrama.
+      if (!seenKabum && (await page.getByText('Kabum!', { exact: true }).count())) {
+        seenKabum = true
+        await wait(1500)
+        await shot(page, '04-tutorial-kabum')
+      }
       // Fronteira noite → papel (DIRECAO-2 §2): a folha de registro sendo impressa, no meio da cortina.
       if (!seenBorder && (await freezeCurtain(page, 'Inicializando DEVO', 1150, 400))) {
         seenBorder = true
