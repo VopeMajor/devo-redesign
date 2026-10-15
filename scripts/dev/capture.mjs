@@ -712,7 +712,15 @@ if (want('partidas')) {
   for (const game of ['Memory Rush', 'Living Chess', 'Bomba Quente', 'Blefe']) {
     const slug = game.toLowerCase().replace(/\s+/g, '-')
     await step(`partida-${slug}`, async () => {
-      // Sai da partida anterior nas duas contas: dois 3D (jogo + sala) ao mesmo tempo no WebGL por
+      // Sai da partida anterior pelo próprio jogo (desistência registrada no servidor) e fecha o resultado:
+      // sem isso a sala continua ativa e a próxima fila reconecta nela.
+      for (const { page } of [A, B]) {
+        await tryClick(page.getByRole('button', { name: /desistir e sair/i }).first(), 4000)
+        await wait(1500)
+        await tryClick(page.getByRole('button', { name: /voltar à mesa/i }).first(), 4000)
+      }
+      await wait(1000)
+      // Depois descarrega as duas páginas: dois 3D (jogo + sala) ao mesmo tempo no WebGL por
       // software do CI travam a página e o clique em "Jogar"/"Sala de Jogos" estoura o tempo.
       for (const { page } of [A, B]) await page.goto('about:blank').catch(() => {})
       for (const [who, { page }] of [['A', A], ['B', B]]) {
@@ -728,7 +736,7 @@ if (want('partidas')) {
         // Quem saiu da partida anterior sem fechar volta para a sala dela (reconexão) e cai no
         // resultado: fecha o resultado e entra de novo na fila do jogo certo.
         const back = page.getByRole('button', { name: /voltar à mesa/i })
-        if (await back.first().waitFor({ state: 'visible', timeout: 15000 }).then(() => true, () => false)) {
+        if (await back.first().waitFor({ state: 'visible', timeout: 5000 }).then(() => true, () => false)) {
           await shot(page, `40-partida-${slug}-reconexao-${who}`)
           await tryClick(back.first(), 4000)
           await wait(1500)
