@@ -15,5 +15,12 @@ for (const [outFile, out] of Object.entries(meta.outputs ?? {})) {
   }
 }
 const kib = (n) => (n / 1024).toFixed(1).padStart(9) + ' KiB'
+const files = []
+for (const [outFile, out] of Object.entries(meta.outputs ?? {})) {
+  if (outFile.endsWith('.map')) continue
+  for (const [input, info] of Object.entries(out.inputs ?? {})) files.push([input, info.bytesInOutput])
+}
 console.log(`total ${kib(total)}  (${process.argv[2]})`)
 for (const [k, v] of [...byPkg].sort((a, b) => b[1] - a[1]).slice(0, 40)) console.log(`${kib(v)}  ${k}`)
+console.log('\nmaiores arquivos:')
+for (const [k, v] of files.sort((a, b) => b[1] - a[1]).slice(0, 30)) console.log(`${kib(v)}  ${k}`)

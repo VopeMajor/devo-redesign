@@ -111,7 +111,10 @@ jobs:
           node .github/scripts/cf-bundle-top.mjs .wrangler-dist/bundle-meta.json > report/top-worker.txt 2>&1 || true
           ls -la .open-next/server-functions/default/ | tee report/server-functions.txt
           du -sh .open-next/assets | tee -a report/server-functions.txt
-          grep -rlE "three/build|from\"three\"|WebGLRenderer" .open-next/server-functions/default --include=*.mjs --include=*.js 2>/dev/null | head -20 > report/three-no-servidor.txt || true
+          # three.js / react-three-fiber no bundle do servidor (só deveriam ir para o cliente)
+          for f in .open-next/server-functions/default/handler.mjs .wrangler-dist/worker.js; do
+            echo "$f: THREE.WebGLRenderer=$(grep -o 'THREE.WebGLRenderer' "$f" | wc -l) react-three-fiber=$(grep -o 'R3F' "$f" | wc -l)"
+          done > report/three-no-servidor.txt || true
 
       - name: Perfil de inicialização (wrangler check startup)
         if: steps.build.outcome == 'success'
