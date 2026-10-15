@@ -132,40 +132,47 @@ export function EmblemPulso(p: EmblemProps) {
   )
 }
 
-/** Mensagens — carta alada: envelope com selo de estrela e duas asas de três penas. */
+/** Mensagens — carta alada: envelope de filete com selo de estrela, asas de três agulhas finas e estrela no alto. */
 export function EmblemMensagens(p: EmblemProps) {
+  // Peso igualado ao de Trocas/Record (rodada 3 do Sistema): agulhas finas e curtas, envelope em filete.
   const feathers: [number, number, number, number, number][] = [
-    [14, 21, 2.5, 11, 1.7],
-    [14, 25, 1.5, 19.5, 1.6],
-    [14, 29, 3.5, 28.5, 1.4],
+    [15.5, 20.5, 4.5, 12.5, 1.15],
+    [15.5, 24, 3, 20.6, 1.05],
+    [15.5, 27.5, 5.5, 28.5, 0.95],
   ]
   return (
     <Svg {...p}>
-      <Line d="M14.5 15H33.5V33H14.5Z" w={2} />
-      <Line d="M14.5 15L24 24L33.5 15" w={1.8} />
-      <Cut d={circle(24, 25.5, 3.6) + star(24, 25.5, 2.4, 0.16)} />
+      <Line d="M15.5 16H32.5V32H15.5Z" w={1.8} />
+      <Line d="M15.5 16L24 24.2L32.5 16" w={1.3} />
+      <Cut d={circle(24, 25.2, 3.4) + star(24, 25.2, 2.3, 0.16)} />
       {feathers.map(([x1, y1, x2, y2, w]) => (
         <g key={y1}>
-          <path d={needle(x1, y1, x2, y2, w, 0.35)} />
-          <path d={needle(mx(x1), y1, mx(x2), y2, w, 0.35)} />
+          <path d={needle(x1, y1, x2, y2, w, 0.3)} />
+          <path d={needle(mx(x1), y1, mx(x2), y2, w, 0.3)} />
         </g>
       ))}
-      <path d={needle(24, 33, 24, 45, 1.3, 0.3)} />
+      <path d={star(24, 9, 3.6, 0.18)} />
+      <path d={needle(24, 32, 24, 45.5, 1.2, 0.3)} />
     </Svg>
   )
 }
 
-/** Cartas — leque de três cartas; a da frente cheia com a estrela recortada e pingente. */
+/** Cartas — leque de três cartas; a da frente cheia com filete gravado, a estrela vazada e pingentes. */
 export function EmblemCartas(p: EmblemProps) {
+  const card = (x0: number, y0: number, x1: number, y1: number, r: number) =>
+    `M${f(x0 + r)} ${f(y0)}H${f(x1 - r)}Q${f(x1)} ${f(y0)} ${f(x1)} ${f(y0 + r)}V${f(y1 - r)}Q${f(x1)} ${f(y1)} ${f(x1 - r)} ${f(y1)}H${f(x0 + r)}Q${f(x0)} ${f(y1)} ${f(x0)} ${f(y1 - r)}V${f(y0 + r)}Q${f(x0)} ${f(y0)} ${f(x0 + r)} ${f(y0)}Z`
   return (
     <Svg {...p}>
-      <g fill="none" strokeWidth={1.8}>
+      <g fill="none" strokeWidth={1.6}>
         <rect x="9.5" y="12" width="14" height="22" rx="1.6" transform="rotate(-17 16.5 23)" />
         <rect x="24.5" y="12" width="14" height="22" rx="1.6" transform="rotate(17 31.5 23)" />
       </g>
-      <Cut d={'M18.6 8.5H29.4Q31 8.5 31 10.1V31.9Q31 33.5 29.4 33.5H18.6Q17 33.5 17 31.9V10.1Q17 8.5 18.6 8.5Z' + star(24, 21, 6.4, 0.16)} />
-      <path d={needle(24, 33.5, 24, 46, 1.5, 0.3)} />
-      <path d={needle(24, 1.5, 24, 8.5, 1.2, 0.5)} />
+      {/* carta da frente: silhueta + filete gravado (anel fino vazado) + estrela vazada */}
+      <Cut d={card(17, 8.5, 31, 33.5, 1.6) + card(18.7, 10.2, 29.3, 31.8, 0.8) + card(19.5, 11, 28.5, 31, 0.5) + star(24, 21, 5.6, 0.16)} />
+      <path d={needle(24, 33.5, 24, 46, 1.4, 0.3)} />
+      <path d={needle(24, 1.2, 24, 8.5, 1.1, 0.55)} />
+      <path d={lozenge(11.2, 37.6, 1.3, 1.8)} />
+      <path d={lozenge(36.8, 37.6, 1.3, 1.8)} />
     </Svg>
   )
 }
@@ -186,40 +193,44 @@ export function EmblemTrocas(p: EmblemProps) {
   )
 }
 
-/** Ajustes — bússola: rosa de oito agulhas sobre anel duplo. */
+/** Ajustes — bússola: rosa de agulhas finas sobre anel de filete duplo, remates em losango. */
 export function EmblemAjustes(p: EmblemProps) {
+  // Mais leve (rodada 3 do Sistema): agulhas cardeais finas, diagonais curtas por dentro do anel e
+  // miolo vazado — o mesmo peso de Trocas/Record na grade.
+  const diag = [45, 135, 225, 315].map((a) => (a * Math.PI) / 180)
   return (
     <Svg {...p}>
-      <Line d={circle(24, 24, 13.5)} w={1.5} />
-      <Line d={circle(24, 24, 16.2)} w={0.9} />
-      <path d={needle(24, 24, 24, 1, 3.4, 0.24)} />
-      <path d={needle(24, 24, 24, 47, 3.4, 0.24)} />
-      <path d={needle(24, 24, 1, 24, 3.4, 0.24)} />
-      <path d={needle(24, 24, 47, 24, 3.4, 0.24)} />
-      {[
-        [12, 12],
-        [36, 12],
-        [12, 36],
-        [36, 36],
-      ].map(([x, y]) => (
-        <path key={`${x}${y}`} d={needle(24, 24, x, y, 2, 0.3)} />
+      <Line d={circle(24, 24, 15)} w={1.3} />
+      <Line d={circle(24, 24, 11.6)} w={0.7} />
+      <path d={needle(24, 24, 24, 1.5, 2.3, 0.3)} />
+      <path d={needle(24, 24, 24, 46.5, 2.3, 0.3)} />
+      <path d={needle(24, 24, 1.5, 24, 2.3, 0.3)} />
+      <path d={needle(24, 24, 46.5, 24, 2.3, 0.3)} />
+      {diag.map((r) => (
+        <path key={r} d={needle(24, 24, 24 + Math.sin(r) * 13.2, 24 - Math.cos(r) * 13.2, 1.2, 0.3)} />
       ))}
-      <path d={circle(24, 24, 2.8)} />
+      {diag.map((r) => (
+        <path key={`l${r}`} d={lozenge(24 + Math.sin(r) * 18.6, 24 - Math.cos(r) * 18.6, 1.3, 1.3)} />
+      ))}
+      <Cut d={circle(24, 24, 3.4) + circle(24, 24, 1.5)} />
     </Svg>
   )
 }
 
-/** Sala de Jogos — coroa de cinco pontas com losango recortado e estrela acima. */
+/** Sala de Jogos — coroa de filete com cinco pontas rematadas por estrelas, losango no peito e faixa gravada. */
 export function EmblemJogos(p: EmblemProps) {
   return (
     <Svg {...p}>
-      <Cut d={'M12 32L8.6 16.8L17.4 24.2L24 12L30.6 24.2L39.4 16.8L36 32Z' + lozenge(24, 25.5, 2.6, 3.6)} />
-      <path d="M11.6 33.8H36.4V37.4H11.6Z" />
-      <Line d="M9 40.6H39" w={1.6} />
-      <path d={circle(8.4, 15.4, 1.9)} />
-      <path d={circle(39.6, 15.4, 1.9)} />
-      <path d={star(24, 6.2, 5, 0.18)} />
-      <path d={needle(24, 40.6, 24, 47, 1.2, 0.3)} />
+      <Line d="M12.4 31.6L9.4 17.6L17.6 24.4L24 13.4L30.4 24.4L38.6 17.6L35.6 31.6Z" w={1.8} />
+      <path d={lozenge(24, 25.2, 2.4, 3.6)} />
+      <path d={lozenge(16.2, 28.2, 1.1, 1.5)} />
+      <path d={lozenge(31.8, 28.2, 1.1, 1.5)} />
+      <Cut d="M11.6 33.6H36.4V37.6H11.6Z M14 35.1H34V36.1H14Z" />
+      <path d={star(9, 14.6, 2.8, 0.2)} />
+      <path d={star(39, 14.6, 2.8, 0.2)} />
+      <path d={star(24, 7, 4.8, 0.18)} />
+      <Line d="M9 41H39" w={1.2} />
+      <path d={needle(24, 41, 24, 47, 1.1, 0.3)} />
     </Svg>
   )
 }

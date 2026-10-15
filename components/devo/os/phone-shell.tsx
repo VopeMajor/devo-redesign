@@ -6,10 +6,12 @@ import { PULSE_CRITICAL_MS, pulseRemaining, pulseRing } from '@/lib/devo/pulse'
 import type { AppId } from '@/lib/devo/types'
 import { cn } from '@/lib/utils'
 import { formatClock, formatDuration, useMediaQuery, useNow } from '../hooks'
-import { Badge as KitBadge } from '../kit/badge'
 import { IconButton } from '../kit/button'
-import { Frame } from '../kit/frame'
-import { GlyphArrow, GlyphDiamond, GlyphHourglass, toRoman } from '../kit/glyphs'
+import { FrameCorners } from '../kit/frame'
+import { SYSTEM_EMBLEMS } from '../kit/emblems'
+import { FUTURE_SYSTEMS, type FutureSystemId } from '../kit/interior/locked'
+import { MarbleSlab, StateSeal } from './shell-ui'
+import { GlyphArrow, GlyphDiamond, GlyphHourglass, GlyphKeyhole, toRoman } from '../kit/glyphs'
 import { SceneBackdrop } from '../kit/scene'
 import { TimeDigits } from '../kit/time'
 import { Divider, Kicker } from '../kit/typography'
@@ -107,7 +109,9 @@ export function PhoneShell({ current, onOpen, onHome }: { current: AppId | null;
   return (
     <div className="fixed inset-0 flex flex-col overflow-hidden bg-dv-ink text-dv-text">
       {/* Uma cena só: viva na home; com um app aberto fica no quadro estático (o app pode ter a sua). */}
-      <SceneBackdrop preset="cathedral" intensity={0.75} dim={current && !entering ? 0.55 : 0.3} alert={critical} staticOnly={!!current && !entering} />
+      <SceneBackdrop preset="cathedral" intensity={0.75} dim={current && !entering ? 0.55 : 0.3} staticOnly={!!current && !entering} />
+      {/* Crítico: a home NÃO vira vermelha. Fica no mármore; a vinheta rubi pulsa nas bordas. */}
+      {critical && <CriticalVignette />}
 
       <StatusBar now={now} remaining={remaining} critical={critical} unread={totalUnread} expanded={shade} onToggle={() => setShade((s) => !s)} />
 
@@ -150,13 +154,16 @@ export function PhoneShell({ current, onOpen, onHome }: { current: AppId | null;
 
       {shade && <Shade remaining={remaining} critical={critical} reduced={reduced} onClose={() => setShade(false)} onOpen={open} />}
 
-      {/* Um aviso por vez, embaixo (nunca sobre o cabeçalho nem sobre o herói/estado crítico). */}
+      {/*
+        Regra única de aviso do shell: um por vez, no TOPO, logo abaixo da barra de status, sobre a faixa
+        do cabeçalho (do app ou da saudação da home) — nunca sobre o conteúdo, o herói ou o dock.
+      */}
       <ToastStack
         onOpen={(id) => open(id)}
         compact
         max={1}
         hold={!toastsReady || shade}
-        className={cn('inset-x-3', current ? 'bottom-[calc(env(safe-area-inset-bottom)+36px)]' : 'bottom-[calc(env(safe-area-inset-bottom)+148px)]')}
+        className="inset-x-3 top-[calc(env(safe-area-inset-top)+50px)]"
       />
     </div>
   )
@@ -190,24 +197,24 @@ function StatusBar({
       aria-label="Abrir central de avisos"
       className="dv-focus relative z-30 w-full shrink-0 pt-[env(safe-area-inset-top)] text-left"
     >
-      <span aria-hidden="true" className="absolute inset-0 bg-[linear-gradient(180deg,rgba(5,7,13,0.92),rgba(5,7,13,0.55))] backdrop-blur-[2px]" />
+      <span aria-hidden="true" className="absolute inset-0 bg-[linear-gradient(180deg,rgba(10,10,12,0.94),rgba(10,10,12,0.6))] backdrop-blur-[2px]" />
       <span className="relative flex items-center justify-between gap-2 px-4" style={{ height: STATUS_H }}>
         <span className="dv-tabular w-[72px] font-mono text-[13px] text-dv-text-2">{formatClock(now)}</span>
 
         <span
           className={cn(
             'relative flex h-7 items-center gap-1.5 px-3',
-            critical ? 'text-dv-blood-text' : 'text-dv-cobalt-text',
+            critical ? 'text-dv-blood-text' : 'text-dv-text',
           )}
           style={{ '--dv-cut': '8px' } as CSSProperties}
         >
           <span
             aria-hidden="true"
-            className={cn('dv-cut-hex absolute inset-0', critical ? 'animate-dv-alert bg-dv-blood/35' : 'bg-dv-cobalt-dim/80')}
+            className={cn('dv-cut-hex absolute inset-0', critical ? 'animate-dv-alert bg-dv-blood/55' : 'bg-[linear-gradient(100deg,rgba(206,201,192,0.5),rgba(186,176,159,0.25)_50%,rgba(206,201,192,0.5))]')}
           />
-          <span aria-hidden="true" className={cn('dv-cut-hex absolute inset-px', critical ? 'bg-[#1d0609]' : 'bg-dv-ink-2/90')} style={{ '--dv-cut': '7.6px' } as CSSProperties} />
+          <span aria-hidden="true" className={cn('dv-cut-hex absolute inset-px', critical ? 'bg-[#1d0609]' : 'bg-[linear-gradient(180deg,#1f1f22,#111113)]')} style={{ '--dv-cut': '7.6px' } as CSSProperties} />
           <GlyphHourglass className={cn('relative size-3.5', critical && 'animate-dv-blink')} />
-          <TimeDigits value={formatDuration(remaining)} size="sm" tone={critical ? 'blood' : 'cobalt'} flip={false} blinkColon={critical} label="Tempo restante" className="relative text-[17px]" />
+          <TimeDigits value={formatDuration(remaining)} size="sm" tone={critical ? 'blood' : 'text'} flip={false} blinkColon={critical} label="Tempo restante" className="relative text-[17px]" />
         </span>
 
         <span className="flex w-[72px] items-center justify-end gap-1.5 text-dv-text-2" aria-hidden="true">
@@ -278,7 +285,9 @@ function HomeScreen({
         <PulseCard remaining={remaining} critical={critical} onOpen={() => onOpen('pulso')} />
       </div>
 
-      <section aria-label="Aplicativos" className="mt-5">
+      <section aria-label="Aplicativos" className="relative mt-5">
+        {/* Véu atrás da grade: as cartas que flutuam na cena não passam atrás dos rótulos (< 15%). */}
+        <span aria-hidden="true" className="pointer-events-none absolute -inset-x-4 -bottom-3 top-6 -z-10 bg-[linear-gradient(180deg,transparent,rgba(12,12,14,0.88)_22%,rgba(12,12,14,0.88)_80%,transparent)]" />
         <div className="animate-dv-fade flex items-center gap-3 px-1 [animation-delay:220ms]">
           <span className="dv-label text-[10px] text-dv-text-3">Aplicativos</span>
           <span aria-hidden="true" className="h-px flex-1 bg-gradient-to-r from-dv-line-strong to-transparent" />
@@ -326,6 +335,8 @@ function HomeScreen({
         ) : null}
       </section>
 
+      <LockedSystems />
+
       <div className="flex shrink-0 grow flex-col items-center justify-end gap-2 pb-3 pt-5 text-center">
         <Divider variant="filigree" tone="gold" className="animate-dv-fade w-56 opacity-60 [animation-delay:520ms]" />
         <p className="animate-dv-fade dv-label text-[10px] tracking-[0.42em] text-dv-text-3 [animation-delay:560ms]">O tempo é a vida</p>
@@ -334,13 +345,13 @@ function HomeScreen({
     </div>
 
       <nav aria-label="Dock" className="animate-dv-rise shrink-0 px-4 pb-2 [animation-delay:420ms]">
-        <Frame variant="ink" cutSize={14} pad="none" innerClassName="px-2 pb-2 pt-3" className="drop-shadow-[0_-10px_24px_rgba(0,0,0,0.6)]">
+        <MarbleSlab edge="line" cut={14} innerClassName="px-2 pb-2 pt-3" className="drop-shadow-[0_-10px_24px_rgba(0,0,0,0.6)]">
           <ul className="grid grid-cols-3">
             {DOCK_APPS.map((id, i) => (
               <PhoneIcon key={id} id={id} onOpen={onOpen} unread={state.unread[id]} delay={480 + i * 60} />
             ))}
           </ul>
-        </Frame>
+        </MarbleSlab>
       </nav>
     </div>
   )
@@ -365,8 +376,8 @@ function HomeStrip({
   label?: string
 }) {
   const line = tone === 'alert' ? 'bg-dv-blood/60' : tone === 'gold' ? 'bg-dv-gold/50' : 'bg-dv-line-strong'
-  const bar = tone === 'alert' ? 'bg-dv-blood' : tone === 'gold' ? 'bg-dv-gold' : 'bg-dv-cobalt'
-  const kick = tone === 'alert' ? 'text-dv-blood-text' : tone === 'gold' ? 'text-dv-gold' : 'text-dv-cobalt-text'
+  const bar = tone === 'alert' ? 'bg-dv-blood' : tone === 'gold' ? 'bg-dv-gold' : 'bg-dv-text-2'
+  const kick = tone === 'alert' ? 'text-dv-blood-text' : tone === 'gold' ? 'text-dv-gold' : 'text-dv-text-2'
   return (
     <button
       type="button"
@@ -376,7 +387,8 @@ function HomeStrip({
       style={{ '--dv-cut': '10px' } as CSSProperties}
     >
       <span aria-hidden="true" className={cn('dv-cut-diag absolute inset-0 -z-10', line)} />
-      <span aria-hidden="true" className="dv-cut-diag absolute inset-px -z-10 bg-[linear-gradient(100deg,var(--dv-ink-3),var(--dv-ink-2)_70%)] group-hover:bg-dv-ink-3" style={{ '--dv-cut': '9.6px' } as CSSProperties} />
+      <span aria-hidden="true" className="dv-cut-diag dv-marble-dark absolute inset-px -z-10" style={{ '--dv-cut': '9.6px' } as CSSProperties} />
+      <span aria-hidden="true" className="dv-cut-diag absolute inset-px -z-10 bg-[linear-gradient(100deg,rgba(255,255,255,0.05),transparent_45%,rgba(0,0,0,0.3))] transition-colors group-hover:bg-white/[0.04]" style={{ '--dv-cut': '9.6px' } as CSSProperties} />
       <span aria-hidden="true" className={cn('absolute inset-y-2.5 left-0 w-[2px]', bar)} />
       <span className="min-w-0 flex-1">
         <span className="dv-label flex justify-between gap-2 text-[10px]">
@@ -406,7 +418,7 @@ function SummonsCard({ onOpen }: { onOpen: () => void }) {
       aria-label={next ? `Deadly Vote ${next.number}: ${next.title}. Abrir o Record` : 'Nenhuma convocação ativa. Abrir o Record'}
       className="dv-focus group block w-full text-left transition-transform duration-[120ms] active:scale-[0.985]"
     >
-      <Frame tone={live ? 'blood' : 'neutral'} cutSize={12} pad="none" innerClassName="flex items-center gap-3 py-3 pl-3 pr-3">
+      <MarbleSlab edge={live ? 'blood' : 'line'} cut={12} innerClassName="flex items-center gap-3 py-3 pl-3 pr-3">
         <span aria-hidden="true" className="relative grid size-12 shrink-0 place-items-center">
           <span className="dv-cut absolute inset-0 bg-[linear-gradient(135deg,var(--dv-gold-bright),var(--dv-gold-deep)_45%,var(--dv-gold))] [--dv-cut:12px]" />
           <span className="dv-cut absolute inset-px bg-dv-ink-2 [--dv-cut:11.6px]" />
@@ -423,14 +435,14 @@ function SummonsCard({ onOpen }: { onOpen: () => void }) {
             {next ? `${formatVoteDate(next.startsAt)}${next.joined ? ' · você está inscrito' : ' · inscrições abertas'}` : 'O Dealer convoca pelo Record. Fique atento.'}
           </span>
         </span>
-        {next && (next.joined ? <KitBadge tone="cobalt" dot>Inscrito</KitBadge> : live ? <KitBadge tone="blood" live>Ao vivo</KitBadge> : null)}
+        {next && (next.joined ? <StateSeal>Inscrito</StateSeal> : live ? <StateSeal tone="blood" live>Ao vivo</StateSeal> : null)}
         <GlyphArrow className="size-4 shrink-0 text-dv-text-3 transition-transform group-hover:translate-x-0.5" />
-      </Frame>
+      </MarbleSlab>
     </button>
   )
 }
 
-/** Cartão-herói "Tempo restante": dígitos de impacto à esquerda, mostrador inteiro à direita. */
+/** Cartão-herói "Tempo restante": tampo de mármore negro, dígitos de impacto e o mostrador de aço. */
 function PulseCard({ remaining, critical, onOpen }: { remaining: number; critical: boolean; onOpen: () => void }) {
   const { state } = useDevo()
   const { excess } = pulseRing(remaining)
@@ -442,16 +454,19 @@ function PulseCard({ remaining, critical, onOpen }: { remaining: number; critica
       aria-label={`Tempo restante ${text}. Abrir o relógio do pulso`}
       className="dv-focus group block w-full text-left transition-transform duration-[120ms] active:scale-[0.985]"
     >
-      <Frame variant="glass" tone={critical ? 'blood' : 'gold'} ornate glow cutSize={16} pad="none" innerClassName="flex min-h-[196px] items-center gap-2 py-5 pl-5 pr-3">
+      <MarbleSlab edge={critical ? 'blood' : 'steel'} cut={16} glow innerClassName="flex min-h-[196px] items-center gap-2 py-5 pl-5 pr-3">
+        <FrameCorners tone={critical ? 'blood' : 'gold'} />
         {critical && (
-          <span aria-hidden="true" className="dv-cut pointer-events-none absolute inset-px overflow-hidden [--dv-cut:15.6px]">
-            <span className="animate-dv-alert absolute inset-0 bg-[radial-gradient(80%_80%_at_0%_100%,rgba(213,31,43,0.28),transparent_70%)]" />
+          <span aria-hidden="true" className="dv-cut pointer-events-none absolute -inset-y-5 -left-5 -right-3 overflow-hidden [--dv-cut:15.6px]">
+            <span className="animate-dv-alert absolute inset-0 bg-[radial-gradient(80%_80%_at_0%_100%,rgba(163,18,31,0.32),transparent_70%)]" />
+            {/* faixa diagonal de alerta que corta o tampo (não o texto: passa por baixo dos dígitos) */}
+            <span className="absolute -right-10 bottom-5 h-[14px] w-[62%] -rotate-[14deg] bg-[repeating-linear-gradient(-55deg,rgba(163,18,31,0.9)_0_7px,rgba(63,6,11,0.9)_7px_14px)] opacity-80 shadow-[0_0_14px_rgba(163,18,31,0.6)]" />
           </span>
         )}
         <span className="relative flex min-w-0 flex-1 flex-col">
           <Kicker tone={critical ? 'blood' : 'gold'}>Tempo restante</Kicker>
           <span className="mt-3 block">
-            <TimeDigits value={text} size="lg" tone={critical ? 'blood' : 'text'} blinkColon={critical} className="text-[40px]" />
+            <TimeDigits value={text} size="lg" tone={critical ? 'blood' : 'text'} blinkColon={critical} className="text-[40px] [text-shadow:0_2px_10px_rgba(0,0,0,0.8)]" />
           </span>
           <span aria-hidden="true" className="mt-1 grid w-fit grid-cols-[1.2em_0.34em_1.2em_0.34em_1.2em] text-[40px] leading-none">
             {['Horas', '', 'Min', '', 'Seg'].map((u, i) => (
@@ -462,15 +477,13 @@ function PulseCard({ remaining, critical, onOpen }: { remaining: number; critica
           </span>
           <span className="mt-4 flex flex-wrap items-center gap-2">
             {critical ? (
-              <KitBadge tone="blood" live>
+              <StateSeal tone="blood" live>
                 Crítico
-              </KitBadge>
+              </StateSeal>
             ) : (
-              <KitBadge tone="cobalt" dot>
-                Estável
-              </KitBadge>
+              <StateSeal>Estável</StateSeal>
             )}
-            {excess > 0 && <KitBadge tone="gold">+72h</KitBadge>}
+            {excess > 0 && <StateSeal tone="quiet">+72h</StateSeal>}
           </span>
         </span>
         <span aria-hidden="true" className="relative grid size-[136px] shrink-0 place-items-center">
@@ -479,9 +492,58 @@ function PulseCard({ remaining, critical, onOpen }: { remaining: number; critica
             Abrir <GlyphArrow className="size-3" />
           </span>
         </span>
-      </Frame>
+      </MarbleSlab>
     </button>
   )
+}
+
+/** Vinheta rubi pulsando nas bordas da home (estado crítico). O centro continua mármore negro. */
+function CriticalVignette() {
+  return (
+    <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-[1]">
+      <div className="animate-dv-alert absolute inset-0 bg-[radial-gradient(120%_85%_at_50%_45%,transparent_58%,rgba(163,18,31,0.34)_88%,rgba(63,6,11,0.6)_100%)]" />
+    </div>
+  )
+}
+
+/**
+ * Os seis sistemas reservados (Direção 2 §3) como emblemas trancados da mesma família: cinza a 60%
+ * com cadeado. Informação, não botão.
+ */
+function LockedSystems() {
+  return (
+    <section aria-label="Sistemas em breve" className="mt-5">
+      <div className="animate-dv-fade flex items-center gap-3 px-1 [animation-delay:520ms]">
+        <span className="dv-label text-[10px] text-dv-text-3">Em breve</span>
+        <span aria-hidden="true" className="h-px flex-1 bg-gradient-to-r from-dv-line-strong to-transparent" />
+        <span className="dv-label text-[10px] text-dv-text-3">Trancado pelo Anfitrião</span>
+      </div>
+      <ul className="animate-dv-fade mt-3 grid grid-cols-6 gap-1 [animation-delay:560ms]">
+        {FUTURE_SYSTEMS.map((f) => {
+          const E = SYSTEM_EMBLEMS[f.id]
+          return (
+            <li key={f.id} className="flex flex-col items-center gap-1.5" title={f.name}>
+              <span className="relative grid size-11 place-items-center">
+                <E className="size-9 text-dv-text-3 opacity-60" />
+                <GlyphKeyhole aria-hidden="true" className="absolute -bottom-0.5 -right-0.5 size-3.5 rounded-full bg-dv-ink p-[1px] text-dv-gold" />
+              </span>
+              <span className="sr-only">{f.name}: bloqueado</span>
+              <span aria-hidden="true" className="dv-label line-clamp-2 text-center text-[10px] leading-[1.25] tracking-[0.06em] text-dv-text-3">{SHORT_NAME[f.id]}</span>
+            </li>
+          )
+        })}
+      </ul>
+    </section>
+  )
+}
+
+const SHORT_NAME: Record<FutureSystemId, string> = {
+  torres: 'Torres',
+  poco: 'Poço',
+  virtudes: 'Virtudes',
+  arcanos: 'Arcanos',
+  corporacoes: 'Corpo­rações',
+  mascaras: 'Máscaras',
 }
 
 function PhoneIcon({ id, onOpen, unread, delay = 0 }: { id: AppId; onOpen: (id: AppId) => void; unread?: number; delay?: number }) {
@@ -633,30 +695,31 @@ function Shade({
   const top = `calc(env(safe-area-inset-top) + ${STATUS_H}px)`
   return (
     <>
-      <div aria-hidden="true" onClick={onClose} className="animate-dv-fade absolute inset-x-0 bottom-0 z-30 bg-dv-ink/70 backdrop-blur-[2px]" style={{ top }} />
+      <div aria-hidden="true" onClick={onClose} className="animate-dv-fade absolute inset-x-0 bottom-0 z-30 bg-black/70 backdrop-blur-[2px]" style={{ top }} />
       <div ref={ref} className="absolute inset-x-0 z-40 flex max-h-[82%] flex-col" style={{ top }}>
-        <span aria-hidden="true" className="absolute inset-0 bg-[linear-gradient(180deg,rgba(10,15,28,0.97),rgba(5,7,13,0.97))] backdrop-blur-xl" />
-        <span aria-hidden="true" className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-dv-gold/60 to-transparent" />
+        {/* folha de mármore negro com veio, filete de aço embaixo */}
+        <span aria-hidden="true" className="dv-marble-dark absolute inset-0" />
+        <span aria-hidden="true" className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.25),transparent_30%,rgba(0,0,0,0.35))]" />
+        <span aria-hidden="true" className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-dv-gold/70 to-transparent" />
+        <span aria-hidden="true" className="absolute inset-x-0 bottom-[3px] h-px bg-gradient-to-r from-transparent via-dv-gold/25 to-transparent" />
 
         {/* painel rápido: pulso + som */}
         <div className="relative px-3 pt-3">
-          <Frame tone={critical ? 'blood' : 'cobalt'} cutSize={12} pad="none" innerClassName="flex items-center gap-3 py-2.5 pl-4 pr-2">
+          <MarbleSlab edge={critical ? 'blood' : 'steel'} cut={12} innerClassName="flex items-center gap-3 py-2.5 pl-4 pr-2">
             <GlyphHourglass className={cn('size-5 shrink-0', critical ? 'text-dv-blood-text' : 'text-dv-gold')} />
             <div className="min-w-0 flex-1">
               <p className="dv-label text-[10px] text-dv-text-3">Pulso</p>
-              <TimeDigits value={formatDuration(remaining)} size="md" tone={critical ? 'blood' : 'cobalt'} flip={false} label="Tempo restante" className="mt-0.5" />
+              <TimeDigits value={formatDuration(remaining)} size="md" tone={critical ? 'blood' : 'text'} flip={false} label="Tempo restante" className="mt-0.5" />
             </div>
             {critical ? (
-              <KitBadge tone="blood" live>
+              <StateSeal tone="blood" live>
                 Crítico
-              </KitBadge>
+              </StateSeal>
             ) : (
-              <KitBadge tone="cobalt" dot>
-                Estável
-              </KitBadge>
+              <StateSeal>Estável</StateSeal>
             )}
             <SoundToggle compact className="min-h-11 min-w-11 justify-center text-dv-gold/80 hover:text-dv-gold-bright" />
-          </Frame>
+          </MarbleSlab>
         </div>
 
         <div className="relative mt-3 flex min-h-0 flex-1 flex-col">

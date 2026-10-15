@@ -20,6 +20,9 @@ import { AppGlyphTile, Badge } from './app-icon'
 import { NotificationList, ToastStack } from './notifications'
 import { PULSE_CRITICAL_MS, pulseRemaining } from '@/lib/devo/pulse'
 import { useOsNav } from './os-nav'
+import { PulseDial } from './pulse-dial'
+import { MarbleSlab, StateSeal } from './shell-ui'
+import { FrameCorners } from '../kit/frame'
 
 type Win = { id: AppId; x: number; y: number; z: number; minimized: boolean; maximized: boolean }
 
@@ -92,11 +95,19 @@ export function DesktopShell() {
 
   return (
     <div className="fixed inset-0 overflow-hidden bg-dv-ink text-dv-text" onPointerDown={() => setSelected(null)}>
-      {/* Cena viva só com a mesa livre; com janelas abertas fica no quadro estático (os apps podem ter a sua). */}
-      <SceneBackdrop preset="cathedral" intensity={0.8} dim={visible.length ? 0.55 : 0.4} alert={critical} staticOnly={visible.length > 0} />
+      {/*
+        Papel de parede = o salão do relógio da Jornada (mostrador ao fundo, piso de mármore xadrez).
+        Viva só com a mesa livre; com janelas abertas fica no quadro estático. No crítico a cena não
+        fica vermelha: a vinheta rubi pulsa nas bordas.
+      */}
+      <SceneBackdrop preset="clockhall" intensity={0.85} dim={visible.length ? 0.55 : 0.2} staticOnly={visible.length > 0} />
+      {critical && (
+        <div aria-hidden="true" className="animate-dv-alert pointer-events-none absolute inset-0 z-[1] bg-[radial-gradient(110%_90%_at_50%_50%,transparent_62%,rgba(163,18,31,0.3)_90%,rgba(63,6,11,0.55)_100%)]" />
+      )}
+      <PulseWidget remaining={remaining} critical={critical} onOpen={() => openApp('pulso')} />
 
       <header
-        className="absolute inset-x-0 top-0 z-40 flex items-center justify-between gap-4 bg-[linear-gradient(180deg,rgba(17,26,46,0.92),rgba(5,7,13,0.88))] px-4 backdrop-blur-md"
+        className="absolute inset-x-0 top-0 z-40 flex items-center justify-between gap-4 bg-[linear-gradient(180deg,rgba(21,21,23,0.94),rgba(10,10,12,0.9))] px-4 backdrop-blur-md"
         style={{ height: TOP }}
       >
         <span aria-hidden="true" className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-dv-gold/60 via-dv-gold/20 to-transparent" />
@@ -117,9 +128,9 @@ export function DesktopShell() {
           <span className="dv-label text-[11px] text-dv-text-3">{top ? getApp(top.id).name : 'Área de trabalho'}</span>
         </div>
         <div className="flex items-center gap-5 text-sm">
-          <span className={cn('flex items-center gap-2', critical ? 'text-dv-blood-text' : 'text-dv-cobalt-text')}>
+          <span className={cn('flex items-center gap-2', critical ? 'text-dv-blood-text' : 'text-dv-gold')}>
             <GlyphHourglass className={cn('size-4', critical && 'animate-dv-blink')} />
-            <TimeDigits value={formatDuration(remaining)} size="sm" tone={critical ? 'blood' : 'cobalt'} flip={false} blinkColon={critical} label="Tempo restante" />
+            <TimeDigits value={formatDuration(remaining)} size="sm" tone={critical ? 'blood' : 'text'} flip={false} blinkColon={critical} label="Tempo restante" />
           </span>
           <SoundToggle compact className="min-h-10 min-w-10 justify-center text-dv-gold/80 hover:text-dv-gold-bright" />
           <IconButton
@@ -199,7 +210,7 @@ export function DesktopShell() {
       )}
 
       <footer
-        className="absolute inset-x-0 bottom-0 z-40 flex items-center justify-center gap-2 bg-[linear-gradient(0deg,rgba(17,26,46,0.92),rgba(5,7,13,0.86))] px-4 backdrop-blur-md"
+        className="absolute inset-x-0 bottom-0 z-40 flex items-center justify-center gap-2 bg-[linear-gradient(0deg,rgba(21,21,23,0.94),rgba(10,10,12,0.88))] px-4 backdrop-blur-md"
         style={{ height: BOTTOM }}
       >
         <span aria-hidden="true" className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-dv-gold/45 to-transparent" />
@@ -218,19 +229,58 @@ export function DesktopShell() {
               }}
               className={cn(
                 'dv-focus group relative flex h-10 items-center gap-2.5 pl-1.5 pr-4 font-display text-[13px] font-semibold tracking-[0.04em] transition-colors',
-                isTop ? 'bg-dv-cobalt-dim/80 text-dv-text' : 'text-dv-text-2 hover:bg-white/[0.04] hover:text-dv-text',
+                isTop ? 'bg-white/[0.07] text-dv-text' : 'text-dv-text-2 hover:bg-white/[0.04] hover:text-dv-text',
               )}
             >
               <AppGlyphTile app={app} size="xs" selected={isTop} />
               {app.name}
-              <span aria-hidden="true" className={cn('absolute inset-x-2 -bottom-px h-[2px]', isTop ? 'bg-dv-cobalt shadow-[0_0_8px_var(--dv-cobalt)]' : w.minimized ? 'bg-transparent' : 'bg-dv-text-3')} />
+              <span aria-hidden="true" className={cn('absolute inset-x-2 -bottom-px h-[2px]', isTop ? 'bg-dv-gold-bright shadow-[0_0_8px_rgba(138,124,200,0.8)]' : w.minimized ? 'bg-transparent' : 'bg-dv-text-3')} />
             </button>
           )
         })}
       </footer>
 
-      <ToastStack onOpen={openApp} className={cn('right-3 top-[50px] w-80', panel === 'notifications' && 'hidden')} />
+      {/* Mesma regra do celular: um aviso por vez, no topo, logo abaixo da barra (canto direito). */}
+      <ToastStack onOpen={openApp} compact max={1} className={cn('right-3 top-[48px] w-[360px]', panel === 'notifications' && 'hidden')} />
     </div>
+  )
+}
+
+/**
+ * Widget do tempo ancorado no papel de parede (canto inferior direito, abaixo das janelas): tampo de
+ * mármore negro, mostrador de aço e os dígitos. Clique abre o Pulso.
+ */
+function PulseWidget({ remaining, critical, onOpen }: { remaining: number; critical: boolean; onOpen: () => void }) {
+  const { state } = useDevo()
+  const text = formatDuration(remaining)
+  return (
+    <button
+      type="button"
+      onPointerDown={(e) => e.stopPropagation()}
+      onClick={onOpen}
+      aria-label={`Tempo restante ${text}. Abrir o Pulso`}
+      className="dv-focus group absolute right-8 z-[5] w-[340px] text-left transition-transform duration-150 active:scale-[0.99]"
+      style={{ bottom: BOTTOM + 28 }}
+    >
+      <MarbleSlab edge={critical ? 'blood' : 'steel'} cut={16} glow innerClassName="flex items-center gap-4 py-4 pl-5 pr-4">
+        <FrameCorners tone={critical ? 'blood' : 'gold'} size={18} />
+        <span className="min-w-0 flex-1">
+          <Kicker tone={critical ? 'blood' : 'gold'}>Tempo restante</Kicker>
+          <TimeDigits value={text} size="lg" tone={critical ? 'blood' : 'text'} blinkColon={critical} className="mt-2 text-[34px]" />
+          <span className="mt-3 flex items-center gap-2">
+            {critical ? (
+              <StateSeal tone="blood" live>
+                Crítico
+              </StateSeal>
+            ) : (
+              <StateSeal>Estável</StateSeal>
+            )}
+            <span className="dv-label text-[10px] text-dv-text-3 transition-colors group-hover:text-dv-text-2">Abrir ›</span>
+          </span>
+        </span>
+        <PulseDial remaining={remaining} timerEndsAt={state.timerEndsAt} critical={critical} variant="compact" className="size-[112px] shrink-0" />
+      </MarbleSlab>
+    </button>
   )
 }
 
@@ -262,7 +312,7 @@ function DesktopIcon({
       onKeyDown={(e) => e.key === 'Enter' && onOpen(app.id)}
       className={cn(
         'dv-focus group relative flex h-[96px] w-24 flex-col items-center gap-2 px-1 py-2 transition-colors',
-        selected ? 'bg-dv-cobalt-dim/60 shadow-[inset_0_0_0_1px_var(--dv-cobalt)]' : 'hover:bg-white/[0.05]',
+        selected ? 'bg-white/[0.06] shadow-[inset_0_0_0_1px_rgba(206,201,192,0.45)]' : 'hover:bg-white/[0.05]',
       )}
     >
       <span className="relative">
@@ -342,7 +392,7 @@ function Window({
       className={cn(
         'animate-dv-pop absolute flex flex-col overflow-hidden border bg-dv-ink/95 backdrop-blur-md transition-[box-shadow,border-color]',
         active
-          ? 'border-dv-cobalt/60 shadow-[0_30px_80px_-20px_rgba(0,0,0,0.95),0_0_32px_-10px_rgba(138,124,200,0.6)]'
+          ? 'border-dv-gold/55 shadow-[0_30px_80px_-20px_rgba(0,0,0,0.95),0_0_28px_-12px_rgba(236,229,216,0.35)]'
           : 'border-dv-line-strong shadow-[0_20px_50px_-20px_rgba(0,0,0,0.9)]',
         win.minimized && 'hidden',
       )}
@@ -355,12 +405,12 @@ function Window({
         onDoubleClick={() => onPatch({ maximized: !win.maximized })}
         className={cn(
           'relative flex h-11 shrink-0 cursor-grab touch-none select-none items-center justify-between gap-3 pl-2 pr-2 active:cursor-grabbing',
-          active ? 'bg-[linear-gradient(90deg,#2b2540,var(--dv-ink-3)_45%,var(--dv-ink-2))]' : 'bg-dv-ink-2',
+          active ? 'bg-[linear-gradient(90deg,#2c2c31,var(--dv-ink-3)_45%,var(--dv-ink-2))]' : 'bg-dv-ink-2',
         )}
       >
         <span aria-hidden="true" className="absolute inset-x-0 bottom-0 h-px">
           <span className={cn('absolute inset-0 bg-gradient-to-r', active ? 'from-dv-gold/70 via-dv-gold/25 to-transparent' : 'from-dv-line-strong to-transparent')} />
-          {active && <span className="absolute -top-[1px] left-[14%] h-[3px] w-7 bg-dv-cobalt" />}
+          {active && <span className="absolute -top-[1.5px] left-[14%] size-1 rotate-45 bg-dv-amethyst shadow-[0_0_6px_rgba(138,124,200,0.9)]" />}
         </span>
         <span className="flex min-w-0 items-center gap-2.5">
           <AppGlyphTile app={app} size="xs" selected={active} />
@@ -410,7 +460,8 @@ function GlassBack() {
   return (
     <span aria-hidden="true" className="pointer-events-none absolute inset-0 [--dv-cut:14px]">
       <span className="dv-cut absolute inset-0 bg-[linear-gradient(135deg,var(--dv-gold-bright),var(--dv-gold-deep)_30%,var(--dv-gold)_60%,var(--dv-gold-deep))] opacity-70" />
-      <span className="dv-cut absolute inset-px bg-[linear-gradient(180deg,rgba(17,26,46,0.97),rgba(5,7,13,0.97))] backdrop-blur-xl [--dv-cut:13.6px]" />
+      <span className="dv-cut dv-marble-dark absolute inset-px [--dv-cut:13.6px]" />
+      <span className="dv-cut absolute inset-px bg-[linear-gradient(180deg,rgba(0,0,0,0.2),rgba(0,0,0,0.4))] [--dv-cut:13.6px]" />
     </span>
   )
 }

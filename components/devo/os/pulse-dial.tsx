@@ -35,13 +35,25 @@ export function PulseDial({
   const R_EXCESS = 155
   const arcCirc = 2 * Math.PI * R_ARC
   const exCirc = 2 * Math.PI * R_EXCESS
-  const arc = critical ? 'var(--dv-blood)' : 'var(--dv-cobalt)'
-  const arcHi = critical ? 'var(--dv-blood-text)' : '#9fb2ff'
+  // Anel do tempo em aço champanhe (rubi só no crítico); ametista só no ponto "agora" e no ponteiro.
+  const arc = critical ? 'var(--dv-blood)' : `url(#a-${uid})`
+  const now = critical ? 'var(--dv-blood-text)' : 'var(--dv-amethyst-text)'
   const endA = ratio * Math.PI * 2
   const end = { x: C + Math.sin(endA) * R_ARC, y: C - Math.cos(endA) * R_ARC }
 
   return (
-    <svg viewBox="0 0 320 320" aria-hidden="true" className={cn('overflow-visible', className)} fill="none">
+    <span className={cn('relative block', className)} aria-hidden="true">
+      {/* mostrador de mármore negro (pedra com veio) atrás do aço */}
+      <span className="dv-marble-dark absolute inset-[3.75%] rounded-full shadow-[inset_0_0_0_1px_rgba(0,0,0,0.6),inset_0_18px_40px_rgba(0,0,0,0.55)]" />
+      <span
+        className={cn(
+          'absolute inset-[3.75%] rounded-full',
+          critical
+            ? 'bg-[radial-gradient(closest-side_at_50%_44%,rgba(63,6,11,0.55),rgba(12,12,14,0.25)_70%,rgba(0,0,0,0.5))]'
+            : 'bg-[radial-gradient(closest-side_at_50%_40%,rgba(238,237,235,0.07),rgba(12,12,14,0.2)_65%,rgba(0,0,0,0.55))]',
+        )}
+      />
+    <svg viewBox="0 0 320 320" className="relative size-full overflow-visible" fill="none">
       <defs>
         <linearGradient id={`g-${uid}`} x1="0" y1="0" x2="1" y2="1">
           <stop offset="0" stopColor="var(--dv-gold-bright)" />
@@ -50,11 +62,13 @@ export function PulseDial({
           <stop offset="0.8" stopColor="var(--dv-gold-deep)" />
           <stop offset="1" stopColor="var(--dv-gold-bright)" />
         </linearGradient>
-        <radialGradient id={`f-${uid}`} cx="0.5" cy="0.42" r="0.6">
-          <stop offset="0" stopColor={critical ? '#3a0a12' : '#2b2540'} stopOpacity="0.95" />
-          <stop offset="0.65" stopColor="#0a0f1c" stopOpacity="0.92" />
-          <stop offset="1" stopColor="#05070d" stopOpacity="0.96" />
-        </radialGradient>
+        {/* aço escovado do anel do tempo: claro no alto, sombra embaixo */}
+        <linearGradient id={`a-${uid}`} x1="0" y1="0" x2="0.3" y2="1">
+          <stop offset="0" stopColor="#f4efe6" />
+          <stop offset="0.35" stopColor="#cfc6b6" />
+          <stop offset="0.62" stopColor="#8f877a" />
+          <stop offset="1" stopColor="#ece5d8" />
+        </linearGradient>
         {/* no herói, órbita e ponteiro somem na faixa dos dígitos (máscara com borda suave) */}
         <filter id={`b-${uid}`} x="-20%" y="-20%" width="140%" height="140%">
           <feGaussianBlur stdDeviation="9" />
@@ -65,11 +79,8 @@ export function PulseDial({
         </mask>
       </defs>
 
-      {/* face */}
-      <circle cx={C} cy={C} r="148" fill={`url(#f-${uid})`} />
-
       {/* excedente acima de 72h: trilho pontilhado + arco dourado externo */}
-      <circle cx={C} cy={C} r={R_EXCESS} stroke="rgba(201,164,92,0.22)" strokeWidth="1" strokeDasharray="1.5 5" />
+      <circle cx={C} cy={C} r={R_EXCESS} stroke="rgba(186,176,159,0.24)" strokeWidth="1" strokeDasharray="1.5 5" />
       {excess > 0 && (
         <circle
           cx={C}
@@ -81,7 +92,7 @@ export function PulseDial({
           strokeDasharray={exCirc}
           strokeDashoffset={exCirc * (1 - excess)}
           transform={`rotate(-90 ${C} ${C})`}
-          className="drop-shadow-[0_0_6px_rgba(236,212,154,0.7)]"
+          className="drop-shadow-[0_0_6px_rgba(236,229,216,0.6)]"
         />
       )}
 
@@ -134,27 +145,30 @@ export function PulseDial({
       </g>
 
       {/* anel do tempo (72h) */}
-      <circle cx={C} cy={C} r={R_ARC} stroke="rgba(236,238,242,0.1)" strokeWidth={hero ? 7 : 9} />
+      <circle cx={C} cy={C} r={R_ARC} stroke="rgba(236,229,216,0.09)" strokeWidth={hero ? 7 : 8} />
+      <circle cx={C} cy={C} r={R_ARC + (hero ? 5 : 6)} stroke="rgba(236,229,216,0.14)" strokeWidth="0.6" />
+      <circle cx={C} cy={C} r={R_ARC - (hero ? 5 : 6)} stroke="rgba(236,229,216,0.1)" strokeWidth="0.6" />
       <circle
         cx={C}
         cy={C}
         r={R_ARC}
         stroke={arc}
-        strokeWidth={hero ? 5 : 8}
+        strokeWidth={hero ? 4 : 5}
         strokeDasharray={arcCirc}
         strokeDashoffset={arcCirc * (1 - ratio)}
         transform={`rotate(-90 ${C} ${C})`}
-        style={{ filter: `drop-shadow(0 0 7px ${critical ? 'rgba(213,31,43,0.9)' : 'rgba(138,124,200,0.9)'})` }}
+        style={{ filter: `drop-shadow(0 0 ${critical ? 7 : 4}px ${critical ? 'rgba(213,31,43,0.9)' : 'rgba(236,229,216,0.45)'})` }}
         className="transition-[stroke-dashoffset] duration-1000 ease-linear"
       />
       {ratio > 0 && (
         <path
           d={`M${end.x} ${end.y - 6} L${end.x + 4.5} ${end.y} L${end.x} ${end.y + 6} L${end.x - 4.5} ${end.y} Z`}
-          fill={arcHi}
+          fill={now}
+          style={{ filter: `drop-shadow(0 0 5px ${critical ? 'rgba(213,31,43,0.9)' : 'rgba(138,124,200,0.95)'})` }}
           transform={`rotate(${(endA * 180) / Math.PI} ${end.x} ${end.y})`}
         />
       )}
-      <circle cx={C} cy={C} r={R_ARC - 12} stroke="rgba(125,151,255,0.22)" strokeWidth="0.8" strokeDasharray="2 4" />
+      <circle cx={C} cy={C} r={R_ARC - 14} stroke="rgba(186,176,159,0.2)" strokeWidth="0.7" strokeDasharray="1.5 4.5" />
 
       <g mask={`url(#m-${uid})`}>
         <SweepHand timerEndsAt={timerEndsAt} length={R_ARC - 6} critical={critical} />
@@ -167,11 +181,12 @@ export function PulseDial({
             fill="var(--dv-text)"
             opacity="0.92"
           />
-          <circle cx={C} cy={C} r="5" fill={arc} />
+          <circle cx={C} cy={C} r="5.5" fill="var(--dv-ink)" stroke="var(--dv-gold)" strokeWidth="1" />
         </g>
       )}
-      {!hero && <circle cx={C} cy={C} r="3" fill="var(--dv-gold-bright)" />}
+      {!hero && <circle cx={C} cy={C} r="2.4" fill={critical ? 'var(--dv-blood-text)' : 'var(--dv-amethyst)'} />}
     </svg>
+    </span>
   )
 }
 
@@ -194,8 +209,8 @@ function SweepHand({ timerEndsAt, length, critical }: { timerEndsAt: number; len
   }, [timerEndsAt])
   return (
     <g ref={ref}>
-      <line x1="160" y1="182" x2="160" y2={160 - length} stroke={critical ? 'var(--dv-blood-text)' : 'var(--dv-gold-bright)'} strokeWidth="1.2" strokeLinecap="round" />
-      <path d={`M160 ${160 - length - 2} l3 7 h-6 Z`} fill={critical ? 'var(--dv-blood-text)' : 'var(--dv-gold-bright)'} />
+      <line x1="160" y1="182" x2="160" y2={160 - length} stroke={critical ? 'var(--dv-blood-text)' : 'var(--dv-amethyst-text)'} strokeWidth="1.2" strokeLinecap="round" />
+      <path d={`M160 ${160 - length - 3} l3.2 8 l-3.2 2.4 l-3.2 -2.4 Z`} fill={critical ? 'var(--dv-blood-text)' : 'var(--dv-amethyst-text)'} />
       <circle cx="160" cy="186" r="3.2" stroke="var(--dv-gold)" strokeWidth="1" />
     </g>
   )

@@ -4,7 +4,7 @@ import { useState, type ReactNode } from 'react'
 import { playSfx } from '@/lib/devo/audio'
 import { PULSE_START_HOURS } from '@/lib/devo/pulse'
 import { Button } from '../kit/button'
-import { Frame } from '../kit/frame'
+import { Frame, FrameCorners } from '../kit/frame'
 import { GlyphAlert, GlyphCheck } from '../kit/glyphs'
 import { Kicker } from '../kit/typography'
 import { Stagger } from '../kit/reveal'
@@ -13,7 +13,8 @@ import { SoundToggle } from '../shared/sound-toggle'
 import { useOsNav } from '../os/os-nav'
 import { callName, useDevo } from '../state/devo-store'
 import { DeadlyVoteSymbol } from '../system/symbol'
-import { Panel, SectionLabel } from './app-ui'
+import { LineAction, Panel, SectionLabel } from './app-ui'
+import { MarbleSlab } from '../os/shell-ui'
 
 function Row({ label, children }: { label: string; children: ReactNode }) {
   return (
@@ -40,33 +41,39 @@ export function AjustesApp() {
 
         <PwaPanel />
 
-        <Panel>
-          <SectionLabel>Sistema</SectionLabel>
+        {/* Sistema: ficha técnica, sem moldura (peso menor que os blocos de ação acima) */}
+        <section aria-label="Sistema" className="px-1 pt-1">
+          <div className="flex items-center gap-3">
+            <SectionLabel className="text-dv-text-3">Sistema</SectionLabel>
+            <span aria-hidden="true" className="h-px flex-1 bg-gradient-to-r from-dv-line-strong to-transparent" />
+          </div>
           <dl className="mt-1 divide-y divide-dv-line">
             <Row label="Versão">DEVO 0.1 · experimental</Row>
             <Row label="Interface">{layout === 'desktop' ? 'Área de trabalho' : 'Smartphone'}</Row>
             <Row label="Operador">O Anfitrião</Row>
+            <div className="flex min-h-12 items-center justify-between gap-3 py-2">
+              <dt className="font-body text-[15px] text-dv-text-2">Central de avisos</dt>
+              <dd>
+                <LineAction
+                  onClick={() => {
+                    playSfx('click')
+                    dispatch({ type: 'CLEAR_NOTIFICATIONS' })
+                  }}
+                >
+                  Limpar avisos
+                </LineAction>
+              </dd>
+            </div>
           </dl>
-          <div className="mt-3 flex flex-wrap gap-2">
-            <Button
-              variant="secondary"
-              size="sm"
-              onClick={() => {
-                playSfx('click')
-                dispatch({ type: 'CLEAR_NOTIFICATIONS' })
-              }}
-            >
-              Limpar notificações
-            </Button>
-          </div>
-        </Panel>
+        </section>
 
-        {/* Herói: a sessão (o que está em jogo) */}
-        <Frame tone="blood" ornate glow pad="lg" cutSize={16}>
+        {/* Herói: a sessão (o que está em jogo). Pedra negra com aço; o rubi fica só na confirmação. */}
+        <MarbleSlab edge="steel" cut={16} glow innerClassName="p-6">
+          <FrameCorners tone="gold" />
           <div className="flex items-center gap-4">
             <DeadlyVoteSymbol className="size-14 shrink-0 text-dv-gold" />
             <div className="min-w-0">
-              <Kicker tone="blood">Sessão</Kicker>
+              <Kicker tone="gold">Sessão</Kicker>
               <p className="mt-1.5 truncate font-display text-[24px] font-semibold uppercase leading-none tracking-[0.06em] text-dv-text">{callName(state) || 'Jogador'}</p>
               {state.characterName && state.playerName && state.characterName !== state.playerName && (
                 <p className="dv-label mt-1.5 truncate text-[10px] text-dv-text-3">Conta · {state.playerName}</p>
@@ -86,7 +93,7 @@ export function AjustesApp() {
             </Button>
           </div>
           <RestartSession />
-        </Frame>
+        </MarbleSlab>
       </Stagger>
     </div>
   )
@@ -122,7 +129,7 @@ function RestartSession() {
         </Button>
         {step === 'done' && (
           <p role="status" className="animate-dv-cut-in flex items-center gap-2 font-body text-[15px] text-dv-text">
-            <GlyphCheck className="size-5 text-dv-cobalt-text" />
+            <GlyphCheck className="size-5 text-dv-gold-bright" />
             Sessão reiniciada e salva. Pulso em {PULSE_START_HOURS}h.
           </p>
         )}

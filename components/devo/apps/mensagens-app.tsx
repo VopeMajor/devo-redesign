@@ -10,6 +10,7 @@ import { formatClock } from '../hooks'
 import { Badge } from '../kit/badge'
 import { IconButton } from '../kit/button'
 import { Frame } from '../kit/frame'
+import { EmblemMensagens } from '../kit/emblems'
 import { GlyphArrow, GlyphKeyhole, toRoman } from '../kit/glyphs'
 import { Kicker } from '../kit/typography'
 import { PortraitFrame, type PortraitTone } from '../kit/portrait'
@@ -25,7 +26,7 @@ const accentOf = (npcId: string): Accent => ACCENT[npcId] ?? 'neutral'
 
 const NAME: Record<Accent, string> = {
   gold: 'text-dv-gold',
-  cobalt: 'text-dv-cobalt-text',
+  cobalt: 'text-dv-amethyst-text',
   paper: 'text-dv-paper',
   neutral: 'text-dv-text-2',
 }
@@ -81,16 +82,22 @@ export function MensagensApp() {
                   className="dv-focus group relative isolate flex w-full items-center gap-3 py-3 pl-3 pr-3 text-left transition-transform duration-[120ms] active:scale-[0.985]"
                   style={{ '--dv-cut': '12px' } as CSSProperties}
                 >
-                  <span aria-hidden="true" className={cn('dv-cut-diag absolute inset-0 -z-10', selected || fresh ? 'bg-dv-cobalt/70' : 'bg-dv-line')} />
+                  <span
+                    aria-hidden="true"
+                    className={cn(
+                      'dv-cut-diag absolute inset-0 -z-10',
+                      selected ? 'bg-[linear-gradient(100deg,#f4efe6,#6b6357_35%,#bab09f_65%,#5f584d)]' : fresh ? 'bg-[rgba(238,237,235,0.32)]' : 'bg-dv-line',
+                    )}
+                  />
                   <span
                     aria-hidden="true"
                     className={cn(
                       'dv-cut-diag absolute inset-px -z-10 transition-colors',
-                      selected ? 'bg-dv-cobalt-dim' : 'bg-[linear-gradient(100deg,var(--dv-ink-3),var(--dv-ink-2)_70%)] group-hover:bg-dv-ink-3',
+                      selected ? 'bg-[linear-gradient(100deg,#2c2c31,#1f1f22_70%)]' : 'bg-[linear-gradient(100deg,var(--dv-ink-3),var(--dv-ink-2)_70%)] group-hover:bg-dv-ink-3',
                     )}
                     style={{ '--dv-cut': '11.6px' } as CSSProperties}
                   />
-                  {fresh && <span aria-hidden="true" className="absolute inset-y-3 left-0 w-[2px] bg-dv-cobalt" />}
+                  {(fresh || selected) && <span aria-hidden="true" className="absolute inset-y-3 left-0 w-[2px] bg-dv-amethyst shadow-[0_0_8px_rgba(138,124,200,0.8)]" />}
                   <Portrait npcId={t.npcId} />
                   <span className="min-w-0 flex-1">
                     <span className="flex items-baseline justify-between gap-2">
@@ -100,7 +107,7 @@ export function MensagensApp() {
                     <span className={cn('dv-label block text-[10px]', NAME[accentOf(t.npcId)])}>{npc.title}</span>
                     <span className={cn('mt-1 block truncate font-body text-[15px]', fresh ? 'text-dv-text' : 'text-dv-text-2')}>
                       {t.typing ? (
-                        <span className="inline-flex items-center gap-2 italic text-dv-cobalt-text">
+                        <span className="inline-flex items-center gap-2 italic text-dv-amethyst-text">
                           digitando <TypingDots />
                         </span>
                       ) : last ? (
@@ -149,9 +156,11 @@ export function MensagensApp() {
       {active ? (
         <Conversation key={active.id} threadId={active.id} onBack={() => setActiveId(null)} />
       ) : (
-        <div className="hidden flex-1 flex-col items-center justify-center gap-3 p-6 text-center @xl:flex">
-          <p className="font-serif text-[44px] uppercase tracking-[0.08em] text-dv-text/25">Devo</p>
-          <p className="font-body text-[15px] italic text-dv-text-3">Escolha uma conversa. Cuidado com quem responde.</p>
+        <div className="relative isolate hidden flex-1 flex-col items-center justify-center gap-4 overflow-hidden p-6 text-center @xl:flex">
+          <span aria-hidden="true" className="dv-marble-dark absolute inset-0 -z-10 opacity-70" />
+          <EmblemMensagens metal className="size-16 opacity-80 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]" />
+          <p className="dv-label text-[11px] text-dv-gold">Canal seguro</p>
+          <p className="max-w-[18rem] font-body text-[16px] italic leading-snug text-dv-text-2">Escolha uma conversa. Cuidado com quem responde.</p>
         </div>
       )}
     </div>
@@ -211,8 +220,10 @@ function Conversation({ threadId, onBack }: { threadId: string; onBack: () => vo
     <section className="animate-dv-slide-left relative isolate flex min-w-0 flex-1 flex-col overflow-hidden" aria-label={`Conversa com ${npc.name}`}>
       {/* retrato grande ao fundo, como numa cena */}
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10">
-        <div className="absolute inset-0 bg-[radial-gradient(70%_50%_at_85%_35%,rgba(138,124,200,0.16),transparent_70%)]" />
-        <div className="absolute -right-12 top-10 h-[62%] w-[78%] opacity-[0.17] [-webkit-mask-image:radial-gradient(ellipse_55%_50%_at_60%_42%,#000_35%,transparent_78%)] [mask-image:radial-gradient(ellipse_55%_50%_at_60%_42%,#000_35%,transparent_78%)]">
+        {/* mármore negro com veio; o retrato do remetente fica como gravura cinza, quase apagada */}
+        <div className="dv-marble-dark absolute inset-0" />
+        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.35),rgba(12,12,14,0.15)_40%,rgba(0,0,0,0.45))]" />
+        <div className="absolute -right-12 top-10 h-[62%] w-[78%] opacity-[0.1] grayscale [-webkit-mask-image:radial-gradient(ellipse_55%_50%_at_60%_42%,#000_35%,transparent_78%)] [mask-image:radial-gradient(ellipse_55%_50%_at_60%_42%,#000_35%,transparent_78%)]">
           {portrait ? (
             <Image src={portrait} alt="" fill sizes="320px" className="object-contain object-right-top" />
           ) : (
@@ -266,19 +277,19 @@ function Conversation({ threadId, onBack }: { threadId: string; onBack: () => vo
                   className="dv-focus group relative isolate flex min-h-12 w-full items-center gap-3 py-2 pl-3 pr-4 text-left transition-transform duration-200 enabled:hover:translate-x-1 enabled:active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-45 disabled:grayscale"
                   style={{ '--dv-cut': '10px' } as CSSProperties}
                 >
-                  <span aria-hidden="true" className="dv-cut-diag absolute inset-0 -z-10 bg-[linear-gradient(100deg,#a9bbff,var(--dv-cobalt)_35%,var(--dv-cobalt-deep))]" />
+                  {/* opção em ink com filete neutro; sob foco/toque o filete vira ametista (único acento frio) */}
                   <span
                     aria-hidden="true"
-                    className="dv-cut-diag dv-sheen absolute inset-px -z-10 overflow-hidden bg-[linear-gradient(100deg,#2b2540,var(--dv-cobalt-dim)_55%,var(--dv-ink-2))] transition-colors group-enabled:group-hover:bg-[linear-gradient(100deg,#5a4f8f,#3b3366_55%,var(--dv-ink-2))]"
-                    style={{ '--dv-cut': '9.6px' } as CSSProperties}
+                    className="dv-cut-diag absolute inset-0 -z-10 bg-[rgba(238,237,235,0.2)] transition-colors group-enabled:group-hover:bg-[linear-gradient(100deg,#c2b9ec,#8a7cc8_40%,rgba(238,237,235,0.25))] group-focus-visible:bg-[linear-gradient(100deg,#c2b9ec,#8a7cc8_40%,rgba(238,237,235,0.25))]"
                   />
-                  <span aria-hidden="true" className="dv-cut-diag absolute inset-px -z-10 bg-white opacity-0 transition-opacity duration-[120ms] group-enabled:group-active:opacity-15" style={{ '--dv-cut': '9.6px' } as CSSProperties} />
-                  <span aria-hidden="true" className="absolute inset-y-2 left-11 -z-10 border-l border-dv-cobalt-text/30" />
-                  <span aria-hidden="true" className="w-7 shrink-0 text-center font-impact text-[20px] font-semibold leading-none text-dv-cobalt-text">
+                  <span aria-hidden="true" className="dv-cut-diag absolute inset-px -z-10 bg-[linear-gradient(100deg,#1f1f22,#151517_55%,#0e0e10)]" style={{ '--dv-cut': '9.6px' } as CSSProperties} />
+                  <span aria-hidden="true" className="dv-cut-diag absolute inset-px -z-10 bg-white opacity-0 transition-opacity duration-[120ms] group-enabled:group-active:opacity-10" style={{ '--dv-cut': '9.6px' } as CSSProperties} />
+                  <span aria-hidden="true" className="absolute inset-y-2 left-11 -z-10 border-l border-dv-gold/30" />
+                  <span aria-hidden="true" className="dv-brass-text w-7 shrink-0 text-center font-impact text-[20px] font-semibold leading-none">
                     {toRoman(i + 1)}
                   </span>
                   <span className="flex-1 pl-2 font-body text-[16px] leading-snug text-dv-text">{c.prompt}</span>
-                  <GlyphArrow aria-hidden="true" className="size-4 shrink-0 text-dv-cobalt-text transition-transform group-enabled:group-hover:translate-x-0.5" />
+                  <GlyphArrow aria-hidden="true" className="size-4 shrink-0 text-dv-gold transition-[transform,color] group-enabled:group-hover:translate-x-0.5 group-enabled:group-hover:text-dv-amethyst-text" />
                 </button>
               </li>
             ))}
@@ -293,7 +304,7 @@ function Conversation({ threadId, onBack }: { threadId: string; onBack: () => vo
 
 const BUBBLE_LINE: Record<Accent, string> = {
   gold: 'bg-dv-gold/70',
-  cobalt: 'bg-dv-cobalt/70',
+  cobalt: 'bg-dv-amethyst/60',
   paper: 'bg-dv-gold-deep',
   neutral: 'bg-dv-line-strong',
 }
@@ -302,17 +313,18 @@ function BubbleShell({ mine, accent, children }: { mine: boolean; accent: Accent
   const paper = !mine && accent === 'paper'
   return (
     <div className="relative isolate px-4 py-2.5" style={{ '--dv-cut': '10px' } as CSSProperties}>
-      <span aria-hidden="true" className={cn('dv-cut-diag absolute inset-0 -z-10', mine && '-scale-x-100', mine ? 'bg-dv-cobalt/80' : BUBBLE_LINE[accent])} />
+      <span aria-hidden="true" className={cn('dv-cut-diag absolute inset-0 -z-10', mine && '-scale-x-100', mine ? 'bg-[linear-gradient(100deg,#bab09f,#ece5d8_50%,#9a9184)]' : BUBBLE_LINE[accent])} />
       <span
         aria-hidden="true"
         className={cn(
           'dv-cut-diag absolute inset-px -z-10',
           mine && '-scale-x-100',
-          mine ? 'bg-[linear-gradient(160deg,#16297a,var(--dv-cobalt-dim)_60%)]' : paper ? 'dv-paper-bg' : 'bg-[linear-gradient(160deg,var(--dv-ink-4),var(--dv-ink-2)_70%)]',
+          // jogador = porcelana (mármore branco) com texto negro; NPC = pedra negra
+          mine ? 'dv-porcelain' : paper ? 'dv-paper-bg' : 'bg-[linear-gradient(160deg,var(--dv-ink-4),var(--dv-ink-2)_70%)]',
         )}
         style={{ '--dv-cut': '9.6px' } as CSSProperties}
       />
-      {!mine && !paper && <span aria-hidden="true" className={cn('absolute inset-y-2 left-0 w-[2px]', accent === 'gold' ? 'bg-dv-gold' : accent === 'cobalt' ? 'bg-dv-cobalt' : 'bg-dv-text-3')} />}
+      {!mine && !paper && <span aria-hidden="true" className={cn('absolute inset-y-2 left-0 w-[2px]', accent === 'gold' ? 'bg-dv-gold' : accent === 'cobalt' ? 'bg-dv-amethyst' : 'bg-dv-text-3')} />}
       {children}
     </div>
   )
@@ -323,12 +335,12 @@ function Bubble({ text, at, mine, first, name, accent }: { text: string; at: num
   const paper = !mine && accent === 'paper'
   return (
     <div className={cn('flex max-w-[84%] flex-col gap-1', mine ? 'animate-dv-slide-left items-end self-end' : 'animate-dv-slide-right self-start', first && 'mt-2.5')}>
-      {first && <span className={cn('dv-label px-1 text-[10px]', mine ? 'text-dv-cobalt-text' : NAME[accent])}>{name}</span>}
+      {first && <span className={cn('dv-label px-1 text-[10px]', mine ? 'text-dv-text-2' : NAME[accent])}>{name}</span>}
       {sticker ? (
         <Image src={sticker} alt="Figurinha" width={128} height={128} className="size-28 object-contain mix-blend-lighten" />
       ) : (
         <BubbleShell mine={mine} accent={accent}>
-          <p className={cn('font-body text-[16px] leading-relaxed', paper ? 'text-dv-paper-ink' : 'text-dv-text')}>{text}</p>
+          <p className={cn('font-body text-[16px] leading-relaxed', paper || mine ? 'text-dv-paper-ink' : 'text-dv-text')}>{text}</p>
         </BubbleShell>
       )}
       <span className="dv-tabular px-1 font-mono text-[10px] text-dv-text-3">{formatClock(at)}</span>
