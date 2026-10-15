@@ -268,8 +268,17 @@ async function enterOS(page) {
 async function openApp(page, label) {
   await enterOS(page)
   const exact = page.getByRole('button', { name: label, exact: true })
+  // Espera o ícone existir (a home pode demorar a montar depois da cortina) antes de desistir.
+  await exact.first().waitFor({ state: 'attached', timeout: 8000 }).catch(() => {})
   if (!(await tryClick(exact.first(), 3000))) await btn(page, label).click({ timeout: 3000 })
   await wait(2600)
+}
+
+/** Diagnóstico de etapa: captura a tela e guarda a árvore acessível no manifest. */
+async function diag(page, name) {
+  await shot(page, name)
+  const tree = await page.locator('body').ariaSnapshot({ timeout: 3000 }).catch((e) => `ariaSnapshot falhou: ${e}`)
+  manifest.errors.push({ step: `${name}-arvore`, error: String(tree).slice(0, 6000) })
 }
 
 const VET_CARDS = ['fosforo', 'escudo', 'moeda', 'dado', 'ampulheta', 'olho', 'relogio', 'laminas', 'chave', 'coroa']
@@ -288,26 +297,40 @@ if (want('sistema') || want('apps') || want('jogos')) {
     // Transição de abrir/voltar (quadro no meio da animação).
     await step('home-transicao', async () => {
       await enterOS(page)
-      // Congela as animações (WAAPI/CSS) a ~45% para provar a direção do movimento no quadro.
+      // Arma o congelamento ANTES do clique: toda animação WAAPI de 200–700 ms criada a partir daí nasce
+      // pausada no ponto pedido (o quadro prova a direção do movimento, não o estado final).
       const freeze = (p) =>
         page.evaluate((pct) => {
-          for (const a of document.getAnimations()) {
-            const t = a.effect?.getComputedTiming?.()
-            const d = typeof t?.duration === 'number' ? t.duration : 0
+          const w = window
+          if (!w.__dvAnimate) w.__dvAnimate = Element.prototype.animate
+          w.__dvFrozen = []
+          Element.prototype.animate = function (k, o) {
+            const a = w.__dvAnimate.call(this, k, o)
+            const d = typeof o === 'number' ? o : Number(o?.duration) || 0
             if (d > 200 && d < 700) {
               a.pause()
               a.currentTime = d * pct
+              w.__dvFrozen.push(a)
             }
+            return a
           }
         }, p)
-      const resume = () => page.evaluate(() => document.getAnimations().forEach((a) => a.playState === 'paused' && a.finish()))
-      await page.getByRole('button', { name: 'Mensagens', exact: true }).first().click({ timeout: 3000 })
+      const resume = () =>
+        page.evaluate(() => {
+          const w = window
+          if (w.__dvAnimate) Element.prototype.animate = w.__dvAnimate
+          for (const a of w.__dvFrozen ?? []) a.finish()
+          w.__dvFrozen = []
+        })
       await freeze(0.4)
+      await page.getByRole('button', { name: 'Mensagens', exact: true }).first().click({ timeout: 3000 })
+      await wait(250)
       await shot(page, '11-transicao-abrir')
       await resume()
       await wait(1500)
-      await btn(page, 'Voltar ao início', true).click({ timeout: 3000 })
       await freeze(0.45)
+      await btn(page, 'Voltar ao início', true).click({ timeout: 3000 })
+      await wait(250)
       await shot(page, '11-transicao-voltar')
       await resume()
     })
@@ -707,10 +730,15 @@ if (want('partidas')) {
   for (const game of ['Memory Rush', 'Living Chess', 'Bomba Quente', 'Blefe']) {
     const slug = game.toLowerCase().replace(/\s+/g, '-')
     await step(`partida-${slug}`, async () => {
-      for (const { page } of [A, B]) {
-        await openApp(page, 'Sala de Jogos')
-        const card = page.locator('[aria-label="Jogos da semana"] > *').filter({ hasText: new RegExp(game, 'i') }).first()
-        await card.getByRole('button', { name: /jogar/i }).first().click({ timeout: 3000 })
+      for (const [who, { page }] of [['a', A], ['b', B]]) {
+        try {
+          await openApp(page, 'Sala de Jogos')
+          const card = page.locator('[aria-label="Jogos da semana"] > *').filter({ hasText: new RegExp(game, 'i') }).first()
+          await card.getByRole('button', { name: /jogar/i }).first().click({ timeout: 8000 })
+        } catch (e) {
+          await diag(page, `40-partida-${slug}-diag-${who}`)
+          throw e
+        }
         await wait(800)
       }
       await shot(A.page, `40-partida-${slug}-fila`)

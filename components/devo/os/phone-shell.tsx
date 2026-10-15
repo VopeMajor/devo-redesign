@@ -61,11 +61,11 @@ export function PhoneShell({ current, onOpen, onHome }: { current: AppId | null;
   useEffect(() => {
     if (current) {
       if (!shown) {
+        // A home sai de baixo só quando a entrada do app termina (onEntered), não por relógio.
         setEntering(true)
-        const t = window.setTimeout(() => setEntering(false), ENTER_MS + 40)
         setShown(current)
         setLeaving(false)
-        return () => window.clearTimeout(t)
+        return
       }
       setShown(current)
       setLeaving(false)
@@ -122,6 +122,7 @@ export function PhoneShell({ current, onOpen, onHome }: { current: AppId | null;
               reduced={reduced}
               back={appBack}
               onBack={goHome}
+              onEntered={() => setEntering(false)}
               onExited={() => {
                 setShown(null)
                 setLeaving(false)
@@ -509,6 +510,8 @@ function PhoneIcon({ id, onOpen, unread, delay = 0 }: { id: AppId; onOpen: (id: 
 
 const EASE_OUT = 'cubic-bezier(0.16,1,0.3,1)'
 const EASE_IN = 'cubic-bezier(0.6,0,0.9,0.4)'
+/** Recuo da borda de ataque na base (corte diagonal da folha do app). */
+const DIAG = '22%'
 
 function AppLayer({
   app,
@@ -516,6 +519,7 @@ function AppLayer({
   reduced,
   back,
   onBack,
+  onEntered,
   onExited,
 }: {
   app: AppDef
@@ -523,22 +527,31 @@ function AppLayer({
   reduced: boolean
   back: AppBack
   onBack: () => void
+  onEntered: () => void
   onExited: () => void
 }) {
   const ref = useRef<HTMLElement>(null)
   const exited = useRef(onExited)
   exited.current = onExited
+  const entered = useRef(onEntered)
+  entered.current = onEntered
 
+  // Entrada: a folha do app corta a tela pela direita com a borda de ataque em diagonal (o canto de
+  // cima vai na frente), e o filete de aço desliza junto na borda. Saída: o mesmo corte, de volta.
   useLayoutEffect(() => {
     const el = ref.current
-    if (!el || reduced || typeof el.animate !== 'function') return
+    if (!el || reduced || typeof el.animate !== 'function') {
+      entered.current()
+      return
+    }
     const anim = el.animate(
       [
-        { transform: 'translateX(100%)', boxShadow: '-40px 0 60px -20px rgba(0,0,0,0)' },
-        { transform: 'translateX(0)', boxShadow: '-40px 0 60px -20px rgba(0,0,0,0.9)' },
+        { transform: 'translateX(100%)', clipPath: `polygon(0 0, 100% 0, 100% 100%, ${DIAG} 100%)` },
+        { transform: 'translateX(0)', clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 100%)' },
       ],
       { duration: ENTER_MS, easing: EASE_OUT },
     )
+    anim.onfinish = () => entered.current()
     return () => anim.cancel()
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -549,7 +562,13 @@ function AppLayer({
       exited.current()
       return
     }
-    const anim = el.animate([{ transform: 'translateX(0)' }, { transform: 'translateX(100%)' }], { duration: EXIT_MS, easing: EASE_IN, fill: 'forwards' })
+    const anim = el.animate(
+      [
+        { transform: 'translateX(0)', clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 100%)' },
+        { transform: 'translateX(100%)', clipPath: `polygon(0 0, 100% 0, 100% 100%, ${DIAG} 100%)` },
+      ],
+      { duration: EXIT_MS, easing: EASE_IN, fill: 'forwards' },
+    )
     anim.onfinish = () => exited.current()
     return () => anim.cancel()
   }, [leaving]) // eslint-disable-line react-hooks/exhaustive-deps
