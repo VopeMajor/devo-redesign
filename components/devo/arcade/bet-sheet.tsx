@@ -121,15 +121,20 @@ function BetSheet({
               )}
               style={{ '--dv-cut': '12px' } as CSSProperties}
             >
-              <span aria-hidden="true" className={cn('dv-cut absolute inset-0 -z-10', on ? (i === 0 ? 'bg-dv-cobalt' : 'bg-dv-gold') : 'bg-dv-line-strong')} />
+              {/* escolhido = placa de porcelana com filete de aço e halo de ametista; o outro fica no negro */}
               <span
                 aria-hidden="true"
-                className={cn('dv-cut absolute inset-px -z-10', on ? (i === 0 ? 'bg-[linear-gradient(180deg,#14287a,var(--dv-ink))]' : 'bg-[linear-gradient(180deg,#2a2010,var(--dv-ink))]') : 'bg-dv-ink-2')}
-                style={{ '--dv-cut': '11.6px' } as CSSProperties}
+                className={cn('dv-cut absolute inset-0 -z-10 transition-shadow duration-200', on ? 'bg-[linear-gradient(135deg,#ffffff,var(--dv-gold-deep)_40%,var(--dv-gold-bright)_70%,var(--dv-gold-deep))]' : 'bg-dv-line-strong')}
               />
-              <Monogram name={s.name} size="md" tone={on ? (i === 0 ? 'cobalt' : 'gold') : 'neutral'} />
-              <span className="max-w-full truncate font-body text-[15px] text-dv-text">{s.isMe ? `${s.name} (você)` : s.name}</span>
-              <span className={cn('font-impact text-[26px] font-semibold leading-none dv-tabular', on ? (i === 0 ? 'text-dv-cobalt-text' : 'text-dv-gold-bright') : 'text-dv-text-2')}>
+              <span
+                aria-hidden="true"
+                className={cn('dv-cut absolute inset-[1.5px] -z-10', on ? 'dv-marble' : 'bg-dv-ink-2')}
+                style={{ '--dv-cut': '11.4px' } as CSSProperties}
+              />
+              {on && <span aria-hidden="true" className="pointer-events-none absolute inset-x-6 -bottom-2 -z-20 h-4 rounded-[50%] bg-[rgba(138,124,200,0.55)] blur-lg" />}
+              <Monogram name={s.name} size="md" tone={on ? 'ivory' : 'neutral'} />
+              <span className={cn('max-w-full truncate font-body text-[15px]', on ? 'text-dv-porcelain-ink' : 'text-dv-text')}>{s.isMe ? `${s.name} (você)` : s.name}</span>
+              <span className={cn('font-impact text-[26px] font-semibold leading-none dv-tabular', on ? 'text-dv-porcelain-ink' : 'text-dv-text-2')}>
                 {s.odds.toFixed(2).replace('.', ',')}×
               </span>
             </button>
@@ -155,7 +160,9 @@ function BetSheet({
               }}
               className={cn(
                 'dv-focus min-h-11 -skew-x-[8deg] border font-impact text-[17px] font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-30',
-                on ? 'border-dv-blood bg-dv-blood-deep text-white shadow-[0_0_16px_-4px_var(--dv-blood)]' : 'border-dv-line-strong bg-dv-ink-2 text-dv-text enabled:hover:border-dv-text-3',
+                on
+                  ? 'border-dv-gold-bright bg-dv-porcelain text-dv-porcelain-ink shadow-[0_0_14px_-4px_rgba(138,124,200,0.8)]'
+                  : 'border-dv-line-strong bg-dv-ink-2 text-dv-text enabled:hover:border-dv-text-3',
               )}
             >
               <span className="inline-block skew-x-[8deg]">{formatMinutes(v)}</span>
@@ -168,7 +175,7 @@ function BetSheet({
         <div>
           <dt className="dv-label text-[10px] text-dv-text-3">Seu Tempo agora</dt>
           <dd className="mt-1">
-            <TimeDigits value={formatDuration(remainingMs)} size="sm" tone="cobalt" flip={false} />
+            <TimeDigits value={formatDuration(remainingMs)} size="sm" tone="text" flip={false} />
           </dd>
         </div>
         <div>
@@ -179,7 +186,7 @@ function BetSheet({
         </div>
         <div>
           <dt className="dv-label text-[10px] text-dv-text-3">Se {side.name} vencer</dt>
-          <dd className="mt-1 font-impact text-[20px] font-semibold leading-none text-dv-cobalt-text dv-tabular">+{formatMinutes(payout)}</dd>
+          <dd className="mt-1 font-impact text-[20px] font-semibold leading-none text-dv-gold-bright dv-tabular">+{formatMinutes(payout)}</dd>
         </div>
         <div>
           <dt className="dv-label text-[10px] text-dv-text-3">Se perder</dt>
@@ -187,7 +194,7 @@ function BetSheet({
         </div>
       </dl>
 
-      <Frame variant="alert" pad="sm" className="mt-4">
+      <Frame pad="sm" className="mt-4">
         <p className="flex gap-2.5 font-body text-[14px] leading-snug text-dv-text-2">
           <GlyphAlert className="mt-0.5 size-4 shrink-0 text-dv-blood-text" />
           <span>

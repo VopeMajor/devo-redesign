@@ -169,7 +169,7 @@ export function JogosApp() {
   return (
     <MiniProfileHost>
       <div className="relative flex h-full min-h-0 flex-col overflow-hidden bg-dv-ink text-dv-text">
-        {!running && <SalaScene endsAt={state.timerEndsAt} />}
+        {!running && <SalaScene endsAt={state.timerEndsAt} quiet={tab !== 'mesa'} />}
 
         <div className="relative z-10 shrink-0 px-4 pt-3">
           <h2 className="sr-only">Sala de Jogos</h2>
@@ -264,11 +264,15 @@ export function JogosApp() {
   )
 }
 
-/** Cena 3D da mesa atrás de tudo; pulsa em vermelho quando o Tempo do jogador fica crítico. */
-function SalaScene({ endsAt }: { endsAt: number }) {
+/**
+ * Cena 3D da mesa atrás de tudo; pulsa em vermelho quando o Tempo do jogador fica crítico. Nas abas
+ * de leitura (Agenda, Ranking, Apostas) a cena recua (`quiet`): mais véu e menos luz, para o texto
+ * nunca disputar com as casas do tabuleiro.
+ */
+function SalaScene({ endsAt, quiet }: { endsAt: number; quiet?: boolean }) {
   const now = useNow(10_000)
   const left = endsAt - now
-  return <SceneBackdrop preset="table" intensity={0.65} dim={0.5} alert={left > 0 && left <= CRITICAL_MS} />
+  return <SceneBackdrop preset="table" intensity={quiet ? 0.45 : 0.65} dim={quiet ? 0.78 : 0.5} alert={left > 0 && left <= CRITICAL_MS} />
 }
 
 function useArcadeAmbience(inGame: boolean) {
@@ -305,8 +309,8 @@ function Header({ data }: { data?: Dashboard }) {
         <span className={cn(me && me.score > 0 ? 'text-dv-gold-bright' : 'text-dv-text')}>{me ? formatPoints(me.score) : '—'}</span>
       </Plaque>
       <Plaque label="Posição">{me?.rank ? `#${me.rank}` : '—'}</Plaque>
-      <Plaque label="Reset do ranking">
-        {data ? <Countdown endsAt={data.week.resetsAt} size="sm" tone="text" sound={false} criticalMs={0} label="Reset do ranking" /> : '—'}
+      <Plaque label="Ranking zera">
+        {data ? <Countdown endsAt={data.week.resetsAt} size="sm" tone="text" sound={false} criticalMs={0} label="Ranking zera em" /> : '—'}
       </Plaque>
     </dl>
   )

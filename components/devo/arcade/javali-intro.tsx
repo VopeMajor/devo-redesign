@@ -1,7 +1,7 @@
 'use client'
 
 import { type CSSProperties, useState } from 'react'
-import { Badge, FrameCorners, GlyphArrow, GlyphDiamond, GlyphHourglass, Kicker, TimeDigits } from '@/components/devo/kit'
+import { Badge, FrameCorners, GlyphArrow, GlyphDiamond, GlyphHourglass, Kicker, RomanDial, TimeDigits } from '@/components/devo/kit'
 import { GAMES, PATENTES } from '@/lib/devo/arcade/games'
 import { playSfx } from '@/lib/devo/audio'
 import { cn } from '@/lib/utils'
@@ -9,25 +9,27 @@ import { npcPortrait } from '@/lib/devo/npcs'
 import { formatDuration, useNow } from '../hooks'
 import { useDevo } from '../state/devo-store'
 
-type Frame = 'table' | 'door' | 'point'
+/** Pose do Javali (sprites transparentes do mapa de retratos em lib/devo/npcs.ts). */
+type Frame = 'neutral' | 'grin' | 'wink' | 'tap'
 type Visual = 'tempo' | 'jogos' | 'tutorial' | 'agenda' | 'ranking' | 'apostas' | 'chat'
 
-// Cenas do Javali, uma por pose (mapa de retratos em lib/devo/npcs.ts).
-const FRAMES: Frame[] = ['table', 'door', 'point']
+// Poses do Javali debruçado na mesa de mármore. As antigas cenas (quadros largos com fundo próprio)
+// deixavam faixas borradas no palco; os sprites transparentes ocupam o quadro inteiro.
+const FRAMES: Frame[] = ['neutral', 'grin', 'wink', 'tap']
 
 const SCRIPT: { text: string; frame: Frame; visual?: Visual }[] = [
-  { text: 'Ora, ora! Um rosto novo na minha mesa. Entre, entre, querido. Bem-vindo à Sala de Jogos!', frame: 'table' },
-  { text: 'Eu sou o Javali, anfitrião desta casa. Ninguém joga aqui sem antes ouvir as regras da casa. E as regras da casa sou eu.', frame: 'point' },
-  { text: 'Primeiro, o mais importante: aqui ninguém aposta dinheiro. Aposta-se Tempo. O seu relógio, lá em cima, é tudo o que você tem.', frame: 'point', visual: 'tempo' },
-  { text: 'Ganhe e ele cresce. Perca... bem, digamos que ele encolhe. Quando zera, a festa acaba para você. Simples, não?', frame: 'door' },
-  { text: 'Na Mesa ficam os jogos. Cada um com seu adversário de carne e osso.', frame: 'table', visual: 'jogos' },
-  { text: 'Inseguro? Não se acanhe. Todo jogo tem um Tutorial. Treine à vontade, que lá a casa não cobra nada.', frame: 'door', visual: 'tutorial' },
-  { text: 'Na Agenda você encontra as partidas marcadas e os torneios. Inscreva-se a tempo, porque eu não espero ninguém.', frame: 'door', visual: 'agenda' },
-  { text: 'Cada vitória rende pontos. Pontos sobem sua Patente e sua posição no Ranking.', frame: 'point', visual: 'ranking' },
-  { text: 'Toda semana o Ranking zera. Os melhores colocados levam prêmios antes do reset. Fique de olho no relógio do Reset.', frame: 'table' },
-  { text: 'Prefere assistir? Nas Apostas você aposta Tempo em quem vai vencer as partidas dos outros. Lucro sem suar a camisa.', frame: 'point', visual: 'apostas' },
-  { text: 'E no Chat você conversa com os outros Records da sala. Provoque, negocie, faça amigos. Ou inimigos. Eu adoro os dois.', frame: 'door', visual: 'chat' },
-  { text: 'Isso é tudo, querido. Puxe uma cadeira e lembre-se: a casa sempre agradece.', frame: 'table' },
+  { text: 'Ora, ora! Um rosto novo na minha mesa. Entre, entre, querido. Bem-vindo à Sala de Jogos!', frame: 'neutral' },
+  { text: 'Eu sou o Javali, anfitrião desta casa. Ninguém joga aqui sem antes ouvir as regras da casa. E as regras da casa sou eu.', frame: 'grin' },
+  { text: 'Primeiro, o mais importante: aqui ninguém aposta dinheiro. Aposta-se Tempo. O seu relógio, lá em cima, é tudo o que você tem.', frame: 'tap', visual: 'tempo' },
+  { text: 'Ganhe e ele cresce. Perca... bem, digamos que ele encolhe. Quando zera, a festa acaba para você. Simples, não?', frame: 'wink' },
+  { text: 'Na Mesa ficam os jogos. Cada um com seu adversário de carne e osso.', frame: 'neutral', visual: 'jogos' },
+  { text: 'Inseguro? Não se acanhe. Todo jogo tem um Tutorial. Treine à vontade, que lá a casa não cobra nada.', frame: 'wink', visual: 'tutorial' },
+  { text: 'Na Agenda você encontra as partidas marcadas e os torneios. Inscreva-se a tempo, porque eu não espero ninguém.', frame: 'wink', visual: 'agenda' },
+  { text: 'Cada vitória rende pontos. Pontos sobem sua Patente e sua posição no Ranking.', frame: 'tap', visual: 'ranking' },
+  { text: 'Toda semana o Ranking zera. Os melhores colocados levam prêmios antes do reset. Fique de olho no relógio do Reset.', frame: 'neutral' },
+  { text: 'Prefere assistir? Nas Apostas você aposta Tempo em quem vai vencer as partidas dos outros. Lucro sem suar a camisa.', frame: 'tap', visual: 'apostas' },
+  { text: 'E no Chat você conversa com os outros Records da sala. Provoque, negocie, faça amigos. Ou inimigos. Eu adoro os dois.', frame: 'wink', visual: 'chat' },
+  { text: 'Isso é tudo, querido. Puxe uma cadeira e lembre-se: a casa sempre agradece.', frame: 'grin' },
 ]
 
 const SECTIONS: { visual: Visual; label: string }[] = [
@@ -65,13 +67,13 @@ export function JavaliIntro() {
       aria-modal="true"
       aria-label="Javali apresenta a Sala de Jogos"
       className={cn(
-        'absolute inset-0 z-40 flex animate-dv-fade flex-col overflow-hidden bg-[radial-gradient(120%_70%_at_50%_0%,#151d3d,var(--dv-ink)_65%)] transition-opacity duration-700',
+        'absolute inset-0 z-40 flex animate-dv-fade flex-col overflow-hidden bg-[radial-gradient(120%_70%_at_50%_0%,#2a2a2e,var(--dv-ink)_65%)] transition-opacity duration-700',
         leaving && 'opacity-0',
       )}
     >
       {/* holofote dourado sobre o anfitrião e piso xadrez da casa */}
-      <span aria-hidden="true" className="javali-spot pointer-events-none absolute inset-x-0 top-0 mx-auto h-[75%] w-[30rem] max-w-full bg-[radial-gradient(ellipse_at_top,rgba(236,212,154,0.26),transparent_70%)]" />
-      <span aria-hidden="true" className="dv-checker pointer-events-none absolute inset-x-[-40%] bottom-[-10%] h-[45%] opacity-40 [mask-image:linear-gradient(to_top,black,transparent)] [transform:perspective(520px)_rotateX(62deg)]" />
+      <span aria-hidden="true" className="javali-spot pointer-events-none absolute inset-x-0 top-0 mx-auto h-[75%] w-[30rem] max-w-full bg-[radial-gradient(ellipse_at_top,rgba(236,229,216,0.2),transparent_70%)]" />
+      <span aria-hidden="true" className="dv-checker-marble pointer-events-none absolute inset-x-[-40%] bottom-[-10%] h-[45%] opacity-40 [mask-image:linear-gradient(to_top,black,transparent)] [transform:perspective(520px)_rotateX(62deg)]" />
 
       <div className="relative flex shrink-0 items-center justify-between px-4 pt-2">
         <Kicker tone="gold">
@@ -95,36 +97,49 @@ export function JavaliIntro() {
       <div className="relative flex min-h-0 flex-1 flex-col px-4 pt-3">
         <div className="relative isolate mx-auto min-h-[220px] w-full max-w-xl flex-1" style={{ '--dv-cut': '18px' } as CSSProperties}>
           <span aria-hidden="true" className="dv-cut absolute inset-0 -z-10 bg-[linear-gradient(135deg,var(--dv-gold-bright),var(--dv-gold-deep)_30%,var(--dv-gold)_60%,var(--dv-gold-deep))]" />
-          <div className="dv-cut absolute inset-[2px] overflow-hidden bg-black" style={{ '--dv-cut': '17px' } as CSSProperties}>
+          <div className="dv-cut absolute inset-[2px] overflow-hidden bg-dv-ink" style={{ '--dv-cut': '17px' } as CSSProperties}>
+            {/* fundo do salão: mostrador romano lento atrás do anfitrião, holofote de lanterna */}
+            <span aria-hidden="true" className="absolute inset-0 bg-[radial-gradient(70%_55%_at_50%_30%,#2c2c31,var(--dv-ink)_75%)]" />
+            <div aria-hidden="true" className="absolute left-1/2 top-[4%] w-[88%] max-w-[420px] -translate-x-1/2 opacity-[0.22]">
+              <RomanDial tone="silver" />
+            </div>
+            <span aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 mx-auto h-full w-[80%] bg-[radial-gradient(ellipse_at_top,rgba(236,229,216,0.18),transparent_65%)]" />
+            {/* o Javali, debruçado: a base do sprite encosta na borda da mesa */}
             {FRAMES.map((name) => {
               const active = name === step.frame
               const art = npcPortrait('javali', name)
               if (!art) return null
-              // Cena larga num palco alto: a cena inteira (contain) sobre um fundo da própria cena, desfocado,
-              // em vez de recortar só o rosto.
               return (
                 <div
                   key={name}
                   aria-hidden={active ? undefined : true}
-                  className={cn('absolute inset-0 transition-[opacity,transform] duration-500', active ? 'scale-100 opacity-100' : 'scale-[1.04] opacity-0')}
+                  className={cn('absolute inset-x-0 bottom-[22%] top-[6%] transition-[opacity,transform] duration-500', active ? 'translate-y-0 opacity-100' : 'translate-y-2 opacity-0')}
                 >
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={art.src} alt="" draggable={false} className="absolute inset-0 size-full scale-110 object-cover opacity-45 blur-xl" />
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={art.src}
                     alt={active ? 'Javali, anfitrião da Sala de Jogos' : ''}
                     draggable={false}
-                    style={{ objectPosition: art.position }}
-                    className="absolute inset-0 size-full object-contain contrast-[1.05] saturate-[0.92] [-webkit-mask-image:linear-gradient(to_bottom,transparent,#000_8%,#000_92%,transparent)] [mask-image:linear-gradient(to_bottom,transparent,#000_8%,#000_92%,transparent)]"
+                    className="absolute inset-0 size-full object-contain object-bottom drop-shadow-[0_18px_22px_rgba(0,0,0,0.65)]"
                   />
                 </div>
               )
             })}
-            {/* luz de borda e vinheta: o mesmo tratamento do PortraitFrame */}
-            <span aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(60%_45%_at_50%_28%,rgba(236,212,154,0.16),transparent_70%)] mix-blend-screen" />
-            <span aria-hidden="true" className="devo-grain pointer-events-none absolute inset-0 opacity-[0.1] mix-blend-overlay" />
-            <span aria-hidden="true" className="pointer-events-none absolute inset-0 shadow-[inset_0_0_80px_rgba(0,0,0,0.8)]" />
+            {/* a mesa: tampo de mármore negro com filete de aço, sobre ela as cartas e as fichas */}
+            <div aria-hidden="true" className="absolute inset-x-0 bottom-0 h-[24%]">
+              <span className="dv-marble-dark absolute inset-0 border-t border-dv-gold/70 shadow-[inset_0_10px_18px_-8px_rgba(236,229,216,0.18)]" />
+              <span className="absolute inset-x-0 top-[3px] h-px bg-dv-gold/25" />
+              <span className="absolute left-[8%] top-[22%] h-[46%] w-[13%] -rotate-[10deg] dv-cut bg-dv-porcelain shadow-[0_4px_8px_rgba(0,0,0,0.6)]" style={{ '--dv-cut': '3px' } as CSSProperties} />
+              <span className="absolute left-[15%] top-[26%] h-[46%] w-[13%] rotate-[6deg] dv-cut bg-[linear-gradient(160deg,#2c2c31,#151517)] shadow-[0_4px_8px_rgba(0,0,0,0.6),inset_0_0_0_1px_rgba(186,176,159,0.6)]" style={{ '--dv-cut': '3px' } as CSSProperties} />
+              {/* fichas de Tempo empilhadas (losangos de aço) */}
+              <span className="absolute right-[12%] top-[30%] flex flex-col-reverse items-center">
+                {[0, 1, 2, 3].map((i) => (
+                  <span key={i} className="-mt-1.5 block h-2.5 w-9 rounded-[50%] border border-dv-gold-deep bg-[linear-gradient(180deg,var(--dv-gold-bright),var(--dv-gold-deep))] shadow-[0_2px_3px_rgba(0,0,0,0.6)]" />
+                ))}
+              </span>
+            </div>
+            <span aria-hidden="true" className="devo-grain pointer-events-none absolute inset-0 opacity-[0.08] mix-blend-overlay" />
+            <span aria-hidden="true" className="pointer-events-none absolute inset-0 shadow-[inset_0_0_70px_rgba(0,0,0,0.75)]" />
             {step.visual && step.visual !== 'tempo' && (
               <div key={step.visual} className="absolute inset-x-3 top-3 flex animate-dv-pop justify-center">
                 <VisualCue visual={step.visual} />
@@ -135,7 +150,7 @@ export function JavaliIntro() {
           {/* placa com o nome */}
           <div className="absolute -bottom-4 left-4 flex items-end">
             <span className="relative">
-              <span aria-hidden="true" className="absolute -left-2 bottom-[8%] h-[40%] w-[calc(100%+1rem)] -skew-x-[18deg] bg-dv-cobalt-deep" />
+              <span aria-hidden="true" className="absolute -left-2 bottom-[8%] h-[40%] w-[calc(100%+1rem)] -skew-x-[18deg] border-t border-dv-gold/80 bg-[linear-gradient(90deg,#4a453d,#2c2a26)]" />
               <span className="relative font-impact text-[40px] font-bold uppercase leading-none text-white [text-shadow:0_2px_0_rgba(0,0,0,0.6)]">Javali</span>
             </span>
             <span className="dv-label mb-1 ml-3 bg-dv-ink/70 px-1 text-[10px] text-dv-gold">Anfitrião</span>
@@ -173,12 +188,13 @@ function TempoCue() {
   const now = useNow(1000)
   return (
     <div className="relative isolate flex items-center gap-3 px-4 py-2" style={{ '--dv-cut': '10px' } as CSSProperties}>
-      <span aria-hidden="true" className="dv-cut-diag absolute inset-0 -z-10 bg-dv-cobalt/80" />
-      <span aria-hidden="true" className="dv-cut-diag absolute inset-px -z-10 bg-[linear-gradient(180deg,#14287a,var(--dv-ink))]" style={{ '--dv-cut': '9.6px' } as CSSProperties} />
-      <GlyphHourglass className="size-5 text-dv-cobalt-text" />
+      {/* pílula em ink com filete de aço */}
+      <span aria-hidden="true" className="dv-cut-diag absolute inset-0 -z-10 bg-[linear-gradient(135deg,var(--dv-gold-bright),var(--dv-gold-deep)_45%,var(--dv-gold))]" />
+      <span aria-hidden="true" className="dv-cut-diag absolute inset-px -z-10 bg-[linear-gradient(180deg,var(--dv-ink-3),var(--dv-ink))]" style={{ '--dv-cut': '9.6px' } as CSSProperties} />
+      <GlyphHourglass className="size-5 text-dv-gold" />
       <div className="leading-tight">
         <p className="dv-label text-[10px] text-dv-text-3">Seu Tempo</p>
-        <TimeDigits value={formatDuration(Math.max(0, state.timerEndsAt - now))} size="sm" tone="cobalt" label="Seu Tempo" />
+        <TimeDigits value={formatDuration(Math.max(0, state.timerEndsAt - now))} size="sm" tone="text" label="Seu Tempo" />
       </div>
     </div>
   )

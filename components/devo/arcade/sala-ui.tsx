@@ -13,7 +13,8 @@ import { portraitFrameProps } from '@/lib/devo/npcs'
 /* ── Placa de status (cabeçalho) ─────────────────────────────────────────────────────── */
 
 const PLAQUE_LINE = {
-  cobalt: 'bg-[linear-gradient(135deg,#a9bbff,var(--dv-cobalt)_35%,var(--dv-cobalt-dim)_75%,var(--dv-cobalt))]',
+  /** "Você": prata clara com um fio de ametista (único acento frio). */
+  cobalt: 'bg-[linear-gradient(135deg,#ffffff,var(--dv-amethyst)_38%,#ecebef_62%,#5b5863)]',
   gold: 'bg-[linear-gradient(135deg,var(--dv-gold-bright),var(--dv-gold-deep)_35%,var(--dv-gold)_65%,var(--dv-gold-deep))]',
   neutral: 'bg-[linear-gradient(135deg,rgba(236,238,242,0.42),var(--dv-line-strong)_40%,rgba(236,238,242,0.12))]',
   blood: 'bg-[linear-gradient(135deg,var(--dv-blood-text),var(--dv-blood)_45%,var(--dv-blood-deep))]',
@@ -39,7 +40,11 @@ export function initials(name: string) {
 
 const MONO_SIZE = { sm: 'size-8 text-[12px]', md: 'size-10 text-[14px]', lg: 'size-14 text-[19px]', xl: 'size-[72px] text-[24px]' } as const
 
-/** Medalhão com as iniciais. `tone` = cor do filete: ouro (1º), prata (2º), bronze (3º), cobalto (você). */
+/**
+ * Medalhão com as iniciais. `tone` = cor do filete: aço champanhe (1º), prata (2º), aço escuro (3º —
+ * o nome `bronze` ficou por compatibilidade, mas não há cobre), `cobalt` = você (prata + ametista),
+ * `ivory` = medalhão de mármore branco (lado claro do confronto).
+ */
 export function Monogram({
   name,
   size = 'md',
@@ -48,28 +53,37 @@ export function Monogram({
 }: {
   name: string
   size?: keyof typeof MONO_SIZE
-  tone?: 'neutral' | 'gold' | 'silver' | 'bronze' | 'cobalt' | 'ghost'
+  tone?: 'neutral' | 'gold' | 'silver' | 'bronze' | 'cobalt' | 'ghost' | 'ivory'
   className?: string
 }) {
   const line =
     tone === 'gold'
       ? PLAQUE_LINE.gold
       : tone === 'silver'
-        ? 'bg-[linear-gradient(135deg,#f4f6fb,#8a92a6_45%,#dfe3ec)]'
+        ? 'bg-[linear-gradient(135deg,#ffffff,#9a9894_45%,#e6e5e2)]'
         : tone === 'bronze'
-          ? 'bg-[linear-gradient(135deg,#e0a872,#7a4a22_45%,#c98a52)]'
+          ? 'bg-[linear-gradient(135deg,#9a9184,#4a453d_45%,#6b6357)]'
           : tone === 'cobalt'
             ? PLAQUE_LINE.cobalt
-            : tone === 'ghost'
-              ? 'bg-dv-line'
-              : PLAQUE_LINE.neutral
+            : tone === 'ivory'
+              ? 'bg-[linear-gradient(135deg,#ffffff,#8f8e8b_45%,#d9d8d4)]'
+              : tone === 'ghost'
+                ? 'bg-dv-line'
+                : PLAQUE_LINE.neutral
   return (
     <span aria-hidden="true" className={cn('relative isolate grid shrink-0 place-items-center font-display font-semibold tracking-[0.04em]', MONO_SIZE[size], className)} style={{ '--dv-cut': '28%' } as CSSProperties}>
       <span className={cn('dv-cut absolute inset-0 -z-10', line)} />
       <span
-        className={cn('dv-cut absolute inset-[1.5px] -z-10', tone === 'cobalt' ? 'bg-[linear-gradient(160deg,#1b2f8c,var(--dv-cobalt-dim)_60%,var(--dv-ink))]' : 'bg-[linear-gradient(160deg,var(--dv-ink-4),var(--dv-ink-2)_60%,var(--dv-ink))]')}
+        className={cn(
+          'dv-cut absolute inset-[1.5px] -z-10',
+          tone === 'ivory'
+            ? 'bg-[linear-gradient(160deg,#ffffff,#e9e8e5_55%,#cfcdc8)]'
+            : tone === 'cobalt'
+              ? 'bg-[radial-gradient(90%_70%_at_50%_100%,rgba(138,124,200,0.35),transparent_70%),linear-gradient(160deg,var(--dv-ink-4),var(--dv-ink-2)_60%,var(--dv-ink))]'
+              : 'bg-[linear-gradient(160deg,var(--dv-ink-4),var(--dv-ink-2)_60%,var(--dv-ink))]',
+        )}
       />
-      <span className={tone === 'ghost' ? 'text-dv-text-3' : 'text-dv-text'}>{tone === 'ghost' ? '?' : initials(name)}</span>
+      <span className={tone === 'ghost' ? 'text-dv-text-3' : tone === 'ivory' ? 'text-dv-porcelain-ink' : 'text-dv-text'}>{tone === 'ghost' ? '?' : initials(name)}</span>
     </span>
   )
 }
@@ -81,6 +95,7 @@ export function Monogram({
  * no rosto serve de medalhão; `arch` mostra busto e mesa.
  */
 export function JavaliPortrait({
+  pose = 'neutral',
   shape = 'arch',
   name,
   role,
@@ -88,6 +103,8 @@ export function JavaliPortrait({
   className,
   title = 'Javali, anfitrião da Sala de Jogos',
 }: {
+  /** Pose do mapa de retratos (`lib/devo/npcs.ts`): `standing` = corpo inteiro. */
+  pose?: string
   shape?: 'arch' | 'round' | 'rect'
   name?: string
   role?: string
@@ -97,7 +114,7 @@ export function JavaliPortrait({
 }) {
   return (
     <PortraitFrame
-      {...(portraitFrameProps('javali', 'neutral', shape === 'round' ? 'face' : 'bust') ?? {})}
+      {...(portraitFrameProps('javali', pose, shape === 'round' ? 'face' : 'bust') ?? {})}
       alt={title}
       tone="gold"
       shape={shape}
@@ -127,6 +144,12 @@ export const GAME_ART: Record<GameId, { src: string; position: string }> = {
   bluff: { src: '/images/arcade/bluff.png', position: '45% 70%' },
 }
 
+/**
+ * Tratamento das artes dos jogos: quase monocromático (mármore p/b), para que a arte não traga
+ * vermelho ou ouro amarelo decorativos para a paleta. A cor volta um pouco no hover.
+ */
+export const GAME_ART_TONE = 'object-cover grayscale-[0.88] contrast-[1.08] brightness-[0.95]'
+
 /* ── Link pequeno "ver mais" (≥ 44px de toque) ───────────────────────────────────────── */
 
 export function MoreLink({ label, onClick }: { label: string; onClick: () => void }) {
@@ -134,7 +157,7 @@ export function MoreLink({ label, onClick }: { label: string; onClick: () => voi
     <button
       type="button"
       onClick={onClick}
-      className="dv-focus group inline-flex min-h-11 items-center gap-1.5 pl-2 font-mono text-[11px] uppercase tracking-[0.18em] text-dv-text-3 transition-colors hover:text-dv-cobalt-text"
+      className="dv-focus group inline-flex min-h-11 items-center gap-1.5 pl-2 font-mono text-[11px] uppercase tracking-[0.18em] text-dv-text-3 transition-colors hover:text-dv-text"
     >
       {label}
       <GlyphArrow className="size-3.5 transition-transform duration-200 group-hover:translate-x-0.5" />
@@ -159,7 +182,7 @@ export function AstrolabeDial({ active, className }: { active: number; className
     <svg viewBox="0 0 400 400" aria-hidden="true" className={cn('pointer-events-none', className)} fill="none">
       <circle cx={cx} cy={cy} r="190" stroke="var(--dv-gold)" strokeOpacity="0.35" strokeWidth="1" />
       <circle cx={cx} cy={cy} r="176" stroke="var(--dv-gold)" strokeOpacity="0.2" strokeWidth="0.8" strokeDasharray="2 6" />
-      <circle cx={cx} cy={cy} r="128" stroke="var(--dv-cobalt)" strokeOpacity="0.35" strokeWidth="1" />
+      <circle cx={cx} cy={cy} r="128" stroke="var(--dv-marble-vein)" strokeOpacity="0.45" strokeWidth="1" />
       <circle cx={cx} cy={cy} r="64" stroke="var(--dv-gold)" strokeOpacity="0.3" strokeWidth="0.8" />
       {Array.from({ length: 72 }, (_, i) => {
         const a = (i / 72) * Math.PI * 2
@@ -184,8 +207,8 @@ export function AstrolabeDial({ active, className }: { active: number; className
         const y = cy - Math.cos(a) * 146
         return (
           <g key={r}>
-            <circle cx={x} cy={y} r="15" fill={on ? 'var(--dv-cobalt-dim)' : 'var(--dv-ink)'} stroke={on ? 'var(--dv-cobalt)' : 'var(--dv-gold)'} strokeOpacity={on ? 1 : 0.4} />
-            <text x={x} y={y + 4} textAnchor="middle" fontSize="11" fill={on ? '#c9d4ff' : 'var(--dv-gold)'} fillOpacity={on ? 1 : 0.6} style={{ fontFamily: 'var(--font-card-title)' }}>
+            <circle cx={x} cy={y} r="15" fill={on ? 'var(--dv-porcelain)' : 'var(--dv-ink)'} stroke={on ? 'var(--dv-amethyst)' : 'var(--dv-gold)'} strokeOpacity={on ? 1 : 0.4} />
+            <text x={x} y={y + 4} textAnchor="middle" fontSize="11" fill={on ? 'var(--dv-porcelain-ink)' : 'var(--dv-gold)'} fillOpacity={on ? 1 : 0.6} style={{ fontFamily: 'var(--font-card-title)' }}>
               {r}
             </text>
           </g>
@@ -197,7 +220,7 @@ export function AstrolabeDial({ active, className }: { active: number; className
         y1={cy}
         x2={cx + Math.sin((active / 7) * Math.PI * 2) * 124}
         y2={cy - Math.cos((active / 7) * Math.PI * 2) * 124}
-        stroke="var(--dv-cobalt)"
+        stroke="var(--dv-gold-bright)"
         strokeWidth="2"
         strokeLinecap="round"
       />

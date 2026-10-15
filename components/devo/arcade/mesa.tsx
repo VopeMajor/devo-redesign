@@ -26,7 +26,7 @@ import { useNow } from '../hooks'
 import { ArcadeChat } from './arcade-chat'
 import { type ArcadeView, eventTimeLabel, formatMinutes, registerEvent, useApplyTime } from './arcade-shared'
 import { type Duel, useBetSheet } from './bet-sheet'
-import { GAME_ART, JavaliPortrait, Monogram, MoreLink, OddsBar } from './sala-ui'
+import { GAME_ART, GAME_ART_TONE, JavaliPortrait, Monogram, MoreLink, OddsBar } from './sala-ui'
 
 export { useBetSheet, type Duel }
 
@@ -154,9 +154,9 @@ export function Mesa({
 function HostStrip() {
   const [line] = useState(() => HOST_LINES[Math.floor(Math.random() * HOST_LINES.length)])
   return (
-    <div className="flex animate-dv-fade items-center gap-4">
-      <JavaliPortrait className="w-[96px]" />
-      <div className="min-w-0 flex-1">
+    <div className="flex animate-dv-fade items-end gap-4 border-b border-dv-line pb-1">
+      <JavaliPortrait pose="standing" shape="rect" className="w-[76px]" />
+      <div className="min-w-0 flex-1 pb-3">
         <p className="dv-label flex flex-wrap items-center gap-x-2 text-[10px] text-dv-gold">
           <span>Javali · anfitrião</span>
           <span className="text-dv-text-3">Jogue. Aposte. Sobreviva.</span>
@@ -229,10 +229,10 @@ function Hero({
     <Frame as="section" aria-label="Próxima partida" tone="gold" ornate glow pad="none" cutSize={16} className="animate-dv-cut-in">
       {/* banner do jogo, cortado em diagonal */}
       <div
-        className="relative m-[3px] mb-0 h-32 overflow-hidden [clip-path:polygon(15px_0,calc(100%-15px)_0,100%_15px,100%_76%,0_100%,0_15px)] @2xl:h-48"
+        className="relative m-[3px] mb-0 h-28 overflow-hidden [clip-path:polygon(15px_0,calc(100%-15px)_0,100%_15px,100%_76%,0_100%,0_15px)] @2xl:h-48"
       >
-        <Image src={GAME_ART[event.gameId].src} alt="" fill priority sizes="(min-width: 1024px) 680px, 100vw" className="object-cover" style={{ objectPosition: GAME_ART[event.gameId].position }} />
-        <span aria-hidden="true" className="absolute inset-0 bg-[linear-gradient(180deg,rgba(5,7,13,0.25)_0%,rgba(5,7,13,0.2)_50%,var(--dv-ink-2)_100%)]" />
+        <Image src={GAME_ART[event.gameId].src} alt="" fill priority sizes="(min-width: 1024px) 680px, 100vw" className={GAME_ART_TONE} style={{ objectPosition: GAME_ART[event.gameId].position }} />
+        <span aria-hidden="true" className="absolute inset-0 bg-[linear-gradient(180deg,rgba(12,12,14,0.25)_0%,rgba(12,12,14,0.2)_50%,var(--dv-ink-2)_100%)]" />
         <div className="absolute inset-x-4 top-4 flex items-center justify-between gap-2">
           <Badge tone={badge.tone} live={badge.live} dot={!badge.live}>
             {badge.text}
@@ -247,7 +247,7 @@ function Hero({
           <MoreLink label="Agenda" onClick={onAgenda} />
         </div>
         <h3 className="relative mt-0.5 w-fit max-w-full">
-          <span aria-hidden="true" className="absolute -left-2 bottom-[10%] h-[32%] w-[calc(100%+1rem)] -skew-x-[18deg] bg-dv-cobalt-deep/90" />
+          <span aria-hidden="true" className="absolute -left-2 bottom-[8%] h-[30%] w-[calc(100%+1rem)] -skew-x-[18deg] border-t border-dv-gold/70 bg-[linear-gradient(90deg,#4a453d,#2c2a26_70%,transparent)]" />
           <span className="relative block font-impact text-[40px] font-bold uppercase leading-[0.9] tracking-[0.01em] text-dv-text [text-shadow:0_2px_0_rgba(0,0,0,0.5)] @2xl:text-[52px]">
             {event.label ?? g.name}
           </span>
@@ -257,14 +257,14 @@ function Hero({
           {g.tagline}
         </p>
 
-        <div className="mt-4">
+        <div className="mt-4 grid grid-cols-[auto_1fr] items-end gap-x-4">
           {isLive ? (
-            <p className="flex items-center gap-3 font-impact text-[40px] font-bold uppercase leading-none text-dv-cobalt-text [text-shadow:0_0_18px_rgba(138,124,200,0.6)]">
-              <span aria-hidden="true" className="size-3 animate-dv-blink rounded-full bg-dv-cobalt shadow-[0_0_14px_var(--dv-cobalt)]" />
+            <p className="flex items-center gap-3 font-impact text-[40px] font-bold uppercase leading-none text-dv-text">
+              <span aria-hidden="true" className="size-3 animate-dv-blink rotate-45 bg-dv-amethyst shadow-[0_0_14px_var(--dv-amethyst)]" />
               Ao vivo
             </p>
           ) : (
-            <>
+            <div>
               <p className="dv-label mb-1.5 text-[10px] text-dv-text-3">Começa em</p>
               <Countdown
                 endsAt={event.startsAt}
@@ -275,26 +275,25 @@ function Hero({
                 label="Começa em"
                 render={long ? (ms) => formatCountdown(ms) : undefined}
               />
-            </>
+            </div>
           )}
+          {/* o prêmio sobe para o lado do relógio: o quarto direito do cartaz deixa de ficar vazio */}
+          <dl className="min-w-0 self-stretch border-l border-dv-line pb-1 pl-3">
+            <dt className="dv-label text-[10px] text-dv-gold">Prêmio</dt>
+            <dd className="mt-1.5 font-body text-[16px] leading-snug text-dv-gold-bright">{prize.length ? prize.join(' · ') : 'Pontos de ranking'}</dd>
+          </dl>
         </div>
 
-        <dl className="mt-4 grid grid-cols-2 gap-4 border-t border-dv-line pt-3">
-          <div>
-            <dt className="dv-label text-[10px] text-dv-text-3">Jogadores</dt>
-            <dd className="mt-1 font-impact text-[22px] font-semibold leading-none dv-tabular">
-              {event.entries}
-              <span className="text-dv-text-3">/{event.maxPlayers}</span>
-            </dd>
-            <dd className="mt-2 h-1 bg-dv-ink-4" role="progressbar" aria-valuenow={pct} aria-valuemin={0} aria-valuemax={100} aria-label="Vagas preenchidas">
-              <span className="block h-full bg-[linear-gradient(90deg,var(--dv-cobalt-deep),var(--dv-cobalt-text))]" style={{ width: `${pct}%` }} />
-            </dd>
-          </div>
-          <div>
-            <dt className="dv-label text-[10px] text-dv-text-3">Prêmio</dt>
-            <dd className="mt-1 font-body text-[15px] leading-snug text-dv-gold-bright">{prize.length ? prize.join(' · ') : 'Pontos de ranking'}</dd>
-          </div>
-        </dl>
+        <div className="mt-4 flex items-center gap-3 border-t border-dv-line pt-3">
+          <p className="dv-label shrink-0 text-[10px] text-dv-text-3">Jogadores</p>
+          <p className="shrink-0 font-impact text-[20px] font-semibold leading-none dv-tabular">
+            {event.entries}
+            <span className="text-dv-text-3">/{event.maxPlayers}</span>
+          </p>
+          <span className="h-1 flex-1 bg-dv-ink-4" role="progressbar" aria-valuenow={pct} aria-valuemin={0} aria-valuemax={100} aria-label="Vagas preenchidas">
+            <span className="block h-full bg-[linear-gradient(90deg,#8f8e8b,var(--dv-porcelain))]" style={{ width: `${pct}%` }} />
+          </span>
+        </div>
 
         <Button block size="lg" className="mt-4" disabled={busy || action.kind === 'done'} onClick={run} sfx={action.kind === 'register' ? 'confirm' : 'click'} icon={action.kind === 'done' ? <GlyphCheck /> : undefined}>
           {action.label}
@@ -330,11 +329,11 @@ function GameCard({
   const eventStatus = !event
     ? { text: 'Nenhum evento esta semana', cls: 'text-dv-text-3', locked: false }
     : event.status === 'LIVE'
-      ? { text: 'Ao vivo', cls: 'text-dv-cobalt-text', locked: false }
+      ? { text: 'Ao vivo', cls: 'text-dv-text', locked: false }
       : event.joined
-        ? { text: 'Inscrito', cls: 'text-dv-cobalt-text', locked: false }
+        ? { text: 'Inscrito', cls: 'text-dv-text', locked: false }
         : event.status === 'REGISTRATION'
-          ? { text: 'Inscrições abertas', cls: 'text-dv-cobalt-text', locked: false }
+          ? { text: 'Inscrições abertas', cls: 'text-dv-text', locked: false }
           : event.status === 'LOCKED'
             ? { text: 'Inscrições encerradas', cls: 'text-dv-text-2', locked: true }
             : { text: 'Inscrições ainda fechadas', cls: 'text-dv-text-2', locked: true }
@@ -344,7 +343,7 @@ function GameCard({
       style={{ '--dv-cut': '14px', animationDelay: `${120 + index * 70}ms` } as CSSProperties}
     >
       {/* moldura metálica da carta */}
-      <span aria-hidden="true" className="dv-cut absolute inset-0 -z-10 bg-[linear-gradient(155deg,var(--dv-gold-bright)_0%,var(--dv-gold-deep)_22%,#2b2416_48%,var(--dv-gold-deep)_74%,var(--dv-gold)_100%)] transition-[filter] duration-300 group-hover:brightness-125" />
+      <span aria-hidden="true" className="dv-cut absolute inset-0 -z-10 bg-[linear-gradient(155deg,var(--dv-gold-bright)_0%,var(--dv-gold-deep)_22%,#24221f_48%,var(--dv-gold-deep)_74%,var(--dv-gold)_100%)] transition-[filter] duration-300 group-hover:brightness-125" />
       <span
         aria-hidden="true"
         className="dv-cut absolute inset-[2px] -z-10 bg-[linear-gradient(180deg,var(--dv-ink-3)_0%,var(--dv-ink-2)_45%,var(--dv-ink)_100%)]"
@@ -357,10 +356,10 @@ function GameCard({
           alt=""
           fill
           sizes="(min-width: 1024px) 240px, 50vw"
-          className="object-cover transition-transform duration-500 group-hover:scale-[1.06]"
+          className={cn(GAME_ART_TONE, 'transition-transform duration-500 group-hover:scale-[1.06]')}
           style={{ objectPosition: GAME_ART[gameId].position }}
         />
-        <span aria-hidden="true" className="absolute inset-0 bg-[linear-gradient(0deg,var(--dv-ink-2)_0%,rgba(10,15,28,0)_55%)]" />
+        <span aria-hidden="true" className="absolute inset-0 bg-[linear-gradient(0deg,var(--dv-ink-2)_0%,rgba(12,12,14,0)_55%)]" />
         {/* índice de canto, como numa carta */}
         <span aria-hidden="true" className="absolute left-2 top-1.5 flex flex-col items-center leading-none text-dv-gold-bright [text-shadow:0_1px_6px_rgba(0,0,0,0.9)]">
           <span className="font-impact text-[20px] font-semibold">{toRoman(index)}</span>
@@ -392,7 +391,7 @@ function GameCard({
         </div>
 
         <div className="mt-2 border-t border-dashed border-dv-line pt-2" aria-label="Partida livre">
-          <p className="dv-label text-[10px] tracking-[0.12em] text-dv-cobalt-text">Partida livre</p>
+          <p className="dv-label text-[10px] tracking-[0.12em] text-dv-gold">Partida livre</p>
           <p className="mt-0.5 font-mono text-[12px] tracking-[0.04em] text-dv-text-2">{soon ? 'Em breve' : `Melhor: ${formatPoints(best)}`}</p>
         </div>
 
@@ -415,12 +414,15 @@ export function fmtOdds(o: number) {
   return `${o.toFixed(2).replace('.', ',')}×`
 }
 
-/** Dois lados em corte diagonal, cada um é o botão de aposta daquele lado. */
+/**
+ * Dois lados em corte diagonal, cada um é o botão de aposta daquele lado. O confronto é o motivo do
+ * DEVO: mármore negro × mármore branco, com o "VS" num losango de aço champanhe.
+ */
 export function VsSplit({ duel, onBet, big = false, closed = false }: { duel: Duel; onBet: (d: Duel, pick: string) => void; big?: boolean; closed?: boolean }) {
   const [a, b] = duel.sides
   const locked = !!duel.myBet || !!duel.winner || closed
   return (
-    <div className="relative grid grid-cols-2">
+    <div className="relative grid grid-cols-2 shadow-[0_10px_24px_-12px_rgba(0,0,0,0.9)]">
       {[a, b].map((s, i) => {
         const left = i === 0
         const won = duel.winner === s.name
@@ -433,44 +435,53 @@ export function VsSplit({ duel, onBet, big = false, closed = false }: { duel: Du
             onClick={() => onBet(duel, s.name)}
             aria-label={s.isMe ? `${s.name} (você)` : `Apostar em ${s.name}, odd ${s.odds.toFixed(2)}`}
             className={cn(
-              'dv-focus group relative isolate flex min-w-0 flex-col gap-1.5 py-3 transition-[filter] duration-200 enabled:active:brightness-125 disabled:cursor-default',
-              left ? 'items-start pl-3 pr-6 text-left' : 'items-end pl-6 pr-3 text-right',
+              'dv-focus group relative isolate flex min-w-0 flex-col gap-1.5 py-3 transition-[filter] duration-200 enabled:active:brightness-110 disabled:cursor-default',
+              left ? 'items-start pl-3 pr-8 text-left text-dv-text' : 'items-end pl-8 pr-3 text-right text-dv-porcelain-ink',
               big ? 'min-h-[148px]' : 'min-h-[120px]',
-              lost && 'opacity-50',
+              lost && 'opacity-50 grayscale',
             )}
           >
+            {/* placa de mármore: negro à esquerda, branco à direita; o corte diagonal vira o rejunte de aço */}
             <span
               aria-hidden="true"
               className={cn(
-                'absolute inset-0 -z-10',
-                left
-                  ? '[clip-path:polygon(0_0,100%_0,86%_100%,0_100%)] bg-[linear-gradient(110deg,#17307f_0%,var(--dv-cobalt-dim)_55%,rgba(11,26,77,0.4)_100%)]'
-                  : '[clip-path:polygon(14%_0,100%_0,100%_100%,0_100%)] bg-[linear-gradient(250deg,#3a2c12_0%,#1d170b_55%,rgba(29,23,11,0.4)_100%)]',
-                'transition-[filter] duration-200 group-enabled:group-hover:brightness-125',
+                'absolute inset-0 -z-20',
+                left ? 'bg-dv-gold-deep [clip-path:polygon(0_0,100%_0,86%_100%,0_100%)]' : 'bg-dv-gold [clip-path:polygon(14%_0,100%_0,100%_100%,0_100%)]',
               )}
             />
             <span
               aria-hidden="true"
-              className={cn('absolute inset-y-0 -z-10 w-[3px]', left ? 'left-0 bg-dv-cobalt' : 'right-0 bg-dv-gold')}
+              className={cn(
+                'absolute -z-10 transition-[filter] duration-200 group-enabled:group-hover:brightness-110',
+                left
+                  ? 'dv-marble-dark inset-y-px left-px right-[2px] [clip-path:polygon(0_0,100%_0,86%_100%,0_100%)]'
+                  : 'dv-marble inset-y-px left-[2px] right-px [clip-path:polygon(14%_0,100%_0,100%_100%,0_100%)]',
+              )}
             />
-            <Monogram name={s.name} size={big ? 'lg' : 'md'} tone={s.isMe ? 'cobalt' : left ? 'cobalt' : 'gold'} />
-            <span className="max-w-full truncate font-body text-[15px] leading-tight text-dv-text">{s.isMe ? `${s.name} (você)` : s.name}</span>
-            <span className={cn('font-impact font-semibold leading-none dv-tabular', big ? 'text-[34px]' : 'text-[26px]', left ? 'text-dv-cobalt-text' : 'text-dv-gold-bright')}>
-              {fmtOdds(s.odds)}
-            </span>
-            <span className="font-mono text-[11px] text-dv-text-3">{s.wins} vitórias</span>
+            {/* luz de lanterna no canto externo */}
+            <span
+              aria-hidden="true"
+              className={cn(
+                'pointer-events-none absolute inset-0 -z-10',
+                left ? 'bg-[radial-gradient(70%_60%_at_0%_0%,rgba(236,229,216,0.12),transparent_70%)]' : 'bg-[radial-gradient(70%_60%_at_100%_100%,rgba(12,12,14,0.12),transparent_70%)]',
+              )}
+            />
+            <Monogram name={s.name} size={big ? 'lg' : 'md'} tone={s.isMe ? 'cobalt' : left ? 'neutral' : 'ivory'} />
+            <span className={cn('max-w-full truncate font-body text-[15px] leading-tight', left ? 'text-dv-text' : 'text-dv-porcelain-ink')}>{s.isMe ? `${s.name} (você)` : s.name}</span>
+            <span className={cn('font-impact font-semibold leading-none dv-tabular', big ? 'text-[34px]' : 'text-[26px]', left ? 'text-dv-gold-bright' : 'text-dv-porcelain-ink')}>{fmtOdds(s.odds)}</span>
+            <span className={cn('font-mono text-[11px]', left ? 'text-dv-text-3' : 'text-[#58585e]')}>{s.wins} vitórias</span>
             {!locked && !s.isMe && (
-              <span className="dv-label mt-0.5 text-[10px] text-dv-text-2 group-enabled:group-hover:text-dv-text">Apostar ›</span>
+              <span className={cn('dv-label mt-0.5 text-[10px]', left ? 'text-dv-text-2 group-enabled:group-hover:text-dv-text' : 'text-[#3d3d42] group-enabled:group-hover:text-dv-porcelain-ink')}>Apostar ›</span>
             )}
-            {won && <span className="dv-label text-[10px] text-dv-gold-bright">Venceu</span>}
+            {won && <span className={cn('dv-label text-[10px]', left ? 'text-dv-gold-bright' : 'text-dv-gold-deep')}>Venceu</span>}
           </button>
         )
       })}
-      <span
-        aria-hidden="true"
-        className="pointer-events-none absolute left-1/2 top-1/2 grid size-12 -translate-x-1/2 -translate-y-1/2 rotate-45 place-items-center border border-dv-gold bg-dv-ink shadow-[0_0_20px_rgba(0,0,0,0.8)]"
-      >
-        <span className="-rotate-45 font-impact text-[18px] font-bold italic text-dv-text">VS</span>
+      <span aria-hidden="true" className="pointer-events-none absolute left-1/2 top-1/2 grid size-12 -translate-x-1/2 -translate-y-1/2 rotate-45 place-items-center shadow-[0_0_18px_rgba(0,0,0,0.75)]">
+        <span className="dv-brass absolute inset-0" />
+        <span className="absolute inset-[3px] bg-dv-ink" />
+        <span className="absolute inset-[5px] border border-dv-gold/40" />
+        <span className="relative -rotate-45 font-impact text-[17px] font-bold italic text-dv-gold-bright">VS</span>
       </span>
     </div>
   )
@@ -515,7 +526,7 @@ function FeaturedDuel({
   const [a, b] = duel.sides
   const bettors = a.bettors + b.bettors
   return (
-    <Frame as="section" aria-label="Confronto em destaque" pad="md" tone={event.status === 'LIVE' ? 'cobalt' : 'neutral'} className="animate-dv-rise">
+    <Frame as="section" aria-label="Confronto em destaque" pad="md" tone="neutral" className="animate-dv-rise">
       <SectionHeader
         index="II"
         kicker={`${GAMES[event.gameId].name} · Nº ${String(event.number).padStart(3, '0')}`}
@@ -546,6 +557,7 @@ function FeaturedDuel({
 
 /* ── Ranking da semana (resumo) ────────────────────────────────────────────────────── */
 
+// 3º lugar em aço escuro (não bronze): a hierarquia vem do tamanho e da luz.
 const PODIUM_TONE = ['gold', 'silver', 'bronze'] as const
 
 function RankingPanel({ data, onMore }: { data: Dashboard; onMore: () => void }) {
@@ -569,16 +581,16 @@ function RankingPanel({ data, onMore }: { data: Dashboard; onMore: () => void })
               return (
                 <li key={r.name} className={cn('flex min-w-0 flex-col items-center text-center', place === 1 ? 'order-2' : place === 2 ? 'order-1' : 'order-3')}>
                   <Monogram name={r.name} size={place === 1 ? 'lg' : 'md'} tone={r.isMe ? 'cobalt' : tone} />
-                  <span className={cn('mt-1.5 max-w-full truncate font-body text-[14px] leading-tight', r.isMe ? 'text-dv-cobalt-text' : 'text-dv-text')}>{r.isMe ? 'Você' : r.name}</span>
+                  <span className={cn('mt-1.5 max-w-full truncate font-body text-[14px] leading-tight', r.isMe ? 'text-dv-amethyst-text' : 'text-dv-text')}>{r.isMe ? 'Você' : r.name}</span>
                   <span className="font-mono text-[12px] tabular-nums text-dv-text-2">{formatPoints(r.score)}</span>
                   <span
                     aria-hidden="true"
                     className={cn(
                       'mt-1.5 grid w-full place-items-center border-t-2 bg-[linear-gradient(180deg,var(--dv-ink-4),var(--dv-ink-2))] [clip-path:polygon(10%_0,90%_0,100%_100%,0_100%)]',
-                      place === 1 ? 'h-14 border-dv-gold' : place === 2 ? 'h-10 border-[#c9cfdb]' : 'h-8 border-[#b77b45]',
+                      place === 1 ? 'h-14 border-dv-gold-bright' : place === 2 ? 'h-10 border-[#d9d8d4]' : 'h-8 border-dv-gold-deep',
                     )}
                   >
-                    <span className={cn('font-impact font-bold leading-none', place === 1 ? 'text-[26px] text-dv-gold-bright' : 'text-[18px] text-dv-text-2')}>{toRoman(place)}</span>
+                    <span className={cn('font-impact font-bold leading-none', place === 1 ? 'text-[26px] text-dv-gold-bright' : place === 2 ? 'text-[20px] text-dv-porcelain' : 'text-[18px] text-[#8a8276]')}>{toRoman(place)}</span>
                   </span>
                 </li>
               )
@@ -587,7 +599,7 @@ function RankingPanel({ data, onMore }: { data: Dashboard; onMore: () => void })
           {rest.length > 0 && (
             <ol className="mt-3 divide-y divide-dv-line border-t border-dv-line" start={4}>
               {rest.map((r) => (
-                <li key={r.name} className={cn('grid min-h-11 grid-cols-[2rem_1fr_auto] items-center gap-2 px-1 font-body text-[15px]', r.isMe ? 'bg-dv-cobalt-dim text-dv-text' : 'text-dv-text-2')}>
+                <li key={r.name} className={cn('grid min-h-11 grid-cols-[2rem_1fr_auto] items-center gap-2 px-1 font-body text-[15px]', r.isMe ? 'bg-dv-ink-3 text-dv-text shadow-[inset_2px_0_0_var(--dv-amethyst)]' : 'text-dv-text-2')}>
                   <span className="font-impact text-[15px] text-dv-text-3 dv-tabular">{r.rank}</span>
                   <span className="truncate">{r.isMe ? `${r.name} (você)` : r.name}</span>
                   <span className="font-mono text-[13px] tabular-nums">{formatPoints(r.score)}</span>
@@ -596,7 +608,7 @@ function RankingPanel({ data, onMore }: { data: Dashboard; onMore: () => void })
             </ol>
           )}
           {meOutside && (
-            <p className="mt-1 grid min-h-11 grid-cols-[2rem_1fr_auto] items-center gap-2 bg-dv-cobalt-dim px-1 font-body text-[15px]">
+            <p className="mt-1 grid min-h-11 grid-cols-[2rem_1fr_auto] items-center gap-2 bg-dv-ink-3 px-1 shadow-[inset_2px_0_0_var(--dv-amethyst)] font-body text-[15px]">
               <span className="font-impact text-dv-text-2">{data.me.rank}</span>
               <span className="truncate">{data.me.name} (você)</span>
               <span className="font-mono text-[13px] tabular-nums">{formatPoints(data.me.score)}</span>
@@ -649,7 +661,7 @@ function RecentPanel({ data }: { data: Dashboard }) {
               <span
                 className={cn(
                   'dv-label w-[4.5rem] shrink-0 text-[10px]',
-                  r.result === 'win' ? 'text-dv-cobalt-text' : r.result === 'draw' ? 'text-dv-text-2' : 'text-dv-text-3',
+                  r.result === 'win' ? 'text-dv-gold-bright' : r.result === 'draw' ? 'text-dv-text-2' : 'text-dv-text-3',
                 )}
               >
                 {r.result === 'win' ? 'Vitória' : r.result === 'draw' ? 'Empate' : 'Derrota'}
