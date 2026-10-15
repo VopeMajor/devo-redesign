@@ -217,6 +217,9 @@ if (want('novato')) {
   })
   await step('tutorial', async () => {
     await wait(2500)
+    // O salão do relógio monta o WebGL ~2,6s depois de entrar: espera o canvas aparecer e assentar.
+    await page.locator('main canvas').first().waitFor({ state: 'attached', timeout: 8000 }).catch(() => {})
+    await wait(1200)
     let n = 0
     let seenBorder = false
     let seenKabum = false

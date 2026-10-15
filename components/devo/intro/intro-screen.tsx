@@ -87,6 +87,15 @@ export function IntroScreen({ onFinish, playerName }: { onFinish: () => void; pl
     void loadVoiceManifest()
   }, [])
 
+  // O salão entra primeiro no desenho estático do preset; o WebGL só monta depois da cortina e da
+  // entrada do salão (en-hall-in: 450ms + 2000ms). Compilar os shaders no meio da animação custava
+  // quadros no celular (e travava a captura da cortina no CI, que roda em renderizador por software).
+  const [sceneLive, setSceneLive] = useState(false)
+  useEffect(() => {
+    const t = window.setTimeout(() => setSceneLive(true), 2600)
+    return () => window.clearTimeout(t)
+  }, [])
+
   // KABUM!: explosão no mesmo instante em que o letreiro bate no diagrama (en-kabum: 760ms).
   useEffect(() => {
     if (line.visual !== 'reveal') return
@@ -130,7 +139,7 @@ export function IntroScreen({ onFinish, playerName }: { onFinish: () => void; pl
       {/* Ponte "subindo à superfície": a pedra da mina desce e some enquanto o salão do relógio desce
           do alto para o lugar (a câmera sobe da mina para o salão). */}
       <div aria-hidden="true" className="en-hall-in absolute inset-0">
-        <SceneBackdrop preset="clockhall" intensity={0.65} dim={0.5} />
+        <SceneBackdrop preset="clockhall" intensity={0.65} dim={0.5} staticOnly={!sceneLive} />
       </div>
       {/* Mármore, não noite: tira ~80% da saturação do salão (o céu índigo do preset vira grafite).
           A noite violeta fica só como resto de luz. Fica FORA da camada animada (en-hall-in), para a
