@@ -222,9 +222,10 @@ export function PrologueStage({
     <div ref={root} className="absolute inset-0 overflow-hidden bg-black">
       {/* Câmera: cada cena tem enquadramento próprio (empurra, aproxima, desce), com transição lenta. */}
       <div className="absolute inset-0 transition-transform duration-[2600ms] ease-[cubic-bezier(.33,0,.15,1)] motion-reduce:transition-none" style={{ transform: camera(stage), transformOrigin: '50% 55%' }}>
-      {/* Escuridão / vazio: o sigilo acende devagar no fundo, poeira na luz que cai do alto. */}
+      {/* Escuridão / vazio: o sigilo acende devagar no fundo, poeira na luz que cai do alto. Luz em
+          porcelana sobre grafite (mármore); a ametista fica só no halo do sigilo. */}
       <Layer on={stage === 'dark' || stage === 'void' || stage === 'voice'}>
-        <div className="absolute inset-0 bg-[radial-gradient(60%_45%_at_50%_0%,color-mix(in_oklab,var(--dv-amethyst)_22%,transparent),transparent_70%),radial-gradient(80%_60%_at_50%_42%,color-mix(in_oklab,var(--dv-night)_70%,transparent),var(--dv-ink)_75%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(60%_45%_at_50%_0%,color-mix(in_oklab,var(--dv-porcelain)_7%,transparent),transparent_70%),radial-gradient(80%_60%_at_50%_42%,#1d1d20,var(--dv-ink)_75%)]" />
         <div className="absolute inset-x-[22%] top-0 h-[70%] bg-[linear-gradient(180deg,color-mix(in_oklab,var(--dv-porcelain)_12%,transparent),transparent)] [clip-path:polygon(38%_0,62%_0,100%_100%,0_100%)] blur-md" />
         <div className="absolute left-1/2 top-[34%] size-[min(64vw,280px)] -translate-x-1/2 -translate-y-1/2" style={NEAR}>
           <svg viewBox="0 0 200 200" aria-hidden="true" className="en-sweep-hand-slow absolute inset-0 size-full text-dv-gold" fill="none" stroke="currentColor">
@@ -237,7 +238,7 @@ export function PrologueStage({
             })}
           </svg>
           <div className="en-ignite absolute inset-[26%] text-dv-text">
-            <DeadlyVoteSymbol variant="mark" className="size-full drop-shadow-[0_0_24px_color-mix(in_oklab,var(--dv-amethyst)_90%,transparent)]" />
+            <DeadlyVoteSymbol variant="mark" className="size-full drop-shadow-[0_0_20px_color-mix(in_oklab,var(--dv-amethyst)_55%,transparent)]" />
           </div>
         </div>
         <Embers className="opacity-70" />
