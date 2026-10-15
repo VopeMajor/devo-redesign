@@ -440,7 +440,7 @@ export function PrologueScreen({ playerName, onFinish: onDone }: { playerName: s
   }, [actN])
 
   return (
-    <main className="relative h-dvh overflow-hidden bg-black text-dv-text">
+    <main className="en-root relative h-dvh overflow-hidden bg-black text-dv-text">
       <PrologueStage
         stage={beat.stage}
         mood={mood}

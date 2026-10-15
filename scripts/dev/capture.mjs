@@ -159,36 +159,6 @@ if (want('novato')) {
     await page.mouse.wheel(0, 900)
     await wait(600)
     await shot(page, '01-landing-scroll')
-    // TEMPORÁRIO (Entrada r5b): teste de renderização da EB Garamond do next/font no Chromium do CI.
-    await page.evaluate(() => {
-      const t = 'Agora vá. Tente não morrer antes de ser útil, Lune Arcanjo. Uma dica do Rato: não confie.'
-      const v = {
-        herdado: '',
-        auto: 'text-rendering:auto',
-        legib: 'text-rendering:optimizeLegibility',
-        speed: 'text-rendering:optimizeSpeed',
-        semkern: 'font-kerning:none',
-        wght: 'font-variation-settings:"wght" 400',
-        gpu: 'transform:translateZ(0)',
-        tam175: 'font-size:17.5px',
-        peso500: 'font-weight:500',
-        italico: 'font-style:italic',
-      }
-      const box = document.createElement('div')
-      box.style.cssText = 'position:fixed;inset:0;z-index:99999;background:#151517;color:#eee;padding:10px;overflow:hidden'
-      for (const [k, s] of Object.entries(v)) {
-        const l = document.createElement('div')
-        l.style.cssText = 'font:10px monospace;color:#9a9;margin-top:4px'
-        l.textContent = k
-        const p = document.createElement('p')
-        p.style.cssText = 'margin:0;font-family:var(--font-body);font-size:17px;line-height:1.5;' + s
-        p.textContent = t
-        box.append(l, p)
-      }
-      document.body.append(box)
-    })
-    await wait(400)
-    await shot(page, '99-teste-fonte')
   })
   await step('convite', async () => {
     await page.goto(BASE, { waitUntil: 'networkidle' })

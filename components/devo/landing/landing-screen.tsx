@@ -83,7 +83,7 @@ export function LandingScreen({
   }, [])
 
   return (
-    <main ref={mainRef} className="relative flex min-h-dvh flex-col overflow-hidden bg-dv-ink text-dv-text lg:h-dvh">
+    <main ref={mainRef} className="en-root relative flex min-h-dvh flex-col overflow-hidden bg-dv-ink text-dv-text lg:h-dvh">
       <SceneBackdrop preset="sigil" intensity={0.9} focus={focus} dim={veiled ? 0.18 : 0.08} />
       {/* Paleta do mármore: a noite do astrolábio vira grafite (a cena perde quase toda a cor) e sobra
           só um halo violeta discreto atrás do sigilo — atmosfera, não fundo. */}

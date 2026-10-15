@@ -314,3 +314,12 @@
 }
 .en-hall-in { animation: en-hall-in 2000ms var(--dv-ease-out) 450ms both; }
 @media (prefers-reduced-motion: reduce) { .en-surface, .en-tear-l, .en-tear-r { display: none; } }
+
+/* Texto dentro de <button>/<input> na Jornada: o estilo padrão do Chromium põe `text-rendering: auto`
+   nos controles de formulário e desfaz o geometricPrecision do <html> (globals.css). Com a EB Garamond do
+   next/font (com hinting) isso abria buracos ("Ten te", "an tes") e engolia o espaço depois de pontuação
+   ("mentir.Uma") nas falas, que são botões. Candidato ao globals: `button, input, textarea, select
+   { text-rendering: inherit }` (o mesmo defeito aparece nos cartões-botão do interior). */
+.en-root :is(button, input, textarea, select) {
+  text-rendering: geometricPrecision;
+}

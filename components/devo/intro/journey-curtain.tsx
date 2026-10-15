@@ -32,11 +32,11 @@ export function JourneyCurtain({ state, tone }: { state: CurtainState; tone: Jou
         <span className="dv-curtain-band absolute -inset-y-[10%] left-[-50%] w-[200%] bg-[linear-gradient(90deg,#5f584d,#bab09f_60%,#ece5d8)]" style={{ animationDelay: '-40ms' }} />
         {/* lâmina principal: mármore negro com veios cinza */}
         <span className="dv-curtain-slab absolute -inset-y-[10%] left-[-50%] w-[200%] bg-[#0c0c0e] shadow-[0_0_60px_rgba(0,0,0,0.9)]">
-          <span className="dv-marble-dark absolute inset-0 opacity-80" />
+          <span className="dv-marble-dark absolute inset-0 opacity-50" />
           <span className="absolute inset-y-0 left-0 w-[2px] bg-[#bab09f] opacity-90" />
           <span className="absolute inset-y-0 right-0 w-[2px] bg-[#bab09f] opacity-90" />
-          {/* corte rubi: um só, fino e diagonal, cruzando a lâmina */}
-          {vote && <span className="absolute inset-y-0 left-[58%] w-[5px] bg-[linear-gradient(180deg,transparent,#a3121f_18%,#c41a28_50%,#a3121f_82%,transparent)] shadow-[0_0_18px_rgba(163,18,31,0.65)]" />}
+          {/* corte rubi: um só, fino e diagonal, no canto direito — nunca sobre o mostrador nem sobre o rótulo */}
+          {vote && <span className="absolute inset-y-0 left-[71.5%] w-[4px] bg-[linear-gradient(180deg,transparent,#a3121f_18%,#c41a28_50%,#a3121f_82%,transparent)] shadow-[0_0_18px_rgba(163,18,31,0.65)]" />}
           <span className="absolute inset-0 dv-scanlines opacity-40" />
         </span>
       </div>

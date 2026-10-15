@@ -221,7 +221,7 @@ export function AccessScreen({
       role="dialog"
       aria-modal="true"
       aria-labelledby="devo-access-title"
-      className="fixed inset-x-0 z-[90] flex flex-col"
+      className="en-root fixed inset-x-0 z-[90] flex flex-col"
       style={{ top: view?.top ?? 0, height: view ? view.h : '100dvh' }}
     >
       {/* Véu: a cena do sigilo continua viva atrás do documento. */}

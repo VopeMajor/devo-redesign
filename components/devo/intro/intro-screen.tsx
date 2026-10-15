@@ -126,7 +126,7 @@ export function IntroScreen({ onFinish, playerName }: { onFinish: () => void; pl
   useAdvanceKeys(advance)
 
   return (
-    <main className="relative flex h-dvh overflow-hidden bg-dv-ink text-dv-text">
+    <main className="en-root relative flex h-dvh overflow-hidden bg-dv-ink text-dv-text">
       {/* Ponte "subindo à superfície": a pedra da mina desce e some enquanto o salão do relógio desce
           do alto para o lugar (a câmera sobe da mina para o salão). */}
       <div aria-hidden="true" className="en-hall-in absolute inset-0">
@@ -154,7 +154,9 @@ export function IntroScreen({ onFinish, playerName }: { onFinish: () => void; pl
 
       <div className="relative z-10 mx-auto flex w-full max-w-7xl flex-col lg:pl-[min(34vw,480px)] lg:pr-10">
         <div className="relative flex min-h-0 flex-1 flex-col px-4 pb-[max(env(safe-area-inset-bottom),1.25rem)] pt-16 lg:px-0 lg:pb-8 lg:pt-14">
-          <div className="flex min-h-0 flex-1 flex-col items-center justify-center gap-5 py-4">
+          {/* No celular a figura assenta logo acima da fala (figura + legenda + fala = uma unidade; o salão fica
+              em cima como palco), sem o terço vazio entre elas. No desktop continua centrada. */}
+          <div className="flex min-h-0 flex-1 flex-col items-center justify-end gap-5 pb-1 pt-4 lg:justify-center lg:py-4">
             {line.visual && (
               <div key={`v-${index}`} className="origin-center [@media(max-height:760px)]:scale-[0.86] [@media(max-height:640px)]:scale-[0.72] [@media(min-height:820px)_and_(max-width:600px)]:mt-6 [@media(min-height:820px)_and_(max-width:600px)]:scale-[1.06]">
                 <TutorialVisualPanel visual={line.visual} step={line.step} index={index + 1} />
