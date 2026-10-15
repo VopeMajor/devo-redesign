@@ -96,7 +96,7 @@ export function ResultScreen({ run, onClose }: { run: Running; onClose: () => vo
             {g.name} · vs {run.start.opponent.name}
           </Kicker>
           <div className="relative mt-6 min-h-[11rem]">
-            <h1 className={cn('relative w-fit animate-dv-cut-in font-impact text-[76px] font-bold uppercase leading-[0.85] tracking-[0.01em]', -skew-x-[8deg] text-white [text-shadow:0_4px_0_rgba(0,0,0,0.45)]')}>{title}</h1>
+            <h1 className="relative w-fit animate-dv-cut-in font-impact text-[76px] font-bold uppercase leading-[0.85] tracking-[0.01em] text-white [text-shadow:0_4px_0_rgba(0,0,0,0.45)] -skew-x-[8deg]">{title}</h1>
             <div className="absolute -right-1 top-[4.6rem]">
               {win ? (
                 <Stamp shape="round" tone="gold" text="Vitória" ring="DEVO · SALA DE JOGOS · A CASA AGRADECE ·" size={104} rotate={12} animate />
