@@ -134,7 +134,7 @@ function BetSheet({
               />
               {on && <span aria-hidden="true" className="pointer-events-none absolute inset-x-6 -bottom-2 -z-20 h-4 rounded-[50%] bg-[rgba(138,124,200,0.55)] blur-lg" />}
               <Monogram name={s.name} size="md" tone={on ? 'ivory' : 'neutral'} />
-              <span className={cn('max-w-full truncate font-body text-[15px]', on ? 'text-dv-porcelain-ink' : 'text-dv-text')}>{s.isMe ? `${s.name} (você)` : s.name}</span>
+              <span className={cn('max-w-full truncate font-display text-[15px] font-semibold uppercase tracking-[0.06em]', on ? 'text-dv-porcelain-ink' : 'text-dv-text')}>{s.isMe ? `${s.name} (você)` : s.name}</span>
               <span className={cn('font-impact text-[26px] font-semibold leading-none dv-tabular', on ? 'text-dv-porcelain-ink' : 'text-dv-text-2')}>
                 {s.odds.toFixed(2).replace('.', ',')}×
               </span>

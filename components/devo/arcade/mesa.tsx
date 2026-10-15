@@ -469,7 +469,7 @@ export function VsSplit({ duel, onBet, big = false, closed = false }: { duel: Du
               )}
             />
             <Monogram name={s.name} size={big ? 'lg' : 'md'} tone={s.isMe ? 'cobalt' : left ? 'neutral' : 'ivory'} />
-            <span className={cn('max-w-full truncate font-body text-[15px] leading-tight', left ? 'text-dv-text' : 'text-dv-porcelain-ink')}>{s.isMe ? `${s.name} (você)` : s.name}</span>
+            <span className={cn('max-w-full truncate font-display text-[15px] font-semibold uppercase leading-tight tracking-[0.06em]', left ? 'text-dv-text' : 'text-dv-porcelain-ink')}>{s.isMe ? `${s.name} (você)` : s.name}</span>
             <span className={cn('font-impact font-semibold leading-none dv-tabular', big ? 'text-[34px]' : 'text-[26px]', left ? 'text-dv-gold-bright' : 'text-dv-porcelain-ink')}>{fmtOdds(s.odds)}</span>
             <span className={cn('font-mono text-[11px]', left ? 'text-dv-text-3' : 'text-[#58585e]')}>{s.wins} vitórias</span>
             {!locked && !s.isMe && (
@@ -583,7 +583,7 @@ function RankingPanel({ data, onMore }: { data: Dashboard; onMore: () => void })
               return (
                 <li key={r.name} className={cn('flex min-w-0 flex-col items-center text-center', place === 1 ? 'order-2' : place === 2 ? 'order-1' : 'order-3')}>
                   <Monogram name={r.name} size={place === 1 ? 'lg' : 'md'} tone={r.isMe ? 'cobalt' : tone} />
-                  <span className={cn('mt-1.5 max-w-full truncate font-body text-[14px] leading-tight', r.isMe ? 'text-dv-amethyst-text' : 'text-dv-text')}>{r.isMe ? 'Você' : r.name}</span>
+                  <span className={cn('mt-1.5 max-w-full truncate font-display text-[13px] font-semibold uppercase leading-tight tracking-[0.06em]', r.isMe ? 'text-dv-amethyst-text' : 'text-dv-text')}>{r.isMe ? 'Você' : r.name}</span>
                   <span className="font-mono text-[12px] tabular-nums text-dv-text-2">{formatPoints(r.score)}</span>
                   <span
                     aria-hidden="true"
