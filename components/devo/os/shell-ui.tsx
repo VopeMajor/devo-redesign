@@ -51,6 +51,7 @@ export function MarbleSlab({
   className,
   innerClassName,
   glow = false,
+  quiet = false,
   as: Tag = 'div',
   ...rest
 }: {
@@ -60,6 +61,8 @@ export function MarbleSlab({
   className?: string
   innerClassName?: string
   glow?: boolean
+  /** Pedra mais calma (veio a ~55%) para tampos com texto corrido. */
+  quiet?: boolean
   as?: 'div' | 'section' | 'aside'
 } & Omit<HTMLAttributes<HTMLElement>, 'className' | 'children'>) {
   const seed = useId()
@@ -77,6 +80,9 @@ export function MarbleSlab({
         className="dv-cut pointer-events-none absolute inset-px -z-10 bg-[linear-gradient(160deg,rgba(255,255,255,0.06),transparent_38%,rgba(0,0,0,0.35))]"
         style={{ '--dv-cut': `${Math.max(0, cut - 0.4)}px` } as CSSProperties}
       />
+      {quiet && (
+        <span aria-hidden="true" className="dv-cut pointer-events-none absolute inset-px -z-10 bg-[rgba(14,14,16,0.45)]" style={{ '--dv-cut': `${Math.max(0, cut - 0.4)}px` } as CSSProperties} />
+      )}
       <span aria-hidden="true" className="pointer-events-none absolute inset-x-[16%] top-px -z-10 h-px bg-gradient-to-r from-transparent via-white/30 to-transparent" />
       <div className={cn('relative', innerClassName)}>{children}</div>
     </Tag>

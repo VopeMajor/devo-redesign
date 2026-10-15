@@ -744,7 +744,7 @@ if (want('partidas')) {
         // Quem saiu da partida anterior sem fechar volta para a sala dela (reconexão) e cai no
         // resultado: fecha o resultado e entra de novo na fila do jogo certo.
         const back = page.getByRole('button', { name: /voltar à mesa/i })
-        if (await back.first().waitFor({ state: 'visible', timeout: 5000 }).then(() => true, () => false)) {
+        if (await back.first().waitFor({ state: 'visible', timeout: 15000 }).then(() => true, () => false)) {
           await shot(page, `40-partida-${slug}-reconexao-${who}`)
           await tryClick(back.first(), 4000)
           await wait(1500)

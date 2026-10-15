@@ -126,7 +126,7 @@ export function PhoneShell({ current, onOpen, onHome }: { current: AppId | null;
       <div
         className={cn(
           'relative z-20 grid shrink-0 transition-[grid-template-rows] ease-out',
-          reduced ? 'duration-0' : 'duration-300',
+          reduced ? 'duration-0' : 'duration-150',
           toastOpen ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]',
         )}
       >

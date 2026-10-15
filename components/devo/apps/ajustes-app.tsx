@@ -68,7 +68,7 @@ export function AjustesApp() {
         </section>
 
         {/* Herói: a sessão (o que está em jogo). Pedra negra com aço; o rubi fica só na confirmação. */}
-        <MarbleSlab edge="steel" cut={16} glow innerClassName="p-6">
+        <MarbleSlab edge="steel" cut={16} glow quiet innerClassName="p-6">
           <FrameCorners tone="gold" />
           <div className="flex items-center gap-4">
             <DeadlyVoteSymbol className="size-14 shrink-0 text-dv-gold" />

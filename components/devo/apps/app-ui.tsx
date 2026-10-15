@@ -29,7 +29,7 @@ export function Panel({ children, className }: { children: ReactNode; className?
       <span aria-hidden="true" className="dv-cut bg-[#121214] bg-[url(/images/os/marmore-negro.webp)] bg-[length:560px_560px] pointer-events-none absolute inset-px -z-10" style={{ '--dv-cut': '11.6px', ...marbleOffset(seed) } as CSSProperties} />
       <span
         aria-hidden="true"
-        className="dv-cut pointer-events-none absolute inset-px -z-10 bg-[linear-gradient(180deg,rgba(255,255,255,0.04)_0%,transparent_45%,rgba(0,0,0,0.35)_100%)]"
+        className="dv-cut pointer-events-none absolute inset-px -z-10 bg-[linear-gradient(180deg,rgba(14,14,16,0.25)_0%,rgba(14,14,16,0.4)_45%,rgba(0,0,0,0.5)_100%)]"
         style={{ '--dv-cut': '11.6px' } as CSSProperties}
       />
       <span aria-hidden="true" className="pointer-events-none absolute inset-x-[14%] top-px -z-10 h-px bg-gradient-to-r from-transparent via-white/25 to-transparent" />
