@@ -270,8 +270,20 @@ async function openApp(page, label) {
   const exact = page.getByRole('button', { name: label, exact: true })
   // O nome acessível do ícone é o nome do app (aria-label). No CI (WebGL por software) a página pode
   // ficar ocupada alguns segundos montando a cena 3D da home: espera o ícone visível e dá folga ao clique.
-  await exact.first().waitFor({ state: 'visible', timeout: 15000 }).catch(() => {})
-  if (!(await tryClick(exact.first(), 8000))) await btn(page, label).click({ timeout: 8000 })
+  // Até 3 tentativas: um clique que estoura o tempo com a página ocupada é repetido quando ela respira.
+  // (Se o clique entrou mas a confirmação atrasou, o app já está aberto: a folha do app é uma região
+  // com o nome dele.)
+  const opened = () => page.getByRole('region', { name: label, exact: true }).first().isVisible().catch(() => false)
+  for (let attempt = 1; ; attempt++) {
+    await exact.first().waitFor({ state: 'visible', timeout: 15000 }).catch(() => {})
+    if (await tryClick(exact.first(), 8000)) break
+    await wait(2000)
+    if (await opened()) break
+    if (attempt === 3) {
+      await btn(page, label).click({ timeout: 8000 })
+      break
+    }
+  }
   await wait(2600)
 }
 
