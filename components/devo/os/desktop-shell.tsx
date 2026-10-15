@@ -94,7 +94,7 @@ export function DesktopShell() {
   const critical = remaining < PULSE_CRITICAL_MS
 
   return (
-    <div className="fixed inset-0 overflow-hidden bg-dv-ink text-dv-text" onPointerDown={() => setSelected(null)}>
+    <div className="fixed inset-0 overflow-hidden bg-dv-ink text-dv-text [&_button]:[text-rendering:geometricPrecision] [&_input]:[text-rendering:geometricPrecision] [&_textarea]:[text-rendering:geometricPrecision]" onPointerDown={() => setSelected(null)}>
       {/*
         Papel de parede = o salão do relógio da Jornada (mostrador ao fundo, piso de mármore xadrez).
         Viva só com a mesa livre; com janelas abertas fica no quadro estático. No crítico a cena não

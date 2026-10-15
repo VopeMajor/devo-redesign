@@ -106,10 +106,11 @@ export function PhoneShell({ current, onOpen, onHome }: { current: AppId | null;
   const app = shown ? getApp(shown) : null
   const totalUnread = Object.values(state.unread).reduce<number>((a, b) => a + (b ?? 0), 0)
   const toastHold = !toastsReady || shade
+  const homeHidden = !!current && !entering
   const toastOpen = !toastHold && state.toasts.length > 0
 
   return (
-    <div className="fixed inset-0 flex flex-col overflow-hidden bg-dv-ink text-dv-text">
+    <div className="fixed inset-0 flex flex-col overflow-hidden bg-dv-ink text-dv-text [&_button]:[text-rendering:geometricPrecision] [&_input]:[text-rendering:geometricPrecision] [&_textarea]:[text-rendering:geometricPrecision]">
       {/* Uma cena só: viva na home; com um app aberto fica no quadro estático (o app pode ter a sua). */}
       <SceneBackdrop preset="cathedral" intensity={0.75} dim={current && !entering ? 0.55 : 0.3} staticOnly={!!current && !entering} />
       {/* Crítico: a home NÃO vira vermelha. Fica no mármore; a vinheta rubi pulsa nas bordas. */}
@@ -130,12 +131,18 @@ export function PhoneShell({ current, onOpen, onHome }: { current: AppId | null;
         )}
       >
         <div className="min-h-0 overflow-hidden">
-          <ToastStack onOpen={(id) => open(id)} compact inline max={1} hold={toastHold} className="px-3 pb-2 pt-2" />
+          <ToastStack onOpen={(id) => open(id)} compact inline max={1} hold={toastHold} className="bg-[linear-gradient(180deg,rgba(10,10,12,0.96),rgba(10,10,12,0.86))] px-3 pb-2.5 pt-2" />
         </div>
       </div>
 
       <div className="relative z-10 min-h-0 flex-1">
-        {(!current || entering) && <HomeScreen remaining={remaining} critical={critical} onOpen={open} onShowNotices={() => setShade(true)} />}
+        {/*
+          A home fica montada por baixo do app (só oculta e inerte quando o app assenta): ao voltar, a
+          folha sai para a direita revelando a home pronta, sem repetir a entrada escalonada.
+        */}
+        <div className={cn('absolute inset-0', homeHidden && 'invisible')} inert={homeHidden || undefined} aria-hidden={homeHidden || undefined}>
+          <HomeScreen remaining={remaining} critical={critical} onOpen={open} onShowNotices={() => setShade(true)} />
+        </div>
         {app && (
           <AppBackContext.Provider value={backCtx}>
             <AppLayer

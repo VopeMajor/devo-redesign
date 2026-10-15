@@ -1,6 +1,9 @@
-import type { ButtonHTMLAttributes, CSSProperties, ReactNode } from 'react'
+'use client'
+
+import { useId, type ButtonHTMLAttributes, type CSSProperties, type ReactNode } from 'react'
 import { cn } from '@/lib/utils'
 import { GlyphDiamond } from '../kit/glyphs'
+import { marbleOffset } from '../os/shell-ui'
 
 /**
  * Peças de interface compartilhadas pelos apps (API estável: SectionLabel, Panel, ActionButton,
@@ -19,10 +22,11 @@ export function SectionLabel({ children, className }: { children: ReactNode; cla
 
 /** Bloco chanfrado de mármore negro com filete neutro. `className` vale para o próprio bloco (layout e padding). */
 export function Panel({ children, className }: { children: ReactNode; className?: string }) {
+  const seed = useId()
   return (
     <div className={cn('relative isolate p-4 text-dv-text', className)} style={{ '--dv-cut': '12px' } as CSSProperties}>
       <span aria-hidden="true" className="dv-cut pointer-events-none absolute inset-0 -z-10 bg-dv-line-strong" />
-      <span aria-hidden="true" className="dv-cut bg-[#121214] bg-[url(/images/os/marmore-negro.webp)] bg-[length:560px_560px] pointer-events-none absolute inset-px -z-10" style={{ '--dv-cut': '11.6px' } as CSSProperties} />
+      <span aria-hidden="true" className="dv-cut bg-[#121214] bg-[url(/images/os/marmore-negro.webp)] bg-[length:560px_560px] pointer-events-none absolute inset-px -z-10" style={{ '--dv-cut': '11.6px', ...marbleOffset(seed) } as CSSProperties} />
       <span
         aria-hidden="true"
         className="dv-cut pointer-events-none absolute inset-px -z-10 bg-[linear-gradient(180deg,rgba(255,255,255,0.04)_0%,transparent_45%,rgba(0,0,0,0.35)_100%)]"

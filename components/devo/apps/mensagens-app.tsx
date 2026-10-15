@@ -320,7 +320,7 @@ function BubbleShell({ mine, accent, children }: { mine: boolean; accent: Accent
           'dv-cut-diag absolute inset-px -z-10',
           mine && '-scale-x-100',
           // jogador = porcelana (mármore branco) com texto negro; NPC = pedra negra
-          mine ? 'dv-porcelain' : paper ? 'dv-paper-bg' : 'bg-[linear-gradient(160deg,var(--dv-ink-4),var(--dv-ink-2)_70%)]',
+          mine ? 'bg-[#ecebe8] bg-[url(/images/os/marmore-branco.webp)] bg-[length:420px_420px] shadow-[inset_0_1px_0_#fff]' : paper ? 'dv-paper-bg' : 'bg-[linear-gradient(160deg,var(--dv-ink-4),var(--dv-ink-2)_70%)]',
         )}
         style={{ '--dv-cut': '9.6px' } as CSSProperties}
       />

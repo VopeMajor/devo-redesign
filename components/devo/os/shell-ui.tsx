@@ -1,4 +1,6 @@
-import type { CSSProperties, HTMLAttributes, ReactNode } from 'react'
+'use client'
+
+import { useId, type CSSProperties, type HTMLAttributes, type ReactNode } from 'react'
 import { cn } from '@/lib/utils'
 
 /*
@@ -17,6 +19,18 @@ import { cn } from '@/lib/utils'
 export const MARBLE_INK = 'bg-[#121214] bg-[url(/images/os/marmore-negro.webp)] bg-[length:560px_560px]'
 /** Mármore branco (porcelana com veio cinza): balão do jogador, superfícies claras. */
 export const MARBLE_PORCELAIN = 'bg-[#ecebe8] bg-[url(/images/os/marmore-branco.webp)] bg-[length:560px_560px]'
+
+/**
+ * Deslocamento do ladrilho de mármore por bloco (determinístico a partir de uma chave): cada tampo
+ * mostra um trecho diferente da pedra, sem o mesmo veio repetido em painéis vizinhos.
+ */
+export function marbleOffset(key: string): CSSProperties {
+  let h = 2166136261
+  for (let i = 0; i < key.length; i++) h = Math.imul(h ^ key.charCodeAt(i), 16777619)
+  const x = (h >>> 0) % 560
+  const y = ((h >>> 0) / 560) % 560
+  return { backgroundPosition: `-${x}px -${Math.floor(y)}px` }
+}
 
 type SlabEdge = 'steel' | 'blood' | 'line'
 
@@ -48,6 +62,7 @@ export function MarbleSlab({
   glow?: boolean
   as?: 'div' | 'section' | 'aside'
 } & Omit<HTMLAttributes<HTMLElement>, 'className' | 'children'>) {
+  const seed = useId()
   return (
     <Tag
       className={cn('relative isolate', glow && (edge === 'blood' ? 'drop-shadow-[0_0_18px_rgba(163,18,31,0.4)]' : 'drop-shadow-[0_14px_28px_rgba(0,0,0,0.65)]'), className)}
@@ -55,7 +70,7 @@ export function MarbleSlab({
       {...rest}
     >
       <span aria-hidden="true" className={cn('dv-cut pointer-events-none absolute inset-0 -z-10', EDGE[edge])} />
-      <span aria-hidden="true" className={cn('dv-cut pointer-events-none absolute inset-px -z-10', MARBLE_INK)} style={{ '--dv-cut': `${Math.max(0, cut - 0.4)}px` } as CSSProperties} />
+      <span aria-hidden="true" className={cn('dv-cut pointer-events-none absolute inset-px -z-10', MARBLE_INK)} style={{ '--dv-cut': `${Math.max(0, cut - 0.4)}px`, ...marbleOffset(seed) } as CSSProperties} />
       {/* luz rasante no tampo (polimento) */}
       <span
         aria-hidden="true"

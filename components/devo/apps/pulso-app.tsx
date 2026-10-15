@@ -171,17 +171,11 @@ export function PulsoApp() {
           <p className="animate-dv-fade pt-2 text-center font-body text-[16px] italic text-dv-text-2 [animation-delay:480ms]">O tempo é a vida. O jogo é a única fonte dela.</p>
         </div>
       </div>
-      {/* indica que há mais conteúdo abaixo (janela baixa no desktop, celular) */}
-      <div
-        aria-hidden="true"
-        className={cn(
-          'pointer-events-none sticky bottom-0 -mt-16 flex h-16 items-end justify-center bg-gradient-to-t from-dv-ink via-dv-ink/80 to-transparent pb-2 transition-opacity duration-300',
-          more.below ? 'opacity-100' : 'opacity-0',
-        )}
-      >
-        <span className="dv-label flex items-center gap-2 text-[10px] text-dv-text-2">
+      {/* indica que há mais conteúdo abaixo (janela baixa no desktop, celular): selo compacto, sem véu */}
+      <div aria-hidden="true" className={cn('pointer-events-none sticky bottom-3 -mt-11 flex h-8 justify-center transition-opacity duration-300', more.below ? 'opacity-100' : 'opacity-0')}>
+        <span className="dv-cut-diag dv-label flex items-center gap-2 bg-[rgba(12,12,14,0.92)] px-3.5 text-[10px] text-dv-text-2 shadow-[inset_0_0_0_1px_rgba(206,201,192,0.35),0_8px_18px_rgba(0,0,0,0.6)] [--dv-cut:7px]">
           Role para ver mais
-          <span className="inline-block size-2 rotate-45 border-b border-r border-dv-gold animate-dv-blink" />
+          <span className="inline-block size-2 -translate-y-0.5 rotate-45 border-b border-r border-dv-gold animate-dv-blink" />
         </span>
       </div>
     </div>

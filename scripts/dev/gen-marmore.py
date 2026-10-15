@@ -74,7 +74,7 @@ v_sec2 = vein(np.sin(2 * np.pi * (xx * 3 - yy * 1) / N + field * 0.9 + fine * 0.
 cloud = fractal(2.6)
 
 stone = 0.07 + cloud * 0.013  # ~#121214
-lum = stone + v_halo * 0.035 + v_main * 0.42 * (0.55 + 0.45 * patch) + v_sec * 0.3 + v_sec2 * 0.3
+lum = stone + v_halo * 0.035 + v_main * 0.36 * (0.55 + 0.45 * patch) + v_sec * 0.3 + v_sec2 * 0.3
 # grão finíssimo
 lum += rng.normal(0, 0.005, (N, N))
 lum = np.clip(lum, 0, 1)
