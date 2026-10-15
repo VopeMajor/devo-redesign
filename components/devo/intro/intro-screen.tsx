@@ -52,18 +52,24 @@ function PlateAvatar({ speaker, expression }: { speaker: string; expression: Exp
   return <PortraitFrame {...art} alt="" shape="round" tone={TONE[speaker] ?? 'gold'} className="w-12" />
 }
 
-/** Selo "Sistema apresentado": plaqueta negra com filete de aço; a estrela em ametista é o único acento. */
+/**
+ * Selo "Sistema apresentado": plaqueta negra com filete de aço; a estrela em ametista é o único acento.
+ * Duas linhas (rótulo pequeno em cima, nome do sistema embaixo) para nunca quebrar no meio de "Sala de Trocas".
+ */
 function UnlockSeal({ name, className }: { name: string; className?: string }) {
   return (
     <p
       className={cn(
-        'animate-dv-toast-in relative z-10 flex w-fit items-center gap-2.5 bg-[linear-gradient(90deg,#1f1f22,#151517_70%,rgba(21,21,23,0.92))] py-1.5 pl-3 pr-5 font-mono text-[11px] uppercase tracking-[0.22em] text-dv-porcelain shadow-[0_8px_20px_rgba(0,0,0,0.55),inset_0_0_0_1px_rgba(186,176,159,0.4)] [clip-path:polygon(0_0,100%_0,calc(100%-10px)_100%,0_100%)]',
+        'animate-dv-toast-in relative z-10 flex w-fit items-center gap-3 bg-[linear-gradient(90deg,#1f1f22,#151517_70%,rgba(21,21,23,0.92))] py-2 pl-3.5 pr-7 shadow-[0_8px_20px_rgba(0,0,0,0.55),inset_0_0_0_1px_rgba(186,176,159,0.4)] [clip-path:polygon(0_0,100%_0,calc(100%-12px)_100%,0_100%)]',
         className,
       )}
     >
       <span aria-hidden="true" className="absolute inset-y-0 left-0 w-[3px] bg-[linear-gradient(180deg,#ece5d8,#bab09f_50%,#6b6357)]" />
-      <GlyphSpark className="size-3 text-dv-amethyst" />
-      <span className="text-dv-text-3">Sistema apresentado:</span> {name}
+      <GlyphSpark className="size-3.5 shrink-0 text-dv-amethyst" />
+      <span className="flex flex-col gap-0.5">
+        <span className="whitespace-nowrap font-mono text-[10px] uppercase tracking-[0.2em] text-dv-text-3">Sistema apresentado</span>
+        <span className="whitespace-nowrap font-display text-[14px] font-semibold uppercase leading-tight tracking-[0.16em] text-dv-porcelain">{name}</span>
+      </span>
     </p>
   )
 }
@@ -125,6 +131,9 @@ export function IntroScreen({ onFinish, playerName }: { onFinish: () => void; pl
           do alto para o lugar (a câmera sobe da mina para o salão). */}
       <div aria-hidden="true" className="en-hall-in absolute inset-0">
         <SceneBackdrop preset="clockhall" intensity={0.65} dim={0.5} />
+        {/* Mármore, não noite: tira ~80% da saturação do salão (o céu índigo do preset vira grafite).
+            A noite violeta fica só como resto de luz. Candidato ao kit: `tone="marble"` no SceneBackdrop. */}
+        <div className="absolute inset-0 bg-[#7a7a7a] opacity-80 mix-blend-saturation" />
       </div>
       <div aria-hidden="true" className="en-surface pointer-events-none absolute inset-0 z-[1] overflow-hidden">
         <Image src="/images/prologue/mine.webp" alt="" fill sizes="100vw" className="object-cover" style={{ filter: 'grayscale(0.9) sepia(0.12) brightness(0.42) contrast(1.05)' }} />
@@ -138,7 +147,7 @@ export function IntroScreen({ onFinish, playerName }: { onFinish: () => void; pl
         chapter={
           <p className="dv-label flex items-center gap-2 text-[10px] text-dv-text-2">
             <span className="font-impact text-[15px] leading-none tracking-normal text-dv-gold">{toRoman(index + 1)}</span>
-            <span className="truncate">Deadly Vote</span>
+            <span className="whitespace-nowrap tracking-[0.14em]">Deadly Vote</span>
           </p>
         }
       />

@@ -277,8 +277,10 @@ export function AccessScreen({
                 className={cn('pointer-events-none absolute right-3 top-[5.6rem] opacity-80 transition-opacity', keyboard && 'opacity-0')}
               />
 
+              {/* O recorte do cut-in começa na borda do bloco: o respiro fica DENTRO dele (pt), senão o acento
+                  de "QUEM É" (acima da linha) é cortado. */}
               <div key={step} className="animate-dv-cut-in [animation-delay:60ms]">
-                <div className="mt-5 flex items-end gap-3 pr-20">
+                <div className="flex items-end gap-3 pr-20 pt-5">
                   <span aria-hidden="true" className="font-impact text-[52px] font-semibold leading-[0.78] text-dv-gold-deep/70 -skew-x-[8deg]">
                     {meta.index}
                   </span>

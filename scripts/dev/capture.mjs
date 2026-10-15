@@ -115,6 +115,40 @@ async function advanceDialogue(page) {
   return true
 }
 
+// Congela a cortina da Jornada num instante (ms) para a foto: a animação CSS e o relógio do React
+// correm em paralelo, e a foto no CI (renderizador por software) às vezes cai depois do quadro certo.
+// Espera a cortina aparecer (role=status com o rótulo), pausa as animações dela em `at` e devolve true.
+async function freezeCurtain(page, label, at = 900, timeout = 3000) {
+  const t0 = Date.now()
+  while (Date.now() - t0 < timeout) {
+    const ok = await page
+      .evaluate(
+        ([label, at]) => {
+          const el = [...document.querySelectorAll('[role="status"]')].find((n) => n.textContent?.includes(label))
+          if (!el) return false
+          for (const a of el.getAnimations({ subtree: true })) {
+            a.pause()
+            a.currentTime = at
+          }
+          return true
+        },
+        [label, at],
+      )
+      .catch(() => false)
+    if (ok) return true
+    await wait(40)
+  }
+  return false
+}
+async function thawCurtain(page, label) {
+  await page
+    .evaluate((label) => {
+      const el = [...document.querySelectorAll('[role="status"]')].find((n) => n.textContent?.includes(label))
+      if (el) for (const a of el.getAnimations({ subtree: true })) a.play()
+    }, label)
+    .catch(() => {})
+}
+
 // ── 1. Novato: landing → convite → cadastro → prólogo → tutorial → sistema ─────────────
 if (want('novato')) {
   const { ctx, page } = await device()
@@ -125,6 +159,36 @@ if (want('novato')) {
     await page.mouse.wheel(0, 900)
     await wait(600)
     await shot(page, '01-landing-scroll')
+    // TEMPORÁRIO (Entrada r5b): teste de renderização da EB Garamond do next/font no Chromium do CI.
+    await page.evaluate(() => {
+      const t = 'Agora vá. Tente não morrer antes de ser útil, Lune Arcanjo. Uma dica do Rato: não confie.'
+      const v = {
+        herdado: '',
+        auto: 'text-rendering:auto',
+        legib: 'text-rendering:optimizeLegibility',
+        speed: 'text-rendering:optimizeSpeed',
+        semkern: 'font-kerning:none',
+        wght: 'font-variation-settings:"wght" 400',
+        gpu: 'transform:translateZ(0)',
+        tam175: 'font-size:17.5px',
+        peso500: 'font-weight:500',
+        italico: 'font-style:italic',
+      }
+      const box = document.createElement('div')
+      box.style.cssText = 'position:fixed;inset:0;z-index:99999;background:#151517;color:#eee;padding:10px;overflow:hidden'
+      for (const [k, s] of Object.entries(v)) {
+        const l = document.createElement('div')
+        l.style.cssText = 'font:10px monospace;color:#9a9;margin-top:4px'
+        l.textContent = k
+        const p = document.createElement('p')
+        p.style.cssText = 'margin:0;font-family:var(--font-body);font-size:17px;line-height:1.5;' + s
+        p.textContent = t
+        box.append(l, p)
+      }
+      document.body.append(box)
+    })
+    await wait(400)
+    await shot(page, '99-teste-fonte')
   })
   await step('convite', async () => {
     await page.goto(BASE, { waitUntil: 'networkidle' })
@@ -172,10 +236,10 @@ if (want('novato')) {
         continue
       }
       await advanceDialogue(page)
-      const curtain = page.getByRole('status').filter({ hasText: 'Deadly Vote' })
-      if (await curtain.count()) {
-        await wait(650)
+      // A última fala do prólogo chama a cortina "Deadly Vote": congela no meio (lâmina cobrindo) e fotografa.
+      if (await freezeCurtain(page, 'Deadly Vote', 900, 300)) {
         await shot(page, '03-transicao-deadly-vote')
+        await thawCurtain(page, 'Deadly Vote')
         break
       }
       if (!(await page.getByText(/pular prólogo/i).count())) break
@@ -197,11 +261,10 @@ if (want('novato')) {
       }
       if (await page.getByText(/pular introdução/i).count()) await advanceDialogue(page)
       // Fronteira noite → papel (DIRECAO-2 §2): a folha de registro sendo impressa, no meio da cortina.
-      const border = page.getByRole('status').filter({ hasText: 'Inicializando DEVO' })
-      if (!seenBorder && (await border.count())) {
+      if (!seenBorder && (await freezeCurtain(page, 'Inicializando DEVO', 1150, 400))) {
         seenBorder = true
-        await wait(520)
         await shot(page, '04-transicao-sistema')
+        await thawCurtain(page, 'Inicializando DEVO')
       }
     }
     await wait(1500)

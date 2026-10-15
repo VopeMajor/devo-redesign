@@ -15,12 +15,18 @@ import { DeadlyVoteSymbol } from '../system/symbol'
  * registro, linhas de cota e legendas mono. Ouro só no que se admira; vermelho só onde se morre.
  */
 
-/** Marca de toque: onde o jogador tocaria (anel que pulsa + ponto). */
+/**
+ * Marca de toque: onde o jogador tocaria. Mira de relojoaria (anel fino de aço que se expande + estrela
+ * de 4 pontas em porcelana), não um disco branco chapado que lia como defeito na captura.
+ */
 function TapMark({ className }: { className?: string }) {
   return (
-    <span aria-hidden="true" className={cn('pointer-events-none absolute z-20 size-7', className)}>
-      <span className="en-ping absolute inset-0 rounded-full border-2 border-dv-porcelain/80" />
-      <span className="en-tap absolute inset-[7px] rounded-full bg-dv-text shadow-[0_0_10px_rgba(241,240,238,0.8)]" />
+    <span aria-hidden="true" className={cn('pointer-events-none absolute z-20 size-8', className)}>
+      <span className="en-ping absolute inset-0 rounded-full border border-dv-gold-bright/80" />
+      <span className="absolute inset-[5px] rounded-full border border-dv-porcelain/35 bg-[radial-gradient(circle,rgba(12,12,14,0.55),rgba(12,12,14,0.15)_70%)] shadow-[0_0_10px_rgba(0,0,0,0.6)]" />
+      <svg viewBox="0 0 24 24" className="en-tap absolute inset-[7px] text-dv-porcelain drop-shadow-[0_0_4px_rgba(241,240,238,0.7)]" fill="currentColor">
+        <path d="M12 2 L13.6 10.4 L22 12 L13.6 13.6 L12 22 L10.4 13.6 L2 12 L10.4 10.4 Z" />
+      </svg>
     </span>
   )
 }
