@@ -44,6 +44,8 @@ LARGURA, ALTURA = 1080, 960
 CABECA_PX = 345
 QUEIXO_Y = 508
 QUALIDADE = 90
+# Altura (px) do degradê que dissolve a base do busto.
+DEGRADE_BASE = 80
 
 # Vocabulário único de expressões (mesmo para todos os NPCs). Cada NPC usa 12 destes nomes,
 # sempre o mais próximo do que a célula mostra; `padrao` é a expressão de repouso do NPC.
@@ -268,6 +270,13 @@ def processa(npc_id: str, cfg: dict, debug: Path | None) -> dict:
         corte = int(a_img[:, :sx0].sum() + a_img[:, sx1:].sum() + a_img[:sy0, sx0:sx1].sum())
         if corte > 200:
             print(f'  aviso: {npc_id}/{nomes[i]} perde {corte} px opacos nas laterais/topo')
+        # base em degradê: o busto termina numa reta (linha de corte da folha ou borda da tela); some suave
+        fim = min(base_y, ALTURA)
+        arr = np.array(tela)
+        y0f = max(0, int(fim - DEGRADE_BASE))
+        rampa = np.clip((fim - np.arange(y0f, ALTURA)) / DEGRADE_BASE, 0, 1)
+        arr[y0f:, :, 3] = (arr[y0f:, :, 3] * rampa[:, None]).astype(np.uint8)
+        tela = Image.fromarray(arr)
         nome = nomes[i]
         tela.save(pasta / f'{nome}.webp', 'WEBP', quality=QUALIDADE, method=6, alpha_quality=95)
         info['celulas'][str(i)] = nome
