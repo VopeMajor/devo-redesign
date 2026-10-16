@@ -1,0 +1,34 @@
+{
+  "id": "balao-ultimo-suspiro",
+  "titulo": "Último Suspiro",
+  "tipo": "balao",
+  "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+  "prompt": "Fantasy RPG user interface element illustration, painted, highly detailed, isolated on a plain flat light gray background. A wide horizontal chat message panel seen straight-on, three times wider than tall: a long rectangular panel whose center is a plain, smooth, empty surface for text, a cold pale blue-gray surface like frosted glass. Thin silver border, silver frost filigree on both ends and a small ornate silver pocket watch hanging by a chain on the right end. The long top and bottom edges are a thin simple border line, the ornaments are concentrated at the left and right ends and may extend beyond the panel. The whole panel fully inside the image with margin, nothing cropped. No text, no letters, no watermark, no people.",
+  "negative": "text, letters, watermark, signature, logo, cropped, cut off, blurry, low detail, flat vector icon, clipart, emoji, cartoon sticker, simple geometric shapes, plastic look, people, hands",
+  "largura": 1536,
+  "altura": 512,
+  "variacoes": [
+    {
+      "seed": 8031
+    },
+    {
+      "seed": 8032
+    },
+    {
+      "seed": 8033
+    },
+    {
+      "seed": 8034
+    }
+  ],
+  "pos": {
+    "tamanho_final": 1536,
+    "margem": 0.01,
+    "derivados": [
+      1024,
+      768,
+      512,
+      256
+    ]
+  }
+}

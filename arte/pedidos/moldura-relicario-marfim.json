@@ -1,0 +1,37 @@
+{
+  "id": "moldura-relicario-marfim",
+  "titulo": "Relicário de Marfim — avatar",
+  "tipo": "moldura",
+  "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+  "prompt": "Fantasy RPG accessory illustration, painted, highly detailed, isolated on a plain flat warm dark gray background. A legendary ornate avatar frame seen straight-on: a round empty opening in the exact center, about half the width of the image, perfectly clear and showing only the flat background through it. An aristocratic reliquary frame of pale polished silver with very fine openwork filigree, like silver lace. Small white flowers with pearl centers and tiny silver leaves grow along the left side and over the top. At the bottom center hangs a small silver reliquary locket with a domed glass window and a pearl drop. Delicate pearl strands drape in swags on the right. Soft diffuse light, pearly reflections, subtle cool silver tones. Balanced asymmetry, layered depth, every material with its own light and texture. Crisp clean silhouette, every ornament fully inside the image with a generous empty margin around the whole object, nothing cropped. No text, no letters, no numbers, no watermark, no character, nothing inside the central opening.",
+  "negative": "text, letters, watermark, signature, logo, cropped, cut off, blurry, low detail, flat vector icon, clipart, emoji, cartoon sticker, simple geometric shapes, plastic look, people, hands",
+  "largura": 1024,
+  "altura": 1024,
+  "variacoes": [
+    {
+      "seed": 6091
+    },
+    {
+      "seed": 6092
+    },
+    {
+      "seed": 6093
+    },
+    {
+      "seed": 6094
+    }
+  ],
+  "pos": {
+    "tamanho_final": 1024,
+    "molde": {
+      "forma": "circulo",
+      "centro": [
+        0.5,
+        0.5
+      ],
+      "raio": 0.25,
+      "sombra": 0.35,
+      "largura_sombra": 0.045
+    }
+  }
+}

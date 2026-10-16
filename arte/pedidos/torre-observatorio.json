@@ -3,22 +3,19 @@
   "titulo": "Observatório (a Coruja)",
   "tipo": "ilustracao",
   "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
-  "referencias": [
-    "arte/referencias/torre-principal-v04.png"
-  ],
-  "prompt": "Fantasy RPG environment illustration, painted, highly detailed, isolated on a plain flat light gray background. Match image 0 exactly in painting style, rendering, palette and lighting: pale weathered stone, dark slate roofs, cold moonlight from the upper right, deep shadows, warm candlelight in narrow windows, faint violet fissures of light cracking through a few stones, a little mist hugging the base, a small rocky outcrop under it. The new tower is a different building from image 0: a slender stone observatory tower topped by a large dark copper dome with a long open slit, a big brass telescope pointing out of the slit toward the upper right, small brass armillary rings and star charts on an open balcony below the dome, round windows like portholes, and a small silver crescent moon finial with an owl silhouette on top of the dome. Single tower standing alone, its full height visible from the base to the very top, seen slightly from below at a three-quarter angle. Crisp silhouette, the whole tower fully inside the image with margin on all sides, no sky, no moon, no landscape, no ground reaching the edges, no text, no watermark, no people.",
-  "negative": "text, letters, watermark, signature, logo, cropped, cut off, blurry, low detail, flat vector icon, clipart, emoji, cartoon sticker, simple geometric shapes, plastic look, people, face, hands, sky, clouds, landscape, horizon",
+  "prompt": "Fantasy RPG environment illustration, painted, highly detailed, isolated on a plain flat light gray background. Painterly dark gothic fantasy style: pale weathered stone, dark slate roofs, cold blue moonlight from the upper right, deep shadows, warm candlelight glowing in a few narrow windows, faint violet fissures of light cracking through some stones, a little mist hugging the base, a small rocky outcrop under it. A slender astronomer's observatory tower: a tall round stone body with small round porthole windows, an open balcony with brass armillary rings, topped by a large dark copper dome with an open slit and a long brass telescope pointing out toward the upper right, and a small silver crescent moon finial on top of the dome. A single building standing alone, its full height visible from the base to the very top, seen slightly from below at a three-quarter angle. Crisp silhouette, fully inside the image with margin on all sides, no sky, no moon, no landscape, no ground reaching the edges, no text, no watermark, no people.",
+  "negative": "text, letters, watermark, signature, logo, cropped, cut off, blurry, low detail, flat vector icon, clipart, emoji, cartoon sticker, simple geometric shapes, plastic look, people, hands, sky, clouds, landscape, horizon",
   "largura": 1024,
   "altura": 1536,
   "variacoes": [
     {
-      "seed": 5111
+      "seed": 5211
     },
     {
-      "seed": 5112
+      "seed": 5212
     },
     {
-      "seed": 5113
+      "seed": 5213
     }
   ],
   "pos": {

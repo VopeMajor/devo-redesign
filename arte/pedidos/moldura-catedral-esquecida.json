@@ -1,0 +1,37 @@
+{
+  "id": "moldura-catedral-esquecida",
+  "titulo": "Catedral Esquecida — avatar",
+  "tipo": "moldura",
+  "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+  "prompt": "Fantasy RPG accessory illustration, painted, highly detailed, isolated on a plain flat light gray background. A epic ornate avatar frame seen straight-on: a round empty opening in the exact center, about half the width of the image, perfectly clear and showing only the flat background through it. The bezel is carved gray stone shaped like a gothic rose window, with pointed arches, tracery and small stained glass panes in deep blue, crimson and amber glowing softly around the ring. At the top center, a tall pointed spire with tiny pinnacles. Small stone gargoyle statues perch on the left and right shoulders. Ivy and moss creep over the lower left, a few cracks and missing stones show its age. Light passes through the stained glass and tints the stone. Balanced asymmetry, layered depth, every material with its own light and texture. Crisp clean silhouette, every ornament fully inside the image with a generous empty margin around the whole object, nothing cropped. No text, no letters, no numbers, no watermark, no character, nothing inside the central opening.",
+  "negative": "text, letters, watermark, signature, logo, cropped, cut off, blurry, low detail, flat vector icon, clipart, emoji, cartoon sticker, simple geometric shapes, plastic look, people, hands",
+  "largura": 1024,
+  "altura": 1024,
+  "variacoes": [
+    {
+      "seed": 6081
+    },
+    {
+      "seed": 6082
+    },
+    {
+      "seed": 6083
+    },
+    {
+      "seed": 6084
+    }
+  ],
+  "pos": {
+    "tamanho_final": 1024,
+    "molde": {
+      "forma": "circulo",
+      "centro": [
+        0.5,
+        0.5
+      ],
+      "raio": 0.25,
+      "sombra": 0.35,
+      "largura_sombra": 0.045
+    }
+  }
+}

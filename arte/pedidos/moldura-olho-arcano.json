@@ -1,0 +1,37 @@
+{
+  "id": "moldura-olho-arcano",
+  "titulo": "Olho do Arcano — avatar",
+  "tipo": "moldura",
+  "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+  "prompt": "Fantasy RPG accessory illustration, painted, highly detailed, isolated on a plain flat light gray background. A legendary ornate avatar frame seen straight-on: a round empty opening in the exact center, about half the width of the image, perfectly clear and showing only the flat background through it. The bezel is an arc of polished steel engraved with glowing violet arcane glyphs all around. At the top center, a large ornate watchful eye sculpted in steel with a luminous violet iris, framed by pointed steel rays. Clusters of faceted amethyst crystals jut out from the left and right sides, and three small amethyst pendants hang below on fine steel chains. Small floating rune stones orbit near the edges. Cool steel reflections, soft violet inner glow from the crystals and glyphs. Balanced asymmetry, layered depth, every material with its own light and texture. Crisp clean silhouette, every ornament fully inside the image with a generous empty margin around the whole object, nothing cropped. No text, no letters, no numbers, no watermark, no character, nothing inside the central opening.",
+  "negative": "text, letters, watermark, signature, logo, cropped, cut off, blurry, low detail, flat vector icon, clipart, emoji, cartoon sticker, simple geometric shapes, plastic look, people, hands",
+  "largura": 1024,
+  "altura": 1024,
+  "variacoes": [
+    {
+      "seed": 6031
+    },
+    {
+      "seed": 6032
+    },
+    {
+      "seed": 6033
+    },
+    {
+      "seed": 6034
+    }
+  ],
+  "pos": {
+    "tamanho_final": 1024,
+    "molde": {
+      "forma": "circulo",
+      "centro": [
+        0.5,
+        0.5
+      ],
+      "raio": 0.25,
+      "sombra": 0.35,
+      "largura_sombra": 0.045
+    }
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "id": "balao-correspondencia-real",
+  "titulo": "Correspondência Real",
+  "tipo": "balao",
+  "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+  "prompt": "Fantasy RPG user interface element illustration, painted, highly detailed, isolated on a plain flat light gray background. A wide horizontal chat message panel seen straight-on, three times wider than tall: a long rectangular panel whose center is a plain, smooth, empty surface for text, a cream parchment surface with very faint paper texture. Thin gold filigree border, ornate gold filigree corners on both ends, a red wax seal with a short ribbon on the right end and a quill feather on the left end. The long top and bottom edges are a thin simple border line, the ornaments are concentrated at the left and right ends and may extend beyond the panel. The whole panel fully inside the image with margin, nothing cropped. No text, no letters, no watermark, no people.",
+  "negative": "text, letters, watermark, signature, logo, cropped, cut off, blurry, low detail, flat vector icon, clipart, emoji, cartoon sticker, simple geometric shapes, plastic look, people, hands",
+  "largura": 1536,
+  "altura": 512,
+  "variacoes": [
+    {
+      "seed": 8001
+    },
+    {
+      "seed": 8002
+    },
+    {
+      "seed": 8003
+    },
+    {
+      "seed": 8004
+    }
+  ],
+  "pos": {
+    "tamanho_final": 1536,
+    "margem": 0.01,
+    "derivados": [
+      1024,
+      768,
+      512,
+      256
+    ]
+  }
+}

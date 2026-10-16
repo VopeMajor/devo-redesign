@@ -1,0 +1,34 @@
+{
+  "id": "balao-mesa-destino",
+  "titulo": "Mesa do Destino",
+  "tipo": "balao",
+  "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+  "prompt": "Fantasy RPG user interface element illustration, painted, highly detailed, isolated on a plain flat light gray background. A wide horizontal chat message panel seen straight-on, three times wider than tall: a long rectangular panel whose center is a plain, smooth, empty surface for text, a dark green card-table felt surface. Thin gold border, a playing card and a red casino chip on the left end, a pair of dice and a small gold coin stack on the right end. The long top and bottom edges are a thin simple border line, the ornaments are concentrated at the left and right ends and may extend beyond the panel. The whole panel fully inside the image with margin, nothing cropped. No text, no letters, no watermark, no people.",
+  "negative": "text, letters, watermark, signature, logo, cropped, cut off, blurry, low detail, flat vector icon, clipart, emoji, cartoon sticker, simple geometric shapes, plastic look, people, hands",
+  "largura": 1536,
+  "altura": 512,
+  "variacoes": [
+    {
+      "seed": 8041
+    },
+    {
+      "seed": 8042
+    },
+    {
+      "seed": 8043
+    },
+    {
+      "seed": 8044
+    }
+  ],
+  "pos": {
+    "tamanho_final": 1536,
+    "margem": 0.01,
+    "derivados": [
+      1024,
+      768,
+      512,
+      256
+    ]
+  }
+}

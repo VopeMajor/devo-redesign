@@ -1,0 +1,37 @@
+{
+  "id": "moldura-heranca-marfim",
+  "titulo": "Herança de Marfim — avatar",
+  "tipo": "moldura",
+  "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+  "prompt": "Fantasy RPG accessory illustration, painted, highly detailed, isolated on a plain flat warm dark gray background. A rare ornate avatar frame seen straight-on: a round empty opening in the exact center, about half the width of the image, perfectly clear and showing only the flat background through it. Around the opening, a bezel of carved ivory and pale polished silver with delicate silver filigree scrolls. Strings of small round cream pearls loop along the lower half. At the top center, an oval family cameo of carved ivory in a silver setting, framed by tiny pearl beads. Fine ivory lace trim peeks from behind the bezel on the left, and a short pale satin ribbon tied in a bow on the lower right. Soft warm key light from the upper left, gentle sheen on the pearls, subtle aged patina in the silver crevices. Balanced asymmetry, layered depth, every material with its own light and texture. Crisp clean silhouette, every ornament fully inside the image with a generous empty margin around the whole object, nothing cropped. No text, no letters, no numbers, no watermark, no character, nothing inside the central opening.",
+  "negative": "text, letters, watermark, signature, logo, cropped, cut off, blurry, low detail, flat vector icon, clipart, emoji, cartoon sticker, simple geometric shapes, plastic look, people, hands",
+  "largura": 1024,
+  "altura": 1024,
+  "variacoes": [
+    {
+      "seed": 6001
+    },
+    {
+      "seed": 6002
+    },
+    {
+      "seed": 6003
+    },
+    {
+      "seed": 6004
+    }
+  ],
+  "pos": {
+    "tamanho_final": 1024,
+    "molde": {
+      "forma": "circulo",
+      "centro": [
+        0.5,
+        0.5
+      ],
+      "raio": 0.25,
+      "sombra": 0.35,
+      "largura_sombra": 0.045
+    }
+  }
+}

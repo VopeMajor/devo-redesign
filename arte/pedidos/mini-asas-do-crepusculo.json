@@ -3,22 +3,23 @@
   "titulo": "Asas do Crepúsculo — miniperfil (quadrada)",
   "tipo": "moldura",
   "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
-  "referencias": [
-    "arte/referencias/asas-do-crepusculo-v02.png"
-  ],
-  "prompt": "Fantasy RPG accessory illustration, painted, highly detailed, isolated on a plain flat light gray background. Use image 0 as the reference for style, materials and palette: the same glossy raven-black feathers with tarnished silver edges, the same blackened silver gothic metalwork with thorned scrollwork, the same faceted crimson crystals and fine silver chains, the same soft studio light from the upper left. Create the SQUARE version of that avatar frame, seen straight-on: an empty square opening with slightly rounded corners in the exact center, about 55 percent of the image width, perfectly clear and showing only the flat background. A slim square bezel of blackened silver runs around the opening. Two dark wings rise from behind the upper left and upper right corners and fold outward along the top edge, smaller than in image 0 so they fit the square. At the top center, the pointed gothic crest with a large crimson crystal. Small crimson teardrop gems on the four corners. Fine silver chains with tiny crystal pendants hang from the two lower corners, and a short dark velvet ribbon with a small crimson gem sits at the bottom center. Every ornament fully inside the image with an empty margin around it. No text, no watermark, no character, no face, nothing inside the square opening.",
-  "negative": "text, letters, watermark, signature, logo, cropped, cut off, blurry, low detail, flat vector icon, clipart, emoji, cartoon sticker, simple geometric shapes, plastic look, people, face, hands",
+  "prompt": "Fantasy RPG accessory illustration, painted, highly detailed, isolated on a plain flat light gray background. A SQUARE ornate avatar frame seen straight-on, a rounded square, not a circle: an empty square opening with slightly rounded corners in the exact center, about 55 percent of the image width, straight vertical and horizontal sides, perfectly clear and showing only the flat background. Around the square opening runs a slim straight-sided square bezel of blackened silver engraved with gothic tracery and tiny thorned scrollwork. Two dark raven wings made of individually painted glossy black feathers with tarnished silver edges rise from behind the upper left and upper right corners and spread outward. At the top center, a pointed gothic crest of chiseled silver holding a large faceted crimson crystal. Small crimson teardrop gems sit on the four corners of the square. Fine silver chains with tiny crystal pendants and a small cross charm hang from the two lower corners, and a short dark velvet ribbon with a crimson gem sits at the bottom center. Soft studio light from the upper left, cool silver reflections. Every ornament fully inside the image with an empty margin around it. No text, no watermark, no character, no face, nothing inside the square opening.",
+  "negative": "text, letters, watermark, signature, logo, cropped, cut off, blurry, low detail, flat vector icon, clipart, emoji, cartoon sticker, simple geometric shapes, plastic look, people, hands",
   "largura": 1024,
   "altura": 1024,
   "variacoes": [
     {
-      "seed": 4101
+      "seed": 4111
     },
     {
-      "seed": 4102
+      "seed": 4112
     },
     {
-      "seed": 4103
+      "seed": 4113
+    },
+    {
+      "seed": 4114,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b"
     }
   ],
   "pos": {
