@@ -6,6 +6,7 @@ import { type DeadlyVoteEntry, lifeClock, voteTitle } from '@/lib/devo/deadly-vo
 import { cn } from '@/lib/utils'
 import { useNow } from '../hooks'
 import { useDevo } from '../state/devo-store'
+import { usePlayerText } from '../state/player-text'
 import { RecButton } from './record-ui'
 
 type Level = 'critical' | 'directive' | 'reminder'
@@ -41,6 +42,7 @@ export function useManagerSignals(entries: DeadlyVoteEntry[], actions: { onOpenV
   const remaining = Math.max(0, state.timerEndsAt - now)
   const tier = remaining === 0 ? 'zero' : remaining < HOUR ? 'hour' : remaining < 6 * HOUR ? 'six' : remaining < 24 * HOUR ? 'day' : 'ok'
   const { onOpenVotes, onOpenGames } = actions
+  const say = usePlayerText()
 
   return useMemo(() => {
     const out: ManagerSignal[] = []
@@ -71,7 +73,7 @@ export function useManagerSignals(entries: DeadlyVoteEntry[], actions: { onOpenV
           title: `${voteTitle(v)} começou`,
           body: v.groupUrl
             ? 'O Dealer abriu o grupo do WhatsApp. Só os inscritos veem o link no Record.'
-            : 'Você está inscrito. O Dealer vai liberar o link do grupo aqui no Record.',
+            : say('Você está inscrit{o|a}. O Dealer vai liberar o link do grupo aqui no Record.'),
           at: v.startsAt,
           action: onOpenVotes && { label: 'Ver Deadly Vote', run: onOpenVotes },
         })
@@ -117,7 +119,7 @@ export function useManagerSignals(entries: DeadlyVoteEntry[], actions: { onOpenV
     return out.sort((a, b) => RANK[a.level] - RANK[b.level] || b.at - a.at)
     // `now` muda a cada segundo; só recalculamos quando a faixa de tempo muda.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tier, entries, state.notifications, onOpenVotes, onOpenGames, tier === 'ok' ? 0 : Math.floor(remaining / 1000)])
+  }, [tier, entries, state.notifications, onOpenVotes, onOpenGames, say, tier === 'ok' ? 0 : Math.floor(remaining / 1000)])
 }
 
 function formatStart(ts: number) {

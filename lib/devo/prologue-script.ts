@@ -31,7 +31,7 @@ export type ProfileField = 'name' | 'face' | 'age' | 'gender'
 
 export type Beat =
   | { kind: 'line'; stage: StageId; line: Line; auto?: number; sfx?: 'crush' | 'reveal' | 'notify' | 'card' }
-  | { kind: 'choice'; stage: StageId; mode: 'one' | 'explore'; options: { label: string; reply: Line[] }[] }
+  | { kind: 'choice'; stage: StageId; mode: 'one' | 'explore'; options: { label: string; reply: Line[]; /** Consequência real da escolha no save. */ effect?: 'return-starter-cards' }[] }
   | { kind: 'input'; stage: StageId; field: ProfileField }
 
 const n = (stage: StageId, text: string, extra: Partial<Extract<Beat, { kind: 'line' }>> = {}): Beat => ({
@@ -101,7 +101,7 @@ export const PROLOGUE: Beat[] = [
     stage: 'voice',
     mode: 'one',
     options: [
-      { label: 'Entendi. Obrigado.', reply: [{ who: 'narrator', text: 'Ninguém responde.' }] },
+      { label: 'Entendi. Obrigad{o|a}.', reply: [{ who: 'narrator', text: 'Ninguém responde.' }] },
       { label: 'E quanto a você?', reply: [{ who: 'voice', text: 'Eu estarei observando.' }] },
     ],
   },
@@ -109,7 +109,7 @@ export const PROLOGUE: Beat[] = [
 
   n('mine', 'A paisagem se abre para um tipo de caverna ou mina desconhecida. Há tochas acesas pelas paredes e um cheiro forte de carvão no ar.'),
   n('mine', 'Alguém parece se aproximar.'),
-  mel('Olá, Record. Eu estive te esperando. Parece que você é o último da lista. Qual o seu nome?', 'convite'),
+  mel('Olá, Record. Eu estive te esperando. Parece que você é {o último|a última} da lista. Qual o seu nome?', 'convite'),
   { kind: 'input', stage: 'mine', field: 'name' },
   mel('É um nome complicado. E qual a sua idade?', 'pensativo'),
   { kind: 'input', stage: 'mine', field: 'age' },
@@ -117,7 +117,7 @@ export const PROLOGUE: Beat[] = [
   { kind: 'input', stage: 'mine', field: 'gender' },
   mel('Huuummm. Então, por fim: como é o seu rosto?', 'pensativo'),
   // Intervenção do sistema sobre a "segunda aparência" (texto do dono, DIRECAO-2 §5, revisão leve).
-  sys('Confuso sobre essa parte? Não se preocupe! No DEVO existem diferentes formas de jogar, e por isso é preciso escolher uma segunda aparência, real ou 2D. Embora seja obrigatório escolher uma aparência aqui, você não será obrigado a participar de jogos em que se sinta desconfortável com o uso do segundo avatar.'),
+  sys('Confus{o|a} sobre essa parte? Não se preocupe! No DEVO existem diferentes formas de jogar, e por isso é preciso escolher uma segunda aparência, real ou 2D. Embora seja obrigatório escolher uma aparência aqui, você não será obrigad{o|a} a participar de jogos em que se sinta desconfortável com o uso do segundo avatar.'),
   sys('Não sabe qual aparência escolher? Basta tocar em Seleção automática! Temos uma lista com diversas aparências preparadas. E, se mudar de ideia mais tarde, será possível trocar de aparência por afinidade dentro do jogo, mas apenas uma vez.'),
   sys('Lembrete: sua aparência não precisa ser parecida com a original, mas deve ter idade aproximada e ser do mesmo sexo. Apenas aparências humanas são permitidas.'),
   { kind: 'input', stage: 'mine', field: 'face' },
@@ -146,7 +146,7 @@ export const PROLOGUE: Beat[] = [
     mode: 'one',
     options: ['O acordo. Eu me lembro agora.', 'Que acordo? Eu não me lembro disso.', 'Então isso é real…'].map((label) => ({
       label,
-      reply: [m('Entendo que você possa estar se sentindo estranho agora, {nome}, mas você deve começar o tutorial o quanto antes. As consequências por perder o primeiro dia não são pequenas. Precisa se apressar.', 'preocupado')],
+      reply: [m('Entendo que você possa estar se sentindo estranh{o|a} agora, {nome}, mas você deve começar o tutorial o quanto antes. As consequências por perder o primeiro dia não são pequenas. Precisa se apressar.', 'preocupado')],
     })),
   },
   n('mine', 'Uma notificação estranha. O bolso da sua roupa vibra.', { sfx: 'notify' }),
@@ -172,9 +172,9 @@ export const PROLOGUE: Beat[] = [
     stage: 'mine',
     mode: 'one',
     options: [
-      { label: 'Devolver', reply: [m('Não quer mesmo? Tudo bem.', 'triste')] },
+      { label: 'Devolver', reply: [m('Não quer mesmo? Tudo bem.', 'triste')], effect: 'return-starter-cards' },
       {
-        label: 'Obrigado. Eu vou usar bem… Mas como?',
+        label: 'Obrigad{o|a}. Eu vou usar bem… Mas como?',
         reply: [m('O Tutorial vai começar. Cheque seu aplicativo Devo no celular. Há uma parte dedicada chamada “Deadly Vote”, onde você poderá encontrar o acesso gerado para a primeira vez. Quando completar, volte aqui. Muitas novas funções serão desbloqueadas depois disso.')],
       },
     ],

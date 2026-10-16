@@ -18,7 +18,7 @@ type Welcome = { delay: number; threadId: string; npcId: string; text: string }
 // Depois de o cartão "Tempo restante" terminar de entrar (fronteira noite → papel + entrada da home).
 const WELCOME_PULSE_MS = 4600
 const WELCOME: Welcome[] = [
-  { delay: 8400, threadId: 't-rato', npcId: 'rato', text: 'Bem-vindo ao DEVO, {nome}! Seu pulso marca 72 horas. Gaste com sabedoria. Ou não! Hihihi.' },
+  { delay: 8400, threadId: 't-rato', npcId: 'rato', text: '{Bem-vindo|Bem-vinda} ao DEVO, {nome}! Seu pulso marca 72 horas. Gaste com sabedoria. Ou não! Hihihi.' },
   { delay: 14200, threadId: 't-rato', npcId: 'rato', text: 'Dica do Anfitrião: a Sala de Trocas está aberta. Leve uma carta. Volte com outra. Talvez.' },
   { delay: 20000, threadId: 't-herdeiro', npcId: 'herdeiro', text: 'Já li o seu perfil, {nome}. Decepcionante. Não me envie mensagens desnecessárias.' },
   { delay: 26000, threadId: 't-desconhecido', npcId: 'desconhecido', text: 'Não confie no Rato.' },
@@ -42,7 +42,7 @@ export function useDevoEngine() {
       window.setTimeout(() => notify({ appId: 'pulso', title: 'Pulso sincronizado', body: '72:00:00 restantes. O relógio começou.' }), WELCOME_PULSE_MS),
     )
     for (const w of WELCOME) {
-      const text = withName(w.text, callName(state))
+      const text = withName(w.text, callName(state), state.profile.gender)
       timers.push(window.setTimeout(() => dispatch({ type: 'THREAD_TYPING', threadId: w.threadId, typing: true }), w.delay - 1300))
       timers.push(
         window.setTimeout(() => {
@@ -101,7 +101,7 @@ export function useDevoEngine() {
         timers.push(window.setTimeout(() => dispatch({ type: 'TRADE_PARTNER_TYPING', typing: true }), 700))
         timers.push(
           window.setTimeout(() => {
-            dispatch({ type: 'TRADE_CHAT', message: { id: nextId('tc'), from: partner.handle, text: partnerLine(partner, card.id, 'opening'), at: Date.now() } })
+            dispatch({ type: 'TRADE_CHAT', message: { id: nextId('tc'), from: partner.handle, text: withName(partnerLine(partner, card.id, 'opening'), callName(state), state.profile.gender), at: Date.now() } })
           }, 2200),
         )
       }, rand(3200, 6500)),
@@ -115,7 +115,7 @@ export function useDevoEngine() {
     const { partner, partnerCardId } = trade
     const say = (kind: 'accept' | 'leave') => {
       if (silent) return
-      dispatch({ type: 'TRADE_CHAT', message: { id: nextId('tc'), from: partner.handle, text: partnerLine(partner, partnerCardId, kind), at: Date.now() } })
+      dispatch({ type: 'TRADE_CHAT', message: { id: nextId('tc'), from: partner.handle, text: withName(partnerLine(partner, partnerCardId, kind), callName(state), state.profile.gender), at: Date.now() } })
     }
     const leave = () => {
       say('leave')

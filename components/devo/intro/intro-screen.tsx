@@ -3,10 +3,9 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { playSfx } from '@/lib/devo/audio'
 import { INTRO_SCRIPT } from '@/lib/devo/intro-script'
-import { loadVoiceManifest, playRatoLaugh } from '@/lib/devo/voice'
-import { LAST_RATO_LINE } from '@/lib/devo/voice-lines'
 import { ELENCO_INFO, getNpc, portraitFrameProps, resolveExpressao, type Expression, type PortraitNpc } from '@/lib/devo/npcs'
 import { withName } from '@/lib/devo/player-name'
+import { useDevo } from '../state/devo-store'
 import { cn } from '@/lib/utils'
 import Image from 'next/image'
 import { useAdvanceKeys } from '../hooks'
@@ -82,18 +81,29 @@ function UnlockSeal({ name, className }: { name: string; className?: string }) {
   )
 }
 
-export function IntroScreen({ onFinish, playerName }: { onFinish: () => void; playerName: string | null }) {
-  const [index, setIndex] = useState(0)
+export function IntroScreen({
+  onFinish,
+  playerName,
+  startIndex = 0,
+  onProgress,
+}: {
+  onFinish: () => void
+  playerName: string | null
+  /** Retomar de onde o jogador parou (Continuar). */
+  startIndex?: number
+  onProgress?: (index: number) => void
+}) {
+  const [index, setIndex] = useState(() => Math.min(Math.max(0, startIndex), INTRO_SCRIPT.length - 1))
+  useEffect(() => {
+    onProgress?.(index)
+  }, [index]) // eslint-disable-line react-hooks/exhaustive-deps
   const script = INTRO_SCRIPT[index]
-  const line = { ...script, text: withName(script.text, playerName) }
+  const gender = useDevo().state.profile.gender
+  const line = { ...script, text: withName(script.text, playerName, gender) }
   const npc = getNpc(line.speaker)
-  const isLastRato = index === LAST_RATO_LINE
   // Sem dublagem no tutorial (DIRECAO-2 §5: voz só na cutscene inicial).
   const { shown, done, finish } = useTypewriter(line.text, CHAR_MS)
 
-  useEffect(() => {
-    void loadVoiceManifest()
-  }, [])
 
   // O salão entra primeiro no desenho estático do preset; o WebGL só monta depois da cortina e da
   // entrada do salão (en-hall-in: 450ms + 2000ms). Compilar os shaders no meio da animação custava
@@ -111,14 +121,6 @@ export function IntroScreen({ onFinish, playerName }: { onFinish: () => void; pl
     return () => window.clearTimeout(t)
   }, [index, line.visual])
 
-  // A risadinha do Rato ("hihihi") fecha a última fala dele, quando o texto termina de aparecer.
-  const laughed = useRef(-1)
-  useEffect(() => {
-    if (!isLastRato || !done || laughed.current === index) return
-    laughed.current = index
-    const t = window.setTimeout(playRatoLaugh, 160)
-    return () => window.clearTimeout(t)
-  }, [done, isLastRato, index])
   const last = index === INTRO_SCRIPT.length - 1
   const total = INTRO_SCRIPT.length
 

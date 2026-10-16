@@ -13,7 +13,7 @@ import { useDevoEngine } from './use-devo-engine'
  * `onRestart` é aceito por compatibilidade, mas não é mais usado: "Reiniciar sessão" não pede convite
  * novo — abre Ajustes, onde a confirmação em dois passos apaga o inventário e devolve o pulso a 72h.
  */
-export function DevoOS({ onExit }: { onExit: () => void; onRestart?: () => void }) {
+export function DevoOS({ onExit }: { onExit: () => void }) {
   useDevoEngine()
   const isDesktop = useMediaQuery('(min-width: 1024px)')
   const windows = useDesktopWindows()

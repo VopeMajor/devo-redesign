@@ -1,8 +1,13 @@
 import { randomInt } from 'node:crypto'
 import { pool } from '@/lib/db'
 import { normalizeInvite } from '@/lib/auth'
+import { type Ator, can, CARGOS, normalizeCargo } from './cargos'
 import type { PlayerRole } from './deadly-votes'
-import { RecordError } from './record-server'
+import { RecordError } from './errors'
+import { txAs, UUID_RE } from './fundacao-db'
+import { consumeItem, grantItem } from './inventario-server'
+import { loadPessoa, requireActor } from './permissoes-server'
+import { ensureInviteQuota, inviteQuota } from './progresso-server'
 
 export type Invite = {
   code: string
@@ -16,18 +21,18 @@ export type Invite = {
   isTest: boolean
 }
 
-export type InvitesPayload = { role: PlayerRole; canGrant: PlayerRole[]; invites: Invite[] }
+/**
+ * `quota`: convites que o Jogador ainda pode gerar (cota de 1, não renova; mais só como recompensa).
+ * null para a equipe (Owner e Anfitrião não usam cota; Dealer não gera convites).
+ */
+export type InvitesPayload = { role: PlayerRole; canGrant: PlayerRole[]; invites: Invite[]; quota: number | null }
 
 const ALPHABET = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'
-const ROLES: PlayerRole[] = ['player', 'dealer', 'admin']
 
-async function staffRole(playerId: string): Promise<PlayerRole> {
-  const [me] = (await pool.query<{ role: PlayerRole }>('SELECT role FROM players WHERE id = $1', [playerId])).rows
-  if (me?.role !== 'dealer' && me?.role !== 'admin') throw new RecordError('Acesso restrito ao Dealer.', 403)
-  return me.role
+/** Cargos que o ator pode gerar agora (pela tabela do dono, via can()). */
+function grantable(ator: Ator, cota: number): PlayerRole[] {
+  return CARGOS.filter((c) => can(ator, 'convite.gerar', { cargo: c, cota }))
 }
-
-const grantable = (role: PlayerRole): PlayerRole[] => (role === 'admin' ? ROLES : ['player'])
 
 function newCode() {
   let s = ''
@@ -47,23 +52,27 @@ type Row = {
 }
 
 export async function listInvites(playerId: string): Promise<InvitesPayload> {
-  const role = await staffRole(playerId)
+  const ator = await requireActor(playerId)
+  const isPlayer = ator.cargo === 'player'
+  if (isPlayer) await ensureInviteQuota(ator.id).catch(() => {})
+  const quota = isPlayer ? await inviteQuota(ator.id) : null
   const { rows } = await pool.query<Row>(
     `SELECT i.code, i.role, i.note, i.created_at, c.name AS creator, i.used_at, u.name AS used_name, i.is_test
        FROM invite_codes i
        LEFT JOIN players c ON c.id = i.created_by
        LEFT JOIN players u ON u.user_id = i.used_by_user
-      WHERE $2 = 'admin' OR i.created_by = $1
+      WHERE $2 = 'owner' OR i.created_by = $1
       ORDER BY i.used_at IS NOT NULL, i.created_at DESC
       LIMIT 200`,
-    [playerId, role],
+    [playerId, ator.cargo],
   )
   return {
-    role,
-    canGrant: grantable(role),
+    role: ator.cargo,
+    canGrant: grantable(ator, quota ?? 0),
+    quota,
     invites: rows.map((r) => ({
       code: r.code,
-      role: r.role,
+      role: normalizeCargo(r.role),
       note: r.note,
       createdAt: r.created_at.toISOString(),
       createdBy: r.creator,
@@ -74,29 +83,59 @@ export async function listInvites(playerId: string): Promise<InvitesPayload> {
   }
 }
 
+/**
+ * Gera um convite. Owner: qualquer cargo; Anfitrião: Jogador ou Dealer (o Dealer nasce sob ele);
+ * Jogador: só Jogador, gastando 1 da cota (item 'convite'); Dealer: não gera.
+ * Convite de Dealer gerado pelo Owner usa `supervisorId` (Anfitrião) ou, sem ele, o próprio Owner.
+ */
 export async function createInvite(playerId: string, input: Record<string, unknown>) {
-  const role = await staffRole(playerId)
-  const want = ROLES.includes(input.role as PlayerRole) ? (input.role as PlayerRole) : 'player'
-  if (!grantable(role).includes(want)) throw new RecordError('Você só pode gerar convites de jogador.', 403)
-  const note = typeof input.note === 'string' ? input.note.trim().slice(0, 60) || null : null
-  // Só o admin marca convites de teste.
-  const isTest = role === 'admin' && input.test === true
-  for (let attempt = 0; attempt < 5; attempt++) {
-    const code = newCode()
-    const { rowCount } = await pool.query(
-      'INSERT INTO invite_codes (code, role, note, created_by, is_test) VALUES ($1, $2, $3, $4, $5) ON CONFLICT (code) DO NOTHING',
-      [code, want, note, playerId, isTest],
-    )
-    if (rowCount) return code
-  }
-  throw new RecordError('Não foi possível gerar um código. Tente de novo.', 500)
+  return txAs(playerId, async (c) => {
+    const ator = await requireActor(playerId, c)
+    const want = normalizeCargo(input.role ?? 'player')
+    const cota = ator.cargo === 'player' ? await inviteQuota(ator.id, c) : 0
+    if (!can(ator, 'convite.gerar', { cargo: want, cota })) {
+      throw new RecordError(ator.cargo === 'player' ? 'Você não tem convites disponíveis.' : ator.cargo === 'dealer' ? 'Dealers não geram convites.' : 'Você não pode gerar convites deste cargo.', 403)
+    }
+    let supervisor: string | null = null
+    if (want === 'dealer') {
+      if (ator.cargo === 'anfitriao') supervisor = ator.id
+      else {
+        const raw = typeof input.supervisorId === 'string' && UUID_RE.test(input.supervisorId) ? input.supervisorId : null
+        const sup = raw ? await loadPessoa(raw, c) : null
+        if (raw && (!sup || (sup.cargo !== 'anfitriao' && sup.cargo !== 'owner'))) throw new RecordError('O supervisor precisa ser um Anfitrião.')
+        supervisor = sup?.id ?? ator.id
+      }
+    }
+    const note = typeof input.note === 'string' ? input.note.trim().slice(0, 60) || null : null
+    // Só o Owner marca convites de teste.
+    const isTest = can(ator, 'convite.teste') && input.test === true
+    for (let attempt = 0; attempt < 5; attempt++) {
+      const code = newCode()
+      const { rowCount } = await c.query(
+        'INSERT INTO invite_codes (code, role, note, created_by, is_test, supervisor_id) VALUES ($1, $2, $3, $4, $5, $6) ON CONFLICT (code) DO NOTHING',
+        [code, want, note, playerId, isTest, supervisor],
+      )
+      if (rowCount) {
+        if (ator.cargo === 'player') await consumeItem({ playerId: ator.id, item: 'convite', quantidade: 1, motivo: 'convite_gerado', ref: code }, c)
+        return code
+      }
+    }
+    throw new RecordError('Não foi possível gerar um código. Tente de novo.', 500)
+  })
 }
 
+/** Revoga um convite ainda não usado. Se era da cota de um Jogador, a unidade volta. */
 export async function revokeInvite(playerId: string, raw: unknown) {
-  const role = await staffRole(playerId)
-  const { rowCount } = await pool.query(
-    `DELETE FROM invite_codes WHERE code = $1 AND used_at IS NULL AND ($3 = 'admin' OR created_by = $2)`,
-    [normalizeInvite(raw), playerId, role],
-  )
-  if (!rowCount) throw new RecordError('Convite não encontrado ou já utilizado.', 404)
+  return txAs(playerId, async (c) => {
+    const ator = await requireActor(playerId, c)
+    const code = normalizeInvite(raw)
+    const { rows } = await c.query<{ code: string }>(
+      `DELETE FROM invite_codes WHERE code = $1 AND used_at IS NULL AND ($3 = 'owner' OR created_by = $2) RETURNING code`,
+      [code, playerId, ator.cargo],
+    )
+    if (!rows.length) throw new RecordError('Convite não encontrado ou já utilizado.', 404)
+    if (ator.cargo === 'player') {
+      await grantItem({ playerId: ator.id, item: 'convite', quantidade: 1, motivo: 'convite_revogado', ref: code, idem: `convite-revogado:${code}` }, c)
+    }
+  })
 }

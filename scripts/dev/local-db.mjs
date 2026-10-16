@@ -24,6 +24,9 @@ const files = [
   join(root, 'scripts', 'arcade-migration.sql'),
   join(root, 'scripts', 'arcade-points-migration.sql'),
   join(root, 'scripts', 'arcade-rooms-migration.sql'),
+  join(root, 'scripts', 'test-accounts-migration.sql'),
+  join(root, 'scripts', 'character-name-migration.sql'),
+  join(root, 'scripts', 'fundacao-migration.sql'),
   ...(fresh ? [join(here, '90-seed.sql')] : []),
 ]
 for (const f of files) await db.exec(readFileSync(f, 'utf8'))
@@ -31,7 +34,7 @@ for (const f of files) await db.exec(readFileSync(f, 'utf8'))
 const server = new PGLiteSocketServer({ db, port, host: '127.0.0.1' })
 await server.start()
 console.log(`[devo] banco local pronto em postgres://postgres@127.0.0.1:${port}/postgres${fresh ? ' (dados de teste criados)' : ''}`)
-console.log('[devo] convites de teste: DEVO-TEST-0001 … 0004, admin: DEVO-TEST-ADM1')
+console.log('[devo] convites de teste: DEVO-TEST-0001 … 0004, owner: DEVO-TEST-ADM1')
 
 const stop = async () => {
   await server.stop()

@@ -155,7 +155,7 @@ Sabe onde me encontrar.
 |
 "Pelo menos ele se despediu."
 
-## Salão das Máscaras — apresentação (o "maestro"; NPC a definir pelo dono)
+## Salão das Máscaras — apresentação (o "maestro" = o Herdeiro)
 
 — Hm? É você?
 |
@@ -201,7 +201,7 @@ Sabe onde me encontrar.
 |
 [A maioria dos itens — exceto as propagandas — não exige um custo inicial além da taxa de divulgação.]
 |
-[Fique atento aos eventos especiais do leilão!]
+[Fique atent{o|a} aos eventos especiais do leilão!]
 |
 [Eventos quinzenais e especiais oferecem oportunidades de obter cartas comemorativas, essências de afinidade raras e fragmentos arcanos, assistir a peças de teatro e muito mais.]
 |

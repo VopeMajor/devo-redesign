@@ -15,7 +15,7 @@
   // Variáveis e segredos cadastrados no painel (Settings → Variables and Secrets) sobrevivem a cada deploy.
   "keep_vars": true,
   // Endereço público (não é segredo). Usado pelo login (better-auth) e pelos links de convite.
-  "vars": { "DEVO_PUBLIC_URL": "https://devo.blakesatan31.workers.dev" },
+  "vars": { "DEVO_PUBLIC_URL": "https://devo.devorpg.workers.dev" },
   "preview_urls": false,
   "assets": {
     "directory": ".open-next/assets",

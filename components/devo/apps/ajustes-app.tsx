@@ -2,7 +2,6 @@
 
 import { useState, type ReactNode } from 'react'
 import { playSfx } from '@/lib/devo/audio'
-import { PULSE_START_HOURS } from '@/lib/devo/pulse'
 import { Button } from '../kit/button'
 import { Frame, FrameCorners } from '../kit/frame'
 import { GlyphAlert, GlyphCheck } from '../kit/glyphs'
@@ -83,83 +82,14 @@ export function AjustesApp() {
               </p>
             </div>
           </div>
-          <p className="mt-4 font-body text-[15px] leading-relaxed text-dv-text-2">
-            Reiniciar apaga suas cartas (você recebe de novo o kit inicial), zera as trocas e devolve o pulso a {PULSE_START_HOURS} horas. Sua conta continua a
-            mesma. O Anfitrião vai fingir que não viu.
-          </p>
           <div className="mt-4 flex flex-wrap gap-2">
             <Button variant="secondary" size="sm" onClick={exitToLanding}>
               Tela inicial
             </Button>
           </div>
-          <RestartSession />
         </MarbleSlab>
       </Stagger>
     </div>
   )
 }
 
-type RestartStep = 'idle' | 'confirm' | 'saving' | 'done' | 'error'
-
-/** Reiniciar sessão em dois passos: pedir → confirmar. Grava no servidor e mostra o resultado. */
-function RestartSession() {
-  const { state, restartSession } = useDevo()
-  const [step, setStep] = useState<RestartStep>('idle')
-
-  const run = async () => {
-    setStep('saving')
-    playSfx('whoosh')
-    const ok = await restartSession()
-    setStep(ok ? 'done' : 'error')
-  }
-
-  if (step === 'idle' || step === 'done' || step === 'error') {
-    return (
-      <div className="mt-3 flex flex-col gap-3">
-        <Button
-          variant="danger"
-          size="sm"
-          className="self-start"
-          onClick={() => {
-            playSfx('click')
-            setStep('confirm')
-          }}
-        >
-          Reiniciar sessão
-        </Button>
-        {step === 'done' && (
-          <p role="status" className="animate-dv-cut-in flex items-center gap-2 font-body text-[15px] text-dv-text">
-            <GlyphCheck className="size-5 text-dv-gold-bright" />
-            Sessão reiniciada e salva. Pulso em {PULSE_START_HOURS}h.
-          </p>
-        )}
-        {step === 'error' && (
-          <p role="alert" className="flex items-start gap-2 font-body text-[15px] text-dv-blood-text">
-            <GlyphAlert className="mt-0.5 size-5 shrink-0" />
-            Reiniciado aqui, mas não foi possível salvar agora. O sistema tenta de novo em instantes.
-          </p>
-        )}
-      </div>
-    )
-  }
-
-  return (
-    <Frame variant="alert" pad="md" cutSize={12} className="animate-dv-cut-in mt-4" role="alertdialog" aria-label="Confirmar reinício da sessão">
-      <div className="flex items-start gap-3">
-        <GlyphAlert className="mt-0.5 size-6 shrink-0 text-dv-blood-text" />
-        <p className="font-body text-[15px] leading-relaxed text-dv-text">
-          Tem certeza? Você perde {state.inventory.length} {state.inventory.length === 1 ? 'carta' : 'cartas'} e {state.tradesCompleted}{' '}
-          {state.tradesCompleted === 1 ? 'troca' : 'trocas'}; o pulso volta a {PULSE_START_HOURS}:00:00. Isso não pode ser desfeito.
-        </p>
-      </div>
-      <div className="mt-4 flex flex-wrap gap-2 pb-2">
-        <Button variant="secondary" size="sm" onClick={() => setStep('idle')} disabled={step === 'saving'}>
-          Cancelar
-        </Button>
-        <Button variant="danger" size="sm" onClick={run} loading={step === 'saving'}>
-          Sim, reiniciar
-        </Button>
-      </div>
-    </Frame>
-  )
-}

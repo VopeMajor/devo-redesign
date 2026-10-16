@@ -1,17 +1,13 @@
 import { pool } from '@/lib/db'
 import { type DeadlyVote, type DeadlyVoteStatus, normalizeGroupUrl, type PlayerRole, type RecordPayload, type StaffBoard, type StaffEntry } from './deadly-votes'
 
-export class RecordError extends Error {
-  constructor(
-    message: string,
-    public status = 400,
-  ) {
-    super(message)
-  }
-}
+import { normalizeCargo } from './cargos'
+import { RecordError } from './errors'
+import { requireActor, requireCan, requireVotoEditavel } from './permissoes-server'
+
+export { RecordError }
 
 const STATUSES: DeadlyVoteStatus[] = ['convocado', 'em-progresso', 'concluido', 'cancelado', 'falha']
-const ROLES: PlayerRole[] = ['player', 'dealer', 'admin']
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 const AVATAR_RE = /^data:image\/(jpeg|webp|png);base64,([A-Za-z0-9+/=]+)$/
 const MAX_AVATAR_BYTES = 180_000
@@ -59,10 +55,11 @@ function toVote(r: VoteRow): DeadlyVote {
 }
 
 /** Colunas comuns: inscritos e resultado público (sobreviventes / eliminados) de cada caso. */
+/** O Owner nunca aparece como anfitrião do caso (DIRECAO-3 §3: Owner não é revelado publicamente). */
 const VOTE_COUNTS = `(SELECT count(*) FROM deadly_vote_entries c WHERE c.vote_id = v.id) AS participants,
               (SELECT count(*) FROM deadly_vote_entries c WHERE c.vote_id = v.id AND c.outcome = 'sobreviveu') AS survivors,
               (SELECT count(*) FROM deadly_vote_entries c WHERE c.vote_id = v.id AND c.outcome = 'eliminado') AS eliminated,
-              (SELECT h.name FROM players h WHERE h.id = v.created_by) AS host,
+              (SELECT CASE WHEN h.role = 'owner' THEN NULL ELSE h.name END FROM players h WHERE h.id = v.created_by) AS host,
               (v.whatsapp_url IS NOT NULL) AS has_group`
 
 export async function getRecord(playerId: string): Promise<RecordPayload> {
@@ -87,7 +84,8 @@ export async function getRecord(playerId: string): Promise<RecordPayload> {
       [playerId],
     )
   ).rows
-  const role = (ROLES as string[]).includes(me.role) ? (me.role as PlayerRole) : 'player'
+  // O próprio cargo (payload privado do dono da sessão).
+  const role: PlayerRole = normalizeCargo(me.role)
   return { role, avatarVersion: me.avatar_updated_at?.getTime() ?? null, votes: votes.map(toVote) }
 }
 
@@ -145,22 +143,30 @@ export async function getAvatar(playerId: string) {
 
 /* Gestão (Dealer / Admin). Base para o painel de gerência que será criado depois. */
 
+/** Equipe que opera Deadly Votes (Owner, Anfitrião, Dealer). Ver lib/devo/cargos.ts. */
 async function requireStaff(playerId: string) {
-  const [me] = (await pool.query<{ role: string }>('SELECT role FROM players WHERE id = $1', [playerId])).rows
-  if (me?.role !== 'dealer' && me?.role !== 'admin') throw new RecordError('Acesso restrito ao Dealer.', 403)
+  const ator = await requireActor(playerId)
+  requireCan(ator, 'dv.criar', undefined, 'Acesso restrito ao Dealer.')
+  return ator
 }
 
-/** Mesa do Dealer: votos recentes (todos os estados) com os inscritos e o resultado de cada um. */
+/**
+ * Mesa do Dealer: votos recentes (todos os estados) com os inscritos e o resultado de cada um.
+ * Escopo pela tabela do dono: Owner vê todos; Anfitrião os seus e os dos seus Dealers; Dealer só os seus.
+ */
 export async function getStaffBoard(playerId: string): Promise<StaffBoard> {
-  await requireStaff(playerId)
+  const ator = await requireStaff(playerId)
   const votes = (
     await pool.query<VoteRow>(
       `SELECT v.id, v.number, v.title, v.arc, v.briefing, v.status, v.starts_at, v.ends_at, v.max_participants,
               ${VOTE_COUNTS},
               NULL::timestamptz AS joined_at, NULL::text AS outcome, v.whatsapp_url AS group_url
          FROM deadly_votes v
+         LEFT JOIN players c ON c.id = v.created_by
+        WHERE $1 = 'owner' OR v.created_by = $2 OR ($1 = 'anfitriao' AND c.supervisor_id = $2)
         ORDER BY (v.status IN ('convocado', 'em-progresso')) DESC, v.starts_at DESC
         LIMIT 30`,
+      [ator.cargo, ator.id],
     )
   ).rows
   if (!votes.length) return { votes: [] }
@@ -186,7 +192,10 @@ export async function getStaffBoard(playerId: string): Promise<StaffBoard> {
 const text = (v: unknown, max: number) => (typeof v === 'string' ? v.trim().slice(0, max) : '')
 
 export async function createVote(playerId: string, input: Record<string, unknown>) {
-  await requireStaff(playerId)
+  const ator = await requireStaff(playerId)
+  // Deadly Vote tutorial (vencer desbloqueia os sistemas; ver scripts/fundacao-migration.sql §7): Owner/Anfitrião.
+  const tutorial = input.tutorial === true
+  if (tutorial) requireCan(ator, 'dv.tutorial', undefined, 'Só Owner ou Anfitrião criam o Deadly Vote tutorial.')
   const title = text(input.title, 60)
   const startsAt = Number(input.startsAt)
   if (title.length < 2) throw new RecordError('Título obrigatório.')
@@ -197,9 +206,9 @@ export async function createVote(playerId: string, input: Record<string, unknown
   if (rawGroup && !group) throw new RecordError('Link do grupo inválido. Use o convite do WhatsApp (https://chat.whatsapp.com/…).')
   const [row] = (
     await pool.query<{ id: string }>(
-      `INSERT INTO deadly_votes (title, arc, briefing, starts_at, max_participants, created_by, whatsapp_url)
-       VALUES ($1, $2, $3, to_timestamp($4 / 1000.0), $5, $6, $7) RETURNING id`,
-      [title, text(input.arc, 60) || null, text(input.briefing, 600) || null, startsAt, Number.isFinite(max) ? max : null, playerId, group],
+      `INSERT INTO deadly_votes (title, arc, briefing, starts_at, max_participants, created_by, whatsapp_url, is_tutorial)
+       VALUES ($1, $2, $3, to_timestamp($4 / 1000.0), $5, $6, $7, $8) RETURNING id`,
+      [title, text(input.arc, 60) || null, text(input.briefing, 600) || null, startsAt, Number.isFinite(max) ? max : null, playerId, group, tutorial],
     )
   ).rows
   return row.id
@@ -207,8 +216,9 @@ export async function createVote(playerId: string, input: Record<string, unknown
 
 /** O Dealer informa, troca ou remove (null/vazio) o link do grupo do WhatsApp de um caso. */
 export async function setVoteGroup(playerId: string, voteId: string, url: unknown) {
-  await requireStaff(playerId)
+  const ator = await requireStaff(playerId)
   if (!UUID_RE.test(voteId)) throw new RecordError('ID inválido.')
+  await requireVotoEditavel(ator, voteId)
   const empty = url === null || (typeof url === 'string' && url.trim() === '')
   const group = empty ? null : normalizeGroupUrl(url)
   if (!empty && !group) throw new RecordError('Link do grupo inválido. Use o convite do WhatsApp (https://chat.whatsapp.com/…).')
@@ -216,9 +226,11 @@ export async function setVoteGroup(playerId: string, voteId: string, url: unknow
   if (!res.rowCount) throw new RecordError('Deadly Vote não encontrado.', 404)
 }
 
+/** Ao virar 'concluido', os gatilhos do banco desbloqueiam os sistemas para quem venceu um voto tutorial. */
 export async function setVoteStatus(playerId: string, voteId: string, status: unknown) {
-  await requireStaff(playerId)
+  const ator = await requireStaff(playerId)
   if (!UUID_RE.test(voteId) || !(STATUSES as unknown[]).includes(status)) throw new RecordError('Dados inválidos.')
+  await requireVotoEditavel(ator, voteId)
   await pool.query(
     `UPDATE deadly_votes SET status = $2, updated_at = now(),
             ends_at = CASE WHEN $2 IN ('concluido', 'cancelado', 'falha') THEN coalesce(ends_at, now()) ELSE ends_at END
@@ -228,9 +240,10 @@ export async function setVoteStatus(playerId: string, voteId: string, status: un
 }
 
 export async function setEntryOutcome(playerId: string, voteId: string, targetId: string, outcome: unknown) {
-  await requireStaff(playerId)
+  const ator = await requireStaff(playerId)
   if (!UUID_RE.test(voteId) || !UUID_RE.test(targetId) || (outcome !== null && outcome !== 'sobreviveu' && outcome !== 'eliminado')) {
     throw new RecordError('Dados inválidos.')
   }
+  await requireVotoEditavel(ator, voteId)
   await pool.query('UPDATE deadly_vote_entries SET outcome = $3 WHERE vote_id = $1 AND player_id = $2', [voteId, targetId, outcome])
 }

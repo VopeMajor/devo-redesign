@@ -24,8 +24,8 @@ const SHAPE: Record<PortraitShape, string> = {
  * fundo noite com brilho do tom, luz de borda que acompanha a silhueta, leve correção de cor,
  * grão, vinheta e BASE QUE SE DISSOLVE em degradê (nunca o corte reto do arquivo).
  *
- *   <PortraitFrame src="/images/npc/rato.png" alt="O Rato" name="O Rato" role="Anfitrião" tone="gold" />
- *   <PortraitFrame {...portraitFrameProps('melissa', 'soft')} alt="Melissa" tone="cobalt" />  // mapa em lib/devo/npcs.ts
+ *   <PortraitFrame {...portraitFrameProps('rato')} alt="O Rato" name="O Rato" role="Anfitrião" tone="gold" />
+ *   <PortraitFrame {...portraitFrameProps('melissa', 'sorriso')} alt="Melissa" tone="cobalt" />  // mapa em lib/devo/npcs.ts
  */
 export function PortraitFrame({
   src,

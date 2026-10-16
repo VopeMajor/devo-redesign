@@ -1,6 +1,6 @@
 -- Dados de teste locais. Nunca rodar no Neon de produção.
 INSERT INTO invite_codes (code, role, note) VALUES
-  ('DEVO-TEST-ADM1', 'admin',  'teste local: admin'),
+  ('DEVO-TEST-ADM1', 'owner',  'teste local: owner (antigo admin)'),
   ('DEVO-TEST-0001', 'player', 'teste local'),
   ('DEVO-TEST-0002', 'player', 'teste local'),
   ('DEVO-TEST-0003', 'player', 'teste local'),
@@ -19,13 +19,22 @@ UPDATE invite_codes SET is_test = false WHERE code LIKE 'DEVO-TEST-%';
 INSERT INTO invite_codes (code, role, note, is_test) VALUES ('DEVO-QA-0001', 'player', 'conta de teste (QA)', true)
 ON CONFLICT (code) DO NOTHING;
 
+-- Fundação (scripts/fundacao-migration.sql): uma conta de cada cargo. 'Sentinela' é Owner (nunca aparece
+-- como Owner em payload público), 'Mordomo' é Anfitrião e supervisiona o Dealer 'Narrador'.
+INSERT INTO players (id, name, role) VALUES
+  ('00000000-0000-4000-8000-000000000010', 'Sentinela', 'owner'),
+  ('00000000-0000-4000-8000-000000000011', 'Mordomo',   'anfitriao')
+ON CONFLICT DO NOTHING;
+INSERT INTO players (id, name, role, supervisor_id) VALUES
+  ('00000000-0000-4000-8000-000000000006', 'Narrador', 'dealer', '00000000-0000-4000-8000-000000000011')
+ON CONFLICT DO NOTHING;
+
 INSERT INTO players (id, name, role) VALUES
   ('00000000-0000-4000-8000-000000000001', 'Corvo',   'player'),
   ('00000000-0000-4000-8000-000000000002', 'Ísis',    'player'),
   ('00000000-0000-4000-8000-000000000003', 'Matheus', 'player'),
   ('00000000-0000-4000-8000-000000000004', 'Nyx',     'player'),
-  ('00000000-0000-4000-8000-000000000005', 'Lírio',   'player'),
-  ('00000000-0000-4000-8000-000000000006', 'Narrador', 'dealer')
+  ('00000000-0000-4000-8000-000000000005', 'Lírio',   'player')
 ON CONFLICT DO NOTHING;
 
 -- Conta de teste com pontuação altíssima: se aparecer no ranking (geral ou por jogo), o filtro quebrou.
@@ -104,3 +113,38 @@ SELECT ev.id, d.slot, d.a, d.b, d.ra, d.rb FROM ev,
 
 -- Nome do personagem (scripts/character-name-migration.sql): contas do seed usam o nome da conta.
 UPDATE players SET character_name = name WHERE character_name IS NULL;
+
+-- ---------------------------------------------------------------------------------------------
+-- Fundação: convites do teste de servidor (scripts/dev/fundacao-test.mjs). Contas de teste (fora do ranking).
+INSERT INTO invite_codes (code, role, note, is_test) VALUES
+  ('DEVO-FUND-OWNR', 'owner',     'teste fundação: owner', true),
+  ('DEVO-FUND-ANF1', 'anfitriao', 'teste fundação: anfitrião', true),
+  ('DEVO-FUND-ANF2', 'anfitriao', 'teste fundação: anfitrião 2', true),
+  ('DEVO-FUND-JOG1', 'player',    'teste fundação: jogador', true),
+  ('DEVO-FUND-JOG2', 'player',    'teste fundação: jogador 2', true)
+ON CONFLICT (code) DO NOTHING;
+
+-- 'O Primeiro Voto' é o Deadly Vote tutorial do seed: quem sobreviveu ganha as flags (gatilho do banco).
+UPDATE deadly_votes SET is_tutorial = true WHERE title = 'O Primeiro Voto';
+-- Gatilho de entrada: reaplica para as entradas já gravadas (idempotente).
+SELECT devo_dv_desbloquear(id) FROM deadly_votes WHERE is_tutorial;
+
+-- Itens de exemplo do catálogo (só no banco de teste): chave de torre, cápsula, cosmético.
+INSERT INTO item_defs (key, kind, name, description, rarity, stackable, meta) VALUES
+  ('chave:torre-exemplo', 'chave', 'Chave da Torre de Exemplo', 'Item de teste.', 'incomum', true, '{"torre": "exemplo"}'),
+  ('capsula:exemplo-001', 'capsula', 'Cápsula do Tempo nº 001', 'Item de teste: uma curiosidade do mundo.', 'raro', false, '{"texto": "O relógio da catedral parou às 3h17."}'),
+  ('cosmetico:moldura-exemplo', 'cosmetico', 'Moldura de Exemplo', 'Item de teste.', 'epico', false, '{"categoria": "moldura_avatar"}')
+ON CONFLICT (key) DO NOTHING;
+
+-- Inventário de exemplo para 'Lírio' (sobrevivente do tutorial).
+SELECT devo_item_grant('00000000-0000-4000-8000-000000000005', k, q, 'seed', NULL, NULL, 'seed:lirio:' || k)
+FROM (VALUES ('dracma_comum', 5), ('dracma_incomum', 1), ('essencia:galo', 3), ('fragmento_arcano', 2),
+             ('chave:torre-exemplo', 1), ('capsula:exemplo-001', 1), ('cosmetico:moldura-exemplo', 1)) AS x(k, q);
+SELECT devo_karma_ajustar('00000000-0000-4000-8000-000000000005', 7, 'seed', NULL, NULL, 'seed:lirio:karma');
+
+-- Uma proposta pendente do Dealer (Narrador) para o Anfitrião (Mordomo) aprovar.
+INSERT INTO reward_proposals (kind, vote_id, origin, recipient_id, resource, resource_key, quantity, justification, proposed_by)
+SELECT 'evento', v.id, 'Deadly Vote #' || v.number || ' · ' || v.title, '00000000-0000-4000-8000-000000000002', 'item', 'dracma_comum', 3,
+       'Sobreviveu até o fim da sala.', '00000000-0000-4000-8000-000000000006'
+FROM deadly_votes v WHERE v.title = 'A Sala Sem Relógio'
+  AND NOT EXISTS (SELECT 1 FROM reward_proposals r WHERE r.vote_id = v.id);

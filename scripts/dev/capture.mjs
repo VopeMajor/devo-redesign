@@ -765,16 +765,6 @@ if (want('sistema') || want('apps') || want('jogos')) {
       await page.mouse.wheel(0, 800)
       await wait(600)
       await shot(page, '25-ajustes-scroll')
-      // Reiniciar sessão: dois passos, salva no servidor, não pede convite.
-      await btn(page, 'Reiniciar sessão', true).click({ timeout: 3000 })
-      await wait(500)
-      await page.mouse.wheel(0, 800)
-      await shot(page, '25-ajustes-reiniciar-confirmar')
-      await btn(page, 'Sim, reiniciar', true).click({ timeout: 3000 })
-      await wait(2500)
-      await shot(page, '25-ajustes-reiniciar-feito')
-      await openApp(page, 'Pulso')
-      await shot(page, '25-ajustes-reiniciar-pulso')
     })
   }
 
@@ -915,7 +905,90 @@ if (want('apps')) {
   await ctx.close()
 }
 
-// ── 3. Partidas reais entre duas contas (fila online) ───────────────────────────────────
+// ── 2c. Gênero nos textos: a mesma conta escolhe "Feminino" no prólogo (convite 0006, Lumina) ──────────
+// Compare com o novato (Aurora escolhe a primeira opção, "Masculino") e com a Visitante (2b).
+if (want('genero')) {
+  // Retoma o prólogo pouco antes da pergunta de gênero (índice 32 = idade) pelo Continuar.
+  const { ctx, page } = await account('Lumina', 'DEVO-TEST-0006', [], 'phone', {
+    welcomed: false,
+    owlMet: false,
+    javaliMet: false,
+    profile: { appearanceChangesLeft: 1 },
+    story: { part: 'prologue', index: 32, vars: { name: 'Lumina' } },
+  })
+  await step('genero-prologo', async () => {
+    await page.goto(BASE, { waitUntil: 'networkidle' })
+    await wait(1000)
+    await btn(page, 'Continuar').click({ timeout: 15000 })
+    await wait(3600)
+    const seen = new Set()
+    // Fotografa a fala com o texto completo (espera a digitação terminar sozinha; Enter aqui avançaria).
+    const grab = async (key, re, name) => {
+      if (seen.has(key) || !(await page.getByText(re).count())) return false
+      seen.add(key)
+      await wait(2500)
+      await shot(page, name)
+      return true
+    }
+    for (let i = 0; i < 80; i++) {
+      await wait(700)
+      const fem = page.getByRole('button', { name: /^Feminino/ })
+      if (!seen.has('genero') && (await fem.count())) {
+        seen.add('genero')
+        await shot(page, '06-genero-escolha')
+        await tryClick(fem.first())
+        continue
+      }
+      if (!seen.has('aparencia') && (await page.getByRole('radiogroup', { name: 'Tipo de aparência' }).count())) {
+        seen.add('aparencia')
+        await tryClick(btn(page, 'Seleção automática'), 1500)
+        await wait(400)
+        await tryClick(btn(page, 'Responder', true), 1500)
+        continue
+      }
+      await grab('confusa', /Confusa sobre essa parte/, '06-genero-prologo-confusa')
+      await grab('estranha', /sentindo estranha agora/, '06-genero-prologo-estranha')
+      const thanks = page.getByRole('button', { name: /Obrigada\. Eu vou usar bem/ })
+      if (await thanks.count()) {
+        await wait(600)
+        await shot(page, '06-genero-prologo-obrigada')
+        await tryClick(thanks.first())
+        await wait(2500)
+        await shot(page, '06-genero-prologo-depois')
+        break
+      }
+      await advanceDialogue(page)
+    }
+  })
+  // Já no sistema: save pronto com o perfil feminino e as primeiras visitas por fazer.
+  await step('genero-sistema', async () => {
+    await page.close()
+    const p2 = await ctx.newPage()
+    await p2.goto(`${BASE}/images/card-back.png`)
+    await api(p2, '/api/save', makeSave(VET_CARDS, { owlMet: false, javaliMet: false, profile: { gender: 'Feminino', age: 24, appearanceChangesLeft: 1 } })).then(
+      (r) => r.status >= 400 && manifest.errors.push({ step: 'genero-save', error: `${r.status} ${r.text}` }),
+    )
+    await enterOS(p2)
+    await shot(p2, '07-genero-home')
+    await openApp(p2, 'Mensagens')
+    if (await tryClick(p2.getByRole('button', { name: /o rato/i }).first())) {
+      await wait(1500)
+      if (await tryClick(p2.locator('[aria-label="Escolhas de diálogo"] button').first())) {
+        await wait(6500)
+        await shot(p2, '07-genero-mensagens-rato')
+      }
+    }
+    await openApp(p2, 'Cartas')
+    await wait(2500)
+    await shot(p2, '07-genero-coruja')
+    await openApp(p2, 'Sala de Jogos')
+    await wait(1500)
+    await shot(p2, '07-genero-javali')
+  })
+  await ctx.close()
+}
+
+// ── 3. Partidas reais entre duas contas (fila online)───────────────────────────────────
 if (want('partidas')) {
   const A = await account('Veterano', 'DEVO-TEST-ADM1', VET_CARDS)
   const B = await account('Rival', 'DEVO-TEST-0002', ['fosforo', 'escudo', 'moeda', 'dado', 'ampulheta'])

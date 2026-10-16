@@ -1,5 +1,6 @@
 import type { PoolClient } from 'pg'
 import { pool } from '@/lib/db'
+import { publicCargo } from '../cargos'
 import { REACTION_IDS } from './reactions'
 import {
   type EventStatus,
@@ -870,7 +871,7 @@ export async function getChat(channel: string) {
       }).filter((m) => m.at <= now)
     : []
   return [
-    ...rows.map((r) => ({ id: String(r.id), author: r.author, body: r.body, at: r.created_at.getTime(), bot: false, pid: r.player_id ?? undefined, role: r.role ?? undefined })),
+    ...rows.map((r) => ({ id: String(r.id), author: r.author, body: r.body, at: r.created_at.getTime(), bot: false, pid: r.player_id ?? undefined, role: r.role ? publicCargo(r.role) : undefined })),
     ...virtual,
   ]
     .sort((a, b) => a.at - b.at)
@@ -955,12 +956,14 @@ export async function getMiniProfile(viewer: Player, pid: string): Promise<MiniP
     ).catch(() => []),
   ])
   const rank = board.find((r) => r.isMe)?.rank ?? null
-  const staff = p.role === 'dealer' || p.role === 'admin'
+  // Payload público: o Owner aparece como Jogador comum (sem borda de equipe). Ver lib/devo/cargos.ts.
+  const role = publicCargo(p.role)
+  const staff = role === 'dealer' || role === 'anfitriao'
   const border: BorderTier = staff ? 'dealer' : rank === 1 ? 'ouro' : rank && rank <= 3 ? 'prata' : rank && rank <= 10 ? 'azul' : 'padrao'
   return {
     id: p.id,
     name: p.name,
-    role: p.role,
+    role,
     avatarVersion: p.has_avatar ? (p.avatar_updated_at?.getTime() ?? 1) : null,
     border,
     week: { rank, score: mine.score, wins: mine.wins, games: mine.games, total: board.length },
