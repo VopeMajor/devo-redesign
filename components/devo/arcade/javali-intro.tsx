@@ -8,6 +8,7 @@ import { cn } from '@/lib/utils'
 import { npcPortrait } from '@/lib/devo/npcs'
 import { formatDuration, useNow } from '../hooks'
 import { useDevo } from '../state/devo-store'
+import { usePlayerText } from '../state/player-text'
 import { MARBLE_INK } from './sala-marble'
 
 /** Pose do Javali (sprites transparentes do mapa de retratos em lib/devo/npcs.ts). */
@@ -19,18 +20,18 @@ type Visual = 'tempo' | 'jogos' | 'tutorial' | 'agenda' | 'ranking' | 'apostas' 
 const FRAMES: Frame[] = ['neutral', 'grin', 'wink', 'tap']
 
 const SCRIPT: { text: string; frame: Frame; visual?: Visual }[] = [
-  { text: 'Ora, ora! Um rosto novo na minha mesa. Entre, entre, querido. Bem-vindo à Sala de Jogos!', frame: 'neutral' },
+  { text: 'Ora, ora! Um rosto novo na minha mesa. Entre, entre, querid{o|a}. {Bem-vindo|Bem-vinda} à Sala de Jogos!', frame: 'neutral' },
   { text: 'Eu sou o Javali, anfitrião desta casa. Ninguém joga aqui sem antes ouvir as regras da casa. E as regras da casa sou eu.', frame: 'grin' },
   { text: 'Primeiro, o mais importante: aqui ninguém aposta dinheiro. Aposta-se Tempo. O seu relógio, lá em cima, é tudo o que você tem.', frame: 'tap', visual: 'tempo' },
   { text: 'Ganhe e ele cresce. Perca... bem, digamos que ele encolhe. Quando zera, a festa acaba para você. Simples, não?', frame: 'wink' },
   { text: 'Na Mesa ficam os jogos. Cada um com seu adversário de carne e osso.', frame: 'neutral', visual: 'jogos' },
-  { text: 'Inseguro? Não se acanhe. Todo jogo tem um Tutorial. Treine à vontade, que lá a casa não cobra nada.', frame: 'wink', visual: 'tutorial' },
+  { text: 'Insegur{o|a}? Não se acanhe. Todo jogo tem um Tutorial. Treine à vontade, que lá a casa não cobra nada.', frame: 'wink', visual: 'tutorial' },
   { text: 'Na Agenda você encontra as partidas marcadas e os torneios. Inscreva-se a tempo, porque eu não espero ninguém.', frame: 'wink', visual: 'agenda' },
   { text: 'Cada vitória rende pontos. Pontos sobem sua Patente e sua posição no Ranking.', frame: 'tap', visual: 'ranking' },
   { text: 'Toda semana o Ranking zera. Os melhores colocados levam prêmios antes do reset. Fique de olho no relógio do Reset.', frame: 'neutral' },
   { text: 'Prefere assistir? Nas Apostas você aposta Tempo em quem vai vencer as partidas dos outros. Lucro sem suar a camisa.', frame: 'tap', visual: 'apostas' },
   { text: 'E no Chat você conversa com os outros Records da sala. Provoque, negocie, faça amigos. Ou inimigos. Eu adoro os dois.', frame: 'wink', visual: 'chat' },
-  { text: 'Isso é tudo, querido. Puxe uma cadeira e lembre-se: a casa sempre agradece.', frame: 'grin' },
+  { text: 'Isso é tudo, querid{o|a}. Puxe uma cadeira e lembre-se: a casa sempre agradece.', frame: 'grin' },
 ]
 
 const SECTIONS: { visual: Visual; label: string }[] = [
@@ -43,6 +44,7 @@ const SECTIONS: { visual: Visual; label: string }[] = [
 
 export function JavaliIntro() {
   const { dispatch } = useDevo()
+  const say = usePlayerText()
   const [index, setIndex] = useState(0)
   const [leaving, setLeaving] = useState(false)
   const step = SCRIPT[index]
@@ -164,7 +166,7 @@ export function JavaliIntro() {
           <span aria-hidden="true" className="dv-cut-diag absolute inset-0 -z-10 bg-[linear-gradient(135deg,var(--dv-gold),var(--dv-gold-deep)_45%,var(--dv-line-strong))]" />
           <span aria-hidden="true" className="dv-cut-diag absolute inset-px -z-10 bg-[linear-gradient(180deg,var(--dv-ink-3),var(--dv-ink)_90%)]" style={{ '--dv-cut': '13.6px' } as CSSProperties} />
           <span key={index} className="animate-dv-fade font-body text-[17px] leading-relaxed text-dv-text">
-            {step.text}
+            {say(step.text)}
           </span>
           <span className="flex items-center justify-between gap-3">
             <span aria-hidden="true" className="flex gap-1">

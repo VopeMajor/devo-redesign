@@ -17,6 +17,8 @@ import { TimeDigits } from '../kit/time'
 import { Divider, Kicker } from '../kit/typography'
 import { SoundToggle } from '../shared/sound-toggle'
 import { callName, useDevo } from '../state/devo-store'
+import { usePlayerText } from '../state/player-text'
+import { playerText } from '@/lib/devo/player-name'
 import { DeadlyVoteSymbol } from '../system/symbol'
 import { useDeadlyVotes } from '../system/use-deadly-votes'
 import { formatVoteDate } from '@/lib/devo/deadly-votes'
@@ -290,7 +292,7 @@ function HomeScreen({
         <div className="min-w-0">
           <Kicker tone="gold">Record System · sessão ativa</Kicker>
           <p className="mt-1 truncate font-body text-[15px] italic text-dv-text-2">
-            Bem-vindo de volta{callName(state) ? <>, <span className="not-italic text-dv-text">{callName(state)}</span></> : null}.
+            {playerText('{Bem-vindo|Bem-vinda}', { gender: state.profile.gender })} de volta{callName(state) ? <>, <span className="not-italic text-dv-text">{callName(state)}</span></> : null}.
           </p>
         </div>
         <DeadlyVoteSymbol className="size-9 shrink-0 text-dv-gold/80" />
@@ -423,6 +425,7 @@ function SummonsCard({ onOpen }: { onOpen: () => void }) {
   const { entries, isLoading } = useDeadlyVotes()
   const next = entries.find((e) => e.status === 'em-progresso' || e.status === 'convocado')?.vote
   const live = next?.status === 'em-progresso'
+  const say = usePlayerText()
   return (
     <button
       type="button"
@@ -447,7 +450,7 @@ function SummonsCard({ onOpen }: { onOpen: () => void }) {
             {next ? next.title : isLoading ? 'Consultando o Record…' : 'Nenhuma convocação ativa'}
           </span>
           <span className="block truncate font-body text-[14px] text-dv-text-2">
-            {next ? `${formatVoteDate(next.startsAt)}${next.joined ? ' · você está inscrito' : ' · inscrições abertas'}` : 'O Dealer convoca pelo Record. Fique atento.'}
+            {next ? `${formatVoteDate(next.startsAt)}${next.joined ? say(' · você está inscrit{o|a}') : ' · inscrições abertas'}` : say('O Dealer convoca pelo Record. Fique atent{o|a}.')}
           </span>
         </span>
         {next && (next.joined ? <StateSeal>Inscrito</StateSeal> : live ? <StateSeal tone="blood" live>Ao vivo</StateSeal> : null)}

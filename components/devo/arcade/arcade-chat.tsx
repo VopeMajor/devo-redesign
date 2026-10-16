@@ -7,6 +7,7 @@ import { playSfx } from '@/lib/devo/audio'
 import { arcadeFetcher, arcadeKey, arcadePost, type ChatLine } from '@/lib/devo/arcade/client'
 import { REACTION_PREFIX } from '@/lib/devo/arcade/reactions'
 import { cn } from '@/lib/utils'
+import { usePlayerText } from '../state/player-text'
 import { useOpenProfile } from './mini-profile'
 
 // Nomes no chat em tons da paleta (porcelana, aço, prata, lavanda, ametista clara): distintos sem virar arco-íris.
@@ -78,6 +79,7 @@ export function ArcadeChat({
     if (el) el.scrollTop = el.scrollHeight
   }, [count])
 
+  const say = usePlayerText()
   const send = async () => {
     const body = text.trim()
     if (!body) return
@@ -94,7 +96,7 @@ export function ArcadeChat({
   return (
     <div className={cn('flex min-h-0 flex-col gap-2', className)}>
       <ul ref={listRef} className="devo-scroll flex min-h-0 flex-1 flex-col gap-1 overflow-y-auto pr-1" aria-live="polite">
-        {count === 0 && <li className="py-6 text-center font-body text-[15px] text-dv-text-3">Bem-vindo ao chat. Seja o primeiro a falar.</li>}
+        {count === 0 && <li className="py-6 text-center font-body text-[15px] text-dv-text-3">{say('{Bem-vindo|Bem-vinda} ao chat. Seja {o primeiro|a primeira} a falar.')}</li>}
         {lines.map((m) => (
           <li key={m.id} className="animate-dv-fade border-l border-transparent px-2 py-1 hover:border-dv-gold/50 hover:bg-white/[0.03]">
             <ChatMessage m={m} />

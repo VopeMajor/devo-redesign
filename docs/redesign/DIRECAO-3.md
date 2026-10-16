@@ -54,6 +54,7 @@ Especificação completa em `SISTEMAS-texto-do-dono.txt` (seção "DEVO — Sist
 - **Staff e Deadly Vote** (painéis de Owner/Anfitrião/Dealer, aprovações, conclusão com resultado por participante).
 - **Virtudes** (tela qualitativa no perfil; dados configuráveis).
 
+<<<<<<< HEAD
 ## 7. Pedidos do dono (16/10, manhã)
 - **Reiniciar sessão foi removido** (Ajustes, menu do desktop, store e roteiro). Não recriar.
 - **Dublagem removida** da cutscene (fica só a risadinha do Rato).
@@ -65,3 +66,22 @@ Especificação completa em `SISTEMAS-texto-do-dono.txt` (seção "DEVO — Sist
 - **Risadinha do Rato removida por enquanto** (o dono vai adicionar o áudio depois). Pasta public/audio/voz e lib/devo/voice*.ts saíram.
 - **Salas de troca sem tipos**: todas funcionam igual, com a regra da explicação do Rato no tutorial (mesma raridade, carta do outro oculta até a revelação, chat da sala para negociar, os dois aceitam → revela, troca confirmada não se desfaz). Quem não tem carta não troca.
 - **Owners e Anfitriões têm acesso a TODAS as telas**: nenhuma trava de progressão vale para eles (sistemas novos, Sala de Jogos ainda não revelada, apps ainda não vistos, tutoriais). A regra é do servidor (flags) e a interface só reflete.
+=======
+## 7. Gênero nos textos (pedido do dono, 16/10)
+"Caso alguém escolha 'Feminino', os diálogos devem tratar a pessoa no feminino."
+
+- Toda fala, aviso ou rótulo **dirigido ao jogador** marca a concordância de gênero com `{masculino|feminino}`:
+  `cansad{o|a}`, `{ele|ela}`, `{o|a} Record`, `{Bem-vindo|Bem-vinda}`, `{o último|a última}`, `querid{o|a} {nome}`.
+  Escreva a primeira forma igual ao texto masculino que já existiria; a segunda é a feminina.
+- Resolução: `playerText(texto, { name, gender })` em `lib/devo/player-name.ts` (resolve também `{nome}`);
+  em componente, `usePlayerText()` de `components/devo/state/player-text.ts` (lê nome e gênero do perfil).
+  `withName(texto, nome, gênero)` continua valendo para as chamadas antigas.
+- Regra: `state.profile.gender === 'Feminino'` → segunda forma; "Masculino", "Prefiro não dizer" ou sem
+  resposta → primeira forma. No prólogo, antes da pergunta de gênero, vale a primeira forma.
+- Só marque o que concorda com o JOGADOR. Não marque o que concorda com outra coisa (o Record como sistema,
+  "seu registro", cartas, salas, NPCs, o outro jogador) nem plurais de grupo ("nós dois", "os inscritos").
+- Escolhas cujo rótulo é a chave da opção (ex.: `choose()` do prólogo): marque o rótulo, mas resolva só na
+  exibição; a comparação continua pelo rótulo cru.
+- Galo, Poço, Torres, Salão das Máscaras e Melissa: usem o marcador desde o primeiro texto e passem cada fala
+  por `playerText`/`usePlayerText` antes de exibir ou gravar na conversa.
+>>>>>>> c3b5d34c221cb6a6248255536628d2fb64ae469e

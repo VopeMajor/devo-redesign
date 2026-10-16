@@ -13,6 +13,7 @@ import { TimeDigits } from '../kit/time'
 import { Divider, Kicker } from '../kit/typography'
 import { SoundToggle } from '../shared/sound-toggle'
 import { cn } from '@/lib/utils'
+import { playerText } from '@/lib/devo/player-name'
 
 const START_MS = 72 * 3600 * 1000
 const useIso = typeof window === 'undefined' ? useEffect : useLayoutEffect
@@ -24,6 +25,7 @@ const useIso = typeof window === 'undefined' ? useEffect : useLayoutEffect
  */
 export function LandingScreen({
   playerName,
+  gender,
   canContinue,
   onStart,
   onContinue,
@@ -31,6 +33,8 @@ export function LandingScreen({
   veiled = false,
 }: {
   playerName: string | null
+  /** Gênero do perfil (concordância da saudação). */
+  gender?: string
   canContinue: boolean
   /** Uma camada (acesso) está aberta por cima: o conteúdo recua e só a cena fica. */
   veiled?: boolean
@@ -161,7 +165,7 @@ export function LandingScreen({
 
           {playerName && (
             <p className="animate-dv-fade mt-2.5 text-[11px] uppercase tracking-[0.3em] text-dv-text-3 [animation-delay:460ms]">
-              Bem-vindo de volta, <span className="text-dv-text">{playerName}</span>
+              {playerText('{Bem-vindo|Bem-vinda}', { gender })} de volta, <span className="text-dv-text">{playerName}</span>
               {onSignOut && (
                 <>
                   {' · '}

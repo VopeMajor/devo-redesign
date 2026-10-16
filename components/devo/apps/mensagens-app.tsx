@@ -189,7 +189,7 @@ function Conversation({ threadId, onBack }: { threadId: string; onBack: () => vo
     playSfx('send')
     dispatch({ type: 'THREAD_ANSWER', threadId, choiceId: choice.id })
     if (!choice.silent) {
-      const text = choice.sticker ? `${STICKER_PREFIX}${choice.sticker}` : choice.prompt
+      const text = choice.sticker ? `${STICKER_PREFIX}${choice.sticker}` : withName(choice.prompt, callName(state), state.profile.gender)
       dispatch({ type: 'THREAD_MESSAGE', threadId, countUnread: false, message: { id: nextId('m'), from: 'me', text, at: Date.now() } })
     }
     if (choice.reply.length === 0) {
@@ -205,7 +205,7 @@ function Conversation({ threadId, onBack }: { threadId: string; onBack: () => vo
           type: 'THREAD_MESSAGE',
           threadId,
           countUnread: false,
-          message: { id: nextId('m'), from: npc.id, text: withName(line, callName(state)), at: Date.now() },
+          message: { id: nextId('m'), from: npc.id, text: withName(line, callName(state), state.profile.gender), at: Date.now() },
         })
         playSfx('notify')
         if (i === choice.reply.length - 1) setPending(false)
@@ -288,7 +288,7 @@ function Conversation({ threadId, onBack }: { threadId: string; onBack: () => vo
                   <span aria-hidden="true" className="dv-brass-text w-7 shrink-0 text-center font-impact text-[20px] font-semibold leading-none">
                     {toRoman(i + 1)}
                   </span>
-                  <span className="flex-1 pl-2 font-body text-[16px] leading-snug text-dv-text">{c.prompt}</span>
+                  <span className="flex-1 pl-2 font-body text-[16px] leading-snug text-dv-text">{withName(c.prompt, callName(state), state.profile.gender)}</span>
                   <GlyphArrow aria-hidden="true" className="size-4 shrink-0 text-dv-gold transition-[transform,color] group-enabled:group-hover:translate-x-0.5 group-enabled:group-hover:text-dv-amethyst-text" />
                 </button>
               </li>
