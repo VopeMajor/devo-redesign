@@ -533,6 +533,7 @@ function CriticalVignette() {
  */
 const SYSTEM_OPEN: Partial<Record<FutureSystemId, { app: AppId; flag: UnlockFlag; nome: string }>> = {
   poco: { app: 'poco', flag: 'poco', nome: 'Poço dos Milagres' },
+  torres: { app: 'torres', flag: 'torres', nome: 'Torres de Ruptura' },
 }
 
 function LockedSystems({ onOpen }: { onOpen: (id: AppId) => void }) {

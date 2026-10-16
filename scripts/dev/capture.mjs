@@ -1427,6 +1427,189 @@ if (want('staff')) {
 }
 
 // ── 4. Uma referência no desktop ────────────────────────────────────────────────────────
+// ── Torres de Ruptura (DIRECAO-3 §2): trancado, apresentação do Galo, mapa, torres, andares ─────────────
+// Convites DEVO-TORR-CAP1/2 (92-seed-torres.sql). O Owner (Veterano) libera a flag e concede essências pela
+// API da equipe, como faria no painel.
+if (want('torres')) {
+  const own = await account('Veterano', 'DEVO-TEST-ADM1', VET_CARDS)
+  const meuId = (page) => page.evaluate(async () => (await (await fetch('/api/eu')).json()).id)
+  const staff = async (body) => {
+    const r = await api(own.page, '/api/staff', body)
+    if (r.status >= 400) manifest.errors.push({ step: `torres-staff-${body.action}`, error: `${r.status} ${r.text}` })
+  }
+  const abrirTorres = async (page) => {
+    await page.getByRole('button', { name: /^Torres de Ruptura/ }).first().click({ timeout: 15000 })
+    await wait(2600)
+  }
+  /** Avança uma cena (Enter termina a digitação; outro Enter avança) até o diálogo `nome` sumir. */
+  const passarCena = async (page, nome, max = 30) => {
+    for (let i = 0; i < max; i++) {
+      if (!(await page.getByRole('dialog', { name: nome }).count())) return
+      const choices = page.locator('[aria-label="Sua resposta"] button:not([disabled])')
+      if (await choices.count()) await tryClick(choices.first())
+      else {
+        await page.keyboard.press('Enter')
+        await wait(250)
+        await page.keyboard.press('Enter')
+      }
+      await wait(650)
+    }
+  }
+
+  const A = await account('Torreada', 'DEVO-TORR-CAP1', VET_CARDS)
+  await step('torres-trancado', async () => {
+    await enterOS(A.page)
+    await wait(1200)
+    await A.page.getByRole('region', { name: 'Sistemas', exact: true }).scrollIntoViewIfNeeded().catch(() => {})
+    await wait(400)
+    await shot(A.page, 't01-torres-home-trancado')
+    await abrirTorres(A.page)
+    await shot(A.page, 't02-torres-trancado', 'jogador sem o tutorial: motivo')
+  })
+  await A.ctx.close()
+
+  const B = await account('Torreira', 'DEVO-TORR-CAP2', VET_CARDS)
+  const bid = await meuId(B.page).catch(() => null)
+  await staff({ action: 'desbloqueio.definir', playerId: bid, flag: 'torres', on: true })
+  const galo = 'O Galo apresenta as Torres de Ruptura'
+  await step('torres-galo', async () => {
+    const page = B.page
+    await enterOS(page)
+    await wait(1200)
+    await page.getByRole('region', { name: 'Sistemas', exact: true }).scrollIntoViewIfNeeded().catch(() => {})
+    await wait(400)
+    await shot(page, 't03-torres-home-liberado')
+    await abrirTorres(page)
+    await wait(1800)
+    await shot(page, 't10-galo-abertura')
+    const seen = new Set()
+    for (let i = 0; i < 90; i++) {
+      if (!(await page.getByRole('dialog', { name: galo }).count())) break
+      const choices = page.locator('[aria-label="Sua resposta"] button:not([disabled])')
+      const aceitar = page.locator('[aria-label="Sua resposta"] button').filter({ hasText: 'Aceitar' })
+      if (await aceitar.count()) {
+        await shot(page, 't13-galo-oferta')
+        await tryClick(aceitar.first())
+        await wait(900)
+        await shot(page, 't14-galo-essencia', '+1 Essência de Afinidade do Galo')
+        continue
+      }
+      if (await choices.count()) {
+        if (!seen.has('escolha')) {
+          seen.add('escolha')
+          await wait(500)
+          await shot(page, 't11-galo-escolha')
+        }
+        await tryClick(choices.first())
+        await wait(700)
+        continue
+      }
+      if (!seen.has('bloco') && (await page.getByText('Torre de Ruptura]').count())) {
+        seen.add('bloco')
+        await wait(900)
+        await shot(page, 't12-galo-bloco', 'quadro [Torre de Ruptura]')
+      }
+      if (!seen.has('fala') && (await page.getByText(/torre baixa nada mais/).count())) {
+        seen.add('fala')
+        await shot(page, 't11b-galo-fala')
+      }
+      if (!seen.has('sistema') && (await page.getByText(/entre cinco e oito andares/).count())) {
+        seen.add('sistema')
+        await shot(page, 't15-galo-sistema')
+      }
+      await page.keyboard.press('Enter')
+      await wait(300)
+      await page.keyboard.press('Enter')
+      await wait(600)
+    }
+    await wait(1500)
+    await shot(page, 't20-mapa')
+  })
+  await step('torres-principal', async () => {
+    const page = B.page
+    await page.getByRole('button', { name: 'Torre do Imperador', exact: true }).click({ timeout: 10000 })
+    await wait(250)
+    await shot(page, 't21a-transicao')
+    await wait(1400)
+    await shot(page, 't21-torre-principal')
+    await page.getByRole('button', { name: /^Andar I:/ }).first().click({ timeout: 8000 })
+    await wait(900)
+    await shot(page, 't22-andar-ficha')
+    await btn(page, 'Subir ao andar I').click({ timeout: 8000 })
+    await wait(2200)
+    await shot(page, 't23-andar-cena')
+    await passarCena(page, /Torre do Imperador · Andar I$/)
+    await wait(700)
+    await shot(page, 't24-andar-concluido', 'andar I concluído; II trancado por essência e chave')
+    await btn(page, 'Voltar ao mapa').click({ timeout: 8000 })
+    await wait(1200)
+    await shot(page, 't25-mapa-progresso')
+  })
+  await step('torres-reflexao', async () => {
+    const page = B.page
+    await btn(page, 'Voltar ao início').click({ timeout: 8000 })
+    await wait(1800)
+    await shot(page, 't30-reflexao')
+    for (let i = 0; i < 6 && !(await page.locator('[aria-label="Sua resposta"] button').count()); i++) {
+      await page.keyboard.press('Enter')
+      await wait(500)
+    }
+    await wait(600)
+    await shot(page, 't31-reflexao-escolha')
+    await tryClick(page.locator('[aria-label="Sua resposta"] button').filter({ hasText: 'Anfitrião do Imperador' }).first())
+    await wait(2600)
+    await shot(page, 't32-reflexao-resposta')
+    await passarCena(page, 'Anfitrião de quê?', 6)
+  })
+  await staff({ action: 'item.conceder', playerId: bid, item: 'essencia:coruja', quantidade: 1, motivo: 'captura' })
+  await step('torres-secundaria', async () => {
+    const page = B.page
+    await enterOS(page)
+    await abrirTorres(page)
+    await page.getByRole('button', { name: 'Torre do Observatório', exact: true }).click({ timeout: 10000 })
+    await wait(1600)
+    await shot(page, 't40-torre-secundaria')
+    await page.getByRole('button', { name: /^Andar I:/ }).first().click({ timeout: 8000 })
+    await wait(800)
+    await btn(page, 'Subir ao andar I').click({ timeout: 8000 })
+    await wait(1500)
+    await passarCena(page, /Torre do Observatório · Andar I$/)
+    await wait(500)
+    await shot(page, 't41-secundaria-chave', '+1 Chave do Observatório')
+    await btn(page, 'Voltar ao mapa').click({ timeout: 8000 })
+    await wait(1200)
+    await page.getByRole('button', { name: 'Torre do Imperador', exact: true }).click({ timeout: 10000 })
+    await wait(1600)
+    await page.getByRole('button', { name: /^Andar II:/ }).first().click({ timeout: 8000 })
+    await wait(900)
+    await shot(page, 't42-andar-trancado-essencia', 'tem a chave; faltam 2 essências')
+  })
+  await staff({ action: 'item.conceder', playerId: bid, item: 'essencia:galo', quantidade: 2, motivo: 'captura' })
+  await step('torres-chave', async () => {
+    const page = B.page
+    await enterOS(page)
+    await abrirTorres(page)
+    await page.getByRole('button', { name: 'Torre do Imperador', exact: true }).click({ timeout: 10000 })
+    await wait(1600)
+    await page.getByRole('button', { name: /^Andar II:/ }).first().click({ timeout: 8000 })
+    await wait(800)
+    await btn(page, 'Subir ao andar II').click({ timeout: 8000 })
+    await wait(1500)
+    await passarCena(page, /Torre do Imperador · Andar II$/)
+    await wait(500)
+    await page.getByRole('button', { name: /^Andar III:/ }).first().click({ timeout: 8000 })
+    await wait(900)
+    await shot(page, 't43-andar-trancado-chave', 'falta a chave do Picadeiro')
+    await page.keyboard.press('Escape')
+    await wait(600)
+    await page.getByRole('button', { name: /^Andar I:/ }).first().click({ timeout: 8000 })
+    await wait(900)
+    await shot(page, 't44-andar-concluido-ficha', 'concluído: Rever cena')
+  })
+  await B.ctx.close()
+  await own.ctx.close()
+}
+
 if (want('desktop')) {
   await step('desktop', async () => {
     const { ctx, page } = await device('desktop')
