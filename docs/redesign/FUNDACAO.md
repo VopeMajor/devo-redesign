@@ -334,3 +334,37 @@ teste `scripts/dev/poco-test.mjs` (CI → `poco-test.log`).
 - **Letreiro:** últimos 12 prêmios não-lixo revelados (30 dias), só nome do personagem; contas de teste ficam fora.
 - **Cliente:** `components/devo/state/use-acesso.ts` (`useAcesso()`/`useEu()`, SWR de `/api/eu`) — candidato a uso comum dos
   outros sistemas; a home acende o emblema do Poço por `acesso.sistemas.poco` (`SYSTEM_OPEN` em `os/phone-shell.tsx`).
+
+## 11. Salão das Máscaras (agente Salão)
+
+Arquivos: `scripts/salao-migration.sql` (tabelas `salao_estado`, `salao_lotes`, `salao_lances`, `salao_mercado`,
+`salao_anuncios`, `salao_eventos`, `salao_movimentos`; config e eventos provisórios), `lib/devo/salao.ts` (puro: calendário,
+taxas, payloads), `lib/devo/salao-herdeiro.ts` (apresentação do Herdeiro e texto "Anunciar no Salão", literais),
+`lib/devo/salao-server.ts`, `app/api/salao/route.ts`, `components/devo/salao/*`, seed `scripts/dev/93-seed-salao.sql`,
+teste `scripts/dev/salao-test.mjs` (CI → `salao-test.log`).
+
+- **Trava:** flag `salao_mascaras` (`requireUnlock`); `GET /api/salao` trancado → `200 { liberado: false, motivo }`.
+- **Cargo novo em `can()`:** `salao.avaliar` (Owner, Anfitrião, Dealer) = especialista da Bandeja e dos anúncios. Owner
+  (`config.editar`) edita eventos, contratos e a configuração.
+- **Calendário** (`devo_config['salao.calendario']`, PROVISÓRIO): `{ ancora, intervalo_dias: 3, duracao_horas: 24, forcar }`.
+  Edição *n* começa em `ancora + n × intervalo` (Brasília) e fica aberta `duracao_horas`. `forcar: 'aberto' | 'fechado'`
+  = manual do Owner (fechar encerra a edição corrente). Sem cron: cada leitura/ação chama `liquidar()` (idempotente).
+- **Bandeja** (`salao.bandeja`, PROVISÓRIO): raridade mínima (escala das cartas), vagas por edição, itens ativos por
+  jogador, lance mínimo/incremento padrão, `reserva_min` (o pulso nunca fica abaixo disso depois de pagar).
+- **Contratos e taxas** (`salao.contratos`, PROVISÓRIO): por tipo (`avulso`, `patrono`, `mecenas`): `divulgacao` (minutos,
+  paga no envio; devolvida se recusado/retirado) e `comissao_pct` (sobre a venda). Contrato do jogador em
+  `salao_estado.contrato` (`POST /api/salao {action:'contrato.definir'}`, Owner). Propaganda: `salao.anuncios.custo_propaganda`.
+- **Cartas sem duplicar:** enviar à Bandeja/vender no Mercado tira a carta de `player_saves.data.inventory` na mesma
+  transação; índice único `(seller_id, card_uid)`; `/api/save` descarta os uids entregues ao Salão (`uidsNoSalao`).
+  Arremate, compra e devolução → `deliverCard` com idem (`salao:lote:<id>:arremate|devolucao`, `salao:oferta:<id>:…`).
+  O cliente resgata (`POST /api/eu cartas.resgatar`) ao abrir o Salão (`useSalao`) e põe no store (`CARDS_ADD`).
+- **Tempo:** débitos direto no pulso (como as apostas da Sala de Jogos) com reserva; créditos por `creditMinutes`
+  (livro-caixa) e `drainTime` no `GET /api/salao` (`timeDeltaMs`). Todo movimento em `salao_movimentos` com `idem_key`
+  único (lance `salao:lance:<id>`, devolução `salao:lance:<id>:devolucao`, repasse `salao:lote:<id>:repasse`…).
+- **Lances:** só com o Salão aberto e no lote da edição corrente; inteiro ≥ maior + incremento (ou ≥ mínimo); nunca no
+  próprio lote; lote travado (`FOR UPDATE`) + índice único de um lance `ativo` por lote. Quem cobre o próprio lance paga a
+  diferença; o superado recebe o valor de volta uma vez.
+- **Recrutamento de Corporações:** `publicarRecrutamento({ corporacao, titulo, texto, autorId?, ref?, dias? })` publica
+  direto no mural (idempotente por corporação + `ref`). O agente de Corporações chama depois de validar quem recruta.
+- **Mesa:** seção "Salão" do StaffDesk (`components/devo/salao/salao-mesa.tsx`) → `GET /api/salao?view=avaliacao`.
+- **Shuffler:** `DeckPanel` ganhou `shufflerAction`; o Record passa `<EnviarBandejaAcao />` (só aparece liberado).
