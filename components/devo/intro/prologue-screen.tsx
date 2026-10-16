@@ -317,7 +317,7 @@ export function PrologueScreen({
   useEffect(() => {
     onProgress?.(index, Object.fromEntries(Object.entries(profile).filter((e): e is [string, string] => typeof e[1] === 'string')))
   }, [index, profile]) // eslint-disable-line react-hooks/exhaustive-deps
-  const [mood, setMood] = useState<MelissaMood>('neutral')
+  const [mood, setMood] = useState<MelissaMood>('convite')
 
   const beat = PROLOGUE[index]
   const name = profile.name ?? playerName ?? 'Record'

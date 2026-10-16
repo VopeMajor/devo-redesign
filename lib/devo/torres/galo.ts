@@ -7,7 +7,7 @@
 import type { Passo } from './tipos'
 
 export const CENA_GALO_TORRES: Passo[] = [
-  { tipo: 'fala', pose: 'sorriso', texto: 'E aí, mané! Qual é a tua?' },
+  { tipo: 'fala', pose: 'malicia', texto: 'E aí, mané! Qual é a tua?' },
   {
     tipo: 'escolha',
     opcoes: [{ texto: 'Qual é a minha?' }, { texto: 'Quem é você?' }, { texto: 'Onde... Onde eu tô?' }].map((o) => ({
@@ -15,7 +15,7 @@ export const CENA_GALO_TORRES: Passo[] = [
       resposta: [
         {
           tipo: 'fala' as const,
-          pose: 'convencido',
+          pose: 'confiante',
           texto: 'Hm? Sai daí, pô! Eu sou O Galo. Todos os bons me conhecem, tá ligado? Comigo não tem lenga-lenga, nem mimimi. Eu sou pura adrenalina!',
         },
       ],
@@ -24,16 +24,16 @@ export const CENA_GALO_TORRES: Passo[] = [
   { tipo: 'escolha', opcoes: [{ texto: 'Isso não faz sentido!' }, { texto: 'Tá...' }, { texto: 'O que significa essa fra—' }] },
   {
     tipo: 'fala',
-    pose: 'piscada',
+    pose: 'piscadela',
     texto: 'Pode me chamar de O Melhor Contador de Histórias, se quiser. Também aceito Mestre do Universo, caso prefira. Agora, cala a boquinha, cala aí, que o maioral vai te mandar a real!',
   },
-  { tipo: 'fala', pose: 'tedio', texto: 'É chato esse tal de trabalho... Não é? Eu sei, eu sei. [Pausa dramática] Mas é pra isso que eu tô aqui!' },
+  { tipo: 'fala', pose: 'entediado', texto: 'É chato esse tal de trabalho... Não é? Eu sei, eu sei. [Pausa dramática] Mas é pra isso que eu tô aqui!' },
   { tipo: 'fala', pose: 'neutro', texto: 'Vou mandar o papo. Então presta atenção, sacou?' },
   { tipo: 'fala', pose: 'desdem', texto: 'Dizem por aí que uma torre baixa nada mais é do que uma casa que se autointitula torre...' },
-  { tipo: 'fala', pose: 'bravo', texto: 'Besteira. [Dedo do meio censurado.]' },
+  { tipo: 'fala', pose: 'irritado', texto: 'Besteira. [Dedo do meio censurado.]' },
   {
     tipo: 'fala',
-    pose: 'convencido',
+    pose: 'confiante',
     texto:
       'As Torres de Ruptura são tipo essa parada aí. Uma das paradas fundamentais desse sistema mal-assombrado! É por meio delas que você, {jogador|jogadora} newbie, consegue descobrir mais sobre esse mundão — incluindo sua condição como Record e outras coisinhas do tipo.',
   },
@@ -46,12 +46,12 @@ export const CENA_GALO_TORRES: Passo[] = [
         resposta: [
           {
             tipo: 'fala',
-            pose: 'tedio',
+            pose: 'entediado',
             texto: 'Pode ser meio cansativo de vez em quando, mas, se quiser evoluir pra valer, é bom ficar de olho nessas belezinhas. E não, ninguém tá te obrigando a nada. A vida é tua, mané! Tu que sabe.',
           },
         ],
       },
-      { texto: 'Como faço isso?', resposta: [{ tipo: 'fala', pose: 'satisfeito', texto: 'Calma, coisa fofa. É nessas horas que aquela parada estranha acontece...' }] },
+      { texto: 'Como faço isso?', resposta: [{ tipo: 'fala', pose: 'sorriso', texto: 'Calma, coisa fofa. É nessas horas que aquela parada estranha acontece...' }] },
     ],
   },
   { tipo: 'escolha', opcoes: [{ texto: 'Parada estranha?' }, { texto: '...' }] },
@@ -71,24 +71,24 @@ export const CENA_GALO_TORRES: Passo[] = [
     tipo: 'escolha',
     opcoes: [{ texto: 'Não aconteceu nada.' }, { texto: 'Você é maluco?' }].map((o) => ({
       ...o,
-      resposta: [{ tipo: 'fala' as const, pose: 'piscada', texto: 'Shhh... Quem precisa saber já sabe. Mas aí, mané! Presta bastante atenção agora, beleza?' }],
+      resposta: [{ tipo: 'fala' as const, pose: 'piscadela', texto: 'Shhh... Quem precisa saber já sabe. Mas aí, mané! Presta bastante atenção agora, beleza?' }],
     })),
   },
   { tipo: 'fala', pose: 'neutro', texto: 'Avançar numa torre nem sempre significa apenas cumprir as tarefas que aparecem pelo caminho tempestuoso da sua jornada...' },
-  { tipo: 'fala', pose: 'satisfeito', texto: 'Algumas delas exigirão algo que eu e meus parças chamamos de Essência de Afinidade.' },
+  { tipo: 'fala', pose: 'sorriso', texto: 'Algumas delas exigirão algo que eu e meus parças chamamos de Essência de Afinidade.' },
   {
     tipo: 'escolha',
     opcoes: [
-      { texto: 'Você tem amigos?', resposta: [{ tipo: 'fala', pose: 'bravo', texto: 'Aí, tá querendo apanhar, é?!' }] },
-      { texto: 'Parças?', resposta: [{ tipo: 'fala', pose: 'risada', texto: 'Os melhores entre os melhores, meu chapa!' }] },
+      { texto: 'Você tem amigos?', resposta: [{ tipo: 'fala', pose: 'irritado', texto: 'Aí, tá querendo apanhar, é?!' }] },
+      { texto: 'Parças?', resposta: [{ tipo: 'fala', pose: 'riso', texto: 'Os melhores entre os melhores, meu chapa!' }] },
       {
         texto: 'Essência?',
-        resposta: [{ tipo: 'fala', pose: 'piscada', texto: 'Ah, essas belezuras você consegue fazendo favores e outras coisinhas por aí. Sabe como é, né? Uma mão lava a outra!' }],
+        resposta: [{ tipo: 'fala', pose: 'piscadela', texto: 'Ah, essas belezuras você consegue fazendo favores e outras coisinhas por aí. Sabe como é, né? Uma mão lava a outra!' }],
       },
     ],
   },
   { tipo: 'escolha', opcoes: [{ texto: 'Entendi...' }, { texto: 'Não sei se eu tô acompanhando.' }, { texto: 'Avisa quando for explicar direito.' }] },
-  { tipo: 'fala', pose: 'espanto', texto: 'Ah, shiu... Vai acontecer aquilo de novo.' },
+  { tipo: 'fala', pose: 'surpreso', texto: 'Ah, shiu... Vai acontecer aquilo de novo.' },
   {
     tipo: 'bloco',
     titulo: 'Essência de Afinidade',
@@ -98,11 +98,11 @@ export const CENA_GALO_TORRES: Passo[] = [
     ],
   },
   { tipo: 'escolha', opcoes: [{ texto: 'Não aconteceu nada... De novo.' }, { texto: 'Você é mesmo maluco.' }] },
-  { tipo: 'fala', pose: 'convencido', texto: 'Aqui, ó! Se você aceitar ser meu fã, eu te dou uma dessas. E aí, qual vai ser?' },
+  { tipo: 'fala', pose: 'confiante', texto: 'Aqui, ó! Se você aceitar ser meu fã, eu te dou uma dessas. E aí, qual vai ser?' },
   {
     tipo: 'escolha',
     opcoes: [
-      { texto: 'Recusar', acao: true, efeito: 'galo.fa.recusar', resposta: [{ tipo: 'fala', pose: 'tedio', texto: 'Sério? Poxa, que chatice...' }] },
+      { texto: 'Recusar', acao: true, efeito: 'galo.fa.recusar', resposta: [{ tipo: 'fala', pose: 'entediado', texto: 'Sério? Poxa, que chatice...' }] },
       {
         texto: 'Aceitar',
         acao: true,
@@ -110,7 +110,7 @@ export const CENA_GALO_TORRES: Passo[] = [
         resposta: [
           {
             tipo: 'fala',
-            pose: 'risada',
+            pose: 'riso',
             texto: 'BOA! Sabia que você era inteligente, mané! [O Galo entrega uma Essência de Afinidade do Galo, Anfitrião do Arcano do Imperador.]',
           },
         ],
@@ -119,11 +119,11 @@ export const CENA_GALO_TORRES: Passo[] = [
   },
   {
     tipo: 'fala',
-    pose: 'piscada',
+    pose: 'piscadela',
     texto: 'Prontinho! Agora, se quiser saber quais essências você tem no momento e onde pode usá-las, basta dar uma olhadinha no inventário. O mesmo vale pras chaves, beleza?',
   },
   { tipo: 'escolha', opcoes: [{ texto: 'Certo.' }, { texto: 'Chaves...?' }] },
-  { tipo: 'fala', pose: 'sorriso', texto: 'Isso é tudo, pessoal! A gente se vê por aí. Bye-bye!' },
+  { tipo: 'fala', pose: 'malicia', texto: 'Isso é tudo, pessoal! A gente se vê por aí. Bye-bye!' },
   { tipo: 'sistema', texto: 'O Galo desaparece sem se despedir adequadamente.' },
   {
     tipo: 'sistema',

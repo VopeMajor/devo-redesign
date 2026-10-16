@@ -21,7 +21,7 @@ import './torres.css'
  * torres → tela de uma torre (escada com andares). Estado e regras no servidor (/api/torres).
  */
 
-const GALO: NpcRef = { id: 'galo', nome: 'O Galo', titulo: 'Anfitrião do Arcano do Imperador', pose: 'sorriso' }
+const GALO: NpcRef = { id: 'galo', nome: 'O Galo', titulo: 'Anfitrião do Arcano do Imperador', pose: 'malicia' }
 const ENTRA_MS = 560
 const SAI_MS = 420
 const EASE_OUT = 'cubic-bezier(0.16,1,0.3,1)'

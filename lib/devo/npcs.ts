@@ -1,4 +1,21 @@
-export type Expression = 'neutral' | 'smirk'
+/**
+ * ELENCO — sprites OC do dono (folhas 4×3 em docs/redesign/refs/npc-oc/), fatiados por
+ * `scripts/dev/fatiar-npcs.py` em public/images/npc/<id>/<expressao>.webp.
+ *
+ * Todos os sprites têm a MESMA tela (1080×960, alfa), a mesma altura de cabeça e o queixo na mesma linha;
+ * dentro de um NPC, o tronco fica parado entre expressões. Por isso o enquadramento é comum a todo o elenco
+ * (só se ajusta por NPC quando o rosto não fica no centro do tronco).
+ */
+
+/** Vocabulário único de expressões (o mesmo do script de fatiamento). */
+export const EXPRESSOES = [
+  'neutro', 'sorriso', 'riso', 'malicia', 'piscadela', 'confiante', 'convite', 'apresenta', 'explica',
+  'pensativo', 'entediado', 'desdem', 'serio', 'sombrio', 'trama', 'segredo', 'timido', 'animado',
+  'surpreso', 'preocupado', 'triste', 'irritado', 'furioso',
+] as const
+export type Expressao = (typeof EXPRESSOES)[number]
+/** Nome antigo mantido para os roteiros que já importam `Expression`. */
+export type Expression = Expressao
 
 /**
  * Um retrato e o seu enquadramento no `PortraitFrame` do kit.
@@ -7,59 +24,103 @@ export type Expression = 'neutral' | 'smirk'
  */
 export type PortraitArt = { src: string; position?: string; scale?: number; faceScale?: number }
 
-/**
- * MAPA ÚNICO DE RETRATOS por NPC e expressão/pose. Para trocar o elenco (ex.: pelos OCs do dono),
- * troque só os caminhos e o enquadramento aqui; as telas leem tudo por `npcPortrait()`.
- *
- * Sprites atuais são TEMPORÁRIOS (de outros jogos), mantidos a pedido do dono até os OCs
- * (docs/redesign/DIRECAO-2.md › 1).
- */
-export const NPC_PORTRAITS = {
-  melissa: {
-    neutral: { src: '/images/npc/melissa-neutral.png', position: '70% 0%', scale: 1.4, faceScale: 2 },
-    soft: { src: '/images/npc/melissa-soft.png', position: '50% 0%', scale: 1, faceScale: 1.6 },
-    serious: { src: '/images/npc/melissa-serious.png', position: '50% 0%', scale: 1, faceScale: 1.6 },
-  },
-  herdeiro: {
-    neutral: { src: '/images/npc/heir-v3-neutral.png', position: '50% 0%', scale: 1.15, faceScale: 3 },
-    smirk: { src: '/images/npc/heir-v3-smirk.png', position: '50% 0%', scale: 1.15, faceScale: 3 },
-  },
-  rato: {
-    neutral: { src: '/images/npc/rat-host-v2.png', position: '50% 8%', scale: 1, faceScale: 1.15 },
-  },
-  coruja: {
-    neutral: { src: '/images/npc/coruja/warai.webp', position: '50% 12%', scale: 1, faceScale: 1.15 },
-  },
-  javali: {
-    /** Debruçado na mesa (Mesa, medalhão, placas). */
-    neutral: { src: '/images/npc/javali.webp', position: '56% 0%', scale: 1, faceScale: 1.5 },
-    grin: { src: '/images/npc/javali-grin.webp', position: '56% 0%', scale: 1, faceScale: 1.5 },
-    wink: { src: '/images/npc/javali-wink.webp', position: '56% 0%', scale: 1, faceScale: 1.5 },
-    tap: { src: '/images/npc/javali-tap.webp', position: '56% 0%', scale: 1, faceScale: 1.5 },
-    /** De pé, corpo inteiro. */
-    standing: { src: '/images/npc/king-dice.png', position: '50% 0%', scale: 1, faceScale: 2.4 },
-    /** Cenas da apresentação da Sala de Jogos (palco largo, não arco). */
-    table: { src: '/images/npc/javali-scene-table.webp', position: '50% 40%' },
-    door: { src: '/images/npc/javali-scene-door.webp', position: '60% 35%' },
-    point: { src: '/images/npc/javali-scene-point.webp', position: '35% 35%' },
-  },
-} satisfies Record<string, Record<string, PortraitArt>>
-
-export type PortraitNpc = keyof typeof NPC_PORTRAITS
-export type PortraitPose<N extends PortraitNpc> = keyof (typeof NPC_PORTRAITS)[N]
-
-/** Retrato de um NPC numa expressão/pose; cai para `neutral` se a pose não existir. */
-export function npcPortrait(npc: string, pose = 'neutral'): PortraitArt | null {
-  const set = (NPC_PORTRAITS as Record<string, Record<string, PortraitArt>>)[npc]
-  if (!set) return null
-  return set[pose] ?? set.neutral ?? null
+type Elenco = {
+  /** Expressão de repouso (usada quando nenhuma é pedida ou a pedida não existe). */
+  padrao: Expressao
+  /** Célula da folha (0–11, ordem de leitura) → expressão. Registro do mapa; o arquivo é `<expressao>.webp`. */
+  celulas: readonly Expressao[]
+  /** Centro horizontal do rosto na tela, se não for o do tronco (medalhão redondo). */
+  rostoX?: string
+  /** Sprite ainda não entregue pelo dono: usa a silhueta de reserva. */
+  pendente?: boolean
 }
 
-/** Props prontas para o `PortraitFrame`: busto (`bust`) ou rosto em medalhão (`face`). */
-export function portraitFrameProps(npc: string, pose = 'neutral', crop: 'bust' | 'face' = 'bust') {
+/**
+ * MAPA ÚNICO DE RETRATOS por NPC e expressão. As telas leem tudo por `npcPortrait()` /
+ * `portraitFrameProps()`; trocar um sprite é rodar o script de novo, sem mexer nas telas.
+ * O mapa célula → expressão é o mesmo de `scripts/dev/fatiar-npcs.py` (e de cada manifest.json).
+ */
+export const ELENCO = {
+  melissa: {
+    padrao: 'confiante',
+    celulas: ['convite', 'explica', 'riso', 'preocupado', 'pensativo', 'timido', 'confiante', 'surpreso', 'animado', 'apresenta', 'triste', 'sorriso'],
+  },
+  galo: {
+    padrao: 'neutro',
+    celulas: ['neutro', 'malicia', 'riso', 'desdem', 'irritado', 'surpreso', 'timido', 'sorriso', 'sombrio', 'piscadela', 'entediado', 'confiante'],
+  },
+  herdeiro: {
+    padrao: 'neutro',
+    celulas: ['neutro', 'malicia', 'confiante', 'riso', 'irritado', 'furioso', 'entediado', 'desdem', 'sorriso', 'surpreso', 'timido', 'trama'],
+  },
+  javali: {
+    padrao: 'neutro',
+    celulas: ['neutro', 'convite', 'trama', 'riso', 'pensativo', 'desdem', 'entediado', 'explica', 'furioso', 'surpreso', 'timido', 'sombrio'],
+  },
+  rato: {
+    padrao: 'sorriso',
+    celulas: ['convite', 'malicia', 'desdem', 'surpreso', 'trama', 'pensativo', 'apresenta', 'triste', 'confiante', 'segredo', 'sorriso', 'irritado'],
+  },
+  coruja: {
+    padrao: 'neutro',
+    celulas: ['neutro', 'sorriso', 'piscadela', 'riso', 'desdem', 'preocupado', 'surpreso', 'serio', 'irritado', 'triste', 'timido', 'malicia'],
+  },
+  /** PENDENTE: o dono ainda não enviou a folha do Corvo. Silhueta encapuzada até lá. */
+  corvo: { padrao: 'neutro', celulas: [], pendente: true },
+} satisfies Record<string, Elenco>
+
+export type PortraitNpc = keyof typeof ELENCO
+/** Nome antigo do mapa (outras áreas ainda podem importá-lo). */
+export const NPC_PORTRAITS = ELENCO
+
+/** Enquadramento comum (sprites normalizados): busto inteiro no arco; rosto a partir de 50% 20%. */
+const BUSTO = { position: '50% 0%', scale: 1 }
+const ROSTO_ESCALA = 2
+
+function elenco(npc: string): Elenco | null {
+  return (ELENCO as Record<string, Elenco>)[npc] ?? null
+}
+
+/** Expressões disponíveis de um NPC (vazio se não tem retrato). */
+export function npcExpressoes(npc: string): Expressao[] {
+  const e = elenco(npc)
+  if (!e) return []
+  return e.pendente ? [e.padrao] : [...e.celulas]
+}
+
+/** Resolve a expressão pedida para uma que o NPC tem (cai para a de repouso). */
+export function resolveExpressao(npc: string, pose?: string): Expressao {
+  const e = elenco(npc)
+  if (!e) return 'neutro'
+  return pose && !e.pendente && (e.celulas as readonly string[]).includes(pose) ? (pose as Expressao) : e.padrao
+}
+
+/** Retrato de um NPC numa expressão; cai para a expressão de repouso se a pedida não existir. */
+export function npcPortrait(npc: string, pose?: string): PortraitArt | null {
+  const e = elenco(npc)
+  if (!e) return null
+  const src = e.pendente ? `/images/npc/${npc}/silhueta.svg` : `/images/npc/${npc}/${resolveExpressao(npc, pose)}.webp`
+  return { src, position: BUSTO.position, scale: BUSTO.scale, faceScale: ROSTO_ESCALA }
+}
+
+/** Props prontas para o `PortraitFrame` (fundo de moldura desligado: PNG transparente normal). */
+export function portraitFrameProps(npc: string, pose?: string, crop: 'bust' | 'face' = 'bust') {
+  const e = elenco(npc)
   const art = npcPortrait(npc, pose)
-  if (!art) return null
-  return { src: art.src, position: art.position ?? '50% 0%', scale: crop === 'face' ? (art.faceScale ?? 1.5) : (art.scale ?? 1) }
+  if (!e || !art) return null
+  const position = crop === 'face' && e.rostoX ? `${e.rostoX} 0%` : (art.position ?? '50% 0%')
+  return { src: art.src, position, scale: crop === 'face' ? (art.faceScale ?? ROSTO_ESCALA) : (art.scale ?? 1), backdrop: false }
+}
+
+/** Nome e papel de cada membro do elenco (rótulos acessíveis). */
+export const ELENCO_INFO: Record<PortraitNpc, { name: string; title: string }> = {
+  melissa: { name: 'Melissa', title: 'Companhia de Despertados' },
+  galo: { name: 'O Galo', title: 'Anfitrião do Arcano do Imperador' },
+  herdeiro: { name: 'O Herdeiro', title: 'Herdeiro Absoluto' },
+  javali: { name: 'Javali', title: 'Anfitrião da Sala de Jogos' },
+  rato: { name: 'O Rato', title: 'Anfitrião' },
+  coruja: { name: 'Coruja', title: 'Guardiã das Cartas' },
+  corvo: { name: 'O Corvo', title: 'Anfitrião' },
 }
 
 /**
@@ -86,9 +147,7 @@ export type NpcDef = {
   id: string
   name: string
   title: string
-  /** Expressões que o NPC tem no mapa `NPC_PORTRAITS` (vazio = sem retrato). */
-  expressions: Expression[]
-  /** 'cutout' para PNGs recortados; 'blend' para ilustrações com fundo escuro. */
+  /** 'cutout' para sprites recortados (todo o elenco OC); 'blend' para quem não tem retrato. */
   portraitStyle: 'cutout' | 'blend'
   choices: DialogueChoice[]
   /** Conversa só aparece na lista depois do primeiro contato. */
@@ -102,7 +161,6 @@ export const NPCS: Record<string, NpcDef> = {
     name: 'O Herdeiro',
     title: 'Herdeiro Absoluto',
     portraitStyle: 'cutout',
-    expressions: ['neutral', 'smirk'],
     choices: [
       {
         id: 'quem',
@@ -132,7 +190,6 @@ export const NPCS: Record<string, NpcDef> = {
     name: 'O Rato',
     title: 'Anfitrião',
     portraitStyle: 'cutout',
-    expressions: ['neutral'],
     choices: [
       {
         id: 'regras',
@@ -161,8 +218,7 @@ export const NPCS: Record<string, NpcDef> = {
     id: 'coruja',
     name: 'Coruja',
     title: 'Guardiã das Cartas',
-    portraitStyle: 'blend',
-    expressions: ['neutral'],
+    portraitStyle: 'cutout',
     hidden: true,
     doneText: 'Não há mais nada aqui.',
     choices: [
@@ -190,7 +246,6 @@ export const NPCS: Record<string, NpcDef> = {
     name: '???',
     title: 'Remetente desconhecido',
     portraitStyle: 'blend',
-    expressions: [],
     choices: [
       {
         id: 'quem',

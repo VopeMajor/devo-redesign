@@ -284,7 +284,7 @@ próprio retangular. Tom: `gold` anfitriões/casa, `cobalt` sistema/aliados, `bl
 `neutral` mentores. Enquadre com `position` (raster) e `scale`.
 
 ```tsx
-<PortraitFrame src="/images/npc/rat-host-v2.png" alt="O Rato, anfitrião" name="O Rato" role="Anfitrião" tone="gold" />
+<PortraitFrame {...portraitFrameProps('rato', 'sorriso')} alt="O Rato, anfitrião" name="O Rato" role="Anfitrião" tone="gold" />
 <PortraitFrame alt="Herdeiro" tone="cobalt"><HerdeiroArt /></PortraitFrame>
 ```
 

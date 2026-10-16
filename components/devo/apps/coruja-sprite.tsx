@@ -1,48 +1,35 @@
 'use client'
 
-import Image from 'next/image'
-import { useEffect, useState } from 'react'
+import { portraitFrameProps } from '@/lib/devo/npcs'
 import { cn } from '@/lib/utils'
 
-export const CORUJA_EXPRESSIONS = ['majime', 'warai', 'warai2', 'komaru', 'odoroki', 'fuman'] as const
+/** Expressões da Coruja usadas na aula (vocabulário do elenco em lib/devo/npcs.ts). */
+export const CORUJA_EXPRESSIONS = ['neutro', 'sorriso', 'riso', 'malicia', 'piscadela', 'preocupado', 'surpreso', 'desdem'] as const
 export type CorujaExpression = (typeof CORUJA_EXPRESSIONS)[number]
 
-const IDLE: Partial<Record<CorujaExpression, CorujaExpression>> = {
-  majime: 'warai',
-  warai: 'warai2',
-  warai2: 'warai',
-  komaru: 'majime',
-  fuman: 'majime',
-}
-
+/**
+ * Sprite OC da Coruja: todas as expressões da aula ficam montadas e trocam por opacidade.
+ * Mesmo enquadramento do PortraitFrame (object-cover no topo), já que os sprites do elenco são normalizados.
+ */
 export function CorujaSprite({ expression, className }: { expression: CorujaExpression; className?: string }) {
-  const [idle, setIdle] = useState(false)
-
-  useEffect(() => {
-    setIdle(false)
-    if (!IDLE[expression] || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
-    const id = window.setInterval(() => setIdle((v) => !v), 2600)
-    return () => window.clearInterval(id)
-  }, [expression])
-
-  const active = idle ? (IDLE[expression] ?? expression) : expression
-
   return (
     <div className={cn('relative', className)}>
-      {CORUJA_EXPRESSIONS.map((name, i) => (
-        <Image
-          key={name}
-          src={`/images/npc/coruja/${name}.webp`}
-          alt=""
-          width={361}
-          height={543}
-          priority={i < 2}
-          className={cn(
-            'absolute inset-0 h-full w-full object-contain object-bottom transition-opacity duration-300',
-            name === active ? 'opacity-100' : 'opacity-0',
-          )}
-        />
-      ))}
+      {CORUJA_EXPRESSIONS.map((name) => {
+        const art = portraitFrameProps('coruja', name)
+        if (!art) return null
+        return (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            key={name}
+            src={art.src}
+            alt=""
+            draggable={false}
+            decoding="async"
+            className={cn('absolute inset-0 size-full object-cover transition-opacity duration-300', name === expression ? 'opacity-100' : 'opacity-0')}
+            style={{ objectPosition: art.position }}
+          />
+        )
+      })}
     </div>
   )
 }

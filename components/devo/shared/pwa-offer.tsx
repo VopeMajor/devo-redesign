@@ -116,7 +116,7 @@ export function PwaOffer({ onClose }: { onClose: () => void }) {
     >
       {/* Fala do Anfitrião: retrato em losango + bilhete */}
       <div className="animate-dv-rise flex items-start gap-3">
-        <PortraitFrame {...(portraitFrameProps('rato', 'neutral', 'face') ?? {})} alt="O Anfitrião" shape="round" tone="gold" className="w-16" />
+        <PortraitFrame {...(portraitFrameProps('rato', undefined, 'face') ?? {})} alt="O Anfitrião" shape="round" tone="gold" className="w-16" />
         <div className="min-w-0 flex-1">
           <p className="dv-label text-[10px] text-dv-gold">O Anfitrião</p>
           <p className="mt-1 font-body text-[16px] italic leading-relaxed text-dv-text-2">

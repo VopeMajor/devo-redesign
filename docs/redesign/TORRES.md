@@ -29,7 +29,6 @@ Sistema da Direção 3 §2. Regras do dono (texto do Galo e notas finais de `SIS
 | `scripts/torres-migration.sql` | Tabelas `tower_progress` e `tower_player`; catálogo das essências/chaves de exemplo. |
 | `scripts/dev/91-seed-torres.sql` | Convites de teste (capturas e teste de servidor). |
 | `scripts/dev/torres-test.mjs` | Teste de servidor (roda no CI → `torres-test.log`). |
-| `public/images/torres/galo/*.webp` | 12 expressões do Galo recortadas da folha OC (provisório até o Elenco pôr o Galo em `lib/devo/npcs.ts`). |
 
 ## Acrescentar um andar, um diálogo ou uma torre (sem código)
 
@@ -74,9 +73,9 @@ Nos textos: `{nome}` vira o nome do jogador; `{o|a}` (masculino|feminino) concor
 (ex.: `cansad{o|a}`, `{obrigado|obrigada}`); trechos entre colchetes ficam como direção de cena
 (`"Besteira. [Dedo do meio censurado.]"`).
 
-Poses do Galo: `neutro`, `sorriso`, `risada`, `desdem`, `bravo`, `espanto`, `sem-graca`, `satisfeito`, `sombrio`,
-`piscada`, `tedio`, `convencido`. Outros NPCs usam as poses de `lib/devo/npcs.ts` (ex.: Javali `neutral`, `grin`,
-`wink`, `tap`); pose desconhecida cai na neutra.
+Poses: o vocabulário único `EXPRESSOES` de `lib/devo/npcs.ts` (ex.: `neutro`, `sorriso`, `riso`, `malicia`,
+`piscadela`, `confiante`, `desdem`, `irritado`, `surpreso`, `sombrio`, `entediado`, `timido`…). Cada NPC tem 12
+(veja `ELENCO` › `celulas`); expressão que o NPC não tem cai na de repouso.
 
 ### Acrescentar um andar
 

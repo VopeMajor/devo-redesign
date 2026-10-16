@@ -9,7 +9,7 @@
       "tipo": "principal",
       "tema": "Campanha",
       "descricao": "A torre da trama principal. Alguns andares só abrem para quem trouxer chaves das torres secundárias.",
-      "npc": { "id": "galo", "nome": "O Galo", "titulo": "Anfitrião do Arcano do Imperador", "pose": "convencido" },
+      "npc": { "id": "galo", "nome": "O Galo", "titulo": "Anfitrião do Arcano do Imperador", "pose": "confiante" },
       "essencia": { "item": "essencia:galo", "nome": "Essência de Afinidade do Galo" },
       "custoBase": 1,
       "arte": "agulha",
@@ -21,7 +21,7 @@
           "resumo": "Placeholder: o primeiro andar da campanha.",
           "provisorio": true,
           "cena": [
-            { "tipo": "fala", "pose": "sorriso", "texto": "[PROVISÓRIO] Diálogo do 1º andar da Torre do Imperador ainda não escrito pelo dono." },
+            { "tipo": "fala", "pose": "malicia", "texto": "[PROVISÓRIO] Diálogo do 1º andar da Torre do Imperador ainda não escrito pelo dono." },
             { "tipo": "sistema", "texto": "Andar concluído. Este texto é um exemplo e será substituído." }
           ]
         },
@@ -90,7 +90,7 @@
       "tipo": "secundaria",
       "tema": "Lona e apostas",
       "descricao": "Uma torre de lona listrada onde a casa sempre ganha. Cada andar vencido entrega uma chave do Picadeiro.",
-      "npc": { "id": "javali", "nome": "O Javali", "titulo": "Anfitrião da Sala de Jogos", "pose": "grin" },
+      "npc": { "id": "javali", "nome": "O Javali", "titulo": "Anfitrião da Sala de Jogos", "pose": "convite" },
       "essencia": { "item": "essencia:javali", "nome": "Essência de Afinidade do Javali" },
       "chave": { "nome": "Chave do Picadeiro" },
       "custoBase": 1,
