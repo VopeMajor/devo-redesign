@@ -66,6 +66,12 @@ export function errosDoConteudo(raw: unknown): string[] {
     if (!(Number(t.custoBase) >= 1)) erros.push(`${onde}: "custoBase" deve ser 1 ou mais.`)
     if (!(ARTES as readonly string[]).includes(t.arte)) erros.push(`${onde}: "arte" deve ser uma de: ${ARTES.join(', ')}.`)
     if (!t.mapa || !(t.mapa.x >= 0 && t.mapa.x <= 100 && t.mapa.y >= 0 && t.mapa.y <= 100)) erros.push(`${onde}: "mapa" precisa de x e y entre 0 e 100.`)
+    if (t.ilustracao) {
+      const il = t.ilustracao
+      if (typeof il.arquivo !== 'string' || !il.arquivo.startsWith('/')) erros.push(`${onde}: "ilustracao.arquivo" deve começar com "/" (sem o sufixo --<largura>.webp).`)
+      if (!Array.isArray(il.larguras) || !il.larguras.length || il.larguras.some((w) => !(Number(w) > 0))) erros.push(`${onde}: "ilustracao.larguras" deve listar as larguras dos arquivos (ex.: [256, 512, 1024]).`)
+      if (!(Number(il.aspecto) > 0) || !(Number(il.altura) > 0)) erros.push(`${onde}: "ilustracao" precisa de "aspecto" (largura ÷ altura) e "altura" > 0.`)
+    }
     if (!Array.isArray(t.andares) || t.andares.length < MIN_ANDARES || t.andares.length > MAX_ANDARES)
       erros.push(`${onde}: uma torre tem de ${MIN_ANDARES} a ${MAX_ANDARES} andares.`)
     t.andares?.forEach((a, j) => {

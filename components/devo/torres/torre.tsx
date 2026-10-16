@@ -5,7 +5,8 @@ import { playSfx } from '@/lib/devo/audio'
 import type { AndarEstado, TorreEstado } from '@/lib/devo/torres/tipos'
 import { cn } from '@/lib/utils'
 import { CageFrame, GlyphArrow, Kicker, Sheet, toRoman } from '../kit'
-import { alturaEscada, ESCADA, Escada, MAPA_W, TorresDefs, yDoAndar } from './arte'
+import { ALTURA_ARTE, alturaEscada, ESCADA, Escada, LARGURA_ARTE, MAPA_W, TorreArte, TorresDefs, yDoAndar } from './arte'
+import { TorreIlustradaImg } from './ilustrada'
 import { BotaoTorre, Cadeado, ChaveOrnamental, CristalEssencia, EstrelaAndar, type EstadoAndar, voluta } from './ornamentos'
 import { RecursoChip } from './mapa'
 import { retratoDe } from './retrato'
@@ -73,6 +74,18 @@ export function TelaTorre({
       <div aria-hidden="true" className="tw-drift absolute inset-x-[-30%] bottom-[6%] h-[22%] bg-[url(/images/torres/nevoa.webp)] bg-[length:100%_100%] opacity-50" />
       {/* feixe de luz do alto sobre a escada */}
       <div aria-hidden="true" className="pointer-events-none absolute left-[2%] top-0 h-full w-[48%] bg-[linear-gradient(180deg,rgba(236,229,216,0.16),rgba(194,185,236,0.05)_55%,transparent)] [clip-path:polygon(30%_0,70%_0,100%_100%,0_100%)] mix-blend-screen" />
+
+      {/* a própria torre ao fundo, à direita (pintada se houver ilustração; senão o desenho vetorial) */}
+      <div aria-hidden="true" className="pointer-events-none absolute bottom-[4%] right-[-14%] top-[12%] w-[62%] opacity-40 [mask-image:linear-gradient(to_left,#000_40%,transparent),linear-gradient(to_top,transparent,#000_20%)] [mask-composite:intersect]">
+        {torre.ilustracao ? (
+          <TorreIlustradaImg ilu={torre.ilustracao} feitos={torre.concluidos} total={N} sizes="(max-width: 640px) 60vw, 260px" className="absolute bottom-0 right-0 h-full" brilho={false} />
+        ) : (
+          <svg viewBox={`${-LARGURA_ARTE[torre.arte] / 2 - 10} ${-ALTURA_ARTE[torre.arte] - 10} ${LARGURA_ARTE[torre.arte] + 20} ${ALTURA_ARTE[torre.arte] + 14}`} preserveAspectRatio="xMaxYMax meet" className="absolute inset-0 size-full">
+            <TorresDefs />
+            <TorreArte arte={torre.arte} feitos={torre.concluidos} total={N} />
+          </svg>
+        )}
+      </div>
 
       {/* cabeçalho: tema, nome, NPC na gaiola, recursos */}
       <header className="relative z-10 shrink-0 bg-[linear-gradient(180deg,rgba(8,8,10,0.92),rgba(8,8,10,0.55)_80%,transparent)] px-4 pb-3 pt-2">
