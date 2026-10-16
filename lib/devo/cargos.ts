@@ -120,6 +120,10 @@ export type Alvos = {
   'equipe.ver': undefined
   /** Especialista do Salão das Máscaras: aprovar/recusar itens da Bandeja e anúncios (toda a equipe). */
   'salao.avaliar': undefined
+  /** Corporações: aprovar/recusar a fundação (avaliação administrativa da Companhia). Owner e Anfitrião. */
+  'corporacao.aprovar': undefined
+  /** Corporações: classificar como oficial ou Necro-Corporação (e rótulos provisórios: escopo, rivais). Owner e Anfitrião. */
+  'corporacao.classificar': undefined
 }
 
 export type Acao = keyof Alvos
@@ -129,6 +133,7 @@ export const ACOES = [
   'recompensa.editar', 'recompensa.aprovar', 'recompensa.distribuir', 'convite.gerar', 'convite.teste', 'dados.resumidos',
   'dados.completos', 'jogar', 'desbloqueio.override', 'karma.ajustar', 'item.conceder', 'cargo.ver_owner',
   'cosmetico.equipar_qualquer', 'catalogo.editar', 'config.editar', 'autorizacao.gerenciar', 'equipe.ver', 'salao.avaliar',
+  'corporacao.aprovar', 'corporacao.classificar',
 ] as const satisfies readonly Acao[]
 
 function temAutorizacao(ator: Ator, escopo: string, ref?: string | null) {
@@ -179,6 +184,8 @@ export function can<A extends Acao>(ator: Ator | null | undefined, acao: A, alvo
       return isStaff(c)
     case 'dv.tutorial':
     case 'equipe.ver':
+    case 'corporacao.aprovar':
+    case 'corporacao.classificar':
       return owner || c === 'anfitriao'
     case 'dv.editar': {
       const v = x as Alvos['dv.editar'] | undefined
