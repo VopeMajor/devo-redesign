@@ -224,6 +224,17 @@ def limpar(rgb: np.ndarray, a: np.ndarray, fundo_certo: np.ndarray, ilha_min: in
             a[borda] = 0
             total += int(borda.sum())
         info["franja_aparada_px"] = total
+    if apara_palido:
+        # beira com cor clara misturada (antisserrilhado do xadrez desenhado): copia a cor do pixel opaco mais
+        # próximo, 3 px para dentro, sem mexer na forma; peças finas (sem miolo perto) ficam como estão
+        dist_fora = ndimage.distance_transform_edt(a > 0.05)
+        miolo = (a > 0.9) & (dist_fora >= 3)
+        if miolo.any():
+            d_m, (iy, ix) = ndimage.distance_transform_edt(~miolo, return_indices=True)
+            beira = (a > 0.05) & (dist_fora < 3) & (d_m <= 4)
+            rgb = rgb.copy()
+            rgb[beira] = rgb[iy[beira], ix[beira]]
+            info["beira_recolorida_px"] = int(beira.sum())
     rgb[a <= 0.0] = 0
     return rgb, a, info
 
@@ -373,6 +384,26 @@ def recortar(im: Image.Image, S: int, margem: float, quadrado: bool) -> Image.Im
         tela = Image.new("RGBA", (nw + 2 * m, nh + 2 * m), (0, 0, 0, 0))
     tela.alpha_composite(obj, ((tela.width - nw) // 2, (tela.height - nh) // 2))
     return tela
+
+
+def retocar(final: Image.Image, retoques: list[dict]) -> Image.Image:
+    """Retoque manual (como faria um ilustrador): elipses em fração do quadro final.
+    modo "palido" apaga só pixels claros quase sem cor (sobra de xadrez/névoa) e preserva correntes e gemas;
+    modo "tudo" apaga tudo dentro da elipse."""
+    if not retoques:
+        return final
+    arr = np.asarray(final, dtype=np.float32).copy()
+    H, W = arr.shape[:2]
+    yy, xx = np.mgrid[0:H, 0:W].astype(np.float32) + 0.5
+    lum = arr[..., :3] @ np.array([0.299, 0.587, 0.114])
+    palido = ((arr[..., :3].max(-1) - arr[..., :3].min(-1)) <= 30) & (lum > 150)
+    for r in retoques:
+        x0, y0, x1, y1 = (v * W if i % 2 == 0 else v * H for i, v in enumerate(r["caixa"]))
+        cx, cy, rx, ry = (x0 + x1) / 2, (y0 + y1) / 2, max(1, (x1 - x0) / 2), max(1, (y1 - y0) / 2)
+        dentro = ((xx - cx) / rx) ** 2 + ((yy - cy) / ry) ** 2 <= 1
+        alvo = dentro & palido if r.get("modo", "palido") == "palido" else dentro
+        arr[alvo, 3] = 0
+    return Image.fromarray(arr.round().astype(np.uint8), "RGBA")
 
 
 def camada_por_cor(final: Image.Image, c: dict) -> Image.Image:
@@ -726,6 +757,9 @@ def main() -> int:
                 borda = np.concatenate([fa[0], fa[-1], fa[:, 0], fa[:, -1]])
                 if (borda > 8).mean() > 0.02:
                     avisos.append("objeto encosta na borda — o gerador pode ter cortado a peça; peça mais margem")
+            if pos.get("retoque"):
+                final = retocar(final, pos["retoque"])
+                reg["retoques"] = len(pos["retoque"])
             reg["arquivos"] = salvar(final, p["id"], nome, pos["derivados"], saida / "final")
             camadas = []
             for c in pos["camadas"]:

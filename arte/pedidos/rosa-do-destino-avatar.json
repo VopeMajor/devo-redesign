@@ -29,6 +29,35 @@
         "val_min": 0.55,
         "animacao": "brilho"
       }
+    ],
+    "retoque": [
+      {
+        "caixa": [
+          0.57,
+          0.79,
+          0.71,
+          0.87
+        ],
+        "modo": "palido"
+      },
+      {
+        "caixa": [
+          0.53,
+          0.06,
+          0.64,
+          0.14
+        ],
+        "modo": "palido"
+      },
+      {
+        "caixa": [
+          0.09,
+          0.18,
+          0.21,
+          0.3
+        ],
+        "modo": "palido"
+      }
     ]
   }
 }
