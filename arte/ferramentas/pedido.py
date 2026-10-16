@@ -43,8 +43,11 @@ def estimar_neuronios(modelo: str, largura: int, altura: int, passos: int | None
     return 0.0
 
 
-TIPOS = {"moldura", "emblema", "ilustracao"}
+TIPOS = {"moldura", "emblema", "ilustracao", "balao", "camada"}
 ID_RE = re.compile(r"^[a-z0-9][a-z0-9-]{2,60}$")
+
+
+RAIZ = Path(__file__).resolve().parents[2]
 
 
 class PedidoInvalido(ValueError):
@@ -69,11 +72,20 @@ def normalizar(p: dict, origem: Path | str = "?") -> dict:
         erros.append(f"id '{pid}' diferente do nome do arquivo '{Path(str(origem)).stem}'")
     if p.get("tipo") not in TIPOS:
         erros.append(f"tipo: um de {sorted(TIPOS)}")
-    if not isinstance(p.get("prompt"), str) or len(p["prompt"]) < 20:
-        erros.append("prompt: texto descritivo obrigatório")
-    modelo = p.get("modelo")
-    if modelo not in MODELOS:
-        erros.append(f"modelo: um de {sorted(MODELOS)}")
+    imp = p.get("importar")
+    if imp:
+        # arte feita fora (outra IA, ilustrador): só pós-processa, não gasta neurônio
+        if not (RAIZ / imp).is_file():
+            erros.append(f"importar: arquivo não encontrado: {imp}")
+        p.setdefault("prompt", "")
+        p["modelo"] = modelo = "importado"
+        p["variacoes"] = [{"seed": 0, "modelo": "importado"}]
+    else:
+        if not isinstance(p.get("prompt"), str) or len(p["prompt"]) < 20:
+            erros.append("prompt: texto descritivo obrigatório")
+        modelo = p.get("modelo")
+        if modelo not in MODELOS:
+            erros.append(f"modelo: um de {sorted(MODELOS)}")
     p.setdefault("negative", "")
     p.setdefault("largura", 1024)
     p.setdefault("altura", 1024)
@@ -97,7 +109,9 @@ def normalizar(p: dict, origem: Path | str = "?") -> dict:
         v.setdefault("prompt_extra", "")
         v["n"] = i
         info = MODELOS.get(v["modelo"])
-        if not info:
+        if imp:
+            pass
+        elif not info:
             erros.append(f"variacoes[{i}].modelo desconhecido: {v['modelo']}")
         else:
             for lado in ("largura", "altura"):
@@ -116,10 +130,14 @@ def normalizar(p: dict, origem: Path | str = "?") -> dict:
     pos.setdefault("remover_fundo", True)
     pos.setdefault("modelo_fundo", "birefnet-general")
     pos.setdefault("tamanho_final", 1024)
-    pos.setdefault("derivados", [512, 256, 96, 48])
+    pos.setdefault("derivados", [1024, 768, 512, 256] if p.get("tipo") == "balao" else [512, 256, 96, 48])
     pos.setdefault("margem", 0.03)
-    if not (1024 <= int(pos["tamanho_final"]) <= 1536):
-        erros.append("pos.tamanho_final: entre 1024 e 1536")
+    pos.setdefault("fundo", "quadriculado" if imp else "liso")
+    pos.setdefault("camadas", [])
+    if not (1024 <= int(pos["tamanho_final"]) <= 2048):
+        erros.append("pos.tamanho_final: entre 1024 e 2048")
+    if pos["fundo"] not in ("liso", "quadriculado"):
+        erros.append("pos.fundo: liso ou quadriculado")
     molde = pos.get("molde")
     if p.get("tipo") == "moldura":
         if not molde:
@@ -135,19 +153,25 @@ def normalizar(p: dict, origem: Path | str = "?") -> dict:
                 erros.append("pos.molde.raio: fração do lado entre 0.10 e 0.45")
             if molde["forma"] == "oval" and not (isinstance(r, list) and len(r) == 2):
                 erros.append("pos.molde.raio: [rx, ry] para oval")
-            if molde["forma"] not in ("circulo", "oval"):
-                erros.append("pos.molde.forma: circulo ou oval")
+            if molde["forma"] == "quadrado":
+                molde.setdefault("raio_canto", 0.04)
+                if not (isinstance(molde.get("lado"), (int, float)) and 0.2 <= molde["lado"] <= 0.9):
+                    erros.append("pos.molde.lado: fração do lado entre 0.20 e 0.90 (ex.: 560/1024 = 0.547)")
+            if molde["forma"] not in ("circulo", "oval", "quadrado"):
+                erros.append("pos.molde.forma: circulo, oval ou quadrado")
             pos["molde"] = molde
     p["pos"] = pos
     for ref in p["referencias"]:
-        if not isinstance(ref, str):
-            erros.append("referencias: caminhos relativos à raiz do repositório")
+        if not isinstance(ref, str) or not (RAIZ / ref).is_file():
+            erros.append(f"referencias: arquivo não encontrado (caminho relativo à raiz): {ref}")
     if erros:
         raise PedidoInvalido(f"{origem}:\n  - " + "\n  - ".join(erros))
     return p
 
 
 def custo_total(p: dict) -> float:
+    if p.get("importar"):
+        return 0.0
     return sum(
         estimar_neuronios(v["modelo"], int(v["largura"]), int(v["altura"]), v["passos"], len(p["referencias"]))
         for v in p["variacoes"]
@@ -163,6 +187,8 @@ if __name__ == "__main__":
             c = custo_total(ped)
             total += c
             modelos = sorted({v["modelo"].split("/")[-1] for v in ped["variacoes"]})
+            if ped.get("importar"):
+                modelos = ["importado: " + ped["importar"]]
             print(f"ok  {ped['id']}: {len(ped['variacoes'])} variação(ões), {', '.join(modelos)}, ~{c:,.0f} neurônios")
         except PedidoInvalido as e:
             falhou = True

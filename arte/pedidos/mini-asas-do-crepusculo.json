@@ -1,0 +1,38 @@
+{
+  "id": "mini-asas-do-crepusculo",
+  "titulo": "Asas do Crepúsculo — miniperfil (quadrada)",
+  "tipo": "moldura",
+  "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+  "referencias": [
+    "arte/referencias/asas-do-crepusculo-v02.png"
+  ],
+  "prompt": "Fantasy RPG accessory illustration, painted, highly detailed, isolated on a plain flat light gray background. Use image 0 as the reference for style, materials and palette: the same glossy raven-black feathers with tarnished silver edges, the same blackened silver gothic metalwork with thorned scrollwork, the same faceted crimson crystals and fine silver chains, the same soft studio light from the upper left. Create the SQUARE version of that avatar frame, seen straight-on: an empty square opening with slightly rounded corners in the exact center, about 55 percent of the image width, perfectly clear and showing only the flat background. A slim square bezel of blackened silver runs around the opening. Two dark wings rise from behind the upper left and upper right corners and fold outward along the top edge, smaller than in image 0 so they fit the square. At the top center, the pointed gothic crest with a large crimson crystal. Small crimson teardrop gems on the four corners. Fine silver chains with tiny crystal pendants hang from the two lower corners, and a short dark velvet ribbon with a small crimson gem sits at the bottom center. Every ornament fully inside the image with an empty margin around it. No text, no watermark, no character, no face, nothing inside the square opening.",
+  "negative": "text, letters, watermark, signature, logo, cropped, cut off, blurry, low detail, flat vector icon, clipart, emoji, cartoon sticker, simple geometric shapes, plastic look, people, face, hands",
+  "largura": 1024,
+  "altura": 1024,
+  "variacoes": [
+    {
+      "seed": 4101
+    },
+    {
+      "seed": 4102
+    },
+    {
+      "seed": 4103
+    }
+  ],
+  "pos": {
+    "tamanho_final": 1024,
+    "molde": {
+      "forma": "quadrado",
+      "centro": [
+        0.5,
+        0.5
+      ],
+      "lado": 0.547,
+      "raio_canto": 0.04,
+      "sombra": 0.35,
+      "largura_sombra": 0.045
+    }
+  }
+}

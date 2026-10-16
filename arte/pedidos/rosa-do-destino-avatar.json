@@ -1,0 +1,34 @@
+{
+  "id": "rosa-do-destino-avatar",
+  "titulo": "Rosa do Destino — avatar (importado)",
+  "tipo": "moldura",
+  "importar": "arte/importados/rosa-do-destino-avatar.png",
+  "pos": {
+    "remover_fundo": true,
+    "modelo_fundo": "birefnet-general",
+    "fundo": "quadriculado",
+    "tamanho_final": 1024,
+    "molde": {
+      "forma": "circulo",
+      "centro": [
+        0.5,
+        0.5
+      ],
+      "raio": 0.25,
+      "sombra": 0.35,
+      "largura_sombra": 0.045
+    },
+    "camadas": [
+      {
+        "nome": "gema",
+        "matiz": [
+          340,
+          15
+        ],
+        "sat_min": 0.6,
+        "val_min": 0.55,
+        "animacao": "brilho"
+      }
+    ]
+  }
+}
