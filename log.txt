@@ -1,0 +1,12 @@
+[cosm-a-asas-do-crepusculo] v01: @cf/black-forest-labs/flux-2-klein-4b seed=1101 1024x1024 passos=None (~104 neurônios)
+    ok em 63.3s, 1024x1024
+[cosm-a-asas-do-crepusculo] v02: @cf/black-forest-labs/flux-2-klein-4b seed=1102 1024x1024 passos=None (~104 neurônios)
+    ok em 26.5s, 1024x1024
+[cosm-a-asas-do-crepusculo] v03: @cf/black-forest-labs/flux-2-klein-4b seed=1103 1024x1024 passos=None (~104 neurônios)
+    ok em 31.0s, 1024x1024
+[cosm-a-asas-do-crepusculo] v04: @cf/black-forest-labs/flux-2-dev seed=1104 1024x1024 passos=20 (~3,000 neurônios)
+    ok em 15.0s, 1024x1024
+[cosm-a-asas-do-crepusculo] v01: rembg:birefnet-general; 8.1% do ornamento ficou fora do quadro — reduza pos.molde.raio ou peça mais margem no prompt
+[cosm-a-asas-do-crepusculo] v02: rembg:birefnet-general; 2.4% do ornamento ficou fora do quadro — reduza pos.molde.raio ou peça mais margem no prompt
+[cosm-a-asas-do-crepusculo] v03: rembg:birefnet-general; 16.5% do ornamento ficou fora do quadro — reduza pos.molde.raio ou peça mais margem no prompt
+[cosm-a-asas-do-crepusculo] v04: rembg:birefnet-general; 22.4% do ornamento ficou fora do quadro — reduza pos.molde.raio ou peça mais margem no prompt

@@ -1,0 +1,270 @@
+{
+  "pedido": "cosm-a-asas-do-crepusculo",
+  "titulo": "Asas do Crepúsculo (moldura lendária, teste A)",
+  "tipo": "moldura",
+  "tamanho_final": 1024,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 1101,
+      "passos": null,
+      "segundos": 63.3,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "miolo_aberto_por_cor": true,
+      "fundo_rgb": [
+        189,
+        189,
+        191
+      ],
+      "janela": {
+        "forma": "circulo",
+        "centro_px": [
+          512.0,
+          512.0
+        ],
+        "raio_px": [
+          256.0,
+          256.0
+        ],
+        "raio_fracao": [
+          0.25,
+          0.25
+        ]
+      },
+      "reencaixe": {
+        "escala": 1.2249,
+        "cobertura_aro": 1.0
+      },
+      "ornamento_cortado": 0.0805,
+      "arquivos": [
+        {
+          "arquivo": "cosm-a-asas-do-crepusculo--v01--1024.png",
+          "bytes": 866468
+        },
+        {
+          "arquivo": "cosm-a-asas-do-crepusculo--v01--1024.webp",
+          "bytes": 187490
+        },
+        {
+          "arquivo": "cosm-a-asas-do-crepusculo--v01--512.webp",
+          "bytes": 69628
+        },
+        {
+          "arquivo": "cosm-a-asas-do-crepusculo--v01--256.webp",
+          "bytes": 25614
+        },
+        {
+          "arquivo": "cosm-a-asas-do-crepusculo--v01--96.webp",
+          "bytes": 6294
+        },
+        {
+          "arquivo": "cosm-a-asas-do-crepusculo--v01--48.webp",
+          "bytes": 2452
+        }
+      ],
+      "segundos_pos": 34.3,
+      "avisos": [
+        "8.1% do ornamento ficou fora do quadro — reduza pos.molde.raio ou peça mais margem no prompt"
+      ]
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 1102,
+      "passos": null,
+      "segundos": 26.5,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "miolo_aberto_por_cor": true,
+      "ilhas_removidas": 1,
+      "fundo_rgb": [
+        195,
+        195,
+        197
+      ],
+      "janela": {
+        "forma": "circulo",
+        "centro_px": [
+          512.0,
+          512.0
+        ],
+        "raio_px": [
+          256.0,
+          256.0
+        ],
+        "raio_fracao": [
+          0.25,
+          0.25
+        ]
+      },
+      "reencaixe": {
+        "escala": 1.1278,
+        "cobertura_aro": 1.0
+      },
+      "ornamento_cortado": 0.0245,
+      "arquivos": [
+        {
+          "arquivo": "cosm-a-asas-do-crepusculo--v02--1024.png",
+          "bytes": 755158
+        },
+        {
+          "arquivo": "cosm-a-asas-do-crepusculo--v02--1024.webp",
+          "bytes": 168586
+        },
+        {
+          "arquivo": "cosm-a-asas-do-crepusculo--v02--512.webp",
+          "bytes": 67010
+        },
+        {
+          "arquivo": "cosm-a-asas-do-crepusculo--v02--256.webp",
+          "bytes": 24614
+        },
+        {
+          "arquivo": "cosm-a-asas-do-crepusculo--v02--96.webp",
+          "bytes": 6046
+        },
+        {
+          "arquivo": "cosm-a-asas-do-crepusculo--v02--48.webp",
+          "bytes": 2422
+        }
+      ],
+      "segundos_pos": 18.7,
+      "avisos": [
+        "2.4% do ornamento ficou fora do quadro — reduza pos.molde.raio ou peça mais margem no prompt"
+      ]
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 1103,
+      "passos": null,
+      "segundos": 31.0,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "miolo_aberto_por_cor": true,
+      "fundo_rgb": [
+        190,
+        190,
+        192
+      ],
+      "janela": {
+        "forma": "circulo",
+        "centro_px": [
+          512.0,
+          512.0
+        ],
+        "raio_px": [
+          256.0,
+          256.0
+        ],
+        "raio_fracao": [
+          0.25,
+          0.25
+        ]
+      },
+      "reencaixe": {
+        "escala": 1.3403,
+        "cobertura_aro": 1.0
+      },
+      "ornamento_cortado": 0.1646,
+      "arquivos": [
+        {
+          "arquivo": "cosm-a-asas-do-crepusculo--v03--1024.png",
+          "bytes": 919897
+        },
+        {
+          "arquivo": "cosm-a-asas-do-crepusculo--v03--1024.webp",
+          "bytes": 193104
+        },
+        {
+          "arquivo": "cosm-a-asas-do-crepusculo--v03--512.webp",
+          "bytes": 71498
+        },
+        {
+          "arquivo": "cosm-a-asas-do-crepusculo--v03--256.webp",
+          "bytes": 25938
+        },
+        {
+          "arquivo": "cosm-a-asas-do-crepusculo--v03--96.webp",
+          "bytes": 6250
+        },
+        {
+          "arquivo": "cosm-a-asas-do-crepusculo--v03--48.webp",
+          "bytes": 2476
+        }
+      ],
+      "segundos_pos": 17.6,
+      "avisos": [
+        "16.5% do ornamento ficou fora do quadro — reduza pos.molde.raio ou peça mais margem no prompt"
+      ]
+    },
+    {
+      "nome": "v04",
+      "modelo": "@cf/black-forest-labs/flux-2-dev",
+      "seed": 1104,
+      "passos": 20,
+      "segundos": 15.0,
+      "neuronios_estimados": 3000,
+      "fundo": "rembg:birefnet-general",
+      "miolo_aberto_por_cor": true,
+      "ilhas_removidas": 1,
+      "fundo_rgb": [
+        200,
+        202,
+        206
+      ],
+      "janela": {
+        "forma": "circulo",
+        "centro_px": [
+          512.0,
+          512.0
+        ],
+        "raio_px": [
+          256.0,
+          256.0
+        ],
+        "raio_fracao": [
+          0.25,
+          0.25
+        ]
+      },
+      "reencaixe": {
+        "escala": 1.5059,
+        "cobertura_aro": 1.0
+      },
+      "ornamento_cortado": 0.224,
+      "arquivos": [
+        {
+          "arquivo": "cosm-a-asas-do-crepusculo--v04--1024.png",
+          "bytes": 1248134
+        },
+        {
+          "arquivo": "cosm-a-asas-do-crepusculo--v04--1024.webp",
+          "bytes": 298044
+        },
+        {
+          "arquivo": "cosm-a-asas-do-crepusculo--v04--512.webp",
+          "bytes": 106892
+        },
+        {
+          "arquivo": "cosm-a-asas-do-crepusculo--v04--256.webp",
+          "bytes": 36766
+        },
+        {
+          "arquivo": "cosm-a-asas-do-crepusculo--v04--96.webp",
+          "bytes": 7952
+        },
+        {
+          "arquivo": "cosm-a-asas-do-crepusculo--v04--48.webp",
+          "bytes": 2762
+        }
+      ],
+      "segundos_pos": 18.9,
+      "avisos": [
+        "22.4% do ornamento ficou fora do quadro — reduza pos.molde.raio ou peça mais margem no prompt"
+      ]
+    }
+  ]
+}

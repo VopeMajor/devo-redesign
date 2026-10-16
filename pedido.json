@@ -1,0 +1,73 @@
+{
+  "id": "cosm-a-asas-do-crepusculo",
+  "titulo": "Asas do Crepúsculo (moldura lendária, teste A)",
+  "tipo": "moldura",
+  "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+  "prompt": "Fantasy RPG accessory illustration, painted, highly detailed, isolated on a plain flat light gray background. A legendary ornate avatar frame seen straight-on: a round empty opening in the exact center, about half the width of the image, perfectly clear and showing only the flat background through it. Around the opening runs a slim bezel of blackened silver engraved with gothic tracery and tiny thorned scrollwork. From the left and right sides, two asymmetric dark wings sweep outward and slightly upward, made of individually painted feathers of varied length and shape: glossy raven-black primaries with frayed, irregular tips, inner coverts edged in tarnished silver, and a few loose silver quills catching a cold rim light. At the top center, a pointed gothic crest of chiseled silver holds a large faceted crimson crystal with an inner glow and sharp specular highlights. Smaller blood-red teardrop gems sit in claw prongs along the bezel. Delicate fine silver chains drape in uneven loops across the lower left and lower right, ending in small crystal pendants and a tiny dangling cross-shaped charm. The lower edge carries a narrow ribbon of dark velvet and a small silver filigree flourish. Balanced asymmetry: the left wing larger and more open, the right wing slightly tucked, chains longer on one side. Soft studio key light from the upper left, cool silver reflections, deep shadows between the feathers, a subtle crimson glow cast on the nearby metal. Crisp clean silhouette, every ornament fully inside the image with a generous empty margin around the whole object, nothing cropped. No text, no letters, no watermark, no character, no face, nothing inside the central opening.",
+  "negative": "text, letters, watermark, signature, logo, frame border of the image, cropped, cut off, blurry, low detail, flat vector icon, clipart, emoji, cartoon sticker, simple geometric shapes, plastic look, people, face, hands",
+  "largura": 1024,
+  "altura": 1024,
+  "variacoes": [
+    {
+      "seed": 1101,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "passos": null,
+      "largura": 1024,
+      "altura": 1024,
+      "prompt_extra": "",
+      "n": 1
+    },
+    {
+      "seed": 1102,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "passos": null,
+      "largura": 1024,
+      "altura": 1024,
+      "prompt_extra": "",
+      "n": 2
+    },
+    {
+      "seed": 1103,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "passos": null,
+      "largura": 1024,
+      "altura": 1024,
+      "prompt_extra": "",
+      "n": 3
+    },
+    {
+      "seed": 1104,
+      "modelo": "@cf/black-forest-labs/flux-2-dev",
+      "passos": 20,
+      "largura": 1024,
+      "altura": 1024,
+      "prompt_extra": "",
+      "n": 4
+    }
+  ],
+  "pos": {
+    "remover_fundo": true,
+    "modelo_fundo": "birefnet-general",
+    "tamanho_final": 1024,
+    "molde": {
+      "forma": "circulo",
+      "centro": [
+        0.5,
+        0.5
+      ],
+      "raio": 0.25,
+      "sombra": 0.35,
+      "largura_sombra": 0.045
+    },
+    "derivados": [
+      512,
+      256,
+      96,
+      48
+    ],
+    "margem": 0.03
+  },
+  "passos": null,
+  "guidance": null,
+  "referencias": []
+}
