@@ -1,0 +1,942 @@
+há também coisas a adicionar. são diálogos e também você já entende um pouco do sistema para trabalhar em cima.
+
+|
+
+[Em meio ao caos da cidade urbana, você se perde e encontra uma região enevoada. Aqui há muitas casas, mas todas são antigas e simples.]
+
+[Ao virar em uma esquina, você se depara com uma rua de barro.]
+
+[No fim dela, algo te chama a atenção. Brilha para você de um jeito sobrenatural.]
+
+[Ao se aproximar, você descobre um poço milenar. Ele tem uma placa ao lado, dizendo que foi construído há pelo menos 500 anos.]
+
+|
+
+*Jogador:*
+
+Um poço… Não é uma fonte, hein?
+
+|
+
+*Jogador:*
+
+Se pelo menos eu tivesse uma moeda…
+
+|
+
+*Jogador:*
+
+Talvez isso tivesse alguma utilidade.
+
+|
+
+*Jogador:*
+
+1 — Usar moeda comum.  
+2 — Usar moeda especial (se houver) *(obs: tente fazer aparecer bloqueado, tipo escuro, caso a pessoa não tenha)*  
+3 — Não jogar nada.  
+4 — Tentar com uma tampa de garrafa.
+
+|
+
+*Jogador (respostas a si próprio):*
+
+1 — Parece que nada mudou.  
+2 — *Aparecem as opções de moedas para se usar.*
+3 — …..  
+4 — …Que idiotice.
+
+|
+
+[No meio da neblina, alguém se aproxima. A silhueta revela uma pessoa alta e esguia com um manto. Não é possível ver seu rosto com tanta névoa.]
+
+|
+
+*Jogador:*
+
+1 — Quem está aí?  
+2 — Chegou a minha hora?  
+3 — Eu juro que só tava testando.
+
+|
+
+Por acaso, você precisa de uma moeda?
+
+|
+
+*Jogador:*
+
+1 — Moeda?  
+2 — Isso não funciona.  
+3 — Você tem uma?
+
+|
+
+Sim, moedas normais não funcionariam aqui. Normalmente elas não funcionam em qualquer lugar. Mas esse poço? Ele é diferente de algo como uma fonte dos desejos. É muito mais especial.
+
+|
+
+*Jogador:*
+
+1 — Entendi.  
+2 — Isso parece besteira.  
+3 — E como você pode provar?
+
+|
+
+Você quer que eu te dê uma que funciona, criança?
+
+|
+
+*Jogador:*
+
+1 — Não, obrigado.  
+2 — Sim, por favor.  
+3 — Primeiro você…
+
+|
+
+*1 e 3* — Não há por que ter medo. Eu não desejo te machucar… Você já saberia se eu quisesse. 
+*2* — (Acontece a mesma coisa que vou mandar no quadro seguinte, só que obviamente não é para repetir caso a pessoa tenha escolhido essa opção. Tem que pular e ir para o que vem na sequência.)
+
+|
+
+*[No início, pensei que fosse um pulso de mentira, mas aquela pessoa realmente ergueu a mão e ela estava o mais puro osso. Desnutrida, não tinha manga cobrindo sua carne morta ou a pele azulada e gélida. Fez arder minhas narinas com o cheiro incendiário de putrefação. Pensei ter visto uma larva devorando o tendão.]*
+
+|
+
+Aqui… É seu agora.
+
+|
+
+[Você recebeu um Dracma de Raridade Incomum]
+
+|
+
+Será muito útil para você se tiver sorte. Claro… O próximo não será tão fácil assim.
+
+|
+
+*Jogador:*
+
+1 — Obrigado.  
+2 — …
+
+|
+
+*Resposta:*
+
+1 — Não há de quê.
+
+|
+
+Agora eu preciso ir embora. Sinta-se livre para visitar o poço sempre que precisar. Use aquela alavanca depois de arremessar a moeda que eu te dei.
+
+|
+
+E lembre-se disso: caso a moeda seja lançada, não poderá ser recuperada. Nunca tente entrar no poço para pegá-las de volta. Ou sofrerá algo terrível… e vai desejar não ter nascido.
+
+|
+
+|
+
+[??? desaparece sem se despedir adequadamente]
+
+|
+
+*Jogador:*
+
+Parece que eu me esqueci de perguntar o seu nome…
+---------
+
+*Poço dos Milagres*
+
+0. Depois de todo aquele diálogo com a figura misteriosa (que é secretamente o Anfitrião Corvo — não sei se comentei), o sistema de Poço dos Milagres fica disponível. Na interface dele:
+
+1. Há um poço com três opções de botão para se clicar.
+
+2. O poço contém: **Lançar Moeda** (ou apenas “Moeda”), **Girar Manivela** (ou apenas “Girar”) e **Inspecionar Balde** (ou apenas “Balde”).
+
+3. Existem opções de que tipo de balde usar. Alguns deles — os mais normais, mas não os Iniciais — aparecem bloqueados. Outros, ainda mais raros, nem isso. Naturalmente, o usuário começa apenas com o trágico balde de madeira desgastado. Ele não tem qualquer efeito sobre a invocação das cartas.
+
+4. Sempre que alguém puxa com o balde, essa pessoa tem a chance de conseguir só água suja, uma pedra ou algo aleatório que não seja uma carta. A maioria dos resultados é desse tipo. Esses itens não vão para o inventário. Ela também pode conseguir cápsulas do tempo, que contêm informações ou curiosidades do mundo de Devo (as cápsulas são mais raras, algo próximo de uma carta rara). Essas ficam no Diário.
+
+5. Além disso, a pessoa também tem a chance de adquirir fragmentos de arcano, essências de afinidade e itens estéticos (como molde de perfil). A quantidade naturalmente é mais baixa — mas algum balde especial específico pode aumentar a quantidade adquirida em cada coleta.
+
+6. Pensei na ideia de colocar um sistema de minigame na hora de girar a manivela, algo como clicar várias vezes para aumentar a chance de algo melhor, ou um daqueles sistemas em que você tem que acertar a hora certa de clicar e vai ficando cada vez mais difícil.
+
+7. Todos os dias teriam direito a um giro grátis na categoria de sorteio normal.
+
+8. As categorias de sorteio estão separadas pelo tipo de moeda usada.
+
+9. “Dracma Comum” é a moeda do sorteio base.
+
+10. Há um tipo de anúncio no topo da tela que mostra as últimas pessoas a conseguirem algo bom. Ele fica passando frequentemente quando se entra nessa página.
+
+11. Há um quarto botão de três pontos no canto superior direito da tela que pode ser usado para saber quais moedas a pessoa tem disponíveis e uma descrição sobre elas.
+
+--
+
+aqui, deve haver um ícone e então uma animação/tela holográfica com melissa. isso deve ocorrer sempre que for algo relacionado a companhia;
+
+[Enquanto estou distraído, uma luz irrompe da tela do meu próprio celular. Um feixe azulado ilumina meu rosto, revelando-se semelhante à luz de uma lanterna.]
+
+|
+
+[Procuro entender o que está acontecendo, mas, antes que consiga formular qualquer hipótese, vejo um holograma se materializar diante de mim. Nele, reconheço o rosto de alguém que já conheço.]
+
+|
+
+— Olá, Record. Sou eu mais uma vez. Como vai?
+
+|
+
+— Você já deve ter ouvido falar da Companhia de Despertados, organização da qual faço parte. Na verdade, fui eu quem lhe contou sobre ela e sobre a nossa função. Certo?
+
+|
+
+— Pois bem. Saiba que não somos a única entidade perambulando por aí.
+
+|
+
+— Grupos menores, organizados por indivíduos como você, surgem a todo momento.
+
+|
+
+— Essas pequenas equipes são formadas para alcançar objetivos em comum, geralmente relacionados à sobrevivência de seus integrantes nos jogos perigosos que estão por vir.
+
+|
+
+— Todas elas são conhecidas como *Corporações* pela *Companhia de Despertados*.
+
+|
+
+— Existem muitas vantagens em fazer parte de uma *Corporação* competente. Você pode transferir cartas entre membros ou participar de jogos coletivos especiais, por exemplo.
+
+|
+
+— Naturalmente, algumas dessas *Corporações* acabam se desviando do caminho correto.
+
+|
+
+— Por esse motivo, nós, da *Companhia de Despertados*, estabelecemos um código de regras que toda *Corporação* precisa seguir caso queira ser reconhecida como oficial e legal.
+
+|
+
+— Quando essas regras são violadas, a *Corporação* passa a ser classificada como terrorista. São as chamadas *Necro-Corporações*.
+
+|
+
+— Eu recomendaria que você ficasse bem longe delas se quiser levar uma vida tranquila.
+
+|
+
+*Jogador:*
+
+1 — Como posso entrar em uma Corporação?
+2 — Parece interessante. Onde encontro uma Necro-Corporação?
+3 — Eu quero mais é ficar na minha.
+
+|
+
+*Respostas:*
+
+*1.* — Entrar em uma Corporação é muito fácil, mas preciso que você espere um pouco antes de dar esse passo.
+
+*2.* — Record... Que coisa horrível.
+
+*[Uma determinada quantidade de tempo é retirada do seu Shuffler.]*
+
+— Como você ainda é iniciante, vou deixar passar desta vez.
+
+*3.* — É uma opção, embora bastante irresponsável. Poucos Records alcançam o sucesso trabalhando sozinhos. E, entre aqueles que conseguem, a maioria já participou de alguma *Corporação* em determinado momento. Além disso, existem muito mais vantagens em fazer parte de uma equipe do que em enfrentar tudo por conta própria.
+
+|
+
+— Para entrar em uma *Corporação*, você precisa adquirir o código de identificação dela e inseri-lo no campo correspondente na página de *Corporações*.
+
+|
+
+— Feito isso, basta aguardar até que o líder ou vice-líder aprove sua entrada. Durante o processo, ele terá acesso a determinadas partes do seu perfil.
+
+|
+
+— Na maioria das vezes, você não encontrará anúncios de recrutamento por aí. Portanto, é bom aproveitar as oportunidades quando surgirem. Quando acontecem, essas divulgações são mais frequentes no *Salão das Máscaras*.
+
+|
+
+— Outra possibilidade é receber um convite diretamente de um *Record* que já faça parte de alguma *Corporação*.
+
+|
+
+*Jogador:*
+
+1 — Salão das Máscaras?
+2 — E se eu quiser criar uma?
+3 — Entendi.
+
+|
+
+*Respostas:*
+
+*1.* — Caso já tenha desbloqueado esse recurso, você encontrará o ícone de uma máscara no *Menu do Devo*. Ele representa o *Salão das Máscaras*. Caso contrário... Bem, paciência.
+
+*2.* — Se quiser criar sua própria *Corporação*, precisará investir uma determinada quantidade de tempo e obter aprovação legal. A avaliação administrativa levará em consideração se o seu perfil corresponde aos requisitos exigidos.
+
+|
+
+— Lembre-se sempre de tomar cuidado com as *Corporações Rivais* e com as outras *Corporações Globais*. Elas não são tão boazinhas quanto nós.
+
+|
+
+[A chamada é encerrada antes que eu possa me despedir de Melissa — ou perguntar a ela o que exatamente são essas tais Corporações Globais.]
+
+|
+
+[Será que eu deveria tomar mais cuidado daqui em diante?]
+
+-----
+
+Permissões por cargo
+Funcionalidade	Owner	Anfitrião	Dealer	Jogador
+Acesso administrativo global	✓	—	—	—
+Gerenciar cargos e vínculos	✓	Limitado	—	—
+Criar Deadly Votes	✓	✓	✓	—
+Editar próprias Deadly Votes	✓	✓	✓	—
+Editar Deadly Votes de subordinados	✓	✓	—	—
+Pré-selecionar recompensas	✓	✓	✓	—
+Aprovar recompensas	✓	✓	—	—
+Distribuir recompensas	✓	✓	—	—
+Gerar códigos de convite	✓	✓	—	Limitado
+Consultar dados resumidos	✓	✓	—	Próprios
+Consultar dados completos	✓	—	—	Próprios
+Jogar e participar de eventos	✓	✓	✓	✓
+
+
+Anfitrião — Supervisão
+Cria Deadly Votes, define e concede recompensas de eventos sob sua responsabilidade, gera códigos de convite e aprova ou rejeita propostas de seus Dealers.
+Consulta dados resumidos dos jogadores, como quantidade de cartas, nível arcano, fragmentos, pontos de potencial e histórico resumido de participação, sem acesso a senhas ou dados privados.
+
+
+
+
+Dealer — Operação
+Cria e administra suas próprias Deadly Votes. Pode propor recompensas, mas não pode aprová-las ou concedê-las diretamente.
+Seu Anfitrião supervisor ou qualquer Owner pode aprovar, rejeitar ou editar a proposta. Alterações posteriores nas recompensas devem passar por nova aprovação.
+
+
+
+
+Jogador — Participação
+Possui o perfil padrão do DEVO, acessa sua progressão, inventário, cartas, arcano e participa dos jogos disponíveis.
+Recebe uma cota inicial de 1 código de convite, podendo obter códigos adicionais como recompensa. A cota não se renova automaticamente.
+
+Eu adicionaria uma distinção entre aprovação das recompensas e aprovação da publicação da Deadly Vote. Inicialmente, apenas as recompensas precisam de aprovação, conforme sua regra. Posteriormente, você poderá exigir aprovação da missão inteira em eventos especiais.
+
+Cada recompensa deve possuir quantidade, destinatário, justificativa, evento de origem e responsável pela autorização.
+Regra essencial: um Dealer não pode modificar uma recompensa já aprovada e manter a autorização anterior. Qualquer alteração relevante devolve a proposta ao estado de aprovação pendente.
+
+Cada recompensa deve possuir quantidade, destinatário, justificativa, evento de origem e responsável pela autorização.
+Regra essencial: um Dealer não pode modificar uma recompensa já aprovada e manter a autorização anterior. Qualquer alteração relevante devolve a proposta ao estado de aprovação pendente.
+
+Um Dealer deve possuir um campo obrigatório de supervisor_id, apontando para seu Anfitrião.
+Isso permitirá que cada Anfitrião tenha um painel próprio contendo seus Dealers, eventos, propostas de recompensa e solicitações pendentes.
+Um Owner poderá transferir um Dealer para outro Anfitrião. As solicitações antigas devem preservar o histórico do supervisor original, mesmo após a transferência.
+
+
+Recompensas externas — aprovação obrigatória
+Quando o Anfitrião deseja conceder tempo, cartas, fragmentos ou outro recurso a um jogador fora de um evento autorizado, ele cria uma solicitação com destinatário, quantidade e justificativa.
+Um Owner pode aprovar, editar ou rejeitar a solicitação. A recompensa só é entregue após a aprovação.
+
+
+
+---
+
+# DEVO — Sistema de Cosméticos, Molduras, Emblemas e Identidade no Chat
+
+Quero que você desenvolva e integre ao DEVO um sistema completo de personalização visual de perfis e mensagens, incluindo **molduras de avatar, molduras de miniperfil, emblemas, balões de chat e efeitos especiais de identificação**.
+
+O objetivo é tornar os perfis visualmente únicos, estimular o colecionismo e criar uma identidade reconhecível para cada jogador, sem comprometer a estética sombria, refinada e misteriosa do DEVO.
+
+Utilize as imagens de referência que enviei como base artística. Você também pode buscar referências externas para enriquecer os conceitos, mas não copie diretamente os designs de outros jogos.
+
+## 1. Direção artística
+
+Os cosméticos devem seguir a identidade do DEVO, com inspirações em:
+
+- Fantasia gótica e vitoriana.
+- Ornamentos aristocráticos.
+- Baralhos, tarô e símbolos arcanos.
+- Relógios, ampulhetas e mecanismos.
+- Cassinos e jogos de azar.
+- Joias, metais ornamentados e vitrais.
+- Elementos sobrenaturais e misteriosos.
+- Motivos de animais associados aos Anfitriões.
+
+Quero designs elaborados, com personalidade e acabamento profissional.
+
+Evite molduras genéricas formadas apenas por contornos dourados, partículas aleatórias ou efeitos neon exagerados.
+
+Cada cosmético deve possuir uma identidade própria, com composição visual, detalhes e materiais coerentes.
+
+## 2. Molduras de avatar e miniperfil
+
+Desenvolva molduras em dois formatos principais:
+
+**Avatar:** molduras adaptadas à imagem principal do jogador, respeitando o formato já utilizado no perfil.
+
+**Miniperfil:** molduras quadradas, adaptadas aos avatares exibidos em chats, rankings, listas de participantes e outros componentes compactos.
+
+As molduras devem:
+
+- Enquadrar corretamente a imagem do jogador.
+- Preservar a visibilidade do rosto.
+- Adaptar-se a diferentes tamanhos.
+- Não distorcer a imagem.
+- Possuir versões adequadas para desktop e mobile.
+- Manter boa legibilidade mesmo em dimensões pequenas.
+
+Sempre que possível, utilize uma mesma identidade artística nos dois formatos.
+
+A moldura deve ser aplicada como uma camada independente sobre o avatar, sem modificar permanentemente a imagem original.
+
+### Molduras animadas
+
+Algumas molduras poderão possuir animações discretas, como:
+
+- Engrenagens girando lentamente.
+- Pequenos brilhos percorrendo ornamentos.
+- Chamas espectrais.
+- Pétalas ou penas flutuantes.
+- Ponteiros de relógio em movimento.
+- Cristais pulsando.
+- Efeitos arcanos sutis.
+
+Não quero animações excessivamente chamativas.
+
+Priorize movimentos elegantes, suaves e otimizados, que não prejudiquem a experiência mobile.
+
+Respeite também a preferência do usuário por movimento reduzido.
+
+## 3. Criar uma coleção inicial
+
+Não desenvolva apenas a estrutura vazia. Quero que você já crie uma primeira coleção de cosméticos, utilizando minhas referências.
+
+Sugestões iniciais de molduras:
+
+1. **Herança de Marfim:** filigranas prateadas, pérolas e ornamentos aristocráticos.
+2. **Relógio do Fim:** engrenagens, ponteiros e mecanismos antigos.
+3. **Pacto Carmesim:** rosas escuras, espinhos e detalhes vermelhos.
+4. **Olho do Arcano:** símbolos esotéricos e cristais violetas.
+5. **Banquete do Javali:** ornamentação luxuosa, dourado envelhecido e motivos de cassino.
+6. **Asas da Coruja:** penas delicadas, detalhes lunares e prata.
+7. **Fortuna do Rato:** moedas antigas, correntes finas e pequenos símbolos de trapaça.
+8. **Última Badalada:** moldura animada com um relógio sobrenatural.
+
+Esses são conceitos iniciais, não limitações. Sinta-se livre para propor designs ainda mais interessantes.
+
+Crie os cosméticos como assets reutilizáveis, preferencialmente com transparência e dimensões padronizadas.
+
+Não utilize emojis comuns como substitutos dos cosméticos definitivos.
+
+Se for necessário gerar artes externas, prepare os assets e a estrutura de integração sem apresentar ícones improvisados como resultado final.
+
+## 4. Sistema de emblemas
+
+Os emblemas serão pequenos símbolos colecionáveis exibidos ao lado do nome do jogador, no perfil e em outras áreas apropriadas.
+
+Utilize como referência os pequenos ícones ornamentados das imagens que enviei.
+
+Os emblemas devem ser visualmente sofisticados, mesmo em dimensões reduzidas.
+
+Exemplos:
+
+- Rosa de Sangue.
+- Coroa Partida.
+- Ampulheta Dourada.
+- Olho do Destino.
+- Chave Proibida.
+- Ás de Espadas.
+- Lua Escarlate.
+- Fragmento Celestial.
+- Engrenagem do Herdeiro.
+- Selo do Anfitrião.
+
+Cada emblema deve possuir nome, descrição, raridade, origem de obtenção e asset visual.
+
+Alguns emblemas poderão ser animados, mas apenas quando isso acrescentar valor à identidade do item.
+
+O jogador poderá possuir vários emblemas em sua coleção, mas inicialmente deverá equipar apenas um emblema principal.
+
+## 5. Balões e estilos de chat
+
+Crie cosméticos específicos para as mensagens.
+
+Os balões poderão modificar:
+
+- Contorno.
+- Fundo.
+- Ornamentos nas extremidades.
+- Pequenos símbolos decorativos.
+- Textura.
+- Efeitos luminosos.
+- Animações discretas.
+
+Exemplos de estilos:
+
+**Correspondência Real:** balão semelhante a uma carta aristocrática, com filigranas e detalhes em ouro.
+
+**Confissão Carmesim:** tons de vinho, bordas ornamentadas e rosas escuras.
+
+**Ecos do Arcano:** balão escuro com símbolos mágicos discretamente iluminados.
+
+**Último Suspiro:** tons frios e pequenos detalhes de relógio.
+
+**Mesa do Destino:** ornamentação inspirada em cartas e fichas de cassino.
+
+Os balões devem continuar fáceis de ler, inclusive em celulares pequenos.
+
+Não permita que ornamentos ou efeitos visuais atrapalhem a leitura das mensagens.
+
+## 6. Destaque especial de Owners e Anfitriões
+
+Owners e Anfitriões terão tratamentos visuais diferenciados no chat.
+
+Entretanto, existe uma regra fundamental:
+
+**A identidade de Owner não deve ser revelada publicamente.**
+
+### Owners
+
+Os Owners poderão utilizar:
+
+- Fonte especial para o nome.
+- Iluminação ou brilho discreto.
+- Emblemas exclusivos ou comuns.
+- Molduras especiais.
+- Balões personalizados.
+- Cosméticos de qualquer raridade.
+
+O destaque deve transmitir autoridade e mistério, sem apresentar explicitamente a palavra "Owner", "Administrador" ou qualquer informação que revele o cargo.
+
+Não exiba o cargo real em tooltips, inspeção de perfil, elementos públicos da interface ou dados públicos desnecessários.
+
+O cargo deve continuar protegido pelas permissões internas do sistema.
+
+### Anfitriões
+
+Os Anfitriões também possuirão destaque visual:
+
+- Nome com tipografia diferenciada.
+- Efeito luminoso próprio.
+- Emblema de Anfitrião.
+- Possibilidade de utilizar cosméticos exclusivos.
+
+Diferentemente dos Owners, a identidade de Anfitrião poderá ser exibida publicamente.
+
+Os efeitos de Owners e Anfitriões devem ser diferentes entre si, mas não devem permitir identificar automaticamente quem é Owner.
+
+### Personalização
+
+Os Owners poderão selecionar e equipar livremente qualquer cosmético disponível no catálogo, independentemente da raridade ou do método de obtenção.
+
+Isso não deve alterar as regras de obtenção dos jogadores comuns.
+
+## 7. Obtenção de cosméticos
+
+Os jogadores comuns não poderão selecionar gratuitamente qualquer cosmético do catálogo.
+
+As principais formas de obtenção serão:
+
+**Poço:** sistema de sorteio do DEVO, com probabilidades configuráveis e chances reduzidas para cosméticos raros.
+
+**Recompensas semanais:** premiações concedidas por participação, desempenho ou conquistas nos jogos.
+
+**Deadly Votes:** recompensas especiais de eventos, quando autorizadas.
+
+Os cosméticos podem ser permanentes inicialmente, mas a estrutura deve permitir cosméticos temporários no futuro.
+
+Não atribua probabilidades arbitrárias ao Poço sem verificar as configurações existentes.
+
+## 8. Recompensas semanais
+
+Desenvolva um sistema de configuração das recompensas semanais dos jogos.
+
+As recompensas possíveis incluem:
+
+- Cartas.
+- Emblemas.
+- Molduras de avatar.
+- Molduras de miniperfil.
+- Balões de chat.
+- Fragmentos de Arcano.
+- Tempo de vida.
+- Outros recursos futuramente adicionados.
+
+Os Owners poderão criar, editar e aprovar livremente as recompensas semanais.
+
+Os Anfitriões poderão selecionar e propor recompensas semanais, mas a permissão para definir e distribuir essas recompensas deverá ser concedida por um Owner.
+
+Essa autorização pode ser específica para um evento, uma semana ou um conjunto determinado de recompensas.
+
+Os Dealers não poderão aprovar recompensas semanais, mas poderão sugerir premiações para os jogos que organizarem, seguindo o fluxo de aprovação já existente.
+
+Todas as concessões devem possuir registro administrativo.
+
+## 9. Inventário de cosméticos
+
+Crie uma seção própria no perfil para os cosméticos obtidos.
+
+Organize em categorias:
+
+- Molduras.
+- Emblemas.
+- Balões de chat.
+- Efeitos especiais.
+
+O jogador deve conseguir:
+
+- Visualizar os cosméticos que possui.
+- Pré-visualizar um item antes de equipá-lo.
+- Equipar e desequipar cosméticos.
+- Consultar nome, descrição e raridade.
+- Ver como determinado cosmético foi obtido.
+- Identificar itens bloqueados.
+
+Os itens ainda não obtidos poderão aparecer no catálogo como silhuetas ou versões discretamente escurecidas, quando fizer sentido.
+
+A pré-visualização deve mostrar o próprio avatar e nome do jogador com o cosmético aplicado.
+
+## 10. Raridades
+
+Crie uma estrutura de raridades configurável.
+
+Sugestão inicial:
+
+- Comum.
+- Incomum.
+- Raro.
+- Épico.
+- Lendário.
+- Arcano.
+
+A raridade deve influenciar principalmente o acabamento artístico, a complexidade ornamental e a exclusividade.
+
+Não é obrigatório que todo cosmético lendário seja animado.
+
+Um design estático excepcional pode ser mais interessante do que uma animação excessiva.
+
+## 11. Integração com o sistema existente
+
+Antes de implementar, analise a arquitetura atual do DEVO.
+
+Reutilize os sistemas existentes de:
+
+- Autenticação.
+- Perfis.
+- Hierarquia de contas.
+- Inventário.
+- Poço.
+- Recompensas.
+- Deadly Votes.
+- Chat.
+- Rankings.
+
+Não crie sistemas paralelos desnecessários.
+
+Os cosméticos devem ser vinculados às contas e sincronizados em tempo real entre as áreas do site.
+
+Um jogador que altera sua moldura deve visualizar a mudança no perfil, miniperfil e chat sem precisar atualizar manualmente a página.
+
+As permissões devem ser validadas no backend, não apenas na interface.
+
+## 12. Otimização mobile
+
+O DEVO será utilizado principalmente em celulares.
+
+Portanto:
+
+- Evite animações pesadas.
+- Não utilize vídeos como molduras por padrão.
+- Prefira SVG, WebP, PNG transparente ou animações CSS leves, conforme o tipo de asset.
+- Reduza efeitos em listas extensas de mensagens.
+- Utilize carregamento sob demanda.
+- Evite múltiplos filtros de blur e glow simultâneos.
+- Preserve a fluidez do chat.
+- Respeite configurações de acessibilidade.
+- Ofereça opção de desativar animações cosméticas.
+
+Os cosméticos precisam manter qualidade visual mesmo em dispositivos intermediários.
+
+## 13. Administração de cosméticos
+
+Crie um painel administrativo para Owners gerenciarem o catálogo.
+
+Permitir:
+
+- Criar cosméticos.
+- Enviar assets.
+- Definir categoria.
+- Definir raridade.
+- Definir descrição.
+- Configurar animação.
+- Determinar disponibilidade.
+- Vincular cosméticos a recompensas.
+- Configurar disponibilidade no Poço.
+- Conceder ou revogar cosméticos.
+- Visualizar histórico de distribuição.
+
+Os Anfitriões poderão selecionar cosméticos existentes como recompensas quando possuírem autorização.
+
+Não conceda automaticamente a eles permissão para alterar o catálogo global.
+
+## 14. Critérios de qualidade
+
+Quero que o resultado pareça um sistema de personalização de um jogo comercial premium, não uma coleção de componentes genéricos de dashboard.
+
+Avalie criticamente:
+
+- Qualidade artística das molduras.
+- Fidelidade às referências enviadas.
+- Originalidade dos emblemas.
+- Legibilidade do chat.
+- Consistência entre avatar e miniperfil.
+- Qualidade das animações.
+- Organização do inventário.
+- Responsividade mobile.
+- Integração com o Poço.
+- Segurança das permissões.
+
+Não considere a tarefa concluída apenas porque as tabelas e os botões foram criados.
+
+O sistema precisa funcionar e possuir uma coleção inicial visualmente convincente.
+
+**Prioridade final: identidade artística, colecionismo, exclusividade, desempenho mobile e integração real com o universo DEVO.**
+
+os: owner pode escolher sempre qualquer cosmético que quiser.
+
+-----
+
+criação de um deadly vote tem atualmente os campos: local, descrição, data, horário, link, recompensas (n fica pública ao jogador). se precisar adicionar mais campos deie essa opção.após criado, o dono desse devo (deadly vote) pode aceitar as inscrições e  depois alterar os status (em andamento, cancelado, concluído, etc). após a conclusão, terá a lista de participantes e será decidido se o prêmio vai a todos, se um morreu, não compareceu, etc, antes de atualizar os perfis dos participantes.
+
+---------
+
+trabalhe sobre este sistema: https://docs.google.com/document/d/1IZ4cm3L4BMp79RSUj_F9dzeVOpuy7-Ix7J8D3EAQtzs/edit?usp=drivesdk
+
+--------
+
+E aí, mané! Qual é a tua?
+
+|
+
+Jogador:
+
+1 — Qual é a minha?
+2 — Quem é você?
+3 — Onde... Onde eu tô?
+
+|
+
+Respostas:
+
+1 — Hm? Sai daí, pô! Eu sou O Galo. Todos os bons me conhecem, tá ligado? Comigo não tem lenga-lenga, nem mimimi. Eu sou pura adrenalina!
+
+|
+
+Jogador:
+
+1 — Isso não faz sentido!
+2 — Tá...
+3 — O que significa essa fra—
+
+|
+
+Pode me chamar de O Melhor Contador de Histórias, se quiser. Também aceito Mestre do Universo, caso prefira. Agora, cala a boquinha, cala aí, que o maioral vai te mandar a real!
+
+|
+
+É chato esse tal de trabalho... Não é? Eu sei, eu sei. [Pausa dramática] Mas é pra isso que eu tô aqui!
+
+|
+
+Vou mandar o papo. Então presta atenção, sacou?
+
+|
+
+Dizem por aí que uma torre baixa nada mais é do que uma casa que se autointitula torre...
+
+|
+
+Besteira. [Dedo do meio censurado.]
+
+|
+
+As Torres de Ruptura são tipo essa parada aí. Uma das paradas fundamentais desse sistema mal-assombrado! É por meio delas que você, jogador newbie, consegue descobrir mais sobre esse mundão — incluindo sua condição como Record e outras coisinhas do tipo.
+
+|
+
+Jogador:
+
+1 — Record... Me disseram o que é, mas sinto que ainda não entendi direito.
+2 — Eu sou obrigado a participar dessas torres?
+3 — Como faço isso?
+
+|
+
+Respostas:
+
+1 — Gente que não presta.
+
+2 — Pode ser meio cansativo de vez em quando, mas, se quiser evoluir pra valer, é bom ficar de olho nessas belezinhas. E não, ninguém tá te obrigando a nada. A vida é tua, mané! Tu que sabe.
+
+3 — Calma, coisa fofa. É nessas horas que aquela parada estranha acontece...
+
+|
+
+Jogador:
+
+1 — Parada estranha?
+2 — ...
+
+|
+
+[Torre de Ruptura]
+
+Cada torre permite que você avance de maneira imersiva pela narrativa enquanto conquista algumas das diversas recompensas exclusivas disponíveis em seu interior.
+
+|
+
+[Sobre as Torres de Ruptura]
+
+As Torres de Ruptura possuem temáticas próprias e, normalmente, representam uma jornada de conexão entre seu personagem e o NPC em destaque. Elas podem integrar diretamente a trama principal ou funcionar como histórias específicas, com objetivos bastante variados.
+
+|
+
+Jogador:
+
+1 — Não aconteceu nada.
+2 — Você é maluco?
+
+|
+
+Resposta:
+
+Shhh... Quem precisa saber já sabe. Mas aí, mané! Presta bastante atenção agora, beleza?
+
+|
+
+Avançar numa torre nem sempre significa apenas cumprir as tarefas que aparecem pelo caminho tempestuoso da sua jornada...
+
+|
+
+Algumas delas exigirão algo que eu e meus parças chamamos de Essência de Afinidade.
+
+|
+
+Jogador:
+
+1 — Você tem amigos?
+2 — Parças?
+3 — Essência?
+
+|
+
+Respostas:
+
+1 — Aí, tá querendo apanhar, é?!
+
+2 — Os melhores entre os melhores, meu chapa!
+
+3 — Ah, essas belezuras você consegue fazendo favores e outras coisinhas por aí. Sabe como é, né? Uma mão lava a outra!
+
+| 
+
+Jogador:
+
+1 — Entendi...
+2 — Não sei se eu tô acompanhando.
+3 — Avisa quando for explicar direito.
+
+|
+
+Ah, shiu... Vai acontecer aquilo de novo.
+
+|
+
+[Essência de Afinidade]
+
+Uma Essência de Afinidade funciona como uma moeda de desbloqueio ou um ingresso. Só que, em vez de ser usada numa máquina qualquer, ela permite o acesso a novos andares que exijam uma quantidade e um tipo específicos de essência.
+
+Cada Essência de Afinidade corresponde a uma torre ou categoria específica de torre. Todas podem ser adquiridas por meio de interações com NPCs importantes.
+
+|
+
+Jogador:
+
+1 — Não aconteceu nada... De novo.
+2 — Você é mesmo maluco.
+
+|
+
+Aqui, ó! Se você aceitar ser meu fã, eu te dou uma dessas. E aí, qual vai ser?
+
+|
+
+Jogador:
+
+1 — *Recusar*
+2 — *Aceitar*
+
+|
+
+Respostas:
+
+1 — Sério? Poxa, que chatice...
+
+2 — BOA! Sabia que você era inteligente, mané! [O Galo entrega uma Essência de Afinidade do Galo, Anfitrião do Arcano do Imperador.]
+
+|
+
+Prontinho! Agora, se quiser saber quais essências você tem no momento e onde pode usá-las, basta dar uma olhadinha no inventário. O mesmo vale pras chaves, beleza?
+
+|
+
+Jogador:
+
+1 — Certo.
+2 — Chaves...?
+
+|
+
+Isso é tudo, pessoal! A gente se vê por aí. Bye-bye!
+
+|
+
+[Mensagem do sistema: O Galo desaparece sem se despedir adequadamente.]
+[Mensagem do sistema: Uma torre normalmente contém entre cinco e oito andares. A cada andar superado, o número de essências exigido para o próximo andar dobra. Por isso, esteja sempre consciente de onde deve ou não gastar seus valiosos recursos.]
+*Quando o jogador sai da aba de torres, ele também reflete sobre sua conversa com O Galo*
+
+“Aquele cara estava marcado como Anfitrião também. Dizia até que ele era o Anfitrião de alguma coisa… O quê?”
+
+*Jogador:*
+
+1. Não me lembro.  
+2. Anfitrião das Galinhas.  
+3. Anfitrião do Sol Celeste.  
+4. Anfitrião do Imperador.  
+5. Só Anfitrião mesmo.
+
+|
+
+*Todos exceto 4* — Encerra interação.
+
+*4* — Acho que era esse. Eu deveria perguntar a alguém sobre isso depois.
+
+------------
+
+
+sobre as torres. pegue as imagens referência (as penúltimas). terá um mapa com as torres secundárias e uma principal. ao clicar numa torre o usuário irá para outra tela (últimas duas imagens). para desbloquear um andar da campanha/torre principal, as vezes requere que tenha completado certa quantidade de andares de torres secundárias, cada uma entregando uma chave. os diálogos e npcs eu vou adicionando com o tempo e você vai pondo.
+
+--
+
+continue o que estava antes e separe agentes sob o mesmo critério para estas funções.

@@ -17,8 +17,12 @@ import { TimeDigits } from '../kit/time'
 import { Divider, Kicker } from '../kit/typography'
 import { SoundToggle } from '../shared/sound-toggle'
 import { callName, useDevo } from '../state/devo-store'
+import { usePlayerText } from '../state/player-text'
+import { playerText } from '@/lib/devo/player-name'
 import { DeadlyVoteSymbol } from '../system/symbol'
 import { useDeadlyVotes } from '../system/use-deadly-votes'
+import { useAcesso } from '../state/use-acesso'
+import type { UnlockFlag } from '@/lib/devo/progresso'
 import { formatVoteDate } from '@/lib/devo/deadly-votes'
 import { AppBackContext, type AppBack } from './app-back'
 import { useBackHandler } from '../use-back-handler'
@@ -290,7 +294,7 @@ function HomeScreen({
         <div className="min-w-0">
           <Kicker tone="gold">Record System · sessão ativa</Kicker>
           <p className="mt-1 truncate font-body text-[15px] italic text-dv-text-2">
-            Bem-vindo de volta{callName(state) ? <>, <span className="not-italic text-dv-text">{callName(state)}</span></> : null}.
+            {playerText('{Bem-vindo|Bem-vinda}', { gender: state.profile.gender })} de volta{callName(state) ? <>, <span className="not-italic text-dv-text">{callName(state)}</span></> : null}.
           </p>
         </div>
         <DeadlyVoteSymbol className="size-9 shrink-0 text-dv-gold/80" />
@@ -350,7 +354,7 @@ function HomeScreen({
         ) : null}
       </section>
 
-      <LockedSystems />
+      <LockedSystems onOpen={onOpen} />
 
       <div className="flex shrink-0 grow flex-col items-center justify-end gap-2 pb-3 pt-5 text-center">
         <Divider variant="filigree" tone="gold" className="animate-dv-fade w-56 opacity-60 [animation-delay:520ms]" />
@@ -423,6 +427,7 @@ function SummonsCard({ onOpen }: { onOpen: () => void }) {
   const { entries, isLoading } = useDeadlyVotes()
   const next = entries.find((e) => e.status === 'em-progresso' || e.status === 'convocado')?.vote
   const live = next?.status === 'em-progresso'
+  const say = usePlayerText()
   return (
     <button
       type="button"
@@ -447,7 +452,7 @@ function SummonsCard({ onOpen }: { onOpen: () => void }) {
             {next ? next.title : isLoading ? 'Consultando o Record…' : 'Nenhuma convocação ativa'}
           </span>
           <span className="block truncate font-body text-[14px] text-dv-text-2">
-            {next ? `${formatVoteDate(next.startsAt)}${next.joined ? ' · você está inscrito' : ' · inscrições abertas'}` : 'O Dealer convoca pelo Record. Fique atento.'}
+            {next ? `${formatVoteDate(next.startsAt)}${next.joined ? say(' · você está inscrit{o|a}') : ' · inscrições abertas'}` : say('O Dealer convoca pelo Record. Fique atent{o|a}.')}
           </span>
         </span>
         {next && (next.joined ? <StateSeal>Inscrito</StateSeal> : live ? <StateSeal tone="blood" live>Ao vivo</StateSeal> : null)}
@@ -522,28 +527,62 @@ function CriticalVignette() {
 }
 
 /**
- * Os seis sistemas reservados (Direção 2 §3) como emblemas trancados da mesma família: cinza a 60%
- * com cadeado. Informação, não botão.
+ * Os seis sistemas reservados (Direção 2 §3) como emblemas da mesma família: cinza a 60% com cadeado quando
+ * trancados. Os que já têm tela (`SYSTEM_OPEN`) viram botão: liberados acendem; trancados abrem a própria tela
+ * com o motivo (quem decide é o servidor, via `acesso`).
  */
-function LockedSystems() {
+const SYSTEM_OPEN: Partial<Record<FutureSystemId, { app: AppId; flag: UnlockFlag; nome: string }>> = {
+  poco: { app: 'poco', flag: 'poco', nome: 'Poço dos Milagres' },
+  mascaras: { app: 'salao', flag: 'salao_mascaras', nome: 'Salão das Máscaras' },
+  torres: { app: 'torres', flag: 'torres', nome: 'Torres de Ruptura' },
+}
+
+function LockedSystems({ onOpen }: { onOpen: (id: AppId) => void }) {
+  const acesso = useAcesso()
   return (
-    <section aria-label="Sistemas em breve" className="mt-5">
+    <section aria-label="Sistemas" className="mt-5">
       <div className="animate-dv-fade flex items-center gap-3 px-1 [animation-delay:520ms]">
-        <span className="dv-label text-[10px] text-dv-text-3">Em breve</span>
+        <span className="dv-label text-[10px] text-dv-text-3">Sistemas</span>
         <span aria-hidden="true" className="h-px flex-1 bg-gradient-to-r from-dv-line-strong to-transparent" />
         <span className="dv-label text-[10px] text-dv-text-3">Trancado pelo Anfitrião</span>
       </div>
       <ul className="animate-dv-fade mt-3 grid grid-cols-6 gap-1 [animation-delay:560ms]">
         {FUTURE_SYSTEMS.map((f) => {
           const E = SYSTEM_EMBLEMS[f.id]
-          return (
-            <li key={f.id} className="flex flex-col items-center gap-1.5" title={f.name}>
+          const open = SYSTEM_OPEN[f.id]
+          const livre = !!open && !!acesso?.sistemas[open.flag]
+          const icon = (
+            <>
               <span className="relative grid size-11 place-items-center">
-                <E className="size-9 text-dv-text-3 opacity-60" />
-                <GlyphKeyhole aria-hidden="true" className="absolute -bottom-0.5 -right-0.5 size-3.5 rounded-full bg-dv-ink p-[1px] text-dv-gold" />
+                {livre && <span aria-hidden="true" className="absolute inset-x-1 bottom-0 h-1/2 bg-[radial-gradient(50%_60%_at_50%_100%,rgba(138,124,200,0.5),transparent)]" />}
+                <E
+                  {...(livre ? { metal: true } : {})}
+                  className={cn('relative size-9', livre ? 'text-dv-text drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] group-active:scale-[0.96]' : 'text-dv-text-3 opacity-60')}
+                />
+                {!livre && <GlyphKeyhole aria-hidden="true" className="absolute -bottom-0.5 -right-0.5 size-3.5 rounded-full bg-dv-ink p-[1px] text-dv-gold" />}
               </span>
-              <span className="sr-only">{f.name}: bloqueado</span>
-              <span aria-hidden="true" className="dv-label line-clamp-2 text-center text-[10px] leading-[1.25] tracking-[0.06em] text-dv-text-3">{SHORT_NAME[f.id]}</span>
+              <span aria-hidden="true" className={cn('dv-label line-clamp-2 text-center text-[10px] leading-[1.25] tracking-[0.06em]', livre ? 'text-dv-text' : 'text-dv-text-3')}>
+                {SHORT_NAME[f.id]}
+              </span>
+            </>
+          )
+          return (
+            <li key={f.id} title={open?.nome ?? f.name}>
+              {open ? (
+                <button
+                  type="button"
+                  onClick={() => onOpen(open.app)}
+                  aria-label={livre ? open.nome : `${open.nome}: trancado`}
+                  className="dv-focus group flex w-full flex-col items-center gap-1.5"
+                >
+                  {icon}
+                </button>
+              ) : (
+                <div className="flex flex-col items-center gap-1.5">
+                  {icon}
+                  <span className="sr-only">{f.name}: bloqueado</span>
+                </div>
+              )}
             </li>
           )
         })}
@@ -686,7 +725,7 @@ function AppLayer({
         <AppGlyphTile app={app} size="sm" />
         <div className="min-w-0 flex-1 animate-dv-cut-in [animation-delay:120ms]">
           <p className="dv-label truncate text-[10px] tracking-[0.18em] text-dv-text-3">{app.subtitle}</p>
-          <h1 className="mt-1 truncate font-display text-[19px] font-semibold uppercase leading-none tracking-[0.08em] text-dv-text">{app.name}</h1>
+          <h1 className={cn('mt-1 truncate font-display font-semibold uppercase leading-[1.15] tracking-[0.08em] text-dv-text', app.name.length > 16 ? 'text-[16px] tracking-[0.05em]' : 'text-[19px]')}>{app.name}</h1>
         </div>
         <span aria-hidden="true" className="font-impact -skew-x-[8deg] text-[30px] font-semibold leading-none text-transparent [-webkit-text-stroke:1px_var(--dv-gold)]">
           {index}

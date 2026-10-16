@@ -1,10 +1,11 @@
 'use client'
 
-import type { CSSProperties } from 'react'
-import { Badge, type BadgeTone, GlyphArrow, GlyphGavel } from '@/components/devo/kit'
+import type { BadgeTone } from '@/components/devo/kit'
+import { GlyphGavel, PanelLink, RecordTitle } from '@/components/devo/kit'
 import { arcLabel, DEADLY_VOTE_STATUS, type DeadlyVoteEntry, type DeadlyVoteStatus, formatVoteDate, OUTCOME_LABEL } from '@/lib/devo/deadly-votes'
 import { cn } from '@/lib/utils'
-import { LinkAction, SectionHeading } from './primitives'
+import { usePlayerText } from '../state/player-text'
+import { STATUS_TEXT, StatusMark } from './record-ui'
 
 type HistoryProps = {
   entries: DeadlyVoteEntry[]
@@ -15,16 +16,21 @@ type HistoryProps = {
   onViewAll?: () => void
   className?: string
   title?: boolean
-  /** Índice romano do cabeçalho. */
-  index?: string
+  /** Título do bloco (padrão: "Deadly Votes", como na referência do Record). */
+  heading?: string
+  /** Legenda japonesa do título. */
+  jp?: string
   /** Texto de vazio (sobrepõe o padrão). */
   emptyText?: string
+  /** Mantido por compatibilidade (o interior não usa índice romano). */
+  index?: string
 }
 
+/** Tom do selo de estado no kit (para telas fora do interior). */
 export const STATUS_BADGE: Record<DeadlyVoteStatus, BadgeTone> = {
   convocado: 'cobalt',
-  'em-progresso': 'blood',
-  concluido: 'neutral',
+  'em-progresso': 'paper',
+  concluido: 'gold',
   cancelado: 'neutral',
   falha: 'blood',
 }
@@ -38,47 +44,57 @@ export function tallyText(survivors: number, eliminated: number) {
 }
 
 /**
- * Registro público dos Deadly Votes como arquivo de casos: cada linha é uma pasta numerada
- * (aba de papel com o número do caso), título, data, placar público e o seu resultado.
+ * Registro dos Deadly Votes em linha do tempo (ref. do Record): data à esquerda, nó do estado,
+ * nome do caso com pontilhado e o estado à direita. Cada um dos cinco estados tem marca própria
+ * (record-ui › StatusMark). Use dentro de um RecordPanel escuro ou sobre o papel.
  */
-export function DeadlyVoteHistory({ entries, limit, loading, error, onSelect, onViewAll, className, title = true, index, emptyText }: HistoryProps) {
+export function DeadlyVoteHistory({
+  entries,
+  limit,
+  loading,
+  error,
+  onSelect,
+  onViewAll,
+  className,
+  title = true,
+  heading = 'Deadly Votes',
+  jp = 'デッドリー・ボート履歴',
+  emptyText,
+}: HistoryProps) {
   const shown = limit ? entries.slice(0, limit) : entries
   return (
     <section aria-labelledby="dv-history" className={cn('flex flex-col', className)}>
-      {title && (
-        <SectionHeading
-          index={index}
-          kicker="Registro público"
-          title="Arquivo de casos"
-          jp="デッドリー・ボート履歴"
-          action={onViewAll && entries.length > (limit ?? Infinity) ? <LinkAction onClick={onViewAll}>Ver histórico completo</LinkAction> : undefined}
-        />
-      )}
+      {title ? (
+        <header className="relative flex items-center justify-between gap-3 pb-2.5">
+          <RecordTitle title={heading} jp={jp} />
+          {onViewAll && entries.length > (limit ?? Infinity) && <PanelLink label="Ver todos" onClick={onViewAll} className="shrink-0" />}
+          <span aria-hidden="true" className="absolute inset-x-0 bottom-0 h-px bg-[linear-gradient(90deg,var(--in-brass)_0%,color-mix(in_oklab,var(--in-brass)_35%,transparent)_45%,transparent_100%)]" />
+        </header>
+      ) : null}
       <h2 id="dv-history" className="sr-only">
         Histórico de Deadly Votes
       </h2>
       {loading && !entries.length ? (
-        <ul className="mt-3 flex flex-col gap-2" aria-busy="true">
+        <ul className="mt-2 flex flex-col" aria-busy="true">
           {[0, 1, 2].map((i) => (
-            <li key={i} className="flex h-[72px] items-center gap-3 border-b border-dv-line">
-              <span className="dv-cut-diag h-12 w-14 animate-pulse bg-dv-ink-4" style={{ '--dv-cut': '8px' } as CSSProperties} />
-              <span className="flex flex-1 flex-col gap-2">
-                <span className="h-3 w-2/3 animate-pulse bg-dv-ink-4" />
-                <span className="h-2.5 w-1/3 animate-pulse bg-dv-ink-3" />
-              </span>
+            <li key={i} className="flex h-[52px] items-center gap-3">
+              <span className="h-2.5 w-10 animate-pulse bg-in-fg/10" />
+              <span className="size-3 animate-pulse rounded-full bg-in-fg/15" />
+              <span className="h-3 flex-1 animate-pulse bg-in-fg/10" />
             </li>
           ))}
         </ul>
       ) : shown.length === 0 ? (
-        <div className="dv-stitch mt-3 flex flex-col items-center gap-2 px-5 py-7 text-center text-dv-text-3">
-          <GlyphGavel className="size-7 text-dv-gold/70" />
-          <p className="dv-label text-[11px] text-dv-text-2">{error ? 'Registro indisponível' : 'Nenhum caso arquivado'}</p>
-          <p className="max-w-[30ch] font-body text-[15px] leading-relaxed text-dv-text-2">
+        <div className="mt-3 flex flex-col items-center gap-2 px-5 py-6 text-center shadow-[inset_0_0_0_1px_var(--in-line)]">
+          <GlyphGavel className="size-7 text-in-brass" />
+          <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-in-fg-2">{error ? 'Registro indisponível' : 'Nenhum caso arquivado'}</p>
+          <p className="max-w-[30ch] font-body text-[15px] leading-relaxed text-in-fg-2">
             {error ? 'Não foi possível acessar o arquivo de votos agora.' : (emptyText ?? 'Os Deadly Votes encerrados aparecerão aqui, com o resultado de cada caso.')}
           </p>
         </div>
       ) : (
-        <ol className="mt-2 flex flex-col">
+        <ol className="relative mt-1.5 flex flex-col">
+          <span aria-hidden="true" className="absolute bottom-6 left-[65px] top-6 w-px bg-in-line-strong" />
           {shown.map((e, i) => (
             <DeadlyVoteHistoryItem key={e.id} entry={e} onSelect={onSelect} index={i} />
           ))}
@@ -91,54 +107,46 @@ export function DeadlyVoteHistory({ entries, limit, loading, error, onSelect, on
 export function DeadlyVoteHistoryItem({ entry, onSelect, index = 0 }: { entry: DeadlyVoteEntry; onSelect?: (entry: DeadlyVoteEntry) => void; index?: number }) {
   const meta = DEADLY_VOTE_STATUS[entry.status]
   const v = entry.vote
-  const live = entry.status === 'em-progresso'
+  const say = usePlayerText()
   const closed = entry.status === 'concluido' || entry.status === 'falha'
   const tally = closed ? tallyText(v.survivors, v.eliminated) : null
-  const sub = arcLabel(v.arc)
+  // Resultado do próprio jogador: concorda com o gênero dele.
+  const mine = v.outcome ? say(`Você · ${v.outcome === 'eliminado' ? 'Eliminad{o|a}' : OUTCOME_LABEL[v.outcome]}`) : v.joined ? say('Você · inscrit{o|a}') : null
+  const sub = [arcLabel(v.arc), tally].filter(Boolean).join(' · ')
   const content = (
     <>
-      {/* Aba de papel com o número do caso */}
-      <span
-        aria-hidden="true"
-        className={cn(
-          'dv-paper-bg dv-cut-diag flex w-14 shrink-0 flex-col items-center justify-center self-stretch py-1.5 text-dv-paper-ink',
-          entry.status === 'cancelado' && 'opacity-60',
-        )}
-        style={{ '--dv-cut': '9px' } as CSSProperties}
-      >
-        <span className="dv-label text-[10px] tracking-[0.14em] text-dv-paper-ink/60">Caso</span>
-        <span className="font-impact text-[22px] font-bold leading-none dv-tabular">{String(v.number).padStart(3, '0')}</span>
+      <span className="w-[46px] shrink-0 pt-[3px] font-mono text-[12px] tabular-nums tracking-[0.04em] text-in-fg-2">{formatVoteDate(entry.at)}</span>
+      <span className="grid w-[18px] shrink-0 place-items-center pt-[5px]">
+        <StatusMark status={entry.status} size={entry.status === 'em-progresso' ? 13 : 12} />
       </span>
       <span className="flex min-w-0 flex-1 flex-col gap-1">
-        <span className="flex items-baseline justify-between gap-2">
-          <span className={cn('truncate font-display text-[15px] font-semibold uppercase tracking-[0.06em] text-dv-text', entry.status === 'cancelado' && 'line-through decoration-dv-text-3')}>
-            {entry.title}
+        <span className="flex min-w-0 items-center gap-2">
+          <span className={cn('line-clamp-2 min-w-0 font-mono text-[12.5px] uppercase leading-snug tracking-[0.06em] text-in-fg', entry.status === 'cancelado' && 'text-in-fg-2')}>{entry.title}</span>
+          <span aria-hidden="true" className="h-px min-w-3 flex-1 bg-[repeating-linear-gradient(90deg,var(--in-line-strong)_0_1px,transparent_1px_4px)]" />
+        </span>
+        {(sub || mine) && (
+          <span className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-0.5 font-sans text-[12px] leading-snug text-in-fg-3">
+            {sub && <span className="line-clamp-1">{sub}</span>}
+            {mine && (
+              <span className={cn('font-mono text-[10px] uppercase tracking-[0.14em]', v.outcome === 'eliminado' ? 'text-in-alert' : 'text-in-accent')}>{mine}</span>
+            )}
           </span>
-          <span className="shrink-0 font-mono text-[11px] text-dv-text-3 dv-tabular">{formatVoteDate(entry.at)}</span>
-        </span>
-        {(sub || tally) && <span className="truncate font-body text-[14px] leading-snug text-dv-text-2">{[sub, tally].filter(Boolean).join(' · ')}</span>}
-        <span className="flex flex-wrap items-center gap-1.5">
-          <Badge tone={STATUS_BADGE[entry.status]} live={live}>
-            {meta.label}
-          </Badge>
-          {v.outcome ? (
-            <Badge tone={v.outcome === 'eliminado' ? 'blood' : 'cobalt'}>Você · {OUTCOME_LABEL[v.outcome]}</Badge>
-          ) : v.joined ? (
-            <Badge tone="paper">Inscrito</Badge>
-          ) : null}
-        </span>
+        )}
       </span>
-      {onSelect && <GlyphArrow className="size-4 shrink-0 self-center text-dv-text-3 transition-[transform,color] group-hover:translate-x-0.5 group-hover:text-dv-cobalt-text" />}
+      <span className={cn('flex max-w-[26%] shrink-0 items-center justify-end gap-1.5 pt-[3px] text-right font-sans text-[9.5px] font-medium uppercase leading-tight tracking-[0.08em]', STATUS_TEXT[entry.status])}>
+        {entry.status === 'em-progresso' && <span aria-hidden="true" className="size-1.5 shrink-0 animate-dv-blink rounded-full bg-current" />}
+        {meta.label}
+      </span>
     </>
   )
-  const base = cn('group relative flex w-full items-stretch gap-3 border-b border-dv-line py-3 text-left', live && 'bg-[linear-gradient(90deg,rgba(213,31,43,0.12),transparent_70%)]')
+  const base = 'group relative flex w-full items-start gap-2.5 py-3 text-left'
   return (
     <li style={{ animationDelay: `${Math.min(index, 8) * 60}ms` }} className="animate-dv-rise">
       {onSelect ? (
         <button
           type="button"
           onClick={() => onSelect(entry)}
-          className={cn(base, 'dv-focus transition-colors hover:bg-white/[0.03]')}
+          className={cn(base, 'dv-focus min-h-[52px] transition-colors hover:bg-in-fg/[0.04]')}
           aria-label={`${entry.title}, ${meta.label}, ${formatVoteDate(entry.at)}`}
         >
           {content}

@@ -67,6 +67,9 @@ async function step(name, fn) {
 }
 
 const btn = (page, name, exact = false) => page.getByRole('button', { name, exact }).first()
+/** Seção da Mesa da equipe no Record (Casos, Recompensas, Equipe, Jogadores, Convites, Registro, Ajustes). */
+const desk = (page, label) =>
+  page.getByRole('navigation', { name: 'Seções da mesa' }).getByRole('button', { name: new RegExp(`^${label}`) }).first()
 
 async function tryClick(locator, timeout = 2500) {
   try {
@@ -426,11 +429,16 @@ if (want('sistema') || want('apps') || want('jogos')) {
       await page.mouse.wheel(0, 800)
       await wait(600)
       await shot(page, '20-record-scroll')
-      for (const tab of ['Deadly Votes', 'Convites']) {
+      // Equipe (Veterano é Owner): a 3ª aba é a Mesa (casos, recompensas, equipe, convites…); Jogador vê "Convites".
+      for (const [tab, name] of [['Deadly Votes', 'deadly-votes'], ['Mesa', 'mesa']]) {
         if (await tryClick(page.getByRole('tab', { name: new RegExp(tab, 'i') }).first())) {
           await wait(1500)
-          await shot(page, `20-record-${tab.toLowerCase().replace(/\s+/g, '-')}`)
+          await shot(page, `20-record-${name}`)
         }
+      }
+      if (await tryClick(desk(page, 'Convites'))) {
+        await wait(1500)
+        await shot(page, '20-record-convites')
       }
     })
     // Record (área): foto com recorte, Shuffler embaralhando, cartaz → dossiê do caso, mesa do Dealer.
@@ -485,12 +493,14 @@ if (want('sistema') || want('apps') || want('jogos')) {
           await wait(800)
         }
       }
-      if (await tryClick(tab('Convites'))) {
+      if (await tryClick(tab('Mesa'))) {
         await wait(1500)
+        await tryClick(desk(page, 'Casos'))
+        await wait(900)
         await page.getByRole('heading', { name: /Mesa do Dealer/i }).first().scrollIntoViewIfNeeded().catch(() => {})
         await wait(1200)
         await shot(page, '20-record-dealer')
-        if (await tryClick(btn(page, /Registrar resultados/))) {
+        if (await tryClick(btn(page, /^(Inscrições|Registrar resultados) ·/))) {
           await wait(900)
           await shot(page, '20-record-dealer-resultados')
         }
@@ -501,6 +511,107 @@ if (want('sistema') || want('apps') || want('jogos')) {
           await shot(page, '20-record-dealer-convocar')
         }
       }
+    })
+    // Deadly Vote (Direção 2 §4): o admin lança uma edição, se inscreve, abre o caso e informa o link do
+    // grupo. Fotografa o inscrito com "Entrar no grupo", o caso em andamento sem inscrição, os cinco
+    // estados (livro + arquivo), os dossiês de falha/cancelado/andamento, a Mesa com o link e o Gerente.
+    await step('record-deadly-vote', async () => {
+      const post = (body) => api(page, '/api/record', body)
+      const made = await post({
+        action: 'create',
+        title: 'Valsa do Relógio Parado',
+        arc: 'Arco II',
+        briefing: 'Quem parar de dançar perde o compasso. Quem perder o compasso perde horas.',
+        startsAt: Date.now() - 20 * 60_000,
+        maxParticipants: 8,
+      })
+      const id = (() => {
+        try {
+          return JSON.parse(made.text).id
+        } catch {
+          return null
+        }
+      })()
+      if (!id) throw new Error(`create: ${made.status} ${made.text}`)
+      for (const body of [
+        { action: 'join', voteId: id },
+        { action: 'status', voteId: id, status: 'em-progresso' },
+        { action: 'group', voteId: id, groupUrl: 'https://chat.whatsapp.com/DevoTesteValsa0002' },
+      ]) {
+        const r = await post(body)
+        if (r.status >= 400) manifest.errors.push({ step: `record-deadly-vote-${body.action}`, error: `${r.status} ${r.text}` })
+      }
+      const tab = (name) => page.getByRole('tab', { name: new RegExp(name, 'i') }).first()
+      const toView = (sel, block = 'start') =>
+        page
+          .locator(sel)
+          .first()
+          .evaluate((el, b) => el.scrollIntoView({ block: b }), block)
+          .catch(() => {})
+      await openApp(page, 'Record')
+      await shot(page, '20-record-dv-gerente')
+      await toView('section[aria-label="Avisos do Gerente"]', 'center')
+      await wait(700)
+      await shot(page, '20-record-dv-gerente-aviso')
+      if (await tryClick(tab('Deadly Votes'))) {
+        await wait(1500)
+        await toView('article[aria-label="Convocação: Valsa do Relógio Parado"]')
+        await wait(700)
+        await shot(page, '20-record-dv-andamento')
+        await toView('article[aria-label="Convocação: Valsa do Relógio Parado"]', 'end')
+        await wait(600)
+        await shot(page, '20-record-dv-entrar-no-grupo')
+        await toView('article[aria-label="Convocação: Baile dos Ponteiros"]', 'end')
+        await wait(600)
+        await shot(page, '20-record-dv-nao-inscrito')
+        await toView('section[aria-label="Estados dos casos"]')
+        await wait(700)
+        await shot(page, '20-record-dv-estados')
+        for (const [name, file] of [
+          [/Torre Invertida/, '20-record-dv-dossie-falha'],
+          [/Jantar de Prata/, '20-record-dv-dossie-cancelado'],
+        ]) {
+          await toView('section[aria-labelledby="dv-history"]')
+          if (await tryClick(btn(page, name))) {
+            await wait(1400)
+            await shot(page, file)
+            await tryClick(btn(page, 'Todos os Deadly Votes'))
+            await wait(900)
+          }
+        }
+        await toView('[role="tablist"]')
+        if (await tryClick(btn(page, 'Ver dossiê do caso'))) {
+          await wait(1400)
+          await page.mouse.wheel(0, 700)
+          await wait(700)
+          await shot(page, '20-record-dv-dossie-andamento')
+          await tryClick(btn(page, 'Todos os Deadly Votes'))
+          await wait(800)
+        }
+      }
+      if (await tryClick(tab('Mesa'))) {
+        await wait(1800)
+        await tryClick(desk(page, 'Casos'))
+        await wait(900)
+        await toView('article[aria-label*="Valsa do Relógio Parado"]')
+        await wait(900)
+        await shot(page, '20-record-dealer-link')
+        await page.mouse.wheel(0, 420)
+        await wait(600)
+        await shot(page, '20-record-dealer-link-scroll')
+      }
+    })
+    // Record no desktop (janela), com o mesmo Veterano.
+    await step('record-desktop', async () => {
+      const d = await device('desktop')
+      await d.page.goto(BASE, { waitUntil: 'networkidle' })
+      const inn = await api(d.page, '/api/auth/sign-in/username', { username: 'Veterano', password: 'teste123' })
+      if (inn.status >= 400) throw new Error(`signin ${inn.status} ${inn.text}`)
+      await enterOS(d.page)
+      await d.page.getByRole('button', { name: 'Record', exact: true }).first().dblclick({ timeout: 10000 })
+      await wait(2600)
+      await shot(d.page, '20-record-desktop')
+      await d.ctx.close()
     })
     await step('pulso', async () => {
       await openApp(page, 'Pulso')
@@ -537,13 +648,42 @@ if (want('sistema') || want('apps') || want('jogos')) {
         // Ficha da carta (rola o diálogo) e o verso.
         await page.mouse.move(195, 600)
         await page.mouse.wheel(0, 600)
-        await wait(600)
-        await shot(page, '23-cartas-detalhe-ficha')
+        await wait(300)
+        // Garante a rolagem da ficha (o wheel no contexto touch nem sempre chega) e registra as medidas.
+        const sc = await dlg
+          .locator('.devo-scroll')
+          .first()
+          .evaluate((el) => {
+            if (el.scrollTop < 100) el.scrollTop = 600
+            return `scrollTop=${el.scrollTop} scrollHeight=${el.scrollHeight} clientHeight=${el.clientHeight}`
+          })
+          .catch((e) => String(e).slice(0, 120))
+        await wait(400)
+        await shot(page, '23-cartas-detalhe-ficha', sc)
+        await page.mouse.wheel(0, -900)
+        await wait(400)
         if (await tryClick(dlg.getByRole('button', { name: 'Verso', exact: true }).first())) {
-          await page.mouse.wheel(0, -900)
-          await wait(250)
+          // Congela o giro no meio (~240 ms de 760 ms ≈ 60°) para provar a virada e o brilho de aço.
+          await page
+            .waitForFunction(
+              () => {
+                const anims = document.getAnimations().filter((a) => a.effect?.target?.closest?.('[data-stage]'))
+                const flip = anims.find((a) => a.effect?.target?.hasAttribute?.('data-flip'))
+                if (!flip) return false
+                for (const a of anims) {
+                  a.pause()
+                  a.currentTime = a === flip || String(a.animationName ?? '').startsWith('dvcard-flash') ? 240 : a.currentTime
+                }
+                return true
+              },
+              null,
+              { timeout: 2000 },
+            )
+            .catch(() => {})
+          await wait(150)
           await shot(page, '23-cartas-detalhe-girando')
-          await wait(900)
+          await page.evaluate(() => document.getAnimations().forEach((a) => a.playState === 'paused' && a.play())).catch(() => {})
+          await wait(1100)
           await shot(page, '23-cartas-detalhe-verso')
         }
         await tryClick(dlg.getByRole('button', { name: 'Fechar', exact: true }).first())
@@ -637,16 +777,6 @@ if (want('sistema') || want('apps') || want('jogos')) {
       await page.mouse.wheel(0, 800)
       await wait(600)
       await shot(page, '25-ajustes-scroll')
-      // Reiniciar sessão: dois passos, salva no servidor, não pede convite.
-      await btn(page, 'Reiniciar sessão', true).click({ timeout: 3000 })
-      await wait(500)
-      await page.mouse.wheel(0, 800)
-      await shot(page, '25-ajustes-reiniciar-confirmar')
-      await btn(page, 'Sim, reiniciar', true).click({ timeout: 3000 })
-      await wait(2500)
-      await shot(page, '25-ajustes-reiniciar-feito')
-      await openApp(page, 'Pulso')
-      await shot(page, '25-ajustes-reiniciar-pulso')
     })
   }
 
@@ -787,7 +917,90 @@ if (want('apps')) {
   await ctx.close()
 }
 
-// ── 3. Partidas reais entre duas contas (fila online) ───────────────────────────────────
+// ── 2c. Gênero nos textos: a mesma conta escolhe "Feminino" no prólogo (convite 0006, Lumina) ──────────
+// Compare com o novato (Aurora escolhe a primeira opção, "Masculino") e com a Visitante (2b).
+if (want('genero')) {
+  // Retoma o prólogo pouco antes da pergunta de gênero (índice 32 = idade) pelo Continuar.
+  const { ctx, page } = await account('Lumina', 'DEVO-TEST-0006', [], 'phone', {
+    welcomed: false,
+    owlMet: false,
+    javaliMet: false,
+    profile: { appearanceChangesLeft: 1 },
+    story: { part: 'prologue', index: 32, vars: { name: 'Lumina' } },
+  })
+  await step('genero-prologo', async () => {
+    await page.goto(BASE, { waitUntil: 'networkidle' })
+    await wait(1000)
+    await btn(page, 'Continuar').click({ timeout: 15000 })
+    await wait(3600)
+    const seen = new Set()
+    // Fotografa a fala com o texto completo (espera a digitação terminar sozinha; Enter aqui avançaria).
+    const grab = async (key, re, name) => {
+      if (seen.has(key) || !(await page.getByText(re).count())) return false
+      seen.add(key)
+      await wait(2500)
+      await shot(page, name)
+      return true
+    }
+    for (let i = 0; i < 80; i++) {
+      await wait(700)
+      const fem = page.getByRole('button', { name: /^Feminino/ })
+      if (!seen.has('genero') && (await fem.count())) {
+        seen.add('genero')
+        await shot(page, '06-genero-escolha')
+        await tryClick(fem.first())
+        continue
+      }
+      if (!seen.has('aparencia') && (await page.getByRole('radiogroup', { name: 'Tipo de aparência' }).count())) {
+        seen.add('aparencia')
+        await tryClick(btn(page, 'Seleção automática'), 1500)
+        await wait(400)
+        await tryClick(btn(page, 'Responder', true), 1500)
+        continue
+      }
+      await grab('confusa', /Confusa sobre essa parte/, '06-genero-prologo-confusa')
+      await grab('estranha', /sentindo estranha agora/, '06-genero-prologo-estranha')
+      const thanks = page.getByRole('button', { name: /Obrigada\. Eu vou usar bem/ })
+      if (await thanks.count()) {
+        await wait(600)
+        await shot(page, '06-genero-prologo-obrigada')
+        await tryClick(thanks.first())
+        await wait(2500)
+        await shot(page, '06-genero-prologo-depois')
+        break
+      }
+      await advanceDialogue(page)
+    }
+  })
+  // Já no sistema: save pronto com o perfil feminino e as primeiras visitas por fazer.
+  await step('genero-sistema', async () => {
+    await page.close()
+    const p2 = await ctx.newPage()
+    await p2.goto(`${BASE}/images/card-back.png`)
+    await api(p2, '/api/save', makeSave(VET_CARDS, { owlMet: false, javaliMet: false, profile: { gender: 'Feminino', age: 24, appearanceChangesLeft: 1 } })).then(
+      (r) => r.status >= 400 && manifest.errors.push({ step: 'genero-save', error: `${r.status} ${r.text}` }),
+    )
+    await enterOS(p2)
+    await shot(p2, '07-genero-home')
+    await openApp(p2, 'Mensagens')
+    if (await tryClick(p2.getByRole('button', { name: /o rato/i }).first())) {
+      await wait(1500)
+      if (await tryClick(p2.locator('[aria-label="Escolhas de diálogo"] button').first())) {
+        await wait(6500)
+        await shot(p2, '07-genero-mensagens-rato')
+      }
+    }
+    await openApp(p2, 'Cartas')
+    await wait(2500)
+    await shot(p2, '07-genero-coruja')
+    await openApp(p2, 'Sala de Jogos')
+    await wait(1500)
+    await shot(p2, '07-genero-javali')
+  })
+  await ctx.close()
+}
+
+// ── 3. Partidas reais entre duas contas (fila online)───────────────────────────────────
 if (want('partidas')) {
   const A = await account('Veterano', 'DEVO-TEST-ADM1', VET_CARDS)
   const B = await account('Rival', 'DEVO-TEST-0002', ['fosforo', 'escudo', 'moeda', 'dado', 'ampulheta'])
@@ -1018,7 +1231,433 @@ if (want('estilo')) {
   })
 }
 
+// ── 3b. Staff e Deadly Vote (DIRECAO-3 §3/§4): a Mesa do Record por cargo ──────────────────────────────
+// Contas do seed ligadas a um login pelo cookie devo_player (ver 90-seed.sql): Matheus (jogador comum),
+// Narrador (Dealer), Mordomo (Anfitrião) e Sentinela (Owner, nunca revelado).
+if (want('staff')) {
+  const SEED = {
+    Matheus: '00000000-0000-4000-8000-000000000003',
+    Narrador: '00000000-0000-4000-8000-000000000006',
+    Mordomo: '00000000-0000-4000-8000-000000000011',
+    Sentinela: '00000000-0000-4000-8000-000000000010',
+  }
+  const seedAccount = async (name, invite) => {
+    const d = await device('phone')
+    await d.ctx.addCookies([{ name: 'devo_player', value: SEED[name], url: BASE }])
+    await d.page.goto(BASE, { waitUntil: 'networkidle' })
+    let up
+    for (let i = 0; i < 6; i++) {
+      up = await api(d.page, '/api/auth/sign-up/email', { email: hexEmail(name), password: 'teste123', name, username: name, displayUsername: name }, { 'x-devo-invite': invite })
+      if (up.status !== 429) break
+      await wait(11000)
+    }
+    if (up.status >= 400) {
+      const inn = await api(d.page, '/api/auth/sign-in/username', { username: name, password: 'teste123' })
+      if (inn.status >= 400) manifest.errors.push({ step: `staff-${name}-auth`, error: `signup ${up.status} ${up.text}; signin ${inn.status}` })
+    }
+    const saved = await api(d.page, '/api/save', makeSave(VET_CARDS))
+    if (saved.status >= 400) manifest.errors.push({ step: `staff-${name}-save`, error: `${saved.status} ${saved.text}` })
+    return d
+  }
+  const getJson = (page, path) => page.evaluate(async (p) => (await fetch(p)).json(), path)
+  const post = async (page, path, body, label) => {
+    const r = await api(page, path, body)
+    if (r.status >= 400) manifest.errors.push({ step: `staff-${label}`, error: `${r.status} ${r.text}` })
+    try {
+      return JSON.parse(r.text)
+    } catch {
+      return {}
+    }
+  }
+  const tabOf = (page, name) => page.getByRole('tab', { name: new RegExp(name, 'i') }).first()
+  const view = (page, sel, block = 'start') =>
+    page
+      .locator(sel)
+      .first()
+      .evaluate((el, b) => el.scrollIntoView({ block: b }), block)
+      .catch(() => {})
+  const openMesa = async (page) => {
+    await openApp(page, 'Record')
+    await tryClick(tabOf(page, 'Mesa'))
+    await wait(2000)
+  }
+  const section = async (page, label) => {
+    await view(page, 'nav[aria-label="Seções da mesa"]', 'start')
+    await tryClick(desk(page, label))
+    await wait(1800)
+  }
+
+  const mat = await seedAccount('Matheus', 'DEVO-STAF-MATH')
+  const nar = await seedAccount('Narrador', 'DEVO-STAF-NARR')
+  const mor = await seedAccount('Mordomo', 'DEVO-STAF-MORD')
+  const sen = await seedAccount('Sentinela', 'DEVO-STAF-SENT')
+
+  // Jogador comum: sem Mesa; pedido de inscrição em análise; cota de 1 convite.
+  await step('staff-jogador', async () => {
+    const page = mat.page
+    await openApp(page, 'Record')
+    await shot(page, '60-staff-jogador-record')
+    if (await tryClick(tabOf(page, 'Deadly Votes'))) {
+      await wait(1500)
+      await view(page, 'article[aria-label="Convocação: Leilão de Sombras"]', 'end')
+      await wait(700)
+      await shot(page, '60-staff-jogador-inscricao-em-analise')
+    }
+    if (await tryClick(tabOf(page, 'Convites'))) {
+      await wait(1500)
+      await shot(page, '60-staff-jogador-convites')
+    }
+  })
+
+  // Dealer: Mesa, inscrições, resultado por participante, aplicação (vai para aprovação), convocação e propostas.
+  await step('staff-dealer', async () => {
+    const page = nar.page
+    await openMesa(page)
+    await shot(page, '61-staff-dealer-mesa')
+    const leilao = 'article[aria-label*="Leilão de Sombras"]'
+    await view(page, `${leilao} button[aria-expanded]`, 'start')
+    await wait(700)
+    await shot(page, '61-staff-dealer-inscricoes')
+    if (await tryClick(page.locator(leilao).getByRole('button', { name: 'Aceitar Matheus', exact: true }))) {
+      await wait(1500)
+      await view(page, `${leilao} button[aria-expanded]`, 'start')
+      await wait(500)
+      await shot(page, '61-staff-dealer-inscricao-aceita')
+    }
+    const sala = 'article[aria-label*="A Sala Sem Relógio"]'
+    await view(page, `${sala} button[aria-expanded]`, 'start')
+    await wait(700)
+    await shot(page, '61-staff-dealer-decisao')
+    await view(page, '[aria-label="Resultado de Ísis"]', 'center')
+    await wait(500)
+    await shot(page, '61-staff-dealer-decisao-lista')
+    if (await tryClick(page.locator(sala).getByRole('button', { name: 'Prêmio para todos' }))) await wait(1500)
+    if (await tryClick(page.locator(sala).getByRole('button', { name: 'Aplicar aos perfis' }))) {
+      await wait(500)
+      await view(page, `${sala} button:has-text("Confirmar aplicação")`, 'center')
+      await wait(400)
+      await shot(page, '61-staff-dealer-aplicar-confirmar')
+      await tryClick(page.locator(sala).getByRole('button', { name: 'Confirmar aplicação' }))
+      await wait(2200)
+      await view(page, `${sala} button[aria-expanded]`, 'start')
+      await wait(600)
+      await shot(page, '61-staff-dealer-aplicado')
+    }
+    await view(page, 'nav[aria-label="Seções da mesa"]')
+    if (await tryClick(btn(page, 'Convocar', true))) {
+      await wait(900)
+      const form = page.getByRole('form', { name: 'Convocar Deadly Vote' })
+      await form.getByPlaceholder('Leilão de Sombras').fill('Vigília das Velas').catch(() => {})
+      await form.getByPlaceholder(/Salão principal/).fill('Capela do terceiro andar').catch(() => {})
+      await form.getByPlaceholder('O que os participantes precisam saber.').fill('Uma vela por pessoa. Quem deixar a sua apagar sai do caso.').catch(() => {})
+      await view(page, 'form[aria-label="Convocar Deadly Vote"]')
+      await wait(500)
+      await shot(page, '61-staff-dealer-convocar')
+      if (await tryClick(form.getByRole('button', { name: 'Adicionar recompensa' }))) {
+        await wait(800)
+        await tryClick(form.getByRole('button', { name: 'Incluir recompensa' }))
+        await wait(500)
+      }
+      await view(page, 'form[aria-label="Convocar Deadly Vote"] button[type=submit]', 'end')
+      await wait(500)
+      await shot(page, '61-staff-dealer-convocar-recompensas')
+      await tryClick(form.getByRole('button', { name: 'Convocar' }))
+      await wait(2000)
+    }
+    await section(page, 'Recompensas')
+    await shot(page, '61-staff-dealer-recompensas')
+    await page.mouse.wheel(0, 700)
+    await wait(600)
+    await shot(page, '61-staff-dealer-recompensas-scroll')
+  })
+
+  // Estado de erro: a Mesa sem resposta do servidor.
+  await step('staff-erro', async () => {
+    const page = await nar.ctx.newPage()
+    await page.route('**/api/record?view=staff*', (r) => r.fulfill({ status: 500, contentType: 'application/json', body: '{"ok":false,"error":"Falha no servidor do Record."}' }))
+    await openMesa(page)
+    await view(page, 'nav[aria-label="Seções da mesa"]')
+    await wait(600)
+    await shot(page, '61-staff-erro')
+    await page.close()
+  })
+
+  // Anfitrião: aprovações dos seus Dealers, tutorial vencido pela tela nova, equipe, jogadores e convites.
+  await step('staff-anfitriao', async () => {
+    const page = mor.page
+    await post(page, '/api/staff', {
+      action: 'recompensa.propor', tipo: 'externa', origem: 'Ajuda no evento de sábado', destinatarioId: SEED.Matheus,
+      recurso: 'tempo', quantidade: 90, justificativa: 'Organizou a fila de inscritos e trouxe dois jogadores.',
+    }, 'externa')
+    const t = await post(page, '/api/record', {
+      action: 'create', title: 'Voto de Iniciação', arc: 'Prólogo', location: 'Átrio do relógio', tutorial: true,
+      briefing: 'O primeiro voto de quem acabou de chegar.', startsAt: Date.now() - 3600_000,
+      prizes: [{ recurso: 'item', chave: 'dracma_comum', quantidade: 1, label: 'boas-vindas' }],
+    }, 'tutorial-criar')
+    if (t.id) {
+      await post(mat.page, '/api/record', { action: 'join', voteId: t.id }, 'tutorial-inscricao')
+      await post(page, '/api/record', { action: 'status', voteId: t.id, status: 'concluido' }, 'tutorial-concluir')
+    }
+    await openMesa(page)
+    await shot(page, '62-staff-anfitriao-mesa')
+    await section(page, 'Recompensas')
+    await shot(page, '62-staff-anfitriao-aprovacoes')
+    if (await tryClick(page.getByRole('button', { name: /^Aprovar e entregar a recompensa de/ }).first())) {
+      await wait(1800)
+      await shot(page, '62-staff-anfitriao-aprovado')
+    }
+    await section(page, 'Casos')
+    const tut = 'article[aria-label*="Voto de Iniciação"]'
+    if (await tryClick(page.locator(tut).getByRole('button', { name: 'Matheus: Recebe prêmio' }))) {
+      await wait(1500)
+      await view(page, `${tut} button[aria-expanded]`, 'start')
+      await wait(500)
+      await shot(page, '62-staff-anfitriao-tutorial-decisao')
+      if (await tryClick(page.locator(tut).getByRole('button', { name: 'Aplicar aos perfis' }))) {
+        await wait(400)
+        await tryClick(page.locator(tut).getByRole('button', { name: 'Confirmar aplicação' }))
+        await wait(2200)
+        await view(page, `${tut} button[aria-expanded]`, 'start')
+        await wait(500)
+        await shot(page, '62-staff-anfitriao-tutorial-aplicado')
+      }
+    }
+    const eu = await getJson(mat.page, '/api/eu').catch(() => null)
+    if (!eu?.desbloqueios?.poco) manifest.errors.push({ step: 'staff-tutorial-desbloqueio', error: `Matheus deveria ter o Poço liberado: ${JSON.stringify(eu?.desbloqueios)}` })
+    await section(page, 'Equipe')
+    await shot(page, '62-staff-anfitriao-equipe')
+    await section(page, 'Jogadores')
+    if (await tryClick(page.getByRole('button', { name: /^Lírio/ }).first())) {
+      await wait(1500)
+      await shot(page, '62-staff-anfitriao-jogador')
+    }
+    await section(page, 'Convites')
+    await shot(page, '62-staff-anfitriao-convites')
+  })
+
+  // Owner: selo neutro no Record (nunca "Owner"), Mesa completa, externas, vínculos, desbloqueios, registro e ajustes.
+  await step('staff-owner', async () => {
+    const page = sen.page
+    await openApp(page, 'Record')
+    await shot(page, '63-staff-owner-record')
+    await tryClick(tabOf(page, 'Mesa'))
+    await wait(2000)
+    await shot(page, '63-staff-owner-mesa')
+    await section(page, 'Recompensas')
+    await shot(page, '63-staff-owner-recompensas')
+    await section(page, 'Equipe')
+    await shot(page, '63-staff-owner-equipe')
+    await section(page, 'Jogadores')
+    if (await tryClick(page.getByRole('button', { name: /^Matheus/ }).first())) {
+      await wait(1600)
+      await view(page, '[role="switch"]', 'center')
+      await wait(500)
+      await shot(page, '63-staff-owner-jogador')
+    }
+    await section(page, 'Registro')
+    await shot(page, '63-staff-owner-registro')
+    await section(page, 'Ajustes')
+    await shot(page, '63-staff-owner-ajustes')
+  })
+
+  // Jogador depois do tutorial vencido: o Record com o resultado.
+  await step('staff-jogador-depois', async () => {
+    await openApp(mat.page, 'Record')
+    if (await tryClick(tabOf(mat.page, 'Deadly Votes'))) {
+      await wait(1500)
+      await view(mat.page, 'section[aria-labelledby="dv-history"]')
+      await wait(600)
+      await shot(mat.page, '60-staff-jogador-depois')
+    }
+  })
+
+  for (const d of [mat, nar, mor, sen]) await d.ctx.close()
+}
+
 // ── 4. Uma referência no desktop ────────────────────────────────────────────────────────
+// ── Torres de Ruptura (DIRECAO-3 §2): trancado, apresentação do Galo, mapa, torres, andares ─────────────
+// Convites DEVO-TORR-CAP1/2 (92-seed-torres.sql). O Owner (Veterano) libera a flag e concede essências pela
+// API da equipe, como faria no painel.
+if (want('torres')) {
+  const own = await account('Veterano', 'DEVO-TEST-ADM1', VET_CARDS)
+  const meuId = (page) => page.evaluate(async () => (await (await fetch('/api/eu')).json()).id)
+  const staff = async (body) => {
+    const r = await api(own.page, '/api/staff', body)
+    if (r.status >= 400) manifest.errors.push({ step: `torres-staff-${body.action}`, error: `${r.status} ${r.text}` })
+  }
+  const abrirTorres = async (page) => {
+    await page.getByRole('button', { name: /^Torres de Ruptura/ }).first().click({ timeout: 15000 })
+    await wait(2600)
+  }
+  /** Avança uma cena (Enter termina a digitação; outro Enter avança) até o diálogo `nome` sumir. */
+  const passarCena = async (page, nome, max = 30) => {
+    for (let i = 0; i < max; i++) {
+      if (!(await page.getByRole('dialog', { name: nome }).count())) return
+      const choices = page.locator('[aria-label="Sua resposta"] button:not([disabled])')
+      if (await choices.count()) await tryClick(choices.first())
+      else {
+        await page.keyboard.press('Enter')
+        await wait(250)
+        await page.keyboard.press('Enter')
+      }
+      await wait(650)
+    }
+  }
+
+  const A = await account('Torreada', 'DEVO-TORR-CAP1', VET_CARDS)
+  await step('torres-trancado', async () => {
+    await enterOS(A.page)
+    await wait(1200)
+    await A.page.getByRole('region', { name: 'Sistemas', exact: true }).scrollIntoViewIfNeeded().catch(() => {})
+    await wait(400)
+    await shot(A.page, 't01-torres-home-trancado')
+    await abrirTorres(A.page)
+    await shot(A.page, 't02-torres-trancado', 'jogador sem o tutorial: motivo')
+  })
+  await A.ctx.close()
+
+  const B = await account('Torreira', 'DEVO-TORR-CAP2', VET_CARDS)
+  const bid = await meuId(B.page).catch(() => null)
+  await staff({ action: 'desbloqueio.definir', playerId: bid, flag: 'torres', on: true })
+  const galo = 'O Galo apresenta as Torres de Ruptura'
+  await step('torres-galo', async () => {
+    const page = B.page
+    await enterOS(page)
+    await wait(1200)
+    await page.getByRole('region', { name: 'Sistemas', exact: true }).scrollIntoViewIfNeeded().catch(() => {})
+    await wait(400)
+    await shot(page, 't03-torres-home-liberado')
+    await abrirTorres(page)
+    await wait(1800)
+    await shot(page, 't10-galo-abertura')
+    const seen = new Set()
+    for (let i = 0; i < 90; i++) {
+      if (!(await page.getByRole('dialog', { name: galo }).count())) break
+      const choices = page.locator('[aria-label="Sua resposta"] button:not([disabled])')
+      const aceitar = page.locator('[aria-label="Sua resposta"] button').filter({ hasText: 'Aceitar' })
+      if (await aceitar.count()) {
+        await shot(page, 't13-galo-oferta')
+        await tryClick(aceitar.first())
+        await wait(900)
+        await shot(page, 't14-galo-essencia', '+1 Essência de Afinidade do Galo')
+        continue
+      }
+      if (await choices.count()) {
+        if (!seen.has('escolha')) {
+          seen.add('escolha')
+          await wait(500)
+          await shot(page, 't11-galo-escolha')
+        }
+        await tryClick(choices.first())
+        await wait(700)
+        continue
+      }
+      if (!seen.has('bloco') && (await page.getByText('Torre de Ruptura]').count())) {
+        seen.add('bloco')
+        await wait(900)
+        await shot(page, 't12-galo-bloco', 'quadro [Torre de Ruptura]')
+      }
+      if (!seen.has('fala') && (await page.getByText(/torre baixa nada mais/).count())) {
+        seen.add('fala')
+        await shot(page, 't11b-galo-fala')
+      }
+      if (!seen.has('sistema') && (await page.getByText(/entre cinco e oito andares/).count())) {
+        seen.add('sistema')
+        await shot(page, 't15-galo-sistema')
+      }
+      await page.keyboard.press('Enter')
+      await wait(300)
+      await page.keyboard.press('Enter')
+      await wait(600)
+    }
+    await wait(1500)
+    await shot(page, 't20-mapa')
+  })
+  await step('torres-principal', async () => {
+    const page = B.page
+    await page.getByRole('button', { name: 'Torre do Imperador', exact: true }).click({ timeout: 10000 })
+    await wait(250)
+    await shot(page, 't21a-transicao')
+    await wait(1400)
+    await shot(page, 't21-torre-principal')
+    await page.getByRole('button', { name: /^Andar I:/ }).first().click({ timeout: 8000 })
+    await wait(900)
+    await shot(page, 't22-andar-ficha')
+    await btn(page, 'Subir ao andar I').click({ timeout: 8000 })
+    await wait(2200)
+    await shot(page, 't23-andar-cena')
+    await passarCena(page, /Torre do Imperador · Andar I$/)
+    await wait(700)
+    await shot(page, 't24-andar-concluido', 'andar I concluído; II trancado por essência e chave')
+    await btn(page, 'Voltar ao mapa').click({ timeout: 8000 })
+    await wait(1200)
+    await shot(page, 't25-mapa-progresso')
+  })
+  await step('torres-reflexao', async () => {
+    const page = B.page
+    await btn(page, 'Voltar ao início').click({ timeout: 8000 })
+    await wait(1800)
+    await shot(page, 't30-reflexao')
+    for (let i = 0; i < 6 && !(await page.locator('[aria-label="Sua resposta"] button').count()); i++) {
+      await page.keyboard.press('Enter')
+      await wait(500)
+    }
+    await wait(600)
+    await shot(page, 't31-reflexao-escolha')
+    await tryClick(page.locator('[aria-label="Sua resposta"] button').filter({ hasText: 'Anfitrião do Imperador' }).first())
+    await wait(2600)
+    await shot(page, 't32-reflexao-resposta')
+    await passarCena(page, 'Anfitrião de quê?', 6)
+  })
+  await staff({ action: 'item.conceder', playerId: bid, item: 'essencia:coruja', quantidade: 1, motivo: 'captura' })
+  await step('torres-secundaria', async () => {
+    const page = B.page
+    await enterOS(page)
+    await abrirTorres(page)
+    await page.getByRole('button', { name: 'Torre do Observatório', exact: true }).click({ timeout: 10000 })
+    await wait(1600)
+    await shot(page, 't40-torre-secundaria')
+    await page.getByRole('button', { name: /^Andar I:/ }).first().click({ timeout: 8000 })
+    await wait(800)
+    await btn(page, 'Subir ao andar I').click({ timeout: 8000 })
+    await wait(1500)
+    await passarCena(page, /Torre do Observatório · Andar I$/)
+    await wait(500)
+    await shot(page, 't41-secundaria-chave', '+1 Chave do Observatório')
+    await btn(page, 'Voltar ao mapa').click({ timeout: 8000 })
+    await wait(1200)
+    await page.getByRole('button', { name: 'Torre do Imperador', exact: true }).click({ timeout: 10000 })
+    await wait(1600)
+    await page.getByRole('button', { name: /^Andar II:/ }).first().click({ timeout: 8000 })
+    await wait(900)
+    await shot(page, 't42-andar-trancado-essencia', 'tem a chave; faltam 2 essências')
+  })
+  await staff({ action: 'item.conceder', playerId: bid, item: 'essencia:galo', quantidade: 2, motivo: 'captura' })
+  await step('torres-chave', async () => {
+    const page = B.page
+    await enterOS(page)
+    await abrirTorres(page)
+    await page.getByRole('button', { name: 'Torre do Imperador', exact: true }).click({ timeout: 10000 })
+    await wait(1600)
+    await page.getByRole('button', { name: /^Andar II:/ }).first().click({ timeout: 8000 })
+    await wait(800)
+    await btn(page, 'Subir ao andar II').click({ timeout: 8000 })
+    await wait(1500)
+    await passarCena(page, /Torre do Imperador · Andar II$/)
+    await wait(500)
+    await page.getByRole('button', { name: /^Andar III:/ }).first().click({ timeout: 8000 })
+    await wait(900)
+    await shot(page, 't43-andar-trancado-chave', 'falta a chave do Picadeiro')
+    await page.keyboard.press('Escape')
+    await wait(600)
+    await page.getByRole('button', { name: /^Andar I:/ }).first().click({ timeout: 8000 })
+    await wait(900)
+    await shot(page, 't44-andar-concluido-ficha', 'concluído: Rever cena')
+  })
+  await B.ctx.close()
+  await own.ctx.close()
+}
+
 if (want('desktop')) {
   await step('desktop', async () => {
     const { ctx, page } = await device('desktop')
@@ -1045,6 +1684,395 @@ if (want('desktop')) {
     await shot(page, '92-desktop-avisos')
     await ctx.close()
   })
+}
+
+// ── Poço dos Milagres (sistema novo, DIRECAO-3 §2) ─────────────────────────────────────────
+// Brasa (DEVO-POCO-0001) recebe as flags do Poço e do Diário pelo banco (como se tivesse vencido o tutorial);
+// Cinza (DEVO-POCO-0002) continua trancada. As probabilidades são forçadas pelo banco só para fotografar o
+// lixo e o resultado raro, e voltam ao valor original no fim.
+if (want('poco')) {
+  let db = null
+  try {
+    const pg = (await import('pg')).default
+    if (process.env.DATABASE_URL) db = new pg.Pool({ connectionString: process.env.DATABASE_URL })
+  } catch {}
+  const sql = async (text, params) => (db ? (await db.query(text, params)).rows : [])
+  const original = (await sql("SELECT value FROM devo_config WHERE key = 'poco.probabilidades'").catch(() => []))[0]?.value
+  const forcar = async (moeda, cat) => {
+    if (!original) return
+    const v = { ...original, [moeda]: { lixo: 0, capsula: 0, fragmento: 0, essencia: 0, cosmetico: 0, [cat]: 100 } }
+    await sql("UPDATE devo_config SET value = $1 WHERE key = 'poco.probabilidades'", [JSON.stringify(v)])
+  }
+  const restaurar = async () => original && sql("UPDATE devo_config SET value = $1 WHERE key = 'poco.probabilidades'", [JSON.stringify(original)])
+  const abrirPoco = async (page, name) => {
+    await enterOS(page)
+    const b = page.getByRole('button', { name, exact: true }).first()
+    await b.waitFor({ state: 'visible', timeout: 15000 })
+    await b.scrollIntoViewIfNeeded().catch(() => {})
+    await tryClick(b, 8000)
+    await wait(2600)
+  }
+  const fala = (page) => page.getByRole('button', { name: /^(Próxima fala|Mostrar fala completa)$/ }).first()
+  const escolhas = (page) => page.locator('[aria-label="Escolhas de diálogo"] button:not([disabled])')
+
+  await step('poco-trancado', async () => {
+    const { ctx, page } = await account('Cinza', 'DEVO-POCO-0002', VET_CARDS)
+    await enterOS(page)
+    await page.getByRole('region', { name: 'Sistemas' }).first().scrollIntoViewIfNeeded().catch(() => {})
+    await wait(600)
+    await shot(page, 'poco-00-home-trancado')
+    await abrirPoco(page, 'Poço dos Milagres: trancado')
+    await shot(page, 'poco-01-trancado')
+    await ctx.close()
+  })
+
+  const { ctx, page } = await account('Brasa', 'DEVO-POCO-0001', VET_CARDS)
+  await sql(
+    "INSERT INTO player_unlocks (player_id, flag, source) SELECT id, f, 'owner' FROM players, unnest(ARRAY['poco','diario']) f WHERE lower(name) = 'brasa' ON CONFLICT DO NOTHING",
+  ).catch((e) => manifest.errors.push({ step: 'poco-flags', error: String(e).slice(0, 300) }))
+
+  await step('poco-diario-vazio', async () => {
+    await openApp(page, 'Record')
+    await tryClick(page.getByRole('tab', { name: /Diário/ }).first())
+    await wait(1500)
+    await shot(page, 'poco-02-diario-vazio')
+  })
+
+  await step('poco-neblina', async () => {
+    await enterOS(page)
+    await page.getByRole('region', { name: 'Sistemas' }).first().scrollIntoViewIfNeeded().catch(() => {})
+    await wait(800)
+    await shot(page, 'poco-03-home-liberado')
+    await abrirPoco(page, 'Poço dos Milagres')
+    await shot(page, 'poco-04-neblina-rua')
+    const vistos = new Set()
+    const marcar = async (re, nome) => {
+      if (vistos.has(nome)) return
+      if (await page.getByText(re).count()) {
+        vistos.add(nome)
+        await tryClick(page.getByRole('button', { name: 'Mostrar fala completa' }).first(), 800)
+        await wait(1200)
+        await shot(page, nome)
+      }
+    }
+    for (let i = 0; i < 120; i++) {
+      if (!(await page.locator('main[aria-label="Poço dos Milagres: apresentação"]').count())) break
+      const ops = escolhas(page)
+      if (await ops.count()) {
+        await wait(700)
+        if (!vistos.has('poco-06-neblina-escolha-moeda') && (await page.getByText('Usar moeda especial (se houver).').count())) {
+          vistos.add('poco-06-neblina-escolha-moeda')
+          await shot(page, 'poco-06-neblina-escolha-moeda')
+        }
+        const sim = page.locator('[aria-label="Escolhas de diálogo"] button', { hasText: 'Sim, por favor.' })
+        if (await sim.count()) await tryClick(sim.first())
+        else await tryClick(ops.first())
+        await wait(600)
+        continue
+      }
+      await marcar(/Ao se aproximar, você descobre um poço milenar/, 'poco-05-neblina-poco')
+      await marcar(/alguém se aproxima/, 'poco-07-neblina-figura')
+      await marcar(/o mais puro osso/, 'poco-08-neblina-mao')
+      await marcar(/Você recebeu um Dracma/, 'poco-09-neblina-dracma')
+      await marcar(/Nunca tente entrar no poço/, 'poco-10-neblina-aviso')
+      await tryClick(fala(page), 1500)
+      await wait(260)
+    }
+    await wait(1500)
+    await shot(page, 'poco-11-tela')
+  })
+
+  await step('poco-moedas', async () => {
+    await tryClick(btn(page, 'Suas moedas', true))
+    await wait(900)
+    await shot(page, 'poco-12-moedas')
+    await page.keyboard.press('Escape')
+    await wait(600)
+  })
+
+  await step('poco-baldes', async () => {
+    await tryClick(btn(page, 'Inspecionar Balde', true))
+    await wait(900)
+    await shot(page, 'poco-13-baldes-bloqueado')
+    await page.keyboard.press('Escape')
+    await wait(600)
+  })
+
+  await step('poco-giro-lixo', async () => {
+    await forcar('dracma_comum', 'lixo')
+    await tryClick(btn(page, 'Lançar Moeda', true))
+    await wait(900)
+    await shot(page, 'poco-14-lancar')
+    await tryClick(btn(page, 'Usar o giro grátis', true))
+    await wait(500)
+    await shot(page, 'poco-15-moeda-caindo')
+    await wait(900)
+    await tryClick(btn(page, 'Girar Manivela', true))
+    await wait(1100)
+    await shot(page, 'poco-16-minigame')
+    for (let k = 0; k < 3; k++) {
+      await tryClick(page.getByRole('button', { name: 'Puxar a manivela' }).first(), 1500)
+      await wait(450)
+    }
+    await wait(350)
+    await shot(page, 'poco-17-minigame-fim')
+    await wait(1400)
+    await shot(page, 'poco-18-balde-subindo')
+    await wait(2200)
+    await tryClick(btn(page, 'Inspecionar Balde', true))
+    await wait(1400)
+    await shot(page, 'poco-19-resultado-lixo')
+    await tryClick(btn(page, 'Devolver ao poço', true))
+    await wait(900)
+    await shot(page, 'poco-20-giro-gratis-usado')
+    await tryClick(btn(page, 'Lançar Moeda', true))
+    await wait(900)
+    await shot(page, 'poco-21-lancar-gratis-usado')
+    await page.keyboard.press('Escape')
+    await wait(600)
+  })
+
+  await step('poco-giro-raro', async () => {
+    await forcar('dracma_incomum', 'capsula')
+    await tryClick(btn(page, 'Lançar Moeda', true))
+    await wait(800)
+    await tryClick(btn(page, 'Lançar Dracma Incomum', true))
+    await wait(1500)
+    await tryClick(btn(page, 'Girar Manivela', true))
+    await wait(1000)
+    await tryClick(btn(page, 'Soltar a manivela', true))
+    await wait(3800)
+    await tryClick(btn(page, 'Inspecionar Balde', true))
+    await wait(1600)
+    await shot(page, 'poco-22-resultado-raro')
+    await tryClick(btn(page, 'Guardar', true))
+    await wait(800)
+  })
+  await restaurar()
+
+  await step('poco-diario', async () => {
+    await openApp(page, 'Record')
+    await tryClick(page.getByRole('tab', { name: /Diário/ }).first())
+    await wait(1500)
+    await shot(page, 'poco-23-diario')
+  })
+  await ctx.close()
+
+  await step('poco-owner', async () => {
+    const o = await account('Veterano', 'DEVO-TEST-ADM1', VET_CARDS)
+    await abrirPoco(o.page, 'Poço dos Milagres')
+    await shot(o.page, 'poco-24-owner-cena-pular')
+    if (await tryClick(btn(o.page, 'Pular apresentação', true))) await wait(1800)
+    await tryClick(btn(o.page, 'Suas moedas', true))
+    await wait(900)
+    await o.page.getByRole('region', { name: 'Probabilidades do Poço' }).first().scrollIntoViewIfNeeded().catch(() => {})
+    await wait(500)
+    await shot(o.page, 'poco-25-owner-probabilidades')
+    await o.ctx.close()
+  })
+  await db?.end().catch(() => {})
+}
+
+// ── Salão das Máscaras (sistema novo, DIRECAO-3 §2) ────────────────────────────────────────
+// Fosca (DEVO-SALA-0002) continua trancada; Velada (DEVO-SALA-0001) recebe a flag pelo banco. O estado aberto/fechado
+// é forçado pelo banco (salao.calendario.forcar, como o Owner faria) e os lotes do seed passam para a próxima edição
+// enquanto o Salão está fechado (para não serem liquidados) e voltam à edição corrente quando ele abre.
+if (want('salao')) {
+  let db = null
+  try {
+    const pg = (await import('pg')).default
+    if (process.env.DATABASE_URL) db = new pg.Pool({ connectionString: process.env.DATABASE_URL })
+  } catch {}
+  const sql = async (text, params) => (db ? (await db.query(text, params)).rows : [])
+  const cal = (await sql("SELECT value FROM devo_config WHERE key = 'salao.calendario'").catch(() => []))[0]?.value
+  const edicao = async () =>
+    (await sql(
+      `SELECT floor(extract(epoch FROM now() - (value->>'ancora')::timestamptz) / ((value->>'intervalo_dias')::numeric * 86400))::int AS n
+         FROM devo_config WHERE key = 'salao.calendario'`,
+    ).catch(() => []))[0]?.n ?? 0
+  const SEED_LOTES = ['5a1a0001-0000-4000-8000-000000000001', '5a1a0001-0000-4000-8000-000000000002', '5a1a0001-0000-4000-8000-000000000003']
+  const estado = async (forcar) => {
+    if (!cal) return
+    await sql("UPDATE devo_config SET value = $1 WHERE key = 'salao.calendario'", [JSON.stringify({ ...cal, forcar })]).catch((e) => manifest.errors.push({ step: 'salao-config', error: String(e).slice(0, 200) }))
+    const n = await edicao()
+    await sql("UPDATE salao_lotes SET edicao = $2 WHERE id = ANY($1) AND status = 'aprovado'", [SEED_LOTES, forcar === 'fechado' ? n + 1 : n]).catch(() => {})
+  }
+  const abrirSalao = async (page, name = 'Salão das Máscaras') => {
+    await enterOS(page)
+    const b = page.getByRole('button', { name, exact: true }).first()
+    await b.waitFor({ state: 'visible', timeout: 15000 })
+    await b.scrollIntoViewIfNeeded().catch(() => {})
+    await tryClick(b, 8000)
+    await wait(2800)
+  }
+  const aba = async (page, nome) => {
+    await page.getByRole('tablist', { name: 'Seções do Salão' }).first().scrollIntoViewIfNeeded().catch(() => {})
+    await tryClick(page.getByRole('tab', { name: new RegExp(`^${nome}`) }).first())
+    await wait(1100)
+    await page
+      .getByRole('tablist', { name: 'Seções do Salão' })
+      .first()
+      .evaluate((el) => el.scrollIntoView({ block: 'start' }))
+      .catch(() => {})
+    await wait(400)
+  }
+
+  await estado('fechado')
+
+  await step('salao-trancado', async () => {
+    const { ctx, page } = await account('Fosca', 'DEVO-SALA-0002', VET_CARDS)
+    await enterOS(page)
+    await page.getByRole('region', { name: 'Sistemas' }).first().scrollIntoViewIfNeeded().catch(() => {})
+    await wait(600)
+    await shot(page, 'salao-00-home-trancado')
+    await abrirSalao(page, 'Salão das Máscaras: trancado')
+    await shot(page, 'salao-01-trancado')
+    await ctx.close()
+  })
+
+  const { ctx, page } = await account('Velada', 'DEVO-SALA-0001', VET_CARDS)
+  await sql(
+    "INSERT INTO player_unlocks (player_id, flag, source) SELECT id, 'salao_mascaras', 'owner' FROM players WHERE lower(name) = 'velada' ON CONFLICT DO NOTHING",
+  ).catch((e) => manifest.errors.push({ step: 'salao-flag', error: String(e).slice(0, 300) }))
+
+  await step('salao-herdeiro', async () => {
+    await abrirSalao(page)
+    await wait(800)
+    await shot(page, 'salao-02-herdeiro-inicio')
+    const vistos = new Set()
+    const marcar = async (re, nome) => {
+      if (vistos.has(nome) || !(await page.getByText(re).count())) return
+      vistos.add(nome)
+      await tryClick(page.getByRole('button', { name: 'Mostrar fala completa' }).first(), 800)
+      await wait(900)
+      await shot(page, nome)
+    }
+    for (let i = 0; i < 60; i++) {
+      if (!(await page.locator('main[aria-label="Salão das Máscaras: apresentação"]').count())) break
+      await marcar(/Este é o/, 'salao-03-herdeiro-salao')
+      await marcar(/aquele número enorme/, 'salao-04-herdeiro-contador')
+      await marcar(/aba chamada/, 'salao-05-herdeiro-bandeja')
+      await marcar(/o único maestro sou eu/, 'salao-06-herdeiro-fim')
+      await tryClick(page.getByRole('button', { name: /^(Próxima fala|Mostrar fala completa)$/ }).first(), 1500)
+      await wait(220)
+    }
+    await wait(1600)
+    await shot(page, 'salao-07-fechado-contador')
+    await aba(page, 'Leilões')
+    await shot(page, 'salao-08-fechado-proxima-edicao')
+  })
+
+  await estado('aberto')
+  await step('salao-aberto', async () => {
+    await abrirSalao(page)
+    await shot(page, 'salao-09-aberto')
+    await aba(page, 'Leilões')
+    await shot(page, 'salao-10-leilao-lotes')
+    await tryClick(page.getByRole('button', { name: 'Dar lance no lote 3' }).first())
+    await wait(1000)
+    await shot(page, 'salao-11-lance-folha')
+    await tryClick(btn(page, 'Aumentar 10 minutos', true))
+    await wait(300)
+    await tryClick(btn(page, 'Confirmar lance', true))
+    await wait(1800)
+    await page.getByRole('region', { name: /Lote 3:/ }).first().scrollIntoViewIfNeeded().catch(() => {})
+    await wait(500)
+    await shot(page, 'salao-12-leilao-voce-lidera')
+  })
+
+  await step('salao-mercado', async () => {
+    await aba(page, 'Mercado')
+    await shot(page, 'salao-13-mercado')
+    await tryClick(btn(page, 'Vender carta', true))
+    await wait(900)
+    await shot(page, 'salao-14-mercado-vender')
+    await page.keyboard.press('Escape')
+    await wait(600)
+  })
+
+  await step('salao-anuncios', async () => {
+    await aba(page, 'Anúncios')
+    await shot(page, 'salao-15-anuncios')
+    await tryClick(btn(page, 'Anunciar', true))
+    await wait(900)
+    await shot(page, 'salao-16-anuncio-novo')
+    await page.keyboard.press('Escape')
+    await wait(600)
+  })
+
+  await step('salao-bandeja', async () => {
+    await aba(page, 'Bandeja')
+    await shot(page, 'salao-17-bandeja-aviso')
+    await tryClick(btn(page, 'Enviar pelo Shuffler', true))
+    await wait(900)
+    await shot(page, 'salao-18-bandeja-escolher')
+    await tryClick(page.getByRole('button', { name: 'Escolher Ampulheta Invertida' }).first())
+    await wait(700)
+    await page.locator('#salao-bandeja-valor').first().scrollIntoViewIfNeeded().catch(() => {})
+    await shot(page, 'salao-19-bandeja-carta')
+    await tryClick(page.getByRole('dialog').getByRole('button', { name: 'Enviar à Bandeja', exact: true }).first())
+    await wait(1800)
+    await shot(page, 'salao-20-bandeja-enviado')
+    await page.keyboard.press('Escape')
+    await wait(900)
+    await page.getByRole('region', { name: 'Seus itens na Bandeja' }).first().scrollIntoViewIfNeeded().catch(() => {})
+    await wait(500)
+    await shot(page, 'salao-21-bandeja-em-avaliacao')
+  })
+
+  await step('salao-calendario', async () => {
+    await page.evaluate(() => document.querySelector('.devo-scroll')?.scrollTo({ top: 0 })).catch(() => {})
+    await tryClick(btn(page, 'Calendário Devo', true))
+    await wait(1100)
+    await shot(page, 'salao-22-calendario')
+  })
+
+  await step('salao-record-shuffler', async () => {
+    await page.keyboard.press('Escape')
+    await openApp(page, 'Record')
+    const b = page.getByRole('button', { name: 'Enviar à Bandeja', exact: true }).first()
+    await b.scrollIntoViewIfNeeded().catch(() => {})
+    await wait(700)
+    await shot(page, 'salao-23-record-shuffler')
+  })
+  await ctx.close()
+
+  await step('salao-mesa', async () => {
+    const o = await account('Veterano', 'DEVO-TEST-ADM1', VET_CARDS)
+    await openApp(o.page, 'Record')
+    await tryClick(o.page.getByRole('tab', { name: /Mesa/i }).first())
+    await wait(2000)
+    await o.page.locator('nav[aria-label="Seções da mesa"]').first().evaluate((el) => el.scrollIntoView({ block: 'start' })).catch(() => {})
+    await tryClick(desk(o.page, 'Salão'))
+    await wait(1800)
+    await shot(o.page, 'salao-24-mesa-fila')
+    await o.page.getByRole('region', { name: 'Bandeja em avaliação' }).first().scrollIntoViewIfNeeded().catch(() => {})
+    await wait(400)
+    await shot(o.page, 'salao-25-mesa-avaliacao')
+    await tryClick(o.page.getByRole('button', { name: 'Aprovar', exact: true }).first())
+    await wait(1600)
+    await shot(o.page, 'salao-26-mesa-aprovado')
+
+    await abrirSalao(o.page)
+    await shot(o.page, 'salao-27-owner-pular')
+    if (await tryClick(btn(o.page, 'Pular apresentação', true))) await wait(1600)
+    await tryClick(btn(o.page, 'Calendário Devo', true))
+    await wait(1100)
+    await o.page.getByRole('region', { name: 'Calendário do Owner' }).first().scrollIntoViewIfNeeded().catch(() => {})
+    await wait(500)
+    await shot(o.page, 'salao-28-owner-calendario')
+    await o.page.keyboard.press('Escape')
+    await wait(500)
+
+    await o.page.route('**/api/salao', (r) => r.fulfill({ status: 500, contentType: 'application/json', body: '{"ok":false,"error":"O Salão não respondeu. Tente de novo."}' }))
+    await abrirSalao(o.page)
+    await shot(o.page, 'salao-29-erro')
+    await o.ctx.close()
+  })
+
+  await estado(null)
+  await sql("UPDATE devo_config SET value = $1 WHERE key = 'salao.calendario'", [JSON.stringify(cal)]).catch(() => {})
+  await db?.end().catch(() => {})
 }
 
 await browser.close()

@@ -7,13 +7,14 @@ import { DesktopShell, DesktopWindowsContext, useDesktopWindows } from './deskto
 import { OsNavContext, type OsNav } from './os-nav'
 import { PhoneShell } from './phone-shell'
 import { useDevoEngine } from './use-devo-engine'
+import { CenasGatilho } from '../torres/gatilho'
 
 /** Mesmo sistema, duas apresentações: área de trabalho (≥1024px) ou smartphone. */
 /**
  * `onRestart` é aceito por compatibilidade, mas não é mais usado: "Reiniciar sessão" não pede convite
  * novo — abre Ajustes, onde a confirmação em dois passos apaga o inventário e devolve o pulso a 72h.
  */
-export function DevoOS({ onExit }: { onExit: () => void; onRestart?: () => void }) {
+export function DevoOS({ onExit }: { onExit: () => void }) {
   useDevoEngine()
   const isDesktop = useMediaQuery('(min-width: 1024px)')
   const windows = useDesktopWindows()
@@ -33,6 +34,8 @@ export function DevoOS({ onExit }: { onExit: () => void; onRestart?: () => void 
     <OsNavContext.Provider value={nav}>
       <DesktopWindowsContext.Provider value={windows}>
         {isDesktop ? <DesktopShell /> : <PhoneShell current={phoneApp} onOpen={setPhoneApp} onHome={() => setPhoneApp(null)} />}
+        {/* cenas narrativas fora dos apps (reflexão "Anfitrião de quê?" ao sair das Torres) */}
+        <CenasGatilho />
       </DesktopWindowsContext.Provider>
     </OsNavContext.Provider>
   )

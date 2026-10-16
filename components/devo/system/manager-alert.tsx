@@ -1,11 +1,13 @@
 'use client'
 
 import { type CSSProperties, type ReactNode, useEffect, useMemo, useState } from 'react'
-import { Button, Frame, GlyphAlert, GlyphArrow, GlyphClock, GlyphGavel, IconButton, Kicker } from '@/components/devo/kit'
+import { GlyphAlert, GlyphArrow, GlyphClock, GlyphGavel, RecordTitle } from '@/components/devo/kit'
 import { type DeadlyVoteEntry, lifeClock, voteTitle } from '@/lib/devo/deadly-votes'
 import { cn } from '@/lib/utils'
 import { useNow } from '../hooks'
 import { useDevo } from '../state/devo-store'
+import { usePlayerText } from '../state/player-text'
+import { RecButton } from './record-ui'
 
 type Level = 'critical' | 'directive' | 'reminder'
 
@@ -22,10 +24,11 @@ export type ManagerSignal = {
 const HOUR = 3600_000
 const ROTATE_MS = 9000
 
-const LEVEL: Record<Level, { label: string; icon: typeof GlyphAlert; text: string; tone: 'blood' | 'cobalt' | 'neutral'; bar: string; kicker: 'blood' | 'cobalt' | 'muted' }> = {
-  critical: { label: 'Alerta crítico', icon: GlyphAlert, text: 'text-dv-blood-text', tone: 'blood', bar: 'bg-dv-blood', kicker: 'blood' },
-  directive: { label: 'Diretriz', icon: GlyphGavel, text: 'text-dv-cobalt-text', tone: 'cobalt', bar: 'bg-dv-cobalt', kicker: 'cobalt' },
-  reminder: { label: 'Lembrete', icon: GlyphClock, text: 'text-dv-text', tone: 'neutral', bar: 'bg-dv-text-3', kicker: 'muted' },
+/** Rubi só no crítico; diretriz em prata com joia ametista; lembrete em cinza. */
+const LEVEL: Record<Level, { label: string; icon: typeof GlyphAlert; text: string; bar: string }> = {
+  critical: { label: 'Alerta crítico', icon: GlyphAlert, text: 'text-in-alert', bar: 'bg-in-alert' },
+  directive: { label: 'Diretriz', icon: GlyphGavel, text: 'text-in-fg', bar: 'bg-dv-amethyst' },
+  reminder: { label: 'Lembrete', icon: GlyphClock, text: 'text-in-fg-2', bar: 'bg-in-fg-3' },
 }
 const RANK: Record<Level, number> = { critical: 0, directive: 1, reminder: 2 }
 
@@ -39,6 +42,7 @@ export function useManagerSignals(entries: DeadlyVoteEntry[], actions: { onOpenV
   const remaining = Math.max(0, state.timerEndsAt - now)
   const tier = remaining === 0 ? 'zero' : remaining < HOUR ? 'hour' : remaining < 6 * HOUR ? 'six' : remaining < 24 * HOUR ? 'day' : 'ok'
   const { onOpenVotes, onOpenGames } = actions
+  const say = usePlayerText()
 
   return useMemo(() => {
     const out: ManagerSignal[] = []
@@ -64,12 +68,23 @@ export function useManagerSignals(entries: DeadlyVoteEntry[], actions: { onOpenV
       if (v.status === 'em-progresso' && v.joined) {
         out.push({
           id: `live-${v.id}`,
-          level: 'critical',
-          source: 'Gerente',
-          title: `${voteTitle(v)} em andamento`,
-          body: v.briefing ?? 'Você está inscrito neste Deadly Vote. Siga as instruções do Dealer.',
+          level: 'directive',
+          source: 'Gerente · Em andamento',
+          title: `${voteTitle(v)} começou`,
+          body: v.groupUrl
+            ? 'O Dealer abriu o grupo do WhatsApp. Só os inscritos veem o link no Record.'
+            : say('Você está inscrit{o|a}. O Dealer vai liberar o link do grupo aqui no Record.'),
           at: v.startsAt,
           action: onOpenVotes && { label: 'Ver Deadly Vote', run: onOpenVotes },
+        })
+      } else if ((v.status === 'falha' || v.status === 'cancelado') && v.joined && now - (v.endsAt ?? v.startsAt) < 3 * 24 * HOUR) {
+        out.push({
+          id: `stop-${v.id}`,
+          level: v.status === 'falha' ? 'critical' : 'reminder',
+          source: 'Gerente',
+          title: v.status === 'falha' ? `Falha do sistema em ${voteTitle(v)}` : `${voteTitle(v)} foi cancelado`,
+          body: v.status === 'falha' ? 'O caso foi interrompido. Aguarde a decisão do Dealer sobre os registros.' : 'O Dealer suspendeu esta edição. Sua inscrição não conta como participação.',
+          at: v.endsAt ?? v.startsAt,
         })
       } else if (v.status === 'convocado' && !v.joined) {
         const full = v.maxParticipants !== null && v.participants >= v.maxParticipants
@@ -104,7 +119,7 @@ export function useManagerSignals(entries: DeadlyVoteEntry[], actions: { onOpenV
     return out.sort((a, b) => RANK[a.level] - RANK[b.level] || b.at - a.at)
     // `now` muda a cada segundo; só recalculamos quando a faixa de tempo muda.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tier, entries, state.notifications, onOpenVotes, onOpenGames, tier === 'ok' ? 0 : Math.floor(remaining / 1000)])
+  }, [tier, entries, state.notifications, onOpenVotes, onOpenGames, say, tier === 'ok' ? 0 : Math.floor(remaining / 1000)])
 }
 
 function formatStart(ts: number) {
@@ -117,8 +132,9 @@ function hhmm(ts: number) {
 }
 
 /**
- * Painel do Gerente: terminal que alterna entre os sinais ativos, pausa ao focar/passar o mouse e
- * some quando não há nada. Vermelho só no nível crítico; diretrizes em cobalto.
+ * Painel do Gerente (NOTIFICAÇÕES da ref. do Record): painel de mármore negro que alterna entre os
+ * sinais ativos, pausa ao focar/passar o mouse e some quando não há nada. Rubi só no nível crítico
+ * (com a faixa listrada do terminal); diretrizes em prata com joia ametista.
  */
 export function ManagerAlert({ signals, className, empty }: { signals: ManagerSignal[]; className?: string; empty?: ReactNode }) {
   const [index, setIndex] = useState(0)
@@ -150,65 +166,66 @@ export function ManagerAlert({ signals, className, empty }: { signals: ManagerSi
       onMouseLeave={() => setPaused(false)}
       onFocus={() => setPaused(true)}
       onBlur={() => setPaused(false)}
-      className={className}
+      className={cn('dv-interior-dark dv-record-panel dv-cut-diag relative overflow-hidden', className)}
+      style={{ '--dv-cut': '12px' } as CSSProperties}
     >
-      <Frame variant={critical ? 'alert' : 'ink'} tone={meta.tone} cut="diag" cutSize={14} pad="none" glow={critical} className="overflow-hidden">
-        <span aria-hidden="true" className={cn('absolute inset-y-3 left-0 w-[3px]', meta.bar)} />
-        <span aria-hidden="true" className="dv-scanlines pointer-events-none absolute inset-0 opacity-40" />
-        <div key={current.id} className="relative flex animate-dv-slide-right items-start gap-3 p-4 pl-5">
-          <span
-            aria-hidden="true"
-            className={cn('dv-cut grid size-11 shrink-0 place-items-center bg-dv-ink/70 shadow-[inset_0_0_0_1px_currentColor]', meta.text)}
-            style={{ '--dv-cut': '8px' } as CSSProperties}
-          >
-            <Icon className={cn('size-6', critical && 'animate-dv-alert')} />
-          </span>
-          <div className="min-w-0 flex-1">
-            <div className="flex items-center justify-between gap-3">
-              <Kicker tone={meta.kicker} glyph={false} className="text-[10px]">
-                {critical ? `${current.source} · ${meta.label}` : current.source}
-              </Kicker>
-              <span className="font-mono text-[11px] text-dv-text-3 dv-tabular">{hhmm(current.at)}</span>
-            </div>
-            <p className={cn('mt-1.5 font-display text-[16px] font-semibold uppercase leading-snug tracking-[0.06em] text-pretty', critical ? 'text-dv-blood-text' : 'text-dv-text')}>
-              {current.title}
-            </p>
-            <p className="mt-1 font-body text-[15px] leading-relaxed text-dv-text-2 text-pretty">{current.body}</p>
+      <header className="relative flex items-center justify-between gap-3 px-4 pb-2.5 pt-3.5">
+        <RecordTitle title="Gerente" jp="通知" size="sm" />
+        <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-in-fg-3 dv-tabular">
+          {String(Math.min(index, count - 1) + 1).padStart(2, '0')} / {String(count).padStart(2, '0')}
+        </span>
+        <span aria-hidden="true" className="absolute inset-x-4 bottom-0 h-px bg-[linear-gradient(90deg,var(--in-brass)_0%,color-mix(in_oklab,var(--in-brass)_35%,transparent)_45%,transparent_100%)]" />
+      </header>
+      <div key={current.id} className="relative flex animate-dv-slide-right items-start gap-3.5 px-4 pb-4 pt-3.5">
+        <span aria-hidden="true" className={cn('absolute bottom-4 left-0 top-3.5 w-[2px]', meta.bar)} />
+        <span aria-hidden="true" className={cn('grid size-11 shrink-0 place-items-center', meta.text)}>
+          <Icon className={cn('size-7', critical && 'animate-dv-alert')} />
+        </span>
+        <div className="min-w-0 flex-1">
+          <div className="flex items-center justify-between gap-3">
+            <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-in-fg-3">{current.source}</p>
+            <span className="font-mono text-[11px] text-in-fg-3 dv-tabular">{hhmm(current.at)}</span>
           </div>
+          <p className={cn('mt-1 font-mono text-[11px] font-medium uppercase tracking-[0.16em]', meta.text)}>
+            {current.level === 'directive' && <span aria-hidden="true" className="mr-2 inline-block size-1.5 -translate-y-px rotate-45 bg-dv-amethyst" />}
+            {meta.label}
+          </p>
+          <p className="mt-1.5 font-serif text-[19px] font-light uppercase leading-tight tracking-[0.03em] text-in-fg text-pretty">{current.title}</p>
+          <p className="mt-1 font-body text-[15px] leading-relaxed text-in-fg-2 text-pretty">{current.body}</p>
         </div>
-        {(current.action || count > 1) && (
-          <div className="relative flex flex-wrap items-center justify-between gap-2 px-4 pb-4 pl-5">
-            {current.action ? (
-              <Button size="sm" variant={critical ? 'danger' : 'primary'} sfx="click" onClick={current.action.run} iconRight={<GlyphArrow />}>
-                {current.action.label}
-              </Button>
-            ) : (
-              <span />
-            )}
-            {count > 1 && (
-              <div className="flex items-center">
-                <IconButton label="Aviso anterior" variant="ghost" onClick={() => go(-1)}>
-                  <GlyphArrow className="rotate-180" />
-                </IconButton>
-                <div className="flex gap-1 px-1" aria-hidden="true">
-                  {signals.map((s, i) => (
-                    <span key={s.id} className={cn('h-1 -skew-x-[20deg] transition-all duration-300', i === index ? cn('w-4', meta.bar) : 'w-1.5 bg-dv-text-3/60')} />
-                  ))}
-                </div>
-                <span className="sr-only">
-                  Aviso {index + 1} de {count}
-                </span>
-                <IconButton label="Próximo aviso" variant="ghost" onClick={() => go(1)}>
-                  <GlyphArrow />
-                </IconButton>
+      </div>
+      {(current.action || count > 1) && (
+        <div className="relative flex flex-wrap items-center justify-between gap-2 px-4 pb-4">
+          {current.action ? (
+            <RecButton size="sm" variant={critical ? 'danger' : 'primary'} sfx="click" onClick={current.action.run} iconRight={<GlyphArrow />}>
+              {current.action.label}
+            </RecButton>
+          ) : (
+            <span />
+          )}
+          {count > 1 && (
+            <div className="flex items-center">
+              <button type="button" aria-label="Aviso anterior" onClick={() => go(-1)} className="dv-focus grid size-11 place-items-center text-in-fg-2 transition-colors hover:text-in-fg">
+                <GlyphArrow className="size-4 rotate-180" />
+              </button>
+              <div className="flex gap-1 px-1" aria-hidden="true">
+                {signals.map((s, i) => (
+                  <span key={s.id} className={cn('h-1 -skew-x-[20deg] transition-all duration-300', i === index ? cn('w-4', meta.bar) : 'w-1.5 bg-in-fg-3/60')} />
+                ))}
               </div>
-            )}
-          </div>
-        )}
-        {count > 1 && !paused && (
-          <span key={`p-${current.id}`} aria-hidden="true" className={cn('dv-progress absolute bottom-0 left-0 h-[2px]', meta.bar)} style={{ animationDuration: `${ROTATE_MS}ms` }} />
-        )}
-      </Frame>
+              <span className="sr-only">
+                Aviso {index + 1} de {count}
+              </span>
+              <button type="button" aria-label="Próximo aviso" onClick={() => go(1)} className="dv-focus grid size-11 place-items-center text-in-fg-2 transition-colors hover:text-in-fg">
+                <GlyphArrow className="size-4" />
+              </button>
+            </div>
+          )}
+        </div>
+      )}
+      {count > 1 && !paused && (
+        <span key={`p-${current.id}`} aria-hidden="true" className={cn('dv-progress absolute bottom-0 left-0 h-[2px]', meta.bar)} style={{ animationDuration: `${ROTATE_MS}ms` }} />
+      )}
     </section>
   )
 }

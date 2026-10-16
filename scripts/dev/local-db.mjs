@@ -19,18 +19,26 @@ const db = await PGlite.create(dataDir)
 const files = [
   join(here, '00-base.sql'),
   join(root, 'scripts', 'deadly-votes-migration.sql'),
+  join(root, 'scripts', 'deadly-votes-group-migration.sql'),
   join(root, 'scripts', 'auth-migration.sql'),
   join(root, 'scripts', 'arcade-migration.sql'),
   join(root, 'scripts', 'arcade-points-migration.sql'),
   join(root, 'scripts', 'arcade-rooms-migration.sql'),
-  ...(fresh ? [join(here, '90-seed.sql')] : []),
+  join(root, 'scripts', 'test-accounts-migration.sql'),
+  join(root, 'scripts', 'character-name-migration.sql'),
+  join(root, 'scripts', 'fundacao-migration.sql'),
+  join(root, 'scripts', 'poco-migration.sql'),
+  join(root, 'scripts', 'staff-migration.sql'),
+  join(root, 'scripts', 'torres-migration.sql'),
+  join(root, 'scripts', 'salao-migration.sql'),
+  ...(fresh ? [join(here, '90-seed.sql'), join(here, '91-seed-poco.sql'), join(here, '92-seed-torres.sql'), join(here, '93-seed-salao.sql')] : []),
 ]
 for (const f of files) await db.exec(readFileSync(f, 'utf8'))
 
 const server = new PGLiteSocketServer({ db, port, host: '127.0.0.1' })
 await server.start()
 console.log(`[devo] banco local pronto em postgres://postgres@127.0.0.1:${port}/postgres${fresh ? ' (dados de teste criados)' : ''}`)
-console.log('[devo] convites de teste: DEVO-TEST-0001 … 0004, admin: DEVO-TEST-ADM1')
+console.log('[devo] convites de teste: DEVO-TEST-0001 … 0004, owner: DEVO-TEST-ADM1')
 
 const stop = async () => {
   await server.stop()
