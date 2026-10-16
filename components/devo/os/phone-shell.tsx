@@ -8,8 +8,9 @@ import { cn } from '@/lib/utils'
 import { formatClock, formatDuration, useMediaQuery, useNow } from '../hooks'
 import { IconButton } from '../kit/button'
 import { FrameCorners } from '../kit/frame'
-import { SYSTEM_EMBLEMS } from '../kit/emblems'
-import { FUTURE_SYSTEMS, type FutureSystemId } from '../kit/interior/locked'
+import { SISTEMAS, TELAS_SISTEMA, type SistemaDef } from '../progressao/sistemas'
+import { useAcesso } from '../progressao/use-acesso'
+import { CartaoNarrativa } from '../progressao/narrativa-host'
 import { MarbleSlab, StateSeal } from './shell-ui'
 import { GlyphArrow, GlyphDiamond, GlyphHourglass, GlyphKeyhole, toRoman } from '../kit/glyphs'
 import { SceneBackdrop } from '../kit/scene'
@@ -21,8 +22,6 @@ import { usePlayerText } from '../state/player-text'
 import { playerText } from '@/lib/devo/player-name'
 import { DeadlyVoteSymbol } from '../system/symbol'
 import { useDeadlyVotes } from '../system/use-deadly-votes'
-import { useAcesso } from '../state/use-acesso'
-import type { UnlockFlag } from '@/lib/devo/progresso'
 import { formatVoteDate } from '@/lib/devo/deadly-votes'
 import { AppBackContext, type AppBack } from './app-back'
 import { useBackHandler } from '../use-back-handler'
@@ -357,6 +356,7 @@ function HomeScreen({
           <span className="dv-label text-[10px] text-dv-text-3">Agora</span>
           <span aria-hidden="true" className="h-px flex-1 bg-gradient-to-r from-[rgba(168,156,224,0.55)] via-dv-line-strong to-transparent" />
         </div>
+        <CartaoNarrativa />
         <div className="animate-dv-rise [animation-delay:420ms]">
           <SummonsCard onOpen={() => onOpen('record')} />
         </div>
@@ -654,19 +654,15 @@ function CriticalVignette() {
 }
 
 /**
- * Os seis sistemas reservados (Direção 2 §3) como emblemas da mesma família: cinza a 60% com cadeado quando
- * trancados. Os que já têm tela (`SYSTEM_OPEN`) viram botão: liberados acendem; trancados abrem a própria tela
- * com o motivo (quem decide é o servidor, via `acesso`).
+ * Os seis sistemas novos (DIRECAO-3; registro em components/devo/progressao/sistemas.tsx) como emblemas da
+ * mesma família: cinza a 60% com fechadura e o motivo quando trancados; liberados acendem (losango ametista =
+ * ainda não aberto). Sistemas com tela própria abrem mesmo trancados (a tela mostra o motivo; o servidor decide).
  */
-const SYSTEM_OPEN: Partial<Record<FutureSystemId, { app: AppId; flag: UnlockFlag; nome: string }>> = {
-  poco: { app: 'poco', flag: 'poco', nome: 'Poço dos Milagres' },
-  mascaras: { app: 'salao', flag: 'salao_mascaras', nome: 'Salão das Máscaras' },
-  torres: { app: 'torres', flag: 'torres', nome: 'Torres de Ruptura' },
-  virtudes: { app: 'virtudes', flag: 'virtudes', nome: 'Virtudes' },
-}
-
 function LockedSystems({ onOpen }: { onOpen: (id: AppId) => void }) {
-  const acesso = useAcesso()
+  const { eu, liberado } = useAcesso()
+  const { state } = useDevo()
+  const aberto = (f: SistemaDef) => !!f.flag && liberado(f.flag)
+  const algum = SISTEMAS.some(aberto)
   return (
     <section aria-label="Sistemas" className="relative mt-5">
       {/* véu atrás da grade: as cartas da cena não passam atrás dos nomes */}
@@ -674,13 +670,14 @@ function LockedSystems({ onOpen }: { onOpen: (id: AppId) => void }) {
       <div className="flex items-center gap-3 px-1">
         <span className="dv-label text-[10px] text-dv-text-3">Seis sistemas</span>
         <span aria-hidden="true" className="h-px flex-1 bg-gradient-to-r from-[rgba(168,156,224,0.55)] via-dv-line-strong to-transparent" />
-        <span className="dv-label text-[10px] text-dv-text-3">Trancado pelo Anfitrião</span>
+        {!algum && !eu && <span className="dv-label text-[10px] text-dv-text-3">Trancado pelo Anfitrião</span>}
       </div>
       <ul className="mt-4 grid grid-cols-3 gap-x-2 gap-y-6">
-        {FUTURE_SYSTEMS.map((f) => {
-          const E = SYSTEM_EMBLEMS[f.id]
-          const open = SYSTEM_OPEN[f.id]
-          const livre = !!open && !!acesso?.sistemas[open.flag]
+        {SISTEMAS.map((f) => {
+          const E = f.emblem
+          const livre = aberto(f)
+          const clicavel = livre || !!TELAS_SISTEMA[f.id]
+          const novo = livre && !state.sistemasVistos.includes(f.id)
           const icon = (
             <>
               <span className="relative grid size-16 place-items-center">
@@ -690,19 +687,21 @@ function LockedSystems({ onOpen }: { onOpen: (id: AppId) => void }) {
                   className={cn('relative size-12', livre ? 'text-dv-text drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] group-active:scale-[0.96]' : 'text-dv-text-3 opacity-60')}
                 />
                 {!livre && <GlyphKeyhole aria-hidden="true" className="absolute bottom-0.5 right-0.5 size-4 rounded-full bg-dv-ink p-[1px] text-dv-amethyst-text" />}
+                {novo && <span aria-hidden="true" className="absolute right-1 top-1 size-2 rotate-45 bg-dv-amethyst shadow-[0_0_8px_rgba(138,124,200,0.9)]" />}
               </span>
               <span aria-hidden="true" className={cn('line-clamp-2 min-h-[2.5em] text-center font-display text-[12px] font-semibold leading-[1.25] tracking-[0.04em]', livre ? 'text-dv-text' : 'text-dv-text-3')}>
-                {open?.nome ?? f.name}
+                {f.nome}
               </span>
+              {!livre && <span aria-hidden="true" className="-mt-1 text-center font-mono text-[9px] uppercase tracking-[0.12em] text-dv-text-3">{f.trava}</span>}
             </>
           )
           return (
-            <li key={f.id} title={open?.nome ?? f.name}>
-              {open ? (
+            <li key={f.id} title={livre ? f.nome : `${f.nome} · ${f.trava}`}>
+              {clicavel ? (
                 <button
                   type="button"
-                  onClick={() => onOpen(open.app)}
-                  aria-label={livre ? open.nome : `${open.nome}: trancado`}
+                  onClick={() => onOpen(f.id as AppId)}
+                  aria-label={livre ? f.nome : `${f.nome}: trancado`}
                   className="dv-focus group flex w-full flex-col items-center gap-2"
                 >
                   {icon}
@@ -710,7 +709,7 @@ function LockedSystems({ onOpen }: { onOpen: (id: AppId) => void }) {
               ) : (
                 <div className="flex flex-col items-center gap-2">
                   {icon}
-                  <span className="sr-only">{f.name}: bloqueado</span>
+                  <span className="sr-only">{f.nome}: bloqueado. {f.trava}.</span>
                 </div>
               )}
             </li>
@@ -720,7 +719,6 @@ function LockedSystems({ onOpen }: { onOpen: (id: AppId) => void }) {
     </section>
   )
 }
-
 
 function PhoneIcon({ id, onOpen, unread, delay = 0 }: { id: AppId; onOpen: (id: AppId) => void; unread?: number; delay?: number }) {
   const app = getApp(id)

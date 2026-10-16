@@ -100,6 +100,22 @@ Copie uma torre secundária e troque:
   (390×640). Hoje: principal em (50, 61); Imperador (18, 68), Observatório (83, 71), Picadeiro (25, 88). Secundárias com y < 80 levam a cartela acima do telhado. Evite sobrepor.
 - `"chave"`: `{ "nome": "Chave da …" }`.
 
+- `"ilustracao"` (opcional): a arte pintada da torre (pipeline de arte, WebP com fundo transparente). Com ela, o
+  mapa, o fundo da tela da torre e o palco das cenas usam a pintura; sem ela, o desenho vetorial de `"arte"`.
+  ```json
+  "ilustracao": {
+    "arquivo": "/images/torres/campanha/torre-principal-agulha--v04",
+    "larguras": [256, 512, 1024],
+    "aspecto": 0.486,
+    "altura": 440,
+    "janelas": [[0.597, 0.825], [0.398, 0.724], [0.556, 0.633]]
+  }
+  ```
+  Os arquivos ficam em `public/images/torres/<id>/<nome>--<largura>.webp` (uma por largura). `aspecto` = largura ÷
+  altura da imagem; `altura` = tamanho no mapa (390×640) com escala 1; `janelas` = posição de cada vitral em frações
+  [x, y] da imagem, de baixo para cima, um por andar — acendem com o progresso (porcelana), o atual pulsa em ametista
+  e os demais escurecem. **Trocar a arte de uma secundária = copiar os WebP e preencher este campo** (sem código).
+
 Deve haver **exatamente 1** torre `"principal"`. Requisitos de chave só podem citar torres que existem.
 
 ## Essências: como o jogador ganha

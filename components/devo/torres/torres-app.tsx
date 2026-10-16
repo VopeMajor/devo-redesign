@@ -60,6 +60,7 @@ function previa(): TorreEstado[] {
     })),
     concluidos: 0,
     provisorio: !!t.provisorio,
+    ilustracao: t.ilustracao ?? null,
   }))
 }
 
@@ -95,7 +96,7 @@ export function TorresApp() {
   const [falha, setFalha] = useState<string | null>(null)
   const [vista, setVista] = useState<{ id: string; x: number; y: number } | null>(null)
   const [galoAberto, setGaloAberto] = useState(false)
-  const [cena, setCena] = useState<{ passos: Passo[]; npc: NpcRef; titulo: string; arte: TorreEstado['arte']; aviso: string | null } | null>(null)
+  const [cena, setCena] = useState<{ passos: Passo[]; npc: NpcRef; titulo: string; arte: TorreEstado['arte']; ilustracao?: TorreEstado['ilustracao']; aviso: string | null } | null>(null)
   const [subindo, setSubindo] = useState(false)
   const [erroTorre, setErroTorre] = useState<string | null>(null)
   const [recem, setRecem] = useState<number | null>(null)
@@ -223,7 +224,7 @@ export function TorresApp() {
             raridade: 'incomum',
             descricao: prox ? `O andar ${toRoman(n + 1)} pede ${prox.custo} ${prox.custo === 1 ? 'essência' : 'essências'}.` : 'Você chegou ao topo desta torre.',
           }
-    const cenaAndar = res.cena.length ? { passos: res.cena, npc: res.andar.npc, titulo: `${torreAtual.nome} · Andar ${toRoman(n)}`, arte: torreAtual.arte, aviso: null } : null
+    const cenaAndar = res.cena.length ? { passos: res.cena, npc: res.andar.npc, titulo: `${torreAtual.nome} · Andar ${toRoman(n)}`, arte: torreAtual.arte, ilustracao: torreAtual.ilustracao, aviso: null } : null
     void carregar()
     setRevelar({
       tipo: 'andar',
@@ -249,7 +250,7 @@ export function TorresApp() {
   const rever = (a: AndarEstado) => {
     if (!torreAtual || !a.cena?.length) return
     playSfx('open')
-    setCena({ passos: a.cena, npc: a.npc, titulo: `${torreAtual.nome} · Andar ${toRoman(a.n)}`, arte: torreAtual.arte, aviso: null })
+    setCena({ passos: a.cena, npc: a.npc, titulo: `${torreAtual.nome} · Andar ${toRoman(a.n)}`, arte: torreAtual.arte, ilustracao: torreAtual.ilustracao, aviso: null })
   }
 
   /* ── apresentação do Galo ── */
@@ -360,6 +361,7 @@ export function TorresApp() {
           npc={cena.npc}
           titulo={cena.titulo}
           arteFundo={cena.arte}
+          ilustracaoFundo={cena.ilustracao}
           onFim={() => {
             const aviso = cena.aviso
             setCena(null)
@@ -376,6 +378,7 @@ export function TorresApp() {
           titulo="O Galo apresenta as Torres de Ruptura"
           kicker="Torres de Ruptura · O Galo"
           arteFundo="palacio"
+          ilustracaoFundo={dados.torres.find((t) => t.id === 'imperador')?.ilustracao}
           onEfeito={efeitoGalo}
           onFim={() => void fimGalo()}
           onPular={dados.pularApresentacao ? () => void fimGalo() : undefined}

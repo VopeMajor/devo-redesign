@@ -7,6 +7,7 @@ import { cn } from '@/lib/utils'
 import { RomanDial, toRoman } from '../kit'
 import { ALTURA_ARTE, LARGURA_ARTE, MAPA_H, MAPA_W, Poeira, TorreArte, TorresDefs } from './arte'
 import { bordaIlha, Cerca, CidadeAoLonge, Feixe, Ilha, MolduraFrente, Portao, Poste } from './mapa-cena'
+import { TorreIlustradaSvg } from './ilustrada'
 import { Cartela, ChaveOrnamental, CristalEssencia } from './ornamentos'
 import './torres.css'
 
@@ -55,8 +56,14 @@ export function MapaTorres({
           const p = pos(t)
           return (
             <g key={t.id} transform={`translate(${p.x} ${p.y}) scale(${t.mapa.escala})`}>
-              <ellipse cx={0} cy={2} rx={LARGURA_ARTE[t.arte] * 0.6} ry={9} fill="#000" opacity={0.55} filter="url(#tw-blur-s)" />
-              <TorreArte arte={t.arte} feitos={t.concluidos} total={t.andares.length} destaque={t.tipo === 'principal'} />
+              {t.ilustracao ? (
+                <TorreIlustradaSvg ilu={t.ilustracao} feitos={t.concluidos} total={t.andares.length} destaque={t.tipo === 'principal'} pxPorUnidade={((largura ?? MAPA_W) / MAPA_W) * t.mapa.escala} />
+              ) : (
+                <>
+                  <ellipse cx={0} cy={2} rx={LARGURA_ARTE[t.arte] * 0.6} ry={9} fill="#000" opacity={0.55} filter="url(#tw-blur-s)" />
+                  <TorreArte arte={t.arte} feitos={t.concluidos} total={t.andares.length} destaque={t.tipo === 'principal'} />
+                </>
+              )}
             </g>
           )
         })}
@@ -73,8 +80,10 @@ export function MapaTorres({
       </svg>
 
       {ordem.map((t) => {
-        const w = (LARGURA_ARTE[t.arte] * t.mapa.escala) / MAPA_W
-        const h = (ALTURA_ARTE[t.arte] * t.mapa.escala) / MAPA_H
+        const altU = t.ilustracao ? t.ilustracao.altura : ALTURA_ARTE[t.arte]
+        const larU = t.ilustracao ? t.ilustracao.altura * t.ilustracao.aspecto * 0.8 : LARGURA_ARTE[t.arte]
+        const w = (larU * t.mapa.escala) / MAPA_W
+        const h = (altU * t.mapa.escala) / MAPA_H
         const total = t.andares.length
         const principal = t.tipo === 'principal'
         // secundárias do fundo levam a cartela acima do telhado (no céu); as da frente e a principal, abaixo da base

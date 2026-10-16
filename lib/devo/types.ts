@@ -38,7 +38,13 @@ export type OwnedCard = {
   acquiredAt: number
 }
 
-export type AppId = 'record' | 'pulso' | 'mensagens' | 'cartas' | 'trocas' | 'ajustes' | 'jogos' | 'poco' | 'torres' | 'salao' | 'virtudes'
+export type AppId = 'record' | 'pulso' | 'mensagens' | 'cartas' | 'trocas' | 'ajustes' | 'jogos'
+  /** Sistemas novos (DIRECAO-3), abertos como app; registro em components/devo/progressao/sistemas.tsx. */
+  | 'salao'
+  | 'poco'
+  | 'torres'
+  | 'corporacoes'
+  | 'virtudes'
 
 export type NotificationItem = {
   id: string

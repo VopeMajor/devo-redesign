@@ -95,6 +95,23 @@ export type TorreDef = {
   chave?: { nome: string }
   andares: AndarDef[]
   provisorio?: boolean
+  /**
+   * Ilustração pintada (pipeline de arte). Sem ela, a torre usa o desenho vetorial de `arte`. Arquivos:
+   * `<arquivo>--<largura>.webp` (fundo transparente), uma por largura listada.
+   */
+  ilustracao?: Ilustracao
+}
+
+export type Ilustracao = {
+  /** Caminho sem o sufixo de largura: '/images/torres/<id>/<nome>' → '<nome>--512.webp'. */
+  arquivo: string
+  larguras: number[]
+  /** largura ÷ altura da imagem. */
+  aspecto: number
+  /** Altura no mapa (unidades da ilustração 390×640, escala 1). */
+  altura: number
+  /** Janelas para o brilho de progresso, em frações [x, y] da imagem, de baixo para cima (uma por andar). */
+  janelas?: [number, number][]
 }
 
 export type ConteudoTorres = { versao: number; provisorio?: boolean; nota?: string; torres: TorreDef[] }
@@ -156,6 +173,7 @@ export type TorreEstado = {
   andares: AndarEstado[]
   concluidos: number
   provisorio: boolean
+  ilustracao: Ilustracao | null
 }
 
 export type TorresPayload =

@@ -261,6 +261,20 @@ export const NPCS: Record<string, NpcDef> = {
   },
 }
 
+/**
+ * Contatos ganhos na narrativa (Mensagens). O Galo entra ao fim da visita (cena `galo-casa`); ainda sem
+ * conversa do dono — a lista de escolhas fica vazia até ele mandar as falas.
+ */
+NPCS.galo = {
+  id: 'galo',
+  name: 'O Galo',
+  title: 'Anfitrião',
+  portraitStyle: 'cutout',
+  hidden: true,
+  doneText: 'Sabe onde me encontrar.',
+  choices: [],
+}
+
 export function getNpc(id: string): NpcDef {
   return NPCS[id] ?? NPCS.desconhecido
 }
