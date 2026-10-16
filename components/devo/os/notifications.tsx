@@ -61,7 +61,7 @@ function LiveToast({ item, onOpen, compact }: { item: NotificationItem; onOpen: 
             <GlyphClose className="size-4" />
           </button>
         </div>
-        <span aria-hidden="true" className={cn('pointer-events-none absolute bottom-0 left-3 right-4 h-px origin-left [animation:devo-shrink_5.2s_linear_forwards]', danger ? 'bg-dv-blood' : 'bg-dv-amethyst')} />
+        <span aria-hidden="true" className={cn('pointer-events-none absolute bottom-0 left-3 right-4 h-px origin-left [animation:devo-shrink_5.2s_linear_forwards]', danger ? 'bg-dv-blood' : 'bg-[linear-gradient(90deg,#bab09f,#f4efe6)]')} />
       </li>
     )
   }
@@ -89,7 +89,7 @@ function LiveToast({ item, onOpen, compact }: { item: NotificationItem; onOpen: 
       />
       <span
         aria-hidden="true"
-        className={cn('pointer-events-none absolute bottom-0 left-3 right-4 h-px origin-left [animation:devo-shrink_5.2s_linear_forwards]', danger ? 'bg-dv-blood' : 'bg-dv-amethyst')}
+        className={cn('pointer-events-none absolute bottom-0 left-3 right-4 h-px origin-left [animation:devo-shrink_5.2s_linear_forwards]', danger ? 'bg-dv-blood' : 'bg-[linear-gradient(90deg,#bab09f,#f4efe6)]')}
       />
     </li>
   )
