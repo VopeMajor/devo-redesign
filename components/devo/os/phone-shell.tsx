@@ -118,6 +118,20 @@ export function PhoneShell({ current, onOpen, onHome }: { current: AppId | null;
       {/* Uma cena só: viva na home; com um app aberto fica no quadro estático (o app pode ter a sua). */}
       <SceneBackdrop preset="cathedral" intensity={0.75} dim={current && !entering ? 0.55 : 0.3} staticOnly={!!current && !entering} />
       {/* Crítico: a home NÃO vira vermelha. Fica no mármore; a vinheta rubi pulsa nas bordas. */}
+      {/*
+        Véu de ametista (Direção 3 §9: a home não pode ficar "preto no branco"): noite violeta como luz,
+        não como superfície — halo alto atrás do cartão do tempo e um sopro no pé, sobre o mármore.
+      */}
+      {!critical && (
+        <div
+          aria-hidden="true"
+          className={cn('pointer-events-none absolute inset-0 z-[1] transition-opacity duration-500', homeHidden ? 'opacity-0' : 'opacity-100')}
+          style={{
+            background:
+              'radial-gradient(90% 38% at 70% 22%, rgba(138,124,200,0.2), transparent 70%), radial-gradient(120% 30% at 50% 104%, rgba(110,96,180,0.18), transparent 70%), linear-gradient(180deg, rgba(60,50,110,0.08), transparent 40%, rgba(60,50,110,0.1))',
+          }}
+        />
+      )}
       {critical && <CriticalVignette />}
 
       <StatusBar now={now} remaining={remaining} critical={critical} unread={totalUnread} expanded={shade} onToggle={() => setShade((s) => !s)} />
@@ -287,9 +301,29 @@ function HomeScreen({
   const { state } = useDevo()
   const apps: AppId[] = state.arcadeUnlocked ? [...HOME_APPS, 'jogos'] : HOME_APPS
   const latest = state.notifications[0]
+  const pager = useHomePager(HOME_PAGES)
   return (
     <div className="absolute inset-0 flex flex-col">
-    <div className="devo-scroll flex min-h-0 flex-1 flex-col overflow-y-auto overflow-x-hidden px-4 pt-3">
+    {/*
+      Home em telas deslizáveis (pedido do dono, Direção 3 §9): arrasto horizontal com snap nativo
+      (scroll-snap), cada tela com rolagem vertical própria. Tela 1 = relógio + apps principais + agora;
+      tela 2 = Sistemas. O dock fica fixo embaixo de todas. Telas fora da vista continuam na árvore
+      acessível (o leitor de tela e o foco do teclado levam até elas, e o carrossel acompanha).
+    */}
+    <div
+      ref={pager.ref}
+      onScroll={pager.onScroll}
+      role="group"
+      aria-roledescription="carrossel"
+      aria-label="Telas do início"
+      className="flex min-h-0 flex-1 snap-x snap-mandatory overflow-x-auto overflow-y-hidden overscroll-x-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+    >
+    <div
+      role="group"
+      aria-roledescription="tela"
+      aria-label={`Tela 1 de ${HOME_PAGES}: início`}
+      className="devo-scroll flex h-full w-full shrink-0 snap-start snap-always flex-col overflow-y-auto overflow-x-hidden px-4 pt-3"
+    >
       <header className="animate-dv-fade flex items-center justify-between gap-3 px-1">
         <div className="min-w-0">
           <Kicker tone="gold">Record System · sessão ativa</Kicker>
@@ -304,12 +338,12 @@ function HomeScreen({
         <PulseCard remaining={remaining} critical={critical} onOpen={() => onOpen('pulso')} />
       </div>
 
-      <section aria-label="Aplicativos" className="relative mt-5">
+      <section aria-label="Aplicativos" className="relative mt-4">
         {/* Véu atrás da grade: as cartas que flutuam na cena não passam atrás dos rótulos (< 15%). */}
         <span aria-hidden="true" className="pointer-events-none absolute -inset-x-4 -bottom-4 -top-7 -z-10 bg-[linear-gradient(180deg,transparent,rgba(12,12,14,0.9)_16%,rgba(12,12,14,0.9)_84%,transparent)]" />
         <div className="animate-dv-fade flex items-center gap-3 px-1 [animation-delay:220ms]">
           <span className="dv-label text-[10px] text-dv-text-3">Aplicativos</span>
-          <span aria-hidden="true" className="h-px flex-1 bg-gradient-to-r from-dv-line-strong to-transparent" />
+          <span aria-hidden="true" className="h-px flex-1 bg-gradient-to-r from-[rgba(168,156,224,0.55)] via-dv-line-strong to-transparent" />
         </div>
         <ul className="mt-3 grid grid-cols-4 gap-x-2 gap-y-4">
           {apps.map((id, i) => (
@@ -318,10 +352,10 @@ function HomeScreen({
         </ul>
       </section>
 
-      <section aria-label="Agora" className="mt-5 flex flex-col gap-2">
+      <section aria-label="Agora" className="mt-3 flex flex-col gap-2">
         <div className="animate-dv-fade flex items-center gap-3 px-1 [animation-delay:360ms]">
           <span className="dv-label text-[10px] text-dv-text-3">Agora</span>
-          <span aria-hidden="true" className="h-px flex-1 bg-gradient-to-r from-dv-line-strong to-transparent" />
+          <span aria-hidden="true" className="h-px flex-1 bg-gradient-to-r from-[rgba(168,156,224,0.55)] via-dv-line-strong to-transparent" />
         </div>
         <div className="animate-dv-rise [animation-delay:420ms]">
           <SummonsCard onOpen={() => onOpen('record')} />
@@ -354,14 +388,31 @@ function HomeScreen({
         ) : null}
       </section>
 
-      <LockedSystems onOpen={onOpen} />
-
-      <div className="flex shrink-0 grow flex-col items-center justify-end gap-2 pb-3 pt-5 text-center">
-        <Divider variant="filigree" tone="gold" className="animate-dv-fade w-56 opacity-60 [animation-delay:520ms]" />
-        <p className="animate-dv-fade dv-label text-[10px] tracking-[0.42em] text-dv-text-3 [animation-delay:560ms]">O tempo é a vida</p>
-      </div>
-
+      <div aria-hidden="true" className="h-2 shrink-0" />
     </div>
+
+    <div
+      role="group"
+      aria-roledescription="tela"
+      aria-label={`Tela 2 de ${HOME_PAGES}: sistemas`}
+      className="devo-scroll flex h-full w-full shrink-0 snap-start snap-always flex-col overflow-y-auto overflow-x-hidden px-4 pt-3"
+    >
+      <header className="flex items-end justify-between gap-3 px-1">
+        <div className="min-w-0">
+          <Kicker tone="gold">Record System · tela II</Kicker>
+          <p className="mt-1.5 font-display text-[22px] font-semibold uppercase leading-none tracking-[0.08em] text-dv-text">Sistemas</p>
+        </div>
+        <span aria-hidden="true" className="font-impact -skew-x-[8deg] text-[30px] font-semibold leading-none text-transparent [-webkit-text-stroke:1px_var(--dv-amethyst-text)]">II</span>
+      </header>
+      <LockedSystems onOpen={onOpen} />
+      <div className="flex shrink-0 grow flex-col items-center justify-end gap-2 pb-3 pt-6 text-center">
+        <Divider variant="filigree" tone="gold" className="w-56 opacity-60" />
+        <p className="dv-label text-[10px] tracking-[0.42em] text-dv-text-3">O tempo é a vida</p>
+      </div>
+    </div>
+    </div>
+
+    <PagerDots pager={pager} />
 
       <nav aria-label="Dock" className="animate-dv-rise shrink-0 px-4 pb-2 [animation-delay:420ms]">
         <MarbleSlab edge="line" cut={14} innerClassName="px-2 pb-2 pt-3" className="drop-shadow-[0_-10px_24px_rgba(0,0,0,0.6)]">
@@ -372,6 +423,80 @@ function HomeScreen({
           </ul>
         </MarbleSlab>
       </nav>
+    </div>
+  )
+}
+
+/** Número de telas da home no celular. */
+const HOME_PAGES = 2
+
+/** Estado do carrossel da home: tela atual (pela rolagem) e ida a uma tela (respeita movimento reduzido). */
+function useHomePager(count: number) {
+  const ref = useRef<HTMLDivElement>(null)
+  const [page, setPage] = useState(0)
+  const reduced = useMediaQuery('(prefers-reduced-motion: reduce)')
+  const onScroll = () => {
+    const el = ref.current
+    if (!el || !el.clientWidth) return
+    const p = Math.max(0, Math.min(count - 1, Math.round(el.scrollLeft / el.clientWidth)))
+    setPage((old) => (old === p ? old : p))
+  }
+  const go = (p: number) => {
+    const el = ref.current
+    if (!el) return
+    const to = Math.max(0, Math.min(count - 1, p))
+    el.scrollTo({ left: to * el.clientWidth, behavior: reduced ? 'auto' : 'smooth' })
+  }
+  return { ref, page, count, go, onScroll }
+}
+
+/** Indicador de telas: anterior/próxima (alvos de 44px com nome acessível) e losangos por tela. */
+function PagerDots({ pager }: { pager: ReturnType<typeof useHomePager> }) {
+  const { page, count, go } = pager
+  return (
+    <div className="relative z-10 -mt-1 flex h-8 shrink-0 items-center justify-center gap-1">
+      <button
+        type="button"
+        aria-label="Tela anterior do início"
+        disabled={page === 0}
+        onClick={() => {
+          playSfx('click')
+          go(page - 1)
+        }}
+        className="dv-focus grid size-11 place-items-center text-dv-text-3 transition-opacity enabled:hover:text-dv-text disabled:opacity-0"
+      >
+        <GlyphArrow className="size-4 rotate-180" />
+      </button>
+      {Array.from({ length: count }, (_, i) => (
+        <button
+          key={i}
+          type="button"
+          aria-label={`Ir para a tela ${i + 1} de ${count} do início`}
+          aria-current={i === page ? 'true' : undefined}
+          onClick={() => go(i)}
+          className="dv-focus grid h-11 w-7 place-items-center"
+        >
+          <span
+            aria-hidden="true"
+            className={cn(
+              'block rotate-45 transition-all duration-300',
+              i === page ? 'size-2 bg-dv-amethyst shadow-[0_0_8px_rgba(138,124,200,0.9)]' : 'size-1.5 border border-dv-text-3',
+            )}
+          />
+        </button>
+      ))}
+      <button
+        type="button"
+        aria-label="Próxima tela do início"
+        disabled={page === count - 1}
+        onClick={() => {
+          playSfx('click')
+          go(page + 1)
+        }}
+        className="dv-focus grid size-11 place-items-center text-dv-text-3 transition-opacity enabled:hover:text-dv-text disabled:opacity-0"
+      >
+        <GlyphArrow className="size-4" />
+      </button>
     </div>
   )
 }
@@ -395,7 +520,7 @@ function HomeStrip({
   label?: string
 }) {
   const line = tone === 'alert' ? 'bg-dv-blood/60' : tone === 'gold' ? 'bg-dv-gold/50' : 'bg-dv-line-strong'
-  const bar = tone === 'alert' ? 'bg-dv-blood' : tone === 'gold' ? 'bg-dv-gold' : 'bg-dv-text-2'
+  const bar = tone === 'alert' ? 'bg-dv-blood' : tone === 'gold' ? 'bg-dv-amethyst shadow-[0_0_8px_rgba(138,124,200,0.8)]' : 'bg-dv-amethyst/70'
   const kick = tone === 'alert' ? 'text-dv-blood-text' : tone === 'gold' ? 'text-dv-gold' : 'text-dv-text-2'
   return (
     <button
@@ -446,16 +571,17 @@ function SummonsCard({ onOpen }: { onOpen: () => void }) {
         </span>
         <span className="min-w-0 flex-1">
           <span className="dv-label flex items-center gap-2 text-[10px]">
-            <span className={live ? 'text-dv-blood-text' : 'text-dv-gold'}>{live ? 'Deadly Vote · em progresso' : 'Próxima convocação'}</span>
+            {live && <span aria-hidden="true" className="animate-dv-blink size-[7px] rotate-45 bg-dv-blood-text" />}
+            <span className={live ? 'text-dv-blood-text' : 'text-dv-gold'}>{live ? 'Em progresso · ao vivo' : 'Próxima convocação'}</span>
           </span>
           <span className="mt-1 block truncate font-display text-[15px] font-semibold uppercase tracking-[0.04em] text-dv-text">
             {next ? next.title : isLoading ? 'Consultando o Record…' : 'Nenhuma convocação ativa'}
           </span>
           <span className="block truncate font-body text-[14px] text-dv-text-2">
-            {next ? `${formatVoteDate(next.startsAt)}${next.joined ? say(' · você está inscrit{o|a}') : ' · inscrições abertas'}` : say('O Dealer convoca pelo Record. Fique atent{o|a}.')}
+            {next ? `${formatVoteDate(next.startsAt)}${next.joined ? say(' · você está inscrit{o|a}') : live ? ' · em andamento' : ' · inscrições abertas'}` : say('O Dealer convoca pelo Record. Fique atent{o|a}.')}
           </span>
         </span>
-        {next && (next.joined ? <StateSeal>Inscrito</StateSeal> : live ? <StateSeal tone="blood" live>Ao vivo</StateSeal> : null)}
+        {next?.joined && <StateSeal>Inscrito</StateSeal>}
         <GlyphArrow className="size-4 shrink-0 text-dv-text-3 transition-transform group-hover:translate-x-0.5" />
       </MarbleSlab>
     </button>
@@ -474,7 +600,7 @@ function PulseCard({ remaining, critical, onOpen }: { remaining: number; critica
       aria-label={`Tempo restante ${text}. Abrir o relógio do pulso`}
       className="dv-focus group block w-full text-left transition-transform duration-[120ms] active:scale-[0.985]"
     >
-      <MarbleSlab edge={critical ? 'blood' : 'steel'} cut={16} glow innerClassName="flex min-h-[196px] items-center gap-2 py-5 pl-5 pr-3">
+      <MarbleSlab edge={critical ? 'blood' : 'steel'} cut={16} glow innerClassName="flex min-h-[184px] items-center gap-2 py-4 pl-5 pr-3">
         <FrameCorners tone={critical ? 'blood' : 'gold'} />
         {critical && (
           <span aria-hidden="true" className="dv-cut pointer-events-none absolute -inset-y-5 -left-5 -right-3 overflow-hidden [--dv-cut:15.6px]">
@@ -507,6 +633,7 @@ function PulseCard({ remaining, critical, onOpen }: { remaining: number; critica
           </span>
         </span>
         <span aria-hidden="true" className="relative grid size-[136px] shrink-0 place-items-center">
+          {!critical && <span className="absolute -inset-3 rounded-full bg-[radial-gradient(closest-side,rgba(138,124,200,0.38),rgba(138,124,200,0.1)_60%,transparent)]" />}
           <PulseDial remaining={remaining} timerEndsAt={state.timerEndsAt} critical={critical} variant="compact" className="size-full" />
           <span className="dv-label absolute -bottom-3 left-1/2 flex -translate-x-1/2 items-center gap-1 whitespace-nowrap text-[10px] text-dv-text-3 transition-colors group-hover:text-dv-text-2">
             Abrir <GlyphArrow className="size-3" />
@@ -540,29 +667,31 @@ const SYSTEM_OPEN: Partial<Record<FutureSystemId, { app: AppId; flag: UnlockFlag
 function LockedSystems({ onOpen }: { onOpen: (id: AppId) => void }) {
   const acesso = useAcesso()
   return (
-    <section aria-label="Sistemas" className="mt-5">
-      <div className="animate-dv-fade flex items-center gap-3 px-1 [animation-delay:520ms]">
-        <span className="dv-label text-[10px] text-dv-text-3">Sistemas</span>
-        <span aria-hidden="true" className="h-px flex-1 bg-gradient-to-r from-dv-line-strong to-transparent" />
+    <section aria-label="Sistemas" className="relative mt-5">
+      {/* véu atrás da grade: as cartas da cena não passam atrás dos nomes */}
+      <span aria-hidden="true" className="pointer-events-none absolute -inset-x-4 -bottom-6 -top-4 -z-10 bg-[linear-gradient(180deg,transparent,rgba(12,12,14,0.86)_12%,rgba(12,12,14,0.86)_88%,transparent)]" />
+      <div className="flex items-center gap-3 px-1">
+        <span className="dv-label text-[10px] text-dv-text-3">Seis sistemas</span>
+        <span aria-hidden="true" className="h-px flex-1 bg-gradient-to-r from-[rgba(168,156,224,0.55)] via-dv-line-strong to-transparent" />
         <span className="dv-label text-[10px] text-dv-text-3">Trancado pelo Anfitrião</span>
       </div>
-      <ul className="animate-dv-fade mt-3 grid grid-cols-6 gap-1 [animation-delay:560ms]">
+      <ul className="mt-4 grid grid-cols-3 gap-x-2 gap-y-6">
         {FUTURE_SYSTEMS.map((f) => {
           const E = SYSTEM_EMBLEMS[f.id]
           const open = SYSTEM_OPEN[f.id]
           const livre = !!open && !!acesso?.sistemas[open.flag]
           const icon = (
             <>
-              <span className="relative grid size-11 place-items-center">
-                {livre && <span aria-hidden="true" className="absolute inset-x-1 bottom-0 h-1/2 bg-[radial-gradient(50%_60%_at_50%_100%,rgba(138,124,200,0.5),transparent)]" />}
+              <span className="relative grid size-16 place-items-center">
+                <span aria-hidden="true" className={cn('absolute -inset-1 rounded-full bg-[radial-gradient(closest-side,rgba(138,124,200,0.32),transparent)]', !livre && 'opacity-40')} />
                 <E
                   {...(livre ? { metal: true } : {})}
-                  className={cn('relative size-9', livre ? 'text-dv-text drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] group-active:scale-[0.96]' : 'text-dv-text-3 opacity-60')}
+                  className={cn('relative size-12', livre ? 'text-dv-text drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] group-active:scale-[0.96]' : 'text-dv-text-3 opacity-60')}
                 />
-                {!livre && <GlyphKeyhole aria-hidden="true" className="absolute -bottom-0.5 -right-0.5 size-3.5 rounded-full bg-dv-ink p-[1px] text-dv-gold" />}
+                {!livre && <GlyphKeyhole aria-hidden="true" className="absolute bottom-0.5 right-0.5 size-4 rounded-full bg-dv-ink p-[1px] text-dv-amethyst-text" />}
               </span>
-              <span aria-hidden="true" className={cn('dv-label line-clamp-2 text-center text-[10px] leading-[1.25] tracking-[0.06em]', livre ? 'text-dv-text' : 'text-dv-text-3')}>
-                {SHORT_NAME[f.id]}
+              <span aria-hidden="true" className={cn('line-clamp-2 min-h-[2.5em] text-center font-display text-[12px] font-semibold leading-[1.25] tracking-[0.04em]', livre ? 'text-dv-text' : 'text-dv-text-3')}>
+                {open?.nome ?? f.name}
               </span>
             </>
           )
@@ -573,12 +702,12 @@ function LockedSystems({ onOpen }: { onOpen: (id: AppId) => void }) {
                   type="button"
                   onClick={() => onOpen(open.app)}
                   aria-label={livre ? open.nome : `${open.nome}: trancado`}
-                  className="dv-focus group flex w-full flex-col items-center gap-1.5"
+                  className="dv-focus group flex w-full flex-col items-center gap-2"
                 >
                   {icon}
                 </button>
               ) : (
-                <div className="flex flex-col items-center gap-1.5">
+                <div className="flex flex-col items-center gap-2">
                   {icon}
                   <span className="sr-only">{f.name}: bloqueado</span>
                 </div>
@@ -591,14 +720,6 @@ function LockedSystems({ onOpen }: { onOpen: (id: AppId) => void }) {
   )
 }
 
-const SHORT_NAME: Record<FutureSystemId, string> = {
-  torres: 'Torres',
-  poco: 'Poço',
-  virtudes: 'Virtudes',
-  arcanos: 'Arcanos',
-  corporacoes: 'Corpo­rações',
-  mascaras: 'Máscaras',
-}
 
 function PhoneIcon({ id, onOpen, unread, delay = 0 }: { id: AppId; onOpen: (id: AppId) => void; unread?: number; delay?: number }) {
   const app = getApp(id)
@@ -611,7 +732,9 @@ function PhoneIcon({ id, onOpen, unread, delay = 0 }: { id: AppId; onOpen: (id: 
         aria-label={app.name}
       >
         <span className="relative transition-transform duration-200 group-hover:-translate-y-0.5">
-          <AppGlyphTile app={app} />
+          {/* halo de ametista sob o emblema (luz, não ladrilho) */}
+          <span aria-hidden="true" className="pointer-events-none absolute -inset-2 rounded-full bg-[radial-gradient(closest-side,rgba(138,124,200,0.3),transparent)] opacity-80 transition-opacity group-hover:opacity-100" />
+          <AppGlyphTile app={app} className="relative" />
           <Badge count={unread} />
         </span>
         <span aria-hidden="true" className="line-clamp-2 min-h-[2.4em] px-0.5 text-center font-display text-[12px] font-semibold leading-[1.2] tracking-[0.04em] text-dv-text [text-shadow:0_1px_6px_rgba(0,0,0,0.9)]">

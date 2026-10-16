@@ -324,6 +324,26 @@ async function enterOS(page) {
   await wait(3600)
 }
 
+/**
+ * Home do celular em telas deslizáveis (Direção 3 §9): se o alvo está noutra tela, desliza até ela pelos
+ * botões "Próxima tela do início"/"Tela anterior do início" (o mesmo efeito do arrasto) antes do clique.
+ * Fora da home (ou no desktop) não faz nada.
+ */
+async function revealOnHome(page, target) {
+  for (let i = 0; i < 4; i++) {
+    const side = await target
+      .evaluate((el) => {
+        const r = el.getBoundingClientRect()
+        return r.right <= 0 ? 'left' : r.left >= window.innerWidth ? 'right' : 'in'
+      })
+      .catch(() => 'in')
+    if (side === 'in') return
+    const nav = page.getByRole('button', { name: side === 'right' ? 'Próxima tela do início' : 'Tela anterior do início', exact: true }).first()
+    if (!(await tryClick(nav, 3000))) return
+    await wait(700)
+  }
+}
+
 async function openApp(page, label) {
   await enterOS(page)
   const exact = page.getByRole('button', { name: label, exact: true })
@@ -335,6 +355,7 @@ async function openApp(page, label) {
   const opened = () => page.getByRole('region', { name: label, exact: true }).first().isVisible().catch(() => false)
   for (let attempt = 1; ; attempt++) {
     await exact.first().waitFor({ state: 'visible', timeout: 15000 }).catch(() => {})
+    await revealOnHome(page, exact.first())
     if (await tryClick(exact.first(), 8000)) break
     await wait(2000)
     if (await opened()) break
@@ -358,6 +379,25 @@ if (want('sistema') || want('apps') || want('jogos')) {
       await page.getByLabel('Abrir central de avisos').first().click({ timeout: 3000 })
       await wait(900)
       await shot(page, '10-home-avisos')
+      // Tela 2 da home (Sistemas): fecha a central e desliza pelo botão de próxima tela.
+      await page.getByLabel('Fechar central de avisos').first().click({ timeout: 3000 }).catch(() => {})
+      await wait(500)
+      await page.getByRole('button', { name: 'Próxima tela do início', exact: true }).first().click({ timeout: 5000 })
+      await wait(900)
+      await shot(page, '10-home-tela-2', 'home deslizada para a tela dos Sistemas')
+      // Arrasto real (toque): volta para a tela 1 rolando o carrossel como o dedo faria.
+      await page
+        .getByRole('group', { name: 'Telas do início', exact: true })
+        .first()
+        .evaluate((el) => {
+          el.style.scrollSnapType = 'none' // segura o quadro no meio do arrasto (sem o snap)
+          el.scrollBy({ left: -el.clientWidth / 2.2, behavior: 'instant' })
+        })
+      await wait(120)
+      await shot(page, '10-home-arrasto', 'meio do arrasto entre as telas')
+      await page.getByRole('group', { name: 'Telas do início', exact: true }).first().evaluate((el) => (el.style.scrollSnapType = '')).catch(() => {})
+      await page.getByRole('button', { name: 'Tela anterior do início', exact: true }).first().click({ timeout: 5000 }).catch(() => {})
+      await wait(900)
     })
     // Transição de abrir/voltar (quadro no meio da animação).
     await step('home-transicao', async () => {

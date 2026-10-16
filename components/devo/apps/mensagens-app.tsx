@@ -3,7 +3,7 @@
 import Image from 'next/image'
 import { useEffect, useRef, useState, type CSSProperties } from 'react'
 import { playSfx } from '@/lib/devo/audio'
-import { availableChoices, getNpc, npcPortrait, portraitFrameProps, STICKER_PREFIX, stickerSrc, type DialogueChoice } from '@/lib/devo/npcs'
+import { availableChoices, getNpc, npcPortrait, STICKER_PREFIX, stickerSrc, type DialogueChoice } from '@/lib/devo/npcs'
 import { withName } from '@/lib/devo/player-name'
 import { cn } from '@/lib/utils'
 import { formatClock } from '../hooks'
@@ -13,7 +13,7 @@ import { Frame } from '../kit/frame'
 import { EmblemMensagens } from '../kit/emblems'
 import { GlyphArrow, GlyphKeyhole, toRoman } from '../kit/glyphs'
 import { Kicker } from '../kit/typography'
-import { PortraitFrame, type PortraitTone } from '../kit/portrait'
+import type { PortraitTone } from '../kit/portrait'
 import { useShellBack } from '../os/app-back'
 import { callName, nextId, useDevo } from '../state/devo-store'
 import { useBackHandler } from '../use-back-handler'
@@ -33,16 +33,59 @@ const NAME: Record<Accent, string> = {
 
 const PORTRAIT_TONE: Record<string, PortraitTone> = { rato: 'gold', herdeiro: 'cobalt', coruja: 'neutral', desconhecido: 'blood' }
 
-/** Retrato redondo do remetente com o tratamento do kit (PortraitFrame: luz de borda, base dissolvida). */
-function Portrait({ npcId, size = 52, className }: { npcId: string; size?: number; className?: string }) {
-  const art = portraitFrameProps(npcId, undefined, 'face')
+/*
+ * Enquadramento do elenco OC (lib/devo/npcs.ts): toda folha tem a mesma tela 1080×960, cabeça de ~345 px
+ * e queixo em y=508. Recortes em pixels da tela do sprite:
+ *  - ROSTO (medalhão): quadrado de 560 px a partir de y=40 — chapéu/cabelo inteiros, queixo e gola, sem tronco;
+ *  - BUSTO (gravura ao fundo da conversa): 700×740 a partir de y=30 — cabeça e ombros, base dissolvida.
+ */
+const SPRITE = { w: 1080, h: 960 }
+const ROSTO = { x: 260, y: 40, w: 560, h: 560 }
+const BUSTO = { x: 190, y: 30, w: 700, h: 740 }
+
+/** Recorta uma janela da tela do sprite num contêiner com a mesma proporção (sem depender de object-fit). */
+function SpriteCrop({ src, win, className, style }: { src: string; win: { x: number; y: number; w: number; h: number }; className?: string; style?: CSSProperties }) {
   return (
-    <span aria-hidden="true" className={cn('shrink-0', className)} style={{ width: size }}>
-      <PortraitFrame alt="" {...(art ?? {})} tone={PORTRAIT_TONE[npcId] ?? 'neutral'} shape="round" className="w-full">
-        {art ? null : (
+    <span aria-hidden="true" className={cn('relative block overflow-hidden', className)} style={{ aspectRatio: `${win.w} / ${win.h}`, ...style }}>
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={src}
+        alt=""
+        draggable={false}
+        decoding="async"
+        className="absolute max-w-none select-none"
+        style={{
+          width: `${(SPRITE.w / win.w) * 100}%`,
+          height: `${(SPRITE.h / win.h) * 100}%`,
+          left: `${(-win.x / win.w) * 100}%`,
+          top: `${(-win.y / win.h) * 100}%`,
+        }}
+      />
+    </span>
+  )
+}
+
+/** Medalhão redondo do remetente: rosto inteiro (sem cortar chapéu/cabelo), gola visível, base dissolvida. */
+function Portrait({ npcId, size = 52, className }: { npcId: string; size?: number; className?: string }) {
+  const src = npcPortrait(npcId)?.src
+  const tone = PORTRAIT_TONE[npcId] ?? 'neutral'
+  return (
+    <span aria-hidden="true" className={cn('relative block shrink-0 rounded-full', className)} style={{ width: size, height: size }}>
+      <span
+        className="absolute inset-0 overflow-hidden rounded-full bg-[radial-gradient(closest-side_at_50%_42%,rgba(138,124,200,0.22),rgba(18,18,20,0.95))]"
+        style={{ boxShadow: `inset 0 0 0 1px ${tone === 'blood' ? 'rgba(213,31,43,0.55)' : 'rgba(206,201,192,0.42)'}` }}
+      >
+        {src ? (
+          <SpriteCrop
+            src={src}
+            win={ROSTO}
+            className="size-full"
+            style={{ WebkitMaskImage: 'linear-gradient(to bottom,#000 72%,transparent 100%)', maskImage: 'linear-gradient(to bottom,#000 72%,transparent 100%)' }}
+          />
+        ) : (
           <span className="grid size-full place-items-center font-impact text-[26px] font-bold text-dv-text-2 [text-shadow:2px_0_0_rgba(213,31,43,0.6),-2px_0_0_rgba(138,124,200,0.6)]">?</span>
         )}
-      </PortraitFrame>
+      </span>
     </span>
   )
 }
@@ -223,9 +266,9 @@ function Conversation({ threadId, onBack }: { threadId: string; onBack: () => vo
         {/* mármore negro com veio; o retrato do remetente fica como gravura cinza, quase apagada */}
         <div className="bg-[#121214] bg-[url(/images/os/marmore-negro.webp)] bg-[length:560px_560px] absolute inset-0" />
         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.35),rgba(12,12,14,0.15)_40%,rgba(0,0,0,0.45))]" />
-        <div className="absolute -right-12 top-10 h-[62%] w-[78%] opacity-[0.1] grayscale [-webkit-mask-image:radial-gradient(ellipse_55%_50%_at_60%_42%,#000_35%,transparent_78%)] [mask-image:radial-gradient(ellipse_55%_50%_at_60%_42%,#000_35%,transparent_78%)]">
+        <div className="absolute -right-6 top-6 aspect-[700/740] w-[72%] max-w-[360px] opacity-[0.12] grayscale [-webkit-mask-image:radial-gradient(ellipse_60%_58%_at_50%_38%,#000_40%,transparent_80%)] [mask-image:radial-gradient(ellipse_60%_58%_at_50%_38%,#000_40%,transparent_80%)]">
           {portrait ? (
-            <Image src={portrait} alt="" fill sizes="320px" className="object-contain object-right-top" />
+            <SpriteCrop src={portrait} win={BUSTO} className="w-full" />
           ) : (
             <span className="absolute right-6 top-0 font-impact text-[260px] font-bold leading-none text-dv-text/60">?</span>
           )}
