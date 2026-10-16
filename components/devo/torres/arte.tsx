@@ -364,7 +364,7 @@ const STARS = (() => {
 })()
 
 /** Céu noturno, lua, montanhas e névoa (fundo do mapa e da tela da torre). */
-export function CeuNoturno({ h = MAPA_H, horizonte = 330 }: { h?: number; horizonte?: number }) {
+export function CeuNoturno({ h = MAPA_H, horizonte = 330, lua = true }: { h?: number; horizonte?: number; lua?: boolean }) {
   return (
     <g>
       <linearGradient id="tw-sky" x1="0" x2="0" y1="0" y2="1">
@@ -379,9 +379,13 @@ export function CeuNoturno({ h = MAPA_H, horizonte = 330 }: { h?: number; horizo
         <circle key={i} cx={s.x} cy={s.y} r={s.s} fill="#eeedeb" className="tw-twinkle" style={{ animationDelay: `${s.d}s`, ['--tw-o' as string]: String(0.35 + (s.s - 0.4) * 0.4) } as CSSProperties} />
       ))}
       {/* lua (luz da esquerda) */}
-      <circle cx={58} cy={74} r={34} fill="url(#tw-halo)" opacity={0.6} />
-      <circle cx={58} cy={74} r={15} fill="#f1f0ee" />
-      <circle cx={65} cy={70} r={14} fill="#141319" />
+      {lua && (
+        <g>
+          <circle cx={58} cy={74} r={34} fill="url(#tw-halo)" opacity={0.6} />
+          <circle cx={58} cy={74} r={15} fill="#f1f0ee" />
+          <circle cx={65} cy={70} r={14} fill="#141319" />
+        </g>
+      )}
       {/* montanhas */}
       <path d={`M0 ${horizonte - 22}L38 ${horizonte - 58}L70 ${horizonte - 34}L112 ${horizonte - 80}L150 ${horizonte - 40}L196 ${horizonte - 66}L236 ${horizonte - 30}L282 ${horizonte - 74}L330 ${horizonte - 36}L364 ${horizonte - 60}L390 ${horizonte - 42}V${horizonte + 40}H0Z`} fill="#19181f" />
       <path d={`M0 ${horizonte + 2}L52 ${horizonte - 26}L98 ${horizonte - 6}L140 ${horizonte - 30}L198 ${horizonte - 4}L250 ${horizonte - 32}L300 ${horizonte - 8}L352 ${horizonte - 28}L390 ${horizonte - 10}V${horizonte + 60}H0Z`} fill="#121115" />

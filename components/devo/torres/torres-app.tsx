@@ -9,7 +9,7 @@ import { cn } from '@/lib/utils'
 import { useMediaQuery } from '../hooks'
 import { Button, EmblemTorres, FrameCorners, GlyphKeyhole, Kicker, toRoman } from '../kit'
 import { useShellBack } from '../os/app-back'
-import { CeuNoturno, MAPA_H, MAPA_W, TorresDefs } from './arte'
+import { MAPA_H, MAPA_W } from './arte'
 import { Cena } from './cena'
 import { pedirCena } from './gatilho'
 import { MapaTorres, Recursos } from './mapa'
@@ -245,10 +245,7 @@ export function TorresApp() {
   return (
     <div ref={raiz} className="absolute inset-0 overflow-hidden bg-dv-ink text-dv-text">
       {/* céu de fundo em tela cheia (o mapa encaixa na altura e pode não cobrir as laterais) */}
-      <svg aria-hidden="true" viewBox={`0 0 ${MAPA_W} ${MAPA_H}`} preserveAspectRatio="xMidYMid slice" className="absolute inset-0 size-full">
-        <TorresDefs />
-        <CeuNoturno />
-      </svg>
+      <span aria-hidden="true" className="absolute inset-0 bg-[linear-gradient(180deg,#09090b,#141319_45%,#19181f_60%,#0c0c0e)]" />
 
       {/* MAPA */}
       <div ref={mapaRef} className={cn('absolute inset-0 flex flex-col', vista && !reduced && 'pointer-events-none')} inert={vista ? true : undefined} aria-hidden={vista ? true : undefined}>
@@ -302,7 +299,7 @@ export function TorresApp() {
             recemConcluido={recem}
           />
           {faixa && (
-            <div role="status" className="animate-dv-cut-in absolute inset-x-3 top-[132px] z-30 flex justify-center">
+            <div role="status" className="animate-dv-cut-in dv-safe-bottom absolute inset-x-3 bottom-5 z-30 flex justify-center">
               <span className="relative isolate px-4 py-2.5 font-display text-[13px] font-semibold uppercase tracking-[0.12em] text-dv-gold-bright" style={{ '--dv-cut': '10px' } as CSSProperties}>
                 <span aria-hidden="true" className="dv-cut-diag absolute inset-0 -z-10 bg-[linear-gradient(135deg,var(--dv-gold-bright),var(--dv-gold-deep)_45%,var(--dv-gold))]" />
                 <span aria-hidden="true" className="dv-cut-diag absolute inset-px -z-10 bg-[linear-gradient(180deg,var(--dv-ink-3),var(--dv-ink))]" style={{ '--dv-cut': '9.6px' } as CSSProperties} />

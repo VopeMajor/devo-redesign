@@ -1205,6 +1205,8 @@ if (want('torres')) {
   await step('torres-trancado', async () => {
     await enterOS(A.page)
     await wait(1200)
+    await A.page.getByRole('region', { name: 'Sistemas em breve' }).scrollIntoViewIfNeeded().catch(() => {})
+    await wait(400)
     await shot(A.page, 't01-torres-home-trancado')
     await abrirTorres(A.page)
     await shot(A.page, 't02-torres-trancado', 'jogador sem o tutorial: motivo')
@@ -1219,6 +1221,8 @@ if (want('torres')) {
     const page = B.page
     await enterOS(page)
     await wait(1200)
+    await page.getByRole('region', { name: 'Sistemas em breve' }).scrollIntoViewIfNeeded().catch(() => {})
+    await wait(400)
     await shot(page, 't03-torres-home-liberado')
     await abrirTorres(page)
     await wait(1800)
@@ -1245,9 +1249,7 @@ if (want('torres')) {
         await wait(700)
         continue
       }
-      await page.keyboard.press('Enter')
-      await wait(300)
-      if (!seen.has('bloco') && (await page.getByText('[Torre de Ruptura]').count())) {
+      if (!seen.has('bloco') && (await page.getByText('Torre de Ruptura]').count())) {
         seen.add('bloco')
         await wait(900)
         await shot(page, 't12-galo-bloco', 'quadro [Torre de Ruptura]')
@@ -1260,6 +1262,8 @@ if (want('torres')) {
         seen.add('sistema')
         await shot(page, 't15-galo-sistema')
       }
+      await page.keyboard.press('Enter')
+      await wait(300)
       await page.keyboard.press('Enter')
       await wait(600)
     }

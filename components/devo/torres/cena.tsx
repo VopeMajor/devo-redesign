@@ -184,7 +184,11 @@ export function Cena({ passos, npc, titulo, kicker, fundo = 'torre', arteFundo =
             <path d={starPath(310, 120, 10)} fill="#ece5d8" opacity={0.5} />
           </g>
         )}
-        <rect y={430} width={MAPA_W} height={210} fill="#0c0c0e" opacity={0.6} />
+        <linearGradient id="tw-palco-chao" x1="0" x2="0" y1="0" y2="1">
+          <stop offset="0" stopColor="#0c0c0e" stopOpacity="0" />
+          <stop offset="1" stopColor="#0c0c0e" stopOpacity="0.85" />
+        </linearGradient>
+        <rect y={380} width={MAPA_W} height={260} fill="url(#tw-palco-chao)" />
       </svg>
       <span aria-hidden="true" className="dv-checker-marble pointer-events-none absolute inset-x-[-40%] bottom-[-6%] h-[42%] opacity-30 [mask-image:linear-gradient(to_top,black,transparent)] [transform:perspective(520px)_rotateX(62deg)]" />
       <span aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 mx-auto h-[70%] w-[30rem] max-w-full bg-[radial-gradient(ellipse_at_top,rgba(236,229,216,0.16),transparent_70%)]" />
@@ -215,7 +219,7 @@ export function Cena({ passos, npc, titulo, kicker, fundo = 'torre', arteFundo =
               src={art.src}
               alt={npc ? `${npc.nome}${npc.titulo ? `, ${npc.titulo}` : ''}` : ''}
               draggable={false}
-              className="tw-breathe absolute inset-0 mx-auto size-full max-w-[460px] object-contain object-bottom drop-shadow-[0_18px_24px_rgba(0,0,0,0.7)] [mask-image:linear-gradient(to_bottom,#000_70%,transparent_100%)]"
+              className="tw-breathe absolute inset-0 mx-auto size-full max-w-[400px] object-contain object-bottom drop-shadow-[0_18px_24px_rgba(0,0,0,0.7)] [mask-image:linear-gradient(to_bottom,#000_70%,transparent_100%)]"
             />
           </div>
         )}
@@ -275,7 +279,7 @@ export function Cena({ passos, npc, titulo, kicker, fundo = 'torre', arteFundo =
               <span
                 aria-hidden="true"
                 className={cn(
-                  'block min-h-[4.5em] font-body text-[17px] leading-relaxed',
+                  'block min-h-[4.5em] pt-4 font-body text-[17px] leading-relaxed',
                   passo.tipo === 'jogador' && 'italic text-dv-text',
                   passo.tipo === 'narra' && 'pt-1 text-center italic text-dv-text-2',
                   passo.tipo === 'sistema' && 'text-dv-cobalt-text',

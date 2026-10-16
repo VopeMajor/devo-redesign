@@ -57,7 +57,7 @@ export function TelaTorre({
     <div className="absolute inset-0 flex flex-col overflow-hidden bg-dv-ink">
       <svg aria-hidden="true" viewBox={`0 0 ${MAPA_W} 640`} preserveAspectRatio="xMidYMid slice" className="absolute inset-0 size-full">
         <TorresDefs />
-        <CeuNoturno h={640} horizonte={600} />
+        <CeuNoturno h={640} horizonte={600} lua={false} />
       </svg>
 
       {/* cabeçalho da torre: tema, nome, NPC em destaque e recursos */}
@@ -211,7 +211,7 @@ function AndarCartao({ andar, essencia, recem, style, onAbrir }: { andar: AndarE
       type="button"
       onClick={onAbrir}
       aria-label={`Andar ${toRoman(a.n)}: ${a.titulo}, ${estadoTxt}`}
-      className={cn('dv-focus group absolute -translate-y-1/2 text-left', recem && 'animate-dv-stamp')}
+      className={cn('dv-focus group absolute -translate-y-1/2 text-left', recem && 'drop-shadow-[0_0_14px_rgba(236,229,216,0.35)]')}
       style={{ ...style, '--dv-cut': '12px' } as CSSProperties}
     >
       <span className="relative isolate flex min-h-[96px] flex-col justify-center py-2.5 pl-11 pr-3">
