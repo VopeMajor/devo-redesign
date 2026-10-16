@@ -187,6 +187,20 @@ function Agulha({ feitos, total, destaque }: { feitos: number; total: number; de
       <path d="M-20 -250L-18 -300L18 -300L20 -250Z" fill="url(#tw-white)" />
       <path d="M-42 -20L-36 -150L36 -150L42 -20ZM-30 -156L-26 -244L26 -244L30 -156ZM-20 -250L-18 -300L18 -300L20 -250Z" fill="url(#tw-white-v)" />
       <Veins clip="tw-agulha-body" seed={3} h={300} />
+      {/* fiadas de pedra (aparelho) */}
+      <g clipPath="url(#tw-agulha-body)" opacity={0.22}>
+        {Array.from({ length: 28 }, (_, i) => -28 - i * 10).map((y, i) => (
+          <g key={y}>
+            <path d={`M-50 ${y}H50`} stroke="#5d5c5a" strokeWidth={0.6} />
+            {[-30, -10, 10, 30].map((x) => (
+              <path key={x} d={`M${x + (i % 2 ? 10 : 0)} ${y}V${y + 10}`} stroke="#5d5c5a" strokeWidth={0.5} />
+            ))}
+          </g>
+        ))}
+      </g>
+      {/* sombra de oclusão sob cada cornija */}
+      <path d="M-36 -150H36L37 -138H-37Z" fill="#000" opacity={0.18} />
+      <path d="M-26 -244H26L27 -234H-27Z" fill="#000" opacity={0.18} />
       {/* pilastras */}
       {[-30, -9, 9, 30].map((x) => (
         <path key={x} d={`M${x} -22L${x * 0.88} -148`} stroke="#6f6e6a" strokeWidth={1.2} opacity={0.55} />

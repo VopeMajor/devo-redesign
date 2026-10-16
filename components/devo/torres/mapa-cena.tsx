@@ -33,13 +33,31 @@ export function CidadeAoLonge() {
     const els: ReactNode[] = []
     for (let i = 0; i < n; i++) {
       const x = 8 + (i / (n - 1)) * (MAPA_W - 16) + (r() - 0.5) * 14
-      const h = 18 + r() * hMax
-      const w = 5 + r() * 7
+      const h = 14 + r() * hMax
+      const w = 5 + r() * 10
+      const tipo = r()
       els.push(
         <g key={i}>
-          <path d={`M${x - w} ${y}V${y - h}L${x} ${y - h - w * 2.6}L${x + w} ${y - h}V${y}Z`} fill={cor} />
-          {r() > 0.55 && <rect x={x - 1} y={y - h * 0.6} width={2} height={3} fill="#ece5d8" opacity={0.35 * op} />}
-          {r() > 0.6 && <path d={`M${x - w - 3} ${y}V${y - h * 0.55}L${x - w - 1.5} ${y - h * 0.55 - 5}L${x - w} ${y - h * 0.55}V${y}Z`} fill={cor} />}
+          {/* corpo */}
+          <path d={`M${x - w} ${y}V${y - h}H${x + w}V${y}Z`} fill={cor} />
+          {tipo < 0.45 ? (
+            // agulha simples
+            <path d={`M${x - w - 1} ${y - h}L${x} ${y - h - w * 3.2}L${x + w + 1} ${y - h}Z`} fill={cor} />
+          ) : tipo < 0.75 ? (
+            // duas agulhas
+            <>
+              <path d={`M${x - w} ${y - h}L${x - w / 2} ${y - h - w * 2.6}L${x} ${y - h}Z`} fill={cor} />
+              <path d={`M${x} ${y - h}L${x + w / 2} ${y - h - w * 3.4}L${x + w} ${y - h}Z`} fill={cor} />
+            </>
+          ) : (
+            // cúpula com lanterna
+            <>
+              <path d={`M${x - w} ${y - h}A${w} ${w * 0.9} 0 0 1 ${x + w} ${y - h}Z`} fill={cor} />
+              <path d={`M${x - 1} ${y - h - w * 0.9}V${y - h - w * 0.9 - 8}H${x + 1}V${y - h - w * 0.9}Z`} fill={cor} />
+            </>
+          )}
+          {r() > 0.5 && <rect x={x - 1} y={y - h * 0.62} width={2} height={3.2} fill="#ece5d8" opacity={0.5 * op} />}
+          {r() > 0.7 && <rect x={x + w * 0.4} y={y - h * 0.35} width={1.6} height={2.6} fill="#c2b9ec" opacity={0.45 * op} />}
         </g>,
       )
     }
@@ -47,9 +65,9 @@ export function CidadeAoLonge() {
   }
   return (
     <g>
-      <g opacity={0.9}>{camada(352, '#1b1a21', 22, 48, 0.6)}</g>
+      <g opacity={0.85}>{camada(352, '#1d1c24', 18, 70, 0.6)}</g>
       <path d="M0 340Q60 330 120 338T240 336T390 340V372H0Z" fill="#16151b" />
-      <g>{camada(370, '#121116', 16, 30, 1)}</g>
+      <g>{camada(372, '#121116', 13, 40, 1)}</g>
       <rect y={366} width={MAPA_W} height={40} fill="#0f0e13" />
     </g>
   )
