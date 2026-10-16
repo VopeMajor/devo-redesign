@@ -96,7 +96,7 @@ export function MapaTorres({
             <div aria-hidden="true" className="pointer-events-none absolute -translate-x-1/2" style={{ left: `${t.mapa.x}%`, top: `${t.mapa.y + 1.4}%` }}>
               <Cartela h={principal ? 46 : 40} destaque={principal}>
                 <span className={cn('whitespace-nowrap font-display font-semibold uppercase leading-none tracking-[0.1em] text-dv-text', principal ? 'text-[13px]' : 'text-[11.5px]')}>
-                  {t.nome.replace(/^Torre d[oa]s? /, '')}
+                  {t.nome.replace(/^\[PROVISÓRIO\]\s*/, '').replace(/^Torre d[oa]s? /, '')}
                 </span>
                 <span className="dv-tabular mt-1 flex items-center gap-1.5 whitespace-nowrap font-mono text-[10px] uppercase leading-none tracking-[0.12em] text-dv-text-3">
                   {principal ? 'Campanha' : 'Secundária'}

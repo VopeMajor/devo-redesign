@@ -93,10 +93,11 @@ Copie uma torre secundária e troque:
 - `"essencia"`: `{ "item": "essencia:melissa", "nome": "Essência de Afinidade da Melissa" }`. O servidor cria a
   essência e a chave no catálogo sozinho, se não existirem.
 - `"custoBase"`: essências do 1º andar.
-- `"arte"`: desenho no mapa — `agulha` (gótica, a principal), `observatorio` (cúpula com luneta) ou `picadeiro`
-  (lona listrada). Desenho novo exige código (`components/devo/torres/arte.tsx`).
+- `"arte"`: desenho no mapa — `agulha` (catedral gótica, a principal), `palacio` (torre-palácio com coroa e
+  cata-vento de galo), `observatorio` (cúpula com luneta) ou `picadeiro` (lona listrada). Desenho novo exige código
+  (`components/devo/torres/arte.tsx` + peças em `estruturas.tsx`; texturas WebP em `public/images/torres/`).
 - `"mapa"`: `{ "x": 0–100, "y": 0–100, "escala": 0.7 }` — posição da base da torre em % da ilustração
-  (390×640). Hoje: principal em (50, 62); secundárias em (21, 77) e (80, 79). Evite sobrepor.
+  (390×640). Hoje: principal em (50, 61); Imperador (19, 74), Observatório (82, 72), Picadeiro (71, 86). Evite sobrepor.
 - `"chave"`: `{ "nome": "Chave da …" }`.
 
 Deve haver **exatamente 1** torre `"principal"`. Requisitos de chave só podem citar torres que existem.
@@ -127,8 +128,21 @@ Deve haver **exatamente 1** torre `"principal"`. Requisitos de chave só podem c
 - O motor de cena das Torres (`components/devo/torres/cena.tsx`) é local; quando `docs/redesign/DIALOGO.md`
   (Narrativa) chegar, o formato de passos pode ser convertido 1:1.
 
+## Torres de exemplo (provisórias)
+
+| id | tipo | NPC | essência | chave |
+|---|---|---|---|---|
+| `campanha` | principal | **a definir** (`???`) | `essencia:campanha` "Essência da Ruptura (provisória)" | — |
+| `imperador` | secundária | O Galo | `essencia:galo` | `chave:imperador` |
+| `observatorio` | secundária | A Coruja | `essencia:coruja` | `chave:observatorio` |
+| `picadeiro` | secundária | O Javali | `essencia:javali` | `chave:picadeiro` |
+
+A principal não pertence ao Galo (pedido do dono, 16/10): nome, NPC e essência dela estão neutros e marcados
+`[PROVISÓRIO]` para o dono decidir. O Galo tem a própria torre secundária (Torre do Imperador).
+
 ## Pendências para o dono
 
+- Nome, NPC e essência da torre principal.
 - Diálogos, títulos e NPCs reais dos andares (tudo marcado `[PROVISÓRIO]`).
 - Torres secundárias, NPCs (Coruja, Javali) e essências delas são exemplos provisórios.
 - `custoBase` provisório (1 em todas).

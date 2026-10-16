@@ -375,7 +375,7 @@ export function TorresApp() {
           npc={GALO}
           titulo="O Galo apresenta as Torres de Ruptura"
           kicker="Torres de Ruptura · O Galo"
-          arteFundo="agulha"
+          arteFundo="palacio"
           onEfeito={efeitoGalo}
           onFim={() => void fimGalo()}
           onPular={dados.pularApresentacao ? () => void fimGalo() : undefined}
