@@ -74,17 +74,30 @@ export function HologramaMelissa({ fase, expressao, className }: { fase: Exclude
       {/* Figura projetada: aço/ametista, sem cor de pele, com varredura e tremulação. */}
       <div className={cn('absolute inset-x-[8%] bottom-[9%] top-[2%]', fase === 'materializa' && 'holo-in', fase === 'encerra' && 'holo-out', fase === 'ativo' && 'holo-flicker', fase === 'chamada' && 'opacity-0')}>
         {art ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={art.src}
-            alt=""
-            className="size-full object-contain object-bottom [filter:grayscale(1)_brightness(1.15)_contrast(1.05)_drop-shadow(0_0_14px_rgba(168,155,224,0.55))]"
-            style={{ WebkitMaskImage: 'linear-gradient(0deg, transparent 0%, #000 22%)', maskImage: 'linear-gradient(0deg, transparent 0%, #000 22%)', opacity: 0.82 }}
-          />
+          <span
+            className="absolute inset-0"
+            style={{
+              // Tudo recortado pela silhueta do próprio sprite: a luz fria só existe onde há figura.
+              WebkitMaskImage: `linear-gradient(0deg, transparent 0%, #000 22%), url(${art.src})`,
+              maskImage: `linear-gradient(0deg, transparent 0%, #000 22%), url(${art.src})`,
+              WebkitMaskComposite: 'source-in',
+              maskComposite: 'intersect',
+              WebkitMaskSize: '100% 100%, contain',
+              maskSize: '100% 100%, contain',
+              WebkitMaskPosition: 'center, bottom',
+              maskPosition: 'center, bottom',
+              WebkitMaskRepeat: 'no-repeat',
+              maskRepeat: 'no-repeat',
+            }}
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={art.src} alt="" className="size-full object-contain object-bottom opacity-80 [filter:grayscale(1)_brightness(1.2)_contrast(1.05)]" />
+            <span className="absolute inset-0 mix-blend-color" style={{ background: 'linear-gradient(180deg,#b9b0e6,#8a7cc8 60%,#6b6357)' }} />
+            <span className="holo-scan absolute inset-0 opacity-40 mix-blend-overlay" style={{ background: 'repeating-linear-gradient(0deg, rgba(236,229,216,0.35) 0 1px, transparent 1px 4px)' }} />
+            <span className="holo-sweep absolute inset-x-0 h-1/5" style={{ background: 'linear-gradient(180deg, transparent, rgba(236,229,216,0.22), transparent)' }} />
+          </span>
         ) : null}
-        <span className="absolute inset-0 mix-blend-color" style={{ background: 'linear-gradient(180deg,#b9b0e6,#8a7cc8 60%,#6b6357)' }} />
-        <span className="holo-scan absolute inset-0 opacity-40 mix-blend-overlay" style={{ background: 'repeating-linear-gradient(0deg, rgba(236,229,216,0.35) 0 1px, transparent 1px 4px)' }} />
-        <span className="holo-sweep absolute inset-x-0 h-1/5" style={{ background: 'linear-gradient(180deg, transparent, rgba(236,229,216,0.22), transparent)' }} />
+        <span className="absolute inset-x-[20%] bottom-0 h-1/3 bg-[radial-gradient(50%_60%_at_50%_100%,rgba(168,155,224,0.28),transparent)] [filter:blur(6px)]" />
       </div>
       {/* Emissor: o celular do jogador, tela acesa. */}
       <span className="absolute bottom-[3%] left-1/2 h-[6%] w-[30%] -translate-x-1/2">

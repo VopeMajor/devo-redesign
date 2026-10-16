@@ -1644,7 +1644,8 @@ if (want('narrativa')) {
   const { default: pg } = await import('pg')
   const db = new pg.Pool({ connectionString: process.env.DATABASE_URL })
   const sql = (t, p) => db.query(t, p).then((r) => r.rows)
-  const dlg = (page) => page.getByRole('dialog').first()
+  // A cena do motor é a última <section role=dialog> (outras telas podem ter diálogos ocultos antes).
+  const dlg = (page) => page.locator('section[role="dialog"][aria-modal="true"]').last()
   const textoDlg = (page) => dlg(page).innerText({ timeout: 2000 }).catch(() => '')
   /** Avança a cena até o texto aparecer (por inteiro); escolhas no caminho: a primeira, ou `pick` por rótulo. */
   async function ate(page, alvo, { pick = {}, max = 120 } = {}) {
