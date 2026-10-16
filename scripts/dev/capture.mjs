@@ -2027,6 +2027,149 @@ if (want('salao')) {
   await db?.end().catch(() => {})
 }
 
+// ── Virtudes (DIRECAO-3 §2; VIRTUDES.md): trancado, sem Arcano, Arcano da Morte, outro Arcano, Evolução antes/depois,
+// Mesa da equipe e erro. Convites DEVO-VIRT-CAP1..3 (95-seed-virtudes.sql). O Owner (Veterano) libera a flag, define
+// o Arcano, lança P.P. e dispara a Evolução pela API, como faria na Mesa.
+if (want('virtudes')) {
+  const own = await account('Veterano', 'DEVO-TEST-ADM1', VET_CARDS)
+  const meuId = (page) => page.evaluate(async () => (await (await fetch('/api/eu')).json()).id)
+  const chamar = async (path, body, tag) => {
+    const r = await api(own.page, path, body)
+    if (r.status >= 400) manifest.errors.push({ step: `virtudes-${tag ?? body.action}`, error: `${r.status} ${r.text}` })
+  }
+  const virt = (body) => chamar('/api/virtudes', body)
+  const abrirVirtudes = async (page) => {
+    await enterOS(page)
+    await page.getByRole('region', { name: 'Sistemas', exact: true }).scrollIntoViewIfNeeded().catch(() => {})
+    const b = page.getByRole('button', { name: /^Virtudes/ }).first()
+    await b.waitFor({ state: 'visible', timeout: 15000 }).catch(() => {})
+    await tryClick(b, 8000)
+    await wait(2400)
+  }
+  /** Rola a tela das Virtudes até o elemento (cabeçalho ou região) pelo nome. */
+  const ir = async (page, nome) => {
+    await page
+      .getByRole('heading', { name: nome })
+      .first()
+      .evaluate((el) => el.scrollIntoView({ block: 'start' }))
+      .catch(() => {})
+    await wait(600)
+  }
+
+  // 1. Jogador comum, sem o tutorial: emblema trancado e a tela com o motivo
+  const A = await account('Virtuosa', 'DEVO-VIRT-CAP1', VET_CARDS)
+  await step('virtudes-trancado', async () => {
+    await enterOS(A.page)
+    await wait(1000)
+    await A.page.getByRole('region', { name: 'Sistemas', exact: true }).scrollIntoViewIfNeeded().catch(() => {})
+    await wait(400)
+    await shot(A.page, 'v01-home-trancado')
+    await abrirVirtudes(A.page)
+    await shot(A.page, 'v02-trancado', 'jogador sem o tutorial: motivo')
+  })
+  await A.ctx.close()
+
+  // 2. Outro Arcano (e antes disso: liberado sem Arcano registrado = estado vazio)
+  const C = await account('Vigilante', 'DEVO-VIRT-CAP3', VET_CARDS)
+  const cid = await meuId(C.page).catch(() => null)
+  await chamar('/api/staff', { action: 'desbloqueio.definir', playerId: cid, flag: 'virtudes', on: true }, 'flag-c')
+  await step('virtudes-sem-arcano', async () => {
+    await abrirVirtudes(C.page)
+    await shot(C.page, 'v03-sem-arcano', 'liberado, Arcano ainda sem registro (vazio)')
+  })
+  await virt({ action: 'arcano', playerId: cid, arcano: 'imperatriz' })
+  for (const [v, n] of [['escudos', 9], ['copas', 6]]) await virt({ action: 'potencial', playerId: cid, virtude: v, quantidade: n, motivo: 'captura' })
+  await step('virtudes-outro-arcano', async () => {
+    await abrirVirtudes(C.page)
+    await shot(C.page, 'v04-imperatriz-roda', 'Arcano da Imperatriz: Taças excelente, Paus deficiente')
+    await ir(C.page, 'Pouco acumulado')
+    await shot(C.page, 'v05-imperatriz-potencial', 'pouco acumulado')
+    await ir(C.page, 'Mais vagas')
+    await shot(C.page, 'v06-imperatriz-antigas')
+  })
+  await C.ctx.close()
+
+  // 3. Arcano da Morte (como o exemplo do doc): roda, naipes, acúmulo perto do limite → Evolução → depois
+  const B = await account('Morgana', 'DEVO-VIRT-CAP2', VET_CARDS)
+  const bid = await meuId(B.page).catch(() => null)
+  await chamar('/api/staff', { action: 'desbloqueio.definir', playerId: bid, flag: 'virtudes', on: true }, 'flag-b')
+  await virt({ action: 'arcano', playerId: bid, arcano: 'morte' })
+  for (const [v, n] of [['tacas', 34], ['ouros', 28], ['espadas', 18], ['paus', 6], ['escudos', 8]]) await virt({ action: 'potencial', playerId: bid, virtude: v, quantidade: n, motivo: 'captura' })
+  await step('virtudes-morte', async () => {
+    await enterOS(B.page)
+    await B.page.getByRole('region', { name: 'Sistemas', exact: true }).scrollIntoViewIfNeeded().catch(() => {})
+    await wait(500)
+    await shot(B.page, 'v07-home-liberado')
+    await abrirVirtudes(B.page)
+    await shot(B.page, 'v08-morte-roda', 'Arcano da Morte, Estágio I')
+    await ir(B.page, 'Perto do limite')
+    await shot(B.page, 'v09-evolucao-antes', 'P.P. perto do limite, pronto para a metamorfose')
+    await ir(B.page, 'Bases claras')
+    await shot(B.page, 'v10-morte-naipes', 'afinidades em palavras')
+    await ir(B.page, 'Evoluções de Estágio')
+    await shot(B.page, 'v11-historico-vazio')
+  })
+  await virt({ action: 'evoluir', playerId: bid })
+  await virt({ action: 'potencial', playerId: bid, virtude: 'tacas', quantidade: 12, motivo: 'captura' })
+  await step('virtudes-evolucao-depois', async () => {
+    await abrirVirtudes(B.page)
+    await shot(B.page, 'v12-evolucao-depois', 'Estágio II')
+    await ir(B.page, 'Quase nada acumulado')
+    await ir(B.page, 'Pouco acumulado')
+    await shot(B.page, 'v13-depois-potencial', 'acúmulo recomeça')
+    await ir(B.page, 'Evoluções de Estágio')
+    await shot(B.page, 'v14-depois-historico', 'histórico: mais cresceu / menos cresceu')
+    // o Record mostra o Arcano na ficha
+    await openApp(B.page, 'Record')
+    await wait(1500)
+    await shot(B.page, 'v15-record-arcano', 'ficha do Record com o Arcano')
+  })
+  await B.ctx.close()
+
+  // 4. Mesa da equipe (Owner): jogadores com números, detalhes, Evolução, tabela de afinidade e divergências
+  await step('virtudes-mesa', async () => {
+    const page = own.page
+    await openApp(page, 'Record')
+    await tryClick(page.getByRole('tab', { name: /Mesa/i }).first())
+    await wait(2000)
+    await page.locator('nav[aria-label="Seções da mesa"]').first().evaluate((el) => el.scrollIntoView({ block: 'start' })).catch(() => {})
+    await tryClick(desk(page, 'Virtudes'))
+    await wait(2000)
+    await shot(page, 'v16-mesa-jogadores')
+    const busca = page.getByRole('textbox', { name: 'Buscar jogador' }).first()
+    await busca.fill('Morgana').catch(() => {})
+    await wait(1600)
+    await tryClick(page.getByRole('listitem', { name: 'Virtudes de Morgana' }).getByRole('button', { name: 'Detalhes' }).first())
+    await wait(700)
+    await page.getByRole('listitem', { name: 'Virtudes de Morgana' }).first().evaluate((el) => el.scrollIntoView({ block: 'start' })).catch(() => {})
+    await wait(400)
+    await shot(page, 'v17-mesa-detalhes', 'P.P., atributos, afinidade e histórico com números')
+    await busca.fill('Lírio').catch(() => {})
+    await wait(1600)
+    await page.getByRole('listitem', { name: 'Virtudes de Lírio' }).first().evaluate((el) => el.scrollIntoView({ block: 'center' })).catch(() => {})
+    await tryClick(page.getByRole('button', { name: 'Evoluir Estágio' }).first())
+    await wait(500)
+    await shot(page, 'v18-mesa-evoluir-armado', 'confirmação em dois toques')
+    await tryClick(page.getByRole('button', { name: 'Voltar', exact: true }).first())
+    await page.getByRole('region', { name: 'Tabela de afinidade' }).first().evaluate((el) => el.scrollIntoView({ block: 'start' })).catch(() => {})
+    await wait(500)
+    await shot(page, 'v19-mesa-tabela', 'tabela editável, provisória')
+    await tryClick(page.getByRole('button', { name: 'Divergência do doc: Arcano da Lua' }).first())
+    await wait(500)
+    await page.getByRole('button', { name: 'Divergência do doc: Arcano da Lua' }).first().evaluate((el) => el.scrollIntoView({ block: 'center' })).catch(() => {})
+    await wait(300)
+    await shot(page, 'v20-mesa-divergencia', 'nota da divergência para o dono confirmar')
+    await page.getByRole('region', { name: 'Limites por Estágio' }).first().evaluate((el) => el.scrollIntoView({ block: 'start' })).catch(() => {})
+    await wait(400)
+    await shot(page, 'v21-mesa-limites')
+
+    await page.route(/\/api\/virtudes$/, (r) => r.fulfill({ status: 500, contentType: 'application/json', body: '{"ok":false,"error":"As Virtudes não responderam. Tente de novo."}' }))
+    await abrirVirtudes(page)
+    await shot(page, 'v22-erro')
+  })
+  await own.ctx.close()
+}
+
 await browser.close()
 writeFileSync(`${OUT}/manifest.json`, JSON.stringify(manifest, null, 2))
 console.log(`capturas: ${manifest.shots.length}, erros: ${manifest.errors.length}, console: ${manifest.console.length}`)

@@ -578,3 +578,17 @@ END $$;
 DROP TRIGGER IF EXISTS reward_proposals_log ON reward_proposals;
 CREATE TRIGGER reward_proposals_log AFTER INSERT OR UPDATE ON reward_proposals
   FOR EACH ROW EXECUTE FUNCTION devo_reward_log();
+
+-- ---------------------------------------------------------------------------------------------
+-- 9. Arcano do jogador e Estágio (acrescentado pelo agente Virtudes; FUNDACAO.md §12)
+--    arcano: chave do Arcano maior ('morte', 'imperador', …; lista em lib/devo/virtudes.ts) ou NULL
+--    ("sem registro"). arcano_estagio: Estágio atual (1..), sobe na Evolução de Estágio.
+-- ---------------------------------------------------------------------------------------------
+ALTER TABLE players ADD COLUMN IF NOT EXISTS arcano text;
+ALTER TABLE players ADD COLUMN IF NOT EXISTS arcano_estagio integer NOT NULL DEFAULT 1;
+DO $$ BEGIN
+  ALTER TABLE players ADD CONSTRAINT players_arcano_chk CHECK (arcano IS NULL OR arcano ~ '^[a-z]{2,20}$');
+EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+DO $$ BEGIN
+  ALTER TABLE players ADD CONSTRAINT players_arcano_estagio_chk CHECK (arcano_estagio BETWEEN 1 AND 50);
+EXCEPTION WHEN duplicate_object THEN NULL; END $$;

@@ -10,13 +10,15 @@ import { awaitingMe, RewardsPanel, useRewards } from './staff-rewards'
 import { AdminLogPanel, ConfigPanel, PlayersPanel, TeamPanel } from './staff-team'
 import { DeskNav, type DeskItem } from './staff-ui'
 import { SalaoMesa, useFilaSalao } from '../salao/salao-mesa'
+import { VirtudesMesa } from '../virtudes/virtudes-mesa'
 
-type Section = 'casos' | 'recompensas' | 'salao' | 'equipe' | 'jogadores' | 'convites' | 'registro' | 'ajustes'
+type Section = 'casos' | 'recompensas' | 'salao' | 'virtudes' | 'equipe' | 'jogadores' | 'convites' | 'registro' | 'ajustes'
 
 const LABEL: Record<Section, string> = {
   casos: 'Casos',
   recompensas: 'Recompensas',
   salao: 'Salão',
+  virtudes: 'Virtudes',
   equipe: 'Equipe',
   jogadores: 'Jogadores',
   convites: 'Convites',
@@ -27,8 +29,8 @@ const LABEL: Record<Section, string> = {
 /** Seções por cargo (tabela do dono). O servidor decide de novo em cada chamada. */
 const SECTIONS: Record<Exclude<Cargo, 'player'>, Section[]> = {
   dealer: ['casos', 'recompensas', 'salao'],
-  anfitriao: ['casos', 'recompensas', 'salao', 'equipe', 'jogadores', 'convites'],
-  owner: ['casos', 'recompensas', 'salao', 'equipe', 'jogadores', 'convites', 'registro', 'ajustes'],
+  anfitriao: ['casos', 'recompensas', 'salao', 'virtudes', 'equipe', 'jogadores', 'convites'],
+  owner: ['casos', 'recompensas', 'salao', 'virtudes', 'equipe', 'jogadores', 'convites', 'registro', 'ajustes'],
 }
 
 const ROLE_LINE: Record<Exclude<Cargo, 'player'>, string> = {
@@ -120,6 +122,7 @@ export function StaffDesk({ role }: { role: Exclude<Cargo, 'player'> }) {
         {section === 'casos' && <DealerBoard role={role} />}
         {section === 'recompensas' && <RewardsPanel role={role} />}
         {section === 'salao' && <SalaoMesa />}
+        {section === 'virtudes' && <VirtudesMesa />}
         {section === 'equipe' && <TeamPanel role={role} />}
         {section === 'jogadores' && <PlayersPanel role={role} />}
         {section === 'convites' && <InvitePanel />}

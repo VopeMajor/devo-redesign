@@ -120,6 +120,12 @@ export type Alvos = {
   'equipe.ver': undefined
   /** Especialista do Salão das Máscaras: aprovar/recusar itens da Bandeja e anúncios (toda a equipe). */
   'salao.avaliar': undefined
+  /** Virtudes: ver P.P., Estágio e atributos dos jogadores na Mesa (Owner, Anfitrião). */
+  'virtudes.ver': undefined
+  /** Virtudes: disparar Evolução de Estágio e definir o Arcano de um jogador (Owner, Anfitrião). */
+  'virtudes.evoluir': undefined
+  /** Virtudes: lançar P.P. manualmente (Owner). A tabela de afinidade usa 'config.editar'. */
+  'virtudes.ajustar': undefined
 }
 
 export type Acao = keyof Alvos
@@ -129,6 +135,7 @@ export const ACOES = [
   'recompensa.editar', 'recompensa.aprovar', 'recompensa.distribuir', 'convite.gerar', 'convite.teste', 'dados.resumidos',
   'dados.completos', 'jogar', 'desbloqueio.override', 'karma.ajustar', 'item.conceder', 'cargo.ver_owner',
   'cosmetico.equipar_qualquer', 'catalogo.editar', 'config.editar', 'autorizacao.gerenciar', 'equipe.ver', 'salao.avaliar',
+  'virtudes.ver', 'virtudes.evoluir', 'virtudes.ajustar',
 ] as const satisfies readonly Acao[]
 
 function temAutorizacao(ator: Ator, escopo: string, ref?: string | null) {
@@ -173,12 +180,15 @@ export function can<A extends Acao>(ator: Ator | null | undefined, acao: A, alvo
     case 'config.editar':
     case 'autorizacao.gerenciar':
     case 'convite.teste':
+    case 'virtudes.ajustar':
       return owner
     case 'dv.criar':
     case 'salao.avaliar':
       return isStaff(c)
     case 'dv.tutorial':
     case 'equipe.ver':
+    case 'virtudes.ver':
+    case 'virtudes.evoluir':
       return owner || c === 'anfitriao'
     case 'dv.editar': {
       const v = x as Alvos['dv.editar'] | undefined

@@ -6,6 +6,8 @@ import {
   BrassCorners,
   CobaltTabs,
   Countdown,
+  EmblemMark,
+  EmblemVirtudes,
   EmblemVotes,
   FUTURE_SYSTEMS,
   GlyphArrow,
@@ -33,6 +35,7 @@ import { DeckPanel } from '../shared/deck-panel'
 import { EnviarBandejaAcao } from '../salao/salao-enviar'
 import { callName, useDevo } from '../state/devo-store'
 import { usePlayerText } from '../state/player-text'
+import { useAcesso, useEu } from '../state/use-acesso'
 import { playerText } from '@/lib/devo/player-name'
 import { DeadlyVoteHistory, tallyText } from '../system/deadly-vote-history'
 import { InvitePanel } from '../system/invite-panel'
@@ -53,6 +56,7 @@ const ROLE_LABEL = { player: 'Jogador', dealer: 'Dealer', anfitriao: 'Anfitrião
 
 export function useRecordData(avatarVersion: number | null = null): RecordFileData {
   const { state } = useDevo()
+  const eu = useEu().data
   const now = useNow(1000)
   const remaining = Math.max(0, state.timerEndsAt - now)
   const critical = remaining < CRITICAL_MS
@@ -62,7 +66,8 @@ export function useRecordData(avatarVersion: number | null = null): RecordFileDa
     status: remaining === 0 ? { label: playerText('Eliminad{o|a}', { gender: state.profile.gender }), tone: 'critical' } : critical ? { label: 'Crítico', tone: 'critical' } : { label: 'Ativo', tone: 'active' },
     remainingMs: remaining,
     critical,
-    arcano: null,
+    // O Arcano vem do servidor (Virtudes / Fundação); sem registro → "Não revelado".
+    arcano: eu?.arcano ? eu.arcano.titulo.replace(/^Arcano d[aoe]s? /, '') : null,
     shuffler: state.arcadeUnlocked ? shufflerStatus(true) : null,
     photoUrl: avatarVersion ? `/api/record/avatar?v=${avatarVersion}` : null,
     stats: [
@@ -218,19 +223,34 @@ function Masthead({ recordId, role, sealed }: { recordId: string; role: string |
   )
 }
 
-/** Sistemas reservados que o Record vai exibir (Direção 2 §3): só informação, sem botão ativo. */
+/**
+ * Sistemas reservados que o Record exibe (Direção 2 §3). Arcanos continua só informação; Virtudes já tem tela
+ * e vira atalho (trancado mostra o motivo lá dentro — quem decide é o servidor).
+ */
 function ReservedSystems() {
-  const shown = FUTURE_SYSTEMS.filter((s) => s.id === 'arcanos' || s.id === 'virtudes')
+  const nav = useOsNav()
+  const acesso = useAcesso()
+  const arcanos = FUTURE_SYSTEMS.find((s) => s.id === 'arcanos')!
+  const livre = !!acesso?.sistemas.virtudes
   return (
     <section aria-label="Sistemas reservados" className="flex flex-col gap-2">
       <div className="flex items-center justify-between gap-3">
-        <RecordTitle title="Reservado" jp="予約" size="sm" />
-        <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-in-fg-3">Em breve</span>
+        <RecordTitle title="Sistemas" jp="予約" size="sm" />
+        <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-in-fg-3">Arcanos em breve</span>
       </div>
       <div className="grid grid-cols-2 gap-3">
-        {shown.map((s) => (
-          <LockedFeature key={s.id} name={s.name} jp={s.jp} hint={s.hint} icon={s.icon} />
-        ))}
+        <button
+          type="button"
+          onClick={() => nav.open('virtudes')}
+          aria-label={livre ? 'Abrir Virtudes' : 'Virtudes: trancado'}
+          className="dv-focus group relative flex min-h-[132px] flex-col items-center justify-center gap-2 bg-[#1c1c1f] px-2 py-3 text-center shadow-[inset_0_0_0_1px_rgba(186,176,159,0.55)] transition-transform active:scale-[0.98]"
+        >
+          <span aria-hidden="true" className="absolute inset-[5px] border border-[#bab09f]/25" />
+          <EmblemMark emblem={EmblemVirtudes} size={52} state={livre ? 'selected' : 'locked'} />
+          <span className="font-serif text-[18px] font-light uppercase leading-none tracking-[0.04em] text-white">Virtudes</span>
+          <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-[#bab09f]">{livre ? 'Naipes e Estágio' : 'Trancado'}</span>
+        </button>
+        <LockedFeature name={arcanos.name} jp={arcanos.jp} hint={arcanos.hint} icon={arcanos.icon} />
       </div>
     </section>
   )
