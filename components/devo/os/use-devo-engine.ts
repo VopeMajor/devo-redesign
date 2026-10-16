@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react'
 import { getCard } from '@/lib/devo/cards'
-import { partnerCardFor, ROOM_RULES } from '@/lib/devo/trade-rooms'
+import { partnerCardFor } from '@/lib/devo/trade-rooms'
 import { getNpc } from '@/lib/devo/npcs'
 import { withName } from '@/lib/devo/player-name'
 import { makePartner, partnerLine } from '@/lib/devo/trade-bots'
@@ -82,9 +82,6 @@ export function useDevoEngine() {
     return () => window.clearInterval(id)
   }, [dispatch])
 
-  const roomRule = trade ? state.rooms.find((r) => r.id === trade.roomId)?.rule : undefined
-  // Fala espontânea do parceiro só onde existe chat (frases prontas ou livre).
-  const silent = roomRule ? ROOM_RULES[roomRule].chat === 'nenhum' : false
 
   useEffect(() => {
     if (stage !== 'waiting' || !trade?.myCard) return
@@ -93,11 +90,10 @@ export function useDevoEngine() {
     timers.push(
       window.setTimeout(() => {
         const partner = makePartner()
-        const card = partnerCardFor(roomRule ?? 'mesma-raridade', rarity)
+        const card = partnerCardFor(rarity)
         dispatch({ type: 'TRADE_PARTNER_JOIN', partner, partnerCardId: card.id })
         notify({ appId: 'trocas', title: `${partner.handle} sentou à mesa`, body: `${partner.handle} entrou na sua sala e colocou uma carta na mesa.` })
         playSfx('notify')
-        if (silent) return
         timers.push(window.setTimeout(() => dispatch({ type: 'TRADE_PARTNER_TYPING', typing: true }), 700))
         timers.push(
           window.setTimeout(() => {
@@ -114,7 +110,6 @@ export function useDevoEngine() {
     if (stage !== 'negotiating' || !trade?.partner || !trade.partnerCardId) return
     const { partner, partnerCardId } = trade
     const say = (kind: 'accept' | 'leave') => {
-      if (silent) return
       dispatch({ type: 'TRADE_CHAT', message: { id: nextId('tc'), from: partner.handle, text: withName(partnerLine(partner, partnerCardId, kind), callName(state), state.profile.gender), at: Date.now() } })
     }
     const leave = () => {

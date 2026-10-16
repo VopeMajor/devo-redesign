@@ -1,22 +1,19 @@
 'use client'
 
-import { useEffect, useId, useRef, useState, type CSSProperties, type FormEvent, type ReactNode } from 'react'
+import { useEffect, useId, useMemo, useRef, useState, type CSSProperties, type FormEvent, type ReactNode } from 'react'
+import useSWR from 'swr'
 import { playSfx } from '@/lib/devo/audio'
 import { RARITY_META, getCard } from '@/lib/devo/cards'
 import { partnerReply } from '@/lib/devo/trade-bots'
-import { QUICK_PHRASES, ROOM_RULES, TRADE_PROTOCOL, type RoomRule, type RoomRuleMeta } from '@/lib/devo/trade-rooms'
+import { QUICK_PHRASES, TRADE_PROTOCOL, TRADE_RULES } from '@/lib/devo/trade-rooms'
 import type { Room, TradeSession } from '@/lib/devo/types'
 import { cn } from '@/lib/utils'
 import {
   Button,
-  Dialog,
-  EmblemMascaras,
-  FUTURE_SYSTEMS,
   FrameCorners,
   GlyphArrow,
   GlyphCheck,
   IconButton,
-  IconLock,
   Kicker,
   LaceEdge,
   Reveal,
@@ -33,8 +30,8 @@ import { TypingDots } from './app-ui'
 
 /**
  * Sala de Trocas — o corredor de portas (cena `corridor`) e a mesa de troca às cegas.
- * Tensão silenciosa: mármore negro, aço champanhe, a luz das fechaduras. Ametista só no que é seu;
- * rubi só na perda. As regras de cada sala vêm de `lib/devo/trade-rooms.ts` (fonte única).
+ * Tensão silenciosa: mármore negro, aço champanhe, a luz das fechaduras. Ametista só no que é seu.
+ * Uma regra só para as oito salas (Direção 3 §8), a mesma do Rato: `lib/devo/trade-rooms.ts`.
  */
 
 const STATUS_META: Record<Room['status'], { label: string }> = {
@@ -45,19 +42,23 @@ const STATUS_META: Record<Room['status'], { label: string }> = {
 
 const pad2 = (n: number) => String(n).padStart(2, '0')
 
+/** Uids entregues ao Salão das Máscaras (Bandeja/Mercado): não vão à mesa. Sem sessão no servidor, lista vazia. */
+function usePresas(): Set<string> {
+  const { data } = useSWR<{ presas?: string[] }>(
+    '/api/trocas',
+    (u: string) => fetch(u, { cache: 'no-store' }).then((r) => (r.ok ? r.json() : { presas: [] })).catch(() => ({ presas: [] })),
+    { revalidateOnFocus: false, refreshInterval: 60_000 },
+  )
+  const list = data?.presas ?? []
+  const key = list.join(',')
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  return useMemo(() => new Set(list), [key])
+}
+
 export function TrocasApp() {
   const { state } = useDevo()
   const trade = state.trade
-  const forfeited = trade?.endReason === 'forfeit'
-  // Pulso rubi de tela inteira só no instante da perda (< 1 s); depois a sala volta ao mármore.
-  const [lossFlash, setLossFlash] = useState(false)
-  useEffect(() => {
-    if (!forfeited) return
-    setLossFlash(true)
-    const t = window.setTimeout(() => setLossFlash(false), 900)
-    return () => window.clearTimeout(t)
-  }, [forfeited])
-  // Entrar numa sala (ou voltar ao corredor) começa do topo: a regra da sala é a primeira coisa que se lê.
+  // Entrar numa sala (ou voltar ao corredor) começa do topo: a regra da casa é a primeira coisa que se lê.
   const scrollRef = useRef<HTMLDivElement>(null)
   const roomId = trade?.roomId
   useEffect(() => {
@@ -67,14 +68,6 @@ export function TrocasApp() {
   return (
     <div className="relative h-full overflow-hidden bg-dv-ink text-dv-text @container">
       <SceneBackdrop preset="corridor" intensity={trade ? 0.4 : 0.7} dim={trade ? 0.74 : 0.5} />
-      {lossFlash && (
-        <span
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-0 z-20 bg-[radial-gradient(90%_70%_at_50%_45%,rgba(163,18,31,0.05),rgba(163,18,31,0.42)_100%)] motion-safe:animate-[trocas-loss_850ms_var(--dv-ease-out)_both]"
-        >
-          <style>{'@keyframes trocas-loss{0%{opacity:0}18%{opacity:1}100%{opacity:0}}'}</style>
-        </span>
-      )}
       <div ref={scrollRef} className="devo-scroll absolute inset-0 overflow-y-auto overflow-x-hidden">
         {trade ? (
           <Reveal key={`sala-${trade.roomId}`} variant="right">
@@ -96,6 +89,10 @@ function Lobby() {
   const { state, dispatch } = useDevo()
   const free = state.rooms.filter((r) => r.status === 'livre').length
   const busy = state.rooms.filter((r) => r.status === 'ocupada').length
+  const presas = usePresas()
+  const tradable = state.inventory.filter((c) => !presas.has(c.uid)).length
+  // Quem não tem carta não troca: as portas ficam trancadas para ele, com o motivo à vista.
+  const blocked = tradable === 0
 
   return (
     <div className="mx-auto flex max-w-5xl flex-col gap-6 px-4 pb-10 pt-5 @2xl:px-6">
@@ -146,11 +143,23 @@ function Lobby() {
         </dl>
       </header>
 
+      {blocked && (
+        <p role="status" className="flex items-start gap-3 border border-dv-line-strong bg-dv-ink-2/90 px-4 py-3 font-body text-[15px] leading-snug text-dv-text-2">
+          <span aria-hidden="true" className="mt-[7px] size-2 shrink-0 rotate-45 border border-dv-gold" />
+          <span>
+            <span className="block font-display text-[13px] font-semibold uppercase tracking-[0.14em] text-dv-text">Nenhuma porta abre para você</span>
+            Sem cartas, sem troca.{' '}
+            {state.inventory.length > 0 ? 'As suas estão no Salão das Máscaras e não vão à mesa.' : 'Consiga uma carta e volte ao corredor.'}
+          </span>
+        </p>
+      )}
+
       <Stagger as="ul" itemAs="li" className="grid grid-cols-2 gap-x-3 gap-y-6 @lg:grid-cols-4 @lg:gap-x-5" step={55} delay={160}>
         {state.rooms.map((room) => (
           <Door
             key={room.id}
             room={room}
+            blocked={blocked}
             onEnter={() => {
               playSfx('open')
               dispatch({ type: 'TRADE_ENTER', roomId: room.id })
@@ -160,28 +169,32 @@ function Lobby() {
       </Stagger>
 
       <Reveal inView variant="rise">
-        <MasksHall />
-      </Reveal>
-
-      <Reveal inView variant="rise">
         <Protocol />
       </Reveal>
     </div>
   )
 }
 
-function Door({ room, onEnter }: { room: Room; onEnter: () => void }) {
+const DOOR_LINE: Record<Room['status'], [string, string]> = {
+  livre: ['Mesa vazia', 'Entre e ponha uma carta.'],
+  ocupada: ['Em negociação', 'Dois estranhos à mesa.'],
+  sua: ['Sua sala', 'Sua carta espera.'],
+}
+
+function Door({ room, blocked, onEnter }: { room: Room; blocked: boolean; onEnter: () => void }) {
   const meta = STATUS_META[room.status]
-  const rule = ROOM_RULES[room.rule]
-  const free = room.status === 'livre'
+  const locked = blocked && room.status === 'livre'
+  const free = room.status === 'livre' && !locked
   const mine = room.status === 'sua'
+  const [title, line] = locked ? ['Trancada para você', 'Sem cartas, sem troca.'] : DOOR_LINE[room.status]
   return (
     <button
       type="button"
       disabled={!free}
+      title={locked ? 'Você não tem cartas para trocar.' : undefined}
       onMouseEnter={() => free && playSfx('hover')}
       onClick={onEnter}
-      aria-label={`Sala ${room.number}, ${meta.label}, ${room.condition}: ${rule.summary}`}
+      aria-label={`Sala ${room.number}, ${meta.label}, ${title}: ${line}`}
       className={cn('dv-focus group relative flex h-full w-full flex-col text-left outline-none', free ? 'cursor-pointer' : 'cursor-not-allowed')}
     >
       {/* a porta */}
@@ -199,7 +212,7 @@ function Door({ room, onEnter }: { room: Room; onEnter: () => void }) {
             free ? 'bg-[#fff1da] opacity-45 group-hover:opacity-80' : mine ? 'bg-dv-amethyst opacity-60' : 'opacity-0',
           )}
         />
-        <DoorArt status={room.status} className={cn('relative block w-full', !free && !mine && 'opacity-70 saturate-50')} />
+        <DoorArt status={locked ? 'ocupada' : room.status} className={cn('relative block w-full', !free && !mine && 'opacity-70 saturate-50')} />
         {/* numeral na ogiva */}
         <span
           aria-hidden="true"
@@ -224,7 +237,7 @@ function Door({ room, onEnter }: { room: Room; onEnter: () => void }) {
               free ? 'bg-dv-gold-bright shadow-[0_0_8px_rgba(255,246,230,0.9)]' : mine ? 'bg-dv-amethyst shadow-[0_0_8px_rgba(138,124,200,0.9)]' : 'border border-current',
             )}
           />
-          {meta.label}
+          {locked ? 'Trancada' : meta.label}
         </span>
       </span>
 
@@ -237,7 +250,7 @@ function Door({ room, onEnter }: { room: Room; onEnter: () => void }) {
           free || mine ? 'opacity-[0.22]' : 'opacity-[0.12]',
         )}
       >
-        <DoorArt status={room.status} className="absolute inset-x-0 top-0 block w-full -scale-y-100 blur-[0.6px]" />
+        <DoorArt status={locked ? 'ocupada' : room.status} className="absolute inset-x-0 top-0 block w-full -scale-y-100 blur-[0.6px]" />
       </span>
 
       {/* plaqueta da condição, abaixo da porta */}
@@ -250,10 +263,10 @@ function Door({ room, onEnter }: { room: Room; onEnter: () => void }) {
         <span aria-hidden="true" className={cn('absolute -left-px -top-px size-1.5 border-l border-t', free ? 'border-dv-gold-bright' : 'border-dv-line-strong')} />
         <span aria-hidden="true" className={cn('absolute -right-px -top-px size-1.5 border-r border-t', free ? 'border-dv-gold-bright' : 'border-dv-line-strong')} />
         <span className={cn('flex items-center gap-1.5 font-display text-[12px] font-semibold uppercase tracking-[0.14em]', free ? 'text-dv-text' : 'text-dv-text-2')}>
-          <RuleSigil rule={room.rule} className={cn('size-4 shrink-0', free ? 'text-dv-gold' : 'text-dv-text-3')} />
-          {room.condition}
+          <SigilStar tone="current" className={cn('size-2.5 shrink-0', free ? 'text-dv-gold' : 'text-dv-text-3')} />
+          {title}
         </span>
-        <span className={cn('font-body text-[14px] leading-snug [word-spacing:0.08em]', free ? 'text-dv-text-2' : 'text-dv-text-3')}>{rule.summary}</span>
+        <span className={cn('font-body text-[14px] leading-snug [word-spacing:0.08em]', free ? 'text-dv-text-2' : 'text-dv-text-3')}>{line}</span>
       </span>
     </button>
   )
@@ -323,87 +336,43 @@ function DoorArt({ status, className }: { status: Room['status']; className?: st
   )
 }
 
-/** Sigilo de cada condição (traço fino, família dos glifos do kit). */
-function RuleSigil({ rule, className }: { rule: RoomRule; className?: string }) {
+type HouseRule = 'raridade' | 'oculta' | 'chat' | 'revela'
+const HOUSE_SIGILS: HouseRule[] = ['raridade', 'oculta', 'chat', 'revela']
+
+/** Sigilos da regra da casa (traço fino, família dos glifos do kit), um por passo do Rato. */
+function HouseSigil({ rule, className }: { rule: HouseRule; className?: string }) {
   const common = { viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 1.4, strokeLinecap: 'round' as const, strokeLinejoin: 'round' as const, 'aria-hidden': true, className }
   switch (rule) {
-    case 'cegas': // olho fechado
-      return (
-        <svg {...common}>
-          <path d="M3.5 11c2.4 3.2 5.2 4.8 8.5 4.8s6.1-1.6 8.5-4.8" />
-          <path d="M6.5 14.4 5 16.6M12 15.8v2.6M17.5 14.4l1.5 2.2" />
-        </svg>
-      )
-    case 'mesma-raridade': // dois losangos iguais
+    case 'raridade': // dois losangos iguais
       return (
         <svg {...common}>
           <path d="M7.5 6.5 11 12l-3.5 5.5L4 12z" />
           <path d="M16.5 6.5 20 12l-3.5 5.5L13 12z" />
         </svg>
       )
-    case 'sem-retorno': // seta que entra e a barra que não deixa sair
+    case 'oculta': // olho fechado
       return (
         <svg {...common}>
-          <path d="M3.5 12h11M11 8.5l3.5 3.5-3.5 3.5" />
-          <path d="M19 5v14" />
+          <path d="M3.5 11c2.4 3.2 5.2 4.8 8.5 4.8s6.1-1.6 8.5-4.8" />
+          <path d="M6.5 14.4 5 16.6M12 15.8v2.6M17.5 14.4l1.5 2.2" />
         </svg>
       )
-    case 'chat-livre': // balão com a estrela
+    case 'chat': // balão com a estrela
       return (
         <svg {...common}>
           <path d="M4.5 5.5h15v10h-8l-4 3.5v-3.5h-3z" />
           <path d="M12 8l.7 2.3L15 11l-2.3.7L12 14l-.7-2.3L9 11l2.3-.7z" fill="currentColor" stroke="none" />
         </svg>
       )
-    case 'silencio': // balão lacrado
+    case 'revela': // duas cartas que viram
       return (
         <svg {...common}>
-          <path d="M4.5 5.5h15v10h-8l-4 3.5v-3.5h-3z" />
-          <path d="M8.5 10.5h7" />
+          <path d="M5 6.5h7v11H5z" />
+          <path d="M14.5 5l5 1.6-3 10.6-5-1.5" />
+          <path d="M8.5 10.5l.5 1.5 1.5.5-1.5.5-.5 1.5-.5-1.5-1.5-.5 1.5-.5z" fill="currentColor" stroke="none" />
         </svg>
       )
   }
-}
-
-/**
- * Fim do corredor: o Salão das Máscaras (leilão, Direção 2 §3) — reservado, trancado, sem ação.
- * Porta dupla lacrada com o emblema da família e o cadeado; nada aqui é clicável.
- */
-function MasksHall() {
-  const sys = FUTURE_SYSTEMS.find((s) => s.id === 'mascaras')!
-  return (
-    <div
-      role="group"
-      aria-label={`${sys.name}: bloqueado. ${sys.hint}, em breve.`}
-      className="relative isolate flex items-center gap-4 overflow-hidden border border-dv-line bg-[linear-gradient(100deg,rgba(21,21,23,0.9),rgba(12,12,14,0.94))] py-3 pl-3 pr-4"
-    >
-      {/* porta dupla lacrada em miniatura */}
-      <span aria-hidden="true" className="relative grid h-[4.5rem] w-14 shrink-0 place-items-center">
-        <svg viewBox="0 0 56 72" className="absolute inset-0 size-full" fill="none">
-          <path d="M3 72V26C3 12 14 3 28 2c14 1 25 10 25 24v46" stroke="#8f8e8b" strokeOpacity="0.55" strokeWidth="1" />
-          <path d="M8 72V28c0-10 9-19 20-20 11 1 20 10 20 20v44z" fill="#151517" stroke="#8f8e8b" strokeOpacity="0.3" strokeWidth="0.6" />
-          <path d="M28 8v64" stroke="#8f8e8b" strokeOpacity="0.35" strokeWidth="0.6" />
-          {/* corrente cruzada */}
-          <path d="M9 40 47 58M47 40 9 58" stroke="#8f8e8b" strokeOpacity="0.5" strokeWidth="1" strokeDasharray="2.4 1.6" />
-        </svg>
-        <EmblemMascaras className="relative -mt-5 size-8 text-dv-text-3 opacity-80" />
-        <span className="absolute bottom-2 left-1/2 grid size-5 -translate-x-1/2 place-items-center bg-dv-ink-3 shadow-[inset_0_0_0_1px_var(--dv-line-strong)]">
-          <IconLock className="size-3 text-dv-text-2" />
-        </span>
-      </span>
-      <div className="min-w-0 flex-1">
-        <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-dv-text-3">Fim do corredor · trancado</p>
-        <p className="mt-1 flex flex-wrap items-baseline gap-x-2 font-display text-[16px] font-semibold uppercase tracking-[0.1em] text-dv-text-2">
-          {sys.name}
-          <span lang="ja" className="font-sans text-[10px] font-normal tracking-[0.18em] text-dv-text-3">
-            {sys.jp}
-          </span>
-        </p>
-        <p className="mt-0.5 font-body text-[14px] italic leading-snug text-dv-text-3">Leilões de cartas. A porta ainda não abre.</p>
-      </div>
-      <span className="shrink-0 border border-dv-line px-2 py-1 font-mono text-[10px] uppercase tracking-[0.18em] text-dv-text-3">Em breve</span>
-    </div>
-  )
 }
 
 function Protocol() {
@@ -457,20 +426,16 @@ const STAGE_TEXT: Record<TradeSession['stage'], string> = {
 function TradeRoom({ trade }: { trade: TradeSession }) {
   const { state, dispatch } = useDevo()
   const room = state.rooms.find((r) => r.id === trade.roomId)
-  const ruleKey: RoomRule = room?.rule ?? 'mesma-raridade'
-  const rule = ROOM_RULES[ruleKey]
   const finished = trade.stage === 'done' || trade.stage === 'abandoned'
-  const forfeitRisk = rule.forfeitOnLeave && !finished && !!trade.myCard
-  const [confirmLeave, setConfirmLeave] = useState(false)
-  const [lostCardId, setLostCardId] = useState<string | null>(null)
   const number = pad2(room?.number ?? 0)
   const tableRef = useRef<HTMLDivElement>(null)
-  // Quem está na mesa já vê quem sentou: o aviso do sistema fica só na central, sem cobrir o canal.
-  const trocasToasts = state.toasts.filter((t) => t.appId === 'trocas' || t.appId === 'cartas').map((t) => t.id).join(',')
+
+  // Quem está na mesa já vê quem sentou e o que recebeu: o aviso do sistema fica só na central, sem cobrir o canal.
+  const roomToasts = state.toasts.filter((t) => t.appId === 'trocas' || t.appId === 'cartas').map((t) => t.id).join(',')
   useEffect(() => {
-    if (!trocasToasts) return
-    for (const id of trocasToasts.split(',')) dispatch({ type: 'DISMISS_TOAST', id })
-  }, [trocasToasts, dispatch])
+    if (!roomToasts) return
+    for (const id of roomToasts.split(',')) dispatch({ type: 'DISMISS_TOAST', id })
+  }, [roomToasts, dispatch])
 
   // Quando algo acontece na mesa (alguém senta, as cartas viram, a sala esvazia), a mesa volta ao centro do olhar.
   useEffect(() => {
@@ -484,23 +449,12 @@ function TradeRoom({ trade }: { trade: TradeSession }) {
     dispatch({ type: 'TRADE_EXIT' })
   }
 
+  // Sair antes de os dois aceitarem desfaz tudo: cada carta volta ao dono. Na revelação não há saída.
   const leave = () => {
     if (finished) return exit()
-    if (forfeitRisk) {
-      playSfx('click')
-      setConfirmLeave(true)
-      return
-    }
     playSfx('close')
-    if (trade.myCard) dispatch({ type: 'TRADE_CANCEL', forfeit: false })
+    if (trade.myCard) dispatch({ type: 'TRADE_CANCEL' })
     dispatch({ type: 'TRADE_EXIT' })
-  }
-
-  const forfeit = () => {
-    setConfirmLeave(false)
-    setLostCardId(trade.myCard?.cardId ?? null)
-    playSfx('error')
-    dispatch({ type: 'TRADE_CANCEL', forfeit: true })
   }
 
   return (
@@ -508,127 +462,84 @@ function TradeRoom({ trade }: { trade: TradeSession }) {
       <section aria-label="Mesa de troca" className="flex min-w-0 flex-col gap-4">
         <header>
           <div className="flex min-h-11 items-center justify-between gap-3">
-            <Kicker className="min-w-0 animate-dv-fade">
-              Sala {number} · {room?.condition}
-            </Kicker>
-            <Button variant={forfeitRisk ? 'danger' : 'secondary'} size="sm" onClick={leave} className="shrink-0">
-              {finished ? 'Sair' : 'Abandonar'}
-            </Button>
+            <Kicker className="min-w-0 animate-dv-fade">Sala {number} · Mesa de mármore</Kicker>
+            {trade.stage !== 'revealing' && (
+              <Button variant="secondary" size="sm" onClick={leave} className="shrink-0">
+                {finished ? 'Sair' : 'Abandonar'}
+              </Button>
+            )}
           </div>
           {/* Título do momento: só a primeira tela da sala entra com corte; as viradas seguintes trocam o texto sem
               animação de recorte, para nunca deixar meia palavra visível. */}
           <p
-            className={cn(
-              'mt-1 font-display text-[21px] font-semibold uppercase leading-tight tracking-[0.06em]',
-              trade.endReason === 'forfeit' ? 'text-dv-blood-text' : 'text-dv-text',
-              trade.stage === 'placing' && 'animate-dv-cut-in',
-            )}
+            className={cn('mt-1 font-display text-[21px] font-semibold uppercase leading-tight tracking-[0.06em] text-dv-text', trade.stage === 'placing' && 'animate-dv-cut-in')}
             aria-live="polite"
           >
-            {trade.endReason === 'forfeit' ? 'Carta perdida' : STAGE_TEXT[trade.stage]}
+            {STAGE_TEXT[trade.stage]}
           </p>
         </header>
 
-        <RoomRuleBanner rule={rule} ruleKey={ruleKey} expanded={trade.stage === 'placing'} />
+        <HouseRuleBanner expanded={trade.stage === 'placing'} />
 
         {trade.stage === 'placing' && <CardPicker />}
 
         <div ref={tableRef} className="scroll-mt-3">
-          <TradeTable trade={trade} rule={rule} lostCardId={lostCardId} />
+          <TradeTable trade={trade} />
         </div>
 
-        <TradeActions trade={trade} rule={rule} lostCardId={lostCardId} onExit={exit} />
+        <TradeActions trade={trade} onExit={exit} />
       </section>
 
-      <TradeChat trade={trade} rule={rule} />
-
-      <Dialog
-        open={confirmLeave}
-        onClose={() => setConfirmLeave(false)}
-        title="Sair e perder a carta?"
-        description="Esta sala não devolve nada. Se você sair agora, a carta fica na mesa e deixa de ser sua."
-        footer={
-          <div className="flex flex-col gap-2.5 @md:flex-row-reverse">
-            <Button variant="danger" block onClick={forfeit}>
-              Sair e perder a carta
-            </Button>
-            <Button variant="secondary" block onClick={() => setConfirmLeave(false)} sfx="click">
-              Ficar na sala
-            </Button>
-          </div>
-        }
-      >
-        {trade.myCard && (
-          <div className="mb-1 flex items-center gap-3.5 border border-dv-line bg-dv-ink-2/80 p-2.5">
-            <CardFace cardId={trade.myCard.cardId} size="sm" className="w-14 shrink-0" />
-            <div className="min-w-0">
-              <p className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.22em] text-dv-porcelain">
-                <span aria-hidden="true" className="size-2 shrink-0 rotate-45 bg-dv-blood shadow-[0_0_8px_rgba(163,18,31,0.8)]" />
-                Sala {number} · Sem retorno
-              </p>
-              <p className="mt-1.5 font-display text-[15px] font-semibold uppercase tracking-[0.08em] text-dv-text">{getCard(trade.myCard.cardId).name}</p>
-              <p className="font-body text-[13px] italic text-dv-text-3">Em jogo: fica na mesa se você sair.</p>
-            </div>
-          </div>
-        )}
-      </Dialog>
+      <TradeChat trade={trade} />
     </div>
   )
 }
 
-/** Faixa com a regra da sala: completa enquanto você escolhe a carta, depois em uma linha. */
-function RoomRuleBanner({ rule, ruleKey, expanded }: { rule: RoomRuleMeta; ruleKey: RoomRule; expanded: boolean }) {
+/** A regra da casa (a mesma em todas as salas): completa enquanto você escolhe a carta, depois em uma linha. */
+function HouseRuleBanner({ expanded }: { expanded: boolean }) {
   return (
     <div
       role="note"
-      aria-label={`Regra da sala: ${rule.label}`}
+      aria-label="Regra da casa: mesma raridade, às cegas até a revelação"
       className="relative isolate animate-dv-cut-in overflow-hidden border border-dv-line-strong bg-[linear-gradient(100deg,rgba(44,44,49,0.95),rgba(21,21,23,0.92)_55%,rgba(12,12,14,0.9))] [animation-delay:120ms]"
     >
       <div className="flex items-stretch">
-        {/* faixa diagonal de aço com o sigilo da condição */}
+        {/* faixa diagonal de aço com o sigilo da raridade; filete de ametista */}
         <span aria-hidden="true" className="relative grid w-[4.6rem] shrink-0 place-items-center">
-          {/* filete diagonal: ametista nas salas comuns; rubi largo na sala que cobra a carta */}
-          <span
-            className={cn(
-              'absolute inset-y-0 left-0 [clip-path:polygon(0_0,100%_0,calc(100%-14px)_100%,0_100%)]',
-              rule.forfeitOnLeave ? '-right-[6px] bg-[linear-gradient(180deg,#c01a28,#a3121f_55%,#5a0a10)]' : 'right-0 bg-dv-amethyst/80',
-            )}
-          />
+          <span className="absolute inset-y-0 left-0 right-0 bg-dv-amethyst/80 [clip-path:polygon(0_0,100%_0,calc(100%-14px)_100%,0_100%)]" />
           <span className="absolute inset-y-0 left-0 right-px bg-[linear-gradient(180deg,#ece5d8,#bab09f_50%,#7a7266)] [clip-path:polygon(0_0,calc(100%-1px)_0,calc(100%-15px)_100%,0_100%)]" />
-          <RuleSigil rule={ruleKey} className="relative size-7 -translate-x-1 text-dv-ink" />
+          <HouseSigil rule="raridade" className="relative size-7 -translate-x-1 text-dv-ink" />
         </span>
         <div className="min-w-0 py-2.5 pl-3 pr-4">
-          <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-dv-text-3">Regra da sala</p>
+          <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-dv-text-3">Regra da casa</p>
           <p className="mt-0.5 flex flex-wrap items-baseline gap-x-2">
-            <span className="font-display text-[16px] font-semibold uppercase tracking-[0.12em] text-dv-text">{rule.label}</span>
-            <span className="font-body text-[14px] italic text-dv-text-2 [word-spacing:0.08em]">{rule.summary}</span>
+            <span className="font-display text-[16px] font-semibold uppercase tracking-[0.12em] text-dv-text">Mesma raridade</span>
+            <span className="font-body text-[14px] italic text-dv-text-2 [word-spacing:0.08em]">Às cegas até a revelação.</span>
           </p>
         </div>
       </div>
       {expanded && (
-        <ul className="flex flex-col gap-1.5 border-t border-dv-line px-4 pb-3 pt-2.5">
-          {rule.details.map((d) => (
-            <li key={d} className="flex gap-2 font-body text-[14px] leading-snug text-dv-text-2">
-              <span aria-hidden="true" className="mt-[7px] size-1.5 shrink-0 rotate-45 border border-dv-gold" />
+        <ol className="flex flex-col gap-2 border-t border-dv-line px-4 pb-3 pt-2.5">
+          {TRADE_RULES.map((d, i) => (
+            <li key={d} className="flex items-start gap-2.5 font-body text-[14px] leading-snug text-dv-text-2">
+              <HouseSigil rule={HOUSE_SIGILS[i]} className="mt-px size-4 shrink-0 text-dv-gold" />
               {d}
             </li>
           ))}
-        </ul>
+        </ol>
       )}
     </div>
   )
 }
 
 /** A mesa: tampo de mármore negro com o "Espaço do outro" e o "Seu espaço" frente a frente. */
-function TradeTable({ trade, rule, lostCardId }: { trade: TradeSession; rule: RoomRuleMeta; lostCardId: string | null }) {
+function TradeTable({ trade }: { trade: TradeSession }) {
   const revealing = trade.stage === 'revealing'
   const revealed = revealing || trade.stage === 'done'
   const partnerLeft = trade.endReason === 'partner-left'
-  const forfeited = trade.endReason === 'forfeit'
-  // Às cegas: nenhuma raridade até a revelação; depois dela, as duas ficam à vista.
-  const showRarity = rule.showRarity || revealed
-  const myRarity = trade.myCard && showRarity ? RARITY_META[getCard(trade.myCard.cardId).rarity] : null
-  const theirRarity = trade.partnerCardId && showRarity && !partnerLeft ? RARITY_META[getCard(trade.partnerCardId).rarity] : null
+  // A raridade é a mesma nas duas (garantida); só a carta do outro fica oculta até a revelação.
+  const myRarity = trade.myCard ? RARITY_META[getCard(trade.myCard.cardId).rarity] : null
+  const theirRarity = trade.partnerCardId && revealed && !partnerLeft ? RARITY_META[getCard(trade.partnerCardId).rarity] : null
 
   return (
     <div className="relative isolate">
@@ -671,17 +582,9 @@ function TradeTable({ trade, rule, lostCardId }: { trade: TradeSession; rule: Ro
             present
             mine
             accepted={trade.myAccept}
-            left={forfeited}
-            note={forfeited ? 'Perdida' : trade.stage === 'done' ? 'Entregue' : trade.myCard ? 'O outro vê o verso' : undefined}
+            note={trade.stage === 'done' ? 'Entregue' : trade.myCard ? 'O outro vê o verso' : undefined}
           >
-            {forfeited && lostCardId ? (
-              <div className="relative">
-                <CardFace cardId={lostCardId} size="md" className="w-[128px] opacity-40 grayscale @lg:w-40" />
-                <span className="absolute inset-0 grid place-items-center">
-                  <Stamp text="Perdida" tone="blood" size={96} rotate={-14} animate />
-                </span>
-              </div>
-            ) : trade.myCard ? (
+            {trade.myCard ? (
               <CardFace cardId={trade.myCard.cardId} size="md" className={cn('w-[128px] animate-dv-pop @lg:w-40', trade.stage === 'done' && 'opacity-55 saturate-50')} />
             ) : (
               <EmptySlot label={trade.stage === 'placing' ? 'Escolha abaixo' : undefined} />
@@ -694,7 +597,7 @@ function TradeTable({ trade, rule, lostCardId }: { trade: TradeSession; rule: Ro
           {revealing ? (
             <span className="animate-dv-cut-in font-impact text-[20px] uppercase leading-none tracking-[0.34em] text-dv-gold-bright [text-shadow:0_0_14px_rgba(255,246,230,0.45)]">Revelação</span>
           ) : myRarity ? (
-            rule.sameRarity && !revealed ? (
+            !revealed ? (
               <span className="flex items-center gap-2 text-dv-text-2">
                 <RarityMark color={myRarity.color} />
                 <span className="text-dv-text">{myRarity.label}</span> · garantida nas duas
@@ -711,13 +614,11 @@ function TradeTable({ trade, rule, lostCardId }: { trade: TradeSession; rule: Ro
                 </span>
               </span>
             )
-          ) : trade.myCard ? (
-            <span className="flex items-center gap-2 text-dv-text-2">
-              <RuleSigil rule="cegas" className="size-4 text-dv-text-3" />
-              Raridade oculta
-            </span>
           ) : (
-            <span className="text-dv-text-3">Mesa de mármore · {rule.label}</span>
+            <span className="flex items-center gap-2 text-dv-text-3">
+              <HouseSigil rule="raridade" className="size-4" />
+              Mesma raridade nas duas
+            </span>
           )}
         </div>
 
@@ -813,7 +714,10 @@ function CardPicker() {
   const { state, dispatch } = useDevo()
   const listRef = useRef<HTMLUListElement>(null)
   const [pos, setPos] = useState({ index: 1, start: true, end: false })
-  const total = state.inventory.length
+  const presas = usePresas()
+  // Cartas no Salão das Máscaras aparecem por último, trancadas: não vão à mesa.
+  const hand = [...state.inventory].sort((a, b) => Number(presas.has(a.uid)) - Number(presas.has(b.uid)))
+  const total = hand.length
 
   const measure = () => {
     const el = listRef.current
@@ -826,6 +730,15 @@ function CardPicker() {
     })
   }
   useEffect(measure, [total]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  const place = (uid: string) => {
+    if (presas.has(uid)) {
+      playSfx('error')
+      return
+    }
+    playSfx('card-select')
+    dispatch({ type: 'TRADE_PLACE', uid })
+  }
 
   const fade = `linear-gradient(90deg, ${pos.start ? '#000' : 'transparent'} 0, #000 ${pos.start ? '0' : '28px'}, #000 calc(100% - ${pos.end ? '0px' : '44px'}), ${pos.end ? '#000' : 'transparent'} 100%)`
 
@@ -849,28 +762,35 @@ function CardPicker() {
         style={{ gap: PICK_GAP, maskImage: fade, WebkitMaskImage: fade }}
         aria-label="Suas cartas"
       >
-        {state.inventory.map((c) => (
-          <li key={c.uid} className="shrink-0 snap-start">
-            <button
-              type="button"
-              onClick={() => {
-                playSfx('card-select')
-                dispatch({ type: 'TRADE_PLACE', uid: c.uid })
-              }}
-              className="dv-focus block transition-transform duration-[var(--dv-dur-2)] ease-[var(--dv-ease-out)] hover:-translate-y-1.5 focus-visible:-translate-y-1.5 active:scale-[0.97]"
-              aria-label={`Colocar ${getCard(c.cardId).name} na mesa`}
-            >
-              <CardFace cardId={c.cardId} size="sm" className="w-[92px] shrink-0" />
-            </button>
-          </li>
-        ))}
+        {hand.map((c) => {
+          const presa = presas.has(c.uid)
+          const name = getCard(c.cardId).name
+          return (
+            <li key={c.uid} className="shrink-0 snap-start">
+              <button
+                type="button"
+                disabled={presa}
+                onClick={() => place(c.uid)}
+                className="dv-focus relative block transition-transform duration-[var(--dv-dur-2)] ease-[var(--dv-ease-out)] enabled:hover:-translate-y-1.5 enabled:focus-visible:-translate-y-1.5 enabled:active:scale-[0.97] disabled:cursor-not-allowed"
+                aria-label={presa ? `${name}: no Salão das Máscaras, não vai à mesa` : `Colocar ${name} na mesa`}
+              >
+                <CardFace cardId={c.cardId} size="sm" className={cn('w-[92px] shrink-0', presa && 'opacity-40 grayscale')} />
+                {presa && (
+                  <span aria-hidden="true" className="absolute inset-x-1 bottom-2 bg-dv-ink/90 py-1 text-center font-mono text-[10px] uppercase tracking-[0.14em] text-dv-text-2 shadow-[inset_0_0_0_1px_var(--dv-line-strong)]">
+                    No Salão
+                  </span>
+                )}
+              </button>
+            </li>
+          )
+        })}
         {total === 0 && <li className="font-body text-[15px] italic text-dv-text-3">Você não tem cartas para trocar.</li>}
       </ul>
     </div>
   )
 }
 
-function TradeActions({ trade, rule, lostCardId, onExit }: { trade: TradeSession; rule: RoomRuleMeta; lostCardId: string | null; onExit: () => void }) {
+function TradeActions({ trade, onExit }: { trade: TradeSession; onExit: () => void }) {
   const { dispatch } = useDevo()
 
   if (trade.stage === 'placing') return null
@@ -901,15 +821,10 @@ function TradeActions({ trade, rule, lostCardId, onExit }: { trade: TradeSession
   }
 
   if (trade.stage === 'abandoned') {
-    const lost = lostCardId ? getCard(lostCardId).name : null
     return (
       <div className="flex animate-dv-rise flex-col gap-3 pt-2">
-        <p className={cn('font-body text-[15px] leading-relaxed', trade.endReason === 'forfeit' ? 'text-dv-blood-text' : 'text-dv-text-2')}>
-          {trade.endReason === 'partner-left'
-            ? 'O outro jogador fugiu. Sua carta voltou para você.'
-            : trade.endReason === 'forfeit'
-              ? `Você saiu de uma sala Sem retorno. ${lost ? `${lost} ficou na mesa.` : 'Sua carta ficou na mesa.'}`
-              : 'Troca cancelada.'}
+        <p className="font-body text-[15px] leading-relaxed text-dv-text-2">
+          {trade.endReason === 'partner-left' ? 'O outro jogador fugiu antes de aceitar. Sua carta voltou para você.' : 'Troca cancelada. Sua carta voltou para você.'}
         </p>
         <Button variant="secondary" block onClick={onExit} icon={<GlyphArrow className="size-4 rotate-180" />}>
           Voltar ao corredor
@@ -925,7 +840,7 @@ function TradeActions({ trade, rule, lostCardId, onExit }: { trade: TradeSession
         ? 'As duas cartas viram ao mesmo tempo.'
         : trade.myAccept
           ? 'Você aceitou. Não há volta.'
-          : 'Aceitar é definitivo assim que ambos confirmarem.'
+          : 'Se os dois aceitarem, as cartas viram. Troca confirmada não se desfaz.'
 
   return (
     <div className="flex flex-col gap-3 pt-2">
@@ -961,19 +876,15 @@ function TradeActions({ trade, rule, lostCardId, onExit }: { trade: TradeSession
             Aceitar troca
           </Button>
         ))}
-      {rule.forfeitOnLeave && trade.stage !== 'revealing' && (
-        <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-dv-blood-text">Sem retorno · sair agora custa a sua carta</p>
-      )}
     </div>
   )
 }
 
-function TradeChat({ trade, rule }: { trade: TradeSession; rule: RoomRuleMeta }) {
+function TradeChat({ trade }: { trade: TradeSession }) {
   const { dispatch } = useDevo()
   const [draft, setDraft] = useState('')
   const listRef = useRef<HTMLDivElement>(null)
-  const silent = rule.chat === 'nenhum'
-  const canChat = trade.stage === 'negotiating' && !silent
+  const canChat = trade.stage === 'negotiating'
 
   useEffect(() => {
     listRef.current?.scrollTo({ top: listRef.current.scrollHeight, behavior: 'smooth' })
@@ -996,7 +907,6 @@ function TradeChat({ trade, rule }: { trade: TradeSession; rule: RoomRuleMeta })
     }, 1800 + Math.random() * 1600)
   }
 
-  const channel = silent ? 'Sala do silêncio · chat bloqueado' : rule.chat === 'frases' ? 'Frases prontas' : 'Chat livre'
 
   return (
     <aside
@@ -1010,9 +920,9 @@ function TradeChat({ trade, rule }: { trade: TradeSession; rule: RoomRuleMeta })
             密談
           </span>
         </p>
-        <span className={cn('flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.16em]', silent ? 'text-dv-text-3' : 'text-dv-text-2')}>
-          <RuleSigil rule={silent ? 'silencio' : 'chat-livre'} className="size-3.5" />
-          {channel}
+        <span className={cn('flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.16em]', canChat ? 'text-dv-text-2' : 'text-dv-text-3')}>
+          <HouseSigil rule="chat" className="size-3.5" />
+          {canChat ? 'Negociação aberta' : trade.partner ? 'Canal fechado' : 'Esperando alguém'}
         </span>
       </header>
       <div
@@ -1026,7 +936,7 @@ function TradeChat({ trade, rule }: { trade: TradeSession; rule: RoomRuleMeta })
         {trade.chat.length === 0 && !trade.partnerTyping && (
           <p className="flex items-center gap-2.5 font-body text-[15px] italic text-dv-text-3">
             <span aria-hidden="true" className="h-px w-5 bg-dv-line-strong" />
-            {silent ? 'Aqui ninguém fala. Decida pelos olhos.' : trade.partner ? 'Ninguém disse nada ainda.' : 'Ninguém na sala ainda.'}
+            {trade.partner ? 'Ninguém disse nada ainda.' : 'Ninguém na sala ainda.'}
           </p>
         )}
         {trade.chat.map((m) => {
@@ -1052,10 +962,8 @@ function TradeChat({ trade, rule }: { trade: TradeSession; rule: RoomRuleMeta })
           </div>
         )}
       </div>
-      {silent ? (
-        <p className="border-t border-dv-line px-4 py-3 font-mono text-[10px] uppercase tracking-[0.18em] text-dv-text-3">Silêncio · nenhuma palavra sai desta mesa</p>
-      ) : rule.chat === 'frases' ? (
-        <div className="grid grid-cols-2 gap-2 border-t border-dv-line p-3" role="group" aria-label="Frases prontas">
+      <div className="border-t border-dv-line">
+        <div className="grid grid-cols-2 gap-2 px-3 pt-3" role="group" aria-label="Frases prontas">
           {QUICK_PHRASES.map((p) => (
             <button
               key={p}
@@ -1069,8 +977,7 @@ function TradeChat({ trade, rule }: { trade: TradeSession; rule: RoomRuleMeta })
             </button>
           ))}
         </div>
-      ) : (
-        <form onSubmit={send} className="flex items-center gap-2 border-t border-dv-line p-3">
+        <form onSubmit={send} className="flex items-center gap-2 p-3">
           <label htmlFor="trade-chat" className="sr-only">
             Mensagem para o outro jogador
           </label>
@@ -1079,7 +986,7 @@ function TradeChat({ trade, rule }: { trade: TradeSession; rule: RoomRuleMeta })
             value={draft}
             onChange={(e) => setDraft(e.target.value)}
             disabled={!canChat}
-            placeholder={canChat ? 'Pergunte sobre a carta…' : 'Chat indisponível'}
+            placeholder={canChat ? 'Negocie, convença… ou minta.' : 'O canal abre quando alguém sentar.'}
             autoComplete="off"
             className="dv-focus min-h-11 min-w-0 flex-1 border-0 bg-dv-ink px-3 font-sans text-[15px] text-dv-text shadow-[inset_0_0_0_1px_var(--dv-line-strong)] placeholder:text-dv-text-3 focus:shadow-[inset_0_0_0_1px_var(--dv-amethyst)] disabled:opacity-50"
           />
@@ -1087,7 +994,7 @@ function TradeChat({ trade, rule }: { trade: TradeSession; rule: RoomRuleMeta })
             <GlyphArrow className="size-4" />
           </IconButton>
         </form>
-      )}
+      </div>
     </aside>
   )
 }

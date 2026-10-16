@@ -709,7 +709,7 @@ if (want('sistema') || want('apps') || want('jogos')) {
     await step('trocas', async () => {
       await openApp(page, 'Sala de Trocas')
       await shot(page, '24-trocas')
-      // Sala 1 (Às cegas): regra explicada ao entrar, raridade oculta, frases prontas.
+      // Sala 1: regra da casa ao entrar (mesma raridade, às cegas), mão com contador, canal com atalhos e chat livre.
       if (await tryClick(page.getByRole('button', { name: /^Sala 1,/ }).first())) {
         await wait(1500)
         await shot(page, '24-trocas-sala')
@@ -719,25 +719,19 @@ if (want('sistema') || want('apps') || want('jogos')) {
         await tryClick(page.getByRole('button', { name: 'Qual o tipo da sua carta?' }).first())
         await wait(3800)
         await shot(page, '24-trocas-sala-frase')
+        // Chat livre da sala (Direção 3 §8: todas as salas negociam pelo canal).
+        const chat = page.locator('#trade-chat')
+        if (await chat.count()) {
+          await chat.fill('Troco agora se você aceitar primeiro.').catch(() => {})
+          await tryClick(btn(page, 'Enviar', true))
+          await wait(3800)
+          await shot(page, '24-trocas-sala-chat')
+        }
+        // Abandonar antes de os dois aceitarem: a carta volta para a mão.
         await tryClick(btn(page, /abandonar|sair/i))
         await wait(800)
         await tryClick(btn(page, /voltar ao corredor/i))
         await wait(800)
-      }
-      // Sala 3 (Sem retorno): sair depois de pôr a carta pede confirmação e custa a carta.
-      if (await tryClick(page.getByRole('button', { name: /^Sala 3,/ }).first())) {
-        await wait(1200)
-        await shot(page, '24-trocas-sem-retorno')
-        await tryClick(page.getByRole('button', { name: /^Colocar / }).first())
-        await wait(800)
-        await tryClick(btn(page, /^abandonar$/i))
-        await wait(600)
-        await shot(page, '24-trocas-sem-retorno-confirmar')
-        await tryClick(btn(page, /perder a carta/i))
-        await wait(800)
-        await shot(page, '24-trocas-sem-retorno-perdeu')
-        await tryClick(btn(page, /voltar ao corredor/i))
-        await wait(1000)
       }
       // Corredor rolado até o Protocolo.
       await page.mouse.move(195, 500)
@@ -748,15 +742,11 @@ if (want('sistema') || want('apps') || want('jogos')) {
       await wait(500)
       // Aceitar e revelar numa sala livre qualquer (o parceiro pode desistir: até 3 tentativas).
       for (let attempt = 0, revealedOk = false; attempt < 3 && !revealedOk; attempt++) {
-        if (!(await tryClick(page.getByRole('button', { name: /^Sala \d+, Livre,/ }).first()))) {
-          await shot(page, `24-trocas-tentativa-${attempt + 1}-porta`)
-          break
-        }
+        if (!(await tryClick(page.getByRole('button', { name: /^Sala \d+, Livre,/ }).first()))) break
         await wait(1200)
         await tryClick(page.getByRole('button', { name: /^Colocar / }).first())
         await wait(7500)
         const accepted = await tryClick(btn(page, 'Aceitar troca', true), 1500)
-        if (!accepted) await shot(page, `24-trocas-tentativa-${attempt + 1}`)
         if (accepted) {
           await wait(800)
           await shot(page, '24-trocas-aceitou')
@@ -777,8 +767,6 @@ if (want('sistema') || want('apps') || want('jogos')) {
         // Sai da sala (concluída ou desfeita) antes da próxima tentativa.
         if (!(await tryClick(btn(page, /voltar ao corredor/i), 1500))) {
           await tryClick(btn(page, /^abandonar$/i), 1500)
-          await tryClick(btn(page, /perder a carta/i), 800)
-          await tryClick(btn(page, /voltar ao corredor/i), 800)
         }
         await wait(1000)
       }
