@@ -1,98 +1,35 @@
-import { CARDS, randomCardOfRarity } from './cards'
+import { randomCardOfRarity } from './cards'
 import type { CardDef, Rarity } from './types'
 
 /**
- * Condições das salas de troca — fonte única. Cada condição muda o comportamento de verdade
- * (motor em `os/use-devo-engine.ts`, reducer em `state/devo-store.tsx`, tela em `apps/trocas-app.tsx`).
+ * Sala de Trocas — regra única (Direção 3 §8). Todas as salas funcionam igual, como o Rato explica no tutorial
+ * (`lib/devo/intro-script.ts`): mesma raridade garantida, carta do outro oculta até a revelação, chat da sala para
+ * negociar, os dois aceitam → revela, troca confirmada não se desfaz. Quem não tem carta não troca.
+ * Motor em `os/use-devo-engine.ts`, reducer em `state/devo-store.tsx`, tela em `apps/trocas-app.tsx`.
  */
-export type RoomRule = 'cegas' | 'mesma-raridade' | 'sem-retorno' | 'chat-livre' | 'silencio'
 
-export type ChatMode = 'livre' | 'frases' | 'nenhum'
+/** A regra da casa, em quatro passos (os mesmos do Rato). Mostrada ao entrar na sala. */
+export const TRADE_RULES = [
+  'A carta do outro tem a mesma raridade da sua.',
+  'Nenhuma das duas é mostrada até a revelação.',
+  'Use o canal da sala para negociar, convencer ou mentir.',
+  'Se os dois aceitarem, as cartas viram. Troca confirmada não se desfaz.',
+] as const
 
-export type RoomRuleMeta = {
-  label: string
-  /** Uma linha, mostrada na porta e no cabeçalho da sala. */
-  summary: string
-  /** O que muda, mostrado ao entrar. */
-  details: string[]
-  /** A carta do outro tem a mesma raridade da sua? */
-  sameRarity: boolean
-  /** A raridade (sua e do outro) aparece na mesa antes da revelação? */
-  showRarity: boolean
-  /** Sair depois de colocar a carta faz você perdê-la. */
-  forfeitOnLeave: boolean
-  chat: ChatMode
-}
-
-export const ROOM_RULES: Record<RoomRule, RoomRuleMeta> = {
-  cegas: {
-    label: 'Às cegas',
-    summary: 'Nem a raridade é revelada.',
-    details: ['A carta do outro pode ser de qualquer raridade.', 'Nenhuma raridade aparece na mesa até a revelação.', 'Chat só com frases prontas.'],
-    sameRarity: false,
-    showRarity: false,
-    forfeitOnLeave: false,
-    chat: 'frases',
-  },
-  'mesma-raridade': {
-    label: 'Mesma raridade',
-    summary: 'A raridade das duas cartas é garantida igual.',
-    details: ['A carta do outro tem a mesma raridade da sua.', 'A raridade aparece na mesa.', 'Chat só com frases prontas.'],
-    sameRarity: true,
-    showRarity: true,
-    forfeitOnLeave: false,
-    chat: 'frases',
-  },
-  'sem-retorno': {
-    label: 'Sem retorno',
-    summary: 'Quem sai depois de pôr a carta, perde a carta.',
-    details: [
-      'Se você abandonar a sala depois de colocar sua carta, ela fica na mesa e você a perde.',
-      'Se o outro jogador sair, sua carta volta para você.',
-      'A raridade da carta do outro aparece quando ele senta. Pode ser qualquer uma.',
-      'Chat só com frases prontas.',
-    ],
-    sameRarity: false,
-    showRarity: true,
-    forfeitOnLeave: true,
-    chat: 'frases',
-  },
-  'chat-livre': {
-    label: 'Chat liberado',
-    summary: 'Escreva o que quiser.',
-    details: ['Chat livre: pergunte, negocie, minta.', 'A raridade da carta do outro aparece quando ele senta. Pode ser qualquer uma.'],
-    sameRarity: false,
-    showRarity: true,
-    forfeitOnLeave: false,
-    chat: 'livre',
-  },
-  silencio: {
-    label: 'Silêncio',
-    summary: 'Ninguém fala.',
-    details: ['Não há chat: decida só pelo que está na mesa.', 'A raridade das duas cartas é garantida igual e aparece na mesa.'],
-    sameRarity: true,
-    showRarity: true,
-    forfeitOnLeave: false,
-    chat: 'nenhum',
-  },
-}
-
-/** Ordem das 8 salas do corredor. */
-export const ROOM_LAYOUT: RoomRule[] = ['cegas', 'mesma-raridade', 'sem-retorno', 'chat-livre', 'cegas', 'mesma-raridade', 'silencio', 'cegas']
-
-/** Regras gerais (Protocolo) — valem em todas as salas e não contradizem nenhuma condição. */
+/** Protocolo do corredor (regras gerais). */
 export const TRADE_PROTOCOL = [
   'Escolha uma sala livre e coloque uma carta no SEU ESPAÇO.',
-  'Outro jogador entra e coloca uma carta no espaço dele. As cartas ficam viradas até a revelação.',
-  'Cada sala tem uma condição própria (raridade, chat, saída). Ela está na porta e é explicada ao entrar.',
-  'Se ambos aceitarem, a troca é final.',
-  'Se o outro jogador abandonar a sala, sua carta volta para você.',
+  'Outro jogador entra e coloca uma carta de mesma raridade no espaço dele. Nenhum dos dois vê a carta do outro.',
+  'Negociem pelo canal da sala. Promessas não valem nada.',
+  'Se ambos aceitarem, as cartas são reveladas e vão direto para os inventários. Sem devoluções.',
+  'Se alguém sair antes de os dois aceitarem, cada carta volta ao seu dono.',
+  'Cartas entregues ao Salão das Máscaras não vão à mesa. Sem cartas, não há troca.',
 ]
 
-/** Frases prontas das salas sem chat livre. O parceiro responde a elas como a qualquer mensagem. */
+/** Atalhos do canal (o chat é livre; estas frases só poupam digitação no celular). */
 export const QUICK_PHRASES = ['Qual o tipo da sua carta?', 'Vamos fechar a troca?', 'Confia em mim.', 'Não sei…']
 
-export function partnerCardFor(rule: RoomRule, myRarity: Rarity): CardDef {
-  if (ROOM_RULES[rule].sameRarity) return randomCardOfRarity(myRarity)
-  return CARDS[Math.floor(Math.random() * CARDS.length)]
+/** A carta do parceiro: sempre da mesma raridade que a sua. */
+export function partnerCardFor(myRarity: Rarity): CardDef {
+  return randomCardOfRarity(myRarity)
 }
