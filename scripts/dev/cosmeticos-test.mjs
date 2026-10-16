@@ -184,7 +184,7 @@ await test('payload público sem cargo de Owner (visuais, chat, miniperfil); Anf
   assert(Object.keys(o).sort().join() === 'anfitriao,av,bal,ef,emb,foto,id,mini', `campos do visual: ${Object.keys(o)}`)
   // A mesa (lobby) é só registro: a mensagem digitada é recusada e a linha entra direto no banco.
   assert((await owner.req('POST', '/api/arcade', { action: 'chat', channel: 'lobby', body: `teste ${sfx}` })).status === 403, 'lobby recusa mensagem digitada')
-  await q('INSERT INTO arcade_chat (channel, author, player_id, body) VALUES ($1,$2,$3,$4)', ['lobby', owner.name, owner.id, `teste ${sfx}`])
+  await q('INSERT INTO arcade_chat (channel, author, player_id, body) VALUES ($1,$2,$3,$4)', [`match-cos-${sfx}`, owner.name, owner.id, `teste ${sfx}`])
   const chat = await j1.get('/api/arcade?view=chat&channel=lobby')
   const linha = chat.json.messages.find((m) => m.pid === owner.id)
   assert(linha && (linha.role === 'player' || linha.role === undefined) && !chat.text.includes('"owner"'), `chat: ${JSON.stringify(linha)}`)
