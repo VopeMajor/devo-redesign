@@ -123,7 +123,7 @@ function Tela({ d, agir, onCompanhia }: { d: CorpLiberado; agir: (b: Record<stri
       <header className="flex items-start justify-between gap-3">
         <div className="min-w-0">
           <p className="dv-label animate-dv-fade text-[10px] text-dv-amethyst-text">Companhia de Despertados · registro</p>
-          <h1 className="animate-dv-cut-in mt-2 font-serif text-[44px] font-medium uppercase leading-[0.9] tracking-[0.02em] text-dv-text">Corporações</h1>
+          <h1 className="animate-dv-cut-in mt-2 font-serif text-[34px] font-medium uppercase leading-[0.95] tracking-[0.02em] text-dv-text">Corporações</h1>
           <p className="animate-dv-fade mt-2 font-body text-[15px] italic leading-snug text-dv-text-2 [animation-delay:200ms]">Poucos Records alcançam o sucesso trabalhando sozinhos.</p>
         </div>
         <button

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { type CSSProperties, useState } from 'react'
 import useSWR from 'swr'
 import { HudCode, RecordPanel } from '@/components/devo/kit'
 import { playSfx } from '@/lib/devo/audio'
@@ -82,12 +82,15 @@ export function CorporacoesMesa() {
                       <p className="mt-1 break-words font-serif text-[19px] font-light uppercase leading-tight tracking-[0.03em] text-in-fg">{c.nome}</p>
                       {c.lema && <p className="mt-0.5 font-body text-[14px] italic text-in-fg-2">“{c.lema}”</p>}
                       <p className="mt-1 font-mono text-[11px] uppercase tracking-[0.12em] text-in-fg-2">Pago {formatMin(c.custo)}</p>
-                      <ul aria-label="Requisitos no pedido" className="mt-2 flex flex-wrap gap-1.5">
+                      <ul aria-label="Requisitos no pedido" className="mt-2 flex flex-col gap-1">
                         {c.requisitos.map((r) => (
-                          <li key={r.id}>
-                            <RecTag tone={r.ok ? 'line' : 'accent'}>
-                              {r.ok ? '✓' : '✗'} {r.rotulo} {r.atual}/{r.exigido}
-                            </RecTag>
+                          <li key={r.id} className="flex items-center justify-between gap-3 font-mono text-[11px] uppercase tracking-[0.1em] text-in-fg-2">
+                            <span>
+                              {r.ok ? '✓' : '✗'} {r.rotulo}
+                            </span>
+                            <span className={r.ok ? 'text-in-fg dv-tabular' : 'text-dv-blood-text dv-tabular'}>
+                              {r.atual}/{r.exigido}
+                            </span>
                           </li>
                         ))}
                       </ul>
@@ -125,20 +128,25 @@ export function CorporacoesMesa() {
                       <BrasaoCorp brasao={c.brasao} necro={necro} className="h-[64px] w-[52px] shrink-0" />
                       <div className="min-w-0 flex-1">
                         <div className="flex flex-wrap items-center gap-1.5">
-                          <RecTag tone={necro ? 'accent' : 'line'} dot={necro}>
-                            {CLASSIFICACAO_ROTULO[c.classificacao]}
-                          </RecTag>
+                          {necro ? (
+                            <span className="dv-cut-diag inline-flex h-6 items-center gap-1.5 bg-[#1a0d0f] px-2 font-mono text-[10px] uppercase leading-none tracking-[0.16em] text-dv-blood-text shadow-[inset_0_0_0_1px_var(--dv-blood)]" style={{ '--dv-cut': '6px' } as CSSProperties}>
+                              <span aria-hidden="true" className="size-[6px] rotate-45 bg-dv-blood" />
+                              {CLASSIFICACAO_ROTULO.necro}
+                            </span>
+                          ) : (
+                            <RecTag tone="line">{CLASSIFICACAO_ROTULO.oficial}</RecTag>
+                          )}
                           {c.escopo === 'global' && <RecTag tone="muted">Global · provisório</RecTag>}
                         </div>
                         <p className="mt-1.5 break-words font-serif text-[18px] font-light uppercase leading-tight text-in-fg">{c.nome}</p>
                         <p className="mt-0.5 font-mono text-[11px] uppercase tracking-[0.12em] text-in-fg-2">
-                          {c.codigo} · {c.membros} membros · líder {c.lider ?? '—'}
+                          {c.codigo} · {c.membros} {c.membros === 1 ? 'membro' : 'membros'} · líder {c.lider ?? '—'}
                         </p>
                         {c.classificacaoNota && <p className="mt-1 font-body text-[14px] text-in-fg-2">{c.classificacaoNota}</p>}
                         <div className="mt-2.5 flex flex-wrap gap-2">
                           <RecButton
                             size="sm"
-                            variant={necro ? 'secondary' : 'danger'}
+                            variant="secondary"
                             loading={busy === `c:${c.id}`}
                             onClick={() => act(`c:${c.id}`, { action: 'mesa.classificar', id: c.id, classificacao: necro ? 'oficial' : 'necro' })}
                           >

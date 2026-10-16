@@ -24,7 +24,7 @@ import { BrasaoCorp } from './brasao'
 import { Campo, Erro, Linha, Monograma, Placa, Rotulo, Selo, Vazio, dataCurta } from './ui'
 
 type Agir = (b: Record<string, unknown>) => Promise<unknown>
-type Aba = 'membros' | 'pedidos' | 'cartas' | 'recrutar' | 'jogos'
+type Aba = 'membros' | 'pedidos' | 'cartas' | 'recrutar'
 
 const nomeCarta = (id: string) => {
   try {
@@ -70,20 +70,23 @@ export function MinhaCorpView({ d, agir }: { d: CorpLiberado; agir: Agir }) {
           ...(decide ? [{ value: 'pedidos' as Aba, label: 'Pedidos', count: m.pedidos.length || undefined }] : []),
           { value: 'cartas', label: 'Cartas' },
           { value: 'recrutar', label: 'Recrutar' },
-          { value: 'jogos', label: 'Jogos' },
         ]}
         value={aba}
         onValueChange={setAba}
         fill
-        className="[&_[role=tab]]:min-w-0 [&_[role=tab]]:px-1 [&_[role=tab]]:text-[11.5px] [&_[role=tab]]:tracking-[0.08em]"
+        className="[&_[role=tab]]:min-w-0 [&_[role=tab]]:px-1.5 [&_[role=tab]]:text-[12px] [&_[role=tab]]:tracking-[0.1em]"
         panelClassName="pt-4"
       >
         <div key={aba} className="animate-dv-fade flex flex-col gap-5">
-          {aba === 'membros' && <Membros m={m} agir={agir} />}
+          {aba === 'membros' && (
+            <>
+              <Membros m={m} agir={agir} />
+              <Jogos d={d} m={m} />
+            </>
+          )}
           {aba === 'pedidos' && decide && <Pedidos m={m} agir={agir} />}
           {aba === 'cartas' && <Cartas m={m} agir={agir} />}
           {aba === 'recrutar' && <Recrutar m={m} agir={agir} />}
-          {aba === 'jogos' && <Jogos d={d} m={m} />}
         </div>
       </Tabs>
     </div>
@@ -112,10 +115,10 @@ function Heroi({ m }: { m: MinhaCorp }) {
           A Companhia classificou esta Corporação como terrorista por violar o código de regras.
         </p>
       )}
-      <div className="mt-4 flex items-center justify-between gap-3 border-t border-dv-line pt-3">
+      <div className="mt-4 flex items-end justify-between gap-3 border-t border-dv-line pt-3">
         <div className="min-w-0">
           <p className="font-mono text-[10.5px] uppercase tracking-[0.16em] text-dv-text-3">Código de identificação</p>
-          <p className="mt-1 font-mono text-[19px] tracking-[0.14em] text-dv-text dv-tabular">{m.codigo}</p>
+          <p className="mt-1 whitespace-nowrap font-mono text-[18px] tracking-[0.08em] text-dv-text dv-tabular">{m.codigo}</p>
         </div>
         <Button
           size="sm"
@@ -128,7 +131,7 @@ function Heroi({ m }: { m: MinhaCorp }) {
             window.setTimeout(() => setCopiado(false), 1800)
           }}
         >
-          {copiado ? 'Copiado' : 'Copiar código'}
+          {copiado ? 'Copiado' : 'Copiar'}
         </Button>
       </div>
       <p className="sr-only">{CLASSIFICACAO_ROTULO[m.classificacao]}</p>
@@ -387,9 +390,12 @@ function Cartas({ m, agir }: { m: MinhaCorp; agir: Agir }) {
                         setUid(c.uid)
                         setErro(null)
                       }}
-                      className={cn('dv-focus block w-full transition-transform', uid === c.uid ? '-translate-y-1 drop-shadow-[0_0_10px_rgba(138,124,200,0.7)]' : 'opacity-85')}
+                      className={cn('dv-focus relative block w-full transition-[transform,opacity] duration-200', uid === c.uid ? '-translate-y-1' : uid ? 'opacity-55' : '')}
                     >
                       <CardFace cardId={c.cardId} className="w-full" />
+                      {uid === c.uid && (
+                        <span aria-hidden="true" className="pointer-events-none absolute -inset-1 shadow-[0_0_0_2px_#c2b9ec,0_0_16px_rgba(138,124,200,0.8)]" />
+                      )}
                     </button>
                   </li>
                 ))}
@@ -404,9 +410,14 @@ function Cartas({ m, agir }: { m: MinhaCorp; agir: Agir }) {
               </div>
             )}
             {feito && <p role="status" className="mt-3 font-body text-[14px] text-dv-amethyst-text">{feito}</p>}
+            <p aria-live="polite" className="mt-4 flex min-h-6 items-center gap-2 font-body text-[15px] text-dv-text-2">
+              {carta ? <span className="text-dv-text">{nomeCarta(carta.cardId)}</span> : 'Escolha uma carta'}
+              <span aria-hidden="true" className="text-dv-gold">→</span>
+              {destino ? <span className="text-dv-text">{destino.personagem}</span> : 'e um membro'}
+            </p>
             <Button
               block
-              className="mt-4"
+              className="mt-3"
               disabled={!carta || !destino || restam <= 0}
               loading={ocupado === 'transf'}
               onClick={async () => {
@@ -418,7 +429,7 @@ function Cartas({ m, agir }: { m: MinhaCorp; agir: Agir }) {
                 }
               }}
             >
-              {carta && destino ? `Transferir para ${destino.personagem}` : 'Transferir carta'}
+              Transferir carta
             </Button>
           </>
         ) : (

@@ -137,7 +137,7 @@ await test('cadastro das contas de teste', async () => {
     [A, [['a-1', 'olho'], ['a-2', 'fosforo'], ['a-3', 'dado']]],
     [B, [['b-1', 'coroa'], ['b-2', 'olho'], ['b-3', 'dado']]],
     [C, [['c-1', 'fosforo']]],
-    [D, [['d-1', 'dado']]],
+    [D, [['d-1', 'dado'], ['d-2', 'olho'], ['d-3', 'fosforo']]],
   ]) {
     const r = await s.post('/api/save', save(cards))
     assert(r.status === 200, `save: ${r.status}`)
@@ -196,7 +196,8 @@ await test('fundar debita Tempo UMA vez (dois toques simultâneos com o mesmo en
   assert(t0 - t1 === custo * MIN, `debitou ${custo} min uma vez (veio ${(t0 - t1) / MIN})`)
   const [{ n }] = await q('SELECT count(*)::int AS n FROM corporacao_movimentos WHERE player_id = $1 AND minutos < 0', [A.id])
   assert(n === 1, `um débito no livro (veio ${n})`)
-  const rep = await A.corp('fundar', { ...body, idem })
+  const [{ envio }] = await q('SELECT envio_idem AS envio FROM corporacoes WHERE id = $1', [corpA])
+  const rep = await A.corp('fundar', { ...body, idem: envio })
   assert(rep.status === 200 && rep.json.repetido === true && rep.json.corporacaoId === corpA, `repetir o envio devolve a mesma fundação: ${rep.text}`)
   assert((await timer(A.id)) === t1, 'repetição não cobra')
 })

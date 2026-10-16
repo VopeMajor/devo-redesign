@@ -79,7 +79,7 @@ export function FundarSheet({ open, onClose, criacao, agir }: { open: boolean; o
         <div className="flex flex-col gap-2">
           {erro && <Erro>{erro}</Erro>}
           <Button block loading={ocupado} disabled={!valido} onClick={enviar} icon={<GlyphHourglass className="size-4" />}>
-            Pagar e enviar à Companhia
+            Pagar e enviar
           </Button>
         </div>
       }

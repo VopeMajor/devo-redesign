@@ -28,7 +28,7 @@ const FORMA: Record<BrasaoForma, string> = {
     return `M${pts.join('L')}Z`
   })(),
   coroa: 'M14 40L30 56L40 26L50 46L60 26L70 56L86 40L80 104Q50 114 20 104Z',
-  chave: 'M50 10A26 26 0 1 1 49.9 10ZM42 84H58V94H66V102H58V116H42Z',
+  chave: 'M50 8A28 28 0 0 1 57 63.1V84H69V93H57V100H65V109H57V116H43V63.1A28 28 0 0 1 50 8Z',
 }
 
 /** Onde fica a inicial (o centro visual de cada forma). */

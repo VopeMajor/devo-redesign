@@ -128,7 +128,7 @@ function PreviaSheet({ corp, onClose, agir }: { corp: CorpResumo | null; onClose
               }
             }}
           >
-            Enviar pedido de entrada
+            Enviar pedido
           </Button>
         </div>
       }
@@ -313,12 +313,15 @@ function Fundar({ d, agir }: { d: CorpLiberado; agir: Agir }) {
             {!c.requisitos.length && <Vazio titulo="Sem requisitos">A Companhia não exige nada além do Tempo por enquanto.</Vazio>}
           </dl>
           <div className="mt-4 flex items-center justify-between gap-3">
+            <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-dv-text-2">Investimento</span>
             <span className="flex items-center gap-1.5 font-impact text-[22px] font-semibold leading-none text-dv-text dv-tabular" aria-label={`Custo: ${formatMin(c.custo)}`}>
               <GlyphHourglass aria-hidden="true" className="size-4 text-dv-gold" />
               {formatMin(c.custo)}
             </span>
+          </div>
+          <div className="mt-3">
             <Button
-              size="sm"
+              block
               variant={c.atende ? 'primary' : 'secondary'}
               disabled={!!d.pedido}
               onClick={() => {

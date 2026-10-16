@@ -129,4 +129,9 @@ export function Linha({ rotulo, children }: { rotulo: string; children: ReactNod
   )
 }
 
-export const dataCurta = (ms: number) => new Date(ms).toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', timeZone: 'America/Sao_Paulo' })
+const MESES = ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez']
+/** "08 out" (horário de Brasília), curto para caber em uma linha. */
+export function dataCurta(ms: number) {
+  const [d, m] = new Date(ms).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', timeZone: 'America/Sao_Paulo' }).split('/')
+  return `${d} ${MESES[Number(m) - 1] ?? ''}`
+}
