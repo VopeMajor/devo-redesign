@@ -28,6 +28,7 @@ export function PocoCena({
   balde = 'fundo',
   baldeTipo = 'madeira',
   girando = false,
+  ativo = false,
   moeda = 0,
   brilho = 0.5,
   className,
@@ -36,6 +37,8 @@ export function PocoCena({
   balde?: BaldePosicao
   baldeTipo?: string
   girando?: boolean
+  /** Invocação em curso: o anel acelera, a aura pulsa e as partículas sobem mais rápido. */
+  ativo?: boolean
   /** Muda a cada moeda lançada: dispara a queda e a ondulação. */
   moeda?: number
   /** 0..1: luz sobrenatural que sai da boca do poço. */
@@ -64,7 +67,7 @@ export function PocoCena({
           } as CSSProperties
         }
       >
-        <Poco balde={balde} baldeTipo={baldeTipo} girando={girando} moeda={moeda} brilho={trancado ? 0.12 : longe ? 0.9 : brilho} />
+        <Poco balde={balde} baldeTipo={baldeTipo} girando={girando} ativo={ativo} moeda={moeda} brilho={trancado ? 0.12 : longe ? 0.9 : brilho} />
       </div>
 
       {/* figura encapuzada (o Corvo, nunca nomeado): silhueta sem rosto, dissolvida na névoa */}
@@ -168,183 +171,69 @@ function Nevoa({ layer, className }: { layer: number; className?: string }) {
   )
 }
 
-/* ── O poço ─────────────────────────────────────────────────────────────────────────────── */
+/* ── O mecanismo (camadas de arte em public/images/poco, geradas por scripts/dev/gen-poco-arte.mjs) ─── */
 
-function Poco({ balde, baldeTipo, girando, moeda, brilho }: { balde: BaldePosicao; baldeTipo: string; girando: boolean; moeda: number; brilho: number }) {
-  // Cilindro de pedra: centro x=200; boca em y=318; base em y=448.
-  const rows = [348, 372, 396, 420]
-  const juntas: [number, number][] = []
-  rows.concat([444]).forEach((y, r) => {
-    const top = r === 0 ? 324 : rows[r - 1]
-    for (let k = 0; k < 8; k++) {
-      const th = -Math.PI / 2 + ((k + (r % 2 ? 0.5 : 0)) / 8) * Math.PI
-      if (Math.abs(th) > 1.45) continue
-      juntas.push([200 + 120 * Math.sin(th), (top + y) / 2])
-    }
-  })
-  const [w0, w1, w2] = WOOD[baldeTipo] ?? WOOD.madeira
-  const baldeY = balde === 'cima' ? 0 : balde === 'subindo' ? 0 : 168
+const ART = '/images/poco'
+
+/** Partículas discretas subindo da água (transform + opacidade apenas; 9 no máximo). */
+const PARTICULAS = [
+  { x: 38, d: 0, t: 7.5, s: 3 },
+  { x: 46, d: 1.6, t: 9, s: 2 },
+  { x: 52, d: 3.1, t: 8, s: 2.5 },
+  { x: 58, d: 0.8, t: 10, s: 2 },
+  { x: 62, d: 4.4, t: 7, s: 3 },
+  { x: 43, d: 5.5, t: 9.5, s: 2 },
+  { x: 55, d: 6.6, t: 8.5, s: 1.5 },
+  { x: 49, d: 2.4, t: 11, s: 1.5 },
+  { x: 66, d: 3.8, t: 9, s: 2 },
+]
+
+function Poco({ balde, baldeTipo, girando, ativo, moeda, brilho }: { balde: BaldePosicao; baldeTipo: string; girando: boolean; ativo: boolean; moeda: number; brilho: number }) {
+  const tipo = ['madeira', 'ferro', 'cobre', 'prata'].includes(baldeTipo) ? baldeTipo : 'madeira'
   return (
-    <svg viewBox="0 0 400 500" className="block w-auto max-w-none" style={{ aspectRatio: '400 / 500', height: 'var(--poco-h, min(64vh, 500px))' }}>
-      <defs>
-        <linearGradient id="poco-pedra" x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0" stopColor="#151518" />
-          <stop offset="0.3" stopColor="#4a4a50" />
-          <stop offset="0.45" stopColor="#5a5a60" />
-          <stop offset="0.75" stopColor="#2e2e33" />
-          <stop offset="1" stopColor="#111114" />
-        </linearGradient>
-        <linearGradient id="poco-borda" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#7a7a80" />
-          <stop offset="0.45" stopColor="#4c4c52" />
-          <stop offset="1" stopColor="#26262b" />
-        </linearGradient>
-        <radialGradient id="poco-boca" cx="0.5" cy="0.55" r="0.6">
-          <stop offset="0" stopColor="#2a2540" />
-          <stop offset="0.35" stopColor="#0d0c14" />
-          <stop offset="1" stopColor="#030304" />
-        </radialGradient>
-        <radialGradient id="poco-luz" cx="0.5" cy="0.5" r="0.5">
-          <stop offset="0" stopColor="#c2b9ec" stopOpacity="0.55" />
-          <stop offset="0.45" stopColor="#8a7cc8" stopOpacity="0.18" />
-          <stop offset="1" stopColor="#8a7cc8" stopOpacity="0" />
-        </radialGradient>
-        <linearGradient id="poco-aco" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#ece5d8" />
-          <stop offset="0.35" stopColor="#bab09f" />
-          <stop offset="0.7" stopColor="#6b6357" />
-          <stop offset="1" stopColor="#3a352e" />
-        </linearGradient>
-        <linearGradient id="poco-viga" x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0" stopColor="#17130f" />
-          <stop offset="0.4" stopColor="#3a3029" />
-          <stop offset="1" stopColor="#1b1612" />
-        </linearGradient>
-        <linearGradient id="poco-telha" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#2c2c31" />
-          <stop offset="1" stopColor="#141417" />
-        </linearGradient>
-        <linearGradient id="poco-balde" x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0" stopColor={w2} />
-          <stop offset="0.4" stopColor={w1} />
-          <stop offset="1" stopColor={w0} />
-        </linearGradient>
-        {/* o balde só aparece acima da borda ou dentro da boca */}
-        <clipPath id="poco-clip-boca">
-          <rect x="0" y="0" width="400" height="318" />
-          <ellipse cx="200" cy="318" rx="98" ry="21" />
-        </clipPath>
-        <clipPath id="poco-clip-corda">
-          <rect x="0" y="176" width="400" height="330" />
-        </clipPath>
-      </defs>
-
-      {/* sombra no barro */}
-      <ellipse cx="200" cy="452" rx="168" ry="34" fill="#050506" opacity="0.7" />
-      {/* luz sobrenatural acima da boca */}
-      <ellipse className="poco-glow" cx="200" cy="300" rx="150" ry="120" fill="url(#poco-luz)" fillOpacity={brilho} />
-
-      {/* corpo de pedra */}
-      <path d="M80 318V444A120 26 0 0 0 320 444V318Z" fill="url(#poco-pedra)" />
-      {rows.map((y) => (
-        <path key={y} d={`M80 ${y}A120 26 0 0 0 320 ${y}`} fill="none" stroke="#0c0c0e" strokeWidth="2" opacity="0.85" />
-      ))}
-      {rows.map((y) => (
-        <path key={`h${y}`} d={`M84 ${y + 2}A116 25 0 0 0 316 ${y + 2}`} fill="none" stroke="#8f8e8b" strokeWidth="0.8" opacity="0.18" />
-      ))}
-      {juntas.map(([x, y], i) => (
-        <path key={i} d={`M${x} ${y - 9}v${18 + (200 - Math.abs(x - 200)) * 0.04}`} stroke="#0c0c0e" strokeWidth="2" opacity="0.8" />
-      ))}
-      {/* musgo/sujeira na base */}
-      <path d="M80 430Q140 456 200 452T320 430V444A120 26 0 0 1 80 444Z" fill="#101012" opacity="0.6" />
-
-      {/* placa dos 500 anos (D em romano) */}
-      <g transform="translate(26 360)">
-        <rect x="14" y="40" width="5" height="52" fill="#1b1612" />
-        <path d="M0 6L6 0H28L34 6V38L28 44H6L0 38Z" fill="url(#poco-borda)" stroke="#0c0c0e" strokeWidth="1.5" />
-        <path d="M5 9L9 5H25L29 9V35L25 39H9L5 35Z" fill="none" stroke="#8f8e8b" strokeWidth="0.7" opacity="0.5" />
-        <text x="17" y="27" textAnchor="middle" fontFamily="Cinzel, serif" fontSize="15" fontWeight="600" fill="#151517" opacity="0.85">
-          D
-        </text>
-        <path d="M10 31H24" stroke="#151517" strokeWidth="0.9" opacity="0.6" />
-      </g>
-
-      {/* postes do telhado */}
-      <rect x="88" y="104" width="16" height="222" fill="url(#poco-viga)" />
-      <rect x="296" y="104" width="16" height="222" fill="url(#poco-viga)" />
-      <path d="M90 140H102M298 140H310M90 236H102M298 236H310" stroke="#0c0c0e" strokeWidth="1.2" opacity="0.7" />
-
-      {/* telhado de duas águas com telhas */}
-      <path d="M58 118L200 44L342 118L332 126L200 58L68 126Z" fill="#0f0f12" />
-      <path d="M68 118L200 50L332 118V126L200 60L68 126Z" fill="url(#poco-telha)" />
-      {[64, 76, 88, 100, 112].map((y, i) => (
-        <path key={y} d={`M${200 - (y - 48) * 1.92} ${y}L200 ${y - 6 - i * 0.3}L${200 + (y - 48) * 1.92} ${y}`} fill="none" stroke="#3d3d44" strokeWidth="1.1" opacity="0.6" />
-      ))}
-      <path d="M196 44h8v8h-8z" transform="rotate(45 200 48)" fill="url(#poco-aco)" />
-
-      {/* sarilho (eixo de aço champanhe) com a corda enrolada */}
-      <rect x="100" y="164" width="200" height="22" rx="3" fill="url(#poco-aco)" />
-      <g className={cn('poco-rope-wind', girando && 'poco-rope-wind-on')}>
-        {Array.from({ length: 13 }, (_, i) => (
-          <path key={i} d={`M${166 + i * 5.5} 165l-4 20`} stroke="#6f675b" strokeWidth="3.4" strokeLinecap="round" />
-        ))}
-      </g>
-      <rect x="100" y="164" width="200" height="4" fill="#ece5d8" opacity="0.35" />
-      <circle cx="96" cy="175" r="9" fill="url(#poco-aco)" stroke="#2c2a26" />
-      <circle cx="304" cy="175" r="9" fill="url(#poco-aco)" stroke="#2c2a26" />
-
-      {/* boca do poço (vista de cima) e borda de pedra */}
-      <ellipse cx="200" cy="318" rx="126" ry="32" fill="url(#poco-borda)" />
-      <ellipse cx="200" cy="318" rx="126" ry="32" fill="none" stroke="#0c0c0e" strokeWidth="2" />
-      {Array.from({ length: 12 }, (_, i) => {
-        const a = (i / 12) * Math.PI * 2
-        const x1 = 200 + Math.cos(a) * 100
-        const y1 = 318 + Math.sin(a) * 22
-        const x2 = 200 + Math.cos(a) * 126
-        const y2 = 318 + Math.sin(a) * 32
-        return <path key={i} d={`M${x1} ${y1}L${x2} ${y2}`} stroke="#141417" strokeWidth="1.6" opacity="0.8" />
-      })}
-      <ellipse cx="200" cy="318" rx="100" ry="22" fill="url(#poco-boca)" />
-      <ellipse className="poco-glow" cx="200" cy="322" rx="60" ry="11" fill="url(#poco-luz)" fillOpacity={0.35 + brilho * 0.4} />
-
-      {/* moeda caindo + ondulação na água (reinicia a cada lançamento) */}
+    <div className={cn('poco-stage relative', (girando || ativo) && 'poco-ativo')} style={{ aspectRatio: '400 / 500', height: 'var(--poco-h, min(64vh, 500px))', '--brilho': brilho } as CSSProperties}>
+      {/* aura violeta atrás de tudo (respira) */}
+      <img src={`${ART}/aura.webp`} alt="" draggable={false} className="poco-aura absolute left-[-14%] top-[-6%] w-[128%] max-w-none" />
+      {/* anel astral: numerais e runas girando devagar (acelera na invocação) */}
+      <div className="absolute left-[9%] top-[5.2%] w-[82%]">
+        <img src={`${ART}/anel.webp`} alt="" draggable={false} className="poco-anel block w-full opacity-60" />
+      </div>
+      {/* feixe de luz direcionada vindo do alto à esquerda */}
+      <span className="poco-feixe absolute left-[-30%] top-[-20%] h-[95%] w-[70%] origin-top-left rotate-[-24deg] bg-[linear-gradient(90deg,transparent,rgba(214,206,246,0.13)_45%,rgba(214,206,246,0.05)_70%,transparent)]" />
+      <img src={`${ART}/estrutura.webp`} alt="" draggable={false} className="absolute inset-0 w-full" />
+      {/* corrente + balde: recortados entre o sarilho e a linha d'água */}
+      <div className="absolute left-[35%] top-[41.6%] h-[28.8%] w-[30%] overflow-hidden">
+        <img
+          src={`${ART}/balde-${tipo}.webp`}
+          alt=""
+          draggable={false}
+          className={cn('poco-bucket absolute left-0 top-0 w-full max-w-none', balde === 'subindo' && 'poco-bucket-sobe')}
+          style={{ transform: `translateY(${balde === 'fundo' ? '-38%' : '-74.5%'})` }}
+        />
+      </div>
+      {/* moeda caindo e ondas na água */}
       {moeda > 0 && (
-        <g key={moeda}>
-          <g className="poco-coin">
-            <ellipse cx="200" cy="232" rx="7" ry="7" fill="url(#poco-aco)" stroke="#3a352e" strokeWidth="1" />
-            <path d="M200 227.5l1.3 3.2 3.2 1.3-3.2 1.3-1.3 3.2-1.3-3.2-3.2-1.3 3.2-1.3z" fill="#5f584d" />
-          </g>
-          <ellipse className="poco-ripple" cx="200" cy="322" rx="40" ry="8" fill="none" stroke="#c2b9ec" strokeWidth="1.5" />
-        </g>
+        <div key={moeda} className="absolute left-[44%] top-[34%] h-[38%] w-[12%]">
+          <span className="poco-coin absolute left-1/2 top-0 block size-[18px] -translate-x-1/2 rounded-full bg-[radial-gradient(circle_at_35%_30%,#fbf6ec,#bab09f_45%,#5f584d)] shadow-[0_0_10px_rgba(236,229,216,0.6)]" />
+        </div>
       )}
-
-      {/* corda + balde (sobem e descem juntos) */}
-      <g clipPath="url(#poco-clip-boca)">
-        <g clipPath="url(#poco-clip-corda)">
-          <g className={cn('poco-bucket', balde === 'subindo' && 'poco-bucket-sobe')} style={{ transform: `translateY(${baldeY}px)` }}>
-            <rect x="198.6" y="-260" width="2.8" height="470" fill="#7b7366" />
-            <rect x="198.6" y="-260" width="0.9" height="470" fill="#b5ab9b" opacity="0.6" />
-            <path d="M178 216Q200 192 222 216" fill="none" stroke="url(#poco-aco)" strokeWidth="2.4" />
-            <path d="M176 214H224L219 258H181Z" fill="url(#poco-balde)" stroke="#0c0c0e" strokeWidth="1.4" />
-            <path d="M177.5 224H222.5M179.5 248H220.5" stroke="url(#poco-aco)" strokeWidth="3" />
-            {baldeTipo === 'madeira' && <path d="M190 214V258M205 214V258M197 230l3 9" stroke="#1b1612" strokeWidth="1" opacity="0.7" />}
-            <ellipse cx="200" cy="214" rx="24" ry="4.5" fill="#0c0c0e" opacity="0.85" />
-          </g>
-        </g>
-      </g>
-
-      {/* frente da borda (sobrepõe a corda quando o balde está no fundo) */}
-      <path d="M74 318A126 32 0 0 0 326 318A126 32 0 0 1 74 318Z" fill="url(#poco-borda)" opacity="0.9" />
-      <path d="M74 318A126 32 0 0 0 326 318" fill="none" stroke="#9a9a9f" strokeWidth="1" opacity="0.35" />
-
-      {/* manivela de aço (gira com a corda) */}
-      <g className={cn('poco-crank', girando && 'poco-crank-on')} style={{ transformOrigin: '312px 175px' }}>
-        <rect x="309" y="171" width="44" height="8" rx="2" fill="url(#poco-aco)" stroke="#2c2a26" strokeWidth="0.8" />
-        <rect x="346" y="160" width="9" height="30" rx="3.5" fill="#2a2420" stroke="#0c0c0e" />
-        <rect x="347.5" y="162" width="2" height="26" rx="1" fill="#5b4c40" opacity="0.6" />
-      </g>
-      <circle cx="312" cy="175" r="6" fill="url(#poco-aco)" stroke="#2c2a26" />
-    </svg>
+      {moeda > 0 && <span key={`r${moeda}`} className="poco-ripple absolute left-[30%] top-[66.5%] h-[8%] w-[40%] rounded-[50%] border border-[#c2b9ec]/70" />}
+      {/* partículas subindo da água */}
+      <div className="absolute left-[18%] top-[18%] h-[52%] w-[64%] overflow-hidden">
+        {PARTICULAS.map((p, i) => (
+          <span
+            key={i}
+            className="poco-particula absolute bottom-0 rotate-45 bg-[#e4defa]"
+            style={{ left: `${p.x * 1.5 - 30}%`, width: p.s, height: p.s, animationDelay: `${p.d}s`, animationDuration: `${p.t}s` } as CSSProperties}
+          />
+        ))}
+      </div>
+      <img src={`${ART}/base.webp`} alt="" draggable={false} className="absolute inset-0 w-full" />
+      {/* roda da manivela (gira com a corrente) */}
+      <div className="absolute left-[72.4%] top-[35.4%] w-[19.6%]">
+        <img src={`${ART}/roda.webp`} alt="" draggable={false} className={cn('poco-roda block w-full', girando && 'poco-roda-on')} />
+      </div>
+    </div>
   )
 }
 
