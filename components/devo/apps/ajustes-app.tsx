@@ -14,6 +14,7 @@ import { callName, useDevo } from '../state/devo-store'
 import { DeadlyVoteSymbol } from '../system/symbol'
 import { LineAction, Panel, SectionLabel } from './app-ui'
 import { MarbleSlab } from '../os/shell-ui'
+import { setAnimacaoPreferida, useAnimacaoPreferida } from '../cosmeticos/use-cosmeticos'
 
 function Row({ label, children }: { label: string; children: ReactNode }) {
   return (
@@ -37,6 +38,8 @@ export function AjustesApp() {
             <SoundToggle />
           </div>
         </Panel>
+
+        <CosmeticosAjuste />
 
         <PwaPanel />
 
@@ -93,3 +96,33 @@ export function AjustesApp() {
   )
 }
 
+
+/** Animações das molduras, emblemas e balões (texto do dono §12). O sistema também respeita "reduzir movimento". */
+function CosmeticosAjuste() {
+  const on = useAnimacaoPreferida()
+  return (
+    <Panel>
+      <SectionLabel>Cosméticos</SectionLabel>
+      <div className="mt-2 flex items-center justify-between gap-3">
+        <div className="min-w-0">
+          <p className="font-body text-[15px] text-dv-text">Animações dos cosméticos</p>
+          <p className="mt-0.5 font-body text-[13px] leading-snug text-dv-text-3">Engrenagens, pêndulos e brilhos das molduras. Desligadas também quando o aparelho pede menos movimento.</p>
+        </div>
+        <button
+          type="button"
+          role="switch"
+          aria-checked={on}
+          aria-label="Animações dos cosméticos"
+          onClick={() => {
+            playSfx('click')
+            setAnimacaoPreferida(!on)
+          }}
+          className="dv-focus relative inline-flex h-11 w-[64px] shrink-0 items-center"
+        >
+          <span aria-hidden="true" className={`absolute inset-x-0 h-7 transition-colors ${on ? 'bg-dv-cobalt shadow-[0_0_12px_-3px_rgba(138,124,200,0.9)]' : 'bg-dv-ink-4 shadow-[inset_0_0_0_1px_var(--dv-line-strong)]'}`} />
+          <span aria-hidden="true" className={`absolute top-1/2 size-5 -translate-y-1/2 bg-dv-porcelain transition-[left] duration-200 ${on ? 'left-[38px]' : 'left-[6px]'}`} />
+        </button>
+      </div>
+    </Panel>
+  )
+}

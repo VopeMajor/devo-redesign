@@ -42,6 +42,9 @@ import { StaffDesk } from '../system/staff-desk'
 import { LifecycleTrack, RecButton, RecLink, STATUS_TEXT, StatusChip, StatusMark } from '../system/record-ui'
 import { useDeadlyVotes } from '../system/use-deadly-votes'
 import { DiarioPanel } from '../poco/diario-panel'
+import { Colecao } from '../cosmeticos/colecao'
+import { FotoMoldurada } from '../cosmeticos/cosmetic-art'
+import { IdentidadePanel, useMinhaMolduraAvatar } from '../cosmeticos/identidade-panel'
 
 const CRITICAL_MS = 6 * 3600 * 1000
 /**
@@ -88,6 +91,11 @@ export function RecordApp() {
   const data = useRecordData(votes.record?.avatarVersion ?? null)
   const [tab, setTab] = useState<Tab>('record')
   const [selected, setSelected] = useState<string | null>(null)
+  const [colecao, setColecao] = useState(false)
+  const molduraAv = useMinhaMolduraAvatar()
+  const fileData: RecordFileData = molduraAv
+    ? { ...data, photoFrame: <FotoMoldurada formato="avatar" src={data.photoUrl ?? null} moldura={molduraAv} alt={`Foto de ${data.name}`} /> }
+    : data
 
   const openVotes = useCallback(() => {
     setTab('votes')
@@ -121,6 +129,7 @@ export function RecordApp() {
               onValueChange={(v) => {
                 setTab(v)
                 setSelected(null)
+                setColecao(false)
               }}
               fill
               className="animate-dv-fade [&_[role=tab]]:min-w-0 [&_[role=tab]]:flex-auto [&_[role=tab]]:whitespace-nowrap [&_[role=tab]]:px-2 [&_[role=tab]]:text-[10.5px] [&_[role=tab]]:tracking-[0.06em] @md:[&_[role=tab]]:px-4 @md:[&_[role=tab]]:text-[11px] @md:[&_[role=tab]]:tracking-[0.14em]"
@@ -136,9 +145,14 @@ export function RecordApp() {
                 <Stagger key="invites" className="flex flex-col gap-5">
                   <InvitePanel />
                 </Stagger>
+              ) : tab === 'record' && colecao ? (
+                <Reveal key="colecao" variant="right">
+                  <Colecao nome={data.name} fotoSrc={data.photoUrl ?? null} onVoltar={() => setColecao(false)} />
+                </Reveal>
               ) : tab === 'record' ? (
                 <Stagger key="record" className="flex flex-col gap-5" delay={60}>
-                  <RecordFile data={data} photoAction={<PhotoPicker hasPhoto={!!data.photoUrl} onChanged={votes.refresh} />} />
+                  <RecordFile data={fileData} photoAction={<PhotoPicker hasPhoto={!!data.photoUrl} onChanged={votes.refresh} />} />
+                  <IdentidadePanel nome={data.name} fotoSrc={data.photoUrl ?? null} onAbrir={() => setColecao(true)} />
                   {signals.length > 0 && <ManagerAlert signals={signals} />}
                   <DeckPanel
                     inventory={state.inventory}

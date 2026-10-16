@@ -9,12 +9,16 @@ import { InvitePanel } from './invite-panel'
 import { awaitingMe, RewardsPanel, useRewards } from './staff-rewards'
 import { AdminLogPanel, ConfigPanel, PlayersPanel, TeamPanel } from './staff-team'
 import { DeskNav, type DeskItem } from './staff-ui'
+import { AdminCosmeticos } from '../cosmeticos/admin-cosmeticos'
+import { SemanaisPanel } from '../cosmeticos/semanais'
 
-type Section = 'casos' | 'recompensas' | 'equipe' | 'jogadores' | 'convites' | 'registro' | 'ajustes'
+type Section = 'casos' | 'recompensas' | 'semanais' | 'equipe' | 'jogadores' | 'convites' | 'cosmeticos' | 'registro' | 'ajustes'
 
 const LABEL: Record<Section, string> = {
   casos: 'Casos',
   recompensas: 'Recompensas',
+  semanais: 'Semanais',
+  cosmeticos: 'Cosméticos',
   equipe: 'Equipe',
   jogadores: 'Jogadores',
   convites: 'Convites',
@@ -24,9 +28,9 @@ const LABEL: Record<Section, string> = {
 
 /** Seções por cargo (tabela do dono). O servidor decide de novo em cada chamada. */
 const SECTIONS: Record<Exclude<Cargo, 'player'>, Section[]> = {
-  dealer: ['casos', 'recompensas'],
-  anfitriao: ['casos', 'recompensas', 'equipe', 'jogadores', 'convites'],
-  owner: ['casos', 'recompensas', 'equipe', 'jogadores', 'convites', 'registro', 'ajustes'],
+  dealer: ['casos', 'recompensas', 'semanais'],
+  anfitriao: ['casos', 'recompensas', 'semanais', 'equipe', 'jogadores', 'convites'],
+  owner: ['casos', 'recompensas', 'semanais', 'equipe', 'jogadores', 'convites', 'cosmeticos', 'registro', 'ajustes'],
 }
 
 const ROLE_LINE: Record<Exclude<Cargo, 'player'>, string> = {
@@ -118,6 +122,8 @@ export function StaffDesk({ role }: { role: Exclude<Cargo, 'player'> }) {
         {section === 'equipe' && <TeamPanel role={role} />}
         {section === 'jogadores' && <PlayersPanel role={role} />}
         {section === 'convites' && <InvitePanel />}
+        {section === 'semanais' && <SemanaisPanel role={role} />}
+        {section === 'cosmeticos' && <AdminCosmeticos />}
         {section === 'registro' && <AdminLogPanel />}
         {section === 'ajustes' && <ConfigPanel />}
       </Stagger>
