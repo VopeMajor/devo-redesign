@@ -15,7 +15,8 @@ type Welcome = { delay: number; threadId: string; npcId: string; text: string }
  * Avisos de boas-vindas (área ENTRADA, rodada 2): começam depois que o herói da home termina de entrar
  * e ficam espaçados mais que a vida do toast (5,2s) — um aviso por vez, nunca empilhados sobre o cartão.
  */
-const WELCOME_PULSE_MS = 2600
+// Depois de o cartão "Tempo restante" terminar de entrar (fronteira noite → papel + entrada da home).
+const WELCOME_PULSE_MS = 4600
 const WELCOME: Welcome[] = [
   { delay: 8400, threadId: 't-rato', npcId: 'rato', text: 'Bem-vindo ao DEVO, {nome}! Seu pulso marca 72 horas. Gaste com sabedoria. Ou não! Hihihi.' },
   { delay: 14200, threadId: 't-rato', npcId: 'rato', text: 'Dica do Anfitrião: a Sala de Trocas está aberta. Leve uma carta. Volte com outra. Talvez.' },
@@ -38,7 +39,7 @@ export function useDevoEngine() {
     dispatch({ type: 'MARK_WELCOMED' })
     const timers: number[] = []
     timers.push(
-      window.setTimeout(() => notify({ appId: 'pulso', title: 'Pulso sincronizado', body: '72:00:00 restantes. O relógio começou.', tone: 'danger' }), WELCOME_PULSE_MS),
+      window.setTimeout(() => notify({ appId: 'pulso', title: 'Pulso sincronizado', body: '72:00:00 restantes. O relógio começou.' }), WELCOME_PULSE_MS),
     )
     for (const w of WELCOME) {
       const text = withName(w.text, callName(state))

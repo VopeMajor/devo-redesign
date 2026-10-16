@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { playSfx } from '@/lib/devo/audio'
 import { cn } from '@/lib/utils'
 import { formatDuration, useNow } from '../hooks'
@@ -40,29 +40,67 @@ function tokenize(value: string): Token[] {
 }
 
 /**
- * Uma casa de dígito: largura fixa (0.6em) e máscara justa à altura do algarismo (0.12em–0.95em da
- * caixa de 1em). Na troca o dígito novo rola de cima e o antigo sai por baixo, deslocados exatamente
- * uma altura de algarismo (como um contador): nunca se sobrepõem, nunca vazam da linha e sempre há
- * dígito visível. Sem `flip` (ou com movimento reduzido) troca seca.
+ * Uma casa de dígito: largura fixa (0.6em) e máscara justa à altura do algarismo. Na troca, o antigo
+ * desce e some ANTES de o novo começar a descer (troca em duas fases, Web Animations): em nenhum quadro
+ * dois algarismos aparecem juntos nem sobra traço do antigo dentro da máscara. O antigo é desmontado
+ * no fim (antes ficava montado e parado no fim da animação — o "fantasma" das rodadas 1–2).
+ * Sem `flip`, com movimento reduzido ou sem `Element.animate`: troca seca.
  */
+const OUT_FRAMES: Keyframe[] = [
+  { transform: 'none', opacity: 1, offset: 0, easing: 'cubic-bezier(0.5,0,0.75,0)' },
+  { transform: 'translateY(0.32em)', opacity: 0, offset: 0.42 },
+  { transform: 'translateY(0.32em)', opacity: 0, offset: 1 },
+]
+const IN_FRAMES: Keyframe[] = [
+  { transform: 'translateY(-0.32em)', opacity: 0, offset: 0 },
+  { transform: 'translateY(-0.32em)', opacity: 0, offset: 0.5, easing: 'cubic-bezier(0.16,1,0.3,1)' },
+  { transform: 'none', opacity: 1, offset: 1 },
+]
+const FLIP_MS = 360
+
 function DigitCell({ c, flip }: { c: string; flip: boolean }) {
   const last = useRef(c)
-  const out = useRef<string | null>(null)
   const seq = useRef(0)
-  if (last.current !== c) {
-    out.current = last.current
+  const [out, setOut] = useState<{ ch: string; seq: number } | null>(null)
+  const inRef = useRef<HTMLSpanElement>(null)
+  const outRef = useRef<HTMLSpanElement>(null)
+
+  useLayoutEffect(() => {
+    if (last.current === c) return
+    const old = last.current
     last.current = c
+    const el = inRef.current
+    const reduce = typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
+    if (!flip || reduce || !el || typeof el.animate !== 'function') {
+      setOut(null)
+      return
+    }
     seq.current += 1
-  }
-  const animating = flip && out.current !== null && seq.current > 0
+    setOut({ ch: old, seq: seq.current })
+  }, [c, flip])
+
+  useLayoutEffect(() => {
+    if (!out) return
+    const a = inRef.current?.animate(IN_FRAMES, { duration: FLIP_MS, fill: 'none' })
+    const b = outRef.current?.animate(OUT_FRAMES, { duration: FLIP_MS, fill: 'forwards' })
+    const mine = out.seq
+    const done = () => setOut((o) => (o && o.seq === mine ? null : o))
+    if (b) b.onfinish = done
+    else done()
+    return () => {
+      a?.cancel()
+      b?.cancel()
+    }
+  }, [out])
+
   return (
-    <span className="relative block h-[1em] w-[0.6em] text-center leading-[1em] [clip-path:inset(0.12em_0_0.05em_0)]">
-      <span key={`in${seq.current}`} className={cn('block h-[1em]', animating && 'animate-dv-digit-in')}>
+    <span className="relative block h-[1em] w-[0.6em] text-center leading-[1em] [clip-path:inset(0.08em_-0.05em_0.02em_-0.05em)]">
+      <span ref={inRef} className="block h-[1em]">
         {c}
       </span>
-      {animating && (
-        <span key={`out${seq.current}`} aria-hidden="true" className="animate-dv-digit-out pointer-events-none absolute inset-x-0 top-0 block h-[1em] text-center motion-reduce:hidden">
-          {out.current}
+      {out && (
+        <span key={out.seq} ref={outRef} aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 block h-[1em] text-center opacity-0">
+          {out.ch}
         </span>
       )}
     </span>

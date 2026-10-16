@@ -7,6 +7,7 @@ import { playSfx } from '@/lib/devo/audio'
 import { promptInstall, requestNotifications, usePwa } from '@/lib/devo/pwa'
 import { Badge } from '../kit/badge'
 import { Button } from '../kit/button'
+import { EntradaButton } from '../landing/entrada-button'
 import { Frame } from '../kit/frame'
 import { Stagger } from '../kit/reveal'
 import { portraitFrameProps } from '@/lib/devo/npcs'
@@ -127,7 +128,7 @@ export function PwaOffer({ onClose }: { onClose: () => void }) {
       <Stagger className="mt-4 flex flex-col gap-2.5" delay={160}>
         <Frame pad="sm" tone={installed ? 'cobalt' : 'neutral'}>
           <div className="flex items-center gap-3">
-            <span className="dv-cut grid size-11 shrink-0 place-items-center bg-dv-cobalt-dim text-dv-cobalt-text" style={{ '--dv-cut': '8px' } as CSSProperties}>
+            <span className="dv-cut grid size-11 shrink-0 place-items-center bg-dv-ink-3 text-dv-gold-bright shadow-[inset_0_0_0_1px_rgba(186,176,159,0.3)]" style={{ '--dv-cut': '8px' } as CSSProperties}>
               <InstallIcon className="size-5" strokeWidth={1.4} aria-hidden="true" />
             </span>
             <div className="min-w-0 flex-1">
@@ -142,14 +143,14 @@ export function PwaOffer({ onClose }: { onClose: () => void }) {
                 target="_blank"
                 rel="noopener"
                 onClick={() => playSfx('click')}
-                className="dv-focus flex min-h-11 items-center gap-1.5 px-2 font-display text-[12px] font-semibold uppercase tracking-[0.2em] text-dv-cobalt-text"
+                className="dv-focus flex min-h-11 items-center gap-1.5 px-2 font-display text-[12px] font-semibold uppercase tracking-[0.2em] text-dv-gold-bright"
               >
                 <ExternalLink className="size-4" strokeWidth={1.4} aria-hidden="true" /> Abrir
               </a>
             ) : (
-              <Button size="sm" disabled={busy} onClick={handleInstall} aria-expanded={!installEvent ? showSteps : undefined}>
+              <EntradaButton tone="porcelain" size="sm" disabled={busy} onClick={handleInstall} aria-expanded={!installEvent ? showSteps : undefined}>
                 {installEvent ? 'Instalar' : 'Como?'}
-              </Button>
+              </EntradaButton>
             )}
           </div>
           {!installed && (showSteps || inIframe) && (
@@ -161,7 +162,7 @@ export function PwaOffer({ onClose }: { onClose: () => void }) {
 
         <Frame pad="sm" tone={permission === 'granted' ? 'cobalt' : 'neutral'}>
           <div className="flex items-center gap-3">
-            <span className="dv-cut grid size-11 shrink-0 place-items-center bg-dv-cobalt-dim text-dv-cobalt-text" style={{ '--dv-cut': '8px' } as CSSProperties}>
+            <span className="dv-cut grid size-11 shrink-0 place-items-center bg-dv-ink-3 text-dv-gold-bright shadow-[inset_0_0_0_1px_rgba(186,176,159,0.3)]" style={{ '--dv-cut': '8px' } as CSSProperties}>
               <Bell className="size-5" strokeWidth={1.4} aria-hidden="true" />
             </span>
             <div className="min-w-0 flex-1">
@@ -182,9 +183,9 @@ export function PwaOffer({ onClose }: { onClose: () => void }) {
               <Badge tone="neutral">Bloqueadas</Badge>
             ) : (
               canNotify && (
-                <Button size="sm" disabled={busy} onClick={() => run(requestNotifications)}>
+                <EntradaButton tone="porcelain" size="sm" disabled={busy} onClick={() => run(requestNotifications)}>
                   Ativar
-                </Button>
+                </EntradaButton>
               )
             )}
           </div>

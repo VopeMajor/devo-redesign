@@ -5,6 +5,7 @@ import { playSfx, preloadMusic } from '@/lib/devo/audio'
 import { enterFullscreen } from '@/lib/devo/fullscreen'
 import { formatDuration } from '../hooks'
 import { Button } from '../kit/button'
+import { EntradaButton } from './entrada-button'
 import { ScreenFrame } from '../kit/frame'
 import { GlyphHourglass } from '../kit/glyphs'
 import { SceneBackdrop, type SceneFocus } from '../kit/scene'
@@ -82,14 +83,24 @@ export function LandingScreen({
   }, [])
 
   return (
-    <main ref={mainRef} className="relative flex min-h-dvh flex-col overflow-hidden bg-dv-ink text-dv-text lg:h-dvh">
+    <main ref={mainRef} className="en-root relative flex min-h-dvh flex-col overflow-hidden bg-dv-ink text-dv-text lg:h-dvh">
       <SceneBackdrop preset="sigil" intensity={0.9} focus={focus} dim={veiled ? 0.18 : 0.08} />
+      {/* Paleta do mármore: a noite do astrolábio vira grafite (a cena perde quase toda a cor) e sobra
+          só um halo violeta discreto atrás do sigilo — atmosfera, não fundo. */}
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[#808080] opacity-[0.82] mix-blend-saturation" />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background: `radial-gradient(${Math.round((focus?.size ?? 0.84) * 38)}vmin ${Math.round((focus?.size ?? 0.84) * 30)}vmin at ${((focus?.x ?? 0.5) * 100).toFixed(1)}% ${((focus?.y ?? 0.25) * 100).toFixed(1)}%, rgba(111,107,130,0.16), transparent 70%)`,
+        }}
+      />
       <ScreenFrame tone="gold" className={cn('transition-opacity duration-[360ms]', veiled && 'opacity-0')} />
 
       {/* Barra superior: identidade do sistema + som */}
       <header className={cn('dv-safe-top relative z-20 flex items-center justify-between px-7 pt-3 transition-opacity duration-[360ms]', veiled && 'pointer-events-none opacity-0')}>
         <p className="dv-label animate-dv-fade text-[11px] text-dv-text-2">
-          Devo<span className="text-dv-cobalt-text">.System</span>
+          Devo<span className="text-dv-gold">.System</span>
         </p>
         <SoundToggle compact className="-mr-2 min-h-11 min-w-11 justify-center text-dv-gold/80 hover:text-dv-gold-bright" />
       </header>
@@ -120,10 +131,14 @@ export function LandingScreen({
               Deadly{' '}
             </span>
             <span className="relative block overflow-visible">
+              {/* veio de mármore cinza atrás de "VOTE" (era faixa índigo) */}
               <span
                 aria-hidden="true"
-                className="en-band-in absolute -inset-x-6 bottom-[16%] top-[30%] bg-[linear-gradient(90deg,transparent,var(--dv-cobalt-deep)_18%,var(--dv-cobalt-deep)_82%,transparent)] [animation-delay:300ms]"
-              />
+                className="en-band-in absolute -inset-x-8 bottom-[22%] top-[44%] [animation-delay:300ms] [mask-image:linear-gradient(90deg,transparent,#000_20%,#000_80%,transparent)]"
+              >
+                <span className="dv-marble-dark absolute inset-0 opacity-90" />
+                <span className="absolute inset-x-0 top-0 h-px bg-[linear-gradient(90deg,transparent,#bab09f_30%,#ece5d8_50%,#bab09f_70%,transparent)] opacity-60" />
+              </span>
               <span className="animate-dv-cut-in relative block font-serif text-[62px] font-medium uppercase leading-[0.84] tracking-[0.02em] text-dv-text [animation-delay:230ms] [text-shadow:0_4px_30px_color-mix(in_oklab,var(--dv-ink)_70%,transparent)] lg:text-[96px]">
                 Vote
               </span>
@@ -131,7 +146,7 @@ export function LandingScreen({
             <span aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
               <span className="en-sweep absolute inset-y-0 left-0 w-1/4 bg-[linear-gradient(90deg,transparent,color-mix(in_oklab,var(--dv-gold-bright)_35%,transparent),transparent)] mix-blend-screen [animation-delay:520ms]" />
             </span>
-            <span className="animate-dv-fade mt-3 block font-sans text-[13px] font-medium uppercase tracking-[0.62em] text-dv-cobalt-text [animation-delay:380ms]">
+            <span className="animate-dv-fade mt-3 block font-sans text-[13px] font-medium uppercase tracking-[0.62em] text-dv-text-2 [animation-delay:380ms]">
               Record System
             </span>
             <span lang="ja" className="animate-dv-fade mt-1 block text-[11px] tracking-[0.3em] text-dv-text-3 [animation-delay:420ms]">
@@ -145,7 +160,7 @@ export function LandingScreen({
           </p>
 
           {playerName && (
-            <p className="animate-dv-fade mt-2.5 text-[11px] uppercase tracking-[0.3em] text-dv-cobalt-text [animation-delay:460ms]">
+            <p className="animate-dv-fade mt-2.5 text-[11px] uppercase tracking-[0.3em] text-dv-text-3 [animation-delay:460ms]">
               Bem-vindo de volta, <span className="text-dv-text">{playerName}</span>
               {onSignOut && (
                 <>
@@ -165,14 +180,14 @@ export function LandingScreen({
             <span aria-hidden="true" className="en-rule-in absolute inset-x-0 bottom-0 h-px bg-[linear-gradient(90deg,transparent,var(--dv-gold)_20%,var(--dv-gold)_80%,transparent)] opacity-60 [animation-delay:600ms]" />
             <GlyphHourglass className="relative size-5 text-dv-gold" />
             <span className="dv-label relative text-[10px] text-dv-text-3">Pulso</span>
-            <TimeDigits value={formatDuration(START_MS - elapsed)} size="md" tone="cobalt" label="Tempo no pulso" className="relative" />
+            <TimeDigits value={formatDuration(START_MS - elapsed)} size="md" tone="text" label="Tempo no pulso" className="relative" />
           </div>
 
           {/* Ações por último. Só opacidade (sem transform): estáveis para toque e para o roteiro de captura. */}
           <div className="mt-5 flex w-full flex-col gap-3">
             <div className="animate-dv-fade [animation-delay:560ms]">
-              <Button
-                variant="primary"
+              <EntradaButton
+                tone="porcelain"
                 size="lg"
                 block
                 onMouseEnter={() => awake && playSfx('hover')}
@@ -183,7 +198,7 @@ export function LandingScreen({
                 }}
               >
                 Começar
-              </Button>
+              </EntradaButton>
             </div>
             <div className="animate-dv-fade [animation-delay:620ms]">
               <Button

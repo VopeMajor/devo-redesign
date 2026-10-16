@@ -11,23 +11,29 @@ import { CardBack, CardFace } from '../shared/devo-card'
 import { DeadlyVoteSymbol } from '../system/symbol'
 
 /**
- * Ilustrações do tutorial como DIAGRAMAS DO SISTEMA DEVO: prancheta cobalto com grade, marcas de
+ * Ilustrações do tutorial como DIAGRAMAS DO SISTEMA DEVO: prancheta de mármore negro com grade fina, marcas de
  * registro, linhas de cota e legendas mono. Ouro só no que se admira; vermelho só onde se morre.
  */
 
-/** Marca de toque: onde o jogador tocaria (anel que pulsa + ponto). */
+/**
+ * Marca de toque: onde o jogador tocaria. Mira de relojoaria (anel fino de aço que se expande + estrela
+ * de 4 pontas em porcelana), não um disco branco chapado que lia como defeito na captura.
+ */
 function TapMark({ className }: { className?: string }) {
   return (
-    <span aria-hidden="true" className={cn('pointer-events-none absolute z-20 size-7', className)}>
-      <span className="en-ping absolute inset-0 rounded-full border-2 border-dv-cobalt-text" />
-      <span className="en-tap absolute inset-[7px] rounded-full bg-dv-text shadow-[0_0_12px_color-mix(in_oklab,var(--dv-amethyst)_90%,transparent)]" />
+    <span aria-hidden="true" className={cn('pointer-events-none absolute z-20 size-8', className)}>
+      <span className="en-ping absolute inset-0 rounded-full border border-dv-gold-bright/80" />
+      <span className="absolute inset-[5px] rounded-full border border-dv-porcelain/35 bg-[radial-gradient(circle,rgba(12,12,14,0.55),rgba(12,12,14,0.15)_70%)] shadow-[0_0_10px_rgba(0,0,0,0.6)]" />
+      <svg viewBox="0 0 24 24" className="en-tap absolute inset-[7px] text-dv-porcelain drop-shadow-[0_0_4px_rgba(241,240,238,0.7)]" fill="currentColor">
+        <path d="M12 2 L13.6 10.4 L22 12 L13.6 13.6 L12 22 L10.4 13.6 L2 12 L10.4 10.4 Z" />
+      </svg>
     </span>
   )
 }
 
 /** Linha de cota com rótulo: liga uma peça do diagrama à legenda. */
 function Callout({ label, className, tone = 'cobalt', side = 'right' }: { label: string; className?: string; tone?: 'cobalt' | 'gold' | 'blood'; side?: 'left' | 'right' }) {
-  const color = tone === 'gold' ? 'text-dv-gold' : tone === 'blood' ? 'text-dv-blood-text' : 'text-dv-cobalt-text'
+  const color = tone === 'gold' ? 'text-dv-gold' : tone === 'blood' ? 'text-dv-blood-text' : 'text-dv-text-2'
   return (
     <span aria-hidden="true" className={cn('pointer-events-none absolute flex items-center gap-1.5', side === 'left' && 'flex-row-reverse', color, className)}>
       <span className="size-1.5 rotate-45 bg-current" />
@@ -85,11 +91,11 @@ function PulseRing({ ratio }: { ratio: number }) {
         cy="66"
         r={r - 6}
         fill="none"
-        stroke="var(--dv-cobalt)"
+        stroke="var(--dv-gold-bright)"
         strokeWidth="3"
         strokeDasharray={`${(2 * Math.PI * (r - 6)) * ratio} ${c}`}
         transform="rotate(-90 66 66)"
-        style={{ filter: 'drop-shadow(0 0 4px color-mix(in oklab,var(--dv-amethyst) 80%,transparent))' }}
+        style={{ filter: 'drop-shadow(0 0 3px rgba(236,229,216,0.45))' }}
       />
     </svg>
   )
@@ -105,10 +111,10 @@ function WristVisual() {
         <span aria-hidden="true" className="absolute inset-x-6 top-1/2 -translate-y-[26px] border-t border-dashed border-dv-gold/35" />
         <span aria-hidden="true" className="absolute inset-x-6 top-1/2 translate-y-[26px] border-t border-dashed border-dv-gold/35" />
         {/* mostrador */}
-        <div className="relative grid size-[136px] place-items-center rounded-full bg-[radial-gradient(circle,var(--dv-ink-3),var(--dv-ink)_72%)] shadow-[0_0_30px_color-mix(in_oklab,var(--dv-amethyst)_30%,transparent)]">
+        <div className="relative grid size-[136px] place-items-center rounded-full bg-[radial-gradient(circle,var(--dv-ink-3),var(--dv-ink)_72%)] shadow-[0_0_0_1px_rgba(186,176,159,0.25),0_12px_30px_rgba(0,0,0,0.8)]">
           <PulseRing ratio={secs / (72 * 3600)} />
           <span className="relative flex flex-col items-center gap-0.5">
-            <span className="dv-label text-[10px] text-dv-cobalt-text">Pulso</span>
+            <span className="dv-label text-[10px] text-dv-gold">Pulso</span>
             <TimeDigits value={formatDuration(secs * 1000)} size="sm" tone="text" label="Tempo no pulso" />
           </span>
         </div>
@@ -153,11 +159,11 @@ function DeviceVisual() {
   return (
     <div className="flex flex-col items-center gap-4">
       <div className="relative mt-5 w-72">
-        <div className="relative mx-auto w-44 rounded-[1.6rem] border border-dv-line-strong bg-[linear-gradient(160deg,var(--dv-ink-3),var(--dv-ink))] p-1.5 shadow-[0_20px_40px_-12px_rgba(0,0,0,0.95),0_0_40px_-16px_var(--dv-cobalt)]">
-          <div className="relative overflow-hidden rounded-[1.2rem] bg-[radial-gradient(ellipse_at_50%_0%,var(--dv-cobalt-dim),var(--dv-ink)_70%)] p-3">
+        <div className="relative mx-auto w-44 rounded-[1.6rem] border border-dv-line-strong bg-[linear-gradient(160deg,var(--dv-ink-3),var(--dv-ink))] p-1.5 shadow-[0_20px_40px_-12px_rgba(0,0,0,0.95),inset_0_0_0_1px_rgba(186,176,159,0.3)]">
+          <div className="relative overflow-hidden rounded-[1.2rem] bg-[radial-gradient(ellipse_at_50%_0%,var(--dv-ink-4),var(--dv-ink)_70%)] p-3">
             <div className="mb-3 flex items-center justify-between gap-3">
               <DeadlyVoteSymbol variant="mark" className="size-4 text-dv-text" />
-              <span className="dv-tabular font-impact text-[12px] tracking-[0.04em] text-dv-cobalt-text">71:59:12</span>
+              <span className="dv-tabular font-impact text-[12px] tracking-[0.04em] text-dv-text">71:59:12</span>
             </div>
             <div className="grid grid-cols-2 gap-3">
               <AppTile label="Pulso" delay={0}>
@@ -224,15 +230,15 @@ function RoomsVisual() {
               className={cn(
                 'relative flex h-24 w-20 flex-col items-center justify-between px-2 pb-2 pt-3 [clip-path:polygon(0_22%,50%_0,100%_22%,100%_100%,0_100%)]',
                 chosen
-                  ? 'bg-[linear-gradient(180deg,var(--dv-cobalt),var(--dv-cobalt-dim)_55%,var(--dv-ink-2))]'
+                  ? 'bg-[linear-gradient(180deg,#fbfaf8,#e9e8e5_55%,#cfccc6)] shadow-[0_0_24px_-6px_rgba(138,124,200,0.7)]'
                   : free
                     ? 'bg-[linear-gradient(180deg,var(--dv-ink-4),var(--dv-ink-2))]'
                     : 'bg-dv-ink-2 opacity-50',
               )}
             >
-              <span className={cn('mt-2 font-impact text-[22px] leading-none', chosen ? 'text-white' : free ? 'text-dv-text' : 'text-dv-text-3')}>{toRoman(i + 1)}</span>
-              {free ? <span className={cn('size-1.5 rotate-45', chosen ? 'bg-dv-gold-bright' : 'bg-dv-cobalt-text')} aria-hidden="true" /> : <GlyphKeyhole className="size-4 text-dv-text-3" />}
-              <span className={cn('dv-label text-[10px] tracking-[0.12em]', chosen ? 'text-white' : free ? 'text-dv-cobalt-text' : 'text-dv-text-3')}>{chosen ? 'Entrar' : status}</span>
+              <span className={cn('mt-2 font-impact text-[22px] leading-none', chosen ? 'text-[#0c0c0e]' : free ? 'text-dv-text' : 'text-dv-text-3')}>{toRoman(i + 1)}</span>
+              {free ? <span className={cn('size-1.5 rotate-45', chosen ? 'bg-dv-amethyst' : 'bg-dv-text-2')} aria-hidden="true" /> : <GlyphKeyhole className="size-4 text-dv-text-3" />}
+              <span className={cn('dv-label text-[10px] tracking-[0.12em]', chosen ? 'text-[#0c0c0e]' : free ? 'text-dv-text-2' : 'text-dv-text-3')}>{chosen ? 'Entrar' : status}</span>
             </div>
           )
         })}
@@ -256,8 +262,8 @@ function Table({ children, className }: { children: ReactNode; className?: strin
 function Slot({ label, children, highlight }: { label: string; children?: ReactNode; highlight?: boolean }) {
   return (
     <div className="flex flex-col items-center gap-2">
-      <div className={cn('grid aspect-[9/20] w-[5.5rem] place-items-center border-2 border-dashed p-1', highlight ? 'border-dv-cobalt-text/80 bg-dv-cobalt-dim/40' : 'border-dv-line-strong bg-black/30')}>{children}</div>
-      <span className={cn('dv-label text-[10px]', highlight ? 'text-dv-cobalt-text' : 'text-dv-text-3')}>{label}</span>
+      <div className={cn('grid aspect-[5/7] w-[6.25rem] place-items-center border border-dashed p-1', highlight ? 'border-dv-gold-bright/70 bg-dv-ink-3/70' : 'border-dv-line-strong bg-black/30')}>{children}</div>
+      <span className={cn('dv-label text-[10px]', highlight ? 'text-dv-gold-bright' : 'text-dv-text-3')}>{label}</span>
     </div>
   )
 }
@@ -272,7 +278,7 @@ function SlotVisual() {
               <CardFace cardId="mascara" size="sm" />
             </div>
           </Slot>
-          <span className="mt-20 -skew-x-[8deg] font-impact text-[22px] text-dv-gold" aria-hidden="true">
+          <span className="mt-14 -skew-x-[8deg] font-impact text-[22px] text-dv-gold" aria-hidden="true">
             VS
           </span>
           <Slot label="Outro jogador">
@@ -294,7 +300,7 @@ function ClockVisual() {
           <circle cx="80" cy="80" r="76" strokeWidth="1" opacity="0.5" />
           <circle cx="80" cy="80" r="56" strokeWidth="0.8" opacity="0.35" />
           <g className="en-sweep-hand-slow">
-            <ellipse cx="80" cy="80" rx="74" ry="30" stroke="var(--dv-cobalt-text)" strokeWidth="0.8" opacity="0.6" strokeDasharray="2 4" />
+            <ellipse cx="80" cy="80" rx="74" ry="30" stroke="var(--dv-text-2)" strokeWidth="0.8" opacity="0.5" strokeDasharray="2 4" />
           </g>
           {Array.from({ length: 12 }, (_, i) => {
             const a = (i / 12) * Math.PI * 2
@@ -305,7 +311,7 @@ function ClockVisual() {
             )
           })}
           <g className="en-sweep-hand">
-            <line x1="80" y1="80" x2="80" y2="28" stroke="var(--dv-cobalt-text)" strokeWidth="2" strokeLinecap="round" />
+            <line x1="80" y1="80" x2="80" y2="28" stroke="var(--dv-porcelain)" strokeWidth="2" strokeLinecap="round" />
           </g>
         </svg>
         <span className="relative grid size-12 place-items-center rounded-full border border-dv-gold/60 bg-dv-ink">
@@ -340,8 +346,8 @@ function HiddenVisual() {
           ))}
         </div>
       </Table>
-      <span className="dv-cut-diag flex items-center gap-2 bg-dv-cobalt-dim px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.22em] text-dv-cobalt-text" style={{ '--dv-cut': '8px' } as CSSProperties}>
-        <GlyphDiamond className="size-3" filled />
+      <span className="dv-cut-diag flex items-center gap-2 bg-dv-ink-3 px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.22em] text-dv-text shadow-[inset_0_0_0_1px_rgba(186,176,159,0.35)]" style={{ '--dv-cut': '8px' } as CSSProperties}>
+        <GlyphDiamond className="size-3 text-dv-amethyst" filled />
         Mesma raridade
       </span>
     </div>
@@ -357,7 +363,7 @@ const CHAT = [
 function Avatar({ me }: { me: boolean }) {
   return (
     <span
-      className={cn('dv-cut grid size-7 shrink-0 place-items-center font-mono text-[10px]', me ? 'bg-dv-cobalt-dim text-dv-cobalt-text' : 'bg-dv-ink-4 text-dv-gold-bright')}
+      className={cn('dv-cut grid size-7 shrink-0 place-items-center font-mono text-[10px]', me ? 'bg-dv-porcelain text-[#0c0c0e]' : 'bg-dv-ink-4 text-dv-gold-bright')}
       style={{ '--dv-cut': '6px' } as CSSProperties}
       aria-hidden="true"
     >
@@ -371,14 +377,14 @@ function ChatVisual() {
     <div className="flex w-72 flex-col gap-2.5">
       <div className="flex items-center justify-between border-b border-dv-line pb-2">
         <span className="dv-label text-[10px] text-dv-text-2">Sala III · Chat</span>
-        <span className="dv-label flex items-center gap-1.5 text-[10px] text-dv-cobalt-text">
-          <span className="size-1.5 animate-dv-blink rounded-full bg-dv-cobalt-text" />2 na sala
+        <span className="dv-label flex items-center gap-1.5 text-[10px] text-dv-text-2">
+          <span className="size-1.5 animate-dv-blink rounded-full bg-dv-amethyst" />2 na sala
         </span>
       </div>
       {CHAT.map((m, i) => (
         <div key={i} className={cn('animate-dv-rise flex items-end gap-2', m.me && 'flex-row-reverse')} style={{ animationDelay: `${i * 420}ms` }}>
           <Avatar me={m.me} />
-          <p className={cn('dv-cut-diag max-w-[78%] px-3 py-1.5 font-sans text-[13px] text-dv-text', m.me ? 'bg-dv-cobalt-dim' : 'bg-dv-ink-3')} style={{ '--dv-cut': '8px' } as CSSProperties}>
+          <p className={cn('dv-cut-diag max-w-[78%] px-3 py-1.5 font-sans text-[13px]', m.me ? 'bg-dv-porcelain text-[#0c0c0e]' : 'bg-dv-ink-3 text-dv-text')} style={{ '--dv-cut': '8px' } as CSSProperties}>
             {m.text}
           </p>
         </div>
@@ -402,12 +408,12 @@ function Seal({ who, lit, delay }: { who: string; lit: boolean; delay: number })
       <span
         className={cn(
           'relative grid size-20 place-items-center rounded-full border-2 transition-all duration-500',
-          lit ? 'border-dv-cobalt-text bg-[radial-gradient(circle_at_35%_30%,var(--dv-cobalt),var(--dv-cobalt-dim)_75%)] shadow-[0_0_30px_-4px_color-mix(in_oklab,var(--dv-amethyst)_80%,transparent)]' : 'border-dv-line-strong bg-dv-ink-3',
+          lit ? 'border-dv-gold-bright bg-[radial-gradient(circle_at_35%_30%,#fbfaf8,#e9e8e5_45%,#bab09f)] shadow-[0_0_26px_-6px_rgba(138,124,200,0.75)]' : 'border-dv-line-strong bg-dv-ink-3',
         )}
         style={{ transitionDelay: `${delay}ms` }}
       >
-        <span className="absolute inset-1.5 rounded-full border border-dashed border-white/25" aria-hidden="true" />
-        <GlyphCheck className={cn('size-8 transition-opacity duration-500', lit ? 'text-white opacity-100' : 'opacity-20')} style={{ transitionDelay: `${delay}ms` }} />
+        <span className={cn('absolute inset-1.5 rounded-full border border-dashed', lit ? 'border-black/25' : 'border-white/25')} aria-hidden="true" />
+        <GlyphCheck className={cn('size-8 transition-opacity duration-500', lit ? 'text-[#0c0c0e] opacity-100' : 'opacity-20')} style={{ transitionDelay: `${delay}ms` }} />
       </span>
       <span className="dv-label text-[10px] text-dv-text-2">{who}</span>
     </div>
@@ -470,8 +476,10 @@ function RevealVisual() {
           </div>
         ))}
       </div>
-      <span aria-hidden="true" className="en-kabum absolute top-14 font-impact text-[56px] font-bold uppercase leading-none tracking-[0.02em] text-dv-gold-bright [-webkit-text-stroke:1.5px_var(--dv-ink)] [text-shadow:4px_4px_0_var(--dv-cobalt-deep)]">
-        Kabum!
+      {/* KABUM: porcelana com contorno negro e um corte rubi curto (o único vermelho: a troca não volta). */}
+      <span aria-hidden="true" className="en-kabum absolute top-14 isolate">
+        <span className="en-kabum-cut absolute left-[8%] top-[58%] -z-10 h-[11px] w-[62%] bg-dv-blood shadow-[0_0_14px_rgba(163,18,31,0.7)]" />
+        <span className="block font-impact text-[56px] font-bold uppercase leading-none tracking-[0.02em] text-dv-porcelain [-webkit-text-stroke:2px_#0c0c0e] [paint-order:stroke_fill] [text-shadow:4px_4px_0_#0c0c0e]">Kabum!</span>
       </span>
       <Caption>Sem devoluções</Caption>
     </div>
@@ -482,7 +490,7 @@ function LostVisual() {
   return (
     <div className="flex flex-col items-center gap-4">
       <div className="dv-cut relative flex h-44 w-72 items-center justify-start overflow-hidden bg-[radial-gradient(ellipse_at_30%_50%,var(--dv-ink-4),var(--dv-ink)_75%)] pl-8" style={{ '--dv-cut': '14px' } as CSSProperties}>
-        <span className="pointer-events-none absolute inset-0 animate-[devo-mist_8s_ease-in-out_infinite] bg-[radial-gradient(ellipse_at_85%_40%,color-mix(in_oklab,var(--dv-amethyst)_18%,transparent),transparent_60%)]" aria-hidden="true" />
+        <span className="pointer-events-none absolute inset-0 animate-[devo-mist_8s_ease-in-out_infinite] bg-[radial-gradient(ellipse_at_85%_40%,rgba(241,240,238,0.07),transparent_60%)]" aria-hidden="true" />
         <div className="en-drift w-20">
           <CardFace cardId="coroa" size="sm" />
         </div>
@@ -514,11 +522,11 @@ function MessagesVisual() {
             key={c}
             className={cn(
               'dv-cut-diag animate-dv-slide-left flex items-center gap-3 px-3 py-1.5 font-body text-[14px]',
-              i === 0 ? 'bg-dv-cobalt-dim text-dv-text shadow-[inset_3px_0_0_var(--dv-cobalt)]' : 'bg-dv-ink-2 text-dv-text-2',
+              i === 0 ? 'bg-dv-ink-4 text-dv-text shadow-[inset_3px_0_0_var(--dv-amethyst),inset_0_0_0_1px_rgba(186,176,159,0.3)]' : 'bg-dv-ink-2 text-dv-text-2',
             )}
             style={{ animationDelay: `${200 + i * 120}ms`, '--dv-cut': '8px' } as CSSProperties}
           >
-            <span className={cn('font-impact text-[14px]', i === 0 ? 'text-dv-cobalt-text' : 'text-dv-text-3')}>{toRoman(i + 1)}</span>
+            <span className={cn('font-impact text-[14px]', i === 0 ? 'text-dv-gold-bright' : 'text-dv-text-3')}>{toRoman(i + 1)}</span>
             {c}
           </span>
         ))}
@@ -563,18 +571,18 @@ function StepBanner({ step }: { step: string }) {
   )
 }
 
-/** Prancheta do diagrama: grade cobalto, marcas de registro, cabeçalho "Fig." e linha de varredura. */
+/** Prancheta do diagrama: grade porcelana quase invisível, marcas de registro, cabeçalho "Fig." e linha de varredura. */
 export function TutorialVisualPanel({ visual, step, index = 1 }: { visual: TutorialVisual; step?: string; index?: number }) {
   const { view: Visual, system } = VISUALS[visual]
   return (
     <figure className="animate-dv-pop relative lg:[zoom:1.25] xl:[zoom:1.35]">
-      <span aria-hidden="true" className="dv-cut absolute inset-0 bg-[linear-gradient(135deg,var(--dv-gold-bright),var(--dv-gold-deep)_32%,var(--dv-marble-black)_62%,var(--dv-gold)_88%,var(--dv-amethyst))]" style={{ '--dv-cut': '16px' } as CSSProperties} />
+      <span aria-hidden="true" className="dv-cut absolute inset-0 bg-[linear-gradient(135deg,var(--dv-gold-bright),var(--dv-gold-deep)_32%,var(--dv-marble-black)_62%,var(--dv-gold)_88%,var(--dv-gold-deep))]" style={{ '--dv-cut': '16px' } as CSSProperties} />
       <span
         aria-hidden="true"
-        className="dv-cut absolute inset-px overflow-hidden bg-[color-mix(in_oklab,var(--dv-ink)_94%,transparent)] [background-image:linear-gradient(color-mix(in_oklab,var(--dv-amethyst)_8%,transparent)_1px,transparent_1px),linear-gradient(90deg,color-mix(in_oklab,var(--dv-amethyst)_8%,transparent)_1px,transparent_1px)] [background-size:16px_16px]"
+        className="dv-cut absolute inset-px overflow-hidden bg-[color-mix(in_oklab,var(--dv-ink)_94%,transparent)] [background-image:linear-gradient(rgba(241,240,238,0.045)_1px,transparent_1px),linear-gradient(90deg,rgba(241,240,238,0.045)_1px,transparent_1px)] [background-size:16px_16px]"
         style={{ '--dv-cut': '15.6px' } as CSSProperties}
       >
-        <span className="en-scan absolute inset-x-0 top-0 h-8 bg-gradient-to-b from-transparent via-[color-mix(in_oklab,var(--dv-amethyst)_14%,transparent)] to-transparent" />
+        <span className="en-scan absolute inset-x-0 top-0 h-8 bg-gradient-to-b from-transparent via-[rgba(241,240,238,0.06)] to-transparent" />
       </span>
       {/* marcas de registro */}
       {['left-3 top-3', 'right-3 top-3', 'bottom-3 left-3', 'bottom-3 right-3'].map((p) => (
@@ -586,7 +594,7 @@ export function TutorialVisualPanel({ visual, step, index = 1 }: { visual: Tutor
       {step && <StepBanner step={step} />}
       <div className={cn('relative flex flex-col items-center gap-3 px-7 pb-6', step ? 'pt-10' : 'pt-5')}>
         <div className="dv-label flex w-full items-center gap-3 text-[10px] text-dv-text-3">
-          <span className="flex items-center gap-1.5 text-dv-cobalt-text">
+          <span className="flex items-center gap-1.5 text-dv-gold">
             <GlyphSpark className="size-2.5" />
             Fig. {toRoman(index)}
           </span>

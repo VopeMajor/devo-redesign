@@ -16,23 +16,26 @@ import { BackExitHint, useBackHandler } from './use-back-handler'
 import { ArcadeUnlock } from './arcade/arcade-unlock'
 import { PwaOffer } from './shared/pwa-offer'
 import { Curtain, useCurtain, type CurtainOptions } from './kit/transition'
+import { JourneyCurtain, type JourneyCurtainTone } from './intro/journey-curtain'
 import './landing/entrada.css'
 
 /**
- * Cada cortina tem tom e direção coerentes com o que acontece (IDENTIDADE.md §8):
- * - Despertando: ouro, avança (nascimento do Record, a sessão começa).
- * - Reconectando: sistema, avança (volta ao aparelho).
- * - Saindo: sistema, volta (lâminas no sentido contrário).
- * - Deadly Vote: alerta, avança, som de revelação (o jogo mortal se apresenta).
- * - Inicializando DEVO: sistema, avança (o aparelho liga).
+ * Cada cortina tem tom e direção coerentes com o que acontece (IDENTIDADE.md §8, DIRECAO-2 §2):
+ * - Despertando: aço, avança (nascimento do Record, a sessão começa).
+ * - Deadly Vote: mármore negro com anel e corte rubi, avança, som de revelação (o jogo mortal se apresenta).
+ * - Inicializando DEVO / Reconectando: FRONTEIRA noite → papel — a folha de registro é impressa sobre a
+ *   tela (tom `interior` do kit) e o sistema começa.
+ * - Saindo: mármore negro, volta (lâminas no sentido contrário).
  */
 const CURTAIN_STYLE: Record<string, CurtainOptions> = {
   Despertando: { tone: 'gold', direction: 'forward' },
-  Reconectando: { tone: 'system', direction: 'forward' },
+  Reconectando: { tone: 'interior', direction: 'forward' },
   Saindo: { tone: 'system', direction: 'back' },
   'Deadly Vote': { tone: 'alert', direction: 'forward', sfx: 'reveal' },
-  'Inicializando DEVO': { tone: 'system', direction: 'forward' },
+  'Inicializando DEVO': { tone: 'interior', direction: 'forward', sfx: 'reveal' },
 }
+/** Cortinas desenhadas na Jornada (paleta do mármore) em vez da `Curtain` do kit. */
+const JOURNEY_CURTAIN: Record<string, JourneyCurtainTone> = { 'Deadly Vote': 'vote', Saindo: 'night' }
 
 export function DevoExperience({
   initialPlayerName,
@@ -176,7 +179,7 @@ function DevoRoot() {
         />
       )}
 
-      <Curtain state={curtain} />
+      {curtain && JOURNEY_CURTAIN[curtain.label] ? <JourneyCurtain state={curtain} tone={JOURNEY_CURTAIN[curtain.label]} /> : <Curtain state={curtain} />}
     </>
   )
 }

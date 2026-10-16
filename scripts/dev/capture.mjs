@@ -115,6 +115,40 @@ async function advanceDialogue(page) {
   return true
 }
 
+// Congela a cortina da Jornada num instante (ms) para a foto: a animação CSS e o relógio do React
+// correm em paralelo, e a foto no CI (renderizador por software) às vezes cai depois do quadro certo.
+// Espera a cortina aparecer (role=status com o rótulo), pausa as animações dela em `at` e devolve true.
+async function freezeCurtain(page, label, at = 900, timeout = 3000) {
+  const t0 = Date.now()
+  while (Date.now() - t0 < timeout) {
+    const ok = await page
+      .evaluate(
+        ([label, at]) => {
+          const el = [...document.querySelectorAll('[role="status"]')].find((n) => n.textContent?.includes(label))
+          if (!el) return false
+          for (const a of el.getAnimations({ subtree: true })) {
+            a.pause()
+            a.currentTime = at
+          }
+          return true
+        },
+        [label, at],
+      )
+      .catch(() => false)
+    if (ok) return true
+    await wait(40)
+  }
+  return false
+}
+async function thawCurtain(page, label) {
+  await page
+    .evaluate((label) => {
+      const el = [...document.querySelectorAll('[role="status"]')].find((n) => n.textContent?.includes(label))
+      if (el) for (const a of el.getAnimations({ subtree: true })) a.play()
+    }, label)
+    .catch(() => {})
+}
+
 // ── 1. Novato: landing → convite → cadastro → prólogo → tutorial → sistema ─────────────
 if (want('novato')) {
   const { ctx, page } = await device()
@@ -172,10 +206,10 @@ if (want('novato')) {
         continue
       }
       await advanceDialogue(page)
-      const curtain = page.getByRole('status').filter({ hasText: 'Deadly Vote' })
-      if (await curtain.count()) {
-        await wait(650)
+      // A última fala do prólogo chama a cortina "Deadly Vote": congela no meio (lâmina cobrindo) e fotografa.
+      if (await freezeCurtain(page, 'Deadly Vote', 900, 300)) {
         await shot(page, '03-transicao-deadly-vote')
+        await thawCurtain(page, 'Deadly Vote')
         break
       }
       if (!(await page.getByText(/pular prólogo/i).count())) break
@@ -183,7 +217,12 @@ if (want('novato')) {
   })
   await step('tutorial', async () => {
     await wait(2500)
+    // O salão do relógio monta o WebGL ~2,6s depois de entrar: espera o canvas aparecer e assentar.
+    await page.locator('main canvas').first().waitFor({ state: 'attached', timeout: 8000 }).catch(() => {})
+    await wait(1200)
     let n = 0
+    let seenBorder = false
+    let seenKabum = false
     for (let i = 0; i < 90; i++) {
       await wait(900)
       if (i % 3 === 0) await shot(page, `04-tutorial-${String(n++).padStart(2, '0')}`)
@@ -195,6 +234,18 @@ if (want('novato')) {
         break
       }
       if (await page.getByText(/pular introdução/i).count()) await advanceDialogue(page)
+      // KABUM! (troca sem volta): letreiro em porcelana com o corte rubi, depois que ele bate no diagrama.
+      if (!seenKabum && (await page.getByText('Kabum!', { exact: true }).count())) {
+        seenKabum = true
+        await wait(1500)
+        await shot(page, '04-tutorial-kabum')
+      }
+      // Fronteira noite → papel (DIRECAO-2 §2): a folha de registro sendo impressa, no meio da cortina.
+      if (!seenBorder && (await freezeCurtain(page, 'Inicializando DEVO', 1150, 400))) {
+        seenBorder = true
+        await shot(page, '04-transicao-sistema')
+        await thawCurtain(page, 'Inicializando DEVO')
+      }
     }
     await wait(1500)
     await shot(page, '04-tutorial-fim')
