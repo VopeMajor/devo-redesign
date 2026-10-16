@@ -1049,7 +1049,7 @@ if (want('novato')) {
     await wait(2600)
     const t0 = await page.evaluate(() => Date.now())
     await page.keyboard.press('Enter')
-    await page.clock.pauseAt(t0 + 200)
+    await page.clock.pauseAt(t0 + 400)
     await page.locator('[data-fall="trip"]').first().waitFor({ state: 'attached', timeout: 4000 })
     await wait(150)
     // o golpe: tesoura no chão, clarão e o corte nascendo do ponto do impacto
@@ -1081,14 +1081,11 @@ if (want('novato')) {
     await wait(1000)
     await btn(page, 'Continuar').click({ timeout: 15000 })
     await page.getByText(/A paisagem se abre/).first().waitFor({ timeout: 8000 })
-    await wait(2400)
+    // espera a fala de cenário terminar de digitar sozinha (Enter aqui só completaria o texto)
+    await wait(4600)
     // "Alguém parece se aproximar.": a silhueta entra. Fotos no começo da transição (onde ela piscava).
-    // (Enter completa a digitação se ela ainda não acabou; repete até o quadro mudar.)
     const approach = page.locator('[data-melissa="approach"]')
-    for (let k = 0; k < 4 && !(await approach.count()); k++) {
-      await page.keyboard.press('Enter')
-      await wait(40)
-    }
+    await page.keyboard.press('Enter')
     await approach.first().waitFor({ state: 'attached', timeout: 4000 })
     await wait(40)
     await freezeIn('[data-melissa]', 160)

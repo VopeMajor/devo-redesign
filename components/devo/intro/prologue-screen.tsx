@@ -111,7 +111,7 @@ function ActCard({ act }: { act: Act }) {
 const fieldClass =
   'w-full border-b-2 border-dv-line-strong bg-dv-ink-2/85 px-3 py-3 font-sans text-[16px] text-dv-text outline-none backdrop-blur-md transition-colors placeholder:text-dv-text-3 focus:border-dv-gold-bright focus:bg-dv-ink-3'
 
-const KIND_HINT: Record<AppearanceKind, string> = { art: 'Personagem de anime, jogo ou animação', real: 'Ator, atriz ou celebridade' }
+const KIND_HINT: Record<AppearanceKind, string> = { art: 'Anime, jogo, animação', real: 'Ator, atriz, celebridade' }
 const KIND_ARIA: Record<AppearanceKind, string> = { art: 'Aparência 2D/3D', real: 'Aparência real' }
 
 /**
@@ -178,7 +178,7 @@ function FaceInput({
       <div className="flex min-w-0 flex-col gap-1">
         <div className="flex items-end justify-between gap-2">
           <label htmlFor={inputId} className="dv-label pb-1 text-[10px] text-dv-text-2">
-            {kind === 'art' ? 'Aparência 2D / 3D' : 'Aparência real'} · {step} de 2
+            Nome da aparência
           </label>
           {/* Seleção automática: lista preparada por tipo, sexo e faixa etária (sorteia outra a cada toque). */}
           <button
@@ -533,7 +533,8 @@ export function PrologueScreen({
       />
 
       {/* Véu inferior: o texto sempre sobre fundo escuro, sem esconder a cena. */}
-      <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-[46%] bg-gradient-to-t from-black/90 via-black/55 to-transparent" />
+      {/* (some nos quadros sem fala, como o golpe da queda: a cena inteira fica à vista) */}
+      <div aria-hidden="true" className={cn('pointer-events-none absolute inset-x-0 bottom-0 z-10 h-[46%] bg-gradient-to-t from-black/90 via-black/55 to-transparent transition-opacity duration-300', beat.kind === 'line' && !text && 'opacity-0')} />
 
       <div className="absolute inset-x-0 bottom-0 z-20 mx-auto flex w-full max-w-3xl flex-col gap-2.5 px-4 pb-[max(env(safe-area-inset-bottom),1.25rem)] lg:pb-10">
         {itemGet && (

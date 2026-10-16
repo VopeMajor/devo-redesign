@@ -33,8 +33,11 @@ const TEAR: [number, number][] = [
   [71, 0.5], [79, -0.6], [87, 0.4], [95, -0.3], [110, 0.2],
 ]
 const tearPts = TEAR.map(([x, dy]) => `${x}% ${CUT_Y + dy}%`)
+const above = (shift: number) => `polygon(-10% -10%, 110% -10%, ${TEAR.map(([x, dy]) => `${x}% ${CUT_Y + dy + shift}%`).reverse().join(', ')})`
 /** Parte de cima do cenário (fica): tudo acima do rasgo. */
-export const CLIP_TOP = `polygon(-10% -10%, 110% -10%, ${[...tearPts].reverse().join(', ')})`
+export const CLIP_TOP = above(0)
+/** Recorte das crianças: um pouco abaixo do rasgo (os sapatos pisam nele), para sumirem já dentro do vão. */
+const CLIP_KIDS = above(2.4)
 /** Faixa do chão abaixo do rasgo (cai). */
 export const CLIP_BOTTOM = `polygon(${tearPts.join(', ')}, 110% 110%, -10% 110%)`
 
@@ -93,11 +96,13 @@ export function FallActors({ phase, rim }: { phase: FallPhase; rim: string }) {
         </div>
       )}
 
-      {/* As crianças: pendem na borda no golpe; escorregam para o escuro na fala seguinte, com rastro. */}
-      <div className="absolute z-[2]" style={KIDS_BOX}>
+      {/* As crianças: pendem na borda no golpe; escorregam para o escuro na fala seguinte, com rastro.
+          Recortadas pela linha do rasgo: o que passa da borda some dentro do vão (são engolidas). */}
+      <div className="absolute inset-0 z-[2]" style={{ clipPath: CLIP_KIDS }}>
+      <div className="absolute" style={KIDS_BOX}>
         {!trip &&
-          [90, 45].map((lag, i) => (
-            <div key={lag} className="en-fall-ghost absolute inset-0" style={{ animationDelay: `${lag}ms`, '--g': i ? 0.32 : 0.18 } as CSSProperties}>
+          [110, 55].map((lag, i) => (
+            <div key={lag} className="en-fall-ghost absolute inset-0" style={{ animationDelay: `${lag}ms`, '--g': i ? 0.45 : 0.25 } as CSSProperties}>
               <div className="en-fall-kids h-full origin-bottom" style={{ animationDelay: `${lag}ms` }}>
                 <KidsSprite filter="brightness(0.25) sepia(1) saturate(4) hue-rotate(-28deg) blur(2px)" />
               </div>
@@ -106,6 +111,7 @@ export function FallActors({ phase, rim }: { phase: FallPhase; rim: string }) {
         <div className={trip ? 'en-fall-teeter relative h-full origin-bottom' : 'en-fall-kids relative h-full origin-bottom'}>
           <KidsSprite filter={`drop-shadow(4px 6px 0 rgba(40,22,18,0.4)) ${rim}`} />
         </div>
+      </div>
       </div>
 
       {/* A tesoura: some do canto e desce num golpe só no centro, fecha as lâminas e recolhe. */}
@@ -131,13 +137,13 @@ export function FallCut({ phase }: { phase: FallPhase }) {
         viewBox="0 0 100 100"
         preserveAspectRatio="none"
         className="absolute inset-0 size-full overflow-visible"
-        style={{ filter: 'drop-shadow(0 0 4px rgba(224,40,58,0.9)) drop-shadow(0 0 16px rgba(170,20,32,0.75))' }}
+        style={{ filter: 'drop-shadow(0 0 3px rgba(255,70,84,1)) drop-shadow(0 0 12px rgba(224,40,58,0.9)) drop-shadow(0 0 28px rgba(170,20,32,0.8))' }}
       >
         {[CUT_LEFT, CUT_RIGHT].map((d) => (
           <g key={d} className={trip ? undefined : 'en-fall-rim'}>
-            <path d={d} fill="none" stroke="var(--dv-blood)" strokeWidth="8" strokeLinecap="round" vectorEffect="non-scaling-stroke" pathLength={1} strokeDasharray="1" opacity="0.45" className={trip ? 'en-fall-cut' : undefined} />
-            <path d={d} fill="none" stroke="#e0283a" strokeWidth="3.5" strokeLinejoin="bevel" vectorEffect="non-scaling-stroke" pathLength={1} strokeDasharray="1" className={trip ? 'en-fall-cut' : undefined} />
-            {trip && <path d={d} fill="none" stroke="#fff3ee" strokeWidth="1.2" strokeLinejoin="bevel" vectorEffect="non-scaling-stroke" pathLength={1} strokeDasharray="1" className="en-fall-cut en-fall-core" />}
+            <path d={d} fill="none" stroke="var(--dv-blood)" strokeWidth="10" strokeLinecap="round" vectorEffect="non-scaling-stroke" pathLength={1} strokeDasharray="1" opacity="0.55" className={trip ? 'en-fall-cut' : undefined} />
+            <path d={d} fill="none" stroke="#ff3a4c" strokeWidth="4" strokeLinejoin="bevel" vectorEffect="non-scaling-stroke" pathLength={1} strokeDasharray="1" className={trip ? 'en-fall-cut' : undefined} />
+            {trip && <path d={d} fill="none" stroke="#fff3ee" strokeWidth="1.6" strokeLinejoin="bevel" vectorEffect="non-scaling-stroke" pathLength={1} strokeDasharray="1" className="en-fall-cut en-fall-core" />}
           </g>
         ))}
       </svg>
