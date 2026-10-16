@@ -1769,7 +1769,7 @@ if (want('narrativa')) {
   // textContent (não innerText): a legenda de som é caixa-alta só no CSS.
   const textoDlg = (page) => dlg(page).evaluate((el) => el.textContent ?? '', null, { timeout: 2000 }).catch(() => '')
   /** Avança a cena até o texto aparecer (por inteiro); escolhas no caminho: a primeira, ou `pick` por rótulo. */
-  async function ate(page, alvo, { pick = {}, max = 120 } = {}) {
+  async function ate(page, alvo, { pick = {}, max = 400 } = {}) {
     for (let i = 0; i < max; i++) {
       const t = await textoDlg(page)
       if (!t) {
@@ -1790,9 +1790,12 @@ if (want('narrativa')) {
         await wait(700)
         continue
       }
-      // Toque na caixa de texto (o primeiro toque completa a digitação, o segundo avança).
-      if (!(await tryClick(dlg(page).getByRole('button', { name: /^(Continuar|Mostrar texto completo)$/ }).first(), 2000))) await page.keyboard.press('Enter')
-      await wait(260)
+      // Espera a fala terminar de digitar (o texto inteiro fica no DOM) e só então toca para avançar.
+      const pronto = dlg(page).getByRole('button', { name: 'Continuar', exact: true }).first()
+      if (await pronto.count()) {
+        await tryClick(pronto, 2000)
+        await wait(450)
+      } else await wait(300)
     }
     manifest.errors.push({ step: 'narrativa-ate', error: `não chegou em ${alvo}; último texto: ${(await textoDlg(page)).slice(-160)}` })
     return false
