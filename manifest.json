@@ -1,0 +1,176 @@
+{
+  "pedido": "cosm-b-coracao-da-condessa",
+  "titulo": "Coração da Condessa (emblema lendário, teste B)",
+  "tipo": "emblema",
+  "tamanho_final": 1024,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 2101,
+      "passos": null,
+      "segundos": 27.6,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "fundo_rgb": [
+        243,
+        239,
+        233
+      ],
+      "arquivos": [
+        {
+          "arquivo": "cosm-b-coracao-da-condessa--v01--1024.png",
+          "bytes": 725063
+        },
+        {
+          "arquivo": "cosm-b-coracao-da-condessa--v01--1024.webp",
+          "bytes": 125290
+        },
+        {
+          "arquivo": "cosm-b-coracao-da-condessa--v01--512.webp",
+          "bytes": 44114
+        },
+        {
+          "arquivo": "cosm-b-coracao-da-condessa--v01--256.webp",
+          "bytes": 18240
+        },
+        {
+          "arquivo": "cosm-b-coracao-da-condessa--v01--96.webp",
+          "bytes": 5202
+        },
+        {
+          "arquivo": "cosm-b-coracao-da-condessa--v01--48.webp",
+          "bytes": 2090
+        }
+      ],
+      "segundos_pos": 21.2,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 2102,
+      "passos": null,
+      "segundos": 30.6,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "fundo_rgb": [
+        241,
+        237,
+        228
+      ],
+      "arquivos": [
+        {
+          "arquivo": "cosm-b-coracao-da-condessa--v02--1024.png",
+          "bytes": 720360
+        },
+        {
+          "arquivo": "cosm-b-coracao-da-condessa--v02--1024.webp",
+          "bytes": 134370
+        },
+        {
+          "arquivo": "cosm-b-coracao-da-condessa--v02--512.webp",
+          "bytes": 45512
+        },
+        {
+          "arquivo": "cosm-b-coracao-da-condessa--v02--256.webp",
+          "bytes": 17920
+        },
+        {
+          "arquivo": "cosm-b-coracao-da-condessa--v02--96.webp",
+          "bytes": 5104
+        },
+        {
+          "arquivo": "cosm-b-coracao-da-condessa--v02--48.webp",
+          "bytes": 2086
+        }
+      ],
+      "segundos_pos": 16.1,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 2103,
+      "passos": null,
+      "segundos": 32.4,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "fundo_rgb": [
+        242,
+        239,
+        229
+      ],
+      "arquivos": [
+        {
+          "arquivo": "cosm-b-coracao-da-condessa--v03--1024.png",
+          "bytes": 703428
+        },
+        {
+          "arquivo": "cosm-b-coracao-da-condessa--v03--1024.webp",
+          "bytes": 129278
+        },
+        {
+          "arquivo": "cosm-b-coracao-da-condessa--v03--512.webp",
+          "bytes": 46658
+        },
+        {
+          "arquivo": "cosm-b-coracao-da-condessa--v03--256.webp",
+          "bytes": 18742
+        },
+        {
+          "arquivo": "cosm-b-coracao-da-condessa--v03--96.webp",
+          "bytes": 5248
+        },
+        {
+          "arquivo": "cosm-b-coracao-da-condessa--v03--48.webp",
+          "bytes": 2180
+        }
+      ],
+      "segundos_pos": 16.0,
+      "avisos": []
+    },
+    {
+      "nome": "v04",
+      "modelo": "@cf/black-forest-labs/flux-2-dev",
+      "seed": 2104,
+      "passos": 20,
+      "segundos": 16.4,
+      "neuronios_estimados": 3000,
+      "fundo": "rembg:birefnet-general",
+      "fundo_rgb": [
+        255,
+        253,
+        242
+      ],
+      "arquivos": [
+        {
+          "arquivo": "cosm-b-coracao-da-condessa--v04--1024.png",
+          "bytes": 712944
+        },
+        {
+          "arquivo": "cosm-b-coracao-da-condessa--v04--1024.webp",
+          "bytes": 157678
+        },
+        {
+          "arquivo": "cosm-b-coracao-da-condessa--v04--512.webp",
+          "bytes": 55208
+        },
+        {
+          "arquivo": "cosm-b-coracao-da-condessa--v04--256.webp",
+          "bytes": 20958
+        },
+        {
+          "arquivo": "cosm-b-coracao-da-condessa--v04--96.webp",
+          "bytes": 5278
+        },
+        {
+          "arquivo": "cosm-b-coracao-da-condessa--v04--48.webp",
+          "bytes": 2136
+        }
+      ],
+      "segundos_pos": 16.0,
+      "avisos": []
+    }
+  ]
+}

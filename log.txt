@@ -1,0 +1,12 @@
+[cosm-b-coracao-da-condessa] v01: @cf/black-forest-labs/flux-2-klein-4b seed=2101 1024x1024 passos=None (~104 neurônios)
+    ok em 27.6s, 1024x1024
+[cosm-b-coracao-da-condessa] v02: @cf/black-forest-labs/flux-2-klein-4b seed=2102 1024x1024 passos=None (~104 neurônios)
+    ok em 30.6s, 1024x1024
+[cosm-b-coracao-da-condessa] v03: @cf/black-forest-labs/flux-2-klein-4b seed=2103 1024x1024 passos=None (~104 neurônios)
+    ok em 32.4s, 1024x1024
+[cosm-b-coracao-da-condessa] v04: @cf/black-forest-labs/flux-2-dev seed=2104 1024x1024 passos=20 (~3,000 neurônios)
+    ok em 16.4s, 1024x1024
+[cosm-b-coracao-da-condessa] v01: rembg:birefnet-general; sem avisos
+[cosm-b-coracao-da-condessa] v02: rembg:birefnet-general; sem avisos
+[cosm-b-coracao-da-condessa] v03: rembg:birefnet-general; sem avisos
+[cosm-b-coracao-da-condessa] v04: rembg:birefnet-general; sem avisos

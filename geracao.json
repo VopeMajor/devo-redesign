@@ -1,0 +1,65 @@
+{
+  "pedido": "cosm-b-coracao-da-condessa",
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 2101,
+      "passos": null,
+      "largura": 1024,
+      "altura": 1024,
+      "neuronios_estimados": 104,
+      "ok": true,
+      "segundos": 27.6,
+      "tamanho_real": [
+        1024,
+        1024
+      ]
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 2102,
+      "passos": null,
+      "largura": 1024,
+      "altura": 1024,
+      "neuronios_estimados": 104,
+      "ok": true,
+      "segundos": 30.6,
+      "tamanho_real": [
+        1024,
+        1024
+      ]
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 2103,
+      "passos": null,
+      "largura": 1024,
+      "altura": 1024,
+      "neuronios_estimados": 104,
+      "ok": true,
+      "segundos": 32.4,
+      "tamanho_real": [
+        1024,
+        1024
+      ]
+    },
+    {
+      "nome": "v04",
+      "modelo": "@cf/black-forest-labs/flux-2-dev",
+      "seed": 2104,
+      "passos": 20,
+      "largura": 1024,
+      "altura": 1024,
+      "neuronios_estimados": 3000,
+      "ok": true,
+      "segundos": 16.4,
+      "tamanho_real": [
+        1024,
+        1024
+      ]
+    }
+  ]
+}
