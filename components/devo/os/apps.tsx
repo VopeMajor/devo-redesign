@@ -13,8 +13,9 @@ import { MensagensApp } from '../apps/mensagens-app'
 import { PulsoApp } from '../apps/pulso-app'
 import { RecordApp } from '../apps/record-app'
 import { TrocasApp } from '../apps/trocas-app'
-import { EmblemPoco } from '../kit/emblems'
+import { EmblemMascaras, EmblemPoco } from '../kit/emblems'
 import { PocoApp } from '../poco/poco-app'
+import { SalaoApp } from '../salao/salao-app'
 
 export type AppDef = {
   id: AppId
@@ -42,10 +43,11 @@ export const APPS: AppDef[] = [
   { id: 'jogos', name: 'Sala de Jogos', subtitle: 'Minigames e apostas', icon: GamesGlyph, Component: JogosApp, window: { w: 1040, h: 680 } },
   // Sistemas novos (DIRECAO-3): abrem pelos emblemas de sistema da home, não pela grade de apps.
   { id: 'poco', name: 'Poço dos Milagres', subtitle: 'Moedas, manivela e balde', icon: EmblemPoco, Component: PocoApp, window: { w: 460, h: 820 } },
+  { id: 'salao', name: 'Salão das Máscaras', subtitle: 'Leilões, mercado e anúncios', icon: EmblemMascaras, Component: SalaoApp, window: { w: 480, h: 840 } },
 ]
 
 /** Apps que são sistemas novos: abrem pelos emblemas da home (trancados até o servidor liberar). */
-export const SYSTEM_APP_IDS: AppId[] = ['poco']
+export const SYSTEM_APP_IDS: AppId[] = ['poco', 'salao']
 
 /** A Sala de Jogos só aparece depois da revelação. */
 export function visibleApps(arcadeUnlocked: boolean) {

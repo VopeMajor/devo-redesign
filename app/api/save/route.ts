@@ -3,6 +3,7 @@ import { getCurrentPlayer } from '@/app/actions/player'
 import { db } from '@/lib/db'
 import { playerSaves } from '@/lib/db/schema'
 import { MAX_SAVE_BYTES, sanitizeSave } from '@/lib/devo/save'
+import { uidsNoSalao } from '@/lib/devo/salao-server'
 
 export async function POST(req: Request) {
   const player = await getCurrentPlayer()
@@ -19,6 +20,10 @@ export async function POST(req: Request) {
   }
   const data = sanitizeSave(raw)
   if (!data) return Response.json({ ok: false }, { status: 400 })
+  // Cartas entregues ao Salão das Máscaras (Bandeja/Mercado) saíram do save no servidor: uma cópia antiga vinda do
+  // cliente não as faz voltar (sem duplicar). A devolução/arremate chega por card_deliveries, com outro uid.
+  const noSalao = await uidsNoSalao(player.id)
+  if (noSalao.size) data.inventory = data.inventory.filter((c) => !noSalao.has(c.uid))
 
   await db
     .insert(playerSaves)
