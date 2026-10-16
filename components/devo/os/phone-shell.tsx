@@ -663,6 +663,7 @@ const SYSTEM_OPEN: Partial<Record<FutureSystemId, { app: AppId; flag: UnlockFlag
   mascaras: { app: 'salao', flag: 'salao_mascaras', nome: 'Salão das Máscaras' },
   torres: { app: 'torres', flag: 'torres', nome: 'Torres de Ruptura' },
   virtudes: { app: 'virtudes', flag: 'virtudes', nome: 'Virtudes' },
+  corporacoes: { app: 'corporacoes', flag: 'corporacoes', nome: 'Corporações' },
 }
 
 function LockedSystems({ onOpen }: { onOpen: (id: AppId) => void }) {

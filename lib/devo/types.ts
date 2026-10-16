@@ -38,7 +38,7 @@ export type OwnedCard = {
   acquiredAt: number
 }
 
-export type AppId = 'record' | 'pulso' | 'mensagens' | 'cartas' | 'trocas' | 'ajustes' | 'jogos' | 'poco' | 'torres' | 'salao' | 'virtudes'
+export type AppId = 'record' | 'pulso' | 'mensagens' | 'cartas' | 'trocas' | 'ajustes' | 'jogos' | 'poco' | 'torres' | 'salao' | 'virtudes' | 'corporacoes'
 
 export type NotificationItem = {
   id: string

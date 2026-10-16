@@ -27,6 +27,7 @@ FILES=(
   scripts/salao-migration.sql
   scripts/cosmeticos-migration.sql
   scripts/virtudes-migration.sql
+  scripts/corporacoes-migration.sql
 )
 {
   echo "-- DEVO — banco novo de produção (gerado; NÃO editar à mão)."

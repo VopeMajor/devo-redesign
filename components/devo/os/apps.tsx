@@ -13,7 +13,8 @@ import { MensagensApp } from '../apps/mensagens-app'
 import { PulsoApp } from '../apps/pulso-app'
 import { RecordApp } from '../apps/record-app'
 import { TrocasApp } from '../apps/trocas-app'
-import { EmblemMascaras, EmblemPoco, EmblemTorres, EmblemVirtudes } from '../kit/emblems'
+import { CorporacoesApp } from '../corporacoes/corporacoes-app'
+import { EmblemCorporacoes, EmblemMascaras, EmblemPoco, EmblemTorres, EmblemVirtudes } from '../kit/emblems'
 import { PocoApp } from '../poco/poco-app'
 import { SalaoApp } from '../salao/salao-app'
 import { TorresApp } from '../torres/torres-app'
@@ -21,6 +22,7 @@ import { VirtudesApp } from '../virtudes/virtudes-app'
 
 /** Ícone das Torres no registro: o emblema de prata do kit (o shell trancado usa o mesmo). */
 const TorresGlyph: AppIconComponent = (p) => <EmblemTorres metal className={p.className} />
+const CorpGlyph: AppIconComponent = (p) => <EmblemCorporacoes metal className={p.className} />
 
 export type AppDef = {
   id: AppId
@@ -52,10 +54,11 @@ export const APPS: AppDef[] = [
   // Sistema novo (DIRECAO-3 §2): sempre registrado; trancado, a tela mostra o motivo (o servidor decide).
   { id: 'torres', name: 'Torres de Ruptura', subtitle: 'Andares, essências e chaves', icon: TorresGlyph, Component: TorresApp, window: { w: 480, h: 820 } },
   { id: 'virtudes', name: 'Virtudes', subtitle: 'Naipes, Arcano e Estágio', icon: EmblemVirtudes, Component: VirtudesApp, window: { w: 460, h: 820 } },
+  { id: 'corporacoes', name: 'Corporações', subtitle: 'Companhia de Despertados', icon: CorpGlyph, Component: CorporacoesApp, window: { w: 480, h: 840 } },
 ]
 
 /** Apps que são sistemas novos: abrem pelos emblemas da home (trancados até o servidor liberar). */
-export const SYSTEM_APP_IDS: AppId[] = ['poco', 'torres', 'salao', 'virtudes']
+export const SYSTEM_APP_IDS: AppId[] = ['poco', 'torres', 'salao', 'virtudes', 'corporacoes']
 
 /** A Sala de Jogos só aparece depois da revelação. */
 export function visibleApps(arcadeUnlocked: boolean) {

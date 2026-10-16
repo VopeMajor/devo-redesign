@@ -126,6 +126,10 @@ export type Alvos = {
   'virtudes.evoluir': undefined
   /** Virtudes: lançar P.P. manualmente (Owner). A tabela de afinidade usa 'config.editar'. */
   'virtudes.ajustar': undefined
+  /** Corporações: aprovar/recusar a fundação (avaliação administrativa da Companhia). Owner e Anfitrião. */
+  'corporacao.aprovar': undefined
+  /** Corporações: classificar como oficial ou Necro-Corporação (e rótulos provisórios: escopo, rivais). Owner e Anfitrião. */
+  'corporacao.classificar': undefined
 }
 
 export type Acao = keyof Alvos
@@ -136,6 +140,7 @@ export const ACOES = [
   'dados.completos', 'jogar', 'desbloqueio.override', 'karma.ajustar', 'item.conceder', 'cargo.ver_owner',
   'cosmetico.equipar_qualquer', 'catalogo.editar', 'config.editar', 'autorizacao.gerenciar', 'equipe.ver', 'salao.avaliar',
   'virtudes.ver', 'virtudes.evoluir', 'virtudes.ajustar',
+  'corporacao.aprovar', 'corporacao.classificar',
 ] as const satisfies readonly Acao[]
 
 function temAutorizacao(ator: Ator, escopo: string, ref?: string | null) {
@@ -189,6 +194,8 @@ export function can<A extends Acao>(ator: Ator | null | undefined, acao: A, alvo
     case 'equipe.ver':
     case 'virtudes.ver':
     case 'virtudes.evoluir':
+    case 'corporacao.aprovar':
+    case 'corporacao.classificar':
       return owner || c === 'anfitriao'
     case 'dv.editar': {
       const v = x as Alvos['dv.editar'] | undefined
