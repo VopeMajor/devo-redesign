@@ -1,6 +1,7 @@
 import type { PoolClient } from 'pg'
 import { pool } from '@/lib/db'
 import { publicCargo } from '../cargos'
+import { potencialDaPartida } from '../virtudes-server'
 import { REACTION_IDS } from './reactions'
 import {
   type EventStatus,
@@ -747,12 +748,14 @@ export async function recordMatchResult(
   } else {
     awarded = rankingPoints('casual', score, r.result)
   }
-  await q(
+  const [match] = await q<{ id: string }>(
     `INSERT INTO arcade_matches (player_id, game_id, mode, duel_id, opponent_name, opponent_rating, seed, started_at, finished_at, result, score, stats, points)
-     VALUES ($1,$2,$3,$4,$5,$6,$7,$8,now(),$9,$10,$11,$12)`,
+     VALUES ($1,$2,$3,$4,$5,$6,$7,$8,now(),$9,$10,$11,$12) RETURNING id`,
     [r.playerId, r.gameId, r.mode, r.duelId, r.opponentName, r.opponentRating, r.seed, r.startedAt, r.result, score, r.stats, awarded],
     c,
   )
+  // Virtudes: a partida rende Pontos de Potencial (participação; mais na vitória). Nunca derruba o fechamento.
+  if (match) await potencialDaPartida(c, { playerId: r.playerId, gameId: r.gameId, result: r.result, matchRef: String(match.id) })
   await q(
     `INSERT INTO arcade_week_scores (week_start, player_id, score, wins, games) VALUES ($1,$2,$3,$4,1)
      ON CONFLICT (week_start, player_id) DO UPDATE SET score = arcade_week_scores.score + $3, wins = arcade_week_scores.wins + $4, games = arcade_week_scores.games + 1`,

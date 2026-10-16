@@ -414,3 +414,42 @@ dashboard ganhou `me.id`, para as telas pedirem a aparência pública. `admin_lo
 Cliente: `useVisuais(ids)` (lote, SWR 30 s), `useMeusCosmeticos()`, `equipar()` (invalida todas as chaves
 `/api/cosmeticos…`: perfil, miniperfil, chat e ranking mudam sem recarregar). Animações só com Ajustes ›
 "Animações dos cosméticos" ligado e sem `prefers-reduced-motion`; em listas (chat, ranking) ficam paradas.
+
+## 13. Virtudes e Arcano (agente Virtudes)
+
+Arquivos: `scripts/virtudes-migration.sql` (tabelas `virtude_pp`, `virtude_nivel`, `virtude_pp_log`, `virtude_evolucoes`;
+funções `devo_virtude_limite`, `devo_virtude_pp_add`; config provisória), `lib/devo/virtudes.ts` (puro: Virtudes, Arcanos,
+textos do doc, rótulos qualitativos, `distribuir`), `lib/devo/virtudes-afinidades.json` (tabela do doc + divergências),
+`lib/devo/virtudes-server.ts`, `app/api/virtudes/route.ts`, `components/devo/virtudes/*` (app, naipes em SVG, Mesa), seed
+`scripts/dev/95-seed-virtudes.sql`, teste `scripts/dev/virtudes-test.mjs` (CI → `virtudes-test.log`).
+
+- **Arcano na Fundação** (`fundacao-migration.sql` §9): `players.arcano` (chave: `morte`, `imperador`, …; NULL = "sem
+  registro") e `players.arcano_estagio` (1..). `PlayerSummary` agora traz `arcano` (título) e `estagio`, e `pontosPotencial`
+  (soma do Estágio). `EuPayload.arcano = { key, titulo, numeral, estagio } | null` (o Record mostra na ficha).
+- **Trava:** flag `virtudes` (não está no padrão do tutorial: Narrativa/Owner libera). `GET /api/virtudes` trancado →
+  `200 { liberado: false, motivo }`. Os P.P. sobem mesmo com a tela trancada.
+- **Regra do dono (números):** o payload do jogador (`VirtudesPayload`) não tem P.P., teto, mínimo, multiplicador nem
+  atributo: afinidade em palavras (`excelente | favorecida | regular | dificil | deficiente` = ordem 1 | 2 | 3–4 | 5 | 6),
+  acúmulo em faixas (`Quase nada acumulado` → `Perto do limite` / `No limite do Estágio`, `pronto`), `tendencia` (para onde
+  o esforço pendeu) e o histórico (de/para, Virtude que mais e menos cresceu). Números só na Mesa (`?view=mesa`).
+- **Entradas de P.P.:** `addPotencial(playerId, virtude, qtd, motivo, { ref, atorId, idem }, q?)` → quanto coube. A soma
+  das seis nunca passa do teto do Estágio (`devo_virtude_pp_add`, trava por jogador; `idem` repetido não soma). Dentro de
+  outra transação use `addPotencialSeguro(c, …)` (SAVEPOINT; nunca derruba quem chamou). Já ligado: fechamento de partida
+  da Sala de Jogos (`recordMatchResult` → `potencialDaPartida`, idem `jogo:<partida>:<jogador>`) e aplicação do resultado do
+  Deadly Vote (`applyVoteResults` → `potencialDoDeadlyVote`: participação para quem jogou, bônus para `premio`). Quanto e
+  em qual Virtude: `devo_config['virtudes.fontes']` (PROVISÓRIO).
+- **Limites:** `virtudes.estagios` (PROVISÓRIO) `{ padrao: [{estagio, minimo, teto}], porArcano: { <arcano>: [...] } }`;
+  além do último Estágio vale o último (e a Evolução recusa: "último Estágio").
+- **Afinidade:** `virtudes.afinidades` (PROVISÓRIO) `{ escala: [0.5, 0.25, 0.15, 0.1, 0.05, 0.015], ordem: { <arcano>:
+  { paus, copas, ouros, espadas, tacas, escudos } }, divergencias: { <arcano>: { confirmar, nota, confirmado } } }`. Em uso
+  a tabela do doc; Sol completado pela lista (tabela cortada); Julgamento e Mundo só existem nas listas. **Para o dono
+  confirmar:** Imperador, Lua, Imperatriz, Diabo, Morte (exemplo da introdução), Sol, Mundo, Julgamento. Owner grava com
+  `POST /api/virtudes {action:'afinidades', value, provisorio}` (cada linha = permutação de 1..6).
+- **Evolução de Estágio:** `evoluirEstagio(atorId, playerId)` (Owner/Anfitrião, `virtudes.evoluir`): exige Arcano e P.P.
+  ≥ mínimo; `distribuir()` espalha o total por peso = multiplicador da posição × ((1 − d) + d × 6 × fatia da Virtude),
+  `d = virtudes.evolucao.peso_direcao` (PROVISÓRIO 0,35); soma em `virtude_nivel`, zera `virtude_pp`, sobe o Estágio,
+  grava `virtude_evolucoes` e `admin_log`. `virtudes.evolucao.fragmentos` (0) gasta Fragmentos de Arcano se o dono quiser.
+- **`can()`:** `virtudes.ver` e `virtudes.evoluir` (Owner, Anfitrião), `virtudes.ajustar` (Owner: lançar P.P. à mão).
+- **API:** `GET /api/virtudes` · `GET ?view=mesa[&q=]` · `POST {action}`: `evoluir {playerId}`, `arcano {playerId, arcano|null}`,
+  `potencial {playerId, virtude, quantidade, motivo?}`, `afinidades {value, provisorio?}`, `estagios {value, provisorio?}`.
+- **Telas:** app `virtudes` (emblema da faixa "Sistemas" e atalho na ficha do Record) e seção "Virtudes" da Mesa.
