@@ -111,7 +111,7 @@ export function GameFrame({
   const [layerEl, setLayerEl] = useState<HTMLDivElement | null>(null)
   return (
     <LiveLayerTarget el={layerEl}>
-      <div className={cn('dv-marble-dark relative flex h-full w-full flex-col overflow-hidden text-dv-text', className)}>
+      <div className={cn('bg-[#121214] bg-[url(/images/os/marmore-negro.webp)] bg-[length:560px_560px] relative flex h-full w-full flex-col overflow-hidden text-dv-text', className)}>
         <div
           aria-hidden="true"
           className="pointer-events-none absolute inset-0"
@@ -120,7 +120,7 @@ export function GameFrame({
               'radial-gradient(90% 45% at 50% 0%, rgba(111,107,130,0.16), transparent 70%), radial-gradient(120% 80% at 50% 120%, rgba(0,0,0,0.75), transparent 60%)',
           }}
         />
-        <header className="dv-velvet relative z-20 flex shrink-0 items-center gap-2 pl-1 pr-2 pt-[env(safe-area-inset-top)]">
+        <header className="bg-[linear-gradient(180deg,#1c1c1f,#0e0e10)] relative z-20 flex shrink-0 items-center gap-2 pl-1 pr-2 pt-[env(safe-area-inset-top)]">
           <button
             type="button"
             onClick={onQuit}

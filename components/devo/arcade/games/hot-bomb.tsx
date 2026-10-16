@@ -41,13 +41,15 @@ const norm = (x: number, y: number): [number, number] => {
 }
 
 /** Cores da arena (paleta do mármore): porcelana, aço champanhe, ametista, grafite. */
-const PALETTE = [0xf1f0ee, 0xbab09f, 0x8a7cc8, 0x38393c, 0xece5d8, 0xc2b9ec]
+const PALETTE = [0xf1f0ee, 0xbab09f, 0x38393c, 0xece5d8, 0x2c2c31, 0xbab09f]
+/** Confete: a paleta mais um toque de ametista (pequeno). */
+const CONFETTI = [...PALETTE, 0x8a7cc8, 0xc2b9ec]
 const FIRE = [0xa3121f, 0xff6670, 0xece5d8, 0xfff4e0]
 const DUST = [0xece5d8, 0xfff4e0, 0xbab09f]
 /** Cor de partícula: explosão (matiz baixo, faixa larga) = fogo rubi → brasa clara; poeira/faísca = aço claro; resto = paleta. */
 function tint(c: THREE.Color, h: number, rg: number) {
   const pick = (list: number[]) => list[Math.floor(Math.random() * list.length)]
-  return c.set(h < 0.15 ? pick(rg >= 0.1 ? FIRE : DUST) : pick(PALETTE))
+  return c.set(h < 0.15 ? pick(rg >= 0.1 ? FIRE : DUST) : pick(CONFETTI))
 }
 
 /** Mesma sequência de eventos nos dois aparelhos: derivada da seed da sala e da rodada. */
@@ -71,7 +73,7 @@ const CSS = `
 .bq-hud{position:absolute;top:calc(8px + env(safe-area-inset-top,0px));left:0;right:0;display:flex;justify-content:center;align-items:flex-start;gap:12px;pointer-events:none}
 .bq-hud>div{display:flex;flex-direction:column;align-items:center;gap:5px}
 .bq-hud span{display:block;min-width:64px;text-align:center;background:linear-gradient(180deg,rgba(31,31,34,.92),rgba(12,12,14,.92));box-shadow:inset 0 0 0 1px rgba(186,176,159,.55),inset 0 1px 0 rgba(236,229,216,.18),0 6px 14px rgba(0,0,0,.5);clip-path:polygon(8px 0,calc(100% - 8px) 0,100% 8px,100% calc(100% - 8px),calc(100% - 8px) 100%,8px 100%,0 calc(100% - 8px),0 8px);padding:6px 16px 5px;font-family:var(--font-oswald),'Arial Narrow',sans-serif;font-size:30px;font-weight:600;line-height:1;font-variant-numeric:tabular-nums}
-.bq-hud small{font-family:var(--font-plex-mono),monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:rgba(238,237,235,.74);max-width:10em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-shadow:0 1px 4px #000}
+.bq-hud small{font-family:var(--font-plex-mono),monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:rgba(238,237,235,.74);max-width:16em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-shadow:0 1px 4px #000}
 .bq-hud small.me{color:var(--porc)}
 .bq-hud small.me::before{content:"";display:inline-block;width:6px;height:6px;margin:0 6px 1px 0;background:var(--am);transform:rotate(45deg);box-shadow:0 0 6px var(--am)}
 .bq-hud>.bq-lvl{display:block;width:46px;height:46px;border-radius:50%;background:radial-gradient(circle,rgba(31,31,34,.9),rgba(12,12,14,.9));box-shadow:inset 0 0 0 1px rgba(186,176,159,.7),inset 0 0 0 6px rgba(12,12,14,.6),inset 0 0 0 7px rgba(186,176,159,.25);position:relative;align-self:flex-start;flex:none;margin-top:2px}
@@ -301,7 +303,7 @@ export default function HotBomb({ start, settings, onFinish, onQuit }: GameProps
     addOB(0, 0, 0.8, 1, 0xf1f0ee, false)
     for (let i = 0; i < 5; i++) {
       const a = (i / 5) * 6.283 + 0.3
-      addOB(Math.cos(a) * 5.6, Math.sin(a) * 5.6, 0.7, 0.9, i % 2 ? 0x8a7cc8 : 0x38393c, true)
+      addOB(Math.cos(a) * 5.6, Math.sin(a) * 5.6, 0.7, 0.9, i % 2 ? 0xbab09f : 0x38393c, true)
     }
     /* avatares: rig com cabeça, braços, pernas, orelhas e contorno */
     const OLM = new THREE.MeshBasicMaterial({ color: 0x0c0c0e, side: THREE.BackSide })
@@ -1260,7 +1262,7 @@ export default function HotBomb({ start, settings, onFinish, onQuit }: GameProps
         }
       L1.position.set(Math.cos(T * 0.9) * 10, 5, Math.sin(T * 0.9) * 10)
       L2.position.set(Math.cos(T * 0.9 + 3.14) * 10, 5, Math.sin(T * 0.9 + 3.14) * 10)
-      bgc.setHSL(0.7, 0.1, 0.055 + 0.012 * Math.sin(T * 0.3))
+      bgc.setHSL(0.7, 0.12, 0.014 + 0.004 * Math.sin(T * 0.3))
       ;(scene.fog as THREE.Fog).color.copy(bgc)
       for (let i = 0; i < NP; i++) {
         const p = pd[i]
@@ -1525,7 +1527,7 @@ function BombEntry(props: {
           <span aria-hidden="true" className="h-px w-24 bg-gradient-to-r from-transparent via-dv-gold/80 to-transparent" />
         </div>
         <p className="font-body text-[17px] leading-relaxed text-dv-text-2 text-balance">{props.sub}</p>
-        <div className="dv-velvet flex w-full items-center justify-center gap-3 border border-dv-line-gold px-4 py-2.5">
+        <div className="bg-[linear-gradient(180deg,#1c1c1f,#0e0e10)] flex w-full items-center justify-center gap-3 border border-dv-line-gold px-4 py-2.5">
           <span className="dv-label text-[10px] text-dv-text-3">Você é o</span>
           <span className="font-display text-[15px] font-semibold uppercase tracking-[0.14em] text-white">{props.avatar}</span>
           <span aria-hidden="true" className="flex gap-1">

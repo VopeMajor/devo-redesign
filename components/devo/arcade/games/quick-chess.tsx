@@ -382,7 +382,7 @@ export default function QuickChess({ start, settings, onFinish, onQuit }: GamePr
   const clockTotal = online ? 30_000 : CLOCK_MS
   const clockOf = (side: Color) => (synced && serverState ? serverState.clock[side === 'w' ? 'a' : 'b'] : clocks[side])
   const turnFrom = synced && serverState ? toLocal(serverState.turnAt) : turnStart.current
-  const live = (side: Color) => (ticking && turn === side ? Math.max(0, clockOf(side) - (now - turnFrom)) : clockOf(side))
+  const live = (side: Color) => (ticking && turn === side ? Math.max(0, Math.min(clockOf(side), clockOf(side) - (now - turnFrom))) : clockOf(side))
   const wLeft = live('w')
   const bLeft = live('b')
   const myLeft = myColor === 'w' ? wLeft : bLeft
@@ -529,7 +529,6 @@ export default function QuickChess({ start, settings, onFinish, onQuit }: GamePr
       active ? 'border-dv-gold-bright bg-dv-ink-4 text-white shadow-[inset_0_-2px_0_var(--dv-amethyst)]' : 'border-dv-line-strong bg-dv-ink/60 text-dv-text-2 hover:border-dv-gold hover:text-dv-text',
     )
 
-  const matchCode = `Partida #${String(start.seed % 1000).padStart(3, '0')}`
   const statusText = spectator
     ? 'Modo espectador'
     : running
@@ -557,7 +556,7 @@ export default function QuickChess({ start, settings, onFinish, onQuit }: GamePr
     <GameFrame
       chat={false}
       title="Living Chess"
-      sub={`${start.mode === 'treino' ? 'Treino' : 'Ao vivo'} · ${matchCode}`}
+      sub={`${start.mode === 'treino' ? 'Treino' : 'Ao vivo'} · #${String(start.seed % 1000).padStart(3, '0')}`}
       accent={meta.accent}
       onQuit={onQuit}
       top={
@@ -601,6 +600,18 @@ export default function QuickChess({ start, settings, onFinish, onQuit }: GamePr
               camera={{ position: [0, 9, 9], fov: 40 }}
               gl={{ antialias: quality !== 'low', alpha: true, powerPreference: 'high-performance' }}
               onPointerMissed={() => setSelected(null)}
+              onCreated={({ gl, setDpr }) => {
+                // Renderizador por software (SwiftShader/llvmpipe): qualidade baixa e DPR 0,75, como as cenas do kit.
+                try {
+                  const ctx = gl.getContext()
+                  const ext = ctx.getExtension('WEBGL_debug_renderer_info')
+                  const name = ext ? String(ctx.getParameter(ext.UNMASKED_RENDERER_WEBGL)) : ''
+                  if (/swiftshader|llvmpipe|software/i.test(name)) {
+                    setQuality('low')
+                    setDpr(0.75)
+                  }
+                } catch {}
+              }}
             >
               <LivingScene
                 units={units}
@@ -653,13 +664,13 @@ export default function QuickChess({ start, settings, onFinish, onQuit }: GamePr
             </div>
 
             {panel === 'history' && (
-              <div className="dv-velvet absolute inset-x-3 bottom-14 z-30 max-h-[55%] animate-dv-rise overflow-y-auto border border-dv-line-gold p-3 lg:hidden">
+              <div className="bg-[linear-gradient(180deg,#1c1c1f,#0e0e10)] absolute inset-x-3 bottom-14 z-30 max-h-[55%] animate-dv-rise overflow-y-auto border border-dv-line-gold p-3 lg:hidden">
                 <p className="dv-label mb-2 text-[10px] text-dv-gold">Lances</p>
                 {historyList}
               </div>
             )}
 
-            <aside className="dv-velvet absolute left-3 top-10 z-20 hidden max-h-[60%] w-48 flex-col border border-dv-line-gold p-3 lg:flex" aria-label="Histórico de lances">
+            <aside className="bg-[linear-gradient(180deg,#1c1c1f,#0e0e10)] absolute left-3 top-10 z-20 hidden max-h-[60%] w-48 flex-col border border-dv-line-gold p-3 lg:flex" aria-label="Histórico de lances">
               <p className="dv-label mb-2 text-[10px] text-dv-gold">Movimentos</p>
               <div className="min-h-0 flex-1 overflow-y-auto">{historyList}</div>
             </aside>
@@ -669,7 +680,7 @@ export default function QuickChess({ start, settings, onFinish, onQuit }: GamePr
           </div>
 
           {panel === 'settings' && (
-            <div className="dv-velvet absolute right-3 top-2 z-40 max-h-[calc(100%-1rem)] w-[min(19rem,calc(100%-1.5rem))] animate-dv-rise overflow-y-auto border border-dv-line-gold p-4">
+            <div className="bg-[linear-gradient(180deg,#1c1c1f,#0e0e10)] absolute right-3 top-2 z-40 max-h-[calc(100%-1rem)] w-[min(19rem,calc(100%-1.5rem))] animate-dv-rise overflow-y-auto border border-dv-line-gold p-4">
               <p className="dv-label mb-2 text-[10px] text-dv-gold">Tabuleiro</p>
               <div className="grid grid-cols-3 gap-1.5">
                 {BOARD_THEMES.map((t) => (
@@ -736,7 +747,7 @@ export default function QuickChess({ start, settings, onFinish, onQuit }: GamePr
                 <p className="dv-label mt-2 text-[10px] text-dv-text-2">
                   {ending.result === 'draw' ? 'Ninguém cai hoje' : `${ending.result === 'win' ? 'Você' : start.opponent.name} venceu`}
                 </p>
-                <dl className="dv-velvet mt-5 grid w-full grid-cols-4 gap-1 border border-dv-line-gold px-2 py-3">
+                <dl className="bg-[linear-gradient(180deg,#1c1c1f,#0e0e10)] mt-5 grid w-full grid-cols-4 gap-1 border border-dv-line-gold px-2 py-3">
                   {(
                     [
                       ['Lances', history.length],
@@ -760,7 +771,7 @@ export default function QuickChess({ start, settings, onFinish, onQuit }: GamePr
         <aside
           className={cn(
             'flex-col border-dv-line',
-            panel === 'chat' ? 'dv-velvet absolute inset-x-3 bottom-3 top-16 z-30 flex border border-dv-line-gold p-3 md:static md:inset-auto md:z-auto' : 'hidden md:flex',
+            panel === 'chat' ? 'bg-[linear-gradient(180deg,#1c1c1f,#0e0e10)] absolute inset-x-3 bottom-3 top-16 z-30 flex border border-dv-line-gold p-3 md:static md:inset-auto md:z-auto' : 'hidden md:flex',
             'md:w-64 md:shrink-0 md:border-0 md:border-l md:bg-dv-ink-2/90 md:p-4 lg:w-72 xl:w-80',
           )}
           aria-label="Chat da partida"

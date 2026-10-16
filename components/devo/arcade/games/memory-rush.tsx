@@ -34,8 +34,8 @@ const SYMBOLS: { icon: LucideIcon; color: string }[] = [
 
 /** Materiais das cartas (verso de mármore negro, frente de porcelana) — CSS local, sem imagens. */
 const MR_CSS = `
-.mr-back{background-color:#0d0d0f;background-image:radial-gradient(120% 80% at 30% 0%,rgba(238,237,235,.08),transparent 60%),var(--dv-marble-dark);background-size:auto,260px 260px;box-shadow:inset 0 0 0 1px rgba(186,176,159,.45),inset 0 1px 0 rgba(236,229,216,.25),0 6px 14px rgba(0,0,0,.55)}
-.mr-face{background-color:#f1f0ee;background-image:radial-gradient(90% 60% at 30% 0%,rgba(255,255,255,.95),transparent 55%),var(--dv-marble-white);background-size:auto,260px 260px;box-shadow:inset 0 0 0 1px rgba(21,21,23,.18),inset 0 0 0 3px #f1f0ee,inset 0 0 0 4px rgba(186,176,159,.7),0 6px 14px rgba(0,0,0,.5)}
+.mr-back{background-color:#0d0d0f;background-image:radial-gradient(120% 80% at 30% 0%,rgba(238,237,235,.08),transparent 60%),url(/images/os/marmore-negro.webp);background-size:auto,300px 300px;box-shadow:inset 0 0 0 1px rgba(186,176,159,.45),inset 0 1px 0 rgba(236,229,216,.25),0 6px 14px rgba(0,0,0,.55)}
+.mr-face{background-color:#f1f0ee;background-image:radial-gradient(90% 60% at 30% 0%,rgba(255,255,255,.95),transparent 55%),url(/images/os/marmore-branco.webp);background-size:auto,240px 240px;box-shadow:inset 0 0 0 1px rgba(21,21,23,.18),inset 0 0 0 3px #f1f0ee,inset 0 0 0 4px rgba(186,176,159,.7),0 6px 14px rgba(0,0,0,.5)}
 .mr-face.mr-mine{box-shadow:inset 0 0 0 1px rgba(21,21,23,.18),inset 0 0 0 3px #f1f0ee,inset 0 0 0 4px #8a7cc8,0 0 0 1px #8a7cc8,0 0 18px rgba(138,124,200,.45)}
 .mr-face.mr-theirs{filter:saturate(.55) brightness(.78);box-shadow:inset 0 0 0 1px rgba(21,21,23,.25),inset 0 0 0 3px #e0ddd8,inset 0 0 0 4px #6b6357,0 4px 10px rgba(0,0,0,.5)}
 `

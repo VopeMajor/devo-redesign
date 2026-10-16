@@ -151,13 +151,14 @@ type UnitProps = {
   selected: boolean
   set: PieceSet
   shadows: boolean
+  lite: boolean
   onPick: (sq: string) => void
 }
 
 const wrapAngle = (a: number) => Math.atan2(Math.sin(a), Math.cos(a))
 const bump = (t: number) => Math.sin(clamp01(t) * Math.PI)
 
-const Unit = memo(function Unit({ u, animRef, mateRef, selected, set, shadows, onPick }: UnitProps) {
+const Unit = memo(function Unit({ u, animRef, mateRef, selected, set, shadows, lite, onPick }: UnitProps) {
   const root = useRef<THREE.Group>(null)
   const leanG = useRef<THREE.Group>(null)
   const yawG = useRef<THREE.Group>(null)
@@ -165,7 +166,7 @@ const Unit = memo(function Unit({ u, animRef, mateRef, selected, set, shadows, o
   const heading = useRef(restYaw)
   const [sx, sz] = sqPos(u.square)
   const model = usePieceModel(u.type)
-  const mats = useMemo(() => makeUnitMaterials(u.color, set), [u.color, set])
+  const mats = useMemo(() => makeUnitMaterials(u.color, set, lite), [u.color, set, lite])
   const baseColor = useMemo(() => mats.body.color.clone(), [mats])
   useEffect(
     () => () => {
@@ -356,6 +357,7 @@ function Army(props: {
   selected: string | null
   set: PieceSet
   shadows: boolean
+  lite: boolean
   onSquare: (sq: string) => void
 }) {
   return (
@@ -369,6 +371,7 @@ function Army(props: {
           selected={props.selected === u.square}
           set={props.set}
           shadows={props.shadows}
+          lite={props.lite}
           onPick={props.onSquare}
         />
       ))}
@@ -843,8 +846,11 @@ function Board(props: {
   const tex = useMemo(() => makeBoardTexture(theme, quality === 'low' ? 1024 : 2048), [theme, quality])
   useEffect(() => () => tex.dispose(), [tex])
   const top = useMemo(
-    () => new THREE.MeshPhysicalMaterial({ map: tex, roughness: 0.24, metalness: 0, clearcoat: 1, clearcoatRoughness: 0.1, envMapIntensity: 0.55 }),
-    [tex],
+    () =>
+      quality === 'low'
+        ? new THREE.MeshStandardMaterial({ map: tex, roughness: 0.3, metalness: 0, envMapIntensity: 0.6 })
+        : new THREE.MeshPhysicalMaterial({ map: tex, roughness: 0.24, metalness: 0, clearcoat: 1, clearcoatRoughness: 0.1, envMapIntensity: 0.55 }),
+    [tex, quality],
   )
   useEffect(() => () => top.dispose(), [top])
   return (
@@ -997,7 +1003,7 @@ export function LivingScene(props: {
       <Sword position={[-5.3, -SLAB_H, 3.2]} rotation={[-0.1, 0.9, -0.34]} scale={0.92} />
       <Sword position={[5.4, -SLAB_H, 2.4]} rotation={[-0.16, -0.7, 0.3]} scale={0.95} />
       <Suspense fallback={null}>
-        <Army units={units} animRef={animRef} mateRef={mateRef} selected={selected} set={set} shadows={shadows} onSquare={onSquare} />
+        <Army units={units} animRef={animRef} mateRef={mateRef} selected={selected} set={set} shadows={shadows} lite={quality === 'low'} onSquare={onSquare} />
       </Suspense>
       <Effects animRef={animRef} theme={theme} quality={quality} />
     </>

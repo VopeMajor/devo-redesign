@@ -28,7 +28,7 @@
 .bf-stage { position: relative; flex: 1 1 0; min-height: 210px; overflow: hidden; -webkit-mask-image: linear-gradient(#000 90%, transparent); mask-image: linear-gradient(#000 90%, transparent); }
 .bf-scene { position: absolute; inset: 0; perspective: 1200px; perspective-origin: 50% 0%; }
 .bf-tbl { position: absolute; left: 50%; top: 18%; width: min(86%, 760px); height: 130%; transform: translateX(-50%) rotateX(52deg); transform-origin: 50% 0; transform-style: preserve-3d; }
-.bf-felt { position: absolute; inset: 0; border-radius: 50%; background-color: #19191c; background-image: radial-gradient(58% 54% at 50% 40%, rgba(236, 229, 216, 0.16), transparent 72%), var(--dv-marble-dark), radial-gradient(62% 62% at 50% 44%, #2c2c31 0%, #1a1a1d 55%, #0e0e10 100%); background-size: auto, 300px 300px, auto; box-shadow: inset 0 0 0 12px #121214, inset 0 0 0 13px #6b6357, inset 0 0 0 15px #ece5d8, inset 0 0 0 17px #bab09f, inset 0 0 0 19px #0c0c0e, inset 0 0 0 20px #6b6357, inset 0 0 110px rgba(0, 0, 0, 0.6), 0 0 0 2px #060607; }
+.bf-felt { position: absolute; inset: 0; border-radius: 50%; background-color: #19191c; background-image: radial-gradient(58% 54% at 50% 40%, rgba(236, 229, 216, 0.16), transparent 72%), url(/images/os/marmore-negro.webp), radial-gradient(62% 62% at 50% 44%, #2c2c31 0%, #1a1a1d 55%, #0e0e10 100%); background-size: auto, 300px 300px, auto; box-shadow: inset 0 0 0 12px #121214, inset 0 0 0 13px #6b6357, inset 0 0 0 15px #ece5d8, inset 0 0 0 17px #bab09f, inset 0 0 0 19px #0c0c0e, inset 0 0 0 20px #6b6357, inset 0 0 110px rgba(0, 0, 0, 0.6), 0 0 0 2px #060607; }
 .bf-tshadow { position: absolute; inset: 3% -2% -6%; border-radius: 50%; background: rgba(0, 0, 0, 0.65); filter: blur(26px); transform: translateZ(-40px); }
 .bf-inlay { position: absolute; inset: 19%; border-radius: 50%; border: 1px solid rgba(186, 176, 159, 0.4); box-shadow: inset 0 0 50px rgba(236, 229, 216, 0.05), 0 0 0 7px rgba(12, 12, 14, 0.35), 0 0 0 8px rgba(186, 176, 159, 0.16); }
 .bf-inlay::after { content: ""; position: absolute; inset: 14%; border-radius: 50%; border: 1px dashed rgba(186, 176, 159, 0.22); }
@@ -87,7 +87,7 @@
 
 /* cartas */
 .bf-cf, .bf-cback { position: absolute; inset: 0; border-radius: 7px; }
-.bf-cf { font-size: calc(var(--cw, 60px) * 0.27); background-color: #f2f0ec; background-image: radial-gradient(90% 60% at 30% 0%, rgba(255, 255, 255, 0.95), transparent 60%), var(--dv-marble-white); background-size: auto, 220px 220px; color: var(--bf-ink); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.8), inset 0 0 0 2px #bab09f, inset 0 0 0 3.5px #f2f0ec, inset 0 0 0 4px rgba(107, 99, 87, 0.45), 0 1px 0 #c9c5bd, 0 2px 0 #9a958c, 0 6px 12px rgba(0, 0, 0, 0.5); overflow: hidden; }
+.bf-cf { font-size: calc(var(--cw, 60px) * 0.27); background-color: #f2f0ec; background-image: radial-gradient(90% 60% at 30% 0%, rgba(255, 255, 255, 0.95), transparent 60%), url(/images/os/marmore-branco.webp); background-size: auto, 200px 200px; color: var(--bf-ink); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.8), inset 0 0 0 2px #bab09f, inset 0 0 0 3.5px #f2f0ec, inset 0 0 0 4px rgba(107, 99, 87, 0.45), 0 1px 0 #c9c5bd, 0 2px 0 #9a958c, 0 6px 12px rgba(0, 0, 0, 0.5); overflow: hidden; }
 .bf-cf.red { color: var(--bf-red); }
 .bf-cf .ix { position: absolute; display: flex; flex-direction: column; align-items: center; line-height: 1; gap: 1px; width: 20%; }
 .bf-cf .ix b { font-family: var(--font-card-title), Georgia, serif; font-weight: 700; font-size: 1.28em; letter-spacing: -0.02em; }

@@ -35,7 +35,7 @@ export function PlayerPlate({ side, total, className }: { side: PlateSide; total
   return (
     <div className={cn('relative isolate transition-opacity duration-[220ms]', !side.active && 'opacity-80', className)} style={{ '--dv-cut': '10px' } as CSSProperties}>
       <span aria-hidden="true" className={cn('dv-cut-diag absolute inset-0 -z-10', edge)} />
-      <span aria-hidden="true" className="dv-cut-diag dv-velvet absolute inset-px -z-10" style={{ '--dv-cut': '9.5px' } as CSSProperties} />
+      <span aria-hidden="true" className="dv-cut-diag bg-[linear-gradient(180deg,#1c1c1f,#0e0e10)] absolute inset-px -z-10" style={{ '--dv-cut': '9.5px' } as CSSProperties} />
       <div className="flex items-center gap-3 px-2.5 py-2">
         {side.portrait ? (
           <img src={side.portrait} alt={`Foto de ${side.name}`} className="size-11 shrink-0 object-cover dv-brass-edge" />
@@ -45,15 +45,15 @@ export function PlayerPlate({ side, total, className }: { side: PlateSide; total
             aria-label={`${side.name} sem foto`}
             className={cn(
               'grid size-11 shrink-0 place-items-center font-display text-[20px] font-semibold dv-brass-edge',
-              side.color === 'w' ? 'dv-porcelain' : 'dv-marble-dark text-dv-text',
+              side.color === 'w' ? 'bg-[#ecebe8] bg-[url(/images/os/marmore-branco.webp)] bg-[length:280px_280px] text-dv-porcelain-ink' : 'bg-[#121214] bg-[url(/images/os/marmore-negro.webp)] bg-[length:560px_560px] text-dv-text',
             )}
           >
             {side.name.trim().charAt(0).toUpperCase() || '?'}
           </span>
         )}
-        <div className="flex min-w-0 flex-1 flex-col gap-1">
-          <p className="w-full truncate font-display text-[14px] font-semibold uppercase leading-none tracking-[0.1em] text-dv-text">{side.name}</p>
-          <p className="dv-label flex w-full min-w-0 items-center gap-2 text-[10px] leading-none tracking-[0.16em] text-dv-text-3">
+        <div className="flex min-w-0 flex-1 flex-col gap-0.5">
+          <p className="w-full truncate pt-0.5 font-display text-[14px] font-semibold uppercase leading-[1.3] tracking-[0.1em] text-dv-text">{side.name}</p>
+          <p className="dv-label flex w-full min-w-0 items-center gap-2 text-[10px] leading-[1.4] tracking-[0.16em] text-dv-text-3">
             <span aria-hidden="true" className={cn('size-2 shrink-0 rotate-45 border border-dv-gold/70', side.color === 'w' ? 'bg-dv-porcelain' : 'bg-dv-ink')} />
             <span className="truncate">{side.court}</span>
             {side.captures > 0 && <span className="shrink-0 text-dv-gold-bright">+{side.captures}</span>}

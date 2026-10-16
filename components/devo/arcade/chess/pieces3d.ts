@@ -81,12 +81,25 @@ function pieceMarble(set: PieceSet, c: Color) {
  * - aço champanhe: metal escovado claro × aço escuro.
  * O filete é sempre metal; a joia é ametista.
  */
-export function makeUnitMaterials(c: Color, set: PieceSet) {
+export function makeUnitMaterials(c: Color, set: PieceSet, lite = false) {
   const p = set[c]
   const deform: Deform = { uBend: { value: 0 }, uSide: { value: 0 }, uSquash: { value: 0 }, uHeight: { value: 1 } }
   const glass = set.material === 'glass'
   const marble = set.material === 'marble'
-  const body = new THREE.MeshPhysicalMaterial({
+  // `lite` (qualidade baixa / renderizador por software): material padrão, sem verniz.
+  const body = lite
+    ? new THREE.MeshStandardMaterial({
+        color: marble ? '#ffffff' : p.body,
+        map: marble ? pieceMarble(set, c) : null,
+        roughness: Math.max(0.3, set.roughness),
+        metalness: set.metalness,
+        envMapIntensity: 1,
+        transparent: glass,
+        opacity: p.opacity,
+        emissive: new THREE.Color(c === 'w' ? '#ece5d8' : '#8a7cc8'),
+        emissiveIntensity: 0,
+      })
+    : new THREE.MeshPhysicalMaterial({
     color: marble ? '#ffffff' : p.body,
     map: marble ? pieceMarble(set, c) : null,
     roughness: set.roughness,
@@ -99,7 +112,7 @@ export function makeUnitMaterials(c: Color, set: PieceSet) {
     emissive: new THREE.Color(c === 'w' ? '#ece5d8' : '#8a7cc8'),
     emissiveIntensity: 0,
   })
-  if (glass) {
+  if (glass && body instanceof THREE.MeshPhysicalMaterial) {
     body.specularIntensity = 1
     body.ior = 1.5
     body.sheen = 0.4
