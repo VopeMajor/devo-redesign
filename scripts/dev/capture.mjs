@@ -1652,6 +1652,12 @@ if (want('narrativa')) {
   async function ate(page, alvo, { pick = {}, max = 120 } = {}) {
     for (let i = 0; i < max; i++) {
       const t = await textoDlg(page)
+      if (!t) {
+        // Sem cena aberta: não adianta apertar teclas na home.
+        await wait(500)
+        if (!(await textoDlg(page))) break
+        continue
+      }
       if (typeof alvo === 'string' ? t.includes(alvo) : alvo.test(t)) {
         await wait(1600)
         return true
@@ -1668,7 +1674,7 @@ if (want('narrativa')) {
       if (!(await tryClick(dlg(page).getByRole('button', { name: /^(Continuar|Mostrar texto completo)$/ }).first(), 2000))) await page.keyboard.press('Enter')
       await wait(260)
     }
-    manifest.errors.push({ step: 'narrativa-ate', error: `não chegou em ${alvo}` })
+    manifest.errors.push({ step: 'narrativa-ate', error: `não chegou em ${alvo}; último texto: ${(await textoDlg(page)).slice(-160)}` })
     return false
   }
 
