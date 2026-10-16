@@ -219,7 +219,7 @@ export function Cena({ passos, npc, titulo, kicker, fundo = 'torre', arteFundo =
               src={art.src}
               alt={npc ? `${npc.nome}${npc.titulo ? `, ${npc.titulo}` : ''}` : ''}
               draggable={false}
-              className="tw-breathe absolute inset-x-0 bottom-[-6%] top-[-8%] mx-auto h-[114%] w-full max-w-[520px] origin-bottom scale-[1.18] object-contain object-bottom drop-shadow-[0_18px_24px_rgba(0,0,0,0.7)] [mask-image:linear-gradient(to_bottom,#000_72%,transparent_96%)]"
+              className="tw-breathe absolute inset-x-0 bottom-[-14%] top-[-6%] mx-auto h-[120%] w-full max-w-[560px] origin-bottom scale-[1.32] object-contain object-bottom drop-shadow-[0_18px_24px_rgba(0,0,0,0.7)] [mask-image:linear-gradient(to_bottom,#000_72%,transparent_96%)]"
             />
           </div>
         )}

@@ -1205,7 +1205,7 @@ if (want('torres')) {
   await step('torres-trancado', async () => {
     await enterOS(A.page)
     await wait(1200)
-    await A.page.getByRole('region', { name: 'Sistemas em breve' }).scrollIntoViewIfNeeded().catch(() => {})
+    await A.page.getByRole('region', { name: 'Sistemas', exact: true }).scrollIntoViewIfNeeded().catch(() => {})
     await wait(400)
     await shot(A.page, 't01-torres-home-trancado')
     await abrirTorres(A.page)
@@ -1221,7 +1221,7 @@ if (want('torres')) {
     const page = B.page
     await enterOS(page)
     await wait(1200)
-    await page.getByRole('region', { name: 'Sistemas em breve' }).scrollIntoViewIfNeeded().catch(() => {})
+    await page.getByRole('region', { name: 'Sistemas', exact: true }).scrollIntoViewIfNeeded().catch(() => {})
     await wait(400)
     await shot(page, 't03-torres-home-liberado')
     await abrirTorres(page)
