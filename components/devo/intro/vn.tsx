@@ -1,8 +1,6 @@
 'use client'
 
 import { useEffect, useState, type CSSProperties, type ReactNode } from 'react'
-import { setDubbing, speakLine, stopVoice, useDubbing } from '@/lib/devo/voice'
-import type { VoiceCast } from '@/lib/devo/voice-lines'
 import { playSfx } from '@/lib/devo/audio'
 import { cn } from '@/lib/utils'
 import { GlyphArrow, GlyphDiamond, toRoman } from '../kit/glyphs'
@@ -42,51 +40,6 @@ export function useTypewriter(text: string, charMs = 28) {
     return () => window.clearTimeout(id)
   }, [shown, done, text, charMs])
   return { shown, done, finish: () => setState({ text, shown: text.length }) }
-}
-
-/**
- * Fala dublada: toca a voz da linha e devolve a velocidade da digitação para o texto acompanhar a fala
- * (a última letra cai ~10% antes do fim do áudio). Sem voz, usa `fallbackMs`.
- */
-export function useVoicedLine(line: { id: string; text: string; cast: VoiceCast } | null, fallbackMs: number, onEnd?: () => void) {
-  const [charMs, setCharMs] = useState(fallbackMs)
-  const dub = useDubbing()
-  const id = line?.id
-  const text = line?.text
-  useEffect(() => {
-    if (!line || !id || !text) {
-      setCharMs(fallbackMs)
-      return
-    }
-    const ms = speakLine({ id, text, cast: line.cast, onEnd })
-    setCharMs(ms ? Math.max(14, Math.min(90, (ms * 0.9) / Math.max(1, text.length))) : fallbackMs)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id, text, dub])
-  useEffect(() => () => stopVoice(), [])
-  return charMs
-}
-
-/** Botão "Dublagem" (liga/desliga as vozes; o som geral continua no outro botão). */
-export function DubToggle({ className }: { className?: string }) {
-  const on = useDubbing()
-  return (
-    <button
-      type="button"
-      onClick={() => setDubbing(!on)}
-      aria-pressed={on}
-      aria-label={on ? 'Desligar dublagem' : 'Ligar dublagem'}
-      title="Dublagem"
-      className={cn('dv-focus group flex min-h-11 min-w-11 items-center justify-center gap-1.5 px-1.5 font-mono text-[10px] uppercase tracking-[0.16em] transition-colors', on ? 'text-dv-text-2 hover:text-dv-text' : 'text-dv-text-3 hover:text-dv-text-2', className)}
-    >
-      <svg viewBox="0 0 24 24" aria-hidden="true" className="size-4" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
-        {/* microfone de estúdio (diferente do alto-falante do som geral) */}
-        <rect x="9" y="3" width="6" height="11" rx="3" />
-        <path d="M6 11a6 6 0 0 0 12 0M12 17v4M9 21h6" />
-        {!on && <path d="M4 4l16 16" />}
-      </svg>
-      <span className="hidden min-[400px]:inline">Dublagem</span>
-    </button>
-  )
 }
 
 export type PlateTone = 'cobalt' | 'gold' | 'void' | 'system'
@@ -256,12 +209,11 @@ export function ChoiceHeader({ children }: { children: ReactNode }) {
 }
 
 /** Barra superior da encenação: capítulo à esquerda; som e "pular" à direita (discretos, ≥44px). */
-export function VnTopBar({ chapter, skipLabel, onSkip, dub = false }: { chapter: ReactNode; skipLabel: string; onSkip: () => void; /** Mostra o botão Dublagem (só no prólogo). */ dub?: boolean }) {
+export function VnTopBar({ chapter, skipLabel, onSkip }: { chapter: ReactNode; skipLabel: string; onSkip: () => void }) {
   return (
     <div className="dv-safe-top pointer-events-none absolute inset-x-0 top-0 z-30 flex items-start justify-between bg-gradient-to-b from-black/70 to-transparent px-4 pb-8">
       <div className="pointer-events-auto min-w-0 flex-1 pr-2 pt-3">{chapter}</div>
       <div className="pointer-events-auto flex shrink-0 items-center">
-        {dub && <DubToggle />}
         <SoundToggle compact className="min-h-11 min-w-11 justify-center text-dv-text-2 hover:text-dv-text" />
         <button
           type="button"

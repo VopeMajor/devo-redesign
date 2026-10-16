@@ -5,10 +5,11 @@ import type { CardDef, OwnedCard, Rarity } from './types'
  * aula da Coruja) saem daqui. `plural` serve para textos corridos.
  */
 export const RARITY_META: Record<Rarity, { label: string; plural: string; color: string; order: number }> = {
-  comum: { label: 'Comum', plural: 'Comuns', color: '#cbbfa8', order: 0 },
-  incomum: { label: 'Incomum', plural: 'Incomuns', color: '#b08350', order: 1 },
-  rara: { label: 'Rara', plural: 'Raras', color: '#d4161f', order: 2 },
-  lendaria: { label: 'Lendária', plural: 'Lendárias', color: '#d8b25a', order: 3 },
+  // `color` = marca da raridade sobre o negro (mármore → prata → champanhe → ametista; sem rubi).
+  comum: { label: 'Comum', plural: 'Comuns', color: '#a3a2a6', order: 0 },
+  incomum: { label: 'Incomum', plural: 'Incomuns', color: '#ececee', order: 1 },
+  rara: { label: 'Rara', plural: 'Raras', color: '#d6cdbd', order: 2 },
+  lendaria: { label: 'Lendária', plural: 'Lendárias', color: '#c2b9ec', order: 3 },
 }
 
 /** Raridades da mais comum para a mais rara. */

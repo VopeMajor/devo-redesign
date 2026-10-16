@@ -4,8 +4,12 @@ import { integer, jsonb, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-c
 export const players = pgTable('players', {
   id: uuid('id').primaryKey().defaultRandom(),
   name: text('name').notNull(),
-  /** 'player' | 'dealer' | 'admin'. Dealer e admin gerenciam os Deadly Votes. */
+  /** Cargo: 'owner' | 'anfitriao' | 'dealer' | 'player' (lib/devo/cargos.ts; o antigo 'admin' virou 'owner'). */
   role: text('role').notNull().default('player'),
+  /** Só Dealer: o Anfitrião (ou Owner) que o supervisiona. Ver scripts/fundacao-migration.sql. */
+  supervisorId: uuid('supervisor_id'),
+  /** Karma (ordem +, caos −). Nunca exibido cru ao jogador. */
+  karma: integer('karma').notNull().default(0),
   avatar: text('avatar'),
   avatarUpdatedAt: timestamp('avatar_updated_at', { withTimezone: true }),
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),

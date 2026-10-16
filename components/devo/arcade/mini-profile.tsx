@@ -16,7 +16,8 @@ export const BORDER_META: Record<BorderTier, { label: string; color: string; glo
   dealer: { label: 'Borda Dealer', color: '#c2b9ec', glow: '#c2b9ec66' },
 }
 
-const ROLE_LABEL: Record<string, string> = { player: 'Participante', dealer: 'Dealer', admin: 'Administrador' }
+// O servidor nunca envia 'owner' aqui (publicCargo em lib/devo/cargos.ts).
+const ROLE_LABEL: Record<string, string> = { player: 'Participante', dealer: 'Dealer', anfitriao: 'Anfitrião' }
 
 const OpenProfileContext = createContext<((pid: string) => void) | null>(null)
 

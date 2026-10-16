@@ -156,7 +156,7 @@ function HostStrip() {
   const [line] = useState(() => HOST_LINES[Math.floor(Math.random() * HOST_LINES.length)])
   return (
     <div className="flex animate-dv-fade items-end gap-4 border-b border-dv-line pb-1">
-      <JavaliPortrait pose="standing" shape="rect" className="w-[76px]" />
+      <JavaliPortrait pose="convite" shape="rect" className="w-[76px]" />
       <div className="min-w-0 flex-1 pb-3">
         <p className="dv-label flex flex-wrap items-center gap-x-2 text-[10px] text-dv-gold">
           <span>Javali · anfitrião</span>

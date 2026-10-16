@@ -1,5 +1,20 @@
 import { getCurrentPlayer } from '@/app/actions/player'
-import { createVote, getRecord, getStaffBoard, joinVote, leaveVote, RecordError, setAvatar, setEntryOutcome, setVoteStatus } from '@/lib/devo/record-server'
+import {
+  applyVoteResults,
+  createVote,
+  getRecord,
+  getStaffBoard,
+  joinVote,
+  leaveVote,
+  RecordError,
+  setAvatar,
+  setEntryAdmission,
+  setEntryDecision,
+  setEntryOutcome,
+  setVoteGroup,
+  setVoteStatus,
+  updateVote,
+} from '@/lib/devo/record-server'
 
 export const dynamic = 'force-dynamic'
 
@@ -43,9 +58,24 @@ export async function POST(req: Request) {
       case 'status':
         await setVoteStatus(player.id, voteId, body.status)
         break
+      case 'group':
+        await setVoteGroup(player.id, voteId, body.groupUrl ?? null)
+        break
       case 'outcome':
         await setEntryOutcome(player.id, voteId, String(body.playerId ?? ''), body.outcome ?? null)
         break
+      // Staff / Deadly Vote (DIRECAO-3 §4): ficha, inscrições, resultado por participante e aplicação única.
+      case 'edit':
+        await updateVote(player.id, voteId, body)
+        break
+      case 'admission':
+        await setEntryAdmission(player.id, voteId, String(body.playerId ?? ''), body.admission)
+        break
+      case 'decision':
+        await setEntryDecision(player.id, voteId, String(body.playerId ?? ''), body.decision ?? null, body.note)
+        break
+      case 'apply':
+        return Response.json({ ok: true, ...(await applyVoteResults(player.id, voteId)) })
       default:
         return Response.json({ ok: false, error: 'Ação desconhecida.' }, { status: 400 })
     }

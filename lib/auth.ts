@@ -45,15 +45,25 @@ function ownOrigin(request?: Request) {
   return [`${proto.split(',')[0].trim()}://${host.split(',')[0].trim()}`]
 }
 
+function originOf(url: string | undefined) {
+  if (!url?.trim()) return []
+  try {
+    return [new URL(url.trim()).origin]
+  } catch {
+    return []
+  }
+}
+
+function publicURL() {
+  const url = process.env.BETTER_AUTH_URL || process.env.DEVO_PUBLIC_URL
+  return url?.trim() || undefined
+}
+
 export const auth = betterAuth({
   database: pool,
-  baseURL:
-    process.env.BETTER_AUTH_URL ??
-    (process.env.VERCEL_PROJECT_PRODUCTION_URL
-      ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
-      : process.env.VERCEL_URL
-        ? `https://${process.env.VERCEL_URL}`
-        : process.env.V0_RUNTIME_URL),
+  // Endereço público fixo quando houver (BETTER_AUTH_URL ou DEVO_PUBLIC_URL, ex.: https://devo.<conta>.workers.dev).
+  // Sem nenhum dos dois, o better-auth deduz a origem de cada requisição.
+  baseURL: publicURL(),
   emailAndPassword: {
     enabled: true,
     autoSignIn: true,
@@ -74,26 +84,10 @@ export const auth = betterAuth({
   // iframe) is same-origin by definition, so it is trusted alongside the static list.
   trustedOrigins: (request?: Request) => [
     ...ownOrigin(request),
-    ...(process.env.NODE_ENV === 'development'
-      ? [
-          'http://localhost:3000',
-          ...(process.env.V0_RUNTIME_URL ? [process.env.V0_RUNTIME_URL] : []),
-          ...(process.env.V0_DEV_APP_URL ? [process.env.V0_DEV_APP_URL] : []),
-          ...(process.env.V0_BUILD_URL ? [process.env.V0_BUILD_URL] : []),
-          ...(process.env.V0_SANDBOX_URL ? [process.env.V0_SANDBOX_URL] : []),
-          // The preview iframe host rotates between sessions; pin to v0's preview domains rather than one URL.
-          'https://*.v0.build',
-          'https://*.vercel.run',
-          'https://*.vusercontent.net',
-        ]
-      : []),
-    ...(process.env.NODE_ENV === 'production'
-      ? [
-          ...(process.env.VERCEL_URL ? [`https://${process.env.VERCEL_URL}`] : []),
-          ...(process.env.VERCEL_BRANCH_URL ? [`https://${process.env.VERCEL_BRANCH_URL}`] : []),
-          ...(process.env.VERCEL_PROJECT_PRODUCTION_URL ? [`https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`] : []),
-        ]
-      : []),
+    ...[process.env.BETTER_AUTH_URL, process.env.DEVO_PUBLIC_URL].flatMap((url) => originOf(url)),
+    // Origens extras separadas por vírgula (ex.: um domínio próprio no futuro, ou um preview).
+    ...(process.env.DEVO_EXTRA_ORIGINS ?? '').split(',').flatMap((url) => originOf(url)),
+    ...(process.env.NODE_ENV === 'development' ? ['http://localhost:3000'] : []),
   ],
   session: {
     expiresIn: 60 * 60 * 24 * 30,
@@ -127,11 +121,27 @@ export const auth = betterAuth({
         },
         after: async (user, ctx) => {
           const code = normalizeInvite(headerOf(ctx, INVITE_HEADER))
-          const { rows } = await pool.query<{ role: string; is_test: boolean }>(
-            'UPDATE invite_codes SET used_by_user = $2 WHERE code = $1 RETURNING role, is_test',
+          const { rows } = await pool.query<{ role: string; is_test: boolean; supervisor_id: string | null; created_by: string | null }>(
+            'UPDATE invite_codes SET used_by_user = $2 WHERE code = $1 RETURNING role, is_test, supervisor_id, created_by',
             [code, user.id],
           )
-          const role = rows[0]?.role ?? 'player'
+          // Cargos (lib/devo/cargos.ts): o antigo 'admin' vale como 'owner'.
+          let role = rows[0]?.role === 'admin' ? 'owner' : (rows[0]?.role ?? 'player')
+          // Dealer exige supervisor (Anfitrião ou Owner): o do convite, senão quem gerou, senão o Owner mais antigo.
+          let supervisor: string | null = null
+          if (role === 'dealer') {
+            const { rows: sup } = await pool.query<{ id: string }>(
+              `SELECT id FROM players WHERE role IN ('anfitriao', 'owner') AND id = ANY($1::uuid[])
+               ORDER BY array_position($1::uuid[], id) LIMIT 1`,
+              [[rows[0]?.supervisor_id, rows[0]?.created_by].filter(Boolean)],
+            )
+            supervisor = sup[0]?.id ?? null
+            if (!supervisor) {
+              const { rows: owner } = await pool.query<{ id: string }>("SELECT id FROM players WHERE role = 'owner' ORDER BY created_at LIMIT 1")
+              supervisor = owner[0]?.id ?? null
+            }
+            if (!supervisor) role = 'player'
+          }
           // Convite de teste gera conta de teste (fora de ranking, apostas e prêmios). Ver scripts/test-accounts-migration.sql.
           const isTest = !!rows[0]?.is_test
           const legacyId = legacyPlayerId(headerOf(ctx, 'cookie'))
@@ -144,29 +154,37 @@ export const auth = betterAuth({
               /* scripts/character-name-migration.sql ainda não rodou */
             }
           }
+          // Cota inicial de convites do Jogador (1, não renova). Idempotente; ignora se a migração da Fundação não rodou.
+          const grantQuota = async () => {
+            try {
+              await pool.query(
+                `SELECT devo_item_grant(p.id, 'convite', 1, 'cota_inicial', NULL, NULL, 'cota-inicial:' || p.id::text)
+                   FROM players p WHERE p.user_id = $1 AND p.role = 'player'`,
+                [user.id],
+              )
+            } catch {
+              /* scripts/fundacao-migration.sql ainda não rodou */
+            }
+          }
           if (legacyId) {
             const linked = await pool.query(
-              'UPDATE players SET user_id = $2, name = $3, role = CASE WHEN $4 = \'player\' THEN role ELSE $4 END, is_test = is_test OR $5 WHERE id = $1 AND user_id IS NULL',
-              [legacyId, user.id, user.name, role, isTest],
+              'UPDATE players SET user_id = $2, name = $3, role = CASE WHEN $4 = \'player\' THEN role ELSE $4 END, supervisor_id = CASE WHEN $4 = \'player\' THEN supervisor_id ELSE $6::uuid END, is_test = is_test OR $5 WHERE id = $1 AND user_id IS NULL',
+              [legacyId, user.id, user.name, role, isTest, supervisor],
             )
-            if (linked.rowCount) return saveCharacter()
+            if (linked.rowCount) {
+              await grantQuota()
+              return saveCharacter()
+            }
           }
-          await pool.query('INSERT INTO players (name, role, user_id, is_test) VALUES ($1, $2, $3, $4)', [user.name, role, user.id, isTest])
+          await pool.query('INSERT INTO players (name, role, user_id, is_test, supervisor_id) VALUES ($1, $2, $3, $4, $5)', [user.name, role, user.id, isTest, supervisor])
+          await grantQuota()
           await saveCharacter()
         },
       },
     },
   },
-  ...(process.env.NODE_ENV === 'development'
-    ? {
-        advanced: {
-          // Required by the cross-site v0 preview iframe. Without these
-          // attributes, login succeeds but the next request appears signed out.
-          defaultCookieAttributes: {
-            sameSite: 'none' as const,
-            secure: true,
-          },
-        },
-      }
-    : {}),
+  // Cookies: sem `advanced` de propósito. O better-auth marca `Secure` (prefixo `__Secure-`) quando o
+  // baseURL é https — ou em produção sem baseURL — e usa `HttpOnly` + `SameSite=Lax`, o certo para o
+  // app servido na própria origem (devo.<conta>.workers.dev). O antigo `SameSite=None` só existia
+  // para o iframe de preview do v0. No CI (http://localhost) os cookies seguem sem `Secure`.
 })

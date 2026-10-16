@@ -7,6 +7,7 @@ import { playSfx } from '@/lib/devo/audio'
 import { arcadeFetcher, arcadeKey, arcadePost, type ChatLine } from '@/lib/devo/arcade/client'
 import { REACTION_PREFIX } from '@/lib/devo/arcade/reactions'
 import { cn } from '@/lib/utils'
+import { usePlayerText } from '../state/player-text'
 import { useOpenProfile } from './mini-profile'
 
 // Nomes no chat em tons da paleta (porcelana, aço, prata, lavanda, ametista clara): distintos sem virar arco-íris.
@@ -25,7 +26,7 @@ export function useChatLines(channel: string, refreshInterval = 5000) {
 export function ChatMessage({ m, compact }: { m: ChatLine; compact?: boolean }) {
   const openProfile = useOpenProfile()
   const color = m.bot ? '#8a90a0' : nameColor(m.author)
-  const staff = m.role === 'dealer' || m.role === 'admin'
+  const staff = m.role === 'dealer' || m.role === 'anfitriao'
   const time = new Date(m.at).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })
   const name = (
     <span className="font-semibold" style={{ color }}>
@@ -36,8 +37,8 @@ export function ChatMessage({ m, compact }: { m: ChatLine; compact?: boolean }) 
     <p className={cn('break-words font-body leading-snug', compact ? 'text-[14px]' : 'text-[15px]')}>
       {!compact && <time className="mr-2 font-mono text-[11px] tabular-nums text-dv-text-3">{time}</time>}
       {staff && (
-        <span title="Dealer" className="mr-1.5 inline-grid size-[18px] place-items-center bg-dv-gold align-[-3px] font-mono text-[10px] font-bold text-dv-ink">
-          D
+        <span title={m.role === 'anfitriao' ? 'Anfitrião' : 'Dealer'} className="mr-1.5 inline-grid size-[18px] place-items-center bg-dv-gold align-[-3px] font-mono text-[10px] font-bold text-dv-ink">
+          {m.role === 'anfitriao' ? 'A' : 'D'}
         </span>
       )}
       {m.bot && <span className="mr-1.5 inline-block border border-dv-line-strong px-1 align-[1px] font-mono text-[10px] uppercase text-dv-text-3">bot</span>}
@@ -78,6 +79,7 @@ export function ArcadeChat({
     if (el) el.scrollTop = el.scrollHeight
   }, [count])
 
+  const say = usePlayerText()
   const send = async () => {
     const body = text.trim()
     if (!body) return
@@ -94,7 +96,7 @@ export function ArcadeChat({
   return (
     <div className={cn('flex min-h-0 flex-col gap-2', className)}>
       <ul ref={listRef} className="devo-scroll flex min-h-0 flex-1 flex-col gap-1 overflow-y-auto pr-1" aria-live="polite">
-        {count === 0 && <li className="py-6 text-center font-body text-[15px] text-dv-text-3">Bem-vindo ao chat. Seja o primeiro a falar.</li>}
+        {count === 0 && <li className="py-6 text-center font-body text-[15px] text-dv-text-3">{say('{Bem-vindo|Bem-vinda} ao chat. Seja {o primeiro|a primeira} a falar.')}</li>}
         {lines.map((m) => (
           <li key={m.id} className="animate-dv-fade border-l border-transparent px-2 py-1 hover:border-dv-gold/50 hover:bg-white/[0.03]">
             <ChatMessage m={m} />
