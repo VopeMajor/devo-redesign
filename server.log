@@ -1,0 +1,8 @@
+$ next start
+▲ Next.js 16.4.1
+- Local:         http://localhost:3000
+- Network:       http://10.1.0.44:3000
+✓ Ready in 166ms
+✓ Running next.config.mjs took 26ms
+(node:3368) DeprecationWarning: Calling client.query() when the client is already executing a query is deprecated and will be removed in pg@9.0. Use async/await or an external async flow control mechanism instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)

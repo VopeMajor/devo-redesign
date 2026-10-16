@@ -1,0 +1,363 @@
+{
+  "base": "http://localhost:3000",
+  "shots": [
+    {
+      "name": "60-staff-jogador-record",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "60-staff-jogador-inscricao-em-analise",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "60-staff-jogador-convites",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "61-staff-dealer-mesa",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "61-staff-dealer-inscricoes",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "61-staff-dealer-inscricao-aceita",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "61-staff-dealer-decisao",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "61-staff-dealer-decisao-lista",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "61-staff-dealer-aplicar-confirmar",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "61-staff-dealer-aplicado",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "61-staff-dealer-convocar",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "61-staff-dealer-convocar-recompensas",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "61-staff-dealer-recompensas",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "61-staff-dealer-recompensas-scroll",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "61-staff-erro",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "62-staff-anfitriao-mesa",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "62-staff-anfitriao-aprovacoes",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "62-staff-anfitriao-aprovado",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "62-staff-anfitriao-tutorial-decisao",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "62-staff-anfitriao-tutorial-aplicado",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "62-staff-anfitriao-equipe",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "62-staff-anfitriao-jogador",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "62-staff-anfitriao-convites",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "63-staff-owner-record",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "63-staff-owner-mesa",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "63-staff-owner-recompensas",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "63-staff-owner-equipe",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "63-staff-owner-jogador",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "63-staff-owner-registro",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "63-staff-owner-ajustes",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "60-staff-jogador-depois",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "corp-00-home-trancado",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "corp-01-trancado",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "corp-02-holograma-chamada",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "corp-03-holograma-melissa",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "corp-04-holograma-escolha",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "corp-05-vazia",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "corp-06-vazia-fundar",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "corp-07-codigo-invalido",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "corp-08-codigo-necro",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "corp-09-codigo-previa",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "corp-10-pedido-enviado",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "corp-11-lider-heroi",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "corp-12-pedidos-perfil",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "corp-13-pedido-aprovado",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "corp-14-membros",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "corp-15-gerir-membro",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "corp-16-transferir-escolha",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "corp-17-transferida",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "corp-18-recrutamento",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "corp-19-jogos-em-breve",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "corp-20-membro-nova",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "corp-21-carta-recebida",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "corp-22-requisitos-faltando",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "corp-23-fundar-brasao",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "corp-24-fundar-custo",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "corp-25-fundacao-em-analise",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "corp-26-mesa-fila",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "corp-27-mesa-fundacao",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "corp-28-mesa-aprovada",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "corp-29-mesa-necro",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "corp-30-necro",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "corp-31-erro",
+      "note": "",
+      "url": "http://localhost:3000/"
+    }
+  ],
+  "errors": [],
+  "console": [
+    {
+      "page": "http://localhost:3000/",
+      "text": "Permissions policy violation: compute-pressure is not allowed in this document.",
+      "src": "https://www.youtube.com/s/player/0229cd64/player_embed_es6.vflset/pt_BR/base.js"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "HTTP 429",
+      "src": "http://localhost:3000/api/auth/sign-up/email"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "Failed to load resource: the server responded with a status of 429 (Too Many Requests)",
+      "src": "http://localhost:3000/api/auth/sign-up/email"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "Permissions policy violation: compute-pressure is not allowed in this document.",
+      "src": "https://www.youtube.com/s/player/0229cd64/player_embed_es6.vflset/pt_BR/base.js"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "HTTP 404",
+      "src": "http://localhost:3000/api/corporacoes?codigo=CRP-AAAA-AAAA"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "src": "http://localhost:3000/api/corporacoes?codigo=CRP-AAAA-AAAA"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "HTTP 500",
+      "src": "http://localhost:3000/api/corporacoes"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "Failed to load resource: the server responded with a status of 500 (Internal Server Error)",
+      "src": "http://localhost:3000/api/corporacoes"
+    }
+  ]
+}
