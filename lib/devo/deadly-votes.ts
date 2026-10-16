@@ -21,6 +21,15 @@ export type DeadlyVote = {
   /** Resultado público do caso (contagem de registros de sobrevivência e eliminação). */
   survivors: number
   eliminated: number
+  /** Dealer/Anfitrião que lançou a edição. */
+  host: string | null
+  /**
+   * Link do grupo do WhatsApp. O servidor só o envia a quem está inscrito e só com o caso
+   * "em-progresso" (na Mesa do Dealer vem sempre).
+   */
+  groupUrl: string | null
+  /** O Dealer já informou o link (sem revelar qual). */
+  hasGroup: boolean
 }
 
 export type VoteOutcome = 'sobreviveu' | 'eliminado'
@@ -42,12 +51,29 @@ export type DeadlyVoteEntry = {
   vote: DeadlyVote
 }
 
-export const DEADLY_VOTE_STATUS: Record<DeadlyVoteStatus, { label: string; danger: boolean }> = {
-  convocado: { label: 'Convocação aberta', danger: false },
-  'em-progresso': { label: 'Em progresso', danger: true },
-  concluido: { label: 'Concluído', danger: false },
-  cancelado: { label: 'Cancelado', danger: false },
-  falha: { label: 'Falha do sistema', danger: true },
+/**
+ * Os cinco estados do Deadly Vote (Direção 2 §4). `label` é o rótulo público; `short`, o do seletor do
+ * Dealer; `danger` marca o único estado em rubi (falha). Cancelado é cinza riscado, não alerta.
+ */
+export const DEADLY_VOTE_STATUS: Record<DeadlyVoteStatus, { label: string; short: string; hint: string; danger: boolean }> = {
+  convocado: { label: 'Não iniciado', short: 'Convocado', hint: 'Inscrições abertas', danger: false },
+  'em-progresso': { label: 'Em andamento', short: 'Em andamento', hint: 'Grupo aberto aos inscritos', danger: false },
+  concluido: { label: 'Encerrado', short: 'Encerrado', hint: 'Resultado registrado', danger: false },
+  cancelado: { label: 'Cancelado', short: 'Cancelado', hint: 'Edição suspensa pelo Dealer', danger: false },
+  falha: { label: 'Falha do sistema', short: 'Falha', hint: 'Caso perdido', danger: true },
+}
+
+/** Ordem do ciclo de vida (convocado → em andamento → encerrado) e os dois desvios. */
+export const STATUS_FLOW: DeadlyVoteStatus[] = ['convocado', 'em-progresso', 'concluido']
+export const STATUS_BREAK: DeadlyVoteStatus[] = ['cancelado', 'falha']
+
+const GROUP_RE = /^https?:\/\/chat\.whatsapp\.com\/(?:invite\/)?([A-Za-z0-9]{10,40})\/?(?:[?#].*)?$/i
+
+/** Normaliza o link de convite de grupo do WhatsApp (https://chat.whatsapp.com/<código>); null se inválido. */
+export function normalizeGroupUrl(raw: unknown): string | null {
+  if (typeof raw !== 'string') return null
+  const m = GROUP_RE.exec(raw.trim())
+  return m ? `https://chat.whatsapp.com/${m[1]}` : null
 }
 
 export const OUTCOME_LABEL = { sobreviveu: 'Sobreviveu', eliminado: 'Eliminado' } as const
@@ -65,7 +91,7 @@ export function arcLabel(arc: string | null | undefined) {
 
 export function toEntry(v: DeadlyVote): DeadlyVoteEntry {
   const parts = [arcLabel(v.arc), v.outcome ? OUTCOME_LABEL[v.outcome] : null]
-  if (!v.joined && v.status === 'convocado') parts.push('Inscrições abertas')
+  if (!v.joined && v.status === 'convocado') parts.push(DEADLY_VOTE_STATUS.convocado.hint)
   if (v.maxParticipants) parts.push(`${v.participants}/${v.maxParticipants} participantes`)
   return { id: v.id, at: v.startsAt, title: voteTitle(v), detail: parts.filter(Boolean).join(' · ') || undefined, status: v.status, vote: v }
 }

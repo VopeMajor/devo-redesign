@@ -3,11 +3,12 @@
 import { Copy, Plus, Trash2 } from 'lucide-react'
 import { type CSSProperties, useState } from 'react'
 import useSWR from 'swr'
-import { Badge, Button, GlyphCheck, IconButton, Panel, Spinner } from '@/components/devo/kit'
+import { GlyphCheck, IconButton, RecordPanel, Spinner } from '@/components/devo/kit'
 import { playSfx } from '@/lib/devo/audio'
 import type { PlayerRole } from '@/lib/devo/deadly-votes'
 import type { Invite, InvitesPayload } from '@/lib/devo/invites-server'
 import { cn } from '@/lib/utils'
+import { RecButton, RecInput, RecLabel, RecTag } from './record-ui'
 
 const KEY = '/api/invites'
 const ROLE_LABEL: Record<PlayerRole, string> = { player: 'Jogador', dealer: 'Dealer', admin: 'Admin' }
@@ -43,7 +44,7 @@ function CopyButton({ code, className }: { code: string; className?: string }) {
         })
       }}
     >
-      {done ? <GlyphCheck className="text-dv-cobalt-text" /> : <Copy strokeWidth={1.4} />}
+      {done ? <GlyphCheck className="text-dv-amethyst-text" /> : <Copy strokeWidth={1.4} />}
     </IconButton>
   )
 }
@@ -90,14 +91,14 @@ export function InvitePanel() {
 
   return (
     <div className="flex flex-col gap-5">
-      <Panel kicker="Gerência · Acesso" title="Gerar convite" jp="招待状" tone="cobalt" cut="diag" pad="md" aria-label="Gerar convite">
-        <p className="font-body text-[15px] leading-relaxed text-dv-text-2">
+      <RecordPanel title="Gerar convite" jp="招待状" chamfer>
+        <p className="font-body text-[15px] leading-relaxed text-in-fg-2">
           Cada código vale para uma única conta. Depois de usado, a pessoa entra por Continuar com usuário e senha.
         </p>
         <div className="mt-4 flex flex-col gap-4">
           {data && data.canGrant.length > 1 && (
             <div className="flex flex-col gap-1.5">
-              <span className="dv-label text-[10px] text-dv-text-3">Papel</span>
+              <RecLabel>Papel</RecLabel>
               <div role="radiogroup" aria-label="Papel do convite" className="flex flex-wrap gap-1">
                 {data.canGrant.map((r) => (
                   <button
@@ -110,17 +111,12 @@ export function InvitePanel() {
                       setRole(r)
                     }}
                     className={cn(
-                      'dv-focus group relative inline-flex min-h-11 flex-1 items-center justify-center px-4 font-mono text-[12px] uppercase tracking-[0.18em] transition-colors',
-                      role === r ? 'text-white' : 'text-dv-text-2 hover:text-dv-text',
+                      'dv-focus dv-cut-diag group relative inline-flex min-h-11 flex-1 items-center justify-center gap-2 px-4 font-sans text-[11px] font-medium uppercase tracking-[0.16em] transition-colors duration-200',
+                      role === r ? 'bg-[linear-gradient(180deg,#f7f6f3,#e3e1dc)] text-[#0c0c0e] shadow-[inset_0_0_0_1px_#bab09f,0_0_16px_-6px_rgba(138,124,200,0.8)]' : 'text-in-fg-2 shadow-[inset_0_0_0_1px_var(--in-line-strong)] hover:text-in-fg',
                     )}
+                    style={{ '--dv-cut': '7px' } as CSSProperties}
                   >
-                    <span
-                      aria-hidden="true"
-                      className={cn(
-                        'absolute inset-x-0 inset-y-1 -skew-x-[14deg] border transition-colors duration-200',
-                        role === r ? 'border-dv-cobalt bg-dv-cobalt-dim shadow-[0_0_14px_-4px_var(--dv-cobalt)]' : 'border-dv-line-strong bg-dv-ink-2/80 group-hover:border-dv-text-3',
-                      )}
-                    />
+                    {role === r && <span aria-hidden="true" className="size-1.5 rotate-45 bg-dv-amethyst" />}
                     <span className="relative">{ROLE_LABEL[r]}</span>
                   </button>
                 ))}
@@ -128,15 +124,8 @@ export function InvitePanel() {
             </div>
           )}
           <label className="flex min-w-0 flex-col gap-1.5">
-            <span className="dv-label text-[10px] text-dv-text-3">Nota (opcional)</span>
-            <input
-              value={note}
-              onChange={(e) => setNote(e.target.value)}
-              maxLength={60}
-              placeholder="Para quem é este convite?"
-              className="dv-focus dv-cut-diag h-12 bg-dv-ink px-3.5 font-sans text-[15px] text-dv-text shadow-[inset_0_0_0_1px_var(--dv-line-strong)] outline-none placeholder:text-dv-text-3 focus:shadow-[inset_0_0_0_1px_var(--dv-cobalt)]"
-              style={{ '--dv-cut': '8px' } as CSSProperties}
-            />
+            <RecLabel hint="opcional">Nota</RecLabel>
+            <RecInput value={note} onChange={(e) => setNote(e.target.value)} maxLength={60} placeholder="Para quem é este convite?" />
           </label>
           {data?.role === 'admin' && (
             <label className="flex min-h-11 cursor-pointer items-center gap-3">
@@ -144,57 +133,46 @@ export function InvitePanel() {
                 type="checkbox"
                 checked={test}
                 onChange={(e) => setTest(e.target.checked)}
-                className="dv-focus peer size-5 shrink-0 cursor-pointer appearance-none border border-dv-line-strong bg-dv-ink transition-colors checked:border-dv-cobalt checked:bg-dv-cobalt"
+                className="dv-focus peer size-5 shrink-0 cursor-pointer appearance-none border border-in-line-strong bg-transparent transition-colors checked:border-[#ece5d8] checked:bg-[#f1f0ee]"
               />
-              <GlyphCheck aria-hidden="true" className="pointer-events-none -ml-8 size-5 p-0.5 text-white opacity-0 peer-checked:opacity-100" />
+              <GlyphCheck aria-hidden="true" className="pointer-events-none -ml-8 size-5 p-0.5 text-[#0c0c0e] opacity-0 peer-checked:opacity-100" />
               <span className="flex flex-col">
-                <span className="font-mono text-[12px] uppercase tracking-[0.16em] text-dv-text">Conta de teste</span>
-                <span className="font-sans text-[12px] text-dv-text-3">Fora de ranking, apostas e prêmios</span>
+                <span className="font-mono text-[12px] uppercase tracking-[0.16em] text-in-fg">Conta de teste</span>
+                <span className="font-sans text-[12px] text-in-fg-3">Fora de ranking, apostas e prêmios</span>
               </span>
             </label>
           )}
-          <Button block loading={busy} disabled={!data} onClick={create} icon={<Plus strokeWidth={1.6} />}>
+          <RecButton block loading={busy} disabled={!data} onClick={create} icon={<Plus strokeWidth={1.4} />}>
             Gerar
-          </Button>
+          </RecButton>
         </div>
         {fresh && (
-          <div aria-live="polite" className="dv-paper-bg dv-cut-diag mt-5 flex animate-dv-pop items-center justify-between gap-3 py-3 pl-4 pr-3" style={{ '--dv-cut': '10px' } as CSSProperties}>
+          <div aria-live="polite" className="dv-porcelain dv-cut-diag mt-5 flex animate-dv-pop items-center justify-between gap-3 py-3 pl-4 pr-3" style={{ '--dv-cut': '10px' } as CSSProperties}>
             <div className="min-w-0">
-              <p className="dv-label text-[10px] text-dv-cobalt-deep">Novo código · uso único</p>
-              <p className="mt-1 truncate font-mono text-[19px] font-medium tracking-[0.12em] text-dv-paper-ink">{fresh}</p>
+              <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-[#58585e]">Novo código · uso único</p>
+              <p className="mt-1 truncate font-mono text-[19px] font-medium tracking-[0.12em] text-[#0d0d0f]">{fresh}</p>
             </div>
             <CopyButton code={fresh} />
           </div>
         )}
         {actionError && (
-          <p role="alert" className="mt-3 font-mono text-[12px] text-dv-blood-text">
+          <p role="alert" className="mt-3 font-mono text-[12px] text-in-alert">
             {actionError}
           </p>
         )}
-      </Panel>
+      </RecordPanel>
 
-      <Panel
-        kicker="Gerência · Acesso"
-        title="Convites emitidos"
-        cut="diag"
-        pad="md"
-        aria-label="Convites emitidos"
-      >
-        {data && (
-          <Badge tone="cobalt" className="mb-3">
-            {available} disponíveis
-          </Badge>
-        )}
+      <RecordPanel title="Convites emitidos" headerRight={data ? <RecTag tone="accent" dot>{available} disponíveis</RecTag> : undefined}>
         {isLoading ? (
-          <p className="flex items-center gap-2 font-body text-[15px] text-dv-text-2">
-            <Spinner className="size-4 text-dv-cobalt-text" /> Carregando…
+          <p className="flex items-center gap-2 font-body text-[15px] text-in-fg-2">
+            <Spinner className="size-4" /> Carregando…
           </p>
         ) : error ? (
-          <p role="alert" className="font-body text-[15px] text-dv-blood-text">
+          <p role="alert" className="font-body text-[15px] text-in-alert">
             {(error as Error).message}
           </p>
         ) : !invites.length ? (
-          <p className="font-body text-[15px] text-dv-text-2">Nenhum convite emitido ainda.</p>
+          <p className="font-body text-[15px] text-in-fg-2">Nenhum convite emitido ainda.</p>
         ) : (
           <ul className="flex flex-col">
             {invites.map((i) => (
@@ -202,7 +180,7 @@ export function InvitePanel() {
             ))}
           </ul>
         )}
-      </Panel>
+      </RecordPanel>
     </div>
   )
 }
@@ -210,21 +188,21 @@ export function InvitePanel() {
 function InviteRow({ invite: i, showCreator, onRevoke }: { invite: Invite; showCreator: boolean; onRevoke: (code: string) => void }) {
   const used = !!i.usedAt
   return (
-    <li className={cn('flex items-center gap-3 border-b border-dv-line py-3 last:border-b-0', used && 'opacity-60')}>
+    <li className={cn('flex items-center gap-3 border-b border-in-line py-3 last:border-b-0', used && 'opacity-60')}>
       <div className="min-w-0 flex-1">
-        <p className={cn('truncate font-mono text-[15px] tracking-[0.08em] text-dv-text', used && 'line-through decoration-dv-text-3')}>{i.code}</p>
+        <p className={cn('truncate font-mono text-[15px] tracking-[0.08em] text-in-fg', used && 'line-through decoration-in-fg-3')}>{i.code}</p>
         <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
-          <Badge tone={used ? 'neutral' : 'cobalt'} dot={!used}>
+          <RecTag tone={used ? 'muted' : 'accent'} dot={!used}>
             {used ? 'Usado' : 'Disponível'}
-          </Badge>
-          <Badge>{ROLE_LABEL[i.role]}</Badge>
+          </RecTag>
+          <RecTag>{ROLE_LABEL[i.role]}</RecTag>
           {i.isTest && (
             <span title="Fora de ranking, apostas e prêmios">
-              <Badge tone="paper">Teste</Badge>
+              <RecTag tone="solid">Teste</RecTag>
             </span>
           )}
         </div>
-        <p className="mt-1.5 truncate font-sans text-[12px] text-dv-text-3">
+        <p className="mt-1.5 truncate font-sans text-[12px] text-in-fg-3">
           {used ? `${i.usedBy ?? 'Conta criada'} · ${fmt(i.usedAt!)}` : `Criado ${fmt(i.createdAt)}`}
           {showCreator && i.createdBy ? ` · por ${i.createdBy}` : ''}
           {i.note ? ` · ${i.note}` : ''}
@@ -233,7 +211,7 @@ function InviteRow({ invite: i, showCreator, onRevoke }: { invite: Invite; showC
       {!used && (
         <div className="flex shrink-0 gap-1.5">
           <CopyButton code={i.code} />
-          <IconButton label={`Revogar código ${i.code}`} variant="secondary" onClick={() => onRevoke(i.code)} className="[&_svg]:transition-colors hover:[&_svg]:text-dv-blood-text">
+          <IconButton label={`Revogar código ${i.code}`} variant="secondary" onClick={() => onRevoke(i.code)} className="[&_svg]:transition-colors hover:[&_svg]:text-in-alert">
             <Trash2 strokeWidth={1.4} />
           </IconButton>
         </div>

@@ -502,6 +502,105 @@ if (want('sistema') || want('apps') || want('jogos')) {
         }
       }
     })
+    // Deadly Vote (Direção 2 §4): o admin lança uma edição, se inscreve, abre o caso e informa o link do
+    // grupo. Fotografa o inscrito com "Entrar no grupo", o caso em andamento sem inscrição, os cinco
+    // estados (livro + arquivo), os dossiês de falha/cancelado/andamento, a Mesa com o link e o Gerente.
+    await step('record-deadly-vote', async () => {
+      const post = (body) => api(page, '/api/record', body)
+      const made = await post({
+        action: 'create',
+        title: 'Valsa do Relógio Parado',
+        arc: 'Arco II',
+        briefing: 'Quem parar de dançar perde o compasso. Quem perder o compasso perde horas.',
+        startsAt: Date.now() - 20 * 60_000,
+        maxParticipants: 8,
+      })
+      const id = (() => {
+        try {
+          return JSON.parse(made.text).id
+        } catch {
+          return null
+        }
+      })()
+      if (!id) throw new Error(`create: ${made.status} ${made.text}`)
+      for (const body of [
+        { action: 'join', voteId: id },
+        { action: 'status', voteId: id, status: 'em-progresso' },
+        { action: 'group', voteId: id, groupUrl: 'https://chat.whatsapp.com/DevoTesteValsa0002' },
+      ]) {
+        const r = await post(body)
+        if (r.status >= 400) manifest.errors.push({ step: `record-deadly-vote-${body.action}`, error: `${r.status} ${r.text}` })
+      }
+      const tab = (name) => page.getByRole('tab', { name: new RegExp(name, 'i') }).first()
+      const toView = (sel, block = 'start') =>
+        page
+          .locator(sel)
+          .first()
+          .evaluate((el, b) => el.scrollIntoView({ block: b }), block)
+          .catch(() => {})
+      await openApp(page, 'Record')
+      await shot(page, '20-record-dv-gerente')
+      await toView('section[aria-label="Avisos do Gerente"]', 'center')
+      await wait(700)
+      await shot(page, '20-record-dv-gerente-aviso')
+      if (await tryClick(tab('Deadly Votes'))) {
+        await wait(1500)
+        await toView('article[aria-label="Convocação: Valsa do Relógio Parado"]')
+        await wait(700)
+        await shot(page, '20-record-dv-andamento')
+        await toView('article[aria-label="Convocação: Valsa do Relógio Parado"]', 'end')
+        await wait(600)
+        await shot(page, '20-record-dv-entrar-no-grupo')
+        await toView('article[aria-label="Convocação: Baile dos Ponteiros"]', 'end')
+        await wait(600)
+        await shot(page, '20-record-dv-nao-inscrito')
+        await toView('section[aria-label="Estados dos casos"]')
+        await wait(700)
+        await shot(page, '20-record-dv-estados')
+        for (const [name, file] of [
+          [/Torre Invertida/, '20-record-dv-dossie-falha'],
+          [/Jantar de Prata/, '20-record-dv-dossie-cancelado'],
+        ]) {
+          await toView('section[aria-labelledby="dv-history"]')
+          if (await tryClick(btn(page, name))) {
+            await wait(1400)
+            await shot(page, file)
+            await tryClick(btn(page, 'Todos os Deadly Votes'))
+            await wait(900)
+          }
+        }
+        await toView('[role="tablist"]')
+        if (await tryClick(btn(page, 'Ver dossiê do caso'))) {
+          await wait(1400)
+          await page.mouse.wheel(0, 700)
+          await wait(700)
+          await shot(page, '20-record-dv-dossie-andamento')
+          await tryClick(btn(page, 'Todos os Deadly Votes'))
+          await wait(800)
+        }
+      }
+      if (await tryClick(tab('Convites'))) {
+        await wait(1800)
+        await toView('article[aria-label*="Valsa do Relógio Parado"]')
+        await wait(900)
+        await shot(page, '20-record-dealer-link')
+        await page.mouse.wheel(0, 420)
+        await wait(600)
+        await shot(page, '20-record-dealer-link-scroll')
+      }
+    })
+    // Record no desktop (janela), com o mesmo Veterano.
+    await step('record-desktop', async () => {
+      const d = await device('desktop')
+      await d.page.goto(BASE, { waitUntil: 'networkidle' })
+      const inn = await api(d.page, '/api/auth/sign-in/username', { username: 'Veterano', password: 'teste123' })
+      if (inn.status >= 400) throw new Error(`signin ${inn.status} ${inn.text}`)
+      await enterOS(d.page)
+      await d.page.getByRole('button', { name: 'Record', exact: true }).first().dblclick({ timeout: 10000 })
+      await wait(2600)
+      await shot(d.page, '20-record-desktop')
+      await d.ctx.close()
+    })
     await step('pulso', async () => {
       await openApp(page, 'Pulso')
       await shot(page, '21-pulso')

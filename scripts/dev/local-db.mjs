@@ -19,6 +19,7 @@ const db = await PGlite.create(dataDir)
 const files = [
   join(here, '00-base.sql'),
   join(root, 'scripts', 'deadly-votes-migration.sql'),
+  join(root, 'scripts', 'deadly-votes-group-migration.sql'),
   join(root, 'scripts', 'auth-migration.sql'),
   join(root, 'scripts', 'arcade-migration.sql'),
   join(root, 'scripts', 'arcade-points-migration.sql'),
