@@ -1,5 +1,5 @@
 import { pool } from '@/lib/db'
-import type { DeadlyVote, DeadlyVoteStatus, PlayerRole, RecordPayload, StaffBoard, StaffEntry } from './deadly-votes'
+import { type DeadlyVote, type DeadlyVoteStatus, normalizeGroupUrl, type PlayerRole, type RecordPayload, type StaffBoard, type StaffEntry } from './deadly-votes'
 
 export class RecordError extends Error {
   constructor(
@@ -31,6 +31,9 @@ type VoteRow = {
   outcome: 'sobreviveu' | 'eliminado' | null
   survivors: string | number
   eliminated: string | number
+  host: string | null
+  group_url: string | null
+  has_group: boolean
 }
 
 function toVote(r: VoteRow): DeadlyVote {
@@ -49,13 +52,18 @@ function toVote(r: VoteRow): DeadlyVote {
     outcome: r.outcome,
     survivors: Number(r.survivors ?? 0),
     eliminated: Number(r.eliminated ?? 0),
+    host: r.host ?? null,
+    groupUrl: r.group_url ?? null,
+    hasGroup: !!r.has_group,
   }
 }
 
 /** Colunas comuns: inscritos e resultado público (sobreviventes / eliminados) de cada caso. */
 const VOTE_COUNTS = `(SELECT count(*) FROM deadly_vote_entries c WHERE c.vote_id = v.id) AS participants,
               (SELECT count(*) FROM deadly_vote_entries c WHERE c.vote_id = v.id AND c.outcome = 'sobreviveu') AS survivors,
-              (SELECT count(*) FROM deadly_vote_entries c WHERE c.vote_id = v.id AND c.outcome = 'eliminado') AS eliminated`
+              (SELECT count(*) FROM deadly_vote_entries c WHERE c.vote_id = v.id AND c.outcome = 'eliminado') AS eliminated,
+              (SELECT h.name FROM players h WHERE h.id = v.created_by) AS host,
+              (v.whatsapp_url IS NOT NULL) AS has_group`
 
 export async function getRecord(playerId: string): Promise<RecordPayload> {
   const [me] = (
@@ -66,12 +74,14 @@ export async function getRecord(playerId: string): Promise<RecordPayload> {
     await pool.query<VoteRow>(
       `SELECT v.id, v.number, v.title, v.arc, v.briefing, v.status, v.starts_at, v.ends_at, v.max_participants,
               ${VOTE_COUNTS},
-              e.joined_at, e.outcome
+              e.joined_at, e.outcome,
+              -- O link do grupo só chega a quem está inscrito, e só enquanto o caso está em andamento.
+              CASE WHEN e.player_id IS NOT NULL AND v.status = 'em-progresso' THEN v.whatsapp_url END AS group_url
          FROM deadly_votes v
          LEFT JOIN deadly_vote_entries e ON e.vote_id = v.id AND e.player_id = $1
-        -- Histórico público: convocações abertas, votos em andamento e casos encerrados
-        -- (exceto cancelados de que o participante não fez parte).
-        WHERE e.player_id IS NOT NULL OR v.status <> 'cancelado'
+        -- Histórico público: convocações abertas, votos em andamento e casos encerrados. Cancelados
+        -- aparecem para quem se inscreveu e, para os demais, por 30 dias (o aviso de suspensão).
+        WHERE e.player_id IS NOT NULL OR v.status <> 'cancelado' OR v.updated_at > now() - interval '30 days'
         ORDER BY v.starts_at DESC
         LIMIT 100`,
       [playerId],
@@ -147,7 +157,7 @@ export async function getStaffBoard(playerId: string): Promise<StaffBoard> {
     await pool.query<VoteRow>(
       `SELECT v.id, v.number, v.title, v.arc, v.briefing, v.status, v.starts_at, v.ends_at, v.max_participants,
               ${VOTE_COUNTS},
-              NULL::timestamptz AS joined_at, NULL::text AS outcome
+              NULL::timestamptz AS joined_at, NULL::text AS outcome, v.whatsapp_url AS group_url
          FROM deadly_votes v
         ORDER BY (v.status IN ('convocado', 'em-progresso')) DESC, v.starts_at DESC
         LIMIT 30`,
@@ -182,14 +192,28 @@ export async function createVote(playerId: string, input: Record<string, unknown
   if (title.length < 2) throw new RecordError('Título obrigatório.')
   if (!Number.isFinite(startsAt)) throw new RecordError('Data de início inválida.')
   const max = input.maxParticipants == null ? null : Math.max(1, Math.min(999, Math.floor(Number(input.maxParticipants))))
+  const rawGroup = text(input.groupUrl, 200)
+  const group = rawGroup ? normalizeGroupUrl(rawGroup) : null
+  if (rawGroup && !group) throw new RecordError('Link do grupo inválido. Use o convite do WhatsApp (https://chat.whatsapp.com/…).')
   const [row] = (
     await pool.query<{ id: string }>(
-      `INSERT INTO deadly_votes (title, arc, briefing, starts_at, max_participants, created_by)
-       VALUES ($1, $2, $3, to_timestamp($4 / 1000.0), $5, $6) RETURNING id`,
-      [title, text(input.arc, 60) || null, text(input.briefing, 600) || null, startsAt, Number.isFinite(max) ? max : null, playerId],
+      `INSERT INTO deadly_votes (title, arc, briefing, starts_at, max_participants, created_by, whatsapp_url)
+       VALUES ($1, $2, $3, to_timestamp($4 / 1000.0), $5, $6, $7) RETURNING id`,
+      [title, text(input.arc, 60) || null, text(input.briefing, 600) || null, startsAt, Number.isFinite(max) ? max : null, playerId, group],
     )
   ).rows
   return row.id
+}
+
+/** O Dealer informa, troca ou remove (null/vazio) o link do grupo do WhatsApp de um caso. */
+export async function setVoteGroup(playerId: string, voteId: string, url: unknown) {
+  await requireStaff(playerId)
+  if (!UUID_RE.test(voteId)) throw new RecordError('ID inválido.')
+  const empty = url === null || (typeof url === 'string' && url.trim() === '')
+  const group = empty ? null : normalizeGroupUrl(url)
+  if (!empty && !group) throw new RecordError('Link do grupo inválido. Use o convite do WhatsApp (https://chat.whatsapp.com/…).')
+  const res = await pool.query('UPDATE deadly_votes SET whatsapp_url = $2, updated_at = now() WHERE id = $1', [voteId, group])
+  if (!res.rowCount) throw new RecordError('Deadly Vote não encontrado.', 404)
 }
 
 export async function setVoteStatus(playerId: string, voteId: string, status: unknown) {

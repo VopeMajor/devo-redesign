@@ -3,8 +3,9 @@
 import { Camera, RotateCcw, Trash2, ZoomIn, ZoomOut } from 'lucide-react'
 import { type CSSProperties, useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } from 'react'
 import { createPortal } from 'react-dom'
-import { Button, Frame, FrameCorners, GlyphCheck, GlyphClip, GlyphClose, IconButton, Spinner } from '@/components/devo/kit'
+import { BrassCorners, GlyphCheck, GlyphClip, GlyphClose, IconButton, Spinner } from '@/components/devo/kit'
 import { playSfx } from '@/lib/devo/audio'
+import { RecButton } from './record-ui'
 import { recordAction } from './use-deadly-votes'
 
 const OUT_W = 480
@@ -14,6 +15,13 @@ const FRAME_H = 320
 const MAX_ZOOM = 4
 
 type Crop = { zoom: number; x: number; y: number }
+
+/** Régua de zoom: trilho de aço fino, cabeça em losango ametista pequena. */
+const RANGE =
+  'dv-focus h-11 flex-1 cursor-pointer appearance-none bg-transparent ' +
+  '[&::-webkit-slider-runnable-track]:h-[2px] [&::-webkit-slider-runnable-track]:bg-[linear-gradient(90deg,#6b6357,#ece5d8_50%,#6b6357)] ' +
+  '[&::-webkit-slider-thumb]:-mt-[6px] [&::-webkit-slider-thumb]:size-3.5 [&::-webkit-slider-thumb]:rotate-45 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:border [&::-webkit-slider-thumb]:border-[#ece5d8] [&::-webkit-slider-thumb]:bg-[#8a7cc8] [&::-webkit-slider-thumb]:shadow-[0_0_8px_rgba(138,124,200,0.7)] ' +
+  '[&::-moz-range-track]:h-[2px] [&::-moz-range-track]:bg-[#bab09f] [&::-moz-range-thumb]:size-3 [&::-moz-range-thumb]:rotate-45 [&::-moz-range-thumb]:rounded-none [&::-moz-range-thumb]:border [&::-moz-range-thumb]:border-[#ece5d8] [&::-moz-range-thumb]:bg-[#8a7cc8]'
 
 /** Escala mínima para a imagem cobrir todo o quadro 3:4. */
 function coverScale(img: { width: number; height: number }) {
@@ -67,15 +75,16 @@ function PhotoCropper({ bitmap, url, onCancel, onConfirm }: { bitmap: ImageBitma
   const zoomTo = (z: number) => setClamped({ ...crop, zoom: Math.min(MAX_ZOOM, Math.max(1, z)) })
 
   return createPortal(
-    <div className="fixed inset-0 z-[130] grid animate-dv-fade place-items-center bg-[rgba(5,7,13,0.82)] p-4 backdrop-blur-sm" onClick={onCancel}>
+    <div className="fixed inset-0 z-[130] grid animate-dv-fade place-items-center bg-[rgba(10,10,12,0.84)] p-4 backdrop-blur-sm" onClick={onCancel}>
       <div role="dialog" aria-modal="true" aria-label="Ajustar foto do perfil" onClick={(e) => e.stopPropagation()} className="w-full max-w-sm animate-dv-pop">
-        <Frame tone="cobalt" pad="none" cutSize={16} glow>
-          <header className="flex items-center justify-between gap-3 border-b border-dv-line px-4 py-2">
+        <div className="dv-interior-dark dv-record-panel dv-cut relative text-dv-text shadow-[0_24px_60px_-10px_rgba(0,0,0,0.9)]" style={{ '--dv-cut': '14px' } as CSSProperties}>
+          <BrassCorners size={24} inset={3} tone="silver" />
+          <header className="relative flex items-center justify-between gap-3 px-4 pb-2.5 pt-3">
             <div>
-              <p className="dv-label text-[10px] text-dv-cobalt-text">Record File · Foto</p>
-              <p className="flex items-baseline gap-2.5 font-display text-[18px] font-semibold uppercase tracking-[0.08em] text-dv-text">
+              <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-dv-gold">Record File · Foto</p>
+              <p className="mt-0.5 flex items-baseline gap-2.5 font-serif text-[22px] font-light uppercase leading-none tracking-[0.04em] text-dv-text">
                 Ajustar foto
-                <span lang="ja" className="font-sans text-[11px] font-normal tracking-[0.22em] text-dv-text-3">
+                <span lang="ja" className="font-sans text-[10px] font-normal tracking-[0.16em] text-dv-text-3">
                   トリミング
                 </span>
               </p>
@@ -83,10 +92,11 @@ function PhotoCropper({ bitmap, url, onCancel, onConfirm }: { bitmap: ImageBitma
             <IconButton label="Cancelar" variant="ghost" onClick={onCancel} sfx="close">
               <GlyphClose />
             </IconButton>
+            <span aria-hidden="true" className="absolute inset-x-4 bottom-0 h-px bg-[linear-gradient(90deg,#bab09f_0%,rgba(186,176,159,0.35)_45%,transparent_100%)]" />
           </header>
 
           <div className="flex flex-col items-center gap-3 p-5">
-            <div className="relative bg-[#fbf8f0] p-1.5 pb-5 shadow-[0_10px_24px_rgba(0,0,0,0.5)]">
+            <div className="relative bg-[#fbfaf7] p-1.5 pb-5 shadow-[0_10px_24px_rgba(0,0,0,0.5)]">
               <div
                 className="relative cursor-grab touch-none select-none overflow-hidden bg-black active:cursor-grabbing"
                 style={{ width: FRAME_W, height: FRAME_H }}
@@ -109,12 +119,12 @@ function PhotoCropper({ bitmap, url, onCancel, onConfirm }: { bitmap: ImageBitma
                   }}
                 />
                 <span aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,transparent_33%,rgba(255,255,255,0.14)_33%,rgba(255,255,255,0.14)_calc(33%+1px),transparent_calc(33%+1px),transparent_66%,rgba(255,255,255,0.14)_66%,rgba(255,255,255,0.14)_calc(66%+1px),transparent_calc(66%+1px)),linear-gradient(to_bottom,transparent_33%,rgba(255,255,255,0.14)_33%,rgba(255,255,255,0.14)_calc(33%+1px),transparent_calc(33%+1px),transparent_66%,rgba(255,255,255,0.14)_66%,rgba(255,255,255,0.14)_calc(66%+1px),transparent_calc(66%+1px))]" />
-                <FrameCorners tone="cobalt" size={18} inset={4} />
+                <BrassCorners size={18} inset={4} tone="silver" />
               </div>
-              <GlyphClip className="absolute -top-4 left-4 size-8 -rotate-12 text-dv-gold" />
+              <GlyphClip className="absolute -top-4 left-4 size-8 -rotate-12 text-[#8f8e8b]" />
             </div>
 
-            <p className="dv-label text-center text-[10px] text-dv-text-3">Arraste para posicionar · pince ou role para zoom</p>
+            <p className="text-center font-mono text-[10px] uppercase tracking-[0.16em] text-dv-text-3">Arraste para posicionar · pince ou role para zoom</p>
 
             <div className="flex w-full items-center gap-1">
               <IconButton label="Diminuir zoom" variant="ghost" onClick={() => zoomTo(crop.zoom / 1.2)}>
@@ -128,7 +138,7 @@ function PhotoCropper({ bitmap, url, onCancel, onConfirm }: { bitmap: ImageBitma
                 value={crop.zoom}
                 onChange={(e) => zoomTo(Number(e.target.value))}
                 aria-label="Zoom"
-                className="h-11 flex-1 accent-[var(--dv-cobalt)]"
+                className={RANGE}
               />
               <IconButton label="Aumentar zoom" variant="ghost" onClick={() => zoomTo(crop.zoom * 1.2)}>
                 <ZoomIn strokeWidth={1.4} />
@@ -137,14 +147,14 @@ function PhotoCropper({ bitmap, url, onCancel, onConfirm }: { bitmap: ImageBitma
           </div>
 
           <footer className="flex items-center gap-2 border-t border-dv-line p-3">
-            <Button variant="ghost" size="sm" onClick={() => setCrop({ zoom: 1, x: 0, y: 0 })} icon={<RotateCcw strokeWidth={1.4} />}>
+            <RecButton variant="ghost" size="sm" onClick={() => setCrop({ zoom: 1, x: 0, y: 0 })} icon={<RotateCcw strokeWidth={1.4} />}>
               Redefinir
-            </Button>
-            <Button size="sm" className="ml-auto" sfx="confirm" onClick={() => onConfirm(renderCrop(bitmap, crop))} icon={<GlyphCheck />}>
+            </RecButton>
+            <RecButton size="sm" className="ml-auto" sfx="confirm" onClick={() => onConfirm(renderCrop(bitmap, crop))} icon={<GlyphCheck />}>
               Salvar foto
-            </Button>
+            </RecButton>
           </footer>
-        </Frame>
+        </div>
       </div>
     </div>,
     document.body,
@@ -191,20 +201,26 @@ export function PhotoPicker({ hasPhoto, onChanged }: { hasPhoto: boolean; onChan
           aria-label="Escolher foto do perfil"
           aria-busy={busy || undefined}
           style={{ '--dv-cut': '8px' } as CSSProperties}
-          className="dv-focus dv-cut group relative flex h-11 min-w-0 flex-1 items-center justify-center gap-1.5 bg-dv-ink px-1.5 text-white transition-transform duration-[120ms] enabled:active:scale-[0.97] disabled:opacity-60"
+          className="dv-focus dv-cut-diag group relative flex h-11 min-w-0 flex-1 items-center justify-center gap-2 bg-[#1c1c1f] px-1.5 text-white shadow-[inset_0_0_0_1px_rgba(186,176,159,0.45)] transition-[transform,box-shadow] duration-[120ms] enabled:hover:shadow-[inset_0_0_0_1px_#bab09f,0_0_16px_-6px_rgba(138,124,200,0.7)] enabled:active:scale-[0.97] disabled:opacity-60"
         >
-          <span aria-hidden="true" className="dv-cut absolute inset-0 shadow-[inset_0_0_0_1px_rgba(125,151,255,0.45)] transition-colors group-enabled:group-hover:bg-dv-cobalt-dim" style={{ '--dv-cut': '8px' } as CSSProperties} />
-          {busy ? <Spinner className="relative size-4" /> : <Camera className="relative size-4 shrink-0 text-dv-cobalt-text" strokeWidth={1.4} aria-hidden="true" />}
-          <span className="relative whitespace-nowrap font-mono text-[11px] uppercase tracking-[0.08em]">{hasPhoto ? 'Trocar' : 'Foto'}</span>
+          {busy ? <Spinner className="relative size-4" /> : <Camera className="relative size-4 shrink-0 text-[#d6cdbd]" strokeWidth={1.4} aria-hidden="true" />}
+          <span className="relative whitespace-nowrap font-sans text-[11px] font-medium uppercase tracking-[0.16em]">{hasPhoto ? 'Trocar' : 'Foto'}</span>
         </button>
         {hasPhoto && (
-          <IconButton label="Remover foto" variant="secondary" disabled={busy} onClick={() => send(null)}>
-            <Trash2 strokeWidth={1.4} />
-          </IconButton>
+          <button
+            type="button"
+            aria-label="Remover foto"
+            disabled={busy}
+            onClick={() => send(null)}
+            style={{ '--dv-cut': '8px' } as CSSProperties}
+            className="dv-focus dv-cut-diag grid size-11 shrink-0 place-items-center text-[#1c1c1f] shadow-[inset_0_0_0_1px_rgba(13,13,15,0.4)] transition-colors hover:text-[#a3121f] disabled:opacity-50"
+          >
+            <Trash2 className="size-4" strokeWidth={1.4} aria-hidden="true" />
+          </button>
         )}
       </div>
       {error && (
-        <p role="alert" className="font-mono text-[11px] leading-snug text-dv-blood">
+        <p role="alert" className="font-mono text-[11px] leading-snug text-[#a3121f]">
           {error}
         </p>
       )}

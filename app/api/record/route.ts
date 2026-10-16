@@ -1,5 +1,5 @@
 import { getCurrentPlayer } from '@/app/actions/player'
-import { createVote, getRecord, getStaffBoard, joinVote, leaveVote, RecordError, setAvatar, setEntryOutcome, setVoteStatus } from '@/lib/devo/record-server'
+import { createVote, getRecord, getStaffBoard, joinVote, leaveVote, RecordError, setAvatar, setEntryOutcome, setVoteGroup, setVoteStatus } from '@/lib/devo/record-server'
 
 export const dynamic = 'force-dynamic'
 
@@ -42,6 +42,9 @@ export async function POST(req: Request) {
         return Response.json({ ok: true, id: await createVote(player.id, body) })
       case 'status':
         await setVoteStatus(player.id, voteId, body.status)
+        break
+      case 'group':
+        await setVoteGroup(player.id, voteId, body.groupUrl ?? null)
         break
       case 'outcome':
         await setEntryOutcome(player.id, voteId, String(body.playerId ?? ''), body.outcome ?? null)

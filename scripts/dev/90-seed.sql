@@ -53,13 +53,25 @@ SELECT '00000000-0000-4000-8000-000000000007', g.game, 'casual', 'Rival', 1000, 
 FROM (VALUES ('chess'), ('memory-rush'), ('hot-bomb'), ('bluff')) AS g(game)
 CROSS JOIN generate_series(1, 3) AS n;
 
-INSERT INTO deadly_votes (title, arc, briefing, status, starts_at, ends_at, max_participants, created_by) VALUES
-  ('A Sala Sem Relógio', 'Arco I', 'Doze pessoas. Uma porta. O tempo de todos é um só.', 'concluido', now() - interval '3 days', now() - interval '3 days' + interval '2 hours', 12, '00000000-0000-4000-8000-000000000006'),
-  ('Leilão de Sombras', 'Arco I', 'Cada lance custa horas. O último lance custa mais.', 'convocado', now() + interval '1 day', NULL, 10, '00000000-0000-4000-8000-000000000006');
+-- Deadly Votes cobrindo os cinco estados (Direção 2 §4): não iniciado (convocado), em andamento,
+-- encerrado (concluído), cancelado e falha. Links de grupo fictícios (formato do WhatsApp).
+INSERT INTO deadly_votes (title, arc, briefing, status, starts_at, ends_at, max_participants, created_by, whatsapp_url, updated_at) VALUES
+  ('A Sala Sem Relógio', 'Arco I', 'Doze pessoas. Uma porta. O tempo de todos é um só.', 'concluido', now() - interval '3 days', now() - interval '3 days' + interval '2 hours', 12, '00000000-0000-4000-8000-000000000006', NULL, now() - interval '3 days'),
+  ('Leilão de Sombras', 'Arco I', 'Cada lance custa horas. O último lance custa mais.', 'convocado', now() + interval '1 day', NULL, 10, '00000000-0000-4000-8000-000000000006', NULL, now()),
+  ('Baile dos Ponteiros', 'Arco II', 'A valsa só termina quando o relógio parar. Ninguém sai do salão antes do último compasso.', 'em-progresso', now() - interval '2 hours', NULL, 8, '00000000-0000-4000-8000-000000000006', 'https://chat.whatsapp.com/DevoTesteBaile0001', now() - interval '2 hours'),
+  ('Jantar de Prata', 'Arco II', 'Talheres de prata, um lugar vazio à mesa e um voto por prato.', 'cancelado', now() - interval '5 days', now() - interval '5 days', 6, '00000000-0000-4000-8000-000000000006', NULL, now() - interval '5 days'),
+  ('Torre Invertida', 'Arco I', 'O andar de cima é o de baixo. A contagem caiu no meio da subida.', 'falha', now() - interval '8 days', now() - interval '8 days' + interval '40 minutes', 10, '00000000-0000-4000-8000-000000000006', NULL, now() - interval '8 days'),
+  ('O Primeiro Voto', 'Prólogo', 'O tribunal abriu as portas pela primeira vez.', 'concluido', now() - interval '12 days', now() - interval '12 days' + interval '3 hours', 12, '00000000-0000-4000-8000-000000000006', NULL, now() - interval '12 days');
 
 INSERT INTO deadly_vote_entries (vote_id, player_id, outcome)
 SELECT v.id, p.id, CASE WHEN p.name IN ('Nyx') THEN 'eliminado' ELSE 'sobreviveu' END
 FROM deadly_votes v, players p WHERE v.status = 'concluido' AND p.role = 'player' AND p.id::text LIKE '00000000-0000-4000-8000-%'
+ON CONFLICT DO NOTHING;
+
+-- Inscritos sem resultado no caso em andamento e nos casos interrompidos.
+INSERT INTO deadly_vote_entries (vote_id, player_id)
+SELECT v.id, p.id FROM deadly_votes v, players p
+WHERE v.status IN ('em-progresso', 'cancelado', 'falha') AND p.name IN ('Corvo', 'Ísis', 'Lírio')
 ON CONFLICT DO NOTHING;
 
 INSERT INTO arcade_chat (channel, author, player_id, body)
