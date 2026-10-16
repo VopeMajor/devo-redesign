@@ -27,44 +27,55 @@
 }
 .poco-glow { animation: poco-glow 7s ease-in-out infinite; }
 
-/* moeda: cai do alto até a boca e some; a água ondula */
+/* moeda: cai do alto até a água e some; a água ondula */
 @keyframes poco-coin {
-  0% { transform: translateY(-30px) scale(1); opacity: 0; }
+  0% { transform: translate(-50%, -20px) scale(1) rotateY(0deg); opacity: 0; }
   12% { opacity: 1; }
-  80% { transform: translateY(86px) scale(0.55); opacity: 1; }
-  100% { transform: translateY(92px) scale(0.4); opacity: 0; }
+  80% { transform: translate(-50%, 118px) scale(0.6) rotateY(540deg); opacity: 1; }
+  100% { transform: translate(-50%, 126px) scale(0.4) rotateY(640deg); opacity: 0; }
 }
-.poco-coin {
-  transform-box: fill-box;
-  transform-origin: center;
-  animation: poco-coin 820ms var(--dv-ease-in) both;
-}
+.poco-coin { animation: poco-coin 860ms var(--dv-ease-in) both; }
 @keyframes poco-ripple {
-  0%, 70% { transform: scale(0.15); opacity: 0; }
-  76% { opacity: 0.9; }
-  100% { transform: scale(1.25); opacity: 0; }
+  0%, 68% { transform: scale(0.15); opacity: 0; }
+  75% { opacity: 0.9; }
+  100% { transform: scale(1.2); opacity: 0; }
 }
-.poco-ripple {
-  transform-box: fill-box;
-  transform-origin: center;
-  animation: poco-ripple 1500ms ease-out both;
-}
+.poco-ripple { animation: poco-ripple 1500ms ease-out both; }
 
-/* manivela e corda */
+/* mecanismo: anel astral, aura, feixe, roda, partículas */
 @keyframes poco-spin { to { transform: rotate(360deg); } }
-.poco-crank { transition: transform 600ms var(--dv-ease-out); }
-.poco-crank-on { animation: poco-spin 1100ms linear infinite; }
-@keyframes poco-wind { to { transform: translateX(5.5px); } }
-.poco-rope-wind-on { animation: poco-wind 360ms linear infinite; }
+@keyframes poco-spin-rev { to { transform: rotate(-360deg); } }
+.poco-anel { animation: poco-spin 200s linear infinite; }
+.poco-ativo .poco-anel { animation: poco-spin-rev 9s linear infinite; opacity: 0.9; transition: opacity 600ms; }
+@keyframes poco-aura {
+  0%, 100% { opacity: calc(0.55 + var(--brilho, 0.5) * 0.35); transform: scale(1); }
+  50% { opacity: calc(0.75 + var(--brilho, 0.5) * 0.25); transform: scale(1.04); }
+}
+.poco-aura { animation: poco-aura 7s ease-in-out infinite; }
+.poco-ativo .poco-aura { animation-duration: 1.4s; }
+@keyframes poco-feixe {
+  0%, 100% { opacity: 0.7; }
+  50% { opacity: 1; }
+}
+.poco-feixe { animation: poco-feixe 9s ease-in-out infinite; }
+.poco-roda { transform-origin: 46% 50%; }
+.poco-roda-on { animation: poco-spin 1s linear infinite; }
+@keyframes poco-particula {
+  0% { transform: translateY(0) rotate(45deg); opacity: 0; }
+  15% { opacity: 0.9; }
+  100% { transform: translateY(-210px) rotate(45deg); opacity: 0; }
+}
+.poco-particula { animation: poco-particula 9s linear infinite; box-shadow: 0 0 6px rgba(194, 185, 236, 0.9); }
+.poco-ativo .poco-particula { animation-duration: 2.2s !important; }
 
-/* balde: sobe pela corda */
-.poco-bucket { transition: transform 1700ms cubic-bezier(0.45, 0.05, 0.25, 1); }
+/* balde: sobe pela corrente */
+.poco-bucket { transition: transform 1800ms cubic-bezier(0.45, 0.05, 0.25, 1); }
 @keyframes poco-sway {
   0%, 100% { rotate: 0deg; }
-  30% { rotate: 1.6deg; }
-  70% { rotate: -1.2deg; }
+  30% { rotate: 1.4deg; }
+  70% { rotate: -1.1deg; }
 }
-.poco-bucket-sobe { transform-origin: 200px 0; animation: poco-sway 1700ms ease-in-out; }
+.poco-bucket-sobe { transform-origin: 50% 0; animation: poco-sway 1800ms ease-in-out; }
 
 /* letreiro: duas cópias lado a lado, rolando para a esquerda */
 @keyframes poco-marquee {
@@ -87,6 +98,64 @@
 }
 .poco-halo { animation: poco-halo 1200ms var(--dv-ease-out) both; }
 
+/* revelação: raios entram girando e crescendo; silhueta acende no fim */
+@keyframes poco-raios-in {
+  0% { transform: translate(-50%, -50%) scale(0.2) rotate(0deg); opacity: 0; }
+  35% { opacity: 1; }
+  100% { transform: translate(-50%, -50%) scale(1) rotate(50deg); opacity: 0.95; }
+}
+.poco-raios-in { animation: poco-raios-in 1400ms var(--dv-ease-out) both; }
+@keyframes poco-raios-rev {
+  0% { transform: translate(-50%, -50%) scale(0.3) rotate(0deg); opacity: 0; }
+  100% { transform: translate(-50%, -50%) scale(1) rotate(-70deg); opacity: 0.8; }
+}
+.poco-raios-in-rev { animation: poco-raios-rev 1900ms var(--dv-ease-out) both; }
+@keyframes poco-raios-lento {
+  from { transform: translate(-50%, -50%) rotate(0deg); }
+  to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+.poco-raios-lento { animation: poco-raios-lento 90s linear infinite; }
+@keyframes poco-silhueta {
+  0% { transform: translateY(70px) scale(0.6); opacity: 0; }
+  45% { opacity: 1; }
+  100% { transform: translateY(0) scale(1); opacity: 1; }
+}
+.poco-silhueta { animation: poco-silhueta 1200ms var(--dv-ease-out) both; }
+
+/* aro de raridade e emersão do prêmio (os elementos ficam centrados por transform) */
+@keyframes poco-aro-in {
+  0% { transform: translate(-50%, -50%) scale(0.55) rotate(-40deg); opacity: 0; }
+  60% { opacity: 1; }
+  100% { transform: translate(-50%, -50%) scale(1) rotate(0deg); opacity: 1; }
+}
+.poco-aro-in { animation: poco-aro-in 1400ms var(--dv-ease-out) both; }
+@keyframes poco-emergir {
+  0% { transform: translateY(80px) scale(0.7); opacity: 0; clip-path: inset(0 0 100% 0); }
+  30% { opacity: 1; }
+  100% { transform: translateY(0) scale(1); opacity: 1; clip-path: inset(0 0 0 0); }
+}
+.poco-emergir { animation: poco-emergir 1400ms var(--dv-ease-out) both; }
+@keyframes poco-sombra-sai {
+  0%, 35% { opacity: 1; }
+  100% { opacity: 0; }
+}
+.poco-sombra-sai { animation: poco-sombra-sai 1400ms ease-out both; }
+@keyframes poco-respingo {
+  0% { transform: translate(-50%, -50%) scale(0.6); opacity: 0; }
+  30% { opacity: 1; }
+  100% { transform: translate(-50%, -50%) scale(1.05); opacity: 0.85; }
+}
+.poco-respingo { animation: poco-respingo 1200ms var(--dv-ease-out) both; }
+
+/* faixa de prêmios: entra pela direita, segura, sai pela esquerda */
+@keyframes poco-faixa {
+  0% { transform: translateX(105%); opacity: 0; }
+  10% { transform: translateX(0); opacity: 1; }
+  88% { transform: translateX(0); opacity: 1; }
+  100% { transform: translateX(-105%); opacity: 0; }
+}
+.poco-faixa { animation: poco-faixa 5200ms var(--dv-ease-out) both; }
+
 /* minigame: acerto e erro (só brilho/cor, nada de tremer a tela) */
 @keyframes poco-hit {
   0% { opacity: 0.95; }
@@ -96,18 +165,29 @@
 
 @media (prefers-reduced-motion: reduce) {
   .poco-t,
-  .poco-bucket,
-  .poco-crank { transition: none !important; }
+  .poco-bucket { transition: none !important; }
   .poco-fog,
   .poco-glow,
   .poco-coin,
   .poco-ripple,
-  .poco-crank-on,
-  .poco-rope-wind-on,
+  .poco-anel,
+  .poco-aura,
+  .poco-feixe,
+  .poco-roda-on,
+  .poco-particula,
   .poco-bucket-sobe,
   .poco-marquee,
   .poco-reveal,
   .poco-halo,
-  .poco-hit { animation: none !important; }
+  .poco-hit,
+  .poco-raios-in,
+  .poco-raios-in-rev,
+  .poco-raios-lento,
+  .poco-silhueta,
+  .poco-faixa,
+  .poco-aro-in,
+  .poco-emergir,
+  .poco-sombra-sai,
+  .poco-respingo { animation: none !important; }
   .poco-coin, .poco-ripple { opacity: 0; }
 }

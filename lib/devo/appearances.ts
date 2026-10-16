@@ -17,17 +17,67 @@ export type Appearance = {
   chosenAt: number
 }
 
+/**
+ * Perfil do jogador. Desde 16/10 (DIRECAO-3 §9) o jogador escolhe AS DUAS aparências no prólogo:
+ * a 2D/3D (`appearanceArt`) e a real (`appearanceReal`). Regra de troca: **1 troca posterior para
+ * cada aparência** (`appearanceChangesArt` / `appearanceChangesReal`). `appearanceChangesLeft` passa a
+ * ser o total que ainda resta (soma das duas), mantido para quem lê o campo antigo.
+ *
+ * Saves antigos (só `appearance` + `appearanceChangesLeft`) continuam válidos: `sanitizeProfile`
+ * coloca a aparência antiga no lugar do tipo dela e o outro tipo fica vazio até ser escolhido.
+ */
 export type PlayerProfile = {
   age?: number
   gender?: string
+  /** Legado: a última aparência escolhida ou trocada (saves antigos só tinham esta). */
   appearance?: Appearance
-  /** Trocas de aparência "por afinidade" que ainda restam (começa em 1 ao escolher a primeira). */
+  /** Aparência 2D/3D (personagem de anime, jogo, animação). */
+  appearanceArt?: Appearance
+  /** Aparência real (ator, atriz, celebridade). */
+  appearanceReal?: Appearance
+  /** Total de trocas "por afinidade" que ainda restam (soma das duas aparências). */
   appearanceChangesLeft: number
+  /** Trocas que restam para a aparência 2D/3D (0 ou 1). */
+  appearanceChangesArt?: number
+  /** Trocas que restam para a aparência real (0 ou 1). */
+  appearanceChangesReal?: number
   /** Histórico curto das trocas (para o Record/perfil). */
   appearanceHistory?: Appearance[]
 }
 
-export const EMPTY_PROFILE: PlayerProfile = { appearanceChangesLeft: 1 }
+export const EMPTY_PROFILE: PlayerProfile = { appearanceChangesLeft: 2, appearanceChangesArt: 1, appearanceChangesReal: 1 }
+
+/** A aparência escolhida de um tipo (com saves antigos, a única que existir daquele tipo). */
+export function appearanceOf(p: PlayerProfile, kind: AppearanceKind): Appearance | undefined {
+  const slot = kind === 'art' ? p.appearanceArt : p.appearanceReal
+  return slot ?? (p.appearance?.kind === kind ? p.appearance : undefined)
+}
+
+/** Trocas que ainda restam para um tipo de aparência. */
+export function appearanceChangesFor(p: PlayerProfile, kind: AppearanceKind): number {
+  return (kind === 'art' ? p.appearanceChangesArt : p.appearanceChangesReal) ?? 1
+}
+
+/** Grava a aparência de um tipo e o contador de trocas dele (o total é recalculado). */
+function withSlot(p: PlayerProfile, a: Appearance, left: number): Partial<PlayerProfile> {
+  const other = appearanceChangesFor(p, a.kind === 'art' ? 'real' : 'art')
+  return a.kind === 'art'
+    ? { appearanceArt: a, appearance: a, appearanceChangesArt: left, appearanceChangesLeft: left + other }
+    : { appearanceReal: a, appearance: a, appearanceChangesReal: left, appearanceChangesLeft: left + other }
+}
+
+/** Patch do perfil ao escolher uma aparência no prólogo (cada tipo começa com 1 troca). */
+export function chooseAppearance(p: PlayerProfile, a: Appearance): Partial<PlayerProfile> {
+  return withSlot(p, a, 1)
+}
+
+/** Troca por afinidade (1 por tipo). Devolve o perfil novo, ou null se não houver troca para esse tipo. */
+export function changeAppearanceIn(p: PlayerProfile, a: Appearance): PlayerProfile | null {
+  const current = appearanceOf(p, a.kind)
+  const left = appearanceChangesFor(p, a.kind)
+  if (!current || left <= 0) return null
+  return { ...p, ...withSlot(p, a, left - 1), appearanceHistory: [...(p.appearanceHistory ?? []), current].slice(-5) }
+}
 
 export const APPEARANCE_KIND_LABEL: Record<AppearanceKind, string> = {
   art: '2D / 3D',
@@ -105,12 +155,23 @@ export function sanitizeProfile(raw: unknown): PlayerProfile {
     return { kind: a.kind === 'real' ? 'real' : 'art', name, auto: a.auto === true, chosenAt: typeof a.chosenAt === 'number' ? a.chosenAt : 0 }
   }
   const age = typeof r.age === 'number' && r.age >= 1 && r.age <= 150 ? Math.floor(r.age) : undefined
-  const left = typeof r.appearanceChangesLeft === 'number' ? Math.max(0, Math.min(1, Math.floor(r.appearanceChangesLeft))) : 1
+  const clamp1 = (v: unknown) => (typeof v === 'number' ? Math.max(0, Math.min(1, Math.floor(v))) : undefined)
+  const legacy = app(r.appearance)
+  // Save antigo: só `appearance` e um contador único — o contador vale para o tipo daquela aparência.
+  const legacyLeft = clamp1(r.appearanceChangesLeft)
+  const art = app(r.appearanceArt) ?? (legacy?.kind === 'art' ? legacy : undefined)
+  const real = app(r.appearanceReal) ?? (legacy?.kind === 'real' ? legacy : undefined)
+  const changesArt = clamp1(r.appearanceChangesArt) ?? (legacy?.kind === 'art' && legacyLeft !== undefined ? legacyLeft : 1)
+  const changesReal = clamp1(r.appearanceChangesReal) ?? (legacy?.kind === 'real' && legacyLeft !== undefined ? legacyLeft : 1)
   return {
     age,
     gender: typeof r.gender === 'string' ? r.gender.slice(0, 40) : undefined,
-    appearance: app(r.appearance),
-    appearanceChangesLeft: left,
+    appearance: legacy,
+    appearanceArt: art,
+    appearanceReal: real,
+    appearanceChangesLeft: changesArt + changesReal,
+    appearanceChangesArt: changesArt,
+    appearanceChangesReal: changesReal,
     appearanceHistory: Array.isArray(r.appearanceHistory) ? r.appearanceHistory.map(app).filter((a): a is Appearance => !!a).slice(-5) : undefined,
   }
 }

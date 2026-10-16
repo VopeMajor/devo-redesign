@@ -1,14 +1,15 @@
 'use client'
 
-import { X } from 'lucide-react'
-import { Fredoka } from 'next/font/google'
-import { useEffect, useRef, useState } from 'react'
+import { Gamepad2, Keyboard, Smartphone, X } from 'lucide-react'
+import { useEffect, useRef, useState, type ReactNode } from 'react'
 import * as THREE from 'three'
 import type { BombState, GameOutcome, GameProps } from '@/lib/devo/arcade/client'
 import { GAMES, botSkill, rng } from '@/lib/devo/arcade/games'
 import { roomOutcome, useRoom } from '../use-room'
+import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js'
+import { SigilStar, Spinner } from '@/components/devo/kit'
+import { cn } from '@/lib/utils'
 
-const fredoka = Fredoka({ subsets: ['latin'], weight: ['500', '700'] })
 const meta = GAMES['hot-bomb']
 
 type Side = 'a' | 'b'
@@ -39,6 +40,18 @@ const norm = (x: number, y: number): [number, number] => {
   return l > 1 ? [x / l, y / l] : [x, y]
 }
 
+/** Cores da arena (paleta do mármore): porcelana, aço champanhe, ametista, grafite. */
+const PALETTE = [0xf1f0ee, 0xbab09f, 0x38393c, 0xece5d8, 0x2c2c31, 0xbab09f]
+/** Confete: a paleta mais um toque de ametista (pequeno). */
+const CONFETTI = [...PALETTE, 0x8a7cc8, 0xc2b9ec]
+const FIRE = [0xa3121f, 0xff6670, 0xece5d8, 0xfff4e0]
+const DUST = [0xece5d8, 0xfff4e0, 0xbab09f]
+/** Cor de partícula: explosão (matiz baixo, faixa larga) = fogo rubi → brasa clara; poeira/faísca = aço claro; resto = paleta. */
+function tint(c: THREE.Color, h: number, rg: number) {
+  const pick = (list: number[]) => list[Math.floor(Math.random() * list.length)]
+  return c.set(h < 0.15 ? pick(rg >= 0.1 ? FIRE : DUST) : pick(CONFETTI))
+}
+
 /** Mesma sequência de eventos nos dois aparelhos: derivada da seed da sala e da rodada. */
 function eventSchedule(seed: number, round: number) {
   const r = rng(seed + round * 977)
@@ -52,38 +65,42 @@ function eventSchedule(seed: number, round: number) {
 }
 
 const CSS = `
-.bq{--ink:#2a1650;--pink:#ff4d8d;--yel:#ffd23d;--cy:#3dd6ff;position:relative;width:100%;height:100%;overflow:hidden;background:#3b2a6b;color:#fff;touch-action:none;-webkit-user-select:none;user-select:none}
+.bq{--ink:#0c0c0e;--ink2:#151517;--steel:#bab09f;--steel-b:#ece5d8;--porc:#f1f0ee;--am:#8a7cc8;--am-t:#cbc5e8;--ruby:#a3121f;position:relative;width:100%;height:100%;overflow:hidden;background:#0e0e11;color:var(--porc);font-family:var(--font-card-body),Georgia,serif;touch-action:none;-webkit-user-select:none;user-select:none}
 .bq *{box-sizing:border-box}
 .bq.rot{position:fixed;top:0;left:0;width:100vh;width:100dvh;height:100vw;transform-origin:top left;transform:rotate(90deg) translateY(-100%);z-index:60}
 .bq.rot .bq-jb{position:absolute}
 .bq-cv,.bq-pad{position:absolute;inset:0}.bq canvas{display:block;width:100%;height:100%}
-.bq-hud{position:absolute;top:calc(10px + env(safe-area-inset-top,0px));left:0;right:0;display:flex;justify-content:center;gap:14px;pointer-events:none}
-.bq-hud>div{display:flex;flex-direction:column;align-items:center;gap:4px}
-.bq-hud span{background:rgba(42,22,80,.7);border:3px solid #fff;border-radius:18px;padding:4px 18px;font-size:28px;font-weight:700}
-.bq-hud small{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;opacity:.85;max-width:9em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.bq-hud small.me{color:var(--yel)}
-.bq-hud>.bq-lvl{display:block;width:50px;height:50px;border-radius:50%;border:3px solid #fff;background:rgba(42,22,80,.7);position:relative;align-self:flex-start;flex:none}
-.bq-lvl i{position:absolute;left:50%;top:50%;width:14px;height:14px;margin:-7px;border-radius:50%;background:#fff;box-shadow:0 2px 0 rgba(0,0,0,.35);transition:background .2s}
-.bq-msg{position:absolute;left:0;right:0;top:22%;text-align:center;font-weight:700;font-size:clamp(34px,9vw,84px);color:var(--yel);-webkit-text-stroke:3px var(--ink);paint-order:stroke fill;text-shadow:0 6px 0 var(--ink);pointer-events:none;opacity:0}
-.bq-msg.pop{animation:bqpop .5s ease-out forwards}
-@keyframes bqpop{0%{transform:scale(.3) rotate(-8deg);opacity:0}50%{transform:scale(1.2) rotate(3deg);opacity:1}100%{transform:scale(1);opacity:1}}
+.bq-hud{position:absolute;top:calc(8px + env(safe-area-inset-top,0px));left:0;right:0;display:flex;justify-content:center;align-items:flex-start;gap:12px;pointer-events:none}
+.bq-hud>div{display:flex;flex-direction:column;align-items:center;gap:5px}
+.bq-hud span{display:block;min-width:64px;text-align:center;background:linear-gradient(180deg,rgba(31,31,34,.92),rgba(12,12,14,.92));box-shadow:inset 0 0 0 1px rgba(186,176,159,.55),inset 0 1px 0 rgba(236,229,216,.18),0 6px 14px rgba(0,0,0,.5);clip-path:polygon(8px 0,calc(100% - 8px) 0,100% 8px,100% calc(100% - 8px),calc(100% - 8px) 100%,8px 100%,0 calc(100% - 8px),0 8px);padding:6px 16px 5px;font-family:var(--font-oswald),'Arial Narrow',sans-serif;font-size:30px;font-weight:600;line-height:1;font-variant-numeric:tabular-nums}
+.bq-hud small{font-family:var(--font-plex-mono),monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:rgba(238,237,235,.74);max-width:16em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-shadow:0 1px 4px #000}
+.bq-hud small.me{color:var(--porc)}
+.bq-hud small.me::before{content:"";display:inline-block;width:6px;height:6px;margin:0 6px 1px 0;background:var(--am);transform:rotate(45deg);box-shadow:0 0 6px var(--am)}
+.bq-hud>.bq-lvl{display:block;width:46px;height:46px;border-radius:50%;background:radial-gradient(circle,rgba(31,31,34,.9),rgba(12,12,14,.9));box-shadow:inset 0 0 0 1px rgba(186,176,159,.7),inset 0 0 0 6px rgba(12,12,14,.6),inset 0 0 0 7px rgba(186,176,159,.25);position:relative;align-self:flex-start;flex:none;margin-top:2px}
+.bq-lvl i{position:absolute;left:50%;top:50%;width:12px;height:12px;margin:-6px;border-radius:50%;background:var(--porc);box-shadow:0 0 6px rgba(241,240,238,.5);transition:background .2s}
+.bq-msg{position:absolute;left:0;right:0;top:24%;text-align:center;font-family:var(--font-oswald),'Arial Narrow',sans-serif;font-weight:700;letter-spacing:.06em;text-transform:uppercase;font-size:clamp(36px,8.5vw,80px);line-height:1;color:var(--porc);text-shadow:0 2px 0 #0c0c0e,0 0 24px rgba(12,12,14,.9),0 0 2px #0c0c0e;pointer-events:none;opacity:0}
+.bq-msg.pop{animation:bqpop .5s cubic-bezier(.3,1.5,.5,1) forwards}
+@keyframes bqpop{0%{opacity:0;transform:scale(1.5) skewX(-8deg)}60%{opacity:1;transform:scale(.96) skewX(-8deg)}100%{opacity:1;transform:scale(1) skewX(-8deg)}}
 .bq-fl{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none}
-.bq-jb{position:fixed;width:120px;height:120px;margin:-60px 0 0 -60px;border-radius:50%;background:rgba(255,255,255,.18);border:3px solid rgba(255,255,255,.6);display:none;pointer-events:none;z-index:4}
-.bq-jb i{position:absolute;left:36px;top:36px;width:48px;height:48px;border-radius:50%;background:#fff;box-shadow:0 4px 0 rgba(0,0,0,.25)}
-.bq-jump{position:absolute;bottom:calc(24px + env(safe-area-inset-bottom,0px));width:76px;height:76px;border-radius:50%;border:4px solid var(--ink);background:var(--yel);font:inherit;font-weight:700;font-size:15px;line-height:1.05;color:var(--ink);box-shadow:0 5px 0 var(--ink);display:none;align-items:center;justify-content:center;text-align:center;z-index:5;touch-action:none}
-.bq-jump.j0{left:calc(50% - 96px)}.bq-jump.j1{left:calc(50% + 20px);background:var(--cy)}
+.bq-jb{position:fixed;width:120px;height:120px;margin:-60px 0 0 -60px;border-radius:50%;background:radial-gradient(circle,rgba(241,240,238,.06),rgba(241,240,238,.14));box-shadow:inset 0 0 0 1px rgba(186,176,159,.7),inset 0 0 0 10px rgba(12,12,14,.25);display:none;pointer-events:none;z-index:4}
+.bq-jb i{position:absolute;left:36px;top:36px;width:48px;height:48px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff,#d9d6d0 60%,#a9a49b);box-shadow:0 0 0 1px rgba(186,176,159,.9),0 4px 10px rgba(0,0,0,.45)}
+.bq-jump{position:absolute;bottom:calc(22px + env(safe-area-inset-bottom,0px));width:76px;height:76px;border-radius:50%;border:0;background:radial-gradient(circle at 35% 28%,#fff,#e9e8e5 55%,#c9c5bd);box-shadow:inset 0 0 0 1px rgba(107,99,87,.6),0 0 0 2px rgba(186,176,159,.8),0 6px 14px rgba(0,0,0,.55);font-family:var(--font-card-title),Georgia,serif;font-weight:700;font-size:13px;letter-spacing:.14em;color:#151517;display:none;align-items:center;justify-content:center;text-align:center;z-index:5;touch-action:none}
+.bq-jump:active{transform:scale(.95)}
+.bq-jump.j0{left:calc(50% - 96px)}.bq-jump.j1{left:calc(50% + 20px);background:radial-gradient(circle at 35% 28%,#5a5a62,#2c2c31 55%,#151517);color:var(--porc)}
 @media (pointer:coarse){.bq-jump{display:flex}}
-.bq-quit{position:absolute;top:calc(10px + env(safe-area-inset-top,0px));left:10px;z-index:12;display:grid;place-items:center;width:44px;height:44px;border-radius:50%;background:rgba(42,22,80,.7);border:3px solid #fff;color:#fff;cursor:pointer}
-.bq-quit:focus-visible{outline:4px solid var(--yel)}
-.bq-menu{position:absolute;inset:0;z-index:10;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center;padding:24px;background:rgba(30,14,70,.62);backdrop-filter:blur(6px)}
-.bq-menu h1{margin:0;font-size:clamp(44px,12vw,92px);color:var(--yel);-webkit-text-stroke:4px var(--ink);paint-order:stroke fill;text-shadow:0 7px 0 var(--ink);line-height:1.05}
-.bq-menu p{margin:0;max-width:30em;font-size:19px;line-height:1.35}
-.bq-menu button{font:inherit;font-weight:700;font-size:24px;color:var(--ink);background:var(--yel);border:4px solid var(--ink);border-radius:20px;padding:12px 30px;min-width:240px;box-shadow:0 6px 0 var(--ink);cursor:pointer}
-.bq-menu button:active{transform:translateY(4px);box-shadow:0 2px 0 var(--ink)}
-.bq-menu button:focus-visible{outline:4px solid #fff}
-.bq-menu small{opacity:.8;font-size:15px}
-.bq-wait{display:inline-block;animation:bqblink 1.2s ease-in-out infinite}
-@keyframes bqblink{50%{opacity:.35}}
+.bq-quit{position:absolute;top:calc(8px + env(safe-area-inset-top,0px));left:8px;z-index:12;display:grid;place-items:center;width:44px;height:44px;background:rgba(12,12,14,.72);box-shadow:inset 0 0 0 1px rgba(186,176,159,.5);clip-path:polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px);color:var(--porc);cursor:pointer}
+.bq-quit:focus-visible,.bq-cta:focus-visible{outline:2px solid var(--am-t);outline-offset:3px}
+.bq-menu{position:absolute;inset:0;z-index:10;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;text-align:center;padding:24px;background:radial-gradient(70% 70% at 50% 45%,rgba(12,12,14,.55),rgba(12,12,14,.88));backdrop-filter:blur(5px)}
+.bq-menu h1{margin:0;font-family:var(--font-oswald),'Arial Narrow',sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:.04em;font-size:clamp(40px,8vw,72px);line-height:1;color:var(--porc);transform:skewX(-8deg)}
+.bq-menu p{margin:0;max-width:30em;font-size:18px;line-height:1.35;color:rgba(238,237,235,.8)}
+.bq-wait{display:inline-flex;align-items:center;gap:8px;font-family:var(--font-plex-mono),monospace;font-size:11px!important;letter-spacing:.2em;text-transform:uppercase;animation:bqblink 1.2s ease-in-out infinite}
+@keyframes bqblink{50%{opacity:.45}}
+.bq-cta{position:relative;isolation:isolate;display:inline-flex;align-items:center;justify-content:center;min-height:56px;min-width:240px;padding:0 36px;border:0;background:none;cursor:pointer;font-family:var(--font-card-title),Georgia,serif;font-weight:700;font-size:16px;letter-spacing:.32em;text-transform:uppercase;color:#151517;transition:transform .12s ease-out}
+.bq-cta:active{transform:scale(.97)}
+.bq-cta::before,.bq-cta::after{content:"";position:absolute;z-index:-1;clip-path:polygon(18px 0,calc(100% - 18px) 0,100% 50%,calc(100% - 18px) 100%,18px 100%,0 50%)}
+.bq-cta::before{inset:0;background:linear-gradient(100deg,#6b6357,#ece5d8 30%,#bab09f 60%,#6b6357)}
+.bq-cta::after{inset:1px;background:linear-gradient(180deg,#ffffff,#f1f0ee 45%,#d9d6d0)}
+.bq-cta:hover::after{background:linear-gradient(180deg,#ffffff,#f6f5f3 45%,#e3e0da)}
 `
 
 export default function HotBomb({ start, settings, onFinish, onQuit }: GameProps) {
@@ -137,8 +154,8 @@ export default function HotBomb({ start, settings, onFinish, onQuit }: GameProps
       const winner = room.result?.winner as Side | null | undefined
       const mine = room.result?.mine?.stats ?? {}
       setMenu({
-        title: winner === 'a' ? 'Coelhinho venceu! 🐰' : winner === 'b' ? 'Ursinho venceu! 🐻' : 'Empate!',
-        sub: room.result?.reason === 'abandono' ? 'O oponente abandonou a partida.' : `Placar: ${st?.wins.a ?? 0} x ${st?.wins.b ?? 0}`,
+        title: winner === 'a' ? 'O Coelho venceu' : winner === 'b' ? 'O Urso venceu' : 'Empate',
+        sub: room.result?.reason === 'abandono' ? 'O oponente abandonou a partida.' : `Placar: ${st?.wins.a ?? 0} × ${st?.wins.b ?? 0}`,
       })
       window.setTimeout(() => finishRef.current(roomOutcome(room, { bonus: (mine.clutch ?? 0) * 100, bonusLabel: `${mine.clutch ?? 0} CLUTCH` })), 2600)
       return
@@ -191,10 +208,10 @@ export default function HotBomb({ start, settings, onFinish, onQuit }: GameProps
     host.appendChild(rd.domElement)
     const scene = new THREE.Scene()
     const cam = new THREE.PerspectiveCamera(45, 1, 0.1, 200)
-    const bgc = new THREE.Color(0x3b2a6b)
+    const bgc = new THREE.Color(0x0e0e11)
     scene.background = bgc
-    scene.fog = new THREE.Fog(0x3b2a6b, 40, 90)
-    scene.add(new THREE.HemisphereLight(0xffffff, 0x8866cc, 0.95 * Math.PI))
+    scene.fog = new THREE.Fog(0x0e0e11, 34, 80)
+    scene.add(new THREE.HemisphereLight(0xf1f0ee, 0x2b2a35, 0.95 * Math.PI))
     const sun = new THREE.DirectionalLight(0xffffff, 0.9 * Math.PI)
     sun.position.set(6, 16, 8)
     sun.castShadow = shadows
@@ -202,8 +219,8 @@ export default function HotBomb({ start, settings, onFinish, onQuit }: GameProps
     Object.assign(sun.shadow.camera, { left: -13, right: 13, top: 13, bottom: -13, near: 1, far: 40 })
     scene.add(sun)
     // decay 1 reproduz a queda de luz do three r128 usado no original.
-    const L1 = new THREE.PointLight(0xff3d8b, 1.3 * Math.PI, 32, 1)
-    const L2 = new THREE.PointLight(0x3dd6ff, 1.3 * Math.PI, 32, 1)
+    const L1 = new THREE.PointLight(0xece5d8, 1.3 * Math.PI, 32, 1)
+    const L2 = new THREE.PointLight(0x8a7cc8, 1.3 * Math.PI, 32, 1)
     scene.add(L1, L2)
     const M = (c: THREE.ColorRepresentation, e: THREE.MeshStandardMaterialParameters = {}) =>
       new THREE.MeshStandardMaterial({ color: c, roughness: 0.5, metalness: 0, ...e })
@@ -211,24 +228,41 @@ export default function HotBomb({ start, settings, onFinish, onQuit }: GameProps
     const arena = new THREE.Group()
     scene.add(arena)
 
-    const base = new THREE.Mesh(new THREE.CylinderGeometry(R + 0.8, R + 1.4, 1, 64), M(0x241a45))
+    const base = new THREE.Mesh(new THREE.CylinderGeometry(R + 0.8, R + 1.4, 1, 64), M(0x1f1f22, { roughness: 0.35 }))
     base.position.y = -0.5
     base.receiveShadow = true
     arena.add(base)
+    // Piso: xadrez radial de mármore (6 anéis × 16 setores), duas malhas só (claras e escuras).
     const rings: THREE.MeshStandardMaterial[] = []
-    for (let i = 0; i < 6; i++) {
-      const m = M(0xffffff)
-      const g = new THREE.Mesh(new THREE.RingGeometry((i * R) / 6 + 0.02, ((i + 1) * R) / 6 - 0.02, 64), m)
-      g.rotation.x = -Math.PI / 2
-      g.position.y = 0.01
-      g.receiveShadow = true
-      arena.add(g)
-      rings.push(m)
+    {
+      const parts: [THREE.BufferGeometry[], THREE.BufferGeometry[]] = [[], []]
+      const SECT = 16
+      for (let i = 0; i < 6; i++)
+        for (let k = 0; k < SECT; k++)
+          parts[(i + k) % 2].push(new THREE.RingGeometry((i * R) / 6 + 0.02, ((i + 1) * R) / 6 - 0.02, 8, 1, (k / SECT) * Math.PI * 2 + 0.01, (Math.PI * 2) / SECT - 0.02))
+      parts.forEach((list, j) => {
+        const m = M(j ? 0xe9e8e5 : 0x2c2c31, { roughness: j ? 0.3 : 0.4 })
+        const g = new THREE.Mesh(mergeGeometries(list, false)!, m)
+        list.forEach((x) => x.dispose())
+        g.rotation.x = -Math.PI / 2
+        g.position.y = 0.01
+        g.receiveShadow = true
+        arena.add(g)
+        rings.push(m)
+      })
+      // Rejunte de aço entre os anéis.
+      const steel = M(0xbab09f, { metalness: 0.35, roughness: 0.35 })
+      for (let i = 1; i <= 6; i++) {
+        const t = new THREE.Mesh(new THREE.RingGeometry((i * R) / 6 - 0.03, (i * R) / 6 + 0.03, 64), steel)
+        t.rotation.x = -Math.PI / 2
+        t.position.y = 0.012
+        arena.add(t)
+      }
     }
     const pil: THREE.Mesh[] = []
     for (let i = 0; i < 28; i++) {
       const a = (i / 28) * 6.283
-      const p = new THREE.Mesh(new THREE.CylinderGeometry(0.35, 0.35, 1, 16), M(i % 2 ? 0xffd23d : 0xff4d8d))
+      const p = new THREE.Mesh(new THREE.CylinderGeometry(0.35, 0.35, 1, 16), i % 2 ? M(0xbab09f, { metalness: 0.35, roughness: 0.35 }) : M(0x1f1f22, { roughness: 0.3 }))
       p.position.set(Math.cos(a) * (R + 0.4), 0.5, Math.sin(a) * (R + 0.4))
       p.castShadow = true
       arena.add(p)
@@ -241,7 +275,7 @@ export default function HotBomb({ start, settings, onFinish, onQuit }: GameProps
     for (let i = 0; i < 34; i++) {
       const a = drnd(0, 6.28)
       const d = drnd(15, 34)
-      const m = new THREE.Mesh(gs[i % 4], M(new THREE.Color().setHSL(dr(), 0.8, 0.62)))
+      const m = new THREE.Mesh(gs[i % 4], M(PALETTE[i % PALETTE.length], { metalness: i % 4 === 1 ? 0.3 : 0.05, roughness: 0.35 }))
       m.position.set(Math.cos(a) * d, drnd(1, 14), Math.sin(a) * d)
       m.scale.setScalar(drnd(0.7, 2))
       m.userData = { s: drnd(0.3, 1.2), y: m.position.y }
@@ -251,7 +285,7 @@ export default function HotBomb({ start, settings, onFinish, onQuit }: GameProps
     /* obstáculos: barras giratórias, hub central e bumpers */
     const sw = [0, 1].map((i) => {
       const g = new THREE.Group()
-      const b = new THREE.Mesh(new THREE.BoxGeometry(R * 1.5, 0.5, 0.5), M(i ? 0x3dd6ff : 0xff7a3d))
+      const b = new THREE.Mesh(new THREE.BoxGeometry(R * 1.5, 0.5, 0.5), i ? M(0xf1f0ee, { roughness: 0.3 }) : M(0xbab09f, { metalness: 0.35, roughness: 0.35 }))
       b.castShadow = true
       b.position.y = 0.4
       g.add(b)
@@ -266,13 +300,13 @@ export default function HotBomb({ start, settings, onFinish, onQuit }: GameProps
       arena.add(m)
       OB.push({ x, z, r, m, bump, pop: 0 })
     }
-    addOB(0, 0, 0.8, 1, 0xffffff, false)
+    addOB(0, 0, 0.8, 1, 0xf1f0ee, false)
     for (let i = 0; i < 5; i++) {
       const a = (i / 5) * 6.283 + 0.3
-      addOB(Math.cos(a) * 5.6, Math.sin(a) * 5.6, 0.7, 0.9, i % 2 ? 0xff4d8d : 0xffd23d, true)
+      addOB(Math.cos(a) * 5.6, Math.sin(a) * 5.6, 0.7, 0.9, i % 2 ? 0xbab09f : 0x38393c, true)
     }
     /* avatares: rig com cabeça, braços, pernas, orelhas e contorno */
-    const OLM = new THREE.MeshBasicMaterial({ color: 0x1a0f2e, side: THREE.BackSide })
+    const OLM = new THREE.MeshBasicMaterial({ color: 0x0c0c0e, side: THREE.BackSide })
     const WH = new THREE.MeshBasicMaterial({ color: 0xffffff })
     const mkAv = (col: number, bunny: boolean) => {
       const g = new THREE.Group()
@@ -283,10 +317,11 @@ export default function HotBomb({ start, settings, onFinish, onQuit }: GameProps
       const sqG = new THREE.Group()
       fit.add(sqG)
       const m = M(col, { roughness: 0.62 })
-      const lt = M(bunny ? 0xfff1f7 : 0xdff3ff, { roughness: 0.85 })
+      const lt = M(bunny ? 0xffffff : 0xbab09f, { roughness: 0.85 })
       const dk = M(0x1b1b2b, { roughness: 0.2, metalness: 0.1 })
-      const pk = M(0xff8fb3, { roughness: 0.8 })
-      const rdm = M(0xff3d5a, { roughness: 0.6 })
+      const pk = M(0xc2b9ec, { roughness: 0.8 })
+      // laço preto no coelho; cachecol ametista no urso
+      const rdm = M(bunny ? 0x151517 : 0x5a4f8f, { roughness: 0.5 })
       const mk = (par: THREE.Object3D, geo: THREE.BufferGeometry, mat: THREE.Material, x: number, y: number, z: number, sx = 1, sy = 1, sz = 1, ol = 0) => {
         const o = new THREE.Mesh(geo, mat)
         o.position.set(x, y, z)
@@ -343,10 +378,10 @@ export default function HotBomb({ start, settings, onFinish, onQuit }: GameProps
       let mouth: THREE.Mesh
       const ears: THREE.Group[] = []
       if (bunny) {
-        mk(head, sph(0.05), M(0xff6f9f), 0, -0.04, 0.6, 1.3, 0.9, 0.8)
+        mk(head, sph(0.05), M(0xb7b3c9), 0, -0.04, 0.6, 1.3, 0.9, 0.8)
         mouth = mk(head, sph(0.065), dk, 0, -0.2, 0.57, 1, 0.6, 0.5)
         for (const s of [-1, 1]) mk(head, new THREE.BoxGeometry(0.05, 0.075, 0.03), WH, s * 0.028, -0.27, 0.6)
-        const wm = new THREE.MeshBasicMaterial({ color: 0xffe9f2 })
+        const wm = new THREE.MeshBasicMaterial({ color: 0xffffff })
         for (const s of [-1, 1])
           for (let i = 0; i < 3; i++) {
             const w = new THREE.Mesh(new THREE.CylinderGeometry(0.006, 0.006, 0.3, 4), wm)
@@ -381,7 +416,7 @@ export default function HotBomb({ start, settings, onFinish, onQuit }: GameProps
         sqG.add(sc)
         mk(sqG, new THREE.BoxGeometry(0.16, 0.38, 0.06), rdm, 0.24, 0.8, 0.4)
       }
-      const sweat = mk(head, sph(0.07), new THREE.MeshBasicMaterial({ color: 0x6fd3ff }), 0.5, 0.2, 0.38, 0.8, 1.25, 0.7)
+      const sweat = mk(head, sph(0.07), new THREE.MeshBasicMaterial({ color: 0xcbc5e8 }), 0.5, 0.2, 0.38, 0.8, 1.25, 0.7)
       sweat.visible = false
       sweat.castShadow = false
       arena.add(g)
@@ -397,7 +432,7 @@ export default function HotBomb({ start, settings, onFinish, onQuit }: GameProps
     const P = ([0, 1] as const).map((i) => ({
       i,
       side: (i ? 'b' : 'a') as Side,
-      ...mkAv(i ? 0x5ec8ff : 0xff8fc4, !i),
+      ...mkAv(i ? 0x3a3a40 : 0xf1f0ee, !i),
       x: 0, z: 0, y: 0, vx: 0, vz: 0, kx: 0, kz: 0, face: 0, jv: 0, sq: 0, fly: 0, jr: 0,
     }))
     type Av = (typeof P)[number]
@@ -417,7 +452,7 @@ export default function HotBomb({ start, settings, onFinish, onQuit }: GameProps
     hl.position.set(-0.17, 0.2, 0.27)
     hl.rotation.z = 0.6
     bomb.add(hl)
-    const metal = M(0x9a9ab0, { metalness: 0.7, roughness: 0.3 })
+    const metal = M(0xbab09f, { metalness: 0.35, roughness: 0.35 })
     const cap = new THREE.Mesh(new THREE.CylinderGeometry(0.11, 0.14, 0.14, 14), metal)
     cap.position.y = 0.39
     bomb.add(cap)
@@ -431,9 +466,9 @@ export default function HotBomb({ start, settings, onFinish, onQuit }: GameProps
       new THREE.Vector3(-0.05, 0.74, 0),
       new THREE.Vector3(0.1, 0.88, 0),
     ])
-    bomb.add(new THREE.Mesh(new THREE.TubeGeometry(fcurve, 16, 0.026, 6), M(0xd8b878)))
-    const spark = new THREE.Mesh(sph(0.075), new THREE.MeshBasicMaterial({ color: 0xffe27a }))
-    spark.add(new THREE.Mesh(sph(0.14), new THREE.MeshBasicMaterial({ color: 0xff9a2f, transparent: true, opacity: 0.5 })))
+    bomb.add(new THREE.Mesh(new THREE.TubeGeometry(fcurve, 16, 0.026, 6), M(0x8f8e8b)))
+    const spark = new THREE.Mesh(sph(0.075), new THREE.MeshBasicMaterial({ color: 0xfff4e0 }))
+    spark.add(new THREE.Mesh(sph(0.14), new THREE.MeshBasicMaterial({ color: 0xff6670, transparent: true, opacity: 0.5 })))
     bomb.add(spark)
     const bpup: THREE.Mesh[] = []
     for (const s of [-1, 1]) {
@@ -485,14 +520,14 @@ export default function HotBomb({ start, settings, onFinish, onQuit }: GameProps
         p.vy = Math.abs(e) * s + 2
         p.l = p.m = rnd(0.5, 1.2)
         p.s = rnd(0.5, 1.5)
-        pm.setColorAt(pi, cc.setHSL(h + rnd(0, rg), 1, 0.6))
+        pm.setColorAt(pi, tint(cc, h, rg))
       }
       if (pm.instanceColor) pm.instanceColor.needsUpdate = true
     }
     /* bolas da "chuva" */
     const balls: { m: THREE.Mesh; x: number; y: number; z: number; vx: number; vy: number; vz: number; l: number }[] = []
     const ball = (r: () => number) => {
-      const m = new THREE.Mesh(sph(0.35), M(new THREE.Color().setHSL(r(), 0.9, 0.6)))
+      const m = new THREE.Mesh(sph(0.35), M(PALETTE[Math.floor(r() * PALETTE.length)], { roughness: 0.3 }))
       m.castShadow = true
       arena.add(m)
       const a = r() * 6.28
@@ -588,8 +623,8 @@ export default function HotBomb({ start, settings, onFinish, onQuit }: GameProps
     const flNode = flEl.current!
 
     const hud = (w: Pair) => {
-      s1.current!.textContent = '🐰 ' + w.a
-      s2.current!.textContent = '🐻 ' + w.b
+      s1.current!.textContent = String(w.a)
+      s2.current!.textContent = String(w.b)
     }
     const msg = (t: string, ms = 1500) => {
       msgNode.textContent = t
@@ -654,8 +689,8 @@ export default function HotBomb({ start, settings, onFinish, onQuit }: GameProps
       shake = 1.4
       flash()
       snd(150, 0.7, 'sawtooth', 0.25, -110)
-      msg('💥 BUUUM!', 2000)
-      const wave = new THREE.Mesh(new THREE.TorusGeometry(1, 0.12, 8, 40), new THREE.MeshBasicMaterial({ color: 0xffd23d, transparent: true }))
+      msg('BUUUM!', 2000)
+      const wave = new THREE.Mesh(new THREE.TorusGeometry(1, 0.12, 8, 40), new THREE.MeshBasicMaterial({ color: 0xece5d8, transparent: true }))
       wave.rotation.x = Math.PI / 2
       wave.position.set(p.x, 0.4, p.z)
       arena.add(wave)
@@ -703,7 +738,7 @@ export default function HotBomb({ start, settings, onFinish, onQuit }: GameProps
       const meWins = A.wins[mySide]
       const oppWins = A.wins[other(mySide)]
       const winner: Side = A.wins.a > A.wins.b ? 'a' : 'b'
-      setMenu({ title: winner === 'a' ? 'Coelhinho venceu! 🐰' : 'Ursinho venceu! 🐻', sub: `Placar: ${A.wins.a} x ${A.wins.b}` })
+      setMenu({ title: winner === 'a' ? 'O Coelho venceu' : 'O Urso venceu', sub: `Placar: ${A.wins.a} × ${A.wins.b}` })
       const out: GameOutcome = {
         result: meWins > oppWins ? 'win' : 'loss',
         score: Math.min(meta.maxScore, A.score[mySide]),
@@ -974,7 +1009,7 @@ export default function HotBomb({ start, settings, onFinish, onQuit }: GameProps
         const dot = lvlEl.current?.firstElementChild as HTMLElement | null
         if (dot) {
           dot.style.transform = `translate(${(tl[0] / 0.34) * 16}px,${(tl[1] / 0.34) * 16}px)`
-          dot.style.background = tilt.m > 0.22 ? '#ff3d5a' : tilt.m > 0.1 ? '#ffd23d' : '#ffffff'
+          dot.style.background = tilt.m > 0.22 ? '#ff6670' : tilt.m > 0.1 ? '#cbc5e8' : '#f1f0ee'
         }
       }
 
@@ -1208,7 +1243,8 @@ export default function HotBomb({ start, settings, onFinish, onQuit }: GameProps
         if (Math.random() < 0.5) burst(h.x + 0.1, 3.7, h.z, 1, 1.5, 0.1, 0.05)
       }
       /* decoração caótica */
-      for (let i = 0; i < 6; i++) rings[i].color.setHSL((T * 0.12 + i * 0.11) % 1, 0.75, 0.62)
+      // O piso respira (brilho), sem trocar de cor.
+      rings[1].emissive.setScalar(0.04 + 0.04 * Math.sin(T * 1.6))
       pil.forEach((p, i) => {
         const s = 1 + 0.7 * Math.abs(Math.sin(T * 4 + i * 0.45))
         p.scale.y = s
@@ -1226,7 +1262,7 @@ export default function HotBomb({ start, settings, onFinish, onQuit }: GameProps
         }
       L1.position.set(Math.cos(T * 0.9) * 10, 5, Math.sin(T * 0.9) * 10)
       L2.position.set(Math.cos(T * 0.9 + 3.14) * 10, 5, Math.sin(T * 0.9 + 3.14) * 10)
-      bgc.setHSL(0.72 + 0.06 * Math.sin(T * 0.3), 0.5, 0.27)
+      bgc.setHSL(0.7, 0.12, 0.014 + 0.004 * Math.sin(T * 0.3))
       ;(scene.fog as THREE.Fog).color.copy(bgc)
       for (let i = 0; i < NP; i++) {
         const p = pd[i]
@@ -1365,58 +1401,159 @@ export default function HotBomb({ start, settings, onFinish, onQuit }: GameProps
     }
   }, [])
 
-  const myEmoji = myIdx === 0 ? '🐰' : '🐻'
+  const myAvatar = myIdx === 0 ? 'Coelho' : 'Urso'
+  // Moldura de entrada (antes da 1ª rodada) fica de pé no celular: o jogador ainda segura o aparelho
+  // em retrato. Só a arena gira para paisagem; o joystick segue o giro (coordenadas em `pdown`).
+  const entry = !!menu && (!!menu.button || !!menu.note)
 
   return (
-    <div ref={root} className={`bq ${fredoka.className}${rotated ? ' rot' : ''}`}>
-      <style>{CSS}</style>
-      <div ref={cv} className="bq-cv" />
-      <div ref={pad} className="bq-pad" />
-      <div className="bq-hud">
-        <div>
-          <span ref={s1} />
-          <small className={myIdx === 0 ? 'me' : undefined}>{myIdx === 0 ? 'Você' : start.opponent.name}</small>
+    <div className="relative h-full w-full">
+      <div ref={root} className={`bq${rotated ? ' rot' : ''}`}>
+        <style>{CSS}</style>
+        <div ref={cv} className="bq-cv" />
+        <div ref={pad} className="bq-pad" />
+        <div className="bq-hud">
+          <div>
+            <span ref={s1} />
+            <small className={myIdx === 0 ? 'me' : undefined}>{myIdx === 0 ? 'Você' : start.opponent.name} · Coelho</small>
+          </div>
+          <div ref={lvlEl} className="bq-lvl" aria-hidden="true">
+            <i />
+          </div>
+          <div>
+            <span ref={s2} />
+            <small className={myIdx === 1 ? 'me' : undefined}>{myIdx === 1 ? 'Você' : start.opponent.name} · Urso</small>
+          </div>
         </div>
-        <div ref={lvlEl} className="bq-lvl" aria-hidden="true">
+        <div ref={msgEl} className="bq-msg" aria-live="polite" />
+        <div ref={flEl} className="bq-fl" />
+        <div ref={jbEl} className="bq-jb">
           <i />
         </div>
-        <div>
-          <span ref={s2} />
-          <small className={myIdx === 1 ? 'me' : undefined}>{myIdx === 1 ? 'Você' : start.opponent.name}</small>
-        </div>
+        <button ref={jumpBtn} type="button" className={`bq-jump j${myIdx}`} aria-label="Pular">
+          PULA
+        </button>
+        {!entry && (
+          <button type="button" className="bq-quit" onClick={onQuit} aria-label="Desistir e sair">
+            <X className="size-5" strokeWidth={1.4} />
+          </button>
+        )}
+        {menu && !entry && (
+          <div className="bq-menu">
+            <span className="dv-label text-[10px] text-dv-gold">Fim de partida</span>
+            <h1>{menu.title}</h1>
+            <p>{menu.sub}</p>
+          </div>
+        )}
       </div>
-      <div ref={msgEl} className="bq-msg" aria-live="polite" />
-      <div ref={flEl} className="bq-fl" />
-      <div ref={jbEl} className="bq-jb">
-        <i />
-      </div>
-      <button ref={jumpBtn} type="button" className={`bq-jump j${myIdx}`} aria-label="Pular">
-        {myEmoji}
-        <br />
-        PULA
-      </button>
-      <button type="button" className="bq-quit" onClick={onQuit} aria-label="Desistir e sair">
-        <X className="size-5" />
-      </button>
-      {menu && (
-        <div className="bq-menu">
-          <h1>{menu.title}</h1>
-          <p>{menu.sub}</p>
-          {menu.button && (
-            <button type="button" onClick={() => startOffline.current()}>
-              Jogar
-            </button>
-          )}
-          {menu.note && <p className="bq-wait">{menu.note}</p>}
-          {!ended.current && (
-            <small>
-              Você é o {myEmoji}. WASD ou setas para mover · Espaço ou Enter para pular.
-              <br />
-              No celular: arraste o polegar na tela e toque em PULA.
-            </small>
-          )}
-        </div>
+      {menu && entry && (
+        <BombEntry
+          fixed={rotated}
+          title={menu.title}
+          sub={menu.sub}
+          note={menu.note}
+          canPlay={!!menu.button}
+          avatar={myAvatar}
+          training={!online}
+          rotateHint={rotated}
+          onPlay={() => startOffline.current()}
+          onQuit={onQuit}
+        />
       )}
+    </div>
+  )
+}
+
+/** Plaqueta de controle (ícone + texto) da moldura de entrada. */
+function ControlLine({ icon: Icon, children }: { icon: typeof Keyboard; children: ReactNode }) {
+  return (
+    <li className="flex items-start gap-3 text-left">
+      <Icon className="mt-0.5 size-[18px] shrink-0 text-dv-gold" strokeWidth={1.4} aria-hidden="true" />
+      <span className="font-body text-[15px] leading-snug text-dv-text-2">{children}</span>
+    </li>
+  )
+}
+
+/** Bomba em linha de aço (emblema do jogo): corpo, anel, pavio e a faísca em rubi. */
+function BombEmblem({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 64 64" className={className} aria-hidden="true">
+      <defs>
+        <linearGradient id="bq-steel" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stopColor="#ece5d8" />
+          <stop offset="0.5" stopColor="#bab09f" />
+          <stop offset="1" stopColor="#6b6357" />
+        </linearGradient>
+      </defs>
+      <circle cx="28" cy="38" r="19" fill="#151517" stroke="url(#bq-steel)" strokeWidth="1.6" />
+      <path d="M17 31a13 13 0 0 1 9-8" fill="none" stroke="#ece5d8" strokeOpacity="0.55" strokeWidth="1.6" strokeLinecap="round" />
+      <rect x="35" y="15" width="9" height="7" transform="rotate(40 39.5 18.5)" fill="#1f1f22" stroke="url(#bq-steel)" strokeWidth="1.4" />
+      <path d="M43 14c3-5 8-4 9-8" fill="none" stroke="url(#bq-steel)" strokeWidth="1.4" strokeLinecap="round" />
+      <path d="M53 1.5l1.1 3.4 3.4 1.1-3.4 1.1L53 10.5l-1.1-3.4L48.5 6l3.4-1.1z" fill="#ff6670" />
+      <path d="M28 33.5l1.3 3.2 3.2 1.3-3.2 1.3L28 42.5l-1.3-3.2L23.5 38l3.2-1.3z" fill="url(#bq-steel)" />
+    </svg>
+  )
+}
+
+/**
+ * Moldura de entrada da Bomba Quente na identidade do DEVO: véu de mármore negro sobre a arena,
+ * título em impacto, regra em plaqueta de aço, controles e o botão de porcelana. Sempre de pé.
+ */
+function BombEntry(props: {
+  fixed: boolean
+  title: string
+  sub: string
+  note?: string
+  canPlay: boolean
+  avatar: string
+  training: boolean
+  rotateHint: boolean
+  onPlay: () => void
+  onQuit: () => void
+}) {
+  return (
+    <div className={cn('inset-0 flex flex-col overflow-y-auto bg-[radial-gradient(90%_60%_at_50%_30%,rgba(21,21,23,0.72),rgba(12,12,14,0.94))] text-dv-text backdrop-blur-[6px]', props.fixed ? 'fixed z-[61]' : 'absolute z-20')}>
+      <div className="flex shrink-0 items-center gap-2 px-2 pt-[max(env(safe-area-inset-top),8px)]">
+        <button type="button" onClick={props.onQuit} aria-label="Desistir e sair" className="dv-focus grid size-11 place-items-center text-dv-text-3 transition-colors hover:text-dv-text">
+          <X className="size-5" strokeWidth={1.4} />
+        </button>
+        <span className="dv-label text-[10px] text-dv-gold">{props.training ? 'Treino · Sala de Jogos' : 'Partida · Sala de Jogos'}</span>
+      </div>
+      <div className="mx-auto flex w-full max-w-md flex-1 flex-col items-center justify-center gap-5 px-6 pb-[max(env(safe-area-inset-bottom),20px)] text-center">
+        <BombEmblem className="size-20 animate-dv-pop drop-shadow-[0_8px_18px_rgba(0,0,0,0.6)]" />
+        <div className="flex flex-col items-center gap-2">
+          <span aria-hidden="true" className="h-px w-24 bg-gradient-to-r from-transparent via-dv-gold/80 to-transparent" />
+          <h1 className="-skew-x-[8deg] animate-dv-cut-in font-impact text-[52px] font-bold uppercase leading-none tracking-[0.04em] text-white">{props.title}</h1>
+          <span aria-hidden="true" className="h-px w-24 bg-gradient-to-r from-transparent via-dv-gold/80 to-transparent" />
+        </div>
+        <p className="font-body text-[17px] leading-relaxed text-dv-text-2 text-balance">{props.sub}</p>
+        <div className="bg-[linear-gradient(180deg,#1c1c1f,#0e0e10)] flex w-full items-center justify-center gap-3 border border-dv-line-gold px-4 py-2.5">
+          <span className="dv-label text-[10px] text-dv-text-3">Você é o</span>
+          <span className="font-display text-[15px] font-semibold uppercase tracking-[0.14em] text-white">{props.avatar}</span>
+          <span aria-hidden="true" className="flex gap-1">
+            {[0, 1, 2].map((i) => (
+              <SigilStar key={i} className="size-2.5 text-dv-gold" />
+            ))}
+          </span>
+          <span className="dv-label text-[10px] text-dv-text-3">3 pontos</span>
+        </div>
+        <ul className="flex w-full flex-col gap-2.5">
+          <ControlLine icon={Smartphone}>Celular: arraste o polegar na tela para andar e toque em PULA.</ControlLine>
+          <ControlLine icon={Keyboard}>Teclado: WASD ou setas para mover · Espaço ou Enter para pular.</ControlLine>
+          {props.rotateHint && <ControlLine icon={Gamepad2}>A arena abre deitada: gire o celular para jogar em paisagem.</ControlLine>}
+        </ul>
+        {props.canPlay && (
+          <button type="button" className="bq-cta mt-1" onClick={props.onPlay}>
+            Jogar
+          </button>
+        )}
+        {props.note && (
+          <p className="bq-wait text-dv-text-2" role="status">
+            <Spinner className="size-4 text-dv-gold" />
+            {props.note}
+          </p>
+        )}
+      </div>
     </div>
   )
 }
