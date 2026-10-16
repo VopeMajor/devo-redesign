@@ -114,7 +114,7 @@ export function RecordApp() {
                 setSelected(null)
               }}
               fill
-              className="animate-dv-fade [&_[role=tab]]:min-w-0 [&_[role=tab]]:px-2 [&_[role=tab]]:text-[10.5px] [&_[role=tab]]:tracking-[0.1em] @md:[&_[role=tab]]:px-4 @md:[&_[role=tab]]:text-[11px] @md:[&_[role=tab]]:tracking-[0.14em]"
+              className="animate-dv-fade [&_[role=tab]]:min-w-0 [&_[role=tab]]:flex-auto [&_[role=tab]]:whitespace-nowrap [&_[role=tab]]:px-2 [&_[role=tab]]:text-[10.5px] [&_[role=tab]]:tracking-[0.06em] @md:[&_[role=tab]]:px-4 @md:[&_[role=tab]]:text-[11px] @md:[&_[role=tab]]:tracking-[0.14em]"
               panelClassName="pt-5"
             >
               {tab === 'invites' && isStaff ? (
@@ -364,7 +364,7 @@ function ConvocationPoster({
           <h2 className="relative">
             <span aria-hidden="true" className="absolute -left-5 bottom-[0.18em] h-[0.2em] w-[calc(100%+2.6rem)] -skew-x-[18deg] bg-[linear-gradient(90deg,rgba(186,176,159,0.55),rgba(186,176,159,0.12)_70%,transparent)]" />
             <span className="relative font-impact text-[46px] font-bold uppercase leading-[0.9] tracking-[0.01em] text-[#f1f0ee] drop-shadow-[0_2px_0_rgba(0,0,0,0.6)]">
-              {live ? 'Em andamento' : 'Convocação'}
+              {live ? 'Em sessão' : 'Convocação'}
             </span>
           </h2>
           {vote.joined && <Stamp text="Inscrito" shape="round" tone="gold" rotate={12} size={70} className="-mr-1 -mt-3 shrink-0" />}

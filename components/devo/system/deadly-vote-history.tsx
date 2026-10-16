@@ -66,7 +66,7 @@ export function DeadlyVoteHistory({
       {title ? (
         <header className="relative flex items-center justify-between gap-3 pb-2.5">
           <RecordTitle title={heading} jp={jp} />
-          {onViewAll && entries.length > (limit ?? Infinity) && <PanelLink label="Ver histórico completo" onClick={onViewAll} className="shrink-0" />}
+          {onViewAll && entries.length > (limit ?? Infinity) && <PanelLink label="Ver todos" onClick={onViewAll} className="shrink-0" />}
           <span aria-hidden="true" className="absolute inset-x-0 bottom-0 h-px bg-[linear-gradient(90deg,var(--in-brass)_0%,color-mix(in_oklab,var(--in-brass)_35%,transparent)_45%,transparent_100%)]" />
         </header>
       ) : null}
@@ -118,19 +118,19 @@ export function DeadlyVoteHistoryItem({ entry, onSelect, index = 0 }: { entry: D
       </span>
       <span className="flex min-w-0 flex-1 flex-col gap-1">
         <span className="flex min-w-0 items-center gap-2">
-          <span className={cn('truncate font-mono text-[13px] uppercase tracking-[0.08em] text-in-fg', entry.status === 'cancelado' && 'text-in-fg-2')}>{entry.title}</span>
+          <span className={cn('line-clamp-2 min-w-0 font-mono text-[12.5px] uppercase leading-snug tracking-[0.06em] text-in-fg', entry.status === 'cancelado' && 'text-in-fg-2')}>{entry.title}</span>
           <span aria-hidden="true" className="h-px min-w-3 flex-1 bg-[repeating-linear-gradient(90deg,var(--in-line-strong)_0_1px,transparent_1px_4px)]" />
         </span>
         {(sub || mine) && (
           <span className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-0.5 font-sans text-[12px] leading-snug text-in-fg-3">
-            {sub && <span className="truncate">{sub}</span>}
+            {sub && <span className="line-clamp-1">{sub}</span>}
             {mine && (
               <span className={cn('font-mono text-[10px] uppercase tracking-[0.14em]', v.outcome === 'eliminado' ? 'text-in-alert' : 'text-in-accent')}>{mine}</span>
             )}
           </span>
         )}
       </span>
-      <span className={cn('flex max-w-[34%] shrink-0 items-center gap-1.5 pt-[3px] text-right font-sans text-[10px] font-medium uppercase leading-tight tracking-[0.12em]', STATUS_TEXT[entry.status])}>
+      <span className={cn('flex max-w-[26%] shrink-0 items-center justify-end gap-1.5 pt-[3px] text-right font-sans text-[9.5px] font-medium uppercase leading-tight tracking-[0.08em]', STATUS_TEXT[entry.status])}>
         {entry.status === 'em-progresso' && <span aria-hidden="true" className="size-1.5 shrink-0 animate-dv-blink rounded-full bg-current" />}
         {meta.label}
       </span>

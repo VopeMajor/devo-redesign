@@ -65,7 +65,7 @@ export function DealerBoard() {
   const votes = data?.votes ?? []
 
   return (
-    <RecordPanel variant="paper" title="Mesa do Dealer" jp="ディーラー" ornate headerRight={<HudCode code="DV_DEALER" sub="Gerência · Tribunal" />}>
+    <RecordPanel variant="paper" title="Mesa do Dealer" jp="ディーラー" ornate headerRight={<HudCode code="DV_DEALER" />}>
       <p className="font-body text-[15px] leading-relaxed text-in-fg-2">
         Lance a edição com data, conduza o estado do caso e libere o grupo do WhatsApp quando começar. Tudo aqui aparece no Record dos participantes.
       </p>
@@ -212,13 +212,12 @@ function StaffVoteCard({ vote: v, onAction }: { vote: StaffVote; onAction: (body
   return (
     <article
       aria-label={`Caso ${String(v.number).padStart(3, '0')}: ${voteTitle(v)}`}
-      className={cn('dv-cut-diag relative bg-[color:var(--in-porcelain)] shadow-[inset_0_0_0_1px_var(--in-line-strong)]', live && 'shadow-[inset_0_0_0_1px_var(--in-fg),0_0_0_3px_color-mix(in_oklab,var(--dv-amethyst)_18%,transparent)]')}
-      style={{ '--dv-cut': '12px' } as CSSProperties}
+      className={cn('relative bg-[color:var(--in-porcelain)] shadow-[inset_0_0_0_1px_var(--in-line-strong),0_6px_14px_-10px_rgba(13,13,15,0.5)]', live && 'shadow-[inset_0_0_0_1px_var(--in-fg),0_0_0_3px_color-mix(in_oklab,var(--dv-amethyst)_18%,transparent)]')}
     >
       <div className="flex items-start gap-3 p-3.5">
         <CaseTab number={v.number} muted={v.status === 'cancelado'} />
         <div className="min-w-0 flex-1">
-          <p className={cn('truncate font-serif text-[19px] font-light uppercase leading-tight tracking-[0.03em] text-in-fg', v.status === 'cancelado' && 'text-in-fg-2')}>{voteTitle(v)}</p>
+          <p className={cn('font-serif text-[19px] font-light uppercase leading-tight tracking-[0.03em] text-in-fg text-balance', v.status === 'cancelado' && 'text-in-fg-2')}>{voteTitle(v)}</p>
           <p className="mt-0.5 truncate font-mono text-[11px] tracking-[0.04em] text-in-fg-3">
             {v.arc ? `${arcLabel(v.arc)} · ` : ''}
             {new Date(v.startsAt).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' })}
@@ -378,20 +377,22 @@ function GroupLinkField({ vote: v, pending, onSave }: { vote: StaffVote; pending
     <div className="border-t border-in-line px-3.5 pb-3.5 pt-3">
       <RecLabel hint={v.status === 'em-progresso' ? 'visível aos inscritos' : closed ? 'caso fechado' : 'aparece quando começar'}>Grupo do WhatsApp</RecLabel>
       {v.groupUrl && !editing ? (
-        <div className="mt-2 flex items-center gap-2">
+        <div className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1">
           <span className="grid size-9 shrink-0 place-items-center bg-[#1c1c1f] text-[#ece5d8]" aria-hidden="true">
             <Link2 className="size-4" strokeWidth={1.4} />
           </span>
-          <p className="min-w-0 flex-1 truncate font-mono text-[12px] tracking-[0.02em] text-in-fg" title={v.groupUrl}>
-            <span className="text-in-fg-3">chat.whatsapp.com/</span>
+          <p className="min-w-0 flex-1 break-all font-mono text-[12px] leading-snug tracking-[0.02em] text-in-fg" title={v.groupUrl}>
+            <span className="block text-[10px] text-in-fg-3">chat.whatsapp.com/</span>
             {code}
           </p>
+          <span className="flex shrink-0">
           <RecButton surface="paper" variant="ghost" size="sm" onClick={() => setEditing(true)} className="px-1.5">
             Trocar
           </RecButton>
           <RecButton surface="paper" variant="ghost" size="sm" loading={pending} onClick={() => onSave(null)} className="px-1.5 text-in-fg-2">
             Remover
           </RecButton>
+          </span>
         </div>
       ) : (
         <form
