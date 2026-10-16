@@ -34,7 +34,8 @@ const SIZE: Record<ButtonSize, { h: string; text: string; px: string; cut: numbe
 }
 
 const LINE: Record<ButtonVariant, string> = {
-  primary: 'bg-[linear-gradient(100deg,#dcd7f0,var(--dv-cobalt)_30%,var(--dv-cobalt-deep)_70%,#dcd7f0)]',
+  // Primário = porcelana com filete de aço champanhe (ref. de mármore); ametista só no halo de foco/hover.
+  primary: 'bg-[linear-gradient(100deg,#f4efe6,#9a9184_28%,#ece5d8_55%,#6b6357_80%,#dcd5c8)]',
   secondary: 'bg-[linear-gradient(100deg,var(--dv-line-strong),rgba(238,237,235,0.55)_50%,var(--dv-line-strong))] group-enabled:group-hover:bg-[linear-gradient(100deg,var(--dv-gold-deep),var(--dv-gold-bright)_50%,var(--dv-gold-deep))]',
   ghost: '',
   danger: 'bg-[linear-gradient(100deg,var(--dv-blood-text),var(--dv-blood)_45%,var(--dv-blood-deep))]',
@@ -42,7 +43,7 @@ const LINE: Record<ButtonVariant, string> = {
 
 const FILL: Record<ButtonVariant, string> = {
   primary:
-    'bg-[linear-gradient(180deg,#5a4f8f_0%,#3b3366_48%,#1f1b38_100%)] group-enabled:group-hover:bg-[linear-gradient(180deg,#6b5fa8_0%,#463d78_48%,#262044_100%)]',
+    'bg-[linear-gradient(180deg,#f6f5f3_0%,#e7e5e1_52%,#cdcac4_100%)] group-enabled:group-hover:bg-[linear-gradient(180deg,#ffffff_0%,#efeeeb_52%,#d6d3cd_100%)]',
   secondary: 'bg-[linear-gradient(180deg,var(--dv-ink-3),var(--dv-ink))]',
   ghost: '',
   danger: 'bg-[linear-gradient(180deg,#8a0f18_0%,#4a0a0f_60%,#22060a_100%)] group-enabled:group-hover:bg-[linear-gradient(180deg,#a5131d_0%,#5a0a10_60%,#2a060a_100%)]',
@@ -57,7 +58,7 @@ const INTERIOR: Record<ButtonVariant, string> = {
 }
 
 const TEXT: Record<ButtonVariant, string> = {
-  primary: 'text-white',
+  primary: 'text-[#0c0c0e]',
   secondary: 'text-dv-text group-enabled:group-hover:text-dv-gold-bright',
   ghost: 'text-dv-text-2 group-enabled:group-hover:text-dv-text',
   danger: 'text-white',
@@ -154,15 +155,15 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
             style={{ '--dv-cut': `${s.cut - 0.5}px` } as CSSProperties}
           />
           {variant === 'primary' && (
-            <span aria-hidden="true" className="dv-cut-hex absolute inset-px -z-10 bg-[linear-gradient(180deg,rgba(255,255,255,0.14),transparent_50%)]" style={{ '--dv-cut': `${s.cut - 0.5}px` } as CSSProperties} />
+            <span aria-hidden="true" className="dv-cut-hex absolute inset-px -z-10 bg-[linear-gradient(180deg,rgba(255,255,255,0.6),transparent_50%)]" style={{ '--dv-cut': `${s.cut - 0.5}px` } as CSSProperties} />
           )}
           {variant === 'primary' && (
-            <span aria-hidden="true" className="pointer-events-none absolute inset-x-6 -bottom-2 -z-20 h-4 rounded-[50%] bg-dv-cobalt/50 blur-lg transition-opacity group-disabled:opacity-0" />
+            <span aria-hidden="true" className="pointer-events-none absolute inset-x-6 -bottom-2 -z-20 h-4 rounded-[50%] bg-[rgba(138,124,200,0.45)] opacity-0 blur-lg transition-opacity group-enabled:group-hover:opacity-100 group-focus-visible:opacity-100" />
           )}
         </>
       )}
       {isGhost && (
-        <span aria-hidden="true" className="absolute inset-x-3 bottom-2 h-px origin-left scale-x-0 bg-dv-cobalt-text transition-transform duration-[360ms] ease-out group-enabled:group-hover:scale-x-100 group-focus-visible:scale-x-100" />
+        <span aria-hidden="true" className="absolute inset-x-3 bottom-2 h-px origin-left scale-x-0 bg-dv-gold-bright transition-transform duration-[360ms] ease-out group-enabled:group-hover:scale-x-100 group-focus-visible:scale-x-100" />
       )}
       <span className={cn('relative flex items-center justify-center gap-3 py-2', TEXT[variant], loading && 'invisible')}>
         {variant === 'secondary' && !icon && <GlyphDiamond className="size-2.5 text-dv-gold/80" filled />}
@@ -172,7 +173,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
         {iconRight && <span className="flex size-[1.15em] items-center justify-center [&>svg]:size-full">{iconRight}</span>}
       </span>
       {loading && (
-        <span className="absolute inset-0 flex items-center justify-center gap-2 text-white">
+        <span className={cn('absolute inset-0 flex items-center justify-center gap-2', variant === 'primary' ? 'text-[#0c0c0e]' : 'text-white')}>
           <Spinner className="size-5" />
           <span className="sr-only">Carregando</span>
         </span>
