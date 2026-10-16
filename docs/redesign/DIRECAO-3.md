@@ -83,3 +83,7 @@ Especificação completa em `SISTEMAS-texto-do-dono.txt` (seção "DEVO — Sist
 - **Risadinha do Rato removida por enquanto** (o dono vai adicionar o áudio depois). Pasta public/audio/voz e lib/devo/voice*.ts saíram.
 - **Salas de troca sem tipos**: todas funcionam igual, com a regra da explicação do Rato no tutorial (mesma raridade, carta do outro oculta até a revelação, chat da sala para negociar, os dois aceitam → revela, troca confirmada não se desfaz). Quem não tem carta não troca.
 - **Owners e Anfitriões têm acesso a TODAS as telas**: nenhuma trava de progressão vale para eles (sistemas novos, Sala de Jogos ainda não revelada, apps ainda não vistos, tutoriais). A regra é do servidor (flags) e a interface só reflete.
+
+## 9. Pedidos do dono (16/10, 11:49)
+- **Poço: reformulação visual profunda** — especificação literal em `POCO-REFORMULACAO-dono.md` (composição cinematográfica, mecanismo central ornamental, sequência ativação → suspense → revelação → resultado com pular/acelerar, apresentação própria por categoria de recompensa, assets de verdade em vez de primitivas, botões de invocação ornamentais). Recompensas inúteis (tampão de lixo, curativo usado…) não vão ao inventário. Faixa de notificação de prêmios raros na tela do Poço; além das reais, **notificações simuladas periódicas** com nomes fictícios (que não correspondam a contas reais), sem suprimir as reais.
+- **Tela inicial (home)**: está "preto no branco" demais — trazer de volta um pouco do roxo/ametista já usado. Revisar o enquadramento dos NPCs.
