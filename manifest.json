@@ -1,0 +1,193 @@
+{
+  "base": "http://localhost:3000",
+  "shots": [
+    {
+      "name": "n-01-home-trancado",
+      "note": "sem o Deadly Vote tutorial: sistemas novos trancados com o motivo",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-50-cena-trancada",
+      "note": "erro: cena exige flag (403 do servidor)",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-02-cerimonia",
+      "note": "cerimônia de desbloqueio depois do tutorial",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-03-home-liberado",
+      "note": "ícones novos destrancados (losango = ainda não aberto)",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-04-sistema-aberto",
+      "note": "sistema liberado abre a própria tela (Poço) e conta como explorado",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-05-cartao-galo",
+      "note": "depois de explorar: cartão \"Ir para casa\" (visita do Galo)",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-10-galo-abertura",
+      "note": "narração entre colchetes",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-11-galo-som",
+      "note": "legenda de som",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-12-galo-escolha",
+      "note": "escolhas numeradas",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-13-galo-campainha",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-14-galo-pensamento",
+      "note": "pensamento entre aspas",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-15-galo-escolha-acao",
+      "note": "opções de ação (negrito no texto do dono)",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-16-galo-aparece",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-17-galo-lembra",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-18-galo-bingo",
+      "note": "resposta por opção",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-19-galo-tempo",
+      "note": "Galo transfere Tempo (valor provisório) — selo de Tempo",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-20-galo-retomada",
+      "note": "recarregou: retoma onde parou",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-21-galo-luz",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-22-galo-sistema-karma",
+      "note": "caixa de sistema",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-23-destino-neutro",
+      "note": "linha do destino (sem número)",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-24-destino-ordem",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-25-destino-caos",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-26-galo-duvida",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-27-galo-contato",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-28-galo-fim",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-30-melissa-chamada",
+      "note": "ícone da Companhia + chamada holográfica",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-31-melissa-materializa",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-32-melissa-holograma",
+      "note": "holograma em luz fria (ametista/aço)",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-33-melissa-escolha",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-34-melissa-multa",
+      "note": "opção 2 tira Tempo do Shuffler (provisório)",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-35-melissa-encerra",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-36-corporacoes-liberado",
+      "note": "Corporações liberado ao fim da chamada (cerimônia)",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-40-mensagens-galo",
+      "note": "contato do Galo em Mensagens",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-41-reflexao",
+      "note": "reflexão \"Anfitrião do quê?\" (ao sair das Torres): cinco opções",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-42-reflexao-resposta",
+      "note": "",
+      "url": "http://localhost:3000/"
+    }
+  ],
+  "errors": [],
+  "console": [
+    {
+      "page": "http://localhost:3000/",
+      "text": "HTTP 403",
+      "src": "http://localhost:3000/api/dialogo?cena=galo-casa"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "Failed to load resource: the server responded with a status of 403 (Forbidden)",
+      "src": "http://localhost:3000/api/dialogo?cena=galo-casa"
+    }
+  ]
+}
