@@ -56,7 +56,7 @@ export function CerimoniaDesbloqueio({ sistemas, onFim }: { sistemas: SistemaDef
               {!um && <span className="dv-label text-[10px] text-dv-text">{s.curto}</span>}
             </span>
           ))}
-          <span className="absolute -right-4 -top-10">
+          <span className="absolute -bottom-9 -right-3">
             <Stamp text="Liberado" tone="gold" size={84} rotate={-12} animate className="[animation-delay:1300ms]" />
           </span>
         </div>

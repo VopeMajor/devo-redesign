@@ -58,6 +58,11 @@ export function CenaDialogo({ cena: cenaId, onFim, onSair }: { cena: string; onF
   const [ocupado, setOcupado] = useState(false)
   const [saindo, setSaindo] = useState(false)
   const nome = callName(state) ?? 'Record'
+  // Foco preso na cena: Enter/Espaço avançam mesmo que o toque que abriu a cena tenha ficado num botão atrás.
+  const raiz = useRef<HTMLElement>(null)
+  useEffect(() => {
+    raiz.current?.focus({ preventScroll: true })
+  }, [])
 
   const retratoDe = useCallback((npc: string | null) => (npc ? (cena?.elenco?.[npc]?.npc ?? npc) : null), [cena])
 
@@ -263,10 +268,12 @@ export function CenaDialogo({ cena: cenaId, onFim, onSair }: { cena: string; onF
 
   return (
     <section
+      ref={raiz}
+      tabIndex={-1}
       role="dialog"
       aria-modal="true"
       aria-label={titulo}
-      className={cn('fixed inset-0 z-[95] overflow-hidden bg-black text-dv-text', saindo ? 'cd-out' : 'cd-in', cena?.cenario === 'sobreposto' && 'bg-transparent')}
+      className={cn('fixed inset-0 z-[95] overflow-hidden bg-black text-dv-text outline-none', saindo ? 'cd-out' : 'cd-in', cena?.cenario === 'sobreposto' && 'bg-transparent')}
     >
       <Palco estado={palco} fx={fx.fx} fxKey={fx.key} destinoReal={dados?.destino} falando={!!falando} />
 

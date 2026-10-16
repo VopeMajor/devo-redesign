@@ -1224,7 +1224,8 @@ if (want('narrativa')) {
         await wait(700)
         continue
       }
-      await page.keyboard.press('Enter')
+      // Toque na caixa de texto (o primeiro toque completa a digitação, o segundo avança).
+      if (!(await tryClick(dlg(page).getByRole('button', { name: /^(Continuar|Mostrar texto completo)$/ }).first(), 2000))) await page.keyboard.press('Enter')
       await wait(260)
     }
     manifest.errors.push({ step: 'narrativa-ate', error: `não chegou em ${alvo}` })
@@ -1235,7 +1236,7 @@ if (want('narrativa')) {
     const { ctx, page } = await account('Lacre', 'DEVO-NARR-0002', VET_CARDS)
     await enterOS(page)
     await wait(1500)
-    await page.mouse.wheel(0, 600)
+    await page.locator('section[aria-label="Sistemas"]').first().scrollIntoViewIfNeeded({ timeout: 5000 }).catch(() => {})
     await wait(800)
     await shot(page, 'n-01-home-trancado', 'sem o Deadly Vote tutorial: sistemas novos trancados com o motivo')
     // Erro: cena com flag exigida aberta à força → o servidor recusa (403) e a cena mostra o aviso.
@@ -1255,7 +1256,7 @@ if (want('narrativa')) {
     await wait(1200)
     await shot(page, 'n-02-cerimonia', 'cerimônia de desbloqueio depois do tutorial')
     await wait(7000)
-    await page.mouse.wheel(0, 600)
+    await page.locator('section[aria-label="Sistemas"]').first().scrollIntoViewIfNeeded({ timeout: 5000 }).catch(() => {})
     await wait(900)
     await shot(page, 'n-03-home-liberado', 'ícones novos destrancados (losango = ainda não aberto)')
     await btn(page, 'Poço dos Milagres', true).click({ timeout: 8000 })
@@ -1360,9 +1361,9 @@ if (want('narrativa')) {
     await enterOS(page)
     await wait(1500)
     await page.evaluate(() => window.dispatchEvent(new CustomEvent('devo:cena', { detail: 'reflexao-anfitriao' })))
-    await wait(3600)
-    await shot(page, 'n-41-reflexao', 'reflexão "Anfitrião do quê?" (ao sair das Torres)')
+    await wait(1500)
     await ate(page, 'Anfitrião do Imperador.')
+    await shot(page, 'n-41-reflexao', 'reflexão "Anfitrião do quê?" (ao sair das Torres): cinco opções')
     await page.getByRole('button', { name: 'Anfitrião do Imperador.', exact: true }).first().click({ timeout: 5000 })
     await wait(3600)
     await shot(page, 'n-42-reflexao-resposta')

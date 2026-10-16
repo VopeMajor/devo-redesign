@@ -226,6 +226,8 @@ Valores **provisórios** já gravados (`provisional = true`):
 - `poco.giro_gratis_diario` — `{ categoria: 'dracma_comum', quantidade: 1 }`.
 - `convites.cota_inicial` — `1`.
 Virtudes (tabela de afinidade com divergências) deve entrar como `virtudes.afinidades`, provisório.
+Narrativa (`scripts/narrativa-migration.sql`, provisórios): `narrativa.galo_casa.tempo_min` (60), `narrativa.melissa_corporacoes.multa_min`
+(−30), `narrativa.galo_casa.explorar_min` (2). Motor de diálogo e efeitos de cena: `docs/redesign/DIALOGO.md`.
 
 ## 8. API
 
