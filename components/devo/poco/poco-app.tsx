@@ -398,7 +398,7 @@ function Acao({
       <span aria-hidden="true" className={cn('font-display text-[16px] font-semibold uppercase leading-none tracking-[0.16em]', disabled ? 'text-dv-text-3' : 'text-dv-text')}>
         {curto}
       </span>
-      <span aria-hidden="true" className="font-mono text-[9.5px] uppercase leading-none tracking-[0.1em] text-dv-text-3">
+      <span aria-hidden="true" className="whitespace-nowrap font-mono text-[10px] uppercase leading-none tracking-[0.02em] text-dv-text-3">
         {label}
       </span>
     </button>

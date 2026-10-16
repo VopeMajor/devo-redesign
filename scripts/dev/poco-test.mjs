@@ -104,6 +104,7 @@ async function giro(s, lancar) {
 
 /* ------------------------------------------------------------- Banco */
 const sfx = Date.now().toString(36)
+const SFX = sfx.toUpperCase()
 const originalCfg = await getCfg()
 
 await test('migração do Poço é idempotente', async () => {
@@ -117,13 +118,13 @@ await test('migração do Poço é idempotente', async () => {
 await q(
   `INSERT INTO invite_codes (code, role, note, is_test) VALUES ($1, 'player', 'poco-test', true), ($2, 'player', 'poco-test', true), ($3, 'owner', 'poco-test', true)
    ON CONFLICT (code) DO NOTHING`,
-  [`DEVO-PT-${sfx}-A`, `DEVO-PT-${sfx}-B`, `DEVO-PT-${sfx}-O`],
+  [`DEVO-PT-${SFX}-A`, `DEVO-PT-${SFX}-B`, `DEVO-PT-${SFX}-O`],
 )
 
 let jog, owner
 await test('cadastro das contas de teste', async () => {
-  jog = await signUp(`Poco${sfx}a`, `DEVO-PT-${sfx}-A`)
-  owner = await signUp(`Poco${sfx}o`, `DEVO-PT-${sfx}-O`)
+  jog = await signUp(`Poco${sfx}a`, `DEVO-PT-${SFX}-A`)
+  owner = await signUp(`Poco${sfx}o`, `DEVO-PT-${SFX}-O`)
 })
 
 /* ------------------------------------------------------------- Trava */
@@ -136,7 +137,12 @@ await test('trancado sem vencer o tutorial (GET sem erro; POST 403)', async () =
   assert(o.json.liberado === true, 'Owner vê o Poço liberado')
 })
 
-await q("INSERT INTO player_unlocks (player_id, flag, source) VALUES ($1, 'poco', 'owner'), ($1, 'diario', 'owner') ON CONFLICT DO NOTHING", [jog?.id])
+if (!jog || !owner) {
+  console.log('sem contas de teste: abortando')
+  await db.end()
+  process.exit(1)
+}
+await q("INSERT INTO player_unlocks (player_id, flag, source) VALUES ($1, 'poco', 'owner'), ($1, 'diario', 'owner') ON CONFLICT DO NOTHING", [jog.id])
 
 /* ------------------------------------------------------------- Dracma do Corvo */
 await test('Dracma do encapuzado é entregue uma vez só', async () => {

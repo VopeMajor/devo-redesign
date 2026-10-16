@@ -59,7 +59,7 @@ export function PocoCena({
         className="poco-t poco-well absolute left-1/2 top-[var(--poco-top,50%)]"
         style={
           {
-            '--poco-y': longe ? '-78%' : '-50%',
+            '--poco-y': longe ? '-44%' : '-50%',
             '--poco-s': longe ? 0.3 : 1,
           } as CSSProperties
         }
@@ -110,8 +110,7 @@ function Casas({ className }: { className?: string }) {
             <path d={`M${c.x} ${base}V${top + c.r}L${c.x + c.w / 2} ${top}L${c.x + c.w} ${top + c.r}V${base}Z`} fill="url(#poco-casa)" />
             <path d={`M${c.x - 3} ${top + c.r + 2}L${c.x + c.w / 2} ${top - 2}L${c.x + c.w + 3} ${top + c.r + 2}`} fill="none" stroke="#2c2b31" strokeWidth="2" />
             {i % 2 === 0 && <rect x={c.x + c.w * 0.68} y={top + c.r * 0.2} width="6" height="14" fill="#1a191e" />}
-            <rect x={c.x + c.w * 0.3} y={top + c.r + 14} width="9" height="12" fill={i === 2 || i === 5 ? '#4a4438' : '#17161a'} opacity={i === 2 || i === 5 ? 0.75 : 1} />
-            <rect x={c.x + c.w * 0.3 + 4} y={top + c.r + 14} width="1" height="12" fill="#121115" />
+            <rect x={c.x + c.w * 0.32} y={top + c.r + 14} width="5" height="7" fill={i === 2 || i === 5 ? '#4a4438' : '#17161a'} opacity={i === 2 || i === 5 ? 0.6 : 1} />
           </g>
         )
       })}
@@ -159,10 +158,10 @@ function Nevoa({ layer, className }: { layer: number; className?: string }) {
         style={{
           background:
             layer === 0
-              ? 'radial-gradient(40% 50% at 30% 50%,rgba(150,148,160,0.18),transparent 70%),radial-gradient(35% 45% at 75% 40%,rgba(150,148,160,0.14),transparent 70%)'
+              ? 'radial-gradient(40% 50% at 30% 50%,rgba(150,148,160,0.3),transparent 70%),radial-gradient(35% 45% at 75% 40%,rgba(150,148,160,0.24),transparent 70%)'
               : layer === 1
-                ? 'radial-gradient(45% 50% at 25% 60%,rgba(170,168,178,0.2),transparent 70%),radial-gradient(40% 50% at 70% 50%,rgba(160,158,170,0.16),transparent 72%)'
-                : 'radial-gradient(55% 60% at 50% 70%,rgba(180,178,188,0.22),transparent 70%)',
+                ? 'radial-gradient(45% 50% at 25% 60%,rgba(170,168,178,0.3),transparent 70%),radial-gradient(40% 50% at 70% 50%,rgba(160,158,170,0.26),transparent 72%)'
+                : 'radial-gradient(55% 60% at 50% 70%,rgba(180,178,188,0.3),transparent 70%)',
         }}
       />
     </div>
@@ -243,7 +242,7 @@ function Poco({ balde, baldeTipo, girando, moeda, brilho }: { balde: BaldePosica
       {/* sombra no barro */}
       <ellipse cx="200" cy="452" rx="168" ry="34" fill="#050506" opacity="0.7" />
       {/* luz sobrenatural acima da boca */}
-      <ellipse className="poco-glow" cx="200" cy="300" rx="150" ry="120" fill="url(#poco-luz)" style={{ opacity: brilho }} />
+      <ellipse className="poco-glow" cx="200" cy="300" rx="150" ry="120" fill="url(#poco-luz)" fillOpacity={brilho} />
 
       {/* corpo de pedra */}
       <path d="M80 318V444A120 26 0 0 0 320 444V318Z" fill="url(#poco-pedra)" />
@@ -306,7 +305,7 @@ function Poco({ balde, baldeTipo, girando, moeda, brilho }: { balde: BaldePosica
         return <path key={i} d={`M${x1} ${y1}L${x2} ${y2}`} stroke="#141417" strokeWidth="1.6" opacity="0.8" />
       })}
       <ellipse cx="200" cy="318" rx="100" ry="22" fill="url(#poco-boca)" />
-      <ellipse className="poco-glow" cx="200" cy="322" rx="56" ry="10" fill="#8a7cc8" opacity={0.14 + brilho * 0.22} />
+      <ellipse className="poco-glow" cx="200" cy="322" rx="60" ry="11" fill="url(#poco-luz)" fillOpacity={0.35 + brilho * 0.4} />
 
       {/* moeda caindo + ondulação na água (reinicia a cada lançamento) */}
       {moeda > 0 && (
@@ -354,8 +353,8 @@ function Figura({ estado }: { estado: 'oculta' | 'visivel' | 'partindo' }) {
     <svg
       viewBox="0 0 120 320"
       className={cn(
-        'poco-t absolute bottom-[14%] right-[4%] h-[52%] w-auto',
-        estado === 'visivel' ? 'translate-x-0 opacity-90' : estado === 'partindo' ? 'translate-x-6 opacity-0' : 'translate-x-10 opacity-0',
+        'poco-t absolute bottom-[20%] right-[-5%] h-[46%] w-auto',
+        estado === 'visivel' ? 'translate-x-0 opacity-80' : estado === 'partindo' ? 'translate-x-6 opacity-0' : 'translate-x-10 opacity-0',
       )}
     >
       <defs>

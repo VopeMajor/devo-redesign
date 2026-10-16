@@ -167,8 +167,9 @@ export function LancarSheet({
               {giroGratis.disponivel ? (
                 `Categoria ${base?.nome ?? 'Dracma Comum'}. Não gasta moeda.`
               ) : (
-                <span className="inline-flex items-baseline gap-1.5">
-                  Usado hoje. Volta em <Countdown endsAt={giroGratis.proximoEm} size="sm" tone="text" criticalMs={0} sound={false} label="Próximo giro grátis" />
+                <span className="flex flex-col gap-1">
+                  Usado hoje. Volta em
+                  <Countdown endsAt={giroGratis.proximoEm} size="sm" tone="text" criticalMs={0} sound={false} label="Próximo giro grátis" />
                 </span>
               )}
             </p>
@@ -236,7 +237,7 @@ export function BaldesSheet({
                 </span>
                 <div className="min-w-0 flex-1">
                   <p className={cn('font-display text-[14px] font-semibold uppercase tracking-[0.08em]', b.possui ? 'text-dv-text' : 'text-dv-text-3')}>{b.nome}</p>
-                  <p className="dv-label mt-0.5 text-[10px] text-dv-text-3">
+                  <p className="mt-0.5 font-sans text-[12.5px] leading-snug text-dv-text-3">
                     {b.tipo === 'inicial' ? 'Inicial' : ITEM_RARITY_LABEL[b.raridade]} · {b.efeito}
                     {b.provisorio && ' (provisório)'}
                   </p>

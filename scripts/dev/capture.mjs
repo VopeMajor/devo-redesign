@@ -1181,7 +1181,7 @@ if (want('poco')) {
       if (vistos.has(nome)) return
       if (await page.getByText(re).count()) {
         vistos.add(nome)
-        await tryClick(fala(page))
+        await tryClick(page.getByRole('button', { name: 'Mostrar fala completa' }).first(), 800)
         await wait(1200)
         await shot(page, nome)
       }

@@ -3,6 +3,7 @@
 .poco-t {
   transition:
     transform 1400ms var(--dv-ease-out),
+    translate 1400ms var(--dv-ease-out),
     opacity 1100ms var(--dv-ease-out);
 }
 .poco-well {

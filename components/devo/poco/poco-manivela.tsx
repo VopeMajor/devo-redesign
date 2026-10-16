@@ -96,7 +96,7 @@ export function PocoManivela({ params, onFim }: { params: ManivelaParams; onFim:
   const a1 = -180 + (r.centro + r.janela / 2) * 180
 
   return (
-    <div className="absolute inset-0 z-30 flex flex-col items-center justify-end bg-[linear-gradient(180deg,rgba(12,12,14,0.15),rgba(12,12,14,0.78)_45%,rgba(12,12,14,0.94))] px-4 pb-4">
+    <div className="absolute inset-0 z-30 flex flex-col items-center justify-end bg-[linear-gradient(180deg,rgba(12,12,14,0.2),rgba(12,12,14,0.88)_42%,#0c0c0e_62%)] px-4 pb-4">
       <button
         type="button"
         onPointerDown={(e) => {
