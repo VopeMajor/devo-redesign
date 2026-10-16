@@ -51,6 +51,10 @@ export type DevoState = {
   javaliMet: boolean
   /** Onde parou na encenação inicial; null depois de chegar ao sistema. */
   story: StoryProgress | null
+  /** Narrativa: sistemas novos já abertos pelo jogador (ordem do dono: explorar → visita do Galo). */
+  sistemasVistos: string[]
+  /** Narrativa: desbloqueios já celebrados (cerimônia de desbloqueio mostrada). */
+  desbloqueiosVistos: string[]
 }
 
 type Action =
@@ -64,6 +68,9 @@ type Action =
   | { type: 'START_SESSION' }
   | { type: 'RETURN_STARTER_CARDS' }
   | { type: 'STORY'; story: StoryProgress | null }
+  | { type: 'ADD_CONTACT'; npcId: string; text?: string }
+  | { type: 'SEE_SYSTEM'; id: string }
+  | { type: 'CELEBRATE_UNLOCKS'; flags: string[] }
   | { type: 'SET_PLAYER'; name: string }
   | { type: 'SET_CHARACTER'; name: string }
   | { type: 'SET_PROFILE'; patch: Partial<PlayerProfile> }
@@ -133,6 +140,8 @@ function freshState(phase: Phase = 'landing', playerName: string | null = null, 
     owlMet: false,
     javaliMet: false,
     story: null,
+    sistemasVistos: [],
+    desbloqueiosVistos: [],
   }
 }
 
@@ -158,6 +167,20 @@ function reducer(state: DevoState, action: Action): DevoState {
       return { ...state, inventory: [] }
     case 'STORY':
       return { ...state, story: action.story }
+    case 'ADD_CONTACT': {
+      // Narrativa: um NPC passa a existir em Mensagens (ex.: o Galo ao fim da visita). Idempotente.
+      const id = `t-${action.npcId}`
+      if (state.threads.some((t) => t.id === id)) return state
+      const message = { id: nextId('m'), from: 'system', text: action.text ?? 'Contato salvo.', at: Date.now() }
+      return { ...state, threads: [...state.threads, { id, npcId: action.npcId, messages: [message], unread: 1, typing: false, answered: [] }] }
+    }
+    case 'SEE_SYSTEM':
+      if (state.sistemasVistos.includes(action.id)) return state
+      return { ...state, sistemasVistos: [...state.sistemasVistos, action.id] }
+    case 'CELEBRATE_UNLOCKS': {
+      const add = action.flags.filter((f) => !state.desbloqueiosVistos.includes(f))
+      return add.length ? { ...state, desbloqueiosVistos: [...state.desbloqueiosVistos, ...add] } : state
+    }
     case 'SET_PLAYER':
       return { ...state, playerName: action.name }
     case 'SET_CHARACTER':
@@ -350,10 +373,18 @@ function hydrate(playerName: string | null, save: SaveData | null, characterName
     javaliMet: !!save.javaliMet,
     story: save.welcomed ? null : (save.story ?? null),
     seenApps: (save.seenApps ?? []).filter((a): a is AppId => STARTER_APPS.includes(a as AppId)),
-    threads: base.threads.map((t) => {
-      const s = savedThreads.get(t.id)
-      return s ? { ...t, messages: s.messages, unread: s.unread, answered: s.answered } : t
-    }),
+    sistemasVistos: save.sistemasVistos ?? [],
+    desbloqueiosVistos: save.desbloqueiosVistos ?? [],
+    threads: [
+      ...base.threads.map((t) => {
+        const s = savedThreads.get(t.id)
+        return s ? { ...t, messages: s.messages, unread: s.unread, answered: s.answered } : t
+      }),
+      // Contatos ganhos na narrativa (ex.: t-galo) não estão na lista inicial.
+      ...save.threads
+        .filter((s) => !base.threads.some((t) => t.id === s.id) && /^t-[a-z0-9-]+$/.test(s.id))
+        .map((s) => ({ id: s.id, npcId: s.id.slice(2), messages: s.messages, unread: s.unread, typing: false, answered: s.answered })),
+    ],
   }
 }
 
@@ -374,6 +405,8 @@ function toSave(state: DevoState): SaveData {
     characterName: state.characterName ?? undefined,
     profile: state.profile,
     story: state.story ?? undefined,
+    sistemasVistos: state.sistemasVistos,
+    desbloqueiosVistos: state.desbloqueiosVistos,
     threads: state.threads.map((th) => ({ id: th.id, messages: th.messages, unread: th.unread, answered: th.answered })),
   }
 }
@@ -392,13 +425,13 @@ function useAutosave(state: DevoState) {
   const latest = useRef(state)
   latest.current = state
   const enabled = state.hasSession && !!state.playerName
-  const { welcomed, timerEndsAt, inventory, notifications, threads, tradesCompleted, trade, arcadeUnlocked, seenApps, owlMet, javaliMet, characterName, profile, story } = state
+  const { welcomed, timerEndsAt, inventory, notifications, threads, tradesCompleted, trade, arcadeUnlocked, seenApps, owlMet, javaliMet, characterName, profile, story, sistemasVistos, desbloqueiosVistos } = state
 
   useEffect(() => {
     if (!enabled) return
     const id = window.setTimeout(() => postSave(latest.current), 1200)
     return () => window.clearTimeout(id)
-  }, [enabled, welcomed, timerEndsAt, inventory, notifications, threads, tradesCompleted, trade?.myCard, arcadeUnlocked, seenApps, owlMet, javaliMet, characterName, profile, story?.part, story?.index])
+  }, [enabled, welcomed, timerEndsAt, inventory, notifications, threads, tradesCompleted, trade?.myCard, arcadeUnlocked, seenApps, owlMet, javaliMet, characterName, profile, story?.part, story?.index, sistemasVistos, desbloqueiosVistos])
 
   useEffect(() => {
     if (!enabled) return

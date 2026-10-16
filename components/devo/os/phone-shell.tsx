@@ -8,8 +8,9 @@ import { cn } from '@/lib/utils'
 import { formatClock, formatDuration, useMediaQuery, useNow } from '../hooks'
 import { IconButton } from '../kit/button'
 import { FrameCorners } from '../kit/frame'
-import { SYSTEM_EMBLEMS } from '../kit/emblems'
-import { FUTURE_SYSTEMS, type FutureSystemId } from '../kit/interior/locked'
+import { SISTEMAS, type SistemaDef } from '../progressao/sistemas'
+import { useAcesso } from '../progressao/use-acesso'
+import { CartaoNarrativa } from '../progressao/narrativa-host'
 import { MarbleSlab, StateSeal } from './shell-ui'
 import { GlyphArrow, GlyphDiamond, GlyphHourglass, GlyphKeyhole, toRoman } from '../kit/glyphs'
 import { SceneBackdrop } from '../kit/scene'
@@ -321,6 +322,7 @@ function HomeScreen({
           <span className="dv-label text-[10px] text-dv-text-3">Agora</span>
           <span aria-hidden="true" className="h-px flex-1 bg-gradient-to-r from-dv-line-strong to-transparent" />
         </div>
+        <CartaoNarrativa />
         <div className="animate-dv-rise [animation-delay:420ms]">
           <SummonsCard onOpen={() => onOpen('record')} />
         </div>
@@ -352,7 +354,7 @@ function HomeScreen({
         ) : null}
       </section>
 
-      <LockedSystems />
+      <SystemsSection onOpen={onOpen} />
 
       <div className="flex shrink-0 grow flex-col items-center justify-end gap-2 pb-3 pt-5 text-center">
         <Divider variant="filigree" tone="gold" className="animate-dv-fade w-56 opacity-60 [animation-delay:520ms]" />
@@ -525,43 +527,57 @@ function CriticalVignette() {
 }
 
 /**
- * Os seis sistemas reservados (Direção 2 §3) como emblemas trancados da mesma família: cinza a 60%
- * com cadeado. Informação, não botão.
+ * Sistemas novos (DIRECAO-3): trancados (cinza a 60% com fechadura e o motivo) até o servidor liberar
+ * (`/api/eu` → `acesso.sistemas`; Owner e Anfitrião veem tudo). Liberados viram ícones de app.
  */
-function LockedSystems() {
+function SystemsSection({ onOpen }: { onOpen: (id: AppId) => void }) {
+  const { eu, liberado } = useAcesso()
+  const { state } = useDevo()
+  const aberto = (f: SistemaDef) => !!f.flag && liberado(f.flag)
+  const algum = SISTEMAS.some(aberto)
   return (
-    <section aria-label="Sistemas em breve" className="mt-5">
+    <section aria-label="Sistemas" className="mt-5">
       <div className="animate-dv-fade flex items-center gap-3 px-1 [animation-delay:520ms]">
-        <span className="dv-label text-[10px] text-dv-text-3">Em breve</span>
+        <span className="dv-label text-[10px] text-dv-text-3">{algum ? 'Sistemas' : 'Em breve'}</span>
         <span aria-hidden="true" className="h-px flex-1 bg-gradient-to-r from-dv-line-strong to-transparent" />
-        <span className="dv-label text-[10px] text-dv-text-3">Trancado pelo Anfitrião</span>
+        {!algum && <span className="dv-label text-[10px] text-dv-text-3">{eu ? 'Vença o Deadly Vote tutorial' : 'Trancado pelo Anfitrião'}</span>}
       </div>
       <ul className="animate-dv-fade mt-3 grid grid-cols-6 gap-1 [animation-delay:560ms]">
-        {FUTURE_SYSTEMS.map((f) => {
-          const E = SYSTEM_EMBLEMS[f.id]
+        {SISTEMAS.map((f) => {
+          const E = f.emblem
+          if (aberto(f)) {
+            const novo = !state.sistemasVistos.includes(f.id)
+            return (
+              <li key={f.id} className="flex flex-col items-center">
+                <button
+                  type="button"
+                  aria-label={f.nome}
+                  onClick={() => onOpen(f.id as AppId)}
+                  className="dv-focus group flex w-full flex-col items-center gap-1.5 transition-transform duration-[120ms] active:scale-[0.92]"
+                >
+                  <span className="relative grid size-11 place-items-center">
+                    <E metal className="size-10 drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] transition-[filter] group-hover:drop-shadow-[0_0_6px_rgba(238,237,235,0.4)]" />
+                    {novo && <span aria-hidden="true" className="absolute -right-0.5 -top-0.5 size-2 rotate-45 bg-dv-amethyst shadow-[0_0_8px_rgba(138,124,200,0.9)]" />}
+                  </span>
+                  <span aria-hidden="true" className="dv-label line-clamp-2 text-center text-[10px] leading-[1.25] tracking-[0.06em] text-dv-text">{f.curto}</span>
+                </button>
+              </li>
+            )
+          }
           return (
-            <li key={f.id} className="flex flex-col items-center gap-1.5" title={f.name}>
+            <li key={f.id} className="flex flex-col items-center gap-1.5" title={`${f.nome} · ${f.trava}`}>
               <span className="relative grid size-11 place-items-center">
                 <E className="size-9 text-dv-text-3 opacity-60" />
                 <GlyphKeyhole aria-hidden="true" className="absolute -bottom-0.5 -right-0.5 size-3.5 rounded-full bg-dv-ink p-[1px] text-dv-gold" />
               </span>
-              <span className="sr-only">{f.name}: bloqueado</span>
-              <span aria-hidden="true" className="dv-label line-clamp-2 text-center text-[10px] leading-[1.25] tracking-[0.06em] text-dv-text-3">{SHORT_NAME[f.id]}</span>
+              <span className="sr-only">{f.nome}: bloqueado. {f.trava}.</span>
+              <span aria-hidden="true" className="dv-label line-clamp-2 text-center text-[10px] leading-[1.25] tracking-[0.06em] text-dv-text-3">{f.curto}</span>
             </li>
           )
         })}
       </ul>
     </section>
   )
-}
-
-const SHORT_NAME: Record<FutureSystemId, string> = {
-  torres: 'Torres',
-  poco: 'Poço',
-  virtudes: 'Virtudes',
-  arcanos: 'Arcanos',
-  corporacoes: 'Corpo­rações',
-  mascaras: 'Máscaras',
 }
 
 function PhoneIcon({ id, onOpen, unread, delay = 0 }: { id: AppId; onOpen: (id: AppId) => void; unread?: number; delay?: number }) {

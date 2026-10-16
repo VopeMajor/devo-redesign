@@ -16,6 +16,8 @@ import { SoundToggle } from '../shared/sound-toggle'
 import { useDevo } from '../state/devo-store'
 import { useBackHandler } from '../use-back-handler'
 import { appIndex, getApp, visibleApps } from './apps'
+import { SISTEMAS } from '../progressao/sistemas'
+import { useAcesso } from '../progressao/use-acesso'
 import { AppGlyphTile, Badge } from './app-icon'
 import { NotificationList, ToastStack } from './notifications'
 import { PULSE_CRITICAL_MS, pulseRemaining } from '@/lib/devo/pulse'
@@ -82,6 +84,7 @@ export function DesktopShell() {
   })
   useBackHandler(panel !== 'none', () => setPanel('none'))
 
+  const { liberado } = useAcesso()
   const openApp = (id: AppId) => {
     playSfx('open')
     setPanel('none')
@@ -163,6 +166,12 @@ export function DesktopShell() {
             <DesktopIcon appId="jogos" selected={selected === 'jogos'} unread={state.unread.jogos} onSelect={setSelected} onOpen={openApp} />
           </div>
         )}
+        {/* Sistemas novos liberados pelo servidor (DIRECAO-3; trancados não aparecem na área de trabalho). */}
+        {SISTEMAS.filter((f) => f.flag && liberado(f.flag)).map((f) => (
+          <div key={f.id} className="animate-[devo-pop_0.7s_ease-out_both]">
+            <DesktopIcon appId={f.id as AppId} selected={selected === f.id} onSelect={setSelected} onOpen={openApp} />
+          </div>
+        ))}
       </nav>
       <p className="dv-label absolute bottom-[64px] left-5 z-10 w-24 text-center text-[10px] text-dv-text-3">Clique duplo</p>
 

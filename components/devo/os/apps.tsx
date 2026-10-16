@@ -13,6 +13,7 @@ import { MensagensApp } from '../apps/mensagens-app'
 import { PulsoApp } from '../apps/pulso-app'
 import { RecordApp } from '../apps/record-app'
 import { TrocasApp } from '../apps/trocas-app'
+import { SISTEMA_APPS, isSistema } from '../progressao/sistemas'
 
 export type AppDef = {
   id: AppId
@@ -38,11 +39,13 @@ export const APPS: AppDef[] = [
   { id: 'trocas', name: 'Sala de Trocas', subtitle: 'Trocas às cegas', icon: TradeGlyph, Component: TrocasApp, window: { w: 980, h: 640 } },
   { id: 'ajustes', name: 'Ajustes', subtitle: 'Sistema', icon: SettingsGlyph, Component: AjustesApp, window: { w: 480, h: 520 } },
   { id: 'jogos', name: 'Sala de Jogos', subtitle: 'Minigames e apostas', icon: GamesGlyph, Component: JogosApp, window: { w: 1040, h: 680 } },
+  // Sistemas novos (Salão, Poço, Torres, Corporações, Virtudes): trancados até o servidor liberar.
+  ...SISTEMA_APPS,
 ]
 
-/** A Sala de Jogos só aparece depois da revelação. */
+/** Apps do shell (sem os sistemas novos, que têm seção própria). A Sala de Jogos só aparece depois da revelação. */
 export function visibleApps(arcadeUnlocked: boolean) {
-  return arcadeUnlocked ? APPS : APPS.filter((a) => a.id !== 'jogos')
+  return APPS.filter((a) => !isSistema(a.id) && (arcadeUnlocked || a.id !== 'jogos'))
 }
 
 const APP_MAP = new Map(APPS.map((a) => [a.id, a]))

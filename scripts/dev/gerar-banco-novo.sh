@@ -21,6 +21,7 @@ FILES=(
   scripts/test-accounts-migration.sql
   scripts/character-name-migration.sql
   scripts/fundacao-migration.sql
+  scripts/narrativa-migration.sql
 )
 {
   echo "-- DEVO — banco novo de produção (gerado; NÃO editar à mão)."
