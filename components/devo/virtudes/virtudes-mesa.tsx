@@ -293,7 +293,7 @@ function EditorAfinidades({ cfg, provisorio, agir }: { cfg: AfinidadesConfig; pr
       <div className="mt-3">
         <table className="w-full table-fixed border-collapse">
           <colgroup>
-            <col className="w-[34%]" />
+            <col className="w-[37%]" />
             {VIRTUDE_KEYS.map((v) => (
               <col key={v} />
             ))}
@@ -368,14 +368,14 @@ function ArcanoLinha({
       <tr className={cn('border-t border-in-line', invalida && 'bg-in-alert/10')}>
         <td className="py-1 pr-1">
           <span className="flex items-center gap-1">
-            <span className="min-w-0 break-words font-sans text-[13px] leading-tight text-in-fg">{titulo.replace(/^Arcano d[aoe]s? /, '')}</span>
+            <span className="min-w-0 font-sans text-[12.5px] leading-tight text-in-fg">{titulo.replace(/^Arcano d[aoe]s? /, '')}</span>
             {div && (
               <button
                 type="button"
                 onClick={() => setNota(!nota)}
                 aria-expanded={nota}
                 aria-label={`Divergência do doc: ${titulo}`}
-                className={cn('dv-focus grid size-7 shrink-0 place-items-center font-mono text-[11px] font-semibold', div.confirmar && !confirmado ? 'text-in-alert shadow-[inset_0_0_0_1.5px_var(--in-alert)]' : 'text-in-fg-3 shadow-[inset_0_0_0_1px_var(--in-line-strong)]')}
+                className={cn('dv-focus grid size-6 shrink-0 place-items-center font-mono text-[11px] font-semibold', div.confirmar && !confirmado ? 'text-in-alert shadow-[inset_0_0_0_1.5px_var(--in-alert)]' : 'text-in-fg-3 shadow-[inset_0_0_0_1px_var(--in-line-strong)]')}
               >
                 !
               </button>
