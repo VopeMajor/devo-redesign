@@ -38,7 +38,7 @@ export const NAIPE_PATH: Record<VirtudeKey, string> = {
 
 /** Detalhes gravados próprios de cada naipe (linhas finas por dentro). */
 const DETALHE: Record<VirtudeKey, string> = {
-  paus: 'M24 10.5V18.5M14.2 21.6V29.6M33.8 21.6V29.6',
+  paus: 'M19.6 38.6H28.4M24 22V31',
   copas: 'M24 17V33M17.5 15.5Q14 18.5 15 23',
   ouros: 'M24 11V37M15 24H33',
   espadas: 'M24 12V31M18.5 25Q16 27.5 17 31',

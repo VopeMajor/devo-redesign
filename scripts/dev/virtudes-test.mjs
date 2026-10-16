@@ -96,7 +96,9 @@ await test('migração das Virtudes é idempotente', async () => {
 await test('tabela de afinidade padrão = arquivo do doc, provisória, com divergências marcadas', async () => {
   const [c] = await q("SELECT value, provisional FROM devo_config WHERE key = 'virtudes.afinidades'")
   assert(c?.provisional === true, 'precisa estar marcada como provisória')
-  assert(JSON.stringify(c.value.ordem) === JSON.stringify(ARQUIVO.ordem) || Object.keys(c.value.ordem).every((k) => JSON.stringify(c.value.ordem[k]) === JSON.stringify(ARQUIVO.ordem[k])), 'ordem difere do arquivo')
+  // jsonb reordena as chaves: compara valor a valor
+  for (const [k, o] of Object.entries(ARQUIVO.ordem)) for (const v of VIRTUDES) assert(c.value.ordem[k]?.[v] === o[v], `ordem difere do arquivo em ${k}.${v}`)
+  assert(JSON.stringify(c.value.escala) === JSON.stringify(ARQUIVO.escala), 'escala difere do arquivo')
   assert(Object.keys(c.value.ordem).length === 22, `22 Arcanos, veio ${Object.keys(c.value.ordem).length}`)
   for (const [k, o] of Object.entries(c.value.ordem)) assert(Object.values(o).sort().join() === '1,2,3,4,5,6', `${k} não é permutação`)
   assert(c.value.ordem.morte.tacas === 1 && c.value.ordem.morte.paus === 6, 'Morte: Taças excelente, Paus deficiente (exemplo do doc)')

@@ -114,6 +114,12 @@ function Tela({ d }: { d: Liberado }) {
         <div className="mx-auto flex max-w-md flex-col gap-6 px-4 pb-12 pt-3">
           <Roda d={d} porKey={porKey} />
 
+          {!d.arcano && (
+            <p role="status" className="mx-auto -mt-2 max-w-[34ch] text-center font-mono text-[11px] uppercase leading-relaxed tracking-[0.14em] text-dv-gold">
+              Sua afinidade aparece quando o Anfitrião registrar o seu Arcano.
+            </p>
+          )}
+
           <p className="animate-dv-fade mx-auto max-w-[36ch] text-center font-body text-[15.5px] italic leading-relaxed text-dv-text-2 [animation-delay:200ms]">
             {TEXTOS_VIRTUDES.abertura}
           </p>

@@ -290,11 +290,17 @@ function EditorAfinidades({ cfg, provisorio, agir }: { cfg: AfinidadesConfig; pr
         Ordem de 1 (excelente) a 6 (deficiente) por Arcano, da tabela do doc do dono. Multiplicadores por posição: {cfg.escala.map((m) => `×${String(m).replace('.', ',')}`).join(' · ')}. Linhas marcadas divergem dentro do próprio doc — confirmar com o dono.
       </p>
       {pendentes > 0 && <p className="mt-2 font-mono text-[11px] uppercase tracking-[0.12em] text-in-alert">{pendentes} Arcanos esperando confirmação do dono</p>}
-      <div className="-mx-1 mt-3 overflow-x-auto">
-        <table className="w-full min-w-[340px] border-collapse">
+      <div className="mt-3">
+        <table className="w-full table-fixed border-collapse">
+          <colgroup>
+            <col className="w-[34%]" />
+            {VIRTUDE_KEYS.map((v) => (
+              <col key={v} />
+            ))}
+          </colgroup>
           <thead>
             <tr>
-              <th className="py-1 pl-1 text-left font-mono text-[10px] font-normal uppercase tracking-[0.12em] text-in-fg-3">Arcano</th>
+              <th className="py-1 text-left font-mono text-[10px] font-normal uppercase tracking-[0.12em] text-in-fg-3">Arcano</th>
               {VIRTUDE_KEYS.map((v) => (
                 <th key={v} className="px-0.5 py-1" title={VIRTUDES[v].nome}>
                   <Naipe virtude={v} className="mx-auto size-5" title={VIRTUDES[v].nome} />
@@ -360,16 +366,16 @@ function ArcanoLinha({
   return (
     <>
       <tr className={cn('border-t border-in-line', invalida && 'bg-in-alert/10')}>
-        <td className="py-1 pl-1">
-          <span className="flex items-center gap-1.5">
-            <span className="font-sans text-[13px] leading-tight text-in-fg">{titulo.replace(/^Arcano d[aoe]s? /, '')}</span>
+        <td className="py-1 pr-1">
+          <span className="flex items-center gap-1">
+            <span className="min-w-0 break-words font-sans text-[13px] leading-tight text-in-fg">{titulo.replace(/^Arcano d[aoe]s? /, '')}</span>
             {div && (
               <button
                 type="button"
                 onClick={() => setNota(!nota)}
                 aria-expanded={nota}
                 aria-label={`Divergência do doc: ${titulo}`}
-                className={cn('dv-focus grid size-6 shrink-0 place-items-center font-mono text-[11px] font-semibold', div.confirmar && !confirmado ? 'bg-in-alert text-white' : 'shadow-[inset_0_0_0_1px_var(--in-line-strong)] text-in-fg-2')}
+                className={cn('dv-focus grid size-7 shrink-0 place-items-center font-mono text-[11px] font-semibold', div.confirmar && !confirmado ? 'text-in-alert shadow-[inset_0_0_0_1.5px_var(--in-alert)]' : 'text-in-fg-3 shadow-[inset_0_0_0_1px_var(--in-line-strong)]')}
               >
                 !
               </button>
@@ -377,12 +383,12 @@ function ArcanoLinha({
           </span>
         </td>
         {VIRTUDE_KEYS.map((v) => (
-          <td key={v} className="px-0.5 py-1">
+          <td key={v} className="px-[2px] py-1">
             <select
               aria-label={`${titulo}: posição de ${VIRTUDES[v].nome}`}
               value={ordem?.[v] ?? ''}
               onChange={(e) => onChange(v, Number(e.target.value))}
-              className={cn('dv-focus h-9 w-full min-w-[40px] appearance-none bg-in-fg/[0.04] text-center font-mono text-[14px] text-in-fg', ordem?.[v] === 1 && 'font-semibold text-in-accent', ordem?.[v] === 6 && 'text-in-fg-3')}
+              className={cn('dv-focus h-10 w-full min-w-0 appearance-none bg-in-fg/[0.04] text-center font-mono text-[14px] text-in-fg [text-align-last:center]', ordem?.[v] === 1 && 'font-semibold text-in-accent', ordem?.[v] === 6 && 'text-in-fg-3')}
             >
               {[1, 2, 3, 4, 5, 6].map((n) => (
                 <option key={n} value={n}>
@@ -395,7 +401,7 @@ function ArcanoLinha({
       </tr>
       {div && nota && (
         <tr>
-          <td colSpan={7} className="pb-2 pl-1 pr-1">
+          <td colSpan={7} className="pb-2 pr-1">
             <p className="font-body text-[14px] leading-relaxed text-in-fg-2">{div.nota}</p>
             {div.confirmar && (
               <label className="mt-1 flex min-h-10 items-center gap-2 font-sans text-[13px] text-in-fg">
