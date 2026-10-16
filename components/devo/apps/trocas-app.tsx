@@ -57,6 +57,12 @@ export function TrocasApp() {
     const t = window.setTimeout(() => setLossFlash(false), 900)
     return () => window.clearTimeout(t)
   }, [forfeited])
+  // Entrar numa sala (ou voltar ao corredor) começa do topo: a regra da sala é a primeira coisa que se lê.
+  const scrollRef = useRef<HTMLDivElement>(null)
+  const roomId = trade?.roomId
+  useEffect(() => {
+    scrollRef.current?.scrollTo({ top: 0 })
+  }, [roomId])
   // A cena acompanha a tensão: o corredor anda devagar; dentro da sala, a luz baixa.
   return (
     <div className="relative h-full overflow-hidden bg-dv-ink text-dv-text @container">
@@ -69,7 +75,7 @@ export function TrocasApp() {
           <style>{'@keyframes trocas-loss{0%{opacity:0}18%{opacity:1}100%{opacity:0}}'}</style>
         </span>
       )}
-      <div className="devo-scroll absolute inset-0 overflow-y-auto overflow-x-hidden">
+      <div ref={scrollRef} className="devo-scroll absolute inset-0 overflow-y-auto overflow-x-hidden">
         {trade ? (
           <Reveal key={`sala-${trade.roomId}`} variant="right">
             <TradeRoom trade={trade} />
@@ -176,7 +182,7 @@ function Door({ room, onEnter }: { room: Room; onEnter: () => void }) {
       onMouseEnter={() => free && playSfx('hover')}
       onClick={onEnter}
       aria-label={`Sala ${room.number}, ${meta.label}, ${room.condition}: ${rule.summary}`}
-      className={cn('dv-focus group relative flex w-full flex-col text-left outline-none', free ? 'cursor-pointer' : 'cursor-not-allowed')}
+      className={cn('dv-focus group relative flex h-full w-full flex-col text-left outline-none', free ? 'cursor-pointer' : 'cursor-not-allowed')}
     >
       {/* a porta */}
       <span
@@ -237,7 +243,7 @@ function Door({ room, onEnter }: { room: Room; onEnter: () => void }) {
       {/* plaqueta da condição, abaixo da porta */}
       <span
         className={cn(
-          'relative -mt-4 flex flex-col items-center gap-1 border bg-[linear-gradient(180deg,rgba(31,31,34,0.92),rgba(12,12,14,0.94))] px-2 pb-2 pt-1.5 text-center transition-colors duration-[var(--dv-dur-2)]',
+          'relative -mt-4 flex flex-1 flex-col items-center justify-center gap-1 border bg-[linear-gradient(180deg,rgba(31,31,34,0.92),rgba(12,12,14,0.94))] px-2 pb-2 pt-1.5 text-center transition-colors duration-[var(--dv-dur-2)]',
           free ? 'border-dv-gold/45 group-hover:border-dv-gold-bright/80' : 'border-dv-line',
         )}
       >
@@ -460,7 +466,7 @@ function TradeRoom({ trade }: { trade: TradeSession }) {
   const number = pad2(room?.number ?? 0)
   const tableRef = useRef<HTMLDivElement>(null)
   // Quem está na mesa já vê quem sentou: o aviso do sistema fica só na central, sem cobrir o canal.
-  const trocasToasts = state.toasts.filter((t) => t.appId === 'trocas').map((t) => t.id).join(',')
+  const trocasToasts = state.toasts.filter((t) => t.appId === 'trocas' || t.appId === 'cartas').map((t) => t.id).join(',')
   useEffect(() => {
     if (!trocasToasts) return
     for (const id of trocasToasts.split(',')) dispatch({ type: 'DISMISS_TOAST', id })
@@ -685,7 +691,9 @@ function TradeTable({ trade, rule, lostCardId }: { trade: TradeSession; rule: Ro
 
         {/* plaqueta da raridade */}
         <div className="relative flex items-center justify-center gap-2 border-t border-dv-line px-3 py-2.5 font-mono text-[10.5px] uppercase tracking-[0.18em]">
-          {myRarity ? (
+          {revealing ? (
+            <span className="animate-dv-cut-in font-impact text-[20px] uppercase leading-none tracking-[0.34em] text-dv-gold-bright [text-shadow:0_0_14px_rgba(255,246,230,0.45)]">Revelação</span>
+          ) : myRarity ? (
             rule.sameRarity && !revealed ? (
               <span className="flex items-center gap-2 text-dv-text-2">
                 <RarityMark color={myRarity.color} />
@@ -722,16 +730,6 @@ function TradeTable({ trade, rule, lostCardId }: { trade: TradeSession; rule: Ro
         )}
       </div>
 
-      {revealing && (
-        <p className="pointer-events-none absolute inset-x-0 -bottom-3 z-10 flex justify-center">
-          <span className="animate-dv-cut-in bg-dv-ink px-3 font-impact text-[22px] uppercase tracking-[0.3em] text-dv-gold-bright">Revelação</span>
-        </p>
-      )}
-      {trade.stage === 'done' && (
-        <span className="pointer-events-none absolute -right-1 -top-4 z-10">
-          <Stamp text="Troca final" shape="round" tone="gold" size={92} rotate={10} animate ring="SALA DE TROCAS · DEVO · SEM VOLTA ·" />
-        </span>
-      )}
     </div>
   )
 }
@@ -882,13 +880,19 @@ function TradeActions({ trade, rule, lostCardId, onExit }: { trade: TradeSession
     const rarity = RARITY_META[card.rarity]
     return (
       <div className="flex animate-dv-rise flex-col gap-3 border-t border-dv-line-gold/50 pt-4">
-        <p className="font-body text-[16px] leading-relaxed text-dv-text">
-          Você recebeu <strong className="font-semibold text-dv-gold-bright">{card.name}</strong>
-          <span className="ml-2 inline-flex items-center gap-1.5 align-middle font-mono text-[10px] uppercase tracking-[0.18em] text-dv-text-2">
-            <RarityMark color={rarity.color} />
-            {rarity.label}
+        <div className="flex items-center gap-3">
+          <div className="min-w-0 flex-1">
+            <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-dv-text-3">Você recebeu</p>
+            <p className="mt-1 font-display text-[20px] font-semibold uppercase leading-tight tracking-[0.06em] text-dv-gold-bright">{card.name}</p>
+            <p className="mt-1 flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.18em] text-dv-text-2">
+              <RarityMark color={rarity.color} />
+              {rarity.label}
+            </p>
+          </div>
+          <span aria-hidden="true" className="-my-2 shrink-0">
+            <Stamp text="Troca final" shape="round" tone="gold" size={88} rotate={10} animate ring="SALA DE TROCAS · DEVO · SEM VOLTA ·" />
           </span>
-        </p>
+        </div>
         <Button block onClick={onExit} sfx="click" icon={<GlyphArrow className="size-4 rotate-180" />}>
           Voltar ao corredor
         </Button>
