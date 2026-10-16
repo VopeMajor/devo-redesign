@@ -34,6 +34,10 @@ export type SaveData = {
   /** Perfil do prólogo: idade, gênero, segunda aparência e trocas restantes. */
   profile?: PlayerProfile
   story?: StoryProgress
+  /** Narrativa: sistemas novos já abertos (explorar → visita do Galo). */
+  sistemasVistos?: string[]
+  /** Narrativa: desbloqueios cuja cerimônia já foi mostrada. */
+  desbloqueiosVistos?: string[]
 }
 
 function story(v: unknown): StoryProgress | undefined {
@@ -45,6 +49,7 @@ function story(v: unknown): StoryProgress | undefined {
 
 export const MAX_SAVE_BYTES = 60_000
 
+const ids = (v: unknown) => (Array.isArray(v) ? v.filter((x): x is string => typeof x === 'string' && /^[a-z0-9_-]{1,40}$/.test(x)).slice(0, 24) : [])
 const isObj = (v: unknown): v is Record<string, unknown> => typeof v === 'object' && v !== null && !Array.isArray(v)
 const str = (v: unknown, max = 600) => (typeof v === 'string' ? v.slice(0, max) : '')
 const num = (v: unknown) => (typeof v === 'number' && Number.isFinite(v) ? v : 0)
@@ -104,6 +109,8 @@ export function sanitizeSave(raw: unknown): SaveData | null {
     characterName: str(raw.characterName, 40).trim() || undefined,
     profile: raw.profile === undefined ? undefined : sanitizeProfile(raw.profile),
     story: story(raw.story),
+    sistemasVistos: ids(raw.sistemasVistos),
+    desbloqueiosVistos: ids(raw.desbloqueiosVistos),
     seenApps: Array.isArray(raw.seenApps) ? raw.seenApps.filter((x): x is string => typeof x === 'string').slice(0, 12).map((x) => x.slice(0, 20)) : [],
   }
 }

@@ -13,16 +13,7 @@ import { MensagensApp } from '../apps/mensagens-app'
 import { PulsoApp } from '../apps/pulso-app'
 import { RecordApp } from '../apps/record-app'
 import { TrocasApp } from '../apps/trocas-app'
-import { CorporacoesApp } from '../corporacoes/corporacoes-app'
-import { EmblemCorporacoes, EmblemMascaras, EmblemPoco, EmblemTorres, EmblemVirtudes } from '../kit/emblems'
-import { PocoApp } from '../poco/poco-app'
-import { SalaoApp } from '../salao/salao-app'
-import { TorresApp } from '../torres/torres-app'
-import { VirtudesApp } from '../virtudes/virtudes-app'
-
-/** Ícone das Torres no registro: o emblema de prata do kit (o shell trancado usa o mesmo). */
-const TorresGlyph: AppIconComponent = (p) => <EmblemTorres metal className={p.className} />
-const CorpGlyph: AppIconComponent = (p) => <EmblemCorporacoes metal className={p.className} />
+import { SISTEMA_APPS, isSistema } from '../progressao/sistemas'
 
 export type AppDef = {
   id: AppId
@@ -48,22 +39,16 @@ export const APPS: AppDef[] = [
   { id: 'trocas', name: 'Sala de Trocas', subtitle: 'Trocas às cegas', icon: TradeGlyph, Component: TrocasApp, window: { w: 980, h: 640 } },
   { id: 'ajustes', name: 'Ajustes', subtitle: 'Sistema', icon: SettingsGlyph, Component: AjustesApp, window: { w: 480, h: 520 } },
   { id: 'jogos', name: 'Sala de Jogos', subtitle: 'Minigames e apostas', icon: GamesGlyph, Component: JogosApp, window: { w: 1040, h: 680 } },
-  // Sistemas novos (DIRECAO-3): abrem pelos emblemas de sistema da home, não pela grade de apps.
-  { id: 'poco', name: 'Poço dos Milagres', subtitle: 'Moedas, manivela e balde', icon: EmblemPoco, Component: PocoApp, window: { w: 460, h: 820 } },
-  { id: 'salao', name: 'Salão das Máscaras', subtitle: 'Leilões, mercado e anúncios', icon: EmblemMascaras, Component: SalaoApp, window: { w: 480, h: 840 } },
-  // Sistema novo (DIRECAO-3 §2): sempre registrado; trancado, a tela mostra o motivo (o servidor decide).
-  { id: 'torres', name: 'Torres de Ruptura', subtitle: 'Andares, essências e chaves', icon: TorresGlyph, Component: TorresApp, window: { w: 480, h: 820 } },
-  { id: 'virtudes', name: 'Virtudes', subtitle: 'Naipes, Arcano e Estágio', icon: EmblemVirtudes, Component: VirtudesApp, window: { w: 460, h: 820 } },
-  { id: 'corporacoes', name: 'Corporações', subtitle: 'Companhia de Despertados', icon: CorpGlyph, Component: CorporacoesApp, window: { w: 480, h: 840 } },
+  // Sistemas novos (Salão, Poço, Torres, Corporações, Virtudes): trancados até o servidor liberar.
+  ...SISTEMA_APPS,
 ]
 
-/** Apps que são sistemas novos: abrem pelos emblemas da home (trancados até o servidor liberar). */
-export const SYSTEM_APP_IDS: AppId[] = ['poco', 'torres', 'salao', 'virtudes', 'corporacoes']
+/** Ids dos sistemas novos (compatibilidade com quem já importava). */
+export const SYSTEM_APP_IDS = APPS.filter((a) => isSistema(a.id)).map((a) => a.id)
 
-/** A Sala de Jogos só aparece depois da revelação. */
+/** Apps do shell (sem os sistemas novos, que têm seção própria). A Sala de Jogos só aparece depois da revelação. */
 export function visibleApps(arcadeUnlocked: boolean) {
-  const apps = APPS.filter((a) => !SYSTEM_APP_IDS.includes(a.id))
-  return arcadeUnlocked ? apps : apps.filter((a) => a.id !== 'jogos')
+  return APPS.filter((a) => !isSistema(a.id) && (arcadeUnlocked || a.id !== 'jogos'))
 }
 
 const APP_MAP = new Map(APPS.map((a) => [a.id, a]))

@@ -1865,6 +1865,186 @@ if (want('desktop')) {
   })
 }
 
+// ── 5. Narrativa e progressão (sys/narrativa): trava → cerimônia → explorar → Galo (Karma) → Melissa ──────
+// Contas: Lacre (DEVO-NARR-0002, sem tutorial) e Sirius (DEVO-NARR-0001, tutorial vencido via SQL).
+if (want('narrativa')) {
+  const { default: pg } = await import('pg')
+  const db = new pg.Pool({ connectionString: process.env.DATABASE_URL })
+  const sql = (t, p) => db.query(t, p).then((r) => r.rows)
+  // A cena do motor é a última <section role=dialog> (outras telas podem ter diálogos ocultos antes).
+  const dlg = (page) => page.locator('section[data-cena]').last()
+  // textContent (não innerText): a legenda de som é caixa-alta só no CSS.
+  const textoDlg = (page) => dlg(page).evaluate((el) => el.textContent ?? '', null, { timeout: 2000 }).catch(() => '')
+  /** Avança a cena até o texto aparecer (por inteiro); escolhas no caminho: a primeira, ou `pick` por rótulo. */
+  async function ate(page, alvo, { pick = {}, max = 400 } = {}) {
+    for (let i = 0; i < max; i++) {
+      const t = await textoDlg(page)
+      if (!t) {
+        // Sem cena aberta: não adianta apertar teclas na home.
+        await wait(500)
+        if (!(await textoDlg(page))) break
+        continue
+      }
+      if (typeof alvo === 'string' ? t.includes(alvo) : alvo.test(t)) {
+        await wait(1600)
+        return true
+      }
+      const grupo = page.locator('[aria-label="Escolha o que dizer"]')
+      if (await grupo.count()) {
+        const quer = Object.entries(pick).find(([k]) => t.includes(k))
+        const alvoBtn = quer ? page.getByRole('button', { name: quer[1], exact: true }) : grupo.locator('button:not([disabled])')
+        await tryClick(alvoBtn.first(), 4000)
+        await wait(700)
+        continue
+      }
+      // Espera a fala terminar de digitar (o texto inteiro fica no DOM) e só então toca para avançar.
+      const pronto = dlg(page).getByRole('button', { name: 'Continuar', exact: true }).first()
+      if (await pronto.count()) {
+        await tryClick(pronto, 2000)
+        await wait(450)
+      } else await wait(300)
+    }
+    manifest.errors.push({ step: 'narrativa-ate', error: `não chegou em ${alvo}; último texto: ${(await textoDlg(page)).slice(-160)}` })
+    return false
+  }
+
+  await step('narrativa-trancado', async () => {
+    const { ctx, page } = await account('Lacre', 'DEVO-NARR-0002', VET_CARDS)
+    await enterOS(page)
+    await wait(1500)
+    await page.locator('section[aria-label="Sistemas"]').first().scrollIntoViewIfNeeded({ timeout: 5000 }).catch(() => {})
+    await wait(800)
+    await shot(page, 'n-01-home-trancado', 'sem o Deadly Vote tutorial: sistemas novos trancados com o motivo')
+    // Erro: cena com flag exigida aberta à força → o servidor recusa (403) e a cena mostra o aviso.
+    await page.evaluate(() => window.dispatchEvent(new CustomEvent('devo:cena', { detail: 'galo-casa' })))
+    await wait(2200)
+    await shot(page, 'n-50-cena-trancada', 'erro: cena exige flag (403 do servidor)')
+    await ctx.close()
+  })
+
+  const { ctx, page } = await account('Sirius', 'DEVO-NARR-0001', VET_CARDS)
+  await step('narrativa-desbloqueio', async () => {
+    const [p] = await sql('SELECT id FROM players WHERE lower(name) = lower($1)', ['Sirius'])
+    for (const f of ['salao_mascaras', 'poco', 'torres', 'diario', 'galo_casa']) {
+      await sql("INSERT INTO player_unlocks (player_id, flag, source, ref) VALUES ($1, $2, 'deadly_vote', 'captura') ON CONFLICT DO NOTHING", [p.id, f])
+    }
+    await enterOS(page)
+    await wait(1200)
+    await shot(page, 'n-02-cerimonia', 'cerimônia de desbloqueio depois do tutorial')
+    await wait(7000)
+    await page.locator('section[aria-label="Sistemas"]').first().scrollIntoViewIfNeeded({ timeout: 5000 }).catch(() => {})
+    await wait(900)
+    await shot(page, 'n-03-home-liberado', 'ícones novos destrancados (losango = ainda não aberto)')
+    await btn(page, 'Poço dos Milagres', true).click({ timeout: 8000 })
+    await wait(2600)
+    await shot(page, 'n-04-sistema-aberto', 'sistema liberado abre a própria tela (Poço) e conta como explorado')
+    // Explorou Poço e Torres (as apresentações deles têm roteiro próprio): grava no save e volta à home.
+    await page.goto(`${BASE}/images/card-back.png`)
+    await api(page, '/api/save', makeSave(VET_CARDS, { sistemasVistos: ['poco', 'torres'], desbloqueiosVistos: ['salao', 'poco', 'torres'] }))
+    await enterOS(page)
+    await wait(1500)
+    const agora = page.getByRole('button', { name: 'Ir para casa' }).first()
+    await agora.scrollIntoViewIfNeeded({ timeout: 5000 }).catch(() => {})
+    await wait(600)
+    await shot(page, 'n-05-cartao-galo', 'depois de explorar: cartão "Ir para casa" (visita do Galo)')
+  })
+
+  await step('narrativa-galo', async () => {
+    await page.getByRole('button', { name: 'Ir para casa' }).first().click({ timeout: 8000 })
+    await wait(2600)
+    await shot(page, 'n-10-galo-abertura', 'narração entre colchetes')
+    await ate(page, 'Som de porta abrindo')
+    await shot(page, 'n-11-galo-som', 'legenda de som')
+    await ate(page, 'Um cativeiro, completamente')
+    await shot(page, 'n-12-galo-escolha', 'escolhas numeradas')
+    await ate(page, 'a campainha toca')
+    await shot(page, 'n-13-galo-campainha')
+    await ate(page, 'Que estranho')
+    await shot(page, 'n-14-galo-pensamento', 'pensamento entre aspas')
+    await ate(page, 'Ir abrir a porta')
+    await shot(page, 'n-15-galo-escolha-acao', 'opções de ação (negrito no texto do dono)')
+    await ate(page, 'Um Anfitrião apareceu')
+    await shot(page, 'n-16-galo-aparece')
+    await ate(page, 'Cláudio')
+    await shot(page, 'n-17-galo-lembra')
+    await page.getByRole('button', { name: 'Galo…?', exact: true }).first().click({ timeout: 5000 })
+    await wait(2600)
+    await shot(page, 'n-18-galo-bingo', 'resposta por opção')
+    await ate(page, 'de tempo para você')
+    await shot(page, 'n-19-galo-tempo', 'Galo transfere Tempo (valor provisório) — selo de Tempo')
+    // Recarregar no meio: retoma no passo salvo e não repete o Tempo.
+    await wait(1200)
+    await enterOS(page)
+    await wait(1500)
+    await page.getByRole('button', { name: 'Ir para casa' }).first().click({ timeout: 8000 })
+    await wait(2800)
+    await shot(page, 'n-20-galo-retomada', 'recarregou: retoma onde parou')
+    await ate(page, 'A luz pisca')
+    await wait(200)
+    await shot(page, 'n-21-galo-luz')
+    await ate(page, 'Sistema de Karma')
+    await shot(page, 'n-22-galo-sistema-karma', 'caixa de sistema')
+    await ate(page, 'medido pela linha do destino')
+    await shot(page, 'n-23-destino-neutro', 'linha do destino (sem número)')
+    await ate(page, 'sobe conforme')
+    await shot(page, 'n-24-destino-ordem')
+    await ate(page, 'rumo ao caos')
+    await shot(page, 'n-25-destino-caos')
+    await ate(page, 'Você come minhocas')
+    await shot(page, 'n-26-galo-duvida')
+    await ate(page, 'Novo contato em Mensagens')
+    await shot(page, 'n-27-galo-contato')
+    await ate(page, 'Pelo menos ele se despediu')
+    await shot(page, 'n-28-galo-fim')
+    await page.keyboard.press('Enter')
+    await wait(2500)
+  })
+
+  await step('narrativa-melissa', async () => {
+    // A chamada da Companhia chega alguns segundos depois de voltar para a home.
+    await enterOS(page)
+    await page.getByRole('dialog', { name: 'Uma chamada da Companhia' }).waitFor({ timeout: 20000 })
+    await wait(1800)
+    await shot(page, 'n-30-melissa-chamada', 'ícone da Companhia + chamada holográfica')
+    await ate(page, 'holograma se materializar')
+    await wait(600)
+    await shot(page, 'n-31-melissa-materializa')
+    await ate(page, 'Sou eu mais uma vez')
+    await shot(page, 'n-32-melissa-holograma', 'holograma em luz fria (ametista/aço)')
+    await ate(page, 'Necro-Corporação?')
+    await shot(page, 'n-33-melissa-escolha')
+    await page.getByRole('button', { name: 'Parece interessante. Onde encontro uma Necro-Corporação?', exact: true }).first().click({ timeout: 5000 })
+    await ate(page, 'retirada do seu Shuffler')
+    await shot(page, 'n-34-melissa-multa', 'opção 2 tira Tempo do Shuffler (provisório)')
+    await ate(page, 'A chamada é encerrada')
+    await shot(page, 'n-35-melissa-encerra')
+    await ate(page, 'tomar mais cuidado')
+    await page.keyboard.press('Enter')
+    await wait(3000)
+    await shot(page, 'n-36-corporacoes-liberado', 'Corporações liberado ao fim da chamada (cerimônia)')
+  })
+
+  await step('narrativa-mensagens', async () => {
+    await wait(6000)
+    await openApp(page, 'Mensagens')
+    await shot(page, 'n-40-mensagens-galo', 'contato do Galo em Mensagens')
+  })
+
+  await step('narrativa-reflexao', async () => {
+    await enterOS(page)
+    await wait(1500)
+    await page.evaluate(() => window.dispatchEvent(new CustomEvent('devo:cena', { detail: { id: 'anfitriao-de-que' }, cancelable: true })))
+    await wait(1500)
+    await ate(page, 'Anfitrião do Imperador.')
+    await shot(page, 'n-41-reflexao', 'reflexão "Anfitrião do quê?" (ao sair das Torres): cinco opções')
+    await page.getByRole('button', { name: 'Anfitrião do Imperador.', exact: true }).first().click({ timeout: 5000 })
+    await wait(3600)
+    await shot(page, 'n-42-reflexao-resposta')
+  })
+  await ctx.close()
+  await db.end()
+}
+
 // ── Poço dos Milagres (sistema novo, DIRECAO-3 §2) ─────────────────────────────────────────
 // Brasa (DEVO-POCO-0001) recebe as flags do Poço e do Diário pelo banco (como se tivesse vencido o tutorial);
 // Cinza (DEVO-POCO-0002) continua trancada. As probabilidades são forçadas pelo banco só para fotografar o

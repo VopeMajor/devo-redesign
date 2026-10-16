@@ -14,6 +14,7 @@ import { callName, DevoProvider, useDevo } from './state/devo-store'
 import type { SaveData } from '@/lib/devo/save'
 import { BackExitHint, useBackHandler } from './use-back-handler'
 import { ArcadeUnlock } from './arcade/arcade-unlock'
+import { NarrativaHost } from './progressao/narrativa-host'
 import { PwaOffer } from './shared/pwa-offer'
 import { Curtain, useCurtain, type CurtainOptions } from './kit/transition'
 import { JourneyCurtain, type JourneyCurtainTone } from './intro/journey-curtain'
@@ -174,7 +175,11 @@ function DevoRoot() {
           }
         />
       )}
-      {state.phase === 'os' && <DevoOS onExit={exitToLanding} />}
+      {state.phase === 'os' && (
+        <NarrativaHost>
+          <DevoOS onExit={exitToLanding} />
+        </NarrativaHost>
+      )}
       {state.phase === 'os' && offerPwa && <PwaOffer onClose={() => setOfferPwa(false)} />}
       {state.phase === 'os' && <ArcadeUnlock />}
 
