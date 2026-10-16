@@ -2027,6 +2027,262 @@ if (want('salao')) {
   await db?.end().catch(() => {})
 }
 
+// ── Cosméticos: coleção (arte), inventário, pré-visualização, perfil, chat, ranking, admin, Owner oculto ──
+if (want('cosmeticos')) {
+  const SEED = {
+    Matheus: '00000000-0000-4000-8000-000000000003',
+    Mordomo: '00000000-0000-4000-8000-000000000011',
+    Sentinela: '00000000-0000-4000-8000-000000000010',
+  }
+  const INV = { Matheus: 'DEVO-STAF-MATH', Mordomo: 'DEVO-STAF-MORD', Sentinela: 'DEVO-STAF-SENT' }
+  const seedAcc = async (name) => {
+    const d = await device('phone')
+    await d.ctx.addCookies([{ name: 'devo_player', value: SEED[name], url: BASE }])
+    await d.page.goto(BASE, { waitUntil: 'networkidle' })
+    let up
+    for (let i = 0; i < 6; i++) {
+      up = await api(d.page, '/api/auth/sign-up/email', { email: hexEmail(name), password: 'teste123', name, username: name, displayUsername: name }, { 'x-devo-invite': INV[name] })
+      if (up.status !== 429) break
+      await wait(11000)
+    }
+    if (up.status >= 400) {
+      const inn = await api(d.page, '/api/auth/sign-in/username', { username: name, password: 'teste123' })
+      if (inn.status >= 400) manifest.errors.push({ step: `cos-${name}-auth`, error: `signup ${up.status} ${up.text}; signin ${inn.status}` })
+    }
+    const saved = await api(d.page, '/api/save', makeSave(VET_CARDS))
+    if (saved.status >= 400) manifest.errors.push({ step: `cos-${name}-save`, error: `${saved.status} ${saved.text}` })
+    return d
+  }
+  const view = (page, sel, block = 'start') =>
+    page.locator(sel).first().evaluate((el, b) => el.scrollIntoView({ block: b }), block).catch(() => {})
+  const full = async (page, name) => {
+    try {
+      await page.screenshot({ path: `${OUT}/${name}.jpg`, type: 'jpeg', quality: 80, fullPage: true })
+      manifest.shots.push({ name, note: 'página inteira', url: page.url() })
+    } catch (e) {
+      manifest.errors.push({ step: name, error: String(e).slice(0, 300) })
+    }
+  }
+  const abrirColecao = async (page) => {
+    await openApp(page, 'Record')
+    await wait(1200)
+    await view(page, 'section[aria-label="Identidade e coleção"]', 'center')
+    await wait(500)
+    await tryClick(btn(page, 'Abrir coleção', true), 4000)
+    await wait(1500)
+    await view(page, 'section[aria-label="Coleção de cosméticos"]', 'start')
+    await wait(500)
+  }
+  const aba = (page, nome) => tryClick(page.getByRole('tablist', { name: 'Categorias da coleção' }).getByRole('tab', { name: nome, exact: true }).first())
+  const item = (page, nome) => page.locator('ul[aria-label^="Itens:"] button').filter({ hasText: nome }).first()
+
+  // Vitrine da coleção inteira (arte em tamanho grande): celular e área de trabalho.
+  await step('cos-galeria', async () => {
+    const { ctx, page } = await device('phone')
+    await page.goto(`${BASE}/estilo/cosmeticos`, { waitUntil: 'networkidle' })
+    await wait(1500)
+    await shot(page, 'cos-00-galeria-topo')
+    for (const [sel, nome] of [['article[aria-label="Olho do Arcano"]', 'cos-01-galeria-arcano'], ['article[aria-label="Última Badalada"]', 'cos-02-galeria-badalada'], ['section[aria-label="Emblemas"]', 'cos-03-galeria-emblemas'], ['section[aria-label="Balões"]', 'cos-04-galeria-baloes'], ['section[aria-label="Efeitos do nome"]', 'cos-05-galeria-efeitos']]) {
+      await view(page, sel)
+      await wait(500)
+      await shot(page, nome)
+    }
+    await ctx.close()
+    const d = await device('desktop')
+    await d.page.goto(`${BASE}/estilo/cosmeticos`, { waitUntil: 'networkidle' })
+    await wait(1500)
+    await full(d.page, 'cos-06-galeria-grade-completa')
+    await d.ctx.close()
+  })
+
+  const mat = await seedAcc('Matheus')
+  const sen = await seedAcc('Sentinela')
+  const mor = await seedAcc('Mordomo')
+
+  // Jogador com coleção: perfil equipado, inventário, pré-visualização, bloqueados, equipar.
+  await step('cos-jogador', async () => {
+    const page = mat.page
+    await openApp(page, 'Record')
+    await wait(1200)
+    await shot(page, 'cos-10-record-moldura')
+    await view(page, 'section[aria-label="Identidade e coleção"]', 'center')
+    await wait(600)
+    await shot(page, 'cos-11-record-identidade')
+    await tryClick(btn(page, 'Abrir coleção', true), 4000)
+    await wait(1500)
+    await view(page, 'section[aria-label="Coleção de cosméticos"]', 'start')
+    await wait(500)
+    await shot(page, 'cos-12-colecao')
+    await view(page, 'ul[aria-label^="Itens:"]', 'start')
+    await wait(500)
+    await shot(page, 'cos-13-colecao-grade-molduras')
+    if (await tryClick(item(page, 'Pacto Carmesim'))) {
+      await wait(600)
+      await view(page, 'section[aria-label="Coleção de cosméticos"]', 'start')
+      await wait(400)
+      await shot(page, 'cos-14-preview-bloqueado')
+      await view(page, 'article[aria-label^="Detalhe:"]', 'center')
+      await wait(400)
+      await shot(page, 'cos-15-detalhe-bloqueado')
+    }
+    if (await tryClick(item(page, 'Asas da Coruja'))) {
+      await wait(600)
+      await view(page, 'article[aria-label^="Detalhe:"]', 'center')
+      await shot(page, 'cos-16-detalhe-obtido')
+      await tryClick(page.locator('article[aria-label^="Detalhe:"]').getByRole('button', { name: 'Equipar', exact: true }))
+      await wait(1600)
+      await view(page, 'section[aria-label="Coleção de cosméticos"]', 'start')
+      await wait(400)
+      await shot(page, 'cos-17-equipado-sem-recarregar')
+    }
+    await view(page, 'div[aria-label="Formato da moldura"]', 'start')
+    await tryClick(page.getByRole('button', { name: 'Miniperfil · quadrada' }).first())
+    await wait(700)
+    await shot(page, 'cos-18-colecao-miniperfil')
+    for (const [t, n] of [['Emblemas', 'cos-19-colecao-emblemas'], ['Balões', 'cos-20-colecao-baloes'], ['Efeitos', 'cos-21-colecao-efeitos']]) {
+      await view(page, 'div[aria-label="Categorias da coleção"]', 'start')
+      await aba(page, t)
+      await wait(700)
+      await shot(page, n)
+    }
+    await view(page, 'div[aria-label="Categorias da coleção"]', 'start')
+    await aba(page, 'Balões')
+    await wait(400)
+    if (await tryClick(item(page, 'Ecos do Arcano'))) {
+      await view(page, 'section[aria-label="Coleção de cosméticos"]', 'start')
+      await wait(600)
+      await shot(page, 'cos-22-preview-balao')
+    }
+    // Volta a moldura original (o roteiro pode rodar de novo).
+    await api(page, '/api/cosmeticos', { action: 'equipar', slot: 'moldura_avatar', key: 'cosmetico:moldura-heranca-marfim' })
+  })
+
+  // Chat da mesa com balões, miniperfis e o Anfitrião; o Owner (Sentinela) aparece como jogador comum.
+  await step('cos-chat', async () => {
+    const page = mat.page
+    await openApp(page, 'Sala de Jogos')
+    await wait(1500)
+    await view(page, 'section[aria-label="Chat da mesa"]', 'start')
+    await wait(1800)
+    await shot(page, 'cos-30-chat-baloes')
+    await page.evaluate(() => document.querySelector('section[aria-label="Chat da mesa"] ul')?.scrollTo(0, 0))
+    await wait(600)
+    await shot(page, 'cos-31-chat-anfitriao')
+    if (await tryClick(page.getByRole('button', { name: 'Abrir miniperfil de Sentinela' }).first())) {
+      await wait(1800)
+      await shot(page, 'cos-32-miniperfil-owner-oculto')
+      await page.keyboard.press('Escape')
+      await wait(500)
+    }
+    if (await tryClick(page.getByRole('button', { name: 'Abrir miniperfil de Ísis' }).first())) {
+      await wait(1800)
+      await shot(page, 'cos-33-miniperfil-jogadora')
+      await page.keyboard.press('Escape')
+      await wait(500)
+    }
+    if (await tryClick(page.getByRole('button', { name: 'Abrir miniperfil de Mordomo' }).first())) {
+      await wait(1800)
+      await shot(page, 'cos-34-miniperfil-anfitriao')
+      await page.keyboard.press('Escape')
+      await wait(500)
+    }
+  })
+
+  await step('cos-ranking', async () => {
+    const page = mat.page
+    await openApp(page, 'Sala de Jogos')
+    await view(page, 'section[aria-label="Ranking da semana"]', 'start')
+    await wait(1500)
+    await shot(page, 'cos-40-ranking-mesa')
+    await page.getByRole('tab', { name: 'Ranking', exact: true }).first().click({ timeout: 3000 }).catch(() => {})
+    await wait(1800)
+    await page.evaluate(() => document.querySelector('[role="tabpanel"]')?.scrollBy(0, 330))
+    await wait(900)
+    await shot(page, 'cos-41-ranking-podio')
+    await page.evaluate(() => document.querySelector('[role="tabpanel"]')?.scrollBy(0, 420))
+    await wait(900)
+    await shot(page, 'cos-42-ranking-lista')
+  })
+
+  // Owner: a própria coleção inteira liberada e a Mesa › Cosméticos / Semanais.
+  await step('cos-owner', async () => {
+    const page = sen.page
+    await openApp(page, 'Record')
+    await wait(1200)
+    await shot(page, 'cos-50-owner-record')
+    await abrirColecao(page)
+    await shot(page, 'cos-51-owner-colecao-livre')
+    await view(page, 'ul[aria-label^="Itens:"]', 'start')
+    await wait(500)
+    await shot(page, 'cos-52-owner-grade')
+    await openApp(page, 'Record')
+    await tryClick(page.getByRole('tab', { name: /Mesa/i }).first())
+    await wait(2000)
+    await view(page, 'nav[aria-label="Seções da mesa"]', 'start')
+    await tryClick(desk(page, 'Cosméticos'))
+    await wait(2000)
+    await shot(page, 'cos-53-admin-catalogo')
+    if (await tryClick(page.getByRole('button', { name: /^Editar Última Badalada/ }).first())) {
+      await wait(1000)
+      await shot(page, 'cos-54-admin-editor')
+      await view(page, 'fieldset', 'center')
+      await wait(400)
+      await shot(page, 'cos-55-admin-editor-disponibilidade')
+      await tryClick(btn(page, 'Cancelar', true))
+      await wait(600)
+    }
+    await tryClick(page.getByRole('tab', { name: 'Conceder', exact: true }).first())
+    await wait(1500)
+    await tryClick(page.locator('ul[aria-label="Resultados"] button').first())
+    await wait(400)
+    await shot(page, 'cos-56-admin-conceder')
+    await tryClick(page.getByRole('tab', { name: 'Histórico', exact: true }).first())
+    await wait(1500)
+    await shot(page, 'cos-57-admin-historico')
+    await view(page, 'nav[aria-label="Seções da mesa"]', 'start')
+    await tryClick(desk(page, 'Semanais'))
+    await wait(1800)
+    await shot(page, 'cos-58-owner-semanais')
+    if (await tryClick(btn(page, 'Criar plano', true))) {
+      await wait(900)
+      await shot(page, 'cos-59-owner-semanal-novo')
+    }
+  })
+
+  await step('cos-anfitriao', async () => {
+    const page = mor.page
+    await openApp(page, 'Record')
+    await tryClick(page.getByRole('tab', { name: /Mesa/i }).first())
+    await wait(2000)
+    await view(page, 'nav[aria-label="Seções da mesa"]', 'start')
+    await tryClick(desk(page, 'Semanais'))
+    await wait(1800)
+    await shot(page, 'cos-60-anfitriao-semanais')
+    await openApp(page, 'Record')
+    await wait(1200)
+    await view(page, 'section[aria-label="Identidade e coleção"]', 'center')
+    await wait(600)
+    await shot(page, 'cos-61-anfitriao-identidade')
+  })
+
+  // Conta nova (ainda sem vencer o tutorial): coleção trancada com o motivo. Ajustes: desligar animações.
+  await step('cos-trancado', async () => {
+    const { ctx, page } = await account('Cardo', 'DEVO-TEST-0008', VET_CARDS)
+    await openApp(page, 'Record')
+    await wait(1200)
+    await view(page, 'section[aria-label="Identidade e coleção"]', 'center')
+    await wait(600)
+    await shot(page, 'cos-70-colecao-trancada')
+    await openApp(page, 'Ajustes')
+    await wait(800)
+    await view(page, 'button[aria-label="Animações dos cosméticos"]', 'center')
+    await shot(page, 'cos-71-ajustes-animacoes')
+    await ctx.close()
+  })
+
+  for (const d of [mat, sen, mor]) await d.ctx.close().catch(() => {})
+}
+
 await browser.close()
 writeFileSync(`${OUT}/manifest.json`, JSON.stringify(manifest, null, 2))
 console.log(`capturas: ${manifest.shots.length}, erros: ${manifest.errors.length}, console: ${manifest.console.length}`)

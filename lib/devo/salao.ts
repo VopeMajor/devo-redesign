@@ -1,6 +1,6 @@
 /**
  * Salão das Máscaras — tipos, calendário e regras puras (cliente e servidor podem importar; sem banco).
- * Contrato: docs/redesign/FUNDACAO.md §11. O servidor (lib/devo/salao-server.ts) decide tudo; o cliente só mostra.
+ * Contrato: docs/redesign/FUNDACAO.md §12. O servidor (lib/devo/salao-server.ts) decide tudo; o cliente só mostra.
  *
  * Tempo: todos os valores do Salão (lances, preços, taxas) são em MINUTOS do pulso.
  */
