@@ -2,6 +2,7 @@
 
 import Image from 'next/image'
 import type { CSSProperties } from 'react'
+import { cn } from '@/lib/utils'
 
 /*
  * A queda das crianças (ato I → "Com um simples acidente.").
@@ -41,14 +42,8 @@ const CLIP_KIDS = above(2.4)
 /** Faixa do chão abaixo do rasgo (cai). */
 export const CLIP_BOTTOM = `polygon(${tearPts.join(', ')}, 110% 110%, -10% 110%)`
 
-/** O rasgo em coordenadas do SVG (viewBox 0 0 100 100), do ponto do golpe (x = 50) para cada lado. */
-const half = (dir: 1 | -1) => {
-  const pts = TEAR.filter(([x]) => (dir === 1 ? x >= 50 : x <= 50))
-  const ordered = dir === 1 ? pts : [...pts].reverse()
-  return ordered.map(([x, dy], i) => `${i ? 'L' : 'M'}${x} ${CUT_Y + dy}`).join(' ')
-}
-const CUT_RIGHT = half(1)
-const CUT_LEFT = half(-1)
+/** O rasgo em coordenadas do SVG (viewBox -10 0 120 100: cobre o palco com folga nas laterais). */
+const CUT_PATH = TEAR.map(([x, dy], i) => `${i ? 'L' : 'M'}${x} ${CUT_Y + dy}`).join(' ')
 
 /** Lascas de papel que saltam do impacto: [dx px, dy px, giro graus, tamanho px]. */
 const FLECKS: [number, number, number, number][] = [
@@ -133,19 +128,18 @@ export function FallCut({ phase }: { phase: FallPhase }) {
   return (
     <div data-fall={phase} aria-hidden="true" className="pointer-events-none absolute inset-0">
       {/* O corte: nasce do ponto do golpe e corre para os dois lados; na queda, esfria na borda. */}
+      {/* Revelado do centro para os lados por um recorte que se abre (en-fall-open), não por traço tracejado. */}
       <svg
-        viewBox="0 0 100 100"
+        viewBox="-10 0 120 100"
         preserveAspectRatio="none"
-        className="absolute inset-0 size-full overflow-visible"
+        className={cn('absolute inset-y-0 -left-[10%] h-full w-[120%] overflow-visible', trip && 'en-fall-open')}
         style={{ filter: 'drop-shadow(0 0 3px rgba(255,70,84,1)) drop-shadow(0 0 12px rgba(224,40,58,0.9)) drop-shadow(0 0 28px rgba(170,20,32,0.8))' }}
       >
-        {[CUT_LEFT, CUT_RIGHT].map((d) => (
-          <g key={d} className={trip ? undefined : 'en-fall-rim'}>
-            <path d={d} fill="none" stroke="var(--dv-blood)" strokeWidth="10" strokeLinecap="round" vectorEffect="non-scaling-stroke" pathLength={1} strokeDasharray="1" opacity="0.55" className={trip ? 'en-fall-cut' : undefined} />
-            <path d={d} fill="none" stroke="#ff3a4c" strokeWidth="4" strokeLinejoin="bevel" vectorEffect="non-scaling-stroke" pathLength={1} strokeDasharray="1" className={trip ? 'en-fall-cut' : undefined} />
-            {trip && <path d={d} fill="none" stroke="#fff3ee" strokeWidth="1.6" strokeLinejoin="bevel" vectorEffect="non-scaling-stroke" pathLength={1} strokeDasharray="1" className="en-fall-cut en-fall-core" />}
-          </g>
-        ))}
+        <g className={trip ? undefined : 'en-fall-rim'}>
+          <path d={CUT_PATH} fill="none" stroke="var(--dv-blood)" strokeWidth="10" strokeLinecap="round" strokeLinejoin="round" vectorEffect="non-scaling-stroke" opacity="0.55" />
+          <path d={CUT_PATH} fill="none" stroke="#ff3a4c" strokeWidth="4" strokeLinejoin="bevel" vectorEffect="non-scaling-stroke" />
+          {trip && <path d={CUT_PATH} fill="none" stroke="#fff3ee" strokeWidth="1.6" strokeLinejoin="bevel" vectorEffect="non-scaling-stroke" className="en-fall-core" />}
+        </g>
       </svg>
 
       {/* Clarão e lascas no ponto do golpe. */}

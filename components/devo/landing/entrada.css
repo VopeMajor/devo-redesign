@@ -269,10 +269,11 @@
 }
 .en-fall-strike { opacity: 0; transform: translate(-51%, -190%); animation: en-fall-strike 900ms linear both; }
 
-@keyframes en-fall-draw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+/* o corte abre do ponto do golpe (centro) para os dois lados; o miolo branco-quente esfria */
+@keyframes en-fall-open { from { clip-path: inset(0 50% 0 50%); } to { clip-path: inset(0 0 0 0); } }
 @keyframes en-fall-core { 0% { opacity: 1; } 100% { opacity: 0; } }
-.en-fall-cut { stroke-dashoffset: 0; animation: en-fall-draw 340ms cubic-bezier(.16, 1, .3, 1) 240ms both; }
-.en-fall-core { opacity: 0; animation: en-fall-draw 340ms cubic-bezier(.16, 1, .3, 1) 240ms both, en-fall-core 900ms ease-out 240ms both; }
+.en-fall-open { animation: en-fall-open 340ms cubic-bezier(.16, 1, .3, 1) 240ms both; }
+.en-fall-core { opacity: 0; animation: en-fall-core 900ms ease-out 240ms both; }
 
 @keyframes en-fall-burst { 0% { transform: scale(0.2); opacity: 1; } 100% { transform: scale(1.7); opacity: 0; } }
 .en-fall-burst { opacity: 0; animation: en-fall-burst 520ms cubic-bezier(.16, 1, .3, 1) 240ms both; }

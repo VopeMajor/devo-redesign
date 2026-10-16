@@ -22,6 +22,7 @@ import { FALL_IMPACT_MS } from './theater-fall'
 import { AdvanceIndicator, ChoiceHeader, ChoiceStrip, DialogueShell, SpeakerPlate, VnTopBar, useTypewriter } from './vn'
 
 const CHAR_MS = 28
+const FIRE_STAGES: StageId[] = ['fire', 'rise']
 const PAPER_STAGES: StageId[] = ['rumor', 'kids', 'boy', 'girl', 'hands', 'omen', 'trip', 'fall']
 const SPEAKER_NAME = { voice: '???', melissa: 'Melissa', system: 'DEVO · Sistema' } as const
 const SPEAKER_TONE = { voice: 'void', melissa: 'cobalt', system: 'system' } as const
@@ -533,8 +534,8 @@ export function PrologueScreen({
       />
 
       {/* Véu inferior: o texto sempre sobre fundo escuro, sem esconder a cena. */}
-      {/* (some nos quadros sem fala, como o golpe da queda: a cena inteira fica à vista) */}
-      <div aria-hidden="true" className={cn('pointer-events-none absolute inset-x-0 bottom-0 z-10 h-[46%] bg-gradient-to-t from-black/90 via-black/55 to-transparent transition-opacity duration-300', beat.kind === 'line' && !text && 'opacity-0')} />
+      {/* (some nos quadros sem fala, como o golpe da queda; no fogo fica leve, para as chamas manterem a cor original) */}
+      <div aria-hidden="true" className={cn('pointer-events-none absolute inset-x-0 bottom-0 z-10 h-[46%] bg-gradient-to-t from-black/90 via-black/55 to-transparent transition-opacity duration-300', beat.kind === 'line' && !text ? 'opacity-0' : FIRE_STAGES.includes(beat.stage) && 'opacity-40')} />
 
       <div className="absolute inset-x-0 bottom-0 z-20 mx-auto flex w-full max-w-3xl flex-col gap-2.5 px-4 pb-[max(env(safe-area-inset-bottom),1.25rem)] lg:pb-10">
         {itemGet && (
