@@ -15,7 +15,7 @@ permissions:
 jobs:
   capturas:
     runs-on: ubuntu-latest
-    timeout-minutes: 55
+    timeout-minutes: 120
     services:
       postgres:
         image: postgres:16
