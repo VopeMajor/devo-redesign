@@ -1,0 +1,12 @@
+[torre-principal-agulha] v01: @cf/black-forest-labs/flux-2-klein-4b seed=3101 1024x1536 passos=None (~156 neurônios)
+    ok em 35.6s, 1024x1536
+[torre-principal-agulha] v02: @cf/black-forest-labs/flux-2-klein-4b seed=3102 1024x1536 passos=None (~156 neurônios)
+    ok em 22.5s, 1024x1536
+[torre-principal-agulha] v03: @cf/black-forest-labs/flux-2-klein-4b seed=3103 1024x1536 passos=None (~156 neurônios)
+    ok em 70.1s, 1024x1536
+[torre-principal-agulha] v04: @cf/black-forest-labs/flux-2-klein-9b seed=3104 1024x1536 passos=None (~1,455 neurônios)
+    ok em 3.0s, 1024x1536
+[torre-principal-agulha] v01: rembg:birefnet-general; sem avisos
+[torre-principal-agulha] v02: rembg:birefnet-general; sem avisos
+[torre-principal-agulha] v03: rembg:birefnet-general; sem avisos
+[torre-principal-agulha] v04: rembg:birefnet-general; sem avisos

@@ -1,0 +1,65 @@
+{
+  "pedido": "torre-principal-agulha",
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 3101,
+      "passos": null,
+      "largura": 1024,
+      "altura": 1536,
+      "neuronios_estimados": 156,
+      "ok": true,
+      "segundos": 35.6,
+      "tamanho_real": [
+        1024,
+        1536
+      ]
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 3102,
+      "passos": null,
+      "largura": 1024,
+      "altura": 1536,
+      "neuronios_estimados": 156,
+      "ok": true,
+      "segundos": 22.5,
+      "tamanho_real": [
+        1024,
+        1536
+      ]
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 3103,
+      "passos": null,
+      "largura": 1024,
+      "altura": 1536,
+      "neuronios_estimados": 156,
+      "ok": true,
+      "segundos": 70.1,
+      "tamanho_real": [
+        1024,
+        1536
+      ]
+    },
+    {
+      "nome": "v04",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 3104,
+      "passos": null,
+      "largura": 1024,
+      "altura": 1536,
+      "neuronios_estimados": 1455,
+      "ok": true,
+      "segundos": 3.0,
+      "tamanho_real": [
+        1024,
+        1536
+      ]
+    }
+  ]
+}
