@@ -95,7 +95,7 @@ export function useDevoEngine() {
         const partner = makePartner()
         const card = partnerCardFor(roomRule ?? 'mesma-raridade', rarity)
         dispatch({ type: 'TRADE_PARTNER_JOIN', partner, partnerCardId: card.id })
-        notify({ appId: 'trocas', title: 'Sala de Trocas', body: `${partner.handle} entrou na sua sala e colocou uma carta na mesa.` })
+        notify({ appId: 'trocas', title: `${partner.handle} sentou à mesa`, body: `${partner.handle} entrou na sua sala e colocou uma carta na mesa.` })
         playSfx('notify')
         if (silent) return
         timers.push(window.setTimeout(() => dispatch({ type: 'TRADE_PARTNER_TYPING', typing: true }), 700))
@@ -120,7 +120,7 @@ export function useDevoEngine() {
     const leave = () => {
       say('leave')
       dispatch({ type: 'TRADE_PARTNER_LEAVE' })
-      notify({ appId: 'trocas', title: 'Troca desfeita', body: `${partner.handle} abandonou a sala. Sua carta voltou para você.`, tone: 'danger' })
+      notify({ appId: 'trocas', title: `${partner.handle} saiu da mesa`, body: `${partner.handle} abandonou a sala. Sua carta voltou para você.` })
       playSfx('error')
     }
     let timer: number

@@ -10,10 +10,13 @@ import { cn } from '@/lib/utils'
 import {
   Button,
   Dialog,
+  EmblemMascaras,
+  FUTURE_SYSTEMS,
   FrameCorners,
   GlyphArrow,
   GlyphCheck,
   IconButton,
+  IconLock,
   Kicker,
   LaceEdge,
   Reveal,
@@ -45,11 +48,27 @@ const pad2 = (n: number) => String(n).padStart(2, '0')
 export function TrocasApp() {
   const { state } = useDevo()
   const trade = state.trade
-  const finished = trade?.stage === 'done' || trade?.stage === 'abandoned'
+  const forfeited = trade?.endReason === 'forfeit'
+  // Pulso rubi de tela inteira só no instante da perda (< 1 s); depois a sala volta ao mármore.
+  const [lossFlash, setLossFlash] = useState(false)
+  useEffect(() => {
+    if (!forfeited) return
+    setLossFlash(true)
+    const t = window.setTimeout(() => setLossFlash(false), 900)
+    return () => window.clearTimeout(t)
+  }, [forfeited])
   // A cena acompanha a tensão: o corredor anda devagar; dentro da sala, a luz baixa.
   return (
     <div className="relative h-full overflow-hidden bg-dv-ink text-dv-text @container">
-      <SceneBackdrop preset="corridor" intensity={trade ? 0.4 : 0.7} dim={trade ? 0.74 : 0.5} alert={trade?.endReason === 'forfeit' && finished} />
+      <SceneBackdrop preset="corridor" intensity={trade ? 0.4 : 0.7} dim={trade ? 0.74 : 0.5} />
+      {lossFlash && (
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 z-20 bg-[radial-gradient(90%_70%_at_50%_45%,rgba(163,18,31,0.05),rgba(163,18,31,0.42)_100%)] motion-safe:animate-[trocas-loss_850ms_var(--dv-ease-out)_both]"
+        >
+          <style>{'@keyframes trocas-loss{0%{opacity:0}18%{opacity:1}100%{opacity:0}}'}</style>
+        </span>
+      )}
       <div className="devo-scroll absolute inset-0 overflow-y-auto overflow-x-hidden">
         {trade ? (
           <Reveal key={`sala-${trade.roomId}`} variant="right">
@@ -85,11 +104,24 @@ function Lobby() {
         <p className="mt-2 max-w-md animate-dv-fade font-body text-[15px] italic leading-snug text-dv-text-2 [animation-delay:200ms]">
           Oito portas. Atrás de cada uma, uma mesa e um estranho.
         </p>
-        <div aria-hidden="true" className="relative mt-4 h-px">
-          <span className="absolute inset-0 bg-gradient-to-r from-dv-gold/70 via-dv-gold/25 to-transparent" />
-          <span className="absolute -top-[3px] left-0 h-[7px] w-px bg-dv-gold" />
-          <span className="absolute -top-[1px] left-[22%] h-[3px] w-8 bg-dv-amethyst/80" />
-        </div>
+        {/* régua do corredor: um segmento por sala (livre = prata acesa, sua = ametista, ocupada = apagada) */}
+        <ol aria-hidden="true" className="mt-4 grid grid-cols-8 gap-1.5">
+          {state.rooms.map((r) => (
+            <li key={r.id} className="flex flex-col items-center gap-1">
+              <span
+                className={cn(
+                  'h-[3px] w-full',
+                  r.status === 'livre'
+                    ? 'bg-[linear-gradient(90deg,#8f877a,#ece5d8_50%,#8f877a)] shadow-[0_0_6px_rgba(236,229,216,0.45)]'
+                    : r.status === 'sua'
+                      ? 'bg-dv-amethyst shadow-[0_0_6px_rgba(138,124,200,0.7)]'
+                      : 'bg-dv-text/12',
+                )}
+              />
+              <span className={cn('font-mono text-[10px] leading-none tracking-[0.08em]', r.status === 'livre' ? 'text-dv-text-2' : 'text-dv-text-3/60')}>{toRoman(r.number)}</span>
+            </li>
+          ))}
+        </ol>
         <dl className="mt-3 flex items-center gap-5 font-mono text-[11px] uppercase tracking-[0.18em] text-dv-text-3">
           <div className="flex items-center gap-2">
             <span aria-hidden="true" className="size-1.5 rotate-45 bg-dv-gold-bright shadow-[0_0_8px_rgba(255,246,230,0.9)]" />
@@ -120,6 +152,10 @@ function Lobby() {
           />
         ))}
       </Stagger>
+
+      <Reveal inView variant="rise">
+        <MasksHall />
+      </Reveal>
 
       <Reveal inView variant="rise">
         <Protocol />
@@ -186,18 +222,32 @@ function Door({ room, onEnter }: { room: Room; onEnter: () => void }) {
         </span>
       </span>
 
-      {/* placa da condição */}
+      {/* soleira de aço e o reflexo da porta no piso de mármore */}
+      <span aria-hidden="true" className="relative -mx-[3%] block h-[5px] bg-[linear-gradient(180deg,#ece5d8,#bab09f_35%,#5f584d)] shadow-[0_2px_6px_rgba(0,0,0,0.8)] [clip-path:polygon(2%_0,98%_0,100%_100%,0_100%)]" />
       <span
+        aria-hidden="true"
         className={cn(
-          'relative mt-2.5 flex flex-col gap-1 border-l px-2.5 py-1.5 transition-colors duration-[var(--dv-dur-2)]',
-          free ? 'border-dv-gold/70 group-hover:border-dv-gold-bright' : 'border-dv-line-strong',
+          'relative block h-10 overflow-hidden [mask-image:linear-gradient(180deg,rgba(0,0,0,0.9),transparent_92%)]',
+          free || mine ? 'opacity-[0.22]' : 'opacity-[0.12]',
         )}
       >
+        <DoorArt status={room.status} className="absolute inset-x-0 top-0 block w-full -scale-y-100 blur-[0.6px]" />
+      </span>
+
+      {/* plaqueta da condição, abaixo da porta */}
+      <span
+        className={cn(
+          'relative -mt-4 flex flex-col items-center gap-1 border bg-[linear-gradient(180deg,rgba(31,31,34,0.92),rgba(12,12,14,0.94))] px-2 pb-2 pt-1.5 text-center transition-colors duration-[var(--dv-dur-2)]',
+          free ? 'border-dv-gold/45 group-hover:border-dv-gold-bright/80' : 'border-dv-line',
+        )}
+      >
+        <span aria-hidden="true" className={cn('absolute -left-px -top-px size-1.5 border-l border-t', free ? 'border-dv-gold-bright' : 'border-dv-line-strong')} />
+        <span aria-hidden="true" className={cn('absolute -right-px -top-px size-1.5 border-r border-t', free ? 'border-dv-gold-bright' : 'border-dv-line-strong')} />
         <span className={cn('flex items-center gap-1.5 font-display text-[12px] font-semibold uppercase tracking-[0.14em]', free ? 'text-dv-text' : 'text-dv-text-2')}>
           <RuleSigil rule={room.rule} className={cn('size-4 shrink-0', free ? 'text-dv-gold' : 'text-dv-text-3')} />
           {room.condition}
         </span>
-        <span className={cn('font-body text-[13px] leading-snug', free ? 'text-dv-text-2' : 'text-dv-text-3')}>{rule.summary}</span>
+        <span className={cn('font-body text-[14px] leading-snug [word-spacing:0.08em]', free ? 'text-dv-text-2' : 'text-dv-text-3')}>{rule.summary}</span>
       </span>
     </button>
   )
@@ -309,6 +359,47 @@ function RuleSigil({ rule, className }: { rule: RoomRule; className?: string }) 
   }
 }
 
+/**
+ * Fim do corredor: o Salão das Máscaras (leilão, Direção 2 §3) — reservado, trancado, sem ação.
+ * Porta dupla lacrada com o emblema da família e o cadeado; nada aqui é clicável.
+ */
+function MasksHall() {
+  const sys = FUTURE_SYSTEMS.find((s) => s.id === 'mascaras')!
+  return (
+    <div
+      role="group"
+      aria-label={`${sys.name}: bloqueado. ${sys.hint}, em breve.`}
+      className="relative isolate flex items-center gap-4 overflow-hidden border border-dv-line bg-[linear-gradient(100deg,rgba(21,21,23,0.9),rgba(12,12,14,0.94))] py-3 pl-3 pr-4"
+    >
+      {/* porta dupla lacrada em miniatura */}
+      <span aria-hidden="true" className="relative grid h-[4.5rem] w-14 shrink-0 place-items-center">
+        <svg viewBox="0 0 56 72" className="absolute inset-0 size-full" fill="none">
+          <path d="M3 72V26C3 12 14 3 28 2c14 1 25 10 25 24v46" stroke="#8f8e8b" strokeOpacity="0.55" strokeWidth="1" />
+          <path d="M8 72V28c0-10 9-19 20-20 11 1 20 10 20 20v44z" fill="#151517" stroke="#8f8e8b" strokeOpacity="0.3" strokeWidth="0.6" />
+          <path d="M28 8v64" stroke="#8f8e8b" strokeOpacity="0.35" strokeWidth="0.6" />
+          {/* corrente cruzada */}
+          <path d="M9 40 47 58M47 40 9 58" stroke="#8f8e8b" strokeOpacity="0.5" strokeWidth="1" strokeDasharray="2.4 1.6" />
+        </svg>
+        <EmblemMascaras className="relative -mt-5 size-8 text-dv-text-3 opacity-80" />
+        <span className="absolute bottom-2 left-1/2 grid size-5 -translate-x-1/2 place-items-center bg-dv-ink-3 shadow-[inset_0_0_0_1px_var(--dv-line-strong)]">
+          <IconLock className="size-3 text-dv-text-2" />
+        </span>
+      </span>
+      <div className="min-w-0 flex-1">
+        <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-dv-text-3">Fim do corredor · trancado</p>
+        <p className="mt-1 flex flex-wrap items-baseline gap-x-2 font-display text-[16px] font-semibold uppercase tracking-[0.1em] text-dv-text-2">
+          {sys.name}
+          <span lang="ja" className="font-sans text-[10px] font-normal tracking-[0.18em] text-dv-text-3">
+            {sys.jp}
+          </span>
+        </p>
+        <p className="mt-0.5 font-body text-[14px] italic leading-snug text-dv-text-3">Leilões de cartas. A porta ainda não abre.</p>
+      </div>
+      <span className="shrink-0 border border-dv-line px-2 py-1 font-mono text-[10px] uppercase tracking-[0.18em] text-dv-text-3">Em breve</span>
+    </div>
+  )
+}
+
 function Protocol() {
   return (
     <section aria-labelledby="trocas-protocolo" className="relative isolate overflow-hidden border border-dv-line-gold/60 bg-[linear-gradient(180deg,rgba(31,31,34,0.92),rgba(12,12,14,0.95))] px-4 pb-5 pt-4 shadow-[0_18px_40px_-20px_rgba(0,0,0,0.9)] @2xl:px-6">
@@ -368,6 +459,12 @@ function TradeRoom({ trade }: { trade: TradeSession }) {
   const [lostCardId, setLostCardId] = useState<string | null>(null)
   const number = pad2(room?.number ?? 0)
   const tableRef = useRef<HTMLDivElement>(null)
+  // Quem está na mesa já vê quem sentou: o aviso do sistema fica só na central, sem cobrir o canal.
+  const trocasToasts = state.toasts.filter((t) => t.appId === 'trocas').map((t) => t.id).join(',')
+  useEffect(() => {
+    if (!trocasToasts) return
+    for (const id of trocasToasts.split(',')) dispatch({ type: 'DISMISS_TOAST', id })
+  }, [trocasToasts, dispatch])
 
   // Quando algo acontece na mesa (alguém senta, as cartas viram, a sala esvazia), a mesa volta ao centro do olhar.
   useEffect(() => {
@@ -412,8 +509,17 @@ function TradeRoom({ trade }: { trade: TradeSession }) {
               {finished ? 'Sair' : 'Abandonar'}
             </Button>
           </div>
-          <p key={trade.stage} className="mt-1 animate-dv-cut-in font-display text-[21px] font-semibold uppercase leading-tight tracking-[0.06em] text-dv-text" aria-live="polite">
-            {STAGE_TEXT[trade.stage]}
+          {/* Título do momento: só a primeira tela da sala entra com corte; as viradas seguintes trocam o texto sem
+              animação de recorte, para nunca deixar meia palavra visível. */}
+          <p
+            className={cn(
+              'mt-1 font-display text-[21px] font-semibold uppercase leading-tight tracking-[0.06em]',
+              trade.endReason === 'forfeit' ? 'text-dv-blood-text' : 'text-dv-text',
+              trade.stage === 'placing' && 'animate-dv-cut-in',
+            )}
+            aria-live="polite"
+          >
+            {trade.endReason === 'forfeit' ? 'Carta perdida' : STAGE_TEXT[trade.stage]}
           </p>
         </header>
 
@@ -433,16 +539,8 @@ function TradeRoom({ trade }: { trade: TradeSession }) {
       <Dialog
         open={confirmLeave}
         onClose={() => setConfirmLeave(false)}
-        tone="alert"
-        kicker={`Sala ${number} · Sem retorno`}
         title="Sair e perder a carta?"
-        description={
-          trade.myCard ? (
-            <>
-              Esta sala não devolve nada. Se você sair agora, <strong className="font-semibold text-dv-text">{getCard(trade.myCard.cardId).name}</strong> fica na mesa e deixa de ser sua.
-            </>
-          ) : undefined
-        }
+        description="Esta sala não devolve nada. Se você sair agora, a carta fica na mesa e deixa de ser sua."
         footer={
           <div className="flex flex-col gap-2.5 @md:flex-row-reverse">
             <Button variant="danger" block onClick={forfeit}>
@@ -453,7 +551,21 @@ function TradeRoom({ trade }: { trade: TradeSession }) {
             </Button>
           </div>
         }
-      />
+      >
+        {trade.myCard && (
+          <div className="mb-1 flex items-center gap-3.5 border border-dv-line bg-dv-ink-2/80 p-2.5">
+            <CardFace cardId={trade.myCard.cardId} size="sm" className="w-14 shrink-0" />
+            <div className="min-w-0">
+              <p className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.22em] text-dv-porcelain">
+                <span aria-hidden="true" className="size-2 shrink-0 rotate-45 bg-dv-blood shadow-[0_0_8px_rgba(163,18,31,0.8)]" />
+                Sala {number} · Sem retorno
+              </p>
+              <p className="mt-1.5 font-display text-[15px] font-semibold uppercase tracking-[0.08em] text-dv-text">{getCard(trade.myCard.cardId).name}</p>
+              <p className="font-body text-[13px] italic text-dv-text-3">Em jogo: fica na mesa se você sair.</p>
+            </div>
+          </div>
+        )}
+      </Dialog>
     </div>
   )
 }
@@ -469,7 +581,13 @@ function RoomRuleBanner({ rule, ruleKey, expanded }: { rule: RoomRuleMeta; ruleK
       <div className="flex items-stretch">
         {/* faixa diagonal de aço com o sigilo da condição */}
         <span aria-hidden="true" className="relative grid w-[4.6rem] shrink-0 place-items-center">
-          <span className="absolute inset-0 bg-dv-amethyst/80 [clip-path:polygon(0_0,100%_0,calc(100%-14px)_100%,0_100%)]" />
+          {/* filete diagonal: ametista nas salas comuns; rubi largo na sala que cobra a carta */}
+          <span
+            className={cn(
+              'absolute inset-y-0 left-0 [clip-path:polygon(0_0,100%_0,calc(100%-14px)_100%,0_100%)]',
+              rule.forfeitOnLeave ? '-right-[6px] bg-[linear-gradient(180deg,#c01a28,#a3121f_55%,#5a0a10)]' : 'right-0 bg-dv-amethyst/80',
+            )}
+          />
           <span className="absolute inset-y-0 left-0 right-px bg-[linear-gradient(180deg,#ece5d8,#bab09f_50%,#7a7266)] [clip-path:polygon(0_0,calc(100%-1px)_0,calc(100%-15px)_100%,0_100%)]" />
           <RuleSigil rule={ruleKey} className="relative size-7 -translate-x-1 text-dv-ink" />
         </span>
@@ -477,7 +595,7 @@ function RoomRuleBanner({ rule, ruleKey, expanded }: { rule: RoomRuleMeta; ruleK
           <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-dv-text-3">Regra da sala</p>
           <p className="mt-0.5 flex flex-wrap items-baseline gap-x-2">
             <span className="font-display text-[16px] font-semibold uppercase tracking-[0.12em] text-dv-text">{rule.label}</span>
-            <span className="font-body text-[14px] italic text-dv-text-2">{rule.summary}</span>
+            <span className="font-body text-[14px] italic text-dv-text-2 [word-spacing:0.08em]">{rule.summary}</span>
           </p>
         </div>
       </div>
@@ -527,7 +645,7 @@ function TradeTable({ trade, rule, lostCardId }: { trade: TradeSession; rule: Ro
                 cardId={trade.partnerCardId}
                 faceDown={!revealed}
                 size="md"
-                className={cn('w-[104px] transition-[transform,filter] duration-700 @lg:w-32', revealing && 'scale-[1.07] drop-shadow-[0_0_22px_rgba(255,246,230,0.5)]')}
+                className={cn('w-[128px] transition-[transform,filter] duration-700 @lg:w-40', revealing && 'scale-[1.07] drop-shadow-[0_0_22px_rgba(255,246,230,0.5)]')}
               />
             ) : (
               <EmptySlot waiting={trade.stage === 'waiting'} label={partnerLeft ? 'Cadeira vazia' : undefined} />
@@ -552,13 +670,13 @@ function TradeTable({ trade, rule, lostCardId }: { trade: TradeSession; rule: Ro
           >
             {forfeited && lostCardId ? (
               <div className="relative">
-                <CardFace cardId={lostCardId} size="md" className="w-[104px] opacity-40 grayscale @lg:w-32" />
+                <CardFace cardId={lostCardId} size="md" className="w-[128px] opacity-40 grayscale @lg:w-40" />
                 <span className="absolute inset-0 grid place-items-center">
                   <Stamp text="Perdida" tone="blood" size={96} rotate={-14} animate />
                 </span>
               </div>
             ) : trade.myCard ? (
-              <CardFace cardId={trade.myCard.cardId} size="md" className={cn('w-[104px] animate-dv-pop @lg:w-32', trade.stage === 'done' && 'opacity-55 saturate-50')} />
+              <CardFace cardId={trade.myCard.cardId} size="md" className={cn('w-[128px] animate-dv-pop @lg:w-40', trade.stage === 'done' && 'opacity-55 saturate-50')} />
             ) : (
               <EmptySlot label={trade.stage === 'placing' ? 'Escolha abaixo' : undefined} />
             )}
@@ -658,10 +776,10 @@ function Seat({
       <p
         className={cn(
           'flex h-6 items-center gap-1.5 px-2 font-mono text-[10px] uppercase tracking-[0.18em]',
-          accepted ? 'bg-dv-cobalt-dim text-dv-amethyst-text shadow-[inset_0_0_0_1px_var(--dv-amethyst)]' : 'text-dv-text-3 shadow-[inset_0_0_0_1px_var(--dv-line)]',
+          accepted ? 'bg-dv-ink text-dv-text shadow-[inset_0_0_0_1px_rgba(236,229,216,0.55)]' : 'text-dv-text-3 shadow-[inset_0_0_0_1px_var(--dv-line)]',
         )}
       >
-        {accepted && <GlyphCheck className="size-3" />}
+        {accepted && <GlyphCheck className="size-3 text-dv-gold-bright" />}
         {accepted ? 'Aceitou' : left ? 'Saiu' : 'Indeciso'}
       </p>
       )}
@@ -672,7 +790,7 @@ function Seat({
 
 function EmptySlot({ waiting, label }: { waiting?: boolean; label?: string }) {
   return (
-    <div className="relative grid aspect-[420/940] w-[104px] place-items-center bg-[repeating-linear-gradient(135deg,rgba(255,255,255,0.025)_0_6px,transparent_6px_12px)] @lg:w-32">
+    <div className="relative grid aspect-[5/7] w-[128px] place-items-center bg-[repeating-linear-gradient(135deg,rgba(255,255,255,0.025)_0_6px,transparent_6px_12px)] @lg:w-40">
       <span aria-hidden="true" className="absolute inset-1.5 border border-dashed border-dv-line-strong" />
       {waiting ? (
         <span className="flex flex-col items-center gap-2.5 px-2 font-mono text-[10px] uppercase tracking-[0.18em] text-dv-text-3">
@@ -689,16 +807,50 @@ function EmptySlot({ waiting, label }: { waiting?: boolean; label?: string }) {
   )
 }
 
-/** Mão do jogador: escolha a carta que vai para o seu espaço. */
+/** Mão do jogador: escolha a carta que vai para o seu espaço. Carrossel com bordas esmaecidas e contador. */
+const PICK_W = 92
+const PICK_GAP = 12
+
 function CardPicker() {
   const { state, dispatch } = useDevo()
+  const listRef = useRef<HTMLUListElement>(null)
+  const [pos, setPos] = useState({ index: 1, start: true, end: false })
+  const total = state.inventory.length
+
+  const measure = () => {
+    const el = listRef.current
+    if (!el) return
+    const max = el.scrollWidth - el.clientWidth
+    setPos({
+      index: Math.min(total, Math.max(1, Math.round(el.scrollLeft / (PICK_W + PICK_GAP)) + 1)),
+      start: el.scrollLeft <= 4,
+      end: el.scrollLeft >= max - 4,
+    })
+  }
+  useEffect(measure, [total]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  const fade = `linear-gradient(90deg, ${pos.start ? '#000' : 'transparent'} 0, #000 ${pos.start ? '0' : '28px'}, #000 calc(100% - ${pos.end ? '0px' : '44px'}), ${pos.end ? '#000' : 'transparent'} 100%)`
+
   return (
     <div className="animate-dv-rise">
-      <p className="dv-label flex items-center gap-2 text-dv-gold">
-        <SigilStar tone="current" className="size-2.5" />
-        Escolha a carta que vai à mesa
-      </p>
-      <ul className="devo-scroll -mx-4 mt-3 flex snap-x gap-3 overflow-x-auto px-4 pb-3 pt-2" aria-label="Suas cartas">
+      <div className="flex items-center justify-between gap-3">
+        <p className="dv-label flex items-center gap-2 text-dv-gold">
+          <SigilStar tone="current" className="size-2.5" />
+          Escolha a carta que vai à mesa
+        </p>
+        {total > 0 && (
+          <p className="shrink-0 font-mono text-[11px] tracking-[0.14em] text-dv-text-3" aria-live="off">
+            <span className="dv-tabular text-dv-text">{pos.index}</span> / <span className="dv-tabular">{total}</span>
+          </p>
+        )}
+      </div>
+      <ul
+        ref={listRef}
+        onScroll={measure}
+        className="devo-scroll -mx-4 mt-3 flex snap-x scroll-px-4 overflow-x-auto px-4 pb-3 pt-2"
+        style={{ gap: PICK_GAP, maskImage: fade, WebkitMaskImage: fade }}
+        aria-label="Suas cartas"
+      >
         {state.inventory.map((c) => (
           <li key={c.uid} className="shrink-0 snap-start">
             <button
@@ -710,11 +862,11 @@ function CardPicker() {
               className="dv-focus block transition-transform duration-[var(--dv-dur-2)] ease-[var(--dv-ease-out)] hover:-translate-y-1.5 focus-visible:-translate-y-1.5 active:scale-[0.97]"
               aria-label={`Colocar ${getCard(c.cardId).name} na mesa`}
             >
-              <CardFace cardId={c.cardId} size="sm" className="w-[76px]" />
+              <CardFace cardId={c.cardId} size="sm" className="w-[92px] shrink-0" />
             </button>
           </li>
         ))}
-        {state.inventory.length === 0 && <li className="font-body text-[15px] italic text-dv-text-3">Você não tem cartas para trocar.</li>}
+        {total === 0 && <li className="font-body text-[15px] italic text-dv-text-3">Você não tem cartas para trocar.</li>}
       </ul>
     </div>
   )
@@ -777,20 +929,34 @@ function TradeActions({ trade, rule, lostCardId, onExit }: { trade: TradeSession
         <span aria-hidden="true" className="mt-[7px] size-1.5 shrink-0 rotate-45 bg-dv-gold" />
         {status}
       </p>
-      {trade.stage !== 'revealing' && (
-      <Button
-        block
-        size="lg"
-        disabled={trade.stage !== 'negotiating' || trade.myAccept}
-        onClick={() => {
-          playSfx('confirm')
-          dispatch({ type: 'TRADE_ACCEPT' })
-        }}
-        icon={<GlyphCheck className="size-4" />}
-      >
-        Aceitar troca
-      </Button>
-      )}
+      {trade.stage !== 'revealing' &&
+        (trade.myAccept ? (
+          // Aceito: selo em ink com o check em prata (não é mais um botão — não há volta).
+          <p
+            role="status"
+            className="relative flex min-h-14 animate-dv-fade items-center justify-center gap-3 border border-dv-gold-bright/40 bg-[linear-gradient(180deg,#1f1f22,#0c0c0e)] font-display text-[15px] font-semibold uppercase tracking-[0.26em] text-dv-text"
+          >
+            <span aria-hidden="true" className="absolute -left-px -top-px size-2.5 border-l border-t border-dv-gold-bright" />
+            <span aria-hidden="true" className="absolute -bottom-px -right-px size-2.5 border-b border-r border-dv-gold-bright" />
+            <span className="grid size-6 place-items-center border border-dv-gold-bright/70 bg-dv-ink">
+              <GlyphCheck className="size-3.5 text-dv-gold-bright" />
+            </span>
+            Troca aceita
+          </p>
+        ) : (
+          <Button
+            block
+            size="lg"
+            disabled={trade.stage !== 'negotiating'}
+            onClick={() => {
+              playSfx('confirm')
+              dispatch({ type: 'TRADE_ACCEPT' })
+            }}
+            icon={<GlyphCheck className="size-4" />}
+          >
+            Aceitar troca
+          </Button>
+        ))}
       {rule.forfeitOnLeave && trade.stage !== 'revealing' && (
         <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-dv-blood-text">Sem retorno · sair agora custa a sua carta</p>
       )}
@@ -831,7 +997,7 @@ function TradeChat({ trade, rule }: { trade: TradeSession; rule: RoomRuleMeta })
   return (
     <aside
       aria-label="Conversa da sala"
-      className="relative isolate flex h-[19rem] flex-col border border-dv-line-strong bg-[linear-gradient(180deg,rgba(21,21,23,0.94),rgba(12,12,14,0.96))] @3xl:sticky @3xl:top-4 @3xl:h-[34rem]"
+      className="relative isolate flex flex-col border border-dv-line-strong bg-[linear-gradient(180deg,rgba(21,21,23,0.94),rgba(12,12,14,0.96))] @3xl:sticky @3xl:top-4 @3xl:h-[34rem]"
     >
       <header className="flex items-center justify-between gap-3 border-b border-dv-line px-4 py-2.5">
         <p className="flex items-baseline gap-2 font-display text-[13px] font-semibold uppercase tracking-[0.14em] text-dv-text">
@@ -845,10 +1011,18 @@ function TradeChat({ trade, rule }: { trade: TradeSession; rule: RoomRuleMeta })
           {channel}
         </span>
       </header>
-      <div ref={listRef} className="devo-scroll flex flex-1 flex-col gap-3 overflow-y-auto px-4 py-3" aria-live="polite">
-        {trade.chat.length === 0 && (
-          <p className="m-auto max-w-[16rem] text-center font-body text-[15px] italic text-dv-text-3">
-            {silent ? 'Aqui ninguém fala. Decida pelos olhos.' : trade.partner ? 'Diga algo. Ou não.' : 'Ninguém na sala ainda.'}
+      <div
+        ref={listRef}
+        className={cn(
+          'devo-scroll flex flex-col gap-3 overflow-y-auto px-4 @3xl:max-h-none @3xl:flex-1',
+          trade.chat.length === 0 && !trade.partnerTyping ? 'py-3' : 'max-h-[15rem] min-h-[7rem] py-3',
+        )}
+        aria-live="polite"
+      >
+        {trade.chat.length === 0 && !trade.partnerTyping && (
+          <p className="flex items-center gap-2.5 font-body text-[15px] italic text-dv-text-3">
+            <span aria-hidden="true" className="h-px w-5 bg-dv-line-strong" />
+            {silent ? 'Aqui ninguém fala. Decida pelos olhos.' : trade.partner ? 'Ninguém disse nada ainda.' : 'Ninguém na sala ainda.'}
           </p>
         )}
         {trade.chat.map((m) => {
@@ -859,7 +1033,7 @@ function TradeChat({ trade, rule }: { trade: TradeSession; rule: RoomRuleMeta })
               <p
                 className={cn(
                   'dv-cut-diag px-3 py-2 font-body text-[15px] leading-snug',
-                  me ? 'bg-[linear-gradient(180deg,#2c2c31,#1f1f22)] text-dv-text shadow-[inset_-2px_0_0_var(--dv-amethyst)]' : 'bg-dv-porcelain text-dv-porcelain-ink',
+                  me ? 'bg-dv-porcelain text-dv-porcelain-ink shadow-[inset_-2px_0_0_var(--dv-gold)]' : 'bg-[linear-gradient(180deg,#2c2c31,#1f1f22)] text-dv-text shadow-[inset_2px_0_0_var(--dv-marble-vein)]',
                 )}
                 style={{ '--dv-cut': '7px' } as CSSProperties}
               >
@@ -877,14 +1051,14 @@ function TradeChat({ trade, rule }: { trade: TradeSession; rule: RoomRuleMeta })
       {silent ? (
         <p className="border-t border-dv-line px-4 py-3 font-mono text-[10px] uppercase tracking-[0.18em] text-dv-text-3">Silêncio · nenhuma palavra sai desta mesa</p>
       ) : rule.chat === 'frases' ? (
-        <div className="flex flex-wrap gap-2 border-t border-dv-line p-3" role="group" aria-label="Frases prontas">
+        <div className="grid grid-cols-2 gap-2 border-t border-dv-line p-3" role="group" aria-label="Frases prontas">
           {QUICK_PHRASES.map((p) => (
             <button
               key={p}
               type="button"
               disabled={!canChat}
               onClick={() => say(p)}
-              className="dv-focus dv-cut-diag min-h-11 bg-dv-ink-3 px-3 font-body text-[14px] text-dv-text shadow-[inset_0_0_0_1px_var(--dv-line-strong)] transition-[background,box-shadow,transform] duration-[var(--dv-dur-2)] enabled:hover:shadow-[inset_0_0_0_1px_var(--dv-gold)] enabled:active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-45"
+              className="dv-focus dv-cut-diag flex h-12 items-center justify-center bg-dv-ink-3 px-2.5 text-center font-body text-[14px] leading-tight text-dv-text shadow-[inset_0_0_0_1px_var(--dv-line-strong)] transition-[background,box-shadow,transform] duration-[var(--dv-dur-2)] enabled:hover:shadow-[inset_0_0_0_1px_var(--dv-gold)] enabled:active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-45"
               style={{ '--dv-cut': '7px' } as CSSProperties}
             >
               {p}
