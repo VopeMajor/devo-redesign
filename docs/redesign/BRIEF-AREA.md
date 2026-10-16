@@ -55,4 +55,4 @@ responda de novo com o mesmo relatório.
 - O que mudou (bullets), funções preservadas conferidas, limitações, candidatos ao kit.
 
 ## Convites de teste por conta do roteiro
-0001 Aurora (novato) · 0002 Rival · 0003 Visitante · 0004 Convidado · 0005 Mesa (desktop) · ADM1 Veterano · 0006–0009 livres (reserve aqui antes de usar).
+0001 Aurora (novato) · 0002 Rival · 0003 Visitante · 0004 Convidado · 0005 Mesa (desktop) · ADM1 Veterano · 0006 Lumina (gênero) · 0009 Brisa (entrada: queda e Melissa) · 0007–0008: confira no main antes de usar.

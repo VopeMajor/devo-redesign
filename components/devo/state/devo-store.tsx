@@ -4,7 +4,7 @@ import { showSystemNotification } from '@/lib/devo/pwa'
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useReducer, useRef, type ReactNode } from 'react'
 import { makeOwned, starterInventory } from '@/lib/devo/cards'
-import { EMPTY_PROFILE, type Appearance, type PlayerProfile } from '@/lib/devo/appearances'
+import { EMPTY_PROFILE, appearanceChangesFor, appearanceOf, changeAppearanceIn, type Appearance, type PlayerProfile } from '@/lib/devo/appearances'
 import { PULSE_START_HOURS } from '@/lib/devo/pulse'
 import { ROOM_LAYOUT, ROOM_RULES } from '@/lib/devo/trade-rooms'
 import type { SaveData, StoryProgress } from '@/lib/devo/save'
@@ -169,13 +169,9 @@ function reducer(state: DevoState, action: Action): DevoState {
     case 'SET_PROFILE':
       return { ...state, profile: { ...state.profile, ...action.patch } }
     case 'CHANGE_APPEARANCE': {
-      // Troca "por afinidade": só uma vez depois da escolha do prólogo.
-      if (!state.profile.appearance || state.profile.appearanceChangesLeft <= 0) return state
-      const history = [...(state.profile.appearanceHistory ?? []), state.profile.appearance].slice(-5)
-      return {
-        ...state,
-        profile: { ...state.profile, appearance: action.appearance, appearanceChangesLeft: state.profile.appearanceChangesLeft - 1, appearanceHistory: history },
-      }
+      // Troca "por afinidade": uma vez para cada aparência (2D/3D e real) depois da escolha do prólogo.
+      const profile = changeAppearanceIn(state.profile, action.appearance)
+      return profile ? { ...state, profile } : state
     }
     case 'MARK_WELCOMED':
       return { ...state, welcomed: true, story: null }
@@ -330,7 +326,7 @@ type DevoContextValue = {
   dispatch: React.Dispatch<Action>
   notify: (item: Omit<NotificationItem, 'id' | 'createdAt'>) => void
   /** Reinicia a sessão (cartas → kit inicial, pulso → 72h) e grava no servidor na hora. */
-  /** Troca de aparência por afinidade (só 1 vez depois do prólogo). */
+  /** Troca de aparência por afinidade (1 vez para cada aparência, 2D/3D e real, depois do prólogo). */
   changeAppearance: (appearance: Omit<Appearance, 'chosenAt'>) => boolean
 }
 
@@ -448,10 +444,10 @@ export function DevoProvider({
   }, [])
   const stateRef = useRef(state)
   stateRef.current = state
-  /** Troca de aparência por afinidade (1 vez). Retorna false se não houver troca disponível. Tela: Record/perfil. */
+  /** Troca de aparência por afinidade (1 vez para cada tipo). Retorna false se não houver troca disponível. Tela: Record/perfil. */
   const changeAppearance = useCallback((appearance: Omit<Appearance, 'chosenAt'>) => {
     const p = stateRef.current.profile
-    if (!p.appearance || p.appearanceChangesLeft <= 0) return false
+    if (!appearanceOf(p, appearance.kind) || appearanceChangesFor(p, appearance.kind) <= 0) return false
     dispatch({ type: 'CHANGE_APPEARANCE', appearance: { ...appearance, chosenAt: Date.now() } })
     return true
   }, [])

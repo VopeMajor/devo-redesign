@@ -11,13 +11,14 @@ import {
   type StageId,
 } from '@/lib/devo/prologue-script'
 import { cn } from '@/lib/utils'
-import { APPEARANCE_KIND_LABEL, autoAppearance, appearancePool, type AppearanceKind } from '@/lib/devo/appearances'
+import { APPEARANCE_KIND_LABEL, autoAppearance, appearancePool, chooseAppearance, type AppearanceKind } from '@/lib/devo/appearances'
 import { useAdvanceKeys } from '../hooks'
 import { playerText } from '@/lib/devo/player-name'
 import { useDevo } from '../state/devo-store'
 import { EntradaButton } from '../landing/entrada-button'
 import { GlyphCard, GlyphSpark, toRoman } from '../kit/glyphs'
 import { PrologueStage } from './prologue-stage'
+import { FALL_IMPACT_MS } from './theater-fall'
 import { AdvanceIndicator, ChoiceHeader, ChoiceStrip, DialogueShell, SpeakerPlate, VnTopBar, useTypewriter } from './vn'
 
 const CHAR_MS = 28
@@ -110,53 +111,74 @@ function ActCard({ act }: { act: Act }) {
 const fieldClass =
   'w-full border-b-2 border-dv-line-strong bg-dv-ink-2/85 px-3 py-3 font-sans text-[16px] text-dv-text outline-none backdrop-blur-md transition-colors placeholder:text-dv-text-3 focus:border-dv-gold-bright focus:bg-dv-ink-3'
 
+const KIND_HINT: Record<AppearanceKind, string> = { art: 'Personagem de anime, jogo ou animação', real: 'Ator, atriz ou celebridade' }
+const KIND_ARIA: Record<AppearanceKind, string> = { art: 'Aparência 2D/3D', real: 'Aparência real' }
+
 /**
- * Segunda aparência (DIRECAO-2 §5): tipo 2D/3D ou Real, nome da aparência e "Seleção automática"
- * (lista preparada por tipo, sexo e faixa etária — lib/devo/appearances.ts).
+ * Segunda aparência (DIRECAO-2 §5, DIRECAO-3 §9): o jogador responde AS DUAS, uma de cada vez —
+ * primeiro a 2D/3D, depois a real —, cada uma com nome e "Seleção automática" (lista preparada por
+ * tipo, sexo e faixa etária — lib/devo/appearances.ts).
  */
-function FaceInput({ gender, age, onSubmit }: { gender?: string; age?: number; onSubmit: (kind: AppearanceKind, name: string, auto: boolean) => void }) {
-  const [kind, setKind] = useState<AppearanceKind>('art')
+function FaceInput({
+  kind,
+  previous,
+  gender,
+  age,
+  onSubmit,
+}: {
+  kind: AppearanceKind
+  /** Na segunda etapa: o nome escolhido na primeira (aparece como já respondido). */
+  previous?: string
+  gender?: string
+  age?: number
+  onSubmit: (kind: AppearanceKind, name: string, auto: boolean) => void
+}) {
   const [name, setName] = useState('')
   const [auto, setAuto] = useState(false)
   const valid = name.trim().length > 0
   const pool = appearancePool(kind, gender, age)
+  const step = kind === 'art' ? 1 : 2
+  const inputId = kind === 'art' ? 'pr-appearance' : 'pr-appearance-real'
   return (
     <form
+      aria-label={KIND_ARIA[kind]}
       className="animate-dv-rise flex flex-col gap-3"
       onSubmit={(e) => {
         e.preventDefault()
         if (valid) onSubmit(kind, name.trim(), auto)
       }}
     >
-      <div role="radiogroup" aria-label="Tipo de aparência" className="grid grid-cols-2 gap-2">
-        {(['art', 'real'] as AppearanceKind[]).map((k) => (
-          <button
-            key={k}
-            type="button"
-            role="radio"
-            aria-checked={kind === k}
-            onClick={() => {
-              playSfx('card-select')
-              setKind(k)
-              if (auto) setName(autoAppearance(k, gender, age))
-            }}
-            className={cn(
-              'dv-focus dv-cut-diag flex min-h-12 flex-col items-start justify-center px-3 py-2 text-left transition-colors duration-[220ms]',
-              kind === k
-                ? 'bg-dv-ink-3 text-dv-text shadow-[inset_3px_0_0_var(--dv-amethyst),inset_0_0_0_1px_color-mix(in_oklab,var(--dv-gold-bright)_38%,transparent),0_0_22px_-8px_var(--dv-amethyst)]'
-                : 'bg-dv-ink-2/90 text-dv-text-2 hover:bg-dv-ink-3',
-            )}
-            style={{ '--dv-cut': '10px' } as CSSProperties}
-          >
-            <span className="font-display text-[15px] font-semibold uppercase tracking-[0.12em]">{APPEARANCE_KIND_LABEL[k]}</span>
-            <span className="font-sans text-[12px] text-dv-text-3">{k === 'art' ? 'Anime, jogo, animação' : 'Ator, atriz, celebridade'}</span>
-          </button>
-        ))}
+      {/* Etapas: as duas aparências são obrigatórias; a que já foi respondida fica marcada. */}
+      <div className="flex items-stretch gap-2" aria-hidden="true">
+        {(['art', 'real'] as AppearanceKind[]).map((k, i) => {
+          const current = k === kind
+          const answered = k === 'art' && step === 2
+          return (
+            <span
+              key={k}
+              className={cn(
+                'dv-cut-diag flex min-w-0 flex-1 flex-col justify-center px-3 py-2 transition-colors duration-[220ms]',
+                current
+                  ? 'bg-dv-ink-3 text-dv-text shadow-[inset_3px_0_0_var(--dv-amethyst),inset_0_0_0_1px_color-mix(in_oklab,var(--dv-gold-bright)_38%,transparent),0_0_22px_-8px_var(--dv-amethyst)]'
+                  : 'bg-dv-ink-2/80 text-dv-text-3',
+              )}
+              style={{ '--dv-cut': '10px' } as CSSProperties}
+            >
+              <span className="flex items-baseline gap-2">
+                <span className={cn('font-impact text-[13px] leading-none', current ? 'text-dv-gold-bright' : 'text-dv-text-3')}>{toRoman(i + 1)}</span>
+                <span className="font-display text-[15px] font-semibold uppercase tracking-[0.12em]">{APPEARANCE_KIND_LABEL[k]}</span>
+              </span>
+              <span className={cn('truncate font-sans text-[12px]', answered ? 'text-dv-amethyst-text' : 'text-dv-text-3')}>
+                {answered && previous ? previous : KIND_HINT[k]}
+              </span>
+            </span>
+          )
+        })}
       </div>
       <div className="flex min-w-0 flex-col gap-1">
         <div className="flex items-end justify-between gap-2">
-          <label htmlFor="pr-appearance" className="dv-label pb-1 text-[10px] text-dv-text-2">
-            Nome da aparência
+          <label htmlFor={inputId} className="dv-label pb-1 text-[10px] text-dv-text-2">
+            {kind === 'art' ? 'Aparência 2D / 3D' : 'Aparência real'} · {step} de 2
           </label>
           {/* Seleção automática: lista preparada por tipo, sexo e faixa etária (sorteia outra a cada toque). */}
           <button
@@ -173,7 +195,7 @@ function FaceInput({ gender, age, onSubmit }: { gender?: string; age?: number; o
           </button>
         </div>
         <input
-          id="pr-appearance"
+          id={inputId}
           autoFocus
           maxLength={80}
           autoComplete="off"
@@ -182,7 +204,7 @@ function FaceInput({ gender, age, onSubmit }: { gender?: string; age?: number; o
             setName(e.target.value)
             setAuto(false)
           }}
-          placeholder={kind === 'art' ? `Ex.: ${pool[0] ?? 'personagem'}` : `Ex.: ${pool[0] ?? 'ator ou atriz'}`}
+          placeholder={`Ex.: ${pool[0] ?? (kind === 'art' ? 'personagem' : 'ator ou atriz')}`}
           className={fieldClass}
         />
         {auto && <span className="dv-label pt-1 text-[10px] text-dv-amethyst-text">Escolhida da lista · toque de novo para sortear outra</span>}
@@ -190,7 +212,9 @@ function FaceInput({ gender, age, onSubmit }: { gender?: string; age?: number; o
       <EntradaButton type="submit" tone="porcelain" size="md" block disabled={!valid} sfx="confirm">
         Responder
       </EntradaButton>
-      <p className="font-sans text-[12px] leading-snug text-dv-text-3">Você poderá trocar de aparência por afinidade dentro do jogo, uma única vez.</p>
+      <p className="font-sans text-[12px] leading-snug text-dv-text-3">
+        {step === 1 ? 'Depois desta, você escolhe a aparência real. ' : ''}Cada aparência pode ser trocada por afinidade dentro do jogo, uma única vez.
+      </p>
     </form>
   )
 }
@@ -202,6 +226,7 @@ function ProfileInput({
   knownAge,
   onSubmit,
   onAppearance,
+  previousArt,
 }: {
   field: ProfileField
   playerName: string
@@ -209,10 +234,13 @@ function ProfileInput({
   knownAge?: number
   onSubmit: (value: string) => void
   onAppearance: (kind: AppearanceKind, name: string, auto: boolean) => void
+  /** Aparência 2D/3D já respondida (mostrada na etapa da real). */
+  previousArt?: string
 }) {
   const [age, setAge] = useState('')
   if (field === 'name') return <ChoiceStrip index={0} label={playerName} onClick={() => onSubmit(playerName)} />
-  if (field === 'face') return <FaceInput gender={gender} age={knownAge} onSubmit={onAppearance} />
+  if (field === 'face') return <FaceInput kind="art" gender={gender} age={knownAge} onSubmit={onAppearance} />
+  if (field === 'faceReal') return <FaceInput kind="real" previous={previousArt} gender={gender} age={knownAge} onSubmit={onAppearance} />
   if (field === 'gender') {
     return (
       <div className="grid gap-2 sm:grid-cols-2">
@@ -307,7 +335,7 @@ export function PrologueScreen({
     stopMusic()
     return () => setPrologueMusic(null)
   }, [])
-  const { dispatch } = useDevo()
+  const { dispatch, state: devo } = useDevo()
   const [replies, setReplies] = useState<Line[]>([])
   /** Qual opção gerou as respostas atuais (para achar o id da fala dublada). */
   const [replyFrom, setReplyFrom] = useState<{ option: number; total: number } | null>(null)
@@ -317,7 +345,15 @@ export function PrologueScreen({
   useEffect(() => {
     onProgress?.(index, Object.fromEntries(Object.entries(profile).filter((e): e is [string, string] => typeof e[1] === 'string')))
   }, [index, profile]) // eslint-disable-line react-hooks/exhaustive-deps
-  const [mood, setMood] = useState<MelissaMood>('convite')
+  // Ao retomar pelo Continuar no meio da conversa, a Melissa já entra com a expressão da última fala dela
+  // (sem trocar de retrato no primeiro quadro).
+  const [mood, setMood] = useState<MelissaMood>(() => {
+    for (let i = Math.min(startIndex, PROLOGUE.length - 1); i >= 0; i--) {
+      const b = PROLOGUE[i]
+      if (b.kind === 'line' && b.line.who === 'melissa' && b.line.mood) return b.line.mood
+    }
+    return 'convite'
+  })
 
   const beat = PROLOGUE[index]
   const name = profile.name ?? playerName ?? 'Record'
@@ -357,11 +393,20 @@ export function PrologueScreen({
   }, [beat.stage, index])
 
   useEffect(() => {
-    if (beat.kind === 'line' && beat.sfx && replies.length === 0) playSfx(beat.sfx)
+    // O impacto da queda soa no golpe da tesoura (FALL_IMPACT_MS), não no início do quadro.
+    let impact = 0
+    if (beat.kind === 'line' && beat.sfx === 'crush' && replies.length === 0) {
+      const sfx = beat.sfx
+      impact = window.setTimeout(() => playSfx(sfx), FALL_IMPACT_MS)
+    } else if (beat.kind === 'line' && beat.sfx && replies.length === 0) playSfx(beat.sfx)
     if (beat.kind === 'line' && beat.auto) {
       const id = window.setTimeout(next, beat.auto)
-      return () => window.clearTimeout(id)
+      return () => {
+        window.clearTimeout(id)
+        window.clearTimeout(impact)
+      }
     }
+    return () => window.clearTimeout(impact)
   }, [beat, next, replies.length])
 
   const advance = useCallback(() => {
@@ -401,10 +446,11 @@ export function PrologueScreen({
     next()
   }
 
+  // As duas aparências vão para o perfil, cada uma no seu lugar e com a sua troca (lib/devo/appearances.ts).
   const submitAppearance = (kind: AppearanceKind, appearance: string, auto: boolean) => {
     playSfx('confirm')
-    setProfile((p) => ({ ...p, face: `${kind === 'art' ? '2D/3D' : 'Real'}: ${appearance}` }))
-    dispatch({ type: 'SET_PROFILE', patch: { appearance: { kind, name: appearance, auto, chosenAt: Date.now() }, appearanceChangesLeft: 1 } })
+    setProfile((p) => (kind === 'art' ? { ...p, face: `2D/3D: ${appearance}` } : { ...p, faceReal: `Real: ${appearance}` }))
+    dispatch({ type: 'SET_PROFILE', patch: chooseAppearance(devo.profile, { kind, name: appearance, auto, chosenAt: Date.now() }) })
     next()
   }
 
@@ -436,11 +482,12 @@ export function PrologueScreen({
   const glint = beat.kind === 'line' && beat.sfx === 'reveal' && replies.length === 0
   const slash = beat.kind === 'line' && beat.sfx === 'crush'
 
-  // Momentos fortes da cutscene: corte vermelho, brilho do aparelho, entrada de cada ato.
+  // Momentos fortes da cutscene: golpe da queda (o corte vermelho está no palco), brilho do aparelho, entrada de cada ato.
   const actN = act?.n ?? 0
   const lastActSfx = useRef(0)
   useEffect(() => {
-    if (slash) window.setTimeout(() => playSfx('slash'), 60)
+    // o silvo da tesoura descendo, logo antes do impacto
+    if (slash) window.setTimeout(() => playSfx('slash'), FALL_IMPACT_MS - 150)
     if (glint) playSfx('shimmer')
   }, [index]) // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => {
@@ -468,11 +515,6 @@ export function PrologueScreen({
         </div>
       )}
 
-      {slash && (
-        <div key={`slash-${index}`} aria-hidden="true" className="pointer-events-none absolute inset-0 z-20 overflow-hidden">
-          <span className="en-slash absolute left-[-20%] top-[44%] h-3 w-[140%] bg-dv-blood shadow-[0_0_30px_color-mix(in_oklab,var(--dv-blood)_90%,transparent)]" />
-        </div>
-      )}
       {glint && <div key={`glint-${index}`} aria-hidden="true" className="en-glint pointer-events-none absolute inset-0 z-20 bg-[radial-gradient(circle_at_50%_40%,rgba(241,240,238,0.55),color-mix(in_oklab,var(--dv-amethyst)_22%,transparent)_30%,transparent_60%)]" />}
       {act && <div key={`cut-${act.n}`} aria-hidden="true" className="en-cut pointer-events-none absolute inset-0 z-[35] bg-black" />}
       {act && <ActCard key={`act-${act.n}`} act={act} />}
@@ -576,6 +618,7 @@ export function PrologueScreen({
               knownAge={profile.age ? Number(profile.age) : undefined}
               onSubmit={(v) => submitProfile(beat.field, v)}
               onAppearance={submitAppearance}
+              previousArt={profile.face?.replace(/^2D\/3D: /, '')}
             />
           </div>
         )}
