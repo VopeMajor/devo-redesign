@@ -1,0 +1,336 @@
+{
+  "base": "http://localhost:3000",
+  "shots": [
+    {
+      "name": "30-jogos-mesa",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "30-jogos-mesa-scroll",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "30-jogos-mesa-scroll2",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "31-jogos-ranking",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "31-jogos-ranking-scroll",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "31-jogos-ranking-scroll2",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "31-jogos-ranking-jogo",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "31-jogos-apostas",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "31-jogos-apostas-duelos",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "31-jogos-apostas-folha",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "32-tutorial-memory-rush-a",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "32-tutorial-memory-rush-b",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "32-tutorial-memory-rush-c",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "32-tutorial-living-chess-a",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "32-tutorial-living-chess-b",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "32-tutorial-living-chess-c",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "32-tutorial-bomba-quente-a",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "32-tutorial-bomba-quente-b",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "32-tutorial-bomba-quente-c",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "32-tutorial-blefe-a",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "32-tutorial-blefe-b",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "32-tutorial-blefe-c",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "33-jogos-fila",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "33-jogos-fila-cancelada",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "30-jogos-mesa-scroll3",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "30-jogos-mesa-scroll4",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "30-jogos-mesa-scroll5",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "30-jogos-mesa-chat",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "34-javali-2",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "34-javali-3",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "40-partida-memory-rush-fila",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "40-partida-memory-rush-a1",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "40-partida-memory-rush-b1",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "40-partida-memory-rush-a2",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "40-partida-memory-rush-b2",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "40-partida-memory-rush-a3-virada",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "40-partida-memory-rush-a3",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "40-partida-memory-rush-b3",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "40-partida-living-chess-fila",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "40-partida-living-chess-a1",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "40-partida-living-chess-b1",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "40-partida-living-chess-a2",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "40-partida-living-chess-b2",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "40-partida-bomba-quente-fila",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "40-partida-bomba-quente-a1",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "40-partida-bomba-quente-b1",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "40-partida-bomba-quente-a2",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "40-partida-bomba-quente-b2",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "40-partida-blefe-fila",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "40-partida-blefe-a1",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "40-partida-blefe-b1",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "40-partida-blefe-a2",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "40-partida-blefe-b2",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "41-xadrez-entrada",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "41-xadrez-lance",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "41-xadrez-lance-b",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "41-xadrez-meio",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "41-xadrez-historico",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "41-xadrez-config",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "41-xadrez-fim",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "42-mesa-registro",
+      "note": "",
+      "url": "http://localhost:3000/"
+    }
+  ],
+  "errors": [
+    {
+      "step": "jogos-Agenda",
+      "error": "TimeoutError: locator.click: Timeout 3000ms exceeded.\nCall log:\n  - waiting for getByRole('tab', { name: 'Agenda', exact: true }).first()\n    - locator resolved to <button role=\"tab\" type=\"button\" tabindex=\"-1\" aria-selected=\"false\" id=\"_r_13_-tab-agenda\" aria-controls=\"_r_13_-panel\" class=\"dv-focus relative flex min-h-12 items-center justify-center gap-2 px-4 font-display text-[13px] font-semibold uppercase tracking-[0.2em] transition-colors duration-200 flex-1 text-dv-text-3 enabled:hover:text-dv-text-2 disabled:cursor-not-allowed disabled:opacity-40\">…</button>\n  - attempting click action\n    - waiting for element to be visible, enabled and stable\n    - element is visible, enabled and stable\n    - scrolling into view if needed\n    - done scrolling\n    - performing click action\n"
+    },
+    {
+      "step": "34-javali-0",
+      "error": "TimeoutError: page.screenshot: Timeout 30000ms exceeded.\nCall log:\n  - taking page screenshot\n  - waiting for fonts to load...\n  - fonts loaded\n"
+    },
+    {
+      "step": "34-javali-1",
+      "error": "TimeoutError: page.screenshot: Timeout 30000ms exceeded.\nCall log:\n  - taking page screenshot\n  - waiting for fonts to load...\n  - fonts loaded\n"
+    }
+  ],
+  "console": [
+    {
+      "page": "http://localhost:3000/",
+      "text": "HTTP 400",
+      "src": "http://localhost:3000/api/auth/sign-up/email"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "Failed to load resource: the server responded with a status of 400 (BAD_REQUEST)",
+      "src": "http://localhost:3000/api/auth/sign-up/email"
+    }
+  ]
+}
