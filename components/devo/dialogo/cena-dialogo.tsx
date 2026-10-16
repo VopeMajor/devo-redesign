@@ -208,7 +208,7 @@ export function CenaDialogo({
 
   useEffect(() => {
     if (!selo) return
-    const t = window.setTimeout(() => setSelo(null), 3400)
+    const t = window.setTimeout(() => setSelo(null), 5200)
     return () => window.clearTimeout(t)
   }, [selo])
 
