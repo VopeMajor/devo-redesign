@@ -329,7 +329,7 @@ function Fundar({ d, agir }: { d: CorpLiberado; agir: Agir }) {
                 setAberto(true)
               }}
             >
-              Fundar Corporação
+              Fundar
             </Button>
           </div>
           {!c.atende && <p className="mt-2 font-body text-[14px] text-dv-text-2">Seu perfil ainda não atende a todos os requisitos.</p>}

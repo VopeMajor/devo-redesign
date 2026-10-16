@@ -157,7 +157,7 @@ export function ChamadaHolograma({ podePular, onFim }: { podePular: boolean; onF
                 <img
                   src={art.src}
                   alt=""
-                  className="size-full object-contain object-bottom [filter:grayscale(1)_brightness(1.15)_contrast(1.05)_drop-shadow(0_0_14px_rgba(168,155,224,0.55))]"
+                  className="size-full object-contain object-bottom [filter:grayscale(1)_sepia(0.55)_hue-rotate(205deg)_saturate(1.7)_brightness(1.12)_contrast(1.05)_drop-shadow(0_0_14px_rgba(168,155,224,0.55))]"
                   style={{ maskImage: 'linear-gradient(0deg, transparent 0%, #000 26%)', WebkitMaskImage: 'linear-gradient(0deg, transparent 0%, #000 26%)', opacity: 0.85 }}
                 />
               )}
@@ -167,8 +167,7 @@ export function ChamadaHolograma({ podePular, onFim }: { podePular: boolean; onF
                   className="absolute inset-0 overflow-hidden"
                   style={{ maskImage: `url(${art.src})`, WebkitMaskImage: `url(${art.src})`, maskSize: 'contain', WebkitMaskSize: 'contain', maskRepeat: 'no-repeat', WebkitMaskRepeat: 'no-repeat', maskPosition: 'bottom', WebkitMaskPosition: 'bottom' }}
                 >
-                  <span className="absolute inset-0 mix-blend-color" style={{ background: 'linear-gradient(180deg,#b9b0e6,#8a7cc8 60%,#6b6357)' }} />
-                  <span className="absolute inset-0 opacity-40 mix-blend-overlay" style={{ background: 'repeating-linear-gradient(0deg, rgba(236,229,216,0.4) 0 1px, transparent 1px 4px)' }} />
+                  <span className="absolute inset-0 opacity-25" style={{ background: 'repeating-linear-gradient(0deg, rgba(236,229,216,0.5) 0 1px, transparent 1px 4px)' }} />
                   <span className="corp-holo-varre absolute inset-x-0 h-1/5" style={{ background: 'linear-gradient(180deg, transparent, rgba(236,229,216,0.3), transparent)' }} />
                 </span>
               )}
