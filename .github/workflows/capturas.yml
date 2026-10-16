@@ -41,7 +41,7 @@ jobs:
         run: pnpm install --no-frozen-lockfile
       - name: Banco de teste
         run: |
-          for f in scripts/dev/00-base.sql scripts/deadly-votes-migration.sql scripts/deadly-votes-group-migration.sql scripts/auth-migration.sql scripts/arcade-migration.sql scripts/arcade-points-migration.sql scripts/arcade-rooms-migration.sql scripts/test-accounts-migration.sql scripts/character-name-migration.sql scripts/fundacao-migration.sql scripts/poco-migration.sql scripts/dev/90-seed.sql scripts/dev/91-seed-poco.sql; do
+          for f in scripts/dev/00-base.sql scripts/deadly-votes-migration.sql scripts/deadly-votes-group-migration.sql scripts/auth-migration.sql scripts/arcade-migration.sql scripts/arcade-points-migration.sql scripts/arcade-rooms-migration.sql scripts/test-accounts-migration.sql scripts/character-name-migration.sql scripts/fundacao-migration.sql scripts/poco-migration.sql scripts/staff-migration.sql scripts/dev/90-seed.sql scripts/dev/91-seed-poco.sql; do
             psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -q -f "$f"
           done
       - name: Tipos
@@ -64,6 +64,8 @@ jobs:
         continue-on-error: true
       - name: Teste de servidor (Poço)
         run: node scripts/dev/poco-test.mjs 2>&1 | tee poco-test.log
+      - name: Teste de servidor (Staff e Deadly Vote)
+        run: node scripts/dev/staff-test.mjs 2>&1 | tee staff-test.log
         continue-on-error: true
       - name: Banco novo confere com as migrações
         run: |
@@ -76,7 +78,7 @@ jobs:
         continue-on-error: true
       - name: Logs
         if: always()
-        run: mkdir -p shots && cp -f build.log typecheck.log server.log capture.log fundacao-test.log poco-test.log banco-novo.log shots/ 2>/dev/null || true
+        run: mkdir -p shots && cp -f build.log typecheck.log server.log capture.log fundacao-test.log poco-test.log staff-test.log banco-novo.log shots/ 2>/dev/null || true
       - name: Publicar capturas na branch capturas/<branch>
         if: always()
         run: |

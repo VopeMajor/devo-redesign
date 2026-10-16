@@ -33,13 +33,59 @@ export type DeadlyVote = {
   groupUrl: string | null
   /** O Dealer já informou o link (sem revelar qual). */
   hasGroup: boolean
+  /** Local do caso (campo do dono). */
+  location: string | null
+  /** 'livre': a inscrição entra direto; 'aprovacao': o dono do Deadly Vote aceita cada inscrito. */
+  admission: VoteAdmission
+  /** Situação da inscrição de quem pede o Record (null = não inscrito). */
+  entryStatus: EntryAdmission | null
 }
+
+export type VoteAdmission = 'livre' | 'aprovacao'
+export type EntryAdmission = 'pendente' | 'aceita' | 'recusada'
+/** Decisão por participante depois de concluir (DIRECAO-3 §4), antes de aplicar aos perfis. */
+export type EntryDecision = 'premio' | 'morreu' | 'ausente' | 'outro'
+
+export const ENTRY_ADMISSION_LABEL: Record<EntryAdmission, string> = { pendente: 'Em análise', aceita: 'Aceita', recusada: 'Recusada' }
+
+export const DECISIONS: EntryDecision[] = ['premio', 'morreu', 'ausente', 'outro']
+export const DECISION_LABEL: Record<EntryDecision, { label: string; hint: string }> = {
+  premio: { label: 'Recebe prêmio', hint: 'Sobreviveu · recebe as recompensas do caso' },
+  morreu: { label: 'Morreu', hint: 'Eliminado · sem recompensa' },
+  ausente: { label: 'Não compareceu', hint: 'Sem resultado · sem recompensa' },
+  outro: { label: 'Outro', hint: 'Sem resultado · explique na nota' },
+}
+
+/** Recurso de uma recompensa (mesmo formato das propostas da Fundação). */
+export type PrizeResource = 'item' | 'tempo' | 'carta' | 'convite'
+/** Recompensa planejada do Deadly Vote. PRIVADA: só a equipe vê; nunca vai no payload do jogador. */
+export type DvPrize = { id: string; recurso: PrizeResource; chave: string | null; quantidade: number; label: string | null }
+export type PrizeInput = { recurso: PrizeResource; chave?: string | null; quantidade: number; label?: string | null }
 
 export type VoteOutcome = 'sobreviveu' | 'eliminado'
 
 /** Visão do Dealer/Admin: todos os Deadly Votes recentes com a lista de inscritos. */
-export type StaffEntry = { playerId: string; name: string; outcome: VoteOutcome | null }
-export type StaffVote = DeadlyVote & { entries: StaffEntry[] }
+export type StaffEntry = {
+  playerId: string
+  name: string
+  outcome: VoteOutcome | null
+  admission: EntryAdmission
+  decision: EntryDecision | null
+  note: string | null
+  joinedAt: number
+}
+export type StaffRewardTally = { pendente: number; aprovada: number; entregue: number; rejeitada: number }
+export type StaffVote = DeadlyVote & {
+  entries: StaffEntry[]
+  isTutorial: boolean
+  /** Nome de quem convocou (a equipe vê; Owner só aparece para Owner). */
+  creator: string | null
+  creatorId: string | null
+  prizes: DvPrize[]
+  /** Quando o resultado por participante foi aplicado aos perfis (uma vez só). */
+  appliedAt: number | null
+  rewards: StaffRewardTally
+}
 export type StaffBoard = { votes: StaffVote[] }
 
 export type RecordPayload = { role: PlayerRole; avatarVersion: number | null; votes: DeadlyVote[] }

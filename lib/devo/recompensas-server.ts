@@ -171,21 +171,39 @@ async function validate(c: PoolClient, input: PropostaInput) {
 
 /** Propõe uma recompensa. Com `aprovar: true`, quem pode aprovar já aprova na mesma transação. */
 export async function proposeReward(atorId: string, input: PropostaInput, opts: { aprovar?: boolean; entregar?: boolean } = {}) {
-  return txAs(atorId, async (c) => {
-    const ator = await requireActor(atorId, c)
-    const v = await validate(c, input)
-    const voto = v.voteId ? await loadVotoAlvo(v.voteId, c) : null
-    requireCan(ator, 'recompensa.propor', { tipo: input.tipo, voto }, 'Você não pode propor esta recompensa.')
-    const [row] = await run<{ id: string }>(
-      c,
-      `INSERT INTO reward_proposals (kind, vote_id, origin, recipient_id, resource, resource_key, quantity, justification, proposed_by)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING id`,
-      [input.tipo, v.voteId, v.origem, input.destinatarioId, input.recurso, v.chave, v.quantidade, v.justificativa, ator.id],
-    )
-    if (opts.aprovar) await approveIn(c, ator, row.id, null)
-    if (opts.aprovar && opts.entregar) await deliverIn(c, ator, row.id)
-    return row.id
-  })
+  return txAs(atorId, async (c) => (await proposeRewardIn(c, await requireActor(atorId, c), input, opts)) as string)
+}
+
+/**
+ * Igual a `proposeReward`, dentro de uma transação já aberta (ex.: aplicar o resultado de um Deadly Vote).
+ * `prizeId` liga a proposta a um prêmio planejado do voto: uma proposta por (prêmio, destinatário) — se já
+ * existir, não cria outra e devolve null. `aprovar` só aprova se o ator puder (`can`), sem lançar 403.
+ */
+export async function proposeRewardIn(
+  c: PoolClient,
+  ator: Ator,
+  input: PropostaInput,
+  opts: { aprovar?: boolean | 'se-puder'; entregar?: boolean; prizeId?: string | null } = {},
+): Promise<string | null> {
+  const v = await validate(c, input)
+  const voto = v.voteId ? await loadVotoAlvo(v.voteId, c) : null
+  requireCan(ator, 'recompensa.propor', { tipo: input.tipo, voto }, 'Você não pode propor esta recompensa.')
+  const [row] = await run<{ id: string }>(
+    c,
+    `INSERT INTO reward_proposals (kind, vote_id, origin, recipient_id, resource, resource_key, quantity, justification, proposed_by, prize_id)
+     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+     ${opts.prizeId ? 'ON CONFLICT (prize_id, recipient_id) WHERE prize_id IS NOT NULL DO NOTHING' : ''} RETURNING id`,
+    [input.tipo, v.voteId, v.origem, input.destinatarioId, input.recurso, v.chave, v.quantidade, v.justificativa, ator.id, opts.prizeId ?? null],
+  )
+  if (!row) return null
+  let aprovar = opts.aprovar === true
+  if (opts.aprovar === 'se-puder') {
+    const [r] = await run<Row>(c, `${SELECT} WHERE r.id = $1`, [row.id])
+    aprovar = can(ator, 'recompensa.aprovar', alvoDe(r))
+  }
+  if (aprovar) await approveIn(c, ator, row.id, null)
+  if (aprovar && opts.entregar) await deliverIn(c, ator, row.id)
+  return row.id
 }
 
 /** Edita uma proposta. Mudança relevante numa aprovada/rejeitada volta a "pendente" (regra do dono, no banco). */

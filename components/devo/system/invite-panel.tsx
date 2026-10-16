@@ -88,6 +88,8 @@ export function InvitePanel() {
 
   const invites = data?.invites ?? []
   const available = invites.filter((i) => !i.usedAt).length
+  // Jogador: cota de convites (começa em 1, não renova; mais convites só como recompensa).
+  const quota = data?.role === 'player' ? (data.quota ?? 0) : null
 
   return (
     <div className="flex flex-col gap-5">
@@ -95,6 +97,19 @@ export function InvitePanel() {
         <p className="font-body text-[15px] leading-relaxed text-in-fg-2">
           Cada código vale para uma única conta. Depois de usado, a pessoa entra por Continuar com usuário e senha.
         </p>
+        {quota !== null && (
+          <div className="mt-4 flex items-center gap-4 border-y border-in-line py-3">
+            <p className="font-impact text-[40px] font-semibold leading-none text-in-fg dv-tabular" aria-hidden="true">
+              {quota}
+            </p>
+            <div className="min-w-0">
+              <p className="font-mono text-[10.5px] uppercase tracking-[0.18em] text-in-fg-2">{quota === 1 ? 'Convite disponível' : 'Convites disponíveis'}</p>
+              <p className="mt-1 font-sans text-[13px] leading-snug text-in-fg-3">
+                {quota > 0 ? 'A cota não se renova. Revogar um código ainda não usado devolve o convite.' : 'Sua cota acabou. Novos convites só chegam como recompensa.'}
+              </p>
+            </div>
+          </div>
+        )}
         <div className="mt-4 flex flex-col gap-4">
           {data && data.canGrant.length > 1 && (
             <div className="flex flex-col gap-1.5">
@@ -142,7 +157,7 @@ export function InvitePanel() {
               </span>
             </label>
           )}
-          <RecButton block loading={busy} disabled={!data} onClick={create} icon={<Plus strokeWidth={1.4} />}>
+          <RecButton block loading={busy} disabled={!data || quota === 0} onClick={create} icon={<Plus strokeWidth={1.4} />} aria-label={quota !== null ? `Gerar convite (${quota} disponível)` : undefined}>
             Gerar
           </RecButton>
         </div>
