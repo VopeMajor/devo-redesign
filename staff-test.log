@@ -1,0 +1,13 @@
+ok   migração do staff é idempotente
+ok   contas: owner, anfitrião, dealer (convite do anfitrião) e três jogadores
+ok   Dealer convoca com local, aprovação de inscrição e recompensas privadas
+ok   recompensa privada não vaza para o jogador (Record, Mesa e API da equipe)
+ok   inscrição com aprovação: pendente → aceita/recusada; grupo só para aceitos
+ok   aplicar exige concluir e decidir todos os aceitos
+ok   decisão por participante aplicada UMA vez (inclusive em corrida)
+ok   resultado aplicado fica selado (decisão, resultado e estado)
+ok   Dealer não aprova nem entrega; Anfitrião aprova e a entrega é idempotente
+ok   tutorial: vencer pela decisão "recebe prêmio" desbloqueia; aplicar em corrida entrega 1 vez
+ok   Owner nunca aparece na Mesa de outro cargo nem no Record público
+
+Staff: 11 ok, 0 falha(s)
