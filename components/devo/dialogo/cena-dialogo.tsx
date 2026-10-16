@@ -281,6 +281,7 @@ export function CenaDialogo({
   return (
     <section
       ref={raiz}
+      data-cena={cenaId}
       tabIndex={-1}
       role="dialog"
       aria-modal="true"

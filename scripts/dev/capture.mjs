@@ -1765,7 +1765,7 @@ if (want('narrativa')) {
   const db = new pg.Pool({ connectionString: process.env.DATABASE_URL })
   const sql = (t, p) => db.query(t, p).then((r) => r.rows)
   // A cena do motor é a última <section role=dialog> (outras telas podem ter diálogos ocultos antes).
-  const dlg = (page) => page.locator('section[role="dialog"][aria-modal="true"]').last()
+  const dlg = (page) => page.locator('section[data-cena]').last()
   // textContent (não innerText): a legenda de som é caixa-alta só no CSS.
   const textoDlg = (page) => dlg(page).evaluate((el) => el.textContent ?? '', null, { timeout: 2000 }).catch(() => '')
   /** Avança a cena até o texto aparecer (por inteiro); escolhas no caminho: a primeira, ou `pick` por rótulo. */
