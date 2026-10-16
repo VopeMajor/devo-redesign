@@ -53,12 +53,18 @@ export function SoundToggle({ className, compact = false }: { className?: string
     >
       {bars}
       <span className="dv-label w-[5.5em] text-right text-[10px] text-dv-text-2">{muted ? 'Desligado' : 'Ligado'}</span>
-      <span aria-hidden="true" className={cn('dv-cut-hex relative h-7 w-14 transition-colors duration-200 [--dv-cut:10px]', muted ? 'bg-dv-line-strong' : 'bg-dv-cobalt')}>
-        <span className={cn('dv-cut-hex absolute inset-px [--dv-cut:9.5px]', muted ? 'bg-dv-ink-2' : 'bg-dv-cobalt-dim')} />
+      <span
+        aria-hidden="true"
+        className={cn(
+          'dv-cut-hex relative h-7 w-14 transition-colors duration-200 [--dv-cut:10px]',
+          muted ? 'bg-dv-line-strong' : 'bg-[linear-gradient(100deg,#f4efe6,#6b6357_35%,#bab09f_65%,#ece5d8)]',
+        )}
+      >
+        <span className={cn('dv-cut-hex absolute inset-px [--dv-cut:9.5px]', muted ? 'bg-dv-ink-2' : 'bg-[linear-gradient(180deg,#1f1f22,#0c0c0e)]')} />
         <span
           className={cn(
             'absolute top-1/2 size-4 -translate-y-1/2 rotate-45 transition-[left,background-color] duration-200 ease-out',
-            muted ? 'left-2 bg-dv-text-3' : 'left-[calc(100%-1.5rem)] bg-white shadow-[0_0_10px_var(--dv-cobalt)]',
+            muted ? 'left-2 bg-dv-text-3' : 'left-[calc(100%-1.5rem)] bg-dv-porcelain shadow-[0_0_10px_rgba(138,124,200,0.85)]',
           )}
         />
       </span>

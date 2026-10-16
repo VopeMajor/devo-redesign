@@ -1,0 +1,203 @@
+name: Cloudflare
+
+# Verificação do build do DEVO para Cloudflare Workers via OpenNext (tamanho do Worker, avisos, startup).
+# O DEPLOY é feito pela própria Cloudflare (Workers Builds, repositório conectado no painel) — ver
+# docs/DEPLOY-CLOUDFLARE.md. Este workflow nunca publica: só confere o build.
+#
+# Sem CLOUDFLARE_API_TOKEN/CLOUDFLARE_ACCOUNT_ID (ou sem DATABASE_URL/BETTER_AUTH_SECRET) o workflow
+# não falha: faz só o build + medição. O relatório (tamanho, avisos, logs) vai sempre para a branch
+# infra-logs/cloudflare.
+
+on:
+  push:
+    branches: [infra/cloudflare]
+  workflow_dispatch:
+
+concurrency:
+  group: cloudflare-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  cloudflare:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      NEXT_TELEMETRY_DISABLED: 1
+      # Inlinado no build (opcional): ativa o Cloudflare Web Analytics.
+      NEXT_PUBLIC_CF_WEB_ANALYTICS_TOKEN: ${{ vars.CF_WEB_ANALYTICS_TOKEN }}
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      HYPERDRIVE_ID: ${{ secrets.HYPERDRIVE_ID || vars.HYPERDRIVE_ID }}
+      DEVO_PUBLIC_URL: ${{ vars.DEVO_PUBLIC_URL }}
+      RT_DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      RT_BETTER_AUTH_SECRET: ${{ secrets.BETTER_AUTH_SECRET }}
+      RT_CRON_SECRET: ${{ secrets.CRON_SECRET }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Modo
+        id: modo
+        run: |
+          mkdir -p report
+          WANT=build
+          MISSING=""
+          for v in CLOUDFLARE_API_TOKEN CLOUDFLARE_ACCOUNT_ID RT_DATABASE_URL RT_BETTER_AUTH_SECRET; do
+            [ -n "${!v}" ] || MISSING="$MISSING ${v#RT_}"
+          done
+          MODE=$WANT
+          if [ "$WANT" = deploy ] && [ -n "$MISSING" ]; then MODE=build; fi
+          echo "mode=$MODE" >> "$GITHUB_OUTPUT"
+          {
+            echo "evento=$GITHUB_EVENT_NAME ref=$GITHUB_REF_NAME pedido=$WANT modo=$MODE"
+            echo "segredos ausentes:${MISSING:- nenhum}"
+            echo "hyperdrive: $([ -n "$HYPERDRIVE_ID" ] && echo configurado || echo 'não configurado (usa DATABASE_URL direto)')"
+            echo "cron secret: $([ -n "$RT_CRON_SECRET" ] && echo configurado || echo 'não configurado (rota do cron fica aberta)')"
+          } | tee report/modo.txt
+
+      - name: Dependências
+        run: pnpm install --no-frozen-lockfile 2>&1 | tee report/install.log
+
+      - name: Hyperdrive no wrangler.jsonc (se HYPERDRIVE_ID existir)
+        if: env.HYPERDRIVE_ID != ''
+        run: |
+          node -e '
+            const fs = require("fs")
+            const file = "wrangler.jsonc"
+            const src = fs.readFileSync(file, "utf8")
+            const at = src.lastIndexOf("}")
+            const add = `,\n  "hyperdrive": [{ "binding": "HYPERDRIVE", "id": "${process.env.HYPERDRIVE_ID}" }]\n`
+            fs.writeFileSync(file, src.slice(0, at) + add + src.slice(at))
+          '
+          grep -n '"hyperdrive"' wrangler.jsonc
+
+      - name: Build (OpenNext)
+        id: build
+        run: |
+          set -o pipefail
+          pnpm exec opennextjs-cloudflare build 2>&1 | tee report/build.log
+
+      - name: Medir o Worker
+        id: medir
+        if: steps.build.outcome == 'success'
+        run: |
+          set -o pipefail
+          # O bundle final é o que o wrangler gera a partir de cloudflare/worker.ts (inclui o .open-next/worker.js).
+          pnpm exec wrangler deploy --dry-run --outdir .wrangler-dist --metafile .wrangler-dist/bundle-meta.json 2>&1 | tee report/dry-run.log
+          LINE=$(grep -E 'Total Upload:' report/dry-run.log | tail -1 || true)
+          echo "linha=$LINE" | tee report/tamanho.txt
+          du -sb .wrangler-dist | tee -a report/tamanho.txt
+          ls -la .wrangler-dist | tee -a report/tamanho.txt
+          # Maiores pacotes no bundle do servidor Next (handler.mjs) e no bundle final.
+          node .github/scripts/cf-bundle-top.mjs .open-next/server-functions/default/handler.mjs.meta.json > report/top-handler.txt 2>&1 || true
+          node .github/scripts/cf-bundle-top.mjs .wrangler-dist/bundle-meta.json > report/top-worker.txt 2>&1 || true
+          ls -la .open-next/server-functions/default/ | tee report/server-functions.txt
+          du -sh .open-next/assets | tee -a report/server-functions.txt
+          # three.js / react-three-fiber no bundle do servidor (só deveriam ir para o cliente)
+          for f in .open-next/server-functions/default/handler.mjs .wrangler-dist/worker.js; do
+            echo "$f: THREE.WebGLRenderer=$(grep -o 'THREE.WebGLRenderer' "$f" | wc -l) react-three-fiber=$(grep -o 'R3F' "$f" | wc -l)"
+          done > report/three-no-servidor.txt || true
+
+      - name: Perfil de inicialização (wrangler check startup)
+        if: steps.build.outcome == 'success'
+        continue-on-error: true
+        run: timeout 300 pnpm exec wrangler check startup 2>&1 | tee report/startup.log
+
+      - name: Endereço público
+        id: url
+        if: steps.modo.outputs.mode == 'deploy' && steps.build.outcome == 'success'
+        run: |
+          URL="$DEVO_PUBLIC_URL"
+          if [ -z "$URL" ]; then
+            SUB=$(curl -fsS -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+              "https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/workers/subdomain" | jq -r '.result.subdomain // empty' || true)
+            [ -n "$SUB" ] && URL="https://devo.$SUB.workers.dev"
+          fi
+          echo "url=$URL" >> "$GITHUB_OUTPUT"
+          echo "endereço: ${URL:-desconhecido (crie o subdomínio workers.dev no painel ou defina a variável DEVO_PUBLIC_URL)}" | tee report/url.txt
+
+      - name: Deploy
+        id: deploy
+        if: steps.modo.outputs.mode == 'deploy' && steps.build.outcome == 'success'
+        env:
+          PUBLIC_URL: ${{ steps.url.outputs.url }}
+          # O deploy do OpenNext sobe um proxy local do wrangler para ler as variáveis; com Hyperdrive no
+          # wrangler.jsonc ele exige uma conexão local, que aqui nunca é usada de fato.
+          CLOUDFLARE_HYPERDRIVE_LOCAL_CONNECTION_STRING_HYPERDRIVE: postgres://unused:unused@127.0.0.1:5432/unused
+        run: |
+          set -o pipefail
+          node -e '
+            const s = {
+              DATABASE_URL: process.env.RT_DATABASE_URL,
+              BETTER_AUTH_SECRET: process.env.RT_BETTER_AUTH_SECRET,
+              ...(process.env.RT_CRON_SECRET ? { CRON_SECRET: process.env.RT_CRON_SECRET } : {}),
+            }
+            require("fs").writeFileSync(".cf-secrets.json", JSON.stringify(s), { mode: 0o600 })
+          '
+          EXTRA=""
+          [ -n "$PUBLIC_URL" ] && EXTRA="--var DEVO_PUBLIC_URL:$PUBLIC_URL"
+          pnpm exec opennextjs-cloudflare deploy -- --secrets-file .cf-secrets.json $EXTRA 2>&1 | tee report/deploy.log
+          rm -f .cf-secrets.json
+
+      - name: Conferir o site no ar
+        if: steps.deploy.outcome == 'success' && steps.url.outputs.url != ''
+        continue-on-error: true
+        run: |
+          sleep 5
+          for p in / /manifest.webmanifest /api/push; do
+            code=$(curl -s -o /dev/null -w '%{http_code}' "${{ steps.url.outputs.url }}$p")
+            echo "$p → $code" | tee -a report/fumaca.txt
+          done
+
+      - name: Relatório
+        if: always()
+        run: |
+          set +e +o pipefail
+          rm -f .cf-secrets.json
+          cp -f pnpm-lock.yaml report/pnpm-lock.yaml 2>/dev/null || true
+          {
+            echo "# Cloudflare — relatório de $(git rev-parse --short HEAD) ($GITHUB_REF_NAME)"
+            echo
+            echo '```'; cat report/modo.txt 2>/dev/null; echo '```'
+            echo
+            echo "## Tamanho do Worker (wrangler deploy --dry-run)"
+            echo '```'; cat report/tamanho.txt 2>/dev/null || echo "sem medição (build falhou?)"; echo '```'
+            echo
+            echo "Limite atual da Cloudflare (developers.cloudflare.com/workers/platform/limits): 64 MiB sem compressão,"
+            echo "nos planos Free e Paid; não há limite comprimido. (Antes eram 3 MiB/10 MiB comprimidos.)"
+            echo
+            echo "## Maiores pacotes no bundle final"
+            echo '```'; head -40 report/top-worker.txt 2>/dev/null; echo '```'
+            echo "## Inicialização"
+            echo '```'; grep -E 'Bundle:|Profile|Sampled|Active|Idle|rror' report/startup.log 2>/dev/null | head -20; echo '```'
+            echo "## Avisos do build"
+            echo '```'; grep -iE 'warn|⚠|error' report/build.log 2>/dev/null | head -60; echo '```'
+            echo "## Deploy"
+            echo '```'; tail -30 report/deploy.log 2>/dev/null || echo "sem deploy"; cat report/url.txt report/fumaca.txt 2>/dev/null; echo '```'
+          } > report/RELATORIO.md
+          echo "$GITHUB_SHA" > report/SOURCE_SHA
+
+      - name: Publicar relatório em infra-logs/cloudflare
+        if: always()
+        run: |
+          BR="infra-logs/cloudflare"
+          SHA=$(git rev-parse --short HEAD)
+          cd report
+          git init -q -b "$BR"
+          git config user.name "devo-ci"; git config user.email "ci@devo.local"
+          git add -A && git commit -qm "cloudflare: relatório de ${SHA} (${GITHUB_REF_NAME})"
+          git push -f "https://x-access-token:${{ github.token }}@github.com/${GITHUB_REPOSITORY}.git" "$BR:$BR"
+
+      - name: Resultado
+        if: always()
+        run: |
+          if [ "${{ steps.build.outcome }}" != "success" ]; then echo "::error::build do OpenNext falhou (veja infra-logs/cloudflare)"; exit 1; fi
+          if [ "${{ steps.modo.outputs.mode }}" = "deploy" ] && [ "${{ steps.deploy.outcome }}" != "success" ]; then echo "::error::deploy falhou"; exit 1; fi
+          echo "ok (modo ${{ steps.modo.outputs.mode }})"

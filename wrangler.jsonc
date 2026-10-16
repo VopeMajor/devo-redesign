@@ -1,0 +1,41 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  // Endereço final: https://devo.<subdominio-da-conta>.workers.dev
+  "name": "devo",
+  // Worker próprio: reaproveita o fetch do OpenNext e acrescenta o handler do Cron Trigger.
+  "main": "cloudflare/worker.ts",
+  "compatibility_date": "2026-10-01",
+  "compatibility_flags": [
+    // APIs do Node (pg, better-auth, AsyncLocalStorage...). Obrigatório para o OpenNext.
+    "nodejs_compat",
+    // fetch() só para endereços públicos.
+    "global_fetch_strictly_public"
+  ],
+  "workers_dev": true,
+  // Variáveis e segredos cadastrados no painel (Settings → Variables and Secrets) sobrevivem a cada deploy.
+  "keep_vars": true,
+  "preview_urls": false,
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+  "services": [
+    {
+      // O OpenNext usa para chamar o próprio Worker. Deve bater com "name".
+      "binding": "WORKER_SELF_REFERENCE",
+      "service": "devo"
+    }
+  ],
+  // Antes era o cron da Vercel (vercel.json). Horário em UTC: 21:00 UTC = 18:00 em Brasília.
+  // Ao mudar aqui, ajuste CRON_ROUTES em cloudflare/worker.ts.
+  "triggers": {
+    "crons": ["0 21 * * *"]
+  },
+  // Logs do Worker no painel (Workers Logs).
+  "observability": {
+    "enabled": true
+  }
+  // Hyperdrive (Neon), opcional: depois de criar a configuração no painel (cache DESLIGADO), descomente e
+  // ponha o ID (não é segredo). Sem ele, o app conecta no Neon direto pelo segredo DATABASE_URL.
+  // , "hyperdrive": [{ "binding": "HYPERDRIVE", "id": "<HYPERDRIVE_ID>" }]
+}

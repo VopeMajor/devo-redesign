@@ -7,12 +7,12 @@ import { GlyphAlert, GlyphClose, GlyphDiamond, GlyphSpark } from './glyphs'
 export type ToastTone = 'system' | 'gold' | 'alert'
 
 const ACCENT: Record<ToastTone, string> = {
-  system: 'bg-dv-cobalt',
+  system: 'bg-[linear-gradient(180deg,#f4efe6,#bab09f_50%,#6b6357)]',
   gold: 'bg-dv-gold',
   alert: 'bg-dv-blood',
 }
 const KICK: Record<ToastTone, string> = {
-  system: 'text-dv-cobalt-text',
+  system: 'text-dv-text-2',
   gold: 'text-dv-gold',
   alert: 'text-dv-blood-text',
 }
