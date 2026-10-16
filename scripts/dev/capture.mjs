@@ -932,12 +932,11 @@ if (want('genero')) {
     await btn(page, 'Continuar').click({ timeout: 15000 })
     await wait(3600)
     const seen = new Set()
-    // Fotografa a fala com o texto completo (o 1º Enter completa a digitação).
+    // Fotografa a fala com o texto completo (espera a digitação terminar sozinha; Enter aqui avançaria).
     const grab = async (key, re, name) => {
       if (seen.has(key) || !(await page.getByText(re).count())) return false
       seen.add(key)
-      await page.keyboard.press('Enter')
-      await wait(600)
+      await wait(2500)
       await shot(page, name)
       return true
     }
