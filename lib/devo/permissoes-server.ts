@@ -3,6 +3,7 @@ import { pool } from '@/lib/db'
 import { type Acao, type Alvos, type Ator, can, type Cargo, cargoVisivel, normalizeCargo, type PessoaAlvo, type VotoAlvo } from './cargos'
 import { RecordError } from './errors'
 import { type Queryable, run, txAs, UUID_RE } from './fundacao-db'
+import { arcanoInfo, isArcano } from './virtudes'
 
 /**
  * Carrega o ator (cargo, supervisor e autorizações ativas). `null` se o jogador não existe.
@@ -185,8 +186,10 @@ export type PlayerSummary = {
   cargo: Cargo
   cartas: number
   fragmentos: number
-  /** Nível arcano e Pontos de Potencial: ainda sem fonte no servidor (Arcanos/Virtudes); null = sem registro. */
+  /** Arcano (título, ex. "Arcano da Morte") e Estágio; null = sem registro. */
   arcano: string | null
+  estagio: number
+  /** P.P. acumulados no Estágio atual (soma das seis Virtudes; só para a equipe). null = tabelas ausentes. */
   pontosPotencial: number | null
   deadlyVotes: { total: number; sobreviveu: number; eliminado: number }
   /** Só em 'completo': inventário inteiro, karma e últimos registros. */
@@ -201,9 +204,9 @@ export type PlayerSummary = {
 export async function getPlayerSummary(atorId: string, alvoId: string, nivel: 'resumido' | 'completo' = 'resumido'): Promise<PlayerSummary> {
   const ator = await requireActor(atorId)
   requireCan(ator, nivel === 'completo' ? 'dados.completos' : 'dados.resumidos', { pessoaId: alvoId })
-  const [p] = await run<{ id: string; name: string; role: string; karma: number; cartas: string | null; fragmentos: string | null }>(
+  const [p] = await run<{ id: string; name: string; role: string; karma: number; arcano: string | null; arcano_estagio: number; cartas: string | null; fragmentos: string | null }>(
     pool,
-    `SELECT p.id, p.name, p.role, p.karma,
+    `SELECT p.id, p.name, p.role, p.karma, p.arcano, p.arcano_estagio,
             (SELECT jsonb_array_length(s.data->'inventory') FROM player_saves s WHERE s.player_id = p.id) AS cartas,
             (SELECT quantity FROM player_items i WHERE i.player_id = p.id AND i.item_key = 'fragmento_arcano') AS fragmentos
        FROM players p WHERE p.id = $1`,
@@ -222,8 +225,11 @@ export async function getPlayerSummary(atorId: string, alvoId: string, nivel: 'r
     cargo: cargoVisivel(ator, p.role),
     cartas: Number(p.cartas ?? 0),
     fragmentos: Number(p.fragmentos ?? 0),
-    arcano: null,
-    pontosPotencial: null,
+    arcano: isArcano(p.arcano) ? arcanoInfo(p.arcano).titulo : null,
+    estagio: p.arcano_estagio ?? 1,
+    pontosPotencial: await run<{ pp: string | null }>(pool, 'SELECT sum(pp) AS pp FROM virtude_pp WHERE player_id = $1', [alvoId])
+      .then((r) => Number(r[0]?.pp ?? 0))
+      .catch(() => null),
     deadlyVotes: { total: Number(dv?.total ?? 0), sobreviveu: Number(dv?.s ?? 0), eliminado: Number(dv?.e ?? 0) },
   }
   if (nivel === 'completo') {

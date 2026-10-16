@@ -7,13 +7,15 @@ import { CENA_ANFITRIAO_DE_QUE, CENA_GALO_TORRES } from '@/lib/devo/torres/galo'
 import { type AndarEstado, chaveItem, custoDoAndar, type Efeito, type NpcRef, type Passo, type SubirResposta, type TorreEstado, type TorresPayload } from '@/lib/devo/torres/tipos'
 import { cn } from '@/lib/utils'
 import { useMediaQuery } from '../hooks'
-import { Button, EmblemTorres, FrameCorners, GlyphKeyhole, Kicker, toRoman } from '../kit'
+import { Button, FrameCorners, Kicker, toRoman } from '../kit'
 import { useShellBack } from '../os/app-back'
 import { MAPA_H, MAPA_W } from './arte'
 import { Cena } from './cena'
 import { pedirCena } from './gatilho'
 import { MapaTorres, Recursos } from './mapa'
 import { TelaTorre } from './torre'
+import { Cadeado } from './ornamentos'
+import { type ItemRevelado, Revelacao } from './revelacao'
 import './torres.css'
 
 /**
@@ -98,6 +100,7 @@ export function TorresApp() {
   const [erroTorre, setErroTorre] = useState<string | null>(null)
   const [recem, setRecem] = useState<number | null>(null)
   const [faixa, setFaixa] = useState<string | null>(null)
+  const [revelar, setRevelar] = useState<{ tipo: 'andar' | 'essencia'; titulo: string; andar?: number; gasto: number; item: ItemRevelado; depois: () => void } | null>(null)
   const reduced = useMediaQuery('(prefers-reduced-motion: reduce)')
   const raiz = useRef<HTMLDivElement>(null)
   const mapaRef = useRef<HTMLDivElement>(null)
@@ -202,13 +205,36 @@ export function TorresApp() {
       return false
     }
     const res = r.data
-    playSfx('reveal')
     setRecem(n)
-    const ganho = res.chavesRecebidas && torreAtual.chave ? `+${res.chavesRecebidas} ${torreAtual.chave.nome}` : null
-    const msg = `Andar ${toRoman(n)} concluído${ganho ? ` · ${ganho}` : ''}`
-    await carregar()
-    if (res.cena.length) setCena({ passos: res.cena, npc: res.andar.npc, titulo: `${torreAtual.nome} · Andar ${toRoman(n)}`, arte: torreAtual.arte, aviso: msg })
-    else mostrarFaixa(msg)
+    const prox = res.torre.andares[n]
+    const item: ItemRevelado =
+      res.chavesRecebidas && torreAtual.chave
+        ? {
+            tipo: 'chave',
+            nome: torreAtual.chave.nome,
+            quantidade: res.chavesRecebidas,
+            raridade: 'incomum',
+            descricao: 'Guardada no seu inventário. Abre andares da torre principal.',
+          }
+        : {
+            tipo: 'selo',
+            nome: `Andar ${toRoman(n)} vencido`,
+            quantidade: 1,
+            raridade: 'incomum',
+            descricao: prox ? `O andar ${toRoman(n + 1)} pede ${prox.custo} ${prox.custo === 1 ? 'essência' : 'essências'}.` : 'Você chegou ao topo desta torre.',
+          }
+    const cenaAndar = res.cena.length ? { passos: res.cena, npc: res.andar.npc, titulo: `${torreAtual.nome} · Andar ${toRoman(n)}`, arte: torreAtual.arte, aviso: null } : null
+    void carregar()
+    setRevelar({
+      tipo: 'andar',
+      titulo: `Andar ${toRoman(n)} aberto`,
+      andar: n,
+      gasto: res.andar.custo,
+      item,
+      depois: () => {
+        if (cenaAndar) setCena(cenaAndar)
+      },
+    })
     return true
   }
 
@@ -230,7 +256,24 @@ export function TorresApp() {
   const efeitoGalo = async (e: Efeito) => {
     const aceitar = e === 'galo.fa.aceitar'
     const r = await post<{ concedido: boolean }>({ action: 'galo.fa', aceitar })
-    return aceitar && r.data?.concedido ? '+1 Essência de Afinidade do Galo' : null
+    if (!aceitar || !r.data?.concedido) return null
+    // a cena espera a revelação da essência terminar
+    await new Promise<void>((ok) =>
+      setRevelar({
+        tipo: 'essencia',
+        titulo: 'Presente do Galo',
+        gasto: 0,
+        item: {
+          tipo: 'essencia',
+          nome: 'Essência de Afinidade do Galo',
+          quantidade: 1,
+          raridade: 'incomum',
+          descricao: 'Do Galo, Anfitrião do Arcano do Imperador. Abre andares da Torre do Imperador. Fica no seu inventário.',
+        },
+        depois: ok,
+      }),
+    )
+    return null
   }
   const fimGalo = async () => {
     setGaloAberto(false)
@@ -245,7 +288,7 @@ export function TorresApp() {
   return (
     <div ref={raiz} className="absolute inset-0 overflow-hidden bg-dv-ink text-dv-text">
       {/* céu de fundo em tela cheia (o mapa encaixa na altura e pode não cobrir as laterais) */}
-      <span aria-hidden="true" className="absolute inset-0 bg-[linear-gradient(180deg,#09090b,#141319_45%,#19181f_60%,#0c0c0e)]" />
+      <span aria-hidden="true" className="absolute inset-0 bg-[#0b0b0d] bg-[url(/images/torres/ceu-noite.webp)] bg-cover bg-[position:30%_0%]" />
 
       {/* MAPA */}
       <div ref={mapaRef} className={cn('absolute inset-0 flex flex-col', vista && !reduced && 'pointer-events-none')} inert={vista ? true : undefined} aria-hidden={vista ? true : undefined}>
@@ -332,10 +375,26 @@ export function TorresApp() {
           npc={GALO}
           titulo="O Galo apresenta as Torres de Ruptura"
           kicker="Torres de Ruptura · O Galo"
-          arteFundo="agulha"
+          arteFundo="palacio"
           onEfeito={efeitoGalo}
           onFim={() => void fimGalo()}
           onPular={dados.pularApresentacao ? () => void fimGalo() : undefined}
+        />
+      )}
+
+      {/* revelação (andar aberto, chave, essência) */}
+      {revelar && (
+        <Revelacao
+          tipo={revelar.tipo}
+          titulo={revelar.titulo}
+          andar={revelar.andar}
+          gasto={revelar.gasto}
+          item={revelar.item}
+          onFim={() => {
+            const depois = revelar.depois
+            setRevelar(null)
+            depois()
+          }}
         />
       )}
     </div>
@@ -349,9 +408,8 @@ function AvisoCentral({ titulo, texto, selo, tom = 'normal', acao }: { titulo: s
         <span aria-hidden="true" className={cn('dv-cut absolute inset-0 -z-10', tom === 'alerta' ? 'bg-[linear-gradient(135deg,var(--dv-blood-text),var(--dv-blood)_50%,var(--dv-blood-deep))]' : 'bg-[linear-gradient(135deg,#ece5d8,#6b6357_30%,#bab09f_62%,#5f584d)]')} />
         <span aria-hidden="true" className="dv-cut absolute inset-px -z-10 bg-[linear-gradient(180deg,rgba(31,31,34,0.97),rgba(12,12,14,0.98))]" style={{ '--dv-cut': '15.6px' } as CSSProperties} />
         {tom !== 'alerta' && <FrameCorners tone="gold" size={18} inset={5} />}
-        <span aria-hidden="true" className="relative mx-auto grid size-16 place-items-center">
-          <EmblemTorres metal className="size-14 opacity-70" />
-          {selo && <GlyphKeyhole className="absolute -bottom-1 -right-1 size-6 rounded-full bg-dv-ink p-[2px] text-dv-gold" />}
+        <span aria-hidden="true" className="relative mx-auto -mt-16 grid h-24 place-items-center">
+          <Cadeado aceso={!!selo} className="h-24 w-auto drop-shadow-[0_8px_18px_rgba(0,0,0,0.85)]" />
         </span>
         <p className="mt-3 font-display text-[20px] font-semibold uppercase tracking-[0.1em] text-dv-text">{titulo}</p>
         {selo && <p className="dv-label mt-1 text-[11px] text-dv-gold">{selo}</p>}

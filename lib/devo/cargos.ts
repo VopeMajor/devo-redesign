@@ -120,6 +120,12 @@ export type Alvos = {
   'equipe.ver': undefined
   /** Especialista do Salão das Máscaras: aprovar/recusar itens da Bandeja e anúncios (toda a equipe). */
   'salao.avaliar': undefined
+  /** Virtudes: ver P.P., Estágio e atributos dos jogadores na Mesa (Owner, Anfitrião). */
+  'virtudes.ver': undefined
+  /** Virtudes: disparar Evolução de Estágio e definir o Arcano de um jogador (Owner, Anfitrião). */
+  'virtudes.evoluir': undefined
+  /** Virtudes: lançar P.P. manualmente (Owner). A tabela de afinidade usa 'config.editar'. */
+  'virtudes.ajustar': undefined
   /** Corporações: aprovar/recusar a fundação (avaliação administrativa da Companhia). Owner e Anfitrião. */
   'corporacao.aprovar': undefined
   /** Corporações: classificar como oficial ou Necro-Corporação (e rótulos provisórios: escopo, rivais). Owner e Anfitrião. */
@@ -133,6 +139,7 @@ export const ACOES = [
   'recompensa.editar', 'recompensa.aprovar', 'recompensa.distribuir', 'convite.gerar', 'convite.teste', 'dados.resumidos',
   'dados.completos', 'jogar', 'desbloqueio.override', 'karma.ajustar', 'item.conceder', 'cargo.ver_owner',
   'cosmetico.equipar_qualquer', 'catalogo.editar', 'config.editar', 'autorizacao.gerenciar', 'equipe.ver', 'salao.avaliar',
+  'virtudes.ver', 'virtudes.evoluir', 'virtudes.ajustar',
   'corporacao.aprovar', 'corporacao.classificar',
 ] as const satisfies readonly Acao[]
 
@@ -178,12 +185,15 @@ export function can<A extends Acao>(ator: Ator | null | undefined, acao: A, alvo
     case 'config.editar':
     case 'autorizacao.gerenciar':
     case 'convite.teste':
+    case 'virtudes.ajustar':
       return owner
     case 'dv.criar':
     case 'salao.avaliar':
       return isStaff(c)
     case 'dv.tutorial':
     case 'equipe.ver':
+    case 'virtudes.ver':
+    case 'virtudes.evoluir':
     case 'corporacao.aprovar':
     case 'corporacao.classificar':
       return owner || c === 'anfitriao'

@@ -26,6 +26,7 @@ FILES=(
   scripts/torres-migration.sql
   scripts/salao-migration.sql
   scripts/cosmeticos-migration.sql
+  scripts/virtudes-migration.sql
   scripts/corporacoes-migration.sql
 )
 {

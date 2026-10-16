@@ -5,6 +5,7 @@ import { RecordError } from './errors'
 import { type Queryable, run, txAs, UUID_RE } from './fundacao-db'
 import { itemBalance, pendingCardCount, readInventory } from './inventario-server'
 import { requireActor, requireCan } from './permissoes-server'
+import { arcanoInfo, isArcano } from './virtudes'
 import { type Acesso, destinoDoKarma, type EuPayload, isUnlockFlag, UNLOCK_FLAGS, type UnlockFlag } from './progresso'
 
 /* ------------------------------------------------------------------ Desbloqueios */
@@ -178,7 +179,11 @@ export async function inviteQuota(playerId: string, q: Queryable = pool) {
 /* ------------------------------------------------------------------ /api/eu */
 
 export async function getEu(playerId: string): Promise<EuPayload> {
-  const [p] = await run<{ id: string; role: string; karma: number }>(pool, 'SELECT id, role, karma FROM players WHERE id = $1', [playerId])
+  const [p] = await run<{ id: string; role: string; karma: number; arcano: string | null; arcano_estagio: number }>(
+    pool,
+    'SELECT id, role, karma, arcano, arcano_estagio FROM players WHERE id = $1',
+    [playerId],
+  )
   if (!p) throw new RecordError('Registro não encontrado.', 404)
   const cargo = normalizeCargo(p.role)
   if (cargo === 'player') await ensureInviteQuota(p.id).catch(() => {})
@@ -198,5 +203,6 @@ export async function getEu(playerId: string): Promise<EuPayload> {
     destino: destinoDoKarma(p.karma),
     convites,
     cartasPendentes,
+    arcano: isArcano(p.arcano) ? { ...arcanoInfo(p.arcano), estagio: p.arcano_estagio } : null,
   }
 }

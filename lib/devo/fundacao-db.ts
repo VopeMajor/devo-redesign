@@ -45,6 +45,8 @@ const DB_ERRORS: [RegExp, string, number][] = [
   // Cosméticos / recompensas semanais (scripts/cosmeticos-migration.sql)
   [/PLANO_FECHADO/, 'Este plano já foi encerrado.', 409],
   [/PLANO_SEM_APROVACAO/, 'Aprove o plano antes de distribuir.', 409],
+  // Virtudes (scripts/virtudes-migration.sql)
+  [/VIRTUDE_DESCONHECIDA/, 'Virtude desconhecida.', 400],
   // Corporações (scripts/corporacoes-migration.sql)
   [/CORP_CLASSIFICACAO_NEGADA/, 'Só a equipe da Companhia classifica uma Corporação.', 403],
   [/violates (check|foreign key) constraint/, 'Dados inválidos.', 400],

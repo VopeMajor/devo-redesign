@@ -10,11 +10,12 @@ import { awaitingMe, RewardsPanel, useRewards } from './staff-rewards'
 import { AdminLogPanel, ConfigPanel, PlayersPanel, TeamPanel } from './staff-team'
 import { DeskNav, type DeskItem } from './staff-ui'
 import { SalaoMesa, useFilaSalao } from '../salao/salao-mesa'
+import { VirtudesMesa } from '../virtudes/virtudes-mesa'
 import { AdminCosmeticos } from '../cosmeticos/admin-cosmeticos'
 import { SemanaisPanel } from '../cosmeticos/semanais'
 import { CorporacoesMesa, useFilaCorporacoes } from '../corporacoes/corporacoes-mesa'
 
-type Section = 'casos' | 'recompensas' | 'semanais' | 'salao' | 'corporacoes' | 'equipe' | 'jogadores' | 'convites' | 'cosmeticos' | 'registro' | 'ajustes'
+type Section = 'casos' | 'recompensas' | 'semanais' | 'salao' | 'virtudes' | 'corporacoes' | 'equipe' | 'jogadores' | 'convites' | 'cosmeticos' | 'registro' | 'ajustes'
 
 const LABEL: Record<Section, string> = {
   casos: 'Casos',
@@ -23,6 +24,7 @@ const LABEL: Record<Section, string> = {
   salao: 'Salão',
   corporacoes: 'Corporações',
   cosmeticos: 'Cosméticos',
+  virtudes: 'Virtudes',
   equipe: 'Equipe',
   jogadores: 'Jogadores',
   convites: 'Convites',
@@ -33,8 +35,8 @@ const LABEL: Record<Section, string> = {
 /** Seções por cargo (tabela do dono). O servidor decide de novo em cada chamada. */
 const SECTIONS: Record<Exclude<Cargo, 'player'>, Section[]> = {
   dealer: ['casos', 'recompensas', 'semanais', 'salao'],
-  anfitriao: ['casos', 'recompensas', 'semanais', 'salao', 'corporacoes', 'equipe', 'jogadores', 'convites'],
-  owner: ['casos', 'recompensas', 'semanais', 'salao', 'corporacoes', 'equipe', 'jogadores', 'convites', 'cosmeticos', 'registro', 'ajustes'],
+  anfitriao: ['casos', 'recompensas', 'semanais', 'salao', 'virtudes', 'corporacoes', 'equipe', 'jogadores', 'convites'],
+  owner: ['casos', 'recompensas', 'semanais', 'salao', 'virtudes', 'corporacoes', 'equipe', 'jogadores', 'convites', 'cosmeticos', 'registro', 'ajustes'],
 }
 
 const ROLE_LINE: Record<Exclude<Cargo, 'player'>, string> = {
@@ -128,6 +130,7 @@ export function StaffDesk({ role }: { role: Exclude<Cargo, 'player'> }) {
         {section === 'casos' && <DealerBoard role={role} />}
         {section === 'recompensas' && <RewardsPanel role={role} />}
         {section === 'salao' && <SalaoMesa />}
+        {section === 'virtudes' && <VirtudesMesa />}
         {section === 'corporacoes' && <CorporacoesMesa />}
         {section === 'equipe' && <TeamPanel role={role} />}
         {section === 'jogadores' && <PlayersPanel role={role} />}
