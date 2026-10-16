@@ -253,7 +253,7 @@ export async function getPoco(playerId: string): Promise<PocoPayload> {
   const listaBaldes = baldeRows.map(baldeInfo).filter((b) => b.possui || b.tipo !== 'raro' || tudo)
   const baldeAtual = listaBaldes.find((b) => b.id === estado?.balde && b.possui)?.id ?? 'madeira'
 
-  const payload: PocoPayload = {
+  const payload: Extract<PocoPayload, { liberado: true }> = {
     liberado: true,
     apresentado: !!estado?.apresentado_at,
     podePular: tudo || !!estado?.apresentado_at,
