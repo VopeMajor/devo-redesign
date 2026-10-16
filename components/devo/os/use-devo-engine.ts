@@ -120,7 +120,7 @@ export function useDevoEngine() {
     const leave = () => {
       say('leave')
       dispatch({ type: 'TRADE_PARTNER_LEAVE' })
-      notify({ appId: 'trocas', title: 'Troca desfeita', body: `${partner.handle} abandonou a sala. Sua carta voltou para você.`, tone: 'danger' })
+      notify({ appId: 'trocas', title: 'Troca desfeita', body: `${partner.handle} abandonou a sala. Sua carta voltou para você.` })
       playSfx('error')
     }
     let timer: number

@@ -319,7 +319,22 @@ async function enterOS(page) {
 async function openApp(page, label) {
   await enterOS(page)
   const exact = page.getByRole('button', { name: label, exact: true })
-  if (!(await tryClick(exact.first(), 3000))) await btn(page, label).click({ timeout: 3000 })
+  // O nome acessível do ícone é o nome do app (aria-label). No CI (WebGL por software) a página pode
+  // ficar ocupada alguns segundos montando a cena 3D da home: espera o ícone visível e dá folga ao clique.
+  // Até 3 tentativas: um clique que estoura o tempo com a página ocupada é repetido quando ela respira.
+  // (Se o clique entrou mas a confirmação atrasou, o app já está aberto: a folha do app é uma região
+  // com o nome dele.)
+  const opened = () => page.getByRole('region', { name: label, exact: true }).first().isVisible().catch(() => false)
+  for (let attempt = 1; ; attempt++) {
+    await exact.first().waitFor({ state: 'visible', timeout: 15000 }).catch(() => {})
+    if (await tryClick(exact.first(), 8000)) break
+    await wait(2000)
+    if (await opened()) break
+    if (attempt === 3) {
+      await btn(page, label).click({ timeout: 8000 })
+      break
+    }
+  }
   await wait(2600)
 }
 
@@ -339,26 +354,42 @@ if (want('sistema') || want('apps') || want('jogos')) {
     // Transição de abrir/voltar (quadro no meio da animação).
     await step('home-transicao', async () => {
       await enterOS(page)
-      // Congela as animações (WAAPI/CSS) a ~45% para provar a direção do movimento no quadro.
+      // Arma o congelamento ANTES do clique: toda animação WAAPI de 200–700 ms criada a partir daí nasce
+      // pausada no ponto pedido (o quadro prova a direção do movimento, não o estado final).
       const freeze = (p) =>
         page.evaluate((pct) => {
-          for (const a of document.getAnimations()) {
-            const t = a.effect?.getComputedTiming?.()
-            const d = typeof t?.duration === 'number' ? t.duration : 0
+          const w = window
+          if (!w.__dvAnimate) w.__dvAnimate = Element.prototype.animate
+          w.__dvFrozen = []
+          Element.prototype.animate = function (k, o) {
+            const a = w.__dvAnimate.call(this, k, o)
+            const d = typeof o === 'number' ? o : Number(o?.duration) || 0
             if (d > 200 && d < 700) {
               a.pause()
               a.currentTime = d * pct
+              w.__dvFrozen.push(a)
             }
+            return a
           }
         }, p)
-      const resume = () => page.evaluate(() => document.getAnimations().forEach((a) => a.playState === 'paused' && a.finish()))
+      const resume = () =>
+        page.evaluate(() => {
+          const w = window
+          if (w.__dvAnimate) Element.prototype.animate = w.__dvAnimate
+          for (const a of w.__dvFrozen ?? []) a.finish()
+          w.__dvFrozen = []
+        })
+      // abrir: ease-out → aos 14% do tempo a folha está a ~meio caminho, com o corte diagonal visível
+      await freeze(0.14)
       await page.getByRole('button', { name: 'Mensagens', exact: true }).first().click({ timeout: 3000 })
-      await freeze(0.4)
+      await wait(250)
       await shot(page, '11-transicao-abrir')
       await resume()
       await wait(1500)
+      // voltar: ease-in → aos 62% do tempo a folha já saiu ~40% para a direita
+      await freeze(0.62)
       await btn(page, 'Voltar ao início', true).click({ timeout: 3000 })
-      await freeze(0.45)
+      await wait(250)
       await shot(page, '11-transicao-voltar')
       await resume()
     })
@@ -378,7 +409,7 @@ if (want('sistema') || want('apps') || want('jogos')) {
       await shot(page, '10-home-avisos-lista')
       await page.getByLabel('Fechar central de avisos').first().click({ timeout: 3000 })
       await wait(400)
-      await page.getByRole('button', { name: 'Pulso', exact: true }).first().click({ timeout: 3000 })
+      await page.getByRole('button', { name: 'Pulso', exact: true }).first().click({ timeout: 8000 })
       await wait(2600)
       await shot(page, '21-pulso-critico')
       await api(page, '/api/save', makeSave(VET_CARDS, { timerEndsAt: Date.now() + 90 * 3600_000 }))
@@ -952,13 +983,16 @@ if (want('desktop')) {
     const { ctx, page } = await account('Mesa', 'DEVO-TEST-0005', VET_CARDS, 'desktop')
     await enterOS(page)
     await shot(page, '92-desktop-os')
-    await page.getByRole('button', { name: 'Pulso', exact: true }).first().dblclick({ timeout: 3000 })
+    // A cena 3D do papel de parede monta logo depois (WebGL por software no CI ocupa a página alguns
+    // segundos): o clique duplo espera o ícone visível e tem folga.
+    await page.getByRole('button', { name: 'Pulso', exact: true }).first().waitFor({ state: 'visible', timeout: 15000 })
+    await page.getByRole('button', { name: 'Pulso', exact: true }).first().dblclick({ timeout: 10000 })
     await wait(2000)
     await shot(page, '92-desktop-pulso')
-    await page.getByRole('button', { name: 'Mensagens', exact: true }).first().dblclick({ timeout: 3000 })
+    await page.getByRole('button', { name: 'Mensagens', exact: true }).first().dblclick({ timeout: 10000 })
     await wait(2000)
     await shot(page, '92-desktop-janelas')
-    await page.getByRole('button', { name: 'Central de avisos' }).first().click({ timeout: 3000 })
+    await page.getByRole('button', { name: 'Central de avisos' }).first().click({ timeout: 10000 })
     await wait(900)
     await shot(page, '92-desktop-avisos')
     await ctx.close()
