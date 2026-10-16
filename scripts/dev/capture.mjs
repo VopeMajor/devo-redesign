@@ -865,6 +865,10 @@ if (want('partidas')) {
     await card.getByRole('button', { name: /tutorial/i }).first().click({ timeout: 12000 })
     await wait(3300)
     await shot(page, '41-xadrez-entrada')
+    // Toque no peão do rei (e2) pela posição na tela: mostra a seleção e as casas possíveis.
+    await page.mouse.click(216, 494).catch(() => {})
+    await wait(700)
+    await shot(page, '41-xadrez-selecao')
     await tryClick(page.getByRole('button', { name: 'IA joga por você' }).first(), 3000)
     await wait(2600)
     await shot(page, '41-xadrez-lance')
