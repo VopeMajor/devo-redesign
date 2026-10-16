@@ -1066,8 +1066,8 @@ if (want('partidas')) {
       }
     })
   }
-  // Living Chess contra o bot com a IA jogando pelas brancas: entrada da câmera, lance e captura.
-  await step('partida-xadrez-ia', async () => {
+  // Living Chess: demonstração guiada do Javali (sem bot): entrada da câmera, lances explicados, mate e fim.
+  await step('partida-xadrez-demo', async () => {
     const { page } = A
     await tryClick(page.getByRole('button', { name: /desistir e sair/i }).first(), 4000)
     await wait(1500)
@@ -1076,25 +1076,30 @@ if (want('partidas')) {
     await openApp(page, 'Sala de Jogos')
     const card = page.locator('[aria-label="Jogos da semana"] > *').filter({ hasText: /Living Chess/i }).first()
     await card.getByRole('button', { name: /tutorial/i }).first().click({ timeout: 12000 })
-    await wait(3300)
+    await wait(1800)
     await shot(page, '41-xadrez-entrada')
-    // Toque no peão do rei (e2) pela posição na tela: mostra a seleção e as casas possíveis.
-    await page.mouse.click(216, 494).catch(() => {})
-    await wait(700)
-    await shot(page, '41-xadrez-selecao')
-    await tryClick(page.getByRole('button', { name: 'IA joga por você' }).first(), 3000)
     await wait(2600)
     await shot(page, '41-xadrez-lance')
     await wait(900)
     await shot(page, '41-xadrez-lance-b')
-    await wait(7000)
+    await wait(6000)
     await shot(page, '41-xadrez-meio')
     await tryClick(page.getByRole('button', { name: 'Histórico de lances' }).first(), 3000)
     await wait(700)
     await shot(page, '41-xadrez-historico')
+    await tryClick(page.getByRole('button', { name: 'Histórico de lances' }).first(), 3000)
     await tryClick(page.getByRole('button', { name: 'Configurações' }).first(), 3000)
     await wait(700)
     await shot(page, '41-xadrez-config')
+    await tryClick(page.getByRole('button', { name: 'Configurações' }).first(), 3000)
+    await page.getByRole('heading', { name: /demonstração concluída/i }).waitFor({ timeout: 30000 }).catch(() => {})
+    await wait(800)
+    await shot(page, '41-xadrez-fim')
+    await tryClick(page.getByRole('button', { name: /voltar à mesa/i }).first(), 3000)
+    await wait(2500)
+    await page.evaluate(() => document.querySelector('[aria-label="Registro das partidas"]')?.scrollIntoView({ block: 'center' }))
+    await wait(1200)
+    await shot(page, '42-mesa-registro')
   })
   await A.ctx.close()
   await B.ctx.close()

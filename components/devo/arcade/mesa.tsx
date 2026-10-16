@@ -140,9 +140,16 @@ export function Mesa({
           </div>
         </div>
 
-        <Frame as="section" aria-label="Chat da mesa" pad="md" className="flex min-w-0 flex-col @4xl:self-start">
-          <SectionHeader kicker="Ao vivo na sala" title="Chat da mesa" size="sm" as="h3" className="mb-3" />
-          <ArcadeChat channel="lobby" className="h-[20rem] min-h-0" />
+        <Frame as="section" aria-label="Registro das partidas" pad="md" className="flex min-w-0 flex-col @4xl:self-start">
+          <SectionHeader kicker="Falas das salas" title="Registro das partidas" size="sm" as="h3" className="mb-3" />
+          <ArcadeChat
+            channel="lobby"
+            readOnly
+            refreshInterval={15000}
+            emptyText="Nenhuma fala nas partidas recentes."
+            className="h-[20rem] min-h-0"
+          />
+          <p className="mt-3 border-t border-dv-line pt-3 font-body text-[14px] leading-snug text-dv-text-3">O chat abre dentro de cada partida. Aqui fica o registro do que foi dito nas salas.</p>
         </Frame>
       </div>
       {sheet.node}

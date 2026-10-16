@@ -848,6 +848,17 @@ const CHAT_BOT_LINES = [
 
 export async function getChat(channel: string) {
   const now = Date.now()
+  // A mesa (canal "lobby") não tem chat próprio: é o registro somente-leitura das falas recentes das partidas.
+  if (channel === 'lobby') {
+    const rows = await q<{ id: string; author: string; body: string; created_at: Date; player_id: string | null; role: string | null }>(
+      `SELECT c.id, c.author, c.body, c.created_at, c.player_id, p.role FROM arcade_chat c LEFT JOIN players p ON p.id = c.player_id
+       WHERE c.channel LIKE 'match-%' AND c.body NOT LIKE '::%' AND c.created_at > now() - interval '${LIVE_CHAT_MINUTES} minutes'
+       ORDER BY c.created_at DESC LIMIT 40`,
+    )
+    return rows
+      .map((r) => ({ id: String(r.id), author: r.author, body: r.body, at: r.created_at.getTime(), bot: false, pid: r.player_id ?? undefined, role: r.role ? publicCargo(r.role) : undefined }))
+      .sort((a, b) => a.at - b.at)
+  }
   const live = channel.startsWith('match-')
   const base = 'SELECT c.id, c.author, c.body, c.created_at, c.player_id, p.role FROM arcade_chat c LEFT JOIN players p ON p.id = c.player_id WHERE c.channel = $1'
   const rows = await q<{ id: string; author: string; body: string; created_at: Date; player_id: string | null; role: string | null }>(
@@ -885,6 +896,8 @@ const REACTION_RE = new RegExp(`^::(${REACTION_IDS.join('|')})$`)
 export async function postChat(player: Player, channel: string, rawBody: string) {
   const body = String(rawBody ?? '').replace(/\s+/g, ' ').trim().slice(0, 200)
   if (!body) throw new ArcadeError('Mensagem vazia.')
+  // Chat só existe dentro das partidas (DIRECAO-3 §8): a mesa é registro, não aceita mensagem.
+  if (channel === 'lobby') throw new ArcadeError('O chat da Sala de Jogos fica dentro das partidas.', 403)
   const isReaction = body.startsWith('::')
   if (isReaction && (!REACTION_RE.test(body) || !channel.startsWith('match-'))) throw new ArcadeError('Reação inválida.')
   const [recent] = await q(

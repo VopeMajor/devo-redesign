@@ -3,7 +3,7 @@
 import { liveChannelFor } from '@/lib/devo/arcade/reactions'
 import { Canvas } from '@react-three/fiber'
 import { Chess, type Color, type Move, type PieceSymbol, type Square } from 'chess.js'
-import { Bot, Eye, History, MessageSquare, RotateCcw, Settings2, type LucideIcon } from 'lucide-react'
+import { Eye, History, MessageSquare, RotateCcw, Settings2, type LucideIcon } from 'lucide-react'
 import { ArcadeChat } from '@/components/devo/arcade/arcade-chat'
 import { useDeadlyVotes } from '@/components/devo/system/use-deadly-votes'
 import { useCallback, useEffect, useMemo, useRef, useState, type PointerEvent as ReactPointerEvent } from 'react'
@@ -11,7 +11,9 @@ import { playSfx, startChessAmbience, stopChessAmbience } from '@/lib/devo/audio
 import { ClockBackdrop } from '../chess/clock-backdrop'
 import { arcadePost, type GameProps } from '@/lib/devo/arcade/client'
 import { BOARD_THEMES, PIECE_SETS, boardTheme, pieceSet, resolveQuality } from '@/lib/devo/arcade/chess-themes'
-import { GAMES, botSkill, rng } from '@/lib/devo/arcade/games'
+import { GAMES } from '@/lib/devo/arcade/games'
+import type { Expressao } from '@/lib/devo/npcs'
+import { JavaliPortrait } from '../sala-ui'
 import { cn } from '@/lib/utils'
 import { PlayerPlate } from '../chess/versus-bar'
 import { Button, SigilStar } from '@/components/devo/kit'
@@ -21,40 +23,27 @@ import { roomOutcome, useOnlineGate, useRoom } from '../use-room'
 import type { ChessState } from '@/lib/devo/arcade/client'
 
 const meta = GAMES.chess
-const CLOCK_MS = 15_000
+/** Relógio por lance (mesmo valor da partida online; na demonstração ele não corre). */
+const CLOCK_MS = 30_000
 const VALUE: Record<PieceSymbol, number> = { p: 1, n: 3, b: 3, r: 5, q: 9, k: 0 }
 const REACTIONS = ['🔥', '😱', '💀', '👏', '👀']
 
-function evaluate(g: Chess) {
-  let s = 0
-  for (const row of g.board()) for (const p of row) if (p) s += (p.color === 'b' ? 1 : -1) * VALUE[p.type] * 100
-  return s
-}
-
-function botMove(g: Chess, skill: number, r: () => number): Move | null {
-  const moves = g.moves({ verbose: true })
-  if (!moves.length) return null
-  let best: Move | null = null
-  let bestScore = -Infinity
-  for (const m of moves) {
-    g.move(m)
-    let score = evaluate(g)
-    if (g.isCheckmate()) score += 100_000
-    else {
-      let worst = 0
-      for (const rep of g.moves({ verbose: true })) if (rep.captured) worst = Math.max(worst, VALUE[rep.captured] * 100)
-      score -= worst * (0.4 + skill * 0.6)
-      if (g.inCheck()) score += 25
-    }
-    g.undo()
-    score += (r() - 0.5) * (1 - skill) * 260
-    if (score > bestScore) {
-      bestScore = score
-      best = m
-    }
-  }
-  return best
-}
+/**
+ * Demonstração guiada (o antigo "tutorial"): não existe partida contra bot no Living Chess
+ * (DIRECAO-3 §8). O Javali joga os dois lados de uma partida curta e explica cada lance.
+ */
+const DEMO: { lan: string; say: string; pose: Expressao }[] = [
+  { lan: 'e2e4', say: 'Peão do rei, duas casas. Na sua vez, toque numa peça: as casas possíveis acendem no mármore.', pose: 'explica' },
+  { lan: 'e7e5', say: 'O preto responde no espelho. Cada lance devolve os trinta segundos ao relógio de quem jogou.', pose: 'pensativo' },
+  { lan: 'f1c4', say: 'O bispo corre na diagonal e mira f7, a casa mais frágil do tabuleiro.', pose: 'trama' },
+  { lan: 'b8c6', say: 'O cavalo é o único que salta por cima das outras peças.', pose: 'explica' },
+  { lan: 'd1h5', say: 'A dama entra cedo. Repare em quem ela ameaça.', pose: 'convite' },
+  { lan: 'g8f6', say: 'O preto ataca a dama… e esquece o próprio rei.', pose: 'desdem' },
+  { lan: 'h5f7', say: 'Captura com xeque-mate. Na mesa de verdade, quem cai assim perde Tempo.', pose: 'riso' },
+]
+const DEMO_INTRO = 'Hoje eu jogo pelos dois lados e você só observa, querido. Na mesa valendo Tempo, o adversário é gente.'
+const DEMO_FIRST_MS = 2200
+const DEMO_STEP_MS = 3400
 
 function initialUnits(g: Chess): UnitState[] {
   const out: UnitState[] = []
@@ -112,7 +101,6 @@ export default function QuickChess({ start, settings, onFinish, onQuit }: GamePr
   const animRef = useRef<Anim | null>(null)
   const mateRef = useRef<MateFx>(null)
   const cam = useRef<CamState>({ az: 0, pol: 0.84, rad: 13, zoom: 1, spectator: false, dragDist: 0 })
-  const [autoPlay, setAutoPlay] = useState(false)
   const pointers = useRef(new Map<number, { x: number; y: number }>())
   const pinch = useRef(0)
   const finished = useRef(false)
@@ -122,13 +110,15 @@ export default function QuickChess({ start, settings, onFinish, onQuit }: GamePr
   const capturesRef = useRef(captures)
   capturesRef.current = captures
   const bestCapture = useRef(0)
-  const skill = botSkill(start.opponent.rating)
   const { online, room, act, toLocal } = useRoom(start, 900)
   const gateOpen = useOnlineGate(start)
   const myColor: Color = online && start.side === 'b' ? 'b' : 'w'
   const oppColor: Color = myColor === 'w' ? 'b' : 'w'
   const pending = useRef(false)
-  const r = useMemo(() => rng(start.seed), [start.seed])
+  /** Sem sala online = demonstração guiada (o Javali joga os dois lados). */
+  const demo = !online
+  const [demoStep, setDemoStep] = useState(-1)
+  const [demoDone, setDemoDone] = useState(false)
   const theme = boardTheme(local.chessTheme)
   const set = pieceSet(local.pieceSet)
   const [quality, setQuality] = useState(() => resolveQuality(settings.quality))
@@ -155,8 +145,6 @@ export default function QuickChess({ start, settings, onFinish, onQuit }: GamePr
       // Online, o servidor fecha a partida; o efeito da sala exibe o resultado oficial.
       if (finished.current || online) return
       finished.current = true
-      // Registro curto do motivo (ajuda a diagnosticar fins inesperados nas capturas do CI).
-      console.warn(`[living-chess] fim: ${result} · ${reason} · lances ${game.history().length}`)
       setRunning(false)
       setSelected(null)
       const c = clocksRef.current
@@ -187,6 +175,11 @@ export default function QuickChess({ start, settings, onFinish, onQuit }: GamePr
       const loser = game.turn()
       const king = unitsRef.current.find((u) => u.type === 'k' && u.color === loser)
       if (king) mateRef.current = { loserKing: king.id, start: performance.now() / 1000 }
+      if (demo) {
+        sound('reveal')
+        window.setTimeout(() => setDemoDone(true), 1500)
+        return true
+      }
       end(loser === 'b' ? 'win' : 'loss', 'XEQUE-MATE', true)
       return true
     }
@@ -195,7 +188,7 @@ export default function QuickChess({ start, settings, onFinish, onQuit }: GamePr
       return true
     }
     return false
-  }, [game, end])
+  }, [game, end, demo, sound])
 
   const apply = useCallback(
     (m: Move) => {
@@ -406,17 +399,32 @@ export default function QuickChess({ start, settings, onFinish, onQuit }: GamePr
     }
   }, [myLeft, ticking, turn, myColor, sound])
 
+  // Demonstração: um lance roteirizado a cada poucos segundos, com a fala do Javali.
   useEffect(() => {
-    const botTurn = online ? autoPlay && turn === myColor : turn === 'b' || autoPlay
-    if (!ticking || !botTurn || finished.current) return
-    const think = turn === myColor ? 700 + r() * 600 : 450 + (1 - skill) * 800 + r() * 800
+    if (!demo || demoDone || animating) return
+    const next = demoStep + 1
+    if (next >= DEMO.length) return
     const id = window.setTimeout(() => {
-      if (finished.current) return
-      const m = botMove(game, turn === myColor ? 0.85 : skill, r)
-      if (m) play(m)
-    }, think)
+      const m = game.moves({ verbose: true }).find((x) => x.lan === DEMO[next].lan)
+      if (!m) return
+      setDemoStep(next)
+      apply(m)
+    }, next === 0 ? DEMO_FIRST_MS : DEMO_STEP_MS)
     return () => window.clearTimeout(id)
-  }, [ticking, turn, skill, r, game, play, autoPlay, online, myColor])
+  }, [demo, demoDone, demoStep, animating, game, apply])
+
+  const replayDemo = () => {
+    game.reset()
+    mateRef.current = null
+    animRef.current = null
+    setUnits(initialUnits(game))
+    setLastMove(null)
+    setCaptures({ w: 0, b: 0 })
+    capturesRef.current = { w: 0, b: 0 }
+    setDemoStep(-1)
+    setDemoDone(false)
+    sound('click')
+  }
 
   useEffect(() => {
     const c = cam.current
@@ -440,7 +448,7 @@ export default function QuickChess({ start, settings, onFinish, onQuit }: GamePr
   const onSquare = useCallback(
     (sq: string) => {
       if (cam.current.dragDist > 8) return
-      if (spectator || autoPlay || !ticking || turn !== myColor || myLeft <= 0 || finished.current) return
+      if (demo || spectator || !ticking || turn !== myColor || myLeft <= 0 || finished.current) return
       const piece = game.get(sq as Square)
       if (selected && targets.includes(sq)) {
         const m = legal.find((x) => x.to === sq && (!x.promotion || x.promotion === 'q'))
@@ -452,7 +460,7 @@ export default function QuickChess({ start, settings, onFinish, onQuit }: GamePr
         setSelected(sq === selected ? null : sq)
       } else setSelected(null)
     },
-    [spectator, autoPlay, ticking, turn, myColor, myLeft, game, selected, targets, legal, play, sound],
+    [demo, spectator, ticking, turn, myColor, myLeft, game, selected, targets, legal, play, sound],
   )
 
   const onPointerDown = (e: ReactPointerEvent) => {
@@ -531,7 +539,9 @@ export default function QuickChess({ start, settings, onFinish, onQuit }: GamePr
       active ? 'border-dv-gold-bright bg-dv-ink-4 text-white shadow-[inset_0_-2px_0_var(--dv-amethyst)]' : 'border-dv-line-strong bg-dv-ink/60 text-dv-text-2 hover:border-dv-gold hover:text-dv-text',
     )
 
-  const statusText = spectator
+  const statusText = demo
+    ? ''
+    : spectator
     ? 'Modo espectador'
     : running
       ? animating
@@ -544,36 +554,26 @@ export default function QuickChess({ start, settings, onFinish, onQuit }: GamePr
       : ''
   const myTurn = running && !animating && turn === myColor && !spectator
   const plate = (side: Color) => ({
-    name: side === myColor ? 'Você' : start.opponent.name,
+    name: demo ? `Javali · ${side === 'w' ? 'brancas' : 'pretas'}` : side === myColor ? 'Você' : start.opponent.name,
     court: side === 'w' ? 'Corte de Marfim' : 'Corte de Ônix',
     color: side,
     portrait: side === myColor ? playerPhoto : null,
     ms: side === 'w' ? wLeft : bLeft,
     captures: captures[side],
-    active: ticking && turn === side,
-    mine: side === myColor,
+    active: demo ? turn === side && !demoDone : ticking && turn === side,
+    mine: !demo && side === myColor,
   })
 
   return (
     <GameFrame
       chat={false}
       title="Living Chess"
-      sub={`${start.mode === 'treino' ? 'Treino' : 'Ao vivo'} · #${String(start.seed % 1000).padStart(3, '0')}`}
+      sub={`${demo ? 'Demonstração' : 'Ao vivo'} · #${String(start.seed % 1000).padStart(3, '0')}`}
       accent={meta.accent}
       onQuit={onQuit}
       top={
         <div className="flex items-center">
           <ChessIconButton icon={Eye} label="Modo espectador" active={spectator} onClick={() => setSpectator((s) => !s)} />
-          <ChessIconButton
-            icon={Bot}
-            label="IA joga por você"
-            active={autoPlay}
-            onClick={() => {
-              setAutoPlay((v) => !v)
-              setSelected(null)
-              sound('click')
-            }}
-          />
           <ChessIconButton icon={MessageSquare} label="Chat da partida" active={panel === 'chat'} onClick={() => setPanel((p) => (p === 'chat' ? 'none' : 'chat'))} className="md:hidden" />
           <ChessIconButton icon={Settings2} label="Configurações" active={panel === 'settings'} onClick={() => setPanel((p) => (p === 'settings' ? 'none' : 'settings'))} />
         </div>
@@ -586,6 +586,21 @@ export default function QuickChess({ start, settings, onFinish, onQuit }: GamePr
           <div className="relative z-20 shrink-0 px-3 pt-2.5">
             <PlayerPlate side={plate(oppColor)} total={clockTotal} />
           </div>
+          {demo && (
+            <div className="relative z-20 shrink-0 px-3 pt-2" aria-live="polite">
+              <div className="flex items-center gap-3 border border-dv-line-gold bg-[linear-gradient(180deg,rgba(28,28,31,0.94),rgba(14,14,16,0.94))] py-2 pl-2 pr-3 shadow-[0_10px_24px_rgba(0,0,0,0.5)]">
+                <JavaliPortrait pose={demoStep >= 0 ? DEMO[demoStep].pose : 'convite'} shape="round" className="size-12 shrink-0" />
+                <div className="min-w-0 flex-1">
+                  <p className="dv-label text-[10px] text-dv-gold">
+                    Javali · {demoStep >= 0 ? `lance ${demoStep + 1} de ${DEMO.length}` : 'demonstração'}
+                  </p>
+                  <p key={demoStep} className="mt-0.5 animate-dv-fade font-body text-[15px] leading-snug text-dv-text">
+                    {demoStep >= 0 ? DEMO[demoStep].say : DEMO_INTRO}
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
           <div
             className="relative min-h-0 flex-1 touch-none"
             onPointerDown={onPointerDown}
@@ -733,6 +748,23 @@ export default function QuickChess({ start, settings, onFinish, onQuit }: GamePr
             </div>
           )}
 
+          {demo && demoDone && (
+            <div className="absolute inset-0 z-40 grid place-items-center bg-dv-ink/70 p-6 backdrop-blur-[2px]" role="status">
+              <div className="flex w-full max-w-sm animate-dv-cut-in flex-col items-center gap-4 text-center">
+                <p className="dv-label text-[10px] text-dv-gold">Xeque-mate em {DEMO.length} lances</p>
+                <h2 className="-skew-x-[8deg] font-impact text-[44px] font-semibold uppercase leading-none tracking-[0.04em] text-white">Demonstração concluída</h2>
+                <p className="font-body text-[16px] leading-relaxed text-dv-text-2">Na mesa de verdade você enfrenta outro jogador, com trinta segundos por lance. Toque em “Jogar” no cartaz do Living Chess para entrar na fila.</p>
+                <div className="flex w-full flex-col gap-2">
+                  <Button variant="primary" block onClick={onQuit}>
+                    Voltar à mesa
+                  </Button>
+                  <Button variant="secondary" block onClick={replayDemo}>
+                    Rever
+                  </Button>
+                </div>
+              </div>
+            </div>
+          )}
           {ending && (
             <div className="absolute inset-0 z-40 grid place-items-center bg-dv-ink/70 p-6 backdrop-blur-[2px]" role="status">
               <div className="flex w-full max-w-sm animate-dv-cut-in flex-col items-center text-center">
@@ -791,20 +823,26 @@ export default function QuickChess({ start, settings, onFinish, onQuit }: GamePr
             </button>
           ))}
         </div>
-        <Button
-          variant="danger"
-          size="sm"
-          className="ml-auto"
-          disabled={!running || spectator}
-          onClick={() => (online ? act({ type: 'resign' }) : end('loss', 'VOCÊ DESISTIU'))}
-        >
-          Desistir
-        </Button>
+        {demo ? (
+          <Button variant="secondary" size="sm" className="ml-auto" onClick={onQuit}>
+            Sair
+          </Button>
+        ) : (
+          <Button
+            variant="danger"
+            size="sm"
+            className="ml-auto"
+            disabled={!running || spectator}
+            onClick={() => (online ? act({ type: 'resign' }) : end('loss', 'VOCÊ DESISTIU'))}
+          >
+            Desistir
+          </Button>
+        )}
       </div>
 
       <PopLayer pops={pops} />
-      {!running && !finished.current && !gateOpen && <WaitingStart name={start.opponent.name} />}
-      {!running && !finished.current && gateOpen && (
+      {!demo && !running && !finished.current && !gateOpen && <WaitingStart name={start.opponent.name} />}
+      {!demo && !running && !finished.current && gateOpen && (
         <Countdown321
           onDone={() => {
             turnStart.current = Date.now()

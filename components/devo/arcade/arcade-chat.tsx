@@ -61,8 +61,13 @@ export function ArcadeChat({
   className,
   refreshInterval = 5000,
   toolbar,
+  readOnly = false,
+  emptyText,
 }: {
   channel: string
+  /** Só leitura: sem campo de digitar (registro da mesa). */
+  readOnly?: boolean
+  emptyText?: string
   placeholder?: string
   className?: string
   refreshInterval?: number
@@ -96,7 +101,9 @@ export function ArcadeChat({
   return (
     <div className={cn('flex min-h-0 flex-col gap-2', className)}>
       <ul ref={listRef} className="devo-scroll flex min-h-0 flex-1 flex-col gap-1 overflow-y-auto pr-1" aria-live="polite">
-        {count === 0 && <li className="py-6 text-center font-body text-[15px] text-dv-text-3">{say('{Bem-vindo|Bem-vinda} ao chat. Seja {o primeiro|a primeira} a falar.')}</li>}
+        {count === 0 && (
+          <li className="py-6 text-center font-body text-[15px] text-dv-text-3">{emptyText ?? say('{Bem-vindo|Bem-vinda} ao chat. Seja {o primeiro|a primeira} a falar.')}</li>
+        )}
         {lines.map((m) => (
           <li key={m.id} className="animate-dv-fade border-l border-transparent px-2 py-1 hover:border-dv-gold/50 hover:bg-white/[0.03]">
             <ChatMessage m={m} />
@@ -104,6 +111,7 @@ export function ArcadeChat({
         ))}
       </ul>
       {toolbar}
+      {!readOnly && (
       <form
         className="flex gap-2"
         onSubmit={(e) => {
@@ -129,6 +137,7 @@ export function ArcadeChat({
           </svg>
         </IconButton>
       </form>
+      )}
     </div>
   )
 }

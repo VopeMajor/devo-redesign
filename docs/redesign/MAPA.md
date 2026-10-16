@@ -33,7 +33,7 @@ com vermelho de alerta (#d51f2b) e "papel claro" (`.dv-light`) no Record, tipogr
 | **Cartas** | Inventário, filtro por raridade, detalhe da carta (frente/verso), coleções, Coruja ensina as cartas | `apps/cartas-app.tsx`, `shared/devo-card.tsx`, `apps/coruja-intro.tsx`, `apps/coruja-sprite.tsx`, `lib/devo/cards.ts` |
 | **Sala de Trocas** | Corredor com 8 salas (condições), troca às cegas com parceiro simulado (chat, aceitar, revelar) | `apps/trocas-app.tsx`, `lib/devo/trade-bots.ts`, reducer `TRADE_*` |
 | **Ajustes** | Som, PWA/notificações, sistema, limpar avisos, tela inicial, reiniciar sessão | `apps/ajustes-app.tsx`, `shared/pwa-panel.tsx`, `shared/sound-toggle.tsx` |
-| **Sala de Jogos** | Abas Mesa / Agenda / Ranking / Apostas; status (tempo, score, posição, reset); cartaz "Próxima partida" com contagem; cards dos 4 jogos (Jogar = fila online, Tutorial = bot); confronto em destaque; ranking da semana; apostas em Tempo; chat; perfil; fila "Procurando oponente"; partida ao vivo | `apps/jogos-app.tsx`, `arcade/mesa.tsx`, `arcade/mini-profile.tsx`, `arcade/arcade-chat.tsx`, `arcade/live-match.tsx`, `arcade/game-hud.tsx`, `arcade/use-room.ts`, `arcade/game-loader.tsx`, `lib/devo/arcade/*`, `app/api/arcade/route.ts` |
+| **Sala de Jogos** | Abas Mesa / Agenda / Ranking / Apostas; status (tempo, score, posição, reset); cartaz "Próxima partida" com contagem; cards dos 4 jogos (Jogar = fila online, Tutorial = bot; no Living Chess, demonstração guiada); confronto em destaque; ranking da semana; apostas em Tempo; registro somente-leitura das falas das partidas (o chat só existe dentro das partidas); perfil; fila "Procurando oponente"; partida ao vivo | `apps/jogos-app.tsx`, `arcade/mesa.tsx`, `arcade/mini-profile.tsx`, `arcade/arcade-chat.tsx`, `arcade/live-match.tsx`, `arcade/game-hud.tsx`, `arcade/use-room.ts`, `arcade/game-loader.tsx`, `lib/devo/arcade/*`, `app/api/arcade/route.ts` |
 | **Torres de Ruptura** | Mapa (1 principal + secundárias), tela da torre com andares em escada (custo em Essências que dobra, chaves das secundárias), apresentação do Galo, reflexão "Anfitrião de quê?". Trancado até o tutorial (abre pelo ícone em "Em breve" com o motivo). Guia: `docs/redesign/TORRES.md` | `torres/*`, `lib/devo/torres/*`, `lib/devo/torres-server.ts`, `app/api/torres/route.ts` |
 
 ## Jogos (`components/devo/arcade/games/`)
@@ -41,7 +41,7 @@ com vermelho de alerta (#d51f2b) e "papel claro" (`.dv-light`) no Record, tipogr
 | Jogo | Arquivos | Notas |
 |---|---|---|
 | Memory Rush | `memory-rush.tsx` | 2 jogadores, mesmo tabuleiro, fases 10/8/6/4 pares, +100/−50, combo, avisos de pressão; tutorial contra bot |
-| Living Chess | `quick-chess.tsx`, `chess/living-board.tsx`, `chess/units.tsx`, `chess/pieces3d.ts`, `chess/titan-pieces.ts`, `chess/marble.ts`, `chess/clock-backdrop.tsx`, `chess/versus-bar.tsx`, `lib/devo/arcade/chess-themes.ts` | Three.js; relógio 30s +2s; capturas viram combate |
+| Living Chess | `quick-chess.tsx`, `chess/living-board.tsx`, `chess/pieces3d.ts`, `chess/titan-pieces.ts`, `chess/marble.ts`, `chess/clock-backdrop.tsx`, `chess/versus-bar.tsx`, `lib/devo/arcade/chess-themes.ts` | Three.js; relógio 30s por lance; capturas viram combate; **sem bot**: o Tutorial é a demonstração guiada do Javali (lances roteirizados) |
 | Bomba Quente | `hot-bomb.tsx` | Three.js; joystick no celular, paisagem; 3 pontos |
 | Blefe | `bluff.tsx`, `bluff.css`, `lib/devo/arcade/bluff.ts` | cartas e blefe |
 
