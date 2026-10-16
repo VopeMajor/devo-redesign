@@ -46,7 +46,11 @@ export function rad(id: string, cores: readonly string[], cx = 0.5, cy = 0.5, r 
 
 /** Gradiente de metal (vertical por padrão, diagonal com `diag`). */
 export function metal(id: string, nome: MetalNome, diag = false) {
-  return diag ? lin(id, METAL[nome], 0, 0, 1, 1) : lin(id, METAL[nome])
+  // bisel com reflexo forte em cima, faixa escura no meio e luz rebatida embaixo (rodada 2 de acabamento)
+  const [c0, c1, c2, c3, c4] = METAL[nome]
+  const pares: [number, string][] = [[0, c1], [0.18, c0], [0.36, c1], [0.5, c2], [0.6, c3], [0.78, c2], [0.92, c4], [1, c2]]
+  const st = pares.map(([o, c]) => `<stop offset="${o}" stop-color="${c}"/>`).join('')
+  return diag ? `<linearGradient id="${id}" x1="0" y1="0" x2="1" y2="1">${st}</linearGradient>` : `<linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1">${st}</linearGradient>`
 }
 
 /** Gradiente de gema (brilho no alto à esquerda). */

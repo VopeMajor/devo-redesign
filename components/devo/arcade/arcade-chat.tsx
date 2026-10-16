@@ -50,7 +50,7 @@ export function ChatMessage({ m, compact, visual }: { m: ChatLine; compact?: boo
       D
     </span>
   )
-  const nome = <NomeVisual nome={m.author} visual={v} cor={color} tamanhoEmblema={compact ? 14 : 16} />
+  const nome = <NomeVisual nome={m.author} visual={v} cor={color} tamanhoEmblema={compact ? 14 : 16} parado />
   const nomeBotao =
     m.pid && openProfile ? (
       <button type="button" onClick={() => openProfile(m.pid as string)} className="dv-focus -my-2 inline-flex min-w-0 max-w-full py-2 hover:underline" aria-label={`Ver perfil de ${m.author}`}>

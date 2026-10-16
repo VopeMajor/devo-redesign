@@ -2,7 +2,8 @@
  * Balões de chat (texto do dono §5). Cada balão = material (fundo, borda, cor do texto) + ornamentos SVG
  * pequenos nos cantos, FORA da área do texto (o padding reserva o espaço). Contraste do texto ≥ AA.
  */
-import { type Arte, circulo, estrela4, gemaGrad, lin, losango, metal, naipe, rad } from './kit'
+import { type Arte, circulo, estrela4, lin, naipe, rad, volutaCheia } from './kit'
+import { contas, folhaDefs, folhaVeias, gemaLapidada, metalDefs, relevo, rosaDefs, rosaVolume } from './material'
 
 export type Balao = {
   /** CSS background do balão */
@@ -21,70 +22,78 @@ export type Balao = {
 }
 
 const K = '#15110d'
-const V = '0 0 24 24'
 
-/** Filigrana dourada de canto (Correspondência Real). */
+const V = '0 0 32 32'
+
+/** Filigrana dourada em relevo, pérolas e um rubi lapidado (Correspondência Real). */
 const cantoReal: Arte = {
   vb: V,
-  corpo: (u) => `<defs>${metal(`${u}-o`, 'ouro', true)}</defs>
-<path d="M2 22 V8 Q2 2 8 2 H22" fill="none" stroke="url(#${u}-o)" stroke-width="1.6"/>
-<path d="M5 18 C5 11 7 7.4 11 6 C9 9 9.4 11.4 12 12 C10.6 9.6 12.6 7.4 15 8.6 C14 5.6 16.6 4.6 19 5" fill="none" stroke="url(#${u}-o)" stroke-width="1.2" stroke-linecap="round"/>
-<circle cx="5" cy="5" r="2" fill="url(#${u}-o)" stroke="${K}" stroke-width=".4"/>`,
+  corpo: (u) => `<defs>${metalDefs(`${u}-o`, 'ouro')}<radialGradient id="${u}-p" cx=".4" cy=".35" r=".7"><stop offset="0" stop-color="#fff"/><stop offset=".6" stop-color="#ece5df"/><stop offset="1" stop-color="#9c93a0"/></radialGradient></defs>
+${relevo(volutaCheia([[3, 22], [3, 10], [9, 4], [20, 3]], 22, 9, 4.6, 1.1, 1.1, -90, 1, 3.2, 0.9), `${u}-o`, 'ouro', 0.5)}
+${relevo(volutaCheia([[6, 14], [9, 9], [14, 8]], 13, 13, 2.6, 0.7, 1, -60, 1, 2, 0.6), `${u}-o-d`, 'ouro', 0.4)}
+${contas([3, 26], [3, 31], 0, 2, 0.9, `${u}-p`, '#6f665e')}${contas([24, 3], [30, 3], 0, 2, 0.9, `${u}-p`, '#6f665e')}
+${gemaLapidada(6, 6, 6, 6, 'rubi', 'oval', `${u}-o`)}`,
 }
 
 const seloCera: Arte = {
-  vb: V,
-  corpo: (u) => `<defs>${rad(`${u}-c`, ['#d0475c', '#8c1a2c', '#4a0912'], 0.4, 0.35, 0.7)}</defs>
+  vb: '0 0 24 24',
+  corpo: (u) => `<defs>${rad(`${u}-c`, ['#e05a70', '#9c1f33', '#5a0a16', '#2a0309'], 0.38, 0.3, 0.75)}</defs>
+<path d="M12.6 3.4 C15.8 2.8 19 4.6 20 7 C22.2 8.6 22.4 12 21.2 14 C21.8 16.8 20 19.8 17.4 20.6 C15.4 22.4 12 22.6 10 21.2 C7 21.4 4.2 19 4 16.2 C2.4 13.8 2.8 10.2 4.8 8.6 C5 5.6 8 3.2 10.6 3.6Z" fill="#000" opacity=".45" transform="translate(.8 1.2)"/>
 <path d="M12 2.6 C15 2 18.4 3.6 19.6 6 C21.8 7.6 22 11 20.8 13 C21.4 15.8 19.6 19 17 19.8 C15 21.8 11.6 22 9.6 20.6 C6.6 20.8 3.8 18.4 3.6 15.6 C2 13.2 2.4 9.6 4.4 8 C4.6 5 7.6 2.6 10.2 3 Z" fill="url(#${u}-c)" stroke="#33060e" stroke-width=".6"/>
-<circle cx="12" cy="11.8" r="5.6" fill="none" stroke="#e9a2ad" stroke-opacity=".55" stroke-width=".8"/>
-<path d="${estrela4(12, 11.8, 4.2)}" fill="#f2c3ca" fill-opacity=".75"/>`,
+<circle cx="12" cy="11.8" r="5.8" fill="none" stroke="#33060e" stroke-opacity=".6" stroke-width="1.2"/><circle cx="12" cy="11.8" r="5.8" fill="none" stroke="#f0a5b1" stroke-opacity=".45" stroke-width=".6" transform="translate(-.4 -.5)"/>
+<path d="${estrela4(12, 11.8, 4.2)}" fill="#33060e" opacity=".55" transform="translate(.4 .5)"/><path d="${estrela4(12, 11.8, 4.2)}" fill="#f4c6cd" fill-opacity=".85"/>
+<path d="M6.5 7 Q8.5 4.6 11.6 4.2" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width=".8" stroke-linecap="round"/>`,
 }
 
-/** Rosa escura com espinho (Confissão Carmesim). */
+/** Rosa de vinho em volume, folhas e um ramo de espinhos (Confissão Carmesim). */
 const cantoCarmesim: Arte = {
   vb: V,
-  corpo: (u) => `<defs>${rad(`${u}-r`, ['#d0475c', '#8c1a2c', '#4a0912', '#22040a'], 0.45, 0.4, 0.7)}${lin(`${u}-f`, ['#56604f', '#22281f'])}</defs>
-<path d="M7 7 C12 9 16 8 22 3" fill="none" stroke="url(#${u}-f)" stroke-width="1.4"/><path d="M15 7.6 l2.4 -2.8 -0.6 3.4Z M11 8.8 l0.6 -3 1.4 2.8Z" fill="#1d1f1b"/>
-<path d="M7 7 C9 12 8 16 3 22" fill="none" stroke="url(#${u}-f)" stroke-width="1.4"/><path d="M7.6 15 l-2.8 2.4 3.4 -.6Z" fill="#1d1f1b"/>
-<circle cx="7" cy="7" r="6" fill="url(#${u}-r)" stroke="#1a0307" stroke-width=".6"/>
-<path d="M4 6.4 C5 3.6 9 3.6 10 6.4 C8.6 5.4 5.4 5.4 4 6.4Z M7 4.8 C9.4 5.4 9.6 8 7.6 9 C7.4 8 6.4 7.6 5.6 8 C5.4 6.6 6 5.4 7 4.8Z" fill="#2a0309" opacity=".6"/>
-<path d="M14 14 h.01" stroke="#c98a95" stroke-width="1.6" stroke-linecap="round" opacity=".6"/>`,
+  corpo: (u) => `<defs>${rosaDefs(`${u}-r`, 'vinho')}${folhaDefs(`${u}-f`)}</defs>
+<path d="M8 8 C14 10 20 8 31 3" fill="none" stroke="#050604" stroke-width="2"/><path d="M8 8 C14 10 20 8 31 3" fill="none" stroke="url(#${u}-f)" stroke-width="1.2"/><path d="M18 8.6 l2.6 -3 -.4 3.6Z M24 6 l1.4 -2.8 .8 2.6Z" fill="#20261d"/>
+<path d="M8 8 C10 14 8 20 3 31" fill="none" stroke="#050604" stroke-width="2"/><path d="M8 8 C10 14 8 20 3 31" fill="none" stroke="url(#${u}-f)" stroke-width="1.2"/><path d="M8.6 18 l-3 2.6 3.6 -.4Z" fill="#20261d"/>
+${folhaVeias(`${u}-f`, 10, 12, 11, 4, 60)}${folhaVeias(`${u}-f`, 12, 9, 11, 4, 10)}
+${rosaVolume(`${u}-r`, 'vinho', 8, 8, 8, 10)}`,
 }
 
-/** Glifos e estrela (Ecos do Arcano). */
+/** Crescente de aço, ametista lapidada e glifos que acendem (Ecos do Arcano). */
 const cantoArcano: Arte = {
   vb: V,
-  corpo: (u) => `<defs>${metal(`${u}-m`, 'champanhe', true)}${gemaGrad(`${u}-g`, 'ametista')}</defs>
-<path d="M2 20 V6 L6 2 H20" fill="none" stroke="#8a7cc8" stroke-width="1.1"/>
-<path d="${losango(6.5, 6.5, 6, 6)}" fill="url(#${u}-g)" stroke="#120d26" stroke-width=".5"/>
-<g class="cos-a-runa"><path d="M13 5 v4 M11.6 6.2 l2.8 1.6 M18 4.6 l-1.4 4 1.4 0 M5 13 a1.6 1.6 0 1 0 .01 0 M5 17.4 v3" fill="none" stroke="#c2b9ec" stroke-width=".9" stroke-linecap="round"/></g>`,
+  corpo: (u) => `<defs>${metalDefs(`${u}-m`, 'champanhe')}</defs>
+<path d="M2 28 V8 L8 2 H28" fill="none" stroke="#000" stroke-opacity=".45" stroke-width="1.6" transform="translate(.6 .9)"/><path d="M2 28 V8 L8 2 H28" fill="none" stroke="#8a7cc8" stroke-width="1.2"/>
+${relevo('M4 14 C4 8 8 4 14 4 C10 6 8 9 8 14 C8 18 10 21 14 23 C8 23 4 19 4 14Z', `${u}-m-d`, 'champanhe', 0.5)}
+${gemaLapidada(9, 9, 6.4, 6.4, 'ametista', 'losango')}
+<g class="cos-a-runa"><path d="M18 5 v5 M16.4 6.4 l3.2 1.8 M24 4.6 l-1.6 4.4 1.6 0 M5.4 20 a1.8 1.8 0 1 0 .01 0 M5.4 25 v4" fill="none" stroke="#d6ccff" stroke-width=".9" stroke-linecap="round"/></g>
+<path d="${estrela4(14, 14, 2.4)}" fill="#fff6e6" class="cos-a-cintila"/>`,
 }
 
-/** Pequeno relógio frio (Último Suspiro). */
+/** Relógio de bolso em relevo de prata fria, com corrente (Último Suspiro). */
 const cantoSuspiro: Arte = {
   vb: V,
-  corpo: (u) => `<defs>${metal(`${u}-l`, 'lua', true)}${rad(`${u}-d`, ['#f2f6fa', '#c8d2dd', '#8693a3'])}</defs>
-<path d="M14 3 H22 M3 14 V22" stroke="url(#${u}-l)" stroke-width="1"/>
-<circle cx="8" cy="8" r="6.4" fill="url(#${u}-d)" stroke="#2c3440" stroke-width=".9"/>
-<circle cx="8" cy="8" r="6.4" fill="none" stroke="url(#${u}-l)" stroke-width="1.2"/>
-<path d="M8 3.4 v1 M12.6 8 h-1 M8 12.6 v-1 M3.4 8 h1" stroke="#2c3440" stroke-width=".7"/>
-<g class="cos-a-ponteiro" style="transform-origin:8px 8px"><path d="M8 8 V4.4" stroke="#2c3440" stroke-width=".8" stroke-linecap="round"/></g>
-<path d="M8 8 L10.4 9.6" stroke="#2c3440" stroke-width=".8" stroke-linecap="round"/>
-<path d="M8 0.6 v1.2" stroke="url(#${u}-l)" stroke-width="1.4"/>`,
+  corpo: (u) => `<defs>${metalDefs(`${u}-l`, 'lua')}${rad(`${u}-d`, ['#f6f9fc', '#d2dbe5', '#8693a3'])}</defs>
+${contas([16, 4], [30, 4], 1.2, 7, 0.7, `${u}-l-r`, '#2c3440')}${contas([4, 16], [4, 30], 1.2, 7, 0.7, `${u}-l-r`, '#2c3440')}
+${relevo('M10 1 h4 v3 h-4Z', `${u}-l`, 'lua', 0.4)}
+<circle cx="12.6" cy="12.6" r="9" fill="#000" opacity=".45"/>
+${relevo('M3 12 a9 9 0 1 0 18 0 a9 9 0 1 0 -18 0Z', `${u}-l-d`, 'lua', 0.5)}
+<circle cx="12" cy="12" r="6.8" fill="url(#${u}-d)" stroke="#2c3440" stroke-width=".6"/>
+<path d="M12 5.8 v1.4 M18.2 12 h-1.4 M12 18.2 v-1.4 M5.8 12 h1.4" stroke="#2c3440" stroke-width=".8"/>
+<g class="cos-a-ponteiro" style="transform-origin:12px 12px"><path d="M12 12 V6.8" stroke="#2c3440" stroke-width=".9" stroke-linecap="round"/></g>
+<path d="M12 12 L15 14" stroke="#2c3440" stroke-width=".9" stroke-linecap="round"/><circle cx="12" cy="12" r=".9" fill="#2c3440"/>
+<path d="M7 8 a6.4 6.4 0 0 1 5 -2.4" fill="none" stroke="#fff" stroke-opacity=".8" stroke-width=".7" stroke-linecap="round"/>`,
 }
 
-/** Carta e ficha (Mesa do Destino). */
+/** Carta, ficha e dado em relevo (Mesa do Destino). */
 const cantoMesa: Arte = {
   vb: V,
   corpo: (u) => {
     let marcas = ''
     for (let i = 0; i < 6; i++) {
       const a = (i / 6) * Math.PI * 2
-      marcas += circulo(16 + Math.cos(a) * 4.3, 16 + Math.sin(a) * 4.3, 0.9)
+      marcas += circulo(21 + Math.cos(a) * 5.2, 21 + Math.sin(a) * 5.2, 1)
     }
-    return `<defs>${lin(`${u}-p`, ['#fbf8f1', '#e3dbc9'])}${metal(`${u}-o`, 'champanhe', true)}</defs>
-<g transform="rotate(-14 7 9)"><rect x="2" y="2" width="10" height="14" rx="1.4" fill="url(#${u}-p)" stroke="${K}" stroke-width=".6"/><path d="${naipe('espadas', 7, 9.4, 6.4)}" fill="${K}"/></g>
-<circle cx="16" cy="16" r="5.6" fill="#7c1325" stroke="${K}" stroke-width=".6"/><path d="${marcas}" fill="#f3ead6"/><circle cx="16" cy="16" r="2.4" fill="url(#${u}-o)"/>`
+    return `<defs>${lin(`${u}-p`, ['#fffcf4', '#e3dbc9'], 0, 0, 1, 1)}${metalDefs(`${u}-o`, 'ouro')}</defs>
+<g transform="rotate(-14 8 11)"><rect x="3.8" y="3.6" width="12" height="17" rx="1.6" fill="#000" opacity=".45"/><rect x="2.6" y="2" width="12" height="17" rx="1.6" fill="url(#${u}-p)" stroke="${K}" stroke-width=".6"/><rect x="3.8" y="3.2" width="9.6" height="14.6" rx="1" fill="none" stroke="url(#${u}-o)" stroke-width=".5"/><path d="${naipe('espadas', 8.6, 11, 7)}" fill="${K}"/><text x="4.8" y="6.8" font-size="3.2" fill="${K}" style="font-family:var(--font-card-title),Cinzel,Georgia,serif;font-weight:700">A</text></g>
+<ellipse cx="21.8" cy="22.4" rx="7" ry="6.6" fill="#000" opacity=".45"/>
+<circle cx="21" cy="21" r="7" fill="#7c1325" stroke="${K}" stroke-width=".6"/><path d="${marcas}" fill="#f3ead6"/><circle cx="21" cy="21" r="3.2" fill="url(#${u}-o)" stroke="${K}" stroke-width=".4"/><path d="M16.4 17.4 a6 6 0 0 1 6 -2.4" fill="none" stroke="#fff" stroke-opacity=".5" stroke-width=".7"/>`
   },
 }
 

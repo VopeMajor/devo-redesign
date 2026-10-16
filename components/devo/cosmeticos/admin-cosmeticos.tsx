@@ -2,7 +2,7 @@
 
 import { type CSSProperties, useMemo, useRef, useState } from 'react'
 import useSWR from 'swr'
-import { type CosmeticoDef, type CosSlot, ORIGEM_LABEL, RARIDADE_PADRAO, RARIDADES, SLOT_LABEL } from '@/lib/devo/cosmeticos'
+import { ARTE_IMAGEM, IMAGENS_CATALOGO, imagemDoAsset, type CosmeticoDef, type CosSlot, ORIGEM_LABEL, RARIDADE_PADRAO, RARIDADES, SLOT_LABEL } from '@/lib/devo/cosmeticos'
 import type { ItemRarity } from '@/lib/devo/progresso'
 import { cn } from '@/lib/utils'
 import { ConfirmButton, EmptyLine, ErrorLine, Loading, RecSelect, STAFF_KEY, staffGet } from '../system/staff-ui'
@@ -140,10 +140,10 @@ function Thumb({ def }: { def: CosmeticoDef }) {
 }
 
 const ARTES: Record<CosSlot, string[]> = {
-  moldura_avatar: Object.keys(MOLDURAS).map((k) => `devo:moldura/${k}`),
-  moldura_mini: Object.keys(MOLDURAS).map((k) => `devo:moldura/${k}`),
-  emblema: Object.keys(EMBLEMAS).map((k) => `devo:emblema/${k}`),
-  balao: Object.keys(BALOES).map((k) => `devo:balao/${k}`),
+  moldura_avatar: [...ARTE_IMAGEM.moldura, ...Object.keys(MOLDURAS).map((k) => `devo:moldura/${k}`)],
+  moldura_mini: [...ARTE_IMAGEM.moldura, ...Object.keys(MOLDURAS).map((k) => `devo:moldura/${k}`)],
+  emblema: [...ARTE_IMAGEM.emblema, ...Object.keys(EMBLEMAS).map((k) => `devo:emblema/${k}`)],
+  balao: [...ARTE_IMAGEM.balao, ...Object.keys(BALOES).map((k) => `devo:balao/${k}`)],
   efeito: Object.keys(EFEITOS).map((k) => `devo:efeito/${k}`),
 }
 
@@ -165,7 +165,13 @@ function Editor({ item, onClose, onSaved }: { item: ItemAdmin | null; onClose: (
   const [err, setErr] = useState<string | null>(null)
   const file = useRef<HTMLInputElement>(null)
   const set = (p: Partial<typeof f>) => setF((x) => ({ ...x, ...p }))
-  const previa: CosmeticoDef = { ...f, description: f.description || null, automatico: !!item?.automatico, par: item?.par ?? null }
+  const previa: CosmeticoDef = {
+    ...f,
+    description: f.description || null,
+    automatico: !!item?.automatico,
+    par: item?.par ?? null,
+    imagem: imagemDoAsset(f.asset, IMAGENS_CATALOGO[f.asset]?.imagem ?? item?.imagem),
+  }
 
   const enviar = async (fl: File) => {
     setErr(null)
