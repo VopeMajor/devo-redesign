@@ -224,6 +224,9 @@ await test('/api/eu: Jogador trancado, Owner e Anfitrião com tudo liberado, sem
   assert(!('karma' in p.json), 'payload do jogador não expõe o karma cru')
   const o = await owner.get('/api/eu')
   assert(o.json.tudoLiberado === true && o.json.desbloqueios.poco === true, 'owner com tudo liberado')
+  const ac = o.json.acesso
+  assert(ac?.total && ac.salaJogos && ac.todosApps && ac.pularTutoriais, `acesso total do owner: ${JSON.stringify(ac)}`)
+  assert(p.json.acesso.total === false && p.json.acesso.salaJogos === false, 'jogador novo sem Sala de Jogos revelada')
   const a = await anf.get('/api/eu')
   assert(a.json.tudoLiberado === true, 'anfitrião com tudo liberado')
   const d = await dealer.get('/api/eu')

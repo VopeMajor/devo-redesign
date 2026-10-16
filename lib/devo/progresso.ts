@@ -64,6 +64,24 @@ export function destinoDoKarma(karma: number): Destino {
   return { direcao: karma > 0 ? 'ordem' : 'caos', intensidade }
 }
 
+/**
+ * Acesso efetivo do jogador (DIRECAO-3 §1b e §7). Owner e Anfitrião: `total = true` e tudo liberado —
+ * nenhuma trava de progressão vale para eles (sistemas novos, Sala de Jogos ainda não revelada, apps ainda não
+ * vistos, tutoriais). A interface só reflete este objeto; quem decide é `unlocks()` no servidor.
+ */
+export type Acesso = {
+  /** Owner/Anfitrião: ignora qualquer trava. */
+  total: boolean
+  /** Sistemas novos (flags do servidor). */
+  sistemas: Record<UnlockFlag, boolean>
+  /** Sala de Jogos revelada (jogador: `save.arcadeUnlocked`; equipe superior: sempre). */
+  salaJogos: boolean
+  /** Todos os apps aparecem como já vistos/disponíveis (sem selo "novo" nem revelação forçada). */
+  todosApps: boolean
+  /** Tutoriais e apresentações são opcionais (podem ser pulados/abertos direto). */
+  pularTutoriais: boolean
+}
+
 /** Resposta de GET /api/eu (somente dados do próprio jogador). */
 export type EuPayload = {
   id: string
@@ -73,6 +91,8 @@ export type EuPayload = {
   /** Flags efetivas (já com a regra Owner/Anfitrião = tudo liberado). */
   desbloqueios: Record<UnlockFlag, boolean>
   tudoLiberado: boolean
+  /** Acesso efetivo completo (inclui as travas antigas do cliente). Ver `Acesso`. */
+  acesso: Acesso
   destino: Destino
   /** Convites que o Jogador ainda pode gerar (null para a equipe: não usa cota). */
   convites: number | null

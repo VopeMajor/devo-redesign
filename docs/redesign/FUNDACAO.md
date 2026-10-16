@@ -145,7 +145,17 @@ próxima resposta que chama `drainTime` (hoje, a Sala de Jogos).
 - Corporações e Virtudes não estão no padrão do tutorial: a Narrativa libera com `grantUnlock(..., 'narrativa')`
   quando a cena acontecer (ou o dono pede para incluir no tutorial — basta editar `devo_tutorial_flags()`).
 
+**Função única de acesso (DIRECAO-3 §7):** `unlocks(playerId) → Acesso`
+`{ total, sistemas: Record<UnlockFlag, boolean>, salaJogos, todosApps, pularTutoriais }`. Owner e Anfitrião:
+`total = true` e **tudo** liberado — nenhuma trava de progressão vale para eles, nem as antigas do cliente (Sala de
+Jogos ainda não revelada / `arcadeUnlocked`, apps ainda não vistos / `seenApps`, tutoriais e apresentações).
+Jogador e Dealer: flags do servidor + `save.arcadeUnlocked`. Vai no payload do próprio jogador como
+`EuPayload.acesso` (`GET /api/eu`). **A interface só reflete**: o shell/apps devem ler `acesso` em vez de decidir
+sozinhos (ex.: `acesso.salaJogos || state.arcadeUnlocked`, mostrar todos os apps se `acesso.todosApps`, oferecer
+"pular" se `acesso.pularTutoriais`). Ligar isso nas telas é tarefa dos agentes de Sistema/Narrativa.
+
 ```ts
+unlocks(playerId) → Acesso                                    // use esta para decidir telas
 getUnlocks(playerId) → { flags: Record<UnlockFlag, boolean>, tudoLiberado }
 hasUnlock(playerId, flag) / requireUnlock(playerId, flag)   // 403 'Este sistema ainda está trancado.'
 grantUnlock(playerId, flag, 'narrativa' | 'sistema' | 'owner' | 'deadly_vote', ref?, atorId?, q?)
@@ -220,7 +230,7 @@ Virtudes (tabela de afinidade com divergências) deve entrar como `virtudes.afin
 ## 8. API
 
 ### `GET /api/eu` (sessão obrigatória)
-`EuPayload`: `{ id, cargo, inventario: InventoryItem[], desbloqueios, tudoLiberado, destino, convites, cartasPendentes }`.
+`EuPayload`: `{ id, cargo, inventario: InventoryItem[], desbloqueios, tudoLiberado, acesso, destino, convites, cartasPendentes }`.
 `?parte=inventario&tipo=moeda,essencia` → `{ inventario }`. `POST {action:'cartas.resgatar'}` → `{ ok, cartas }`.
 
 ### `GET /api/staff?view=…`

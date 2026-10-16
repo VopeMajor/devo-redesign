@@ -5,7 +5,7 @@ import { RecordError } from './errors'
 import { type Queryable, run, txAs, UUID_RE } from './fundacao-db'
 import { itemBalance, pendingCardCount, readInventory } from './inventario-server'
 import { requireActor, requireCan } from './permissoes-server'
-import { destinoDoKarma, type EuPayload, isUnlockFlag, UNLOCK_FLAGS, type UnlockFlag } from './progresso'
+import { type Acesso, destinoDoKarma, type EuPayload, isUnlockFlag, UNLOCK_FLAGS, type UnlockFlag } from './progresso'
 
 /* ------------------------------------------------------------------ Desbloqueios */
 
@@ -20,6 +20,18 @@ export async function getUnlocks(playerId: string, q: Queryable = pool): Promise
   const set = new Set(have.map((h) => h.flag))
   const flags = Object.fromEntries(UNLOCK_FLAGS.map((f) => [f, tudo || set.has(f)])) as Record<UnlockFlag, boolean>
   return { flags, tudoLiberado: tudo }
+}
+
+/**
+ * FUNÇÃO ÚNICA de acesso (DIRECAO-3 §7): Owner e Anfitrião recebem tudo liberado, inclusive as travas antigas
+ * do cliente (Sala de Jogos não revelada, apps não vistos, tutoriais). Para os demais: flags do servidor +
+ * `arcadeUnlocked` do save. Qualquer tela nova deve consultar isto (via /api/eu → `acesso`).
+ */
+export async function unlocks(playerId: string, q: Queryable = pool): Promise<Acesso> {
+  const { flags, tudoLiberado } = await getUnlocks(playerId, q)
+  if (tudoLiberado) return { total: true, sistemas: flags, salaJogos: true, todosApps: true, pularTutoriais: true }
+  const [s] = await run<{ arcade: boolean | null }>(q, "SELECT (data->>'arcadeUnlocked')::boolean AS arcade FROM player_saves WHERE player_id = $1", [playerId])
+  return { total: false, sistemas: flags, salaJogos: !!s?.arcade, todosApps: false, pularTutoriais: false }
 }
 
 export async function hasUnlock(playerId: string, flag: UnlockFlag, q: Queryable = pool) {
@@ -170,9 +182,9 @@ export async function getEu(playerId: string): Promise<EuPayload> {
   if (!p) throw new RecordError('Registro não encontrado.', 404)
   const cargo = normalizeCargo(p.role)
   if (cargo === 'player') await ensureInviteQuota(p.id).catch(() => {})
-  const [inventario, unlocks, cartasPendentes, convites] = await Promise.all([
+  const [inventario, acesso, cartasPendentes, convites] = await Promise.all([
     readInventory(p.id),
-    getUnlocks(p.id),
+    unlocks(p.id),
     pendingCardCount(p.id),
     cargo === 'player' ? inviteQuota(p.id) : Promise.resolve(null),
   ])
@@ -180,8 +192,9 @@ export async function getEu(playerId: string): Promise<EuPayload> {
     id: p.id,
     cargo,
     inventario,
-    desbloqueios: unlocks.flags,
-    tudoLiberado: unlocks.tudoLiberado,
+    desbloqueios: acesso.sistemas,
+    tudoLiberado: acesso.total,
+    acesso,
     destino: destinoDoKarma(p.karma),
     convites,
     cartasPendentes,
