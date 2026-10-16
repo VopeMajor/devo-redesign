@@ -87,3 +87,11 @@ Especificação completa em `SISTEMAS-texto-do-dono.txt` (seção "DEVO — Sist
 ## 9. Pedidos do dono (16/10, 11:49)
 - **Poço: reformulação visual profunda** — especificação literal em `POCO-REFORMULACAO-dono.md` (composição cinematográfica, mecanismo central ornamental, sequência ativação → suspense → revelação → resultado com pular/acelerar, apresentação própria por categoria de recompensa, assets de verdade em vez de primitivas, botões de invocação ornamentais). Recompensas inúteis (tampão de lixo, curativo usado…) não vão ao inventário. Faixa de notificação de prêmios raros na tela do Poço; além das reais, **notificações simuladas periódicas** com nomes fictícios (que não correspondam a contas reais), sem suprimir as reais.
 - **Tela inicial (home)**: está "preto no branco" demais — trazer de volta um pouco do roxo/ametista já usado. Revisar o enquadramento dos NPCs.
+- **Home do celular em telas deslizáveis** (dono: "no mobile, quero que os outros ícones estejam em outras telas ao
+  arrastar o dedo"): tela 1 = relógio/Pulso, apps principais (Record, Pulso, Cartas, Sala de Jogos) e "Agora";
+  tela 2 = Sistemas (Torres, Poço, Virtudes, Arcanos, Corporações, Salão das Máscaras), com nomes inteiros. Arrasto
+  horizontal com snap nativo (scroll-snap; cada tela rola na vertical; não usa o voltar do shell), indicador de
+  telas em losangos e botões "Tela anterior do início"/"Próxima tela do início" (teclado e leitor de tela). Dock
+  fixo em todas as telas. Desktop não muda. Roteiro: `openApp` desliza até a tela do ícone antes do clique; a
+  região "Sistemas" continua com o mesmo nome (os grupos poco/torres/salao usam `scrollIntoViewIfNeeded`, que
+  leva o carrossel até a tela 2).
