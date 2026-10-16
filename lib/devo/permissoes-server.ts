@@ -185,6 +185,9 @@ export type PlayerSummary = {
   cargo: Cargo
   cartas: number
   fragmentos: number
+  /** Nível arcano e Pontos de Potencial: ainda sem fonte no servidor (Arcanos/Virtudes); null = sem registro. */
+  arcano: string | null
+  pontosPotencial: number | null
   deadlyVotes: { total: number; sobreviveu: number; eliminado: number }
   /** Só em 'completo': inventário inteiro, karma e últimos registros. */
   completo?: {
@@ -219,6 +222,8 @@ export async function getPlayerSummary(atorId: string, alvoId: string, nivel: 'r
     cargo: cargoVisivel(ator, p.role),
     cartas: Number(p.cartas ?? 0),
     fragmentos: Number(p.fragmentos ?? 0),
+    arcano: null,
+    pontosPotencial: null,
     deadlyVotes: { total: Number(dv?.total ?? 0), sobreviveu: Number(dv?.s ?? 0), eliminado: Number(dv?.e ?? 0) },
   }
   if (nivel === 'completo') {
@@ -235,6 +240,36 @@ export async function getPlayerSummary(atorId: string, alvoId: string, nivel: 'r
     }
   }
   return out
+}
+
+export type JogadorLinha = { id: string; name: string; cargo: Cargo; supervisorId: string | null; deadlyVotes: number; isTest: boolean }
+
+/**
+ * Lista de pessoas para os painéis de equipe (Owner, Anfitrião): nome, cargo visível ao ator (Owner só para
+ * Owner) e participação. Sem dados privados. Busca opcional por nome.
+ */
+export async function listJogadores(atorId: string, busca?: string | null): Promise<JogadorLinha[]> {
+  const ator = await requireActor(atorId)
+  requireCan(ator, 'equipe.ver')
+  const termo = typeof busca === 'string' ? busca.trim().slice(0, 40) : ''
+  const rows = await run<{ id: string; name: string; role: string; supervisor_id: string | null; dv: string; is_test: boolean | null }>(
+    pool,
+    `SELECT p.id, p.name, p.role, p.supervisor_id, p.is_test,
+            (SELECT count(*) FROM deadly_vote_entries e WHERE e.player_id = p.id AND e.admission = 'aceita') AS dv
+       FROM players p
+      WHERE ($1 = '' OR p.name ILIKE '%' || $1 || '%')
+      ORDER BY p.is_test, lower(p.name)
+      LIMIT 60`,
+    [termo.replace(/[%_\\]/g, '')],
+  )
+  return rows.map((r) => ({
+    id: r.id,
+    name: r.name,
+    cargo: cargoVisivel(ator, r.role),
+    supervisorId: cargoVisivel(ator, r.role) === 'dealer' ? r.supervisor_id : null,
+    deadlyVotes: Number(r.dv),
+    isTest: !!r.is_test,
+  }))
 }
 
 /** Log administrativo (Owner). Filtros opcionais por ação e por alvo. */

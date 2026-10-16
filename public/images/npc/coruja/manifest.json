@@ -1,0 +1,18 @@
+{
+  "celulas": {
+    "0": "neutro",
+    "1": "sorriso",
+    "2": "piscadela",
+    "3": "riso",
+    "4": "desdem",
+    "5": "preocupado",
+    "6": "surpreso",
+    "7": "serio",
+    "8": "irritado",
+    "9": "triste",
+    "10": "timido",
+    "11": "malicia"
+  },
+  "escala": 1.7513,
+  "linhaDeCorte": 0.7663
+}

@@ -43,6 +43,9 @@ export const APPS: AppDef[] = [
   ...SISTEMA_APPS,
 ]
 
+/** Ids dos sistemas novos (compatibilidade com quem já importava). */
+export const SYSTEM_APP_IDS = APPS.filter((a) => isSistema(a.id)).map((a) => a.id)
+
 /** Apps do shell (sem os sistemas novos, que têm seção própria). A Sala de Jogos só aparece depois da revelação. */
 export function visibleApps(arcadeUnlocked: boolean) {
   return APPS.filter((a) => !isSistema(a.id) && (arcadeUnlocked || a.id !== 'jogos'))

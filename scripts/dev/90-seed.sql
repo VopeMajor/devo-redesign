@@ -148,3 +148,43 @@ SELECT 'evento', v.id, 'Deadly Vote #' || v.number || ' · ' || v.title, '000000
        'Sobreviveu até o fim da sala.', '00000000-0000-4000-8000-000000000006'
 FROM deadly_votes v WHERE v.title = 'A Sala Sem Relógio'
   AND NOT EXISTS (SELECT 1 FROM reward_proposals r WHERE r.vote_id = v.id);
+
+-- ---------------------------------------------------------------------------------------------
+-- Staff e Deadly Vote (scripts/staff-migration.sql).
+-- Convites que ligam as contas do seed a um login (cookie devo_player = id do seed; ver capture.mjs, grupo
+-- 'staff'): Sentinela (Owner), Mordomo (Anfitrião), Narrador (Dealer) e Matheus (jogador comum).
+INSERT INTO invite_codes (code, role, note) VALUES
+  ('DEVO-STAF-SENT', 'player', 'capturas staff: liga Sentinela'),
+  ('DEVO-STAF-MORD', 'player', 'capturas staff: liga Mordomo'),
+  ('DEVO-STAF-NARR', 'player', 'capturas staff: liga Narrador'),
+  ('DEVO-STAF-MATH', 'player', 'capturas staff: liga Matheus')
+ON CONFLICT (code) DO NOTHING;
+-- Teste de servidor do Staff (scripts/dev/staff-test.mjs). Contas de teste.
+INSERT INTO invite_codes (code, role, note, is_test) VALUES
+  ('DEVO-STFT-OWNR', 'owner',     'teste staff: owner', true),
+  ('DEVO-STFT-ANF1', 'anfitriao', 'teste staff: anfitrião', true),
+  ('DEVO-STFT-JOG1', 'player',    'teste staff: jogador 1', true),
+  ('DEVO-STFT-JOG2', 'player',    'teste staff: jogador 2', true),
+  ('DEVO-STFT-JOG3', 'player',    'teste staff: jogador 3', true)
+ON CONFLICT (code) DO NOTHING;
+
+-- 'Leilão de Sombras' (convocado, do Narrador): inscrição com aprovação, local, recompensas privadas e
+-- inscrições à espera (Matheus e Ísis) ao lado de uma aceita (Corvo).
+UPDATE deadly_votes SET admission = 'aprovacao', location = 'Salão de leilões · grupo do WhatsApp' WHERE title = 'Leilão de Sombras';
+INSERT INTO deadly_vote_prizes (vote_id, resource, resource_key, quantity, label, position)
+SELECT v.id, x.r, x.k, x.q, x.l, x.p FROM deadly_votes v,
+  (VALUES ('item', 'dracma_comum', 3, 'último lance', 0), ('tempo', NULL, 120, NULL, 1)) AS x(r, k, q, l, p)
+WHERE v.title = 'Leilão de Sombras' AND NOT EXISTS (SELECT 1 FROM deadly_vote_prizes z WHERE z.vote_id = v.id);
+INSERT INTO deadly_vote_entries (vote_id, player_id, admission)
+SELECT v.id, p.id, CASE WHEN p.name = 'Corvo' THEN 'aceita' ELSE 'pendente' END
+FROM deadly_votes v, players p WHERE v.title = 'Leilão de Sombras' AND p.name IN ('Corvo', 'Ísis', 'Matheus')
+ON CONFLICT DO NOTHING;
+
+-- 'A Sala Sem Relógio' (concluído, do Narrador): resultado por participante pela metade, ainda não aplicado.
+UPDATE deadly_votes SET location = 'Sala sem janelas · subsolo' WHERE title = 'A Sala Sem Relógio';
+INSERT INTO deadly_vote_prizes (vote_id, resource, resource_key, quantity, label, position)
+SELECT v.id, 'item', 'dracma_comum', 2, 'sobrevivente', 0 FROM deadly_votes v
+WHERE v.title = 'A Sala Sem Relógio' AND NOT EXISTS (SELECT 1 FROM deadly_vote_prizes z WHERE z.vote_id = v.id);
+UPDATE deadly_vote_entries e SET decision = CASE p.name WHEN 'Nyx' THEN 'morreu' ELSE 'premio' END
+FROM players p, deadly_votes v
+WHERE p.id = e.player_id AND v.id = e.vote_id AND v.title = 'A Sala Sem Relógio' AND p.name IN ('Lírio', 'Corvo', 'Nyx');

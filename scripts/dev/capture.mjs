@@ -67,6 +67,9 @@ async function step(name, fn) {
 }
 
 const btn = (page, name, exact = false) => page.getByRole('button', { name, exact }).first()
+/** Seção da Mesa da equipe no Record (Casos, Recompensas, Equipe, Jogadores, Convites, Registro, Ajustes). */
+const desk = (page, label) =>
+  page.getByRole('navigation', { name: 'Seções da mesa' }).getByRole('button', { name: new RegExp(`^${label}`) }).first()
 
 async function tryClick(locator, timeout = 2500) {
   try {
@@ -426,11 +429,16 @@ if (want('sistema') || want('apps') || want('jogos')) {
       await page.mouse.wheel(0, 800)
       await wait(600)
       await shot(page, '20-record-scroll')
-      for (const tab of ['Deadly Votes', 'Convites']) {
+      // Equipe (Veterano é Owner): a 3ª aba é a Mesa (casos, recompensas, equipe, convites…); Jogador vê "Convites".
+      for (const [tab, name] of [['Deadly Votes', 'deadly-votes'], ['Mesa', 'mesa']]) {
         if (await tryClick(page.getByRole('tab', { name: new RegExp(tab, 'i') }).first())) {
           await wait(1500)
-          await shot(page, `20-record-${tab.toLowerCase().replace(/\s+/g, '-')}`)
+          await shot(page, `20-record-${name}`)
         }
+      }
+      if (await tryClick(desk(page, 'Convites'))) {
+        await wait(1500)
+        await shot(page, '20-record-convites')
       }
     })
     // Record (área): foto com recorte, Shuffler embaralhando, cartaz → dossiê do caso, mesa do Dealer.
@@ -485,12 +493,14 @@ if (want('sistema') || want('apps') || want('jogos')) {
           await wait(800)
         }
       }
-      if (await tryClick(tab('Convites'))) {
+      if (await tryClick(tab('Mesa'))) {
         await wait(1500)
+        await tryClick(desk(page, 'Casos'))
+        await wait(900)
         await page.getByRole('heading', { name: /Mesa do Dealer/i }).first().scrollIntoViewIfNeeded().catch(() => {})
         await wait(1200)
         await shot(page, '20-record-dealer')
-        if (await tryClick(btn(page, /Registrar resultados/))) {
+        if (await tryClick(btn(page, /^(Inscrições|Registrar resultados) ·/))) {
           await wait(900)
           await shot(page, '20-record-dealer-resultados')
         }
@@ -579,8 +589,10 @@ if (want('sistema') || want('apps') || want('jogos')) {
           await wait(800)
         }
       }
-      if (await tryClick(tab('Convites'))) {
+      if (await tryClick(tab('Mesa'))) {
         await wait(1800)
+        await tryClick(desk(page, 'Casos'))
+        await wait(900)
         await toView('article[aria-label*="Valsa do Relógio Parado"]')
         await wait(900)
         await shot(page, '20-record-dealer-link')
@@ -1171,6 +1183,249 @@ if (want('estilo')) {
   })
 }
 
+// ── 3b. Staff e Deadly Vote (DIRECAO-3 §3/§4): a Mesa do Record por cargo ──────────────────────────────
+// Contas do seed ligadas a um login pelo cookie devo_player (ver 90-seed.sql): Matheus (jogador comum),
+// Narrador (Dealer), Mordomo (Anfitrião) e Sentinela (Owner, nunca revelado).
+if (want('staff')) {
+  const SEED = {
+    Matheus: '00000000-0000-4000-8000-000000000003',
+    Narrador: '00000000-0000-4000-8000-000000000006',
+    Mordomo: '00000000-0000-4000-8000-000000000011',
+    Sentinela: '00000000-0000-4000-8000-000000000010',
+  }
+  const seedAccount = async (name, invite) => {
+    const d = await device('phone')
+    await d.ctx.addCookies([{ name: 'devo_player', value: SEED[name], url: BASE }])
+    await d.page.goto(BASE, { waitUntil: 'networkidle' })
+    let up
+    for (let i = 0; i < 6; i++) {
+      up = await api(d.page, '/api/auth/sign-up/email', { email: hexEmail(name), password: 'teste123', name, username: name, displayUsername: name }, { 'x-devo-invite': invite })
+      if (up.status !== 429) break
+      await wait(11000)
+    }
+    if (up.status >= 400) {
+      const inn = await api(d.page, '/api/auth/sign-in/username', { username: name, password: 'teste123' })
+      if (inn.status >= 400) manifest.errors.push({ step: `staff-${name}-auth`, error: `signup ${up.status} ${up.text}; signin ${inn.status}` })
+    }
+    const saved = await api(d.page, '/api/save', makeSave(VET_CARDS))
+    if (saved.status >= 400) manifest.errors.push({ step: `staff-${name}-save`, error: `${saved.status} ${saved.text}` })
+    return d
+  }
+  const getJson = (page, path) => page.evaluate(async (p) => (await fetch(p)).json(), path)
+  const post = async (page, path, body, label) => {
+    const r = await api(page, path, body)
+    if (r.status >= 400) manifest.errors.push({ step: `staff-${label}`, error: `${r.status} ${r.text}` })
+    try {
+      return JSON.parse(r.text)
+    } catch {
+      return {}
+    }
+  }
+  const tabOf = (page, name) => page.getByRole('tab', { name: new RegExp(name, 'i') }).first()
+  const view = (page, sel, block = 'start') =>
+    page
+      .locator(sel)
+      .first()
+      .evaluate((el, b) => el.scrollIntoView({ block: b }), block)
+      .catch(() => {})
+  const openMesa = async (page) => {
+    await openApp(page, 'Record')
+    await tryClick(tabOf(page, 'Mesa'))
+    await wait(2000)
+  }
+  const section = async (page, label) => {
+    await view(page, 'nav[aria-label="Seções da mesa"]', 'start')
+    await tryClick(desk(page, label))
+    await wait(1800)
+  }
+
+  const mat = await seedAccount('Matheus', 'DEVO-STAF-MATH')
+  const nar = await seedAccount('Narrador', 'DEVO-STAF-NARR')
+  const mor = await seedAccount('Mordomo', 'DEVO-STAF-MORD')
+  const sen = await seedAccount('Sentinela', 'DEVO-STAF-SENT')
+
+  // Jogador comum: sem Mesa; pedido de inscrição em análise; cota de 1 convite.
+  await step('staff-jogador', async () => {
+    const page = mat.page
+    await openApp(page, 'Record')
+    await shot(page, '60-staff-jogador-record')
+    if (await tryClick(tabOf(page, 'Deadly Votes'))) {
+      await wait(1500)
+      await view(page, 'article[aria-label="Convocação: Leilão de Sombras"]', 'end')
+      await wait(700)
+      await shot(page, '60-staff-jogador-inscricao-em-analise')
+    }
+    if (await tryClick(tabOf(page, 'Convites'))) {
+      await wait(1500)
+      await shot(page, '60-staff-jogador-convites')
+    }
+  })
+
+  // Dealer: Mesa, inscrições, resultado por participante, aplicação (vai para aprovação), convocação e propostas.
+  await step('staff-dealer', async () => {
+    const page = nar.page
+    await openMesa(page)
+    await shot(page, '61-staff-dealer-mesa')
+    const leilao = 'article[aria-label*="Leilão de Sombras"]'
+    await view(page, `${leilao} button[aria-expanded]`, 'start')
+    await wait(700)
+    await shot(page, '61-staff-dealer-inscricoes')
+    if (await tryClick(page.locator(leilao).getByRole('button', { name: 'Aceitar Matheus', exact: true }))) {
+      await wait(1500)
+      await view(page, `${leilao} button[aria-expanded]`, 'start')
+      await wait(500)
+      await shot(page, '61-staff-dealer-inscricao-aceita')
+    }
+    const sala = 'article[aria-label*="A Sala Sem Relógio"]'
+    await view(page, `${sala} button[aria-expanded]`, 'start')
+    await wait(700)
+    await shot(page, '61-staff-dealer-decisao')
+    await view(page, '[aria-label="Resultado de Ísis"]', 'center')
+    await wait(500)
+    await shot(page, '61-staff-dealer-decisao-lista')
+    if (await tryClick(page.locator(sala).getByRole('button', { name: 'Prêmio para todos' }))) await wait(1500)
+    if (await tryClick(page.locator(sala).getByRole('button', { name: 'Aplicar aos perfis' }))) {
+      await wait(500)
+      await view(page, `${sala} button:has-text("Confirmar aplicação")`, 'center')
+      await wait(400)
+      await shot(page, '61-staff-dealer-aplicar-confirmar')
+      await tryClick(page.locator(sala).getByRole('button', { name: 'Confirmar aplicação' }))
+      await wait(2200)
+      await view(page, `${sala} button[aria-expanded]`, 'start')
+      await wait(600)
+      await shot(page, '61-staff-dealer-aplicado')
+    }
+    await view(page, 'nav[aria-label="Seções da mesa"]')
+    if (await tryClick(btn(page, 'Convocar', true))) {
+      await wait(900)
+      const form = page.getByRole('form', { name: 'Convocar Deadly Vote' })
+      await form.getByPlaceholder('Leilão de Sombras').fill('Vigília das Velas').catch(() => {})
+      await form.getByPlaceholder(/Salão principal/).fill('Capela do terceiro andar').catch(() => {})
+      await form.getByPlaceholder('O que os participantes precisam saber.').fill('Uma vela por pessoa. Quem deixar a sua apagar sai do caso.').catch(() => {})
+      await view(page, 'form[aria-label="Convocar Deadly Vote"]')
+      await wait(500)
+      await shot(page, '61-staff-dealer-convocar')
+      if (await tryClick(form.getByRole('button', { name: 'Adicionar recompensa' }))) {
+        await wait(800)
+        await tryClick(form.getByRole('button', { name: 'Incluir recompensa' }))
+        await wait(500)
+      }
+      await view(page, 'form[aria-label="Convocar Deadly Vote"] button[type=submit]', 'end')
+      await wait(500)
+      await shot(page, '61-staff-dealer-convocar-recompensas')
+      await tryClick(form.getByRole('button', { name: 'Convocar' }))
+      await wait(2000)
+    }
+    await section(page, 'Recompensas')
+    await shot(page, '61-staff-dealer-recompensas')
+    await page.mouse.wheel(0, 700)
+    await wait(600)
+    await shot(page, '61-staff-dealer-recompensas-scroll')
+  })
+
+  // Estado de erro: a Mesa sem resposta do servidor.
+  await step('staff-erro', async () => {
+    const page = await nar.ctx.newPage()
+    await page.route('**/api/record?view=staff*', (r) => r.fulfill({ status: 500, contentType: 'application/json', body: '{"ok":false,"error":"Falha no servidor do Record."}' }))
+    await openMesa(page)
+    await view(page, 'nav[aria-label="Seções da mesa"]')
+    await wait(600)
+    await shot(page, '61-staff-erro')
+    await page.close()
+  })
+
+  // Anfitrião: aprovações dos seus Dealers, tutorial vencido pela tela nova, equipe, jogadores e convites.
+  await step('staff-anfitriao', async () => {
+    const page = mor.page
+    await post(page, '/api/staff', {
+      action: 'recompensa.propor', tipo: 'externa', origem: 'Ajuda no evento de sábado', destinatarioId: SEED.Matheus,
+      recurso: 'tempo', quantidade: 90, justificativa: 'Organizou a fila de inscritos e trouxe dois jogadores.',
+    }, 'externa')
+    const t = await post(page, '/api/record', {
+      action: 'create', title: 'Voto de Iniciação', arc: 'Prólogo', location: 'Átrio do relógio', tutorial: true,
+      briefing: 'O primeiro voto de quem acabou de chegar.', startsAt: Date.now() - 3600_000,
+      prizes: [{ recurso: 'item', chave: 'dracma_comum', quantidade: 1, label: 'boas-vindas' }],
+    }, 'tutorial-criar')
+    if (t.id) {
+      await post(mat.page, '/api/record', { action: 'join', voteId: t.id }, 'tutorial-inscricao')
+      await post(page, '/api/record', { action: 'status', voteId: t.id, status: 'concluido' }, 'tutorial-concluir')
+    }
+    await openMesa(page)
+    await shot(page, '62-staff-anfitriao-mesa')
+    await section(page, 'Recompensas')
+    await shot(page, '62-staff-anfitriao-aprovacoes')
+    if (await tryClick(page.getByRole('button', { name: /^Aprovar e entregar a recompensa de/ }).first())) {
+      await wait(1800)
+      await shot(page, '62-staff-anfitriao-aprovado')
+    }
+    await section(page, 'Casos')
+    const tut = 'article[aria-label*="Voto de Iniciação"]'
+    if (await tryClick(page.locator(tut).getByRole('button', { name: 'Matheus: Recebe prêmio' }))) {
+      await wait(1500)
+      await view(page, `${tut} button[aria-expanded]`, 'start')
+      await wait(500)
+      await shot(page, '62-staff-anfitriao-tutorial-decisao')
+      if (await tryClick(page.locator(tut).getByRole('button', { name: 'Aplicar aos perfis' }))) {
+        await wait(400)
+        await tryClick(page.locator(tut).getByRole('button', { name: 'Confirmar aplicação' }))
+        await wait(2200)
+        await view(page, `${tut} button[aria-expanded]`, 'start')
+        await wait(500)
+        await shot(page, '62-staff-anfitriao-tutorial-aplicado')
+      }
+    }
+    const eu = await getJson(mat.page, '/api/eu').catch(() => null)
+    if (!eu?.desbloqueios?.poco) manifest.errors.push({ step: 'staff-tutorial-desbloqueio', error: `Matheus deveria ter o Poço liberado: ${JSON.stringify(eu?.desbloqueios)}` })
+    await section(page, 'Equipe')
+    await shot(page, '62-staff-anfitriao-equipe')
+    await section(page, 'Jogadores')
+    if (await tryClick(page.getByRole('button', { name: /^Lírio/ }).first())) {
+      await wait(1500)
+      await shot(page, '62-staff-anfitriao-jogador')
+    }
+    await section(page, 'Convites')
+    await shot(page, '62-staff-anfitriao-convites')
+  })
+
+  // Owner: selo neutro no Record (nunca "Owner"), Mesa completa, externas, vínculos, desbloqueios, registro e ajustes.
+  await step('staff-owner', async () => {
+    const page = sen.page
+    await openApp(page, 'Record')
+    await shot(page, '63-staff-owner-record')
+    await tryClick(tabOf(page, 'Mesa'))
+    await wait(2000)
+    await shot(page, '63-staff-owner-mesa')
+    await section(page, 'Recompensas')
+    await shot(page, '63-staff-owner-recompensas')
+    await section(page, 'Equipe')
+    await shot(page, '63-staff-owner-equipe')
+    await section(page, 'Jogadores')
+    if (await tryClick(page.getByRole('button', { name: /^Matheus/ }).first())) {
+      await wait(1600)
+      await view(page, '[role="switch"]', 'center')
+      await wait(500)
+      await shot(page, '63-staff-owner-jogador')
+    }
+    await section(page, 'Registro')
+    await shot(page, '63-staff-owner-registro')
+    await section(page, 'Ajustes')
+    await shot(page, '63-staff-owner-ajustes')
+  })
+
+  // Jogador depois do tutorial vencido: o Record com o resultado.
+  await step('staff-jogador-depois', async () => {
+    await openApp(mat.page, 'Record')
+    if (await tryClick(tabOf(mat.page, 'Deadly Votes'))) {
+      await wait(1500)
+      await view(mat.page, 'section[aria-labelledby="dv-history"]')
+      await wait(600)
+      await shot(mat.page, '60-staff-jogador-depois')
+    }
+  })
+
+  for (const d of [mat, nar, mor, sen]) await d.ctx.close()
+}
+
 // ── 4. Uma referência no desktop ────────────────────────────────────────────────────────
 if (want('desktop')) {
   await step('desktop', async () => {
@@ -1370,6 +1625,193 @@ if (want('narrativa')) {
   })
   await ctx.close()
   await db.end()
+}
+
+// ── Poço dos Milagres (sistema novo, DIRECAO-3 §2) ─────────────────────────────────────────
+// Brasa (DEVO-POCO-0001) recebe as flags do Poço e do Diário pelo banco (como se tivesse vencido o tutorial);
+// Cinza (DEVO-POCO-0002) continua trancada. As probabilidades são forçadas pelo banco só para fotografar o
+// lixo e o resultado raro, e voltam ao valor original no fim.
+if (want('poco')) {
+  let db = null
+  try {
+    const pg = (await import('pg')).default
+    if (process.env.DATABASE_URL) db = new pg.Pool({ connectionString: process.env.DATABASE_URL })
+  } catch {}
+  const sql = async (text, params) => (db ? (await db.query(text, params)).rows : [])
+  const original = (await sql("SELECT value FROM devo_config WHERE key = 'poco.probabilidades'").catch(() => []))[0]?.value
+  const forcar = async (moeda, cat) => {
+    if (!original) return
+    const v = { ...original, [moeda]: { lixo: 0, capsula: 0, fragmento: 0, essencia: 0, cosmetico: 0, [cat]: 100 } }
+    await sql("UPDATE devo_config SET value = $1 WHERE key = 'poco.probabilidades'", [JSON.stringify(v)])
+  }
+  const restaurar = async () => original && sql("UPDATE devo_config SET value = $1 WHERE key = 'poco.probabilidades'", [JSON.stringify(original)])
+  const abrirPoco = async (page, name) => {
+    await enterOS(page)
+    const b = page.getByRole('button', { name, exact: true }).first()
+    await b.waitFor({ state: 'visible', timeout: 15000 })
+    await b.scrollIntoViewIfNeeded().catch(() => {})
+    await tryClick(b, 8000)
+    await wait(2600)
+  }
+  const fala = (page) => page.getByRole('button', { name: /^(Próxima fala|Mostrar fala completa)$/ }).first()
+  const escolhas = (page) => page.locator('[aria-label="Escolhas de diálogo"] button:not([disabled])')
+
+  await step('poco-trancado', async () => {
+    const { ctx, page } = await account('Cinza', 'DEVO-POCO-0002', VET_CARDS)
+    await enterOS(page)
+    await page.getByRole('region', { name: 'Sistemas' }).first().scrollIntoViewIfNeeded().catch(() => {})
+    await wait(600)
+    await shot(page, 'poco-00-home-trancado')
+    await abrirPoco(page, 'Poço dos Milagres: trancado')
+    await shot(page, 'poco-01-trancado')
+    await ctx.close()
+  })
+
+  const { ctx, page } = await account('Brasa', 'DEVO-POCO-0001', VET_CARDS)
+  await sql(
+    "INSERT INTO player_unlocks (player_id, flag, source) SELECT id, f, 'owner' FROM players, unnest(ARRAY['poco','diario']) f WHERE lower(name) = 'brasa' ON CONFLICT DO NOTHING",
+  ).catch((e) => manifest.errors.push({ step: 'poco-flags', error: String(e).slice(0, 300) }))
+
+  await step('poco-diario-vazio', async () => {
+    await openApp(page, 'Record')
+    await tryClick(page.getByRole('tab', { name: /Diário/ }).first())
+    await wait(1500)
+    await shot(page, 'poco-02-diario-vazio')
+  })
+
+  await step('poco-neblina', async () => {
+    await enterOS(page)
+    await page.getByRole('region', { name: 'Sistemas' }).first().scrollIntoViewIfNeeded().catch(() => {})
+    await wait(800)
+    await shot(page, 'poco-03-home-liberado')
+    await abrirPoco(page, 'Poço dos Milagres')
+    await shot(page, 'poco-04-neblina-rua')
+    const vistos = new Set()
+    const marcar = async (re, nome) => {
+      if (vistos.has(nome)) return
+      if (await page.getByText(re).count()) {
+        vistos.add(nome)
+        await tryClick(page.getByRole('button', { name: 'Mostrar fala completa' }).first(), 800)
+        await wait(1200)
+        await shot(page, nome)
+      }
+    }
+    for (let i = 0; i < 120; i++) {
+      if (!(await page.locator('main[aria-label="Poço dos Milagres: apresentação"]').count())) break
+      const ops = escolhas(page)
+      if (await ops.count()) {
+        await wait(700)
+        if (!vistos.has('poco-06-neblina-escolha-moeda') && (await page.getByText('Usar moeda especial (se houver).').count())) {
+          vistos.add('poco-06-neblina-escolha-moeda')
+          await shot(page, 'poco-06-neblina-escolha-moeda')
+        }
+        const sim = page.locator('[aria-label="Escolhas de diálogo"] button', { hasText: 'Sim, por favor.' })
+        if (await sim.count()) await tryClick(sim.first())
+        else await tryClick(ops.first())
+        await wait(600)
+        continue
+      }
+      await marcar(/Ao se aproximar, você descobre um poço milenar/, 'poco-05-neblina-poco')
+      await marcar(/alguém se aproxima/, 'poco-07-neblina-figura')
+      await marcar(/o mais puro osso/, 'poco-08-neblina-mao')
+      await marcar(/Você recebeu um Dracma/, 'poco-09-neblina-dracma')
+      await marcar(/Nunca tente entrar no poço/, 'poco-10-neblina-aviso')
+      await tryClick(fala(page), 1500)
+      await wait(260)
+    }
+    await wait(1500)
+    await shot(page, 'poco-11-tela')
+  })
+
+  await step('poco-moedas', async () => {
+    await tryClick(btn(page, 'Suas moedas', true))
+    await wait(900)
+    await shot(page, 'poco-12-moedas')
+    await page.keyboard.press('Escape')
+    await wait(600)
+  })
+
+  await step('poco-baldes', async () => {
+    await tryClick(btn(page, 'Inspecionar Balde', true))
+    await wait(900)
+    await shot(page, 'poco-13-baldes-bloqueado')
+    await page.keyboard.press('Escape')
+    await wait(600)
+  })
+
+  await step('poco-giro-lixo', async () => {
+    await forcar('dracma_comum', 'lixo')
+    await tryClick(btn(page, 'Lançar Moeda', true))
+    await wait(900)
+    await shot(page, 'poco-14-lancar')
+    await tryClick(btn(page, 'Usar o giro grátis', true))
+    await wait(500)
+    await shot(page, 'poco-15-moeda-caindo')
+    await wait(900)
+    await tryClick(btn(page, 'Girar Manivela', true))
+    await wait(1100)
+    await shot(page, 'poco-16-minigame')
+    for (let k = 0; k < 3; k++) {
+      await tryClick(page.getByRole('button', { name: 'Puxar a manivela' }).first(), 1500)
+      await wait(450)
+    }
+    await wait(350)
+    await shot(page, 'poco-17-minigame-fim')
+    await wait(1400)
+    await shot(page, 'poco-18-balde-subindo')
+    await wait(2200)
+    await tryClick(btn(page, 'Inspecionar Balde', true))
+    await wait(1400)
+    await shot(page, 'poco-19-resultado-lixo')
+    await tryClick(btn(page, 'Devolver ao poço', true))
+    await wait(900)
+    await shot(page, 'poco-20-giro-gratis-usado')
+    await tryClick(btn(page, 'Lançar Moeda', true))
+    await wait(900)
+    await shot(page, 'poco-21-lancar-gratis-usado')
+    await page.keyboard.press('Escape')
+    await wait(600)
+  })
+
+  await step('poco-giro-raro', async () => {
+    await forcar('dracma_incomum', 'capsula')
+    await tryClick(btn(page, 'Lançar Moeda', true))
+    await wait(800)
+    await tryClick(btn(page, 'Lançar Dracma Incomum', true))
+    await wait(1500)
+    await tryClick(btn(page, 'Girar Manivela', true))
+    await wait(1000)
+    await tryClick(btn(page, 'Soltar a manivela', true))
+    await wait(3800)
+    await tryClick(btn(page, 'Inspecionar Balde', true))
+    await wait(1600)
+    await shot(page, 'poco-22-resultado-raro')
+    await tryClick(btn(page, 'Guardar', true))
+    await wait(800)
+  })
+  await restaurar()
+
+  await step('poco-diario', async () => {
+    await openApp(page, 'Record')
+    await tryClick(page.getByRole('tab', { name: /Diário/ }).first())
+    await wait(1500)
+    await shot(page, 'poco-23-diario')
+  })
+  await ctx.close()
+
+  await step('poco-owner', async () => {
+    const o = await account('Veterano', 'DEVO-TEST-ADM1', VET_CARDS)
+    await abrirPoco(o.page, 'Poço dos Milagres')
+    await shot(o.page, 'poco-24-owner-cena-pular')
+    if (await tryClick(btn(o.page, 'Pular apresentação', true))) await wait(1800)
+    await tryClick(btn(o.page, 'Suas moedas', true))
+    await wait(900)
+    await o.page.getByRole('region', { name: 'Probabilidades do Poço' }).first().scrollIntoViewIfNeeded().catch(() => {})
+    await wait(500)
+    await shot(o.page, 'poco-25-owner-probabilidades')
+    await o.ctx.close()
+  })
+  await db?.end().catch(() => {})
 }
 
 await browser.close()

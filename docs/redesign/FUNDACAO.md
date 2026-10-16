@@ -264,8 +264,75 @@ Erros: `{ ok: false, error }` com 400/403/404/409 (mensagens em português, sem 
 - `/api/invites`: Jogador com cota; Dealer não gera; `quota` no payload.
 - `/api/arcade`: `role` do chat e do miniperfil passa por `publicCargo`.
 
+## 8b. Staff e Deadly Vote (agente Staff)
+
+Migração `scripts/staff-migration.sql` (depois da Fundação; está no CI, no `local-db.mjs` e no banco novo).
+
+- `deadly_votes`: `location` (local), `admission` (`'livre'` entra direto | `'aprovacao'` o dono do caso aceita),
+  `results_applied_at/by` (resultado aplicado aos perfis — uma vez só).
+- `deadly_vote_entries`: `admission` (`pendente`/`aceita`/`recusada`), `decision` (`premio`/`morreu`/`ausente`/`outro`),
+  `note`, `decided_by/at`. Gatilhos `devo_dv_entry_guard`/`devo_dv_vote_guard`: depois de aplicado, decisão, resultado,
+  inscrição e estado do voto ficam selados (`RESULTADO_APLICADO` → 409).
+- `deadly_vote_prizes`: recompensas planejadas do caso. **Privadas**: só a Mesa (`GET /api/record?view=staff`) as
+  envia; `getRecord` (payload do jogador) nunca.
+- `reward_proposals.prize_id` + índice único `(prize_id, recipient_id)`: uma proposta por prêmio e participante.
+- `recompensas-server.ts`: **`proposeRewardIn(c, ator, input, { aprovar: true | 'se-puder', entregar, prizeId })`** —
+  proposta dentro de uma transação aberta; `'se-puder'` aprova só se `can(ator, 'recompensa.aprovar')`.
+- `permissoes-server.ts`: `listJogadores(atorId, busca)` (`equipe.ver`; cargo por `cargoVisivel`) →
+  `GET /api/staff?view=jogadores&q=`. `PlayerSummary` ganhou `arcano` e `pontosPotencial` (null até Arcanos/Virtudes
+  terem fonte no servidor).
+
+`POST /api/record` (todas exigem `dv.editar` no voto): `create` aceita `location`, `admission`, `prizes[]`
+(`{recurso, chave?, quantidade, label?}`, até 8); `edit {voteId, …ficha, prizes?}` (antes de aplicar);
+`admission {voteId, playerId, admission}`; `decision {voteId, playerId | '*', decision | null, note?}` (só com o voto
+`concluido`; `'*'` = todos os aceitos ainda sem decisão; `outro` exige nota); `apply {voteId}` →
+`{ aplicou, participantes, propostas, entregues, pendentes }`. Aplicar: exige todos os aceitos decididos;
+`premio` → `sobreviveu` + uma proposta `evento` por prêmio planejado; `morreu` → `eliminado`; `ausente`/`outro` → sem
+resultado; inscrições ainda em análise viram recusadas. Quem pode aprovar (Owner; Anfitrião no seu escopo) já aprova e
+entrega; a proposta de Dealer fica pendente. Gravar `sobreviveu` num tutorial concluído dispara o desbloqueio
+(gatilhos da §3). Segunda chamada → `aplicou: false`, nada duplica. `join` respeita `admission` (pendente) e recusa
+quem foi recusado. O payload público (`DeadlyVote`) ganhou `location`, `admission` e `entryStatus` (a própria inscrição).
+
+Telas: aba **Mesa** do Record (`components/devo/system/staff-desk.tsx`): Casos (Mesa do Dealer), Recompensas, Equipe,
+Jogadores, Convites, Registro, Ajustes — por cargo. Jogador: aba Convites com a cota. Teste: `scripts/dev/staff-test.mjs`
+(→ `staff-test.log`).
+
 ## 9. Pendências e decisões para o dono
 - Probabilidades do Poço, faixas da "linha do destino" e lista de flags do tutorial: provisórias e editáveis.
 - `dracma_rara` foi criada como provisória (o texto só cita Comum e Incomum).
 - Dealer não gera convites (segue a tabela; antes podia gerar convite de Jogador).
 - O painel de equipe (telas) é do agente Staff; a Fundação entrega só API.
+
+## 10. Poço dos Milagres (agente Poço)
+
+Arquivos: `scripts/poco-migration.sql` (tabelas `poco_estado`, `poco_giros`; config e catálogo provisórios),
+`lib/devo/poco.ts` (puro: tipos, lixo, minigame, pesos), `lib/devo/poco-server.ts`, `app/api/poco/route.ts`,
+`lib/devo/poco-neblina.ts` (cena literal do dono, como dados), `components/devo/poco/*`, seed `scripts/dev/91-seed-poco.sql`,
+teste `scripts/dev/poco-test.mjs` (CI → `poco-test.log`).
+
+- **Trava:** toda rota chama `requireUnlock(…, 'poco')`; `GET /api/poco` trancado responde `200 { liberado: false, motivo }`.
+- **Moedas:** `item_defs` com `kind = 'moeda'` e `meta.poco = true`; cada chave é uma **categoria** de sorteio com pesos em
+  `devo_config['poco.probabilidades'][<moeda>]` (categoria sem pesos = fechada). `dracma_comum` = base.
+- **Dracma do encapuzado:** `POST {action:'apresentacao.concluir'}` → `grantItem('dracma_incomum', idem 'poco:corvo:<id>')`.
+- **Giro grátis:** `devo_config['poco.giro_gratis_diario'] = { categoria, quantidade }`; dia em horário de Brasília;
+  índice único `(player_id, dia, gratis_n) WHERE gratis`.
+- **Um giro por vez:** índice único `(player_id) WHERE estado <> 'revelado'`. A moeda é consumida na mesma transação do
+  giro com `idem 'poco:giro:<giro>:moeda'`; o prêmio com `idem 'poco:giro:<giro>:premio'`.
+- **Sorteio auditável:** `seed` aleatório por giro, `seed_hash = sha256(seed)` mostrado antes; rolagens = HMAC-SHA256(seed,
+  rótulo). Grava pesos efetivos, `provisorio`, rolagem, categoria sorteada/final, item, quantidade, toques e acertos.
+- **Manivela:** `devo_config['poco.manivela']` (provisório). O servidor deriva os parâmetros do ponteiro do seed, recebe só os
+  instantes dos toques, recusa toques posteriores ao tempo real decorrido e conta os acertos (`avaliarToques`). Cada acerto
+  multiplica o peso do lixo por `1 − acertos × reducao_lixo_por_acerto`. Não há segunda tentativa.
+- **Resultados:** `lixo` (lista `POCO_LIXO`, não vai ao inventário) · `capsula` (`kind 'capsula'`, `meta.poco = true`, só as
+  que o jogador não tem; vão ao **Diário**, aba do Record) · `fragmento` (`fragmento_arcano`, faixa em `poco.quantidades`) ·
+  `essencia` (todas as `essencia:*` ativas, exceto `meta.poco = false`) · `cosmetico` (**`item_defs` `kind 'cosmetico'` com
+  `meta.poco = true`**, peso por raridade em `poco.raridade_pesos`, só os que o jogador não tem). Categoria sem item elegível
+  vira fragmento.
+- **Baldes:** `item_defs` `balde:<id>` (`kind 'outro'`, `meta.poco_balde`, `meta.tipo` inicial | normal | raro, `meta.mult_qtd`).
+  Normais aparecem bloqueados; raros só aparecem depois de obtidos. Conceder um balde = `grantItem('balde:ferro')`.
+- **Cápsulas:** `capsula:001…008` com `meta.titulo`/`meta.texto` **provisórios** (o dono escreve; editar pelo catálogo).
+- **Owner:** o payload traz `owner { provisorio, probabilidades, manivela }`; a tela grava com `POST /api/staff
+  {action:'config.definir', key:'poco.probabilidades', value, provisional: true}`.
+- **Letreiro:** últimos 12 prêmios não-lixo revelados (30 dias), só nome do personagem; contas de teste ficam fora.
+- **Cliente:** `components/devo/state/use-acesso.ts` (`useAcesso()`/`useEu()`, SWR de `/api/eu`) — candidato a uso comum dos
+  outros sistemas; a home acende o emblema do Poço por `acesso.sistemas.poco` (`SYSTEM_OPEN` em `os/phone-shell.tsx`).

@@ -7,6 +7,7 @@ import {
   grantAuthorization,
   listAdminLog,
   listEquipe,
+  listJogadores,
   requireActor,
   requireCan,
   revokeAuthorization,
@@ -65,6 +66,8 @@ export async function GET(req: Request) {
         })
       case 'recompensa':
         return Response.json({ historico: await rewardHistory(player.id, p('id') ?? '') })
+      case 'jogadores':
+        return Response.json({ jogadores: await listJogadores(player.id, p('q')) })
       case 'jogador':
         return Response.json(await getPlayerSummary(player.id, p('id') ?? '', p('nivel') === 'completo' ? 'completo' : 'resumido'))
       case 'log':

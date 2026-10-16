@@ -8,6 +8,7 @@ import { GlyphKeyhole } from '../kit/glyphs'
 import { Panel, SectionLabel } from '../apps/app-ui'
 import { useDevo } from '../state/devo-store'
 import { useAcesso } from './use-acesso'
+import { PocoApp } from '../poco/poco-app'
 
 /**
  * SISTEMAS NOVOS (DIRECAO-3 §1–2) no menu do DEVO: trancados até vencer o Deadly Vote tutorial (Owner e
@@ -15,14 +16,15 @@ import { useAcesso } from './use-acesso'
  *
  * ▸ AGENTES DE SISTEMA: registrem a tela do seu sistema em `TELAS_SISTEMA` (uma linha + o import). Ela abre como
  *   um app (camada no celular, janela no desktop), com o mesmo id de `AppId`. Sem tela registrada, aparece o
- *   aviso "em preparação". A tela é responsável por chamar a apresentação narrativa na primeira entrada
+ *   aviso "em preparação". Com tela registrada, o ícone trancado também abre a tela (aria-label "<nome>: trancado"),
+ *   e ELA mostra a trava (decidida no servidor). A tela é responsável por chamar a apresentação narrativa na primeira entrada
  *   (`useCenas().abrir(..., { seNaoVista: true })` — docs/redesign/DIALOGO.md).
  */
 export type SistemaId = 'mascaras' | 'poco' | 'torres' | 'corporacoes' | 'virtudes' | 'arcanos'
 
 export const TELAS_SISTEMA: Partial<Record<SistemaId, ComponentType>> = {
   // mascaras: SalaoApp,      ← agente Salão das Máscaras
-  // poco: PocoApp,           ← agente Poço
+  poco: PocoApp,
   // torres: TorresApp,       ← agente Torres
   // corporacoes: CorporacoesApp, ← agente Corporações
   // virtudes: VirtudesApp,   ← agente Virtudes
@@ -38,13 +40,15 @@ export type SistemaDef = {
   /** Motivo mostrado no ícone trancado. */
   trava: string
   emblem: EmblemComponent
+  /** Janela no desktop (padrão 860×620). */
+  janela?: { w: number; h: number }
 }
 
 const TUTORIAL = 'Vença o Deadly Vote tutorial'
 
 export const SISTEMAS: SistemaDef[] = [
   { id: 'mascaras', nome: 'Salão das Máscaras', curto: 'Máscaras', subtitulo: 'Leilões e mercado', flag: 'salao_mascaras', trava: TUTORIAL, emblem: EmblemMascaras },
-  { id: 'poco', nome: 'Poço dos Milagres', curto: 'Poço', subtitulo: 'Moeda, manivela e balde', flag: 'poco', trava: TUTORIAL, emblem: EmblemPoco },
+  { id: 'poco', nome: 'Poço dos Milagres', curto: 'Poço', subtitulo: 'Moedas, manivela e balde', flag: 'poco', trava: TUTORIAL, emblem: EmblemPoco, janela: { w: 460, h: 820 } },
   { id: 'torres', nome: 'Torres de Ruptura', curto: 'Torres', subtitulo: 'Andares e essências', flag: 'torres', trava: TUTORIAL, emblem: EmblemTorres },
   { id: 'corporacoes', nome: 'Corporações', curto: 'Corpo­rações', subtitulo: 'Companhia de Despertados', flag: 'corporacoes', trava: 'Aguarde a Companhia', emblem: EmblemCorporacoes },
   { id: 'virtudes', nome: 'Virtudes', curto: 'Virtudes', subtitulo: 'Pontos de potencial', flag: 'virtudes', trava: 'Em breve', emblem: EmblemVirtudes },
@@ -72,6 +76,7 @@ export function TelaSistema({ id }: { id: SistemaId }) {
     if (aberto) dispatch({ type: 'SEE_SYSTEM', id })
   }, [aberto, id, dispatch])
   const Tela = TELAS_SISTEMA[id]
+  if (Tela) return <Tela />
   if (!eu) return <p className="dv-label px-4 pt-6 text-[11px] text-dv-text-3" role="status">Conferindo acesso…</p>
   if (!aberto) {
     return (
@@ -85,7 +90,6 @@ export function TelaSistema({ id }: { id: SistemaId }) {
       </div>
     )
   }
-  if (Tela) return <Tela />
   return (
     <div className="devo-scroll h-full overflow-y-auto px-4 pb-8 pt-4">
       <Panel>
@@ -105,5 +109,5 @@ export const SISTEMA_APPS = SISTEMAS.filter((s) => s.flag).map((s) => ({
   Component: function SistemaApp() {
     return <TelaSistema id={s.id} />
   },
-  window: { w: 860, h: 620 },
+  window: s.janela ?? { w: 860, h: 620 },
 }))

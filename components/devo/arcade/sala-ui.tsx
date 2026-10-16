@@ -8,7 +8,7 @@ import type { CSSProperties, ReactNode } from 'react'
 import { GlyphArrow, PortraitFrame } from '@/components/devo/kit'
 import type { GameId } from '@/lib/devo/arcade/games'
 import { cn } from '@/lib/utils'
-import { portraitFrameProps } from '@/lib/devo/npcs'
+import { portraitFrameProps, type Expressao } from '@/lib/devo/npcs'
 
 /* ── Placa de status (cabeçalho) ─────────────────────────────────────────────────────── */
 
@@ -95,7 +95,7 @@ export function Monogram({
  * no rosto serve de medalhão; `arch` mostra busto e mesa.
  */
 export function JavaliPortrait({
-  pose = 'neutral',
+  pose,
   shape = 'arch',
   name,
   role,
@@ -103,8 +103,8 @@ export function JavaliPortrait({
   className,
   title = 'Javali, anfitrião da Sala de Jogos',
 }: {
-  /** Pose do mapa de retratos (`lib/devo/npcs.ts`): `standing` = corpo inteiro. */
-  pose?: string
+  /** Expressão do mapa de retratos (`lib/devo/npcs.ts`); sem ela, a de repouso. */
+  pose?: Expressao
   shape?: 'arch' | 'round' | 'rect'
   name?: string
   role?: string

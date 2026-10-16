@@ -8,7 +8,7 @@ import { cn } from '@/lib/utils'
 import { formatClock, formatDuration, useMediaQuery, useNow } from '../hooks'
 import { IconButton } from '../kit/button'
 import { FrameCorners } from '../kit/frame'
-import { SISTEMAS, type SistemaDef } from '../progressao/sistemas'
+import { SISTEMAS, TELAS_SISTEMA, type SistemaDef } from '../progressao/sistemas'
 import { useAcesso } from '../progressao/use-acesso'
 import { CartaoNarrativa } from '../progressao/narrativa-host'
 import { MarbleSlab, StateSeal } from './shell-ui'
@@ -564,11 +564,29 @@ function SystemsSection({ onOpen }: { onOpen: (id: AppId) => void }) {
               </li>
             )
           }
+          // Sistema com tela própria (TELAS_SISTEMA): o ícone trancado abre a tela, que mostra o motivo.
+          if (TELAS_SISTEMA[f.id]) {
+            return (
+              <li key={f.id} title={`${f.nome} · ${f.trava}`}>
+                <button type="button" onClick={() => onOpen(f.id as AppId)} aria-label={`${f.nome}: trancado`} className="dv-focus group flex w-full flex-col items-center gap-1.5">
+                  <span className="relative grid size-11 place-items-center">
+                    <E className="size-9 text-dv-text-3 opacity-60" />
+                    <GlyphKeyhole aria-hidden="true" className="absolute -bottom-0.5 -right-0.5 size-3.5 rounded-full bg-dv-ink p-[1px] text-dv-gold" />
+                  </span>
+                  <span aria-hidden="true" className="dv-label line-clamp-2 text-center text-[10px] leading-[1.25] tracking-[0.06em] text-dv-text-3">{f.curto}</span>
+                </button>
+              </li>
+            )
+          }
           return (
             <li key={f.id} className="flex flex-col items-center gap-1.5" title={`${f.nome} · ${f.trava}`}>
               <span className="relative grid size-11 place-items-center">
-                <E className="size-9 text-dv-text-3 opacity-60" />
-                <GlyphKeyhole aria-hidden="true" className="absolute -bottom-0.5 -right-0.5 size-3.5 rounded-full bg-dv-ink p-[1px] text-dv-gold" />
+                {livre && <span aria-hidden="true" className="absolute inset-x-1 bottom-0 h-1/2 bg-[radial-gradient(50%_60%_at_50%_100%,rgba(138,124,200,0.5),transparent)]" />}
+                <E
+                  {...(livre ? { metal: true } : {})}
+                  className={cn('relative size-9', livre ? 'text-dv-text drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] group-active:scale-[0.96]' : 'text-dv-text-3 opacity-60')}
+                />
+                {!livre && <GlyphKeyhole aria-hidden="true" className="absolute -bottom-0.5 -right-0.5 size-3.5 rounded-full bg-dv-ink p-[1px] text-dv-gold" />}
               </span>
               <span className="sr-only">{f.nome}: bloqueado. {f.trava}.</span>
               <span aria-hidden="true" className="dv-label line-clamp-2 text-center text-[10px] leading-[1.25] tracking-[0.06em] text-dv-text-3">{f.curto}</span>

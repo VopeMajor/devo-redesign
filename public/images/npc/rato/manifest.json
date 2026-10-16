@@ -1,0 +1,18 @@
+{
+  "celulas": {
+    "0": "convite",
+    "1": "malicia",
+    "2": "desdem",
+    "3": "surpreso",
+    "4": "trama",
+    "5": "pensativo",
+    "6": "apresenta",
+    "7": "triste",
+    "8": "confiante",
+    "9": "segredo",
+    "10": "sorriso",
+    "11": "irritado"
+  },
+  "escala": 1.8649,
+  "linhaDeCorte": 0.8885
+}
