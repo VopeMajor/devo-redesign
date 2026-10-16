@@ -2025,7 +2025,7 @@ if (want('salao')) {
   await estado(null)
   await sql("UPDATE devo_config SET value = $1 WHERE key = 'salao.calendario'", [JSON.stringify(cal)]).catch(() => {})
   await db?.end().catch(() => {})
-
+}
 
 // ── Cosméticos: coleção (arte), inventário, pré-visualização, perfil, chat, ranking, admin, Owner oculto ──
 if (want('cosmeticos')) {
