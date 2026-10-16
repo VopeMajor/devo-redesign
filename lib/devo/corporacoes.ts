@@ -1,6 +1,6 @@
 /**
  * Corporações — tipos e regras puras (o cliente pode importar). Servidor: lib/devo/corporacoes-server.ts.
- * Contrato: docs/redesign/FUNDACAO.md §12. Regras do dono: diálogo da Melissa (SISTEMAS-texto-do-dono.txt).
+ * Contrato: docs/redesign/FUNDACAO.md §14. Regras do dono: diálogo da Melissa (SISTEMAS-texto-do-dono.txt).
  */
 
 export type CorpCargo = 'lider' | 'vice' | 'membro'

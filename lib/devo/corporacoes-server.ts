@@ -37,7 +37,7 @@ import { getConfig, hasUnlock, requireUnlock } from './progresso-server'
 import { publicarRecrutamento, uidsNoSalao } from './salao-server'
 
 /**
- * Corporações — servidor. Contrato: docs/redesign/FUNDACAO.md §12. Regras do dono (diálogo da Melissa):
+ * Corporações — servidor. Contrato: docs/redesign/FUNDACAO.md §14. Regras do dono (diálogo da Melissa):
  * - entrar: o Record insere o código de identificação → pedido → líder ou vice aprova (vendo só partes permitidas
  *   do perfil); ou recebe um convite direto de um membro;
  * - fundar: custa Tempo (pago no pedido) e passa pela avaliação administrativa da Companhia (Owner/Anfitrião na

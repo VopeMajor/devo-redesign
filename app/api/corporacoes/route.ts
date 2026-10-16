@@ -28,7 +28,7 @@ import { RecordError } from '@/lib/devo/errors'
 export const dynamic = 'force-dynamic'
 
 /**
- * Corporações (contrato: docs/redesign/FUNDACAO.md §12). Tudo decidido no servidor; o cliente só mostra.
+ * Corporações (contrato: docs/redesign/FUNDACAO.md §14). Tudo decidido no servidor; o cliente só mostra.
  * GET  /api/corporacoes                  → CorpPayload ({ liberado: false, motivo } quando trancado)
  * GET  /api/corporacoes?codigo=CRP-…     → { corporacao } (prévia antes de pedir entrada) · 400/404
  * GET  /api/corporacoes?view=mesa        → CorpMesa (Owner/Anfitrião)
