@@ -3,7 +3,10 @@
  * Não têm relação com os minigames da Sala de Jogos.
  */
 export type DeadlyVoteStatus = 'convocado' | 'em-progresso' | 'concluido' | 'cancelado' | 'falha'
-export type PlayerRole = 'player' | 'dealer' | 'admin'
+import type { Cargo } from './cargos'
+
+/** Cargo do jogador (lib/devo/cargos.ts). O antigo 'admin' virou 'owner'. */
+export type PlayerRole = Cargo
 
 export type DeadlyVote = {
   id: string

@@ -41,7 +41,7 @@ jobs:
         run: pnpm install --no-frozen-lockfile
       - name: Banco de teste
         run: |
-          for f in scripts/dev/00-base.sql scripts/deadly-votes-migration.sql scripts/deadly-votes-group-migration.sql scripts/auth-migration.sql scripts/arcade-migration.sql scripts/arcade-points-migration.sql scripts/arcade-rooms-migration.sql scripts/test-accounts-migration.sql scripts/character-name-migration.sql scripts/dev/90-seed.sql; do
+          for f in scripts/dev/00-base.sql scripts/deadly-votes-migration.sql scripts/deadly-votes-group-migration.sql scripts/auth-migration.sql scripts/arcade-migration.sql scripts/arcade-points-migration.sql scripts/arcade-rooms-migration.sql scripts/test-accounts-migration.sql scripts/character-name-migration.sql scripts/fundacao-migration.sql scripts/dev/90-seed.sql; do
             psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -q -f "$f"
           done
       - name: Tipos
@@ -59,9 +59,21 @@ jobs:
       - name: Capturas
         run: CAPTURE_ONLY="$(cat .capture-only 2>/dev/null || true)" PLAYWRIGHT_FROM=/tmp/pw/package.json node scripts/dev/capture.mjs 2>&1 | tee capture.log
         continue-on-error: true
+      - name: Teste de servidor (Fundação)
+        run: node scripts/dev/fundacao-test.mjs 2>&1 | tee fundacao-test.log
+        continue-on-error: true
+      - name: Banco novo confere com as migrações
+        run: |
+          bash scripts/dev/gerar-banco-novo.sh /tmp/devo-banco-novo.sql
+          if diff -q scripts/devo-banco-novo.sql /tmp/devo-banco-novo.sql; then echo "devo-banco-novo.sql em dia" | tee banco-novo.log; else echo "DESATUALIZADO: rode scripts/dev/gerar-banco-novo.sh" | tee banco-novo.log; fi
+          psql "postgres://postgres:devo@localhost:5432/postgres" -q -c 'CREATE DATABASE devo_novo'
+          psql "postgres://postgres:devo@localhost:5432/devo_novo" -v ON_ERROR_STOP=1 -q -f scripts/devo-banco-novo.sql 2>&1 | tee -a banco-novo.log
+          psql "postgres://postgres:devo@localhost:5432/devo_novo" -v ON_ERROR_STOP=1 -q -f scripts/devo-banco-novo.sql 2>&1 | tee -a banco-novo.log
+          echo "banco novo aplicado duas vezes: ok" | tee -a banco-novo.log
+        continue-on-error: true
       - name: Logs
         if: always()
-        run: mkdir -p shots && cp -f build.log typecheck.log server.log capture.log shots/ 2>/dev/null || true
+        run: mkdir -p shots && cp -f build.log typecheck.log server.log capture.log fundacao-test.log banco-novo.log shots/ 2>/dev/null || true
       - name: Publicar capturas na branch capturas/<branch>
         if: always()
         run: |

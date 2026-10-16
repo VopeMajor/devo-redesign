@@ -25,7 +25,7 @@ export function useChatLines(channel: string, refreshInterval = 5000) {
 export function ChatMessage({ m, compact }: { m: ChatLine; compact?: boolean }) {
   const openProfile = useOpenProfile()
   const color = m.bot ? '#8a90a0' : nameColor(m.author)
-  const staff = m.role === 'dealer' || m.role === 'admin'
+  const staff = m.role === 'dealer' || m.role === 'anfitriao'
   const time = new Date(m.at).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })
   const name = (
     <span className="font-semibold" style={{ color }}>
@@ -36,8 +36,8 @@ export function ChatMessage({ m, compact }: { m: ChatLine; compact?: boolean }) 
     <p className={cn('break-words font-body leading-snug', compact ? 'text-[14px]' : 'text-[15px]')}>
       {!compact && <time className="mr-2 font-mono text-[11px] tabular-nums text-dv-text-3">{time}</time>}
       {staff && (
-        <span title="Dealer" className="mr-1.5 inline-grid size-[18px] place-items-center bg-dv-gold align-[-3px] font-mono text-[10px] font-bold text-dv-ink">
-          D
+        <span title={m.role === 'anfitriao' ? 'Anfitrião' : 'Dealer'} className="mr-1.5 inline-grid size-[18px] place-items-center bg-dv-gold align-[-3px] font-mono text-[10px] font-bold text-dv-ink">
+          {m.role === 'anfitriao' ? 'A' : 'D'}
         </span>
       )}
       {m.bot && <span className="mr-1.5 inline-block border border-dv-line-strong px-1 align-[1px] font-mono text-[10px] uppercase text-dv-text-3">bot</span>}

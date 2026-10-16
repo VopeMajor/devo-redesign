@@ -41,7 +41,7 @@ import { LifecycleTrack, RecButton, RecLink, STATUS_TEXT, StatusChip, StatusMark
 import { useDeadlyVotes } from '../system/use-deadly-votes'
 
 const CRITICAL_MS = 6 * 3600 * 1000
-const ROLE_LABEL = { player: 'Jogador', dealer: 'Dealer', admin: 'Admin' } as const
+const ROLE_LABEL = { player: 'Jogador', dealer: 'Dealer', anfitriao: 'Anfitrião', owner: 'Owner' } as const
 
 export function useRecordData(avatarVersion: number | null = null): RecordFileData {
   const { state } = useDevo()
@@ -90,7 +90,7 @@ export function RecordApp() {
   const signals = useManagerSignals(votes.entries, { onOpenVotes: openVotes, onOpenGames: state.arcadeUnlocked ? openGames : undefined })
   const selectedVote = votes.entries.find((e) => e.id === selected)?.vote
   const role = votes.record?.role
-  const isStaff = role === 'dealer' || role === 'admin'
+  const isStaff = role === 'dealer' || role === 'anfitriao' || role === 'owner'
 
   const items: TabItem<Tab>[] = [
     { value: 'record', label: 'Record File' },

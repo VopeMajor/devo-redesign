@@ -11,7 +11,7 @@ import { cn } from '@/lib/utils'
 import { RecButton, RecInput, RecLabel, RecTag } from './record-ui'
 
 const KEY = '/api/invites'
-const ROLE_LABEL: Record<PlayerRole, string> = { player: 'Jogador', dealer: 'Dealer', admin: 'Admin' }
+const ROLE_LABEL: Record<PlayerRole, string> = { player: 'Jogador', dealer: 'Dealer', anfitriao: 'Anfitrião', owner: 'Owner' }
 
 async function fetcher(url: string): Promise<InvitesPayload> {
   const res = await fetch(url, { cache: 'no-store' })
@@ -127,7 +127,7 @@ export function InvitePanel() {
             <RecLabel hint="opcional">Nota</RecLabel>
             <RecInput value={note} onChange={(e) => setNote(e.target.value)} maxLength={60} placeholder="Para quem é este convite?" />
           </label>
-          {data?.role === 'admin' && (
+          {data?.role === 'owner' && (
             <label className="flex min-h-11 cursor-pointer items-center gap-3">
               <input
                 type="checkbox"
@@ -176,7 +176,7 @@ export function InvitePanel() {
         ) : (
           <ul className="flex flex-col">
             {invites.map((i) => (
-              <InviteRow key={i.code} invite={i} showCreator={data?.role === 'admin'} onRevoke={revoke} />
+              <InviteRow key={i.code} invite={i} showCreator={data?.role === 'owner'} onRevoke={revoke} />
             ))}
           </ul>
         )}
