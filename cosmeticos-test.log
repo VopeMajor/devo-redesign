@@ -1,0 +1,19 @@
+contas: owner=owner anf=anfitriao j1=player j2=player
+ok   catálogo inicial: 8 molduras ×2, ≥10 emblemas, ≥5 balões, itens do Poço marcados
+ok   jogador não equipa o que não tem; nem item de outra categoria; nem o Selo automático
+ok   Owner concede → jogador equipa → aparece no visual público; Owner revoga → some
+ok   item expirado (temporário) deixa de valer para equipar
+ok   Owner equipa qualquer cosmético, sem possuir (inclusive arcano e inativo)
+FAIL payload público sem cargo de Owner (visuais, chat, miniperfil); Anfitrião é público
+     Error: owner fala no chat: 403 {"ok":false,"error":"O chat da Sala de Jogos fica dentro das partidas."}
+    at assert (file:///home/runner/work/devo-redesign/devo-redesign/scripts/dev/cosmeticos-test.mjs:25:20)
+    at ok200 (file:///home/runner/work/devo-redesign/devo-redesign/scripts/dev/cosmeticos-test.mjs:83:28)
+    at file:///home/runner/work/devo-redesign/devo-redesign/scripts/dev/cosmeticos-test.mjs:170:3
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async test (file:///home/runner/work/devo-redesign/devo-redesign/scripts/dev/cosmeticos-test.mjs:16:5)
+    at async file:///home/runner/work/devo-redesign/devo-redesign/scripts/dev/cosmeticos-test.mjs:161:1
+ok   catálogo: só o Owner cria/edita; Anfitrião e jogador recebem 403
+ok   upload de asset: SVG com script recusado; SVG limpo servido com CSP fechada
+ok   semanais: Anfitrião propõe; só aprova com autorização; editar volta a pendente; distribui uma vez
+
+Cosméticos: 8 ok, 1 falha(s): payload público sem cargo de Owner (visuais, chat, miniperfil); Anfitrião é público
