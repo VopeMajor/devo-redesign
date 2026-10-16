@@ -1806,6 +1806,7 @@ if (want('poco')) {
   // Uma revelação por categoria (fragmento, essência e os três tipos de cosmético de teste).
   await step('poco-categorias', async () => {
     await sql("SELECT devo_item_grant(id, 'dracma_comum', 6, 'captura', NULL, NULL, 'captura-poco-moedas:' || id) FROM players WHERE lower(name) = 'brasa'")
+    await abrirPoco(page, 'Poço dos Milagres')
     const giroUI = async (nome) => {
       await tryClick(btn(page, 'Lançar Moeda', true))
       await wait(800)
