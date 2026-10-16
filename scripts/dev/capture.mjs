@@ -500,7 +500,7 @@ if (want('sistema') || want('apps') || want('jogos')) {
         await page.getByRole('heading', { name: /Mesa do Dealer/i }).first().scrollIntoViewIfNeeded().catch(() => {})
         await wait(1200)
         await shot(page, '20-record-dealer')
-        if (await tryClick(btn(page, /Registrar resultados/))) {
+        if (await tryClick(btn(page, /^(Inscrições|Registrar resultados) ·/))) {
           await wait(900)
           await shot(page, '20-record-dealer-resultados')
         }

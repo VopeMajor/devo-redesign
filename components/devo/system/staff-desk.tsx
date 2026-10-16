@@ -44,8 +44,8 @@ const ROLE_LINE: Record<Exclude<Cargo, 'player'>, string> = {
 export function StaffDesk({ role }: { role: Exclude<Cargo, 'player'> }) {
   const sections = SECTIONS[role]
   const [section, setSection] = useState<Section>('casos')
-  const { data: board } = useStaffBoard()
-  const { data: rewards } = useRewards()
+  const { data: board, error: boardError } = useStaffBoard()
+  const { data: rewards, error: rewardsError } = useRewards()
   const votes = board?.votes ?? []
   const abertos = votes.filter((v) => v.status === 'convocado' || v.status === 'em-progresso').length
   const analise = votes.reduce((n, v) => n + voteTodo(v).analise, 0)
@@ -60,11 +60,13 @@ export function StaffDesk({ role }: { role: Exclude<Cargo, 'player'> }) {
     count: s === 'casos' ? analise + decidir : s === 'recompensas' ? (approver ? minhas : 0) : undefined,
   }))
 
-  const tiles: { label: string; value: number; go: Section; hot?: boolean }[] = [
-    { label: 'Casos abertos', value: abertos, go: 'casos' },
-    { label: 'Inscrições em análise', value: analise, go: 'casos', hot: analise > 0 },
-    { label: 'Resultados a aplicar', value: decidir, go: 'casos', hot: decidir > 0 },
-    approver ? { label: 'Recompensas a aprovar', value: minhas, go: 'recompensas', hot: minhas > 0 } : { label: 'Propostas pendentes', value: propostas, go: 'recompensas' },
+  const tiles: { label: string; value: number; go: Section; hot?: boolean; off?: boolean }[] = [
+    { label: 'Casos abertos', value: abertos, go: 'casos', off: !board },
+    { label: 'Inscrições em análise', value: analise, go: 'casos', hot: analise > 0, off: !board },
+    { label: 'Resultados a aplicar', value: decidir, go: 'casos', hot: decidir > 0, off: !board },
+    approver
+      ? { label: 'Recompensas a aprovar', value: minhas, go: 'recompensas', hot: minhas > 0, off: !rewards }
+      : { label: 'Propostas pendentes', value: propostas, go: 'recompensas', off: !rewards },
   ]
 
   return (
@@ -88,18 +90,23 @@ export function StaffDesk({ role }: { role: Exclude<Cargo, 'player'> }) {
                 <button
                   type="button"
                   onClick={() => setSection(t.go)}
-                  aria-label={`${t.label}: ${t.value}`}
+                  aria-label={`${t.label}: ${t.off ? 'indisponível' : t.value}`}
                   className="dv-focus flex min-h-[72px] w-full flex-col items-start justify-center gap-1 px-4 py-2.5 text-left hover:bg-white/[0.04]"
                 >
                   <span className="order-2 font-mono text-[10px] uppercase leading-tight tracking-[0.12em] text-in-fg-2">{t.label}</span>
                   <span className={cn('order-1 flex items-center gap-2 font-impact text-[30px] font-semibold leading-none dv-tabular', t.value ? 'text-in-fg' : 'text-in-fg-3')}>
                     {t.hot && <span aria-hidden="true" className="size-2 rotate-45 bg-dv-amethyst shadow-[0_0_10px_rgba(138,124,200,0.8)]" />}
-                    {t.value}
+                    {t.off ? '—' : t.value}
                   </span>
                 </button>
               </div>
             ))}
           </div>
+          {(boardError || rewardsError) && (
+            <p role="status" className="relative border-t border-in-line px-4 py-2.5 font-mono text-[10.5px] uppercase tracking-[0.12em] text-in-fg-2">
+              Parte da mesa não respondeu · tente de novo em instantes
+            </p>
+          )}
         </section>
       </Reveal>
 

@@ -385,6 +385,11 @@ function StaffVoteCard({ vote: v, role, onAction }: { vote: StaffVote; role?: Ca
                 {todo.analise} em análise
               </RecTag>
             )}
+            {todo.decidir && (
+              <RecTag tone="accent" dot>
+                Decidir resultado
+              </RecTag>
+            )}
             {v.isTutorial && <RecTag tone="solid">Tutorial</RecTag>}
             {v.creator && role !== 'dealer' && <RecTag tone="muted">por {v.creator}</RecTag>}
           </div>
@@ -405,7 +410,7 @@ function StaffVoteCard({ vote: v, role, onAction }: { vote: StaffVote; role?: Ca
           />
         </div>
       ) : (
-        <PrivatePrizes vote={v} onEdit={v.appliedAt === null ? () => setEditing(true) : undefined} />
+        <PrivatePrizes vote={v} onEdit={v.appliedAt === null && v.status !== 'cancelado' && v.status !== 'falha' ? () => setEditing(true) : undefined} />
       )}
 
       <StatusControl vote={v} pending={pending} onPick={(st) => run(`s-${st}`, { action: 'status', voteId: v.id, status: st })} />
@@ -420,8 +425,7 @@ function StaffVoteCard({ vote: v, role, onAction }: { vote: StaffVote; role?: Ca
           className="dv-focus flex min-h-11 w-full items-center justify-between gap-2 px-3.5 font-mono text-[11px] uppercase tracking-[0.16em] text-in-fg hover:bg-in-fg/[0.04]"
         >
           <span>
-            Registrar resultados · {v.entries.length}
-            {todo.decidir && <span className="ml-2 text-in-gold">· decidir</span>}
+            {v.status === 'concluido' ? 'Registrar resultados' : 'Inscrições'} · {v.entries.length}
           </span>
           <span aria-hidden="true" className={cn('text-[10px] transition-transform duration-300', open && 'rotate-180')}>
             ▼
@@ -556,7 +560,6 @@ function ResultsPanel({ vote: v, role, pending, run }: { vote: StaffVote; role?:
   const decididos = aceitos.filter((e) => e.decision).length
   const applied = v.appliedAt !== null
   const premiados = aceitos.filter((e) => e.decision === 'premio').length
-  const [summary, setSummary] = useState<Record<string, unknown> | null>(null)
   const approver = role === 'owner' || role === 'anfitriao'
 
   if (!aceitos.length) return <p className="py-2 font-body text-[14px] text-in-fg-3">Nenhum participante aceito neste caso.</p>
@@ -629,21 +632,13 @@ function ResultsPanel({ vote: v, role, pending, run }: { vote: StaffVote; role?:
             loading={pending === 'apply'}
             onConfirm={async () => {
               const res = await run('apply', { action: 'apply', voteId: v.id })
-              if (res) {
-                playSfx('reveal')
-                setSummary(res)
-              }
+              if (res) playSfx('reveal')
             }}
           >
             Aplicar aos perfis
           </ConfirmButton>
           {decididos < aceitos.length && <p className="font-mono text-[10.5px] uppercase tracking-[0.12em] text-in-fg-3">Faltam {aceitos.length - decididos} decisões</p>}
         </div>
-      )}
-      {summary && (
-        <p aria-live="polite" className="font-mono text-[11px] uppercase tracking-[0.12em] text-in-fg-2">
-          Aplicado · {String(summary.propostas ?? 0)} recompensa(s) · {String(summary.entregues ?? 0)} entregue(s)
-        </p>
       )}
     </div>
   )
@@ -777,7 +772,7 @@ function StatusControl({ vote: v, pending, onPick }: { vote: StaffVote; pending:
           )
         })}
       </div>
-      <div className="mt-2 flex items-center gap-2 border-t border-dashed border-in-line pt-2.5">
+      <div className={cn('mt-2 flex items-center gap-2 border-t border-dashed border-in-line pt-2.5', sealed && 'hidden')}>
         <span className="mr-auto font-mono text-[10px] uppercase tracking-[0.16em] text-in-fg-3">Interromper</span>
         {STATUS_BREAK.map((st) => {
           const on = v.status === st

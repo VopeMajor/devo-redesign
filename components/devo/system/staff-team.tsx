@@ -510,7 +510,7 @@ export function ConfigPanel() {
         ) : error ? (
           <ErrorLine>{(error as Error).message}</ErrorLine>
         ) : (
-          (data?.config ?? []).map((c) => (c.key === 'poco.probabilidades' ? <PocoOdds key={c.key} c={c} onSaved={() => mutate()} /> : <JsonConfig key={c.key} c={c} onSaved={() => mutate()} />))
+          [...(data?.config ?? [])].sort((a, b) => Number(b.key === 'poco.probabilidades') - Number(a.key === 'poco.probabilidades')).map((c) => (c.key === 'poco.probabilidades' ? <PocoOdds key={c.key} c={c} onSaved={() => mutate()} /> : <JsonConfig key={c.key} c={c} onSaved={() => mutate()} />))
         )}
       </div>
     </RecordPanel>
