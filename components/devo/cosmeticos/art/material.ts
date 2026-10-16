@@ -350,7 +350,7 @@ export function cartaTaro(x: number, y: number, w: number, h: number, rot: numbe
 export function contas(a: Pt, b: Pt, queda: number, n: number, r: number, grad: string, borda: string) {
   let s = ''
   for (let i = 0; i <= n; i++) {
-    const t = i / n
+    const t = n > 0 ? i / n : 0
     const x = a[0] + (b[0] - a[0]) * t
     const y = a[1] + (b[1] - a[1]) * t + Math.sin(Math.PI * t) * queda
     s += `<circle cx="${n2(x + r * 0.25)}" cy="${n2(y + r * 0.35)}" r="${n2(r)}" fill="#000" opacity=".4"/><circle cx="${n2(x)}" cy="${n2(y)}" r="${n2(r)}" fill="url(#${grad})" stroke="${borda}" stroke-width="${n2(r * 0.16)}"/><circle cx="${n2(x - r * 0.3)}" cy="${n2(y - r * 0.32)}" r="${n2(r * 0.28)}" fill="#fff" opacity=".85"/>`
