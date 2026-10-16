@@ -99,7 +99,8 @@ await test('catálogo inicial: 8 molduras ×2, ≥10 emblemas, ≥5 balões, ite
   const n = (cat) => c.filter((x) => x.categoria === cat).length
   assert(n('moldura_avatar') >= 8 && n('moldura_mini') >= 8, `molduras: ${n('moldura_avatar')}/${n('moldura_mini')}`)
   assert(n('emblema') >= 10 && n('balao') >= 5, `emblemas ${n('emblema')} balões ${n('balao')}`)
-  assert(c.every((x) => x.asset), 'todo item tem asset')
+  // Itens de teste do seed do Poço (cosmetico:poco_teste_*) não têm arte própria; o catálogo real precisa ter.
+  assert(c.filter((x) => !String(x.key ?? x.id ?? '').includes('poco_teste')).every((x) => x.asset), 'todo item tem asset')
   const [{ n: poco }] = await q("SELECT count(*)::int AS n FROM item_defs WHERE kind = 'cosmetico' AND active AND meta->>'poco' = 'true'")
   assert(poco >= 10, `itens do Poço: ${poco}`)
 })

@@ -22,6 +22,7 @@ import { RecordError } from './errors'
 import { run, txAs } from './fundacao-db'
 import { requireActor, requireCan, requireVotoEditavel } from './permissoes-server'
 import { proposeRewardIn } from './recompensas-server'
+import { potencialDoDeadlyVote } from './virtudes-server'
 
 export { RecordError }
 
@@ -563,6 +564,8 @@ export async function applyVoteResults(playerId: string, voteId: string): Promis
         if (st?.status === 'entregue') entregues++
       }
     }
+    // Virtudes: participar (e sobreviver) rende Pontos de Potencial. Idempotente e nunca derruba a aplicação.
+    await potencialDoDeadlyVote(c, voteId, entries)
     await run(c, 'UPDATE deadly_votes SET results_applied_at = now(), results_applied_by = $2, updated_at = now() WHERE id = $1', [voteId, ator.id])
     await run(c, "INSERT INTO admin_log (actor_id, action, ref, data) VALUES ($1, 'deadly_vote.resultado', $2, $3)", [
       ator.id,

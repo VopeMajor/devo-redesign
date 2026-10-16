@@ -338,7 +338,7 @@ function PlayerDetail({ id, role, row }: { id: string; role: Cargo; row: Jogador
       <dl className="grid grid-cols-2 gap-x-5 bg-[color:var(--in-porcelain)] px-3 py-1 shadow-[inset_0_0_0_1px_var(--in-line)]">
         <DataRow label="Cartas" value={data.cartas} />
         <DataRow label="Fragmentos" value={data.fragmentos} />
-        <DataRow label="Arcano" value={data.arcano ?? '—'} hint={data.arcano ? undefined : 'sem registro'} />
+        <DataRow label="Arcano" value={data.arcano ?? '—'} hint={data.arcano ? `Estágio ${data.estagio}` : 'sem registro'} />
         <DataRow label="P.P." value={data.pontosPotencial ?? '—'} hint={data.pontosPotencial === null ? 'sem registro' : undefined} />
       </dl>
       <div className="flex flex-col gap-1.5">

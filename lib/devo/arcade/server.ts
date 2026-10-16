@@ -1,6 +1,7 @@
 import type { PoolClient } from 'pg'
 import { pool } from '@/lib/db'
 import { publicCargo } from '../cargos'
+import { potencialDaPartida } from '../virtudes-server'
 import { REACTION_IDS } from './reactions'
 import {
   type EventStatus,
@@ -747,12 +748,14 @@ export async function recordMatchResult(
   } else {
     awarded = rankingPoints('casual', score, r.result)
   }
-  await q(
+  const [match] = await q<{ id: string }>(
     `INSERT INTO arcade_matches (player_id, game_id, mode, duel_id, opponent_name, opponent_rating, seed, started_at, finished_at, result, score, stats, points)
-     VALUES ($1,$2,$3,$4,$5,$6,$7,$8,now(),$9,$10,$11,$12)`,
+     VALUES ($1,$2,$3,$4,$5,$6,$7,$8,now(),$9,$10,$11,$12) RETURNING id`,
     [r.playerId, r.gameId, r.mode, r.duelId, r.opponentName, r.opponentRating, r.seed, r.startedAt, r.result, score, r.stats, awarded],
     c,
   )
+  // Virtudes: a partida rende Pontos de Potencial (participação; mais na vitória). Nunca derruba o fechamento.
+  if (match) await potencialDaPartida(c, { playerId: r.playerId, gameId: r.gameId, result: r.result, matchRef: String(match.id) })
   await q(
     `INSERT INTO arcade_week_scores (week_start, player_id, score, wins, games) VALUES ($1,$2,$3,$4,1)
      ON CONFLICT (week_start, player_id) DO UPDATE SET score = arcade_week_scores.score + $3, wins = arcade_week_scores.wins + $4, games = arcade_week_scores.games + 1`,
@@ -850,6 +853,17 @@ const CHAT_BOT_LINES = [
 
 export async function getChat(channel: string) {
   const now = Date.now()
+  // A mesa (canal "lobby") não tem chat próprio: é o registro somente-leitura das falas recentes das partidas.
+  if (channel === 'lobby') {
+    const rows = await q<{ id: string; author: string; body: string; created_at: Date; player_id: string | null; role: string | null }>(
+      `SELECT c.id, c.author, c.body, c.created_at, c.player_id, p.role FROM arcade_chat c LEFT JOIN players p ON p.id = c.player_id
+       WHERE c.channel LIKE 'match-%' AND c.body NOT LIKE '::%' AND c.created_at > now() - interval '${LIVE_CHAT_MINUTES} minutes'
+       ORDER BY c.created_at DESC LIMIT 40`,
+    )
+    return rows
+      .map((r) => ({ id: String(r.id), author: r.author, body: r.body, at: r.created_at.getTime(), bot: false, pid: r.player_id ?? undefined, role: r.role ? publicCargo(r.role) : undefined }))
+      .sort((a, b) => a.at - b.at)
+  }
   const live = channel.startsWith('match-')
   const base = 'SELECT c.id, c.author, c.body, c.created_at, c.player_id, p.role FROM arcade_chat c LEFT JOIN players p ON p.id = c.player_id WHERE c.channel = $1'
   const rows = await q<{ id: string; author: string; body: string; created_at: Date; player_id: string | null; role: string | null }>(
@@ -887,6 +901,8 @@ const REACTION_RE = new RegExp(`^::(${REACTION_IDS.join('|')})$`)
 export async function postChat(player: Player, channel: string, rawBody: string) {
   const body = String(rawBody ?? '').replace(/\s+/g, ' ').trim().slice(0, 200)
   if (!body) throw new ArcadeError('Mensagem vazia.')
+  // Chat só existe dentro das partidas (DIRECAO-3 §8): a mesa é registro, não aceita mensagem.
+  if (channel === 'lobby') throw new ArcadeError('O chat da Sala de Jogos fica dentro das partidas.', 403)
   const isReaction = body.startsWith('::')
   if (isReaction && (!REACTION_RE.test(body) || !channel.startsWith('match-'))) throw new ArcadeError('Reação inválida.')
   const [recent] = await q(

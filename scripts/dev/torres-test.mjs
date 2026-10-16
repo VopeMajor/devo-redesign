@@ -140,9 +140,10 @@ await test('oferta de fã do Galo entrega 1 essência, uma vez só', async () =>
 })
 
 /* ------------------------------------------------------------- 5. Subir */
-await test('sobe o 1º andar da principal pagando 1 essência', async () => {
+await test('sobe o 1º andar da Torre do Imperador (secundária do Galo) com a essência do Galo e ganha a chave', async () => {
   const r = await jog.post('/api/torres', { action: 'subir', torre: 'imperador', andar: 1 })
-  assert(r.status === 200 && r.json?.andar?.estado === 'concluido', `subir: ${r.text}`)
+  assert(r.status === 200 && r.json?.andar?.estado === 'concluido' && r.json?.chavesRecebidas === 1, `subir: ${r.text}`)
+  assert((await saldo(jog.id, 'chave:imperador')) === 1, '1 chave do Imperador')
   assert((await saldo(jog.id, 'essencia:galo')) === 0, 'essência gasta')
 })
 await test('não repete andar concluído nem pula andar', async () => {
@@ -177,17 +178,22 @@ await test('sem essência suficiente não sobe e nada muda', async () => {
   assert((await saldo(jog.id, 'chave:observatorio')) === 3, 'chaves iguais')
 })
 await test('andar da principal exige chaves: sem a chave não sobe e não cobra essência', async () => {
-  await grant(jog.id, 'essencia:galo', 2, 'p2')
-  const ok2 = await jog.post('/api/torres', { action: 'subir', torre: 'imperador', andar: 2 })
-  assert(ok2.status === 200, `andar 2 com 1 chave do Observatório: ${ok2.text}`)
-  assert((await saldo(jog.id, 'chave:observatorio')) === 3, 'chaves não são gastas por padrão')
-  await grant(jog.id, 'essencia:galo', 4, 'p3')
-  const r = await jog.post('/api/torres', { action: 'subir', torre: 'imperador', andar: 3 })
+  await grant(jog.id, 'essencia:campanha', 1, 'p1')
+  const ok1 = await jog.post('/api/torres', { action: 'subir', torre: 'campanha', andar: 1 })
+  assert(ok1.status === 200 && ok1.json?.chavesRecebidas === 0, `principal andar 1 (sem chave de recompensa): ${ok1.text}`)
+  await grant(jog.id, 'essencia:campanha', 2, 'p2')
+  const ok2 = await jog.post('/api/torres', { action: 'subir', torre: 'campanha', andar: 2 })
+  assert(ok2.status === 200, `andar 2 com 1 chave do Imperador: ${ok2.text}`)
+  assert((await saldo(jog.id, 'chave:imperador')) === 1, 'chaves não são gastas por padrão')
+  await grant(jog.id, 'essencia:campanha', 4, 'p3')
+  const r = await jog.post('/api/torres', { action: 'subir', torre: 'campanha', andar: 3 })
   assert(r.status === 409 && /chaves/.test(r.json?.error), `sem chave do Picadeiro: ${r.text}`)
-  assert((await saldo(jog.id, 'essencia:galo')) === 4, 'essência não pode ser cobrada')
+  assert((await saldo(jog.id, 'essencia:campanha')) === 4, 'essência não pode ser cobrada')
   const e = await jog.get('/api/torres')
-  const a3 = e.json.torres.find((t) => t.id === 'imperador').andares[2]
+  const a3 = e.json.torres.find((t) => t.id === 'campanha').andares[2]
   assert(a3.estado === 'atual' && !a3.podeSubir && a3.faltaChaves === 1, `andar 3 trancado por chave: ${JSON.stringify(a3).slice(0, 200)}`)
+  const pri = e.json.torres.find((t) => t.tipo === 'principal')
+  assert(pri.id === 'campanha' && pri.npc.id !== 'galo', 'a principal não é do Galo')
 })
 await test('dois pedidos simultâneos do mesmo andar cobram uma vez só', async () => {
   await grant(jog.id, 'essencia:javali', 10, 'corrida')

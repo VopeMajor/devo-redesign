@@ -324,6 +324,26 @@ async function enterOS(page) {
   await wait(3600)
 }
 
+/**
+ * Home do celular em telas deslizáveis (Direção 3 §9): se o alvo está noutra tela, desliza até ela pelos
+ * botões "Próxima tela do início"/"Tela anterior do início" (o mesmo efeito do arrasto) antes do clique.
+ * Fora da home (ou no desktop) não faz nada.
+ */
+async function revealOnHome(page, target) {
+  for (let i = 0; i < 4; i++) {
+    const side = await target
+      .evaluate((el) => {
+        const r = el.getBoundingClientRect()
+        return r.right <= 0 ? 'left' : r.left >= window.innerWidth ? 'right' : 'in'
+      })
+      .catch(() => 'in')
+    if (side === 'in') return
+    const nav = page.getByRole('button', { name: side === 'right' ? 'Próxima tela do início' : 'Tela anterior do início', exact: true }).first()
+    if (!(await tryClick(nav, 3000))) return
+    await wait(700)
+  }
+}
+
 async function openApp(page, label) {
   await enterOS(page)
   const exact = page.getByRole('button', { name: label, exact: true })
@@ -335,6 +355,7 @@ async function openApp(page, label) {
   const opened = () => page.getByRole('region', { name: label, exact: true }).first().isVisible().catch(() => false)
   for (let attempt = 1; ; attempt++) {
     await exact.first().waitFor({ state: 'visible', timeout: 15000 }).catch(() => {})
+    await revealOnHome(page, exact.first())
     if (await tryClick(exact.first(), 8000)) break
     await wait(2000)
     if (await opened()) break
@@ -358,6 +379,25 @@ if (want('sistema') || want('apps') || want('jogos')) {
       await page.getByLabel('Abrir central de avisos').first().click({ timeout: 3000 })
       await wait(900)
       await shot(page, '10-home-avisos')
+      // Tela 2 da home (Sistemas): fecha a central e desliza pelo botão de próxima tela.
+      await page.getByLabel('Fechar central de avisos').first().click({ timeout: 3000 }).catch(() => {})
+      await wait(500)
+      await page.getByRole('button', { name: 'Próxima tela do início', exact: true }).first().click({ timeout: 5000 })
+      await wait(900)
+      await shot(page, '10-home-tela-2', 'home deslizada para a tela dos Sistemas')
+      // Arrasto real (toque): volta para a tela 1 rolando o carrossel como o dedo faria.
+      await page
+        .getByRole('group', { name: 'Telas do início', exact: true })
+        .first()
+        .evaluate((el) => {
+          el.style.scrollSnapType = 'none' // segura o quadro no meio do arrasto (sem o snap)
+          el.scrollBy({ left: -el.clientWidth / 2.2, behavior: 'instant' })
+        })
+      await wait(120)
+      await shot(page, '10-home-arrasto', 'meio do arrasto entre as telas')
+      await page.getByRole('group', { name: 'Telas do início', exact: true }).first().evaluate((el) => (el.style.scrollSnapType = '')).catch(() => {})
+      await page.getByRole('button', { name: 'Tela anterior do início', exact: true }).first().click({ timeout: 5000 }).catch(() => {})
+      await wait(900)
     })
     // Transição de abrir/voltar (quadro no meio da animação).
     await step('home-transicao', async () => {
@@ -1152,8 +1192,61 @@ if (want('partidas')) {
       await wait(10000)
       await shot(A.page, `40-partida-${slug}-a2`)
       await shot(B.page, `40-partida-${slug}-b2`)
+      // Memory Rush online: A procura um par de verdade (carta 1 × cada outra) e as duas telas
+      // mostram o par levado — prova que as cartas viram e que o par sincroniza com o oponente.
+      if (slug === 'memory-rush') {
+        const cards = A.page.getByRole('button', { name: /^Carta (virada|revelada)$/ })
+        const n = await cards.count()
+        for (let k = 1; k < n; k++) {
+          if (!(await tryClick(cards.nth(0), 1500))) break
+          await wait(120)
+          if (k === 1) await shot(A.page, `40-partida-${slug}-a3-virada`)
+          if (!(await tryClick(cards.nth(k), 1500))) break
+          await wait(220)
+          if (await cards.nth(0).isDisabled().catch(() => false)) break
+          await wait(650)
+        }
+        await shot(A.page, `40-partida-${slug}-a3`)
+        await wait(1400)
+        await shot(B.page, `40-partida-${slug}-b3`)
+      }
     })
   }
+  // Living Chess: demonstração guiada do Javali (sem bot): entrada da câmera, lances explicados, mate e fim.
+  await step('partida-xadrez-demo', async () => {
+    const { page } = A
+    await tryClick(page.getByRole('button', { name: /desistir e sair/i }).first(), 4000)
+    await wait(1500)
+    await tryClick(page.getByRole('button', { name: /voltar à mesa/i }).first(), 4000)
+    await page.goto('about:blank').catch(() => {})
+    await openApp(page, 'Sala de Jogos')
+    const card = page.locator('[aria-label="Jogos da semana"] > *').filter({ hasText: /Living Chess/i }).first()
+    await card.getByRole('button', { name: /tutorial/i }).first().click({ timeout: 12000 })
+    await wait(1800)
+    await shot(page, '41-xadrez-entrada')
+    await wait(2600)
+    await shot(page, '41-xadrez-lance')
+    await wait(900)
+    await shot(page, '41-xadrez-lance-b')
+    await wait(6000)
+    await shot(page, '41-xadrez-meio')
+    await tryClick(page.getByRole('button', { name: 'Histórico de lances' }).first(), 3000)
+    await wait(700)
+    await shot(page, '41-xadrez-historico')
+    await tryClick(page.getByRole('button', { name: 'Histórico de lances' }).first(), 3000)
+    await tryClick(page.getByRole('button', { name: 'Configurações' }).first(), 3000)
+    await wait(700)
+    await shot(page, '41-xadrez-config')
+    await tryClick(page.getByRole('button', { name: 'Configurações' }).first(), 3000)
+    await page.getByRole('heading', { name: /demonstração concluída/i }).waitFor({ timeout: 30000 }).catch(() => {})
+    await wait(800)
+    await shot(page, '41-xadrez-fim')
+    await tryClick(page.getByRole('button', { name: /voltar à mesa/i }).first(), 3000)
+    await wait(2500)
+    await page.evaluate(() => document.querySelector('[aria-label="Registro das partidas"]')?.scrollIntoView({ block: 'center' }))
+    await wait(1200)
+    await shot(page, '42-mesa-registro')
+  })
   await A.ctx.close()
   await B.ctx.close()
 }
@@ -1635,13 +1728,14 @@ if (want('torres')) {
     await wait(1500)
     await shot(page, 't20-mapa')
   })
-  await step('torres-principal', async () => {
+  const PRINCIPAL = '[PROVISÓRIO] Torre da Ruptura'
+  await step('torres-imperador', async () => {
     const page = B.page
     await page.getByRole('button', { name: 'Torre do Imperador', exact: true }).click({ timeout: 10000 })
     await wait(250)
     await shot(page, 't21a-transicao')
     await wait(1400)
-    await shot(page, 't21-torre-principal')
+    await shot(page, 't21-torre-imperador', 'secundária do Galo')
     await page.getByRole('button', { name: /^Andar I:/ }).first().click({ timeout: 8000 })
     await wait(900)
     await shot(page, 't22-andar-ficha')
@@ -1649,13 +1743,13 @@ if (want('torres')) {
     await wait(1300)
     await shot(page, 't23a-revelacao', 'cadeado abrindo')
     await wait(2300)
-    await shot(page, 't23b-revelacao-resultado', 'andar I vencido')
+    await shot(page, 't23b-revelacao-chave', '+1 Chave do Imperador')
     await btn(page, 'Continuar', true).click({ timeout: 8000 })
     await wait(2200)
     await shot(page, 't23-andar-cena')
     await passarCena(page, /Torre do Imperador · Andar I$/)
     await wait(700)
-    await shot(page, 't24-andar-concluido', 'andar I concluído; II trancado por essência e chave')
+    await shot(page, 't24-andar-concluido')
     await btn(page, 'Voltar ao mapa').click({ timeout: 8000 })
     await wait(1200)
     await shot(page, 't25-mapa-progresso')
@@ -1677,6 +1771,7 @@ if (want('torres')) {
     await passarCena(page, 'Anfitrião de quê?', 6)
   })
   await staff({ action: 'item.conceder', playerId: bid, item: 'essencia:coruja', quantidade: 1, motivo: 'captura' })
+  await staff({ action: 'item.conceder', playerId: bid, item: 'essencia:campanha', quantidade: 1, motivo: 'captura' })
   await step('torres-secundaria', async () => {
     const page = B.page
     await enterOS(page)
@@ -1693,21 +1788,31 @@ if (want('torres')) {
     await wait(1500)
     await passarCena(page, /Torre do Observatório · Andar I$/)
     await wait(500)
-    await shot(page, 't41-secundaria-chave', '+1 Chave do Observatório')
+    await shot(page, 't41-secundaria-chave')
     await btn(page, 'Voltar ao mapa').click({ timeout: 8000 })
     await wait(1200)
-    await page.getByRole('button', { name: 'Torre do Imperador', exact: true }).click({ timeout: 10000 })
+    await page.getByRole('button', { name: PRINCIPAL, exact: true }).click({ timeout: 10000 })
     await wait(1600)
+    await shot(page, 't45-torre-principal', 'principal sem NPC definido')
+    await page.getByRole('button', { name: /^Andar I:/ }).first().click({ timeout: 8000 })
+    await wait(800)
+    await btn(page, 'Subir ao andar I').click({ timeout: 8000 })
+    await wait(3600)
+    await shot(page, 't46-revelacao-selo', 'andar I da principal')
+    await btn(page, 'Continuar', true).click({ timeout: 8000 })
+    await wait(1500)
+    await passarCena(page, /Torre da Ruptura · Andar I$/)
+    await wait(500)
     await page.getByRole('button', { name: /^Andar II:/ }).first().click({ timeout: 8000 })
     await wait(900)
-    await shot(page, 't42-andar-trancado-essencia', 'tem a chave; faltam 2 essências')
+    await shot(page, 't42-andar-trancado-essencia', 'tem a chave do Imperador; faltam 2 essências')
   })
-  await staff({ action: 'item.conceder', playerId: bid, item: 'essencia:galo', quantidade: 2, motivo: 'captura' })
+  await staff({ action: 'item.conceder', playerId: bid, item: 'essencia:campanha', quantidade: 2, motivo: 'captura' })
   await step('torres-chave', async () => {
     const page = B.page
     await enterOS(page)
     await abrirTorres(page)
-    await page.getByRole('button', { name: 'Torre do Imperador', exact: true }).click({ timeout: 10000 })
+    await page.getByRole('button', { name: PRINCIPAL, exact: true }).click({ timeout: 10000 })
     await wait(1600)
     await page.getByRole('button', { name: /^Andar II:/ }).first().click({ timeout: 8000 })
     await wait(800)
@@ -1715,7 +1820,7 @@ if (want('torres')) {
     await wait(3600)
     await tryClick(btn(page, 'Continuar', true), 6000)
     await wait(1500)
-    await passarCena(page, /Torre do Imperador · Andar II$/)
+    await passarCena(page, /Torre da Ruptura · Andar II$/)
     await wait(500)
     await page.getByRole('button', { name: /^Andar III:/ }).first().click({ timeout: 8000 })
     await wait(900)
@@ -2612,6 +2717,149 @@ if (want('cosmeticos')) {
   })
 
   for (const d of [mat, sen, mor]) await d.ctx.close().catch(() => {})
+}
+
+// ── Virtudes (DIRECAO-3 §2; VIRTUDES.md): trancado, sem Arcano, Arcano da Morte, outro Arcano, Evolução antes/depois,
+// Mesa da equipe e erro. Convites DEVO-VIRT-CAP1..3 (95-seed-virtudes.sql). O Owner (Veterano) libera a flag, define
+// o Arcano, lança P.P. e dispara a Evolução pela API, como faria na Mesa.
+if (want('virtudes')) {
+  const own = await account('Veterano', 'DEVO-TEST-ADM1', VET_CARDS)
+  const meuId = (page) => page.evaluate(async () => (await (await fetch('/api/eu')).json()).id)
+  const chamar = async (path, body, tag) => {
+    const r = await api(own.page, path, body)
+    if (r.status >= 400) manifest.errors.push({ step: `virtudes-${tag ?? body.action}`, error: `${r.status} ${r.text}` })
+  }
+  const virt = (body) => chamar('/api/virtudes', body)
+  const abrirVirtudes = async (page) => {
+    await enterOS(page)
+    await page.getByRole('region', { name: 'Sistemas', exact: true }).scrollIntoViewIfNeeded().catch(() => {})
+    const b = page.getByRole('button', { name: /^Virtudes/ }).first()
+    await b.waitFor({ state: 'visible', timeout: 15000 }).catch(() => {})
+    await tryClick(b, 8000)
+    await wait(2400)
+  }
+  /** Rola a tela das Virtudes até o elemento (cabeçalho ou região) pelo nome. */
+  const ir = async (page, nome) => {
+    await page
+      .getByRole('heading', { name: nome })
+      .first()
+      .evaluate((el) => el.scrollIntoView({ block: 'start' }))
+      .catch(() => {})
+    await wait(600)
+  }
+
+  // 1. Jogador comum, sem o tutorial: emblema trancado e a tela com o motivo
+  const A = await account('Virtuosa', 'DEVO-VIRT-CAP1', VET_CARDS)
+  await step('virtudes-trancado', async () => {
+    await enterOS(A.page)
+    await wait(1000)
+    await A.page.getByRole('region', { name: 'Sistemas', exact: true }).scrollIntoViewIfNeeded().catch(() => {})
+    await wait(400)
+    await shot(A.page, 'v01-home-trancado')
+    await abrirVirtudes(A.page)
+    await shot(A.page, 'v02-trancado', 'jogador sem o tutorial: motivo')
+  })
+  await A.ctx.close()
+
+  // 2. Outro Arcano (e antes disso: liberado sem Arcano registrado = estado vazio)
+  const C = await account('Vigilante', 'DEVO-VIRT-CAP3', VET_CARDS)
+  const cid = await meuId(C.page).catch(() => null)
+  await chamar('/api/staff', { action: 'desbloqueio.definir', playerId: cid, flag: 'virtudes', on: true }, 'flag-c')
+  await step('virtudes-sem-arcano', async () => {
+    await abrirVirtudes(C.page)
+    await shot(C.page, 'v03-sem-arcano', 'liberado, Arcano ainda sem registro (vazio)')
+  })
+  await virt({ action: 'arcano', playerId: cid, arcano: 'imperatriz' })
+  for (const [v, n] of [['escudos', 9], ['copas', 6]]) await virt({ action: 'potencial', playerId: cid, virtude: v, quantidade: n, motivo: 'captura' })
+  await step('virtudes-outro-arcano', async () => {
+    await abrirVirtudes(C.page)
+    await shot(C.page, 'v04-imperatriz-roda', 'Arcano da Imperatriz: Taças excelente, Paus deficiente')
+    await ir(C.page, 'Pouco acumulado')
+    await shot(C.page, 'v05-imperatriz-potencial', 'pouco acumulado')
+    await ir(C.page, 'Mais vagas')
+    await shot(C.page, 'v06-imperatriz-antigas')
+  })
+  await C.ctx.close()
+
+  // 3. Arcano da Morte (como o exemplo do doc): roda, naipes, acúmulo perto do limite → Evolução → depois
+  const B = await account('Morgana', 'DEVO-VIRT-CAP2', VET_CARDS)
+  const bid = await meuId(B.page).catch(() => null)
+  await chamar('/api/staff', { action: 'desbloqueio.definir', playerId: bid, flag: 'virtudes', on: true }, 'flag-b')
+  await virt({ action: 'arcano', playerId: bid, arcano: 'morte' })
+  for (const [v, n] of [['tacas', 34], ['ouros', 28], ['espadas', 18], ['paus', 6], ['escudos', 8]]) await virt({ action: 'potencial', playerId: bid, virtude: v, quantidade: n, motivo: 'captura' })
+  await step('virtudes-morte', async () => {
+    await enterOS(B.page)
+    await B.page.getByRole('region', { name: 'Sistemas', exact: true }).scrollIntoViewIfNeeded().catch(() => {})
+    await wait(500)
+    await shot(B.page, 'v07-home-liberado')
+    await abrirVirtudes(B.page)
+    await shot(B.page, 'v08-morte-roda', 'Arcano da Morte, Estágio I')
+    await ir(B.page, 'Perto do limite')
+    await shot(B.page, 'v09-evolucao-antes', 'P.P. perto do limite, pronto para a metamorfose')
+    await ir(B.page, 'Bases claras')
+    await shot(B.page, 'v10-morte-naipes', 'afinidades em palavras')
+    await ir(B.page, 'Evoluções de Estágio')
+    await shot(B.page, 'v11-historico-vazio')
+  })
+  await virt({ action: 'evoluir', playerId: bid })
+  await virt({ action: 'potencial', playerId: bid, virtude: 'tacas', quantidade: 12, motivo: 'captura' })
+  await step('virtudes-evolucao-depois', async () => {
+    await abrirVirtudes(B.page)
+    await shot(B.page, 'v12-evolucao-depois', 'Estágio II')
+    await ir(B.page, 'Quase nada acumulado')
+    await ir(B.page, 'Pouco acumulado')
+    await shot(B.page, 'v13-depois-potencial', 'acúmulo recomeça')
+    await ir(B.page, 'Evoluções de Estágio')
+    await shot(B.page, 'v14-depois-historico', 'histórico: mais cresceu / menos cresceu')
+    // o Record mostra o Arcano na ficha
+    await openApp(B.page, 'Record')
+    await wait(1500)
+    await shot(B.page, 'v15-record-arcano', 'ficha do Record com o Arcano')
+  })
+  await B.ctx.close()
+
+  // 4. Mesa da equipe (Owner): jogadores com números, detalhes, Evolução, tabela de afinidade e divergências
+  await step('virtudes-mesa', async () => {
+    const page = own.page
+    await openApp(page, 'Record')
+    await tryClick(page.getByRole('tab', { name: /Mesa/i }).first())
+    await wait(2000)
+    await page.locator('nav[aria-label="Seções da mesa"]').first().evaluate((el) => el.scrollIntoView({ block: 'start' })).catch(() => {})
+    await tryClick(desk(page, 'Virtudes'))
+    await wait(2000)
+    await shot(page, 'v16-mesa-jogadores')
+    const busca = page.getByRole('textbox', { name: 'Buscar jogador' }).first()
+    await busca.fill('Morgana').catch(() => {})
+    await wait(1600)
+    await tryClick(page.getByRole('listitem', { name: 'Virtudes de Morgana' }).getByRole('button', { name: 'Detalhes' }).first())
+    await wait(700)
+    await page.getByRole('listitem', { name: 'Virtudes de Morgana' }).first().evaluate((el) => el.scrollIntoView({ block: 'start' })).catch(() => {})
+    await wait(400)
+    await shot(page, 'v17-mesa-detalhes', 'P.P., atributos, afinidade e histórico com números')
+    await busca.fill('Lírio').catch(() => {})
+    await wait(1600)
+    await page.getByRole('listitem', { name: 'Virtudes de Lírio' }).first().evaluate((el) => el.scrollIntoView({ block: 'center' })).catch(() => {})
+    await tryClick(page.getByRole('button', { name: 'Evoluir Estágio' }).first())
+    await wait(500)
+    await shot(page, 'v18-mesa-evoluir-armado', 'confirmação em dois toques')
+    await tryClick(page.getByRole('button', { name: 'Voltar', exact: true }).first())
+    await page.getByRole('region', { name: 'Tabela de afinidade' }).first().evaluate((el) => el.scrollIntoView({ block: 'start' })).catch(() => {})
+    await wait(500)
+    await shot(page, 'v19-mesa-tabela', 'tabela editável, provisória')
+    await tryClick(page.getByRole('button', { name: 'Divergência do doc: Arcano da Lua' }).first())
+    await wait(500)
+    await page.getByRole('button', { name: 'Divergência do doc: Arcano da Lua' }).first().evaluate((el) => el.scrollIntoView({ block: 'center' })).catch(() => {})
+    await wait(300)
+    await shot(page, 'v20-mesa-divergencia', 'nota da divergência para o dono confirmar')
+    await page.getByRole('region', { name: 'Limites por Estágio' }).first().evaluate((el) => el.scrollIntoView({ block: 'start' })).catch(() => {})
+    await wait(400)
+    await shot(page, 'v21-mesa-limites')
+
+    await page.route(/\/api\/virtudes$/, (r) => r.fulfill({ status: 500, contentType: 'application/json', body: '{"ok":false,"error":"As Virtudes não responderam. Tente de novo."}' }))
+    await abrirVirtudes(page)
+    await shot(page, 'v22-erro')
+  })
+  await own.ctx.close()
 }
 
 await browser.close()

@@ -94,7 +94,12 @@ export function TelaTorre({
             {art ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img src={art.src} alt={torre.npc.nome} className="absolute inset-0 size-full origin-top scale-[1.3] object-cover object-top" style={{ objectPosition: art.position ?? '50% 0%' }} />
-            ) : null}
+            ) : (
+              <svg viewBox="0 0 100 140" aria-label={`${torre.npc.nome}: NPC a definir`} role="img" className="absolute inset-0 size-full">
+                <path d="M50 30C64 30 72 42 72 56S64 82 50 82 28 70 28 56 36 30 50 30ZM10 140C14 108 30 90 50 90S86 108 90 140Z" fill="#151517" stroke="#38393c" strokeWidth={1} />
+                <text x="50" y="66" textAnchor="middle" fontSize="26" fill="#8a7cc8" fontFamily="serif">?</text>
+              </svg>
+            )}
           </CageFrame>
         </div>
         <ul aria-label="Recursos desta torre" className="mt-1 flex items-center gap-1.5">

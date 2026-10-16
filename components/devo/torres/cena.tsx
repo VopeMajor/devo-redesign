@@ -2,7 +2,7 @@
 
 import { type CSSProperties, useEffect, useMemo, useRef, useState } from 'react'
 import { playSfx } from '@/lib/devo/audio'
-import type { Efeito, NpcRef, Opcao, Passo } from '@/lib/devo/torres/tipos'
+import type { Arte, Efeito, NpcRef, Opcao, Passo } from '@/lib/devo/torres/tipos'
 import { cn } from '@/lib/utils'
 import { AdvanceIndicator, ChoiceHeader, ChoiceStrip, DialogueShell, SpeakerPlate, useTypewriter } from '../intro/vn'
 import { FrameCorners, GlyphDiamond, Kicker, Lantern } from '../kit'
@@ -26,7 +26,7 @@ export type CenaProps = {
   kicker?: string
   fundo?: 'torre' | 'reflexao'
   /** Arte de torre ao fundo do palco. */
-  arteFundo?: 'agulha' | 'observatorio' | 'picadeiro'
+  arteFundo?: Arte
   /** Efeito pedido por uma escolha. Pode devolver um aviso ("+1 Essência…"). */
   onEfeito?: (e: Efeito) => Promise<string | null | void> | string | null | void
   /** Toda escolha feita (índice do passo de escolha na ordem em que apareceu, índice da opção 0-based). */

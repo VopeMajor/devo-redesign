@@ -98,6 +98,8 @@ export type EuPayload = {
   convites: number | null
   /** Cartas entregues pelo servidor esperando o cliente resgatar (POST /api/eu {action:'cartas.resgatar'}). */
   cartasPendentes: number
+  /** O próprio Arcano (título, ex. "Arcano da Morte") e Estágio; null = sem registro. Sem números de Virtudes. */
+  arcano: { key: string; titulo: string; numeral: string; estagio: number } | null
 }
 
 export type CardDelivery = { id: string; cardId: string; origin: string; createdAt: number }
