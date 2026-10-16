@@ -50,7 +50,7 @@ export function TorreIlustradaSvg({ ilu, feitos, total, destaque, pxPorUnidade =
         return (
           <g key={i} style={{ mixBlendMode: 'screen' }}>
             <circle cx={x} cy={y} r={w * (est === 'atual' ? 0.11 : 0.09)} fill={est === 'atual' ? 'url(#vt-halo-am)' : 'url(#vt-halo)'} className={est === 'atual' ? 'tw-pulse' : undefined} />
-            <circle cx={x} cy={y} r={w * 0.025} fill={est === 'atual' ? '#e6e0ff' : '#fff3dc'} opacity={0.75} />
+            <circle cx={x} cy={y} r={w * 0.025} fill={est === 'atual' ? '#e6e0ff' : '#fff3dc'} opacity={0.35} />
           </g>
         )
       })}
