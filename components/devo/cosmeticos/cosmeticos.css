@@ -17,11 +17,15 @@
 .cos-anim .cos-a-cintila { animation: cos-cintila 6s ease-in-out infinite; }
 .cos-anim .cos-a-chama { animation: cos-chama 3.6s ease-in-out infinite; transform-origin: center bottom; transform-box: fill-box; }
 .cos-anim .cos-a-atraso { animation-delay: -1.7s; }
+.cos-anim .cos-a-balanco { animation: cos-balanco 5.5s ease-in-out infinite alternate; }
+.cos-anim .cos-a-carrossel { animation: cos-carrossel 3.2s ease-in-out infinite alternate; }
 .cos-anim .cos-a-runa { animation: cos-pulso 4.2s ease-in-out infinite; }
 
 @keyframes cos-giro { to { transform: rotate(360deg); } }
 @keyframes cos-pendulo { from { transform: rotate(-7deg); } to { transform: rotate(7deg); } }
 @keyframes cos-sino { 0%, 82%, 100% { transform: rotate(0); } 86% { transform: rotate(-9deg); } 90% { transform: rotate(7deg); } 94% { transform: rotate(-4deg); } }
+@keyframes cos-balanco { from { transform: rotate(-3deg); } to { transform: rotate(3deg); } }
+@keyframes cos-carrossel { from { transform: translateY(-1.5px); } to { transform: translateY(1.5px); } }
 @keyframes cos-pulso { 0%, 100% { opacity: 0.55; } 50% { opacity: 1; } }
 @keyframes cos-cintila { 0%, 70%, 100% { opacity: 1; } 78% { opacity: 0.35; } 86% { opacity: 1; } }
 @keyframes cos-chama { 0%, 100% { transform: scaleY(1); opacity: 0.85; } 50% { transform: scaleY(1.12) translateY(-2px); opacity: 0.55; } }

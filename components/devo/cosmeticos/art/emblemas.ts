@@ -2,6 +2,7 @@
  * Emblemas (texto do dono §4): símbolos pequenos ao lado do nome. viewBox 0 0 32 32, desenhados para 16–24 px:
  * silhueta de metal cheia com contorno escuro (lê no negro e no papel), um acento de cor por peça.
  */
+import { gemaLapidada, rosaDefs, rosaVolume } from './material'
 import { type Arte, circulo, engrenagem, estrela4, gemaGrad, lin, losango, metal, n2, naipe, rad } from './kit'
 
 const K = '#120f0d'
@@ -9,13 +10,10 @@ const VB = '0 0 32 32'
 
 const rosaSangue: Arte = {
   vb: VB,
-  corpo: (u) => `<defs>${metal(`${u}-m`, 'prata', true)}${rad(`${u}-r`, ['#e0697b', '#a3213a', '#5a0a18', '#2a0309'], 0.42, 0.36, 0.7)}</defs>
+  corpo: (u) => `<defs>${metal(`${u}-m`, 'prata', true)}${rosaDefs(`${u}-rv`, 'carmim')}</defs>
 <path d="M16 29 C15 24 17 21 16 17" fill="none" stroke="${K}" stroke-width="3.2" stroke-linecap="round"/><path d="M16 29 C15 24 17 21 16 17" fill="none" stroke="url(#${u}-m)" stroke-width="1.8" stroke-linecap="round"/>
 <path d="M16 24 C12 23 9.5 20.5 9 18 C12 18.5 14.5 20.5 16 24Z M16.4 21.6 l3 -1.6 -1.6 3Z" fill="url(#${u}-m)" stroke="${K}" stroke-width=".7"/>
-<path d="M16 3 C21 3 25 6.5 24.6 11 C24.3 15 20.6 17.6 16 17.6 C11.4 17.6 7.7 15 7.4 11 C7 6.5 11 3 16 3Z" fill="url(#${u}-r)" stroke="${K}" stroke-width="1"/>
-<path d="M11 9.5 C12.5 6.4 19.5 6.4 21 9.5 C19 8.4 13 8.4 11 9.5Z M16 7.2 C19.6 7.6 20.6 11.4 18 13.2 C17.4 11.6 16 11 14.6 11.6 C14.4 9.6 15 8.2 16 7.2Z" fill="#2a0309" opacity=".55"/>
-<path d="M10 12.4 C11.6 15.2 20.4 15.2 22 12.4" fill="none" stroke="#2a0309" stroke-width=".9" opacity=".7"/>
-<path d="M12 5.6 C13.6 4.6 15.4 4.4 17 4.8" fill="none" stroke="#ffd3da" stroke-width=".9" stroke-linecap="round" opacity=".8"/>
+${rosaVolume(`${u}-rv`, 'carmim', 16, 10.4, 9.4, 8)}
 <path d="M23.4 17.6 c1.4 1.6 2 2.8 2 3.8 a2 2 0 0 1 -4 0 c0 -1 .6 -2.2 2 -3.8Z" fill="#a3213a" stroke="${K}" stroke-width=".6"/>`,
 }
 
@@ -28,7 +26,7 @@ const coroaPartida: Arte = {
 <path d="M17.6 23.4 H28.6 L28.2 27.2 H17.6Z" fill="url(#${u}-m)" stroke="${K}" stroke-width=".9" transform="rotate(6 23 18)"/>
 <path d="M15.8 12 L16.8 15.2 L15.9 18 L17 21.2 L16.2 27" fill="none" stroke="${K}" stroke-width=".9"/>
 <circle cx="2.6" cy="10.6" r="1.6" fill="url(#${u}-m)" stroke="${K}" stroke-width=".6"/><circle cx="11.6" cy="7.2" r="1.6" fill="url(#${u}-m)" stroke="${K}" stroke-width=".6"/><circle cx="20.6" cy="7" r="1.6" fill="url(#${u}-m)" stroke="${K}" stroke-width=".6"/>
-<path d="${losango(9.4, 19.6, 4, 5.6)}" fill="url(#${u}-g)" stroke="${K}" stroke-width=".7"/>
+${gemaLapidada(9.4, 19.6, 4.6, 6.2, 'ametista', 'losango')}
 <path d="M19.6 30 l1.4 -2 1.2 1.4" fill="none" stroke="url(#${u}-m)" stroke-width="1"/>`,
 }
 
@@ -50,8 +48,8 @@ const olhoDestino: Arte = {
   corpo: (u) => `<defs>${metal(`${u}-m`, 'champanhe', true)}${rad(`${u}-i`, ['#f2eeff', '#a796ea', '#4b3c9e', '#17112f'], 0.5, 0.5, 0.55)}</defs>
 <path d="${estrela4(16, 16, 15.4, 0.12)}" fill="url(#${u}-m)" stroke="${K}" stroke-width=".8"/>
 <path d="M3.6 16 Q16 4.6 28.4 16 Q16 27.4 3.6 16Z" fill="#f4f1ea" stroke="${K}" stroke-width="1.1"/>
-<circle cx="16" cy="16" r="5.6" fill="url(#${u}-i)" stroke="${K}" stroke-width=".7"/>
-<path d="${estrela4(16, 16, 3.8, 0.18)}" fill="#0d0a1c"/>
+${gemaLapidada(16, 16, 11.4, 11.4, 'ametista', 'oval')}
+<path d="${estrela4(16, 16, 3.4, 0.18)}" fill="#0d0a1c" opacity=".85"/>
 <circle cx="14.2" cy="14" r="1.1" fill="#fff" class="cos-a-cintila"/>
 <path d="M5 13 Q16 4 27 13" fill="none" stroke="url(#${u}-m)" stroke-width="1.6"/>`,
 }
@@ -64,7 +62,7 @@ const chaveProibida: Arte = {
 <path d="M17.4 22 H21.4 V24.2 H19.6 V26 H17.4Z M17.4 26.6 H20.4 V28.6 H17.4Z" fill="url(#${u}-m)" stroke="${K}" stroke-width=".7"/>
 <path d="${circulo(16, 7.4, 6.6)}${circulo(16, 7.4, 3.4)}" fill="url(#${u}-c)" fill-rule="evenodd" stroke="${K}" stroke-width=".9"/>
 <path d="M16 0.4 L17.4 2.4 L16 4 L14.6 2.4Z M9 7.4 L11 6 L11 8.8Z M23 7.4 L21 6 L21 8.8Z" fill="url(#${u}-c)" stroke="${K}" stroke-width=".5"/>
-<path d="${losango(16, 7.4, 3.4, 4.4)}" fill="url(#${u}-g)"/>
+${gemaLapidada(16, 7.4, 3.6, 4.6, 'rubi', 'losango')}
 <path d="M13.6 14.6 H18.4 V16.2 H13.6Z" fill="url(#${u}-c)" stroke="${K}" stroke-width=".6"/>
 </g>`,
 }
@@ -107,7 +105,7 @@ const engrenagemHerdeiro: Arte = {
 <g class="cos-a-spin-lento" style="transform-origin:16px 17px"><path d="${engrenagem(16, 17, 13.4, 11.2, 12, 0)}" fill="url(#${u}-b)" stroke="${K}" stroke-width=".9"/></g>
 <circle cx="16" cy="17" r="8.4" fill="url(#${u}-m)" stroke="${K}" stroke-width=".9"/>
 <path d="M10.6 15.4 L11 10.6 L13.4 13 L16 9.4 L18.6 13 L21 10.6 L21.4 15.4Z" fill="url(#${u}-b)" stroke="${K}" stroke-width=".7" stroke-linejoin="round"/>
-<path d="${losango(16, 19.4, 5, 6.6)}" fill="url(#${u}-g)" stroke="${K}" stroke-width=".6"/>
+${gemaLapidada(16, 19.4, 5.4, 7, 'ametista', 'losango')}
 <path d="M11 15.4 H21" stroke="${K}" stroke-width=".7"/>`,
 }
 
@@ -135,7 +133,7 @@ const seloAnfitriao: Arte = {
 <circle cx="16" cy="16" r="10.6" fill="url(#${u}-s)" stroke="${K}" stroke-width=".8"/>
 ${louro}<g transform="matrix(-1 0 0 1 32 0)">${louro}</g>
 <path d="${estrela4(16, 15.4, 7.4, 0.2)}" fill="url(#${u}-m)" stroke="${K}" stroke-width=".6"/>
-<path d="${losango(16, 15.4, 3, 3.8)}" fill="url(#${u}-g)"/>
+${gemaLapidada(16, 15.4, 3.6, 4.4, 'ametista', 'losango')}
 <path d="M11.6 22.4 Q16 25.4 20.4 22.4" fill="none" stroke="url(#${u}-m)" stroke-width="1.1"/>`
   },
 }

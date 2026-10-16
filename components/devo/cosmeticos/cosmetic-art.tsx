@@ -172,13 +172,13 @@ export function BalaoChat({ def, children, className, animar }: { def: Cosmetico
   }
   return (
     <div
-      className={cn('relative px-4 py-2.5', anim && 'cos-anim', className)}
+      className={cn('relative px-5 py-3', anim && 'cos-anim', className)}
       style={{ background: b.textura ? `${b.textura},${b.fundo}` : b.fundo, color: b.texto, boxShadow: `inset 0 0 0 1px ${b.borda}, inset 0 0 0 3px transparent, inset 0 0 0 4px ${b.filete}, 0 3px 10px rgba(0,0,0,.35)` }}
     >
-      <ArteSvg arte={b.canto} animar={anim} className="pointer-events-none absolute left-0 top-0 size-[18px]" />
-      <ArteSvg arte={b.canto} animar={anim} className="pointer-events-none absolute bottom-0 right-0 size-[18px] rotate-180" />
+      <ArteSvg arte={b.canto} animar={anim} className="pointer-events-none absolute -left-1.5 -top-1.5 size-[26px]" />
+      <ArteSvg arte={b.canto} animar={anim} className="pointer-events-none absolute -bottom-1.5 -right-1.5 size-[26px] rotate-180" />
       <div className="relative">{children}</div>
-      {b.selo && <ArteSvg arte={b.selo} className="pointer-events-none absolute -bottom-2 right-4 size-[20px]" />}
+      {b.selo && <ArteSvg arte={b.selo} className="pointer-events-none absolute -bottom-2.5 right-6 size-[24px]" />}
     </div>
   )
 }
