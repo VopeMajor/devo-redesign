@@ -10,8 +10,7 @@ import { Button } from '../kit/button'
 import { EntradaButton } from '../landing/entrada-button'
 import { Frame } from '../kit/frame'
 import { Stagger } from '../kit/reveal'
-import { portraitFrameProps } from '@/lib/devo/npcs'
-import { PortraitFrame } from '../kit/portrait'
+import { NpcMedallion } from '../kit/npc-anchor'
 import { Sheet } from '../kit/sheet'
 
 function InstallSteps({ isIos, isAndroid, inIframe }: { isIos: boolean; isAndroid: boolean; inIframe: boolean }) {
@@ -116,7 +115,9 @@ export function PwaOffer({ onClose }: { onClose: () => void }) {
     >
       {/* Fala do Anfitrião: retrato em losango + bilhete */}
       <div className="animate-dv-rise flex items-start gap-3">
-        <PortraitFrame {...(portraitFrameProps('rato', undefined, 'face') ?? {})} alt="O Anfitrião" shape="round" tone="gold" className="w-16" />
+        <span role="img" aria-label="O Anfitrião" className="block w-16 shrink-0">
+          <NpcMedallion npc="rato" size="100%" ring="rgba(186,176,159,0.6)" />
+        </span>
         <div className="min-w-0 flex-1">
           <p className="dv-label text-[10px] text-dv-gold">O Anfitrião</p>
           <p className="mt-1 font-body text-[16px] italic leading-relaxed text-dv-text-2">

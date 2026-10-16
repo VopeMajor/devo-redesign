@@ -14,6 +14,7 @@ import { EmblemMensagens } from '../kit/emblems'
 import { GlyphArrow, GlyphKeyhole, toRoman } from '../kit/glyphs'
 import { Kicker } from '../kit/typography'
 import type { PortraitTone } from '../kit/portrait'
+import { NpcMedallion } from '../kit/npc-anchor'
 import { useShellBack } from '../os/app-back'
 import { callName, nextId, useDevo } from '../state/devo-store'
 import { useBackHandler } from '../use-back-handler'
@@ -36,11 +37,10 @@ const PORTRAIT_TONE: Record<string, PortraitTone> = { rato: 'gold', herdeiro: 'c
 /*
  * Enquadramento do elenco OC (lib/devo/npcs.ts): toda folha tem a mesma tela 1080×960, cabeça de ~345 px
  * e queixo em y=508. Recortes em pixels da tela do sprite:
- *  - ROSTO (medalhão): quadrado de 560 px a partir de y=40 — chapéu/cabelo inteiros, queixo e gola, sem tronco;
+ *  - medalhão: NpcMedallion do kit (janela do rosto por NPC);
  *  - BUSTO (gravura ao fundo da conversa): 700×740 a partir de y=30 — cabeça e ombros, base dissolvida.
  */
 const SPRITE = { w: 1080, h: 960 }
-const ROSTO = { x: 260, y: 40, w: 560, h: 560 }
 const BUSTO = { x: 190, y: 30, w: 700, h: 740 }
 
 /** Recorta uma janela da tela do sprite num contêiner com a mesma proporção (sem depender de object-fit). */
@@ -65,28 +65,13 @@ function SpriteCrop({ src, win, className, style }: { src: string; win: { x: num
   )
 }
 
-/** Medalhão redondo do remetente: rosto inteiro (sem cortar chapéu/cabelo), gola visível, base dissolvida. */
+/** Medalhão redondo do remetente: rosto inteiro com janela própria por NPC (kit/npc-anchor), sem tronco. */
 function Portrait({ npcId, size = 52, className }: { npcId: string; size?: number; className?: string }) {
-  const src = npcPortrait(npcId)?.src
   const tone = PORTRAIT_TONE[npcId] ?? 'neutral'
   return (
-    <span aria-hidden="true" className={cn('relative block shrink-0 rounded-full', className)} style={{ width: size, height: size }}>
-      <span
-        className="absolute inset-0 overflow-hidden rounded-full bg-[radial-gradient(closest-side_at_50%_42%,rgba(138,124,200,0.22),rgba(18,18,20,0.95))]"
-        style={{ boxShadow: `inset 0 0 0 1px ${tone === 'blood' ? 'rgba(213,31,43,0.55)' : 'rgba(206,201,192,0.42)'}` }}
-      >
-        {src ? (
-          <SpriteCrop
-            src={src}
-            win={ROSTO}
-            className="size-full"
-            style={{ WebkitMaskImage: 'linear-gradient(to bottom,#000 72%,transparent 100%)', maskImage: 'linear-gradient(to bottom,#000 72%,transparent 100%)' }}
-          />
-        ) : (
-          <span className="grid size-full place-items-center font-impact text-[26px] font-bold text-dv-text-2 [text-shadow:2px_0_0_rgba(213,31,43,0.6),-2px_0_0_rgba(138,124,200,0.6)]">?</span>
-        )}
-      </span>
-    </span>
+    <NpcMedallion npc={npcId} size={size} className={className} ring={tone === 'blood' ? 'rgba(213,31,43,0.55)' : 'rgba(206,201,192,0.42)'}>
+      <span className="grid size-full place-items-center font-impact text-[26px] font-bold text-dv-text-2 [text-shadow:2px_0_0_rgba(213,31,43,0.6),-2px_0_0_rgba(138,124,200,0.6)]">?</span>
+    </NpcMedallion>
   )
 }
 

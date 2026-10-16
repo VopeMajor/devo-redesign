@@ -23,6 +23,7 @@ export { SceneBackdrop, type SceneBackdropProps, type SceneFocus, type ScenePres
 export { OddsBar, Plaque, type PlaqueTone } from './plaque'
 export { PaperField, StatusSeal, type SealTone } from './paper'
 export { PortraitFrame, type PortraitShape, type PortraitTone } from './portrait'
+export { NpcAnchor, NpcBustLayer, NpcMedallion, npcBusto, NPC_SPRITE, useFalaAncora, type NpcAnchorProps } from './npc-anchor'
 export { useVisibleViewport } from './viewport'
 export * from './interior'
 export * from './ornament'

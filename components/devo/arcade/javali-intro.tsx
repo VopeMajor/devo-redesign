@@ -1,11 +1,11 @@
 'use client'
 
 import { type CSSProperties, useState } from 'react'
-import { Badge, FrameCorners, GlyphArrow, GlyphDiamond, GlyphHourglass, Kicker, RomanDial, TimeDigits } from '@/components/devo/kit'
+import { Badge, FrameCorners, NpcAnchor, GlyphArrow, GlyphDiamond, GlyphHourglass, Kicker, RomanDial, TimeDigits } from '@/components/devo/kit'
 import { GAMES, PATENTES } from '@/lib/devo/arcade/games'
 import { playSfx } from '@/lib/devo/audio'
 import { cn } from '@/lib/utils'
-import { npcPortrait, type Expressao } from '@/lib/devo/npcs'
+import type { Expressao } from '@/lib/devo/npcs'
 import { formatDuration, useNow } from '../hooks'
 import { useDevo } from '../state/devo-store'
 import { usePlayerText } from '../state/player-text'
@@ -48,6 +48,8 @@ export function JavaliIntro() {
   const say = usePlayerText()
   const [index, setIndex] = useState(0)
   const [leaving, setLeaving] = useState(false)
+  // tampo da mesa: o Javali se ancora nele
+  const [mesa, setMesa] = useState<HTMLElement | null>(null)
   const step = SCRIPT[index]
   const last = index === SCRIPT.length - 1
 
@@ -108,29 +110,20 @@ export function JavaliIntro() {
               <RomanDial tone="silver" />
             </div>
             <span aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 mx-auto h-full w-[80%] bg-[radial-gradient(ellipse_at_top,rgba(236,229,216,0.18),transparent_65%)]" />
-            {/* o Javali, debruçado: a base do sprite encosta na borda da mesa */}
-            {FRAMES.map((name) => {
-              const active = name === step.frame
-              const art = npcPortrait('javali', name)
-              if (!art) return null
-              return (
-                <div
-                  key={name}
-                  aria-hidden={active ? undefined : true}
-                  className={cn('absolute inset-x-0 bottom-[22%] top-[6%] transition-[opacity,transform] duration-500', active ? 'translate-y-0 opacity-100' : 'translate-y-2 opacity-0')}
-                >
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={art.src}
-                    alt={active ? 'Javali, anfitrião da Sala de Jogos' : ''}
-                    draggable={false}
-                    className="absolute inset-0 size-full object-contain object-bottom drop-shadow-[0_18px_22px_rgba(0,0,0,0.65)]"
-                  />
-                </div>
-              )
-            })}
+            {/* o Javali, debruçado: busto ANCORADO ao tampo da mesa (kit/npc-anchor), a base passa atrás da borda */}
+            <NpcAnchor
+              npc="javali"
+              pose={step.frame}
+              poses={FRAMES}
+              fala={mesa}
+              alt="Javali, anfitrião da Sala de Jogos"
+              cabeca="min(16dvh, 150px)"
+              reserva={10}
+              sobreposicao={10}
+              className="drop-shadow-[0_18px_22px_rgba(0,0,0,0.65)]"
+            />
             {/* a mesa: tampo de mármore negro com filete de aço, sobre ela as cartas e as fichas */}
-            <div aria-hidden="true" className="absolute inset-x-0 bottom-0 h-[24%]">
+            <div ref={setMesa} aria-hidden="true" className="absolute inset-x-0 bottom-0 h-[24%]">
               <span style={MARBLE_INK} className="absolute inset-0 border-t border-dv-gold/70 shadow-[inset_0_10px_18px_-8px_rgba(236,229,216,0.18)]" />
               <span className="absolute inset-x-0 top-[3px] h-px bg-dv-gold/25" />
               <span className="absolute left-[8%] top-[22%] h-[46%] w-[13%] -rotate-[10deg] dv-cut bg-dv-porcelain shadow-[0_4px_8px_rgba(0,0,0,0.6)]" style={{ '--dv-cut': '3px' } as CSSProperties} />
