@@ -608,11 +608,16 @@ if (want('sistema') || want('apps') || want('jogos')) {
       await wait(500)
       // Aceitar e revelar numa sala livre qualquer (o parceiro pode desistir: até 3 tentativas).
       for (let attempt = 0, revealedOk = false; attempt < 3 && !revealedOk; attempt++) {
-        if (!(await tryClick(page.locator('button[aria-label^="Sala "]:not([disabled])').first()))) break
+        if (!(await tryClick(page.locator('button[aria-label^="Sala "]:not([disabled])').first()))) {
+          await shot(page, `24-trocas-tentativa-${attempt + 1}-porta`)
+          break
+        }
         await wait(1200)
         await tryClick(page.getByRole('button', { name: /^Colocar / }).first())
         await wait(7500)
-        if (await tryClick(btn(page, 'Aceitar troca', true), 1500)) {
+        const accepted = await tryClick(btn(page, 'Aceitar troca', true), 1500)
+        if (!accepted) await shot(page, `24-trocas-tentativa-${attempt + 1}`)
+        if (accepted) {
           await wait(800)
           await shot(page, '24-trocas-aceitou')
           const revealing = await page
