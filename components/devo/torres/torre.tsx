@@ -97,12 +97,12 @@ export function TelaTorre({
             ) : null}
           </CageFrame>
         </div>
-        <ul aria-label="Recursos desta torre" className="-mt-2 flex items-center gap-1.5">
+        <ul aria-label="Recursos desta torre" className="mt-1 flex items-center gap-1.5">
           <RecursoChip nome={torre.essencia.nome} curto="Essências" quantidade={torre.essencia.quantidade} tipo="essencia" />
           {torre.chave && <RecursoChip nome={torre.chave.nome} curto="Chaves" quantidade={torre.chave.quantidade} tipo="chave" />}
           <li className="ml-auto flex items-baseline gap-1 font-mono text-[11px] uppercase tracking-[0.14em] text-dv-text-3">
             <span className="dv-tabular font-impact text-[20px] text-dv-gold-bright">{torre.concluidos}</span>/{N}
-            <span className="ml-1">andares</span>
+            <span className={cn('ml-1', torre.chave && 'sr-only')}>andares</span>
           </li>
         </ul>
       </header>
