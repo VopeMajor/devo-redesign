@@ -87,6 +87,17 @@ ${banda(18, 30, 264, 342, 12, `${u}-fe`, '#0c0b0e', 1.1)}
 ${banda(18, 30, 264, 342, 3.2, `${u}-ch`, '#16120d', 0.9)}
 ${banda(26.8, 38.8, 246.4, 324.4, 3, `${u}-ch`, '#16120d', 0.9)}
 <path d="M24 120 V70 M276 300 V230 M24 300 V230" stroke="#bab09f" stroke-opacity=".5" stroke-width="1" stroke-dasharray="1.5 4.5"/>
+${(() => {
+      let r = ''
+      for (let y = 70; y <= 340; y += 18) r += `<circle cx="24" cy="${y}" r="1.7"/><circle cx="276" cy="${y}" r="1.7"/>`
+      for (let x = 60; x <= 240; x += 18) if (x < 92 || x > 208) r += `<circle cx="${x}" cy="36" r="1.7"/>`
+      for (let x = 60; x <= 240; x += 18) r += `<circle cx="${x}" cy="366" r="1.7"/>`
+      return `<g fill="url(#${u}-ch)" stroke="#16120d" stroke-width=".5">${r}</g>`
+    })()}
+${(() => {
+      const k = `<path d="M12 22 H62 V30 H22 V70 H12 Z" fill="url(#${u}-chd)" stroke="#16120d" stroke-width="1"/><circle cx="17" cy="27" r="2.4" fill="url(#${u}-ch)" stroke="#16120d" stroke-width=".6"/><circle cx="54" cy="26" r="1.6" fill="#16120d"/><circle cx="17" cy="62" r="1.6" fill="#16120d"/>`
+      return k + espelhoX(300, k) + espelhoY(400, k + espelhoX(300, k))
+    })()}
 <path d="M98 40 A52 52 0 0 1 202 40 Z" fill="url(#${u}-fe)" stroke="#0c0b0e" stroke-width="1"/>
 <path d="M98 40 A52 52 0 0 1 202 40" fill="none" stroke="url(#${u}-ch)" stroke-width="3.2"/>
 <path d="M106 40 A44 44 0 0 1 194 40 Z" fill="url(#${u}-dial)" stroke="#5f584d" stroke-width=".8"/>
@@ -327,7 +338,7 @@ const javaliAvatar: Arte = {
   vb: AV.vb,
   corpo: (u) => {
     const voluta1 = `${fio(voluta([[150, 30], [120, 22], [90, 26], [70, 36]], 62, 48, 10, 2.4, 1.2, -80, -1), `${u}-ou`, 4)}${fio(voluta([[100, 32], [80, 44], [72, 60]], 80, 66, 6, 1.6, 1.1, 180, -1), `${u}-ou`, 2.6)}${peca(folha(118, 22, 22, 6, -170, -3), `${u}-oud`, '#2b1d0b', 0.9)}${peca(folha(92, 28, 18, 5, 160, 2), `${u}-oud`, '#2b1d0b', 0.9)}`
-    const canto = `${fio(voluta([[60, 386], [32, 388], [18, 372]], 22, 360, 9, 2, 1.2, 120, 1), `${u}-ou`, 3.4)}${peca(folha(36, 380, 20, 6, -40), `${u}-oud`, '#2b1d0b', 0.8)}`
+    const canto = `<path d="${volutaCheia([[24, 340], [12, 360], [16, 384], [40, 390]], 54, 380, 8, 1.8, 1.1, 150, -1, 7, 1.6)}" fill="url(#${u}-oud)" stroke="#2b1d0b" stroke-width=".9"/><path d="${folha(22, 374, 22, 7, -60)}" fill="url(#${u}-ou)" stroke="#2b1d0b" stroke-width=".8"/><circle cx="20" cy="380" r="5" fill="url(#${u}-ou)" stroke="#2b1d0b"/>${gema(20, 380, 5, 5, `${u}-rubi`, 'oval')}`
     return `${javaliDefs(u)}
 <defs><filter id="${u}-sombra" x="-10%" y="-10%" width="120%" height="120%"><feDropShadow dx="0" dy="2.4" stdDeviation="1.8" flood-color="#000" flood-opacity=".6"/></filter></defs>
 <g filter="url(#${u}-sombra)">
@@ -500,6 +511,10 @@ ${banda(27.5, 37.5, 245, 325, 2.6, `${u}-bz`, '#24180b', 0.7)}
 <path d="M20 30 L52 30 L20 62Z M280 30 L248 30 L280 62Z M20 370 L52 370 L20 338Z M280 370 L248 370 L280 338Z" fill="url(#${u}-bzd)" stroke="#24180b" stroke-width=".8"/>
 ${corrente(u, [[44, 30], [76, 42], [114, 48], [150, 50], [186, 48], [224, 42], [256, 30]], 3.6)}
 ${moeda(u, 150, 56, 7, true)}
+${(() => {
+      const k = `<path d="${volutaCheia([[20, 66], [12, 46], [18, 26], [40, 18]], 52, 28, 7, 1.6, 1.1, -100, 1, 6, 1.4)}" fill="url(#${u}-bzd)" stroke="#24180b" stroke-width=".9"/>`
+      return k + espelhoX(300, k)
+    })()}
 ${corrente(u, [[280, 120], [290, 170], [284, 220]], 3.4)}
 ${moeda(u, 284, 230, 8)}
 ${moeda(u, 34, 368, 18, false, 0.42)}${moeda(u, 34, 360, 18, false, 0.42)}${moeda(u, 34, 352, 18, false, 0.42)}${moeda(u, 34, 344, 18, false, 0.42)}${moeda(u, 30, 336, 18, false, 0.42)}

@@ -1869,6 +1869,8 @@ if (want('cosmeticos')) {
     await wait(500)
     await tryClick(btn(page, 'Abrir coleção', true), 4000)
     await wait(1500)
+    await view(page, 'section[aria-label="Coleção de cosméticos"]', 'start')
+    await wait(500)
   }
   const aba = (page, nome) => tryClick(page.getByRole('tablist', { name: 'Categorias da coleção' }).getByRole('tab', { name: nome, exact: true }).first())
   const item = (page, nome) => page.locator('ul[aria-label^="Itens:"] button').filter({ hasText: nome }).first()
@@ -1907,6 +1909,8 @@ if (want('cosmeticos')) {
     await shot(page, 'cos-11-record-identidade')
     await tryClick(btn(page, 'Abrir coleção', true), 4000)
     await wait(1500)
+    await view(page, 'section[aria-label="Coleção de cosméticos"]', 'start')
+    await wait(500)
     await shot(page, 'cos-12-colecao')
     await view(page, 'ul[aria-label^="Itens:"]', 'start')
     await wait(500)
