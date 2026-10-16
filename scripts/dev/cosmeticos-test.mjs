@@ -182,14 +182,12 @@ await test('payload público sem cargo de Owner (visuais, chat, miniperfil); Anf
   assert(a.anfitriao === true, 'anfitrião público')
   assert(!/owner|admin|livre|cargo|role/i.test(v.text), `payload de visuais vaza cargo: ${v.text.slice(0, 300)}`)
   assert(Object.keys(o).sort().join() === 'anfitriao,av,bal,ef,emb,foto,id,mini', `campos do visual: ${Object.keys(o)}`)
-  // O chat da Sala de Jogos passou para dentro das partidas (redesign): o saguão pode recusar com 403.
-  const fala = await owner.req('POST', '/api/arcade', { action: 'chat', channel: 'lobby', body: `teste ${sfx}` })
-  if (fala.status !== 403) {
-    ok200(fala, 'owner fala no chat')
-    const chat = await j1.get('/api/arcade?view=chat&channel=lobby')
-    const linha = chat.json.messages.find((m) => m.pid === owner.id)
-    assert(linha && (linha.role === 'player' || linha.role === undefined) && !chat.text.includes('"owner"'), `chat: ${JSON.stringify(linha)}`)
-  }
+  // A mesa (lobby) é só registro: a mensagem digitada é recusada e a linha entra direto no banco.
+  assert((await owner.req('POST', '/api/arcade', { action: 'chat', channel: 'lobby', body: `teste ${sfx}` })).status === 403, 'lobby recusa mensagem digitada')
+  await q('INSERT INTO arcade_chat (channel, author, player_id, body) VALUES ($1,$2,$3,$4)', ['lobby', owner.name, owner.id, `teste ${sfx}`])
+  const chat = await j1.get('/api/arcade?view=chat&channel=lobby')
+  const linha = chat.json.messages.find((m) => m.pid === owner.id)
+  assert(linha && (linha.role === 'player' || linha.role === undefined) && !chat.text.includes('"owner"'), `chat: ${JSON.stringify(linha)}`)
   const mp = await j1.get(`/api/arcade?view=profile&pid=${owner.id}`)
   assert(mp.json.role === 'player' && !mp.text.includes('"owner"'), `miniperfil: ${mp.text.slice(0, 200)}`)
 })

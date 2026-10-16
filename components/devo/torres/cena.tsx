@@ -2,12 +2,13 @@
 
 import { type CSSProperties, useEffect, useMemo, useRef, useState } from 'react'
 import { playSfx } from '@/lib/devo/audio'
-import type { Arte, Efeito, NpcRef, Opcao, Passo } from '@/lib/devo/torres/tipos'
+import type { Arte, Efeito, Ilustracao, NpcRef, Opcao, Passo } from '@/lib/devo/torres/tipos'
 import { cn } from '@/lib/utils'
 import { AdvanceIndicator, ChoiceHeader, ChoiceStrip, DialogueShell, SpeakerPlate, useTypewriter } from '../intro/vn'
 import { FrameCorners, GlyphDiamond, Kicker, Lantern } from '../kit'
 import { usePlayerText } from '../state/player-text'
 import { MAPA_W, starPath, TorreArte, TorresDefs } from './arte'
+import { TorreIlustradaImg } from './ilustrada'
 import { retratoDe } from './retrato'
 import './torres.css'
 
@@ -27,6 +28,8 @@ export type CenaProps = {
   fundo?: 'torre' | 'reflexao'
   /** Arte de torre ao fundo do palco. */
   arteFundo?: Arte
+  /** Ilustração pintada da torre (substitui o desenho vetorial ao fundo). */
+  ilustracaoFundo?: Ilustracao | null
   /** Efeito pedido por uma escolha. Pode devolver um aviso ("+1 Essência…"). */
   onEfeito?: (e: Efeito) => Promise<string | null | void> | string | null | void
   /** Toda escolha feita (índice do passo de escolha na ordem em que apareceu, índice da opção 0-based). */
@@ -55,7 +58,7 @@ function Falado({ texto }: { texto: string }) {
   )
 }
 
-export function Cena({ passos, npc, titulo, kicker, fundo = 'torre', arteFundo = 'agulha', onEfeito, onOpcao, onFim, onPular, className }: CenaProps) {
+export function Cena({ passos, npc, titulo, kicker, fundo = 'torre', arteFundo = 'agulha', ilustracaoFundo, onEfeito, onOpcao, onFim, onPular, className }: CenaProps) {
   const say = usePlayerText()
   const [fila, setFila] = useState<Passo[]>(passos)
   const [i, setI] = useState(0)
@@ -181,7 +184,7 @@ export function Cena({ passos, npc, titulo, kicker, fundo = 'torre', arteFundo =
         <TorresDefs />
         <path d="M0 420L48 384L92 404L150 360L206 398L262 364L318 400L390 372V640H0Z" fill="#141319" />
         <path d="M0 450L70 428L140 446L220 424L300 446L390 430V640H0Z" fill="#0e0d12" />
-        {fundo !== 'reflexao' ? (
+        {fundo !== 'reflexao' && ilustracaoFundo ? null : fundo !== 'reflexao' ? (
           <g transform="translate(318 446) scale(0.86)" opacity={0.6}>
             <TorreArte arte={arteFundo} feitos={0} total={7} />
           </g>
@@ -199,6 +202,11 @@ export function Cena({ passos, npc, titulo, kicker, fundo = 'torre', arteFundo =
         </linearGradient>
         <rect y={380} width={MAPA_W} height={260} fill="url(#tw-palco-chao)" />
       </svg>
+      {fundo !== 'reflexao' && ilustracaoFundo && (
+        <div aria-hidden="true" className="pointer-events-none absolute bottom-[26%] right-[-6%] h-[62%] opacity-70 [mask-image:linear-gradient(to_top,transparent,#000_22%)]">
+          <TorreIlustradaImg ilu={ilustracaoFundo} sizes="(max-width: 640px) 45vw, 240px" className="h-full" brilho={false} />
+        </div>
+      )}
       <span aria-hidden="true" className="dv-checker-marble pointer-events-none absolute inset-x-[-40%] bottom-[-6%] h-[42%] opacity-30 [mask-image:linear-gradient(to_top,black,transparent)] [transform:perspective(520px)_rotateX(62deg)]" />
       <span aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 mx-auto h-[70%] w-[30rem] max-w-full bg-[radial-gradient(ellipse_at_top,rgba(236,229,216,0.16),transparent_70%)]" />
 

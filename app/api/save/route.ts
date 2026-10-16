@@ -3,6 +3,7 @@ import { getCurrentPlayer } from '@/app/actions/player'
 import { db } from '@/lib/db'
 import { playerSaves } from '@/lib/db/schema'
 import { MAX_SAVE_BYTES, sanitizeSave } from '@/lib/devo/save'
+import { uidsTransferidos } from '@/lib/devo/corporacoes-server'
 import { uidsNoSalao } from '@/lib/devo/salao-server'
 
 export async function POST(req: Request) {
@@ -24,6 +25,9 @@ export async function POST(req: Request) {
   // cliente não as faz voltar (sem duplicar). A devolução/arremate chega por card_deliveries, com outro uid.
   const noSalao = await uidsNoSalao(player.id)
   if (noSalao.size) data.inventory = data.inventory.filter((c) => !noSalao.has(c.uid))
+  // O mesmo para cartas transferidas a outro membro da Corporação (saíram do save no servidor).
+  const transferidas = await uidsTransferidos(player.id)
+  if (transferidas.size) data.inventory = data.inventory.filter((c) => !transferidas.has(c.uid))
 
   await db
     .insert(playerSaves)

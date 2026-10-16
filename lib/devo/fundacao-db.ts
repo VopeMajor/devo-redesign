@@ -47,6 +47,8 @@ const DB_ERRORS: [RegExp, string, number][] = [
   [/PLANO_SEM_APROVACAO/, 'Aprove o plano antes de distribuir.', 409],
   // Virtudes (scripts/virtudes-migration.sql)
   [/VIRTUDE_DESCONHECIDA/, 'Virtude desconhecida.', 400],
+  // Corporações (scripts/corporacoes-migration.sql)
+  [/CORP_CLASSIFICACAO_NEGADA/, 'Só a equipe da Companhia classifica uma Corporação.', 403],
   [/violates (check|foreign key) constraint/, 'Dados inválidos.', 400],
   [/invalid input syntax for type uuid/, 'ID inválido.', 400],
 ]

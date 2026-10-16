@@ -13,14 +13,16 @@ import { SalaoMesa, useFilaSalao } from '../salao/salao-mesa'
 import { VirtudesMesa } from '../virtudes/virtudes-mesa'
 import { AdminCosmeticos } from '../cosmeticos/admin-cosmeticos'
 import { SemanaisPanel } from '../cosmeticos/semanais'
+import { CorporacoesMesa, useFilaCorporacoes } from '../corporacoes/corporacoes-mesa'
 
-type Section = 'casos' | 'recompensas' | 'semanais' | 'salao' | 'virtudes' | 'equipe' | 'jogadores' | 'convites' | 'cosmeticos' | 'registro' | 'ajustes'
+type Section = 'casos' | 'recompensas' | 'semanais' | 'salao' | 'virtudes' | 'corporacoes' | 'equipe' | 'jogadores' | 'convites' | 'cosmeticos' | 'registro' | 'ajustes'
 
 const LABEL: Record<Section, string> = {
   casos: 'Casos',
   recompensas: 'Recompensas',
   semanais: 'Semanais',
   salao: 'Salão',
+  corporacoes: 'Corporações',
   cosmeticos: 'Cosméticos',
   virtudes: 'Virtudes',
   equipe: 'Equipe',
@@ -33,8 +35,8 @@ const LABEL: Record<Section, string> = {
 /** Seções por cargo (tabela do dono). O servidor decide de novo em cada chamada. */
 const SECTIONS: Record<Exclude<Cargo, 'player'>, Section[]> = {
   dealer: ['casos', 'recompensas', 'semanais', 'salao'],
-  anfitriao: ['casos', 'recompensas', 'semanais', 'salao', 'virtudes', 'equipe', 'jogadores', 'convites'],
-  owner: ['casos', 'recompensas', 'semanais', 'salao', 'virtudes', 'equipe', 'jogadores', 'convites', 'cosmeticos', 'registro', 'ajustes'],
+  anfitriao: ['casos', 'recompensas', 'semanais', 'salao', 'virtudes', 'corporacoes', 'equipe', 'jogadores', 'convites'],
+  owner: ['casos', 'recompensas', 'semanais', 'salao', 'virtudes', 'corporacoes', 'equipe', 'jogadores', 'convites', 'cosmeticos', 'registro', 'ajustes'],
 }
 
 const ROLE_LINE: Record<Exclude<Cargo, 'player'>, string> = {
@@ -56,6 +58,8 @@ export function StaffDesk({ role }: { role: Exclude<Cargo, 'player'> }) {
   const { data: rewards, error: rewardsError } = useRewards()
   const { data: fila } = useFilaSalao()
   const salaoPendentes = (fila?.lotes.length ?? 0) + (fila?.anuncios.length ?? 0)
+  const { data: filaCorp } = useFilaCorporacoes(role !== 'dealer')
+  const corpPendentes = filaCorp?.pendentes.length ?? 0
   const votes = board?.votes ?? []
   const abertos = votes.filter((v) => v.status === 'convocado' || v.status === 'em-progresso').length
   const analise = votes.reduce((n, v) => n + voteTodo(v).analise, 0)
@@ -67,7 +71,7 @@ export function StaffDesk({ role }: { role: Exclude<Cargo, 'player'> }) {
   const items: DeskItem<Section>[] = sections.map((s) => ({
     value: s,
     label: LABEL[s],
-    count: s === 'casos' ? analise + decidir : s === 'recompensas' ? (approver ? minhas : 0) : s === 'salao' ? salaoPendentes : undefined,
+    count: s === 'casos' ? analise + decidir : s === 'recompensas' ? (approver ? minhas : 0) : s === 'salao' ? salaoPendentes : s === 'corporacoes' ? corpPendentes : undefined,
   }))
 
   const tiles: { label: string; value: number; go: Section; hot?: boolean; off?: boolean }[] = [
@@ -127,6 +131,7 @@ export function StaffDesk({ role }: { role: Exclude<Cargo, 'player'> }) {
         {section === 'recompensas' && <RewardsPanel role={role} />}
         {section === 'salao' && <SalaoMesa />}
         {section === 'virtudes' && <VirtudesMesa />}
+        {section === 'corporacoes' && <CorporacoesMesa />}
         {section === 'equipe' && <TeamPanel role={role} />}
         {section === 'jogadores' && <PlayersPanel role={role} />}
         {section === 'convites' && <InvitePanel />}

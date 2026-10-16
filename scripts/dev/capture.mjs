@@ -917,6 +917,8 @@ if (want('sistema') || want('apps') || want('jogos')) {
       await page.goto('about:blank').catch(() => {})
       const g = await account('Convidado', 'DEVO-TEST-0004', VET_CARDS, 'phone', { javaliMet: false })
       await openApp(g.page, 'Sala de Jogos')
+      // a primeira tela da apresentação monta a cena; dá tempo antes da primeira captura
+      await wait(2500)
       for (let i = 0; i < 4; i++) {
         await shot(g.page, `34-javali-${i}`)
         await tryClick(g.page.getByRole('button', { name: /continuar/i }).last())
@@ -1863,6 +1865,186 @@ if (want('desktop')) {
   })
 }
 
+// ── 5. Narrativa e progressão (sys/narrativa): trava → cerimônia → explorar → Galo (Karma) → Melissa ──────
+// Contas: Lacre (DEVO-NARR-0002, sem tutorial) e Sirius (DEVO-NARR-0001, tutorial vencido via SQL).
+if (want('narrativa')) {
+  const { default: pg } = await import('pg')
+  const db = new pg.Pool({ connectionString: process.env.DATABASE_URL })
+  const sql = (t, p) => db.query(t, p).then((r) => r.rows)
+  // A cena do motor é a última <section role=dialog> (outras telas podem ter diálogos ocultos antes).
+  const dlg = (page) => page.locator('section[data-cena]').last()
+  // textContent (não innerText): a legenda de som é caixa-alta só no CSS.
+  const textoDlg = (page) => dlg(page).evaluate((el) => el.textContent ?? '', null, { timeout: 2000 }).catch(() => '')
+  /** Avança a cena até o texto aparecer (por inteiro); escolhas no caminho: a primeira, ou `pick` por rótulo. */
+  async function ate(page, alvo, { pick = {}, max = 400 } = {}) {
+    for (let i = 0; i < max; i++) {
+      const t = await textoDlg(page)
+      if (!t) {
+        // Sem cena aberta: não adianta apertar teclas na home.
+        await wait(500)
+        if (!(await textoDlg(page))) break
+        continue
+      }
+      if (typeof alvo === 'string' ? t.includes(alvo) : alvo.test(t)) {
+        await wait(1600)
+        return true
+      }
+      const grupo = page.locator('[aria-label="Escolha o que dizer"]')
+      if (await grupo.count()) {
+        const quer = Object.entries(pick).find(([k]) => t.includes(k))
+        const alvoBtn = quer ? page.getByRole('button', { name: quer[1], exact: true }) : grupo.locator('button:not([disabled])')
+        await tryClick(alvoBtn.first(), 4000)
+        await wait(700)
+        continue
+      }
+      // Espera a fala terminar de digitar (o texto inteiro fica no DOM) e só então toca para avançar.
+      const pronto = dlg(page).getByRole('button', { name: 'Continuar', exact: true }).first()
+      if (await pronto.count()) {
+        await tryClick(pronto, 2000)
+        await wait(450)
+      } else await wait(300)
+    }
+    manifest.errors.push({ step: 'narrativa-ate', error: `não chegou em ${alvo}; último texto: ${(await textoDlg(page)).slice(-160)}` })
+    return false
+  }
+
+  await step('narrativa-trancado', async () => {
+    const { ctx, page } = await account('Lacre', 'DEVO-NARR-0002', VET_CARDS)
+    await enterOS(page)
+    await wait(1500)
+    await page.locator('section[aria-label="Sistemas"]').first().scrollIntoViewIfNeeded({ timeout: 5000 }).catch(() => {})
+    await wait(800)
+    await shot(page, 'n-01-home-trancado', 'sem o Deadly Vote tutorial: sistemas novos trancados com o motivo')
+    // Erro: cena com flag exigida aberta à força → o servidor recusa (403) e a cena mostra o aviso.
+    await page.evaluate(() => window.dispatchEvent(new CustomEvent('devo:cena', { detail: 'galo-casa' })))
+    await wait(2200)
+    await shot(page, 'n-50-cena-trancada', 'erro: cena exige flag (403 do servidor)')
+    await ctx.close()
+  })
+
+  const { ctx, page } = await account('Sirius', 'DEVO-NARR-0001', VET_CARDS)
+  await step('narrativa-desbloqueio', async () => {
+    const [p] = await sql('SELECT id FROM players WHERE lower(name) = lower($1)', ['Sirius'])
+    for (const f of ['salao_mascaras', 'poco', 'torres', 'diario', 'galo_casa']) {
+      await sql("INSERT INTO player_unlocks (player_id, flag, source, ref) VALUES ($1, $2, 'deadly_vote', 'captura') ON CONFLICT DO NOTHING", [p.id, f])
+    }
+    await enterOS(page)
+    await wait(1200)
+    await shot(page, 'n-02-cerimonia', 'cerimônia de desbloqueio depois do tutorial')
+    await wait(7000)
+    await page.locator('section[aria-label="Sistemas"]').first().scrollIntoViewIfNeeded({ timeout: 5000 }).catch(() => {})
+    await wait(900)
+    await shot(page, 'n-03-home-liberado', 'ícones novos destrancados (losango = ainda não aberto)')
+    await btn(page, 'Poço dos Milagres', true).click({ timeout: 8000 })
+    await wait(2600)
+    await shot(page, 'n-04-sistema-aberto', 'sistema liberado abre a própria tela (Poço) e conta como explorado')
+    // Explorou Poço e Torres (as apresentações deles têm roteiro próprio): grava no save e volta à home.
+    await page.goto(`${BASE}/images/card-back.png`)
+    await api(page, '/api/save', makeSave(VET_CARDS, { sistemasVistos: ['poco', 'torres'], desbloqueiosVistos: ['salao', 'poco', 'torres'] }))
+    await enterOS(page)
+    await wait(1500)
+    const agora = page.getByRole('button', { name: 'Ir para casa' }).first()
+    await agora.scrollIntoViewIfNeeded({ timeout: 5000 }).catch(() => {})
+    await wait(600)
+    await shot(page, 'n-05-cartao-galo', 'depois de explorar: cartão "Ir para casa" (visita do Galo)')
+  })
+
+  await step('narrativa-galo', async () => {
+    await page.getByRole('button', { name: 'Ir para casa' }).first().click({ timeout: 8000 })
+    await wait(2600)
+    await shot(page, 'n-10-galo-abertura', 'narração entre colchetes')
+    await ate(page, 'Som de porta abrindo')
+    await shot(page, 'n-11-galo-som', 'legenda de som')
+    await ate(page, 'Um cativeiro, completamente')
+    await shot(page, 'n-12-galo-escolha', 'escolhas numeradas')
+    await ate(page, 'a campainha toca')
+    await shot(page, 'n-13-galo-campainha')
+    await ate(page, 'Que estranho')
+    await shot(page, 'n-14-galo-pensamento', 'pensamento entre aspas')
+    await ate(page, 'Ir abrir a porta')
+    await shot(page, 'n-15-galo-escolha-acao', 'opções de ação (negrito no texto do dono)')
+    await ate(page, 'Um Anfitrião apareceu')
+    await shot(page, 'n-16-galo-aparece')
+    await ate(page, 'Cláudio')
+    await shot(page, 'n-17-galo-lembra')
+    await page.getByRole('button', { name: 'Galo…?', exact: true }).first().click({ timeout: 5000 })
+    await wait(2600)
+    await shot(page, 'n-18-galo-bingo', 'resposta por opção')
+    await ate(page, 'de tempo para você')
+    await shot(page, 'n-19-galo-tempo', 'Galo transfere Tempo (valor provisório) — selo de Tempo')
+    // Recarregar no meio: retoma no passo salvo e não repete o Tempo.
+    await wait(1200)
+    await enterOS(page)
+    await wait(1500)
+    await page.getByRole('button', { name: 'Ir para casa' }).first().click({ timeout: 8000 })
+    await wait(2800)
+    await shot(page, 'n-20-galo-retomada', 'recarregou: retoma onde parou')
+    await ate(page, 'A luz pisca')
+    await wait(200)
+    await shot(page, 'n-21-galo-luz')
+    await ate(page, 'Sistema de Karma')
+    await shot(page, 'n-22-galo-sistema-karma', 'caixa de sistema')
+    await ate(page, 'medido pela linha do destino')
+    await shot(page, 'n-23-destino-neutro', 'linha do destino (sem número)')
+    await ate(page, 'sobe conforme')
+    await shot(page, 'n-24-destino-ordem')
+    await ate(page, 'rumo ao caos')
+    await shot(page, 'n-25-destino-caos')
+    await ate(page, 'Você come minhocas')
+    await shot(page, 'n-26-galo-duvida')
+    await ate(page, 'Novo contato em Mensagens')
+    await shot(page, 'n-27-galo-contato')
+    await ate(page, 'Pelo menos ele se despediu')
+    await shot(page, 'n-28-galo-fim')
+    await page.keyboard.press('Enter')
+    await wait(2500)
+  })
+
+  await step('narrativa-melissa', async () => {
+    // A chamada da Companhia chega alguns segundos depois de voltar para a home.
+    await enterOS(page)
+    await page.getByRole('dialog', { name: 'Uma chamada da Companhia' }).waitFor({ timeout: 20000 })
+    await wait(1800)
+    await shot(page, 'n-30-melissa-chamada', 'ícone da Companhia + chamada holográfica')
+    await ate(page, 'holograma se materializar')
+    await wait(600)
+    await shot(page, 'n-31-melissa-materializa')
+    await ate(page, 'Sou eu mais uma vez')
+    await shot(page, 'n-32-melissa-holograma', 'holograma em luz fria (ametista/aço)')
+    await ate(page, 'Necro-Corporação?')
+    await shot(page, 'n-33-melissa-escolha')
+    await page.getByRole('button', { name: 'Parece interessante. Onde encontro uma Necro-Corporação?', exact: true }).first().click({ timeout: 5000 })
+    await ate(page, 'retirada do seu Shuffler')
+    await shot(page, 'n-34-melissa-multa', 'opção 2 tira Tempo do Shuffler (provisório)')
+    await ate(page, 'A chamada é encerrada')
+    await shot(page, 'n-35-melissa-encerra')
+    await ate(page, 'tomar mais cuidado')
+    await page.keyboard.press('Enter')
+    await wait(3000)
+    await shot(page, 'n-36-corporacoes-liberado', 'Corporações liberado ao fim da chamada (cerimônia)')
+  })
+
+  await step('narrativa-mensagens', async () => {
+    await wait(6000)
+    await openApp(page, 'Mensagens')
+    await shot(page, 'n-40-mensagens-galo', 'contato do Galo em Mensagens')
+  })
+
+  await step('narrativa-reflexao', async () => {
+    await enterOS(page)
+    await wait(1500)
+    await page.evaluate(() => window.dispatchEvent(new CustomEvent('devo:cena', { detail: { id: 'anfitriao-de-que' }, cancelable: true })))
+    await wait(1500)
+    await ate(page, 'Anfitrião do Imperador.')
+    await shot(page, 'n-41-reflexao', 'reflexão "Anfitrião do quê?" (ao sair das Torres): cinco opções')
+    await page.getByRole('button', { name: 'Anfitrião do Imperador.', exact: true }).first().click({ timeout: 5000 })
+    await wait(3600)
+    await shot(page, 'n-42-reflexao-resposta')
+  })
+  await ctx.close()
+  await db.end()
+}
+
 // ── Poço dos Milagres (sistema novo, DIRECAO-3 §2) ─────────────────────────────────────────
 // Brasa (DEVO-POCO-0001) recebe as flags do Poço e do Diário pelo banco (como se tivesse vencido o tutorial);
 // Cinza (DEVO-POCO-0002) continua trancada. As probabilidades são forçadas pelo banco só para fotografar o
@@ -2280,6 +2462,243 @@ if (want('salao')) {
 
   await estado(null)
   await sql("UPDATE devo_config SET value = $1 WHERE key = 'salao.calendario'", [JSON.stringify(cal)]).catch(() => {})
+  await db?.end().catch(() => {})
+}
+
+// ── Corporações (DIRECAO-3 §2): trancado, holograma (fallback), página vazia, código inválido, pedido,
+// aprovação pelo líder, membros, transferência de carta, criar com custo, fila na Mesa, Necro, erro.
+// Convites DEVO-CORP-0001…0004 (96-seed-corporacoes.sql). Flags e o líder da Ordem vêm por SQL (como o Salão).
+if (want('corporacoes')) {
+  let db = null
+  try {
+    const pg = (await import('pg')).default
+    if (process.env.DATABASE_URL) db = new pg.Pool({ connectionString: process.env.DATABASE_URL })
+  } catch {}
+  const sql = async (text, params) => (db ? (await db.query(text, params)).rows : [])
+  const ORDEM = 'c0a90000-0000-4000-8000-000000000001'
+  const liberarCorp = (nome, apresentado = true) =>
+    sql(
+      `WITH p AS (SELECT id FROM players WHERE lower(name) = lower($1))
+       , f AS (INSERT INTO player_unlocks (player_id, flag, source) SELECT id, 'corporacoes', 'owner' FROM p ON CONFLICT DO NOTHING)
+       INSERT INTO corporacao_estado (player_id, apresentado_at) SELECT id, CASE WHEN $2 THEN now() END FROM p ON CONFLICT DO NOTHING`,
+      [nome, apresentado],
+    ).catch((e) => manifest.errors.push({ step: `corp-flag-${nome}`, error: String(e).slice(0, 300) }))
+  const abrirCorp = async (page, name = 'Corporações') => {
+    await enterOS(page)
+    const b = page.getByRole('button', { name, exact: true }).first()
+    await b.waitFor({ state: 'visible', timeout: 15000 })
+    await b.scrollIntoViewIfNeeded().catch(() => {})
+    await tryClick(b, 8000)
+    await wait(2600)
+  }
+  const aba = async (page, nome) => {
+    await tryClick(page.getByRole('tab', { name: new RegExp(`^${nome}`) }).first())
+    await wait(900)
+    await page.getByRole('tablist', { name: 'Seções da Corporação' }).first().evaluate((el) => el.scrollIntoView({ block: 'start' })).catch(() => {})
+    await wait(400)
+  }
+  const codigo = async (page, c) => {
+    await page.locator('#corp-codigo').fill(c)
+    await tryClick(btn(page, 'Consultar código', true))
+    await wait(1400)
+  }
+
+  await step('corp-trancado', async () => {
+    const { ctx, page } = await account('Cortesa', 'DEVO-CORP-0001', VET_CARDS)
+    await enterOS(page)
+    await page.getByRole('region', { name: 'Sistemas' }).first().scrollIntoViewIfNeeded().catch(() => {})
+    await wait(600)
+    await shot(page, 'corp-00-home-trancado')
+    await abrirCorp(page, 'Corporações: trancado')
+    await shot(page, 'corp-01-trancado')
+    await ctx.close()
+  })
+
+  const cand = await account('Candida', 'DEVO-CORP-0002', VET_CARDS.slice(0, 5))
+  await liberarCorp('Candida', false)
+  await step('corp-holograma', async () => {
+    const page = cand.page
+    await abrirCorp(page)
+    await shot(page, 'corp-02-holograma-chamada')
+    const dlg = page.getByRole('dialog', { name: 'Chamada holográfica da Companhia de Despertados' })
+    let falou = false
+    let escolheu = false
+    for (let i = 0; i < 60; i++) {
+      if (!(await dlg.count())) break
+      const choices = page.locator('[aria-label="Sua resposta"] button')
+      if (await choices.count()) {
+        if (!escolheu) {
+          escolheu = true
+          await wait(500)
+          await shot(page, 'corp-04-holograma-escolha')
+        }
+        await tryClick(choices.first())
+      } else if (!(await tryClick(btn(page, 'Próxima fala', true), 1500))) {
+        await tryClick(btn(page, 'Atender', true), 1500)
+      }
+      await wait(350)
+      if (!falou && (await page.getByText('Sou eu mais uma vez').count())) {
+        falou = true
+        await wait(1200)
+        await shot(page, 'corp-03-holograma-melissa')
+      }
+    }
+    await wait(1200)
+    await shot(page, 'corp-05-vazia')
+    await page.locator('section[aria-label="Fundar uma Corporação"]').first().scrollIntoViewIfNeeded().catch(() => {})
+    await wait(400)
+    await shot(page, 'corp-06-vazia-fundar')
+  })
+
+  await step('corp-codigo', async () => {
+    const page = cand.page
+    await page.evaluate(() => document.querySelector('.devo-scroll')?.scrollTo({ top: 0 })).catch(() => {})
+    await codigo(page, 'CRP-AAAA-AAAA')
+    await shot(page, 'corp-07-codigo-invalido')
+    await codigo(page, 'crp-cnxa-9x4t')
+    await shot(page, 'corp-08-codigo-necro')
+    await page.keyboard.press('Escape')
+    await wait(700)
+    await codigo(page, 'CRP-HQRA-3746')
+    await shot(page, 'corp-09-codigo-previa')
+    await tryClick(page.getByRole('dialog').getByRole('button', { name: 'Enviar pedido', exact: true }).first())
+    await wait(1800)
+    await page.evaluate(() => document.querySelector('.devo-scroll')?.scrollTo({ top: 0 })).catch(() => {})
+    await shot(page, 'corp-10-pedido-enviado')
+  })
+
+  const lid = await account('Lidera', 'DEVO-CORP-0003', VET_CARDS)
+  await sql("UPDATE corporacao_membros SET cargo = 'membro' WHERE corporacao_id = $1 AND cargo = 'lider'", [ORDEM]).catch((e) => manifest.errors.push({ step: 'corp-lider-1', error: String(e).slice(0, 300) }))
+  await sql(
+    "INSERT INTO corporacao_membros (player_id, corporacao_id, cargo) SELECT id, $1, 'lider' FROM players WHERE lower(name) = 'lidera' ON CONFLICT DO NOTHING",
+    [ORDEM],
+  ).catch((e) => manifest.errors.push({ step: 'corp-lider-2', error: String(e).slice(0, 300) }))
+  await liberarCorp('Lidera')
+  await step('corp-lider', async () => {
+    const page = lid.page
+    await abrirCorp(page)
+    await shot(page, 'corp-11-lider-heroi')
+    await aba(page, 'Pedidos')
+    await shot(page, 'corp-12-pedidos-perfil')
+    await tryClick(page.getByRole('button', { name: 'Aprovar', exact: true }).first())
+    await wait(1800)
+    await shot(page, 'corp-13-pedido-aprovado')
+    await aba(page, 'Membros')
+    await shot(page, 'corp-14-membros')
+    await tryClick(page.getByRole('button', { name: 'Gerir Candida' }).first())
+    await wait(900)
+    await shot(page, 'corp-15-gerir-membro')
+    await page.keyboard.press('Escape')
+    await wait(600)
+  })
+
+  await step('corp-transferencia', async () => {
+    const page = lid.page
+    await aba(page, 'Cartas')
+    await tryClick(page.getByRole('group', { name: 'Destinatário' }).getByRole('button', { name: 'Candida' }).first())
+    await wait(300)
+    await tryClick(page.getByRole('list', { name: 'Suas cartas' }).getByRole('button').first())
+    await wait(500)
+    await shot(page, 'corp-16-transferir-escolha')
+    await tryClick(btn(page, 'Transferir carta', true))
+    await wait(1800)
+    await page.getByRole('status').filter({ hasText: 'foi para' }).first().scrollIntoViewIfNeeded().catch(() => {})
+    await wait(400)
+    await shot(page, 'corp-17-transferida')
+    await aba(page, 'Recrutar')
+    await page.locator('#corp-rec-titulo').fill('Procuramos Records de nervos firmes')
+    await page.locator('#corp-rec-texto').fill('Duas vagas para quem já sobreviveu a um Deadly Vote. Reuniões depois de cada edição do Salão.')
+    await tryClick(btn(page, 'Publicar no Salão', true))
+    await wait(1600)
+    await shot(page, 'corp-18-recrutamento')
+    await aba(page, 'Membros')
+    await page.locator('section[aria-label="Jogos coletivos especiais"]').first().scrollIntoViewIfNeeded().catch(() => {})
+    await wait(500)
+    await shot(page, 'corp-19-jogos-em-breve')
+  })
+  await lid.ctx.close()
+
+  await step('corp-membro', async () => {
+    const page = cand.page
+    await abrirCorp(page)
+    await shot(page, 'corp-20-membro-nova')
+    await openApp(page, 'Cartas')
+    await shot(page, 'corp-21-carta-recebida')
+  })
+  await cand.ctx.close()
+
+  const fun = await account('Fundadora', 'DEVO-CORP-0004', VET_CARDS)
+  await liberarCorp('Fundadora')
+  await step('corp-fundar', async () => {
+    const page = fun.page
+    await abrirCorp(page)
+    await page.locator('section[aria-label="Fundar uma Corporação"]').first().scrollIntoViewIfNeeded().catch(() => {})
+    await wait(500)
+    await shot(page, 'corp-22-requisitos-faltando')
+    await sql(
+      "INSERT INTO deadly_vote_entries (vote_id, player_id, outcome) SELECT 'c0a90002-0000-4000-8000-000000000001', id, 'sobreviveu' FROM players WHERE lower(name) = 'fundadora' ON CONFLICT DO NOTHING",
+    ).catch((e) => manifest.errors.push({ step: 'corp-dv', error: String(e).slice(0, 300) }))
+    await abrirCorp(page)
+    const f = btn(page, 'Fundar', true)
+    await f.scrollIntoViewIfNeeded().catch(() => {})
+    await tryClick(f)
+    await wait(1000)
+    await page.locator('#corp-nome').fill('Círculo de Ametista')
+    await page.locator('#corp-lema').fill('Nenhuma joia brilha sozinha.')
+    await tryClick(btn(page, 'Forma: Coroa', true))
+    await tryClick(btn(page, 'Cor: Ametista', true))
+    await wait(500)
+    await shot(page, 'corp-23-fundar-brasao')
+    const pagar = btn(page, 'Pagar e enviar', true)
+    await pagar.scrollIntoViewIfNeeded().catch(() => {})
+    await shot(page, 'corp-24-fundar-custo')
+    await tryClick(pagar)
+    await wait(2000)
+    await page.locator('section[aria-label="Fundar uma Corporação"]').first().scrollIntoViewIfNeeded().catch(() => {})
+    await wait(400)
+    await shot(page, 'corp-25-fundacao-em-analise')
+  })
+
+  await step('corp-mesa', async () => {
+    const o = await account('Veterano', 'DEVO-TEST-ADM1', VET_CARDS)
+    await openApp(o.page, 'Record')
+    await tryClick(o.page.getByRole('tab', { name: /Mesa/i }).first())
+    await wait(2000)
+    await o.page.locator('nav[aria-label="Seções da mesa"]').first().evaluate((el) => el.scrollIntoView({ block: 'start' })).catch(() => {})
+    await tryClick(desk(o.page, 'Corporações'))
+    await wait(1800)
+    await shot(o.page, 'corp-26-mesa-fila')
+    const item = o.page.getByRole('listitem', { name: 'Fundação: Círculo de Ametista' }).first()
+    await item.scrollIntoViewIfNeeded().catch(() => {})
+    await wait(400)
+    await shot(o.page, 'corp-27-mesa-fundacao')
+    if (!(await tryClick(item.getByRole('button', { name: 'Aprovar fundação', exact: true }), 8000))) {
+      const [c] = await sql("SELECT id FROM corporacoes WHERE nome = 'Círculo de Ametista' AND status = 'pendente'").catch(() => [])
+      if (c) await api(o.page, '/api/corporacoes', { action: 'mesa.fundacao', id: c.id, decisao: 'aprovar' })
+      await tryClick(desk(o.page, 'Corporações'))
+    }
+    await wait(2200)
+    const ativa = o.page.getByRole('listitem', { name: 'Corporação Círculo de Ametista' }).first()
+    await ativa.scrollIntoViewIfNeeded().catch(() => {})
+    await wait(400)
+    await shot(o.page, 'corp-28-mesa-aprovada')
+    await tryClick(ativa.getByRole('button', { name: 'Classificar como Necro', exact: true }), 8000)
+    await wait(1800)
+    await o.page.getByRole('listitem', { name: 'Corporação Círculo de Ametista' }).first().scrollIntoViewIfNeeded().catch(() => {})
+    await wait(400)
+    await shot(o.page, 'corp-29-mesa-necro')
+    await o.ctx.close()
+  })
+
+  await step('corp-necro', async () => {
+    const page = fun.page
+    await abrirCorp(page)
+    await shot(page, 'corp-30-necro')
+    await page.route('**/api/corporacoes', (r) => r.fulfill({ status: 500, contentType: 'application/json', body: '{"ok":false,"error":"A Companhia não respondeu. Tente de novo."}' }))
+    await abrirCorp(page)
+    await shot(page, 'corp-31-erro')
+  })
+  await fun.ctx.close()
   await db?.end().catch(() => {})
 }
 
