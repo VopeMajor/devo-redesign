@@ -508,11 +508,30 @@ if (want('sistema') || want('apps') || want('jogos')) {
         await page.mouse.wheel(0, 600)
         await wait(600)
         await shot(page, '23-cartas-detalhe-ficha')
+        await page.mouse.wheel(0, -900)
+        await wait(400)
         if (await tryClick(dlg.getByRole('button', { name: 'Verso', exact: true }).first())) {
-          await page.mouse.wheel(0, -900)
-          await wait(250)
+          // Congela o giro no meio (~240 ms de 760 ms ≈ 60°) para provar a virada e o brilho de aço.
+          await page
+            .waitForFunction(
+              () => {
+                const anims = document.getAnimations().filter((a) => a.effect?.target?.closest?.('[data-stage]'))
+                const flip = anims.find((a) => a.effect?.target?.hasAttribute?.('data-flip'))
+                if (!flip) return false
+                for (const a of anims) {
+                  a.pause()
+                  a.currentTime = a === flip || String(a.animationName ?? '').startsWith('dvcard-flash') ? 240 : a.currentTime
+                }
+                return true
+              },
+              null,
+              { timeout: 2000 },
+            )
+            .catch(() => {})
+          await wait(150)
           await shot(page, '23-cartas-detalhe-girando')
-          await wait(900)
+          await page.evaluate(() => document.getAnimations().forEach((a) => a.playState === 'paused' && a.play())).catch(() => {})
+          await wait(1100)
           await shot(page, '23-cartas-detalhe-verso')
         }
         await tryClick(dlg.getByRole('button', { name: 'Fechar', exact: true }).first())

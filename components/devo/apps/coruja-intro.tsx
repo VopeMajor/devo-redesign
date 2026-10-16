@@ -3,12 +3,12 @@
 import { Check, ChevronLeft, ChevronRight, FastForward, HelpCircle, Shield, Swords } from 'lucide-react'
 import { useCallback, useEffect, useState, type CSSProperties, type ReactNode } from 'react'
 import { playSfx } from '@/lib/devo/audio'
-import { BrassCorners, HudRule } from '@/components/devo/kit'
+import { BrassCorners, HudRule, PortraitFrame } from '@/components/devo/kit'
 import { RARITIES, RARITY_META, getCardMeta, getCollections } from '@/lib/devo/cards'
 import type { Rarity } from '@/lib/devo/types'
 import { cn } from '@/lib/utils'
 import { useAdvanceKeys } from '../hooks'
-import { CardFace, RARITY_SKIN, RarityGem, RarityPips } from '../shared/devo-card'
+import { CardFace, RARITY_SKIN, RarityGem, RarityPips, marbleBlack } from '../shared/devo-card'
 import { useDevo } from '../state/devo-store'
 import { CorujaSprite, type CorujaExpression } from './coruja-sprite'
 
@@ -193,7 +193,7 @@ export function CorujaIntro() {
       className={cn('dv-interior-dark absolute inset-0 z-20 flex animate-dv-fade flex-col overflow-hidden bg-[#0a0a0c] transition-opacity duration-700', leaving && 'opacity-0')}
     >
       {/* salão de mármore negro: veios, luz de vela fria vinda do alto e xadrez quase invisível no chão */}
-      <div aria-hidden="true" className="dv-marble-dark pointer-events-none absolute inset-0 opacity-80" />
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 opacity-85" style={marbleBlack(640)} />
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(70%_45%_at_50%_18%,rgba(236,229,216,0.09),transparent_70%),radial-gradient(60%_40%_at_15%_85%,rgba(111,107,130,0.14),transparent_70%)]" />
       <div aria-hidden="true" className="dv-checker-faint pointer-events-none absolute inset-x-0 bottom-0 h-2/5 opacity-50 [mask-image:linear-gradient(to_top,#000,transparent)]" />
 
@@ -229,26 +229,30 @@ export function CorujaIntro() {
         Lição {ROMAN_CH[chapterIndex]} · {step.chapter}
       </p>
 
-      <div className="relative flex min-h-0 flex-1 items-center justify-center p-4 @2xl:pr-[40%]">
+      {/* palco: a Coruja fica num PortraitFrame cuja base se dissolve ANTES da caixa de fala; com uma
+          vitrine aberta ela recua (≤ 15%) e a vitrine é opaca, para nunca se lerem os dois ao mesmo tempo */}
+      <div className="relative min-h-0 flex-1 [container-type:size]">
+        <div
+          className={cn(
+            'pointer-events-none absolute bottom-0 left-1/2 -translate-x-1/2 transition-[opacity,filter] duration-700 @2xl:left-auto @2xl:right-0 @2xl:translate-x-0',
+            step.kind === 'system' && 'opacity-0 blur-sm',
+            visual && 'opacity-[0.14] blur-[1px] @2xl:opacity-100 @2xl:blur-none',
+          )}
+          style={{ width: 'min(75cqh, 96cqw)' }}
+        >
+          <PortraitFrame alt="Coruja" shape="rect" tone="neutral" className="w-full">
+            <CorujaSprite expression={face} className="size-full" />
+          </PortraitFrame>
+        </div>
         {visual && (
-          <div key={visual} className="relative z-10 w-full max-w-md animate-dv-rise">
-            <SceneFrame>
-              <SceneVisual visual={visual} sampleCards={sampleCards} quiz={step.kind === 'quiz' ? { picked: quiz?.picked ?? null, correct: !!quiz?.correct, onAnswer: answer } : null} />
-            </SceneFrame>
+          <div className="devo-scroll absolute inset-0 flex overflow-y-auto p-4 @2xl:pr-[44%]">
+            <div key={visual} className="relative z-10 m-auto w-full max-w-md animate-dv-rise">
+              <SceneFrame>
+                <SceneVisual visual={visual} sampleCards={sampleCards} quiz={step.kind === 'quiz' ? { picked: quiz?.picked ?? null, correct: !!quiz?.correct, onAnswer: answer } : null} />
+              </SceneFrame>
+            </div>
           </div>
         )}
-      </div>
-
-      <div
-        aria-hidden="true"
-        className={cn(
-          'pointer-events-none absolute bottom-0 right-1/2 h-[78%] w-[22rem] translate-x-1/2 transition-all duration-700 @2xl:right-0 @2xl:h-[96%] @2xl:w-[46%] @2xl:translate-x-0',
-          step.kind === 'system' && 'opacity-0 blur-sm',
-          visual && 'opacity-[0.22] @2xl:opacity-100',
-        )}
-        style={{ maskImage: 'linear-gradient(to top, transparent 0%, #000 18%)' }}
-      >
-        <CorujaSprite expression={face} className="h-full w-full drop-shadow-[0_0_30px_rgba(236,229,216,0.08)]" />
       </div>
 
       <div className="relative z-10 px-3 pb-3 @md:px-5 @md:pb-5">
@@ -310,7 +314,12 @@ export function CorujaIntro() {
               type="button"
               onClick={advance}
               disabled={typer.done && blocked}
-              className="dv-focus dv-cut-diag flex min-h-11 items-center gap-1.5 bg-[#eeedeb] px-5 font-sans text-[12px] font-semibold uppercase tracking-[0.2em] text-[#0c0c0e] transition-[background-color,box-shadow] hover:bg-white hover:shadow-[0_0_22px_-4px_rgba(138,124,200,0.8)] disabled:cursor-not-allowed disabled:opacity-40"
+              className={cn(
+                'dv-focus dv-cut-diag flex min-h-11 items-center gap-1.5 px-5 font-sans text-[12px] font-semibold uppercase tracking-[0.2em] transition-[background-color,box-shadow,color]',
+                typer.done && blocked
+                  ? 'cursor-not-allowed bg-white/[0.03] text-[#eeedeb]/80 shadow-[inset_0_0_0_1px_rgba(220,220,223,0.5)]'
+                  : 'bg-[#eeedeb] text-[#0c0c0e] hover:bg-white hover:shadow-[0_0_22px_-4px_rgba(138,124,200,0.8)]',
+              )}
               style={{ '--dv-cut': '10px' } as CSSProperties}
             >
               {!typer.done ? 'Mostrar' : blocked ? 'Responda' : isLast ? 'Fechar' : 'Continuar'}
@@ -343,7 +352,7 @@ function DialogueBox({ speaker, children }: { speaker: string | null; children: 
 /** Vitrine da lição: painel de veludo com régua de HUD no topo. */
 function SceneFrame({ children }: { children: ReactNode }) {
   return (
-    <div className="dv-record-panel relative px-5 pb-5 pt-4 shadow-[0_30px_60px_-24px_rgba(0,0,0,0.95)] @md:px-7">
+    <div className="dv-record-panel relative px-5 pb-5 pt-4 @md:px-7" style={{ backgroundColor: '#151517' }}>
       <HudRule label="Cartas DEVO · aula" code="OWL" className="mb-4 opacity-80" />
       {children}
     </div>
@@ -422,7 +431,7 @@ function SceneVisual({ visual, sampleCards, quiz }: { visual: Visual; sampleCard
     return (
       <div className="flex flex-col items-center gap-5">
         <div className="relative grid place-items-center">
-          <span aria-hidden="true" className="absolute size-28 rounded-full bg-[radial-gradient(closest-side,rgba(138,124,200,0.35),transparent)] animate-dv-breathe" />
+          <span aria-hidden="true" className="absolute size-28 rounded-full animate-dv-breathe" style={{ background: `radial-gradient(closest-side, ${RARITY_SKIN[QUIZ_TARGET.id].glow}, transparent)` }} />
           <RarityGem rarity={QUIZ_TARGET.id} title="Pedra de raridade misteriosa" className="relative h-24 w-16" />
         </div>
         <div className="grid w-full grid-cols-2 gap-2">
@@ -456,15 +465,28 @@ function SceneVisual({ visual, sampleCards, quiz }: { visual: Visual; sampleCard
   }
   if (visual === 'rarities') {
     return (
-      <div className="flex flex-col items-center gap-4">
-        <div className="grid w-full grid-cols-2 gap-2">
-          {RARITY_TIERS.map((t, i) => (
-            <div key={t.id} className="animate-dv-rise" style={{ animationDelay: `${i * 90}ms` }}>
-              <TierTile rarity={t.id} label={t.label} hint={t.hint} />
-            </div>
-          ))}
-        </div>
-        <span className="font-sans text-[10px] font-medium uppercase tracking-[0.2em] text-white/60">A cor e os losangos revelam a raridade</span>
+      <div className="flex flex-col gap-3">
+        <ul className="flex flex-col">
+          {RARITY_TIERS.map((t, i) => {
+            const skin = RARITY_SKIN[t.id]
+            return (
+              <li key={t.id} className={cn('flex animate-dv-rise items-center gap-3.5 py-2.5', i > 0 && 'border-t border-white/10')} style={{ animationDelay: `${i * 90}ms` }}>
+                <RarityGem rarity={t.id} className="h-11 w-7 shrink-0" />
+                <div className="min-w-0 flex-1">
+                  <p className="flex items-center gap-2">
+                    <span className="font-sans text-[12px] font-semibold uppercase tracking-[0.18em]" style={{ color: skin.light }}>
+                      {t.label}
+                    </span>
+                    <RarityPips rarity={t.id} className="text-[9px]" style={{ color: skin.light }} />
+                  </p>
+                  <p className="mt-0.5 font-serif text-[15px] italic leading-snug text-white/70">{t.hint}</p>
+                </div>
+                <span className="w-[5.2rem] shrink-0 text-right font-mono text-[10px] uppercase leading-tight tracking-[0.1em] text-white/55">{skin.material}</span>
+              </li>
+            )
+          })}
+        </ul>
+        <span className="text-center font-sans text-[10px] font-medium uppercase tracking-[0.2em] text-white/60">O material e os losangos revelam a raridade</span>
       </div>
     )
   }
@@ -529,7 +551,7 @@ function SceneVisual({ visual, sampleCards, quiz }: { visual: Visual; sampleCard
       <dl className="flex min-w-0 flex-col gap-4">
         <div className="border-l border-[#bab09f] pl-3">
           <dt className="font-sans text-[10px] font-medium uppercase tracking-[0.18em] text-white/60">Ordem na Coleção</dt>
-          <dd className="font-serif text-[34px] font-light leading-none tabular-nums text-[#eeedeb]">{sampleMeta.orderLabel}</dd>
+          <dd className="font-impact text-[34px] font-normal leading-none tracking-[0.02em] tabular-nums text-[#eeedeb]">{sampleMeta.orderLabel}</dd>
           <dd className="mt-1 font-sans text-[11px] uppercase tracking-[0.14em] text-white/65">{sampleMeta.collection}</dd>
         </div>
         <div className="border-l border-white/25 pl-3">
