@@ -19,6 +19,8 @@ import { SoundToggle } from '../shared/sound-toggle'
 import { callName, useDevo } from '../state/devo-store'
 import { DeadlyVoteSymbol } from '../system/symbol'
 import { useDeadlyVotes } from '../system/use-deadly-votes'
+import { useAcesso } from '../state/use-acesso'
+import type { UnlockFlag } from '@/lib/devo/progresso'
 import { formatVoteDate } from '@/lib/devo/deadly-votes'
 import { AppBackContext, type AppBack } from './app-back'
 import { useBackHandler } from '../use-back-handler'
@@ -350,7 +352,7 @@ function HomeScreen({
         ) : null}
       </section>
 
-      <LockedSystems />
+      <LockedSystems onOpen={onOpen} />
 
       <div className="flex shrink-0 grow flex-col items-center justify-end gap-2 pb-3 pt-5 text-center">
         <Divider variant="filigree" tone="gold" className="animate-dv-fade w-56 opacity-60 [animation-delay:520ms]" />
@@ -522,28 +524,60 @@ function CriticalVignette() {
 }
 
 /**
- * Os seis sistemas reservados (Direção 2 §3) como emblemas trancados da mesma família: cinza a 60%
- * com cadeado. Informação, não botão.
+ * Os seis sistemas reservados (Direção 2 §3) como emblemas da mesma família: cinza a 60% com cadeado quando
+ * trancados. Os que já têm tela (`SYSTEM_OPEN`) viram botão: liberados acendem; trancados abrem a própria tela
+ * com o motivo (quem decide é o servidor, via `acesso`).
  */
-function LockedSystems() {
+const SYSTEM_OPEN: Partial<Record<FutureSystemId, { app: AppId; flag: UnlockFlag; nome: string }>> = {
+  poco: { app: 'poco', flag: 'poco', nome: 'Poço dos Milagres' },
+}
+
+function LockedSystems({ onOpen }: { onOpen: (id: AppId) => void }) {
+  const acesso = useAcesso()
   return (
-    <section aria-label="Sistemas em breve" className="mt-5">
+    <section aria-label="Sistemas" className="mt-5">
       <div className="animate-dv-fade flex items-center gap-3 px-1 [animation-delay:520ms]">
-        <span className="dv-label text-[10px] text-dv-text-3">Em breve</span>
+        <span className="dv-label text-[10px] text-dv-text-3">Sistemas</span>
         <span aria-hidden="true" className="h-px flex-1 bg-gradient-to-r from-dv-line-strong to-transparent" />
         <span className="dv-label text-[10px] text-dv-text-3">Trancado pelo Anfitrião</span>
       </div>
       <ul className="animate-dv-fade mt-3 grid grid-cols-6 gap-1 [animation-delay:560ms]">
         {FUTURE_SYSTEMS.map((f) => {
           const E = SYSTEM_EMBLEMS[f.id]
-          return (
-            <li key={f.id} className="flex flex-col items-center gap-1.5" title={f.name}>
+          const open = SYSTEM_OPEN[f.id]
+          const livre = !!open && !!acesso?.sistemas[open.flag]
+          const icon = (
+            <>
               <span className="relative grid size-11 place-items-center">
-                <E className="size-9 text-dv-text-3 opacity-60" />
-                <GlyphKeyhole aria-hidden="true" className="absolute -bottom-0.5 -right-0.5 size-3.5 rounded-full bg-dv-ink p-[1px] text-dv-gold" />
+                {livre && <span aria-hidden="true" className="absolute inset-x-1 bottom-0 h-1/2 bg-[radial-gradient(50%_60%_at_50%_100%,rgba(138,124,200,0.5),transparent)]" />}
+                <E
+                  {...(livre ? { metal: true } : {})}
+                  className={cn('relative size-9', livre ? 'text-dv-text drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] group-active:scale-[0.96]' : 'text-dv-text-3 opacity-60')}
+                />
+                {!livre && <GlyphKeyhole aria-hidden="true" className="absolute -bottom-0.5 -right-0.5 size-3.5 rounded-full bg-dv-ink p-[1px] text-dv-gold" />}
               </span>
-              <span className="sr-only">{f.name}: bloqueado</span>
-              <span aria-hidden="true" className="dv-label line-clamp-2 text-center text-[10px] leading-[1.25] tracking-[0.06em] text-dv-text-3">{SHORT_NAME[f.id]}</span>
+              <span aria-hidden="true" className={cn('dv-label line-clamp-2 text-center text-[10px] leading-[1.25] tracking-[0.06em]', livre ? 'text-dv-text' : 'text-dv-text-3')}>
+                {SHORT_NAME[f.id]}
+              </span>
+            </>
+          )
+          return (
+            <li key={f.id} title={open?.nome ?? f.name}>
+              {open ? (
+                <button
+                  type="button"
+                  onClick={() => onOpen(open.app)}
+                  aria-label={livre ? open.nome : `${open.nome}: trancado`}
+                  className="dv-focus group flex w-full flex-col items-center gap-1.5"
+                >
+                  {icon}
+                </button>
+              ) : (
+                <div className="flex flex-col items-center gap-1.5">
+                  {icon}
+                  <span className="sr-only">{f.name}: bloqueado</span>
+                </div>
+              )}
             </li>
           )
         })}

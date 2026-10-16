@@ -1,0 +1,112 @@
+/* Poço dos Milagres — movimentos lentos da cena e da revelação. Tudo para com prefers-reduced-motion. */
+
+.poco-t {
+  transition:
+    transform 1400ms var(--dv-ease-out),
+    opacity 1100ms var(--dv-ease-out);
+}
+.poco-well {
+  transform: translate(-50%, var(--poco-y, -50%)) scale(var(--poco-s, 1));
+  transform-origin: 50% 50%;
+}
+
+/* névoa: três faixas derivando em velocidades diferentes */
+@keyframes poco-fog {
+  from { transform: translateX(-6%); }
+  to { transform: translateX(6%); }
+}
+.poco-fog { animation: poco-fog 38s ease-in-out infinite alternate; }
+.poco-fog-b { animation-duration: 52s; animation-direction: alternate-reverse; }
+.poco-fog-c { animation-duration: 67s; }
+
+/* luz sobrenatural da boca */
+@keyframes poco-glow {
+  0%, 100% { opacity: var(--poco-glow-a, 0.85); }
+  50% { opacity: 1; }
+}
+.poco-glow { animation: poco-glow 7s ease-in-out infinite; }
+
+/* moeda: cai do alto até a boca e some; a água ondula */
+@keyframes poco-coin {
+  0% { transform: translateY(-30px) scale(1); opacity: 0; }
+  12% { opacity: 1; }
+  80% { transform: translateY(86px) scale(0.55); opacity: 1; }
+  100% { transform: translateY(92px) scale(0.4); opacity: 0; }
+}
+.poco-coin {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: poco-coin 820ms var(--dv-ease-in) both;
+}
+@keyframes poco-ripple {
+  0%, 70% { transform: scale(0.15); opacity: 0; }
+  76% { opacity: 0.9; }
+  100% { transform: scale(1.25); opacity: 0; }
+}
+.poco-ripple {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: poco-ripple 1500ms ease-out both;
+}
+
+/* manivela e corda */
+@keyframes poco-spin { to { transform: rotate(360deg); } }
+.poco-crank { transition: transform 600ms var(--dv-ease-out); }
+.poco-crank-on { animation: poco-spin 1100ms linear infinite; }
+@keyframes poco-wind { to { transform: translateX(5.5px); } }
+.poco-rope-wind-on { animation: poco-wind 360ms linear infinite; }
+
+/* balde: sobe pela corda */
+.poco-bucket { transition: transform 1700ms cubic-bezier(0.45, 0.05, 0.25, 1); }
+@keyframes poco-sway {
+  0%, 100% { rotate: 0deg; }
+  30% { rotate: 1.6deg; }
+  70% { rotate: -1.2deg; }
+}
+.poco-bucket-sobe { transform-origin: 200px 0; animation: poco-sway 1700ms ease-in-out; }
+
+/* letreiro: duas cópias lado a lado, rolando para a esquerda */
+@keyframes poco-marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.poco-marquee { animation: poco-marquee var(--poco-marquee-dur, 40s) linear infinite; }
+
+/* revelação do resultado */
+@keyframes poco-reveal {
+  0% { transform: translateY(24px) scale(0.96); opacity: 0; clip-path: inset(0 0 100% 0); }
+  60% { opacity: 1; }
+  100% { transform: none; opacity: 1; clip-path: inset(0 0 0 0); }
+}
+.poco-reveal { animation: poco-reveal 620ms var(--dv-ease-out) both; }
+@keyframes poco-halo {
+  0% { transform: scale(0.6); opacity: 0; }
+  40% { opacity: 1; }
+  100% { transform: scale(1.15); opacity: 0.55; }
+}
+.poco-halo { animation: poco-halo 1200ms var(--dv-ease-out) both; }
+
+/* minigame: acerto e erro (só brilho/cor, nada de tremer a tela) */
+@keyframes poco-hit {
+  0% { opacity: 0.95; }
+  100% { opacity: 0; }
+}
+.poco-hit { animation: poco-hit 420ms ease-out both; }
+
+@media (prefers-reduced-motion: reduce) {
+  .poco-t,
+  .poco-bucket,
+  .poco-crank { transition: none !important; }
+  .poco-fog,
+  .poco-glow,
+  .poco-coin,
+  .poco-ripple,
+  .poco-crank-on,
+  .poco-rope-wind-on,
+  .poco-bucket-sobe,
+  .poco-marquee,
+  .poco-reveal,
+  .poco-halo,
+  .poco-hit { animation: none !important; }
+  .poco-coin, .poco-ripple { opacity: 0; }
+}

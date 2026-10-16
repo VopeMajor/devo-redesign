@@ -1117,6 +1117,193 @@ if (want('desktop')) {
   })
 }
 
+// ── Poço dos Milagres (sistema novo, DIRECAO-3 §2) ─────────────────────────────────────────
+// Brasa (DEVO-POCO-0001) recebe as flags do Poço e do Diário pelo banco (como se tivesse vencido o tutorial);
+// Cinza (DEVO-POCO-0002) continua trancada. As probabilidades são forçadas pelo banco só para fotografar o
+// lixo e o resultado raro, e voltam ao valor original no fim.
+if (want('poco')) {
+  let db = null
+  try {
+    const pg = (await import('pg')).default
+    if (process.env.DATABASE_URL) db = new pg.Pool({ connectionString: process.env.DATABASE_URL })
+  } catch {}
+  const sql = async (text, params) => (db ? (await db.query(text, params)).rows : [])
+  const original = (await sql("SELECT value FROM devo_config WHERE key = 'poco.probabilidades'").catch(() => []))[0]?.value
+  const forcar = async (moeda, cat) => {
+    if (!original) return
+    const v = { ...original, [moeda]: { lixo: 0, capsula: 0, fragmento: 0, essencia: 0, cosmetico: 0, [cat]: 100 } }
+    await sql("UPDATE devo_config SET value = $1 WHERE key = 'poco.probabilidades'", [JSON.stringify(v)])
+  }
+  const restaurar = async () => original && sql("UPDATE devo_config SET value = $1 WHERE key = 'poco.probabilidades'", [JSON.stringify(original)])
+  const abrirPoco = async (page, name) => {
+    await enterOS(page)
+    const b = page.getByRole('button', { name, exact: true }).first()
+    await b.waitFor({ state: 'visible', timeout: 15000 })
+    await b.scrollIntoViewIfNeeded().catch(() => {})
+    await tryClick(b, 8000)
+    await wait(2600)
+  }
+  const fala = (page) => page.getByRole('button', { name: /^(Próxima fala|Mostrar fala completa)$/ }).first()
+  const escolhas = (page) => page.locator('[aria-label="Escolhas de diálogo"] button:not([disabled])')
+
+  await step('poco-trancado', async () => {
+    const { ctx, page } = await account('Cinza', 'DEVO-POCO-0002', VET_CARDS)
+    await enterOS(page)
+    await page.getByRole('region', { name: 'Sistemas' }).first().scrollIntoViewIfNeeded().catch(() => {})
+    await wait(600)
+    await shot(page, 'poco-00-home-trancado')
+    await abrirPoco(page, 'Poço dos Milagres: trancado')
+    await shot(page, 'poco-01-trancado')
+    await ctx.close()
+  })
+
+  const { ctx, page } = await account('Brasa', 'DEVO-POCO-0001', VET_CARDS)
+  await sql(
+    "INSERT INTO player_unlocks (player_id, flag, source) SELECT id, f, 'owner' FROM players, unnest(ARRAY['poco','diario']) f WHERE lower(name) = 'brasa' ON CONFLICT DO NOTHING",
+  ).catch((e) => manifest.errors.push({ step: 'poco-flags', error: String(e).slice(0, 300) }))
+
+  await step('poco-diario-vazio', async () => {
+    await openApp(page, 'Record')
+    await tryClick(page.getByRole('tab', { name: /Diário/ }).first())
+    await wait(1500)
+    await shot(page, 'poco-02-diario-vazio')
+  })
+
+  await step('poco-neblina', async () => {
+    await enterOS(page)
+    await page.getByRole('region', { name: 'Sistemas' }).first().scrollIntoViewIfNeeded().catch(() => {})
+    await wait(800)
+    await shot(page, 'poco-03-home-liberado')
+    await abrirPoco(page, 'Poço dos Milagres')
+    await shot(page, 'poco-04-neblina-rua')
+    const vistos = new Set()
+    const marcar = async (re, nome) => {
+      if (vistos.has(nome)) return
+      if (await page.getByText(re).count()) {
+        vistos.add(nome)
+        await tryClick(fala(page))
+        await wait(1200)
+        await shot(page, nome)
+      }
+    }
+    for (let i = 0; i < 120; i++) {
+      if (!(await page.locator('main[aria-label="Poço dos Milagres: apresentação"]').count())) break
+      const ops = escolhas(page)
+      if (await ops.count()) {
+        await wait(700)
+        if (!vistos.has('poco-06-neblina-escolha-moeda') && (await page.getByText('Usar moeda especial (se houver).').count())) {
+          vistos.add('poco-06-neblina-escolha-moeda')
+          await shot(page, 'poco-06-neblina-escolha-moeda')
+        }
+        const sim = page.locator('[aria-label="Escolhas de diálogo"] button', { hasText: 'Sim, por favor.' })
+        if (await sim.count()) await tryClick(sim.first())
+        else await tryClick(ops.first())
+        await wait(600)
+        continue
+      }
+      await marcar(/Ao se aproximar, você descobre um poço milenar/, 'poco-05-neblina-poco')
+      await marcar(/alguém se aproxima/, 'poco-07-neblina-figura')
+      await marcar(/o mais puro osso/, 'poco-08-neblina-mao')
+      await marcar(/Você recebeu um Dracma/, 'poco-09-neblina-dracma')
+      await marcar(/Nunca tente entrar no poço/, 'poco-10-neblina-aviso')
+      await tryClick(fala(page), 1500)
+      await wait(260)
+    }
+    await wait(1500)
+    await shot(page, 'poco-11-tela')
+  })
+
+  await step('poco-moedas', async () => {
+    await tryClick(btn(page, 'Suas moedas', true))
+    await wait(900)
+    await shot(page, 'poco-12-moedas')
+    await page.keyboard.press('Escape')
+    await wait(600)
+  })
+
+  await step('poco-baldes', async () => {
+    await tryClick(btn(page, 'Inspecionar Balde', true))
+    await wait(900)
+    await shot(page, 'poco-13-baldes-bloqueado')
+    await page.keyboard.press('Escape')
+    await wait(600)
+  })
+
+  await step('poco-giro-lixo', async () => {
+    await forcar('dracma_comum', 'lixo')
+    await tryClick(btn(page, 'Lançar Moeda', true))
+    await wait(900)
+    await shot(page, 'poco-14-lancar')
+    await tryClick(btn(page, 'Usar o giro grátis', true))
+    await wait(500)
+    await shot(page, 'poco-15-moeda-caindo')
+    await wait(900)
+    await tryClick(btn(page, 'Girar Manivela', true))
+    await wait(1100)
+    await shot(page, 'poco-16-minigame')
+    for (let k = 0; k < 3; k++) {
+      await tryClick(page.getByRole('button', { name: 'Puxar a manivela' }).first(), 1500)
+      await wait(450)
+    }
+    await wait(350)
+    await shot(page, 'poco-17-minigame-fim')
+    await wait(1400)
+    await shot(page, 'poco-18-balde-subindo')
+    await wait(2200)
+    await tryClick(btn(page, 'Inspecionar Balde', true))
+    await wait(1400)
+    await shot(page, 'poco-19-resultado-lixo')
+    await tryClick(btn(page, 'Devolver ao poço', true))
+    await wait(900)
+    await shot(page, 'poco-20-giro-gratis-usado')
+    await tryClick(btn(page, 'Lançar Moeda', true))
+    await wait(900)
+    await shot(page, 'poco-21-lancar-gratis-usado')
+    await page.keyboard.press('Escape')
+    await wait(600)
+  })
+
+  await step('poco-giro-raro', async () => {
+    await forcar('dracma_incomum', 'capsula')
+    await tryClick(btn(page, 'Lançar Moeda', true))
+    await wait(800)
+    await tryClick(btn(page, 'Lançar Dracma Incomum', true))
+    await wait(1500)
+    await tryClick(btn(page, 'Girar Manivela', true))
+    await wait(1000)
+    await tryClick(btn(page, 'Soltar a manivela', true))
+    await wait(3800)
+    await tryClick(btn(page, 'Inspecionar Balde', true))
+    await wait(1600)
+    await shot(page, 'poco-22-resultado-raro')
+    await tryClick(btn(page, 'Guardar', true))
+    await wait(800)
+  })
+  await restaurar()
+
+  await step('poco-diario', async () => {
+    await openApp(page, 'Record')
+    await tryClick(page.getByRole('tab', { name: /Diário/ }).first())
+    await wait(1500)
+    await shot(page, 'poco-23-diario')
+  })
+  await ctx.close()
+
+  await step('poco-owner', async () => {
+    const o = await account('Veterano', 'DEVO-TEST-ADM1', VET_CARDS)
+    await abrirPoco(o.page, 'Poço dos Milagres')
+    await shot(o.page, 'poco-24-owner-cena-pular')
+    if (await tryClick(btn(o.page, 'Pular apresentação', true))) await wait(1800)
+    await tryClick(btn(o.page, 'Suas moedas', true))
+    await wait(900)
+    await o.page.getByRole('region', { name: 'Probabilidades do Poço' }).first().scrollIntoViewIfNeeded().catch(() => {})
+    await wait(500)
+    await shot(o.page, 'poco-25-owner-probabilidades')
+    await o.ctx.close()
+  })
+  await db?.end().catch(() => {})
+}
+
 await browser.close()
 writeFileSync(`${OUT}/manifest.json`, JSON.stringify(manifest, null, 2))
 console.log(`capturas: ${manifest.shots.length}, erros: ${manifest.errors.length}, console: ${manifest.console.length}`)
