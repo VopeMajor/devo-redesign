@@ -45,15 +45,25 @@ function ownOrigin(request?: Request) {
   return [`${proto.split(',')[0].trim()}://${host.split(',')[0].trim()}`]
 }
 
+function originOf(url: string | undefined) {
+  if (!url?.trim()) return []
+  try {
+    return [new URL(url.trim()).origin]
+  } catch {
+    return []
+  }
+}
+
+function publicURL() {
+  const url = process.env.BETTER_AUTH_URL || process.env.DEVO_PUBLIC_URL
+  return url?.trim() || undefined
+}
+
 export const auth = betterAuth({
   database: pool,
-  baseURL:
-    process.env.BETTER_AUTH_URL ??
-    (process.env.VERCEL_PROJECT_PRODUCTION_URL
-      ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
-      : process.env.VERCEL_URL
-        ? `https://${process.env.VERCEL_URL}`
-        : process.env.V0_RUNTIME_URL),
+  // Endereço público fixo quando houver (BETTER_AUTH_URL ou DEVO_PUBLIC_URL, ex.: https://devo.<conta>.workers.dev).
+  // Sem nenhum dos dois, o better-auth deduz a origem de cada requisição.
+  baseURL: publicURL(),
   emailAndPassword: {
     enabled: true,
     autoSignIn: true,
@@ -74,26 +84,10 @@ export const auth = betterAuth({
   // iframe) is same-origin by definition, so it is trusted alongside the static list.
   trustedOrigins: (request?: Request) => [
     ...ownOrigin(request),
-    ...(process.env.NODE_ENV === 'development'
-      ? [
-          'http://localhost:3000',
-          ...(process.env.V0_RUNTIME_URL ? [process.env.V0_RUNTIME_URL] : []),
-          ...(process.env.V0_DEV_APP_URL ? [process.env.V0_DEV_APP_URL] : []),
-          ...(process.env.V0_BUILD_URL ? [process.env.V0_BUILD_URL] : []),
-          ...(process.env.V0_SANDBOX_URL ? [process.env.V0_SANDBOX_URL] : []),
-          // The preview iframe host rotates between sessions; pin to v0's preview domains rather than one URL.
-          'https://*.v0.build',
-          'https://*.vercel.run',
-          'https://*.vusercontent.net',
-        ]
-      : []),
-    ...(process.env.NODE_ENV === 'production'
-      ? [
-          ...(process.env.VERCEL_URL ? [`https://${process.env.VERCEL_URL}`] : []),
-          ...(process.env.VERCEL_BRANCH_URL ? [`https://${process.env.VERCEL_BRANCH_URL}`] : []),
-          ...(process.env.VERCEL_PROJECT_PRODUCTION_URL ? [`https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`] : []),
-        ]
-      : []),
+    ...[process.env.BETTER_AUTH_URL, process.env.DEVO_PUBLIC_URL].flatMap((url) => originOf(url)),
+    // Origens extras separadas por vírgula (ex.: um domínio próprio no futuro, ou um preview).
+    ...(process.env.DEVO_EXTRA_ORIGINS ?? '').split(',').flatMap((url) => originOf(url)),
+    ...(process.env.NODE_ENV === 'development' ? ['http://localhost:3000'] : []),
   ],
   session: {
     expiresIn: 60 * 60 * 24 * 30,
@@ -157,16 +151,8 @@ export const auth = betterAuth({
       },
     },
   },
-  ...(process.env.NODE_ENV === 'development'
-    ? {
-        advanced: {
-          // Required by the cross-site v0 preview iframe. Without these
-          // attributes, login succeeds but the next request appears signed out.
-          defaultCookieAttributes: {
-            sameSite: 'none' as const,
-            secure: true,
-          },
-        },
-      }
-    : {}),
+  // Cookies: sem `advanced` de propósito. O better-auth marca `Secure` (prefixo `__Secure-`) quando o
+  // baseURL é https — ou em produção sem baseURL — e usa `HttpOnly` + `SameSite=Lax`, o certo para o
+  // app servido na própria origem (devo.<conta>.workers.dev). O antigo `SameSite=None` só existia
+  // para o iframe de preview do v0. No CI (http://localhost) os cookies seguem sem `Secure`.
 })
