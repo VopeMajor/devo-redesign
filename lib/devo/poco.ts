@@ -47,14 +47,17 @@ export const MANIVELA_PADRAO: ManivelaConfig = {
  * provisórios até o dono revisar.
  */
 export const POCO_LIXO: { id: string; nome: string; texto: string }[] = [
-  { id: 'agua_suja', nome: 'Água suja', texto: 'Água turva, com gosto de ferrugem e folhas velhas.' },
-  { id: 'pedra', nome: 'Uma pedra', texto: 'Lisa, fria e absolutamente comum.' },
-  { id: 'lodo', nome: 'Lodo', texto: 'Um punhado de lodo verde-escuro grudado no fundo do balde.' },
+  { id: 'agua_suja', nome: 'Água suja', texto: 'Um balde de água turva. Tem algo se mexendo no fundo, mas você prefere não saber.' },
+  { id: 'pedra', nome: 'Uma pedra', texto: 'Lisa, fria e profundamente comum. O poço achou que você precisava de uma.' },
+  { id: 'tampao', nome: 'Tampão de lixo', texto: 'A tampa de uma lixeira. O cheiro veio junto, de brinde.' },
+  { id: 'curativo', nome: 'Curativo usado', texto: 'Ainda grudento. Alguém se machucou tentando a sorte antes de você.' },
+  { id: 'meia', nome: 'Meia sem par', texto: 'O par está em algum lugar por aí, provavelmente mais feliz.' },
+  { id: 'dente', nome: 'Um dente', texto: 'Não é seu. Pelo menos você espera que não seja.' },
+  { id: 'boleto', nome: 'Boleto vencido', texto: 'Nem o poço quis pagar.' },
+  { id: 'chiclete', nome: 'Chiclete mascado', texto: 'Ainda tem um resto de gosto de morango. Infelizmente.' },
   { id: 'tampa', nome: 'Tampa de garrafa', texto: 'Alguém já tentou a sorte com isto antes de você.' },
-  { id: 'botao', nome: 'Botão de casaco', texto: 'Um botão de osso, sem linha e sem dono.' },
   { id: 'chave_torta', nome: 'Chave torta', texto: 'Não abre nada. Talvez já tenha aberto, um dia.' },
-  { id: 'galho', nome: 'Galho podre', texto: 'Desfaz-se entre os dedos.' },
-  { id: 'nada', nome: 'Nada', texto: 'O balde volta vazio, pingando.' },
+  { id: 'nada', nome: 'Nada', texto: 'O balde volta vazio, pingando. O poço ficou com a moeda.' },
 ]
 
 export const lixoPorId = (id: string | null | undefined) => POCO_LIXO.find((l) => l.id === id) ?? POCO_LIXO[0]
@@ -208,6 +211,11 @@ export type PocoPayload =
       baldeAtual: string
       aberto: PocoGiroAberto | null
       letreiro: PocoLetreiro[]
+      /**
+       * Faixa de prêmios: além dos reais (`letreiro`), a tela mostra de tempos em tempos prêmios SIMULADOS com
+       * nomes fictícios (pedido do dono). Os nomes já vêm filtrados contra todas as contas e personagens reais.
+       */
+      simulacao: { nomes: string[]; itens: { item: string; raridade: ItemRarity; categoria: PocoCategoria }[] }
       owner?: PocoOwner
     }
 

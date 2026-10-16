@@ -6,7 +6,6 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useReducer,
 import { makeOwned, starterInventory } from '@/lib/devo/cards'
 import { EMPTY_PROFILE, appearanceChangesFor, appearanceOf, changeAppearanceIn, type Appearance, type PlayerProfile } from '@/lib/devo/appearances'
 import { PULSE_START_HOURS } from '@/lib/devo/pulse'
-import { ROOM_LAYOUT, ROOM_RULES } from '@/lib/devo/trade-rooms'
 import type { SaveData, StoryProgress } from '@/lib/devo/save'
 import type {
   AppId,
@@ -92,15 +91,14 @@ type Action =
   | { type: 'TRADE_REVEAL' }
   | { type: 'TRADE_COMPLETE' }
   | { type: 'TRADE_PARTNER_LEAVE' }
-  | { type: 'TRADE_CANCEL'; forfeit?: boolean }
+  | { type: 'TRADE_CANCEL' }
   | { type: 'TRADE_EXIT' }
 
 function initialRooms(): Room[] {
-  return ROOM_LAYOUT.map((rule, i) => ({
+  // Oito salas iguais (Direção 3 §8): só muda quem está dentro.
+  return Array.from({ length: 8 }, (_, i) => ({
     id: `sala-${i + 1}`,
     number: i + 1,
-    rule,
-    condition: ROOM_RULES[rule].label,
     status: [1, 4, 6].includes(i) ? 'ocupada' : 'livre',
   }))
 }
@@ -297,19 +295,13 @@ function reducer(state: DevoState, action: Action): DevoState {
     case 'TRADE_PARTNER_LEAVE':
     case 'TRADE_CANCEL': {
       const t = state.trade
-      if (!t || t.stage === 'done' || t.stage === 'abandoned') return state
-      // Sala "Sem retorno": quem sai depois de pôr a carta perde a carta.
-      const forfeit = action.type === 'TRADE_CANCEL' && !!action.forfeit && !!t.myCard
+      // Depois que os dois aceitaram (revelação), a troca está confirmada: ninguém desfaz.
+      if (!t || t.stage === 'done' || t.stage === 'abandoned' || t.stage === 'revealing') return state
+      // Saída antes da confirmação: cada carta volta ao dono.
       return {
         ...state,
-        inventory: t.myCard && !forfeit ? [t.myCard, ...state.inventory] : state.inventory,
-        trade: {
-          ...t,
-          myCard: forfeit ? null : t.myCard,
-          stage: 'abandoned',
-          partnerTyping: false,
-          endReason: forfeit ? 'forfeit' : action.type === 'TRADE_CANCEL' ? 'cancelled' : 'partner-left',
-        },
+        inventory: t.myCard ? [t.myCard, ...state.inventory] : state.inventory,
+        trade: { ...t, stage: 'abandoned', partnerTyping: false, endReason: action.type === 'TRADE_CANCEL' ? 'cancelled' : 'partner-left' },
       }
     }
     case 'TRADE_EXIT': {

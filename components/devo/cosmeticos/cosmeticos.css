@@ -1,0 +1,78 @@
+/*
+ * Cosméticos: animações discretas e efeitos de nome. Toda animação só roda dentro de `.cos-anim`
+ * (o componente põe a classe quando Ajustes › Animações dos cosméticos está ligado e o sistema não pede
+ * movimento reduzido). Ritmos seguem IDENTIDADE.md: engrenagens ≥ 60 s/volta, ponteiros ≥ 4 min/volta.
+ */
+.cos-art { overflow: visible; }
+.cos-art * { transform-box: view-box; }
+
+.cos-anim .cos-a-spin { animation: cos-giro 90s linear infinite; }
+.cos-anim .cos-a-spin-rev { animation: cos-giro 70s linear infinite reverse; }
+.cos-anim .cos-a-spin-lento { animation: cos-giro 140s linear infinite; }
+.cos-anim .cos-a-ponteiro { animation: cos-giro 240s linear infinite; }
+.cos-anim .cos-a-ponteiro-lento { animation: cos-giro 2880s linear infinite; }
+.cos-anim .cos-a-pendulo { animation: cos-pendulo 2.8s ease-in-out infinite alternate; }
+.cos-anim .cos-a-sino { animation: cos-sino 7s ease-in-out infinite; }
+.cos-anim .cos-a-pulso { animation: cos-pulso 5s ease-in-out infinite; }
+.cos-anim .cos-a-cintila { animation: cos-cintila 6s ease-in-out infinite; }
+.cos-anim .cos-a-chama { animation: cos-chama 3.6s ease-in-out infinite; transform-origin: center bottom; transform-box: fill-box; }
+.cos-anim .cos-a-atraso { animation-delay: -1.7s; }
+.cos-anim .cos-a-runa { animation: cos-pulso 4.2s ease-in-out infinite; }
+
+@keyframes cos-giro { to { transform: rotate(360deg); } }
+@keyframes cos-pendulo { from { transform: rotate(-7deg); } to { transform: rotate(7deg); } }
+@keyframes cos-sino { 0%, 82%, 100% { transform: rotate(0); } 86% { transform: rotate(-9deg); } 90% { transform: rotate(7deg); } 94% { transform: rotate(-4deg); } }
+@keyframes cos-pulso { 0%, 100% { opacity: 0.55; } 50% { opacity: 1; } }
+@keyframes cos-cintila { 0%, 70%, 100% { opacity: 1; } 78% { opacity: 0.35; } 86% { opacity: 1; } }
+@keyframes cos-chama { 0%, 100% { transform: scaleY(1); opacity: 0.85; } 50% { transform: scaleY(1.12) translateY(-2px); opacity: 0.55; } }
+
+/* ── Efeitos do nome (categoria "efeito") ── */
+.cos-nome { font-weight: 600; }
+.cos-ef-noturna {
+  font-family: var(--font-cormorant), Georgia, serif;
+  font-style: italic;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  background: linear-gradient(100deg, #f3ece0 0%, #d8ccb4 40%, #c2b9ec 75%, #ece5d8 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: 0 0 10px rgba(138, 124, 200, 0.35);
+}
+.cos-ef-brasa {
+  font-family: var(--font-card-banner), Georgia, serif;
+  font-weight: 700;
+  background: linear-gradient(180deg, #f7cdd3 0%, #df6a7c 55%, #a8283d 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: 0 1px 6px rgba(163, 18, 31, 0.35);
+}
+.cos-ef-geada {
+  font-family: var(--font-card-title), Georgia, serif;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  background: linear-gradient(100deg, #9aa3b4 0%, #f4f7fb 30%, #b4bccb 50%, #ffffff 62%, #9aa3b4 100%);
+  background-size: 220% 100%;
+  background-position: 100% 0;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.cos-anim .cos-ef-geada, .cos-anim.cos-ef-geada { animation: cos-geada 6s ease-in-out infinite; }
+@keyframes cos-geada { 0%, 60% { background-position: 100% 0; } 100% { background-position: -20% 0; } }
+
+/* Anfitrião (público): tipografia de cerimônia e luz de aço. Diferente de qualquer efeito equipável. */
+.cos-anfitriao {
+  font-family: var(--font-card-title), Georgia, serif;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: #ece5d8;
+  text-shadow: 0 0 1px #000, 0 0 9px rgba(214, 200, 168, 0.55);
+}
+.cos-papel .cos-anfitriao { color: #3d362c; text-shadow: 0 0 6px rgba(186, 176, 159, 0.7); }
+.cos-papel .cos-ef-noturna, .cos-papel .cos-ef-geada { text-shadow: none; filter: brightness(0.55) contrast(1.4); }
+
+@media (prefers-reduced-motion: reduce) {
+  .cos-anim *, .cos-anim { animation: none !important; }
+}

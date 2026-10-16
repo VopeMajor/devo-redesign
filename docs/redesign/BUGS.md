@@ -105,6 +105,13 @@ Cada item: causa confirmada no código → mudança → arquivos.
 - **Arquivos:** `lib/devo/shuffler.ts`, `system/record-file.tsx`, `apps/record-app.tsx`, `shared/deck-panel.tsx`.
 
 ### 8. Regras das salas de troca
+- **Substituído (Direção 3 §8, 16/10):** não há mais tipos de sala. As oito salas seguem a regra única do Rato
+  (`lib/devo/trade-rooms.ts` → `TRADE_RULES`): mesma raridade garantida, carta do outro oculta até a revelação, canal da sala
+  com chat livre (e atalhos), os dois aceitam → revela, troca confirmada não se desfaz (sem Abandonar na revelação); sair antes
+  devolve as cartas. Sem cartas para pôr na mesa, as portas trancam com o motivo. Cartas no Salão das Máscaras
+  (`GET /api/trocas` → `uidsNoSalao`) aparecem trancadas na mão e não vão à mesa. `RoomRule`/`ROOM_RULES` e o "perder a
+  carta" saíram do reducer, do motor, da tela e do roteiro.
+- *Histórico:*
 - **Causa:** a condição era só um texto; o parceiro sempre trazia carta da mesma raridade, só "Silêncio" bloqueava o chat, e o
   Protocolo dizia "a raridade é a mesma" e "as cartas voltam aos donos" (contradiz "Às cegas" e "Sem retorno").
 - **Mudança:** `lib/devo/trade-rooms.ts` com as regras de cada sala: **Às cegas** (raridade qualquer, nenhuma raridade

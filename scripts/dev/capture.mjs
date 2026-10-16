@@ -714,7 +714,7 @@ if (want('sistema') || want('apps') || want('jogos')) {
     await step('trocas', async () => {
       await openApp(page, 'Sala de Trocas')
       await shot(page, '24-trocas')
-      // Sala 1 (Às cegas): regra explicada ao entrar, raridade oculta, frases prontas.
+      // Sala 1: regra da casa ao entrar (mesma raridade, às cegas), mão com contador, canal com atalhos e chat livre.
       if (await tryClick(page.getByRole('button', { name: /^Sala 1,/ }).first())) {
         await wait(1500)
         await shot(page, '24-trocas-sala')
@@ -724,25 +724,19 @@ if (want('sistema') || want('apps') || want('jogos')) {
         await tryClick(page.getByRole('button', { name: 'Qual o tipo da sua carta?' }).first())
         await wait(3800)
         await shot(page, '24-trocas-sala-frase')
+        // Chat livre da sala (Direção 3 §8: todas as salas negociam pelo canal).
+        const chat = page.locator('#trade-chat')
+        if (await chat.count()) {
+          await chat.fill('Troco agora se você aceitar primeiro.').catch(() => {})
+          await tryClick(btn(page, 'Enviar', true))
+          await wait(3800)
+          await shot(page, '24-trocas-sala-chat')
+        }
+        // Abandonar antes de os dois aceitarem: a carta volta para a mão.
         await tryClick(btn(page, /abandonar|sair/i))
         await wait(800)
         await tryClick(btn(page, /voltar ao corredor/i))
         await wait(800)
-      }
-      // Sala 3 (Sem retorno): sair depois de pôr a carta pede confirmação e custa a carta.
-      if (await tryClick(page.getByRole('button', { name: /^Sala 3,/ }).first())) {
-        await wait(1200)
-        await shot(page, '24-trocas-sem-retorno')
-        await tryClick(page.getByRole('button', { name: /^Colocar / }).first())
-        await wait(800)
-        await tryClick(btn(page, /^abandonar$/i))
-        await wait(600)
-        await shot(page, '24-trocas-sem-retorno-confirmar')
-        await tryClick(btn(page, /perder a carta/i))
-        await wait(800)
-        await shot(page, '24-trocas-sem-retorno-perdeu')
-        await tryClick(btn(page, /voltar ao corredor/i))
-        await wait(1000)
       }
       // Corredor rolado até o Protocolo.
       await page.mouse.move(195, 500)
@@ -751,12 +745,14 @@ if (want('sistema') || want('apps') || want('jogos')) {
       await shot(page, '24-trocas-scroll')
       await page.mouse.wheel(0, -4000)
       await wait(500)
-      // Aceitar e revelar numa sala livre qualquer (o parceiro pode desistir: depende da sorte).
-      if (await tryClick(page.locator('button[aria-label^="Sala "]:not([disabled])').first())) {
+      // Aceitar e revelar numa sala livre qualquer (o parceiro pode desistir: até 3 tentativas).
+      for (let attempt = 0, revealedOk = false; attempt < 3 && !revealedOk; attempt++) {
+        if (!(await tryClick(page.getByRole('button', { name: /^Sala \d+, Livre,/ }).first()))) break
         await wait(1200)
         await tryClick(page.getByRole('button', { name: /^Colocar / }).first())
         await wait(7500)
-        if (await tryClick(btn(page, 'Aceitar troca', true), 1500)) {
+        const accepted = await tryClick(btn(page, 'Aceitar troca', true), 1500)
+        if (accepted) {
           await wait(800)
           await shot(page, '24-trocas-aceitou')
           const revealing = await page
@@ -766,14 +762,18 @@ if (want('sistema') || want('apps') || want('jogos')) {
             .then(() => true)
             .catch(() => false)
           if (revealing) {
+            revealedOk = true
             await wait(900)
             await shot(page, '24-trocas-revelacao')
             await wait(3200)
             await shot(page, '24-trocas-revelada')
           }
-          await tryClick(btn(page, /voltar ao corredor/i))
-          await wait(800)
         }
+        // Sai da sala (concluída ou desfeita) antes da próxima tentativa.
+        if (!(await tryClick(btn(page, /voltar ao corredor/i), 1500))) {
+          await tryClick(btn(page, /^abandonar$/i), 1500)
+        }
+        await wait(1000)
       }
     })
     await step('ajustes', async () => {
@@ -1596,8 +1596,12 @@ if (want('torres')) {
       if (await aceitar.count()) {
         await shot(page, 't13-galo-oferta')
         await tryClick(aceitar.first())
-        await wait(900)
+        await wait(1300)
+        await shot(page, 't13b-galo-revelacao', 'cristal se formando')
+        await wait(2200)
         await shot(page, 't14-galo-essencia', '+1 Essência de Afinidade do Galo')
+        await tryClick(btn(page, 'Continuar', true))
+        await wait(800)
         continue
       }
       if (await choices.count()) {
@@ -1642,6 +1646,11 @@ if (want('torres')) {
     await wait(900)
     await shot(page, 't22-andar-ficha')
     await btn(page, 'Subir ao andar I').click({ timeout: 8000 })
+    await wait(1300)
+    await shot(page, 't23a-revelacao', 'cadeado abrindo')
+    await wait(2300)
+    await shot(page, 't23b-revelacao-resultado', 'andar I vencido')
+    await btn(page, 'Continuar', true).click({ timeout: 8000 })
     await wait(2200)
     await shot(page, 't23-andar-cena')
     await passarCena(page, /Torre do Imperador · Andar I$/)
@@ -1678,6 +1687,9 @@ if (want('torres')) {
     await page.getByRole('button', { name: /^Andar I:/ }).first().click({ timeout: 8000 })
     await wait(800)
     await btn(page, 'Subir ao andar I').click({ timeout: 8000 })
+    await wait(3600)
+    await shot(page, 't41a-revelacao-chave', '+1 Chave do Observatório')
+    await btn(page, 'Continuar', true).click({ timeout: 8000 })
     await wait(1500)
     await passarCena(page, /Torre do Observatório · Andar I$/)
     await wait(500)
@@ -1700,6 +1712,8 @@ if (want('torres')) {
     await page.getByRole('button', { name: /^Andar II:/ }).first().click({ timeout: 8000 })
     await wait(800)
     await btn(page, 'Subir ao andar II').click({ timeout: 8000 })
+    await wait(3600)
+    await tryClick(btn(page, 'Continuar', true), 6000)
     await wait(1500)
     await passarCena(page, /Torre do Imperador · Andar II$/)
     await wait(500)
@@ -1901,10 +1915,41 @@ if (want('poco')) {
     await tryClick(btn(page, 'Soltar a manivela', true))
     await wait(3800)
     await tryClick(btn(page, 'Inspecionar Balde', true))
-    await wait(1600)
+    await wait(900)
+    await shot(page, 'poco-22a-revelacao-raro')
+    await wait(1500)
     await shot(page, 'poco-22-resultado-raro')
     await tryClick(btn(page, 'Guardar', true))
     await wait(800)
+  })
+
+  // Uma revelação por categoria (fragmento, essência e os três tipos de cosmético de teste).
+  await step('poco-categorias', async () => {
+    await sql("SELECT devo_item_grant(id, 'dracma_comum', 6, 'captura', NULL, NULL, 'captura-poco-moedas:' || id) FROM players WHERE lower(name) = 'brasa'")
+    await abrirPoco(page, 'Poço dos Milagres')
+    const giroUI = async (nome) => {
+      await tryClick(btn(page, 'Lançar Moeda', true))
+      await wait(800)
+      await tryClick(btn(page, 'Lançar Dracma Comum', true))
+      await wait(1400)
+      await tryClick(btn(page, 'Girar Manivela', true))
+      await wait(900)
+      await tryClick(btn(page, 'Soltar a manivela', true))
+      await wait(2900)
+      await tryClick(btn(page, 'Inspecionar Balde', true))
+      await wait(2500)
+      await shot(page, nome)
+      if (!(await tryClick(btn(page, 'Guardar', true), 1500))) await tryClick(btn(page, 'Devolver ao poço', true), 1500)
+      await wait(900)
+    }
+    await forcar('dracma_comum', 'fragmento')
+    await giroUI('poco-26-resultado-fragmento')
+    await forcar('dracma_comum', 'essencia')
+    await giroUI('poco-27-resultado-essencia')
+    await forcar('dracma_comum', 'cosmetico')
+    await giroUI('poco-28-resultado-cosmetico-1')
+    await giroUI('poco-29-resultado-cosmetico-2')
+    await giroUI('poco-30-resultado-cosmetico-3')
   })
   await restaurar()
 
@@ -2131,6 +2176,262 @@ if (want('salao')) {
   await estado(null)
   await sql("UPDATE devo_config SET value = $1 WHERE key = 'salao.calendario'", [JSON.stringify(cal)]).catch(() => {})
   await db?.end().catch(() => {})
+}
+
+// ── Cosméticos: coleção (arte), inventário, pré-visualização, perfil, chat, ranking, admin, Owner oculto ──
+if (want('cosmeticos')) {
+  const SEED = {
+    Matheus: '00000000-0000-4000-8000-000000000003',
+    Mordomo: '00000000-0000-4000-8000-000000000011',
+    Sentinela: '00000000-0000-4000-8000-000000000010',
+  }
+  const INV = { Matheus: 'DEVO-STAF-MATH', Mordomo: 'DEVO-STAF-MORD', Sentinela: 'DEVO-STAF-SENT' }
+  const seedAcc = async (name) => {
+    const d = await device('phone')
+    await d.ctx.addCookies([{ name: 'devo_player', value: SEED[name], url: BASE }])
+    await d.page.goto(BASE, { waitUntil: 'networkidle' })
+    let up
+    for (let i = 0; i < 6; i++) {
+      up = await api(d.page, '/api/auth/sign-up/email', { email: hexEmail(name), password: 'teste123', name, username: name, displayUsername: name }, { 'x-devo-invite': INV[name] })
+      if (up.status !== 429) break
+      await wait(11000)
+    }
+    if (up.status >= 400) {
+      const inn = await api(d.page, '/api/auth/sign-in/username', { username: name, password: 'teste123' })
+      if (inn.status >= 400) manifest.errors.push({ step: `cos-${name}-auth`, error: `signup ${up.status} ${up.text}; signin ${inn.status}` })
+    }
+    const saved = await api(d.page, '/api/save', makeSave(VET_CARDS))
+    if (saved.status >= 400) manifest.errors.push({ step: `cos-${name}-save`, error: `${saved.status} ${saved.text}` })
+    return d
+  }
+  const view = (page, sel, block = 'start') =>
+    page.locator(sel).first().evaluate((el, b) => el.scrollIntoView({ block: b }), block).catch(() => {})
+  const full = async (page, name) => {
+    try {
+      await page.screenshot({ path: `${OUT}/${name}.jpg`, type: 'jpeg', quality: 80, fullPage: true })
+      manifest.shots.push({ name, note: 'página inteira', url: page.url() })
+    } catch (e) {
+      manifest.errors.push({ step: name, error: String(e).slice(0, 300) })
+    }
+  }
+  const abrirColecao = async (page) => {
+    await openApp(page, 'Record')
+    await wait(1200)
+    await view(page, 'section[aria-label="Identidade e coleção"]', 'center')
+    await wait(500)
+    await tryClick(btn(page, 'Abrir coleção', true), 4000)
+    await wait(1500)
+    await view(page, 'section[aria-label="Coleção de cosméticos"]', 'start')
+    await wait(500)
+  }
+  const aba = (page, nome) => tryClick(page.getByRole('tablist', { name: 'Categorias da coleção' }).getByRole('tab', { name: nome, exact: true }).first())
+  const item = (page, nome) => page.locator('ul[aria-label^="Itens:"] button').filter({ hasText: nome }).first()
+
+  // Vitrine da coleção inteira (arte em tamanho grande): celular e área de trabalho.
+  await step('cos-galeria', async () => {
+    const { ctx, page } = await device('phone')
+    await page.goto(`${BASE}/estilo/cosmeticos`, { waitUntil: 'networkidle' })
+    await wait(1500)
+    await shot(page, 'cos-00-galeria-topo')
+    for (const [sel, nome] of [['article[aria-label="Olho do Arcano"]', 'cos-01-galeria-arcano'], ['article[aria-label="Última Badalada"]', 'cos-02-galeria-badalada'], ['section[aria-label="Emblemas"]', 'cos-03-galeria-emblemas'], ['section[aria-label="Balões"]', 'cos-04-galeria-baloes'], ['section[aria-label="Efeitos do nome"]', 'cos-05-galeria-efeitos']]) {
+      await view(page, sel)
+      await wait(500)
+      await shot(page, nome)
+    }
+    await ctx.close()
+    const d = await device('desktop')
+    await d.page.goto(`${BASE}/estilo/cosmeticos`, { waitUntil: 'networkidle' })
+    await wait(1500)
+    await full(d.page, 'cos-06-galeria-grade-completa')
+    await d.ctx.close()
+  })
+
+  const mat = await seedAcc('Matheus')
+  const sen = await seedAcc('Sentinela')
+  const mor = await seedAcc('Mordomo')
+
+  // Jogador com coleção: perfil equipado, inventário, pré-visualização, bloqueados, equipar.
+  await step('cos-jogador', async () => {
+    const page = mat.page
+    await openApp(page, 'Record')
+    await wait(1200)
+    await shot(page, 'cos-10-record-moldura')
+    await view(page, 'section[aria-label="Identidade e coleção"]', 'center')
+    await wait(600)
+    await shot(page, 'cos-11-record-identidade')
+    await tryClick(btn(page, 'Abrir coleção', true), 4000)
+    await wait(1500)
+    await view(page, 'section[aria-label="Coleção de cosméticos"]', 'start')
+    await wait(500)
+    await shot(page, 'cos-12-colecao')
+    await view(page, 'ul[aria-label^="Itens:"]', 'start')
+    await wait(500)
+    await shot(page, 'cos-13-colecao-grade-molduras')
+    if (await tryClick(item(page, 'Pacto Carmesim'))) {
+      await wait(600)
+      await view(page, 'section[aria-label="Coleção de cosméticos"]', 'start')
+      await wait(400)
+      await shot(page, 'cos-14-preview-bloqueado')
+      await view(page, 'article[aria-label^="Detalhe:"]', 'center')
+      await wait(400)
+      await shot(page, 'cos-15-detalhe-bloqueado')
+    }
+    if (await tryClick(item(page, 'Asas da Coruja'))) {
+      await wait(600)
+      await view(page, 'article[aria-label^="Detalhe:"]', 'center')
+      await shot(page, 'cos-16-detalhe-obtido')
+      await tryClick(page.locator('article[aria-label^="Detalhe:"]').getByRole('button', { name: 'Equipar', exact: true }))
+      await wait(1600)
+      await view(page, 'section[aria-label="Coleção de cosméticos"]', 'start')
+      await wait(400)
+      await shot(page, 'cos-17-equipado-sem-recarregar')
+    }
+    await view(page, 'div[aria-label="Formato da moldura"]', 'start')
+    await tryClick(page.getByRole('button', { name: 'Miniperfil · quadrada' }).first())
+    await wait(700)
+    await shot(page, 'cos-18-colecao-miniperfil')
+    for (const [t, n] of [['Emblemas', 'cos-19-colecao-emblemas'], ['Balões', 'cos-20-colecao-baloes'], ['Efeitos', 'cos-21-colecao-efeitos']]) {
+      await view(page, 'div[aria-label="Categorias da coleção"]', 'start')
+      await aba(page, t)
+      await wait(700)
+      await shot(page, n)
+    }
+    await view(page, 'div[aria-label="Categorias da coleção"]', 'start')
+    await aba(page, 'Balões')
+    await wait(400)
+    if (await tryClick(item(page, 'Ecos do Arcano'))) {
+      await view(page, 'section[aria-label="Coleção de cosméticos"]', 'start')
+      await wait(600)
+      await shot(page, 'cos-22-preview-balao')
+    }
+    // Volta a moldura original (o roteiro pode rodar de novo).
+    await api(page, '/api/cosmeticos', { action: 'equipar', slot: 'moldura_avatar', key: 'cosmetico:moldura-heranca-marfim' })
+  })
+
+  // Chat da mesa com balões, miniperfis e o Anfitrião; o Owner (Sentinela) aparece como jogador comum.
+  await step('cos-chat', async () => {
+    const page = mat.page
+    await openApp(page, 'Sala de Jogos')
+    await wait(1500)
+    await view(page, 'section[aria-label="Chat da mesa"]', 'start')
+    await wait(1800)
+    await shot(page, 'cos-30-chat-baloes')
+    await page.evaluate(() => document.querySelector('section[aria-label="Chat da mesa"] ul')?.scrollTo(0, 0))
+    await wait(600)
+    await shot(page, 'cos-31-chat-anfitriao')
+    if (await tryClick(page.getByRole('button', { name: 'Abrir miniperfil de Sentinela' }).first())) {
+      await wait(1800)
+      await shot(page, 'cos-32-miniperfil-owner-oculto')
+      await page.keyboard.press('Escape')
+      await wait(500)
+    }
+    if (await tryClick(page.getByRole('button', { name: 'Abrir miniperfil de Ísis' }).first())) {
+      await wait(1800)
+      await shot(page, 'cos-33-miniperfil-jogadora')
+      await page.keyboard.press('Escape')
+      await wait(500)
+    }
+    if (await tryClick(page.getByRole('button', { name: 'Abrir miniperfil de Mordomo' }).first())) {
+      await wait(1800)
+      await shot(page, 'cos-34-miniperfil-anfitriao')
+      await page.keyboard.press('Escape')
+      await wait(500)
+    }
+  })
+
+  await step('cos-ranking', async () => {
+    const page = mat.page
+    await openApp(page, 'Sala de Jogos')
+    await view(page, 'section[aria-label="Ranking da semana"]', 'start')
+    await wait(1500)
+    await shot(page, 'cos-40-ranking-mesa')
+    await page.getByRole('tab', { name: 'Ranking', exact: true }).first().click({ timeout: 3000 }).catch(() => {})
+    await wait(1800)
+    await page.evaluate(() => document.querySelector('[role="tabpanel"]')?.scrollBy(0, 330))
+    await wait(900)
+    await shot(page, 'cos-41-ranking-podio')
+    await page.evaluate(() => document.querySelector('[role="tabpanel"]')?.scrollBy(0, 420))
+    await wait(900)
+    await shot(page, 'cos-42-ranking-lista')
+  })
+
+  // Owner: a própria coleção inteira liberada e a Mesa › Cosméticos / Semanais.
+  await step('cos-owner', async () => {
+    const page = sen.page
+    await openApp(page, 'Record')
+    await wait(1200)
+    await shot(page, 'cos-50-owner-record')
+    await abrirColecao(page)
+    await shot(page, 'cos-51-owner-colecao-livre')
+    await view(page, 'ul[aria-label^="Itens:"]', 'start')
+    await wait(500)
+    await shot(page, 'cos-52-owner-grade')
+    await openApp(page, 'Record')
+    await tryClick(page.getByRole('tab', { name: /Mesa/i }).first())
+    await wait(2000)
+    await view(page, 'nav[aria-label="Seções da mesa"]', 'start')
+    await tryClick(desk(page, 'Cosméticos'))
+    await wait(2000)
+    await shot(page, 'cos-53-admin-catalogo')
+    if (await tryClick(page.getByRole('button', { name: /^Editar Última Badalada/ }).first())) {
+      await wait(1000)
+      await shot(page, 'cos-54-admin-editor')
+      await view(page, 'fieldset', 'center')
+      await wait(400)
+      await shot(page, 'cos-55-admin-editor-disponibilidade')
+      await tryClick(btn(page, 'Cancelar', true))
+      await wait(600)
+    }
+    await tryClick(page.getByRole('tab', { name: 'Conceder', exact: true }).first())
+    await wait(1500)
+    await tryClick(page.locator('ul[aria-label="Resultados"] button').first())
+    await wait(400)
+    await shot(page, 'cos-56-admin-conceder')
+    await tryClick(page.getByRole('tab', { name: 'Histórico', exact: true }).first())
+    await wait(1500)
+    await shot(page, 'cos-57-admin-historico')
+    await view(page, 'nav[aria-label="Seções da mesa"]', 'start')
+    await tryClick(desk(page, 'Semanais'))
+    await wait(1800)
+    await shot(page, 'cos-58-owner-semanais')
+    if (await tryClick(btn(page, 'Criar plano', true))) {
+      await wait(900)
+      await shot(page, 'cos-59-owner-semanal-novo')
+    }
+  })
+
+  await step('cos-anfitriao', async () => {
+    const page = mor.page
+    await openApp(page, 'Record')
+    await tryClick(page.getByRole('tab', { name: /Mesa/i }).first())
+    await wait(2000)
+    await view(page, 'nav[aria-label="Seções da mesa"]', 'start')
+    await tryClick(desk(page, 'Semanais'))
+    await wait(1800)
+    await shot(page, 'cos-60-anfitriao-semanais')
+    await openApp(page, 'Record')
+    await wait(1200)
+    await view(page, 'section[aria-label="Identidade e coleção"]', 'center')
+    await wait(600)
+    await shot(page, 'cos-61-anfitriao-identidade')
+  })
+
+  // Conta nova (ainda sem vencer o tutorial): coleção trancada com o motivo. Ajustes: desligar animações.
+  await step('cos-trancado', async () => {
+    const { ctx, page } = await account('Cardo', 'DEVO-TEST-0008', VET_CARDS)
+    await openApp(page, 'Record')
+    await wait(1200)
+    await view(page, 'section[aria-label="Identidade e coleção"]', 'center')
+    await wait(600)
+    await shot(page, 'cos-70-colecao-trancada')
+    await openApp(page, 'Ajustes')
+    await wait(800)
+    await view(page, 'button[aria-label="Animações dos cosméticos"]', 'center')
+    await shot(page, 'cos-71-ajustes-animacoes')
+    await ctx.close()
+  })
+
+  for (const d of [mat, sen, mor]) await d.ctx.close().catch(() => {})
 }
 
 await browser.close()

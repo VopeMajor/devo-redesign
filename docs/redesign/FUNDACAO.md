@@ -368,3 +368,49 @@ teste `scripts/dev/salao-test.mjs` (CI → `salao-test.log`).
   direto no mural (idempotente por corporação + `ref`). O agente de Corporações chama depois de validar quem recruta.
 - **Mesa:** seção "Salão" do StaffDesk (`components/devo/salao/salao-mesa.tsx`) → `GET /api/salao?view=avaliacao`.
 - **Shuffler:** `DeckPanel` ganhou `shufflerAction`; o Record passa `<EnviarBandejaAcao />` (só aparece liberado).
+
+## 12. Cosméticos (agente Cosméticos)
+
+Arquivos: `scripts/cosmeticos-migration.sql`, `lib/devo/cosmeticos.ts` (puro: tipos, espaços, raridades, `Visual`),
+`lib/devo/cosmeticos-server.ts`, `app/api/cosmeticos/route.ts`, `components/devo/cosmeticos/*` (arte em
+`art/`, exibição em `cosmetic-art.tsx`, coleção, painel do Owner, semanais), seed `scripts/dev/94-seed-cosmeticos.sql`,
+teste `scripts/dev/cosmeticos-test.mjs` (CI → `cosmeticos-test.log`), vitrine `/estilo/cosmeticos`.
+
+- **Catálogo** = `item_defs` `kind 'cosmetico'`, chave `cosmetico:<id>`, `stackable = false`. `meta`: `categoria`
+  (`moldura_avatar` | `moldura_mini` | `emblema` | `balao` | `efeito`), `asset` (`devo:<grupo>/<arte>` = arte SVG do
+  código, ou URL de upload/https), `animado`, `poco`, `origem` (`poco`, `semanal`, `deadly_vote`, `evento`, `exclusivo`,
+  `anfitriao`), `automatico` (não se equipa: Selo do Anfitrião), `par` (o mesmo desenho no outro formato), `ordem`.
+  Coleção inicial: 8 molduras × 2 formatos, 12 emblemas, 5 balões, 3 efeitos de nome.
+- **Posse** = inventário genérico. Novo: `player_items.expires_at` (NULL = permanente) para temporários futuros;
+  posse válida = `quantity > 0 AND (expires_at IS NULL OR expires_at > now())`.
+- **Equipados** = `player_cosmetics` (1 por espaço). `equiparCosmetico()` exige posse válida e item ativo; o Owner
+  (`can(ator, 'cosmetico.equipar_qualquer')`) equipa qualquer item, até inativo. Revogar desequipa.
+- **Público**: `visuais(ids)` → `Visual { id, foto, av, mini, emb, bal, ef, anfitriao }`. Sem cargo; `anfitriao` vem
+  de `publicCargo`. Item revogado/expirado some; item inativo nunca aparece em público (nem no Owner). O Owner não tem
+  marca: aparece só com o que equipou — todo item que ele usa também pode ser obtido por jogadores, então não dá
+  para deduzir o cargo. O Selo do Anfitrião é automático e ninguém o equipa (nem o Owner: seria um selo de
+  Anfitrião num "jogador", o que revelaria o cargo).
+- **Poço**: sorteia `meta.poco = true` com peso por raridade (`poco.raridade_pesos`, §10). Itens de semana, Deadly
+  Vote e evento ficam fora do Poço.
+- **Raridades configuráveis**: `devo_config['cosmeticos.raridades']` (rótulo, cor, brilho; provisório).
+- **Assets enviados**: `cosmetic_assets` (bytea, SVG/PNG/WebP ≤ 400 KB; não há storage de arquivos no projeto).
+  SVG com script/eventos/conteúdo embutido é recusado; servido com CSP `default-src 'none'` e sempre exibido em
+  `<img>`. Também aceita URL https.
+- **Recompensas semanais** (`weekly_reward_plans` + `weekly_reward_log`, gatilho `devo_weekly_plan_guard`): plano por
+  semana/jogo/critério (`top1`, `top3`, `top10`, `participacao`) e recurso (item existente do catálogo, tempo, carta,
+  convite). Owner cria e aprova; Anfitrião propõe e só aprova/distribui com `staff_authorizations`
+  `recompensa.semanal` com `ref = 'Semana AAAA-MM-DD'` (segunda-feira, Brasília) ou ref nula; Dealer só sugere.
+  Mudança relevante numa aprovada volta para `proposta`. Distribuir cria uma proposta `semanal` por vencedor
+  (`origin = 'Semana AAAA-MM-DD'`) via `proposeRewardIn(..., { aprovar: 'se-puder', entregar: true })`; uma vez só.
+
+API (`/api/cosmeticos`): `GET` (minha coleção) · `?view=catalogo` · `?view=visuais&ids=` · `?view=asset&id=` ·
+`?view=admin` · `?view=historico[&item=&jogador=]` · `?view=planos`. `POST {action}`: `equipar {slot, key|null}` ·
+`admin.salvar {item}` · `admin.asset {mime, base64}` · `admin.conceder` / `admin.revogar {playerId, key, motivo}` ·
+`plano.criar` / `plano.editar` / `plano.aprovar` / `plano.rejeitar` / `plano.cancelar` / `plano.distribuir`.
+Mudança em rota existente: `/api/arcade` — linhas do ranking (`leaderboard`, `rankings[*].rows`) ganharam `pid` e o
+dashboard ganhou `me.id`, para as telas pedirem a aparência pública. `admin_log`: `cosmetico.item`,
+`cosmetico.asset`, `cosmetico.concedido`, `cosmetico.revogado`.
+
+Cliente: `useVisuais(ids)` (lote, SWR 30 s), `useMeusCosmeticos()`, `equipar()` (invalida todas as chaves
+`/api/cosmeticos…`: perfil, miniperfil, chat e ranking mudam sem recarregar). Animações só com Ajustes ›
+"Animações dos cosméticos" ligado e sem `prefers-reduced-motion`; em listas (chat, ranking) ficam paradas.
