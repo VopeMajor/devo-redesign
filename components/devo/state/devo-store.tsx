@@ -62,6 +62,7 @@ type Action =
   | { type: 'ARCADE_REVEAL_DONE' }
   | { type: 'SET_PHASE'; phase: Phase }
   | { type: 'START_SESSION' }
+  | { type: 'RETURN_STARTER_CARDS' }
   | { type: 'STORY'; story: StoryProgress | null }
   | { type: 'SET_PLAYER'; name: string }
   | { type: 'SET_CHARACTER'; name: string }
@@ -166,6 +167,9 @@ function reducer(state: DevoState, action: Action): DevoState {
       }
     case 'START_SESSION':
       return { ...freshState('intro', state.playerName, state.characterName), hasSession: true, story: { part: 'prologue', index: 0 } }
+    case 'RETURN_STARTER_CARDS':
+      // Escolha do prólogo: devolve à Melissa o kit inicial (o jogador começa sem cartas).
+      return { ...state, inventory: [] }
     case 'STORY':
       return { ...state, story: action.story }
     case 'SET_PLAYER':
