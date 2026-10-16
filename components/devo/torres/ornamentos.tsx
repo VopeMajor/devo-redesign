@@ -220,11 +220,14 @@ export function CristalEssencia({ className, style, brilho = true }: { className
       ))}
       <ellipse cx={46} cy={44} rx={9} ry={20} fill={`url(#${d.gemHi})`} />
       <path d="M50 6L40 50" stroke="#ffffff" strokeWidth={0.8} opacity={0.8} />
-      {/* garras */}
-      <path d="M24 46Q30 56 26 66L32 60Q34 54 30 46Z" fill={`url(#${d.steel})`} />
-      <path d="M76 46Q70 56 74 66L68 60Q66 54 70 46Z" fill={`url(#${d.steel})`} />
-      <path d="M36 98Q50 108 64 98L62 104Q50 112 38 104Z" fill={`url(#${d.steel})`} />
-      <path d="M46 112L50 118L54 112L50 128Z" fill="#2b2547" opacity={0.4} />
+      {/* engaste: cinta de aço na cintura do cristal com rebites e garras finas */}
+      <path d="M26.6 47L73.4 47L72.8 55L27.2 55Z" fill={`url(#${d.steel})`} />
+      <path d="M27 49.5H73" stroke="#fffaf0" strokeWidth={0.6} opacity={0.7} />
+      {[34, 44, 56, 66].map((x) => (
+        <circle key={x} cx={x} cy={51} r={1.1} fill="#5f584d" />
+      ))}
+      <path d="M50 47L53 51L50 55L47 51Z" fill={`url(#${d.gem})`} stroke="#ece5d8" strokeWidth={0.4} />
+      <path d="M28 55L31 66L33 55Z M72 55L69 66L67 55Z" fill={`url(#${d.steel})`} />
     </svg>
   )
 }

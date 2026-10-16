@@ -220,7 +220,7 @@ function AndarLinha({ andar, essencia, recem, topo, atraso, onAbrir }: { andar: 
         </svg>
         {/* texto flutuante */}
         <span className="relative min-w-0 flex-1 py-2 pl-1 pr-2">
-          <span aria-hidden="true" className="pointer-events-none absolute -inset-x-3 -inset-y-1 -z-10 bg-[radial-gradient(60%_70%_at_30%_50%,rgba(8,8,10,0.86),rgba(8,8,10,0.5)_60%,transparent)]" />
+          <span aria-hidden="true" className="pointer-events-none absolute -inset-x-6 -inset-y-4 -z-10 bg-[radial-gradient(closest-side,rgba(8,8,10,0.82),rgba(8,8,10,0.45)_65%,transparent)]" />
           <span className="flex items-baseline gap-2">
             <span className={cn('font-impact text-[30px] font-semibold leading-none -skew-x-[8deg]', a.estado === 'trancado' ? 'text-dv-text-3' : vivo ? 'text-dv-amethyst-text' : 'text-dv-gold-bright')}>{toRoman(a.n)}</span>
             <span className="dv-label text-[10px] text-dv-text-3">Andar</span>

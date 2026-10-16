@@ -34,7 +34,7 @@ export function MapaTorres({
   const pos = (t: TorreEstado) => ({ x: (t.mapa.x / 100) * MAPA_W, y: (t.mapa.y / 100) * MAPA_H })
   const caminho = torres.map(pos)
   return (
-    <div className={cn('relative mx-auto overflow-hidden', !largura && 'w-full max-w-[460px]')} style={{ aspectRatio: `${MAPA_W} / ${MAPA_H}`, width: largura }}>
+    <div className={cn('relative mx-auto overflow-hidden [mask-image:linear-gradient(to_right,transparent,#000_7%,#000_93%,transparent)]', !largura && 'w-full max-w-[460px]')} style={{ aspectRatio: `${MAPA_W} / ${MAPA_H}`, width: largura }}>
       {/* mostrador gigante no céu (o tempo julga até as torres) */}
       <div aria-hidden="true" className="pointer-events-none absolute left-1/2 top-[1%] w-[96%] -translate-x-1/2 opacity-[0.16] [mask-image:radial-gradient(closest-side,#000_60%,transparent)]">
         <RomanDial tone="silver" />

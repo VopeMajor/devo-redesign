@@ -4,7 +4,6 @@ import { type CSSProperties, useEffect, useState } from 'react'
 import { playSfx } from '@/lib/devo/audio'
 import { ITEM_RARITY_LABEL, type ItemRarity } from '@/lib/devo/progresso'
 import { cn } from '@/lib/utils'
-import { toRoman } from '../kit'
 import { useMediaQuery } from '../hooks'
 import { starPath } from './arte'
 import { BotaoTorre, Cadeado, ChaveOrnamental, CristalEssencia, EstrelaAndar } from './ornamentos'
@@ -71,7 +70,7 @@ export function Revelacao({
   const nCristais = Math.min(Math.max(gasto, tipo === 'essencia' ? 6 : 1), 8)
 
   return (
-    <div role="dialog" aria-modal="true" aria-label={titulo} className="absolute inset-0 z-50 flex flex-col overflow-hidden bg-[#08080a]/95 animate-dv-fade" data-fase={fase}>
+    <div role="dialog" aria-modal="true" aria-label={titulo} className="absolute inset-0 z-50 flex flex-col overflow-hidden bg-[#08080a]/[0.97] animate-dv-fade" data-fase={fase}>
       {/* luz que cresce com a fase */}
       <div
         aria-hidden="true"
@@ -150,8 +149,7 @@ export function Revelacao({
             {item.tipo === 'selo' && (
               <div className="relative grid place-items-center">
                 <EstrelaAndar estado="concluido" className="size-[min(62vw,240px)] drop-shadow-[0_14px_30px_rgba(0,0,0,0.85)]" />
-                {andar ? <span className="absolute font-impact text-[40px] font-semibold text-[#141416] -skew-x-[8deg]">{toRoman(andar)}</span> : null}
-              </div>
+                              </div>
             )}
             {/* faíscas */}
             {Array.from({ length: nFaiscas }, (_, i) => {
