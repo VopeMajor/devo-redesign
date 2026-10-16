@@ -8,6 +8,7 @@
  * (`opcoes[].resposta` = falas só daquela opção; `opcoes[].ir` = salto) e efeitos (`efeito`). Concordância de
  * gênero com o marcador `{masculino|feminino}` (DIRECAO-3, "Gênero nos textos").
  */
+import { playerText } from './player-name'
 
 export type NeblinaQuem = 'narrador' | 'jogador' | 'figura' | 'sistema'
 export type NeblinaPalco = 'rua' | 'poco' | 'figura' | 'mao' | 'partiu'
@@ -119,8 +120,10 @@ export const NEBLINA: NeblinaNo[] = [
   J('jog-fim', 'Parece que eu me esqueci de perguntar o seu nome…'),
 ]
 
-/** Resolve o marcador de gênero `{masculino|feminino}` (mesmo formato de lib/devo/player-name.ts › playerText). */
-export function generoTexto(texto: string, genero: string | null | undefined) {
-  const f = genero === 'Feminino'
-  return texto.replace(/\{([^{}|]*)\|([^{}|]*)\}/g, (_, m: string, fem: string) => (f ? fem : m))
+/**
+ * Resolve o marcador de gênero `{masculino|feminino}` com o helper comum (lib/devo/player-name.ts › playerText).
+ * A figura nunca é nomeada; o Corvo do elenco (lib/devo/npcs.ts) ainda é silhueta pendente, e a cena usa a própria.
+ */
+export function generoTexto(texto: string, genero: string | null | undefined, nome?: string | null) {
+  return playerText(texto, { gender: genero, name: nome })
 }
