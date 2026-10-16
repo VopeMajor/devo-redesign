@@ -917,6 +917,8 @@ if (want('sistema') || want('apps') || want('jogos')) {
       await page.goto('about:blank').catch(() => {})
       const g = await account('Convidado', 'DEVO-TEST-0004', VET_CARDS, 'phone', { javaliMet: false })
       await openApp(g.page, 'Sala de Jogos')
+      // a primeira tela da apresentação monta a cena; dá tempo antes da primeira captura
+      await wait(2500)
       for (let i = 0; i < 4; i++) {
         await shot(g.page, `34-javali-${i}`)
         await tryClick(g.page.getByRole('button', { name: /continuar/i }).last())
