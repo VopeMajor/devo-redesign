@@ -132,17 +132,39 @@ function DevoRoot() {
               beginSession()
               return
             }
+            // Saiu no meio da encenação inicial: volta exatamente à fala em que parou.
+            if (!state.welcomed) {
+              playMusic()
+              transition('Reconectando', () => {
+                setPrologue(state.story?.part !== 'tutorial')
+                dispatch({ type: 'SET_PHASE', phase: 'intro' })
+              })
+              return
+            }
             playMusic()
             transition('Reconectando', () => dispatch({ type: 'SET_PHASE', phase: 'os' }))
           }}
         />
       )}
       {state.phase === 'intro' && prologue && (
-        <PrologueScreen playerName={callName(state)} onFinish={() => transition('Deadly Vote', () => setPrologue(false))} />
+        <PrologueScreen
+          playerName={callName(state)}
+          startIndex={state.story?.part === 'prologue' ? state.story.index : 0}
+          startVars={state.story?.part === 'prologue' ? state.story.vars : undefined}
+          onProgress={(index, vars) => dispatch({ type: 'STORY', story: { part: 'prologue', index, vars } })}
+          onFinish={() =>
+            transition('Deadly Vote', () => {
+              dispatch({ type: 'STORY', story: { part: 'tutorial', index: 0 } })
+              setPrologue(false)
+            })
+          }
+        />
       )}
       {state.phase === 'intro' && !prologue && (
         <IntroScreen
           playerName={callName(state)}
+          startIndex={state.story?.part === 'tutorial' ? state.story.index : 0}
+          onProgress={(index) => dispatch({ type: 'STORY', story: { part: 'tutorial', index } })}
           onFinish={() =>
             transition('Inicializando DEVO', () => {
               dispatch({ type: 'SET_PHASE', phase: 'os' })
@@ -151,7 +173,7 @@ function DevoRoot() {
           }
         />
       )}
-      {state.phase === 'os' && <DevoOS onExit={exitToLanding} onRestart={start} />}
+      {state.phase === 'os' && <DevoOS onExit={exitToLanding} />}
       {state.phase === 'os' && offerPwa && <PwaOffer onClose={() => setOfferPwa(false)} />}
       {state.phase === 'os' && <ArcadeUnlock />}
 

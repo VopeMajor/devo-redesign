@@ -204,9 +204,6 @@ export function DesktopShell() {
           <div className="relative mt-4 flex flex-col">
             <MenuRow onClick={() => openApp('ajustes')}>Ajustes do sistema</MenuRow>
             <MenuRow onClick={nav.exitToLanding}>Voltar à tela inicial</MenuRow>
-            <MenuRow onClick={() => openApp('ajustes')} danger>
-              Reiniciar sessão…
-            </MenuRow>
           </div>
         </div>
       )}

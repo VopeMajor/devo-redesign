@@ -12,14 +12,12 @@ import {
 } from '@/lib/devo/prologue-script'
 import { cn } from '@/lib/utils'
 import { APPEARANCE_KIND_LABEL, autoAppearance, appearancePool, type AppearanceKind } from '@/lib/devo/appearances'
-import { loadVoiceManifest } from '@/lib/devo/voice'
-import { prologueLineId } from '@/lib/devo/voice-lines'
 import { useAdvanceKeys } from '../hooks'
 import { useDevo } from '../state/devo-store'
 import { EntradaButton } from '../landing/entrada-button'
 import { GlyphCard, GlyphSpark, toRoman } from '../kit/glyphs'
 import { PrologueStage } from './prologue-stage'
-import { AdvanceIndicator, ChoiceHeader, ChoiceStrip, DialogueShell, SpeakerPlate, VnTopBar, useTypewriter, useVoicedLine } from './vn'
+import { AdvanceIndicator, ChoiceHeader, ChoiceStrip, DialogueShell, SpeakerPlate, VnTopBar, useTypewriter } from './vn'
 
 const CHAR_MS = 28
 const PAPER_STAGES: StageId[] = ['rumor', 'kids', 'boy', 'girl', 'hands', 'omen', 'trip', 'fall']
@@ -281,13 +279,26 @@ function PaperBox({ text, done, live = false }: { text: string; done: boolean; l
   )
 }
 
-export function PrologueScreen({ playerName, onFinish: onDone }: { playerName: string | null; onFinish: () => void }) {
+export function PrologueScreen({
+  playerName,
+  onFinish: onDone,
+  startIndex = 0,
+  startVars,
+  onProgress,
+}: {
+  playerName: string | null
+  onFinish: () => void
+  /** Retomar de onde o jogador parou (Continuar). */
+  startIndex?: number
+  startVars?: Record<string, string>
+  onProgress?: (index: number, vars: Record<string, string>) => void
+}) {
   const onFinish = useCallback(() => {
     setPrologueMusic(null)
     playMusic()
     onDone()
   }, [onDone])
-  const [index, setIndex] = useState(0)
+  const [index, setIndex] = useState(() => Math.min(Math.max(0, startIndex), PROLOGUE.length - 1))
   const lastStage = useRef<StageId | null>(null)
   const lastAct = useRef<Act | null>(null)
 
@@ -296,14 +307,15 @@ export function PrologueScreen({ playerName, onFinish: onDone }: { playerName: s
     return () => setPrologueMusic(null)
   }, [])
   const { dispatch } = useDevo()
-  useEffect(() => {
-    void loadVoiceManifest()
-  }, [])
   const [replies, setReplies] = useState<Line[]>([])
   /** Qual opção gerou as respostas atuais (para achar o id da fala dublada). */
   const [replyFrom, setReplyFrom] = useState<{ option: number; total: number } | null>(null)
   const [explored, setExplored] = useState<string[]>([])
-  const [profile, setProfile] = useState<Profile>({})
+  const [profile, setProfile] = useState<Profile>(() => ({ ...(startVars as Profile | undefined) }))
+  // Grava o ponto da encenação a cada quadro (o autosave manda ao servidor).
+  useEffect(() => {
+    onProgress?.(index, Object.fromEntries(Object.entries(profile).filter((e): e is [string, string] => typeof e[1] === 'string')))
+  }, [index, profile]) // eslint-disable-line react-hooks/exhaustive-deps
   const [mood, setMood] = useState<MelissaMood>('neutral')
 
   const beat = PROLOGUE[index]
@@ -311,13 +323,7 @@ export function PrologueScreen({ playerName, onFinish: onDone }: { playerName: s
   const fill = (t: string) => t.replaceAll('{nome}', name)
   const line: Line | null = replies[0] ?? (beat.kind === 'line' ? beat.line : null)
   const text = line ? fill(line.text) : ''
-  const lineId = !line
-    ? null
-    : replies.length > 0 && replyFrom
-      ? prologueLineId(index, replyFrom.option, replyFrom.total - replies.length)
-      : prologueLineId(index)
-  // A legenda/voz do aparelho usa o texto já com o nome do personagem; a voz gerada omite o nome.
-  const charMs = useVoicedLine(line && lineId ? { id: lineId, text, cast: line.who } : null, CHAR_MS)
+  const charMs = CHAR_MS
   const { shown, done, finish } = useTypewriter(text, charMs)
 
   const next = useCallback(() => {
@@ -377,6 +383,8 @@ export function PrologueScreen({ playerName, onFinish: onDone }: { playerName: s
   const choose = (label: string, reply: Line[]) => {
     playSfx('confirm')
     const option = beat.kind === 'choice' ? beat.options.findIndex((o) => o.label === label) : 0
+    // "Devolver" as Cartas Iniciais é pra valer: o jogador fica sem cartas.
+    if (beat.kind === 'choice' && beat.options[option]?.effect === 'return-starter-cards') dispatch({ type: 'RETURN_STARTER_CARDS' })
     setReplyFrom({ option, total: reply.length })
     setExplored((e) => [...e, label])
     setReplies(reply)
@@ -469,7 +477,6 @@ export function PrologueScreen({ playerName, onFinish: onDone }: { playerName: s
 
       <VnTopBar
         skipLabel="Pular prólogo"
-        dub
         onSkip={onFinish}
         chapter={
           act ? (

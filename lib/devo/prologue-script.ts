@@ -27,7 +27,7 @@ export type ProfileField = 'name' | 'face' | 'age' | 'gender'
 
 export type Beat =
   | { kind: 'line'; stage: StageId; line: Line; auto?: number; sfx?: 'crush' | 'reveal' | 'notify' | 'card' }
-  | { kind: 'choice'; stage: StageId; mode: 'one' | 'explore'; options: { label: string; reply: Line[] }[] }
+  | { kind: 'choice'; stage: StageId; mode: 'one' | 'explore'; options: { label: string; reply: Line[]; /** Consequência real da escolha no save. */ effect?: 'return-starter-cards' }[] }
   | { kind: 'input'; stage: StageId; field: ProfileField }
 
 const n = (stage: StageId, text: string, extra: Partial<Extract<Beat, { kind: 'line' }>> = {}): Beat => ({
@@ -168,7 +168,7 @@ export const PROLOGUE: Beat[] = [
     stage: 'mine',
     mode: 'one',
     options: [
-      { label: 'Devolver', reply: [m('Não quer mesmo? Tudo bem.', 'serious')] },
+      { label: 'Devolver', reply: [m('Não quer mesmo? Tudo bem.', 'serious')], effect: 'return-starter-cards' },
       {
         label: 'Obrigado. Eu vou usar bem… Mas como?',
         reply: [m('O Tutorial vai começar. Cheque seu aplicativo Devo no celular. Há uma parte dedicada chamada “Deadly Vote”, onde você poderá encontrar o acesso gerado para a primeira vez. Quando completar, volte aqui. Muitas novas funções serão desbloqueadas depois disso.')],

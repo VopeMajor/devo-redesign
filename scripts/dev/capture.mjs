@@ -765,16 +765,6 @@ if (want('sistema') || want('apps') || want('jogos')) {
       await page.mouse.wheel(0, 800)
       await wait(600)
       await shot(page, '25-ajustes-scroll')
-      // Reiniciar sessão: dois passos, salva no servidor, não pede convite.
-      await btn(page, 'Reiniciar sessão', true).click({ timeout: 3000 })
-      await wait(500)
-      await page.mouse.wheel(0, 800)
-      await shot(page, '25-ajustes-reiniciar-confirmar')
-      await btn(page, 'Sim, reiniciar', true).click({ timeout: 3000 })
-      await wait(2500)
-      await shot(page, '25-ajustes-reiniciar-feito')
-      await openApp(page, 'Pulso')
-      await shot(page, '25-ajustes-reiniciar-pulso')
     })
   }
 
