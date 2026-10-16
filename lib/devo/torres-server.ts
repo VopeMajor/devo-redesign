@@ -140,6 +140,7 @@ function montarTorre(t: TorreDef, conteudo: ConteudoTorres, feitos: Set<number>,
     andares: t.andares.map((a, i) => montarAndar(t, conteudo, a, i + 1, feitos, s, nomes)),
     concluidos: feitos.size,
     provisorio: !!t.provisorio,
+    ilustracao: t.ilustracao ?? null,
   }
 }
 
