@@ -1,0 +1,533 @@
+{
+  "base": "http://localhost:3000",
+  "shots": [
+    {
+      "name": "60-staff-jogador-record",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "60-staff-jogador-inscricao-em-analise",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "60-staff-jogador-convites",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "61-staff-dealer-mesa",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "61-staff-dealer-inscricoes",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "61-staff-dealer-inscricao-aceita",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "61-staff-dealer-decisao",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "61-staff-dealer-decisao-lista",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "61-staff-dealer-aplicar-confirmar",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "61-staff-dealer-aplicado",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "61-staff-dealer-convocar",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "61-staff-dealer-convocar-recompensas",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "61-staff-dealer-recompensas",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "61-staff-dealer-recompensas-scroll",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "61-staff-erro",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "62-staff-anfitriao-mesa",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "62-staff-anfitriao-aprovacoes",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "62-staff-anfitriao-aprovado",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "62-staff-anfitriao-tutorial-decisao",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "62-staff-anfitriao-tutorial-aplicado",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "62-staff-anfitriao-equipe",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "62-staff-anfitriao-jogador",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "62-staff-anfitriao-convites",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "63-staff-owner-record",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "63-staff-owner-mesa",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "63-staff-owner-recompensas",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "63-staff-owner-equipe",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "63-staff-owner-jogador",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "63-staff-owner-registro",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "63-staff-owner-ajustes",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "60-staff-jogador-depois",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-00-galeria-topo",
+      "note": "",
+      "url": "http://localhost:3000/estilo/cosmeticos"
+    },
+    {
+      "name": "cos-01-galeria-arcano",
+      "note": "",
+      "url": "http://localhost:3000/estilo/cosmeticos"
+    },
+    {
+      "name": "cos-02-galeria-badalada",
+      "note": "",
+      "url": "http://localhost:3000/estilo/cosmeticos"
+    },
+    {
+      "name": "cos-03-galeria-emblemas",
+      "note": "",
+      "url": "http://localhost:3000/estilo/cosmeticos"
+    },
+    {
+      "name": "cos-04-galeria-baloes",
+      "note": "",
+      "url": "http://localhost:3000/estilo/cosmeticos"
+    },
+    {
+      "name": "cos-05-galeria-efeitos",
+      "note": "",
+      "url": "http://localhost:3000/estilo/cosmeticos"
+    },
+    {
+      "name": "cos-06-galeria-grade-completa",
+      "note": "página inteira",
+      "url": "http://localhost:3000/estilo/cosmeticos"
+    },
+    {
+      "name": "cos-10-record-moldura",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-11-record-identidade",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-12-colecao",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-13-colecao-grade-molduras",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-14-preview-bloqueado",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-15-detalhe-bloqueado",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-16-detalhe-obtido",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-17-equipado-sem-recarregar",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-18-colecao-miniperfil",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-19-colecao-emblemas",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-20-colecao-baloes",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-21-colecao-efeitos",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-22-preview-balao",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-30-chat-baloes",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-31-chat-anfitriao",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-32-miniperfil-owner-oculto",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-33-miniperfil-jogadora",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-34-miniperfil-anfitriao",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-40-ranking-mesa",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-41-ranking-podio",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-42-ranking-lista",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-50-owner-record",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-51-owner-colecao-livre",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-52-owner-grade",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-53-admin-catalogo",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-54-admin-editor",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-55-admin-editor-disponibilidade",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-56-admin-conceder",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-57-admin-historico",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-58-owner-semanais",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-59-owner-semanal-novo",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-60-anfitriao-semanais",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-61-anfitriao-identidade",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-70-colecao-trancada",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-71-ajustes-animacoes",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "v01-home-trancado",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "v02-trancado",
+      "note": "jogador sem o tutorial: motivo",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "v03-sem-arcano",
+      "note": "liberado, Arcano ainda sem registro (vazio)",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "v04-imperatriz-roda",
+      "note": "Arcano da Imperatriz: Taças excelente, Paus deficiente",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "v05-imperatriz-potencial",
+      "note": "pouco acumulado",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "v06-imperatriz-antigas",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "v07-home-liberado",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "v08-morte-roda",
+      "note": "Arcano da Morte, Estágio I",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "v09-evolucao-antes",
+      "note": "P.P. perto do limite, pronto para a metamorfose",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "v10-morte-naipes",
+      "note": "afinidades em palavras",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "v11-historico-vazio",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "v12-evolucao-depois",
+      "note": "Estágio II",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "v13-depois-potencial",
+      "note": "acúmulo recomeça",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "v14-depois-historico",
+      "note": "histórico: mais cresceu / menos cresceu",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "v15-record-arcano",
+      "note": "ficha do Record com o Arcano",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "v16-mesa-jogadores",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "v17-mesa-detalhes",
+      "note": "P.P., atributos, afinidade e histórico com números",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "v18-mesa-evoluir-armado",
+      "note": "confirmação em dois toques",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "v19-mesa-tabela",
+      "note": "tabela editável, provisória",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "v20-mesa-divergencia",
+      "note": "nota da divergência para o dono confirmar",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "v21-mesa-limites",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "v22-erro",
+      "note": "",
+      "url": "http://localhost:3000/"
+    }
+  ],
+  "errors": [],
+  "console": [
+    {
+      "page": "http://localhost:3000/",
+      "text": "HTTP 429",
+      "src": "http://localhost:3000/api/auth/sign-up/email"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "Failed to load resource: the server responded with a status of 429 (Too Many Requests)",
+      "src": "http://localhost:3000/api/auth/sign-up/email"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "HTTP 400",
+      "src": "http://localhost:3000/api/auth/sign-up/email"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "Failed to load resource: the server responded with a status of 400 (BAD_REQUEST)",
+      "src": "http://localhost:3000/api/auth/sign-up/email"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "HTTP 400",
+      "src": "http://localhost:3000/api/auth/sign-up/email"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "Failed to load resource: the server responded with a status of 400 (BAD_REQUEST)",
+      "src": "http://localhost:3000/api/auth/sign-up/email"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "HTTP 400",
+      "src": "http://localhost:3000/api/auth/sign-up/email"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "Failed to load resource: the server responded with a status of 400 (BAD_REQUEST)",
+      "src": "http://localhost:3000/api/auth/sign-up/email"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "HTTP 500",
+      "src": "http://localhost:3000/api/virtudes"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "Failed to load resource: the server responded with a status of 500 (Internal Server Error)",
+      "src": "http://localhost:3000/api/virtudes"
+    }
+  ]
+}
