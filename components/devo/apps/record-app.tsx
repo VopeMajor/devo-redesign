@@ -350,7 +350,7 @@ function ConvocationPoster({
       style={{ '--dv-cut': '16px' } as CSSProperties}
     >
       <BrassCorners size={30} inset={4} />
-      <span aria-hidden="true" className="dv-marble-dark pointer-events-none absolute inset-0 opacity-60" />
+      <span aria-hidden="true" className="bg-[url(/images/os/marmore-negro.webp)] bg-[length:560px_560px] pointer-events-none absolute inset-0 opacity-60" />
       <div className="relative p-5 pb-4">
         <div className="flex items-center justify-between gap-3">
           <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-in-fg-2">

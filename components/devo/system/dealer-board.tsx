@@ -377,22 +377,24 @@ function GroupLinkField({ vote: v, pending, onSave }: { vote: StaffVote; pending
     <div className="border-t border-in-line px-3.5 pb-3.5 pt-3">
       <RecLabel hint={v.status === 'em-progresso' ? 'visível aos inscritos' : closed ? 'caso fechado' : 'aparece quando começar'}>Grupo do WhatsApp</RecLabel>
       {v.groupUrl && !editing ? (
-        <div className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1">
-          <span className="grid size-9 shrink-0 place-items-center bg-[#1c1c1f] text-[#ece5d8]" aria-hidden="true">
-            <Link2 className="size-4" strokeWidth={1.4} />
-          </span>
-          <p className="min-w-0 flex-1 break-all font-mono text-[12px] leading-snug tracking-[0.02em] text-in-fg" title={v.groupUrl}>
-            <span className="block text-[10px] text-in-fg-3">chat.whatsapp.com/</span>
-            {code}
-          </p>
-          <span className="flex shrink-0">
-          <RecButton surface="paper" variant="ghost" size="sm" onClick={() => setEditing(true)} className="px-1.5">
-            Trocar
-          </RecButton>
-          <RecButton surface="paper" variant="ghost" size="sm" loading={pending} onClick={() => onSave(null)} className="px-1.5 text-in-fg-2">
-            Remover
-          </RecButton>
-          </span>
+        <div className="mt-2 flex flex-col gap-1">
+          <div className="flex min-w-0 items-center gap-2.5">
+            <span className="grid size-9 shrink-0 place-items-center bg-[#1c1c1f] text-[#ece5d8]" aria-hidden="true">
+              <Link2 className="size-4" strokeWidth={1.4} />
+            </span>
+            <p className="min-w-0 flex-1 truncate font-mono text-[12px] tracking-[0.02em] text-in-fg" title={v.groupUrl}>
+              <span className="text-in-fg-3">chat.whatsapp.com/</span>
+              {code}
+            </p>
+          </div>
+          <div className="flex justify-end gap-1">
+            <RecButton surface="paper" variant="ghost" size="sm" onClick={() => setEditing(true)} className="px-1.5">
+              Trocar
+            </RecButton>
+            <RecButton surface="paper" variant="ghost" size="sm" loading={pending} onClick={() => onSave(null)} className="px-1.5 text-in-fg-2">
+              Remover
+            </RecButton>
+          </div>
         </div>
       ) : (
         <form

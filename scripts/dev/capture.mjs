@@ -596,7 +596,7 @@ if (want('sistema') || want('apps') || want('jogos')) {
       const inn = await api(d.page, '/api/auth/sign-in/username', { username: 'Veterano', password: 'teste123' })
       if (inn.status >= 400) throw new Error(`signin ${inn.status} ${inn.text}`)
       await enterOS(d.page)
-      await d.page.getByRole('button', { name: 'Record', exact: true }).first().dblclick({ timeout: 3000 })
+      await d.page.getByRole('button', { name: 'Record', exact: true }).first().dblclick({ timeout: 10000 })
       await wait(2600)
       await shot(d.page, '20-record-desktop')
       await d.ctx.close()

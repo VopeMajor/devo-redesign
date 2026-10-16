@@ -85,7 +85,7 @@ export function RecordFile({
           <div className="flex min-w-0 flex-col gap-4">
             <figure className="relative" style={{ transform: 'rotate(-2.2deg)' } as CSSProperties}>
               <div className="bg-[#fbfaf7] p-1.5 pb-6 shadow-[0_6px_14px_rgba(13,13,15,0.3),0_0_0_1px_rgba(13,13,15,0.08)]">
-                <div className="dv-marble-dark relative aspect-[3/4] overflow-hidden bg-[#1f1f22]">
+                <div className="bg-[url(/images/os/marmore-negro.webp)] bg-[length:560px_560px] relative aspect-[3/4] overflow-hidden bg-[#1f1f22]">
                   {data.photoUrl ? (
                     // biome-ignore lint/performance/noImgElement: foto enviada pelo usuário, servida pela API privada
                     <img src={data.photoUrl} alt={`Foto de ${data.name}`} className="absolute inset-0 size-full object-cover grayscale-[0.15]" />
@@ -220,7 +220,7 @@ function LifePlate({ remainingMs, critical }: { remainingMs: number; critical: b
   return (
     <div
       className={cn(
-        'dv-cut dv-marble-dark relative overflow-hidden bg-[#0c0c0e] px-4 pb-3 pt-3 text-dv-text shadow-[inset_0_0_0_1px_rgba(186,176,159,0.5)]',
+        'dv-cut bg-[url(/images/os/marmore-negro.webp)] bg-[length:560px_560px] relative overflow-hidden bg-[#0c0c0e] px-4 pb-3 pt-3 text-dv-text shadow-[inset_0_0_0_1px_rgba(186,176,159,0.5)]',
         critical && 'shadow-[inset_0_0_0_1px_rgba(255,90,99,0.6)]',
       )}
       style={{ '--dv-cut': '10px' } as CSSProperties}
