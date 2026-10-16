@@ -1,0 +1,38 @@
+{
+  "id": "moldura-rosa-destino",
+  "tipo": "moldura",
+  "origem": {
+    "pedido": "rosa-do-destino-avatar",
+    "variacao": "v01",
+    "modelo": "importado",
+    "seed": 0,
+    "importado": "arte/importados/rosa-do-destino-avatar.png"
+  },
+  "tamanho_original": [
+    1024,
+    1024
+  ],
+  "arquivos": [
+    "1024.webp",
+    "512.webp",
+    "256.webp",
+    "96.webp",
+    "48.webp"
+  ],
+  "janela": {
+    "forma": "circulo",
+    "centro_px": [
+      512.0,
+      512.0
+    ],
+    "raio_px": [
+      256.0,
+      256.0
+    ],
+    "raio_fracao": [
+      0.25,
+      0.25
+    ],
+    "avatar_sob_moldura": "avatar centrado na janela, 4% maior, por baixo do asset"
+  }
+}
