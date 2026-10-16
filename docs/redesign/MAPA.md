@@ -34,6 +34,7 @@ com vermelho de alerta (#d51f2b) e "papel claro" (`.dv-light`) no Record, tipogr
 | **Sala de Trocas** | Corredor com 8 salas (condições), troca às cegas com parceiro simulado (chat, aceitar, revelar) | `apps/trocas-app.tsx`, `lib/devo/trade-bots.ts`, reducer `TRADE_*` |
 | **Ajustes** | Som, PWA/notificações, sistema, limpar avisos, tela inicial, reiniciar sessão | `apps/ajustes-app.tsx`, `shared/pwa-panel.tsx`, `shared/sound-toggle.tsx` |
 | **Sala de Jogos** | Abas Mesa / Agenda / Ranking / Apostas; status (tempo, score, posição, reset); cartaz "Próxima partida" com contagem; cards dos 4 jogos (Jogar = fila online, Tutorial = bot); confronto em destaque; ranking da semana; apostas em Tempo; chat; perfil; fila "Procurando oponente"; partida ao vivo | `apps/jogos-app.tsx`, `arcade/mesa.tsx`, `arcade/mini-profile.tsx`, `arcade/arcade-chat.tsx`, `arcade/live-match.tsx`, `arcade/game-hud.tsx`, `arcade/use-room.ts`, `arcade/game-loader.tsx`, `lib/devo/arcade/*`, `app/api/arcade/route.ts` |
+| **Torres de Ruptura** | Mapa (1 principal + secundárias), tela da torre com andares em escada (custo em Essências que dobra, chaves das secundárias), apresentação do Galo, reflexão "Anfitrião de quê?". Trancado até o tutorial (abre pelo ícone em "Em breve" com o motivo). Guia: `docs/redesign/TORRES.md` | `torres/*`, `lib/devo/torres/*`, `lib/devo/torres-server.ts`, `app/api/torres/route.ts` |
 
 ## Jogos (`components/devo/arcade/games/`)
 

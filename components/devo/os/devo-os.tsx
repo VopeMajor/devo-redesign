@@ -7,6 +7,7 @@ import { DesktopShell, DesktopWindowsContext, useDesktopWindows } from './deskto
 import { OsNavContext, type OsNav } from './os-nav'
 import { PhoneShell } from './phone-shell'
 import { useDevoEngine } from './use-devo-engine'
+import { CenasGatilho } from '../torres/gatilho'
 
 /** Mesmo sistema, duas apresentações: área de trabalho (≥1024px) ou smartphone. */
 /**
@@ -33,6 +34,8 @@ export function DevoOS({ onExit }: { onExit: () => void }) {
     <OsNavContext.Provider value={nav}>
       <DesktopWindowsContext.Provider value={windows}>
         {isDesktop ? <DesktopShell /> : <PhoneShell current={phoneApp} onOpen={setPhoneApp} onHome={() => setPhoneApp(null)} />}
+        {/* cenas narrativas fora dos apps (reflexão "Anfitrião de quê?" ao sair das Torres) */}
+        <CenasGatilho />
       </DesktopWindowsContext.Provider>
     </OsNavContext.Provider>
   )

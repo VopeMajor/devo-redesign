@@ -11,6 +11,8 @@ import { FrameCorners } from '../kit/frame'
 import { SYSTEM_EMBLEMS } from '../kit/emblems'
 import { FUTURE_SYSTEMS, type FutureSystemId } from '../kit/interior/locked'
 import { MarbleSlab, StateSeal } from './shell-ui'
+import { useAcesso } from './use-acesso'
+import type { UnlockFlag } from '@/lib/devo/progresso'
 import { GlyphArrow, GlyphDiamond, GlyphHourglass, GlyphKeyhole, toRoman } from '../kit/glyphs'
 import { SceneBackdrop } from '../kit/scene'
 import { TimeDigits } from '../kit/time'
@@ -352,7 +354,7 @@ function HomeScreen({
         ) : null}
       </section>
 
-      <LockedSystems />
+      <LockedSystems onOpen={onOpen} />
 
       <div className="flex shrink-0 grow flex-col items-center justify-end gap-2 pb-3 pt-5 text-center">
         <Divider variant="filigree" tone="gold" className="animate-dv-fade w-56 opacity-60 [animation-delay:520ms]" />
@@ -525,10 +527,16 @@ function CriticalVignette() {
 }
 
 /**
- * Os seis sistemas reservados (Direção 2 §3) como emblemas trancados da mesma família: cinza a 60%
- * com cadeado. Informação, não botão.
+ * Os seis sistemas reservados (Direção 2 §3) como emblemas da mesma família: cinza a 60% com cadeado.
+ * Sistemas que já têm tela (`SYSTEM_APP`) viram botão: abrem o app, que mostra o motivo quando trancado; o
+ * cadeado some quando o servidor libera (`acesso.sistemas`, FUNDACAO.md §3).
  */
-function LockedSystems() {
+const SYSTEM_APP: Partial<Record<FutureSystemId, { app: AppId; flag: UnlockFlag }>> = {
+  torres: { app: 'torres', flag: 'torres' },
+}
+
+function LockedSystems({ onOpen }: { onOpen: (id: AppId) => void }) {
+  const acesso = useAcesso()
   return (
     <section aria-label="Sistemas em breve" className="mt-5">
       <div className="animate-dv-fade flex items-center gap-3 px-1 [animation-delay:520ms]">
@@ -539,14 +547,34 @@ function LockedSystems() {
       <ul className="animate-dv-fade mt-3 grid grid-cols-6 gap-1 [animation-delay:560ms]">
         {FUTURE_SYSTEMS.map((f) => {
           const E = SYSTEM_EMBLEMS[f.id]
+          const sys = SYSTEM_APP[f.id]
+          const aberto = !!(sys && acesso?.sistemas[sys.flag])
+          const conteudo = (
+            <>
+              <span className="relative grid size-11 place-items-center">
+                <E className={cn('size-9', aberto ? 'text-dv-text drop-shadow-[0_0_6px_rgba(238,237,235,0.35)]' : 'text-dv-text-3 opacity-60')} metal={aberto || undefined} />
+                {!aberto && <GlyphKeyhole aria-hidden="true" className="absolute -bottom-0.5 -right-0.5 size-3.5 rounded-full bg-dv-ink p-[1px] text-dv-gold" />}
+              </span>
+              <span aria-hidden="true" className={cn('dv-label line-clamp-2 text-center text-[10px] leading-[1.25] tracking-[0.06em]', aberto ? 'text-dv-text' : 'text-dv-text-3')}>{SHORT_NAME[f.id]}</span>
+            </>
+          )
+          if (sys)
+            return (
+              <li key={f.id}>
+                <button
+                  type="button"
+                  onClick={() => onOpen(sys.app)}
+                  aria-label={aberto ? f.name : `${f.name}: bloqueado`}
+                  className="dv-focus group flex w-full flex-col items-center gap-1.5 transition-transform duration-[120ms] active:scale-[0.92]"
+                >
+                  {conteudo}
+                </button>
+              </li>
+            )
           return (
             <li key={f.id} className="flex flex-col items-center gap-1.5" title={f.name}>
-              <span className="relative grid size-11 place-items-center">
-                <E className="size-9 text-dv-text-3 opacity-60" />
-                <GlyphKeyhole aria-hidden="true" className="absolute -bottom-0.5 -right-0.5 size-3.5 rounded-full bg-dv-ink p-[1px] text-dv-gold" />
-              </span>
+              {conteudo}
               <span className="sr-only">{f.name}: bloqueado</span>
-              <span aria-hidden="true" className="dv-label line-clamp-2 text-center text-[10px] leading-[1.25] tracking-[0.06em] text-dv-text-3">{SHORT_NAME[f.id]}</span>
             </li>
           )
         })}

@@ -1,0 +1,110 @@
+{
+  "versao": 1,
+  "provisorio": true,
+  "nota": "EXEMPLO PROVISÓRIO: 1 torre principal e 2 secundárias com andares de placeholder. O dono troca títulos, NPCs e cenas aos poucos. Guia: docs/redesign/TORRES.md",
+  "torres": [
+    {
+      "id": "imperador",
+      "nome": "Torre do Imperador",
+      "tipo": "principal",
+      "tema": "Campanha",
+      "descricao": "A torre da trama principal. Alguns andares só abrem para quem trouxer chaves das torres secundárias.",
+      "npc": { "id": "galo", "nome": "O Galo", "titulo": "Anfitrião do Arcano do Imperador", "pose": "convencido" },
+      "essencia": { "item": "essencia:galo", "nome": "Essência de Afinidade do Galo" },
+      "custoBase": 1,
+      "arte": "agulha",
+      "mapa": { "x": 50, "y": 62, "escala": 1 },
+      "provisorio": true,
+      "andares": [
+        {
+          "titulo": "[PROVISÓRIO] O Saguão",
+          "resumo": "Placeholder: o primeiro andar da campanha.",
+          "provisorio": true,
+          "cena": [
+            { "tipo": "fala", "pose": "sorriso", "texto": "[PROVISÓRIO] Diálogo do 1º andar da Torre do Imperador ainda não escrito pelo dono." },
+            { "tipo": "sistema", "texto": "Andar concluído. Este texto é um exemplo e será substituído." }
+          ]
+        },
+        {
+          "titulo": "[PROVISÓRIO] A Escadaria Fria",
+          "resumo": "Placeholder: pede 1 chave da Torre do Observatório.",
+          "provisorio": true,
+          "requisitos": { "chaves": [{ "torre": "observatorio", "quantidade": 1 }] },
+          "cena": [{ "tipo": "fala", "pose": "desdem", "texto": "[PROVISÓRIO] Diálogo do 2º andar ainda não escrito." }]
+        },
+        {
+          "titulo": "[PROVISÓRIO] O Corredor dos Retratos",
+          "resumo": "Placeholder: pede 1 chave do Observatório e 1 do Picadeiro.",
+          "provisorio": true,
+          "requisitos": { "chaves": [{ "torre": "observatorio", "quantidade": 1 }, { "torre": "picadeiro", "quantidade": 1 }] },
+          "cena": [{ "tipo": "fala", "texto": "[PROVISÓRIO] Diálogo do 3º andar ainda não escrito." }]
+        },
+        {
+          "titulo": "[PROVISÓRIO] A Sala do Trono Vazio",
+          "provisorio": true,
+          "cena": [{ "tipo": "fala", "texto": "[PROVISÓRIO] Diálogo do 4º andar ainda não escrito." }]
+        },
+        {
+          "titulo": "[PROVISÓRIO] O Mirante",
+          "provisorio": true,
+          "requisitos": { "chaves": [{ "torre": "observatorio", "quantidade": 3 }, { "torre": "picadeiro", "quantidade": 3 }] },
+          "cena": [{ "tipo": "fala", "texto": "[PROVISÓRIO] Diálogo do 5º andar ainda não escrito." }]
+        },
+        {
+          "titulo": "[PROVISÓRIO] A Coroa Partida",
+          "provisorio": true,
+          "cena": [{ "tipo": "fala", "texto": "[PROVISÓRIO] Diálogo do 6º andar ainda não escrito." }]
+        },
+        {
+          "titulo": "[PROVISÓRIO] O Topo",
+          "provisorio": true,
+          "requisitos": { "chaves": [{ "torre": "observatorio", "quantidade": 5 }, { "torre": "picadeiro", "quantidade": 5 }] },
+          "cena": [{ "tipo": "fala", "texto": "[PROVISÓRIO] Diálogo do 7º andar ainda não escrito." }]
+        }
+      ]
+    },
+    {
+      "id": "observatorio",
+      "nome": "Torre do Observatório",
+      "tipo": "secundaria",
+      "tema": "Estrelas e segredos",
+      "descricao": "Uma torre de vigia com cúpula de aço. Cada andar vencido entrega uma chave do Observatório.",
+      "npc": { "id": "coruja", "nome": "A Coruja", "titulo": "Guardiã das cartas" },
+      "essencia": { "item": "essencia:coruja", "nome": "Essência de Afinidade da Coruja" },
+      "chave": { "nome": "Chave do Observatório" },
+      "custoBase": 1,
+      "arte": "observatorio",
+      "mapa": { "x": 21, "y": 77, "escala": 0.78 },
+      "provisorio": true,
+      "andares": [
+        { "titulo": "[PROVISÓRIO] A Luneta", "provisorio": true, "cena": [{ "tipo": "fala", "texto": "[PROVISÓRIO] Diálogo do 1º andar do Observatório ainda não escrito." }] },
+        { "titulo": "[PROVISÓRIO] O Mapa Celeste", "provisorio": true, "cena": [{ "tipo": "fala", "texto": "[PROVISÓRIO] Diálogo do 2º andar ainda não escrito." }] },
+        { "titulo": "[PROVISÓRIO] A Biblioteca Suspensa", "provisorio": true, "cena": [{ "tipo": "fala", "texto": "[PROVISÓRIO] Diálogo do 3º andar ainda não escrito." }] },
+        { "titulo": "[PROVISÓRIO] O Eclipse", "provisorio": true, "cena": [{ "tipo": "fala", "texto": "[PROVISÓRIO] Diálogo do 4º andar ainda não escrito." }] },
+        { "titulo": "[PROVISÓRIO] A Cúpula", "provisorio": true, "cena": [{ "tipo": "fala", "texto": "[PROVISÓRIO] Diálogo do 5º andar ainda não escrito." }] }
+      ]
+    },
+    {
+      "id": "picadeiro",
+      "nome": "Torre do Picadeiro",
+      "tipo": "secundaria",
+      "tema": "Lona e apostas",
+      "descricao": "Uma torre de lona listrada onde a casa sempre ganha. Cada andar vencido entrega uma chave do Picadeiro.",
+      "npc": { "id": "javali", "nome": "O Javali", "titulo": "Anfitrião da Sala de Jogos", "pose": "grin" },
+      "essencia": { "item": "essencia:javali", "nome": "Essência de Afinidade do Javali" },
+      "chave": { "nome": "Chave do Picadeiro" },
+      "custoBase": 1,
+      "arte": "picadeiro",
+      "mapa": { "x": 80, "y": 79, "escala": 0.74 },
+      "provisorio": true,
+      "andares": [
+        { "titulo": "[PROVISÓRIO] A Bilheteria", "provisorio": true, "cena": [{ "tipo": "fala", "texto": "[PROVISÓRIO] Diálogo do 1º andar do Picadeiro ainda não escrito." }] },
+        { "titulo": "[PROVISÓRIO] O Trapézio", "provisorio": true, "cena": [{ "tipo": "fala", "texto": "[PROVISÓRIO] Diálogo do 2º andar ainda não escrito." }] },
+        { "titulo": "[PROVISÓRIO] A Jaula Dourada", "provisorio": true, "cena": [{ "tipo": "fala", "texto": "[PROVISÓRIO] Diálogo do 3º andar ainda não escrito." }] },
+        { "titulo": "[PROVISÓRIO] O Mestre de Cerimônias", "provisorio": true, "cena": [{ "tipo": "fala", "texto": "[PROVISÓRIO] Diálogo do 4º andar ainda não escrito." }] },
+        { "titulo": "[PROVISÓRIO] A Última Volta", "provisorio": true, "cena": [{ "tipo": "fala", "texto": "[PROVISÓRIO] Diálogo do 5º andar ainda não escrito." }] },
+        { "titulo": "[PROVISÓRIO] O Apagar das Luzes", "provisorio": true, "cena": [{ "tipo": "fala", "texto": "[PROVISÓRIO] Diálogo do 6º andar ainda não escrito." }] }
+      ]
+    }
+  ]
+}

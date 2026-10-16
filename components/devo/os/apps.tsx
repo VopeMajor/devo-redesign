@@ -13,6 +13,11 @@ import { MensagensApp } from '../apps/mensagens-app'
 import { PulsoApp } from '../apps/pulso-app'
 import { RecordApp } from '../apps/record-app'
 import { TrocasApp } from '../apps/trocas-app'
+import { EmblemTorres } from '../kit/emblems'
+import { TorresApp } from '../torres/torres-app'
+
+/** Ícone das Torres no registro: o emblema de prata do kit (o shell trancado usa o mesmo). */
+const TorresGlyph: AppIconComponent = (p) => <EmblemTorres metal className={p.className} />
 
 export type AppDef = {
   id: AppId
@@ -38,6 +43,8 @@ export const APPS: AppDef[] = [
   { id: 'trocas', name: 'Sala de Trocas', subtitle: 'Trocas às cegas', icon: TradeGlyph, Component: TrocasApp, window: { w: 980, h: 640 } },
   { id: 'ajustes', name: 'Ajustes', subtitle: 'Sistema', icon: SettingsGlyph, Component: AjustesApp, window: { w: 480, h: 520 } },
   { id: 'jogos', name: 'Sala de Jogos', subtitle: 'Minigames e apostas', icon: GamesGlyph, Component: JogosApp, window: { w: 1040, h: 680 } },
+  // Sistema novo (DIRECAO-3 §2): sempre registrado; trancado, a tela mostra o motivo (o servidor decide).
+  { id: 'torres', name: 'Torres de Ruptura', subtitle: 'Andares, essências e chaves', icon: TorresGlyph, Component: TorresApp, window: { w: 480, h: 820 } },
 ]
 
 /** A Sala de Jogos só aparece depois da revelação. */
