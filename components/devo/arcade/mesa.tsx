@@ -615,7 +615,7 @@ function RankingPanel({ data, onMore }: { data: Dashboard; onMore: () => void })
                 <li key={r.name} className={cn('grid min-h-11 grid-cols-[2rem_1fr_auto] items-center gap-2 px-1 font-body text-[15px]', r.isMe ? 'bg-dv-ink-3 text-dv-text shadow-[inset_2px_0_0_var(--dv-amethyst)]' : 'text-dv-text-2')}>
                   <span className="font-impact text-[15px] text-dv-text-3 dv-tabular">{r.rank}</span>
                   <span className="min-w-0 truncate">
-                    <NomeVisual nome={r.isMe ? `${r.name} (você)` : r.name} visual={visualDe(r.pid)} tamanhoEmblema={15} />
+                    <NomeVisual nome={r.isMe ? `${r.name} (você)` : r.name} visual={visualDe(r.pid)} tamanhoEmblema={15} parado />
                   </span>
                   <span className="font-mono text-[13px] tabular-nums">{formatPoints(r.score)}</span>
                 </li>

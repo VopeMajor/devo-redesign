@@ -493,7 +493,7 @@ function RankList({ rows, me }: { rows: RankRow[]; me: RankRow | null }) {
       <RankRetrato pid={r.pid} visual={visualDe(r.pid)} largura={32} fallback={<Monogram name={r.name} size="sm" tone={r.isMe ? 'cobalt' : 'neutral'} />} />
       <div className="min-w-0 flex-1">
         <span className={cn('flex items-center gap-2 truncate font-body text-[16px]', r.isMe ? 'text-white' : 'text-dv-text')}>
-          <NomeVisual nome={r.name} visual={visualDe(r.pid)} semEmblema={false} tamanhoEmblema={16} />
+          <NomeVisual nome={r.name} visual={visualDe(r.pid)} semEmblema={false} tamanhoEmblema={16} parado />
           {r.isMe && (
             <Badge tone="cobalt" className="h-5 px-1.5">
               Você

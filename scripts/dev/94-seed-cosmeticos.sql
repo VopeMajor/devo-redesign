@@ -65,7 +65,8 @@ INSERT INTO invite_codes (code, role, note, is_test) VALUES
   ('DEVO-COSM-OWNR', 'owner',     'teste cosméticos: owner', true),
   ('DEVO-COSM-ANF1', 'anfitriao', 'teste cosméticos: anfitrião', true),
   ('DEVO-COSM-JOG1', 'player',    'teste cosméticos: jogador', true),
-  ('DEVO-COSM-JOG2', 'player',    'teste cosméticos: jogador 2', true)
+  ('DEVO-COSM-JOG2', 'player',    'teste cosméticos: jogador 2', true),
+  ('DEVO-COSM-POCO', 'player',    'captura cosméticos: resultado do Poço', true)
 ON CONFLICT (code) DO NOTHING;
 
 -- Prévia da nova direção: Matheus usa Asas do Crepúsculo (avatar e mini) e o Coração da Condessa.

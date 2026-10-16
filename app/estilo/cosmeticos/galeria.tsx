@@ -2,7 +2,7 @@
 
 import { BalaoChat, Emblema, FotoMoldurada, classeEfeito } from '@/components/devo/cosmeticos/cosmetic-art'
 import { BALOES, EFEITOS, EMBLEMAS, MOLDURAS } from '@/components/devo/cosmeticos/art'
-import type { CosmeticoDef, CosSlot } from '@/lib/devo/cosmeticos'
+import { type CosmeticoDef, type CosSlot, IMAGENS_CATALOGO } from '@/lib/devo/cosmeticos'
 import { cn } from '@/lib/utils'
 
 const NOMES: Record<string, string> = {
@@ -41,8 +41,16 @@ const NOMES: Record<string, string> = {
 const ANIMADOS = new Set(['relogio-fim', 'olho-arcano', 'ultima-badalada', 'olho-destino', 'lua-escarlate', 'fragmento-celestial', 'engrenagem-herdeiro', 'ecos-arcano', 'ultimo-suspiro', 'geada-prata'])
 
 function def(grupo: string, id: string, categoria: CosSlot): CosmeticoDef {
-  return { key: `cosmetico:${id}`, name: NOMES[id] ?? id, description: null, rarity: 'raro', categoria, asset: `devo:${grupo}/${id}`, animado: ANIMADOS.has(id), poco: false, origem: 'poco', automatico: false, par: null, ordem: 0, active: true }
+  return { key: `cosmetico:${id}`, name: NOMES[id] ?? id, description: null, rarity: 'raro', categoria, asset: `devo:${grupo}/${id}`, animado: ANIMADOS.has(id), poco: false, origem: 'poco', automatico: false, par: null, ordem: 0, active: true, imagem: null }
 }
+
+/** Item com arte em imagem (pipeline de arte), igual ao catálogo. */
+function img(asset: string, nome: string, categoria: CosSlot): CosmeticoDef {
+  const imagem = IMAGENS_CATALOGO[asset].imagem
+  return { key: `cosmetico:${nome}`, name: nome, description: null, rarity: 'lendario', categoria, asset, animado: !!imagem.camadas?.length, poco: false, origem: 'evento', automatico: false, par: null, ordem: 0, active: true, imagem }
+}
+const ASAS = 'img:/images/cosmeticos/asas-do-crepusculo/moldura'
+const CORACAO = 'img:/images/cosmeticos/coracao-da-condessa/emblema'
 
 const RET = '/images/cosmeticos/amostra-retrato.jpg'
 const MINI = '/images/cosmeticos/amostra-mini.jpg'
@@ -69,27 +77,27 @@ export function Galeria() {
 
       <section aria-label="Prévia da nova direção" className="mb-14">
         <Titulo n="✦" t="Prévia · nova direção" />
-        <p className="mb-5 max-w-xl font-body text-[15px] leading-relaxed text-[#bdbcb8]">Arte pintada (WebP transparente gerado por script): penas desenhadas uma a uma, cristais lapidados, correntes e seda. Para aprovação do dono antes de refazer o catálogo.</p>
+        <p className="mb-5 max-w-xl font-body text-[15px] leading-relaxed text-[#bdbcb8]">Arte gerada por IA no pipeline de arte (escolhas do dono: Asas v02, Coração v02), WebP transparente em cinco tamanhos. A gema do Coração tem brilho animado (desligável em Ajustes).</p>
         <article aria-label="Prévia: Asas do Crepúsculo" className="mb-10 flex flex-col gap-4">
           <h3 className="font-display text-[15px] font-semibold uppercase tracking-[0.08em] text-[#ece5d8]">Asas do Crepúsculo · moldura</h3>
           <div className="flex justify-center py-6">
-            <FotoMoldurada formato="avatar" src={RET} moldura={def('moldura', 'asas-crepusculo', 'moldura_avatar')} largura={260} />
+            <FotoMoldurada formato="avatar" src={RET} moldura={img(ASAS, 'Asas do Crepúsculo', 'moldura_avatar')} largura={260} />
           </div>
           <div className="flex flex-wrap items-end justify-center gap-6 py-4">
-            <FotoMoldurada formato="mini" src={MINI} moldura={def('moldura', 'asas-crepusculo', 'moldura_mini')} largura={150} />
-            <FotoMoldurada formato="mini" src={MINI2} moldura={def('moldura', 'asas-crepusculo', 'moldura_mini')} largura={64} />
-            <FotoMoldurada formato="mini" src={MINI} moldura={def('moldura', 'asas-crepusculo', 'moldura_mini')} largura={48} />
-            <FotoMoldurada formato="mini" src={MINI2} moldura={def('moldura', 'asas-crepusculo', 'moldura_mini')} largura={36} />
+            <FotoMoldurada formato="mini" src={MINI} moldura={img(ASAS, 'Asas do Crepúsculo', 'moldura_mini')} largura={150} />
+            <FotoMoldurada formato="mini" src={MINI2} moldura={img(ASAS, 'Asas do Crepúsculo', 'moldura_mini')} largura={64} />
+            <FotoMoldurada formato="mini" src={MINI} moldura={img(ASAS, 'Asas do Crepúsculo', 'moldura_mini')} largura={48} />
+            <FotoMoldurada formato="mini" src={MINI2} moldura={img(ASAS, 'Asas do Crepúsculo', 'moldura_mini')} largura={36} />
           </div>
         </article>
         <article aria-label="Prévia: Coração da Condessa" className="flex flex-col gap-4">
           <h3 className="font-display text-[15px] font-semibold uppercase tracking-[0.08em] text-[#ece5d8]">Coração da Condessa · emblema</h3>
           <div className="flex flex-wrap items-center justify-center gap-6">
-            <Emblema def={def('emblema', 'coracao-condessa', 'emblema')} tamanho={180} />
+            <Emblema def={img(CORACAO, 'Coração da Condessa', 'emblema')} tamanho={180} />
             <div className="flex flex-col gap-3">
-              <p className="flex items-center gap-1.5 font-body text-[17px]">Lune Arcanjo <Emblema def={def('emblema', 'coracao-condessa', 'emblema')} tamanho={24} /></p>
-              <p className="flex items-center gap-1.5 font-body text-[15px]">Lune Arcanjo <Emblema def={def('emblema', 'coracao-condessa', 'emblema')} tamanho={20} /></p>
-              <p className="flex items-center gap-1.5 bg-[#e7e6e3] px-2 py-1 font-body text-[15px] text-[#0d0d0f]">no papel <Emblema def={def('emblema', 'coracao-condessa', 'emblema')} tamanho={22} /></p>
+              <p className="flex items-center gap-1.5 font-body text-[17px]">Lune Arcanjo <Emblema def={img(CORACAO, 'Coração da Condessa', 'emblema')} tamanho={24} /></p>
+              <p className="flex items-center gap-1.5 font-body text-[15px]">Lune Arcanjo <Emblema def={img(CORACAO, 'Coração da Condessa', 'emblema')} tamanho={20} /></p>
+              <p className="flex items-center gap-1.5 bg-[#e7e6e3] px-2 py-1 font-body text-[15px] text-[#0d0d0f]">no papel <Emblema def={img(CORACAO, 'Coração da Condessa', 'emblema')} tamanho={22} /></p>
             </div>
           </div>
         </article>

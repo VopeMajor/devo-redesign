@@ -393,6 +393,15 @@ teste `scripts/dev/cosmeticos-test.mjs` (CI → `cosmeticos-test.log`), vitrine 
 - **Poço**: sorteia `meta.poco = true` com peso por raridade (`poco.raridade_pesos`, §10). Itens de semana, Deadly
   Vote e evento ficam fora do Poço.
 - **Raridades configuráveis**: `devo_config['cosmeticos.raridades']` (rótulo, cor, brilho; provisório).
+- **Arte em imagem (pipeline `infra/arte`)**: `asset = 'img:/images/cosmeticos/<id>/<peca>'` + `meta.imagem`
+  `{ base, tamanhos: [48,96,256,512,1024], janela?: {forma, centro:[x,y], raio:[rx,ry]} (fração do lado),
+  camadas?: [{ src?, anim: giro|giro-rev|ponteiro|brilho|oscila|petalas|pulso|flutua, caixa:[x,y,w,h], origem?, dur?, atraso? }],
+  slice?: { corte:[t,r,b,l] (px da imagem), borda:[t,r,b,l] (px CSS), folga?, texto?, lado? } }`. Arquivos em
+  `public/images/cosmeticos/<id>/<peca>-<lado>.webp`. Moldura: foto com diâmetro = 2 × raio × 1,04 do lado da arte (a
+  arte passa do contêiner); `srcSet` 96+256 em listas/chat, 512+1024 no Record/miniperfil. Balão: 9-slice por
+  `border-image` (cantos fixos, bordas esticadas, centro `fill`). Camadas: animação CSS só dentro de `.cos-anim`
+  (Ajustes + movimento reduzido; listas paradas); `brilho` usa a camada `src` como máscara (ex.: a gema).
+  Registro no código: `IMAGENS_CATALOGO` (`lib/devo/cosmeticos.ts`) — o painel oferece esses assets e copia o `meta.imagem`.
 - **Assets enviados**: `cosmetic_assets` (bytea, SVG/PNG/WebP ≤ 400 KB; não há storage de arquivos no projeto).
   SVG com script/eventos/conteúdo embutido é recusado; servido com CSP `default-src 'none'` e sempre exibido em
   `<img>`. Também aceita URL https.

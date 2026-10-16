@@ -105,6 +105,21 @@ await test('catálogo inicial: 8 molduras ×2, ≥10 emblemas, ≥5 balões, ite
   assert(poco >= 10, `itens do Poço: ${poco}`)
 })
 
+await test('arte por IA: Asas e Coração com meta.imagem (janela, tamanhos, camada de brilho) e arquivos presentes', async () => {
+  const r = await j1.get('/api/cosmeticos?view=catalogo')
+  ok200(r, 'catálogo')
+  const by = new Map(r.json.catalogo.map((x) => [x.key, x]))
+  const asas = by.get('cosmetico:moldura-asas-crepusculo')
+  const cor = by.get('cosmetico:emblema-coracao-condessa')
+  assert(asas?.imagem?.janela?.raio?.[0] === 0.25 && asas.imagem.tamanhos.length === 5, `asas: ${JSON.stringify(asas?.imagem)}`)
+  assert(by.get('cosmetico:mini-asas-crepusculo')?.imagem?.base === asas.imagem.base, 'mini usa a mesma arte por enquanto')
+  assert(cor?.imagem?.camadas?.[0]?.anim === 'brilho' && cor.animado === true, `coração: ${JSON.stringify(cor?.imagem)}`)
+  for (const u of [`${asas.imagem.base}-96.webp`, `${asas.imagem.base}-512.webp`, `${cor.imagem.base}-256.webp`, cor.imagem.camadas[0].src]) {
+    const f = await fetch(`${BASE}${u}`)
+    assert(f.ok && /webp/.test(f.headers.get('content-type') ?? ''), `${u}: ${f.status}`)
+  }
+})
+
 await test('jogador não equipa o que não tem; nem item de outra categoria; nem o Selo automático', async () => {
   const r = await j1.cos({ action: 'equipar', slot: 'moldura_avatar', key: MOLDURA })
   assert(r.status === 403, `sem posse: ${r.status} ${r.text}`)

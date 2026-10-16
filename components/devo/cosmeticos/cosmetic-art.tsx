@@ -3,9 +3,9 @@
 import './cosmeticos.css'
 import { UserRound } from 'lucide-react'
 import { type CSSProperties, type ReactNode, useId, useMemo } from 'react'
-import { type CosmeticoDef, SELO_ANFITRIAO, type Visual } from '@/lib/devo/cosmeticos'
+import { type ArteImagem, type Camada, type CosmeticoDef, SELO_ANFITRIAO, srcSetImagem, urlImagem, type Visual } from '@/lib/devo/cosmeticos'
 import { cn } from '@/lib/utils'
-import { type Arte, BALOES, EFEITOS, EMBLEMAS, MOLDURAS, type MolduraRaster, parseAsset, RASTER_EMBLEMAS, RASTER_MOLDURAS } from './art'
+import { type Arte, BALOES, EFEITOS, EMBLEMAS, MOLDURAS, parseAsset } from './art'
 import { useAnimarCosmeticos, useCatalogo } from './use-cosmeticos'
 
 /** Injeta uma arte SVG (marcação gerada por nós, nunca do usuário) com ids únicos por instância. */
@@ -34,15 +34,82 @@ export function arteMoldura(def: CosmeticoDef | null | undefined, formato: 'avat
   return MOLDURAS[a.id]?.[formato] ?? null
 }
 
-/** Moldura pintada (raster) de um item do catálogo, se houver. */
-export function rasterMoldura(def: CosmeticoDef | null | undefined, formato: 'avatar' | 'mini'): MolduraRaster | null {
-  if (!def) return null
-  const a = parseAsset(def.asset)
-  if (!a || a.grupo !== 'moldura') return null
-  return RASTER_MOLDURAS[a.id]?.[formato] ?? null
+/**
+ * Arte em imagem (pipeline de arte): faixa de resolução por contexto — listas e chat leem 96+256,
+ * Record/miniperfil/vitrine leem 512+1024. `sizes` usa a largura real desenhada.
+ */
+function faixa(px: number): [number, number] {
+  return px <= 140 ? [96, 256] : [512, 1024]
+}
+
+function ImgArte({ img, px, className, style, alt = '' }: { img: ArteImagem; px: number; className?: string; style?: CSSProperties; alt?: string }) {
+  const [min, max] = faixa(px)
+  return (
+    // biome-ignore lint/performance/noImgElement: arte WebP transparente com variantes por tamanho (srcSet)
+    <img
+      src={urlImagem(img, px <= 140 ? 96 : 512)}
+      srcSet={srcSetImagem(img, min, max)}
+      sizes={`${Math.max(16, Math.round(px))}px`}
+      alt={alt}
+      aria-hidden={alt ? undefined : true}
+      decoding="async"
+      loading="lazy"
+      draggable={false}
+      className={cn('pointer-events-none select-none', className)}
+      style={style}
+    />
+  )
+}
+
+/**
+ * Camadas animadas por cima da arte (ponteiro, engrenagem, gema, pena, pétalas). A posição vem em fração da
+ * imagem principal; o movimento só roda dentro de `.cos-anim` (Ajustes + movimento reduzido; listas: parado).
+ */
+export function CamadasArte({ camadas }: { camadas: Camada[] | undefined }) {
+  if (!camadas?.length) return null
+  return (
+    <>
+      {camadas.map((c, i) => {
+        const style: CSSProperties & Record<'--cos-dur' | '--cos-atraso', string | undefined> = {
+          left: `${c.caixa[0] * 100}%`,
+          top: `${c.caixa[1] * 100}%`,
+          width: `${c.caixa[2] * 100}%`,
+          height: `${c.caixa[3] * 100}%`,
+          transformOrigin: c.origem ? `${c.origem[0] * 100}% ${c.origem[1] * 100}%` : undefined,
+          '--cos-dur': c.dur ? `${c.dur}s` : undefined,
+          '--cos-atraso': c.atraso ? `${-c.atraso}s` : undefined,
+        }
+        const k = `${c.anim}-${i}`
+        if (c.anim === 'brilho') {
+          const mask = c.src ? `url("${c.src}")` : 'radial-gradient(closest-side, #000 70%, transparent)'
+          return <span key={k} aria-hidden="true" className="cos-camada cos-l-brilho" style={{ ...style, WebkitMaskImage: mask, maskImage: mask }} />
+        }
+        if (!c.src) return null
+        // biome-ignore lint/performance/noImgElement: camada recortada da arte (WebP transparente)
+        return <img key={k} src={c.src} alt="" aria-hidden="true" decoding="async" draggable={false} className={`cos-camada cos-l-${c.anim}`} style={style} />
+      })}
+    </>
+  )
 }
 
 const JANELA = { avatar: { x: 10, y: 10, w: 80, h: 80 }, mini: { x: 100 / 6, y: 100 / 6, w: 200 / 3, h: 200 / 3 } }
+
+/**
+ * Molduras em imagem: diâmetro da foto em fração da largura do contêiner. A moldura é desenhada a partir da
+ * janela do manifest (foto = 2 × raio × 1,04 do lado da arte) e passa do contêiner — asas e correntes saem.
+ */
+const FOTO_IMG = { avatar: 0.66, mini: 0.62 }
+const SOBRA_FOTO = 1.04
+
+function FotoVazia({ vazio }: { vazio?: ReactNode }) {
+  return (
+    vazio ?? (
+      <span className="grid size-full place-items-center bg-[radial-gradient(80%_70%_at_50%_30%,rgba(241,240,238,0.08),transparent_70%)]">
+        <UserRound className="size-1/2 text-white/35" strokeWidth={1.25} aria-hidden="true" />
+      </span>
+    )
+  )
+}
 
 /**
  * Foto com moldura como camada independente (a imagem nunca é alterada). O tamanho total é sempre o mesmo,
@@ -75,41 +142,53 @@ export function FotoMoldurada({
 }) {
   const pref = useAnimarCosmeticos()
   const anim = (animar ?? pref) && !!moldura?.animado
-  const arte = arteMoldura(moldura, formato)
-  const raster = arte ? null : rasterMoldura(moldura, formato)
-  const url = moldura && !arte && !raster && /^(\/|https:)/.test(moldura.asset) ? moldura.asset : null
-  const j = semJanela ? { x: 0, y: 0, w: 100, h: 100 } : JANELA[formato]
+  const img = moldura?.imagem ?? null
+  const arte = img ? null : arteMoldura(moldura, formato)
+  const url = moldura && !img && !arte && /^(\/|https:)/.test(moldura.asset) ? moldura.asset : null
   const ratio = formato === 'avatar' ? 4 / 3 : 1
   const style: CSSProperties = largura ? { width: largura, height: largura * ratio } : { width: '100%', aspectRatio: formato === 'avatar' ? '3 / 4' : '1 / 1' }
+  const foto = src ? (
+    // biome-ignore lint/performance/noImgElement: avatar privado servido pela API
+    <img src={src} alt={alt} className="size-full object-cover object-[50%_25%]" loading="lazy" decoding="async" />
+  ) : (
+    <FotoVazia vazio={vazio} />
+  )
+
+  if (img) {
+    const jan = img.janela ?? { forma: 'circulo' as const, centro: [0.5, 0.5] as [number, number], raio: [0.25, 0.25] as [number, number] }
+    const d = FOTO_IMG[formato]
+    // lado da arte em múltiplos do diâmetro da foto
+    const k = 1 / (2 * jan.raio[0] * SOBRA_FOTO)
+    const aspecto = jan.raio[0] / jan.raio[1]
+    const px = (largura ?? 300) * d * k
+    return (
+      <span className={cn('relative inline-block shrink-0 align-middle', className)} style={style}>
+        <span className="absolute inset-0 grid place-items-center">
+          <span className={cn('relative', anim && 'cos-anim')} style={{ width: `${d * 100}%`, aspectRatio: `${aspecto}` }}>
+            <span className="absolute inset-0 overflow-hidden rounded-[50%] bg-dv-ink-2">{foto}</span>
+            <span
+              className="pointer-events-none absolute"
+              style={{ width: `${k * 100}%`, aspectRatio: '1 / 1', left: `${(0.5 - jan.centro[0] * k) * 100}%`, top: `${(0.5 - jan.centro[1] * k * aspecto) * 100}%` }}
+            >
+              <ImgArte img={img} px={px} className="absolute inset-0 size-full max-w-none" />
+              <CamadasArte camadas={img.camadas} />
+            </span>
+          </span>
+        </span>
+      </span>
+    )
+  }
+
+  const j = semJanela ? { x: 0, y: 0, w: 100, h: 100 } : JANELA[formato]
   return (
     <span className={cn('relative inline-block shrink-0 align-middle', className)} style={style}>
       <span
-        className={cn('absolute overflow-hidden bg-dv-ink-2', !arte && !url && !raster && !semJanela && 'shadow-[0_0_0_1px_#0c0c0e,0_0_0_2px_rgba(186,176,159,0.55)]')}
-        style={{ left: `${j.x}%`, top: `${j.y}%`, width: `${j.w}%`, height: `${j.h}%`, clipPath: raster && raster.janela !== 'retangulo' ? 'ellipse(50% 50% at 50% 50%)' : undefined }}
+        className={cn('absolute overflow-hidden bg-dv-ink-2', !arte && !url && !semJanela && 'shadow-[0_0_0_1px_#0c0c0e,0_0_0_2px_rgba(186,176,159,0.55)]')}
+        style={{ left: `${j.x}%`, top: `${j.y}%`, width: `${j.w}%`, height: `${j.h}%` }}
       >
-        {src ? (
-          // biome-ignore lint/performance/noImgElement: avatar privado servido pela API
-          <img src={src} alt={alt} className="size-full object-cover object-[50%_25%]" loading="lazy" decoding="async" />
-        ) : (
-          (vazio ?? (
-            <span className="grid size-full place-items-center bg-[radial-gradient(80%_70%_at_50%_30%,rgba(241,240,238,0.08),transparent_70%)]">
-              <UserRound className="size-1/2 text-white/35" strokeWidth={1.25} aria-hidden="true" />
-            </span>
-          ))
-        )}
+        {foto}
       </span>
       {arte && <ArteSvg arte={arte} animar={anim} className="pointer-events-none absolute inset-0 size-full" />}
-      {raster && (
-        // biome-ignore lint/performance/noImgElement: arte pintada (WebP transparente) por cima da foto
-        <img
-          src={raster.src}
-          alt=""
-          aria-hidden="true"
-          decoding="async"
-          className="pointer-events-none absolute max-w-none select-none"
-          style={{ left: `${-raster.sangria * 100}%`, top: `${-raster.sangria * 100}%`, width: `${100 + 2 * raster.sangria * 100}%`, height: `${100 + 2 * raster.sangria * 100}%` }}
-        />
-      )}
       {url && (
         // biome-ignore lint/performance/noImgElement: asset enviado pelo Owner (SVG/PNG/WebP com transparência)
         <img src={url} alt="" aria-hidden="true" className="pointer-events-none absolute inset-0 size-full object-contain" loading="lazy" />
@@ -125,10 +204,15 @@ export function Emblema({ def, tamanho = 18, className, animar }: { def: Cosmeti
   const a = parseAsset(def.asset)
   const arte = a?.grupo === 'emblema' ? EMBLEMAS[a.id] : null
   const anim = (animar ?? pref) && def.animado
-  const pintado = a?.grupo === 'emblema' ? RASTER_EMBLEMAS[a.id] : null
-  if (pintado)
-    // biome-ignore lint/performance/noImgElement: emblema pintado; versão própria abaixo de 28 px
-    return <img src={tamanho <= 28 ? pintado.mini : pintado.src} alt="" aria-hidden="true" decoding="async" className={cn('inline-block shrink-0 align-[-0.25em] object-contain', className)} style={{ width: tamanho * 1.15, height: tamanho * 1.15 }} />
+  if (def.imagem) {
+    const lado = tamanho * 1.15
+    return (
+      <span className={cn('relative inline-block shrink-0 align-[-0.25em]', anim && 'cos-anim', className)} style={{ width: lado, height: lado }}>
+        <ImgArte img={def.imagem} px={lado} className="absolute inset-0 size-full object-contain" />
+        <CamadasArte camadas={def.imagem.camadas} />
+      </span>
+    )
+  }
   if (arte) return <ArteSvg arte={arte} animar={anim} className={cn('inline-block shrink-0 align-[-0.2em]', className)} style={{ width: tamanho, height: tamanho }} />
   if (/^(\/|https:)/.test(def.asset))
     // biome-ignore lint/performance/noImgElement: asset enviado pelo Owner
@@ -152,6 +236,7 @@ export function NomeVisual({
   tamanhoEmblema = 16,
   semEmblema = false,
   cor,
+  parado = false,
 }: {
   nome: string
   visual: Visual | null | undefined
@@ -159,23 +244,25 @@ export function NomeVisual({
   tamanhoEmblema?: number
   semEmblema?: boolean
   cor?: string
+  /** listas longas (chat, rankings): sem animação no nome e no emblema */
+  parado?: boolean
 }) {
   const { mapa } = useCatalogo()
-  const animar = useAnimarCosmeticos()
+  const animar = useAnimarCosmeticos() && !parado
   const ef = visual?.ef ? mapa.get(visual.ef) : null
   const emb = visual?.emb ? mapa.get(visual.emb) : null
   const selo = visual?.anfitriao ? mapa.get(SELO_ANFITRIAO) : null
   const efClasse = classeEfeito(ef)
   return (
     <span className={cn('inline-flex min-w-0 max-w-full items-center gap-1 align-baseline', className)}>
-      {selo && <Emblema def={selo} tamanho={tamanhoEmblema} />}
+      {selo && <Emblema def={selo} tamanho={tamanhoEmblema} animar={animar} />}
       <span
         className={cn('cos-nome truncate', visual?.anfitriao && 'cos-anfitriao', !visual?.anfitriao && efClasse, animar && efClasse && 'cos-anim')}
         style={!efClasse && !visual?.anfitriao && cor ? { color: cor } : undefined}
       >
         {nome}
       </span>
-      {!semEmblema && emb && <Emblema def={emb} tamanho={tamanhoEmblema} />}
+      {!semEmblema && emb && <Emblema def={emb} tamanho={tamanhoEmblema} animar={animar} />}
     </span>
   )
 }
@@ -185,8 +272,34 @@ export function BalaoChat({ def, children, className, animar }: { def: Cosmetico
   const pref = useAnimarCosmeticos()
   const a = def ? parseAsset(def.asset) : null
   const b = a?.grupo === 'balao' ? BALOES[a.id] : null
+  const anim = (animar ?? pref) && !!def?.animado
+  const sl = def?.imagem?.slice
+  if (def?.imagem && sl) {
+    // 9-slice: cantos fixos, bordas esticadas, centro liso (fill) — o texto fica sempre sobre o centro
+    const img = def.imagem
+    const lado = sl.lado ?? img.tamanhos[img.tamanhos.length - 1]
+    const [t, r, bb, l] = sl.corte
+    const [bt, br, bbx, bl] = sl.borda
+    const folga = sl.folga ?? [2, 4, 2, 4]
+    return (
+      <div
+        className={cn('relative', anim && 'cos-anim', className)}
+        style={{
+          borderStyle: 'solid',
+          borderColor: 'transparent',
+          borderWidth: `${bt}px ${br}px ${bbx}px ${bl}px`,
+          borderImage: `url("${img.base}-${lado}.webp") ${t} ${r} ${bb} ${l} fill / ${bt}px ${br}px ${bbx}px ${bl}px stretch`,
+          padding: `${folga[0]}px ${folga[1]}px ${folga[2]}px ${folga[3]}px`,
+          color: sl.texto,
+          filter: 'drop-shadow(0 3px 6px rgba(0,0,0,.35))',
+        }}
+      >
+        <div className="relative">{children}</div>
+        <CamadasArte camadas={img.camadas} />
+      </div>
+    )
+  }
   if (!def || (!b && !/^(\/|https:)/.test(def.asset))) return <div className={className}>{children}</div>
-  const anim = (animar ?? pref) && def.animado
   if (!b) {
     return (
       <div className={cn('relative border border-dv-line-strong px-3.5 py-2', className)} style={{ backgroundImage: `url(${def.asset})`, backgroundSize: 'cover' }}>
@@ -209,6 +322,7 @@ export function BalaoChat({ def, children, className, animar }: { def: Cosmetico
 
 /** Cor do texto do balão (para o nome/horário dentro dele). */
 export function corDoBalao(def: CosmeticoDef | null | undefined): string | null {
+  if (def?.imagem?.slice) return def.imagem.slice.texto ?? null
   const a = def ? parseAsset(def.asset) : null
   return a?.grupo === 'balao' ? (BALOES[a.id]?.texto ?? null) : null
 }

@@ -77,6 +77,41 @@
 .cos-papel .cos-anfitriao { color: #3d362c; text-shadow: 0 0 6px rgba(186, 176, 159, 0.7); }
 .cos-papel .cos-ef-noturna, .cos-papel .cos-ef-geada { text-shadow: none; filter: brightness(0.55) contrast(1.4); }
 
+/* ── Camadas animadas da arte em imagem (meta.imagem.camadas) ──
+ * Peças recortadas pelo pipeline de arte, posicionadas em fração da arte. Paradas por padrão; o movimento
+ * só roda dentro de `.cos-anim`. `--cos-dur` / `--cos-atraso` vêm do catálogo. */
+.cos-camada { position: absolute; pointer-events: none; user-select: none; max-width: none; }
+.cos-anim .cos-l-giro { animation: cos-giro var(--cos-dur, 14s) linear infinite var(--cos-atraso, 0s); }
+.cos-anim .cos-l-giro-rev { animation: cos-giro var(--cos-dur, 11s) linear infinite reverse var(--cos-atraso, 0s); }
+.cos-anim .cos-l-ponteiro { animation: cos-giro var(--cos-dur, 60s) steps(60) infinite var(--cos-atraso, 0s); }
+.cos-anim .cos-l-oscila { animation: cos-l-oscila var(--cos-dur, 3.4s) ease-in-out infinite alternate var(--cos-atraso, 0s); }
+.cos-anim .cos-l-pulso { animation: cos-pulso var(--cos-dur, 4s) ease-in-out infinite var(--cos-atraso, 0s); }
+.cos-anim .cos-l-flutua { animation: cos-l-flutua var(--cos-dur, 4.5s) ease-in-out infinite alternate var(--cos-atraso, 0s); }
+.cos-l-petalas { opacity: 0; }
+.cos-anim .cos-l-petalas { animation: cos-l-petalas var(--cos-dur, 7s) linear infinite var(--cos-atraso, 0s); }
+@keyframes cos-l-oscila { from { transform: rotate(-5deg); } to { transform: rotate(5deg); } }
+@keyframes cos-l-flutua { from { transform: translateY(-3%); } to { transform: translateY(3%); } }
+@keyframes cos-l-petalas {
+  0% { opacity: 0; transform: translate(0, -10%) rotate(0); }
+  12% { opacity: 1; }
+  80% { opacity: 0.9; }
+  100% { opacity: 0; transform: translate(14%, 70%) rotate(160deg); }
+}
+/* Brilho que atravessa a gema: faixa clara mascarada pela silhueta da gema (camada `src`). */
+.cos-l-brilho {
+  opacity: 0;
+  background: linear-gradient(112deg, transparent 0 40%, rgba(255, 238, 236, 0.18) 45%, rgba(255, 250, 248, 0.9) 50%, rgba(255, 238, 236, 0.18) 55%, transparent 60% 100%) no-repeat;
+  background-size: 300% 100%;
+  background-position: 100% 0;
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  mix-blend-mode: screen;
+}
+.cos-anim .cos-l-brilho { opacity: 1; animation: cos-l-brilho var(--cos-dur, 5.5s) ease-in-out infinite var(--cos-atraso, 0s); }
+@keyframes cos-l-brilho { 0% { background-position: 100% 0; } 38%, 100% { background-position: 0% 0; } }
+
 @media (prefers-reduced-motion: reduce) {
   .cos-anim *, .cos-anim { animation: none !important; }
 }

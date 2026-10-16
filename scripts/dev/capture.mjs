@@ -2548,6 +2548,103 @@ if (want('cosmeticos')) {
     await ctx.close()
   })
 
+  // Arte por IA (pipeline infra/arte; dono escolheu Asas do Crepúsculo v02 e Coração da Condessa v02) aplicada
+  // em Record, coleção, chat, miniperfil e no resultado do Poço. Matheus tem os dois equipados (94-seed).
+  await step('cos-ia-aplicada', async () => {
+    const page = mat.page
+    await api(page, '/api/cosmeticos', { action: 'equipar', slot: 'moldura_avatar', key: 'cosmetico:moldura-asas-crepusculo' })
+    await openApp(page, 'Record')
+    await wait(1800)
+    await shot(page, 'cos-82-ia-record')
+    await view(page, 'section[aria-label="Identidade e coleção"]', 'center')
+    await wait(700)
+    await shot(page, 'cos-83-ia-record-identidade')
+    await tryClick(btn(page, 'Abrir coleção', true), 4000)
+    await wait(1500)
+    if (await tryClick(item(page, 'Asas do Crepúsculo'))) {
+      await wait(900)
+      await view(page, 'section[aria-label="Coleção de cosméticos"]', 'start')
+      await wait(500)
+      await shot(page, 'cos-84-ia-colecao-asas')
+      await view(page, 'article[aria-label^="Detalhe:"]', 'center')
+      await wait(400)
+      await shot(page, 'cos-85-ia-colecao-asas-detalhe')
+    }
+    await view(page, 'div[aria-label="Categorias da coleção"]', 'start')
+    await aba(page, 'Emblemas')
+    await wait(700)
+    if (await tryClick(item(page, 'Coração da Condessa'))) {
+      await wait(900)
+      await view(page, 'article[aria-label^="Detalhe:"]', 'center')
+      await wait(1200)
+      await shot(page, 'cos-86-ia-colecao-coracao')
+    }
+    await openApp(page, 'Sala de Jogos')
+    await wait(1500)
+    await view(page, 'section[aria-label="Chat da mesa"]', 'start')
+    await wait(1800)
+    const minha = page.locator('section[aria-label="Chat da mesa"] li').filter({ has: page.getByRole('button', { name: 'Abrir miniperfil de Matheus' }) }).last()
+    await minha.evaluate((el) => el.scrollIntoView({ block: 'center' })).catch(() => {})
+    await wait(800)
+    await shot(page, 'cos-87-ia-chat')
+    if (await tryClick(page.getByRole('button', { name: 'Abrir miniperfil de Matheus' }).last())) {
+      await wait(2000)
+      await shot(page, 'cos-88-ia-miniperfil')
+      await page.keyboard.press('Escape')
+      await wait(500)
+    }
+  })
+
+  // Resultado do Poço com cada um dos dois itens: o banco deixa só o item-alvo no sorteio de cosméticos e força a
+  // categoria (como na captura do Poço); tudo volta ao original no fim.
+  await step('cos-ia-poco', async () => {
+    let db = null
+    try {
+      const pg = (await import('pg')).default
+      if (process.env.DATABASE_URL) db = new pg.Pool({ connectionString: process.env.DATABASE_URL })
+    } catch {}
+    if (!db) return manifest.errors.push({ step: 'cos-ia-poco', error: 'sem DATABASE_URL' })
+    const sql = async (text, params) => (await db.query(text, params)).rows
+    const probs = (await sql("SELECT value FROM devo_config WHERE key = 'poco.probabilidades'"))[0]?.value
+    const noPoco = (await sql("SELECT key FROM item_defs WHERE kind = 'cosmetico' AND meta->>'poco' = 'true'")).map((r) => r.key)
+    const { ctx, page } = await account('Lume', 'DEVO-COSM-POCO', VET_CARDS)
+    try {
+      await sql("INSERT INTO player_unlocks (player_id, flag, source) SELECT id, 'poco', 'owner' FROM players WHERE lower(name) = 'lume' ON CONFLICT DO NOTHING")
+      await sql("INSERT INTO poco_estado (player_id, apresentado_at) SELECT id, now() FROM players WHERE lower(name) = 'lume' ON CONFLICT (player_id) DO UPDATE SET apresentado_at = coalesce(poco_estado.apresentado_at, now())")
+      await sql("SELECT devo_item_grant(id, 'dracma_comum', 4, 'captura', NULL, NULL, 'captura-cos-poco:' || id) FROM players WHERE lower(name) = 'lume'")
+      if (probs) await sql("UPDATE devo_config SET value = $1 WHERE key = 'poco.probabilidades'", [JSON.stringify({ ...probs, dracma_comum: { lixo: 0, capsula: 0, fragmento: 0, essencia: 0, cosmetico: 100 } })])
+      await enterOS(page)
+      const abrir = page.getByRole('button', { name: 'Poço dos Milagres', exact: true }).first()
+      await abrir.waitFor({ state: 'visible', timeout: 15000 }).catch(() => {})
+      await abrir.scrollIntoViewIfNeeded().catch(() => {})
+      await tryClick(abrir, 8000)
+      await wait(2600)
+      for (const [alvo, nome] of [['cosmetico:moldura-asas-crepusculo', 'cos-89-ia-poco-asas'], ['cosmetico:emblema-coracao-condessa', 'cos-90-ia-poco-coracao']]) {
+        await sql("UPDATE item_defs SET meta = jsonb_set(meta, '{poco}', to_jsonb(key = $1)) WHERE kind = 'cosmetico'", [alvo])
+        await tryClick(btn(page, 'Lançar Moeda', true))
+        await wait(800)
+        await tryClick(btn(page, 'Lançar Dracma Comum', true))
+        await wait(1400)
+        await tryClick(btn(page, 'Girar Manivela', true))
+        await wait(900)
+        await tryClick(btn(page, 'Soltar a manivela', true))
+        await wait(2900)
+        await tryClick(btn(page, 'Inspecionar Balde', true))
+        await wait(1200)
+        await shot(page, `${nome}-revelacao`)
+        await wait(2000)
+        await shot(page, nome)
+        if (!(await tryClick(btn(page, 'Guardar', true), 1500))) await tryClick(btn(page, 'Devolver ao poço', true), 1500)
+        await wait(900)
+      }
+    } finally {
+      await sql("UPDATE item_defs SET meta = jsonb_set(meta, '{poco}', to_jsonb(key = ANY($1))) WHERE kind = 'cosmetico'", [noPoco]).catch(() => {})
+      if (probs) await sql("UPDATE devo_config SET value = $1 WHERE key = 'poco.probabilidades'", [JSON.stringify(probs)]).catch(() => {})
+      await ctx.close().catch(() => {})
+      await db.end().catch(() => {})
+    }
+  })
+
   for (const d of [mat, sen, mor]) await d.ctx.close().catch(() => {})
 }
 
