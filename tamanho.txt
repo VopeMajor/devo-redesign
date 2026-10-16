@@ -1,0 +1,9 @@
+linha=Total Upload: 10451.88 KiB / gzip: 2198.95 KiB
+25316394	.wrangler-dist
+total 24736
+drwxr-xr-x  2 runner runner     4096 Oct 16 02:11 .
+drwxr-xr-x 17 runner runner     4096 Oct 16 02:11 ..
+-rw-r--r--  1 runner runner      105 Oct 16 02:11 README.md
+-rw-r--r--  1 runner runner    57302 Oct 16 02:11 bundle-meta.json
+-rw-r--r--  1 runner runner 10702725 Oct 16 02:11 worker.js
+-rw-r--r--  1 runner runner 14556262 Oct 16 02:11 worker.js.map

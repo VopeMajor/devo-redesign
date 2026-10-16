@@ -1,0 +1,13 @@
+total 7836
+drwxr-xr-x 4 runner runner    4096 Oct 16 02:11 .
+drwxr-xr-x 3 runner runner    4096 Oct 16 02:11 ..
+drwxr-xr-x 4 runner runner    4096 Oct 16 02:11 .next
+-rw-r--r-- 1 runner runner   23836 Oct 16 02:11 cache.cjs
+-rw-r--r-- 1 runner runner   11602 Oct 16 02:11 composable-cache.cjs
+-rw-r--r-- 1 runner runner 7174194 Oct 16 02:11 handler.mjs
+-rw-r--r-- 1 runner runner  667929 Oct 16 02:11 handler.mjs.meta.json
+-rw-r--r-- 1 runner runner  103639 Oct 16 02:11 index.mjs
+drwxr-xr-x 3 runner runner    4096 Oct 16 02:11 node_modules
+-rw-r--r-- 1 runner runner   12169 Oct 16 02:11 open-next.config.mjs
+-rw-r--r-- 1 runner runner     671 Oct 16 02:11 patchedAsyncStorage.cjs
+48M	.open-next/assets

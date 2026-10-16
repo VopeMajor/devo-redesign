@@ -1,0 +1,4 @@
+evento=push ref=infra/cloudflare pedido=build modo=build
+segredos ausentes: CLOUDFLARE_API_TOKEN CLOUDFLARE_ACCOUNT_ID DATABASE_URL BETTER_AUTH_SECRET
+hyperdrive: não configurado (usa DATABASE_URL direto)
+cron secret: não configurado (rota do cron fica aberta)

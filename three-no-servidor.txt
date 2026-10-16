@@ -1,0 +1,2 @@
+.open-next/server-functions/default/handler.mjs: THREE.WebGLRenderer=0 react-three-fiber=0
+.wrangler-dist/worker.js: THREE.WebGLRenderer=0 react-three-fiber=0

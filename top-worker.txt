@@ -1,0 +1,73 @@
+total   10448.8 KiB  (.wrangler-dist/bundle-meta.json)
+  10278.2 KiB  .open-next/server-functions/default/handler.mjs
+    124.4 KiB  .open-next/middleware/handler.mjs
+     20.2 KiB  .open-next/cloudflare/images.js
+     12.7 KiB  .open-next/middleware/open-next.config.mjs
+      2.7 KiB  .open-next/cloudflare/init.js
+      1.3 KiB  .open-next/cloudflare/skew-protection.js
+      1.2 KiB  (app) cloudflare/worker.ts
+      0.9 KiB  .open-next/worker.js
+      0.2 KiB  .open-next/cloudflare/next-env.mjs
+      0.2 KiB  (app) node-built-in-modules:node:stream/promises
+      0.2 KiB  (app) node-built-in-modules:node:async_hooks
+      0.2 KiB  (app) node-built-in-modules:node:timers/promises
+      0.2 KiB  (app) node-built-in-modules:string_decoder
+      0.2 KiB  (app) node-built-in-modules:worker_threads
+      0.2 KiB  (app) node-built-in-modules:node:fs/promises
+      0.2 KiB  (app) node-built-in-modules:node:inspector
+      0.2 KiB  (app) node-built-in-modules:node:stream
+      0.2 KiB  (app) node-built-in-modules:node:stream/web
+      0.2 KiB  (app) node-built-in-modules:node:buffer
+      0.2 KiB  .open-next/.build/durable-objects/sharded-tag-cache.js
+      0.2 KiB  .open-next/.build/durable-objects/bucket-cache-purge.js
+      0.2 KiB  (app) node-built-in-modules:node:crypto
+      0.2 KiB  (app) node-built-in-modules:node:timers
+      0.2 KiB  (app) node-built-in-modules:node:https
+      0.2 KiB  (app) node-built-in-modules:async_hooks
+      0.2 KiB  (app) node-built-in-modules:node:path
+      0.2 KiB  (app) node-built-in-modules:node:zlib
+      0.2 KiB  (app) node-built-in-modules:node:http
+      0.2 KiB  (app) node-built-in-modules:node:util
+      0.2 KiB  (app) node-built-in-modules:util/types
+      0.2 KiB  (app) node-built-in-modules:node:net
+      0.2 KiB  (app) node-built-in-modules:node:tls
+      0.2 KiB  (app) node-built-in-modules:node:os
+      0.2 KiB  (app) node-built-in-modules:node:fs
+      0.2 KiB  (app) node-built-in-modules:crypto
+      0.2 KiB  (app) node-built-in-modules:events
+      0.2 KiB  (app) node-built-in-modules:stream
+      0.2 KiB  (app) node-built-in-modules:buffer
+      0.2 KiB  (app) node-built-in-modules:module
+      0.2 KiB  (app) node-built-in-modules:https
+
+maiores arquivos:
+  10278.2 KiB  .open-next/server-functions/default/handler.mjs
+    124.4 KiB  .open-next/middleware/handler.mjs
+     20.2 KiB  .open-next/cloudflare/images.js
+     12.7 KiB  .open-next/middleware/open-next.config.mjs
+      2.7 KiB  .open-next/cloudflare/init.js
+      1.3 KiB  .open-next/cloudflare/skew-protection.js
+      1.2 KiB  cloudflare/worker.ts
+      0.9 KiB  .open-next/worker.js
+      0.2 KiB  .open-next/cloudflare/next-env.mjs
+      0.2 KiB  node-built-in-modules:node:stream/promises
+      0.2 KiB  node-built-in-modules:node:async_hooks
+      0.2 KiB  node-built-in-modules:node:timers/promises
+      0.2 KiB  node-built-in-modules:string_decoder
+      0.2 KiB  node-built-in-modules:worker_threads
+      0.2 KiB  node-built-in-modules:node:fs/promises
+      0.2 KiB  node-built-in-modules:node:inspector
+      0.2 KiB  node-built-in-modules:node:stream
+      0.2 KiB  node-built-in-modules:node:stream/web
+      0.2 KiB  node-built-in-modules:node:buffer
+      0.2 KiB  .open-next/.build/durable-objects/sharded-tag-cache.js
+      0.2 KiB  .open-next/.build/durable-objects/bucket-cache-purge.js
+      0.2 KiB  node-built-in-modules:node:crypto
+      0.2 KiB  node-built-in-modules:node:timers
+      0.2 KiB  node-built-in-modules:node:https
+      0.2 KiB  node-built-in-modules:async_hooks
+      0.2 KiB  node-built-in-modules:node:path
+      0.2 KiB  node-built-in-modules:node:zlib
+      0.2 KiB  node-built-in-modules:node:http
+      0.2 KiB  node-built-in-modules:node:util
+      0.2 KiB  node-built-in-modules:util/types
