@@ -155,7 +155,7 @@ Sabe onde me encontrar.
 |
 "Pelo menos ele se despediu."
 
-## Salão das Máscaras — apresentação (o "maestro"; NPC a definir pelo dono)
+## Salão das Máscaras — apresentação (o "maestro" = o Herdeiro)
 
 — Hm? É você?
 |

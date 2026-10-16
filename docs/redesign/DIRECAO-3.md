@@ -2,7 +2,7 @@
 
 Fontes do dono, que valem como especificação (ler inteiras, não resumir de memória):
 - `SISTEMAS-texto-do-dono.txt` — Poço dos Milagres (diálogo + regras), Melissa holograma / Corporações, permissões por cargo, cosméticos (§1–14), campos do Deadly Vote, diálogo do Galo sobre Torres/Essências, regras das Torres.
-- `DIALOGOS-galo-salao.md` — Galo (Karma) e apresentação do Salão das Máscaras.
+- `DIALOGOS-galo-salao.md` — Galo (Karma) e apresentação do Salão das Máscaras (pelo Herdeiro).
 - `VIRTUDES.md` — Virtudes / Pontos de Potencial (Google Doc).
 - Refs: `refs/cosmeticos/ref-01..08` (molduras/ornamentos), `refs/torres/ref-mapa-circo.png` e `ref-mapa-castelo.png` (mapa com torres secundárias e uma principal), `refs/torres/ref-torre-andares.png` e `ref-torre-escada.png` (tela de uma torre, andares com cadeado), e as antigas `refs/ref-torre-ruptura-*.jpg`.
 - **Sprites OC novos**: `refs/npc-oc/*.png` — folhas 4×3 (12 expressões) de Coruja, Galo, Herdeiro, Javali, Melissa e Rato. Substituem os sprites antigos (o dono avisou que trocaria por OCs).
@@ -16,6 +16,11 @@ As referências são guia de qualidade e de material, não para copiar (algumas 
 4. **Novo diálogo com O Galo** (casa, campainha, Karma).
 
 Desbloqueios são **flags por jogador no servidor**, com override de Owner (para testes e para liberar manualmente).
+
+## 1b. Respostas do dono (16/10, 06:53)
+- O "maestro" que apresenta o Salão das Máscaras é **o Herdeiro**.
+- Poço: probabilidades **provisórias**, marcadas como tal e editáveis pelo Owner, até o dono definir as finais.
+- Ícones dos sistemas novos ficam **trancados também para contas existentes** até vencer o Deadly Vote do tutorial — **exceto Owners e Anfitriões**, que veem tudo liberado.
 
 ## 2. Sistemas novos
 - **Karma**: inteiro por jogador, começa em 0, sobe (ordem) e desce (caos, pode ser negativo). Escolhas de diálogo podem alterar. Exibido como "linha do destino", sem número cru no início.
