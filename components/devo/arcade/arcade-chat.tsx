@@ -9,7 +9,8 @@ import { REACTION_PREFIX } from '@/lib/devo/arcade/reactions'
 import { cn } from '@/lib/utils'
 import { useOpenProfile } from './mini-profile'
 
-const NAME_COLORS = ['#7d97ff', '#a9bbff', '#ecd49a', '#7fdcb6', '#c9a6ff', '#7fd3ec', '#ffb07f', '#f08cc0']
+// Nomes no chat em tons da paleta (porcelana, aço, prata, lavanda, ametista clara): distintos sem virar arco-íris.
+const NAME_COLORS = ['#f1f0ee', '#ece5d8', '#bab09f', '#c2b9ec', '#b7b3c9', '#d9d8d4', '#9a9184', '#cbc5e8']
 
 export function nameColor(name: string) {
   let h = 0
@@ -117,7 +118,7 @@ export function ArcadeChat({
           maxLength={200}
           placeholder={placeholder}
           aria-label="Mensagem"
-          className="min-h-11 min-w-0 flex-1 border border-dv-line-strong bg-dv-ink/80 px-3 font-body text-[16px] text-dv-text outline-none placeholder:text-dv-text-3 focus:border-dv-cobalt"
+          className="min-h-11 min-w-0 flex-1 border border-dv-line-strong bg-dv-ink/80 px-3 font-body text-[16px] text-dv-text outline-none placeholder:text-dv-text-3 focus:border-dv-gold"
         />
         <IconButton type="submit" label="Enviar" variant="primary">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" aria-hidden="true">

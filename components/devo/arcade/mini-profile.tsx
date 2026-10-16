@@ -9,10 +9,10 @@ import { GAMES, type GameId } from '@/lib/devo/arcade/games'
 import { cn } from '@/lib/utils'
 
 export const BORDER_META: Record<BorderTier, { label: string; color: string; glow: string }> = {
-  padrao: { label: 'Borda Padrão', color: '#5b6170', glow: 'transparent' },
+  padrao: { label: 'Borda Padrão', color: '#58585e', glow: 'transparent' },
   azul: { label: 'Borda Azul · Top 10', color: '#c2b9ec', glow: '#c2b9ec66' },
-  prata: { label: 'Borda Prata · Top 3', color: '#d3dae8', glow: '#d3dae855' },
-  ouro: { label: 'Borda Ouro · #1 da semana', color: '#e2b95c', glow: '#e2b95c77' },
+  prata: { label: 'Borda Prata · Top 3', color: '#d9d8d4', glow: '#d9d8d455' },
+  ouro: { label: 'Borda Ouro · #1 da semana', color: '#ece5d8', glow: '#bab09f77' },
   dealer: { label: 'Borda Dealer', color: '#c2b9ec', glow: '#c2b9ec66' },
 }
 
@@ -74,7 +74,7 @@ function MiniProfileDialog({ pid, onClose }: { pid: string; onClose: () => void 
             <p className="relative p-8 text-center text-sm text-white/60">Não foi possível carregar este perfil.</p>
           ) : !data ? (
             <div className="relative flex min-h-[16rem]" aria-busy="true">
-              <span className="w-[38%] animate-pulse bg-[#0b1550]/60" />
+              <span className="w-[38%] animate-pulse bg-dv-ink-4/60" />
               <span className="flex flex-1 flex-col gap-3 p-6">
                 <span className="h-7 w-2/3 animate-pulse rounded-sm bg-white/10" />
                 <span className="h-3 w-1/3 animate-pulse rounded-sm bg-white/10" />
@@ -112,7 +112,7 @@ function ProfileBody({ data, tier }: { data: MiniProfile; tier: (typeof BORDER_M
             <UserRound className="size-24 text-white/30" strokeWidth={0.75} aria-hidden="true" />
           </span>
         )}
-        <span aria-hidden="true" className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-[#04071a] to-transparent sm:inset-y-0 sm:left-auto sm:right-0 sm:h-auto sm:w-1/3 sm:bg-gradient-to-r sm:from-transparent sm:to-[#04071a]" />
+        <span aria-hidden="true" className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-dv-ink to-transparent sm:inset-y-0 sm:left-auto sm:right-0 sm:h-auto sm:w-1/3 sm:bg-gradient-to-r sm:from-transparent sm:to-dv-ink" />
       </div>
 
       <div className="relative flex min-w-0 flex-1 flex-col sm:ml-[38%]">
@@ -164,7 +164,7 @@ function ProfileBody({ data, tier }: { data: MiniProfile; tier: (typeof BORDER_M
           </div>
           <div
             className="flex min-w-0 max-w-full items-center gap-3 dv-cut-diag border px-3 py-2 font-sans text-[10px] font-semibold uppercase tracking-[0.18em]"
-            style={{ borderColor: `${tier.color}55`, color: '#c9d4ff', background: `${tier.color}0d` }}
+            style={{ borderColor: `${tier.color}55`, color: 'var(--dv-text)', background: `${tier.color}0d` }}
           >
             <span className="flex min-w-0 flex-col gap-0.5">
               <span className="text-white/45">{bestName ? 'Melhor jogo' : 'Pontos da semana'}</span>
@@ -199,11 +199,11 @@ export function AvatarRing({ profile, size = 48 }: { profile: MiniProfile; size?
       style={{
         width: size,
         height: size,
-        background: profile.border === 'padrao' ? tier.color : `conic-gradient(from 210deg, ${tier.color}, #0a0c11 30%, ${tier.color} 55%, #0a0c11 80%, ${tier.color})`,
+        background: profile.border === 'padrao' ? tier.color : `conic-gradient(from 210deg, ${tier.color}, #0c0c0e 30%, ${tier.color} 55%, #0c0c0e 80%, ${tier.color})`,
         boxShadow: `0 0 18px ${tier.glow}`,
       }}
     >
-      <span className="relative grid size-full place-items-center overflow-hidden rounded-full border-2 border-[#0a0c11] bg-[#121726]">
+      <span className="relative grid size-full place-items-center overflow-hidden rounded-full border-2 border-[#0c0c0e] bg-dv-ink-2">
         {src ? (
           // biome-ignore lint/performance/noImgElement: avatar privado servido pela API
           <img src={src} alt="" className="size-full object-cover" />
