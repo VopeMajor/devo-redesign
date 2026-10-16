@@ -1,6 +1,6 @@
 -- Virtudes e Pontos de Potencial (DIRECAO-3 §2; docs/redesign/VIRTUDES.md). Idempotente.
 -- Depende de scripts/fundacao-migration.sql (players.arcano/arcano_estagio, devo_config, admin_log).
--- Contrato: docs/redesign/FUNDACAO.md §12. Regra do dono: os números ficam aqui e na Mesa; o jogador só vê
+-- Contrato: docs/redesign/FUNDACAO.md §13. Regra do dono: os números ficam aqui e na Mesa; o jogador só vê
 -- rótulos qualitativos (afinidade, quanto acumulou, para onde pendeu).
 
 -- P.P. acumulados no Estágio atual, por Virtude (o "nutriente" da metamorfose). A soma nunca passa do teto

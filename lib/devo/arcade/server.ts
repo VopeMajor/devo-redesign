@@ -295,7 +295,8 @@ async function savedTimerEndsAt(playerId: string) {
 
 type Player = { id: string; name: string }
 
-export type LeaderRow = { rank: number; name: string; score: number; wins: number; isBot: boolean; isMe: boolean }
+/** `pid` permite desenhar a aparência pública (cosméticos) no ranking. */
+export type LeaderRow = { rank: number; pid: string; name: string; score: number; wins: number; isBot: boolean; isMe: boolean }
 
 export async function leaderboard(week: number, _now: number, meId: string) {
   const real = await q<{ player_id: string; name: string; score: number; wins: number }>(
@@ -303,7 +304,7 @@ export async function leaderboard(week: number, _now: number, meId: string) {
      WHERE s.week_start = $1 AND s.score > 0 AND NOT p.is_test`,
     [weekKey(week)],
   )
-  const rows = real.map((r) => ({ name: r.name, score: r.score, wins: r.wins, isBot: false, isMe: r.player_id === meId }))
+  const rows = real.map((r) => ({ pid: r.player_id, name: r.name, score: r.score, wins: r.wins, isBot: false, isMe: r.player_id === meId }))
   rows.sort((a, b) => b.score - a.score || a.name.localeCompare(b.name))
   return rows.map((r, i) => ({ ...r, rank: i + 1 })) as LeaderRow[]
 }
@@ -366,7 +367,7 @@ async function eventViews(events: EventRow[], player: Player, now: number): Prom
 /** Mínimo de partidas online na semana para concorrer aos prêmios do ranking. */
 export const MIN_WEEK_GAMES = 5
 
-export type GameRankRow = { rank: number; name: string; points: number; today: number; games: number; isMe: boolean }
+export type GameRankRow = { rank: number; pid: string; name: string; points: number; today: number; games: number; isMe: boolean }
 
 export type GameRanking = {
   rows: GameRankRow[]
@@ -400,7 +401,7 @@ async function gameRankings(player: Player, week: number, now: number): Promise<
     const ranked = rows
       .filter((r) => r.game_id === g && r.points > 0)
       .sort((a, b) => b.points - a.points || a.name.localeCompare(b.name))
-      .map((r, i) => ({ rank: i + 1, name: r.name, points: r.points, today: r.today, games: r.games, isMe: r.player_id === player.id }))
+      .map((r, i) => ({ rank: i + 1, pid: r.player_id, name: r.name, points: r.points, today: r.today, games: r.games, isMe: r.player_id === player.id }))
     const me = ranked.find((r) => r.isMe) ?? null
     out[g] = { rows: ranked.slice(0, 10), me, bestWeek: best.find((b) => b.game_id === g)?.best ?? 0 }
   }
@@ -464,6 +465,7 @@ export async function getDashboard(player: Player) {
     timeDeltaMs,
     week: { key: weekKey(week), resetsAt: week + WEEK },
     me: {
+      id: player.id,
       name: player.name,
       settings: profile.settings,
       score: mine.score,

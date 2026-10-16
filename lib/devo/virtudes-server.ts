@@ -34,7 +34,7 @@ import {
 } from './virtudes'
 
 /**
- * Virtudes no servidor (contrato: docs/redesign/FUNDACAO.md §12). Os números (P.P., teto, multiplicadores,
+ * Virtudes no servidor (contrato: docs/redesign/FUNDACAO.md §13). Os números (P.P., teto, multiplicadores,
  * atributos) só existem aqui e na Mesa; o payload do jogador é qualitativo.
  */
 

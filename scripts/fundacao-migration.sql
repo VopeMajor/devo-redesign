@@ -580,7 +580,7 @@ CREATE TRIGGER reward_proposals_log AFTER INSERT OR UPDATE ON reward_proposals
   FOR EACH ROW EXECUTE FUNCTION devo_reward_log();
 
 -- ---------------------------------------------------------------------------------------------
--- 9. Arcano do jogador e Estágio (acrescentado pelo agente Virtudes; FUNDACAO.md §12)
+-- 9. Arcano do jogador e Estágio (acrescentado pelo agente Virtudes; FUNDACAO.md §13)
 --    arcano: chave do Arcano maior ('morte', 'imperador', …; lista em lib/devo/virtudes.ts) ou NULL
 --    ("sem registro"). arcano_estagio: Estágio atual (1..), sobe na Evolução de Estágio.
 -- ---------------------------------------------------------------------------------------------

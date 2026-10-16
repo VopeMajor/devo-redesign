@@ -422,6 +422,10 @@ const ACTION_LABEL: Record<string, string> = {
   'autorizacao.concedida': 'Autorização concedida',
   'autorizacao.revogada': 'Autorização revogada',
   'catalogo.item': 'Catálogo editado',
+  'cosmetico.item': 'Cosmético editado',
+  'cosmetico.asset': 'Asset enviado',
+  'cosmetico.concedido': 'Cosmético concedido',
+  'cosmetico.revogado': 'Cosmético revogado',
 }
 
 /** Registro administrativo (Owner): toda concessão, mudança de cargo, vínculo, override e configuração. */

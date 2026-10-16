@@ -42,6 +42,9 @@ const DB_ERRORS: [RegExp, string, number][] = [
   // Staff / Deadly Vote (scripts/staff-migration.sql)
   [/RESULTADO_APLICADO/, 'O resultado deste Deadly Vote já foi aplicado aos perfis.', 409],
   [/APLICAR_SO_CONCLUIDO/, 'Conclua o Deadly Vote antes de aplicar o resultado.', 409],
+  // Cosméticos / recompensas semanais (scripts/cosmeticos-migration.sql)
+  [/PLANO_FECHADO/, 'Este plano já foi encerrado.', 409],
+  [/PLANO_SEM_APROVACAO/, 'Aprove o plano antes de distribuir.', 409],
   // Virtudes (scripts/virtudes-migration.sql)
   [/VIRTUDE_DESCONHECIDA/, 'Virtude desconhecida.', 400],
   [/violates (check|foreign key) constraint/, 'Dados inválidos.', 400],

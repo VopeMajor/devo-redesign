@@ -31,6 +31,9 @@ import { BET_OPTIONS, BET_RESERVE_MIN, SP_TZ, formatMinutes, registerEvent, useA
 import { useBetSheet } from './bet-sheet'
 import { eventBadge, VsSplit } from './mesa'
 import { MARBLE_INK } from './sala-marble'
+import { NomeVisual } from '../cosmeticos/cosmetic-art'
+import { RankRetrato } from '../cosmeticos/rank-retrato'
+import { useVisuais } from '../cosmeticos/use-cosmeticos'
 import { AstrolabeDial, GAME_ART, GAME_ART_TONE, JavaliMedallion, Monogram, OddsBar } from './sala-ui'
 
 type EventView = Dashboard['events'][number]
@@ -342,7 +345,7 @@ function EventPanel({ id }: { id: string }) {
 
 export type RankView = 'geral' | GameId
 
-type RankRow = { rank: number; name: string; isMe: boolean; sub: string; points: number; today?: number }
+type RankRow = { rank: number; pid?: string; name: string; isMe: boolean; sub: string; points: number; today?: number }
 
 export function Ranking({ data, view, onView }: { data: Dashboard; view: RankView; onView: (v: RankView) => void }) {
   const options: { id: RankView; label: string }[] = [{ id: 'geral', label: 'Geral' }, ...(Object.keys(GAMES) as GameId[]).map((g) => ({ id: g, label: GAMES[g].name }))]
@@ -372,14 +375,14 @@ export function Ranking({ data, view, onView }: { data: Dashboard; view: RankVie
               </div>
             </div>
           </Frame>
-          <Podium rows={data.leaderboard.slice(0, 3).map((r) => ({ rank: r.rank, name: r.name, isMe: r.isMe, sub: `${r.wins} vitórias`, points: r.score }))} />
+          <Podium rows={data.leaderboard.slice(0, 3).map((r) => ({ rank: r.rank, pid: r.pid, name: r.name, isMe: r.isMe, sub: `${r.wins} vitórias`, points: r.score }))} />
           <RankList
             rows={data.leaderboard
               .slice(3, 10)
-              .map((r) => ({ rank: r.rank, name: r.name, isMe: r.isMe, sub: `${r.wins} vitórias · ${PATENTES[patenteIndex(r.score)].name}`, points: r.score }))}
+              .map((r) => ({ rank: r.rank, pid: r.pid, name: r.name, isMe: r.isMe, sub: `${r.wins} vitórias · ${PATENTES[patenteIndex(r.score)].name}`, points: r.score }))}
             me={
               data.me.rank && data.me.rank > 10
-                ? { rank: data.me.rank, name: data.me.name, isMe: true, sub: `${data.me.wins} vitórias`, points: data.me.score }
+                ? { rank: data.me.rank, pid: data.me.id, name: data.me.name, isMe: true, sub: `${data.me.wins} vitórias`, points: data.me.score }
                 : !data.me.rank
                   ? { rank: 0, name: data.me.name, isMe: true, sub: 'Sem pontos ainda', points: data.me.score }
                   : null
@@ -432,6 +435,7 @@ const PODIUM = {
 }
 
 function Podium({ rows }: { rows: RankRow[] }) {
+  const visualDe = useVisuais(rows.map((r) => r.pid))
   if (!rows.length) return <p className="font-body text-[15px] text-dv-text-2">Ninguém pontuou nesta semana ainda.</p>
   const order = [rows[1], rows[0], rows[2]].filter(Boolean)
   return (
@@ -453,7 +457,7 @@ function Podium({ rows }: { rows: RankRow[] }) {
                 <path d="M2 18 L6 4 L14 12 L20 2 L26 12 L34 4 L38 18 Z" fill="currentColor" opacity="0.9" />
               </svg>
             )}
-            <Monogram name={r.name} size={r.rank === 1 ? 'lg' : 'md'} tone={r.isMe ? 'cobalt' : p.tone} />
+            <RankRetrato pid={r.pid} visual={visualDe(r.pid)} largura={r.rank === 1 ? 56 : 40} fallback={<Monogram name={r.name} size={r.rank === 1 ? 'lg' : 'md'} tone={r.isMe ? 'cobalt' : p.tone} />} />
             <span className={cn('mt-2 max-w-full truncate font-display text-[15px] font-semibold uppercase tracking-[0.04em]', r.isMe ? 'text-dv-amethyst-text' : 'text-dv-text')}>
               {r.isMe ? `${r.name} (você)` : r.name}
             </span>
@@ -477,6 +481,7 @@ function Podium({ rows }: { rows: RankRow[] }) {
 }
 
 function RankList({ rows, me }: { rows: RankRow[]; me: RankRow | null }) {
+  const visualDe = useVisuais([...rows.map((r) => r.pid), me?.pid])
   const item = (r: RankRow, i: number) => (
     <li
       key={`${r.rank}-${r.name}`}
@@ -485,10 +490,10 @@ function RankList({ rows, me }: { rows: RankRow[]; me: RankRow | null }) {
     >
       {r.isMe && <span aria-hidden="true" className="absolute inset-y-0 left-0 w-[3px] bg-dv-porcelain shadow-[0_0_12px_var(--dv-amethyst)]" />}
       <span className="w-8 text-center font-impact text-[20px] font-semibold text-dv-text-3 dv-tabular">{r.rank || '—'}</span>
-      <Monogram name={r.name} size="sm" tone={r.isMe ? 'cobalt' : 'neutral'} />
+      <RankRetrato pid={r.pid} visual={visualDe(r.pid)} largura={32} fallback={<Monogram name={r.name} size="sm" tone={r.isMe ? 'cobalt' : 'neutral'} />} />
       <div className="min-w-0 flex-1">
         <span className={cn('flex items-center gap-2 truncate font-body text-[16px]', r.isMe ? 'text-white' : 'text-dv-text')}>
-          <span className="truncate">{r.name}</span>
+          <NomeVisual nome={r.name} visual={visualDe(r.pid)} semEmblema={false} tamanhoEmblema={16} />
           {r.isMe && (
             <Badge tone="cobalt" className="h-5 px-1.5">
               Você
@@ -529,7 +534,7 @@ function GameRank({ data, gameId }: { data: Dashboard; gameId: GameId }) {
   const nextP = PATENTES[idx + 1]
   const pct = nextP ? Math.round(((points - cur.min) / (nextP.min - cur.min)) * 100) : 100
   const permanent = PATENTES[patenteIndex(r.bestWeek)]
-  const rows: RankRow[] = r.rows.map((x) => ({ rank: x.rank, name: x.name, isMe: x.isMe, sub: PATENTES[patenteIndex(x.points)].name, points: x.points, today: x.today }))
+  const rows: RankRow[] = r.rows.map((x) => ({ rank: x.rank, pid: x.pid, name: x.name, isMe: x.isMe, sub: PATENTES[patenteIndex(x.points)].name, points: x.points, today: x.today }))
   return (
     <>
       {/* cartão de patente compacto: o pódio inteiro cabe acima da dobra */}
@@ -582,7 +587,7 @@ function GameRank({ data, gameId }: { data: Dashboard; gameId: GameId }) {
       ) : (
         <>
           <Podium rows={rows.slice(0, 3)} />
-          <RankList rows={rows.slice(3)} me={r.me && r.me.rank > 10 ? { rank: r.me.rank, name: r.me.name, isMe: true, sub: cur.name, points: r.me.points, today: r.me.today } : null} />
+          <RankList rows={rows.slice(3)} me={r.me && r.me.rank > 10 ? { rank: r.me.rank, pid: r.me.pid, name: r.me.name, isMe: true, sub: cur.name, points: r.me.points, today: r.me.today } : null} />
         </>
       )}
     </>
