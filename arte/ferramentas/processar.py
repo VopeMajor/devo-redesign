@@ -110,10 +110,25 @@ def zonas_quadriculado(rgb: np.ndarray) -> tuple[np.ndarray, np.ndarray, np.ndar
     return zona, ext, xadrez
 
 
-def remover_fundo(bruto: Image.Image, rgb: np.ndarray, pos: dict, tem_rembg: bool) -> tuple[np.ndarray, np.ndarray, str]:
-    """Devolve (alfa, máscara de fundo certo, descrição)."""
+def periodicidade(lum: np.ndarray) -> np.ndarray:
+    """~1 onde a textura é um xadrez (anticorrelação a 1 casa na horizontal e na vertical, correlação na
+    diagonal, casas de 7–13 px); ~0 em penas, fitas e metal."""
+    hp = lum - ndimage.gaussian_filter(lum, 5)
+    e = ndimage.uniform_filter(hp * hp, 15) + 1e-3
+    melhor = np.full(lum.shape, -9.0, np.float32)
+    for c in range(7, 14):
+        sx, sy = np.roll(hp, c, 1), np.roll(hp, c, 0)
+        n1 = ndimage.uniform_filter(hp * sx, 15) / e
+        n2 = ndimage.uniform_filter(hp * sy, 15) / e
+        p = ndimage.uniform_filter(hp * np.roll(sx, c, 0), 15) / e
+        melhor = np.maximum(melhor, (-(n1 + n2) / 2 + p) / 2)
+    return melhor
+
+
+def remover_fundo(bruto: Image.Image, rgb: np.ndarray, pos: dict, tem_rembg: bool):
+    """Devolve (alfa, máscara de fundo certo, descrição, rgb possivelmente corrigido)."""
     if not pos["remover_fundo"]:
-        return np.ones(rgb.shape[:2], np.float32), np.zeros(rgb.shape[:2], bool), "mantido"
+        return np.ones(rgb.shape[:2], np.float32), np.zeros(rgb.shape[:2], bool), "mantido", rgb
     if pos["fundo"] == "quadriculado":
         zona, ext, xadrez = zonas_quadriculado(rgb)
         plano = rgb.copy()
@@ -125,20 +140,42 @@ def remover_fundo(bruto: Image.Image, rgb: np.ndarray, pos: dict, tem_rembg: boo
         if tem_rembg:
             a_r, usado = mascara_rembg(Image.fromarray(plano.astype(np.uint8)), pos["modelo_fundo"])
             desc = f"quadriculado+rembg:{usado}"
-        else:
-            a_r, desc = np.zeros(rgb.shape[:2], np.float32), "quadriculado (teste, sem rembg)"
+        else:  # pior caso do rembg: considera objeto tudo que não é zona de xadrez
+            a_r, desc = (~ext).astype(np.float32), "quadriculado (teste, sem rembg)"
         a = np.maximum(a_r, cor.astype(np.float32))
         a[ext] = 0.0
-        # borda: pixel de xadrez fora da zona e sem rembg vira transparente gradualmente
-        return a.astype(np.float32), ext, desc
+        # xadrez visto através de véu tingido em qualquer lugar (o rembg costuma manter): claro, pouca cor,
+        # textura claro/escuro na janela 9×9. Fitas e penas lisas ou coloridas não entram.
+        g = lambda m: ndimage.uniform_filter(m.astype(np.float32), 9)  # noqa: E731
+        med = ndimage.uniform_filter(lum, 9)
+        dp = np.sqrt(np.maximum(ndimage.uniform_filter(lum ** 2, 9) - med ** 2, 0))
+        veu = (g((rgb.max(-1) - rgb.min(-1)) <= 24) > 0.7) & (med > 185) & (dp < 30) & (periodicidade(lum) > 0.35)
+        veu = ndimage.binary_closing(veu, iterations=2)
+        rot, n = ndimage.label(veu)
+        if n:
+            areas = np.bincount(rot.ravel())
+            veu = (areas[rot] >= 150) & (rot > 0)
+        # véu translúcido pintado sobre o xadrez: estima a opacidade pelo contraste que sobrou do xadrez
+        # (xadrez limpo: desvio ~23 de luminância) e troca a textura pela cor média desmisturada
+        alvo = veu & ~cor
+        alfa_v = np.clip(1 - dp / 23.0, 0, 1)
+        alfa_v[alfa_v < 0.15] = 0
+        media_rgb = np.dstack([ndimage.uniform_filter(rgb[..., i], 9) for i in range(3)])
+        cor_v = (media_rgb - (1 - alfa_v[..., None]) * 230.0) / np.maximum(alfa_v[..., None], 1e-3)
+        rgb = rgb.copy()
+        rgb[alvo] = np.clip(cor_v[alvo], 0, 255)
+        a[alvo] = np.minimum(a[alvo], alfa_v[alvo])
+        fundo = ext | (alvo & (alfa_v == 0))
+        return a.astype(np.float32), fundo, desc, rgb
     if tem_rembg:
         a, usado = mascara_rembg(bruto, pos["modelo_fundo"])
-        return a, a < 0.02, f"rembg:{usado}"
+        return a, a < 0.02, f"rembg:{usado}", rgb
     a = mascara_por_cor(rgb)
-    return a, a < 0.02, "cor (teste)"
+    return a, a < 0.02, "cor (teste)", rgb
 
 
-def limpar(rgb: np.ndarray, a: np.ndarray, fundo_certo: np.ndarray, ilha_min: int, ilha_rel: float):
+def limpar(rgb: np.ndarray, a: np.ndarray, fundo_certo: np.ndarray, ilha_min: int, ilha_rel: float,
+           apara_palido: bool = False):
     """Halo, ilhas soltas e cor do fundo misturada nas bordas semitransparentes."""
     info = {}
     a = np.clip((a - 0.04) / 0.94, 0, 1)
@@ -163,6 +200,17 @@ def limpar(rgb: np.ndarray, a: np.ndarray, fundo_certo: np.ndarray, ilha_min: in
         am = a[meio][:, None]
         rgb = rgb.copy()
         rgb[meio] = np.clip((rgb[meio] - (1 - am) * bg[meio]) / am, 0, 255)
+    if apara_palido:
+        # franja clara do xadrez colada na borda: pixel pálido (quase sem cor, claro) na beira do recorte some
+        lum = rgb @ np.array([0.299, 0.587, 0.114])
+        palido = ((rgb.max(-1) - rgb.min(-1)) <= 16) & (lum > 195)
+        a = a.copy()
+        total = 0
+        for _ in range(3):  # até 3 anéis de franja
+            borda = (a > 0) & ndimage.binary_dilation(a < 0.05, iterations=1) & palido
+            a[borda] = 0
+            total += int(borda.sum())
+        info["franja_aparada_px"] = total
     rgb[a <= 0.0] = 0
     return rgb, a, info
 
@@ -644,13 +692,14 @@ def main() -> int:
         it = {"rotulo": rot, "bruto": bruto}
         try:
             rgb = np.asarray(bruto, dtype=np.float32)
-            a, fundo_certo, reg["fundo"] = remover_fundo(bruto, rgb, pos, tem_rembg)
+            a, fundo_certo, reg["fundo"], rgb = remover_fundo(bruto, rgb, pos, tem_rembg)
             if p["tipo"] == "moldura" and pos["fundo"] == "liso":
                 a, aberto = abrir_centro(rgb, a, cor_fundo(rgb))
                 if aberto:
                     reg["miolo_aberto_por_cor"] = True
             imp = bool(p.get("importar"))
-            rgb, a, info = limpar(rgb, a, fundo_certo, ilha_min=60 if imp else 40, ilha_rel=0.0 if imp else 0.004)
+            rgb, a, info = limpar(rgb, a, fundo_certo, ilha_min=60 if imp else 40, ilha_rel=0.0 if imp else 0.004,
+                                  apara_palido=pos["fundo"] == "quadriculado")
             reg.update(info)
             recorte = rgba(rgb, a)
             av = None

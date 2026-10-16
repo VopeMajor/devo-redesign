@@ -121,6 +121,35 @@ Baixar: `git clone -q --depth 1 -b arte-saida/<id> https://github.com/VopeMajor/
 
 Nomes: `<id>--v<NN>--<lado>.<ext>`, ex. `cosm-b-coracao-da-condessa--v02--256.webp`.
 
+### Arte importada (feita em outra IA ou por ilustrador)
+
+Ponha o arquivo em `arte/importados/` e crie um pedido com `"importar": "arte/importados/<arquivo>.png"`
+(sem prompt/modelo/variações). Não gasta neurônio e roda sem o segredo. Com `"pos": {"fundo": "quadriculado"}`
+(padrão para importados) o pipeline trata o **xadrez de "transparência" desenhado** que muitas IAs entregam
+em RGB: acha a zona do xadrez (cinzas neutros R≈G≈B claros alternando ~253/~207, janela 19×19), cresce por
+pixels de xadrez com textura claro/escuro — inclusive o xadrez visto através de véu rosado pintado — e troca
+tudo por cor lisa; o BiRefNet refina o resto. Pixels com cor (gemas, pétalas, correntes) nunca viram fundo, então
+peças finas soltas sobrevivem. Ilhas pequenas só somem abaixo de 60 px. Exemplo: `rosa-do-destino-*.json`.
+
+### Formas e tipos extras
+
+- **Moldura quadrada (miniperfil)**: `"molde": {"forma": "quadrado", "lado": 0.547, "raio_canto": 0.04}`
+  (abertura 560/1024 com cantos levemente arredondados). O manifest traz `janela.lado_px` e `raio_canto_px`.
+- **Balão** (`"tipo": "balao"`, gere 1536×512): além do asset inteiro, mede o **9-slice** (cantos ornamentados
+  fixos, bordas esticáveis, centro liso) e monta um **kit**: `kit-corpo` (perfil vertical mediano repetido na
+  horizontal — borda uniforme, centro liso para o texto, estica livre) + `kit-ponta-esq`/`kit-ponta-dir`
+  (ornamentos das pontas, com 3% de sobra que se funde ao corpo). Medidas em `manifest.json › balao`:
+  `nove_fatias` (top/right/bottom/left em px do original, com o `border-image` pronto), `kit.corpo.fatias`,
+  `kit.texto` (retângulo do texto). Nos derivados, o número no nome é a largura do balão inteiro e todas as
+  medidas escalam por `largura/W`. A prancha mostra as linhas das fatias e o kit montado em duas alturas.
+- **Camadas de animação por cor** (`"pos": {"camadas": [{"nome": "gema", "matiz": [340, 15], "sat_min": 0.6,
+  "val_min": 0.55, "animacao": "brilho"}]}`): recorta do próprio final só os pixels naquela faixa de cor, no
+  mesmo quadro (alinhamento perfeito). O CSS anima opacidade/brilho dessa camada por cima do asset.
+  Peças que giram ou balançam (engrenagem, ponteiros, pêndulo) são pedidos próprios (`"tipo": "camada"`,
+  quadrado centrado) com a arte escolhida como referência; o encaixe (posição, pivô) fica no manifest da pasta
+  pública.
+- **Referências fixas** do catálogo ficam em `arte/referencias/` (versões escolhidas pelo dono, ≤508 px).
+
 ## Modelos (Workers AI, conferido na doc pública em 16/10/2026)
 
 | modelo | papel no DEVO | custo aprox. 1024×1024 | observações |

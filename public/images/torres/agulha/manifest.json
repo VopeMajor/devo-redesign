@@ -1,0 +1,21 @@
+{
+  "id": "agulha",
+  "tipo": "ilustracao",
+  "origem": {
+    "pedido": "torre-principal-agulha",
+    "variacao": "v04",
+    "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+    "seed": 3104,
+    "importado": null
+  },
+  "tamanho_original": [
+    746,
+    1536
+  ],
+  "arquivos": [
+    "1024.webp",
+    "512.webp",
+    "256.webp",
+    "96.webp"
+  ]
+}
