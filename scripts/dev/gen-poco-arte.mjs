@@ -430,12 +430,71 @@ function raios(tom) {
     const [x, y] = polar(250, 250, 60 + ((i * 37) % 150), i * 22.5 + 7)
     p.push(`<path d="${star4(x, y, 3 + (i % 3) * 2.5, 0.18)}" fill="${cor[0]}" opacity="0.85"/>`)
   }
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" width="500" height="500"><defs><radialGradient id="r" cx="250" cy="250" r="240" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="${cor[0]}"/><stop offset="0.35" stop-color="${cor[1]}" stop-opacity="0.75"/><stop offset="1" stop-color="${cor[1]}" stop-opacity="0"/></radialGradient><filter id="b"><feGaussianBlur stdDeviation="1.2"/></filter></defs><g filter="url(#b)">${p.join('')}</g><circle cx="250" cy="250" r="70" fill="url(#r)" opacity="0.8"/></svg>`
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" width="500" height="500"><defs><radialGradient id="r" cx="250" cy="250" r="240" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="${cor[0]}"/><stop offset="0.35" stop-color="${cor[1]}" stop-opacity="0.75"/><stop offset="1" stop-color="${cor[1]}" stop-opacity="0"/></radialGradient><filter id="b"><feGaussianBlur stdDeviation="1.2"/></filter></defs><g filter="url(#b)">${p.join('')}</g></svg>`
 }
 
 /** Aura suave (névoa luminosa) — fundo atrás do mecanismo. */
 function aura() {
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400"><defs><radialGradient id="a" cx="0.5" cy="0.5" r="0.5"><stop offset="0" stop-color="#7d6fbd" stop-opacity="0.55"/><stop offset="0.4" stop-color="#4a3f80" stop-opacity="0.25"/><stop offset="1" stop-color="#19181f" stop-opacity="0"/></radialGradient><filter id="t"><feTurbulence type="fractalNoise" baseFrequency="0.018" numOctaves="3" seed="5"/><feColorMatrix type="matrix" values="0 0 0 0 0.6  0 0 0 0 0.58  0 0 0 0 0.7  0 0 0 0.9 -0.25"/><feComposite in2="SourceGraphic" operator="in"/></filter></defs><circle cx="200" cy="200" r="200" fill="url(#a)"/><circle cx="200" cy="200" r="190" fill="url(#a)" filter="url(#t)" opacity="0.8"/></svg>`
+}
+
+/** Aro de raridade da revelação: anel de runas com agulhas e joias; mais ornamentado quanto maior o nível. */
+function aroRaridade(nivel) {
+  const cx = 150, cy = 150
+  const gem = nivel >= 3 ? 'url(#joia)' : '#e9e2d4'
+  const p = []
+  p.push(`<circle cx="${cx}" cy="${cy}" r="132" fill="none" stroke="url(#aco-escuro)" stroke-width="3"/>`)
+  p.push(`<circle cx="${cx}" cy="${cy}" r="118" fill="none" stroke="url(#aco)" stroke-width="7"/>`)
+  p.push(`<circle cx="${cx}" cy="${cy}" r="110" fill="none" stroke="${nivel >= 3 ? '#8a7cc8' : '#bab09f'}" stroke-width="0.9" opacity="0.8"/>`)
+  for (let i = 0; i < 72; i++) {
+    const [x1, y1] = polar(cx, cy, 124, i * 5), [x2, y2] = polar(cx, cy, i % 6 ? 128 : 134, i * 5)
+    p.push(`<path d="M${f(x1)} ${f(y1)}L${f(x2)} ${f(y2)}" stroke="#d8cfbf" stroke-width="${i % 6 ? 0.6 : 1.4}" opacity="0.8"/>`)
+  }
+  for (let i = 0; i < 36; i++) {
+    const a = i * 10
+    const [x, y] = polar(cx, cy, 118, a)
+    const g = i % 3 === 0 ? 'M-2 -2.6L2 2.6M2 -2.6L-2 2.6' : i % 3 === 1 ? 'M0 -3V3M-2 -0.8H2' : 'M-2.2 2.6L0 -3L2.2 2.6'
+    p.push(`<path transform="translate(${f(x)} ${f(y)}) rotate(${a + 90})" d="${g}" stroke="#2a251f" stroke-width="0.9" fill="none"/>`)
+  }
+  const n = nivel >= 4 ? 8 : nivel >= 3 ? 6 : nivel >= 2 ? 4 : 0
+  for (let i = 0; i < n; i++) {
+    const a = (i / n) * 360 - 90
+    const [x, y] = polar(cx, cy, 132, a)
+    p.push(`<path transform="translate(${f(x)} ${f(y)}) rotate(${a + 90})" d="M0 -9L6 0L0 9L-6 0Z" fill="${gem}" stroke="#d8cfbf" stroke-width="0.8"/>`)
+  }
+  if (nivel >= 2) for (let i = 0; i < 4; i++) {
+    const a = i * 90 - 45
+    const [x1, y1] = polar(cx, cy, 136, a), [x2, y2] = polar(cx, cy, nivel >= 4 ? 150 : 144, a)
+    p.push(`<path d="${needle(x1, y1, x2, y2, 3, 0.4)}" fill="url(#aco)"/>`)
+  }
+  if (nivel >= 3) {
+    p.push(`<path d="M150 2L164 14L160 30L150 38L140 30L136 14Z" fill="url(#aco)" stroke="#1d1a16"/>`)
+    p.push(`<path d="${star4(150, 20, 7, 0.2)}" fill="#c2b9ec"/>`)
+    p.push(`<path d="${voluta(124, 20, 11, -1, 1.3, 20)}" stroke="url(#aco)" stroke-width="2.4" fill="none"/>`)
+    p.push(`<path d="${voluta(176, 20, 11, 1, 1.3, 160)}" stroke="url(#aco)" stroke-width="2.4" fill="none"/>`)
+  }
+  if (nivel >= 4) for (let i = 0; i < 16; i++) {
+    const a = i * 22.5 + 11.25
+    const [x1, y1] = polar(cx, cy, 136, a), [x2, y2] = polar(cx, cy, 146, a)
+    p.push(`<path d="${needle(x1, y1, x2, y2, 1.6, 0.4)}" fill="#bab09f"/>`)
+  }
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300" width="300" height="300">${DEFS}<g filter="url(#patina)">${p.join('')}</g></svg>`
+}
+
+/** Coroa de água/luz de onde o prêmio emerge (anéis de ondulação e gotas). */
+function respingo() {
+  const p = []
+  p.push(`<ellipse cx="150" cy="80" rx="140" ry="34" fill="url(#halo)" opacity="0.9"/>`)
+  p.push(`<ellipse cx="150" cy="80" rx="96" ry="22" fill="url(#agua)"/>`)
+  for (const [rx, ry, o] of [[40, 9, 0.7], [66, 15, 0.5], [92, 21, 0.35], [118, 28, 0.2]]) p.push(`<ellipse cx="150" cy="80" rx="${rx}" ry="${ry}" fill="none" stroke="#e4defa" stroke-width="1.2" opacity="${o}"/>`)
+  for (let i = 0; i < 11; i++) {
+    const a = 200 + i * 14
+    const [x, y] = polar(150, 82, 64 + (i % 3) * 10, a)
+    const h = 14 + (i % 4) * 7
+    p.push(`<path d="M${f(x)} ${f(y)}Q${f(x + 2.5)} ${f(y - h * 0.5)} ${f(x)} ${f(y - h)}Q${f(x - 2.5)} ${f(y - h * 0.5)} ${f(x)} ${f(y)}Z" fill="#d9d1fb" opacity="0.75"/>`)
+    p.push(`<circle cx="${f(x + (i % 2 ? 3 : -3))}" cy="${f(y - h - 6)}" r="${1.4 + (i % 3) * 0.5}" fill="#f1edff" opacity="0.8"/>`)
+  }
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 120" width="300" height="120">${DEFS}${p.join('')}</svg>`
 }
 
 /* ── Prêmios: lixo (com humor) e recursos ─────────────────────────────────────────────── */
@@ -476,6 +535,11 @@ const jobs = [
   ['raios-ame', raios('ame'), 500, 500, 1.4],
   ['raios-ouro', raios('ouro'), 500, 500, 1.4],
   ['aura', aura(), 400, 400, 1],
+  ['aro-1', aroRaridade(1), 300, 300, 2],
+  ['aro-2', aroRaridade(2), 300, 300, 2],
+  ['aro-3', aroRaridade(3), 300, 300, 2],
+  ['aro-4', aroRaridade(4), 300, 300, 2],
+  ['respingo', respingo(), 300, 120, 2],
   ...Object.keys(ITENS).map((k) => [k, item(k), 120, 120, 3]),
 ]
 const only = (process.env.POCO_ONLY ?? '').split(',').filter(Boolean)

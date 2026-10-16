@@ -242,3 +242,27 @@ export function MolduraResultado({ raridade, lixo = false, children, className }
     </div>
   )
 }
+
+/**
+ * Etiqueta ornamental (estados do topo: balde em uso, giro grátis): placa de mármore negro com filete duplo de
+ * aço, ponta de lança à direita e joia em losango à esquerda (acesa em ametista quando `aceso`).
+ */
+export function Etiqueta({ children, aceso = false, joia = true, className }: { children: ReactNode; aceso?: boolean; joia?: boolean; className?: string }) {
+  const id = useId().replace(/:/g, '')
+  return (
+    <div className={cn('relative flex min-h-8 w-fit max-w-full items-center pl-6 pr-6', className)}>
+      <svg viewBox="0 0 200 32" preserveAspectRatio="none" className="absolute inset-0 size-full" aria-hidden="true">
+        <defs>
+          <Metal id={id} />
+        </defs>
+        <path d="M10 2H186L198 16L186 30H10L2 16Z" fill="#0f0f12" fillOpacity="0.9" />
+        <path d="M10 2H186L198 16L186 30H10L2 16Z" fill="none" stroke={`url(#${id}-m)`} strokeWidth="1.2" vectorEffect="non-scaling-stroke" />
+        <path d="M12 5H184L193 16L184 27H12L6 16Z" fill="none" stroke={aceso ? '#8a7cc8' : '#5f584d'} strokeWidth="0.8" vectorEffect="non-scaling-stroke" opacity="0.9" />
+      </svg>
+      {joia && (
+        <span aria-hidden="true" className="absolute left-[7px] top-1/2 size-2.5 -translate-y-1/2 rotate-45 border border-[#d8cfbf]" style={{ background: aceso ? 'radial-gradient(circle at 35% 30%,#f3efff,#8a7cc8 55%,#2b2450)' : 'linear-gradient(135deg,#6b6357,#2a2621)', boxShadow: aceso ? '0 0 8px rgba(138,124,200,0.9)' : undefined }} />
+      )}
+      <div className="relative flex min-w-0 items-center gap-2">{children}</div>
+    </div>
+  )
+}

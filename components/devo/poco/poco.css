@@ -122,6 +122,31 @@
 }
 .poco-silhueta { animation: poco-silhueta 1200ms var(--dv-ease-out) both; }
 
+/* aro de raridade e emersão do prêmio (os elementos ficam centrados por transform) */
+@keyframes poco-aro-in {
+  0% { transform: translate(-50%, -50%) scale(0.55) rotate(-40deg); opacity: 0; }
+  60% { opacity: 1; }
+  100% { transform: translate(-50%, -50%) scale(1) rotate(0deg); opacity: 1; }
+}
+.poco-aro-in { animation: poco-aro-in 1400ms var(--dv-ease-out) both; }
+@keyframes poco-emergir {
+  0% { transform: translateY(80px) scale(0.7); opacity: 0; clip-path: inset(0 0 100% 0); }
+  30% { opacity: 1; }
+  100% { transform: translateY(0) scale(1); opacity: 1; clip-path: inset(0 0 0 0); }
+}
+.poco-emergir { animation: poco-emergir 1400ms var(--dv-ease-out) both; }
+@keyframes poco-sombra-sai {
+  0%, 35% { opacity: 1; }
+  100% { opacity: 0; }
+}
+.poco-sombra-sai { animation: poco-sombra-sai 1400ms ease-out both; }
+@keyframes poco-respingo {
+  0% { transform: translate(-50%, -50%) scale(0.6); opacity: 0; }
+  30% { opacity: 1; }
+  100% { transform: translate(-50%, -50%) scale(1.05); opacity: 0.85; }
+}
+.poco-respingo { animation: poco-respingo 1200ms var(--dv-ease-out) both; }
+
 /* faixa de prêmios: entra pela direita, segura, sai pela esquerda */
 @keyframes poco-faixa {
   0% { transform: translateX(105%); opacity: 0; }
@@ -159,6 +184,10 @@
   .poco-raios-in-rev,
   .poco-raios-lento,
   .poco-silhueta,
-  .poco-faixa { animation: none !important; }
+  .poco-faixa,
+  .poco-aro-in,
+  .poco-emergir,
+  .poco-sombra-sai,
+  .poco-respingo { animation: none !important; }
   .poco-coin, .poco-ripple { opacity: 0; }
 }

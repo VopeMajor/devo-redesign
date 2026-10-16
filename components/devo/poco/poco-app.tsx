@@ -12,7 +12,7 @@ import { Button, Spinner } from '../kit/button'
 import { EmblemMark, EmblemPoco } from '../kit/emblems'
 import { callName, useDevo } from '../state/devo-store'
 import { BaldesSheet, LancarSheet, MoedasSheet } from './poco-folhas'
-import { FaixaOrnamental, MedalhaoDentado, PlacaGotica } from './poco-ornamentos'
+import { Etiqueta, FaixaOrnamental, MedalhaoDentado, PlacaGotica } from './poco-ornamentos'
 import { BaldeIcon, type BaldePosicao, DracmaIcon, PocoCena } from './poco-cena'
 import { PocoManivela } from './poco-manivela'
 import { PocoNeblina } from './poco-neblina'
@@ -293,14 +293,15 @@ function PocoTela({ data, refresh }: { data: Liberado; refresh: () => void }) {
 
         <div className="flex items-start justify-between gap-2 px-3 pt-1.5">
           <div className="animate-dv-fade flex min-w-0 flex-col gap-1">
-            <p className="flex min-h-8 items-center gap-2 py-1 pl-1 pr-3 [background:linear-gradient(90deg,rgba(12,12,14,0.85),rgba(12,12,14,0.5)_80%,transparent)]">
-              <img src={`/images/poco/balde-${['madeira', 'ferro', 'cobre', 'prata'].includes(baldeAtual?.id ?? '') ? baldeAtual?.id : 'madeira'}.webp`} alt="" className="h-9 w-auto object-cover object-bottom [aspect-ratio:120/120] [object-position:50%_92%]" />
-              <span className="truncate font-display text-[12.5px] font-semibold uppercase tracking-[0.1em] text-dv-text-2">{baldeAtual?.nome}</span>
-            </p>
-            <p className={cn('flex w-fit items-center gap-2 py-0.5 pl-2 pr-3 font-mono text-[10.5px] uppercase tracking-[0.12em]', data.giroGratis.disponivel ? 'text-dv-amethyst-text' : 'text-dv-text-3')}>
-              <span aria-hidden="true" className={cn('size-2 rotate-45', data.giroGratis.disponivel ? 'bg-dv-amethyst shadow-[0_0_8px_rgba(138,124,200,0.9)]' : 'border border-dv-line-strong')} />
-              {data.giroGratis.disponivel ? 'Giro grátis disponível' : 'Giro grátis usado hoje'}
-            </p>
+            <Etiqueta joia={false} className="pl-2">
+              <img src={`/images/poco/balde-${['madeira', 'ferro', 'cobre', 'prata'].includes(baldeAtual?.id ?? '') ? baldeAtual?.id : 'madeira'}.webp`} alt="" className="h-7 w-7 object-cover [object-position:50%_92%]" />
+              <span className="truncate font-display text-[12px] font-semibold uppercase tracking-[0.1em] text-dv-text-2">{baldeAtual?.nome}</span>
+            </Etiqueta>
+            <Etiqueta aceso={data.giroGratis.disponivel}>
+              <span className={cn('whitespace-nowrap font-mono text-[10.5px] uppercase tracking-[0.12em]', data.giroGratis.disponivel ? 'text-dv-amethyst-text' : 'text-dv-text-3')}>
+                {data.giroGratis.disponivel ? 'Giro grátis disponível' : 'Giro grátis usado hoje'}
+              </span>
+            </Etiqueta>
           </div>
           <BotaoTresPontos onClick={() => setFolha('moedas')} />
         </div>
