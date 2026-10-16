@@ -1,83 +1,74 @@
-import { UserRound } from 'lucide-react'
+import type { CSSProperties } from 'react'
+import { TimeDigits } from '@/components/devo/kit'
 import { cn } from '@/lib/utils'
 
-type Side = { name: string; court: string; portrait: string | null; ms: number; captures: number; active: boolean }
+export type PlateSide = {
+  name: string
+  /** Corte (lado do tabuleiro): "Corte de Marfim" / "Corte de Ônix". */
+  court: string
+  color: 'w' | 'b'
+  portrait: string | null
+  ms: number
+  /** Material capturado (soma dos valores das peças). */
+  captures: number
+  active: boolean
+  mine: boolean
+}
 
+/** ≤10s: atenção (branco pulsando); ≤5s: perigo real (rubi). */
 function urgency(ms: number, active: boolean) {
   const s = ms / 1000
-  return !active ? 0 : s <= 3 ? 3 : s <= 5 ? 2 : s <= 10 ? 1 : 0
+  return !active ? 0 : s <= 5 ? 2 : s <= 10 ? 1 : 0
 }
 
-function PlayerCard({ side, total, align }: { side: Side; total: number; align: 'left' | 'right' }) {
+/**
+ * Plaqueta de um jogador no Living Chess: retrato (ou monograma), nome, corte e material
+ * capturado à esquerda; relógio grande à direita; régua de tempo embaixo. Uma linha, sem
+ * sobreposição de textos — o código da partida mora no cabeçalho.
+ */
+export function PlayerPlate({ side, total, className }: { side: PlateSide; total: number; className?: string }) {
   const level = urgency(side.ms, side.active)
   const pct = Math.max(0, Math.min(100, (side.ms / total) * 100))
-  const blue = align === 'left'
+  const secs = Math.max(0, Math.ceil(side.ms / 1000))
+  const clock = `${String(Math.floor(secs / 60)).padStart(2, '0')}:${String(secs % 60).padStart(2, '0')}`
+  const edge = level === 2 ? 'bg-[linear-gradient(135deg,var(--dv-blood-text),var(--dv-blood)_45%,var(--dv-blood-deep))]' : side.active ? (side.mine ? 'bg-[linear-gradient(135deg,#cbc5e8,#5a4f8f_45%,#2c2c31)]' : 'bg-[linear-gradient(135deg,#ece5d8,#6b6357_45%,#2c2c31)]') : 'bg-dv-line'
   return (
-    <div
-      className={cn(
-        'flex min-w-0 flex-1 items-stretch gap-2 border bg-black/55 p-1.5 backdrop-blur-sm transition-colors sm:gap-3',
-        align === 'right' && 'flex-row-reverse',
-        side.active ? (blue ? 'border-[#5aa8ff]/70' : 'border-[#ff4a4a]/70') : 'border-white/10',
-      )}
-    >
-      {side.portrait ? (
-        <img
-          src={side.portrait}
-          alt={`Foto de ${side.name}`}
-          className={cn('size-11 shrink-0 border object-cover sm:size-14', blue ? 'border-[#5aa8ff]/50' : 'border-[#ff4a4a]/50')}
-        />
-      ) : (
-        <span
-          role="img"
-          aria-label={`${side.name} sem foto`}
-          className={cn('grid size-11 shrink-0 place-items-center border bg-white/5 sm:size-14', blue ? 'border-[#5aa8ff]/50' : 'border-[#ff4a4a]/50')}
-        >
-          <UserRound className="size-3/5 text-white/55" strokeWidth={1.25} aria-hidden="true" />
-        </span>
-      )}
-      <div className={cn('flex min-w-0 flex-1 flex-col justify-between', align === 'right' && 'items-end text-right')}>
-        <div className="min-w-0">
-          <p className="truncate font-serif text-xs uppercase tracking-[0.18em] text-white sm:text-sm">{side.name}</p>
-          <p className="hidden truncate text-[9px] uppercase tracking-[0.25em] text-white/55 sm:block">
-            {side.court} · +{side.captures}
+    <div className={cn('relative isolate transition-opacity duration-[220ms]', !side.active && 'opacity-80', className)} style={{ '--dv-cut': '10px' } as CSSProperties}>
+      <span aria-hidden="true" className={cn('dv-cut-diag absolute inset-0 -z-10', edge)} />
+      <span aria-hidden="true" className="dv-cut-diag bg-[linear-gradient(180deg,#1c1c1f,#0e0e10)] absolute inset-px -z-10" style={{ '--dv-cut': '9.5px' } as CSSProperties} />
+      <div className="flex items-center gap-3 px-2.5 py-2">
+        {side.portrait ? (
+          <img src={side.portrait} alt={`Foto de ${side.name}`} className="size-11 shrink-0 object-cover dv-brass-edge" />
+        ) : (
+          <span
+            role="img"
+            aria-label={`${side.name} sem foto`}
+            className={cn(
+              'grid size-11 shrink-0 place-items-center font-display text-[20px] font-semibold dv-brass-edge',
+              side.color === 'w' ? 'bg-[#ecebe8] bg-[url(/images/os/marmore-branco.webp)] bg-[length:280px_280px] text-dv-porcelain-ink' : 'bg-[#121214] bg-[url(/images/os/marmore-negro.webp)] bg-[length:560px_560px] text-dv-text',
+            )}
+          >
+            {side.name.trim().charAt(0).toUpperCase() || '?'}
+          </span>
+        )}
+        <div className="flex min-w-0 flex-1 flex-col gap-0.5">
+          <p className="w-full truncate pt-0.5 font-display text-[14px] font-semibold uppercase leading-[1.3] tracking-[0.1em] text-dv-text">{side.name}</p>
+          <p className="dv-label flex w-full min-w-0 items-center gap-2 text-[10px] leading-[1.4] tracking-[0.16em] text-dv-text-3">
+            <span aria-hidden="true" className={cn('size-2 shrink-0 rotate-45 border border-dv-gold/70', side.color === 'w' ? 'bg-dv-porcelain' : 'bg-dv-ink')} />
+            <span className="truncate">{side.court}</span>
+            {side.captures > 0 && <span className="shrink-0 text-dv-gold-bright">+{side.captures}</span>}
           </p>
         </div>
-        <span
-          className={cn(
-            'font-mono text-xl leading-none tabular-nums transition-all sm:text-3xl',
-            level === 0 && (blue ? 'text-[#cfe6ff]' : 'text-white'),
-            level === 1 && 'text-[#ffb347]',
-            level === 2 && 'animate-pulse text-[#ff4a4a]',
-            level === 3 && 'animate-pulse text-[#ff2a2a] [text-shadow:0_0_12px_#ff2a2a]',
-          )}
-        >
-          {`00:${String(Math.ceil(side.ms / 1000)).padStart(2, '0')}`}
-        </span>
-        <div className="mt-1 h-1 w-full bg-white/10" aria-hidden="true">
-          <div
-            className={cn('h-full transition-[width] duration-200', blue ? 'bg-[#4a9cff]' : 'ml-auto bg-[#e3262f]')}
-            style={{ width: `${pct}%` }}
-          />
+        <div className={cn('flex shrink-0 flex-col items-end', level === 1 && 'animate-dv-alert')}>
+          <TimeDigits value={clock} size="md" tone={level === 2 ? 'blood' : side.active ? 'text' : 'text'} flip label={`Relógio de ${side.name}`} className={cn(!side.active && 'opacity-70')} />
         </div>
       </div>
-    </div>
-  )
-}
-
-export function VersusBar({ white, black, total, match, status }: { white: Side; black: Side; total: number; match: string; status: string }) {
-  return (
-    <div className="pointer-events-none absolute inset-x-0 top-0 z-20 flex flex-col items-center px-2 pt-2 sm:px-4">
-      <div className="flex w-full max-w-3xl items-start gap-1.5 sm:gap-3">
-        <PlayerCard side={white} total={total} align="left" />
-        <div className="flex shrink-0 flex-col items-center pt-1">
-          <span className="border border-white/15 bg-black/60 px-2 py-0.5 font-mono text-[8px] uppercase tracking-[0.3em] text-white/60">{match}</span>
-          <span className="mt-1 font-serif text-2xl text-white [text-shadow:0_2px_12px_#000] sm:text-3xl">VS</span>
-        </div>
-        <PlayerCard side={black} total={total} align="right" />
+      <div className="mx-2.5 mb-1.5 h-[3px] bg-white/10" aria-hidden="true">
+        <div
+          className={cn('h-full transition-[width] duration-200 ease-linear', level === 2 ? 'bg-dv-blood-text' : side.mine ? 'bg-dv-amethyst' : 'bg-dv-gold')}
+          style={{ width: `${side.active ? pct : 100}%`, opacity: side.active ? 1 : 0.35 }}
+        />
       </div>
-      <p className="mt-1.5 text-center text-[9px] uppercase tracking-[0.35em] text-white/80 [text-shadow:0_1px_6px_#000]" aria-live="polite">
-        {status}
-      </p>
     </div>
   )
 }

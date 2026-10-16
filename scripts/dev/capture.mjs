@@ -1192,8 +1192,61 @@ if (want('partidas')) {
       await wait(10000)
       await shot(A.page, `40-partida-${slug}-a2`)
       await shot(B.page, `40-partida-${slug}-b2`)
+      // Memory Rush online: A procura um par de verdade (carta 1 × cada outra) e as duas telas
+      // mostram o par levado — prova que as cartas viram e que o par sincroniza com o oponente.
+      if (slug === 'memory-rush') {
+        const cards = A.page.getByRole('button', { name: /^Carta (virada|revelada)$/ })
+        const n = await cards.count()
+        for (let k = 1; k < n; k++) {
+          if (!(await tryClick(cards.nth(0), 1500))) break
+          await wait(120)
+          if (k === 1) await shot(A.page, `40-partida-${slug}-a3-virada`)
+          if (!(await tryClick(cards.nth(k), 1500))) break
+          await wait(220)
+          if (await cards.nth(0).isDisabled().catch(() => false)) break
+          await wait(650)
+        }
+        await shot(A.page, `40-partida-${slug}-a3`)
+        await wait(1400)
+        await shot(B.page, `40-partida-${slug}-b3`)
+      }
     })
   }
+  // Living Chess: demonstração guiada do Javali (sem bot): entrada da câmera, lances explicados, mate e fim.
+  await step('partida-xadrez-demo', async () => {
+    const { page } = A
+    await tryClick(page.getByRole('button', { name: /desistir e sair/i }).first(), 4000)
+    await wait(1500)
+    await tryClick(page.getByRole('button', { name: /voltar à mesa/i }).first(), 4000)
+    await page.goto('about:blank').catch(() => {})
+    await openApp(page, 'Sala de Jogos')
+    const card = page.locator('[aria-label="Jogos da semana"] > *').filter({ hasText: /Living Chess/i }).first()
+    await card.getByRole('button', { name: /tutorial/i }).first().click({ timeout: 12000 })
+    await wait(1800)
+    await shot(page, '41-xadrez-entrada')
+    await wait(2600)
+    await shot(page, '41-xadrez-lance')
+    await wait(900)
+    await shot(page, '41-xadrez-lance-b')
+    await wait(6000)
+    await shot(page, '41-xadrez-meio')
+    await tryClick(page.getByRole('button', { name: 'Histórico de lances' }).first(), 3000)
+    await wait(700)
+    await shot(page, '41-xadrez-historico')
+    await tryClick(page.getByRole('button', { name: 'Histórico de lances' }).first(), 3000)
+    await tryClick(page.getByRole('button', { name: 'Configurações' }).first(), 3000)
+    await wait(700)
+    await shot(page, '41-xadrez-config')
+    await tryClick(page.getByRole('button', { name: 'Configurações' }).first(), 3000)
+    await page.getByRole('heading', { name: /demonstração concluída/i }).waitFor({ timeout: 30000 }).catch(() => {})
+    await wait(800)
+    await shot(page, '41-xadrez-fim')
+    await tryClick(page.getByRole('button', { name: /voltar à mesa/i }).first(), 3000)
+    await wait(2500)
+    await page.evaluate(() => document.querySelector('[aria-label="Registro das partidas"]')?.scrollIntoView({ block: 'center' }))
+    await wait(1200)
+    await shot(page, '42-mesa-registro')
+  })
   await A.ctx.close()
   await B.ctx.close()
 }
