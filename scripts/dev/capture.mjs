@@ -606,8 +606,9 @@ if (want('sistema') || want('apps') || want('jogos')) {
       await shot(page, '24-trocas-scroll')
       await page.mouse.wheel(0, -4000)
       await wait(500)
-      // Aceitar e revelar numa sala livre qualquer (o parceiro pode desistir: depende da sorte).
-      if (await tryClick(page.locator('button[aria-label^="Sala "]:not([disabled])').first())) {
+      // Aceitar e revelar numa sala livre qualquer (o parceiro pode desistir: até 3 tentativas).
+      for (let attempt = 0, revealedOk = false; attempt < 3 && !revealedOk; attempt++) {
+        if (!(await tryClick(page.locator('button[aria-label^="Sala "]:not([disabled])').first()))) break
         await wait(1200)
         await tryClick(page.getByRole('button', { name: /^Colocar / }).first())
         await wait(7500)
@@ -621,14 +622,20 @@ if (want('sistema') || want('apps') || want('jogos')) {
             .then(() => true)
             .catch(() => false)
           if (revealing) {
+            revealedOk = true
             await wait(900)
             await shot(page, '24-trocas-revelacao')
             await wait(3200)
             await shot(page, '24-trocas-revelada')
           }
-          await tryClick(btn(page, /voltar ao corredor/i))
-          await wait(800)
         }
+        // Sai da sala (concluída ou desfeita) antes da próxima tentativa.
+        if (!(await tryClick(btn(page, /voltar ao corredor/i), 1500))) {
+          await tryClick(btn(page, /^abandonar$/i), 1500)
+          await tryClick(btn(page, /perder a carta/i), 800)
+          await tryClick(btn(page, /voltar ao corredor/i), 800)
+        }
+        await wait(1000)
       }
     })
     await step('ajustes', async () => {
