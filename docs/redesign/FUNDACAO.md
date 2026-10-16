@@ -368,3 +368,42 @@ teste `scripts/dev/salao-test.mjs` (CI → `salao-test.log`).
   direto no mural (idempotente por corporação + `ref`). O agente de Corporações chama depois de validar quem recruta.
 - **Mesa:** seção "Salão" do StaffDesk (`components/devo/salao/salao-mesa.tsx`) → `GET /api/salao?view=avaliacao`.
 - **Shuffler:** `DeckPanel` ganhou `shufflerAction`; o Record passa `<EnviarBandejaAcao />` (só aparece liberado).
+
+## 12. Corporações (agente Corporações)
+
+Arquivos: `scripts/corporacoes-migration.sql` (tabelas `corporacoes`, `corporacao_membros`, `corporacao_pedidos`,
+`corporacao_convites`, `corporacao_transferencias`, `corporacao_rivalidades`, `corporacao_estado`, `corporacao_movimentos`;
+gatilho da classificação; config provisória), `lib/devo/corporacoes.ts` (puro: tipos, brasão, código),
+`lib/devo/corporacoes-server.ts`, `lib/devo/corporacoes-melissa.ts` (fala literal da Melissa, fallback),
+`app/api/corporacoes/route.ts`, `components/devo/corporacoes/*`, seed `scripts/dev/96-seed-corporacoes.sql`,
+teste `scripts/dev/corporacoes-test.mjs` (CI → `corporacoes-test.log`).
+
+- **Trava:** flag `corporacoes` (`requireUnlock`); `GET /api/corporacoes` trancado → `200 { liberado: false, motivo }`. A Narrativa
+  libera a flag ao fim da chamada da Melissa (Owner/Anfitrião: liberado).
+- **Cargos novos em `can()`:** `corporacao.aprovar` (avaliação administrativa da fundação) e `corporacao.classificar` (oficial ↔
+  Necro, escopo e rivais provisórios) — Owner e Anfitrião. Pedidos de entrada NÃO usam `can()`: só o líder ou o vice-líder da
+  própria Corporação decide (nem a equipe aprova por eles).
+- **Um Record, uma Corporação** (PK `corporacao_membros.player_id`); um líder por Corporação; um pedido pendente por Record;
+  uma fundação em análise por fundador; nome único entre pendentes/ativas.
+- **Entrada:** código `CRP-XXXX-XXXX` (gerado na aprovação; alfabeto sem ambíguos). `GET ?codigo=` dá a prévia (brasão, status
+  legal); `entrar` cria o pedido. O líder/vice vê só as partes do perfil em `devo_config['corporacoes.perfil_visivel']`
+  (personagem, registro, Deadly Votes, cartas, aparência; nunca cargo/karma). Convite direto: de líder/vice entra direto; de
+  membro comum vira pedido (`origem 'convite'`).
+- **Fundar:** `devo_config['corporacoes.criacao']` (PROVISÓRIO: custo, reserva do pulso, requisitos, máx. de membros,
+  devolver se recusada). O Tempo sai do pulso na mesma transação (`corporacao_movimentos`, idem `corp:fundar:<id>`); o envio
+  carrega `idem` (`corporacoes.envio_idem`) e a linha do jogador é travada: toque duplo não cria nem cobra duas vezes.
+  Recusa/desistência devolve pelo livro-caixa (idem `corp:fundar:<id>:devolucao`; `drainTime` no GET).
+- **Mesa:** seção "Corporações" do StaffDesk (Owner/Anfitrião; `components/devo/corporacoes/corporacoes-mesa.tsx`) →
+  `GET ?view=mesa`; `mesa.fundacao`, `mesa.classificar`, `mesa.escopo`, `mesa.rivalidade`. Decisões vão para `admin_log`
+  (`corporacao.aprovada|recusada|classificada`).
+- **Necro só pela equipe:** além do `can()`, o gatilho `corporacao_classificacao_guard` recusa mudar `classificacao` sem
+  `devo.actor` Owner/Anfitrião (`CORP_CLASSIFICACAO_NEGADA` → 403).
+- **Transferir carta:** só entre membros da mesma Corporação; a carta sai do save (linha travada) e chega por `deliverCard`
+  (idem `corp:transf:<id>`); índice único `(de_id, card_uid)`; `/api/save` descarta os uids transferidos (`uidsTransferidos`);
+  cartas no Salão (`uidsNoSalao`) não saem; limite diário em `corporacoes.transferencia` (PROVISÓRIO).
+- **Recrutamento:** líder/vice → `publicarRecrutamento()` do Salão com o código no texto (um por dia por Corporação).
+- **Provisórios (só dados/rótulo):** `corporacoes.codigo_regras` (texto do código da Companhia), `corporacoes.jogos_coletivos`
+  ("em breve"), `escopo` local/global ("Corporações Globais"), `corporacao_rivalidades` ("Corporações Rivais").
+- **Holograma:** a página dispara `devo:cena` `{ id: 'melissa-corporacoes' }` na primeira entrada e no botão "Chamar a
+  Companhia". O motor da Narrativa assume com `preventDefault()`; senão toca o fallback local
+  (`components/devo/corporacoes/holograma.tsx`, texto literal, sem cobrar Tempo na opção 2).
