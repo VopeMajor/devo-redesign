@@ -6,6 +6,7 @@ import { type CenaEstado, type Efeito, type Fx, formatTempo, type MembroElenco, 
 import { getCena, indicePasso } from '@/lib/devo/dialogo/registro'
 import { cn } from '@/lib/utils'
 import { useAdvanceKeys } from '../hooks'
+import { useBackHandler } from '../use-back-handler'
 import { GlyphDiamond, GlyphHourglass, GlyphKeyhole } from '../kit/glyphs'
 import { AdvanceIndicator, ChoiceHeader, ChoiceStrip, DialogueShell, SpeakerPlate, VnTopBar, useTypewriter } from '../intro/vn'
 import { callName, useDevo } from '../state/devo-store'
@@ -224,6 +225,8 @@ export function CenaDialogo({ cena: cenaId, onFim, onSair }: { cena: string; onF
   }, [atual, ocupado, saindo, texto, done, finish, respostas, cena, idx, explorados.length, saltar, seguinte])
 
   useAdvanceKeys(avancar, { enabled: !!atual && atual.tipo !== 'escolha' })
+  // Voltar do aparelho = Sair (o passo fica salvo para retomar).
+  useBackHandler(true, () => onSair?.())
 
   const escolherOpcao = async (passo: Extract<Passo, { tipo: 'escolha' }>, i: number) => {
     if (!cena || ocupado) return

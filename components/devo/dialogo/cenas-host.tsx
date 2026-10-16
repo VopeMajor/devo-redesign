@@ -41,6 +41,18 @@ export function CenasProvider({ children }: { children: ReactNode }) {
     void recarregar()
   }, [recarregar])
 
+  // Atalho por evento (roteiro de capturas e telas fora do React): window.dispatchEvent(new CustomEvent('devo:cena', { detail: 'id' })).
+  // Só abre; quem decide se a cena pode ser vista é o servidor (flag exigida → 403).
+  const abrirRef = useRef<(id: string) => void>(() => {})
+  useEffect(() => {
+    const on = (e: Event) => {
+      const id = (e as CustomEvent<unknown>).detail
+      if (typeof id === 'string') abrirRef.current(id)
+    }
+    window.addEventListener('devo:cena', on)
+    return () => window.removeEventListener('devo:cena', on)
+  }, [])
+
   const vista = useCallback((id: string) => !!resumo?.cenas[id]?.fim, [resumo])
   const abrir = useCallback(
     (id: string, opts: AbrirOpts = {}) => {
@@ -51,6 +63,8 @@ export function CenasProvider({ children }: { children: ReactNode }) {
     },
     [vista],
   )
+
+  abrirRef.current = (id) => abrir(id)
 
   const value = useMemo<Ctx>(
     () => ({ abrir, aberta: aberta?.id ?? null, vista, carregado: !!resumo, config: resumo?.config ?? { galoExplorarMin: 2 }, recarregar }),

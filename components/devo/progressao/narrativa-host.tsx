@@ -42,10 +42,15 @@ function Gatilhos({ children }: { children: ReactNode }) {
   const cenas = useCenas()
   const total = !!eu?.acesso.total
 
-  /* 1. Cerimônia para flags novas (uma vez por flag; a marca vai no save). */
+  /* 1. Cerimônia para flags novas (uma vez por flag; a marca vai no save). Espera a cortina de entrada sair. */
   const [cerimonia, setCerimonia] = useState<SistemaDef[] | null>(null)
+  const [pronto, setPronto] = useState(false)
   useEffect(() => {
-    if (!eu || cerimonia || cenas.aberta) return
+    const t = window.setTimeout(() => setPronto(true), 1800)
+    return () => window.clearTimeout(t)
+  }, [])
+  useEffect(() => {
+    if (!eu || !pronto || cerimonia || cenas.aberta) return
     const liberados = SISTEMAS.filter((s) => s.flag && eu.acesso.sistemas[s.flag])
     const novos = liberados.filter((s) => !state.desbloqueiosVistos.includes(s.id))
     if (!novos.length) return
@@ -54,7 +59,7 @@ function Gatilhos({ children }: { children: ReactNode }) {
       return
     }
     setCerimonia(novos)
-  }, [eu, state.desbloqueiosVistos, cenas.aberta, cerimonia, total, dispatch])
+  }, [eu, pronto, state.desbloqueiosVistos, cenas.aberta, cerimonia, total, dispatch])
 
   /* 3. Visita do Galo disponível? */
   const exploradosNovos = SISTEMAS.filter((s) => s.flag && s.flag !== 'corporacoes' && state.sistemasVistos.includes(s.id)).length
