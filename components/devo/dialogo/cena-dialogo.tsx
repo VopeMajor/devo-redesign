@@ -43,7 +43,18 @@ type Selo = { titulo: string; texto: string; tom: 'tempo' | 'perda' | 'item'; ke
 
 const PALCO_INICIAL = (cenario: PalcoEstado['cenario']): PalcoEstado => ({ cenario, npc: null, retrato: null, destino: null, holo: null })
 
-export function CenaDialogo({ cena: cenaId, onFim, onSair }: { cena: string; onFim?: () => void; onSair?: () => void }) {
+export function CenaDialogo({
+  cena: cenaId,
+  onFim,
+  onSair,
+  onEscolha,
+}: {
+  cena: string
+  onFim?: () => void
+  onSair?: () => void
+  /** Cada escolha confirmada pelo servidor (id, opção 0-based que valeu). */
+  onEscolha?: (escolha: string, opcao: number) => void
+}) {
   const cena = useMemo(() => getCena(cenaId), [cenaId])
   const { state, dispatch } = useDevo()
   const pt = usePlayerText()
@@ -246,6 +257,7 @@ export function CenaDialogo({ cena: cenaId, onFim, onSair }: { cena: string; onF
       const r = await escolher(cena.id, passo.id, i)
       aplicarResultado(r)
       const n = r.opcao ?? i
+      onEscolha?.(passo.id, n)
       setDados((d) =>
         d ? { ...d, progresso: { ...d.progresso, escolhas: { ...d.progresso.escolhas, [passo.id]: [...(d.progresso.escolhas[passo.id] ?? []), n] } } } : d,
       )

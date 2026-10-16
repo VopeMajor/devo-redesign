@@ -1,0 +1,71 @@
+/* Torres de Ruptura — movimento da ilustração (lento, discreto; IDENTIDADE.md §0 regra 6). */
+
+@keyframes tw-twinkle {
+  0%, 100% { opacity: var(--tw-o, 0.55); }
+  50% { opacity: 0.12; }
+}
+.tw-twinkle { animation: tw-twinkle 5.5s ease-in-out infinite; }
+
+@keyframes tw-drift {
+  from { transform: translateX(-18px); }
+  to { transform: translateX(18px); }
+}
+.tw-drift { animation: tw-drift 22s ease-in-out infinite alternate; }
+
+@keyframes tw-dust {
+  0% { transform: translateY(0); opacity: 0; }
+  15% { opacity: 0.7; }
+  85% { opacity: 0.5; }
+  100% { transform: translateY(-160px); opacity: 0; }
+}
+.tw-dust { animation: tw-dust 11s linear infinite; }
+
+@keyframes tw-flicker {
+  0%, 100% { opacity: 0.85; }
+  40% { opacity: 0.6; }
+  44% { opacity: 0.9; }
+  70% { opacity: 0.7; }
+}
+.tw-flicker { animation: tw-flicker 7s ease-in-out infinite; }
+.tw-bulb { animation: tw-flicker 5s ease-in-out infinite; }
+
+@keyframes tw-pulse {
+  0%, 100% { opacity: 0.55; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.12); }
+}
+.tw-pulse { transform-box: fill-box; transform-origin: center; animation: tw-pulse 3.6s ease-in-out infinite; }
+
+/* Nó do andar atual: halo ametista que respira */
+@keyframes tw-node {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(138, 124, 200, 0.0), 0 0 18px rgba(138, 124, 200, 0.45); }
+  50% { box-shadow: 0 0 0 6px rgba(138, 124, 200, 0.12), 0 0 26px rgba(138, 124, 200, 0.7); }
+}
+.tw-node-cur { animation: tw-node 2.8s ease-in-out infinite; }
+
+/* "Aquela parada estranha": o quadro do sistema entra com um corte e uma linha de varredura. */
+@keyframes tw-glitch {
+  0% { opacity: 0; clip-path: inset(48% 0 48% 0); filter: brightness(2.2); }
+  35% { opacity: 1; clip-path: inset(0 0 0 0); filter: brightness(1.4); }
+  45% { transform: translateX(3px); }
+  55% { transform: translateX(-2px); }
+  100% { opacity: 1; clip-path: inset(0 0 0 0); filter: none; transform: none; }
+}
+.tw-glitch { animation: tw-glitch 620ms cubic-bezier(0.16, 1, 0.3, 1) both; }
+@keyframes tw-scan {
+  from { transform: translateY(-100%); }
+  to { transform: translateY(100%); }
+}
+.tw-scan { animation: tw-scan 1.4s cubic-bezier(0.7, 0, 0.2, 1) 1 both; }
+
+/* Troca de pose do NPC: leve respiração */
+@keyframes tw-breathe {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-2px) scale(1.006); }
+}
+.tw-breathe { animation: tw-breathe 5.2s ease-in-out infinite; transform-origin: 50% 100%; }
+
+@media (prefers-reduced-motion: reduce) {
+  .tw-twinkle, .tw-drift, .tw-dust, .tw-flicker, .tw-bulb, .tw-pulse, .tw-node-cur, .tw-glitch, .tw-scan, .tw-breathe {
+    animation: none !important;
+  }
+}

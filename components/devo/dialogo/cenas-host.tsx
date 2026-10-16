@@ -1,6 +1,7 @@
 'use client'
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
+import { getCena } from '@/lib/devo/dialogo/registro'
 import { CenaDialogo } from './cena-dialogo'
 import { lerResumo, type Resumo } from './cliente'
 
@@ -13,7 +14,25 @@ import { lerResumo, type Resumo } from './cliente'
  *
  * `seNaoVista`: só abre se a cena nunca foi concluída (resumo do servidor). Devolve `false` se não abriu.
  */
-export type AbrirOpts = { seNaoVista?: boolean; aoFim?: () => void; aoSair?: () => void }
+export type AbrirOpts = {
+  seNaoVista?: boolean
+  aoFim?: () => void
+  aoSair?: () => void
+  /** Cada escolha feita (id da escolha, opção 0-based que valeu) — para sistemas que guardam a resposta. */
+  aoEscolher?: (escolha: string, opcao: number) => void
+}
+
+/** Pedidos de cena de outros sistemas (evento `devo:cena`) → cena do motor + o que fazer com a resposta. */
+const PEDIDOS: Record<string, { cena: string; opts?: AbrirOpts }> = {
+  // Torres (components/devo/torres/gatilho.tsx): "Anfitrião de quê?" ao sair da aba pela primeira vez.
+  'anfitriao-de-que': {
+    cena: 'reflexao-anfitriao',
+    opts: {
+      aoEscolher: (_, opcao) =>
+        void fetch('/api/torres', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ action: 'reflexao', escolha: opcao + 1 }) }).catch(() => {}),
+    },
+  },
+}
 
 type Ctx = {
   abrir: (id: string, opts?: AbrirOpts) => boolean
@@ -41,13 +60,19 @@ export function CenasProvider({ children }: { children: ReactNode }) {
     void recarregar()
   }, [recarregar])
 
-  // Atalho por evento (roteiro de capturas e telas fora do React): window.dispatchEvent(new CustomEvent('devo:cena', { detail: 'id' })).
-  // Só abre; quem decide se a cena pode ser vista é o servidor (flag exigida → 403).
-  const abrirRef = useRef<(id: string) => void>(() => {})
+  // Pedido por evento: window.dispatchEvent(new CustomEvent('devo:cena', { detail: 'id' | { id }, cancelable: true })).
+  // Cena registrada (ou pedido conhecido em PEDIDOS) → o motor assume e chama preventDefault() (o fallback das
+  // Torres não toca). Quem decide se a cena pode ser vista é o servidor (flag exigida → 403).
+  const abrirRef = useRef<(id: string, opts?: AbrirOpts) => boolean>(() => false)
   useEffect(() => {
     const on = (e: Event) => {
-      const id = (e as CustomEvent<unknown>).detail
-      if (typeof id === 'string') abrirRef.current(id)
+      const d = (e as CustomEvent<unknown>).detail
+      const id = typeof d === 'string' ? d : d && typeof d === 'object' && typeof (d as { id?: unknown }).id === 'string' ? (d as { id: string }).id : null
+      if (!id) return
+      const pedido = PEDIDOS[id] ?? (getCena(id) ? { cena: id } : null)
+      if (!pedido) return
+      e.preventDefault()
+      abrirRef.current(pedido.cena, pedido.opts)
     }
     window.addEventListener('devo:cena', on)
     return () => window.removeEventListener('devo:cena', on)
@@ -64,7 +89,7 @@ export function CenasProvider({ children }: { children: ReactNode }) {
     [vista],
   )
 
-  abrirRef.current = (id) => abrir(id)
+  abrirRef.current = abrir
 
   const value = useMemo<Ctx>(
     () => ({ abrir, aberta: aberta?.id ?? null, vista, carregado: !!resumo, config: resumo?.config ?? { galoExplorarMin: 2 }, recarregar }),
@@ -78,6 +103,7 @@ export function CenasProvider({ children }: { children: ReactNode }) {
         <CenaDialogo
           key={aberta.id}
           cena={aberta.id}
+          onEscolha={aberta.opts.aoEscolher}
           onFim={() => {
             // Marca vista na hora (a interface reage já); o servidor confirma no recarregar.
             setResumo((r) => (r ? { ...r, cenas: { ...r.cenas, [aberta.id]: { passo: 0, fim: true } } } : r))

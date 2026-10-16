@@ -111,3 +111,36 @@ Cena com `requer: <flag>` → 403 para quem não tem a flag (Owner/Anfitrião pa
 
 **Melissa = Companhia de Despertados.** Sempre que o assunto for a Companhia, use o cenário `holograma` (chamada
 + projeção) ou, fora de uma cena, `<ChamadaMelissa />` / `<HologramaMelissa />` de `components/devo/dialogo`.
+
+## 6. Pedidos de cena de outros sistemas (`devo:cena`)
+
+`window.dispatchEvent(new CustomEvent('devo:cena', { detail: 'id' | { id }, cancelable: true }))`. Se o id for
+uma cena registrada ou um pedido conhecido (`PEDIDOS` em `components/devo/dialogo/cenas-host.tsx`), o motor
+assume e chama `preventDefault()` — o fallback local de quem pediu não toca.
+- `anfitriao-de-que` (Torres, `components/devo/torres/gatilho.tsx`) → cena `reflexao-anfitriao`; a opção
+  escolhida vai para `POST /api/torres {action:'reflexao', escolha: 1–5}` (o servidor das Torres continua dono
+  do "pendente"). O fallback das Torres fica como reserva (fora do host).
+
+## 7. Migrar os formatos locais (Torres e Poço) para este motor
+
+Os dois já são quase o mesmo formato; a troca é mecânica e pode ser feita pelo dono de cada sistema quando
+quiser usar o palco/retomada do motor (os efeitos de servidor deles continuam nas próprias rotas, via
+`aoEscolher`/`onEscolha`, ou viram `Efeito` da cena):
+
+| Torres (`lib/devo/torres/tipos.ts`) | Motor |
+|---|---|
+| `{tipo:'fala', quem?, pose?}` | `fala(quem ?? npcDaCena, texto, { expressao: pose })` |
+| `{tipo:'jogador'}` | `eu(texto)` (fala) ou `pensa(texto sem aspas)` (entre aspas) |
+| `{tipo:'narra'}` / `{tipo:'sistema'}` | `narra(texto)` |
+| `{tipo:'bloco', titulo, texto[]}` | `sistema(titulo, texto[])` |
+| `{tipo:'escolha', opcoes}` | `escolha('<id>', opcoes)` — o motor exige `id` |
+| `opcao.resposta` / `acao` / `encerra` | `respostas` / `acao` / `ir: 'fim'` |
+| `opcao.efeito` (essência do Galo etc.) | `efeitos: [{ tipo: 'item', item: 'essencia:galo' }]` ou `aoEscolher` → rota das Torres |
+
+| Poço (`lib/devo/poco-neblina.ts`) | Motor |
+|---|---|
+| nó `fala` com `quem: 'narrador' | 'jogador' | 'figura' | 'sistema'` | `narra` / `eu` / `fala('corvo', …, { nome: '???' })` / `narra` |
+| nó `escolha` + `opcoes[].resposta`, `ir` | `escolha(id, [opcao(rotulo, respostas, { ir })])` |
+| `exigeMoedaEspecial` | `requer: { item: 'dracma_incomum', motivo: … }` |
+| nó `moeda` (Dracma do encapuzado) | `efeito('dracma', [{ tipo: 'item', item: 'dracma_incomum' }], 'Dracma de Raridade Incomum')` |
+| `palco` (`rua`, `poco`, `figura`, `mao`, `partiu`) | cenário `nevoa` + `palco.npc: 'corvo' / null`; a mão pode virar `fx` novo |

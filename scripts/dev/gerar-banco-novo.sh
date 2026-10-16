@@ -23,6 +23,7 @@ FILES=(
   scripts/fundacao-migration.sql
   scripts/poco-migration.sql
   scripts/staff-migration.sql
+  scripts/torres-migration.sql
   scripts/narrativa-migration.sql
 )
 {

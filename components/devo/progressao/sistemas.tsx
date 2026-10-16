@@ -9,6 +9,7 @@ import { Panel, SectionLabel } from '../apps/app-ui'
 import { useDevo } from '../state/devo-store'
 import { useAcesso } from './use-acesso'
 import { PocoApp } from '../poco/poco-app'
+import { TorresApp } from '../torres/torres-app'
 
 /**
  * SISTEMAS NOVOS (DIRECAO-3 §1–2) no menu do DEVO: trancados até vencer o Deadly Vote tutorial (Owner e
@@ -25,7 +26,7 @@ export type SistemaId = 'mascaras' | 'poco' | 'torres' | 'corporacoes' | 'virtud
 export const TELAS_SISTEMA: Partial<Record<SistemaId, ComponentType>> = {
   // mascaras: SalaoApp,      ← agente Salão das Máscaras
   poco: PocoApp,
-  // torres: TorresApp,       ← agente Torres
+  torres: TorresApp,
   // corporacoes: CorporacoesApp, ← agente Corporações
   // virtudes: VirtudesApp,   ← agente Virtudes
 }
@@ -49,7 +50,7 @@ const TUTORIAL = 'Vença o Deadly Vote tutorial'
 export const SISTEMAS: SistemaDef[] = [
   { id: 'mascaras', nome: 'Salão das Máscaras', curto: 'Máscaras', subtitulo: 'Leilões e mercado', flag: 'salao_mascaras', trava: TUTORIAL, emblem: EmblemMascaras },
   { id: 'poco', nome: 'Poço dos Milagres', curto: 'Poço', subtitulo: 'Moedas, manivela e balde', flag: 'poco', trava: TUTORIAL, emblem: EmblemPoco, janela: { w: 460, h: 820 } },
-  { id: 'torres', nome: 'Torres de Ruptura', curto: 'Torres', subtitulo: 'Andares e essências', flag: 'torres', trava: TUTORIAL, emblem: EmblemTorres },
+  { id: 'torres', nome: 'Torres de Ruptura', curto: 'Torres', subtitulo: 'Andares, essências e chaves', flag: 'torres', trava: TUTORIAL, emblem: EmblemTorres, janela: { w: 480, h: 820 } },
   { id: 'corporacoes', nome: 'Corporações', curto: 'Corpo­rações', subtitulo: 'Companhia de Despertados', flag: 'corporacoes', trava: 'Aguarde a Companhia', emblem: EmblemCorporacoes },
   { id: 'virtudes', nome: 'Virtudes', curto: 'Virtudes', subtitulo: 'Pontos de potencial', flag: 'virtudes', trava: 'Em breve', emblem: EmblemVirtudes },
   { id: 'arcanos', nome: 'Arcanos', curto: 'Arcanos', subtitulo: 'Rank e poder', flag: null, trava: 'Em breve', emblem: EmblemArcanos },
