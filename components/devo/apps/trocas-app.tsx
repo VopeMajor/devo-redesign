@@ -462,7 +462,7 @@ function TradeRoom({ trade }: { trade: TradeSession }) {
       <section aria-label="Mesa de troca" className="flex min-w-0 flex-col gap-4">
         <header>
           <div className="flex min-h-11 items-center justify-between gap-3">
-            <Kicker className="min-w-0 animate-dv-fade">Sala {number} · Mesa de mármore</Kicker>
+            <Kicker className="min-w-0 animate-dv-fade">Sala {number}</Kicker>
             {trade.stage !== 'revealing' && (
               <Button variant="secondary" size="sm" onClick={leave} className="shrink-0">
                 {finished ? 'Sair' : 'Abandonar'}
