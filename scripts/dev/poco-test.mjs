@@ -217,10 +217,10 @@ await test('a probabilidade vem da configuração (fragmento 100% → fragmento;
   assert((await saldo(jog.id, 'fragmento_arcano')) === f0 + r1.quantidade && r1.quantidade >= 1, 'fragmentos entregues no inventário')
 
   await setCfg({ ...originalCfg, dracma_comum: { lixo: 100, capsula: 0, fragmento: 0, essencia: 0, cosmetico: 0 } })
-  const inv0 = (await q('SELECT coalesce(sum(quantity),0)::int AS s FROM player_items WHERE player_id = $1 AND item_key <> 'dracma_comum'', [jog.id]))[0].s
+  const inv0 = (await q("SELECT coalesce(sum(quantity),0)::int AS s FROM player_items WHERE player_id = $1 AND item_key <> 'dracma_comum'", [jog.id]))[0].s
   const r2 = await giro(jog, { moeda: 'dracma_comum' })
   assert(r2.categoria === 'lixo' && r2.item === null && r2.lixo?.nome, `esperado lixo: ${JSON.stringify(r2)}`)
-  const inv1 = (await q('SELECT coalesce(sum(quantity),0)::int AS s FROM player_items WHERE player_id = $1 AND item_key <> 'dracma_comum'', [jog.id]))[0].s
+  const inv1 = (await q("SELECT coalesce(sum(quantity),0)::int AS s FROM player_items WHERE player_id = $1 AND item_key <> 'dracma_comum'", [jog.id]))[0].s
   assert(inv1 === inv0, 'lixo não entra no inventário')
   // Auditoria: o segredo revelado bate com o compromisso mostrado antes.
   const { createHash } = await import('node:crypto')
