@@ -64,6 +64,8 @@ export function Revelacao({
   }, [reduced])
 
   const peso = PESO[item.raridade] ?? 1
+  const nRaios = 12 + peso * 4
+  const nFaiscas = 6 + peso * 4
   const aberto = fase !== 'ativacao'
   const mostraItem = fase === 'revelacao' || fase === 'resultado'
   const nCristais = Math.min(Math.max(gasto, tipo === 'essencia' ? 6 : 1), 8)
@@ -83,8 +85,8 @@ export function Revelacao({
       {/* raios */}
       <svg aria-hidden="true" viewBox="-200 -200 400 400" className={cn('absolute left-1/2 top-[40%] w-[150vmin] max-w-[900px] -translate-x-1/2 -translate-y-1/2 transition-opacity duration-500', mostraItem ? 'opacity-100' : 'opacity-0')}>
         <g className="tw-raios-lentos">
-          {Array.from({ length: 12 + peso * 4 }, (_, i, a) => (
-            <path key={i} d="M0 0L-7 -200L7 -200Z" fill={i % 2 ? '#c2b9ec' : '#ece5d8'} opacity={0.07 + (i % 3) * 0.03} transform={`rotate(${(360 / a.length) * i})`} />
+          {Array.from({ length: nRaios }, (_, i) => (
+            <path key={i} d="M0 0L-7 -200L7 -200Z" fill={i % 2 ? '#c2b9ec' : '#ece5d8'} opacity={0.07 + (i % 3) * 0.03} transform={`rotate(${(360 / nRaios) * i})`} />
           ))}
         </g>
         {peso >= 2 && <circle r={150} fill="none" stroke="#c2b9ec" strokeWidth={0.8} opacity={0.4} strokeDasharray="2 6" className="tw-raios-lentos" />}
@@ -152,8 +154,8 @@ export function Revelacao({
               </div>
             )}
             {/* faíscas */}
-            {Array.from({ length: 6 + peso * 4 }, (_, i, a) => {
-              const ang = (i / a.length) * Math.PI * 2
+            {Array.from({ length: nFaiscas }, (_, i) => {
+              const ang = (i / nFaiscas) * Math.PI * 2
               return (
                 <span
                   key={i}
