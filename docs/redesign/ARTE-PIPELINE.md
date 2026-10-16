@@ -23,7 +23,10 @@ arte/pedidos/<id>.json ──push em infra/arte──▶ .github/workflows/arte.
    - Opcional: TTL e filtro de IP não são necessários.
 2. GitHub → repositório `VopeMajor/devo-redesign` → **Settings › Secrets and variables › Actions ›
    New repository secret** → nome `CLOUDFLARE_API_TOKEN`, valor = o token.
-3. **Actions › Arte (Workers AI) › Run workflow** (branch `infra/arte`, pedidos = `todos`).
+3. **Actions › Arte (Workers AI)** → abra a última execução (a que falhou por falta do segredo) → **Re-run all
+   jobs**. Ela roda de novo já com o segredo e gera os três pedidos de teste.
+   (O botão "Run workflow" só aparece quando o `arte.yml` estiver na branch padrão `main`; até lá, use o
+   re-run ou `gh workflow run arte.yml -R VopeMajor/devo-redesign --ref infra/arte -f pedidos=todos`.)
 
 O repositório é público: o token **só** vive no segredo do GitHub. Nunca cole em arquivo, issue ou commit.
 O account id não é segredo e está no workflow (pode ser trocado pela variável de repositório
@@ -32,7 +35,8 @@ O account id não é segredo e está no workflow (pode ser trocado pela variáve
 ## Como pedir arte
 
 Crie ou edite `arte/pedidos/<id>.json` na branch `infra/arte` e faça push. Só os pedidos alterados no push
-rodam. Para repetir um pedido sem mudar nada: Actions › Arte › Run workflow › `pedidos = <id>`.
+rodam. Para repetir um pedido sem mudar nada: `gh workflow run arte.yml -R VopeMajor/devo-redesign --ref infra/arte
+-f pedidos=<id>` (ou mude uma seed e faça push).
 
 ```jsonc
 {
