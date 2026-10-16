@@ -96,24 +96,23 @@ const CROP: Record<string, { pos: string; zoom?: number }> = {
   coroa: { pos: "50% 10%" },
 };
 
-/* ── Mármore procedural (SVG) ──────────────────────────────────────────────────────────────
- * Neutro, como a ref de mármore: base sem azul, veios cinza difusos e UM veio fino de aço.
- * (O `dv-marble-dark` global tem veios amarelados; Cartas usa este.) */
-function marbleUrl({ vein, veinA, cloud, cloudA, steelA, seed }: { vein: string; veinA: number; cloud: string; cloudA: number; steelA: number; seed: number }) {
-  const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='520' height='520'><filter id='m' x='0' y='0' width='100%' height='100%' color-interpolation-filters='sRGB'><feTurbulence type='fractalNoise' baseFrequency='0.0048 0.0115' numOctaves='5' seed='${seed}' stitchTiles='stitch' result='n'/><feColorMatrix in='n' type='matrix' values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  1.5 0 0 0 -0.25' result='a'/><feComponentTransfer in='a' result='v'><feFuncA type='table' tableValues='0 0 0 0 0 0 0 0.12 0.55 1 0.55 0.12 0 0 0 0 0 0 0 0'/></feComponentTransfer><feGaussianBlur in='v' stdDeviation='1.1' result='vb'/><feColorMatrix in='vb' type='matrix' values='0 0 0 0 ${vein}  0 0 0 0 ${vein}  0 0 0 0 ${vein}  0 0 0 ${veinA} 0' result='c1'/><feColorMatrix in='n' type='matrix' values='0 0 0 0 ${cloud}  0 0 0 0 ${cloud}  0 0 0 0 ${cloud}  ${cloudA} 0 0 0 ${-cloudA * 0.45}' result='c0'/><feTurbulence type='fractalNoise' baseFrequency='0.0036 0.0085' numOctaves='4' seed='${seed + 17}' stitchTiles='stitch' result='n2'/><feColorMatrix in='n2' type='matrix' values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  1.5 0 0 0 -0.25' result='a2'/><feComponentTransfer in='a2' result='s'><feFuncA type='table' tableValues='0 0 0 0 0 0 0 0 0 0 0 0 0 0.6 1 0.6 0 0 0 0 0 0 0 0 0 0 0 0 0 0'/></feComponentTransfer><feColorMatrix in='s' type='matrix' values='0 0 0 0 0.73  0 0 0 0 0.69  0 0 0 0 0.62  0 0 0 ${steelA} 0' result='c2'/><feMerge><feMergeNode in='c0'/><feMergeNode in='c1'/><feMergeNode in='c2'/></feMerge></filter><rect width='100%' height='100%' filter='url(#m)'/></svg>`;
-  return `url("data:image/svg+xml,${encodeURIComponent(svg)}")`;
-}
-
-const MARBLE_BLACK_IMG = marbleUrl({ vein: 0.56, veinA: 0.34, cloud: 0.62, cloudA: 0.09, steelA: 0.42, seed: 11 });
-const MARBLE_WHITE_IMG = marbleUrl({ vein: 0.42, veinA: 0.42, cloud: 0.55, cloudA: 0.12, steelA: 0.5, seed: 29 });
-
-/** Mármore negro neutro (#151517, veios #8f8e8b difusos, um veio de aço). `size` = tamanho do ladrilho. */
-export function marbleBlack(size = 520): CSSProperties {
-  return { backgroundColor: "#151517", backgroundImage: `radial-gradient(120% 80% at 80% 0%, rgba(238,237,235,0.045), transparent 60%), ${MARBLE_BLACK_IMG}`, backgroundSize: `auto, ${size}px ${size}px` };
+/* ── Mármore ───────────────────────────────────────────────────────────────────────────────
+ * Mesmo material do shell (Sistema r3): imagens raster neutras em public/images/os/marmore-*.webp
+ * (geradas por scripts/dev/gen-marmore.py). Pedra sem azul, veios cinza. `size` = ladrilho em px. */
+export function marbleBlack(size = 560): CSSProperties {
+  return {
+    backgroundColor: "#121214",
+    backgroundImage: "radial-gradient(120% 80% at 80% 0%, rgba(238,237,235,0.045), transparent 60%), url(/images/os/marmore-negro.webp)",
+    backgroundSize: `auto, ${size}px ${size}px`,
+  };
 }
 /** Mármore branco (porcelana com veios cinza). */
-export function marbleWhite(size = 520): CSSProperties {
-  return { backgroundColor: "#ecebe8", backgroundImage: `radial-gradient(120% 80% at 20% 0%, rgba(255,255,255,0.7), transparent 60%), ${MARBLE_WHITE_IMG}`, backgroundSize: `auto, ${size}px ${size}px` };
+export function marbleWhite(size = 560): CSSProperties {
+  return {
+    backgroundColor: "#ecebe8",
+    backgroundImage: "radial-gradient(120% 80% at 20% 0%, rgba(255,255,255,0.55), transparent 60%), url(/images/os/marmore-branco.webp)",
+    backgroundSize: `auto, ${size}px ${size}px`,
+  };
 }
 
 export type RaritySkin = {
