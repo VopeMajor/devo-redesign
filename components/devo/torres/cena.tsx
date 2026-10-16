@@ -5,9 +5,9 @@ import { playSfx } from '@/lib/devo/audio'
 import type { Efeito, NpcRef, Opcao, Passo } from '@/lib/devo/torres/tipos'
 import { cn } from '@/lib/utils'
 import { AdvanceIndicator, ChoiceHeader, ChoiceStrip, DialogueShell, SpeakerPlate, useTypewriter } from '../intro/vn'
-import { FrameCorners, GlyphDiamond, Kicker } from '../kit'
+import { FrameCorners, GlyphDiamond, Kicker, Lantern } from '../kit'
 import { usePlayerText } from '../state/player-text'
-import { CeuNoturno, MAPA_W, starPath, TorreArte, TorresDefs } from './arte'
+import { MAPA_W, starPath, TorreArte, TorresDefs } from './arte'
 import { retratoDe } from './retrato'
 import './torres.css'
 
@@ -169,11 +169,20 @@ export function Cena({ passos, npc, titulo, kicker, fundo = 'torre', arteFundo =
       className={cn('absolute inset-0 z-40 flex flex-col overflow-hidden bg-dv-ink transition-opacity duration-[380ms]', saindo ? 'opacity-0' : 'animate-dv-fade', className)}
     >
       {/* palco: noite, a torre ao longe, piso de mármore e holofote */}
+      <div aria-hidden="true" className="absolute inset-0 bg-[url(/images/torres/ceu-noite.webp)] bg-cover bg-[position:30%_0%]" />
+      {/* lanternas penduradas (salão do relógio) */}
+      {fundo !== 'reflexao' && (
+        <>
+          <Lantern chain={70} className="pointer-events-none absolute left-[6%] top-0 w-9 opacity-90" />
+          <Lantern chain={120} className="pointer-events-none absolute right-[8%] top-0 w-8 opacity-80" style={{ animationDelay: '-2s' }} />
+        </>
+      )}
       <svg aria-hidden="true" viewBox={`0 0 ${MAPA_W} 640`} preserveAspectRatio="xMidYMax slice" className="absolute inset-0 size-full">
         <TorresDefs />
-        <CeuNoturno h={640} horizonte={fundo === 'reflexao' ? 470 : 420} />
+        <path d="M0 420L48 384L92 404L150 360L206 398L262 364L318 400L390 372V640H0Z" fill="#141319" />
+        <path d="M0 450L70 428L140 446L220 424L300 446L390 430V640H0Z" fill="#0e0d12" />
         {fundo !== 'reflexao' ? (
-          <g transform="translate(300 430) scale(0.62)" opacity={0.55}>
+          <g transform="translate(318 446) scale(0.86)" opacity={0.6}>
             <TorreArte arte={arteFundo} feitos={0} total={7} />
           </g>
         ) : (

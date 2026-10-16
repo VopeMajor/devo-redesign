@@ -26,6 +26,9 @@ import { useNow } from '../hooks'
 import { ArcadeChat } from './arcade-chat'
 import { type ArcadeView, eventTimeLabel, formatMinutes, registerEvent, useApplyTime } from './arcade-shared'
 import { type Duel, useBetSheet } from './bet-sheet'
+import { NomeVisual } from '../cosmeticos/cosmetic-art'
+import { RankRetrato } from '../cosmeticos/rank-retrato'
+import { useVisuais } from '../cosmeticos/use-cosmeticos'
 import { GAME_ART, GAME_ART_TONE, JavaliPortrait, Monogram, MoreLink, OddsBar } from './sala-ui'
 import { MARBLE_INK, MARBLE_PORCELAIN } from './sala-marble'
 
@@ -569,6 +572,7 @@ function RankingPanel({ data, onMore }: { data: Dashboard; onMore: () => void })
   const meOutside = data.me.rank && data.me.rank > 8
   // Pódio na ordem visual 2 · 1 · 3.
   const podium = [top[1], top[0], top[2]].filter(Boolean)
+  const visualDe = useVisuais(rows.map((r) => r.pid))
   return (
     <Frame as="section" aria-label="Ranking da semana" pad="md" className="animate-dv-rise">
       <SectionHeader index="III" kicker="Reinicia toda segunda" title="Ranking da semana" size="sm" as="h3" className="mb-4" action={<MoreLink label="Completo" onClick={onMore} />} />
@@ -582,7 +586,7 @@ function RankingPanel({ data, onMore }: { data: Dashboard; onMore: () => void })
               const tone = PODIUM_TONE[place - 1] ?? 'neutral'
               return (
                 <li key={r.name} className={cn('flex min-w-0 flex-col items-center text-center', place === 1 ? 'order-2' : place === 2 ? 'order-1' : 'order-3')}>
-                  <Monogram name={r.name} size={place === 1 ? 'lg' : 'md'} tone={r.isMe ? 'cobalt' : tone} />
+                  <RankRetrato pid={r.pid} visual={visualDe(r.pid)} largura={place === 1 ? 56 : 40} fallback={<Monogram name={r.name} size={place === 1 ? 'lg' : 'md'} tone={r.isMe ? 'cobalt' : tone} />} />
                   <span className={cn('mt-1.5 max-w-full truncate font-display text-[13px] font-semibold uppercase leading-tight tracking-[0.06em]', r.isMe ? 'text-dv-amethyst-text' : 'text-dv-text')}>{r.isMe ? 'Você' : r.name}</span>
                   <span className="font-mono text-[12px] tabular-nums text-dv-text-2">{formatPoints(r.score)}</span>
                   <span
@@ -603,7 +607,9 @@ function RankingPanel({ data, onMore }: { data: Dashboard; onMore: () => void })
               {rest.map((r) => (
                 <li key={r.name} className={cn('grid min-h-11 grid-cols-[2rem_1fr_auto] items-center gap-2 px-1 font-body text-[15px]', r.isMe ? 'bg-dv-ink-3 text-dv-text shadow-[inset_2px_0_0_var(--dv-amethyst)]' : 'text-dv-text-2')}>
                   <span className="font-impact text-[15px] text-dv-text-3 dv-tabular">{r.rank}</span>
-                  <span className="truncate">{r.isMe ? `${r.name} (você)` : r.name}</span>
+                  <span className="min-w-0 truncate">
+                    <NomeVisual nome={r.isMe ? `${r.name} (você)` : r.name} visual={visualDe(r.pid)} tamanhoEmblema={15} />
+                  </span>
                   <span className="font-mono text-[13px] tabular-nums">{formatPoints(r.score)}</span>
                 </li>
               ))}

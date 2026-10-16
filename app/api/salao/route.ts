@@ -23,7 +23,7 @@ import {
 export const dynamic = 'force-dynamic'
 
 /**
- * Salão das Máscaras (contrato: docs/redesign/FUNDACAO.md §11). Tudo decidido no servidor; o cliente só mostra.
+ * Salão das Máscaras (contrato: docs/redesign/FUNDACAO.md §12). Tudo decidido no servidor; o cliente só mostra.
  * GET  /api/salao                 → SalaoPayload ({ liberado: false, motivo } quando trancado)
  * GET  /api/salao?view=avaliacao  → SalaoAvaliacao (equipe: fila do especialista)
  * POST /api/salao { action }:

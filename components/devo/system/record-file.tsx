@@ -18,6 +18,8 @@ export type RecordFileData = {
   shuffler?: string | null
   stats: { label: string; value: number | string }[]
   photoUrl?: string | null
+  /** Foto já com a moldura de avatar equipada (cosméticos): substitui a polaroide. */
+  photoFrame?: ReactNode
 }
 
 /** Borda inferior serrilhada (picote de formulário): a folha "termina" sobre o papel da mesa. */
@@ -83,6 +85,18 @@ export function RecordFile({
         <div className={cn('relative grid gap-4 px-5 pt-6', compact ? 'grid-cols-[36%_1fr]' : 'grid-cols-[43%_1fr] @xl:grid-cols-[13rem_1fr]')}>
           {/* Polaroide presa por clipe de aço + carimbo */}
           <div className="flex min-w-0 flex-col gap-4">
+            {data.photoFrame ? (
+              <figure className="relative">
+                {data.photoFrame}
+                <div className="pointer-events-none absolute -right-3 bottom-5">
+                  {eliminated ? (
+                    <Stamp text="Eliminado" tone="blood" rotate={-14} size={96} animate />
+                  ) : data.critical ? (
+                    <Stamp text="Crítico" tone="blood" rotate={-12} size={86} />
+                  ) : null}
+                </div>
+              </figure>
+            ) : (
             <figure className="relative" style={{ transform: 'rotate(-2.2deg)' } as CSSProperties}>
               <div className="bg-[#fbfaf7] p-1.5 pb-6 shadow-[0_6px_14px_rgba(13,13,15,0.3),0_0_0_1px_rgba(13,13,15,0.08)]">
                 <div className="bg-[url(/images/os/marmore-negro.webp)] bg-[length:560px_560px] relative aspect-[3/4] overflow-hidden bg-[#1f1f22]">
@@ -114,6 +128,7 @@ export function RecordFile({
                 )}
               </div>
             </figure>
+            )}
             {photoAction}
           </div>
 

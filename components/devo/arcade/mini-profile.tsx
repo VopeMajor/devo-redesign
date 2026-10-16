@@ -7,6 +7,8 @@ import useSWR from 'swr'
 import { arcadeFetcher, arcadeKey, type BorderTier, type MiniProfile } from '@/lib/devo/arcade/client'
 import { GAMES, type GameId } from '@/lib/devo/arcade/games'
 import { cn } from '@/lib/utils'
+import { FotoMoldurada, NomeVisual } from '../cosmeticos/cosmetic-art'
+import { useCatalogo, useVisual } from '../cosmeticos/use-cosmeticos'
 
 export const BORDER_META: Record<BorderTier, { label: string; color: string; glow: string }> = {
   padrao: { label: 'Borda Padrão', color: '#58585e', glow: 'transparent' },
@@ -100,20 +102,21 @@ function recordId(id: string) {
 
 function ProfileBody({ data, tier }: { data: MiniProfile; tier: (typeof BORDER_META)[BorderTier] }) {
   const src = avatarSrc(data)
+  const visual = useVisual(data.id)
+  const { mapa } = useCatalogo()
+  const mini = visual?.mini ? (mapa.get(visual.mini) ?? null) : null
   const bestName = data.bestGame ? (GAMES[data.bestGame.gameId as GameId]?.name ?? data.bestGame.gameId) : null
 
   return (
     <div className="relative flex min-w-0 flex-col sm:min-h-[17rem] sm:flex-row">
-      <div className="relative aspect-[4/3] max-h-[45vh] w-full shrink-0 overflow-hidden min-[400px]:aspect-[16/10] sm:absolute sm:inset-y-0 sm:left-0 sm:aspect-auto sm:max-h-none sm:w-[42%]">
-        {src ? (
+      <div className="relative grid aspect-[16/10] max-h-[40vh] w-full shrink-0 place-items-center overflow-hidden sm:absolute sm:inset-y-0 sm:left-0 sm:aspect-auto sm:max-h-none sm:w-[42%]">
+        {src && (
           // biome-ignore lint/performance/noImgElement: avatar privado servido pela API
-          <img src={src} alt="" className="absolute inset-0 size-full object-cover object-[50%_20%]" />
-        ) : (
-          <span className="absolute inset-0 grid place-items-center bg-white/[0.03]">
-            <UserRound className="size-24 text-white/30" strokeWidth={0.75} aria-hidden="true" />
-          </span>
+          <img src={src} alt="" aria-hidden="true" className="absolute inset-0 size-full scale-110 object-cover object-[50%_20%] opacity-30 blur-[2px]" />
         )}
-        <span aria-hidden="true" className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-dv-ink to-transparent sm:inset-y-0 sm:left-auto sm:right-0 sm:h-auto sm:w-1/3 sm:bg-gradient-to-r sm:from-transparent sm:to-dv-ink" />
+        <span aria-hidden="true" className="absolute inset-0 bg-[radial-gradient(70%_70%_at_50%_45%,rgba(236,229,216,0.12),rgba(12,12,14,0.85)_75%)]" />
+        <FotoMoldurada formato="mini" src={src} moldura={mini} largura={168} alt={`Foto de ${data.name}`} className="relative" />
+        <span aria-hidden="true" className="absolute inset-x-0 bottom-0 h-1/4 bg-gradient-to-t from-dv-ink to-transparent sm:inset-y-0 sm:left-auto sm:right-0 sm:h-auto sm:w-1/4 sm:bg-gradient-to-r sm:from-transparent sm:to-dv-ink" />
       </div>
 
       <div className="relative flex min-w-0 flex-1 flex-col sm:ml-[38%]">
@@ -122,7 +125,9 @@ function ProfileBody({ data, tier }: { data: MiniProfile; tier: (typeof BORDER_M
             <span aria-hidden="true" className="size-1 rounded-full" style={{ background: tier.color, boxShadow: `0 0 6px ${tier.color}` }} />
             {ROLE_LABEL[data.role] ?? data.role}
           </span>
-          <p className="truncate font-impact text-[1.6rem] font-semibold sm:text-[2.1rem] uppercase leading-none tracking-[0.02em] text-white">{data.name}</p>
+          <p className="min-w-0 truncate font-impact text-[1.6rem] font-semibold uppercase leading-none tracking-[0.02em] text-white sm:text-[2.1rem]">
+            <NomeVisual nome={data.name} visual={visual} tamanhoEmblema={24} cor="#ffffff" />
+          </p>
           <p className="font-sans text-[10px] font-medium uppercase tracking-[0.18em] text-white/60">
             ID.Record: <span className="font-mono tracking-[0.12em] text-white/85">{recordId(data.id)}</span>
           </p>

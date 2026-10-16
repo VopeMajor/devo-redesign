@@ -95,3 +95,5 @@ Especificação completa em `SISTEMAS-texto-do-dono.txt` (seção "DEVO — Sist
   fixo em todas as telas. Desktop não muda. Roteiro: `openApp` desliza até a tela do ícone antes do clique; a
   região "Sistemas" continua com o mesmo nome (os grupos poco/torres/salao usam `scrollIntoViewIfNeeded`, que
   leva o carrossel até a tela 2).
+- **Torres: a mesma regra de design do Poço** (POCO-REFORMULACAO-dono.md vale para as Torres): estão simples demais. Mapa e tela da torre com composição cinematográfica, estruturas ornamentais de verdade (assets elaborados, não primitivas), profundidade, luz, botões próprios, apresentação de recompensas (essência, chave) à altura.
+- **Entrada (prólogo), 16/10 11:59:** (1) a Melissa "pisca" (aparece por um instante) antes de ficar oculta no começo — corrigir; (2) aparência: o jogador responde **as duas**, a 2D e a real (pessoa real), não uma ou outra; (3) as chamas da cutscene inicial voltam à **mesma cor de antes** (exceção à paleta); (4) a animação das crianças caindo (a linha vermelha) está desconexa — refazer com uma encenação melhor.
