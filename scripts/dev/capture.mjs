@@ -537,8 +537,18 @@ if (want('sistema') || want('apps') || want('jogos')) {
         // Ficha da carta (rola o diálogo) e o verso.
         await page.mouse.move(195, 600)
         await page.mouse.wheel(0, 600)
-        await wait(600)
-        await shot(page, '23-cartas-detalhe-ficha')
+        await wait(300)
+        // Garante a rolagem da ficha (o wheel no contexto touch nem sempre chega) e registra as medidas.
+        const sc = await dlg
+          .locator('.devo-scroll')
+          .first()
+          .evaluate((el) => {
+            if (el.scrollTop < 100) el.scrollTop = 600
+            return `scrollTop=${el.scrollTop} scrollHeight=${el.scrollHeight} clientHeight=${el.clientHeight}`
+          })
+          .catch((e) => String(e).slice(0, 120))
+        await wait(400)
+        await shot(page, '23-cartas-detalhe-ficha', sc)
         await page.mouse.wheel(0, -900)
         await wait(400)
         if (await tryClick(dlg.getByRole('button', { name: 'Verso', exact: true }).first())) {
