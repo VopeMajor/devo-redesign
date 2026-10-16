@@ -270,7 +270,6 @@ NPCS.galo = {
   name: 'O Galo',
   title: 'Anfitrião',
   portraitStyle: 'cutout',
-  expressions: [],
   hidden: true,
   doneText: 'Sabe onde me encontrar.',
   choices: [],
