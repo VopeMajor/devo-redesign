@@ -33,7 +33,7 @@ const REACTIONS = ['🔥', '😱', '💀', '👏', '👀']
  * (DIRECAO-3 §8). O Javali joga os dois lados de uma partida curta e explica cada lance.
  */
 const DEMO: { lan: string; say: string; pose: Expressao }[] = [
-  { lan: 'e2e4', say: 'Peão do rei, duas casas. Na sua vez, toque numa peça: as casas possíveis acendem no mármore.', pose: 'explica' },
+  { lan: 'e2e4', say: 'Peão do rei, duas casas. Nas suas partidas, toque numa peça e as casas possíveis acendem no mármore.', pose: 'explica' },
   { lan: 'e7e5', say: 'O preto responde no espelho. Cada lance devolve os trinta segundos ao relógio de quem jogou.', pose: 'pensativo' },
   { lan: 'f1c4', say: 'O bispo corre na diagonal e mira f7, a casa mais frágil do tabuleiro.', pose: 'trama' },
   { lan: 'b8c6', say: 'O cavalo é o único que salta por cima das outras peças.', pose: 'explica' },
@@ -400,6 +400,9 @@ export default function QuickChess({ start, settings, onFinish, onQuit }: GamePr
   }, [myLeft, ticking, turn, myColor, sound])
 
   // Demonstração: um lance roteirizado a cada poucos segundos, com a fala do Javali.
+  // `apply` muda de identidade quando a sala/mesa re-renderiza; pela ref o temporizador não reinicia.
+  const applyRef = useRef(apply)
+  applyRef.current = apply
   useEffect(() => {
     if (!demo || demoDone || animating) return
     const next = demoStep + 1
@@ -408,10 +411,10 @@ export default function QuickChess({ start, settings, onFinish, onQuit }: GamePr
       const m = game.moves({ verbose: true }).find((x) => x.lan === DEMO[next].lan)
       if (!m) return
       setDemoStep(next)
-      apply(m)
+      applyRef.current(m)
     }, next === 0 ? DEMO_FIRST_MS : DEMO_STEP_MS)
     return () => window.clearTimeout(id)
-  }, [demo, demoDone, demoStep, animating, game, apply])
+  }, [demo, demoDone, demoStep, animating, game])
 
   const replayDemo = () => {
     game.reset()
