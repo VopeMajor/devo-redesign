@@ -80,12 +80,18 @@ class Session {
 }
 async function signUp(name, invite) {
   const s = new Session(name)
-  const r = await s.req(
-    'POST',
-    '/api/auth/sign-up/email',
-    { email: internalEmail(name), password: 'senha-teste-123', name, username: name, displayUsername: name },
-    { 'x-devo-invite': invite, 'x-devo-character': encodeURIComponent(name) },
-  )
+  let r
+  // O better-auth limita cadastros (429 em rajadas): espera a janela e tenta de novo.
+  for (let attempt = 0; attempt < 8; attempt++) {
+    r = await s.req(
+      'POST',
+      '/api/auth/sign-up/email',
+      { email: internalEmail(name), password: 'senha-teste-123', name, username: name, displayUsername: name },
+      { 'x-devo-invite': invite, 'x-devo-character': encodeURIComponent(name) },
+    )
+    if (r.status !== 429) break
+    await new Promise((ok) => setTimeout(ok, 11_000))
+  }
   if (r.status !== 200) throw new Error(`cadastro de ${name} falhou: ${r.status} ${r.text.slice(0, 200)}`)
   const [p] = await q('SELECT id, role, supervisor_id FROM players WHERE lower(name) = lower($1)', [name])
   s.id = p.id
