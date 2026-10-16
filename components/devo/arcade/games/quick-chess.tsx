@@ -155,6 +155,8 @@ export default function QuickChess({ start, settings, onFinish, onQuit }: GamePr
       // Online, o servidor fecha a partida; o efeito da sala exibe o resultado oficial.
       if (finished.current || online) return
       finished.current = true
+      // Registro curto do motivo (ajuda a diagnosticar fins inesperados nas capturas do CI).
+      console.warn(`[living-chess] fim: ${result} · ${reason} · lances ${game.history().length}`)
       setRunning(false)
       setSelected(null)
       const c = clocksRef.current
