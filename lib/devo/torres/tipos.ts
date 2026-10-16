@@ -44,7 +44,7 @@ export type Efeito = (typeof EFEITOS)[number]
 /* ------------------------------------------------------------------ Conteúdo (arquivo) */
 
 /** Desenhos de torre disponíveis no mapa (em código). Torre nova escolhe um deles. */
-export const ARTES = ['agulha', 'observatorio', 'picadeiro'] as const
+export const ARTES = ['agulha', 'palacio', 'observatorio', 'picadeiro'] as const
 export type Arte = (typeof ARTES)[number]
 
 export type NpcRef = {

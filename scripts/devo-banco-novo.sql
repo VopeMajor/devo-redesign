@@ -1163,6 +1163,8 @@ INSERT INTO item_defs (key, kind, name, description, rarity, stackable, meta) VA
   ('essencia:coruja', 'essencia', 'Essência de Afinidade da Coruja', 'Abre andares da Torre do Observatório. (provisório)', 'incomum', true, '{"npc": "coruja", "torre": "observatorio", "provisorio": true}'),
   ('essencia:javali', 'essencia', 'Essência de Afinidade do Javali', 'Abre andares da Torre do Picadeiro. (provisório)', 'incomum', true, '{"npc": "javali", "torre": "picadeiro", "provisorio": true}'),
   ('chave:observatorio', 'chave', 'Chave do Observatório', 'Entregue a cada andar vencido da Torre do Observatório. Abre andares da Torre do Imperador.', 'incomum', true, '{"torre": "observatorio"}'),
+  ('essencia:campanha', 'essencia', 'Essência da Ruptura (provisória)', 'Abre andares da torre principal. Nome e origem a definir pelo dono. (provisório)', 'incomum', true, '{"torre": "campanha", "provisorio": true}'),
+  ('chave:imperador', 'chave', 'Chave do Imperador', 'Entregue a cada andar vencido da Torre do Imperador (do Galo). Abre andares da torre principal.', 'incomum', true, '{"torre": "imperador"}'),
   ('chave:picadeiro', 'chave', 'Chave do Picadeiro', 'Entregue a cada andar vencido da Torre do Picadeiro. Abre andares da Torre do Imperador.', 'incomum', true, '{"torre": "picadeiro"}')
 ON CONFLICT (key) DO NOTHING;
 
