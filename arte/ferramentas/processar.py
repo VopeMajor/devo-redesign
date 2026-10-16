@@ -162,9 +162,22 @@ def remover_fundo(bruto: Image.Image, rgb: np.ndarray, pos: dict, tem_rembg: boo
         alfa_v[alfa_v < 0.15] = 0
         media_rgb = np.dstack([ndimage.uniform_filter(rgb[..., i], 9) for i in range(3)])
         cor_v = (media_rgb - (1 - alfa_v[..., None]) * 230.0) / np.maximum(alfa_v[..., None], 1e-3)
+        # véu sem cor própria (névoa cinza do gerador sobre o nada) some; véu colorido (fita rosada) fica translúcido
+        croma_v = cor_v.max(-1) - cor_v.min(-1)
+        alfa_v[croma_v < 28] = 0
         rgb = rgb.copy()
         rgb[alvo] = np.clip(cor_v[alvo], 0, 255)
         a[alvo] = np.minimum(a[alvo], alfa_v[alvo])
+        # furinhos de véu cercados de objeto opaco (miolo de fita) voltam a ser opacos
+        rot, n = ndimage.label(alvo)
+        for i in range(1, n + 1):
+            m = rot == i
+            if m.sum() > 600:
+                continue
+            anel = ndimage.binary_dilation(m, iterations=3) & ~m
+            if a[anel].mean() > 0.85:
+                a[m] = 1.0
+                rgb[m] = np.clip(media_rgb[m], 0, 255)
         fundo = ext | (alvo & (alfa_v == 0))
         return a.astype(np.float32), fundo, desc, rgb
     if tem_rembg:
