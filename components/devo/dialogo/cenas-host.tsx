@@ -24,6 +24,8 @@ export type AbrirOpts = {
 
 /** Pedidos de cena de outros sistemas (evento `devo:cena`) → cena do motor + o que fazer com a resposta. */
 const PEDIDOS: Record<string, { cena: string; opts?: AbrirOpts }> = {
+  // Corporações: holograma da Melissa na 1ª entrada (a cena oficial assume o id; já vista → não repete).
+  'melissa-corporacoes': { cena: 'melissa-corporacoes', opts: { seNaoVista: true } },
   // Torres (components/devo/torres/gatilho.tsx): "Anfitrião de quê?" ao sair da aba pela primeira vez.
   'anfitriao-de-que': {
     cena: 'reflexao-anfitriao',

@@ -10,6 +10,7 @@ import { SceneBackdrop } from '../kit/scene'
 import { DeadlyVoteSymbol } from '../system/symbol'
 import { Embers } from '../shared/atmosphere'
 import { CelFire } from './cel-fire'
+import { CLIP_BOTTOM, CLIP_TOP, CUT_Y, FallActors, FallCut } from './theater-fall'
 
 const THEATER: StageId[] = ['rumor', 'kids', 'boy', 'girl', 'hands', 'omen', 'trip', 'fall']
 const KIDS: StageId[] = ['kids', 'boy', 'girl', 'hands', 'omen', 'trip', 'fall']
@@ -52,54 +53,21 @@ function Puppet({
   )
 }
 
-const CRACK_LINE = 'M0 30 L38 29 L62 34 L96 25 L128 33 L158 26 L184 32 L200 28 L222 35 L250 24 L280 33 L310 27 L338 34 L366 28 L400 30'
-const CHASM =
-  'M0 30 L38 26 L62 22 L96 12 L128 18 L158 6 L184 14 L200 2 L222 12 L250 4 L280 16 L310 10 L338 22 L366 25 L400 30 L366 35 L338 42 L310 50 L280 46 L250 58 L222 52 L200 60 L184 50 L158 56 L128 44 L96 48 L62 38 L38 34 Z'
-
-/** Rachadura no chão do teatro: primeiro risca o papel, depois se abre em fenda. */
-function FloorCrack({ cracked, open }: { cracked: boolean; open: boolean }) {
-  return (
-    <svg
-      viewBox="0 0 400 60"
-      preserveAspectRatio="none"
-      className="absolute bottom-[2%] left-1/2 h-[16%] w-[78%] -translate-x-1/2 overflow-visible"
-      style={{ opacity: cracked ? 1 : 0 }}
-    >
-      <defs>
-        <radialGradient id="pr-chasm" cx="50%" cy="50%" r="55%">
-          <stop offset="0%" stopColor="#000" />
-          <stop offset="75%" stopColor="#050203" />
-          <stop offset="100%" stopColor="var(--dv-blood-deep)" />
-        </radialGradient>
-      </defs>
-      <g
-        className="origin-center transition-transform duration-[900ms] ease-[cubic-bezier(.6,0,.3,1.2)]"
-        style={{ transform: `scaleY(${open ? 1 : 0.04})`, transformBox: 'fill-box' }}
-      >
-        <path d={CHASM} fill="url(#pr-chasm)" stroke="#1a0a08" strokeWidth="1.5" />
-      </g>
-      {cracked && (
-        <path
-          d={CRACK_LINE}
-          fill="none"
-          stroke="#160806"
-          strokeWidth="2.5"
-          strokeLinejoin="bevel"
-          vectorEffect="non-scaling-stroke"
-          pathLength={1}
-          strokeDasharray="1"
-          className="animate-[pr-crack_0.7s_0.15s_ease-out_both]"
-          style={{ opacity: open ? 0 : 1, transition: 'opacity .4s ease' }}
-        />
-      )}
-    </svg>
-  )
-}
-
 function Layer({ on, children, className }: { on: boolean; children: ReactNode; className?: string }) {
   return (
     <div aria-hidden="true" className={cn('absolute inset-0 transition-opacity duration-[1200ms]', on ? 'opacity-100' : 'opacity-0', className)}>
       {children}
+    </div>
+  )
+}
+
+/** Papel de parede do teatro (camada longe, com parallax). Usado duas vezes na queda: cenário e aba do chão. */
+function Wallpaper() {
+  return (
+    <div className="absolute -inset-[4%]" style={FAR}>
+      <div className="en-cam-far absolute inset-0">
+        <Image src="/images/prologue/wallpaper.webp" alt="" fill priority sizes="100vw" className="object-cover" />
+      </div>
     </div>
   )
 }
@@ -137,9 +105,11 @@ const CAMERA: Partial<Record<StageId, [number, number, number]>> = {
   boy: [1.12, -4, -2],
   girl: [1.12, 4, -2],
   hands: [1.06, 0, -1],
-  omen: [1.14, 0, 2],
-  trip: [1.2, 0, 3],
-  fall: [1.08, 0, -4],
+  // Presságio e golpe com o chão em quadro (a linha do corte fica visível acima da barra de cinema);
+  // na queda a câmera desce atrás das crianças.
+  omen: [1.1, 0, -7],
+  trip: [1.16, 0, -8],
+  fall: [1.1, 0, -16],
   abyss: [1.22, 0, 0],
   death: [1.1, 0, 2],
   fire: [1.04, 0, 0],
@@ -199,6 +169,9 @@ export function PrologueStage({
   const fallen = stage === 'fall'
   const tripped = stage === 'trip'
   const omen = stage === 'omen' || tripped || fallen
+  // A queda (theater-fall.tsx): golpe da tesoura e corte no `trip`, as crianças escorregam no `fall`.
+  const cut = tripped || fallen
+  const fallPhase = tripped ? 'trip' : fallen ? 'fall' : null
   const deathOn = stage === 'death' || stage === 'fire'
   const fireOn = stage === 'fire' || stage === 'rise'
   const melissaOn = stage === 'mine' && melissa !== 'off'
@@ -247,14 +220,19 @@ export function PrologueStage({
       {/* Teatro de papel */}
       <Layer on={theater}>
         <div
-          className={cn('absolute inset-0 transition-[filter] duration-1000', tripped && 'animate-[pr-shake_0.6s_ease-out_both]')}
+          data-theater=""
+          className={cn('absolute inset-0 transition-[filter] duration-1000', tripped && 'en-fall-shake')}
           style={{ filter: omen ? 'grayscale(0.75) sepia(0.3) contrast(1.15) brightness(0.75)' : 'none' }}
         >
-          <div className="absolute -inset-[4%]" style={FAR}>
-            <div className="en-cam-far absolute inset-0">
-              <Image src="/images/prologue/wallpaper.webp" alt="" fill priority sizes="100vw" className="object-cover" />
-            </div>
+          {/* Cenário. Depois do golpe da tesoura, só a parte acima do rasgo fica; a faixa do chão cai (aba). */}
+          <div className="absolute inset-0" style={{ clipPath: cut ? CLIP_TOP : undefined }}>
+            <Wallpaper />
           </div>
+          {tripped && (
+            <div className="en-fall-flap absolute inset-0 z-[1]" style={{ clipPath: CLIP_BOTTOM, transformOrigin: `50% ${CUT_Y}%` }}>
+              <Wallpaper />
+            </div>
+          )}
 
           <Puppet
             src="/images/prologue/girl.webp"
@@ -272,6 +250,7 @@ export function PrologueStage({
             swayDelay="-1.1s"
             style={{ left: kids ? '58%' : '115%', bottom: '9%', height: 'min(55%, 66vw)', ...solo('boy') }}
           />
+          {/* De mãos dadas. No golpe, a marionete dá lugar (sem transição) aos atores da queda, na mesma caixa. */}
           <Puppet
             src="/images/prologue/kids-hands.webp"
             w={514}
@@ -280,25 +259,29 @@ export function PrologueStage({
             swayDelay="-0.6s"
             style={{
               left: '50%',
-              bottom: fallen ? '-90%' : '9%',
+              bottom: '9%',
               height: 'min(60%, 72vw)',
-              opacity: together ? 1 : 0,
-              transform: `translateX(-50%) rotate(${tripped ? -12 : fallen ? 35 : 0}deg)`,
-              transitionDelay: fallen ? '0.9s' : '0s',
+              opacity: together && !cut ? 1 : 0,
+              transform: 'translateX(-50%)',
+              ...(cut ? { transition: 'none' } : {}),
             }}
           />
 
-          <FloorCrack cracked={tripped || fallen} open={fallen} />
+          {/* A tesoura balança no presságio; no golpe, sai do canto num tranco (quem desce é a dos atores). */}
           <div
-            className="absolute left-[18%] h-[52%] transition-[top] duration-[1600ms] ease-out"
-            style={{ top: omen ? '-12%' : '-75%' }}
+            className={cn('absolute left-[18%] h-[52%] ease-out', cut ? 'transition-[top,opacity] duration-150' : 'transition-[top] duration-[1600ms]')}
+            style={{ top: cut ? '-70%' : omen ? '-12%' : '-75%', opacity: cut ? 0 : 1 }}
           >
             <div className="h-full origin-top animate-[pr-dangle_3s_ease-in-out_infinite]">
               <Image src="/images/prologue/hand-scissors.png" alt="" width={312} height={718} className="h-full w-auto max-w-none" />
             </div>
           </div>
+
+          {fallPhase && <FallActors key={fallPhase} phase={fallPhase} rim={RIM_GOLD} />}
         </div>
-        {tripped && <div className="absolute inset-0 animate-[pr-flash_0.9s_ease-out_both] bg-[var(--dv-blood-deep)]" />}
+        {fallPhase && <FallCut key={fallPhase} phase={fallPhase} />}
+        {/* clarão curto e vermelho no impacto (sai junto com o corte) */}
+        {tripped && <div className="en-fall-flash absolute inset-0 bg-[var(--dv-blood-deep)]" />}
       </Layer>
 
       {/* O abismo: a fenda de luz encolhe lá em cima, poeira sobe (queda), dois vultos pequenos giram no escuro. */}
@@ -354,8 +337,9 @@ export function PrologueStage({
       </Layer>
       <Layer on={fireOn} className="pointer-events-none">
         <CelFire className={cn('h-[58%] transition-transform duration-[1400ms] ease-out', fireOn ? 'translate-y-0' : 'translate-y-full')} />
-        {/* tremor de luz fria do fogo gravado (sem laranja) */}
-        <div className="absolute inset-0 animate-[devo-flicker_0.4s_steps(2)_infinite] bg-[radial-gradient(ellipse_80%_60%_at_50%_100%,rgba(241,240,238,0.08),transparent_70%)] mix-blend-screen" />
+        {/* tremor de luz quente do fogo e brasas: as cores originais (exceção à paleta pedida pelo dono) */}
+        <div className="absolute inset-0 animate-[devo-flicker_0.4s_steps(2)_infinite] bg-[#ff5a1f]/10 mix-blend-screen" />
+        <Embers className="opacity-90" />
       </Layer>
 
       {/* O salão do relógio: a luz que a Voz promete. Entra de longe (câmera recua) com uma badalada. */}
@@ -427,6 +411,7 @@ export function PrologueStage({
       >
         <div
           ref={melissaRef}
+          data-melissa={melissa}
           className={cn(
             'relative w-[min(72vw,320px)] transition-[opacity,transform,filter] duration-[800ms] ease-[var(--dv-ease-out)] lg:w-full lg:max-w-[440px]',
             melissaOn ? 'translate-x-0 opacity-100' : 'translate-x-[14%] opacity-0',
@@ -447,6 +432,7 @@ export function PrologueStage({
               alt=""
               fill
               sizes="320px"
+              loading="eager"
               className="object-cover object-top"
               style={{ filter: `brightness(0) ${RIM_GOLD}` }}
             />
@@ -456,7 +442,9 @@ export function PrologueStage({
             {MELISSA_MOODS.map((m) => {
               const on = m === mood
               return (
-                <div key={m} className={cn('transition-opacity duration-500', on ? 'relative' : 'absolute inset-0', on && melissa !== 'approach' ? 'opacity-100' : 'opacity-0')}>
+                // Só acende com a Melissa em cena ('on'). Antes (fora/aproximação) fica apagada: se a moldura
+                // ficasse acesa em 'off', a entrada da silhueta mostrava o retrato colorido por um instante.
+                <div key={m} className={cn('transition-opacity duration-500', on ? 'relative' : 'absolute inset-0', on && melissa === 'on' ? 'opacity-100' : 'opacity-0')}>
                   <PortraitFrame
                     {...(portraitFrameProps('melissa', m) ?? {})}
                     alt={melissaOn && on ? 'Melissa, da Companhia de Despertados' : ''}
@@ -515,7 +503,8 @@ export function PrologueStage({
       <div aria-hidden="true" className={cn('pointer-events-none absolute inset-x-0 bottom-0 z-[5] h-[7dvh] bg-black transition-transform duration-[900ms] ease-[var(--dv-ease-out)]', letterbox ? 'translate-y-0' : 'translate-y-full')} />
 
       {/* Grade de cor comum a todas as cenas: sombra da noite só como atmosfera discreta (paleta do mármore). */}
-      <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,color-mix(in_oklab,var(--dv-night)_18%,transparent),color-mix(in_oklab,var(--dv-night)_8%,transparent)_40%,color-mix(in_oklab,var(--dv-ink)_50%,transparent))] mix-blend-multiply" />
+      {/* (fora do fogo: as chamas mantêm as cores originais, sem o escurecimento da grade) */}
+      <div aria-hidden="true" className={cn('pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,color-mix(in_oklab,var(--dv-night)_18%,transparent),color-mix(in_oklab,var(--dv-night)_8%,transparent)_40%,color-mix(in_oklab,var(--dv-ink)_50%,transparent))] mix-blend-multiply transition-opacity duration-[1200ms]', fireOn && 'opacity-0')} />
 
       {/* Abrir os olhos: pálpebras se afastam no primeiro quadro. */}
       {opening && (

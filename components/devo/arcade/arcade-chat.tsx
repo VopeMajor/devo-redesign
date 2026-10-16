@@ -9,6 +9,9 @@ import { REACTION_PREFIX } from '@/lib/devo/arcade/reactions'
 import { cn } from '@/lib/utils'
 import { usePlayerText } from '../state/player-text'
 import { useOpenProfile } from './mini-profile'
+import type { Visual } from '@/lib/devo/cosmeticos'
+import { BalaoChat, FotoMoldurada, NomeVisual } from '../cosmeticos/cosmetic-art'
+import { useCatalogo, useVisual, useVisuais } from '../cosmeticos/use-cosmeticos'
 
 // Nomes no chat em tons da paleta (porcelana, aço, prata, lavanda, ametista clara): distintos sem virar arco-íris.
 const NAME_COLORS = ['#f1f0ee', '#ece5d8', '#bab09f', '#c2b9ec', '#b7b3c9', '#d9d8d4', '#9a9184', '#cbc5e8']
@@ -23,35 +26,76 @@ export function useChatLines(channel: string, refreshInterval = 5000) {
   return useSWR<{ messages: ChatLine[] }>(arcadeKey('chat', `&channel=${channel}`), arcadeFetcher, { refreshInterval })
 }
 
-export function ChatMessage({ m, compact }: { m: ChatLine; compact?: boolean }) {
+/** Foto pública de um jogador (Sala de Jogos). */
+export function fotoPublica(pid: string | undefined, v: Visual | null | undefined) {
+  return pid && v?.foto ? `/api/arcade?view=avatar&pid=${pid}&v=${v.foto}` : null
+}
+
+/**
+ * Linha do chat com a aparência pública do autor (texto do dono §5–§6): miniperfil com moldura, nome com
+ * efeito/emblema, balão equipado. Anfitrião tem selo e tipografia próprios (cargo público); Dealer, a marca D;
+ * o Owner não tem marca nenhuma — aparece só com o que equipou, como qualquer jogador.
+ * Em listas, as animações dos cosméticos ficam paradas (desempenho no celular).
+ */
+export function ChatMessage({ m, compact, visual }: { m: ChatLine; compact?: boolean; visual?: Visual | null }) {
   const openProfile = useOpenProfile()
+  const proprio = useVisual(visual === undefined ? m.pid : null)
+  const v = visual === undefined ? proprio : visual
+  const { mapa } = useCatalogo()
   const color = m.bot ? '#8a90a0' : nameColor(m.author)
-  const staff = m.role === 'dealer' || m.role === 'anfitriao'
   const time = new Date(m.at).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })
-  const name = (
-    <span className="font-semibold" style={{ color }}>
-      {m.author}
+  const balao = v?.bal ? (mapa.get(v.bal) ?? null) : null
+  const dealer = m.role === 'dealer' && (
+    <span title="Dealer" className="inline-grid size-[18px] shrink-0 place-items-center bg-dv-gold font-mono text-[10px] font-bold text-dv-ink">
+      D
     </span>
   )
+  const nome = <NomeVisual nome={m.author} visual={v} cor={color} tamanhoEmblema={compact ? 14 : 16} />
+  const nomeBotao =
+    m.pid && openProfile ? (
+      <button type="button" onClick={() => openProfile(m.pid as string)} className="dv-focus -my-2 inline-flex min-w-0 max-w-full py-2 hover:underline" aria-label={`Ver perfil de ${m.author}`}>
+        {nome}
+      </button>
+    ) : (
+      nome
+    )
+  if (compact) {
+    return (
+      <p className="flex min-w-0 flex-wrap items-baseline gap-x-1.5 break-words font-body text-[14px] leading-snug">
+        {dealer}
+        {m.bot && <span className="inline-block border border-dv-line-strong px-1 align-[1px] font-mono text-[10px] uppercase text-dv-text-3">bot</span>}
+        {nomeBotao}
+        <span className="text-dv-text-3">:</span>
+        <span className="text-dv-text">{m.body}</span>
+      </p>
+    )
+  }
+  const mini = v?.mini ? (mapa.get(v.mini) ?? null) : null
   return (
-    <p className={cn('break-words font-body leading-snug', compact ? 'text-[14px]' : 'text-[15px]')}>
-      {!compact && <time className="mr-2 font-mono text-[11px] tabular-nums text-dv-text-3">{time}</time>}
-      {staff && (
-        <span title={m.role === 'anfitriao' ? 'Anfitrião' : 'Dealer'} className="mr-1.5 inline-grid size-[18px] place-items-center bg-dv-gold align-[-3px] font-mono text-[10px] font-bold text-dv-ink">
-          {m.role === 'anfitriao' ? 'A' : 'D'}
-        </span>
-      )}
-      {m.bot && <span className="mr-1.5 inline-block border border-dv-line-strong px-1 align-[1px] font-mono text-[10px] uppercase text-dv-text-3">bot</span>}
+    <div className="flex min-w-0 gap-2.5">
       {m.pid && openProfile ? (
-        <button type="button" onClick={() => openProfile(m.pid as string)} className="dv-focus -my-2 inline py-2 hover:underline" aria-label={`Ver perfil de ${m.author}`}>
-          {name}
+        <button type="button" onClick={() => openProfile(m.pid as string)} className="dv-focus shrink-0 self-start" aria-label={`Abrir miniperfil de ${m.author}`}>
+          <FotoMoldurada formato="mini" src={fotoPublica(m.pid, v)} moldura={mini} largura={42} animar={false} />
         </button>
       ) : (
-        name
+        <FotoMoldurada formato="mini" src={null} moldura={null} largura={42} animar={false} className="self-start opacity-60" />
       )}
-      <span className="text-dv-text-3">: </span>
-      <span className="text-dv-text">{m.body}</span>
-    </p>
+      <div className="min-w-0 flex-1">
+        <p className="flex min-w-0 items-center gap-1.5 font-body text-[15px] leading-tight">
+          {dealer}
+          {m.bot && <span className="inline-block shrink-0 border border-dv-line-strong px-1 font-mono text-[10px] uppercase text-dv-text-3">bot</span>}
+          <span className="min-w-0">{nomeBotao}</span>
+          <time className="ml-auto shrink-0 font-mono text-[11px] tabular-nums text-dv-text-3">{time}</time>
+        </p>
+        {balao ? (
+          <BalaoChat def={balao} animar={false} className="mt-1.5 w-fit max-w-full break-words font-body text-[15px] leading-snug">
+            {m.body}
+          </BalaoChat>
+        ) : (
+          <p className="mt-0.5 break-words font-body text-[15px] leading-snug text-dv-text">{m.body}</p>
+        )}
+      </div>
+    </div>
   )
 }
 
@@ -73,6 +117,7 @@ export function ArcadeChat({
   const listRef = useRef<HTMLUListElement>(null)
   const lines = (data?.messages ?? []).filter((m) => !m.body.startsWith(REACTION_PREFIX))
   const count = lines.length
+  const visualDe = useVisuais(lines.map((l) => l.pid))
 
   useEffect(() => {
     const el = listRef.current
@@ -98,8 +143,8 @@ export function ArcadeChat({
       <ul ref={listRef} className="devo-scroll flex min-h-0 flex-1 flex-col gap-1 overflow-y-auto pr-1" aria-live="polite">
         {count === 0 && <li className="py-6 text-center font-body text-[15px] text-dv-text-3">{say('{Bem-vindo|Bem-vinda} ao chat. Seja {o primeiro|a primeira} a falar.')}</li>}
         {lines.map((m) => (
-          <li key={m.id} className="animate-dv-fade border-l border-transparent px-2 py-1 hover:border-dv-gold/50 hover:bg-white/[0.03]">
-            <ChatMessage m={m} />
+          <li key={m.id} className="animate-dv-fade border-l border-transparent px-2 py-1.5 hover:border-dv-gold/50 hover:bg-white/[0.03]">
+            <ChatMessage m={m} visual={visualDe(m.pid)} />
           </li>
         ))}
       </ul>

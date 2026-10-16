@@ -36,7 +36,7 @@ import {
 import type { Rarity } from './types'
 
 /**
- * Salão das Máscaras — servidor. Contrato: docs/redesign/FUNDACAO.md §11.
+ * Salão das Máscaras — servidor. Contrato: docs/redesign/FUNDACAO.md §12.
  *
  * Moeda: Tempo (minutos). Débitos saem do pulso NA HORA (player_saves.timerEndsAt, com reserva mínima — o pulso
  * nunca fica negativo); créditos entram pelo livro-caixa do Tempo (arcade_profiles.time_pending_ms) e o cliente

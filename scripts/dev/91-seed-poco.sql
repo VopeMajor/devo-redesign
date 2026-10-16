@@ -24,3 +24,12 @@ SELECT p.id::uuid, 'dracma_comum', false, (now() AT TIME ZONE 'America/Sao_Paulo
   ) AS v(pid, cat, item, qtd, acertos, ha, dias)
   JOIN players p ON p.id = v.pid::uuid
  WHERE NOT EXISTS (SELECT 1 FROM poco_giros g WHERE g.player_id = p.id AND g.item_key = v.item);
+
+-- Cosméticos de TESTE que entram no sorteio do Poço (meta.poco = true), só para as capturas mostrarem a
+-- apresentação de cada categoria (moldura no avatar, emblema, balão na mensagem). O catálogo real é do agente
+-- Cosméticos; estes ficam só no banco de teste.
+INSERT INTO item_defs (key, kind, name, description, rarity, stackable, meta) VALUES
+  ('cosmetico:poco_teste_moldura', 'cosmetico', 'Moldura do Relógio Partido', 'Moldura de teste do Poço (catálogo real: agente Cosméticos).', 'raro', false, '{"poco": true, "categoria": "moldura_avatar", "teste": true}'),
+  ('cosmetico:poco_teste_emblema', 'cosmetico', 'Emblema da Lua Velada', 'Emblema de teste do Poço.', 'epico', false, '{"poco": true, "categoria": "emblema", "teste": true}'),
+  ('cosmetico:poco_teste_balao', 'cosmetico', 'Balão de Renda Negra', 'Balão de chat de teste do Poço.', 'raro', false, '{"poco": true, "categoria": "balao", "teste": true}')
+ON CONFLICT (key) DO NOTHING;

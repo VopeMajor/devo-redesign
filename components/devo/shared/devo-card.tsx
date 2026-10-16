@@ -453,8 +453,9 @@ export function CardFace({
         </span>
 
         {/* carta grande: nome, tipo e rodapé de série */}
-        <span aria-hidden="true" className="absolute inset-x-[7cqw] top-[101cqw] hidden h-[16cqw] items-start justify-center text-center @min-[132px]:flex">
-          <span className="line-clamp-2 py-[0.6cqw] font-display text-[7cqw] font-semibold uppercase leading-[1.16] tracking-[0.04em]" style={{ color: onBody }}>
+        <span aria-hidden="true" className="absolute inset-x-[7cqw] top-[98.6cqw] hidden h-[18.4cqw] items-start justify-center text-center @min-[132px]:flex">
+          {/* o clamp corta no padding-box: o pt reserva a altura do acento sobre a maiúscula (Ó, Ã, Ê) */}
+          <span className="line-clamp-2 pb-[0.6cqw] pt-[3cqw] font-display text-[7cqw] font-semibold uppercase leading-[1.22] tracking-[0.04em]" style={{ color: onBody }}>
             {card.name}
           </span>
         </span>
