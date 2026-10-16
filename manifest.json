@@ -1,0 +1,173 @@
+{
+  "base": "http://localhost:3000",
+  "shots": [
+    {
+      "name": "60-staff-jogador-record",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "60-staff-jogador-inscricao-em-analise",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "60-staff-jogador-convites",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "61-staff-dealer-mesa",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "61-staff-dealer-inscricoes",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "61-staff-dealer-inscricao-aceita",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "61-staff-dealer-decisao",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "61-staff-dealer-decisao-lista",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "61-staff-dealer-aplicar-confirmar",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "61-staff-dealer-aplicado",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "61-staff-dealer-convocar",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "61-staff-dealer-convocar-recompensas",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "61-staff-dealer-recompensas",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "61-staff-dealer-recompensas-scroll",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "61-staff-erro",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "62-staff-anfitriao-mesa",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "62-staff-anfitriao-aprovacoes",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "62-staff-anfitriao-aprovado",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "62-staff-anfitriao-tutorial-decisao",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "62-staff-anfitriao-tutorial-aplicado",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "62-staff-anfitriao-equipe",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "62-staff-anfitriao-jogador",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "62-staff-anfitriao-convites",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "63-staff-owner-record",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "63-staff-owner-mesa",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "63-staff-owner-recompensas",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "63-staff-owner-equipe",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "63-staff-owner-jogador",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "63-staff-owner-registro",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "63-staff-owner-ajustes",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "60-staff-jogador-depois",
+      "note": "",
+      "url": "http://localhost:3000/"
+    }
+  ],
+  "errors": [],
+  "console": [
+    {
+      "page": "http://localhost:3000/",
+      "text": "HTTP 429",
+      "src": "http://localhost:3000/api/auth/sign-up/email"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "Failed to load resource: the server responded with a status of 429 (Too Many Requests)",
+      "src": "http://localhost:3000/api/auth/sign-up/email"
+    }
+  ]
+}
