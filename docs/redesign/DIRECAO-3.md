@@ -54,19 +54,6 @@ Especificação completa em `SISTEMAS-texto-do-dono.txt` (seção "DEVO — Sist
 - **Staff e Deadly Vote** (painéis de Owner/Anfitrião/Dealer, aprovações, conclusão com resultado por participante).
 - **Virtudes** (tela qualitativa no perfil; dados configuráveis).
 
-<<<<<<< HEAD
-## 7. Pedidos do dono (16/10, manhã)
-- **Reiniciar sessão foi removido** (Ajustes, menu do desktop, store e roteiro). Não recriar.
-- **Dublagem removida** da cutscene (fica só a risadinha do Rato).
-- **Continuar** retoma a encenação inicial na fala em que o jogador parou (save.story).
-- **"Devolver"** as Cartas Iniciais no prólogo deixa o jogador sem cartas.
-- **Feminino**: diálogos concordam com o gênero escolhido (marcador `{o|a}`).
-- **Xadrez sem bot**: o Living Chess não tem partida contra bot.
-- **Chat da Sala de Jogos**: só existe dentro das partidas. Na mesa, as mensagens das salas aparecem como registro, mas não há campo para digitar livremente.
-- **Risadinha do Rato removida por enquanto** (o dono vai adicionar o áudio depois). Pasta public/audio/voz e lib/devo/voice*.ts saíram.
-- **Salas de troca sem tipos**: todas funcionam igual, com a regra da explicação do Rato no tutorial (mesma raridade, carta do outro oculta até a revelação, chat da sala para negociar, os dois aceitam → revela, troca confirmada não se desfaz). Quem não tem carta não troca.
-- **Owners e Anfitriões têm acesso a TODAS as telas**: nenhuma trava de progressão vale para eles (sistemas novos, Sala de Jogos ainda não revelada, apps ainda não vistos, tutoriais). A regra é do servidor (flags) e a interface só reflete.
-=======
 ## 7. Gênero nos textos (pedido do dono, 16/10)
 "Caso alguém escolha 'Feminino', os diálogos devem tratar a pessoa no feminino."
 
@@ -84,4 +71,15 @@ Especificação completa em `SISTEMAS-texto-do-dono.txt` (seção "DEVO — Sist
   exibição; a comparação continua pelo rótulo cru.
 - Galo, Poço, Torres, Salão das Máscaras e Melissa: usem o marcador desde o primeiro texto e passem cada fala
   por `playerText`/`usePlayerText` antes de exibir ou gravar na conversa.
->>>>>>> c3b5d34c221cb6a6248255536628d2fb64ae469e
+
+## 8. Pedidos do dono (16/10, manhã)
+- **Reiniciar sessão foi removido** (Ajustes, menu do desktop, store e roteiro). Não recriar.
+- **Dublagem removida** da cutscene .
+- **Continuar** retoma a encenação inicial na fala em que o jogador parou (save.story).
+- **"Devolver"** as Cartas Iniciais no prólogo deixa o jogador sem cartas.
+- **Feminino**: diálogos concordam com o gênero escolhido (marcador `{o|a}`, ver §7).
+- **Xadrez sem bot**: o Living Chess não tem partida contra bot.
+- **Chat da Sala de Jogos**: só existe dentro das partidas. Na mesa, as mensagens das salas aparecem como registro, mas não há campo para digitar livremente.
+- **Risadinha do Rato removida por enquanto** (o dono vai adicionar o áudio depois). Pasta public/audio/voz e lib/devo/voice*.ts saíram.
+- **Salas de troca sem tipos**: todas funcionam igual, com a regra da explicação do Rato no tutorial (mesma raridade, carta do outro oculta até a revelação, chat da sala para negociar, os dois aceitam → revela, troca confirmada não se desfaz). Quem não tem carta não troca.
+- **Owners e Anfitriões têm acesso a TODAS as telas**: nenhuma trava de progressão vale para eles (sistemas novos, Sala de Jogos ainda não revelada, apps ainda não vistos, tutoriais). A regra é do servidor (flags) e a interface só reflete.
