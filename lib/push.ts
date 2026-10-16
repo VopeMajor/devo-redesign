@@ -1,9 +1,9 @@
 import 'server-only'
 
 import { eq } from 'drizzle-orm'
-import webpush from 'web-push'
 import { db } from '@/lib/db'
 import { pushConfig, pushSubscriptions } from '@/lib/db/schema'
+import { generateVAPIDKeys, sendNotification } from '@/lib/webpush'
 
 export type PushPayload = { title: string; body: string; tag?: string; url?: string }
 
@@ -17,7 +17,7 @@ export async function getVapidKeys() {
     cached = { publicKey: row.publicKey, privateKey: row.privateKey }
     return cached
   }
-  const keys = webpush.generateVAPIDKeys()
+  const keys = await generateVAPIDKeys()
   await db.insert(pushConfig).values({ id: 1, publicKey: keys.publicKey, privateKey: keys.privateKey }).onConflictDoNothing()
   const [saved] = await db.select().from(pushConfig).where(eq(pushConfig.id, 1)).limit(1)
   cached = { publicKey: saved.publicKey, privateKey: saved.privateKey }
@@ -32,7 +32,7 @@ export async function sendPushToPlayer(playerId: string, payload: PushPayload) {
   await Promise.all(
     subs.map(async (s) => {
       try {
-        await webpush.sendNotification({ endpoint: s.endpoint, keys: { p256dh: s.p256dh, auth: s.auth } }, JSON.stringify(payload), {
+        await sendNotification({ endpoint: s.endpoint, keys: { p256dh: s.p256dh, auth: s.auth } }, JSON.stringify(payload), {
           vapidDetails: { subject: 'mailto:anfitriao@devo.game', publicKey, privateKey },
           TTL: 60 * 60 * 12,
         })
