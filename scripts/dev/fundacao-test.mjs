@@ -309,7 +309,7 @@ await test('payload público nunca contém o cargo owner', async () => {
   // A mesa (lobby) é só registro: ninguém digita ali. A linha entra direto no banco para conferir a leitura.
   const c = await owner.post('/api/arcade', { action: 'chat', channel: 'lobby', body: 'Mensagem do teste da fundação.' })
   assert(c.status === 403, `lobby deveria recusar mensagem digitada: ${c.status}`)
-  await q('INSERT INTO arcade_chat (channel, author, player_id, body) VALUES ($1,$2,$3,$4)', ['lobby', owner.name, owner.id, 'Mensagem do teste da fundação.'])
+  await q('INSERT INTO arcade_chat (channel, author, player_id, body) VALUES ($1,$2,$3,$4)', [`match-fundacao-${sfx}`, owner.name, owner.id, 'Mensagem do teste da fundação.'])
   const chat = await j1.get('/api/arcade?view=chat&channel=lobby')
   const mine = chat.json.messages.find((m) => m.pid === owner.id)
   assert(mine && mine.role === 'player', `role do owner no chat: ${mine?.role}`)
