@@ -27,8 +27,10 @@ import { cn } from '@/lib/utils'
 import { Countdown321, GameFrame, WaitingStart, vibrate } from '../game-hud'
 import { roomOutcome, useOnlineGate, useRoom } from '../use-room'
 
-const ACCENT = '#d6334f'
-const OPP_COLOR = '#d6334f'
+/** Paleta do mármore: aço champanhe no metal, ametista no que é seu/ativo, rubi só no alerta. */
+const ACCENT = '#bab09f'
+const OPP_COLOR = '#bab09f'
+const RUBY = '#ff6670'
 const SUIT_NAMES = ['espadas', 'copas', 'ouros', 'paus']
 
 const SUIT_PATHS = [
@@ -51,9 +53,9 @@ const PIPS: Record<number, [number, number][]> = {
   9: [[0.32, 0.18], [0.68, 0.18], [0.5, 0.29], [0.32, 0.39], [0.68, 0.39], [0.32, 0.61], [0.68, 0.61], [0.5, 0.71], [0.32, 0.82], [0.68, 0.82]],
 }
 
-/** Verso com a ampulheta: o tempo é a moeda do DEVO. */
+/** Verso da carta DEVO (mesma linguagem do verso de Cartas): mármore negro, treliça de losangos em aço, medalhão com a estrela. */
 const BACK_SVG =
-  '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 88"><defs><pattern id="p" width="10" height="10" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="10" height="10" fill="#15174a"/><path d="M0 5h10M5 0v10" stroke="#23277a" stroke-width=".6"/></pattern><radialGradient id="g" cx="50%" cy="40%" r="60%"><stop offset="0" stop-color="#3a3fa8" stop-opacity=".9"/><stop offset="1" stop-color="#15174a" stop-opacity="0"/></radialGradient></defs><rect width="60" height="88" fill="url(#p)"/><rect width="60" height="88" fill="url(#g)"/><rect x="3.5" y="3.5" width="53" height="81" rx="3" fill="none" stroke="#d9b25c" stroke-width=".9"/><rect x="6" y="6" width="48" height="76" rx="2" fill="none" stroke="#d9b25c" stroke-width=".4" opacity=".7"/><circle cx="30" cy="44" r="15" fill="#0c0d30" stroke="#d9b25c" stroke-width=".9"/><path d="M23 34h14M23 54h14M24.5 34l5.5 10-5.5 10M35.5 34 30 44l5.5 10" fill="none" stroke="#d9b25c" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/><path d="M26.5 52h7l-3.5-5z" fill="#d9b25c"/><path d="M8 8l4 4M52 8l-4 4M8 80l4-4M52 80l-4-4" stroke="#d9b25c" stroke-width=".7"/></svg>'
+  '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 88"><defs><linearGradient id="m" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f4efe6"/><stop offset=".22" stop-color="#9a9184"/><stop offset=".42" stop-color="#ece5d8"/><stop offset=".64" stop-color="#5d564c"/><stop offset=".84" stop-color="#d8d0c2"/><stop offset="1" stop-color="#f4efe6"/></linearGradient><radialGradient id="g" cx="50%" cy="45%" r="62%"><stop offset="0" stop-color="#2c2c31"/><stop offset="1" stop-color="#0e0e10"/></radialGradient><pattern id="p" width="9" height="15.6" patternUnits="userSpaceOnUse"><path d="M4.5 0 9 7.8 4.5 15.6 0 7.8z" fill="none" stroke="#a59d90" stroke-width=".35"/></pattern><radialGradient id="k" cx="50%" cy="50%" r="55%"><stop offset=".35" stop-color="#fff"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient><mask id="q"><rect width="60" height="88" fill="url(#k)"/></mask></defs><rect width="60" height="88" rx="4" fill="url(#m)"/><rect x="1.4" y="1.4" width="57.2" height="85.2" rx="3" fill="url(#g)"/><path d="M8 30c8-3 14 6 22 2s14-9 24-4M6 62c10 2 16-6 26-2s14 6 22 3" fill="none" stroke="#8f8e8b" stroke-width=".35" opacity=".5"/><rect x="5" y="5" width="50" height="78" fill="url(#p)" opacity=".55" mask="url(#q)"/><rect x="4" y="4" width="52" height="80" rx="2" fill="none" stroke="#d6cdbd" stroke-width=".4" opacity=".55"/><circle cx="30" cy="44" r="13.5" fill="url(#m)"/><circle cx="30" cy="44" r="12.4" fill="#111113"/><path d="M30 35.5c.7 5 2.7 7.6 8.5 8.5-5.8.9-7.8 3.5-8.5 8.5-.7-5-2.7-7.6-8.5-8.5 5.8-.9 7.8-3.5 8.5-8.5z" fill="#ece5d8"/><circle cx="30" cy="44" r="1.3" fill="#8a7cc8"/><path d="M30 9.5l1.1 2.4 2.4 1.1-2.4 1.1-1.1 2.4-1.1-2.4-2.4-1.1 2.4-1.1zM30 71.5l1.1 2.4 2.4 1.1-2.4 1.1-1.1 2.4-1.1-2.4-2.4-1.1 2.4-1.1z" fill="#d6cdbd"/></svg>'
 const BACK_URL = `url("data:image/svg+xml,${encodeURIComponent(BACK_SVG)}")`
 
 type CallEvent = Extract<BluffEvent, { t: 'call' }>
@@ -284,7 +286,7 @@ export default function Bluff({ start, onFinish, onQuit }: GameProps) {
               </div>
             </div>
             <div className="flex items-center gap-3">
-              <span className={cn('font-mono text-[11px] tabular-nums tracking-[0.15em]', myTurn && left < 6000 ? 'text-[#ff8a90]' : 'text-[#8d8ba8]')}>
+              <span className={cn('font-mono text-[11px] tabular-nums tracking-[0.15em]', myTurn && left < 6000 ? 'text-dv-blood-text' : 'text-dv-text-3')}>
                 {live ? `${myTurn ? 'Sua vez' : `Vez de ${oppName}`} · ${Math.ceil(left / 1000)}s` : ''}
               </span>
               <button type="button" className="bf-mini" onClick={pickRank} disabled={!myTurn || pending}>
@@ -296,7 +298,7 @@ export default function Bluff({ start, onFinish, onQuit }: GameProps) {
             <i
               style={{
                 width: live ? `${Math.min(100, (left / BLUFF_TURN_MS) * 100)}%` : '0%',
-                background: left < 6000 ? OPP_COLOR : myTurn ? '#7286f8' : '#5c5b78',
+                background: left < 6000 ? RUBY : myTurn ? 'var(--dv-amethyst)' : 'var(--dv-gold-deep)',
               }}
             />
           </div>
@@ -498,7 +500,7 @@ function Cylinder({ n, size, mark }: { n: number; size: number; mark?: { idx: nu
   })
   const round = (x: number, y: number, cls?: string) => (
     <g className={cls}>
-      <circle cx={x} cy={y} r="10" fill={`url(#b${uid})`} stroke="#6f5a22" strokeWidth="1" />
+      <circle cx={x} cy={y} r="10" fill={`url(#b${uid})`} stroke="#6b6357" strokeWidth="1" />
       <circle cx={x} cy={y} r="5.6" fill={`url(#c${uid})`} />
     </g>
   )
@@ -506,42 +508,42 @@ function Cylinder({ n, size, mark }: { n: number; size: number; mark?: { idx: nu
     <svg className="bf-cyl" width={size} height={size} viewBox="-52 -52 104 104" role="img" aria-label={`${n} de ${BLUFF_BULLETS} balas`}>
       <defs>
         <radialGradient id={`b${uid}`} cx="35%" cy="30%" r="80%">
-          <stop offset="0" stopColor="#f6e3a0" />
-          <stop offset=".55" stopColor="#c9a24b" />
-          <stop offset="1" stopColor="#7a5f1e" />
+          <stop offset="0" stopColor="#fbf8f2" />
+          <stop offset=".55" stopColor="#d8d0c2" />
+          <stop offset="1" stopColor="#6b6357" />
         </radialGradient>
         <radialGradient id={`c${uid}`} cx="35%" cy="30%" r="80%">
-          <stop offset="0" stopColor="#e6a174" />
-          <stop offset=".6" stopColor="#b4623a" />
-          <stop offset="1" stopColor="#6a2f18" />
+          <stop offset="0" stopColor="#ece5d8" />
+          <stop offset=".6" stopColor="#bab09f" />
+          <stop offset="1" stopColor="#5f584d" />
         </radialGradient>
         <radialGradient id={`g${uid}`} cx="40%" cy="30%" r="85%">
-          <stop offset="0" stopColor="#4a4a6c" />
-          <stop offset=".6" stopColor="#23233c" />
-          <stop offset="1" stopColor="#0e0e1e" />
+          <stop offset="0" stopColor="#4a4a50" />
+          <stop offset=".6" stopColor="#232326" />
+          <stop offset="1" stopColor="#0e0e10" />
         </radialGradient>
       </defs>
       <g className="cg">
-        <circle r="50" fill={`url(#g${uid})`} stroke="#5a5880" strokeWidth="2.5" />
-        <circle r="42" fill="none" stroke="#2c2c4a" strokeWidth="1.5" />
+        <circle r="50" fill={`url(#g${uid})`} stroke="#bab09f" strokeWidth="2.5" />
+        <circle r="42" fill="none" stroke="#3a3a40" strokeWidth="1.5" />
         {chambers.map(({ x, y, slot, j }, i) => (
           <g key={i}>
-            <circle cx={x} cy={y} r="12.5" fill="#05050b" stroke="#3a3858" strokeWidth="1.5" />
+            <circle cx={x} cy={y} r="12.5" fill="#060607" stroke="#4a4a50" strokeWidth="1.5" />
             {slot &&
               (j < n ? (
                 round(x, y, mark?.idx === j ? mark.name : undefined)
               ) : mark?.idx === j && mark.name === 'spent' ? (
                 <>
                   {round(x, y, 'spent')}
-                  <circle className="puff" cx={x} cy={y} r="12" fill="#8d8ba8" />
+                  <circle className="puff" cx={x} cy={y} r="12" fill="#a7a6a3" />
                 </>
               ) : (
-                <circle cx={x} cy={y} r="8" fill="none" stroke="#2a2850" strokeWidth="1" strokeDasharray="2 3" />
+                <circle cx={x} cy={y} r="8" fill="none" stroke="#3a3a40" strokeWidth="1" strokeDasharray="2 3" />
               ))}
           </g>
         ))}
-        <circle r="9" fill="#2a2850" stroke="#5a5880" strokeWidth="1.5" />
-        <circle r="3" fill="#07070d" />
+        <circle r="9" fill="#2c2c31" stroke="#bab09f" strokeWidth="1.5" />
+        <circle r="3" fill="#8a7cc8" />
       </g>
     </svg>
   )
