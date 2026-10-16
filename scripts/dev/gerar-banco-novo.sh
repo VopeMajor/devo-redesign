@@ -24,6 +24,7 @@ FILES=(
   scripts/poco-migration.sql
   scripts/staff-migration.sql
   scripts/torres-migration.sql
+  scripts/salao-migration.sql
   scripts/narrativa-migration.sql
 )
 {

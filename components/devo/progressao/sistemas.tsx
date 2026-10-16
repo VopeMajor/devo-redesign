@@ -10,6 +10,7 @@ import { useDevo } from '../state/devo-store'
 import { useAcesso } from './use-acesso'
 import { PocoApp } from '../poco/poco-app'
 import { TorresApp } from '../torres/torres-app'
+import { SalaoApp } from '../salao/salao-app'
 
 /**
  * SISTEMAS NOVOS (DIRECAO-3 §1–2) no menu do DEVO: trancados até vencer o Deadly Vote tutorial (Owner e
@@ -21,10 +22,10 @@ import { TorresApp } from '../torres/torres-app'
  *   e ELA mostra a trava (decidida no servidor). A tela é responsável por chamar a apresentação narrativa na primeira entrada
  *   (`useCenas().abrir(..., { seNaoVista: true })` — docs/redesign/DIALOGO.md).
  */
-export type SistemaId = 'mascaras' | 'poco' | 'torres' | 'corporacoes' | 'virtudes' | 'arcanos'
+export type SistemaId = 'salao' | 'poco' | 'torres' | 'corporacoes' | 'virtudes' | 'arcanos'
 
 export const TELAS_SISTEMA: Partial<Record<SistemaId, ComponentType>> = {
-  // mascaras: SalaoApp,      ← agente Salão das Máscaras
+  salao: SalaoApp,
   poco: PocoApp,
   torres: TorresApp,
   // corporacoes: CorporacoesApp, ← agente Corporações
@@ -48,7 +49,7 @@ export type SistemaDef = {
 const TUTORIAL = 'Vença o Deadly Vote tutorial'
 
 export const SISTEMAS: SistemaDef[] = [
-  { id: 'mascaras', nome: 'Salão das Máscaras', curto: 'Máscaras', subtitulo: 'Leilões e mercado', flag: 'salao_mascaras', trava: TUTORIAL, emblem: EmblemMascaras },
+  { id: 'salao', nome: 'Salão das Máscaras', curto: 'Máscaras', subtitulo: 'Leilões, mercado e anúncios', flag: 'salao_mascaras', trava: TUTORIAL, emblem: EmblemMascaras, janela: { w: 480, h: 840 } },
   { id: 'poco', nome: 'Poço dos Milagres', curto: 'Poço', subtitulo: 'Moedas, manivela e balde', flag: 'poco', trava: TUTORIAL, emblem: EmblemPoco, janela: { w: 460, h: 820 } },
   { id: 'torres', nome: 'Torres de Ruptura', curto: 'Torres', subtitulo: 'Andares, essências e chaves', flag: 'torres', trava: TUTORIAL, emblem: EmblemTorres, janela: { w: 480, h: 820 } },
   { id: 'corporacoes', nome: 'Corporações', curto: 'Corpo­rações', subtitulo: 'Companhia de Despertados', flag: 'corporacoes', trava: 'Aguarde a Companhia', emblem: EmblemCorporacoes },

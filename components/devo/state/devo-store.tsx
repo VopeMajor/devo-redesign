@@ -63,6 +63,10 @@ type Action =
   | { type: 'SEE_APP'; appId: AppId }
   | { type: 'UNLOCK_ARCADE' }
   | { type: 'ADD_TIME'; ms: number }
+  /** Cartas que o servidor tirou do save (Salão das Máscaras: Bandeja, Mercado). */
+  | { type: 'CARDS_REMOVE'; uids: string[] }
+  /** Cartas entregues pelo servidor (card_deliveries resgatadas). Uid repetido é ignorado. */
+  | { type: 'CARDS_ADD'; cards: OwnedCard[] }
   | { type: 'ARCADE_REVEAL_DONE' }
   | { type: 'SET_PHASE'; phase: Phase }
   | { type: 'START_SESSION' }
@@ -211,6 +215,17 @@ function reducer(state: DevoState, action: Action): DevoState {
     case 'ADD_TIME':
       if (!action.ms) return state
       return { ...state, timerEndsAt: state.timerEndsAt + action.ms }
+    case 'CARDS_REMOVE': {
+      const out = new Set(action.uids)
+      if (!state.inventory.some((c) => out.has(c.uid))) return state
+      return { ...state, inventory: state.inventory.filter((c) => !out.has(c.uid)) }
+    }
+    case 'CARDS_ADD': {
+      const have = new Set(state.inventory.map((c) => c.uid))
+      const novas = action.cards.filter((c) => !have.has(c.uid))
+      if (!novas.length) return state
+      return { ...state, inventory: [...novas, ...state.inventory] }
+    }
     case 'ARCADE_REVEAL_DONE':
       return { ...state, arcadeReveal: false }
     case 'NOTIFY':

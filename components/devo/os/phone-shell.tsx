@@ -719,7 +719,7 @@ function AppLayer({
         <AppGlyphTile app={app} size="sm" />
         <div className="min-w-0 flex-1 animate-dv-cut-in [animation-delay:120ms]">
           <p className="dv-label truncate text-[10px] tracking-[0.18em] text-dv-text-3">{app.subtitle}</p>
-          <h1 className="mt-1 truncate font-display text-[19px] font-semibold uppercase leading-none tracking-[0.08em] text-dv-text">{app.name}</h1>
+          <h1 className={cn('mt-1 truncate font-display font-semibold uppercase leading-[1.15] tracking-[0.08em] text-dv-text', app.name.length > 16 ? 'text-[16px] tracking-[0.05em]' : 'text-[19px]')}>{app.name}</h1>
         </div>
         <span aria-hidden="true" className="font-impact -skew-x-[8deg] text-[30px] font-semibold leading-none text-transparent [-webkit-text-stroke:1px_var(--dv-gold)]">
           {index}
