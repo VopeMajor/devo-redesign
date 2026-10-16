@@ -7,6 +7,7 @@ import { loadVoiceManifest, playRatoLaugh } from '@/lib/devo/voice'
 import { LAST_RATO_LINE } from '@/lib/devo/voice-lines'
 import { getNpc, portraitFrameProps, type Expression } from '@/lib/devo/npcs'
 import { withName } from '@/lib/devo/player-name'
+import { useDevo } from '../state/devo-store'
 import { cn } from '@/lib/utils'
 import Image from 'next/image'
 import { useAdvanceKeys } from '../hooks'
@@ -91,7 +92,8 @@ export function IntroScreen({
     onProgress?.(index)
   }, [index]) // eslint-disable-line react-hooks/exhaustive-deps
   const script = INTRO_SCRIPT[index]
-  const line = { ...script, text: withName(script.text, playerName) }
+  const gender = useDevo().state.profile.gender
+  const line = { ...script, text: withName(script.text, playerName, gender) }
   const npc = getNpc(line.speaker)
   const isLastRato = index === LAST_RATO_LINE
   // Sem dublagem no tutorial (DIRECAO-2 §5: voz só na cutscene inicial).

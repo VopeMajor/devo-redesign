@@ -119,6 +119,7 @@ function DevoRoot() {
       {state.phase === 'landing' && (
         <LandingScreen
           playerName={callName(state)}
+          gender={state.profile.gender}
           canContinue
           veiled={naming !== null}
           onStart={start}

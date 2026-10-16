@@ -4,6 +4,7 @@ import type { BadgeTone } from '@/components/devo/kit'
 import { GlyphGavel, PanelLink, RecordTitle } from '@/components/devo/kit'
 import { arcLabel, DEADLY_VOTE_STATUS, type DeadlyVoteEntry, type DeadlyVoteStatus, formatVoteDate, OUTCOME_LABEL } from '@/lib/devo/deadly-votes'
 import { cn } from '@/lib/utils'
+import { usePlayerText } from '../state/player-text'
 import { STATUS_TEXT, StatusMark } from './record-ui'
 
 type HistoryProps = {
@@ -106,9 +107,11 @@ export function DeadlyVoteHistory({
 export function DeadlyVoteHistoryItem({ entry, onSelect, index = 0 }: { entry: DeadlyVoteEntry; onSelect?: (entry: DeadlyVoteEntry) => void; index?: number }) {
   const meta = DEADLY_VOTE_STATUS[entry.status]
   const v = entry.vote
+  const say = usePlayerText()
   const closed = entry.status === 'concluido' || entry.status === 'falha'
   const tally = closed ? tallyText(v.survivors, v.eliminated) : null
-  const mine = v.outcome ? `Você · ${OUTCOME_LABEL[v.outcome]}` : v.joined ? 'Você · inscrito' : null
+  // Resultado do próprio jogador: concorda com o gênero dele.
+  const mine = v.outcome ? say(`Você · ${v.outcome === 'eliminado' ? 'Eliminad{o|a}' : OUTCOME_LABEL[v.outcome]}`) : v.joined ? say('Você · inscrit{o|a}') : null
   const sub = [arcLabel(v.arc), tally].filter(Boolean).join(' · ')
   const content = (
     <>

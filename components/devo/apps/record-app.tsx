@@ -31,6 +31,8 @@ import { formatDuration, useNow } from '../hooks'
 import { useOsNav } from '../os/os-nav'
 import { DeckPanel } from '../shared/deck-panel'
 import { callName, useDevo } from '../state/devo-store'
+import { usePlayerText } from '../state/player-text'
+import { playerText } from '@/lib/devo/player-name'
 import { DealerBoard } from '../system/dealer-board'
 import { DeadlyVoteHistory, tallyText } from '../system/deadly-vote-history'
 import { InvitePanel } from '../system/invite-panel'
@@ -51,7 +53,7 @@ export function useRecordData(avatarVersion: number | null = null): RecordFileDa
   return {
     name: callName(state) ?? 'Não identificado',
     recordId: recordIdFor(state.playerName),
-    status: remaining === 0 ? { label: 'Eliminado', tone: 'critical' } : critical ? { label: 'Crítico', tone: 'critical' } : { label: 'Ativo', tone: 'active' },
+    status: remaining === 0 ? { label: playerText('Eliminad{o|a}', { gender: state.profile.gender }), tone: 'critical' } : critical ? { label: 'Crítico', tone: 'critical' } : { label: 'Ativo', tone: 'active' },
     remainingMs: remaining,
     critical,
     arcano: null,
@@ -285,6 +287,7 @@ function useVoteAction(id: string) {
 
 /** Bloco do grupo do WhatsApp: só para inscritos, só com o caso em andamento. */
 function GroupAccess({ vote, surface }: { vote: DeadlyVote; surface: 'dark' | 'paper' }) {
+  const say = usePlayerText()
   if (vote.status !== 'em-progresso') return null
   if (!vote.joined) {
     return (
@@ -301,7 +304,7 @@ function GroupAccess({ vote, surface }: { vote: DeadlyVote; surface: 'dark' | 'p
           <span className="absolute inset-0 animate-ping rounded-full bg-in-fg/20" />
           <span className="size-2 rounded-full bg-in-fg" />
         </span>
-        <p className="font-body text-[15px] leading-snug text-in-fg-2">Você está inscrito. O Dealer vai liberar o link do grupo aqui.</p>
+        <p className="font-body text-[15px] leading-snug text-in-fg-2">{say('Você está inscrit{o|a}. O Dealer vai liberar o link do grupo aqui.')}</p>
       </div>
     )
   }

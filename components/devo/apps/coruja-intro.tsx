@@ -10,6 +10,7 @@ import { cn } from '@/lib/utils'
 import { useAdvanceKeys } from '../hooks'
 import { CardFace, RARITY_SKIN, RarityGem, RarityPips, marbleBlack } from '../shared/devo-card'
 import { useDevo } from '../state/devo-store'
+import { usePlayerText } from '../state/player-text'
 import { CorujaSprite, type CorujaExpression } from './coruja-sprite'
 
 type Visual = 'cards' | 'rarities' | 'secret' | 'roles' | 'collections' | 'numbers'
@@ -26,7 +27,7 @@ const CHAPTERS: Chapter[] = ['Apresentação', 'Raridades', 'Segredos', 'Funçõ
 const line = (chapter: Chapter, text: string, face: CorujaExpression, visual?: Visual): Step => ({ kind: 'line', text, visual, face, chapter })
 
 const SCRIPT: Step[] = [
-  line('Apresentação', 'Um Record, hm? Você não é nada mal. Até que gosto. Que rosto interessante.', 'warai'),
+  line('Apresentação', '{Um|Uma} Record, hm? Você não é nada mal. Até que gosto. Que rosto interessante.', 'warai'),
   line('Apresentação', 'Eu me chamo Coruja, mas pode me chamar como bem quiser.', 'warai2'),
   line('Apresentação', 'Estas são as Cartas Devo. Você já deve ter ouvido falar delas, não é?', 'majime', 'cards'),
   line('Raridades', `As Cartas Devo são separadas por diferentes tipos de raridade: ${RARITIES.map((r) => RARITY_META[r].plural).join(', ').replace(/, ([^,]*)$/, ' e $1')}.`, 'majime', 'rarities'),
@@ -48,7 +49,7 @@ const SCRIPT: Step[] = [
   line('Coleções', 'Isso pode representar formas úteis ou até um pouco estranhas de se usar uma carta em conexão com outra, como combinações, apoio ou até descarte.', 'komaru', 'collections'),
   line('Coleções', 'Por conta disso, muitos Records buscam reunir o máximo possível de Cartas de uma mesma Coleção Arcana.', 'majime', 'collections'),
   line('Coleções', 'Há também outro motivo… ainda que, no momento, eu não possa te dizer qual.', 'fuman'),
-  line('Coleções', 'À medida que você for evoluindo, novas possibilidades se abrirão diante dos seus olhos. E eu espero que você os tenha bem abertos quando esse momento chegar, meu querido Record.', 'warai2'),
+  line('Coleções', 'À medida que você for evoluindo, novas possibilidades se abrirão diante dos seus olhos. E eu espero que você os tenha bem abertos quando esse momento chegar, {meu querido|minha querida} Record.', 'warai2'),
   { kind: 'system', text: 'A Coruja desaparece sem se despedir adequadamente.', chapter: 'Coleções' },
 ]
 
@@ -99,6 +100,7 @@ function useTypewriter(text: string) {
 
 export function CorujaIntro() {
   const { state, dispatch } = useDevo()
+  const say = usePlayerText()
   const [index, setIndex] = useState(0)
   const [reply, setReply] = useState<{ text: string; face: CorujaExpression } | null>(null)
   const [asked, setAsked] = useState<string[]>([])
@@ -135,7 +137,7 @@ export function CorujaIntro() {
               : 'Não. Olhe de novo… com mais calma.'
             : 'Esta pedra tem a cor de qual raridade?'
           : step.text
-  const typer = useTypewriter(spoken)
+  const typer = useTypewriter(say(spoken))
 
   const chapterIndex = CHAPTERS.indexOf(step.chapter)
   const isLast = index === SCRIPT.length - 1

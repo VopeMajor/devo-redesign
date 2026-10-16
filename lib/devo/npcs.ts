@@ -137,7 +137,7 @@ export const NPCS: Record<string, NpcDef> = {
       {
         id: 'regras',
         prompt: 'Quais são as regras daqui?',
-        reply: ['Hihihi! Simples, querido {nome}: o tempo é a vida, e o jogo é a única fonte dela.', 'O resto você descobre perdendo.'],
+        reply: ['Hihihi! Simples, querid{o|a} {nome}: o tempo é a vida, e o jogo é a única fonte dela.', 'O resto você descobre perdendo.'],
       },
       {
         id: 'sair',
