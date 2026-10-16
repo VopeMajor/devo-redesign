@@ -2,7 +2,9 @@ name: Capturas mobile
 
 on:
   push:
-    branches-ignore: [main]
+    branches-ignore: [main, 'infra/arte', 'arte-saida/**', 'infra-logs/**', 'capturas/**']
+    # Mudança só de documentação ou de pedidos de arte não refaz as capturas (e não cancela a rodada em curso).
+    paths-ignore: ['docs/**', 'arte/**', '**/*.md']
   workflow_dispatch:
 
 concurrency:
