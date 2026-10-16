@@ -2,6 +2,7 @@
 
 import type { CSSProperties, ReactNode } from 'react'
 import type { Arte } from '@/lib/devo/torres/tipos'
+import { voluta } from './ornamentos'
 
 /**
  * Ilustração procedural das Torres de Ruptura (SVG, sem imagens externas): mármore branco e negro com veios,
@@ -222,6 +223,50 @@ function Agulha({ feitos, total, destaque }: { feitos: number; total: number; de
       <path d="M-21 -306L0 -404" stroke="#ece5d8" strokeWidth={0.8} opacity={0.55} />
       {destaque && <circle cx={0} cy={-412} r={22} fill="url(#tw-halo-am)" className="tw-pulse" />}
       <path d={starPath(0, -413, 10)} fill="url(#tw-steel)" />
+      {/* rosácea sobre a porta */}
+      <g transform="translate(0 -94)">
+        <circle r={11} fill="#0c0c0e" stroke="url(#tw-steel)" strokeWidth={1.6} />
+        {Array.from({ length: 8 }, (_, i) => (
+          <path key={i} d="M0 0L0 -9.5" stroke="#bab09f" strokeWidth={0.8} transform={`rotate(${i * 45})`} />
+        ))}
+        {Array.from({ length: 8 }, (_, i) => (
+          <circle key={i} cx={0} cy={-6.5} r={2.2} fill={feitos > 0 ? '#ece5d8' : '#2c2a38'} stroke="#6b6357" strokeWidth={0.5} transform={`rotate(${i * 45 + 22.5})`} />
+        ))}
+        <circle r={2.6} fill={feitos > 0 ? '#fffaf0' : '#5a4f8f'} />
+      </g>
+      {/* balaustradas nas cornijas */}
+      {[
+        [-157, 44],
+        [-251, 32],
+      ].map(([y, w]) => (
+        <g key={y}>
+          {Array.from({ length: Math.floor((w * 2) / 4.5) }, (_, i) => -w + 2 + i * 4.5).map((x) => (
+            <path key={x} d={`M${x} ${y}V${y - 7}`} stroke="#d9d6cf" strokeWidth={1.6} strokeLinecap="round" />
+          ))}
+          <path d={`M${-w - 1} ${y - 7.5}H${w + 1}`} stroke="url(#tw-steel)" strokeWidth={1.8} />
+        </g>
+      ))}
+      {/* estandartes lavanda com a estrela */}
+      {[-1, 1].map((s) => (
+        <g key={s}>
+          <path d={`M${s * 33 - 7} -150H${s * 33 + 7}`} stroke="url(#tw-steel)" strokeWidth={1.6} />
+          <path d={`M${s * 33 - 6} -150L${s * 33 - 6} -104L${s * 33} -112L${s * 33 + 6} -104L${s * 33 + 6} -150Z`} fill="#4e4580" />
+          <path d={`M${s * 33 - 6} -150L${s * 33 - 6} -104L${s * 33} -112L${s * 33} -150Z`} fill="#6f63b0" opacity={0.55} />
+          <path d={`M${s * 33 - 6} -146H${s * 33 + 6}M${s * 33 - 6} -110`} stroke="#bab09f" strokeWidth={0.6} />
+          <path d={starPath(s * 33, -128, 4.2)} fill="#ece5d8" />
+        </g>
+      ))}
+      {/* crochês no pináculo */}
+      {[0.2, 0.38, 0.56, 0.74].map((t) => (
+        <g key={t}>
+          <path d={voluta(-21 + 21 * t, -306 - 98 * t, 3.2, -1)} fill="none" stroke="#5f584d" strokeWidth={1.1} />
+          <path d={voluta(21 - 21 * t, -306 - 98 * t, 3.2, 1)} fill="none" stroke="#5f584d" strokeWidth={1.1} />
+        </g>
+      ))}
+      {/* volutas nos arcobotantes */}
+      {[-1, 1].map((s) => (
+        <path key={s} d={voluta(s * 53, -84, 5, s)} fill="none" stroke="url(#tw-steel)" strokeWidth={1.2} strokeLinecap="round" />
+      ))}
       {slots.slice(0, Math.max(total, 0)).map(([x, y, w, h], i) => (
         <ArchWindow key={i} x={x} y={y} w={w} h={h} state={winState(i, feitos, total)} />
       ))}
@@ -272,6 +317,24 @@ function Observatorio({ feitos, total }: { feitos: number; total: number }) {
         <rect x={-2} y={-230} width={4} height={10} fill="#38393c" />
       </g>
       <path d={starPath(30, -250, 4)} fill="#ece5d8" opacity={0.8} />
+      {/* esfera armilar no topo da cúpula */}
+      <g transform="translate(-14 -238)">
+        <path d="M0 6V0" stroke="url(#tw-steel)" strokeWidth={1.4} />
+        <circle cy={-8} r={8} fill="none" stroke="url(#tw-steel)" strokeWidth={1.2} />
+        <ellipse cy={-8} rx={8} ry={3} fill="none" stroke="#bab09f" strokeWidth={0.8} />
+        <ellipse cy={-8} rx={3} ry={8} fill="none" stroke="#bab09f" strokeWidth={0.8} transform="rotate(30 0 -8)" />
+        <circle cy={-8} r={1.8} fill="#8a7cc8" />
+      </g>
+      {/* lanterna pendurada na sacada */}
+      <g transform="translate(34 -196)">
+        <path d="M0 0V10" stroke="#6b6357" strokeWidth={0.8} />
+        <circle cy={16} r={8} fill="url(#tw-halo)" className="tw-flicker" />
+        <path d="M-3 10H3L4 19H-4Z" fill="#ece5d8" stroke="#6b6357" strokeWidth={0.6} />
+      </g>
+      {/* volutas de ferro sob a sacada */}
+      {[-1, 1].map((s) => (
+        <path key={s} d={voluta(s * 25, -192, 5, s, -1)} fill="none" stroke="url(#tw-steel)" strokeWidth={1.2} strokeLinecap="round" />
+      ))}
       {slots.slice(0, total).map(([x, y], i) => (
         <RoundWindow key={i} x={x} y={y} r={6} state={winState(i, feitos, total)} />
       ))}
@@ -326,6 +389,17 @@ function Picadeiro({ feitos, total }: { feitos: number; total: number }) {
         </g>
       ))}
       <rect x={-29} y={-158} width={58} height={3} fill="url(#tw-steel)" />
+      {/* bandeirolas do mastro às bordas */}
+      {[-1, 1].map((s) => (
+        <g key={s}>
+          <path d={`M0 -262Q${s * 40} -214 ${s * 66} -118`} stroke="#6b6357" strokeWidth={0.6} fill="none" />
+          {[0.18, 0.34, 0.5, 0.66, 0.82].map((t, i) => {
+            const x = s * (2 * (1 - t) * t * 40 + t * t * 66)
+            const y = (1 - t) * (1 - t) * -262 + 2 * (1 - t) * t * -214 + t * t * -118
+            return <path key={t} d={`M${x - 3} ${y}L${x + 3} ${y}L${x} ${y + 7}Z`} fill={i % 2 ? '#ebe9e4' : '#4e4580'} />
+          })}
+        </g>
+      ))}
       {/* mastro e flâmula */}
       <path d="M0 -262V-284" stroke="url(#tw-steel)" strokeWidth={1.4} />
       <path d="M0 -284L18 -278L0 -272Z" fill="#ebe9e4" />
@@ -545,7 +619,12 @@ export function Escada({ andares, feitos }: { andares: number; feitos: number })
       <g key={i}>
         <path d={d} fill={col} stroke="#0c0c0e" strokeWidth={0.4} />
         <path d={riser} fill={isFront ? '#55545a' : '#1f1f22'} />
-        {i % 2 === 0 && <path d={`M${xo} ${y}V${y - 16}`} stroke={isFront ? '#bab09f' : '#5f584d'} strokeWidth={0.7} />}
+        {i % 2 === 0 &&
+          (isFront ? (
+            <path d={`M${xo} ${y}C${xo + 4} ${y - 5} ${xo - 4} ${y - 10} ${xo} ${y - 16}`} stroke="#d9d3c6" strokeWidth={0.9} fill="none" />
+          ) : (
+            <path d={`M${xo} ${y}V${y - 16}`} stroke="#4a453d" strokeWidth={0.7} />
+          ))}
       </g>
     )
     ;(isFront ? front : back).push(el)
@@ -580,6 +659,20 @@ export function Escada({ andares, feitos }: { andares: number; feitos: number })
       {railFront.map((d, i) => (
         <path key={i} d={d} stroke="url(#tw-steel-v)" strokeWidth={2.2} fill="none" strokeLinecap="round" />
       ))}
+      {/* patamares: capitel na coluna e espinhos de aço que rasgam a escada (um par por andar) */}
+      {Array.from({ length: andares }, (_, k) => {
+        const y = y0 - PASSO * k - PASSO / 4
+        return (
+          <g key={`pt${k}`}>
+            <rect x={AX - 10} y={y - 3} width={20} height={5} rx={1} fill="url(#tw-steel)" />
+            <path d={`M${AX - 12} ${y + 2}H${AX + 12}`} stroke="#0c0c0e" strokeWidth={0.8} />
+            <path d={`M${AX + R - 2} ${y - 14}L${AX + R + 1.6} ${y - 14}L${AX + R + 9} ${y - 64}Z`} fill="url(#tw-steel)" />
+            <path d={`M${AX - R + 6} ${y - 50}L${AX - R + 9} ${y - 50}L${AX - R - 2} ${y - 96}Z`} fill="#5f584d" />
+            <path d={voluta(AX + R - 1, y - 22, 6, 1)} fill="none" stroke="#d9d3c6" strokeWidth={1} strokeLinecap="round" />
+            <path d={voluta(AX + R - 1, y - 34, 5, -1)} fill="none" stroke="#bab09f" strokeWidth={0.8} strokeLinecap="round" />
+          </g>
+        )
+      })}
       {/* remate do topo: agulha com a estrela */}
       <path d={`M${AX - 9} ${ESCADA.TOPO - 40}L${AX} ${ESCADA.TOPO - 120}L${AX + 9} ${ESCADA.TOPO - 40}Z`} fill="url(#tw-slate)" />
       <path d={`M${AX - 9} ${ESCADA.TOPO - 40}L${AX} ${ESCADA.TOPO - 120}`} stroke="#ece5d8" strokeWidth={0.7} opacity={0.6} />
