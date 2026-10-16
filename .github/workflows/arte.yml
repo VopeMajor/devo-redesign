@@ -1,0 +1,115 @@
+name: Arte (Workers AI)
+
+# Gera arte com os modelos de imagem do Workers AI (Cloudflare), remove o fundo, aplica o molde,
+# padroniza os tamanhos e publica cada pedido na branch arte-saida/<id>. Guia: docs/redesign/ARTE-PIPELINE.md
+on:
+  push:
+    branches: [infra/arte]
+    paths: ['arte/pedidos/*.json']
+  workflow_dispatch:
+    inputs:
+      pedidos:
+        description: "ids separados por vírgula, ou 'todos'"
+        required: true
+        default: todos
+
+concurrency:
+  group: arte-${{ github.ref }}
+  cancel-in-progress: false   # não descarta geração já paga
+
+permissions:
+  contents: write
+
+jobs:
+  arte:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    env:
+      CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID || '6dfd3c2b012ccd4d1e66c60cb72e7e6b' }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Pedidos a processar
+        id: lista
+        env:
+          ENTRADA: ${{ github.event.inputs.pedidos }}
+          ANTES: ${{ github.event.before }}
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            if [ "$ENTRADA" = "todos" ]; then
+              ls arte/pedidos/*.json > lista.txt
+            else
+              echo "$ENTRADA" | tr ',' '\n' | sed 's/ //g; /^$/d; s#^#arte/pedidos/#; s#$#.json#' > lista.txt
+            fi
+          elif [ -z "$ANTES" ] || [ "$ANTES" = "0000000000000000000000000000000000000000" ] || ! git cat-file -e "$ANTES" 2>/dev/null; then
+            ls arte/pedidos/*.json > lista.txt
+          else
+            git diff --name-only --diff-filter=AM "$ANTES" "$GITHUB_SHA" -- 'arte/pedidos/*.json' > lista.txt
+          fi
+          echo "Pedidos:"; cat lista.txt
+          for f in $(cat lista.txt); do [ -f "$f" ] || { echo "::error::pedido não encontrado: $f"; exit 1; }; done
+          [ -s lista.txt ] || { echo "Nenhum pedido alterado."; }
+
+      - name: Validar pedidos
+        run: |
+          [ -s lista.txt ] || exit 0
+          python3 arte/ferramentas/pedido.py $(cat lista.txt)
+
+      - name: Conferir segredo CLOUDFLARE_API_TOKEN
+        env:
+          CF_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: |
+          if [ -z "$CF_TOKEN" ]; then
+            echo "::error title=Falta o segredo CLOUDFLARE_API_TOKEN::Crie um token da Cloudflare com a permissão 'Account > Workers AI > Read' (conta $CLOUDFLARE_ACCOUNT_ID) e salve em GitHub > Settings > Secrets and variables > Actions > New repository secret, com o nome CLOUDFLARE_API_TOKEN. Depois rode este workflow de novo (Actions > Arte (Workers AI) > Run workflow). Passo a passo em docs/redesign/ARTE-PIPELINE.md."
+            exit 1
+          fi
+          echo "segredo presente (valor oculto)"
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: arte/ferramentas/requirements.txt
+
+      - name: Dependências (rembg, Pillow, numpy, scipy)
+        run: pip install -q -r arte/ferramentas/requirements.txt
+
+      - name: Cache dos modelos de remoção de fundo
+        uses: actions/cache@v4
+        with:
+          path: ~/.u2net
+          key: rembg-modelos-v1
+
+      - name: Gerar, processar e publicar
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: |
+          set +e
+          FALHAS=0
+          for f in $(cat lista.txt); do
+            ID=$(basename "$f" .json)
+            OUT="saida/$ID"
+            mkdir -p "$OUT"
+            echo "::group::$ID — geração"
+            python3 arte/ferramentas/gerar.py "$f" "$OUT"; G=$?
+            echo "::endgroup::"
+            echo "::group::$ID — pós-processamento"
+            python3 arte/ferramentas/processar.py "$f" "$OUT"; P=$?
+            echo "::endgroup::"
+            [ $G -ne 0 ] && echo "::warning::$ID: geração com falhas (veja log.txt na branch arte-saida/$ID)"
+            [ $P -ne 0 ] && { echo "::error::$ID: nenhuma imagem final"; FALHAS=$((FALHAS+1)); }
+            (
+              cd "$OUT"
+              echo "$GITHUB_SHA" > SOURCE_SHA
+              BR="arte-saida/$ID"
+              git init -q -b "$BR"
+              git config user.name "devo-ci"; git config user.email "ci@devo.local"
+              git add -A && git commit -qm "arte $ID de ${GITHUB_SHA::7}"
+              git push -q -f "https://x-access-token:${{ github.token }}@github.com/${GITHUB_REPOSITORY}.git" "$BR:$BR" \
+                && echo "publicado em $BR"
+            )
+            { echo "## $ID"; echo; echo "Branch: \`arte-saida/$ID\`"; echo; grep -v '^!\[prancha' "$OUT/README.md" 2>/dev/null | head -20; echo; } >> "$GITHUB_STEP_SUMMARY"
+          done
+          exit $FALHAS

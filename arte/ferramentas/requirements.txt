@@ -1,0 +1,6 @@
+# Só para o runner do GitHub Actions (workflow arte.yml). Local não precisa.
+requests>=2.31
+pillow>=10.3
+numpy>=1.26
+scipy>=1.11
+rembg[cpu]>=2.0.59,<3

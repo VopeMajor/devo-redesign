@@ -1,0 +1,37 @@
+{
+  "id": "torre-principal-agulha",
+  "titulo": "Torre principal — agulha gótica (ilustração isolada, teste)",
+  "tipo": "ilustracao",
+  "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+  "prompt": "Fantasy RPG environment illustration, painted, highly detailed, isolated on a plain flat light gray background. A single tall gothic cathedral spire tower standing alone, its full height visible from the base to the needle tip, seen slightly from below at a three-quarter angle. Pale weathered stone with dark slate roofs, flying buttresses, pointed arches, a rose window glowing faint crimson, narrow lancet windows with warm candlelight on several floors. An external spiral staircase of carved stone with wrought silver railings winds around the middle section. Small balconies with gargoyles, delicate pinnacles and crockets, and a tall thin needle spire topped with a silver finial. Faint violet fissures of light crack through some of the stones, as if the tower were breaking reality. Moody cold moonlight from the upper right, deep shadows, a little mist hugging the base without spreading to the edges. The base ends on a small rocky outcrop. Crisp silhouette, the whole tower fully inside the image with margin on all sides, no ground plane reaching the edges, no sky, no landscape, no text, no watermark, no people.",
+  "negative": "text, letters, watermark, signature, logo, frame border of the image, cropped, cut off, blurry, low detail, flat vector icon, clipart, emoji, cartoon sticker, simple geometric shapes, plastic look, people, face, hands, sky, clouds, landscape, horizon",
+  "largura": 1024,
+  "altura": 1536,
+  "variacoes": [
+    {
+      "seed": 3101
+    },
+    {
+      "seed": 3102
+    },
+    {
+      "seed": 3103
+    },
+    {
+      "seed": 3104,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b"
+    }
+  ],
+  "pos": {
+    "remover_fundo": true,
+    "modelo_fundo": "birefnet-general",
+    "tamanho_final": 1536,
+    "margem": 0.03,
+    "derivados": [
+      1024,
+      512,
+      256,
+      96
+    ]
+  }
+}
