@@ -35,7 +35,7 @@ const PORTRAIT_TONE: Record<string, PortraitTone> = { rato: 'gold', herdeiro: 'c
 
 /** Retrato redondo do remetente com o tratamento do kit (PortraitFrame: luz de borda, base dissolvida). */
 function Portrait({ npcId, size = 52, className }: { npcId: string; size?: number; className?: string }) {
-  const art = portraitFrameProps(npcId, 'neutral', 'face')
+  const art = portraitFrameProps(npcId, undefined, 'face')
   return (
     <span aria-hidden="true" className={cn('shrink-0', className)} style={{ width: size }}>
       <PortraitFrame alt="" {...(art ?? {})} tone={PORTRAIT_TONE[npcId] ?? 'neutral'} shape="round" className="w-full">
