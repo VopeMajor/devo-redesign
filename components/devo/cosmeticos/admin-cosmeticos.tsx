@@ -2,7 +2,7 @@
 
 import { type CSSProperties, useMemo, useRef, useState } from 'react'
 import useSWR from 'swr'
-import { ARTE_IMAGEM, type CosmeticoDef, type CosSlot, ORIGEM_LABEL, RARIDADE_PADRAO, RARIDADES, SLOT_LABEL } from '@/lib/devo/cosmeticos'
+import { ARTE_IMAGEM, IMAGENS_CATALOGO, imagemDoAsset, type CosmeticoDef, type CosSlot, ORIGEM_LABEL, RARIDADE_PADRAO, RARIDADES, SLOT_LABEL } from '@/lib/devo/cosmeticos'
 import type { ItemRarity } from '@/lib/devo/progresso'
 import { cn } from '@/lib/utils'
 import { ConfirmButton, EmptyLine, ErrorLine, Loading, RecSelect, STAFF_KEY, staffGet } from '../system/staff-ui'
@@ -165,7 +165,13 @@ function Editor({ item, onClose, onSaved }: { item: ItemAdmin | null; onClose: (
   const [err, setErr] = useState<string | null>(null)
   const file = useRef<HTMLInputElement>(null)
   const set = (p: Partial<typeof f>) => setF((x) => ({ ...x, ...p }))
-  const previa: CosmeticoDef = { ...f, description: f.description || null, automatico: !!item?.automatico, par: item?.par ?? null }
+  const previa: CosmeticoDef = {
+    ...f,
+    description: f.description || null,
+    automatico: !!item?.automatico,
+    par: item?.par ?? null,
+    imagem: imagemDoAsset(f.asset, IMAGENS_CATALOGO[f.asset]?.imagem ?? item?.imagem),
+  }
 
   const enviar = async (fl: File) => {
     setErr(null)

@@ -2424,10 +2424,10 @@ if (want('cosmeticos')) {
     const page = mat.page
     await openApp(page, 'Sala de Jogos')
     await wait(1500)
-    await view(page, 'section[aria-label="Chat da mesa"]', 'start')
+    await view(page, 'section[aria-label="Registro das partidas"]', 'start')
     await wait(1800)
     await shot(page, 'cos-30-chat-baloes')
-    await page.evaluate(() => document.querySelector('section[aria-label="Chat da mesa"] ul')?.scrollTo(0, 0))
+    await page.evaluate(() => document.querySelector('section[aria-label="Registro das partidas"] ul')?.scrollTo(0, 0))
     await wait(600)
     await shot(page, 'cos-31-chat-anfitriao')
     if (await tryClick(page.getByRole('button', { name: 'Abrir miniperfil de Sentinela' }).first())) {
@@ -2581,9 +2581,9 @@ if (want('cosmeticos')) {
     }
     await openApp(page, 'Sala de Jogos')
     await wait(1500)
-    await view(page, 'section[aria-label="Chat da mesa"]', 'start')
+    await view(page, 'section[aria-label="Registro das partidas"]', 'start')
     await wait(1800)
-    const minha = page.locator('section[aria-label="Chat da mesa"] li').filter({ has: page.getByRole('button', { name: 'Abrir miniperfil de Matheus' }) }).last()
+    const minha = page.locator('section[aria-label="Registro das partidas"] li').filter({ has: page.getByRole('button', { name: 'Abrir miniperfil de Matheus' }) }).last()
     await minha.evaluate((el) => el.scrollIntoView({ block: 'center' })).catch(() => {})
     await wait(800)
     await shot(page, 'cos-87-ia-chat')
