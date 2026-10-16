@@ -262,6 +262,39 @@ Erros: `{ ok: false, error }` com 400/403/404/409 (mensagens em português, sem 
 - `/api/invites`: Jogador com cota; Dealer não gera; `quota` no payload.
 - `/api/arcade`: `role` do chat e do miniperfil passa por `publicCargo`.
 
+## 8b. Staff e Deadly Vote (agente Staff)
+
+Migração `scripts/staff-migration.sql` (depois da Fundação; está no CI, no `local-db.mjs` e no banco novo).
+
+- `deadly_votes`: `location` (local), `admission` (`'livre'` entra direto | `'aprovacao'` o dono do caso aceita),
+  `results_applied_at/by` (resultado aplicado aos perfis — uma vez só).
+- `deadly_vote_entries`: `admission` (`pendente`/`aceita`/`recusada`), `decision` (`premio`/`morreu`/`ausente`/`outro`),
+  `note`, `decided_by/at`. Gatilhos `devo_dv_entry_guard`/`devo_dv_vote_guard`: depois de aplicado, decisão, resultado,
+  inscrição e estado do voto ficam selados (`RESULTADO_APLICADO` → 409).
+- `deadly_vote_prizes`: recompensas planejadas do caso. **Privadas**: só a Mesa (`GET /api/record?view=staff`) as
+  envia; `getRecord` (payload do jogador) nunca.
+- `reward_proposals.prize_id` + índice único `(prize_id, recipient_id)`: uma proposta por prêmio e participante.
+- `recompensas-server.ts`: **`proposeRewardIn(c, ator, input, { aprovar: true | 'se-puder', entregar, prizeId })`** —
+  proposta dentro de uma transação aberta; `'se-puder'` aprova só se `can(ator, 'recompensa.aprovar')`.
+- `permissoes-server.ts`: `listJogadores(atorId, busca)` (`equipe.ver`; cargo por `cargoVisivel`) →
+  `GET /api/staff?view=jogadores&q=`. `PlayerSummary` ganhou `arcano` e `pontosPotencial` (null até Arcanos/Virtudes
+  terem fonte no servidor).
+
+`POST /api/record` (todas exigem `dv.editar` no voto): `create` aceita `location`, `admission`, `prizes[]`
+(`{recurso, chave?, quantidade, label?}`, até 8); `edit {voteId, …ficha, prizes?}` (antes de aplicar);
+`admission {voteId, playerId, admission}`; `decision {voteId, playerId | '*', decision | null, note?}` (só com o voto
+`concluido`; `'*'` = todos os aceitos ainda sem decisão; `outro` exige nota); `apply {voteId}` →
+`{ aplicou, participantes, propostas, entregues, pendentes }`. Aplicar: exige todos os aceitos decididos;
+`premio` → `sobreviveu` + uma proposta `evento` por prêmio planejado; `morreu` → `eliminado`; `ausente`/`outro` → sem
+resultado; inscrições ainda em análise viram recusadas. Quem pode aprovar (Owner; Anfitrião no seu escopo) já aprova e
+entrega; a proposta de Dealer fica pendente. Gravar `sobreviveu` num tutorial concluído dispara o desbloqueio
+(gatilhos da §3). Segunda chamada → `aplicou: false`, nada duplica. `join` respeita `admission` (pendente) e recusa
+quem foi recusado. O payload público (`DeadlyVote`) ganhou `location`, `admission` e `entryStatus` (a própria inscrição).
+
+Telas: aba **Mesa** do Record (`components/devo/system/staff-desk.tsx`): Casos (Mesa do Dealer), Recompensas, Equipe,
+Jogadores, Convites, Registro, Ajustes — por cargo. Jogador: aba Convites com a cota. Teste: `scripts/dev/staff-test.mjs`
+(→ `staff-test.log`).
+
 ## 9. Pendências e decisões para o dono
 - Probabilidades do Poço, faixas da "linha do destino" e lista de flags do tutorial: provisórias e editáveis.
 - `dracma_rara` foi criada como provisória (o texto só cita Comum e Incomum).

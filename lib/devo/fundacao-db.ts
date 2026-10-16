@@ -39,6 +39,9 @@ const DB_ERRORS: [RegExp, string, number][] = [
   [/APROVACAO_SO_DE_PENDENTE/, 'Só propostas pendentes podem ser aprovadas.', 409],
   [/APROVACAO_NAO_PERMITIDA/, 'Você não pode aprovar esta recompensa.', 403],
   [/ENTREGA_SEM_APROVACAO/, 'A recompensa precisa estar aprovada para ser entregue.', 409],
+  // Staff / Deadly Vote (scripts/staff-migration.sql)
+  [/RESULTADO_APLICADO/, 'O resultado deste Deadly Vote já foi aplicado aos perfis.', 409],
+  [/APLICAR_SO_CONCLUIDO/, 'Conclua o Deadly Vote antes de aplicar o resultado.', 409],
   [/violates (check|foreign key) constraint/, 'Dados inválidos.', 400],
   [/invalid input syntax for type uuid/, 'ID inválido.', 400],
 ]

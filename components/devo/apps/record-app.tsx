@@ -1,6 +1,6 @@
 'use client'
 
-import { Link2, Lock } from 'lucide-react'
+import { Link2, Lock, MapPin } from 'lucide-react'
 import { type CSSProperties, useCallback, useState } from 'react'
 import {
   BrassCorners,
@@ -33,17 +33,21 @@ import { DeckPanel } from '../shared/deck-panel'
 import { callName, useDevo } from '../state/devo-store'
 import { usePlayerText } from '../state/player-text'
 import { playerText } from '@/lib/devo/player-name'
-import { DealerBoard } from '../system/dealer-board'
 import { DeadlyVoteHistory, tallyText } from '../system/deadly-vote-history'
 import { InvitePanel } from '../system/invite-panel'
 import { ManagerAlert, useManagerSignals } from '../system/manager-alert'
 import { PhotoPicker } from '../system/photo-picker'
 import { RecordFile, type RecordFileData } from '../system/record-file'
+import { StaffDesk } from '../system/staff-desk'
 import { LifecycleTrack, RecButton, RecLink, STATUS_TEXT, StatusChip, StatusMark } from '../system/record-ui'
 import { useDeadlyVotes } from '../system/use-deadly-votes'
 
 const CRITICAL_MS = 6 * 3600 * 1000
-const ROLE_LABEL = { player: 'Jogador', dealer: 'Dealer', anfitriao: 'Anfitrião', owner: 'Owner' } as const
+/**
+ * Selo do cargo no cabeçalho. O Owner nunca é revelado (DIRECAO-3 §3): no lugar do cargo, um selo neutro
+ * ("Sigilo") — autoridade e mistério sem a palavra, para não vazar numa captura compartilhada.
+ */
+const ROLE_LABEL = { player: 'Jogador', dealer: 'Dealer', anfitriao: 'Anfitrião', owner: 'Sigilo' } as const
 
 export function useRecordData(avatarVersion: number | null = null): RecordFileData {
   const { state } = useDevo()
@@ -67,7 +71,7 @@ export function useRecordData(avatarVersion: number | null = null): RecordFileDa
   }
 }
 
-type Tab = 'record' | 'votes' | 'invites'
+type Tab = 'record' | 'votes' | 'invites' | 'mesa'
 const OPEN: DeadlyVoteStatus[] = ['convocado', 'em-progresso']
 const ALL_STATUSES: DeadlyVoteStatus[] = ['convocado', 'em-progresso', 'concluido', 'cancelado', 'falha']
 
@@ -97,7 +101,8 @@ export function RecordApp() {
   const items: TabItem<Tab>[] = [
     { value: 'record', label: 'Record File' },
     { value: 'votes', label: 'Deadly Votes', count: votes.entries.filter((e) => e.status === 'convocado' && !e.vote.joined).length },
-    ...(isStaff ? [{ value: 'invites' as const, label: 'Convites' }] : []),
+    // Equipe: a Mesa (casos, recompensas, equipe, convites…). Jogador: os próprios convites (cota de 1).
+    isStaff ? { value: 'mesa' as const, label: 'Mesa' } : { value: 'invites' as const, label: 'Convites' },
   ]
 
   return (
@@ -105,7 +110,7 @@ export function RecordApp() {
       <div className="devo-scroll absolute inset-0 overflow-y-auto">
         <PaperSheet code={false} className="min-h-full">
           <div className="relative mx-auto flex max-w-3xl flex-col gap-4 pb-12 pl-6 pr-4 pt-4 @2xl:px-8">
-            <Masthead recordId={data.recordId} role={role && role !== 'player' ? ROLE_LABEL[role] : null} />
+            <Masthead recordId={data.recordId} role={role && role !== 'player' ? ROLE_LABEL[role] : null} sealed={role === 'owner'} />
 
             <CobaltTabs
               label="Seções do registro"
@@ -119,10 +124,11 @@ export function RecordApp() {
               className="animate-dv-fade [&_[role=tab]]:min-w-0 [&_[role=tab]]:flex-auto [&_[role=tab]]:whitespace-nowrap [&_[role=tab]]:px-2 [&_[role=tab]]:text-[10.5px] [&_[role=tab]]:tracking-[0.06em] @md:[&_[role=tab]]:px-4 @md:[&_[role=tab]]:text-[11px] @md:[&_[role=tab]]:tracking-[0.14em]"
               panelClassName="pt-5"
             >
-              {tab === 'invites' && isStaff ? (
+              {tab === 'mesa' && role && role !== 'player' ? (
+                <StaffDesk key="mesa" role={role} />
+              ) : tab === 'invites' ? (
                 <Stagger key="invites" className="flex flex-col gap-5">
                   <InvitePanel />
-                  <DealerBoard />
                 </Stagger>
               ) : tab === 'record' ? (
                 <Stagger key="record" className="flex flex-col gap-5" delay={60}>
@@ -166,7 +172,7 @@ export function RecordApp() {
 }
 
 /** Cabeçalho do arquivo: título-marca em serifada fina (ref. do Record), código de HUD e o papel do usuário. */
-function Masthead({ recordId, role }: { recordId: string; role: string | null }) {
+function Masthead({ recordId, role, sealed }: { recordId: string; role: string | null; sealed?: boolean }) {
   return (
     <header className="relative animate-dv-fade">
       <div className="flex items-start justify-between gap-3">
@@ -183,7 +189,15 @@ function Masthead({ recordId, role }: { recordId: string; role: string | null })
               className="dv-cut-diag inline-flex h-8 items-center gap-2 bg-[#1c1c1f] px-3 font-mono text-[10.5px] font-medium uppercase tracking-[0.2em] text-white"
               style={{ '--dv-cut': '7px' } as CSSProperties}
             >
-              <span aria-hidden="true" className="size-1.5 rotate-45 bg-dv-amethyst" />
+              {sealed ? (
+                <span aria-hidden="true" className="flex items-center gap-[3px]">
+                  <span className="size-1 rotate-45 bg-[#bab09f]" />
+                  <span className="size-1.5 rotate-45 bg-dv-amethyst" />
+                  <span className="size-1 rotate-45 bg-[#bab09f]" />
+                </span>
+              ) : (
+                <span aria-hidden="true" className="size-1.5 rotate-45 bg-dv-amethyst" />
+              )}
               {role}
             </span>
           )}
@@ -297,6 +311,14 @@ function GroupAccess({ vote, surface }: { vote: DeadlyVote; surface: 'dark' | 'p
       </p>
     )
   }
+  if (vote.entryStatus === 'pendente') {
+    return (
+      <p className="flex items-center gap-2 font-mono text-[10.5px] uppercase tracking-[0.14em] text-in-fg-2">
+        <Lock className="size-3.5 shrink-0" strokeWidth={1.4} aria-hidden="true" />
+        Inscrição em análise · o grupo abre quando o Dealer aceitar
+      </p>
+    )
+  }
   if (!vote.groupUrl) {
     return (
       <div className="flex items-center gap-3 px-3 py-2.5 shadow-[inset_0_0_0_1px_var(--in-line-strong)]">
@@ -341,7 +363,8 @@ function ConvocationPoster({
   const { busy, error, run } = useVoteAction(vote.id)
   const live = vote.status === 'em-progresso'
   const full = vote.maxParticipants !== null && vote.participants >= vote.maxParticipants
-  const canJoin = vote.status === 'convocado' && !vote.joined && !full
+  const refused = vote.entryStatus === 'recusada'
+  const canJoin = vote.status === 'convocado' && !vote.joined && !full && !refused
   const canLeave = vote.status === 'convocado' && vote.joined
   const slots = vote.maxParticipants ? Math.min(vote.maxParticipants, 24) : 0
   const filled = vote.maxParticipants ? Math.round((Math.min(vote.participants, vote.maxParticipants) / vote.maxParticipants) * slots) : 0
@@ -370,7 +393,7 @@ function ConvocationPoster({
               {live ? 'Em sessão' : 'Convocação'}
             </span>
           </h2>
-          {vote.joined && <Stamp text="Inscrito" shape="round" tone="gold" rotate={12} size={70} className="-mr-1 -mt-3 shrink-0" />}
+          {vote.entryStatus === 'aceita' && <Stamp text="Inscrito" shape="round" tone="gold" rotate={12} size={70} className="-mr-1 -mt-3 shrink-0" />}
         </div>
 
         {vote.arc && <p className="mt-4 font-mono text-[10px] uppercase tracking-[0.2em] text-dv-gold">{arcLabel(vote.arc)}</p>}
@@ -408,20 +431,36 @@ function ConvocationPoster({
         <p className="mt-3 font-mono text-[11px] uppercase tracking-[0.14em] text-in-fg-3">
           {new Date(vote.startsAt).toLocaleString('pt-BR', { weekday: 'short', day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })}
         </p>
+        {vote.location && (
+          <p className="mt-1.5 flex items-center gap-1.5 font-sans text-[14px] text-in-fg-2">
+            <MapPin className="size-3.5 shrink-0" strokeWidth={1.4} aria-hidden="true" />
+            {vote.location}
+          </p>
+        )}
       </div>
 
       <div className="relative flex flex-col gap-2.5 border-t border-in-line px-5 pb-5 pt-4">
         {canJoin && (
           <RecButton block size="lg" loading={busy} sfx="confirm" onClick={() => run(onJoin)}>
-            Inscrever-se
+            {vote.admission === 'aprovacao' ? 'Pedir inscrição' : 'Inscrever-se'}
           </RecButton>
         )}
+        {vote.status === 'convocado' && vote.entryStatus === 'pendente' && (
+          <p className="flex items-center gap-2.5 font-body text-[15px] leading-snug text-in-fg-2">
+            <span aria-hidden="true" className="relative grid size-4 shrink-0 place-items-center">
+              <span className="absolute inset-0 animate-ping rounded-full bg-dv-amethyst/30" />
+              <span className="size-2 rotate-45 bg-dv-amethyst" />
+            </span>
+            Inscrição enviada. O Dealer vai confirmar sua vaga.
+          </p>
+        )}
+        {refused && <p className="font-mono text-[10.5px] uppercase tracking-[0.14em] text-in-fg-3">Inscrição recusada pelo Dealer</p>}
         {canLeave && (
           <RecButton block variant="secondary" loading={busy} sfx="click" onClick={() => run(onLeave)}>
-            Cancelar inscrição
+            {vote.entryStatus === 'pendente' ? 'Retirar pedido' : 'Cancelar inscrição'}
           </RecButton>
         )}
-        {vote.status === 'convocado' && full && !vote.joined && (
+        {vote.status === 'convocado' && full && !vote.joined && !refused && (
           <p className="flex items-center gap-2 font-mono text-[10.5px] uppercase tracking-[0.14em] text-in-fg-2">
             <Lock className="size-3.5" strokeWidth={1.4} aria-hidden="true" /> Vagas esgotadas
           </p>
@@ -454,7 +493,7 @@ function VoteDetail({
 }) {
   const { busy, error, run } = useVoteAction(vote.id)
   const full = vote.maxParticipants !== null && vote.participants >= vote.maxParticipants
-  const canJoin = vote.status === 'convocado' && !vote.joined && !full
+  const canJoin = vote.status === 'convocado' && !vote.joined && !full && vote.entryStatus !== 'recusada'
   const canLeave = vote.status === 'convocado' && vote.joined
   const tally = tallyText(vote.survivors, vote.eliminated)
 
@@ -487,7 +526,22 @@ function VoteDetail({
           <dl className="mx-5 mt-5 grid grid-cols-2 gap-x-4 gap-y-3 border-t border-[#0d0d0f]/15 pt-4">
             <PaperField label="Início" value={new Date(vote.startsAt).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' })} />
             <PaperField label="Participantes" value={`${vote.participants}${vote.maxParticipants ? ` / ${vote.maxParticipants}` : ''}`} />
-            <PaperField label="Seu registro" value={vote.outcome ? OUTCOME_LABEL[vote.outcome] : vote.joined ? 'Inscrito' : 'Não inscrito'} danger={vote.outcome === 'eliminado'} />
+            <PaperField
+              label="Seu registro"
+              value={
+                vote.outcome
+                  ? OUTCOME_LABEL[vote.outcome]
+                  : vote.entryStatus === 'pendente'
+                    ? 'Em análise'
+                    : vote.entryStatus === 'recusada'
+                      ? 'Recusada'
+                      : vote.joined
+                        ? 'Inscrito'
+                        : 'Não inscrito'
+              }
+              danger={vote.outcome === 'eliminado'}
+            />
+            {vote.location && <PaperField label="Local" value={vote.location} className="col-span-2" />}
             {vote.host && <PaperField label="Dealer" value={vote.host} />}
             {tally && <PaperField label="Resultado público" value={tally} className="col-span-2" />}
           </dl>
@@ -512,12 +566,12 @@ function VoteDetail({
           <div className="mx-5 mt-4 flex flex-col gap-2.5 border-t border-[#0d0d0f]/20 pb-6 pt-4">
             {canJoin && (
               <RecButton surface="paper" block loading={busy} sfx="confirm" onClick={() => run(onJoin)}>
-                Inscrever-se
+                {vote.admission === 'aprovacao' ? 'Pedir inscrição' : 'Inscrever-se'}
               </RecButton>
             )}
             {canLeave && (
               <RecButton surface="paper" block variant="secondary" loading={busy} sfx="click" onClick={() => run(onLeave)}>
-                Cancelar inscrição
+                {vote.entryStatus === 'pendente' ? 'Retirar pedido' : 'Cancelar inscrição'}
               </RecButton>
             )}
             {vote.status === 'convocado' && full && !vote.joined && <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-[#58585e]">Vagas esgotadas</p>}
