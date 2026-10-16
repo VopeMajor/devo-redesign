@@ -338,7 +338,7 @@ function HomeScreen({
         <PulseCard remaining={remaining} critical={critical} onOpen={() => onOpen('pulso')} />
       </div>
 
-      <section aria-label="Aplicativos" className="relative mt-5">
+      <section aria-label="Aplicativos" className="relative mt-4">
         {/* Véu atrás da grade: as cartas que flutuam na cena não passam atrás dos rótulos (< 15%). */}
         <span aria-hidden="true" className="pointer-events-none absolute -inset-x-4 -bottom-4 -top-7 -z-10 bg-[linear-gradient(180deg,transparent,rgba(12,12,14,0.9)_16%,rgba(12,12,14,0.9)_84%,transparent)]" />
         <div className="animate-dv-fade flex items-center gap-3 px-1 [animation-delay:220ms]">
@@ -352,7 +352,7 @@ function HomeScreen({
         </ul>
       </section>
 
-      <section aria-label="Agora" className="mt-5 flex flex-col gap-2">
+      <section aria-label="Agora" className="mt-3 flex flex-col gap-2">
         <div className="animate-dv-fade flex items-center gap-3 px-1 [animation-delay:360ms]">
           <span className="dv-label text-[10px] text-dv-text-3">Agora</span>
           <span aria-hidden="true" className="h-px flex-1 bg-gradient-to-r from-[rgba(168,156,224,0.55)] via-dv-line-strong to-transparent" />
@@ -388,11 +388,7 @@ function HomeScreen({
         ) : null}
       </section>
 
-      <div className="flex shrink-0 grow flex-col items-center justify-end gap-2 pb-3 pt-5 text-center">
-        <p className="animate-dv-fade dv-label flex items-center gap-2 text-[10px] tracking-[0.3em] text-dv-text-3 [animation-delay:560ms]">
-          Deslize para os sistemas <GlyphArrow className="size-3 text-dv-amethyst-text" />
-        </p>
-      </div>
+      <div aria-hidden="true" className="h-2 shrink-0" />
     </div>
 
     <div
@@ -458,7 +454,7 @@ function useHomePager(count: number) {
 function PagerDots({ pager }: { pager: ReturnType<typeof useHomePager> }) {
   const { page, count, go } = pager
   return (
-    <div className="relative z-10 flex h-9 shrink-0 items-center justify-center gap-1">
+    <div className="relative z-10 -mt-1 flex h-8 shrink-0 items-center justify-center gap-1">
       <button
         type="button"
         aria-label="Tela anterior do início"
@@ -604,7 +600,7 @@ function PulseCard({ remaining, critical, onOpen }: { remaining: number; critica
       aria-label={`Tempo restante ${text}. Abrir o relógio do pulso`}
       className="dv-focus group block w-full text-left transition-transform duration-[120ms] active:scale-[0.985]"
     >
-      <MarbleSlab edge={critical ? 'blood' : 'steel'} cut={16} glow innerClassName="flex min-h-[196px] items-center gap-2 py-5 pl-5 pr-3">
+      <MarbleSlab edge={critical ? 'blood' : 'steel'} cut={16} glow innerClassName="flex min-h-[184px] items-center gap-2 py-4 pl-5 pr-3">
         <FrameCorners tone={critical ? 'blood' : 'gold'} />
         {critical && (
           <span aria-hidden="true" className="dv-cut pointer-events-none absolute -inset-y-5 -left-5 -right-3 overflow-hidden [--dv-cut:15.6px]">
@@ -671,9 +667,11 @@ const SYSTEM_OPEN: Partial<Record<FutureSystemId, { app: AppId; flag: UnlockFlag
 function LockedSystems({ onOpen }: { onOpen: (id: AppId) => void }) {
   const acesso = useAcesso()
   return (
-    <section aria-label="Sistemas" className="mt-5">
+    <section aria-label="Sistemas" className="relative mt-5">
+      {/* véu atrás da grade: as cartas da cena não passam atrás dos nomes */}
+      <span aria-hidden="true" className="pointer-events-none absolute -inset-x-4 -bottom-6 -top-4 -z-10 bg-[linear-gradient(180deg,transparent,rgba(12,12,14,0.86)_12%,rgba(12,12,14,0.86)_88%,transparent)]" />
       <div className="flex items-center gap-3 px-1">
-        <span className="dv-label text-[10px] text-dv-text-3">Sistemas</span>
+        <span className="dv-label text-[10px] text-dv-text-3">Seis sistemas</span>
         <span aria-hidden="true" className="h-px flex-1 bg-gradient-to-r from-[rgba(168,156,224,0.55)] via-dv-line-strong to-transparent" />
         <span className="dv-label text-[10px] text-dv-text-3">Trancado pelo Anfitrião</span>
       </div>
