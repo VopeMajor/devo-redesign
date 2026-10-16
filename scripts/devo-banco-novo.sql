@@ -1569,3 +1569,16 @@ INSERT INTO item_defs (key, kind, name, description, rarity, stackable, meta) VA
    '{"categoria": "efeito", "asset": "devo:efeito/geada-prata", "animado": true, "poco": false, "origem": "semanal", "ordem": 30}')
 ON CONFLICT (key) DO NOTHING;
 
+-- ---------------------------------------------------------------------------------------------
+-- 7. Prévia da nova direção artística (COSMETICOS-REFORMULACAO-dono.md §12): arte pintada em WebP
+--    (scripts/arte/*.py). Fora do Poço até a aprovação do dono.
+-- ---------------------------------------------------------------------------------------------
+INSERT INTO item_defs (key, kind, name, description, rarity, stackable, meta) VALUES
+  ('cosmetico:moldura-asas-crepusculo', 'cosmetico', 'Asas do Crepúsculo', 'Penas negras e prateadas abertas em volta do rosto, cristais carmesins e correntes finas que balançam.', 'lendario', false,
+   '{"categoria": "moldura_avatar", "asset": "devo:moldura/asas-crepusculo", "animado": false, "poco": false, "origem": "evento", "par": "cosmetico:mini-asas-crepusculo", "ordem": 5}'),
+  ('cosmetico:mini-asas-crepusculo', 'cosmetico', 'Asas do Crepúsculo', 'Versão do miniperfil: a asa negra, a prateada e o coração carmesim.', 'lendario', false,
+   '{"categoria": "moldura_mini", "asset": "devo:moldura/asas-crepusculo", "animado": false, "poco": false, "origem": "evento", "par": "cosmetico:moldura-asas-crepusculo", "ordem": 5}'),
+  ('cosmetico:emblema-coracao-condessa', 'cosmetico', 'Coração da Condessa', 'Coração de cristal vermelho num broche de ouro, preso a um laço de seda escura.', 'lendario', false,
+   '{"categoria": "emblema", "asset": "devo:emblema/coracao-condessa", "animado": false, "poco": false, "origem": "evento", "ordem": 5}')
+ON CONFLICT (key) DO NOTHING;
+

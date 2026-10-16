@@ -2082,6 +2082,12 @@ if (want('cosmeticos')) {
     await page.goto(`${BASE}/estilo/cosmeticos`, { waitUntil: 'networkidle' })
     await wait(1500)
     await shot(page, 'cos-00-galeria-topo')
+    await view(page, 'section[aria-label="Prévia da nova direção"]')
+    await wait(800)
+    await shot(page, 'cos-80-previa-asas')
+    await view(page, 'article[aria-label="Prévia: Coração da Condessa"]')
+    await wait(500)
+    await shot(page, 'cos-81-previa-coracao')
     for (const [sel, nome] of [['article[aria-label="Olho do Arcano"]', 'cos-01-galeria-arcano'], ['article[aria-label="Última Badalada"]', 'cos-02-galeria-badalada'], ['section[aria-label="Emblemas"]', 'cos-03-galeria-emblemas'], ['section[aria-label="Balões"]', 'cos-04-galeria-baloes'], ['section[aria-label="Efeitos do nome"]', 'cos-05-galeria-efeitos']]) {
       await view(page, sel)
       await wait(500)
@@ -2154,7 +2160,7 @@ if (want('cosmeticos')) {
       await shot(page, 'cos-22-preview-balao')
     }
     // Volta a moldura original (o roteiro pode rodar de novo).
-    await api(page, '/api/cosmeticos', { action: 'equipar', slot: 'moldura_avatar', key: 'cosmetico:moldura-heranca-marfim' })
+    await api(page, '/api/cosmeticos', { action: 'equipar', slot: 'moldura_avatar', key: 'cosmetico:moldura-asas-crepusculo' })
   })
 
   // Chat da mesa com balões, miniperfis e o Anfitrião; o Owner (Sentinela) aparece como jogador comum.
@@ -2177,6 +2183,12 @@ if (want('cosmeticos')) {
     if (await tryClick(page.getByRole('button', { name: 'Abrir miniperfil de Ísis' }).first())) {
       await wait(1800)
       await shot(page, 'cos-33-miniperfil-jogadora')
+      await page.keyboard.press('Escape')
+      await wait(500)
+    }
+    if (await tryClick(page.getByRole('button', { name: 'Abrir miniperfil de Matheus' }).first())) {
+      await wait(1800)
+      await shot(page, 'cos-35-previa-miniperfil-asas')
       await page.keyboard.press('Escape')
       await wait(500)
     }

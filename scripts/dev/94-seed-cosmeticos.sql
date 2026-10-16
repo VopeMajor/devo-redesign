@@ -67,3 +67,10 @@ INSERT INTO invite_codes (code, role, note, is_test) VALUES
   ('DEVO-COSM-JOG1', 'player',    'teste cosméticos: jogador', true),
   ('DEVO-COSM-JOG2', 'player',    'teste cosméticos: jogador 2', true)
 ON CONFLICT (code) DO NOTHING;
+
+-- Prévia da nova direção: Matheus usa Asas do Crepúsculo (avatar e mini) e o Coração da Condessa.
+SELECT devo_item_grant('00000000-0000-4000-8000-000000000003', k, 1, 'recompensa', NULL, NULL, 'seed:cos:matheus:' || k)
+FROM unnest(ARRAY['cosmetico:moldura-asas-crepusculo', 'cosmetico:mini-asas-crepusculo', 'cosmetico:emblema-coracao-condessa']) AS k;
+UPDATE player_cosmetics SET moldura_avatar = 'cosmetico:moldura-asas-crepusculo', moldura_mini = 'cosmetico:mini-asas-crepusculo',
+       emblema = 'cosmetico:emblema-coracao-condessa'
+ WHERE player_id = '00000000-0000-4000-8000-000000000003';

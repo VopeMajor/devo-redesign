@@ -7,7 +7,7 @@ import type { ItemRarity } from '@/lib/devo/progresso'
 import { cn } from '@/lib/utils'
 import { ConfirmButton, EmptyLine, ErrorLine, Loading, RecSelect, STAFF_KEY, staffGet } from '../system/staff-ui'
 import { RecButton, RecInput, RecLabel, RecTextarea } from '../system/record-ui'
-import { BALOES, EFEITOS, EMBLEMAS, MOLDURAS } from './art'
+import { BALOES, EFEITOS, EMBLEMAS, MOLDURAS, RASTER_EMBLEMAS, RASTER_MOLDURAS } from './art'
 import { BalaoChat, Emblema, FotoMoldurada, classeEfeito } from './cosmetic-art'
 import { cosPost, revalidarCosmeticos } from './use-cosmeticos'
 
@@ -140,9 +140,9 @@ function Thumb({ def }: { def: CosmeticoDef }) {
 }
 
 const ARTES: Record<CosSlot, string[]> = {
-  moldura_avatar: Object.keys(MOLDURAS).map((k) => `devo:moldura/${k}`),
-  moldura_mini: Object.keys(MOLDURAS).map((k) => `devo:moldura/${k}`),
-  emblema: Object.keys(EMBLEMAS).map((k) => `devo:emblema/${k}`),
+  moldura_avatar: [...Object.keys(RASTER_MOLDURAS), ...Object.keys(MOLDURAS)].map((k) => `devo:moldura/${k}`),
+  moldura_mini: [...Object.keys(RASTER_MOLDURAS), ...Object.keys(MOLDURAS)].map((k) => `devo:moldura/${k}`),
+  emblema: [...Object.keys(RASTER_EMBLEMAS), ...Object.keys(EMBLEMAS)].map((k) => `devo:emblema/${k}`),
   balao: Object.keys(BALOES).map((k) => `devo:balao/${k}`),
   efeito: Object.keys(EFEITOS).map((k) => `devo:efeito/${k}`),
 }

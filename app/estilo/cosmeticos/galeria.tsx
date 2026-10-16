@@ -14,6 +14,8 @@ const NOMES: Record<string, string> = {
   'asas-coruja': 'Asas da Coruja',
   'fortuna-rato': 'Fortuna do Rato',
   'ultima-badalada': 'Última Badalada',
+  'asas-crepusculo': 'Asas do Crepúsculo',
+  'coracao-condessa': 'Coração da Condessa',
   'rosa-sangue': 'Rosa de Sangue',
   'coroa-partida': 'Coroa Partida',
   'ampulheta-dourada': 'Ampulheta Dourada',
@@ -64,6 +66,34 @@ export function Galeria() {
         <h1 className="mt-2 font-serif text-[40px] font-light uppercase leading-none tracking-[0.03em]">Cosméticos</h1>
         <p className="mt-2 max-w-xl font-body text-[15px] leading-relaxed text-[#bdbcb8]">Oito molduras em dois formatos, doze emblemas, cinco balões e três efeitos de nome. Desenhados em SVG, por cima da foto, sem tocar na imagem.</p>
       </header>
+
+      <section aria-label="Prévia da nova direção" className="mb-14">
+        <Titulo n="✦" t="Prévia · nova direção" />
+        <p className="mb-5 max-w-xl font-body text-[15px] leading-relaxed text-[#bdbcb8]">Arte pintada (WebP transparente gerado por script): penas desenhadas uma a uma, cristais lapidados, correntes e seda. Para aprovação do dono antes de refazer o catálogo.</p>
+        <article aria-label="Prévia: Asas do Crepúsculo" className="mb-10 flex flex-col gap-4">
+          <h3 className="font-display text-[15px] font-semibold uppercase tracking-[0.08em] text-[#ece5d8]">Asas do Crepúsculo · moldura</h3>
+          <div className="flex justify-center py-6">
+            <FotoMoldurada formato="avatar" src={RET} moldura={def('moldura', 'asas-crepusculo', 'moldura_avatar')} largura={260} />
+          </div>
+          <div className="flex flex-wrap items-end justify-center gap-6 py-4">
+            <FotoMoldurada formato="mini" src={MINI} moldura={def('moldura', 'asas-crepusculo', 'moldura_mini')} largura={150} />
+            <FotoMoldurada formato="mini" src={MINI2} moldura={def('moldura', 'asas-crepusculo', 'moldura_mini')} largura={64} />
+            <FotoMoldurada formato="mini" src={MINI} moldura={def('moldura', 'asas-crepusculo', 'moldura_mini')} largura={48} />
+            <FotoMoldurada formato="mini" src={MINI2} moldura={def('moldura', 'asas-crepusculo', 'moldura_mini')} largura={36} />
+          </div>
+        </article>
+        <article aria-label="Prévia: Coração da Condessa" className="flex flex-col gap-4">
+          <h3 className="font-display text-[15px] font-semibold uppercase tracking-[0.08em] text-[#ece5d8]">Coração da Condessa · emblema</h3>
+          <div className="flex flex-wrap items-center justify-center gap-6">
+            <Emblema def={def('emblema', 'coracao-condessa', 'emblema')} tamanho={180} />
+            <div className="flex flex-col gap-3">
+              <p className="flex items-center gap-1.5 font-body text-[17px]">Lune Arcanjo <Emblema def={def('emblema', 'coracao-condessa', 'emblema')} tamanho={24} /></p>
+              <p className="flex items-center gap-1.5 font-body text-[15px]">Lune Arcanjo <Emblema def={def('emblema', 'coracao-condessa', 'emblema')} tamanho={20} /></p>
+              <p className="flex items-center gap-1.5 bg-[#e7e6e3] px-2 py-1 font-body text-[15px] text-[#0d0d0f]">no papel <Emblema def={def('emblema', 'coracao-condessa', 'emblema')} tamanho={22} /></p>
+            </div>
+          </div>
+        </article>
+      </section>
 
       <section aria-label="Molduras" className="mb-12">
         <Titulo n="I" t="Molduras" />

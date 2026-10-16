@@ -5,7 +5,7 @@ import { UserRound } from 'lucide-react'
 import { type CSSProperties, type ReactNode, useId, useMemo } from 'react'
 import { type CosmeticoDef, SELO_ANFITRIAO, type Visual } from '@/lib/devo/cosmeticos'
 import { cn } from '@/lib/utils'
-import { type Arte, BALOES, EFEITOS, EMBLEMAS, MOLDURAS, parseAsset } from './art'
+import { type Arte, BALOES, EFEITOS, EMBLEMAS, MOLDURAS, type MolduraRaster, parseAsset, RASTER_EMBLEMAS, RASTER_MOLDURAS } from './art'
 import { useAnimarCosmeticos, useCatalogo } from './use-cosmeticos'
 
 /** Injeta uma arte SVG (marcação gerada por nós, nunca do usuário) com ids únicos por instância. */
@@ -32,6 +32,14 @@ export function arteMoldura(def: CosmeticoDef | null | undefined, formato: 'avat
   const a = parseAsset(def.asset)
   if (!a || a.grupo !== 'moldura') return null
   return MOLDURAS[a.id]?.[formato] ?? null
+}
+
+/** Moldura pintada (raster) de um item do catálogo, se houver. */
+export function rasterMoldura(def: CosmeticoDef | null | undefined, formato: 'avatar' | 'mini'): MolduraRaster | null {
+  if (!def) return null
+  const a = parseAsset(def.asset)
+  if (!a || a.grupo !== 'moldura') return null
+  return RASTER_MOLDURAS[a.id]?.[formato] ?? null
 }
 
 const JANELA = { avatar: { x: 10, y: 10, w: 80, h: 80 }, mini: { x: 100 / 6, y: 100 / 6, w: 200 / 3, h: 200 / 3 } }
@@ -68,15 +76,16 @@ export function FotoMoldurada({
   const pref = useAnimarCosmeticos()
   const anim = (animar ?? pref) && !!moldura?.animado
   const arte = arteMoldura(moldura, formato)
-  const url = moldura && !arte && /^(\/|https:)/.test(moldura.asset) ? moldura.asset : null
+  const raster = arte ? null : rasterMoldura(moldura, formato)
+  const url = moldura && !arte && !raster && /^(\/|https:)/.test(moldura.asset) ? moldura.asset : null
   const j = semJanela ? { x: 0, y: 0, w: 100, h: 100 } : JANELA[formato]
   const ratio = formato === 'avatar' ? 4 / 3 : 1
   const style: CSSProperties = largura ? { width: largura, height: largura * ratio } : { width: '100%', aspectRatio: formato === 'avatar' ? '3 / 4' : '1 / 1' }
   return (
     <span className={cn('relative inline-block shrink-0 align-middle', className)} style={style}>
       <span
-        className={cn('absolute overflow-hidden bg-dv-ink-2', !arte && !url && !semJanela && 'shadow-[0_0_0_1px_#0c0c0e,0_0_0_2px_rgba(186,176,159,0.55)]')}
-        style={{ left: `${j.x}%`, top: `${j.y}%`, width: `${j.w}%`, height: `${j.h}%` }}
+        className={cn('absolute overflow-hidden bg-dv-ink-2', !arte && !url && !raster && !semJanela && 'shadow-[0_0_0_1px_#0c0c0e,0_0_0_2px_rgba(186,176,159,0.55)]')}
+        style={{ left: `${j.x}%`, top: `${j.y}%`, width: `${j.w}%`, height: `${j.h}%`, clipPath: raster && raster.janela !== 'retangulo' ? 'ellipse(50% 50% at 50% 50%)' : undefined }}
       >
         {src ? (
           // biome-ignore lint/performance/noImgElement: avatar privado servido pela API
@@ -90,6 +99,17 @@ export function FotoMoldurada({
         )}
       </span>
       {arte && <ArteSvg arte={arte} animar={anim} className="pointer-events-none absolute inset-0 size-full" />}
+      {raster && (
+        // biome-ignore lint/performance/noImgElement: arte pintada (WebP transparente) por cima da foto
+        <img
+          src={raster.src}
+          alt=""
+          aria-hidden="true"
+          decoding="async"
+          className="pointer-events-none absolute max-w-none select-none"
+          style={{ left: `${-raster.sangria * 100}%`, top: `${-raster.sangria * 100}%`, width: `${100 + 2 * raster.sangria * 100}%`, height: `${100 + 2 * raster.sangria * 100}%` }}
+        />
+      )}
       {url && (
         // biome-ignore lint/performance/noImgElement: asset enviado pelo Owner (SVG/PNG/WebP com transparência)
         <img src={url} alt="" aria-hidden="true" className="pointer-events-none absolute inset-0 size-full object-contain" loading="lazy" />
@@ -105,6 +125,10 @@ export function Emblema({ def, tamanho = 18, className, animar }: { def: Cosmeti
   const a = parseAsset(def.asset)
   const arte = a?.grupo === 'emblema' ? EMBLEMAS[a.id] : null
   const anim = (animar ?? pref) && def.animado
+  const pintado = a?.grupo === 'emblema' ? RASTER_EMBLEMAS[a.id] : null
+  if (pintado)
+    // biome-ignore lint/performance/noImgElement: emblema pintado; versão própria abaixo de 28 px
+    return <img src={tamanho <= 28 ? pintado.mini : pintado.src} alt="" aria-hidden="true" decoding="async" className={cn('inline-block shrink-0 align-[-0.25em] object-contain', className)} style={{ width: tamanho * 1.15, height: tamanho * 1.15 }} />
   if (arte) return <ArteSvg arte={arte} animar={anim} className={cn('inline-block shrink-0 align-[-0.2em]', className)} style={{ width: tamanho, height: tamanho }} />
   if (/^(\/|https:)/.test(def.asset))
     // biome-ignore lint/performance/noImgElement: asset enviado pelo Owner
