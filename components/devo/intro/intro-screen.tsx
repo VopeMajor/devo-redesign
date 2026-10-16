@@ -74,8 +74,22 @@ function UnlockSeal({ name, className }: { name: string; className?: string }) {
   )
 }
 
-export function IntroScreen({ onFinish, playerName }: { onFinish: () => void; playerName: string | null }) {
-  const [index, setIndex] = useState(0)
+export function IntroScreen({
+  onFinish,
+  playerName,
+  startIndex = 0,
+  onProgress,
+}: {
+  onFinish: () => void
+  playerName: string | null
+  /** Retomar de onde o jogador parou (Continuar). */
+  startIndex?: number
+  onProgress?: (index: number) => void
+}) {
+  const [index, setIndex] = useState(() => Math.min(Math.max(0, startIndex), INTRO_SCRIPT.length - 1))
+  useEffect(() => {
+    onProgress?.(index)
+  }, [index]) // eslint-disable-line react-hooks/exhaustive-deps
   const script = INTRO_SCRIPT[index]
   const line = { ...script, text: withName(script.text, playerName) }
   const npc = getNpc(line.speaker)

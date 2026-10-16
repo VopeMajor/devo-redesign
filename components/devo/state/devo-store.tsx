@@ -7,7 +7,7 @@ import { makeOwned, starterInventory } from '@/lib/devo/cards'
 import { EMPTY_PROFILE, type Appearance, type PlayerProfile } from '@/lib/devo/appearances'
 import { PULSE_START_HOURS } from '@/lib/devo/pulse'
 import { ROOM_LAYOUT, ROOM_RULES } from '@/lib/devo/trade-rooms'
-import type { SaveData } from '@/lib/devo/save'
+import type { SaveData, StoryProgress } from '@/lib/devo/save'
 import type {
   AppId,
   ChatMessage,
@@ -49,6 +49,8 @@ export type DevoState = {
   owlMet: boolean
   /** O Javali já apresentou a Sala de Jogos. */
   javaliMet: boolean
+  /** Onde parou na encenação inicial; null depois de chegar ao sistema. */
+  story: StoryProgress | null
 }
 
 type Action =
@@ -60,6 +62,7 @@ type Action =
   | { type: 'ARCADE_REVEAL_DONE' }
   | { type: 'SET_PHASE'; phase: Phase }
   | { type: 'START_SESSION' }
+  | { type: 'STORY'; story: StoryProgress | null }
   | { type: 'SET_PLAYER'; name: string }
   | { type: 'SET_CHARACTER'; name: string }
   | { type: 'SET_PROFILE'; patch: Partial<PlayerProfile> }
@@ -129,6 +132,7 @@ function freshState(phase: Phase = 'landing', playerName: string | null = null, 
     arcadeReveal: false,
     owlMet: false,
     javaliMet: false,
+    story: null,
   }
 }
 
@@ -161,7 +165,9 @@ function reducer(state: DevoState, action: Action): DevoState {
         unread: {},
       }
     case 'START_SESSION':
-      return { ...freshState('intro', state.playerName, state.characterName), hasSession: true }
+      return { ...freshState('intro', state.playerName, state.characterName), hasSession: true, story: { part: 'prologue', index: 0 } }
+    case 'STORY':
+      return { ...state, story: action.story }
     case 'SET_PLAYER':
       return { ...state, playerName: action.name }
     case 'SET_CHARACTER':
@@ -178,7 +184,7 @@ function reducer(state: DevoState, action: Action): DevoState {
       }
     }
     case 'MARK_WELCOMED':
-      return { ...state, welcomed: true }
+      return { ...state, welcomed: true, story: null }
     case 'OWL_MET':
       return state.owlMet ? state : { ...state, owlMet: true }
     case 'JAVALI_MET':
@@ -353,6 +359,7 @@ function hydrate(playerName: string | null, save: SaveData | null, characterName
     arcadeUnlocked: !!save.arcadeUnlocked,
     owlMet: !!save.owlMet,
     javaliMet: !!save.javaliMet,
+    story: save.welcomed ? null : (save.story ?? null),
     seenApps: (save.seenApps ?? []).filter((a): a is AppId => STARTER_APPS.includes(a as AppId)),
     threads: base.threads.map((t) => {
       const s = savedThreads.get(t.id)
@@ -377,6 +384,7 @@ function toSave(state: DevoState): SaveData {
     javaliMet: state.javaliMet,
     characterName: state.characterName ?? undefined,
     profile: state.profile,
+    story: state.story ?? undefined,
     threads: state.threads.map((th) => ({ id: th.id, messages: th.messages, unread: th.unread, answered: th.answered })),
   }
 }
@@ -395,13 +403,13 @@ function useAutosave(state: DevoState) {
   const latest = useRef(state)
   latest.current = state
   const enabled = state.hasSession && !!state.playerName
-  const { welcomed, timerEndsAt, inventory, notifications, threads, tradesCompleted, trade, arcadeUnlocked, seenApps, owlMet, javaliMet, characterName, profile } = state
+  const { welcomed, timerEndsAt, inventory, notifications, threads, tradesCompleted, trade, arcadeUnlocked, seenApps, owlMet, javaliMet, characterName, profile, story } = state
 
   useEffect(() => {
     if (!enabled) return
     const id = window.setTimeout(() => postSave(latest.current), 1200)
     return () => window.clearTimeout(id)
-  }, [enabled, welcomed, timerEndsAt, inventory, notifications, threads, tradesCompleted, trade?.myCard, arcadeUnlocked, seenApps, owlMet, javaliMet, characterName, profile])
+  }, [enabled, welcomed, timerEndsAt, inventory, notifications, threads, tradesCompleted, trade?.myCard, arcadeUnlocked, seenApps, owlMet, javaliMet, characterName, profile, story?.part, story?.index])
 
   useEffect(() => {
     if (!enabled) return

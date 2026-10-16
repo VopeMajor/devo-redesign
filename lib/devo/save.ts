@@ -8,6 +8,15 @@ export type SavedThread = {
   answered: string[]
 }
 
+/** Onde o jogador parou na encenação inicial (prólogo → tutorial). Some quando ele chega ao sistema. */
+export type StoryProgress = {
+  part: 'prologue' | 'tutorial'
+  /** Índice da fala/quadro em que parou. */
+  index: number
+  /** Respostas já dadas no prólogo (nome, idade, gênero...) para os textos seguintes. */
+  vars?: Record<string, string>
+}
+
 export type SaveData = {
   v: 1
   welcomed: boolean
@@ -24,6 +33,14 @@ export type SaveData = {
   characterName?: string
   /** Perfil do prólogo: idade, gênero, segunda aparência e trocas restantes. */
   profile?: PlayerProfile
+  story?: StoryProgress
+}
+
+function story(v: unknown): StoryProgress | undefined {
+  if (!isObj(v) || (v.part !== 'prologue' && v.part !== 'tutorial')) return undefined
+  const vars: Record<string, string> = {}
+  if (isObj(v.vars)) for (const [k, x] of Object.entries(v.vars).slice(0, 12)) if (typeof x === 'string') vars[k.slice(0, 20)] = x.slice(0, 80)
+  return { part: v.part, index: Math.max(0, Math.min(999, Math.floor(num(v.index)))), vars }
 }
 
 export const MAX_SAVE_BYTES = 60_000
@@ -86,6 +103,7 @@ export function sanitizeSave(raw: unknown): SaveData | null {
     javaliMet: raw.javaliMet === true,
     characterName: str(raw.characterName, 40).trim() || undefined,
     profile: raw.profile === undefined ? undefined : sanitizeProfile(raw.profile),
+    story: story(raw.story),
     seenApps: Array.isArray(raw.seenApps) ? raw.seenApps.filter((x): x is string => typeof x === 'string').slice(0, 12).map((x) => x.slice(0, 20)) : [],
   }
 }

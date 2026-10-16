@@ -279,13 +279,26 @@ function PaperBox({ text, done, live = false }: { text: string; done: boolean; l
   )
 }
 
-export function PrologueScreen({ playerName, onFinish: onDone }: { playerName: string | null; onFinish: () => void }) {
+export function PrologueScreen({
+  playerName,
+  onFinish: onDone,
+  startIndex = 0,
+  startVars,
+  onProgress,
+}: {
+  playerName: string | null
+  onFinish: () => void
+  /** Retomar de onde o jogador parou (Continuar). */
+  startIndex?: number
+  startVars?: Record<string, string>
+  onProgress?: (index: number, vars: Record<string, string>) => void
+}) {
   const onFinish = useCallback(() => {
     setPrologueMusic(null)
     playMusic()
     onDone()
   }, [onDone])
-  const [index, setIndex] = useState(0)
+  const [index, setIndex] = useState(() => Math.min(Math.max(0, startIndex), PROLOGUE.length - 1))
   const lastStage = useRef<StageId | null>(null)
   const lastAct = useRef<Act | null>(null)
 
@@ -298,7 +311,11 @@ export function PrologueScreen({ playerName, onFinish: onDone }: { playerName: s
   /** Qual opção gerou as respostas atuais (para achar o id da fala dublada). */
   const [replyFrom, setReplyFrom] = useState<{ option: number; total: number } | null>(null)
   const [explored, setExplored] = useState<string[]>([])
-  const [profile, setProfile] = useState<Profile>({})
+  const [profile, setProfile] = useState<Profile>(() => ({ ...(startVars as Profile | undefined) }))
+  // Grava o ponto da encenação a cada quadro (o autosave manda ao servidor).
+  useEffect(() => {
+    onProgress?.(index, Object.fromEntries(Object.entries(profile).filter((e): e is [string, string] => typeof e[1] === 'string')))
+  }, [index, profile]) // eslint-disable-line react-hooks/exhaustive-deps
   const [mood, setMood] = useState<MelissaMood>('neutral')
 
   const beat = PROLOGUE[index]
