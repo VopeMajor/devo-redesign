@@ -488,7 +488,7 @@ function CardDetail({
         </button>
       </header>
 
-      <div className="devo-scroll relative z-10 flex-1 overflow-y-auto">
+      <div className="devo-scroll relative z-10 min-h-0 flex-1 overflow-y-auto overscroll-contain">
         <div className="mx-auto flex w-full max-w-3xl flex-col items-center gap-5 px-4 pb-8 pt-2 @2xl:flex-row @2xl:items-start @2xl:justify-center @2xl:gap-10 @2xl:pt-8">
           {/* palco */}
           <div className="flex w-full shrink-0 flex-col items-center gap-4 @2xl:w-auto">
@@ -536,7 +536,7 @@ function CardDetail({
                   aria-pressed={side === s}
                   onClick={() => flipTo(s)}
                   className={cn(
-                    'dv-focus flex min-h-11 min-w-[108px] items-center justify-center gap-2 px-4 font-sans text-[11px] font-medium uppercase tracking-[0.16em] transition-colors duration-200',
+                    'dv-focus flex min-h-11 min-w-[108px] items-center justify-center gap-2 px-4 font-sans text-[11px] font-medium uppercase tracking-[0.16em]',
                     side === s ? 'bg-in-fg text-in-bg' : 'text-in-fg-2 hover:text-in-fg',
                   )}
                 >
