@@ -670,7 +670,7 @@ function LockedSystems({ onOpen }: { onOpen: (id: AppId) => void }) {
       <div className="flex items-center gap-3 px-1">
         <span className="dv-label text-[10px] text-dv-text-3">Seis sistemas</span>
         <span aria-hidden="true" className="h-px flex-1 bg-gradient-to-r from-[rgba(168,156,224,0.55)] via-dv-line-strong to-transparent" />
-        {!algum && <span className="dv-label text-[10px] text-dv-text-3">{eu ? 'Vença o Deadly Vote tutorial' : 'Trancado pelo Anfitrião'}</span>}
+        {!algum && !eu && <span className="dv-label text-[10px] text-dv-text-3">Trancado pelo Anfitrião</span>}
       </div>
       <ul className="mt-4 grid grid-cols-3 gap-x-2 gap-y-6">
         {SISTEMAS.map((f) => {
