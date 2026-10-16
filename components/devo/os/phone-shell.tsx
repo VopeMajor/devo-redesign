@@ -118,6 +118,20 @@ export function PhoneShell({ current, onOpen, onHome }: { current: AppId | null;
       {/* Uma cena só: viva na home; com um app aberto fica no quadro estático (o app pode ter a sua). */}
       <SceneBackdrop preset="cathedral" intensity={0.75} dim={current && !entering ? 0.55 : 0.3} staticOnly={!!current && !entering} />
       {/* Crítico: a home NÃO vira vermelha. Fica no mármore; a vinheta rubi pulsa nas bordas. */}
+      {/*
+        Véu de ametista (Direção 3 §9: a home não pode ficar "preto no branco"): noite violeta como luz,
+        não como superfície — halo alto atrás do cartão do tempo e um sopro no pé, sobre o mármore.
+      */}
+      {!critical && (
+        <div
+          aria-hidden="true"
+          className={cn('pointer-events-none absolute inset-0 z-[1] transition-opacity duration-500', homeHidden ? 'opacity-0' : 'opacity-100')}
+          style={{
+            background:
+              'radial-gradient(90% 38% at 70% 22%, rgba(138,124,200,0.2), transparent 70%), radial-gradient(120% 30% at 50% 104%, rgba(110,96,180,0.18), transparent 70%), linear-gradient(180deg, rgba(60,50,110,0.08), transparent 40%, rgba(60,50,110,0.1))',
+          }}
+        />
+      )}
       {critical && <CriticalVignette />}
 
       <StatusBar now={now} remaining={remaining} critical={critical} unread={totalUnread} expanded={shade} onToggle={() => setShade((s) => !s)} />
@@ -309,7 +323,7 @@ function HomeScreen({
         <span aria-hidden="true" className="pointer-events-none absolute -inset-x-4 -bottom-4 -top-7 -z-10 bg-[linear-gradient(180deg,transparent,rgba(12,12,14,0.9)_16%,rgba(12,12,14,0.9)_84%,transparent)]" />
         <div className="animate-dv-fade flex items-center gap-3 px-1 [animation-delay:220ms]">
           <span className="dv-label text-[10px] text-dv-text-3">Aplicativos</span>
-          <span aria-hidden="true" className="h-px flex-1 bg-gradient-to-r from-dv-line-strong to-transparent" />
+          <span aria-hidden="true" className="h-px flex-1 bg-gradient-to-r from-[rgba(168,156,224,0.55)] via-dv-line-strong to-transparent" />
         </div>
         <ul className="mt-3 grid grid-cols-4 gap-x-2 gap-y-4">
           {apps.map((id, i) => (
@@ -321,7 +335,7 @@ function HomeScreen({
       <section aria-label="Agora" className="mt-5 flex flex-col gap-2">
         <div className="animate-dv-fade flex items-center gap-3 px-1 [animation-delay:360ms]">
           <span className="dv-label text-[10px] text-dv-text-3">Agora</span>
-          <span aria-hidden="true" className="h-px flex-1 bg-gradient-to-r from-dv-line-strong to-transparent" />
+          <span aria-hidden="true" className="h-px flex-1 bg-gradient-to-r from-[rgba(168,156,224,0.55)] via-dv-line-strong to-transparent" />
         </div>
         <div className="animate-dv-rise [animation-delay:420ms]">
           <SummonsCard onOpen={() => onOpen('record')} />
@@ -395,7 +409,7 @@ function HomeStrip({
   label?: string
 }) {
   const line = tone === 'alert' ? 'bg-dv-blood/60' : tone === 'gold' ? 'bg-dv-gold/50' : 'bg-dv-line-strong'
-  const bar = tone === 'alert' ? 'bg-dv-blood' : tone === 'gold' ? 'bg-dv-gold' : 'bg-dv-text-2'
+  const bar = tone === 'alert' ? 'bg-dv-blood' : tone === 'gold' ? 'bg-dv-amethyst shadow-[0_0_8px_rgba(138,124,200,0.8)]' : 'bg-dv-amethyst/70'
   const kick = tone === 'alert' ? 'text-dv-blood-text' : tone === 'gold' ? 'text-dv-gold' : 'text-dv-text-2'
   return (
     <button
@@ -507,6 +521,7 @@ function PulseCard({ remaining, critical, onOpen }: { remaining: number; critica
           </span>
         </span>
         <span aria-hidden="true" className="relative grid size-[136px] shrink-0 place-items-center">
+          {!critical && <span className="absolute -inset-3 rounded-full bg-[radial-gradient(closest-side,rgba(138,124,200,0.38),rgba(138,124,200,0.1)_60%,transparent)]" />}
           <PulseDial remaining={remaining} timerEndsAt={state.timerEndsAt} critical={critical} variant="compact" className="size-full" />
           <span className="dv-label absolute -bottom-3 left-1/2 flex -translate-x-1/2 items-center gap-1 whitespace-nowrap text-[10px] text-dv-text-3 transition-colors group-hover:text-dv-text-2">
             Abrir <GlyphArrow className="size-3" />
@@ -543,7 +558,7 @@ function LockedSystems({ onOpen }: { onOpen: (id: AppId) => void }) {
     <section aria-label="Sistemas" className="mt-5">
       <div className="animate-dv-fade flex items-center gap-3 px-1 [animation-delay:520ms]">
         <span className="dv-label text-[10px] text-dv-text-3">Sistemas</span>
-        <span aria-hidden="true" className="h-px flex-1 bg-gradient-to-r from-dv-line-strong to-transparent" />
+        <span aria-hidden="true" className="h-px flex-1 bg-gradient-to-r from-[rgba(168,156,224,0.55)] via-dv-line-strong to-transparent" />
         <span className="dv-label text-[10px] text-dv-text-3">Trancado pelo Anfitrião</span>
       </div>
       <ul className="animate-dv-fade mt-3 grid grid-cols-6 gap-1 [animation-delay:560ms]">
@@ -559,7 +574,7 @@ function LockedSystems({ onOpen }: { onOpen: (id: AppId) => void }) {
                   {...(livre ? { metal: true } : {})}
                   className={cn('relative size-9', livre ? 'text-dv-text drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] group-active:scale-[0.96]' : 'text-dv-text-3 opacity-60')}
                 />
-                {!livre && <GlyphKeyhole aria-hidden="true" className="absolute -bottom-0.5 -right-0.5 size-3.5 rounded-full bg-dv-ink p-[1px] text-dv-gold" />}
+                {!livre && <GlyphKeyhole aria-hidden="true" className="absolute -bottom-0.5 -right-0.5 size-3.5 rounded-full bg-dv-ink p-[1px] text-dv-amethyst-text" />}
               </span>
               <span aria-hidden="true" className={cn('dv-label line-clamp-2 text-center text-[10px] leading-[1.25] tracking-[0.06em]', livre ? 'text-dv-text' : 'text-dv-text-3')}>
                 {SHORT_NAME[f.id]}
@@ -611,7 +626,9 @@ function PhoneIcon({ id, onOpen, unread, delay = 0 }: { id: AppId; onOpen: (id: 
         aria-label={app.name}
       >
         <span className="relative transition-transform duration-200 group-hover:-translate-y-0.5">
-          <AppGlyphTile app={app} />
+          {/* halo de ametista sob o emblema (luz, não ladrilho) */}
+          <span aria-hidden="true" className="pointer-events-none absolute -inset-2 rounded-full bg-[radial-gradient(closest-side,rgba(138,124,200,0.3),transparent)] opacity-80 transition-opacity group-hover:opacity-100" />
+          <AppGlyphTile app={app} className="relative" />
           <Badge count={unread} />
         </span>
         <span aria-hidden="true" className="line-clamp-2 min-h-[2.4em] px-0.5 text-center font-display text-[12px] font-semibold leading-[1.2] tracking-[0.04em] text-dv-text [text-shadow:0_1px_6px_rgba(0,0,0,0.9)]">

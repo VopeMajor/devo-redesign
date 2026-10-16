@@ -142,7 +142,7 @@ export function PulseDial({
       {/* anel armilar girando devagar */}
       <g mask={`url(#m-${uid})`}>
       <g className="origin-center animate-dv-spin-slow [transform-box:view-box]">
-        <ellipse cx={C} cy={C} rx={hero ? 100 : 96} ry={hero ? 34 : 36} transform={`rotate(-24 ${C} ${C})`} stroke="var(--dv-gold)" strokeWidth="0.8" opacity="0.45" />
+        <ellipse cx={C} cy={C} rx={hero ? 100 : 96} ry={hero ? 34 : 36} transform={`rotate(-24 ${C} ${C})`} stroke={critical ? 'var(--dv-gold)' : 'var(--dv-amethyst-text)'} strokeWidth="0.8" opacity="0.55" />
         <circle cx={C + (hero ? 91 : 88)} cy={C - 40} r="2.6" fill="var(--dv-gold-bright)" opacity="0.8" />
       </g>
       </g>
@@ -156,7 +156,7 @@ export function PulseDial({
         cx={C}
         cy={C}
         r={R_ARC}
-        stroke={critical ? 'rgba(213,31,43,0.28)' : 'rgba(236,229,216,0.12)'}
+        stroke={critical ? 'rgba(213,31,43,0.28)' : 'rgba(138,124,200,0.26)'}
         strokeWidth={hero ? 12 : 13}
         strokeDasharray={arcCirc}
         strokeDashoffset={arcCirc * (1 - ratio)}
