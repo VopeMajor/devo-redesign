@@ -1,3 +1,4 @@
+import type { Expressao } from './npcs'
 export type StageId =
   | 'dark'
   | 'rumor'
@@ -17,7 +18,10 @@ export type StageId =
   | 'mine'
   | 'phone'
 
-export type MelissaMood = 'neutral' | 'soft' | 'serious'
+/** Expressão da Melissa (vocabulário do elenco em lib/devo/npcs.ts). */
+export type MelissaMood = Extract<Expressao, 'confiante' | 'convite' | 'sorriso' | 'apresenta' | 'preocupado' | 'triste' | 'pensativo'>
+/** Expressões que o prólogo usa (só estas ficam montadas no palco). */
+export const MELISSA_MOODS: MelissaMood[] = ['confiante', 'convite', 'sorriso', 'apresenta', 'preocupado', 'triste', 'pensativo']
 /** `system` = o próprio DEVO intervindo na cena (caixa de sistema, voz sintética). */
 export type Speaker = 'narrator' | 'voice' | 'melissa' | 'system'
 
@@ -37,12 +41,12 @@ const n = (stage: StageId, text: string, extra: Partial<Extract<Beat, { kind: 'l
   ...extra,
 })
 const voice = (stage: StageId, text: string): Beat => ({ kind: 'line', stage, line: { who: 'voice', text } })
-const mel = (text: string, mood: MelissaMood = 'neutral', stage: StageId = 'mine'): Beat => ({
+const mel = (text: string, mood: MelissaMood = 'confiante', stage: StageId = 'mine'): Beat => ({
   kind: 'line',
   stage,
   line: { who: 'melissa', text, mood },
 })
-const m = (text: string, mood: MelissaMood = 'neutral'): Line => ({ who: 'melissa', text, mood })
+const m = (text: string, mood: MelissaMood = 'confiante'): Line => ({ who: 'melissa', text, mood })
 const sys = (text: string, stage: StageId = 'mine'): Beat => ({ kind: 'line', stage, line: { who: 'system', text } })
 
 export const FACE_OPTIONS = ['Sério e marcado', 'Gentil e cansado', 'Pálido e comum', 'Difícil de lembrar']
@@ -105,31 +109,31 @@ export const PROLOGUE: Beat[] = [
 
   n('mine', 'A paisagem se abre para um tipo de caverna ou mina desconhecida. Há tochas acesas pelas paredes e um cheiro forte de carvão no ar.'),
   n('mine', 'Alguém parece se aproximar.'),
-  mel('Olá, Record. Eu estive te esperando. Parece que você é o último da lista. Qual o seu nome?'),
+  mel('Olá, Record. Eu estive te esperando. Parece que você é o último da lista. Qual o seu nome?', 'convite'),
   { kind: 'input', stage: 'mine', field: 'name' },
-  mel('É um nome complicado. E qual a sua idade?', 'soft'),
+  mel('É um nome complicado. E qual a sua idade?', 'sorriso'),
   { kind: 'input', stage: 'mine', field: 'age' },
-  mel('Certo… E me diga seu gênero.'),
+  mel('Certo… E me diga seu gênero.', 'pensativo'),
   { kind: 'input', stage: 'mine', field: 'gender' },
-  mel('Huuummm. Então, por fim: como é o seu rosto?', 'soft'),
+  mel('Huuummm. Então, por fim: como é o seu rosto?', 'sorriso'),
   // Intervenção do sistema sobre a "segunda aparência" (texto do dono, DIRECAO-2 §5, revisão leve).
   sys('Confuso sobre essa parte? Não se preocupe! No DEVO existem diferentes formas de jogar, e por isso é preciso escolher uma segunda aparência, real ou 2D. Embora seja obrigatório escolher uma aparência aqui, você não será obrigado a participar de jogos em que se sinta desconfortável com o uso do segundo avatar.'),
   sys('Não sabe qual aparência escolher? Basta tocar em Seleção automática! Temos uma lista com diversas aparências preparadas. E, se mudar de ideia mais tarde, será possível trocar de aparência por afinidade dentro do jogo, mas apenas uma vez.'),
   sys('Lembrete: sua aparência não precisa ser parecida com a original, mas deve ter idade aproximada e ser do mesmo sexo. Apenas aparências humanas são permitidas.'),
   { kind: 'input', stage: 'mine', field: 'face' },
-  mel('Curioso. Bem curioso. Tudo certo!', 'soft'),
-  mel('Então, {nome}, você precisa se apressar. Seu jogo já vai começar.', 'serious'),
+  mel('Curioso. Bem curioso. Tudo certo!', 'sorriso'),
+  mel('Então, {nome}, você precisa se apressar. Seu jogo já vai começar.', 'preocupado'),
   {
     kind: 'choice',
     stage: 'mine',
     mode: 'explore',
     options: [
-      { label: 'Jogo?', reply: [m('O Deadly Vote. É um jogo de morte, em que pessoas lutam pela própria vida para conseguir mais tempo. Você deve ter aceitado esse acordo que permite a eternidade quando estava mais perto da morte.', 'serious')] },
-      { label: 'O jogo…', reply: [m('Pode me chamar de Melissa. É um prazer te conhecer.', 'soft')] },
+      { label: 'Jogo?', reply: [m('O Deadly Vote. É um jogo de morte, em que pessoas lutam pela própria vida para conseguir mais tempo. Você deve ter aceitado esse acordo que permite a eternidade quando estava mais perto da morte.', 'preocupado')] },
+      { label: 'O jogo…', reply: [m('Pode me chamar de Melissa. É um prazer te conhecer.', 'sorriso')] },
       {
         label: 'Record, você disse isso antes. O que é?',
         reply: [
-          m('Eu não disse…', 'serious'),
+          m('Eu não disse…', 'preocupado'),
           m('Um Record é um indivíduo com a capacidade de possuir um Card Shuffler. Um Card Shuffler, por sua vez, é o objeto que você adquiriu quando firmou aquele acordo. Ele está com você agora.'),
         ],
       },
@@ -142,25 +146,25 @@ export const PROLOGUE: Beat[] = [
     mode: 'one',
     options: ['O acordo. Eu me lembro agora.', 'Que acordo? Eu não me lembro disso.', 'Então isso é real…'].map((label) => ({
       label,
-      reply: [m('Entendo que você possa estar se sentindo estranho agora, {nome}, mas você deve começar o tutorial o quanto antes. As consequências por perder o primeiro dia não são pequenas. Precisa se apressar.', 'serious')],
+      reply: [m('Entendo que você possa estar se sentindo estranho agora, {nome}, mas você deve começar o tutorial o quanto antes. As consequências por perder o primeiro dia não são pequenas. Precisa se apressar.', 'preocupado')],
     })),
   },
   n('mine', 'Uma notificação estranha. O bolso da sua roupa vibra.', { sfx: 'notify' }),
   n('phone', 'Ao conferir, você descobre seu celular. Na interface, há um novo aplicativo suspeito.'),
   n('phone', 'Seu nome é Devo.', { sfx: 'reveal' }),
-  mel('Acesso liberado. Você agora pode usar os mais variados sistemas. Alguns desses são ajustes criados pela Companhia, mas não precisa se preocupar. Nós apenas queremos cuidar de você.', 'soft'),
+  mel('Acesso liberado. Você agora pode usar os mais variados sistemas. Alguns desses são ajustes criados pela Companhia, mas não precisa se preocupar. Nós apenas queremos cuidar de você.', 'sorriso'),
   {
     kind: 'choice',
     stage: 'mine',
     mode: 'explore',
     options: [
       { label: 'Sistemas?', reply: [m('Isso vai ficar mais claro com o tempo.')] },
-      { label: 'Ajustes?', reply: [m('Algumas coisas do sistema são… perigosas e confusas. Ajudamos a contornar isso.', 'serious')] },
-      { label: 'Companhia?', reply: [m('Pense nisso como uma Força Militar. Somos uma organização mundialmente reconhecida, ainda que as pessoas normais não saibam sobre nós. Se existe algum tipo de lei nesse lugar, essa lei vem da Companhia.', 'serious')] },
+      { label: 'Ajustes?', reply: [m('Algumas coisas do sistema são… perigosas e confusas. Ajudamos a contornar isso.', 'preocupado')] },
+      { label: 'Companhia?', reply: [m('Pense nisso como uma Força Militar. Somos uma organização mundialmente reconhecida, ainda que as pessoas normais não saibam sobre nós. Se existe algum tipo de lei nesse lugar, essa lei vem da Companhia.', 'confiante')] },
     ],
   },
   n('mine', 'Melissa parece retirar alguma coisa do bolso. O som de papéis é engraçado.'),
-  mel('Aqui, fique com isso. É um investimento da Companhia.', 'soft'),
+  mel('Aqui, fique com isso. É um investimento da Companhia.', 'apresenta'),
   n('mine', 'Você adquiriu: Cartas Iniciais.', { sfx: 'card' }),
   mel('Além das cartas iniciais, há muitas outras coisas como essa, até mais raras, por aí. A Companhia costuma investir em bons talentos, então se destaque para conseguir mais.'),
   {
@@ -168,7 +172,7 @@ export const PROLOGUE: Beat[] = [
     stage: 'mine',
     mode: 'one',
     options: [
-      { label: 'Devolver', reply: [m('Não quer mesmo? Tudo bem.', 'serious')] },
+      { label: 'Devolver', reply: [m('Não quer mesmo? Tudo bem.', 'triste')] },
       {
         label: 'Obrigado. Eu vou usar bem… Mas como?',
         reply: [m('O Tutorial vai começar. Cheque seu aplicativo Devo no celular. Há uma parte dedicada chamada “Deadly Vote”, onde você poderá encontrar o acesso gerado para a primeira vez. Quando completar, volte aqui. Muitas novas funções serão desbloqueadas depois disso.')],
@@ -180,9 +184,9 @@ export const PROLOGUE: Beat[] = [
     stage: 'mine',
     mode: 'one',
     options: [
-      { label: 'Você sabe me dizer mais sobre mim?', reply: [m('A perda de memória é um problema frequente para aqueles que se tornaram Records. Gradualmente, essas coisas costumam voltar. Você até sabe seu nome… então já é um começo. Acredite.', 'soft')] },
-      { label: 'Eu vou tentar.', reply: [m('Tentar e vencer, assim espero.', 'soft')] },
-      { label: 'Ir embora', reply: [m('Até logo, {nome}. Nós da Companhia de Despertados te desejamos boa sorte. E boas-vindas também.', 'soft')] },
+      { label: 'Você sabe me dizer mais sobre mim?', reply: [m('A perda de memória é um problema frequente para aqueles que se tornaram Records. Gradualmente, essas coisas costumam voltar. Você até sabe seu nome… então já é um começo. Acredite.', 'sorriso')] },
+      { label: 'Eu vou tentar.', reply: [m('Tentar e vencer, assim espero.', 'sorriso')] },
+      { label: 'Ir embora', reply: [m('Até logo, {nome}. Nós da Companhia de Despertados te desejamos boa sorte. E boas-vindas também.', 'sorriso')] },
     ],
   },
 ]

@@ -5,33 +5,34 @@ import { Badge, FrameCorners, GlyphArrow, GlyphDiamond, GlyphHourglass, Kicker, 
 import { GAMES, PATENTES } from '@/lib/devo/arcade/games'
 import { playSfx } from '@/lib/devo/audio'
 import { cn } from '@/lib/utils'
-import { npcPortrait } from '@/lib/devo/npcs'
+import { npcPortrait, type Expressao } from '@/lib/devo/npcs'
 import { formatDuration, useNow } from '../hooks'
 import { useDevo } from '../state/devo-store'
 import { MARBLE_INK } from './sala-marble'
 
-/** Pose do Javali (sprites transparentes do mapa de retratos em lib/devo/npcs.ts). */
-type Frame = 'neutral' | 'grin' | 'wink' | 'tap'
+/** Expressão do Javali (sprites OC do mapa de retratos em lib/devo/npcs.ts). */
+type Frame = Expressao
 type Visual = 'tempo' | 'jogos' | 'tutorial' | 'agenda' | 'ranking' | 'apostas' | 'chat'
 
-// Poses do Javali debruçado na mesa de mármore. As antigas cenas (quadros largos com fundo próprio)
-// deixavam faixas borradas no palco; os sprites transparentes ocupam o quadro inteiro.
-const FRAMES: Frame[] = ['neutral', 'grin', 'wink', 'tap']
 
 const SCRIPT: { text: string; frame: Frame; visual?: Visual }[] = [
-  { text: 'Ora, ora! Um rosto novo na minha mesa. Entre, entre, querido. Bem-vindo à Sala de Jogos!', frame: 'neutral' },
-  { text: 'Eu sou o Javali, anfitrião desta casa. Ninguém joga aqui sem antes ouvir as regras da casa. E as regras da casa sou eu.', frame: 'grin' },
-  { text: 'Primeiro, o mais importante: aqui ninguém aposta dinheiro. Aposta-se Tempo. O seu relógio, lá em cima, é tudo o que você tem.', frame: 'tap', visual: 'tempo' },
-  { text: 'Ganhe e ele cresce. Perca... bem, digamos que ele encolhe. Quando zera, a festa acaba para você. Simples, não?', frame: 'wink' },
-  { text: 'Na Mesa ficam os jogos. Cada um com seu adversário de carne e osso.', frame: 'neutral', visual: 'jogos' },
-  { text: 'Inseguro? Não se acanhe. Todo jogo tem um Tutorial. Treine à vontade, que lá a casa não cobra nada.', frame: 'wink', visual: 'tutorial' },
-  { text: 'Na Agenda você encontra as partidas marcadas e os torneios. Inscreva-se a tempo, porque eu não espero ninguém.', frame: 'wink', visual: 'agenda' },
-  { text: 'Cada vitória rende pontos. Pontos sobem sua Patente e sua posição no Ranking.', frame: 'tap', visual: 'ranking' },
-  { text: 'Toda semana o Ranking zera. Os melhores colocados levam prêmios antes do reset. Fique de olho no relógio do Reset.', frame: 'neutral' },
-  { text: 'Prefere assistir? Nas Apostas você aposta Tempo em quem vai vencer as partidas dos outros. Lucro sem suar a camisa.', frame: 'tap', visual: 'apostas' },
-  { text: 'E no Chat você conversa com os outros Records da sala. Provoque, negocie, faça amigos. Ou inimigos. Eu adoro os dois.', frame: 'wink', visual: 'chat' },
-  { text: 'Isso é tudo, querido. Puxe uma cadeira e lembre-se: a casa sempre agradece.', frame: 'grin' },
+  { text: 'Ora, ora! Um rosto novo na minha mesa. Entre, entre, querido. Bem-vindo à Sala de Jogos!', frame: 'convite' },
+  { text: 'Eu sou o Javali, anfitrião desta casa. Ninguém joga aqui sem antes ouvir as regras da casa. E as regras da casa sou eu.', frame: 'trama' },
+  { text: 'Primeiro, o mais importante: aqui ninguém aposta dinheiro. Aposta-se Tempo. O seu relógio, lá em cima, é tudo o que você tem.', frame: 'explica', visual: 'tempo' },
+  { text: 'Ganhe e ele cresce. Perca... bem, digamos que ele encolhe. Quando zera, a festa acaba para você. Simples, não?', frame: 'sombrio' },
+  { text: 'Na Mesa ficam os jogos. Cada um com seu adversário de carne e osso.', frame: 'neutro', visual: 'jogos' },
+  { text: 'Inseguro? Não se acanhe. Todo jogo tem um Tutorial. Treine à vontade, que lá a casa não cobra nada.', frame: 'riso', visual: 'tutorial' },
+  { text: 'Na Agenda você encontra as partidas marcadas e os torneios. Inscreva-se a tempo, porque eu não espero ninguém.', frame: 'desdem', visual: 'agenda' },
+  { text: 'Cada vitória rende pontos. Pontos sobem sua Patente e sua posição no Ranking.', frame: 'explica', visual: 'ranking' },
+  { text: 'Toda semana o Ranking zera. Os melhores colocados levam prêmios antes do reset. Fique de olho no relógio do Reset.', frame: 'pensativo' },
+  { text: 'Prefere assistir? Nas Apostas você aposta Tempo em quem vai vencer as partidas dos outros. Lucro sem suar a camisa.', frame: 'trama', visual: 'apostas' },
+  { text: 'E no Chat você conversa com os outros Records da sala. Provoque, negocie, faça amigos. Ou inimigos. Eu adoro os dois.', frame: 'riso', visual: 'chat' },
+  { text: 'Isso é tudo, querido. Puxe uma cadeira e lembre-se: a casa sempre agradece.', frame: 'neutro' },
 ]
+
+// Expressões usadas no roteiro: só estas ficam montadas (trocam por opacidade). O Javali fica de busto
+// sobre a mesa de mármore; a base do sprite some atrás do tampo.
+const FRAMES: Frame[] = Array.from(new Set(SCRIPT.map((s) => s.frame)))
 
 const SECTIONS: { visual: Visual; label: string }[] = [
   { visual: 'jogos', label: 'Mesa' },

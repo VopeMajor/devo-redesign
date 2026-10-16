@@ -5,7 +5,7 @@ import { playSfx } from '@/lib/devo/audio'
 import { INTRO_SCRIPT } from '@/lib/devo/intro-script'
 import { loadVoiceManifest, playRatoLaugh } from '@/lib/devo/voice'
 import { LAST_RATO_LINE } from '@/lib/devo/voice-lines'
-import { getNpc, portraitFrameProps, type Expression } from '@/lib/devo/npcs'
+import { ELENCO_INFO, getNpc, portraitFrameProps, resolveExpressao, type Expression, type PortraitNpc } from '@/lib/devo/npcs'
 import { withName } from '@/lib/devo/player-name'
 import { cn } from '@/lib/utils'
 import Image from 'next/image'
@@ -21,12 +21,20 @@ const CHAR_MS = 24
 /** Tom do retrato por falante: todos em aço champanhe (paleta do mármore; ametista só como acento). */
 const TONE: Record<string, 'gold' | 'cobalt'> = { rato: 'gold', herdeiro: 'gold' }
 
-/** Retrato do falante no PortraitFrame do kit; todas as expressões ficam montadas e trocam por opacidade. */
+/** Expressões que o roteiro pede de cada falante: só estas ficam montadas (as 12 de cada NPC pesariam à toa). */
+const SCRIPT_EXPRS: Record<string, Expression[]> = {}
+for (const l of INTRO_SCRIPT) {
+  const e = resolveExpressao(l.speaker, l.expression)
+  const list = (SCRIPT_EXPRS[l.speaker] ??= [])
+  if (!list.includes(e)) list.push(e)
+}
+
+/** Retrato do falante no PortraitFrame do kit; as expressões do roteiro ficam montadas e trocam por opacidade. */
 function Portrait({ speaker, expression, className }: { speaker: string; expression: Expression; className?: string }) {
-  const npc = getNpc(speaker)
-  const alt = `${npc.name}, ${npc.title}`
-  const exprs = npc.expressions.length ? npc.expressions : (['neutral'] as Expression[])
-  const target = exprs.includes(expression) ? expression : 'neutral'
+  const info = ELENCO_INFO[speaker as PortraitNpc]
+  const alt = info ? `${info.name}, ${info.title}` : speaker
+  const exprs = SCRIPT_EXPRS[speaker] ?? [resolveExpressao(speaker)]
+  const target = resolveExpressao(speaker, expression)
   return (
     <div className={cn('relative', className)}>
       {exprs.map((expr) => {

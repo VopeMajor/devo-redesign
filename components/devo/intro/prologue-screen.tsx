@@ -304,7 +304,7 @@ export function PrologueScreen({ playerName, onFinish: onDone }: { playerName: s
   const [replyFrom, setReplyFrom] = useState<{ option: number; total: number } | null>(null)
   const [explored, setExplored] = useState<string[]>([])
   const [profile, setProfile] = useState<Profile>({})
-  const [mood, setMood] = useState<MelissaMood>('neutral')
+  const [mood, setMood] = useState<MelissaMood>('convite')
 
   const beat = PROLOGUE[index]
   const name = profile.name ?? playerName ?? 'Record'

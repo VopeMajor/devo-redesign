@@ -26,36 +26,36 @@ const CHAPTERS: Chapter[] = ['Apresentação', 'Raridades', 'Segredos', 'Funçõ
 const line = (chapter: Chapter, text: string, face: CorujaExpression, visual?: Visual): Step => ({ kind: 'line', text, visual, face, chapter })
 
 const SCRIPT: Step[] = [
-  line('Apresentação', 'Um Record, hm? Você não é nada mal. Até que gosto. Que rosto interessante.', 'warai'),
-  line('Apresentação', 'Eu me chamo Coruja, mas pode me chamar como bem quiser.', 'warai2'),
-  line('Apresentação', 'Estas são as Cartas Devo. Você já deve ter ouvido falar delas, não é?', 'majime', 'cards'),
-  line('Raridades', `As Cartas Devo são separadas por diferentes tipos de raridade: ${RARITIES.map((r) => RARITY_META[r].plural).join(', ').replace(/, ([^,]*)$/, ' e $1')}.`, 'majime', 'rarities'),
-  line('Raridades', 'Essas últimas sendo mais… raras. Repetitivo, não?', 'komaru', 'rarities'),
-  line('Raridades', 'Por sorte, todas também estão separadas por cores. Você pode saber a raridade de uma apenas notando esse detalhe.', 'warai', 'rarities'),
-  line('Raridades', 'Vamos ver se você prestou atenção.', 'warai2', 'rarities'),
+  line('Apresentação', 'Um Record, hm? Você não é nada mal. Até que gosto. Que rosto interessante.', 'sorriso'),
+  line('Apresentação', 'Eu me chamo Coruja, mas pode me chamar como bem quiser.', 'riso'),
+  line('Apresentação', 'Estas são as Cartas Devo. Você já deve ter ouvido falar delas, não é?', 'neutro', 'cards'),
+  line('Raridades', `As Cartas Devo são separadas por diferentes tipos de raridade: ${RARITIES.map((r) => RARITY_META[r].plural).join(', ').replace(/, ([^,]*)$/, ' e $1')}.`, 'neutro', 'rarities'),
+  line('Raridades', 'Essas últimas sendo mais… raras. Repetitivo, não?', 'preocupado', 'rarities'),
+  line('Raridades', 'Por sorte, todas também estão separadas por cores. Você pode saber a raridade de uma apenas notando esse detalhe.', 'sorriso', 'rarities'),
+  line('Raridades', 'Vamos ver se você prestou atenção.', 'malicia', 'rarities'),
   { kind: 'quiz', chapter: 'Raridades' },
-  line('Segredos', 'Ah, é verdade…', 'odoroki'),
-  line('Segredos', 'Ainda há outras duas raridades.', 'majime'),
-  line('Segredos', 'Geralmente eu mantenho em segredo, mas eu gostei de você.', 'warai2'),
-  line('Segredos', 'Cartas Únicas e Promocionais. Essas são as mais difíceis de se encontrar. Você pode nunca ter a chance de ver uma na vida, não importa quanto se esforce.', 'majime', 'secret'),
-  line('Segredos', 'Jogos comuns não costumam oferecer cartas de tal patamar. Para elas, a régua é muito mais alta.', 'fuman', 'secret'),
+  line('Segredos', 'Ah, é verdade…', 'surpreso'),
+  line('Segredos', 'Ainda há outras duas raridades.', 'neutro'),
+  line('Segredos', 'Geralmente eu mantenho em segredo, mas eu gostei de você.', 'piscadela'),
+  line('Segredos', 'Cartas Únicas e Promocionais. Essas são as mais difíceis de se encontrar. Você pode nunca ter a chance de ver uma na vida, não importa quanto se esforce.', 'neutro', 'secret'),
+  line('Segredos', 'Jogos comuns não costumam oferecer cartas de tal patamar. Para elas, a régua é muito mais alta.', 'desdem', 'secret'),
   { kind: 'choice', chapter: 'Segredos' },
-  line('Funções', 'Além da raridade atribuída, existem outras formas de distribuição detalhadas no sistema. Algumas cartas são feitas para suporte, outras para ataques.', 'majime', 'roles'),
-  line('Funções', 'Há até mesmo aquelas que parecem ser completamente inúteis, mas isso é pura questão de perspectiva.', 'warai', 'roles'),
-  line('Coleções', 'A Coleção Arcana também é um fator importante para uma Carta.', 'majime', 'collections'),
-  line('Coleções', `Diferentes tipos de Carta ocupam diferentes Coleções Arcanas, como ${getCollections().slice(0, 3).map((c) => c.name).join(', ').replace(/, ([^,]*)$/, ' e $1')}.`, 'warai', 'collections'),
-  line('Coleções', 'Toda Carta contém um número que representa sua Ordem na Coleção. O outro, mais contido, é o universal de série: seu lugar no que chamamos de Compêndio.', 'majime', 'numbers'),
-  line('Coleções', 'Isso pode representar formas úteis ou até um pouco estranhas de se usar uma carta em conexão com outra, como combinações, apoio ou até descarte.', 'komaru', 'collections'),
-  line('Coleções', 'Por conta disso, muitos Records buscam reunir o máximo possível de Cartas de uma mesma Coleção Arcana.', 'majime', 'collections'),
-  line('Coleções', 'Há também outro motivo… ainda que, no momento, eu não possa te dizer qual.', 'fuman'),
-  line('Coleções', 'À medida que você for evoluindo, novas possibilidades se abrirão diante dos seus olhos. E eu espero que você os tenha bem abertos quando esse momento chegar, meu querido Record.', 'warai2'),
+  line('Funções', 'Além da raridade atribuída, existem outras formas de distribuição detalhadas no sistema. Algumas cartas são feitas para suporte, outras para ataques.', 'neutro', 'roles'),
+  line('Funções', 'Há até mesmo aquelas que parecem ser completamente inúteis, mas isso é pura questão de perspectiva.', 'sorriso', 'roles'),
+  line('Coleções', 'A Coleção Arcana também é um fator importante para uma Carta.', 'neutro', 'collections'),
+  line('Coleções', `Diferentes tipos de Carta ocupam diferentes Coleções Arcanas, como ${getCollections().slice(0, 3).map((c) => c.name).join(', ').replace(/, ([^,]*)$/, ' e $1')}.`, 'sorriso', 'collections'),
+  line('Coleções', 'Toda Carta contém um número que representa sua Ordem na Coleção. O outro, mais contido, é o universal de série: seu lugar no que chamamos de Compêndio.', 'neutro', 'numbers'),
+  line('Coleções', 'Isso pode representar formas úteis ou até um pouco estranhas de se usar uma carta em conexão com outra, como combinações, apoio ou até descarte.', 'preocupado', 'collections'),
+  line('Coleções', 'Por conta disso, muitos Records buscam reunir o máximo possível de Cartas de uma mesma Coleção Arcana.', 'neutro', 'collections'),
+  line('Coleções', 'Há também outro motivo… ainda que, no momento, eu não possa te dizer qual.', 'desdem'),
+  line('Coleções', 'À medida que você for evoluindo, novas possibilidades se abrirão diante dos seus olhos. E eu espero que você os tenha bem abertos quando esse momento chegar, meu querido Record.', 'malicia'),
   { kind: 'system', text: 'A Coruja desaparece sem se despedir adequadamente.', chapter: 'Coleções' },
 ]
 
 const QUESTIONS: { id: string; prompt: string; reply: string; face: CorujaExpression }[] = [
-  { id: 'quem', prompt: 'Quem é você?', reply: 'Já se esqueceu? Eu sou Coruja.', face: 'warai' },
-  { id: 'unicas', prompt: 'Como posso obter cartas Únicas ou Promocionais?', reply: 'Esse é um conhecimento que não te convém agora.', face: 'fuman' },
-  { id: 'sair', prompt: 'Não existe mesmo uma forma de sair desse lugar?', reply: 'Quem sabe…?', face: 'warai2' },
+  { id: 'quem', prompt: 'Quem é você?', reply: 'Já se esqueceu? Eu sou Coruja.', face: 'sorriso' },
+  { id: 'unicas', prompt: 'Como posso obter cartas Únicas ou Promocionais?', reply: 'Esse é um conhecimento que não te convém agora.', face: 'desdem' },
+  { id: 'sair', prompt: 'Não existe mesmo uma forma de sair desse lugar?', reply: 'Quem sabe…?', face: 'malicia' },
 ]
 
 // Nomes, cores e ordem vêm de RARITY_META (lib/devo/cards.ts); aqui só as falas da Coruja.
@@ -114,14 +114,14 @@ export function CorujaIntro() {
     step.kind === 'line'
       ? step.face
       : step.kind === 'choice'
-        ? (reply?.face ?? 'majime')
+        ? (reply?.face ?? 'neutro')
         : step.kind === 'quiz'
           ? quiz
             ? quiz.correct
-              ? 'warai2'
-              : 'komaru'
-            : 'majime'
-          : 'majime'
+              ? 'riso'
+              : 'preocupado'
+            : 'neutro'
+          : 'neutro'
 
   const spoken =
     step.kind === 'line'

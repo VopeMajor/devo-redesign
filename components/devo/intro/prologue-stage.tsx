@@ -2,7 +2,7 @@
 
 import Image from 'next/image'
 import { useEffect, useRef, type CSSProperties, type ReactNode } from 'react'
-import type { MelissaMood, StageId } from '@/lib/devo/prologue-script'
+import { MELISSA_MOODS, type MelissaMood, type StageId } from '@/lib/devo/prologue-script'
 import { portraitFrameProps } from '@/lib/devo/npcs'
 import { cn } from '@/lib/utils'
 import { PortraitFrame } from '../kit/portrait'
@@ -441,18 +441,19 @@ export function PrologueStage({
               melissa === 'approach' ? 'opacity-100' : 'opacity-0',
             )}
           >
+            {/* mesmo enquadramento do PortraitFrame (object-cover no topo), para a silhueta casar com o retrato */}
             <Image
-              src={portraitFrameProps('melissa', 'neutral')?.src ?? '/images/npc/melissa-neutral.png'}
+              src={portraitFrameProps('melissa', 'convite')?.src ?? '/images/npc/melissa/convite.webp'}
               alt=""
               fill
               sizes="320px"
-              className="object-contain object-bottom"
+              className="object-cover object-top"
               style={{ filter: `brightness(0) ${RIM_GOLD}` }}
             />
           </div>
           {/* uma moldura por expressão (mapa em lib/devo/npcs.ts), trocadas por opacidade */}
           <div className="relative">
-            {(['neutral', 'soft', 'serious'] as MelissaMood[]).map((m) => {
+            {MELISSA_MOODS.map((m) => {
               const on = m === mood
               return (
                 <div key={m} className={cn('transition-opacity duration-500', on ? 'relative' : 'absolute inset-0', on && melissa !== 'approach' ? 'opacity-100' : 'opacity-0')}>
