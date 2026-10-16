@@ -1825,6 +1825,207 @@ if (want('poco')) {
   await db?.end().catch(() => {})
 }
 
+// ── Salão das Máscaras (sistema novo, DIRECAO-3 §2) ────────────────────────────────────────
+// Fosca (DEVO-SALA-0002) continua trancada; Velada (DEVO-SALA-0001) recebe a flag pelo banco. O estado aberto/fechado
+// é forçado pelo banco (salao.calendario.forcar, como o Owner faria) e os lotes do seed passam para a próxima edição
+// enquanto o Salão está fechado (para não serem liquidados) e voltam à edição corrente quando ele abre.
+if (want('salao')) {
+  let db = null
+  try {
+    const pg = (await import('pg')).default
+    if (process.env.DATABASE_URL) db = new pg.Pool({ connectionString: process.env.DATABASE_URL })
+  } catch {}
+  const sql = async (text, params) => (db ? (await db.query(text, params)).rows : [])
+  const cal = (await sql("SELECT value FROM devo_config WHERE key = 'salao.calendario'").catch(() => []))[0]?.value
+  const edicao = async () =>
+    (await sql(
+      `SELECT floor(extract(epoch FROM now() - (value->>'ancora')::timestamptz) / ((value->>'intervalo_dias')::numeric * 86400))::int AS n
+         FROM devo_config WHERE key = 'salao.calendario'`,
+    ).catch(() => []))[0]?.n ?? 0
+  const SEED_LOTES = ['5a1a0001-0000-4000-8000-000000000001', '5a1a0001-0000-4000-8000-000000000002', '5a1a0001-0000-4000-8000-000000000003']
+  const estado = async (forcar) => {
+    if (!cal) return
+    await sql("UPDATE devo_config SET value = $1 WHERE key = 'salao.calendario'", [JSON.stringify({ ...cal, forcar })]).catch((e) => manifest.errors.push({ step: 'salao-config', error: String(e).slice(0, 200) }))
+    const n = await edicao()
+    await sql("UPDATE salao_lotes SET edicao = $2 WHERE id = ANY($1) AND status = 'aprovado'", [SEED_LOTES, forcar === 'fechado' ? n + 1 : n]).catch(() => {})
+  }
+  const abrirSalao = async (page, name = 'Salão das Máscaras') => {
+    await enterOS(page)
+    const b = page.getByRole('button', { name, exact: true }).first()
+    await b.waitFor({ state: 'visible', timeout: 15000 })
+    await b.scrollIntoViewIfNeeded().catch(() => {})
+    await tryClick(b, 8000)
+    await wait(2800)
+  }
+  const aba = async (page, nome) => {
+    await page.getByRole('tablist', { name: 'Seções do Salão' }).first().scrollIntoViewIfNeeded().catch(() => {})
+    await tryClick(page.getByRole('tab', { name: new RegExp(`^${nome}`) }).first())
+    await wait(1100)
+    await page
+      .getByRole('tablist', { name: 'Seções do Salão' })
+      .first()
+      .evaluate((el) => el.scrollIntoView({ block: 'start' }))
+      .catch(() => {})
+    await wait(400)
+  }
+
+  await estado('fechado')
+
+  await step('salao-trancado', async () => {
+    const { ctx, page } = await account('Fosca', 'DEVO-SALA-0002', VET_CARDS)
+    await enterOS(page)
+    await page.getByRole('region', { name: 'Sistemas' }).first().scrollIntoViewIfNeeded().catch(() => {})
+    await wait(600)
+    await shot(page, 'salao-00-home-trancado')
+    await abrirSalao(page, 'Salão das Máscaras: trancado')
+    await shot(page, 'salao-01-trancado')
+    await ctx.close()
+  })
+
+  const { ctx, page } = await account('Velada', 'DEVO-SALA-0001', VET_CARDS)
+  await sql(
+    "INSERT INTO player_unlocks (player_id, flag, source) SELECT id, 'salao_mascaras', 'owner' FROM players WHERE lower(name) = 'velada' ON CONFLICT DO NOTHING",
+  ).catch((e) => manifest.errors.push({ step: 'salao-flag', error: String(e).slice(0, 300) }))
+
+  await step('salao-herdeiro', async () => {
+    await abrirSalao(page)
+    await wait(800)
+    await shot(page, 'salao-02-herdeiro-inicio')
+    const vistos = new Set()
+    const marcar = async (re, nome) => {
+      if (vistos.has(nome) || !(await page.getByText(re).count())) return
+      vistos.add(nome)
+      await tryClick(page.getByRole('button', { name: 'Mostrar fala completa' }).first(), 800)
+      await wait(900)
+      await shot(page, nome)
+    }
+    for (let i = 0; i < 60; i++) {
+      if (!(await page.locator('main[aria-label="Salão das Máscaras: apresentação"]').count())) break
+      await marcar(/Este é o/, 'salao-03-herdeiro-salao')
+      await marcar(/aquele número enorme/, 'salao-04-herdeiro-contador')
+      await marcar(/aba chamada/, 'salao-05-herdeiro-bandeja')
+      await marcar(/o único maestro sou eu/, 'salao-06-herdeiro-fim')
+      await tryClick(page.getByRole('button', { name: /^(Próxima fala|Mostrar fala completa)$/ }).first(), 1500)
+      await wait(220)
+    }
+    await wait(1600)
+    await shot(page, 'salao-07-fechado-contador')
+    await aba(page, 'Leilões')
+    await shot(page, 'salao-08-fechado-proxima-edicao')
+  })
+
+  await estado('aberto')
+  await step('salao-aberto', async () => {
+    await abrirSalao(page)
+    await shot(page, 'salao-09-aberto')
+    await aba(page, 'Leilões')
+    await shot(page, 'salao-10-leilao-lotes')
+    await tryClick(page.getByRole('button', { name: 'Dar lance no lote 3' }).first())
+    await wait(1000)
+    await shot(page, 'salao-11-lance-folha')
+    await tryClick(btn(page, 'Aumentar 10 minutos', true))
+    await wait(300)
+    await tryClick(btn(page, 'Confirmar lance', true))
+    await wait(1800)
+    await page.getByRole('region', { name: /Lote 3:/ }).first().scrollIntoViewIfNeeded().catch(() => {})
+    await wait(500)
+    await shot(page, 'salao-12-leilao-voce-lidera')
+  })
+
+  await step('salao-mercado', async () => {
+    await aba(page, 'Mercado')
+    await shot(page, 'salao-13-mercado')
+    await tryClick(btn(page, 'Vender carta', true))
+    await wait(900)
+    await shot(page, 'salao-14-mercado-vender')
+    await page.keyboard.press('Escape')
+    await wait(600)
+  })
+
+  await step('salao-anuncios', async () => {
+    await aba(page, 'Anúncios')
+    await shot(page, 'salao-15-anuncios')
+    await tryClick(btn(page, 'Anunciar', true))
+    await wait(900)
+    await shot(page, 'salao-16-anuncio-novo')
+    await page.keyboard.press('Escape')
+    await wait(600)
+  })
+
+  await step('salao-bandeja', async () => {
+    await aba(page, 'Bandeja')
+    await shot(page, 'salao-17-bandeja-aviso')
+    await tryClick(btn(page, 'Enviar pelo Shuffler', true))
+    await wait(900)
+    await shot(page, 'salao-18-bandeja-escolher')
+    await tryClick(page.getByRole('button', { name: 'Escolher Ampulheta Invertida' }).first())
+    await wait(700)
+    await page.locator('#salao-bandeja-valor').first().scrollIntoViewIfNeeded().catch(() => {})
+    await shot(page, 'salao-19-bandeja-carta')
+    await tryClick(page.getByRole('dialog').getByRole('button', { name: 'Enviar à Bandeja', exact: true }).first())
+    await wait(1800)
+    await shot(page, 'salao-20-bandeja-enviado')
+    await page.keyboard.press('Escape')
+    await wait(900)
+    await page.getByRole('region', { name: 'Seus itens na Bandeja' }).first().scrollIntoViewIfNeeded().catch(() => {})
+    await wait(500)
+    await shot(page, 'salao-21-bandeja-em-avaliacao')
+  })
+
+  await step('salao-calendario', async () => {
+    await page.evaluate(() => document.querySelector('.devo-scroll')?.scrollTo({ top: 0 })).catch(() => {})
+    await tryClick(btn(page, 'Calendário Devo', true))
+    await wait(1100)
+    await shot(page, 'salao-22-calendario')
+  })
+
+  await step('salao-record-shuffler', async () => {
+    await page.keyboard.press('Escape')
+    await openApp(page, 'Record')
+    const b = page.getByRole('button', { name: 'Enviar à Bandeja', exact: true }).first()
+    await b.scrollIntoViewIfNeeded().catch(() => {})
+    await wait(700)
+    await shot(page, 'salao-23-record-shuffler')
+  })
+  await ctx.close()
+
+  await step('salao-mesa', async () => {
+    const o = await account('Veterano', 'DEVO-TEST-ADM1', VET_CARDS)
+    await openApp(o.page, 'Record')
+    await tryClick(o.page.getByRole('tab', { name: /Mesa/i }).first())
+    await wait(2000)
+    await o.page.locator('nav[aria-label="Seções da mesa"]').first().evaluate((el) => el.scrollIntoView({ block: 'start' })).catch(() => {})
+    await tryClick(desk(o.page, 'Salão'))
+    await wait(1800)
+    await shot(o.page, 'salao-24-mesa-fila')
+    await o.page.getByRole('region', { name: 'Bandeja em avaliação' }).first().scrollIntoViewIfNeeded().catch(() => {})
+    await wait(400)
+    await shot(o.page, 'salao-25-mesa-avaliacao')
+    await tryClick(o.page.getByRole('button', { name: 'Aprovar', exact: true }).first())
+    await wait(1600)
+    await shot(o.page, 'salao-26-mesa-aprovado')
+
+    await abrirSalao(o.page)
+    await shot(o.page, 'salao-27-owner-pular')
+    if (await tryClick(btn(o.page, 'Pular apresentação', true))) await wait(1600)
+    await tryClick(btn(o.page, 'Calendário Devo', true))
+    await wait(1100)
+    await o.page.getByRole('region', { name: 'Calendário do Owner' }).first().scrollIntoViewIfNeeded().catch(() => {})
+    await wait(500)
+    await shot(o.page, 'salao-28-owner-calendario')
+    await o.page.keyboard.press('Escape')
+    await wait(500)
+
+    await o.page.route('**/api/salao', (r) => r.fulfill({ status: 500, contentType: 'application/json', body: '{"ok":false,"error":"O Salão não respondeu. Tente de novo."}' }))
+    await abrirSalao(o.page)
+    await shot(o.page, 'salao-29-erro')
+    await o.ctx.close()
+  })
+
+  await estado(null)
+  await sql("UPDATE devo_config SET value = $1 WHERE key = 'salao.calendario'", [JSON.stringify(cal)]).catch(() => {})
+  await db?.end().catch(() => {})
+
 
 // ── Cosméticos: coleção (arte), inventário, pré-visualização, perfil, chat, ranking, admin, Owner oculto ──
 if (want('cosmeticos')) {

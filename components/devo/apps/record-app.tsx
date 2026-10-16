@@ -30,6 +30,7 @@ import { cn } from '@/lib/utils'
 import { formatDuration, useNow } from '../hooks'
 import { useOsNav } from '../os/os-nav'
 import { DeckPanel } from '../shared/deck-panel'
+import { EnviarBandejaAcao } from '../salao/salao-enviar'
 import { callName, useDevo } from '../state/devo-store'
 import { usePlayerText } from '../state/player-text'
 import { playerText } from '@/lib/devo/player-name'
@@ -160,6 +161,7 @@ export function RecordApp() {
                     onViewAll={() => nav.open('cartas')}
                     onAcquire={() => nav.open('trocas')}
                     onSelect={() => nav.open('cartas')}
+                    shufflerAction={<EnviarBandejaAcao />}
                   />
                   <RecordPanel chamfer pad="md">
                     <DeadlyVoteHistory

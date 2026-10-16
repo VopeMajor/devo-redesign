@@ -1,6 +1,6 @@
 -- Cosméticos (texto do dono "Sistema de Cosméticos" §1–§14; DIRECAO-3 §5). Idempotente.
 -- Depende da Fundação (item_defs, player_items, item_ledger, devo_config, admin_log, staff_authorizations).
--- Contrato: docs/redesign/FUNDACAO.md §11.
+-- Contrato: docs/redesign/FUNDACAO.md §12.
 
 -- ---------------------------------------------------------------------------------------------
 -- 1. Temporários (futuro): posse com validade. NULL = permanente (padrão de hoje).

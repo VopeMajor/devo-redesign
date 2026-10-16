@@ -32,7 +32,7 @@ import type { ItemRarity } from './progresso'
 import { proposeRewardIn } from './recompensas-server'
 
 /**
- * Cosméticos no servidor (contrato: docs/redesign/FUNDACAO.md §11).
+ * Cosméticos no servidor (contrato: docs/redesign/FUNDACAO.md §12).
  * Posse = inventário genérico (player_items, kind 'cosmetico'); equipados = player_cosmetics.
  * Regras críticas: jogador só equipa o que possui (e não expirou); Owner equipa qualquer item
  * (`can(ator, 'cosmetico.equipar_qualquer')`); payload público (`Visual`) nunca leva cargo de Owner.

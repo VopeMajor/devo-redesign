@@ -1,7 +1,7 @@
 'use client'
 
 import { Plus } from 'lucide-react'
-import { type CSSProperties, useEffect, useRef, useState, type PointerEvent } from 'react'
+import { type CSSProperties, type ReactNode, useEffect, useRef, useState, type PointerEvent } from 'react'
 import { PanelLink, RecordPanel, RecordTitle, SigilStar, toRoman } from '@/components/devo/kit'
 import { playSfx } from '@/lib/devo/audio'
 import { getCard, RARITY_META } from '@/lib/devo/cards'
@@ -304,6 +304,8 @@ type DeckPanelProps = {
   onViewAll?: () => void
   onAcquire?: () => void
   onSelect?: (cardId: string) => void
+  /** Ação extra sob o Shuffler (ex.: "Enviar à Bandeja" do Salão das Máscaras). */
+  shufflerAction?: ReactNode
   className?: string
 }
 
@@ -311,7 +313,7 @@ type DeckPanelProps = {
  * Cartas DEVO + Card Shuffler (ref. do Record): painel negro com as cartas mais repetidas e a
  * contagem "12 / 20", e o mecanismo num painel de porcelana ao lado (embaixo, no celular).
  */
-export function DeckPanel({ inventory, shufflerSynced, limit = 4, onViewAll, onAcquire, onSelect, className }: DeckPanelProps) {
+export function DeckPanel({ inventory, shufflerSynced, limit = 4, onViewAll, onAcquire, onSelect, shufflerAction, className }: DeckPanelProps) {
   const stacks = stackInventory(inventory).slice(0, limit)
   const status = shufflerStatus(shufflerSynced)
 
@@ -354,6 +356,7 @@ export function DeckPanel({ inventory, shufflerSynced, limit = 4, onViewAll, onA
           <SigilStar aria-hidden="true" className="pointer-events-none absolute -left-1 top-0 size-5 text-in-fg-3/50" />
           <CardShuffler synced={shufflerSynced} className="w-full max-w-[15rem]" />
         </div>
+        {shufflerAction && <div className="mt-4">{shufflerAction}</div>}
         <p className="sr-only">Card Shuffler: {status}</p>
       </RecordPanel>
     </section>

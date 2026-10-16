@@ -23,7 +23,7 @@ import { RecordError } from '@/lib/devo/errors'
 export const dynamic = 'force-dynamic'
 
 /**
- * Cosméticos (contrato: docs/redesign/FUNDACAO.md §11).
+ * Cosméticos (contrato: docs/redesign/FUNDACAO.md §12).
  * GET  /api/cosmeticos                         → MeusCosmeticos (só do próprio jogador)
  * GET  ?view=catalogo                          → { catalogo } (itens ativos; dado público do jogo)
  * GET  ?view=visuais&ids=a,b,c                 → { visuais: Visual[] } (aparência pública, sem cargo de Owner)

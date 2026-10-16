@@ -118,6 +118,8 @@ export type Alvos = {
   'autorizacao.gerenciar': undefined
   /** Ver a mesa de equipe (Dealers e propostas) do próprio escopo. */
   'equipe.ver': undefined
+  /** Especialista do Salão das Máscaras: aprovar/recusar itens da Bandeja e anúncios (toda a equipe). */
+  'salao.avaliar': undefined
 }
 
 export type Acao = keyof Alvos
@@ -126,7 +128,7 @@ export const ACOES = [
   'admin.global', 'cargo.gerenciar', 'dealer.transferir', 'dv.criar', 'dv.editar', 'dv.tutorial', 'recompensa.propor',
   'recompensa.editar', 'recompensa.aprovar', 'recompensa.distribuir', 'convite.gerar', 'convite.teste', 'dados.resumidos',
   'dados.completos', 'jogar', 'desbloqueio.override', 'karma.ajustar', 'item.conceder', 'cargo.ver_owner',
-  'cosmetico.equipar_qualquer', 'catalogo.editar', 'config.editar', 'autorizacao.gerenciar', 'equipe.ver',
+  'cosmetico.equipar_qualquer', 'catalogo.editar', 'config.editar', 'autorizacao.gerenciar', 'equipe.ver', 'salao.avaliar',
 ] as const satisfies readonly Acao[]
 
 function temAutorizacao(ator: Ator, escopo: string, ref?: string | null) {
@@ -173,6 +175,7 @@ export function can<A extends Acao>(ator: Ator | null | undefined, acao: A, alvo
     case 'convite.teste':
       return owner
     case 'dv.criar':
+    case 'salao.avaliar':
       return isStaff(c)
     case 'dv.tutorial':
     case 'equipe.ver':
