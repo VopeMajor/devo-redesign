@@ -1,0 +1,173 @@
+{
+  "base": "http://localhost:3000",
+  "shots": [
+    {
+      "name": "salao-00-home-trancado",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "salao-01-trancado",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "salao-02-herdeiro-inicio",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "salao-03-herdeiro-salao",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "salao-04-herdeiro-contador",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "salao-05-herdeiro-bandeja",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "salao-06-herdeiro-fim",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "salao-07-fechado-contador",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "salao-08-fechado-proxima-edicao",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "salao-09-aberto",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "salao-10-leilao-lotes",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "salao-11-lance-folha",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "salao-12-leilao-voce-lidera",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "salao-13-mercado",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "salao-14-mercado-vender",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "salao-15-anuncios",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "salao-16-anuncio-novo",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "salao-17-bandeja-aviso",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "salao-18-bandeja-escolher",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "salao-19-bandeja-carta",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "salao-20-bandeja-enviado",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "salao-21-bandeja-em-avaliacao",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "salao-22-calendario",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "salao-23-record-shuffler",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "salao-24-mesa-fila",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "salao-25-mesa-avaliacao",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "salao-26-mesa-aprovado",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "salao-27-owner-pular",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "salao-28-owner-calendario",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "salao-29-erro",
+      "note": "",
+      "url": "http://localhost:3000/"
+    }
+  ],
+  "errors": [],
+  "console": [
+    {
+      "page": "http://localhost:3000/",
+      "text": "Permissions policy violation: compute-pressure is not allowed in this document.",
+      "src": "https://www.youtube.com/s/player/0229cd64/player_embed_es6.vflset/pt_BR/base.js"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "HTTP 500",
+      "src": "http://localhost:3000/api/salao"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "Failed to load resource: the server responded with a status of 500 (Internal Server Error)",
+      "src": "http://localhost:3000/api/salao"
+    }
+  ]
+}
