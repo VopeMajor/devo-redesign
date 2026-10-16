@@ -81,7 +81,7 @@ export function TelaTorre({
           <div className="relative -mr-1 -mt-1 h-[92px] w-[78px] shrink-0 animate-dv-fade overflow-hidden [mask-image:linear-gradient(to_bottom,#000_70%,transparent)]">
             {art ? (
               // eslint-disable-next-line @next/next/no-img-element
-              <img src={art.src} alt={torre.npc.nome} className="absolute inset-0 size-full object-cover object-top" style={{ objectPosition: art.position ?? '50% 0%' }} />
+              <img src={art.src} alt={torre.npc.nome} className="absolute inset-0 size-full origin-top scale-[1.7] object-cover object-top" style={{ objectPosition: art.position ?? '50% 0%' }} />
             ) : (
               <PortraitFrame alt={torre.npc.nome} shape="arch" className="w-full" />
             )}
