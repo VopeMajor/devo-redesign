@@ -62,3 +62,5 @@ Especificação completa em `SISTEMAS-texto-do-dono.txt` (seção "DEVO — Sist
 - **Feminino**: diálogos concordam com o gênero escolhido (marcador `{o|a}`).
 - **Xadrez sem bot**: o Living Chess não tem partida contra bot.
 - **Chat da Sala de Jogos**: só existe dentro das partidas. Na mesa, as mensagens das salas aparecem como registro, mas não há campo para digitar livremente.
+- **Risadinha do Rato removida por enquanto** (o dono vai adicionar o áudio depois). Pasta public/audio/voz e lib/devo/voice*.ts saíram.
+- **Salas de troca sem tipos**: todas funcionam igual, com a regra da explicação do Rato no tutorial (mesma raridade, carta do outro oculta até a revelação, chat da sala para negociar, os dois aceitam → revela, troca confirmada não se desfaz). Quem não tem carta não troca.

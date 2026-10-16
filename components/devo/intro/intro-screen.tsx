@@ -3,8 +3,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { playSfx } from '@/lib/devo/audio'
 import { INTRO_SCRIPT } from '@/lib/devo/intro-script'
-import { loadVoiceManifest, playRatoLaugh } from '@/lib/devo/voice'
-import { LAST_RATO_LINE } from '@/lib/devo/voice-lines'
 import { getNpc, portraitFrameProps, type Expression } from '@/lib/devo/npcs'
 import { withName } from '@/lib/devo/player-name'
 import { cn } from '@/lib/utils'
@@ -93,13 +91,9 @@ export function IntroScreen({
   const script = INTRO_SCRIPT[index]
   const line = { ...script, text: withName(script.text, playerName) }
   const npc = getNpc(line.speaker)
-  const isLastRato = index === LAST_RATO_LINE
   // Sem dublagem no tutorial (DIRECAO-2 §5: voz só na cutscene inicial).
   const { shown, done, finish } = useTypewriter(line.text, CHAR_MS)
 
-  useEffect(() => {
-    void loadVoiceManifest()
-  }, [])
 
   // O salão entra primeiro no desenho estático do preset; o WebGL só monta depois da cortina e da
   // entrada do salão (en-hall-in: 450ms + 2000ms). Compilar os shaders no meio da animação custava
@@ -117,14 +111,6 @@ export function IntroScreen({
     return () => window.clearTimeout(t)
   }, [index, line.visual])
 
-  // A risadinha do Rato ("hihihi") fecha a última fala dele, quando o texto termina de aparecer.
-  const laughed = useRef(-1)
-  useEffect(() => {
-    if (!isLastRato || !done || laughed.current === index) return
-    laughed.current = index
-    const t = window.setTimeout(playRatoLaugh, 160)
-    return () => window.clearTimeout(t)
-  }, [done, isLastRato, index])
   const last = index === INTRO_SCRIPT.length - 1
   const total = INTRO_SCRIPT.length
 
