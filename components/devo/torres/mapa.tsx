@@ -77,6 +77,8 @@ export function MapaTorres({
         const h = (ALTURA_ARTE[t.arte] * t.mapa.escala) / MAPA_H
         const total = t.andares.length
         const principal = t.tipo === 'principal'
+        // secundárias do fundo levam a cartela acima do telhado (no céu); as da frente e a principal, abaixo da base
+        const acima = !principal && t.mapa.y < 80
         return (
           <div key={t.id}>
             <button
@@ -93,7 +95,11 @@ export function MapaTorres({
               <span aria-hidden="true" className="absolute inset-x-[5%] bottom-0 h-1/2 bg-[radial-gradient(50%_60%_at_50%_100%,rgba(194,185,236,0.28),transparent_70%)] opacity-0 transition-opacity duration-200 group-hover:opacity-100 group-focus-visible:opacity-100 group-active:opacity-100" />
             </button>
             {/* cartela de progresso */}
-            <div aria-hidden="true" className="pointer-events-none absolute -translate-x-1/2" style={{ left: `${t.mapa.x}%`, top: `${t.mapa.y + 1.4}%` }}>
+            <div
+              aria-hidden="true"
+              className={cn('pointer-events-none absolute -translate-x-1/2', acima && '-translate-y-full')}
+              style={{ left: `${Math.min(84, Math.max(16, t.mapa.x))}%`, top: acima ? `${t.mapa.y - h * 100 - 0.6}%` : `${t.mapa.y + 1.4}%` }}
+            >
               <Cartela h={principal ? 46 : 40} destaque={principal}>
                 <span className={cn('whitespace-nowrap font-display font-semibold uppercase leading-none tracking-[0.1em] text-dv-text', principal ? 'text-[13px]' : 'text-[11.5px]')}>
                   {t.nome.replace(/^\[PROVISÓRIO\]\s*/, '').replace(/^Torre d[oa]s? /, '')}
@@ -120,7 +126,7 @@ export function Recursos({ torres, className }: { torres: TorreEstado[]; classNa
   return (
     <ul aria-label="Seus recursos das torres" className={cn('flex gap-1.5 overflow-x-auto pb-1 [scrollbar-width:none]', className)}>
       {essencias.map((e) => (
-        <RecursoChip key={e.item} nome={e.nome} curto={e.nome.replace(/^Essência de Afinidade d[oa] /, '')} quantidade={e.quantidade} tipo="essencia" />
+        <RecursoChip key={e.item} nome={e.nome} curto={e.nome.replace(/^Essência (de Afinidade )?d[oa] /, '').replace(/\s*\(provisória\)/, '')} quantidade={e.quantidade} tipo="essencia" />
       ))}
       {chaves.map((c) => (
         <RecursoChip key={c.item} nome={c.nome} curto={c.nome.replace(/^Chave d[oa] /, '')} quantidade={c.quantidade} tipo="chave" />

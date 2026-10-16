@@ -97,7 +97,7 @@ Copie uma torre secundária e troque:
   cata-vento de galo), `observatorio` (cúpula com luneta) ou `picadeiro` (lona listrada). Desenho novo exige código
   (`components/devo/torres/arte.tsx` + peças em `estruturas.tsx`; texturas WebP em `public/images/torres/`).
 - `"mapa"`: `{ "x": 0–100, "y": 0–100, "escala": 0.7 }` — posição da base da torre em % da ilustração
-  (390×640). Hoje: principal em (50, 61); Imperador (19, 74), Observatório (82, 72), Picadeiro (71, 86). Evite sobrepor.
+  (390×640). Hoje: principal em (50, 61); Imperador (18, 68), Observatório (83, 71), Picadeiro (25, 88). Secundárias com y < 80 levam a cartela acima do telhado. Evite sobrepor.
 - `"chave"`: `{ "nome": "Chave da …" }`.
 
 Deve haver **exatamente 1** torre `"principal"`. Requisitos de chave só podem citar torres que existem.

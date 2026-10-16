@@ -172,9 +172,9 @@
       "custoBase": 1,
       "arte": "palacio",
       "mapa": {
-        "x": 19,
-        "y": 74,
-        "escala": 0.7
+        "x": 18,
+        "y": 68,
+        "escala": 0.68
       },
       "provisorio": true,
       "andares": [
@@ -258,9 +258,9 @@
       "custoBase": 1,
       "arte": "observatorio",
       "mapa": {
-        "x": 82,
-        "y": 72,
-        "escala": 0.66
+        "x": 83,
+        "y": 71,
+        "escala": 0.64
       },
       "provisorio": true,
       "andares": [
@@ -338,9 +338,9 @@
       "custoBase": 1,
       "arte": "picadeiro",
       "mapa": {
-        "x": 71,
-        "y": 86,
-        "escala": 0.58
+        "x": 25,
+        "y": 88,
+        "escala": 0.56
       },
       "provisorio": true,
       "andares": [
