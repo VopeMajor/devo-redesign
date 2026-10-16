@@ -460,16 +460,17 @@ function SummonsCard({ onOpen }: { onOpen: () => void }) {
         </span>
         <span className="min-w-0 flex-1">
           <span className="dv-label flex items-center gap-2 text-[10px]">
-            <span className={live ? 'text-dv-blood-text' : 'text-dv-gold'}>{live ? 'Deadly Vote · em progresso' : 'Próxima convocação'}</span>
+            {live && <span aria-hidden="true" className="animate-dv-blink size-[7px] rotate-45 bg-dv-blood-text" />}
+            <span className={live ? 'text-dv-blood-text' : 'text-dv-gold'}>{live ? 'Em progresso · ao vivo' : 'Próxima convocação'}</span>
           </span>
           <span className="mt-1 block truncate font-display text-[15px] font-semibold uppercase tracking-[0.04em] text-dv-text">
             {next ? next.title : isLoading ? 'Consultando o Record…' : 'Nenhuma convocação ativa'}
           </span>
           <span className="block truncate font-body text-[14px] text-dv-text-2">
-            {next ? `${formatVoteDate(next.startsAt)}${next.joined ? say(' · você está inscrit{o|a}') : ' · inscrições abertas'}` : say('O Dealer convoca pelo Record. Fique atent{o|a}.')}
+            {next ? `${formatVoteDate(next.startsAt)}${next.joined ? say(' · você está inscrit{o|a}') : live ? ' · em andamento' : ' · inscrições abertas'}` : say('O Dealer convoca pelo Record. Fique atent{o|a}.')}
           </span>
         </span>
-        {next && (next.joined ? <StateSeal>Inscrito</StateSeal> : live ? <StateSeal tone="blood" live>Ao vivo</StateSeal> : null)}
+        {next?.joined && <StateSeal>Inscrito</StateSeal>}
         <GlyphArrow className="size-4 shrink-0 text-dv-text-3 transition-transform group-hover:translate-x-0.5" />
       </MarbleSlab>
     </button>
