@@ -53,3 +53,12 @@ Especificação completa em `SISTEMAS-texto-do-dono.txt` (seção "DEVO — Sist
 - **Cosméticos** (molduras, emblemas, balões, Owner oculto, inventário, painel).
 - **Staff e Deadly Vote** (painéis de Owner/Anfitrião/Dealer, aprovações, conclusão com resultado por participante).
 - **Virtudes** (tela qualitativa no perfil; dados configuráveis).
+
+## 7. Pedidos do dono (16/10, manhã)
+- **Reiniciar sessão foi removido** (Ajustes, menu do desktop, store e roteiro). Não recriar.
+- **Dublagem removida** da cutscene (fica só a risadinha do Rato).
+- **Continuar** retoma a encenação inicial na fala em que o jogador parou (save.story).
+- **"Devolver"** as Cartas Iniciais no prólogo deixa o jogador sem cartas.
+- **Feminino**: diálogos concordam com o gênero escolhido (marcador `{o|a}`).
+- **Xadrez sem bot**: o Living Chess não tem partida contra bot.
+- **Chat da Sala de Jogos**: só existe dentro das partidas. Na mesa, as mensagens das salas aparecem como registro, mas não há campo para digitar livremente.

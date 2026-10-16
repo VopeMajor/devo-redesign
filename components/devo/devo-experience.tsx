@@ -173,7 +173,7 @@ function DevoRoot() {
           }
         />
       )}
-      {state.phase === 'os' && <DevoOS onExit={exitToLanding} onRestart={start} />}
+      {state.phase === 'os' && <DevoOS onExit={exitToLanding} />}
       {state.phase === 'os' && offerPwa && <PwaOffer onClose={() => setOfferPwa(false)} />}
       {state.phase === 'os' && <ArcadeUnlock />}
 

@@ -90,7 +90,6 @@ type Action =
   | { type: 'TRADE_PARTNER_LEAVE' }
   | { type: 'TRADE_CANCEL'; forfeit?: boolean }
   | { type: 'TRADE_EXIT' }
-  | { type: 'RESTART_SESSION'; at: number; inventory: OwnedCard[] }
 
 function initialRooms(): Room[] {
   return ROOM_LAYOUT.map((rule, i) => ({
@@ -152,19 +151,6 @@ function reducer(state: DevoState, action: Action): DevoState {
   switch (action.type) {
     case 'SET_PHASE':
       return { ...state, phase: action.phase }
-    case 'RESTART_SESSION':
-      // Mantém conta, conversas e tutoriais vistos; zera cartas, trocas e avisos e devolve o pulso a 72h.
-      return {
-        ...state,
-        timerEndsAt: action.at + START_HOURS * 3600 * 1000,
-        inventory: action.inventory,
-        trade: null,
-        tradesCompleted: 0,
-        rooms: initialRooms(),
-        notifications: [],
-        toasts: [],
-        unread: {},
-      }
     case 'START_SESSION':
       return { ...freshState('intro', state.playerName, state.characterName), hasSession: true, story: { part: 'prologue', index: 0 } }
     case 'RETURN_STARTER_CARDS':
@@ -329,7 +315,6 @@ type DevoContextValue = {
   dispatch: React.Dispatch<Action>
   notify: (item: Omit<NotificationItem, 'id' | 'createdAt'>) => void
   /** Reinicia a sessão (cartas → kit inicial, pulso → 72h) e grava no servidor na hora. */
-  restartSession: () => Promise<boolean>
   /** Troca de aparência por afinidade (só 1 vez depois do prólogo). */
   changeAppearance: (appearance: Omit<Appearance, 'chosenAt'>) => boolean
 }
@@ -448,14 +433,6 @@ export function DevoProvider({
   }, [])
   const stateRef = useRef(state)
   stateRef.current = state
-  const restartSession = useCallback(async () => {
-    const action: Action = { type: 'RESTART_SESSION', at: Date.now(), inventory: starterInventory() }
-    const next = reducer(stateRef.current, action)
-    dispatch(action)
-    if (!next.hasSession || !next.playerName) return true
-    const res = await postSave(next)
-    return !!res && res.ok
-  }, [])
   /** Troca de aparência por afinidade (1 vez). Retorna false se não houver troca disponível. Tela: Record/perfil. */
   const changeAppearance = useCallback((appearance: Omit<Appearance, 'chosenAt'>) => {
     const p = stateRef.current.profile
@@ -463,7 +440,7 @@ export function DevoProvider({
     dispatch({ type: 'CHANGE_APPEARANCE', appearance: { ...appearance, chosenAt: Date.now() } })
     return true
   }, [])
-  const value = useMemo(() => ({ state, dispatch, notify, restartSession, changeAppearance }), [state, notify, restartSession, changeAppearance])
+  const value = useMemo(() => ({ state, dispatch, notify, changeAppearance }), [state, notify, changeAppearance])
   return <DevoContext.Provider value={value}>{children}</DevoContext.Provider>
 }
 
