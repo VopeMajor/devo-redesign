@@ -214,7 +214,7 @@ function Poco({ balde, baldeTipo, girando, ativo, moeda, brilho }: { balde: Bald
       {/* moeda caindo e ondas na água */}
       {moeda > 0 && (
         <div key={moeda} className="absolute left-[44%] top-[34%] h-[38%] w-[12%]">
-          <span className="poco-coin absolute left-1/2 top-0 block size-[18px] -translate-x-1/2 rounded-full bg-[radial-gradient(circle_at_35%_30%,#fbf6ec,#bab09f_45%,#5f584d)] shadow-[0_0_10px_rgba(236,229,216,0.6)]" />
+          <span className="poco-coin absolute left-1/2 top-0 block size-[18px] rounded-full bg-[radial-gradient(circle_at_35%_30%,#fbf6ec,#bab09f_45%,#5f584d)] shadow-[0_0_10px_rgba(236,229,216,0.6)]" />
         </div>
       )}
       {moeda > 0 && <span key={`r${moeda}`} className="poco-ripple absolute left-[30%] top-[66.5%] h-[8%] w-[40%] rounded-[50%] border border-[#c2b9ec]/70" />}

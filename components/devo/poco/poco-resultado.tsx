@@ -56,9 +56,9 @@ export function PocoResultadoView({ r, nome, onFechar }: { r: PocoResultado; nom
       {etapa === 'abrindo' ? (
         <div className="absolute inset-0 flex flex-col items-center justify-center">
           {tier > 0 && (
-            <img src={`${ART}/raios-${raios}.webp`} alt="" draggable={false} className="poco-raios-in pointer-events-none absolute left-1/2 top-[42%] w-[150%] max-w-none -translate-x-1/2 -translate-y-1/2" style={{ animationDuration: `${DUR[tier]}ms` } as CSSProperties} />
+            <img src={`${ART}/raios-${raios}.webp`} alt="" draggable={false} className="poco-raios-in pointer-events-none absolute left-1/2 top-[42%] w-[150%] max-w-none" style={{ animationDuration: `${DUR[tier]}ms` } as CSSProperties} />
           )}
-          {tier >= 4 && <img src={`${ART}/raios-ame.webp`} alt="" draggable={false} className="poco-raios-in-rev pointer-events-none absolute left-1/2 top-[42%] w-[110%] max-w-none -translate-x-1/2 -translate-y-1/2" />}
+          {tier >= 4 && <img src={`${ART}/raios-ame.webp`} alt="" draggable={false} className="poco-raios-in-rev pointer-events-none absolute left-1/2 top-[42%] w-[110%] max-w-none" />}
           <div className="poco-silhueta relative mb-[18%] size-40" style={{ animationDuration: `${DUR[tier]}ms` } as CSSProperties}>
             <PremioArte r={r} nome={nome} silhueta />
           </div>
@@ -79,7 +79,7 @@ export function PocoResultadoView({ r, nome, onFechar }: { r: PocoResultado; nom
         </div>
       ) : (
         <div className="devo-scroll absolute inset-0 flex flex-col items-center overflow-y-auto px-4 pb-5 pt-4">
-          {tier >= 2 && <img src={`${ART}/raios-${raios}.webp`} alt="" draggable={false} className="poco-raios-lento pointer-events-none absolute left-1/2 top-[27%] w-[118%] max-w-none -translate-x-1/2 -translate-y-1/2 opacity-60" />}
+          {tier >= 2 && <img src={`${ART}/raios-${raios}.webp`} alt="" draggable={false} className="poco-raios-lento pointer-events-none absolute left-1/2 top-[27%] w-[118%] max-w-none opacity-60" />}
           <MolduraResultado raridade={r.item?.raridade} lixo={tier === 0} className="poco-reveal mt-auto w-full max-w-[360px]">
             <div className={cn('flex flex-col items-center px-6 text-center', tier === 0 ? 'pb-5 pt-5' : 'pb-7 pt-12')}>
               <div className={cn('relative grid place-items-center', tier === 0 ? 'size-28' : 'size-40')}>
@@ -156,7 +156,7 @@ function SeloRaridade({ raridade, provisorio }: { raridade: ItemRarity; provisor
 /* ── Arte de cada categoria ───────────────────────────────────────────────────────────── */
 
 export function PremioArte({ r, nome, silhueta = false }: { r: PocoResultado; nome: string; silhueta?: boolean }) {
-  const cls = cn('relative size-full object-contain', silhueta && 'brightness-0 opacity-80')
+  const cls = cn('relative size-full object-contain', silhueta && 'brightness-0 invert opacity-95 drop-shadow-[0_0_16px_rgba(194,185,236,0.95)]')
   if (r.categoria === 'lixo') return <img src={`${ART}/lixo-${r.lixo?.id ?? 'nada'}.webp`} alt="" draggable={false} className={cn(cls, !silhueta && 'opacity-90 grayscale-[0.3]')} />
   if (r.categoria === 'cosmetico' && r.item) return <Cosmetico r={r} nome={nome} silhueta={silhueta} />
   const src = r.categoria === 'capsula' ? 'capsula' : r.categoria === 'essencia' ? 'essencia' : 'fragmento'
@@ -176,7 +176,7 @@ function Cosmetico({ r, nome, silhueta }: { r: PocoResultado; nome: string; silh
   const t = TIER[r.item?.raridade ?? 'comum']
   if (cat === 'balao') {
     return (
-      <div className={cn('flex w-[230px] items-end gap-2', silhueta && 'brightness-0 opacity-80')}>
+      <div className={cn('flex w-[230px] items-end gap-2', silhueta && 'brightness-0 invert opacity-95')}>
         <Avatar nome={nome} className="size-10 shrink-0" fs={17} />
         <div className="relative min-w-0 flex-1 px-3.5 pb-2.5 pt-2 text-left">
           {asset ? (
@@ -192,7 +192,7 @@ function Cosmetico({ r, nome, silhueta }: { r: PocoResultado; nome: string; silh
   }
   if (cat === 'emblema') {
     return (
-      <div className={cn('relative size-full', silhueta && 'brightness-0 opacity-80')}>
+      <div className={cn('relative size-full', silhueta && 'brightness-0 invert opacity-95')}>
         <span aria-hidden="true" className="poco-halo absolute inset-[-10%] bg-[radial-gradient(50%_50%_at_50%_50%,rgba(194,185,236,0.55),transparent_70%)]" />
         {asset ? <img src={asset} alt="" className="relative size-full object-contain" /> : <EmblemaOrnamental tier={t} />}
       </div>
@@ -200,7 +200,7 @@ function Cosmetico({ r, nome, silhueta }: { r: PocoResultado; nome: string; silh
   }
   // moldura de avatar / miniperfil / efeito: aplicada ao avatar do jogador
   return (
-    <div className={cn('relative size-full', silhueta && 'brightness-0 opacity-80')}>
+    <div className={cn('relative size-full', silhueta && 'brightness-0 invert opacity-95')}>
       <Avatar nome={nome} className="absolute inset-[16%]" />
       {asset ? <img src={asset} alt="" className="absolute inset-0 size-full object-contain" /> : <MolduraAvatar tier={t} />}
     </div>
