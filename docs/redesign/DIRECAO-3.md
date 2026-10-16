@@ -64,3 +64,4 @@ Especificação completa em `SISTEMAS-texto-do-dono.txt` (seção "DEVO — Sist
 - **Chat da Sala de Jogos**: só existe dentro das partidas. Na mesa, as mensagens das salas aparecem como registro, mas não há campo para digitar livremente.
 - **Risadinha do Rato removida por enquanto** (o dono vai adicionar o áudio depois). Pasta public/audio/voz e lib/devo/voice*.ts saíram.
 - **Salas de troca sem tipos**: todas funcionam igual, com a regra da explicação do Rato no tutorial (mesma raridade, carta do outro oculta até a revelação, chat da sala para negociar, os dois aceitam → revela, troca confirmada não se desfaz). Quem não tem carta não troca.
+- **Owners e Anfitriões têm acesso a TODAS as telas**: nenhuma trava de progressão vale para eles (sistemas novos, Sala de Jogos ainda não revelada, apps ainda não vistos, tutoriais). A regra é do servidor (flags) e a interface só reflete.
