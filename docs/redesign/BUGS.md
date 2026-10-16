@@ -36,6 +36,9 @@ causa, corrigir na origem (uma fonte da verdade) e anotar aqui o que mudou.
     apostas e prêmios. Migração SQL nova em `scripts/`.
 11. **Sprites com arte de outros jogos (Melissa e Javali).** Ver `MAPA.md` → Ativos. Substituir por arte
     original desenhada no projeto (SVG/Three.js), mantendo nome, papel e expressões usadas no código.
+    **Resolvido (16/10, branch `sys/elenco`):** os sprites de terceiros (Melissa, Javali/King Dice, Herdeiro, Rato,
+    Coruja, cenas do Javali, `voice.webp`) saíram do repositório; o elenco usa os OCs do dono (`refs/npc-oc/`),
+    fatiados por `scripts/dev/fatiar-npcs.py`.
 
 
 ---

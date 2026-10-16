@@ -51,8 +51,10 @@ Servidor dos jogos/salas: `lib/devo/arcade/server.ts`, `rooms.ts`, `client.ts`, 
 `public/images/` — `background.png` (catedral), `card-back.png`, `cards/*` (artes de tipo), `arcade/*`
 (banners dos jogos), `chess/*`, `npc/*`, `prologue/*`, `stickers/*`. Vídeos em `public/videos`.
 
-Retratos de NPC: mapa único em `lib/devo/npcs.ts` (`NPC_PORTRAITS`, `portraitFrameProps()`), sempre exibidos no
-`PortraitFrame` do kit. Melissa, Javali e Herdeiro usam sprites de outros jogos TEMPORÁRIOS (decisão do dono, até os OCs).
+Retratos de NPC: mapa único em `lib/devo/npcs.ts` (`ELENCO`/`NPC_PORTRAITS`, `npcPortrait()`, `portraitFrameProps()`),
+sempre exibidos no `PortraitFrame` do kit (sem fundo de moldura). Sprites OC do dono (Melissa, Galo, Herdeiro, Javali,
+Rato, Coruja) fatiados por `scripts/dev/fatiar-npcs.py` em `public/images/npc/<id>/<expressao>.webp`, 12 expressões
+cada, vocabulário comum (`EXPRESSOES`). Corvo: sprite PENDENTE, usa `npc/corvo/silhueta.svg`.
 
 ## Captura e teste
 

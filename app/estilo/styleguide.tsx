@@ -495,10 +495,12 @@ function StyleGuideBody() {
       <Section id="retratos" index="X" kicker="Elenco" title="Retratos">
         <p className="mb-4 font-body text-[15px] text-dv-text-2">Mesmo tratamento para raster e SVG: luz de borda na silhueta, grão, vinheta e base que se dissolve.</p>
         <div className="grid grid-cols-2 gap-x-4 gap-y-6">
-          <PortraitFrame src="/images/npc/rat-host-v2.png" alt="O Rato, anfitrião" name="O Rato" role="Anfitrião" tone="gold" ornate className="w-full" />
+          <PortraitFrame {...(portraitFrameProps('rato') ?? {})} alt="O Rato, anfitrião" name="O Rato" role="Anfitrião" tone="gold" ornate className="w-full" />
           <PortraitFrame {...(portraitFrameProps('herdeiro') ?? {})} alt="Herdeiro" name="Herdeiro" role="Desconhecido" tone="cobalt" className="w-full" />
           <PortraitFrame {...(portraitFrameProps('melissa') ?? {})} alt="Melissa" name="Melissa" role="Prólogo" tone="blood" shape="rect" className="w-full" />
-          <PortraitFrame src="/images/npc/coruja.png" alt="A Coruja" name="Coruja" role="Mestra das cartas" tone="neutral" shape="round" className="w-full" />
+          <PortraitFrame {...(portraitFrameProps('coruja') ?? {})} alt="A Coruja" name="Coruja" role="Mestra das cartas" tone="neutral" shape="round" className="w-full" />
+          <PortraitFrame {...(portraitFrameProps('galo') ?? {})} alt="O Galo" name="O Galo" role="Arcano do Imperador" tone="gold" className="w-full" />
+          <PortraitFrame {...(portraitFrameProps('corvo') ?? {})} alt="O Corvo (silhueta provisória)" name="O Corvo" role="Sprite pendente" tone="neutral" className="w-full" />
         </div>
         <p className="dv-label mb-3 mt-8 text-[10px] text-dv-text-3">Plaque · OddsBar (da Sala de Jogos)</p>
         <dl className="grid grid-cols-3 gap-2">

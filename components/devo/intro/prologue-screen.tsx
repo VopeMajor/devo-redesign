@@ -13,6 +13,7 @@ import {
 import { cn } from '@/lib/utils'
 import { APPEARANCE_KIND_LABEL, autoAppearance, appearancePool, type AppearanceKind } from '@/lib/devo/appearances'
 import { useAdvanceKeys } from '../hooks'
+import { playerText } from '@/lib/devo/player-name'
 import { useDevo } from '../state/devo-store'
 import { EntradaButton } from '../landing/entrada-button'
 import { GlyphCard, GlyphSpark, toRoman } from '../kit/glyphs'
@@ -316,11 +317,12 @@ export function PrologueScreen({
   useEffect(() => {
     onProgress?.(index, Object.fromEntries(Object.entries(profile).filter((e): e is [string, string] => typeof e[1] === 'string')))
   }, [index, profile]) // eslint-disable-line react-hooks/exhaustive-deps
-  const [mood, setMood] = useState<MelissaMood>('neutral')
+  const [mood, setMood] = useState<MelissaMood>('convite')
 
   const beat = PROLOGUE[index]
   const name = profile.name ?? playerName ?? 'Record'
-  const fill = (t: string) => t.replaceAll('{nome}', name)
+  // Nome e gênero (marcadores {m|f}): antes da escolha de gênero vale a primeira forma; depois, a escolhida.
+  const fill = (t: string) => playerText(t, { name, gender: profile.gender })
   const line: Line | null = replies[0] ?? (beat.kind === 'line' ? beat.line : null)
   const text = line ? fill(line.text) : ''
   const charMs = CHAR_MS
@@ -557,7 +559,7 @@ export function PrologueScreen({
             <ChoiceHeader>{name} · escolha o que dizer</ChoiceHeader>
             {pending.map((o, i) => {
               const action = o.label.startsWith('Devolver') || o.label === 'Ir embora'
-              return <ChoiceStrip key={o.label} index={i} delay={80 + i * 70} action={action} label={o.label} onClick={() => choose(o.label, o.reply)} />
+              return <ChoiceStrip key={o.label} index={i} delay={80 + i * 70} action={action} label={fill(o.label)} onClick={() => choose(o.label, o.reply)} />
             })}
             {beat.mode === 'explore' && explored.length > 0 && <ChoiceStrip muted index={pending.length} delay={80 + pending.length * 70} label="Continuar" onClick={next} />}
           </div>

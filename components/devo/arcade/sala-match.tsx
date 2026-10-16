@@ -6,6 +6,7 @@ import type { GameOutcome, MatchFinish, MatchStart } from '@/lib/devo/arcade/cli
 import { formatPoints } from '@/lib/devo/arcade/client'
 import { GAMES, type GameId, RANKING_RULE_CASUAL, RANKING_RULE_EVENT } from '@/lib/devo/arcade/games'
 import { cn } from '@/lib/utils'
+import { usePlayerText } from '../state/player-text'
 import { useNow } from '../hooks'
 import { formatMinutes } from './arcade-shared'
 import { GameEmblem } from './sala-emblems'
@@ -71,6 +72,7 @@ export function Searching({ gameId, duel, onCancel }: { gameId: GameId; duel: bo
 export function ResultScreen({ run, onClose }: { run: Running; onClose: () => void }) {
   const f = run.finish!
   const o = f.outcome
+  const say = usePlayerText()
   const win = o.result === 'win'
   const draw = o.result === 'draw'
   const loss = !win && !draw
@@ -149,7 +151,7 @@ export function ResultScreen({ run, onClose }: { run: Running; onClose: () => vo
               <JavaliPortrait shape="round" className="w-12" />
               <p className="font-body text-[16px] italic leading-snug text-dv-text-2">
                 <span className="dv-label mb-0.5 block text-[10px] not-italic text-dv-gold">Javali</span>
-                {f.tutorial ? 'Treino é por conta da casa. A próxima, querido, vale Tempo.' : win ? 'A casa agradece o espetáculo.' : costly ? 'O relógio cobra. A casa só observa.' : 'Empate não paga a casa. Tente de novo.'}
+                {f.tutorial ? say('Treino é por conta da casa. A próxima, querid{o|a}, vale Tempo.') : win ? 'A casa agradece o espetáculo.' : costly ? 'O relógio cobra. A casa só observa.' : 'Empate não paga a casa. Tente de novo.'}
               </p>
             </div>
             <Button block size="lg" onClick={onClose} sfx="close">

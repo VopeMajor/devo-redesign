@@ -7,6 +7,7 @@ import { playSfx } from '@/lib/devo/audio'
 import { cn } from '@/lib/utils'
 import { formatDuration, useNow } from '../hooks'
 import { useDevo } from '../state/devo-store'
+import { playerText } from '@/lib/devo/player-name'
 import { BET_OPTIONS, BET_RESERVE_MIN, formatMinutes, useApplyTime } from './arcade-shared'
 import { MARBLE_PORCELAIN } from './sala-marble'
 import { Monogram } from './sala-ui'
@@ -91,7 +92,7 @@ function BetSheet({
       onClose={onClose}
       kicker={`Livro da casa · duelo ${duel.slot + 1}`}
       title="Apostar Tempo"
-      description="Escolha o lado e quanto do seu relógio está disposto a arriscar."
+      description={playerText('Escolha o lado e quanto do seu relógio está dispost{o|a} a arriscar.', { gender: state.profile.gender })}
       footer={
         <>
           <Button variant="secondary" onClick={onClose} className="sm:min-w-36">
