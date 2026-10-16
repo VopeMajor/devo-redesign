@@ -267,3 +267,37 @@ Erros: `{ ok: false, error }` com 400/403/404/409 (mensagens em português, sem 
 - `dracma_rara` foi criada como provisória (o texto só cita Comum e Incomum).
 - Dealer não gera convites (segue a tabela; antes podia gerar convite de Jogador).
 - O painel de equipe (telas) é do agente Staff; a Fundação entrega só API.
+
+## 10. Poço dos Milagres (agente Poço)
+
+Arquivos: `scripts/poco-migration.sql` (tabelas `poco_estado`, `poco_giros`; config e catálogo provisórios),
+`lib/devo/poco.ts` (puro: tipos, lixo, minigame, pesos), `lib/devo/poco-server.ts`, `app/api/poco/route.ts`,
+`lib/devo/poco-neblina.ts` (cena literal do dono, como dados), `components/devo/poco/*`, seed `scripts/dev/91-seed-poco.sql`,
+teste `scripts/dev/poco-test.mjs` (CI → `poco-test.log`).
+
+- **Trava:** toda rota chama `requireUnlock(…, 'poco')`; `GET /api/poco` trancado responde `200 { liberado: false, motivo }`.
+- **Moedas:** `item_defs` com `kind = 'moeda'` e `meta.poco = true`; cada chave é uma **categoria** de sorteio com pesos em
+  `devo_config['poco.probabilidades'][<moeda>]` (categoria sem pesos = fechada). `dracma_comum` = base.
+- **Dracma do encapuzado:** `POST {action:'apresentacao.concluir'}` → `grantItem('dracma_incomum', idem 'poco:corvo:<id>')`.
+- **Giro grátis:** `devo_config['poco.giro_gratis_diario'] = { categoria, quantidade }`; dia em horário de Brasília;
+  índice único `(player_id, dia, gratis_n) WHERE gratis`.
+- **Um giro por vez:** índice único `(player_id) WHERE estado <> 'revelado'`. A moeda é consumida na mesma transação do
+  giro com `idem 'poco:giro:<giro>:moeda'`; o prêmio com `idem 'poco:giro:<giro>:premio'`.
+- **Sorteio auditável:** `seed` aleatório por giro, `seed_hash = sha256(seed)` mostrado antes; rolagens = HMAC-SHA256(seed,
+  rótulo). Grava pesos efetivos, `provisorio`, rolagem, categoria sorteada/final, item, quantidade, toques e acertos.
+- **Manivela:** `devo_config['poco.manivela']` (provisório). O servidor deriva os parâmetros do ponteiro do seed, recebe só os
+  instantes dos toques, recusa toques posteriores ao tempo real decorrido e conta os acertos (`avaliarToques`). Cada acerto
+  multiplica o peso do lixo por `1 − acertos × reducao_lixo_por_acerto`. Não há segunda tentativa.
+- **Resultados:** `lixo` (lista `POCO_LIXO`, não vai ao inventário) · `capsula` (`kind 'capsula'`, `meta.poco = true`, só as
+  que o jogador não tem; vão ao **Diário**, aba do Record) · `fragmento` (`fragmento_arcano`, faixa em `poco.quantidades`) ·
+  `essencia` (todas as `essencia:*` ativas, exceto `meta.poco = false`) · `cosmetico` (**`item_defs` `kind 'cosmetico'` com
+  `meta.poco = true`**, peso por raridade em `poco.raridade_pesos`, só os que o jogador não tem). Categoria sem item elegível
+  vira fragmento.
+- **Baldes:** `item_defs` `balde:<id>` (`kind 'outro'`, `meta.poco_balde`, `meta.tipo` inicial | normal | raro, `meta.mult_qtd`).
+  Normais aparecem bloqueados; raros só aparecem depois de obtidos. Conceder um balde = `grantItem('balde:ferro')`.
+- **Cápsulas:** `capsula:001…008` com `meta.titulo`/`meta.texto` **provisórios** (o dono escreve; editar pelo catálogo).
+- **Owner:** o payload traz `owner { provisorio, probabilidades, manivela }`; a tela grava com `POST /api/staff
+  {action:'config.definir', key:'poco.probabilidades', value, provisional: true}`.
+- **Letreiro:** últimos 12 prêmios não-lixo revelados (30 dias), só nome do personagem; contas de teste ficam fora.
+- **Cliente:** `components/devo/state/use-acesso.ts` (`useAcesso()`/`useEu()`, SWR de `/api/eu`) — candidato a uso comum dos
+  outros sistemas; a home acende o emblema do Poço por `acesso.sistemas.poco` (`SYSTEM_OPEN` em `os/phone-shell.tsx`).

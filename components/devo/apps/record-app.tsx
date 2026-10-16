@@ -41,6 +41,7 @@ import { PhotoPicker } from '../system/photo-picker'
 import { RecordFile, type RecordFileData } from '../system/record-file'
 import { LifecycleTrack, RecButton, RecLink, STATUS_TEXT, StatusChip, StatusMark } from '../system/record-ui'
 import { useDeadlyVotes } from '../system/use-deadly-votes'
+import { DiarioPanel } from '../poco/diario-panel'
 
 const CRITICAL_MS = 6 * 3600 * 1000
 const ROLE_LABEL = { player: 'Jogador', dealer: 'Dealer', anfitriao: 'Anfitrião', owner: 'Owner' } as const
@@ -67,7 +68,7 @@ export function useRecordData(avatarVersion: number | null = null): RecordFileDa
   }
 }
 
-type Tab = 'record' | 'votes' | 'invites'
+type Tab = 'record' | 'votes' | 'invites' | 'diario'
 const OPEN: DeadlyVoteStatus[] = ['convocado', 'em-progresso']
 const ALL_STATUSES: DeadlyVoteStatus[] = ['convocado', 'em-progresso', 'concluido', 'cancelado', 'falha']
 
@@ -97,6 +98,7 @@ export function RecordApp() {
   const items: TabItem<Tab>[] = [
     { value: 'record', label: 'Record File' },
     { value: 'votes', label: 'Deadly Votes', count: votes.entries.filter((e) => e.status === 'convocado' && !e.vote.joined).length },
+    { value: 'diario', label: 'Diário' },
     ...(isStaff ? [{ value: 'invites' as const, label: 'Convites' }] : []),
   ]
 
@@ -119,7 +121,11 @@ export function RecordApp() {
               className="animate-dv-fade [&_[role=tab]]:min-w-0 [&_[role=tab]]:flex-auto [&_[role=tab]]:whitespace-nowrap [&_[role=tab]]:px-2 [&_[role=tab]]:text-[10.5px] [&_[role=tab]]:tracking-[0.06em] @md:[&_[role=tab]]:px-4 @md:[&_[role=tab]]:text-[11px] @md:[&_[role=tab]]:tracking-[0.14em]"
               panelClassName="pt-5"
             >
-              {tab === 'invites' && isStaff ? (
+              {tab === 'diario' ? (
+                <Reveal key="diario" variant="right">
+                  <DiarioPanel />
+                </Reveal>
+              ) : tab === 'invites' && isStaff ? (
                 <Stagger key="invites" className="flex flex-col gap-5">
                   <InvitePanel />
                   <DealerBoard />

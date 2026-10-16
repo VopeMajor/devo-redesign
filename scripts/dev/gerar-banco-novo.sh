@@ -21,6 +21,7 @@ FILES=(
   scripts/test-accounts-migration.sql
   scripts/character-name-migration.sql
   scripts/fundacao-migration.sql
+  scripts/poco-migration.sql
   scripts/torres-migration.sql
 )
 {

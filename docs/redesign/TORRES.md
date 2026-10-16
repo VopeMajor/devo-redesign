@@ -27,7 +27,7 @@ Sistema da Direção 3 §2. Regras do dono (texto do Galo e notas finais de `SIS
 | `app/api/torres/route.ts` | API (abaixo). |
 | `components/devo/torres/*` | Telas: app, mapa, torre (escada), cena de diálogo, arte em SVG, gatilho da reflexão. |
 | `scripts/torres-migration.sql` | Tabelas `tower_progress` e `tower_player`; catálogo das essências/chaves de exemplo. |
-| `scripts/dev/91-seed-torres.sql` | Convites de teste (capturas e teste de servidor). |
+| `scripts/dev/92-seed-torres.sql` | Convites de teste (capturas e teste de servidor). |
 | `scripts/dev/torres-test.mjs` | Teste de servidor (roda no CI → `torres-test.log`). |
 
 ## Acrescentar um andar, um diálogo ou uma torre (sem código)

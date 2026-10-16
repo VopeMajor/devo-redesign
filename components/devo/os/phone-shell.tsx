@@ -11,8 +11,6 @@ import { FrameCorners } from '../kit/frame'
 import { SYSTEM_EMBLEMS } from '../kit/emblems'
 import { FUTURE_SYSTEMS, type FutureSystemId } from '../kit/interior/locked'
 import { MarbleSlab, StateSeal } from './shell-ui'
-import { useAcesso } from './use-acesso'
-import type { UnlockFlag } from '@/lib/devo/progresso'
 import { GlyphArrow, GlyphDiamond, GlyphHourglass, GlyphKeyhole, toRoman } from '../kit/glyphs'
 import { SceneBackdrop } from '../kit/scene'
 import { TimeDigits } from '../kit/time'
@@ -23,6 +21,8 @@ import { usePlayerText } from '../state/player-text'
 import { playerText } from '@/lib/devo/player-name'
 import { DeadlyVoteSymbol } from '../system/symbol'
 import { useDeadlyVotes } from '../system/use-deadly-votes'
+import { useAcesso } from '../state/use-acesso'
+import type { UnlockFlag } from '@/lib/devo/progresso'
 import { formatVoteDate } from '@/lib/devo/deadly-votes'
 import { AppBackContext, type AppBack } from './app-back'
 import { useBackHandler } from '../use-back-handler'
@@ -527,54 +527,61 @@ function CriticalVignette() {
 }
 
 /**
- * Os seis sistemas reservados (Direção 2 §3) como emblemas da mesma família: cinza a 60% com cadeado.
- * Sistemas que já têm tela (`SYSTEM_APP`) viram botão: abrem o app, que mostra o motivo quando trancado; o
- * cadeado some quando o servidor libera (`acesso.sistemas`, FUNDACAO.md §3).
+ * Os seis sistemas reservados (Direção 2 §3) como emblemas da mesma família: cinza a 60% com cadeado quando
+ * trancados. Os que já têm tela (`SYSTEM_OPEN`) viram botão: liberados acendem; trancados abrem a própria tela
+ * com o motivo (quem decide é o servidor, via `acesso`).
  */
-const SYSTEM_APP: Partial<Record<FutureSystemId, { app: AppId; flag: UnlockFlag }>> = {
-  torres: { app: 'torres', flag: 'torres' },
+const SYSTEM_OPEN: Partial<Record<FutureSystemId, { app: AppId; flag: UnlockFlag; nome: string }>> = {
+  poco: { app: 'poco', flag: 'poco', nome: 'Poço dos Milagres' },
+  torres: { app: 'torres', flag: 'torres', nome: 'Torres de Ruptura' },
 }
 
 function LockedSystems({ onOpen }: { onOpen: (id: AppId) => void }) {
   const acesso = useAcesso()
   return (
-    <section aria-label="Sistemas em breve" className="mt-5">
+    <section aria-label="Sistemas" className="mt-5">
       <div className="animate-dv-fade flex items-center gap-3 px-1 [animation-delay:520ms]">
-        <span className="dv-label text-[10px] text-dv-text-3">Em breve</span>
+        <span className="dv-label text-[10px] text-dv-text-3">Sistemas</span>
         <span aria-hidden="true" className="h-px flex-1 bg-gradient-to-r from-dv-line-strong to-transparent" />
         <span className="dv-label text-[10px] text-dv-text-3">Trancado pelo Anfitrião</span>
       </div>
       <ul className="animate-dv-fade mt-3 grid grid-cols-6 gap-1 [animation-delay:560ms]">
         {FUTURE_SYSTEMS.map((f) => {
           const E = SYSTEM_EMBLEMS[f.id]
-          const sys = SYSTEM_APP[f.id]
-          const aberto = !!(sys && acesso?.sistemas[sys.flag])
-          const conteudo = (
+          const open = SYSTEM_OPEN[f.id]
+          const livre = !!open && !!acesso?.sistemas[open.flag]
+          const icon = (
             <>
               <span className="relative grid size-11 place-items-center">
-                <E className={cn('size-9', aberto ? 'text-dv-text drop-shadow-[0_0_6px_rgba(238,237,235,0.35)]' : 'text-dv-text-3 opacity-60')} metal={aberto || undefined} />
-                {!aberto && <GlyphKeyhole aria-hidden="true" className="absolute -bottom-0.5 -right-0.5 size-3.5 rounded-full bg-dv-ink p-[1px] text-dv-gold" />}
+                {livre && <span aria-hidden="true" className="absolute inset-x-1 bottom-0 h-1/2 bg-[radial-gradient(50%_60%_at_50%_100%,rgba(138,124,200,0.5),transparent)]" />}
+                <E
+                  {...(livre ? { metal: true } : {})}
+                  className={cn('relative size-9', livre ? 'text-dv-text drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] group-active:scale-[0.96]' : 'text-dv-text-3 opacity-60')}
+                />
+                {!livre && <GlyphKeyhole aria-hidden="true" className="absolute -bottom-0.5 -right-0.5 size-3.5 rounded-full bg-dv-ink p-[1px] text-dv-gold" />}
               </span>
-              <span aria-hidden="true" className={cn('dv-label line-clamp-2 text-center text-[10px] leading-[1.25] tracking-[0.06em]', aberto ? 'text-dv-text' : 'text-dv-text-3')}>{SHORT_NAME[f.id]}</span>
+              <span aria-hidden="true" className={cn('dv-label line-clamp-2 text-center text-[10px] leading-[1.25] tracking-[0.06em]', livre ? 'text-dv-text' : 'text-dv-text-3')}>
+                {SHORT_NAME[f.id]}
+              </span>
             </>
           )
-          if (sys)
-            return (
-              <li key={f.id}>
+          return (
+            <li key={f.id} title={open?.nome ?? f.name}>
+              {open ? (
                 <button
                   type="button"
-                  onClick={() => onOpen(sys.app)}
-                  aria-label={aberto ? f.name : `${f.name}: bloqueado`}
-                  className="dv-focus group flex w-full flex-col items-center gap-1.5 transition-transform duration-[120ms] active:scale-[0.92]"
+                  onClick={() => onOpen(open.app)}
+                  aria-label={livre ? open.nome : `${open.nome}: trancado`}
+                  className="dv-focus group flex w-full flex-col items-center gap-1.5"
                 >
-                  {conteudo}
+                  {icon}
                 </button>
-              </li>
-            )
-          return (
-            <li key={f.id} className="flex flex-col items-center gap-1.5" title={f.name}>
-              {conteudo}
-              <span className="sr-only">{f.name}: bloqueado</span>
+              ) : (
+                <div className="flex flex-col items-center gap-1.5">
+                  {icon}
+                  <span className="sr-only">{f.name}: bloqueado</span>
+                </div>
+              )}
             </li>
           )
         })}

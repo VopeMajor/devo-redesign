@@ -2,7 +2,7 @@
 // ordem dos andares, trava, oferta do Galo uma vez só, reflexão). Roda no CI depois das capturas, contra o
 // Postgres do workflow e o servidor em http://localhost:3000.
 // Uso local: DATABASE_URL=... DEVO_URL=http://localhost:3000 node scripts/dev/torres-test.mjs
-// Usa os convites DEVO-TORR-TST* do 91-seed-torres.sql (contas de teste). Sai com código 1 se algo falhar.
+// Usa os convites DEVO-TORR-TST* do 92-seed-torres.sql (contas de teste). Sai com código 1 se algo falhar.
 import { readFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
