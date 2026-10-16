@@ -3,7 +3,7 @@
 import { liveChannelFor } from '@/lib/devo/arcade/reactions'
 import { Canvas } from '@react-three/fiber'
 import { Chess, type Color, type Move, type PieceSymbol, type Square } from 'chess.js'
-import { Bot, Eye, History, MessageSquare, RotateCcw, Settings2 } from 'lucide-react'
+import { Bot, Eye, History, MessageSquare, RotateCcw, Settings2, type LucideIcon } from 'lucide-react'
 import { ArcadeChat } from '@/components/devo/arcade/arcade-chat'
 import { useDeadlyVotes } from '@/components/devo/system/use-deadly-votes'
 import { useCallback, useEffect, useMemo, useRef, useState, type PointerEvent as ReactPointerEvent } from 'react'
@@ -13,7 +13,8 @@ import { arcadePost, type GameProps } from '@/lib/devo/arcade/client'
 import { BOARD_THEMES, PIECE_SETS, boardTheme, pieceSet, resolveQuality } from '@/lib/devo/arcade/chess-themes'
 import { GAMES, botSkill, rng } from '@/lib/devo/arcade/games'
 import { cn } from '@/lib/utils'
-import { VersusBar } from '../chess/versus-bar'
+import { PlayerPlate } from '../chess/versus-bar'
+import { Button, SigilStar } from '@/components/devo/kit'
 import { LivingScene, planAnim, type Anim, type CamState, type MateFx, type UnitState } from '../chess/living-board'
 import { Countdown321, GameFrame, PopLayer, WaitingStart, usePops, vibrate } from '../game-hud'
 import { roomOutcome, useOnlineGate, useRoom } from '../use-room'
@@ -64,29 +65,24 @@ function initialUnits(g: Chess): UnitState[] {
 
 type Ending = { result: 'win' | 'loss' | 'draw'; reason: string; score: number }
 
-function Clock({ label, ms, active, mine }: { label: string; ms: number; active: boolean; mine: boolean }) {
-  const s = ms / 1000
-  const level = !active ? 0 : s <= 3 ? 3 : s <= 5 ? 2 : s <= 10 ? 1 : 0
+/** Botão de ícone do cabeçalho/tabuleiro: 44px, filete de aço quando ativo. */
+function ChessIconButton({ icon: Icon, label, active, onClick, className, title }: { icon: LucideIcon; label: string; active?: boolean; onClick: () => void; className?: string; title?: string }) {
   return (
-    <div
+    <button
+      type="button"
+      onClick={onClick}
+      aria-label={label}
+      aria-pressed={active}
+      title={title ?? label}
       className={cn(
-        'flex min-w-0 flex-1 flex-col items-center border px-2 py-1 transition-colors',
-        active ? (mine ? 'border-[#e8c35a] bg-[#e8c35a]/10' : 'border-primary bg-primary/15') : 'border-foreground/15 bg-black/30',
+        'dv-focus relative grid size-11 shrink-0 place-items-center transition-[color,transform] duration-[120ms] active:scale-95',
+        active ? 'text-white' : 'text-dv-text-3 hover:text-dv-text',
+        className,
       )}
     >
-      <span className="max-w-full truncate text-[9px] uppercase tracking-[0.25em] text-foreground/60">{label}</span>
-      <span
-        className={cn(
-          'font-mono tabular-nums leading-none transition-all',
-          level === 0 && 'text-xl text-foreground',
-          level === 1 && 'text-2xl text-[#ffb347]',
-          level === 2 && 'animate-pulse text-2xl text-[#ff4a4a]',
-          level === 3 && 'scale-110 animate-pulse text-2xl text-[#ff2a2a] [text-shadow:0_0_12px_#ff2a2a]',
-        )}
-      >
-        {`00:${String(Math.ceil(s)).padStart(2, '0')}`}
-      </span>
-    </div>
+      <Icon className="size-[18px]" strokeWidth={1.4} />
+      {active && <span aria-hidden="true" className="absolute bottom-1.5 left-1/2 size-1.5 -translate-x-1/2 rotate-45 bg-dv-amethyst shadow-[0_0_6px_var(--dv-amethyst)]" />}
+    </button>
   )
 }
 
@@ -459,17 +455,31 @@ export default function QuickChess({ start, settings, onFinish, onQuit }: GamePr
 
   const onPointerDown = (e: ReactPointerEvent) => {
     pointers.current.set(e.pointerId, { x: e.clientX, y: e.clientY })
-    cam.current.dragDist = 0
+    const c = cam.current
+    c.dragDist = 0
+    c.holdUntil = Number.POSITIVE_INFINITY
     if (pointers.current.size === 2) {
       const [a, b] = [...pointers.current.values()]
       pinch.current = Math.hypot(a.x - b.x, a.y - b.y)
     }
   }
   const onPointerMove = (e: ReactPointerEvent) => {
-    if (!pointers.current.has(e.pointerId)) return
+    const prev = pointers.current.get(e.pointerId)
+    if (!prev) return
     pointers.current.set(e.pointerId, { x: e.clientX, y: e.clientY })
-    if (pointers.current.size !== 2) return
     const c = cam.current
+    if (pointers.current.size === 1) {
+      // Arrasto com um dedo: órbita suave em volta do tabuleiro (volta sozinha ao soltar).
+      const dx = e.clientX - prev.x
+      const dy = e.clientY - prev.y
+      c.dragDist += Math.abs(dx) + Math.abs(dy)
+      if (c.dragDist > 8) {
+        c.orbitX = Math.max(-0.95, Math.min(0.95, (c.orbitX ?? 0) - dx * 0.006))
+        c.orbitY = Math.max(-0.32, Math.min(0.3, (c.orbitY ?? 0) - dy * 0.004))
+      }
+      return
+    }
+    if (pointers.current.size !== 2) return
     const [a, b] = [...pointers.current.values()]
     const d = Math.hypot(a.x - b.x, a.y - b.y)
     if (pinch.current && d) c.zoom = Math.min(1.2, Math.max(0.75, c.zoom * (pinch.current / d)))
@@ -479,9 +489,14 @@ export default function QuickChess({ start, settings, onFinish, onQuit }: GamePr
   const onPointerUp = (e: ReactPointerEvent) => {
     pointers.current.delete(e.pointerId)
     if (pointers.current.size < 2) pinch.current = 0
+    if (pointers.current.size === 0) cam.current.holdUntil = performance.now() + 900
   }
   const resetCam = () => {
-    cam.current.zoom = 1
+    const c = cam.current
+    c.zoom = 1
+    c.orbitX = 0
+    c.orbitY = 0
+    c.holdUntil = 0
     sound('click')
   }
 
@@ -496,198 +511,190 @@ export default function QuickChess({ start, settings, onFinish, onQuit }: GamePr
   for (let i = 0; i < history.length; i += 2) pairs.push([history[i], history[i + 1]])
 
   const historyList = (
-    <ol className="space-y-0.5 font-mono text-xs">
-      {pairs.length === 0 && <li className="text-foreground/40">Nenhum lance ainda.</li>}
+    <ol className="space-y-0.5 font-mono text-[13px] dv-tabular">
+      {pairs.length === 0 && <li className="font-body text-[14px] italic text-dv-text-3">Nenhum lance ainda.</li>}
       {pairs.map(([w, b], i) => (
-        <li key={i} className={cn('grid grid-cols-[2rem_1fr_1fr] gap-1 px-1', i === pairs.length - 1 && 'bg-foreground/10')}>
-          <span className="text-foreground/40">{i + 1}.</span>
-          <span className="text-[#f2e3b8]">{w}</span>
-          <span className="text-[#ff9a9a]">{b ?? ''}</span>
+        <li key={i} className={cn('grid grid-cols-[2rem_1fr_1fr] gap-1 px-1.5 py-0.5', i === pairs.length - 1 && 'bg-dv-ink-4/80 shadow-[inset_2px_0_0_var(--dv-gold)]')}>
+          <span className="text-dv-text-3">{i + 1}.</span>
+          <span className="text-dv-text">{w}</span>
+          <span className="text-dv-text-2">{b ?? ''}</span>
         </li>
       ))}
     </ol>
   )
 
   const optionBtn = (active: boolean) =>
-    cn('border px-2 py-1.5 text-left transition-colors', active ? 'border-primary text-foreground' : 'border-foreground/15 text-foreground/60 hover:border-foreground/40')
+    cn(
+      'dv-focus min-h-11 border px-2.5 py-2 text-left font-display text-[12px] font-semibold uppercase tracking-[0.12em] transition-colors duration-[220ms]',
+      active ? 'border-dv-gold-bright bg-dv-ink-4 text-white shadow-[inset_0_-2px_0_var(--dv-amethyst)]' : 'border-dv-line-strong bg-dv-ink/60 text-dv-text-2 hover:border-dv-gold hover:text-dv-text',
+    )
+
+  const matchCode = `Partida #${String(start.seed % 1000).padStart(3, '0')}`
+  const statusText = spectator
+    ? 'Modo espectador'
+    : running
+      ? animating
+        ? 'Combate…'
+        : turn === myColor
+          ? myLeft <= 0
+            ? 'Tempo esgotado…'
+            : 'Sua vez — toque numa peça'
+          : `Turno de ${start.opponent.name}`
+      : ''
+  const myTurn = running && !animating && turn === myColor && !spectator
+  const plate = (side: Color) => ({
+    name: side === myColor ? 'Você' : start.opponent.name,
+    court: side === 'w' ? 'Corte de Marfim' : 'Corte de Ônix',
+    color: side,
+    portrait: side === myColor ? playerPhoto : null,
+    ms: side === 'w' ? wLeft : bLeft,
+    captures: captures[side],
+    active: ticking && turn === side,
+    mine: side === myColor,
+  })
 
   return (
     <GameFrame
       chat={false}
       title="Living Chess"
+      sub={`${start.mode === 'treino' ? 'Treino' : 'Ao vivo'} · ${matchCode}`}
       accent={meta.accent}
       onQuit={onQuit}
       top={
-        <div className="flex items-center gap-1">
-          <span className="mr-2 hidden items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.25em] text-foreground/60 sm:flex">
-            <span className="size-2 animate-pulse rounded-full bg-[#ff3b3b]" aria-hidden="true" />
-            {start.mode === 'treino' ? 'Treino' : 'Ao vivo'}
-          </span>
-          <button
-            type="button"
-            onClick={() => setSpectator((s) => !s)}
-            aria-pressed={spectator}
-            aria-label="Modo espectador"
-            className={cn('grid size-9 place-items-center hover:text-foreground', spectator ? 'text-primary' : 'text-foreground/60')}
-          >
-            <Eye className="size-4" />
-          </button>
-          <button
-            type="button"
+        <div className="flex items-center">
+          <ChessIconButton icon={Eye} label="Modo espectador" active={spectator} onClick={() => setSpectator((s) => !s)} />
+          <ChessIconButton
+            icon={Bot}
+            label="IA joga por você"
+            active={autoPlay}
             onClick={() => {
               setAutoPlay((v) => !v)
               setSelected(null)
               sound('click')
             }}
-            aria-pressed={autoPlay}
-            aria-label="IA joga por você"
-            title="IA joga por você"
-            className={cn('grid size-9 place-items-center hover:text-foreground', autoPlay ? 'text-primary' : 'text-foreground/60')}
-          >
-            <Bot className="size-4" />
-          </button>
-          <button
-            type="button"
-            onClick={() => setPanel((p) => (p === 'history' ? 'none' : 'history'))}
-            aria-label="Histórico de lances"
-            className="grid size-9 place-items-center text-foreground/60 hover:text-foreground lg:hidden"
-          >
-            <History className="size-4" />
-          </button>
-          <button
-            type="button"
-            onClick={() => setPanel((p) => (p === 'chat' ? 'none' : 'chat'))}
-            aria-label="Chat da partida"
-            aria-pressed={panel === 'chat'}
-            className={cn('grid size-9 place-items-center hover:text-foreground md:hidden', panel === 'chat' ? 'text-primary' : 'text-foreground/60')}
-          >
-            <MessageSquare className="size-4" />
-          </button>
-          <button
-            type="button"
-            onClick={() => setPanel((p) => (p === 'settings' ? 'none' : 'settings'))}
-            aria-label="Configurações"
-            className="grid size-9 place-items-center text-foreground/60 hover:text-foreground"
-          >
-            <Settings2 className="size-4" />
-          </button>
+          />
+          <ChessIconButton icon={MessageSquare} label="Chat da partida" active={panel === 'chat'} onClick={() => setPanel((p) => (p === 'chat' ? 'none' : 'chat'))} className="md:hidden" />
+          <ChessIconButton icon={Settings2} label="Configurações" active={panel === 'settings'} onClick={() => setPanel((p) => (p === 'settings' ? 'none' : 'settings'))} />
         </div>
       }
     >
       <div className="relative flex min-h-0 flex-1">
-        <div
-          className="relative min-h-0 flex-1 touch-none bg-[#0b0d1c]"
-          onPointerDown={onPointerDown}
-          onPointerMove={onPointerMove}
-          onPointerUp={onPointerUp}
-          onPointerCancel={onPointerUp}
-          onWheel={(e) => {
-            cam.current.zoom = Math.min(1.2, Math.max(0.75, cam.current.zoom + e.deltaY * 0.0008))
-          }}
-        >
+        <div className="relative flex min-h-0 flex-1 flex-col">
           <ClockBackdrop danger={ticking && turn === myColor && myLeft <= 5000} tint={theme.glow} turnKey={`${turn}-${lastMove?.to ?? ''}`} />
-          <VersusBar
-            white={{
-              name: myColor === 'w' ? 'Você' : start.opponent.name,
-              court: 'Corte de Marfim',
-              portrait: myColor === 'w' ? playerPhoto : null,
-              ms: wLeft,
-              captures: captures.w,
-              active: ticking && turn === 'w',
+          {/* Oponente no alto, você embaixo: o tabuleiro fica entre as duas plaquetas. */}
+          <div className="relative z-20 shrink-0 px-3 pt-2.5">
+            <PlayerPlate side={plate(oppColor)} total={clockTotal} />
+          </div>
+          <div
+            className="relative min-h-0 flex-1 touch-none"
+            onPointerDown={onPointerDown}
+            onPointerMove={onPointerMove}
+            onPointerUp={onPointerUp}
+            onPointerCancel={onPointerUp}
+            onWheel={(e) => {
+              cam.current.zoom = Math.min(1.2, Math.max(0.75, cam.current.zoom + e.deltaY * 0.0008))
             }}
-            black={{
-              name: myColor === 'b' ? 'Você' : start.opponent.name,
-              court: 'Corte Crimson',
-              portrait: myColor === 'b' ? playerPhoto : null,
-              ms: bLeft,
-              captures: captures.b,
-              active: ticking && turn === 'b',
-            }}
-            total={clockTotal}
-            match={`Partida #${String(start.seed % 1000).padStart(3, '0')}`}
-            status={
-              spectator
-                ? 'Modo espectador'
-                : running
-                  ? animating
-                    ? 'Combate…'
-                    : turn === myColor
-                      ? myLeft <= 0
-                        ? 'Tempo esgotado…'
-                        : 'Sua vez — toque numa peça'
-                      : `Turno de ${start.opponent.name}`
-                  : ''
-            }
-          />
-          <Canvas
-            shadows="soft"
-            dpr={quality === 'low' ? 1 : quality === 'medium' ? [1, 1.5] : [1, 2]}
-            camera={{ position: [0, 9, 9], fov: 40 }}
-            gl={{ antialias: quality !== 'low', alpha: true, powerPreference: 'high-performance' }}
-            onPointerMissed={() => setSelected(null)}
           >
-            <LivingScene
-              units={units}
-              theme={theme}
-              set={set}
-              quality={quality}
-              animRef={animRef}
-              mateRef={mateRef}
-              cam={cam}
-              selected={selected}
-              targets={targets}
-              captureTargets={captureTargets}
-              lastFrom={lastMove?.from ?? null}
-              lastTo={lastMove?.to ?? null}
-              checkSq={checkSq}
-              onSquare={onSquare}
+            <Canvas
+              shadows="soft"
+              dpr={quality === 'low' ? 1 : quality === 'medium' ? [1, 1.5] : [1, 2]}
+              camera={{ position: [0, 9, 9], fov: 40 }}
+              gl={{ antialias: quality !== 'low', alpha: true, powerPreference: 'high-performance' }}
+              onPointerMissed={() => setSelected(null)}
+            >
+              <LivingScene
+                units={units}
+                theme={theme}
+                set={set}
+                quality={quality}
+                animRef={animRef}
+                mateRef={mateRef}
+                cam={cam}
+                selected={selected}
+                targets={targets}
+                captureTargets={captureTargets}
+                lastFrom={lastMove?.from ?? null}
+                lastTo={lastMove?.to ?? null}
+                checkSq={checkSq}
+                onSquare={onSquare}
+              />
+            </Canvas>
+
+            {statusText && (
+              <p
+                key={statusText}
+                className={cn(
+                  'pointer-events-none absolute inset-x-0 top-2 z-20 flex animate-dv-fade items-center justify-center gap-2 text-center',
+                  myTurn ? 'text-white' : 'text-dv-text-3',
+                )}
+                role="status"
+              >
+                <SigilStar className={cn('size-2.5', myTurn ? 'text-dv-amethyst' : 'text-dv-gold/60')} />
+                <span className="dv-label text-[10px] tracking-[0.2em] [text-shadow:0_1px_6px_#000]">{statusText}</span>
+                <SigilStar className={cn('size-2.5', myTurn ? 'text-dv-amethyst' : 'text-dv-gold/60')} />
+              </p>
+            )}
+
+            <ChessIconButton icon={RotateCcw} label="Resetar câmera" onClick={resetCam} className="absolute bottom-2 left-2 z-20 border border-dv-line-strong bg-dv-ink/70 backdrop-blur-sm" />
+            <ChessIconButton
+              icon={History}
+              label="Histórico de lances"
+              active={panel === 'history'}
+              onClick={() => setPanel((p) => (p === 'history' ? 'none' : 'history'))}
+              className="absolute bottom-2 right-2 z-20 border border-dv-line-strong bg-dv-ink/70 backdrop-blur-sm lg:hidden"
             />
-          </Canvas>
 
-          <button
-            type="button"
-            onClick={resetCam}
-            aria-label="Resetar câmera"
-            className="absolute bottom-3 left-3 z-20 grid size-10 place-items-center border border-foreground/20 bg-black/50 text-foreground/70 backdrop-blur hover:text-foreground"
-          >
-            <RotateCcw className="size-4" />
-          </button>
+            <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20 h-40 overflow-hidden" aria-hidden="true">
+              {reactions.map((x) => (
+                <span key={x.id} className="devo-react absolute bottom-2 text-2xl" style={{ left: `${x.x}%` }}>
+                  {x.e}
+                </span>
+              ))}
+            </div>
 
-          <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20 h-40 overflow-hidden" aria-hidden="true">
-            {reactions.map((x) => (
-              <span key={x.id} className="devo-react absolute bottom-2 text-2xl" style={{ left: `${x.x}%` }}>
-                {x.e}
-              </span>
-            ))}
+            {panel === 'history' && (
+              <div className="dv-velvet absolute inset-x-3 bottom-14 z-30 max-h-[55%] animate-dv-rise overflow-y-auto border border-dv-line-gold p-3 lg:hidden">
+                <p className="dv-label mb-2 text-[10px] text-dv-gold">Lances</p>
+                {historyList}
+              </div>
+            )}
+
+            <aside className="dv-velvet absolute left-3 top-10 z-20 hidden max-h-[60%] w-48 flex-col border border-dv-line-gold p-3 lg:flex" aria-label="Histórico de lances">
+              <p className="dv-label mb-2 text-[10px] text-dv-gold">Movimentos</p>
+              <div className="min-h-0 flex-1 overflow-y-auto">{historyList}</div>
+            </aside>
+          </div>
+          <div className="relative z-20 shrink-0 px-3 pb-1">
+            <PlayerPlate side={plate(myColor)} total={clockTotal} />
           </div>
 
           {panel === 'settings' && (
-            <div className="absolute right-3 top-3 z-30 max-h-[calc(100%-1.5rem)] w-72 overflow-y-auto border border-foreground/20 bg-background/95 p-4 text-xs backdrop-blur">
-              <p className="mb-2 uppercase tracking-[0.3em] text-foreground/50">Tabuleiro</p>
-              <div className="grid grid-cols-2 gap-1.5">
+            <div className="dv-velvet absolute right-3 top-2 z-40 max-h-[calc(100%-1rem)] w-[min(19rem,calc(100%-1.5rem))] animate-dv-rise overflow-y-auto border border-dv-line-gold p-4">
+              <p className="dv-label mb-2 text-[10px] text-dv-gold">Tabuleiro</p>
+              <div className="grid grid-cols-3 gap-1.5">
                 {BOARD_THEMES.map((t) => (
-                  <button key={t.id} type="button" onClick={() => saveLocal({ chessTheme: t.id })} className={cn(optionBtn(theme.id === t.id), 'flex items-center gap-2')}>
-                    <span className="flex shrink-0" aria-hidden="true">
-                      <span className="size-3" style={{ background: t.light }} />
-                      <span className="size-3" style={{ background: t.dark }} />
+                  <button key={t.id} type="button" aria-pressed={theme.id === t.id} onClick={() => saveLocal({ chessTheme: t.id })} className={cn(optionBtn(theme.id === t.id), 'flex flex-col items-start gap-1.5')}>
+                    <span className="flex shrink-0 border border-dv-gold/60" aria-hidden="true">
+                      <span className="size-3.5" style={{ background: t.light }} />
+                      <span className="size-3.5" style={{ background: t.dark }} />
                     </span>
                     {t.name}
                   </button>
                 ))}
               </div>
-              <p className="mb-2 mt-4 uppercase tracking-[0.3em] text-foreground/50">Exércitos</p>
+              <p className="dv-label mb-2 mt-4 text-[10px] text-dv-gold">Exércitos</p>
               <div className="grid gap-1.5">
                 {PIECE_SETS.map((s) => (
-                  <button key={s.id} type="button" onClick={() => saveLocal({ pieceSet: s.id })} className={cn(optionBtn(set.id === s.id), 'flex items-center gap-2')}>
+                  <button key={s.id} type="button" aria-pressed={set.id === s.id} onClick={() => saveLocal({ pieceSet: s.id })} className={cn(optionBtn(set.id === s.id), 'flex items-center gap-2.5')}>
                     <span className="flex shrink-0 gap-0.5" aria-hidden="true">
-                      <span className="size-3 rounded-full" style={{ background: s.w.cloth }} />
-                      <span className="size-3 rounded-full" style={{ background: s.b.cloth }} />
+                      <span className="size-3.5 rotate-45 border border-dv-gold/60" style={{ background: s.w.body }} />
+                      <span className="size-3.5 rotate-45 border border-dv-gold/60" style={{ background: s.b.body }} />
                     </span>
                     {s.name}
                   </button>
                 ))}
               </div>
-              <p className="mb-2 mt-4 uppercase tracking-[0.3em] text-foreground/50">Gráficos</p>
+              <p className="dv-label mb-2 mt-4 text-[10px] text-dv-gold">Gráficos</p>
               <div className="grid grid-cols-4 gap-1.5">
                 {[
                   ['auto', 'Auto'],
@@ -695,47 +702,41 @@ export default function QuickChess({ start, settings, onFinish, onQuit }: GamePr
                   ['medium', 'Médio'],
                   ['high', 'Alto'],
                 ].map(([k, l]) => (
-                  <button key={k} type="button" onClick={() => saveLocal({ quality: k })} className={cn(optionBtn((local.quality ?? 'auto') === k), 'text-center')}>
+                  <button key={k} type="button" aria-pressed={(local.quality ?? 'auto') === k} onClick={() => saveLocal({ quality: k })} className={cn(optionBtn((local.quality ?? 'auto') === k), 'px-1 text-center tracking-[0.06em]')}>
                     {l}
                   </button>
                 ))}
               </div>
-              <p className="mb-2 mt-4 uppercase tracking-[0.3em] text-foreground/50">Som</p>
+              <p className="dv-label mb-2 mt-4 text-[10px] text-dv-gold">Som</p>
               <div className="grid grid-cols-2 gap-1.5">
-                <button type="button" onClick={() => saveLocal({ sfx: sfx ? 'off' : 'on' })} className={cn(optionBtn(sfx), 'text-center')}>
+                <button type="button" aria-pressed={sfx} onClick={() => saveLocal({ sfx: sfx ? 'off' : 'on' })} className={cn(optionBtn(sfx), 'text-center')}>
                   SFX {sfx ? 'ON' : 'OFF'}
                 </button>
                 <button type="button" onClick={resetCam} className={cn(optionBtn(false), 'text-center')}>
                   Resetar câmera
                 </button>
               </div>
-              <p className="mt-4 text-[10px] leading-relaxed text-foreground/40">A câmera fica fixa atrás das suas peças. Pinça ou roda do mouse ajustam a distância.</p>
-            </div>
-          )}
-
-          {panel === 'history' && (
-            <div className="absolute inset-x-3 bottom-16 z-30 max-h-[45%] overflow-y-auto border border-foreground/20 bg-background/95 p-3 backdrop-blur lg:hidden">
-              <p className="mb-2 text-[10px] uppercase tracking-[0.3em] text-foreground/50">Lances</p>
-              {historyList}
+              <p className="mt-4 font-body text-[14px] leading-snug text-dv-text-3">Arraste para girar a mesa (ela volta sozinha ao seu assento). Pinça ou roda do mouse ajustam a distância.</p>
             </div>
           )}
 
           {ending && (
-            <div className="absolute inset-0 z-40 grid place-items-center bg-black/55 p-6 backdrop-blur-[2px]" role="status">
-              <div className="devo-rise flex flex-col items-center text-center">
-                <p className="font-mono text-[10px] uppercase tracking-[0.5em] text-foreground/60">{ending.reason}</p>
+            <div className="absolute inset-0 z-40 grid place-items-center bg-dv-ink/70 p-6 backdrop-blur-[2px]" role="status">
+              <div className="flex w-full max-w-sm animate-dv-cut-in flex-col items-center text-center">
+                <p className="dv-label text-[10px] text-dv-gold">{ending.reason}</p>
+                <span aria-hidden="true" className="mt-3 h-px w-28 bg-gradient-to-r from-transparent via-dv-gold/70 to-transparent" />
                 <h2
                   className={cn(
-                    'mt-2 font-serif text-5xl uppercase tracking-wider sm:text-6xl',
-                    ending.result === 'win' ? 'text-[#e8c35a]' : ending.result === 'loss' ? 'text-[#ff4a4a]' : 'text-foreground',
+                    'mt-3 font-impact text-[56px] font-semibold uppercase leading-none tracking-[0.06em]',
+                    ending.result === 'win' ? 'dv-brass-text' : ending.result === 'loss' && online ? 'text-dv-blood-text' : 'text-white',
                   )}
                 >
                   {ending.result === 'win' ? 'Vitória' : ending.result === 'loss' ? 'Derrota' : 'Empate'}
                 </h2>
-                <p className="mt-1 text-xs uppercase tracking-[0.3em] text-foreground/70">
+                <p className="dv-label mt-2 text-[10px] text-dv-text-2">
                   {ending.result === 'draw' ? 'Ninguém cai hoje' : `${ending.result === 'win' ? 'Você' : start.opponent.name} venceu`}
                 </p>
-                <dl className="mt-5 grid grid-cols-2 gap-x-8 gap-y-2 font-mono text-xs sm:grid-cols-4">
+                <dl className="dv-velvet mt-5 grid w-full grid-cols-4 gap-1 border border-dv-line-gold px-2 py-3">
                   {(
                     [
                       ['Lances', history.length],
@@ -744,54 +745,48 @@ export default function QuickChess({ start, settings, onFinish, onQuit }: GamePr
                       ['Melhor', bestCapture.current ? `+${bestCapture.current}` : '—'],
                     ] as const
                   ).map(([k, v]) => (
-                    <div key={k} className="flex flex-col items-center">
-                      <dt className="text-[9px] uppercase tracking-[0.3em] text-foreground/50">{k}</dt>
-                      <dd className="text-lg text-foreground">{v}</dd>
+                    <div key={k} className="flex flex-col items-center gap-1">
+                      <dt className="dv-label text-[10px] tracking-[0.12em] text-dv-text-3">{k}</dt>
+                      <dd className="font-impact text-[22px] font-semibold leading-none text-white dv-tabular">{v}</dd>
                     </div>
                   ))}
                 </dl>
-                <p className="mt-4 font-mono text-sm text-[#e8c35a]">+{ending.score} SCORE</p>
+                <p className="mt-4 font-impact text-[20px] font-semibold tracking-[0.08em] text-dv-gold-bright dv-tabular">+{ending.score} SCORE</p>
               </div>
             </div>
           )}
-          <aside
-            className="absolute left-3 top-28 z-20 hidden max-h-[45%] w-44 flex-col border border-white/10 bg-black/60 p-3 backdrop-blur-sm lg:flex"
-            aria-label="Histórico de lances"
-          >
-            <p className="mb-2 text-[10px] uppercase tracking-[0.3em] text-white/70">Movimentos</p>
-            <div className="min-h-0 flex-1 overflow-y-auto">{historyList}</div>
-          </aside>
         </div>
 
         <aside
           className={cn(
-            'flex-col border-foreground/10 bg-background/95 backdrop-blur',
-            panel === 'chat' ? 'absolute inset-x-3 bottom-3 top-28 z-30 flex border p-3 md:static md:inset-auto md:z-auto' : 'hidden md:flex',
-            'md:w-64 md:shrink-0 md:border-0 md:border-l md:p-4 lg:w-72 xl:w-80',
+            'flex-col border-dv-line',
+            panel === 'chat' ? 'dv-velvet absolute inset-x-3 bottom-3 top-16 z-30 flex border border-dv-line-gold p-3 md:static md:inset-auto md:z-auto' : 'hidden md:flex',
+            'md:w-64 md:shrink-0 md:border-0 md:border-l md:bg-dv-ink-2/90 md:p-4 lg:w-72 xl:w-80',
           )}
           aria-label="Chat da partida"
         >
-          <p className="mb-3 text-[10px] uppercase tracking-[0.3em] text-foreground/60">Chat da mesa</p>
+          <p className="dv-label mb-3 text-[10px] text-dv-gold">Chat da mesa</p>
           <ArcadeChat channel={chatChannel} className="flex-1" />
         </aside>
       </div>
 
-      <div className="relative z-10 flex shrink-0 items-center justify-center gap-2 px-3 pb-[max(env(safe-area-inset-bottom),10px)] pt-2">
-        <div className="flex gap-1">
+      <div className="relative z-10 flex shrink-0 items-center gap-1 border-t border-dv-line bg-dv-ink/80 px-2 pb-[max(env(safe-area-inset-bottom),8px)] pt-1.5">
+        <div className="flex">
           {REACTIONS.map((e) => (
-            <button key={e} type="button" onClick={() => react(e)} className="grid size-9 place-items-center text-base opacity-70 transition hover:scale-110 hover:opacity-100" aria-label={`Reagir ${e}`}>
+            <button key={e} type="button" onClick={() => react(e)} className="dv-focus grid size-11 place-items-center text-[20px] opacity-75 grayscale-[0.35] transition hover:scale-110 hover:opacity-100 hover:grayscale-0 active:scale-95" aria-label={`Reagir ${e}`}>
               {e}
             </button>
           ))}
         </div>
-        <button
-          type="button"
+        <Button
+          variant="danger"
+          size="sm"
+          className="ml-auto"
           disabled={!running || spectator}
           onClick={() => (online ? act({ type: 'resign' }) : end('loss', 'VOCÊ DESISTIU'))}
-          className="ml-auto border border-[#b3141c]/60 bg-[#3a0a0e]/60 px-5 py-2 font-serif text-[11px] uppercase tracking-[0.35em] text-[#ff6a6a] hover:border-[#ff4a4a] hover:text-[#ff9a9a] disabled:opacity-30"
         >
           Desistir
-        </button>
+        </Button>
       </div>
 
       <PopLayer pops={pops} />

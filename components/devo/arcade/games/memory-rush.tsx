@@ -7,24 +7,38 @@ import type { GameProps } from '@/lib/devo/arcade/client'
 import type { MemoryState } from '@/lib/devo/arcade/client'
 import { GAMES, MEMORY_PHASES, memoryAfterMiss, memoryDeck, memoryPairPoints, rng } from '@/lib/devo/arcade/games'
 import { cn } from '@/lib/utils'
-import { Countdown321, GameFrame, PopLayer, ScoreChip, WaitingStart, usePops, vibrate } from '../game-hud'
+import { SigilStar } from '@/components/devo/kit'
+import { Countdown321, GameFrame, HudClock, PopLayer, PressureLine, ScoreChip, WaitingStart, usePops, vibrate } from '../game-hud'
 import { roomOutcome, useOnlineGate, useRoom } from '../use-room'
 
+/** Símbolos na porcelana: tinta negra, rubi só nos naipes vermelhos, ametista e aço como joias. */
+const INK = '#151517'
+const RUBY = '#a3121f'
+const AMETHYST = '#4e4580'
+const STEEL = '#6b6357'
 const SYMBOLS: { icon: LucideIcon; color: string }[] = [
-  { icon: Skull, color: '#eceef2' },
-  { icon: Crown, color: '#c2b9ec' },
-  { icon: Dice5, color: '#c9a7ff' },
-  { icon: Spade, color: '#9fb4ff' },
-  { icon: Heart, color: '#c2b9ec' },
-  { icon: Club, color: '#7fe0a6' },
-  { icon: Diamond, color: '#ffb36b' },
-  { icon: Moon, color: '#b8d8ff' },
-  { icon: Flame, color: '#ff7a3a' },
-  { icon: Eye, color: '#f0a6ff' },
-  { icon: Key, color: '#e0d27a' },
-  { icon: Hourglass, color: '#d6b48c' },
-  { icon: Anchor, color: '#7ad7e0' },
+  { icon: Skull, color: INK },
+  { icon: Crown, color: STEEL },
+  { icon: Dice5, color: INK },
+  { icon: Spade, color: INK },
+  { icon: Heart, color: RUBY },
+  { icon: Club, color: INK },
+  { icon: Diamond, color: RUBY },
+  { icon: Moon, color: AMETHYST },
+  { icon: Flame, color: RUBY },
+  { icon: Eye, color: AMETHYST },
+  { icon: Key, color: STEEL },
+  { icon: Hourglass, color: STEEL },
+  { icon: Anchor, color: AMETHYST },
 ]
+
+/** Materiais das cartas (verso de mármore negro, frente de porcelana) — CSS local, sem imagens. */
+const MR_CSS = `
+.mr-back{background-color:#0d0d0f;background-image:radial-gradient(120% 80% at 30% 0%,rgba(238,237,235,.08),transparent 60%),var(--dv-marble-dark);background-size:auto,260px 260px;box-shadow:inset 0 0 0 1px rgba(186,176,159,.45),inset 0 1px 0 rgba(236,229,216,.25),0 6px 14px rgba(0,0,0,.55)}
+.mr-face{background-color:#f1f0ee;background-image:radial-gradient(90% 60% at 30% 0%,rgba(255,255,255,.95),transparent 55%),var(--dv-marble-white);background-size:auto,260px 260px;box-shadow:inset 0 0 0 1px rgba(21,21,23,.18),inset 0 0 0 3px #f1f0ee,inset 0 0 0 4px rgba(186,176,159,.7),0 6px 14px rgba(0,0,0,.5)}
+.mr-face.mr-mine{box-shadow:inset 0 0 0 1px rgba(21,21,23,.18),inset 0 0 0 3px #f1f0ee,inset 0 0 0 4px #8a7cc8,0 0 0 1px #8a7cc8,0 0 18px rgba(138,124,200,.45)}
+.mr-face.mr-theirs{filter:saturate(.55) brightness(.78);box-shadow:inset 0 0 0 1px rgba(21,21,23,.25),inset 0 0 0 3px #e0ddd8,inset 0 0 0 4px #6b6357,0 4px 10px rgba(0,0,0,.5)}
+`
 
 const PHASES = MEMORY_PHASES
 const TOTAL_MS = 120_000
@@ -123,7 +137,7 @@ export default function MemoryRush({ start, onFinish, onQuit }: GameProps) {
     if (fresh.length) {
       setOppFlash(fresh)
       window.setTimeout(() => setOppFlash([]), 700)
-      push('OPONENTE ENCONTROU UM PAR!', 'red', 1000)
+      push('OPONENTE ENCONTROU UM PAR!', 'amethyst', 1000)
       playSfx('error')
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -197,7 +211,7 @@ export default function MemoryRush({ start, onFinish, onQuit }: GameProps) {
             setCards((prev) => prev.map((c) => (c.id === pick.id || c.id === mate.id ? { ...c, owner: 'opp' } : c)))
             setOppFlash([pick.id, mate.id])
             window.setTimeout(() => setOppFlash([]), 700)
-            push('OPONENTE ENCONTROU UM PAR!', 'red', 1000)
+            push('OPONENTE ENCONTROU UM PAR!', 'amethyst', 1000)
             playSfx('error')
           } else if (wrong.length) {
             const other = wrong[Math.floor(botRand() * wrong.length)]
@@ -260,39 +274,51 @@ export default function MemoryRush({ start, onFinish, onQuit }: GameProps) {
   }, [cards])
 
   const diff = me.score - opp.score
-  const status =
-    !running ? null : diff < 0 && diff >= -150 ? `VOCÊ ESTÁ A ${-diff} PONTOS` : diff < 0 ? 'ADVERSÁRIO ESTÁ NA FRENTE' : diff > 0 ? 'VOCÊ ESTÁ NA FRENTE' : 'EMPATE'
-  const cols = cards.length >= 20 ? 'grid-cols-5' : cards.length >= 12 ? 'grid-cols-4' : 'grid-cols-4'
-  const secs = Math.ceil(remaining / 1000)
+  const status: { text: string; tone: 'neutral' | 'lead' | 'amethyst' | 'alert' } | null = !running
+    ? null
+    : diff < 0 && diff >= -150
+      ? { text: `VOCÊ ESTÁ A ${-diff} PONTOS`, tone: lastTen ? 'alert' : 'amethyst' }
+      : diff < 0
+        ? { text: 'ADVERSÁRIO ESTÁ NA FRENTE', tone: lastTen ? 'alert' : 'amethyst' }
+        : diff > 0
+          ? { text: 'VOCÊ ESTÁ NA FRENTE', tone: 'lead' }
+          : { text: 'EMPATE', tone: 'neutral' }
+  const cols = cards.length >= 20 ? 'grid-cols-5' : 'grid-cols-4'
+  const combo = Math.max(1, Math.min(me.combo, 5))
 
   return (
     <GameFrame
-      title={`${meta.name} · Fase ${phase + 1}/${PHASES.length}`}
+      title={meta.name}
+      sub={`${phase === PHASES.length - 1 ? 'Fase final' : `Fase ${phase + 1}/${PHASES.length}`} · ${PHASES[phase]} pares`}
       accent={meta.accent}
       onQuit={onQuit}
-      top={
-        <span className={cn('font-mono text-lg tabular-nums', lastTen ? 'animate-pulse text-[#c2b9ec]' : 'text-foreground')}>
-          {String(Math.floor(secs / 60)).padStart(2, '0')}:{String(secs % 60).padStart(2, '0')}
-        </span>
-      }
+      top={<HudClock ms={remaining} critical={lastTen} />}
     >
-      <div className={cn('pointer-events-none absolute inset-0 z-0 transition-opacity duration-500', lastTen ? 'opacity-100' : 'opacity-0')} style={{ boxShadow: 'inset 0 0 120px #8a7cc866' }} />
-      <div className="relative z-10 flex shrink-0 items-stretch gap-2 px-3 pt-3">
-        <ScoreChip label="Você" value={shownScore(me.score)} active={diff >= 0} />
-        <div className="flex flex-1 flex-col items-center justify-center text-center">
-          <span className="text-[10px] uppercase tracking-[0.25em] text-foreground/40">
-            {me.pairs} x {opp.pairs} pares · combo x{Math.max(1, Math.min(me.combo, 5))}
+      {/* Últimos 10 segundos: a borda da tela respira em rubi (perigo real). */}
+      <div
+        aria-hidden="true"
+        className={cn('pointer-events-none absolute inset-0 z-0 transition-opacity duration-500', lastTen ? 'animate-dv-alert opacity-100' : 'opacity-0')}
+        style={{ boxShadow: 'inset 0 0 110px rgba(163,18,31,0.45)' }}
+      />
+      <div className="relative z-10 grid shrink-0 grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-2 px-3 pt-3">
+        <ScoreChip label="Você" value={shownScore(me.score)} active={diff > 0} />
+        <div className="flex flex-col items-center gap-1 text-center">
+          <span className="font-impact text-[18px] font-semibold leading-none text-dv-text dv-tabular" aria-label={`${me.pairs} a ${opp.pairs} pares`}>
+            {me.pairs}
+            <span className="mx-1.5 text-[13px] text-dv-gold">×</span>
+            {opp.pairs}
           </span>
-          {status && (
-            <span className={cn('mt-0.5 font-mono text-[11px] uppercase tracking-[0.2em]', diff < 0 ? 'text-[#c2b9ec]' : 'text-[#c2b9ec]')}>{status}</span>
-          )}
+          <span className="dv-label text-[10px] tracking-[0.16em] text-dv-text-3">
+            pares · combo <span className={cn(combo > 1 ? 'text-dv-gold-bright' : 'text-dv-text-2')}>x{combo}</span>
+          </span>
         </div>
         <ScoreChip label={start.opponent.name} value={shownScore(opp.score)} active={diff < 0} tone="opp" />
       </div>
+      <div className="relative z-10 flex h-6 shrink-0 items-center justify-center px-3 pt-1.5">{status && <PressureLine text={status.text} tone={status.tone} />}</div>
 
-      <div className="relative z-10 flex min-h-0 flex-1 items-center justify-center p-3">
-        <div className={cn('grid w-full max-w-[min(100%,calc((100dvh-170px)*1.05))] gap-2 md:gap-3', cols)}>
-          {cards.map((c) => {
+      <div className="relative z-10 flex min-h-0 flex-1 items-center justify-center px-3 pb-[max(env(safe-area-inset-bottom),12px)] pt-1">
+        <div className={cn('grid w-full max-w-[min(100%,calc((100dvh-190px)*1.02))] gap-2 md:gap-3', cols)}>
+          {cards.map((c, i) => {
             const peek = oppPeek.includes(c.id)
             const faceUp = !!c.owner || open.includes(c.id) || peek
             const S = SYMBOLS[c.sym]
@@ -303,26 +329,34 @@ export default function MemoryRush({ start, onFinish, onQuit }: GameProps) {
                 onClick={() => flip(c)}
                 disabled={!!c.owner}
                 aria-label={faceUp ? 'Carta revelada' : 'Carta virada'}
-                className="aspect-[3/4] [perspective:600px]"
+                className="dv-focus group aspect-[3/4] animate-dv-pop [perspective:700px]"
+                style={{ animationDelay: `${Math.min(i, 20) * 18}ms` }}
               >
                 <span
                   className={cn(
-                    'relative block size-full transition-transform duration-300 [transform-style:preserve-3d]',
+                    'relative block size-full transition-transform duration-[360ms] ease-[cubic-bezier(0.16,1,0.3,1)] [transform-style:preserve-3d]',
                     faceUp && '[transform:rotateY(180deg)]',
-                    c.owner && 'opacity-60',
-                    oppFlash.includes(c.id) && 'animate-pulse',
+                    !faceUp && 'group-enabled:group-active:scale-[0.96]',
+                    oppFlash.includes(c.id) && 'animate-dv-alert',
                   )}
                 >
-                  <span className="absolute inset-0 grid place-items-center border border-[#8a7cc8]/30 bg-gradient-to-br from-[#1b1310] to-[#0c0807] [backface-visibility:hidden]">
-                    <span className="size-1/3 rotate-45 border border-[#8a7cc8]/40" />
+                  {/* Verso: mármore negro com filete de aço e a estrela do sigilo. */}
+                  <span className="mr-back absolute inset-0 grid place-items-center [backface-visibility:hidden]">
+                    <span className="absolute inset-[5px] border border-dv-gold/35" />
+                    <span className="absolute inset-[9px] border border-dv-gold/10" />
+                    <SigilStar className="relative size-[30%] text-dv-gold/70 drop-shadow-[0_0_6px_rgba(236,229,216,0.25)]" />
                   </span>
+                  {/* Frente: porcelana com o símbolo em tinta. */}
                   <span
                     className={cn(
-                      'absolute inset-0 grid place-items-center border bg-[#140f0d] [backface-visibility:hidden] [transform:rotateY(180deg)]',
-                      c.owner === 'me' ? 'border-[#c2b9ec]' : c.owner === 'opp' || peek ? 'border-primary' : 'border-foreground/40',
+                      'mr-face absolute inset-0 grid place-items-center [backface-visibility:hidden] [transform:rotateY(180deg)]',
+                      c.owner === 'me' && 'mr-mine',
+                      (c.owner === 'opp' || peek) && 'mr-theirs',
                     )}
                   >
-                    <S.icon className="size-1/2" style={{ color: S.color }} strokeWidth={1.6} />
+                    <S.icon className="relative size-[46%]" style={{ color: S.color }} strokeWidth={1.5} />
+                    {c.owner === 'me' && <span aria-hidden="true" className="absolute right-1.5 top-1.5 size-1.5 rotate-45 bg-dv-amethyst shadow-[0_0_6px_var(--dv-amethyst)]" />}
+                    {c.owner === 'opp' && <span aria-hidden="true" className="absolute inset-0 bg-[linear-gradient(135deg,transparent_47%,rgba(21,21,23,0.35)_48%,rgba(21,21,23,0.35)_52%,transparent_53%)]" />}
                   </span>
                 </span>
               </button>
@@ -330,6 +364,7 @@ export default function MemoryRush({ start, onFinish, onQuit }: GameProps) {
           })}
         </div>
       </div>
+      <style>{MR_CSS}</style>
 
       <PopLayer pops={pops} />
       {!running && !finished.current && !gateOpen && <WaitingStart name={start.opponent.name} />}
