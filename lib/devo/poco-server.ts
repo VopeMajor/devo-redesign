@@ -214,6 +214,44 @@ async function abertoInfo(g: GiroRow, q: Queryable): Promise<PocoGiroAberto> {
   }
 }
 
+/* ------------------------------------------------------------------ Faixa simulada (pedido do dono) */
+
+/** Nomes fictícios para a faixa de prêmios simulados. Nunca saem se coincidirem com alguma conta ou personagem. */
+const NOMES_FICTICIOS = [
+  'Valéria Montserrat', 'Oto Brancaleone', 'Cecília Vasquez', 'Ignácio Ravel', 'Dante Moreau', 'Íris Calloway',
+  'Teodoro Lins', 'Marieta Duval', 'Bento Arruda', 'Selene Alcântara', 'Raul Veríssimo', 'Helena Quintal',
+  'Augusto Prado', 'Noémia Castro', 'Caio Belmonte', 'Ofélia Sarmento', 'Joaquim Távora', 'Flora Albuquerque',
+  'Gaspar Leme', 'Inês Valadares', 'Rômulo Siqueira', 'Clarice Morais', 'Vicente Aragão', 'Leonor Bastos',
+  'Elias Campelo', 'Odete Rangel', 'Silvano Mattos', 'Aurélia Pontes', 'Horácio Lacerda', 'Benedita Sales',
+]
+let simCache: { at: number; v: Extract<PocoPayload, { liberado: true }>['simulacao'] } | null = null
+
+async function simulacao(q: Queryable) {
+  if (simCache && Date.now() - simCache.at < 5 * 60_000) return simCache.v
+  const reais = await run<{ n: string }>(
+    q,
+    `SELECT lower(name) AS n FROM players
+     UNION SELECT lower(character_name) FROM players WHERE character_name IS NOT NULL AND character_name <> ''`,
+  )
+  const set = new Set<string>()
+  for (const r of reais) {
+    set.add(r.n.trim())
+    set.add(r.n.trim().split(/\s+/)[0])
+  }
+  // Fora se o nome completo OU o primeiro nome coincidir com qualquer conta/personagem real.
+  const nomes = NOMES_FICTICIOS.filter((n) => !set.has(n.toLowerCase()) && !set.has(n.toLowerCase().split(/\s+/)[0]))
+  const itens = await run<{ item: string; raridade: ItemRarity; categoria: PocoCategoria }>(
+    q,
+    `SELECT name AS item, rarity AS raridade, kind AS categoria FROM item_defs
+      WHERE active AND rarity IN ('raro', 'epico', 'lendario', 'arcano')
+        AND ((kind IN ('capsula', 'cosmetico') AND meta->>'poco' = 'true') OR key = 'fragmento_arcano')
+      ORDER BY key LIMIT 40`,
+  )
+  const v = { nomes, itens }
+  simCache = { at: Date.now(), v }
+  return v
+}
+
 /** Tudo o que a tela do Poço precisa (só dados do próprio jogador + letreiro público). */
 export async function getPoco(playerId: string): Promise<PocoPayload> {
   if (!(await hasUnlock(playerId, 'poco'))) return { liberado: false, motivo: MOTIVO_TRANCADO }
@@ -221,7 +259,7 @@ export async function getPoco(playerId: string): Promise<PocoPayload> {
   if (!ator) throw new RecordError('Registro não encontrado.', 404)
   const tudo = seesAllSystems(normalizeCargo(ator.cargo))
 
-  const [estadoRows, moedasRows, probs, gratisCfg, dia, baldeRows, aberto, faixa] = await Promise.all([
+  const [estadoRows, moedasRows, probs, gratisCfg, dia, baldeRows, aberto, faixa, sim] = await Promise.all([
     run<{ apresentado_at: Date | null; balde: string }>(pool, 'SELECT apresentado_at, balde FROM poco_estado WHERE player_id = $1', [playerId]),
     run<{ key: string; name: string; description: string | null; rarity: ItemRarity; quantity: string | null }>(
       pool,
@@ -237,6 +275,7 @@ export async function getPoco(playerId: string): Promise<PocoPayload> {
     baldes(playerId, pool),
     giroAberto(playerId, pool),
     letreiro(pool),
+    simulacao(pool),
   ])
   const estado = estadoRows[0]
   const [{ n: usados }] = await run<{ n: string }>(pool, 'SELECT count(*) AS n FROM poco_giros WHERE player_id = $1 AND gratis AND dia = $2::date', [playerId, dia.dia])
@@ -263,6 +302,7 @@ export async function getPoco(playerId: string): Promise<PocoPayload> {
     baldeAtual,
     aberto: aberto ? await abertoInfo(aberto, pool) : null,
     letreiro: faixa,
+    simulacao: sim,
   }
   if (can(ator, 'config.editar')) {
     const [nota] = await run<{ note: string | null }>(pool, "SELECT note FROM devo_config WHERE key = 'poco.probabilidades'")
