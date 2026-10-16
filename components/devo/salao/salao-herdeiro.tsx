@@ -91,7 +91,7 @@ export function SalaoHerdeiro({
                 playSfx('whoosh')
                 onFim()
               }}
-              className="dv-focus flex min-h-11 items-center px-2 font-mono text-[11px] uppercase tracking-[0.18em] text-dv-text-2 hover:text-dv-text"
+              className="dv-focus flex min-h-11 items-center whitespace-nowrap px-2 font-mono text-[11px] uppercase tracking-[0.12em] text-dv-text-2 hover:text-dv-text"
             >
               Pular apresentação
             </button>
@@ -118,7 +118,7 @@ export function SalaoHerdeiro({
       </div>
 
       {/* o Herdeiro, no camarote: a base do busto some atrás do parapeito */}
-      <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-[17%] z-10 mx-auto h-[50%] max-w-[560px]">
+      <div aria-hidden="true" className={cn('pointer-events-none absolute inset-x-0 top-[17%] z-10 mx-auto h-[50%] max-w-[560px] transition-transform duration-500', foco === 'contador' && 'translate-y-[9%]')}>
         <span className="absolute inset-x-[10%] top-[8%] h-[80%] bg-[radial-gradient(50%_50%_at_50%_45%,rgba(236,229,216,0.16),transparent_70%)]" />
         {HERDEIRO_POSES.map((pose) => {
           const art = npcPortrait('herdeiro', pose)

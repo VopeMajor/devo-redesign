@@ -37,7 +37,7 @@ export function Placa({
   return (
     <MarbleSlab as="section" edge={edge} cut={12} quiet aria-label={ariaLabel ?? titulo} className={className} innerClassName="p-4">
       {titulo && (
-        <header className="mb-3 flex items-end justify-between gap-3">
+        <header className="mb-3 flex flex-col items-start gap-3">
           <div className="min-w-0">
             <h3 className="font-display text-[16px] font-semibold uppercase leading-tight tracking-[0.14em] text-dv-text">{titulo}</h3>
             {legenda && <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.18em] text-dv-text-3">{legenda}</p>}

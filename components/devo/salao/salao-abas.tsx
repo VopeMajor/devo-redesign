@@ -90,9 +90,9 @@ export function AbaLeiloes({ d, agir }: { d: SalaoLiberado; agir: Agir }) {
 
 function Cabeca({ titulo, legenda }: { titulo: string; legenda?: string }) {
   return (
-    <div className="flex items-end justify-between gap-3 px-1">
+    <div className="px-1">
       <h3 className="font-display text-[17px] font-semibold uppercase tracking-[0.14em] text-dv-text">{titulo}</h3>
-      {legenda && <p className="font-mono text-[10.5px] uppercase tracking-[0.14em] text-dv-text-3">{legenda}</p>}
+      {legenda && <p className="mt-1 font-mono text-[10.5px] uppercase tracking-[0.14em] text-dv-text-3">{legenda}</p>}
     </div>
   )
 }
@@ -115,12 +115,12 @@ function LoteCartao({ l, i, aberto, onLance }: { l: SalaoLote; i: number; aberto
           <span className="font-body text-[14px] text-dv-text-2">de {l.vendedor}</span>
         </p>
         <div className="mt-auto flex items-end justify-between gap-2 pt-3">
-          <div>
-            <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-dv-text-3">{l.maiorLance ? `Maior lance · ${l.lances}` : 'Lance mínimo'}</p>
-            <Tempo min={l.maiorLance ?? l.lanceMinimo} forte className="mt-1" />
+          <div className="min-w-0">
+            <p className="whitespace-nowrap font-mono text-[10px] uppercase tracking-[0.14em] text-dv-text-3">{l.maiorLance ? `Maior lance · ${l.lances}×` : 'Lance mínimo'}</p>
+            <Tempo min={l.maiorLance ?? l.lanceMinimo} forte className="mt-1 whitespace-nowrap" />
           </div>
           {aberto && !l.meu && onLance && (
-            <Button variant={l.lidero ? 'secondary' : 'primary'} size="sm" onClick={onLance} aria-label={`Dar lance no lote ${l.numero}`}>
+            <Button variant={l.lidero ? 'secondary' : 'primary'} size="sm" onClick={onLance} aria-label={`Dar lance no lote ${l.numero}`} className="shrink-0 whitespace-nowrap !px-3.5 !tracking-[0.14em]">
               Dar lance
             </Button>
           )}

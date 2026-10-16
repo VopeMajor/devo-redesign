@@ -129,7 +129,7 @@ function Tela({ d, agir, recarregar }: { d: SalaoLiberado; agir: (b: Record<stri
             <span aria-hidden="true" className="size-[7px] rotate-45 bg-dv-amethyst shadow-[0_0_8px_rgba(138,124,200,0.9)]" />
             Calendário Devo
           </button>
-          <ContadorSalao relogio={d.relogio} className="animate-dv-fade" />
+          <ContadorSalao relogio={d.relogio} manual={!!d.owner} className="animate-dv-fade" />
           {d.eventos.some((e) => e.fim > d.agora && e.inicio - d.agora < 16 * 86_400_000) && (
             <p className="mx-auto mt-4 w-fit max-w-full truncate px-3 text-center font-mono text-[10.5px] uppercase tracking-[0.14em] text-dv-amethyst-text">
               Em breve · {d.eventos.find((e) => e.fim > d.agora)?.titulo}

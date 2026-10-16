@@ -21,7 +21,7 @@ function partes(ms: number) {
  * (aberto). Dígitos de impacto com virada mascarada do kit, rótulos Dias/Horas/Min/Seg, selo de estado e a data
  * em horário de Brasília. `destaque` = a cena do Herdeiro aponta para ele (halo de aço).
  */
-export function ContadorSalao({ relogio, className, destaque = false, compacto = false }: { relogio: SalaoRelogio; className?: string; destaque?: boolean; compacto?: boolean }) {
+export function ContadorSalao({ relogio, className, destaque = false, compacto = false, manual = false }: { relogio: SalaoRelogio; className?: string; destaque?: boolean; compacto?: boolean; manual?: boolean }) {
   const now = useNow(1000)
   const aberto = relogio.aberto
   const alvo = aberto ? relogio.fechaEm : relogio.proxima.inicio
@@ -38,7 +38,7 @@ export function ContadorSalao({ relogio, className, destaque = false, compacto =
         ) : (
           <StateSeal tone="quiet">Fechado</StateSeal>
         )}
-        {relogio.forcado && <span className="dv-label text-[10px] text-dv-text-3">manual</span>}
+        {manual && relogio.forcado && <span className="dv-label text-[10px] text-dv-text-3">manual</span>}
       </div>
       <p className="dv-label mt-3 text-[10px] tracking-[0.24em] text-dv-text-2">{aberto ? (alvo ? 'A edição fecha em' : 'Aberto até segunda ordem') : 'Próxima abertura em'}</p>
       <div
