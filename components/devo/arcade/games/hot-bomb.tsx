@@ -249,7 +249,7 @@ export default function HotBomb({ start, settings, onFinish, onQuit }: GameProps
         rings.push(m)
       })
       // Rejunte de aço entre os anéis.
-      const steel = M(0xbab09f, { metalness: 0.85, roughness: 0.3 })
+      const steel = M(0xbab09f, { metalness: 0.35, roughness: 0.35 })
       for (let i = 1; i <= 6; i++) {
         const t = new THREE.Mesh(new THREE.RingGeometry((i * R) / 6 - 0.03, (i * R) / 6 + 0.03, 64), steel)
         t.rotation.x = -Math.PI / 2
@@ -260,7 +260,7 @@ export default function HotBomb({ start, settings, onFinish, onQuit }: GameProps
     const pil: THREE.Mesh[] = []
     for (let i = 0; i < 28; i++) {
       const a = (i / 28) * 6.283
-      const p = new THREE.Mesh(new THREE.CylinderGeometry(0.35, 0.35, 1, 16), i % 2 ? M(0xbab09f, { metalness: 0.85, roughness: 0.28 }) : M(0x1f1f22, { roughness: 0.3 }))
+      const p = new THREE.Mesh(new THREE.CylinderGeometry(0.35, 0.35, 1, 16), i % 2 ? M(0xbab09f, { metalness: 0.35, roughness: 0.35 }) : M(0x1f1f22, { roughness: 0.3 }))
       p.position.set(Math.cos(a) * (R + 0.4), 0.5, Math.sin(a) * (R + 0.4))
       p.castShadow = true
       arena.add(p)
@@ -273,7 +273,7 @@ export default function HotBomb({ start, settings, onFinish, onQuit }: GameProps
     for (let i = 0; i < 34; i++) {
       const a = drnd(0, 6.28)
       const d = drnd(15, 34)
-      const m = new THREE.Mesh(gs[i % 4], M(PALETTE[i % PALETTE.length], { metalness: i % 4 === 1 ? 0.8 : 0.1, roughness: 0.35 }))
+      const m = new THREE.Mesh(gs[i % 4], M(PALETTE[i % PALETTE.length], { metalness: i % 4 === 1 ? 0.3 : 0.05, roughness: 0.35 }))
       m.position.set(Math.cos(a) * d, drnd(1, 14), Math.sin(a) * d)
       m.scale.setScalar(drnd(0.7, 2))
       m.userData = { s: drnd(0.3, 1.2), y: m.position.y }
@@ -283,7 +283,7 @@ export default function HotBomb({ start, settings, onFinish, onQuit }: GameProps
     /* obstáculos: barras giratórias, hub central e bumpers */
     const sw = [0, 1].map((i) => {
       const g = new THREE.Group()
-      const b = new THREE.Mesh(new THREE.BoxGeometry(R * 1.5, 0.5, 0.5), i ? M(0xf1f0ee, { roughness: 0.3 }) : M(0xbab09f, { metalness: 0.85, roughness: 0.28 }))
+      const b = new THREE.Mesh(new THREE.BoxGeometry(R * 1.5, 0.5, 0.5), i ? M(0xf1f0ee, { roughness: 0.3 }) : M(0xbab09f, { metalness: 0.35, roughness: 0.35 }))
       b.castShadow = true
       b.position.y = 0.4
       g.add(b)
@@ -450,7 +450,7 @@ export default function HotBomb({ start, settings, onFinish, onQuit }: GameProps
     hl.position.set(-0.17, 0.2, 0.27)
     hl.rotation.z = 0.6
     bomb.add(hl)
-    const metal = M(0xbab09f, { metalness: 0.85, roughness: 0.3 })
+    const metal = M(0xbab09f, { metalness: 0.35, roughness: 0.35 })
     const cap = new THREE.Mesh(new THREE.CylinderGeometry(0.11, 0.14, 0.14, 14), metal)
     cap.position.y = 0.39
     bomb.add(cap)
