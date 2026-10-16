@@ -64,6 +64,8 @@ export function CenaDialogo({
   const [respostas, setRespostas] = useState<Respostas | null>(null)
   const [explorados, setExplorados] = useState<number[]>([])
   const [palco, setPalco] = useState<PalcoEstado>(() => PALCO_INICIAL(cena?.cenario ?? 'escuro'))
+  // coluna da caixa de fala: o retrato do NPC se ancora no topo dela (kit/npc-anchor)
+  const [coluna, setColuna] = useState<HTMLElement | null>(null)
   const [fx, setFx] = useState<{ fx?: Fx; key: number }>({ key: 0 })
   const [selo, setSelo] = useState<Selo | null>(null)
   const [ocupado, setOcupado] = useState(false)
@@ -288,7 +290,7 @@ export function CenaDialogo({
       aria-label={titulo}
       className={cn('fixed inset-0 z-[95] overflow-hidden bg-black text-dv-text outline-none', saindo ? 'cd-out' : 'cd-in', cena?.cenario === 'sobreposto' && 'bg-transparent')}
     >
-      <Palco estado={palco} fx={fx.fx} fxKey={fx.key} destinoReal={dados?.destino} falando={!!falando} />
+      <Palco estado={palco} fx={fx.fx} fxKey={fx.key} destinoReal={dados?.destino} falando={!!falando} fala={coluna} />
 
       <VnTopBar
         skipLabel="Sair"
@@ -304,7 +306,7 @@ export function CenaDialogo({
       {/* Véu inferior: o texto sempre sobre fundo escuro. */}
       <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-[48%] bg-gradient-to-t from-black/90 via-black/55 to-transparent" />
 
-      <div className="absolute inset-x-0 bottom-0 z-20 mx-auto flex w-full max-w-3xl flex-col gap-2.5 px-4 pb-[max(env(safe-area-inset-bottom),1.25rem)] lg:pb-10">
+      <div ref={setColuna} className="absolute inset-x-0 bottom-0 z-20 mx-auto flex w-full max-w-3xl flex-col gap-2.5 px-4 pb-[max(env(safe-area-inset-bottom),1.25rem)] lg:pb-10">
         {selo && <SeloEfeito key={selo.key} selo={selo} />}
 
         {erro && (

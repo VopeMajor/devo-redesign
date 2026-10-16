@@ -52,27 +52,35 @@ export function npcBusto(npc: string) {
 }
 
 /** Arte do busto recortada (preenche o contêiner, que deve ter a proporção 1080:(base−topo)). */
-function BustArt({ npc, src, fade }: { npc: string; src: string; fade: boolean }) {
+function BustArt({ npc, src, fade, overlay }: { npc: string; src: string; fade: boolean; overlay?: ReactNode }) {
   const { topo, base, cx } = npcBusto(npc)
   const h = base - topo
-  const mask = fade ? 'linear-gradient(to bottom, #000 0%, #000 74%, rgba(0,0,0,0.5) 88%, transparent 100%)' : undefined
+  // a base some nos últimos ~24% da janela (stops em fração da imagem inteira, 960 px)
+  const pct = (y: number) => `${((y / NPC_SPRITE.h) * 100).toFixed(2)}%`
+  const mask = fade
+    ? `linear-gradient(to bottom, #000 0%, #000 ${pct(base - h * 0.24)}, rgba(0,0,0,0.5) ${pct(base - h * 0.1)}, transparent ${pct(base)})`
+    : undefined
+  const box: CSSProperties = {
+    width: '100%',
+    height: `${(NPC_SPRITE.h / h) * 100}%`,
+    top: `${(-topo / h) * 100}%`,
+    left: `${((NPC_SPRITE.w / 2 - cx) / NPC_SPRITE.w) * 100}%`,
+  }
   return (
-    // eslint-disable-next-line @next/next/no-img-element
-    <img
-      src={src}
-      alt=""
-      draggable={false}
-      decoding="async"
-      className="absolute max-w-none select-none"
-      style={{
-        width: '100%',
-        height: `${(NPC_SPRITE.h / h) * 100}%`,
-        top: `${(-topo / h) * 100}%`,
-        left: `${((NPC_SPRITE.w / 2 - cx) / NPC_SPRITE.w) * 100}%`,
-        WebkitMaskImage: mask,
-        maskImage: mask,
-      }}
-    />
+    <>
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src={src} alt="" draggable={false} decoding="async" className="absolute max-w-none select-none" style={{ ...box, WebkitMaskImage: mask, maskImage: mask }} />
+      {overlay && (
+        // efeito só sobre a silhueta: mesma caixa da imagem, máscara = o próprio sprite
+        <span
+          aria-hidden="true"
+          className="absolute overflow-hidden"
+          style={{ ...box, maskImage: `url(${src})`, WebkitMaskImage: `url(${src})`, maskSize: '100% 100%', WebkitMaskSize: '100% 100%' }}
+        >
+          {overlay}
+        </span>
+      )}
+    </>
   )
 }
 
@@ -142,6 +150,8 @@ export type NpcAnchorProps = {
   children?: ReactNode
   /** Base dissolvida (padrão). */
   dissolver?: boolean
+  /** Efeito pintado só dentro da silhueta da pose atual (ex.: varredura de holograma). */
+  sobreArte?: ReactNode
 }
 
 /**
@@ -163,6 +173,7 @@ export function NpcAnchor({
   style,
   children,
   dissolver = true,
+  sobreArte,
 }: NpcAnchorProps) {
   const ref = useRef<HTMLDivElement>(null)
   const pos = useFalaAncora(fala, ref, reserva)
@@ -193,7 +204,7 @@ export function NpcAnchor({
           if (!src) return null
           return (
             <div key={p} className={cn('npc-pose absolute inset-0 overflow-hidden transition-opacity duration-500', p === atual ? 'opacity-100' : 'opacity-0')}>
-              <BustArt npc={npc} src={src} fade={dissolver} />
+              <BustArt npc={npc} src={src} fade={dissolver} overlay={p === atual ? sobreArte : undefined} />
             </div>
           )
         })}
