@@ -193,18 +193,23 @@ if (want('novato')) {
   await step('prologo', async () => {
     // O prólogo tem ~60 falas (cada uma: 1 Enter completa o texto, outro avança). Foto a cada 5 passos.
     let n = 0
-    let seenLook = false
+    const seenLook = new Set()
     for (let i = 0; i < 220; i++) {
       await wait(800)
       if (i % 5 === 0) await shot(page, `03-prologo-${String(n++).padStart(2, '0')}`)
-      // Escolha da segunda aparência (DIRECAO-2 §5): foto do painel antes e depois da Seleção automática.
-      if (!seenLook && (await page.getByRole('radiogroup', { name: 'Tipo de aparência' }).count())) {
-        seenLook = true
+      // As duas aparências (DIRECAO-3 §9): primeiro a 2D/3D, depois a real. Foto de cada painel antes e
+      // depois da Seleção automática.
+      const look = [
+        ['art', 'Aparência 2D/3D', '03-prologo-aparencia'],
+        ['real', 'Aparência real', '03-prologo-aparencia-real'],
+      ].find(([k]) => !seenLook.has(k))
+      if (look && (await page.getByRole('form', { name: look[1] }).count())) {
+        seenLook.add(look[0])
         await wait(700)
-        await shot(page, '03-prologo-aparencia')
+        await shot(page, look[2])
         await tryClick(btn(page, 'Seleção automática'), 1500)
         await wait(500)
-        await shot(page, '03-prologo-aparencia-auto')
+        await shot(page, `${look[2]}-auto`)
         await tryClick(btn(page, 'Responder', true), 1500)
         continue
       }
@@ -951,10 +956,13 @@ if (want('genero')) {
         await tryClick(fem.first())
         continue
       }
-      if (!seen.has('aparencia') && (await page.getByRole('radiogroup', { name: 'Tipo de aparência' }).count())) {
-        seen.add('aparencia')
+      // As duas aparências (2D/3D e real), cada uma pela Seleção automática; foto da segunda com a primeira já respondida.
+      const look = [['art', 'Aparência 2D/3D'], ['real', 'Aparência real']].find(([k]) => !seen.has(`aparencia-${k}`))
+      if (look && (await page.getByRole('form', { name: look[1] }).count())) {
+        seen.add(`aparencia-${look[0]}`)
         await tryClick(btn(page, 'Seleção automática'), 1500)
         await wait(400)
+        if (look[0] === 'real') await shot(page, '06-genero-aparencia-real')
         await tryClick(btn(page, 'Responder', true), 1500)
         continue
       }
@@ -996,6 +1004,104 @@ if (want('genero')) {
     await openApp(p2, 'Sala de Jogos')
     await wait(1500)
     await shot(p2, '07-genero-javali')
+  })
+  await ctx.close()
+}
+
+// ── 2d. Prólogo: a queda das crianças e a entrada da Melissa (convite 0009, Brisa) ───────────────
+// Quadros intermediários da queda (DIRECAO-3 §9): o relógio da página é parado (page.clock) para o
+// golpe (quadro com avanço automático) esperar as fotos, e as animações do teatro são postas em
+// instantes fixos (ms desde o início do quadro). Depois, a Melissa entrando: nunca em cor antes da hora.
+if (want('novato')) {
+  const { ctx, page } = await account('Brisa', 'DEVO-TEST-0009', [], 'phone', {
+    welcomed: false,
+    owlMet: false,
+    javaliMet: false,
+    profile: { appearanceChangesLeft: 1 },
+    // índice 7 = "Com um simples acidente." (o próximo quadro é o golpe)
+    story: { part: 'prologue', index: 7, vars: { name: 'Brisa' } },
+  })
+  /** Pausa tudo e põe as animações dentro de `scope` (seletor) no instante `at`. */
+  const freezeIn = (scope, at, up = 0) =>
+    page
+      .evaluate(
+        ([scope, at, up]) => {
+          let root = document.querySelector(scope)
+          for (let k = 0; k < up && root; k++) root = root.parentElement
+          if (!root) return false
+          for (const a of document.getAnimations()) {
+            a.pause()
+            const t = a.effect?.target
+            if (t && root.contains(t)) a.currentTime = at
+          }
+          return true
+        },
+        [scope, at, up],
+      )
+      .catch(() => false)
+  const thaw = () => page.evaluate(() => document.getAnimations().forEach((a) => a.play())).catch(() => {})
+  await step('queda', async () => {
+    await page.clock.install()
+    await page.goto(BASE, { waitUntil: 'networkidle' })
+    await wait(1000)
+    await btn(page, 'Continuar').click({ timeout: 15000 })
+    await page.getByText('Com um simples acidente.').first().waitFor({ timeout: 8000 })
+    await wait(2600)
+    const t0 = await page.evaluate(() => Date.now())
+    await page.keyboard.press('Enter')
+    await page.clock.pauseAt(t0 + 400)
+    await page.locator('[data-fall="trip"]').first().waitFor({ state: 'attached', timeout: 4000 })
+    await wait(150)
+    // o golpe: tesoura no chão, clarão e o corte nascendo do ponto do impacto
+    await freezeIn('[data-theater]', 330, 1)
+    await shot(page, '03-queda-1-golpe')
+    // o corte aberto para os dois lados, a faixa do chão dobrando para o escuro, as crianças na borda
+    await freezeIn('[data-theater]', 1050, 1)
+    await shot(page, '03-queda-2-corte')
+    await thaw()
+    await page.clock.resume()
+    await page.locator('[data-fall="fall"]').first().waitFor({ state: 'attached', timeout: 6000 })
+    await wait(150)
+    // a queda: as crianças escorregando para o vão, com rastro
+    await freezeIn('[data-theater]', 480, 1)
+    await shot(page, '03-queda-3-queda')
+    await thaw()
+    await wait(2600)
+    await shot(page, '03-queda-4-fenda')
+  })
+  await step('melissa-entrada', async () => {
+    // Volta o save para a fala de cenário da mina (índice 27), numa página que não é o app.
+    const p2 = await ctx.newPage()
+    await p2.goto(`${BASE}/images/card-back.png`)
+    await api(p2, '/api/save', makeSave([], { welcomed: false, owlMet: false, javaliMet: false, profile: { appearanceChangesLeft: 1 }, story: { part: 'prologue', index: 27, vars: { name: 'Brisa' } } })).then(
+      (r) => r.status >= 400 && manifest.errors.push({ step: 'melissa-save', error: `${r.status} ${r.text}` }),
+    )
+    await p2.close()
+    await page.goto(BASE, { waitUntil: 'networkidle' })
+    await wait(1000)
+    await btn(page, 'Continuar').click({ timeout: 15000 })
+    await page.getByText(/A paisagem se abre/).first().waitFor({ timeout: 8000 })
+    // espera a fala de cenário terminar de digitar sozinha (Enter aqui só completaria o texto)
+    await wait(4600)
+    // "Alguém parece se aproximar.": a silhueta entra. Fotos no começo da transição (onde ela piscava).
+    const approach = page.locator('[data-melissa="approach"]')
+    await page.keyboard.press('Enter')
+    await approach.first().waitFor({ state: 'attached', timeout: 4000 })
+    await wait(40)
+    await freezeIn('[data-melissa]', 160)
+    await shot(page, '03-melissa-1-silhueta-160ms')
+    await freezeIn('[data-melissa]', 900)
+    await shot(page, '03-melissa-2-silhueta')
+    await thaw()
+    await wait(1800)
+    const on = page.locator('[data-melissa="on"]')
+    for (let k = 0; k < 4 && !(await on.count()); k++) {
+      await page.keyboard.press('Enter')
+      await wait(300)
+    }
+    await on.first().waitFor({ state: 'attached', timeout: 4000 })
+    await wait(1400)
+    await shot(page, '03-melissa-3-em-cena')
   })
   await ctx.close()
 }
@@ -1490,8 +1596,12 @@ if (want('torres')) {
       if (await aceitar.count()) {
         await shot(page, 't13-galo-oferta')
         await tryClick(aceitar.first())
-        await wait(900)
+        await wait(1300)
+        await shot(page, 't13b-galo-revelacao', 'cristal se formando')
+        await wait(2200)
         await shot(page, 't14-galo-essencia', '+1 Essência de Afinidade do Galo')
+        await tryClick(btn(page, 'Continuar', true))
+        await wait(800)
         continue
       }
       if (await choices.count()) {
@@ -1536,6 +1646,11 @@ if (want('torres')) {
     await wait(900)
     await shot(page, 't22-andar-ficha')
     await btn(page, 'Subir ao andar I').click({ timeout: 8000 })
+    await wait(1300)
+    await shot(page, 't23a-revelacao', 'cadeado abrindo')
+    await wait(2300)
+    await shot(page, 't23b-revelacao-resultado', 'andar I vencido')
+    await btn(page, 'Continuar', true).click({ timeout: 8000 })
     await wait(2200)
     await shot(page, 't23-andar-cena')
     await passarCena(page, /Torre do Imperador · Andar I$/)
@@ -1572,6 +1687,9 @@ if (want('torres')) {
     await page.getByRole('button', { name: /^Andar I:/ }).first().click({ timeout: 8000 })
     await wait(800)
     await btn(page, 'Subir ao andar I').click({ timeout: 8000 })
+    await wait(3600)
+    await shot(page, 't41a-revelacao-chave', '+1 Chave do Observatório')
+    await btn(page, 'Continuar', true).click({ timeout: 8000 })
     await wait(1500)
     await passarCena(page, /Torre do Observatório · Andar I$/)
     await wait(500)
@@ -1594,6 +1712,8 @@ if (want('torres')) {
     await page.getByRole('button', { name: /^Andar II:/ }).first().click({ timeout: 8000 })
     await wait(800)
     await btn(page, 'Subir ao andar II').click({ timeout: 8000 })
+    await wait(3600)
+    await tryClick(btn(page, 'Continuar', true), 6000)
     await wait(1500)
     await passarCena(page, /Torre do Imperador · Andar II$/)
     await wait(500)
@@ -1795,10 +1915,41 @@ if (want('poco')) {
     await tryClick(btn(page, 'Soltar a manivela', true))
     await wait(3800)
     await tryClick(btn(page, 'Inspecionar Balde', true))
-    await wait(1600)
+    await wait(900)
+    await shot(page, 'poco-22a-revelacao-raro')
+    await wait(1500)
     await shot(page, 'poco-22-resultado-raro')
     await tryClick(btn(page, 'Guardar', true))
     await wait(800)
+  })
+
+  // Uma revelação por categoria (fragmento, essência e os três tipos de cosmético de teste).
+  await step('poco-categorias', async () => {
+    await sql("SELECT devo_item_grant(id, 'dracma_comum', 6, 'captura', NULL, NULL, 'captura-poco-moedas:' || id) FROM players WHERE lower(name) = 'brasa'")
+    await abrirPoco(page, 'Poço dos Milagres')
+    const giroUI = async (nome) => {
+      await tryClick(btn(page, 'Lançar Moeda', true))
+      await wait(800)
+      await tryClick(btn(page, 'Lançar Dracma Comum', true))
+      await wait(1400)
+      await tryClick(btn(page, 'Girar Manivela', true))
+      await wait(900)
+      await tryClick(btn(page, 'Soltar a manivela', true))
+      await wait(2900)
+      await tryClick(btn(page, 'Inspecionar Balde', true))
+      await wait(2500)
+      await shot(page, nome)
+      if (!(await tryClick(btn(page, 'Guardar', true), 1500))) await tryClick(btn(page, 'Devolver ao poço', true), 1500)
+      await wait(900)
+    }
+    await forcar('dracma_comum', 'fragmento')
+    await giroUI('poco-26-resultado-fragmento')
+    await forcar('dracma_comum', 'essencia')
+    await giroUI('poco-27-resultado-essencia')
+    await forcar('dracma_comum', 'cosmetico')
+    await giroUI('poco-28-resultado-cosmetico-1')
+    await giroUI('poco-29-resultado-cosmetico-2')
+    await giroUI('poco-30-resultado-cosmetico-3')
   })
   await restaurar()
 

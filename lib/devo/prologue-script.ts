@@ -27,7 +27,8 @@ export type Speaker = 'narrator' | 'voice' | 'melissa' | 'system'
 
 export type Line = { who: Speaker; text: string; mood?: MelissaMood }
 
-export type ProfileField = 'name' | 'face' | 'age' | 'gender'
+/** `face` = aparência 2D/3D; `faceReal` = aparência real. O jogador responde as duas (DIRECAO-3 §9). */
+export type ProfileField = 'name' | 'face' | 'faceReal' | 'age' | 'gender'
 
 export type Beat =
   | { kind: 'line'; stage: StageId; line: Line; auto?: number; sfx?: 'crush' | 'reveal' | 'notify' | 'card' }
@@ -120,7 +121,9 @@ export const PROLOGUE: Beat[] = [
   sys('Confus{o|a} sobre essa parte? Não se preocupe! No DEVO existem diferentes formas de jogar, e por isso é preciso escolher uma segunda aparência, real ou 2D. Embora seja obrigatório escolher uma aparência aqui, você não será obrigad{o|a} a participar de jogos em que se sinta desconfortável com o uso do segundo avatar.'),
   sys('Não sabe qual aparência escolher? Basta tocar em Seleção automática! Temos uma lista com diversas aparências preparadas. E, se mudar de ideia mais tarde, será possível trocar de aparência por afinidade dentro do jogo, mas apenas uma vez.'),
   sys('Lembrete: sua aparência não precisa ser parecida com a original, mas deve ter idade aproximada e ser do mesmo sexo. Apenas aparências humanas são permitidas.'),
+  // As duas aparências, uma depois da outra: primeiro a 2D/3D, depois a real (DIRECAO-3 §9).
   { kind: 'input', stage: 'mine', field: 'face' },
+  { kind: 'input', stage: 'mine', field: 'faceReal' },
   mel('Curioso. Bem curioso. Tudo certo!', 'convite'),
   mel('Então, {nome}, você precisa se apressar. Seu jogo já vai começar.', 'preocupado'),
   {

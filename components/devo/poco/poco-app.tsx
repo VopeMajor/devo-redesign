@@ -1,17 +1,18 @@
 'use client'
 
 import './poco.css'
-import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties, type ReactNode } from 'react'
+import { useCallback, useEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react'
 import useSWR from 'swr'
 import { playSfx } from '@/lib/devo/audio'
 import type { ManivelaParams, PocoLetreiro, PocoPayload, PocoPesos, PocoResultado } from '@/lib/devo/poco'
+import { ITEM_RARITY_LABEL } from '@/lib/devo/progresso'
 import { cn } from '@/lib/utils'
 import { useMediaQuery } from '../hooks'
-import { Button, IconButton, Spinner } from '../kit/button'
+import { Button, Spinner } from '../kit/button'
 import { EmblemMark, EmblemPoco } from '../kit/emblems'
-import { GlyphSpark } from '../kit/glyphs'
 import { callName, useDevo } from '../state/devo-store'
 import { BaldesSheet, LancarSheet, MoedasSheet } from './poco-folhas'
+import { Etiqueta, FaixaOrnamental, MedalhaoDentado, PlacaGotica } from './poco-ornamentos'
 import { BaldeIcon, type BaldePosicao, DracmaIcon, PocoCena } from './poco-cena'
 import { PocoManivela } from './poco-manivela'
 import { PocoNeblina } from './poco-neblina'
@@ -130,11 +131,13 @@ function Trancado({ motivo }: { motivo: string }) {
 /* ── Tela do poço ───────────────────────────────────────────────────────────────────────── */
 
 function PocoTela({ data, refresh }: { data: Liberado; refresh: () => void }) {
+  const { state } = useDevo()
   const reduced = useMediaQuery('(prefers-reduced-motion: reduce)')
   const [folha, setFolha] = useState<null | 'moedas' | 'lancar' | 'baldes'>(null)
   const [ocupado, setOcupado] = useState<string | null>(null)
   const [erro, setErro] = useState<string | null>(null)
   const [moedaAnim, setMoedaAnim] = useState(0)
+  const [ativo, setAtivo] = useState(false)
   const [manivela, setManivela] = useState<ManivelaParams | null>(null)
   const [girando, setGirando] = useState(false)
   const [subindo, setSubindo] = useState(false)
@@ -142,6 +145,7 @@ function PocoTela({ data, refresh }: { data: Liberado; refresh: () => void }) {
   const timers = useRef<number[]>([])
   useEffect(() => () => timers.current.forEach((t) => window.clearTimeout(t)), [])
   const later = (fn: () => void, ms: number) => timers.current.push(window.setTimeout(fn, ms))
+  const nome = callName(state) || 'Você'
 
   const aberto = data.aberto
   const fase: 'vazio' | 'moeda' | 'cheio' = !aberto ? 'vazio' : aberto.estado === 'girado' ? 'cheio' : 'moeda'
@@ -153,6 +157,7 @@ function PocoTela({ data, refresh }: { data: Liberado; refresh: () => void }) {
     playSfx('error')
   }
 
+  // Etapa 1 — ativação: a moeda cai, o anel acelera e a água acende.
   const lancar = async (o: { gratis: true } | { moeda: string }) => {
     setOcupado('gratis' in o ? 'gratis' : o.moeda)
     setErro(null)
@@ -160,6 +165,8 @@ function PocoTela({ data, refresh }: { data: Liberado; refresh: () => void }) {
       await poco('moeda.lancar', o)
       setFolha(null)
       setMoedaAnim((n) => n + 1)
+      setAtivo(true)
+      later(() => setAtivo(false), reduced ? 0 : 1600)
       playSfx('fall')
       refresh()
     } catch (e) {
@@ -168,6 +175,14 @@ function PocoTela({ data, refresh }: { data: Liberado; refresh: () => void }) {
       setOcupado(null)
     }
   }
+
+  // Etapa 2 — suspense: depois do minigame, a roda gira e o balde sobe (o servidor já decidiu o prêmio).
+  const terminarSuspense = useCallback(() => {
+    timers.current.forEach((t) => window.clearTimeout(t))
+    timers.current = []
+    setGirando(false)
+    setSubindo(false)
+  }, [])
 
   const finalizarGiro = useCallback(
     async (toques: number[]) => {
@@ -180,26 +195,23 @@ function PocoTela({ data, refresh }: { data: Liberado; refresh: () => void }) {
         await poco('manivela.girar', { toques })
         refresh()
         later(() => {
-          setGirando(false)
-          setSubindo(false)
+          terminarSuspense()
           playSfx('bell')
-        }, reduced ? 0 : 1700)
+        }, reduced ? 0 : 2000)
       } catch (e) {
-        setGirando(false)
-        setSubindo(false)
+        terminarSuspense()
         falhar(e)
         refresh()
       } finally {
         setOcupado(null)
       }
     },
-    [refresh, reduced], // eslint-disable-line react-hooks/exhaustive-deps
+    [refresh, reduced, terminarSuspense], // eslint-disable-line react-hooks/exhaustive-deps
   )
 
   const girar = async () => {
     if (!aberto) return
     setErro(null)
-    // Retomada (a manivela já tinha começado e a página recarregou): termina o giro sem minigame.
     if (aberto.estado === 'girando') return finalizarGiro([])
     setOcupado('girar')
     try {
@@ -214,6 +226,7 @@ function PocoTela({ data, refresh }: { data: Liberado; refresh: () => void }) {
     }
   }
 
+  // Etapas 3 e 4 — revelação e resultado (PocoResultadoView).
   const inspecionar = async () => {
     setErro(null)
     if (fase !== 'cheio') {
@@ -226,7 +239,7 @@ function PocoTela({ data, refresh }: { data: Liberado; refresh: () => void }) {
       const r = await poco('balde.inspecionar')
       const res = r.resultado as PocoResultado
       setResultado(res)
-      playSfx(res.categoria === 'lixo' ? 'card' : 'reveal')
+      playSfx(res.categoria === 'lixo' ? 'card' : 'whoosh')
     } catch (e) {
       falhar(e)
       refresh()
@@ -253,90 +266,115 @@ function PocoTela({ data, refresh }: { data: Liberado; refresh: () => void }) {
     refresh()
   }
 
-  const dica =
-    fase === 'vazio' ? 'Lance uma moeda no poço.' : fase === 'moeda' ? (aberto?.estado === 'girando' ? 'A manivela ficou no meio. Termine o giro.' : 'A moeda afundou. Gire a manivela.') : 'O balde subiu. Inspecione o balde.'
+  const dica = subindo
+    ? 'O balde sobe pela corrente…'
+    : fase === 'vazio'
+      ? 'Lance uma moeda no poço.'
+      : fase === 'moeda'
+        ? aberto?.estado === 'girando'
+          ? 'A manivela ficou no meio. Termine o giro.'
+          : 'A moeda afundou. Gire a manivela.'
+        : 'O balde subiu. Inspecione o balde.'
 
   return (
-    <div className="relative h-full overflow-hidden bg-dv-ink [--poco-h:min(44vh,370px)] [--poco-top:46%]">
-      <PocoCena palco="tela" balde={balde} baldeTipo={baldeAtual?.id ?? 'madeira'} girando={girando} moeda={moedaAnim} brilho={fase === 'cheio' ? 0.9 : fase === 'moeda' ? 0.7 : 0.45} />
+    <div className="relative h-full overflow-hidden bg-dv-ink [--poco-h:min(50vh,410px)] [--poco-top:45%]">
+      <PocoCena
+        palco="tela"
+        balde={balde}
+        baldeTipo={baldeAtual?.id ?? 'madeira'}
+        girando={girando}
+        ativo={ativo || subindo || fase === 'cheio'}
+        moeda={moedaAnim}
+        brilho={fase === 'cheio' ? 0.95 : fase === 'moeda' ? 0.75 : 0.5}
+      />
 
       <div className="relative z-10 flex h-full flex-col">
-        <Letreiro itens={data.letreiro} />
+        <FaixaPremios reais={data.letreiro} simulacao={data.simulacao} />
 
-        <div className="flex items-start justify-between gap-3 px-3 pt-2">
-          <div className="animate-dv-fade flex min-w-0 flex-col gap-1.5">
-            <p className="flex min-h-8 items-center gap-2 bg-[#0c0c0e]/70 py-1 pl-1.5 pr-3 shadow-[inset_0_0_0_1px_rgba(238,237,235,0.14)]">
-              <BaldeIcon tipo={baldeAtual?.id} className="size-6" />
-              <span className="truncate font-mono text-[10.5px] uppercase tracking-[0.12em] text-dv-text-2">{baldeAtual?.nome}</span>
-            </p>
-            <p
-              className={cn(
-                'flex w-fit items-center gap-2 py-1 pl-2 pr-3 font-mono text-[10.5px] uppercase tracking-[0.12em] shadow-[inset_0_0_0_1px_rgba(238,237,235,0.14)]',
-                data.giroGratis.disponivel ? 'bg-dv-cobalt-dim text-dv-amethyst-text shadow-[inset_0_0_0_1px_rgba(138,124,200,0.5)]' : 'bg-[#0c0c0e]/70 text-dv-text-3',
-              )}
-            >
-              <GlyphSpark className="size-3" />
-              {data.giroGratis.disponivel ? 'Giro grátis disponível' : 'Giro grátis usado hoje'}
-            </p>
+        <div className="flex items-start justify-between gap-2 px-3 pt-1.5">
+          <div className="animate-dv-fade flex min-w-0 flex-col gap-1">
+            <Etiqueta joia={false} className="pl-2">
+              <img src={`/images/poco/balde-${['madeira', 'ferro', 'cobre', 'prata'].includes(baldeAtual?.id ?? '') ? baldeAtual?.id : 'madeira'}.webp`} alt="" className="h-7 w-7 object-cover [object-position:50%_92%]" />
+              <span className="truncate font-display text-[12px] font-semibold uppercase tracking-[0.1em] text-dv-text-2">{baldeAtual?.nome}</span>
+            </Etiqueta>
+            <Etiqueta aceso={data.giroGratis.disponivel}>
+              <span className={cn('whitespace-nowrap font-mono text-[10.5px] uppercase tracking-[0.12em]', data.giroGratis.disponivel ? 'text-dv-amethyst-text' : 'text-dv-text-3')}>
+                {data.giroGratis.disponivel ? 'Giro grátis disponível' : 'Giro grátis usado hoje'}
+              </span>
+            </Etiqueta>
           </div>
-          <IconButton label="Suas moedas" variant="ghost" onClick={() => setFolha('moedas')} sfx="open" className="shrink-0 bg-[#0c0c0e]/60">
-            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-              <circle cx="5" cy="12" r="2" />
-              <circle cx="12" cy="12" r="2" />
-              <circle cx="19" cy="12" r="2" />
-            </svg>
-          </IconButton>
+          <BotaoTresPontos onClick={() => setFolha('moedas')} />
         </div>
 
         <div className="min-h-0 flex-1" />
 
-        <div className="px-3 pb-[max(env(safe-area-inset-bottom),0.75rem)]">
-          <p aria-live="polite" className="mb-2.5 text-center font-body text-[15.5px] italic text-dv-text-2 [text-shadow:0_1px_8px_rgba(0,0,0,0.9)]">
+        <div className="px-3 pb-[max(env(safe-area-inset-bottom),0.6rem)]">
+          <p aria-live="polite" className="mb-1.5 text-center font-body text-[15.5px] italic text-dv-text-2 [text-shadow:0_1px_8px_rgba(0,0,0,0.95)]">
             {dica}
           </p>
           {erro && (
-            <p role="alert" className="mb-2.5 border-l-2 border-dv-blood bg-dv-blood-deep/70 px-3 py-2 text-[13.5px] text-dv-blood-text">
+            <p role="alert" className="mb-2 border-l-2 border-dv-blood bg-dv-blood-deep/70 px-3 py-2 text-[13.5px] text-dv-blood-text">
               {erro}
             </p>
           )}
-          <div className="grid grid-cols-3 gap-2">
-            <Acao
+          <div className="grid grid-cols-[1fr_1.18fr_1fr] items-end gap-1.5">
+            <Invocacao
+              forma="placa"
               label="Lançar Moeda"
               curto="Moeda"
               ativo={fase === 'vazio'}
-              disabled={fase !== 'vazio' || !!ocupado}
+              disabled={fase !== 'vazio' || !!ocupado || subindo}
               onClick={() => {
                 setErro(null)
                 setFolha('lancar')
               }}
-              icon={<DracmaIcon raridade="incomum" className="size-9" />}
+              icon={<DracmaIcon raridade="incomum" className="size-9 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]" />}
             />
-            <Acao
+            <Invocacao
+              forma="medalhao"
               label="Girar Manivela"
               curto="Girar"
-              ativo={fase === 'moeda'}
-              disabled={fase !== 'moeda' || !!ocupado}
+              ativo={fase === 'moeda' && !subindo}
+              disabled={fase !== 'moeda' || !!ocupado || subindo}
               loading={ocupado === 'girar'}
               onClick={girar}
-              icon={<ManivelaIcon className="size-9" />}
+              icon={<img src="/images/poco/roda.webp" alt="" className={cn('w-14', girando && 'poco-roda-on')} />}
             />
-            <Acao
+            <Invocacao
+              forma="placa"
               label="Inspecionar Balde"
               curto="Balde"
-              ativo={fase === 'cheio'}
+              ativo={fase === 'cheio' && !subindo}
               disabled={!!ocupado || subindo}
               loading={ocupado === 'balde' && fase === 'cheio'}
               onClick={inspecionar}
-              icon={<BaldeIcon tipo={baldeAtual?.id} className="size-9" />}
+              icon={<BaldeIcon tipo={baldeAtual?.id} className="size-9 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]" />}
             />
           </div>
         </div>
       </div>
 
+      {subindo && !reduced && (
+        <button
+          type="button"
+          onClick={() => {
+            playSfx('click')
+            terminarSuspense()
+          }}
+          className="dv-focus absolute right-2 top-12 z-30 flex min-h-11 items-center gap-2 px-3 font-mono text-[11px] uppercase tracking-[0.18em] text-dv-text-2 [text-shadow:0_1px_6px_#000] hover:text-dv-text"
+        >
+          Acelerar
+          <svg viewBox="0 0 16 16" className="size-3.5" fill="currentColor" aria-hidden="true">
+            <path d="M2 3l6 5-6 5zM8 3l6 5-6 5z" />
+          </svg>
+        </button>
+      )}
+
       {manivela && <PocoManivela params={manivela} onFim={finalizarGiro} />}
       {resultado && (
         <PocoResultadoView
           r={resultado}
+          nome={nome}
           onFechar={() => {
             setResultado(null)
             refresh()
@@ -351,8 +389,46 @@ function PocoTela({ data, refresh }: { data: Liberado; refresh: () => void }) {
   )
 }
 
-/** Botão de pedra do poço: ícone, rótulo curto grande e o nome completo pequeno. Ativo = filete de ametista. */
-function Acao({
+/** ⋯ no canto superior direito: losango de aço com três pontos de ametista (abre "Suas moedas"). */
+function BotaoTresPontos({ onClick }: { onClick: () => void }) {
+  return (
+    <button
+      type="button"
+      aria-label="Suas moedas"
+      onClick={() => {
+        playSfx('open')
+        onClick()
+      }}
+      className="dv-focus group relative grid size-12 shrink-0 place-items-center transition-transform duration-[120ms] active:scale-95"
+    >
+      <svg viewBox="0 0 48 48" className="absolute inset-0 size-full" aria-hidden="true">
+        <defs>
+          <linearGradient id="poco-tp" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stopColor="#f6f1e7" />
+            <stop offset="0.5" stopColor="#9a907f" />
+            <stop offset="1" stopColor="#3a352e" />
+          </linearGradient>
+        </defs>
+        <path d="M24 2L46 24L24 46L2 24Z" fill="url(#poco-tp)" />
+        <path d="M24 6L42 24L24 42L6 24Z" fill="#121214" />
+        <path d="M24 9L39 24L24 39L9 24Z" fill="none" stroke="#6b6357" strokeWidth="0.8" />
+      </svg>
+      <span aria-hidden="true" className="relative flex gap-1">
+        {[0, 1, 2].map((i) => (
+          <span key={i} className="size-1.5 rotate-45 bg-dv-amethyst-text group-hover:bg-white" />
+        ))}
+      </span>
+    </button>
+  )
+}
+
+/**
+ * Botão de invocação com forma própria: placa gótica (Moeda, Balde) ou medalhão dentado maior (Girar).
+ * Ativo = joias e filete de ametista acesos; pressionado = encolhe 3% com um lampejo de aço; desabilitado =
+ * metal apagado. Nome acessível = nome completo ("Lançar Moeda"…); visível = nome curto + nome completo.
+ */
+function Invocacao({
+  forma,
   label,
   curto,
   icon,
@@ -361,6 +437,7 @@ function Acao({
   loading,
   onClick,
 }: {
+  forma: 'placa' | 'medalhao'
   label: string
   curto: string
   icon: ReactNode
@@ -369,6 +446,7 @@ function Acao({
   loading?: boolean
   onClick: () => void
 }) {
+  const aceso = ativo && !disabled
   return (
     <button
       type="button"
@@ -379,81 +457,88 @@ function Acao({
         playSfx('click')
         onClick()
       }}
-      style={{ '--dv-cut': '12px' } as CSSProperties}
-      className="dv-focus group relative isolate flex min-h-[92px] flex-col items-center justify-center gap-1 px-1 pb-2 pt-2.5 transition-transform duration-[120ms] enabled:active:scale-[0.97] disabled:cursor-not-allowed"
+      className={cn(
+        'dv-focus group relative isolate flex flex-col items-center transition-transform duration-[120ms] enabled:active:scale-[0.97] disabled:cursor-not-allowed',
+        forma === 'medalhao' ? 'pb-1' : 'pb-1.5',
+      )}
     >
-      <span
-        aria-hidden="true"
-        className={cn(
-          'dv-cut absolute inset-0 -z-10',
-          ativo && !disabled ? 'bg-[linear-gradient(135deg,#ece5d8,#6b6357_30%,#bab09f_60%,#8a7cc8)]' : 'bg-[linear-gradient(135deg,rgba(238,237,235,0.32),rgba(238,237,235,0.1)_45%,rgba(238,237,235,0.24))]',
-        )}
-      />
-      <span aria-hidden="true" className="dv-cut absolute inset-px -z-10 bg-[#121214] bg-[url(/images/os/marmore-negro.webp)] bg-[length:560px_560px]" style={{ '--dv-cut': '11.6px' } as CSSProperties} />
-      <span aria-hidden="true" className="dv-cut absolute inset-px -z-10 bg-[linear-gradient(170deg,rgba(255,255,255,0.07),transparent_40%,rgba(0,0,0,0.4))]" style={{ '--dv-cut': '11.6px' } as CSSProperties} />
-      {ativo && !disabled && <span aria-hidden="true" className="absolute inset-x-4 bottom-0 h-6 -z-10 bg-[radial-gradient(50%_80%_at_50%_100%,rgba(138,124,200,0.45),transparent)]" />}
-      <span aria-hidden="true" className={cn('grid size-10 place-items-center transition-[filter,opacity]', disabled ? 'opacity-40 grayscale' : 'group-active:drop-shadow-[0_0_8px_rgba(236,229,216,0.8)]')}>
-        {loading ? <Spinner className="size-6" /> : icon}
+      <span className={cn('relative grid place-items-center', forma === 'medalhao' ? 'size-[104px]' : 'h-[94px] w-full max-w-[112px]')}>
+        {aceso && <span aria-hidden="true" className="poco-aura absolute inset-[-14%] -z-10 bg-[radial-gradient(50%_50%_at_50%_55%,rgba(138,124,200,0.55),transparent_70%)]" />}
+        {forma === 'medalhao' ? <MedalhaoDentado ativo={aceso} apagado={disabled} /> : <PlacaGotica ativo={aceso} apagado={disabled} />}
+        <span aria-hidden="true" className="absolute inset-0 rounded-full bg-white opacity-0 transition-opacity duration-150 group-enabled:group-active:opacity-10" />
+        <span aria-hidden="true" className={cn('relative grid place-items-center transition-[opacity,filter]', forma === 'placa' && '-mt-1', disabled && 'opacity-40 grayscale')}>
+          {loading ? <Spinner className="size-6" /> : icon}
+        </span>
       </span>
-      <span aria-hidden="true" className={cn('font-display text-[16px] font-semibold uppercase leading-none tracking-[0.16em]', disabled ? 'text-dv-text-3' : 'text-dv-text')}>
+      <span aria-hidden="true" className={cn('mt-1 font-display text-[16px] font-semibold uppercase leading-none tracking-[0.16em] [text-shadow:0_1px_6px_#000]', disabled ? 'text-dv-text-3' : aceso ? 'text-dv-porcelain' : 'text-dv-text-2')}>
         {curto}
       </span>
-      <span aria-hidden="true" className="whitespace-nowrap font-mono text-[10px] uppercase leading-none tracking-[0.02em] text-dv-text-3">
+      <span aria-hidden="true" className="mt-1 whitespace-nowrap font-mono text-[10px] uppercase leading-none tracking-[0.04em] text-dv-text-3">
         {label}
       </span>
     </button>
   )
 }
 
-function ManivelaIcon({ className }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 32 32" className={className} aria-hidden="true">
-      <defs>
-        <linearGradient id="poco-ic-aco" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#ece5d8" />
-          <stop offset="0.5" stopColor="#bab09f" />
-          <stop offset="1" stopColor="#6b6357" />
-        </linearGradient>
-      </defs>
-      <circle cx="11" cy="16" r="7.5" fill="none" stroke="url(#poco-ic-aco)" strokeWidth="2.2" />
-      <circle cx="11" cy="16" r="2.6" fill="url(#poco-ic-aco)" />
-      <path d="M11 16L24 9" stroke="url(#poco-ic-aco)" strokeWidth="2.6" strokeLinecap="round" />
-      <rect x="22" y="4" width="4.5" height="10" rx="2" transform="rotate(-28 24 9)" fill="#5b4c40" stroke="#0c0c0e" strokeWidth="0.8" />
-    </svg>
-  )
-}
+/* ── Faixa de prêmios (reais + simulados) ──────────────────────────────────────────────── */
 
-/* ── Letreiro ───────────────────────────────────────────────────────────────────────────── */
+type Aviso = { k: string; nome: string; item: string; raridade: string; raro: boolean }
 
-/** Últimos prêmios bons de outros jogadores, rolando no topo (duas cópias para a volta não ter emenda). */
-function Letreiro({ itens }: { itens: PocoLetreiro[] }) {
-  const texto = useMemo(() => itens.map((i) => ({ k: `${i.nome}-${i.quando}`, nome: i.nome, item: i.item, raro: i.categoria === 'capsula' || i.categoria === 'cosmetico' })), [itens])
-  const dur = Math.max(24, texto.length * 7)
+/**
+ * Faixa de notificação dos prêmios: um aviso por vez, entrando pela direita. Primeiro os reais (os mais recentes
+ * que ainda não passaram); entre eles, a cada 12–18 s, um prêmio simulado com nome fictício (pedido do dono:
+ * dar a sensação de gente girando). Os simulados nunca tiram a vez de um real.
+ */
+function FaixaPremios({ reais, simulacao }: { reais: PocoLetreiro[]; simulacao: Liberado['simulacao'] }) {
+  const vistos = useRef(new Set<string>())
+  const fila = useRef<Aviso[]>([])
+  const [atual, setAtual] = useState<Aviso | null>(null)
+
+  // Reais novos entram na frente da fila.
+  useEffect(() => {
+    const novos = reais
+      .filter((r) => !vistos.current.has(`${r.nome}-${r.quando}`))
+      .slice(0, 4)
+      .reverse()
+      .map((r) => ({ k: `${r.nome}-${r.quando}`, nome: r.nome, item: r.item, raridade: ITEM_RARITY_LABEL[r.raridade], raro: r.categoria === 'capsula' || r.categoria === 'cosmetico' || ['raro', 'epico', 'lendario', 'arcano'].includes(r.raridade) }))
+    for (const n of novos) vistos.current.add(n.k)
+    fila.current = [...novos, ...fila.current.filter((a) => !a.k.startsWith('sim-'))]
+  }, [reais])
+
+  useEffect(() => {
+    let t = 0
+    const proximo = (espera: number) => {
+      t = window.setTimeout(() => {
+        let a = fila.current.shift() ?? null
+        if (!a && simulacao.nomes.length && simulacao.itens.length) {
+          const n = simulacao.nomes[Math.floor(Math.random() * simulacao.nomes.length)]
+          const it = simulacao.itens[Math.floor(Math.random() * simulacao.itens.length)]
+          a = { k: `sim-${Date.now()}`, nome: n, item: it.item, raridade: ITEM_RARITY_LABEL[it.raridade], raro: true }
+        }
+        setAtual(a)
+        proximo(a && !a.k.startsWith('sim-') ? 5600 : 12000 + Math.random() * 6000)
+      }, espera)
+    }
+    proximo(700)
+    return () => window.clearTimeout(t)
+  }, [simulacao])
+
   return (
-    <div className="relative flex h-9 shrink-0 items-center overflow-hidden border-b border-dv-line bg-[linear-gradient(180deg,rgba(12,12,14,0.92),rgba(12,12,14,0.7))]">
-      <span className="relative z-10 flex h-full shrink-0 items-center gap-1.5 bg-[#0c0c0e] pl-3 pr-3 font-mono text-[10px] uppercase tracking-[0.18em] text-dv-gold shadow-[6px_0_12px_#0c0c0e]">
-        <GlyphSpark className="size-3 text-dv-amethyst" />
-        Milagres
-      </span>
-      {texto.length === 0 ? (
-        <p className="truncate px-2 font-body text-[14px] italic text-dv-text-3">O poço guarda silêncio. Nenhum milagre recente.</p>
-      ) : (
-        <div className="min-w-0 flex-1 overflow-hidden" aria-label="Últimos prêmios do poço" role="marquee">
-          <div className="poco-marquee flex w-max" style={{ '--poco-marquee-dur': `${dur}s` } as CSSProperties}>
-            {[0, 1].map((copia) => (
-              <ul key={copia} aria-hidden={copia === 1 || undefined} className="flex shrink-0 items-center">
-                {texto.map((t) => (
-                  <li key={t.k} className="flex items-center gap-1.5 whitespace-nowrap px-4 font-body text-[14px] text-dv-text-2">
-                    <span className="text-dv-text">{t.nome}</span>
-                    <span className="text-dv-text-3">tirou</span>
-                    <span className={t.raro ? 'text-dv-amethyst-text' : 'text-dv-gold-bright'}>{t.item}</span>
-                    <span aria-hidden="true" className="ml-3 size-1 rotate-45 bg-dv-gold/60" />
-                  </li>
-                ))}
-              </ul>
-            ))}
-          </div>
+    <div className="relative h-11 shrink-0 overflow-hidden" aria-live="polite" aria-label="Prêmios do poço">
+      {atual ? (
+        <div key={atual.k} className="poco-faixa absolute inset-x-1 top-1">
+          <FaixaOrnamental tom={atual.raro ? 'ametista' : 'aco'} className="h-9">
+            <p className="flex min-w-0 items-baseline gap-1.5 whitespace-nowrap">
+              <span className={cn('dv-label shrink-0 text-[10px]', atual.raro ? 'text-dv-amethyst-text' : 'text-dv-gold')}>{atual.raridade}</span>
+              <span className="truncate font-body text-[14px] text-dv-text">
+                <span className="text-dv-porcelain">{atual.nome}</span> <span className="text-dv-text-3">obteve</span>{' '}
+                <span className={atual.raro ? 'text-dv-amethyst-text' : 'text-dv-gold-bright'}>{atual.item}</span>
+              </span>
+            </p>
+          </FaixaOrnamental>
         </div>
+      ) : (
+        <p className="absolute inset-0 flex items-center justify-center font-body text-[14px] italic text-dv-text-3">O poço guarda silêncio.</p>
       )}
     </div>
   )
