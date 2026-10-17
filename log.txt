@@ -1,0 +1,9 @@
+[emblema-as-espadas] v01: @cf/black-forest-labs/flux-2-klein-4b seed=7051 1024x1024 passos=None (~104 neurônios)
+    ok em 11.1s, 1024x1024
+[emblema-as-espadas] v02: @cf/black-forest-labs/flux-2-klein-4b seed=7052 1024x1024 passos=None (~104 neurônios)
+    ok em 16.8s, 1024x1024
+[emblema-as-espadas] v03: @cf/black-forest-labs/flux-2-klein-4b seed=7053 1024x1024 passos=None (~104 neurônios)
+    ok em 17.8s, 1024x1024
+[emblema-as-espadas] v01: rembg:birefnet-general; sem avisos
+[emblema-as-espadas] v02: rembg:birefnet-general; sem avisos
+[emblema-as-espadas] v03: rembg:birefnet-general; sem avisos

@@ -1,0 +1,121 @@
+{
+  "pedido": "emblema-as-espadas",
+  "titulo": "Ás de Espadas",
+  "tipo": "emblema",
+  "tamanho_final": 1024,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 7051,
+      "passos": null,
+      "segundos": 11.1,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "emblema-as-espadas--v01--1024.png",
+          "bytes": 704550
+        },
+        {
+          "arquivo": "emblema-as-espadas--v01--1024.webp",
+          "bytes": 82644
+        },
+        {
+          "arquivo": "emblema-as-espadas--v01--512.webp",
+          "bytes": 27730
+        },
+        {
+          "arquivo": "emblema-as-espadas--v01--256.webp",
+          "bytes": 12522
+        },
+        {
+          "arquivo": "emblema-as-espadas--v01--96.webp",
+          "bytes": 4094
+        },
+        {
+          "arquivo": "emblema-as-espadas--v01--48.webp",
+          "bytes": 1770
+        }
+      ],
+      "segundos_pos": 29.4,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 7052,
+      "passos": null,
+      "segundos": 16.8,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "ilhas_removidas": 1,
+      "arquivos": [
+        {
+          "arquivo": "emblema-as-espadas--v02--1024.png",
+          "bytes": 672407
+        },
+        {
+          "arquivo": "emblema-as-espadas--v02--1024.webp",
+          "bytes": 88094
+        },
+        {
+          "arquivo": "emblema-as-espadas--v02--512.webp",
+          "bytes": 29354
+        },
+        {
+          "arquivo": "emblema-as-espadas--v02--256.webp",
+          "bytes": 12874
+        },
+        {
+          "arquivo": "emblema-as-espadas--v02--96.webp",
+          "bytes": 4438
+        },
+        {
+          "arquivo": "emblema-as-espadas--v02--48.webp",
+          "bytes": 1856
+        }
+      ],
+      "segundos_pos": 24.2,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 7053,
+      "passos": null,
+      "segundos": 17.8,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "emblema-as-espadas--v03--1024.png",
+          "bytes": 641830
+        },
+        {
+          "arquivo": "emblema-as-espadas--v03--1024.webp",
+          "bytes": 74452
+        },
+        {
+          "arquivo": "emblema-as-espadas--v03--512.webp",
+          "bytes": 26632
+        },
+        {
+          "arquivo": "emblema-as-espadas--v03--256.webp",
+          "bytes": 11092
+        },
+        {
+          "arquivo": "emblema-as-espadas--v03--96.webp",
+          "bytes": 3892
+        },
+        {
+          "arquivo": "emblema-as-espadas--v03--48.webp",
+          "bytes": 1692
+        }
+      ],
+      "segundos_pos": 24.4,
+      "avisos": []
+    }
+  ]
+}
