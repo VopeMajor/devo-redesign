@@ -1,0 +1,59 @@
+{
+  "asset": "img:/images/cosmeticos/ultima-badalada/moldura",
+  "imagem": {
+    "base": "/images/cosmeticos/ultima-badalada/moldura",
+    "tamanhos": [
+      48,
+      96,
+      256,
+      512,
+      1024
+    ],
+    "janela": {
+      "forma": "circulo",
+      "centro": [
+        0.5,
+        0.5
+      ],
+      "raio": [
+        0.25,
+        0.25
+      ]
+    },
+    "camadas": [
+      {
+        "src": "/images/cosmeticos/ultima-badalada/moldura-brilho-arcano.webp",
+        "anim": "pulso",
+        "caixa": [
+          0.1338,
+          0.0381,
+          0.7246,
+          0.8594
+        ],
+        "dur": 3.2
+      },
+      {
+        "src": "/images/cosmeticos/ultima-badalada/moldura-sino-prata.webp",
+        "anim": "oscila",
+        "caixa": [
+          0.408,
+          0.0645,
+          0.184,
+          0.184
+        ],
+        "dur": 2.4,
+        "origem": [
+          0.5,
+          0.03
+        ]
+      }
+    ]
+  },
+  "origem": {
+    "pedido": "moldura-ultima-badalada",
+    "variacao": "v04",
+    "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+    "seed": 6074,
+    "importado": null
+  }
+}

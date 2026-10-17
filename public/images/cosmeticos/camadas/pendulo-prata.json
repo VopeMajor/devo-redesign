@@ -1,0 +1,18 @@
+{
+  "asset": "img:/images/cosmeticos/camadas/pendulo-prata",
+  "imagem": {
+    "base": "/images/cosmeticos/camadas/pendulo-prata",
+    "tamanhos": [
+      128,
+      256,
+      512
+    ]
+  },
+  "origem": {
+    "pedido": "camada-pendulo-prata",
+    "variacao": "v01",
+    "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+    "seed": 9031,
+    "importado": null
+  }
+}

@@ -112,12 +112,37 @@ await test('arte por IA: Asas e Coração com meta.imagem (janela, tamanhos, cam
   const asas = by.get('cosmetico:moldura-asas-crepusculo')
   const cor = by.get('cosmetico:emblema-coracao-condessa')
   assert(asas?.imagem?.janela?.raio?.[0] === 0.25 && asas.imagem.tamanhos.length === 5, `asas: ${JSON.stringify(asas?.imagem)}`)
-  assert(by.get('cosmetico:mini-asas-crepusculo')?.imagem?.base === asas.imagem.base, 'mini usa a mesma arte por enquanto')
   assert(cor?.imagem?.camadas?.[0]?.anim === 'brilho' && cor.animado === true, `coração: ${JSON.stringify(cor?.imagem)}`)
   for (const u of [`${asas.imagem.base}-96.webp`, `${asas.imagem.base}-512.webp`, `${cor.imagem.base}-256.webp`, cor.imagem.camadas[0].src]) {
     const f = await fetch(`${BASE}${u}`)
     assert(f.ok && /webp/.test(f.headers.get('content-type') ?? ''), `${u}: ${f.status}`)
   }
+})
+
+await test('lote 2: molduras e balões em imagem (9-slice com cor de texto), itens novos lendários coerentes', async () => {
+  const r = await j1.get('/api/cosmeticos?view=catalogo')
+  ok200(r, 'catálogo')
+  const by = new Map(r.json.catalogo.map((x) => [x.key, x]))
+  for (const id of ['heranca-marfim', 'relogio-fim', 'pacto-carmesim', 'olho-arcano', 'banquete-javali', 'asas-coruja', 'fortuna-rato', 'ultima-badalada', 'catedral-esquecida', 'relicario-marfim', 'rosa-destino']) {
+    const m = by.get(`cosmetico:moldura-${id}`)
+    assert(m?.imagem?.janela && m.asset.startsWith('img:'), `moldura ${id}: ${m?.asset}`)
+    assert(by.get(`cosmetico:mini-${id}`)?.imagem?.janela?.forma === 'quadrado', `mini ${id} quadrada própria`)
+  }
+  assert(by.get('cosmetico:mini-asas-crepusculo')?.imagem?.janela?.forma === 'quadrado', 'mini definitiva das Asas')
+  for (const id of ['rosa-sangue', 'coroa-partida', 'ampulheta-dourada', 'olho-destino', 'chave-proibida', 'as-espadas', 'lua-escarlate', 'fragmento-celestial', 'engrenagem-herdeiro', 'pena-coruja', 'ficha-javali', 'selo-anfitriao', 'fortuna-profana'])
+    assert(by.get(`cosmetico:emblema-${id}`)?.imagem?.base?.endsWith(`/${id}/emblema`), `emblema ${id}`)
+  const relogio = by.get('cosmetico:moldura-relogio-fim').imagem.camadas.map((c) => c.anim).sort().join()
+  assert(relogio === 'giro,giro-rev,ponteiro,pulso', `camadas do Relógio: ${relogio}`)
+  assert(by.get('cosmetico:moldura-ultima-badalada').imagem.camadas.some((c) => c.anim === 'oscila' && c.origem?.[1] < 0.1), 'sino oscila preso no alto')
+  assert(by.get('cosmetico:mini-rosa-destino')?.imagem?.janela?.forma === 'quadrado', 'mini da Rosa')
+  for (const k of ['moldura-rosa-destino', 'mini-rosa-destino', 'balao-rosa-destino', 'moldura-asas-crepusculo']) assert(by.get(`cosmetico:${k}`)?.rarity === 'lendario', `${k} lendário`)
+  for (const id of ['correspondencia-real', 'confissao-carmesim', 'ecos-arcano', 'ultimo-suspiro', 'mesa-destino', 'rosa-destino']) {
+    const b = by.get(`cosmetico:balao-${id}`)
+    assert(b?.imagem?.slice?.texto, `balão ${id} sem 9-slice/texto`)
+    const f = await fetch(`${BASE}${b.imagem.base}-${b.imagem.slice.lado}.webp`)
+    assert(f.ok, `${id}: arquivo do 9-slice ${f.status}`)
+  }
+  assert(by.get('cosmetico:balao-correspondencia-real').imagem.slice.texto === '#2a2320' && by.get('cosmetico:balao-ultimo-suspiro').imagem.slice.texto === '#2a2320', 'balões claros com texto escuro')
 })
 
 await test('jogador não equipa o que não tem; nem item de outra categoria; nem o Selo automático', async () => {

@@ -1,0 +1,88 @@
+{
+  "asset": "img:/images/cosmeticos/ecos-arcano/balao",
+  "imagem": {
+    "base": "/images/cosmeticos/ecos-arcano/balao",
+    "tamanhos": [
+      256,
+      512,
+      768,
+      1024
+    ],
+    "camadas": [
+      {
+        "src": "/images/cosmeticos/ecos-arcano/balao-glifos.webp",
+        "anim": "brilho",
+        "caixa": [
+          0.0098,
+          0.1601,
+          0.9818,
+          0.6667
+        ],
+        "dur": 5.5
+      }
+    ],
+    "slice": {
+      "corte": [
+        12,
+        70,
+        12,
+        75
+      ],
+      "borda": [
+        8,
+        38,
+        8,
+        41
+      ],
+      "folga": [
+        4,
+        9,
+        4,
+        10
+      ],
+      "texto": "#f1e7e9",
+      "lado": 512
+    },
+    "kit": {
+      "corpo": {
+        "altura_px": 348,
+        "topo_no_original": 17,
+        "fatias": {
+          "top": 19,
+          "bottom": 19,
+          "left": 0,
+          "right": 0
+        },
+        "obs": "uniforme na horizontal; estique livre. Centro liso (texto)."
+      },
+      "pontas": {
+        "esq": {
+          "largura_px": 270,
+          "sobreposicao_px": 46
+        },
+        "dir": {
+          "largura_px": 256,
+          "sobreposicao_px": 46
+        }
+      },
+      "texto": {
+        "x0": 224,
+        "x1": 1325,
+        "y0": 36,
+        "y1": 346
+      },
+      "tamanho_px": [
+        1535,
+        381
+      ],
+      "arquivos": "/images/cosmeticos/ecos-arcano/balao-corpo|ponta-esq|ponta-dir-<largura>.webp"
+    }
+  },
+  "origem": {
+    "pedido": "balao-ecos-arcano",
+    "variacao": "v03",
+    "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+    "seed": 8023,
+    "importado": null
+  }
+}

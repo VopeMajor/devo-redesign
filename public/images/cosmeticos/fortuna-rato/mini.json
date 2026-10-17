@@ -1,0 +1,33 @@
+{
+  "asset": "img:/images/cosmeticos/fortuna-rato/mini",
+  "imagem": {
+    "base": "/images/cosmeticos/fortuna-rato/mini",
+    "tamanhos": [
+      48,
+      96,
+      256,
+      512,
+      1024
+    ],
+    "janela": {
+      "forma": "quadrado",
+      "centro": [
+        0.5,
+        0.5
+      ],
+      "raio": [
+        0.2735,
+        0.2735
+      ],
+      "lado": 0.547,
+      "raio_canto": 0.04
+    }
+  },
+  "origem": {
+    "pedido": "mini-fortuna-rato",
+    "variacao": "v01",
+    "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+    "seed": 4261,
+    "importado": null
+  }
+}

@@ -75,3 +75,11 @@ FROM unnest(ARRAY['cosmetico:moldura-asas-crepusculo', 'cosmetico:mini-asas-crep
 UPDATE player_cosmetics SET moldura_avatar = 'cosmetico:moldura-asas-crepusculo', moldura_mini = 'cosmetico:mini-asas-crepusculo',
        emblema = 'cosmetico:emblema-coracao-condessa'
  WHERE player_id = '00000000-0000-4000-8000-000000000003';
+
+-- Lote 2 da arte: Lírio usa o conjunto Rosa do Destino (moldura, mini quadrada e balão) — com isso o chat do
+-- seed mostra os seis balões em imagem (Mesa do Destino, Correspondência, Confissão, Ecos, Rosa, Último Suspiro).
+SELECT devo_item_grant('00000000-0000-4000-8000-000000000005', k, 1, 'recompensa', NULL, NULL, 'seed:cos:lirio:' || k)
+FROM unnest(ARRAY['cosmetico:moldura-rosa-destino', 'cosmetico:mini-rosa-destino', 'cosmetico:balao-rosa-destino']) AS k;
+UPDATE player_cosmetics SET moldura_avatar = 'cosmetico:moldura-rosa-destino', moldura_mini = 'cosmetico:mini-rosa-destino',
+       balao = 'cosmetico:balao-rosa-destino'
+ WHERE player_id = '00000000-0000-4000-8000-000000000005';

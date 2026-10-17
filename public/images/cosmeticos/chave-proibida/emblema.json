@@ -1,0 +1,20 @@
+{
+  "asset": "img:/images/cosmeticos/chave-proibida/emblema",
+  "imagem": {
+    "base": "/images/cosmeticos/chave-proibida/emblema",
+    "tamanhos": [
+      48,
+      96,
+      256,
+      512,
+      1024
+    ]
+  },
+  "origem": {
+    "pedido": "emblema-chave-proibida",
+    "variacao": "v01",
+    "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+    "seed": 7041,
+    "importado": null
+  }
+}

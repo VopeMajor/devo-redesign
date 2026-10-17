@@ -3016,6 +3016,126 @@ if (want('cosmeticos')) {
     await ctx.close()
   })
 
+  // Lote 2 da arte (infra/arte 2cce492): vitrine das molduras e balões em imagem (minis a 48/36 px), coleção com os
+  // itens novos, o Registro das partidas com cada balão, Record de três contas e miniperfis com molduras diferentes.
+  await step('cos-lote2', async () => {
+    const g = await device('phone')
+    await g.page.goto(`${BASE}/estilo/cosmeticos`, { waitUntil: 'networkidle' })
+    await wait(1500)
+    const arts = await g.page.locator('article[aria-label^="Lote 2: "]').evaluateAll((els) => els.map((e) => e.getAttribute('aria-label')))
+    let i = 0
+    for (const a of arts) {
+      await view(g.page, `article[aria-label="${a}"]`, 'start')
+      await wait(700)
+      await shot(g.page, `cos-l2-${String(++i).padStart(2, '0')}-moldura-${a.slice(8).toLowerCase().normalize('NFD').replace(/[^a-z ]/g, '').trim().replace(/ +/g, '-')}`)
+    }
+    await view(g.page, 'section[aria-label="Lote 2 · balões"]', 'start')
+    await wait(800)
+    await shot(g.page, 'cos-l2-20-baloes-1')
+    await g.page.evaluate(() => window.scrollBy(0, window.innerHeight * 0.85))
+    await wait(700)
+    await shot(g.page, 'cos-l2-21-baloes-2')
+    await g.page.evaluate(() => window.scrollBy(0, window.innerHeight * 0.85))
+    await wait(700)
+    await shot(g.page, 'cos-l2-22-baloes-3')
+    await g.ctx.close()
+
+    // Coleção do Matheus: molduras (grade com os itens novos) e balões.
+    const page = mat.page
+    await abrirColecao(page)
+    await view(page, 'ul[aria-label^="Itens:"]', 'start')
+    await wait(600)
+    await shot(page, 'cos-l2-30-colecao-molduras')
+    await page.evaluate(() => window.scrollBy(0, window.innerHeight * 0.8))
+    await wait(600)
+    await shot(page, 'cos-l2-31-colecao-molduras-2')
+    await view(page, 'div[aria-label="Categorias da coleção"]', 'start')
+    await aba(page, 'Balões')
+    await wait(800)
+    await view(page, 'ul[aria-label^="Itens:"]', 'start')
+    await wait(600)
+    await shot(page, 'cos-l2-32-colecao-baloes')
+
+    // Registro das partidas: cada fala (cada balão) e miniperfis com molduras diferentes.
+    await openApp(page, 'Sala de Jogos')
+    await wait(1500)
+    await view(page, 'section[aria-label="Registro das partidas"]', 'start')
+    await wait(1800)
+    let n = 40
+    for (const autor of ['Mordomo', 'Matheus', 'Ísis', 'Sentinela', 'Lírio', 'Corvo', 'Nyx']) {
+      const li = page.locator('section[aria-label="Registro das partidas"] li').filter({ has: page.getByRole('button', { name: `Abrir miniperfil de ${autor}` }) }).first()
+      if (!(await li.count())) continue
+      await li.evaluate((el) => el.scrollIntoView({ block: 'center' })).catch(() => {})
+      await wait(700)
+      await shot(page, `cos-l2-${n++}-chat-${autor.normalize('NFD').replace(/[^A-Za-z]/g, '').toLowerCase()}`)
+    }
+    n = 50
+    for (const autor of ['Lírio', 'Ísis', 'Corvo']) {
+      const b = page.getByRole('button', { name: `Abrir miniperfil de ${autor}` }).first()
+      await b.evaluate((el) => el.scrollIntoView({ block: 'center' })).catch(() => {})
+      if (await tryClick(b)) {
+        await wait(2000)
+        await shot(page, `cos-l2-${n++}-miniperfil-${autor.normalize('NFD').replace(/[^A-Za-z]/g, '').toLowerCase()}`)
+        await page.keyboard.press('Escape')
+        await wait(600)
+      }
+    }
+    // Record de outras contas: Mordomo (Banquete do Javali) e Sentinela (Última Badalada).
+    for (const [d, nome] of [[mor, 'mordomo'], [sen, 'sentinela']]) {
+      await openApp(d.page, 'Record')
+      await wait(1800)
+      await shot(d.page, `cos-l2-60-record-${nome}`)
+    }
+  })
+
+  // Lote 3 (infra/arte da41f23): emblemas, Relógio do Fim e Última Badalada animados (dois quadros com 3 s de
+  // intervalo: ponteiro, engrenagens e sino giram no próprio eixo) e itens bloqueados na coleção.
+  await step('cos-lote3', async () => {
+    const g = await device('phone')
+    await g.page.goto(`${BASE}/estilo/cosmeticos`, { waitUntil: 'networkidle' })
+    await wait(1500)
+    await view(g.page, 'section[aria-label="Lote 3 · emblemas"]', 'start')
+    await wait(900)
+    for (let k = 0; k < 4; k++) {
+      await shot(g.page, `cos-l3-0${k + 1}-emblemas`)
+      await g.page.evaluate(() => window.scrollBy(0, window.innerHeight * 0.85))
+      await wait(700)
+    }
+    for (const [nome, slug] of [['Relógio do Fim', 'relogio'], ['Última Badalada', 'badalada'], ['Engrenagem do Herdeiro', 'engrenagem']]) {
+      const sel = slug === 'engrenagem' ? `article[aria-label="Lote 3: ${nome}"]` : `article[aria-label="Lote 2: ${nome}"]`
+      await view(g.page, sel, 'start')
+      await wait(1200)
+      await shot(g.page, `cos-l3-1-${slug}-quadro-a`)
+      await wait(3000)
+      await shot(g.page, `cos-l3-1-${slug}-quadro-b`)
+    }
+    await g.ctx.close()
+
+    const page = mat.page
+    await abrirColecao(page)
+    await view(page, 'div[aria-label="Categorias da coleção"]', 'start')
+    await aba(page, 'Emblemas')
+    await wait(900)
+    await view(page, 'ul[aria-label^="Itens:"]', 'start')
+    await wait(700)
+    await shot(page, 'cos-l3-20-colecao-emblemas')
+    await page.evaluate(() => window.scrollBy(0, window.innerHeight * 0.8))
+    await wait(700)
+    await shot(page, 'cos-l3-21-colecao-emblemas-2')
+    await view(page, 'div[aria-label="Categorias da coleção"]', 'start')
+    await aba(page, 'Molduras')
+    await wait(900)
+    await view(page, 'ul[aria-label^="Itens:"]', 'start')
+    await wait(700)
+    await shot(page, 'cos-l3-22-colecao-bloqueados')
+    await view(page, 'div[aria-label="Formato da moldura"]', 'start')
+    await tryClick(page.getByRole('button', { name: 'Miniperfil · quadrada' }).first())
+    await wait(900)
+    await view(page, 'ul[aria-label^="Itens:"]', 'start')
+    await wait(700)
+    await shot(page, 'cos-l3-23-colecao-minis')
+  })
+
   // Arte por IA (pipeline infra/arte; dono escolheu Asas do Crepúsculo v02 e Coração da Condessa v02) aplicada
   // em Record, coleção, chat, miniperfil e no resultado do Poço. Matheus tem os dois equipados (94-seed).
   await step('cos-ia-aplicada', async () => {
@@ -3081,8 +3201,17 @@ if (want('cosmeticos')) {
       await sql("INSERT INTO poco_estado (player_id, apresentado_at) SELECT id, now() FROM players WHERE lower(name) = 'lume' ON CONFLICT (player_id) DO UPDATE SET apresentado_at = coalesce(poco_estado.apresentado_at, now())")
       await sql("SELECT devo_item_grant(id, 'dracma_comum', 4, 'captura', NULL, NULL, 'captura-cos-poco:' || id) FROM players WHERE lower(name) = 'lume'")
       if (probs) await sql("UPDATE devo_config SET value = $1 WHERE key = 'poco.probabilidades'", [JSON.stringify({ ...probs, dracma_comum: { lixo: 0, capsula: 0, fragmento: 0, essencia: 0, cosmetico: 100 } })])
-      await enterOS(page)
+      // A entrada ("Continuar") pode disparar uma navegação que o clique fica esperando (timeout de 15 s visto na
+      // rodada da janela quadrada): aqui o clique não espera a navegação e a entrada é refeita uma vez se preciso.
       const abrir = page.getByRole('button', { name: 'Poço dos Milagres', exact: true }).first()
+      for (let t = 0; t < 2; t++) {
+        await page.goto(BASE, { waitUntil: 'networkidle' }).catch(() => {})
+        await wait(1000)
+        await btn(page, 'Continuar').click({ timeout: 15000, noWaitAfter: true }).catch((e) => manifest.errors.push({ step: `cos-ia-poco-entrada-${t}`, error: String(e).slice(0, 200) }))
+        await wait(3600)
+        if (await abrir.isVisible().catch(() => false)) break
+        await shot(page, `cos-ia-poco-entrada-${t}`)
+      }
       await abrir.waitFor({ state: 'visible', timeout: 15000 }).catch(() => {})
       await abrir.scrollIntoViewIfNeeded().catch(() => {})
       await tryClick(abrir, 8000)

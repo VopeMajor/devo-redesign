@@ -1,0 +1,18 @@
+{
+  "asset": "img:/images/cosmeticos/camadas/sino-prata",
+  "imagem": {
+    "base": "/images/cosmeticos/camadas/sino-prata",
+    "tamanhos": [
+      128,
+      256,
+      512
+    ]
+  },
+  "origem": {
+    "pedido": "camada-sino-prata",
+    "variacao": "v02",
+    "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+    "seed": 9042,
+    "importado": null
+  }
+}

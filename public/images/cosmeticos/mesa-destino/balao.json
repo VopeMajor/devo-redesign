@@ -1,0 +1,75 @@
+{
+  "asset": "img:/images/cosmeticos/mesa-destino/balao",
+  "imagem": {
+    "base": "/images/cosmeticos/mesa-destino/balao",
+    "tamanhos": [
+      256,
+      512,
+      768,
+      1024
+    ],
+    "slice": {
+      "corte": [
+        14,
+        54,
+        11,
+        83
+      ],
+      "borda": [
+        8,
+        30,
+        8,
+        46
+      ],
+      "folga": [
+        4,
+        7,
+        4,
+        11
+      ],
+      "texto": "#f1e7e9",
+      "lado": 512
+    },
+    "kit": {
+      "corpo": {
+        "altura_px": 244,
+        "topo_no_original": 26,
+        "fatias": {
+          "top": 17,
+          "bottom": 17,
+          "left": 0,
+          "right": 0
+        },
+        "obs": "uniforme na horizontal; estique livre. Centro liso (texto)."
+      },
+      "pontas": {
+        "esq": {
+          "largura_px": 295,
+          "sobreposicao_px": 46
+        },
+        "dir": {
+          "largura_px": 207,
+          "sobreposicao_px": 46
+        }
+      },
+      "texto": {
+        "x0": 249,
+        "x1": 1374,
+        "y0": 43,
+        "y1": 253
+      },
+      "tamanho_px": [
+        1535,
+        286
+      ],
+      "arquivos": "/images/cosmeticos/mesa-destino/balao-corpo|ponta-esq|ponta-dir-<largura>.webp"
+    }
+  },
+  "origem": {
+    "pedido": "balao-mesa-destino",
+    "variacao": "v01",
+    "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+    "seed": 8041,
+    "importado": null
+  }
+}
