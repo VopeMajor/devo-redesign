@@ -242,7 +242,7 @@ export function LancarSheet({
                 {/* lançar várias de uma vez, quando a pessoa tem moedas para isso */}
                 {pode && m.quantidade >= 5 && (
                   <div className="flex gap-1">
-                    {[5, 10].filter((n) => m.quantidade >= n).map((n) => (
+                    {[5, 10, 15, 20].filter((n) => m.quantidade >= n).map((n) => (
                       <button
                         key={n}
                         type="button"

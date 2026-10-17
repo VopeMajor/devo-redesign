@@ -479,7 +479,10 @@ export async function lancarMoeda(playerId: string, input: { moeda?: unknown; gr
 }
 
 /** Quantidades aceitas no lançamento múltiplo (x5, x10). */
-export const POCO_MULTIPLOS = [5, 10] as const
+/** Botões de lançamento múltiplo. O servidor aceita de 1 a POCO_MAX_LOTE: a 1ª moeda do lote passa pela manivela
+ * como um giro normal; as restantes vêm aqui, depois desse giro. */
+export const POCO_MULTIPLOS = [5, 10, 15, 20] as const
+export const POCO_MAX_LOTE = 50
 
 /**
  * Lançamento múltiplo: várias moedas iguais de uma vez, sem o minigame da manivela (0 acertos em cada giro).
@@ -489,7 +492,7 @@ export const POCO_MULTIPLOS = [5, 10] as const
 export async function lancarVarias(playerId: string, input: { moeda?: unknown; vezes?: unknown }) {
   await requireUnlock(playerId, 'poco')
   const vezes = Number(input.vezes)
-  if (!(POCO_MULTIPLOS as readonly number[]).includes(vezes)) throw new RecordError('Quantidade inválida.', 400)
+  if (!Number.isInteger(vezes) || vezes < 1 || vezes > POCO_MAX_LOTE) throw new RecordError('Quantidade inválida.', 400)
   const moeda = typeof input.moeda === 'string' ? input.moeda : ''
   if (await giroAberto(playerId, pool)) throw new RecordError('Já há uma moeda no poço. Termine o giro aberto primeiro.', 409)
   const [saldo] = await run<{ q: string }>(pool, 'SELECT coalesce(sum(quantity), 0) AS q FROM player_items WHERE player_id = $1 AND item_key = $2', [playerId, moeda])

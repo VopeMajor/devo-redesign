@@ -175,8 +175,21 @@ function CenaPintada({ longe, balde, baldeTipo, girando, ativo, moeda, brilho, a
             className={cn('poco-bucket-pintado absolute inset-x-0', balde === 'subindo' && 'poco-bucket-sobe')}
             style={{ aspectRatio: '1 / 1', bottom: balde === 'fundo' ? '-70%' : '30%' }}
           >
+            {/* corda: sobe do nó da alça até o sarilho (o recorte do contêiner a corta na altura do sarilho) */}
+            <span aria-hidden="true" className={cn('poco-corda absolute bottom-[112%] left-1/2 h-[900%] w-[5%] -translate-x-1/2', balde === 'subindo' && 'poco-corda-enrola')} />
+            {/* alça de corda: das argolas laterais do balde até o nó */}
+            <svg aria-hidden="true" viewBox="0 0 100 100" className="absolute inset-0 size-full overflow-visible">
+              <path d="M13 34 Q24 -2 50 -12 Q76 -2 87 34" fill="none" stroke="#3a2c1d" strokeWidth="4.2" strokeLinecap="round" />
+              <path d="M13 34 Q24 -2 50 -12 Q76 -2 87 34" fill="none" stroke="#8a6c47" strokeWidth="2.6" strokeLinecap="round" />
+              <path d="M13 34 Q24 -2 50 -12 Q76 -2 87 34" fill="none" stroke="#c9ad82" strokeWidth="1.1" strokeDasharray="1.4 2.4" strokeLinecap="round" opacity="0.8" />
+              <circle cx="50" cy="-12" r="3.6" fill="#5b4530" stroke="#2b2016" strokeWidth="1" />
+            </svg>
             {/* o mesmo balde do gacha (ícone pintado do item), não um desenho à parte */}
             <img src={`${ART}/itens/balde-${tipo}-256.webp`} alt="" draggable={false} className="absolute inset-0 size-full object-contain" />
+            {/* água na boca do balde: espelho escuro que balança e brilha */}
+            {balde !== 'fundo' && (
+              <span aria-hidden="true" className={cn('poco-agua-balde absolute left-[19%] top-[12%] h-[13%] w-[62%] rounded-[50%]', balde === 'subindo' && 'poco-agua-balanca')} />
+            )}
             {/* água escorrendo do balde enquanto sobe; pingos depois que chega à boca */}
             {balde !== 'fundo' && <AguaDoBalde forte={balde === 'subindo'} />}
           </div>
@@ -223,8 +236,8 @@ function AguaDoBalde({ forte }: { forte: boolean }) {
       {GOTAS_BALDE.slice(0, forte ? 6 : 3).map((g, i) => (
         <span
           key={i}
-          className="poco-gota-cai absolute top-0 rounded-full"
-          style={{ left: `${g.x}%`, width: g.s, height: g.s * 1.6, animationDelay: `${g.d * (forte ? 1 : 1.8)}ms`, animationDuration: `${forte ? g.t : g.t * 1.4}ms` } as CSSProperties}
+          className="poco-gota-cai absolute top-0"
+          style={{ left: `${g.x}%`, width: g.s * 1.15, height: g.s * 1.9, animationDelay: `${g.d * (forte ? 1 : 1.8)}ms`, animationDuration: `${forte ? g.t : g.t * 1.4}ms` } as CSSProperties}
         />
       ))}
     </span>

@@ -174,32 +174,48 @@ function PocoTela({ data, refresh }: { data: Liberado; refresh: () => void }) {
       later(() => playSfx('splash'), reduced ? 0 : 900)
       if (!reduced) later(() => pocoSom('nevoa'), 1150)
       refresh()
+      return true
     } catch (e) {
       falhar(e)
+      return false
     } finally {
       setOcupado(null)
     }
   }
 
-  // Lançamento múltiplo (x5, x10): o servidor faz todos os giros e devolve os resultados de uma vez.
+  // Lançamento múltiplo (×5, ×10…): a 1ª moeda cai e o jogador GIRA a manivela (ao menos uma vez, como num giro
+  // normal); quando o balde sobe, o servidor resolve as outras moedas e todos os resultados aparecem juntos.
+  const lote = useRef<{ moeda: string; restantes: number } | null>(null)
   const lancarVarias = async (moeda: string, vezes: number) => {
-    setOcupado(`${moeda}x${vezes}`)
-    setErro(null)
+    lote.current = { moeda, restantes: vezes - 1 }
+    // a moeda não caiu (erro): desfaz o lote
+    if (!(await lancar({ moeda }))) lote.current = null
+  }
+
+  const fecharLote = useCallback(async () => {
+    const l = lote.current
+    if (!l) return false
+    lote.current = null
+    setOcupado('balde')
     try {
-      const r = await poco('moeda.varias', { moeda, vezes })
-      const lista = (r.resultados ?? []) as PocoResultado[]
-      setFolha(null)
-      playSfx('coin')
-      later(() => playSfx('splash'), reduced ? 0 : 500)
-      if (lista.length) setMulti({ lista, erro: (r.erro as string | null) ?? null })
-      else if (r.erro) setErro(r.erro as string)
+      const primeiro = (await poco('balde.inspecionar')).resultado as PocoResultado
+      let lista: PocoResultado[] = [primeiro]
+      let falha: string | null = null
+      if (l.restantes > 0) {
+        const r = await poco('moeda.varias', { moeda: l.moeda, vezes: l.restantes })
+        lista = [primeiro, ...((r.resultados ?? []) as PocoResultado[])]
+        falha = (r.erro as string | null) ?? null
+      }
+      setMulti({ lista, erro: falha })
       refresh()
     } catch (e) {
       falhar(e)
+      refresh()
     } finally {
       setOcupado(null)
     }
-  }
+    return true
+  }, [refresh]) // eslint-disable-line react-hooks/exhaustive-deps
 
   // Etapa 2 — suspense: depois do minigame, a roda gira e o balde sobe (o servidor já decidiu o prêmio).
   const terminarSuspense = useCallback(() => {
@@ -222,6 +238,7 @@ function PocoTela({ data, refresh }: { data: Liberado; refresh: () => void }) {
         later(() => {
           terminarSuspense()
           pocoSom('balde')
+          void fecharLote()
         }, reduced ? 0 : 2000)
       } catch (e) {
         terminarSuspense()
@@ -231,7 +248,7 @@ function PocoTela({ data, refresh }: { data: Liberado; refresh: () => void }) {
         setOcupado(null)
       }
     },
-    [refresh, reduced, terminarSuspense], // eslint-disable-line react-hooks/exhaustive-deps
+    [refresh, reduced, terminarSuspense, fecharLote], // eslint-disable-line react-hooks/exhaustive-deps
   )
 
   const girar = async () => {
