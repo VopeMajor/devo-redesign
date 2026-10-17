@@ -1,0 +1,9 @@
+[balao2-aco-champanhe] v01: @cf/black-forest-labs/flux-2-klein-4b seed=15011 1536x512 passos=None (~78 neurônios)
+    ok em 32.0s, 1536x512
+[balao2-aco-champanhe] v02: @cf/black-forest-labs/flux-2-klein-4b seed=15012 1536x512 passos=None (~78 neurônios)
+    ok em 21.0s, 1536x512
+[balao2-aco-champanhe] v03: @cf/black-forest-labs/flux-2-klein-4b seed=15013 1536x512 passos=None (~78 neurônios)
+    ok em 49.5s, 1536x512
+[balao2-aco-champanhe] v01: rembg:birefnet-general; sem avisos
+[balao2-aco-champanhe] v02: rembg:birefnet-general; sem avisos
+[balao2-aco-champanhe] v03: rembg:birefnet-general; sem avisos

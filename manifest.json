@@ -1,0 +1,285 @@
+{
+  "pedido": "balao2-aco-champanhe",
+  "titulo": "Balão — aco-champanhe",
+  "tipo": "balao",
+  "tamanho_final": 1536,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 15011,
+      "passos": null,
+      "segundos": 32.0,
+      "neuronios_estimados": 78,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "balao2-aco-champanhe--v01--1535.png",
+          "bytes": 405300
+        },
+        {
+          "arquivo": "balao2-aco-champanhe--v01--1535.webp",
+          "bytes": 42460
+        },
+        {
+          "arquivo": "balao2-aco-champanhe--v01--1024.webp",
+          "bytes": 18928
+        },
+        {
+          "arquivo": "balao2-aco-champanhe--v01--768.webp",
+          "bytes": 14278
+        },
+        {
+          "arquivo": "balao2-aco-champanhe--v01--512.webp",
+          "bytes": 8776
+        },
+        {
+          "arquivo": "balao2-aco-champanhe--v01--256.webp",
+          "bytes": 4240
+        }
+      ],
+      "balao": {
+        "tamanho_px": [
+          1535,
+          318
+        ],
+        "nove_fatias": {
+          "top": 72,
+          "right": 84,
+          "bottom": 69,
+          "left": 84,
+          "css": "border-image: url(...) 72 84 69 84 fill / auto; border-image-repeat: stretch;",
+          "obs": "medidas em px do original; nos derivados multiplique por largura/W"
+        },
+        "kit": {
+          "corpo": {
+            "altura_px": 253,
+            "topo_no_original": 25,
+            "fatias": {
+              "top": 47,
+              "bottom": 29,
+              "left": 0,
+              "right": 0
+            },
+            "obs": "uniforme na horizontal; estique livre. Centro liso (texto)."
+          },
+          "ponta_esq": {
+            "largura_px": 130,
+            "sobreposicao_px": 46
+          },
+          "ponta_dir": {
+            "largura_px": 130,
+            "sobreposicao_px": 46
+          },
+          "texto": {
+            "x0": 84,
+            "x1": 1451,
+            "y0": 72,
+            "y1": 249
+          }
+        },
+        "arquivos_kit": [
+          "balao2-aco-champanhe--v01--kit-corpo--1024.webp",
+          "balao2-aco-champanhe--v01--kit-corpo--768.webp",
+          "balao2-aco-champanhe--v01--kit-corpo--512.webp",
+          "balao2-aco-champanhe--v01--kit-corpo--256.webp",
+          "balao2-aco-champanhe--v01--kit-ponta-esq--1024.webp",
+          "balao2-aco-champanhe--v01--kit-ponta-esq--768.webp",
+          "balao2-aco-champanhe--v01--kit-ponta-esq--512.webp",
+          "balao2-aco-champanhe--v01--kit-ponta-esq--256.webp",
+          "balao2-aco-champanhe--v01--kit-ponta-dir--1024.webp",
+          "balao2-aco-champanhe--v01--kit-ponta-dir--768.webp",
+          "balao2-aco-champanhe--v01--kit-ponta-dir--512.webp",
+          "balao2-aco-champanhe--v01--kit-ponta-dir--256.webp"
+        ]
+      },
+      "segundos_pos": 45.9,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 15012,
+      "passos": null,
+      "segundos": 21.0,
+      "neuronios_estimados": 78,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "balao2-aco-champanhe--v02--1535.png",
+          "bytes": 450876
+        },
+        {
+          "arquivo": "balao2-aco-champanhe--v02--1535.webp",
+          "bytes": 48500
+        },
+        {
+          "arquivo": "balao2-aco-champanhe--v02--1024.webp",
+          "bytes": 21186
+        },
+        {
+          "arquivo": "balao2-aco-champanhe--v02--768.webp",
+          "bytes": 16300
+        },
+        {
+          "arquivo": "balao2-aco-champanhe--v02--512.webp",
+          "bytes": 9718
+        },
+        {
+          "arquivo": "balao2-aco-champanhe--v02--256.webp",
+          "bytes": 3978
+        }
+      ],
+      "balao": {
+        "tamanho_px": [
+          1535,
+          391
+        ],
+        "nove_fatias": {
+          "top": 59,
+          "right": 72,
+          "bottom": 57,
+          "left": 77,
+          "css": "border-image: url(...) 59 72 57 77 fill / auto; border-image-repeat: stretch;",
+          "obs": "medidas em px do original; nos derivados multiplique por largura/W"
+        },
+        "kit": {
+          "corpo": {
+            "altura_px": 356,
+            "topo_no_original": 18,
+            "fatias": {
+              "top": 41,
+              "bottom": 40,
+              "left": 0,
+              "right": 0
+            },
+            "obs": "uniforme na horizontal; estique livre. Centro liso (texto)."
+          },
+          "ponta_esq": {
+            "largura_px": 123,
+            "sobreposicao_px": 46
+          },
+          "ponta_dir": {
+            "largura_px": 118,
+            "sobreposicao_px": 46
+          },
+          "texto": {
+            "x0": 77,
+            "x1": 1463,
+            "y0": 59,
+            "y1": 334
+          }
+        },
+        "arquivos_kit": [
+          "balao2-aco-champanhe--v02--kit-corpo--1024.webp",
+          "balao2-aco-champanhe--v02--kit-corpo--768.webp",
+          "balao2-aco-champanhe--v02--kit-corpo--512.webp",
+          "balao2-aco-champanhe--v02--kit-corpo--256.webp",
+          "balao2-aco-champanhe--v02--kit-ponta-esq--1024.webp",
+          "balao2-aco-champanhe--v02--kit-ponta-esq--768.webp",
+          "balao2-aco-champanhe--v02--kit-ponta-esq--512.webp",
+          "balao2-aco-champanhe--v02--kit-ponta-esq--256.webp",
+          "balao2-aco-champanhe--v02--kit-ponta-dir--1024.webp",
+          "balao2-aco-champanhe--v02--kit-ponta-dir--768.webp",
+          "balao2-aco-champanhe--v02--kit-ponta-dir--512.webp",
+          "balao2-aco-champanhe--v02--kit-ponta-dir--256.webp"
+        ]
+      },
+      "segundos_pos": 29.5,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 15013,
+      "passos": null,
+      "segundos": 49.5,
+      "neuronios_estimados": 78,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "balao2-aco-champanhe--v03--1535.png",
+          "bytes": 447341
+        },
+        {
+          "arquivo": "balao2-aco-champanhe--v03--1535.webp",
+          "bytes": 42422
+        },
+        {
+          "arquivo": "balao2-aco-champanhe--v03--1024.webp",
+          "bytes": 21650
+        },
+        {
+          "arquivo": "balao2-aco-champanhe--v03--768.webp",
+          "bytes": 13944
+        },
+        {
+          "arquivo": "balao2-aco-champanhe--v03--512.webp",
+          "bytes": 9402
+        },
+        {
+          "arquivo": "balao2-aco-champanhe--v03--256.webp",
+          "bytes": 4020
+        }
+      ],
+      "balao": {
+        "tamanho_px": [
+          1535,
+          397
+        ],
+        "nove_fatias": {
+          "top": 85,
+          "right": 92,
+          "bottom": 81,
+          "left": 90,
+          "css": "border-image: url(...) 85 92 81 90 fill / auto; border-image-repeat: stretch;",
+          "obs": "medidas em px do original; nos derivados multiplique por largura/W"
+        },
+        "kit": {
+          "corpo": {
+            "altura_px": 363,
+            "topo_no_original": 17,
+            "fatias": {
+              "top": 68,
+              "bottom": 64,
+              "left": 0,
+              "right": 0
+            },
+            "obs": "uniforme na horizontal; estique livre. Centro liso (texto)."
+          },
+          "ponta_esq": {
+            "largura_px": 136,
+            "sobreposicao_px": 46
+          },
+          "ponta_dir": {
+            "largura_px": 138,
+            "sobreposicao_px": 46
+          },
+          "texto": {
+            "x0": 90,
+            "x1": 1443,
+            "y0": 85,
+            "y1": 316
+          }
+        },
+        "arquivos_kit": [
+          "balao2-aco-champanhe--v03--kit-corpo--1024.webp",
+          "balao2-aco-champanhe--v03--kit-corpo--768.webp",
+          "balao2-aco-champanhe--v03--kit-corpo--512.webp",
+          "balao2-aco-champanhe--v03--kit-corpo--256.webp",
+          "balao2-aco-champanhe--v03--kit-ponta-esq--1024.webp",
+          "balao2-aco-champanhe--v03--kit-ponta-esq--768.webp",
+          "balao2-aco-champanhe--v03--kit-ponta-esq--512.webp",
+          "balao2-aco-champanhe--v03--kit-ponta-esq--256.webp",
+          "balao2-aco-champanhe--v03--kit-ponta-dir--1024.webp",
+          "balao2-aco-champanhe--v03--kit-ponta-dir--768.webp",
+          "balao2-aco-champanhe--v03--kit-ponta-dir--512.webp",
+          "balao2-aco-champanhe--v03--kit-ponta-dir--256.webp"
+        ]
+      },
+      "segundos_pos": 27.2,
+      "avisos": []
+    }
+  ]
+}

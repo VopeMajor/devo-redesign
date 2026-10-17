@@ -1,0 +1,50 @@
+{
+  "pedido": "balao2-aco-champanhe",
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 15011,
+      "passos": null,
+      "largura": 1536,
+      "altura": 512,
+      "neuronios_estimados": 78,
+      "ok": true,
+      "segundos": 32.0,
+      "tamanho_real": [
+        1536,
+        512
+      ]
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 15012,
+      "passos": null,
+      "largura": 1536,
+      "altura": 512,
+      "neuronios_estimados": 78,
+      "ok": true,
+      "segundos": 21.0,
+      "tamanho_real": [
+        1536,
+        512
+      ]
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 15013,
+      "passos": null,
+      "largura": 1536,
+      "altura": 512,
+      "neuronios_estimados": 78,
+      "ok": true,
+      "segundos": 49.5,
+      "tamanho_real": [
+        1536,
+        512
+      ]
+    }
+  ]
+}
