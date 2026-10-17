@@ -1,0 +1,111 @@
+{
+  "pedido": "arcano-torre",
+  "titulo": "Arcano — torre (figura)",
+  "tipo": "ilustracao",
+  "tamanho_final": 1536,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 12161,
+      "passos": null,
+      "segundos": 3.5,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "ilhas_removidas": 7,
+      "arquivos": [
+        {
+          "arquivo": "arcano-torre--v01--1536.png",
+          "bytes": 1204988
+        },
+        {
+          "arquivo": "arcano-torre--v01--1536.webp",
+          "bytes": 257514
+        },
+        {
+          "arquivo": "arcano-torre--v01--1024.webp",
+          "bytes": 122186
+        },
+        {
+          "arquivo": "arcano-torre--v01--768.webp",
+          "bytes": 81272
+        },
+        {
+          "arquivo": "arcano-torre--v01--512.webp",
+          "bytes": 45988
+        }
+      ],
+      "segundos_pos": 40.2,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 12162,
+      "passos": null,
+      "segundos": 3.2,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "ilhas_removidas": 7,
+      "arquivos": [
+        {
+          "arquivo": "arcano-torre--v02--1536.png",
+          "bytes": 1179953
+        },
+        {
+          "arquivo": "arcano-torre--v02--1536.webp",
+          "bytes": 240126
+        },
+        {
+          "arquivo": "arcano-torre--v02--1024.webp",
+          "bytes": 114030
+        },
+        {
+          "arquivo": "arcano-torre--v02--768.webp",
+          "bytes": 76406
+        },
+        {
+          "arquivo": "arcano-torre--v02--512.webp",
+          "bytes": 43156
+        }
+      ],
+      "segundos_pos": 33.9,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 12163,
+      "passos": null,
+      "segundos": 3.2,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "ilhas_removidas": 11,
+      "arquivos": [
+        {
+          "arquivo": "arcano-torre--v03--1536.png",
+          "bytes": 1202690
+        },
+        {
+          "arquivo": "arcano-torre--v03--1536.webp",
+          "bytes": 241056
+        },
+        {
+          "arquivo": "arcano-torre--v03--1024.webp",
+          "bytes": 112118
+        },
+        {
+          "arquivo": "arcano-torre--v03--768.webp",
+          "bytes": 74358
+        },
+        {
+          "arquivo": "arcano-torre--v03--512.webp",
+          "bytes": 41778
+        }
+      ],
+      "segundos_pos": 33.1,
+      "avisos": []
+    }
+  ]
+}
