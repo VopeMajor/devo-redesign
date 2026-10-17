@@ -1,0 +1,110 @@
+{
+  "pedido": "arcano-enforcado",
+  "titulo": "Arcano — enforcado (figura)",
+  "tipo": "ilustracao",
+  "tamanho_final": 1536,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 12121,
+      "passos": null,
+      "segundos": 3.2,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "ilhas_removidas": 2,
+      "arquivos": [
+        {
+          "arquivo": "arcano-enforcado--v01--1536.png",
+          "bytes": 990112
+        },
+        {
+          "arquivo": "arcano-enforcado--v01--1536.webp",
+          "bytes": 239248
+        },
+        {
+          "arquivo": "arcano-enforcado--v01--1024.webp",
+          "bytes": 114272
+        },
+        {
+          "arquivo": "arcano-enforcado--v01--768.webp",
+          "bytes": 75382
+        },
+        {
+          "arquivo": "arcano-enforcado--v01--512.webp",
+          "bytes": 41916
+        }
+      ],
+      "segundos_pos": 37.8,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 12122,
+      "passos": null,
+      "segundos": 2.7,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "arcano-enforcado--v02--1536.png",
+          "bytes": 908384
+        },
+        {
+          "arquivo": "arcano-enforcado--v02--1536.webp",
+          "bytes": 206276
+        },
+        {
+          "arquivo": "arcano-enforcado--v02--1024.webp",
+          "bytes": 103000
+        },
+        {
+          "arquivo": "arcano-enforcado--v02--768.webp",
+          "bytes": 69096
+        },
+        {
+          "arquivo": "arcano-enforcado--v02--512.webp",
+          "bytes": 40028
+        }
+      ],
+      "segundos_pos": 33.4,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 12123,
+      "passos": null,
+      "segundos": 2.7,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "ilhas_removidas": 3,
+      "arquivos": [
+        {
+          "arquivo": "arcano-enforcado--v03--1536.png",
+          "bytes": 895387
+        },
+        {
+          "arquivo": "arcano-enforcado--v03--1536.webp",
+          "bytes": 210274
+        },
+        {
+          "arquivo": "arcano-enforcado--v03--1024.webp",
+          "bytes": 108394
+        },
+        {
+          "arquivo": "arcano-enforcado--v03--768.webp",
+          "bytes": 72176
+        },
+        {
+          "arquivo": "arcano-enforcado--v03--512.webp",
+          "bytes": 41222
+        }
+      ],
+      "segundos_pos": 33.5,
+      "avisos": []
+    }
+  ]
+}
