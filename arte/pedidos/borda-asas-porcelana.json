@@ -1,0 +1,32 @@
+{
+  "id": "borda-asas-porcelana",
+  "titulo": "Borda de perfil — asas-porcelana",
+  "tipo": "ilustracao",
+  "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+  "prompt": "Fantasy RPG profile card banner border, painted, highly detailed, isolated on a plain flat light gray background. A horizontal ornate frame for a player profile card, wider than tall, seen straight-on: a large EMPTY rectangular center area (about 70 percent of the width and 60 percent of the height) that is completely plain, surrounded by an ornate border whose decorations are concentrated at the top corners, the top center crest and the bottom corners. Symmetric. two porcelain white feathered wings spreading from the top corners, a small champagne steel halo at the top center. The whole frame fully inside the image with margin, nothing cropped. No text, no letters. Palette: porcelain white and veined marble with a dark interior, accents of soft amethyst violet and champagne steel (pale warm brushed metal), low saturation, no wine red, no bright gold, no neon. Painterly, highly detailed, elegant. ",
+  "negative": "text, letters, numbers, watermark, people, characters, faces, neon, saturated colors",
+  "largura": 1024,
+  "altura": 640,
+  "variacoes": [
+    {
+      "seed": 16021
+    },
+    {
+      "seed": 16022
+    },
+    {
+      "seed": 16023
+    }
+  ],
+  "pos": {
+    "tamanho_final": 1024,
+    "margem": 0.0,
+    "quadro_inteiro": true,
+    "derivados": [
+      768,
+      512,
+      256
+    ],
+    "anim": "asas"
+  }
+}

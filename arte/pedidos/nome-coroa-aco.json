@@ -1,0 +1,31 @@
+{
+  "id": "nome-coroa-aco",
+  "titulo": "Ornamento de nome — coroa-aco",
+  "tipo": "emblema",
+  "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+  "prompt": "Fantasy RPG game icon, painted, highly detailed, isolated on a plain flat light gray background, one small ornament centered, crisp silhouette readable at 24 pixels, no text: a tiny crown of champagne steel with an amethyst. Palette: porcelain white and veined marble with a dark interior, accents of soft amethyst violet and champagne steel (pale warm brushed metal), low saturation, no wine red, no bright gold, no neon. Painterly, highly detailed, elegant. ",
+  "negative": "text, letters, numbers, watermark, people, characters, faces, neon, saturated colors",
+  "largura": 1024,
+  "altura": 1024,
+  "variacoes": [
+    {
+      "seed": 17021
+    },
+    {
+      "seed": 17022
+    },
+    {
+      "seed": 17023
+    }
+  ],
+  "pos": {
+    "tamanho_final": 1024,
+    "margem": 0.06,
+    "derivados": [
+      512,
+      256,
+      128,
+      64
+    ]
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "id": "balao2-porcelana-partida",
+  "titulo": "Balão — porcelana-partida",
+  "tipo": "balao",
+  "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+  "prompt": "Fantasy RPG user interface element illustration, painted, highly detailed, isolated on a plain flat light gray background. A wide horizontal chat message panel seen straight-on, three times wider than tall: a long rectangular panel whose center is a plain, smooth, empty dark surface for text, a dark surface framed by white porcelain edges with delicate cracks and a few missing chips mended with thin champagne seams, small porcelain shards at the ends. The long top and bottom edges are a thin simple border line, the ornaments are concentrated at the left and right ends and may extend beyond the panel. The whole panel fully inside the image with margin, nothing cropped. No text, no letters. Palette: porcelain white and veined marble with a dark interior, accents of soft amethyst violet and champagne steel (pale warm brushed metal), low saturation, no wine red, no bright gold, no neon. Painterly, highly detailed, elegant. ",
+  "negative": "text, letters, numbers, watermark, people, characters, faces, neon, saturated colors",
+  "largura": 1536,
+  "altura": 512,
+  "variacoes": [
+    {
+      "seed": 15021
+    },
+    {
+      "seed": 15022
+    },
+    {
+      "seed": 15023
+    }
+  ],
+  "pos": {
+    "tamanho_final": 1536,
+    "margem": 0.01,
+    "derivados": [
+      1024,
+      768,
+      512,
+      256
+    ]
+  }
+}
