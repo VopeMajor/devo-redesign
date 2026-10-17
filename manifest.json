@@ -1,0 +1,398 @@
+{
+  "base": "http://localhost:3000",
+  "shots": [
+    {
+      "name": "cal-00-home-sistemas",
+      "note": "ícone do Calendário na tela de Sistemas (liberado desde o início)",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cal-00-home-sistemas@390x900",
+      "note": "ícone do Calendário na tela de Sistemas (liberado desde o início)",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cal-00-home-sistemas@360x740",
+      "note": "ícone do Calendário na tela de Sistemas (liberado desde o início)",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cal-01-melissa",
+      "note": "holograma da Melissa: boas-vindas",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cal-01-melissa@390x900",
+      "note": "holograma da Melissa: boas-vindas",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cal-01-melissa@360x740",
+      "note": "holograma da Melissa: boas-vindas",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cal-02-natal",
+      "note": "\"Mostra exemplo de Evento de Natal\": o Natal do calendário projetado por cima da cena",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cal-02-natal@390x900",
+      "note": "\"Mostra exemplo de Evento de Natal\": o Natal do calendário projetado por cima da cena",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cal-02-natal@360x740",
+      "note": "\"Mostra exemplo de Evento de Natal\": o Natal do calendário projetado por cima da cena",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cal-03-checkin-fala",
+      "note": "fala do check-in de datas comemorativas",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cal-03-checkin-fala@390x900",
+      "note": "fala do check-in de datas comemorativas",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cal-03-checkin-fala@360x740",
+      "note": "fala do check-in de datas comemorativas",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cal-04-tela",
+      "note": "Calendário: check-in diário no Dia 1",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cal-04-tela@390x900",
+      "note": "Calendário: check-in diário no Dia 1",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cal-04-tela@360x740",
+      "note": "Calendário: check-in diário no Dia 1",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cal-05-revelacao",
+      "note": "revelação do resgate (pulável)",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cal-05-revelacao@390x900",
+      "note": "revelação do resgate (pulável)",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cal-05-revelacao@360x740",
+      "note": "revelação do resgate (pulável)",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cal-06-marcado",
+      "note": "Dia 1 carimbado, contagem para amanhã",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cal-06-marcado@390x900",
+      "note": "Dia 1 carimbado, contagem para amanhã",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cal-06-marcado@360x740",
+      "note": "Dia 1 carimbado, contagem para amanhã",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cal-07-extra",
+      "note": "check-in extra da data comemorativa de hoje",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cal-07-extra@390x900",
+      "note": "check-in extra da data comemorativa de hoje",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cal-07-extra@360x740",
+      "note": "check-in extra da data comemorativa de hoje",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cal-08-extra-revelacao",
+      "note": "revelação do check-in do evento (+30 min)",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cal-08-extra-revelacao@390x900",
+      "note": "revelação do check-in do evento (+30 min)",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cal-08-extra-revelacao@360x740",
+      "note": "revelação do check-in do evento (+30 min)",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cal-09-mes",
+      "note": "mês com eventos marcados (atenção / folga / hoje)",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cal-09-mes@390x900",
+      "note": "mês com eventos marcados (atenção / folga / hoje)",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cal-09-mes@360x740",
+      "note": "mês com eventos marcados (atenção / folga / hoje)",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cal-10-dia",
+      "note": "dia escolhido: Halloween",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cal-10-dia@390x900",
+      "note": "dia escolhido: Halloween",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cal-10-dia@360x740",
+      "note": "dia escolhido: Halloween",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cal-11-proximos",
+      "note": "próximos eventos (arte, data, destaque)",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cal-11-proximos@390x900",
+      "note": "próximos eventos (arte, data, destaque)",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cal-11-proximos@360x740",
+      "note": "próximos eventos (arte, data, destaque)",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cal-12-proximos-fim",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cal-12-proximos-fim@390x900",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cal-12-proximos-fim@360x740",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cal-13-dia4",
+      "note": "três dias carimbados, Dia 4 em destaque",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cal-13-dia4@390x900",
+      "note": "três dias carimbados, Dia 4 em destaque",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cal-13-dia4@360x740",
+      "note": "três dias carimbados, Dia 4 em destaque",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cal-14-revelacao-horas",
+      "note": "+2 Horas entram no pulso",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cal-14-revelacao-horas@390x900",
+      "note": "+2 Horas entram no pulso",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cal-14-revelacao-horas@360x740",
+      "note": "+2 Horas entram no pulso",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cal-15-dia4-feito",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cal-15-dia4-feito@390x900",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cal-15-dia4-feito@360x740",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cal-16-dia7",
+      "note": "seis carimbos, a carta no fim do ciclo",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cal-16-dia7@390x900",
+      "note": "seis carimbos, a carta no fim do ciclo",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cal-16-dia7@360x740",
+      "note": "seis carimbos, a carta no fim do ciclo",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cal-17-revelacao-carta",
+      "note": "revelação da Carta Incomum",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cal-17-revelacao-carta@390x900",
+      "note": "revelação da Carta Incomum",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cal-17-revelacao-carta@360x740",
+      "note": "revelação da Carta Incomum",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cal-20-mesa",
+      "note": "Mesa › Calendário",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cal-20-mesa@390x900",
+      "note": "Mesa › Calendário",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cal-20-mesa@360x740",
+      "note": "Mesa › Calendário",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cal-21-mesa-eventos",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cal-21-mesa-eventos@390x900",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cal-21-mesa-eventos@360x740",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cal-22-mesa-novo",
+      "note": "formulário: nome, datas, destaque, arte",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cal-22-mesa-novo@390x900",
+      "note": "formulário: nome, datas, destaque, arte",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cal-22-mesa-novo@360x740",
+      "note": "formulário: nome, datas, destaque, arte",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cal-23-mesa-checkin",
+      "note": "check-in do evento (só o Owner)",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cal-23-mesa-checkin@390x900",
+      "note": "check-in do evento (só o Owner)",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cal-23-mesa-checkin@360x740",
+      "note": "check-in do evento (só o Owner)",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cal-24-mesa-criado",
+      "note": "evento criado (vai para o admin_log)",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cal-24-mesa-criado@390x900",
+      "note": "evento criado (vai para o admin_log)",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cal-24-mesa-criado@360x740",
+      "note": "evento criado (vai para o admin_log)",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cal-25-mesa-diario",
+      "note": "ciclo do dono + regras provisórias",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cal-25-mesa-diario@390x900",
+      "note": "ciclo do dono + regras provisórias",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cal-25-mesa-diario@360x740",
+      "note": "ciclo do dono + regras provisórias",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cal-26-erro",
+      "note": "erro com tentar de novo",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cal-26-erro@390x900",
+      "note": "erro com tentar de novo",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cal-26-erro@360x740",
+      "note": "erro com tentar de novo",
+      "url": "http://localhost:3000/"
+    }
+  ],
+  "errors": [],
+  "console": [
+    {
+      "page": "http://localhost:3000/",
+      "text": "Permissions policy violation: compute-pressure is not allowed in this document.",
+      "src": "https://www.youtube.com/s/player/0229cd64/player_embed_es6.vflset/pt_BR/base.js"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "HTTP 500",
+      "src": "http://localhost:3000/api/calendario"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "Failed to load resource: the server responded with a status of 500 (Internal Server Error)",
+      "src": "http://localhost:3000/api/calendario"
+    }
+  ]
+}
