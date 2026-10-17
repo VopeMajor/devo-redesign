@@ -1,0 +1,50 @@
+{
+  "pedido": "ico-dracma-incomum",
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 10641,
+      "passos": null,
+      "largura": 1024,
+      "altura": 1024,
+      "neuronios_estimados": 104,
+      "ok": true,
+      "segundos": 14.5,
+      "tamanho_real": [
+        1024,
+        1024
+      ]
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 10642,
+      "passos": null,
+      "largura": 1024,
+      "altura": 1024,
+      "neuronios_estimados": 104,
+      "ok": true,
+      "segundos": 14.3,
+      "tamanho_real": [
+        1024,
+        1024
+      ]
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 10643,
+      "passos": null,
+      "largura": 1024,
+      "altura": 1024,
+      "neuronios_estimados": 104,
+      "ok": true,
+      "segundos": 13.8,
+      "tamanho_real": [
+        1024,
+        1024
+      ]
+    }
+  ]
+}
