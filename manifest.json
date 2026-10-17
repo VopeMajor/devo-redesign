@@ -1,0 +1,110 @@
+{
+  "pedido": "arcano-morte",
+  "titulo": "Arcano — morte (figura)",
+  "tipo": "ilustracao",
+  "tamanho_final": 1536,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 12131,
+      "passos": null,
+      "segundos": 2.6,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "arcano-morte--v01--1536.png",
+          "bytes": 955372
+        },
+        {
+          "arquivo": "arcano-morte--v01--1536.webp",
+          "bytes": 175140
+        },
+        {
+          "arquivo": "arcano-morte--v01--1024.webp",
+          "bytes": 81918
+        },
+        {
+          "arquivo": "arcano-morte--v01--768.webp",
+          "bytes": 54782
+        },
+        {
+          "arquivo": "arcano-morte--v01--512.webp",
+          "bytes": 30986
+        }
+      ],
+      "segundos_pos": 35.2,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 12132,
+      "passos": null,
+      "segundos": 2.8,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "ilhas_removidas": 1,
+      "arquivos": [
+        {
+          "arquivo": "arcano-morte--v02--1536.png",
+          "bytes": 1015740
+        },
+        {
+          "arquivo": "arcano-morte--v02--1536.webp",
+          "bytes": 193196
+        },
+        {
+          "arquivo": "arcano-morte--v02--1024.webp",
+          "bytes": 89654
+        },
+        {
+          "arquivo": "arcano-morte--v02--768.webp",
+          "bytes": 59092
+        },
+        {
+          "arquivo": "arcano-morte--v02--512.webp",
+          "bytes": 33300
+        }
+      ],
+      "segundos_pos": 30.6,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 12133,
+      "passos": null,
+      "segundos": 3.2,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "ilhas_removidas": 1,
+      "arquivos": [
+        {
+          "arquivo": "arcano-morte--v03--1536.png",
+          "bytes": 1074179
+        },
+        {
+          "arquivo": "arcano-morte--v03--1536.webp",
+          "bytes": 193278
+        },
+        {
+          "arquivo": "arcano-morte--v03--1024.webp",
+          "bytes": 89576
+        },
+        {
+          "arquivo": "arcano-morte--v03--768.webp",
+          "bytes": 58778
+        },
+        {
+          "arquivo": "arcano-morte--v03--512.webp",
+          "bytes": 32856
+        }
+      ],
+      "segundos_pos": 29.8,
+      "avisos": []
+    }
+  ]
+}
