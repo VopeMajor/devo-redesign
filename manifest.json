@@ -1,0 +1,109 @@
+{
+  "pedido": "arcano-carro-tarot",
+  "titulo": "Arcano — carro (tarô, menos humanizado)",
+  "tipo": "ilustracao",
+  "tamanho_final": 1536,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 91081,
+      "passos": null,
+      "segundos": 3.2,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "arcano-carro-tarot--v01--1536.png",
+          "bytes": 1239997
+        },
+        {
+          "arquivo": "arcano-carro-tarot--v01--1536.webp",
+          "bytes": 220000
+        },
+        {
+          "arquivo": "arcano-carro-tarot--v01--1024.webp",
+          "bytes": 96802
+        },
+        {
+          "arquivo": "arcano-carro-tarot--v01--768.webp",
+          "bytes": 62190
+        },
+        {
+          "arquivo": "arcano-carro-tarot--v01--512.webp",
+          "bytes": 33556
+        }
+      ],
+      "segundos_pos": 46.0,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 91082,
+      "passos": null,
+      "segundos": 3.0,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "ilhas_removidas": 2,
+      "arquivos": [
+        {
+          "arquivo": "arcano-carro-tarot--v02--1536.png",
+          "bytes": 1330080
+        },
+        {
+          "arquivo": "arcano-carro-tarot--v02--1536.webp",
+          "bytes": 233326
+        },
+        {
+          "arquivo": "arcano-carro-tarot--v02--1024.webp",
+          "bytes": 100480
+        },
+        {
+          "arquivo": "arcano-carro-tarot--v02--768.webp",
+          "bytes": 64244
+        },
+        {
+          "arquivo": "arcano-carro-tarot--v02--512.webp",
+          "bytes": 34952
+        }
+      ],
+      "segundos_pos": 27.6,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 91083,
+      "passos": null,
+      "segundos": 3.4,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "arcano-carro-tarot--v03--1536.png",
+          "bytes": 1375631
+        },
+        {
+          "arquivo": "arcano-carro-tarot--v03--1536.webp",
+          "bytes": 225280
+        },
+        {
+          "arquivo": "arcano-carro-tarot--v03--1024.webp",
+          "bytes": 96230
+        },
+        {
+          "arquivo": "arcano-carro-tarot--v03--768.webp",
+          "bytes": 63054
+        },
+        {
+          "arquivo": "arcano-carro-tarot--v03--512.webp",
+          "bytes": 34948
+        }
+      ],
+      "segundos_pos": 27.0,
+      "avisos": []
+    }
+  ]
+}
