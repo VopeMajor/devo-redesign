@@ -1,0 +1,522 @@
+{
+  "base": "http://localhost:3000",
+  "shots": [
+    {
+      "name": "cos-00-galeria-topo",
+      "note": "",
+      "url": "http://localhost:3000/estilo/cosmeticos"
+    },
+    {
+      "name": "cos-80-previa-asas",
+      "note": "",
+      "url": "http://localhost:3000/estilo/cosmeticos"
+    },
+    {
+      "name": "cos-81-previa-coracao",
+      "note": "",
+      "url": "http://localhost:3000/estilo/cosmeticos"
+    },
+    {
+      "name": "cos-89-previa-rosa-mini",
+      "note": "",
+      "url": "http://localhost:3000/estilo/cosmeticos"
+    },
+    {
+      "name": "cos-01-galeria-arcano",
+      "note": "",
+      "url": "http://localhost:3000/estilo/cosmeticos"
+    },
+    {
+      "name": "cos-02-galeria-badalada",
+      "note": "",
+      "url": "http://localhost:3000/estilo/cosmeticos"
+    },
+    {
+      "name": "cos-03-galeria-emblemas",
+      "note": "",
+      "url": "http://localhost:3000/estilo/cosmeticos"
+    },
+    {
+      "name": "cos-04-galeria-baloes",
+      "note": "",
+      "url": "http://localhost:3000/estilo/cosmeticos"
+    },
+    {
+      "name": "cos-05-galeria-efeitos",
+      "note": "",
+      "url": "http://localhost:3000/estilo/cosmeticos"
+    },
+    {
+      "name": "cos-06-galeria-grade-completa",
+      "note": "página inteira",
+      "url": "http://localhost:3000/estilo/cosmeticos"
+    },
+    {
+      "name": "cos-10-record-moldura",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-11-record-identidade",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-12-colecao",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-13-colecao-grade-molduras",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-14-preview-bloqueado",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-15-detalhe-bloqueado",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-16-detalhe-obtido",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-17-equipado-sem-recarregar",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-18-colecao-miniperfil",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-19-colecao-emblemas",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-20-colecao-baloes",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-21-colecao-efeitos",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-22-preview-balao",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-30-chat-baloes",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-31-chat-anfitriao",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-32-miniperfil-owner-oculto",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-33-miniperfil-jogadora",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-35-previa-miniperfil-asas",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-34-miniperfil-anfitriao",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-40-ranking-mesa",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-41-ranking-podio",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-42-ranking-lista",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-50-owner-record",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-51-owner-colecao-livre",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-52-owner-grade",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-53-admin-catalogo",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-54-admin-editor",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-55-admin-editor-disponibilidade",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-56-admin-conceder",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-57-admin-historico",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-58-owner-semanais",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-59-owner-semanal-novo",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-60-anfitriao-semanais",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-61-anfitriao-identidade",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-70-colecao-trancada",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-71-ajustes-animacoes",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-l2-01-moldura-asas-da-coruja",
+      "note": "",
+      "url": "http://localhost:3000/estilo/cosmeticos"
+    },
+    {
+      "name": "cos-l2-02-moldura-asas-do-crepusculo",
+      "note": "",
+      "url": "http://localhost:3000/estilo/cosmeticos"
+    },
+    {
+      "name": "cos-l2-03-moldura-banquete-do-javali",
+      "note": "",
+      "url": "http://localhost:3000/estilo/cosmeticos"
+    },
+    {
+      "name": "cos-l2-04-moldura-catedral-esquecida",
+      "note": "",
+      "url": "http://localhost:3000/estilo/cosmeticos"
+    },
+    {
+      "name": "cos-l2-05-moldura-fortuna-do-rato",
+      "note": "",
+      "url": "http://localhost:3000/estilo/cosmeticos"
+    },
+    {
+      "name": "cos-l2-06-moldura-heranca-de-marfim",
+      "note": "",
+      "url": "http://localhost:3000/estilo/cosmeticos"
+    },
+    {
+      "name": "cos-l2-07-moldura-olho-do-arcano",
+      "note": "",
+      "url": "http://localhost:3000/estilo/cosmeticos"
+    },
+    {
+      "name": "cos-l2-08-moldura-pacto-carmesim",
+      "note": "",
+      "url": "http://localhost:3000/estilo/cosmeticos"
+    },
+    {
+      "name": "cos-l2-09-moldura-relicario-de-marfim",
+      "note": "",
+      "url": "http://localhost:3000/estilo/cosmeticos"
+    },
+    {
+      "name": "cos-l2-10-moldura-relogio-do-fim",
+      "note": "",
+      "url": "http://localhost:3000/estilo/cosmeticos"
+    },
+    {
+      "name": "cos-l2-11-moldura-rosa-do-destino",
+      "note": "",
+      "url": "http://localhost:3000/estilo/cosmeticos"
+    },
+    {
+      "name": "cos-l2-12-moldura-ultima-badalada",
+      "note": "",
+      "url": "http://localhost:3000/estilo/cosmeticos"
+    },
+    {
+      "name": "cos-l2-20-baloes-1",
+      "note": "",
+      "url": "http://localhost:3000/estilo/cosmeticos"
+    },
+    {
+      "name": "cos-l2-21-baloes-2",
+      "note": "",
+      "url": "http://localhost:3000/estilo/cosmeticos"
+    },
+    {
+      "name": "cos-l2-22-baloes-3",
+      "note": "",
+      "url": "http://localhost:3000/estilo/cosmeticos"
+    },
+    {
+      "name": "cos-l2-30-colecao-molduras",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-l2-31-colecao-molduras-2",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-l2-32-colecao-baloes",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-l2-40-chat-mordomo",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-l2-41-chat-matheus",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-l2-42-chat-isis",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-l2-43-chat-sentinela",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-l2-44-chat-lirio",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-l2-45-chat-corvo",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-l2-46-chat-nyx",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-l2-50-miniperfil-lirio",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-l2-51-miniperfil-isis",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-l2-52-miniperfil-corvo",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-l2-60-record-mordomo",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-l2-60-record-sentinela",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-l3-01-emblemas",
+      "note": "",
+      "url": "http://localhost:3000/estilo/cosmeticos"
+    },
+    {
+      "name": "cos-l3-02-emblemas",
+      "note": "",
+      "url": "http://localhost:3000/estilo/cosmeticos"
+    },
+    {
+      "name": "cos-l3-03-emblemas",
+      "note": "",
+      "url": "http://localhost:3000/estilo/cosmeticos"
+    },
+    {
+      "name": "cos-l3-04-emblemas",
+      "note": "",
+      "url": "http://localhost:3000/estilo/cosmeticos"
+    },
+    {
+      "name": "cos-l3-1-relogio-quadro-a",
+      "note": "",
+      "url": "http://localhost:3000/estilo/cosmeticos"
+    },
+    {
+      "name": "cos-l3-1-relogio-quadro-b",
+      "note": "",
+      "url": "http://localhost:3000/estilo/cosmeticos"
+    },
+    {
+      "name": "cos-l3-1-badalada-quadro-a",
+      "note": "",
+      "url": "http://localhost:3000/estilo/cosmeticos"
+    },
+    {
+      "name": "cos-l3-1-badalada-quadro-b",
+      "note": "",
+      "url": "http://localhost:3000/estilo/cosmeticos"
+    },
+    {
+      "name": "cos-l3-1-engrenagem-quadro-a",
+      "note": "",
+      "url": "http://localhost:3000/estilo/cosmeticos"
+    },
+    {
+      "name": "cos-l3-1-engrenagem-quadro-b",
+      "note": "",
+      "url": "http://localhost:3000/estilo/cosmeticos"
+    },
+    {
+      "name": "cos-l3-20-colecao-emblemas",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-l3-21-colecao-emblemas-2",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-l3-22-colecao-bloqueados",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-l3-23-colecao-minis",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-82-ia-record",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-83-ia-record-identidade",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-84-ia-colecao-asas",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-85-ia-colecao-asas-detalhe",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-86-ia-colecao-coracao",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-87-ia-chat",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-88-ia-miniperfil",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-ia-poco-entrada-0",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-ia-poco-entrada-1",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-89-ia-poco-asas-revelacao",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-89-ia-poco-asas",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-90-ia-poco-coracao-revelacao",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-90-ia-poco-coracao",
+      "note": "",
+      "url": "http://localhost:3000/"
+    }
+  ],
+  "errors": [],
+  "console": []
+}
