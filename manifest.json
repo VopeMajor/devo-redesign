@@ -1,0 +1,108 @@
+{
+  "pedido": "arcano-temperanca-tarot",
+  "titulo": "Arcano — temperanca (tarô, menos humanizado)",
+  "tipo": "ilustracao",
+  "tamanho_final": 1536,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 91151,
+      "passos": null,
+      "segundos": 2.7,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "arcano-temperanca-tarot--v01--1536.png",
+          "bytes": 1476436
+        },
+        {
+          "arquivo": "arcano-temperanca-tarot--v01--1536.webp",
+          "bytes": 243626
+        },
+        {
+          "arquivo": "arcano-temperanca-tarot--v01--1024.webp",
+          "bytes": 101336
+        },
+        {
+          "arquivo": "arcano-temperanca-tarot--v01--768.webp",
+          "bytes": 65832
+        },
+        {
+          "arquivo": "arcano-temperanca-tarot--v01--512.webp",
+          "bytes": 36602
+        }
+      ],
+      "segundos_pos": 31.8,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 91152,
+      "passos": null,
+      "segundos": 2.7,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "arcano-temperanca-tarot--v02--1536.png",
+          "bytes": 1108087
+        },
+        {
+          "arquivo": "arcano-temperanca-tarot--v02--1536.webp",
+          "bytes": 171414
+        },
+        {
+          "arquivo": "arcano-temperanca-tarot--v02--1024.webp",
+          "bytes": 78818
+        },
+        {
+          "arquivo": "arcano-temperanca-tarot--v02--768.webp",
+          "bytes": 52092
+        },
+        {
+          "arquivo": "arcano-temperanca-tarot--v02--512.webp",
+          "bytes": 30678
+        }
+      ],
+      "segundos_pos": 26.3,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 91153,
+      "passos": null,
+      "segundos": 3.1,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "arcano-temperanca-tarot--v03--1536.png",
+          "bytes": 956805
+        },
+        {
+          "arquivo": "arcano-temperanca-tarot--v03--1536.webp",
+          "bytes": 159554
+        },
+        {
+          "arquivo": "arcano-temperanca-tarot--v03--1024.webp",
+          "bytes": 76284
+        },
+        {
+          "arquivo": "arcano-temperanca-tarot--v03--768.webp",
+          "bytes": 51332
+        },
+        {
+          "arquivo": "arcano-temperanca-tarot--v03--512.webp",
+          "bytes": 29370
+        }
+      ],
+      "segundos_pos": 25.2,
+      "avisos": []
+    }
+  ]
+}
