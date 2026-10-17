@@ -1,0 +1,377 @@
+{
+  "pedido": "balao-mesa-destino",
+  "titulo": "Mesa do Destino",
+  "tipo": "balao",
+  "tamanho_final": 1536,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 8041,
+      "passos": null,
+      "segundos": 17.1,
+      "neuronios_estimados": 78,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "balao-mesa-destino--v01--1535.png",
+          "bytes": 524641
+        },
+        {
+          "arquivo": "balao-mesa-destino--v01--1535.webp",
+          "bytes": 73588
+        },
+        {
+          "arquivo": "balao-mesa-destino--v01--1024.webp",
+          "bytes": 27446
+        },
+        {
+          "arquivo": "balao-mesa-destino--v01--768.webp",
+          "bytes": 17612
+        },
+        {
+          "arquivo": "balao-mesa-destino--v01--512.webp",
+          "bytes": 9186
+        },
+        {
+          "arquivo": "balao-mesa-destino--v01--256.webp",
+          "bytes": 3752
+        }
+      ],
+      "balao": {
+        "tamanho_px": [
+          1535,
+          286
+        ],
+        "nove_fatias": {
+          "top": 43,
+          "right": 161,
+          "bottom": 33,
+          "left": 249,
+          "css": "border-image: url(...) 43 161 33 249 fill / auto; border-image-repeat: stretch;",
+          "obs": "medidas em px do original; nos derivados multiplique por largura/W"
+        },
+        "kit": {
+          "corpo": {
+            "altura_px": 244,
+            "topo_no_original": 26,
+            "fatias": {
+              "top": 17,
+              "bottom": 17,
+              "left": 0,
+              "right": 0
+            },
+            "obs": "uniforme na horizontal; estique livre. Centro liso (texto)."
+          },
+          "ponta_esq": {
+            "largura_px": 295,
+            "sobreposicao_px": 46
+          },
+          "ponta_dir": {
+            "largura_px": 207,
+            "sobreposicao_px": 46
+          },
+          "texto": {
+            "x0": 249,
+            "x1": 1374,
+            "y0": 43,
+            "y1": 253
+          }
+        },
+        "arquivos_kit": [
+          "balao-mesa-destino--v01--kit-corpo--1024.webp",
+          "balao-mesa-destino--v01--kit-corpo--768.webp",
+          "balao-mesa-destino--v01--kit-corpo--512.webp",
+          "balao-mesa-destino--v01--kit-corpo--256.webp",
+          "balao-mesa-destino--v01--kit-ponta-esq--1024.webp",
+          "balao-mesa-destino--v01--kit-ponta-esq--768.webp",
+          "balao-mesa-destino--v01--kit-ponta-esq--512.webp",
+          "balao-mesa-destino--v01--kit-ponta-esq--256.webp",
+          "balao-mesa-destino--v01--kit-ponta-dir--1024.webp",
+          "balao-mesa-destino--v01--kit-ponta-dir--768.webp",
+          "balao-mesa-destino--v01--kit-ponta-dir--512.webp",
+          "balao-mesa-destino--v01--kit-ponta-dir--256.webp"
+        ]
+      },
+      "segundos_pos": 33.4,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 8042,
+      "passos": null,
+      "segundos": 13.5,
+      "neuronios_estimados": 78,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "balao-mesa-destino--v02--1535.png",
+          "bytes": 494402
+        },
+        {
+          "arquivo": "balao-mesa-destino--v02--1535.webp",
+          "bytes": 61184
+        },
+        {
+          "arquivo": "balao-mesa-destino--v02--1024.webp",
+          "bytes": 26850
+        },
+        {
+          "arquivo": "balao-mesa-destino--v02--768.webp",
+          "bytes": 16422
+        },
+        {
+          "arquivo": "balao-mesa-destino--v02--512.webp",
+          "bytes": 9248
+        },
+        {
+          "arquivo": "balao-mesa-destino--v02--256.webp",
+          "bytes": 3876
+        }
+      ],
+      "balao": {
+        "tamanho_px": [
+          1535,
+          328
+        ],
+        "nove_fatias": {
+          "top": 49,
+          "right": 120,
+          "bottom": 39,
+          "left": 235,
+          "css": "border-image: url(...) 49 120 39 235 fill / auto; border-image-repeat: stretch;",
+          "obs": "medidas em px do original; nos derivados multiplique por largura/W"
+        },
+        "kit": {
+          "corpo": {
+            "altura_px": 278,
+            "topo_no_original": 33,
+            "fatias": {
+              "top": 16,
+              "bottom": 22,
+              "left": 0,
+              "right": 0
+            },
+            "obs": "uniforme na horizontal; estique livre. Centro liso (texto)."
+          },
+          "ponta_esq": {
+            "largura_px": 281,
+            "sobreposicao_px": 46
+          },
+          "ponta_dir": {
+            "largura_px": 166,
+            "sobreposicao_px": 46
+          },
+          "texto": {
+            "x0": 235,
+            "x1": 1415,
+            "y0": 49,
+            "y1": 289
+          }
+        },
+        "arquivos_kit": [
+          "balao-mesa-destino--v02--kit-corpo--1024.webp",
+          "balao-mesa-destino--v02--kit-corpo--768.webp",
+          "balao-mesa-destino--v02--kit-corpo--512.webp",
+          "balao-mesa-destino--v02--kit-corpo--256.webp",
+          "balao-mesa-destino--v02--kit-ponta-esq--1024.webp",
+          "balao-mesa-destino--v02--kit-ponta-esq--768.webp",
+          "balao-mesa-destino--v02--kit-ponta-esq--512.webp",
+          "balao-mesa-destino--v02--kit-ponta-esq--256.webp",
+          "balao-mesa-destino--v02--kit-ponta-dir--1024.webp",
+          "balao-mesa-destino--v02--kit-ponta-dir--768.webp",
+          "balao-mesa-destino--v02--kit-ponta-dir--512.webp",
+          "balao-mesa-destino--v02--kit-ponta-dir--256.webp"
+        ]
+      },
+      "segundos_pos": 29.1,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 8043,
+      "passos": null,
+      "segundos": 16.1,
+      "neuronios_estimados": 78,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "balao-mesa-destino--v03--1535.png",
+          "bytes": 518036
+        },
+        {
+          "arquivo": "balao-mesa-destino--v03--1535.webp",
+          "bytes": 47906
+        },
+        {
+          "arquivo": "balao-mesa-destino--v03--1024.webp",
+          "bytes": 20176
+        },
+        {
+          "arquivo": "balao-mesa-destino--v03--768.webp",
+          "bytes": 14308
+        },
+        {
+          "arquivo": "balao-mesa-destino--v03--512.webp",
+          "bytes": 7760
+        },
+        {
+          "arquivo": "balao-mesa-destino--v03--256.webp",
+          "bytes": 3088
+        }
+      ],
+      "balao": {
+        "tamanho_px": [
+          1535,
+          317
+        ],
+        "nove_fatias": {
+          "top": 38,
+          "right": 182,
+          "bottom": 43,
+          "left": 170,
+          "css": "border-image: url(...) 38 182 43 170 fill / auto; border-image-repeat: stretch;",
+          "obs": "medidas em px do original; nos derivados multiplique por largura/W"
+        },
+        "kit": {
+          "corpo": {
+            "altura_px": 285,
+            "topo_no_original": 16,
+            "fatias": {
+              "top": 22,
+              "bottom": 27,
+              "left": 0,
+              "right": 0
+            },
+            "obs": "uniforme na horizontal; estique livre. Centro liso (texto)."
+          },
+          "ponta_esq": {
+            "largura_px": 216,
+            "sobreposicao_px": 46
+          },
+          "ponta_dir": {
+            "largura_px": 228,
+            "sobreposicao_px": 46
+          },
+          "texto": {
+            "x0": 170,
+            "x1": 1353,
+            "y0": 38,
+            "y1": 274
+          }
+        },
+        "arquivos_kit": [
+          "balao-mesa-destino--v03--kit-corpo--1024.webp",
+          "balao-mesa-destino--v03--kit-corpo--768.webp",
+          "balao-mesa-destino--v03--kit-corpo--512.webp",
+          "balao-mesa-destino--v03--kit-corpo--256.webp",
+          "balao-mesa-destino--v03--kit-ponta-esq--1024.webp",
+          "balao-mesa-destino--v03--kit-ponta-esq--768.webp",
+          "balao-mesa-destino--v03--kit-ponta-esq--512.webp",
+          "balao-mesa-destino--v03--kit-ponta-esq--256.webp",
+          "balao-mesa-destino--v03--kit-ponta-dir--1024.webp",
+          "balao-mesa-destino--v03--kit-ponta-dir--768.webp",
+          "balao-mesa-destino--v03--kit-ponta-dir--512.webp",
+          "balao-mesa-destino--v03--kit-ponta-dir--256.webp"
+        ]
+      },
+      "segundos_pos": 27.7,
+      "avisos": []
+    },
+    {
+      "nome": "v04",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 8044,
+      "passos": null,
+      "segundos": 15.8,
+      "neuronios_estimados": 78,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "balao-mesa-destino--v04--1535.png",
+          "bytes": 537956
+        },
+        {
+          "arquivo": "balao-mesa-destino--v04--1535.webp",
+          "bytes": 62320
+        },
+        {
+          "arquivo": "balao-mesa-destino--v04--1024.webp",
+          "bytes": 30288
+        },
+        {
+          "arquivo": "balao-mesa-destino--v04--768.webp",
+          "bytes": 21280
+        },
+        {
+          "arquivo": "balao-mesa-destino--v04--512.webp",
+          "bytes": 11618
+        },
+        {
+          "arquivo": "balao-mesa-destino--v04--256.webp",
+          "bytes": 4560
+        }
+      ],
+      "balao": {
+        "tamanho_px": [
+          1535,
+          352
+        ],
+        "nove_fatias": {
+          "top": 77,
+          "right": 229,
+          "bottom": 67,
+          "left": 307,
+          "css": "border-image: url(...) 77 229 67 307 fill / auto; border-image-repeat: stretch;",
+          "obs": "medidas em px do original; nos derivados multiplique por largura/W"
+        },
+        "kit": {
+          "corpo": {
+            "altura_px": 280,
+            "topo_no_original": 41,
+            "fatias": {
+              "top": 36,
+              "bottom": 36,
+              "left": 0,
+              "right": 0
+            },
+            "obs": "uniforme na horizontal; estique livre. Centro liso (texto)."
+          },
+          "ponta_esq": {
+            "largura_px": 353,
+            "sobreposicao_px": 46
+          },
+          "ponta_dir": {
+            "largura_px": 275,
+            "sobreposicao_px": 46
+          },
+          "texto": {
+            "x0": 307,
+            "x1": 1306,
+            "y0": 77,
+            "y1": 285
+          }
+        },
+        "arquivos_kit": [
+          "balao-mesa-destino--v04--kit-corpo--1024.webp",
+          "balao-mesa-destino--v04--kit-corpo--768.webp",
+          "balao-mesa-destino--v04--kit-corpo--512.webp",
+          "balao-mesa-destino--v04--kit-corpo--256.webp",
+          "balao-mesa-destino--v04--kit-ponta-esq--1024.webp",
+          "balao-mesa-destino--v04--kit-ponta-esq--768.webp",
+          "balao-mesa-destino--v04--kit-ponta-esq--512.webp",
+          "balao-mesa-destino--v04--kit-ponta-esq--256.webp",
+          "balao-mesa-destino--v04--kit-ponta-dir--1024.webp",
+          "balao-mesa-destino--v04--kit-ponta-dir--768.webp",
+          "balao-mesa-destino--v04--kit-ponta-dir--512.webp",
+          "balao-mesa-destino--v04--kit-ponta-dir--256.webp"
+        ]
+      },
+      "segundos_pos": 30.6,
+      "avisos": []
+    }
+  ]
+}

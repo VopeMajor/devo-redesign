@@ -1,0 +1,12 @@
+[balao-mesa-destino] v01: @cf/black-forest-labs/flux-2-klein-4b seed=8041 1536x512 passos=None (~78 neurônios)
+    ok em 17.1s, 1536x512
+[balao-mesa-destino] v02: @cf/black-forest-labs/flux-2-klein-4b seed=8042 1536x512 passos=None (~78 neurônios)
+    ok em 13.5s, 1536x512
+[balao-mesa-destino] v03: @cf/black-forest-labs/flux-2-klein-4b seed=8043 1536x512 passos=None (~78 neurônios)
+    ok em 16.1s, 1536x512
+[balao-mesa-destino] v04: @cf/black-forest-labs/flux-2-klein-4b seed=8044 1536x512 passos=None (~78 neurônios)
+    ok em 15.8s, 1536x512
+[balao-mesa-destino] v01: rembg:birefnet-general; sem avisos
+[balao-mesa-destino] v02: rembg:birefnet-general; sem avisos
+[balao-mesa-destino] v03: rembg:birefnet-general; sem avisos
+[balao-mesa-destino] v04: rembg:birefnet-general; sem avisos

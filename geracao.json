@@ -1,0 +1,65 @@
+{
+  "pedido": "balao-mesa-destino",
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 8041,
+      "passos": null,
+      "largura": 1536,
+      "altura": 512,
+      "neuronios_estimados": 78,
+      "ok": true,
+      "segundos": 17.1,
+      "tamanho_real": [
+        1536,
+        512
+      ]
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 8042,
+      "passos": null,
+      "largura": 1536,
+      "altura": 512,
+      "neuronios_estimados": 78,
+      "ok": true,
+      "segundos": 13.5,
+      "tamanho_real": [
+        1536,
+        512
+      ]
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 8043,
+      "passos": null,
+      "largura": 1536,
+      "altura": 512,
+      "neuronios_estimados": 78,
+      "ok": true,
+      "segundos": 16.1,
+      "tamanho_real": [
+        1536,
+        512
+      ]
+    },
+    {
+      "nome": "v04",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 8044,
+      "passos": null,
+      "largura": 1536,
+      "altura": 512,
+      "neuronios_estimados": 78,
+      "ok": true,
+      "segundos": 15.8,
+      "tamanho_real": [
+        1536,
+        512
+      ]
+    }
+  ]
+}
