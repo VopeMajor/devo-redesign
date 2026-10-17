@@ -1,0 +1,285 @@
+{
+  "pedido": "balao2-fumaca-eter",
+  "titulo": "Balão — fumaca-eter",
+  "tipo": "balao",
+  "tamanho_final": 1536,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 15061,
+      "passos": null,
+      "segundos": 20.2,
+      "neuronios_estimados": 78,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "balao2-fumaca-eter--v01--1535.png",
+          "bytes": 492487
+        },
+        {
+          "arquivo": "balao2-fumaca-eter--v01--1535.webp",
+          "bytes": 50104
+        },
+        {
+          "arquivo": "balao2-fumaca-eter--v01--1024.webp",
+          "bytes": 21952
+        },
+        {
+          "arquivo": "balao2-fumaca-eter--v01--768.webp",
+          "bytes": 15984
+        },
+        {
+          "arquivo": "balao2-fumaca-eter--v01--512.webp",
+          "bytes": 10426
+        },
+        {
+          "arquivo": "balao2-fumaca-eter--v01--256.webp",
+          "bytes": 4262
+        }
+      ],
+      "balao": {
+        "tamanho_px": [
+          1535,
+          441
+        ],
+        "nove_fatias": {
+          "top": 74,
+          "right": 338,
+          "bottom": 70,
+          "left": 436,
+          "css": "border-image: url(...) 74 338 70 436 fill / auto; border-image-repeat: stretch;",
+          "obs": "medidas em px do original; nos derivados multiplique por largura/W"
+        },
+        "kit": {
+          "corpo": {
+            "altura_px": 361,
+            "topo_no_original": 18,
+            "fatias": {
+              "top": 56,
+              "bottom": 8,
+              "left": 0,
+              "right": 0
+            },
+            "obs": "uniforme na horizontal; estique livre. Centro liso (texto)."
+          },
+          "ponta_esq": {
+            "largura_px": 482,
+            "sobreposicao_px": 46
+          },
+          "ponta_dir": {
+            "largura_px": 384,
+            "sobreposicao_px": 46
+          },
+          "texto": {
+            "x0": 436,
+            "x1": 1197,
+            "y0": 74,
+            "y1": 371
+          }
+        },
+        "arquivos_kit": [
+          "balao2-fumaca-eter--v01--kit-corpo--1024.webp",
+          "balao2-fumaca-eter--v01--kit-corpo--768.webp",
+          "balao2-fumaca-eter--v01--kit-corpo--512.webp",
+          "balao2-fumaca-eter--v01--kit-corpo--256.webp",
+          "balao2-fumaca-eter--v01--kit-ponta-esq--1024.webp",
+          "balao2-fumaca-eter--v01--kit-ponta-esq--768.webp",
+          "balao2-fumaca-eter--v01--kit-ponta-esq--512.webp",
+          "balao2-fumaca-eter--v01--kit-ponta-esq--256.webp",
+          "balao2-fumaca-eter--v01--kit-ponta-dir--1024.webp",
+          "balao2-fumaca-eter--v01--kit-ponta-dir--768.webp",
+          "balao2-fumaca-eter--v01--kit-ponta-dir--512.webp",
+          "balao2-fumaca-eter--v01--kit-ponta-dir--256.webp"
+        ]
+      },
+      "segundos_pos": 39.6,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 15062,
+      "passos": null,
+      "segundos": 18.4,
+      "neuronios_estimados": 78,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "balao2-fumaca-eter--v02--1535.png",
+          "bytes": 301966
+        },
+        {
+          "arquivo": "balao2-fumaca-eter--v02--1535.webp",
+          "bytes": 34984
+        },
+        {
+          "arquivo": "balao2-fumaca-eter--v02--1024.webp",
+          "bytes": 16630
+        },
+        {
+          "arquivo": "balao2-fumaca-eter--v02--768.webp",
+          "bytes": 11010
+        },
+        {
+          "arquivo": "balao2-fumaca-eter--v02--512.webp",
+          "bytes": 7280
+        },
+        {
+          "arquivo": "balao2-fumaca-eter--v02--256.webp",
+          "bytes": 3398
+        }
+      ],
+      "balao": {
+        "tamanho_px": [
+          1535,
+          425
+        ],
+        "nove_fatias": {
+          "top": 26,
+          "right": 147,
+          "bottom": 30,
+          "left": 42,
+          "css": "border-image: url(...) 26 147 30 42 fill / auto; border-image-repeat: stretch;",
+          "obs": "medidas em px do original; nos derivados multiplique por largura/W"
+        },
+        "kit": {
+          "corpo": {
+            "altura_px": 386,
+            "topo_no_original": 17,
+            "fatias": {
+              "top": 9,
+              "bottom": 8,
+              "left": 0,
+              "right": 0
+            },
+            "obs": "uniforme na horizontal; estique livre. Centro liso (texto)."
+          },
+          "ponta_esq": {
+            "largura_px": 88,
+            "sobreposicao_px": 46
+          },
+          "ponta_dir": {
+            "largura_px": 193,
+            "sobreposicao_px": 46
+          },
+          "texto": {
+            "x0": 42,
+            "x1": 1388,
+            "y0": 26,
+            "y1": 395
+          }
+        },
+        "arquivos_kit": [
+          "balao2-fumaca-eter--v02--kit-corpo--1024.webp",
+          "balao2-fumaca-eter--v02--kit-corpo--768.webp",
+          "balao2-fumaca-eter--v02--kit-corpo--512.webp",
+          "balao2-fumaca-eter--v02--kit-corpo--256.webp",
+          "balao2-fumaca-eter--v02--kit-ponta-esq--1024.webp",
+          "balao2-fumaca-eter--v02--kit-ponta-esq--768.webp",
+          "balao2-fumaca-eter--v02--kit-ponta-esq--512.webp",
+          "balao2-fumaca-eter--v02--kit-ponta-esq--256.webp",
+          "balao2-fumaca-eter--v02--kit-ponta-dir--1024.webp",
+          "balao2-fumaca-eter--v02--kit-ponta-dir--768.webp",
+          "balao2-fumaca-eter--v02--kit-ponta-dir--512.webp",
+          "balao2-fumaca-eter--v02--kit-ponta-dir--256.webp"
+        ]
+      },
+      "segundos_pos": 28.9,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 15063,
+      "passos": null,
+      "segundos": 24.0,
+      "neuronios_estimados": 78,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "balao2-fumaca-eter--v03--1535.png",
+          "bytes": 380119
+        },
+        {
+          "arquivo": "balao2-fumaca-eter--v03--1535.webp",
+          "bytes": 34470
+        },
+        {
+          "arquivo": "balao2-fumaca-eter--v03--1024.webp",
+          "bytes": 15648
+        },
+        {
+          "arquivo": "balao2-fumaca-eter--v03--768.webp",
+          "bytes": 11216
+        },
+        {
+          "arquivo": "balao2-fumaca-eter--v03--512.webp",
+          "bytes": 7132
+        },
+        {
+          "arquivo": "balao2-fumaca-eter--v03--256.webp",
+          "bytes": 3264
+        }
+      ],
+      "balao": {
+        "tamanho_px": [
+          1535,
+          400
+        ],
+        "nove_fatias": {
+          "top": 54,
+          "right": 177,
+          "bottom": 53,
+          "left": 53,
+          "css": "border-image: url(...) 54 177 53 53 fill / auto; border-image-repeat: stretch;",
+          "obs": "medidas em px do original; nos derivados multiplique por largura/W"
+        },
+        "kit": {
+          "corpo": {
+            "altura_px": 341,
+            "topo_no_original": 18,
+            "fatias": {
+              "top": 36,
+              "bottom": 12,
+              "left": 0,
+              "right": 0
+            },
+            "obs": "uniforme na horizontal; estique livre. Centro liso (texto)."
+          },
+          "ponta_esq": {
+            "largura_px": 99,
+            "sobreposicao_px": 46
+          },
+          "ponta_dir": {
+            "largura_px": 223,
+            "sobreposicao_px": 46
+          },
+          "texto": {
+            "x0": 53,
+            "x1": 1358,
+            "y0": 54,
+            "y1": 347
+          }
+        },
+        "arquivos_kit": [
+          "balao2-fumaca-eter--v03--kit-corpo--1024.webp",
+          "balao2-fumaca-eter--v03--kit-corpo--768.webp",
+          "balao2-fumaca-eter--v03--kit-corpo--512.webp",
+          "balao2-fumaca-eter--v03--kit-corpo--256.webp",
+          "balao2-fumaca-eter--v03--kit-ponta-esq--1024.webp",
+          "balao2-fumaca-eter--v03--kit-ponta-esq--768.webp",
+          "balao2-fumaca-eter--v03--kit-ponta-esq--512.webp",
+          "balao2-fumaca-eter--v03--kit-ponta-esq--256.webp",
+          "balao2-fumaca-eter--v03--kit-ponta-dir--1024.webp",
+          "balao2-fumaca-eter--v03--kit-ponta-dir--768.webp",
+          "balao2-fumaca-eter--v03--kit-ponta-dir--512.webp",
+          "balao2-fumaca-eter--v03--kit-ponta-dir--256.webp"
+        ]
+      },
+      "segundos_pos": 27.9,
+      "avisos": []
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+[balao2-fumaca-eter] v01: @cf/black-forest-labs/flux-2-klein-4b seed=15061 1536x512 passos=None (~78 neurônios)
+    ok em 20.2s, 1536x512
+[balao2-fumaca-eter] v02: @cf/black-forest-labs/flux-2-klein-4b seed=15062 1536x512 passos=None (~78 neurônios)
+    ok em 18.4s, 1536x512
+[balao2-fumaca-eter] v03: @cf/black-forest-labs/flux-2-klein-4b seed=15063 1536x512 passos=None (~78 neurônios)
+    ok em 24.0s, 1536x512
+[balao2-fumaca-eter] v01: rembg:birefnet-general; sem avisos
+[balao2-fumaca-eter] v02: rembg:birefnet-general; sem avisos
+[balao2-fumaca-eter] v03: rembg:birefnet-general; sem avisos

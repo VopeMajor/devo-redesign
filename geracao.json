@@ -1,0 +1,50 @@
+{
+  "pedido": "balao2-fumaca-eter",
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 15061,
+      "passos": null,
+      "largura": 1536,
+      "altura": 512,
+      "neuronios_estimados": 78,
+      "ok": true,
+      "segundos": 20.2,
+      "tamanho_real": [
+        1536,
+        512
+      ]
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 15062,
+      "passos": null,
+      "largura": 1536,
+      "altura": 512,
+      "neuronios_estimados": 78,
+      "ok": true,
+      "segundos": 18.4,
+      "tamanho_real": [
+        1536,
+        512
+      ]
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 15063,
+      "passos": null,
+      "largura": 1536,
+      "altura": 512,
+      "neuronios_estimados": 78,
+      "ok": true,
+      "segundos": 24.0,
+      "tamanho_real": [
+        1536,
+        512
+      ]
+    }
+  ]
+}
