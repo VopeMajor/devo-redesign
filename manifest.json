@@ -1,0 +1,109 @@
+{
+  "pedido": "arcano-imperador",
+  "titulo": "Arcano — imperador (figura)",
+  "tipo": "ilustracao",
+  "tamanho_final": 1536,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 12041,
+      "passos": null,
+      "segundos": 3.2,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "arcano-imperador--v01--1536.png",
+          "bytes": 1084799
+        },
+        {
+          "arquivo": "arcano-imperador--v01--1536.webp",
+          "bytes": 192580
+        },
+        {
+          "arquivo": "arcano-imperador--v01--1024.webp",
+          "bytes": 93064
+        },
+        {
+          "arquivo": "arcano-imperador--v01--768.webp",
+          "bytes": 64274
+        },
+        {
+          "arquivo": "arcano-imperador--v01--512.webp",
+          "bytes": 36348
+        }
+      ],
+      "segundos_pos": 37.2,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 12042,
+      "passos": null,
+      "segundos": 3.2,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "arcano-imperador--v02--1536.png",
+          "bytes": 1171462
+        },
+        {
+          "arquivo": "arcano-imperador--v02--1536.webp",
+          "bytes": 204008
+        },
+        {
+          "arquivo": "arcano-imperador--v02--1024.webp",
+          "bytes": 97972
+        },
+        {
+          "arquivo": "arcano-imperador--v02--768.webp",
+          "bytes": 64508
+        },
+        {
+          "arquivo": "arcano-imperador--v02--512.webp",
+          "bytes": 36936
+        }
+      ],
+      "segundos_pos": 31.9,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 12043,
+      "passos": null,
+      "segundos": 3.1,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "ilhas_removidas": 1,
+      "arquivos": [
+        {
+          "arquivo": "arcano-imperador--v03--1536.png",
+          "bytes": 1092710
+        },
+        {
+          "arquivo": "arcano-imperador--v03--1536.webp",
+          "bytes": 193448
+        },
+        {
+          "arquivo": "arcano-imperador--v03--1024.webp",
+          "bytes": 95524
+        },
+        {
+          "arquivo": "arcano-imperador--v03--768.webp",
+          "bytes": 65858
+        },
+        {
+          "arquivo": "arcano-imperador--v03--512.webp",
+          "bytes": 37598
+        }
+      ],
+      "segundos_pos": 32.1,
+      "avisos": []
+    }
+  ]
+}
