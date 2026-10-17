@@ -1,0 +1,285 @@
+{
+  "pedido": "balao2-luar-ametista",
+  "titulo": "Balão — luar-ametista",
+  "tipo": "balao",
+  "tamanho_final": 1536,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 15001,
+      "passos": null,
+      "segundos": 23.2,
+      "neuronios_estimados": 78,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "balao2-luar-ametista--v01--1535.png",
+          "bytes": 352049
+        },
+        {
+          "arquivo": "balao2-luar-ametista--v01--1535.webp",
+          "bytes": 42376
+        },
+        {
+          "arquivo": "balao2-luar-ametista--v01--1024.webp",
+          "bytes": 22222
+        },
+        {
+          "arquivo": "balao2-luar-ametista--v01--768.webp",
+          "bytes": 15540
+        },
+        {
+          "arquivo": "balao2-luar-ametista--v01--512.webp",
+          "bytes": 9892
+        },
+        {
+          "arquivo": "balao2-luar-ametista--v01--256.webp",
+          "bytes": 4502
+        }
+      ],
+      "balao": {
+        "tamanho_px": [
+          1535,
+          405
+        ],
+        "nove_fatias": {
+          "top": 55,
+          "right": 194,
+          "bottom": 59,
+          "left": 244,
+          "css": "border-image: url(...) 55 194 59 244 fill / auto; border-image-repeat: stretch;",
+          "obs": "medidas em px do original; nos derivados multiplique por largura/W"
+        },
+        "kit": {
+          "corpo": {
+            "altura_px": 372,
+            "topo_no_original": 17,
+            "fatias": {
+              "top": 38,
+              "bottom": 43,
+              "left": 0,
+              "right": 0
+            },
+            "obs": "uniforme na horizontal; estique livre. Centro liso (texto)."
+          },
+          "ponta_esq": {
+            "largura_px": 290,
+            "sobreposicao_px": 46
+          },
+          "ponta_dir": {
+            "largura_px": 240,
+            "sobreposicao_px": 46
+          },
+          "texto": {
+            "x0": 244,
+            "x1": 1341,
+            "y0": 55,
+            "y1": 346
+          }
+        },
+        "arquivos_kit": [
+          "balao2-luar-ametista--v01--kit-corpo--1024.webp",
+          "balao2-luar-ametista--v01--kit-corpo--768.webp",
+          "balao2-luar-ametista--v01--kit-corpo--512.webp",
+          "balao2-luar-ametista--v01--kit-corpo--256.webp",
+          "balao2-luar-ametista--v01--kit-ponta-esq--1024.webp",
+          "balao2-luar-ametista--v01--kit-ponta-esq--768.webp",
+          "balao2-luar-ametista--v01--kit-ponta-esq--512.webp",
+          "balao2-luar-ametista--v01--kit-ponta-esq--256.webp",
+          "balao2-luar-ametista--v01--kit-ponta-dir--1024.webp",
+          "balao2-luar-ametista--v01--kit-ponta-dir--768.webp",
+          "balao2-luar-ametista--v01--kit-ponta-dir--512.webp",
+          "balao2-luar-ametista--v01--kit-ponta-dir--256.webp"
+        ]
+      },
+      "segundos_pos": 46.2,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 15002,
+      "passos": null,
+      "segundos": 24.6,
+      "neuronios_estimados": 78,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "balao2-luar-ametista--v02--1535.png",
+          "bytes": 329666
+        },
+        {
+          "arquivo": "balao2-luar-ametista--v02--1535.webp",
+          "bytes": 40914
+        },
+        {
+          "arquivo": "balao2-luar-ametista--v02--1024.webp",
+          "bytes": 20774
+        },
+        {
+          "arquivo": "balao2-luar-ametista--v02--768.webp",
+          "bytes": 15190
+        },
+        {
+          "arquivo": "balao2-luar-ametista--v02--512.webp",
+          "bytes": 9538
+        },
+        {
+          "arquivo": "balao2-luar-ametista--v02--256.webp",
+          "bytes": 3904
+        }
+      ],
+      "balao": {
+        "tamanho_px": [
+          1535,
+          404
+        ],
+        "nove_fatias": {
+          "top": 55,
+          "right": 150,
+          "bottom": 60,
+          "left": 156,
+          "css": "border-image: url(...) 55 150 60 156 fill / auto; border-image-repeat: stretch;",
+          "obs": "medidas em px do original; nos derivados multiplique por largura/W"
+        },
+        "kit": {
+          "corpo": {
+            "altura_px": 370,
+            "topo_no_original": 16,
+            "fatias": {
+              "top": 39,
+              "bottom": 42,
+              "left": 0,
+              "right": 0
+            },
+            "obs": "uniforme na horizontal; estique livre. Centro liso (texto)."
+          },
+          "ponta_esq": {
+            "largura_px": 202,
+            "sobreposicao_px": 46
+          },
+          "ponta_dir": {
+            "largura_px": 196,
+            "sobreposicao_px": 46
+          },
+          "texto": {
+            "x0": 156,
+            "x1": 1385,
+            "y0": 55,
+            "y1": 344
+          }
+        },
+        "arquivos_kit": [
+          "balao2-luar-ametista--v02--kit-corpo--1024.webp",
+          "balao2-luar-ametista--v02--kit-corpo--768.webp",
+          "balao2-luar-ametista--v02--kit-corpo--512.webp",
+          "balao2-luar-ametista--v02--kit-corpo--256.webp",
+          "balao2-luar-ametista--v02--kit-ponta-esq--1024.webp",
+          "balao2-luar-ametista--v02--kit-ponta-esq--768.webp",
+          "balao2-luar-ametista--v02--kit-ponta-esq--512.webp",
+          "balao2-luar-ametista--v02--kit-ponta-esq--256.webp",
+          "balao2-luar-ametista--v02--kit-ponta-dir--1024.webp",
+          "balao2-luar-ametista--v02--kit-ponta-dir--768.webp",
+          "balao2-luar-ametista--v02--kit-ponta-dir--512.webp",
+          "balao2-luar-ametista--v02--kit-ponta-dir--256.webp"
+        ]
+      },
+      "segundos_pos": 28.1,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 15003,
+      "passos": null,
+      "segundos": 21.1,
+      "neuronios_estimados": 78,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "balao2-luar-ametista--v03--1535.png",
+          "bytes": 302213
+        },
+        {
+          "arquivo": "balao2-luar-ametista--v03--1535.webp",
+          "bytes": 41956
+        },
+        {
+          "arquivo": "balao2-luar-ametista--v03--1024.webp",
+          "bytes": 20740
+        },
+        {
+          "arquivo": "balao2-luar-ametista--v03--768.webp",
+          "bytes": 15010
+        },
+        {
+          "arquivo": "balao2-luar-ametista--v03--512.webp",
+          "bytes": 8796
+        },
+        {
+          "arquivo": "balao2-luar-ametista--v03--256.webp",
+          "bytes": 3770
+        }
+      ],
+      "balao": {
+        "tamanho_px": [
+          1535,
+          291
+        ],
+        "nove_fatias": {
+          "top": 36,
+          "right": 204,
+          "bottom": 36,
+          "left": 196,
+          "css": "border-image: url(...) 36 204 36 196 fill / auto; border-image-repeat: stretch;",
+          "obs": "medidas em px do original; nos derivados multiplique por largura/W"
+        },
+        "kit": {
+          "corpo": {
+            "altura_px": 258,
+            "topo_no_original": 17,
+            "fatias": {
+              "top": 19,
+              "bottom": 20,
+              "left": 0,
+              "right": 0
+            },
+            "obs": "uniforme na horizontal; estique livre. Centro liso (texto)."
+          },
+          "ponta_esq": {
+            "largura_px": 242,
+            "sobreposicao_px": 46
+          },
+          "ponta_dir": {
+            "largura_px": 250,
+            "sobreposicao_px": 46
+          },
+          "texto": {
+            "x0": 196,
+            "x1": 1331,
+            "y0": 36,
+            "y1": 255
+          }
+        },
+        "arquivos_kit": [
+          "balao2-luar-ametista--v03--kit-corpo--1024.webp",
+          "balao2-luar-ametista--v03--kit-corpo--768.webp",
+          "balao2-luar-ametista--v03--kit-corpo--512.webp",
+          "balao2-luar-ametista--v03--kit-corpo--256.webp",
+          "balao2-luar-ametista--v03--kit-ponta-esq--1024.webp",
+          "balao2-luar-ametista--v03--kit-ponta-esq--768.webp",
+          "balao2-luar-ametista--v03--kit-ponta-esq--512.webp",
+          "balao2-luar-ametista--v03--kit-ponta-esq--256.webp",
+          "balao2-luar-ametista--v03--kit-ponta-dir--1024.webp",
+          "balao2-luar-ametista--v03--kit-ponta-dir--768.webp",
+          "balao2-luar-ametista--v03--kit-ponta-dir--512.webp",
+          "balao2-luar-ametista--v03--kit-ponta-dir--256.webp"
+        ]
+      },
+      "segundos_pos": 28.1,
+      "avisos": []
+    }
+  ]
+}

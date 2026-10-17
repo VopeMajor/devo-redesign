@@ -1,0 +1,9 @@
+[balao2-luar-ametista] v01: @cf/black-forest-labs/flux-2-klein-4b seed=15001 1536x512 passos=None (~78 neurônios)
+    ok em 23.2s, 1536x512
+[balao2-luar-ametista] v02: @cf/black-forest-labs/flux-2-klein-4b seed=15002 1536x512 passos=None (~78 neurônios)
+    ok em 24.6s, 1536x512
+[balao2-luar-ametista] v03: @cf/black-forest-labs/flux-2-klein-4b seed=15003 1536x512 passos=None (~78 neurônios)
+    ok em 21.1s, 1536x512
+[balao2-luar-ametista] v01: rembg:birefnet-general; sem avisos
+[balao2-luar-ametista] v02: rembg:birefnet-general; sem avisos
+[balao2-luar-ametista] v03: rembg:birefnet-general; sem avisos
