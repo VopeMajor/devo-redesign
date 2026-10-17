@@ -1,0 +1,12 @@
+[balao-confissao-carmesim] v01: @cf/black-forest-labs/flux-2-klein-4b seed=8011 1536x512 passos=None (~78 neurônios)
+    ok em 12.9s, 1536x512
+[balao-confissao-carmesim] v02: @cf/black-forest-labs/flux-2-klein-4b seed=8012 1536x512 passos=None (~78 neurônios)
+    ok em 13.4s, 1536x512
+[balao-confissao-carmesim] v03: @cf/black-forest-labs/flux-2-klein-4b seed=8013 1536x512 passos=None (~78 neurônios)
+    ok em 33.4s, 1536x512
+[balao-confissao-carmesim] v04: @cf/black-forest-labs/flux-2-klein-4b seed=8014 1536x512 passos=None (~78 neurônios)
+    ok em 12.1s, 1536x512
+[balao-confissao-carmesim] v01: rembg:birefnet-general; sem avisos
+[balao-confissao-carmesim] v02: rembg:birefnet-general; sem avisos
+[balao-confissao-carmesim] v03: rembg:birefnet-general; sem avisos
+[balao-confissao-carmesim] v04: rembg:birefnet-general; sem avisos

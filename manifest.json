@@ -1,0 +1,381 @@
+{
+  "pedido": "balao-confissao-carmesim",
+  "titulo": "Confissão Carmesim",
+  "tipo": "balao",
+  "tamanho_final": 1536,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 8011,
+      "passos": null,
+      "segundos": 12.9,
+      "neuronios_estimados": 78,
+      "fundo": "rembg:birefnet-general",
+      "ilhas_removidas": 1,
+      "arquivos": [
+        {
+          "arquivo": "balao-confissao-carmesim--v01--1535.png",
+          "bytes": 599105
+        },
+        {
+          "arquivo": "balao-confissao-carmesim--v01--1535.webp",
+          "bytes": 77858
+        },
+        {
+          "arquivo": "balao-confissao-carmesim--v01--1024.webp",
+          "bytes": 37256
+        },
+        {
+          "arquivo": "balao-confissao-carmesim--v01--768.webp",
+          "bytes": 25884
+        },
+        {
+          "arquivo": "balao-confissao-carmesim--v01--512.webp",
+          "bytes": 15362
+        },
+        {
+          "arquivo": "balao-confissao-carmesim--v01--256.webp",
+          "bytes": 5824
+        }
+      ],
+      "balao": {
+        "tamanho_px": [
+          1535,
+          458
+        ],
+        "nove_fatias": {
+          "top": 109,
+          "right": 228,
+          "bottom": 70,
+          "left": 217,
+          "css": "border-image: url(...) 109 228 70 217 fill / auto; border-image-repeat: stretch;",
+          "obs": "medidas em px do original; nos derivados multiplique por largura/W"
+        },
+        "kit": {
+          "corpo": {
+            "altura_px": 347,
+            "topo_no_original": 55,
+            "fatias": {
+              "top": 54,
+              "bottom": 14,
+              "left": 0,
+              "right": 0
+            },
+            "obs": "uniforme na horizontal; estique livre. Centro liso (texto)."
+          },
+          "ponta_esq": {
+            "largura_px": 263,
+            "sobreposicao_px": 46
+          },
+          "ponta_dir": {
+            "largura_px": 274,
+            "sobreposicao_px": 46
+          },
+          "texto": {
+            "x0": 217,
+            "x1": 1307,
+            "y0": 109,
+            "y1": 388
+          }
+        },
+        "arquivos_kit": [
+          "balao-confissao-carmesim--v01--kit-corpo--1024.webp",
+          "balao-confissao-carmesim--v01--kit-corpo--768.webp",
+          "balao-confissao-carmesim--v01--kit-corpo--512.webp",
+          "balao-confissao-carmesim--v01--kit-corpo--256.webp",
+          "balao-confissao-carmesim--v01--kit-ponta-esq--1024.webp",
+          "balao-confissao-carmesim--v01--kit-ponta-esq--768.webp",
+          "balao-confissao-carmesim--v01--kit-ponta-esq--512.webp",
+          "balao-confissao-carmesim--v01--kit-ponta-esq--256.webp",
+          "balao-confissao-carmesim--v01--kit-ponta-dir--1024.webp",
+          "balao-confissao-carmesim--v01--kit-ponta-dir--768.webp",
+          "balao-confissao-carmesim--v01--kit-ponta-dir--512.webp",
+          "balao-confissao-carmesim--v01--kit-ponta-dir--256.webp"
+        ]
+      },
+      "segundos_pos": 38.3,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 8012,
+      "passos": null,
+      "segundos": 13.4,
+      "neuronios_estimados": 78,
+      "fundo": "rembg:birefnet-general",
+      "ilhas_removidas": 12,
+      "arquivos": [
+        {
+          "arquivo": "balao-confissao-carmesim--v02--1535.png",
+          "bytes": 586665
+        },
+        {
+          "arquivo": "balao-confissao-carmesim--v02--1535.webp",
+          "bytes": 76546
+        },
+        {
+          "arquivo": "balao-confissao-carmesim--v02--1024.webp",
+          "bytes": 36514
+        },
+        {
+          "arquivo": "balao-confissao-carmesim--v02--768.webp",
+          "bytes": 24590
+        },
+        {
+          "arquivo": "balao-confissao-carmesim--v02--512.webp",
+          "bytes": 14594
+        },
+        {
+          "arquivo": "balao-confissao-carmesim--v02--256.webp",
+          "bytes": 5486
+        }
+      ],
+      "balao": {
+        "tamanho_px": [
+          1535,
+          457
+        ],
+        "nove_fatias": {
+          "top": 84,
+          "right": 187,
+          "bottom": 82,
+          "left": 183,
+          "css": "border-image: url(...) 84 187 82 183 fill / auto; border-image-repeat: stretch;",
+          "obs": "medidas em px do original; nos derivados multiplique por largura/W"
+        },
+        "kit": {
+          "corpo": {
+            "altura_px": 332,
+            "topo_no_original": 62,
+            "fatias": {
+              "top": 22,
+              "bottom": 19,
+              "left": 0,
+              "right": 0
+            },
+            "obs": "uniforme na horizontal; estique livre. Centro liso (texto)."
+          },
+          "ponta_esq": {
+            "largura_px": 229,
+            "sobreposicao_px": 46
+          },
+          "ponta_dir": {
+            "largura_px": 233,
+            "sobreposicao_px": 46
+          },
+          "texto": {
+            "x0": 183,
+            "x1": 1348,
+            "y0": 84,
+            "y1": 375
+          }
+        },
+        "arquivos_kit": [
+          "balao-confissao-carmesim--v02--kit-corpo--1024.webp",
+          "balao-confissao-carmesim--v02--kit-corpo--768.webp",
+          "balao-confissao-carmesim--v02--kit-corpo--512.webp",
+          "balao-confissao-carmesim--v02--kit-corpo--256.webp",
+          "balao-confissao-carmesim--v02--kit-ponta-esq--1024.webp",
+          "balao-confissao-carmesim--v02--kit-ponta-esq--768.webp",
+          "balao-confissao-carmesim--v02--kit-ponta-esq--512.webp",
+          "balao-confissao-carmesim--v02--kit-ponta-esq--256.webp",
+          "balao-confissao-carmesim--v02--kit-ponta-dir--1024.webp",
+          "balao-confissao-carmesim--v02--kit-ponta-dir--768.webp",
+          "balao-confissao-carmesim--v02--kit-ponta-dir--512.webp",
+          "balao-confissao-carmesim--v02--kit-ponta-dir--256.webp"
+        ]
+      },
+      "segundos_pos": 32.5,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 8013,
+      "passos": null,
+      "segundos": 33.4,
+      "neuronios_estimados": 78,
+      "fundo": "rembg:birefnet-general",
+      "ilhas_removidas": 14,
+      "arquivos": [
+        {
+          "arquivo": "balao-confissao-carmesim--v03--1535.png",
+          "bytes": 713664
+        },
+        {
+          "arquivo": "balao-confissao-carmesim--v03--1535.webp",
+          "bytes": 104336
+        },
+        {
+          "arquivo": "balao-confissao-carmesim--v03--1024.webp",
+          "bytes": 48314
+        },
+        {
+          "arquivo": "balao-confissao-carmesim--v03--768.webp",
+          "bytes": 32078
+        },
+        {
+          "arquivo": "balao-confissao-carmesim--v03--512.webp",
+          "bytes": 17460
+        },
+        {
+          "arquivo": "balao-confissao-carmesim--v03--256.webp",
+          "bytes": 6508
+        }
+      ],
+      "balao": {
+        "tamanho_px": [
+          1535,
+          509
+        ],
+        "nove_fatias": {
+          "top": 105,
+          "right": 287,
+          "bottom": 110,
+          "left": 305,
+          "css": "border-image: url(...) 105 287 110 305 fill / auto; border-image-repeat: stretch;",
+          "obs": "medidas em px do original; nos derivados multiplique por largura/W"
+        },
+        "kit": {
+          "corpo": {
+            "altura_px": 324,
+            "topo_no_original": 88,
+            "fatias": {
+              "top": 17,
+              "bottom": 13,
+              "left": 0,
+              "right": 0
+            },
+            "obs": "uniforme na horizontal; estique livre. Centro liso (texto)."
+          },
+          "ponta_esq": {
+            "largura_px": 351,
+            "sobreposicao_px": 46
+          },
+          "ponta_dir": {
+            "largura_px": 333,
+            "sobreposicao_px": 46
+          },
+          "texto": {
+            "x0": 305,
+            "x1": 1248,
+            "y0": 105,
+            "y1": 399
+          }
+        },
+        "arquivos_kit": [
+          "balao-confissao-carmesim--v03--kit-corpo--1024.webp",
+          "balao-confissao-carmesim--v03--kit-corpo--768.webp",
+          "balao-confissao-carmesim--v03--kit-corpo--512.webp",
+          "balao-confissao-carmesim--v03--kit-corpo--256.webp",
+          "balao-confissao-carmesim--v03--kit-ponta-esq--1024.webp",
+          "balao-confissao-carmesim--v03--kit-ponta-esq--768.webp",
+          "balao-confissao-carmesim--v03--kit-ponta-esq--512.webp",
+          "balao-confissao-carmesim--v03--kit-ponta-esq--256.webp",
+          "balao-confissao-carmesim--v03--kit-ponta-dir--1024.webp",
+          "balao-confissao-carmesim--v03--kit-ponta-dir--768.webp",
+          "balao-confissao-carmesim--v03--kit-ponta-dir--512.webp",
+          "balao-confissao-carmesim--v03--kit-ponta-dir--256.webp"
+        ]
+      },
+      "segundos_pos": 36.1,
+      "avisos": []
+    },
+    {
+      "nome": "v04",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 8014,
+      "passos": null,
+      "segundos": 12.1,
+      "neuronios_estimados": 78,
+      "fundo": "rembg:birefnet-general",
+      "ilhas_removidas": 10,
+      "arquivos": [
+        {
+          "arquivo": "balao-confissao-carmesim--v04--1535.png",
+          "bytes": 477355
+        },
+        {
+          "arquivo": "balao-confissao-carmesim--v04--1535.webp",
+          "bytes": 85004
+        },
+        {
+          "arquivo": "balao-confissao-carmesim--v04--1024.webp",
+          "bytes": 40150
+        },
+        {
+          "arquivo": "balao-confissao-carmesim--v04--768.webp",
+          "bytes": 27140
+        },
+        {
+          "arquivo": "balao-confissao-carmesim--v04--512.webp",
+          "bytes": 15468
+        },
+        {
+          "arquivo": "balao-confissao-carmesim--v04--256.webp",
+          "bytes": 6046
+        }
+      ],
+      "balao": {
+        "tamanho_px": [
+          1535,
+          418
+        ],
+        "nove_fatias": {
+          "top": 90,
+          "right": 228,
+          "bottom": 90,
+          "left": 241,
+          "css": "border-image: url(...) 90 228 90 241 fill / auto; border-image-repeat: stretch;",
+          "obs": "medidas em px do original; nos derivados multiplique por largura/W"
+        },
+        "kit": {
+          "corpo": {
+            "altura_px": 288,
+            "topo_no_original": 64,
+            "fatias": {
+              "top": 26,
+              "bottom": 24,
+              "left": 0,
+              "right": 0
+            },
+            "obs": "uniforme na horizontal; estique livre. Centro liso (texto)."
+          },
+          "ponta_esq": {
+            "largura_px": 287,
+            "sobreposicao_px": 46
+          },
+          "ponta_dir": {
+            "largura_px": 274,
+            "sobreposicao_px": 46
+          },
+          "texto": {
+            "x0": 241,
+            "x1": 1307,
+            "y0": 90,
+            "y1": 328
+          }
+        },
+        "arquivos_kit": [
+          "balao-confissao-carmesim--v04--kit-corpo--1024.webp",
+          "balao-confissao-carmesim--v04--kit-corpo--768.webp",
+          "balao-confissao-carmesim--v04--kit-corpo--512.webp",
+          "balao-confissao-carmesim--v04--kit-corpo--256.webp",
+          "balao-confissao-carmesim--v04--kit-ponta-esq--1024.webp",
+          "balao-confissao-carmesim--v04--kit-ponta-esq--768.webp",
+          "balao-confissao-carmesim--v04--kit-ponta-esq--512.webp",
+          "balao-confissao-carmesim--v04--kit-ponta-esq--256.webp",
+          "balao-confissao-carmesim--v04--kit-ponta-dir--1024.webp",
+          "balao-confissao-carmesim--v04--kit-ponta-dir--768.webp",
+          "balao-confissao-carmesim--v04--kit-ponta-dir--512.webp",
+          "balao-confissao-carmesim--v04--kit-ponta-dir--256.webp"
+        ]
+      },
+      "segundos_pos": 33.9,
+      "avisos": []
+    }
+  ]
+}
