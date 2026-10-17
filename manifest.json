@@ -1,0 +1,120 @@
+{
+  "pedido": "arcano-sigilo-fortuna",
+  "titulo": "Arcano — fortuna (sigilo)",
+  "tipo": "emblema",
+  "tamanho_final": 1024,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 13101,
+      "passos": null,
+      "segundos": 10.2,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "arcano-sigilo-fortuna--v01--1024.png",
+          "bytes": 519195
+        },
+        {
+          "arquivo": "arcano-sigilo-fortuna--v01--1024.webp",
+          "bytes": 120870
+        },
+        {
+          "arquivo": "arcano-sigilo-fortuna--v01--512.webp",
+          "bytes": 39944
+        },
+        {
+          "arquivo": "arcano-sigilo-fortuna--v01--256.webp",
+          "bytes": 17176
+        },
+        {
+          "arquivo": "arcano-sigilo-fortuna--v01--128.webp",
+          "bytes": 8610
+        },
+        {
+          "arquivo": "arcano-sigilo-fortuna--v01--64.webp",
+          "bytes": 3610
+        }
+      ],
+      "segundos_pos": 25.3,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 13102,
+      "passos": null,
+      "segundos": 9.5,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "arcano-sigilo-fortuna--v02--1024.png",
+          "bytes": 580280
+        },
+        {
+          "arquivo": "arcano-sigilo-fortuna--v02--1024.webp",
+          "bytes": 128184
+        },
+        {
+          "arquivo": "arcano-sigilo-fortuna--v02--512.webp",
+          "bytes": 41956
+        },
+        {
+          "arquivo": "arcano-sigilo-fortuna--v02--256.webp",
+          "bytes": 17646
+        },
+        {
+          "arquivo": "arcano-sigilo-fortuna--v02--128.webp",
+          "bytes": 8400
+        },
+        {
+          "arquivo": "arcano-sigilo-fortuna--v02--64.webp",
+          "bytes": 3500
+        }
+      ],
+      "segundos_pos": 21.6,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 13103,
+      "passos": null,
+      "segundos": 7.6,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "arcano-sigilo-fortuna--v03--1024.png",
+          "bytes": 551249
+        },
+        {
+          "arquivo": "arcano-sigilo-fortuna--v03--1024.webp",
+          "bytes": 136550
+        },
+        {
+          "arquivo": "arcano-sigilo-fortuna--v03--512.webp",
+          "bytes": 44916
+        },
+        {
+          "arquivo": "arcano-sigilo-fortuna--v03--256.webp",
+          "bytes": 18692
+        },
+        {
+          "arquivo": "arcano-sigilo-fortuna--v03--128.webp",
+          "bytes": 8484
+        },
+        {
+          "arquivo": "arcano-sigilo-fortuna--v03--64.webp",
+          "bytes": 3458
+        }
+      ],
+      "segundos_pos": 21.0,
+      "avisos": []
+    }
+  ]
+}

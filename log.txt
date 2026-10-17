@@ -1,0 +1,9 @@
+[arcano-sigilo-fortuna] v01: @cf/black-forest-labs/flux-2-klein-4b seed=13101 1024x1024 passos=None (~104 neurônios)
+    ok em 10.2s, 1024x1024
+[arcano-sigilo-fortuna] v02: @cf/black-forest-labs/flux-2-klein-4b seed=13102 1024x1024 passos=None (~104 neurônios)
+    ok em 9.5s, 1024x1024
+[arcano-sigilo-fortuna] v03: @cf/black-forest-labs/flux-2-klein-4b seed=13103 1024x1024 passos=None (~104 neurônios)
+    ok em 7.6s, 1024x1024
+[arcano-sigilo-fortuna] v01: rembg:birefnet-general; sem avisos
+[arcano-sigilo-fortuna] v02: rembg:birefnet-general; sem avisos
+[arcano-sigilo-fortuna] v03: rembg:birefnet-general; sem avisos
