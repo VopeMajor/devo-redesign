@@ -1,0 +1,110 @@
+{
+  "pedido": "arcano-mundo-tarot",
+  "titulo": "Arcano — mundo (tarô, menos humanizado)",
+  "tipo": "ilustracao",
+  "tamanho_final": 1536,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 91221,
+      "passos": null,
+      "segundos": 3.6,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "ilhas_removidas": 3,
+      "arquivos": [
+        {
+          "arquivo": "arcano-mundo-tarot--v01--1536.png",
+          "bytes": 993273
+        },
+        {
+          "arquivo": "arcano-mundo-tarot--v01--1536.webp",
+          "bytes": 222300
+        },
+        {
+          "arquivo": "arcano-mundo-tarot--v01--1024.webp",
+          "bytes": 102076
+        },
+        {
+          "arquivo": "arcano-mundo-tarot--v01--768.webp",
+          "bytes": 67584
+        },
+        {
+          "arquivo": "arcano-mundo-tarot--v01--512.webp",
+          "bytes": 37970
+        }
+      ],
+      "segundos_pos": 32.2,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 91222,
+      "passos": null,
+      "segundos": 3.8,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "arcano-mundo-tarot--v02--1536.png",
+          "bytes": 1556589
+        },
+        {
+          "arquivo": "arcano-mundo-tarot--v02--1536.webp",
+          "bytes": 343590
+        },
+        {
+          "arquivo": "arcano-mundo-tarot--v02--1024.webp",
+          "bytes": 161624
+        },
+        {
+          "arquivo": "arcano-mundo-tarot--v02--768.webp",
+          "bytes": 107000
+        },
+        {
+          "arquivo": "arcano-mundo-tarot--v02--512.webp",
+          "bytes": 61238
+        }
+      ],
+      "segundos_pos": 28.8,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 91223,
+      "passos": null,
+      "segundos": 2.8,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "ilhas_removidas": 0,
+      "arquivos": [
+        {
+          "arquivo": "arcano-mundo-tarot--v03--1536.png",
+          "bytes": 1336006
+        },
+        {
+          "arquivo": "arcano-mundo-tarot--v03--1536.webp",
+          "bytes": 309418
+        },
+        {
+          "arquivo": "arcano-mundo-tarot--v03--1024.webp",
+          "bytes": 151876
+        },
+        {
+          "arquivo": "arcano-mundo-tarot--v03--768.webp",
+          "bytes": 101846
+        },
+        {
+          "arquivo": "arcano-mundo-tarot--v03--512.webp",
+          "bytes": 57252
+        }
+      ],
+      "segundos_pos": 28.6,
+      "avisos": []
+    }
+  ]
+}
