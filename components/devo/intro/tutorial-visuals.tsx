@@ -15,22 +15,6 @@ import { DeadlyVoteSymbol } from '../system/symbol'
  * registro, linhas de cota e legendas mono. Ouro só no que se admira; vermelho só onde se morre.
  */
 
-/**
- * Marca de toque: onde o jogador tocaria. Mira de relojoaria (anel fino de aço que se expande + estrela
- * de 4 pontas em porcelana), não um disco branco chapado que lia como defeito na captura.
- */
-function TapMark({ className }: { className?: string }) {
-  return (
-    <span aria-hidden="true" className={cn('pointer-events-none absolute z-20 size-8', className)}>
-      <span className="en-ping absolute inset-0 rounded-full border border-dv-gold-bright/80" />
-      <span className="absolute inset-[5px] rounded-full border border-dv-porcelain/35 bg-[radial-gradient(circle,rgb(var(--dv-ink-rgb)/0.55),rgb(var(--dv-ink-rgb)/0.15)_70%)] shadow-[0_0_10px_rgba(0,0,0,0.6)]" />
-      <svg viewBox="0 0 24 24" className="en-tap absolute inset-[7px] text-dv-porcelain drop-shadow-[0_0_4px_rgba(241,240,238,0.7)]" fill="currentColor">
-        <path d="M12 2 L13.6 10.4 L22 12 L13.6 13.6 L12 22 L10.4 13.6 L2 12 L10.4 10.4 Z" />
-      </svg>
-    </span>
-  )
-}
-
 /** Linha de cota com rótulo: liga uma peça do diagrama à legenda. */
 function Callout({ label, className, tone = 'cobalt', side = 'right' }: { label: string; className?: string; tone?: 'cobalt' | 'gold' | 'blood'; side?: 'left' | 'right' }) {
   const color = tone === 'gold' ? 'text-dv-gold' : tone === 'blood' ? 'text-dv-blood-text' : 'text-dv-text-2'
@@ -120,7 +104,6 @@ function WristVisual() {
         </div>
         <Callout label="72h = vida" className="right-0 top-2" tone="gold" side="left" />
         <Callout label="Zero = fim" className="bottom-2 left-0" tone="blood" />
-        <TapMark className="bottom-7 right-16" />
       </div>
       <Caption>Tempo restante = vida restante</Caption>
     </div>
@@ -184,7 +167,6 @@ function DeviceVisual() {
         </div>
         <Callout label="Pulso" className="-top-6 right-6" side="left" />
         <Callout label="Apps" className="left-0 top-24" />
-        <TapMark className="bottom-14 right-[5.4rem]" />
       </div>
       <Caption>Um sistema dentro do sistema</Caption>
     </div>
@@ -204,7 +186,6 @@ function CardsVisual() {
             </div>
           </div>
         ))}
-        <TapMark className="bottom-6 left-[55%]" />
       </div>
       <span className="dv-cut-diag flex items-center gap-2 bg-dv-ink-3 px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.22em] text-dv-gold-bright" style={{ '--dv-cut': '8px' } as CSSProperties}>
         <GlyphCard className="size-3.5 text-dv-gold" />
@@ -242,7 +223,6 @@ function RoomsVisual() {
             </div>
           )
         })}
-        <TapMark className="right-5 top-10" />
       </div>
       <Caption>Uma negociação por sala</Caption>
     </div>
@@ -284,7 +264,6 @@ function SlotVisual() {
           <Slot label="Outro jogador">
             <span className="font-impact text-[40px] text-dv-text-3">?</span>
           </Slot>
-          <TapMark className="left-14 top-24" />
         </div>
       </Table>
       <Caption>Você não escolhe o que ele oferece</Caption>
@@ -437,7 +416,6 @@ function AcceptVisual() {
         <Seal who="Você" lit={lit} delay={0} />
         <span className={cn('h-px w-12 transition-colors duration-700', lit ? 'bg-dv-gold' : 'bg-dv-line')} style={{ transitionDelay: '900ms' }} aria-hidden="true" />
         <Seal who="Outro jogador" lit={lit} delay={900} />
-        <TapMark className="left-12 top-12" />
         {sealed && (
           <span className="absolute -bottom-6 left-1/2 -translate-x-1/2">
             <Stamp text="Troca selada" tone="gold" size={150} rotate={-6} animate />
@@ -530,7 +508,6 @@ function MessagesVisual() {
             {c}
           </span>
         ))}
-        <TapMark className="right-8 top-1" />
       </div>
       <Caption>Cada pergunta, uma resposta</Caption>
     </div>

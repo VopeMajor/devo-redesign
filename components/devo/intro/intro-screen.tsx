@@ -163,7 +163,9 @@ export function IntroScreen({
             {line.visual && line.unlock && <UnlockSeal key={`u-${index}`} name={line.unlock} />}
           </div>
 
-          <div ref={setPalco} className="relative">
+          {/* Só no desktop o palco é a referência do retrato; no celular é a coluna inteira, para o busto medir o espaço
+              livre ACIMA da fala (dentro do palco não sobra altura e o retrato sumia nas falas sem figura). */}
+          <div ref={setPalco} className="lg:relative">
             {/* Retrato ANCORADO à caixa (kit/npc-anchor): a base do busto passa por trás do topo da fala, sem vão,
                 em qualquer altura de tela; no desktop fica à esquerda da caixa. Entra pelo lado do falante. */}
             <NpcAnchor

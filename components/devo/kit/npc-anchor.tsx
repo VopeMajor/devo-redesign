@@ -2,6 +2,7 @@
 
 import { useLayoutEffect, useRef, useState, type CSSProperties, type ReactNode, type RefObject } from 'react'
 import { npcPortrait, resolveExpressao } from '@/lib/devo/npcs'
+import ROSTOS from '@/lib/devo/npc-rostos.json'
 import { cn } from '@/lib/utils'
 
 /* ────────────────────────────────────────────────────────────────────────────────────────
@@ -37,9 +38,18 @@ const ROSTO: Record<string, { cx: number; cy: number; lado: number }> = {
   herdeiro: { cx: 545, cy: 330, lado: 560 },
   coruja: { cx: 535, cy: 330, lado: 560 },
   javali: { cx: 612, cy: 375, lado: 470 },
-  rato: { cx: 415, cy: 390, lado: 510 },
+  rato: { cx: 415, cy: 380, lado: 560 },
 }
 const ROSTO_PADRAO = { cx: 540, cy: 335, lado: 560 }
+
+/**
+ * Janela do rosto da EXPRESSÃO (a cabeça muda de lugar entre as poses): medida na própria imagem por
+ * scripts/dev/rostos-npcs.py (lib/devo/npc-rostos.json). Sem medida, cai na janela do NPC.
+ */
+function rostoDe(npc: string, pose?: string) {
+  const m = (ROSTOS as Record<string, Record<string, number[]>>)[npc]?.[resolveExpressao(npc, pose)]
+  return m ? { cx: m[0], cy: m[1], lado: m[2] } : (ROSTO[npc] ?? ROSTO_PADRAO)
+}
 
 const TOPO = 60
 const BASE_MAX = 770
@@ -248,7 +258,7 @@ export function NpcMedallion({
   children?: ReactNode
 }) {
   const src = npcPortrait(npc, pose)?.src
-  const f = ROSTO[npc] ?? ROSTO_PADRAO
+  const f = rostoDe(npc, pose)
   const x = f.cx - f.lado / 2
   const y = f.cy - f.lado / 2
   const mask = 'linear-gradient(to bottom, #000 74%, transparent 100%)'
