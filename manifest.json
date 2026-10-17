@@ -1,0 +1,62 @@
+{
+  "pedido": "arcano-sigilo-torre",
+  "titulo": "Arcano — torre (sigilo)",
+  "tipo": "emblema",
+  "tamanho_final": 1024,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 13161,
+      "passos": null,
+      "neuronios_estimados": 104,
+      "erro": "HTTP 400 — 3030: AiError: AiError: Your output has been flagged. Please choose another prompt / input image combination (0d56b30b-3709-4fb4-b1b1-713464512428)"
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 13162,
+      "passos": null,
+      "neuronios_estimados": 104,
+      "erro": "HTTP 400 — 3030: AiError: AiError: Your output has been flagged. Please choose another prompt / input image combination (88158b7a-9c2e-42e6-b4ce-edf66350f165)"
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 13163,
+      "passos": null,
+      "segundos": 8.5,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "arcano-sigilo-torre--v03--1024.png",
+          "bytes": 282454
+        },
+        {
+          "arquivo": "arcano-sigilo-torre--v03--1024.webp",
+          "bytes": 49112
+        },
+        {
+          "arquivo": "arcano-sigilo-torre--v03--512.webp",
+          "bytes": 16430
+        },
+        {
+          "arquivo": "arcano-sigilo-torre--v03--256.webp",
+          "bytes": 6960
+        },
+        {
+          "arquivo": "arcano-sigilo-torre--v03--128.webp",
+          "bytes": 3582
+        },
+        {
+          "arquivo": "arcano-sigilo-torre--v03--64.webp",
+          "bytes": 1540
+        }
+      ],
+      "segundos_pos": 17.0,
+      "avisos": []
+    }
+  ]
+}
