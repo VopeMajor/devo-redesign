@@ -1,0 +1,110 @@
+{
+  "pedido": "arcano-imperatriz",
+  "titulo": "Arcano — imperatriz (figura)",
+  "tipo": "ilustracao",
+  "tamanho_final": 1536,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 12031,
+      "passos": null,
+      "segundos": 2.8,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "arcano-imperatriz--v01--1536.png",
+          "bytes": 1240382
+        },
+        {
+          "arquivo": "arcano-imperatriz--v01--1536.webp",
+          "bytes": 250870
+        },
+        {
+          "arquivo": "arcano-imperatriz--v01--1024.webp",
+          "bytes": 114028
+        },
+        {
+          "arquivo": "arcano-imperatriz--v01--768.webp",
+          "bytes": 74412
+        },
+        {
+          "arquivo": "arcano-imperatriz--v01--512.webp",
+          "bytes": 40790
+        }
+      ],
+      "segundos_pos": 36.8,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 12032,
+      "passos": null,
+      "segundos": 3.2,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "ilhas_removidas": 7,
+      "arquivos": [
+        {
+          "arquivo": "arcano-imperatriz--v02--1536.png",
+          "bytes": 1263748
+        },
+        {
+          "arquivo": "arcano-imperatriz--v02--1536.webp",
+          "bytes": 242674
+        },
+        {
+          "arquivo": "arcano-imperatriz--v02--1024.webp",
+          "bytes": 108152
+        },
+        {
+          "arquivo": "arcano-imperatriz--v02--768.webp",
+          "bytes": 70928
+        },
+        {
+          "arquivo": "arcano-imperatriz--v02--512.webp",
+          "bytes": 38328
+        }
+      ],
+      "segundos_pos": 30.8,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 12033,
+      "passos": null,
+      "segundos": 3.4,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "ilhas_removidas": 3,
+      "arquivos": [
+        {
+          "arquivo": "arcano-imperatriz--v03--1536.png",
+          "bytes": 1228271
+        },
+        {
+          "arquivo": "arcano-imperatriz--v03--1536.webp",
+          "bytes": 238748
+        },
+        {
+          "arquivo": "arcano-imperatriz--v03--1024.webp",
+          "bytes": 113858
+        },
+        {
+          "arquivo": "arcano-imperatriz--v03--768.webp",
+          "bytes": 74728
+        },
+        {
+          "arquivo": "arcano-imperatriz--v03--512.webp",
+          "bytes": 40546
+        }
+      ],
+      "segundos_pos": 30.7,
+      "avisos": []
+    }
+  ]
+}

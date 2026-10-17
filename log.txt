@@ -1,0 +1,9 @@
+[arcano-imperatriz] v01: @cf/black-forest-labs/flux-2-klein-9b seed=12031 1024x1536 passos=None (~1,455 neurônios)
+    ok em 2.8s, 1024x1536
+[arcano-imperatriz] v02: @cf/black-forest-labs/flux-2-klein-9b seed=12032 1024x1536 passos=None (~1,455 neurônios)
+    ok em 3.2s, 1024x1536
+[arcano-imperatriz] v03: @cf/black-forest-labs/flux-2-klein-9b seed=12033 1024x1536 passos=None (~1,455 neurônios)
+    ok em 3.4s, 1024x1536
+[arcano-imperatriz] v01: rembg:birefnet-general; sem avisos
+[arcano-imperatriz] v02: rembg:birefnet-general; sem avisos
+[arcano-imperatriz] v03: rembg:birefnet-general; sem avisos
