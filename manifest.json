@@ -1,0 +1,111 @@
+{
+  "pedido": "arcano-forca-tarot",
+  "titulo": "Arcano — forca (tarô, menos humanizado)",
+  "tipo": "ilustracao",
+  "tamanho_final": 1536,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 91091,
+      "passos": null,
+      "segundos": 3.8,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "ilhas_removidas": 0,
+      "arquivos": [
+        {
+          "arquivo": "arcano-forca-tarot--v01--1536.png",
+          "bytes": 1329188
+        },
+        {
+          "arquivo": "arcano-forca-tarot--v01--1536.webp",
+          "bytes": 266574
+        },
+        {
+          "arquivo": "arcano-forca-tarot--v01--1024.webp",
+          "bytes": 112390
+        },
+        {
+          "arquivo": "arcano-forca-tarot--v01--768.webp",
+          "bytes": 71416
+        },
+        {
+          "arquivo": "arcano-forca-tarot--v01--512.webp",
+          "bytes": 39046
+        }
+      ],
+      "segundos_pos": 31.6,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 91092,
+      "passos": null,
+      "segundos": 2.9,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "ilhas_removidas": 0,
+      "arquivos": [
+        {
+          "arquivo": "arcano-forca-tarot--v02--1536.png",
+          "bytes": 1164997
+        },
+        {
+          "arquivo": "arcano-forca-tarot--v02--1536.webp",
+          "bytes": 228922
+        },
+        {
+          "arquivo": "arcano-forca-tarot--v02--1024.webp",
+          "bytes": 109624
+        },
+        {
+          "arquivo": "arcano-forca-tarot--v02--768.webp",
+          "bytes": 72512
+        },
+        {
+          "arquivo": "arcano-forca-tarot--v02--512.webp",
+          "bytes": 41300
+        }
+      ],
+      "segundos_pos": 26.8,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 91093,
+      "passos": null,
+      "segundos": 3.4,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "ilhas_removidas": 0,
+      "arquivos": [
+        {
+          "arquivo": "arcano-forca-tarot--v03--1536.png",
+          "bytes": 1212759
+        },
+        {
+          "arquivo": "arcano-forca-tarot--v03--1536.webp",
+          "bytes": 226222
+        },
+        {
+          "arquivo": "arcano-forca-tarot--v03--1024.webp",
+          "bytes": 105260
+        },
+        {
+          "arquivo": "arcano-forca-tarot--v03--768.webp",
+          "bytes": 69566
+        },
+        {
+          "arquivo": "arcano-forca-tarot--v03--512.webp",
+          "bytes": 38912
+        }
+      ],
+      "segundos_pos": 25.9,
+      "avisos": []
+    }
+  ]
+}

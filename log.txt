@@ -1,0 +1,9 @@
+[arcano-forca-tarot] v01: @cf/black-forest-labs/flux-2-klein-9b seed=91091 1024x1536 passos=None (~1,455 neurônios)
+    ok em 3.8s, 1024x1536
+[arcano-forca-tarot] v02: @cf/black-forest-labs/flux-2-klein-9b seed=91092 1024x1536 passos=None (~1,455 neurônios)
+    ok em 2.9s, 1024x1536
+[arcano-forca-tarot] v03: @cf/black-forest-labs/flux-2-klein-9b seed=91093 1024x1536 passos=None (~1,455 neurônios)
+    ok em 3.4s, 1024x1536
+[arcano-forca-tarot] v01: rembg:birefnet-general; sem avisos
+[arcano-forca-tarot] v02: rembg:birefnet-general; sem avisos
+[arcano-forca-tarot] v03: rembg:birefnet-general; sem avisos
