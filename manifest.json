@@ -1,0 +1,95 @@
+{
+  "pedido": "rosa-do-destino-mini",
+  "titulo": "Rosa do Destino — miniperfil (importado)",
+  "tipo": "moldura",
+  "tamanho_final": 1024,
+  "importado": "arte/importados/rosa-do-destino-mini.png",
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "importado",
+      "seed": 0,
+      "passos": null,
+      "fundo": "quadriculado+rembg:birefnet-general",
+      "ilhas_removidas": 115,
+      "franja_aparada_px": 40612,
+      "beira_recolorida_px": 43574,
+      "janela": {
+        "forma": "quadrado",
+        "centro_px": [
+          512.0,
+          512.0
+        ],
+        "lado_px": 560.1,
+        "raio_canto_px": 41.0,
+        "lado_fracao": 0.547
+      },
+      "reencaixe": {
+        "escala": 0.7869,
+        "cobertura_aro": 1.0
+      },
+      "ornamento_cortado": 0.0,
+      "polimento": {
+        "nevoa_px": 3032,
+        "pontos_px": 655,
+        "ilhas_px": 119
+      },
+      "retoques": 5,
+      "arquivos": [
+        {
+          "arquivo": "rosa-do-destino-mini--v01--1024.png",
+          "bytes": 1210078
+        },
+        {
+          "arquivo": "rosa-do-destino-mini--v01--1024.webp",
+          "bytes": 301594
+        },
+        {
+          "arquivo": "rosa-do-destino-mini--v01--512.webp",
+          "bytes": 99068
+        },
+        {
+          "arquivo": "rosa-do-destino-mini--v01--256.webp",
+          "bytes": 32804
+        },
+        {
+          "arquivo": "rosa-do-destino-mini--v01--96.webp",
+          "bytes": 7806
+        },
+        {
+          "arquivo": "rosa-do-destino-mini--v01--48.webp",
+          "bytes": 2856
+        },
+        {
+          "arquivo": "rosa-do-destino-mini--v01--gema--1024.webp",
+          "bytes": 96326
+        },
+        {
+          "arquivo": "rosa-do-destino-mini--v01--gema--512.webp",
+          "bytes": 43596
+        },
+        {
+          "arquivo": "rosa-do-destino-mini--v01--gema--256.webp",
+          "bytes": 18478
+        },
+        {
+          "arquivo": "rosa-do-destino-mini--v01--gema--96.webp",
+          "bytes": 5588
+        },
+        {
+          "arquivo": "rosa-do-destino-mini--v01--gema--48.webp",
+          "bytes": 2252
+        }
+      ],
+      "camadas": [
+        {
+          "nome": "gema",
+          "animacao": "brilho",
+          "cobertura": 0.0389
+        }
+      ],
+      "segundos_pos": 42.1,
+      "avisos": []
+    }
+  ]
+}

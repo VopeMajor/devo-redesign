@@ -1,0 +1,108 @@
+{
+  "id": "rosa-do-destino-mini",
+  "titulo": "Rosa do Destino — miniperfil (importado)",
+  "tipo": "moldura",
+  "importar": "arte/importados/rosa-do-destino-mini.png",
+  "pos": {
+    "remover_fundo": true,
+    "modelo_fundo": "birefnet-general",
+    "fundo": "quadriculado",
+    "tamanho_final": 1024,
+    "molde": {
+      "forma": "quadrado",
+      "centro": [
+        0.5,
+        0.5
+      ],
+      "lado": 0.547,
+      "raio_canto": 0.04,
+      "sombra": 0.35,
+      "largura_sombra": 0.045
+    },
+    "camadas": [
+      {
+        "nome": "gema",
+        "matiz": [
+          340,
+          15
+        ],
+        "sat_min": 0.6,
+        "val_min": 0.55,
+        "animacao": "brilho"
+      }
+    ],
+    "retoque": [
+      {
+        "caixa": [
+          0.015,
+          0.36,
+          0.075,
+          0.42
+        ],
+        "modo": "palido"
+      },
+      {
+        "caixa": [
+          0.03,
+          0.64,
+          0.12,
+          0.74
+        ],
+        "modo": "palido"
+      },
+      {
+        "caixa": [
+          0.88,
+          0.3,
+          0.95,
+          0.46
+        ],
+        "modo": "palido"
+      },
+      {
+        "caixa": [
+          0.22,
+          0.86,
+          0.33,
+          0.94
+        ],
+        "modo": "palido"
+      },
+      {
+        "caixa": [
+          0.37,
+          0.1,
+          0.45,
+          0.16
+        ],
+        "modo": "palido"
+      }
+    ],
+    "derivados": [
+      512,
+      256,
+      96,
+      48
+    ],
+    "margem": 0.03
+  },
+  "prompt": "",
+  "modelo": "importado",
+  "variacoes": [
+    {
+      "seed": 0,
+      "modelo": "importado",
+      "passos": null,
+      "largura": 1024,
+      "altura": 1024,
+      "prompt_extra": "",
+      "n": 1
+    }
+  ],
+  "negative": "",
+  "largura": 1024,
+  "altura": 1024,
+  "passos": null,
+  "guidance": null,
+  "referencias": []
+}
