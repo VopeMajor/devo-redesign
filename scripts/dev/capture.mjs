@@ -3404,7 +3404,7 @@ if (want('virtudes')) {
     await page.getByRole('combobox', { name: 'Arcano a editar' }).first().selectOption('morte').catch(() => {})
     await wait(600)
     await shot(page, 'v35-mesa-textos', 'Owner edita os textos do Arcano (provisório)')
-    await page.getByRole('textbox', { name: 'Nome do Estágio 1' }).first().evaluate((el) => el.scrollIntoView({ block: 'center' })).catch(() => {})
+    await page.getByRole('button', { name: 'Gravar texto' }).first().evaluate((el) => el.scrollIntoView({ block: 'end' })).catch(() => {})
     await wait(400)
     await shot(page, 'v36-mesa-textos-estagios', 'Estágios e o botão de gravar')
     // tela do jogador vista pelo Owner: todos abrem, selo "Provisório"

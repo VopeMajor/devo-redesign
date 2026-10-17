@@ -522,7 +522,7 @@ function EditorTextos({ textos, agir }: { textos: Record<string, TextoMesa>; agi
         <RecSelect aria-label="Arcano a editar" value={k} onChange={(e) => setK(e.target.value as ArcanoKey)}>
           {ARCANOS.map(([key, t]) => (
             <option key={key} value={key}>
-              {arcanoInfo(key).numeral} · {t.replace(/^Arcano /, '')}
+              {arcanoInfo(key).numeral} · {t.replace(/^Arcano d[aoe]s? /, '')}
               {textos[key]?.editado ? (textos[key].provisorio ? ' (editado)' : ' (final)') : ''}
             </option>
           ))}
@@ -550,7 +550,7 @@ function EditorTextos({ textos, agir }: { textos: Record<string, TextoMesa>; agi
               <span className="w-7 shrink-0 pt-3 font-impact text-[17px] font-semibold text-in-fg">{['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'][i]}</span>
               <div className="flex min-w-0 flex-1 flex-col gap-1.5">
                 <RecInput aria-label={`Nome do Estágio ${i + 1}`} value={e.nome} maxLength={L.nome} onChange={(ev) => setEstagio(i, 'nome', ev.target.value)} className="h-11 text-[15px]" />
-                <RecInput aria-label={`Linha do Estágio ${i + 1}`} value={e.linha} maxLength={L.linha} onChange={(ev) => setEstagio(i, 'linha', ev.target.value)} className="h-11 text-[14.5px]" />
+                <RecTextarea aria-label={`Linha do Estágio ${i + 1}`} rows={2} value={e.linha} maxLength={L.linha} onChange={(ev) => setEstagio(i, 'linha', ev.target.value)} className="text-[14.5px]" />
               </div>
             </div>
           ))}

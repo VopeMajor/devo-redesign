@@ -55,7 +55,7 @@ function ItemTrancado({ a }: { a: ArcanoVista }) {
       <Numeral n={a.numeral} apagado />
       <div className="min-w-0 flex-1">
         <h3 className="flex items-center gap-2 font-display text-[14.5px] font-semibold uppercase tracking-[0.08em] text-dv-text-2">
-          {a.titulo.replace(/^Arcano /, '')}
+          {nomeCurto(a.titulo)}
           <span className="sr-only">(trancado)</span>
         </h3>
         <p className="mt-1 font-body text-[14.5px] leading-relaxed text-dv-text-3">{a.breve}</p>
@@ -69,7 +69,7 @@ function ItemAberto({ a }: { a: ArcanoVista }) {
   const [aberto, setAberto] = useState(false)
   const id = useId()
   const d = a.detalhe!
-  const nome = a.titulo.replace(/^Arcano /, '')
+  const nome = nomeCurto(a.titulo)
   return (
     <li className={cn('relative', a.proprio ? 'mb-2 bg-dv-ink-2 shadow-[inset_0_0_0_1px_var(--dv-line-gold)]' : 'border-b border-dv-line last:border-b-0')}>
       <h3>
@@ -154,6 +154,9 @@ function Bloco({ titulo, children }: { titulo: string; children: ReactNode }) {
     </div>
   )
 }
+
+/** "Arcano da Morte" → "Morte" (o rótulo "Seu Arcano" e o numeral já dizem o resto). */
+const nomeCurto = (t: string) => t.replace(/^Arcano d[aoe]s? /, '')
 
 const ROMANOS = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X']
 const ESTADO_SR: Record<EstagioVista['estado'], string> = { passado: 'alcançado', atual: 'Estágio atual', futuro: 'ainda não alcançado', aberto: '' }
