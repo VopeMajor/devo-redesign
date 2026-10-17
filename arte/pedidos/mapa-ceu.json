@@ -1,0 +1,31 @@
+{
+  "id": "mapa-ceu",
+  "titulo": "Mapa das torres — céu (parallax)",
+  "tipo": "ilustracao",
+  "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+  "prompt": "Fantasy RPG environment background painting, painted, highly detailed, full frame vertical night sky with no ground and no buildings: a deep night sky in amethyst violet and dark indigo, soft layered clouds lit by cold moonlight from the upper left, discreet small stars, and faintly visible inside the clouds a huge ghostly antique astrolabe and clock dial with concentric rings and thin engraved lines, very subtle and translucent, centered in the upper half. Calm, dark, atmospheric, painterly, no text, no numbers, no moon disc, no people.",
+  "negative": "text, letters, watermark, towers, buildings, castle, people, cropped",
+  "largura": 1024,
+  "altura": 1536,
+  "variacoes": [
+    {
+      "seed": 9601
+    },
+    {
+      "seed": 9602
+    },
+    {
+      "seed": 9603
+    }
+  ],
+  "pos": {
+    "remover_fundo": false,
+    "tamanho_final": 1536,
+    "margem": 0.0,
+    "derivados": [
+      1024,
+      768,
+      512
+    ]
+  }
+}
