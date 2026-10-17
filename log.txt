@@ -1,0 +1,9 @@
+[mini-relicario-marfim] v01: @cf/black-forest-labs/flux-2-klein-4b seed=4291 1024x1024 passos=None (~104 neurônios)
+    ok em 13.5s, 1024x1024
+[mini-relicario-marfim] v02: @cf/black-forest-labs/flux-2-klein-4b seed=4292 1024x1024 passos=None (~104 neurônios)
+    ok em 18.3s, 1024x1024
+[mini-relicario-marfim] v03: @cf/black-forest-labs/flux-2-klein-4b seed=4293 1024x1024 passos=None (~104 neurônios)
+    ok em 20.6s, 1024x1024
+[mini-relicario-marfim] v01: rembg:birefnet-general; 2.7% do ornamento ficou fora do quadro — reduza a janela ou peça mais margem no prompt
+[mini-relicario-marfim] v02: rembg:birefnet-general; 1.3% do ornamento ficou fora do quadro — reduza a janela ou peça mais margem no prompt
+[mini-relicario-marfim] v03: rembg:birefnet-general; 2.8% do ornamento ficou fora do quadro — reduza a janela ou peça mais margem no prompt

@@ -1,0 +1,175 @@
+{
+  "pedido": "mini-relicario-marfim",
+  "titulo": "relicario-marfim — miniperfil (quadrada)",
+  "tipo": "moldura",
+  "tamanho_final": 1024,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 4291,
+      "passos": null,
+      "segundos": 13.5,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "miolo_aberto_por_cor": true,
+      "janela": {
+        "forma": "quadrado",
+        "centro_px": [
+          512.0,
+          512.0
+        ],
+        "lado_px": 560.1,
+        "raio_canto_px": 41.0,
+        "lado_fracao": 0.547
+      },
+      "reencaixe": {
+        "escala": 1.4515,
+        "cobertura_aro": 1.0
+      },
+      "ornamento_cortado": 0.0273,
+      "arquivos": [
+        {
+          "arquivo": "mini-relicario-marfim--v01--1024.png",
+          "bytes": 751191
+        },
+        {
+          "arquivo": "mini-relicario-marfim--v01--1024.webp",
+          "bytes": 164470
+        },
+        {
+          "arquivo": "mini-relicario-marfim--v01--512.webp",
+          "bytes": 63212
+        },
+        {
+          "arquivo": "mini-relicario-marfim--v01--256.webp",
+          "bytes": 23130
+        },
+        {
+          "arquivo": "mini-relicario-marfim--v01--96.webp",
+          "bytes": 5964
+        },
+        {
+          "arquivo": "mini-relicario-marfim--v01--48.webp",
+          "bytes": 2384
+        }
+      ],
+      "segundos_pos": 33.4,
+      "avisos": [
+        "2.7% do ornamento ficou fora do quadro — reduza a janela ou peça mais margem no prompt"
+      ]
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 4292,
+      "passos": null,
+      "segundos": 18.3,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "miolo_aberto_por_cor": true,
+      "ilhas_removidas": 1,
+      "janela": {
+        "forma": "quadrado",
+        "centro_px": [
+          512.0,
+          512.0
+        ],
+        "lado_px": 560.1,
+        "raio_canto_px": 41.0,
+        "lado_fracao": 0.547
+      },
+      "reencaixe": {
+        "escala": 1.4356,
+        "cobertura_aro": 1.0
+      },
+      "ornamento_cortado": 0.0134,
+      "arquivos": [
+        {
+          "arquivo": "mini-relicario-marfim--v02--1024.png",
+          "bytes": 712806
+        },
+        {
+          "arquivo": "mini-relicario-marfim--v02--1024.webp",
+          "bytes": 149106
+        },
+        {
+          "arquivo": "mini-relicario-marfim--v02--512.webp",
+          "bytes": 59228
+        },
+        {
+          "arquivo": "mini-relicario-marfim--v02--256.webp",
+          "bytes": 22556
+        },
+        {
+          "arquivo": "mini-relicario-marfim--v02--96.webp",
+          "bytes": 5616
+        },
+        {
+          "arquivo": "mini-relicario-marfim--v02--48.webp",
+          "bytes": 2276
+        }
+      ],
+      "segundos_pos": 27.4,
+      "avisos": [
+        "1.3% do ornamento ficou fora do quadro — reduza a janela ou peça mais margem no prompt"
+      ]
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 4293,
+      "passos": null,
+      "segundos": 20.6,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "miolo_aberto_por_cor": true,
+      "janela": {
+        "forma": "quadrado",
+        "centro_px": [
+          512.0,
+          512.0
+        ],
+        "lado_px": 560.1,
+        "raio_canto_px": 41.0,
+        "lado_fracao": 0.547
+      },
+      "reencaixe": {
+        "escala": 1.3555,
+        "cobertura_aro": 1.0
+      },
+      "ornamento_cortado": 0.0279,
+      "arquivos": [
+        {
+          "arquivo": "mini-relicario-marfim--v03--1024.png",
+          "bytes": 745523
+        },
+        {
+          "arquivo": "mini-relicario-marfim--v03--1024.webp",
+          "bytes": 186490
+        },
+        {
+          "arquivo": "mini-relicario-marfim--v03--512.webp",
+          "bytes": 73710
+        },
+        {
+          "arquivo": "mini-relicario-marfim--v03--256.webp",
+          "bytes": 26608
+        },
+        {
+          "arquivo": "mini-relicario-marfim--v03--96.webp",
+          "bytes": 6448
+        },
+        {
+          "arquivo": "mini-relicario-marfim--v03--48.webp",
+          "bytes": 2468
+        }
+      ],
+      "segundos_pos": 28.5,
+      "avisos": [
+        "2.8% do ornamento ficou fora do quadro — reduza a janela ou peça mais margem no prompt"
+      ]
+    }
+  ]
+}
