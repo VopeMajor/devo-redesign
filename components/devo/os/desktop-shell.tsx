@@ -155,23 +155,25 @@ export function DesktopShell() {
         </div>
       </header>
 
-      <nav aria-label="Aplicativos" className="absolute left-5 z-10 flex items-start gap-2" style={{ top: TOP + 16, bottom: BOTTOM + 32 }}>
-        <div className="grid h-full auto-cols-max grid-flow-col content-start gap-1 [grid-template-rows:repeat(auto-fill,96px)]">
+      {/* Área de trabalho de verdade: todos os ícones numa só grade que desce em coluna e abre a coluna seguinte
+          quando falta altura (apps, Sala de Jogos e sistemas liberados, nessa ordem). */}
+      <nav aria-label="Aplicativos" className="absolute left-5 z-10" style={{ top: TOP + 16, bottom: BOTTOM + 32 }}>
+        <div className="grid h-full auto-cols-max grid-flow-col content-start gap-x-2 gap-y-1 [grid-template-rows:repeat(auto-fill,108px)]">
           {visibleApps(false).map((app) => (
             <DesktopIcon key={app.id} appId={app.id} selected={selected === app.id} unread={state.unread[app.id]} onSelect={setSelected} onOpen={openApp} />
           ))}
+          {(state.arcadeUnlocked || salaJogos) && (
+            <div className="animate-[devo-pop_0.7s_ease-out_both]">
+              <DesktopIcon appId="jogos" selected={selected === 'jogos'} unread={state.unread.jogos} onSelect={setSelected} onOpen={openApp} />
+            </div>
+          )}
+          {/* Sistemas novos liberados pelo servidor (DIRECAO-3; trancados não aparecem na área de trabalho). */}
+          {SISTEMAS.filter((f) => f.flag && liberado(f.flag)).map((f) => (
+            <div key={f.id} className="animate-[devo-pop_0.7s_ease-out_both]">
+              <DesktopIcon appId={f.id as AppId} selected={selected === f.id} onSelect={setSelected} onOpen={openApp} />
+            </div>
+          ))}
         </div>
-        {(state.arcadeUnlocked || salaJogos) && (
-          <div className="animate-[devo-pop_0.7s_ease-out_both]">
-            <DesktopIcon appId="jogos" selected={selected === 'jogos'} unread={state.unread.jogos} onSelect={setSelected} onOpen={openApp} />
-          </div>
-        )}
-        {/* Sistemas novos liberados pelo servidor (DIRECAO-3; trancados não aparecem na área de trabalho). */}
-        {SISTEMAS.filter((f) => f.flag && liberado(f.flag)).map((f) => (
-          <div key={f.id} className="animate-[devo-pop_0.7s_ease-out_both]">
-            <DesktopIcon appId={f.id as AppId} selected={selected === f.id} onSelect={setSelected} onOpen={openApp} />
-          </div>
-        ))}
       </nav>
       <p className="dv-label absolute bottom-[64px] left-5 z-10 w-24 text-center text-[10px] text-dv-text-3">Clique duplo</p>
 
@@ -319,7 +321,7 @@ function DesktopIcon({
       title={unread ? `${app.name} · ${unread} não lidas` : app.name}
       onKeyDown={(e) => e.key === 'Enter' && onOpen(app.id)}
       className={cn(
-        'dv-focus group relative flex h-[96px] w-24 flex-col items-center gap-2 px-1 py-2 transition-colors',
+        'dv-focus group relative flex h-[108px] w-24 flex-col items-center gap-2 px-1 py-2 transition-colors',
         selected ? 'bg-white/[0.06] shadow-[inset_0_0_0_1px_rgba(206,201,192,0.45)]' : 'hover:bg-white/[0.05]',
       )}
     >
