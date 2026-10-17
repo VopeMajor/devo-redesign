@@ -1,0 +1,108 @@
+{
+  "pedido": "borda-selo-ametista",
+  "titulo": "Borda de perfil — selo-ametista",
+  "tipo": "ilustracao",
+  "tamanho_final": 1024,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 16001,
+      "passos": null,
+      "segundos": 15.7,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "borda-selo-ametista--v01--1024.png",
+          "bytes": 278771
+        },
+        {
+          "arquivo": "borda-selo-ametista--v01--1024.webp",
+          "bytes": 57102
+        },
+        {
+          "arquivo": "borda-selo-ametista--v01--768.webp",
+          "bytes": 38284
+        },
+        {
+          "arquivo": "borda-selo-ametista--v01--512.webp",
+          "bytes": 23646
+        },
+        {
+          "arquivo": "borda-selo-ametista--v01--256.webp",
+          "bytes": 9534
+        }
+      ],
+      "segundos_pos": 32.5,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 16002,
+      "passos": null,
+      "segundos": 25.5,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "borda-selo-ametista--v02--1024.png",
+          "bytes": 287860
+        },
+        {
+          "arquivo": "borda-selo-ametista--v02--1024.webp",
+          "bytes": 59126
+        },
+        {
+          "arquivo": "borda-selo-ametista--v02--768.webp",
+          "bytes": 40240
+        },
+        {
+          "arquivo": "borda-selo-ametista--v02--512.webp",
+          "bytes": 24208
+        },
+        {
+          "arquivo": "borda-selo-ametista--v02--256.webp",
+          "bytes": 10010
+        }
+      ],
+      "segundos_pos": 27.5,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 16003,
+      "passos": null,
+      "segundos": 20.8,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "borda-selo-ametista--v03--1024.png",
+          "bytes": 257042
+        },
+        {
+          "arquivo": "borda-selo-ametista--v03--1024.webp",
+          "bytes": 64662
+        },
+        {
+          "arquivo": "borda-selo-ametista--v03--768.webp",
+          "bytes": 45894
+        },
+        {
+          "arquivo": "borda-selo-ametista--v03--512.webp",
+          "bytes": 27320
+        },
+        {
+          "arquivo": "borda-selo-ametista--v03--256.webp",
+          "bytes": 11612
+        }
+      ],
+      "segundos_pos": 28.8,
+      "avisos": []
+    }
+  ]
+}

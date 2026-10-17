@@ -1,0 +1,9 @@
+[borda-selo-ametista] v01: @cf/black-forest-labs/flux-2-klein-4b seed=16001 1024x640 passos=None (~104 neurônios)
+    ok em 15.7s, 1024x640
+[borda-selo-ametista] v02: @cf/black-forest-labs/flux-2-klein-4b seed=16002 1024x640 passos=None (~104 neurônios)
+    ok em 25.5s, 1024x640
+[borda-selo-ametista] v03: @cf/black-forest-labs/flux-2-klein-4b seed=16003 1024x640 passos=None (~104 neurônios)
+    ok em 20.8s, 1024x640
+[borda-selo-ametista] v01: rembg:birefnet-general; sem avisos
+[borda-selo-ametista] v02: rembg:birefnet-general; sem avisos
+[borda-selo-ametista] v03: rembg:birefnet-general; sem avisos
