@@ -1,0 +1,33 @@
+{
+  "asset": "img:/images/cosmeticos/olho-destino/emblema",
+  "imagem": {
+    "base": "/images/cosmeticos/olho-destino/emblema",
+    "tamanhos": [
+      48,
+      96,
+      256,
+      512,
+      1024
+    ],
+    "camadas": [
+      {
+        "src": "/images/cosmeticos/olho-destino/emblema-iris.webp",
+        "anim": "brilho",
+        "caixa": [
+          0.2539,
+          0.1045,
+          0.5,
+          0.5088
+        ],
+        "dur": 5.5
+      }
+    ]
+  },
+  "origem": {
+    "pedido": "emblema-olho-destino",
+    "variacao": "v02",
+    "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+    "seed": 7032,
+    "importado": null
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "asset": "img:/images/cosmeticos/engrenagem-herdeiro/emblema",
+  "imagem": {
+    "base": "/images/cosmeticos/engrenagem-herdeiro/emblema",
+    "tamanhos": [
+      48,
+      96,
+      256,
+      512,
+      1024
+    ],
+    "camadas": [
+      {
+        "src": "/images/cosmeticos/engrenagem-herdeiro/emblema-engrenagem-herdeiro.webp",
+        "anim": "giro",
+        "caixa": [
+          0.035,
+          0.09,
+          0.82,
+          0.82
+        ],
+        "dur": 24
+      }
+    ]
+  },
+  "origem": {
+    "pedido": "emblema-engrenagem-herdeiro",
+    "variacao": "v03",
+    "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+    "seed": 7083,
+    "importado": null
+  }
+}

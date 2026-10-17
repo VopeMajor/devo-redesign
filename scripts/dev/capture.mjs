@@ -3080,6 +3080,54 @@ if (want('cosmeticos')) {
     }
   })
 
+  // Lote 3 (infra/arte da41f23): emblemas, Relógio do Fim e Última Badalada animados (dois quadros com 3 s de
+  // intervalo: ponteiro, engrenagens e sino giram no próprio eixo) e itens bloqueados na coleção.
+  await step('cos-lote3', async () => {
+    const g = await device('phone')
+    await g.page.goto(`${BASE}/estilo/cosmeticos`, { waitUntil: 'networkidle' })
+    await wait(1500)
+    await view(g.page, 'section[aria-label="Lote 3 · emblemas"]', 'start')
+    await wait(900)
+    for (let k = 0; k < 4; k++) {
+      await shot(g.page, `cos-l3-0${k + 1}-emblemas`)
+      await g.page.evaluate(() => window.scrollBy(0, window.innerHeight * 0.85))
+      await wait(700)
+    }
+    for (const [nome, slug] of [['Relógio do Fim', 'relogio'], ['Última Badalada', 'badalada'], ['Engrenagem do Herdeiro', 'engrenagem']]) {
+      const sel = slug === 'engrenagem' ? `article[aria-label="Lote 3: ${nome}"]` : `article[aria-label="Lote 2: ${nome}"]`
+      await view(g.page, sel, 'start')
+      await wait(1200)
+      await shot(g.page, `cos-l3-1-${slug}-quadro-a`)
+      await wait(3000)
+      await shot(g.page, `cos-l3-1-${slug}-quadro-b`)
+    }
+    await g.ctx.close()
+
+    const page = mat.page
+    await abrirColecao(page)
+    await view(page, 'div[aria-label="Categorias da coleção"]', 'start')
+    await aba(page, 'Emblemas')
+    await wait(900)
+    await view(page, 'ul[aria-label^="Itens:"]', 'start')
+    await wait(700)
+    await shot(page, 'cos-l3-20-colecao-emblemas')
+    await page.evaluate(() => window.scrollBy(0, window.innerHeight * 0.8))
+    await wait(700)
+    await shot(page, 'cos-l3-21-colecao-emblemas-2')
+    await view(page, 'div[aria-label="Categorias da coleção"]', 'start')
+    await aba(page, 'Molduras')
+    await wait(900)
+    await view(page, 'ul[aria-label^="Itens:"]', 'start')
+    await wait(700)
+    await shot(page, 'cos-l3-22-colecao-bloqueados')
+    await view(page, 'div[aria-label="Formato da moldura"]', 'start')
+    await tryClick(page.getByRole('button', { name: 'Miniperfil · quadrada' }).first())
+    await wait(900)
+    await view(page, 'ul[aria-label^="Itens:"]', 'start')
+    await wait(700)
+    await shot(page, 'cos-l3-23-colecao-minis')
+  })
+
   // Arte por IA (pipeline infra/arte; dono escolheu Asas do Crepúsculo v02 e Coração da Condessa v02) aplicada
   // em Record, coleção, chat, miniperfil e no resultado do Poço. Matheus tem os dois equipados (94-seed).
   await step('cos-ia-aplicada', async () => {

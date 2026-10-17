@@ -1,0 +1,18 @@
+{
+  "asset": "img:/images/cosmeticos/camadas/ponteiros-prata",
+  "imagem": {
+    "base": "/images/cosmeticos/camadas/ponteiros-prata",
+    "tamanhos": [
+      128,
+      256,
+      512
+    ]
+  },
+  "origem": {
+    "pedido": "camada-ponteiros-prata",
+    "variacao": "v01",
+    "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+    "seed": 9051,
+    "importado": null
+  }
+}

@@ -60,9 +60,12 @@ const LOTE2_NOMES: Record<string, string> = {
   'relicario-marfim': 'Relicário de Marfim',
   'rosa-do-destino': 'Rosa do Destino',
   'asas-do-crepusculo': 'Asas do Crepúsculo',
+  'coracao-da-condessa': 'Coração da Condessa',
+  'fortuna-profana': 'Fortuna Profana',
 }
 const idDe = (asset: string) => asset.split('/')[3]
 const MOLDURAS_IMG = Object.keys(IMAGENS_CATALOGO).filter((a) => IMAGENS_CATALOGO[a].slots.includes('moldura_avatar'))
+const EMBLEMAS_IMG = Object.keys(IMAGENS_CATALOGO).filter((a) => IMAGENS_CATALOGO[a].slots.includes('emblema'))
 const BALOES_IMG = Object.keys(IMAGENS_CATALOGO).filter((a) => IMAGENS_CATALOGO[a].slots.includes('balao'))
 const miniDe = (asset: string) => {
   const propria = asset.replace(/\/moldura$/, '/mini')
@@ -151,6 +154,28 @@ export function Galeria() {
                     </div>
                   </div>
                 </div>
+              </article>
+            )
+          })}
+        </div>
+      </section>
+
+      <section aria-label="Lote 3 · emblemas" className="mb-14">
+        <Titulo n="✦" t="Lote 3 · emblemas" />
+        <div className="grid grid-cols-2 gap-x-4 gap-y-8 md:grid-cols-4">
+          {EMBLEMAS_IMG.map((a) => {
+            const nome = LOTE2_NOMES[idDe(a)] ?? idDe(a)
+            const e = img(a, nome, 'emblema')
+            return (
+              <article key={a} aria-label={`Lote 3: ${nome}`} className="flex flex-col items-center gap-2">
+                <Emblema def={e} tamanho={96} />
+                <p className="text-center font-display text-[12px] font-semibold uppercase tracking-[0.06em] text-[#ece5d8]">
+                  {nome}
+                  {e.animado && <span className="ml-1 font-mono text-[9px] text-[#c2b9ec]">anim.</span>}
+                </p>
+                <p className="flex items-center gap-1 font-body text-[15px]">
+                  Lune <Emblema def={e} tamanho={20} animar={false} /> <Emblema def={e} tamanho={16} animar={false} />
+                </p>
               </article>
             )
           })}

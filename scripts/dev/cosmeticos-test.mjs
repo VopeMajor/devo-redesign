@@ -126,9 +126,14 @@ await test('lote 2: molduras e balões em imagem (9-slice com cor de texto), ite
   for (const id of ['heranca-marfim', 'relogio-fim', 'pacto-carmesim', 'olho-arcano', 'banquete-javali', 'asas-coruja', 'fortuna-rato', 'ultima-badalada', 'catedral-esquecida', 'relicario-marfim', 'rosa-destino']) {
     const m = by.get(`cosmetico:moldura-${id}`)
     assert(m?.imagem?.janela && m.asset.startsWith('img:'), `moldura ${id}: ${m?.asset}`)
-    assert(by.get(`cosmetico:mini-${id}`)?.imagem, `mini ${id}`)
+    assert(by.get(`cosmetico:mini-${id}`)?.imagem?.janela?.forma === 'quadrado', `mini ${id} quadrada própria`)
   }
   assert(by.get('cosmetico:mini-asas-crepusculo')?.imagem?.janela?.forma === 'quadrado', 'mini definitiva das Asas')
+  for (const id of ['rosa-sangue', 'coroa-partida', 'ampulheta-dourada', 'olho-destino', 'chave-proibida', 'as-espadas', 'lua-escarlate', 'fragmento-celestial', 'engrenagem-herdeiro', 'pena-coruja', 'ficha-javali', 'selo-anfitriao', 'fortuna-profana'])
+    assert(by.get(`cosmetico:emblema-${id}`)?.imagem?.base?.endsWith(`/${id}/emblema`), `emblema ${id}`)
+  const relogio = by.get('cosmetico:moldura-relogio-fim').imagem.camadas.map((c) => c.anim).sort().join()
+  assert(relogio === 'giro,giro-rev,ponteiro,pulso', `camadas do Relógio: ${relogio}`)
+  assert(by.get('cosmetico:moldura-ultima-badalada').imagem.camadas.some((c) => c.anim === 'oscila' && c.origem?.[1] < 0.1), 'sino oscila preso no alto')
   assert(by.get('cosmetico:mini-rosa-destino')?.imagem?.janela?.forma === 'quadrado', 'mini da Rosa')
   for (const k of ['moldura-rosa-destino', 'mini-rosa-destino', 'balao-rosa-destino', 'moldura-asas-crepusculo']) assert(by.get(`cosmetico:${k}`)?.rarity === 'lendario', `${k} lendário`)
   for (const id of ['correspondencia-real', 'confissao-carmesim', 'ecos-arcano', 'ultimo-suspiro', 'mesa-destino', 'rosa-destino']) {
