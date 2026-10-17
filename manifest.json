@@ -1,0 +1,108 @@
+{
+  "pedido": "borda-relogio-porcelana",
+  "titulo": "Borda de perfil — relogio-porcelana",
+  "tipo": "ilustracao",
+  "tamanho_final": 1024,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 16051,
+      "passos": null,
+      "segundos": 19.9,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "borda-relogio-porcelana--v01--1024.png",
+          "bytes": 358211
+        },
+        {
+          "arquivo": "borda-relogio-porcelana--v01--1024.webp",
+          "bytes": 74030
+        },
+        {
+          "arquivo": "borda-relogio-porcelana--v01--768.webp",
+          "bytes": 48756
+        },
+        {
+          "arquivo": "borda-relogio-porcelana--v01--512.webp",
+          "bytes": 29294
+        },
+        {
+          "arquivo": "borda-relogio-porcelana--v01--256.webp",
+          "bytes": 11422
+        }
+      ],
+      "segundos_pos": 34.8,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 16052,
+      "passos": null,
+      "segundos": 25.7,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "borda-relogio-porcelana--v02--1024.png",
+          "bytes": 366367
+        },
+        {
+          "arquivo": "borda-relogio-porcelana--v02--1024.webp",
+          "bytes": 82630
+        },
+        {
+          "arquivo": "borda-relogio-porcelana--v02--768.webp",
+          "bytes": 56382
+        },
+        {
+          "arquivo": "borda-relogio-porcelana--v02--512.webp",
+          "bytes": 32066
+        },
+        {
+          "arquivo": "borda-relogio-porcelana--v02--256.webp",
+          "bytes": 12844
+        }
+      ],
+      "segundos_pos": 28.7,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 16053,
+      "passos": null,
+      "segundos": 17.2,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "borda-relogio-porcelana--v03--1024.png",
+          "bytes": 362038
+        },
+        {
+          "arquivo": "borda-relogio-porcelana--v03--1024.webp",
+          "bytes": 93492
+        },
+        {
+          "arquivo": "borda-relogio-porcelana--v03--768.webp",
+          "bytes": 64000
+        },
+        {
+          "arquivo": "borda-relogio-porcelana--v03--512.webp",
+          "bytes": 37168
+        },
+        {
+          "arquivo": "borda-relogio-porcelana--v03--256.webp",
+          "bytes": 14370
+        }
+      ],
+      "segundos_pos": 28.7,
+      "avisos": []
+    }
+  ]
+}
