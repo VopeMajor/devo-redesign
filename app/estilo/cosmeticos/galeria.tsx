@@ -53,6 +53,22 @@ const ASAS = 'img:/images/cosmeticos/asas-do-crepusculo/moldura'
 const CORACAO = 'img:/images/cosmeticos/coracao-da-condessa/emblema'
 const ROSA_MINI = 'img:/images/cosmeticos/rosa-do-destino/mini'
 
+/** Lote 2 (infra/arte 2cce492): molduras em imagem e a mini própria de cada uma (quando existe). */
+const LOTE2_NOMES: Record<string, string> = {
+  ...NOMES,
+  'catedral-esquecida': 'Catedral Esquecida',
+  'relicario-marfim': 'Relicário de Marfim',
+  'rosa-do-destino': 'Rosa do Destino',
+  'asas-do-crepusculo': 'Asas do Crepúsculo',
+}
+const idDe = (asset: string) => asset.split('/')[3]
+const MOLDURAS_IMG = Object.keys(IMAGENS_CATALOGO).filter((a) => IMAGENS_CATALOGO[a].slots.includes('moldura_avatar'))
+const BALOES_IMG = Object.keys(IMAGENS_CATALOGO).filter((a) => IMAGENS_CATALOGO[a].slots.includes('balao'))
+const miniDe = (asset: string) => {
+  const propria = asset.replace(/\/moldura$/, '/mini')
+  return IMAGENS_CATALOGO[propria] ? propria : asset
+}
+
 const RET = '/images/cosmeticos/amostra-retrato.jpg'
 const MINI = '/images/cosmeticos/amostra-mini.jpg'
 const MINI2 = '/images/cosmeticos/amostra-mini-2.jpg'
@@ -111,6 +127,55 @@ export function Galeria() {
             </div>
           </div>
         </article>
+      </section>
+
+      <section aria-label="Lote 2 · molduras" className="mb-14">
+        <Titulo n="✦" t="Lote 2 · molduras" />
+        <div className="grid grid-cols-1 gap-10 md:grid-cols-2">
+          {MOLDURAS_IMG.map((a) => {
+            const nome = LOTE2_NOMES[idDe(a)] ?? idDe(a)
+            const mini = img(miniDe(a), nome, 'moldura_mini')
+            return (
+              <article key={a} aria-label={`Lote 2: ${nome}`} className="flex flex-col gap-3">
+                <h3 className="font-display text-[15px] font-semibold uppercase tracking-[0.08em] text-[#ece5d8]">
+                  {nome}
+                  {mini.imagem !== IMAGENS_CATALOGO[a].imagem && <span className="ml-2 font-mono text-[10px] text-[#c2b9ec]">mini própria</span>}
+                </h3>
+                <div className="flex flex-wrap items-center gap-8 px-6 py-4">
+                  <FotoMoldurada formato="avatar" src={RET} moldura={img(a, nome, 'moldura_avatar')} largura={180} />
+                  <div className="flex flex-col items-start gap-6">
+                    <FotoMoldurada formato="mini" src={MINI} moldura={mini} largura={96} />
+                    <div className="flex items-end gap-5">
+                      <FotoMoldurada formato="mini" src={MINI2} moldura={mini} largura={48} animar={false} />
+                      <FotoMoldurada formato="mini" src={MINI} moldura={mini} largura={36} animar={false} />
+                    </div>
+                  </div>
+                </div>
+              </article>
+            )
+          })}
+        </div>
+      </section>
+
+      <section aria-label="Lote 2 · balões" className="mb-14">
+        <Titulo n="✦" t="Lote 2 · balões" />
+        <div className="flex flex-col gap-6">
+          {BALOES_IMG.map((a) => {
+            const nome = LOTE2_NOMES[idDe(a)] ?? idDe(a)
+            const b = img(a, nome, 'balao')
+            return (
+              <article key={a} aria-label={`Lote 2 balão: ${nome}`} className="flex flex-col gap-2">
+                <h3 className="font-mono text-[11px] uppercase tracking-[0.16em] text-[#bab09f]">{nome} · texto {b.imagem?.slice?.texto}</h3>
+                <BalaoChat def={b} className="w-fit max-w-full font-body text-[15px] leading-snug">
+                  Guardei lugar perto da janela. Alguém topa uma rodada de memória antes da mesa abrir?
+                </BalaoChat>
+                <BalaoChat def={b} className="w-fit max-w-full font-body text-[15px] leading-snug">
+                  Eu topo.
+                </BalaoChat>
+              </article>
+            )
+          })}
+        </div>
       </section>
 
       <section aria-label="Molduras" className="mb-12">

@@ -1,0 +1,75 @@
+{
+  "asset": "img:/images/cosmeticos/correspondencia-real/balao",
+  "imagem": {
+    "base": "/images/cosmeticos/correspondencia-real/balao",
+    "tamanhos": [
+      256,
+      512,
+      768,
+      1024
+    ],
+    "slice": {
+      "corte": [
+        15,
+        46,
+        14,
+        61
+      ],
+      "borda": [
+        8,
+        25,
+        8,
+        34
+      ],
+      "folga": [
+        4,
+        6,
+        4,
+        8
+      ],
+      "texto": "#2a2320",
+      "lado": 512
+    },
+    "kit": {
+      "corpo": {
+        "altura_px": 432,
+        "topo_no_original": 17,
+        "fatias": {
+          "top": 29,
+          "bottom": 25,
+          "left": 0,
+          "right": 0
+        },
+        "obs": "uniforme na horizontal; estique livre. Centro liso (texto)."
+      },
+      "pontas": {
+        "esq": {
+          "largura_px": 230,
+          "sobreposicao_px": 46
+        },
+        "dir": {
+          "largura_px": 183,
+          "sobreposicao_px": 46
+        }
+      },
+      "texto": {
+        "x0": 184,
+        "x1": 1398,
+        "y0": 46,
+        "y1": 424
+      },
+      "tamanho_px": [
+        1535,
+        466
+      ],
+      "arquivos": "/images/cosmeticos/correspondencia-real/balao-corpo|ponta-esq|ponta-dir-<largura>.webp"
+    }
+  },
+  "origem": {
+    "pedido": "balao-correspondencia-real",
+    "variacao": "v01",
+    "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+    "seed": 8001,
+    "importado": null
+  }
+}

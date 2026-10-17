@@ -251,22 +251,30 @@ export function toCosmetico(r: { key: string; name: string; description: string 
  * (o mesmo valor vai na migração). O painel do Owner oferece estes assets; novas artes do pipeline entram aqui.
  */
 export const IMAGENS_CATALOGO: Record<string, { slots: CosSlot[]; imagem: ArteImagem }> = {
+  // lote 1 (Asas v02, Coração v02) e lote 2 (infra/arte 2cce492: 10 molduras, minis, 6 balões 9-slice) — gerado dos <peca>.json
   'img:/images/cosmeticos/asas-do-crepusculo/moldura': {
-    slots: ['moldura_avatar', 'moldura_mini'],
-    imagem: {
-      base: '/images/cosmeticos/asas-do-crepusculo/moldura',
-      tamanhos: [48, 96, 256, 512, 1024],
-      janela: { forma: 'circulo', centro: [0.5, 0.5], raio: [0.25, 0.25] },
-    },
+    slots: ['moldura_avatar'],
+    imagem: { base: '/images/cosmeticos/asas-do-crepusculo/moldura', tamanhos: [48, 96, 256, 512, 1024], janela: { forma: 'circulo', centro: [0.5, 0.5], raio: [0.25, 0.25] } },
   },
-  'img:/images/cosmeticos/rosa-do-destino/mini': {
-    slots: ['moldura_mini'],
-    imagem: {
-      base: '/images/cosmeticos/rosa-do-destino/mini',
-      tamanhos: [48, 96, 256, 512, 1024],
-      janela: { forma: 'quadrado', centro: [0.5, 0.5], raio: [0.2735, 0.2735], raio_canto: 0.04 },
-    },
-  },
+  'img:/images/cosmeticos/heranca-marfim/moldura': { slots: ['moldura_avatar', 'moldura_mini'], imagem: {base: '/images/cosmeticos/heranca-marfim/moldura', tamanhos: [48, 96, 256, 512, 1024], janela: {forma: 'circulo', centro: [0.5, 0.5], raio: [0.25, 0.25]}} },
+  'img:/images/cosmeticos/relogio-fim/moldura': { slots: ['moldura_avatar', 'moldura_mini'], imagem: {base: '/images/cosmeticos/relogio-fim/moldura', tamanhos: [48, 96, 256, 512, 1024], janela: {forma: 'circulo', centro: [0.5, 0.5], raio: [0.25, 0.25]}, camadas: [{src: '/images/cosmeticos/relogio-fim/moldura-brilho-arcano.webp', anim: 'pulso', caixa: [0.0898, 0.2715, 0.8271, 0.4209], dur: 3.2}]} },
+  'img:/images/cosmeticos/pacto-carmesim/moldura': { slots: ['moldura_avatar', 'moldura_mini'], imagem: {base: '/images/cosmeticos/pacto-carmesim/moldura', tamanhos: [48, 96, 256, 512, 1024], janela: {forma: 'circulo', centro: [0.5, 0.5], raio: [0.25, 0.25]}} },
+  'img:/images/cosmeticos/olho-arcano/moldura': { slots: ['moldura_avatar', 'moldura_mini'], imagem: {base: '/images/cosmeticos/olho-arcano/moldura', tamanhos: [48, 96, 256, 512, 1024], janela: {forma: 'circulo', centro: [0.5, 0.5], raio: [0.25, 0.25]}, camadas: [{src: '/images/cosmeticos/olho-arcano/moldura-brilho-arcano.webp', anim: 'brilho', caixa: [0.0039, 0.1055, 0.9961, 0.8945], dur: 5.5}]} },
+  'img:/images/cosmeticos/banquete-javali/moldura': { slots: ['moldura_avatar', 'moldura_mini'], imagem: {base: '/images/cosmeticos/banquete-javali/moldura', tamanhos: [48, 96, 256, 512, 1024], janela: {forma: 'circulo', centro: [0.5, 0.5], raio: [0.25, 0.25]}} },
+  'img:/images/cosmeticos/asas-coruja/moldura': { slots: ['moldura_avatar', 'moldura_mini'], imagem: {base: '/images/cosmeticos/asas-coruja/moldura', tamanhos: [48, 96, 256, 512, 1024], janela: {forma: 'circulo', centro: [0.5, 0.5], raio: [0.25, 0.25]}, camadas: [{src: '/images/cosmeticos/asas-coruja/moldura-lua.webp', anim: 'brilho', caixa: [0.4443, 0.125, 0.5107, 0.2148], dur: 5.5}]} },
+  'img:/images/cosmeticos/fortuna-rato/moldura': { slots: ['moldura_avatar', 'moldura_mini'], imagem: {base: '/images/cosmeticos/fortuna-rato/moldura', tamanhos: [48, 96, 256, 512, 1024], janela: {forma: 'circulo', centro: [0.5, 0.5], raio: [0.25, 0.25]}} },
+  'img:/images/cosmeticos/ultima-badalada/moldura': { slots: ['moldura_avatar', 'moldura_mini'], imagem: {base: '/images/cosmeticos/ultima-badalada/moldura', tamanhos: [48, 96, 256, 512, 1024], janela: {forma: 'circulo', centro: [0.5, 0.5], raio: [0.25, 0.25]}, camadas: [{src: '/images/cosmeticos/ultima-badalada/moldura-brilho-arcano.webp', anim: 'pulso', caixa: [0.1338, 0.0381, 0.7246, 0.8594], dur: 3.2}]} },
+  'img:/images/cosmeticos/catedral-esquecida/moldura': { slots: ['moldura_avatar', 'moldura_mini'], imagem: {base: '/images/cosmeticos/catedral-esquecida/moldura', tamanhos: [48, 96, 256, 512, 1024], janela: {forma: 'circulo', centro: [0.5, 0.5], raio: [0.25, 0.25]}, camadas: [{src: '/images/cosmeticos/catedral-esquecida/moldura-vitral-azul.webp', anim: 'brilho', caixa: [0.2217, 0.1963, 0.3936, 0.6006], dur: 5.5}]} },
+  'img:/images/cosmeticos/relicario-marfim/moldura': { slots: ['moldura_avatar', 'moldura_mini'], imagem: {base: '/images/cosmeticos/relicario-marfim/moldura', tamanhos: [48, 96, 256, 512, 1024], janela: {forma: 'circulo', centro: [0.5, 0.5], raio: [0.25, 0.25]}} },
+  'img:/images/cosmeticos/rosa-do-destino/moldura': { slots: ['moldura_avatar'], imagem: {base: '/images/cosmeticos/rosa-do-destino/moldura', tamanhos: [48, 96, 256, 512, 1024], janela: {forma: 'circulo', centro: [0.5, 0.5], raio: [0.25, 0.25]}} },
+  'img:/images/cosmeticos/asas-do-crepusculo/mini': { slots: ['moldura_mini'], imagem: {base: '/images/cosmeticos/asas-do-crepusculo/mini', tamanhos: [48, 96, 256, 512, 1024], janela: {forma: 'quadrado', centro: [0.5, 0.5], raio: [0.2735, 0.2735], raio_canto: 0.04}, camadas: [{src: '/images/cosmeticos/asas-do-crepusculo/mini-gema.webp', anim: 'brilho', caixa: [0.2334, 0.0752, 0.542, 0.7861], dur: 5.5}]} },
+  'img:/images/cosmeticos/rosa-do-destino/mini': { slots: ['moldura_mini'], imagem: {base: '/images/cosmeticos/rosa-do-destino/mini', tamanhos: [48, 96, 256, 512, 1024], janela: {forma: 'quadrado', centro: [0.5, 0.5], raio: [0.2735, 0.2735], raio_canto: 0.04}} },
+  'img:/images/cosmeticos/correspondencia-real/balao': { slots: ['balao'], imagem: {base: '/images/cosmeticos/correspondencia-real/balao', tamanhos: [256, 512, 768, 1024], slice: {corte: [15, 46, 14, 61], borda: [8, 25, 8, 34], folga: [4, 6, 4, 8], texto: '#2a2320', lado: 512}} },
+  'img:/images/cosmeticos/confissao-carmesim/balao': { slots: ['balao'], imagem: {base: '/images/cosmeticos/confissao-carmesim/balao', tamanhos: [256, 512, 768, 1024], slice: {corte: [36, 76, 23, 72], borda: [20, 42, 13, 40], folga: [6, 10, 4, 10], texto: '#f1e7e9', lado: 512}} },
+  'img:/images/cosmeticos/ecos-arcano/balao': { slots: ['balao'], imagem: {base: '/images/cosmeticos/ecos-arcano/balao', tamanhos: [256, 512, 768, 1024], camadas: [{src: '/images/cosmeticos/ecos-arcano/balao-glifos.webp', anim: 'brilho', caixa: [0.0098, 0.1601, 0.9818, 0.6667], dur: 5.5}], slice: {corte: [12, 70, 12, 75], borda: [8, 38, 8, 41], folga: [4, 9, 4, 10], texto: '#f1e7e9', lado: 512}} },
+  'img:/images/cosmeticos/ultimo-suspiro/balao': { slots: ['balao'], imagem: {base: '/images/cosmeticos/ultimo-suspiro/balao', tamanhos: [256, 512, 768, 1024], slice: {corte: [23, 70, 23, 57], borda: [13, 38, 13, 31], folga: [4, 9, 4, 7], texto: '#2a2320', lado: 512}} },
+  'img:/images/cosmeticos/mesa-destino/balao': { slots: ['balao'], imagem: {base: '/images/cosmeticos/mesa-destino/balao', tamanhos: [256, 512, 768, 1024], slice: {corte: [14, 54, 11, 83], borda: [8, 30, 8, 46], folga: [4, 7, 4, 11], texto: '#f1e7e9', lado: 512}} },
+  'img:/images/cosmeticos/rosa-do-destino/balao': { slots: ['balao'], imagem: {base: '/images/cosmeticos/rosa-do-destino/balao', tamanhos: [256, 512, 768, 1024], slice: {corte: [58, 98, 55, 88], borda: [32, 54, 30, 48], folga: [10, 13, 10, 12], texto: '#f1e7e9', lado: 512}} },
   'img:/images/cosmeticos/coracao-da-condessa/emblema': {
     slots: ['emblema'],
     imagem: {

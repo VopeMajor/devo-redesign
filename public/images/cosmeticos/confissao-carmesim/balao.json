@@ -1,0 +1,75 @@
+{
+  "asset": "img:/images/cosmeticos/confissao-carmesim/balao",
+  "imagem": {
+    "base": "/images/cosmeticos/confissao-carmesim/balao",
+    "tamanhos": [
+      256,
+      512,
+      768,
+      1024
+    ],
+    "slice": {
+      "corte": [
+        36,
+        76,
+        23,
+        72
+      ],
+      "borda": [
+        20,
+        42,
+        13,
+        40
+      ],
+      "folga": [
+        6,
+        10,
+        4,
+        10
+      ],
+      "texto": "#f1e7e9",
+      "lado": 512
+    },
+    "kit": {
+      "corpo": {
+        "altura_px": 347,
+        "topo_no_original": 55,
+        "fatias": {
+          "top": 54,
+          "bottom": 14,
+          "left": 0,
+          "right": 0
+        },
+        "obs": "uniforme na horizontal; estique livre. Centro liso (texto)."
+      },
+      "pontas": {
+        "esq": {
+          "largura_px": 263,
+          "sobreposicao_px": 46
+        },
+        "dir": {
+          "largura_px": 274,
+          "sobreposicao_px": 46
+        }
+      },
+      "texto": {
+        "x0": 217,
+        "x1": 1307,
+        "y0": 109,
+        "y1": 388
+      },
+      "tamanho_px": [
+        1535,
+        458
+      ],
+      "arquivos": "/images/cosmeticos/confissao-carmesim/balao-corpo|ponta-esq|ponta-dir-<largura>.webp"
+    }
+  },
+  "origem": {
+    "pedido": "balao-confissao-carmesim",
+    "variacao": "v01",
+    "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+    "seed": 8011,
+    "importado": null
+  }
+}

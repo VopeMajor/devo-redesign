@@ -1,0 +1,75 @@
+{
+  "asset": "img:/images/cosmeticos/rosa-do-destino/balao",
+  "imagem": {
+    "base": "/images/cosmeticos/rosa-do-destino/balao",
+    "tamanhos": [
+      256,
+      512,
+      768,
+      1024
+    ],
+    "slice": {
+      "corte": [
+        58,
+        98,
+        55,
+        88
+      ],
+      "borda": [
+        32,
+        54,
+        30,
+        48
+      ],
+      "folga": [
+        10,
+        13,
+        10,
+        12
+      ],
+      "texto": "#f1e7e9",
+      "lado": 512
+    },
+    "kit": {
+      "corpo": {
+        "altura_px": 368,
+        "topo_no_original": 170,
+        "fatias": {
+          "top": 61,
+          "bottom": 63,
+          "left": 0,
+          "right": 0
+        },
+        "obs": "uniforme na horizontal; estique livre. Centro liso (texto)."
+      },
+      "pontas": {
+        "esq": {
+          "largura_px": 411,
+          "sobreposicao_px": 61
+        },
+        "dir": {
+          "largura_px": 451,
+          "sobreposicao_px": 61
+        }
+      },
+      "texto": {
+        "x0": 350,
+        "x1": 1657,
+        "y0": 231,
+        "y1": 475
+      },
+      "tamanho_px": [
+        2047,
+        693
+      ],
+      "arquivos": "/images/cosmeticos/rosa-do-destino/balao-corpo|ponta-esq|ponta-dir-<largura>.webp"
+    }
+  },
+  "origem": {
+    "pedido": "rosa-do-destino-balao",
+    "variacao": "v01",
+    "modelo": "importado",
+    "seed": 0,
+    "importado": "arte/importados/rosa-do-destino-balao.png"
+  }
+}
