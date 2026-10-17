@@ -1,7 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties } from 'react'
-import { playDeixa, playSfx } from '@/lib/devo/audio'
+import { isMuted, playDeixa, playSfx } from '@/lib/devo/audio'
 import { type CenaEstado, type Efeito, type Fx, formatTempo, type MembroElenco, type Palco as PalcoMuda, type Passo, type PassoResposta, type SomId } from '@/lib/devo/dialogo/formato'
 import { getCena, indicePasso } from '@/lib/devo/dialogo/registro'
 import { cn } from '@/lib/utils'
@@ -30,6 +30,32 @@ function tocar(som?: SomId) {
   playDeixa(som === 'porta' ? 'porta-abre' : som)
 }
 const SONS_TEMPO = new Set(['tempo', 'tempo-perde'])
+
+/**
+ * As marcações de som do roteiro (*Som de porta se abrindo*, *Som de campainha*, *sons*, *Som de lata*, *Som*) são
+ * DEIXAS, não falas: tocam o som e nunca aparecem como texto na caixa. Um passo `som` sozinho segue sozinho depois
+ * do som. Com o som desligado, só um sinal discreto no canto (onomatopeia), nunca o texto com asteriscos.
+ */
+const SOM_SOZINHO_MS = 1500
+const ONOMATOPEIA: Record<string, string> = {
+  porta: 'nhééc…',
+  'porta-abre': 'nhééc…',
+  'porta-fecha': 'tum.',
+  campainha: 'dim… dom',
+  lata: 'tssss',
+  cozinha: 'clinc… clanc',
+  passos: 'tap… tap…',
+  luz: 'bzzt',
+  aparicao: 'vuuum…',
+  holograma: 'zzzt',
+  chamada: 'zzzt',
+  'holograma-fim': 'tic.',
+  sistema: '✧',
+  item: '✧',
+  tempo: 'tum-tum',
+  'tempo-perde': 'tum-tum',
+  papel: 'frrr',
+}
 
 type Respostas = { passos: PassoResposta[]; escolha: string; opcao: number; ir?: string; explorar: boolean }
 type Selo = { titulo: string; texto: string; tom: 'tempo' | 'perda' | 'item'; key: number }
@@ -61,6 +87,8 @@ export function CenaDialogo({
   const [coluna, setColuna] = useState<HTMLElement | null>(null)
   const [fx, setFx] = useState<{ fx?: Fx; key: number }>({ key: 0 })
   const [selo, setSelo] = useState<Selo | null>(null)
+  /** Sinal discreto do som quando o jogador está sem som (onomatopeia no canto). */
+  const [dica, setDica] = useState<{ texto: string; key: number } | null>(null)
   /** Selo de Tempo esperando a narração que o anuncia ("O Galo transferiu…", "…retirada do seu Shuffler"). */
   const seloPendente = useRef<Selo | null>(null)
   const [ocupado, setOcupado] = useState(false)
@@ -203,6 +231,7 @@ export function CenaDialogo({
     if (atual.fx) setFx((f) => ({ fx: atual.fx, key: f.key + 1 }))
     else setFx((f) => (f.fx ? { key: f.key } : f))
     tocar(atual.som)
+    if (atual.som && isMuted()) setDica({ texto: ONOMATOPEIA[atual.som] ?? '♪', key: Date.now() })
     if (atual.som && SONS_TEMPO.has(atual.som) && seloPendente.current) {
       setSelo({ ...seloPendente.current, key: Date.now() })
       seloPendente.current = null
@@ -237,6 +266,12 @@ export function CenaDialogo({
   }, [chaveAtual, dados !== null]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
+    if (!dica) return
+    const t = window.setTimeout(() => setDica(null), 3200)
+    return () => window.clearTimeout(t)
+  }, [dica])
+
+  useEffect(() => {
     if (!selo) return
     const t = window.setTimeout(() => setSelo(null), 6500)
     return () => window.clearTimeout(t)
@@ -252,7 +287,7 @@ export function CenaDialogo({
     if (!atual || ocupado || saindo) return
     if (texto && !done) return finish()
     if (atual.tipo === 'escolha') return
-    playSfx('click')
+    if (atual.tipo !== 'som') playSfx('click')
     if (respostas) {
       const resto = respostas.passos.slice(1)
       if (resto.length) {
@@ -271,6 +306,15 @@ export function CenaDialogo({
   }, [atual, ocupado, saindo, texto, done, finish, respostas, cena, idx, explorados.length, saltar, seguinte])
 
   useAdvanceKeys(avancar, { enabled: !!atual && atual.tipo !== 'escolha' })
+
+  // Deixa de som sozinha: toca e segue (sem caixa de texto).
+  const avancarRef = useRef(avancar)
+  avancarRef.current = avancar
+  useEffect(() => {
+    if (atual?.tipo !== 'som') return
+    const t = window.setTimeout(() => avancarRef.current(), SOM_SOZINHO_MS)
+    return () => window.clearTimeout(t)
+  }, [chaveAtual, atual?.tipo])
   // Voltar do aparelho = Sair (o passo fica salvo para retomar).
   useBackHandler(true, () => onSair?.())
 
@@ -332,6 +376,18 @@ export function CenaDialogo({
         }
       />
 
+      {dica && (
+        <span
+          key={dica.key}
+          role="img"
+          aria-label={`Som: ${dica.texto}`}
+          className="animate-dv-fade pointer-events-none absolute right-4 top-[calc(env(safe-area-inset-top)+4.75rem)] z-30 flex items-center gap-1.5 font-body text-[13px] italic text-dv-text-3"
+        >
+          <OndaSom />
+          {dica.texto}
+        </span>
+      )}
+
       {/* Véu inferior: o texto sempre sobre fundo escuro. */}
       <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-[48%] bg-gradient-to-t from-black/90 via-black/55 to-transparent" />
 
@@ -355,7 +411,7 @@ export function CenaDialogo({
           </p>
         )}
 
-        {!erro && atual && atual.tipo !== 'escolha' && atual.tipo !== 'ir' && (
+        {!erro && atual && atual.tipo !== 'escolha' && atual.tipo !== 'ir' && atual.tipo !== 'som' && (
           <button
             key={chaveAtual}
             type="button"
@@ -474,16 +530,7 @@ function Caixa({
           </span>
         </DialogueShell>
       )
-    case 'som':
-      return (
-        <DialogueShell tone="neutral">
-          <span className="flex min-h-[64px] items-center justify-center gap-3 px-6 py-4">
-            <OndaSom />
-            <span className="font-mono text-[13px] uppercase tracking-[0.2em] text-dv-text-2">*{resolver(passo.texto)}*</span>
-            <OndaSom espelho />
-          </span>
-        </DialogueShell>
-      )
+    // 'som' nunca vira caixa: é deixa sonora (ver ONOMATOPEIA)
     case 'sistema': {
       const pars = Array.isArray(passo.texto) ? passo.texto : [passo.texto]
       return (

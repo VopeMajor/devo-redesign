@@ -1179,17 +1179,29 @@ function aplicarNivelSala(t: number) {
   sala.lp.frequency.setTargetAtTime(salaAbafada ? 650 : 5200, ctx.currentTime, 0.5)
 }
 
-/** Reverberação curta gerada (sala de pedra), criada uma vez por início de trilha. */
-function reverb(c: AudioContext, seg = 2.4) {
-  const conv = c.createConvolver()
-  const len = Math.floor(c.sampleRate * seg)
-  const buf = c.createBuffer(2, len, c.sampleRate)
-  for (let ch = 0; ch < 2; ch++) {
-    const d = buf.getChannelData(ch)
-    for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * (1 - i / len) ** 2.6
+/**
+ * Ambiência barata (sem ConvolverNode, que pesa no celular): dois ecos curtos com realimentação e filtro grave,
+ * o bastante para "sala de pedra". Entrada → saída molhada.
+ */
+function eco(c: AudioContext) {
+  const entrada = c.createGain()
+  const saida = c.createGain()
+  for (const [tempo, fb] of [
+    [0.137, 0.42],
+    [0.211, 0.36],
+  ] as const) {
+    const d = c.createDelay(0.5)
+    d.delayTime.value = tempo
+    const g = c.createGain()
+    g.gain.value = fb
+    const lp = c.createBiquadFilter()
+    lp.type = 'lowpass'
+    lp.frequency.value = 1800
+    entrada.connect(d)
+    d.connect(lp).connect(g).connect(d)
+    lp.connect(saida)
   }
-  conv.buffer = buf
-  return conv
+  return { entrada, saida }
 }
 
 /** Uma voz de cordas: duas serras levemente desafinadas, envelope lento. */
@@ -1306,20 +1318,20 @@ function iniciarSala() {
       },
     }
   } else {
-    const rev = reverb(c)
+    const rev = eco(c)
     const molhado = c.createGain()
-    molhado.gain.value = 0.32
-    rev.connect(molhado).connect(lp)
+    molhado.gain.value = 0.3
+    rev.saida.connect(molhado).connect(lp)
     const cordasLp = c.createBiquadFilter()
     cordasLp.type = 'lowpass'
     cordasLp.frequency.value = 1150
     cordasLp.Q.value = 0.4
     cordasLp.connect(lp)
-    cordasLp.connect(rev)
+    cordasLp.connect(rev.entrada)
     const pianoBus = c.createGain()
     pianoBus.gain.value = 1
     pianoBus.connect(lp)
-    pianoBus.connect(rev)
+    pianoBus.connect(rev.entrada)
     const grave = c.createBiquadFilter()
     grave.type = 'lowpass'
     grave.frequency.value = 220

@@ -1917,6 +1917,7 @@ if (want('narrativa')) {
         if (!(await textoDlg(page))) break
         continue
       }
+      if (/\*\s*som\b/i.test(t)) manifest.errors.push({ step: 'narrativa-deixa-como-fala', error: `deixa de som apareceu como texto: ${t.slice(0, 160)}` })
       if (typeof alvo === 'string' ? t.includes(alvo) : alvo.test(t)) {
         await wait(1600)
         return true
@@ -1986,15 +1987,19 @@ if (want('narrativa')) {
     await page.getByRole('button', { name: 'Ir para casa' }).first().click({ timeout: 8000 })
     await wait(2600)
     await shot(page, 'n-10-galo-abertura', 'narração entre colchetes (texto literal do dono)')
-    await ate(page, 'Som de porta se abrindo.')
-    await wait(900)
-    await shot(page, 'n-11-galo-som', 'legenda de som + porta abrindo (luz do corredor no assoalho)')
+    // *Som de porta se abrindo.* é deixa, não fala: toca o som e segue sozinho (nunca aparece na caixa).
+    await ate(page, 'Finalmente em casa.')
+    await shot(page, 'n-11-galo-som', 'a deixa de som tocou e seguiu sozinha: nenhuma caixa com *Som…*')
     await ate(page, 'Um cativeiro. Completamente.')
     await shot(page, 'n-12-galo-escolha', 'escolhas numeradas (casa: luar, abajur, quadro torto)')
     await ate(page, 'continue acordada')
     await shot(page, 'n-12b-casa-acordada', 'feminino: "continue acordada"')
+    // Sem som: só a onomatopeia discreta no canto (nunca o texto com asteriscos).
+    await ate(page, 'Só que...')
+    await dlg(page).getByRole('button', { name: 'Silenciar som' }).first().click({ timeout: 4000 }).catch(() => {})
     await ate(page, 'a campainha toca')
-    await shot(page, 'n-13-galo-campainha')
+    await shot(page, 'n-13-galo-campainha', 'som desligado: "dim… dom" discreto no canto')
+    await dlg(page).getByRole('button', { name: 'Ativar som' }).first().click({ timeout: 4000 }).catch(() => {})
     await ate(page, 'Que estranho')
     await shot(page, 'n-14-galo-pensamento', 'pensamento entre aspas')
     await ate(page, 'Ir abrir a porta.')
