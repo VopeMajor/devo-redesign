@@ -48,6 +48,7 @@ const SLOT_COL: Record<CosSlot, string> = {
   emblema: 'emblema',
   balao: 'balao',
   efeito: 'efeito',
+  borda: 'borda',
 }
 
 export async function listCatalogo(opts: { inativos?: boolean } = {}, q: Queryable = pool): Promise<CosmeticoDef[]> {
@@ -86,8 +87,8 @@ async function possuidos(playerId: string, q: Queryable = pool): Promise<Cosmeti
 }
 
 async function equipados(playerId: string, q: Queryable = pool): Promise<Equipados> {
-  const [r] = await run<Record<CosSlot, string | null>>(q, 'SELECT moldura_avatar, moldura_mini, emblema, balao, efeito FROM player_cosmetics WHERE player_id = $1', [playerId])
-  return r ? { moldura_avatar: r.moldura_avatar, moldura_mini: r.moldura_mini, emblema: r.emblema, balao: r.balao, efeito: r.efeito } : { ...EQUIP_VAZIO }
+  const [r] = await run<Record<CosSlot, string | null>>(q, 'SELECT moldura_avatar, moldura_mini, emblema, balao, efeito, borda FROM player_cosmetics WHERE player_id = $1', [playerId])
+  return r ? { moldura_avatar: r.moldura_avatar, moldura_mini: r.moldura_mini, emblema: r.emblema, balao: r.balao, efeito: r.efeito, borda: r.borda } : { ...EQUIP_VAZIO }
 }
 
 /** Coleção do próprio jogador (GET /api/cosmeticos). */
@@ -163,6 +164,7 @@ export async function visuais(idsRaw: string[]): Promise<Visual[]> {
     emb: r.emblema,
     bal: r.balao,
     ef: r.efeito,
+    borda: r.borda,
     anfitriao: publicCargo(r.role) === 'anfitriao',
   }))
 }
@@ -180,7 +182,7 @@ export async function adminCatalogo(atorId: string): Promise<ItemAdmin[]> {
       pool,
       `SELECT d.key,
               (SELECT count(*) FROM player_items i WHERE i.item_key = d.key AND i.quantity > 0) AS donos,
-              (SELECT count(*) FROM player_cosmetics pc WHERE d.key IN (pc.moldura_avatar, pc.moldura_mini, pc.emblema, pc.balao, pc.efeito)) AS equipados
+              (SELECT count(*) FROM player_cosmetics pc WHERE d.key IN (pc.moldura_avatar, pc.moldura_mini, pc.emblema, pc.balao, pc.efeito, pc.borda)) AS equipados
          FROM item_defs d WHERE d.kind = 'cosmetico'`,
     ),
   ])
@@ -284,7 +286,7 @@ export async function revogarCosmetico(atorId: string, playerId: string, key: st
       c,
       `UPDATE player_cosmetics SET
          moldura_avatar = NULLIF(moldura_avatar, $2), moldura_mini = NULLIF(moldura_mini, $2), emblema = NULLIF(emblema, $2),
-         balao = NULLIF(balao, $2), efeito = NULLIF(efeito, $2), updated_at = now()
+         balao = NULLIF(balao, $2), efeito = NULLIF(efeito, $2), borda = NULLIF(borda, $2), updated_at = now()
        WHERE player_id = $1`,
       [playerId, key],
     )

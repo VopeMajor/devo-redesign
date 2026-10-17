@@ -404,6 +404,13 @@ teste `scripts/dev/cosmeticos-test.mjs` (CI → `cosmeticos-test.log`), vitrine 
   `border-image` (cantos fixos, bordas esticadas, centro `fill`). Camadas: animação CSS só dentro de `.cos-anim`
   (Ajustes + movimento reduzido; listas paradas); `brilho` usa a camada `src` como máscara (ex.: a gema).
   Registro no código: `IMAGENS_CATALOGO` (`lib/devo/cosmeticos.ts`) — o painel oferece esses assets e copia o `meta.imagem`.
+- **Estilo do nome e borda do perfil (pedido do dono 17/10)**: o espaço `efeito` aparece como "Nome" e aceita
+  `meta.nome = {fonte, cores, efeito}`; o espaço novo `borda` (coluna `player_cosmetics.borda`, campo `borda` do
+  `Visual` público) aceita `meta.borda = {estilo, cores, animada}`; balões provisórios em cores usam
+  `meta.balao = {fundo, borda, texto, filete}`. Só chaves de listas fixas (`FONTES_NOME`, `EFEITOS_NOME`,
+  `ESTILOS_BORDA`) e cores `#rrggbb` passam por `lerEstiloNome`/`lerBorda`/`lerBalaoProv`; nenhum CSS livre chega ao
+  cliente. Fontes extras via next/font (Cinzel Decorative, Pirata One, Great Vibes, Silkscreen), sem preload. Itens
+  com `meta.provisorio` esperam a arte pintada: um UPDATE para `asset = 'img:…'` liga a imagem.
 - **Assets enviados**: `cosmetic_assets` (bytea, SVG/PNG/WebP ≤ 400 KB; não há storage de arquivos no projeto).
   SVG com script/eventos/conteúdo embutido é recusado; servido com CSP `default-src 'none'` e sempre exibido em
   `<img>`. Também aceita URL https.

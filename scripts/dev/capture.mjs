@@ -24,9 +24,10 @@ const browser = await chromium.launch({
 })
 
 async function device(kind = 'phone') {
-  const phone = kind === 'phone'
+  // 'phone' = 390×844; 'phone-sm' = 360×740 (Android pequeno)
+  const phone = kind === 'phone' || kind === 'phone-sm'
   const ctx = await browser.newContext({
-    viewport: phone ? { width: 390, height: 844 } : { width: 1440, height: 900 },
+    viewport: kind === 'phone-sm' ? { width: 360, height: 740 } : phone ? { width: 390, height: 844 } : { width: 1440, height: 900 },
     deviceScaleFactor: phone ? 2 : 1,
     isMobile: phone,
     hasTouch: phone,
@@ -2757,8 +2758,8 @@ if (want('cosmeticos')) {
     Sentinela: '00000000-0000-4000-8000-000000000010',
   }
   const INV = { Matheus: 'DEVO-STAF-MATH', Mordomo: 'DEVO-STAF-MORD', Sentinela: 'DEVO-STAF-SENT' }
-  const seedAcc = async (name) => {
-    const d = await device('phone')
+  const seedAcc = async (name, kind = 'phone') => {
+    const d = await device(kind)
     await d.ctx.addCookies([{ name: 'devo_player', value: SEED[name], url: BASE }])
     await d.page.goto(BASE, { waitUntil: 'networkidle' })
     let up
@@ -3202,6 +3203,75 @@ if (want('cosmeticos')) {
       await db?.end().catch(() => {})
     }
   })
+
+  // Pedido do dono (17/10): estilo do nome à Discord, borda do perfil, balões provisórios e o miniperfil em folha
+  // (estrutura de card de perfil à Wild Rift). Em 390×844 e 360×740.
+  for (const [kind, tam] of [['phone', '390'], ['phone-sm', '360']]) {
+    await step(`cos-4-${tam}`, async () => {
+      const d = kind === 'phone' ? mat : await seedAcc('Matheus', kind)
+      const page = d.page
+      try {
+        const nm = (n) => `cos-4-${tam}-${n}`
+        // Record: cartão de identidade com a borda e o nome (animados) + coleção nas abas novas
+        await openApp(page, 'Record')
+        await wait(1200)
+        await view(page, 'section[aria-label="Identidade e coleção"]', 'center')
+        await wait(1200)
+        await shot(page, nm('01-record-identidade'))
+        await tryClick(btn(page, 'Abrir coleção', true), 4000)
+        await wait(1500)
+        for (const [t, n] of [['Nome', '02-colecao-nome'], ['Bordas', '03-colecao-bordas'], ['Balões', '04-colecao-baloes']]) {
+          await view(page, 'div[aria-label="Categorias da coleção"]', 'start')
+          await aba(page, t)
+          await wait(900)
+          await view(page, 'section[aria-label="Coleção de cosméticos"]', 'start')
+          await wait(600)
+          await shot(page, nm(`${n}-palco`))
+          await view(page, 'ul[aria-label^="Itens:"]', 'start')
+          await wait(600)
+          await shot(page, nm(n))
+        }
+        // chat (Registro das partidas): nomes parados, balões provisórios
+        await openApp(page, 'Sala de Jogos')
+        await wait(1500)
+        await view(page, 'section[aria-label="Registro das partidas"]', 'start')
+        await wait(1800)
+        let k = 10
+        for (const autor of ['Matheus', 'Sentinela', 'Lírio', 'Nyx']) {
+          const li = page.locator('section[aria-label="Registro das partidas"] li').filter({ has: page.getByRole('button', { name: `Abrir miniperfil de ${autor}` }) }).first()
+          if (!(await li.count())) continue
+          await li.evaluate((el) => el.scrollIntoView({ block: 'center' })).catch(() => {})
+          await wait(600)
+          await shot(page, nm(`${k++}-chat-${autor.normalize('NFD').replace(/[^A-Za-z]/g, '').toLowerCase()}`))
+        }
+        // miniperfis (folha): várias combinações de borda/nome/moldura/vitrine; Anfitrião e Owner (como jogador)
+        k = 20
+        for (const autor of ['Matheus', 'Ísis', 'Lírio', 'Nyx', 'Corvo', 'Mordomo', 'Sentinela']) {
+          const b = page.getByRole('button', { name: `Abrir miniperfil de ${autor}` }).first()
+          await b.evaluate((el) => el.scrollIntoView({ block: 'center' })).catch(() => {})
+          if (await tryClick(b)) {
+            await wait(2200)
+            await shot(page, nm(`${k++}-miniperfil-${autor.normalize('NFD').replace(/[^A-Za-z]/g, '').toLowerCase()}`))
+            if (autor === 'Matheus') {
+              await page.locator('section[aria-label="Vitrine de cosméticos"]').first().evaluate((el) => el.scrollIntoView({ block: 'end' })).catch(() => {})
+              await wait(500)
+              await shot(page, nm(`${k++}-miniperfil-matheus-vitrine`))
+            }
+            await page.keyboard.press('Escape')
+            await wait(600)
+          }
+        }
+        // ranking com os nomes (parados)
+        await page.getByRole('tab', { name: 'Ranking', exact: true }).first().click({ timeout: 3000 }).catch(() => {})
+        await wait(1800)
+        await page.evaluate(() => document.querySelector('[role="tabpanel"]')?.scrollBy(0, 330))
+        await wait(900)
+        await shot(page, nm('40-ranking'))
+      } finally {
+        if (kind !== 'phone') await d.ctx.close().catch(() => {})
+      }
+    })
+  }
 
   // Arte por IA (pipeline infra/arte; dono escolheu Asas do Crepúsculo v02 e Coração da Condessa v02) aplicada
   // em Record, coleção, chat, miniperfil e no resultado do Poço. Matheus tem os dois equipados (94-seed).

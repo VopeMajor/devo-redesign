@@ -19,6 +19,7 @@ import {
 import type { ItemRarity } from '@/lib/devo/progresso'
 import { cn } from '@/lib/utils'
 import { BalaoChat, Emblema, FotoMoldurada, NomeVisual, classeEfeito } from './cosmetic-art'
+import { AmostraNome, BordaPerfilFundo } from './estilo-nome'
 import { equipar, useAnimarCosmeticos, useMeusCosmeticos } from './use-cosmeticos'
 
 const fmtData = (ms: number) => new Date(ms).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' })
@@ -27,7 +28,7 @@ const fmtData = (ms: number) => new Date(ms).toLocaleDateString('pt-BR', { day: 
 function visualCom(eq: Equipados, id: string, foto: number | null, preview: CosmeticoDef | null, anfitriao = false): Visual {
   const e = { ...eq }
   if (preview) e[preview.categoria] = preview.key
-  return { id, foto, av: e.moldura_avatar, mini: e.moldura_mini, emb: e.emblema, bal: e.balao, ef: e.efeito, anfitriao }
+  return { id, foto, av: e.moldura_avatar, mini: e.moldura_mini, emb: e.emblema, bal: e.balao, ef: e.efeito, borda: e.borda, anfitriao }
 }
 
 /**
@@ -64,6 +65,7 @@ export function Colecao({ nome, fotoSrc, onVoltar }: { nome: string; fotoSrc: st
   const pode = (c: CosmeticoDef) => data.livre || posse.has(c.key)
   const v = visualCom(eq, 'eu', null, atual)
   const mapa = new Map(data.catalogo.map((c) => [c.key, c]))
+  const bordaV = v.borda ? (mapa.get(v.borda) ?? null) : null
   const ativo = (slot: CosSlot) => eq[slot]
 
   const trocar = async (slot: CosSlot, key: string | null) => {
@@ -102,6 +104,8 @@ export function Colecao({ nome, fotoSrc, onVoltar }: { nome: string; fotoSrc: st
       {/* Palco: o próprio avatar e nome com o item aplicado */}
       <div className="dv-cut relative overflow-hidden bg-[#0c0c0e] text-dv-text shadow-[inset_0_0_0_1px_rgba(186,176,159,0.45)]" style={{ '--dv-cut': '14px' } as CSSProperties}>
         <span aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[url(/images/os/marmore-negro.webp)] bg-[length:520px_520px] opacity-50" />
+        {/* borda do perfil (equipada ou em pré-visualização) como fundo do palco */}
+        {bordaV && <BordaPerfilFundo borda={bordaV.borda} imagem={fundoBorda(bordaV)} animar={animar} className="opacity-90" />}
         <span aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(60%_70%_at_30%_40%,rgba(236,229,216,0.12),transparent_70%)]" />
         <div className="relative grid grid-cols-[42%_1fr] gap-3 p-4" role="group" aria-label="Pré-visualização">
           <FotoMoldurada formato="avatar" src={fotoSrc} moldura={v.av ? mapa.get(v.av) : null} animar={animar} alt={`Foto de ${nome}`} />
@@ -124,7 +128,7 @@ export function Colecao({ nome, fotoSrc, onVoltar }: { nome: string; fotoSrc: st
       </div>
 
       {/* Categorias */}
-      <div role="tablist" aria-label="Categorias da coleção" className="grid grid-cols-4 gap-1">
+      <div role="tablist" aria-label="Categorias da coleção" className="grid grid-cols-5 gap-1">
         {COS_ABAS.map((a) => (
           <button
             key={a.id}
@@ -244,7 +248,20 @@ function Miniatura({ def, fotoSrc, apagado }: { def: CosmeticoDef; fotoSrc: stri
         <span className="font-body">Olá…</span>
       </BalaoChat>
     )
+  if (def.categoria === 'borda')
+    return (
+      <span className="relative block h-[70px] w-full overflow-hidden">
+        <BordaPerfilFundo borda={def.borda} imagem={fundoBorda(def)} animar={false} />
+      </span>
+    )
+  if (def.nome) return <AmostraNome estilo={def.nome} texto="Nome" className="text-[21px]" />
   return <span className={cn('cos-nome text-[19px]', efClasse)}>Nome</span>
+}
+
+/** Arte pintada da borda (quando houver), no tamanho de faixa. */
+function fundoBorda(def: CosmeticoDef | null | undefined) {
+  const img = def?.imagem
+  return img ? `${img.base}-${img.tamanhos.find((t) => t >= 512) ?? img.tamanhos.at(-1)}.webp` : null
 }
 
 function ItemTile({
