@@ -1,0 +1,6 @@
+[camada-ponteiros-prata] v01: @cf/black-forest-labs/flux-2-klein-4b seed=9051 1024x1024 passos=None (~104 neurônios)
+    ok em 14.6s, 1024x1024
+[camada-ponteiros-prata] v02: @cf/black-forest-labs/flux-2-klein-4b seed=9052 1024x1024 passos=None (~104 neurônios)
+    ok em 14.2s, 1024x1024
+[camada-ponteiros-prata] v01: rembg:birefnet-general; sem avisos
+[camada-ponteiros-prata] v02: rembg:birefnet-general; sem avisos

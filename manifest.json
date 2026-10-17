@@ -1,0 +1,83 @@
+{
+  "pedido": "camada-ponteiros-prata",
+  "titulo": "Camada: ponteiros-prata",
+  "tipo": "camada",
+  "tamanho_final": 1024,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 9051,
+      "passos": null,
+      "segundos": 14.6,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "camada-ponteiros-prata--v01--1024.png",
+          "bytes": 346948
+        },
+        {
+          "arquivo": "camada-ponteiros-prata--v01--1024.webp",
+          "bytes": 82724
+        },
+        {
+          "arquivo": "camada-ponteiros-prata--v01--512.webp",
+          "bytes": 29334
+        },
+        {
+          "arquivo": "camada-ponteiros-prata--v01--256.webp",
+          "bytes": 12560
+        },
+        {
+          "arquivo": "camada-ponteiros-prata--v01--128.webp",
+          "bytes": 5542
+        },
+        {
+          "arquivo": "camada-ponteiros-prata--v01--64.webp",
+          "bytes": 2194
+        }
+      ],
+      "segundos_pos": 30.6,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 9052,
+      "passos": null,
+      "segundos": 14.2,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "camada-ponteiros-prata--v02--1024.png",
+          "bytes": 271321
+        },
+        {
+          "arquivo": "camada-ponteiros-prata--v02--1024.webp",
+          "bytes": 64462
+        },
+        {
+          "arquivo": "camada-ponteiros-prata--v02--512.webp",
+          "bytes": 23256
+        },
+        {
+          "arquivo": "camada-ponteiros-prata--v02--256.webp",
+          "bytes": 9896
+        },
+        {
+          "arquivo": "camada-ponteiros-prata--v02--128.webp",
+          "bytes": 4304
+        },
+        {
+          "arquivo": "camada-ponteiros-prata--v02--64.webp",
+          "bytes": 1756
+        }
+      ],
+      "segundos_pos": 24.6,
+      "avisos": []
+    }
+  ]
+}
