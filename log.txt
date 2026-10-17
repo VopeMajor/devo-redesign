@@ -1,0 +1,9 @@
+[mapa-ceu] v01: @cf/black-forest-labs/flux-2-klein-9b seed=9601 1024x1536 passos=None (~1,455 neurônios)
+    ok em 3.2s, 1024x1536
+[mapa-ceu] v02: @cf/black-forest-labs/flux-2-klein-9b seed=9602 1024x1536 passos=None (~1,455 neurônios)
+    ok em 3.4s, 1024x1536
+[mapa-ceu] v03: @cf/black-forest-labs/flux-2-klein-9b seed=9603 1024x1536 passos=None (~1,455 neurônios)
+    ok em 3.9s, 1024x1536
+[mapa-ceu] v01: mantido; objeto encosta na borda — o gerador pode ter cortado a peça; peça mais margem
+[mapa-ceu] v02: mantido; objeto encosta na borda — o gerador pode ter cortado a peça; peça mais margem
+[mapa-ceu] v03: mantido; objeto encosta na borda — o gerador pode ter cortado a peça; peça mais margem
