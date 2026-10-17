@@ -56,7 +56,7 @@ async function device(kind = 'phone') {
  * das Torres (t20/t25) também, para conferir placas e chips nas três alturas. A Mesa dos textos dos Arcanos (v35/v36) e a
  * tela própria dos Arcanos (arc-*) também: mapa, galeria (inclusive no meio do giro) e altar nas três alturas.
  */
-const NPC_VARIANT = /^(03-prologo-(0[2-9]|1\d)|04-tutorial-0[1-6]|26-coruja-0[13]|27-javali-[01]|34-javali-[01]|salao-0[2-5]|t10-galo-abertura|t11b-galo-fala|t23-andar-cena|t20-mapa|t25-mapa-progresso|t21-torre-imperador|t45-torre-principal|t22-andar-ficha|t47-torre-picadeiro|poco-0[5-9]|03-melissa-3|n-1[0-7]|n-2[06]|n-3[24]|corp-0[34]|v3[0-7]-|cal-|arc-\d\d)/
+const NPC_VARIANT = /^(03-prologo-(0[2-9]|1\d)|04-tutorial-0[1-6]|26-coruja-0[13]|26-coruja-promocionais|27-javali-[01]|34-javali-[01]|salao-0[2-5]|t10-galo-abertura|t11b-galo-fala|t23-andar-cena|t20-mapa|t25-mapa-progresso|t21-torre-imperador|t45-torre-principal|t22-andar-ficha|t47-torre-picadeiro|poco-0[5-9]|03-melissa-3|n-1[0-7]|n-2[06]|n-3[24]|corp-0[34]|v3[0-7]-|cal-|arc-\d\d)/
 const VARIANT_SIZES = [
   [390, 900],
   [360, 740],
@@ -961,10 +961,25 @@ if (want('apps')) {
   const { ctx, page } = await account('Visitante', 'DEVO-TEST-0003', VET_CARDS, 'phone', { owlMet: false, javaliMet: false })
   await step('coruja', async () => {
     await openApp(page, 'Cartas')
+    let promo = false
+    let quizShot = false
     for (let i = 0; i < 26; i++) {
+      // Fala das Únicas e Promocionais: espera a digitação terminar e fotografa as palavras com efeito.
+      if (!promo && (await page.locator('p[aria-live="polite"] .dv-txt-holo').count())) {
+        promo = true
+        await wait(3600)
+        await shot(page, '26-coruja-promocionais')
+      }
       if ([1, 3, 5, 7, 11, 14, 16, 18].includes(i)) await shot(page, `26-coruja-${String(i).padStart(2, '0')}`)
       const quiz = page.getByRole('button', { name: /^Rara$/ })
-      if (await quiz.count()) await tryClick(quiz.first())
+      if (await quiz.count()) {
+        if (!quizShot) {
+          quizShot = true
+          await wait(1200)
+          await shot(page, '26-coruja-quiz')
+        }
+        await tryClick(quiz.first())
+      }
       await page.evaluate(() => document.activeElement instanceof HTMLElement && document.activeElement.blur()).catch(() => {})
       await page.keyboard.press('Enter')
       await wait(700)
@@ -1406,6 +1421,54 @@ if (want('estilo')) {
     await page.goto(`${BASE}/estilo`, { waitUntil: 'networkidle' })
     await wait(3500)
     await shot(page, '91-desktop-estilo')
+    await ctx.close()
+  })
+}
+
+// ── 3c. Raridades das cartas (pedido do dono 17/10): uma carta por raridade em /estilo, incluindo Ultra Rara,
+// Única (granada) e Promocional (holográfica), em 390×844 e 360×740, mais um recorte de cada carta.
+if (want('raridades')) {
+  await step('raridades', async () => {
+    const { ctx, page } = await device()
+    await page.goto(`${BASE}/estilo`, { waitUntil: 'networkidle' })
+    await wait(3000)
+    for (const [w, h] of [
+      [390, 844],
+      [360, 740],
+    ]) {
+      await page.setViewportSize({ width: w, height: h })
+      await wait(500)
+      const tag = `${w}x${h}`
+      for (const [k, sel] of [
+        ['1', '[data-estilo="raridades"]'],
+        ['2', '[data-raridade="rara"]'],
+        ['3', '[data-raridade="lendaria"]'],
+        ['4', '[data-raridade="promocional"]'],
+      ]) {
+        await page.evaluate((s) => document.querySelector(s)?.scrollIntoView({ block: 'start' }), sel)
+        await wait(1100)
+        await shot(page, `85-raridades-${k}@${tag}`)
+      }
+    }
+    await page.setViewportSize({ width: 390, height: 844 })
+    await wait(500)
+    for (const r of ['comum', 'incomum', 'rara', 'ultra_rara', 'lendaria', 'unica', 'promocional']) {
+      const el = page.locator(`[data-raridade="${r}"]`).first()
+      try {
+        await el.scrollIntoViewIfNeeded({ timeout: 3000 })
+        await wait(700)
+        await el.screenshot({ path: `${OUT}/85-raridade-${r}.jpg`, type: 'jpeg', quality: 88 })
+        manifest.shots.push({ name: `85-raridade-${r}`, note: 'carta da raridade', url: page.url() })
+      } catch (e) {
+        manifest.errors.push({ step: `85-raridade-${r}`, error: String(e).slice(0, 300) })
+      }
+    }
+    // Movimento reduzido: a Promocional fica num gradiente iridescente parado (sem animação).
+    await page.emulateMedia({ reducedMotion: 'reduce' })
+    await wait(600)
+    const promo = page.locator('[data-raridade="promocional"]').first()
+    await promo.screenshot({ path: `${OUT}/85-raridade-promocional-reduzido.jpg`, type: 'jpeg', quality: 88 }).catch((e) => manifest.errors.push({ step: 'promo-reduzido', error: String(e).slice(0, 300) }))
+    manifest.shots.push({ name: '85-raridade-promocional-reduzido', note: 'prefers-reduced-motion', url: page.url() })
     await ctx.close()
   })
 }

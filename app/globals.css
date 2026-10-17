@@ -362,6 +362,30 @@
 .dv-orbit { transform-origin: center; animation: dv-orbit 24s linear infinite; }
 .dv-retrieve { animation: dv-retrieve 0.9s cubic-bezier(0.6, 0, 0.2, 1) both; }
 
+/* Palavras com o efeito da raridade secreta (aula da Coruja, pedido do dono 17/10).
+   Holográfica = gradiente iridescente que desliza devagar dentro da letra; Única = granada (vinho), não o rubi de alerta.
+   Com movimento reduzido o gradiente fica parado. */
+@keyframes dv-txt-holo { 0% { background-position: 0% 50%; } 100% { background-position: 300% 50%; } }
+.dv-txt-holo {
+  background-image: linear-gradient(100deg, #f7b6d6 0%, #c9b4ff 18%, #8fe0f0 36%, #e2f7ae 52%, #ffc79c 68%, #c9b4ff 84%, #f7b6d6 100%);
+  background-size: 150% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 6px rgba(190, 210, 255, 0.35));
+  animation: dv-txt-holo 6s linear infinite;
+}
+.dv-txt-unica {
+  background-image: linear-gradient(180deg, #f1b3ba 0%, #d8616f 55%, #b3364a 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 6px rgba(168, 28, 52, 0.45));
+}
+@media (prefers-reduced-motion: reduce) { .dv-txt-holo { animation: none; } }
+
 /* Linha azul que percorre a borda inferior de um item ao ser selecionado/focado. */
 .dv-trace { position: relative; }
 .dv-trace::after {

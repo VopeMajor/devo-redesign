@@ -184,6 +184,47 @@ await test('raridade mínima: carta comum recusada e continua no inventário', a
   assert(inv.some((c) => c.uid === 'a-comum'), 'a carta comum continua no save')
 })
 
+await test('Ultra Rara na ordem: mínimo "ultra_rara" recusa a Rara (rara < ultra_rara < lendaria) com o rótulo novo', async () => {
+  const [b] = await q("SELECT value FROM devo_config WHERE key = 'salao.bandeja'")
+  try {
+    await q("UPDATE devo_config SET value = $1 WHERE key = 'salao.bandeja'", [JSON.stringify({ ...b.value, raridade_minima: 'ultra_rara' })])
+    const r = await A.salao('bandeja.enviar', { uid: 'a-rara' })
+    assert(r.status === 400 && /Ultra Rara/.test(r.json?.error ?? ''), `rara abaixo da Ultra Rara deveria ser 400 com "Ultra Rara" (veio ${r.status} ${r.text})`)
+    const inv = await inventario(A.id)
+    assert(inv.some((c) => c.uid === 'a-rara'), 'a carta rara continua no save')
+    const g = await A.get('/api/salao')
+    assert(g.status === 200, `GET com mínimo Ultra Rara: ${g.status}`)
+  } finally {
+    await q("UPDATE devo_config SET value = $1 WHERE key = 'salao.bandeja'", [JSON.stringify(b.value)])
+  }
+})
+
+await test('migração das raridades das cartas: idempotente; o banco aceita ultra_rara/unica/promocional e recusa o resto', async () => {
+  const sql = readFileSync(join(here, '..', 'cartas-raridade-migration.sql'), 'utf8')
+  await db.query(sql)
+  await db.query(sql)
+  for (const t of ['salao_lotes', 'salao_mercado']) {
+    const [c] = await q("SELECT pg_get_constraintdef(oid) AS d FROM pg_constraint WHERE conname = $1", [`${t}_card_rarity_chk`])
+    assert(c && /ultra_rara/.test(c.d) && /unica/.test(c.d) && /promocional/.test(c.d), `${t}: constraint com as 7 raridades (veio ${c?.d})`)
+  }
+  const client = await db.connect()
+  try {
+    await client.query('BEGIN')
+    let erro = null
+    try {
+      await client.query("UPDATE salao_lotes SET card_rarity = 'ultra-rara' WHERE id = (SELECT id FROM salao_lotes LIMIT 1)")
+      const [{ n }] = (await client.query('SELECT count(*)::int AS n FROM salao_lotes')).rows
+      if (n === 0) erro = 'sem linhas (nada a testar)'
+    } catch (e) {
+      erro = String(e.message)
+    }
+    assert(erro && /card_rarity_chk|sem linhas/.test(erro), `raridade desconhecida deveria violar a constraint (veio ${erro})`)
+  } finally {
+    await client.query('ROLLBACK').catch(() => {})
+    client.release()
+  }
+})
+
 await test('enviar à Bandeja: carta sai do save, taxa de divulgação paga, lote em avaliação', async () => {
   const t0 = await timer(A.id)
   const r = await A.salao('bandeja.enviar', { uid: 'a-rara', lanceMinimo: 30 })

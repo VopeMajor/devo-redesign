@@ -362,6 +362,30 @@ await test('Owner: evento com check-in próprio aparece como cartão extra; regr
   await O.cal('evento.remover', { id })
 })
 
+await test('Ultra Rara: aceita no check-in, rótulo próprio e entrega uma carta (cai para Rara enquanto não há Ultra Raras); secretas recusadas', async () => {
+  const hoje = (await q("SELECT to_char((now() AT TIME ZONE 'America/Sao_Paulo')::date, 'YYYY-MM-DD') AS d"))[0].d
+  let r = await O.cal('evento.salvar', {
+    titulo: `Ultra ${sfx}`,
+    descricao: 'Check-in com Carta Ultra Rara.',
+    inicio: hoje,
+    enfase: 'normal',
+    checkin: { titulo: 'Check-in Ultra', recompensas: [{ tipo: 'carta', raridade: 'ultra_rara' }, { tipo: 'carta', raridade: 'lendaria' }] },
+  })
+  assert(r.status === 200, `Owner cria com Carta Ultra Rara: ${r.text.slice(0, 160)}`)
+  const id = r.json.id
+  for (const secreta of ['unica', 'promocional', 'ultra-rara']) {
+    const x = await O.cal('evento.salvar', { titulo: `Secreta ${secreta}`, inicio: hoje, checkin: { titulo: 'X', recompensas: [{ tipo: 'carta', raridade: secreta }] } })
+    assert(x.status === 400, `carta ${secreta} no check-in → 400 (veio ${x.status})`)
+  }
+  const g = await C.get('/api/calendario')
+  const x = g.json.extras.find((e) => e.eventoId === id)
+  const rotulos = x?.slots?.map((s) => s.recompensa.rotulo)
+  assert(rotulos?.[0] === 'Carta Ultra Rara' && rotulos?.[1] === 'Carta Lendária', `rótulos: ${JSON.stringify(rotulos)}`)
+  r = await C.checkin({ tipo: 'evento', eventoId: id })
+  assert(r.status === 200 && ['ampulheta', 'olho', 'mascara', 'cranio'].includes(r.json.aplicado.cartaId), `Ultra Rara sem cartas cai para a Rara mais próxima: ${JSON.stringify(r.json?.aplicado)}`)
+  await O.cal('evento.remover', { id })
+})
+
 await test('a cena da Melissa está registrada e só termina uma vez', async () => {
   const r = await A.get('/api/dialogo?cena=melissa-calendario')
   assert(r.status === 200 && r.json?.progresso, `cena registrada: ${r.status} ${r.text.slice(0, 120)}`)

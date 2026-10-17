@@ -4,6 +4,7 @@ import { useState } from 'react'
 import useSWR from 'swr'
 import { HudCode, RecordPanel } from '@/components/devo/kit'
 import { playSfx } from '@/lib/devo/audio'
+import { RARITIES, RARITY_META } from '@/lib/devo/cards'
 import { type CalendarioMesa, dataCurtaFaixa, ENFASE_ROTULO, type Enfase, type EventoBase, type Recompensa, verRecompensa } from '@/lib/devo/calendario'
 import type { Rarity } from '@/lib/devo/types'
 import { VIRTUDE_KEYS, VIRTUDES } from '@/lib/devo/virtudes'
@@ -31,12 +32,8 @@ const TIPOS: [TipoForm, string][] = [
   ['tempo', 'Tempo (minutos)'],
   ['carta', 'Carta'],
 ]
-const RARIDADES: [Rarity, string][] = [
-  ['comum', 'Comum'],
-  ['incomum', 'Incomum'],
-  ['rara', 'Rara'],
-  ['lendaria', 'Lendária'],
-]
+// Raridades de jogo (Comum → Lendária, com a Ultra Rara); Única e Promocional não saem em check-in.
+const RARIDADES: [Rarity, string][] = RARITIES.map((r) => [r, RARITY_META[r].label])
 
 const paraLinha = (r: Recompensa): LinhaForm =>
   r.tipo === 'pp'
