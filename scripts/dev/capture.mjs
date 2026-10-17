@@ -3019,7 +3019,7 @@ if (want('cosmeticos')) {
     for (const a of arts) {
       await view(g.page, `article[aria-label="${a}"]`, 'start')
       await wait(700)
-      await shot(g.page, `cos-l2-${String(++i).padStart(2, '0')}-moldura-${a.slice(9).toLowerCase().normalize('NFD').replace(/[^a-z ]/g, '').trim().replace(/ +/g, '-')}`)
+      await shot(g.page, `cos-l2-${String(++i).padStart(2, '0')}-moldura-${a.slice(8).toLowerCase().normalize('NFD').replace(/[^a-z ]/g, '').trim().replace(/ +/g, '-')}`)
     }
     await view(g.page, 'section[aria-label="Lote 2 · balões"]', 'start')
     await wait(800)
