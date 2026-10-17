@@ -1,0 +1,123 @@
+{
+  "pedido": "arcano-sigilo-hierofante",
+  "titulo": "Arcano — hierofante (sigilo)",
+  "tipo": "emblema",
+  "tamanho_final": 1024,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 13051,
+      "passos": null,
+      "segundos": 12.0,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "ilhas_removidas": 0,
+      "arquivos": [
+        {
+          "arquivo": "arcano-sigilo-hierofante--v01--1024.png",
+          "bytes": 434180
+        },
+        {
+          "arquivo": "arcano-sigilo-hierofante--v01--1024.webp",
+          "bytes": 102484
+        },
+        {
+          "arquivo": "arcano-sigilo-hierofante--v01--512.webp",
+          "bytes": 33654
+        },
+        {
+          "arquivo": "arcano-sigilo-hierofante--v01--256.webp",
+          "bytes": 14168
+        },
+        {
+          "arquivo": "arcano-sigilo-hierofante--v01--128.webp",
+          "bytes": 6986
+        },
+        {
+          "arquivo": "arcano-sigilo-hierofante--v01--64.webp",
+          "bytes": 3140
+        }
+      ],
+      "segundos_pos": 17.8,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 13052,
+      "passos": null,
+      "segundos": 11.9,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "ilhas_removidas": 0,
+      "arquivos": [
+        {
+          "arquivo": "arcano-sigilo-hierofante--v02--1024.png",
+          "bytes": 434770
+        },
+        {
+          "arquivo": "arcano-sigilo-hierofante--v02--1024.webp",
+          "bytes": 104490
+        },
+        {
+          "arquivo": "arcano-sigilo-hierofante--v02--512.webp",
+          "bytes": 34894
+        },
+        {
+          "arquivo": "arcano-sigilo-hierofante--v02--256.webp",
+          "bytes": 14318
+        },
+        {
+          "arquivo": "arcano-sigilo-hierofante--v02--128.webp",
+          "bytes": 6832
+        },
+        {
+          "arquivo": "arcano-sigilo-hierofante--v02--64.webp",
+          "bytes": 2898
+        }
+      ],
+      "segundos_pos": 14.5,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 13053,
+      "passos": null,
+      "segundos": 9.2,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "ilhas_removidas": 0,
+      "arquivos": [
+        {
+          "arquivo": "arcano-sigilo-hierofante--v03--1024.png",
+          "bytes": 359085
+        },
+        {
+          "arquivo": "arcano-sigilo-hierofante--v03--1024.webp",
+          "bytes": 88362
+        },
+        {
+          "arquivo": "arcano-sigilo-hierofante--v03--512.webp",
+          "bytes": 30018
+        },
+        {
+          "arquivo": "arcano-sigilo-hierofante--v03--256.webp",
+          "bytes": 12340
+        },
+        {
+          "arquivo": "arcano-sigilo-hierofante--v03--128.webp",
+          "bytes": 6054
+        },
+        {
+          "arquivo": "arcano-sigilo-hierofante--v03--64.webp",
+          "bytes": 2672
+        }
+      ],
+      "segundos_pos": 14.4,
+      "avisos": []
+    }
+  ]
+}
