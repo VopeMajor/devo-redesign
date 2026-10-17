@@ -24,7 +24,8 @@ import type { ChessState } from '@/lib/devo/arcade/client'
 
 const meta = GAMES.chess
 /** Relógio por lance (mesmo valor da partida online; na demonstração ele não corre). */
-const CLOCK_MS = 30_000
+/** 10 minutos por jogador; o relógio de cada um só corre na própria vez. */
+const CLOCK_MS = 600_000
 const VALUE: Record<PieceSymbol, number> = { p: 1, n: 3, b: 3, r: 5, q: 9, k: 0 }
 const REACTIONS = ['🔥', '😱', '💀', '👏', '👀']
 
@@ -34,7 +35,7 @@ const REACTIONS = ['🔥', '😱', '💀', '👏', '👀']
  */
 const DEMO: { lan: string; say: string; pose: Expressao }[] = [
   { lan: 'e2e4', say: 'Peão do rei, duas casas. Nas suas partidas, toque numa peça e as casas possíveis acendem no mármore.', pose: 'explica' },
-  { lan: 'e7e5', say: 'O preto responde no espelho. Cada lance devolve os trinta segundos ao relógio de quem jogou.', pose: 'pensativo' },
+  { lan: 'e7e5', say: 'O preto responde no espelho. Cada um tem dez minutos no relógio, e ele só corre na sua vez.', pose: 'pensativo' },
   { lan: 'f1c4', say: 'O bispo corre na diagonal e mira f7, a casa mais frágil do tabuleiro.', pose: 'trama' },
   { lan: 'b8c6', say: 'O cavalo é o único que salta por cima das outras peças.', pose: 'explica' },
   { lan: 'd1h5', say: 'A dama entra cedo. Repare em quem ela ameaça.', pose: 'convite' },
@@ -194,7 +195,8 @@ export default function QuickChess({ start, settings, onFinish, onQuit }: GamePr
     (m: Move) => {
       if (animRef.current || finished.current) return
       const by = game.turn()
-      const nextClocks = { w: CLOCK_MS, b: CLOCK_MS }
+      const gasto = Date.now() - turnStart.current
+      const nextClocks = { ...clocksRef.current, [by]: Math.max(0, clocksRef.current[by] - (turnStart.current ? gasto : 0)) }
       clocksRef.current = nextClocks
       setClocks(nextClocks)
 
@@ -374,7 +376,7 @@ export default function QuickChess({ start, settings, onFinish, onQuit }: GamePr
   const plies = game.history().length
   const serverState = online && room && room.status !== 'waiting' ? (room.state as ChessState) : null
   const synced = !!serverState?.moves && serverState.moves.length === plies
-  const clockTotal = online ? 30_000 : CLOCK_MS
+  const clockTotal = CLOCK_MS
   const clockOf = (side: Color) => (synced && serverState ? serverState.clock[side === 'w' ? 'a' : 'b'] : clocks[side])
   const turnFrom = synced && serverState ? toLocal(serverState.turnAt) : turnStart.current
   const live = (side: Color) => (ticking && turn === side ? Math.max(0, Math.min(clockOf(side), clockOf(side) - (now - turnFrom))) : clockOf(side))
@@ -756,7 +758,7 @@ export default function QuickChess({ start, settings, onFinish, onQuit }: GamePr
               <div className="flex w-full max-w-sm animate-dv-cut-in flex-col items-center gap-4 text-center">
                 <p className="dv-label text-[10px] text-dv-gold">Xeque-mate em {DEMO.length} lances</p>
                 <h2 className="-skew-x-[8deg] font-impact text-[44px] font-semibold uppercase leading-none tracking-[0.04em] text-white">Demonstração concluída</h2>
-                <p className="font-body text-[16px] leading-relaxed text-dv-text-2">Na mesa de verdade você enfrenta outro jogador, com trinta segundos por lance. Toque em “Jogar” no cartaz do Living Chess para entrar na fila.</p>
+                <p className="font-body text-[16px] leading-relaxed text-dv-text-2">Na mesa de verdade você enfrenta outro jogador, com dez minutos de relógio para cada um. Toque em “Jogar” no cartaz do Living Chess para entrar na fila.</p>
                 <div className="flex w-full flex-col gap-2">
                   <Button variant="primary" block onClick={onQuit}>
                     Voltar à mesa

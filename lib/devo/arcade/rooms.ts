@@ -20,7 +20,8 @@ type Pair<T> = { a: T; b: T }
 const COUNTDOWN_MS = 4000
 const ABANDON_MS = 15_000
 const WAIT_FRESH_MS = 12_000
-const CHESS_MOVE_MS = 30_000
+/** Relógio total por jogador (10 min). Só corre na vez de quem joga; para quando ele faz o lance. */
+const CHESS_MOVE_MS = 600_000
 /** Tolerância para a animação do lance e a latência antes de cair o tempo. */
 const CHESS_GRACE_MS = 2500
 
@@ -91,7 +92,7 @@ function initialState(gameId: GameId, seed: number, startAt: number): Record<str
     return s
   }
   if (gameId === 'chess') {
-    const s: ChessState = { fen: new Chess().fen(), moves: [], clock: { a: 30_000, b: 30_000 }, turnAt: startAt, captures: zero() }
+    const s: ChessState = { fen: new Chess().fen(), moves: [], clock: { a: CHESS_MOVE_MS, b: CHESS_MOVE_MS }, turnAt: startAt, captures: zero() }
     return s
   }
   if (gameId === 'bluff') return bluffNew(seed, startAt) as unknown as Record<string, unknown>
@@ -162,7 +163,7 @@ function sideScores(room: RoomRow): Pair<{ score: number; stats: Record<string, 
   }
   if (room.game_id === 'chess') {
     const s = room.state as ChessState
-    const pack = (x: Side) => ({ score: cap(s.captures[x] * 10 + Math.max(0, s.clock[x]) / 100), stats: { captures: s.captures[x], moves: Math.ceil(s.moves.length / 2) } })
+    const pack = (x: Side) => ({ score: cap(s.captures[x] * 10 + Math.max(0, s.clock[x]) / 2000), stats: { captures: s.captures[x], moves: Math.ceil(s.moves.length / 2) } })
     return { a: pack('a'), b: pack('b') }
   }
   if (room.game_id === 'bluff') {
@@ -355,7 +356,8 @@ async function applyAction(c: PoolClient, room: RoomRow, side: Side, action: Act
     } catch {
       throw new ArcadeError('Lance ilegal.')
     }
-    s.clock = { a: CHESS_MOVE_MS, b: CHESS_MOVE_MS }
+    // Relógio de partida: desconta só o tempo gasto neste lance; o do oponente fica como estava.
+    s.clock[side] = Math.max(0, s.clock[side] - spent)
     s.turnAt = now
     s.fen = game.fen()
     s.moves.push(mv.lan)
