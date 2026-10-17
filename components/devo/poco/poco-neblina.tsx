@@ -63,7 +63,7 @@ export function PocoNeblina({
   // Fala corrente: a resposta na fila tem prioridade; senão o próprio nó (fala ou aviso da moeda).
   const fala: NeblinaFala | null = fila?.falas[0] ?? (no.tipo === 'fala' ? { quem: no.quem, texto: no.texto } : no.tipo === 'moeda' ? { quem: 'sistema', texto: no.texto } : null)
   const texto = fala ? generoTexto(fala.texto, genero) : ''
-  const { shown, done, finish } = useTypewriter(texto, fala?.quem === 'sistema' ? 12 : CHAR_MS)
+  const { shown, done, finish, inicio, pronto, guarda } = useTypewriter(texto, fala?.quem === 'sistema' ? 12 : CHAR_MS)
 
   // Nó da moeda: o servidor entrega o Dracma (uma vez só) antes de a fala poder avançar.
   const pediu = useRef(false)
@@ -100,6 +100,7 @@ export function PocoNeblina({
       finish()
       return
     }
+    if (guarda()) return
     if (no.tipo === 'moeda' && moedaEstado !== 'ok') return
     playSfx('click')
     if (fila) {
@@ -193,8 +194,8 @@ export function PocoNeblina({
                     quem === 'sistema' && 'text-center font-display text-[15px] not-italic uppercase tracking-[0.12em] text-dv-gold-bright',
                   )}
                 >
-                  {texto.slice(0, shown)}
-                  {!done && <span aria-hidden="true" className="ml-0.5 inline-block h-4 w-[2px] translate-y-0.5 animate-dv-blink bg-dv-gold-bright" />}
+                  {texto.slice(inicio, shown)}
+                  {!pronto && <span aria-hidden="true" className="ml-0.5 inline-block h-4 w-[2px] translate-y-0.5 animate-dv-blink bg-dv-gold-bright" />}
                 </span>
                 <span className="mt-3 flex items-center gap-3" aria-hidden="true">
                   <span className="dv-label dv-tabular text-[10px] text-dv-text-3">
@@ -206,7 +207,7 @@ export function PocoNeblina({
                   {no.tipo === 'moeda' && moedaEstado === 'pedindo' ? (
                     <span className="dv-label text-[10px] text-dv-text-3">Recebendo…</span>
                   ) : (
-                    <AdvanceIndicator visible={done} label="Continuar" tone="gold" />
+                    <AdvanceIndicator visible={pronto} label="Continuar" tone="gold" />
                   )}
                 </span>
               </span>

@@ -138,6 +138,7 @@ export function Cena({ passos, npc, titulo, kicker, fundo = 'torre', arteFundo =
   const tocar = () => {
     if (ehEscolha || ocupado) return
     if (!ehBloco && !tw.done) return tw.finish()
+    if (!ehBloco && tw.guarda()) return
     avancar()
   }
   const tocarRef = useRef(tocar)
@@ -329,10 +330,10 @@ export function Cena({ passos, npc, titulo, kicker, fundo = 'torre', arteFundo =
                   passo.tipo === 'fala' && 'text-dv-text',
                 )}
               >
-                <Falado texto={texto.slice(0, tw.shown)} />
+                <Falado texto={texto.slice(tw.inicio, tw.shown)} />
               </span>
               <span className="mt-1 flex justify-end">
-                <AdvanceIndicator visible={tw.done} label={i + 1 < fila.length ? undefined : 'Fim'} tone="gold" />
+                <AdvanceIndicator visible={tw.pronto} label={i + 1 < fila.length ? undefined : 'Fim'} tone="gold" />
               </span>
             </DialogueShell>
           </button>

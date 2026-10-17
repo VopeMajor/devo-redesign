@@ -1972,7 +1972,7 @@ if (want('narrativa')) {
         continue
       }
       // Espera a fala terminar de digitar (o texto inteiro fica no DOM) e só então toca para avançar.
-      const pronto = dlg(page).getByRole('button', { name: 'Continuar', exact: true }).first()
+      const pronto = dlg(page).getByRole('button', { name: /^(Continuar|Próxima parte)$/ }).first()
       if (await pronto.count()) {
         await tryClick(pronto, 2000)
         await wait(450)

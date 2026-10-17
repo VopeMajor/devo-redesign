@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState, type CSSProperties, type ReactNode } from 'react'
+import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react'
 import { playSfx } from '@/lib/devo/audio'
 import { cn } from '@/lib/utils'
 import { GlyphArrow, GlyphDiamond, toRoman } from '../kit/glyphs'
@@ -12,34 +12,96 @@ import { SoundToggle } from '../shared/sound-toggle'
  * Candidatas ao kit (ver relatório da área ENTRADA).
  */
 
-/** Pausa extra depois de pontuação: o texto "respira" como fala, não como impressora. */
-function pauseAfter(ch: string | undefined) {
-  if (!ch) return 0
-  if (ch === '…') return 320
-  if ('.!?'.includes(ch)) return 220
-  if (',;:'.includes(ch)) return 110
+/**
+ * Pausa extra depois de pontuação: o texto "respira" como fala, não como impressora (refinamento 4 §2.2).
+ * Reticências ("…" ou "...") e o fecho de uma rubrica ("]") são pausas dramáticas; pontos seguidos de ponto
+ * (o meio de "...") quase não param, para "..." não valer três pausas.
+ */
+function pauseAfter(prev: string | undefined, prev2: string | undefined, next: string | undefined) {
+  if (!prev) return 0
+  if (prev === '.' && next === '.') return 40
+  if (prev === '…' || (prev === '.' && prev2 === '.')) return 420
+  if (prev === ']') return 260
+  if ('.!?'.includes(prev)) return 260
+  if (prev === '—' || prev === '–') return 160
+  if (',;:'.includes(prev)) return 120
   return 0
 }
 
-export function useTypewriter(text: string, charMs = 28) {
+/** Acima disto a fala é dividida em páginas (por frase), para não virar um bloco que ninguém lê. */
+const PAGINA_MAX = 200
+const PAGINAR_ACIMA = 240
+/** Depois de uma fala (ou página) completar, toques nesse intervalo não avançam: evita pular sem querer. */
+const GUARDA_MS = 320
+
+/** Divide a fala em páginas nos fins de frase, cada uma com até ~PAGINA_MAX caracteres. Retorna os inícios. */
+export function paginasDe(text: string): number[] {
+  if (text.length <= PAGINAR_ACIMA) return [0]
+  const cortes: number[] = []
+  const re = /[.!?…]["”»)]?\s+/g
+  for (let m = re.exec(text); m; m = re.exec(text)) cortes.push(m.index + m[0].length)
+  const inicios = [0]
+  let atual = 0
+  let ultimo = 0
+  for (const c of cortes) {
+    if (c - atual > PAGINA_MAX && ultimo > atual) {
+      inicios.push(ultimo)
+      atual = ultimo
+    }
+    ultimo = c
+  }
+  if (text.length - atual > PAGINA_MAX && ultimo > atual && ultimo < text.length) inicios.push(ultimo)
+  return inicios
+}
+
+/**
+ * Máquina de escrever com cadência de fala (refinamento 4 §2.2), igual no celular e no desktop:
+ * - pausas de pontuação e pausas dramáticas ("…", "...", fim de "[rubrica]");
+ * - falas longas viram páginas (`inicio`..`shown` é o trecho visível);
+ * - `finish()` = o toque durante a digitação COMPLETA a página atual; com a página completa e mais páginas,
+ *   passa para a próxima — nunca avança a fala; `done` só fica verdadeiro na última página completa;
+ * - `pronto` = página atual completa (mostrar a seta); `guarda()` = true logo depois de completar
+ *   (toque/tecla nesse instante não deve avançar a fala).
+ */
+export function useTypewriter(text: string, charMs = 28, { paginar = true }: { paginar?: boolean } = {}) {
   // O progresso fica preso ao texto: ao trocar de fala, começa do zero no mesmo render (sem "piscar" pronto).
-  const [state, setState] = useState({ text, shown: 0 })
-  const shown = state.text === text ? state.shown : 0
-  const done = shown >= text.length
+  const [state, setState] = useState({ text, shown: 0, pagina: 0 })
+  const atual = state.text === text ? state : { text, shown: 0, pagina: 0 }
+  const inicios = paginar ? paginasDe(text) : [0]
+  const pagina = Math.min(atual.pagina, inicios.length - 1)
+  const inicio = inicios[pagina]
+  const fimPagina = pagina + 1 < inicios.length ? inicios[pagina + 1] : text.length
+  const shown = Math.max(atual.shown, inicio)
+  const pronto = shown >= fimPagina
+  const done = pronto && pagina === inicios.length - 1
+  const completou = useRef(0)
   useEffect(() => {
-    if (done) return
+    if (pronto) {
+      completou.current = performance.now()
+      return
+    }
     const prev = text[shown - 1]
     const next = text[shown]
     const id = window.setTimeout(
       () => {
-        setState({ text, shown: shown + 1 })
+        setState({ text, shown: shown + 1, pagina })
         if (shown % 3 === 0 && next !== ' ') playSfx('type')
       },
-      charMs + (next === ' ' ? pauseAfter(prev) : 0),
+      charMs + (next === ' ' || next === '\n' || next === '.' ? pauseAfter(prev, text[shown - 2], next) : 0),
     )
     return () => window.clearTimeout(id)
-  }, [shown, done, text, charMs])
-  return { shown, done, finish: () => setState({ text, shown: text.length }) }
+  }, [shown, pronto, text, charMs, pagina])
+  const finish = () => {
+    if (!pronto) {
+      completou.current = performance.now()
+      setState({ text, shown: fimPagina, pagina })
+      return
+    }
+    if (performance.now() - completou.current < GUARDA_MS) return
+    if (pagina + 1 < inicios.length) setState({ text, shown: inicios[pagina + 1], pagina: pagina + 1 })
+  }
+  const guarda = () => performance.now() - completou.current < GUARDA_MS
+  return { shown, done, finish, inicio, pronto, guarda, pagina, paginas: inicios.length }
 }
 
 export type PlateTone = 'cobalt' | 'gold' | 'void' | 'system'
@@ -61,8 +123,9 @@ export function SpeakerPlate({ name, title, tone = 'cobalt', avatar }: { name: s
   return (
     // Uma linha só, em qualquer largura: a placa não passa da caixa e o epíteto encurta com reticências
     // (antes quebrava em duas linhas a 360 px e cobria a primeira linha da fala).
-    <span className="absolute -top-[22px] left-3 z-10 flex max-w-[calc(100%-1.5rem)] items-end gap-2" aria-hidden="true">
-      {avatar && <span className="relative -mb-2 block w-12 shrink-0">{avatar}</span>}
+    <span className="absolute -top-[22px] left-3 z-10 flex max-w-[calc(100%-1.5rem)] items-center gap-2" aria-hidden="true">
+      {/* medalhão centrado na altura da placa (antes descia sobre a borda da caixa) */}
+      {avatar && <span className="relative block w-11 shrink-0">{avatar}</span>}
       <span className="en-plate-in relative flex min-w-0 items-center bg-[linear-gradient(100deg,#0c0c0e,#151517_55%,#1f1f22)] px-5 py-1.5 shadow-[4px_4px_0_rgba(0,0,0,0.55),inset_0_0_0_1px_rgba(186,176,159,0.5)]">
         {/* filete de aço: topo aceso, base em sombra */}
         <span className="absolute inset-x-0 top-0 h-px bg-[linear-gradient(90deg,#6b6357,#ece5d8_40%,#bab09f_70%,#6b6357)]" />

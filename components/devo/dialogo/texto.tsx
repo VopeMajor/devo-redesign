@@ -26,14 +26,19 @@ export function segmentos(texto: string): Seg[] {
 /** Texto sem as marcas de ênfase (as rubricas mantêm os colchetes). */
 export const textoPlano = (texto: string) => segmentos(texto).map((s) => s.t).join('')
 
-export function TextoRico({ texto, shown }: { texto: string; shown?: number }) {
+/** `inicio` (texto plano) esconde o começo: falas longas mostradas em páginas. */
+export function TextoRico({ texto, shown, inicio = 0 }: { texto: string; shown?: number; inicio?: number }) {
   let left = shown ?? Number.POSITIVE_INFINITY
+  let pular = inicio
   return (
     <>
       {segmentos(texto).map((s, i) => {
         if (left <= 0) return null
-        const t = s.t.slice(0, Math.max(0, left))
+        const corte = Math.min(pular, s.t.length)
+        pular -= corte
+        const t = s.t.slice(corte, Math.max(corte, left))
         left -= s.t.length
+        if (!t) return null
         if (s.k === 'e') return <em key={i} className="not-italic text-dv-gold-bright [font-style:italic]">{t}</em>
         if (s.k === 'r') return <span key={i} className="font-body italic text-dv-text-3">{t}</span>
         return <Fragment key={i}>{t}</Fragment>

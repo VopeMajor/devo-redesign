@@ -51,7 +51,7 @@ export function SalaoHerdeiro({
   const fala = HERDEIRO_APRESENTACAO[index]
   const texto = salaoTexto(fala.texto, genero, nome)
   const plano = semMarcas(texto)
-  const { shown, done, finish } = useTypewriter(plano, CHAR_MS)
+  const { shown, done, finish, guarda } = useTypewriter(plano, CHAR_MS, { paginar: false })
   const total = HERDEIRO_APRESENTACAO.length
 
   const advance = useCallback(() => {
@@ -59,6 +59,7 @@ export function SalaoHerdeiro({
       finish()
       return
     }
+    if (guarda()) return
     playSfx('click')
     if (index + 1 >= total) {
       playSfx('whoosh')

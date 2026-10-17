@@ -10,6 +10,7 @@ import { cn } from '@/lib/utils'
 import { useAdvanceKeys } from '../hooks'
 import { CardFace, RARITY_SKIN, RarityGem, RarityPips, marbleBlack } from '../shared/devo-card'
 import { useDevo } from '../state/devo-store'
+import { useTypewriter as useVnTypewriter } from '../intro/vn'
 import { usePlayerText } from '../state/player-text'
 import { CORUJA_EXPRESSIONS, type CorujaExpression } from './coruja-sprite'
 
@@ -77,25 +78,10 @@ const SECRET_TIERS = [
 
 const QUIZ_TARGET = RARITY_TIERS.find((t) => t.id === 'rara') ?? RARITY_TIERS[0]
 
-const TYPE_SPEED_MS = 18
-
+/** Mesma cadência dos outros diálogos (intro/vn: pausas, páginas, toque completa sem avançar, guarda). */
 function useTypewriter(text: string) {
-  const [count, setCount] = useState(0)
-  useEffect(() => {
-    setCount(0)
-    if (!text) return
-    const id = window.setInterval(() => {
-      setCount((c) => {
-        if (c >= text.length) {
-          window.clearInterval(id)
-          return c
-        }
-        return c + 1
-      })
-    }, TYPE_SPEED_MS)
-    return () => window.clearInterval(id)
-  }, [text])
-  return { shown: text.slice(0, count), done: count >= text.length, finish: () => setCount(text.length) }
+  const tw = useVnTypewriter(text, 24)
+  return { shown: text.slice(tw.inicio, tw.shown), done: tw.done, pronto: tw.pronto, finish: tw.finish, guarda: tw.guarda }
 }
 
 export function CorujaIntro() {
@@ -156,6 +142,7 @@ export function CorujaIntro() {
       typer.finish()
       return
     }
+    if (typer.guarda()) return
     if (blocked) return
     playSfx('click')
     setReply(null)
@@ -280,7 +267,7 @@ export function CorujaIntro() {
             </p>
           )}
 
-          {step.kind === 'choice' && (
+          {step.kind === 'choice' && typer.done && (
             <ul className="mt-3 grid gap-1.5 @lg:grid-cols-3" aria-label="Escolhas de diálogo">
               {QUESTIONS.map((q) => {
                 const done = asked.includes(q.id)

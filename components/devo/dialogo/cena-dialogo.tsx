@@ -218,11 +218,12 @@ export function CenaDialogo({
   const tempoDe = (k?: string) => (k && dados?.tempos[k] !== undefined ? formatTempo(dados.tempos[k]) : '')
   const resolver = (t: string) => pt(t).replaceAll('{tempo}', tempoDe(respostas ? `${respostas.escolha}:${respostas.opcao}` : atual?.id))
   const texto = atual && (atual.tipo === 'fala' || atual.tipo === 'narra' || atual.tipo === 'pensa') ? resolver(atual.texto) : ''
-  const { shown, done, finish } = useTypewriter(textoPlano(texto), 26)
+  const { shown, done, finish, inicio, pronto, guarda } = useTypewriter(textoPlano(texto), 26)
 
   const avancar = useCallback(() => {
     if (!atual || ocupado || saindo) return
     if (texto && !done) return finish()
+    if (texto && guarda()) return
     if (atual.tipo === 'escolha') return
     playSfx('click')
     if (respostas) {
@@ -331,10 +332,10 @@ export function CenaDialogo({
             key={chaveAtual}
             type="button"
             onClick={avancar}
-            aria-label={texto && !done ? 'Mostrar texto completo' : 'Continuar'}
+            aria-label={texto && !pronto ? 'Mostrar texto completo' : texto && !done ? 'Próxima parte' : 'Continuar'}
             className={cn('en-box-in dv-focus relative block w-full text-left', atual.tipo === 'fala' && 'mt-6')}
           >
-            <Caixa passo={atual} texto={texto} shown={shown} done={done || !texto} nome={nome} elenco={elenco} resolver={resolver} />
+            <Caixa passo={atual} texto={texto} shown={shown} inicio={inicio} pronto={pronto || !texto} done={done || !texto} nome={nome} elenco={elenco} resolver={resolver} />
           </button>
         )}
 
@@ -371,6 +372,8 @@ function Caixa({
   passo,
   texto,
   shown,
+  inicio = 0,
+  pronto,
   done,
   nome,
   elenco,
@@ -379,12 +382,17 @@ function Caixa({
   passo: Passo
   texto: string
   shown: number
+  /** Início da página visível (falas longas em páginas: vn.tsx/useTypewriter). */
+  inicio?: number
+  /** Página atual completa (seta de avanço). */
+  pronto?: boolean
   done: boolean
   nome: string
   elenco: Record<string, MembroElenco>
   resolver: (t: string) => string
 }) {
-  const cursor = !done && <span aria-hidden="true" className="ml-0.5 inline-block h-4 w-[2px] translate-y-0.5 animate-dv-blink bg-dv-porcelain" />
+  const pagina = pronto ?? done
+  const cursor = !pagina && <span aria-hidden="true" className="ml-0.5 inline-block h-4 w-[2px] translate-y-0.5 animate-dv-blink bg-dv-porcelain" />
   switch (passo.tipo) {
     case 'fala': {
       const eu = passo.quem === 'jogador'
@@ -395,11 +403,11 @@ function Caixa({
           <SpeakerPlate key={placa} name={placa} title={eu ? 'você' : passo.nome ? undefined : m?.titulo} tone={eu ? 'gold' : passo.quem === 'melissa' ? 'cobalt' : 'void'} />
           <span className="block px-6 pb-3 pt-7">
             <span aria-live="polite" className="block min-h-[3.25rem] text-pretty font-body text-[17px] leading-relaxed text-dv-text">
-              <TextoRico texto={texto} shown={shown} />
+              <TextoRico texto={texto} shown={shown} inicio={inicio} />
               {cursor}
             </span>
             <span className="mt-1.5 flex justify-end">
-              <AdvanceIndicator visible={done} tone={eu ? 'gold' : 'cobalt'} />
+              <AdvanceIndicator visible={pagina} tone={eu ? 'gold' : 'cobalt'} />
             </span>
           </span>
         </DialogueShell>
@@ -412,11 +420,11 @@ function Caixa({
             <Colchete lado="esq" />
             <span className="flex-1">
               <span aria-live="polite" className="block min-h-[3.25rem] text-pretty text-center font-body text-[17px] italic leading-relaxed text-dv-text-2">
-                <TextoRico texto={texto} shown={shown} />
+                <TextoRico texto={texto} shown={shown} inicio={inicio} />
                 {cursor}
               </span>
               <span className="mt-1 flex justify-center">
-                <AdvanceIndicator visible={done} />
+                <AdvanceIndicator visible={pagina} />
               </span>
             </span>
             <Colchete lado="dir" />
@@ -433,12 +441,12 @@ function Caixa({
             </span>
             <span aria-live="polite" className="block min-h-[3.25rem] text-pretty font-body text-[17px] italic leading-relaxed text-dv-text">
               <span aria-hidden="true" className="mr-0.5 font-display text-[22px] leading-none text-dv-gold/70">“</span>
-              <TextoRico texto={texto} shown={shown} />
+              <TextoRico texto={texto} shown={shown} inicio={inicio} />
               {done && <span aria-hidden="true" className="ml-0.5 font-display text-[22px] leading-none text-dv-gold/70">”</span>}
               {cursor}
             </span>
             <span className="mt-1 flex justify-end">
-              <AdvanceIndicator visible={done} />
+              <AdvanceIndicator visible={pagina} />
             </span>
           </span>
         </DialogueShell>

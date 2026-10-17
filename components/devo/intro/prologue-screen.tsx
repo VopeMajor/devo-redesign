@@ -365,7 +365,7 @@ export function PrologueScreen({
   const line: Line | null = replies[0] ?? (beat.kind === 'line' ? beat.line : null)
   const text = line ? fill(line.text) : ''
   const charMs = CHAR_MS
-  const { shown, done, finish } = useTypewriter(text, charMs)
+  const { shown, done, finish, inicio, pronto, guarda } = useTypewriter(text, charMs)
 
   const next = useCallback(() => {
     if (index >= PROLOGUE.length - 1) {
@@ -415,6 +415,7 @@ export function PrologueScreen({
   const advance = useCallback(() => {
     if (!line) return
     if (!done) return finish()
+    if (guarda()) return
     playSfx('click')
     if (replies.length > 0) {
       const rest = replies.slice(1)
@@ -573,7 +574,7 @@ export function PrologueScreen({
             className={cn('en-box-in dv-focus relative block w-full text-left', speaker && 'mt-6', index === 0 && 'en-after-eyes', tear && 'en-box-late')}
           >
             {paper ? (
-              <PaperBox text={text.slice(0, shown)} done={done} live />
+              <PaperBox text={text.slice(inicio, shown)} done={pronto} live />
             ) : (
               <DialogueShell tone={speaker === 'melissa' ? 'cobalt' : 'gold'}>
                 {speaker && <SpeakerPlate key={speaker} name={SPEAKER_NAME[speaker]} tone={SPEAKER_TONE[speaker]} />}
@@ -585,8 +586,8 @@ export function PrologueScreen({
                       speaker ? 'text-[17px]' : 'text-[17px] italic text-dv-text-2',
                     )}
                   >
-                    {text.slice(0, shown)}
-                    {!done && <span aria-hidden="true" className="ml-0.5 inline-block h-4 w-[2px] translate-y-0.5 animate-dv-blink bg-dv-porcelain" />}
+                    {text.slice(inicio, shown)}
+                    {!pronto && <span aria-hidden="true" className="ml-0.5 inline-block h-4 w-[2px] translate-y-0.5 animate-dv-blink bg-dv-porcelain" />}
                   </span>
                   <span className={cn('mt-1.5 flex items-center', speaker ? 'justify-between' : 'justify-center')}>
                     {speaker && (
@@ -594,7 +595,7 @@ export function PrologueScreen({
                         {act ? `Ato ${toRoman(act.n)}` : ''}
                       </span>
                     )}
-                    <AdvanceIndicator visible={done} tone={speaker === 'voice' ? 'gold' : 'cobalt'} />
+                    <AdvanceIndicator visible={pronto} tone={speaker === 'voice' ? 'gold' : 'cobalt'} />
                   </span>
                 </span>
               </DialogueShell>

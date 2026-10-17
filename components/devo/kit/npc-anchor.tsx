@@ -3,6 +3,7 @@
 import { useLayoutEffect, useRef, useState, type CSSProperties, type ReactNode, type RefObject } from 'react'
 import { npcPortrait, resolveExpressao } from '@/lib/devo/npcs'
 import { cn } from '@/lib/utils'
+import { ROSTOS } from './npc-rostos'
 
 /* ────────────────────────────────────────────────────────────────────────────────────────
    Encenação única dos NPCs (DIRECAO-3 §9, pedido do dono 16/10 18:23): o retrato fica ANCORADO
@@ -248,7 +249,10 @@ export function NpcMedallion({
   children?: ReactNode
 }) {
   const src = npcPortrait(npc, pose)?.src
-  const f = ROSTO[npc] ?? ROSTO_PADRAO
+  // janela por EXPRESSÃO (gerada de cada sprite por scripts/dev/rostos-npc.py): o rosto muda de lugar entre
+  // poses; sem ela, a janela fixa do NPC
+  const porPose = ROSTOS[npc]?.[resolveExpressao(npc, pose)]
+  const f = porPose ? { cx: porPose[0], cy: porPose[1], lado: porPose[2] } : (ROSTO[npc] ?? ROSTO_PADRAO)
   const x = f.cx - f.lado / 2
   const y = f.cy - f.lado / 2
   const mask = 'linear-gradient(to bottom, #000 74%, transparent 100%)'

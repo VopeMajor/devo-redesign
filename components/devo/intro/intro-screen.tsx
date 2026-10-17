@@ -30,7 +30,7 @@ for (const l of INTRO_SCRIPT) {
 const ENTER_FROM: Record<string, 'l' | 'r'> = { herdeiro: 'l', rato: 'r' }
 
 function PlateAvatar({ speaker, expression }: { speaker: string; expression: Expression }) {
-  return <NpcMedallion npc={speaker} pose={expression} size={48} ring="rgba(186,176,159,0.55)" />
+  return <NpcMedallion npc={speaker} pose={expression} size="100%" ring="rgba(186,176,159,0.55)" />
 }
 
 /**
@@ -76,7 +76,7 @@ export function IntroScreen({
   const line = { ...script, text: withName(script.text, playerName, gender) }
   const npc = getNpc(line.speaker)
   // Sem dublagem no tutorial (DIRECAO-2 §5: voz só na cutscene inicial).
-  const { shown, done, finish } = useTypewriter(line.text, CHAR_MS)
+  const { shown, done, finish, inicio, pronto, guarda } = useTypewriter(line.text, CHAR_MS)
 
 
   // O salão entra primeiro no desenho estático do preset; o WebGL só monta depois da cortina e da
@@ -110,6 +110,8 @@ export function IntroScreen({
       finish()
       return
     }
+    // logo depois de completar, um segundo toque não pula a fala
+    if (guarda()) return
     if (last) {
       playSfx('whoosh')
       onFinish()
@@ -117,7 +119,7 @@ export function IntroScreen({
     }
     playSfx('click')
     setIndex((i) => i + 1)
-  }, [done, finish, last, onFinish])
+  }, [done, finish, guarda, last, onFinish])
 
   useAdvanceKeys(advance)
 
@@ -201,8 +203,8 @@ export function IntroScreen({
                 />
                 <span className="block px-6 pb-3 pt-8 sm:px-8">
                   <span className="block min-h-[4.5rem] text-pretty font-body text-[17px] leading-relaxed text-dv-text sm:text-lg" aria-live="polite">
-                    {line.text.slice(0, shown)}
-                    {!done && <span className="ml-0.5 inline-block h-4 w-[2px] translate-y-0.5 animate-dv-blink bg-dv-gold-bright" aria-hidden="true" />}
+                    {line.text.slice(inicio, shown)}
+                    {!pronto && <span className="ml-0.5 inline-block h-4 w-[2px] translate-y-0.5 animate-dv-blink bg-dv-gold-bright" aria-hidden="true" />}
                   </span>
                   <span className="mt-3 flex items-center gap-3" aria-hidden="true">
                     <span className="dv-label dv-tabular text-[10px] text-dv-text-3">
@@ -215,7 +217,7 @@ export function IntroScreen({
                       ))}
                     </span>
                     <span className="hidden font-mono text-[10px] text-dv-text-3 sm:inline">Espaço</span>
-                    <AdvanceIndicator visible={done} label={last ? 'Entrar no DEVO' : 'Continuar'} tone="gold" />
+                    <AdvanceIndicator visible={pronto} label={done ? (last ? 'Entrar no DEVO' : 'Continuar') : 'Mais'} tone="gold" />
                   </span>
                 </span>
               </DialogueShell>
