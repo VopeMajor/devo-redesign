@@ -1,0 +1,120 @@
+{
+  "pedido": "emblema-olho-destino",
+  "titulo": "Olho do Destino",
+  "tipo": "emblema",
+  "tamanho_final": 1024,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 7031,
+      "passos": null,
+      "segundos": 16.0,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "emblema-olho-destino--v01--1024.png",
+          "bytes": 603054
+        },
+        {
+          "arquivo": "emblema-olho-destino--v01--1024.webp",
+          "bytes": 127718
+        },
+        {
+          "arquivo": "emblema-olho-destino--v01--512.webp",
+          "bytes": 44138
+        },
+        {
+          "arquivo": "emblema-olho-destino--v01--256.webp",
+          "bytes": 17296
+        },
+        {
+          "arquivo": "emblema-olho-destino--v01--96.webp",
+          "bytes": 4560
+        },
+        {
+          "arquivo": "emblema-olho-destino--v01--48.webp",
+          "bytes": 1754
+        }
+      ],
+      "segundos_pos": 30.1,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 7032,
+      "passos": null,
+      "segundos": 14.9,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "emblema-olho-destino--v02--1024.png",
+          "bytes": 706651
+        },
+        {
+          "arquivo": "emblema-olho-destino--v02--1024.webp",
+          "bytes": 159242
+        },
+        {
+          "arquivo": "emblema-olho-destino--v02--512.webp",
+          "bytes": 54264
+        },
+        {
+          "arquivo": "emblema-olho-destino--v02--256.webp",
+          "bytes": 21666
+        },
+        {
+          "arquivo": "emblema-olho-destino--v02--96.webp",
+          "bytes": 5660
+        },
+        {
+          "arquivo": "emblema-olho-destino--v02--48.webp",
+          "bytes": 2316
+        }
+      ],
+      "segundos_pos": 25.6,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 7033,
+      "passos": null,
+      "segundos": 19.2,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "emblema-olho-destino--v03--1024.png",
+          "bytes": 562463
+        },
+        {
+          "arquivo": "emblema-olho-destino--v03--1024.webp",
+          "bytes": 132852
+        },
+        {
+          "arquivo": "emblema-olho-destino--v03--512.webp",
+          "bytes": 45300
+        },
+        {
+          "arquivo": "emblema-olho-destino--v03--256.webp",
+          "bytes": 17800
+        },
+        {
+          "arquivo": "emblema-olho-destino--v03--96.webp",
+          "bytes": 4598
+        },
+        {
+          "arquivo": "emblema-olho-destino--v03--48.webp",
+          "bytes": 1874
+        }
+      ],
+      "segundos_pos": 25.1,
+      "avisos": []
+    }
+  ]
+}

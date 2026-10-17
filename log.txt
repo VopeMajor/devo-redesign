@@ -1,0 +1,9 @@
+[emblema-olho-destino] v01: @cf/black-forest-labs/flux-2-klein-4b seed=7031 1024x1024 passos=None (~104 neurônios)
+    ok em 16.0s, 1024x1024
+[emblema-olho-destino] v02: @cf/black-forest-labs/flux-2-klein-4b seed=7032 1024x1024 passos=None (~104 neurônios)
+    ok em 14.9s, 1024x1024
+[emblema-olho-destino] v03: @cf/black-forest-labs/flux-2-klein-4b seed=7033 1024x1024 passos=None (~104 neurônios)
+    ok em 19.2s, 1024x1024
+[emblema-olho-destino] v01: rembg:birefnet-general; sem avisos
+[emblema-olho-destino] v02: rembg:birefnet-general; sem avisos
+[emblema-olho-destino] v03: rembg:birefnet-general; sem avisos

@@ -1,0 +1,56 @@
+{
+  "id": "emblema-olho-destino",
+  "titulo": "Olho do Destino",
+  "tipo": "emblema",
+  "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+  "prompt": "Fantasy RPG accessory illustration, painted, highly detailed, isolated on a plain flat light gray background. A legendary collectible badge, a small luxury jewel-like object seen from the front, centered: a mystic eye brooch: an almond-shaped eye of white enamel with a luminous violet iris set in an ornate silver and gold frame of pointed rays, small amethyst crystals around it, a crescent moon below and three fine chains with tiny star pendants. The iris glows softly. Rich detail that still reads at small size, crisp silhouette, the whole object fully visible with a generous empty margin, floating without a cast shadow, nothing cropped. No text, no letters, no numbers, no watermark, no people.",
+  "negative": "text, letters, watermark, signature, logo, cropped, cut off, blurry, low detail, flat vector icon, clipart, emoji, cartoon sticker, simple geometric shapes, plastic look, people, hands",
+  "largura": 1024,
+  "altura": 1024,
+  "variacoes": [
+    {
+      "seed": 7031,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "passos": null,
+      "largura": 1024,
+      "altura": 1024,
+      "prompt_extra": "",
+      "n": 1
+    },
+    {
+      "seed": 7032,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "passos": null,
+      "largura": 1024,
+      "altura": 1024,
+      "prompt_extra": "",
+      "n": 2
+    },
+    {
+      "seed": 7033,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "passos": null,
+      "largura": 1024,
+      "altura": 1024,
+      "prompt_extra": "",
+      "n": 3
+    }
+  ],
+  "pos": {
+    "tamanho_final": 1024,
+    "margem": 0.03,
+    "remover_fundo": true,
+    "modelo_fundo": "birefnet-general",
+    "derivados": [
+      512,
+      256,
+      96,
+      48
+    ],
+    "fundo": "liso",
+    "camadas": []
+  },
+  "passos": null,
+  "guidance": null,
+  "referencias": []
+}
