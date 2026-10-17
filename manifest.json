@@ -1,0 +1,120 @@
+{
+  "pedido": "nome-laco-fita",
+  "titulo": "Ornamento de nome — laco-fita",
+  "tipo": "emblema",
+  "tamanho_final": 1024,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 17041,
+      "passos": null,
+      "segundos": 27.7,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "nome-laco-fita--v01--1024.png",
+          "bytes": 510342
+        },
+        {
+          "arquivo": "nome-laco-fita--v01--1024.webp",
+          "bytes": 91898
+        },
+        {
+          "arquivo": "nome-laco-fita--v01--512.webp",
+          "bytes": 29408
+        },
+        {
+          "arquivo": "nome-laco-fita--v01--256.webp",
+          "bytes": 13438
+        },
+        {
+          "arquivo": "nome-laco-fita--v01--128.webp",
+          "bytes": 6494
+        },
+        {
+          "arquivo": "nome-laco-fita--v01--64.webp",
+          "bytes": 2856
+        }
+      ],
+      "segundos_pos": 33.8,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 17042,
+      "passos": null,
+      "segundos": 14.0,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "nome-laco-fita--v02--1024.png",
+          "bytes": 549129
+        },
+        {
+          "arquivo": "nome-laco-fita--v02--1024.webp",
+          "bytes": 94832
+        },
+        {
+          "arquivo": "nome-laco-fita--v02--512.webp",
+          "bytes": 29734
+        },
+        {
+          "arquivo": "nome-laco-fita--v02--256.webp",
+          "bytes": 13646
+        },
+        {
+          "arquivo": "nome-laco-fita--v02--128.webp",
+          "bytes": 6860
+        },
+        {
+          "arquivo": "nome-laco-fita--v02--64.webp",
+          "bytes": 2888
+        }
+      ],
+      "segundos_pos": 29.0,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 17043,
+      "passos": null,
+      "segundos": 15.9,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "nome-laco-fita--v03--1024.png",
+          "bytes": 483443
+        },
+        {
+          "arquivo": "nome-laco-fita--v03--1024.webp",
+          "bytes": 94320
+        },
+        {
+          "arquivo": "nome-laco-fita--v03--512.webp",
+          "bytes": 29634
+        },
+        {
+          "arquivo": "nome-laco-fita--v03--256.webp",
+          "bytes": 12582
+        },
+        {
+          "arquivo": "nome-laco-fita--v03--128.webp",
+          "bytes": 6524
+        },
+        {
+          "arquivo": "nome-laco-fita--v03--64.webp",
+          "bytes": 2922
+        }
+      ],
+      "segundos_pos": 29.0,
+      "avisos": []
+    }
+  ]
+}
