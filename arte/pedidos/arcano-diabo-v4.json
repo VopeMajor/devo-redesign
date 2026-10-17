@@ -1,0 +1,34 @@
+{
+  "id": "arcano-diabo-v4",
+  "titulo": "Arcano — Diabo v4 (asas de morcego, cabelo longo escuro, rosto marcante)",
+  "tipo": "ilustracao",
+  "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+  "prompt": "Dark fantasy character design concept art, painted, soft painterly render, highly detailed, isolated on a plain flat light gray background. A single tall, regal personification of the tarot Major Arcana THE DEVIL as an original fallen-angel woman: androgynous and elegant, pale porcelain skin, very long straight jet-black hair falling past the waist, parted in the middle, a striking, unusual, unforgettable face that is NOT a generic pretty face: very angular and severe, sharp high cheekbones, hollow cheeks, strong square jaw, a long straight nose, thin pale lips in a slight crooked knowing smirk, heavy-lidded eyes with pale silver irises and fully black sclera, almost no eyebrows, faint ash-grey freckles of soot under the eyes, a thin old scar through one eyebrow, ageless and unsettling, towering height and broad shoulders, wearing a sharp tailored black three-piece suit with a long black coat, a high collar and a thin silver chain at the waistcoat, no tunic, no robe. A pair of dark curling ram horns rising from her temples, and in addition to the horns, two enormous bat-like membranous wings behind her, half open, the thin leathery membrane dark charcoal with faint amethyst translucency where light passes through, long clawed finger-bones along the wing edges. One hand in her pocket, the other holding a lowered slender torch with a small ember flame. Broken silver chains hang loosely from her wrists leading off to nothing. Standing perfectly still in a front view, full body from head to feet, the whole figure fills about 85 percent of the image height, feet near the bottom edge, strong elegant silhouette. Muted palette of black, porcelain white, fog gray and champagne steel, with a subtle amethyst sheen in the wing shadows and a single small ember-orange accent in the flame. Soft studio key light from the upper left, gentle cool rim light, no cast shadow. No text, no letters, no card frame, no background, no other characters.",
+  "negative": "text, letters, watermark, signature, cropped, cut off feet, background scenery, multiple figures, cartoon, chibi, neon, saturated colors, robe, tunic, red dress, wine color, generic beautiful face, doll face, round face, soft features, smiling widely, makeup, lipstick, feathered wings, bird wings, angel wings, blonde hair, short hair",
+  "largura": 1024,
+  "altura": 1536,
+  "variacoes": [
+    {
+      "seed": 42151
+    },
+    {
+      "seed": 42152
+    },
+    {
+      "seed": 42153
+    },
+    {
+      "seed": 42154
+    }
+  ],
+  "pos": {
+    "remover_fundo": true,
+    "tamanho_final": 1536,
+    "margem": 0.03,
+    "derivados": [
+      1024,
+      768,
+      512
+    ]
+  }
+}
