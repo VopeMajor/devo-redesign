@@ -1,0 +1,9 @@
+[mini-pacto-carmesim] v01: @cf/black-forest-labs/flux-2-klein-4b seed=4221 1024x1024 passos=None (~104 neurônios)
+    ok em 30.8s, 1024x1024
+[mini-pacto-carmesim] v02: @cf/black-forest-labs/flux-2-klein-4b seed=4222 1024x1024 passos=None (~104 neurônios)
+    ok em 36.5s, 1024x1024
+[mini-pacto-carmesim] v03: @cf/black-forest-labs/flux-2-klein-4b seed=4223 1024x1024 passos=None (~104 neurônios)
+    ok em 18.6s, 1024x1024
+[mini-pacto-carmesim] v01: rembg:birefnet-general; 5.4% do ornamento ficou fora do quadro — reduza a janela ou peça mais margem no prompt
+[mini-pacto-carmesim] v02: rembg:birefnet-general; sem avisos
+[mini-pacto-carmesim] v03: rembg:birefnet-general; 1.5% do ornamento ficou fora do quadro — reduza a janela ou peça mais margem no prompt
