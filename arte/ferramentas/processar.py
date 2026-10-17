@@ -107,6 +107,7 @@ def zonas_quadriculado(rgb: np.ndarray) -> tuple[np.ndarray, np.ndarray, np.ndar
     ids = np.unique(rot_x[zona & (rot_x > 0)])
     ext = np.isin(rot_x, ids[ids > 0]) | zona
     ext = ndimage.binary_closing(ext, iterations=1) & (cand | xadrez)
+    zonas_quadriculado.padrao = xadrez & bimodal  # xadrez com o padrão claro/médio (para a beira)
     return zona, ext, xadrez
 
 
@@ -144,6 +145,9 @@ def remover_fundo(bruto: Image.Image, rgb: np.ndarray, pos: dict, tem_rembg: boo
             a_r, desc = (~ext).astype(np.float32), "quadriculado (teste, sem rembg)"
         a = np.maximum(a_r, cor.astype(np.float32))
         a[ext] = 0.0
+        # xadrez que o rembg manteve colado na beira (visto através da ponta de fitas translúcidas)
+        perto = ndimage.distance_transform_edt(~ext) < 14
+        a[zonas_quadriculado.padrao & perto & ~cor] = 0.0
         # xadrez visto através de véu tingido em qualquer lugar (o rembg costuma manter): claro, pouca cor,
         # textura claro/escuro na janela 9×9. Fitas e penas lisas ou coloridas não entram.
         g = lambda m: ndimage.uniform_filter(m.astype(np.float32), 9)  # noqa: E731
@@ -384,6 +388,28 @@ def recortar(im: Image.Image, S: int, margem: float, quadrado: bool) -> Image.Im
         tela = Image.new("RGBA", (nw + 2 * m, nh + 2 * m), (0, 0, 0, 0))
     tela.alpha_composite(obj, ((tela.width - nw) // 2, (tela.height - nh) // 2))
     return tela
+
+
+def polir_importado(final: Image.Image) -> tuple[Image.Image, dict]:
+    """Último passe dos importados: névoa neutra translúcida, pontinhos claros soltos na beira, ilhas minúsculas."""
+    arr = np.asarray(final, dtype=np.float32).copy()
+    rgb, a = arr[..., :3], arr[..., 3] / 255.0
+    lum = rgb @ np.array([0.299, 0.587, 0.114])
+    cr = rgb.max(-1) - rgb.min(-1)
+    nevoa = (a > 0) & (a < 0.9) & (cr <= 22) & (lum > 110)
+    a[nevoa] = 0
+    viz = ndimage.uniform_filter(a, 5)
+    pontos = (a > 0) & (cr <= 34) & (lum > 150) & (viz < 0.5)
+    a[pontos] = 0
+    rot, n = ndimage.label(a > 0.05)
+    ilhas = 0
+    if n:
+        ar = np.bincount(rot.ravel())
+        m = (ar[rot] < 24) & (rot > 0)
+        ilhas = int(m.sum())
+        a[m] = 0
+    arr[..., 3] = a * 255
+    return Image.fromarray(arr.round().astype(np.uint8), "RGBA"), {"nevoa_px": int(nevoa.sum()), "pontos_px": int(pontos.sum()), "ilhas_px": ilhas}
 
 
 def retocar(final: Image.Image, retoques: list[dict]) -> Image.Image:
@@ -757,6 +783,8 @@ def main() -> int:
                 borda = np.concatenate([fa[0], fa[-1], fa[:, 0], fa[:, -1]])
                 if (borda > 8).mean() > 0.02:
                     avisos.append("objeto encosta na borda — o gerador pode ter cortado a peça; peça mais margem")
+            if pos["fundo"] == "quadriculado":
+                final, reg["polimento"] = polir_importado(final)
             if pos.get("retoque"):
                 final = retocar(final, pos["retoque"])
                 reg["retoques"] = len(pos["retoque"])
