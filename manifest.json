@@ -1,0 +1,108 @@
+{
+  "pedido": "arcano-louco",
+  "titulo": "Arcano — louco (figura)",
+  "tipo": "ilustracao",
+  "tamanho_final": 1536,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 12001,
+      "passos": null,
+      "segundos": 3.1,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "arcano-louco--v01--1536.png",
+          "bytes": 1218271
+        },
+        {
+          "arquivo": "arcano-louco--v01--1536.webp",
+          "bytes": 261678
+        },
+        {
+          "arquivo": "arcano-louco--v01--1024.webp",
+          "bytes": 124422
+        },
+        {
+          "arquivo": "arcano-louco--v01--768.webp",
+          "bytes": 81788
+        },
+        {
+          "arquivo": "arcano-louco--v01--512.webp",
+          "bytes": 45128
+        }
+      ],
+      "segundos_pos": 38.2,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 12002,
+      "passos": null,
+      "segundos": 3.1,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "arcano-louco--v02--1536.png",
+          "bytes": 1169198
+        },
+        {
+          "arquivo": "arcano-louco--v02--1536.webp",
+          "bytes": 246896
+        },
+        {
+          "arquivo": "arcano-louco--v02--1024.webp",
+          "bytes": 121618
+        },
+        {
+          "arquivo": "arcano-louco--v02--768.webp",
+          "bytes": 81056
+        },
+        {
+          "arquivo": "arcano-louco--v02--512.webp",
+          "bytes": 45888
+        }
+      ],
+      "segundos_pos": 33.8,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 12003,
+      "passos": null,
+      "segundos": 3.7,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "arcano-louco--v03--1536.png",
+          "bytes": 1156334
+        },
+        {
+          "arquivo": "arcano-louco--v03--1536.webp",
+          "bytes": 250308
+        },
+        {
+          "arquivo": "arcano-louco--v03--1024.webp",
+          "bytes": 125632
+        },
+        {
+          "arquivo": "arcano-louco--v03--768.webp",
+          "bytes": 82326
+        },
+        {
+          "arquivo": "arcano-louco--v03--512.webp",
+          "bytes": 45856
+        }
+      ],
+      "segundos_pos": 33.0,
+      "avisos": []
+    }
+  ]
+}
