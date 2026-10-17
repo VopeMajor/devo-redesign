@@ -1,0 +1,47 @@
+{
+  "id": "camada-engrenagem-herdeiro",
+  "titulo": "Camada: engrenagem-herdeiro",
+  "tipo": "camada",
+  "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+  "prompt": "Fantasy RPG game asset, a single isolated animation part, painted, highly detailed, isolated on a plain flat light gray background, perfectly centered, seen exactly from the front, flat orthographic view, no perspective, no cast shadow: one ornate brass gear with fine engraved teeth and an openwork center, a tiny crown engraved on the hub and a small ruby set at the exact center, perfectly circular and symmetric. Nothing else in the image, generous empty margin, nothing cropped, no text, no numbers, no watermark.",
+  "negative": "text, letters, numbers, watermark, cropped, blurry, background scenery, shadow, people",
+  "largura": 1024,
+  "altura": 1024,
+  "variacoes": [
+    {
+      "seed": 9061,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "passos": null,
+      "largura": 1024,
+      "altura": 1024,
+      "prompt_extra": "",
+      "n": 1
+    },
+    {
+      "seed": 9062,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "passos": null,
+      "largura": 1024,
+      "altura": 1024,
+      "prompt_extra": "",
+      "n": 2
+    }
+  ],
+  "pos": {
+    "tamanho_final": 1024,
+    "margem": 0.02,
+    "derivados": [
+      512,
+      256,
+      128,
+      64
+    ],
+    "remover_fundo": true,
+    "modelo_fundo": "birefnet-general",
+    "fundo": "liso",
+    "camadas": []
+  },
+  "passos": null,
+  "guidance": null,
+  "referencias": []
+}

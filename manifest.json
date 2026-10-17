@@ -1,0 +1,83 @@
+{
+  "pedido": "camada-engrenagem-herdeiro",
+  "titulo": "Camada: engrenagem-herdeiro",
+  "tipo": "camada",
+  "tamanho_final": 1024,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 9061,
+      "passos": null,
+      "segundos": 18.8,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "camada-engrenagem-herdeiro--v01--1024.png",
+          "bytes": 1121650
+        },
+        {
+          "arquivo": "camada-engrenagem-herdeiro--v01--1024.webp",
+          "bytes": 236716
+        },
+        {
+          "arquivo": "camada-engrenagem-herdeiro--v01--512.webp",
+          "bytes": 79716
+        },
+        {
+          "arquivo": "camada-engrenagem-herdeiro--v01--256.webp",
+          "bytes": 31018
+        },
+        {
+          "arquivo": "camada-engrenagem-herdeiro--v01--128.webp",
+          "bytes": 12160
+        },
+        {
+          "arquivo": "camada-engrenagem-herdeiro--v01--64.webp",
+          "bytes": 4336
+        }
+      ],
+      "segundos_pos": 33.2,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 9062,
+      "passos": null,
+      "segundos": 17.2,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "camada-engrenagem-herdeiro--v02--1024.png",
+          "bytes": 1138198
+        },
+        {
+          "arquivo": "camada-engrenagem-herdeiro--v02--1024.webp",
+          "bytes": 235856
+        },
+        {
+          "arquivo": "camada-engrenagem-herdeiro--v02--512.webp",
+          "bytes": 78250
+        },
+        {
+          "arquivo": "camada-engrenagem-herdeiro--v02--256.webp",
+          "bytes": 31284
+        },
+        {
+          "arquivo": "camada-engrenagem-herdeiro--v02--128.webp",
+          "bytes": 12256
+        },
+        {
+          "arquivo": "camada-engrenagem-herdeiro--v02--64.webp",
+          "bytes": 4294
+        }
+      ],
+      "segundos_pos": 27.8,
+      "avisos": []
+    }
+  ]
+}

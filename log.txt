@@ -1,0 +1,6 @@
+[camada-engrenagem-herdeiro] v01: @cf/black-forest-labs/flux-2-klein-4b seed=9061 1024x1024 passos=None (~104 neurônios)
+    ok em 18.8s, 1024x1024
+[camada-engrenagem-herdeiro] v02: @cf/black-forest-labs/flux-2-klein-4b seed=9062 1024x1024 passos=None (~104 neurônios)
+    ok em 17.2s, 1024x1024
+[camada-engrenagem-herdeiro] v01: rembg:birefnet-general; sem avisos
+[camada-engrenagem-herdeiro] v02: rembg:birefnet-general; sem avisos
