@@ -1,0 +1,173 @@
+{
+  "pedido": "mini-asas-coruja",
+  "titulo": "asas-coruja — miniperfil (quadrada)",
+  "tipo": "moldura",
+  "tamanho_final": 1024,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 4251,
+      "passos": null,
+      "segundos": 22.9,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "miolo_aberto_por_cor": true,
+      "janela": {
+        "forma": "quadrado",
+        "centro_px": [
+          512.0,
+          512.0
+        ],
+        "lado_px": 560.1,
+        "raio_canto_px": 41.0,
+        "lado_fracao": 0.547
+      },
+      "reencaixe": {
+        "escala": 1.4383,
+        "cobertura_aro": 1.0
+      },
+      "ornamento_cortado": 0.028,
+      "arquivos": [
+        {
+          "arquivo": "mini-asas-coruja--v01--1024.png",
+          "bytes": 533689
+        },
+        {
+          "arquivo": "mini-asas-coruja--v01--1024.webp",
+          "bytes": 78136
+        },
+        {
+          "arquivo": "mini-asas-coruja--v01--512.webp",
+          "bytes": 29770
+        },
+        {
+          "arquivo": "mini-asas-coruja--v01--256.webp",
+          "bytes": 12528
+        },
+        {
+          "arquivo": "mini-asas-coruja--v01--96.webp",
+          "bytes": 3938
+        },
+        {
+          "arquivo": "mini-asas-coruja--v01--48.webp",
+          "bytes": 1732
+        }
+      ],
+      "segundos_pos": 30.6,
+      "avisos": [
+        "2.8% do ornamento ficou fora do quadro — reduza a janela ou peça mais margem no prompt"
+      ]
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 4252,
+      "passos": null,
+      "segundos": 19.8,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "miolo_aberto_por_cor": true,
+      "janela": {
+        "forma": "quadrado",
+        "centro_px": [
+          512.0,
+          512.0
+        ],
+        "lado_px": 560.1,
+        "raio_canto_px": 41.0,
+        "lado_fracao": 0.547
+      },
+      "reencaixe": {
+        "escala": 1.2393,
+        "cobertura_aro": 1.0
+      },
+      "ornamento_cortado": 0.0015,
+      "arquivos": [
+        {
+          "arquivo": "mini-asas-coruja--v02--1024.png",
+          "bytes": 510898
+        },
+        {
+          "arquivo": "mini-asas-coruja--v02--1024.webp",
+          "bytes": 83350
+        },
+        {
+          "arquivo": "mini-asas-coruja--v02--512.webp",
+          "bytes": 33030
+        },
+        {
+          "arquivo": "mini-asas-coruja--v02--256.webp",
+          "bytes": 13478
+        },
+        {
+          "arquivo": "mini-asas-coruja--v02--96.webp",
+          "bytes": 4120
+        },
+        {
+          "arquivo": "mini-asas-coruja--v02--48.webp",
+          "bytes": 1804
+        }
+      ],
+      "segundos_pos": 25.6,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 4253,
+      "passos": null,
+      "segundos": 27.9,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "miolo_aberto_por_cor": true,
+      "ilhas_removidas": 21,
+      "janela": {
+        "forma": "quadrado",
+        "centro_px": [
+          512.0,
+          512.0
+        ],
+        "lado_px": 560.1,
+        "raio_canto_px": 41.0,
+        "lado_fracao": 0.547
+      },
+      "reencaixe": {
+        "escala": 1.6455,
+        "cobertura_aro": 1.0
+      },
+      "ornamento_cortado": 0.1434,
+      "arquivos": [
+        {
+          "arquivo": "mini-asas-coruja--v03--1024.png",
+          "bytes": 646907
+        },
+        {
+          "arquivo": "mini-asas-coruja--v03--1024.webp",
+          "bytes": 83464
+        },
+        {
+          "arquivo": "mini-asas-coruja--v03--512.webp",
+          "bytes": 31502
+        },
+        {
+          "arquivo": "mini-asas-coruja--v03--256.webp",
+          "bytes": 12906
+        },
+        {
+          "arquivo": "mini-asas-coruja--v03--96.webp",
+          "bytes": 3986
+        },
+        {
+          "arquivo": "mini-asas-coruja--v03--48.webp",
+          "bytes": 1704
+        }
+      ],
+      "segundos_pos": 25.5,
+      "avisos": [
+        "14.3% do ornamento ficou fora do quadro — reduza a janela ou peça mais margem no prompt"
+      ]
+    }
+  ]
+}

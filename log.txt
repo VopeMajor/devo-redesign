@@ -1,0 +1,9 @@
+[mini-asas-coruja] v01: @cf/black-forest-labs/flux-2-klein-4b seed=4251 1024x1024 passos=None (~104 neurônios)
+    ok em 22.9s, 1024x1024
+[mini-asas-coruja] v02: @cf/black-forest-labs/flux-2-klein-4b seed=4252 1024x1024 passos=None (~104 neurônios)
+    ok em 19.8s, 1024x1024
+[mini-asas-coruja] v03: @cf/black-forest-labs/flux-2-klein-4b seed=4253 1024x1024 passos=None (~104 neurônios)
+    ok em 27.9s, 1024x1024
+[mini-asas-coruja] v01: rembg:birefnet-general; 2.8% do ornamento ficou fora do quadro — reduza a janela ou peça mais margem no prompt
+[mini-asas-coruja] v02: rembg:birefnet-general; sem avisos
+[mini-asas-coruja] v03: rembg:birefnet-general; 14.3% do ornamento ficou fora do quadro — reduza a janela ou peça mais margem no prompt
