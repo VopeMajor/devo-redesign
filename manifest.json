@@ -1,0 +1,120 @@
+{
+  "pedido": "ico-dracma-comum",
+  "titulo": "Calendário — ícone dracma-comum",
+  "tipo": "emblema",
+  "tamanho_final": 1024,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 10631,
+      "passos": null,
+      "segundos": 17.0,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "ico-dracma-comum--v01--1024.png",
+          "bytes": 925743
+        },
+        {
+          "arquivo": "ico-dracma-comum--v01--1024.webp",
+          "bytes": 129614
+        },
+        {
+          "arquivo": "ico-dracma-comum--v01--512.webp",
+          "bytes": 40280
+        },
+        {
+          "arquivo": "ico-dracma-comum--v01--256.webp",
+          "bytes": 16984
+        },
+        {
+          "arquivo": "ico-dracma-comum--v01--128.webp",
+          "bytes": 7294
+        },
+        {
+          "arquivo": "ico-dracma-comum--v01--64.webp",
+          "bytes": 2926
+        }
+      ],
+      "segundos_pos": 35.1,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 10632,
+      "passos": null,
+      "segundos": 16.1,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "ico-dracma-comum--v02--1024.png",
+          "bytes": 1218356
+        },
+        {
+          "arquivo": "ico-dracma-comum--v02--1024.webp",
+          "bytes": 199964
+        },
+        {
+          "arquivo": "ico-dracma-comum--v02--512.webp",
+          "bytes": 59364
+        },
+        {
+          "arquivo": "ico-dracma-comum--v02--256.webp",
+          "bytes": 20654
+        },
+        {
+          "arquivo": "ico-dracma-comum--v02--128.webp",
+          "bytes": 8154
+        },
+        {
+          "arquivo": "ico-dracma-comum--v02--64.webp",
+          "bytes": 3122
+        }
+      ],
+      "segundos_pos": 28.8,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 10633,
+      "passos": null,
+      "segundos": 15.5,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "ico-dracma-comum--v03--1024.png",
+          "bytes": 1142730
+        },
+        {
+          "arquivo": "ico-dracma-comum--v03--1024.webp",
+          "bytes": 171052
+        },
+        {
+          "arquivo": "ico-dracma-comum--v03--512.webp",
+          "bytes": 52100
+        },
+        {
+          "arquivo": "ico-dracma-comum--v03--256.webp",
+          "bytes": 18922
+        },
+        {
+          "arquivo": "ico-dracma-comum--v03--128.webp",
+          "bytes": 7920
+        },
+        {
+          "arquivo": "ico-dracma-comum--v03--64.webp",
+          "bytes": 2984
+        }
+      ],
+      "segundos_pos": 28.9,
+      "avisos": []
+    }
+  ]
+}

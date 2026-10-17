@@ -1,0 +1,9 @@
+[ico-dracma-comum] v01: @cf/black-forest-labs/flux-2-klein-4b seed=10631 1024x1024 passos=None (~104 neurônios)
+    ok em 17.0s, 1024x1024
+[ico-dracma-comum] v02: @cf/black-forest-labs/flux-2-klein-4b seed=10632 1024x1024 passos=None (~104 neurônios)
+    ok em 16.1s, 1024x1024
+[ico-dracma-comum] v03: @cf/black-forest-labs/flux-2-klein-4b seed=10633 1024x1024 passos=None (~104 neurônios)
+    ok em 15.5s, 1024x1024
+[ico-dracma-comum] v01: rembg:birefnet-general; sem avisos
+[ico-dracma-comum] v02: rembg:birefnet-general; sem avisos
+[ico-dracma-comum] v03: rembg:birefnet-general; sem avisos
