@@ -217,9 +217,9 @@
       "custoBase": 1,
       "arte": "palacio",
       "mapa": {
-        "x": 18,
-        "y": 68,
-        "escala": 0.68
+        "x": 17,
+        "y": 67,
+        "escala": 0.66
       },
       "provisorio": true,
       "andares": [
@@ -449,9 +449,9 @@
       "custoBase": 1,
       "arte": "picadeiro",
       "mapa": {
-        "x": 25,
-        "y": 88,
-        "escala": 0.56
+        "x": 40,
+        "y": 93,
+        "escala": 0.54
       },
       "provisorio": true,
       "andares": [

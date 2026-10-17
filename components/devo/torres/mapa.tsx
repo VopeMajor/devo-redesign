@@ -68,24 +68,35 @@ export function colocarPlacas(torres: TorreEstado[], lug: Record<string, Lugar>)
     const nome = rotulo(t)
     const { w, h } = placaTam(nome, t.tipo === 'principal')
     const cx0 = l.x
+    const bx = caixaTorre(t, l)
     const tentativas: [number, number][] = [
       [cx0, l.y + 10 + h / 2],
       [cx0 - w * 0.55, l.y + 10 + h / 2],
       [cx0 + w * 0.55, l.y + 10 + h / 2],
+      [bx.x1 + 6 + w / 2, l.y - h / 2],
+      [bx.x0 - 6 - w / 2, l.y - h / 2],
       [cx0, l.y + 34 + h / 2],
       [cx0 - w * 0.7, l.y + 30 + h / 2],
       [cx0 + w * 0.7, l.y + 30 + h / 2],
-      [cx0, caixaTorre(t, l).y0 - 8 - h / 2],
+      [bx.x1 + 6 + w / 2, l.y - h * 1.8],
+      [bx.x0 - 6 - w / 2, l.y - h * 1.8],
     ]
+    // margem das bordas: o mapa esmaece nos 6 % de cada lado
+    const MX = MAPA_W * 0.065
+    const area = (a: Caixa, b: Caixa) => Math.max(0, Math.min(a.x1, b.x1) - Math.max(a.x0, b.x0)) * Math.max(0, Math.min(a.y1, b.y1) - Math.max(a.y0, b.y0))
     let escolhida = tentativas[0]
-    for (const [cx, cy] of tentativas) {
-      const x = Math.min(MAPA_W - w / 2 - 4, Math.max(w / 2 + 4, cx))
+    let melhor = Infinity
+    for (const [i, [cx, cy]] of tentativas.entries()) {
+      const x = Math.min(MAPA_W - MX - w / 2, Math.max(MX + w / 2, cx))
       const y = Math.min(MAPA_H - h / 2 - 4, Math.max(h / 2 + 4, cy))
       const c = { x0: x - w / 2, x1: x + w / 2, y0: y - h / 2, y1: y + h / 2 }
-      if (!caixas.some((k) => cruza(c, k)) && !feitas.some((k) => cruza(c, k))) {
+      // custo = área sobreposta (ilustrações pesam o dobro) + uma pitada pela ordem de preferência
+      const custo = caixas.reduce((a, k) => a + area(c, k) * 2, 0) + feitas.reduce((a, k) => a + area(c, k) * 3, 0) + i * 0.5
+      if (custo < melhor) {
+        melhor = custo
         escolhida = [x, y]
-        break
       }
+      if (custo === i * 0.5) break
     }
     const [cx, cy] = escolhida
     feitas.push({ x0: cx - w / 2, x1: cx + w / 2, y0: cy - h / 2, y1: cy + h / 2 })
