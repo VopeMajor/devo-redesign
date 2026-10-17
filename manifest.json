@@ -1,0 +1,120 @@
+{
+  "pedido": "emblema-fortuna-profana",
+  "titulo": "Fortuna Profana",
+  "tipo": "emblema",
+  "tamanho_final": 1024,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 7121,
+      "passos": null,
+      "segundos": 15.6,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "emblema-fortuna-profana--v01--1024.png",
+          "bytes": 963368
+        },
+        {
+          "arquivo": "emblema-fortuna-profana--v01--1024.webp",
+          "bytes": 139924
+        },
+        {
+          "arquivo": "emblema-fortuna-profana--v01--512.webp",
+          "bytes": 50638
+        },
+        {
+          "arquivo": "emblema-fortuna-profana--v01--256.webp",
+          "bytes": 21570
+        },
+        {
+          "arquivo": "emblema-fortuna-profana--v01--96.webp",
+          "bytes": 5938
+        },
+        {
+          "arquivo": "emblema-fortuna-profana--v01--48.webp",
+          "bytes": 2288
+        }
+      ],
+      "segundos_pos": 30.4,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 7122,
+      "passos": null,
+      "segundos": 14.1,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "emblema-fortuna-profana--v02--1024.png",
+          "bytes": 1077621
+        },
+        {
+          "arquivo": "emblema-fortuna-profana--v02--1024.webp",
+          "bytes": 175548
+        },
+        {
+          "arquivo": "emblema-fortuna-profana--v02--512.webp",
+          "bytes": 61900
+        },
+        {
+          "arquivo": "emblema-fortuna-profana--v02--256.webp",
+          "bytes": 24632
+        },
+        {
+          "arquivo": "emblema-fortuna-profana--v02--96.webp",
+          "bytes": 6232
+        },
+        {
+          "arquivo": "emblema-fortuna-profana--v02--48.webp",
+          "bytes": 2344
+        }
+      ],
+      "segundos_pos": 25.1,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 7123,
+      "passos": null,
+      "segundos": 25.8,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "emblema-fortuna-profana--v03--1024.png",
+          "bytes": 1084326
+        },
+        {
+          "arquivo": "emblema-fortuna-profana--v03--1024.webp",
+          "bytes": 190634
+        },
+        {
+          "arquivo": "emblema-fortuna-profana--v03--512.webp",
+          "bytes": 63714
+        },
+        {
+          "arquivo": "emblema-fortuna-profana--v03--256.webp",
+          "bytes": 25650
+        },
+        {
+          "arquivo": "emblema-fortuna-profana--v03--96.webp",
+          "bytes": 6592
+        },
+        {
+          "arquivo": "emblema-fortuna-profana--v03--48.webp",
+          "bytes": 2458
+        }
+      ],
+      "segundos_pos": 25.6,
+      "avisos": []
+    }
+  ]
+}

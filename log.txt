@@ -1,0 +1,9 @@
+[emblema-fortuna-profana] v01: @cf/black-forest-labs/flux-2-klein-4b seed=7121 1024x1024 passos=None (~104 neurônios)
+    ok em 15.6s, 1024x1024
+[emblema-fortuna-profana] v02: @cf/black-forest-labs/flux-2-klein-4b seed=7122 1024x1024 passos=None (~104 neurônios)
+    ok em 14.1s, 1024x1024
+[emblema-fortuna-profana] v03: @cf/black-forest-labs/flux-2-klein-4b seed=7123 1024x1024 passos=None (~104 neurônios)
+    ok em 25.8s, 1024x1024
+[emblema-fortuna-profana] v01: rembg:birefnet-general; sem avisos
+[emblema-fortuna-profana] v02: rembg:birefnet-general; sem avisos
+[emblema-fortuna-profana] v03: rembg:birefnet-general; sem avisos
