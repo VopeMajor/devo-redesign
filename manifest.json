@@ -1,0 +1,120 @@
+{
+  "pedido": "arcano-sigilo-justica",
+  "titulo": "Arcano — justica (sigilo)",
+  "tipo": "emblema",
+  "tamanho_final": 1024,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 13111,
+      "passos": null,
+      "segundos": 9.9,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "arcano-sigilo-justica--v01--1024.png",
+          "bytes": 370375
+        },
+        {
+          "arquivo": "arcano-sigilo-justica--v01--1024.webp",
+          "bytes": 97796
+        },
+        {
+          "arquivo": "arcano-sigilo-justica--v01--512.webp",
+          "bytes": 33936
+        },
+        {
+          "arquivo": "arcano-sigilo-justica--v01--256.webp",
+          "bytes": 14412
+        },
+        {
+          "arquivo": "arcano-sigilo-justica--v01--128.webp",
+          "bytes": 6718
+        },
+        {
+          "arquivo": "arcano-sigilo-justica--v01--64.webp",
+          "bytes": 2818
+        }
+      ],
+      "segundos_pos": 18.4,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 13112,
+      "passos": null,
+      "segundos": 11.9,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "arcano-sigilo-justica--v02--1024.png",
+          "bytes": 316169
+        },
+        {
+          "arquivo": "arcano-sigilo-justica--v02--1024.webp",
+          "bytes": 77486
+        },
+        {
+          "arquivo": "arcano-sigilo-justica--v02--512.webp",
+          "bytes": 28138
+        },
+        {
+          "arquivo": "arcano-sigilo-justica--v02--256.webp",
+          "bytes": 12102
+        },
+        {
+          "arquivo": "arcano-sigilo-justica--v02--128.webp",
+          "bytes": 5598
+        },
+        {
+          "arquivo": "arcano-sigilo-justica--v02--64.webp",
+          "bytes": 2550
+        }
+      ],
+      "segundos_pos": 15.1,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 13113,
+      "passos": null,
+      "segundos": 10.4,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "arcano-sigilo-justica--v03--1024.png",
+          "bytes": 297604
+        },
+        {
+          "arquivo": "arcano-sigilo-justica--v03--1024.webp",
+          "bytes": 79336
+        },
+        {
+          "arquivo": "arcano-sigilo-justica--v03--512.webp",
+          "bytes": 27948
+        },
+        {
+          "arquivo": "arcano-sigilo-justica--v03--256.webp",
+          "bytes": 11816
+        },
+        {
+          "arquivo": "arcano-sigilo-justica--v03--128.webp",
+          "bytes": 5610
+        },
+        {
+          "arquivo": "arcano-sigilo-justica--v03--64.webp",
+          "bytes": 2384
+        }
+      ],
+      "segundos_pos": 14.8,
+      "avisos": []
+    }
+  ]
+}

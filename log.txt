@@ -1,0 +1,9 @@
+[arcano-sigilo-justica] v01: @cf/black-forest-labs/flux-2-klein-4b seed=13111 1024x1024 passos=None (~104 neurônios)
+    ok em 9.9s, 1024x1024
+[arcano-sigilo-justica] v02: @cf/black-forest-labs/flux-2-klein-4b seed=13112 1024x1024 passos=None (~104 neurônios)
+    ok em 11.9s, 1024x1024
+[arcano-sigilo-justica] v03: @cf/black-forest-labs/flux-2-klein-4b seed=13113 1024x1024 passos=None (~104 neurônios)
+    ok em 10.4s, 1024x1024
+[arcano-sigilo-justica] v01: rembg:birefnet-general; sem avisos
+[arcano-sigilo-justica] v02: rembg:birefnet-general; sem avisos
+[arcano-sigilo-justica] v03: rembg:birefnet-general; sem avisos
