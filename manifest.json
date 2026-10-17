@@ -1,0 +1,120 @@
+{
+  "pedido": "nome-chama-eter",
+  "titulo": "Ornamento de nome — chama-eter",
+  "tipo": "emblema",
+  "tamanho_final": 1024,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 17051,
+      "passos": null,
+      "segundos": 19.3,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "nome-chama-eter--v01--1024.png",
+          "bytes": 597634
+        },
+        {
+          "arquivo": "nome-chama-eter--v01--1024.webp",
+          "bytes": 78544
+        },
+        {
+          "arquivo": "nome-chama-eter--v01--512.webp",
+          "bytes": 23578
+        },
+        {
+          "arquivo": "nome-chama-eter--v01--256.webp",
+          "bytes": 10864
+        },
+        {
+          "arquivo": "nome-chama-eter--v01--128.webp",
+          "bytes": 5082
+        },
+        {
+          "arquivo": "nome-chama-eter--v01--64.webp",
+          "bytes": 2254
+        }
+      ],
+      "segundos_pos": 32.7,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 17052,
+      "passos": null,
+      "segundos": 10.0,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "nome-chama-eter--v02--1024.png",
+          "bytes": 303482
+        },
+        {
+          "arquivo": "nome-chama-eter--v02--1024.webp",
+          "bytes": 58612
+        },
+        {
+          "arquivo": "nome-chama-eter--v02--512.webp",
+          "bytes": 20222
+        },
+        {
+          "arquivo": "nome-chama-eter--v02--256.webp",
+          "bytes": 8156
+        },
+        {
+          "arquivo": "nome-chama-eter--v02--128.webp",
+          "bytes": 4056
+        },
+        {
+          "arquivo": "nome-chama-eter--v02--64.webp",
+          "bytes": 1964
+        }
+      ],
+      "segundos_pos": 26.3,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 17053,
+      "passos": null,
+      "segundos": 22.9,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "nome-chama-eter--v03--1024.png",
+          "bytes": 638797
+        },
+        {
+          "arquivo": "nome-chama-eter--v03--1024.webp",
+          "bytes": 83508
+        },
+        {
+          "arquivo": "nome-chama-eter--v03--512.webp",
+          "bytes": 27784
+        },
+        {
+          "arquivo": "nome-chama-eter--v03--256.webp",
+          "bytes": 12914
+        },
+        {
+          "arquivo": "nome-chama-eter--v03--128.webp",
+          "bytes": 5900
+        },
+        {
+          "arquivo": "nome-chama-eter--v03--64.webp",
+          "bytes": 2638
+        }
+      ],
+      "segundos_pos": 27.0,
+      "avisos": []
+    }
+  ]
+}

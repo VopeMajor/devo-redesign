@@ -1,0 +1,9 @@
+[nome-chama-eter] v01: @cf/black-forest-labs/flux-2-klein-4b seed=17051 1024x1024 passos=None (~104 neurônios)
+    ok em 19.3s, 1024x1024
+[nome-chama-eter] v02: @cf/black-forest-labs/flux-2-klein-4b seed=17052 1024x1024 passos=None (~104 neurônios)
+    ok em 10.0s, 1024x1024
+[nome-chama-eter] v03: @cf/black-forest-labs/flux-2-klein-4b seed=17053 1024x1024 passos=None (~104 neurônios)
+    ok em 22.9s, 1024x1024
+[nome-chama-eter] v01: rembg:birefnet-general; sem avisos
+[nome-chama-eter] v02: rembg:birefnet-general; sem avisos
+[nome-chama-eter] v03: rembg:birefnet-general; sem avisos

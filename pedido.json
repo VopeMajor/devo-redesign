@@ -1,0 +1,56 @@
+{
+  "id": "nome-chama-eter",
+  "titulo": "Ornamento de nome — chama-eter",
+  "tipo": "emblema",
+  "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+  "prompt": "Fantasy RPG game icon, painted, highly detailed, isolated on a plain flat light gray background, one small ornament centered, crisp silhouette readable at 24 pixels, no text: a tiny pale violet ethereal flame. Palette: porcelain white and veined marble with a dark interior, accents of soft amethyst violet and champagne steel (pale warm brushed metal), low saturation, no wine red, no bright gold, no neon. Painterly, highly detailed, elegant. ",
+  "negative": "text, letters, numbers, watermark, people, characters, faces, neon, saturated colors",
+  "largura": 1024,
+  "altura": 1024,
+  "variacoes": [
+    {
+      "seed": 17051,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "passos": null,
+      "largura": 1024,
+      "altura": 1024,
+      "prompt_extra": "",
+      "n": 1
+    },
+    {
+      "seed": 17052,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "passos": null,
+      "largura": 1024,
+      "altura": 1024,
+      "prompt_extra": "",
+      "n": 2
+    },
+    {
+      "seed": 17053,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "passos": null,
+      "largura": 1024,
+      "altura": 1024,
+      "prompt_extra": "",
+      "n": 3
+    }
+  ],
+  "pos": {
+    "tamanho_final": 1024,
+    "margem": 0.06,
+    "derivados": [
+      512,
+      256,
+      128,
+      64
+    ],
+    "remover_fundo": true,
+    "modelo_fundo": "birefnet-general",
+    "fundo": "liso",
+    "camadas": []
+  },
+  "passos": null,
+  "guidance": null,
+  "referencias": []
+}
