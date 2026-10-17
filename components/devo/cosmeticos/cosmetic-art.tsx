@@ -6,6 +6,7 @@ import { type CSSProperties, type ReactNode, useId, useMemo } from 'react'
 import { type ArteImagem, type Camada, type CosmeticoDef, SELO_ANFITRIAO, srcSetImagem, urlImagem, type Visual } from '@/lib/devo/cosmeticos'
 import { cn } from '@/lib/utils'
 import { type Arte, BALOES, EFEITOS, EMBLEMAS, MOLDURAS, parseAsset } from './art'
+import { propsEstiloNome } from './estilo-nome'
 import { useAnimarCosmeticos, useCatalogo } from './use-cosmeticos'
 
 /** Injeta uma arte SVG (marcação gerada por nós, nunca do usuário) com ids únicos por instância. */
@@ -262,15 +263,23 @@ export function NomeVisual({
   const emb = visual?.emb ? mapa.get(visual.emb) : null
   const selo = visual?.anfitriao ? mapa.get(SELO_ANFITRIAO) : null
   const efClasse = classeEfeito(ef)
+  // estilo do nome (fonte + cor/gradiente + efeito); o Anfitrião mantém a tipografia própria do cargo
+  const estilo = !visual?.anfitriao && ef?.nome ? propsEstiloNome(ef.nome, animar) : null
   return (
     <span className={cn('inline-flex min-w-0 max-w-full items-center gap-1 align-baseline', className)}>
       {selo && <Emblema def={selo} tamanho={tamanhoEmblema} animar={animar} />}
-      <span
-        className={cn('cos-nome truncate', visual?.anfitriao && 'cos-anfitriao', !visual?.anfitriao && efClasse, animar && efClasse && 'cos-anim')}
-        style={!efClasse && !visual?.anfitriao && cor ? { color: cor } : undefined}
-      >
-        {nome}
-      </span>
+      {estilo ? (
+        <span className={cn('cos-nome truncate', estilo.className)} style={estilo.style}>
+          {nome}
+        </span>
+      ) : (
+        <span
+          className={cn('cos-nome truncate', visual?.anfitriao && 'cos-anfitriao', !visual?.anfitriao && efClasse, animar && efClasse && 'cos-anim')}
+          style={!efClasse && !visual?.anfitriao && cor ? { color: cor } : undefined}
+        >
+          {nome}
+        </span>
+      )}
       {!semEmblema && emb && <Emblema def={emb} tamanho={tamanhoEmblema} animar={animar} />}
     </span>
   )
@@ -308,6 +317,20 @@ export function BalaoChat({ def, children, className, animar }: { def: Cosmetico
       </div>
     )
   }
+  const prov = def?.balaoProv
+  if (def && prov && !b && !def.imagem) {
+    // balão provisório (cores do catálogo) até a arte pintada chegar
+    return (
+      <div
+        className={cn('relative px-4 py-2.5', className)}
+        style={{ background: `linear-gradient(180deg, ${prov.fundo}, color-mix(in srgb, ${prov.fundo} 82%, #000))`, color: prov.texto, boxShadow: `inset 0 0 0 1px ${prov.borda}, inset 0 0 0 3px transparent, inset 0 0 0 4px ${prov.filete}, 0 3px 10px rgba(0,0,0,.35)` }}
+      >
+        <span aria-hidden="true" className="pointer-events-none absolute -left-1 -top-1 size-2.5 rotate-45" style={{ background: prov.filete, boxShadow: `0 0 0 1px ${prov.borda}` }} />
+        <span aria-hidden="true" className="pointer-events-none absolute -bottom-1 -right-1 size-2.5 rotate-45" style={{ background: prov.filete, boxShadow: `0 0 0 1px ${prov.borda}` }} />
+        <div className="relative">{children}</div>
+      </div>
+    )
+  }
   if (!def || (!b && !/^(\/|https:)/.test(def.asset))) return <div className={className}>{children}</div>
   if (!b) {
     return (
@@ -332,6 +355,7 @@ export function BalaoChat({ def, children, className, animar }: { def: Cosmetico
 /** Cor do texto do balão (para o nome/horário dentro dele). */
 export function corDoBalao(def: CosmeticoDef | null | undefined): string | null {
   if (def?.imagem?.slice) return def.imagem.slice.texto ?? null
+  if (def?.balaoProv) return def.balaoProv.texto
   const a = def ? parseAsset(def.asset) : null
   return a?.grupo === 'balao' ? (BALOES[a.id]?.texto ?? null) : null
 }

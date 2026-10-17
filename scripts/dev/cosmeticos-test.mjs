@@ -189,6 +189,37 @@ await test('foto do perfil (rota /api/record avatar): sessão, tipo, conteúdo, 
   assert(img.status === 200, `foto servida: ${img.status}`)
 })
 
+await test('nome e borda (pedido 17/10): só valores das listas fixas; borda exige posse; visual público leva a borda', async () => {
+  const r = await j1.get('/api/cosmeticos?view=catalogo')
+  ok200(r, 'catálogo')
+  const by = new Map(r.json.catalogo.map((x) => [x.key, x]))
+  const champ = by.get('cosmetico:nome-champanhe')
+  assert(champ?.categoria === 'efeito' && champ.nome?.fonte === 'classica' && champ.nome.efeito === 'gradiente-movel', `nome: ${JSON.stringify(champ?.nome)}`)
+  const bordas = r.json.catalogo.filter((x) => x.categoria === 'borda')
+  assert(bordas.length >= 7 && bordas.every((b) => b.borda?.estilo), `bordas: ${bordas.length}`)
+  assert(by.get('cosmetico:balao-veu-ametista')?.balaoProv?.texto === '#efe9ff', 'balão provisório')
+  // catálogo com valores fora da lista: o cliente não recebe nada aplicável
+  const mal = `cosmetico:teste-nome-${sfx}`
+  await q(`INSERT INTO item_defs (key, kind, name, rarity, stackable, meta) VALUES ($1, 'cosmetico', 'Mal', 'comum', false, $2)`, [
+    mal,
+    JSON.stringify({ categoria: 'efeito', asset: 'devo:nome/mal', nome: { fonte: 'x;}</style>', cores: ['red;background:url(//x)', '#12345g'], efeito: 'javascript' } }),
+  ])
+  const r2 = await j1.get('/api/cosmeticos?view=catalogo')
+  const m = r2.json.catalogo.find((x) => x.key === mal)
+  assert(m && m.nome === null, `nome malicioso deveria virar null: ${JSON.stringify(m?.nome)}`)
+  await q('DELETE FROM item_defs WHERE key = $1', [mal])
+  // borda sem posse: recusada; com posse: equipa e aparece no visual público
+  const semPosse = await j1.cos({ action: 'equipar', slot: 'borda', key: 'cosmetico:borda-constelacao' })
+  assert(semPosse.status === 403, `borda sem posse: ${semPosse.status}`)
+  await q("SELECT devo_item_grant($1, 'cosmetico:borda-aco-escovado', 1, 'recompensa', NULL, NULL, $2)", [j1.id, `teste-borda:${sfx}`])
+  ok200(await j1.cos({ action: 'equipar', slot: 'borda', key: 'cosmetico:borda-aco-escovado' }), 'equipa borda')
+  const errado = await j1.cos({ action: 'equipar', slot: 'efeito', key: 'cosmetico:borda-aco-escovado' })
+  assert(errado.status >= 400, 'borda não entra no espaço do nome')
+  const v = await j2.get(`/api/cosmeticos?view=visuais&ids=${j1.id}`)
+  assert(v.json.visuais[0].borda === 'cosmetico:borda-aco-escovado', `visual: ${v.text}`)
+  ok200(await j1.cos({ action: 'equipar', slot: 'borda', key: null }), 'desequipa borda')
+})
+
 await test('jogador não equipa o que não tem; nem item de outra categoria; nem o Selo automático', async () => {
   const r = await j1.cos({ action: 'equipar', slot: 'moldura_avatar', key: MOLDURA })
   assert(r.status === 403, `sem posse: ${r.status} ${r.text}`)
@@ -250,7 +281,7 @@ await test('payload público sem cargo de Owner (visuais, chat, miniperfil); Anf
   assert(o.av === ARCANO && o.anfitriao === false, `owner aparece como jogador com o que equipou: ${JSON.stringify(o)}`)
   assert(a.anfitriao === true, 'anfitrião público')
   assert(!/owner|admin|livre|cargo|role/i.test(v.text), `payload de visuais vaza cargo: ${v.text.slice(0, 300)}`)
-  assert(Object.keys(o).sort().join() === 'anfitriao,av,bal,ef,emb,foto,id,mini', `campos do visual: ${Object.keys(o)}`)
+  assert(Object.keys(o).sort().join() === 'anfitriao,av,bal,borda,ef,emb,foto,id,mini', `campos do visual: ${Object.keys(o)}`)
   // A mesa (lobby) é só registro: a mensagem digitada é recusada e a linha entra direto no banco.
   assert((await owner.req('POST', '/api/arcade', { action: 'chat', channel: 'lobby', body: `teste ${sfx}` })).status === 403, 'lobby recusa mensagem digitada')
   await q('INSERT INTO arcade_chat (channel, author, player_id, body) VALUES ($1,$2,$3,$4)', [`match-cos-${sfx}`, owner.name, owner.id, `teste ${sfx}`])
