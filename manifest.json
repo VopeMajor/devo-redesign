@@ -1,0 +1,145 @@
+{
+  "pedido": "arcano-diabo-v4",
+  "titulo": "Arcano — Diabo v4 (asas de morcego, cabelo longo escuro, rosto marcante)",
+  "tipo": "ilustracao",
+  "tamanho_final": 1536,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 42151,
+      "passos": null,
+      "segundos": 3.0,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "ilhas_removidas": 4,
+      "arquivos": [
+        {
+          "arquivo": "arcano-diabo-v4--v01--1536.png",
+          "bytes": 1089342
+        },
+        {
+          "arquivo": "arcano-diabo-v4--v01--1536.webp",
+          "bytes": 180516
+        },
+        {
+          "arquivo": "arcano-diabo-v4--v01--1024.webp",
+          "bytes": 89324
+        },
+        {
+          "arquivo": "arcano-diabo-v4--v01--768.webp",
+          "bytes": 61768
+        },
+        {
+          "arquivo": "arcano-diabo-v4--v01--512.webp",
+          "bytes": 36834
+        }
+      ],
+      "segundos_pos": 47.2,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 42152,
+      "passos": null,
+      "segundos": 3.5,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "ilhas_removidas": 1,
+      "arquivos": [
+        {
+          "arquivo": "arcano-diabo-v4--v02--1536.png",
+          "bytes": 986292
+        },
+        {
+          "arquivo": "arcano-diabo-v4--v02--1536.webp",
+          "bytes": 181920
+        },
+        {
+          "arquivo": "arcano-diabo-v4--v02--1024.webp",
+          "bytes": 88220
+        },
+        {
+          "arquivo": "arcano-diabo-v4--v02--768.webp",
+          "bytes": 60332
+        },
+        {
+          "arquivo": "arcano-diabo-v4--v02--512.webp",
+          "bytes": 36078
+        }
+      ],
+      "segundos_pos": 29.2,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 42153,
+      "passos": null,
+      "segundos": 3.1,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "ilhas_removidas": 4,
+      "arquivos": [
+        {
+          "arquivo": "arcano-diabo-v4--v03--1536.png",
+          "bytes": 1133502
+        },
+        {
+          "arquivo": "arcano-diabo-v4--v03--1536.webp",
+          "bytes": 182410
+        },
+        {
+          "arquivo": "arcano-diabo-v4--v03--1024.webp",
+          "bytes": 87032
+        },
+        {
+          "arquivo": "arcano-diabo-v4--v03--768.webp",
+          "bytes": 61102
+        },
+        {
+          "arquivo": "arcano-diabo-v4--v03--512.webp",
+          "bytes": 34988
+        }
+      ],
+      "segundos_pos": 28.7,
+      "avisos": []
+    },
+    {
+      "nome": "v04",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 42154,
+      "passos": null,
+      "segundos": 3.3,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "ilhas_removidas": 1,
+      "arquivos": [
+        {
+          "arquivo": "arcano-diabo-v4--v04--1536.png",
+          "bytes": 1077995
+        },
+        {
+          "arquivo": "arcano-diabo-v4--v04--1536.webp",
+          "bytes": 181300
+        },
+        {
+          "arquivo": "arcano-diabo-v4--v04--1024.webp",
+          "bytes": 89844
+        },
+        {
+          "arquivo": "arcano-diabo-v4--v04--768.webp",
+          "bytes": 62500
+        },
+        {
+          "arquivo": "arcano-diabo-v4--v04--512.webp",
+          "bytes": 36438
+        }
+      ],
+      "segundos_pos": 29.3,
+      "avisos": []
+    }
+  ]
+}

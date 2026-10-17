@@ -1,0 +1,12 @@
+[arcano-diabo-v4] v01: @cf/black-forest-labs/flux-2-klein-9b seed=42151 1024x1536 passos=None (~1,455 neurônios)
+    ok em 3.0s, 1024x1536
+[arcano-diabo-v4] v02: @cf/black-forest-labs/flux-2-klein-9b seed=42152 1024x1536 passos=None (~1,455 neurônios)
+    ok em 3.5s, 1024x1536
+[arcano-diabo-v4] v03: @cf/black-forest-labs/flux-2-klein-9b seed=42153 1024x1536 passos=None (~1,455 neurônios)
+    ok em 3.1s, 1024x1536
+[arcano-diabo-v4] v04: @cf/black-forest-labs/flux-2-klein-9b seed=42154 1024x1536 passos=None (~1,455 neurônios)
+    ok em 3.3s, 1024x1536
+[arcano-diabo-v4] v01: rembg:birefnet-general; sem avisos
+[arcano-diabo-v4] v02: rembg:birefnet-general; sem avisos
+[arcano-diabo-v4] v03: rembg:birefnet-general; sem avisos
+[arcano-diabo-v4] v04: rembg:birefnet-general; sem avisos
