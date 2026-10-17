@@ -1,0 +1,9 @@
+[torre-imperador] v01: @cf/black-forest-labs/flux-2-klein-4b seed=5201 1024x1536 passos=None (~156 neurônios)
+    ok em 39.5s, 1024x1536
+[torre-imperador] v02: @cf/black-forest-labs/flux-2-klein-4b seed=5202 1024x1536 passos=None (~156 neurônios)
+    ok em 30.2s, 1024x1536
+[torre-imperador] v03: @cf/black-forest-labs/flux-2-klein-4b seed=5203 1024x1536 passos=None (~156 neurônios)
+    ok em 26.6s, 1024x1536
+[torre-imperador] v01: rembg:birefnet-general; sem avisos
+[torre-imperador] v02: rembg:birefnet-general; sem avisos
+[torre-imperador] v03: rembg:birefnet-general; sem avisos

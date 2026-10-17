@@ -1,0 +1,121 @@
+{
+  "pedido": "torre-imperador",
+  "titulo": "Torre do Imperador (palácio do Galo)",
+  "tipo": "ilustracao",
+  "tamanho_final": 1536,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 5201,
+      "passos": null,
+      "segundos": 39.5,
+      "neuronios_estimados": 156,
+      "fundo": "rembg:birefnet-general",
+      "ilhas_removidas": 1,
+      "arquivos": [
+        {
+          "arquivo": "torre-imperador--v01--1536.png",
+          "bytes": 1061200
+        },
+        {
+          "arquivo": "torre-imperador--v01--1536.webp",
+          "bytes": 179814
+        },
+        {
+          "arquivo": "torre-imperador--v01--1024.webp",
+          "bytes": 89814
+        },
+        {
+          "arquivo": "torre-imperador--v01--512.webp",
+          "bytes": 35154
+        },
+        {
+          "arquivo": "torre-imperador--v01--256.webp",
+          "bytes": 12850
+        },
+        {
+          "arquivo": "torre-imperador--v01--96.webp",
+          "bytes": 3428
+        }
+      ],
+      "segundos_pos": 34.6,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 5202,
+      "passos": null,
+      "segundos": 30.2,
+      "neuronios_estimados": 156,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "torre-imperador--v02--1536.png",
+          "bytes": 1058879
+        },
+        {
+          "arquivo": "torre-imperador--v02--1536.webp",
+          "bytes": 184420
+        },
+        {
+          "arquivo": "torre-imperador--v02--1024.webp",
+          "bytes": 90116
+        },
+        {
+          "arquivo": "torre-imperador--v02--512.webp",
+          "bytes": 33908
+        },
+        {
+          "arquivo": "torre-imperador--v02--256.webp",
+          "bytes": 12202
+        },
+        {
+          "arquivo": "torre-imperador--v02--96.webp",
+          "bytes": 3412
+        }
+      ],
+      "segundos_pos": 28.5,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 5203,
+      "passos": null,
+      "segundos": 26.6,
+      "neuronios_estimados": 156,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "torre-imperador--v03--1536.png",
+          "bytes": 1110780
+        },
+        {
+          "arquivo": "torre-imperador--v03--1536.webp",
+          "bytes": 197536
+        },
+        {
+          "arquivo": "torre-imperador--v03--1024.webp",
+          "bytes": 91658
+        },
+        {
+          "arquivo": "torre-imperador--v03--512.webp",
+          "bytes": 34780
+        },
+        {
+          "arquivo": "torre-imperador--v03--256.webp",
+          "bytes": 12614
+        },
+        {
+          "arquivo": "torre-imperador--v03--96.webp",
+          "bytes": 3458
+        }
+      ],
+      "segundos_pos": 29.0,
+      "avisos": []
+    }
+  ]
+}

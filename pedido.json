@@ -1,0 +1,56 @@
+{
+  "id": "torre-imperador",
+  "titulo": "Torre do Imperador (palácio do Galo)",
+  "tipo": "ilustracao",
+  "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+  "prompt": "Fantasy RPG environment illustration, painted, highly detailed, isolated on a plain flat light gray background. Painterly dark gothic fantasy style: pale weathered stone, dark slate roofs, cold blue moonlight from the upper right, deep shadows, warm candlelight glowing in a few narrow windows, faint violet fissures of light cracking through some stones, a little mist hugging the base, a small rocky outcrop under it. A palace tower, wider and more regal than a church spire: a broad round keep with three stacked tiers of balconies with gilded balustrades, tall arched windows with crimson curtains, long red and gold banners hanging down the walls, a domed roof shaped like a huge golden royal crown with pointed tips and red gems, and on the very top a tall ornate golden weathervane in the shape of a proud crowing rooster. A single building standing alone, its full height visible from the base to the very top, seen slightly from below at a three-quarter angle. Crisp silhouette, fully inside the image with margin on all sides, no sky, no moon, no landscape, no ground reaching the edges, no text, no watermark, no people.",
+  "negative": "text, letters, watermark, signature, logo, cropped, cut off, blurry, low detail, flat vector icon, clipart, emoji, cartoon sticker, simple geometric shapes, plastic look, people, hands, sky, clouds, landscape, horizon",
+  "largura": 1024,
+  "altura": 1536,
+  "variacoes": [
+    {
+      "seed": 5201,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "passos": null,
+      "largura": 1024,
+      "altura": 1536,
+      "prompt_extra": "",
+      "n": 1
+    },
+    {
+      "seed": 5202,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "passos": null,
+      "largura": 1024,
+      "altura": 1536,
+      "prompt_extra": "",
+      "n": 2
+    },
+    {
+      "seed": 5203,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "passos": null,
+      "largura": 1024,
+      "altura": 1536,
+      "prompt_extra": "",
+      "n": 3
+    }
+  ],
+  "pos": {
+    "tamanho_final": 1536,
+    "margem": 0.03,
+    "derivados": [
+      1024,
+      512,
+      256,
+      96
+    ],
+    "remover_fundo": true,
+    "modelo_fundo": "birefnet-general",
+    "fundo": "liso",
+    "camadas": []
+  },
+  "passos": null,
+  "guidance": null,
+  "referencias": []
+}
