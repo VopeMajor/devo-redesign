@@ -1,0 +1,9 @@
+[torre-observatorio] v01: @cf/black-forest-labs/flux-2-klein-4b seed=5211 1024x1536 passos=None (~156 neurônios)
+    ok em 40.1s, 1024x1536
+[torre-observatorio] v02: @cf/black-forest-labs/flux-2-klein-4b seed=5212 1024x1536 passos=None (~156 neurônios)
+    ok em 14.2s, 1024x1536
+[torre-observatorio] v03: @cf/black-forest-labs/flux-2-klein-4b seed=5213 1024x1536 passos=None (~156 neurônios)
+    ok em 15.5s, 1024x1536
+[torre-observatorio] v01: rembg:birefnet-general; sem avisos
+[torre-observatorio] v02: rembg:birefnet-general; sem avisos
+[torre-observatorio] v03: rembg:birefnet-general; sem avisos

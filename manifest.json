@@ -1,0 +1,120 @@
+{
+  "pedido": "torre-observatorio",
+  "titulo": "Observatório (a Coruja)",
+  "tipo": "ilustracao",
+  "tamanho_final": 1536,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 5211,
+      "passos": null,
+      "segundos": 40.1,
+      "neuronios_estimados": 156,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "torre-observatorio--v01--1536.png",
+          "bytes": 950085
+        },
+        {
+          "arquivo": "torre-observatorio--v01--1536.webp",
+          "bytes": 153946
+        },
+        {
+          "arquivo": "torre-observatorio--v01--1024.webp",
+          "bytes": 76370
+        },
+        {
+          "arquivo": "torre-observatorio--v01--512.webp",
+          "bytes": 31304
+        },
+        {
+          "arquivo": "torre-observatorio--v01--256.webp",
+          "bytes": 11772
+        },
+        {
+          "arquivo": "torre-observatorio--v01--96.webp",
+          "bytes": 3310
+        }
+      ],
+      "segundos_pos": 34.2,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 5212,
+      "passos": null,
+      "segundos": 14.2,
+      "neuronios_estimados": 156,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "torre-observatorio--v02--1536.png",
+          "bytes": 1055024
+        },
+        {
+          "arquivo": "torre-observatorio--v02--1536.webp",
+          "bytes": 176462
+        },
+        {
+          "arquivo": "torre-observatorio--v02--1024.webp",
+          "bytes": 86880
+        },
+        {
+          "arquivo": "torre-observatorio--v02--512.webp",
+          "bytes": 35092
+        },
+        {
+          "arquivo": "torre-observatorio--v02--256.webp",
+          "bytes": 13180
+        },
+        {
+          "arquivo": "torre-observatorio--v02--96.webp",
+          "bytes": 3608
+        }
+      ],
+      "segundos_pos": 29.4,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 5213,
+      "passos": null,
+      "segundos": 15.5,
+      "neuronios_estimados": 156,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "torre-observatorio--v03--1536.png",
+          "bytes": 912292
+        },
+        {
+          "arquivo": "torre-observatorio--v03--1536.webp",
+          "bytes": 147244
+        },
+        {
+          "arquivo": "torre-observatorio--v03--1024.webp",
+          "bytes": 73438
+        },
+        {
+          "arquivo": "torre-observatorio--v03--512.webp",
+          "bytes": 30572
+        },
+        {
+          "arquivo": "torre-observatorio--v03--256.webp",
+          "bytes": 11840
+        },
+        {
+          "arquivo": "torre-observatorio--v03--96.webp",
+          "bytes": 3406
+        }
+      ],
+      "segundos_pos": 29.0,
+      "avisos": []
+    }
+  ]
+}
