@@ -1,0 +1,12 @@
+[moldura-catedral-esquecida] v01: @cf/black-forest-labs/flux-2-klein-4b seed=6081 1024x1024 passos=None (~104 neurônios)
+    ok em 17.0s, 1024x1024
+[moldura-catedral-esquecida] v02: @cf/black-forest-labs/flux-2-klein-4b seed=6082 1024x1024 passos=None (~104 neurônios)
+    ok em 22.3s, 1024x1024
+[moldura-catedral-esquecida] v03: @cf/black-forest-labs/flux-2-klein-4b seed=6083 1024x1024 passos=None (~104 neurônios)
+    ok em 16.7s, 1024x1024
+[moldura-catedral-esquecida] v04: @cf/black-forest-labs/flux-2-klein-4b seed=6084 1024x1024 passos=None (~104 neurônios)
+    ok em 16.5s, 1024x1024
+[moldura-catedral-esquecida] v01: rembg:birefnet-general; 3.3% do ornamento ficou fora do quadro — reduza a janela ou peça mais margem no prompt
+[moldura-catedral-esquecida] v02: rembg:birefnet-general; sem avisos
+[moldura-catedral-esquecida] v03: rembg:birefnet-general; 2.6% do ornamento ficou fora do quadro — reduza a janela ou peça mais margem no prompt
+[moldura-catedral-esquecida] v04: rembg:birefnet-general; 1.5% do ornamento ficou fora do quadro — reduza a janela ou peça mais margem no prompt

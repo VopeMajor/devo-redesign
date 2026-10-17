@@ -1,0 +1,247 @@
+{
+  "pedido": "moldura-catedral-esquecida",
+  "titulo": "Catedral Esquecida — avatar",
+  "tipo": "moldura",
+  "tamanho_final": 1024,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 6081,
+      "passos": null,
+      "segundos": 17.0,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "miolo_aberto_por_cor": true,
+      "janela": {
+        "forma": "circulo",
+        "centro_px": [
+          512.0,
+          512.0
+        ],
+        "raio_px": [
+          256.0,
+          256.0
+        ],
+        "raio_fracao": [
+          0.25,
+          0.25
+        ]
+      },
+      "reencaixe": {
+        "escala": 1.3617,
+        "cobertura_aro": 1.0
+      },
+      "ornamento_cortado": 0.0326,
+      "arquivos": [
+        {
+          "arquivo": "moldura-catedral-esquecida--v01--1024.png",
+          "bytes": 829748
+        },
+        {
+          "arquivo": "moldura-catedral-esquecida--v01--1024.webp",
+          "bytes": 119598
+        },
+        {
+          "arquivo": "moldura-catedral-esquecida--v01--512.webp",
+          "bytes": 49446
+        },
+        {
+          "arquivo": "moldura-catedral-esquecida--v01--256.webp",
+          "bytes": 20316
+        },
+        {
+          "arquivo": "moldura-catedral-esquecida--v01--96.webp",
+          "bytes": 5574
+        },
+        {
+          "arquivo": "moldura-catedral-esquecida--v01--48.webp",
+          "bytes": 2228
+        }
+      ],
+      "segundos_pos": 35.7,
+      "avisos": [
+        "3.3% do ornamento ficou fora do quadro — reduza a janela ou peça mais margem no prompt"
+      ]
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 6082,
+      "passos": null,
+      "segundos": 22.3,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "miolo_aberto_por_cor": true,
+      "janela": {
+        "forma": "circulo",
+        "centro_px": [
+          512.0,
+          512.0
+        ],
+        "raio_px": [
+          256.0,
+          256.0
+        ],
+        "raio_fracao": [
+          0.25,
+          0.25
+        ]
+      },
+      "reencaixe": {
+        "escala": 1.1636,
+        "cobertura_aro": 1.0
+      },
+      "ornamento_cortado": 0.0069,
+      "arquivos": [
+        {
+          "arquivo": "moldura-catedral-esquecida--v02--1024.png",
+          "bytes": 627381
+        },
+        {
+          "arquivo": "moldura-catedral-esquecida--v02--1024.webp",
+          "bytes": 101758
+        },
+        {
+          "arquivo": "moldura-catedral-esquecida--v02--512.webp",
+          "bytes": 42796
+        },
+        {
+          "arquivo": "moldura-catedral-esquecida--v02--256.webp",
+          "bytes": 17570
+        },
+        {
+          "arquivo": "moldura-catedral-esquecida--v02--96.webp",
+          "bytes": 5016
+        },
+        {
+          "arquivo": "moldura-catedral-esquecida--v02--48.webp",
+          "bytes": 2142
+        }
+      ],
+      "segundos_pos": 30.3,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 6083,
+      "passos": null,
+      "segundos": 16.7,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "miolo_aberto_por_cor": true,
+      "janela": {
+        "forma": "circulo",
+        "centro_px": [
+          512.0,
+          512.0
+        ],
+        "raio_px": [
+          256.0,
+          256.0
+        ],
+        "raio_fracao": [
+          0.25,
+          0.25
+        ]
+      },
+      "reencaixe": {
+        "escala": 1.2249,
+        "cobertura_aro": 1.0
+      },
+      "ornamento_cortado": 0.0263,
+      "arquivos": [
+        {
+          "arquivo": "moldura-catedral-esquecida--v03--1024.png",
+          "bytes": 613391
+        },
+        {
+          "arquivo": "moldura-catedral-esquecida--v03--1024.webp",
+          "bytes": 104160
+        },
+        {
+          "arquivo": "moldura-catedral-esquecida--v03--512.webp",
+          "bytes": 41876
+        },
+        {
+          "arquivo": "moldura-catedral-esquecida--v03--256.webp",
+          "bytes": 16468
+        },
+        {
+          "arquivo": "moldura-catedral-esquecida--v03--96.webp",
+          "bytes": 4766
+        },
+        {
+          "arquivo": "moldura-catedral-esquecida--v03--48.webp",
+          "bytes": 2040
+        }
+      ],
+      "segundos_pos": 29.8,
+      "avisos": [
+        "2.6% do ornamento ficou fora do quadro — reduza a janela ou peça mais margem no prompt"
+      ]
+    },
+    {
+      "nome": "v04",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 6084,
+      "passos": null,
+      "segundos": 16.5,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "miolo_aberto_por_cor": true,
+      "janela": {
+        "forma": "circulo",
+        "centro_px": [
+          512.0,
+          512.0
+        ],
+        "raio_px": [
+          256.0,
+          256.0
+        ],
+        "raio_fracao": [
+          0.25,
+          0.25
+        ]
+      },
+      "reencaixe": {
+        "escala": 1.28,
+        "cobertura_aro": 1.0
+      },
+      "ornamento_cortado": 0.0151,
+      "arquivos": [
+        {
+          "arquivo": "moldura-catedral-esquecida--v04--1024.png",
+          "bytes": 721172
+        },
+        {
+          "arquivo": "moldura-catedral-esquecida--v04--1024.webp",
+          "bytes": 125340
+        },
+        {
+          "arquivo": "moldura-catedral-esquecida--v04--512.webp",
+          "bytes": 50154
+        },
+        {
+          "arquivo": "moldura-catedral-esquecida--v04--256.webp",
+          "bytes": 19376
+        },
+        {
+          "arquivo": "moldura-catedral-esquecida--v04--96.webp",
+          "bytes": 5284
+        },
+        {
+          "arquivo": "moldura-catedral-esquecida--v04--48.webp",
+          "bytes": 2206
+        }
+      ],
+      "segundos_pos": 30.5,
+      "avisos": [
+        "1.5% do ornamento ficou fora do quadro — reduza a janela ou peça mais margem no prompt"
+      ]
+    }
+  ]
+}
