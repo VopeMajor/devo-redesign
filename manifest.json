@@ -1,0 +1,172 @@
+{
+  "pedido": "mini-heranca-marfim",
+  "titulo": "heranca-marfim — miniperfil (quadrada)",
+  "tipo": "moldura",
+  "tamanho_final": 1024,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 4201,
+      "passos": null,
+      "segundos": 16.0,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "miolo_aberto_por_cor": true,
+      "janela": {
+        "forma": "quadrado",
+        "centro_px": [
+          512.0,
+          512.0
+        ],
+        "lado_px": 560.1,
+        "raio_canto_px": 41.0,
+        "lado_fracao": 0.547
+      },
+      "reencaixe": {
+        "escala": 1.2715,
+        "cobertura_aro": 1.0
+      },
+      "ornamento_cortado": 0.0001,
+      "arquivos": [
+        {
+          "arquivo": "mini-heranca-marfim--v01--1024.png",
+          "bytes": 688369
+        },
+        {
+          "arquivo": "mini-heranca-marfim--v01--1024.webp",
+          "bytes": 121178
+        },
+        {
+          "arquivo": "mini-heranca-marfim--v01--512.webp",
+          "bytes": 44504
+        },
+        {
+          "arquivo": "mini-heranca-marfim--v01--256.webp",
+          "bytes": 17534
+        },
+        {
+          "arquivo": "mini-heranca-marfim--v01--96.webp",
+          "bytes": 4698
+        },
+        {
+          "arquivo": "mini-heranca-marfim--v01--48.webp",
+          "bytes": 2044
+        }
+      ],
+      "segundos_pos": 30.8,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 4202,
+      "passos": null,
+      "segundos": 13.8,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "miolo_aberto_por_cor": true,
+      "ilhas_removidas": 1,
+      "janela": {
+        "forma": "quadrado",
+        "centro_px": [
+          512.0,
+          512.0
+        ],
+        "lado_px": 560.1,
+        "raio_canto_px": 41.0,
+        "lado_fracao": 0.547
+      },
+      "reencaixe": {
+        "escala": 1.3466,
+        "cobertura_aro": 1.0
+      },
+      "ornamento_cortado": 0.0,
+      "arquivos": [
+        {
+          "arquivo": "mini-heranca-marfim--v02--1024.png",
+          "bytes": 633866
+        },
+        {
+          "arquivo": "mini-heranca-marfim--v02--1024.webp",
+          "bytes": 107040
+        },
+        {
+          "arquivo": "mini-heranca-marfim--v02--512.webp",
+          "bytes": 41672
+        },
+        {
+          "arquivo": "mini-heranca-marfim--v02--256.webp",
+          "bytes": 16728
+        },
+        {
+          "arquivo": "mini-heranca-marfim--v02--96.webp",
+          "bytes": 4944
+        },
+        {
+          "arquivo": "mini-heranca-marfim--v02--48.webp",
+          "bytes": 2128
+        }
+      ],
+      "segundos_pos": 26.0,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 4203,
+      "passos": null,
+      "segundos": 15.7,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "miolo_aberto_por_cor": true,
+      "ilhas_removidas": 13,
+      "janela": {
+        "forma": "quadrado",
+        "centro_px": [
+          512.0,
+          512.0
+        ],
+        "lado_px": 560.1,
+        "raio_canto_px": 41.0,
+        "lado_fracao": 0.547
+      },
+      "reencaixe": {
+        "escala": 1.6639,
+        "cobertura_aro": 1.0
+      },
+      "ornamento_cortado": 0.1161,
+      "arquivos": [
+        {
+          "arquivo": "mini-heranca-marfim--v03--1024.png",
+          "bytes": 951852
+        },
+        {
+          "arquivo": "mini-heranca-marfim--v03--1024.webp",
+          "bytes": 135618
+        },
+        {
+          "arquivo": "mini-heranca-marfim--v03--512.webp",
+          "bytes": 48608
+        },
+        {
+          "arquivo": "mini-heranca-marfim--v03--256.webp",
+          "bytes": 19744
+        },
+        {
+          "arquivo": "mini-heranca-marfim--v03--96.webp",
+          "bytes": 5002
+        },
+        {
+          "arquivo": "mini-heranca-marfim--v03--48.webp",
+          "bytes": 1940
+        }
+      ],
+      "segundos_pos": 26.0,
+      "avisos": [
+        "11.6% do ornamento ficou fora do quadro — reduza a janela ou peça mais margem no prompt"
+      ]
+    }
+  ]
+}

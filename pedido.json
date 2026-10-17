@@ -1,0 +1,67 @@
+{
+  "id": "mini-heranca-marfim",
+  "titulo": "heranca-marfim — miniperfil (quadrada)",
+  "tipo": "moldura",
+  "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+  "prompt": "Fantasy RPG accessory illustration, painted, highly detailed, isolated on a plain flat warm dark gray background. A SQUARE ornate avatar frame seen straight-on, a rounded square, not a circle: an empty square opening with slightly rounded corners in the exact center, about 55 percent of the image width, straight vertical and horizontal sides, perfectly clear and showing only the flat background. A straight-sided square bezel of carved ivory and pale polished silver with delicate silver filigree scrolls. At the top center, an oval ivory family cameo in a silver setting framed by tiny pearl beads. Strings of small round cream pearls loop along the bottom edge, fine ivory lace peeks from behind the left side, and a short pale satin bow sits on the lower right corner. Soft warm light from the upper left, gentle sheen on the pearls. The ornaments are compact and stay close to the square, every ornament fully inside the image with an empty margin around it, nothing cropped. No text, no letters, no numbers, no watermark, no character, nothing inside the square opening.",
+  "negative": "text, letters, numbers, watermark, cropped, cut off, blurry, low detail, flat vector icon, clipart, circle opening, round opening, people, face",
+  "largura": 1024,
+  "altura": 1024,
+  "variacoes": [
+    {
+      "seed": 4201,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "passos": null,
+      "largura": 1024,
+      "altura": 1024,
+      "prompt_extra": "",
+      "n": 1
+    },
+    {
+      "seed": 4202,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "passos": null,
+      "largura": 1024,
+      "altura": 1024,
+      "prompt_extra": "",
+      "n": 2
+    },
+    {
+      "seed": 4203,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "passos": null,
+      "largura": 1024,
+      "altura": 1024,
+      "prompt_extra": "",
+      "n": 3
+    }
+  ],
+  "pos": {
+    "tamanho_final": 1024,
+    "molde": {
+      "forma": "quadrado",
+      "centro": [
+        0.5,
+        0.5
+      ],
+      "lado": 0.547,
+      "raio_canto": 0.04,
+      "sombra": 0.35,
+      "largura_sombra": 0.045
+    },
+    "remover_fundo": true,
+    "modelo_fundo": "birefnet-general",
+    "derivados": [
+      512,
+      256,
+      96,
+      48
+    ],
+    "margem": 0.03,
+    "fundo": "liso",
+    "camadas": []
+  },
+  "passos": null,
+  "guidance": null,
+  "referencias": []
+}

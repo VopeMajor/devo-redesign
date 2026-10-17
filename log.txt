@@ -1,0 +1,9 @@
+[mini-heranca-marfim] v01: @cf/black-forest-labs/flux-2-klein-4b seed=4201 1024x1024 passos=None (~104 neurônios)
+    ok em 16.0s, 1024x1024
+[mini-heranca-marfim] v02: @cf/black-forest-labs/flux-2-klein-4b seed=4202 1024x1024 passos=None (~104 neurônios)
+    ok em 13.8s, 1024x1024
+[mini-heranca-marfim] v03: @cf/black-forest-labs/flux-2-klein-4b seed=4203 1024x1024 passos=None (~104 neurônios)
+    ok em 15.7s, 1024x1024
+[mini-heranca-marfim] v01: rembg:birefnet-general; sem avisos
+[mini-heranca-marfim] v02: rembg:birefnet-general; sem avisos
+[mini-heranca-marfim] v03: rembg:birefnet-general; 11.6% do ornamento ficou fora do quadro — reduza a janela ou peça mais margem no prompt
