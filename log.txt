@@ -1,0 +1,12 @@
+[moldura-pacto-carmesim] v01: @cf/black-forest-labs/flux-2-klein-4b seed=6021 1024x1024 passos=None (~104 neurônios)
+    ok em 32.1s, 1024x1024
+[moldura-pacto-carmesim] v02: @cf/black-forest-labs/flux-2-klein-4b seed=6022 1024x1024 passos=None (~104 neurônios)
+    ok em 22.2s, 1024x1024
+[moldura-pacto-carmesim] v03: @cf/black-forest-labs/flux-2-klein-4b seed=6023 1024x1024 passos=None (~104 neurônios)
+    ok em 30.7s, 1024x1024
+[moldura-pacto-carmesim] v04: @cf/black-forest-labs/flux-2-klein-4b seed=6024 1024x1024 passos=None (~104 neurônios)
+    ok em 17.8s, 1024x1024
+[moldura-pacto-carmesim] v01: rembg:birefnet-general; sem avisos
+[moldura-pacto-carmesim] v02: rembg:birefnet-general; sem avisos
+[moldura-pacto-carmesim] v03: rembg:birefnet-general; sem avisos
+[moldura-pacto-carmesim] v04: rembg:birefnet-general; 1.7% do ornamento ficou fora do quadro — reduza a janela ou peça mais margem no prompt

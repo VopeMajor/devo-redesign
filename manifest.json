@@ -1,0 +1,247 @@
+{
+  "pedido": "moldura-pacto-carmesim",
+  "titulo": "Pacto Carmesim — avatar",
+  "tipo": "moldura",
+  "tamanho_final": 1024,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 6021,
+      "passos": null,
+      "segundos": 32.1,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "miolo_aberto_por_cor": true,
+      "ilhas_removidas": 4,
+      "janela": {
+        "forma": "circulo",
+        "centro_px": [
+          512.0,
+          512.0
+        ],
+        "raio_px": [
+          256.0,
+          256.0
+        ],
+        "raio_fracao": [
+          0.25,
+          0.25
+        ]
+      },
+      "reencaixe": {
+        "escala": 1.219,
+        "cobertura_aro": 1.0
+      },
+      "ornamento_cortado": 0.0026,
+      "arquivos": [
+        {
+          "arquivo": "moldura-pacto-carmesim--v01--1024.png",
+          "bytes": 741782
+        },
+        {
+          "arquivo": "moldura-pacto-carmesim--v01--1024.webp",
+          "bytes": 124768
+        },
+        {
+          "arquivo": "moldura-pacto-carmesim--v01--512.webp",
+          "bytes": 52104
+        },
+        {
+          "arquivo": "moldura-pacto-carmesim--v01--256.webp",
+          "bytes": 20980
+        },
+        {
+          "arquivo": "moldura-pacto-carmesim--v01--96.webp",
+          "bytes": 5532
+        },
+        {
+          "arquivo": "moldura-pacto-carmesim--v01--48.webp",
+          "bytes": 2150
+        }
+      ],
+      "segundos_pos": 36.2,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 6022,
+      "passos": null,
+      "segundos": 22.2,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "miolo_aberto_por_cor": true,
+      "ilhas_removidas": 3,
+      "janela": {
+        "forma": "circulo",
+        "centro_px": [
+          512.0,
+          512.0
+        ],
+        "raio_px": [
+          256.0,
+          256.0
+        ],
+        "raio_fracao": [
+          0.25,
+          0.25
+        ]
+      },
+      "reencaixe": {
+        "escala": 1.1123,
+        "cobertura_aro": 1.0
+      },
+      "ornamento_cortado": 0.0021,
+      "arquivos": [
+        {
+          "arquivo": "moldura-pacto-carmesim--v02--1024.png",
+          "bytes": 728714
+        },
+        {
+          "arquivo": "moldura-pacto-carmesim--v02--1024.webp",
+          "bytes": 140828
+        },
+        {
+          "arquivo": "moldura-pacto-carmesim--v02--512.webp",
+          "bytes": 58084
+        },
+        {
+          "arquivo": "moldura-pacto-carmesim--v02--256.webp",
+          "bytes": 22168
+        },
+        {
+          "arquivo": "moldura-pacto-carmesim--v02--96.webp",
+          "bytes": 5948
+        },
+        {
+          "arquivo": "moldura-pacto-carmesim--v02--48.webp",
+          "bytes": 2336
+        }
+      ],
+      "segundos_pos": 31.9,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 6023,
+      "passos": null,
+      "segundos": 30.7,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "miolo_aberto_por_cor": true,
+      "ilhas_removidas": 0,
+      "janela": {
+        "forma": "circulo",
+        "centro_px": [
+          512.0,
+          512.0
+        ],
+        "raio_px": [
+          256.0,
+          256.0
+        ],
+        "raio_fracao": [
+          0.25,
+          0.25
+        ]
+      },
+      "reencaixe": {
+        "escala": 1.1082,
+        "cobertura_aro": 1.0
+      },
+      "ornamento_cortado": 0.0,
+      "arquivos": [
+        {
+          "arquivo": "moldura-pacto-carmesim--v03--1024.png",
+          "bytes": 535867
+        },
+        {
+          "arquivo": "moldura-pacto-carmesim--v03--1024.webp",
+          "bytes": 104006
+        },
+        {
+          "arquivo": "moldura-pacto-carmesim--v03--512.webp",
+          "bytes": 43688
+        },
+        {
+          "arquivo": "moldura-pacto-carmesim--v03--256.webp",
+          "bytes": 17114
+        },
+        {
+          "arquivo": "moldura-pacto-carmesim--v03--96.webp",
+          "bytes": 4764
+        },
+        {
+          "arquivo": "moldura-pacto-carmesim--v03--48.webp",
+          "bytes": 1908
+        }
+      ],
+      "segundos_pos": 30.3,
+      "avisos": []
+    },
+    {
+      "nome": "v04",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 6024,
+      "passos": null,
+      "segundos": 17.8,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "miolo_aberto_por_cor": true,
+      "ilhas_removidas": 4,
+      "janela": {
+        "forma": "circulo",
+        "centro_px": [
+          512.0,
+          512.0
+        ],
+        "raio_px": [
+          256.0,
+          256.0
+        ],
+        "raio_fracao": [
+          0.25,
+          0.25
+        ]
+      },
+      "reencaixe": {
+        "escala": 1.2075,
+        "cobertura_aro": 1.0
+      },
+      "ornamento_cortado": 0.0174,
+      "arquivos": [
+        {
+          "arquivo": "moldura-pacto-carmesim--v04--1024.png",
+          "bytes": 649498
+        },
+        {
+          "arquivo": "moldura-pacto-carmesim--v04--1024.webp",
+          "bytes": 121598
+        },
+        {
+          "arquivo": "moldura-pacto-carmesim--v04--512.webp",
+          "bytes": 48430
+        },
+        {
+          "arquivo": "moldura-pacto-carmesim--v04--256.webp",
+          "bytes": 18546
+        },
+        {
+          "arquivo": "moldura-pacto-carmesim--v04--96.webp",
+          "bytes": 5072
+        },
+        {
+          "arquivo": "moldura-pacto-carmesim--v04--48.webp",
+          "bytes": 2140
+        }
+      ],
+      "segundos_pos": 30.7,
+      "avisos": [
+        "1.7% do ornamento ficou fora do quadro — reduza a janela ou peça mais margem no prompt"
+      ]
+    }
+  ]
+}
