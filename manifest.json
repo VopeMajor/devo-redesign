@@ -1,0 +1,170 @@
+{
+  "pedido": "mini-relogio-fim",
+  "titulo": "relogio-fim — miniperfil (quadrada)",
+  "tipo": "moldura",
+  "tamanho_final": 1024,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 4211,
+      "passos": null,
+      "segundos": 16.7,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "miolo_aberto_por_cor": true,
+      "janela": {
+        "forma": "quadrado",
+        "centro_px": [
+          512.0,
+          512.0
+        ],
+        "lado_px": 560.1,
+        "raio_canto_px": 41.0,
+        "lado_fracao": 0.547
+      },
+      "reencaixe": {
+        "escala": 1.1593,
+        "cobertura_aro": 1.0
+      },
+      "ornamento_cortado": 0.0003,
+      "arquivos": [
+        {
+          "arquivo": "mini-relogio-fim--v01--1024.png",
+          "bytes": 665095
+        },
+        {
+          "arquivo": "mini-relogio-fim--v01--1024.webp",
+          "bytes": 92942
+        },
+        {
+          "arquivo": "mini-relogio-fim--v01--512.webp",
+          "bytes": 36608
+        },
+        {
+          "arquivo": "mini-relogio-fim--v01--256.webp",
+          "bytes": 15416
+        },
+        {
+          "arquivo": "mini-relogio-fim--v01--96.webp",
+          "bytes": 4428
+        },
+        {
+          "arquivo": "mini-relogio-fim--v01--48.webp",
+          "bytes": 1792
+        }
+      ],
+      "segundos_pos": 29.8,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 4212,
+      "passos": null,
+      "segundos": 17.5,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "miolo_aberto_por_cor": true,
+      "janela": {
+        "forma": "quadrado",
+        "centro_px": [
+          512.0,
+          512.0
+        ],
+        "lado_px": 560.1,
+        "raio_canto_px": 41.0,
+        "lado_fracao": 0.547
+      },
+      "reencaixe": {
+        "escala": 1.1711,
+        "cobertura_aro": 1.0
+      },
+      "ornamento_cortado": 0.0006,
+      "arquivos": [
+        {
+          "arquivo": "mini-relogio-fim--v02--1024.png",
+          "bytes": 605083
+        },
+        {
+          "arquivo": "mini-relogio-fim--v02--1024.webp",
+          "bytes": 87006
+        },
+        {
+          "arquivo": "mini-relogio-fim--v02--512.webp",
+          "bytes": 32344
+        },
+        {
+          "arquivo": "mini-relogio-fim--v02--256.webp",
+          "bytes": 13396
+        },
+        {
+          "arquivo": "mini-relogio-fim--v02--96.webp",
+          "bytes": 3920
+        },
+        {
+          "arquivo": "mini-relogio-fim--v02--48.webp",
+          "bytes": 1810
+        }
+      ],
+      "segundos_pos": 24.8,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 4213,
+      "passos": null,
+      "segundos": 16.7,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "miolo_aberto_por_cor": true,
+      "janela": {
+        "forma": "quadrado",
+        "centro_px": [
+          512.0,
+          512.0
+        ],
+        "lado_px": 560.1,
+        "raio_canto_px": 41.0,
+        "lado_fracao": 0.547
+      },
+      "reencaixe": {
+        "escala": 1.2368,
+        "cobertura_aro": 1.0
+      },
+      "ornamento_cortado": 0.0144,
+      "arquivos": [
+        {
+          "arquivo": "mini-relogio-fim--v03--1024.png",
+          "bytes": 704209
+        },
+        {
+          "arquivo": "mini-relogio-fim--v03--1024.webp",
+          "bytes": 97546
+        },
+        {
+          "arquivo": "mini-relogio-fim--v03--512.webp",
+          "bytes": 37352
+        },
+        {
+          "arquivo": "mini-relogio-fim--v03--256.webp",
+          "bytes": 15802
+        },
+        {
+          "arquivo": "mini-relogio-fim--v03--96.webp",
+          "bytes": 4546
+        },
+        {
+          "arquivo": "mini-relogio-fim--v03--48.webp",
+          "bytes": 1924
+        }
+      ],
+      "segundos_pos": 25.2,
+      "avisos": [
+        "1.4% do ornamento ficou fora do quadro — reduza a janela ou peça mais margem no prompt"
+      ]
+    }
+  ]
+}
