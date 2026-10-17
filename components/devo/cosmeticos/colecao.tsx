@@ -280,7 +280,7 @@ function ItemTile({
     >
       <span aria-hidden="true" className="absolute inset-x-0 top-0 h-[3px]" style={{ background: raridade.cor, boxShadow: `0 0 10px ${raridade.brilho}` }} />
       <span aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(70%_55%_at_50%_40%,rgba(236,229,216,0.07),transparent_70%)]" />
-      <span className={cn('relative grid min-h-[86px] w-full place-items-center', bloqueado && 'opacity-75 [filter:grayscale(0.85)_brightness(0.72)_contrast(1.05)]')}>
+      <span className={cn('relative grid min-h-[86px] w-full place-items-center', bloqueado && 'opacity-85 [filter:grayscale(0.8)_brightness(0.86)]')}>
         <Miniatura def={def} fotoSrc={fotoSrc} apagado={bloqueado} />
       </span>
       {bloqueado && (
