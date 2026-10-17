@@ -91,6 +91,7 @@ jobs:
         run: |
           set +e
           FALHAS=0
+          LIMITE=""
           for f in $(cat lista.txt); do
             ID=$(basename "$f" .json)
             OUT="saida/$ID"
@@ -99,7 +100,18 @@ jobs:
             if python3 -c "import json,sys; sys.exit(0 if json.load(open(sys.argv[1])).get('importar') else 1)" "$f"; then
               echo "importado: só pós-processamento"; G=0
             else
+              if [ -n "$LIMITE" ]; then
+                echo "::warning::$ID: pulado — limite diário do Workers AI já atingido nesta execução"; echo "::endgroup::"; continue
+              fi
               python3 arte/ferramentas/gerar.py "$f" "$OUT"; G=$?
+              if [ $G -eq 3 ]; then
+                LIMITE=1
+                echo "::warning::$ID: limite diário de neurônios do Workers AI — nada publicado (a saída anterior em arte-saida/$ID fica como estava)"
+                echo "::endgroup::"; continue
+              fi
+              if [ -z "$(ls "$OUT/bruto" 2>/dev/null)" ]; then
+                echo "::error::$ID: nenhuma imagem gerada — nada publicado"; FALHAS=$((FALHAS+1)); echo "::endgroup::"; continue
+              fi
             fi
             echo "::endgroup::"
             echo "::group::$ID — pós-processamento"
@@ -119,4 +131,6 @@ jobs:
             )
             { echo "## $ID"; echo; echo "Branch: \`arte-saida/$ID\`"; echo; grep -v '^!\[prancha' "$OUT/README.md" 2>/dev/null | head -20; echo; } >> "$GITHUB_STEP_SUMMARY"
           done
+          [ -n "$LIMITE" ] && echo "::error title=Limite diário do Workers AI::A cota gratuita de 10.000 neurônios/dia acabou; rode de novo depois de 00:00 UTC (pedidos pulados ficaram sem publicar)."
+          [ -n "$LIMITE" ] && exit 1
           exit $FALHAS

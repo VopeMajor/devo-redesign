@@ -169,6 +169,8 @@ def main() -> int:
         f.write("\n".join(linhas) + "\n")
     ok = sum(1 for i in registro["variacoes"] if i.get("ok"))
     log(f"[{p['id']}] {ok}/{len(registro['variacoes'])} imagens geradas")
+    if not ok and parar and any("LIMITE" in l for l in linhas):
+        return 3  # limite diário: o workflow para os próximos pedidos e não sobrescreve a saída publicada
     return 0 if ok else 1
 
 
