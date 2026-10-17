@@ -48,10 +48,21 @@ export type Sfx =
   | 'tick'
   /** Vidro do espelho trincando. */
   | 'crack'
+  /** Folhas de papel (tutorial: cada etapa nova "vira a página"). */
+  | 'paper'
 
 let ctx: AudioContext | null = null
 let master: GainNode | null = null
-let muted = false
+/** Preferência de som do jogador (Ajustes / equalizador): guardada no aparelho e lida ao carregar. */
+const MUDO_KEY = 'devo.som.mudo'
+let muted = lerMudo()
+function lerMudo() {
+  try {
+    return typeof window !== 'undefined' && window.localStorage.getItem(MUDO_KEY) === '1'
+  } catch {
+    return false
+  }
+}
 let ambient: { stop: () => void; bus: GainNode; level: number } | null = null
 let ambientDucked = false
 
@@ -107,12 +118,12 @@ function noiseBuffer(c: AudioContext, seconds: number) {
   return buffer
 }
 
-type NoiseOpts = { gain?: number; freq?: number; q?: number; delay?: number; sweepTo?: number }
+type NoiseOpts = { gain?: number; freq?: number; q?: number; delay?: number; sweepTo?: number; dest?: AudioNode }
 
 function noise(dur: number, opts: NoiseOpts = {}) {
   const c = ensure()
   if (!c || !master) return
-  const { gain = 0.08, freq = 1200, q = 1, delay = 0, sweepTo } = opts
+  const { gain = 0.08, freq = 1200, q = 1, delay = 0, sweepTo, dest = master } = opts
   const t = c.currentTime + delay
   const src = c.createBufferSource()
   src.buffer = noiseBuffer(c, Math.max(dur, 0.05))
@@ -125,7 +136,7 @@ function noise(dur: number, opts: NoiseOpts = {}) {
   g.gain.setValueAtTime(0.0001, t)
   g.gain.exponentialRampToValueAtTime(gain, t + Math.min(0.02, dur / 3))
   g.gain.exponentialRampToValueAtTime(0.0001, t + dur)
-  src.connect(filter).connect(g).connect(master)
+  src.connect(filter).connect(g).connect(dest)
   src.start(t)
   src.stop(t + dur + 0.05)
 }
@@ -183,6 +194,9 @@ export function playSfx(kind: Sfx) {
       break
     case 'hover':
       tone(1400, 0.05, { gain: 0.018, type: 'triangle' })
+      break
+    case 'paper':
+      somPapel(master ?? undefined)
       break
     case 'crush':
       noise(0.35, { gain: 0.32, freq: 260, q: 0.8, sweepTo: 90 })
@@ -877,6 +891,11 @@ export function stopMusic() {
 
 export function setMuted(next: boolean) {
   muted = next
+  try {
+    window.localStorage.setItem(MUDO_KEY, next ? '1' : '0')
+  } catch {
+    /* sem armazenamento: vale só nesta sessão */
+  }
   if (master && ctx) master.gain.setTargetAtTime(next ? 0 : 0.8, ctx.currentTime, 0.05)
   if (ytPlayer && ytReady) {
     if (next) ytPlayer.mute()
@@ -898,4 +917,477 @@ export function subscribeMuted(listener: () => void) {
 
 export function unlockAudio() {
   ensure()
+}
+
+/* ══════════════════════════════════════════════════════════════════ Sons narrativos (cenas de diálogo) */
+
+/** Papel: algumas folhas mexidas (ruído agudo em rajadas curtas). */
+function somPapel(dest?: AudioNode) {
+  const d = dest
+  for (let i = 0; i < 6; i++) {
+    noise(0.05 + Math.random() * 0.09, { gain: 0.035 + Math.random() * 0.03, freq: 2600 + Math.random() * 2600, q: 0.8, delay: i * 0.07 + Math.random() * 0.04, sweepTo: 1800 + Math.random() * 1200, dest: d })
+  }
+  noise(0.35, { gain: 0.02, freq: 5200, q: 0.6, delay: 0.1, sweepTo: 3000, dest: d })
+}
+
+/**
+ * Sons das marcações do roteiro (*Som de porta se abrindo*, *campainha*, *lata*…). Cada um é tocado num barramento
+ * próprio: um som novo abaixa o anterior em 0,2 s (nada se sobrepõe) e o mesmo som pedido de novo em menos de
+ * 1,5 s é ignorado (retomada da cena, efeito duplo do React). Volume moderado; o mudo global vale para todos.
+ */
+export type Deixa =
+  | 'porta-abre'
+  | 'porta-fecha'
+  | 'campainha'
+  | 'lata'
+  | 'holograma'
+  | 'holograma-fim'
+  | 'aparicao'
+  | 'sistema'
+  | 'luz'
+  | 'passos'
+  | 'cozinha'
+  | 'tempo'
+  | 'tempo-perde'
+  | 'item'
+  | 'papel'
+  | 'chamada'
+
+let deixaBus: GainNode | null = null
+let ultimaDeixa: { id: string; at: number } | null = null
+
+export function playDeixa(id: Deixa | string) {
+  if (muted) return
+  const c = ensure()
+  if (!c || !master) return
+  const agora = performance.now()
+  if (ultimaDeixa && ultimaDeixa.id === id && agora - ultimaDeixa.at < 1500) return
+  ultimaDeixa = { id, at: agora }
+  // o som anterior sai em 0,2 s: um efeito por vez
+  if (deixaBus) {
+    const velho = deixaBus
+    velho.gain.cancelScheduledValues(c.currentTime)
+    velho.gain.setValueAtTime(Math.max(velho.gain.value, 0.0001), c.currentTime)
+    velho.gain.exponentialRampToValueAtTime(0.0001, c.currentTime + 0.2)
+    window.setTimeout(() => velho.disconnect(), 400)
+  }
+  const bus = c.createGain()
+  bus.gain.value = 0.85
+  bus.connect(master)
+  deixaBus = bus
+  const o = { dest: bus }
+  switch (id) {
+    case 'porta-abre':
+      // trinco + rangido de dobradiça + ar do corredor
+      noise(0.04, { gain: 0.12, freq: 2600, q: 4, ...o })
+      tone(1200, 0.05, { gain: 0.02, type: 'square', ...o })
+      for (let i = 0; i < 7; i++) tone(150 + Math.random() * 70, 0.13, { type: 'sawtooth', gain: 0.018, delay: 0.14 + i * 0.1, slideTo: 120 + Math.random() * 90, ...o })
+      noise(1.2, { gain: 0.05, freq: 380, q: 0.6, delay: 0.1, sweepTo: 900, ...o })
+      break
+    case 'porta-fecha':
+      tone(68, 0.4, { gain: 0.24, slideTo: 42, ...o })
+      noise(0.14, { gain: 0.12, freq: 260, q: 0.8, ...o })
+      noise(0.04, { gain: 0.08, freq: 3000, q: 5, delay: 0.16, ...o })
+      tone(1400, 0.04, { gain: 0.015, type: 'square', delay: 0.16, ...o })
+      break
+    case 'campainha':
+      // "ding… dong": duas notas de sino de porta com parciais
+      for (const [f, at] of [[659.3, 0], [523.3, 0.62]] as const) {
+        tone(f, 1.8, { gain: 0.07, attack: 0.004, delay: at, ...o })
+        tone(f * 2.76, 0.6, { gain: 0.012, attack: 0.003, delay: at, ...o })
+        tone(f * 5.4, 0.25, { gain: 0.006, attack: 0.002, delay: at, ...o })
+      }
+      break
+    case 'lata':
+      // lacre abrindo + gás + "tim" do alumínio
+      noise(0.03, { gain: 0.14, freq: 4800, q: 3, ...o })
+      tone(2400, 0.18, { gain: 0.018, slideTo: 2200, ...o })
+      noise(0.9, { gain: 0.05, freq: 6200, q: 0.9, delay: 0.03, sweepTo: 3200, ...o })
+      for (let i = 0; i < 8; i++) noise(0.012, { gain: 0.02, freq: 7000 + Math.random() * 2000, q: 8, delay: 0.2 + Math.random() * 0.7, ...o })
+      break
+    case 'holograma':
+    case 'chamada':
+      // interferência: rajadas filtradas + portadora que oscila e assenta
+      for (let i = 0; i < 6; i++) noise(0.03 + Math.random() * 0.06, { gain: 0.05 + Math.random() * 0.04, freq: 1400 + Math.random() * 3200, q: 5, delay: i * 0.09 + Math.random() * 0.05, ...o })
+      tone(420, 0.9, { type: 'square', gain: 0.012, slideTo: 980, delay: 0.05, ...o })
+      tone(880, 1.4, { gain: 0.02, attack: 0.3, delay: 0.5, ...o })
+      tone(1318.5, 1.2, { gain: 0.01, attack: 0.3, delay: 0.6, ...o })
+      break
+    case 'holograma-fim':
+      tone(980, 0.6, { type: 'square', gain: 0.012, slideTo: 260, ...o })
+      for (let i = 0; i < 4; i++) noise(0.04, { gain: 0.05, freq: 2000 + Math.random() * 2500, q: 5, delay: i * 0.08, ...o })
+      tone(1760, 0.08, { gain: 0.02, delay: 0.55, ...o })
+      break
+    case 'aparicao':
+      // um corpo grave que cresce + brilho frio por cima
+      tone(55, 2.4, { gain: 0.13, attack: 0.9, slideTo: 49, ...o })
+      tone(82.4, 2.2, { gain: 0.05, type: 'triangle', attack: 1, ...o })
+      noise(1.8, { gain: 0.05, freq: 300, q: 0.6, sweepTo: 2200, ...o })
+      ;[1174.7, 1568, 2093].forEach((f, i) => tone(f, 1.6, { gain: 0.012, attack: 0.25, delay: 0.7 + i * 0.12, ...o }))
+      break
+    case 'sistema':
+      // revelação do sistema: varredura + acorde de vidro
+      noise(0.7, { gain: 0.06, freq: 400, q: 0.8, sweepTo: 5000, ...o })
+      ;[587.3, 880, 1174.7].forEach((f, i) => tone(f, 1.8, { gain: 0.03 - i * 0.006, attack: 0.02, delay: 0.25 + i * 0.06, ...o }))
+      tone(146.8, 1.6, { gain: 0.05, type: 'triangle', attack: 0.05, ...o })
+      break
+    case 'luz':
+      // zumbido elétrico que falha
+      tone(100, 0.7, { type: 'sawtooth', gain: 0.02, ...o })
+      tone(120, 0.5, { type: 'square', gain: 0.008, delay: 0.25, ...o })
+      for (const at of [0, 0.26, 0.5]) noise(0.03, { gain: 0.08, freq: 3600, q: 5, delay: at, ...o })
+      break
+    case 'passos':
+      for (let i = 0; i < 4; i++) {
+        tone(80, 0.12, { gain: 0.09 - i * 0.015, slideTo: 55, delay: i * 0.46, ...o })
+        noise(0.06, { gain: 0.04 - i * 0.006, freq: 900, q: 1, delay: i * 0.46, ...o })
+      }
+      break
+    case 'cozinha':
+      // passos, gaveta e louça mexida
+      for (let i = 0; i < 3; i++) tone(80, 0.12, { gain: 0.07, slideTo: 55, delay: i * 0.42, ...o })
+      noise(0.5, { gain: 0.05, freq: 700, q: 1.4, delay: 1.3, sweepTo: 1300, ...o })
+      for (let i = 0; i < 4; i++) tone(1900 + Math.random() * 1400, 0.22, { gain: 0.015, delay: 1.9 + i * 0.16 + Math.random() * 0.08, ...o })
+      break
+    case 'tempo':
+      for (let k = 0; k < 2; k++) {
+        tone(62, 0.2, { gain: 0.2, delay: k * 1.0, slideTo: 40, ...o })
+        tone(56, 0.22, { gain: 0.14, delay: k * 1.0 + 0.28, slideTo: 38, ...o })
+      }
+      ;[587.3, 880].forEach((f, i) => tone(f, 1.2, { gain: 0.025, delay: 0.1 + i * 0.12, ...o }))
+      break
+    case 'tempo-perde':
+      for (let k = 0; k < 2; k++) {
+        tone(62, 0.2, { gain: 0.2, delay: k * 1.0, slideTo: 40, ...o })
+        tone(56, 0.22, { gain: 0.14, delay: k * 1.0 + 0.28, slideTo: 38, ...o })
+      }
+      tone(220, 1.1, { type: 'triangle', gain: 0.04, slideTo: 110, delay: 0.1, ...o })
+      break
+    case 'item':
+      noise(0.07, { gain: 0.08, freq: 2400, q: 1.2, sweepTo: 900, ...o })
+      ;[987.8, 1318.5, 1975.5].forEach((f, i) => tone(f, 1.2, { gain: 0.025, delay: 0.08 + i * 0.07, ...o }))
+      break
+    case 'papel':
+      somPapel(bus)
+      break
+    default:
+      noise(0.04, { gain: 0.05, freq: 2600, q: 6, ...o })
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════════ Trilha da Sala de Jogos */
+
+/**
+ * Tema da Sala de Jogos: "cassino gótico" em ré menor, 72 bpm — cordas sustentadas, piano em arpejo com uma melodia
+ * no agudo e um pulso grave suave. 24 compassos (80 s) em laço, agendado no relógio do WebAudio (lookahead de 1 s,
+ * temporizador de 250 ms): poucos osciladores vivos por vez, leve no celular.
+ *
+ * TROCAR POR UM ARQUIVO DE ÁUDIO: ponha o arquivo em `public/audio/` e aponte `SALA_MUSICA_ARQUIVO` para ele
+ * (ex.: '/audio/sala-de-jogos.mp3'). Com o caminho definido, a síntese não é usada; volume, mudo, fade e "abafar
+ * durante a partida" continuam iguais.
+ */
+export const SALA_MUSICA_ARQUIVO: string | null = null
+
+const SALA_PREFS_KEY = 'devo.musica.sala'
+export type SalaMusicaPrefs = { volume: number; mudo: boolean }
+let salaPrefs: SalaMusicaPrefs = lerSalaPrefs()
+const salaListeners = new Set<() => void>()
+function lerSalaPrefs(): SalaMusicaPrefs {
+  try {
+    const raw = typeof window !== 'undefined' ? window.localStorage.getItem(SALA_PREFS_KEY) : null
+    const v = raw ? (JSON.parse(raw) as Partial<SalaMusicaPrefs>) : {}
+    const volume = typeof v.volume === 'number' && v.volume >= 0 && v.volume <= 1 ? v.volume : 0.6
+    return { volume, mudo: v.mudo === true }
+  } catch {
+    return { volume: 0.6, mudo: false }
+  }
+}
+export function getSalaMusica() {
+  return salaPrefs
+}
+export function subscribeSalaMusica(l: () => void) {
+  salaListeners.add(l)
+  return () => {
+    salaListeners.delete(l)
+  }
+}
+export function setSalaMusica(next: Partial<SalaMusicaPrefs>) {
+  salaPrefs = { ...salaPrefs, ...next }
+  try {
+    window.localStorage.setItem(SALA_PREFS_KEY, JSON.stringify(salaPrefs))
+  } catch {
+    /* só nesta sessão */
+  }
+  aplicarNivelSala(0.25)
+  salaListeners.forEach((l) => l())
+}
+
+const SALA_BPM = 72
+const SALA_BEAT = 60 / SALA_BPM
+const SALA_BAR = SALA_BEAT * 4
+const SALA_BARS = 24
+// acordes (2 compassos cada): Dm Bb Gm A | Dm F C A7 | Bb Gm Eb(napolitano) A
+const SALA_ACORDES: { raiz: number; voz: number[] }[] = [
+  { raiz: 38, voz: [50, 53, 57, 62] },
+  { raiz: 34, voz: [50, 53, 58, 62] },
+  { raiz: 31, voz: [50, 55, 58, 62] },
+  { raiz: 33, voz: [49, 52, 57, 61] },
+  { raiz: 38, voz: [50, 53, 57, 62] },
+  { raiz: 41, voz: [48, 53, 57, 60] },
+  { raiz: 36, voz: [48, 52, 55, 60] },
+  { raiz: 33, voz: [49, 52, 55, 57] },
+  { raiz: 34, voz: [50, 53, 58, 62] },
+  { raiz: 31, voz: [50, 55, 58, 62] },
+  { raiz: 39, voz: [51, 55, 58, 63] },
+  { raiz: 33, voz: [49, 52, 57, 61] },
+]
+// melodia do piano no agudo: [compasso, tempo (em colcheias), nota MIDI, duração em tempos]
+const SALA_MELODIA: [number, number, number, number][] = [
+  [0, 0, 74, 2], [0, 4, 77, 1.5], [0, 7, 76, 0.5], [1, 0, 74, 3],
+  [2, 0, 74, 1], [2, 2, 72, 1], [2, 4, 70, 2], [3, 0, 69, 3],
+  [4, 0, 67, 2], [4, 4, 70, 1.5], [4, 7, 69, 0.5], [5, 0, 67, 3],
+  [6, 0, 69, 1], [6, 2, 70, 1], [6, 4, 73, 2], [7, 0, 76, 3],
+  [8, 0, 74, 2], [8, 4, 77, 1.5], [8, 7, 79, 0.5], [9, 0, 81, 3],
+  [10, 0, 77, 1], [10, 2, 76, 1], [10, 4, 74, 2], [11, 0, 72, 3],
+  [12, 0, 70, 2], [12, 4, 74, 2], [13, 0, 77, 3],
+  [14, 0, 79, 2], [14, 4, 77, 1], [14, 6, 74, 1], [15, 0, 70, 3],
+  [16, 0, 74, 1.5], [16, 3, 72, 0.5], [16, 4, 70, 2], [17, 0, 69, 3],
+  [18, 0, 70, 1], [18, 2, 74, 1], [18, 4, 79, 2], [19, 0, 78, 3],
+  [20, 0, 75, 2], [20, 4, 74, 1], [20, 6, 70, 1], [21, 0, 67, 3],
+  [22, 0, 69, 2], [22, 4, 73, 2], [23, 0, 76, 2], [23, 4, 73, 2],
+]
+// arpejo do piano (índices da voz do acorde, uma oitava acima; -1 = pausa), alterna por compasso
+const SALA_ARPEJO = [
+  [0, 2, 1, 3, 2, 1, -1, 2],
+  [0, -1, 2, 1, 3, -1, 2, -1],
+]
+
+type SalaSynth = { bus: GainNode; lp: BiquadFilterNode; timer: number; next: number; passo: number; parar: () => void }
+type SalaArquivo = { bus: GainNode; lp: BiquadFilterNode; el: HTMLAudioElement; parar: () => void }
+let sala: SalaSynth | SalaArquivo | null = null
+let salaAbafada = false
+let salaEsperaGesto: (() => void) | null = null
+
+function nivelSala() {
+  if (salaPrefs.mudo) return 0.0001
+  return Math.max(0.0001, salaPrefs.volume * 0.5 * (salaAbafada ? 0.3 : 1))
+}
+function aplicarNivelSala(t: number) {
+  if (!sala || !ctx) return
+  sala.bus.gain.cancelScheduledValues(ctx.currentTime)
+  sala.bus.gain.setTargetAtTime(nivelSala(), ctx.currentTime, t)
+  sala.lp.frequency.setTargetAtTime(salaAbafada ? 650 : 5200, ctx.currentTime, 0.5)
+}
+
+/** Reverberação curta gerada (sala de pedra), criada uma vez por início de trilha. */
+function reverb(c: AudioContext, seg = 2.4) {
+  const conv = c.createConvolver()
+  const len = Math.floor(c.sampleRate * seg)
+  const buf = c.createBuffer(2, len, c.sampleRate)
+  for (let ch = 0; ch < 2; ch++) {
+    const d = buf.getChannelData(ch)
+    for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * (1 - i / len) ** 2.6
+  }
+  conv.buffer = buf
+  return conv
+}
+
+/** Uma voz de cordas: duas serras levemente desafinadas, envelope lento. */
+function corda(c: AudioContext, f: number, t: number, dur: number, gain: number, dest: AudioNode) {
+  const g = c.createGain()
+  g.gain.setValueAtTime(0, t)
+  g.gain.linearRampToValueAtTime(gain, t + 1.3)
+  g.gain.setValueAtTime(gain, t + Math.max(1.4, dur - 1.2))
+  g.gain.linearRampToValueAtTime(0, t + dur)
+  g.connect(dest)
+  for (const det of [-7, 6]) {
+    const o = c.createOscillator()
+    o.type = 'sawtooth'
+    o.frequency.value = f
+    o.detune.value = det
+    o.connect(g)
+    o.start(t)
+    o.stop(t + dur + 0.05)
+  }
+}
+
+/** Nota de piano: triângulo + harmônico, ataque seco e queda longa. */
+function piano(c: AudioContext, f: number, t: number, dur: number, gain: number, dest: AudioNode) {
+  const g = c.createGain()
+  g.gain.setValueAtTime(0.0001, t)
+  g.gain.exponentialRampToValueAtTime(gain, t + 0.006)
+  g.gain.exponentialRampToValueAtTime(gain * 0.35, t + 0.4)
+  g.gain.exponentialRampToValueAtTime(0.0001, t + dur)
+  g.connect(dest)
+  const o = c.createOscillator()
+  o.type = 'triangle'
+  o.frequency.value = f
+  o.connect(g)
+  const h = c.createOscillator()
+  h.type = 'sine'
+  h.frequency.value = f * 2.003
+  const hg = c.createGain()
+  hg.gain.value = 0.3
+  h.connect(hg).connect(g)
+  o.start(t)
+  h.start(t)
+  o.stop(t + dur + 0.05)
+  h.stop(t + dur + 0.05)
+}
+
+function pulso(c: AudioContext, f: number, t: number, gain: number, dest: AudioNode) {
+  const g = c.createGain()
+  g.gain.setValueAtTime(0.0001, t)
+  g.gain.exponentialRampToValueAtTime(gain, t + 0.02)
+  g.gain.exponentialRampToValueAtTime(0.0001, t + 0.55)
+  g.connect(dest)
+  const o = c.createOscillator()
+  o.type = 'sine'
+  o.frequency.setValueAtTime(f, t)
+  o.frequency.exponentialRampToValueAtTime(f * 0.8, t + 0.5)
+  o.connect(g)
+  o.start(t)
+  o.stop(t + 0.6)
+}
+
+/** Agenda uma colcheia da trilha (o laço dá a volta em 24 compassos). */
+function salaColcheia(s: SalaSynth, cordas: AudioNode, pianoBus: AudioNode, grave: AudioNode) {
+  if (!ctx) return
+  const c = ctx
+  const p = s.passo % (SALA_BARS * 8)
+  const compasso = Math.floor(p / 8)
+  const colcheia = p % 8
+  const t = s.next
+  const ac = SALA_ACORDES[Math.floor(compasso / 2) % SALA_ACORDES.length]
+  const midi = (m: number) => 440 * 2 ** ((m - 69) / 12)
+  if (!muted) {
+    // cordas: um acorde a cada 2 compassos
+    if (compasso % 2 === 0 && colcheia === 0) for (const m of ac.voz) corda(c, midi(m), t, SALA_BAR * 2 + 0.9, 0.016, cordas)
+    // pulso grave: tempos 1 e 3 (e um eco leve no "e" do 2, como um coração)
+    if (colcheia === 0 || colcheia === 4) pulso(c, midi(ac.raiz), t, colcheia === 0 ? 0.16 : 0.1, grave)
+    if (colcheia === 3) pulso(c, midi(ac.raiz), t, 0.05, grave)
+    // arpejo do piano (mais ralo nos 4 primeiros compassos: entrada)
+    const ar = SALA_ARPEJO[compasso % 2][colcheia]
+    if (ar >= 0 && (compasso >= 2 || colcheia % 2 === 0)) piano(c, midi(ac.voz[ar] + 12), t, 1.8, 0.03, pianoBus)
+    // melodia
+    for (const [b, e, n, d] of SALA_MELODIA) if (b === compasso && e === colcheia) piano(c, midi(n), t, Math.max(1.6, d * SALA_BEAT + 1.2), 0.05, pianoBus)
+  }
+  s.passo++
+  s.next += SALA_BEAT / 2
+}
+
+function iniciarSala() {
+  const c = ensure()
+  if (!c || !master || sala) return
+  const bus = c.createGain()
+  bus.gain.setValueAtTime(0.0001, c.currentTime)
+  const lp = c.createBiquadFilter()
+  lp.type = 'lowpass'
+  lp.frequency.value = salaAbafada ? 650 : 5200
+  lp.connect(bus)
+  bus.connect(master)
+  setAmbientDucked(true)
+
+  if (SALA_MUSICA_ARQUIVO) {
+    const el = new Audio(SALA_MUSICA_ARQUIVO)
+    el.loop = true
+    el.preload = 'auto'
+    c.createMediaElementSource(el).connect(lp)
+    void el.play().catch(() => {})
+    sala = {
+      bus,
+      lp,
+      el,
+      parar: () => {
+        window.setTimeout(() => {
+          el.pause()
+          bus.disconnect()
+        }, 2200)
+      },
+    }
+  } else {
+    const rev = reverb(c)
+    const molhado = c.createGain()
+    molhado.gain.value = 0.32
+    rev.connect(molhado).connect(lp)
+    const cordasLp = c.createBiquadFilter()
+    cordasLp.type = 'lowpass'
+    cordasLp.frequency.value = 1150
+    cordasLp.Q.value = 0.4
+    cordasLp.connect(lp)
+    cordasLp.connect(rev)
+    const pianoBus = c.createGain()
+    pianoBus.gain.value = 1
+    pianoBus.connect(lp)
+    pianoBus.connect(rev)
+    const grave = c.createBiquadFilter()
+    grave.type = 'lowpass'
+    grave.frequency.value = 220
+    grave.connect(lp)
+    const s: SalaSynth = {
+      bus,
+      lp,
+      timer: 0,
+      next: c.currentTime + 0.3,
+      passo: 0,
+      parar: () => {
+        window.clearInterval(s.timer)
+        window.setTimeout(() => bus.disconnect(), 2600)
+      },
+    }
+    s.timer = window.setInterval(() => {
+      while (sala === s && s.next < c.currentTime + 1) salaColcheia(s, cordasLp, pianoBus, grave)
+    }, 250)
+    sala = s
+  }
+  // fade in
+  bus.gain.setValueAtTime(0.0001, c.currentTime)
+  bus.gain.exponentialRampToValueAtTime(nivelSala(), c.currentTime + 2.5)
+}
+
+/**
+ * Liga a trilha da Sala de Jogos (fade in de 2,5 s). Nunca toca antes de um gesto do jogador: sem ativação da
+ * página, espera o primeiro toque/tecla. O mudo global (equalizador) e o mudo/volume próprios valem sempre.
+ */
+export function startSalaMusica() {
+  if (typeof window === 'undefined' || sala || salaEsperaGesto) return
+  const ativa = (navigator as Navigator & { userActivation?: { hasBeenActive: boolean } }).userActivation?.hasBeenActive
+  const ok = ativa ?? ctx?.state === 'running'
+  if (ok) {
+    iniciarSala()
+    return
+  }
+  const gesto = () => {
+    window.removeEventListener('pointerdown', gesto)
+    window.removeEventListener('keydown', gesto)
+    salaEsperaGesto = null
+    iniciarSala()
+  }
+  salaEsperaGesto = () => {
+    window.removeEventListener('pointerdown', gesto)
+    window.removeEventListener('keydown', gesto)
+    salaEsperaGesto = null
+  }
+  window.addEventListener('pointerdown', gesto)
+  window.addEventListener('keydown', gesto)
+}
+
+/** Desliga a trilha (fade out de 1,8 s). */
+export function stopSalaMusica() {
+  salaEsperaGesto?.()
+  if (!sala || !ctx) return
+  const s = sala
+  sala = null
+  const t = ctx.currentTime
+  s.bus.gain.cancelScheduledValues(t)
+  s.bus.gain.setValueAtTime(Math.max(s.bus.gain.value, 0.0001), t)
+  s.bus.gain.exponentialRampToValueAtTime(0.0001, t + 1.8)
+  s.parar()
+  if (!musicPlaying) setAmbientDucked(false)
+}
+
+/** Abafa a trilha enquanto uma partida está aberta (sem cortar o clima). */
+export function setSalaMusicaAbafada(on: boolean) {
+  salaAbafada = on
+  aplicarNivelSala(0.6)
 }

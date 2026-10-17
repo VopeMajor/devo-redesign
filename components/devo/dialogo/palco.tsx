@@ -6,6 +6,7 @@ import { npcPortrait } from '@/lib/devo/npcs'
 import type { Destino } from '@/lib/devo/progresso'
 import { cn } from '@/lib/utils'
 import { NpcAnchor, useFalaAncora } from '../kit/npc-anchor'
+import { CasaNoite } from './casa-noite'
 import { ChamadaMelissa, HologramaMelissa } from './holograma'
 import { LinhaDestino, PlacaDestino } from './linha-destino'
 
@@ -48,7 +49,7 @@ export function Palco({
   return (
     <div aria-hidden="true" className={cn('absolute inset-0 overflow-hidden', shake && 'pl-shake')} key={shake ? `s${fxKey}` : 'palco'}>
       <div ref={marca} className="pointer-events-none absolute inset-0" />
-      <Cenario id={estado.cenario} portaAberta={!!estado.porta} anima={fx === 'porta-abre' || fx === 'porta-fecha'} fxKey={fxKey} />
+      <Cenario id={estado.cenario} portaAberta={!!estado.porta} anima={fx === 'porta-abre' || fx === 'porta-fecha'} fxKey={fxKey} luzFalha={fx === 'luz-pisca'} />
 
       {estado.cenario === 'holograma' && estado.holo === 'chamada' && (
         <div className="absolute inset-x-0 top-[20%] z-10 flex justify-center">
@@ -80,10 +81,10 @@ export function Palco({
   )
 }
 
-function Cenario({ id, portaAberta, anima, fxKey }: { id: CenarioId; portaAberta: boolean; anima: boolean; fxKey: number }) {
+function Cenario({ id, portaAberta, anima, fxKey, luzFalha }: { id: CenarioId; portaAberta: boolean; anima: boolean; fxKey: number; luzFalha: boolean }) {
   switch (id) {
     case 'casa-noite':
-      return <CasaNoite portaAberta={portaAberta} anima={anima} fxKey={fxKey} />
+      return <CasaNoite portaAberta={portaAberta} anima={anima} fxKey={fxKey} luzFalha={luzFalha} />
     case 'holograma':
       return (
         <div className="absolute inset-0 bg-[radial-gradient(120%_70%_at_50%_70%,#1a1824,#0c0c0e_60%,#050506)]">
@@ -118,40 +119,6 @@ function Cenario({ id, portaAberta, anima, fxKey }: { id: CenarioId; portaAberta
     default:
       return <div className="absolute inset-0 bg-black" />
   }
-}
-
-/** Casa do jogador à noite: parede, janela com luar frio, porta com moldura (a luz do corredor entra ao abrir). */
-function CasaNoite({ portaAberta, anima, fxKey }: { portaAberta: boolean; anima: boolean; fxKey: number }) {
-  return (
-    <div className="absolute inset-0 bg-[linear-gradient(180deg,#141418,#1b1a1e_55%,#0e0e10)]">
-      {/* papel de parede: listras finas quase invisíveis */}
-      <span className="absolute inset-0 opacity-[0.07] bg-[repeating-linear-gradient(90deg,#ece5d8_0_1px,transparent_1px_26px)]" />
-      {/* janela com luar */}
-      <span className="absolute left-[7%] top-[13%] h-[26%] w-[30%] bg-[linear-gradient(160deg,rgba(194,185,236,0.20),rgba(186,176,159,0.06))] shadow-[inset_0_0_0_3px_#2a2a2e,0_0_60px_rgba(168,155,224,0.12)]">
-        <span className="absolute inset-y-0 left-1/2 w-[3px] -translate-x-1/2 bg-[#2a2a2e]" />
-        <span className="absolute inset-x-0 top-1/2 h-[3px] -translate-y-1/2 bg-[#2a2a2e]" />
-      </span>
-      <span className="absolute left-[2%] top-[38%] h-[44%] w-[46%] bg-[linear-gradient(180deg,rgba(168,155,224,0.10),transparent)] [clip-path:polygon(18%_0,78%_0,100%_100%,0_100%)]" />
-      {/* porta */}
-      <span className="absolute bottom-[30%] right-[9%] h-[40%] w-[30%] bg-[#0b0b0d] shadow-[inset_0_0_0_4px_#26252a,0_0_0_1px_rgba(186,176,159,0.25)]">
-        {portaAberta && <span key={`luz${anima ? fxKey : 'x'}`} className={cn('absolute inset-[4px] bg-[linear-gradient(90deg,rgba(236,229,216,0.5),rgba(236,229,216,0.1))]', anima && 'pl-door-light')} />}
-        <span
-          key={`porta${anima ? fxKey : 'x'}`}
-          className={cn(
-            'absolute inset-[4px] origin-left bg-[linear-gradient(90deg,#1d1c21,#141317)]',
-            anima ? (portaAberta ? 'pl-door-open' : 'pl-door-close') : portaAberta && '[transform:perspective(500px)_rotateY(-72deg)]',
-          )}
-        >
-          <span className="absolute right-[12%] top-1/2 size-2 rounded-full bg-[#bab09f]" />
-          <span className="absolute inset-x-[14%] top-[10%] h-[30%] border border-[#2c2b30]" />
-          <span className="absolute inset-x-[14%] bottom-[10%] h-[38%] border border-[#2c2b30]" />
-        </span>
-      </span>
-      {/* chão */}
-      <span className="absolute inset-x-0 bottom-0 h-[30%] bg-[linear-gradient(180deg,#121114,#08080a)] shadow-[0_-1px_0_rgba(186,176,159,0.18)]" />
-      <span className="absolute inset-0 bg-[radial-gradient(120%_80%_at_50%_40%,transparent_45%,rgba(0,0,0,0.7))]" />
-    </div>
-  )
 }
 
 /** Retrato do NPC em cena; sem arte no mapa de elenco → silhueta (ex.: Corvo, ou Galo antes do Elenco). */

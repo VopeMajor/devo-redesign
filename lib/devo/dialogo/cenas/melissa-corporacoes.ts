@@ -1,7 +1,13 @@
 /**
  * Holograma da Melissa — Corporações (apresentação do sistema). Texto LITERAL do dono:
- * docs/redesign/SISTEMAS-texto-do-dono.txt (só formatação, efeitos e `{o|a}`).
+ * docs/redesign/DIALOGOS-casa-galo-poco-melissa-dono.txt (linhas 440–556; só formatação, efeitos e `{o|a}`).
  * Ao concluir, libera a flag `corporacoes` (a Fundação deixa Corporações para a Narrativa liberar).
+ *
+ * Consequências (servidor, uma vez só):
+ * - Opção 2 (Necro-Corporação): −1h30 no Shuffler (valor do dono; config `narrativa.melissa_corporacoes.multa_min`
+ *   = −90) + Karma −2 (caos). O Tempo vai para o histórico (`admin_log` 'dialogo.tempo') e o karma para `karma_log`.
+ * - "Salão das Máscaras? / E se eu quiser criar uma? / Entendi.": as duas primeiras podem ser vistas (cada uma
+ *   volta às que faltam); "Entendi." segue direto (instrução do dono).
  */
 import { escolha, fala, narra, opcao } from '../autor'
 import type { Cena } from '../formato'
@@ -39,8 +45,17 @@ export const CENA_MELISSA_CORPORACOES: Cena = {
       opcao('Como posso entrar em uma Corporação?', [mel('Entrar em uma Corporação é muito fácil, mas preciso que você espere um pouco antes de dar esse passo.', 'sorriso')]),
       opcao(
         'Parece interessante. Onde encontro uma Necro-Corporação?',
-        [mel('Record... Que coisa horrível.', 'surpreso'), narra('Uma determinada quantidade de tempo é retirada do seu Shuffler.', { som: 'tempo' }), mel('Como você ainda é iniciante, vou deixar passar desta vez.', 'triste')],
-        { efeitos: [{ tipo: 'tempo', minutos: -30, config: 'narrativa.melissa_corporacoes.multa_min' }] },
+        [
+          mel('Record... Que coisa horrível.', 'surpreso'),
+          narra('Uma determinada quantidade de tempo é retirada do seu Shuffler.', { som: 'tempo-perde' }),
+          mel('Como você ainda é iniciante, vou deixar passar desta vez.', 'triste'),
+        ],
+        {
+          efeitos: [
+            { tipo: 'tempo', minutos: -90, config: 'narrativa.melissa_corporacoes.multa_min' },
+            { tipo: 'karma', delta: -2 },
+          ],
+        },
       ),
       opcao('Eu quero mais é ficar na minha.', [
         mel('É uma opção, embora bastante irresponsável. Poucos Records alcançam o sucesso trabalhando sozinhos. E, entre aqueles que conseguem, a maioria já participou de alguma *Corporação* em determinado momento. Além disso, existem muito mais vantagens em fazer parte de uma equipe do que em enfrentar tudo por conta própria.', 'pensativo'),
@@ -53,11 +68,11 @@ export const CENA_MELISSA_CORPORACOES: Cena = {
     escolha('salao', [
       opcao('Salão das Máscaras?', [mel('Caso já tenha desbloqueado esse recurso, você encontrará o ícone de uma máscara no *Menu do Devo*. Ele representa o *Salão das Máscaras*. Caso contrário... Bem, paciência.', 'riso')]),
       opcao('E se eu quiser criar uma?', [mel('Se quiser criar sua própria *Corporação*, precisará investir uma determinada quantidade de tempo e obter aprovação legal. A avaliação administrativa levará em consideração se o seu perfil corresponde aos requisitos exigidos.', 'explica')]),
-      'Entendi.',
-    ]),
+      { texto: 'Entendi.', segue: true },
+    ], { modo: 'explorar' }),
     mel('Lembre-se sempre de tomar cuidado com as *Corporações Rivais* e com as outras *Corporações Globais*. Elas não são tão boazinhas quanto nós.', 'confiante'),
     narra('A chamada é encerrada antes que eu possa me despedir de Melissa — ou perguntar a ela o que exatamente são essas tais Corporações Globais.', {
-      som: 'holograma',
+      som: 'holograma-fim',
       palco: { holo: 'encerra', npc: null },
     }),
     narra('Será que eu deveria tomar mais cuidado daqui em diante?'),

@@ -27,7 +27,7 @@ Transcreva o texto do dono como está; só mude a **forma**:
 | `"Que estranho. Alguém veio me visitar?"` | `pensa('Que estranho. Alguém veio me visitar?')` (sem as aspas; o motor desenha) |
 | fala de NPC (`— E aí, pé de caju.`) | `fala('galo', 'E aí, pé de caju.')` (sem o travessão; a placa diz quem fala) |
 | fala do jogador sem opção | `eu('Finalmente em casa.')` |
-| `*Som de porta abrindo*` | `som('Som de porta abrindo', 'porta')` (legenda + som) |
+| `*Som de porta se abrindo.*` | `som('Som de porta se abrindo.', 'porta-abre')` (legenda + som) |
 | `[No meio da noite, a campainha toca] *Som*` | `narra('No meio da noite, a campainha toca', { som: 'campainha', fx: 'campainha' })` |
 | `[A luz pisca]` | `narra('A luz pisca', { fx: 'luz-pisca', som: 'luz' })` |
 | bloco "**Sistema de Karma**" / `[Torre de Ruptura]` + texto | `sistema('Sistema de Karma', ['parágrafo 1', 'parágrafo 2'])` |
@@ -37,6 +37,7 @@ Transcreva o texto do dono como está; só mude a **forma**:
 | "(se houver) … aparecer bloqueado" | `{ texto: 'Usar moeda especial', requer: { item: 'dracma_incomum', motivo: 'Você não tem moeda especial.' } }` |
 | "Todos exceto 4 — Encerra interação" | `opcao('…', [], { ir: 'fim' })` |
 | "2 — pula o quadro seguinte" | `opcao('Sim, por favor.', [], { ir: 'id-do-quadro-depois' })` |
+| "deixe que todas as opções sejam selecionáveis antes de continuar, exceto a terceira que vai direto" | `escolha('id', [opcao('1', […]), opcao('2', […]), { texto: '3', segue: true }], { modo: 'explorar' })` |
 | `[Você recebeu um Dracma de Raridade Incomum]` | `efeito('dracma', [{ tipo: 'item', item: 'dracma_incomum' }], 'Dracma de Raridade Incomum')` + a `narra` do texto |
 
 Texto aceita: `{nome}`, gênero `{o|a}` (DIRECAO-3 §7 — marque tudo que concorda com o JOGADOR),
@@ -47,14 +48,27 @@ Texto aceita: `{nome}`, gênero `{o|a}` (DIRECAO-3 §7 — marque tudo que conco
 para ver várias opções antes de seguir) · `efeito` (id obrigatório) · `ir`.
 Todo passo aceita `id`, `som`, `fx` (`luz-pisca`, `porta-abre`, `porta-fecha`, `campainha`, `escurece`,
 `revela`, `tremor`) e `palco` (`npc`, `expressao`, `cenario`, `destino`, `holo`), que **persiste** nos passos
-seguintes até outro passo mudar.
+seguintes até outro passo mudar. `quadro` (texto livre) é para telas PRÓPRIAS que tocam a cena com o cenário delas
+(ex.: o Poço: `rua`, `poco`, `figura`, `mao`); o palco do motor ignora.
+
+**Explorar**: em `modo: 'explorar'` cada opção pode ser vista uma vez (a resposta volta à lista com as que faltam);
+a opção com `segue: true` encerra e avança. Sem nenhuma `segue`, aparece "Continuar" depois da primeira.
+
+### Sons (`som`) — lib/devo/audio.ts › `playDeixa`
+`porta-abre` (`porta`), `porta-fecha`, `campainha`, `lata`, `luz`, `passos`, `cozinha`, `chamada`, `holograma`,
+`holograma-fim`, `aparicao`, `sistema`, `item`, `tempo`, `tempo-perde`, `papel`. Um som por vez (o novo abaixa o
+anterior em 0,2 s), o mesmo som não repete em 1,5 s, volume moderado, e o mudo do jogador (guardado no aparelho)
+vale sempre. Ponha o som no passo da marcação do roteiro (`*Som de lata*` → o passo da lata).
 
 ### Efeitos (`Efeito`) — aplicados no servidor, uma vez por jogador
 - `{ tipo: 'tempo', minutos, config? }` — + dá, − tira. `config` = chave em `devo_config` (Owner edita; o número
   da cena é o padrão). Valor não definido pelo dono → config **provisória** na sua migração.
 - `{ tipo: 'karma', delta }` — + ordem, − caos (`adjustKarma` com idem).
-- `{ tipo: 'item', item, quantidade? }` — inventário da Fundação; quantidade negativa consome (sem saldo → a
-  escolha falha com 409 e nada muda).
+- `{ tipo: 'item', item, quantidade?, idem? }` — inventário da Fundação; quantidade negativa consome (sem saldo → a
+  escolha falha com 409 e nada muda). `idem` = prefixo próprio (o servidor põe `:<jogador>`) quando OUTRO sistema
+  entrega o mesmo item com a mesma chave (Dracma do encapuzado: `poco:corvo`, a mesma do servidor do Poço).
+- Todo Tempo dado/tirado por cena vai também ao histórico `admin_log` (`action = 'dialogo.tempo'`, `target_id` =
+  jogador, `ref` = `<cena>:<chave>`, `data.minutos`).
 - `{ tipo: 'flag', flag }` — `grantUnlock(..., 'narrativa')`.
 - `{ tipo: 'contato', npc }` — o NPC passa a existir em Mensagens.
 
@@ -108,6 +122,7 @@ Cena com `requer: <flag>` → 403 para quem não tem a flag (Owner/Anfitrião pa
 | `galo-casa` (Karma) | Flag `galo_casa` + jogador abriu ≥ N sistemas novos (`narrativa.galo_casa.explorar_min`, provisório = 2). Aparece o cartão "Ir para casa" na home e um aviso. | Narrativa (automático) |
 | `melissa-corporacoes` | Depois de `galo-casa` terminada, ao voltar à home (chamada holográfica); ou na 1ª entrada em Corporações. Ao concluir libera a flag `corporacoes`. | Narrativa + agente Corporações: `cenas.abrir('melissa-corporacoes', { seNaoVista: true })` |
 | `reflexao-anfitriao` | Ao sair da aba de Torres pela primeira vez. | Agente Torres: `cenas.abrir('reflexao-anfitriao', { seNaoVista: true })` |
+| `poco-encontro` | 1ª entrada no Poço. Tocada pela tela do Poço (`components/devo/poco/poco-neblina.tsx`, cenário próprio) com o progresso/efeitos do motor. Ao terminar pela 1ª vez, pede `melissa-corporacoes` (roteiro do dono: "Enquanto estou distraído…" vem logo depois do Poço). | Poço |
 
 **Melissa = Companhia de Despertados.** Sempre que o assunto for a Companhia, use o cenário `holograma` (chamada
 + projeção) ou, fora de uma cena, `<ChamadaMelissa />` / `<HologramaMelissa />` de `components/devo/dialogo`.

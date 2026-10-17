@@ -133,7 +133,7 @@ await test('progresso: guarda o passo e retoma de onde parou', async () => {
   assert(bad.status === 400, 'passo fora da cena')
 })
 
-await test('Galo "Galo…?" transfere Tempo UMA vez (repetir/recarregar não repete)', async () => {
+await test('Galo "Galo...?" transfere Tempo UMA vez (repetir/recarregar não repete)', async () => {
   const cfg = Number((await q("SELECT value FROM devo_config WHERE key = 'narrativa.galo_casa.tempo_min'"))[0].value)
   const r1 = await j.post('/api/dialogo', { action: 'escolher', cena: 'galo-casa', escolha: 'lembra', opcao: 2 })
   assert(r1.status === 200 && r1.json.opcao === 2, `escolher: ${r1.text}`)
@@ -168,6 +168,7 @@ await test('efeito de contato e conclusão valem uma vez', async () => {
 await test('Melissa: a opção da Necro-Corporação tira Tempo uma vez; concluir libera Corporações uma vez', async () => {
   const before = await timer(j.id)
   const cfg = Number((await q("SELECT value FROM devo_config WHERE key = 'narrativa.melissa_corporacoes.multa_min'"))[0].value)
+  assert(cfg === -90, `multa da Necro-Corporação deveria ser 1h30 (−90), veio ${cfg}`)
   const rs = await Promise.all([1, 2, 3, 4, 5].map(() => j.post('/api/dialogo', { action: 'escolher', cena: 'melissa-corporacoes', escolha: 'entrar', opcao: 1 })))
   assert(rs.every((r) => r.status === 200), `concorrência: ${rs.map((r) => r.status)}`)
   const soma = rs.reduce((a, r) => a + r.json.timeDeltaMs, 0)
@@ -205,6 +206,78 @@ await test('banco: evento repetido é barrado pela chave primária', async () =>
     falhou = true
   }
   assert(falhou, 'inserir evento repetido deveria falhar')
+})
+
+
+await test('Melissa: Necro-Corporação vai para o histórico (admin_log) e tira karma uma vez', async () => {
+  const h = await q("SELECT ref, data FROM admin_log WHERE target_id = $1 AND action = 'dialogo.tempo' ORDER BY at", [j.id])
+  const multa = h.filter((r) => r.ref === 'melissa-corporacoes:e:entrar')
+  assert(multa.length === 1 && multa[0].data.minutos === -90 && multa[0].data.motivo === 'penalidade', `histórico da multa: ${JSON.stringify(h)}`)
+  const galo = h.filter((r) => r.ref === 'galo-casa:e:lembra')
+  assert(galo.length === 1 && galo[0].data.minutos > 0, `histórico do Tempo do Galo: ${JSON.stringify(h)}`)
+  const k = await q("SELECT delta FROM karma_log WHERE player_id = $1 AND ref = 'melissa-corporacoes:e:entrar'", [j.id])
+  assert(k.length === 1 && Number(k[0].delta) === -2, `karma da Necro-Corporação: ${JSON.stringify(k)}`)
+})
+
+await test('Melissa: "Salão das Máscaras?" e "E se eu quiser criar uma?" exploráveis (uma vez cada); "Entendi." registra e segue', async () => {
+  for (const o of [0, 0, 1, 2]) {
+    const r = await j.post('/api/dialogo', { action: 'escolher', cena: 'melissa-corporacoes', escolha: 'salao', opcao: o })
+    assert(r.status === 200 && r.json.opcao === o, `explorar ${o}: ${r.text}`)
+  }
+  const ev = await q("SELECT key FROM dialog_events WHERE player_id = $1 AND scene_id = 'melissa-corporacoes' AND key LIKE 'e:salao%' ORDER BY key", [j.id])
+  assert(JSON.stringify(ev.map((e) => e.key)) === JSON.stringify(['e:salao:0', 'e:salao:1', 'e:salao:2']), `eventos: ${JSON.stringify(ev)}`)
+  const est = await j.get('/api/dialogo?cena=melissa-corporacoes')
+  assert(JSON.stringify(est.json.progresso.escolhas.salao) === '[0,1,2]', `escolhas: ${JSON.stringify(est.json.progresso.escolhas)}`)
+})
+
+await test('Galo: "Agradeço." dá karma +1 uma vez só', async () => {
+  const antes = Number((await q('SELECT karma FROM players WHERE id = $1', [j.id]))[0].karma)
+  for (let i = 0; i < 3; i++) await j.post('/api/dialogo', { action: 'escolher', cena: 'galo-casa', escolha: 'contato', opcao: 0 })
+  const depois = Number((await q('SELECT karma FROM players WHERE id = $1', [j.id]))[0].karma)
+  assert(depois - antes === 1, `karma ${antes} → ${depois}`)
+})
+
+const dracmas = async (id) => Number((await q("SELECT coalesce(sum(quantity), 0)::int AS n FROM player_items WHERE player_id = $1 AND item_key = 'dracma_incomum'", [id]))[0].n)
+
+const p1 = await signUp(`Npoc${sfx}`, 'DEVO-NARR-0005')
+const p2 = await signUp(`Npoz${sfx}`, 'DEVO-NARR-0006')
+
+await test('Poço: encontro exige a flag do Poço (403 sem ela)', async () => {
+  const r = await p1.get('/api/dialogo?cena=poco-encontro')
+  assert(r.status === 403, `sem poco: ${r.status}`)
+})
+for (const p of [p1, p2]) await q("INSERT INTO player_unlocks (player_id, flag, source) VALUES ($1, 'poco', 'sistema') ON CONFLICT DO NOTHING", [p.id])
+
+await test('Poço: o encapuzado dá 1 Dracma Incomum uma vez (motor e servidor do Poço com a mesma chave)', async () => {
+  const st = await p1.get('/api/dialogo?cena=poco-encontro')
+  assert(st.status === 200, `estado: ${st.text}`)
+  const rs = await Promise.all([1, 2, 3].map(() => p1.post('/api/dialogo', { action: 'efeito', cena: 'poco-encontro', efeito: 'dracma' })))
+  assert(rs.every((r) => r.status === 200), `efeito: ${rs.map((r) => r.status)}`)
+  assert(rs.filter((r) => r.json.aplicados.length === 1).length === 1, `aplicado mais de uma vez: ${rs.map((r) => r.text)}`)
+  assert((await dracmas(p1.id)) === 1, `saldo depois do motor: ${await dracmas(p1.id)}`)
+  const ap = await p1.post('/api/poco', { action: 'apresentacao.concluir' })
+  assert(ap.status === 200, `apresentacao.concluir: ${ap.text}`)
+  assert((await dracmas(p1.id)) === 1, `servidor do Poço deu outra moeda: ${await dracmas(p1.id)}`)
+  // ordem inversa: o servidor do Poço primeiro, depois o motor
+  const ap2 = await p2.post('/api/poco', { action: 'apresentacao.concluir' })
+  assert(ap2.status === 200, `apresentacao.concluir (2): ${ap2.text}`)
+  const e2 = await p2.post('/api/dialogo', { action: 'efeito', cena: 'poco-encontro', efeito: 'dracma' })
+  assert(e2.status === 200, `efeito (2): ${e2.text}`)
+  assert((await dracmas(p2.id)) === 1, `motor deu outra moeda: ${await dracmas(p2.id)}`)
+})
+
+await test('Poço: "Sim, por favor." registra e "Obrigado/Obrigada." dá karma +1 uma vez', async () => {
+  const s1 = await p1.post('/api/dialogo', { action: 'escolher', cena: 'poco-encontro', escolha: 'oferta', opcao: 1 })
+  assert(s1.status === 200 && s1.json.opcao === 1, `oferta: ${s1.text}`)
+  const k0 = Number((await q('SELECT karma FROM players WHERE id = $1', [p1.id]))[0].karma)
+  await p1.post('/api/dialogo', { action: 'escolher', cena: 'poco-encontro', escolha: 'agradece', opcao: 0 })
+  await p1.post('/api/dialogo', { action: 'escolher', cena: 'poco-encontro', escolha: 'agradece', opcao: 0 })
+  const k1 = Number((await q('SELECT karma FROM players WHERE id = $1', [p1.id]))[0].karma)
+  assert(k1 - k0 === 1, `karma ${k0} → ${k1}`)
+  const f = await p1.post('/api/dialogo', { action: 'concluir', cena: 'poco-encontro' })
+  assert(f.status === 200, `concluir: ${f.text}`)
+  const r = await p1.get('/api/dialogo')
+  assert(r.json.cenas['poco-encontro']?.fim === true, `resumo: ${r.text}`)
 })
 
 await db.end()

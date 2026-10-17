@@ -2080,7 +2080,14 @@ CREATE INDEX IF NOT EXISTS dialog_events_scene_idx ON dialog_events (scene_id, a
 -- Valores do dono ainda não definidos ("X quantidade de tempo"): PROVISÓRIOS, editáveis pelo Owner.
 INSERT INTO devo_config (key, value, provisional, note) VALUES
   ('narrativa.galo_casa.tempo_min', '60'::jsonb, true, 'PROVISÓRIO: minutos que o Galo transfere na opção "Galo…?" (texto do dono: "X quantidade de tempo").'),
-  ('narrativa.melissa_corporacoes.multa_min', '-30'::jsonb, true, 'PROVISÓRIO: minutos retirados do Shuffler na opção da Necro-Corporação (negativo = tira).'),
+  ('narrativa.melissa_corporacoes.multa_min', '-90'::jsonb, false, 'Minutos retirados do Shuffler na opção da Necro-Corporação (dono, 17/10: 1h30). Negativo = tira.'),
   ('narrativa.galo_casa.explorar_min', '2'::jsonb, true, 'PROVISÓRIO: quantos sistemas novos o jogador abre antes da visita do Galo ficar disponível.')
 ON CONFLICT (key) DO NOTHING;
+
+-- Dono (17/10, DIALOGOS-casa-galo-poco-melissa-dono.txt): a multa da Necro-Corporação é 1h30. Bancos que ainda
+-- têm o valor provisório antigo (-30) passam para -90; um valor já editado pelo Owner fica como está.
+UPDATE devo_config
+   SET value = '-90'::jsonb, provisional = false,
+       note = 'Minutos retirados do Shuffler na opção da Necro-Corporação (dono, 17/10: 1h30). Negativo = tira.'
+ WHERE key = 'narrativa.melissa_corporacoes.multa_min' AND value = '-30'::jsonb AND provisional;
 

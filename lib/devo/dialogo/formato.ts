@@ -34,8 +34,30 @@ export type Fx =
   /** Tremor curto. */
   | 'tremor'
 
-/** Som do motor (sintetizado em lib/devo/audio.ts). Nomes livres caem num som neutro. */
-export type SomId = 'porta' | 'campainha' | 'luz' | 'passos' | 'chamada' | 'holograma' | 'item' | 'tempo' | 'sistema' | (string & {})
+/**
+ * Som do motor (sintetizado em lib/devo/audio.ts › `playDeixa`). Um som por vez (o novo abaixa o anterior) e o
+ * mesmo som não repete em 1,5 s. Nomes livres caem num clique neutro.
+ * `porta` = porta abrindo (legado; igual a `porta-abre`).
+ */
+export type SomId =
+  | 'porta'
+  | 'porta-abre'
+  | 'porta-fecha'
+  | 'campainha'
+  | 'lata'
+  | 'luz'
+  | 'passos'
+  | 'cozinha'
+  | 'chamada'
+  | 'holograma'
+  | 'holograma-fim'
+  | 'aparicao'
+  | 'item'
+  | 'tempo'
+  | 'tempo-perde'
+  | 'sistema'
+  | 'papel'
+  | (string & {})
 
 /** Demonstração da linha do destino (Karma) no palco. `'seu'` mostra o destino real do jogador (sem número). */
 export type DestinoDemo = 'neutro' | 'ordem' | 'caos' | 'ambos' | 'seu' | null
@@ -72,7 +94,11 @@ export type Palco = {
 export type Efeito =
   | { tipo: 'tempo'; minutos: number; config?: string }
   | { tipo: 'karma'; delta: number }
-  | { tipo: 'item'; item: string; quantidade?: number }
+  /**
+   * `idem`: prefixo de idempotência próprio (o servidor acrescenta `:<jogador>`). Use quando outro sistema entrega o
+   * MESMO item com a mesma chave (ex.: o Dracma do encapuzado, `poco:corvo`), para nunca entregar duas vezes.
+   */
+  | { tipo: 'item'; item: string; quantidade?: number; idem?: string }
   | { tipo: 'flag'; flag: UnlockFlag }
   | { tipo: 'contato'; npc: string }
 
@@ -84,6 +110,11 @@ type Base = {
   fx?: Fx
   /** Som tocado quando o passo aparece (sem legenda). */
   som?: SomId
+  /**
+   * Quadro de uma tela PRÓPRIA que toca a cena fora do palco do motor (ex.: Poço: `rua`, `poco`, `figura`, `mao`,
+   * `partiu`). Persiste até outro passo trocar. O palco do motor ignora.
+   */
+  quadro?: string
 }
 
 /**
@@ -114,6 +145,14 @@ export type PassoResposta = Extract<Passo, { tipo: 'fala' | 'narra' | 'pensa' | 
 export type Opcao = {
   /** Texto da opção (pode ter `{o|a}`). Negrito no original (`**Ir abrir a porta**`) = `acao: true`. */
   texto: string
+  /** Rótulo estável opcional (telas próprias que tratam uma opção de um jeito especial, ex.: Poço `moeda-especial`). */
+  id?: string
+  /**
+   * Em escolha `explorar`: esta opção ENCERRA a exploração e segue a cena (ex.: "Entendi." da Melissa). As outras
+   * podem ser vistas antes, uma vez cada, e voltam à lista com as que faltam. Sem nenhuma `segue`, aparece um
+   * "Continuar" depois da primeira.
+   */
+  segue?: boolean
   acao?: boolean
   /** Respostas desta opção, mostradas logo depois dela. */
   respostas?: PassoResposta[]

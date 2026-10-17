@@ -32,7 +32,8 @@ import {
 } from '@/lib/devo/arcade/client'
 import type { GameId } from '@/lib/devo/arcade/games'
 import { liveChannelFor } from '@/lib/devo/arcade/reactions'
-import { playSfx, setArcadeAmbienceMuffled, startArcadeAmbience, stopArcadeAmbience } from '@/lib/devo/audio'
+import { playSfx, setSalaMusicaAbafada, startSalaMusica, stopSalaMusica } from '@/lib/devo/audio'
+import { MusicaSala } from '../arcade/musica-sala'
 import { cn } from '@/lib/utils'
 import { GAME_COMPONENTS } from '../arcade/game-loader'
 import { useNow } from '../hooks'
@@ -178,6 +179,7 @@ export function JogosApp() {
         <div className="relative z-10 shrink-0 px-4 pt-3">
           <h2 className="sr-only">Sala de Jogos</h2>
           <Header data={data} />
+          <MusicaSala className="mt-1.5" />
         </div>
 
         <Tabs
@@ -308,17 +310,13 @@ function QuietRoom({ alert }: { alert: boolean }) {
   )
 }
 
+/** Trilha da Sala de Jogos (lib/devo/audio.ts › startSalaMusica): só aqui dentro, com fade; abafada na partida. */
 function useArcadeAmbience(inGame: boolean) {
   useEffect(() => {
-    startArcadeAmbience()
-    const resume = () => startArcadeAmbience()
-    window.addEventListener('pointerdown', resume, { once: true })
-    return () => {
-      window.removeEventListener('pointerdown', resume)
-      stopArcadeAmbience()
-    }
+    startSalaMusica()
+    return () => stopSalaMusica()
   }, [])
-  useEffect(() => setArcadeAmbienceMuffled(inGame), [inGame])
+  useEffect(() => setSalaMusicaAbafada(inGame), [inGame])
 }
 
 function GameRunner({ run, settings, onFinish, onQuit }: { run: Running; settings: Record<string, string>; onFinish: (o: GameOutcome) => void; onQuit: () => void }) {

@@ -1,7 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties } from 'react'
-import { playSfx, type Sfx } from '@/lib/devo/audio'
+import { playDeixa, playSfx } from '@/lib/devo/audio'
 import { type CenaEstado, type Efeito, type Fx, formatTempo, type MembroElenco, type Palco as PalcoMuda, type Passo, type PassoResposta, type SomId } from '@/lib/devo/dialogo/formato'
 import { getCena, indicePasso } from '@/lib/devo/dialogo/registro'
 import { cn } from '@/lib/utils'
@@ -21,22 +21,15 @@ import { TextoRico, textoPlano } from './texto'
  * efeitos pela API (uma vez só). Formato: docs/redesign/DIALOGO.md.
  */
 
-/** Som do motor → sons sintetizados que já existem (lib/devo/audio.ts). */
-const SONS: Record<string, [Sfx, number][]> = {
-  porta: [['thud', 0], ['crack', 160]],
-  campainha: [['bell', 0]],
-  luz: [['tick', 0], ['tick', 260]],
-  passos: [['tick', 0], ['tick', 420]],
-  chamada: [['notify', 0], ['shimmer', 380]],
-  holograma: [['shimmer', 0]],
-  item: [['card', 0]],
-  tempo: [['heartbeat', 0]],
-  sistema: [['reveal', 0]],
-}
+/**
+ * Som do passo → deixa sonora (lib/devo/audio.ts › playDeixa): um som por vez, sem repetir o mesmo em 1,5 s,
+ * volume moderado e mudo respeitado. `porta` (legado) = porta abrindo.
+ */
 function tocar(som?: SomId) {
   if (!som) return
-  for (const [s, ms] of SONS[som] ?? [['click', 0]]) window.setTimeout(() => playSfx(s), ms)
+  playDeixa(som === 'porta' ? 'porta-abre' : som)
 }
+const SONS_TEMPO = new Set(['tempo', 'tempo-perde'])
 
 type Respostas = { passos: PassoResposta[]; escolha: string; opcao: number; ir?: string; explorar: boolean }
 type Selo = { titulo: string; texto: string; tom: 'tempo' | 'perda' | 'item'; key: number }
@@ -68,6 +61,8 @@ export function CenaDialogo({
   const [coluna, setColuna] = useState<HTMLElement | null>(null)
   const [fx, setFx] = useState<{ fx?: Fx; key: number }>({ key: 0 })
   const [selo, setSelo] = useState<Selo | null>(null)
+  /** Selo de Tempo esperando a narração que o anuncia ("O Galo transferiu…", "…retirada do seu Shuffler"). */
+  const seloPendente = useRef<Selo | null>(null)
   const [ocupado, setOcupado] = useState(false)
   const [saindo, setSaindo] = useState(false)
   const nome = callName(state) ?? 'Record'
@@ -132,13 +127,23 @@ export function CenaDialogo({
   const atual: Passo | null = cena && dados ? (respostas?.passos[0] ?? cena.passos[idx] ?? null) : null
 
   const aplicarResultado = useCallback(
-    (r: { timeDeltaMs: number; contatos: string[]; aplicados: Efeito[] }) => {
+    (r: { timeDeltaMs: number; contatos: string[]; aplicados: Efeito[] }, adiarSelo = false) => {
       if (r.timeDeltaMs) dispatch({ type: 'ADD_TIME', ms: r.timeDeltaMs })
       for (const npc of r.contatos) dispatch({ type: 'ADD_CONTACT', npcId: npc })
       const t = r.aplicados.find((e): e is Extract<Efeito, { tipo: 'tempo' }> => e.tipo === 'tempo')
       if (t && t.minutos) {
-        setSelo({ titulo: t.minutos > 0 ? 'Tempo recebido' : 'Tempo retirado', texto: `${t.minutos > 0 ? '+' : '−'}${formatTempo(t.minutos)}`, tom: t.minutos > 0 ? 'tempo' : 'perda', key: Date.now() })
-        tocar('tempo')
+        const novo: Selo = {
+          titulo: t.minutos > 0 ? 'Tempo recebido' : 'Tempo retirado do Shuffler',
+          texto: `${t.minutos > 0 ? '+' : '−'}${formatTempo(t.minutos)}`,
+          tom: t.minutos > 0 ? 'tempo' : 'perda',
+          key: Date.now(),
+        }
+        // A narração da própria opção anuncia o Tempo (com o som): o selo aparece junto dela.
+        if (adiarSelo) seloPendente.current = novo
+        else {
+          setSelo(novo)
+          tocar(t.minutos > 0 ? 'tempo' : 'tempo-perde')
+        }
       }
       if (r.aplicados.some((e) => e.tipo === 'flag')) window.dispatchEvent(new Event('devo:acesso'))
     },
@@ -184,7 +189,16 @@ export function CenaDialogo({
     if (atual.fx) setFx((f) => ({ fx: atual.fx, key: f.key + 1 }))
     else setFx((f) => (f.fx ? { key: f.key } : f))
     tocar(atual.som)
+    if (atual.som && SONS_TEMPO.has(atual.som) && seloPendente.current) {
+      setSelo({ ...seloPendente.current, key: Date.now() })
+      seloPendente.current = null
+    }
     if (respostas) return
+    // Exploração retomada (recarregou): as opções já vistas não voltam.
+    if (atual.tipo === 'escolha' && atual.modo === 'explorar') {
+      const vistas = (dados.progresso.escolhas[atual.id] ?? []).filter((n) => !atual.opcoes[n]?.segue)
+      setExplorados((e) => (e.length ? e : vistas))
+    }
     if (atual.tipo === 'ir') {
       saltar(atual.para)
       return
@@ -201,7 +215,7 @@ export function CenaDialogo({
         .then((r) => {
           aplicarResultado(r)
           setDados((d) => (d ? { ...d, progresso: { ...d.progresso, efeitos: [...d.progresso.efeitos, atual.id] } } : d))
-          playSfx('reveal')
+          if (!atual.som) tocar('item')
         })
         .catch((e: Error) => setErro(e.message))
         .finally(() => setOcupado(false))
@@ -257,14 +271,15 @@ export function CenaDialogo({
     setOcupado(true)
     try {
       const r = await escolher(cena.id, passo.id, i)
-      aplicarResultado(r)
       const n = r.opcao ?? i
+      aplicarResultado(r, !!passo.opcoes[n]?.respostas?.some((p) => p.som && SONS_TEMPO.has(p.som)))
       onEscolha?.(passo.id, n)
       setDados((d) =>
         d ? { ...d, progresso: { ...d.progresso, escolhas: { ...d.progresso.escolhas, [passo.id]: [...(d.progresso.escolhas[passo.id] ?? []), n] } } } : d,
       )
       const escolhida = passo.opcoes[n] ?? op
-      const explorar = passo.modo === 'explorar'
+      // Explorar: a opção vista volta à lista das que faltam; a opção `segue` encerra e avança (ex.: "Entendi.").
+      const explorar = passo.modo === 'explorar' && !escolhida.segue
       if (explorar) setExplorados((e) => (e.includes(n) ? e : [...e, n]))
       if (escolhida.respostas?.length) setRespostas({ passos: escolhida.respostas, escolha: passo.id, opcao: n, ir: escolhida.ir, explorar })
       else if (!explorar) saltar(escolhida.ir)
@@ -351,7 +366,9 @@ export function CenaDialogo({
                 <ChoiceStrip key={i} index={i} delay={80 + i * 70} action={o.acao} label={rotulo} onClick={() => void escolherOpcao(atual, i)} />
               )
             })}
-            {atual.modo === 'explorar' && explorados.length > 0 && <ChoiceStrip muted index={atual.opcoes.length} label="Continuar" onClick={() => seguinte()} />}
+            {atual.modo === 'explorar' && explorados.length > 0 && !atual.opcoes.some((o) => o.segue) && (
+              <ChoiceStrip muted index={atual.opcoes.length} label="Continuar" onClick={() => seguinte()} />
+            )}
           </div>
         )}
       </div>

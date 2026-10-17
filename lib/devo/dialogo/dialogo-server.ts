@@ -104,7 +104,15 @@ async function aplicar(c: Queryable, playerId: string, cena: Cena, key: string, 
   for (const [i, e] of efeitos.entries()) {
     if (e.tipo === 'tempo') {
       const m = await minutosDe(e, c)
-      if (m) await creditMinutes(playerId, m, c)
+      if (m) {
+        await creditMinutes(playerId, m, c)
+        // Histórico: todo Tempo dado/tirado por diálogo fica no admin_log do jogador (Mesa do Owner/Anfitrião).
+        await run(c, "INSERT INTO admin_log (actor_id, action, target_id, ref, data) VALUES (NULL, 'dialogo.tempo', $1, $2, $3)", [
+          playerId,
+          `${cena.id}:${key}`,
+          JSON.stringify({ minutos: m, cena: cena.id, chave: key, motivo: m < 0 ? 'penalidade' : 'recompensa' }),
+        ])
+      }
       minutos += m
       aplicados.push({ ...e, minutos: m })
     } else if (e.tipo === 'karma') {
@@ -112,7 +120,8 @@ async function aplicar(c: Queryable, playerId: string, cena: Cena, key: string, 
       aplicados.push(e)
     } else if (e.tipo === 'item') {
       const qtd = Math.trunc(e.quantidade ?? 1)
-      const op = { playerId, item: e.item, quantidade: Math.abs(qtd), motivo: 'dialogo', ref: `${cena.id}:${key}`, idem: idem(i) }
+      // `idem` próprio: o mesmo item entregue por outro sistema com a mesma chave (ex.: Dracma do Corvo) não duplica.
+      const op = { playerId, item: e.item, quantidade: Math.abs(qtd), motivo: 'dialogo', ref: `${cena.id}:${key}`, idem: e.idem ? `${e.idem}:${playerId}` : idem(i) }
       if (qtd > 0) await grantItem(op, c)
       else if (qtd < 0) await consumeItem(op, c)
       aplicados.push(e)

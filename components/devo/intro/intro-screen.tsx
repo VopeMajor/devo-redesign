@@ -101,9 +101,15 @@ export function IntroScreen({
   const last = index === INTRO_SCRIPT.length - 1
   const total = INTRO_SCRIPT.length
 
+  // Sistema novo apresentado = revelação; ilustração/etapa nova do "documento" do tutorial = papel virando
+  // (um som só por fala: a revelação tem prioridade; o KABUM tem o próprio som).
+  const visualAnterior = useRef<string | undefined>(undefined)
   useEffect(() => {
-    if (line.unlock || line.step) playSfx('reveal')
-  }, [index, line.unlock, line.step])
+    const novoVisual = !!line.visual && line.visual !== visualAnterior.current
+    visualAnterior.current = line.visual
+    if (line.unlock) playSfx('reveal')
+    else if ((line.step || novoVisual) && line.visual !== 'reveal') playSfx('paper')
+  }, [index, line.unlock, line.step, line.visual])
 
   const advance = useCallback(() => {
     if (!done) {
