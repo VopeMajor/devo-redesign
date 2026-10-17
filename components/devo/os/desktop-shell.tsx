@@ -84,7 +84,7 @@ export function DesktopShell() {
   })
   useBackHandler(panel !== 'none', () => setPanel('none'))
 
-  const { liberado } = useAcesso()
+  const { liberado, salaJogos } = useAcesso()
   const openApp = (id: AppId) => {
     playSfx('open')
     setPanel('none')
@@ -161,7 +161,7 @@ export function DesktopShell() {
             <DesktopIcon key={app.id} appId={app.id} selected={selected === app.id} unread={state.unread[app.id]} onSelect={setSelected} onOpen={openApp} />
           ))}
         </div>
-        {state.arcadeUnlocked && (
+        {(state.arcadeUnlocked || salaJogos) && (
           <div className="animate-[devo-pop_0.7s_ease-out_both]">
             <DesktopIcon appId="jogos" selected={selected === 'jogos'} unread={state.unread.jogos} onSelect={setSelected} onOpen={openApp} />
           </div>

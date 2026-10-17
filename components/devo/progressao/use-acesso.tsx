@@ -29,10 +29,16 @@ export function AcessoProvider({ children }: { children: ReactNode }) {
 }
 
 /** `{ eu, recarregar, liberado(flag) }` — sem sessão ou carregando: tudo trancado. */
-export function useAcesso(): { eu: EuPayload | null; recarregar: () => Promise<void>; liberado: (flag: UnlockFlag) => boolean } {
+export function useAcesso(): {
+  eu: EuPayload | null
+  recarregar: () => Promise<void>
+  liberado: (flag: UnlockFlag) => boolean
+  /** Sala de Jogos visível: revelada no save OU cargo com tudo liberado (Owner/Anfitrião). */
+  salaJogos: boolean
+} {
   const { data, mutate } = useEu()
   const recarregar = useCallback(async () => {
     await mutate()
   }, [mutate])
-  return { eu: data ?? null, recarregar, liberado: (f) => !!data?.acesso.sistemas[f] }
+  return { eu: data ?? null, recarregar, liberado: (f) => !!data?.acesso.sistemas[f], salaJogos: !!data?.acesso.salaJogos }
 }

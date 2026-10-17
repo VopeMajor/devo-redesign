@@ -179,18 +179,28 @@ export async function inviteQuota(playerId: string, q: Queryable = pool) {
 /* ------------------------------------------------------------------ /api/eu */
 
 export async function getEu(playerId: string): Promise<EuPayload> {
-  const [p] = await run<{ id: string; role: string; karma: number; arcano: string | null; arcano_estagio: number }>(
+  const [base] = await run<{ id: string; role: string }>(pool, 'SELECT id, role FROM players WHERE id = $1', [playerId])
+  if (!base) throw new RecordError('Registro não encontrado.', 404)
+  // Karma e Arcano vêm de migrações posteriores; se o banco ainda não as tiver, o acesso (cargo e flags) continua
+  // valendo — Owner e Anfitrião nunca ficam trancados por uma coluna que falta.
+  const [extra] = await run<{ karma: number; arcano: string | null; arcano_estagio: number }>(
     pool,
-    'SELECT id, role, karma, arcano, arcano_estagio FROM players WHERE id = $1',
+    'SELECT karma, arcano, arcano_estagio FROM players WHERE id = $1',
     [playerId],
-  )
-  if (!p) throw new RecordError('Registro não encontrado.', 404)
+  ).catch((err) => {
+    console.error('[eu] colunas de karma/arcano ausentes — aplique scripts/devo-banco-novo.sql', err)
+    return [] as { karma: number; arcano: string | null; arcano_estagio: number }[]
+  })
+  const p = { ...base, karma: extra?.karma ?? 0, arcano: extra?.arcano ?? null, arcano_estagio: extra?.arcano_estagio ?? 0 }
   const cargo = normalizeCargo(p.role)
   if (cargo === 'player') await ensureInviteQuota(p.id).catch(() => {})
-  const [inventario, acesso, cartasPendentes, convites] = await Promise.all([
-    readInventory(p.id),
-    unlocks(p.id),
-    pendingCardCount(p.id),
+  const acesso = await unlocks(p.id)
+  const [inventario, cartasPendentes, convites] = await Promise.all([
+    readInventory(p.id).catch((err) => {
+      console.error('[eu] inventário', err)
+      return [] as Awaited<ReturnType<typeof readInventory>>
+    }),
+    pendingCardCount(p.id).catch(() => 0),
     cargo === 'player' ? inviteQuota(p.id) : Promise.resolve(null),
   ])
   return {

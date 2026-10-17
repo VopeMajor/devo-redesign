@@ -298,7 +298,9 @@ function HomeScreen({
   onShowNotices: () => void
 }) {
   const { state } = useDevo()
-  const apps: AppId[] = state.arcadeUnlocked ? [...HOME_APPS, 'jogos'] : HOME_APPS
+  const { salaJogos } = useAcesso()
+  const jogosVisivel = state.arcadeUnlocked || salaJogos
+  const apps: AppId[] = jogosVisivel ? [...HOME_APPS, 'jogos'] : HOME_APPS
   const latest = state.notifications[0]
   const pager = useHomePager(HOME_PAGES)
   return (
@@ -374,7 +376,7 @@ function HomeScreen({
               }}
             />
           </div>
-        ) : state.arcadeUnlocked ? (
+        ) : jogosVisivel ? (
           <div className="animate-dv-rise [animation-delay:480ms]">
             <HomeStrip
               tone="gold"
