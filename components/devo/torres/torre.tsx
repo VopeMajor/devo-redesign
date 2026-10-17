@@ -161,7 +161,7 @@ export function TelaTorre({
       <Sheet
         open={!!andarFicha}
         onClose={() => setFicha(null)}
-        kicker={`${torre.nome} · Andar ${toRoman(andarFicha?.n ?? 1)}`}
+        kicker={`Andar ${toRoman(andarFicha?.n ?? 1)} · ${semProvisorio(torre.nome).replace(/^Torre d[oa]s? /, '')}`}
         title={semProvisorio(andarFicha?.titulo ?? '')}
         footer={
           andarFicha ? (
@@ -304,7 +304,7 @@ function FichaAndar({ andar, torre }: { andar: AndarEstado; torre: TorreEstado }
         <div>
           <p className="dv-label text-[10px] text-dv-text-3">Recompensa</p>
           <ul className="mt-1.5 flex flex-wrap gap-1.5">
-            {a.recompensas.chaves > 0 && torre.chave && <RecursoChip nome={torre.chave.nome} curto={torre.chave.nome} quantidade={a.recompensas.chaves} tipo="chave" />}
+            {a.recompensas.chaves > 0 && torre.chave && <RecursoChip nome={torre.chave.nome} curto={torre.chave.nome.replace(/^Chave d[oa] /, '')} quantidade={a.recompensas.chaves} tipo="chave" />}
             {a.recompensas.itens.map((it) => (
               <li key={it.item} className="font-body text-[14px] text-dv-text-2">
                 +{it.quantidade} {it.nome}
