@@ -1,0 +1,45 @@
+{
+  "pedido": "arcano-sigilo-enforcado",
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 13121,
+      "passos": null,
+      "largura": 1024,
+      "altura": 1024,
+      "neuronios_estimados": 104,
+      "ok": true,
+      "segundos": 8.4,
+      "tamanho_real": [
+        1024,
+        1024
+      ]
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 13122,
+      "passos": null,
+      "largura": 1024,
+      "altura": 1024,
+      "neuronios_estimados": 104,
+      "ok": true,
+      "segundos": 10.6,
+      "tamanho_real": [
+        1024,
+        1024
+      ]
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 13123,
+      "passos": null,
+      "largura": 1024,
+      "altura": 1024,
+      "neuronios_estimados": 104,
+      "erro": "HTTP 400 — 3030: AiError: AiError: Your output has been flagged. Please choose another prompt / input image combination (4237aa07-68f1-4d52-b23a-9ebb7b4c6971)"
+    }
+  ]
+}

@@ -1,0 +1,91 @@
+{
+  "pedido": "arcano-sigilo-enforcado",
+  "titulo": "Arcano — enforcado (sigilo)",
+  "tipo": "emblema",
+  "tamanho_final": 1024,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 13121,
+      "passos": null,
+      "segundos": 8.4,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "arcano-sigilo-enforcado--v01--1024.png",
+          "bytes": 337713
+        },
+        {
+          "arquivo": "arcano-sigilo-enforcado--v01--1024.webp",
+          "bytes": 68106
+        },
+        {
+          "arquivo": "arcano-sigilo-enforcado--v01--512.webp",
+          "bytes": 22044
+        },
+        {
+          "arquivo": "arcano-sigilo-enforcado--v01--256.webp",
+          "bytes": 9454
+        },
+        {
+          "arquivo": "arcano-sigilo-enforcado--v01--128.webp",
+          "bytes": 4746
+        },
+        {
+          "arquivo": "arcano-sigilo-enforcado--v01--64.webp",
+          "bytes": 2316
+        }
+      ],
+      "segundos_pos": 23.1,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 13122,
+      "passos": null,
+      "segundos": 10.6,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "arcano-sigilo-enforcado--v02--1024.png",
+          "bytes": 266477
+        },
+        {
+          "arquivo": "arcano-sigilo-enforcado--v02--1024.webp",
+          "bytes": 67262
+        },
+        {
+          "arquivo": "arcano-sigilo-enforcado--v02--512.webp",
+          "bytes": 21552
+        },
+        {
+          "arquivo": "arcano-sigilo-enforcado--v02--256.webp",
+          "bytes": 9096
+        },
+        {
+          "arquivo": "arcano-sigilo-enforcado--v02--128.webp",
+          "bytes": 4594
+        },
+        {
+          "arquivo": "arcano-sigilo-enforcado--v02--64.webp",
+          "bytes": 2020
+        }
+      ],
+      "segundos_pos": 14.0,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 13123,
+      "passos": null,
+      "neuronios_estimados": 104,
+      "erro": "HTTP 400 — 3030: AiError: AiError: Your output has been flagged. Please choose another prompt / input image combination (4237aa07-68f1-4d52-b23a-9ebb7b4c6971)"
+    }
+  ]
+}
