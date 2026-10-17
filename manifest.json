@@ -1,0 +1,353 @@
+{
+  "base": "http://localhost:3000",
+  "shots": [
+    {
+      "name": "v01-home-trancado",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "v02-trancado",
+      "note": "jogador sem o tutorial: motivo",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "arc-00-trancado",
+      "note": "Arcanos trancado (mesma regra das Virtudes)",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "arc-00-trancado@390x900",
+      "note": "Arcanos trancado (mesma regra das Virtudes)",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "arc-00-trancado@360x740",
+      "note": "Arcanos trancado (mesma regra das Virtudes)",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "v03-sem-arcano",
+      "note": "liberado, Arcano ainda sem registro (vazio)",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "v04-imperatriz-roda",
+      "note": "Arcano da Imperatriz: Taças excelente, Paus deficiente",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "v05-imperatriz-potencial",
+      "note": "pouco acumulado",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "v06-imperatriz-antigas",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "v07-home-liberado",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "v08-morte-roda",
+      "note": "Arcano da Morte, Estágio I",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "v09-evolucao-antes",
+      "note": "P.P. perto do limite, pronto para a metamorfose",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "v10-morte-naipes",
+      "note": "afinidades em palavras",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "v11-historico-vazio",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "arc-01-virtudes-link",
+      "note": "Virtudes: só a entrada para os Arcanos, sem a lista",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "arc-01-virtudes-link@390x900",
+      "note": "Virtudes: só a entrada para os Arcanos, sem a lista",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "arc-01-virtudes-link@360x740",
+      "note": "Virtudes: só a entrada para os Arcanos, sem a lista",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "arc-02-mapa",
+      "note": "mapa orbital: o próprio aceso, os outros apagados",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "arc-02-mapa@390x900",
+      "note": "mapa orbital: o próprio aceso, os outros apagados",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "arc-02-mapa@360x740",
+      "note": "mapa orbital: o próprio aceso, os outros apagados",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "arc-03-galeria-trancado",
+      "note": "galeria centrada num trancado: estátua cinza, nome e frase breve",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "arc-03-galeria-trancado@390x900",
+      "note": "galeria centrada num trancado: estátua cinza, nome e frase breve",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "arc-03-galeria-trancado@360x740",
+      "note": "galeria centrada num trancado: estátua cinza, nome e frase breve",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "arc-04-galeria-proprio",
+      "note": "galeria no próprio: em cor, botão Abrir",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "arc-04-galeria-proprio@390x900",
+      "note": "galeria no próprio: em cor, botão Abrir",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "arc-04-galeria-proprio@360x740",
+      "note": "galeria no próprio: em cor, botão Abrir",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "arc-04b-galeria-giro",
+      "note": "no meio do arrasto: laterais giram, encolhem e perdem a cor",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "arc-04b-galeria-giro@390x900",
+      "note": "no meio do arrasto: laterais giram, encolhem e perdem a cor",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "arc-04b-galeria-giro@360x740",
+      "note": "no meio do arrasto: laterais giram, encolhem e perdem a cor",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "arc-05-detalhe",
+      "note": "altar: vitral vermelho, velas, a figura (placeholder) e o nome",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "arc-05-detalhe@390x900",
+      "note": "altar: vitral vermelho, velas, a figura (placeholder) e o nome",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "arc-05-detalhe@360x740",
+      "note": "altar: vitral vermelho, velas, a figura (placeholder) e o nome",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "arc-06-detalhe-fisiologia",
+      "note": "Descrição e Fisiologia (mais natural / mais custosa)",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "arc-06-detalhe-fisiologia@390x900",
+      "note": "Descrição e Fisiologia (mais natural / mais custosa)",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "arc-06-detalhe-fisiologia@360x740",
+      "note": "Descrição e Fisiologia (mais natural / mais custosa)",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "arc-07-detalhe-estagios",
+      "note": "Estágio I atual, os seguintes velados",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "arc-07-detalhe-estagios@390x900",
+      "note": "Estágio I atual, os seguintes velados",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "arc-07-detalhe-estagios@360x740",
+      "note": "Estágio I atual, os seguintes velados",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "v12-evolucao-depois",
+      "note": "Estágio II",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "v13-depois-potencial",
+      "note": "acúmulo recomeça",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "v14-depois-historico",
+      "note": "histórico: mais cresceu / menos cresceu",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "arc-08-estagio-ii",
+      "note": "depois da Evolução: I alcançado, II atual",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "arc-08-estagio-ii@390x900",
+      "note": "depois da Evolução: I alcançado, II atual",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "arc-08-estagio-ii@360x740",
+      "note": "depois da Evolução: I alcançado, II atual",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "v15-record-arcano",
+      "note": "ficha do Record com o Arcano",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "v16-mesa-jogadores",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "v17-mesa-detalhes",
+      "note": "P.P., atributos, afinidade e histórico com números",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "v18-mesa-evoluir-armado",
+      "note": "confirmação em dois toques",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "v19-mesa-tabela",
+      "note": "tabela editável, provisória",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "v20-mesa-divergencia",
+      "note": "nota da divergência para o dono confirmar",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "v21-mesa-limites",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "v35-mesa-textos",
+      "note": "Owner edita os textos do Arcano (provisório)",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "v35-mesa-textos@390x900",
+      "note": "Owner edita os textos do Arcano (provisório)",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "v35-mesa-textos@360x740",
+      "note": "Owner edita os textos do Arcano (provisório)",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "v36-mesa-textos-estagios",
+      "note": "Estágios e o botão de gravar",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "v36-mesa-textos-estagios@390x900",
+      "note": "Estágios e o botão de gravar",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "v36-mesa-textos-estagios@360x740",
+      "note": "Estágios e o botão de gravar",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "arc-09-owner-mapa",
+      "note": "Owner: todos os sigilos abertos",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "arc-09-owner-mapa@390x900",
+      "note": "Owner: todos os sigilos abertos",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "arc-09-owner-mapa@360x740",
+      "note": "Owner: todos os sigilos abertos",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "arc-10-owner-galeria",
+      "note": "Owner: qualquer Arcano abre",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "arc-10-owner-galeria@390x900",
+      "note": "Owner: qualquer Arcano abre",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "arc-10-owner-galeria@360x740",
+      "note": "Owner: qualquer Arcano abre",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "arc-11-owner-detalhe",
+      "note": "Owner: detalhe de outro Arcano, com o selo de provisório",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "arc-11-owner-detalhe@390x900",
+      "note": "Owner: detalhe de outro Arcano, com o selo de provisório",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "arc-11-owner-detalhe@360x740",
+      "note": "Owner: detalhe de outro Arcano, com o selo de provisório",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "v22-erro",
+      "note": "",
+      "url": "http://localhost:3000/"
+    }
+  ],
+  "errors": [],
+  "console": [
+    {
+      "page": "http://localhost:3000/",
+      "text": "HTTP 500",
+      "src": "http://localhost:3000/api/virtudes"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "Failed to load resource: the server responded with a status of 500 (Internal Server Error)",
+      "src": "http://localhost:3000/api/virtudes"
+    }
+  ]
+}
