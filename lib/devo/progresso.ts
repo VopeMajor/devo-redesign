@@ -6,7 +6,7 @@
 import type { Cargo } from './cargos'
 
 /** Sistemas trancados até vencer o Deadly Vote tutorial (Owner e Anfitrião veem tudo liberado). */
-export const UNLOCK_FLAGS = ['salao_mascaras', 'poco', 'torres', 'diario', 'corporacoes', 'virtudes', 'galo_casa'] as const
+export const UNLOCK_FLAGS = ['salao_mascaras', 'poco', 'torres', 'diario', 'corporacoes', 'virtudes', 'galo_casa', 'calendario'] as const
 export type UnlockFlag = (typeof UNLOCK_FLAGS)[number]
 
 export const UNLOCK_LABEL: Record<UnlockFlag, string> = {
@@ -17,7 +17,14 @@ export const UNLOCK_LABEL: Record<UnlockFlag, string> = {
   corporacoes: 'Corporações',
   virtudes: 'Virtudes',
   galo_casa: 'Visita do Galo (narrativa)',
+  calendario: 'Grandioso Calendário Devo',
 }
+
+/**
+ * Flags liberadas para TODO jogador desde o início (sem tutorial), padrão de `devo_config['desbloqueio.livres']`
+ * (o Owner pode tirar um sistema daqui para trancá-lo de novo). Hoje: o Calendário (o check-in diário puxa a volta).
+ */
+export const FLAGS_LIVRES_PADRAO: UnlockFlag[] = ['calendario']
 
 /** Padrão do tutorial; espelho de devo_tutorial_flags() em scripts/fundacao-migration.sql. */
 export const TUTORIAL_FLAGS: UnlockFlag[] = ['salao_mascaras', 'poco', 'torres', 'diario', 'galo_casa']

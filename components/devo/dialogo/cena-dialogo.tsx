@@ -126,6 +126,20 @@ export function CenaDialogo({
 
   const atual: Passo | null = cena && dados ? (respostas?.passos[0] ?? cena.passos[idx] ?? null) : null
 
+  /* ── aviso de passo para a tela por trás (ex.: o Calendário projeta o evento de Natal no passo `exemplo-natal`):
+     window 'devo:cena-passo' { cena, indice, id } — id null ao sair da cena ── */
+  const passoId = atual?.id ?? null
+  useEffect(() => {
+    if (!cena || !dados) return
+    window.dispatchEvent(new CustomEvent('devo:cena-passo', { detail: { cena: cena.id, indice: idx, id: passoId } }))
+  }, [cena, dados, idx, passoId])
+  useEffect(() => {
+    const id = cena?.id
+    return () => {
+      if (id) window.dispatchEvent(new CustomEvent('devo:cena-passo', { detail: { cena: id, indice: -1, id: null } }))
+    }
+  }, [cena])
+
   const aplicarResultado = useCallback(
     (r: { timeDeltaMs: number; contatos: string[]; aplicados: Efeito[] }, adiarSelo = false) => {
       if (r.timeDeltaMs) dispatch({ type: 'ADD_TIME', ms: r.timeDeltaMs })

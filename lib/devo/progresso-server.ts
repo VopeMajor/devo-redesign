@@ -6,7 +6,7 @@ import { type Queryable, run, txAs, UUID_RE } from './fundacao-db'
 import { itemBalance, pendingCardCount, readInventory } from './inventario-server'
 import { requireActor, requireCan } from './permissoes-server'
 import { arcanoInfo, isArcano } from './virtudes'
-import { type Acesso, destinoDoKarma, type EuPayload, isUnlockFlag, UNLOCK_FLAGS, type UnlockFlag } from './progresso'
+import { type Acesso, destinoDoKarma, type EuPayload, FLAGS_LIVRES_PADRAO, isUnlockFlag, UNLOCK_FLAGS, type UnlockFlag } from './progresso'
 
 /* ------------------------------------------------------------------ Desbloqueios */
 
@@ -18,7 +18,7 @@ export async function getUnlocks(playerId: string, q: Queryable = pool): Promise
   const [p] = await run<{ role: string }>(q, 'SELECT role FROM players WHERE id = $1', [playerId])
   const tudo = !!p && seesAllSystems(normalizeCargo(p.role))
   const have = tudo ? [] : await run<{ flag: string }>(q, 'SELECT flag FROM player_unlocks WHERE player_id = $1', [playerId])
-  const set = new Set(have.map((h) => h.flag))
+  const set = new Set([...have.map((h) => h.flag), ...(tudo || !p ? [] : await flagsLivres(q))])
   const flags = Object.fromEntries(UNLOCK_FLAGS.map((f) => [f, tudo || set.has(f)])) as Record<UnlockFlag, boolean>
   return { flags, tudoLiberado: tudo }
 }
@@ -35,7 +35,21 @@ export async function unlocks(playerId: string, q: Queryable = pool): Promise<Ac
   return { total: false, sistemas: flags, salaJogos: !!s?.arcade, todosApps: false, pularTutoriais: false }
 }
 
+/**
+ * Flags liberadas para todo jogador desde o início (`devo_config['desbloqueio.livres']`, padrão
+ * `FLAGS_LIVRES_PADRAO`). Só aqui no servidor: `devo_tem_desbloqueio` (SQL) continua olhando só as linhas.
+ */
+export async function flagsLivres(q: Queryable = pool): Promise<UnlockFlag[]> {
+  const cfg = await getConfig<unknown>('desbloqueio.livres', q).catch(() => null)
+  const v = cfg ? cfg.value : FLAGS_LIVRES_PADRAO
+  return Array.isArray(v) ? v.filter(isUnlockFlag) : []
+}
+
 export async function hasUnlock(playerId: string, flag: UnlockFlag, q: Queryable = pool) {
+  if ((await flagsLivres(q)).includes(flag)) {
+    const [p] = await run<{ id: string }>(q, 'SELECT id FROM players WHERE id = $1', [playerId])
+    if (p) return true
+  }
   const [r] = await run<{ ok: boolean }>(q, 'SELECT devo_tem_desbloqueio($1, $2) AS ok', [playerId, flag])
   return !!r?.ok
 }

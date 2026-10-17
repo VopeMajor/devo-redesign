@@ -556,7 +556,7 @@ export function Poeira({ n = 14, h = MAPA_H }: { n?: number; h?: number }) {
 /* ------------------------------------------------------------------ Escada em espiral (tela da torre) */
 
 /** Geometria da escada: um giro por andar. */
-export const ESCADA = { AX: 96, R: 58, PASSO: 150, TOPO: 170, BASE: 130 }
+export const ESCADA = { AX: 80, R: 48, PASSO: 172, TOPO: 170, BASE: 130 }
 
 export function alturaEscada(andares: number) {
   return ESCADA.TOPO + ESCADA.BASE + andares * ESCADA.PASSO

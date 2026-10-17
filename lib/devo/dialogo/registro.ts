@@ -4,6 +4,7 @@
  * em ordem alfabética, para não dar conflito entre agentes).
  */
 import { CENA_GALO_CASA } from './cenas/galo-casa'
+import { CENA_MELISSA_CALENDARIO } from './cenas/melissa-calendario'
 import { CENA_MELISSA_CORPORACOES } from './cenas/melissa-corporacoes'
 import { CENA_POCO_ENCONTRO } from './cenas/poco-encontro'
 import { CENA_REFLEXAO_ANFITRIAO } from './cenas/reflexao-anfitriao'
@@ -11,6 +12,7 @@ import type { Cena, Passo } from './formato'
 
 const LISTA: Cena[] = [
   CENA_GALO_CASA,
+  CENA_MELISSA_CALENDARIO,
   CENA_MELISSA_CORPORACOES,
   CENA_POCO_ENCONTRO,
   CENA_REFLEXAO_ANFITRIAO,

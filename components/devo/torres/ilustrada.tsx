@@ -1,6 +1,6 @@
 'use client'
 
-import { type CSSProperties, useEffect, useState } from 'react'
+import { type CSSProperties, useEffect, useId, useState } from 'react'
 import type { Ilustracao } from '@/lib/devo/torres/tipos'
 import { cn } from '@/lib/utils'
 
@@ -42,11 +42,26 @@ export function TorreIlustradaSvg({ ilu, feitos, total, destaque, pxPorUnidade =
   const h = ilu.altura
   const w = h * ilu.aspecto
   const href = srcDe(ilu, larguraPara(ilu, w * pxPorUnidade * dpr))
+  const id = useId().replace(/[^a-zA-Z0-9]/g, '')
+  // a base da pintura (rochas) fica nos ~6 % de baixo; a sombra de contato e a oclusão nascem ali
   return (
     <g>
-      <ellipse cx={0} cy={0} rx={w * 0.42} ry={8} fill="#000" opacity={0.6} filter="url(#tw-blur-s)" />
+      <defs>
+        <mask id={`tm-${id}`} style={{ maskType: 'alpha' }}>
+          <image href={href} x={-w / 2} y={-h} width={w} height={h} preserveAspectRatio="xMidYMax meet" />
+        </mask>
+        <linearGradient id={`tg-${id}`} x1="0" x2="0" y1="0" y2="1">
+          <stop offset="0" stopColor="#000" stopOpacity="0" />
+          <stop offset="1" stopColor="#000" stopOpacity="0.62" />
+        </linearGradient>
+      </defs>
+      {/* sombra projetada (luar vem da direita: a sombra cai para a esquerda) e sombra de contato */}
+      <ellipse cx={-w * 0.22} cy={-1} rx={w * 0.55} ry={Math.max(4, w * 0.075)} fill="#000" opacity={0.38} filter="url(#tw-blur-s)" />
+      <ellipse cx={0} cy={-2} rx={w * 0.38} ry={Math.max(3, w * 0.05)} fill="#000" opacity={0.8} filter="url(#tw-blur-s)" />
       {destaque && <ellipse cx={0} cy={-h * 0.62} rx={w * 0.7} ry={h * 0.5} fill="url(#tw-halo-am)" opacity={0.35} />}
       <image href={href} x={-w / 2} y={-h} width={w} height={h} preserveAspectRatio="xMidYMax meet" />
+      {/* oclusão no chão: escurece a base da pintura onde ela encosta na superfície */}
+      <rect x={-w / 2} y={-h * 0.16} width={w} height={h * 0.16} fill={`url(#tg-${id})`} mask={`url(#tm-${id})`} />
       {(ilu.janelas ?? []).slice(0, total).map(([fx, fy], i) => {
         const x = -w / 2 + fx * w
         const y = -h + fy * h

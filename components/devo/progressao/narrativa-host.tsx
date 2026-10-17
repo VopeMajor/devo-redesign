@@ -51,7 +51,7 @@ function Gatilhos({ children }: { children: ReactNode }) {
   }, [])
   useEffect(() => {
     if (!eu || !pronto || cerimonia || cenas.aberta) return
-    const liberados = SISTEMAS.filter((s) => s.flag && eu.acesso.sistemas[s.flag])
+    const liberados = SISTEMAS.filter((s) => s.flag && !s.inicial && eu.acesso.sistemas[s.flag])
     const novos = liberados.filter((s) => !state.desbloqueiosVistos.includes(s.id))
     if (!novos.length) return
     if (total) {
@@ -62,7 +62,7 @@ function Gatilhos({ children }: { children: ReactNode }) {
   }, [eu, pronto, state.desbloqueiosVistos, cenas.aberta, cerimonia, total, dispatch])
 
   /* 3. Visita do Galo disponível? */
-  const exploradosNovos = SISTEMAS.filter((s) => s.flag && s.flag !== 'corporacoes' && state.sistemasVistos.includes(s.id)).length
+  const exploradosNovos = SISTEMAS.filter((s) => s.flag && s.flag !== 'corporacoes' && !s.inicial && s.id !== 'arcanos' && state.sistemasVistos.includes(s.id)).length
   const galoDisponivel =
     !!eu?.acesso.sistemas.galo_casa && cenas.carregado && !cenas.vista('galo-casa') && (total || exploradosNovos >= Math.max(0, cenas.config.galoExplorarMin))
   useEffect(() => {

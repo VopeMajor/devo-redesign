@@ -7,7 +7,8 @@ INSERT INTO invite_codes (code, role, note, is_test) VALUES
   ('DEVO-VIRT-CAP3', 'player', 'capturas virtudes: outro Arcano', true),
   ('DEVO-VIRT-TST1', 'player', 'teste virtudes: jogador', true),
   ('DEVO-VIRT-TST2', 'player', 'teste virtudes: jogador trancado', true),
-  ('DEVO-VIRT-OWN1', 'owner', 'teste virtudes: owner', true)
+  ('DEVO-VIRT-OWN1', 'owner', 'teste virtudes: owner', true),
+  ('DEVO-VIRT-ANF1', 'anfitriao', 'teste virtudes: anfitrião (textos dos Arcanos)', true)
 ON CONFLICT (code) DO NOTHING;
 
 -- Exemplos para a Mesa: Lírio (Arcano da Morte, Estágio I, P.P. acumulando) e Ísis (Arcano do Imperador,
