@@ -58,7 +58,7 @@ export type SistemaDef = {
 const TUTORIAL = 'Vença o Deadly Vote tutorial'
 
 export const SISTEMAS: SistemaDef[] = [
-  { id: 'calendario', nome: 'Calendário Devo', curto: 'Calendário', subtitulo: 'Eventos e check-in diário', flag: 'calendario', trava: 'Em breve', emblem: EmblemCalendario, janela: { w: 460, h: 820 }, inicial: true },
+  { id: 'calendario', nome: 'Calendário', curto: 'Calendário', subtitulo: 'Eventos e check-in diário', flag: 'calendario', trava: 'Em breve', emblem: EmblemCalendario, janela: { w: 460, h: 820 }, inicial: true },
   { id: 'salao', nome: 'Salão das Máscaras', curto: 'Máscaras', subtitulo: 'Leilões, mercado e anúncios', flag: 'salao_mascaras', trava: TUTORIAL, emblem: EmblemMascaras, janela: { w: 480, h: 840 } },
   { id: 'poco', nome: 'Poço dos Milagres', curto: 'Poço', subtitulo: 'Moedas, manivela e balde', flag: 'poco', trava: TUTORIAL, emblem: EmblemPoco, janela: { w: 460, h: 820 } },
   { id: 'torres', nome: 'Torres de Ruptura', curto: 'Torres', subtitulo: 'Andares, essências e chaves', flag: 'torres', trava: TUTORIAL, emblem: EmblemTorres, janela: { w: 480, h: 820 } },

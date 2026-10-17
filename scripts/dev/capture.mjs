@@ -3426,7 +3426,7 @@ if (want('calendario')) {
   }
   const abrirCal = async (page) => {
     await enterOS(page)
-    const b = page.getByRole('button', { name: 'Calendário Devo', exact: true }).first()
+    const b = page.getByRole('button', { name: 'Calendário', exact: true }).first()
     await b.waitFor({ state: 'visible', timeout: 15000 }).catch(() => {})
     await revealOnHome(page, b)
     await tryClick(b, 8000)
@@ -3455,7 +3455,7 @@ if (want('calendario')) {
   await step('cal-primeira-entrada', async () => {
     const page = A.page
     await enterOS(page)
-    const b = page.getByRole('button', { name: 'Calendário Devo', exact: true }).first()
+    const b = page.getByRole('button', { name: 'Calendário', exact: true }).first()
     await b.waitFor({ state: 'visible', timeout: 15000 }).catch(() => {})
     await revealOnHome(page, b)
     await wait(900)
@@ -3472,7 +3472,7 @@ if (want('calendario')) {
     await ateOFim(page)
     await wait(1600)
     await shot(page, 'cal-04-tela', 'Calendário: check-in diário no Dia 1')
-    await tryClick(page.getByRole('button', { name: /^Marcar presença · 50 PP/ }).first(), 6000)
+    await tryClick(page.getByRole('button', { name: /^Marcar presença: 50 PP/ }).first(), 6000)
     await wait(1500)
     await shot(page, 'cal-05-revelacao', 'revelação do resgate (pulável)')
     await tryClick(page.getByRole('button', { name: 'Pular', exact: true }).first(), 3000)
@@ -3480,7 +3480,7 @@ if (want('calendario')) {
     await shot(page, 'cal-06-marcado', 'Dia 1 carimbado, contagem para amanhã')
     await regiao(page, 'Check-in dos Arcanos')
     await shot(page, 'cal-07-extra', 'check-in extra da data comemorativa de hoje')
-    await tryClick(page.getByRole('button', { name: /^Marcar presença · \+30 Minutos/ }).first(), 6000)
+    await tryClick(page.getByRole('button', { name: /^Marcar presença no evento: \+30 Minutos/ }).first(), 6000)
     await wait(1500)
     await shot(page, 'cal-08-extra-revelacao', 'revelação do check-in do evento (+30 min)')
     await tryClick(page.getByRole('button', { name: 'Pular', exact: true }).first(), 3000)
@@ -3506,7 +3506,7 @@ if (want('calendario')) {
     const page = B.page
     await abrirCal(page)
     await shot(page, 'cal-13-dia4', 'três dias carimbados, Dia 4 em destaque')
-    await tryClick(page.getByRole('button', { name: /^Marcar presença · \+2 Horas/ }).first(), 6000)
+    await tryClick(page.getByRole('button', { name: /^Marcar presença: \+2 Horas/ }).first(), 6000)
     await wait(1500)
     await shot(page, 'cal-14-revelacao-horas', '+2 Horas entram no pulso')
     await tryClick(page.getByRole('button', { name: 'Pular', exact: true }).first(), 3000)
@@ -3522,7 +3522,7 @@ if (want('calendario')) {
     const page = C.page
     await abrirCal(page)
     await shot(page, 'cal-16-dia7', 'seis carimbos, a carta no fim do ciclo')
-    await tryClick(page.getByRole('button', { name: /^Marcar presença · Carta Incomum/ }).first(), 6000)
+    await tryClick(page.getByRole('button', { name: /^Marcar presença: Carta Incomum/ }).first(), 6000)
     await wait(1800)
     await shot(page, 'cal-17-revelacao-carta', 'revelação da Carta Incomum')
   })

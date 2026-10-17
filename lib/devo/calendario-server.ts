@@ -339,7 +339,8 @@ export async function resgatar(playerId: string, alvo: { tipo?: unknown; eventoI
       [playerId, hoje, tipo, eventoId, ocorrencia, posicao, JSON.stringify(recompensa)],
     )
     if (!inserted.length) throw new RecordError('Presença de hoje já marcada. Volte amanhã.', 409)
-    const idem = `calendario:${playerId}:${hoje}:${tipo}`
+    // A PK (jogador, dia, tipo) já garante uma vez; a posição entra no idem só por segurança extra.
+    const idem = `calendario:${playerId}:${hoje}:${tipo}:${posicao}`
     const aplicado = await aplicar(c, playerId, recompensa, regras, idem, `${tipo}:${hoje}`)
     await run(c, 'UPDATE calendario_checkins SET aplicado = $4 WHERE player_id = $1 AND dia = $2 AND tipo = $3', [playerId, hoje, tipo, JSON.stringify(aplicado)])
     return { posicao, recompensa, aplicado }
@@ -427,8 +428,9 @@ export async function salvarEvento(atorId: string, b: Record<string, unknown>) {
     }
     // checkin ausente no corpo = mantém o atual.
     const mexeCheckin = Object.prototype.hasOwnProperty.call(b, 'checkin')
+    // Permissão antes de validar: quem não pode mexer no check-in recebe 403, não o erro de um campo.
+    if (mexeCheckin && (b.checkin != null || antigo?.checkin)) requireCan(ator, 'calendario.recompensas', undefined, 'Só o Owner define o check-in de um evento.')
     const checkin = mexeCheckin ? await checkinValido(c, b.checkin) : antigo ? checkinDe(antigo.checkin) : null
-    if (mexeCheckin && (checkin || antigo?.checkin)) requireCan(ator, 'calendario.recompensas', undefined, 'Só o Owner define o check-in de um evento.')
     const params = [titulo, descricao, inicio, fim, anual, enfase, arte, checkin ? JSON.stringify(checkin) : null, ator.id]
     let eventoId: string
     if (id) {

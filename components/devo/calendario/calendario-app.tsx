@@ -300,7 +300,7 @@ function CheckinDiarioView({ d, ocupado, onMarcar, recarregar }: { d: Liberado; 
         <header className="flex items-start justify-between gap-3">
           <div className="min-w-0">
             <h2 className="font-display text-[17px] font-semibold uppercase leading-tight tracking-[0.14em] text-dv-text">Check-in diário</h2>
-            <p className="mt-1 font-mono text-[10.5px] uppercase tracking-[0.16em] text-dv-text-3">Recompensa de presença · ciclo de {c.slots.length} dias</p>
+            <p className="mt-1 font-mono text-[10.5px] uppercase tracking-[0.16em] text-dv-text-3">Ciclo de {c.slots.length} dias</p>
           </div>
           <span className="dv-cut-diag shrink-0 bg-dv-wine px-2.5 py-1.5 font-mono text-[11px] uppercase leading-none tracking-[0.12em] text-dv-text shadow-[inset_0_0_0_1px_var(--dv-wine-text)]" style={{ '--dv-cut': '6px' } as CSSProperties}>
             Dia {c.posicao} de {c.slots.length}
@@ -319,8 +319,8 @@ function CheckinDiarioView({ d, ocupado, onMarcar, recarregar }: { d: Liberado; 
             </span>
           </p>
         ) : (
-          <Button block size="lg" loading={ocupado} sfx={false} onClick={onMarcar}>
-            Marcar presença · {hoje?.recompensa.rotulo}
+          <Button block size="lg" loading={ocupado} sfx={false} onClick={onMarcar} aria-label={`Marcar presença: ${hoje?.recompensa.rotulo ?? ''}`}>
+            Marcar presença
           </Button>
         )}
         <p className="font-body text-[13.5px] leading-snug text-dv-text-3">
@@ -352,8 +352,8 @@ function CheckinExtraView({ x, ocupado, onMarcar }: { x: CheckinExtra; ocupado: 
             {x.posicao >= x.slots.length && x.slots.every((s) => s.estado === 'feito') ? 'Tudo resgatado neste evento.' : 'Presença marcada neste evento. Volte amanhã.'}
           </p>
         ) : (
-          <Button block size="md" variant="secondary" loading={ocupado} sfx={false} onClick={onMarcar}>
-            Marcar presença · {proximo?.recompensa.rotulo}
+          <Button block size="md" variant="secondary" loading={ocupado} sfx={false} onClick={onMarcar} aria-label={`Marcar presença no evento: ${proximo?.recompensa.rotulo ?? ''}`}>
+            Marcar presença no evento
           </Button>
         )}
       </div>
@@ -393,16 +393,20 @@ function Revelacao({ r, onFim }: { r: ResgateResultado & { titulo: string }; onF
         : r.recompensa.icone === 'carta'
           ? 'A carta foi para o seu inventário.'
           : 'Guardado no seu inventário.'
-  return (
+  const [alvo, setAlvo] = useState<HTMLElement | null>(null)
+  useEffect(() => setAlvo(document.body), [])
+  if (!alvo) return null
+  // Portal no body: cobre o shell inteiro (barra de status e avisos) e fica abaixo das cenas (z 95).
+  return createPortal(
     <div
       role="dialog"
       aria-modal="true"
       aria-label={`Recompensa resgatada: ${r.recompensa.rotulo}`}
       onClick={() => fechar.current()}
-      className="cal-rev fixed inset-0 z-[90] flex flex-col items-center justify-center bg-dv-abyss/90 px-6 text-center backdrop-blur-[2px]"
+      className="cal-rev fixed inset-0 z-[94] flex flex-col items-center justify-center bg-dv-abyss/90 px-6 text-center backdrop-blur-[2px]"
     >
       <style>{REV_CSS}</style>
-      <button type="button" onClick={() => fechar.current()} className="dv-focus absolute right-3 top-[max(12px,env(safe-area-inset-top))] min-h-11 px-3 font-mono text-[11px] uppercase tracking-[0.18em] text-dv-text-2">
+      <button type="button" onClick={() => fechar.current()} className="dv-focus absolute right-3 top-[calc(env(safe-area-inset-top)+16px)] min-h-11 px-3 font-mono text-[11px] uppercase tracking-[0.18em] text-dv-text-2">
         Pular
       </button>
       <span aria-hidden="true" className="cal-rev-halo pointer-events-none absolute left-1/2 top-[42%] size-[min(120vw,520px)] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(closest-side,color-mix(in_srgb,var(--dv-wine)_90%,transparent),color-mix(in_srgb,var(--dv-wine-deep)_60%,transparent)_55%,transparent)]" />
@@ -424,7 +428,8 @@ function Revelacao({ r, onFim }: { r: ResgateResultado & { titulo: string }; onF
       <p className="cal-rev-txt relative mt-10 font-serif text-[30px] font-medium uppercase leading-tight tracking-[0.02em] text-dv-text [animation-delay:380ms]">{r.recompensa.rotulo}</p>
       <p className="cal-rev-txt relative mt-2 max-w-xs font-body text-[15px] leading-snug text-dv-text-2 [animation-delay:480ms]">{pt(nota)}</p>
       <p className="cal-rev-txt relative mt-8 font-mono text-[10px] uppercase tracking-[0.2em] text-dv-text-3 [animation-delay:900ms]">Toque para continuar</p>
-    </div>
+    </div>,
+    alvo,
   )
 }
 
@@ -599,6 +604,7 @@ function Proximos({ d }: { d: Liberado }) {
 }
 
 export function EventoCartao({ e, destaque = false, as = 'li' }: { e: EventoVista; destaque?: boolean; as?: 'li' | 'div' }) {
+  // `destaque` = projeção do tutorial: cartão enxuto (sem o selo de check-in), para não cobrir a Melissa.
   const p = partes(e.ocorrencia)
   return (
     <Lamina as={as} tom={e.enfase === 'atencao' ? 'vinho' : 'prata'} ariaLabel={`${e.titulo}: ${dataCurtaFaixa(e.ocorrencia, e.ate)}, ${ENFASE_ROTULO[e.enfase]}`} className={cn(destaque && 'drop-shadow-[0_0_28px_color-mix(in_srgb,var(--dv-wine-text)_45%,transparent)]')}>
@@ -635,7 +641,7 @@ export function EventoCartao({ e, destaque = false, as = 'li' }: { e: EventoVist
                 {ENFASE_ROTULO[e.enfase]}
               </span>
             )}
-            {e.checkin && (
+            {e.checkin && !destaque && (
               <span className="dv-cut-diag inline-flex h-6 items-center px-2 font-mono text-[10px] uppercase leading-none tracking-[0.12em] text-dv-gold-bright shadow-[inset_0_0_0_1px_var(--dv-line-gold)]" style={{ '--dv-cut': '5px' } as CSSProperties}>
                 Check-in especial
               </span>

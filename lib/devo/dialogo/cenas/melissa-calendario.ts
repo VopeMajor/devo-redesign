@@ -12,7 +12,7 @@ const mel = (texto: string, expressao?: string, extra: Parameters<typeof fala>[2
 
 export const CENA_MELISSA_CALENDARIO: Cena = {
   id: 'melissa-calendario',
-  titulo: 'Grandioso Calendário Devo',
+  titulo: 'Calendário Devo',
   capitulo: 'Companhia de Despertados',
   cenario: 'holograma',
   elenco: { melissa: { nome: 'Melissa', npc: 'melissa', titulo: 'Companhia de Despertados' } },
