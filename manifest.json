@@ -1,0 +1,249 @@
+{
+  "pedido": "moldura-ultima-badalada",
+  "titulo": "Última Badalada — avatar",
+  "tipo": "moldura",
+  "tamanho_final": 1024,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 6071,
+      "passos": null,
+      "segundos": 31.3,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "miolo_aberto_por_cor": true,
+      "janela": {
+        "forma": "circulo",
+        "centro_px": [
+          512.0,
+          512.0
+        ],
+        "raio_px": [
+          256.0,
+          256.0
+        ],
+        "raio_fracao": [
+          0.25,
+          0.25
+        ]
+      },
+      "reencaixe": {
+        "escala": 1.8963,
+        "cobertura_aro": 1.0
+      },
+      "ornamento_cortado": 0.1269,
+      "arquivos": [
+        {
+          "arquivo": "moldura-ultima-badalada--v01--1024.png",
+          "bytes": 768072
+        },
+        {
+          "arquivo": "moldura-ultima-badalada--v01--1024.webp",
+          "bytes": 124492
+        },
+        {
+          "arquivo": "moldura-ultima-badalada--v01--512.webp",
+          "bytes": 48266
+        },
+        {
+          "arquivo": "moldura-ultima-badalada--v01--256.webp",
+          "bytes": 20372
+        },
+        {
+          "arquivo": "moldura-ultima-badalada--v01--96.webp",
+          "bytes": 5686
+        },
+        {
+          "arquivo": "moldura-ultima-badalada--v01--48.webp",
+          "bytes": 2346
+        }
+      ],
+      "segundos_pos": 35.5,
+      "avisos": [
+        "12.7% do ornamento ficou fora do quadro — reduza a janela ou peça mais margem no prompt"
+      ]
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 6072,
+      "passos": null,
+      "segundos": 21.2,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "miolo_aberto_por_cor": true,
+      "janela": {
+        "forma": "circulo",
+        "centro_px": [
+          512.0,
+          512.0
+        ],
+        "raio_px": [
+          256.0,
+          256.0
+        ],
+        "raio_fracao": [
+          0.25,
+          0.25
+        ]
+      },
+      "reencaixe": {
+        "escala": 1.7902,
+        "cobertura_aro": 1.0
+      },
+      "ornamento_cortado": 0.1068,
+      "arquivos": [
+        {
+          "arquivo": "moldura-ultima-badalada--v02--1024.png",
+          "bytes": 868286
+        },
+        {
+          "arquivo": "moldura-ultima-badalada--v02--1024.webp",
+          "bytes": 134894
+        },
+        {
+          "arquivo": "moldura-ultima-badalada--v02--512.webp",
+          "bytes": 54656
+        },
+        {
+          "arquivo": "moldura-ultima-badalada--v02--256.webp",
+          "bytes": 22750
+        },
+        {
+          "arquivo": "moldura-ultima-badalada--v02--96.webp",
+          "bytes": 6430
+        },
+        {
+          "arquivo": "moldura-ultima-badalada--v02--48.webp",
+          "bytes": 2454
+        }
+      ],
+      "segundos_pos": 30.9,
+      "avisos": [
+        "10.7% do ornamento ficou fora do quadro — reduza a janela ou peça mais margem no prompt"
+      ]
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 6073,
+      "passos": null,
+      "segundos": 20.2,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "ilhas_removidas": 1,
+      "janela": {
+        "forma": "circulo",
+        "centro_px": [
+          512.0,
+          512.0
+        ],
+        "raio_px": [
+          256.0,
+          256.0
+        ],
+        "raio_fracao": [
+          0.25,
+          0.25
+        ]
+      },
+      "reencaixe": {
+        "escala": 1.5515,
+        "cobertura_aro": 1.0
+      },
+      "ornamento_cortado": 0.0627,
+      "arquivos": [
+        {
+          "arquivo": "moldura-ultima-badalada--v03--1024.png",
+          "bytes": 930572
+        },
+        {
+          "arquivo": "moldura-ultima-badalada--v03--1024.webp",
+          "bytes": 147588
+        },
+        {
+          "arquivo": "moldura-ultima-badalada--v03--512.webp",
+          "bytes": 58854
+        },
+        {
+          "arquivo": "moldura-ultima-badalada--v03--256.webp",
+          "bytes": 23258
+        },
+        {
+          "arquivo": "moldura-ultima-badalada--v03--96.webp",
+          "bytes": 6464
+        },
+        {
+          "arquivo": "moldura-ultima-badalada--v03--48.webp",
+          "bytes": 2524
+        }
+      ],
+      "segundos_pos": 30.6,
+      "avisos": [
+        "6.3% do ornamento ficou fora do quadro — reduza a janela ou peça mais margem no prompt"
+      ]
+    },
+    {
+      "nome": "v04",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 6074,
+      "passos": null,
+      "segundos": 16.2,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "miolo_aberto_por_cor": true,
+      "janela": {
+        "forma": "circulo",
+        "centro_px": [
+          512.0,
+          512.0
+        ],
+        "raio_px": [
+          256.0,
+          256.0
+        ],
+        "raio_fracao": [
+          0.25,
+          0.25
+        ]
+      },
+      "reencaixe": {
+        "escala": 1.5148,
+        "cobertura_aro": 1.0
+      },
+      "ornamento_cortado": 0.0382,
+      "arquivos": [
+        {
+          "arquivo": "moldura-ultima-badalada--v04--1024.png",
+          "bytes": 668676
+        },
+        {
+          "arquivo": "moldura-ultima-badalada--v04--1024.webp",
+          "bytes": 117506
+        },
+        {
+          "arquivo": "moldura-ultima-badalada--v04--512.webp",
+          "bytes": 48380
+        },
+        {
+          "arquivo": "moldura-ultima-badalada--v04--256.webp",
+          "bytes": 19536
+        },
+        {
+          "arquivo": "moldura-ultima-badalada--v04--96.webp",
+          "bytes": 5578
+        },
+        {
+          "arquivo": "moldura-ultima-badalada--v04--48.webp",
+          "bytes": 2390
+        }
+      ],
+      "segundos_pos": 30.4,
+      "avisos": [
+        "3.8% do ornamento ficou fora do quadro — reduza a janela ou peça mais margem no prompt"
+      ]
+    }
+  ]
+}
