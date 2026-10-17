@@ -1,0 +1,120 @@
+{
+  "pedido": "ico-pp",
+  "titulo": "Calendário — ícone pp",
+  "tipo": "emblema",
+  "tamanho_final": 1024,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 10601,
+      "passos": null,
+      "segundos": 15.1,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "ico-pp--v01--1024.png",
+          "bytes": 1061764
+        },
+        {
+          "arquivo": "ico-pp--v01--1024.webp",
+          "bytes": 153802
+        },
+        {
+          "arquivo": "ico-pp--v01--512.webp",
+          "bytes": 46280
+        },
+        {
+          "arquivo": "ico-pp--v01--256.webp",
+          "bytes": 17136
+        },
+        {
+          "arquivo": "ico-pp--v01--128.webp",
+          "bytes": 7088
+        },
+        {
+          "arquivo": "ico-pp--v01--64.webp",
+          "bytes": 2740
+        }
+      ],
+      "segundos_pos": 34.3,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 10602,
+      "passos": null,
+      "segundos": 14.4,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "ico-pp--v02--1024.png",
+          "bytes": 979396
+        },
+        {
+          "arquivo": "ico-pp--v02--1024.webp",
+          "bytes": 155448
+        },
+        {
+          "arquivo": "ico-pp--v02--512.webp",
+          "bytes": 42058
+        },
+        {
+          "arquivo": "ico-pp--v02--256.webp",
+          "bytes": 15556
+        },
+        {
+          "arquivo": "ico-pp--v02--128.webp",
+          "bytes": 6544
+        },
+        {
+          "arquivo": "ico-pp--v02--64.webp",
+          "bytes": 2602
+        }
+      ],
+      "segundos_pos": 28.6,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 10603,
+      "passos": null,
+      "segundos": 14.0,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "ico-pp--v03--1024.png",
+          "bytes": 1127880
+        },
+        {
+          "arquivo": "ico-pp--v03--1024.webp",
+          "bytes": 158614
+        },
+        {
+          "arquivo": "ico-pp--v03--512.webp",
+          "bytes": 40588
+        },
+        {
+          "arquivo": "ico-pp--v03--256.webp",
+          "bytes": 15792
+        },
+        {
+          "arquivo": "ico-pp--v03--128.webp",
+          "bytes": 6806
+        },
+        {
+          "arquivo": "ico-pp--v03--64.webp",
+          "bytes": 2902
+        }
+      ],
+      "segundos_pos": 29.0,
+      "avisos": []
+    }
+  ]
+}

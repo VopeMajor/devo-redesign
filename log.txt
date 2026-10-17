@@ -1,0 +1,9 @@
+[ico-pp] v01: @cf/black-forest-labs/flux-2-klein-4b seed=10601 1024x1024 passos=None (~104 neurônios)
+    ok em 15.1s, 1024x1024
+[ico-pp] v02: @cf/black-forest-labs/flux-2-klein-4b seed=10602 1024x1024 passos=None (~104 neurônios)
+    ok em 14.4s, 1024x1024
+[ico-pp] v03: @cf/black-forest-labs/flux-2-klein-4b seed=10603 1024x1024 passos=None (~104 neurônios)
+    ok em 14.0s, 1024x1024
+[ico-pp] v01: rembg:birefnet-general; sem avisos
+[ico-pp] v02: rembg:birefnet-general; sem avisos
+[ico-pp] v03: rembg:birefnet-general; sem avisos
