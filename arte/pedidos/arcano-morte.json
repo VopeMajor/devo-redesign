@@ -1,0 +1,38 @@
+{
+  "id": "arcano-morte",
+  "titulo": "Arcano — morte (figura)",
+  "tipo": "ilustracao",
+  "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+  "prompt": "Dark fantasy character design concept art, painted, soft painterly render, highly detailed, isolated on a plain flat light gray background. A single tall, regal and ethereal personification of a tarot Major Arcana, an original otherworldly being, standing perfectly still in a front view, full body from head to feet, the whole figure fills about 85 percent of the image height, feet resting near the bottom edge on nothing, strong elegant silhouette. Muted palette of abyss black, deep blood wine, fog stone gray and faded silver, with ONE accent color: cold white. Soft studio key light from the upper left, gentle cool rim light, no cast shadow. No text, no letters, no card frame, no background, no other characters. Death: an extremely tall gaunt veiled figure in layered black and wine shrouds, a long sheer black veil hiding the face, a fragile skeletal frame barely visible through the cloth, holding an empty silver chalice, countless thin pale threads flowing from the fingers and drifting downward like severed fates, a crown of dried white roses.",
+  "negative": "text, letters, watermark, signature, cropped, cut off feet, background scenery, multiple figures, cartoon, chibi, neon, saturated colors",
+  "largura": 1024,
+  "altura": 1536,
+  "variacoes": [
+    {
+      "seed": 12131,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b"
+    },
+    {
+      "seed": 12132,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b"
+    },
+    {
+      "seed": 12131,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b"
+    },
+    {
+      "seed": 12132,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b"
+    }
+  ],
+  "pos": {
+    "remover_fundo": true,
+    "tamanho_final": 1536,
+    "margem": 0.03,
+    "derivados": [
+      1024,
+      768,
+      512
+    ]
+  }
+}
