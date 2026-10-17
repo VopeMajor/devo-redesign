@@ -3,7 +3,7 @@
 import { useEffect, type ComponentType } from 'react'
 import type { UnlockFlag } from '@/lib/devo/progresso'
 import type { AppId } from '@/lib/devo/types'
-import { EmblemArcanos, EmblemCorporacoes, EmblemMascaras, EmblemPoco, EmblemTorres, EmblemVirtudes, type EmblemComponent, type EmblemProps } from '../kit/emblems'
+import { EmblemArcanos, EmblemCalendario, EmblemCorporacoes, EmblemMascaras, EmblemPoco, EmblemTorres, EmblemVirtudes, type EmblemComponent, type EmblemProps } from '../kit/emblems'
 import { GlyphKeyhole } from '../kit/glyphs'
 import { Panel, SectionLabel } from '../apps/app-ui'
 import { useDevo } from '../state/devo-store'
@@ -13,6 +13,7 @@ import { TorresApp } from '../torres/torres-app'
 import { SalaoApp } from '../salao/salao-app'
 import { VirtudesApp } from '../virtudes/virtudes-app'
 import { CorporacoesApp } from '../corporacoes/corporacoes-app'
+import { CalendarioApp } from '../calendario/calendario-app'
 
 /**
  * SISTEMAS NOVOS (DIRECAO-3 §1–2) no menu do DEVO: trancados até vencer o Deadly Vote tutorial (Owner e
@@ -24,7 +25,7 @@ import { CorporacoesApp } from '../corporacoes/corporacoes-app'
  *   e ELA mostra a trava (decidida no servidor). A tela é responsável por chamar a apresentação narrativa na primeira entrada
  *   (`useCenas().abrir(..., { seNaoVista: true })` — docs/redesign/DIALOGO.md).
  */
-export type SistemaId = 'salao' | 'poco' | 'torres' | 'corporacoes' | 'virtudes' | 'arcanos'
+export type SistemaId = 'calendario' | 'salao' | 'poco' | 'torres' | 'corporacoes' | 'virtudes' | 'arcanos'
 
 export const TELAS_SISTEMA: Partial<Record<SistemaId, ComponentType>> = {
   salao: SalaoApp,
@@ -32,6 +33,7 @@ export const TELAS_SISTEMA: Partial<Record<SistemaId, ComponentType>> = {
   torres: TorresApp,
   corporacoes: CorporacoesApp,
   virtudes: VirtudesApp,
+  calendario: CalendarioApp,
 }
 
 export type SistemaDef = {
@@ -46,11 +48,17 @@ export type SistemaDef = {
   emblem: EmblemComponent
   /** Janela no desktop (padrão 860×620). */
   janela?: { w: number; h: number }
+  /**
+   * Liberado para todos desde o início (`desbloqueio.livres` no servidor): sem cerimônia de desbloqueio e fora da
+   * contagem de "sistemas novos explorados" da visita do Galo.
+   */
+  inicial?: boolean
 }
 
 const TUTORIAL = 'Vença o Deadly Vote tutorial'
 
 export const SISTEMAS: SistemaDef[] = [
+  { id: 'calendario', nome: 'Calendário Devo', curto: 'Calendário', subtitulo: 'Eventos e check-in diário', flag: 'calendario', trava: 'Em breve', emblem: EmblemCalendario, janela: { w: 460, h: 820 }, inicial: true },
   { id: 'salao', nome: 'Salão das Máscaras', curto: 'Máscaras', subtitulo: 'Leilões, mercado e anúncios', flag: 'salao_mascaras', trava: TUTORIAL, emblem: EmblemMascaras, janela: { w: 480, h: 840 } },
   { id: 'poco', nome: 'Poço dos Milagres', curto: 'Poço', subtitulo: 'Moedas, manivela e balde', flag: 'poco', trava: TUTORIAL, emblem: EmblemPoco, janela: { w: 460, h: 820 } },
   { id: 'torres', nome: 'Torres de Ruptura', curto: 'Torres', subtitulo: 'Andares, essências e chaves', flag: 'torres', trava: TUTORIAL, emblem: EmblemTorres, janela: { w: 480, h: 820 } },

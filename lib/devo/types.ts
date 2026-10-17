@@ -45,6 +45,7 @@ export type AppId = 'record' | 'pulso' | 'mensagens' | 'cartas' | 'trocas' | 'aj
   | 'torres'
   | 'corporacoes'
   | 'virtudes'
+  | 'calendario'
 
 export type NotificationItem = {
   id: string

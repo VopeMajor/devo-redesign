@@ -130,6 +130,10 @@ export type Alvos = {
   'corporacao.aprovar': undefined
   /** Corporações: classificar como oficial ou Necro-Corporação (e rótulos provisórios: escopo, rivais). Owner e Anfitrião. */
   'corporacao.classificar': undefined
+  /** Calendário: criar/editar/remover eventos programados (sem recompensas). Owner e Anfitrião. */
+  'calendario.editar': undefined
+  /** Calendário: check-ins de evento (lista de recompensas) e regras do check-in diário. Owner. */
+  'calendario.recompensas': undefined
 }
 
 export type Acao = keyof Alvos
@@ -141,6 +145,7 @@ export const ACOES = [
   'cosmetico.equipar_qualquer', 'catalogo.editar', 'config.editar', 'autorizacao.gerenciar', 'equipe.ver', 'salao.avaliar',
   'virtudes.ver', 'virtudes.evoluir', 'virtudes.ajustar',
   'corporacao.aprovar', 'corporacao.classificar',
+  'calendario.editar', 'calendario.recompensas',
 ] as const satisfies readonly Acao[]
 
 function temAutorizacao(ator: Ator, escopo: string, ref?: string | null) {
@@ -186,6 +191,7 @@ export function can<A extends Acao>(ator: Ator | null | undefined, acao: A, alvo
     case 'autorizacao.gerenciar':
     case 'convite.teste':
     case 'virtudes.ajustar':
+    case 'calendario.recompensas':
       return owner
     case 'dv.criar':
     case 'salao.avaliar':
@@ -196,6 +202,7 @@ export function can<A extends Acao>(ator: Ator | null | undefined, acao: A, alvo
     case 'virtudes.evoluir':
     case 'corporacao.aprovar':
     case 'corporacao.classificar':
+    case 'calendario.editar':
       return owner || c === 'anfitriao'
     case 'dv.editar': {
       const v = x as Alvos['dv.editar'] | undefined

@@ -121,6 +121,12 @@ assume e chama `preventDefault()` — o fallback local de quem pediu não toca.
   escolhida vai para `POST /api/torres {action:'reflexao', escolha: 1–5}` (o servidor das Torres continua dono
   do "pendente"). O fallback das Torres fica como reserva (fora do host).
 
+### Aviso de passo (`devo:cena-passo`)
+A cada passo mostrado, o motor dispara `window` `CustomEvent('devo:cena-passo', { detail: { cena, indice, id } })`
+(`id` = o `id` do passo, se tiver; ao fechar a cena vem `indice: -1, id: null`). Serve para a tela que está por trás
+reagir a um momento da cena sem mexer no formato: ex. o Calendário projeta o evento de Natal no passo
+`exemplo-natal` da cena `melissa-calendario` ("*Mostra exemplo de Evento de Natal*").
+
 ## 7. Migrar os formatos locais (Torres e Poço) para este motor
 
 Os dois já são quase o mesmo formato; a troca é mecânica e pode ser feita pelo dono de cada sistema quando

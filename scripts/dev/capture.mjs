@@ -54,7 +54,7 @@ async function device(kind = 'phone') {
  * para provar que o retrato fica ancorado na caixa de fala em qualquer altura (DIRECAO-3 §9, NpcAnchor). O mapa
  * das Torres (t20/t25) também, para conferir placas e chips nas três alturas.
  */
-const NPC_VARIANT = /^(03-prologo-(0[2-9]|1\d)|04-tutorial-0[1-6]|26-coruja-0[13]|27-javali-[01]|34-javali-[01]|salao-0[2-5]|t10-galo-abertura|t11b-galo-fala|t23-andar-cena|t20-mapa|t25-mapa-progresso|poco-0[5-9]|03-melissa-3|n-1[0-7]|n-2[06]|n-3[24]|corp-0[34])/
+const NPC_VARIANT = /^(03-prologo-(0[2-9]|1\d)|04-tutorial-0[1-6]|26-coruja-0[13]|27-javali-[01]|34-javali-[01]|salao-0[2-5]|t10-galo-abertura|t11b-galo-fala|t23-andar-cena|t20-mapa|t25-mapa-progresso|poco-0[5-9]|03-melissa-3|n-1[0-7]|n-2[06]|n-3[24]|corp-0[34]|cal-)/
 const VARIANT_SIZES = [
   [390, 900],
   [360, 740],
@@ -3386,6 +3386,189 @@ if (want('virtudes')) {
     await shot(page, 'v22-erro')
   })
   await own.ctx.close()
+}
+
+if (want('calendario')) {
+  const { default: pg } = await import('pg')
+  const db = process.env.DATABASE_URL ? new pg.Pool({ connectionString: process.env.DATABASE_URL }) : null
+  const sql = (t, p) => (db ? db.query(t, p).then((r) => r.rows) : Promise.resolve([]))
+  const dlg = (page) => page.locator('section[data-cena]').last()
+  const textoDlg = (page) => dlg(page).evaluate((el) => el.textContent ?? '', null, { timeout: 2000 }).catch(() => '')
+  /** Avança a cena do motor até o texto aparecer (por inteiro). */
+  async function ate(page, alvo, max = 200) {
+    for (let i = 0; i < max; i++) {
+      const t = await textoDlg(page)
+      if (!t) {
+        await wait(500)
+        if (!(await textoDlg(page))) return false
+        continue
+      }
+      if (t.includes(alvo)) {
+        await wait(1600)
+        return true
+      }
+      const pronto = dlg(page).getByRole('button', { name: 'Continuar', exact: true }).first()
+      if (await pronto.count()) {
+        await tryClick(pronto, 2000)
+        await wait(450)
+      } else await wait(300)
+    }
+    manifest.errors.push({ step: 'cal-ate', error: `não chegou em ${alvo}; último texto: ${(await textoDlg(page)).slice(-160)}` })
+    return false
+  }
+  async function ateOFim(page) {
+    for (let i = 0; i < 120; i++) {
+      if (!(await textoDlg(page))) return
+      const pronto = dlg(page).getByRole('button', { name: 'Continuar', exact: true }).first()
+      if (!(await tryClick(pronto, 1500))) await page.keyboard.press('Enter').catch(() => {})
+      await wait(450)
+    }
+  }
+  const abrirCal = async (page) => {
+    await enterOS(page)
+    const b = page.getByRole('button', { name: 'Calendário Devo', exact: true }).first()
+    await b.waitFor({ state: 'visible', timeout: 15000 }).catch(() => {})
+    await revealOnHome(page, b)
+    await tryClick(b, 8000)
+    await wait(2800)
+  }
+  const regiao = async (page, nome, block = 'start') => {
+    await page.getByRole('region', { name: nome, exact: true }).first().evaluate((el, b) => el.scrollIntoView({ block: b }), block).catch(() => {})
+    await wait(600)
+  }
+  const idDe = async (nome) => (await sql('SELECT id FROM players WHERE lower(name) = lower($1)', [nome]))[0]?.id
+  /** Histórico: `n` check-ins diários nos dias anteriores (Dia 1 há n dias … Dia n ontem) e a apresentação já vista. */
+  const historico = async (nome, n) => {
+    const id = await idDe(nome)
+    if (!id) return manifest.errors.push({ step: `cal-hist-${nome}`, error: 'jogador não encontrado' })
+    await sql(
+      `INSERT INTO calendario_checkins (player_id, dia, tipo, posicao, recompensa)
+       SELECT $1, (now() AT TIME ZONE 'America/Sao_Paulo')::date - ($2::int - k + 1), 'diario', k, '{"tipo": "pp", "quantidade": 50}'::jsonb
+         FROM generate_series(1, $2::int) k ON CONFLICT DO NOTHING`,
+      [id, n],
+    )
+    await sql("INSERT INTO dialog_progress (player_id, scene_id, step, done_at) VALUES ($1, 'melissa-calendario', 0, now()) ON CONFLICT (player_id, scene_id) DO UPDATE SET done_at = now()", [id])
+  }
+
+  // 1. Primeira entrada: ícone na tela de Sistemas, apresentação da Melissa (Natal projetado), Dia 1, revelação.
+  const A = await account('Calendula', 'DEVO-CAL-0001', VET_CARDS)
+  await step('cal-primeira-entrada', async () => {
+    const page = A.page
+    await enterOS(page)
+    const b = page.getByRole('button', { name: 'Calendário Devo', exact: true }).first()
+    await b.waitFor({ state: 'visible', timeout: 15000 }).catch(() => {})
+    await revealOnHome(page, b)
+    await wait(900)
+    await shot(page, 'cal-00-home-sistemas', 'ícone do Calendário na tela de Sistemas (liberado desde o início)')
+    await tryClick(b, 8000)
+    await wait(3200)
+    await ate(page, 'Grandioso Calendário Devo!!!')
+    await shot(page, 'cal-01-melissa', 'holograma da Melissa: boas-vindas')
+    await ate(page, 'quais dias você tem mais folga')
+    await wait(600)
+    await shot(page, 'cal-02-natal', '"Mostra exemplo de Evento de Natal": o Natal do calendário projetado por cima da cena')
+    await ate(page, 'mais de um tipo de check-in')
+    await shot(page, 'cal-03-checkin-fala', 'fala do check-in de datas comemorativas')
+    await ateOFim(page)
+    await wait(1600)
+    await shot(page, 'cal-04-tela', 'Calendário: check-in diário no Dia 1')
+    await tryClick(page.getByRole('button', { name: /^Marcar presença · 50 PP/ }).first(), 6000)
+    await wait(1500)
+    await shot(page, 'cal-05-revelacao', 'revelação do resgate (pulável)')
+    await tryClick(page.getByRole('button', { name: 'Pular', exact: true }).first(), 3000)
+    await wait(900)
+    await shot(page, 'cal-06-marcado', 'Dia 1 carimbado, contagem para amanhã')
+    await regiao(page, 'Check-in dos Arcanos')
+    await shot(page, 'cal-07-extra', 'check-in extra da data comemorativa de hoje')
+    await tryClick(page.getByRole('button', { name: /^Marcar presença · \+30 Minutos/ }).first(), 6000)
+    await wait(1500)
+    await shot(page, 'cal-08-extra-revelacao', 'revelação do check-in do evento (+30 min)')
+    await tryClick(page.getByRole('button', { name: 'Pular', exact: true }).first(), 3000)
+    await wait(700)
+    await regiao(page, 'Mês')
+    await shot(page, 'cal-09-mes', 'mês com eventos marcados (atenção / folga / hoje)')
+    await tryClick(page.getByRole('gridcell', { name: /^31 de outubro/ }).first(), 3000)
+    await wait(600)
+    await regiao(page, 'Mês', 'end')
+    await shot(page, 'cal-10-dia', 'dia escolhido: Halloween')
+    await regiao(page, 'Próximos eventos')
+    await shot(page, 'cal-11-proximos', 'próximos eventos (arte, data, destaque)')
+    await page.getByRole('region', { name: 'Próximos eventos', exact: true }).first().evaluate((el) => el.scrollIntoView({ block: 'end' })).catch(() => {})
+    await wait(500)
+    await shot(page, 'cal-12-proximos-fim')
+  })
+  await A.ctx.close()
+
+  // 2. Assídua: três dias feitos, hoje é o Dia 4 (+2 Horas).
+  const B = await account('Assidua', 'DEVO-CAL-0002', VET_CARDS)
+  await historico('Assidua', 3)
+  await step('cal-dia-4', async () => {
+    const page = B.page
+    await abrirCal(page)
+    await shot(page, 'cal-13-dia4', 'três dias carimbados, Dia 4 em destaque')
+    await tryClick(page.getByRole('button', { name: /^Marcar presença · \+2 Horas/ }).first(), 6000)
+    await wait(1500)
+    await shot(page, 'cal-14-revelacao-horas', '+2 Horas entram no pulso')
+    await tryClick(page.getByRole('button', { name: 'Pular', exact: true }).first(), 3000)
+    await wait(800)
+    await shot(page, 'cal-15-dia4-feito')
+  })
+  await B.ctx.close()
+
+  // 3. Dia 7: a Carta Incomum (entregue pelo servidor, resgatada para o inventário).
+  const C = await account('Setima', 'DEVO-CAL-0003', VET_CARDS)
+  await historico('Setima', 6)
+  await step('cal-dia-7', async () => {
+    const page = C.page
+    await abrirCal(page)
+    await shot(page, 'cal-16-dia7', 'seis carimbos, a carta no fim do ciclo')
+    await tryClick(page.getByRole('button', { name: /^Marcar presença · Carta Incomum/ }).first(), 6000)
+    await wait(1800)
+    await shot(page, 'cal-17-revelacao-carta', 'revelação da Carta Incomum')
+  })
+  await C.ctx.close()
+
+  // 4. Mesa do Owner: eventos, novo evento com check-in próprio, regras do diário.
+  const own = await account('Veterano', 'DEVO-TEST-ADM1', VET_CARDS)
+  await step('cal-mesa', async () => {
+    const page = own.page
+    await openApp(page, 'Record')
+    await tryClick(page.getByRole('tab', { name: /Mesa/i }).first())
+    await wait(2000)
+    await page.locator('nav[aria-label="Seções da mesa"]').first().evaluate((el) => el.scrollIntoView({ block: 'start' })).catch(() => {})
+    await tryClick(desk(page, 'Calendário'))
+    await wait(2000)
+    await shot(page, 'cal-20-mesa', 'Mesa › Calendário')
+    await page.getByRole('region', { name: 'Eventos programados' }).first().evaluate((el) => el.scrollIntoView({ block: 'start' })).catch(() => {})
+    await wait(500)
+    await shot(page, 'cal-21-mesa-eventos')
+    await tryClick(page.getByRole('button', { name: 'Novo evento', exact: true }).first())
+    await wait(700)
+    const f = page.getByRole('form', { name: 'Novo evento' }).first()
+    await f.getByRole('textbox').first().fill('Noite da Lua Vermelha').catch(() => {})
+    await f.locator('textarea').first().fill('Os relógios atrasam. Ninguém sabe por quê.').catch(() => {})
+    await f.getByRole('checkbox', { name: 'Check-in próprio nestas datas' }).check().catch(() => {})
+    await wait(400)
+    await f.evaluate((el) => el.scrollIntoView({ block: 'start' })).catch(() => {})
+    await wait(400)
+    await shot(page, 'cal-22-mesa-novo', 'formulário: nome, datas, destaque, arte')
+    await page.getByRole('checkbox', { name: 'Check-in próprio nestas datas' }).first().evaluate((el) => el.scrollIntoView({ block: 'center' })).catch(() => {})
+    await wait(400)
+    await shot(page, 'cal-23-mesa-checkin', 'check-in do evento (só o Owner)')
+    await tryClick(page.getByRole('button', { name: 'Criar evento', exact: true }).first())
+    await wait(1600)
+    await page.getByRole('listitem', { name: 'Evento Noite da Lua Vermelha' }).first().evaluate((el) => el.scrollIntoView({ block: 'center' })).catch(() => {})
+    await wait(500)
+    await shot(page, 'cal-24-mesa-criado', 'evento criado (vai para o admin_log)')
+    await page.getByRole('region', { name: 'Check-in diário' }).first().evaluate((el) => el.scrollIntoView({ block: 'start' })).catch(() => {})
+    await wait(500)
+    await shot(page, 'cal-25-mesa-diario', 'ciclo do dono + regras provisórias')
+    await page.route(/\/api\/calendario$/, (r) => r.fulfill({ status: 500, contentType: 'application/json', body: '{"ok":false,"error":"O Calendário não respondeu. Tente de novo."}' }))
+    await abrirCal(page)
+    await shot(page, 'cal-26-erro', 'erro com tentar de novo')
+  })
+  await own.ctx.close()
+  if (db) await db.end().catch(() => {})
 }
 
 await browser.close()
