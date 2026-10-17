@@ -1,0 +1,29 @@
+ok   migração é idempotente (roda de novo sem erro)
+ok   grant/consume: nunca deixa negativo e é idempotente
+ok   item único (cosmético) fica com quantidade 1
+ok   karma ajusta com histórico e idem
+ok   Dealer sem supervisor é recusado pelo banco
+ok   banco: Dealer não aprova; aprovada editada volta a pendente; externa só Owner
+ok   seed: tutorial vencido desbloqueia; contas antigas continuam trancadas
+ok   cadastro por convite de cada cargo
+ok   Anfitrião gera convite de Dealer; Dealer nasce sob ele
+ok   Dealer não gera convites; Jogador gera 1 (cota) e não fica negativo
+FAIL /api/eu: Jogador trancado, Owner e Anfitrião com tudo liberado, sem karma cru
+     Error: jogador novo deveria estar trancado
+    at assert (file:///home/runner/work/devo-redesign/devo-redesign/scripts/dev/fundacao-test.mjs:27:20)
+    at file:///home/runner/work/devo-redesign/devo-redesign/scripts/dev/fundacao-test.mjs:223:3
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async test (file:///home/runner/work/devo-redesign/devo-redesign/scripts/dev/fundacao-test.mjs:18:5)
+    at async file:///home/runner/work/devo-redesign/devo-redesign/scripts/dev/fundacao-test.mjs:220:1
+ok   recompensa: Dealer propõe e NÃO aprova; Anfitrião aprova
+ok   editar recompensa aprovada volta a pendente
+ok   entrega idempotente
+ok   recompensa externa do Anfitrião exige Owner
+ok   Jogador não acessa a API da equipe
+ok   transferência de Dealer preserva o supervisor original nas propostas
+ok   payload público nunca contém o cargo owner
+ok   Deadly Vote tutorial vencido desbloqueia; Owner sem nome público como anfitrião do caso
+ok   override de flag e karma pelo Owner (linha do destino sem número)
+ok   cargos: Anfitrião promove Jogador a Dealer sob si, não promove a Anfitrião
+
+Fundação: 20 ok, 1 falha(s): /api/eu: Jogador trancado, Owner e Anfitrião com tudo liberado, sem karma cru
