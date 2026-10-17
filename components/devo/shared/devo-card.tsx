@@ -200,7 +200,7 @@ export const RARITY_SKIN: Record<Rarity, RaritySkin> = {
     duo: "mono",
     tint: "linear-gradient(180deg,#e6dcef,#5b5088)",
     body: "black",
-    gem: ["#f1ecff", "#a99adf", "#3b3269"],
+    gem: ["#f7eef5", "#c4abd2", "#57446c"],
   },
   lendaria: {
     material: "Ametista",
@@ -597,7 +597,7 @@ export function CardFace({
             data-follow={holo ? "" : undefined}
             className={cn(
               "dvcard-holo pointer-events-none absolute inset-0",
-              white ? "opacity-[0.5] mix-blend-multiply" : promo ? "opacity-[0.6] mix-blend-color-dodge" : "opacity-[0.42] mix-blend-color-dodge",
+              white ? "opacity-[0.5] mix-blend-multiply" : promo ? "opacity-[0.46] mix-blend-color-dodge" : "opacity-[0.42] mix-blend-color-dodge",
             )}
             style={{
               backgroundImage: promo ? HOLO_FOIL.iris : white ? HOLO_FOIL.white : HOLO_FOIL.black,

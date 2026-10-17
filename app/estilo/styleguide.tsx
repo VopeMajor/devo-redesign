@@ -610,7 +610,7 @@ function RaridadesVitrine() {
                 </span>
               </p>
               <p className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.12em] text-white/55">
-                {meta.secreta ? 'Secreta' : <RarityPips rarity={r} className="text-[8px]" style={{ color: skin.light }} />}
+                {meta.secreta ? 'Secreta ·' : <RarityPips rarity={r} className="text-[8px]" style={{ color: skin.light }} />}
                 <span>{skin.material}</span>
               </p>
             </li>

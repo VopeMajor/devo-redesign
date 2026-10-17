@@ -961,6 +961,7 @@ if (want('apps')) {
   await step('coruja', async () => {
     await openApp(page, 'Cartas')
     let promo = false
+    let quizShot = false
     for (let i = 0; i < 26; i++) {
       // Fala das Únicas e Promocionais: espera a digitação terminar e fotografa as palavras com efeito.
       if (!promo && (await page.locator('p[aria-live="polite"] .dv-txt-holo').count())) {
@@ -970,7 +971,14 @@ if (want('apps')) {
       }
       if ([1, 3, 5, 7, 11, 14, 16, 18].includes(i)) await shot(page, `26-coruja-${String(i).padStart(2, '0')}`)
       const quiz = page.getByRole('button', { name: /^Rara$/ })
-      if (await quiz.count()) await tryClick(quiz.first())
+      if (await quiz.count()) {
+        if (!quizShot) {
+          quizShot = true
+          await wait(1200)
+          await shot(page, '26-coruja-quiz')
+        }
+        await tryClick(quiz.first())
+      }
       await page.evaluate(() => document.activeElement instanceof HTMLElement && document.activeElement.blur()).catch(() => {})
       await page.keyboard.press('Enter')
       await wait(700)
