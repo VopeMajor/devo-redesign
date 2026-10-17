@@ -1,0 +1,18 @@
+{
+  "asset": "img:/images/calendario/icones/dracma-comum",
+  "imagem": {
+    "base": "/images/calendario/icones/dracma-comum",
+    "tamanhos": [
+      64,
+      128,
+      256
+    ]
+  },
+  "origem": {
+    "pedido": "ico-dracma-comum",
+    "variacao": "v02",
+    "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+    "seed": 10632,
+    "importado": null
+  }
+}

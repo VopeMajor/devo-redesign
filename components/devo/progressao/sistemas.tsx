@@ -3,7 +3,7 @@
 import { useEffect, type ComponentType } from 'react'
 import type { UnlockFlag } from '@/lib/devo/progresso'
 import type { AppId } from '@/lib/devo/types'
-import { EmblemArcanos, EmblemCorporacoes, EmblemMascaras, EmblemPoco, EmblemTorres, EmblemVirtudes, type EmblemComponent, type EmblemProps } from '../kit/emblems'
+import { EmblemArcanos, EmblemCalendario, EmblemCorporacoes, EmblemMascaras, EmblemPoco, EmblemTorres, EmblemVirtudes, type EmblemComponent, type EmblemProps } from '../kit/emblems'
 import { GlyphKeyhole } from '../kit/glyphs'
 import { Panel, SectionLabel } from '../apps/app-ui'
 import { useDevo } from '../state/devo-store'
@@ -12,7 +12,9 @@ import { PocoApp } from '../poco/poco-app'
 import { TorresApp } from '../torres/torres-app'
 import { SalaoApp } from '../salao/salao-app'
 import { VirtudesApp } from '../virtudes/virtudes-app'
+import { ArcanosApp } from '../arcanos/arcanos-app'
 import { CorporacoesApp } from '../corporacoes/corporacoes-app'
+import { CalendarioApp } from '../calendario/calendario-app'
 
 /**
  * SISTEMAS NOVOS (DIRECAO-3 §1–2) no menu do DEVO: trancados até vencer o Deadly Vote tutorial (Owner e
@@ -24,7 +26,7 @@ import { CorporacoesApp } from '../corporacoes/corporacoes-app'
  *   e ELA mostra a trava (decidida no servidor). A tela é responsável por chamar a apresentação narrativa na primeira entrada
  *   (`useCenas().abrir(..., { seNaoVista: true })` — docs/redesign/DIALOGO.md).
  */
-export type SistemaId = 'salao' | 'poco' | 'torres' | 'corporacoes' | 'virtudes' | 'arcanos'
+export type SistemaId = 'calendario' | 'salao' | 'poco' | 'torres' | 'corporacoes' | 'virtudes' | 'arcanos'
 
 export const TELAS_SISTEMA: Partial<Record<SistemaId, ComponentType>> = {
   salao: SalaoApp,
@@ -32,6 +34,8 @@ export const TELAS_SISTEMA: Partial<Record<SistemaId, ComponentType>> = {
   torres: TorresApp,
   corporacoes: CorporacoesApp,
   virtudes: VirtudesApp,
+  calendario: CalendarioApp,
+  arcanos: ArcanosApp,
 }
 
 export type SistemaDef = {
@@ -46,17 +50,24 @@ export type SistemaDef = {
   emblem: EmblemComponent
   /** Janela no desktop (padrão 860×620). */
   janela?: { w: number; h: number }
+  /**
+   * Liberado para todos desde o início (`desbloqueio.livres` no servidor): sem cerimônia de desbloqueio e fora da
+   * contagem de "sistemas novos explorados" da visita do Galo.
+   */
+  inicial?: boolean
 }
 
 const TUTORIAL = 'Vença o Deadly Vote tutorial'
 
 export const SISTEMAS: SistemaDef[] = [
+  { id: 'calendario', nome: 'Calendário', curto: 'Calendário', subtitulo: 'Eventos e check-in diário', flag: 'calendario', trava: 'Em breve', emblem: EmblemCalendario, janela: { w: 460, h: 820 }, inicial: true },
   { id: 'salao', nome: 'Salão das Máscaras', curto: 'Máscaras', subtitulo: 'Leilões, mercado e anúncios', flag: 'salao_mascaras', trava: TUTORIAL, emblem: EmblemMascaras, janela: { w: 480, h: 840 } },
   { id: 'poco', nome: 'Poço dos Milagres', curto: 'Poço', subtitulo: 'Moedas, manivela e balde', flag: 'poco', trava: TUTORIAL, emblem: EmblemPoco, janela: { w: 460, h: 820 } },
   { id: 'torres', nome: 'Torres de Ruptura', curto: 'Torres', subtitulo: 'Andares, essências e chaves', flag: 'torres', trava: TUTORIAL, emblem: EmblemTorres, janela: { w: 480, h: 820 } },
   { id: 'corporacoes', nome: 'Corporações', curto: 'Corpo­rações', subtitulo: 'Companhia de Despertados', flag: 'corporacoes', trava: 'Aguarde a Companhia', emblem: EmblemCorporacoes },
   { id: 'virtudes', nome: 'Virtudes', curto: 'Virtudes', subtitulo: 'Pontos de potencial', flag: 'virtudes', trava: 'Em breve', emblem: EmblemVirtudes, janela: { w: 460, h: 820 } },
-  { id: 'arcanos', nome: 'Arcanos', curto: 'Arcanos', subtitulo: 'Rank e poder', flag: null, trava: 'Em breve', emblem: EmblemArcanos },
+  // Arcanos: tela própria (dono, 17/10), mesma regra das Virtudes (a flag e o payload /api/virtudes são os mesmos).
+  { id: 'arcanos', nome: 'Arcanos', curto: 'Arcanos', subtitulo: 'Os vinte e dois', flag: 'virtudes', trava: 'Em breve', emblem: EmblemArcanos, janela: { w: 460, h: 820 } },
 ]
 
 export const SISTEMA_IDS = SISTEMAS.map((s) => s.id) as SistemaId[]

@@ -52,6 +52,12 @@
   --color-dv-blood: var(--dv-blood);
   --color-dv-blood-deep: var(--dv-blood-deep);
   --color-dv-blood-text: var(--dv-blood-text);
+  --color-dv-abyss: var(--dv-abyss);
+  --color-dv-wine: var(--dv-wine);
+  --color-dv-wine-deep: var(--dv-wine-deep);
+  --color-dv-wine-text: var(--dv-wine-text);
+  --color-dv-fog: var(--dv-fog);
+  --color-dv-silver: var(--dv-silver);
   --color-dv-text: var(--dv-text);
   --color-dv-text-2: var(--dv-text-2);
   --color-dv-text-3: var(--dv-text-3);
@@ -205,6 +211,14 @@
   --dv-blood: #a3121f;
   --dv-blood-deep: #3f060b;
   --dv-blood-text: #ff6670;
+  /* Paleta de referência "黒鍵の祈り" (refs/paleta/kokken-no-inori.jpg, REFINAMENTO-4): Abyss Black, Blood Wine
+     (dois tons), Fog Stone e Faded Silver. Vinho = atmosfera e destaque quente sóbrio (não é alerta: alerta é rubi). */
+  --dv-abyss: #090909;
+  --dv-wine: #3f1117;
+  --dv-wine-deep: #280e11;
+  --dv-wine-text: #d9a3aa;
+  --dv-fog: #353535;
+  --dv-silver: #acacac;
   /* Texto sobre ink (branco porcelana). */
   --dv-text: #eeedeb;
   --dv-text-2: rgba(238,237,235, 0.74);

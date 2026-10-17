@@ -8,11 +8,21 @@ import { playSfx } from '@/lib/devo/audio'
 import { RecButton } from './record-ui'
 import { recordAction } from './use-deadly-votes'
 
-const OUT_W = 480
-const OUT_H = 640
-const FRAME_W = 240
-const FRAME_H = 320
+/**
+ * Foto do perfil (REFINAMENTO-4 §2.4): recorte QUADRADO — as molduras mostram a foto num círculo (avatar) ou num
+ * quadrado (miniperfil), e o guia redondo do recorte é exatamente essa janela. Saída JPEG comprimida no aparelho
+ * até caber no limite do servidor (180 KB), antes de enviar.
+ */
+const OUT = 640
+const FRAME_W = 280
+const FRAME_H = 280
 const MAX_ZOOM = 4
+/** Limite do servidor (lib/devo/record-server.ts MAX_AVATAR_BYTES) com folga. */
+const ALVO_BYTES = 170_000
+/** Arquivo original aceito (antes de comprimir). */
+const MAX_ORIGINAL = 25 * 1024 * 1024
+/** Lado máximo da cópia de trabalho (iOS limita o tamanho de canvas; fotos de 48 MP travam o recorte). */
+const MAX_LADO = 2048
 
 type Crop = { zoom: number; x: number; y: number }
 
@@ -35,25 +45,82 @@ function clampCrop(c: Crop, img: { width: number; height: number }): Crop {
   return { zoom: c.zoom, x: Math.min(maxX, Math.max(-maxX, c.x)), y: Math.min(maxY, Math.max(-maxY, c.y)) }
 }
 
-function renderCrop(bitmap: ImageBitmap, c: Crop) {
-  const s = coverScale(bitmap) * c.zoom
+type Fonte = { el: HTMLCanvasElement; width: number; height: number }
+
+const bytesDe = (dataUrl: string) => Math.floor(((dataUrl.length - dataUrl.indexOf(',') - 1) * 3) / 4)
+
+/** Recorta e comprime: baixa a qualidade (e, se precisar, o tamanho) até caber no limite do servidor. */
+export function renderCrop(src: Fonte, c: Crop) {
+  const s = coverScale(src) * c.zoom
   const sw = FRAME_W / s
   const sh = FRAME_H / s
-  const sx = bitmap.width / 2 - c.x / s - sw / 2
-  const sy = bitmap.height / 2 - c.y / s - sh / 2
-  const canvas = document.createElement('canvas')
-  canvas.width = OUT_W
-  canvas.height = OUT_H
-  const ctx = canvas.getContext('2d')
-  if (!ctx) throw new Error('Canvas indisponível.')
-  ctx.imageSmoothingQuality = 'high'
-  ctx.drawImage(bitmap, sx, sy, sw, sh, 0, 0, OUT_W, OUT_H)
-  return canvas.toDataURL('image/jpeg', 0.85)
+  const sx = src.width / 2 - c.x / s - sw / 2
+  const sy = src.height / 2 - c.y / s - sh / 2
+  for (const lado of [OUT, 512, 384]) {
+    const canvas = document.createElement('canvas')
+    canvas.width = lado
+    canvas.height = lado
+    const ctx = canvas.getContext('2d')
+    if (!ctx) throw new Error('Seu navegador não conseguiu preparar a foto.')
+    ctx.fillStyle = '#0c0c0e'
+    ctx.fillRect(0, 0, lado, lado)
+    ctx.imageSmoothingQuality = 'high'
+    ctx.drawImage(src.el, sx, sy, sw, sh, 0, 0, lado, lado)
+    for (const q of [0.86, 0.78, 0.7, 0.6, 0.5]) {
+      const url = canvas.toDataURL('image/jpeg', q)
+      if (bytesDe(url) <= ALVO_BYTES) return url
+    }
+  }
+  throw new Error('Não deu para comprimir essa foto o bastante. Tente outra imagem.')
 }
 
-function PhotoCropper({ bitmap, url, onCancel, onConfirm }: { bitmap: ImageBitmap; url: string; onCancel: () => void; onConfirm: (dataUrl: string) => void }) {
+const EXT_HEIC = /\.(heic|heif)$/i
+
+/** Mensagem clara para o que não dá para abrir (HEIC do iPhone, PDF, vídeo…). */
+export function motivoRecusa(file: { type: string; name: string; size: number }) {
+  if (file.type === 'image/heic' || file.type === 'image/heif' || EXT_HEIC.test(file.name))
+    return 'Foto em HEIC (formato do iPhone) não abre aqui. No iPhone, use Ajustes › Câmera › Formatos › "Mais compatível", ou compartilhe a foto como JPEG e tente de novo.'
+  if (file.type && !file.type.startsWith('image/')) return 'Esse arquivo não é uma imagem. Escolha uma foto (JPEG, PNG ou WebP).'
+  if (file.size > MAX_ORIGINAL) return 'Essa foto passa de 25 MB. Escolha uma menor.'
+  return null
+}
+
+/**
+ * Abre o arquivo como <img> (respeita a orientação EXIF em todos os navegadores atuais) e faz uma cópia de trabalho
+ * de no máximo 2048 px — o recorte e a compressão partem dela.
+ */
+async function abrirImagem(file: File): Promise<{ fonte: Fonte; url: string }> {
+  const url = URL.createObjectURL(file)
+  try {
+    const img = new Image()
+    img.decoding = 'async'
+    img.src = url
+    await img.decode()
+    if (!img.naturalWidth || !img.naturalHeight) throw new Error('vazia')
+    const k = Math.min(1, MAX_LADO / Math.max(img.naturalWidth, img.naturalHeight))
+    const el = document.createElement('canvas')
+    el.width = Math.round(img.naturalWidth * k)
+    el.height = Math.round(img.naturalHeight * k)
+    const ctx = el.getContext('2d')
+    if (!ctx) throw new Error('canvas')
+    ctx.imageSmoothingQuality = 'high'
+    ctx.drawImage(img, 0, 0, el.width, el.height)
+    URL.revokeObjectURL(url)
+    return { fonte: { el, width: el.width, height: el.height }, url: el.toDataURL('image/jpeg', 0.9) }
+  } catch {
+    URL.revokeObjectURL(url)
+    throw new Error(
+      EXT_HEIC.test(file.name) ? (motivoRecusa({ type: 'image/heic', name: file.name, size: 0 }) ?? '') : 'Não foi possível abrir essa imagem. Tente outra foto (JPEG, PNG ou WebP).',
+    )
+  }
+}
+
+function PhotoCropper({ fonte: bitmap, url, onCancel, onConfirm }: { fonte: Fonte; url: string; onCancel: () => void; onConfirm: (dataUrl: string) => void }) {
   const [crop, setCrop] = useState<Crop>({ zoom: 1, x: 0, y: 0 })
   const drag = useRef<{ id: number; sx: number; sy: number; ox: number; oy: number } | null>(null)
+  const dedos = useRef(new Map<number, { x: number; y: number }>())
+  const pinca = useRef<{ d: number; z: number } | null>(null)
+  const [erro, setErro] = useState<string | null>(null)
   const setClamped = (c: Crop) => setCrop(clampCrop(c, bitmap))
   const s = coverScale(bitmap) * crop.zoom
 
@@ -63,14 +130,42 @@ function PhotoCropper({ bitmap, url, onCancel, onConfirm }: { bitmap: ImageBitma
     return () => window.removeEventListener('keydown', onKey)
   }, [onCancel])
 
+  const distancia = () => {
+    const [a, b] = [...dedos.current.values()]
+    return a && b ? Math.hypot(a.x - b.x, a.y - b.y) : 0
+  }
   const onDown = (e: ReactPointerEvent<HTMLDivElement>) => {
     e.currentTarget.setPointerCapture(e.pointerId)
-    drag.current = { id: e.pointerId, sx: e.clientX, sy: e.clientY, ox: crop.x, oy: crop.y }
+    dedos.current.set(e.pointerId, { x: e.clientX, y: e.clientY })
+    if (dedos.current.size === 2) {
+      // dois dedos: pinça para zoom (o arrasto para até soltar)
+      pinca.current = { d: distancia(), z: crop.zoom }
+      drag.current = null
+    } else drag.current = { id: e.pointerId, sx: e.clientX, sy: e.clientY, ox: crop.x, oy: crop.y }
   }
   const onMove = (e: ReactPointerEvent<HTMLDivElement>) => {
+    if (dedos.current.has(e.pointerId)) dedos.current.set(e.pointerId, { x: e.clientX, y: e.clientY })
+    const p = pinca.current
+    if (p && dedos.current.size === 2) {
+      const d = distancia()
+      if (p.d > 0 && d > 0) setClamped({ ...crop, zoom: Math.min(MAX_ZOOM, Math.max(1, (p.z * d) / p.d)) })
+      return
+    }
     const d = drag.current
     if (!d || d.id !== e.pointerId) return
     setClamped({ zoom: crop.zoom, x: d.ox + e.clientX - d.sx, y: d.oy + e.clientY - d.sy })
+  }
+  const onUp = (e: ReactPointerEvent<HTMLDivElement>) => {
+    dedos.current.delete(e.pointerId)
+    if (dedos.current.size < 2) pinca.current = null
+    drag.current = null
+  }
+  const confirmar = () => {
+    try {
+      onConfirm(renderCrop(bitmap, crop))
+    } catch (e) {
+      setErro(e instanceof Error ? e.message : 'Não foi possível preparar a foto.')
+    }
   }
   const zoomTo = (z: number) => setClamped({ ...crop, zoom: Math.min(MAX_ZOOM, Math.max(1, z)) })
 
@@ -102,8 +197,9 @@ function PhotoCropper({ bitmap, url, onCancel, onConfirm }: { bitmap: ImageBitma
                 style={{ width: FRAME_W, height: FRAME_H }}
                 onPointerDown={onDown}
                 onPointerMove={onMove}
-                onPointerUp={() => (drag.current = null)}
-                onPointerCancel={() => (drag.current = null)}
+                onPointerUp={onUp}
+                onPointerCancel={onUp}
+                data-testid="recorte-foto"
                 onWheel={(e) => zoomTo(crop.zoom * (e.deltaY < 0 ? 1.08 : 1 / 1.08))}
               >
                 {/* biome-ignore lint/performance/noImgElement: prévia local via object URL */}
@@ -118,13 +214,20 @@ function PhotoCropper({ bitmap, url, onCancel, onConfirm }: { bitmap: ImageBitma
                     transform: `translate(calc(-50% + ${crop.x}px), calc(-50% + ${crop.y}px))`,
                   }}
                 />
-                <span aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,transparent_33%,rgba(255,255,255,0.14)_33%,rgba(255,255,255,0.14)_calc(33%+1px),transparent_calc(33%+1px),transparent_66%,rgba(255,255,255,0.14)_66%,rgba(255,255,255,0.14)_calc(66%+1px),transparent_calc(66%+1px)),linear-gradient(to_bottom,transparent_33%,rgba(255,255,255,0.14)_33%,rgba(255,255,255,0.14)_calc(33%+1px),transparent_calc(33%+1px),transparent_66%,rgba(255,255,255,0.14)_66%,rgba(255,255,255,0.14)_calc(66%+1px),transparent_calc(66%+1px))]" />
+                {/* guia: o círculo é a janela das molduras do avatar; o quadro inteiro é o miniperfil */}
+                <span aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_closest-side_at_50%_50%,transparent_calc(100%-1.5px),rgba(236,229,216,0.85)_100%,rgba(10,10,12,0.42)_calc(100%+1px))]" />
                 <BrassCorners size={18} inset={4} tone="silver" />
               </div>
               <GlyphClip className="absolute -top-4 left-4 size-8 -rotate-12 text-[#8f8e8b]" />
             </div>
 
-            <p className="text-center font-mono text-[10px] uppercase tracking-[0.16em] text-dv-text-3">Arraste para posicionar · pince ou role para zoom</p>
+            <p className="text-center font-mono text-[10px] uppercase tracking-[0.16em] text-dv-text-3">Arraste para posicionar · pince ou use a régua para zoom</p>
+            <p className="-mt-1 text-center font-body text-[13px] leading-snug text-dv-text-2">O círculo é como a foto aparece nas molduras; o quadrado inteiro, no miniperfil.</p>
+            {erro && (
+              <p role="alert" className="text-center font-mono text-[11px] leading-snug text-[#e06a72]">
+                {erro}
+              </p>
+            )}
 
             <div className="flex w-full items-center gap-1">
               <IconButton label="Diminuir zoom" variant="ghost" onClick={() => zoomTo(crop.zoom / 1.2)}>
@@ -150,7 +253,7 @@ function PhotoCropper({ bitmap, url, onCancel, onConfirm }: { bitmap: ImageBitma
             <RecButton variant="ghost" size="sm" onClick={() => setCrop({ zoom: 1, x: 0, y: 0 })} icon={<RotateCcw strokeWidth={1.4} />}>
               Redefinir
             </RecButton>
-            <RecButton size="sm" className="ml-auto" sfx="confirm" onClick={() => onConfirm(renderCrop(bitmap, crop))} icon={<GlyphCheck />}>
+            <RecButton size="sm" className="ml-auto" sfx="confirm" onClick={confirmar} icon={<GlyphCheck />}>
               Salvar foto
             </RecButton>
           </footer>
@@ -165,24 +268,37 @@ export function PhotoPicker({ hasPhoto, onChanged }: { hasPhoto: boolean; onChan
   const input = useRef<HTMLInputElement>(null)
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [editing, setEditing] = useState<{ bitmap: ImageBitmap; url: string } | null>(null)
+  const [ok, setOk] = useState<string | null>(null)
+  const [editing, setEditing] = useState<{ fonte: Fonte; url: string } | null>(null)
 
-  const closeEditor = () => {
-    if (editing) {
-      editing.bitmap.close()
-      URL.revokeObjectURL(editing.url)
-    }
-    setEditing(null)
-  }
+  const closeEditor = () => setEditing(null)
 
   async function send(image: string | null) {
     setBusy(true)
     setError(null)
+    setOk(null)
     try {
       await recordAction({ action: 'avatar', image })
       onChanged()
+      setOk(image ? 'Foto atualizada.' : 'Foto removida.')
     } catch (e) {
-      setError(e instanceof Error ? e.message : 'Falha ao enviar a foto.')
+      // fetch sem rede lança TypeError ("Failed to fetch"/"Load failed"): diga o que aconteceu de verdade
+      setError(e instanceof TypeError ? 'Sem conexão: a foto não foi enviada. Tente de novo.' : e instanceof Error ? e.message : 'Falha ao enviar a foto.')
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  async function escolher(file: File) {
+    setError(null)
+    setOk(null)
+    const recusa = motivoRecusa(file)
+    if (recusa) return setError(recusa)
+    setBusy(true)
+    try {
+      setEditing(await abrirImagem(file))
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Não foi possível abrir essa imagem.')
     } finally {
       setBusy(false)
     }
@@ -224,28 +340,28 @@ export function PhotoPicker({ hasPhoto, onChanged }: { hasPhoto: boolean; onChan
           {error}
         </p>
       )}
+      {ok && !error && (
+        <p role="status" className="font-mono text-[11px] leading-snug text-[#3d6b4f]">
+          {ok}
+        </p>
+      )}
+      {/* image/*: no celular abre a escolha entre galeria e câmera (sem `capture`, que forçaria a câmera) */}
       <input
         ref={input}
         type="file"
-        accept="image/png,image/jpeg,image/webp"
+        accept="image/*"
         className="sr-only"
         tabIndex={-1}
-        onChange={async (e) => {
+        aria-label="Arquivo da foto do perfil"
+        onChange={(e) => {
           const file = e.target.files?.[0]
           e.target.value = ''
-          if (!file) return
-          if (file.size > 12 * 1024 * 1024) return setError('Arquivo acima de 12 MB.')
-          try {
-            const bitmap = await createImageBitmap(file)
-            setEditing({ bitmap, url: URL.createObjectURL(file) })
-          } catch {
-            setError('Não foi possível ler essa imagem.')
-          }
+          if (file) void escolher(file)
         }}
       />
       {editing && (
         <PhotoCropper
-          bitmap={editing.bitmap}
+          fonte={editing.fonte}
           url={editing.url}
           onCancel={closeEditor}
           onConfirm={(dataUrl) => {
