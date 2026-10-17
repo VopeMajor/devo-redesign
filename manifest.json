@@ -1,0 +1,278 @@
+{
+  "base": "http://localhost:3000",
+  "shots": [
+    {
+      "name": "cos-00-galeria-topo",
+      "note": "",
+      "url": "http://localhost:3000/estilo/cosmeticos"
+    },
+    {
+      "name": "cos-80-previa-asas",
+      "note": "",
+      "url": "http://localhost:3000/estilo/cosmeticos"
+    },
+    {
+      "name": "cos-81-previa-coracao",
+      "note": "",
+      "url": "http://localhost:3000/estilo/cosmeticos"
+    },
+    {
+      "name": "cos-89-previa-rosa-mini",
+      "note": "",
+      "url": "http://localhost:3000/estilo/cosmeticos"
+    },
+    {
+      "name": "cos-01-galeria-arcano",
+      "note": "",
+      "url": "http://localhost:3000/estilo/cosmeticos"
+    },
+    {
+      "name": "cos-02-galeria-badalada",
+      "note": "",
+      "url": "http://localhost:3000/estilo/cosmeticos"
+    },
+    {
+      "name": "cos-03-galeria-emblemas",
+      "note": "",
+      "url": "http://localhost:3000/estilo/cosmeticos"
+    },
+    {
+      "name": "cos-04-galeria-baloes",
+      "note": "",
+      "url": "http://localhost:3000/estilo/cosmeticos"
+    },
+    {
+      "name": "cos-05-galeria-efeitos",
+      "note": "",
+      "url": "http://localhost:3000/estilo/cosmeticos"
+    },
+    {
+      "name": "cos-06-galeria-grade-completa",
+      "note": "página inteira",
+      "url": "http://localhost:3000/estilo/cosmeticos"
+    },
+    {
+      "name": "cos-10-record-moldura",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-11-record-identidade",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-12-colecao",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-13-colecao-grade-molduras",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-14-preview-bloqueado",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-15-detalhe-bloqueado",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-16-detalhe-obtido",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-17-equipado-sem-recarregar",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-18-colecao-miniperfil",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-19-colecao-emblemas",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-20-colecao-baloes",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-21-colecao-efeitos",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-30-chat-baloes",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-31-chat-anfitriao",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-32-miniperfil-owner-oculto",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-33-miniperfil-jogadora",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-35-previa-miniperfil-asas",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-34-miniperfil-anfitriao",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-40-ranking-mesa",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-41-ranking-podio",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-42-ranking-lista",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-50-owner-record",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-51-owner-colecao-livre",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-52-owner-grade",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-53-admin-catalogo",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-54-admin-editor",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-55-admin-editor-disponibilidade",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-56-admin-conceder",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-57-admin-historico",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-58-owner-semanais",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-59-owner-semanal-novo",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-60-anfitriao-semanais",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-61-anfitriao-identidade",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-70-colecao-trancada",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-71-ajustes-animacoes",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-82-ia-record",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-83-ia-record-identidade",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-84-ia-colecao-asas",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-85-ia-colecao-asas-detalhe",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-86-ia-colecao-coracao",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-87-ia-chat",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "cos-88-ia-miniperfil",
+      "note": "",
+      "url": "http://localhost:3000/"
+    }
+  ],
+  "errors": [
+    {
+      "step": "cos-ia-poco",
+      "error": "TimeoutError: locator.click: Timeout 15000ms exceeded.\nCall log:\n  - waiting for getByRole('button', { name: 'Continuar' }).first()\n    - locator resolved to <button type=\"button\" class=\"group relative isolate inline-flex select-none items-center justify-center font-display font-semibold uppercase transition-[transform,filter] duration-[120ms] ease-out enabled:active:scale-[0.97] dv-focus disabled:cursor-not-allowed disabled:[&:not([aria-busy])]:opacity-45 disabled:[&:not([aria-busy])]:grayscale-[0.7] min-h-14 text-[16px] tracking-[0.28em] px-9 w-full\">…</button>\n  - attempting click action\n    - waiting for element to be visible, enabled and stable\n    - element is visible, enabled and stable\n    - scrolling into view if needed\n    - done scrolling\n    - performing click action\n"
+    }
+  ],
+  "console": [
+    {
+      "page": "http://localhost:3000/",
+      "text": "Permissions policy violation: compute-pressure is not allowed in this document.",
+      "src": "https://www.youtube.com/s/player/0229cd64/player_embed_es6.vflset/pt_BR/base.js"
+    }
+  ]
+}
