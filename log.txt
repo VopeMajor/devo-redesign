@@ -1,0 +1,9 @@
+[arcano-hierofante-tarot] v01: @cf/black-forest-labs/flux-2-klein-9b seed=91061 1024x1536 passos=None (~1,455 neurônios)
+    ok em 2.7s, 1024x1536
+[arcano-hierofante-tarot] v02: @cf/black-forest-labs/flux-2-klein-9b seed=91062 1024x1536 passos=None (~1,455 neurônios)
+    ok em 3.0s, 1024x1536
+[arcano-hierofante-tarot] v03: @cf/black-forest-labs/flux-2-klein-9b seed=91063 1024x1536 passos=None (~1,455 neurônios)
+    ok em 3.8s, 1024x1536
+[arcano-hierofante-tarot] v01: rembg:birefnet-general; sem avisos
+[arcano-hierofante-tarot] v02: rembg:birefnet-general; sem avisos
+[arcano-hierofante-tarot] v03: rembg:birefnet-general; sem avisos
