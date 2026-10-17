@@ -1,0 +1,251 @@
+{
+  "pedido": "moldura-asas-coruja",
+  "titulo": "Asas da Coruja — avatar",
+  "tipo": "moldura",
+  "tamanho_final": 1024,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 6051,
+      "passos": null,
+      "segundos": 15.0,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "miolo_aberto_por_cor": true,
+      "ilhas_removidas": 7,
+      "janela": {
+        "forma": "circulo",
+        "centro_px": [
+          512.0,
+          512.0
+        ],
+        "raio_px": [
+          256.0,
+          256.0
+        ],
+        "raio_fracao": [
+          0.25,
+          0.25
+        ]
+      },
+      "reencaixe": {
+        "escala": 1.3061,
+        "cobertura_aro": 1.0
+      },
+      "ornamento_cortado": 0.0993,
+      "arquivos": [
+        {
+          "arquivo": "moldura-asas-coruja--v01--1024.png",
+          "bytes": 605554
+        },
+        {
+          "arquivo": "moldura-asas-coruja--v01--1024.webp",
+          "bytes": 123674
+        },
+        {
+          "arquivo": "moldura-asas-coruja--v01--512.webp",
+          "bytes": 49626
+        },
+        {
+          "arquivo": "moldura-asas-coruja--v01--256.webp",
+          "bytes": 19406
+        },
+        {
+          "arquivo": "moldura-asas-coruja--v01--96.webp",
+          "bytes": 5220
+        },
+        {
+          "arquivo": "moldura-asas-coruja--v01--48.webp",
+          "bytes": 2166
+        }
+      ],
+      "segundos_pos": 35.7,
+      "avisos": [
+        "9.9% do ornamento ficou fora do quadro — reduza a janela ou peça mais margem no prompt"
+      ]
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 6052,
+      "passos": null,
+      "segundos": 41.3,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "miolo_aberto_por_cor": true,
+      "janela": {
+        "forma": "circulo",
+        "centro_px": [
+          512.0,
+          512.0
+        ],
+        "raio_px": [
+          256.0,
+          256.0
+        ],
+        "raio_fracao": [
+          0.25,
+          0.25
+        ]
+      },
+      "reencaixe": {
+        "escala": 1.4884,
+        "cobertura_aro": 1.0
+      },
+      "ornamento_cortado": 0.2041,
+      "arquivos": [
+        {
+          "arquivo": "moldura-asas-coruja--v02--1024.png",
+          "bytes": 836607
+        },
+        {
+          "arquivo": "moldura-asas-coruja--v02--1024.webp",
+          "bytes": 164594
+        },
+        {
+          "arquivo": "moldura-asas-coruja--v02--512.webp",
+          "bytes": 64454
+        },
+        {
+          "arquivo": "moldura-asas-coruja--v02--256.webp",
+          "bytes": 23496
+        },
+        {
+          "arquivo": "moldura-asas-coruja--v02--96.webp",
+          "bytes": 6068
+        },
+        {
+          "arquivo": "moldura-asas-coruja--v02--48.webp",
+          "bytes": 2380
+        }
+      ],
+      "segundos_pos": 30.8,
+      "avisos": [
+        "20.4% do ornamento ficou fora do quadro — reduza a janela ou peça mais margem no prompt"
+      ]
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 6053,
+      "passos": null,
+      "segundos": 26.8,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "miolo_aberto_por_cor": true,
+      "ilhas_removidas": 5,
+      "janela": {
+        "forma": "circulo",
+        "centro_px": [
+          512.0,
+          512.0
+        ],
+        "raio_px": [
+          256.0,
+          256.0
+        ],
+        "raio_fracao": [
+          0.25,
+          0.25
+        ]
+      },
+      "reencaixe": {
+        "escala": 1.4066,
+        "cobertura_aro": 1.0
+      },
+      "ornamento_cortado": 0.176,
+      "arquivos": [
+        {
+          "arquivo": "moldura-asas-coruja--v03--1024.png",
+          "bytes": 724457
+        },
+        {
+          "arquivo": "moldura-asas-coruja--v03--1024.webp",
+          "bytes": 143216
+        },
+        {
+          "arquivo": "moldura-asas-coruja--v03--512.webp",
+          "bytes": 57252
+        },
+        {
+          "arquivo": "moldura-asas-coruja--v03--256.webp",
+          "bytes": 21702
+        },
+        {
+          "arquivo": "moldura-asas-coruja--v03--96.webp",
+          "bytes": 5648
+        },
+        {
+          "arquivo": "moldura-asas-coruja--v03--48.webp",
+          "bytes": 2304
+        }
+      ],
+      "segundos_pos": 30.5,
+      "avisos": [
+        "17.6% do ornamento ficou fora do quadro — reduza a janela ou peça mais margem no prompt"
+      ]
+    },
+    {
+      "nome": "v04",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 6054,
+      "passos": null,
+      "segundos": 26.6,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "miolo_aberto_por_cor": true,
+      "janela": {
+        "forma": "circulo",
+        "centro_px": [
+          512.0,
+          512.0
+        ],
+        "raio_px": [
+          256.0,
+          256.0
+        ],
+        "raio_fracao": [
+          0.25,
+          0.25
+        ]
+      },
+      "reencaixe": {
+        "escala": 1.1852,
+        "cobertura_aro": 1.0
+      },
+      "ornamento_cortado": 0.0227,
+      "arquivos": [
+        {
+          "arquivo": "moldura-asas-coruja--v04--1024.png",
+          "bytes": 631400
+        },
+        {
+          "arquivo": "moldura-asas-coruja--v04--1024.webp",
+          "bytes": 129856
+        },
+        {
+          "arquivo": "moldura-asas-coruja--v04--512.webp",
+          "bytes": 51126
+        },
+        {
+          "arquivo": "moldura-asas-coruja--v04--256.webp",
+          "bytes": 19736
+        },
+        {
+          "arquivo": "moldura-asas-coruja--v04--96.webp",
+          "bytes": 5356
+        },
+        {
+          "arquivo": "moldura-asas-coruja--v04--48.webp",
+          "bytes": 2184
+        }
+      ],
+      "segundos_pos": 30.6,
+      "avisos": [
+        "2.3% do ornamento ficou fora do quadro — reduza a janela ou peça mais margem no prompt"
+      ]
+    }
+  ]
+}

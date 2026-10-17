@@ -1,0 +1,12 @@
+[moldura-asas-coruja] v01: @cf/black-forest-labs/flux-2-klein-4b seed=6051 1024x1024 passos=None (~104 neurônios)
+    ok em 15.0s, 1024x1024
+[moldura-asas-coruja] v02: @cf/black-forest-labs/flux-2-klein-4b seed=6052 1024x1024 passos=None (~104 neurônios)
+    ok em 41.3s, 1024x1024
+[moldura-asas-coruja] v03: @cf/black-forest-labs/flux-2-klein-4b seed=6053 1024x1024 passos=None (~104 neurônios)
+    ok em 26.8s, 1024x1024
+[moldura-asas-coruja] v04: @cf/black-forest-labs/flux-2-klein-4b seed=6054 1024x1024 passos=None (~104 neurônios)
+    ok em 26.6s, 1024x1024
+[moldura-asas-coruja] v01: rembg:birefnet-general; 9.9% do ornamento ficou fora do quadro — reduza a janela ou peça mais margem no prompt
+[moldura-asas-coruja] v02: rembg:birefnet-general; 20.4% do ornamento ficou fora do quadro — reduza a janela ou peça mais margem no prompt
+[moldura-asas-coruja] v03: rembg:birefnet-general; 17.6% do ornamento ficou fora do quadro — reduza a janela ou peça mais margem no prompt
+[moldura-asas-coruja] v04: rembg:birefnet-general; 2.3% do ornamento ficou fora do quadro — reduza a janela ou peça mais margem no prompt

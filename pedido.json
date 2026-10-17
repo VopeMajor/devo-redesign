@@ -1,0 +1,75 @@
+{
+  "id": "moldura-asas-coruja",
+  "titulo": "Asas da Coruja — avatar",
+  "tipo": "moldura",
+  "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+  "prompt": "Fantasy RPG accessory illustration, painted, highly detailed, isolated on a plain flat dark slate gray background. A rare ornate avatar frame seen straight-on: a round empty opening in the exact center, about half the width of the image, perfectly clear and showing only the flat background through it. Around the opening, a slim bezel of brushed silver with small engraved stars. Two large owl wings of silver and pale gray feathers spread outward from the sides, individually painted feathers with soft barred patterns and silver-tipped edges, the left wing slightly higher than the right. At the top center, a thin silver crescent moon with a small pale blue moonstone. Two tiny silver stars dangle on fine chains on the lower right. Cool moonlight from the upper right, soft blue-white highlights on the feathers. Balanced asymmetry, layered depth, every material with its own light and texture. Crisp clean silhouette, every ornament fully inside the image with a generous empty margin around the whole object, nothing cropped. No text, no letters, no numbers, no watermark, no character, nothing inside the central opening.",
+  "negative": "text, letters, watermark, signature, logo, cropped, cut off, blurry, low detail, flat vector icon, clipart, emoji, cartoon sticker, simple geometric shapes, plastic look, people, hands",
+  "largura": 1024,
+  "altura": 1024,
+  "variacoes": [
+    {
+      "seed": 6051,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "passos": null,
+      "largura": 1024,
+      "altura": 1024,
+      "prompt_extra": "",
+      "n": 1
+    },
+    {
+      "seed": 6052,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "passos": null,
+      "largura": 1024,
+      "altura": 1024,
+      "prompt_extra": "",
+      "n": 2
+    },
+    {
+      "seed": 6053,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "passos": null,
+      "largura": 1024,
+      "altura": 1024,
+      "prompt_extra": "",
+      "n": 3
+    },
+    {
+      "seed": 6054,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "passos": null,
+      "largura": 1024,
+      "altura": 1024,
+      "prompt_extra": "",
+      "n": 4
+    }
+  ],
+  "pos": {
+    "tamanho_final": 1024,
+    "molde": {
+      "forma": "circulo",
+      "centro": [
+        0.5,
+        0.5
+      ],
+      "raio": 0.25,
+      "sombra": 0.35,
+      "largura_sombra": 0.045
+    },
+    "remover_fundo": true,
+    "modelo_fundo": "birefnet-general",
+    "derivados": [
+      512,
+      256,
+      96,
+      48
+    ],
+    "margem": 0.03,
+    "fundo": "liso",
+    "camadas": []
+  },
+  "passos": null,
+  "guidance": null,
+  "referencias": []
+}
