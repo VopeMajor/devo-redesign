@@ -51,6 +51,7 @@ function img(asset: string, nome: string, categoria: CosSlot): CosmeticoDef {
 }
 const ASAS = 'img:/images/cosmeticos/asas-do-crepusculo/moldura'
 const CORACAO = 'img:/images/cosmeticos/coracao-da-condessa/emblema'
+const ROSA_MINI = 'img:/images/cosmeticos/rosa-do-destino/mini'
 
 const RET = '/images/cosmeticos/amostra-retrato.jpg'
 const MINI = '/images/cosmeticos/amostra-mini.jpg'
@@ -88,6 +89,15 @@ export function Galeria() {
             <FotoMoldurada formato="mini" src={MINI2} moldura={img(ASAS, 'Asas do Crepúsculo', 'moldura_mini')} largura={64} />
             <FotoMoldurada formato="mini" src={MINI} moldura={img(ASAS, 'Asas do Crepúsculo', 'moldura_mini')} largura={48} />
             <FotoMoldurada formato="mini" src={MINI2} moldura={img(ASAS, 'Asas do Crepúsculo', 'moldura_mini')} largura={36} />
+          </div>
+        </article>
+        <article aria-label="Prévia: Rosa do Destino (miniperfil)" className="mb-10 flex flex-col gap-4">
+          <h3 className="font-display text-[15px] font-semibold uppercase tracking-[0.08em] text-[#ece5d8]">Rosa do Destino · miniperfil quadrado</h3>
+          <div className="flex flex-wrap items-end justify-center gap-6 py-4">
+            <FotoMoldurada formato="mini" src={MINI} moldura={img(ROSA_MINI, 'Rosa do Destino', 'moldura_mini')} largura={150} />
+            <FotoMoldurada formato="mini" src={MINI2} moldura={img(ROSA_MINI, 'Rosa do Destino', 'moldura_mini')} largura={64} />
+            <FotoMoldurada formato="mini" src={MINI} moldura={img(ROSA_MINI, 'Rosa do Destino', 'moldura_mini')} largura={48} />
+            <FotoMoldurada formato="mini" src={MINI2} moldura={img(ROSA_MINI, 'Rosa do Destino', 'moldura_mini')} largura={36} />
           </div>
         </article>
         <article aria-label="Prévia: Coração da Condessa" className="flex flex-col gap-4">
