@@ -1,0 +1,9 @@
+[nome-asa-porcelana] v01: @cf/black-forest-labs/flux-2-klein-4b seed=17011 1024x1024 passos=None (~104 neurônios)
+    ok em 11.6s, 1024x1024
+[nome-asa-porcelana] v02: @cf/black-forest-labs/flux-2-klein-4b seed=17012 1024x1024 passos=None (~104 neurônios)
+    ok em 24.7s, 1024x1024
+[nome-asa-porcelana] v03: @cf/black-forest-labs/flux-2-klein-4b seed=17013 1024x1024 passos=None (~104 neurônios)
+    ok em 22.3s, 1024x1024
+[nome-asa-porcelana] v01: rembg:birefnet-general; sem avisos
+[nome-asa-porcelana] v02: rembg:birefnet-general; sem avisos
+[nome-asa-porcelana] v03: rembg:birefnet-general; sem avisos
