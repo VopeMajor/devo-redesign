@@ -1,0 +1,108 @@
+{
+  "pedido": "casa-interior",
+  "titulo": "Casa — interior à noite (porta fechada)",
+  "tipo": "ilustracao",
+  "tamanho_final": 1536,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 10101,
+      "passos": null,
+      "segundos": 3.3,
+      "neuronios_estimados": 1455,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "casa-interior--v01--1536.png",
+          "bytes": 2664927
+        },
+        {
+          "arquivo": "casa-interior--v01--1536.webp",
+          "bytes": 483972
+        },
+        {
+          "arquivo": "casa-interior--v01--1024.webp",
+          "bytes": 114186
+        },
+        {
+          "arquivo": "casa-interior--v01--768.webp",
+          "bytes": 49388
+        },
+        {
+          "arquivo": "casa-interior--v01--512.webp",
+          "bytes": 21638
+        }
+      ],
+      "segundos_pos": 2.6,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 10102,
+      "passos": null,
+      "segundos": 3.7,
+      "neuronios_estimados": 1455,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "casa-interior--v02--1536.png",
+          "bytes": 2567140
+        },
+        {
+          "arquivo": "casa-interior--v02--1536.webp",
+          "bytes": 447054
+        },
+        {
+          "arquivo": "casa-interior--v02--1024.webp",
+          "bytes": 99428
+        },
+        {
+          "arquivo": "casa-interior--v02--768.webp",
+          "bytes": 44998
+        },
+        {
+          "arquivo": "casa-interior--v02--512.webp",
+          "bytes": 20020
+        }
+      ],
+      "segundos_pos": 2.6,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 10103,
+      "passos": null,
+      "segundos": 2.9,
+      "neuronios_estimados": 1455,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "casa-interior--v03--1536.png",
+          "bytes": 2612342
+        },
+        {
+          "arquivo": "casa-interior--v03--1536.webp",
+          "bytes": 452308
+        },
+        {
+          "arquivo": "casa-interior--v03--1024.webp",
+          "bytes": 112532
+        },
+        {
+          "arquivo": "casa-interior--v03--768.webp",
+          "bytes": 57734
+        },
+        {
+          "arquivo": "casa-interior--v03--512.webp",
+          "bytes": 24662
+        }
+      ],
+      "segundos_pos": 2.6,
+      "avisos": []
+    }
+  ]
+}

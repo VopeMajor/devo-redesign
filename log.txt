@@ -1,0 +1,9 @@
+[casa-interior] v01: @cf/black-forest-labs/flux-2-klein-9b seed=10101 1024x1536 passos=None (~1,455 neurônios)
+    ok em 3.3s, 1024x1536
+[casa-interior] v02: @cf/black-forest-labs/flux-2-klein-9b seed=10102 1024x1536 passos=None (~1,455 neurônios)
+    ok em 3.7s, 1024x1536
+[casa-interior] v03: @cf/black-forest-labs/flux-2-klein-9b seed=10103 1024x1536 passos=None (~1,455 neurônios)
+    ok em 2.9s, 1024x1536
+[casa-interior] v01: mantido; sem avisos
+[casa-interior] v02: mantido; sem avisos
+[casa-interior] v03: mantido; sem avisos

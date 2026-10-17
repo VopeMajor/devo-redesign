@@ -1,0 +1,15 @@
+# Casa — interior à noite (porta fechada) (`casa-interior`)
+
+Tipo: **ilustracao** · tamanho original 1536px
+
+![prancha](prancha.png)
+
+| var. | modelo | seed | fundo | avisos/erro | arquivos |
+|---|---|---|---|---|---|
+| v01 | flux-2-klein-9b | 10101 | mantido |  | [1536.png](final/casa-interior--v01--1536.png), [1536.webp](final/casa-interior--v01--1536.webp), [1024.webp](final/casa-interior--v01--1024.webp), [768.webp](final/casa-interior--v01--768.webp), [512.webp](final/casa-interior--v01--512.webp) |
+| v02 | flux-2-klein-9b | 10102 | mantido |  | [1536.png](final/casa-interior--v02--1536.png), [1536.webp](final/casa-interior--v02--1536.webp), [1024.webp](final/casa-interior--v02--1024.webp), [768.webp](final/casa-interior--v02--768.webp), [512.webp](final/casa-interior--v02--512.webp) |
+| v03 | flux-2-klein-9b | 10103 | mantido |  | [1536.png](final/casa-interior--v03--1536.png), [1536.webp](final/casa-interior--v03--1536.webp), [1024.webp](final/casa-interior--v03--1024.webp), [768.webp](final/casa-interior--v03--768.webp), [512.webp](final/casa-interior--v03--512.webp) |
+
+Prompt:
+
+> Fantasy RPG environment illustration, full frame vertical interior scene, no characters. Muted dark urban fantasy palette: abyss black, deep blood wine red, fog stone gray and faded silver, low saturation, no neon, no bright gold, no purple glow. Painterly, highly detailed, subtle film grain, elegant and melancholic. A small old apartment at night seen from inside, slightly from above: worn wooden floor, faded patterned wallpaper peeling in one corner, a window on the left with cold moonlight falling across the room in a pale rectangle, a single dim table lamp with a fringed shade giving a weak warm pool of light, a sagging old armchair with a folded blanket, a small side table with a cracked teacup, a stack of old books and a few letters, a framed photograph turned face down, a wall clock, a potted plant that is slightly wilted, a coat rack. On the right wall a wooden apartment door with a brass knob and a security chain, the door is firmly closed, a thin line of shadow under it. Personal and lived-in, but subtly unsettling: deep shadows in the corners, a faint dark stain near the ceiling, the feeling that someone might knock in the middle of the night. Composition leaves the center of the room open, the door clearly visible on the right.
