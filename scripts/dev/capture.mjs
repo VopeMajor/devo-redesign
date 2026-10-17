@@ -53,7 +53,7 @@ async function device(kind = 'phone') {
  * Cenas com fala de NPC: além de 390×844, repete o quadro numa tela alta (390×900) e numa baixa (360×740)
  * para provar que o retrato fica ancorado na caixa de fala em qualquer altura (DIRECAO-3 §9, NpcAnchor). O mapa
  * das Torres (t20/t25) também, para conferir placas e chips nas três alturas. A Mesa dos textos dos Arcanos (v35/v36) e a
- * tela própria dos Arcanos (arc-*) também: mapa, galeria e altar nas três alturas.
+ * tela própria dos Arcanos (arc-*) também: mapa, galeria (inclusive no meio do giro) e altar nas três alturas.
  */
 const NPC_VARIANT = /^(03-prologo-(0[2-9]|1\d)|04-tutorial-0[1-6]|26-coruja-0[13]|27-javali-[01]|34-javali-[01]|salao-0[2-5]|t10-galo-abertura|t11b-galo-fala|t23-andar-cena|t20-mapa|t25-mapa-progresso|t21-torre-imperador|t45-torre-principal|t22-andar-ficha|t47-torre-picadeiro|poco-0[5-9]|03-melissa-3|n-1[0-7]|n-2[06]|n-3[24]|corp-0[34]|v3[0-7]-|cal-|arc-\d\d)/
 const VARIANT_SIZES = [
@@ -3343,8 +3343,9 @@ if (want('virtudes')) {
   const galeriaEm = async (page, nome) => {
     await tryClick(page.getByRole('button', { name: 'Mapa', exact: true }).first())
     await wait(500)
-    await tryClick(page.getByRole('region', { name: 'Mapa dos vinte e dois Arcanos' }).getByRole('button', { name: nome }).first())
-    await wait(1400)
+    // os medalhões giram (nunca "estáveis" para o Playwright): clique direto no elemento
+    await page.getByRole('region', { name: 'Mapa dos vinte e dois Arcanos' }).getByRole('button', { name: nome }).first().evaluate((el) => el.click()).catch(() => {})
+    await wait(1600)
   }
   /** Rola a tela das Virtudes até o elemento (cabeçalho ou região) pelo nome. */
   const ir = async (page, nome) => {
@@ -3420,6 +3421,11 @@ if (want('virtudes')) {
     await shot(B.page, 'arc-03-galeria-trancado', 'galeria centrada num trancado: estátua cinza, nome e frase breve')
     await galeriaEm(B.page, /seu Arcano/)
     await shot(B.page, 'arc-04-galeria-proprio', 'galeria no próprio: em cor, botão Abrir')
+    await B.page.getByRole('region', { name: 'Galeria dos Arcanos' }).first().evaluate((el) => el.scrollBy({ left: 70, behavior: 'instant' })).catch(() => {})
+    await wait(500)
+    await shot(B.page, 'arc-04b-galeria-giro', 'no meio do arrasto: laterais giram, encolhem e perdem a cor')
+    await B.page.getByRole('region', { name: 'Galeria dos Arcanos' }).first().evaluate((el) => el.scrollBy({ left: -70, behavior: 'instant' })).catch(() => {})
+    await wait(900)
     await tryClick(B.page.getByRole('button', { name: /Abrir seu Arcano/ }).first())
     await wait(1600)
     await shot(B.page, 'arc-05-detalhe', 'altar: vitral vermelho, velas, a figura (placeholder) e o nome')
