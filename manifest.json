@@ -1,0 +1,120 @@
+{
+  "pedido": "emblema-ficha-javali",
+  "titulo": "Ficha do Javali",
+  "tipo": "emblema",
+  "tamanho_final": 1024,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 7101,
+      "passos": null,
+      "segundos": 10.7,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "emblema-ficha-javali--v01--1024.png",
+          "bytes": 923161
+        },
+        {
+          "arquivo": "emblema-ficha-javali--v01--1024.webp",
+          "bytes": 139018
+        },
+        {
+          "arquivo": "emblema-ficha-javali--v01--512.webp",
+          "bytes": 46832
+        },
+        {
+          "arquivo": "emblema-ficha-javali--v01--256.webp",
+          "bytes": 20566
+        },
+        {
+          "arquivo": "emblema-ficha-javali--v01--96.webp",
+          "bytes": 6056
+        },
+        {
+          "arquivo": "emblema-ficha-javali--v01--48.webp",
+          "bytes": 2216
+        }
+      ],
+      "segundos_pos": 30.2,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 7102,
+      "passos": null,
+      "segundos": 10.1,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "emblema-ficha-javali--v02--1024.png",
+          "bytes": 1012374
+        },
+        {
+          "arquivo": "emblema-ficha-javali--v02--1024.webp",
+          "bytes": 144822
+        },
+        {
+          "arquivo": "emblema-ficha-javali--v02--512.webp",
+          "bytes": 46004
+        },
+        {
+          "arquivo": "emblema-ficha-javali--v02--256.webp",
+          "bytes": 20932
+        },
+        {
+          "arquivo": "emblema-ficha-javali--v02--96.webp",
+          "bytes": 6010
+        },
+        {
+          "arquivo": "emblema-ficha-javali--v02--48.webp",
+          "bytes": 2310
+        }
+      ],
+      "segundos_pos": 25.2,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 7103,
+      "passos": null,
+      "segundos": 9.3,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "emblema-ficha-javali--v03--1024.png",
+          "bytes": 1009606
+        },
+        {
+          "arquivo": "emblema-ficha-javali--v03--1024.webp",
+          "bytes": 144216
+        },
+        {
+          "arquivo": "emblema-ficha-javali--v03--512.webp",
+          "bytes": 48150
+        },
+        {
+          "arquivo": "emblema-ficha-javali--v03--256.webp",
+          "bytes": 21566
+        },
+        {
+          "arquivo": "emblema-ficha-javali--v03--96.webp",
+          "bytes": 6058
+        },
+        {
+          "arquivo": "emblema-ficha-javali--v03--48.webp",
+          "bytes": 2210
+        }
+      ],
+      "segundos_pos": 25.1,
+      "avisos": []
+    }
+  ]
+}

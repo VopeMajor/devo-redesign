@@ -1,0 +1,9 @@
+[emblema-ficha-javali] v01: @cf/black-forest-labs/flux-2-klein-4b seed=7101 1024x1024 passos=None (~104 neurônios)
+    ok em 10.7s, 1024x1024
+[emblema-ficha-javali] v02: @cf/black-forest-labs/flux-2-klein-4b seed=7102 1024x1024 passos=None (~104 neurônios)
+    ok em 10.1s, 1024x1024
+[emblema-ficha-javali] v03: @cf/black-forest-labs/flux-2-klein-4b seed=7103 1024x1024 passos=None (~104 neurônios)
+    ok em 9.3s, 1024x1024
+[emblema-ficha-javali] v01: rembg:birefnet-general; sem avisos
+[emblema-ficha-javali] v02: rembg:birefnet-general; sem avisos
+[emblema-ficha-javali] v03: rembg:birefnet-general; sem avisos
