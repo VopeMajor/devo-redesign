@@ -1,0 +1,175 @@
+{
+  "pedido": "mini-catedral-esquecida",
+  "titulo": "catedral-esquecida — miniperfil (quadrada)",
+  "tipo": "moldura",
+  "tamanho_final": 1024,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 4281,
+      "passos": null,
+      "segundos": 21.7,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "miolo_aberto_por_cor": true,
+      "janela": {
+        "forma": "quadrado",
+        "centro_px": [
+          512.0,
+          512.0
+        ],
+        "lado_px": 560.1,
+        "raio_canto_px": 41.0,
+        "lado_fracao": 0.547
+      },
+      "reencaixe": {
+        "escala": 1.2058,
+        "cobertura_aro": 1.0
+      },
+      "ornamento_cortado": 0.0278,
+      "arquivos": [
+        {
+          "arquivo": "mini-catedral-esquecida--v01--1024.png",
+          "bytes": 608947
+        },
+        {
+          "arquivo": "mini-catedral-esquecida--v01--1024.webp",
+          "bytes": 93322
+        },
+        {
+          "arquivo": "mini-catedral-esquecida--v01--512.webp",
+          "bytes": 36924
+        },
+        {
+          "arquivo": "mini-catedral-esquecida--v01--256.webp",
+          "bytes": 15828
+        },
+        {
+          "arquivo": "mini-catedral-esquecida--v01--96.webp",
+          "bytes": 4620
+        },
+        {
+          "arquivo": "mini-catedral-esquecida--v01--48.webp",
+          "bytes": 2032
+        }
+      ],
+      "segundos_pos": 29.8,
+      "avisos": [
+        "2.8% do ornamento ficou fora do quadro — reduza a janela ou peça mais margem no prompt"
+      ]
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 4282,
+      "passos": null,
+      "segundos": 20.0,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "miolo_aberto_por_cor": true,
+      "ilhas_removidas": 1,
+      "janela": {
+        "forma": "quadrado",
+        "centro_px": [
+          512.0,
+          512.0
+        ],
+        "lado_px": 560.1,
+        "raio_canto_px": 41.0,
+        "lado_fracao": 0.547
+      },
+      "reencaixe": {
+        "escala": 1.5082,
+        "cobertura_aro": 1.0
+      },
+      "ornamento_cortado": 0.0236,
+      "arquivos": [
+        {
+          "arquivo": "mini-catedral-esquecida--v02--1024.png",
+          "bytes": 660886
+        },
+        {
+          "arquivo": "mini-catedral-esquecida--v02--1024.webp",
+          "bytes": 94806
+        },
+        {
+          "arquivo": "mini-catedral-esquecida--v02--512.webp",
+          "bytes": 36028
+        },
+        {
+          "arquivo": "mini-catedral-esquecida--v02--256.webp",
+          "bytes": 15338
+        },
+        {
+          "arquivo": "mini-catedral-esquecida--v02--96.webp",
+          "bytes": 4622
+        },
+        {
+          "arquivo": "mini-catedral-esquecida--v02--48.webp",
+          "bytes": 1958
+        }
+      ],
+      "segundos_pos": 25.8,
+      "avisos": [
+        "2.4% do ornamento ficou fora do quadro — reduza a janela ou peça mais margem no prompt"
+      ]
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 4283,
+      "passos": null,
+      "segundos": 24.2,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "miolo_aberto_por_cor": true,
+      "janela": {
+        "forma": "quadrado",
+        "centro_px": [
+          512.0,
+          512.0
+        ],
+        "lado_px": 560.1,
+        "raio_canto_px": 41.0,
+        "lado_fracao": 0.547
+      },
+      "reencaixe": {
+        "escala": 1.2498,
+        "cobertura_aro": 1.0
+      },
+      "ornamento_cortado": 0.0116,
+      "arquivos": [
+        {
+          "arquivo": "mini-catedral-esquecida--v03--1024.png",
+          "bytes": 435378
+        },
+        {
+          "arquivo": "mini-catedral-esquecida--v03--1024.webp",
+          "bytes": 69348
+        },
+        {
+          "arquivo": "mini-catedral-esquecida--v03--512.webp",
+          "bytes": 27918
+        },
+        {
+          "arquivo": "mini-catedral-esquecida--v03--256.webp",
+          "bytes": 11860
+        },
+        {
+          "arquivo": "mini-catedral-esquecida--v03--96.webp",
+          "bytes": 3772
+        },
+        {
+          "arquivo": "mini-catedral-esquecida--v03--48.webp",
+          "bytes": 1670
+        }
+      ],
+      "segundos_pos": 25.0,
+      "avisos": [
+        "1.2% do ornamento ficou fora do quadro — reduza a janela ou peça mais margem no prompt"
+      ]
+    }
+  ]
+}
