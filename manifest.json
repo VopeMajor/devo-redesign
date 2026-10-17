@@ -1,0 +1,120 @@
+{
+  "pedido": "nome-estrela-ametista",
+  "titulo": "Ornamento de nome — estrela-ametista",
+  "tipo": "emblema",
+  "tamanho_final": 1024,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 17001,
+      "passos": null,
+      "segundos": 17.0,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "nome-estrela-ametista--v01--1024.png",
+          "bytes": 641112
+        },
+        {
+          "arquivo": "nome-estrela-ametista--v01--1024.webp",
+          "bytes": 101308
+        },
+        {
+          "arquivo": "nome-estrela-ametista--v01--512.webp",
+          "bytes": 32538
+        },
+        {
+          "arquivo": "nome-estrela-ametista--v01--256.webp",
+          "bytes": 14060
+        },
+        {
+          "arquivo": "nome-estrela-ametista--v01--128.webp",
+          "bytes": 6360
+        },
+        {
+          "arquivo": "nome-estrela-ametista--v01--64.webp",
+          "bytes": 2852
+        }
+      ],
+      "segundos_pos": 34.9,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 17002,
+      "passos": null,
+      "segundos": 19.8,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "nome-estrela-ametista--v02--1024.png",
+          "bytes": 562867
+        },
+        {
+          "arquivo": "nome-estrela-ametista--v02--1024.webp",
+          "bytes": 93166
+        },
+        {
+          "arquivo": "nome-estrela-ametista--v02--512.webp",
+          "bytes": 30498
+        },
+        {
+          "arquivo": "nome-estrela-ametista--v02--256.webp",
+          "bytes": 13786
+        },
+        {
+          "arquivo": "nome-estrela-ametista--v02--128.webp",
+          "bytes": 6426
+        },
+        {
+          "arquivo": "nome-estrela-ametista--v02--64.webp",
+          "bytes": 2772
+        }
+      ],
+      "segundos_pos": 28.4,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 17003,
+      "passos": null,
+      "segundos": 9.4,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "nome-estrela-ametista--v03--1024.png",
+          "bytes": 591643
+        },
+        {
+          "arquivo": "nome-estrela-ametista--v03--1024.webp",
+          "bytes": 99586
+        },
+        {
+          "arquivo": "nome-estrela-ametista--v03--512.webp",
+          "bytes": 31944
+        },
+        {
+          "arquivo": "nome-estrela-ametista--v03--256.webp",
+          "bytes": 14308
+        },
+        {
+          "arquivo": "nome-estrela-ametista--v03--128.webp",
+          "bytes": 6440
+        },
+        {
+          "arquivo": "nome-estrela-ametista--v03--64.webp",
+          "bytes": 2670
+        }
+      ],
+      "segundos_pos": 28.5,
+      "avisos": []
+    }
+  ]
+}
