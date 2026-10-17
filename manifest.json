@@ -1,0 +1,121 @@
+{
+  "pedido": "emblema-chave-proibida",
+  "titulo": "Chave Proibida",
+  "tipo": "emblema",
+  "tamanho_final": 1024,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 7041,
+      "passos": null,
+      "segundos": 23.9,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "ilhas_removidas": 1,
+      "arquivos": [
+        {
+          "arquivo": "emblema-chave-proibida--v01--1024.png",
+          "bytes": 333937
+        },
+        {
+          "arquivo": "emblema-chave-proibida--v01--1024.webp",
+          "bytes": 77942
+        },
+        {
+          "arquivo": "emblema-chave-proibida--v01--512.webp",
+          "bytes": 26496
+        },
+        {
+          "arquivo": "emblema-chave-proibida--v01--256.webp",
+          "bytes": 10442
+        },
+        {
+          "arquivo": "emblema-chave-proibida--v01--96.webp",
+          "bytes": 2926
+        },
+        {
+          "arquivo": "emblema-chave-proibida--v01--48.webp",
+          "bytes": 1264
+        }
+      ],
+      "segundos_pos": 31.7,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 7042,
+      "passos": null,
+      "segundos": 12.5,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "emblema-chave-proibida--v02--1024.png",
+          "bytes": 311258
+        },
+        {
+          "arquivo": "emblema-chave-proibida--v02--1024.webp",
+          "bytes": 65586
+        },
+        {
+          "arquivo": "emblema-chave-proibida--v02--512.webp",
+          "bytes": 22290
+        },
+        {
+          "arquivo": "emblema-chave-proibida--v02--256.webp",
+          "bytes": 9388
+        },
+        {
+          "arquivo": "emblema-chave-proibida--v02--96.webp",
+          "bytes": 2730
+        },
+        {
+          "arquivo": "emblema-chave-proibida--v02--48.webp",
+          "bytes": 1230
+        }
+      ],
+      "segundos_pos": 24.7,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 7043,
+      "passos": null,
+      "segundos": 26.5,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "emblema-chave-proibida--v03--1024.png",
+          "bytes": 298996
+        },
+        {
+          "arquivo": "emblema-chave-proibida--v03--1024.webp",
+          "bytes": 71368
+        },
+        {
+          "arquivo": "emblema-chave-proibida--v03--512.webp",
+          "bytes": 24940
+        },
+        {
+          "arquivo": "emblema-chave-proibida--v03--256.webp",
+          "bytes": 10040
+        },
+        {
+          "arquivo": "emblema-chave-proibida--v03--96.webp",
+          "bytes": 2788
+        },
+        {
+          "arquivo": "emblema-chave-proibida--v03--48.webp",
+          "bytes": 1192
+        }
+      ],
+      "segundos_pos": 25.1,
+      "avisos": []
+    }
+  ]
+}

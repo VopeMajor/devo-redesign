@@ -1,0 +1,9 @@
+[emblema-chave-proibida] v01: @cf/black-forest-labs/flux-2-klein-4b seed=7041 1024x1024 passos=None (~104 neurônios)
+    ok em 23.9s, 1024x1024
+[emblema-chave-proibida] v02: @cf/black-forest-labs/flux-2-klein-4b seed=7042 1024x1024 passos=None (~104 neurônios)
+    ok em 12.5s, 1024x1024
+[emblema-chave-proibida] v03: @cf/black-forest-labs/flux-2-klein-4b seed=7043 1024x1024 passos=None (~104 neurônios)
+    ok em 26.5s, 1024x1024
+[emblema-chave-proibida] v01: rembg:birefnet-general; sem avisos
+[emblema-chave-proibida] v02: rembg:birefnet-general; sem avisos
+[emblema-chave-proibida] v03: rembg:birefnet-general; sem avisos
