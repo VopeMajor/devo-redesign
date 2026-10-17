@@ -1,0 +1,9 @@
+[borda-marmore-real] v01: @cf/black-forest-labs/flux-2-klein-4b seed=16011 1024x640 passos=None (~104 neurônios)
+    ok em 22.6s, 1024x640
+[borda-marmore-real] v02: @cf/black-forest-labs/flux-2-klein-4b seed=16012 1024x640 passos=None (~104 neurônios)
+    ok em 20.1s, 1024x640
+[borda-marmore-real] v03: @cf/black-forest-labs/flux-2-klein-4b seed=16013 1024x640 passos=None (~104 neurônios)
+    ok em 20.6s, 1024x640
+[borda-marmore-real] v01: rembg:birefnet-general; sem avisos
+[borda-marmore-real] v02: rembg:birefnet-general; sem avisos
+[borda-marmore-real] v03: rembg:birefnet-general; sem avisos
