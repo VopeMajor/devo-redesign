@@ -368,7 +368,7 @@ function Cartas({ m, agir }: { m: MinhaCorp; agir: Agir }) {
                   }}
                   className={cn(
                     'dv-focus dv-cut-diag flex min-h-11 items-center gap-2 px-3 font-body text-[15px]',
-                    para === p.id ? 'bg-dv-cobalt-dim text-dv-text shadow-[inset_0_0_0_1px_#c2b9ec]' : 'text-dv-text-2 shadow-[inset_0_0_0_1px_var(--dv-line-strong)]',
+                    para === p.id ? 'bg-dv-cobalt-dim text-dv-text shadow-[inset_0_0_0_1px_var(--dv-amethyst-text)]' : 'text-dv-text-2 shadow-[inset_0_0_0_1px_var(--dv-line-strong)]',
                   )}
                   style={{ '--dv-cut': '7px' } as CSSProperties}
                 >
@@ -394,7 +394,7 @@ function Cartas({ m, agir }: { m: MinhaCorp; agir: Agir }) {
                     >
                       <CardFace cardId={c.cardId} className="w-full" />
                       {uid === c.uid && (
-                        <span aria-hidden="true" className="pointer-events-none absolute -inset-1 shadow-[0_0_0_2px_#c2b9ec,0_0_16px_rgba(138,124,200,0.8)]" />
+                        <span aria-hidden="true" className="pointer-events-none absolute -inset-1 shadow-[0_0_0_2px_var(--dv-amethyst-text),0_0_16px_rgb(var(--dv-amethyst-rgb)/0.8)]" />
                       )}
                     </button>
                   </li>

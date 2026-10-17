@@ -153,12 +153,12 @@ export function CardShuffler({ synced, onShuffle, className }: { synced: boolean
             <radialGradient id="dvshuf-iris" cx="46%" cy="42%" r="56%">
               <stop offset="0%" stopColor="#f6f5f2" />
               <stop offset="34%" stopColor="#b9b6c2" />
-              <stop offset="66%" stopColor="#8a7cc8" />
+              <stop offset="66%" stopColor="#8f86b4" />
               <stop offset="100%" stopColor="#1f1f22" />
             </radialGradient>
             <radialGradient id="dvshuf-glow" cx="50%" cy="50%" r="50%">
-              <stop offset="58%" stopColor="#8a7cc8" stopOpacity="0.22" />
-              <stop offset="100%" stopColor="#8a7cc8" stopOpacity="0" />
+              <stop offset="58%" stopColor="#8f86b4" stopOpacity="0.22" />
+              <stop offset="100%" stopColor="#8f86b4" stopOpacity="0" />
             </radialGradient>
           </defs>
 
@@ -212,10 +212,10 @@ export function CardShuffler({ synced, onShuffle, className }: { synced: boolean
           {/* anéis armilares (prata; um fio de ametista) */}
           <g style={spin(40, 1.6, true)}>
             <ellipse cx="100" cy="100" rx="66" ry="20" fill="none" stroke="#dcd9d3" strokeOpacity="0.55" strokeWidth="1" transform="rotate(-24 100 100)" />
-            <path d="M160.3 70.2 L163.3 73.2 L160.3 76.2 L157.3 73.2 Z" fill="#8a7cc8" />
+            <path d="M160.3 70.2 L163.3 73.2 L160.3 76.2 L157.3 73.2 Z" fill="#8f86b4" />
           </g>
           <g style={spin(55, 2, false)}>
-            <ellipse cx="100" cy="100" rx="66" ry="14" fill="none" stroke="#8a7cc8" strokeOpacity="0.45" strokeWidth="0.7" strokeDasharray="10 4 2 4" transform="rotate(38 100 100)" />
+            <ellipse cx="100" cy="100" rx="66" ry="14" fill="none" stroke="#8f86b4" strokeOpacity="0.45" strokeWidth="0.7" strokeDasharray="10 4 2 4" transform="rotate(38 100 100)" />
           </g>
 
           {/* cartas em órbita */}
@@ -251,7 +251,7 @@ export function CardShuffler({ synced, onShuffle, className }: { synced: boolean
           {/* ponteiros */}
           <g style={spin(60, 0.6)}>
             <line x1="100" y1="100" x2="100" y2="24" stroke="#dcd9d3" strokeOpacity="0.8" strokeWidth="0.8" strokeLinecap="round" />
-            <path d="M100 21.4 L102.2 24 L100 26.6 L97.8 24 Z" fill="#8a7cc8" />
+            <path d="M100 21.4 L102.2 24 L100 26.6 L97.8 24 Z" fill="#8f86b4" />
           </g>
           <g style={spin(720, 4)}>
             <path d="M100 100 L97 92 L100 46 L103 92 Z" fill="url(#dvshuf-gold)" />

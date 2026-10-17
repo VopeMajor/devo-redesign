@@ -101,8 +101,8 @@ const CROP: Record<string, { pos: string; zoom?: number }> = {
  * (geradas por scripts/dev/gen-marmore.py). Pedra sem azul, veios cinza. `size` = ladrilho em px. */
 export function marbleBlack(size = 560): CSSProperties {
   return {
-    backgroundColor: "#121214",
-    backgroundImage: "radial-gradient(120% 80% at 80% 0%, rgba(238,237,235,0.045), transparent 60%), url(/images/os/marmore-negro.webp)",
+    backgroundColor: "var(--dv-ink-2)",
+    backgroundImage: "radial-gradient(120% 80% at 80% 0%, rgb(var(--dv-text-rgb) / 0.045), transparent 60%), url(/images/os/marmore-negro.webp)",
     backgroundSize: `auto, ${size}px ${size}px`,
   };
 }
@@ -187,13 +187,13 @@ export const RARITY_SKIN: Record<Rarity, RaritySkin> = {
     material: "Ametista",
     pips: 4,
     frame: "linear-gradient(150deg,#fffdf8 0%,#b3a998 17%,#f7f2e8 35%,#7b7264 55%,#efe8dc 74%,#c9c0b0 88%,#fffdf8 100%)",
-    filet: "#c2b9ec",
+    filet: "#cbc6dc",
     ink: "#4a4180",
-    light: "#c2b9ec",
+    light: "#cbc6dc",
     glow: "rgba(138,124,200,0.5)",
     duo: "mono",
     body: "white",
-    gem: ["#e4defb", "#8a7cc8", "#2a2350"],
+    gem: ["#e4defb", "#8f86b4", "#2a2350"],
   },
 };
 
@@ -291,10 +291,10 @@ function SetAmethyst({ className }: { className?: string }) {
     <svg viewBox="0 0 20 28" aria-hidden="true" className={className}>
       <path d="M10 0.5 L19.5 14 L10 27.5 L0.5 14 Z" fill="#f4efe6" />
       <path d="M10 2.6 L17.4 14 L10 25.4 L2.6 14 Z" fill="#2a2350" />
-      <path d="M10 3.4 L16.6 14 L10 14 Z" fill="#8a7cc8" />
+      <path d="M10 3.4 L16.6 14 L10 14 Z" fill="#8f86b4" />
       <path d="M10 3.4 L3.4 14 L10 14 Z" fill="#e4defb" />
-      <path d="M3.4 14 L10 24.6 L10 14 Z" fill="#8a7cc8" />
-      <path d="M10 9 L13 14 L10 19 L7 14 Z" fill="#c2b9ec" />
+      <path d="M3.4 14 L10 24.6 L10 14 Z" fill="#8f86b4" />
+      <path d="M10 9 L13 14 L10 19 L7 14 Z" fill="#cbc6dc" />
       <path d="M6.4 9 L7.6 7.8 L8.2 10.2 Z" fill="#fff" className="dvcard-gem" />
     </svg>
   );
@@ -345,8 +345,7 @@ export function CardBack({ className }: { className?: string }) {
           aria-hidden="true"
           className="absolute inset-[5cqw] opacity-55"
           style={{
-            backgroundImage:
-              "linear-gradient(60deg, transparent 48.8%, #a8a39a 49.4%, #a8a39a 50.6%, transparent 51.2%), linear-gradient(-60deg, transparent 48.8%, #a8a39a 49.4%, #a8a39a 50.6%, transparent 51.2%)",
+            backgroundImage: "linear-gradient(60deg, transparent 48.8%, #a8a39a 49.4%, #a8a39a 50.6%, transparent 51.2%), linear-gradient(-60deg, transparent 48.8%, #a8a39a 49.4%, #a8a39a 50.6%, transparent 51.2%)",
             backgroundSize: "16cqw 27.7cqw",
             backgroundPosition: "center",
             maskImage: "radial-gradient(70% 58% at 50% 50%, #000 35%, transparent 100%)",
@@ -354,7 +353,7 @@ export function CardBack({ className }: { className?: string }) {
           }}
         />
         <span aria-hidden="true" className="absolute left-1/2 top-1/2 aspect-square w-[54%] -translate-x-1/2 -translate-y-1/2 rounded-full p-[1.1cqw]" style={{ background: BACK_FRAME, boxShadow: "0 0 6cqw rgba(0,0,0,0.9)" }}>
-          <span className="grid size-full place-items-center rounded-full bg-[radial-gradient(circle_at_50%_38%,#2c2c31,#0c0c0e_70%)] text-[#e9e4da] shadow-[inset_0_0_0_0.6cqw_rgba(0,0,0,0.8)]">
+          <span className="grid size-full place-items-center rounded-full bg-[radial-gradient(circle_at_50%_38%,var(--dv-ink-4),var(--dv-ink)_70%)] text-[#e9e4da] shadow-[inset_0_0_0_0.6cqw_rgba(0,0,0,0.8)]">
             <DeadlyVoteSymbol variant="full" className="size-[80%]" />
           </span>
         </span>
@@ -406,13 +405,13 @@ export function CardFace({
       <Shell frame={skin.frame} filet={skin.filet} glow={legendary ? skin.glow : undefined} body={skin.body}>
         {/* janela ogival com a arte em duotom */}
         <span aria-hidden="true" className="absolute inset-x-[5.5cqw] top-[5.5cqw] h-[84cqw]">
-          <span className="absolute inset-0 overflow-hidden bg-[#0c0c0e]" style={{ clipPath: ARCH_CLIP }}>
+          <span className="absolute inset-0 overflow-hidden bg-dv-ink" style={{ clipPath: ARCH_CLIP }}>
             <span className="absolute inset-0" style={{ transform: `scale(${crop.zoom ?? 1})`, transformOrigin: crop.pos }}>
               <DuotoneArt src={TYPE_ART[card.type]} alt="" tone={skin.duo} position={crop.pos} contrast={1.3} className="size-full" />
             </span>
             {skin.tint && <span className="absolute inset-0 mix-blend-color" style={{ background: skin.tint, opacity: 0.32 }} />}
-            <span className="absolute inset-0 bg-[radial-gradient(120%_90%_at_50%_30%,transparent_45%,rgba(12,12,14,0.75)_100%)]" />
-            <span className="absolute inset-x-0 bottom-0 h-[40%] bg-[linear-gradient(to_top,rgba(12,12,14,0.95),transparent)]" />
+            <span className="absolute inset-0 bg-[radial-gradient(120%_90%_at_50%_30%,transparent_45%,rgb(var(--dv-ink-rgb)/0.75)_100%)]" />
+            <span className="absolute inset-x-0 bottom-0 h-[40%] bg-[linear-gradient(to_top,rgb(var(--dv-ink-rgb)/0.95),transparent)]" />
           </span>
           <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="absolute inset-0 size-full overflow-visible">
             <path d={ARCH_PATH} fill="none" stroke={white ? "#b3a998" : skin.filet} strokeWidth="1.1" vectorEffect="non-scaling-stroke" opacity="0.9" />
@@ -435,7 +434,7 @@ export function CardFace({
           className="absolute left-1/2 top-[79cqw] aspect-square w-[19cqw] -translate-x-1/2 rounded-full p-[1cqw]"
           style={{ background: skin.frame, boxShadow: `0 0 5cqw ${skin.glow}, 0 1cqw 2cqw rgba(0,0,0,${white ? 0.45 : 0.8})` }}
         >
-          <span className="grid size-full place-items-center rounded-full bg-[radial-gradient(circle_at_50%_35%,#2c2c31,#0c0c0e_72%)]" style={{ color: skin.light }}>
+          <span className="grid size-full place-items-center rounded-full bg-[radial-gradient(circle_at_50%_35%,var(--dv-ink-4),var(--dv-ink)_72%)]" style={{ color: skin.light }}>
             <Glyph className="size-[56%]" strokeWidth={1.4} />
           </span>
         </span>

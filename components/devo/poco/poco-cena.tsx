@@ -3,12 +3,18 @@
 import type { CSSProperties } from 'react'
 import { cn } from '@/lib/utils'
 import type { NeblinaPalco } from '@/lib/devo/poco-neblina'
+import { POCO_PINTURA } from './poco-pintura'
 
 /**
- * Cena do Poço dos Milagres: ilustração vetorial de alto acabamento (sem WebGL, então não há fallback a
- * esperar nem custo de GPU no celular). Camadas: céu de neblina, casas antigas em silhueta, rua de barro, o
- * poço de pedra com telhado, sarilho de aço champanhe e manivela, balde na corda, placa dos 500 anos e três
- * faixas de névoa que derivam devagar. Toda animação para com prefers-reduced-motion (poco.css).
+ * Cena do Poço dos Milagres: ilustração em camadas (sem WebGL, então não há fallback a esperar nem custo de
+ * GPU no celular). De trás para a frente: céu de neblina com a lua velada, casas antigas (duas janelas acesas),
+ * rua de barro com poças, o pátio de pedra gasta com a inscrição circular, a estela dos 500 anos, o poço
+ * (camadas de arte em public/images/poco), as oferendas deixadas por quem veio antes (velas, uma rosa vinho,
+ * moedas que ninguém ousou buscar) e três faixas de névoa. Paleta do Refinamento 4: abismo, pedra de névoa,
+ * vinho e prata apagada; a luz do poço é prata fria com um fundo vinho (sem roxo neon).
+ *
+ * Camadas pintadas opcionais: poco-pintura.ts (cada uma substitui a parte desenhada correspondente).
+ * Toda animação para com prefers-reduced-motion (poco.css).
  *
  * `palco`: 'rua' (poço pequeno no fim da rua), 'poco'/'tela' (poço de perto), 'figura' (silhueta encapuzada
  * na névoa), 'mao' (vinheta fechada), 'partiu' (a figura some).
@@ -42,7 +48,7 @@ export function PocoCena({
   girando?: boolean
   /** Invocação em curso: o anel acelera, a aura pulsa e as partículas sobem mais rápido. */
   ativo?: boolean
-  /** Muda a cada moeda lançada: dispara a queda e a ondulação. */
+  /** Muda a cada moeda lançada: dispara o arco da moeda, o respingo e as ondas. */
   moeda?: number
   /** 0..1: luz sobrenatural que sai da boca do poço. */
   brilho?: number
@@ -53,11 +59,16 @@ export function PocoCena({
   const partiu = palco === 'partiu'
   const trancado = palco === 'trancado'
   return (
-    <div aria-hidden="true" className={cn('poco-cena pointer-events-none absolute inset-0 overflow-hidden bg-[#0d0d10]', className)}>
-      {/* céu de neblina: grafite com um resto de luz lavanda (atmosfera, nunca superfície) */}
-      <div className="absolute inset-0 bg-[radial-gradient(120%_70%_at_50%_30%,#26252c_0%,#17161b_45%,#0d0d10_100%)]" />
-      <Casas className={cn('poco-t absolute inset-x-0 top-[14%] h-[38%] w-full', longe ? 'opacity-90' : 'opacity-55')} />
-      <Rua className="absolute inset-x-0 bottom-0 h-[58%] w-full" />
+    <div aria-hidden="true" className={cn('poco-cena pointer-events-none absolute inset-0 overflow-hidden bg-dv-abyss', className)}>
+      {POCO_PINTURA.fundo ? (
+        <img src={POCO_PINTURA.fundo} alt="" draggable={false} className="absolute inset-0 size-full object-cover object-bottom" />
+      ) : (
+        <>
+          <Ceu />
+          <Casas className={cn('poco-t absolute inset-x-0 top-[14%] h-[38%] w-full', longe ? 'opacity-95' : 'opacity-70')} />
+          <Rua className="absolute inset-x-0 bottom-0 h-[58%] w-full" />
+        </>
+      )}
       <Nevoa layer={0} className="top-[30%] opacity-60" />
 
       {/* o poço: pequeno no fim da rua; de perto no resto */}
@@ -70,24 +81,46 @@ export function PocoCena({
           } as CSSProperties
         }
       >
-        <Poco balde={balde} baldeTipo={baldeTipo} girando={girando} ativo={ativo} moeda={moeda} brilho={trancado ? 0.12 : longe ? 0.9 : brilho} />
+        <Poco balde={balde} baldeTipo={baldeTipo} girando={girando} ativo={ativo} moeda={moeda} brilho={trancado ? 0.12 : longe ? 0.9 : brilho} apagado={trancado} />
       </div>
 
       {/* figura encapuzada (o Corvo, nunca nomeado): silhueta sem rosto, dissolvida na névoa */}
       <Figura estado={figura ? 'visivel' : partiu ? 'partindo' : 'oculta'} base={figuraBase} />
 
-      <Nevoa layer={1} className="bottom-[8%] opacity-70" />
-      <Nevoa layer={2} className="bottom-[-6%] opacity-80" />
+      {POCO_PINTURA.nevoa ? (
+        <img src={POCO_PINTURA.nevoa} alt="" draggable={false} className="poco-fog absolute -inset-x-1/4 bottom-[-4%] h-[40%] w-[150%] max-w-none object-cover opacity-80" />
+      ) : (
+        <>
+          <Nevoa layer={1} className="bottom-[8%] opacity-70" />
+          <Nevoa layer={2} className="bottom-[-6%] opacity-80" />
+        </>
+      )}
       {/* a mão: a cena se fecha e esfria (sem ilustrar o horror; o texto dá conta) */}
-      <div className={cn('poco-t absolute inset-0 bg-[radial-gradient(60%_45%_at_60%_48%,transparent_0%,rgba(6,6,9,0.86)_70%,#050507_100%)]', palco === 'mao' ? 'opacity-100' : 'opacity-0')} />
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_50%,rgba(4,3,6,0.82)_100%)]" />
-      <div className="devo-grain absolute inset-0 opacity-[0.07] mix-blend-overlay" />
-      {trancado && <div className="absolute inset-0 bg-[#0c0c0e]/45" />}
+      <div className={cn('poco-t absolute inset-0 bg-[radial-gradient(60%_45%_at_60%_48%,transparent_0%,rgba(9,9,9,0.86)_70%,#050505_100%)]', palco === 'mao' ? 'opacity-100' : 'opacity-0')} />
+      {/* vinheta: pedra nas bordas, um fundo vinho no pé */}
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_45%,transparent_48%,rgba(9,9,9,0.8)_100%)]" />
+      <div className="absolute inset-x-0 bottom-0 h-1/3 bg-[linear-gradient(0deg,rgba(40,14,17,0.55),transparent)]" />
+      <div className="devo-grain absolute inset-0 opacity-[0.08] mix-blend-overlay" />
+      {trancado && <div className="absolute inset-0 bg-dv-ink/45" />}
     </div>
   )
 }
 
 /* ── Fundo ──────────────────────────────────────────────────────────────────────────────── */
+
+/** Céu de neblina: pedra de névoa no alto, lua velada atrás da bruma, horizonte com um resto de vinho. */
+function Ceu() {
+  return (
+    <>
+      <div className="absolute inset-0 bg-[radial-gradient(120%_70%_at_50%_28%,#2c2a2a_0%,#1a1818_42%,#090909_100%)]" />
+      <div className="absolute inset-x-0 top-[26%] h-[30%] bg-[radial-gradient(70%_60%_at_50%_100%,rgba(63,17,23,0.42),transparent_75%)]" />
+      {/* lua velada: disco de prata apagada com halo largo, quase engolido pela neblina */}
+      <div className="poco-lua absolute right-[14%] top-[7%] size-[54px] rounded-full bg-[radial-gradient(circle_at_42%_40%,#d9d7d3,#a9a7a3_55%,#7d7b78)] opacity-55 blur-[1.5px]" />
+      <div className="absolute right-[14%] top-[7%] size-[54px] scale-[4.2] rounded-full bg-[radial-gradient(closest-side,rgba(172,172,172,0.16),transparent)]" />
+      <div className="absolute inset-x-0 top-[6%] h-[16%] bg-[linear-gradient(180deg,transparent,rgba(53,53,53,0.45)_45%,transparent)]" />
+    </>
+  )
+}
 
 function Casas({ className }: { className?: string }) {
   // Casas antigas e simples: telhados de duas águas, chaminés, poucas janelas apagadas (duas acesas, fracas).
@@ -104,19 +137,28 @@ function Casas({ className }: { className?: string }) {
     <svg viewBox="0 0 400 160" preserveAspectRatio="xMidYMax slice" className={className}>
       <defs>
         <linearGradient id="poco-casa" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#1d1c21" />
-          <stop offset="1" stopColor="#121115" />
+          <stop offset="0" stopColor="#242222" />
+          <stop offset="1" stopColor="#131111" />
         </linearGradient>
+        <radialGradient id="poco-janela" cx="0.5" cy="0.5" r="0.5">
+          <stop offset="0" stopColor="#b59a72" stopOpacity="0.5" />
+          <stop offset="1" stopColor="#b59a72" stopOpacity="0" />
+        </radialGradient>
       </defs>
       {casas.map((c, i) => {
         const base = 160
         const top = base - c.h
+        const acesa = i === 2 || i === 5
         return (
           <g key={i}>
             <path d={`M${c.x} ${base}V${top + c.r}L${c.x + c.w / 2} ${top}L${c.x + c.w} ${top + c.r}V${base}Z`} fill="url(#poco-casa)" />
-            <path d={`M${c.x - 3} ${top + c.r + 2}L${c.x + c.w / 2} ${top - 2}L${c.x + c.w + 3} ${top + c.r + 2}`} fill="none" stroke="#2c2b31" strokeWidth="2" />
-            {i % 2 === 0 && <rect x={c.x + c.w * 0.68} y={top + c.r * 0.2} width="6" height="14" fill="#1a191e" />}
-            <rect x={c.x + c.w * 0.32} y={top + c.r + 14} width="5" height="7" fill={i === 2 || i === 5 ? '#4a4438' : '#17161a'} opacity={i === 2 || i === 5 ? 0.6 : 1} />
+            <path d={`M${c.x - 3} ${top + c.r + 2}L${c.x + c.w / 2} ${top - 2}L${c.x + c.w + 3} ${top + c.r + 2}`} fill="none" stroke="#3a3737" strokeWidth="2" />
+            {/* reboco gasto: duas linhas tortas por casa */}
+            <path d={`M${c.x + 6} ${top + c.r + 30}h${c.w * 0.3}M${c.x + c.w * 0.5} ${top + c.r + 48}h${c.w * 0.36}`} stroke="#0d0c0c" strokeWidth="1" opacity="0.6" />
+            {i % 2 === 0 && <rect x={c.x + c.w * 0.68} y={top + c.r * 0.2} width="6" height="14" fill="#1d1b1b" />}
+            {acesa && <circle cx={c.x + c.w * 0.32 + 2.5} cy={top + c.r + 17.5} r="12" fill="url(#poco-janela)" className="poco-janela" />}
+            <rect x={c.x + c.w * 0.32} y={top + c.r + 14} width="5" height="7" fill={acesa ? '#8c7756' : '#181616'} opacity={acesa ? 0.75 : 1} />
+            {acesa && <path d={`M${c.x + c.w * 0.32 + 2.5} ${top + c.r + 14}v7M${c.x + c.w * 0.32} ${top + c.r + 17.5}h5`} stroke="#1a1716" strokeWidth="0.8" />}
           </g>
         )
       })}
@@ -125,33 +167,38 @@ function Casas({ className }: { className?: string }) {
 }
 
 function Rua({ className }: { className?: string }) {
-  // Rua de barro em perspectiva: sulcos de roda convergindo para o fim, onde o poço espera.
+  // Rua de barro em perspectiva: sulcos de roda convergindo para o fim, onde o poço espera; poças refletem a lua.
   return (
     <svg viewBox="0 0 400 300" preserveAspectRatio="none" className={className}>
       <defs>
         <linearGradient id="poco-barro" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#1c1916" />
-          <stop offset="0.5" stopColor="#25201b" />
-          <stop offset="1" stopColor="#14110e" />
+          <stop offset="0" stopColor="#221d19" />
+          <stop offset="0.5" stopColor="#2c241e" />
+          <stop offset="1" stopColor="#17120f" />
         </linearGradient>
         <linearGradient id="poco-chao" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#141317" />
-          <stop offset="1" stopColor="#0b0b0d" />
+          <stop offset="0" stopColor="#1a1818" />
+          <stop offset="1" stopColor="#0c0b0b" />
+        </linearGradient>
+        <linearGradient id="poco-poca" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0" stopColor="#acacac" stopOpacity="0" />
+          <stop offset="0.5" stopColor="#acacac" stopOpacity="0.22" />
+          <stop offset="1" stopColor="#acacac" stopOpacity="0" />
         </linearGradient>
       </defs>
       <rect width="400" height="300" fill="url(#poco-chao)" />
       <path d="M176 0H224L400 300H0Z" fill="url(#poco-barro)" />
-      {[
-        'M190 0L92 300',
-        'M196 0L140 300',
-        'M204 0L262 300',
-        'M210 0L310 300',
-      ].map((d) => (
-        <path key={d} d={d} stroke="#0f0d0b" strokeWidth="2.2" opacity="0.7" />
+      {['M190 0L92 300', 'M196 0L140 300', 'M204 0L262 300', 'M210 0L310 300'].map((d) => (
+        <path key={d} d={d} stroke="#100d0b" strokeWidth="2.2" opacity="0.7" />
       ))}
       {Array.from({ length: 14 }, (_, i) => (
-        <ellipse key={i} cx={60 + ((i * 97) % 280)} cy={60 + ((i * 53) % 230)} rx={4 + (i % 4) * 2} ry={1.2 + (i % 3) * 0.6} fill="#0f0d0b" opacity="0.6" />
+        <ellipse key={i} cx={60 + ((i * 97) % 280)} cy={60 + ((i * 53) % 230)} rx={4 + (i % 4) * 2} ry={1.2 + (i % 3) * 0.6} fill="#100d0b" opacity="0.6" />
       ))}
+      {/* poças rasas com o reflexo frio da lua */}
+      <ellipse cx="128" cy="236" rx="34" ry="5" fill="#0e0c0b" />
+      <ellipse cx="128" cy="235" rx="30" ry="3" fill="url(#poco-poca)" />
+      <ellipse cx="282" cy="196" rx="22" ry="3.4" fill="#0e0c0b" />
+      <ellipse cx="282" cy="195.4" rx="19" ry="2" fill="url(#poco-poca)" />
     </svg>
   )
 }
@@ -164,10 +211,10 @@ function Nevoa({ layer, className }: { layer: number; className?: string }) {
         style={{
           background:
             layer === 0
-              ? 'radial-gradient(40% 50% at 30% 50%,rgba(150,148,160,0.3),transparent 70%),radial-gradient(35% 45% at 75% 40%,rgba(150,148,160,0.24),transparent 70%)'
+              ? 'radial-gradient(40% 50% at 30% 50%,rgba(172,172,172,0.26),transparent 70%),radial-gradient(35% 45% at 75% 40%,rgba(172,172,172,0.2),transparent 70%)'
               : layer === 1
-                ? 'radial-gradient(45% 50% at 25% 60%,rgba(170,168,178,0.3),transparent 70%),radial-gradient(40% 50% at 70% 50%,rgba(160,158,170,0.26),transparent 72%)'
-                : 'radial-gradient(55% 60% at 50% 70%,rgba(180,178,188,0.3),transparent 70%)',
+                ? 'radial-gradient(45% 50% at 25% 60%,rgba(180,178,176,0.28),transparent 70%),radial-gradient(40% 50% at 70% 50%,rgba(172,170,168,0.24),transparent 72%)'
+                : 'radial-gradient(55% 60% at 50% 70%,rgba(186,184,182,0.28),transparent 70%)',
         }}
       />
     </div>
@@ -191,19 +238,31 @@ const PARTICULAS = [
   { x: 66, d: 3.8, t: 9, s: 2 },
 ]
 
-function Poco({ balde, baldeTipo, girando, ativo, moeda, brilho }: { balde: BaldePosicao; baldeTipo: string; girando: boolean; ativo: boolean; moeda: number; brilho: number }) {
+function Poco({ balde, baldeTipo, girando, ativo, moeda, brilho, apagado }: { balde: BaldePosicao; baldeTipo: string; girando: boolean; ativo: boolean; moeda: number; brilho: number; apagado: boolean }) {
   const tipo = ['madeira', 'ferro', 'cobre', 'prata'].includes(baldeTipo) ? baldeTipo : 'madeira'
   return (
     <div className={cn('poco-stage relative', (girando || ativo) && 'poco-ativo')} style={{ aspectRatio: '400 / 500', height: 'var(--poco-h, min(64vh, 500px))', '--brilho': brilho } as CSSProperties}>
-      {/* aura violeta atrás de tudo (respira) */}
-      <img src={`${ART}/aura.webp`} alt="" draggable={false} className="poco-aura absolute left-[-14%] top-[-6%] w-[128%] max-w-none" />
+      {/* luz do poço: halo de prata fria com o pé vinho (a aura pintada entra dessaturada por cima) */}
+      <span className="poco-aura absolute left-[-24%] top-[2%] h-[90%] w-[148%] bg-[radial-gradient(45%_42%_at_50%_58%,rgba(220,218,214,0.22),rgba(90,29,38,0.28)_55%,transparent_75%)]" />
+      <img src={`${ART}/aura.webp`} alt="" draggable={false} className="poco-aura poco-dessatura absolute left-[-14%] top-[-6%] w-[128%] max-w-none opacity-70" />
       {/* anel astral: numerais e runas girando devagar (acelera na invocação) */}
       <div className="absolute left-[9%] top-[5.2%] w-[82%]">
-        <img src={`${ART}/anel.webp`} alt="" draggable={false} className="poco-anel block w-full opacity-60" />
+        <img src={`${ART}/anel.webp`} alt="" draggable={false} className="poco-anel poco-dessatura block w-full opacity-50" />
       </div>
-      {/* feixe de luz direcionada vindo do alto à esquerda */}
-      <span className="poco-feixe absolute left-[-30%] top-[-20%] h-[95%] w-[70%] origin-top-left rotate-[-24deg] bg-[linear-gradient(90deg,transparent,rgba(214,206,246,0.13)_45%,rgba(214,206,246,0.05)_70%,transparent)]" />
-      <img src={`${ART}/estrutura.webp`} alt="" draggable={false} className="absolute inset-0 w-full" />
+      {/* feixe de luar vindo do alto à direita (onde está a lua) */}
+      <span className="poco-feixe absolute right-[-34%] top-[-24%] h-[100%] w-[70%] origin-top-right rotate-[22deg] bg-[linear-gradient(270deg,transparent,rgba(214,212,208,0.12)_45%,rgba(214,212,208,0.04)_70%,transparent)]" />
+
+      {/* pátio de pedra gasta e a estela dos 500 anos (atrás da base) */}
+      {POCO_PINTURA.patio ? (
+        <img src={POCO_PINTURA.patio} alt="" draggable={false} className="absolute left-[-35%] top-[70%] w-[170%] max-w-none" />
+      ) : (
+        <>
+          <Patio className="absolute left-[-35%] top-[76%] h-[40%] w-[170%]" />
+          <Estela className="absolute left-[-5%] top-[62%] h-[34%] w-auto" />
+        </>
+      )}
+
+      <img src={`${ART}/estrutura.webp`} alt="" draggable={false} className="poco-pedra absolute inset-0 w-full" />
       {/* corrente + balde: recortados entre o sarilho e a linha d'água */}
       <div className="absolute left-[35%] top-[41.6%] h-[28.8%] w-[30%] overflow-hidden">
         <img
@@ -214,29 +273,237 @@ function Poco({ balde, baldeTipo, girando, ativo, moeda, brilho }: { balde: Bald
           style={{ transform: `translateY(${balde === 'fundo' ? '-38%' : '-74.5%'})` }}
         />
       </div>
-      {/* moeda caindo e ondas na água */}
-      {moeda > 0 && (
-        <div key={moeda} className="absolute left-[44%] top-[34%] h-[38%] w-[12%]">
-          <span className="poco-coin absolute left-1/2 top-0 block size-[18px] rounded-full bg-[radial-gradient(circle_at_35%_30%,#fbf6ec,#bab09f_45%,#5f584d)] shadow-[0_0_10px_rgba(236,229,216,0.6)]" />
-        </div>
-      )}
-      {moeda > 0 && <span key={`r${moeda}`} className="poco-ripple absolute left-[30%] top-[66.5%] h-[8%] w-[40%] rounded-[50%] border border-[#c2b9ec]/70" />}
       {/* partículas subindo da água */}
       <div className="absolute left-[18%] top-[18%] h-[52%] w-[64%] overflow-hidden">
         {PARTICULAS.map((p, i) => (
           <span
             key={i}
-            className="poco-particula absolute bottom-0 rotate-45 bg-[#e4defa]"
+            className="poco-particula absolute bottom-0 rotate-45 bg-[#e2e0dc]"
             style={{ left: `${p.x * 1.5 - 30}%`, width: p.s, height: p.s, animationDelay: `${p.d}s`, animationDuration: `${p.t}s` } as CSSProperties}
           />
         ))}
       </div>
-      <img src={`${ART}/base.webp`} alt="" draggable={false} className="absolute inset-0 w-full" />
+      <img src={`${ART}/base.webp`} alt="" draggable={false} className="poco-pedra absolute inset-0 w-full" />
+      {/* inscrição gasta na borda de pedra (o poço tem nome e regra) */}
+      <Inscricao className="absolute left-[19%] top-[73%] w-[62%]" />
       {/* roda da manivela (gira com a corrente) */}
       <div className="absolute left-[72.4%] top-[35.4%] w-[19.6%]">
-        <img src={`${ART}/roda.webp`} alt="" draggable={false} className={cn('poco-roda block w-full', girando && 'poco-roda-on')} />
+        <img src={`${ART}/roda.webp`} alt="" draggable={false} className={cn('poco-roda poco-pedra block w-full', girando && 'poco-roda-on')} />
       </div>
+
+      {/* oferendas de quem veio antes: velas, uma rosa vinho, moedas que ninguém foi buscar */}
+      {POCO_PINTURA.frente ? (
+        <img src={POCO_PINTURA.frente} alt="" draggable={false} className="absolute left-[-10%] top-[84%] w-[120%] max-w-none" />
+      ) : (
+        <Oferendas apagado={apagado} className="absolute left-[-10%] top-[86%] h-[24%] w-[120%]" />
+      )}
+
+      {/* a moeda lançada: arco, rastro, respingo e ondas */}
+      {moeda > 0 && <Lancamento key={moeda} />}
     </div>
+  )
+}
+
+/**
+ * Arco da moeda (de baixo à esquerda, onde fica o botão Moeda, até a boca do poço), em unidades de
+ * contêiner (cqw/cqh) para cair no mesmo ponto em qualquer altura de tela. Rastro = três cópias atrasadas.
+ * Ao tocar a água (~900 ms): respingo pintado, três ondas, lampejo de prata e gotas.
+ */
+function Lancamento() {
+  return (
+    <div className="pointer-events-none absolute inset-0 [container-type:size]">
+      {[3, 2, 1, 0].map((k) => (
+        <span key={k} className="poco-arco-x absolute left-[8%] top-[128%]" style={{ animationDelay: `${k * 34}ms` } as CSSProperties}>
+          <span className="poco-arco-y block" style={{ animationDelay: `${k * 34}ms` } as CSSProperties}>
+            <span
+              className={cn('poco-arco-moeda block size-[20px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle_at_35%_30%,#fbf6ec,#bab09f_45%,#5f584d)]', k === 0 ? 'shadow-[0_0_12px_rgba(236,229,216,0.75)]' : 'opacity-[var(--rastro)] blur-[1px]')}
+              style={{ animationDelay: `${k * 34}ms`, '--rastro': 0.42 - k * 0.11 } as CSSProperties}
+            />
+          </span>
+        </span>
+      ))}
+      {/* água: lampejo, ondas e respingo */}
+      <span className="poco-lampejo absolute left-[22%] top-[60%] h-[14%] w-[56%] rounded-[50%] bg-[radial-gradient(closest-side,rgba(236,235,233,0.7),rgba(172,172,172,0.25)_50%,transparent)]" />
+      {[0, 1, 2].map((i) => (
+        <span key={i} className="poco-onda absolute left-[30%] top-[63.5%] h-[7%] w-[40%] rounded-[50%] border border-[#dcdad6]/70" style={{ animationDelay: `${900 + i * 260}ms` } as CSSProperties} />
+      ))}
+      <img src={`${ART}/respingo.webp`} alt="" draggable={false} className="poco-respingo-moeda poco-dessatura absolute left-[27%] top-[52%] w-[46%] max-w-none" />
+      {[-3, -1.6, -0.6, 0.6, 1.7, 2.8].map((dx, i) => (
+        <span key={i} className="poco-gota absolute left-1/2 top-[64%] size-[3px] rounded-full bg-[#e8e6e2]" style={{ '--gx': `${dx * 9}px`, '--gy': `${-26 - (i % 3) * 12}px`, animationDelay: `${900 + i * 20}ms` } as CSSProperties} />
+      ))}
+    </div>
+  )
+}
+
+/** Pátio: lajes de pedra gasta em elipse ao redor da base, rachaduras, musgo seco e poeira de barro na borda. */
+function Patio({ className }: { className?: string }) {
+  const lajes: string[] = []
+  // anéis de lajes irregulares (determinístico)
+  for (let anel = 0; anel < 3; anel++) {
+    const rx0 = 150 + anel * 70
+    const rx1 = rx0 + 66
+    const ry = (r: number) => r * 0.27
+    const n = 12 + anel * 4
+    for (let i = 0; i < n; i++) {
+      const a0 = (i / n) * Math.PI * 2 + anel * 0.21
+      const a1 = ((i + 1) / n) * Math.PI * 2 + anel * 0.21 - 0.035
+      const p = (r: number, a: number) => `${(340 + Math.cos(a) * r).toFixed(1)} ${(80 + Math.sin(a) * ry(r)).toFixed(1)}`
+      lajes.push(`M${p(rx0, a0)}L${p(rx1, a0 + 0.01)}L${p(rx1, a1)}L${p(rx0, a1 - 0.01)}Z`)
+    }
+  }
+  return (
+    <svg viewBox="0 0 680 200" preserveAspectRatio="none" className={className}>
+      <defs>
+        <radialGradient id="poco-patio" cx="0.5" cy="0.4" r="0.55">
+          <stop offset="0" stopColor="#3b3838" />
+          <stop offset="0.55" stopColor="#262323" />
+          <stop offset="1" stopColor="#141212" stopOpacity="0" />
+        </radialGradient>
+        <radialGradient id="poco-patio-luz" cx="0.5" cy="0.35" r="0.5">
+          <stop offset="0" stopColor="#dcdad6" stopOpacity="0.16" />
+          <stop offset="1" stopColor="#dcdad6" stopOpacity="0" />
+        </radialGradient>
+      </defs>
+      <ellipse cx="340" cy="80" rx="345" ry="100" fill="url(#poco-patio)" />
+      {lajes.map((d, i) => (
+        <path key={i} d={d} fill={i % 5 === 0 ? '#2b2828' : i % 3 === 0 ? '#353232' : '#302d2d'} stroke="#121010" strokeWidth="2.4" opacity={0.92 - (i % 4) * 0.08} />
+      ))}
+      {/* rachaduras e musgo seco */}
+      <path d="M210 92l18 6 6 12 14 3M470 70l-14 9-4 13M300 128l12-4 9 7" stroke="#0d0c0c" strokeWidth="1.4" fill="none" />
+      {[
+        [196, 104],
+        [492, 96],
+        [410, 132],
+        [262, 64],
+      ].map(([x, y], i) => (
+        <ellipse key={i} cx={x} cy={y} rx={10 + i * 2} ry="3" fill="#3a3d33" opacity="0.45" />
+      ))}
+      <ellipse cx="340" cy="78" rx="230" ry="62" fill="url(#poco-patio-luz)" />
+    </svg>
+  )
+}
+
+/** Estela dos 500 anos: lápide de pedra gasta, lascada no alto, com a inscrição meio apagada. */
+function Estela({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 60 120" className={className}>
+      <defs>
+        <linearGradient id="poco-estela" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0" stopColor="#2a2727" />
+          <stop offset="0.45" stopColor="#474343" />
+          <stop offset="1" stopColor="#1c1a1a" />
+        </linearGradient>
+      </defs>
+      <ellipse cx="30" cy="116" rx="30" ry="4" fill="#000" opacity="0.55" />
+      <path d="M6 116V30C6 14 16 6 30 6c9 0 15 3 19 8l-4 5 6 2c2 3 3 6 3 9v86Z" fill="url(#poco-estela)" stroke="#121010" strokeWidth="1.2" />
+      <path d="M10 112V32C10 19 18 11 30 11" fill="none" stroke="#6b6767" strokeWidth="0.7" opacity="0.5" />
+      {/* inscrição: numeral grande e linhas gastas */}
+      <text x="30" y="46" textAnchor="middle" fontFamily="Georgia, serif" fontSize="17" fill="#121010" letterSpacing="1">D</text>
+      <text x="30" y="45.4" textAnchor="middle" fontFamily="Georgia, serif" fontSize="17" fill="#8a8686" opacity="0.55" letterSpacing="1">D</text>
+      <text x="30" y="57" textAnchor="middle" fontFamily="Georgia, serif" fontSize="6.2" fill="#8a8686" opacity="0.5" letterSpacing="1.2">ANNI</text>
+      {[66, 73, 80, 87].map((y, i) => (
+        <path key={y} d={`M${15 + (i % 2) * 2} ${y}h${26 - (i % 3) * 5}`} stroke="#121010" strokeWidth="1.6" opacity={0.75 - i * 0.12} strokeDasharray={i === 2 ? '4 2 7 3' : undefined} />
+      ))}
+      <path d="M40 22l-6 14 3 9-5 11M14 92l8 6 2 9" stroke="#0e0c0c" strokeWidth="1" fill="none" />
+      <ellipse cx="14" cy="112" rx="9" ry="3" fill="#3a3d33" opacity="0.5" />
+    </svg>
+  )
+}
+
+/** Inscrição circular na borda de pedra, quase apagada (lida pela metade — o resto o tempo comeu). */
+function Inscricao({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 248 40" className={className}>
+      <defs>
+        <path id="poco-inscr" d="M8 8Q124 40 240 8" />
+      </defs>
+      <text fontFamily="Georgia, serif" fontSize="8.6" letterSpacing="2.2" fill="#0c0b0b" opacity="0.8">
+        <textPath href="#poco-inscr" startOffset="50%" textAnchor="middle">
+          · O QUE CAI NÃO VOLTA · NÃO DESÇA ·
+        </textPath>
+      </text>
+      <text fontFamily="Georgia, serif" fontSize="8.6" letterSpacing="2.2" fill="#b4b0aa" opacity="0.32" transform="translate(0 -0.7)">
+        <textPath href="#poco-inscr" startOffset="50%" textAnchor="middle">
+          · O QUE CAI NÃO VOLTA · NÃO DESÇA ·
+        </textPath>
+      </text>
+    </svg>
+  )
+}
+
+/** Oferendas no chão, à frente da base: três velas (chama viva), uma rosa vinho caída e moedas esquecidas. */
+function Oferendas({ className, apagado }: { className?: string; apagado: boolean }) {
+  const velas = [
+    { x: 92, h: 30, w: 9 },
+    { x: 106, h: 20, w: 8 },
+    { x: 382, h: 26, w: 9 },
+  ]
+  const moedas = [
+    [150, 44],
+    [168, 52],
+    [304, 50],
+    [330, 42],
+    [262, 58],
+  ]
+  return (
+    <svg viewBox="0 0 480 100" preserveAspectRatio="xMidYMin meet" className={className}>
+      <defs>
+        <radialGradient id="poco-vela-luz" cx="0.5" cy="0.5" r="0.5">
+          <stop offset="0" stopColor="#e8d3b0" stopOpacity="0.4" />
+          <stop offset="0.4" stopColor="#b08a62" stopOpacity="0.14" />
+          <stop offset="1" stopColor="#b08a62" stopOpacity="0" />
+        </radialGradient>
+        <linearGradient id="poco-cera" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0" stopColor="#8f8a82" />
+          <stop offset="0.5" stopColor="#d6d1c8" />
+          <stop offset="1" stopColor="#77726a" />
+        </linearGradient>
+        <radialGradient id="poco-moeda-chao" cx="0.35" cy="0.3" r="0.8">
+          <stop offset="0" stopColor="#ece5d8" />
+          <stop offset="0.5" stopColor="#9a9080" />
+          <stop offset="1" stopColor="#3e3a33" />
+        </radialGradient>
+      </defs>
+      {/* velas */}
+      {velas.map((v, i) => {
+        const topo = 70 - v.h
+        return (
+          <g key={i}>
+            {!apagado && <circle cx={v.x + v.w / 2} cy={topo - 6} r="34" fill="url(#poco-vela-luz)" className="poco-vela-luz" style={{ animationDelay: `${i * 0.7}s` } as CSSProperties} />}
+            <ellipse cx={v.x + v.w / 2} cy="71" rx={v.w * 0.9} ry="2.4" fill="#000" opacity="0.6" />
+            <path d={`M${v.x} 71V${topo + 2}q${v.w / 2} -3 ${v.w} 0V71Z`} fill="url(#poco-cera)" />
+            {/* cera escorrida */}
+            <path d={`M${v.x + 1} ${topo + 2}q1 6 0 ${8 + i * 3}`} stroke="#e4e0d8" strokeWidth="1.4" fill="none" opacity="0.7" />
+            <path d={`M${v.x + v.w / 2} ${topo}v-3`} stroke="#141212" strokeWidth="0.9" />
+            {!apagado && (
+              <g className="dv-flame" style={{ transformOrigin: `${v.x + v.w / 2}px ${topo - 3}px`, animationDelay: `${i * 0.5}s` } as CSSProperties}>
+                <path d={`M${v.x + v.w / 2} ${topo - 14}q4 6 0 11q-4 -5 0 -11Z`} fill="#f1e2c4" opacity="0.95" />
+                <path d={`M${v.x + v.w / 2} ${topo - 9}q1.8 3 0 5.6q-1.8 -2.6 0 -5.6Z`} fill="#fff8ea" />
+              </g>
+            )}
+          </g>
+        )
+      })}
+      {/* rosa vinho caída (como na referência da paleta), haste com folhas secas */}
+      <g transform="translate(206 52) rotate(-8)">
+        <path d="M-2 10C10 14 34 16 58 12" stroke="#2b3027" strokeWidth="2" fill="none" />
+        <path d="M22 13q5 -8 12 -6q-4 7 -12 6Z" fill="#30352b" />
+        <path d="M40 13q3 6 10 6q-2 -7 -10 -6Z" fill="#2b2f26" />
+        <circle cx="-6" cy="6" r="9.5" fill="#3f1117" />
+        <path d="M-14 4q4 -9 12 -7q6 2 6 9q-6 -6 -12 -3Z" fill="#5a1d26" />
+        <path d="M-10 9q4 -6 9 -4q3 2 2 6q-5 -4 -11 -2Z" fill="#7d3a44" />
+        <path d="M-5 4q2 -2 4 0" stroke="#280e11" strokeWidth="1" fill="none" />
+        <path d="M-12 1q2 -3 5 -3" stroke="#a46670" strokeWidth="0.7" fill="none" opacity="0.6" />
+      </g>
+      {/* moedas esquecidas, com um brilho que vem e vai */}
+      {moedas.map(([x, y], i) => (
+        <g key={i}>
+          <ellipse cx={x} cy={y + 1.4} rx="6" ry="2" fill="#000" opacity="0.5" />
+          <ellipse cx={x} cy={y} rx="5.6" ry="2.4" fill="url(#poco-moeda-chao)" />
+          {i % 2 === 0 && !apagado && <path className="poco-cintila" d={`M${x - 1} ${y - 4}l1 3 3 1 -3 1 -1 3 -1 -3 -3 -1 3 -1z`} fill="#fbf6ec" style={{ animationDelay: `${i * 1.3}s` } as CSSProperties} />}
+        </g>
+      ))}
+    </svg>
   )
 }
 
@@ -258,9 +525,9 @@ function Figura({ estado, base }: { estado: 'oculta' | 'visivel' | 'partindo'; b
           <stop offset="1" stopColor="#0c0c0f" stopOpacity="0" />
         </linearGradient>
         <linearGradient id="poco-manto-luz" x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0" stopColor="#6f6b82" stopOpacity="0" />
-          <stop offset="0.85" stopColor="#6f6b82" stopOpacity="0" />
-          <stop offset="1" stopColor="#b7b3c9" stopOpacity="0.35" />
+          <stop offset="0" stopColor="#7c7a78" stopOpacity="0" />
+          <stop offset="0.85" stopColor="#7c7a78" stopOpacity="0" />
+          <stop offset="1" stopColor="#c4c2bf" stopOpacity="0.35" />
         </linearGradient>
       </defs>
       {/* capuz pontudo, ombros estreitos, manto longo até o chão */}
@@ -293,7 +560,7 @@ export function DracmaIcon({ raridade = 'comum', className }: { raridade?: strin
         return <path key={i} d={`M${16 + Math.cos(a) * 11.6} ${16 + Math.sin(a) * 11.6}L${16 + Math.cos(a) * 13.2} ${16 + Math.sin(a) * 13.2}`} stroke="#0c0c0e" strokeWidth="0.6" opacity="0.5" />
       })}
       {gem ? (
-        <path d="M16 10.5L20 16L16 21.5L12 16Z" fill="#8a7cc8" stroke="#463d78" strokeWidth="0.8" />
+        <path d="M16 10.5L20 16L16 21.5L12 16Z" fill="#8f86b4" stroke="#4d4668" strokeWidth="0.8" />
       ) : (
         <path d="M16 9.5l1.6 4.9 4.9 1.6-4.9 1.6-1.6 4.9-1.6-4.9-4.9-1.6 4.9-1.6z" fill="#0c0c0e" opacity={raridade === 'incomum' ? 0.75 : 0.55} />
       )}

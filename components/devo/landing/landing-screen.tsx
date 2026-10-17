@@ -96,7 +96,7 @@ export function LandingScreen({
         aria-hidden="true"
         className="pointer-events-none absolute inset-0"
         style={{
-          background: `radial-gradient(${Math.round((focus?.size ?? 0.84) * 38)}vmin ${Math.round((focus?.size ?? 0.84) * 30)}vmin at ${((focus?.x ?? 0.5) * 100).toFixed(1)}% ${((focus?.y ?? 0.25) * 100).toFixed(1)}%, rgba(111,107,130,0.16), transparent 70%)`,
+          background: `radial-gradient(${Math.round((focus?.size ?? 0.84) * 38)}vmin ${Math.round((focus?.size ?? 0.84) * 30)}vmin at ${((focus?.x ?? 0.5) * 100).toFixed(1)}% ${((focus?.y ?? 0.25) * 100).toFixed(1)}%, rgb(var(--dv-violet-rgb) / 0.16), transparent 70%)`,
         }}
       />
       <ScreenFrame tone="gold" className={cn('transition-opacity duration-[360ms]', veiled && 'opacity-0')} />

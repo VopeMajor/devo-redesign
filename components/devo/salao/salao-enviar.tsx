@@ -99,7 +99,7 @@ export function EnviarCartaSheet({ open, onClose, modo, dados }: { open: boolean
     >
       {feito ? (
         <div className="flex flex-col items-center gap-3 py-6 text-center" role="status">
-          <span aria-hidden="true" className="size-3 rotate-45 bg-dv-amethyst shadow-[0_0_12px_rgba(138,124,200,0.9)]" />
+          <span aria-hidden="true" className="size-3 rotate-45 bg-dv-amethyst shadow-[0_0_12px_rgb(var(--dv-amethyst-rgb)/0.9)]" />
           <p className="font-display text-[18px] font-semibold uppercase tracking-[0.12em] text-dv-text">{feito}</p>
           <p className="max-w-xs font-body text-[15px] leading-relaxed text-dv-text-2">
             {modo === 'bandeja' ? 'Na Bandeja, em avaliação de especialista. Acompanhe na aba Bandeja do Salão.' : 'À venda no Mercado do Salão.'}
@@ -128,7 +128,7 @@ export function EnviarCartaSheet({ open, onClose, modo, dados }: { open: boolean
                       }}
                       className={cn(
                         'dv-focus relative block w-full transition-transform duration-200 enabled:active:scale-[0.97]',
-                        sel && '-translate-y-1 [filter:drop-shadow(0_0_10px_rgba(138,124,200,0.85))]',
+                        sel && '-translate-y-1 [filter:drop-shadow(0_0_10px_rgb(var(--dv-amethyst-rgb)/0.85))]',
                         !ok && 'cursor-not-allowed',
                       )}
                     >
@@ -141,7 +141,7 @@ export function EnviarCartaSheet({ open, onClose, modo, dados }: { open: boolean
                       {sel && (
                         <span
                           aria-hidden="true"
-                          className="dv-cut absolute inset-0 shadow-[inset_0_0_0_2px_#c2b9ec]"
+                          className="dv-cut absolute inset-0 shadow-[inset_0_0_0_2px_var(--dv-amethyst-text)]"
                           style={{ '--dv-cut': '8px' } as CSSProperties}
                         />
                       )}

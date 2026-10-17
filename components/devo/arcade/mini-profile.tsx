@@ -12,10 +12,10 @@ import { useCatalogo, useVisual } from '../cosmeticos/use-cosmeticos'
 
 export const BORDER_META: Record<BorderTier, { label: string; color: string; glow: string }> = {
   padrao: { label: 'Borda Padrão', color: '#58585e', glow: 'transparent' },
-  azul: { label: 'Borda Azul · Top 10', color: '#c2b9ec', glow: '#c2b9ec66' },
+  azul: { label: 'Borda Azul · Top 10', color: 'var(--dv-amethyst-text)', glow: '#cbc6dc66' },
   prata: { label: 'Borda Prata · Top 3', color: '#d9d8d4', glow: '#d9d8d455' },
   ouro: { label: 'Borda Ouro · #1 da semana', color: '#ece5d8', glow: '#bab09f77' },
-  dealer: { label: 'Borda Dealer', color: '#c2b9ec', glow: '#c2b9ec66' },
+  dealer: { label: 'Borda Dealer', color: 'var(--dv-amethyst-text)', glow: '#cbc6dc66' },
 }
 
 // O servidor nunca envia 'owner' aqui (publicCargo em lib/devo/cargos.ts).
@@ -114,7 +114,7 @@ function ProfileBody({ data, tier }: { data: MiniProfile; tier: (typeof BORDER_M
           // biome-ignore lint/performance/noImgElement: avatar privado servido pela API
           <img src={src} alt="" aria-hidden="true" className="absolute inset-0 size-full scale-110 object-cover object-[50%_20%] opacity-30 blur-[2px]" />
         )}
-        <span aria-hidden="true" className="absolute inset-0 bg-[radial-gradient(70%_70%_at_50%_45%,rgba(236,229,216,0.12),rgba(12,12,14,0.85)_75%)]" />
+        <span aria-hidden="true" className="absolute inset-0 bg-[radial-gradient(70%_70%_at_50%_45%,rgba(236,229,216,0.12),rgb(var(--dv-ink-rgb)/0.85)_75%)]" />
         <FotoMoldurada formato="mini" src={src} moldura={mini} largura={168} alt={`Foto de ${data.name}`} className="relative" />
         <span aria-hidden="true" className="absolute inset-x-0 bottom-0 h-1/4 bg-gradient-to-t from-dv-ink to-transparent sm:inset-y-0 sm:left-auto sm:right-0 sm:h-auto sm:w-1/4 sm:bg-gradient-to-r sm:from-transparent sm:to-dv-ink" />
       </div>
@@ -148,7 +148,7 @@ function ProfileBody({ data, tier }: { data: MiniProfile; tier: (typeof BORDER_M
             )}
           </Cell>
           <Cell label="Deadly Votes" className="border-l border-white/10" sub={`S ${data.deadlyVotes.survived} · E ${data.deadlyVotes.eliminated}`}>
-            <span className="text-[#c2b9ec]">{String(data.deadlyVotes.total).padStart(2, '0')}</span>
+            <span className="text-dv-amethyst-text">{String(data.deadlyVotes.total).padStart(2, '0')}</span>
           </Cell>
           <Cell label="Vitórias" className="border-l border-white/10" sub={`${data.week.games} partidas`}>
             <span className="text-white">{String(data.week.wins).padStart(2, '0')}</span>
@@ -205,11 +205,11 @@ export function AvatarRing({ profile, size = 48 }: { profile: MiniProfile; size?
       style={{
         width: size,
         height: size,
-        background: profile.border === 'padrao' ? tier.color : `conic-gradient(from 210deg, ${tier.color}, #0c0c0e 30%, ${tier.color} 55%, #0c0c0e 80%, ${tier.color})`,
+        background: profile.border === 'padrao' ? tier.color: `conic-gradient(from 210deg, ${tier.color}, var(--dv-ink) 30%, ${tier.color} 55%, var(--dv-ink) 80%, ${tier.color})`,
         boxShadow: `0 0 18px ${tier.glow}`,
       }}
     >
-      <span className="relative grid size-full place-items-center overflow-hidden rounded-full border-2 border-[#0c0c0e] bg-dv-ink-2">
+      <span className="relative grid size-full place-items-center overflow-hidden rounded-full border-2 border-dv-ink bg-dv-ink-2">
         {src ? (
           // biome-ignore lint/performance/noImgElement: avatar privado servido pela API
           <img src={src} alt="" className="size-full object-cover" />

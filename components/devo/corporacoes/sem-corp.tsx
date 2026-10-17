@@ -77,7 +77,7 @@ function EntradaCodigo({ agir, bloqueado }: { agir: Agir; bloqueado: boolean }) 
           aria-invalid={!!erro}
           className={cn(
             'h-14 w-full bg-black/55 px-4 text-center font-mono text-[22px] uppercase tracking-[0.18em] text-dv-text outline-none placeholder:text-dv-text-3/70 disabled:opacity-50',
-            erro ? 'shadow-[inset_0_0_0_1px_var(--dv-blood)]' : 'shadow-[inset_0_0_0_1px_rgba(186,176,159,0.55)] focus:shadow-[inset_0_0_0_1px_#c2b9ec,0_0_18px_rgba(138,124,200,0.25)]',
+            erro ? 'shadow-[inset_0_0_0_1px_var(--dv-blood)]' : 'shadow-[inset_0_0_0_1px_rgba(186,176,159,0.55)] focus:shadow-[inset_0_0_0_1px_var(--dv-amethyst-text),0_0_18px_rgb(var(--dv-amethyst-rgb)/0.25)]',
           )}
         />
         {erro && <Erro>{erro}</Erro>}

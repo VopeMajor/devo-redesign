@@ -96,8 +96,7 @@ export function HudRule({
           <span
             className="absolute inset-x-0 bottom-0 h-full opacity-60"
             style={{
-              background:
-                'repeating-linear-gradient(90deg, currentColor 0 1px, transparent 1px 6px) bottom/100% 3px no-repeat, repeating-linear-gradient(90deg, currentColor 0 1px, transparent 1px 30px) bottom/100% 7px no-repeat',
+              background: 'repeating-linear-gradient(90deg, currentColor 0 1px, transparent 1px 6px) bottom/100% 3px no-repeat, repeating-linear-gradient(90deg, currentColor 0 1px, transparent 1px 30px) bottom/100% 7px no-repeat',
             }}
           />
         )}

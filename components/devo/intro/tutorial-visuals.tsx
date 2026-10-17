@@ -23,7 +23,7 @@ function TapMark({ className }: { className?: string }) {
   return (
     <span aria-hidden="true" className={cn('pointer-events-none absolute z-20 size-8', className)}>
       <span className="en-ping absolute inset-0 rounded-full border border-dv-gold-bright/80" />
-      <span className="absolute inset-[5px] rounded-full border border-dv-porcelain/35 bg-[radial-gradient(circle,rgba(12,12,14,0.55),rgba(12,12,14,0.15)_70%)] shadow-[0_0_10px_rgba(0,0,0,0.6)]" />
+      <span className="absolute inset-[5px] rounded-full border border-dv-porcelain/35 bg-[radial-gradient(circle,rgb(var(--dv-ink-rgb)/0.55),rgb(var(--dv-ink-rgb)/0.15)_70%)] shadow-[0_0_10px_rgba(0,0,0,0.6)]" />
       <svg viewBox="0 0 24 24" className="en-tap absolute inset-[7px] text-dv-porcelain drop-shadow-[0_0_4px_rgba(241,240,238,0.7)]" fill="currentColor">
         <path d="M12 2 L13.6 10.4 L22 12 L13.6 13.6 L12 22 L10.4 13.6 L2 12 L10.4 10.4 Z" />
       </svg>
@@ -230,15 +230,15 @@ function RoomsVisual() {
               className={cn(
                 'relative flex h-24 w-20 flex-col items-center justify-between px-2 pb-2 pt-3 [clip-path:polygon(0_22%,50%_0,100%_22%,100%_100%,0_100%)]',
                 chosen
-                  ? 'bg-[linear-gradient(180deg,#fbfaf8,#e9e8e5_55%,#cfccc6)] shadow-[0_0_24px_-6px_rgba(138,124,200,0.7)]'
+                  ? 'bg-[linear-gradient(180deg,#fbfaf8,#e9e8e5_55%,#cfccc6)] shadow-[0_0_24px_-6px_rgb(var(--dv-amethyst-rgb)/0.7)]'
                   : free
                     ? 'bg-[linear-gradient(180deg,var(--dv-ink-4),var(--dv-ink-2))]'
                     : 'bg-dv-ink-2 opacity-50',
               )}
             >
-              <span className={cn('mt-2 font-impact text-[22px] leading-none', chosen ? 'text-[#0c0c0e]' : free ? 'text-dv-text' : 'text-dv-text-3')}>{toRoman(i + 1)}</span>
+              <span className={cn('mt-2 font-impact text-[22px] leading-none', chosen ? 'text-dv-ink' : free ? 'text-dv-text' : 'text-dv-text-3')}>{toRoman(i + 1)}</span>
               {free ? <span className={cn('size-1.5 rotate-45', chosen ? 'bg-dv-amethyst' : 'bg-dv-text-2')} aria-hidden="true" /> : <GlyphKeyhole className="size-4 text-dv-text-3" />}
-              <span className={cn('dv-label text-[10px] tracking-[0.12em]', chosen ? 'text-[#0c0c0e]' : free ? 'text-dv-text-2' : 'text-dv-text-3')}>{chosen ? 'Entrar' : status}</span>
+              <span className={cn('dv-label text-[10px] tracking-[0.12em]', chosen ? 'text-dv-ink' : free ? 'text-dv-text-2' : 'text-dv-text-3')}>{chosen ? 'Entrar' : status}</span>
             </div>
           )
         })}
@@ -363,7 +363,7 @@ const CHAT = [
 function Avatar({ me }: { me: boolean }) {
   return (
     <span
-      className={cn('dv-cut grid size-7 shrink-0 place-items-center font-mono text-[10px]', me ? 'bg-dv-porcelain text-[#0c0c0e]' : 'bg-dv-ink-4 text-dv-gold-bright')}
+      className={cn('dv-cut grid size-7 shrink-0 place-items-center font-mono text-[10px]', me ? 'bg-dv-porcelain text-dv-ink' : 'bg-dv-ink-4 text-dv-gold-bright')}
       style={{ '--dv-cut': '6px' } as CSSProperties}
       aria-hidden="true"
     >
@@ -384,7 +384,7 @@ function ChatVisual() {
       {CHAT.map((m, i) => (
         <div key={i} className={cn('animate-dv-rise flex items-end gap-2', m.me && 'flex-row-reverse')} style={{ animationDelay: `${i * 420}ms` }}>
           <Avatar me={m.me} />
-          <p className={cn('dv-cut-diag max-w-[78%] px-3 py-1.5 font-sans text-[13px]', m.me ? 'bg-dv-porcelain text-[#0c0c0e]' : 'bg-dv-ink-3 text-dv-text')} style={{ '--dv-cut': '8px' } as CSSProperties}>
+          <p className={cn('dv-cut-diag max-w-[78%] px-3 py-1.5 font-sans text-[13px]', m.me ? 'bg-dv-porcelain text-dv-ink' : 'bg-dv-ink-3 text-dv-text')} style={{ '--dv-cut': '8px' } as CSSProperties}>
             {m.text}
           </p>
         </div>
@@ -408,12 +408,12 @@ function Seal({ who, lit, delay }: { who: string; lit: boolean; delay: number })
       <span
         className={cn(
           'relative grid size-20 place-items-center rounded-full border-2 transition-all duration-500',
-          lit ? 'border-dv-gold-bright bg-[radial-gradient(circle_at_35%_30%,#fbfaf8,#e9e8e5_45%,#bab09f)] shadow-[0_0_26px_-6px_rgba(138,124,200,0.75)]' : 'border-dv-line-strong bg-dv-ink-3',
+          lit ? 'border-dv-gold-bright bg-[radial-gradient(circle_at_35%_30%,#fbfaf8,#e9e8e5_45%,#bab09f)] shadow-[0_0_26px_-6px_rgb(var(--dv-amethyst-rgb)/0.75)]' : 'border-dv-line-strong bg-dv-ink-3',
         )}
         style={{ transitionDelay: `${delay}ms` }}
       >
         <span className={cn('absolute inset-1.5 rounded-full border border-dashed', lit ? 'border-black/25' : 'border-white/25')} aria-hidden="true" />
-        <GlyphCheck className={cn('size-8 transition-opacity duration-500', lit ? 'text-[#0c0c0e] opacity-100' : 'opacity-20')} style={{ transitionDelay: `${delay}ms` }} />
+        <GlyphCheck className={cn('size-8 transition-opacity duration-500', lit ? 'text-dv-ink opacity-100' : 'opacity-20')} style={{ transitionDelay: `${delay}ms` }} />
       </span>
       <span className="dv-label text-[10px] text-dv-text-2">{who}</span>
     </div>
@@ -478,8 +478,8 @@ function RevealVisual() {
       </div>
       {/* KABUM: porcelana com contorno negro e um corte rubi curto (o único vermelho: a troca não volta). */}
       <span aria-hidden="true" className="en-kabum absolute top-14 isolate">
-        <span className="en-kabum-cut absolute left-[8%] top-[58%] -z-10 h-[11px] w-[62%] bg-dv-blood shadow-[0_0_14px_rgba(163,18,31,0.7)]" />
-        <span className="block font-impact text-[56px] font-bold uppercase leading-none tracking-[0.02em] text-dv-porcelain [-webkit-text-stroke:2px_#0c0c0e] [paint-order:stroke_fill] [text-shadow:4px_4px_0_#0c0c0e]">Kabum!</span>
+        <span className="en-kabum-cut absolute left-[8%] top-[58%] -z-10 h-[11px] w-[62%] bg-dv-blood shadow-[0_0_14px_rgb(var(--dv-blood-rgb)/0.7)]" />
+        <span className="block font-impact text-[56px] font-bold uppercase leading-none tracking-[0.02em] text-dv-porcelain [-webkit-text-stroke:2px_var(--dv-ink)] [paint-order:stroke_fill] [text-shadow:4px_4px_0_var(--dv-ink)]">Kabum!</span>
       </span>
       <Caption>Sem devoluções</Caption>
     </div>

@@ -293,8 +293,7 @@ function QuietRoom({ alert }: { alert: boolean }) {
       <span
         className="absolute inset-x-[-60%] bottom-[-6%] h-[52%] origin-bottom [transform:perspective(560px)_rotateX(64deg)]"
         style={{
-          backgroundImage:
-            'linear-gradient(90deg, rgba(186,176,159,0.16) 1px, transparent 1px), linear-gradient(0deg, rgba(186,176,159,0.16) 1px, transparent 1px), conic-gradient(#26262a 25%, #0d0d0f 0 50%, #26262a 0 75%, #0d0d0f 0)',
+          backgroundImage: 'linear-gradient(90deg, rgba(186,176,159,0.16) 1px, transparent 1px), linear-gradient(0deg, rgba(186,176,159,0.16) 1px, transparent 1px), conic-gradient(#26262a 25%, var(--dv-ink) 0 50%, #26262a 0 75%, var(--dv-ink) 0)',
           backgroundSize: '96px 96px, 96px 96px, 192px 192px',
           backgroundPosition: 'center bottom',
           maskImage: 'linear-gradient(0deg, #000 0%, rgba(0,0,0,0.55) 45%, transparent 92%)',
@@ -302,8 +301,8 @@ function QuietRoom({ alert }: { alert: boolean }) {
         }}
       />
       <span className="absolute inset-0 bg-[radial-gradient(85%_40%_at_50%_0%,rgba(236,229,216,0.07),transparent_70%)]" />
-      <span className="absolute inset-0 bg-[radial-gradient(120%_70%_at_50%_45%,transparent_40%,rgba(12,12,14,0.85)_100%)]" />
-      {alert && <span className="absolute inset-x-0 bottom-0 h-1/3 bg-[radial-gradient(60%_80%_at_50%_100%,rgba(163,18,31,0.2),transparent_70%)]" />}
+      <span className="absolute inset-0 bg-[radial-gradient(120%_70%_at_50%_45%,transparent_40%,rgb(var(--dv-ink-rgb)/0.85)_100%)]" />
+      {alert && <span className="absolute inset-x-0 bottom-0 h-1/3 bg-[radial-gradient(60%_80%_at_50%_100%,rgb(var(--dv-blood-rgb)/0.2),transparent_70%)]" />}
     </div>
   )
 }

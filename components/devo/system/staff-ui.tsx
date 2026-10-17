@@ -75,7 +75,7 @@ export function DeskNav<T extends string>({ items, value, onChange, label }: { i
                 }}
                 className={cn(
                   'dv-focus dv-cut-diag inline-flex min-h-11 items-center gap-2 px-3.5 font-mono text-[10.5px] uppercase tracking-[0.14em] transition-colors',
-                  on ? 'bg-[#1c1c1f] text-white shadow-[inset_0_0_0_1px_rgba(186,176,159,0.45)]' : 'text-in-fg-2 shadow-[inset_0_0_0_1px_var(--in-line-strong)] hover:text-in-fg',
+                  on ? 'bg-dv-block text-white shadow-[inset_0_0_0_1px_rgba(186,176,159,0.45)]' : 'text-in-fg-2 shadow-[inset_0_0_0_1px_var(--in-line-strong)] hover:text-in-fg',
                 )}
                 style={{ '--dv-cut': '7px' } as CSSProperties}
               >

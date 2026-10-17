@@ -54,17 +54,21 @@ export function PocoResultadoView({ r, nome, onFechar }: { r: PocoResultado; nom
 
   return (
     <div role="dialog" aria-modal="true" aria-label={`Resultado do balde: ${nomeItem}`} className="absolute inset-0 z-40 overflow-hidden">
-      <div className={cn('absolute inset-0 transition-colors duration-500', tier >= 3 ? 'bg-[#09080e]/90' : 'bg-[#0c0c0e]/86')} />
+      <div className={cn('absolute inset-0 transition-colors duration-500', tier >= 3 ? 'bg-dv-ink/92' : 'bg-dv-ink/86')} />
+      {/* fundo vinho que sobe do poço: mais forte quanto mais raro */}
+      <div className="absolute inset-x-0 bottom-0 h-2/3 bg-[radial-gradient(80%_70%_at_50%_100%,rgb(var(--dv-wine-rgb)/0.7),transparent_75%)]" style={{ opacity: tier === 0 ? 0.35 : 0.55 + tier * 0.1 } as CSSProperties} />
+      {/* véu de luz que sobe da água quando o balde se abre */}
+      {etapa === 'abrindo' && <span aria-hidden="true" className="poco-veu pointer-events-none absolute bottom-[30%] left-1/2 h-[60%] w-[46%] -translate-x-1/2 bg-[radial-gradient(50%_60%_at_50%_100%,rgba(236,235,233,0.4),rgba(172,172,172,0.1)_55%,transparent_75%)]" />}
 
       {etapa === 'abrindo' ? (
         <div className="absolute inset-0 flex flex-col items-center justify-center">
           {tier > 0 && (
-            <img src={`${ART}/raios-${raios}.webp`} alt="" draggable={false} className="poco-raios-in pointer-events-none absolute left-1/2 top-[40%] w-[165%] max-w-none" style={{ animationDuration: `${DUR[tier]}ms` } as CSSProperties} />
+            <img src={`${ART}/raios-${raios}.webp`} alt="" draggable={false} className="poco-raios-in poco-raro-tom pointer-events-none absolute left-1/2 top-[40%] w-[165%] max-w-none" style={{ animationDuration: `${DUR[tier]}ms` } as CSSProperties} />
           )}
-          {tier >= 4 && <img src={`${ART}/raios-ame.webp`} alt="" draggable={false} className="poco-raios-in-rev pointer-events-none absolute left-1/2 top-[40%] w-[125%] max-w-none" />}
+          {tier >= 4 && <img src={`${ART}/raios-ame.webp`} alt="" draggable={false} className="poco-raios-in-rev poco-raro-tom pointer-events-none absolute left-1/2 top-[40%] w-[125%] max-w-none" />}
           {/* aro de raridade: runas, joias e brasão crescem com o nível */}
           {tier > 0 && (
-            <img src={`${ART}/aro-${tier}.webp`} alt="" draggable={false} className="poco-aro-in pointer-events-none absolute left-1/2 top-[40%] w-[78%] max-w-[320px]" style={{ animationDuration: `${DUR[tier]}ms` } as CSSProperties} />
+            <img src={`${ART}/aro-${tier}.webp`} alt="" draggable={false} className="poco-aro-in poco-raro-tom pointer-events-none absolute left-1/2 top-[40%] w-[78%] max-w-[320px]" style={{ animationDuration: `${DUR[tier]}ms` } as CSSProperties} />
           )}
           {/* o prêmio emerge da água: sombra que se dissolve sobre a arte real */}
           <div className="absolute left-1/2 top-[40%] size-44 -translate-x-1/2 -translate-y-1/2">
@@ -93,7 +97,7 @@ export function PocoResultadoView({ r, nome, onFechar }: { r: PocoResultado; nom
         </div>
       ) : (
         <div className="devo-scroll absolute inset-0 flex flex-col items-center overflow-y-auto px-4 pb-5 pt-4">
-          {tier >= 2 && <img src={`${ART}/raios-${raios}.webp`} alt="" draggable={false} className="poco-raios-lento pointer-events-none absolute left-1/2 top-[27%] w-[118%] max-w-none opacity-60" />}
+          {tier >= 2 && <img src={`${ART}/raios-${raios}.webp`} alt="" draggable={false} className="poco-raios-lento poco-raro-tom pointer-events-none absolute left-1/2 top-[27%] w-[118%] max-w-none opacity-60" />}
           <MolduraResultado raridade={r.item?.raridade} lixo={tier === 0} className="poco-reveal mt-auto w-full max-w-[360px]">
             <div className={cn('flex flex-col items-center px-6 text-center', tier === 0 ? 'pb-5 pt-5' : 'pb-7 pt-12')}>
               <div className={cn('relative grid place-items-center', tier === 0 ? 'size-28' : 'size-40')}>
@@ -154,10 +158,10 @@ function SeloRaridade({ raridade, provisorio }: { raridade: ItemRarity; provisor
   const t = TIER[raridade]
   return (
     <p className="mt-2.5 flex items-center gap-2">
-      <span className="flex items-center gap-1.5 border border-dv-line-strong bg-[#0c0c0e] py-1 pl-1.5 pr-2.5">
+      <span className="flex items-center gap-1.5 border border-dv-line-strong bg-dv-ink py-1 pl-1.5 pr-2.5">
         <span className="flex gap-0.5" aria-hidden="true">
           {Array.from({ length: 4 }, (_, i) => (
-            <span key={i} className={cn('size-2 rotate-45', i < t ? (t >= 3 ? 'bg-dv-amethyst shadow-[0_0_6px_rgba(138,124,200,0.9)]' : 'bg-dv-gold') : 'border border-dv-line-strong')} />
+            <span key={i} className={cn('size-2 rotate-45', i < t ? (t >= 3 ? 'bg-dv-amethyst shadow-[0_0_6px_rgb(var(--dv-amethyst-rgb)/0.9)]' : 'bg-dv-gold') : 'border border-dv-line-strong')} />
           ))}
         </span>
         <span className={cn('dv-label text-[10.5px]', t >= 3 ? 'text-dv-amethyst-text' : 'text-dv-text-2')}>{ITEM_RARITY_LABEL[raridade]}</span>
@@ -176,7 +180,7 @@ export function PremioArte({ r, nome, silhueta = false }: { r: PocoResultado; no
   const src = r.categoria === 'capsula' ? 'capsula' : r.categoria === 'essencia' ? 'essencia' : 'fragmento'
   return (
     <>
-      {!silhueta && <span aria-hidden="true" className="poco-halo absolute inset-[-12%] bg-[radial-gradient(50%_50%_at_50%_50%,rgba(138,124,200,0.5),rgba(138,124,200,0.08)_60%,transparent_72%)]" />}
+      {!silhueta && <span aria-hidden="true" className="poco-halo absolute inset-[-12%] bg-[radial-gradient(50%_50%_at_50%_50%,rgb(var(--dv-amethyst-rgb)/0.5),rgb(var(--dv-amethyst-rgb)/0.08)_60%,transparent_72%)]" />}
       <img src={`${ART}/${src}.webp`} alt="" draggable={false} className={cls} />
     </>
   )
@@ -204,7 +208,7 @@ function Cosmetico({ r, nome, silhueta }: { r: PocoResultado; nome: string; silh
     if (cat === 'emblema')
       return (
         <div className={cn('relative grid size-full place-items-center', silhueta && 'brightness-0')}>
-          <span aria-hidden="true" className="poco-halo absolute inset-[-10%] bg-[radial-gradient(50%_50%_at_50%_50%,rgba(194,185,236,0.55),transparent_70%)]" />
+          <span aria-hidden="true" className="poco-halo absolute inset-[-10%] bg-[radial-gradient(50%_50%_at_50%_50%,rgb(var(--dv-amethyst-text-rgb)/0.55),transparent_70%)]" />
           <Emblema def={def} tamanho={138} className="relative" />
         </div>
       )
@@ -233,7 +237,7 @@ function Cosmetico({ r, nome, silhueta }: { r: PocoResultado; nome: string; silh
   if (cat === 'emblema') {
     return (
       <div className={cn('relative size-full', silhueta && 'brightness-0')}>
-        <span aria-hidden="true" className="poco-halo absolute inset-[-10%] bg-[radial-gradient(50%_50%_at_50%_50%,rgba(194,185,236,0.55),transparent_70%)]" />
+        <span aria-hidden="true" className="poco-halo absolute inset-[-10%] bg-[radial-gradient(50%_50%_at_50%_50%,rgb(var(--dv-amethyst-text-rgb)/0.55),transparent_70%)]" />
         {asset ? <img src={asset} alt="" className="relative size-full object-contain" /> : <EmblemaOrnamental tier={t} />}
       </div>
     )
@@ -249,7 +253,7 @@ function Cosmetico({ r, nome, silhueta }: { r: PocoResultado; nome: string; silh
 
 function Avatar({ nome, className, fs = 30 }: { nome: string; className?: string; fs?: number }) {
   return (
-    <span className={cn('grid place-items-center overflow-hidden rounded-full bg-[#121214] bg-[url(/images/os/marmore-negro.webp)] bg-[length:240px_240px] shadow-[inset_0_0_0_1px_rgba(238,237,235,0.25)]', className)}>
+    <span className={cn('grid place-items-center overflow-hidden rounded-full bg-dv-ink-2 bg-[url(/images/os/marmore-negro.webp)] bg-[length:240px_240px] shadow-[inset_0_0_0_1px_rgb(var(--dv-text-rgb)/0.25)]', className)}>
       <span className="font-display font-semibold uppercase text-dv-porcelain" style={{ fontSize: fs }}>{(nome || '?').slice(0, 1)}</span>
     </span>
   )
@@ -272,12 +276,12 @@ function MolduraAvatar({ tier }: { tier: Tier }) {
       <circle cx="80" cy="80" r="56" fill="none" stroke={`url(#${id}-m)`} strokeWidth="7" />
       <circle cx="80" cy="80" r="61" fill="none" stroke="#bab09f" strokeWidth="0.8" opacity="0.7" />
       {tier >= 2 && <path d="M80 6L90 22L80 30L70 22Z" fill={`url(#${id}-m)`} />}
-      {tier >= 3 && <path d="M80 12L85 21L80 26L75 21Z" fill="#8a7cc8" />}
+      {tier >= 3 && <path d="M80 12L85 21L80 26L75 21Z" fill="#8f86b4" />}
       {Array.from({ length: gems }, (_, i) => {
         const a = ((i / gems) * 360 + 90) * (Math.PI / 180)
         const x = 80 + Math.cos(a) * 56
         const y = 80 + Math.sin(a) * 56
-        return <path key={i} d={`M${x} ${y - 6}L${x + 4.5} ${y}L${x} ${y + 6}L${x - 4.5} ${y}Z`} fill="#8a7cc8" stroke="#ece5d8" strokeWidth="0.8" />
+        return <path key={i} d={`M${x} ${y - 6}L${x + 4.5} ${y}L${x} ${y + 6}L${x - 4.5} ${y}Z`} fill="#8f86b4" stroke="#ece5d8" strokeWidth="0.8" />
       })}
       {tier >= 4 &&
         Array.from({ length: 12 }, (_, i) => {
@@ -303,7 +307,7 @@ function EmblemaOrnamental({ tier }: { tier: Tier }) {
       </defs>
       <path d="M60 4L68 44L108 52L68 60L60 116L52 60L12 52L52 44Z" fill={`url(#${id}-m)`} stroke="#1d1a16" />
       <path d="M68 36A22 22 0 1 0 68 76A17 17 0 0 1 68 36Z" fill="#141217" stroke="#ece5d8" strokeWidth="1" />
-      <path d="M60 46L64 56L60 66L56 56Z" fill={tier >= 3 ? '#8a7cc8' : '#bab09f'} />
+      <path d="M60 46L64 56L60 66L56 56Z" fill={tier >= 3 ? '#8f86b4' : '#bab09f'} />
     </svg>
   )
 }
@@ -311,7 +315,7 @@ function EmblemaOrnamental({ tier }: { tier: Tier }) {
 function BalaoOrnamental({ tier }: { tier: Tier }) {
   return (
     <svg viewBox="0 0 200 70" preserveAspectRatio="none" className="absolute inset-0 size-full" aria-hidden="true">
-      <path d="M8 4H192L196 8V58L192 62H22L4 70L10 60L4 56V8Z" fill="#141417" stroke={tier >= 3 ? '#8a7cc8' : '#bab09f'} strokeWidth="1.4" />
+      <path d="M8 4H192L196 8V58L192 62H22L4 70L10 60L4 56V8Z" fill="#141417" stroke={tier >= 3 ? '#8f86b4' : '#bab09f'} strokeWidth="1.4" />
       <path d="M12 9H188V54H14Z" fill="none" stroke="#6b6357" strokeWidth="0.6" />
       {tier >= 2 && <path d="M186 4L196 4L196 14" fill="none" stroke="#ece5d8" strokeWidth="1.4" />}
     </svg>

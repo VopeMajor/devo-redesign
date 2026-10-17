@@ -11,12 +11,12 @@ import { ArcadeChat, ChatMessage, useChatLines } from './arcade-chat'
 
 const REACTIONS: Record<ReactionId, { label: string; icon?: LucideIcon; text?: string; color: string }> = {
   gg: { label: 'GG', text: 'GG', color: '#f1f0ee' },
-  fogo: { label: 'Fogo', icon: Flame, color: '#ff6670' },
+  fogo: { label: 'Fogo', icon: Flame, color: 'var(--dv-blood-text)' },
   caveira: { label: 'Caveira', icon: Skull, color: '#e8e8ee' },
   kkk: { label: 'Risada', text: 'KKK', color: '#bab09f' },
   choque: { label: 'Choque', icon: Zap, color: '#ece5d8' },
-  coracao: { label: 'Coração', icon: Heart, color: '#c2b9ec' },
-  f: { label: 'F', text: 'F', color: '#cbc5e8' },
+  coracao: { label: 'Coração', icon: Heart, color: 'var(--dv-amethyst-text)' },
+  f: { label: 'F', text: 'F', color: 'var(--dv-amethyst-text)' },
   rato: { label: 'Rato', icon: Rat, color: '#8a90a0' },
 }
 

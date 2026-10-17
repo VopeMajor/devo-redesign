@@ -89,7 +89,7 @@ function Fundo({ children }: { children: ReactNode }) {
     <div className="relative h-full overflow-hidden bg-dv-ink">
       <HoloEstilos />
       <span aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[url(/images/os/marmore-negro.webp)] bg-[length:560px_560px] opacity-50" />
-      <span aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 h-[60%] bg-[radial-gradient(60%_55%_at_50%_0%,rgba(138,124,200,0.16),transparent_70%)]" />
+      <span aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 h-[60%] bg-[radial-gradient(60%_55%_at_50%_0%,rgb(var(--dv-amethyst-rgb)/0.16),transparent_70%)]" />
       <span aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,transparent_55%,rgba(0,0,0,0.6))]" />
       <div className="relative z-10 h-full">{children}</div>
     </div>
@@ -101,8 +101,8 @@ function Trancado({ motivo }: { motivo: string }) {
     <Fundo>
       <div className="flex h-full flex-col justify-end px-4 pb-6">
         <section aria-label="Corporações: trancado" className="animate-dv-rise relative" style={{ '--dv-cut': '14px' } as CSSProperties}>
-          <span aria-hidden="true" className="dv-cut absolute inset-0 bg-[linear-gradient(135deg,rgba(238,237,235,0.34),rgba(238,237,235,0.12)_45%,rgba(238,237,235,0.26))]" />
-          <span aria-hidden="true" className="dv-cut absolute inset-px bg-[linear-gradient(180deg,#1a1a1d,#0e0e10)]" style={{ '--dv-cut': '13.6px' } as CSSProperties} />
+          <span aria-hidden="true" className="dv-cut absolute inset-0 bg-[linear-gradient(135deg,rgb(var(--dv-text-rgb)/0.34),rgb(var(--dv-text-rgb)/0.12)_45%,rgb(var(--dv-text-rgb)/0.26))]" />
+          <span aria-hidden="true" className="dv-cut absolute inset-px bg-[linear-gradient(180deg,var(--dv-ink-3),var(--dv-ink))]" style={{ '--dv-cut': '13.6px' } as CSSProperties} />
           <div className="relative flex items-start gap-4 p-5">
             <EmblemMark emblem={EmblemCorporacoes} size={56} state="locked" />
             <div className="min-w-0 flex-1">
@@ -136,7 +136,7 @@ function Tela({ d, agir, onCompanhia }: { d: CorpLiberado; agir: (b: Record<stri
           className="dv-focus group mt-1 flex shrink-0 flex-col items-center gap-1"
         >
           <span className="relative grid size-14 place-items-center">
-            <span aria-hidden="true" className="absolute inset-1 rounded-full bg-[radial-gradient(circle,rgba(168,155,224,0.28),transparent_70%)]" />
+            <span aria-hidden="true" className="absolute inset-1 rounded-full bg-[radial-gradient(circle,rgb(var(--dv-amethyst-rgb)/0.28),transparent_70%)]" />
             <SeloCompanhia aceso className="relative size-11 transition-transform group-active:scale-95" />
           </span>
           <span aria-hidden="true" className="dv-label text-[9.5px] text-dv-text-2">Companhia</span>
@@ -156,8 +156,8 @@ function CodigoRegras({ d }: { d: CorpLiberado }) {
   const [aberto, setAberto] = useState(false)
   return (
     <section aria-label={d.regras.titulo} className="relative" style={{ '--dv-cut': '12px' } as CSSProperties}>
-      <span aria-hidden="true" className="dv-cut absolute inset-0 bg-[linear-gradient(135deg,rgba(194,185,236,0.5),rgba(186,176,159,0.2)_50%,rgba(194,185,236,0.35))]" />
-      <span aria-hidden="true" className="dv-cut absolute inset-px bg-[linear-gradient(180deg,rgba(26,24,34,0.97),rgba(12,12,14,0.98))]" style={{ '--dv-cut': '11.6px' } as CSSProperties} />
+      <span aria-hidden="true" className="dv-cut absolute inset-0 bg-[linear-gradient(135deg,rgb(var(--dv-amethyst-text-rgb)/0.5),rgba(186,176,159,0.2)_50%,rgb(var(--dv-amethyst-text-rgb)/0.35))]" />
+      <span aria-hidden="true" className="dv-cut absolute inset-px bg-[linear-gradient(180deg,rgba(26,24,34,0.97),rgb(var(--dv-ink-rgb)/0.98))]" style={{ '--dv-cut': '11.6px' } as CSSProperties} />
       <span aria-hidden="true" className="dv-cut pointer-events-none absolute inset-px opacity-30 [background:repeating-linear-gradient(0deg,rgba(236,229,216,0.12)_0_1px,transparent_1px_4px)]" style={{ '--dv-cut': '11.6px' } as CSSProperties} />
       <button
         type="button"

@@ -65,7 +65,7 @@
   15% { opacity: 0.9; }
   100% { transform: translateY(-210px) rotate(45deg); opacity: 0; }
 }
-.poco-particula { animation: poco-particula 9s linear infinite; box-shadow: 0 0 6px rgba(194, 185, 236, 0.9); }
+.poco-particula { animation: poco-particula 9s linear infinite; box-shadow: 0 0 6px rgba(226, 224, 220, 0.85); }
 .poco-ativo .poco-particula { animation-duration: 2.2s !important; }
 
 /* balde: sobe pela corrente */
@@ -163,6 +163,94 @@
 }
 .poco-hit { animation: poco-hit 420ms ease-out both; }
 
+/* ── Refinamento 4: matéria antiga e luz fria ─────────────────────────────────────────────── */
+/* Camadas pintadas em violeta entram dessaturadas: prata fria, sem roxo neon. */
+.poco-dessatura { filter: saturate(0.22) brightness(1.06); }
+.poco-raro-tom { filter: saturate(0.55); }
+.poco-pedra { filter: saturate(0.42) contrast(1.05) brightness(1.02); }
+
+/* lua velada, janelas, velas e moedas no chão: tudo devagar */
+@keyframes poco-lua {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 0.62; }
+}
+.poco-lua { animation: poco-lua 14s ease-in-out infinite; }
+@keyframes poco-janela {
+  0%, 100% { opacity: 0.85; }
+  47% { opacity: 0.85; }
+  50% { opacity: 0.55; }
+  53% { opacity: 0.9; }
+}
+.poco-janela { animation: poco-janela 11s linear infinite; }
+@keyframes poco-vela-luz {
+  0%, 100% { opacity: 0.85; transform: scale(1); }
+  35% { opacity: 1; transform: scale(1.06); }
+  70% { opacity: 0.75; transform: scale(0.97); }
+}
+.poco-vela-luz { transform-box: fill-box; transform-origin: center; animation: poco-vela-luz 3.1s ease-in-out infinite; }
+@keyframes poco-cintila {
+  0%, 82%, 100% { opacity: 0; transform: scale(0.4); }
+  88% { opacity: 1; transform: scale(1); }
+  94% { opacity: 0; transform: scale(0.6); }
+}
+.poco-cintila { transform-box: fill-box; transform-origin: center; animation: poco-cintila 6.5s ease-out infinite; }
+
+/* moeda lançada: arco em parábola (x linear, y sobe e cai), giro de face e perspectiva (fica menor ao longe) */
+@keyframes poco-arco-x {
+  from { transform: translateX(0); }
+  to { transform: translateX(42cqw); }
+}
+@keyframes poco-arco-y {
+  0% { transform: translateY(0); animation-timing-function: cubic-bezier(0.15, 0.6, 0.35, 1); }
+  46% { transform: translateY(-104cqh); animation-timing-function: cubic-bezier(0.6, 0, 0.9, 0.5); }
+  100% { transform: translateY(-63cqh); }
+}
+@keyframes poco-arco-moeda {
+  0% { transform: translate(-50%, -50%) scale(1.35) rotateX(0deg); opacity: 0; }
+  6% { opacity: 1; }
+  46% { transform: translate(-50%, -50%) scale(0.95) rotateX(900deg); }
+  92% { opacity: 1; }
+  100% { transform: translate(-50%, -50%) scale(0.5) rotateX(1620deg); opacity: 0; }
+}
+.poco-arco-x { animation: poco-arco-x 920ms cubic-bezier(0.35, 0.1, 0.6, 1) both; }
+.poco-arco-y { animation: poco-arco-y 920ms both; }
+.poco-arco-moeda { animation: poco-arco-moeda 920ms linear both; }
+
+/* a moeda toca a água (~900 ms): lampejo, ondas, respingo pintado e gotas */
+@keyframes poco-lampejo-on {
+  0% { opacity: 0; transform: scale(0.4); }
+  18% { opacity: 1; transform: scale(1); }
+  100% { opacity: 0; transform: scale(1.25); }
+}
+.poco-lampejo { opacity: 0; animation: poco-lampejo-on 1100ms 880ms var(--dv-ease-out) both; }
+@keyframes poco-onda {
+  0% { transform: scale(0.15); opacity: 0; }
+  10% { opacity: 0.95; }
+  100% { transform: scale(1.35); opacity: 0; }
+}
+.poco-onda { animation: poco-onda 1500ms ease-out both; }
+@keyframes poco-respingo-moeda {
+  0% { transform: translateY(18%) scaleY(0.2) scaleX(0.7); opacity: 0; }
+  25% { opacity: 0.9; transform: translateY(0) scaleY(1) scaleX(1); }
+  100% { transform: translateY(6%) scaleY(0.6) scaleX(1.1); opacity: 0; }
+}
+.poco-respingo-moeda { transform-origin: 50% 100%; animation: poco-respingo-moeda 900ms 900ms var(--dv-ease-out) both; }
+@keyframes poco-gota {
+  0% { transform: translate(0, 0); opacity: 0; }
+  10% { opacity: 1; }
+  45% { transform: translate(calc(var(--gx) * 0.6), var(--gy)); }
+  100% { transform: translate(var(--gx), 6px); opacity: 0; }
+}
+.poco-gota { animation: poco-gota 760ms cubic-bezier(0.3, 0.7, 0.5, 1) both; }
+
+/* o balde se abre: véu de luz que sobe da água antes da revelação */
+@keyframes poco-veu {
+  0% { opacity: 0; transform: scaleY(0.2); }
+  35% { opacity: 1; }
+  100% { opacity: 0; transform: scaleY(1.2); }
+}
+.poco-veu { transform-origin: 50% 100%; animation: poco-veu 1000ms var(--dv-ease-out) both; }
+
 @media (prefers-reduced-motion: reduce) {
   .poco-t,
   .poco-bucket { transition: none !important; }
@@ -188,6 +276,19 @@
   .poco-aro-in,
   .poco-emergir,
   .poco-sombra-sai,
-  .poco-respingo { animation: none !important; }
+  .poco-respingo,
+  .poco-lua,
+  .poco-janela,
+  .poco-vela-luz,
+  .poco-cintila,
+  .poco-arco-x,
+  .poco-arco-y,
+  .poco-arco-moeda,
+  .poco-lampejo,
+  .poco-onda,
+  .poco-respingo-moeda,
+  .poco-gota,
+  .poco-veu { animation: none !important; }
+  .poco-arco-x, .poco-lampejo, .poco-onda, .poco-respingo-moeda, .poco-gota, .poco-veu { opacity: 0; }
   .poco-coin, .poco-ripple { opacity: 0; }
 }

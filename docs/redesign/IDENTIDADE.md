@@ -13,6 +13,44 @@ brilhos sutis, microinterações). Nada de copiar telas, personagens, logos, íc
 
 ## 0. Paleta, material e ornamento (Direção 2 §0 e §6 — prioridade sobre o resto do guia)
 
+### 0.0 Refinamento 4 — paleta "Kokken no Inori" (dono, 17/10; prioridade sobre a tabela abaixo)
+
+Referência: `refs/paleta/kokken-no-inori.jpg` (piano negro, rosa vinho). Pedido: menos escuro, mais
+diferença entre fundo, painel e controle, texto mais legível, sem roxo neon e sem dourado intenso.
+**Camadas:** ABISMO (fundo de tela) → PEDRA DE NÉVOA (painéis e controles, em degraus) → VINHO (seleção,
+ênfase, perigo) · PRATA APAGADA para texto secundário e filetes. O aço champanhe continua sendo o metal
+(reflexo discreto). A ametista continua, pequena e dessaturada (foco, joia, item ativo).
+
+| Papel | Token | Valor | Observação |
+|---|---|---|---|
+| Abismo (fundo de tela) | `--dv-ink`, `--dv-abyss` | `#090909` | Abyss Black da ref |
+| Degraus de painel | `--dv-ink-2/3/4` | `#161515` / `#222020` / `#2e2c2c` | antes `#151517…#2c2c31` (azulados) |
+| Pedra de névoa (controle, painel alto) | `--dv-fog`, `--dv-fog-2` | `#353535` / `#434141` | Fog Stone da ref; botão secundário e folhas |
+| Vinho escuro / vinho | `--dv-wine-0`, `--dv-wine` | `#280e11` / `#3f1117` | da ref; fundo de perigo, atmosfera no pé das cenas |
+| Vinho de seleção | `--dv-cobalt`, `--dv-wine-2` | `#5a1d26` | bloco ativo (o antigo "cobalto" agora é vinho) |
+| Bloco selecionado no papel | `--dv-block`, `--in-accent-fill` (papel) | `#2e1014` | aba/chip ativo, selo "em uso" |
+| Filete vinho | `--dv-wine-line` | `#7d3a44` | borda de seleção, traço `dv-trace` |
+| Texto vinho sobre o abismo | `--dv-wine-text` | `#d49aa2` | ênfase pequena |
+| Prata apagada | `--dv-silver`, `--dv-text-3`, `--muted-foreground` | `#acacac` | Faded Silver da ref; texto secundário |
+| Texto / texto 2 | `--dv-text`, `--dv-text-2` | `#ecebe9` / `#c9c7c5` | agora sólidos (antes rgba) |
+| Linhas | `--dv-line`, `--dv-line-strong` | prata 22% / 46% | bordas delicadas mas visíveis |
+| Ametista | `--dv-amethyst`, `-text`, `-deep` | `#8f86b4` / `#cbc6dc` / `#4d4668` | dessaturada |
+| Alerta | `--dv-blood`, `--dv-blood-text` | `#9b2531` / `#e0858d` | menos saturado |
+| Noite (só atmosfera) | `--dv-night`, `--dv-night-2` | `#140f11` / `#2a1d21` | vinho-abismo, sem violeta |
+| Tinta vinho no papel | `--in-accent` (papel) | `#5a1d26` | links e acento pequeno |
+
+Canais para transparência: `rgb(var(--dv-ink-rgb) / a)`, `--dv-text-rgb`, `--dv-amethyst-rgb`,
+`--dv-amethyst-text-rgb`, `--dv-blood-rgb`, `--dv-wine-rgb`, `--dv-violet-rgb`, `--dv-silver-rgb`.
+**Não escreva hex/rgba fixos em tela**: use os tokens. `node scripts/dev/paleta-tokens.mjs [pasta]` troca os
+valores antigos conhecidos por tokens (só em contexto CSS; idempotente).
+
+**Contraste (WCAG, conferido):** texto `#ecebe9` sobre abismo 16.7 · sobre pedra `#353535` 10.3 ·
+texto 2 `#c9c7c5` sobre abismo 11.8, sobre `#2e2c2c` 8.2 · prata `#acacac` sobre abismo 8.8, sobre
+`#222020` 7.1, sobre `#353535` 5.4 · aço `#bab09f` sobre abismo 9.3, sobre pedra 5.7 · branco sobre vinho
+`#5a1d26` 12.8, sobre `#3f1117` 16.1 · vinho-texto `#d49aa2` sobre abismo 8.5 · alerta `#e0858d` sobre abismo
+7.5 · no papel `#e7e6e3`: tinta vinho `#5a1d26` 10.5, `--in-fg-3` `#575555` 5.9, alerta `#9b2531` 6.2.
+
+
 **Referência-mestra de cor: `refs/ref-xadrez-marmore.png`** (tabuleiro de mármore com espadas; Direção 2
 §6). As demais refs do dono (figurino gótico, valsa do relógio, gaiola, figurinos de NPC) dão material e
 motivo. Cores amostradas dos pixels (PIL): casas pretas `#1e1f21`–`#4f4f4f`, casas brancas

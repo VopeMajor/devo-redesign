@@ -112,8 +112,8 @@ function Trancado({ motivo }: { motivo: string }) {
     <Fundo palco="trancado">
       <div className="flex h-full flex-col justify-end px-4 pb-6">
         <section aria-label="Poço dos Milagres: trancado" className="animate-dv-rise relative" style={{ '--dv-cut': '14px' } as CSSProperties}>
-          <span aria-hidden="true" className="dv-cut absolute inset-0 bg-[linear-gradient(135deg,rgba(238,237,235,0.34),rgba(238,237,235,0.12)_45%,rgba(238,237,235,0.26))]" />
-          <span aria-hidden="true" className="dv-cut absolute inset-px bg-[linear-gradient(180deg,#1a1a1d,#0e0e10)]" style={{ '--dv-cut': '13.6px' } as CSSProperties} />
+          <span aria-hidden="true" className="dv-cut absolute inset-0 bg-[linear-gradient(135deg,rgb(var(--dv-text-rgb)/0.34),rgb(var(--dv-text-rgb)/0.12)_45%,rgb(var(--dv-text-rgb)/0.26))]" />
+          <span aria-hidden="true" className="dv-cut absolute inset-px bg-[linear-gradient(180deg,var(--dv-ink-3),var(--dv-ink))]" style={{ '--dv-cut': '13.6px' } as CSSProperties} />
           <div className="relative flex items-start gap-4 p-5">
             <EmblemMark emblem={EmblemPoco} size={56} state="locked" />
             <div className="min-w-0 flex-1">
@@ -166,8 +166,10 @@ function PocoTela({ data, refresh }: { data: Liberado; refresh: () => void }) {
       setFolha(null)
       setMoedaAnim((n) => n + 1)
       setAtivo(true)
-      later(() => setAtivo(false), reduced ? 0 : 1600)
-      playSfx('fall')
+      later(() => setAtivo(false), reduced ? 0 : 2200)
+      // tinido na mão, respingo quando a moeda toca a água (o arco dura ~900 ms)
+      playSfx('coin')
+      later(() => playSfx('splash'), reduced ? 0 : 900)
       refresh()
     } catch (e) {
       falhar(e)
@@ -463,7 +465,7 @@ function Invocacao({
       )}
     >
       <span className={cn('relative grid place-items-center', forma === 'medalhao' ? 'size-[104px]' : 'h-[94px] w-full max-w-[112px]')}>
-        {aceso && <span aria-hidden="true" className="poco-aura absolute inset-[-14%] -z-10 bg-[radial-gradient(50%_50%_at_50%_55%,rgba(138,124,200,0.55),transparent_70%)]" />}
+        {aceso && <span aria-hidden="true" className="poco-aura absolute inset-[-14%] -z-10 bg-[radial-gradient(50%_50%_at_50%_55%,rgb(var(--dv-amethyst-rgb)/0.55),transparent_70%)]" />}
         {forma === 'medalhao' ? <MedalhaoDentado ativo={aceso} apagado={disabled} /> : <PlacaGotica ativo={aceso} apagado={disabled} />}
         <span aria-hidden="true" className="absolute inset-0 rounded-full bg-white opacity-0 transition-opacity duration-150 group-enabled:group-active:opacity-10" />
         <span aria-hidden="true" className={cn('relative grid place-items-center transition-[opacity,filter]', forma === 'placa' && '-mt-1', disabled && 'opacity-40 grayscale')}>

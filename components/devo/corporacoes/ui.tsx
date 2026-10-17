@@ -51,15 +51,15 @@ export function Selo({ children, tom = 'aco', className }: { children: ReactNode
     <span
       className={cn(
         'dv-cut-diag inline-flex h-7 shrink-0 items-center gap-1.5 whitespace-nowrap px-2.5 font-mono text-[11px] uppercase leading-none tracking-[0.12em]',
-        tom === 'aco' && 'bg-[rgba(12,12,14,0.75)] text-dv-text shadow-[inset_0_0_0_1px_rgba(206,201,192,0.6)]',
-        tom === 'ametista' && 'bg-[#1d1a2b] text-dv-amethyst-text shadow-[inset_0_0_0_1px_rgba(138,124,200,0.7)]',
+        tom === 'aco' && 'bg-[rgb(var(--dv-ink-rgb)/0.75)] text-dv-text shadow-[inset_0_0_0_1px_rgba(206,201,192,0.6)]',
+        tom === 'ametista' && 'bg-dv-cobalt-dim text-dv-amethyst-text shadow-[inset_0_0_0_1px_rgb(var(--dv-amethyst-rgb)/0.7)]',
         tom === 'quieto' && 'text-dv-text-2 shadow-[inset_0_0_0_1px_var(--dv-line-strong)]',
         tom === 'rubi' && 'bg-[#1a0d0f] text-dv-blood-text shadow-[inset_0_0_0_1px_var(--dv-blood)]',
         className,
       )}
       style={{ '--dv-cut': '6px' } as CSSProperties}
     >
-      {tom === 'ametista' && <span aria-hidden="true" className="size-[6px] rotate-45 bg-dv-amethyst shadow-[0_0_6px_rgba(138,124,200,0.9)]" />}
+      {tom === 'ametista' && <span aria-hidden="true" className="size-[6px] rotate-45 bg-dv-amethyst shadow-[0_0_6px_rgb(var(--dv-amethyst-rgb)/0.9)]" />}
       {tom === 'rubi' && <span aria-hidden="true" className="size-[6px] rotate-45 bg-dv-blood" />}
       {children}
     </span>
@@ -112,7 +112,7 @@ export function Monograma({ nome, className }: { nome: string; className?: strin
   return (
     <span
       aria-hidden="true"
-      className={cn('dv-cut grid size-10 shrink-0 place-items-center bg-[linear-gradient(160deg,#2c2c31,#0c0c0e)] font-display text-[16px] font-semibold text-dv-gold-bright shadow-[inset_0_0_0_1px_rgba(186,176,159,0.5)]', className)}
+      className={cn('dv-cut grid size-10 shrink-0 place-items-center bg-[linear-gradient(160deg,var(--dv-ink-4),var(--dv-ink))] font-display text-[16px] font-semibold text-dv-gold-bright shadow-[inset_0_0_0_1px_rgba(186,176,159,0.5)]', className)}
       style={{ '--dv-cut': '7px' } as CSSProperties}
     >
       {(nome.trim()[0] ?? '?').toLocaleUpperCase('pt-BR')}

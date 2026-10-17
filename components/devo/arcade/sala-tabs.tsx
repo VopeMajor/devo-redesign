@@ -202,7 +202,7 @@ export function Agenda({
                   className={cn(
                     'relative grid size-11 shrink-0 place-items-center rounded-full border font-mono text-[11px] tracking-[0.08em]',
                     isNow
-                      ? 'border-dv-gold-bright bg-dv-porcelain text-dv-porcelain-ink shadow-[0_0_16px_-2px_rgba(138,124,200,0.55)]'
+                      ? 'border-dv-gold-bright bg-dv-porcelain text-dv-porcelain-ink shadow-[0_0_16px_-2px_rgb(var(--dv-amethyst-rgb)/0.55)]'
                       : 'border-dv-gold/50 bg-dv-ink text-dv-gold',
                   )}
                 >
@@ -441,7 +441,7 @@ function Podium({ rows }: { rows: RankRow[] }) {
   return (
     <ol aria-label="Pódio" className="relative isolate grid grid-cols-3 items-end gap-2 px-2 pt-3">
       {/* palco: painel negro com piso de mármore e holofote sobre o 1º */}
-      <span aria-hidden="true" className="dv-cut absolute inset-0 -z-10 bg-[linear-gradient(180deg,rgba(12,12,14,0.92),rgba(12,12,14,0.96))] shadow-[inset_0_0_0_1px_var(--dv-line)]" style={{ '--dv-cut': '12px' } as CSSProperties} />
+      <span aria-hidden="true" className="dv-cut absolute inset-0 -z-10 bg-[linear-gradient(180deg,rgb(var(--dv-ink-rgb)/0.92),rgb(var(--dv-ink-rgb)/0.96))] shadow-[inset_0_0_0_1px_var(--dv-line)]" style={{ '--dv-cut': '12px' } as CSSProperties} />
       <span aria-hidden="true" style={MARBLE_INK} className="absolute inset-x-0 bottom-0 -z-10 h-6 border-t border-dv-gold/40" />
       <span aria-hidden="true" className="pointer-events-none absolute left-1/2 top-0 -z-10 h-full w-1/2 -translate-x-1/2 bg-[radial-gradient(60%_80%_at_50%_0%,rgba(236,229,216,0.2),transparent_70%)]" />
       {order.map((r) => {
@@ -561,7 +561,7 @@ function GameRank({ data, gameId }: { data: Dashboard; gameId: GameId }) {
               className={cn(
                 'flex min-h-8 flex-col items-center justify-center border px-0.5 text-center font-mono text-[10px] uppercase leading-tight tracking-[0.02em]',
                 i === idx
-                  ? 'border-dv-gold-bright bg-dv-porcelain text-dv-porcelain-ink shadow-[0_0_12px_-3px_rgba(138,124,200,0.7)]'
+                  ? 'border-dv-gold-bright bg-dv-porcelain text-dv-porcelain-ink shadow-[0_0_12px_-3px_rgb(var(--dv-amethyst-rgb)/0.7)]'
                   : i < idx
                     ? 'border-dv-line-strong text-dv-text-2'
                     : 'border-dv-line text-dv-text-3',
@@ -648,7 +648,7 @@ export function Apostas() {
                   className={cn(
                     'dv-focus min-h-11 -skew-x-[8deg] border font-impact text-[17px] font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-45',
                     on
-                      ? 'border-dv-gold-bright bg-dv-porcelain text-dv-porcelain-ink shadow-[0_0_14px_-4px_rgba(138,124,200,0.8)]'
+                      ? 'border-dv-gold-bright bg-dv-porcelain text-dv-porcelain-ink shadow-[0_0_14px_-4px_rgb(var(--dv-amethyst-rgb)/0.8)]'
                       : 'border-dv-line-strong bg-dv-ink-2 text-dv-text enabled:hover:border-dv-text-3',
                   )}
                 >

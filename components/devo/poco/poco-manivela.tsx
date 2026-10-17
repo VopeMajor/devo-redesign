@@ -96,7 +96,7 @@ export function PocoManivela({ params, onFim }: { params: ManivelaParams; onFim:
   const a1 = -180 + (r.centro + r.janela / 2) * 180
 
   return (
-    <div className="absolute inset-0 z-30 flex flex-col items-center justify-end bg-[linear-gradient(180deg,rgba(12,12,14,0.2),rgba(12,12,14,0.88)_42%,#0c0c0e_62%)] px-4 pb-4">
+    <div className="absolute inset-0 z-30 flex flex-col items-center justify-end bg-[linear-gradient(180deg,rgb(var(--dv-ink-rgb)/0.2),rgb(var(--dv-ink-rgb)/0.88)_42%,var(--dv-ink)_62%)] px-4 pb-4">
       <button
         type="button"
         onPointerDown={(e) => {
@@ -132,8 +132,8 @@ export function PocoManivela({ params, onFim }: { params: ManivelaParams; onFim:
             )
           })}
           {/* janela de ametista (encolhe a cada acerto) */}
-          <path d={arc(150, 150, 116, a0, a1)} fill="none" stroke="#8a7cc8" strokeWidth="22" opacity="0.85" />
-          <path d={arc(150, 150, 127, a0, a1)} fill="none" stroke="#c2b9ec" strokeWidth="2" />
+          <path d={arc(150, 150, 116, a0, a1)} fill="none" stroke="#8f86b4" strokeWidth="22" opacity="0.85" />
+          <path d={arc(150, 150, 127, a0, a1)} fill="none" stroke="#cbc6dc" strokeWidth="2" />
           {flash && <path key={flash.k} className="poco-hit" d={arc(150, 150, 116, a0, a1)} fill="none" stroke={flash.ok ? '#f1f0ee' : '#a3121f'} strokeWidth="26" />}
           {/* ponteiro */}
           <g ref={agulha} transform="rotate(-90 150 150)">
@@ -141,13 +141,13 @@ export function PocoManivela({ params, onFim }: { params: ManivelaParams; onFim:
             <path d="M150 34L150 146" stroke="#6b6357" strokeWidth="0.8" />
           </g>
           <circle cx="150" cy="150" r="11" fill="url(#poco-dial-aco)" stroke="#0c0c0e" strokeWidth="1.5" />
-          <circle cx="150" cy="150" r="3.5" fill="#8a7cc8" />
+          <circle cx="150" cy="150" r="3.5" fill="#8f86b4" />
         </svg>
 
         {/* acertos: losangos */}
         <span className="mt-1 flex items-center gap-2" aria-hidden="true">
           {Array.from({ length: total }, (_, i) => (
-            <span key={i} className={cn('size-3 rotate-45 border', i < acertos ? 'border-dv-amethyst-text bg-dv-amethyst shadow-[0_0_8px_rgba(138,124,200,0.8)]' : 'border-dv-line-strong bg-transparent')} />
+            <span key={i} className={cn('size-3 rotate-45 border', i < acertos ? 'border-dv-amethyst-text bg-dv-amethyst shadow-[0_0_8px_rgb(var(--dv-amethyst-rgb)/0.8)]' : 'border-dv-line-strong bg-transparent')} />
           ))}
         </span>
         <span className="sr-only" aria-live="polite">

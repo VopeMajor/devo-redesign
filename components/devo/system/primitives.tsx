@@ -51,8 +51,7 @@ export function TechnicalDivider({ index, label, className }: { index?: string; 
       <span
         className="h-2.5 flex-1 opacity-70"
         style={{
-          background:
-            'repeating-linear-gradient(90deg, var(--dv-gold) 0 1px, transparent 1px 8px) bottom/100% 5px no-repeat, linear-gradient(var(--dv-line-strong), var(--dv-line-strong)) bottom/100% 1px no-repeat',
+          background: 'repeating-linear-gradient(90deg, var(--dv-gold) 0 1px, transparent 1px 8px) bottom/100% 5px no-repeat, linear-gradient(var(--dv-line-strong), var(--dv-line-strong)) bottom/100% 1px no-repeat',
         }}
       />
       {label && <span className="dv-label text-[10px]">{label}</span>}
@@ -113,7 +112,7 @@ export function CriticalAlert({
   className?: string
 }) {
   return (
-    <div role="alert" className={cn('dv-cut relative overflow-hidden bg-[linear-gradient(160deg,var(--dv-blood-deep),#1a0507_45%,var(--dv-ink))] text-dv-text', className)}>
+    <div role="alert" className={cn('dv-cut relative overflow-hidden bg-[linear-gradient(160deg,var(--dv-blood-deep),var(--dv-wine-0)_45%,var(--dv-ink))] text-dv-text', className)}>
       <span aria-hidden="true" className="absolute inset-y-0 left-0 w-1 bg-dv-blood" />
       <div className="flex items-start gap-4 p-4 pl-5">
         <GlyphAlert className="mt-0.5 size-6 shrink-0 text-dv-blood-text" />

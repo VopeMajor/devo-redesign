@@ -65,7 +65,7 @@ export function PulsoApp() {
           <div className="animate-dv-pop relative mt-3 grid aspect-square w-[min(88vw,330px)] place-items-center [animation-delay:120ms]">
             <PulseDial remaining={remaining} timerEndsAt={state.timerEndsAt} critical={critical} className="absolute inset-0 size-full" />
             <div className="relative flex flex-col items-center px-6 py-5 text-center">
-              <span aria-hidden="true" className="absolute inset-0 -z-0 rounded-full bg-[radial-gradient(closest-side,rgba(10,10,12,0.9),rgba(10,10,12,0.55)_60%,transparent)]" />
+              <span aria-hidden="true" className="absolute inset-0 -z-0 rounded-full bg-[radial-gradient(closest-side,rgb(var(--dv-ink-rgb)/0.9),rgb(var(--dv-ink-rgb)/0.55)_60%,transparent)]" />
               <p className={cn('dv-label relative text-[10px]', critical ? 'text-dv-blood-text' : 'text-dv-text-3')}>Restante</p>
               <TimeDigits
                 value={formatDuration(remaining)}
@@ -173,7 +173,7 @@ export function PulsoApp() {
       </div>
       {/* indica que há mais conteúdo abaixo (janela baixa no desktop, celular): selo compacto, sem véu */}
       <div aria-hidden="true" className={cn('pointer-events-none sticky bottom-3 -mt-11 flex h-8 justify-center transition-opacity duration-300', more.below ? 'opacity-100' : 'opacity-0')}>
-        <span className="dv-cut-diag dv-label flex items-center gap-2 bg-[rgba(12,12,14,0.92)] px-3.5 text-[10px] text-dv-text-2 shadow-[inset_0_0_0_1px_rgba(206,201,192,0.35),0_8px_18px_rgba(0,0,0,0.6)] [--dv-cut:7px]">
+        <span className="dv-cut-diag dv-label flex items-center gap-2 bg-[rgb(var(--dv-ink-rgb)/0.92)] px-3.5 text-[10px] text-dv-text-2 shadow-[inset_0_0_0_1px_rgba(206,201,192,0.35),0_8px_18px_rgba(0,0,0,0.6)] [--dv-cut:7px]">
           Role para ver mais
           <span className="inline-block size-2 -translate-y-0.5 rotate-45 border-b border-r border-dv-gold animate-dv-blink" />
         </span>

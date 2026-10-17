@@ -109,7 +109,7 @@ export function StaffDesk({ role }: { role: Exclude<Cargo, 'player'> }) {
                 >
                   <span className="order-2 font-mono text-[10px] uppercase leading-tight tracking-[0.12em] text-in-fg-2">{t.label}</span>
                   <span className={cn('order-1 flex items-center gap-2 font-impact text-[30px] font-semibold leading-none dv-tabular', t.value ? 'text-in-fg' : 'text-in-fg-3')}>
-                    {t.hot && <span aria-hidden="true" className="size-2 rotate-45 bg-dv-amethyst shadow-[0_0_10px_rgba(138,124,200,0.8)]" />}
+                    {t.hot && <span aria-hidden="true" className="size-2 rotate-45 bg-dv-amethyst shadow-[0_0_10px_rgb(var(--dv-amethyst-rgb)/0.8)]" />}
                     {t.off ? '—' : t.value}
                   </span>
                 </button>

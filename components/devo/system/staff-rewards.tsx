@@ -193,7 +193,7 @@ function StatusTag({ status }: { status: RecompensaStatus }) {
       className={cn(
         'dv-cut-diag inline-flex h-6 items-center gap-1.5 px-2 font-mono text-[10px] font-medium uppercase leading-none tracking-[0.14em]',
         status === 'pendente' && 'text-in-accent shadow-[inset_0_0_0_1px_var(--in-accent)]',
-        status === 'aprovada' && 'bg-[#1c1c1f] text-white',
+        status === 'aprovada' && 'bg-dv-block text-white',
         status === 'entregue' && 'text-in-fg shadow-[inset_0_0_0_1px_var(--in-fg)]',
         (status === 'rejeitada' || status === 'cancelada') && 'text-in-fg-3 line-through shadow-[inset_0_0_0_1px_var(--in-line)]',
       )}
@@ -406,7 +406,7 @@ function ProposeForm({ role, onDone }: { role: Cargo; onDone: () => Promise<void
                   }}
                   className={cn(
                     'dv-focus dv-cut-diag inline-flex min-h-11 items-center justify-center gap-1.5 px-2 font-mono text-[10.5px] uppercase tracking-[0.12em]',
-                    on ? 'bg-[#1c1c1f] text-white' : 'text-in-fg-2 shadow-[inset_0_0_0_1px_var(--in-line-strong)] hover:text-in-fg',
+                    on ? 'bg-dv-block text-white' : 'text-in-fg-2 shadow-[inset_0_0_0_1px_var(--in-line-strong)] hover:text-in-fg',
                   )}
                   style={{ '--dv-cut': '6px' } as CSSProperties}
                 >
@@ -467,7 +467,7 @@ function ProposeForm({ role, onDone }: { role: Cargo; onDone: () => Promise<void
             type="checkbox"
             checked={agora}
             onChange={(e) => setAgora(e.target.checked)}
-            className="dv-focus peer size-5 shrink-0 cursor-pointer appearance-none border border-in-line-strong bg-transparent transition-colors checked:border-[#1c1c1f] checked:bg-[#1c1c1f]"
+            className="dv-focus peer size-5 shrink-0 cursor-pointer appearance-none border border-in-line-strong bg-transparent transition-colors checked:border-dv-block checked:bg-dv-block"
           />
           <GlyphCheck aria-hidden="true" className="pointer-events-none -ml-8 size-5 p-0.5 text-white opacity-0 peer-checked:opacity-100" />
           <span className="font-mono text-[12px] uppercase tracking-[0.16em] text-in-fg">Aprovar e entregar agora</span>

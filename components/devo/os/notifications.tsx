@@ -35,10 +35,10 @@ function LiveToast({ item, onOpen, compact }: { item: NotificationItem; onOpen: 
             danger ? 'bg-dv-blood/80' : 'bg-[linear-gradient(100deg,#f4efe6,#6b6357_30%,#bab09f_60%,#5f584d_85%,#ece5d8)]',
           )}
         />
-        <span aria-hidden="true" className="dv-cut-diag bg-[#121214] bg-[url(/images/os/marmore-negro.webp)] bg-[length:560px_560px] absolute inset-px" style={{ '--dv-cut': '9.6px' } as CSSProperties} />
+        <span aria-hidden="true" className="dv-cut-diag bg-dv-ink-2 bg-[url(/images/os/marmore-negro.webp)] bg-[length:560px_560px] absolute inset-px" style={{ '--dv-cut': '9.6px' } as CSSProperties} />
         <span
           aria-hidden="true"
-          className={cn('dv-cut-diag absolute inset-px', danger ? 'bg-[linear-gradient(100deg,rgba(63,6,11,0.85),rgba(12,12,14,0.4)_60%)]' : 'bg-[linear-gradient(100deg,rgba(255,255,255,0.05),rgba(0,0,0,0.25))]')}
+          className={cn('dv-cut-diag absolute inset-px', danger ? 'bg-[linear-gradient(100deg,rgb(var(--dv-wine-rgb)/0.85),rgb(var(--dv-ink-rgb)/0.4)_60%)]' : 'bg-[linear-gradient(100deg,rgba(255,255,255,0.05),rgba(0,0,0,0.25))]')}
           style={{ '--dv-cut': '9.6px' } as CSSProperties}
         />
         <div className="relative flex min-h-12 items-center gap-2.5 pl-3">
@@ -156,7 +156,7 @@ export function NotificationList({ onOpen, className }: { onOpen: (id: AppId) =>
       </div>
       <div aria-hidden="true" className="relative mx-4 h-px">
         <span className="absolute inset-0 bg-gradient-to-r from-dv-gold/70 via-dv-gold/25 to-transparent" />
-        <span className="absolute -top-[1.5px] left-[18%] size-1 rotate-45 bg-dv-amethyst shadow-[0_0_6px_rgba(138,124,200,0.9)]" />
+        <span className="absolute -top-[1.5px] left-[18%] size-1 rotate-45 bg-dv-amethyst shadow-[0_0_6px_rgb(var(--dv-amethyst-rgb)/0.9)]" />
       </div>
       <ul className="devo-scroll flex min-h-0 flex-1 flex-col gap-2 overflow-y-auto px-3 py-3">
         {count === 0 && (
@@ -182,13 +182,13 @@ export function NotificationList({ onOpen, className }: { onOpen: (id: AppId) =>
                 className="dv-focus group relative isolate flex w-full items-start gap-3 py-3 pl-4 pr-3 text-left transition-transform duration-[120ms] active:scale-[0.985]"
                 style={{ '--dv-cut': '10px' } as CSSProperties}
               >
-                <span aria-hidden="true" className={cn('dv-cut-diag absolute inset-0 -z-10', danger ? 'bg-dv-blood/60' : 'bg-[rgba(238,237,235,0.16)]')} />
-                <span aria-hidden="true" className="dv-cut-diag absolute inset-px -z-10 bg-[linear-gradient(100deg,#1f1f22,#151517_70%)]" style={{ '--dv-cut': '9.6px' } as CSSProperties} />
+                <span aria-hidden="true" className={cn('dv-cut-diag absolute inset-0 -z-10', danger ? 'bg-dv-blood/60' : 'bg-[rgb(var(--dv-text-rgb)/0.16)]')} />
+                <span aria-hidden="true" className="dv-cut-diag absolute inset-px -z-10 bg-[linear-gradient(100deg,var(--dv-ink-3),var(--dv-ink-2)_70%)]" style={{ '--dv-cut': '9.6px' } as CSSProperties} />
                 <span
                   aria-hidden="true"
                   className={cn(
                     'dv-cut-diag absolute inset-px -z-10 transition-colors',
-                    danger ? 'bg-[linear-gradient(100deg,rgba(63,6,11,0.8),transparent_60%)]' : 'group-hover:bg-white/[0.04]',
+                    danger ? 'bg-[linear-gradient(100deg,rgb(var(--dv-wine-rgb)/0.8),transparent_60%)]' : 'group-hover:bg-white/[0.04]',
                   )}
                   style={{ '--dv-cut': '9.6px' } as CSSProperties}
                 />

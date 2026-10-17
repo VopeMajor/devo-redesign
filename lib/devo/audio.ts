@@ -25,6 +25,8 @@ export type Sfx =
   | 'curtain'
   | 'chirp'
   | 'fall'
+  | 'coin'
+  | 'splash'
   | 'rumble'
   | 'bell'
   | 'ignite'
@@ -204,6 +206,21 @@ export function playSfx(kind: Sfx) {
       noise(1.8, { gain: 0.18, freq: 2000, q: 0.7, sweepTo: 120 })
       tone(52, 1.4, { gain: 0.22, delay: 1.3, slideTo: 30 })
       noise(0.5, { gain: 0.22, freq: 180, q: 0.6, delay: 1.3, sweepTo: 70 })
+      break
+    case 'coin':
+      // Poço: a moeda sai da mão — tinido metálico curto e o ar cortado pelo arco.
+      tone(2637, 0.5, { gain: 0.045, attack: 0.002 })
+      tone(3951, 0.32, { gain: 0.022, attack: 0.002, delay: 0.015 })
+      tone(1318.5, 0.7, { gain: 0.02, attack: 0.002 })
+      noise(0.7, { gain: 0.045, freq: 900, q: 0.8, delay: 0.08, sweepTo: 2600 })
+      break
+    case 'splash':
+      // Poço: a moeda toca a água — estalo, "bloop" que sobe e respingos finos.
+      noise(0.32, { gain: 0.2, freq: 1500, q: 0.6, sweepTo: 420 })
+      tone(360, 0.2, { gain: 0.1, slideTo: 1050, delay: 0.02 })
+      noise(0.9, { gain: 0.05, freq: 3400, q: 1.2, delay: 0.1, sweepTo: 1700 })
+      for (let i = 0; i < 3; i++) tone(1100 + Math.random() * 500, 0.1, { gain: 0.035, slideTo: 2600, delay: 0.3 + i * 0.22 + Math.random() * 0.1 })
+      tone(48, 0.9, { gain: 0.12, delay: 0.05, slideTo: 32 })
       break
     case 'rumble':
       noise(2.6, { gain: 0.24, freq: 90, q: 0.5, sweepTo: 55 })

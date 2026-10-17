@@ -213,7 +213,7 @@ function Masthead({ recordId, role, sealed }: { recordId: string; role: string |
         <div className="flex shrink-0 flex-col items-end gap-2 pt-0.5">
           {role && (
             <span
-              className="dv-cut-diag inline-flex h-8 items-center gap-2 bg-[#1c1c1f] px-3 font-mono text-[10.5px] font-medium uppercase tracking-[0.2em] text-white"
+              className="dv-cut-diag inline-flex h-8 items-center gap-2 bg-dv-block px-3 font-mono text-[10.5px] font-medium uppercase tracking-[0.2em] text-white"
               style={{ '--dv-cut': '7px' } as CSSProperties}
             >
               {sealed ? (
@@ -257,7 +257,7 @@ function ReservedSystems() {
           type="button"
           onClick={() => nav.open('virtudes')}
           aria-label={livre ? 'Abrir Virtudes' : 'Virtudes: trancado'}
-          className="dv-focus group relative flex min-h-[132px] flex-col items-center justify-center gap-2 bg-[#1c1c1f] px-2 py-3 text-center shadow-[inset_0_0_0_1px_rgba(186,176,159,0.55)] transition-transform active:scale-[0.98]"
+          className="dv-focus group relative flex min-h-[132px] flex-col items-center justify-center gap-2 bg-dv-block px-2 py-3 text-center shadow-[inset_0_0_0_1px_rgba(186,176,159,0.55)] transition-transform active:scale-[0.98]"
         >
           <span aria-hidden="true" className="absolute inset-[5px] border border-[#bab09f]/25" />
           <EmblemMark emblem={EmblemVirtudes} size={52} state={livre ? 'selected' : 'locked'} />
@@ -414,7 +414,7 @@ function ConvocationPoster({
   return (
     <article
       aria-label={`Convocação: ${voteTitle(vote)}`}
-      className={cn('dv-interior-dark dv-record-panel dv-cut relative', live && 'shadow-[0_0_0_1px_rgba(241,240,238,0.5),0_18px_40px_-18px_rgba(138,124,200,0.55)]')}
+      className={cn('dv-interior-dark dv-record-panel dv-cut relative', live && 'shadow-[0_0_0_1px_rgba(241,240,238,0.5),0_18px_40px_-18px_rgb(var(--dv-amethyst-rgb)/0.55)]')}
       style={{ '--dv-cut': '16px' } as CSSProperties}
     >
       <BrassCorners size={30} inset={4} />
@@ -545,7 +545,7 @@ function VoteDetail({
         Todos os Deadly Votes
       </RecButton>
       <div className="relative mb-2 drop-shadow-[0_16px_22px_rgba(13,13,15,0.28)]">
-        <div className="dv-cut relative bg-[color:var(--in-porcelain)] bg-[radial-gradient(110%_60%_at_20%_0%,#ffffff,transparent_65%)] text-[#0d0d0f] shadow-[inset_0_0_0_1px_rgba(13,13,15,0.14)]" style={{ '--dv-cut': '14px' } as CSSProperties}>
+        <div className="dv-cut relative bg-[color:var(--in-porcelain)] bg-[radial-gradient(110%_60%_at_20%_0%,#ffffff,transparent_65%)] text-dv-ink shadow-[inset_0_0_0_1px_rgba(13,13,15,0.14)]" style={{ '--dv-cut': '14px' } as CSSProperties}>
           <BrassCorners size={26} inset={4} />
           <header className="px-5 pb-4 pt-6">
             <div className="flex items-center justify-between gap-3">
@@ -553,19 +553,19 @@ function VoteDetail({
               <HudCode code={hudCode(vote.id, 'DV')} />
             </div>
             <h2 className="mt-3 font-serif text-[32px] font-light uppercase leading-[1] tracking-[0.02em] text-balance">{vote.title}</h2>
-            {vote.arc && <p className="mt-1.5 font-body text-[16px] italic text-[#0d0d0f]/75">{arcLabel(vote.arc)}</p>}
+            {vote.arc && <p className="mt-1.5 font-body text-[16px] italic text-dv-ink/75">{arcLabel(vote.arc)}</p>}
             <div className="mt-3 flex flex-wrap items-center gap-2">
               <StatusChip status={vote.status} />
               <span className="font-mono text-[10.5px] uppercase tracking-[0.14em] text-[#58585e]">{DEADLY_VOTE_STATUS[vote.status].hint}</span>
             </div>
           </header>
           <div aria-hidden="true" className="relative mx-5 h-1.5 overflow-hidden">
-            <span className="absolute inset-y-0 -left-2 right-10 -skew-x-[18deg] bg-[#1c1c1f]" />
+            <span className="absolute inset-y-0 -left-2 right-10 -skew-x-[18deg] bg-dv-block" />
           </div>
 
           <LifecycleTrack status={vote.status} className="mx-5 mt-5" />
 
-          <dl className="mx-5 mt-5 grid grid-cols-2 gap-x-4 gap-y-3 border-t border-[#0d0d0f]/15 pt-4">
+          <dl className="mx-5 mt-5 grid grid-cols-2 gap-x-4 gap-y-3 border-t border-dv-ink/15 pt-4">
             <PaperField label="Início" value={new Date(vote.startsAt).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' })} />
             <PaperField label="Participantes" value={`${vote.participants}${vote.maxParticipants ? ` / ${vote.maxParticipants}` : ''}`} />
             <PaperField
@@ -589,9 +589,9 @@ function VoteDetail({
           </dl>
 
           {vote.briefing && (
-            <div className="mx-5 mt-4 border-t border-dashed border-[#0d0d0f]/30 pt-3">
+            <div className="mx-5 mt-4 border-t border-dashed border-dv-ink/30 pt-3">
               <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-[#58585e]">Briefing do Dealer</p>
-              <p className="mt-2 whitespace-pre-line font-body text-[16px] leading-relaxed text-[#0d0d0f]/90 text-pretty">{vote.briefing}</p>
+              <p className="mt-2 whitespace-pre-line font-body text-[16px] leading-relaxed text-dv-ink/90 text-pretty">{vote.briefing}</p>
             </div>
           )}
 
@@ -605,7 +605,7 @@ function VoteDetail({
             </div>
           )}
 
-          <div className="mx-5 mt-4 flex flex-col gap-2.5 border-t border-[#0d0d0f]/20 pb-6 pt-4">
+          <div className="mx-5 mt-4 flex flex-col gap-2.5 border-t border-dv-ink/20 pb-6 pt-4">
             {canJoin && (
               <RecButton surface="paper" block loading={busy} sfx="confirm" onClick={() => run(onJoin)}>
                 {vote.admission === 'aprovacao' ? 'Pedir inscrição' : 'Inscrever-se'}
@@ -619,12 +619,12 @@ function VoteDetail({
             {vote.status === 'convocado' && full && !vote.joined && <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-[#58585e]">Vagas esgotadas</p>}
             <GroupAccess vote={vote} surface="paper" />
             {vote.status !== 'convocado' && vote.status !== 'em-progresso' && (
-              <p className={cn('font-mono text-[10.5px] uppercase tracking-[0.14em]', vote.status === 'falha' ? 'text-[#a3121f]' : 'text-[#58585e]')}>
+              <p className={cn('font-mono text-[10.5px] uppercase tracking-[0.14em]', vote.status === 'falha' ? 'text-dv-blood' : 'text-[#58585e]')}>
                 {vote.status === 'cancelado' ? 'Edição cancelada pelo Dealer' : vote.status === 'falha' ? 'Caso interrompido por falha do sistema' : 'Caso encerrado · resultado registrado'}
               </p>
             )}
             {error && (
-              <p role="alert" className="font-mono text-[12px] text-[#a3121f]">
+              <p role="alert" className="font-mono text-[12px] text-dv-blood">
                 {error}
               </p>
             )}

@@ -163,7 +163,7 @@ export function PocoNeblina({
 
       <div ref={setCaixa} className="relative z-10 mt-auto px-4 pb-[max(env(safe-area-inset-bottom),1.25rem)]">
         {no.tipo === 'moeda' && moedaEstado === 'ok' && (
-          <p className="animate-dv-toast-in mx-auto mb-5 flex w-fit items-center gap-3 bg-[linear-gradient(90deg,#1f1f22,#151517)] py-2 pl-3 pr-6 shadow-[0_10px_24px_rgba(0,0,0,0.6),inset_0_0_0_1px_rgba(186,176,159,0.5)] [clip-path:polygon(0_0,100%_0,calc(100%-12px)_100%,0_100%)]">
+          <p className="animate-dv-toast-in mx-auto mb-5 flex w-fit items-center gap-3 bg-[linear-gradient(90deg,var(--dv-ink-3),var(--dv-ink-2))] py-2 pl-3 pr-6 shadow-[0_10px_24px_rgba(0,0,0,0.6),inset_0_0_0_1px_rgba(186,176,159,0.5)] [clip-path:polygon(0_0,100%_0,calc(100%-12px)_100%,0_100%)]">
             <DracmaIcon raridade="incomum" className="size-9 drop-shadow-[0_0_8px_rgba(236,229,216,0.5)]" />
             <span className="flex flex-col">
               <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-dv-text-3">Item recebido</span>
@@ -276,7 +276,7 @@ function ChoiceLocked({ index, label, delay }: { index: number; label: string; d
         className="relative isolate flex min-h-12 w-full cursor-not-allowed items-stretch text-left"
       >
         <span aria-hidden="true" className="dv-cut-diag absolute inset-0 -z-10 bg-[#26262a]" />
-        <span aria-hidden="true" className="dv-cut-diag absolute inset-px -z-10 bg-[#08080a]" style={{ '--dv-cut': '11.6px' } as CSSProperties} />
+        <span aria-hidden="true" className="dv-cut-diag absolute inset-px -z-10 bg-dv-ink" style={{ '--dv-cut': '11.6px' } as CSSProperties} />
         <span aria-hidden="true" className="flex w-12 shrink-0 items-center justify-center font-impact text-[22px] font-semibold leading-none text-[#3d3d42] -skew-x-[8deg]">
           {toRoman(index + 1)}
         </span>

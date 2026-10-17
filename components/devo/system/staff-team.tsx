@@ -83,7 +83,7 @@ export function TeamPanel({ role }: { role: Cargo }) {
           grupos.map((g, gi) => (
             <section key={g.sup?.id ?? gi} aria-label={g.sup ? `Supervisão de ${g.sup.name}` : 'Seus Dealers'} className="flex flex-col">
               {g.sup && (
-                <div className="flex items-center justify-between gap-2 bg-[#1c1c1f] px-3 py-2.5 text-white">
+                <div className="flex items-center justify-between gap-2 bg-dv-block px-3 py-2.5 text-white">
                   <div className="min-w-0">
                     <p className="truncate font-serif text-[19px] font-light uppercase leading-tight tracking-[0.04em]">{g.sup.name}</p>
                     <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-white/60">
@@ -367,7 +367,7 @@ function PlayerDetail({ id, role, row }: { id: string; role: Cargo; row: Jogador
                     onClick={() => act(`f-${f}`, { action: 'desbloqueio.definir', playerId: id, flag: f, on: !on })}
                     className={cn(
                       'dv-focus dv-cut-diag inline-flex min-h-9 min-w-24 items-center justify-center gap-1.5 px-2.5 font-mono text-[10px] uppercase tracking-[0.12em] disabled:opacity-50',
-                      on ? 'bg-[#1c1c1f] text-white' : 'text-in-fg-2 shadow-[inset_0_0_0_1px_var(--in-line-strong)]',
+                      on ? 'bg-dv-block text-white' : 'text-in-fg-2 shadow-[inset_0_0_0_1px_var(--in-line-strong)]',
                     )}
                     style={{ '--dv-cut': '6px' } as CSSProperties}
                   >
@@ -444,7 +444,7 @@ export function AdminLogPanel() {
             onClick={() => setFiltro(v)}
             className={cn(
               'dv-focus dv-cut-diag inline-flex min-h-11 shrink-0 items-center px-3 font-mono text-[10px] uppercase tracking-[0.12em]',
-              filtro === v ? 'bg-[#1c1c1f] text-white' : 'text-in-fg-2 shadow-[inset_0_0_0_1px_var(--in-line-strong)]',
+              filtro === v ? 'bg-dv-block text-white' : 'text-in-fg-2 shadow-[inset_0_0_0_1px_var(--in-line-strong)]',
             )}
             style={{ '--dv-cut': '6px' } as CSSProperties}
           >
@@ -553,7 +553,7 @@ function PocoOdds({ c, onSaved }: { c: ConfigLinha; onSaved: () => void }) {
             <p className="font-mono text-[10.5px] uppercase tracking-[0.16em] text-in-fg-2">{MOEDA_LABEL[m] ?? m}</p>
             <div aria-hidden="true" className="mt-2 flex h-2 overflow-hidden">
               {POCO_CATEGORIAS.map((k, i) => (
-                <span key={k} style={{ width: `${(Math.max(0, Number(v[m]?.[k] ?? 0)) / total) * 100}%` }} className={cn('h-full', ['bg-in-fg-3', 'bg-in-gold', 'bg-dv-amethyst', 'bg-in-fg-2', 'bg-[#1c1c1f]'][i])} />
+                <span key={k} style={{ width: `${(Math.max(0, Number(v[m]?.[k] ?? 0)) / total) * 100}%` }} className={cn('h-full', ['bg-in-fg-3', 'bg-in-gold', 'bg-dv-amethyst', 'bg-in-fg-2', 'bg-dv-block'][i])} />
               ))}
             </div>
             <ul className="mt-2 flex flex-col">
@@ -578,7 +578,7 @@ function PocoOdds({ c, onSaved }: { c: ConfigLinha; onSaved: () => void }) {
         )
       })}
       <label className="flex min-h-11 cursor-pointer items-center gap-3">
-        <input type="checkbox" checked={prov} onChange={(e) => setProv(e.target.checked)} className="dv-focus size-5 shrink-0 cursor-pointer accent-[#1c1c1f]" />
+        <input type="checkbox" checked={prov} onChange={(e) => setProv(e.target.checked)} className="dv-focus size-5 shrink-0 cursor-pointer accent-dv-block" />
         <span className="font-mono text-[12px] uppercase tracking-[0.14em] text-in-fg">Ainda provisório</span>
       </label>
       {err && <ErrorLine>{err}</ErrorLine>}

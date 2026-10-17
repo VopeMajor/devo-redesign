@@ -417,7 +417,7 @@ function NovoAnuncioSheet({ open, onClose, custo, agir }: { open: boolean; onClo
               }}
               className={cn(
                 'dv-focus dv-cut-diag flex min-h-14 flex-col items-start justify-center px-3.5 text-left',
-                tipo === t ? 'bg-[#1d1a2b] shadow-[inset_0_0_0_1px_rgba(138,124,200,0.8)]' : 'shadow-[inset_0_0_0_1px_var(--dv-line-strong)]',
+                tipo === t ? 'bg-dv-cobalt-dim shadow-[inset_0_0_0_1px_rgb(var(--dv-amethyst-rgb)/0.8)]' : 'shadow-[inset_0_0_0_1px_var(--dv-line-strong)]',
               )}
               style={{ '--dv-cut': '8px' } as CSSProperties}
             >

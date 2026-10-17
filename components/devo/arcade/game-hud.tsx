@@ -42,10 +42,10 @@ const POP_TEXT: Record<PopTone, string> = {
 }
 
 const POP_BAND: Record<PopTone, string> = {
-  gold: 'bg-[linear-gradient(90deg,transparent,rgba(12,12,14,0.92)_14%,rgba(21,21,23,0.95)_50%,rgba(12,12,14,0.92)_86%,transparent)]',
+  gold: 'bg-[linear-gradient(90deg,transparent,rgb(var(--dv-ink-rgb)/0.92)_14%,rgba(21,21,23,0.95)_50%,rgb(var(--dv-ink-rgb)/0.92)_86%,transparent)]',
   amethyst: 'bg-[linear-gradient(90deg,transparent,rgba(30,27,43,0.92)_14%,rgba(42,37,66,0.95)_50%,rgba(30,27,43,0.92)_86%,transparent)]',
-  red: 'bg-[linear-gradient(90deg,transparent,rgba(63,6,11,0.94)_14%,rgba(110,10,20,0.96)_50%,rgba(63,6,11,0.94)_86%,transparent)]',
-  white: 'bg-[linear-gradient(90deg,transparent,rgba(12,12,14,0.88)_14%,rgba(21,21,23,0.9)_50%,rgba(12,12,14,0.88)_86%,transparent)]',
+  red: 'bg-[linear-gradient(90deg,transparent,rgb(var(--dv-wine-rgb)/0.94)_14%,rgba(110,10,20,0.96)_50%,rgb(var(--dv-wine-rgb)/0.94)_86%,transparent)]',
+  white: 'bg-[linear-gradient(90deg,transparent,rgb(var(--dv-ink-rgb)/0.88)_14%,rgba(21,21,23,0.9)_50%,rgb(var(--dv-ink-rgb)/0.88)_86%,transparent)]',
 }
 
 const POP_LINE: Record<PopTone, string> = {
@@ -111,16 +111,15 @@ export function GameFrame({
   const [layerEl, setLayerEl] = useState<HTMLDivElement | null>(null)
   return (
     <LiveLayerTarget el={layerEl}>
-      <div className={cn('bg-[#121214] bg-[url(/images/os/marmore-negro.webp)] bg-[length:560px_560px] relative flex h-full w-full flex-col overflow-hidden text-dv-text', className)}>
+      <div className={cn('bg-dv-ink-2 bg-[url(/images/os/marmore-negro.webp)] bg-[length:560px_560px] relative flex h-full w-full flex-col overflow-hidden text-dv-text', className)}>
         <div
           aria-hidden="true"
           className="pointer-events-none absolute inset-0"
           style={{
-            background:
-              'radial-gradient(90% 45% at 50% 0%, rgba(111,107,130,0.16), transparent 70%), radial-gradient(120% 80% at 50% 120%, rgba(0,0,0,0.75), transparent 60%)',
+            background: 'radial-gradient(90% 45% at 50% 0%, rgb(var(--dv-violet-rgb) / 0.16), transparent 70%), radial-gradient(120% 80% at 50% 120%, rgba(0,0,0,0.75), transparent 60%)',
           }}
         />
-        <header className="bg-[linear-gradient(180deg,#1c1c1f,#0e0e10)] relative z-20 flex shrink-0 items-center gap-2 pl-1 pr-2 pt-[env(safe-area-inset-top)]">
+        <header className="bg-[linear-gradient(180deg,var(--dv-block),var(--dv-ink))] relative z-20 flex shrink-0 items-center gap-2 pl-1 pr-2 pt-[env(safe-area-inset-top)]">
           <button
             type="button"
             onClick={onQuit}
@@ -189,7 +188,7 @@ export function ScoreChip({
         aria-hidden="true"
         className={cn(
           'dv-cut-diag absolute inset-0 -z-10 transition-opacity duration-[220ms]',
-          active ? (me ? 'bg-[linear-gradient(135deg,#cbc5e8,#5a4f8f_40%,#2c2c31)]' : 'bg-[linear-gradient(135deg,#ece5d8,#6b6357_45%,#2c2c31)]') : 'bg-dv-line-strong',
+          active ? (me ? 'bg-[linear-gradient(135deg,var(--dv-amethyst-text),var(--dv-cobalt)_40%,var(--dv-ink-4))]' : 'bg-[linear-gradient(135deg,#ece5d8,#6b6357_45%,var(--dv-ink-4))]') : 'bg-dv-line-strong',
         )}
       />
       <span aria-hidden="true" className="dv-cut-diag absolute inset-px -z-10 bg-[linear-gradient(180deg,var(--dv-ink-3),var(--dv-ink))]" style={{ '--dv-cut': '7.5px' } as CSSProperties} />

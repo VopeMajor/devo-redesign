@@ -73,11 +73,11 @@ export function BottomNav<V extends string>({
               >
                 {active && (
                   <>
-                    <span aria-hidden="true" className="absolute inset-0 bg-[radial-gradient(60%_70%_at_50%_100%,rgba(138,124,200,0.32),transparent_75%),linear-gradient(180deg,rgba(238,237,235,0.08),transparent_70%)]" />
-                    <span aria-hidden="true" className="absolute inset-x-0 top-0 h-[2px] bg-[linear-gradient(90deg,transparent,var(--in-brass)_20%,#ece5d8_50%,var(--in-brass)_80%,transparent)] shadow-[0_0_12px_1px_rgba(194,185,236,0.6)]" />
+                    <span aria-hidden="true" className="absolute inset-0 bg-[radial-gradient(60%_70%_at_50%_100%,rgb(var(--dv-amethyst-rgb)/0.32),transparent_75%),linear-gradient(180deg,rgb(var(--dv-text-rgb)/0.08),transparent_70%)]" />
+                    <span aria-hidden="true" className="absolute inset-x-0 top-0 h-[2px] bg-[linear-gradient(90deg,transparent,var(--in-brass)_20%,#ece5d8_50%,var(--in-brass)_80%,transparent)] shadow-[0_0_12px_1px_rgb(var(--dv-amethyst-text-rgb)/0.6)]" />
                   </>
                 )}
-                <span className={cn('relative flex size-7 items-center justify-center [&>svg]:size-full group-active:drop-shadow-[0_0_8px_rgba(236,229,216,0.85)]', active && 'drop-shadow-[0_0_6px_rgba(194,185,236,0.8)]', it.locked && 'opacity-60')}>
+                <span className={cn('relative flex size-7 items-center justify-center [&>svg]:size-full group-active:drop-shadow-[0_0_8px_rgba(236,229,216,0.85)]', active && 'drop-shadow-[0_0_6px_rgb(var(--dv-amethyst-text-rgb)/0.8)]', it.locked && 'opacity-60')}>
                   {it.icon}
                   {it.locked && (
                     <span aria-hidden="true" className="absolute -bottom-1 -right-1.5 grid size-3.5 place-items-center bg-in-panel text-in-fg-2">

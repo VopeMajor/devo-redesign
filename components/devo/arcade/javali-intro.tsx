@@ -105,7 +105,7 @@ export function JavaliIntro() {
           <span aria-hidden="true" className="dv-cut absolute inset-0 -z-10 bg-[linear-gradient(135deg,var(--dv-gold-bright),var(--dv-gold-deep)_30%,var(--dv-gold)_60%,var(--dv-gold-deep))]" />
           <div className="dv-cut absolute inset-[2px] overflow-hidden bg-dv-ink" style={{ '--dv-cut': '17px' } as CSSProperties}>
             {/* fundo do salão: mostrador romano lento atrás do anfitrião, holofote de lanterna */}
-            <span aria-hidden="true" className="absolute inset-0 bg-[radial-gradient(70%_55%_at_50%_30%,#2c2c31,var(--dv-ink)_75%)]" />
+            <span aria-hidden="true" className="absolute inset-0 bg-[radial-gradient(70%_55%_at_50%_30%,var(--dv-ink-4),var(--dv-ink)_75%)]" />
             <div aria-hidden="true" className="absolute left-1/2 top-[4%] w-[88%] max-w-[420px] -translate-x-1/2 opacity-[0.22]">
               <RomanDial tone="silver" />
             </div>
@@ -127,7 +127,7 @@ export function JavaliIntro() {
               <span style={MARBLE_INK} className="absolute inset-0 border-t border-dv-gold/70 shadow-[inset_0_10px_18px_-8px_rgba(236,229,216,0.18)]" />
               <span className="absolute inset-x-0 top-[3px] h-px bg-dv-gold/25" />
               <span className="absolute left-[8%] top-[22%] h-[46%] w-[13%] -rotate-[10deg] dv-cut bg-dv-porcelain shadow-[0_4px_8px_rgba(0,0,0,0.6)]" style={{ '--dv-cut': '3px' } as CSSProperties} />
-              <span className="absolute left-[15%] top-[26%] h-[46%] w-[13%] rotate-[6deg] dv-cut bg-[linear-gradient(160deg,#2c2c31,#151517)] shadow-[0_4px_8px_rgba(0,0,0,0.6),inset_0_0_0_1px_rgba(186,176,159,0.6)]" style={{ '--dv-cut': '3px' } as CSSProperties} />
+              <span className="absolute left-[15%] top-[26%] h-[46%] w-[13%] rotate-[6deg] dv-cut bg-[linear-gradient(160deg,var(--dv-ink-4),var(--dv-ink-2))] shadow-[0_4px_8px_rgba(0,0,0,0.6),inset_0_0_0_1px_rgba(186,176,159,0.6)]" style={{ '--dv-cut': '3px' } as CSSProperties} />
               {/* fichas de Tempo empilhadas (losangos de aço) */}
               <span className="absolute right-[12%] top-[30%] flex flex-col-reverse items-center">
                 {[0, 1, 2, 3].map((i) => (

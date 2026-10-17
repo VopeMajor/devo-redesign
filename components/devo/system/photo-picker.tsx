@@ -20,8 +20,8 @@ type Crop = { zoom: number; x: number; y: number }
 const RANGE =
   'dv-focus h-11 flex-1 cursor-pointer appearance-none bg-transparent ' +
   '[&::-webkit-slider-runnable-track]:h-[2px] [&::-webkit-slider-runnable-track]:bg-[linear-gradient(90deg,#6b6357,#ece5d8_50%,#6b6357)] ' +
-  '[&::-webkit-slider-thumb]:-mt-[6px] [&::-webkit-slider-thumb]:size-3.5 [&::-webkit-slider-thumb]:rotate-45 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:border [&::-webkit-slider-thumb]:border-[#ece5d8] [&::-webkit-slider-thumb]:bg-[#8a7cc8] [&::-webkit-slider-thumb]:shadow-[0_0_8px_rgba(138,124,200,0.7)] ' +
-  '[&::-moz-range-track]:h-[2px] [&::-moz-range-track]:bg-[#bab09f] [&::-moz-range-thumb]:size-3 [&::-moz-range-thumb]:rotate-45 [&::-moz-range-thumb]:rounded-none [&::-moz-range-thumb]:border [&::-moz-range-thumb]:border-[#ece5d8] [&::-moz-range-thumb]:bg-[#8a7cc8]'
+  '[&::-webkit-slider-thumb]:-mt-[6px] [&::-webkit-slider-thumb]:size-3.5 [&::-webkit-slider-thumb]:rotate-45 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:border [&::-webkit-slider-thumb]:border-[#ece5d8] [&::-webkit-slider-thumb]:bg-[#8f86b4] [&::-webkit-slider-thumb]:shadow-[0_0_8px_rgba(138,124,200,0.7)] ' +
+  '[&::-moz-range-track]:h-[2px] [&::-moz-range-track]:bg-[#bab09f] [&::-moz-range-thumb]:size-3 [&::-moz-range-thumb]:rotate-45 [&::-moz-range-thumb]:rounded-none [&::-moz-range-thumb]:border [&::-moz-range-thumb]:border-[#ece5d8] [&::-moz-range-thumb]:bg-[#8f86b4]'
 
 /** Escala mínima para a imagem cobrir todo o quadro 3:4. */
 function coverScale(img: { width: number; height: number }) {

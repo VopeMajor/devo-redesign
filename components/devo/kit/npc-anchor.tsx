@@ -255,7 +255,7 @@ export function NpcMedallion({
   return (
     <span aria-hidden="true" className={cn('relative block shrink-0 rounded-full', className)} style={{ width: size, aspectRatio: '1' }}>
       <span
-        className="absolute inset-0 overflow-hidden rounded-full bg-[radial-gradient(closest-side_at_50%_42%,rgba(138,124,200,0.22),rgba(18,18,20,0.95))]"
+        className="absolute inset-0 overflow-hidden rounded-full bg-[radial-gradient(closest-side_at_50%_42%,rgb(var(--dv-amethyst-rgb)/0.22),rgba(18,18,20,0.95))]"
         style={{ boxShadow: `inset 0 0 0 1px ${ring}` }}
       >
         {src ? (

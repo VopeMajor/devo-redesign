@@ -62,9 +62,9 @@ export function CageFrame({
         className={cn('absolute overflow-hidden bg-dv-ink', innerClassName)}
         style={{ left: `${(42 / 300) * 100}%`, right: `${(42 / 300) * 100}%`, top: `${(70 / 420) * 100}%`, bottom: `${((420 - BASE_Y) / 420) * 100}%`, borderRadius: '999px 999px 2px 2px' }}
       >
-        {glow && <span aria-hidden="true" className="absolute inset-0 -z-10 bg-[radial-gradient(70%_50%_at_50%_35%,rgba(111,107,130,0.55),transparent_75%),linear-gradient(180deg,#19181f,#0c0c0e)]" />}
+        {glow && <span aria-hidden="true" className="absolute inset-0 -z-10 bg-[radial-gradient(70%_50%_at_50%_35%,rgb(var(--dv-violet-rgb)/0.55),transparent_75%),linear-gradient(180deg,var(--dv-night),var(--dv-ink))]" />}
         {children}
-        <span aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_40%,transparent_55%,rgba(12,12,14,0.55)_100%)]" />
+        <span aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_40%,transparent_55%,rgb(var(--dv-ink-rgb)/0.55)_100%)]" />
       </div>
 
       <svg viewBox="0 0 300 420" aria-hidden="true" className="pointer-events-none absolute inset-0 size-full overflow-visible drop-shadow-[0_2px_3px_rgba(0,0,0,0.55)]" fill="none">

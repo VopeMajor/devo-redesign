@@ -127,7 +127,7 @@ export function InvitePanel() {
                     }}
                     className={cn(
                       'dv-focus dv-cut-diag group relative inline-flex min-h-11 flex-1 items-center justify-center gap-2 px-4 font-sans text-[11px] font-medium uppercase tracking-[0.16em] transition-colors duration-200',
-                      role === r ? 'bg-[linear-gradient(180deg,#f7f6f3,#e3e1dc)] text-[#0c0c0e] shadow-[inset_0_0_0_1px_#bab09f,0_0_16px_-6px_rgba(138,124,200,0.8)]' : 'text-in-fg-2 shadow-[inset_0_0_0_1px_var(--in-line-strong)] hover:text-in-fg',
+                      role === r ? 'bg-[linear-gradient(180deg,#f7f6f3,#e3e1dc)] text-dv-ink shadow-[inset_0_0_0_1px_#bab09f,0_0_16px_-6px_rgb(var(--dv-amethyst-rgb)/0.8)]' : 'text-in-fg-2 shadow-[inset_0_0_0_1px_var(--in-line-strong)] hover:text-in-fg',
                     )}
                     style={{ '--dv-cut': '7px' } as CSSProperties}
                   >
@@ -150,7 +150,7 @@ export function InvitePanel() {
                 onChange={(e) => setTest(e.target.checked)}
                 className="dv-focus peer size-5 shrink-0 cursor-pointer appearance-none border border-in-line-strong bg-transparent transition-colors checked:border-[#ece5d8] checked:bg-[#f1f0ee]"
               />
-              <GlyphCheck aria-hidden="true" className="pointer-events-none -ml-8 size-5 p-0.5 text-[#0c0c0e] opacity-0 peer-checked:opacity-100" />
+              <GlyphCheck aria-hidden="true" className="pointer-events-none -ml-8 size-5 p-0.5 text-dv-ink opacity-0 peer-checked:opacity-100" />
               <span className="flex flex-col">
                 <span className="font-mono text-[12px] uppercase tracking-[0.16em] text-in-fg">Conta de teste</span>
                 <span className="font-sans text-[12px] text-in-fg-3">Fora de ranking, apostas e prêmios</span>
@@ -165,7 +165,7 @@ export function InvitePanel() {
           <div aria-live="polite" className="dv-porcelain dv-cut-diag mt-5 flex animate-dv-pop items-center justify-between gap-3 py-3 pl-4 pr-3" style={{ '--dv-cut': '10px' } as CSSProperties}>
             <div className="min-w-0">
               <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-[#58585e]">Novo código · uso único</p>
-              <p className="mt-1 truncate font-mono text-[19px] font-medium tracking-[0.12em] text-[#0d0d0f]">{fresh}</p>
+              <p className="mt-1 truncate font-mono text-[19px] font-medium tracking-[0.12em] text-dv-ink">{fresh}</p>
             </div>
             <CopyButton code={fresh} />
           </div>
