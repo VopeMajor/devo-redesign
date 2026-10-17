@@ -1,0 +1,121 @@
+{
+  "pedido": "arcano-sigilo-temperanca",
+  "titulo": "Arcano — temperanca (sigilo)",
+  "tipo": "emblema",
+  "tamanho_final": 1024,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 13141,
+      "passos": null,
+      "segundos": 16.2,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "ilhas_removidas": 0,
+      "arquivos": [
+        {
+          "arquivo": "arcano-sigilo-temperanca--v01--1024.png",
+          "bytes": 437276
+        },
+        {
+          "arquivo": "arcano-sigilo-temperanca--v01--1024.webp",
+          "bytes": 93800
+        },
+        {
+          "arquivo": "arcano-sigilo-temperanca--v01--512.webp",
+          "bytes": 30202
+        },
+        {
+          "arquivo": "arcano-sigilo-temperanca--v01--256.webp",
+          "bytes": 12444
+        },
+        {
+          "arquivo": "arcano-sigilo-temperanca--v01--128.webp",
+          "bytes": 5450
+        },
+        {
+          "arquivo": "arcano-sigilo-temperanca--v01--64.webp",
+          "bytes": 2072
+        }
+      ],
+      "segundos_pos": 17.2,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 13142,
+      "passos": null,
+      "segundos": 10.8,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "arcano-sigilo-temperanca--v02--1024.png",
+          "bytes": 295248
+        },
+        {
+          "arquivo": "arcano-sigilo-temperanca--v02--1024.webp",
+          "bytes": 64690
+        },
+        {
+          "arquivo": "arcano-sigilo-temperanca--v02--512.webp",
+          "bytes": 21126
+        },
+        {
+          "arquivo": "arcano-sigilo-temperanca--v02--256.webp",
+          "bytes": 8636
+        },
+        {
+          "arquivo": "arcano-sigilo-temperanca--v02--128.webp",
+          "bytes": 3942
+        },
+        {
+          "arquivo": "arcano-sigilo-temperanca--v02--64.webp",
+          "bytes": 1538
+        }
+      ],
+      "segundos_pos": 13.6,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 13143,
+      "passos": null,
+      "segundos": 10.5,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "arcano-sigilo-temperanca--v03--1024.png",
+          "bytes": 372149
+        },
+        {
+          "arquivo": "arcano-sigilo-temperanca--v03--1024.webp",
+          "bytes": 78178
+        },
+        {
+          "arquivo": "arcano-sigilo-temperanca--v03--512.webp",
+          "bytes": 24910
+        },
+        {
+          "arquivo": "arcano-sigilo-temperanca--v03--256.webp",
+          "bytes": 10418
+        },
+        {
+          "arquivo": "arcano-sigilo-temperanca--v03--128.webp",
+          "bytes": 4950
+        },
+        {
+          "arquivo": "arcano-sigilo-temperanca--v03--64.webp",
+          "bytes": 2156
+        }
+      ],
+      "segundos_pos": 14.4,
+      "avisos": []
+    }
+  ]
+}

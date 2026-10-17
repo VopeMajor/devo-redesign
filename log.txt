@@ -1,0 +1,9 @@
+[arcano-sigilo-temperanca] v01: @cf/black-forest-labs/flux-2-klein-4b seed=13141 1024x1024 passos=None (~104 neurônios)
+    ok em 16.2s, 1024x1024
+[arcano-sigilo-temperanca] v02: @cf/black-forest-labs/flux-2-klein-4b seed=13142 1024x1024 passos=None (~104 neurônios)
+    ok em 10.8s, 1024x1024
+[arcano-sigilo-temperanca] v03: @cf/black-forest-labs/flux-2-klein-4b seed=13143 1024x1024 passos=None (~104 neurônios)
+    ok em 10.5s, 1024x1024
+[arcano-sigilo-temperanca] v01: rembg:birefnet-general; sem avisos
+[arcano-sigilo-temperanca] v02: rembg:birefnet-general; sem avisos
+[arcano-sigilo-temperanca] v03: rembg:birefnet-general; sem avisos
