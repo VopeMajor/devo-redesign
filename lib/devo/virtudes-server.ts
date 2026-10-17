@@ -1,6 +1,7 @@
 import 'server-only'
 import type { PoolClient } from 'pg'
 import { pool } from '@/lib/db'
+import { ARCANOS_RASCUNHO, type ArcanoTexto, type ArcanoTextoCfg, limparTexto } from './arcanos-textos'
 import { normalizeCargo } from './cargos'
 import { RecordError } from './errors'
 import { type Queryable, run, txAs, UUID_RE } from './fundacao-db'
@@ -12,8 +13,12 @@ import {
   AFINIDADES_PADRAO,
   type AfinidadesConfig,
   afinidadeDaOrdem,
+  ARCANO_KEYS,
   arcanoInfo,
   type ArcanoKey,
+  type ArcanoVista,
+  type EstagioVista,
+  type OrdemArcano,
   distribuir,
   ESTAGIOS_PADRAO,
   type EstagioLimite,
@@ -83,6 +88,52 @@ export async function lerConfigs(q: Queryable = pool) {
     evolucao: { ...EVOLUCAO_PADRAO, ...(ev?.value ?? {}) },
     fontes: (f?.value as Fontes | undefined) ?? FONTES_PADRAO,
   }
+}
+
+/** Textos dos Arcanos: o que o Owner editou (devo_config 'virtudes.arcanos') por cima do rascunho do código. */
+export async function lerTextosArcanos(q: Queryable = pool): Promise<Record<ArcanoKey, ArcanoTextoCfg & { editado: boolean }>> {
+  const c = await getConfig<Record<string, unknown>>('virtudes.arcanos', q).catch(() => null)
+  const salvo = c?.value && typeof c.value === 'object' ? c.value : {}
+  return Object.fromEntries(
+    ARCANO_KEYS.map((k) => {
+      const raw = salvo[k] as (ArcanoTexto & { provisorio?: unknown }) | undefined
+      const t = raw ? limparTexto(raw) : null
+      return [k, t ? { ...t, provisorio: raw?.provisorio !== false, editado: true } : { ...ARCANOS_RASCUNHO[k], provisorio: true, editado: false }]
+    }),
+  ) as Record<ArcanoKey, ArcanoTextoCfg & { editado: boolean }>
+}
+
+function extremosDaOrdem(o: OrdemArcano | undefined) {
+  if (!o || !ordemValida(o)) return { excelente: null, deficiente: null }
+  return { excelente: VIRTUDE_KEYS.find((v) => o[v] === 1) ?? null, deficiente: VIRTUDE_KEYS.find((v) => o[v] === 6) ?? null }
+}
+
+/**
+ * Lista dos 22 para a tela do jogador. Trancado = só key/numeral/título/breve (nada mais sai do servidor).
+ * Próprio: detalhe com Estágios passado/atual/futuro (futuro sem a linha, salvo para a equipe). Equipe: tudo
+ * aberto. `provisorio` só para o Owner.
+ */
+function listaArcanos(textos: Record<ArcanoKey, ArcanoTextoCfg>, ordem: AfinidadesConfig['ordem'], proprio: ArcanoKey | null, estagio: number, equipe: boolean, owner: boolean): ArcanoVista[] {
+  return ARCANO_KEYS.map((k) => {
+    const info = arcanoInfo(k)
+    const t = textos[k]
+    const base: ArcanoVista = { key: k, numeral: info.numeral, titulo: info.titulo, breve: t.breve }
+    const meu = k === proprio
+    if (!meu && !equipe) return base
+    const n = t.estagios.length
+    const atual = Math.min(Math.max(1, estagio), n)
+    const estagios = t.estagios.map((x, i): EstagioVista => {
+      if (!meu) return { nome: x.nome, linha: x.linha, estado: 'aberto' }
+      const estado: EstagioVista['estado'] = i + 1 < atual ? 'passado' : i + 1 === atual ? 'atual' : 'futuro'
+      return estado === 'futuro' && !equipe ? { nome: x.nome, estado } : { nome: x.nome, linha: x.linha, estado }
+    })
+    return {
+      ...base,
+      ...(meu ? { proprio: true as const } : {}),
+      ...(owner ? { provisorio: t.provisorio } : {}),
+      detalhe: { descricao: t.descricao, fisiologia: t.fisiologia, ...extremosDaOrdem(ordem[k]), estagios },
+    }
+  })
 }
 
 /* ------------------------------------------------------------------ Pontos de Potencial */
@@ -177,7 +228,9 @@ export async function estadoVirtudes(playerId: string): Promise<VirtudesPayload>
   if (!(await hasUnlock(playerId, 'virtudes'))) return { liberado: false, motivo: MOTIVO_TRANCADO }
   const [p] = await run<Linha>(pool, 'SELECT id, name, role, is_test, arcano, arcano_estagio FROM players WHERE id = $1', [playerId])
   if (!p) throw new RecordError('Registro não encontrado.', 404)
-  const cfg = await lerConfigs()
+  const [cfg, textos] = await Promise.all([lerConfigs(), lerTextosArcanos()])
+  const cargo = normalizeCargo(p.role)
+  const equipe = cargo === 'owner' || cargo === 'anfitriao'
   const arcano = isArcano(p.arcano) ? p.arcano : null
   const ordem = arcano ? cfg.afinidades.ordem[arcano] : null
   const pp = (await ppDe([p.id], pool)).get(p.id)!
@@ -207,6 +260,8 @@ export async function estadoVirtudes(playerId: string): Promise<VirtudesPayload>
       const x = extremos(e.ganhos)
       return { at: e.at.getTime(), de: e.de_estagio, para: e.para_estagio, arcano: isArcano(e.arcano) ? arcanoInfo(e.arcano).titulo : null, maisCresceu: x.mais, menosCresceu: x.menos }
     }),
+    arcanos: listaArcanos(textos, cfg.afinidades.ordem, arcano, p.arcano_estagio, equipe, cargo === 'owner'),
+    verTodos: equipe,
   }
 }
 
@@ -223,7 +278,8 @@ export async function mesaVirtudes(atorId: string, busca?: string | null): Promi
     [termo, ator.cargo === 'owner'],
   )
   const ids = rows.map((r) => r.id)
-  const cfg = await lerConfigs()
+  const owner = ator.cargo === 'owner'
+  const [cfg, textos] = await Promise.all([lerConfigs(), owner ? lerTextosArcanos() : null])
   const [pp, niveis, evol] = await Promise.all([
     ppDe(ids, pool),
     ids.length ? run<{ player_id: string; virtude: VirtudeKey; valor: string }>(pool, 'SELECT player_id, virtude, valor FROM virtude_nivel WHERE player_id = ANY($1)', [ids]) : [],
@@ -272,7 +328,14 @@ export async function mesaVirtudes(atorId: string, busca?: string | null): Promi
     podeEvoluir: true,
     podeEditar: ator.cargo === 'owner',
     jogadores,
-    config: { afinidades: cfg.afinidades, afinidadesProvisorio: cfg.afinidadesProvisorio, estagios: cfg.estagios, estagiosProvisorio: cfg.estagiosProvisorio, evolucao: cfg.evolucao },
+    config: {
+      afinidades: cfg.afinidades,
+      afinidadesProvisorio: cfg.afinidadesProvisorio,
+      estagios: cfg.estagios,
+      estagiosProvisorio: cfg.estagiosProvisorio,
+      evolucao: cfg.evolucao,
+      ...(textos ? { arcanos: textos } : {}),
+    },
   }
 }
 
@@ -414,5 +477,37 @@ async function gravarConfig(atorId: string, key: string, value: unknown, proviso
     )
     await run(c, "INSERT INTO admin_log (actor_id, action, ref, data) VALUES ($1, 'config.alterada', $2, $3)", [ator.id, key, JSON.stringify({ value, provisional: provisorio })])
     return { ok: true }
+  })
+}
+
+/**
+ * Owner grava (ou, com `valor` null, devolve ao rascunho do código) o texto de UM Arcano: breve, descrição,
+ * fisiologia e Estágios. Uma instrução só (jsonb || / -), então duas edições de Arcanos diferentes não se
+ * atropelam. Registra no admin_log.
+ */
+export async function definirTextoArcano(atorId: string, arcanoRaw: unknown, valor: unknown, provisorio = true) {
+  if (!isArcano(arcanoRaw)) throw new RecordError('Arcano desconhecido.')
+  const arcano = arcanoRaw
+  const limpo = valor === null ? null : limparTexto(valor)
+  if (valor !== null && !limpo) throw new RecordError('Preencha a frase breve, a descrição, a fisiologia e o nome de cada Estágio.')
+  return txAs(atorId, async (c) => {
+    const ator = await requireActor(atorId, c)
+    requireCan(ator, 'config.editar')
+    if (limpo) {
+      await run(
+        c,
+        `INSERT INTO devo_config (key, value, provisional, updated_by, updated_at) VALUES ('virtudes.arcanos', jsonb_build_object($1::text, $2::jsonb), true, $3, now())
+         ON CONFLICT (key) DO UPDATE SET value = coalesce(devo_config.value, '{}'::jsonb) || jsonb_build_object($1::text, $2::jsonb), updated_by = EXCLUDED.updated_by, updated_at = now()`,
+        [arcano, JSON.stringify({ ...limpo, provisorio }), ator.id],
+      )
+    } else {
+      await run(c, "UPDATE devo_config SET value = value - $1::text, updated_by = $2, updated_at = now() WHERE key = 'virtudes.arcanos'", [arcano, ator.id])
+    }
+    await run(c, "INSERT INTO admin_log (actor_id, action, ref, data) VALUES ($1, 'virtudes.arcano_texto', $2, $3)", [
+      ator.id,
+      arcano,
+      JSON.stringify(limpo ? { ...limpo, provisorio } : { restaurado: true }),
+    ])
+    return { ok: true, arcano, restaurado: !limpo }
   })
 }

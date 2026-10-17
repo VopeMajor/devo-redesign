@@ -3,11 +3,13 @@
 import { useEffect, useState } from 'react'
 import useSWR from 'swr'
 import { HudCode, RecordPanel } from '@/components/devo/kit'
+import { type ArcanoTextoCfg, TEXTO_LIMITES } from '@/lib/devo/arcanos-textos'
 import { playSfx } from '@/lib/devo/audio'
 import {
   ARCANOS,
   type AfinidadesConfig,
   afinidadeDaOrdem,
+  type ArcanoKey,
   AFINIDADE_ROTULO,
   arcanoInfo,
   type EstagioLimite,
@@ -19,7 +21,7 @@ import {
   type VirtudesMesa,
 } from '@/lib/devo/virtudes'
 import { cn } from '@/lib/utils'
-import { RecButton, RecInput, RecTag } from '../system/record-ui'
+import { RecButton, RecInput, RecLabel, RecTag, RecTextarea } from '../system/record-ui'
 import { ConfirmButton, EmptyLine, ErrorLine, Loading, RecSelect } from '../system/staff-ui'
 import { Naipe } from './naipes'
 
@@ -104,6 +106,7 @@ export function VirtudesMesa() {
           </RecordPanel>
           {data.podeEditar && <EditorAfinidades cfg={data.config.afinidades} provisorio={data.config.afinidadesProvisorio} agir={agir} />}
           {data.podeEditar && <EditorEstagios padrao={data.config.estagios.padrao} provisorio={data.config.estagiosProvisorio} agir={agir} porArcano={data.config.estagios.porArcano} />}
+          {data.podeEditar && data.config.arcanos && <EditorTextos textos={data.config.arcanos} agir={agir} />}
         </>
       ) : null}
     </div>
@@ -472,6 +475,101 @@ function EditorEstagios({ padrao, porArcano, provisorio, agir }: { padrao: Estag
         >
           Gravar limites
         </RecButton>
+      </div>
+    </RecordPanel>
+  )
+}
+
+type TextoMesa = ArcanoTextoCfg & { editado: boolean }
+
+/**
+ * Owner: textos de cada Arcano (frase breve, descrição, fisiologia e Estágios). Saem do rascunho do código até
+ * alguém gravar; "Voltar ao rascunho" apaga a versão editada. Fica no admin_log ('virtudes.arcano_texto').
+ */
+function EditorTextos({ textos, agir }: { textos: Record<string, TextoMesa>; agir: Agir }) {
+  const [k, setK] = useState<ArcanoKey>('louco')
+  const atual = textos[k]
+  const [f, setF] = useState<TextoMesa>(atual)
+  const [final, setFinal] = useState(!atual.provisorio)
+  const [busy, setBusy] = useState<string | null>(null)
+  useEffect(() => {
+    setF(textos[k])
+    setFinal(!textos[k].provisorio)
+  }, [k, textos])
+  const L = TEXTO_LIMITES
+  const faltando = !f.breve.trim() || !f.descricao.trim() || !f.fisiologia.trim() || f.estagios.some((e) => !e.nome.trim())
+  const mudou = JSON.stringify([f.breve, f.descricao, f.fisiologia, f.estagios]) !== JSON.stringify([atual.breve, atual.descricao, atual.fisiologia, atual.estagios]) || final === atual.provisorio
+  const titulo = arcanoInfo(k).titulo
+  const setEstagio = (i: number, campo: 'nome' | 'linha', v: string) => setF({ ...f, estagios: f.estagios.map((e, j) => (j === i ? { ...e, [campo]: v.slice(0, L[campo]) } : e)) })
+  const gravar = async () => {
+    setBusy('gravar')
+    await agir({ action: 'arcano-texto', arcano: k, value: { breve: f.breve, descricao: f.descricao, fisiologia: f.fisiologia, estagios: f.estagios }, provisorio: !final }, `Texto do ${titulo} gravado.`)
+    setBusy(null)
+  }
+  const restaurar = async () => {
+    setBusy('restaurar')
+    await agir({ action: 'arcano-texto', arcano: k, value: null }, `${titulo} voltou ao rascunho.`)
+    setBusy(null)
+  }
+  const editados = Object.values(textos).filter((t) => t.editado).length
+  return (
+    <RecordPanel title="Textos dos Arcanos" jp="札文" headerRight={<RecTag tone={atual.provisorio ? 'accent' : 'muted'}>{atual.provisorio ? 'Provisório' : 'Final'}</RecTag>}>
+      <p className="font-body text-[15px] leading-relaxed text-in-fg-2">
+        O doc não descreve os Arcanos; estes textos são rascunho. O jogador vê a frase breve de todos e o texto inteiro só do próprio Arcano. {editados ? `${editados} de 22 já editados.` : 'Nenhum editado ainda.'}
+      </p>
+      <label className="mt-3 flex flex-col gap-1">
+        <RecLabel>Arcano</RecLabel>
+        <RecSelect aria-label="Arcano a editar" value={k} onChange={(e) => setK(e.target.value as ArcanoKey)}>
+          {ARCANOS.map(([key, t]) => (
+            <option key={key} value={key}>
+              {arcanoInfo(key).numeral} · {t.replace(/^Arcano /, '')}
+              {textos[key]?.editado ? (textos[key].provisorio ? ' (editado)' : ' (final)') : ''}
+            </option>
+          ))}
+        </RecSelect>
+      </label>
+      <div className="mt-4 flex flex-col gap-4">
+        <label className="flex flex-col gap-1">
+          <RecLabel hint={`${f.breve.length}/${L.breve}`}>Frase breve (todos veem)</RecLabel>
+          <RecTextarea rows={3} value={f.breve} maxLength={L.breve} onChange={(e) => setF({ ...f, breve: e.target.value })} />
+        </label>
+        <label className="flex flex-col gap-1">
+          <RecLabel hint={`${f.descricao.length}/${L.descricao}`}>Descrição</RecLabel>
+          <RecTextarea rows={7} value={f.descricao} maxLength={L.descricao} onChange={(e) => setF({ ...f, descricao: e.target.value })} />
+        </label>
+        <label className="flex flex-col gap-1">
+          <RecLabel hint={`${f.fisiologia.length}/${L.fisiologia}`}>Fisiologia</RecLabel>
+          <RecTextarea rows={5} value={f.fisiologia} maxLength={L.fisiologia} onChange={(e) => setF({ ...f, fisiologia: e.target.value })} />
+        </label>
+        <fieldset className="flex flex-col gap-3">
+          <legend className="mb-1">
+            <RecLabel>Estágios de Evolução</RecLabel>
+          </legend>
+          {f.estagios.map((e, i) => (
+            <div key={i} className="flex gap-2">
+              <span className="w-7 shrink-0 pt-3 font-impact text-[17px] font-semibold text-in-fg">{['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'][i]}</span>
+              <div className="flex min-w-0 flex-1 flex-col gap-1.5">
+                <RecInput aria-label={`Nome do Estágio ${i + 1}`} value={e.nome} maxLength={L.nome} onChange={(ev) => setEstagio(i, 'nome', ev.target.value)} className="h-11 text-[15px]" />
+                <RecInput aria-label={`Linha do Estágio ${i + 1}`} value={e.linha} maxLength={L.linha} onChange={(ev) => setEstagio(i, 'linha', ev.target.value)} className="h-11 text-[14.5px]" />
+              </div>
+            </div>
+          ))}
+        </fieldset>
+      </div>
+      <label className="mt-3 flex min-h-11 items-center gap-2.5 font-sans text-[14px] text-in-fg">
+        <input type="checkbox" checked={final} onChange={(e) => setFinal(e.target.checked)} className="size-5 accent-[var(--in-fg)]" />
+        Texto final (tira o selo de provisório)
+      </label>
+      {faltando && <p className="mt-1 font-mono text-[11px] leading-relaxed text-in-alert">Frase breve, descrição, fisiologia e o nome de cada Estágio são obrigatórios.</p>}
+      <div className="mt-2 flex flex-wrap gap-2">
+        <RecButton disabled={faltando || !mudou} loading={busy === 'gravar'} onClick={() => void gravar()}>
+          Gravar texto
+        </RecButton>
+        {atual.editado && (
+          <ConfirmButton size="md" variant="secondary" confirmLabel={`Confirmar: ${titulo} volta ao rascunho`} loading={busy === 'restaurar'} onConfirm={() => void restaurar()}>
+            Voltar ao rascunho
+          </ConfirmButton>
+        )}
       </div>
     </RecordPanel>
   )

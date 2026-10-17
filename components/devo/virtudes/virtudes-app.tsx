@@ -7,6 +7,7 @@ import { cn } from '@/lib/utils'
 import { Button, Spinner } from '../kit/button'
 import { EmblemMark, EmblemVirtudes } from '../kit/emblems'
 import { toRoman } from '../kit'
+import { ArcanosLista } from './arcanos-lista'
 import { Naipe } from './naipes'
 
 /**
@@ -125,6 +126,8 @@ function Tela({ d }: { d: Liberado }) {
           </p>
 
           <Potencial d={d} />
+
+          {d.arcanos?.length > 0 && <ArcanosLista arcanos={d.arcanos} verTodos={d.verTodos} />}
 
           <section aria-labelledby="virt-naipes" className="flex flex-col gap-3">
             <Cabecalho id="virt-naipes" kicker="Os quatro naipes" titulo="Bases claras" />
