@@ -1,0 +1,109 @@
+{
+  "pedido": "arcano-estrela",
+  "titulo": "Arcano — estrela (figura)",
+  "tipo": "ilustracao",
+  "tamanho_final": 1536,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 12171,
+      "passos": null,
+      "segundos": 3.0,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "arcano-estrela--v01--1536.png",
+          "bytes": 1109724
+        },
+        {
+          "arquivo": "arcano-estrela--v01--1536.webp",
+          "bytes": 211168
+        },
+        {
+          "arquivo": "arcano-estrela--v01--1024.webp",
+          "bytes": 98742
+        },
+        {
+          "arquivo": "arcano-estrela--v01--768.webp",
+          "bytes": 66222
+        },
+        {
+          "arquivo": "arcano-estrela--v01--512.webp",
+          "bytes": 37460
+        }
+      ],
+      "segundos_pos": 36.1,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 12172,
+      "passos": null,
+      "segundos": 3.6,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "arcano-estrela--v02--1536.png",
+          "bytes": 1027345
+        },
+        {
+          "arquivo": "arcano-estrela--v02--1536.webp",
+          "bytes": 204106
+        },
+        {
+          "arquivo": "arcano-estrela--v02--1024.webp",
+          "bytes": 93820
+        },
+        {
+          "arquivo": "arcano-estrela--v02--768.webp",
+          "bytes": 62116
+        },
+        {
+          "arquivo": "arcano-estrela--v02--512.webp",
+          "bytes": 34460
+        }
+      ],
+      "segundos_pos": 30.5,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 12173,
+      "passos": null,
+      "segundos": 3.1,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "ilhas_removidas": 1,
+      "arquivos": [
+        {
+          "arquivo": "arcano-estrela--v03--1536.png",
+          "bytes": 1040079
+        },
+        {
+          "arquivo": "arcano-estrela--v03--1536.webp",
+          "bytes": 192206
+        },
+        {
+          "arquivo": "arcano-estrela--v03--1024.webp",
+          "bytes": 91926
+        },
+        {
+          "arquivo": "arcano-estrela--v03--768.webp",
+          "bytes": 61168
+        },
+        {
+          "arquivo": "arcano-estrela--v03--512.webp",
+          "bytes": 34306
+        }
+      ],
+      "segundos_pos": 31.1,
+      "avisos": []
+    }
+  ]
+}
