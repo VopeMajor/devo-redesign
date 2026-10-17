@@ -1,0 +1,9 @@
+[emblema-engrenagem-herdeiro] v01: @cf/black-forest-labs/flux-2-klein-4b seed=7081 1024x1024 passos=None (~104 neurônios)
+    ok em 13.9s, 1024x1024
+[emblema-engrenagem-herdeiro] v02: @cf/black-forest-labs/flux-2-klein-4b seed=7082 1024x1024 passos=None (~104 neurônios)
+    ok em 14.1s, 1024x1024
+[emblema-engrenagem-herdeiro] v03: @cf/black-forest-labs/flux-2-klein-4b seed=7083 1024x1024 passos=None (~104 neurônios)
+    ok em 22.6s, 1024x1024
+[emblema-engrenagem-herdeiro] v01: rembg:birefnet-general; sem avisos
+[emblema-engrenagem-herdeiro] v02: rembg:birefnet-general; sem avisos
+[emblema-engrenagem-herdeiro] v03: rembg:birefnet-general; sem avisos
