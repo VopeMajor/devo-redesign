@@ -1,0 +1,9 @@
+[emblema-selo-anfitriao] v01: @cf/black-forest-labs/flux-2-klein-4b seed=7111 1024x1024 passos=None (~104 neurônios)
+    ok em 12.8s, 1024x1024
+[emblema-selo-anfitriao] v02: @cf/black-forest-labs/flux-2-klein-4b seed=7112 1024x1024 passos=None (~104 neurônios)
+    ok em 30.6s, 1024x1024
+[emblema-selo-anfitriao] v03: @cf/black-forest-labs/flux-2-klein-4b seed=7113 1024x1024 passos=None (~104 neurônios)
+    ok em 21.8s, 1024x1024
+[emblema-selo-anfitriao] v01: rembg:birefnet-general; sem avisos
+[emblema-selo-anfitriao] v02: rembg:birefnet-general; sem avisos
+[emblema-selo-anfitriao] v03: rembg:birefnet-general; sem avisos

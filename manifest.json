@@ -1,0 +1,121 @@
+{
+  "pedido": "emblema-selo-anfitriao",
+  "titulo": "Selo do Anfitrião",
+  "tipo": "emblema",
+  "tamanho_final": 1024,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 7111,
+      "passos": null,
+      "segundos": 12.8,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "ilhas_removidas": 0,
+      "arquivos": [
+        {
+          "arquivo": "emblema-selo-anfitriao--v01--1024.png",
+          "bytes": 700966
+        },
+        {
+          "arquivo": "emblema-selo-anfitriao--v01--1024.webp",
+          "bytes": 131460
+        },
+        {
+          "arquivo": "emblema-selo-anfitriao--v01--512.webp",
+          "bytes": 44906
+        },
+        {
+          "arquivo": "emblema-selo-anfitriao--v01--256.webp",
+          "bytes": 17426
+        },
+        {
+          "arquivo": "emblema-selo-anfitriao--v01--96.webp",
+          "bytes": 4592
+        },
+        {
+          "arquivo": "emblema-selo-anfitriao--v01--48.webp",
+          "bytes": 1950
+        }
+      ],
+      "segundos_pos": 30.2,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 7112,
+      "passos": null,
+      "segundos": 30.6,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "emblema-selo-anfitriao--v02--1024.png",
+          "bytes": 622416
+        },
+        {
+          "arquivo": "emblema-selo-anfitriao--v02--1024.webp",
+          "bytes": 105782
+        },
+        {
+          "arquivo": "emblema-selo-anfitriao--v02--512.webp",
+          "bytes": 36264
+        },
+        {
+          "arquivo": "emblema-selo-anfitriao--v02--256.webp",
+          "bytes": 14992
+        },
+        {
+          "arquivo": "emblema-selo-anfitriao--v02--96.webp",
+          "bytes": 4380
+        },
+        {
+          "arquivo": "emblema-selo-anfitriao--v02--48.webp",
+          "bytes": 1856
+        }
+      ],
+      "segundos_pos": 24.9,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 7113,
+      "passos": null,
+      "segundos": 21.8,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "emblema-selo-anfitriao--v03--1024.png",
+          "bytes": 692406
+        },
+        {
+          "arquivo": "emblema-selo-anfitriao--v03--1024.webp",
+          "bytes": 119798
+        },
+        {
+          "arquivo": "emblema-selo-anfitriao--v03--512.webp",
+          "bytes": 40988
+        },
+        {
+          "arquivo": "emblema-selo-anfitriao--v03--256.webp",
+          "bytes": 15782
+        },
+        {
+          "arquivo": "emblema-selo-anfitriao--v03--96.webp",
+          "bytes": 4306
+        },
+        {
+          "arquivo": "emblema-selo-anfitriao--v03--48.webp",
+          "bytes": 1766
+        }
+      ],
+      "segundos_pos": 25.1,
+      "avisos": []
+    }
+  ]
+}
