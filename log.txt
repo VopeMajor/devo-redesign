@@ -1,0 +1,9 @@
+[balao2-constelacao] v01: @cf/black-forest-labs/flux-2-klein-4b seed=15031 1536x512 passos=None (~78 neurônios)
+    ok em 23.1s, 1536x512
+[balao2-constelacao] v02: @cf/black-forest-labs/flux-2-klein-4b seed=15032 1536x512 passos=None (~78 neurônios)
+    ok em 24.0s, 1536x512
+[balao2-constelacao] v03: @cf/black-forest-labs/flux-2-klein-4b seed=15033 1536x512 passos=None (~78 neurônios)
+    ok em 16.2s, 1536x512
+[balao2-constelacao] v01: rembg:birefnet-general; sem avisos
+[balao2-constelacao] v02: rembg:birefnet-general; sem avisos
+[balao2-constelacao] v03: rembg:birefnet-general; sem avisos

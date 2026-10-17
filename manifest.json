@@ -1,0 +1,285 @@
+{
+  "pedido": "balao2-constelacao",
+  "titulo": "Balão — constelacao",
+  "tipo": "balao",
+  "tamanho_final": 1536,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 15031,
+      "passos": null,
+      "segundos": 23.1,
+      "neuronios_estimados": 78,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "balao2-constelacao--v01--1535.png",
+          "bytes": 465612
+        },
+        {
+          "arquivo": "balao2-constelacao--v01--1535.webp",
+          "bytes": 49110
+        },
+        {
+          "arquivo": "balao2-constelacao--v01--1024.webp",
+          "bytes": 23858
+        },
+        {
+          "arquivo": "balao2-constelacao--v01--768.webp",
+          "bytes": 18758
+        },
+        {
+          "arquivo": "balao2-constelacao--v01--512.webp",
+          "bytes": 10394
+        },
+        {
+          "arquivo": "balao2-constelacao--v01--256.webp",
+          "bytes": 4484
+        }
+      ],
+      "balao": {
+        "tamanho_px": [
+          1535,
+          414
+        ],
+        "nove_fatias": {
+          "top": 63,
+          "right": 230,
+          "bottom": 61,
+          "left": 306,
+          "css": "border-image: url(...) 63 230 61 306 fill / auto; border-image-repeat: stretch;",
+          "obs": "medidas em px do original; nos derivados multiplique por largura/W"
+        },
+        "kit": {
+          "corpo": {
+            "altura_px": 354,
+            "topo_no_original": 17,
+            "fatias": {
+              "top": 46,
+              "bottom": 18,
+              "left": 0,
+              "right": 0
+            },
+            "obs": "uniforme na horizontal; estique livre. Centro liso (texto)."
+          },
+          "ponta_esq": {
+            "largura_px": 352,
+            "sobreposicao_px": 46
+          },
+          "ponta_dir": {
+            "largura_px": 276,
+            "sobreposicao_px": 46
+          },
+          "texto": {
+            "x0": 306,
+            "x1": 1305,
+            "y0": 63,
+            "y1": 353
+          }
+        },
+        "arquivos_kit": [
+          "balao2-constelacao--v01--kit-corpo--1024.webp",
+          "balao2-constelacao--v01--kit-corpo--768.webp",
+          "balao2-constelacao--v01--kit-corpo--512.webp",
+          "balao2-constelacao--v01--kit-corpo--256.webp",
+          "balao2-constelacao--v01--kit-ponta-esq--1024.webp",
+          "balao2-constelacao--v01--kit-ponta-esq--768.webp",
+          "balao2-constelacao--v01--kit-ponta-esq--512.webp",
+          "balao2-constelacao--v01--kit-ponta-esq--256.webp",
+          "balao2-constelacao--v01--kit-ponta-dir--1024.webp",
+          "balao2-constelacao--v01--kit-ponta-dir--768.webp",
+          "balao2-constelacao--v01--kit-ponta-dir--512.webp",
+          "balao2-constelacao--v01--kit-ponta-dir--256.webp"
+        ]
+      },
+      "segundos_pos": 35.9,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 15032,
+      "passos": null,
+      "segundos": 24.0,
+      "neuronios_estimados": 78,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "balao2-constelacao--v02--1535.png",
+          "bytes": 368821
+        },
+        {
+          "arquivo": "balao2-constelacao--v02--1535.webp",
+          "bytes": 44066
+        },
+        {
+          "arquivo": "balao2-constelacao--v02--1024.webp",
+          "bytes": 22888
+        },
+        {
+          "arquivo": "balao2-constelacao--v02--768.webp",
+          "bytes": 15866
+        },
+        {
+          "arquivo": "balao2-constelacao--v02--512.webp",
+          "bytes": 9290
+        },
+        {
+          "arquivo": "balao2-constelacao--v02--256.webp",
+          "bytes": 4180
+        }
+      ],
+      "balao": {
+        "tamanho_px": [
+          1535,
+          348
+        ],
+        "nove_fatias": {
+          "top": 38,
+          "right": 113,
+          "bottom": 40,
+          "left": 120,
+          "css": "border-image: url(...) 38 113 40 120 fill / auto; border-image-repeat: stretch;",
+          "obs": "medidas em px do original; nos derivados multiplique por largura/W"
+        },
+        "kit": {
+          "corpo": {
+            "altura_px": 315,
+            "topo_no_original": 17,
+            "fatias": {
+              "top": 21,
+              "bottom": 24,
+              "left": 0,
+              "right": 0
+            },
+            "obs": "uniforme na horizontal; estique livre. Centro liso (texto)."
+          },
+          "ponta_esq": {
+            "largura_px": 166,
+            "sobreposicao_px": 46
+          },
+          "ponta_dir": {
+            "largura_px": 159,
+            "sobreposicao_px": 46
+          },
+          "texto": {
+            "x0": 120,
+            "x1": 1422,
+            "y0": 38,
+            "y1": 308
+          }
+        },
+        "arquivos_kit": [
+          "balao2-constelacao--v02--kit-corpo--1024.webp",
+          "balao2-constelacao--v02--kit-corpo--768.webp",
+          "balao2-constelacao--v02--kit-corpo--512.webp",
+          "balao2-constelacao--v02--kit-corpo--256.webp",
+          "balao2-constelacao--v02--kit-ponta-esq--1024.webp",
+          "balao2-constelacao--v02--kit-ponta-esq--768.webp",
+          "balao2-constelacao--v02--kit-ponta-esq--512.webp",
+          "balao2-constelacao--v02--kit-ponta-esq--256.webp",
+          "balao2-constelacao--v02--kit-ponta-dir--1024.webp",
+          "balao2-constelacao--v02--kit-ponta-dir--768.webp",
+          "balao2-constelacao--v02--kit-ponta-dir--512.webp",
+          "balao2-constelacao--v02--kit-ponta-dir--256.webp"
+        ]
+      },
+      "segundos_pos": 29.8,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 15033,
+      "passos": null,
+      "segundos": 16.2,
+      "neuronios_estimados": 78,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "balao2-constelacao--v03--1535.png",
+          "bytes": 499532
+        },
+        {
+          "arquivo": "balao2-constelacao--v03--1535.webp",
+          "bytes": 47962
+        },
+        {
+          "arquivo": "balao2-constelacao--v03--1024.webp",
+          "bytes": 24198
+        },
+        {
+          "arquivo": "balao2-constelacao--v03--768.webp",
+          "bytes": 15730
+        },
+        {
+          "arquivo": "balao2-constelacao--v03--512.webp",
+          "bytes": 9434
+        },
+        {
+          "arquivo": "balao2-constelacao--v03--256.webp",
+          "bytes": 4046
+        }
+      ],
+      "balao": {
+        "tamanho_px": [
+          1535,
+          379
+        ],
+        "nove_fatias": {
+          "top": 57,
+          "right": 318,
+          "bottom": 26,
+          "left": 295,
+          "css": "border-image: url(...) 57 318 26 295 fill / auto; border-image-repeat: stretch;",
+          "obs": "medidas em px do original; nos derivados multiplique por largura/W"
+        },
+        "kit": {
+          "corpo": {
+            "altura_px": 345,
+            "topo_no_original": 17,
+            "fatias": {
+              "top": 40,
+              "bottom": 9,
+              "left": 0,
+              "right": 0
+            },
+            "obs": "uniforme na horizontal; estique livre. Centro liso (texto)."
+          },
+          "ponta_esq": {
+            "largura_px": 341,
+            "sobreposicao_px": 46
+          },
+          "ponta_dir": {
+            "largura_px": 364,
+            "sobreposicao_px": 46
+          },
+          "texto": {
+            "x0": 295,
+            "x1": 1217,
+            "y0": 57,
+            "y1": 353
+          }
+        },
+        "arquivos_kit": [
+          "balao2-constelacao--v03--kit-corpo--1024.webp",
+          "balao2-constelacao--v03--kit-corpo--768.webp",
+          "balao2-constelacao--v03--kit-corpo--512.webp",
+          "balao2-constelacao--v03--kit-corpo--256.webp",
+          "balao2-constelacao--v03--kit-ponta-esq--1024.webp",
+          "balao2-constelacao--v03--kit-ponta-esq--768.webp",
+          "balao2-constelacao--v03--kit-ponta-esq--512.webp",
+          "balao2-constelacao--v03--kit-ponta-esq--256.webp",
+          "balao2-constelacao--v03--kit-ponta-dir--1024.webp",
+          "balao2-constelacao--v03--kit-ponta-dir--768.webp",
+          "balao2-constelacao--v03--kit-ponta-dir--512.webp",
+          "balao2-constelacao--v03--kit-ponta-dir--256.webp"
+        ]
+      },
+      "segundos_pos": 30.6,
+      "avisos": []
+    }
+  ]
+}
