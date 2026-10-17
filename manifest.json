@@ -1,0 +1,120 @@
+{
+  "pedido": "emblema-fragmento-celestial",
+  "titulo": "Fragmento Celestial",
+  "tipo": "emblema",
+  "tamanho_final": 1024,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 7071,
+      "passos": null,
+      "segundos": 10.8,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "emblema-fragmento-celestial--v01--1024.png",
+          "bytes": 483278
+        },
+        {
+          "arquivo": "emblema-fragmento-celestial--v01--1024.webp",
+          "bytes": 88468
+        },
+        {
+          "arquivo": "emblema-fragmento-celestial--v01--512.webp",
+          "bytes": 30406
+        },
+        {
+          "arquivo": "emblema-fragmento-celestial--v01--256.webp",
+          "bytes": 12864
+        },
+        {
+          "arquivo": "emblema-fragmento-celestial--v01--96.webp",
+          "bytes": 3816
+        },
+        {
+          "arquivo": "emblema-fragmento-celestial--v01--48.webp",
+          "bytes": 1708
+        }
+      ],
+      "segundos_pos": 29.9,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 7072,
+      "passos": null,
+      "segundos": 22.6,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "emblema-fragmento-celestial--v02--1024.png",
+          "bytes": 469381
+        },
+        {
+          "arquivo": "emblema-fragmento-celestial--v02--1024.webp",
+          "bytes": 91438
+        },
+        {
+          "arquivo": "emblema-fragmento-celestial--v02--512.webp",
+          "bytes": 32010
+        },
+        {
+          "arquivo": "emblema-fragmento-celestial--v02--256.webp",
+          "bytes": 13112
+        },
+        {
+          "arquivo": "emblema-fragmento-celestial--v02--96.webp",
+          "bytes": 3694
+        },
+        {
+          "arquivo": "emblema-fragmento-celestial--v02--48.webp",
+          "bytes": 1556
+        }
+      ],
+      "segundos_pos": 24.3,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 7073,
+      "passos": null,
+      "segundos": 15.7,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "emblema-fragmento-celestial--v03--1024.png",
+          "bytes": 522599
+        },
+        {
+          "arquivo": "emblema-fragmento-celestial--v03--1024.webp",
+          "bytes": 111440
+        },
+        {
+          "arquivo": "emblema-fragmento-celestial--v03--512.webp",
+          "bytes": 37256
+        },
+        {
+          "arquivo": "emblema-fragmento-celestial--v03--256.webp",
+          "bytes": 15500
+        },
+        {
+          "arquivo": "emblema-fragmento-celestial--v03--96.webp",
+          "bytes": 4422
+        },
+        {
+          "arquivo": "emblema-fragmento-celestial--v03--48.webp",
+          "bytes": 1830
+        }
+      ],
+      "segundos_pos": 24.8,
+      "avisos": []
+    }
+  ]
+}

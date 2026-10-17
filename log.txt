@@ -1,0 +1,9 @@
+[emblema-fragmento-celestial] v01: @cf/black-forest-labs/flux-2-klein-4b seed=7071 1024x1024 passos=None (~104 neurônios)
+    ok em 10.8s, 1024x1024
+[emblema-fragmento-celestial] v02: @cf/black-forest-labs/flux-2-klein-4b seed=7072 1024x1024 passos=None (~104 neurônios)
+    ok em 22.6s, 1024x1024
+[emblema-fragmento-celestial] v03: @cf/black-forest-labs/flux-2-klein-4b seed=7073 1024x1024 passos=None (~104 neurônios)
+    ok em 15.7s, 1024x1024
+[emblema-fragmento-celestial] v01: rembg:birefnet-general; sem avisos
+[emblema-fragmento-celestial] v02: rembg:birefnet-general; sem avisos
+[emblema-fragmento-celestial] v03: rembg:birefnet-general; sem avisos
