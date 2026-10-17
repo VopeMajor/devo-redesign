@@ -1,0 +1,108 @@
+{
+  "pedido": "arcano-julgamento-tarot",
+  "titulo": "Arcano — julgamento (tarô, menos humanizado)",
+  "tipo": "ilustracao",
+  "tamanho_final": 1536,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 91211,
+      "passos": null,
+      "segundos": 2.9,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "arcano-julgamento-tarot--v01--1536.png",
+          "bytes": 1264855
+        },
+        {
+          "arquivo": "arcano-julgamento-tarot--v01--1536.webp",
+          "bytes": 210414
+        },
+        {
+          "arquivo": "arcano-julgamento-tarot--v01--1024.webp",
+          "bytes": 93342
+        },
+        {
+          "arquivo": "arcano-julgamento-tarot--v01--768.webp",
+          "bytes": 60968
+        },
+        {
+          "arquivo": "arcano-julgamento-tarot--v01--512.webp",
+          "bytes": 34292
+        }
+      ],
+      "segundos_pos": 32.0,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 91212,
+      "passos": null,
+      "segundos": 2.8,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "arcano-julgamento-tarot--v02--1536.png",
+          "bytes": 1301083
+        },
+        {
+          "arquivo": "arcano-julgamento-tarot--v02--1536.webp",
+          "bytes": 245764
+        },
+        {
+          "arquivo": "arcano-julgamento-tarot--v02--1024.webp",
+          "bytes": 114066
+        },
+        {
+          "arquivo": "arcano-julgamento-tarot--v02--768.webp",
+          "bytes": 75124
+        },
+        {
+          "arquivo": "arcano-julgamento-tarot--v02--512.webp",
+          "bytes": 42048
+        }
+      ],
+      "segundos_pos": 27.2,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 91213,
+      "passos": null,
+      "segundos": 4.3,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "arcano-julgamento-tarot--v03--1536.png",
+          "bytes": 1152949
+        },
+        {
+          "arquivo": "arcano-julgamento-tarot--v03--1536.webp",
+          "bytes": 206650
+        },
+        {
+          "arquivo": "arcano-julgamento-tarot--v03--1024.webp",
+          "bytes": 84174
+        },
+        {
+          "arquivo": "arcano-julgamento-tarot--v03--768.webp",
+          "bytes": 56266
+        },
+        {
+          "arquivo": "arcano-julgamento-tarot--v03--512.webp",
+          "bytes": 31208
+        }
+      ],
+      "segundos_pos": 26.3,
+      "avisos": []
+    }
+  ]
+}
