@@ -57,7 +57,7 @@ export function CasaNoite({ portaAberta, anima, fxKey, luzFalha }: { portaAberta
  * Quadro 2:3 que COBRE a tela (como object-cover), para que as luzes vivas fiquem sobre o abajur e a janela da
  * pintura em qualquer proporção. Celular: corta um pouco as laterais; desktop: corta em cima e embaixo.
  */
-const QUADRO: CSSProperties = { width: 'max(100vw, 66.667dvh)', aspectRatio: '2 / 3', left: '50%', top: '54%', transform: 'translate(-50%, -50%)' }
+const QUADRO: CSSProperties = { width: 'max(100vw, 66.667dvh)', aspectRatio: '2 / 3', left: '47%', top: '54%', transform: 'translate(-50%, -50%)' }
 
 /**
  * Casa pintada (CASA_ARTE): porta fechada ↔ entreaberta em cruzamento (a porta abre com o som, quando o Galo entra,
@@ -104,7 +104,7 @@ function CasaPintada({ portaAberta, fxKey, luzFalha, onErro }: { portaAberta: bo
             srcSet={casaSrcSet(CASA_ARTE.primeiroPlano)}
             sizes="max(100vw, 66.667dvh)"
             alt=""
-            className="absolute inset-0 size-full -translate-x-[27%] brightness-[0.7] [clip-path:inset(0_0_44%_0)] [mask-image:linear-gradient(180deg,#000_46%,transparent_56%)]"
+            className="absolute inset-0 size-full -translate-x-[6%] brightness-[0.7] [clip-path:inset(0_0_44%_0)] [mask-image:linear-gradient(180deg,#000_46%,transparent_56%)]"
           />
         </div>
       )}

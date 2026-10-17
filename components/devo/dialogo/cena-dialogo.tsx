@@ -224,7 +224,7 @@ export function CenaDialogo({
 
   useEffect(() => {
     if (!selo) return
-    const t = window.setTimeout(() => setSelo(null), 5200)
+    const t = window.setTimeout(() => setSelo(null), 6500)
     return () => window.clearTimeout(t)
   }, [selo])
 
@@ -499,7 +499,7 @@ function Caixa({
     }
     case 'efeito':
       return (
-        <span className="en-item flex items-center gap-3 self-start border-l-[3px] border-dv-gold bg-[linear-gradient(90deg,color-mix(in_oklab,var(--dv-gold-deep)_90%,transparent),color-mix(in_oklab,var(--dv-ink-2)_92%,transparent))] py-3 pl-3 pr-6 shadow-[0_10px_24px_rgba(0,0,0,0.6)] [clip-path:polygon(0_0,100%_0,calc(100%-12px)_100%,0_100%)]">
+        <span className="animate-dv-toast-in flex items-center gap-3 self-start border-l-[3px] border-dv-gold bg-[linear-gradient(90deg,color-mix(in_oklab,var(--dv-gold-deep)_90%,transparent),color-mix(in_oklab,var(--dv-ink-2)_92%,transparent))] py-3 pl-3 pr-6 shadow-[0_10px_24px_rgba(0,0,0,0.6)] [clip-path:polygon(0_0,100%_0,calc(100%-12px)_100%,0_100%)]">
           <GlyphKeyhole className="size-6 text-dv-gold-bright" />
           <span className="flex flex-col">
             <span className="dv-label text-[10px] text-dv-gold-bright">{passo.efeitos.some((e) => e.tipo === 'contato') ? 'Contato' : 'Recebido'}</span>
@@ -550,7 +550,7 @@ function OpcaoTrancada({ index, label, motivo }: { index: number; label: string;
 
 function SeloEfeito({ selo }: { selo: Selo }) {
   return (
-    <div role="status" className="en-item flex items-center gap-3 self-start border-l-[3px] border-dv-gold bg-[linear-gradient(90deg,color-mix(in_oklab,var(--dv-ink-3)_96%,transparent),color-mix(in_oklab,var(--dv-ink-2)_92%,transparent))] py-2 pl-3 pr-6 shadow-[0_10px_24px_rgba(0,0,0,0.6)] [clip-path:polygon(0_0,100%_0,calc(100%-12px)_100%,0_100%)]">
+    <div role="status" className="animate-dv-toast-in flex items-center gap-3 self-start border-l-[3px] border-dv-gold bg-[linear-gradient(90deg,color-mix(in_oklab,var(--dv-ink-3)_96%,transparent),color-mix(in_oklab,var(--dv-ink-2)_92%,transparent))] py-2 pl-3 pr-6 shadow-[0_10px_24px_rgba(0,0,0,0.6)] [clip-path:polygon(0_0,100%_0,calc(100%-12px)_100%,0_100%)]">
       <GlyphHourglass className={cn('size-6', selo.tom === 'perda' ? 'text-dv-blood-text' : 'text-dv-gold-bright')} />
       <span className="flex flex-col">
         <span className="dv-label text-[10px] text-dv-text-2">{selo.titulo}</span>
