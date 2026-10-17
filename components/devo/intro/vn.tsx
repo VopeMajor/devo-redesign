@@ -59,16 +59,18 @@ const PLATE_NAME: Record<PlateTone, string> = {
 /** Placa do falante: paralelogramo inclinado que entra com corte a cada troca de falante. */
 export function SpeakerPlate({ name, title, tone = 'cobalt', avatar }: { name: string; title?: string; tone?: PlateTone; avatar?: ReactNode }) {
   return (
-    <span className="absolute -top-[22px] left-3 z-10 flex items-end gap-2" aria-hidden="true">
-      {avatar && <span className="relative -mb-2 block w-12">{avatar}</span>}
-      <span className="en-plate-in relative flex items-center bg-[linear-gradient(100deg,#0c0c0e,#151517_55%,#1f1f22)] px-5 py-1.5 shadow-[4px_4px_0_rgba(0,0,0,0.55),inset_0_0_0_1px_rgba(186,176,159,0.5)]">
+    // Uma linha só, em qualquer largura: a placa não passa da caixa e o epíteto encurta com reticências
+    // (antes quebrava em duas linhas a 360 px e cobria a primeira linha da fala).
+    <span className="absolute -top-[22px] left-3 z-10 flex max-w-[calc(100%-1.5rem)] items-end gap-2" aria-hidden="true">
+      {avatar && <span className="relative -mb-2 block w-12 shrink-0">{avatar}</span>}
+      <span className="en-plate-in relative flex min-w-0 items-center bg-[linear-gradient(100deg,#0c0c0e,#151517_55%,#1f1f22)] px-5 py-1.5 shadow-[4px_4px_0_rgba(0,0,0,0.55),inset_0_0_0_1px_rgba(186,176,159,0.5)]">
         {/* filete de aço: topo aceso, base em sombra */}
         <span className="absolute inset-x-0 top-0 h-px bg-[linear-gradient(90deg,#6b6357,#ece5d8_40%,#bab09f_70%,#6b6357)]" />
         <span className="absolute inset-y-0 left-0 w-[3px] bg-[linear-gradient(180deg,#ece5d8,#bab09f_50%,#6b6357)]" />
-        <span className="flex skew-x-[14deg] items-center gap-2.5">
-          {tone === 'system' && <span className="size-1.5 rotate-45 bg-dv-amethyst shadow-[0_0_6px_rgba(138,124,200,0.8)]" />}
-          <span className={cn('font-display text-[15px] font-semibold uppercase tracking-[0.18em]', PLATE_NAME[tone])}>{name}</span>
-          {title && <span className="font-body text-[13px] italic text-dv-text-3">{title}</span>}
+        <span className="flex min-w-0 skew-x-[14deg] items-center gap-2.5 whitespace-nowrap">
+          {tone === 'system' && <span className="size-1.5 shrink-0 rotate-45 bg-dv-amethyst shadow-[0_0_6px_rgba(138,124,200,0.8)]" />}
+          <span className={cn('shrink-0 font-display text-[15px] font-semibold uppercase tracking-[0.18em]', PLATE_NAME[tone])}>{name}</span>
+          {title && <span className="min-w-0 truncate pr-1 font-body text-[13px] italic text-dv-text-3">{title}</span>}
         </span>
       </span>
     </span>
