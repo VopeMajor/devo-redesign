@@ -416,6 +416,12 @@
   100% { opacity: 0; transform: scale(1.3, 1.4) translateY(-20%); }
 }
 
+/* gema da Dracma Rara (camada da arte): brilho lento */
+@keyframes poco-item-brilho {
+  0%, 100% { opacity: 0.35; }
+  50% { opacity: 1; }
+}
+.poco-item-brilho { animation: poco-item-brilho 5.5s ease-in-out infinite; }
 @media (prefers-reduced-motion: reduce) {
   .poco-t,
   .poco-bucket,
@@ -456,6 +462,7 @@
   .poco-gota,
   .poco-veu,
   .poco-brilho-boca,
+  .poco-item-brilho,
   .poco-boca-luz,
   .poco-coluna,
   .poco-mote,

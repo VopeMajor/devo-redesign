@@ -1,0 +1,18 @@
+{
+  "asset": "img:/images/poco/itens/balde-ferro",
+  "imagem": {
+    "base": "/images/poco/itens/balde-ferro",
+    "tamanhos": [
+      64,
+      128,
+      256
+    ]
+  },
+  "origem": {
+    "pedido": "poco-balde-ferro",
+    "variacao": "v02",
+    "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+    "seed": 11072,
+    "importado": null
+  }
+}

@@ -2,29 +2,79 @@
 
 import type { PocoPremio } from '@/lib/devo/poco'
 import { cn } from '@/lib/utils'
-import { DracmaIcon } from './poco-cena'
+import { BaldeIcon, DracmaIcon } from './poco-cena'
 
 /**
- * Ícones dos itens do Poço (moedas, prêmios lixo, fragmento, essência, cápsula).
- *
- * Arte nova (pedido ao agente de arte): public/images/poco/itens/<id>-{256,128,64}.webp. Ids:
- *   moedas  dracma_comum, dracma_incomum, dracma_rara
- *   lixo    agua_suja, pedra, tampao, curativo, meia, dente, boleto, chiclete, tampa, chave_torta, nada
- *   outros  fragmento, essencia, capsula
- * Quando um id chegar, acrescente-o em ITENS_PINTADOS: o componente passa a usar a arte nova com srcset.
- * Enquanto não chegar, cai no que existe hoje (lixo-<id>.webp, fragmento.webp…, Dracma vetorial), sem
- * pedir arquivo inexistente ao servidor.
+ * Registro ÚNICO da arte dos itens do Poço (infra/arte 8f72fb2 → public/images/poco/itens/<arquivo>-{64,128,256}.webp).
+ * Chave = id do sistema (item_defs.key, id do lixo, id do balde); valor = nome do arquivo (o _ virou -).
+ * Quem mostra um item do Poço (revelação, faixa de prêmios, moedas, baldes, Mesa do Owner, Diário) passa por
+ * aqui; id sem arte cai no desenho antigo (lixo-<id>.webp, fragmento.webp…, Dracma vetorial).
  */
-export const ITENS_PINTADOS = new Set<string>([])
+const ITENS_ARTE: Record<string, string> = {
+  dracma_comum: 'dracma-comum',
+  dracma_incomum: 'dracma-incomum',
+  dracma_rara: 'dracma-rara',
+  fragmento: 'fragmento',
+  fragmento_arcano: 'fragmento',
+  essencia: 'essencia',
+  capsula: 'capsula',
+  'balde:madeira': 'balde-madeira',
+  'balde:ferro': 'balde-ferro',
+  'balde:cobre': 'balde-cobre',
+  'balde:prata': 'balde-prata',
+  agua_suja: 'lixo-agua-suja',
+  pedra: 'lixo-pedra',
+  tampao: 'lixo-tampao',
+  curativo: 'lixo-curativo',
+  meia: 'lixo-meia',
+  dente: 'lixo-dente',
+  boleto: 'lixo-boleto',
+  chiclete: 'lixo-chiclete',
+  tampa: 'lixo-tampa',
+  chave_torta: 'lixo-chave-torta',
+  nada: 'lixo-nada',
+}
+/** Camadas animadas da arte (itens/<arquivo>.json → camadas): caixa [x, y, w, h] em fração da imagem. */
+const CAMADAS: Record<string, { src: string; caixa: [number, number, number, number]; dur: number }> = {
+  'dracma-rara': { src: '/images/poco/itens/dracma-rara-gema.webp', caixa: [0.4199, 0.4414, 0.1494, 0.124], dur: 5.5 },
+}
 
 const DIR = '/images/poco/itens'
 const LADOS = [64, 128, 256] as const
 
-/** Arte nova do item (src + srcset) se já existir; senão null. */
+/** Id do sistema → arquivo de arte (essencia:galo → essencia, capsula:003 → capsula). */
+export function arquivoItem(id: string): string | null {
+  if (ITENS_ARTE[id]) return ITENS_ARTE[id]
+  const base = id.split(':')[0]
+  return base !== 'balde' && ITENS_ARTE[base] ? ITENS_ARTE[base] : null
+}
+
+/** Arte do item (src + srcset) se existir no registro; senão null. */
 export function arteItem(id: string, tamanho: number) {
-  if (!ITENS_PINTADOS.has(id)) return null
+  const arq = arquivoItem(id)
+  if (!arq) return null
   const lado = LADOS.find((l) => l >= tamanho * 2) ?? 256
-  return { src: `${DIR}/${id}-${lado}.webp`, srcSet: LADOS.map((l) => `${DIR}/${id}-${l}.webp ${l}w`).join(', '), sizes: `${tamanho}px` }
+  return { src: `${DIR}/${arq}-${lado}.webp`, srcSet: LADOS.map((l) => `${DIR}/${arq}-${l}.webp ${l}w`).join(', '), sizes: `${tamanho}px` }
+}
+
+/** Imagem do item com as camadas animadas da arte (gema da Dracma Rara). */
+function ImgItem({ id, tamanho, className }: { id: string; tamanho: number; className?: string }) {
+  const arte = arteItem(id, tamanho)!
+  const camada = CAMADAS[arquivoItem(id) ?? '']
+  if (!camada) return <img {...arte} alt="" draggable={false} className={cn('object-contain', className)} />
+  const [x, y, w, h] = camada.caixa
+  return (
+    <span className={cn('relative inline-block', className)}>
+      <img {...arte} alt="" draggable={false} className="size-full object-contain" />
+      <img
+        src={camada.src}
+        alt=""
+        draggable={false}
+        className="poco-item-brilho pointer-events-none absolute mix-blend-screen"
+        style={{ left: `${x * 100}%`, top: `${y * 100}%`, width: `${w * 100}%`, height: `${h * 100}%`, animationDuration: `${camada.dur}s` }}
+      />
+    </span>
+  )
 }
 
 const RARIDADE_DRACMA: Record<string, string> = { dracma_comum: 'comum', dracma_incomum: 'incomum', dracma_rara: 'raro' }
@@ -32,25 +82,39 @@ const RARIDADE_DRACMA: Record<string, string> = { dracma_comum: 'comum', dracma_
 /** Moeda (Dracma) do Poço por chave ou raridade. */
 export function MoedaPoco({ chave, raridade, tamanho = 44, className }: { chave?: string; raridade?: string; tamanho?: number; className?: string }) {
   const id = chave ?? Object.keys(RARIDADE_DRACMA).find((k) => RARIDADE_DRACMA[k] === raridade) ?? 'dracma_comum'
-  const arte = arteItem(id, tamanho)
-  if (arte) return <img {...arte} alt="" draggable={false} className={cn('object-contain', className)} />
+  if (arteItem(id, tamanho)) return <ImgItem id={id} tamanho={tamanho} className={className} />
   return <DracmaIcon raridade={raridade ?? RARIDADE_DRACMA[id] ?? 'comum'} className={className} />
 }
 
 /** Prêmio lixo: imagem enviada pelo Owner, arte nova ou a arte antiga (lixo-<id>.webp). */
 export function LixoPoco({ id, imagem, tamanho = 160, className }: { id: string; imagem?: string | null; tamanho?: number; className?: string }) {
   if (imagem) return <img src={imagem} alt="" draggable={false} className={cn('object-contain', className)} />
-  const arte = arteItem(id, tamanho)
-  if (arte) return <img {...arte} alt="" draggable={false} className={cn('object-contain', className)} />
+  // lixo do pool do Owner sem imagem própria (premio:<id>) usa a arte do "Nada"
+  const alvo = arteItem(id, tamanho) || !/^[a-z_]+$/.test(id) ? (arteItem(id, tamanho) ? id : 'nada') : id
+  if (arteItem(alvo, tamanho)) return <ImgItem id={alvo} tamanho={tamanho} className={className} />
   const antigo = /^[a-z_]+$/.test(id) ? id : 'nada'
   return <img src={`/images/poco/lixo-${antigo}.webp`} alt="" draggable={false} className={cn('object-contain', className)} />
 }
 
 /** Recurso do poço (fragmento, essência, cápsula). */
 export function RecursoPoco({ id, tamanho = 160, className }: { id: 'fragmento' | 'essencia' | 'capsula'; tamanho?: number; className?: string }) {
-  const arte = arteItem(id, tamanho)
-  if (arte) return <img {...arte} alt="" draggable={false} className={cn('object-contain', className)} />
+  if (arteItem(id, tamanho)) return <ImgItem id={id} tamanho={tamanho} className={className} />
   return <img src={`/images/poco/${id}.webp`} alt="" draggable={false} className={cn('object-contain', className)} />
+}
+
+/** Balde do Poço (madeira, ferro, cobre, prata): arte pintada, ou o ícone vetorial antigo. */
+export function BaldePoco({ tipo = 'madeira', tamanho = 44, className }: { tipo?: string; tamanho?: number; className?: string }) {
+  const id = `balde:${tipo}`
+  if (arteItem(id, tamanho)) return <ImgItem id={id} tamanho={tamanho} className={className} />
+  return <BaldeIcon tipo={tipo} className={className} />
+}
+
+/** Ícone de qualquer item do Poço pelo id do sistema (faixa de prêmios, Diário, listas). */
+export function IconeItemPoco({ id, tamanho = 32, className }: { id: string; tamanho?: number; className?: string }) {
+  if (id.startsWith('dracma_')) return <MoedaPoco chave={id} tamanho={tamanho} className={className} />
+  if (id.startsWith('balde:')) return <BaldePoco tipo={id.slice(6)} tamanho={tamanho} className={className} />
+  if (arteItem(id, tamanho)) return <ImgItem id={id} tamanho={tamanho} className={className} />
+  return null
 }
 
 /** Miniatura de um prêmio do pool do Owner (lista da Mesa). */

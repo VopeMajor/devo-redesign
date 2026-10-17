@@ -13,8 +13,8 @@ import { EmblemMark, EmblemPoco } from '../kit/emblems'
 import { callName, useDevo } from '../state/devo-store'
 import { BaldesSheet, LancarSheet, MoedasSheet } from './poco-folhas'
 import { Etiqueta, FaixaOrnamental, MedalhaoDentado, PlacaGotica } from './poco-ornamentos'
-import { BaldeIcon, type BaldePosicao, PocoCena } from './poco-cena'
-import { MoedaPoco } from './poco-itens'
+import { type BaldePosicao, PocoCena } from './poco-cena'
+import { BaldePoco, IconeItemPoco, MoedaPoco } from './poco-itens'
 import { PocoManivela } from './poco-manivela'
 import { PocoNeblina } from './poco-neblina'
 import { PocoResultadoView } from './poco-resultado'
@@ -298,7 +298,7 @@ function PocoTela({ data, refresh }: { data: Liberado; refresh: () => void }) {
         <div className="flex items-start justify-between gap-2 px-3 pt-1.5">
           <div className="animate-dv-fade flex min-w-0 flex-col gap-1">
             <Etiqueta joia={false} className="pl-2">
-              <img src={`/images/poco/balde-${['madeira', 'ferro', 'cobre', 'prata'].includes(baldeAtual?.id ?? '') ? baldeAtual?.id : 'madeira'}.webp`} alt="" className="h-7 w-7 object-cover [object-position:50%_92%]" />
+              <BaldePoco tipo={baldeAtual?.id} tamanho={28} className="h-7 w-7" />
               <span className="truncate font-display text-[12px] font-semibold uppercase tracking-[0.1em] text-dv-text-2">{baldeAtual?.nome}</span>
             </Etiqueta>
             <Etiqueta aceso={data.giroGratis.disponivel}>
@@ -352,7 +352,7 @@ function PocoTela({ data, refresh }: { data: Liberado; refresh: () => void }) {
               disabled={!!ocupado || subindo}
               loading={ocupado === 'balde' && fase === 'cheio'}
               onClick={inspecionar}
-              icon={<BaldeIcon tipo={baldeAtual?.id} className="size-9 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]" />}
+              icon={<BaldePoco tipo={baldeAtual?.id} tamanho={40} className="size-10 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]" />}
             />
           </div>
         </div>
@@ -487,7 +487,7 @@ function Invocacao({
 
 /* ── Faixa de prêmios (reais + simulados) ──────────────────────────────────────────────── */
 
-type Aviso = { k: string; nome: string; item: string; raridade: string; raro: boolean }
+type Aviso = { k: string; nome: string; item: string; raridade: string; raro: boolean; categoria: string }
 
 /**
  * Faixa de notificação dos prêmios: um aviso por vez, entrando pela direita. Primeiro os reais (os mais recentes
@@ -505,7 +505,7 @@ function FaixaPremios({ reais, simulacao }: { reais: PocoLetreiro[]; simulacao: 
       .filter((r) => !vistos.current.has(`${r.nome}-${r.quando}`))
       .slice(0, 4)
       .reverse()
-      .map((r) => ({ k: `${r.nome}-${r.quando}`, nome: r.nome, item: r.item, raridade: ITEM_RARITY_LABEL[r.raridade], raro: r.categoria === 'capsula' || r.categoria === 'cosmetico' || ['raro', 'epico', 'lendario', 'arcano'].includes(r.raridade) }))
+      .map((r) => ({ k: `${r.nome}-${r.quando}`, nome: r.nome, item: r.item, categoria: r.categoria, raridade: ITEM_RARITY_LABEL[r.raridade], raro: r.categoria === 'capsula' || r.categoria === 'cosmetico' || ['raro', 'epico', 'lendario', 'arcano'].includes(r.raridade) }))
     for (const n of novos) vistos.current.add(n.k)
     fila.current = [...novos, ...fila.current.filter((a) => !a.k.startsWith('sim-'))]
   }, [reais])
@@ -518,7 +518,7 @@ function FaixaPremios({ reais, simulacao }: { reais: PocoLetreiro[]; simulacao: 
         if (!a && simulacao.nomes.length && simulacao.itens.length) {
           const n = simulacao.nomes[Math.floor(Math.random() * simulacao.nomes.length)]
           const it = simulacao.itens[Math.floor(Math.random() * simulacao.itens.length)]
-          a = { k: `sim-${Date.now()}`, nome: n, item: it.item, raridade: ITEM_RARITY_LABEL[it.raridade], raro: true }
+          a = { k: `sim-${Date.now()}`, nome: n, item: it.item, categoria: it.categoria, raridade: ITEM_RARITY_LABEL[it.raridade], raro: true }
         }
         setAtual(a)
         proximo(a && !a.k.startsWith('sim-') ? 5600 : 12000 + Math.random() * 6000)
@@ -533,7 +533,8 @@ function FaixaPremios({ reais, simulacao }: { reais: PocoLetreiro[]; simulacao: 
       {atual ? (
         <div key={atual.k} className="poco-faixa absolute inset-x-1 top-1">
           <FaixaOrnamental tom={atual.raro ? 'ametista' : 'aco'} className="h-9">
-            <p className="flex min-w-0 items-baseline gap-1.5 whitespace-nowrap">
+            <p className="flex min-w-0 items-center gap-1.5 whitespace-nowrap">
+              {['fragmento', 'essencia', 'capsula'].includes(atual.categoria) && <IconeItemPoco id={atual.categoria} tamanho={22} className="size-[22px] shrink-0" />}
               <span className={cn('dv-label shrink-0 text-[10px]', atual.raro ? 'text-dv-amethyst-text' : 'text-dv-gold')}>{atual.raridade}</span>
               <span className="truncate font-body text-[14px] text-dv-text">
                 <span className="text-dv-porcelain">{atual.nome}</span> <span className="text-dv-text-3">obteve</span>{' '}

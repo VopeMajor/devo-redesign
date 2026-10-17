@@ -10,7 +10,6 @@ import { parseAsset } from '../cosmeticos/art'
 import { BalaoChat, Emblema, FotoMoldurada } from '../cosmeticos/cosmetic-art'
 import { useMediaQuery } from '../hooks'
 import { Button } from '../kit/button'
-import { DracmaIcon } from './poco-cena'
 import { Ampulheta, CartaMini, LixoPoco, MoedaPoco, RecursoPoco } from './poco-itens'
 import { MolduraResultado } from './poco-ornamentos'
 
@@ -223,7 +222,7 @@ export function PocoResultadoView({ r, nome, onFechar }: { r: PocoResultado; nom
               </Button>
               <details className="mt-3 w-full text-left">
                 <summary className="dv-focus flex min-h-11 cursor-pointer list-none items-center justify-center gap-2 font-mono text-[10px] uppercase tracking-[0.16em] text-dv-text-3">
-                  <DracmaIcon raridade="comum" className="size-4 opacity-70" />
+                  <MoedaPoco chave="dracma_comum" tamanho={16} className="size-4 opacity-80" />
                   Selo do sorteio · {r.acertos} {r.acertos === 1 ? 'acerto' : 'acertos'}
                 </summary>
                 <dl className="mt-1 grid gap-1 break-all font-mono text-[10.5px] leading-snug text-dv-text-3">

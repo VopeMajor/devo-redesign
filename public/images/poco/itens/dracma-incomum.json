@@ -1,0 +1,18 @@
+{
+  "asset": "img:/images/poco/itens/dracma-incomum",
+  "imagem": {
+    "base": "/images/poco/itens/dracma-incomum",
+    "tamanhos": [
+      64,
+      128,
+      256
+    ]
+  },
+  "origem": {
+    "pedido": "poco-dracma-incomum",
+    "variacao": "v01",
+    "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+    "seed": 11011,
+    "importado": null
+  }
+}

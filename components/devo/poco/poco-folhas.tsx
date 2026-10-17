@@ -9,8 +9,7 @@ import { Button } from '../kit/button'
 import { GlyphKeyhole } from '../kit/glyphs'
 import { Sheet } from '../kit/sheet'
 import { Countdown } from '../kit/time'
-import { BaldeIcon } from './poco-cena'
-import { MoedaPoco } from './poco-itens'
+import { BaldePoco, MoedaPoco } from './poco-itens'
 
 type GiroGratis = { disponivel: boolean; restantes: number; categoria: string; proximoEm: number }
 
@@ -277,7 +276,7 @@ export function BaldesSheet({
                 )}
               >
                 <span className={cn('relative grid size-12 shrink-0 place-items-center', !b.possui && 'brightness-[0.25] grayscale')}>
-                  <BaldeIcon tipo={b.id} className="size-11" />
+                  <BaldePoco tipo={b.id} tamanho={44} className="size-11" />
                 </span>
                 <div className="min-w-0 flex-1">
                   <p className={cn('font-display text-[14px] font-semibold uppercase tracking-[0.08em]', b.possui ? 'text-dv-text' : 'text-dv-text-3')}>{b.nome}</p>

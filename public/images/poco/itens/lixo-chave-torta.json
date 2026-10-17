@@ -1,0 +1,16 @@
+{
+  "asset": "img:/images/poco/itens/lixo-chave-torta",
+  "imagem": {
+    "base": "/images/poco/itens/lixo-chave-torta",
+    "tamanhos": [
+      64,
+      128,
+      256
+    ]
+  },
+  "origem": {
+    "pedido": "poco-lixo-chave-torta",
+    "variacao": "v02",
+    "obs": "o modelo não entortou a chave; dobra de 28° aplicada na pós-produção"
+  }
+}

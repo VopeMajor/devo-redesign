@@ -7,6 +7,7 @@ import { ITEM_RARITY_LABEL, type InventoryItem } from '@/lib/devo/progresso'
 import { useOsNav } from '../os/os-nav'
 import { useEu } from '../state/use-acesso'
 import { RecButton, RecTag } from '../system/record-ui'
+import { IconeItemPoco } from './poco-itens'
 
 const fmtData = (t: number) => new Date(t).toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' })
 
@@ -78,7 +79,10 @@ function Capsula({ item, n }: { item: InventoryItem; n: number }) {
         {/* costura do diário na margem esquerda */}
         <span aria-hidden="true" className="absolute inset-y-3 left-1.5 w-px border-l border-dashed border-in-line-strong" />
         <header className="flex items-start justify-between gap-3 pl-2">
-          <div className="min-w-0">
+          <span aria-hidden="true" className="grid size-11 shrink-0 place-items-center bg-in-panel shadow-[inset_0_0_0_1px_var(--dv-champagne-line)]">
+            <IconeItemPoco id="capsula" tamanho={36} className="size-9" />
+          </span>
+          <div className="min-w-0 flex-1">
             <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-in-fg-3">
               Nº {String(n).padStart(3, '0')} · {fmtData(item.firstAt)}
             </p>
