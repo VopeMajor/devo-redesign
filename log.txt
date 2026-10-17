@@ -1,0 +1,9 @@
+[poco-lixo-chave-torta] v01: @cf/black-forest-labs/flux-2-klein-4b seed=11301 1024x1024 passos=None (~104 neurônios)
+    ok em 21.1s, 1024x1024
+[poco-lixo-chave-torta] v02: @cf/black-forest-labs/flux-2-klein-4b seed=11302 1024x1024 passos=None (~104 neurônios)
+    ok em 14.5s, 1024x1024
+[poco-lixo-chave-torta] v03: @cf/black-forest-labs/flux-2-klein-4b seed=11303 1024x1024 passos=None (~104 neurônios)
+    ok em 16.6s, 1024x1024
+[poco-lixo-chave-torta] v01: rembg:birefnet-general; sem avisos
+[poco-lixo-chave-torta] v02: rembg:birefnet-general; sem avisos
+[poco-lixo-chave-torta] v03: rembg:birefnet-general; sem avisos

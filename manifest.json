@@ -1,0 +1,120 @@
+{
+  "pedido": "poco-lixo-chave-torta",
+  "titulo": "Poço — lixo-chave-torta",
+  "tipo": "emblema",
+  "tamanho_final": 1024,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 11301,
+      "passos": null,
+      "segundos": 21.1,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "poco-lixo-chave-torta--v01--1024.png",
+          "bytes": 299405
+        },
+        {
+          "arquivo": "poco-lixo-chave-torta--v01--1024.webp",
+          "bytes": 58726
+        },
+        {
+          "arquivo": "poco-lixo-chave-torta--v01--512.webp",
+          "bytes": 19028
+        },
+        {
+          "arquivo": "poco-lixo-chave-torta--v01--256.webp",
+          "bytes": 7822
+        },
+        {
+          "arquivo": "poco-lixo-chave-torta--v01--128.webp",
+          "bytes": 3646
+        },
+        {
+          "arquivo": "poco-lixo-chave-torta--v01--64.webp",
+          "bytes": 1704
+        }
+      ],
+      "segundos_pos": 47.6,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 11302,
+      "passos": null,
+      "segundos": 14.5,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "poco-lixo-chave-torta--v02--1024.png",
+          "bytes": 279276
+        },
+        {
+          "arquivo": "poco-lixo-chave-torta--v02--1024.webp",
+          "bytes": 53354
+        },
+        {
+          "arquivo": "poco-lixo-chave-torta--v02--512.webp",
+          "bytes": 17914
+        },
+        {
+          "arquivo": "poco-lixo-chave-torta--v02--256.webp",
+          "bytes": 7744
+        },
+        {
+          "arquivo": "poco-lixo-chave-torta--v02--128.webp",
+          "bytes": 3718
+        },
+        {
+          "arquivo": "poco-lixo-chave-torta--v02--64.webp",
+          "bytes": 1554
+        }
+      ],
+      "segundos_pos": 29.1,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 11303,
+      "passos": null,
+      "segundos": 16.6,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "poco-lixo-chave-torta--v03--1024.png",
+          "bytes": 253603
+        },
+        {
+          "arquivo": "poco-lixo-chave-torta--v03--1024.webp",
+          "bytes": 50528
+        },
+        {
+          "arquivo": "poco-lixo-chave-torta--v03--512.webp",
+          "bytes": 17618
+        },
+        {
+          "arquivo": "poco-lixo-chave-torta--v03--256.webp",
+          "bytes": 7758
+        },
+        {
+          "arquivo": "poco-lixo-chave-torta--v03--128.webp",
+          "bytes": 3650
+        },
+        {
+          "arquivo": "poco-lixo-chave-torta--v03--64.webp",
+          "bytes": 1584
+        }
+      ],
+      "segundos_pos": 28.1,
+      "avisos": []
+    }
+  ]
+}
