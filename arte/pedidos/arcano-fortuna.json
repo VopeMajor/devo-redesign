@@ -1,0 +1,31 @@
+{
+  "id": "arcano-fortuna",
+  "titulo": "Arcano — fortuna (figura)",
+  "tipo": "ilustracao",
+  "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+  "prompt": "Dark fantasy character design concept art, painted, soft painterly render, highly detailed, isolated on a plain flat light gray background. A single tall, regal and ethereal personification of a tarot Major Arcana, an original otherworldly divine being with slightly elongated graceful proportions, ornate symbolic headdress or halo, layered flowing fabrics and ribbons, ritual jewelry of faded silver, more deity than human, standing perfectly still in a front view, full body from head to feet, the whole figure fills about 85 percent of the image height, feet resting near the bottom edge on nothing, strong elegant silhouette. Muted palette of abyss black, deep blood wine, fog stone gray and faded silver, with ONE accent color: faded teal. Soft studio key light from the upper left, gentle cool rim light, no cast shadow. No text, no letters, no card frame, no background, no other characters. Wheel of Fortune: an uncanny figure whose body is encircled by several large slowly rotating silver rings and a great wheel behind the back engraved with runes, a blindfolded serene face, four hands holding small symbols, a sphinx-shaped crown with a sword, robes of black and wine with teal accents.",
+  "negative": "text, letters, watermark, signature, cropped, cut off feet, background scenery, multiple figures, cartoon, chibi, neon, saturated colors",
+  "largura": 1024,
+  "altura": 1536,
+  "variacoes": [
+    {
+      "seed": 12101
+    },
+    {
+      "seed": 12102
+    },
+    {
+      "seed": 12103
+    }
+  ],
+  "pos": {
+    "remover_fundo": true,
+    "tamanho_final": 1536,
+    "margem": 0.03,
+    "derivados": [
+      1024,
+      768,
+      512
+    ]
+  }
+}
