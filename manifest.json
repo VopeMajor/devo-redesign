@@ -1,0 +1,120 @@
+{
+  "pedido": "arcano-sigilo-diabo",
+  "titulo": "Arcano — diabo (sigilo)",
+  "tipo": "emblema",
+  "tamanho_final": 1024,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 13151,
+      "passos": null,
+      "segundos": 10.1,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "arcano-sigilo-diabo--v01--1024.png",
+          "bytes": 383159
+        },
+        {
+          "arquivo": "arcano-sigilo-diabo--v01--1024.webp",
+          "bytes": 104888
+        },
+        {
+          "arquivo": "arcano-sigilo-diabo--v01--512.webp",
+          "bytes": 36378
+        },
+        {
+          "arquivo": "arcano-sigilo-diabo--v01--256.webp",
+          "bytes": 15526
+        },
+        {
+          "arquivo": "arcano-sigilo-diabo--v01--128.webp",
+          "bytes": 6714
+        },
+        {
+          "arquivo": "arcano-sigilo-diabo--v01--64.webp",
+          "bytes": 2420
+        }
+      ],
+      "segundos_pos": 23.2,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 13152,
+      "passos": null,
+      "segundos": 14.3,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "arcano-sigilo-diabo--v02--1024.png",
+          "bytes": 455143
+        },
+        {
+          "arquivo": "arcano-sigilo-diabo--v02--1024.webp",
+          "bytes": 113576
+        },
+        {
+          "arquivo": "arcano-sigilo-diabo--v02--512.webp",
+          "bytes": 38226
+        },
+        {
+          "arquivo": "arcano-sigilo-diabo--v02--256.webp",
+          "bytes": 15984
+        },
+        {
+          "arquivo": "arcano-sigilo-diabo--v02--128.webp",
+          "bytes": 7636
+        },
+        {
+          "arquivo": "arcano-sigilo-diabo--v02--64.webp",
+          "bytes": 3038
+        }
+      ],
+      "segundos_pos": 20.6,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 13153,
+      "passos": null,
+      "segundos": 8.7,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "arcano-sigilo-diabo--v03--1024.png",
+          "bytes": 429511
+        },
+        {
+          "arquivo": "arcano-sigilo-diabo--v03--1024.webp",
+          "bytes": 107760
+        },
+        {
+          "arquivo": "arcano-sigilo-diabo--v03--512.webp",
+          "bytes": 35722
+        },
+        {
+          "arquivo": "arcano-sigilo-diabo--v03--256.webp",
+          "bytes": 15102
+        },
+        {
+          "arquivo": "arcano-sigilo-diabo--v03--128.webp",
+          "bytes": 7008
+        },
+        {
+          "arquivo": "arcano-sigilo-diabo--v03--64.webp",
+          "bytes": 2842
+        }
+      ],
+      "segundos_pos": 20.2,
+      "avisos": []
+    }
+  ]
+}
