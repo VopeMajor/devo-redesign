@@ -1,0 +1,83 @@
+{
+  "pedido": "camada-ponteiros-bronze",
+  "titulo": "Camada: ponteiros-bronze",
+  "tipo": "camada",
+  "tamanho_final": 1024,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 9011,
+      "passos": null,
+      "segundos": 17.5,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "camada-ponteiros-bronze--v01--1024.png",
+          "bytes": 247518
+        },
+        {
+          "arquivo": "camada-ponteiros-bronze--v01--1024.webp",
+          "bytes": 55502
+        },
+        {
+          "arquivo": "camada-ponteiros-bronze--v01--512.webp",
+          "bytes": 20510
+        },
+        {
+          "arquivo": "camada-ponteiros-bronze--v01--256.webp",
+          "bytes": 8770
+        },
+        {
+          "arquivo": "camada-ponteiros-bronze--v01--128.webp",
+          "bytes": 4042
+        },
+        {
+          "arquivo": "camada-ponteiros-bronze--v01--64.webp",
+          "bytes": 1668
+        }
+      ],
+      "segundos_pos": 29.5,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 9012,
+      "passos": null,
+      "segundos": 17.8,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "camada-ponteiros-bronze--v02--1024.png",
+          "bytes": 218871
+        },
+        {
+          "arquivo": "camada-ponteiros-bronze--v02--1024.webp",
+          "bytes": 52630
+        },
+        {
+          "arquivo": "camada-ponteiros-bronze--v02--512.webp",
+          "bytes": 18736
+        },
+        {
+          "arquivo": "camada-ponteiros-bronze--v02--256.webp",
+          "bytes": 8076
+        },
+        {
+          "arquivo": "camada-ponteiros-bronze--v02--128.webp",
+          "bytes": 3500
+        },
+        {
+          "arquivo": "camada-ponteiros-bronze--v02--64.webp",
+          "bytes": 1434
+        }
+      ],
+      "segundos_pos": 24.2,
+      "avisos": []
+    }
+  ]
+}
