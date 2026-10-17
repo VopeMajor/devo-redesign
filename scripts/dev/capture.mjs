@@ -2315,7 +2315,7 @@ if (want('poco')) {
     // Prêmios do pool (Mesa do Owner). Criados pela API do próprio Owner; só na moeda Dracma Rara para não
     // mexer nas outras capturas nem no poco-test. No fim ficam desligados.
     const api = async (body) => {
-      const r = await o.page.request.post('/api/poco', { data: body })
+      const r = await o.page.request.post(`${BASE}/api/poco`, { data: body })
       const j = await r.json().catch(() => null)
       if (!r.ok()) manifest.errors.push({ step: 'poco-premios-api', error: `${r.status()} ${JSON.stringify(j).slice(0, 200)}` })
       return j
