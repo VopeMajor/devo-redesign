@@ -1,0 +1,50 @@
+{
+  "pedido": "balao2-porcelana-partida",
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 15021,
+      "passos": null,
+      "largura": 1536,
+      "altura": 512,
+      "neuronios_estimados": 78,
+      "ok": true,
+      "segundos": 16.8,
+      "tamanho_real": [
+        1536,
+        512
+      ]
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 15022,
+      "passos": null,
+      "largura": 1536,
+      "altura": 512,
+      "neuronios_estimados": 78,
+      "ok": true,
+      "segundos": 23.0,
+      "tamanho_real": [
+        1536,
+        512
+      ]
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 15023,
+      "passos": null,
+      "largura": 1536,
+      "altura": 512,
+      "neuronios_estimados": 78,
+      "ok": true,
+      "segundos": 23.1,
+      "tamanho_real": [
+        1536,
+        512
+      ]
+    }
+  ]
+}

@@ -1,0 +1,285 @@
+{
+  "pedido": "balao2-porcelana-partida",
+  "titulo": "Balão — porcelana-partida",
+  "tipo": "balao",
+  "tamanho_final": 1536,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 15021,
+      "passos": null,
+      "segundos": 16.8,
+      "neuronios_estimados": 78,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "balao2-porcelana-partida--v01--1535.png",
+          "bytes": 452381
+        },
+        {
+          "arquivo": "balao2-porcelana-partida--v01--1535.webp",
+          "bytes": 54434
+        },
+        {
+          "arquivo": "balao2-porcelana-partida--v01--1024.webp",
+          "bytes": 26358
+        },
+        {
+          "arquivo": "balao2-porcelana-partida--v01--768.webp",
+          "bytes": 19010
+        },
+        {
+          "arquivo": "balao2-porcelana-partida--v01--512.webp",
+          "bytes": 11870
+        },
+        {
+          "arquivo": "balao2-porcelana-partida--v01--256.webp",
+          "bytes": 5014
+        }
+      ],
+      "balao": {
+        "tamanho_px": [
+          1535,
+          399
+        ],
+        "nove_fatias": {
+          "top": 67,
+          "right": 103,
+          "bottom": 62,
+          "left": 122,
+          "css": "border-image: url(...) 67 103 62 122 fill / auto; border-image-repeat: stretch;",
+          "obs": "medidas em px do original; nos derivados multiplique por largura/W"
+        },
+        "kit": {
+          "corpo": {
+            "altura_px": 355,
+            "topo_no_original": 22,
+            "fatias": {
+              "top": 45,
+              "bottom": 40,
+              "left": 0,
+              "right": 0
+            },
+            "obs": "uniforme na horizontal; estique livre. Centro liso (texto)."
+          },
+          "ponta_esq": {
+            "largura_px": 168,
+            "sobreposicao_px": 46
+          },
+          "ponta_dir": {
+            "largura_px": 149,
+            "sobreposicao_px": 46
+          },
+          "texto": {
+            "x0": 122,
+            "x1": 1432,
+            "y0": 67,
+            "y1": 337
+          }
+        },
+        "arquivos_kit": [
+          "balao2-porcelana-partida--v01--kit-corpo--1024.webp",
+          "balao2-porcelana-partida--v01--kit-corpo--768.webp",
+          "balao2-porcelana-partida--v01--kit-corpo--512.webp",
+          "balao2-porcelana-partida--v01--kit-corpo--256.webp",
+          "balao2-porcelana-partida--v01--kit-ponta-esq--1024.webp",
+          "balao2-porcelana-partida--v01--kit-ponta-esq--768.webp",
+          "balao2-porcelana-partida--v01--kit-ponta-esq--512.webp",
+          "balao2-porcelana-partida--v01--kit-ponta-esq--256.webp",
+          "balao2-porcelana-partida--v01--kit-ponta-dir--1024.webp",
+          "balao2-porcelana-partida--v01--kit-ponta-dir--768.webp",
+          "balao2-porcelana-partida--v01--kit-ponta-dir--512.webp",
+          "balao2-porcelana-partida--v01--kit-ponta-dir--256.webp"
+        ]
+      },
+      "segundos_pos": 34.5,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 15022,
+      "passos": null,
+      "segundos": 23.0,
+      "neuronios_estimados": 78,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "balao2-porcelana-partida--v02--1535.png",
+          "bytes": 403853
+        },
+        {
+          "arquivo": "balao2-porcelana-partida--v02--1535.webp",
+          "bytes": 49970
+        },
+        {
+          "arquivo": "balao2-porcelana-partida--v02--1024.webp",
+          "bytes": 24456
+        },
+        {
+          "arquivo": "balao2-porcelana-partida--v02--768.webp",
+          "bytes": 17874
+        },
+        {
+          "arquivo": "balao2-porcelana-partida--v02--512.webp",
+          "bytes": 11396
+        },
+        {
+          "arquivo": "balao2-porcelana-partida--v02--256.webp",
+          "bytes": 5086
+        }
+      ],
+      "balao": {
+        "tamanho_px": [
+          1535,
+          365
+        ],
+        "nove_fatias": {
+          "top": 66,
+          "right": 182,
+          "bottom": 62,
+          "left": 197,
+          "css": "border-image: url(...) 66 182 62 197 fill / auto; border-image-repeat: stretch;",
+          "obs": "medidas em px do original; nos derivados multiplique por largura/W"
+        },
+        "kit": {
+          "corpo": {
+            "altura_px": 328,
+            "topo_no_original": 19,
+            "fatias": {
+              "top": 47,
+              "bottom": 44,
+              "left": 0,
+              "right": 0
+            },
+            "obs": "uniforme na horizontal; estique livre. Centro liso (texto)."
+          },
+          "ponta_esq": {
+            "largura_px": 243,
+            "sobreposicao_px": 46
+          },
+          "ponta_dir": {
+            "largura_px": 228,
+            "sobreposicao_px": 46
+          },
+          "texto": {
+            "x0": 197,
+            "x1": 1353,
+            "y0": 66,
+            "y1": 303
+          }
+        },
+        "arquivos_kit": [
+          "balao2-porcelana-partida--v02--kit-corpo--1024.webp",
+          "balao2-porcelana-partida--v02--kit-corpo--768.webp",
+          "balao2-porcelana-partida--v02--kit-corpo--512.webp",
+          "balao2-porcelana-partida--v02--kit-corpo--256.webp",
+          "balao2-porcelana-partida--v02--kit-ponta-esq--1024.webp",
+          "balao2-porcelana-partida--v02--kit-ponta-esq--768.webp",
+          "balao2-porcelana-partida--v02--kit-ponta-esq--512.webp",
+          "balao2-porcelana-partida--v02--kit-ponta-esq--256.webp",
+          "balao2-porcelana-partida--v02--kit-ponta-dir--1024.webp",
+          "balao2-porcelana-partida--v02--kit-ponta-dir--768.webp",
+          "balao2-porcelana-partida--v02--kit-ponta-dir--512.webp",
+          "balao2-porcelana-partida--v02--kit-ponta-dir--256.webp"
+        ]
+      },
+      "segundos_pos": 30.0,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 15023,
+      "passos": null,
+      "segundos": 23.1,
+      "neuronios_estimados": 78,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "balao2-porcelana-partida--v03--1535.png",
+          "bytes": 418625
+        },
+        {
+          "arquivo": "balao2-porcelana-partida--v03--1535.webp",
+          "bytes": 44022
+        },
+        {
+          "arquivo": "balao2-porcelana-partida--v03--1024.webp",
+          "bytes": 21672
+        },
+        {
+          "arquivo": "balao2-porcelana-partida--v03--768.webp",
+          "bytes": 16274
+        },
+        {
+          "arquivo": "balao2-porcelana-partida--v03--512.webp",
+          "bytes": 9246
+        },
+        {
+          "arquivo": "balao2-porcelana-partida--v03--256.webp",
+          "bytes": 4336
+        }
+      ],
+      "balao": {
+        "tamanho_px": [
+          1535,
+          333
+        ],
+        "nove_fatias": {
+          "top": 56,
+          "right": 143,
+          "bottom": 53,
+          "left": 136,
+          "css": "border-image: url(...) 56 143 53 136 fill / auto; border-image-repeat: stretch;",
+          "obs": "medidas em px do original; nos derivados multiplique por largura/W"
+        },
+        "kit": {
+          "corpo": {
+            "altura_px": 300,
+            "topo_no_original": 16,
+            "fatias": {
+              "top": 40,
+              "bottom": 36,
+              "left": 0,
+              "right": 0
+            },
+            "obs": "uniforme na horizontal; estique livre. Centro liso (texto)."
+          },
+          "ponta_esq": {
+            "largura_px": 182,
+            "sobreposicao_px": 46
+          },
+          "ponta_dir": {
+            "largura_px": 189,
+            "sobreposicao_px": 46
+          },
+          "texto": {
+            "x0": 136,
+            "x1": 1392,
+            "y0": 56,
+            "y1": 280
+          }
+        },
+        "arquivos_kit": [
+          "balao2-porcelana-partida--v03--kit-corpo--1024.webp",
+          "balao2-porcelana-partida--v03--kit-corpo--768.webp",
+          "balao2-porcelana-partida--v03--kit-corpo--512.webp",
+          "balao2-porcelana-partida--v03--kit-corpo--256.webp",
+          "balao2-porcelana-partida--v03--kit-ponta-esq--1024.webp",
+          "balao2-porcelana-partida--v03--kit-ponta-esq--768.webp",
+          "balao2-porcelana-partida--v03--kit-ponta-esq--512.webp",
+          "balao2-porcelana-partida--v03--kit-ponta-esq--256.webp",
+          "balao2-porcelana-partida--v03--kit-ponta-dir--1024.webp",
+          "balao2-porcelana-partida--v03--kit-ponta-dir--768.webp",
+          "balao2-porcelana-partida--v03--kit-ponta-dir--512.webp",
+          "balao2-porcelana-partida--v03--kit-ponta-dir--256.webp"
+        ]
+      },
+      "segundos_pos": 28.4,
+      "avisos": []
+    }
+  ]
+}

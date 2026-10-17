@@ -1,0 +1,9 @@
+[balao2-porcelana-partida] v01: @cf/black-forest-labs/flux-2-klein-4b seed=15021 1536x512 passos=None (~78 neurônios)
+    ok em 16.8s, 1536x512
+[balao2-porcelana-partida] v02: @cf/black-forest-labs/flux-2-klein-4b seed=15022 1536x512 passos=None (~78 neurônios)
+    ok em 23.0s, 1536x512
+[balao2-porcelana-partida] v03: @cf/black-forest-labs/flux-2-klein-4b seed=15023 1536x512 passos=None (~78 neurônios)
+    ok em 23.1s, 1536x512
+[balao2-porcelana-partida] v01: rembg:birefnet-general; sem avisos
+[balao2-porcelana-partida] v02: rembg:birefnet-general; sem avisos
+[balao2-porcelana-partida] v03: rembg:birefnet-general; sem avisos
