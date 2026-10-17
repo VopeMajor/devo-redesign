@@ -1759,7 +1759,7 @@ INSERT INTO item_defs (key, kind, name, description, rarity, stackable, meta) VA
   ('cosmetico:nome-veu-ametista', 'cosmetico', 'Véu de Ametista', 'Capitulares com um reflexo que atravessa o nome.', 'raro', false,
    '{"categoria": "efeito", "asset": "devo:nome/veu-ametista", "nome": {"fonte": "decorativa", "cores": ["#c2b9ec", "#8a7cc8", "#efe9ff"], "efeito": "brilho"}, "animado": true, "poco": true, "origem": "poco", "ordem": 16}'),
   ('cosmetico:nome-champanhe', 'cosmetico', 'Aço Champanhe', 'Champanhe e aço em gradiente que corre devagar.', 'epico', false,
-   '{"categoria": "efeito", "asset": "devo:nome/champanhe", "nome": {"fonte": "classica", "cores": ["#e3d3ae", "#9aa0b4", "#fff6e0"], "efeito": "gradiente-movel"}, "animado": true, "poco": false, "origem": "semanal", "ordem": 17}'),
+   '{"categoria": "efeito", "asset": "devo:nome/champanhe", "nome": {"fonte": "classica", "cores": ["#f3d48a", "#7f8fbf", "#fff4d6"], "efeito": "gradiente-movel"}, "animado": true, "poco": false, "origem": "semanal", "ordem": 17}'),
   ('cosmetico:nome-sangue-neon', 'cosmetico', 'Letreiro de Sangue', 'Neon vermelho de cassino, com uma falha de vez em quando.', 'epico', false,
    '{"categoria": "efeito", "asset": "devo:nome/sangue-neon", "nome": {"fonte": "impacto", "cores": ["#ff3a5c", "#a3121f"], "efeito": "neon"}, "animado": true, "poco": false, "origem": "deadly_vote", "ordem": 18}'),
   ('cosmetico:nome-aurora-arcana', 'cosmetico', 'Aurora Arcana', 'Ametista, rosa-seco e champanhe correndo pelo nome.', 'lendario', false,
@@ -1789,6 +1789,10 @@ INSERT INTO item_defs (key, kind, name, description, rarity, stackable, meta) VA
   ('cosmetico:balao-ouro-velho', 'cosmetico', 'Ouro Velho', 'Papel de cartório com moldura de ouro gasto.', 'epico', false,
    '{"categoria": "balao", "asset": "devo:balao/ouro-velho", "balao": {"fundo": "#e9dfc6", "borda": "#8a6a2a", "texto": "#2a2320", "filete": "#b8923a"}, "animado": false, "poco": false, "origem": "semanal", "ordem": 44, "provisorio": true}')
 ON CONFLICT (key) DO NOTHING;
+
+-- Aço Champanhe com mais contraste no gradiente (no miniperfil parecia texto comum). Só troca o valor antigo.
+UPDATE item_defs SET meta = jsonb_set(meta, '{nome,cores}', '["#f3d48a", "#7f8fbf", "#fff4d6"]'::jsonb)
+ WHERE key = 'cosmetico:nome-champanhe' AND meta->'nome'->'cores' = '["#e3d3ae", "#9aa0b4", "#fff6e0"]'::jsonb;
 
 
 -- =============================================================================================

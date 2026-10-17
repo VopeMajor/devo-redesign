@@ -125,6 +125,8 @@
   -webkit-text-fill-color: transparent;
 }
 .cos-n-gradiente-movel { background-image: linear-gradient(90deg, var(--n1), var(--n2), var(--n3), var(--n1)); background-size: 300% 100%; }
+/* gradientes recortados no texto ganham um halo discreto da cor do meio: se destacam do fundo e de um nome comum */
+.cos-n-gradiente, .cos-n-gradiente-movel, .cos-n-brilho { filter: drop-shadow(0 0 0.18em color-mix(in srgb, var(--n2) 55%, transparent)); }
 .cos-anim.cos-n-gradiente-movel { animation: cos-n-mover 6s linear infinite; }
 @keyframes cos-n-mover { from { background-position: 0% 0; } to { background-position: 300% 0; } }
 .cos-n-brilho {
