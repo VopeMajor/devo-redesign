@@ -1,0 +1,18 @@
+{
+  "asset": "img:/images/calendario/icones/pp",
+  "imagem": {
+    "base": "/images/calendario/icones/pp",
+    "tamanhos": [
+      64,
+      128,
+      256
+    ]
+  },
+  "origem": {
+    "pedido": "ico-pp",
+    "variacao": "v03",
+    "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+    "seed": 10603,
+    "importado": null
+  }
+}

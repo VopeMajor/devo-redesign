@@ -502,3 +502,38 @@ teste `scripts/dev/corporacoes-test.mjs` (CI → `corporacoes-test.log`).
 - **Holograma:** a página dispara `devo:cena` `{ id: 'melissa-corporacoes' }` na primeira entrada e no botão "Chamar a
   Companhia". O motor da Narrativa assume com `preventDefault()`; senão toca o fallback local
   (`components/devo/corporacoes/holograma.tsx`, texto literal, sem cobrar Tempo na opção 2).
+
+## 15. Grandioso Calendário Devo (agente Calendário)
+
+Arquivos: `scripts/calendario-migration.sql` (tabelas `calendario_eventos`, `calendario_checkins`; config; datas
+comemorativas iniciais), `lib/devo/calendario.ts` (puro: tipos, rótulos das recompensas, datas de Brasília, ocorrências
+anuais), `lib/devo/calendario-server.ts`, `app/api/calendario/route.ts`, `lib/devo/dialogo/cenas/melissa-calendario.ts`
+(fala literal da Melissa), `components/devo/calendario/*` (app, ícones, Mesa), seed `scripts/dev/97-seed-calendario.sql`,
+teste `scripts/dev/calendario-test.mjs` (CI → `calendario-test.log`). Texto do dono: `docs/redesign/CALENDARIO-dono.md`.
+
+- **Trava / desbloqueio:** flag `calendario`, mas **liberada para todos desde o início**: `devo_config['desbloqueio.livres']`
+  (PROVISÓRIO, padrão `["calendario"]`) entra em `getUnlocks`/`hasUnlock`/`unlocks` (só no TypeScript; a função SQL
+  `devo_tem_desbloqueio` continua olhando as linhas). Tirar a flag da lista tranca de novo (Owner/Anfitrião sempre veem).
+  Sem cerimônia de desbloqueio e fora da contagem de "sistemas explorados" do Galo (`SistemaDef.inicial`).
+- **Check-in diário:** ciclo em `calendario.checkin.ciclo` (texto do dono; não provisório). Um por jogador por dia de
+  Brasília (relógio do banco) — PK `(player_id, dia, tipo)` + trava do jogador (`pg_advisory_xact_lock`): toque duplo e
+  requisições simultâneas entregam uma vez; a segunda recebe 409. O ciclo só anda com o resgate (a posição fica na linha).
+  **Falta** (`calendario.checkin.regras.falta`, PROVISÓRIO): `pausa` (padrão: continua de onde parou) ou `reinicia`.
+- **Recompensas** (funções seguras, `idem = calendario:<jogador>:<dia>:<tipo>`): `pp` → `addPotencialSeguro` na Virtude de
+  afinidade **Excelente do Arcano** do jogador; sem Arcano, `pp_virtude_padrao` (Paus) — PROVISÓRIO, o Owner pode fixar uma
+  Virtude. O teto do Estágio vale (o que não couber não entra; a revelação avisa). `item` → `grantItem`
+  (`fragmento_arcano`, `dracma_comum`, `dracma_incomum`…). `tempo` → `creditMinutes` + `drainTime` (resposta traz
+  `timeDeltaMs`). `carta` → `randomCardOfRarity` + `deliverCard` (o cliente resgata por `/api/eu cartas.resgatar`).
+- **Check-in de evento** ("em datas comemorativas…"): `calendario_eventos.checkin = { titulo, recompensas[] }`. Cada evento
+  ativo hoje vira um cartão extra; um resgate por dia (`tipo = 'evento:<id>'`), o n-ésimo resgate da edição entrega a n-ésima
+  recompensa; acabou a lista → completo (409). Evento anual conta por edição (`ocorrencia`).
+- **`can()`:** `calendario.editar` (Owner, Anfitrião): criar/editar/remover eventos sem check-in. `calendario.recompensas`
+  (Owner): check-in de evento, eventos que já têm check-in e regras do diário. Tudo no `admin_log`
+  (`calendario.evento.criado|editado|removido`, `calendario.regras`). Remoção é suave (`removido_at`).
+- **API:** `GET /api/calendario` → `CalendarioPayload` · `GET ?view=mesa` → `CalendarioMesa` · `POST {action}`: `checkin
+  {tipo?: 'diario'|'evento', eventoId?}` → `ResgateResultado`; `evento.salvar`, `evento.remover`, `regras`.
+- **Tutorial:** cena `melissa-calendario` (holograma), aberta uma vez na 1ª entrada (`seNaoVista`); o motor avisa os
+  passos por `devo:cena-passo` e a tela projeta o evento de Natal no passo `exemplo-natal`. Botão "Melissa" revê.
+- **Mesa:** seção "Calendário" (Owner/Anfitrião), `components/devo/calendario/calendario-mesa.tsx`.
+- **Paleta:** tokens `--dv-abyss`, `--dv-wine`, `--dv-wine-deep`, `--dv-wine-text` (derivado, para texto sobre vinho),
+  `--dv-fog`, `--dv-silver` (refs/paleta/kokken-no-inori.jpg) em `app/globals.css`.

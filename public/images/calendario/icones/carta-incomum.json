@@ -1,0 +1,18 @@
+{
+  "asset": "img:/images/calendario/icones/carta-incomum",
+  "imagem": {
+    "base": "/images/calendario/icones/carta-incomum",
+    "tamanhos": [
+      64,
+      128,
+      256
+    ]
+  },
+  "origem": {
+    "pedido": "ico-carta-incomum",
+    "variacao": "v03",
+    "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+    "seed": 10653,
+    "importado": null
+  }
+}

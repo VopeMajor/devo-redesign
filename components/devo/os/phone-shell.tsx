@@ -660,6 +660,8 @@ function CriticalVignette() {
  * mesma família: cinza a 60% com fechadura e o motivo quando trancados; liberados acendem (losango ametista =
  * ainda não aberto). Sistemas com tela própria abrem mesmo trancados (a tela mostra o motivo; o servidor decide).
  */
+const POR_EXTENSO: Record<number, string> = { 6: 'Seis', 7: 'Sete', 8: 'Oito', 9: 'Nove' }
+
 function LockedSystems({ onOpen }: { onOpen: (id: AppId) => void }) {
   const { eu, liberado } = useAcesso()
   const { state } = useDevo()
@@ -670,7 +672,7 @@ function LockedSystems({ onOpen }: { onOpen: (id: AppId) => void }) {
       {/* véu atrás da grade: as cartas da cena não passam atrás dos nomes */}
       <span aria-hidden="true" className="pointer-events-none absolute -inset-x-4 -bottom-6 -top-4 -z-10 bg-[linear-gradient(180deg,transparent,rgba(12,12,14,0.86)_12%,rgba(12,12,14,0.86)_88%,transparent)]" />
       <div className="flex items-center gap-3 px-1">
-        <span className="dv-label text-[10px] text-dv-text-3">Seis sistemas</span>
+        <span className="dv-label text-[10px] text-dv-text-3">{POR_EXTENSO[SISTEMAS.length] ?? SISTEMAS.length} sistemas</span>
         <span aria-hidden="true" className="h-px flex-1 bg-gradient-to-r from-[rgba(168,156,224,0.55)] via-dv-line-strong to-transparent" />
         {!algum && !eu && <span className="dv-label text-[10px] text-dv-text-3">Trancado pelo Anfitrião</span>}
       </div>
