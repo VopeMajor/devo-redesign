@@ -1,0 +1,91 @@
+{
+  "pedido": "arcano-sigilo-forca",
+  "titulo": "Arcano — forca (sigilo)",
+  "tipo": "emblema",
+  "tamanho_final": 1024,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 13081,
+      "passos": null,
+      "neuronios_estimados": 104,
+      "erro": "HTTP 400 — 3030: AiError: AiError: Your output has been flagged. Please choose another prompt / input image combination (badad73a-0c3b-46ab-a03c-b52d75a200ef)"
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 13082,
+      "passos": null,
+      "segundos": 10.1,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "arcano-sigilo-forca--v02--1024.png",
+          "bytes": 382153
+        },
+        {
+          "arquivo": "arcano-sigilo-forca--v02--1024.webp",
+          "bytes": 87802
+        },
+        {
+          "arquivo": "arcano-sigilo-forca--v02--512.webp",
+          "bytes": 29490
+        },
+        {
+          "arquivo": "arcano-sigilo-forca--v02--256.webp",
+          "bytes": 12780
+        },
+        {
+          "arquivo": "arcano-sigilo-forca--v02--128.webp",
+          "bytes": 6094
+        },
+        {
+          "arquivo": "arcano-sigilo-forca--v02--64.webp",
+          "bytes": 2540
+        }
+      ],
+      "segundos_pos": 17.9,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 13083,
+      "passos": null,
+      "segundos": 11.0,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "arcano-sigilo-forca--v03--1024.png",
+          "bytes": 526258
+        },
+        {
+          "arquivo": "arcano-sigilo-forca--v03--1024.webp",
+          "bytes": 107262
+        },
+        {
+          "arquivo": "arcano-sigilo-forca--v03--512.webp",
+          "bytes": 36048
+        },
+        {
+          "arquivo": "arcano-sigilo-forca--v03--256.webp",
+          "bytes": 14842
+        },
+        {
+          "arquivo": "arcano-sigilo-forca--v03--128.webp",
+          "bytes": 6452
+        },
+        {
+          "arquivo": "arcano-sigilo-forca--v03--64.webp",
+          "bytes": 2738
+        }
+      ],
+      "segundos_pos": 14.7,
+      "avisos": []
+    }
+  ]
+}
