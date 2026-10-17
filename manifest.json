@@ -1,0 +1,168 @@
+{
+  "pedido": "mini-fortuna-rato",
+  "titulo": "fortuna-rato — miniperfil (quadrada)",
+  "tipo": "moldura",
+  "tamanho_final": 1024,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 4261,
+      "passos": null,
+      "segundos": 13.2,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "miolo_aberto_por_cor": true,
+      "janela": {
+        "forma": "quadrado",
+        "centro_px": [
+          512.0,
+          512.0
+        ],
+        "lado_px": 560.1,
+        "raio_canto_px": 41.0,
+        "lado_fracao": 0.547
+      },
+      "reencaixe": {
+        "escala": 1.1635,
+        "cobertura_aro": 1.0
+      },
+      "ornamento_cortado": 0.0,
+      "arquivos": [
+        {
+          "arquivo": "mini-fortuna-rato--v01--1024.png",
+          "bytes": 615576
+        },
+        {
+          "arquivo": "mini-fortuna-rato--v01--1024.webp",
+          "bytes": 91138
+        },
+        {
+          "arquivo": "mini-fortuna-rato--v01--512.webp",
+          "bytes": 35328
+        },
+        {
+          "arquivo": "mini-fortuna-rato--v01--256.webp",
+          "bytes": 14164
+        },
+        {
+          "arquivo": "mini-fortuna-rato--v01--96.webp",
+          "bytes": 4128
+        },
+        {
+          "arquivo": "mini-fortuna-rato--v01--48.webp",
+          "bytes": 1810
+        }
+      ],
+      "segundos_pos": 29.4,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 4262,
+      "passos": null,
+      "segundos": 24.5,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "miolo_aberto_por_cor": true,
+      "janela": {
+        "forma": "quadrado",
+        "centro_px": [
+          512.0,
+          512.0
+        ],
+        "lado_px": 560.1,
+        "raio_canto_px": 41.0,
+        "lado_fracao": 0.547
+      },
+      "reencaixe": {
+        "escala": 1.178,
+        "cobertura_aro": 1.0
+      },
+      "ornamento_cortado": 0.0001,
+      "arquivos": [
+        {
+          "arquivo": "mini-fortuna-rato--v02--1024.png",
+          "bytes": 464954
+        },
+        {
+          "arquivo": "mini-fortuna-rato--v02--1024.webp",
+          "bytes": 78588
+        },
+        {
+          "arquivo": "mini-fortuna-rato--v02--512.webp",
+          "bytes": 28820
+        },
+        {
+          "arquivo": "mini-fortuna-rato--v02--256.webp",
+          "bytes": 11322
+        },
+        {
+          "arquivo": "mini-fortuna-rato--v02--96.webp",
+          "bytes": 3496
+        },
+        {
+          "arquivo": "mini-fortuna-rato--v02--48.webp",
+          "bytes": 1726
+        }
+      ],
+      "segundos_pos": 24.6,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 4263,
+      "passos": null,
+      "segundos": 36.6,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "miolo_aberto_por_cor": true,
+      "janela": {
+        "forma": "quadrado",
+        "centro_px": [
+          512.0,
+          512.0
+        ],
+        "lado_px": 560.1,
+        "raio_canto_px": 41.0,
+        "lado_fracao": 0.547
+      },
+      "reencaixe": {
+        "escala": 1.233,
+        "cobertura_aro": 1.0
+      },
+      "ornamento_cortado": 0.0001,
+      "arquivos": [
+        {
+          "arquivo": "mini-fortuna-rato--v03--1024.png",
+          "bytes": 592362
+        },
+        {
+          "arquivo": "mini-fortuna-rato--v03--1024.webp",
+          "bytes": 89690
+        },
+        {
+          "arquivo": "mini-fortuna-rato--v03--512.webp",
+          "bytes": 33444
+        },
+        {
+          "arquivo": "mini-fortuna-rato--v03--256.webp",
+          "bytes": 13614
+        },
+        {
+          "arquivo": "mini-fortuna-rato--v03--96.webp",
+          "bytes": 3908
+        },
+        {
+          "arquivo": "mini-fortuna-rato--v03--48.webp",
+          "bytes": 1744
+        }
+      ],
+      "segundos_pos": 24.8,
+      "avisos": []
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+[mini-fortuna-rato] v01: @cf/black-forest-labs/flux-2-klein-4b seed=4261 1024x1024 passos=None (~104 neurônios)
+    ok em 13.2s, 1024x1024
+[mini-fortuna-rato] v02: @cf/black-forest-labs/flux-2-klein-4b seed=4262 1024x1024 passos=None (~104 neurônios)
+    ok em 24.5s, 1024x1024
+[mini-fortuna-rato] v03: @cf/black-forest-labs/flux-2-klein-4b seed=4263 1024x1024 passos=None (~104 neurônios)
+    ok em 36.6s, 1024x1024
+[mini-fortuna-rato] v01: rembg:birefnet-general; sem avisos
+[mini-fortuna-rato] v02: rembg:birefnet-general; sem avisos
+[mini-fortuna-rato] v03: rembg:birefnet-general; sem avisos
