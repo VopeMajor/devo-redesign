@@ -1,0 +1,9 @@
+[arcano-sigilo-sacerdotisa] v01: @cf/black-forest-labs/flux-2-klein-4b seed=13021 1024x1024 passos=None (~104 neurônios)
+    ok em 10.3s, 1024x1024
+[arcano-sigilo-sacerdotisa] v02: @cf/black-forest-labs/flux-2-klein-4b seed=13022 1024x1024 passos=None (~104 neurônios)
+    ok em 10.6s, 1024x1024
+[arcano-sigilo-sacerdotisa] v03: @cf/black-forest-labs/flux-2-klein-4b seed=13023 1024x1024 passos=None (~104 neurônios)
+    ok em 13.8s, 1024x1024
+[arcano-sigilo-sacerdotisa] v01: rembg:birefnet-general; sem avisos
+[arcano-sigilo-sacerdotisa] v02: rembg:birefnet-general; sem avisos
+[arcano-sigilo-sacerdotisa] v03: rembg:birefnet-general; sem avisos
