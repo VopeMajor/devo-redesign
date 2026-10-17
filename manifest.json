@@ -1,0 +1,120 @@
+{
+  "pedido": "arcano-sigilo-imperador",
+  "titulo": "Arcano — imperador (sigilo)",
+  "tipo": "emblema",
+  "tamanho_final": 1024,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 13041,
+      "passos": null,
+      "segundos": 11.6,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "arcano-sigilo-imperador--v01--1024.png",
+          "bytes": 319180
+        },
+        {
+          "arquivo": "arcano-sigilo-imperador--v01--1024.webp",
+          "bytes": 60096
+        },
+        {
+          "arquivo": "arcano-sigilo-imperador--v01--512.webp",
+          "bytes": 21256
+        },
+        {
+          "arquivo": "arcano-sigilo-imperador--v01--256.webp",
+          "bytes": 8892
+        },
+        {
+          "arquivo": "arcano-sigilo-imperador--v01--128.webp",
+          "bytes": 4842
+        },
+        {
+          "arquivo": "arcano-sigilo-imperador--v01--64.webp",
+          "bytes": 2120
+        }
+      ],
+      "segundos_pos": 22.7,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 13042,
+      "passos": null,
+      "segundos": 9.6,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "arcano-sigilo-imperador--v02--1024.png",
+          "bytes": 424332
+        },
+        {
+          "arquivo": "arcano-sigilo-imperador--v02--1024.webp",
+          "bytes": 66950
+        },
+        {
+          "arquivo": "arcano-sigilo-imperador--v02--512.webp",
+          "bytes": 22148
+        },
+        {
+          "arquivo": "arcano-sigilo-imperador--v02--256.webp",
+          "bytes": 9856
+        },
+        {
+          "arquivo": "arcano-sigilo-imperador--v02--128.webp",
+          "bytes": 4640
+        },
+        {
+          "arquivo": "arcano-sigilo-imperador--v02--64.webp",
+          "bytes": 2188
+        }
+      ],
+      "segundos_pos": 19.9,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 13043,
+      "passos": null,
+      "segundos": 10.0,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "arcano-sigilo-imperador--v03--1024.png",
+          "bytes": 284737
+        },
+        {
+          "arquivo": "arcano-sigilo-imperador--v03--1024.webp",
+          "bytes": 58468
+        },
+        {
+          "arquivo": "arcano-sigilo-imperador--v03--512.webp",
+          "bytes": 20958
+        },
+        {
+          "arquivo": "arcano-sigilo-imperador--v03--256.webp",
+          "bytes": 8714
+        },
+        {
+          "arquivo": "arcano-sigilo-imperador--v03--128.webp",
+          "bytes": 4402
+        },
+        {
+          "arquivo": "arcano-sigilo-imperador--v03--64.webp",
+          "bytes": 2006
+        }
+      ],
+      "segundos_pos": 19.3,
+      "avisos": []
+    }
+  ]
+}

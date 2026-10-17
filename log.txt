@@ -1,0 +1,9 @@
+[arcano-sigilo-imperador] v01: @cf/black-forest-labs/flux-2-klein-4b seed=13041 1024x1024 passos=None (~104 neurônios)
+    ok em 11.6s, 1024x1024
+[arcano-sigilo-imperador] v02: @cf/black-forest-labs/flux-2-klein-4b seed=13042 1024x1024 passos=None (~104 neurônios)
+    ok em 9.6s, 1024x1024
+[arcano-sigilo-imperador] v03: @cf/black-forest-labs/flux-2-klein-4b seed=13043 1024x1024 passos=None (~104 neurônios)
+    ok em 10.0s, 1024x1024
+[arcano-sigilo-imperador] v01: rembg:birefnet-general; sem avisos
+[arcano-sigilo-imperador] v02: rembg:birefnet-general; sem avisos
+[arcano-sigilo-imperador] v03: rembg:birefnet-general; sem avisos
