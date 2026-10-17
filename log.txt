@@ -1,0 +1,9 @@
+[poco-lixo-chiclete] v01: @cf/black-forest-labs/flux-2-klein-4b seed=11171 1024x1024 passos=None (~104 neurônios)
+    ok em 19.8s, 1024x1024
+[poco-lixo-chiclete] v02: @cf/black-forest-labs/flux-2-klein-4b seed=11172 1024x1024 passos=None (~104 neurônios)
+    ok em 12.0s, 1024x1024
+[poco-lixo-chiclete] v03: @cf/black-forest-labs/flux-2-klein-4b seed=11173 1024x1024 passos=None (~104 neurônios)
+    ok em 16.3s, 1024x1024
+[poco-lixo-chiclete] v01: rembg:birefnet-general; sem avisos
+[poco-lixo-chiclete] v02: rembg:birefnet-general; sem avisos
+[poco-lixo-chiclete] v03: rembg:birefnet-general; sem avisos

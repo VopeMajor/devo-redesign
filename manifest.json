@@ -1,0 +1,120 @@
+{
+  "pedido": "poco-lixo-chiclete",
+  "titulo": "Poço — lixo-chiclete",
+  "tipo": "emblema",
+  "tamanho_final": 1024,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 11171,
+      "passos": null,
+      "segundos": 19.8,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "poco-lixo-chiclete--v01--1024.png",
+          "bytes": 574751
+        },
+        {
+          "arquivo": "poco-lixo-chiclete--v01--1024.webp",
+          "bytes": 76870
+        },
+        {
+          "arquivo": "poco-lixo-chiclete--v01--512.webp",
+          "bytes": 21802
+        },
+        {
+          "arquivo": "poco-lixo-chiclete--v01--256.webp",
+          "bytes": 9542
+        },
+        {
+          "arquivo": "poco-lixo-chiclete--v01--128.webp",
+          "bytes": 4508
+        },
+        {
+          "arquivo": "poco-lixo-chiclete--v01--64.webp",
+          "bytes": 2152
+        }
+      ],
+      "segundos_pos": 35.2,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 11172,
+      "passos": null,
+      "segundos": 12.0,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "poco-lixo-chiclete--v02--1024.png",
+          "bytes": 802296
+        },
+        {
+          "arquivo": "poco-lixo-chiclete--v02--1024.webp",
+          "bytes": 103942
+        },
+        {
+          "arquivo": "poco-lixo-chiclete--v02--512.webp",
+          "bytes": 30138
+        },
+        {
+          "arquivo": "poco-lixo-chiclete--v02--256.webp",
+          "bytes": 12144
+        },
+        {
+          "arquivo": "poco-lixo-chiclete--v02--128.webp",
+          "bytes": 5658
+        },
+        {
+          "arquivo": "poco-lixo-chiclete--v02--64.webp",
+          "bytes": 2426
+        }
+      ],
+      "segundos_pos": 29.8,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 11173,
+      "passos": null,
+      "segundos": 16.3,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "poco-lixo-chiclete--v03--1024.png",
+          "bytes": 462239
+        },
+        {
+          "arquivo": "poco-lixo-chiclete--v03--1024.webp",
+          "bytes": 68418
+        },
+        {
+          "arquivo": "poco-lixo-chiclete--v03--512.webp",
+          "bytes": 19802
+        },
+        {
+          "arquivo": "poco-lixo-chiclete--v03--256.webp",
+          "bytes": 8826
+        },
+        {
+          "arquivo": "poco-lixo-chiclete--v03--128.webp",
+          "bytes": 4296
+        },
+        {
+          "arquivo": "poco-lixo-chiclete--v03--64.webp",
+          "bytes": 2064
+        }
+      ],
+      "segundos_pos": 29.0,
+      "avisos": []
+    }
+  ]
+}
