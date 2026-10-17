@@ -86,9 +86,10 @@ async function shot(page, name, note = '') {
     try {
       await page.setViewportSize({ width, height })
       await wait(600)
-      // animações CSS paradas no quadro (o redimensionamento repinta a cena inteira no WebGL/raster por software)
+      // se o quadro não sair (o redimensionamento repinta a cena inteira no raster por software), segunda
+      // tentativa com as animações CSS paradas (assim elas não podem segurar o quadro)
       await page
-        .screenshot({ path: `${OUT}/${nome}.jpg`, type: 'jpeg', quality: 82, animations: 'disabled', timeout: 20000 })
+        .screenshot({ path: `${OUT}/${nome}.jpg`, type: 'jpeg', quality: 82, timeout: 20000 })
         .catch(async () => {
           await wait(1500)
           await page.screenshot({ path: `${OUT}/${nome}.jpg`, type: 'jpeg', quality: 82, animations: 'disabled', timeout: 25000 })
