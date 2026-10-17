@@ -1,0 +1,50 @@
+{
+  "pedido": "nome-coroa-aco",
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 17021,
+      "passos": null,
+      "largura": 1024,
+      "altura": 1024,
+      "neuronios_estimados": 104,
+      "ok": true,
+      "segundos": 11.1,
+      "tamanho_real": [
+        1024,
+        1024
+      ]
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 17022,
+      "passos": null,
+      "largura": 1024,
+      "altura": 1024,
+      "neuronios_estimados": 104,
+      "ok": true,
+      "segundos": 13.2,
+      "tamanho_real": [
+        1024,
+        1024
+      ]
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 17023,
+      "passos": null,
+      "largura": 1024,
+      "altura": 1024,
+      "neuronios_estimados": 104,
+      "ok": true,
+      "segundos": 15.1,
+      "tamanho_real": [
+        1024,
+        1024
+      ]
+    }
+  ]
+}

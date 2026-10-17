@@ -1,0 +1,9 @@
+[nome-coroa-aco] v01: @cf/black-forest-labs/flux-2-klein-4b seed=17021 1024x1024 passos=None (~104 neurônios)
+    ok em 11.1s, 1024x1024
+[nome-coroa-aco] v02: @cf/black-forest-labs/flux-2-klein-4b seed=17022 1024x1024 passos=None (~104 neurônios)
+    ok em 13.2s, 1024x1024
+[nome-coroa-aco] v03: @cf/black-forest-labs/flux-2-klein-4b seed=17023 1024x1024 passos=None (~104 neurônios)
+    ok em 15.1s, 1024x1024
+[nome-coroa-aco] v01: rembg:birefnet-general; sem avisos
+[nome-coroa-aco] v02: rembg:birefnet-general; sem avisos
+[nome-coroa-aco] v03: rembg:birefnet-general; sem avisos

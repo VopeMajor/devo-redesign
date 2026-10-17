@@ -1,0 +1,120 @@
+{
+  "pedido": "nome-coroa-aco",
+  "titulo": "Ornamento de nome — coroa-aco",
+  "tipo": "emblema",
+  "tamanho_final": 1024,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 17021,
+      "passos": null,
+      "segundos": 11.1,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "nome-coroa-aco--v01--1024.png",
+          "bytes": 527103
+        },
+        {
+          "arquivo": "nome-coroa-aco--v01--1024.webp",
+          "bytes": 88090
+        },
+        {
+          "arquivo": "nome-coroa-aco--v01--512.webp",
+          "bytes": 29588
+        },
+        {
+          "arquivo": "nome-coroa-aco--v01--256.webp",
+          "bytes": 13188
+        },
+        {
+          "arquivo": "nome-coroa-aco--v01--128.webp",
+          "bytes": 6240
+        },
+        {
+          "arquivo": "nome-coroa-aco--v01--64.webp",
+          "bytes": 2764
+        }
+      ],
+      "segundos_pos": 35.8,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 17022,
+      "passos": null,
+      "segundos": 13.2,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "nome-coroa-aco--v02--1024.png",
+          "bytes": 528023
+        },
+        {
+          "arquivo": "nome-coroa-aco--v02--1024.webp",
+          "bytes": 96678
+        },
+        {
+          "arquivo": "nome-coroa-aco--v02--512.webp",
+          "bytes": 33700
+        },
+        {
+          "arquivo": "nome-coroa-aco--v02--256.webp",
+          "bytes": 14334
+        },
+        {
+          "arquivo": "nome-coroa-aco--v02--128.webp",
+          "bytes": 6708
+        },
+        {
+          "arquivo": "nome-coroa-aco--v02--64.webp",
+          "bytes": 2854
+        }
+      ],
+      "segundos_pos": 27.5,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 17023,
+      "passos": null,
+      "segundos": 15.1,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "nome-coroa-aco--v03--1024.png",
+          "bytes": 506938
+        },
+        {
+          "arquivo": "nome-coroa-aco--v03--1024.webp",
+          "bytes": 86184
+        },
+        {
+          "arquivo": "nome-coroa-aco--v03--512.webp",
+          "bytes": 28738
+        },
+        {
+          "arquivo": "nome-coroa-aco--v03--256.webp",
+          "bytes": 13328
+        },
+        {
+          "arquivo": "nome-coroa-aco--v03--128.webp",
+          "bytes": 6130
+        },
+        {
+          "arquivo": "nome-coroa-aco--v03--64.webp",
+          "bytes": 2762
+        }
+      ],
+      "segundos_pos": 26.9,
+      "avisos": []
+    }
+  ]
+}
