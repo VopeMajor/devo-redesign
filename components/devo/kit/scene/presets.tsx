@@ -442,7 +442,7 @@ function CathedralPreset({ intensity, alert, lite }: PresetProps) {
   return (
     <>
       <color attach="background" args={[DV_COLOR.ink]} />
-      <fog attach="fog" args={['#0e0c18', 6, 36]} />
+      <fog attach="fog" args={['#120d0f', 6, 36]} />
       <CameraRig pos={[0, 1.6, 8]} look={[0, 3.2, -16]} drift={0.35} />
       <ambientLight intensity={0.9} color="#a3a2a8" />
       <hemisphereLight args={['#c9c7cf', '#151517', 0.8]} />

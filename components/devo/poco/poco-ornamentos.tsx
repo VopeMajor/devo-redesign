@@ -193,8 +193,8 @@ export function MolduraResultado({ raridade, lixo = false, children, className }
         <defs>
           <Metal id={id} />
           <linearGradient id={`${id}-fundo`} x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0" stopColor={n >= 3 ? '#211d33' : '#1c1c20'} />
-            <stop offset="0.45" stopColor="#121214" />
+            <stop offset="0" stopColor={n >= 4 ? '#3f1117' : n >= 3 ? '#2a2638' : '#262424'} />
+            <stop offset="0.45" stopColor="#181717" />
             <stop offset="1" stopColor="#0b0b0d" />
           </linearGradient>
         </defs>

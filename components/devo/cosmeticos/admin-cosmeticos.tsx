@@ -57,7 +57,7 @@ export function AdminCosmeticos() {
             role="tab"
             aria-selected={aba === v}
             onClick={() => setAba(v)}
-            className={cn('dv-focus min-h-11 font-sans text-[11px] font-medium uppercase tracking-[0.12em]', aba === v ? 'bg-[#1c1c1f] text-white' : 'text-in-fg-2 shadow-[inset_0_0_0_1px_var(--in-line-strong)]')}
+            className={cn('dv-focus min-h-11 font-sans text-[11px] font-medium uppercase tracking-[0.12em]', aba === v ? 'bg-dv-block text-white' : 'text-in-fg-2 shadow-[inset_0_0_0_1px_var(--in-line-strong)]')}
           >
             {l}
           </button>
@@ -93,13 +93,13 @@ export function AdminCosmeticos() {
                     aria-label={`Editar ${it.name} (${SLOT_LABEL[it.categoria]})`}
                     className="dv-focus flex min-h-[68px] w-full items-center gap-3 bg-[color:var(--in-porcelain)] px-3 py-2 text-left shadow-[inset_0_0_0_1px_var(--in-line)] hover:shadow-[inset_0_0_0_1px_var(--in-fg-2)]"
                   >
-                    <span className="grid size-[54px] shrink-0 place-items-center bg-[#121214]">
+                    <span className="grid size-[54px] shrink-0 place-items-center bg-dv-ink-2">
                       <Thumb def={it} />
                     </span>
                     <span className="min-w-0 flex-1">
                       <span className="flex items-center gap-2">
                         <span className="truncate font-body text-[16px] text-in-fg">{it.name}</span>
-                        {!it.active && <span className="shrink-0 bg-[#0d0d0f]/10 px-1 font-mono text-[9px] uppercase tracking-[0.1em] text-in-fg-2">inativo</span>}
+                        {!it.active && <span className="shrink-0 bg-dv-ink/10 px-1 font-mono text-[9px] uppercase tracking-[0.1em] text-in-fg-2">inativo</span>}
                       </span>
                       <span className="block truncate font-mono text-[10px] uppercase tracking-[0.12em] text-in-fg-3">
                         {SLOT_LABEL[it.categoria]} · {RARIDADE_PADRAO[it.rarity].label}
@@ -207,7 +207,7 @@ function Editor({ item, onClose, onSaved }: { item: ItemAdmin | null; onClose: (
   return (
     <article aria-label={item ? `Editar ${item.name}` : 'Novo cosmético'} className="dv-cut-diag flex flex-col gap-4 bg-[color:var(--in-porcelain)] p-4 shadow-[inset_0_0_0_1px_var(--in-line-strong)]" style={{ '--dv-cut': '10px' } as CSSProperties}>
       <div className="flex items-center gap-4">
-        <span className="grid size-[96px] shrink-0 place-items-center bg-[#121214]">
+        <span className="grid size-[96px] shrink-0 place-items-center bg-dv-ink-2">
           <Thumb def={previa} />
         </span>
         <div className="min-w-0">
@@ -290,7 +290,7 @@ function Editor({ item, onClose, onSaved }: { item: ItemAdmin | null; onClose: (
           ] as const
         ).map(([k, l]) => (
           <label key={k} className="flex min-h-11 items-center gap-3 font-body text-[15px] text-in-fg">
-            <input type="checkbox" checked={f[k]} onChange={(e) => set({ [k]: e.target.checked } as Partial<typeof f>)} className="size-5 accent-[#1c1c1f]" />
+            <input type="checkbox" checked={f[k]} onChange={(e) => set({ [k]: e.target.checked } as Partial<typeof f>)} className="size-5 accent-dv-block" />
             {l}
           </label>
         ))}
@@ -348,7 +348,7 @@ function Conceder({ itens, onDone }: { itens: ItemAdmin[]; onDone: () => void })
               type="button"
               aria-pressed={pid === j.id}
               onClick={() => setPid(j.id)}
-              className={cn('dv-focus flex min-h-11 w-full items-center px-3 text-left font-body text-[15px]', pid === j.id ? 'bg-[#1c1c1f] text-white' : 'text-in-fg shadow-[inset_0_0_0_1px_var(--in-line)]')}
+              className={cn('dv-focus flex min-h-11 w-full items-center px-3 text-left font-body text-[15px]', pid === j.id ? 'bg-dv-block text-white' : 'text-in-fg shadow-[inset_0_0_0_1px_var(--in-line)]')}
             >
               {j.name}
             </button>

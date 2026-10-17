@@ -70,13 +70,13 @@ export function Revelacao({
   const nCristais = Math.min(Math.max(gasto, tipo === 'essencia' ? 6 : 1), 8)
 
   return (
-    <div role="dialog" aria-modal="true" aria-label={titulo} className="absolute inset-0 z-50 flex flex-col overflow-hidden bg-[#08080a]/[0.97] animate-dv-fade" data-fase={fase}>
+    <div role="dialog" aria-modal="true" aria-label={titulo} className="absolute inset-0 z-50 flex flex-col overflow-hidden bg-dv-ink/[0.97] animate-dv-fade" data-fase={fase}>
       {/* luz que cresce com a fase */}
       <div
         aria-hidden="true"
         className="absolute left-1/2 top-[40%] size-[140vmin] -translate-x-1/2 -translate-y-1/2 rounded-full transition-[opacity,transform] duration-700"
         style={{
-          background: 'radial-gradient(closest-side, rgba(194,185,236,0.5), rgba(138,124,200,0.18) 45%, transparent 72%)',
+          background: 'radial-gradient(closest-side, rgb(var(--dv-amethyst-text-rgb) / 0.5), rgb(var(--dv-amethyst-rgb) / 0.18) 45%, transparent 72%)',
           opacity: fase === 'ativacao' ? 0.25 : fase === 'suspense' ? 0.55 : 0.9,
           transform: `translate(-50%,-50%) scale(${fase === 'ativacao' ? 0.5 : fase === 'suspense' ? 0.75 : 1})`,
         }}
@@ -85,10 +85,10 @@ export function Revelacao({
       <svg aria-hidden="true" viewBox="-200 -200 400 400" className={cn('absolute left-1/2 top-[40%] w-[150vmin] max-w-[900px] -translate-x-1/2 -translate-y-1/2 transition-opacity duration-500', mostraItem ? 'opacity-100' : 'opacity-0')}>
         <g className="tw-raios-lentos">
           {Array.from({ length: nRaios }, (_, i) => (
-            <path key={i} d="M0 0L-7 -200L7 -200Z" fill={i % 2 ? '#c2b9ec' : '#ece5d8'} opacity={0.07 + (i % 3) * 0.03} transform={`rotate(${(360 / nRaios) * i})`} />
+            <path key={i} d="M0 0L-7 -200L7 -200Z" fill={i % 2 ? '#cbc6dc' : '#ece5d8'} opacity={0.07 + (i % 3) * 0.03} transform={`rotate(${(360 / nRaios) * i})`} />
           ))}
         </g>
-        {peso >= 2 && <circle r={150} fill="none" stroke="#c2b9ec" strokeWidth={0.8} opacity={0.4} strokeDasharray="2 6" className="tw-raios-lentos" />}
+        {peso >= 2 && <circle r={150} fill="none" stroke="#cbc6dc" strokeWidth={0.8} opacity={0.4} strokeDasharray="2 6" className="tw-raios-lentos" />}
       </svg>
 
       <div className="relative z-10 flex shrink-0 items-center justify-between px-4 pt-3">
@@ -120,7 +120,7 @@ export function Revelacao({
             ) : (
               <svg viewBox="-50 -50 100 100" className="tw-girar-lento h-40 w-40" aria-hidden="true">
                 <path d={starPath(0, 0, 46, 0.12)} fill="#ece5d8" opacity={0.85} />
-                <path d={starPath(0, 0, 30, 0.14)} fill="#c2b9ec" transform="rotate(45)" opacity={0.7} />
+                <path d={starPath(0, 0, 30, 0.14)} fill="#cbc6dc" transform="rotate(45)" opacity={0.7} />
                 <circle r={9} fill="#fffaf0" />
               </svg>
             )}

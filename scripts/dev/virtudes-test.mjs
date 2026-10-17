@@ -2,7 +2,8 @@
 // teto do Estágio (e a idempotência), Evolução de Estágio distribui pela afinidade do Arcano, trava, permissões da
 // Mesa e P.P. do Deadly Vote. Roda no CI depois das capturas, contra o Postgres do workflow e o servidor em
 // http://localhost:3000. Uso local: DATABASE_URL=... DEVO_URL=http://localhost:3000 node scripts/dev/virtudes-test.mjs
-// Convites DEVO-VIRT-TST1/TST2 e DEVO-VIRT-OWN1 (95-seed-virtudes.sql). Sai com código 1 se algo falhar.
+// Também: lista dos 22 Arcanos (trancado = só key/numeral/título/breve; o próprio abre) e edição dos textos dos
+// Arcanos (só Owner, com admin_log). Convites DEVO-VIRT-TST1/TST2, DEVO-VIRT-OWN1 e DEVO-VIRT-ANF1 (95-seed-virtudes.sql). Sai com código 1 se algo falhar.
 import { readFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -110,6 +111,7 @@ const sfx = Date.now().toString(36).slice(-5)
 const trancado = await signUp(`VirtT${sfx}`, 'DEVO-VIRT-TST2')
 const jog = await signUp(`VirtJ${sfx}`, 'DEVO-VIRT-TST1')
 const own = await signUp(`VirtO${sfx}`, 'DEVO-VIRT-OWN1')
+const anf = await signUp(`VirtA${sfx}`, 'DEVO-VIRT-ANF1')
 
 await test('jogador sem o tutorial vê as Virtudes trancadas, com motivo', async () => {
   const r = await trancado.get('/api/virtudes')
@@ -193,6 +195,91 @@ await test('payload do jogador: afinidade em palavras, acúmulo qualitativo, sem
   assert(r.json.acumulo.cheio === true && r.json.acumulo.pronto === true && /limite/i.test(r.json.acumulo.rotulo), `acúmulo: ${JSON.stringify(r.json.acumulo)}`)
   assert(['ouros', 'tacas'].includes(r.json.tendencia), `tendência: ${r.json.tendencia}`)
   assert(r.json.virtudes.every((v) => typeof v.texto === 'string' && v.texto.length > 10), 'texto de cada Virtude')
+})
+
+/* ------------------------------------------------------------- 4b. Os vinte e dois Arcanos */
+const PUBLICO = 'breve,key,numeral,titulo'
+await test('lista dos Arcanos (jogador): trancados só com nome, numeral e breve; o próprio abre com Estágios', async () => {
+  const r = await jog.get('/api/virtudes')
+  semNumeros(r)
+  const l = r.json.arcanos
+  assert(Array.isArray(l) && l.length === 22, `22 Arcanos, veio ${l?.length}`)
+  assert(r.json.verTodos === false, 'jogador não vê todos')
+  assert(l[0].key === 'louco' && l[0].numeral === '0' && l[21].key === 'mundo' && l[21].numeral === 'XXI', 'ordem do tarô')
+  for (const a of l.filter((x) => x.key !== 'morte')) {
+    assert(Object.keys(a).sort().join() === PUBLICO, `${a.key} trancado expõe ${Object.keys(a).sort().join()}`)
+    assert(typeof a.breve === 'string' && a.breve.length > 20 && a.breve.length <= 260, `${a.key}: breve`)
+  }
+  const m = l.find((x) => x.key === 'morte')
+  assert(m.proprio === true && !('provisorio' in m), `próprio, sem selo de provisório: ${JSON.stringify(Object.keys(m))}`)
+  const d = m.detalhe
+  assert(d && d.descricao.length > 80 && d.fisiologia.length > 80, 'descrição e fisiologia')
+  assert(d.excelente === 'tacas' && d.deficiente === 'paus', `extremos: ${d.excelente}/${d.deficiente}`)
+  assert(d.estagios.length === 5, `cinco Estágios, veio ${d.estagios.length}`)
+  assert(d.estagios[0].estado === 'atual' && d.estagios[0].linha, 'Estágio I atual, com a linha')
+  for (const e of d.estagios.slice(1)) assert(e.estado === 'futuro' && e.nome && !('linha' in e), `futuro velado: ${JSON.stringify(e)}`)
+  assert(!/"provisorio"/.test(r.text), 'nenhum "provisorio" no payload do jogador')
+})
+await test('lista dos Arcanos: jogador sem o tutorial não recebe nada; Anfitrião abre todos, sem selo; Owner vê o selo', async () => {
+  const t = await trancado.get('/api/virtudes')
+  assert(t.json.liberado === false && !('arcanos' in t.json), 'trancado sem lista')
+  const a = await anf.get('/api/virtudes')
+  assert(a.status === 200 && a.json.liberado === true && a.json.verTodos === true, `anfitrião: ${a.text.slice(0, 200)}`)
+  assert(a.json.arcanos.every((x) => x.detalhe && x.detalhe.estagios.every((e) => e.linha)), 'anfitrião abre todos, com as linhas')
+  assert(!/"provisorio"/.test(a.text), 'selo de provisório só para o Owner')
+  const o = await own.get('/api/virtudes')
+  assert(o.json.verTodos === true && o.json.arcanos.every((x) => x.detalhe && x.provisorio === true), 'Owner: todos abertos e marcados provisórios')
+})
+
+const NOVO = {
+  breve: 'Frase breve de teste para a Morte, editada pelo Owner.',
+  descricao: 'Descrição de teste da Morte, editada pelo Owner na Mesa das Virtudes.',
+  fisiologia: 'Fisiologia de teste: Taças cresce, Paus quase não responde.',
+  estagios: [
+    { nome: 'Um', linha: 'Linha um.' },
+    { nome: 'Dois', linha: 'Linha dois.' },
+    { nome: 'Três', linha: 'Linha três.' },
+    { nome: 'Quatro', linha: 'Linha quatro.' },
+    { nome: 'Cinco', linha: 'Linha cinco.' },
+  ],
+}
+await test('textos dos Arcanos: só o Owner edita (jogador e Anfitrião 403)', async () => {
+  for (const s of [jog, anf]) {
+    const r = await s.virt({ action: 'arcano-texto', arcano: 'morte', value: NOVO })
+    assert(r.status === 403, `${s.name}: esperado 403, veio ${r.status}`)
+    const z = await s.virt({ action: 'arcano-texto', arcano: 'morte', value: null })
+    assert(z.status === 403, `${s.name} restaurar: esperado 403, veio ${z.status}`)
+  }
+  const m = await anf.get('/api/virtudes?view=mesa')
+  assert(m.status === 200 && m.json.podeEditar === false && !('arcanos' in m.json.config), 'Mesa do Anfitrião sem os textos editáveis')
+})
+await test('textos dos Arcanos: Owner grava (admin_log), jogador vê; inválido 400; voltar ao rascunho', async () => {
+  const antes = (await jog.get('/api/virtudes')).json.arcanos.find((x) => x.key === 'morte')
+  const r = await own.virt({ action: 'arcano-texto', arcano: 'morte', value: NOVO, provisorio: false })
+  assert(r.status === 200 && r.json.ok, `gravar: ${r.status} ${r.text}`)
+  const [log] = await q("SELECT ref, data FROM admin_log WHERE action = 'virtudes.arcano_texto' AND ref = 'morte' ORDER BY id DESC LIMIT 1")
+  assert(log && log.data.breve === NOVO.breve && log.data.provisorio === false, `admin_log: ${JSON.stringify(log)}`)
+  const depois = (await jog.get('/api/virtudes')).json.arcanos.find((x) => x.key === 'morte')
+  assert(depois.breve === NOVO.breve && depois.detalhe.descricao === NOVO.descricao && depois.detalhe.estagios[0].nome === 'Um', 'jogador vê o texto novo')
+  assert(!('linha' in depois.detalhe.estagios[1]), 'futuro continua velado')
+  const ol = (await own.get('/api/virtudes')).json.arcanos.find((x) => x.key === 'morte')
+  assert(ol.provisorio === false, 'Owner: sem selo depois de marcar final')
+  const mesa = await own.get('/api/virtudes?view=mesa')
+  assert(Object.keys(mesa.json.config.arcanos).length === 22 && mesa.json.config.arcanos.morte.editado === true && mesa.json.config.arcanos.louco.editado === false, 'Mesa do Owner: textos em vigor')
+  for (const [body, msg] of [
+    [{ action: 'arcano-texto', arcano: 'morte', value: { ...NOVO, fisiologia: '  ' } }, 'sem fisiologia'],
+    [{ action: 'arcano-texto', arcano: 'morte', value: { ...NOVO, estagios: [] } }, 'sem Estágios'],
+    [{ action: 'arcano-texto', arcano: 'gato', value: NOVO }, 'Arcano desconhecido'],
+  ]) {
+    const b = await own.virt(body)
+    assert(b.status === 400, `${msg}: esperado 400, veio ${b.status}`)
+  }
+  const z = await own.virt({ action: 'arcano-texto', arcano: 'morte', value: null })
+  assert(z.status === 200 && z.json.restaurado === true, `restaurar: ${z.text}`)
+  const volta = (await jog.get('/api/virtudes')).json.arcanos.find((x) => x.key === 'morte')
+  assert(volta.breve === antes.breve && volta.detalhe.descricao === antes.detalhe.descricao, 'voltou ao rascunho do código')
+  const [{ n }] = await q("SELECT count(*)::int AS n FROM admin_log WHERE action = 'virtudes.arcano_texto' AND ref = 'morte'")
+  assert(n >= 2, `duas entradas no admin_log, veio ${n}`)
 })
 
 /* ------------------------------------------------------------- 5. Evolução */

@@ -57,7 +57,7 @@ export function EstruturasDefs() {
         <stop offset="1" stopColor="#000" stopOpacity="0.5" />
       </linearGradient>
       <linearGradient id="sh-telha" x1="0" x2="1" y1="0" y2="0">
-        <stop offset="0" stopColor="#c2b9ec" stopOpacity="0.16" />
+        <stop offset="0" stopColor="#cbc6dc" stopOpacity="0.16" />
         <stop offset="0.5" stopColor="#000" stopOpacity="0.1" />
         <stop offset="1" stopColor="#000" stopOpacity="0.6" />
       </linearGradient>
@@ -66,15 +66,15 @@ export function EstruturasDefs() {
         <path d="M0 3.5L2.5 0L5 3.5L2.5 7Z" fill="none" stroke="#1a1720" strokeWidth="0.55" />
       </pattern>
       <linearGradient id="vt-aceso" x1="0" x2="0" y1="0" y2="1">
-        <stop offset="0" stopColor="#c2b9ec" />
+        <stop offset="0" stopColor="#cbc6dc" />
         <stop offset="0.35" stopColor="#fff3dc" />
         <stop offset="0.75" stopColor="#ecc79a" />
-        <stop offset="1" stopColor="#8a7cc8" />
+        <stop offset="1" stopColor="#8f86b4" />
       </linearGradient>
       <linearGradient id="vt-atual" x1="0" x2="0" y1="0" y2="1">
         <stop offset="0" stopColor="#e6e0ff" />
-        <stop offset="0.5" stopColor="#8a7cc8" />
-        <stop offset="1" stopColor="#463d78" />
+        <stop offset="0.5" stopColor="#8f86b4" />
+        <stop offset="1" stopColor="#4d4668" />
       </linearGradient>
       <linearGradient id="vt-apagado" x1="0" x2="1" y1="0" y2="1">
         <stop offset="0" stopColor="#2b2a35" />
@@ -88,8 +88,8 @@ export function EstruturasDefs() {
         <stop offset="1" stopColor="#fff3dc" stopOpacity="0" />
       </radialGradient>
       <radialGradient id="vt-halo-am" cx="0.5" cy="0.5" r="0.5">
-        <stop offset="0" stopColor="#c2b9ec" stopOpacity="0.7" />
-        <stop offset="1" stopColor="#8a7cc8" stopOpacity="0" />
+        <stop offset="0" stopColor="#cbc6dc" stopOpacity="0.7" />
+        <stop offset="1" stopColor="#8f86b4" stopOpacity="0" />
       </radialGradient>
     </defs>
   )
@@ -219,7 +219,7 @@ export function Gargula({ x, y, s = 1, k = 1 }: { x: number; y: number; s?: numb
       <path d="M0 0C4 -3 9 -3 12 -1L15 -3L14 0C16 1 17 3 15 4L11 3C8 5 4 5 0 3Z" fill="#4a4a50" />
       <path d="M0 0C4 -3 9 -3 12 -1" stroke="#9d9a94" strokeWidth={0.5} fill="none" />
       <path d="M4 -1.6C5 -5 8 -6 9 -3" fill="#38393c" />
-      <circle cx={13} cy={0.6} r={0.6} fill="#c2b9ec" />
+      <circle cx={13} cy={0.6} r={0.6} fill="#cbc6dc" />
     </g>
   )
 }
@@ -283,7 +283,7 @@ export function Rosacea({ x, y, r, acesa }: { x: number; y: number; r: number; a
           <circle cx={x} cy={y - r * 0.68} r={r * 0.2} fill="none" stroke="#2c2a26" strokeWidth={0.6} />
         </g>
       ))}
-      <circle cx={x} cy={y} r={r * 0.3} fill={acesa ? '#fffaf0' : '#5a4f8f'} stroke="#2c2a26" strokeWidth={0.7} />
+      <circle cx={x} cy={y} r={r * 0.3} fill={acesa ? '#fffaf0' : '#5a1d26'} stroke="#2c2a26" strokeWidth={0.7} />
     </g>
   )
 }
@@ -338,8 +338,8 @@ export function Estandarte({ x, y, h, emblema }: { x: number; y: number; h: numb
   return (
     <g>
       <path d={`M${x - 7} ${y}H${x + 7}`} stroke="url(#tw-steel)" strokeWidth={1.6} strokeLinecap="round" />
-      <path d={`M${x - 6} ${y}C${x - 6.5} ${y + h * 0.4} ${x - 5.5} ${y + h * 0.7} ${x - 6} ${y + h}L${x} ${y + h - 7}L${x + 6} ${y + h}C${x + 6.5} ${y + h * 0.7} ${x + 5.5} ${y + h * 0.4} ${x + 6} ${y}Z`} fill="#4e4580" />
-      <path d={`M${x - 6} ${y}C${x - 6.5} ${y + h * 0.4} ${x - 5.5} ${y + h * 0.7} ${x - 6} ${y + h}L${x} ${y + h - 7}V${y}Z`} fill="#8a7cc8" opacity={0.35} />
+      <path d={`M${x - 6} ${y}C${x - 6.5} ${y + h * 0.4} ${x - 5.5} ${y + h * 0.7} ${x - 6} ${y + h}L${x} ${y + h - 7}L${x + 6} ${y + h}C${x + 6.5} ${y + h * 0.7} ${x + 5.5} ${y + h * 0.4} ${x + 6} ${y}Z`} fill="#4d4668" />
+      <path d={`M${x - 6} ${y}C${x - 6.5} ${y + h * 0.4} ${x - 5.5} ${y + h * 0.7} ${x - 6} ${y + h}L${x} ${y + h - 7}V${y}Z`} fill="#8f86b4" opacity={0.35} />
       <path d={`M${x - 4.5} ${y + 3}H${x + 4.5}`} stroke="#bab09f" strokeWidth={0.6} />
       <g transform={`translate(${x} ${y + h * 0.45})`}>{emblema}</g>
     </g>
@@ -372,12 +372,12 @@ export function Coroa({ y, w }: { y: number; w: number }) {
           <g key={i}>
             <path d={`M${x - 3.4} ${y - 6}L${x} ${y - 6 - alta}L${x + 3.4} ${y - 6}Z`} fill="url(#tw-steel)" />
             <path d={`M${x} ${y - 6}L${x} ${y - 6 - alta}L${x + 3.4} ${y - 6}Z`} fill="#000" opacity={0.3} />
-            <circle cx={x} cy={y - 6 - alta - 1.6} r={1.6} fill={i % 2 === 0 ? '#8a7cc8' : '#ece5d8'} />
+            <circle cx={x} cy={y - 6 - alta - 1.6} r={1.6} fill={i % 2 === 0 ? '#8f86b4' : '#ece5d8'} />
           </g>
         )
       })}
       {pts.slice(0, -1).map((x, i) => (
-        <path key={`g${i}`} d={`M${x + w / (n - 1) - 1.6} ${y - 3}L${x + w / (n - 1)} ${y - 4.6}L${x + w / (n - 1) + 1.6} ${y - 3}L${x + w / (n - 1)} ${y - 1.4}Z`} fill={i % 2 ? '#ece5d8' : '#5a4f8f'} />
+        <path key={`g${i}`} d={`M${x + w / (n - 1) - 1.6} ${y - 3}L${x + w / (n - 1)} ${y - 4.6}L${x + w / (n - 1) + 1.6} ${y - 3}L${x + w / (n - 1)} ${y - 1.4}Z`} fill={i % 2 ? '#ece5d8' : '#5a1d26'} />
       ))}
     </g>
   )

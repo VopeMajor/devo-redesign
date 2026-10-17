@@ -19,7 +19,7 @@ export const FRAME_LINE: Record<FrameTone, string> = {
 const FILL: Record<FrameVariant, string> = {
   ink: 'bg-[linear-gradient(180deg,var(--dv-ink-4)_0%,var(--dv-ink-3)_55%,var(--dv-ink-2)_100%)]',
   paper: 'dv-paper-bg',
-  alert: 'bg-[linear-gradient(160deg,var(--dv-blood-deep)_0%,var(--dv-wine-0)_45%,var(--dv-ink)_100%)]',
+  alert: 'bg-[linear-gradient(160deg,var(--dv-blood-deep)_0%,var(--dv-wine-deep)_45%,var(--dv-ink)_100%)]',
   glass: 'bg-[color-mix(in_oklab,var(--dv-ink-2)_72%,transparent)] backdrop-blur-md',
 }
 

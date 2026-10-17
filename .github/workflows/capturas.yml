@@ -43,7 +43,7 @@ jobs:
         run: pnpm install --no-frozen-lockfile
       - name: Banco de teste
         run: |
-          for f in scripts/dev/00-base.sql scripts/deadly-votes-migration.sql scripts/deadly-votes-group-migration.sql scripts/auth-migration.sql scripts/arcade-migration.sql scripts/arcade-points-migration.sql scripts/arcade-rooms-migration.sql scripts/test-accounts-migration.sql scripts/character-name-migration.sql scripts/fundacao-migration.sql scripts/poco-migration.sql scripts/staff-migration.sql scripts/torres-migration.sql scripts/salao-migration.sql scripts/cosmeticos-migration.sql scripts/virtudes-migration.sql scripts/corporacoes-migration.sql scripts/narrativa-migration.sql scripts/dev/90-seed.sql scripts/dev/91-seed-poco.sql scripts/dev/92-seed-torres.sql scripts/dev/93-seed-salao.sql scripts/dev/94-seed-cosmeticos.sql scripts/dev/95-seed-virtudes.sql scripts/dev/96-seed-corporacoes.sql scripts/dev/91-seed-narrativa.sql; do
+          for f in scripts/dev/00-base.sql scripts/deadly-votes-migration.sql scripts/deadly-votes-group-migration.sql scripts/auth-migration.sql scripts/arcade-migration.sql scripts/arcade-points-migration.sql scripts/arcade-rooms-migration.sql scripts/test-accounts-migration.sql scripts/character-name-migration.sql scripts/fundacao-migration.sql scripts/poco-migration.sql scripts/staff-migration.sql scripts/torres-migration.sql scripts/salao-migration.sql scripts/cosmeticos-migration.sql scripts/virtudes-migration.sql scripts/corporacoes-migration.sql scripts/narrativa-migration.sql scripts/calendario-migration.sql scripts/dev/90-seed.sql scripts/dev/91-seed-poco.sql scripts/dev/92-seed-torres.sql scripts/dev/93-seed-salao.sql scripts/dev/94-seed-cosmeticos.sql scripts/dev/95-seed-virtudes.sql scripts/dev/96-seed-corporacoes.sql scripts/dev/91-seed-narrativa.sql scripts/dev/97-seed-calendario.sql; do
             psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -q -f "$f"
           done
       - name: Tipos
@@ -88,6 +88,9 @@ jobs:
       - name: Teste de servidor (Narrativa)
         run: node scripts/dev/narrativa-test.mjs 2>&1 | tee narrativa-test.log
         continue-on-error: true
+      - name: Teste de servidor (Calendário)
+        run: node scripts/dev/calendario-test.mjs 2>&1 | tee calendario-test.log
+        continue-on-error: true
       - name: Banco novo confere com as migrações
         run: |
           bash scripts/dev/gerar-banco-novo.sh /tmp/devo-banco-novo.sql
@@ -99,7 +102,7 @@ jobs:
         continue-on-error: true
       - name: Logs
         if: always()
-        run: mkdir -p shots && cp -f build.log typecheck.log server.log capture.log fundacao-test.log poco-test.log staff-test.log torres-test.log salao-test.log cosmeticos-test.log virtudes-test.log corporacoes-test.log narrativa-test.log banco-novo.log shots/ 2>/dev/null || true
+        run: mkdir -p shots && cp -f build.log typecheck.log server.log capture.log fundacao-test.log poco-test.log staff-test.log torres-test.log salao-test.log cosmeticos-test.log virtudes-test.log corporacoes-test.log narrativa-test.log calendario-test.log banco-novo.log shots/ 2>/dev/null || true
       - name: Publicar capturas na branch capturas/<branch>
         if: always()
         run: |

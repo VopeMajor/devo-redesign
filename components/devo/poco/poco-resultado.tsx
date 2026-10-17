@@ -94,7 +94,9 @@ export function PocoResultadoView({ r, nome, onFechar }: { r: PocoResultado; nom
       pocoSom('subida', tier)
       em(EMERGE[tier] - 60, () => pocoSom('revela', tier))
     }
-    em(DUR[tier], () => setEtapa('pronto'))
+    // (as capturas congelam a revelação quadro a quadro com window.__pocoCongelado; no jogo é sempre falso)
+    const fim = () => ((window as unknown as { __pocoCongelado?: boolean }).__pocoCongelado ? em(150, fim) : setEtapa('pronto'))
+    em(DUR[tier], fim)
     return () => ts.forEach((t) => window.clearTimeout(t))
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
   const pular = () => {

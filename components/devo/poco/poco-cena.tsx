@@ -131,10 +131,10 @@ function CenaPintada({ longe, balde, baldeTipo, girando, ativo, moeda, brilho, a
     top: `calc(var(--poco-base, 70cqh) - ${C.baseY} * ${H})`,
   } as CSSProperties
   // o poço: largura em fração da rua; o pé encosta na base. Longe = menor e mais ao fundo da rua.
-  const s = longe ? 0.42 : 1
+  const s = longe ? 0.5 : 1
   const poco = {
     left: `${C.baseX * 100}%`,
-    top: `${(longe ? 0.6 : C.baseY) * 100}%`,
+    top: `${(longe ? 0.66 : C.baseY) * 100}%`,
     width: `${C.largura * 100}%`,
     aspectRatio: `${C.poco.aspecto}`,
     transform: `translate(-50%, -${C.pe * 100}%) scale(${s})`,

@@ -1,0 +1,19 @@
+{
+  "asset": "img:/images/calendario/natal",
+  "imagem": {
+    "base": "/images/calendario/natal",
+    "tamanhos": [
+      256,
+      512,
+      768,
+      1024
+    ]
+  },
+  "origem": {
+    "pedido": "cal-natal",
+    "variacao": "v01",
+    "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+    "seed": 10501,
+    "importado": null
+  }
+}

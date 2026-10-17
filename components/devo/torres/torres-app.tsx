@@ -12,7 +12,7 @@ import { useShellBack } from '../os/app-back'
 import { MAPA_H, MAPA_W } from './arte'
 import { Cena } from './cena'
 import { pedirCena } from './gatilho'
-import { MapaTorres, Recursos } from './mapa'
+import { MapaNavegavel, Recursos } from './mapa'
 import { TelaTorre } from './torre'
 import { Cadeado } from './ornamentos'
 import { type ItemRevelado, Revelacao } from './revelacao'
@@ -79,16 +79,20 @@ async function post<T>(body: Record<string, unknown>): Promise<{ ok: boolean; da
 function useEncaixe() {
   const ref = useRef<HTMLDivElement>(null)
   const [w, setW] = useState<number | undefined>(undefined)
+  const [h, setH] = useState<number | undefined>(undefined)
   useLayoutEffect(() => {
     const el = ref.current
     if (!el) return
-    const fit = () => setW(Math.max(260, Math.min(el.clientWidth, (el.clientHeight * MAPA_W) / MAPA_H, 520)))
+    const fit = () => {
+      setW(el.clientWidth)
+      setH(el.clientHeight)
+    }
     fit()
     const ro = new ResizeObserver(fit)
     ro.observe(el)
     return () => ro.disconnect()
   }, [])
-  return { ref, w }
+  return { ref, w, h }
 }
 
 export function TorresApp() {
@@ -289,7 +293,7 @@ export function TorresApp() {
   return (
     <div ref={raiz} className="absolute inset-0 overflow-hidden bg-dv-ink text-dv-text">
       {/* céu de fundo em tela cheia (o mapa encaixa na altura e pode não cobrir as laterais) */}
-      <span aria-hidden="true" className="absolute inset-0 bg-[#0b0b0d] bg-[url(/images/torres/ceu-noite.webp)] bg-cover bg-[position:30%_0%]" />
+      <span aria-hidden="true" className="absolute inset-0 bg-dv-ink bg-[url(/images/torres/ceu-noite.webp)] bg-cover bg-[position:30%_0%]" />
 
       {/* MAPA */}
       <div ref={mapaRef} className={cn('absolute inset-0 flex flex-col', vista && !reduced && 'pointer-events-none')} inert={vista ? true : undefined} aria-hidden={vista ? true : undefined}>
@@ -303,8 +307,17 @@ export function TorresApp() {
           {dados?.liberado && <Recursos torres={dados.torres} />}
         </div>
         <div ref={encaixe.ref} className={cn('relative min-h-0 flex-1', (trancado || !dados) && 'pointer-events-none')}>
-          <div className={cn('absolute inset-0 flex items-start justify-center transition-[filter,opacity] duration-700', (trancado || !dados) && '[filter:grayscale(1)_brightness(0.45)]')}>
-            {encaixe.w ? <MapaTorres torres={torresMapa} cenario={dados?.liberado ? dados.cenario : (CONTEUDO_PADRAO.cenario ?? null)} largura={encaixe.w} inerte={!dados?.liberado || galoAberto} onAbrir={abrir} /> : null}
+          <div className={cn('absolute inset-0 transition-[filter,opacity] duration-700', (trancado || !dados) && '[filter:grayscale(1)_brightness(0.45)]')}>
+            {encaixe.w && encaixe.h ? (
+              <MapaNavegavel
+                torres={torresMapa}
+                cenario={dados?.liberado ? dados.cenario : (CONTEUDO_PADRAO.cenario ?? null)}
+                vw={encaixe.w}
+                vh={encaixe.h}
+                inerte={!dados?.liberado || galoAberto}
+                onAbrir={abrir}
+              />
+            ) : null}
           </div>
         </div>
       </div>
@@ -409,7 +422,7 @@ function AvisoCentral({ titulo, texto, selo, tom = 'normal', acao }: { titulo: s
     <div className="absolute inset-x-0 bottom-0 z-10 flex justify-center px-4 pb-8">
       <div role={tom === 'alerta' ? 'alert' : 'group'} aria-label={`${titulo}${selo ? `: ${selo.toLowerCase()}` : ''}`} className="animate-dv-rise relative isolate w-full max-w-sm px-5 pb-5 pt-6 text-center" style={{ '--dv-cut': '16px' } as CSSProperties}>
         <span aria-hidden="true" className={cn('dv-cut absolute inset-0 -z-10', tom === 'alerta' ? 'bg-[linear-gradient(135deg,var(--dv-blood-text),var(--dv-blood)_50%,var(--dv-blood-deep))]' : 'bg-[linear-gradient(135deg,#ece5d8,#6b6357_30%,#bab09f_62%,#5f584d)]')} />
-        <span aria-hidden="true" className="dv-cut absolute inset-px -z-10 bg-[linear-gradient(180deg,rgba(31,31,34,0.97),rgba(12,12,14,0.98))]" style={{ '--dv-cut': '15.6px' } as CSSProperties} />
+        <span aria-hidden="true" className="dv-cut absolute inset-px -z-10 bg-[linear-gradient(180deg,rgba(31,31,34,0.97),rgb(var(--dv-ink-rgb)/0.98))]" style={{ '--dv-cut': '15.6px' } as CSSProperties} />
         {tom !== 'alerta' && <FrameCorners tone="gold" size={18} inset={5} />}
         <span aria-hidden="true" className="relative mx-auto -mt-16 grid h-24 place-items-center">
           <Cadeado aceso={!!selo} className="h-24 w-auto drop-shadow-[0_8px_18px_rgba(0,0,0,0.85)]" />

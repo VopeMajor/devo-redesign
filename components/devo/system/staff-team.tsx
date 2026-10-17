@@ -426,6 +426,9 @@ const ACTION_LABEL: Record<string, string> = {
   'cosmetico.asset': 'Asset enviado',
   'cosmetico.concedido': 'Cosmético concedido',
   'cosmetico.revogado': 'Cosmético revogado',
+  'cosmetico.removido': 'Cosmético retirado do jogo (inventário)',
+  'cosmetico.item_removido': 'Cosmético retirado do catálogo',
+  'virtudes.arcano_texto': 'Texto de Arcano editado',
 }
 
 /** Registro administrativo (Owner): toda concessão, mudança de cargo, vínculo, override e configuração. */
@@ -488,6 +491,7 @@ function logDetail(l: LogLinha) {
   if (l.action.startsWith('desbloqueio')) return ` · ${UNLOCK_LABEL[d.flag as UnlockFlag] ?? d.flag}`
   if (l.action === 'deadly_vote.resultado') return ` · ${d.participantes ?? 0} participantes, ${d.entregues ?? 0} entregas`
   if (l.action === 'config.alterada') return ` · ${l.ref}`
+  if (l.action === 'virtudes.arcano_texto') return ` · ${l.ref}${d.restaurado ? ' (rascunho restaurado)' : ''}`
   return ''
 }
 

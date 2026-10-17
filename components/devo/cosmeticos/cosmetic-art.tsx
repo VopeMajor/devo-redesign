@@ -192,7 +192,7 @@ export function FotoMoldurada({
   return (
     <span className={cn('relative inline-block shrink-0 align-middle', className)} style={style}>
       <span
-        className={cn('absolute overflow-hidden bg-dv-ink-2', !arte && !url && !semJanela && 'shadow-[0_0_0_1px_#0c0c0e,0_0_0_2px_rgba(186,176,159,0.55)]')}
+        className={cn('absolute overflow-hidden bg-dv-ink-2', !arte && !url && !semJanela && 'shadow-[0_0_0_1px_var(--dv-ink),0_0_0_2px_rgba(186,176,159,0.55)]')}
         style={{ left: `${j.x}%`, top: `${j.y}%`, width: `${j.w}%`, height: `${j.h}%` }}
       >
         {foto}

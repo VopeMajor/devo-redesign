@@ -1,6 +1,6 @@
 'use client'
 
-import { type CSSProperties, useEffect, useRef, useState } from 'react'
+import { type CSSProperties, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { playSfx } from '@/lib/devo/audio'
 import type { CenarioMapa, ImagemPintada, TorreEstado } from '@/lib/devo/torres/tipos'
 import { cn } from '@/lib/utils'
@@ -15,7 +15,7 @@ import './torres.css'
 type Lugar = { x: number; y: number; escala: number }
 
 /** Retângulo da ilustração de uma torre já posicionada. */
-function caixaTorre(t: TorreEstado, l: Lugar) {
+export function caixaTorre(t: TorreEstado, l: Lugar) {
   const altU = t.ilustracao ? t.ilustracao.altura : ALTURA_ARTE[t.arte]
   const larU = t.ilustracao ? t.ilustracao.altura * t.ilustracao.aspecto * 0.82 : LARGURA_ARTE[t.arte] * 0.85
   const w = larU * l.escala
@@ -292,7 +292,7 @@ export function MapaTorres({
               className="dv-focus group absolute"
               style={{ left: `${(b.x0 / MAPA_W) * 100}%`, top: `${(b.y0 / MAPA_H) * 100}%`, width: `${(b.w / MAPA_W) * 100}%`, height: `${((b.h + 6) / MAPA_H) * 100}%` }}
             >
-              <span aria-hidden="true" className="absolute inset-x-[5%] bottom-0 h-1/2 bg-[radial-gradient(50%_60%_at_50%_100%,rgba(194,185,236,0.28),transparent_70%)] opacity-0 transition-opacity duration-200 group-hover:opacity-100 group-focus-visible:opacity-100 group-active:opacity-100" />
+              <span aria-hidden="true" className="absolute inset-x-[5%] bottom-0 h-1/2 bg-[radial-gradient(50%_60%_at_50%_100%,rgb(var(--dv-amethyst-text-rgb)/0.28),transparent_70%)] opacity-0 transition-opacity duration-200 group-hover:opacity-100 group-focus-visible:opacity-100 group-active:opacity-100" />
             </button>
             {/* placa pequena no pé */}
             <div aria-hidden="true" className="pointer-events-none absolute -translate-x-1/2 -translate-y-1/2" style={{ left: `${(p.cx / MAPA_W) * 100}%`, top: `${(p.cy / MAPA_H) * 100}%` }}>
@@ -311,6 +311,123 @@ export function MapaTorres({
     </div>
   )
 }
+
+/**
+ * Mapa navegável: as torres nunca são comprimidas para caber. No celular o cenário fica maior que a tela
+ * (zoom) e o jogador arrasta para os lados (rolagem horizontal com encaixe suave em cada torre). Indicadores
+ * discretos: esmaecimento na borda com setas e pontos (um por torre). Começa centrado na torre principal.
+ * Com mais torres (conteúdo crescendo), o mesmo trilho rola mais.
+ */
+export function MapaNavegavel({
+  torres,
+  cenario,
+  vw,
+  vh,
+  onAbrir,
+  inerte,
+}: {
+  torres: TorreEstado[]
+  cenario: CenarioMapa | null
+  vw: number
+  vh: number
+  onAbrir?: (id: string, origem: DOMRect) => void
+  inerte?: boolean
+}) {
+  const trilho = useRef<HTMLDivElement>(null)
+  // celular: zoom para as torres terem tamanho de leitura; mais torres que pedestais/4 → cenário mais largo
+  const zoom = (vw < 520 ? 1.3 : 1) * Math.max(1, torres.length / 4)
+  const s = Math.max(0.5, (vh / MAPA_H) * zoom)
+  const mapW = MAPA_W * s
+  const mapH = MAPA_H * s
+  const lug = lugares(torres, cenario)
+  // corte vertical: tira céu e penhasco, mas nunca o topo da torre mais alta
+  const topo = Math.min(...torres.map((t) => caixaTorre(t, lug[t.id]).y0)) - 14
+  const sobra = Math.max(0, mapH - vh)
+  const corte = Math.min(sobra * 0.42, Math.max(0, topo * s))
+  const rola = mapW > vw + 2
+  const [pos, setPos] = useState({ esq: false, dir: rola, ativo: torres.findIndex((t) => t.tipo === 'principal') })
+  const ordemX = [...torres].sort((a, b) => lug[a.id].x - lug[b.id].x)
+
+  // começa centrado na principal
+  useLayoutEffect(() => {
+    const el = trilho.current
+    if (!el || !rola) return
+    const p = torres.find((t) => t.tipo === 'principal') ?? torres[0]
+    el.scrollLeft = Math.max(0, lug[p.id].x * s - vw / 2)
+    atualizar()
+  }, [rola, s]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  const atualizar = () => {
+    const el = trilho.current
+    if (!el) return
+    const centro = (el.scrollLeft + el.clientWidth / 2) / s
+    let ativo = 0
+    let melhor = Infinity
+    ordemX.forEach((t, i) => {
+      const d = Math.abs(lug[t.id].x - centro)
+      if (d < melhor) {
+        melhor = d
+        ativo = i
+      }
+    })
+    setPos({ esq: el.scrollLeft > 4, dir: el.scrollLeft < el.scrollWidth - el.clientWidth - 4, ativo })
+  }
+  const irPara = (t: TorreEstado) => {
+    const el = trilho.current
+    if (!el) return
+    playSfx('click')
+    el.scrollTo({ left: lug[t.id].x * s - vw / 2, behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' })
+  }
+  const passo = (dir: -1 | 1) => {
+    const alvo = ordemX[Math.min(ordemX.length - 1, Math.max(0, pos.ativo + dir))]
+    if (alvo) irPara(alvo)
+  }
+
+  return (
+    <div className="relative size-full">
+      <div
+        ref={trilho}
+        onScroll={atualizar}
+        className={cn('size-full overflow-y-hidden [scrollbar-width:none] [&::-webkit-scrollbar]:hidden', rola ? 'snap-x snap-proximity overflow-x-auto overscroll-x-contain' : 'overflow-x-hidden')}
+      >
+        <div className={cn('relative h-full', !rola && 'mx-auto')} style={{ width: mapW }}>
+          {/* âncoras de encaixe (uma por torre) */}
+          {rola && ordemX.map((t) => <span key={t.id} aria-hidden="true" className="pointer-events-none absolute top-0 h-px w-px snap-center" style={{ left: lug[t.id].x * s }} />)}
+          <div className="absolute left-0" style={{ top: -corte }}>
+            <MapaTorres torres={torres} cenario={cenario} largura={mapW} inerte={inerte} onAbrir={onAbrir} />
+          </div>
+        </div>
+      </div>
+      {rola && (
+        <>
+          {/* esmaecimento + setas nas bordas: há mais mapa para os lados */}
+          <div aria-hidden="true" className={cn('pointer-events-none absolute inset-y-0 left-0 w-10 bg-[linear-gradient(90deg,var(--dv-ink),transparent)] transition-opacity duration-300', pos.esq ? 'opacity-90' : 'opacity-0')} />
+          <div aria-hidden="true" className={cn('pointer-events-none absolute inset-y-0 right-0 w-10 bg-[linear-gradient(270deg,var(--dv-ink),transparent)] transition-opacity duration-300', pos.dir ? 'opacity-90' : 'opacity-0')} />
+          {pos.esq && (
+            <button type="button" onClick={() => passo(-1)} aria-label="Ver torres à esquerda" className="dv-focus absolute left-0 top-1/2 grid size-11 -translate-y-1/2 place-items-center text-dv-text-2 hover:text-dv-text">
+              <svg viewBox="0 0 16 16" className="size-4" aria-hidden="true"><path d="M10 3L5 8l5 5" fill="none" stroke="currentColor" strokeWidth="1.6" /></svg>
+            </button>
+          )}
+          {pos.dir && (
+            <button type="button" onClick={() => passo(1)} aria-label="Ver torres à direita" className="dv-focus absolute right-0 top-1/2 grid size-11 -translate-y-1/2 place-items-center text-dv-text-2 hover:text-dv-text">
+              <svg viewBox="0 0 16 16" className="size-4" aria-hidden="true"><path d="M6 3l5 5-5 5" fill="none" stroke="currentColor" strokeWidth="1.6" /></svg>
+            </button>
+          )}
+          {/* pontos: um por torre, o do centro aceso */}
+          <div className="absolute inset-x-0 bottom-1 flex justify-center gap-0.5">
+            {ordemX.map((t, i) => (
+              <button key={t.id} type="button" onClick={() => irPara(t)} aria-label={`Mostrar ${semPrefixo(t.nome)}`} aria-current={i === pos.ativo || undefined} className="dv-focus grid size-6 place-items-center">
+                <span aria-hidden="true" className={cn('block rotate-45 transition-all duration-300', i === pos.ativo ? 'size-2 bg-dv-amethyst-text shadow-[0_0_6px_var(--dv-amethyst)]' : 'size-1.5 bg-dv-text-3')} />
+              </button>
+            ))}
+          </div>
+        </>
+      )}
+    </div>
+  )
+}
+
+const semPrefixo = (n: string) => n.replace(/^\[PROVISÓRIO\]\s*/, '')
 
 /** Fila de recursos (essências e chaves) com quantidade, em medalhões. */
 export function Recursos({ torres, className }: { torres: TorreEstado[]; className?: string }) {
@@ -335,8 +452,8 @@ export function Recursos({ torres, className }: { torres: TorreEstado[]; classNa
 export function RecursoChip({ nome, curto, quantidade, tipo, className }: { nome: string; curto: string; quantidade: number; tipo: 'essencia' | 'chave'; className?: string }) {
   return (
     <li className={cn('relative isolate flex h-9 shrink-0 snap-start items-center gap-1 pl-1 pr-2.5', !quantidade && 'opacity-70', className)} style={{ '--dv-cut': '8px' } as CSSProperties} title={nome}>
-      <span aria-hidden="true" className="dv-cut-diag absolute inset-0 -z-10 bg-[linear-gradient(100deg,#ece5d8,#6b6357_40%,#bab09f_75%,#5a4f8f)] opacity-70" />
-      <span aria-hidden="true" className="dv-cut-diag absolute inset-px -z-10 bg-[linear-gradient(180deg,rgba(31,31,34,0.96),rgba(12,12,14,0.96))]" style={{ '--dv-cut': '7.6px' } as CSSProperties} />
+      <span aria-hidden="true" className="dv-cut-diag absolute inset-0 -z-10 bg-[linear-gradient(100deg,#ece5d8,#6b6357_40%,#bab09f_75%,var(--dv-cobalt))] opacity-70" />
+      <span aria-hidden="true" className="dv-cut-diag absolute inset-px -z-10 bg-[linear-gradient(180deg,rgba(31,31,34,0.96),rgb(var(--dv-ink-rgb)/0.96))]" style={{ '--dv-cut': '7.6px' } as CSSProperties} />
       <span aria-hidden="true" className="grid h-8 w-6 place-items-center">
         {tipo === 'essencia' ? <CristalEssencia className="h-7 w-auto" brilho={quantidade > 0} /> : <ChaveOrnamental className="w-7 -rotate-45" />}
       </span>

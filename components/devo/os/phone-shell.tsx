@@ -118,15 +118,15 @@ export function PhoneShell({ current, onOpen, onHome }: { current: AppId | null;
       <SceneBackdrop preset="cathedral" intensity={0.75} dim={current && !entering ? 0.55 : 0.3} staticOnly={!!current && !entering} />
       {/* Crítico: a home NÃO vira vermelha. Fica no mármore; a vinheta rubi pulsa nas bordas. */}
       {/*
-        Véu de ametista (Direção 3 §9: a home não pode ficar "preto no branco"): noite violeta como luz,
-        não como superfície — halo alto atrás do cartão do tempo e um sopro no pé, sobre o mármore.
+        Véu de luz (Direção 3 §9: a home não pode ficar "preto no branco"; Refinamento 4: sem violeta):
+        halo de prata apagada atrás do cartão do tempo e um sopro vinho no pé, sobre o mármore.
       */}
       {!critical && (
         <div
           aria-hidden="true"
           className={cn('pointer-events-none absolute inset-0 z-[1] transition-opacity duration-500', homeHidden ? 'opacity-0' : 'opacity-100')}
           style={{
-            background: 'radial-gradient(90% 38% at 70% 22%, rgb(var(--dv-amethyst-rgb) / 0.2), transparent 70%), radial-gradient(120% 30% at 50% 104%, rgba(110,96,180,0.18), transparent 70%), linear-gradient(180deg, rgba(60,50,110,0.08), transparent 40%, rgba(60,50,110,0.1))',
+            background: 'radial-gradient(90% 38% at 70% 22%, rgb(var(--dv-silver-rgb) / 0.12), transparent 70%), radial-gradient(120% 34% at 50% 104%, rgb(var(--dv-wine-rgb) / 0.55), transparent 70%), linear-gradient(180deg, rgb(var(--dv-silver-rgb) / 0.04), transparent 40%, rgb(var(--dv-wine-rgb) / 0.18))',
           }}
         />
       )}
@@ -243,7 +243,7 @@ function StatusBar({
             aria-hidden="true"
             className={cn('dv-cut-hex absolute inset-0', critical ? 'animate-dv-alert bg-dv-blood/55' : 'bg-[linear-gradient(100deg,rgba(206,201,192,0.5),rgba(186,176,159,0.25)_50%,rgba(206,201,192,0.5))]')}
           />
-          <span aria-hidden="true" className={cn('dv-cut-hex absolute inset-px', critical ? 'bg-dv-wine-0' : 'bg-[linear-gradient(180deg,var(--dv-ink-3),var(--dv-ink-2))]')} style={{ '--dv-cut': '7.6px' } as CSSProperties} />
+          <span aria-hidden="true" className={cn('dv-cut-hex absolute inset-px', critical ? 'bg-dv-wine-deep' : 'bg-[linear-gradient(180deg,var(--dv-ink-3),var(--dv-ink-2))]')} style={{ '--dv-cut': '7.6px' } as CSSProperties} />
           <GlyphHourglass className={cn('relative size-3.5', critical && 'animate-dv-blink')} />
           <TimeDigits value={formatDuration(remaining)} size="sm" tone={critical ? 'blood' : 'text'} flip={false} blinkColon={critical} label="Tempo restante" className="relative text-[17px]" />
         </span>
@@ -659,6 +659,8 @@ function CriticalVignette() {
  * mesma família: cinza a 60% com fechadura e o motivo quando trancados; liberados acendem (losango ametista =
  * ainda não aberto). Sistemas com tela própria abrem mesmo trancados (a tela mostra o motivo; o servidor decide).
  */
+const POR_EXTENSO: Record<number, string> = { 6: 'Seis', 7: 'Sete', 8: 'Oito', 9: 'Nove' }
+
 function LockedSystems({ onOpen }: { onOpen: (id: AppId) => void }) {
   const { eu, liberado } = useAcesso()
   const { state } = useDevo()
@@ -669,7 +671,7 @@ function LockedSystems({ onOpen }: { onOpen: (id: AppId) => void }) {
       {/* véu atrás da grade: as cartas da cena não passam atrás dos nomes */}
       <span aria-hidden="true" className="pointer-events-none absolute -inset-x-4 -bottom-6 -top-4 -z-10 bg-[linear-gradient(180deg,transparent,rgb(var(--dv-ink-rgb)/0.86)_12%,rgb(var(--dv-ink-rgb)/0.86)_88%,transparent)]" />
       <div className="flex items-center gap-3 px-1">
-        <span className="dv-label text-[10px] text-dv-text-3">Seis sistemas</span>
+        <span className="dv-label text-[10px] text-dv-text-3">{POR_EXTENSO[SISTEMAS.length] ?? SISTEMAS.length} sistemas</span>
         <span aria-hidden="true" className="h-px flex-1 bg-gradient-to-r from-[rgb(var(--dv-amethyst-rgb)/0.55)] via-dv-line-strong to-transparent" />
         {!algum && !eu && <span className="dv-label text-[10px] text-dv-text-3">Trancado pelo Anfitrião</span>}
       </div>

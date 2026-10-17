@@ -16,7 +16,7 @@ const HEX = {
   '#0c0c0e': 'ink', '#121214': 'ink-2', '#151517': 'ink-2', '#1f1f22': 'ink-3', '#2c2c31': 'ink-4',
   '#8a7cc8': 'amethyst', '#c2b9ec': 'amethyst-text', '#d4cfee': 'amethyst-text', '#cbc5e8': 'amethyst-text',
   '#a3121f': 'blood', '#3f060b': 'blood-deep', '#ff6670': 'blood-text', '#1d1a2b': 'cobalt-dim', '#1c1c1f': 'block',
-  '#eeedeb': 'text', '#0d0d0f': 'ink', '#0e0e10': 'ink', '#0b0b0d': 'ink', '#08080a': 'ink', '#111113': 'ink-2', '#161618': 'ink-2', '#1a1a1d': 'ink-3', '#1c1b20': 'ink-3', '#23212c': 'ink-3', '#242329': 'ink-4', '#0b0b10': 'ink', '#1d0609': 'wine-0', '#2a070b': 'wine', '#1a0507': 'wine-0', '#5a4f8f': 'cobalt', '#463d78': 'cobalt-deep', '#4e4580': 'amethyst-deep',
+  '#eeedeb': 'text', '#0d0d0f': 'ink', '#0e0e10': 'ink', '#0b0b0d': 'ink', '#08080a': 'ink', '#111113': 'ink-2', '#161618': 'ink-2', '#1a1a1d': 'ink-3', '#1c1b20': 'ink-3', '#23212c': 'ink-3', '#242329': 'ink-4', '#0b0b10': 'ink', '#1d0609': 'wine-deep', '#2a070b': 'wine', '#1a0507': 'wine-0', '#5a4f8f': 'cobalt', '#463d78': 'cobalt-deep', '#4e4580': 'amethyst-deep',
   '#b7b3c9': 'violet-text', '#6f6b82': 'violet', '#19181f': 'night', '#2b2a35': 'night-2',
 }
 const RGB = {

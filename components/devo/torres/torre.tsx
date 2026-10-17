@@ -55,7 +55,7 @@ export function TelaTorre({
   const andarFicha = ficha ? torre.andares[ficha - 1] : null
 
   return (
-    <div className="absolute inset-0 flex flex-col overflow-hidden bg-[#0b0b0d]">
+    <div className="absolute inset-0 flex flex-col overflow-hidden bg-dv-ink">
       {/* noite: textura de céu, montanhas, árvore seca, névoa */}
       <div aria-hidden="true" className="absolute inset-0 bg-[url(/images/torres/ceu-noite.webp)] bg-cover bg-[position:30%_0%]" />
       <svg aria-hidden="true" viewBox="0 0 390 640" preserveAspectRatio="xMidYMax slice" className="absolute inset-0 size-full">
@@ -73,7 +73,7 @@ export function TelaTorre({
       </svg>
       <div aria-hidden="true" className="tw-drift absolute inset-x-[-30%] bottom-[6%] h-[22%] bg-[url(/images/torres/nevoa.webp)] bg-[length:100%_100%] opacity-50" />
       {/* feixe de luz do alto sobre a escada */}
-      <div aria-hidden="true" className="pointer-events-none absolute left-[2%] top-0 h-full w-[48%] bg-[linear-gradient(180deg,rgba(236,229,216,0.16),rgba(194,185,236,0.05)_55%,transparent)] [clip-path:polygon(30%_0,70%_0,100%_100%,0_100%)] mix-blend-screen" />
+      <div aria-hidden="true" className="pointer-events-none absolute left-[2%] top-0 h-full w-[48%] bg-[linear-gradient(180deg,rgba(236,229,216,0.16),rgb(var(--dv-amethyst-text-rgb)/0.05)_55%,transparent)] [clip-path:polygon(30%_0,70%_0,100%_100%,0_100%)] mix-blend-screen" />
 
       {/* a própria torre ao fundo, à direita (pintada se houver ilustração; senão o desenho vetorial) */}
       <div aria-hidden="true" className="pointer-events-none absolute bottom-[4%] right-[-14%] top-[12%] w-[62%] opacity-40 [mask-image:linear-gradient(to_left,#000_40%,transparent),linear-gradient(to_top,transparent,#000_20%)] [mask-composite:intersect]">
@@ -97,7 +97,10 @@ export function TelaTorre({
           )}
           <div className="min-w-0 flex-1 animate-dv-cut-in pt-1">
             <Kicker tone="gold">{torre.tipo === 'principal' ? 'Torre principal · Campanha' : `Torre secundária · ${torre.tema}`}</Kicker>
-            <h2 className="mt-1.5 font-display text-[25px] font-semibold uppercase leading-[1.02] tracking-[0.05em] text-dv-text [text-shadow:0_2px_12px_rgba(0,0,0,0.9)] [text-wrap:balance]">{torre.nome}</h2>
+            <h2 className="mt-1.5 font-display text-[clamp(20px,6.2vw,25px)] font-semibold uppercase leading-[1.04] tracking-[0.04em] text-dv-text [text-shadow:0_2px_12px_rgba(0,0,0,0.9)] [text-wrap:balance]">
+              {semProvisorio(torre.nome)}
+              {torre.provisorio && /^\[PROVISÓRIO\]/.test(torre.nome) && <span className="dv-label ml-2 align-middle text-[9px] tracking-[0.14em] text-dv-text-3">Provisório</span>}
+            </h2>
             <p className="mt-1 font-body text-[14px] italic text-dv-text-2">
               {torre.npc.nome}
               {torre.npc.titulo ? <span className="text-dv-text-3"> · {torre.npc.titulo}</span> : null}
@@ -110,7 +113,7 @@ export function TelaTorre({
             ) : (
               <svg viewBox="0 0 100 140" aria-label={`${torre.npc.nome}: NPC a definir`} role="img" className="absolute inset-0 size-full">
                 <path d="M50 30C64 30 72 42 72 56S64 82 50 82 28 70 28 56 36 30 50 30ZM10 140C14 108 30 90 50 90S86 108 90 140Z" fill="#151517" stroke="#38393c" strokeWidth={1} />
-                <text x="50" y="66" textAnchor="middle" fontSize="26" fill="#8a7cc8" fontFamily="serif">?</text>
+                <text x="50" y="66" textAnchor="middle" fontSize="26" fill="#8f86b4" fontFamily="serif">?</text>
               </svg>
             )}
           </CageFrame>
@@ -158,8 +161,8 @@ export function TelaTorre({
       <Sheet
         open={!!andarFicha}
         onClose={() => setFicha(null)}
-        kicker={`${torre.nome} · Andar ${toRoman(andarFicha?.n ?? 1)}`}
-        title={andarFicha?.titulo ?? ''}
+        kicker={`Andar ${toRoman(andarFicha?.n ?? 1)} · ${semProvisorio(torre.nome).replace(/^Torre d[oa]s? /, '')}`}
+        title={semProvisorio(andarFicha?.titulo ?? '')}
         footer={
           andarFicha ? (
             andarFicha.estado === 'concluido' ? (
@@ -196,6 +199,9 @@ export function TelaTorre({
   )
 }
 
+/** Tira o prefixo "[PROVISÓRIO]" do texto exibido (o selo "Provisório" já marca o andar/torre). */
+export const semProvisorio = (t: string) => t.replace(/^\[PROVISÓRIO\]\s*/, '')
+
 const estadoVisual = (a: AndarEstado): EstadoAndar => (a.estado === 'atual' ? (a.podeSubir ? 'pronto' : 'atual') : a.estado)
 
 function motivoCurto(a: AndarEstado) {
@@ -224,17 +230,17 @@ function AndarLinha({ andar, essencia, recem, topo, atraso, onAbrir }: { andar: 
       onClick={onAbrir}
       aria-label={`Andar ${toRoman(a.n)}: ${a.titulo}, ${estadoTxt}`}
       className="tw-andar-in dv-focus group absolute -translate-y-1/2 text-left"
-      style={{ top: `${topo}%`, left: `${nodeX - 11}%`, right: '2%', animationDelay: `${atraso}ms` } as CSSProperties}
+      style={{ top: `${topo}%`, left: `calc(${nodeX}% - 34px)`, right: '2%', animationDelay: `${atraso}ms` } as CSSProperties}
     >
       <span className="relative flex min-h-[112px] items-center">
         {/* estrela do patamar */}
-        <span className={cn('relative grid size-[84px] shrink-0 place-items-center transition-transform duration-200 group-hover:scale-105 group-active:scale-95', recem && 'tw-surge')}>
+        <span className={cn('relative grid size-[68px] shrink-0 place-items-center transition-transform duration-200 group-hover:scale-105 group-active:scale-95', recem && 'tw-surge')}>
           <EstrelaAndar estado={ev} className="size-full drop-shadow-[0_6px_14px_rgba(0,0,0,0.85)]" />
         </span>
         {/* filete com voluta */}
-        <svg aria-hidden="true" viewBox="0 0 40 20" className="-ml-3 h-5 w-9 shrink-0">
-          <path d="M0 10H30" stroke={vivo ? '#c2b9ec' : a.estado === 'concluido' ? '#ece5d8' : '#6b6357'} strokeWidth={1} />
-          <path d={voluta(30, 10, 4, 1)} fill="none" stroke={vivo ? '#c2b9ec' : '#8f8676'} strokeWidth={1} />
+        <svg aria-hidden="true" viewBox="0 0 40 20" className="-ml-2 h-5 w-7 shrink-0">
+          <path d="M0 10H30" stroke={vivo ? '#cbc6dc' : a.estado === 'concluido' ? '#ece5d8' : '#6b6357'} strokeWidth={1} />
+          <path d={voluta(30, 10, 4, 1)} fill="none" stroke={vivo ? '#cbc6dc' : '#8f8676'} strokeWidth={1} />
         </svg>
         {/* texto flutuante */}
         <span className="relative min-w-0 flex-1 py-2 pl-1 pr-2">
@@ -244,7 +250,7 @@ function AndarLinha({ andar, essencia, recem, topo, atraso, onAbrir }: { andar: 
             <span className="dv-label text-[10px] text-dv-text-3">Andar</span>
             {a.provisorio && <span className="dv-label ml-auto text-[9px] text-dv-text-3 opacity-80">Provisório</span>}
           </span>
-          <span className={cn('mt-1 line-clamp-2 font-body text-[15.5px] leading-snug [text-shadow:0_1px_6px_rgba(0,0,0,0.9)]', a.estado === 'trancado' ? 'text-dv-text-2' : 'text-dv-text')}>{a.titulo}</span>
+          <span className={cn('mt-1 line-clamp-2 font-body text-[15.5px] leading-snug [text-shadow:0_1px_6px_rgba(0,0,0,0.9)]', a.estado === 'trancado' ? 'text-dv-text-2' : 'text-dv-text')}>{semProvisorio(a.titulo)}</span>
           <span className="mt-1.5 flex flex-wrap items-center gap-x-2.5 gap-y-1">
             {a.estado === 'concluido' ? (
               <span className="font-mono text-[11px] uppercase tracking-[0.16em] text-dv-gold">Vencido</span>
@@ -298,7 +304,7 @@ function FichaAndar({ andar, torre }: { andar: AndarEstado; torre: TorreEstado }
         <div>
           <p className="dv-label text-[10px] text-dv-text-3">Recompensa</p>
           <ul className="mt-1.5 flex flex-wrap gap-1.5">
-            {a.recompensas.chaves > 0 && torre.chave && <RecursoChip nome={torre.chave.nome} curto={torre.chave.nome} quantidade={a.recompensas.chaves} tipo="chave" />}
+            {a.recompensas.chaves > 0 && torre.chave && <RecursoChip nome={torre.chave.nome} curto={torre.chave.nome.replace(/^Chave d[oa] /, '')} quantidade={a.recompensas.chaves} tipo="chave" />}
             {a.recompensas.itens.map((it) => (
               <li key={it.item} className="font-body text-[14px] text-dv-text-2">
                 +{it.quantidade} {it.nome}

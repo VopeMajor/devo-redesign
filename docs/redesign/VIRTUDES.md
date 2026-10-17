@@ -36,3 +36,17 @@ Fonte: https://docs.google.com/document/d/1IZ4cm3L4BMp79RSUj_F9dzeVOpuy7-Ix7J8D3
 | Sol | 4 | 1 | 5 | (truncado) | | |
 
 Observação: as listas por Arcano no corpo do doc às vezes divergem desta tabela (ex.: Lua e Justiça aparecem duas vezes com valores diferentes). **Não decidir sozinho**: guardar os dados em configuração editável (por Owner) e marcar as divergências para o dono confirmar.
+
+## Os vinte e dois Arcanos na tela (pedido do dono, 17/10)
+
+- Lista "Os vinte e dois" na tela das Virtudes. Arcano trancado (não é o do jogador): numeral, nome e uma frase breve, apagado e com cadeado; o servidor só manda `key`, `numeral`, `titulo` e `breve`.
+- O Arcano do jogador vem primeiro e expande (Descrição, Fisiologia, Estágios de Evolução). Estágio atual em destaque, anteriores "alcançado", seguintes só com o nome ("Ainda velado"). Owner e Anfitrião abrem todos.
+- **Textos são rascunho** (o doc não descreve os Arcanos): `lib/devo/arcanos-textos.ts`, escritos a partir do tarô e da tabela acima (Virtude excelente e deficiente na Fisiologia, sem números). Cinco Estágios por Arcano, como os limites padrão.
+- O Owner edita na Mesa › Virtudes › "Textos dos Arcanos" (`POST /api/virtudes { action: 'arcano-texto', arcano, value | null, provisorio? }`, devo_config `virtudes.arcanos`, admin_log `virtudes.arcano_texto`); `null` volta ao rascunho. O selo "Provisório" aparece só para o Owner.
+
+## Arcanos: tela própria (dono, 17/10, refs em docs/redesign/refs/arcanos)
+
+- "Apesar dos arcanos influenciarem nas virtudes, quero telas separadas." Os 22 saíram das Virtudes, que ficam só com a entrada "Seu Arcano → Abrir Arcanos".
+- Sistema `arcanos` (components/devo/arcanos/): mesma regra de liberação das Virtudes (flag `virtudes`; Owner/Anfitrião sempre) e o mesmo payload `/api/virtudes` (trancado = numeral, nome e frase breve).
+- Vistas: **Mapa** orbital (ref-06), **Galeria** em carrossel com molduras (ref-05/04; trancado em grisalha), **Detalhe** no altar com vitral vermelho e velas (ref-07) com Descrição, Fisiologia e Estágios.
+- Figuras pintadas: registro em `lib/devo/arcanos-arte.ts` (`public/images/arcanos/<key>/{figura,retrato,sigilo}-<lado>.webp`); sem arte, o placeholder é o sigilo do Arcano (components/devo/arcanos/sigilos.tsx) na moldura.

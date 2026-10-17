@@ -51,14 +51,12 @@ function img(asset: string, nome: string, categoria: CosSlot): CosmeticoDef {
 }
 const ASAS = 'img:/images/cosmeticos/asas-do-crepusculo/moldura'
 const CORACAO = 'img:/images/cosmeticos/coracao-da-condessa/emblema'
-const ROSA_MINI = 'img:/images/cosmeticos/rosa-do-destino/mini'
 
 /** Lote 2 (infra/arte 2cce492): molduras em imagem e a mini própria de cada uma (quando existe). */
 const LOTE2_NOMES: Record<string, string> = {
   ...NOMES,
   'catedral-esquecida': 'Catedral Esquecida',
   'relicario-marfim': 'Relicário de Marfim',
-  'rosa-do-destino': 'Rosa do Destino',
   'asas-do-crepusculo': 'Asas do Crepúsculo',
   'coracao-da-condessa': 'Coração da Condessa',
   'fortuna-profana': 'Fortuna Profana',
@@ -108,15 +106,6 @@ export function Galeria() {
             <FotoMoldurada formato="mini" src={MINI2} moldura={img(ASAS, 'Asas do Crepúsculo', 'moldura_mini')} largura={64} />
             <FotoMoldurada formato="mini" src={MINI} moldura={img(ASAS, 'Asas do Crepúsculo', 'moldura_mini')} largura={48} />
             <FotoMoldurada formato="mini" src={MINI2} moldura={img(ASAS, 'Asas do Crepúsculo', 'moldura_mini')} largura={36} />
-          </div>
-        </article>
-        <article aria-label="Prévia: Rosa do Destino (miniperfil)" className="mb-10 flex flex-col gap-4">
-          <h3 className="font-display text-[15px] font-semibold uppercase tracking-[0.08em] text-[#ece5d8]">Rosa do Destino · miniperfil quadrado</h3>
-          <div className="flex flex-wrap items-end justify-center gap-6 py-4">
-            <FotoMoldurada formato="mini" src={MINI} moldura={img(ROSA_MINI, 'Rosa do Destino', 'moldura_mini')} largura={150} />
-            <FotoMoldurada formato="mini" src={MINI2} moldura={img(ROSA_MINI, 'Rosa do Destino', 'moldura_mini')} largura={64} />
-            <FotoMoldurada formato="mini" src={MINI} moldura={img(ROSA_MINI, 'Rosa do Destino', 'moldura_mini')} largura={48} />
-            <FotoMoldurada formato="mini" src={MINI2} moldura={img(ROSA_MINI, 'Rosa do Destino', 'moldura_mini')} largura={36} />
           </div>
         </article>
         <article aria-label="Prévia: Coração da Condessa" className="flex flex-col gap-4">

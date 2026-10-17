@@ -46,7 +46,7 @@ const FILL: Record<ButtonVariant, string> = {
     'bg-[linear-gradient(180deg,#f6f5f3_0%,#e7e5e1_52%,#cdcac4_100%)] group-enabled:group-hover:bg-[linear-gradient(180deg,#ffffff_0%,#efeeeb_52%,#d6d3cd_100%)]',
   secondary: 'bg-[linear-gradient(180deg,var(--dv-fog)_0%,var(--dv-ink-4)_38%,var(--dv-ink-2)_100%)] group-enabled:group-hover:bg-[linear-gradient(180deg,var(--dv-fog-2)_0%,var(--dv-fog)_38%,var(--dv-ink-3)_100%)]',
   ghost: '',
-  danger: 'bg-[linear-gradient(180deg,var(--dv-wine-line)_0%,var(--dv-wine)_60%,var(--dv-wine-0)_100%)] group-enabled:group-hover:bg-[linear-gradient(180deg,#8e4450_0%,var(--dv-wine-2)_60%,var(--dv-wine)_100%)]',
+  danger: 'bg-[linear-gradient(180deg,var(--dv-wine-line)_0%,var(--dv-wine)_60%,var(--dv-wine-deep)_100%)] group-enabled:group-hover:bg-[linear-gradient(180deg,#8e4450_0%,var(--dv-wine-2)_60%,var(--dv-wine)_100%)]',
 }
 
 /** Interior: primary = bloco cobalto; secondary = bloco na cor do texto (preto no papel, claro no painel); ghost = link cobalto; danger = vermelho com faixa. */

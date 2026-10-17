@@ -1650,8 +1650,7 @@ UPDATE item_defs SET meta = meta || '{"asset": "img:/images/cosmeticos/coracao-d
 
 -- ---------------------------------------------------------------------------------------------
 -- 8. Arte por IA, lotes 2 e 3 (infra/arte da41f23): molduras e minis quadradas definitivas, balões 9-slice,
---    emblemas e camadas animadas; itens novos (Catedral Esquecida, Relicário de Marfim, Rosa do Destino,
---    Fortuna Profana). Os UPDATEs só trocam o asset desenhado antigo (ou a mini provisória do lote 1) — edição
+--    emblemas e camadas animadas; itens novos (Catedral Esquecida, Relicário de Marfim, Fortuna Profana). Os UPDATEs só trocam o asset desenhado antigo (ou a mini provisória do lote 1) — edição
 --    do Owner no painel fica como está.
 -- ---------------------------------------------------------------------------------------------
 INSERT INTO item_defs (key, kind, name, description, rarity, stackable, meta) VALUES
@@ -1663,12 +1662,6 @@ INSERT INTO item_defs (key, kind, name, description, rarity, stackable, meta) VA
    '{"categoria": "moldura_avatar", "asset": "img:/images/cosmeticos/relicario-marfim/moldura", "imagem": {"base": "/images/cosmeticos/relicario-marfim/moldura", "tamanhos": [48, 96, 256, 512, 1024], "janela": {"forma": "circulo", "centro": [0.5, 0.5], "raio": [0.25, 0.25]}}, "animado": false, "poco": true, "origem": "poco", "par": "cosmetico:mini-relicario-marfim", "ordem": 15}'),
   ('cosmetico:mini-relicario-marfim', 'cosmetico', 'Relicário de Marfim', 'Versão do miniperfil: marfim e ouro velho.', 'raro', false,
    '{"categoria": "moldura_mini", "asset": "img:/images/cosmeticos/relicario-marfim/mini", "imagem": {"base": "/images/cosmeticos/relicario-marfim/mini", "tamanhos": [48, 96, 256, 512, 1024], "janela": {"forma": "quadrado", "centro": [0.5, 0.5], "raio": [0.2735, 0.2735], "raio_canto": 0.04}}, "animado": false, "poco": true, "origem": "poco", "par": "cosmetico:moldura-relicario-marfim", "ordem": 15}'),
-  ('cosmetico:moldura-rosa-destino', 'cosmetico', 'Rosa do Destino', 'Rosas vermelhas e espinhos de prata em volta do rosto. Quem a usa já sabe como termina.', 'lendario', false,
-   '{"categoria": "moldura_avatar", "asset": "img:/images/cosmeticos/rosa-do-destino/moldura", "imagem": {"base": "/images/cosmeticos/rosa-do-destino/moldura", "tamanhos": [48, 96, 256, 512, 1024], "janela": {"forma": "circulo", "centro": [0.5, 0.5], "raio": [0.25, 0.25]}}, "animado": false, "poco": false, "origem": "evento", "par": "cosmetico:mini-rosa-destino", "ordem": 6}'),
-  ('cosmetico:mini-rosa-destino', 'cosmetico', 'Rosa do Destino', 'Versão do miniperfil: a moldura quadrada com as rosas nos cantos.', 'lendario', false,
-   '{"categoria": "moldura_mini", "asset": "img:/images/cosmeticos/rosa-do-destino/mini", "imagem": {"base": "/images/cosmeticos/rosa-do-destino/mini", "tamanhos": [48, 96, 256, 512, 1024], "janela": {"forma": "quadrado", "centro": [0.5, 0.5], "raio": [0.2735, 0.2735], "raio_canto": 0.04}}, "animado": false, "poco": false, "origem": "evento", "par": "cosmetico:moldura-rosa-destino", "ordem": 6}'),
-  ('cosmetico:balao-rosa-destino', 'cosmetico', 'Rosa do Destino', 'Vinho escuro com rosas e espinhos nas pontas. Faz par com a moldura.', 'lendario', false,
-   '{"categoria": "balao", "asset": "img:/images/cosmeticos/rosa-do-destino/balao", "imagem": {"base": "/images/cosmeticos/rosa-do-destino/balao", "tamanhos": [256, 512, 768, 1024], "slice": {"corte": [58, 98, 55, 88], "borda": [22, 38, 21, 34], "folga": [6, 9, 6, 8], "texto": "#f1e7e9", "lado": 512}}, "animado": false, "poco": false, "origem": "evento", "ordem": 6}'),
   ('cosmetico:emblema-fortuna-profana', 'cosmetico', 'Fortuna Profana', 'Cartas, dados e fichas presos a um rubi por uma corrente de ouro. A casa sempre cobra.', 'epico', false,
    '{"categoria": "emblema", "asset": "img:/images/cosmeticos/fortuna-profana/emblema", "imagem": {"base": "/images/cosmeticos/fortuna-profana/emblema", "tamanhos": [48, 96, 256, 512, 1024]}, "animado": false, "poco": true, "origem": "poco", "ordem": 45}')
 ON CONFLICT (key) DO NOTHING;
@@ -1741,6 +1734,46 @@ UPDATE item_defs SET meta = meta || '{"asset": "img:/images/cosmeticos/selo-anfi
  WHERE key = 'cosmetico:emblema-selo-anfitriao' AND meta->>'asset' = 'devo:emblema/selo-anfitriao';
 UPDATE item_defs SET meta = meta || '{"asset": "img:/images/cosmeticos/asas-do-crepusculo/mini", "imagem": {"base": "/images/cosmeticos/asas-do-crepusculo/mini", "tamanhos": [48, 96, 256, 512, 1024], "janela": {"forma": "quadrado", "centro": [0.5, 0.5], "raio": [0.2735, 0.2735], "raio_canto": 0.04}, "camadas": [{"src": "/images/cosmeticos/asas-do-crepusculo/mini-gema.webp", "anim": "brilho", "caixa": [0.2334, 0.0752, 0.542, 0.7861], "dur": 5.5}]}, "animado": true}'::jsonb
  WHERE key = 'cosmetico:mini-asas-crepusculo' AND meta->>'asset' IN ('devo:moldura/asas-crepusculo', 'img:/images/cosmeticos/asas-do-crepusculo/moldura');
+
+-- ---------------------------------------------------------------------------------------------
+-- 9. Rosa do Destino retirada (REFINAMENTO-4-dono.md §4): moldura, mini e balão saem do jogo. Idempotente — na
+--    segunda vez nada mais casa. Ordem: registra no admin_log (por jogador: o que tinha e o que estava equipado),
+--    desequipa, tira dos inventários, limpa o histórico do item (item_ledger e poco_giros apontam para item_defs)
+--    e apaga a definição. O registro fica só no admin_log ('cosmetico.removido' por jogador, 'cosmetico.item_removido'
+--    por item, com a definição completa para restaurar se o dono mudar de ideia).
+-- ---------------------------------------------------------------------------------------------
+INSERT INTO admin_log (action, target_id, ref, data)
+SELECT 'cosmetico.removido', x.pid, 'rosa-do-destino',
+       jsonb_build_object('motivo', 'Rosa do Destino retirada do catálogo (pedido do dono)',
+                          'itens', coalesce(it.itens, '[]'::jsonb), 'equipados', coalesce(eq.slots, '{}'::jsonb))
+  FROM (SELECT player_id AS pid FROM player_items WHERE item_key = ANY(ARRAY['cosmetico:moldura-rosa-destino', 'cosmetico:mini-rosa-destino', 'cosmetico:balao-rosa-destino']) AND quantity > 0
+        UNION
+        SELECT player_id FROM player_cosmetics
+         WHERE moldura_avatar = ANY(ARRAY['cosmetico:moldura-rosa-destino', 'cosmetico:mini-rosa-destino', 'cosmetico:balao-rosa-destino']) OR moldura_mini = ANY(ARRAY['cosmetico:moldura-rosa-destino', 'cosmetico:mini-rosa-destino', 'cosmetico:balao-rosa-destino']) OR balao = ANY(ARRAY['cosmetico:moldura-rosa-destino', 'cosmetico:mini-rosa-destino', 'cosmetico:balao-rosa-destino'])) x
+  LEFT JOIN LATERAL (SELECT jsonb_agg(jsonb_build_object('item', i.item_key, 'quantidade', i.quantity)) AS itens
+                       FROM player_items i WHERE i.player_id = x.pid AND i.item_key = ANY(ARRAY['cosmetico:moldura-rosa-destino', 'cosmetico:mini-rosa-destino', 'cosmetico:balao-rosa-destino']) AND i.quantity > 0) it ON true
+  LEFT JOIN LATERAL (SELECT jsonb_strip_nulls(jsonb_build_object(
+                              'moldura_avatar', CASE WHEN c.moldura_avatar = ANY(ARRAY['cosmetico:moldura-rosa-destino', 'cosmetico:mini-rosa-destino', 'cosmetico:balao-rosa-destino']) THEN c.moldura_avatar END,
+                              'moldura_mini', CASE WHEN c.moldura_mini = ANY(ARRAY['cosmetico:moldura-rosa-destino', 'cosmetico:mini-rosa-destino', 'cosmetico:balao-rosa-destino']) THEN c.moldura_mini END,
+                              'balao', CASE WHEN c.balao = ANY(ARRAY['cosmetico:moldura-rosa-destino', 'cosmetico:mini-rosa-destino', 'cosmetico:balao-rosa-destino']) THEN c.balao END)) AS slots
+                       FROM player_cosmetics c WHERE c.player_id = x.pid) eq ON true;
+
+UPDATE player_cosmetics SET
+  moldura_avatar = CASE WHEN moldura_avatar = ANY(ARRAY['cosmetico:moldura-rosa-destino', 'cosmetico:mini-rosa-destino', 'cosmetico:balao-rosa-destino']) THEN NULL ELSE moldura_avatar END,
+  moldura_mini = CASE WHEN moldura_mini = ANY(ARRAY['cosmetico:moldura-rosa-destino', 'cosmetico:mini-rosa-destino', 'cosmetico:balao-rosa-destino']) THEN NULL ELSE moldura_mini END,
+  balao = CASE WHEN balao = ANY(ARRAY['cosmetico:moldura-rosa-destino', 'cosmetico:mini-rosa-destino', 'cosmetico:balao-rosa-destino']) THEN NULL ELSE balao END,
+  updated_at = now()
+ WHERE moldura_avatar = ANY(ARRAY['cosmetico:moldura-rosa-destino', 'cosmetico:mini-rosa-destino', 'cosmetico:balao-rosa-destino']) OR moldura_mini = ANY(ARRAY['cosmetico:moldura-rosa-destino', 'cosmetico:mini-rosa-destino', 'cosmetico:balao-rosa-destino']) OR balao = ANY(ARRAY['cosmetico:moldura-rosa-destino', 'cosmetico:mini-rosa-destino', 'cosmetico:balao-rosa-destino']);
+
+DELETE FROM player_items WHERE item_key = ANY(ARRAY['cosmetico:moldura-rosa-destino', 'cosmetico:mini-rosa-destino', 'cosmetico:balao-rosa-destino']);
+DELETE FROM item_ledger WHERE item_key = ANY(ARRAY['cosmetico:moldura-rosa-destino', 'cosmetico:mini-rosa-destino', 'cosmetico:balao-rosa-destino']);
+UPDATE poco_giros SET item_key = NULL WHERE item_key = ANY(ARRAY['cosmetico:moldura-rosa-destino', 'cosmetico:mini-rosa-destino', 'cosmetico:balao-rosa-destino']);
+
+INSERT INTO admin_log (action, ref, data)
+SELECT 'cosmetico.item_removido', d.key, jsonb_build_object('motivo', 'Rosa do Destino retirada do catálogo (pedido do dono)',
+       'definicao', to_jsonb(d))
+  FROM item_defs d WHERE d.key = ANY(ARRAY['cosmetico:moldura-rosa-destino', 'cosmetico:mini-rosa-destino', 'cosmetico:balao-rosa-destino']);
+DELETE FROM item_defs WHERE key = ANY(ARRAY['cosmetico:moldura-rosa-destino', 'cosmetico:mini-rosa-destino', 'cosmetico:balao-rosa-destino']);
 
 
 -- =============================================================================================
@@ -2126,4 +2159,115 @@ INSERT INTO devo_config (key, value, provisional, note) VALUES
   ('narrativa.melissa_corporacoes.multa_min', '-30'::jsonb, true, 'PROVISÓRIO: minutos retirados do Shuffler na opção da Necro-Corporação (negativo = tira).'),
   ('narrativa.galo_casa.explorar_min', '2'::jsonb, true, 'PROVISÓRIO: quantos sistemas novos o jogador abre antes da visita do Galo ficar disponível.')
 ON CONFLICT (key) DO NOTHING;
+
+
+-- =============================================================================================
+-- scripts/calendario-migration.sql
+-- =============================================================================================
+-- Grandioso Calendário Devo (texto do dono: docs/redesign/CALENDARIO-dono.md).
+-- Depende de scripts/fundacao-migration.sql (players, devo_config, item_defs, card_deliveries, arcade_profiles,
+-- admin_log) e de scripts/virtudes-migration.sql (P.P. do check-in).
+-- Idempotente: rodar duas vezes não quebra nem duplica.
+--
+-- Regras que o BANCO garante (além do servidor em lib/devo/calendario-server.ts):
+--   · um check-in por jogador, por dia (horário de Brasília) e por tipo: PK (player_id, dia, tipo) — toque duplo,
+--     duas abas ou rede instável não resgatam duas vezes ('diario' e cada 'evento:<id>' são tipos separados);
+--   · o ciclo de 7 dias só anda com um resgate (a posição do dia fica gravada na linha do resgate);
+--   · eventos removidos ficam com removido_at (não voltam ao rodar a migração de novo: os da migração têm slug).
+
+-- ---------------------------------------------------------------------------------------------
+-- 1. Eventos programados
+-- ---------------------------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS calendario_eventos (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  -- Eventos que vêm da migração/seed (feriados): a chave impede duplicar ou ressuscitar ao rodar de novo.
+  slug text UNIQUE,
+  titulo text NOT NULL,
+  descricao text NOT NULL DEFAULT '',
+  -- Datas no calendário de Brasília. `anual` repete todo ano no mesmo dia/mês (Natal, Halloween).
+  inicio date NOT NULL,
+  fim date NOT NULL,
+  anual boolean NOT NULL DEFAULT false,
+  -- "Fique atento" (atencao) · "Dia de folga" (folga) · sem destaque (normal).
+  enfase text NOT NULL DEFAULT 'normal',
+  -- Espaço da arte: caminho em /images/… ou URL https (opcional; sem arte → placa ornamental).
+  arte text,
+  -- Check-in extra do evento (datas comemorativas): { "titulo": "…", "recompensas": [Recompensa, …] } ou NULL.
+  -- Recompensa = {"tipo":"pp","quantidade":n} | {"tipo":"item","item":"<chave>","quantidade":n}
+  --             | {"tipo":"tempo","minutos":n} | {"tipo":"carta","raridade":"incomum"}
+  checkin jsonb,
+  criado_por uuid REFERENCES players(id) ON DELETE SET NULL,
+  atualizado_por uuid REFERENCES players(id) ON DELETE SET NULL,
+  created_at timestamptz NOT NULL DEFAULT now(),
+  updated_at timestamptz NOT NULL DEFAULT now(),
+  removido_at timestamptz,
+  CONSTRAINT calendario_eventos_enfase_chk CHECK (enfase IN ('atencao', 'folga', 'normal')),
+  CONSTRAINT calendario_eventos_datas_chk CHECK (fim >= inicio AND fim - inicio <= 31),
+  CONSTRAINT calendario_eventos_titulo_chk CHECK (char_length(titulo) BETWEEN 2 AND 60),
+  CONSTRAINT calendario_eventos_descricao_chk CHECK (char_length(descricao) <= 240),
+  CONSTRAINT calendario_eventos_checkin_chk CHECK (checkin IS NULL OR jsonb_typeof(checkin->'recompensas') = 'array')
+);
+CREATE INDEX IF NOT EXISTS calendario_eventos_inicio_idx ON calendario_eventos (inicio) WHERE removido_at IS NULL;
+
+-- ---------------------------------------------------------------------------------------------
+-- 2. Check-ins (diário e de evento)
+-- ---------------------------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS calendario_checkins (
+  player_id uuid NOT NULL REFERENCES players(id) ON DELETE CASCADE,
+  -- Dia do check-in no horário de Brasília.
+  dia date NOT NULL,
+  -- 'diario' (ciclo de 7 dias) ou 'evento:<id do evento>'.
+  tipo text NOT NULL,
+  evento_id uuid REFERENCES calendario_eventos(id) ON DELETE SET NULL,
+  -- Início da ocorrência do evento (num evento anual, a do ano): conta os resgates daquela edição.
+  ocorrencia date,
+  -- Diário: dia do ciclo (1..7). Evento: n-ésimo resgate daquela ocorrência (1..).
+  posicao smallint NOT NULL,
+  recompensa jsonb NOT NULL,
+  -- O que de fato entrou (P.P. que couberam, carta sorteada, minutos…), para a Mesa e o teste.
+  aplicado jsonb NOT NULL DEFAULT '{}'::jsonb,
+  created_at timestamptz NOT NULL DEFAULT now(),
+  PRIMARY KEY (player_id, dia, tipo),
+  CONSTRAINT calendario_checkins_tipo_chk CHECK (tipo = 'diario' OR tipo ~ '^evento:[0-9a-f-]{36}$'),
+  CONSTRAINT calendario_checkins_posicao_chk CHECK (posicao BETWEEN 1 AND 32)
+);
+CREATE INDEX IF NOT EXISTS calendario_checkins_ultimo_idx ON calendario_checkins (player_id, tipo, dia DESC);
+
+-- ---------------------------------------------------------------------------------------------
+-- 3. Configuração (Owner edita em Ajustes ou na seção Calendário da Mesa)
+-- ---------------------------------------------------------------------------------------------
+INSERT INTO devo_config (key, value, provisional, note) VALUES
+  ('calendario.checkin.ciclo',
+   '[{"tipo": "pp", "quantidade": 50},
+     {"tipo": "pp", "quantidade": 75},
+     {"tipo": "item", "item": "fragmento_arcano", "quantidade": 2},
+     {"tipo": "tempo", "minutos": 120},
+     {"tipo": "item", "item": "dracma_comum", "quantidade": 5},
+     {"tipo": "item", "item": "dracma_incomum", "quantidade": 2},
+     {"tipo": "carta", "raridade": "incomum"}]'::jsonb,
+   false, 'Texto do dono (17/10): Dia 1: 50 PP · Dia 2: 75 PP · Dia 3: +2 Fragmentos Arcanos · Dia 4: +2 Horas · Dia 5: +5 Dracmas Comuns · Dia 6: +2 Dracmas Incomuns · Dia 7: Carta Incomum.'),
+  ('calendario.checkin.regras',
+   '{"falta": "pausa", "pp_virtude": "arcano", "pp_virtude_padrao": "paus"}'::jsonb,
+   true, 'PROVISÓRIO (decisão para o dono): falta = "pausa" (perder um dia não zera; o ciclo continua de onde parou) ou "reinicia" (volta ao Dia 1). P.P. do check-in vão para a Virtude de afinidade Excelente do Arcano do jogador; sem Arcano, para pp_virtude_padrao.'),
+  ('desbloqueio.livres',
+   '["calendario"]'::jsonb,
+   true, 'PROVISÓRIO: sistemas liberados para todo jogador desde o início (sem tutorial). O Calendário entra aqui porque o check-in diário puxa a volta diária.')
+ON CONFLICT (key) DO NOTHING;
+
+-- ---------------------------------------------------------------------------------------------
+-- 4. Datas comemorativas iniciais (o Owner edita ou remove pela Mesa; removidas não voltam)
+-- ---------------------------------------------------------------------------------------------
+INSERT INTO calendario_eventos (slug, titulo, descricao, inicio, fim, anual, enfase) VALUES
+  ('natal', 'Natal', 'As luzes ficam acesas até tarde e quase ninguém tem pressa.', '2026-12-25', '2026-12-25', true, 'folga'),
+  ('halloween', 'Halloween', 'Máscaras demais pelas ruas. Repare em quem está por trás delas.', '2026-10-31', '2026-10-31', true, 'atencao'),
+  ('festa-junina', 'Festa Junina', 'Fogueira, quadrilha e bandeirinhas.', '2027-06-24', '2027-06-24', true, 'folga'),
+  ('carnaval-2027', 'Carnaval', 'Quatro dias de festa pelas ruas.', '2027-02-06', '2027-02-09', false, 'folga')
+ON CONFLICT (slug) DO NOTHING;
+
+-- Arte pintada das datas comemorativas (infra/arte → public/images/calendario/<nome>-{256,512,768,1024}.webp).
+-- Só preenche quando ainda não há arte (não sobrescreve a escolha do Owner).
+UPDATE calendario_eventos SET arte = '/images/calendario/' || slug || '-512.webp'
+ WHERE slug IN ('natal', 'halloween') AND arte IS NULL;
+UPDATE calendario_eventos SET arte = '/images/calendario/carnaval-512.webp'
+ WHERE slug = 'carnaval-2027' AND arte IS NULL;
 

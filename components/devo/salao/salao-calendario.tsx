@@ -121,7 +121,7 @@ export function CalendarioDevo({ open, onClose, d, agir, onConfig }: { open: boo
                   }}
                   className={cn(
                     'dv-focus relative flex aspect-square min-h-11 flex-col items-center justify-center gap-0.5 transition-colors',
-                    ativo ? 'bg-[#1d1a2b] shadow-[inset_0_0_0_1px_rgba(138,124,200,0.8)]' : ed || ev ? 'bg-white/[0.04] shadow-[inset_0_0_0_1px_var(--dv-line)]' : 'hover:bg-white/[0.03]',
+                    ativo ? 'bg-dv-cobalt-dim shadow-[inset_0_0_0_1px_rgb(var(--dv-amethyst-rgb)/0.8)]' : ed || ev ? 'bg-white/[0.04] shadow-[inset_0_0_0_1px_var(--dv-line)]' : 'hover:bg-white/[0.03]',
                   )}
                 >
                   <span className={cn('font-impact text-[17px] leading-none dv-tabular', eHoje ? 'text-dv-gold-bright' : ed || ev ? 'text-dv-text' : 'text-dv-text-3')}>{dia}</span>

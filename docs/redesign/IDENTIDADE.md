@@ -26,7 +26,7 @@ diferença entre fundo, painel e controle, texto mais legível, sem roxo neon e 
 | Abismo (fundo de tela) | `--dv-ink`, `--dv-abyss` | `#090909` | Abyss Black da ref |
 | Degraus de painel | `--dv-ink-2/3/4` | `#161515` / `#222020` / `#2e2c2c` | antes `#151517…#2c2c31` (azulados) |
 | Pedra de névoa (controle, painel alto) | `--dv-fog`, `--dv-fog-2` | `#353535` / `#434141` | Fog Stone da ref; botão secundário e folhas |
-| Vinho escuro / vinho | `--dv-wine-0`, `--dv-wine` | `#280e11` / `#3f1117` | da ref; fundo de perigo, atmosfera no pé das cenas |
+| Vinho escuro / vinho | `--dv-wine-deep`, `--dv-wine` | `#280e11` / `#3f1117` | da ref; fundo de perigo, atmosfera no pé das cenas |
 | Vinho de seleção | `--dv-cobalt`, `--dv-wine-2` | `#5a1d26` | bloco ativo (o antigo "cobalto" agora é vinho) |
 | Bloco selecionado no papel | `--dv-block`, `--in-accent-fill` (papel) | `#2e1014` | aba/chip ativo, selo "em uso" |
 | Filete vinho | `--dv-wine-line` | `#7d3a44` | borda de seleção, traço `dv-trace` |

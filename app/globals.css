@@ -63,7 +63,7 @@
   --color-dv-fog: var(--dv-fog);
   --color-dv-fog-2: var(--dv-fog-2);
   --color-dv-wine: var(--dv-wine);
-  --color-dv-wine-0: var(--dv-wine-0);
+  --color-dv-wine-deep: var(--dv-wine-deep);
   --color-dv-wine-2: var(--dv-wine-2);
   --color-dv-wine-line: var(--dv-wine-line);
   --color-dv-wine-text: var(--dv-wine-text);
@@ -184,11 +184,12 @@
   --dv-abyss: #090909;
   --dv-fog: #353535;
   --dv-fog-2: #434141;
-  --dv-wine-0: #280e11;
+  --dv-wine-deep: #280e11;
   --dv-wine: #3f1117;
   --dv-wine-2: #5a1d26;
   --dv-wine-line: #7d3a44;
-  --dv-wine-text: #d49aa2;
+  /* rosa claro para texto sobre vinho e sobre o abismo */
+  --dv-wine-text: #d9a3aa;
   --dv-silver: #acacac;
   /* Bloco de seleção (aba/chip ativo, selo "em uso"): vinho-abismo com texto branco (16:1). */
   --dv-block: #2e1014;

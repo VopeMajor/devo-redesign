@@ -52,9 +52,10 @@ async function device(kind = 'phone') {
 /**
  * Cenas com fala de NPC: além de 390×844, repete o quadro numa tela alta (390×900) e numa baixa (360×740)
  * para provar que o retrato fica ancorado na caixa de fala em qualquer altura (DIRECAO-3 §9, NpcAnchor). O mapa
- * das Torres (t20/t25) também, para conferir placas e chips nas três alturas.
+ * das Torres (t20/t25) também, para conferir placas e chips nas três alturas. A Mesa dos textos dos Arcanos (v35/v36) e a
+ * tela própria dos Arcanos (arc-*) também: mapa, galeria e altar nas três alturas.
  */
-const NPC_VARIANT = /^(03-prologo-(0[2-9]|1\d)|04-tutorial-0[1-6]|26-coruja-0[13]|27-javali-[01]|34-javali-[01]|salao-0[2-5]|t10-galo-abertura|t11b-galo-fala|t23-andar-cena|t20-mapa|t25-mapa-progresso|poco-0[5-9]|03-melissa-3|n-1[0-7]|n-2[06]|n-3[24]|corp-0[34])/
+const NPC_VARIANT = /^(03-prologo-(0[2-9]|1\d)|04-tutorial-0[1-6]|26-coruja-0[13]|27-javali-[01]|34-javali-[01]|salao-0[2-5]|t10-galo-abertura|t11b-galo-fala|t23-andar-cena|t20-mapa|t25-mapa-progresso|t21-torre-imperador|t45-torre-principal|t22-andar-ficha|t47-torre-picadeiro|poco-0[5-9]|03-melissa-3|n-1[0-7]|n-2[06]|n-3[24]|corp-0[34]|v3[0-7]-|cal-|arc-\d\d)/
 const VARIANT_SIZES = [
   [390, 900],
   [360, 740],
@@ -2106,6 +2107,36 @@ if (want('poco')) {
   const escolhas = (page) => page.locator('[aria-label="Escolhas de diálogo"] button:not([disabled])')
   const view = (page, sel, block = 'start') =>
     page.locator(sel).first().evaluate((el, b) => el.scrollIntoView({ block: b }), block).catch(() => {})
+  /**
+   * Quadros de uma animação do Poço: congela tudo (CSS e o fim da revelação, via window.__pocoCongelado) e põe
+   * as animações dentro de `escopo` no instante `ms` depois de montarem. O clique é feito por `acao`.
+   */
+  const quadros = async (page, acao, escopo, frames) => {
+    await page.evaluate(() => (window.__pocoCongelado = true)).catch(() => {})
+    await acao()
+    await page.locator(escopo).first().waitFor({ state: 'attached', timeout: 8000 }).catch(() => {})
+    for (const [ms, nome] of frames) {
+      await page
+        .evaluate(
+          ([escopo, ms]) => {
+            const raiz = document.querySelector(escopo)
+            for (const a of document.getAnimations()) {
+              a.pause()
+              const t = a.effect?.target
+              if (raiz && t && raiz.contains(t)) a.currentTime = ms
+            }
+          },
+          [escopo, ms],
+        )
+        .catch(() => {})
+      await wait(120)
+      await shot(page, nome)
+    }
+    await page.evaluate(() => {
+      window.__pocoCongelado = false
+      document.getAnimations().forEach((a) => a.play())
+    }).catch(() => {})
+  }
 
   await step('poco-trancado', async () => {
     const { ctx, page } = await account('Cinza', 'DEVO-POCO-0002', VET_CARDS)
@@ -2195,14 +2226,14 @@ if (want('poco')) {
     await tryClick(btn(page, 'Lançar Moeda', true))
     await wait(900)
     await shot(page, 'poco-14-lancar')
-    await tryClick(btn(page, 'Usar o giro grátis', true))
-    // etapa 1 — ativação: a moeda em arco, o respingo e a névoa subindo
-    await wait(380)
-    await shot(page, 'poco-15-moeda-caindo')
-    await wait(560)
-    await shot(page, 'poco-15b-respingo')
-    await wait(700)
-    await shot(page, 'poco-15c-nevoa')
+    // etapa 1 — ativação: a moeda em arco (com rastro), o respingo e a névoa subindo
+    await quadros(page, () => tryClick(btn(page, 'Usar o giro grátis', true)), '.poco-arco-x', [])
+    await quadros(page, async () => {}, '.poco-cena', [
+      [330, 'poco-15-moeda-caindo'],
+      [1000, 'poco-15b-respingo'],
+      [1700, 'poco-15c-nevoa'],
+    ])
+    await wait(600)
     await tryClick(btn(page, 'Girar Manivela', true))
     await wait(1100)
     await shot(page, 'poco-16-minigame')
@@ -2215,15 +2246,13 @@ if (want('poco')) {
     await wait(1400)
     await shot(page, 'poco-18-balde-subindo')
     await wait(2200)
-    await tryClick(btn(page, 'Inspecionar Balde', true))
     // lixo: a luz tosse cinza, o item cai murcho, poeira
-    await wait(250)
-    await shot(page, 'poco-19a-lixo-luz')
-    await wait(500)
-    await shot(page, 'poco-19b-lixo-cai')
-    await wait(550)
-    await shot(page, 'poco-19c-lixo-poeira')
-    await wait(1200)
+    await quadros(page, () => tryClick(btn(page, 'Inspecionar Balde', true)), '[aria-label^="Resultado do balde"]', [
+      [250, 'poco-19a-lixo-luz'],
+      [700, 'poco-19b-lixo-cai'],
+      [1250, 'poco-19c-lixo-poeira'],
+    ])
+    await wait(1800)
     await shot(page, 'poco-19-resultado-lixo')
     await tryClick(btn(page, 'Devolver ao poço', true))
     await wait(900)
@@ -2245,17 +2274,14 @@ if (want('poco')) {
     await wait(1000)
     await tryClick(btn(page, 'Soltar a manivela', true))
     await wait(3800)
-    await tryClick(btn(page, 'Inspecionar Balde', true))
     // raro: sobe prata (como um comum), engasga, explode na cor da raridade, emerge
-    await wait(300)
-    await shot(page, 'poco-22b-raro-prata')
-    await wait(420)
-    await shot(page, 'poco-22c-raro-engasgo')
-    await wait(450)
-    await shot(page, 'poco-22d-raro-surto')
-    await wait(700)
-    await shot(page, 'poco-22a-revelacao-raro')
-    await wait(1500)
+    await quadros(page, () => tryClick(btn(page, 'Inspecionar Balde', true)), '[aria-label^="Resultado do balde"]', [
+      [320, 'poco-22b-raro-prata'],
+      [700, 'poco-22c-raro-engasgo'],
+      [1150, 'poco-22d-raro-surto'],
+      [1750, 'poco-22a-revelacao-raro'],
+    ])
+    await wait(3200)
     await shot(page, 'poco-22-resultado-raro')
     await tryClick(btn(page, 'Guardar', true))
     await wait(800)
@@ -2364,23 +2390,19 @@ if (want('poco')) {
       await wait(700)
       await shot(o.page, `${prefixo}-b-subindo`)
       await wait(2300)
-      await tryClick(btn(o.page, 'Inspecionar Balde', true))
-      let t = 0
-      for (const [ms, nome] of frames) {
-        await wait(ms - t)
-        t = ms
-        await shot(o.page, `${prefixo}-${nome}`)
-      }
+      await quadros(o.page, () => tryClick(btn(o.page, 'Inspecionar Balde', true)), '[aria-label^="Resultado do balde"]', frames.map(([ms, nome]) => [ms, `${prefixo}-${nome}`]))
+      await wait(3000)
+      await shot(o.page, `${prefixo}-e-resultado`)
       if (!(await tryClick(btn(o.page, 'Guardar', true), 1500))) await tryClick(btn(o.page, 'Devolver ao poço', true), 1500)
       await wait(900)
     }
     await step('poco-giro-comum', async () => {
-      await giroOwner('poco-50-comum', [[250, 'c-luz'], [700, 'd-revela'], [2400, 'e-resultado']])
+      await giroOwner('poco-50-comum', [[300, 'c-luz'], [800, 'd-revela']])
     })
     await step('poco-giro-premio-lixo', async () => {
       if (tempo?.id) await api({ action: 'premio.ativar', id: tempo.id, ativo: false })
       if (botao?.id) await api({ action: 'premio.ativar', id: botao.id, ativo: true })
-      await giroOwner('poco-51-lixo-owner', [[300, 'c-luz'], [800, 'd-cai'], [2600, 'e-resultado']])
+      await giroOwner('poco-51-lixo-owner', [[300, 'c-luz'], [800, 'd-cai']])
     })
     if (botao?.id) await api({ action: 'premio.ativar', id: botao.id, ativo: false })
     if (tempo?.id) await api({ action: 'premio.ativar', id: tempo.id, ativo: false })
@@ -2905,9 +2927,6 @@ if (want('cosmeticos')) {
     await view(page, 'article[aria-label="Prévia: Coração da Condessa"]')
     await wait(500)
     await shot(page, 'cos-81-previa-coracao')
-    await view(page, 'article[aria-label="Prévia: Rosa do Destino (miniperfil)"]')
-    await wait(500)
-    await shot(page, 'cos-89-previa-rosa-mini')
     for (const [sel, nome] of [['article[aria-label="Olho do Arcano"]', 'cos-01-galeria-arcano'], ['article[aria-label="Última Badalada"]', 'cos-02-galeria-badalada'], ['section[aria-label="Emblemas"]', 'cos-03-galeria-emblemas'], ['section[aria-label="Balões"]', 'cos-04-galeria-baloes'], ['section[aria-label="Efeitos do nome"]', 'cos-05-galeria-efeitos']]) {
       await view(page, sel)
       await wait(500)
@@ -3232,6 +3251,75 @@ if (want('cosmeticos')) {
     await shot(page, 'cos-l3-23-colecao-minis')
   })
 
+  // Foto do perfil no celular (REFINAMENTO-4 §2.4), 390×844: HEIC recusado com mensagem clara, foto da galeria
+  // (PNG de 2,2 MB, comprimida no aparelho), recorte quadrado com o guia redondo da moldura, arrasto e zoom,
+  // envio, foto viva depois de recarregar (URL com ?v=) e erro sem conexão.
+  await step('cos-foto', async () => {
+    const { readFileSync } = await import('node:fs')
+    let db = null
+    try {
+      const pg = (await import('pg')).default
+      if (process.env.DATABASE_URL) db = new pg.Pool({ connectionString: process.env.DATABASE_URL })
+    } catch {}
+    const { ctx, page } = await account('Vela', 'DEVO-COSM-FOTO', VET_CARDS)
+    try {
+      if (db) {
+        await db.query("SELECT devo_item_grant(id, k, 1, 'recompensa', NULL, NULL, 'captura-foto:' || id || k) FROM players, unnest(ARRAY['cosmetico:moldura-heranca-marfim', 'cosmetico:mini-heranca-marfim']) k WHERE lower(name) = 'vela'")
+        await db.query("INSERT INTO player_cosmetics (player_id, moldura_avatar, moldura_mini) SELECT id, 'cosmetico:moldura-heranca-marfim', 'cosmetico:mini-heranca-marfim' FROM players WHERE lower(name) = 'vela' ON CONFLICT (player_id) DO UPDATE SET moldura_avatar = EXCLUDED.moldura_avatar, moldura_mini = EXCLUDED.moldura_mini")
+      }
+      await openApp(page, 'Record')
+      await wait(1800)
+      const arquivo = page.locator('input[aria-label="Arquivo da foto do perfil"]')
+      await page.getByRole('button', { name: 'Escolher foto do perfil' }).first().evaluate((el) => el.scrollIntoView({ block: 'center' })).catch(() => {})
+      await wait(500)
+      await shot(page, 'cos-foto-01-sem-foto')
+      await arquivo.setInputFiles({ name: 'IMG_0412.HEIC', mimeType: 'image/heic', buffer: Buffer.from('ftypheic-falso') })
+      await wait(800)
+      await shot(page, 'cos-foto-02-heic-recusado')
+      await arquivo.setInputFiles({ name: 'galeria.png', mimeType: 'image/png', buffer: readFileSync('public/images/rabbit.png') })
+      await page.getByRole('dialog', { name: 'Ajustar foto do perfil' }).waitFor({ timeout: 10000 })
+      await wait(900)
+      await shot(page, 'cos-foto-03-recorte')
+      const area = page.getByTestId('recorte-foto')
+      for (let k = 0; k < 3; k++) await tryClick(page.getByRole('button', { name: 'Aumentar zoom' }).first(), 1500)
+      const box = await area.boundingBox()
+      if (box) {
+        await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2)
+        await page.mouse.down()
+        await page.mouse.move(box.x + box.width / 2 + 10, box.y + box.height / 2 + 60, { steps: 8 })
+        await page.mouse.up()
+      }
+      await wait(600)
+      await shot(page, 'cos-foto-04-ajustado')
+      await tryClick(page.getByRole('button', { name: 'Salvar foto' }).first())
+      await page.getByRole('status').filter({ hasText: 'Foto atualizada.' }).first().waitFor({ timeout: 15000 }).catch((e) => manifest.errors.push({ step: 'cos-foto-envio', error: String(e).slice(0, 200) }))
+      await wait(1500)
+      await page.getByRole('button', { name: 'Escolher foto do perfil' }).first().evaluate((el) => el.scrollIntoView({ block: 'center' })).catch(() => {})
+      await wait(500)
+      await shot(page, 'cos-foto-05-enviada')
+      await page.reload({ waitUntil: 'networkidle' })
+      await wait(1000)
+      await openApp(page, 'Record')
+      await wait(2200)
+      const v = await page.locator('img[src*="/api/record/avatar?v="]').count()
+      if (!v) manifest.errors.push({ step: 'cos-foto-persistencia', error: 'foto sem ?v= depois de recarregar' })
+      await shot(page, 'cos-foto-06-depois-de-recarregar')
+      // Sem conexão: escolhe de novo, ajusta e tenta enviar offline.
+      await arquivo.setInputFiles({ name: 'retrato.jpg', mimeType: 'image/jpeg', buffer: readFileSync('public/images/cosmeticos/amostra-retrato.jpg') })
+      await page.getByRole('dialog', { name: 'Ajustar foto do perfil' }).waitFor({ timeout: 10000 }).catch(() => {})
+      await wait(700)
+      await ctx.setOffline(true)
+      await tryClick(page.getByRole('button', { name: 'Salvar foto' }).first())
+      await wait(1500)
+      await page.getByRole('button', { name: 'Escolher foto do perfil' }).first().evaluate((el) => el.scrollIntoView({ block: 'center' })).catch(() => {})
+      await shot(page, 'cos-foto-07-sem-conexao')
+      await ctx.setOffline(false)
+    } finally {
+      await ctx.close().catch(() => {})
+      await db?.end().catch(() => {})
+    }
+  })
+
   // Arte por IA (pipeline infra/arte; dono escolheu Asas do Crepúsculo v02 e Coração da Condessa v02) aplicada
   // em Record, coleção, chat, miniperfil e no resultado do Poço. Matheus tem os dois equipados (94-seed).
   await step('cos-ia-aplicada', async () => {
@@ -3360,6 +3448,21 @@ if (want('virtudes')) {
     await tryClick(b, 8000)
     await wait(2400)
   }
+  const abrirArcanos = async (page) => {
+    await enterOS(page)
+    await page.getByRole('region', { name: 'Sistemas', exact: true }).scrollIntoViewIfNeeded().catch(() => {})
+    const b = page.getByRole('button', { name: /^Arcanos/ }).first()
+    await b.waitFor({ state: 'visible', timeout: 15000 }).catch(() => {})
+    await tryClick(b, 8000)
+    await wait(2400)
+  }
+  /** Mapa → galeria no Arcano pelo nome do sigilo (ex.: /Torre/). */
+  const galeriaEm = async (page, nome) => {
+    await tryClick(page.getByRole('button', { name: 'Mapa', exact: true }).first())
+    await wait(500)
+    await tryClick(page.getByRole('region', { name: 'Mapa dos vinte e dois Arcanos' }).getByRole('button', { name: nome }).first())
+    await wait(1400)
+  }
   /** Rola a tela das Virtudes até o elemento (cabeçalho ou região) pelo nome. */
   const ir = async (page, nome) => {
     await page
@@ -3380,6 +3483,8 @@ if (want('virtudes')) {
     await shot(A.page, 'v01-home-trancado')
     await abrirVirtudes(A.page)
     await shot(A.page, 'v02-trancado', 'jogador sem o tutorial: motivo')
+    await abrirArcanos(A.page)
+    await shot(A.page, 'arc-00-trancado', 'Arcanos trancado (mesma regra das Virtudes)')
   })
   await A.ctx.close()
 
@@ -3422,6 +3527,23 @@ if (want('virtudes')) {
     await shot(B.page, 'v10-morte-naipes', 'afinidades em palavras')
     await ir(B.page, 'Evoluções de Estágio')
     await shot(B.page, 'v11-historico-vazio')
+    // Arcanos: tela própria. Entrada pelas Virtudes ("Seu Arcano → abrir Arcanos")
+    await abrirVirtudes(B.page)
+    await shot(B.page, 'arc-01-virtudes-link', 'Virtudes: só a entrada para os Arcanos, sem a lista')
+    await tryClick(B.page.getByRole('button', { name: /Abrir Arcanos/ }).first())
+    await wait(2400)
+    await shot(B.page, 'arc-02-mapa', 'mapa orbital: o próprio aceso, os outros apagados')
+    await galeriaEm(B.page, /Torre \(trancado\)/)
+    await shot(B.page, 'arc-03-galeria-trancado', 'galeria centrada num trancado: estátua cinza, nome e frase breve')
+    await galeriaEm(B.page, /seu Arcano/)
+    await shot(B.page, 'arc-04-galeria-proprio', 'galeria no próprio: em cor, botão Abrir')
+    await tryClick(B.page.getByRole('button', { name: /Abrir seu Arcano/ }).first())
+    await wait(1600)
+    await shot(B.page, 'arc-05-detalhe', 'altar: vitral vermelho, velas, a figura (placeholder) e o nome')
+    await ir(B.page, 'Fisiologia')
+    await shot(B.page, 'arc-06-detalhe-fisiologia', 'Descrição e Fisiologia (mais natural / mais custosa)')
+    await ir(B.page, 'Estágios de evolução')
+    await shot(B.page, 'arc-07-detalhe-estagios', 'Estágio I atual, os seguintes velados')
   })
   await virt({ action: 'evoluir', playerId: bid })
   await virt({ action: 'potencial', playerId: bid, virtude: 'tacas', quantidade: 12, motivo: 'captura' })
@@ -3433,6 +3555,12 @@ if (want('virtudes')) {
     await shot(B.page, 'v13-depois-potencial', 'acúmulo recomeça')
     await ir(B.page, 'Evoluções de Estágio')
     await shot(B.page, 'v14-depois-historico', 'histórico: mais cresceu / menos cresceu')
+    await abrirArcanos(B.page)
+    await galeriaEm(B.page, /seu Arcano/)
+    await tryClick(B.page.getByRole('button', { name: /Abrir seu Arcano/ }).first())
+    await wait(1600)
+    await ir(B.page, 'Estágios de evolução')
+    await shot(B.page, 'arc-08-estagio-ii', 'depois da Evolução: I alcançado, II atual')
     // o Record mostra o Arcano na ficha
     await openApp(B.page, 'Record')
     await wait(1500)
@@ -3476,12 +3604,210 @@ if (want('virtudes')) {
     await page.getByRole('region', { name: 'Limites por Estágio' }).first().evaluate((el) => el.scrollIntoView({ block: 'start' })).catch(() => {})
     await wait(400)
     await shot(page, 'v21-mesa-limites')
+    await page.getByRole('region', { name: 'Textos dos Arcanos' }).first().evaluate((el) => el.scrollIntoView({ block: 'start' })).catch(() => {})
+    await page.getByRole('combobox', { name: 'Arcano a editar' }).first().selectOption('morte').catch(() => {})
+    await wait(600)
+    await shot(page, 'v35-mesa-textos', 'Owner edita os textos do Arcano (provisório)')
+    await page.getByRole('button', { name: 'Gravar texto' }).first().evaluate((el) => el.scrollIntoView({ block: 'end' })).catch(() => {})
+    await wait(400)
+    await shot(page, 'v36-mesa-textos-estagios', 'Estágios e o botão de gravar')
+    // Arcanos vistos pelo Owner: todos abrem, selo "Texto provisório"
+    await abrirArcanos(page)
+    await shot(page, 'arc-09-owner-mapa', 'Owner: todos os sigilos abertos')
+    await galeriaEm(page, /Louco/)
+    await shot(page, 'arc-10-owner-galeria', 'Owner: qualquer Arcano abre')
+    await tryClick(page.getByRole('button', { name: 'Abrir', exact: true }).first())
+    await wait(1600)
+    await shot(page, 'arc-11-owner-detalhe', 'Owner: detalhe de outro Arcano, com o selo de provisório')
 
     await page.route(/\/api\/virtudes$/, (r) => r.fulfill({ status: 500, contentType: 'application/json', body: '{"ok":false,"error":"As Virtudes não responderam. Tente de novo."}' }))
     await abrirVirtudes(page)
     await shot(page, 'v22-erro')
   })
   await own.ctx.close()
+}
+
+if (want('calendario')) {
+  const { default: pg } = await import('pg')
+  const db = process.env.DATABASE_URL ? new pg.Pool({ connectionString: process.env.DATABASE_URL }) : null
+  const sql = (t, p) => (db ? db.query(t, p).then((r) => r.rows) : Promise.resolve([]))
+  const dlg = (page) => page.locator('section[data-cena]').last()
+  const textoDlg = (page) => dlg(page).evaluate((el) => el.textContent ?? '', null, { timeout: 2000 }).catch(() => '')
+  /** Avança a cena do motor até o texto aparecer (por inteiro). */
+  async function ate(page, alvo, max = 200) {
+    for (let i = 0; i < max; i++) {
+      const t = await textoDlg(page)
+      if (!t) {
+        await wait(500)
+        if (!(await textoDlg(page))) return false
+        continue
+      }
+      if (t.includes(alvo)) {
+        await wait(1600)
+        return true
+      }
+      const pronto = dlg(page).getByRole('button', { name: 'Continuar', exact: true }).first()
+      if (await pronto.count()) {
+        await tryClick(pronto, 2000)
+        await wait(450)
+      } else await wait(300)
+    }
+    manifest.errors.push({ step: 'cal-ate', error: `não chegou em ${alvo}; último texto: ${(await textoDlg(page)).slice(-160)}` })
+    return false
+  }
+  async function ateOFim(page) {
+    for (let i = 0; i < 120; i++) {
+      if (!(await textoDlg(page))) return
+      const pronto = dlg(page).getByRole('button', { name: 'Continuar', exact: true }).first()
+      if (!(await tryClick(pronto, 1500))) await page.keyboard.press('Enter').catch(() => {})
+      await wait(450)
+    }
+  }
+  const abrirCal = async (page) => {
+    await enterOS(page)
+    const b = page.getByRole('button', { name: 'Calendário', exact: true }).first()
+    await b.waitFor({ state: 'visible', timeout: 15000 }).catch(() => {})
+    await revealOnHome(page, b)
+    await tryClick(b, 8000)
+    await wait(2800)
+  }
+  const regiao = async (page, nome, block = 'start') => {
+    await page.getByRole('region', { name: nome, exact: true }).first().evaluate((el, b) => el.scrollIntoView({ block: b }), block).catch(() => {})
+    await wait(600)
+  }
+  const idDe = async (nome) => (await sql('SELECT id FROM players WHERE lower(name) = lower($1)', [nome]))[0]?.id
+  /** Histórico: `n` check-ins diários nos dias anteriores (Dia 1 há n dias … Dia n ontem) e a apresentação já vista. */
+  const historico = async (nome, n) => {
+    const id = await idDe(nome)
+    if (!id) return manifest.errors.push({ step: `cal-hist-${nome}`, error: 'jogador não encontrado' })
+    await sql(
+      `INSERT INTO calendario_checkins (player_id, dia, tipo, posicao, recompensa)
+       SELECT $1, (now() AT TIME ZONE 'America/Sao_Paulo')::date - ($2::int - k + 1), 'diario', k, '{"tipo": "pp", "quantidade": 50}'::jsonb
+         FROM generate_series(1, $2::int) k ON CONFLICT DO NOTHING`,
+      [id, n],
+    )
+    await sql("INSERT INTO dialog_progress (player_id, scene_id, step, done_at) VALUES ($1, 'melissa-calendario', 0, now()) ON CONFLICT (player_id, scene_id) DO UPDATE SET done_at = now()", [id])
+  }
+
+  // 1. Primeira entrada: ícone na tela de Sistemas, apresentação da Melissa (Natal projetado), Dia 1, revelação.
+  const A = await account('Calendula', 'DEVO-CAL-0001', VET_CARDS)
+  await step('cal-primeira-entrada', async () => {
+    const page = A.page
+    await enterOS(page)
+    const b = page.getByRole('button', { name: 'Calendário', exact: true }).first()
+    await b.waitFor({ state: 'visible', timeout: 15000 }).catch(() => {})
+    await revealOnHome(page, b)
+    await wait(900)
+    await shot(page, 'cal-00-home-sistemas', 'ícone do Calendário na tela de Sistemas (liberado desde o início)')
+    await tryClick(b, 8000)
+    await wait(3200)
+    await ate(page, 'Grandioso Calendário Devo!!!')
+    await shot(page, 'cal-01-melissa', 'holograma da Melissa: boas-vindas')
+    await ate(page, 'quais dias você tem mais folga')
+    await wait(600)
+    await shot(page, 'cal-02-natal', '"Mostra exemplo de Evento de Natal": o Natal do calendário projetado por cima da cena')
+    await ate(page, 'mais de um tipo de check-in')
+    await shot(page, 'cal-03-checkin-fala', 'fala do check-in de datas comemorativas')
+    await ateOFim(page)
+    await wait(1600)
+    await shot(page, 'cal-04-tela', 'Calendário: check-in diário no Dia 1')
+    await tryClick(page.getByRole('button', { name: /^Marcar presença: 50 PP/ }).first(), 6000)
+    await wait(1500)
+    await shot(page, 'cal-05-revelacao', 'revelação do resgate (pulável)')
+    await tryClick(page.getByRole('button', { name: 'Pular', exact: true }).first(), 3000)
+    await wait(900)
+    await shot(page, 'cal-06-marcado', 'Dia 1 carimbado, contagem para amanhã')
+    await regiao(page, 'Check-in dos Arcanos')
+    await shot(page, 'cal-07-extra', 'check-in extra da data comemorativa de hoje')
+    await tryClick(page.getByRole('button', { name: /^Marcar presença no evento: \+30 Minutos/ }).first(), 6000)
+    await wait(1500)
+    await shot(page, 'cal-08-extra-revelacao', 'revelação do check-in do evento (+30 min)')
+    await tryClick(page.getByRole('button', { name: 'Pular', exact: true }).first(), 3000)
+    await wait(700)
+    await regiao(page, 'Mês')
+    await shot(page, 'cal-09-mes', 'mês com eventos marcados (atenção / folga / hoje)')
+    await tryClick(page.getByRole('gridcell', { name: /^31 de outubro/ }).first(), 3000)
+    await wait(600)
+    await regiao(page, 'Mês', 'end')
+    await shot(page, 'cal-10-dia', 'dia escolhido: Halloween')
+    await regiao(page, 'Próximos eventos')
+    await shot(page, 'cal-11-proximos', 'próximos eventos (arte, data, destaque)')
+    await page.getByRole('region', { name: 'Próximos eventos', exact: true }).first().evaluate((el) => el.scrollIntoView({ block: 'end' })).catch(() => {})
+    await wait(500)
+    await shot(page, 'cal-12-proximos-fim')
+  })
+  await A.ctx.close()
+
+  // 2. Assídua: três dias feitos, hoje é o Dia 4 (+2 Horas).
+  const B = await account('Assidua', 'DEVO-CAL-0002', VET_CARDS)
+  await historico('Assidua', 3)
+  await step('cal-dia-4', async () => {
+    const page = B.page
+    await abrirCal(page)
+    await shot(page, 'cal-13-dia4', 'três dias carimbados, Dia 4 em destaque')
+    await tryClick(page.getByRole('button', { name: /^Marcar presença: \+2 Horas/ }).first(), 6000)
+    await wait(1500)
+    await shot(page, 'cal-14-revelacao-horas', '+2 Horas entram no pulso')
+    await tryClick(page.getByRole('button', { name: 'Pular', exact: true }).first(), 3000)
+    await wait(800)
+    await shot(page, 'cal-15-dia4-feito')
+  })
+  await B.ctx.close()
+
+  // 3. Dia 7: a Carta Incomum (entregue pelo servidor, resgatada para o inventário).
+  const C = await account('Setima', 'DEVO-CAL-0003', VET_CARDS)
+  await historico('Setima', 6)
+  await step('cal-dia-7', async () => {
+    const page = C.page
+    await abrirCal(page)
+    await shot(page, 'cal-16-dia7', 'seis carimbos, a carta no fim do ciclo')
+    await tryClick(page.getByRole('button', { name: /^Marcar presença: Carta Incomum/ }).first(), 6000)
+    await wait(1800)
+    await shot(page, 'cal-17-revelacao-carta', 'revelação da Carta Incomum')
+  })
+  await C.ctx.close()
+
+  // 4. Mesa do Owner: eventos, novo evento com check-in próprio, regras do diário.
+  const own = await account('Veterano', 'DEVO-TEST-ADM1', VET_CARDS)
+  await step('cal-mesa', async () => {
+    const page = own.page
+    await openApp(page, 'Record')
+    await tryClick(page.getByRole('tab', { name: /Mesa/i }).first())
+    await wait(2000)
+    await page.locator('nav[aria-label="Seções da mesa"]').first().evaluate((el) => el.scrollIntoView({ block: 'start' })).catch(() => {})
+    await tryClick(desk(page, 'Calendário'))
+    await wait(2000)
+    await shot(page, 'cal-20-mesa', 'Mesa › Calendário')
+    await page.getByRole('region', { name: 'Eventos programados' }).first().evaluate((el) => el.scrollIntoView({ block: 'start' })).catch(() => {})
+    await wait(500)
+    await shot(page, 'cal-21-mesa-eventos')
+    await tryClick(page.getByRole('button', { name: 'Novo evento', exact: true }).first())
+    await wait(700)
+    const f = page.getByRole('form', { name: 'Novo evento' }).first()
+    await f.getByRole('textbox').first().fill('Noite da Lua Vermelha').catch(() => {})
+    await f.locator('textarea').first().fill('Os relógios atrasam. Ninguém sabe por quê.').catch(() => {})
+    await f.getByRole('checkbox', { name: 'Check-in próprio nestas datas' }).check().catch(() => {})
+    await wait(400)
+    await f.evaluate((el) => el.scrollIntoView({ block: 'start' })).catch(() => {})
+    await wait(400)
+    await shot(page, 'cal-22-mesa-novo', 'formulário: nome, datas, destaque, arte')
+    await page.getByRole('checkbox', { name: 'Check-in próprio nestas datas' }).first().evaluate((el) => el.scrollIntoView({ block: 'center' })).catch(() => {})
+    await wait(400)
+    await shot(page, 'cal-23-mesa-checkin', 'check-in do evento (só o Owner)')
+    await tryClick(page.getByRole('button', { name: 'Criar evento', exact: true }).first())
+    await wait(1600)
+    await page.getByRole('listitem', { name: 'Evento Noite da Lua Vermelha' }).first().evaluate((el) => el.scrollIntoView({ block: 'center' })).catch(() => {})
+    await wait(500)
+    await shot(page, 'cal-24-mesa-criado', 'evento criado (vai para o admin_log)')
+    await page.getByRole('region', { name: 'Check-in diário' }).first().evaluate((el) => el.scrollIntoView({ block: 'start' })).catch(() => {})
+    await wait(500)
+    await shot(page, 'cal-25-mesa-diario', 'ciclo do dono + regras provisórias')
+    await page.route(/\/api\/calendario$/, (r) => r.fulfill({ status: 500, contentType: 'application/json', body: '{"ok":false,"error":"O Calendário não respondeu. Tente de novo."}' }))
+    await abrirCal(page)
+    await shot(page, 'cal-26-erro', 'erro com tentar de novo')
+  })
+  await own.ctx.close()
+  if (db) await db.end().catch(() => {})
 }
 
 await browser.close()

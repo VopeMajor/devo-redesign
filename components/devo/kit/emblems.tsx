@@ -372,6 +372,23 @@ export function EmblemMascaras(p: EmblemProps) {
   )
 }
 
+/** Calendário — folha com duas argolas e faixa de cabeçalho; a data marcada é a estrela do sigilo, entre quatro losangos. */
+export function EmblemCalendario(p: EmblemProps) {
+  return (
+    <Svg {...p}>
+      <Line d="M9.5 13H38.5V41.5H9.5Z" w={2.2} />
+      <path d="M9.5 13H38.5V19.2H9.5Z" />
+      <path d={needle(17, 5.5, 17, 16, 1.5, 0.4)} />
+      <path d={needle(31, 5.5, 31, 16, 1.5, 0.4)} />
+      <path d={star(24, 30.4, 7.6, 0.17)} />
+      <path d={lozenge(14.6, 24.6, 1.5, 1.9)} />
+      <path d={lozenge(33.4, 24.6, 1.5, 1.9)} />
+      <path d={lozenge(14.6, 36.2, 1.5, 1.9)} />
+      <path d={lozenge(33.4, 36.2, 1.5, 1.9)} />
+    </Svg>
+  )
+}
+
 /* ───────────────────────────────── registros ───────────────────────────────── */
 
 /** Um emblema por app do shell (mesmos ids de `AppId`). */
@@ -393,6 +410,7 @@ export const SYSTEM_EMBLEMS = {
   arcanos: EmblemArcanos,
   corporacoes: EmblemCorporacoes,
   mascaras: EmblemMascaras,
+  calendario: EmblemCalendario,
 } as const satisfies Record<string, EmblemComponent>
 
 /**

@@ -165,8 +165,15 @@ export async function setAvatar(playerId: string, dataUrl: unknown) {
     return
   }
   const m = typeof dataUrl === 'string' ? AVATAR_RE.exec(dataUrl) : null
-  if (!m) throw new RecordError('Formato de imagem inválido.')
-  if (Math.floor((m[2].length * 3) / 4) > MAX_AVATAR_BYTES) throw new RecordError('Imagem grande demais.')
+  if (!m) throw new RecordError('Formato de imagem inválido: envie JPEG, PNG ou WebP.')
+  if (Math.floor((m[2].length * 3) / 4) > MAX_AVATAR_BYTES)
+    throw new RecordError(`Foto grande demais (limite de ${Math.round(MAX_AVATAR_BYTES / 1000)} KB depois de comprimida). Tente de novo ou escolha outra imagem.`, 413)
+  // o conteúdo precisa ser mesmo do tipo declarado (não só o prefixo do data URL)
+  const head = Buffer.from(m[2].slice(0, 24), 'base64')
+  const tipoOk =
+    head.length >= 12 &&
+    (m[1] === 'jpeg' ? head[0] === 0xff && head[1] === 0xd8 : m[1] === 'png' ? head.readUInt32BE(0) === 0x89504e47 : head.toString('ascii', 0, 4) === 'RIFF' && head.toString('ascii', 8, 12) === 'WEBP')
+  if (!tipoOk) throw new RecordError('O arquivo não é uma imagem válida.')
   await pool.query('UPDATE players SET avatar = $2, avatar_updated_at = now() WHERE id = $1', [playerId, dataUrl])
 }
 

@@ -165,7 +165,7 @@
 
 /* ── Refinamento 4: matéria antiga e luz fria ─────────────────────────────────────────────── */
 /* Camadas pintadas em violeta entram dessaturadas: prata fria, sem roxo neon. */
-.poco-dessatura { filter: saturate(0.22) brightness(1.06); }
+.poco-dessatura { filter: saturate(0.12) brightness(1.08); }
 .poco-raro-tom { filter: saturate(0.55); }
 .poco-pedra { filter: saturate(0.42) contrast(1.05) brightness(1.02); }
 
@@ -294,9 +294,9 @@
 }
 @keyframes poco-coluna-falsa {
   0% { opacity: 0; transform: translateX(-50%) scaleY(0.05); }
-  45% { opacity: 0.5; transform: translateX(-50%) scaleY(0.62); }
-  58% { opacity: 0.18; }
-  64% { opacity: 0.42; }
+  45% { opacity: 0.8; transform: translateX(-50%) scaleY(0.62); }
+  58% { opacity: 0.22; }
+  64% { opacity: 0.6; }
   69% { opacity: 0.08; transform: translateX(-50%) scaleY(0.4); }
   100% { opacity: 0; transform: translateX(-50%) scaleY(0.2); }
 }

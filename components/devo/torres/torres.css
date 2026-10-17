@@ -37,8 +37,8 @@
 
 /* Nó do andar atual: halo ametista que respira */
 @keyframes tw-node {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(138, 124, 200, 0.0), 0 0 18px rgba(138, 124, 200, 0.45); }
-  50% { box-shadow: 0 0 0 6px rgba(138, 124, 200, 0.12), 0 0 26px rgba(138, 124, 200, 0.7); }
+  0%, 100% { box-shadow: 0 0 0 0 rgb(var(--dv-amethyst-rgb) / 0.0), 0 0 18px rgb(var(--dv-amethyst-rgb) / 0.45); }
+  50% { box-shadow: 0 0 0 6px rgb(var(--dv-amethyst-rgb) / 0.12), 0 0 26px rgb(var(--dv-amethyst-rgb) / 0.7); }
 }
 .tw-node-cur { animation: tw-node 2.8s ease-in-out infinite; }
 
@@ -113,8 +113,8 @@
 
 /* Botão ornamental: brilho que atravessa, afunda ao pressionar, pedra fosca desabilitado */
 .tw-botao { transition: transform 120ms ease-out, filter 220ms ease-out; }
-.tw-botao[data-estado='on']:hover { filter: drop-shadow(0 0 10px rgba(194, 185, 236, 0.45)); }
-.tw-botao[data-estado='on']:active { transform: scale(0.97) translateY(1px); filter: drop-shadow(0 0 16px rgba(194, 185, 236, 0.75)) brightness(1.06); }
+.tw-botao[data-estado='on']:hover { filter: drop-shadow(0 0 10px rgb(var(--dv-amethyst-text-rgb) / 0.45)); }
+.tw-botao[data-estado='on']:active { transform: scale(0.97) translateY(1px); filter: drop-shadow(0 0 16px rgb(var(--dv-amethyst-text-rgb) / 0.75)) brightness(1.06); }
 .tw-botao-brilho::after {
   content: '';
   position: absolute;
