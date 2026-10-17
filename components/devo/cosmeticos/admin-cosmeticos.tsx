@@ -9,6 +9,7 @@ import { ConfirmButton, EmptyLine, ErrorLine, Loading, RecSelect, STAFF_KEY, sta
 import { RecButton, RecInput, RecLabel, RecTextarea } from '../system/record-ui'
 import { BALOES, EFEITOS, EMBLEMAS, MOLDURAS } from './art'
 import { BalaoChat, Emblema, FotoMoldurada, classeEfeito } from './cosmetic-art'
+import { AmostraNome, BordaPerfilFundo } from './estilo-nome'
 import { cosPost, revalidarCosmeticos } from './use-cosmeticos'
 
 type ItemAdmin = CosmeticoDef & { donos: number; equipados: number }
@@ -136,6 +137,13 @@ function Thumb({ def }: { def: CosmeticoDef }) {
         Aa
       </BalaoChat>
     )
+  if (def.categoria === 'borda')
+    return (
+      <span className="relative block h-9 w-14 overflow-hidden">
+        <BordaPerfilFundo borda={def.borda} imagem={def.imagem ? `${def.imagem.base}-256.webp` : null} animar={false} />
+      </span>
+    )
+  if (def.nome) return <AmostraNome estilo={def.nome} texto="Aa" className="text-[16px]" />
   return <span className={cn('cos-nome text-[14px] text-white', classeEfeito(def))}>Aa</span>
 }
 
@@ -145,6 +153,8 @@ const ARTES: Record<CosSlot, string[]> = {
   emblema: [...ARTE_IMAGEM.emblema, ...Object.keys(EMBLEMAS).map((k) => `devo:emblema/${k}`)],
   balao: [...ARTE_IMAGEM.balao, ...Object.keys(BALOES).map((k) => `devo:balao/${k}`)],
   efeito: Object.keys(EFEITOS).map((k) => `devo:efeito/${k}`),
+  // estilo do nome e borda: definidos no catálogo (meta.nome / meta.borda), sem arte escolhível aqui
+  borda: [],
 }
 
 function Editor({ item, onClose, onSaved }: { item: ItemAdmin | null; onClose: () => void; onSaved: () => void }) {
@@ -171,6 +181,9 @@ function Editor({ item, onClose, onSaved }: { item: ItemAdmin | null; onClose: (
     automatico: !!item?.automatico,
     par: item?.par ?? null,
     imagem: imagemDoAsset(f.asset, IMAGENS_CATALOGO[f.asset]?.imagem ?? item?.imagem),
+    nome: item?.nome ?? null,
+    borda: item?.borda ?? null,
+    balaoProv: item?.balaoProv ?? null,
   }
 
   const enviar = async (fl: File) => {

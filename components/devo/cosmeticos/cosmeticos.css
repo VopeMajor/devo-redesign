@@ -112,6 +112,122 @@
 .cos-anim .cos-l-brilho { opacity: 1; animation: cos-l-brilho var(--cos-dur, 5.5s) ease-in-out infinite var(--cos-atraso, 0s); }
 @keyframes cos-l-brilho { 0% { background-position: 100% 0; } 38%, 100% { background-position: 0% 0; } }
 
+/* ── Estilo do nome (categoria efeito, à moda do Discord) ──
+ * Cores em --n1/--n2/--n3 (validadas no catálogo). Parado por padrão; só move dentro de .cos-anim
+ * (Record e miniperfil, com animações ligadas e sem movimento reduzido). */
+.cos-nome-estilo { color: var(--n1); }
+.cos-n-gradiente, .cos-n-gradiente-movel, .cos-n-brilho {
+  background-image: linear-gradient(90deg, var(--n1), var(--n2) 50%, var(--n3));
+  background-size: 100% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+.cos-n-gradiente-movel { background-image: linear-gradient(90deg, var(--n1), var(--n2), var(--n3), var(--n1)); background-size: 300% 100%; }
+.cos-anim.cos-n-gradiente-movel { animation: cos-n-mover 6s linear infinite; }
+@keyframes cos-n-mover { from { background-position: 0% 0; } to { background-position: 300% 0; } }
+.cos-n-brilho {
+  background-image: linear-gradient(100deg, var(--n1) 0 38%, color-mix(in srgb, var(--n2) 40%, #fff) 50%, var(--n1) 62% 100%), linear-gradient(90deg, var(--n1), var(--n2));
+  background-size: 260% 100%, 100% 100%;
+  background-position: 100% 0, 0 0;
+}
+.cos-anim.cos-n-brilho { animation: cos-n-brilho 4.5s ease-in-out infinite; }
+@keyframes cos-n-brilho { 0%, 35% { background-position: 100% 0, 0 0; } 75%, 100% { background-position: 0% 0, 0 0; } }
+.cos-n-glow { text-shadow: 0 0 0.35em color-mix(in srgb, var(--n2) 75%, transparent), 0 0 0.9em color-mix(in srgb, var(--n2) 40%, transparent); }
+.cos-n-pulso { text-shadow: 0 0 0.3em color-mix(in srgb, var(--n2) 60%, transparent); }
+.cos-anim.cos-n-pulso { animation: cos-n-pulso 2.8s ease-in-out infinite; }
+@keyframes cos-n-pulso {
+  0%, 100% { text-shadow: 0 0 0.2em color-mix(in srgb, var(--n2) 40%, transparent); }
+  50% { text-shadow: 0 0 0.45em var(--n2), 0 0 1.1em color-mix(in srgb, var(--n2) 55%, transparent); }
+}
+.cos-n-neon {
+  color: color-mix(in srgb, var(--n1) 35%, #fff);
+  text-shadow: 0 0 0.08em #fff, 0 0 0.25em var(--n1), 0 0 0.6em var(--n1), 0 0 1.1em color-mix(in srgb, var(--n2) 70%, transparent);
+}
+.cos-anim.cos-n-neon { animation: cos-n-neon 7s linear infinite; }
+@keyframes cos-n-neon { 0%, 91%, 95%, 100% { opacity: 1; } 92%, 94% { opacity: 0.55; } }
+.cos-n-toon {
+  -webkit-text-stroke: 0.07em var(--n2);
+  paint-order: stroke fill;
+  text-shadow: 0 0.09em 0 var(--n2), 0 0.11em 0 color-mix(in srgb, var(--n2) 60%, #000);
+  letter-spacing: 0.01em;
+}
+
+/* ── Borda do perfil (categoria borda): fundo e acabamento do card do Record e do miniperfil ──
+ * Três camadas por estilo (--b1/--b2/--b3) + aro. Animação leve só em .cos-anim. */
+.cos-borda { background: #0f0f12; }
+.cos-b-camada, .cos-b-aro { position: absolute; inset: 0; pointer-events: none; }
+.cos-b-aro { box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--b1) 70%, transparent), inset 0 0 0 4px rgba(10, 10, 12, 0.6), inset 0 0 0 5px color-mix(in srgb, var(--b2) 55%, transparent), inset 0 0 40px -10px color-mix(in srgb, var(--b2) 45%, transparent); }
+
+/* aço escovado com filete champanhe */
+.cos-b-aco .cos-b-1 { background: linear-gradient(160deg, #3a3a40, #17171a 55%, #26262b); }
+.cos-b-aco .cos-b-2 { background: repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.025) 0 1px, transparent 1px 3px); }
+.cos-b-aco .cos-b-3 { background: radial-gradient(60% 90% at 80% 0%, color-mix(in srgb, var(--b1) 28%, transparent), transparent 70%); }
+
+/* veludo cor de vinho com filigrana dourada */
+.cos-b-veludo .cos-b-1 { background: radial-gradient(120% 90% at 50% 0%, color-mix(in srgb, var(--b2) 70%, #000), #0d0709 75%); }
+.cos-b-veludo .cos-b-2 { background: repeating-radial-gradient(circle at 50% 120%, transparent 0 18px, color-mix(in srgb, var(--b1) 10%, transparent) 18px 19px); }
+.cos-b-veludo .cos-b-3 { background: linear-gradient(90deg, color-mix(in srgb, var(--b1) 45%, transparent), transparent 10% 90%, color-mix(in srgb, var(--b1) 45%, transparent)); mask: linear-gradient(#000 0 2px, transparent 2px calc(100% - 2px), #000 calc(100% - 2px)); }
+
+/* vitral: painéis de cor com chumbo */
+.cos-b-vitral .cos-b-1 { background: conic-gradient(from 200deg at 50% 110%, var(--b1), var(--b2), var(--b3), var(--b1), var(--b2)); opacity: 0.55; filter: saturate(0.85); }
+.cos-b-vitral .cos-b-2 { background: repeating-conic-gradient(from 0deg at 50% 110%, transparent 0 11deg, rgba(8, 8, 10, 0.9) 11deg 12deg), repeating-radial-gradient(circle at 50% 110%, transparent 0 34px, rgba(8, 8, 10, 0.9) 34px 36px); }
+.cos-b-vitral .cos-b-3 { background: radial-gradient(70% 60% at 50% 0%, rgba(255, 245, 230, 0.16), transparent 70%); }
+.cos-anim.cos-b-vitral .cos-b-3 { animation: cos-b-luz 6s ease-in-out infinite alternate; }
+
+/* brasas subindo */
+.cos-b-brasas .cos-b-1 { background: radial-gradient(90% 80% at 50% 125%, color-mix(in srgb, var(--b3) 45%, var(--b2)), color-mix(in srgb, var(--b2) 60%, #000) 45%, #0b0708 85%); }
+.cos-b-brasas .cos-b-2, .cos-b-brasas .cos-b-3 {
+  background-image: radial-gradient(3px 3px at 12% 80%, var(--b1), transparent), radial-gradient(2.5px 2.5px at 26% 55%, var(--b3), transparent), radial-gradient(2px 2px at 34% 70%, var(--b1), transparent), radial-gradient(3px 3px at 47% 88%, var(--b3), transparent), radial-gradient(2px 2px at 58% 62%, var(--b1), transparent), radial-gradient(3px 3px at 69% 78%, var(--b1), transparent), radial-gradient(2.5px 2.5px at 81% 58%, var(--b3), transparent), radial-gradient(3px 3px at 92% 84%, var(--b1), transparent);
+  filter: drop-shadow(0 0 3px var(--b3));
+  background-size: 100% 100%;
+}
+.cos-b-brasas .cos-b-3 { transform: translate(18%, 30%); opacity: 0.7; }
+.cos-anim.cos-b-brasas .cos-b-2 { animation: cos-b-subir 7s linear infinite; }
+.cos-anim.cos-b-brasas .cos-b-3 { animation: cos-b-subir 9s linear infinite -4s; }
+
+/* névoa que passa */
+.cos-b-nevoa .cos-b-1 { background: linear-gradient(180deg, color-mix(in srgb, var(--b2) 45%, #0c0c10), #0c0c10); }
+.cos-b-nevoa .cos-b-2, .cos-b-nevoa .cos-b-3 { background: radial-gradient(40% 35% at 20% 70%, color-mix(in srgb, var(--b1) 30%, transparent), transparent 70%), radial-gradient(45% 30% at 75% 40%, color-mix(in srgb, var(--b1) 22%, transparent), transparent 70%); width: 200%; }
+.cos-b-nevoa .cos-b-3 { opacity: 0.6; transform: translateX(-30%); }
+.cos-anim.cos-b-nevoa .cos-b-2 { animation: cos-b-nevoa 26s linear infinite; }
+.cos-anim.cos-b-nevoa .cos-b-3 { animation: cos-b-nevoa 38s linear infinite reverse; }
+
+/* constelação */
+.cos-b-constelacao .cos-b-1 { background: radial-gradient(100% 80% at 30% 0%, color-mix(in srgb, var(--b2) 55%, #07070c), #07070c 80%); }
+.cos-b-constelacao .cos-b-2 {
+  background-image: radial-gradient(2px 2px at 10% 30%, #fff, transparent), radial-gradient(1.5px 1.5px at 25% 70%, var(--b1), transparent), radial-gradient(2.5px 2.5px at 48% 22%, #fff, transparent), radial-gradient(1.5px 1.5px at 62% 58%, var(--b1), transparent), radial-gradient(2px 2px at 80% 35%, #fff, transparent), radial-gradient(1.5px 1.5px at 92% 78%, var(--b3), transparent), radial-gradient(1.5px 1.5px at 37% 45%, #fff, transparent), radial-gradient(1px 1px at 18% 12%, #fff, transparent), radial-gradient(1px 1px at 70% 15%, var(--b3), transparent), radial-gradient(1px 1px at 55% 85%, #fff, transparent), radial-gradient(1px 1px at 86% 60%, #fff, transparent);
+  filter: drop-shadow(0 0 2px #fff);
+}
+.cos-b-constelacao .cos-b-3 { background: linear-gradient(28deg, transparent 47%, color-mix(in srgb, var(--b1) 16%, transparent) 47.3% 47.5%, transparent 47.8%), linear-gradient(-18deg, transparent 60%, color-mix(in srgb, var(--b1) 14%, transparent) 60.3% 60.5%, transparent 60.8%), radial-gradient(60% 90% at 70% 0%, color-mix(in srgb, var(--b3) 18%, transparent), transparent 70%); }
+.cos-anim.cos-b-constelacao .cos-b-2 { animation: cos-pulso 4.5s ease-in-out infinite; }
+
+/* arcano: anel rúnico de ametista */
+.cos-b-arcano .cos-b-1 { background: radial-gradient(80% 90% at 50% 50%, color-mix(in srgb, var(--b2) 40%, #0a0910), #08070c 75%); }
+.cos-b-arcano .cos-b-2 {
+  inset: auto; left: 50%; top: 50%; width: min(78%, 300px); aspect-ratio: 1; translate: -50% -50%; border-radius: 50%;
+  background: radial-gradient(circle closest-side, transparent 0 79%, color-mix(in srgb, var(--b1) 60%, transparent) 79.5% 81%, transparent 81.5% 95%, color-mix(in srgb, var(--b1) 45%, transparent) 95.5% 97%, transparent 97.5%);
+}
+.cos-b-arcano .cos-b-2::before {
+  content: ''; position: absolute; inset: 0; border-radius: 50%;
+  background: repeating-conic-gradient(color-mix(in srgb, var(--b1) 70%, transparent) 0 1.4deg, transparent 1.4deg 10deg);
+  mask: radial-gradient(circle closest-side, transparent 0 84%, #000 85% 92%, transparent 93%);
+}
+.cos-b-arcano .cos-b-3 { background: radial-gradient(35% 60% at 50% 50%, color-mix(in srgb, var(--b3) 40%, transparent), transparent 70%); }
+.cos-anim.cos-b-arcano .cos-b-2 { animation: cos-giro 60s linear infinite; }
+
+@keyframes cos-b-luz { from { opacity: 0.6; } to { opacity: 1; } }
+@keyframes cos-b-subir { from { transform: translateY(20%); opacity: 0; } 15% { opacity: 1; } to { transform: translateY(-40%); opacity: 0; } }
+@keyframes cos-b-nevoa { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+/* Miniperfil (estrutura de card de perfil à Wild Rift): folha que sobe no celular, cartão que surge no desktop. */
+.cos-folha { animation: cos-folha-sobe 0.34s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+@media (min-width: 640px) { .cos-folha { animation-name: cos-folha-surge; } }
+@keyframes cos-folha-sobe { from { transform: translateY(100%); } to { transform: none; } }
+@keyframes cos-folha-surge { from { opacity: 0; transform: translateY(14px) scale(0.98); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .cos-folha { animation: none; } }
+
 @media (prefers-reduced-motion: reduce) {
   .cos-anim *, .cos-anim { animation: none !important; }
 }

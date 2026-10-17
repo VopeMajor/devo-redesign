@@ -343,3 +343,61 @@ SELECT 'cosmetico.item_removido', d.key, jsonb_build_object('motivo', 'Rosa do D
        'definicao', to_jsonb(d))
   FROM item_defs d WHERE d.key = ANY(ARRAY['cosmetico:moldura-rosa-destino', 'cosmetico:mini-rosa-destino', 'cosmetico:balao-rosa-destino']);
 DELETE FROM item_defs WHERE key = ANY(ARRAY['cosmetico:moldura-rosa-destino', 'cosmetico:mini-rosa-destino', 'cosmetico:balao-rosa-destino']);
+
+
+-- ---------------------------------------------------------------------------------------------
+-- 10. Pedido do dono (17/10): estilo do nome (à moda do Discord), borda do perfil e mais balões.
+--     • `efeito` passa a se chamar "Nome" na coleção: além dos três efeitos antigos, estilos com fonte + cor/gradiente
+--       + efeito em meta.nome = {fonte, cores, efeito} (listas fixas em lib/devo/cosmeticos.ts; nada de CSS livre).
+--     • Novo espaço `borda` (borda do perfil: card do Record e do miniperfil), meta.borda = {estilo, cores, animada}.
+--     • Balões e bordas marcados meta.provisorio: desenhados em CSS até a arte pintada chegar do agente de arte
+--       (public/images/cosmeticos/<id>/…); aí um UPDATE troca o asset para 'img:…' e a arte assume.
+-- ---------------------------------------------------------------------------------------------
+ALTER TABLE player_cosmetics ADD COLUMN IF NOT EXISTS borda text REFERENCES item_defs(key) ON UPDATE CASCADE ON DELETE SET NULL;
+
+INSERT INTO item_defs (key, kind, name, description, rarity, stackable, meta) VALUES
+  ('cosmetico:nome-pergaminho-real', 'cosmetico', 'Pergaminho Real', 'Letras de chancelaria em tinta sépia e ouro baço.', 'incomum', false,
+   '{"categoria": "efeito", "asset": "devo:nome/pergaminho-real", "nome": {"fonte": "real", "cores": ["#ece5d8", "#bab09f"], "efeito": "gradiente"}, "animado": false, "poco": true, "origem": "poco", "ordem": 10}'),
+  ('cosmetico:nome-tinta-gotica', 'cosmetico', 'Tinta Gótica', 'O nome em letra negra, como num registro antigo.', 'comum', false,
+   '{"categoria": "efeito", "asset": "devo:nome/tinta-gotica", "nome": {"fonte": "gotica", "cores": ["#d9d8d4"], "efeito": "nenhum"}, "animado": false, "poco": true, "origem": "poco", "ordem": 11}'),
+  ('cosmetico:nome-fliperama', 'cosmetico', 'Fliperama', 'Letra de fliperama que pulsa devagar, verde de tela velha.', 'incomum', false,
+   '{"categoria": "efeito", "asset": "devo:nome/fliperama", "nome": {"fonte": "pixel", "cores": ["#7cf2c8", "#2a7a5e"], "efeito": "pulso"}, "animado": true, "poco": true, "origem": "poco", "ordem": 12}'),
+  ('cosmetico:nome-vela-funebre', 'cosmetico', 'Vela Fúnebre', 'Pergaminho à luz de vela: o brilho sobe e desce.', 'raro', false,
+   '{"categoria": "efeito", "asset": "devo:nome/vela-funebre", "nome": {"fonte": "pergaminho", "cores": ["#f2d39b", "#c26a1c"], "efeito": "pulso"}, "animado": true, "poco": true, "origem": "poco", "ordem": 13}'),
+  ('cosmetico:nome-corsario', 'cosmetico', 'Corsário', 'Letra de mapa de pirata, contornada como cartaz.', 'raro', false,
+   '{"categoria": "efeito", "asset": "devo:nome/corsario", "nome": {"fonte": "pirata", "cores": ["#e2c27a", "#3a240c"], "efeito": "toon"}, "animado": false, "poco": true, "origem": "poco", "ordem": 14}'),
+  ('cosmetico:nome-caligrafia-noturna', 'cosmetico', 'Caligrafia Noturna', 'Traço de pena com um halo de ametista.', 'raro', false,
+   '{"categoria": "efeito", "asset": "devo:nome/caligrafia-noturna", "nome": {"fonte": "caligrafia", "cores": ["#f1e7e9", "#8a7cc8"], "efeito": "glow"}, "animado": false, "poco": true, "origem": "poco", "ordem": 15}'),
+  ('cosmetico:nome-veu-ametista', 'cosmetico', 'Véu de Ametista', 'Capitulares com um reflexo que atravessa o nome.', 'raro', false,
+   '{"categoria": "efeito", "asset": "devo:nome/veu-ametista", "nome": {"fonte": "decorativa", "cores": ["#c2b9ec", "#8a7cc8", "#efe9ff"], "efeito": "brilho"}, "animado": true, "poco": true, "origem": "poco", "ordem": 16}'),
+  ('cosmetico:nome-champanhe', 'cosmetico', 'Aço Champanhe', 'Champanhe e aço em gradiente que corre devagar.', 'epico', false,
+   '{"categoria": "efeito", "asset": "devo:nome/champanhe", "nome": {"fonte": "classica", "cores": ["#e3d3ae", "#9aa0b4", "#fff6e0"], "efeito": "gradiente-movel"}, "animado": true, "poco": false, "origem": "semanal", "ordem": 17}'),
+  ('cosmetico:nome-sangue-neon', 'cosmetico', 'Letreiro de Sangue', 'Neon vermelho de cassino, com uma falha de vez em quando.', 'epico', false,
+   '{"categoria": "efeito", "asset": "devo:nome/sangue-neon", "nome": {"fonte": "impacto", "cores": ["#ff3a5c", "#a3121f"], "efeito": "neon"}, "animado": true, "poco": false, "origem": "deadly_vote", "ordem": 18}'),
+  ('cosmetico:nome-aurora-arcana', 'cosmetico', 'Aurora Arcana', 'Ametista, rosa-seco e champanhe correndo pelo nome.', 'lendario', false,
+   '{"categoria": "efeito", "asset": "devo:nome/aurora-arcana", "nome": {"fonte": "real", "cores": ["#8a7cc8", "#c98a95", "#e3d3ae"], "efeito": "gradiente-movel"}, "animado": true, "poco": false, "origem": "evento", "ordem": 19}'),
+  ('cosmetico:borda-aco-escovado', 'cosmetico', 'Aço Escovado', 'Aço escuro com filete champanhe. Discreta.', 'comum', false,
+   '{"categoria": "borda", "asset": "devo:borda/aco-escovado", "borda": {"estilo": "aco", "cores": ["#bab09f", "#8a7cc8"], "animada": false}, "animado": false, "poco": true, "origem": "poco", "ordem": 10, "provisorio": true}'),
+  ('cosmetico:borda-veludo-carmesim', 'cosmetico', 'Veludo Carmesim', 'Veludo cor de vinho com filigrana dourada.', 'raro', false,
+   '{"categoria": "borda", "asset": "devo:borda/veludo-carmesim", "borda": {"estilo": "veludo", "cores": ["#e3d3ae", "#5c1424"], "animada": false}, "animado": false, "poco": true, "origem": "poco", "ordem": 11, "provisorio": true}'),
+  ('cosmetico:borda-nevoa-cemiterio', 'cosmetico', 'Névoa do Cemitério', 'Uma névoa fria que passa devagar atrás do nome.', 'raro', false,
+   '{"categoria": "borda", "asset": "devo:borda/nevoa-cemiterio", "borda": {"estilo": "nevoa", "cores": ["#c9ccd6", "#2a2f3a"], "animada": true}, "animado": true, "poco": true, "origem": "poco", "ordem": 12, "provisorio": true}'),
+  ('cosmetico:borda-vitral-capela', 'cosmetico', 'Vitral da Capela', 'Vitrais de capela com luz que respira.', 'epico', false,
+   '{"categoria": "borda", "asset": "devo:borda/vitral-capela", "borda": {"estilo": "vitral", "cores": ["#8a7cc8", "#a3121f", "#2f5a8a"], "animada": true}, "animado": true, "poco": false, "origem": "semanal", "ordem": 13, "provisorio": true}'),
+  ('cosmetico:borda-brasas', 'cosmetico', 'Brasas', 'Brasas subindo de um fundo em carvão.', 'epico', false,
+   '{"categoria": "borda", "asset": "devo:borda/brasas", "borda": {"estilo": "brasas", "cores": ["#ffb36b", "#5c1a10", "#ff6a3d"], "animada": true}, "animado": true, "poco": false, "origem": "deadly_vote", "ordem": 14, "provisorio": true}'),
+  ('cosmetico:borda-constelacao', 'cosmetico', 'Constelação', 'Céu de estrelas que piscam, ligadas por linhas finas.', 'lendario', false,
+   '{"categoria": "borda", "asset": "devo:borda/constelacao", "borda": {"estilo": "constelacao", "cores": ["#e3d3ae", "#2a2448", "#c2b9ec"], "animada": true}, "animado": true, "poco": false, "origem": "evento", "ordem": 15, "provisorio": true}'),
+  ('cosmetico:borda-circulo-arcano', 'cosmetico', 'Círculo Arcano', 'Um anel rúnico de ametista girando sem pressa.', 'arcano', false,
+   '{"categoria": "borda", "asset": "devo:borda/circulo-arcano", "borda": {"estilo": "arcano", "cores": ["#c2b9ec", "#3b2f6b", "#8a7cc8"], "animada": true}, "animado": true, "poco": false, "origem": "evento", "ordem": 16, "provisorio": true}'),
+  ('cosmetico:balao-cinza-fumaca', 'cosmetico', 'Cinza Fumaça', 'Fumaça fria com filete de aço.', 'comum', false,
+   '{"categoria": "balao", "asset": "devo:balao/cinza-fumaca", "balao": {"fundo": "#1c1d22", "borda": "#5d6070", "texto": "#e6e7ec", "filete": "#9aa0b4"}, "animado": false, "poco": true, "origem": "poco", "ordem": 40, "provisorio": true}'),
+  ('cosmetico:balao-aco-champanhe', 'cosmetico', 'Aço Champanhe', 'Aço escuro com filete champanhe.', 'incomum', false,
+   '{"categoria": "balao", "asset": "devo:balao/aco-champanhe", "balao": {"fundo": "#2a2926", "borda": "#bab09f", "texto": "#f3eee4", "filete": "#e3d3ae"}, "animado": false, "poco": true, "origem": "poco", "ordem": 41, "provisorio": true}'),
+  ('cosmetico:balao-veu-ametista', 'cosmetico', 'Véu de Ametista', 'Roxo profundo com um fio de ametista.', 'raro', false,
+   '{"categoria": "balao", "asset": "devo:balao/veu-ametista", "balao": {"fundo": "#241d38", "borda": "#8a7cc8", "texto": "#efe9ff", "filete": "#c2b9ec"}, "animado": false, "poco": true, "origem": "poco", "ordem": 42, "provisorio": true}'),
+  ('cosmetico:balao-tinta-vinho', 'cosmetico', 'Tinta de Vinho', 'Vinho escuro com borda de sangue.', 'raro', false,
+   '{"categoria": "balao", "asset": "devo:balao/tinta-vinho", "balao": {"fundo": "#3a0f18", "borda": "#a3121f", "texto": "#f1e7e9", "filete": "#c98a95"}, "animado": false, "poco": true, "origem": "poco", "ordem": 43, "provisorio": true}'),
+  ('cosmetico:balao-ouro-velho', 'cosmetico', 'Ouro Velho', 'Papel de cartório com moldura de ouro gasto.', 'epico', false,
+   '{"categoria": "balao", "asset": "devo:balao/ouro-velho", "balao": {"fundo": "#e9dfc6", "borda": "#8a6a2a", "texto": "#2a2320", "filete": "#b8923a"}, "animado": false, "poco": false, "origem": "semanal", "ordem": 44, "provisorio": true}')
+ON CONFLICT (key) DO NOTHING;

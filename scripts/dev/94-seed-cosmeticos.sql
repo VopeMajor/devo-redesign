@@ -84,3 +84,30 @@ FROM unnest(ARRAY['cosmetico:moldura-catedral-esquecida', 'cosmetico:mini-catedr
 UPDATE player_cosmetics SET moldura_avatar = 'cosmetico:moldura-catedral-esquecida', moldura_mini = 'cosmetico:mini-catedral-esquecida',
        balao = 'cosmetico:balao-ecos-arcano'
  WHERE player_id = '00000000-0000-4000-8000-000000000005';
+
+-- Pedido do dono (17/10): estilos de nome, bordas de perfil e balões novos espalhados pelo seed, para o chat, o
+-- ranking, o Record e o miniperfil mostrarem combinações diferentes. Sentinela (Owner) equipa sem possuir.
+SELECT devo_item_grant(x.id::uuid, 'cosmetico:' || x.k, 1, 'recompensa', NULL, NULL, 'seed:cos4:' || x.id || ':' || x.k)
+FROM (VALUES
+  ('00000000-0000-4000-8000-000000000003', 'nome-champanhe'), ('00000000-0000-4000-8000-000000000003', 'borda-constelacao'),
+  ('00000000-0000-4000-8000-000000000003', 'nome-tinta-gotica'), ('00000000-0000-4000-8000-000000000003', 'borda-aco-escovado'),
+  ('00000000-0000-4000-8000-000000000003', 'balao-cinza-fumaca'),
+  ('00000000-0000-4000-8000-000000000002', 'nome-aurora-arcana'), ('00000000-0000-4000-8000-000000000002', 'borda-veludo-carmesim'),
+  ('00000000-0000-4000-8000-000000000001', 'nome-corsario'), ('00000000-0000-4000-8000-000000000001', 'borda-nevoa-cemiterio'),
+  ('00000000-0000-4000-8000-000000000005', 'nome-veu-ametista'), ('00000000-0000-4000-8000-000000000005', 'borda-vitral-capela'),
+  ('00000000-0000-4000-8000-000000000005', 'balao-veu-ametista'),
+  ('00000000-0000-4000-8000-000000000004', 'nome-fliperama'), ('00000000-0000-4000-8000-000000000004', 'borda-brasas'),
+  ('00000000-0000-4000-8000-000000000004', 'balao-ouro-velho'),
+  ('00000000-0000-4000-8000-000000000011', 'borda-circulo-arcano')
+) AS x(id, k);
+UPDATE player_cosmetics pc SET efeito = x.ef, borda = x.bo, balao = coalesce(x.ba, pc.balao)
+  FROM (VALUES
+    ('00000000-0000-4000-8000-000000000003', 'cosmetico:nome-champanhe', 'cosmetico:borda-constelacao', NULL),
+    ('00000000-0000-4000-8000-000000000002', 'cosmetico:nome-aurora-arcana', 'cosmetico:borda-veludo-carmesim', NULL),
+    ('00000000-0000-4000-8000-000000000001', 'cosmetico:nome-corsario', 'cosmetico:borda-nevoa-cemiterio', NULL),
+    ('00000000-0000-4000-8000-000000000005', 'cosmetico:nome-veu-ametista', 'cosmetico:borda-vitral-capela', 'cosmetico:balao-veu-ametista'),
+    ('00000000-0000-4000-8000-000000000004', 'cosmetico:nome-fliperama', 'cosmetico:borda-brasas', 'cosmetico:balao-ouro-velho'),
+    ('00000000-0000-4000-8000-000000000011', NULL, 'cosmetico:borda-circulo-arcano', NULL),
+    ('00000000-0000-4000-8000-000000000010', 'cosmetico:nome-sangue-neon', 'cosmetico:borda-circulo-arcano', NULL)
+  ) AS x(id, ef, bo, ba)
+ WHERE pc.player_id = x.id::uuid;

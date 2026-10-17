@@ -220,7 +220,10 @@ await test('Dealer não gera convites; Jogador gera 1 (cota) e não fica negativ
 await test('/api/eu: Jogador trancado, Owner e Anfitrião com tudo liberado, sem karma cru', async () => {
   const p = await j1.get('/api/eu')
   assert(p.status === 200 && p.json.cargo === 'player', `eu: ${p.status}`)
-  assert(Object.values(p.json.desbloqueios).every((v) => v === false), 'jogador novo deveria estar trancado')
+  // Flags livres por padrão (ex.: calendario, FUNDACAO.md §15) nascem abertas; todo o resto fica trancado.
+  const livres = new Set(['calendario'])
+  const presos = Object.entries(p.json.desbloqueios).filter(([k]) => !livres.has(k))
+  assert(presos.every(([, v]) => v === false), `jogador novo deveria estar trancado: ${JSON.stringify(p.json.desbloqueios)}`)
   assert(!('karma' in p.json), 'payload do jogador não expõe o karma cru')
   const o = await owner.get('/api/eu')
   assert(o.json.tudoLiberado === true && o.json.desbloqueios.poco === true, 'owner com tudo liberado')

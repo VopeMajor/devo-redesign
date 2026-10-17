@@ -3,7 +3,9 @@
  * para desenhar; quem decide posse, equipamento e catálogo é `lib/devo/cosmeticos-server.ts`.
  *
  * Os itens vivem no inventário genérico da Fundação (`item_defs` kind 'cosmetico', chave `cosmetico:<id>`):
- *   meta.categoria  moldura_avatar | moldura_mini | emblema | balao | efeito
+ *   meta.categoria  moldura_avatar | moldura_mini | emblema | balao | efeito (estilo do nome) | borda (borda do perfil)
+ *   meta.nome       estilo do nome {fonte, cores, efeito} — só valores das listas fixas abaixo (nada de CSS livre)
+ *   meta.borda      borda do perfil {estilo, cores, animada} — idem; com `asset = 'img:…'` vira arte pintada
  *   meta.asset      'devo:<arte>' (arte desenhada no código, components/devo/cosmeticos/art) ou URL de imagem
  *                   (upload do Owner: '/api/cosmeticos?view=asset&id=<uuid>', ou https)
  *   meta.animado    true quando a arte tem animação (CSS, desligável)
@@ -15,7 +17,7 @@
  */
 import { ITEM_RARITY_LABEL, type ItemRarity } from './progresso'
 
-export const COS_SLOTS = ['moldura_avatar', 'moldura_mini', 'emblema', 'balao', 'efeito'] as const
+export const COS_SLOTS = ['moldura_avatar', 'moldura_mini', 'emblema', 'balao', 'efeito', 'borda'] as const
 export type CosSlot = (typeof COS_SLOTS)[number]
 export type CosCategoria = CosSlot
 
@@ -24,15 +26,20 @@ export const SLOT_LABEL: Record<CosSlot, string> = {
   moldura_mini: 'Moldura do miniperfil',
   emblema: 'Emblema principal',
   balao: 'Balão de chat',
-  efeito: 'Efeito do nome',
+  efeito: 'Estilo do nome',
+  borda: 'Borda do perfil',
 }
 
-/** Abas do inventário (§9): Molduras · Emblemas · Balões · Efeitos especiais. */
+/**
+ * Abas do inventário (§9 + pedido do dono 17/10): Molduras · Emblemas · Balões · Nome · Bordas.
+ * "Nome" é o espaço `efeito` (estilo do nome à moda do Discord: fonte, cor/gradiente e efeito).
+ */
 export const COS_ABAS = [
   { id: 'molduras', label: 'Molduras', slots: ['moldura_avatar', 'moldura_mini'] as CosSlot[] },
   { id: 'emblemas', label: 'Emblemas', slots: ['emblema'] as CosSlot[] },
   { id: 'baloes', label: 'Balões', slots: ['balao'] as CosSlot[] },
-  { id: 'efeitos', label: 'Efeitos', slots: ['efeito'] as CosSlot[] },
+  { id: 'efeitos', label: 'Nome', slots: ['efeito'] as CosSlot[] },
+  { id: 'bordas', label: 'Bordas', slots: ['borda'] as CosSlot[] },
 ] as const
 export type CosAba = (typeof COS_ABAS)[number]['id']
 
@@ -182,13 +189,80 @@ export type CosmeticoDef = {
   active: boolean
   /** arte em imagem (pipeline de arte); quando presente, tem prioridade sobre `asset` */
   imagem: ArteImagem | null
+  /** estilo do nome (categoria `efeito`, à moda do Discord) — só valores das listas fixas */
+  nome?: EstiloNome | null
+  /** borda do perfil (categoria `borda`) desenhada em CSS; com arte pintada, `imagem` cobre o fundo */
+  borda?: BordaPerfil | null
+  /** balão provisório em cores (até a arte chegar do agente de arte) */
+  balaoProv?: BalaoProv | null
+}
+
+/* ── Estilo do nome · borda do perfil · balão provisório ─────────────────────────────────────────────
+ * Tudo vem do catálogo (meta), mas só por CHAVES de listas fixas e cores #rrggbb: o cliente nunca recebe nem
+ * aplica CSS livre. Fontes: Google Fonts servidas pelo próprio app (next/font). */
+
+export const FONTES_NOME = ['padrao', 'classica', 'real', 'gotica', 'pergaminho', 'impacto', 'decorativa', 'pirata', 'caligrafia', 'pixel'] as const
+export type FonteNome = (typeof FONTES_NOME)[number]
+export const FONTE_NOME_LABEL: Record<FonteNome, string> = {
+  padrao: 'Padrão',
+  classica: 'Clássica',
+  real: 'Real',
+  gotica: 'Gótica',
+  pergaminho: 'Pergaminho',
+  impacto: 'Impacto',
+  decorativa: 'Decorativa',
+  pirata: 'Corsária',
+  caligrafia: 'Caligrafia',
+  pixel: 'Pixel',
+}
+/** Efeitos do nome (referência: estilos de nome do Discord). Os de `EFEITOS_NOME_ANIMADOS` só se movem no Record/miniperfil. */
+export const EFEITOS_NOME = ['nenhum', 'gradiente', 'gradiente-movel', 'brilho', 'glow', 'pulso', 'neon', 'toon'] as const
+export type EfeitoNome = (typeof EFEITOS_NOME)[number]
+export const EFEITOS_NOME_ANIMADOS: readonly EfeitoNome[] = ['gradiente-movel', 'brilho', 'pulso', 'neon']
+export type EstiloNome = { fonte: FonteNome; cores: string[]; efeito: EfeitoNome }
+
+export const ESTILOS_BORDA = ['aco', 'veludo', 'vitral', 'brasas', 'nevoa', 'constelacao', 'arcano'] as const
+export type EstiloBorda = (typeof ESTILOS_BORDA)[number]
+export type BordaPerfil = { estilo: EstiloBorda; cores: string[]; animada: boolean }
+
+export type BalaoProv = { fundo: string; borda: string; texto: string; filete: string }
+
+const HEX = /^#[0-9a-f]{6}$/i
+const cores = (v: unknown, max: number) => (Array.isArray(v) ? v.filter((c): c is string => typeof c === 'string' && HEX.test(c)).slice(0, max) : [])
+
+export function lerEstiloNome(raw: unknown): EstiloNome | null {
+  if (!raw || typeof raw !== 'object') return null
+  const r = raw as Record<string, unknown>
+  const cs = cores(r.cores, 3)
+  if (!cs.length) return null
+  return {
+    fonte: (FONTES_NOME as readonly unknown[]).includes(r.fonte) ? (r.fonte as FonteNome) : 'padrao',
+    cores: cs,
+    efeito: (EFEITOS_NOME as readonly unknown[]).includes(r.efeito) ? (r.efeito as EfeitoNome) : 'nenhum',
+  }
+}
+
+export function lerBorda(raw: unknown): BordaPerfil | null {
+  if (!raw || typeof raw !== 'object') return null
+  const r = raw as Record<string, unknown>
+  if (!(ESTILOS_BORDA as readonly unknown[]).includes(r.estilo)) return null
+  const cs = cores(r.cores, 3)
+  return { estilo: r.estilo as EstiloBorda, cores: cs.length >= 2 ? cs : ['#bab09f', '#8a7cc8'], animada: r.animada === true }
+}
+
+export function lerBalaoProv(raw: unknown): BalaoProv | null {
+  if (!raw || typeof raw !== 'object') return null
+  const r = raw as Record<string, unknown>
+  const ok = (k: string) => typeof r[k] === 'string' && HEX.test(r[k] as string)
+  if (!['fundo', 'borda', 'texto', 'filete'].every(ok)) return null
+  return { fundo: r.fundo as string, borda: r.borda as string, texto: r.texto as string, filete: r.filete as string }
 }
 
 /** Item possuído (inventário do próprio jogador). */
 export type CosmeticoPosse = { key: string; source: string | null; firstAt: number; expiresAt: number | null }
 
 export type Equipados = Record<CosSlot, string | null>
-export const EQUIP_VAZIO: Equipados = { moldura_avatar: null, moldura_mini: null, emblema: null, balao: null, efeito: null }
+export const EQUIP_VAZIO: Equipados = { moldura_avatar: null, moldura_mini: null, emblema: null, balao: null, efeito: null, borda: null }
 
 /**
  * Aparência pública de um jogador (vai em qualquer payload público). NUNCA leva cargo de Owner nem
@@ -203,11 +277,13 @@ export type Visual = {
   emb: string | null
   bal: string | null
   ef: string | null
+  /** Borda do perfil (card do Record e do miniperfil). */
+  borda: string | null
   /** Anfitrião (público): selo e brilho próprios. Owner sai sempre como jogador comum. */
   anfitriao: boolean
 }
 
-export const VISUAL_VAZIO = (id: string): Visual => ({ id, foto: null, av: null, mini: null, emb: null, bal: null, ef: null, anfitriao: false })
+export const VISUAL_VAZIO = (id: string): Visual => ({ id, foto: null, av: null, mini: null, emb: null, bal: null, ef: null, borda: null, anfitriao: false })
 
 /** Resposta de GET /api/cosmeticos (somente o próprio jogador). */
 export type MeusCosmeticos = {
@@ -249,6 +325,9 @@ export function toCosmetico(r: { key: string; name: string; description: string 
     ordem: typeof m.ordem === 'number' ? m.ordem : 999,
     active: r.active,
     imagem: imagemDoAsset(typeof m.asset === 'string' ? m.asset : '', m.imagem),
+    nome: categoria === 'efeito' ? lerEstiloNome(m.nome) : null,
+    borda: categoria === 'borda' ? lerBorda(m.borda) : null,
+    balaoProv: categoria === 'balao' ? lerBalaoProv(m.balao) : null,
   }
 }
 
