@@ -1,0 +1,108 @@
+{
+  "pedido": "cal-carnaval",
+  "titulo": "Calendário — Carnaval",
+  "tipo": "ilustracao",
+  "tamanho_final": 1024,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 10521,
+      "passos": null,
+      "segundos": 1.7,
+      "neuronios_estimados": 1364,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "cal-carnaval--v01--1024.png",
+          "bytes": 1032951
+        },
+        {
+          "arquivo": "cal-carnaval--v01--1024.webp",
+          "bytes": 191608
+        },
+        {
+          "arquivo": "cal-carnaval--v01--768.webp",
+          "bytes": 59238
+        },
+        {
+          "arquivo": "cal-carnaval--v01--512.webp",
+          "bytes": 29072
+        },
+        {
+          "arquivo": "cal-carnaval--v01--256.webp",
+          "bytes": 10462
+        }
+      ],
+      "segundos_pos": 1.2,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 10522,
+      "passos": null,
+      "segundos": 1.7,
+      "neuronios_estimados": 1364,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "cal-carnaval--v02--1024.png",
+          "bytes": 926657
+        },
+        {
+          "arquivo": "cal-carnaval--v02--1024.webp",
+          "bytes": 163256
+        },
+        {
+          "arquivo": "cal-carnaval--v02--768.webp",
+          "bytes": 47398
+        },
+        {
+          "arquivo": "cal-carnaval--v02--512.webp",
+          "bytes": 26732
+        },
+        {
+          "arquivo": "cal-carnaval--v02--256.webp",
+          "bytes": 9476
+        }
+      ],
+      "segundos_pos": 1.3,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 10523,
+      "passos": null,
+      "segundos": 1.9,
+      "neuronios_estimados": 1364,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "cal-carnaval--v03--1024.png",
+          "bytes": 1031642
+        },
+        {
+          "arquivo": "cal-carnaval--v03--1024.webp",
+          "bytes": 194272
+        },
+        {
+          "arquivo": "cal-carnaval--v03--768.webp",
+          "bytes": 60898
+        },
+        {
+          "arquivo": "cal-carnaval--v03--512.webp",
+          "bytes": 27970
+        },
+        {
+          "arquivo": "cal-carnaval--v03--256.webp",
+          "bytes": 9524
+        }
+      ],
+      "segundos_pos": 1.2,
+      "avisos": []
+    }
+  ]
+}
