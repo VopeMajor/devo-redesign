@@ -1,0 +1,12 @@
+[moldura-heranca-marfim] v01: @cf/black-forest-labs/flux-2-klein-4b seed=6001 1024x1024 passos=None (~104 neurônios)
+    ok em 17.5s, 1024x1024
+[moldura-heranca-marfim] v02: @cf/black-forest-labs/flux-2-klein-4b seed=6002 1024x1024 passos=None (~104 neurônios)
+    ok em 16.8s, 1024x1024
+[moldura-heranca-marfim] v03: @cf/black-forest-labs/flux-2-klein-4b seed=6003 1024x1024 passos=None (~104 neurônios)
+    ok em 20.7s, 1024x1024
+[moldura-heranca-marfim] v04: @cf/black-forest-labs/flux-2-klein-4b seed=6004 1024x1024 passos=None (~104 neurônios)
+    ok em 20.7s, 1024x1024
+[moldura-heranca-marfim] v01: rembg:birefnet-general; sem avisos
+[moldura-heranca-marfim] v02: rembg:birefnet-general; sem avisos
+[moldura-heranca-marfim] v03: rembg:birefnet-general; sem avisos
+[moldura-heranca-marfim] v04: rembg:birefnet-general; sem avisos

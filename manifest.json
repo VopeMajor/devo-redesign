@@ -1,0 +1,244 @@
+{
+  "pedido": "moldura-heranca-marfim",
+  "titulo": "Herança de Marfim — avatar",
+  "tipo": "moldura",
+  "tamanho_final": 1024,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 6001,
+      "passos": null,
+      "segundos": 17.5,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "miolo_aberto_por_cor": true,
+      "janela": {
+        "forma": "circulo",
+        "centro_px": [
+          512.0,
+          512.0
+        ],
+        "raio_px": [
+          256.0,
+          256.0
+        ],
+        "raio_fracao": [
+          0.25,
+          0.25
+        ]
+      },
+      "reencaixe": {
+        "escala": 1.3403,
+        "cobertura_aro": 1.0
+      },
+      "ornamento_cortado": 0.0,
+      "arquivos": [
+        {
+          "arquivo": "moldura-heranca-marfim--v01--1024.png",
+          "bytes": 766893
+        },
+        {
+          "arquivo": "moldura-heranca-marfim--v01--1024.webp",
+          "bytes": 142912
+        },
+        {
+          "arquivo": "moldura-heranca-marfim--v01--512.webp",
+          "bytes": 55922
+        },
+        {
+          "arquivo": "moldura-heranca-marfim--v01--256.webp",
+          "bytes": 21850
+        },
+        {
+          "arquivo": "moldura-heranca-marfim--v01--96.webp",
+          "bytes": 5740
+        },
+        {
+          "arquivo": "moldura-heranca-marfim--v01--48.webp",
+          "bytes": 2308
+        }
+      ],
+      "segundos_pos": 50.6,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 6002,
+      "passos": null,
+      "segundos": 16.8,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "miolo_aberto_por_cor": true,
+      "ilhas_removidas": 7,
+      "janela": {
+        "forma": "circulo",
+        "centro_px": [
+          512.0,
+          512.0
+        ],
+        "raio_px": [
+          256.0,
+          256.0
+        ],
+        "raio_fracao": [
+          0.25,
+          0.25
+        ]
+      },
+      "reencaixe": {
+        "escala": 1.28,
+        "cobertura_aro": 1.0
+      },
+      "ornamento_cortado": 0.005,
+      "arquivos": [
+        {
+          "arquivo": "moldura-heranca-marfim--v02--1024.png",
+          "bytes": 883832
+        },
+        {
+          "arquivo": "moldura-heranca-marfim--v02--1024.webp",
+          "bytes": 155818
+        },
+        {
+          "arquivo": "moldura-heranca-marfim--v02--512.webp",
+          "bytes": 62284
+        },
+        {
+          "arquivo": "moldura-heranca-marfim--v02--256.webp",
+          "bytes": 23680
+        },
+        {
+          "arquivo": "moldura-heranca-marfim--v02--96.webp",
+          "bytes": 6198
+        },
+        {
+          "arquivo": "moldura-heranca-marfim--v02--48.webp",
+          "bytes": 2442
+        }
+      ],
+      "segundos_pos": 31.6,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 6003,
+      "passos": null,
+      "segundos": 20.7,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "miolo_aberto_por_cor": true,
+      "ilhas_removidas": 24,
+      "janela": {
+        "forma": "circulo",
+        "centro_px": [
+          512.0,
+          512.0
+        ],
+        "raio_px": [
+          256.0,
+          256.0
+        ],
+        "raio_fracao": [
+          0.25,
+          0.25
+        ]
+      },
+      "reencaixe": {
+        "escala": 1.0705,
+        "cobertura_aro": 1.0
+      },
+      "ornamento_cortado": 0.0,
+      "arquivos": [
+        {
+          "arquivo": "moldura-heranca-marfim--v03--1024.png",
+          "bytes": 595002
+        },
+        {
+          "arquivo": "moldura-heranca-marfim--v03--1024.webp",
+          "bytes": 117838
+        },
+        {
+          "arquivo": "moldura-heranca-marfim--v03--512.webp",
+          "bytes": 46368
+        },
+        {
+          "arquivo": "moldura-heranca-marfim--v03--256.webp",
+          "bytes": 17778
+        },
+        {
+          "arquivo": "moldura-heranca-marfim--v03--96.webp",
+          "bytes": 4884
+        },
+        {
+          "arquivo": "moldura-heranca-marfim--v03--48.webp",
+          "bytes": 2140
+        }
+      ],
+      "segundos_pos": 29.7,
+      "avisos": []
+    },
+    {
+      "nome": "v04",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 6004,
+      "passos": null,
+      "segundos": 20.7,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "miolo_aberto_por_cor": true,
+      "ilhas_removidas": 79,
+      "janela": {
+        "forma": "circulo",
+        "centro_px": [
+          512.0,
+          512.0
+        ],
+        "raio_px": [
+          256.0,
+          256.0
+        ],
+        "raio_fracao": [
+          0.25,
+          0.25
+        ]
+      },
+      "reencaixe": {
+        "escala": 1.1278,
+        "cobertura_aro": 1.0
+      },
+      "ornamento_cortado": 0.0001,
+      "arquivos": [
+        {
+          "arquivo": "moldura-heranca-marfim--v04--1024.png",
+          "bytes": 650658
+        },
+        {
+          "arquivo": "moldura-heranca-marfim--v04--1024.webp",
+          "bytes": 137334
+        },
+        {
+          "arquivo": "moldura-heranca-marfim--v04--512.webp",
+          "bytes": 55506
+        },
+        {
+          "arquivo": "moldura-heranca-marfim--v04--256.webp",
+          "bytes": 21086
+        },
+        {
+          "arquivo": "moldura-heranca-marfim--v04--96.webp",
+          "bytes": 5560
+        },
+        {
+          "arquivo": "moldura-heranca-marfim--v04--48.webp",
+          "bytes": 2252
+        }
+      ],
+      "segundos_pos": 30.8,
+      "avisos": []
+    }
+  ]
+}
