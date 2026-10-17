@@ -1,0 +1,89 @@
+{
+  "id": "rosa-do-destino-avatar",
+  "titulo": "Rosa do Destino — avatar (importado)",
+  "tipo": "moldura",
+  "importar": "arte/importados/rosa-do-destino-avatar.png",
+  "pos": {
+    "remover_fundo": true,
+    "modelo_fundo": "birefnet-general",
+    "fundo": "quadriculado",
+    "tamanho_final": 1024,
+    "molde": {
+      "forma": "circulo",
+      "centro": [
+        0.5,
+        0.5
+      ],
+      "raio": 0.25,
+      "sombra": 0.35,
+      "largura_sombra": 0.045
+    },
+    "camadas": [
+      {
+        "nome": "gema",
+        "matiz": [
+          340,
+          15
+        ],
+        "sat_min": 0.6,
+        "val_min": 0.55,
+        "animacao": "brilho"
+      }
+    ],
+    "retoque": [
+      {
+        "caixa": [
+          0.57,
+          0.79,
+          0.71,
+          0.87
+        ],
+        "modo": "palido"
+      },
+      {
+        "caixa": [
+          0.53,
+          0.06,
+          0.64,
+          0.14
+        ],
+        "modo": "palido"
+      },
+      {
+        "caixa": [
+          0.09,
+          0.18,
+          0.21,
+          0.3
+        ],
+        "modo": "palido"
+      }
+    ],
+    "derivados": [
+      512,
+      256,
+      96,
+      48
+    ],
+    "margem": 0.03
+  },
+  "prompt": "",
+  "modelo": "importado",
+  "variacoes": [
+    {
+      "seed": 0,
+      "modelo": "importado",
+      "passos": null,
+      "largura": 1024,
+      "altura": 1024,
+      "prompt_extra": "",
+      "n": 1
+    }
+  ],
+  "negative": "",
+  "largura": 1024,
+  "altura": 1024,
+  "passos": null,
+  "guidance": null,
+  "referencias": []
+}

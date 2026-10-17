@@ -1,0 +1,100 @@
+{
+  "pedido": "rosa-do-destino-avatar",
+  "titulo": "Rosa do Destino — avatar (importado)",
+  "tipo": "moldura",
+  "tamanho_final": 1024,
+  "importado": "arte/importados/rosa-do-destino-avatar.png",
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "importado",
+      "seed": 0,
+      "passos": null,
+      "fundo": "quadriculado+rembg:birefnet-general",
+      "ilhas_removidas": 98,
+      "franja_aparada_px": 43191,
+      "beira_recolorida_px": 49036,
+      "janela": {
+        "forma": "circulo",
+        "centro_px": [
+          512.0,
+          512.0
+        ],
+        "raio_px": [
+          256.0,
+          256.0
+        ],
+        "raio_fracao": [
+          0.25,
+          0.25
+        ]
+      },
+      "reencaixe": {
+        "escala": 0.8,
+        "cobertura_aro": 1.0
+      },
+      "ornamento_cortado": 0.0001,
+      "polimento": {
+        "nevoa_px": 4269,
+        "pontos_px": 981,
+        "ilhas_px": 163
+      },
+      "retoques": 3,
+      "arquivos": [
+        {
+          "arquivo": "rosa-do-destino-avatar--v01--1024.png",
+          "bytes": 1459003
+        },
+        {
+          "arquivo": "rosa-do-destino-avatar--v01--1024.webp",
+          "bytes": 360654
+        },
+        {
+          "arquivo": "rosa-do-destino-avatar--v01--512.webp",
+          "bytes": 119174
+        },
+        {
+          "arquivo": "rosa-do-destino-avatar--v01--256.webp",
+          "bytes": 38962
+        },
+        {
+          "arquivo": "rosa-do-destino-avatar--v01--96.webp",
+          "bytes": 8830
+        },
+        {
+          "arquivo": "rosa-do-destino-avatar--v01--48.webp",
+          "bytes": 3040
+        },
+        {
+          "arquivo": "rosa-do-destino-avatar--v01--gema--1024.webp",
+          "bytes": 77692
+        },
+        {
+          "arquivo": "rosa-do-destino-avatar--v01--gema--512.webp",
+          "bytes": 34936
+        },
+        {
+          "arquivo": "rosa-do-destino-avatar--v01--gema--256.webp",
+          "bytes": 15088
+        },
+        {
+          "arquivo": "rosa-do-destino-avatar--v01--gema--96.webp",
+          "bytes": 4908
+        },
+        {
+          "arquivo": "rosa-do-destino-avatar--v01--gema--48.webp",
+          "bytes": 2122
+        }
+      ],
+      "camadas": [
+        {
+          "nome": "gema",
+          "animacao": "brilho",
+          "cobertura": 0.0303
+        }
+      ],
+      "segundos_pos": 58.5,
+      "avisos": []
+    }
+  ]
+}
