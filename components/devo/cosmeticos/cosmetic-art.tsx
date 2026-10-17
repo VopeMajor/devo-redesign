@@ -101,6 +101,13 @@ const JANELA = { avatar: { x: 10, y: 10, w: 80, h: 80 }, mini: { x: 100 / 6, y: 
 const FOTO_IMG = { avatar: 0.66, mini: 0.62 }
 const SOBRA_FOTO = 1.04
 
+/** Recorte da foto sob a janela: elipse (círculo/oval) ou quadrado com o arredondamento do manifest. */
+function cantoFoto(jan: { forma: string; raio: [number, number]; raio_canto?: number }): string {
+  if (jan.forma !== 'quadrado') return '50%'
+  const r = (jan.raio_canto ?? 0.04) / (2 * jan.raio[0] * SOBRA_FOTO)
+  return `${Math.round(r * 1000) / 10}%`
+}
+
 function FotoVazia({ vazio }: { vazio?: ReactNode }) {
   return (
     vazio ?? (
@@ -165,7 +172,9 @@ export function FotoMoldurada({
       <span className={cn('relative inline-block shrink-0 align-middle', className)} style={style}>
         <span className="absolute inset-0 grid place-items-center">
           <span className={cn('relative', anim && 'cos-anim')} style={{ width: `${d * 100}%`, aspectRatio: `${aspecto}` }}>
-            <span className="absolute inset-0 overflow-hidden rounded-[50%] bg-dv-ink-2">{foto}</span>
+            <span className="absolute inset-0 overflow-hidden bg-dv-ink-2" style={{ borderRadius: cantoFoto(jan) }}>
+              {foto}
+            </span>
             <span
               className="pointer-events-none absolute"
               style={{ width: `${k * 100}%`, aspectRatio: '1 / 1', left: `${(0.5 - jan.centro[0] * k) * 100}%`, top: `${(0.5 - jan.centro[1] * k * aspecto) * 100}%` }}

@@ -76,7 +76,8 @@ export const RARIDADE_PADRAO: Record<ItemRarity, RaridadeVisual> = {
  * Arte em imagem (pipeline de arte — infra/arte, docs/redesign/ARTE-PIPELINE.md). Vai em `meta.imagem`:
  *   base      caminho sem sufixo: '/images/cosmeticos/<id>/<peca>' → `${base}-${lado}.webp`
  *   tamanhos  lados disponíveis (px), ex. [48, 96, 256, 512, 1024]
- *   janela    abertura da moldura em fração do lado da imagem (do manifest do pipeline)
+ *   janela    abertura da moldura em fração do lado da imagem (do manifest do pipeline); círculo, oval ou
+ *             quadrado (miniperfil: raio = meio lado, raio_canto = arredondamento dos cantos)
  *   camadas   peças separadas animadas por CSS (ponteiro, engrenagem, gema, pena…), em fração da imagem
  *   slice     balão 9-slice: cantos fixos, bordas esticáveis, centro liso
  */
@@ -100,7 +101,7 @@ export type Camada = {
 export type ArteImagem = {
   base: string
   tamanhos: number[]
-  janela?: { forma: 'circulo' | 'oval'; centro: [number, number]; raio: [number, number] }
+  janela?: { forma: 'circulo' | 'oval' | 'quadrado'; centro: [number, number]; raio: [number, number]; raio_canto?: number }
   camadas?: Camada[]
   slice?: {
     /** corte em px da imagem original: topo, direita, baixo, esquerda */
@@ -129,7 +130,11 @@ export function lerImagem(raw: unknown): ArteImagem | null {
   if (!tamanhos.length) return null
   const out: ArteImagem = { base: r.base, tamanhos }
   const j = r.janela as Record<string, unknown> | undefined
-  if (j && PAR(j.centro) && PAR(j.raio)) out.janela = { forma: j.forma === 'oval' ? 'oval' : 'circulo', centro: j.centro, raio: j.raio }
+  if (j && PAR(j.centro) && PAR(j.raio)) {
+    const forma: 'circulo' | 'oval' | 'quadrado' = j.forma === 'oval' || j.forma === 'quadrado' ? (j.forma as 'oval' | 'quadrado') : 'circulo'
+    out.janela = { forma, centro: j.centro, raio: j.raio }
+    if (forma === 'quadrado') out.janela.raio_canto = NUM(j.raio_canto) ? Math.min(Math.max(j.raio_canto as number, 0), j.raio[0]) : 0.04
+  }
   if (Array.isArray(r.camadas)) {
     out.camadas = (r.camadas as Record<string, unknown>[])
       .filter((c) => c && QUAD(c.caixa) && (CAMADA_ANIMS as readonly unknown[]).includes(c.anim))
@@ -252,6 +257,14 @@ export const IMAGENS_CATALOGO: Record<string, { slots: CosSlot[]; imagem: ArteIm
       base: '/images/cosmeticos/asas-do-crepusculo/moldura',
       tamanhos: [48, 96, 256, 512, 1024],
       janela: { forma: 'circulo', centro: [0.5, 0.5], raio: [0.25, 0.25] },
+    },
+  },
+  'img:/images/cosmeticos/rosa-do-destino/mini': {
+    slots: ['moldura_mini'],
+    imagem: {
+      base: '/images/cosmeticos/rosa-do-destino/mini',
+      tamanhos: [48, 96, 256, 512, 1024],
+      janela: { forma: 'quadrado', centro: [0.5, 0.5], raio: [0.2735, 0.2735], raio_canto: 0.04 },
     },
   },
   'img:/images/cosmeticos/coracao-da-condessa/emblema': {
