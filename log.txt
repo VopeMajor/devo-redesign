@@ -1,0 +1,9 @@
+[emblema-rosa-sangue] v01: @cf/black-forest-labs/flux-2-klein-4b seed=7001 1024x1024 passos=None (~104 neurônios)
+    ok em 15.8s, 1024x1024
+[emblema-rosa-sangue] v02: @cf/black-forest-labs/flux-2-klein-4b seed=7002 1024x1024 passos=None (~104 neurônios)
+    ok em 12.6s, 1024x1024
+[emblema-rosa-sangue] v03: @cf/black-forest-labs/flux-2-klein-4b seed=7003 1024x1024 passos=None (~104 neurônios)
+    ok em 24.1s, 1024x1024
+[emblema-rosa-sangue] v01: rembg:birefnet-general; sem avisos
+[emblema-rosa-sangue] v02: rembg:birefnet-general; sem avisos
+[emblema-rosa-sangue] v03: rembg:birefnet-general; sem avisos

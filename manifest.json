@@ -1,0 +1,120 @@
+{
+  "pedido": "emblema-rosa-sangue",
+  "titulo": "Rosa de Sangue",
+  "tipo": "emblema",
+  "tamanho_final": 1024,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 7001,
+      "passos": null,
+      "segundos": 15.8,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "emblema-rosa-sangue--v01--1024.png",
+          "bytes": 574334
+        },
+        {
+          "arquivo": "emblema-rosa-sangue--v01--1024.webp",
+          "bytes": 110936
+        },
+        {
+          "arquivo": "emblema-rosa-sangue--v01--512.webp",
+          "bytes": 38864
+        },
+        {
+          "arquivo": "emblema-rosa-sangue--v01--256.webp",
+          "bytes": 15802
+        },
+        {
+          "arquivo": "emblema-rosa-sangue--v01--96.webp",
+          "bytes": 4306
+        },
+        {
+          "arquivo": "emblema-rosa-sangue--v01--48.webp",
+          "bytes": 1732
+        }
+      ],
+      "segundos_pos": 29.9,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 7002,
+      "passos": null,
+      "segundos": 12.6,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "emblema-rosa-sangue--v02--1024.png",
+          "bytes": 526304
+        },
+        {
+          "arquivo": "emblema-rosa-sangue--v02--1024.webp",
+          "bytes": 105216
+        },
+        {
+          "arquivo": "emblema-rosa-sangue--v02--512.webp",
+          "bytes": 36492
+        },
+        {
+          "arquivo": "emblema-rosa-sangue--v02--256.webp",
+          "bytes": 14614
+        },
+        {
+          "arquivo": "emblema-rosa-sangue--v02--96.webp",
+          "bytes": 3978
+        },
+        {
+          "arquivo": "emblema-rosa-sangue--v02--48.webp",
+          "bytes": 1678
+        }
+      ],
+      "segundos_pos": 25.2,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 7003,
+      "passos": null,
+      "segundos": 24.1,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "emblema-rosa-sangue--v03--1024.png",
+          "bytes": 564386
+        },
+        {
+          "arquivo": "emblema-rosa-sangue--v03--1024.webp",
+          "bytes": 113602
+        },
+        {
+          "arquivo": "emblema-rosa-sangue--v03--512.webp",
+          "bytes": 39926
+        },
+        {
+          "arquivo": "emblema-rosa-sangue--v03--256.webp",
+          "bytes": 16246
+        },
+        {
+          "arquivo": "emblema-rosa-sangue--v03--96.webp",
+          "bytes": 4418
+        },
+        {
+          "arquivo": "emblema-rosa-sangue--v03--48.webp",
+          "bytes": 1868
+        }
+      ],
+      "segundos_pos": 25.3,
+      "avisos": []
+    }
+  ]
+}
