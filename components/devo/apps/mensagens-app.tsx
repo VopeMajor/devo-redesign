@@ -3,7 +3,7 @@
 import Image from 'next/image'
 import { useEffect, useRef, useState, type CSSProperties } from 'react'
 import { playSfx } from '@/lib/devo/audio'
-import { availableChoices, getNpc, npcPortrait, STICKER_PREFIX, stickerSrc, type DialogueChoice } from '@/lib/devo/npcs'
+import { availableChoices, getNpc, isAcao, npcPortrait, semAsteriscos, STICKER_PREFIX, stickerSrc, type DialogueChoice } from '@/lib/devo/npcs'
 import { withName } from '@/lib/devo/player-name'
 import { cn } from '@/lib/utils'
 import { formatClock } from '../hooks'
@@ -217,7 +217,7 @@ function Conversation({ threadId, onBack }: { threadId: string; onBack: () => vo
     playSfx('send')
     dispatch({ type: 'THREAD_ANSWER', threadId, choiceId: choice.id })
     if (!choice.silent) {
-      const text = choice.sticker ? `${STICKER_PREFIX}${choice.sticker}` : withName(choice.prompt, callName(state), state.profile.gender)
+      const text = choice.sticker ? `${STICKER_PREFIX}${choice.sticker}` : withName(semAsteriscos(choice.prompt), callName(state), state.profile.gender)
       dispatch({ type: 'THREAD_MESSAGE', threadId, countUnread: false, message: { id: nextId('m'), from: 'me', text, at: Date.now() } })
     }
     if (choice.reply.length === 0) {
@@ -316,7 +316,9 @@ function Conversation({ threadId, onBack }: { threadId: string; onBack: () => vo
                   <span aria-hidden="true" className="dv-brass-text w-7 shrink-0 text-center font-impact text-[20px] font-semibold leading-none">
                     {toRoman(i + 1)}
                   </span>
-                  <span className="flex-1 pl-2 font-body text-[16px] leading-snug text-dv-text">{withName(c.prompt, callName(state), state.profile.gender)}</span>
+                  <span className={cn('flex-1 pl-2 font-body text-[16px] leading-snug', isAcao(c.prompt) ? 'italic text-dv-text-2' : 'text-dv-text')}>
+                    {withName(semAsteriscos(c.prompt), callName(state), state.profile.gender)}
+                  </span>
                   <GlyphArrow aria-hidden="true" className="size-4 shrink-0 text-dv-gold transition-[transform,color] group-enabled:group-hover:translate-x-0.5 group-enabled:group-hover:text-dv-amethyst-text" />
                 </button>
               </li>
@@ -365,7 +367,7 @@ function Bubble({ text, at, mine, first, name, accent }: { text: string; at: num
     <div className={cn('flex max-w-[84%] flex-col gap-1', mine ? 'animate-dv-slide-left items-end self-end' : 'animate-dv-slide-right self-start', first && 'mt-2.5')}>
       {first && <span className={cn('dv-label px-1 text-[10px]', mine ? 'text-dv-text-2' : NAME[accent])}>{name}</span>}
       {sticker ? (
-        <Image src={sticker} alt="Figurinha" width={128} height={128} className="size-28 object-contain mix-blend-lighten" />
+        <Image src={sticker} alt="Figurinha" width={128} height={128} className="size-28 object-contain drop-shadow-[0_4px_10px_rgba(0,0,0,0.45)]" />
       ) : (
         <BubbleShell mine={mine} accent={accent}>
           <p className={cn('font-body text-[16px] leading-relaxed', paper || mine ? 'text-dv-paper-ink' : 'text-dv-text')}>{text}</p>

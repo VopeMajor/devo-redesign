@@ -222,9 +222,9 @@ export const NPCS: Record<string, NpcDef> = {
     hidden: true,
     doneText: 'Não há mais nada aqui.',
     choices: [
-      { id: 'figurinha', prompt: 'Figurinha engraçada', sticker: 'engracada', reply: ['Gostei da figurinha.'] },
+      { id: 'figurinha', prompt: '*Enviar figurinha engraçada*', sticker: 'engracada', reply: ['Gostei da figurinha.'] },
       { id: 'esqueceu', prompt: 'Que coisa você esqueceu de me avisar?', reply: ['Coleções não são a única forma de agrupar um certo tipo de carta.'] },
-      { id: 'ignorar', prompt: 'Ignorar', silent: true, after: 'esqueceu', reply: ['Ei…'] },
+      { id: 'ignorar', prompt: '*Ignorar*', silent: true, after: 'esqueceu', reply: ['Ei…'] },
       {
         id: 'outra',
         prompt: 'O que é a outra coisa?',
@@ -281,5 +281,11 @@ export function getNpc(id: string): NpcDef {
 
 /** Escolhas ainda disponíveis, respeitando a ordem de liberação. */
 export function availableChoices(npc: NpcDef, answered: string[]) {
-  return npc.choices.filter((c) => !answered.includes(c.id) && (!c.after || answered.includes(c.after)))
+  const abertas = npc.choices.filter((c) => !answered.includes(c.id) && (!c.after || answered.includes(c.after)))
+  // "Ignorar" (escolha silenciosa) só faz sentido enquanto houver outra coisa para dizer: sozinha, some.
+  return abertas.some((c) => !c.silent) ? abertas : []
 }
+
+/** Escolha escrita entre asteriscos é uma ação do jogador (*Ignorar*), não uma fala. */
+export const isAcao = (prompt: string) => prompt.length > 2 && prompt.startsWith('*') && prompt.endsWith('*')
+export const semAsteriscos = (prompt: string) => (isAcao(prompt) ? prompt.slice(1, -1) : prompt)
