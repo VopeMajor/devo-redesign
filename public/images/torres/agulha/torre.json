@@ -1,0 +1,19 @@
+{
+  "asset": "img:/images/torres/agulha/torre",
+  "imagem": {
+    "base": "/images/torres/agulha/torre",
+    "tamanhos": [
+      96,
+      256,
+      512,
+      1024
+    ]
+  },
+  "origem": {
+    "pedido": "torre-principal-agulha",
+    "variacao": "v04",
+    "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+    "seed": 3104,
+    "importado": null
+  }
+}

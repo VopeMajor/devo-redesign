@@ -1,9 +1,9 @@
 """Prancha-resumo de uma categoria a partir das pastas públicas exportadas.
 
 Uso:
-  python3 arte/ferramentas/resumo.py "<título>" <saida.png> <pasta1> [<pasta2> ...]
+  python3 arte/ferramentas/resumo.py "<título>" <saida.png> <pasta>/<peca> [...]
 
-Cada pasta é public/images/cosmeticos/<id>/ ou public/images/torres/<id>/ (com manifest.json e <tam>.webp).
+Cada item é public/images/cosmeticos/<id>/<peca> (lê <peca>.json e <peca>-<lado>.webp).
 Molduras ganham o avatar de teste na janela; balões aparecem largos; mostra também 96 px e 48 px.
 """
 from __future__ import annotations
@@ -19,30 +19,33 @@ sys.path.insert(0, str(Path(__file__).parent))
 from processar import ESCURO, avatar_ficticio, fonte, ladrilho  # noqa: E402
 
 
-def maior(p: Path) -> Image.Image:
-    arqs = sorted((f for f in p.glob("*.webp") if f.stem.isdigit()), key=lambda f: -int(f.stem))
-    return Image.open(arqs[0]).convert("RGBA")
+def maior(p: Path, peca: str) -> Image.Image:
+    arqs = [f for f in p.glob(f"{peca}-*.webp") if f.stem.rsplit("-", 1)[-1].isdigit() and f.stem.rsplit("-", 1)[0] == peca]
+    return Image.open(max(arqs, key=lambda f: int(f.stem.rsplit("-", 1)[-1]))).convert("RGBA")
 
 
 def main() -> int:
-    titulo, destino, pastas = sys.argv[1], Path(sys.argv[2]), [Path(x) for x in sys.argv[3:]]
+    titulo, destino = sys.argv[1], Path(sys.argv[2])
     itens = []
-    for p in pastas:
-        m = json.loads((p / "manifest.json").read_text())
-        im = maior(p)
+    for arg in sys.argv[3:]:
+        p, peca = Path(arg).parent, Path(arg).name
+        meta = json.loads((p / f"{peca}.json").read_text())
+        img_meta, org = meta["imagem"], meta.get("origem", {})
+        im = maior(p, peca)
+        tipo = "balao" if img_meta.get("slice") else ("moldura" if img_meta.get("janela") else
+                                                      ("ilustracao" if "torres" in str(p) else "emblema"))
         av = None
-        if m.get("janela"):
+        if img_meta.get("janela"):
             S = im.width
-            j = dict(m["janela"])
-            k = S / m["tamanho_original"][0]
-            j["centro_px"] = [c * k for c in j["centro_px"]]
+            j = img_meta["janela"]
+            jj = {"forma": j["forma"], "centro_px": [j["centro"][0] * S, j["centro"][1] * S]}
             if j["forma"] == "quadrado":
-                j["lado_px"] *= k
-                j["raio_canto_px"] *= k
+                jj.update({"lado_px": j["lado"] * S, "raio_canto_px": j["raio_canto"] * S})
             else:
-                j["raio_px"] = [r * k for r in j["raio_px"]]
-            av = avatar_ficticio(S, {"janela": j})
-        itens.append((p.name, m, im, av))
+                jj["raio_px"] = [j["raio"][0] * S, j["raio"][1] * S]
+            av = avatar_ficticio(S, {"janela": jj})
+        m = {"tipo": tipo, "origem": org, "camadas": img_meta.get("camadas", [])}
+        itens.append((f"{p.name}/{peca}", m, im, av))
     balao = all(m["tipo"] == "balao" for _, m, _, _ in itens)
     larg, alt = (560, 200) if balao else (300, 300)
     torre = all(m["tipo"] == "ilustracao" for _, m, _, _ in itens)
@@ -73,7 +76,7 @@ def main() -> int:
         else:
             tela.alpha_composite(ladrilho(im, ESCURO, 96, 96, av), (x + 2, yb + 2))
             tela.alpha_composite(ladrilho(im, ESCURO, 48, 48, av), (x + 110, yb + 26))
-            cams = [c["nome"] for c in m.get("camadas", [])] + [c.get("nome", "") for c in m.get("montagem", {}).get("camadas", [])]
+            cams = [f'{Path(c.get("src", "")).stem.split("-", 1)[-1]} ({c["anim"]})' for c in m.get("camadas", [])]
             if cams:
                 d.text((x + 170, yb + 10), "camadas:\n" + "\n".join(cams[:5]), fill=(190, 180, 210), font=fonte(11))
     destino.parent.mkdir(parents=True, exist_ok=True)
