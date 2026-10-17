@@ -1,0 +1,83 @@
+{
+  "pedido": "camada-pendulo-bronze",
+  "titulo": "Camada: pendulo-bronze",
+  "tipo": "camada",
+  "tamanho_final": 1024,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 9021,
+      "passos": null,
+      "segundos": 22.9,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "camada-pendulo-bronze--v01--1024.png",
+          "bytes": 175023
+        },
+        {
+          "arquivo": "camada-pendulo-bronze--v01--1024.webp",
+          "bytes": 41684
+        },
+        {
+          "arquivo": "camada-pendulo-bronze--v01--512.webp",
+          "bytes": 14164
+        },
+        {
+          "arquivo": "camada-pendulo-bronze--v01--256.webp",
+          "bytes": 5642
+        },
+        {
+          "arquivo": "camada-pendulo-bronze--v01--128.webp",
+          "bytes": 2694
+        },
+        {
+          "arquivo": "camada-pendulo-bronze--v01--64.webp",
+          "bytes": 1152
+        }
+      ],
+      "segundos_pos": 28.7,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 9022,
+      "passos": null,
+      "segundos": 21.2,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "camada-pendulo-bronze--v02--1024.png",
+          "bytes": 208846
+        },
+        {
+          "arquivo": "camada-pendulo-bronze--v02--1024.webp",
+          "bytes": 49542
+        },
+        {
+          "arquivo": "camada-pendulo-bronze--v02--512.webp",
+          "bytes": 17914
+        },
+        {
+          "arquivo": "camada-pendulo-bronze--v02--256.webp",
+          "bytes": 7304
+        },
+        {
+          "arquivo": "camada-pendulo-bronze--v02--128.webp",
+          "bytes": 3208
+        },
+        {
+          "arquivo": "camada-pendulo-bronze--v02--64.webp",
+          "bytes": 1420
+        }
+      ],
+      "segundos_pos": 23.7,
+      "avisos": []
+    }
+  ]
+}

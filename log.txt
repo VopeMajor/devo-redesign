@@ -1,0 +1,6 @@
+[camada-pendulo-bronze] v01: @cf/black-forest-labs/flux-2-klein-4b seed=9021 1024x1024 passos=None (~104 neurônios)
+    ok em 22.9s, 1024x1024
+[camada-pendulo-bronze] v02: @cf/black-forest-labs/flux-2-klein-4b seed=9022 1024x1024 passos=None (~104 neurônios)
+    ok em 21.2s, 1024x1024
+[camada-pendulo-bronze] v01: rembg:birefnet-general; sem avisos
+[camada-pendulo-bronze] v02: rembg:birefnet-general; sem avisos
