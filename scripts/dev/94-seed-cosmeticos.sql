@@ -66,7 +66,8 @@ INSERT INTO invite_codes (code, role, note, is_test) VALUES
   ('DEVO-COSM-ANF1', 'anfitriao', 'teste cosméticos: anfitrião', true),
   ('DEVO-COSM-JOG1', 'player',    'teste cosméticos: jogador', true),
   ('DEVO-COSM-JOG2', 'player',    'teste cosméticos: jogador 2', true),
-  ('DEVO-COSM-POCO', 'player',    'captura cosméticos: resultado do Poço', true)
+  ('DEVO-COSM-POCO', 'player',    'captura cosméticos: resultado do Poço', true),
+  ('DEVO-COSM-FOTO', 'player',    'captura: troca da foto do perfil', true)
 ON CONFLICT (code) DO NOTHING;
 
 -- Prévia da nova direção: Matheus usa Asas do Crepúsculo (avatar e mini) e o Coração da Condessa.
@@ -76,10 +77,10 @@ UPDATE player_cosmetics SET moldura_avatar = 'cosmetico:moldura-asas-crepusculo'
        emblema = 'cosmetico:emblema-coracao-condessa'
  WHERE player_id = '00000000-0000-4000-8000-000000000003';
 
--- Lote 2 da arte: Lírio usa o conjunto Rosa do Destino (moldura, mini quadrada e balão) — com isso o chat do
--- seed mostra os seis balões em imagem (Mesa do Destino, Correspondência, Confissão, Ecos, Rosa, Último Suspiro).
+-- Lírio usa a Catedral Esquecida (moldura e mini quadrada) com o balão Ecos do Arcano. (O conjunto Rosa do Destino
+-- foi retirado do jogo — REFINAMENTO-4-dono.md §4.)
 SELECT devo_item_grant('00000000-0000-4000-8000-000000000005', k, 1, 'recompensa', NULL, NULL, 'seed:cos:lirio:' || k)
-FROM unnest(ARRAY['cosmetico:moldura-rosa-destino', 'cosmetico:mini-rosa-destino', 'cosmetico:balao-rosa-destino']) AS k;
-UPDATE player_cosmetics SET moldura_avatar = 'cosmetico:moldura-rosa-destino', moldura_mini = 'cosmetico:mini-rosa-destino',
-       balao = 'cosmetico:balao-rosa-destino'
+FROM unnest(ARRAY['cosmetico:moldura-catedral-esquecida', 'cosmetico:mini-catedral-esquecida']) AS k;
+UPDATE player_cosmetics SET moldura_avatar = 'cosmetico:moldura-catedral-esquecida', moldura_mini = 'cosmetico:mini-catedral-esquecida',
+       balao = 'cosmetico:balao-ecos-arcano'
  WHERE player_id = '00000000-0000-4000-8000-000000000005';

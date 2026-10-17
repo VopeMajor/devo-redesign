@@ -2809,9 +2809,6 @@ if (want('cosmeticos')) {
     await view(page, 'article[aria-label="Prévia: Coração da Condessa"]')
     await wait(500)
     await shot(page, 'cos-81-previa-coracao')
-    await view(page, 'article[aria-label="Prévia: Rosa do Destino (miniperfil)"]')
-    await wait(500)
-    await shot(page, 'cos-89-previa-rosa-mini')
     for (const [sel, nome] of [['article[aria-label="Olho do Arcano"]', 'cos-01-galeria-arcano'], ['article[aria-label="Última Badalada"]', 'cos-02-galeria-badalada'], ['section[aria-label="Emblemas"]', 'cos-03-galeria-emblemas'], ['section[aria-label="Balões"]', 'cos-04-galeria-baloes'], ['section[aria-label="Efeitos do nome"]', 'cos-05-galeria-efeitos']]) {
       await view(page, sel)
       await wait(500)
@@ -3134,6 +3131,75 @@ if (want('cosmeticos')) {
     await view(page, 'ul[aria-label^="Itens:"]', 'start')
     await wait(700)
     await shot(page, 'cos-l3-23-colecao-minis')
+  })
+
+  // Foto do perfil no celular (REFINAMENTO-4 §2.4), 390×844: HEIC recusado com mensagem clara, foto da galeria
+  // (PNG de 2,2 MB, comprimida no aparelho), recorte quadrado com o guia redondo da moldura, arrasto e zoom,
+  // envio, foto viva depois de recarregar (URL com ?v=) e erro sem conexão.
+  await step('cos-foto', async () => {
+    const { readFileSync } = await import('node:fs')
+    let db = null
+    try {
+      const pg = (await import('pg')).default
+      if (process.env.DATABASE_URL) db = new pg.Pool({ connectionString: process.env.DATABASE_URL })
+    } catch {}
+    const { ctx, page } = await account('Vela', 'DEVO-COSM-FOTO', VET_CARDS)
+    try {
+      if (db) {
+        await db.query("SELECT devo_item_grant(id, k, 1, 'recompensa', NULL, NULL, 'captura-foto:' || id || k) FROM players, unnest(ARRAY['cosmetico:moldura-heranca-marfim', 'cosmetico:mini-heranca-marfim']) k WHERE lower(name) = 'vela'")
+        await db.query("INSERT INTO player_cosmetics (player_id, moldura_avatar, moldura_mini) SELECT id, 'cosmetico:moldura-heranca-marfim', 'cosmetico:mini-heranca-marfim' FROM players WHERE lower(name) = 'vela' ON CONFLICT (player_id) DO UPDATE SET moldura_avatar = EXCLUDED.moldura_avatar, moldura_mini = EXCLUDED.moldura_mini")
+      }
+      await openApp(page, 'Record')
+      await wait(1800)
+      const arquivo = page.locator('input[aria-label="Arquivo da foto do perfil"]')
+      await page.getByRole('button', { name: 'Escolher foto do perfil' }).first().evaluate((el) => el.scrollIntoView({ block: 'center' })).catch(() => {})
+      await wait(500)
+      await shot(page, 'cos-foto-01-sem-foto')
+      await arquivo.setInputFiles({ name: 'IMG_0412.HEIC', mimeType: 'image/heic', buffer: Buffer.from('ftypheic-falso') })
+      await wait(800)
+      await shot(page, 'cos-foto-02-heic-recusado')
+      await arquivo.setInputFiles({ name: 'galeria.png', mimeType: 'image/png', buffer: readFileSync('public/images/rabbit.png') })
+      await page.getByRole('dialog', { name: 'Ajustar foto do perfil' }).waitFor({ timeout: 10000 })
+      await wait(900)
+      await shot(page, 'cos-foto-03-recorte')
+      const area = page.getByTestId('recorte-foto')
+      for (let k = 0; k < 3; k++) await tryClick(page.getByRole('button', { name: 'Aumentar zoom' }).first(), 1500)
+      const box = await area.boundingBox()
+      if (box) {
+        await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2)
+        await page.mouse.down()
+        await page.mouse.move(box.x + box.width / 2 + 10, box.y + box.height / 2 + 60, { steps: 8 })
+        await page.mouse.up()
+      }
+      await wait(600)
+      await shot(page, 'cos-foto-04-ajustado')
+      await tryClick(page.getByRole('button', { name: 'Salvar foto' }).first())
+      await page.getByRole('status').filter({ hasText: 'Foto atualizada.' }).first().waitFor({ timeout: 15000 }).catch((e) => manifest.errors.push({ step: 'cos-foto-envio', error: String(e).slice(0, 200) }))
+      await wait(1500)
+      await page.getByRole('button', { name: 'Escolher foto do perfil' }).first().evaluate((el) => el.scrollIntoView({ block: 'center' })).catch(() => {})
+      await wait(500)
+      await shot(page, 'cos-foto-05-enviada')
+      await page.reload({ waitUntil: 'networkidle' })
+      await wait(1000)
+      await openApp(page, 'Record')
+      await wait(2200)
+      const v = await page.locator('img[src*="/api/record/avatar?v="]').count()
+      if (!v) manifest.errors.push({ step: 'cos-foto-persistencia', error: 'foto sem ?v= depois de recarregar' })
+      await shot(page, 'cos-foto-06-depois-de-recarregar')
+      // Sem conexão: escolhe de novo, ajusta e tenta enviar offline.
+      await arquivo.setInputFiles({ name: 'retrato.jpg', mimeType: 'image/jpeg', buffer: readFileSync('public/images/cosmeticos/amostra-retrato.jpg') })
+      await page.getByRole('dialog', { name: 'Ajustar foto do perfil' }).waitFor({ timeout: 10000 }).catch(() => {})
+      await wait(700)
+      await ctx.setOffline(true)
+      await tryClick(page.getByRole('button', { name: 'Salvar foto' }).first())
+      await wait(1500)
+      await page.getByRole('button', { name: 'Escolher foto do perfil' }).first().evaluate((el) => el.scrollIntoView({ block: 'center' })).catch(() => {})
+      await shot(page, 'cos-foto-07-sem-conexao')
+      await ctx.setOffline(false)
+    } finally {
+      await ctx.close().catch(() => {})
+      await db?.end().catch(() => {})
+    }
   })
 
   // Arte por IA (pipeline infra/arte; dono escolheu Asas do Crepúsculo v02 e Coração da Condessa v02) aplicada

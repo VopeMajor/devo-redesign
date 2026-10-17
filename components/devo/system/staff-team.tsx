@@ -426,6 +426,8 @@ const ACTION_LABEL: Record<string, string> = {
   'cosmetico.asset': 'Asset enviado',
   'cosmetico.concedido': 'Cosmético concedido',
   'cosmetico.revogado': 'Cosmético revogado',
+  'cosmetico.removido': 'Cosmético retirado do jogo (inventário)',
+  'cosmetico.item_removido': 'Cosmético retirado do catálogo',
 }
 
 /** Registro administrativo (Owner): toda concessão, mudança de cargo, vínculo, override e configuração. */
