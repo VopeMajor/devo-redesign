@@ -1,0 +1,9 @@
+[mapa-ilha] v01: @cf/black-forest-labs/flux-2-klein-9b seed=9501 1024x1536 passos=None (~1,455 neurônios)
+    ok em 2.6s, 1024x1536
+[mapa-ilha] v02: @cf/black-forest-labs/flux-2-klein-9b seed=9502 1024x1536 passos=None (~1,455 neurônios)
+    ok em 2.6s, 1024x1536
+[mapa-ilha] v03: @cf/black-forest-labs/flux-2-klein-9b seed=9503 1024x1536 passos=None (~1,455 neurônios)
+    ok em 3.5s, 1024x1536
+[mapa-ilha] v01: rembg:birefnet-general; sem avisos
+[mapa-ilha] v02: rembg:birefnet-general; sem avisos
+[mapa-ilha] v03: rembg:birefnet-general; sem avisos
