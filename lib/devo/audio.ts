@@ -77,6 +77,15 @@ function ensure(): AudioContext | null {
     master = ctx.createGain()
     master.gain.value = muted ? 0 : 0.8
     master.connect(ctx.destination)
+    // Ao destravar (primeiro toque) o som entra em rampa, sem estouro: o que estava parado volta suave.
+    const c0 = ctx
+    c0.addEventListener('statechange', () => {
+      if (c0.state !== 'running' || !master) return
+      const alvo = muted ? 0 : 0.8
+      master.gain.cancelScheduledValues(c0.currentTime)
+      master.gain.setValueAtTime(0.0001, c0.currentTime)
+      master.gain.linearRampToValueAtTime(alvo, c0.currentTime + 0.9)
+    })
   }
   if (ctx.state === 'suspended') void ctx.resume()
   return ctx
@@ -86,7 +95,9 @@ type ToneOpts = { type?: OscillatorType; gain?: number; attack?: number; slideTo
 
 function tone(freq: number, dur: number, opts: ToneOpts = {}) {
   const c = ensure()
-  if (!c || !master) return
+  // Contexto ainda suspenso (sem gesto do usuário): descarta. O relógio do áudio fica parado e tudo o que fosse
+  // agendado tocaria de uma vez, muito alto, no primeiro toque (o "estouro" ao entrar de novo no site).
+  if (!c || !master || c.state !== 'running') return
   const { type = 'sine', gain = 0.12, attack = 0.005, slideTo, delay = 0, dest = master } = opts
   const t = c.currentTime + delay
   const o = c.createOscillator()
@@ -113,7 +124,7 @@ type NoiseOpts = { gain?: number; freq?: number; q?: number; delay?: number; swe
 
 function noise(dur: number, opts: NoiseOpts = {}) {
   const c = ensure()
-  if (!c || !master) return
+  if (!c || !master || c.state !== 'running') return
   const { gain = 0.08, freq = 1200, q = 1, delay = 0, sweepTo, dest = master, type = 'bandpass' } = opts
   const t = c.currentTime + delay
   const src = c.createBufferSource()
@@ -894,6 +905,9 @@ let ytFailed = false
 let musicWanted = false
 let musicPlaying = false
 let musicFade: number | null = null
+/** Quando a trilha foi pedida (gesto). Se o player só fica pronto bem depois, a trilha não começa atrasada e alta. */
+let musicAskedAt = 0
+const MUSIC_LATE_MS = 2500
 
 export function preloadMusic() {
   if (typeof window === 'undefined' || document.getElementById('devo-yt-host')) return
@@ -933,7 +947,8 @@ export function preloadMusic() {
           ytReady = true
           ytPlayer?.setVolume(MUSIC_VOLUME)
           if (muted) ytPlayer?.mute()
-          if (musicWanted) startPlayer()
+          if (musicWanted && Date.now() - musicAskedAt <= MUSIC_LATE_MS) startPlayer()
+          else musicWanted = false
         },
         onError: () => {
           ytFailed = true
@@ -963,11 +978,21 @@ export function preloadMusic() {
 function startPlayer() {
   if (!ytPlayer) return
   if (musicFade) window.clearInterval(musicFade)
-  ytPlayer.setVolume(MUSIC_VOLUME)
   if (muted) ytPlayer.mute()
   else ytPlayer.unMute()
   ytPlayer.seekTo(0, true)
+  // entra em rampa (nunca no volume cheio de uma vez)
+  let vol = 0
+  ytPlayer.setVolume(0)
   ytPlayer.playVideo()
+  musicFade = window.setInterval(() => {
+    vol = Math.min(MUSIC_VOLUME, vol + 5)
+    ytPlayer?.setVolume(vol)
+    if (vol >= MUSIC_VOLUME && musicFade) {
+      window.clearInterval(musicFade)
+      musicFade = null
+    }
+  }, 80)
   musicPlaying = true
   setAmbientDucked(true)
 }
@@ -976,6 +1001,7 @@ function startPlayer() {
 export function playMusic() {
   ensure()
   musicWanted = true
+  musicAskedAt = Date.now()
   if (ytReady) startPlayer()
   else if (ytFailed && !muted) synthIntroSting()
   else preloadMusic()

@@ -19,6 +19,7 @@ import { PwaOffer } from './shared/pwa-offer'
 import { Curtain, useCurtain, type CurtainOptions } from './kit/transition'
 import { JourneyCurtain, type JourneyCurtainTone } from './intro/journey-curtain'
 import './landing/entrada.css'
+import { TelaEntrada } from './shared/tela-entrada'
 
 /**
  * Cada cortina tem tom e direção coerentes com o que acontece (IDENTIDADE.md §8, DIRECAO-2 §2):
@@ -51,6 +52,7 @@ export function DevoExperience({
     <DevoProvider initialPlayerName={initialPlayerName} initialCharacterName={initialCharacterName} initialSave={initialSave}>
       <DevoRoot />
       <BackExitHint />
+      <TelaEntrada />
     </DevoProvider>
   )
 }
