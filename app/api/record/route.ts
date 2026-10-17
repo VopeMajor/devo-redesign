@@ -1,6 +1,7 @@
 import { getCurrentPlayer } from '@/app/actions/player'
 import {
   applyVoteResults,
+  setEntryPrizes,
   createVote,
   getRecord,
   getStaffBoard,
@@ -81,6 +82,9 @@ export async function POST(req: Request) {
         break
       case 'decision':
         await setEntryDecision(player.id, voteId, String(body.playerId ?? ''), body.decision ?? null, body.note)
+        break
+      case 'entryPrizes':
+        await setEntryPrizes(player.id, voteId, String(body.playerId ?? ''), body.prizes ?? [])
         break
       case 'apply':
         return Response.json({ ok: true, ...(await applyVoteResults(player.id, voteId)) })

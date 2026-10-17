@@ -292,7 +292,8 @@ function ConvokeForm({
         <RecTextarea value={f.briefing} onChange={(e) => set({ briefing: e.target.value })} maxLength={600} rows={3} placeholder="O que os participantes precisam saber." />
       </Field>
       <div className="flex flex-col gap-2 border-t border-dashed border-in-line-strong pt-3">
-        <RecLabel hint={<span className="inline-flex items-center gap-1"><Lock className="size-3" strokeWidth={1.6} aria-hidden="true" />privadas: só a equipe vê</span>}>Recompensas</RecLabel>
+        <RecLabel hint={<span className="inline-flex items-center gap-1"><Lock className="size-3" strokeWidth={1.6} aria-hidden="true" />privadas: só a equipe vê</span>}>Recompensa geral</RecLabel>
+        <p className="font-sans text-[13px] leading-relaxed text-in-fg-2">Vai para todos os participantes que não morrerem. As recompensas individuais de cada um são definidas no resultado do caso.</p>
         <PrizeEditor value={f.prizes} onChange={(prizes) => set({ prizes })} />
       </div>
       {canTutorial && !editing && (
@@ -559,7 +560,7 @@ function ResultsPanel({ vote: v, role, pending, run }: { vote: StaffVote; role?:
   const aceitos = v.entries.filter((e) => e.admission === 'aceita')
   const decididos = aceitos.filter((e) => e.decision).length
   const applied = v.appliedAt !== null
-  const premiados = aceitos.filter((e) => e.decision === 'premio').length
+  const premiados = aceitos.filter((e) => e.decision === 'premio' || e.decision === 'outro').length
   const approver = role === 'owner' || role === 'anfitriao'
 
   if (!aceitos.length) return <p className="py-2 font-body text-[14px] text-in-fg-3">Nenhum participante aceito neste caso.</p>
@@ -680,7 +681,10 @@ function DecisionRow({
         )}
       </div>
       {applied ? (
-        e.note && <p className="font-sans text-[13px] italic text-in-fg-2">{e.note}</p>
+        <>
+          {e.note && <p className="font-sans text-[13px] italic text-in-fg-2">{e.note}</p>}
+          {e.prizes.length > 0 && <EntryPrizes entry={e} voteId={voteId} pending={pending} run={run} readOnly />}
+        </>
       ) : (
         <>
           <div role="group" aria-label={`Resultado de ${e.name}`} className="grid grid-cols-2 gap-1.5">
@@ -698,6 +702,7 @@ function DecisionRow({
               </MiniButton>
             ))}
           </div>
+          <EntryPrizes entry={e} voteId={voteId} pending={pending} run={run} />
           {(askNote || e.decision === 'outro') && (
             <form
               className="flex items-end gap-2"
@@ -719,6 +724,63 @@ function DecisionRow({
         </>
       )}
     </li>
+  )
+}
+
+/**
+ * Recompensas individuais do participante (pode haver várias para a mesma pessoa), além da recompensa geral do
+ * caso. Vão junto na aplicação se ele não morreu nem faltou. Cada mudança é salva na hora.
+ */
+function EntryPrizes({
+  entry: e,
+  voteId,
+  pending,
+  run,
+  readOnly,
+}: {
+  entry: StaffEntry
+  voteId: string
+  pending: string | null
+  run: (k: string, b: Record<string, unknown>) => Promise<unknown>
+  readOnly?: boolean
+}) {
+  const [open, setOpen] = useState(e.prizes.length > 0)
+  const { names } = useStaffItems()
+  const key = `p-${e.playerId}`
+  if (readOnly) {
+    return (
+      <ul className="flex flex-col gap-0.5 pl-1">
+        {e.prizes.map((p) => (
+          <li key={p.id} className="flex items-center gap-2 font-sans text-[13px] text-in-fg-2">
+            <span aria-hidden="true" className="size-1 rotate-45 bg-in-gold" />
+            {resourceText(p, names)}
+            {p.label && <span className="text-in-fg-3">· {p.label}</span>}
+          </li>
+        ))}
+      </ul>
+    )
+  }
+  return (
+    <div className="flex flex-col gap-2">
+      <button
+        type="button"
+        aria-expanded={open}
+        onClick={() => setOpen((o) => !o)}
+        className="dv-focus flex min-h-9 items-center gap-2 self-start font-mono text-[10.5px] uppercase tracking-[0.14em] text-in-fg-2 hover:text-in-fg"
+      >
+        <span aria-hidden="true" className={cn('size-1.5 rotate-45 transition-colors', e.prizes.length ? 'bg-in-gold' : 'shadow-[inset_0_0_0_1px_var(--in-line-strong)]')} />
+        Recompensas individuais{e.prizes.length ? ` · ${e.prizes.length}` : ''}
+        {pending === key && <Spinner className="size-3" />}
+      </button>
+      {open && (
+        <div className="border-l border-in-line pl-3">
+          <PrizeEditor
+            value={e.prizes.map((p) => ({ recurso: p.recurso, chave: p.chave, quantidade: p.quantidade, label: p.label }))}
+            onChange={(prizes) => run(key, { action: 'entryPrizes', voteId, playerId: e.playerId, prizes })}
+          />
+        </div>
+      )}
+    </div>
   )
 }
 

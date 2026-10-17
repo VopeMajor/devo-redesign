@@ -6,6 +6,7 @@ import useSWR from 'swr'
 import { Spinner } from '@/components/devo/kit'
 import { playSfx } from '@/lib/devo/audio'
 import { CARDS } from '@/lib/devo/cards'
+import { ARCANO_KEYS, arcanoInfo, isArcano } from '@/lib/devo/virtudes'
 import type { PrizeInput, PrizeResource } from '@/lib/devo/deadly-votes'
 import { cn } from '@/lib/utils'
 import { RecButton, RecInput, RecLabel } from './record-ui'
@@ -158,7 +159,7 @@ export function useStaffItems() {
   return { itens, names }
 }
 
-export const RESOURCE_LABEL: Record<PrizeResource, string> = { item: 'Item do inventário', tempo: 'Tempo de vida', carta: 'Carta', convite: 'Convite' }
+export const RESOURCE_LABEL: Record<PrizeResource, string> = { item: 'Item do inventário', tempo: 'Tempo de vida', carta: 'Carta', convite: 'Convite', arcano: 'Arcano' }
 
 /** Texto curto de um recurso: "3 × Dracma Comum", "2 h de tempo", "Carta: Fósforo", "1 convite". */
 export function resourceText(r: { recurso: PrizeResource; chave: string | null; quantidade: number }, names?: Map<string, string>) {
@@ -168,6 +169,7 @@ export function resourceText(r: { recurso: PrizeResource; chave: string | null; 
     return `${h ? `${h} h` : ''}${h && m ? ' ' : ''}${m ? `${m} min` : ''} de tempo`
   }
   if (r.recurso === 'convite') return r.quantidade === 1 ? '1 convite' : `${r.quantidade} convites`
+  if (r.recurso === 'arcano') return isArcano(r.chave) ? arcanoInfo(r.chave).titulo : 'Arcano'
   if (r.recurso === 'carta') {
     const name = CARDS.find((c) => c.id === r.chave)?.name ?? r.chave
     return `${r.quantidade > 1 ? `${r.quantidade} × ` : ''}Carta ${name}`
@@ -198,7 +200,11 @@ export function ResourceFields({
           value={value.recurso}
           onChange={(e) => {
             const recurso = e.target.value as PrizeResource
-            set({ recurso, chave: recurso === 'item' ? (usable[0]?.key ?? null) : recurso === 'carta' ? CARDS[0]?.id : null, quantidade: recurso === 'tempo' ? 60 : 1 })
+            set({
+              recurso,
+              chave: recurso === 'item' ? (usable[0]?.key ?? null) : recurso === 'carta' ? CARDS[0]?.id : recurso === 'arcano' ? ARCANO_KEYS[0] : null,
+              quantidade: recurso === 'tempo' ? 60 : 1,
+            })
           }}
         >
           {(Object.keys(RESOURCE_LABEL) as PrizeResource[]).map((r) => (
@@ -233,7 +239,22 @@ export function ResourceFields({
           </RecSelect>
         </label>
       )}
-      <label className="flex min-w-0 flex-col gap-1.5">
+      {value.recurso === 'arcano' && (
+        <label className="col-span-2 flex min-w-0 flex-col gap-1.5">
+          <RecLabel hint="define o Arcano do jogador">Arcano</RecLabel>
+          <RecSelect value={value.chave ?? ''} onChange={(e) => set({ chave: e.target.value, quantidade: 1 })}>
+            {ARCANO_KEYS.map((k) => {
+              const a = arcanoInfo(k)
+              return (
+                <option key={k} value={k}>
+                  {a.numeral} · {a.titulo}
+                </option>
+              )
+            })}
+          </RecSelect>
+        </label>
+      )}
+      <label className={cn('flex min-w-0 flex-col gap-1.5', value.recurso === 'arcano' && 'hidden')}>
         <RecLabel hint={value.recurso === 'tempo' ? 'minutos' : undefined}>Quantidade</RecLabel>
         <RecInput
           inputMode="numeric"
@@ -257,7 +278,7 @@ export function ResourceFields({
 export function PrizeEditor({ value, onChange }: { value: PrizeInput[]; onChange: (v: PrizeInput[]) => void }) {
   const { itens, names } = useStaffItems()
   const [draft, setDraft] = useState<PrizeInput | null>(null)
-  const draftOk = !!draft && draft.quantidade > 0 && (draft.recurso === 'tempo' || draft.recurso === 'convite' || !!draft.chave)
+  const draftOk = !!draft && (draft.recurso === 'arcano' ? !!draft.chave : draft.quantidade > 0 && (draft.recurso === 'tempo' || draft.recurso === 'convite' || !!draft.chave))
   return (
     <div className="flex flex-col gap-2.5">
       {value.length > 0 && (

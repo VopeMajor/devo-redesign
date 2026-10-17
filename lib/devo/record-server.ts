@@ -1,5 +1,6 @@
 import type { PoolClient } from 'pg'
 import { pool } from '@/lib/db'
+import { isArcano } from './virtudes'
 import {
   type DeadlyVote,
   type DeadlyVoteStatus,
@@ -243,6 +244,21 @@ export async function getStaffBoard(playerId: string): Promise<StaffBoard> {
       [ids],
     ),
   ])
+  // Recompensas individuais (tabela nova): banco sem a migração ainda devolve lista vazia, sem derrubar a mesa.
+  const entryPrizes = await pool
+    .query<{ id: string; vote_id: string; player_id: string; resource: DvPrize['recurso']; resource_key: string | null; quantity: number; label: string | null }>(
+      'SELECT id, vote_id, player_id, resource, resource_key, quantity, label FROM deadly_vote_entry_prizes WHERE vote_id = ANY($1::uuid[]) ORDER BY position, created_at',
+      [ids],
+    )
+    .then((r) => r.rows)
+    .catch(() => [])
+  const entryPrizesBy = new Map<string, DvPrize[]>()
+  for (const p of entryPrizes) {
+    const k = `${p.vote_id}:${p.player_id}`
+    const list = entryPrizesBy.get(k) ?? []
+    list.push({ id: p.id, recurso: p.resource, chave: p.resource_key, quantidade: p.quantity, label: p.label })
+    entryPrizesBy.set(k, list)
+  }
   const byVote = new Map<string, StaffEntry[]>()
   for (const e of entries.rows) {
     const list = byVote.get(e.vote_id) ?? []
@@ -254,6 +270,7 @@ export async function getStaffBoard(playerId: string): Promise<StaffBoard> {
       decision: e.decision,
       note: e.note,
       joinedAt: e.joined_at.getTime(),
+      prizes: entryPrizesBy.get(`${e.vote_id}:${e.player_id}`) ?? [],
     })
     byVote.set(e.vote_id, list)
   }
@@ -286,7 +303,7 @@ export async function getStaffBoard(playerId: string): Promise<StaffBoard> {
 }
 
 const text = (v: unknown, max: number) => (typeof v === 'string' ? v.trim().slice(0, max) : '')
-const PRIZE_RESOURCES = ['item', 'tempo', 'carta', 'convite'] as const
+const PRIZE_RESOURCES = ['item', 'tempo', 'carta', 'convite', 'arcano'] as const
 
 /** Valida a lista de recompensas planejadas (até 8). Itens precisam existir no catálogo. */
 async function cleanPrizes(c: PoolClient, raw: unknown): Promise<PrizeInput[]> {
@@ -307,10 +324,39 @@ async function cleanPrizes(c: PoolClient, raw: unknown): Promise<PrizeInput[]> {
     } else if (recurso === 'carta') {
       chave = text(r.chave, 80)
       if (!/^[a-z0-9_-]{1,80}$/.test(chave)) throw new RecordError('Carta inválida.')
+    } else if (recurso === 'arcano') {
+      chave = text(r.chave, 40)
+      if (!isArcano(chave)) throw new RecordError('Arcano desconhecido.')
     }
-    out.push({ recurso, chave, quantidade, label: text(r.label, 60) || null })
+    out.push({ recurso, chave, quantidade: recurso === 'arcano' ? 1 : quantidade, label: text(r.label, 60) || null })
   }
   return out
+}
+
+/**
+ * Recompensas individuais de um participante (várias para a mesma pessoa), além da geral do caso. Substitui o
+ * conjunto; só antes de o resultado ser aplicado. Entregues na aplicação, se o participante não morreu nem faltou.
+ */
+export async function setEntryPrizes(playerId: string, voteId: string, entryPlayerId: string, raw: unknown) {
+  if (!UUID_RE.test(voteId) || !UUID_RE.test(entryPlayerId)) throw new RecordError('ID inválido.')
+  return txAs(playerId, async (c) => {
+    const ator = await requireStaff(playerId, c)
+    await requireVotoEditavel(ator, voteId, c)
+    const [v] = await run<{ results_applied_at: Date | null }>(c, 'SELECT results_applied_at FROM deadly_votes WHERE id = $1 FOR UPDATE', [voteId])
+    if (!v) throw new RecordError('Deadly Vote não encontrado.', 404)
+    if (v.results_applied_at) throw new RecordError('O resultado deste Deadly Vote já foi aplicado aos perfis.', 409)
+    const [e] = await run(c, 'SELECT 1 FROM deadly_vote_entries WHERE vote_id = $1 AND player_id = $2', [voteId, entryPlayerId])
+    if (!e) throw new RecordError('Participante não encontrado neste Deadly Vote.', 404)
+    const prizes = await cleanPrizes(c, raw)
+    await run(c, 'DELETE FROM deadly_vote_entry_prizes WHERE vote_id = $1 AND player_id = $2', [voteId, entryPlayerId])
+    for (const [i, p] of prizes.entries()) {
+      await run(
+        c,
+        'INSERT INTO deadly_vote_entry_prizes (vote_id, player_id, resource, resource_key, quantity, label, position) VALUES ($1, $2, $3, $4, $5, $6, $7)',
+        [voteId, entryPlayerId, p.recurso, p.chave ?? null, p.quantidade, p.label ?? null, i],
+      )
+    }
+  })
 }
 
 async function writePrizes(c: PoolClient, voteId: string, prizes: PrizeInput[]) {
@@ -548,7 +594,8 @@ export async function applyVoteResults(playerId: string, voteId: string): Promis
     let propostas = 0
     let entregues = 0
     const origem = `Deadly Vote #${v.number} · ${v.title}`
-    for (const e of entries.filter((x) => x.decision === 'premio')) {
+    // Recompensa geral: todos os que não morreram (nem faltaram) recebem.
+    for (const e of entries.filter((x) => x.decision !== 'morreu' && x.decision !== 'ausente')) {
       for (const p of prizes) {
         const id = await proposeRewardIn(
           c,
@@ -564,6 +611,35 @@ export async function applyVoteResults(playerId: string, voteId: string): Promis
             justificativa: `Resultado do caso: recebe prêmio${p.label ? ` (${p.label})` : ''}${e.note ? ` · ${e.note}` : ''}.`,
           },
           { aprovar: 'se-puder', entregar: true, prizeId: p.id },
+        )
+        if (!id) continue
+        propostas++
+        const [st] = await run<{ status: string }>(c, 'SELECT status FROM reward_proposals WHERE id = $1', [id])
+        if (st?.status === 'entregue') entregues++
+      }
+    }
+    // Recompensas individuais: valem para quem não morreu nem faltou (além da geral, que é só de quem recebe prêmio).
+    const individuais = await run<{ player_id: string; resource: PrizeInput['recurso']; resource_key: string | null; quantity: number; label: string | null }>(
+      c,
+      'SELECT player_id, resource, resource_key, quantity, label FROM deadly_vote_entry_prizes WHERE vote_id = $1 ORDER BY position, created_at',
+      [voteId],
+    ).catch(() => [])
+    for (const e of entries.filter((x) => x.decision !== 'morreu' && x.decision !== 'ausente')) {
+      for (const p of individuais.filter((x) => x.player_id === e.player_id)) {
+        const id = await proposeRewardIn(
+          c,
+          ator,
+          {
+            tipo: 'evento',
+            voteId,
+            origem,
+            destinatarioId: e.player_id,
+            recurso: p.resource,
+            chave: p.resource_key,
+            quantidade: p.quantity,
+            justificativa: `Recompensa individual do caso${p.label ? ` (${p.label})` : ''}${e.note ? ` · ${e.note}` : ''}.`,
+          },
+          { aprovar: 'se-puder', entregar: true },
         )
         if (!id) continue
         propostas++

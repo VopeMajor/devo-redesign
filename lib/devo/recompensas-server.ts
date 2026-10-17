@@ -1,4 +1,5 @@
 import 'server-only'
+import { isArcano } from './virtudes'
 import type { PoolClient } from 'pg'
 import { pool } from '@/lib/db'
 import { type Ator, can, type PropostaAlvo, type RecompensaTipo } from './cargos'
@@ -15,7 +16,7 @@ import { loadVotoAlvo, requireActor, requireCan } from './permissoes-server'
  * aprova. Toda mudança vai para reward_log; toda entrega, para admin_log ('recompensa.entregue').
  */
 
-export type RecursoTipo = 'item' | 'tempo' | 'carta' | 'convite'
+export type RecursoTipo = 'item' | 'tempo' | 'carta' | 'convite' | 'arcano'
 export type RecompensaStatus = 'pendente' | 'aprovada' | 'rejeitada' | 'entregue' | 'cancelada'
 
 export type Recompensa = {
@@ -57,7 +58,7 @@ export type PropostaInput = {
 }
 
 const TIPOS: RecompensaTipo[] = ['evento', 'externa', 'semanal']
-const RECURSOS: RecursoTipo[] = ['item', 'tempo', 'carta', 'convite']
+const RECURSOS: RecursoTipo[] = ['item', 'tempo', 'carta', 'convite', 'arcano']
 
 type Row = {
   id: string
@@ -154,6 +155,9 @@ async function validate(c: PoolClient, input: PropostaInput) {
   } else if (input.recurso === 'carta') {
     chave = clean(input.chave, 80)
     if (!/^[a-z0-9_-]{1,80}$/.test(chave)) throw new RecordError('Carta inválida.')
+  } else if (input.recurso === 'arcano') {
+    chave = clean(input.chave, 40)
+    if (!isArcano(chave)) throw new RecordError('Arcano desconhecido.')
   }
   const [dest] = await run(c, 'SELECT 1 FROM players WHERE id = $1', [input.destinatarioId])
   if (!dest) throw new RecordError('Destinatário não encontrado.', 404)
@@ -166,7 +170,7 @@ async function validate(c: PoolClient, input: PropostaInput) {
     origem ||= `Deadly Vote #${v.number} · ${v.title}`
   }
   if (!origem) throw new RecordError('Evento de origem obrigatório.')
-  return { quantidade, justificativa, chave, voteId, origem }
+  return { quantidade: input.recurso === 'arcano' ? 1 : quantidade, justificativa, chave, voteId, origem }
 }
 
 /** Propõe uma recompensa. Com `aprovar: true`, quem pode aprovar já aprova na mesma transação. */
@@ -297,6 +301,17 @@ async function deliverIn(c: PoolClient, ator: Ator | null, id: string): Promise<
       break
     case 'tempo':
       await creditMinutes(row.recipient_id, row.quantity, c)
+      break
+    case 'arcano':
+      // Concede (ou troca) o Arcano do destinatário. Registro no admin_log, como no ajuste manual das Virtudes.
+      if (!isArcano(row.resource_key)) throw new RecordError('Arcano desconhecido.')
+      await run(c, 'UPDATE players SET arcano = $2 WHERE id = $1', [row.recipient_id, row.resource_key])
+      await run(c, "INSERT INTO admin_log (actor_id, action, target_id, ref, data) VALUES ($1, 'virtudes.arcano', $2, $3, $4)", [
+        ator?.id ?? null,
+        row.recipient_id,
+        row.id,
+        JSON.stringify({ arcano: row.resource_key, origem: 'recompensa' }),
+      ])
       break
     case 'carta':
       for (let i = 0; i < row.quantity && i < 50; i++) {

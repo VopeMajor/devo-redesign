@@ -53,11 +53,11 @@ export const DECISION_LABEL: Record<EntryDecision, { label: string; hint: string
   premio: { label: 'Recebe prêmio', hint: 'Sobreviveu · recebe as recompensas do caso' },
   morreu: { label: 'Morreu', hint: 'Eliminado · sem recompensa' },
   ausente: { label: 'Não compareceu', hint: 'Sem resultado · sem recompensa' },
-  outro: { label: 'Outro', hint: 'Sem resultado · explique na nota' },
+  outro: { label: 'Outro', hint: 'Sobreviveu sem resultado definido · recebe a recompensa geral · explique na nota' },
 }
 
 /** Recurso de uma recompensa (mesmo formato das propostas da Fundação). */
-export type PrizeResource = 'item' | 'tempo' | 'carta' | 'convite'
+export type PrizeResource = 'item' | 'tempo' | 'carta' | 'convite' | 'arcano'
 /** Recompensa planejada do Deadly Vote. PRIVADA: só a equipe vê; nunca vai no payload do jogador. */
 export type DvPrize = { id: string; recurso: PrizeResource; chave: string | null; quantidade: number; label: string | null }
 export type PrizeInput = { recurso: PrizeResource; chave?: string | null; quantidade: number; label?: string | null }
@@ -73,6 +73,8 @@ export type StaffEntry = {
   decision: EntryDecision | null
   note: string | null
   joinedAt: number
+  /** Recompensas individuais deste participante (além da geral do caso). PRIVADAS: só a equipe vê. */
+  prizes: DvPrize[]
 }
 export type StaffRewardTally = { pendente: number; aprovada: number; entregue: number; rejeitada: number }
 export type StaffVote = DeadlyVote & {
