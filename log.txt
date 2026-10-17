@@ -1,0 +1,6 @@
+[camada-sino-prata] v01: @cf/black-forest-labs/flux-2-klein-4b seed=9041 1024x1024 passos=None (~104 neurônios)
+    ok em 8.1s, 1024x1024
+[camada-sino-prata] v02: @cf/black-forest-labs/flux-2-klein-4b seed=9042 1024x1024 passos=None (~104 neurônios)
+    ok em 9.5s, 1024x1024
+[camada-sino-prata] v01: rembg:birefnet-general; sem avisos
+[camada-sino-prata] v02: rembg:birefnet-general; sem avisos

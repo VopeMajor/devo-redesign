@@ -1,0 +1,47 @@
+{
+  "id": "camada-sino-prata",
+  "titulo": "Camada: sino-prata",
+  "tipo": "camada",
+  "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+  "prompt": "Fantasy RPG game asset, a single isolated animation part, painted, highly detailed, isolated on a plain flat light gray background, perfectly centered, seen exactly from the front, flat orthographic view, no perspective, no cast shadow: one small ornate silver bell hanging from a little ring at the top, engraved with stars, a visible clapper inside, cold silver reflections and a faint violet glow. Nothing else in the image, generous empty margin, nothing cropped, no text, no numbers, no watermark.",
+  "negative": "text, letters, numbers, watermark, cropped, blurry, background scenery, shadow, people",
+  "largura": 1024,
+  "altura": 1024,
+  "variacoes": [
+    {
+      "seed": 9041,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "passos": null,
+      "largura": 1024,
+      "altura": 1024,
+      "prompt_extra": "",
+      "n": 1
+    },
+    {
+      "seed": 9042,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "passos": null,
+      "largura": 1024,
+      "altura": 1024,
+      "prompt_extra": "",
+      "n": 2
+    }
+  ],
+  "pos": {
+    "tamanho_final": 1024,
+    "margem": 0.02,
+    "derivados": [
+      512,
+      256,
+      128,
+      64
+    ],
+    "remover_fundo": true,
+    "modelo_fundo": "birefnet-general",
+    "fundo": "liso",
+    "camadas": []
+  },
+  "passos": null,
+  "guidance": null,
+  "referencias": []
+}
