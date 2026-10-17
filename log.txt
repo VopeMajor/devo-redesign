@@ -1,0 +1,9 @@
+[poco-cena] v01: @cf/black-forest-labs/flux-2-klein-9b seed=10301 1024x1536 passos=None (~1,455 neurônios)
+    ok em 2.8s, 1024x1536
+[poco-cena] v02: @cf/black-forest-labs/flux-2-klein-9b seed=10302 1024x1536 passos=None (~1,455 neurônios)
+    ok em 3.3s, 1024x1536
+[poco-cena] v03: @cf/black-forest-labs/flux-2-klein-9b seed=10303 1024x1536 passos=None (~1,455 neurônios)
+    ok em 3.1s, 1024x1536
+[poco-cena] v01: mantido; sem avisos
+[poco-cena] v02: mantido; sem avisos
+[poco-cena] v03: mantido; sem avisos

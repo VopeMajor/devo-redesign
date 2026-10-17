@@ -1,0 +1,56 @@
+{
+  "id": "poco-cena",
+  "titulo": "Poço — rua de barro com névoa (fundo)",
+  "tipo": "ilustracao",
+  "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+  "prompt": "Fantasy RPG environment illustration, full frame vertical scene, no characters. Muted dark urban fantasy palette: abyss black, deep blood wine red, fog stone gray and faded silver, low saturation, no neon, no bright gold, no purple glow. Painterly, highly detailed, subtle film grain, elegant and melancholic. A narrow old clay street at dusk turning to night, lined on both sides with simple ancient houses of cracked adobe and pale clay, small dark windows, wooden doors, a few faded cloth awnings, dry vines. The street leads the eye to a small open square at the end, where there is an EMPTY spot of worn flagstones in the lower center (nothing there yet). Thick low mist creeps along the ground, the sky above is overcast fog stone gray with a faint blood wine tint near the horizon. Silence, antiquity, the sense that the place is much older than the town.",
+  "negative": "text, letters, watermark, people, characters, faces, neon, cartoon, saturated colors",
+  "largura": 1024,
+  "altura": 1536,
+  "variacoes": [
+    {
+      "seed": 10301,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "passos": null,
+      "largura": 1024,
+      "altura": 1536,
+      "prompt_extra": "",
+      "n": 1
+    },
+    {
+      "seed": 10302,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "passos": null,
+      "largura": 1024,
+      "altura": 1536,
+      "prompt_extra": "",
+      "n": 2
+    },
+    {
+      "seed": 10303,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "passos": null,
+      "largura": 1024,
+      "altura": 1536,
+      "prompt_extra": "",
+      "n": 3
+    }
+  ],
+  "pos": {
+    "remover_fundo": false,
+    "tamanho_final": 1536,
+    "margem": 0.0,
+    "derivados": [
+      1024,
+      768,
+      512
+    ],
+    "quadro_inteiro": true,
+    "modelo_fundo": "birefnet-general",
+    "fundo": "liso",
+    "camadas": []
+  },
+  "passos": null,
+  "guidance": null,
+  "referencias": []
+}
