@@ -1,0 +1,9 @@
+[balao2-carta-fita] v01: @cf/black-forest-labs/flux-2-klein-4b seed=15051 1536x512 passos=None (~78 neurônios)
+    ok em 24.1s, 1536x512
+[balao2-carta-fita] v02: @cf/black-forest-labs/flux-2-klein-4b seed=15052 1536x512 passos=None (~78 neurônios)
+    ok em 29.1s, 1536x512
+[balao2-carta-fita] v03: @cf/black-forest-labs/flux-2-klein-4b seed=15053 1536x512 passos=None (~78 neurônios)
+    ok em 26.5s, 1536x512
+[balao2-carta-fita] v01: rembg:birefnet-general; sem avisos
+[balao2-carta-fita] v02: rembg:birefnet-general; sem avisos
+[balao2-carta-fita] v03: rembg:birefnet-general; sem avisos

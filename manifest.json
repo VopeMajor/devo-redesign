@@ -1,0 +1,285 @@
+{
+  "pedido": "balao2-carta-fita",
+  "titulo": "Balão — carta-fita",
+  "tipo": "balao",
+  "tamanho_final": 1536,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 15051,
+      "passos": null,
+      "segundos": 24.1,
+      "neuronios_estimados": 78,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "balao2-carta-fita--v01--1535.png",
+          "bytes": 413973
+        },
+        {
+          "arquivo": "balao2-carta-fita--v01--1535.webp",
+          "bytes": 43484
+        },
+        {
+          "arquivo": "balao2-carta-fita--v01--1024.webp",
+          "bytes": 22424
+        },
+        {
+          "arquivo": "balao2-carta-fita--v01--768.webp",
+          "bytes": 15908
+        },
+        {
+          "arquivo": "balao2-carta-fita--v01--512.webp",
+          "bytes": 9958
+        },
+        {
+          "arquivo": "balao2-carta-fita--v01--256.webp",
+          "bytes": 4320
+        }
+      ],
+      "balao": {
+        "tamanho_px": [
+          1535,
+          403
+        ],
+        "nove_fatias": {
+          "top": 56,
+          "right": 165,
+          "bottom": 37,
+          "left": 304,
+          "css": "border-image: url(...) 56 165 37 304 fill / auto; border-image-repeat: stretch;",
+          "obs": "medidas em px do original; nos derivados multiplique por largura/W"
+        },
+        "kit": {
+          "corpo": {
+            "altura_px": 355,
+            "topo_no_original": 16,
+            "fatias": {
+              "top": 40,
+              "bottom": 5,
+              "left": 0,
+              "right": 0
+            },
+            "obs": "uniforme na horizontal; estique livre. Centro liso (texto)."
+          },
+          "ponta_esq": {
+            "largura_px": 350,
+            "sobreposicao_px": 46
+          },
+          "ponta_dir": {
+            "largura_px": 211,
+            "sobreposicao_px": 46
+          },
+          "texto": {
+            "x0": 304,
+            "x1": 1370,
+            "y0": 56,
+            "y1": 366
+          }
+        },
+        "arquivos_kit": [
+          "balao2-carta-fita--v01--kit-corpo--1024.webp",
+          "balao2-carta-fita--v01--kit-corpo--768.webp",
+          "balao2-carta-fita--v01--kit-corpo--512.webp",
+          "balao2-carta-fita--v01--kit-corpo--256.webp",
+          "balao2-carta-fita--v01--kit-ponta-esq--1024.webp",
+          "balao2-carta-fita--v01--kit-ponta-esq--768.webp",
+          "balao2-carta-fita--v01--kit-ponta-esq--512.webp",
+          "balao2-carta-fita--v01--kit-ponta-esq--256.webp",
+          "balao2-carta-fita--v01--kit-ponta-dir--1024.webp",
+          "balao2-carta-fita--v01--kit-ponta-dir--768.webp",
+          "balao2-carta-fita--v01--kit-ponta-dir--512.webp",
+          "balao2-carta-fita--v01--kit-ponta-dir--256.webp"
+        ]
+      },
+      "segundos_pos": 37.2,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 15052,
+      "passos": null,
+      "segundos": 29.1,
+      "neuronios_estimados": 78,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "balao2-carta-fita--v02--1535.png",
+          "bytes": 428029
+        },
+        {
+          "arquivo": "balao2-carta-fita--v02--1535.webp",
+          "bytes": 42674
+        },
+        {
+          "arquivo": "balao2-carta-fita--v02--1024.webp",
+          "bytes": 22040
+        },
+        {
+          "arquivo": "balao2-carta-fita--v02--768.webp",
+          "bytes": 15678
+        },
+        {
+          "arquivo": "balao2-carta-fita--v02--512.webp",
+          "bytes": 9704
+        },
+        {
+          "arquivo": "balao2-carta-fita--v02--256.webp",
+          "bytes": 4840
+        }
+      ],
+      "balao": {
+        "tamanho_px": [
+          1535,
+          328
+        ],
+        "nove_fatias": {
+          "top": 65,
+          "right": 179,
+          "bottom": 62,
+          "left": 320,
+          "css": "border-image: url(...) 65 179 62 320 fill / auto; border-image-repeat: stretch;",
+          "obs": "medidas em px do original; nos derivados multiplique por largura/W"
+        },
+        "kit": {
+          "corpo": {
+            "altura_px": 290,
+            "topo_no_original": 19,
+            "fatias": {
+              "top": 46,
+              "bottom": 43,
+              "left": 0,
+              "right": 0
+            },
+            "obs": "uniforme na horizontal; estique livre. Centro liso (texto)."
+          },
+          "ponta_esq": {
+            "largura_px": 366,
+            "sobreposicao_px": 46
+          },
+          "ponta_dir": {
+            "largura_px": 225,
+            "sobreposicao_px": 46
+          },
+          "texto": {
+            "x0": 320,
+            "x1": 1356,
+            "y0": 65,
+            "y1": 266
+          }
+        },
+        "arquivos_kit": [
+          "balao2-carta-fita--v02--kit-corpo--1024.webp",
+          "balao2-carta-fita--v02--kit-corpo--768.webp",
+          "balao2-carta-fita--v02--kit-corpo--512.webp",
+          "balao2-carta-fita--v02--kit-corpo--256.webp",
+          "balao2-carta-fita--v02--kit-ponta-esq--1024.webp",
+          "balao2-carta-fita--v02--kit-ponta-esq--768.webp",
+          "balao2-carta-fita--v02--kit-ponta-esq--512.webp",
+          "balao2-carta-fita--v02--kit-ponta-esq--256.webp",
+          "balao2-carta-fita--v02--kit-ponta-dir--1024.webp",
+          "balao2-carta-fita--v02--kit-ponta-dir--768.webp",
+          "balao2-carta-fita--v02--kit-ponta-dir--512.webp",
+          "balao2-carta-fita--v02--kit-ponta-dir--256.webp"
+        ]
+      },
+      "segundos_pos": 29.9,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 15053,
+      "passos": null,
+      "segundos": 26.5,
+      "neuronios_estimados": 78,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "balao2-carta-fita--v03--1535.png",
+          "bytes": 317079
+        },
+        {
+          "arquivo": "balao2-carta-fita--v03--1535.webp",
+          "bytes": 42616
+        },
+        {
+          "arquivo": "balao2-carta-fita--v03--1024.webp",
+          "bytes": 20822
+        },
+        {
+          "arquivo": "balao2-carta-fita--v03--768.webp",
+          "bytes": 15940
+        },
+        {
+          "arquivo": "balao2-carta-fita--v03--512.webp",
+          "bytes": 9052
+        },
+        {
+          "arquivo": "balao2-carta-fita--v03--256.webp",
+          "bytes": 3888
+        }
+      ],
+      "balao": {
+        "tamanho_px": [
+          1535,
+          376
+        ],
+        "nove_fatias": {
+          "top": 61,
+          "right": 120,
+          "bottom": 65,
+          "left": 343,
+          "css": "border-image: url(...) 61 120 65 343 fill / auto; border-image-repeat: stretch;",
+          "obs": "medidas em px do original; nos derivados multiplique por largura/W"
+        },
+        "kit": {
+          "corpo": {
+            "altura_px": 344,
+            "topo_no_original": 16,
+            "fatias": {
+              "top": 45,
+              "bottom": 49,
+              "left": 0,
+              "right": 0
+            },
+            "obs": "uniforme na horizontal; estique livre. Centro liso (texto)."
+          },
+          "ponta_esq": {
+            "largura_px": 389,
+            "sobreposicao_px": 46
+          },
+          "ponta_dir": {
+            "largura_px": 166,
+            "sobreposicao_px": 46
+          },
+          "texto": {
+            "x0": 343,
+            "x1": 1415,
+            "y0": 61,
+            "y1": 311
+          }
+        },
+        "arquivos_kit": [
+          "balao2-carta-fita--v03--kit-corpo--1024.webp",
+          "balao2-carta-fita--v03--kit-corpo--768.webp",
+          "balao2-carta-fita--v03--kit-corpo--512.webp",
+          "balao2-carta-fita--v03--kit-corpo--256.webp",
+          "balao2-carta-fita--v03--kit-ponta-esq--1024.webp",
+          "balao2-carta-fita--v03--kit-ponta-esq--768.webp",
+          "balao2-carta-fita--v03--kit-ponta-esq--512.webp",
+          "balao2-carta-fita--v03--kit-ponta-esq--256.webp",
+          "balao2-carta-fita--v03--kit-ponta-dir--1024.webp",
+          "balao2-carta-fita--v03--kit-ponta-dir--768.webp",
+          "balao2-carta-fita--v03--kit-ponta-dir--512.webp",
+          "balao2-carta-fita--v03--kit-ponta-dir--256.webp"
+        ]
+      },
+      "segundos_pos": 30.4,
+      "avisos": []
+    }
+  ]
+}
