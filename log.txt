@@ -1,0 +1,9 @@
+[emblema-coroa-partida] v01: @cf/black-forest-labs/flux-2-klein-4b seed=7011 1024x1024 passos=None (~104 neurônios)
+    ok em 12.5s, 1024x1024
+[emblema-coroa-partida] v02: @cf/black-forest-labs/flux-2-klein-4b seed=7012 1024x1024 passos=None (~104 neurônios)
+    ok em 14.6s, 1024x1024
+[emblema-coroa-partida] v03: @cf/black-forest-labs/flux-2-klein-4b seed=7013 1024x1024 passos=None (~104 neurônios)
+    ok em 14.0s, 1024x1024
+[emblema-coroa-partida] v01: rembg:birefnet-general; sem avisos
+[emblema-coroa-partida] v02: rembg:birefnet-general; sem avisos
+[emblema-coroa-partida] v03: rembg:birefnet-general; sem avisos
