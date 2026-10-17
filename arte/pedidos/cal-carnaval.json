@@ -1,0 +1,32 @@
+{
+  "id": "cal-carnaval",
+  "titulo": "Calendário — Carnaval",
+  "tipo": "ilustracao",
+  "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+  "prompt": "Fantasy RPG event card illustration, full frame horizontal, painted, highly detailed, elegant and a little melancholic, not cartoonish, no characters, no text. Muted dark urban fantasy palette: abyss black, deep blood wine red, fog stone gray and faded silver, low saturation, no neon, no bright gold, no purple glow. Painterly, highly detailed, subtle film grain, elegant and melancholic. An elegant venetian masquerade mask of faded silver and blood wine velvet resting on a dark marble table, scattered dull confetti and a few muted ribbons, a half-empty glass of red wine, a ballroom in soft focus behind, a sense of the party already ending.",
+  "negative": "text, letters, watermark, people, characters, faces, neon, cartoon, saturated colors",
+  "largura": 1024,
+  "altura": 640,
+  "variacoes": [
+    {
+      "seed": 10521
+    },
+    {
+      "seed": 10522
+    },
+    {
+      "seed": 10523
+    }
+  ],
+  "pos": {
+    "remover_fundo": false,
+    "tamanho_final": 1024,
+    "margem": 0.0,
+    "derivados": [
+      768,
+      512,
+      256
+    ],
+    "quadro_inteiro": true
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "id": "ico-pp",
+  "titulo": "Calendário — ícone pp",
+  "tipo": "emblema",
+  "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+  "prompt": "Fantasy RPG game icon illustration, painted, highly detailed, isolated on a plain flat light gray background, one single object centered, front view, crisp silhouette readable at small size, no cast shadow, generous empty margin, no text, no letters, no numbers. Muted dark urban fantasy palette: abyss black, deep blood wine red, fog stone gray and faded silver, low saturation, no neon, no bright gold, no purple glow. Painterly, highly detailed, subtle film grain, elegant and melancholic. Potential Points: a radiant circular sigil of faded silver engraved with fine arcane lines, a small soft amethyst crystal in the center giving a gentle pale glow, thin silver rays around it.",
+  "negative": "text, letters, watermark, people, characters, faces, neon, cartoon, saturated colors",
+  "largura": 1024,
+  "altura": 1024,
+  "variacoes": [
+    {
+      "seed": 10601
+    },
+    {
+      "seed": 10602
+    },
+    {
+      "seed": 10603
+    }
+  ],
+  "pos": {
+    "remover_fundo": true,
+    "tamanho_final": 1024,
+    "margem": 0.04,
+    "derivados": [
+      512,
+      256,
+      128,
+      64
+    ]
+  }
+}

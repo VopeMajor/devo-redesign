@@ -778,8 +778,14 @@ def main() -> int:
                 reg.update(meta)
                 av = avatar_ficticio(S, meta)
             else:
-                final = recortar(recorte, S, pos["margem"], quadrado=p["tipo"] in ("emblema", "camada"))
+                if pos.get("quadro_inteiro"):  # camada de parallax: mantém o quadro (alinhada à cena)
+                    k = S / max(recorte.size)
+                    final = redimensionar(recorte, (round(recorte.width * k), round(recorte.height * k)))
+                else:
+                    final = recortar(recorte, S, pos["margem"], quadrado=p["tipo"] in ("emblema", "camada"))
                 fa = np.asarray(final)[..., 3]
+                if pos.get("quadro_inteiro") or not pos["remover_fundo"]:
+                    fa = np.zeros((2, 2))
                 borda = np.concatenate([fa[0], fa[-1], fa[:, 0], fa[:, -1]])
                 if (borda > 8).mean() > 0.02:
                     avisos.append("objeto encosta na borda — o gerador pode ter cortado a peça; peça mais margem")

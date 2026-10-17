@@ -1,0 +1,32 @@
+{
+  "id": "cal-natal",
+  "titulo": "Calendário — Natal",
+  "tipo": "ilustracao",
+  "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+  "prompt": "Fantasy RPG event card illustration, full frame horizontal, painted, highly detailed, elegant and a little melancholic, not cartoonish, no characters, no text. Muted dark urban fantasy palette: abyss black, deep blood wine red, fog stone gray and faded silver, low saturation, no neon, no bright gold, no purple glow. Painterly, highly detailed, subtle film grain, elegant and melancholic. A quiet snowy night at the window of an old gothic house: a dark pine branch with a few faded silver and blood wine glass ornaments, a single candle burning low, a small wrapped gift with a dark ribbon, snow falling outside the frosted window, cold moonlight and a faint warm glow.",
+  "negative": "text, letters, watermark, people, characters, faces, neon, cartoon, saturated colors",
+  "largura": 1024,
+  "altura": 640,
+  "variacoes": [
+    {
+      "seed": 10501
+    },
+    {
+      "seed": 10502
+    },
+    {
+      "seed": 10503
+    }
+  ],
+  "pos": {
+    "remover_fundo": false,
+    "tamanho_final": 1024,
+    "margem": 0.0,
+    "derivados": [
+      768,
+      512,
+      256
+    ],
+    "quadro_inteiro": true
+  }
+}

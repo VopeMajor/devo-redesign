@@ -1,0 +1,30 @@
+{
+  "id": "poco-poco",
+  "titulo": "Poço — o poço milenar (camada)",
+  "tipo": "ilustracao",
+  "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+  "prompt": "Fantasy RPG environment prop illustration, isolated on a plain flat light gray background, seen slightly from above at a three-quarter angle. Muted dark urban fantasy palette: abyss black, deep blood wine red, fog stone gray and faded silver, low saturation, no neon, no bright gold, no purple glow. Painterly, highly detailed, subtle film grain, elegant and melancholic. A millennia-old stone well: a low round wall of huge weathered stones, moss and cracks, a worn wooden crossbeam with an old rope and an iron pulley, a weathered stone plaque leaning against the wall with an illegible eroded inscription (no readable letters), a few old coins scattered at its base. From inside the well rises a faint supernatural pale silver light with a subtle blood wine tint, thin wisps of mist spilling over the rim. The whole well fully inside the image with margin, nothing cropped, no ground plane reaching the edges.",
+  "negative": "text, letters, watermark, people, characters, faces, neon, cartoon, saturated colors",
+  "largura": 1024,
+  "altura": 1024,
+  "variacoes": [
+    {
+      "seed": 10401
+    },
+    {
+      "seed": 10402
+    },
+    {
+      "seed": 10403
+    }
+  ],
+  "pos": {
+    "remover_fundo": true,
+    "tamanho_final": 1024,
+    "margem": 0.02,
+    "derivados": [
+      512,
+      256
+    ]
+  }
+}
