@@ -1,4 +1,9 @@
-export type Rarity = 'comum' | 'incomum' | 'rara' | 'lendaria'
+/**
+ * Raridades das Cartas DEVO, da mais comum para a mais rara: comum < incomum < rara < ultra_rara < lendaria.
+ * `unica` (tom de granada) e `promocional` (holográfica) são as duas raridades "secretas" da aula da Coruja:
+ * nenhum jogo comum as entrega e ficam fora dos filtros e das recompensas configuráveis (ver RARITIES em cards.ts).
+ */
+export type Rarity = 'comum' | 'incomum' | 'rara' | 'ultra_rara' | 'lendaria' | 'unica' | 'promocional'
 
 export type CardType = 'Tempo' | 'Ataque' | 'Defesa' | 'Informação' | 'Trapaça'
 

@@ -46,7 +46,11 @@ import {
 } from '@/components/devo/kit'
 import { DeadlyVoteSymbol } from '@/components/devo/system/symbol'
 import { OddsBar, PaperField, Plaque, PortraitFrame, StatusSeal } from '@/components/devo/kit'
+import { CardFace, RARITY_SKIN, RarityGem, RarityPips } from '@/components/devo/shared/devo-card'
+import { ALL_RARITIES, RARITY_META } from '@/lib/devo/cards'
 import { portraitFrameProps } from '@/lib/devo/npcs'
+import { cn } from '@/lib/utils'
+import type { Rarity } from '@/lib/devo/types'
 import { InteriorSection } from './interior-section'
 import { BoardSample, EmblemShowcase, MaterialGrid, OrnamentShowcase, PaletteGrid } from './material-section'
 
@@ -445,6 +449,10 @@ function StyleGuideBody() {
         />
       </Section>
 
+      <Section id="raridades" index="VIII·b" kicker="Cartas DEVO" title="Raridades">
+        <RaridadesVitrine />
+      </Section>
+
       <Section id="movimento" index="IX" kicker="Movimento" title="Entradas e cortina">
         <Stagger className="grid gap-2" variant="left" inView>
           {['Corte diagonal entra primeiro', 'Conteúdo sobe em cascata', 'Atraso de 60ms por item', 'Máximo 8 degraus'].map((t) => (
@@ -566,4 +574,49 @@ function FastClock() {
   const sec = n % 60
   const v = [d, h, m, sec].map((x) => String(x).padStart(2, '0')).join(':')
   return <TimeDigits value={v} size="lg" tone="cobalt" units={['Dias', 'Horas', 'Min', 'Seg']} label="Tempo de vida" />
+}
+
+/**
+ * Uma carta por raridade (Comum → Lendária, mais as secretas Única e Promocional). Ultra Rara, Única e Promocional
+ * ainda não têm cartas no Compêndio: a vitrine usa a pele da raridade sobre uma carta existente (`rarity`).
+ */
+const VITRINE_RARIDADES: { r: Rarity; card: string }[] = [
+  { r: 'comum', card: 'fosforo' },
+  { r: 'incomum', card: 'moeda' },
+  { r: 'rara', card: 'ampulheta' },
+  { r: 'ultra_rara', card: 'olho' },
+  { r: 'lendaria', card: 'relogio' },
+  { r: 'unica', card: 'coroa' },
+  { r: 'promocional', card: 'contrato' },
+]
+
+function RaridadesVitrine() {
+  return (
+    <div className="dv-interior-dark -mx-4 bg-[#0c0c0e] px-4 py-6">
+      <ul className="grid grid-cols-2 gap-x-4 gap-y-6 sm:grid-cols-4">
+        {VITRINE_RARIDADES.filter((v) => ALL_RARITIES.includes(v.r)).map(({ r, card }) => {
+          const meta = RARITY_META[r]
+          const skin = RARITY_SKIN[r]
+          return (
+            <li key={r} data-raridade={r} className="flex min-w-0 flex-col items-center gap-2">
+              <CardFace cardId={card} rarity={r} className="w-full max-w-[11rem]" />
+              <p className="flex items-center gap-2">
+                <RarityGem rarity={r} className="h-5 w-3.5" />
+                <span
+                  className={cn('font-sans text-[11px] font-semibold uppercase tracking-[0.18em]', r === 'promocional' && 'dv-txt-holo', r === 'unica' && 'dv-txt-unica')}
+                  style={meta.secreta ? undefined : { color: skin.light }}
+                >
+                  {meta.label}
+                </span>
+              </p>
+              <p className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.12em] text-white/55">
+                {meta.secreta ? 'Secreta' : <RarityPips rarity={r} className="text-[8px]" style={{ color: skin.light }} />}
+                <span>{skin.material}</span>
+              </p>
+            </li>
+          )
+        })}
+      </ul>
+    </div>
+  )
 }

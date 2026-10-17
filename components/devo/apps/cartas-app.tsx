@@ -80,7 +80,7 @@ export function CartasApp() {
               <div
                 role="radiogroup"
                 aria-label="Filtrar por raridade"
-                className="grid animate-dv-fade grid-cols-5 bg-[color-mix(in_oklab,var(--in-bg)_55%,white)] shadow-[inset_0_0_0_1px_var(--in-line-strong)]"
+                className="grid animate-dv-fade grid-cols-3 bg-[color-mix(in_oklab,var(--in-bg)_55%,white)] shadow-[inset_0_0_0_1px_var(--in-line-strong)] @xl:grid-cols-6"
                 style={{ animationDelay: '120ms' }}
               >
                 {FILTERS.map((f, i) => {
@@ -102,7 +102,9 @@ export function CartasApp() {
                         active ? 'bg-in-accent-fill text-white' : 'text-in-fg-2 hover:bg-black/[0.04] hover:text-in-fg',
                       )}
                     >
-                      {!active && i > 0 && <span aria-hidden="true" className="absolute inset-y-3 left-0 w-px bg-in-line" />}
+                      {/* 3 × 2 no celular (6 filtros com a Ultra Rara), uma linha só a partir de @xl */}
+                      {!active && i > 0 && <span aria-hidden="true" className={cn('absolute inset-y-3 left-0 w-px bg-in-line', i % 3 === 0 && 'hidden @xl:block')} />}
+                      {!active && i >= 3 && <span aria-hidden="true" className="absolute inset-x-3 top-0 h-px bg-in-line @xl:hidden" />}
                       <span className="max-w-full truncate font-sans text-[10px] font-medium uppercase tracking-[0.1em]">{f === 'todas' ? 'Todas' : RARITY_META[f].label}</span>
                       <span className="flex items-center gap-1 font-mono text-[10px] leading-none tabular-nums">
                         {f === 'todas' ? (

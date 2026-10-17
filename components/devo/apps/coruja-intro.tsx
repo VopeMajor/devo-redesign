@@ -4,7 +4,7 @@ import { Check, ChevronLeft, ChevronRight, FastForward, HelpCircle, Shield, Swor
 import { useCallback, useEffect, useState, type CSSProperties, type ReactNode } from 'react'
 import { playSfx } from '@/lib/devo/audio'
 import { BrassCorners, HudRule, NpcAnchor } from '@/components/devo/kit'
-import { RARITIES, RARITY_META, getCardMeta, getCollections } from '@/lib/devo/cards'
+import { RARITIES, RARITY_META, SECRET_RARITIES, getCardMeta, getCollections } from '@/lib/devo/cards'
 import type { Rarity } from '@/lib/devo/types'
 import { cn } from '@/lib/utils'
 import { useAdvanceKeys } from '../hooks'
@@ -60,20 +60,50 @@ const QUESTIONS: { id: string; prompt: string; reply: string; face: CorujaExpres
 ]
 
 // Nomes, cores e ordem vêm de RARITY_META (lib/devo/cards.ts); aqui só as falas da Coruja.
-const RARITY_HINTS: Record<(typeof RARITIES)[number], string> = {
+const RARITY_HINTS: Record<Rarity, string> = {
   comum: 'O que circula de mão em mão.',
   incomum: 'Já vale uma boa conversa.',
   rara: 'Poucos aceitam trocá-la.',
+  ultra_rara: 'Quem tem, raramente mostra.',
   lendaria: 'Gente já mentiu por menos.',
+  unica: 'Existe apenas uma.',
+  promocional: 'Nenhum jogo comum a entrega.',
 }
 
-const RARITY_TIERS = RARITIES.map((r) => ({ id: r as Rarity, label: RARITY_META[r].label, hint: RARITY_HINTS[r] }))
+const RARITY_TIERS = RARITIES.map((r) => ({ id: r, label: RARITY_META[r].label, hint: RARITY_HINTS[r] }))
 
-// As duas raridades "secretas" não existem no inventário: pedras próprias, fora de RARITY_META.
-const SECRET_TIERS = [
-  { id: 'unica', label: 'Única', hint: 'Existe apenas uma.', gem: ['#ffffff', '#f1f0ee', '#b9b6c4'] as const },
-  { id: 'promo', label: 'Promocional', hint: 'Nenhum jogo comum a entrega.', gem: ['#efeafd', '#6f63b0', '#1d1838'] as const },
+// As duas raridades "secretas" (Única em granada, Promocional holográfica): ficam fora da aula de raridades.
+const SECRET_TIERS = SECRET_RARITIES.map((r) => ({ id: r, label: RARITY_META[r].label, hint: RARITY_HINTS[r] }))
+
+/**
+ * Palavras com o efeito da própria raridade na fala da Coruja (pedido do dono 17/10): "Promocionais" brilha
+ * holográfica e "Únicas" fica em granada. O texto não muda; o efeito acompanha a digitação letra a letra.
+ */
+const FALA_FX: { re: RegExp; className: string }[] = [
+  { re: /promocionais/giu, className: 'dv-txt-holo' },
+  { re: /únicas/giu, className: 'dv-txt-unica' },
 ]
+
+function FalaComEfeito({ text, shown }: { text: string; shown: number }) {
+  const marks: { start: number; end: number; className: string }[] = []
+  for (const { re, className } of FALA_FX) for (const m of text.matchAll(re)) marks.push({ start: m.index ?? 0, end: (m.index ?? 0) + m[0].length, className })
+  if (!marks.length) return <>{text.slice(0, shown)}</>
+  marks.sort((a, b) => a.start - b.start)
+  const out: ReactNode[] = []
+  let at = 0
+  for (const mk of marks) {
+    if (mk.start >= shown) break
+    if (mk.start > at) out.push(text.slice(at, mk.start))
+    out.push(
+      <span key={mk.start} className={mk.className}>
+        {text.slice(mk.start, Math.min(mk.end, shown))}
+      </span>,
+    )
+    at = Math.min(mk.end, shown)
+  }
+  if (at < shown) out.push(text.slice(at, shown))
+  return <>{out}</>
+}
 
 const QUIZ_TARGET = RARITY_TIERS.find((t) => t.id === 'rara') ?? RARITY_TIERS[0]
 
@@ -95,7 +125,7 @@ function useTypewriter(text: string) {
     }, TYPE_SPEED_MS)
     return () => window.clearInterval(id)
   }, [text])
-  return { shown: text.slice(0, count), done: count >= text.length, finish: () => setCount(text.length) }
+  return { shown: text.slice(0, count), count, done: count >= text.length, finish: () => setCount(text.length) }
 }
 
 export function CorujaIntro() {
@@ -139,7 +169,8 @@ export function CorujaIntro() {
               : 'Não. Olhe de novo… com mais calma.'
             : 'Esta pedra tem a cor de qual raridade?'
           : step.text
-  const typer = useTypewriter(say(spoken))
+  const falaTexto = say(spoken)
+  const typer = useTypewriter(falaTexto)
 
   const chapterIndex = CHAPTERS.indexOf(step.chapter)
   const isLast = index === SCRIPT.length - 1
@@ -271,7 +302,7 @@ export function CorujaIntro() {
             <p className="min-h-[3.5rem] font-serif text-[19px] leading-relaxed text-[#eeedeb] @md:text-xl" aria-live="polite">
               {spoken ? (
                 <>
-                  {typer.shown}
+                  <FalaComEfeito text={falaTexto} shown={typer.count} />
                   {!typer.done && <span className="ml-0.5 inline-block h-5 w-px translate-y-1 animate-blink bg-[#cbc5e8]" aria-hidden="true" />}
                 </>
               ) : (
@@ -372,18 +403,19 @@ function TierTile({
   rarity,
   label,
   hint,
-  gem,
   onSelect,
   state,
+  wide,
 }: {
+  wide?: boolean
   rarity?: Rarity
   label: string
   hint?: string
-  gem?: readonly [string, string, string]
   onSelect?: () => void
   state?: 'right' | 'wrong' | null
 }) {
   const light = rarity ? RARITY_SKIN[rarity].light : '#eeedeb'
+  const secreta = !!rarity && !!RARITY_META[rarity].secreta
   if (onSelect) {
     return (
       <button
@@ -391,6 +423,7 @@ function TierTile({
         onClick={onSelect}
         className={cn(
           'dv-focus relative flex min-h-12 w-full items-center justify-center px-2 font-sans text-[12px] font-medium uppercase tracking-[0.16em] transition-colors',
+          wide && 'col-span-2',
           state === 'right'
             ? 'bg-[#eeedeb] text-[#0c0c0e] shadow-[0_0_20px_-4px_rgba(138,124,200,0.8)]'
             : state === 'wrong'
@@ -405,30 +438,16 @@ function TierTile({
   }
   return (
     <div className="flex flex-col items-center gap-2 px-2 pb-3 pt-3.5 text-center shadow-[inset_0_0_0_1px_rgba(238,237,235,0.12)]">
-      {rarity ? <RarityGem rarity={rarity} className="h-12 w-8" /> : gem ? <LooseGem colors={gem} className="h-12 w-8" /> : null}
-      <span className="mt-0.5 font-sans text-[12px] font-semibold uppercase tracking-[0.18em]" style={{ color: light }}>
+      {rarity ? <RarityGem rarity={rarity} className="h-12 w-8" /> : null}
+      <span
+        className={cn('mt-0.5 font-sans text-[12px] font-semibold uppercase tracking-[0.18em]', rarity === 'promocional' && 'dv-txt-holo', rarity === 'unica' && 'dv-txt-unica')}
+        style={secreta ? undefined : { color: light }}
+      >
         {label}
       </span>
-      {rarity && <RarityPips rarity={rarity} className="text-[9px]" style={{ color: light }} />}
+      {rarity && !secreta && <RarityPips rarity={rarity} className="text-[9px]" style={{ color: light }} />}
       {hint && <span className="font-serif text-[14px] italic leading-snug text-white/65">{hint}</span>}
     </div>
-  )
-}
-
-/** Pedra avulsa (raridades secretas): mesmo desenho do RarityGem, com engaste de prata. */
-function LooseGem({ colors, className }: { colors: readonly [string, string, string]; className?: string }) {
-  const [hi, mid, lo] = colors
-  return (
-    <svg viewBox="0 0 32 48" className={cn('drop-shadow-[0_2px_3px_rgba(0,0,0,0.45)]', className)} aria-hidden="true">
-      <path d="M16 0.8 L31.2 24 L16 47.2 L0.8 24 Z" fill="#c9c6d0" />
-      <path d="M16 3.8 L28.4 24 L16 44.2 L3.6 24 Z" fill="#0a090e" />
-      <path d="M16 5 L27.2 24 L16 24 Z" fill={mid} />
-      <path d="M16 5 L4.8 24 L16 24 Z" fill={hi} />
-      <path d="M4.8 24 L16 43 L16 24 Z" fill={mid} />
-      <path d="M27.2 24 L16 43 L16 24 Z" fill={lo} />
-      <path d="M16 15 L21.5 24 L16 33 L10.5 24 Z" fill={mid} />
-      <path d="M10 15 L12 13 L13 17 Z" fill="#fff" opacity="0.85" />
-    </svg>
   )
 }
 
@@ -443,9 +462,10 @@ function SceneVisual({ visual, sampleCards, quiz }: { visual: Visual; sampleCard
           <RarityGem rarity={QUIZ_TARGET.id} title="Pedra de raridade misteriosa" className="relative h-24 w-16" />
         </div>
         <div className="grid w-full grid-cols-2 gap-2">
-          {RARITY_TIERS.map((t) => (
+          {RARITY_TIERS.map((t, i) => (
             <TierTile
               key={t.id}
+              wide={RARITY_TIERS.length % 2 === 1 && i === RARITY_TIERS.length - 1}
               label={t.label}
               onSelect={() => quiz.onAnswer(t.id)}
               state={quiz.picked === t.id ? (quiz.correct ? 'right' : 'wrong') : quiz.correct && t.id === QUIZ_TARGET.id ? 'right' : null}
@@ -504,7 +524,7 @@ function SceneVisual({ visual, sampleCards, quiz }: { visual: Visual; sampleCard
         <div className="grid w-full grid-cols-2 gap-2">
           {SECRET_TIERS.map((t, i) => (
             <div key={t.id} className="animate-dv-rise" style={{ animationDelay: `${i * 110}ms` }}>
-              <TierTile label={t.label} hint={t.hint} gem={t.gem} />
+              <TierTile rarity={t.id} label={t.label} hint={t.hint} />
             </div>
           ))}
         </div>
