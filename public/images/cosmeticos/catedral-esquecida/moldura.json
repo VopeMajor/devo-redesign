@@ -1,0 +1,44 @@
+{
+  "asset": "img:/images/cosmeticos/catedral-esquecida/moldura",
+  "imagem": {
+    "base": "/images/cosmeticos/catedral-esquecida/moldura",
+    "tamanhos": [
+      48,
+      96,
+      256,
+      512,
+      1024
+    ],
+    "janela": {
+      "forma": "circulo",
+      "centro": [
+        0.5,
+        0.5
+      ],
+      "raio": [
+        0.25,
+        0.25
+      ]
+    },
+    "camadas": [
+      {
+        "src": "/images/cosmeticos/catedral-esquecida/moldura-vitral-azul.webp",
+        "anim": "brilho",
+        "caixa": [
+          0.2217,
+          0.1963,
+          0.3936,
+          0.6006
+        ],
+        "dur": 5.5
+      }
+    ]
+  },
+  "origem": {
+    "pedido": "moldura-catedral-esquecida",
+    "variacao": "v02",
+    "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+    "seed": 6082,
+    "importado": null
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "asset": "img:/images/torres/observatorio/torre",
+  "imagem": {
+    "base": "/images/torres/observatorio/torre",
+    "tamanhos": [
+      96,
+      256,
+      512,
+      1024
+    ]
+  },
+  "origem": {
+    "pedido": "torre-observatorio",
+    "variacao": "v03",
+    "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+    "seed": 5213,
+    "importado": null
+  }
+}

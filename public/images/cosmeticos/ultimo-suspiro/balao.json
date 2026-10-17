@@ -1,0 +1,75 @@
+{
+  "asset": "img:/images/cosmeticos/ultimo-suspiro/balao",
+  "imagem": {
+    "base": "/images/cosmeticos/ultimo-suspiro/balao",
+    "tamanhos": [
+      256,
+      512,
+      768,
+      1024
+    ],
+    "slice": {
+      "corte": [
+        23,
+        70,
+        23,
+        57
+      ],
+      "borda": [
+        13,
+        38,
+        13,
+        31
+      ],
+      "folga": [
+        4,
+        9,
+        4,
+        7
+      ],
+      "texto": "#2a2320",
+      "lado": 512
+    },
+    "kit": {
+      "corpo": {
+        "altura_px": 350,
+        "topo_no_original": 18,
+        "fatias": {
+          "top": 51,
+          "bottom": 50,
+          "left": 0,
+          "right": 0
+        },
+        "obs": "uniforme na horizontal; estique livre. Centro liso (texto)."
+      },
+      "pontas": {
+        "esq": {
+          "largura_px": 216,
+          "sobreposicao_px": 46
+        },
+        "dir": {
+          "largura_px": 255,
+          "sobreposicao_px": 46
+        }
+      },
+      "texto": {
+        "x0": 170,
+        "x1": 1326,
+        "y0": 69,
+        "y1": 318
+      },
+      "tamanho_px": [
+        1535,
+        388
+      ],
+      "arquivos": "/images/cosmeticos/ultimo-suspiro/balao-corpo|ponta-esq|ponta-dir-<largura>.webp"
+    }
+  },
+  "origem": {
+    "pedido": "balao-ultimo-suspiro",
+    "variacao": "v03",
+    "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+    "seed": 8033,
+    "importado": null
+  }
+}
