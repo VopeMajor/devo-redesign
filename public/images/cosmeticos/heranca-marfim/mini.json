@@ -1,0 +1,33 @@
+{
+  "asset": "img:/images/cosmeticos/heranca-marfim/mini",
+  "imagem": {
+    "base": "/images/cosmeticos/heranca-marfim/mini",
+    "tamanhos": [
+      48,
+      96,
+      256,
+      512,
+      1024
+    ],
+    "janela": {
+      "forma": "quadrado",
+      "centro": [
+        0.5,
+        0.5
+      ],
+      "raio": [
+        0.2735,
+        0.2735
+      ],
+      "lado": 0.547,
+      "raio_canto": 0.04
+    }
+  },
+  "origem": {
+    "pedido": "mini-heranca-marfim",
+    "variacao": "v02",
+    "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+    "seed": 4202,
+    "importado": null
+  }
+}

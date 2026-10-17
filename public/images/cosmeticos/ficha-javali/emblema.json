@@ -1,0 +1,20 @@
+{
+  "asset": "img:/images/cosmeticos/ficha-javali/emblema",
+  "imagem": {
+    "base": "/images/cosmeticos/ficha-javali/emblema",
+    "tamanhos": [
+      48,
+      96,
+      256,
+      512,
+      1024
+    ]
+  },
+  "origem": {
+    "pedido": "emblema-ficha-javali",
+    "variacao": "v02",
+    "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+    "seed": 7102,
+    "importado": null
+  }
+}

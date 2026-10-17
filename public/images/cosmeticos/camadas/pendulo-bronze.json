@@ -1,0 +1,18 @@
+{
+  "asset": "img:/images/cosmeticos/camadas/pendulo-bronze",
+  "imagem": {
+    "base": "/images/cosmeticos/camadas/pendulo-bronze",
+    "tamanhos": [
+      128,
+      256,
+      512
+    ]
+  },
+  "origem": {
+    "pedido": "camada-pendulo-bronze",
+    "variacao": "v01",
+    "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+    "seed": 9021,
+    "importado": null
+  }
+}

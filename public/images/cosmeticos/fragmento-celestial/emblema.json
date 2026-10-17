@@ -1,0 +1,33 @@
+{
+  "asset": "img:/images/cosmeticos/fragmento-celestial/emblema",
+  "imagem": {
+    "base": "/images/cosmeticos/fragmento-celestial/emblema",
+    "tamanhos": [
+      48,
+      96,
+      256,
+      512,
+      1024
+    ],
+    "camadas": [
+      {
+        "src": "/images/cosmeticos/fragmento-celestial/emblema-luz.webp",
+        "anim": "pulso",
+        "caixa": [
+          0.291,
+          0.0283,
+          0.416,
+          0.9453
+        ],
+        "dur": 3.2
+      }
+    ]
+  },
+  "origem": {
+    "pedido": "emblema-fragmento-celestial",
+    "variacao": "v02",
+    "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+    "seed": 7072,
+    "importado": null
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "asset": "img:/images/cosmeticos/pena-coruja/emblema",
+  "imagem": {
+    "base": "/images/cosmeticos/pena-coruja/emblema",
+    "tamanhos": [
+      48,
+      96,
+      256,
+      512,
+      1024
+    ]
+  },
+  "origem": {
+    "pedido": "emblema-pena-coruja",
+    "variacao": "v02",
+    "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+    "seed": 7092,
+    "importado": null
+  }
+}

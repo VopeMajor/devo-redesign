@@ -31,6 +31,43 @@
           0.4209
         ],
         "dur": 3.2
+      },
+      {
+        "src": "/images/cosmeticos/relogio-fim/moldura-ponteiros-bronze.webp",
+        "anim": "ponteiro",
+        "caixa": [
+          0.468,
+          0.0837,
+          0.064,
+          0.064
+        ],
+        "dur": 60,
+        "origem": [
+          0.5,
+          0.86
+        ]
+      },
+      {
+        "src": "/images/cosmeticos/relogio-fim/moldura-engrenagem-bronze.webp",
+        "anim": "giro",
+        "caixa": [
+          0.035,
+          0.4209,
+          0.193,
+          0.193
+        ],
+        "dur": 24
+      },
+      {
+        "src": "/images/cosmeticos/relogio-fim/moldura-engrenagem-bronze.webp",
+        "anim": "giro-rev",
+        "caixa": [
+          0.763,
+          0.4209,
+          0.193,
+          0.193
+        ],
+        "dur": 30
       }
     ]
   },
