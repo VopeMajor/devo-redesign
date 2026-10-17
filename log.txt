@@ -1,0 +1,9 @@
+[ico-ampulheta] v01: @cf/black-forest-labs/flux-2-klein-4b seed=10621 1024x1024 passos=None (~104 neurônios)
+    ok em 16.9s, 1024x1024
+[ico-ampulheta] v02: @cf/black-forest-labs/flux-2-klein-4b seed=10622 1024x1024 passos=None (~104 neurônios)
+    ok em 15.3s, 1024x1024
+[ico-ampulheta] v03: @cf/black-forest-labs/flux-2-klein-4b seed=10623 1024x1024 passos=None (~104 neurônios)
+    ok em 15.7s, 1024x1024
+[ico-ampulheta] v01: rembg:birefnet-general; sem avisos
+[ico-ampulheta] v02: rembg:birefnet-general; sem avisos
+[ico-ampulheta] v03: rembg:birefnet-general; sem avisos

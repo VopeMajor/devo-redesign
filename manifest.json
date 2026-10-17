@@ -1,0 +1,120 @@
+{
+  "pedido": "ico-ampulheta",
+  "titulo": "Calendário — ícone ampulheta",
+  "tipo": "emblema",
+  "tamanho_final": 1024,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 10621,
+      "passos": null,
+      "segundos": 16.9,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "ico-ampulheta--v01--1024.png",
+          "bytes": 664785
+        },
+        {
+          "arquivo": "ico-ampulheta--v01--1024.webp",
+          "bytes": 99898
+        },
+        {
+          "arquivo": "ico-ampulheta--v01--512.webp",
+          "bytes": 32118
+        },
+        {
+          "arquivo": "ico-ampulheta--v01--256.webp",
+          "bytes": 13216
+        },
+        {
+          "arquivo": "ico-ampulheta--v01--128.webp",
+          "bytes": 5806
+        },
+        {
+          "arquivo": "ico-ampulheta--v01--64.webp",
+          "bytes": 2530
+        }
+      ],
+      "segundos_pos": 35.1,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 10622,
+      "passos": null,
+      "segundos": 15.3,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "ico-ampulheta--v02--1024.png",
+          "bytes": 634047
+        },
+        {
+          "arquivo": "ico-ampulheta--v02--1024.webp",
+          "bytes": 97660
+        },
+        {
+          "arquivo": "ico-ampulheta--v02--512.webp",
+          "bytes": 31416
+        },
+        {
+          "arquivo": "ico-ampulheta--v02--256.webp",
+          "bytes": 13066
+        },
+        {
+          "arquivo": "ico-ampulheta--v02--128.webp",
+          "bytes": 5402
+        },
+        {
+          "arquivo": "ico-ampulheta--v02--64.webp",
+          "bytes": 2306
+        }
+      ],
+      "segundos_pos": 29.5,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 10623,
+      "passos": null,
+      "segundos": 15.7,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "ico-ampulheta--v03--1024.png",
+          "bytes": 688383
+        },
+        {
+          "arquivo": "ico-ampulheta--v03--1024.webp",
+          "bytes": 122784
+        },
+        {
+          "arquivo": "ico-ampulheta--v03--512.webp",
+          "bytes": 37808
+        },
+        {
+          "arquivo": "ico-ampulheta--v03--256.webp",
+          "bytes": 14628
+        },
+        {
+          "arquivo": "ico-ampulheta--v03--128.webp",
+          "bytes": 6502
+        },
+        {
+          "arquivo": "ico-ampulheta--v03--64.webp",
+          "bytes": 2636
+        }
+      ],
+      "segundos_pos": 29.0,
+      "avisos": []
+    }
+  ]
+}
