@@ -1,0 +1,9 @@
+[borda-orbita] v01: @cf/black-forest-labs/flux-2-klein-4b seed=16031 1024x640 passos=None (~104 neurônios)
+    ok em 18.3s, 1024x640
+[borda-orbita] v02: @cf/black-forest-labs/flux-2-klein-4b seed=16032 1024x640 passos=None (~104 neurônios)
+    ok em 14.9s, 1024x640
+[borda-orbita] v03: @cf/black-forest-labs/flux-2-klein-4b seed=16033 1024x640 passos=None (~104 neurônios)
+    ok em 16.8s, 1024x640
+[borda-orbita] v01: rembg:birefnet-general; sem avisos
+[borda-orbita] v02: rembg:birefnet-general; sem avisos
+[borda-orbita] v03: rembg:birefnet-general; sem avisos

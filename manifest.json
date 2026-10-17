@@ -1,0 +1,108 @@
+{
+  "pedido": "borda-orbita",
+  "titulo": "Borda de perfil — orbita",
+  "tipo": "ilustracao",
+  "tamanho_final": 1024,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 16031,
+      "passos": null,
+      "segundos": 18.3,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "borda-orbita--v01--1024.png",
+          "bytes": 366223
+        },
+        {
+          "arquivo": "borda-orbita--v01--1024.webp",
+          "bytes": 75062
+        },
+        {
+          "arquivo": "borda-orbita--v01--768.webp",
+          "bytes": 50696
+        },
+        {
+          "arquivo": "borda-orbita--v01--512.webp",
+          "bytes": 31402
+        },
+        {
+          "arquivo": "borda-orbita--v01--256.webp",
+          "bytes": 12726
+        }
+      ],
+      "segundos_pos": 34.2,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 16032,
+      "passos": null,
+      "segundos": 14.9,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "borda-orbita--v02--1024.png",
+          "bytes": 385197
+        },
+        {
+          "arquivo": "borda-orbita--v02--1024.webp",
+          "bytes": 75598
+        },
+        {
+          "arquivo": "borda-orbita--v02--768.webp",
+          "bytes": 50436
+        },
+        {
+          "arquivo": "borda-orbita--v02--512.webp",
+          "bytes": 30196
+        },
+        {
+          "arquivo": "borda-orbita--v02--256.webp",
+          "bytes": 12236
+        }
+      ],
+      "segundos_pos": 28.4,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 16033,
+      "passos": null,
+      "segundos": 16.8,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "borda-orbita--v03--1024.png",
+          "bytes": 292639
+        },
+        {
+          "arquivo": "borda-orbita--v03--1024.webp",
+          "bytes": 61944
+        },
+        {
+          "arquivo": "borda-orbita--v03--768.webp",
+          "bytes": 44584
+        },
+        {
+          "arquivo": "borda-orbita--v03--512.webp",
+          "bytes": 27418
+        },
+        {
+          "arquivo": "borda-orbita--v03--256.webp",
+          "bytes": 10874
+        }
+      ],
+      "segundos_pos": 28.4,
+      "avisos": []
+    }
+  ]
+}
