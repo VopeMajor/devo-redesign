@@ -1,0 +1,120 @@
+{
+  "pedido": "poco-balde-ferro",
+  "titulo": "Poço — balde-ferro",
+  "tipo": "emblema",
+  "tamanho_final": 1024,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 11071,
+      "passos": null,
+      "segundos": 17.0,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "poco-balde-ferro--v01--1024.png",
+          "bytes": 703525
+        },
+        {
+          "arquivo": "poco-balde-ferro--v01--1024.webp",
+          "bytes": 89658
+        },
+        {
+          "arquivo": "poco-balde-ferro--v01--512.webp",
+          "bytes": 30128
+        },
+        {
+          "arquivo": "poco-balde-ferro--v01--256.webp",
+          "bytes": 13404
+        },
+        {
+          "arquivo": "poco-balde-ferro--v01--128.webp",
+          "bytes": 5962
+        },
+        {
+          "arquivo": "poco-balde-ferro--v01--64.webp",
+          "bytes": 2518
+        }
+      ],
+      "segundos_pos": 37.5,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 11072,
+      "passos": null,
+      "segundos": 17.3,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "poco-balde-ferro--v02--1024.png",
+          "bytes": 541089
+        },
+        {
+          "arquivo": "poco-balde-ferro--v02--1024.webp",
+          "bytes": 84104
+        },
+        {
+          "arquivo": "poco-balde-ferro--v02--512.webp",
+          "bytes": 28514
+        },
+        {
+          "arquivo": "poco-balde-ferro--v02--256.webp",
+          "bytes": 12238
+        },
+        {
+          "arquivo": "poco-balde-ferro--v02--128.webp",
+          "bytes": 5360
+        },
+        {
+          "arquivo": "poco-balde-ferro--v02--64.webp",
+          "bytes": 2252
+        }
+      ],
+      "segundos_pos": 30.2,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 11073,
+      "passos": null,
+      "segundos": 14.0,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "poco-balde-ferro--v03--1024.png",
+          "bytes": 774903
+        },
+        {
+          "arquivo": "poco-balde-ferro--v03--1024.webp",
+          "bytes": 109870
+        },
+        {
+          "arquivo": "poco-balde-ferro--v03--512.webp",
+          "bytes": 36336
+        },
+        {
+          "arquivo": "poco-balde-ferro--v03--256.webp",
+          "bytes": 15994
+        },
+        {
+          "arquivo": "poco-balde-ferro--v03--128.webp",
+          "bytes": 7078
+        },
+        {
+          "arquivo": "poco-balde-ferro--v03--64.webp",
+          "bytes": 2782
+        }
+      ],
+      "segundos_pos": 30.4,
+      "avisos": []
+    }
+  ]
+}
