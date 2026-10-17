@@ -1,0 +1,142 @@
+{
+  "pedido": "arcano-diabo-v3",
+  "titulo": "Arcano — Diabo v3 (rosto marcante, pedido do dono 17/10)",
+  "tipo": "ilustracao",
+  "tamanho_final": 1536,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 32151,
+      "passos": null,
+      "segundos": 3.9,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "arcano-diabo-v3--v01--1536.png",
+          "bytes": 1438856
+        },
+        {
+          "arquivo": "arcano-diabo-v3--v01--1536.webp",
+          "bytes": 242130
+        },
+        {
+          "arquivo": "arcano-diabo-v3--v01--1024.webp",
+          "bytes": 115708
+        },
+        {
+          "arquivo": "arcano-diabo-v3--v01--768.webp",
+          "bytes": 80408
+        },
+        {
+          "arquivo": "arcano-diabo-v3--v01--512.webp",
+          "bytes": 45854
+        }
+      ],
+      "segundos_pos": 34.8,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 32152,
+      "passos": null,
+      "segundos": 3.4,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "arcano-diabo-v3--v02--1536.png",
+          "bytes": 1383015
+        },
+        {
+          "arquivo": "arcano-diabo-v3--v02--1536.webp",
+          "bytes": 222904
+        },
+        {
+          "arquivo": "arcano-diabo-v3--v02--1024.webp",
+          "bytes": 108788
+        },
+        {
+          "arquivo": "arcano-diabo-v3--v02--768.webp",
+          "bytes": 75376
+        },
+        {
+          "arquivo": "arcano-diabo-v3--v02--512.webp",
+          "bytes": 43316
+        }
+      ],
+      "segundos_pos": 18.5,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 32153,
+      "passos": null,
+      "segundos": 3.4,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "arcano-diabo-v3--v03--1536.png",
+          "bytes": 1283178
+        },
+        {
+          "arquivo": "arcano-diabo-v3--v03--1536.webp",
+          "bytes": 202698
+        },
+        {
+          "arquivo": "arcano-diabo-v3--v03--1024.webp",
+          "bytes": 97804
+        },
+        {
+          "arquivo": "arcano-diabo-v3--v03--768.webp",
+          "bytes": 66384
+        },
+        {
+          "arquivo": "arcano-diabo-v3--v03--512.webp",
+          "bytes": 38538
+        }
+      ],
+      "segundos_pos": 17.0,
+      "avisos": []
+    },
+    {
+      "nome": "v04",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 32154,
+      "passos": null,
+      "segundos": 3.4,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "ilhas_removidas": 2,
+      "arquivos": [
+        {
+          "arquivo": "arcano-diabo-v3--v04--1536.png",
+          "bytes": 1370934
+        },
+        {
+          "arquivo": "arcano-diabo-v3--v04--1536.webp",
+          "bytes": 227378
+        },
+        {
+          "arquivo": "arcano-diabo-v3--v04--1024.webp",
+          "bytes": 108816
+        },
+        {
+          "arquivo": "arcano-diabo-v3--v04--768.webp",
+          "bytes": 74972
+        },
+        {
+          "arquivo": "arcano-diabo-v3--v04--512.webp",
+          "bytes": 42586
+        }
+      ],
+      "segundos_pos": 17.4,
+      "avisos": []
+    }
+  ]
+}
