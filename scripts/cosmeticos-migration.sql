@@ -219,8 +219,7 @@ UPDATE item_defs SET meta = meta || '{"asset": "img:/images/cosmeticos/coracao-d
 
 -- ---------------------------------------------------------------------------------------------
 -- 8. Arte por IA, lotes 2 e 3 (infra/arte da41f23): molduras e minis quadradas definitivas, balões 9-slice,
---    emblemas e camadas animadas; itens novos (Catedral Esquecida, Relicário de Marfim, Rosa do Destino,
---    Fortuna Profana). Os UPDATEs só trocam o asset desenhado antigo (ou a mini provisória do lote 1) — edição
+--    emblemas e camadas animadas; itens novos (Catedral Esquecida, Relicário de Marfim, Fortuna Profana). Os UPDATEs só trocam o asset desenhado antigo (ou a mini provisória do lote 1) — edição
 --    do Owner no painel fica como está.
 -- ---------------------------------------------------------------------------------------------
 INSERT INTO item_defs (key, kind, name, description, rarity, stackable, meta) VALUES
@@ -232,12 +231,6 @@ INSERT INTO item_defs (key, kind, name, description, rarity, stackable, meta) VA
    '{"categoria": "moldura_avatar", "asset": "img:/images/cosmeticos/relicario-marfim/moldura", "imagem": {"base": "/images/cosmeticos/relicario-marfim/moldura", "tamanhos": [48, 96, 256, 512, 1024], "janela": {"forma": "circulo", "centro": [0.5, 0.5], "raio": [0.25, 0.25]}}, "animado": false, "poco": true, "origem": "poco", "par": "cosmetico:mini-relicario-marfim", "ordem": 15}'),
   ('cosmetico:mini-relicario-marfim', 'cosmetico', 'Relicário de Marfim', 'Versão do miniperfil: marfim e ouro velho.', 'raro', false,
    '{"categoria": "moldura_mini", "asset": "img:/images/cosmeticos/relicario-marfim/mini", "imagem": {"base": "/images/cosmeticos/relicario-marfim/mini", "tamanhos": [48, 96, 256, 512, 1024], "janela": {"forma": "quadrado", "centro": [0.5, 0.5], "raio": [0.2735, 0.2735], "raio_canto": 0.04}}, "animado": false, "poco": true, "origem": "poco", "par": "cosmetico:moldura-relicario-marfim", "ordem": 15}'),
-  ('cosmetico:moldura-rosa-destino', 'cosmetico', 'Rosa do Destino', 'Rosas vermelhas e espinhos de prata em volta do rosto. Quem a usa já sabe como termina.', 'lendario', false,
-   '{"categoria": "moldura_avatar", "asset": "img:/images/cosmeticos/rosa-do-destino/moldura", "imagem": {"base": "/images/cosmeticos/rosa-do-destino/moldura", "tamanhos": [48, 96, 256, 512, 1024], "janela": {"forma": "circulo", "centro": [0.5, 0.5], "raio": [0.25, 0.25]}}, "animado": false, "poco": false, "origem": "evento", "par": "cosmetico:mini-rosa-destino", "ordem": 6}'),
-  ('cosmetico:mini-rosa-destino', 'cosmetico', 'Rosa do Destino', 'Versão do miniperfil: a moldura quadrada com as rosas nos cantos.', 'lendario', false,
-   '{"categoria": "moldura_mini", "asset": "img:/images/cosmeticos/rosa-do-destino/mini", "imagem": {"base": "/images/cosmeticos/rosa-do-destino/mini", "tamanhos": [48, 96, 256, 512, 1024], "janela": {"forma": "quadrado", "centro": [0.5, 0.5], "raio": [0.2735, 0.2735], "raio_canto": 0.04}}, "animado": false, "poco": false, "origem": "evento", "par": "cosmetico:moldura-rosa-destino", "ordem": 6}'),
-  ('cosmetico:balao-rosa-destino', 'cosmetico', 'Rosa do Destino', 'Vinho escuro com rosas e espinhos nas pontas. Faz par com a moldura.', 'lendario', false,
-   '{"categoria": "balao", "asset": "img:/images/cosmeticos/rosa-do-destino/balao", "imagem": {"base": "/images/cosmeticos/rosa-do-destino/balao", "tamanhos": [256, 512, 768, 1024], "slice": {"corte": [58, 98, 55, 88], "borda": [22, 38, 21, 34], "folga": [6, 9, 6, 8], "texto": "#f1e7e9", "lado": 512}}, "animado": false, "poco": false, "origem": "evento", "ordem": 6}'),
   ('cosmetico:emblema-fortuna-profana', 'cosmetico', 'Fortuna Profana', 'Cartas, dados e fichas presos a um rubi por uma corrente de ouro. A casa sempre cobra.', 'epico', false,
    '{"categoria": "emblema", "asset": "img:/images/cosmeticos/fortuna-profana/emblema", "imagem": {"base": "/images/cosmeticos/fortuna-profana/emblema", "tamanhos": [48, 96, 256, 512, 1024]}, "animado": false, "poco": true, "origem": "poco", "ordem": 45}')
 ON CONFLICT (key) DO NOTHING;
@@ -310,3 +303,43 @@ UPDATE item_defs SET meta = meta || '{"asset": "img:/images/cosmeticos/selo-anfi
  WHERE key = 'cosmetico:emblema-selo-anfitriao' AND meta->>'asset' = 'devo:emblema/selo-anfitriao';
 UPDATE item_defs SET meta = meta || '{"asset": "img:/images/cosmeticos/asas-do-crepusculo/mini", "imagem": {"base": "/images/cosmeticos/asas-do-crepusculo/mini", "tamanhos": [48, 96, 256, 512, 1024], "janela": {"forma": "quadrado", "centro": [0.5, 0.5], "raio": [0.2735, 0.2735], "raio_canto": 0.04}, "camadas": [{"src": "/images/cosmeticos/asas-do-crepusculo/mini-gema.webp", "anim": "brilho", "caixa": [0.2334, 0.0752, 0.542, 0.7861], "dur": 5.5}]}, "animado": true}'::jsonb
  WHERE key = 'cosmetico:mini-asas-crepusculo' AND meta->>'asset' IN ('devo:moldura/asas-crepusculo', 'img:/images/cosmeticos/asas-do-crepusculo/moldura');
+
+-- ---------------------------------------------------------------------------------------------
+-- 9. Rosa do Destino retirada (REFINAMENTO-4-dono.md §4): moldura, mini e balão saem do jogo. Idempotente — na
+--    segunda vez nada mais casa. Ordem: registra no admin_log (por jogador: o que tinha e o que estava equipado),
+--    desequipa, tira dos inventários, limpa o histórico do item (item_ledger e poco_giros apontam para item_defs)
+--    e apaga a definição. O registro fica só no admin_log ('cosmetico.removido' por jogador, 'cosmetico.item_removido'
+--    por item, com a definição completa para restaurar se o dono mudar de ideia).
+-- ---------------------------------------------------------------------------------------------
+INSERT INTO admin_log (action, target_id, ref, data)
+SELECT 'cosmetico.removido', x.pid, 'rosa-do-destino',
+       jsonb_build_object('motivo', 'Rosa do Destino retirada do catálogo (pedido do dono)',
+                          'itens', coalesce(it.itens, '[]'::jsonb), 'equipados', coalesce(eq.slots, '{}'::jsonb))
+  FROM (SELECT player_id AS pid FROM player_items WHERE item_key = ANY(ARRAY['cosmetico:moldura-rosa-destino', 'cosmetico:mini-rosa-destino', 'cosmetico:balao-rosa-destino']) AND quantity > 0
+        UNION
+        SELECT player_id FROM player_cosmetics
+         WHERE moldura_avatar = ANY(ARRAY['cosmetico:moldura-rosa-destino', 'cosmetico:mini-rosa-destino', 'cosmetico:balao-rosa-destino']) OR moldura_mini = ANY(ARRAY['cosmetico:moldura-rosa-destino', 'cosmetico:mini-rosa-destino', 'cosmetico:balao-rosa-destino']) OR balao = ANY(ARRAY['cosmetico:moldura-rosa-destino', 'cosmetico:mini-rosa-destino', 'cosmetico:balao-rosa-destino'])) x
+  LEFT JOIN LATERAL (SELECT jsonb_agg(jsonb_build_object('item', i.item_key, 'quantidade', i.quantity)) AS itens
+                       FROM player_items i WHERE i.player_id = x.pid AND i.item_key = ANY(ARRAY['cosmetico:moldura-rosa-destino', 'cosmetico:mini-rosa-destino', 'cosmetico:balao-rosa-destino']) AND i.quantity > 0) it ON true
+  LEFT JOIN LATERAL (SELECT jsonb_strip_nulls(jsonb_build_object(
+                              'moldura_avatar', CASE WHEN c.moldura_avatar = ANY(ARRAY['cosmetico:moldura-rosa-destino', 'cosmetico:mini-rosa-destino', 'cosmetico:balao-rosa-destino']) THEN c.moldura_avatar END,
+                              'moldura_mini', CASE WHEN c.moldura_mini = ANY(ARRAY['cosmetico:moldura-rosa-destino', 'cosmetico:mini-rosa-destino', 'cosmetico:balao-rosa-destino']) THEN c.moldura_mini END,
+                              'balao', CASE WHEN c.balao = ANY(ARRAY['cosmetico:moldura-rosa-destino', 'cosmetico:mini-rosa-destino', 'cosmetico:balao-rosa-destino']) THEN c.balao END)) AS slots
+                       FROM player_cosmetics c WHERE c.player_id = x.pid) eq ON true;
+
+UPDATE player_cosmetics SET
+  moldura_avatar = CASE WHEN moldura_avatar = ANY(ARRAY['cosmetico:moldura-rosa-destino', 'cosmetico:mini-rosa-destino', 'cosmetico:balao-rosa-destino']) THEN NULL ELSE moldura_avatar END,
+  moldura_mini = CASE WHEN moldura_mini = ANY(ARRAY['cosmetico:moldura-rosa-destino', 'cosmetico:mini-rosa-destino', 'cosmetico:balao-rosa-destino']) THEN NULL ELSE moldura_mini END,
+  balao = CASE WHEN balao = ANY(ARRAY['cosmetico:moldura-rosa-destino', 'cosmetico:mini-rosa-destino', 'cosmetico:balao-rosa-destino']) THEN NULL ELSE balao END,
+  updated_at = now()
+ WHERE moldura_avatar = ANY(ARRAY['cosmetico:moldura-rosa-destino', 'cosmetico:mini-rosa-destino', 'cosmetico:balao-rosa-destino']) OR moldura_mini = ANY(ARRAY['cosmetico:moldura-rosa-destino', 'cosmetico:mini-rosa-destino', 'cosmetico:balao-rosa-destino']) OR balao = ANY(ARRAY['cosmetico:moldura-rosa-destino', 'cosmetico:mini-rosa-destino', 'cosmetico:balao-rosa-destino']);
+
+DELETE FROM player_items WHERE item_key = ANY(ARRAY['cosmetico:moldura-rosa-destino', 'cosmetico:mini-rosa-destino', 'cosmetico:balao-rosa-destino']);
+DELETE FROM item_ledger WHERE item_key = ANY(ARRAY['cosmetico:moldura-rosa-destino', 'cosmetico:mini-rosa-destino', 'cosmetico:balao-rosa-destino']);
+UPDATE poco_giros SET item_key = NULL WHERE item_key = ANY(ARRAY['cosmetico:moldura-rosa-destino', 'cosmetico:mini-rosa-destino', 'cosmetico:balao-rosa-destino']);
+
+INSERT INTO admin_log (action, ref, data)
+SELECT 'cosmetico.item_removido', d.key, jsonb_build_object('motivo', 'Rosa do Destino retirada do catálogo (pedido do dono)',
+       'definicao', to_jsonb(d))
+  FROM item_defs d WHERE d.key = ANY(ARRAY['cosmetico:moldura-rosa-destino', 'cosmetico:mini-rosa-destino', 'cosmetico:balao-rosa-destino']);
+DELETE FROM item_defs WHERE key = ANY(ARRAY['cosmetico:moldura-rosa-destino', 'cosmetico:mini-rosa-destino', 'cosmetico:balao-rosa-destino']);

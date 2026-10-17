@@ -4,6 +4,7 @@
 // Roda no CI depois das capturas (Postgres do workflow + servidor em http://localhost:3000).
 // Usa os convites DEVO-COSM-* do 94-seed-cosmeticos.sql (contas de teste).
 // Uso local: DATABASE_URL=... DEVO_URL=http://localhost:3000 node scripts/dev/cosmeticos-test.mjs
+import { readFileSync } from 'node:fs'
 import pg from 'pg'
 
 const BASE = process.env.DEVO_URL ?? 'http://localhost:3000'
@@ -123,7 +124,7 @@ await test('lote 2: molduras e balões em imagem (9-slice com cor de texto), ite
   const r = await j1.get('/api/cosmeticos?view=catalogo')
   ok200(r, 'catálogo')
   const by = new Map(r.json.catalogo.map((x) => [x.key, x]))
-  for (const id of ['heranca-marfim', 'relogio-fim', 'pacto-carmesim', 'olho-arcano', 'banquete-javali', 'asas-coruja', 'fortuna-rato', 'ultima-badalada', 'catedral-esquecida', 'relicario-marfim', 'rosa-destino']) {
+  for (const id of ['heranca-marfim', 'relogio-fim', 'pacto-carmesim', 'olho-arcano', 'banquete-javali', 'asas-coruja', 'fortuna-rato', 'ultima-badalada', 'catedral-esquecida', 'relicario-marfim']) {
     const m = by.get(`cosmetico:moldura-${id}`)
     assert(m?.imagem?.janela && m.asset.startsWith('img:'), `moldura ${id}: ${m?.asset}`)
     assert(by.get(`cosmetico:mini-${id}`)?.imagem?.janela?.forma === 'quadrado', `mini ${id} quadrada própria`)
@@ -134,15 +135,58 @@ await test('lote 2: molduras e balões em imagem (9-slice com cor de texto), ite
   const relogio = by.get('cosmetico:moldura-relogio-fim').imagem.camadas.map((c) => c.anim).sort().join()
   assert(relogio === 'giro,giro-rev,ponteiro,pulso', `camadas do Relógio: ${relogio}`)
   assert(by.get('cosmetico:moldura-ultima-badalada').imagem.camadas.some((c) => c.anim === 'oscila' && c.origem?.[1] < 0.1), 'sino oscila preso no alto')
-  assert(by.get('cosmetico:mini-rosa-destino')?.imagem?.janela?.forma === 'quadrado', 'mini da Rosa')
-  for (const k of ['moldura-rosa-destino', 'mini-rosa-destino', 'balao-rosa-destino', 'moldura-asas-crepusculo']) assert(by.get(`cosmetico:${k}`)?.rarity === 'lendario', `${k} lendário`)
-  for (const id of ['correspondencia-real', 'confissao-carmesim', 'ecos-arcano', 'ultimo-suspiro', 'mesa-destino', 'rosa-destino']) {
+  for (const k of ['moldura-asas-crepusculo', 'mini-asas-crepusculo']) assert(by.get(`cosmetico:${k}`)?.rarity === 'lendario', `${k} lendário`)
+  for (const id of ['correspondencia-real', 'confissao-carmesim', 'ecos-arcano', 'ultimo-suspiro', 'mesa-destino']) {
     const b = by.get(`cosmetico:balao-${id}`)
     assert(b?.imagem?.slice?.texto, `balão ${id} sem 9-slice/texto`)
     const f = await fetch(`${BASE}${b.imagem.base}-${b.imagem.slice.lado}.webp`)
     assert(f.ok, `${id}: arquivo do 9-slice ${f.status}`)
   }
   assert(by.get('cosmetico:balao-correspondencia-real').imagem.slice.texto === '#2a2320' && by.get('cosmetico:balao-ultimo-suspiro').imagem.slice.texto === '#2a2320', 'balões claros com texto escuro')
+})
+
+await test('Rosa do Destino retirada: fora do catálogo; a migração desequipa, tira do inventário, registra e é idempotente', async () => {
+  const r = await j1.get('/api/cosmeticos?view=catalogo')
+  ok200(r, 'catálogo')
+  assert(!r.text.includes('rosa-destino') && !r.text.includes('rosa-do-destino'), 'Rosa ainda no catálogo')
+  // Simula um banco de produção antigo: a Rosa existe, j2 tem os três itens e equipa a moldura e o balão.
+  const ROSA = ['cosmetico:moldura-rosa-destino', 'cosmetico:mini-rosa-destino', 'cosmetico:balao-rosa-destino']
+  for (const [k, cat] of [[ROSA[0], 'moldura_avatar'], [ROSA[1], 'moldura_mini'], [ROSA[2], 'balao']]) {
+    await q(`INSERT INTO item_defs (key, kind, name, rarity, stackable, meta) VALUES ($1, 'cosmetico', 'Rosa do Destino', 'lendario', false, $2) ON CONFLICT (key) DO NOTHING`, [k, JSON.stringify({ categoria: cat, asset: 'img:/images/cosmeticos/rosa-do-destino/x' })])
+    await q("SELECT devo_item_grant($1, $2, 1, 'recompensa', NULL, NULL, $3)", [j2.id, k, `teste-rosa:${sfx}:${k}`])
+  }
+  await q(`INSERT INTO player_cosmetics (player_id, moldura_avatar, balao) VALUES ($1, $2, $3)
+           ON CONFLICT (player_id) DO UPDATE SET moldura_avatar = $2, balao = $3`, [j2.id, ROSA[0], ROSA[2]])
+  const mig = readFileSync(new URL('../cosmeticos-migration.sql', import.meta.url), 'utf8')
+  const sec9 = mig.slice(mig.indexOf('-- 9. Rosa do Destino retirada'))
+  assert(sec9.length > 200, 'seção 9 da migração')
+  await db.query(sec9)
+  await db.query(sec9)
+  const [{ n: defs }] = await q('SELECT count(*)::int AS n FROM item_defs WHERE key = ANY($1)', [ROSA])
+  const [{ n: inv }] = await q('SELECT count(*)::int AS n FROM player_items WHERE item_key = ANY($1)', [ROSA])
+  const [eq] = await q('SELECT moldura_avatar, balao FROM player_cosmetics WHERE player_id = $1', [j2.id])
+  const logs = await q("SELECT data FROM admin_log WHERE action = 'cosmetico.removido' AND target_id = $1", [j2.id])
+  assert(defs === 0 && inv === 0, `defs ${defs} inventário ${inv}`)
+  assert(!eq.moldura_avatar && !eq.balao, `ainda equipado: ${JSON.stringify(eq)}`)
+  assert(logs.length === 1 && logs[0].data.itens.length === 3 && logs[0].data.equipados.balao === ROSA[2], `log: ${JSON.stringify(logs)}`)
+})
+
+await test('foto do perfil (rota /api/record avatar): sessão, tipo, conteúdo, limite e versão para furar o cache', async () => {
+  const JPG = 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAgDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwDyKiiiuQ+yP//Z'
+  const anon = await fetch(`${BASE}/api/record`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'avatar', image: JPG }) })
+  assert(anon.status === 401, `sem sessão: ${anon.status}`)
+  const heic = await j1.req('POST', '/api/record', { action: 'avatar', image: 'data:image/heic;base64,AAAA' })
+  assert(heic.status === 400 && /JPEG, PNG ou WebP/.test(heic.text), `heic: ${heic.status} ${heic.text}`)
+  const falso = await j1.req('POST', '/api/record', { action: 'avatar', image: `data:image/jpeg;base64,${Buffer.from('<svg onload=alert(1)>xxxxxxxx').toString('base64')}` })
+  assert(falso.status === 400, `conteúdo falso: ${falso.status}`)
+  const grande = await j1.req('POST', '/api/record', { action: 'avatar', image: `data:image/jpeg;base64,/9j/${'A'.repeat(260_000)}` })
+  assert(grande.status === 413 && /KB/.test(grande.text), `grande: ${grande.status} ${grande.text.slice(0, 120)}`)
+  const antes = (await j1.get('/api/record')).json.avatarVersion
+  ok200(await j1.req('POST', '/api/record', { action: 'avatar', image: JPG }), 'foto válida')
+  const depois = (await j1.get('/api/record')).json.avatarVersion
+  assert(depois && depois !== antes, `versão nova: ${antes} → ${depois}`)
+  const img = await j1.get(`/api/record/avatar?v=${depois}`)
+  assert(img.status === 200, `foto servida: ${img.status}`)
 })
 
 await test('jogador não equipa o que não tem; nem item de outra categoria; nem o Selo automático', async () => {
