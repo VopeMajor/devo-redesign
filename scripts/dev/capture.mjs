@@ -3180,7 +3180,7 @@ if (want('cosmeticos')) {
     await shot(page, 'cos-61-anfitriao-identidade')
   })
 
-  // Conta nova (ainda sem vencer o tutorial): coleção trancada com o motivo. Ajustes: desligar animações.
+  // Conta nova (ainda sem vencer o tutorial): coleção trancada com o motivo.
   await step('cos-trancado', async () => {
     const { ctx, page } = await account('Cardo', 'DEVO-TEST-0008', VET_CARDS)
     await openApp(page, 'Record')
@@ -3188,10 +3188,6 @@ if (want('cosmeticos')) {
     await view(page, 'section[aria-label="Identidade e coleção"]', 'center')
     await wait(600)
     await shot(page, 'cos-70-colecao-trancada')
-    await openApp(page, 'Ajustes')
-    await wait(800)
-    await view(page, 'button[aria-label="Animações dos cosméticos"]', 'center')
-    await shot(page, 'cos-71-ajustes-animacoes')
     await ctx.close()
   })
 

@@ -29,27 +29,23 @@
     "pedestais": {
       "campanha": {
         "x": 0.5,
-        "y": 0.352,
-        "escala": 0.55,
-        "afundar": 8
+        "y": 0.475,
+        "escala": 0.6
       },
       "imperador": {
-        "x": 0.213,
-        "y": 0.413,
-        "escala": 0.6,
-        "afundar": 10
+        "x": 0.205,
+        "y": 0.512,
+        "escala": 0.6
       },
       "observatorio": {
-        "x": 0.767,
-        "y": 0.475,
-        "escala": 0.6,
-        "afundar": 32
+        "x": 0.775,
+        "y": 0.562,
+        "escala": 0.6
       },
       "picadeiro": {
         "x": 0.36,
         "y": 0.67,
-        "escala": 0.5,
-        "afundar": 0
+        "escala": 0.5
       }
     },
     "enfeites": [

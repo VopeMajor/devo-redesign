@@ -7,6 +7,7 @@ import { RecordError } from './errors'
 import { run, txAs, UUID_RE } from './fundacao-db'
 import { creditMinutes, deliverCard, grantItem } from './inventario-server'
 import { loadVotoAlvo, requireActor, requireCan } from './permissoes-server'
+import { grantUnlock } from './progresso-server'
 
 /**
  * Recompensas com aprovação (DIRECAO-3 §3; texto do dono "Recompensas externas" e §8).
@@ -312,6 +313,8 @@ async function deliverIn(c: PoolClient, ator: Ator | null, id: string): Promise<
         row.id,
         JSON.stringify({ arcano: row.resource_key, origem: 'recompensa' }),
       ])
+      // Ganhar um Arcano abre os sistemas de Arcanos e Virtudes (mesma flag) para o jogador.
+      await grantUnlock(row.recipient_id, 'virtudes', 'sistema', row.id, null, c)
       break
     case 'carta':
       for (let i = 0; i < row.quantity && i < 50; i++) {

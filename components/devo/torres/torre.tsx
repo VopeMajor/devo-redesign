@@ -4,7 +4,7 @@ import { type CSSProperties, type ReactNode, useEffect, useRef, useState } from 
 import { playSfx } from '@/lib/devo/audio'
 import type { AndarEstado, TorreEstado } from '@/lib/devo/torres/tipos'
 import { cn } from '@/lib/utils'
-import { CageFrame, GlyphArrow, Kicker, Sheet, toRoman } from '../kit'
+import { CageFrame, GlyphClose, Kicker, Sheet, toRoman } from '../kit'
 import { ALTURA_ARTE, alturaEscada, ESCADA, Escada, LARGURA_ARTE, MAPA_W, TorreArte, TorresDefs, yDoAndar } from './arte'
 import { TorreIlustradaImg } from './ilustrada'
 import { BotaoTorre, Cadeado, ChaveOrnamental, CristalEssencia, EstrelaAndar, type EstadoAndar, voluta } from './ornamentos'
@@ -91,8 +91,18 @@ export function TelaTorre({
       <header className="relative z-10 shrink-0 bg-[linear-gradient(180deg,rgba(8,8,10,0.92),rgba(8,8,10,0.55)_80%,transparent)] px-4 pb-3 pt-2">
         <div className="flex items-start gap-3">
           {voltarProprio && (
-            <button type="button" onClick={onVoltar} aria-label="Voltar ao mapa" className="dv-focus -ml-2 grid size-11 shrink-0 place-items-center text-dv-text-2 hover:text-dv-text">
-              <GlyphArrow className="size-5 rotate-180" />
+            // Desktop (sem seta do shell): um X claro, com moldura, para sair da torre e voltar ao mapa.
+            <button
+              type="button"
+              onClick={() => {
+                playSfx('click')
+                onVoltar()
+              }}
+              aria-label="Sair da torre"
+              title="Sair da torre"
+              className="dv-focus -ml-1 mt-0.5 grid size-11 shrink-0 place-items-center border border-dv-line-strong bg-dv-ink/70 text-dv-text-2 transition-colors hover:border-dv-gold/60 hover:bg-dv-blood hover:text-white"
+            >
+              <GlyphClose className="size-4" />
             </button>
           )}
           <div className="min-w-0 flex-1 animate-dv-cut-in pt-1">

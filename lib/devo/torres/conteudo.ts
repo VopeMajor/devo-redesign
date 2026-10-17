@@ -106,10 +106,20 @@ export function errosDoConteudo(raw: unknown): string[] {
 }
 
 /** Escolhe o conteúdo em vigor: o do Owner (se válido) ou o arquivo. */
+/**
+ * O pouso das torres depende da ilha pintada (pedestais e chão do arquivo de arte), não do texto do Owner: com a
+ * mesma ilha, as posições do arquivo valem sobre as salvas (senão um conteúdo antigo deixa as torres flutuando).
+ */
+function comPousoDoArquivo(c: ConteudoTorres): ConteudoTorres {
+  const pad = CONTEUDO_PADRAO.cenario
+  if (!c.cenario || !pad || c.cenario.ilha.arquivo !== pad.ilha.arquivo) return c
+  return { ...c, cenario: { ...c.cenario, pedestais: { ...c.cenario.pedestais, ...pad.pedestais } } }
+}
+
 export function conteudoEmVigor(override: unknown): { conteudo: ConteudoTorres; fonte: 'arquivo' | 'owner'; erros: string[] } {
   if (override) {
     const erros = errosDoConteudo(override)
-    if (!erros.length) return { conteudo: override as ConteudoTorres, fonte: 'owner', erros }
+    if (!erros.length) return { conteudo: comPousoDoArquivo(override as ConteudoTorres), fonte: 'owner', erros }
     return { conteudo: CONTEUDO_PADRAO, fonte: 'arquivo', erros }
   }
   return { conteudo: CONTEUDO_PADRAO, fonte: 'arquivo', erros: [] }
