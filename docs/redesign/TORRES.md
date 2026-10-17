@@ -121,6 +121,26 @@ Copie uma torre secundária e troque:
 
 Deve haver **exatamente 1** torre `"principal"`. Requisitos de chave só podem citar torres que existem.
 
+## Cenário pintado do mapa (opcional)
+
+No topo do `conteudo.json`, `"cenario"` troca o desenho vetorial do mapa pela ilha e pelo céu pintados:
+
+```json
+"cenario": {
+  "ilha": { "arquivo": "/images/torres/mapa/ilha", "larguras": [512, 1024], "aspecto": 0.8 },
+  "ceu":  { "arquivo": "/images/torres/mapa/ceu",  "larguras": [512, 1024], "aspecto": 0.6 },
+  "pedestais": { "campanha": { "x": 0.5, "y": 0.32 }, "imperador": { "x": 0.2, "y": 0.5 } }
+}
+```
+
+- A ilha ocupa a largura do mapa, apoiada embaixo; `aspecto` = largura ÷ altura da imagem.
+- `pedestais`: centro da base de cada torre em frações [0–1] da imagem da ilha (o `json` do pipeline traz isso).
+  A escala vem da profundidade (mais ao fundo, menor; a principal 25 % maior); `"escala"` no pedestal força um valor.
+- O céu deriva devagar (paralaxe leve) e acompanha o ponteiro no desktop.
+- Se uma imagem falhar, o mapa volta sozinho para o vetorial. Torre sem pedestal usa o `"mapa"` dela.
+- As placas de nome ficam no pé de cada torre, pequenas, com um filete até a base, e o código as desloca para
+  nunca cobrir uma ilustração ou outra placa.
+
 ## Essências: como o jogador ganha
 
 - **Galo**: 1 Essência do Galo ao aceitar ser fã na apresentação (uma vez só; recusar também é definitivo).

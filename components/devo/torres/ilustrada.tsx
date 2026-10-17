@@ -10,11 +10,13 @@ import { cn } from '@/lib/utils'
  * apagadas (sombra leve). Trocar a arte = trocar o arquivo e o campo `ilustracao` no conteúdo.
  */
 
-export const srcDe = (ilu: Ilustracao, largura: number) => `${ilu.arquivo}-${largura}.webp`
-export const srcSetDe = (ilu: Ilustracao) => ilu.larguras.map((w) => `${srcDe(ilu, w)} ${w}w`).join(', ')
+type Arquivo = Pick<Ilustracao, 'arquivo' | 'larguras'>
+
+export const srcDe = (ilu: Arquivo, largura: number) => `${ilu.arquivo}-${largura}.webp`
+export const srcSetDe = (ilu: Arquivo) => ilu.larguras.map((w) => `${srcDe(ilu, w)} ${w}w`).join(', ')
 
 /** Menor largura disponível que cobre `px` pixels de tela (com a densidade do aparelho). */
-export function larguraPara(ilu: Ilustracao, px: number) {
+export function larguraPara(ilu: Arquivo, px: number) {
   const ord = [...ilu.larguras].sort((a, b) => a - b)
   return ord.find((w) => w >= px) ?? ord[ord.length - 1]
 }

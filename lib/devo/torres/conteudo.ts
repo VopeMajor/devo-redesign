@@ -86,6 +86,13 @@ export function errosDoConteudo(raw: unknown): string[] {
       validarCena(a?.cena, at, erros)
     })
   })
+  if (c.cenario) {
+    const ce = c.cenario
+    if (!ce.ilha?.arquivo || !Array.isArray(ce.ilha.larguras) || !(Number(ce.ilha.aspecto) > 0)) erros.push('"cenario.ilha" precisa de "arquivo", "larguras" e "aspecto".')
+    if (ce.ceu && (!ce.ceu.arquivo || !Array.isArray(ce.ceu.larguras))) erros.push('"cenario.ceu" precisa de "arquivo" e "larguras".')
+    for (const [id, p] of Object.entries(ce.pedestais ?? {}))
+      if (!(p.x >= 0 && p.x <= 1 && p.y >= 0 && p.y <= 1)) erros.push(`"cenario.pedestais.${id}" precisa de x e y entre 0 e 1.`)
+  }
   if (principais !== 1) erros.push(`Deve haver exatamente 1 torre principal (há ${principais}).`)
   // chaves pedidas precisam ser de torres que existem
   c.torres.forEach((t) =>
