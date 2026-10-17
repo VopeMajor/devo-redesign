@@ -1,0 +1,19 @@
+{
+  "asset": "img:/images/casa/cena-porta",
+  "imagem": {
+    "base": "/images/casa/cena-porta",
+    "tamanhos": [
+      512,
+      768,
+      1024,
+      1536
+    ]
+  },
+  "origem": {
+    "pedido": "casa-interior-porta",
+    "variacao": "v02",
+    "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+    "seed": 10102,
+    "importado": null
+  }
+}

@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, type CSSProperties } from 'react'
-import { CASA_ARTE } from '@/lib/devo/casa-arte'
+import { CASA_ARTE, CASA_ARTE_POS, casaSrcSet } from '@/lib/devo/casa-arte'
 import { cn } from '@/lib/utils'
 
 /**
@@ -9,7 +9,8 @@ import { cn } from '@/lib/utils'
  * papel de parede adamascado quase invisível, quadro torto, relógio parado, poltrona vazia virada para a porta.
  *
  * Camadas (de trás para a frente), todas em CSS/SVG leves (sem imagens obrigatórias, sem JS de animação):
- *  1. parede + lambri; ou a PINTURA opcional de `CASA_ARTE.noite` (lib/devo/casa-arte.ts) com reserva em CSS;
+ *  1. a PINTURA da Arte (`CASA_ARTE`, lib/devo/casa-arte.ts: porta fechada/entreaberta + cortina em paralaxe) com
+ *     as luzes vivas por cima; se não houver/carregar, parede + lambri em CSS (abaixo);
  *  2. janela com lua e cortinas finas (o luar desce em feixe até o chão);
  *  3. porta com batente — ao abrir, a luz do corredor vaza em leque pelo assoalho;
  *  4. assoalho em perspectiva;
@@ -19,24 +20,18 @@ import { cn } from '@/lib/utils'
  */
 export function CasaNoite({ portaAberta, anima, fxKey, luzFalha }: { portaAberta: boolean; anima: boolean; fxKey: number; luzFalha: boolean }) {
   const [semArte, setSemArte] = useState(false)
-  const arte = CASA_ARTE.noite && !semArte ? CASA_ARTE.noite : null
+  if (CASA_ARTE.cena && !semArte) return <CasaPintada portaAberta={portaAberta} fxKey={fxKey} luzFalha={luzFalha} onErro={() => setSemArte(true)} />
   return (
     <div className="cn-casa absolute inset-0 overflow-hidden bg-[#0f0e12]">
-      {arte ? (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img src={arte} alt="" onError={() => setSemArte(true)} className="absolute inset-0 size-full object-cover" />
-      ) : (
-        <Parede />
-      )}
-
-      {!arte && <Janela />}
+      <Parede />
+      <Janela />
       {/* feixe de luar da janela até o chão */}
       <span className="cn-luar absolute left-[2%] top-[34%] h-[52%] w-[min(58%,520px)] bg-[linear-gradient(180deg,rgba(176,168,222,0.16),rgba(176,168,222,0.05)_70%,transparent)] mix-blend-screen [clip-path:polygon(16%_0,66%_0,100%_100%,0_100%)]" />
       <Poeira />
 
-      <Porta aberta={portaAberta} anima={anima} fxKey={fxKey} desenhar={!arte} />
+      <Porta aberta={portaAberta} anima={anima} fxKey={fxKey} desenhar />
 
-      {!arte && <Assoalho />}
+      <Assoalho />
       {/* leque de luz do corredor no assoalho (só com a porta aberta) */}
       {portaAberta && (
         <span
@@ -48,11 +43,73 @@ export function CasaNoite({ portaAberta, anima, fxKey, luzFalha }: { portaAberta
         />
       )}
 
-      <Abajur falha={luzFalha} fxKey={fxKey} desenhar={!arte} />
-      {!arte && <Poltrona />}
+      <Abajur falha={luzFalha} fxKey={fxKey} desenhar />
+      <Poltrona />
 
       {/* vinheta: o canto do quarto engole a luz */}
       <span className="absolute inset-0 bg-[radial-gradient(120%_85%_at_45%_45%,transparent_42%,rgba(0,0,0,0.78))]" />
+      <style>{CASA_CSS}</style>
+    </div>
+  )
+}
+
+/**
+ * Quadro 2:3 que COBRE a tela (como object-cover), para que as luzes vivas fiquem sobre o abajur e a janela da
+ * pintura em qualquer proporção. Celular: corta um pouco as laterais; desktop: corta em cima e embaixo.
+ */
+const QUADRO: CSSProperties = { width: 'max(100vw, 66.667dvh)', aspectRatio: '2 / 3', left: '50%', top: '54%', transform: 'translate(-50%, -50%)' }
+
+/**
+ * Casa pintada (CASA_ARTE): porta fechada ↔ entreaberta em cruzamento (a porta abre com o som, quando o Galo entra,
+ * e fecha quando ele sai), luz quente do abajur que respira e falha no "A luz pisca", poeira no feixe do luar,
+ * e o primeiro plano (a cortina vinho) com paralaxe lenta. A mesa do primeiro plano fica de fora (cairia atrás da
+ * caixa de fala).
+ */
+function CasaPintada({ portaAberta, fxKey, luzFalha, onErro }: { portaAberta: boolean; fxKey: number; luzFalha: boolean; onErro: () => void }) {
+  const { abajur, janela } = CASA_ARTE_POS
+  return (
+    <div className="cn-casa absolute inset-0 overflow-hidden bg-[#0f0e12]">
+      <div className="absolute" style={QUADRO}>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={`${CASA_ARTE.cena}-768.webp`} srcSet={casaSrcSet(CASA_ARTE.cena!)} sizes="max(100vw, 66.667dvh)" alt="" onError={onErro} className="absolute inset-0 size-full" />
+        {CASA_ARTE.cenaPorta && (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={`${CASA_ARTE.cenaPorta}-768.webp`}
+            srcSet={casaSrcSet(CASA_ARTE.cenaPorta)}
+            sizes="max(100vw, 66.667dvh)"
+            alt=""
+            className={cn('absolute inset-0 size-full transition-opacity ease-out', portaAberta ? 'opacity-100 duration-[1200ms]' : 'opacity-0 duration-[900ms]')}
+          />
+        )}
+        {/* luz viva do abajur por cima da pintada */}
+        <span
+          key={luzFalha ? `f${fxKey}` : 'luz'}
+          className={cn('absolute size-[46%] -translate-x-1/2 -translate-y-1/2 bg-[radial-gradient(closest-side,rgba(240,206,150,0.30),rgba(240,206,150,0.08)_55%,transparent)] mix-blend-screen', luzFalha ? 'cn-falha' : 'cn-respira')}
+          style={{ left: `${abajur.x}%`, top: `${abajur.y}%` }}
+        />
+        {/* "A luz pisca": o abajur pintado também apaga (o quarto escurece em volta dele) */}
+        {luzFalha && <span key={`e${fxKey}`} className="cn-escuro absolute inset-0 bg-black" />}
+        {/* poeira no feixe do luar */}
+        <span className="absolute h-[34%] w-[40%]" style={{ left: `${janela.x}%`, top: `${janela.y}%` }}>
+          <Poeira />
+        </span>
+      </div>
+
+      {CASA_ARTE.primeiroPlano && (
+        <div className="cn-paralaxe pointer-events-none absolute" style={QUADRO}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={`${CASA_ARTE.primeiroPlano}-768.webp`}
+            srcSet={casaSrcSet(CASA_ARTE.primeiroPlano)}
+            sizes="max(100vw, 66.667dvh)"
+            alt=""
+            className="absolute inset-0 size-full -translate-x-[27%] brightness-[0.7] [clip-path:inset(0_0_44%_0)] [mask-image:linear-gradient(180deg,#000_46%,transparent_56%)]"
+          />
+        </div>
+      )}
+
+      <span className="absolute inset-0 bg-[radial-gradient(120%_85%_at_50%_45%,transparent_48%,rgba(0,0,0,0.72))]" />
       <style>{CASA_CSS}</style>
     </div>
   )
@@ -253,6 +310,10 @@ const CASA_CSS = `
 .cn-nuvem{animation:cn-nuvem 60s linear infinite}
 .cn-grao{animation:cn-grao 14s ease-in-out infinite}
 .cn-fresta{animation:cn-fresta 6s ease-in-out infinite}
+.cn-paralaxe{animation:cn-paralaxe 16s ease-in-out infinite alternate}
+.cn-escuro{animation:cn-escuro 1.1s steps(1) both;pointer-events:none}
+@keyframes cn-paralaxe{0%{transform:translate(-50%,-50%) translateX(-1.2%)}100%{transform:translate(-50%,-50%) translateX(1.2%)}}
+@keyframes cn-escuro{0%{opacity:0}12%{opacity:.55}24%{opacity:.1}36%{opacity:.7}62%{opacity:.3}74%{opacity:.6}100%{opacity:0}}
 @keyframes cn-porta{0%{transform:perspective(600px) rotateY(0)}100%{transform:perspective(600px) rotateY(-74deg)}}
 @keyframes cn-acende{0%{opacity:0}100%{opacity:1}}
 @keyframes cn-respira{0%,100%{opacity:.92}50%{opacity:1}}

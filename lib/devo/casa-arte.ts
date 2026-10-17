@@ -1,17 +1,26 @@
 /**
- * Arte pintada da Casa do jogador (opcional). O agente de Arte entrega em `public/images/casa/*` e preenche os
- * caminhos aqui; enquanto for `null`, a cena usa só a composição em CSS/SVG (components/devo/dialogo/casa-noite.tsx).
- * Com a pintura, a cena continua pondo POR CIMA a luz do abajur, o luar da janela, a luz da porta ao abrir e a
- * vinheta — então a pintura deve vir "apagada" (sem esses brilhos), de preferência 1600×1000 webp, centro útil no
- * meio (o celular corta as laterais), porta à direita e janela à esquerda (posições em `CASA_ARTE_POS`).
+ * Arte pintada da Casa do jogador (agente de Arte, `public/images/casa/*`, prancha docs/redesign/criticas/arte-casa.png).
+ * Quadro 2:3, quatro larguras (512/768/1024/1536). `null` em `cena` volta à composição em CSS/SVG
+ * (components/devo/dialogo/casa-noite.tsx), que também é a reserva se a imagem não carregar.
+ * - `cena`: porta fechada; `cenaPorta`: a MESMA composição com a porta entreaberta e a luz do corredor
+ *   (cruzamento quando a porta abre/fecha);
+ * - `primeiroPlano`: cortina vinho, velas, chaves e a borda de uma mesa, com alfa, para paralaxe. Só a cortina
+ *   aparece (o tampo da mesa cairia atrás da caixa de fala).
  */
-export const CASA_ARTE: { noite: string | null } = {
-  noite: null,
+export const CASA_ARTE: { cena: string | null; cenaPorta: string | null; primeiroPlano: string | null; tamanhos: number[] } = {
+  cena: '/images/casa/cena',
+  cenaPorta: '/images/casa/cena-porta',
+  primeiroPlano: '/images/casa/primeiro-plano',
+  tamanhos: [512, 768, 1024, 1536],
 }
 
-/** Onde estão a janela, a porta e o abajur na pintura (em % da cena), para alinhar as luzes por cima. */
+/** srcset de uma arte da Casa (`<base>-<largura>.webp`). */
+export function casaSrcSet(base: string) {
+  return CASA_ARTE.tamanhos.map((w) => `${base}-${w}.webp ${w}w`).join(', ')
+}
+
+/** Onde estão o abajur e a janela na pintura (em % do quadro 2:3), para pôr as luzes vivas por cima. */
 export const CASA_ARTE_POS = {
-  janela: { left: '7%', top: '14%' },
-  porta: { right: '8%', bottom: '30%' },
-  abajur: { left: '15%', bottom: '33%' },
+  abajur: { x: 12, y: 57 },
+  janela: { x: 9, y: 34 },
 }

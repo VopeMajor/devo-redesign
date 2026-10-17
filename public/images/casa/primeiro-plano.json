@@ -1,0 +1,20 @@
+{
+  "asset": "img:/images/casa/primeiro-plano",
+  "imagem": {
+    "base": "/images/casa/primeiro-plano",
+    "tamanhos": [
+      512,
+      768,
+      1024,
+      1536
+    ],
+    "parallax": "primeiro plano: move mais que a cena; mesmo quadro 2:3 da cena"
+  },
+  "origem": {
+    "pedido": "casa-primeiro-plano",
+    "variacao": "v02",
+    "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+    "seed": 10202,
+    "obs": "fundo cinza removido por cor (rembg comia a cortina)"
+  }
+}
