@@ -3,12 +3,12 @@
 import { useCallback, useEffect, useState, type CSSProperties } from 'react'
 import { createPortal } from 'react-dom'
 import { playSfx } from '@/lib/devo/audio'
-import { ELENCO_INFO, npcPortrait } from '@/lib/devo/npcs'
+import { ELENCO_INFO } from '@/lib/devo/npcs'
 import type { SalaoRelogio } from '@/lib/devo/salao'
 import { HERDEIRO_APRESENTACAO, HERDEIRO_POSES, salaoTexto, semMarcas, trechos, type SalaoFoco } from '@/lib/devo/salao-herdeiro'
-import { cn } from '@/lib/utils'
 import { useAdvanceKeys } from '../hooks'
 import { toRoman } from '../kit/glyphs'
+import { NpcAnchor } from '../kit/npc-anchor'
 import { AdvanceIndicator, DialogueShell, SpeakerPlate, useTypewriter } from '../intro/vn'
 import { SoundToggle } from '../shared/sound-toggle'
 import { SalaoCena } from './salao-cena'
@@ -44,6 +44,8 @@ export function SalaoHerdeiro({
 }) {
   const [index, setIndex] = useState(0)
   const [montado, setMontado] = useState(false)
+  // parapeito colado na caixa de fala: o Herdeiro se ancora nele
+  const [parapeito, setParapeito] = useState<HTMLElement | null>(null)
   useEffect(() => setMontado(true), [])
 
   const fala = HERDEIRO_APRESENTACAO[index]
@@ -117,40 +119,32 @@ export function SalaoHerdeiro({
         ) : null}
       </div>
 
-      {/* o Herdeiro, no camarote: a base do busto some atrás do parapeito */}
-      <div aria-hidden="true" className={cn('pointer-events-none absolute inset-x-0 top-[17%] z-10 mx-auto h-[50%] max-w-[560px] transition-transform duration-500', foco === 'contador' && 'translate-y-[9%]')}>
-        <span className="absolute inset-x-[10%] top-[8%] h-[80%] bg-[radial-gradient(50%_50%_at_50%_45%,rgba(236,229,216,0.16),transparent_70%)]" />
-        {HERDEIRO_POSES.map((pose) => {
-          const art = npcPortrait('herdeiro', pose)
-          if (!art) return null
-          const ativo = pose === fala.pose
-          return (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              key={pose}
-              src={art.src}
-              alt=""
-              draggable={false}
-              className={cn(
-                'absolute inset-x-0 top-0 h-[136%] w-full object-contain object-top drop-shadow-[0_18px_22px_rgba(0,0,0,0.7)] transition-[opacity,transform] duration-300',
-                ativo ? 'translate-y-0 opacity-100' : 'translate-y-1 opacity-0',
-              )}
-            />
-          )
-        })}
-        {/* parapeito do camarote: mármore negro com filete de aço e balaústres */}
-        <div className="absolute inset-x-[4%] bottom-[-6%] h-[26%]">
+      {/* o Herdeiro, no camarote: busto ANCORADO ao parapeito (kit/npc-anchor), que por sua vez fica colado
+          no topo da caixa de fala — sem vão em nenhuma altura de tela */}
+      <NpcAnchor
+        npc="herdeiro"
+        pose={fala.pose}
+        poses={HERDEIRO_POSES}
+        fala={parapeito}
+        cabeca="min(15dvh, 140px)"
+        reserva={foco ? 196 : 72}
+        sobreposicao={18}
+        className="drop-shadow-[0_18px_22px_rgba(0,0,0,0.7)]"
+      >
+        <span aria-hidden="true" className="absolute inset-x-[22%] top-[6%] -z-10 h-[70%] bg-[radial-gradient(50%_50%_at_50%_45%,rgba(236,229,216,0.16),transparent_70%)]" />
+      </NpcAnchor>
+      <span className="sr-only">{`${info.name}, ${info.title}`}</span>
+
+      <div className="relative z-20 mt-auto px-4 pb-[max(env(safe-area-inset-bottom),1.25rem)]">
+        {/* parapeito do camarote: mármore negro com filete de aço e balaústres, colado na caixa de fala */}
+        <div ref={setParapeito} aria-hidden="true" className="relative -mx-4 mt-6 h-11">
           <span className="absolute inset-0 bg-[linear-gradient(180deg,#1f1f22,#0c0c0e)] shadow-[0_-6px_18px_rgba(0,0,0,0.6)]" />
           <span className="absolute inset-x-0 top-0 h-[3px] bg-[linear-gradient(90deg,transparent,#bab09f_12%,#ece5d8_50%,#bab09f_88%,transparent)]" />
           <span className="absolute inset-x-[6%] top-[22%] bottom-[18%] opacity-60 [background-image:repeating-linear-gradient(90deg,rgba(186,176,159,0.5)_0_2px,transparent_2px_22px)]" />
           <span className="absolute inset-x-0 bottom-[14%] h-px bg-[#bab09f]/45" />
         </div>
-      </div>
-      <span className="sr-only">{`${info.name}, ${info.title}`}</span>
-
-      <div className="relative z-20 mt-auto px-4 pb-[max(env(safe-area-inset-bottom),1.25rem)]">
         <button type="button" onClick={advance} aria-label={done ? 'Próxima fala' : 'Mostrar fala completa'} className="dv-focus relative block w-full text-left">
-          <DialogueShell tone="gold" className="mt-6">
+          <DialogueShell tone="gold" className="-mt-3">
             <SpeakerPlate name={info.name} title="Maestro do Salão" tone="gold" />
             <span className="block px-6 pb-3 pt-8">
               <span aria-live="polite" className="block min-h-[6.2rem] text-pretty font-body text-[17px] leading-relaxed text-dv-porcelain">

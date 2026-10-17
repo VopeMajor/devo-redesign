@@ -3,22 +3,20 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { playSfx } from '@/lib/devo/audio'
 import { INTRO_SCRIPT } from '@/lib/devo/intro-script'
-import { ELENCO_INFO, getNpc, portraitFrameProps, resolveExpressao, type Expression, type PortraitNpc } from '@/lib/devo/npcs'
+import { ELENCO_INFO, getNpc, resolveExpressao, type Expression, type PortraitNpc } from '@/lib/devo/npcs'
 import { withName } from '@/lib/devo/player-name'
 import { useDevo } from '../state/devo-store'
 import { cn } from '@/lib/utils'
 import Image from 'next/image'
 import { useAdvanceKeys } from '../hooks'
 import { GlyphSpark, toRoman } from '../kit/glyphs'
-import { PortraitFrame } from '../kit/portrait'
+import { NpcAnchor, NpcMedallion } from '../kit/npc-anchor'
 import { SceneBackdrop } from '../kit/scene'
 import { TutorialVisualPanel } from './tutorial-visuals'
 import { AdvanceIndicator, DialogueShell, SpeakerPlate, VnTopBar, useTypewriter } from './vn'
 
 const CHAR_MS = 24
 
-/** Tom do retrato por falante: todos em aço champanhe (paleta do mármore; ametista só como acento). */
-const TONE: Record<string, 'gold' | 'cobalt'> = { rato: 'gold', herdeiro: 'gold' }
 
 /** Expressões que o roteiro pede de cada falante: só estas ficam montadas (as 12 de cada NPC pesariam à toa). */
 const SCRIPT_EXPRS: Record<string, Expression[]> = {}
@@ -28,35 +26,11 @@ for (const l of INTRO_SCRIPT) {
   if (!list.includes(e)) list.push(e)
 }
 
-/** Retrato do falante no PortraitFrame do kit; as expressões do roteiro ficam montadas e trocam por opacidade. */
-function Portrait({ speaker, expression, className }: { speaker: string; expression: Expression; className?: string }) {
-  const info = ELENCO_INFO[speaker as PortraitNpc]
-  const alt = info ? `${info.name}, ${info.title}` : speaker
-  const exprs = SCRIPT_EXPRS[speaker] ?? [resolveExpressao(speaker)]
-  const target = resolveExpressao(speaker, expression)
-  return (
-    <div className={cn('relative', className)}>
-      {exprs.map((expr) => {
-        const art = portraitFrameProps(speaker, expr)
-        if (!art) return null
-        const on = expr === target
-        return (
-          <div key={expr} className={cn('transition-opacity duration-500', on ? 'relative opacity-100' : 'absolute inset-0 opacity-0')} aria-hidden={on ? undefined : true}>
-            <PortraitFrame {...art} alt={on ? alt : ''} tone={TONE[speaker] ?? 'gold'} ornate className="w-full" />
-          </div>
-        )
-      })}
-    </div>
-  )
-}
-
 /** Lado de entrada do retrato por falante (o Herdeiro vem da esquerda, o Rato da direita). */
 const ENTER_FROM: Record<string, 'l' | 'r'> = { herdeiro: 'l', rato: 'r' }
 
 function PlateAvatar({ speaker, expression }: { speaker: string; expression: Expression }) {
-  const art = portraitFrameProps(speaker, expression, 'face')
-  if (!art) return null
-  return <PortraitFrame {...art} alt="" shape="round" tone={TONE[speaker] ?? 'gold'} className="w-12" />
+  return <NpcMedallion npc={speaker} pose={expression} size={48} ring="rgba(186,176,159,0.55)" />
 }
 
 /**
@@ -109,6 +83,9 @@ export function IntroScreen({
   // entrada do salão (en-hall-in: 450ms + 2000ms). Compilar os shaders no meio da animação custava
   // quadros no celular (e travava a captura da cortina no CI, que roda em renderizador por software).
   const [sceneLive, setSceneLive] = useState(false)
+  // caixa de fala e palco (fala + selo) para o retrato ancorado
+  const [fala, setFala] = useState<HTMLElement | null>(null)
+  const [palco, setPalco] = useState<HTMLElement | null>(null)
   useEffect(() => {
     const t = window.setTimeout(() => setSceneLive(true), 2600)
     return () => window.clearTimeout(t)
@@ -186,27 +163,33 @@ export function IntroScreen({
             {line.visual && line.unlock && <UnlockSeal key={`u-${index}`} name={line.unlock} />}
           </div>
 
-          <div className="relative">
-            {/* Retrato ancorado à caixa: em cima dela no celular, à esquerda no desktop. Entra pelo lado do falante. */}
-            <div
-              className={cn(
-                'pointer-events-none absolute inset-x-0 bottom-full mb-4 flex justify-center transition-[opacity,transform] duration-500 ease-out',
-                'lg:inset-x-auto lg:bottom-0 lg:right-full lg:mb-0 lg:mr-8 lg:w-[min(30vw,400px)]',
-                line.visual ? 'translate-y-6 opacity-0 lg:translate-y-0 lg:opacity-100' : 'translate-y-0 opacity-100',
+          <div ref={setPalco} className="relative">
+            {/* Retrato ANCORADO à caixa (kit/npc-anchor): a base do busto passa por trás do topo da fala, sem vão,
+                em qualquer altura de tela; no desktop fica à esquerda da caixa. Entra pelo lado do falante. */}
+            <NpcAnchor
+              key={line.speaker}
+              npc={line.speaker}
+              pose={line.expression}
+              poses={SCRIPT_EXPRS[line.speaker]}
+              fala={line.unlock && !line.visual ? palco : fala}
+              alt={ELENCO_INFO[line.speaker as PortraitNpc] ? `${ELENCO_INFO[line.speaker as PortraitNpc].name}, ${ELENCO_INFO[line.speaker as PortraitNpc].title}` : undefined}
+              cabeca="min(14dvh, 128px)"
+              reserva={72}
+              outerClassName={cn(
+                'transition-opacity duration-500 lg:!bottom-0 lg:!left-auto lg:!right-full lg:mr-8 lg:![transform:none]',
+                line.visual ? 'opacity-0 lg:opacity-100' : 'opacity-100',
               )}
-            >
-              <div key={line.speaker} className={cn('w-[min(58vw,240px)] lg:w-full', ENTER_FROM[line.speaker] === 'l' ? 'en-portrait-in-l' : 'en-portrait-in-r')}>
-                <Portrait speaker={line.speaker} expression={line.expression} className="w-full" />
-              </div>
-            </div>
+              className={ENTER_FROM[line.speaker] === 'l' ? 'en-portrait-in-l' : 'en-portrait-in-r'}
+            />
 
             {line.unlock && !line.visual && <UnlockSeal key={`u-${index}`} name={line.unlock} className="mb-8" />}
 
             <button
+              ref={setFala}
               type="button"
               onClick={advance}
               aria-label={done ? (last ? 'Entrar no DEVO' : 'Próxima fala') : 'Mostrar fala completa'}
-              className={cn('dv-focus relative z-10 block w-full text-left', !(line.unlock && !line.visual) && 'mt-6')}
+              className={cn('dv-focus relative z-10 block w-full text-left', !(line.unlock && !line.visual) && 'mt-2')}
             >
               <DialogueShell tone="gold">
                 <SpeakerPlate

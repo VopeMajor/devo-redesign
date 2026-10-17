@@ -329,6 +329,8 @@ export function PrologueScreen({
     onDone()
   }, [onDone])
   const [index, setIndex] = useState(() => Math.min(Math.max(0, startIndex), PROLOGUE.length - 1))
+  // caixa de fala atual (a Melissa se ancora nela: kit/npc-anchor)
+  const [fala, setFala] = useState<HTMLElement | null>(null)
   const lastStage = useRef<StageId | null>(null)
   const lastAct = useRef<Act | null>(null)
 
@@ -505,6 +507,7 @@ export function PrologueScreen({
         speaking={line?.who === 'melissa'}
         melissa={index >= FIRST_MELISSA ? 'on' : index === FIRST_MELISSA - 1 ? 'approach' : 'off'}
         opening={index === 0}
+        fala={fala}
       />
 
       {/* Primeiro quadro: onde o jogador está. Entra quando os olhos abrem. */}
@@ -563,6 +566,7 @@ export function PrologueScreen({
         {line && text && (
           <button
             key={`${index}-${replies.length}`}
+            ref={setFala}
             type="button"
             onClick={advance}
             aria-label={done ? 'Continuar' : 'Mostrar texto completo'}

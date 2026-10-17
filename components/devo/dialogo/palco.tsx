@@ -1,10 +1,11 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import type { CenarioId, DestinoDemo, Fx, HoloFase } from '@/lib/devo/dialogo/formato'
 import { npcPortrait } from '@/lib/devo/npcs'
 import type { Destino } from '@/lib/devo/progresso'
 import { cn } from '@/lib/utils'
+import { NpcAnchor, useFalaAncora } from '../kit/npc-anchor'
 import { ChamadaMelissa, HologramaMelissa } from './holograma'
 import { LinhaDestino, PlacaDestino } from './linha-destino'
 
@@ -31,16 +32,22 @@ export function Palco({
   fxKey,
   destinoReal,
   falando,
+  fala = null,
 }: {
   estado: PalcoEstado
   fx?: Fx
   fxKey: number
   destinoReal?: Destino
   falando: boolean
+  /** Coluna da caixa de fala: retrato e holograma se ancoram no topo dela (kit/npc-anchor). */
+  fala?: HTMLElement | null
 }) {
   const shake = fx === 'campainha' || fx === 'tremor'
+  const marca = useRef<HTMLDivElement>(null)
+  const ancora = useFalaAncora(fala, marca, 64)
   return (
     <div aria-hidden="true" className={cn('absolute inset-0 overflow-hidden', shake && 'pl-shake')} key={shake ? `s${fxKey}` : 'palco'}>
+      <div ref={marca} className="pointer-events-none absolute inset-0" />
       <Cenario id={estado.cenario} portaAberta={!!estado.porta} anima={fx === 'porta-abre' || fx === 'porta-fecha'} fxKey={fxKey} />
 
       {estado.cenario === 'holograma' && estado.holo === 'chamada' && (
@@ -50,12 +57,12 @@ export function Palco({
       )}
 
       {estado.cenario === 'holograma' && estado.holo && estado.holo !== 'chamada' && (
-        <div className="absolute inset-x-0 bottom-[30%] top-[9%] mx-auto max-w-md">
+        <div className="absolute inset-x-0 bottom-[30%] top-[9%] mx-auto max-w-md" style={ancora ? { bottom: ancora.bottom - 6 } : undefined}>
           <HologramaMelissa fase={estado.holo} expressao={estado.expressao} />
         </div>
       )}
 
-      {estado.npc && estado.cenario !== 'holograma' && <Retrato key={estado.npc} npc={estado.retrato ?? estado.npc} expressao={estado.expressao} falando={falando} />}
+      {estado.npc && estado.cenario !== 'holograma' && <Retrato key={estado.npc} npc={estado.retrato ?? estado.npc} expressao={estado.expressao} falando={falando} fala={fala} ancora={ancora} />}
 
       {estado.destino && (
         <div className="absolute inset-x-0 top-[16%] z-10 px-4">
@@ -148,12 +155,40 @@ function CasaNoite({ portaAberta, anima, fxKey }: { portaAberta: boolean; anima:
 }
 
 /** Retrato do NPC em cena; sem arte no mapa de elenco → silhueta (ex.: Corvo, ou Galo antes do Elenco). */
-function Retrato({ npc, expressao, falando }: { npc: string; expressao?: string; falando: boolean }) {
+function Retrato({
+  npc,
+  expressao,
+  falando,
+  fala,
+  ancora,
+}: {
+  npc: string
+  expressao?: string
+  falando: boolean
+  fala: HTMLElement | null
+  ancora: { bottom: number; espaco: number } | null
+}) {
   const art = npcPortrait(npc, expressao)
   const [erro, setErro] = useState(false)
   useEffect(() => setErro(false), [art?.src])
+  // elenco: busto ANCORADO ao topo da caixa de fala (base atrás da caixa, sem vão, em qualquer altura)
+  if (art && !erro && !art.src.endsWith('.svg'))
+    return (
+      <NpcAnchor
+        npc={npc}
+        pose={expressao}
+        fala={fala}
+        cabeca="min(16dvh, 150px)"
+        reserva={64}
+        outerClassName="z-[4]"
+        className={cn('pl-npc-in drop-shadow-[0_18px_30px_rgba(0,0,0,0.7)] transition-[filter] duration-300', !falando && 'brightness-[0.82]')}
+      />
+    )
   return (
-    <div className={cn('pl-npc-in absolute inset-x-0 bottom-[22%] top-[10%] z-[4] mx-auto max-w-md transition-[filter] duration-300', !falando && 'brightness-[0.82]')}>
+    <div
+      className={cn('pl-npc-in absolute inset-x-0 bottom-[22%] top-[10%] z-[4] mx-auto max-w-md transition-[filter] duration-300', !falando && 'brightness-[0.82]')}
+      style={ancora ? { bottom: ancora.bottom - 16 } : undefined}
+    >
       {art && !erro ? (
         // eslint-disable-next-line @next/next/no-img-element
         <img

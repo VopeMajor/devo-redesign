@@ -31,8 +31,11 @@ export function PocoCena({
   ativo = false,
   moeda = 0,
   brilho = 0.5,
+  figuraBase,
   className,
 }: {
+  /** Pé da figura ancorado ao topo da caixa de fala (px a partir do pé da cena; kit/npc-anchor useFalaAncora). */
+  figuraBase?: { bottom: number; espaco: number } | null
   palco?: PocoPalco
   balde?: BaldePosicao
   baldeTipo?: string
@@ -71,7 +74,7 @@ export function PocoCena({
       </div>
 
       {/* figura encapuzada (o Corvo, nunca nomeado): silhueta sem rosto, dissolvida na névoa */}
-      <Figura estado={figura ? 'visivel' : partiu ? 'partindo' : 'oculta'} />
+      <Figura estado={figura ? 'visivel' : partiu ? 'partindo' : 'oculta'} base={figuraBase} />
 
       <Nevoa layer={1} className="bottom-[8%] opacity-70" />
       <Nevoa layer={2} className="bottom-[-6%] opacity-80" />
@@ -237,10 +240,12 @@ function Poco({ balde, baldeTipo, girando, ativo, moeda, brilho }: { balde: Bald
   )
 }
 
-function Figura({ estado }: { estado: 'oculta' | 'visivel' | 'partindo' }) {
+function Figura({ estado, base }: { estado: 'oculta' | 'visivel' | 'partindo'; base?: { bottom: number; espaco: number } | null }) {
   return (
     <svg
       viewBox="0 0 120 320"
+      // com a caixa de fala medida, o manto (que se dissolve no pé) passa por trás do topo da caixa, sem vão
+      style={base ? { bottom: base.bottom - 28, height: `min(46%, ${base.espaco + 28}px)` } : undefined}
       className={cn(
         'poco-t absolute bottom-[20%] right-[-5%] h-[46%] w-auto',
         estado === 'visivel' ? 'translate-x-0 opacity-80' : estado === 'partindo' ? 'translate-x-6 opacity-0' : 'translate-x-10 opacity-0',

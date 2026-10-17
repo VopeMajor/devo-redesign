@@ -5,7 +5,7 @@ import { playSfx } from '@/lib/devo/audio'
 import type { Arte, Efeito, Ilustracao, NpcRef, Opcao, Passo } from '@/lib/devo/torres/tipos'
 import { cn } from '@/lib/utils'
 import { AdvanceIndicator, ChoiceHeader, ChoiceStrip, DialogueShell, SpeakerPlate, useTypewriter } from '../intro/vn'
-import { FrameCorners, GlyphDiamond, Kicker, Lantern } from '../kit'
+import { FrameCorners, GlyphDiamond, Kicker, Lantern, NpcAnchor } from '../kit'
 import { usePlayerText } from '../state/player-text'
 import { MAPA_W, starPath, TorreArte, TorresDefs } from './arte'
 import { TorreIlustradaImg } from './ilustrada'
@@ -65,6 +65,8 @@ export function Cena({ passos, npc, titulo, kicker, fundo = 'torre', arteFundo =
   const [ocupado, setOcupado] = useState(false)
   const [aviso, setAviso] = useState<string | null>(null)
   const [saindo, setSaindo] = useState(false)
+  // caixa de fala/escolhas: o retrato se ancora nela
+  const [caixa, setCaixa] = useState<HTMLElement | null>(null)
   const passo = fila[i]
   // A última pose falada fica no palco durante escolhas e quadros.
   const [pose, setPose] = useState<string | undefined>(npc?.pose)
@@ -229,7 +231,20 @@ export function Cena({ passos, npc, titulo, kicker, fundo = 'torre', arteFundo =
 
       {/* NPC */}
       <div className="relative min-h-0 flex-1">
-        {art && (
+        {/* retrato do elenco ANCORADO à caixa de fala (kit/npc-anchor): base atrás do topo da caixa, sem vão */}
+        {art && npc && !npc.retrato && (
+          <NpcAnchor
+            npc={npc.id}
+            pose={pose}
+            fala={caixa}
+            alt={`${npc.nome}${npc.titulo ? `, ${npc.titulo}` : ''}`}
+            cabeca="min(16dvh, 150px)"
+            reserva={56}
+            sobreposicao={46}
+            className={cn('tw-breathe origin-bottom drop-shadow-[0_18px_24px_rgba(0,0,0,0.7)] transition-[filter,opacity] duration-500', npcApagado ? 'opacity-45 [filter:grayscale(0.6)_brightness(0.6)]' : 'opacity-100')}
+          />
+        )}
+        {art && npc?.retrato && (
           <div key={art.src} className={cn('absolute inset-x-0 bottom-0 top-[4%] animate-dv-fade transition-[filter,opacity] duration-500', npcApagado ? 'opacity-45 [filter:grayscale(0.6)_brightness(0.6)]' : 'opacity-100')}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
@@ -280,7 +295,7 @@ export function Cena({ passos, npc, titulo, kicker, fundo = 'torre', arteFundo =
       </div>
 
       {/* caixa de diálogo / escolhas */}
-      <div className="dv-safe-bottom relative z-10 shrink-0 px-3 pb-3 pt-8">
+      <div ref={setCaixa} className="dv-safe-bottom relative z-10 shrink-0 px-3 pb-3 pt-8">
         {passo?.tipo === 'escolha' ? (
           <div className="mx-auto flex w-full max-w-xl flex-col gap-2.5" aria-label="Sua resposta" role="group" data-cena-escolhas>
             <ChoiceHeader>Sua resposta</ChoiceHeader>

@@ -97,3 +97,10 @@ Especificação completa em `SISTEMAS-texto-do-dono.txt` (seção "DEVO — Sist
   leva o carrossel até a tela 2).
 - **Torres: a mesma regra de design do Poço** (POCO-REFORMULACAO-dono.md vale para as Torres): estão simples demais. Mapa e tela da torre com composição cinematográfica, estruturas ornamentais de verdade (assets elaborados, não primitivas), profundidade, luz, botões próprios, apresentação de recompensas (essência, chave) à altura.
 - **Entrada (prólogo), 16/10 11:59:** (1) a Melissa "pisca" (aparece por um instante) antes de ficar oculta no começo — corrigir; (2) aparência: o jogador responde **as duas**, a 2D e a real (pessoa real), não uma ou outra; (3) as chamas da cutscene inicial voltam à **mesma cor de antes** (exceção à paleta); (4) a animação das crianças caindo (a linha vermelha) está desconexa — refazer com uma encenação melhor.
+- **Encenação única dos NPCs** (dono, 16/10 18:23: "os npcs aparecem mt distantes dos balões de fala"; "ajuste o rato no
+  ícone circular"): `components/devo/kit/npc-anchor.tsx` — `NpcAnchor` ancora o busto no topo da caixa de fala (mede a
+  caixa; a base dissolve por trás dela, sem vão, em qualquer altura de tela; altura limitada ao espaço livre), com a
+  geometria do sprite (1080×960, cabeça 345, queixo 508, linha de corte da folha, centro próprio do Rato e do Javali);
+  `NpcMedallion` = medalhão com janela do rosto por NPC (Rato com a cartola inteira, Javali com os chifres);
+  `useFalaAncora` para figuras que não são do elenco (encapuzado do Poço, holograma da Narrativa). Usado no tutorial,
+  prólogo, Coruja, Javali, Herdeiro, Galo (Torres e Narrativa), hologramas da Melissa e Mensagens.

@@ -171,7 +171,9 @@ export function JogosApp() {
     <MiniProfileHost>
       <div className="relative flex h-full min-h-0 flex-col overflow-hidden bg-dv-ink text-dv-text">
         {/* na fila, o radar cobre a sala: a cena 3D dá lugar ao fundo em CSS (sem desfocar WebGL ao vivo) */}
-        {!running && <SalaScene endsAt={state.timerEndsAt} quiet={tab !== 'mesa' || !!queue} />}
+        {/* com a apresentação do Javali por cima (opaca), a sala fica no fundo em CSS: o 3D ao vivo atrás dela
+            ocupava o quadro no WebGL por software e a captura de tela não conseguia um quadro em 30 s */}
+        {!running && <SalaScene endsAt={state.timerEndsAt} quiet={tab !== 'mesa' || !!queue || !state.javaliMet} />}
 
         <div className="relative z-10 shrink-0 px-4 pt-3">
           <h2 className="sr-only">Sala de Jogos</h2>

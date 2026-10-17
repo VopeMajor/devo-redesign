@@ -5,7 +5,7 @@
  * daqui foi para o kit (Plaque, OddsBar); Medallion, VsSplit e AstrolabeDial seguem aqui (ver IDENTIDADE.md).
  */
 import type { CSSProperties, ReactNode } from 'react'
-import { GlyphArrow, PortraitFrame } from '@/components/devo/kit'
+import { GlyphArrow, NpcMedallion, PortraitFrame } from '@/components/devo/kit'
 import type { GameId } from '@/lib/devo/arcade/games'
 import { cn } from '@/lib/utils'
 import { portraitFrameProps, type Expressao } from '@/lib/devo/npcs'
@@ -112,9 +112,16 @@ export function JavaliPortrait({
   className?: string
   title?: string
 }) {
+  // Medalhão: rosto inteiro do Javali (janela própria, kit/npc-anchor), sem tronco.
+  if (shape === 'round')
+    return (
+      <span role="img" aria-label={title} className={cn('block shrink-0', className)}>
+        <NpcMedallion npc="javali" pose={pose} size="100%" ring="rgba(186,176,159,0.55)" />
+      </span>
+    )
   return (
     <PortraitFrame
-      {...(portraitFrameProps('javali', pose, shape === 'round' ? 'face' : 'bust') ?? {})}
+      {...(portraitFrameProps('javali', pose, 'bust') ?? {})}
       alt={title}
       tone="gold"
       shape={shape}

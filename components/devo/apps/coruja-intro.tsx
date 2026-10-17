@@ -3,7 +3,7 @@
 import { Check, ChevronLeft, ChevronRight, FastForward, HelpCircle, Shield, Swords } from 'lucide-react'
 import { useCallback, useEffect, useState, type CSSProperties, type ReactNode } from 'react'
 import { playSfx } from '@/lib/devo/audio'
-import { BrassCorners, HudRule, PortraitFrame } from '@/components/devo/kit'
+import { BrassCorners, HudRule, NpcAnchor } from '@/components/devo/kit'
 import { RARITIES, RARITY_META, getCardMeta, getCollections } from '@/lib/devo/cards'
 import type { Rarity } from '@/lib/devo/types'
 import { cn } from '@/lib/utils'
@@ -11,7 +11,7 @@ import { useAdvanceKeys } from '../hooks'
 import { CardFace, RARITY_SKIN, RarityGem, RarityPips, marbleBlack } from '../shared/devo-card'
 import { useDevo } from '../state/devo-store'
 import { usePlayerText } from '../state/player-text'
-import { CorujaSprite, type CorujaExpression } from './coruja-sprite'
+import { CORUJA_EXPRESSIONS, type CorujaExpression } from './coruja-sprite'
 
 type Visual = 'cards' | 'rarities' | 'secret' | 'roles' | 'collections' | 'numbers'
 type Chapter = 'Apresentação' | 'Raridades' | 'Segredos' | 'Funções' | 'Coleções'
@@ -102,6 +102,8 @@ export function CorujaIntro() {
   const { state, dispatch } = useDevo()
   const say = usePlayerText()
   const [index, setIndex] = useState(0)
+  // caixa de fala (a Coruja se ancora nela)
+  const [fala, setFala] = useState<HTMLElement | null>(null)
   const [reply, setReply] = useState<{ text: string; face: CorujaExpression } | null>(null)
   const [asked, setAsked] = useState<string[]>([])
   const [quiz, setQuiz] = useState<{ picked: string; correct: boolean } | null>(null)
@@ -234,18 +236,22 @@ export function CorujaIntro() {
       {/* palco: a Coruja fica num PortraitFrame cuja base se dissolve ANTES da caixa de fala; com uma
           vitrine aberta ela recua (≤ 15%) e a vitrine é opaca, para nunca se lerem os dois ao mesmo tempo */}
       <div className="relative min-h-0 flex-1 [container-type:size]">
-        <div
+        {/* retrato ANCORADO à caixa de fala (kit/npc-anchor): base do busto atrás do topo da caixa, sem vão */}
+        <NpcAnchor
+          npc="coruja"
+          pose={face}
+          poses={CORUJA_EXPRESSIONS}
+          fala={fala}
+          alt="Coruja"
+          cabeca="min(17dvh, 156px)"
+          reserva={8}
+          outerClassName="@2xl:!left-auto @2xl:right-0 @2xl:![transform:none]"
           className={cn(
-            'pointer-events-none absolute bottom-0 left-1/2 -translate-x-1/2 transition-[opacity,filter] duration-700 @2xl:left-auto @2xl:right-0 @2xl:translate-x-0',
+            'transition-[opacity,filter] duration-700',
             step.kind === 'system' && 'opacity-0 blur-sm',
             visual && 'opacity-[0.14] blur-[1px] @2xl:opacity-100 @2xl:blur-none',
           )}
-          style={{ width: 'min(75cqh, 96cqw)' }}
-        >
-          <PortraitFrame alt="Coruja" shape="rect" tone="neutral" className="w-full">
-            <CorujaSprite expression={face} className="size-full" />
-          </PortraitFrame>
-        </div>
+        />
         {visual && (
           <div className="devo-scroll absolute inset-0 flex overflow-y-auto p-4 @2xl:pr-[44%]">
             <div key={visual} className="relative z-10 m-auto w-full max-w-md animate-dv-rise">
@@ -257,7 +263,7 @@ export function CorujaIntro() {
         )}
       </div>
 
-      <div className="relative z-10 px-3 pb-3 @md:px-5 @md:pb-5">
+      <div ref={setFala} className="relative z-10 px-3 pb-3 @md:px-5 @md:pb-5">
         <DialogueBox speaker={step.kind === 'system' ? null : 'Coruja'}>
           {step.kind === 'system' ? (
             <p className="py-3 text-center font-sans text-[12px] font-medium uppercase tracking-[0.24em] text-white/70">{typer.shown}</p>

@@ -8,6 +8,7 @@ import { generoTexto, NEBLINA, type NeblinaFala, type NeblinaNo, type NeblinaOpc
 import { cn } from '@/lib/utils'
 import { useAdvanceKeys } from '../hooks'
 import { GlyphKeyhole, toRoman } from '../kit/glyphs'
+import { useFalaAncora } from '../kit/npc-anchor'
 import { AdvanceIndicator, ChoiceHeader, ChoiceStrip, DialogueShell, SpeakerPlate, useTypewriter } from '../intro/vn'
 import { SoundToggle } from '../shared/sound-toggle'
 import { DracmaIcon, PocoCena } from './poco-cena'
@@ -40,6 +41,10 @@ export function PocoNeblina({
   const [index, setIndex] = useState(0)
   /** Falas da resposta escolhida, mostradas antes de seguir para o próximo nó. */
   const [fila, setFila] = useState<{ falas: NeblinaFala[]; ir?: string } | null>(null)
+  // caixa de fala: a figura encapuzada se ancora nela (o pé do manto atrás do topo da caixa)
+  const [caixa, setCaixa] = useState<HTMLElement | null>(null)
+  const palcoRef = useRef<HTMLDivElement>(null)
+  const figuraBase = useFalaAncora(caixa, palcoRef, 72)
   const [escolhendoMoeda, setEscolhendoMoeda] = useState<NeblinaOpcao | null>(null)
   const [moedaEstado, setMoedaEstado] = useState<'idle' | 'pedindo' | 'ok' | 'erro'>('idle')
   const [montado, setMontado] = useState(false)
@@ -128,7 +133,9 @@ export function PocoNeblina({
   if (!montado) return null
   return createPortal(
     <main aria-label="Poço dos Milagres: apresentação" className="fixed inset-0 z-[80] flex h-dvh flex-col overflow-hidden bg-dv-ink text-dv-text">
-      <PocoCena palco={palco} brilho={0.75} className="[--poco-h:min(58vh,470px)] [--poco-top:42%]" />
+      <PocoCena palco={palco} brilho={0.75} figuraBase={figuraBase} className="[--poco-h:min(58vh,470px)] [--poco-top:42%]" />
+      {/* marcador do palco: mede a caixa de fala para ancorar a figura (kit/npc-anchor) */}
+      <div ref={palcoRef} aria-hidden="true" className="pointer-events-none absolute inset-0" />
 
       {/* barra superior: capítulo; som e "pular" (só para quem já viu ou para a equipe superior) */}
       <div className="dv-safe-top pointer-events-none absolute inset-x-0 top-0 z-30 flex items-start justify-between bg-gradient-to-b from-black/70 to-transparent px-4 pb-8">
@@ -154,7 +161,7 @@ export function PocoNeblina({
         </div>
       </div>
 
-      <div className="relative z-10 mt-auto px-4 pb-[max(env(safe-area-inset-bottom),1.25rem)]">
+      <div ref={setCaixa} className="relative z-10 mt-auto px-4 pb-[max(env(safe-area-inset-bottom),1.25rem)]">
         {no.tipo === 'moeda' && moedaEstado === 'ok' && (
           <p className="animate-dv-toast-in mx-auto mb-5 flex w-fit items-center gap-3 bg-[linear-gradient(90deg,#1f1f22,#151517)] py-2 pl-3 pr-6 shadow-[0_10px_24px_rgba(0,0,0,0.6),inset_0_0_0_1px_rgba(186,176,159,0.5)] [clip-path:polygon(0_0,100%_0,calc(100%-12px)_100%,0_100%)]">
             <DracmaIcon raridade="incomum" className="size-9 drop-shadow-[0_0_8px_rgba(236,229,216,0.5)]" />

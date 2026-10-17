@@ -3,7 +3,7 @@
 import { type CSSProperties, Fragment, type ReactNode, useEffect, useState } from 'react'
 import { playSfx } from '@/lib/devo/audio'
 import { CENA_MELISSA_CORPORACOES, type PassoHolo, ROTEIRO_MELISSA } from '@/lib/devo/corporacoes-melissa'
-import { npcPortrait } from '@/lib/devo/npcs'
+import { NpcAnchor } from '../kit/npc-anchor'
 import { cn } from '@/lib/utils'
 import { GlyphArrow } from '../kit/glyphs'
 import { usePlayerText } from '../state/player-text'
@@ -72,6 +72,8 @@ export function ChamadaHolograma({ podePular, onFim }: { podePular: boolean; onF
   const pt = usePlayerText()
   const [fila, setFila] = useState<PassoHolo[]>(ROTEIRO_MELISSA)
   const [pose, setPose] = useState('sorriso')
+  // caixa de fala: a projeção se ancora nela
+  const [caixa, setCaixa] = useState<HTMLElement | null>(null)
   const [fase, setFase] = useState<'chamada' | 'ativo' | 'encerra'>('chamada')
   const atual = fila[0]
 
@@ -105,7 +107,6 @@ export function ChamadaHolograma({ podePular, onFim }: { podePular: boolean; onF
     setFila(resto)
   }
 
-  const art = npcPortrait('melissa', pose)
   return (
     <div
       role="dialog"
@@ -151,33 +152,28 @@ export function ChamadaHolograma({ podePular, onFim }: { podePular: boolean; onF
         ) : (
           <div aria-hidden="true" className="absolute inset-0">
             <span className="absolute inset-x-0 bottom-0 top-[6%]" style={{ background: 'linear-gradient(0deg, rgba(168,155,224,0.3), rgba(186,176,159,0.08) 50%, transparent 88%)', clipPath: 'polygon(44% 100%, 56% 100%, 94% 0, 6% 0)' }} />
-            <div className="corp-holo-entra corp-holo-tremor absolute inset-x-[10%] bottom-0 top-[4%]">
-              {art && (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={art.src}
-                  alt=""
-                  className="size-full object-contain object-bottom [filter:grayscale(1)_sepia(0.55)_hue-rotate(205deg)_saturate(1.7)_brightness(1.12)_contrast(1.05)_drop-shadow(0_0_14px_rgba(168,155,224,0.55))]"
-                  style={{ maskImage: 'linear-gradient(0deg, transparent 0%, #000 26%)', WebkitMaskImage: 'linear-gradient(0deg, transparent 0%, #000 26%)', opacity: 0.85 }}
-                />
-              )}
-              {art && (
-                // Tinta fria e varredura só sobre a silhueta (máscara = o próprio sprite).
-                <span
-                  className="absolute inset-0 overflow-hidden"
-                  style={{ maskImage: `url(${art.src})`, WebkitMaskImage: `url(${art.src})`, maskSize: 'contain', WebkitMaskSize: 'contain', maskRepeat: 'no-repeat', WebkitMaskRepeat: 'no-repeat', maskPosition: 'bottom', WebkitMaskPosition: 'bottom' }}
-                >
+            {/* Melissa projetada, ANCORADA à caixa de fala (kit/npc-anchor): a base some atrás do topo da caixa */}
+            <NpcAnchor
+              npc="melissa"
+              pose={pose}
+              fala={caixa}
+              cabeca="min(16dvh, 148px)"
+              reserva={8}
+              sobreposicao={14}
+              className="corp-holo-entra corp-holo-tremor opacity-[0.85] [filter:grayscale(1)_sepia(0.55)_hue-rotate(205deg)_saturate(1.7)_brightness(1.12)_contrast(1.05)_drop-shadow(0_0_14px_rgba(168,155,224,0.55))]"
+              sobreArte={
+                <>
                   <span className="absolute inset-0 opacity-25" style={{ background: 'repeating-linear-gradient(0deg, rgba(236,229,216,0.5) 0 1px, transparent 1px 4px)' }} />
                   <span className="corp-holo-varre absolute inset-x-0 h-1/5" style={{ background: 'linear-gradient(180deg, transparent, rgba(236,229,216,0.3), transparent)' }} />
-                </span>
-              )}
-            </div>
+                </>
+              }
+            />
           </div>
         )}
       </div>
 
       {/* diálogo */}
-      <div className="relative z-10 px-4 pb-[max(16px,env(safe-area-inset-bottom))]">
+      <div ref={setCaixa} className="relative z-10 px-4 pb-[max(16px,env(safe-area-inset-bottom))]">
         {fase !== 'chamada' && atual && atual.tipo !== 'escolha' && (
           <Caixa key={fila.length + atual.texto.slice(0, 12)} quem={atual.tipo === 'fala' ? 'Melissa' : null} onAvancar={avancar}>
             {atual.tipo === 'narra' ? (

@@ -3,9 +3,8 @@
 import Image from 'next/image'
 import { useEffect, useRef, type CSSProperties, type ReactNode } from 'react'
 import { MELISSA_MOODS, type MelissaMood, type StageId } from '@/lib/devo/prologue-script'
-import { portraitFrameProps } from '@/lib/devo/npcs'
 import { cn } from '@/lib/utils'
-import { PortraitFrame } from '../kit/portrait'
+import { NpcAnchor, NpcBustLayer } from '../kit/npc-anchor'
 import { SceneBackdrop } from '../kit/scene'
 import { DeadlyVoteSymbol } from '../system/symbol'
 import { Embers } from '../shared/atmosphere'
@@ -141,6 +140,7 @@ export function PrologueStage({
   speaking = false,
   melissa = 'off',
   opening = false,
+  fala,
 }: {
   stage: StageId
   mood: MelissaMood
@@ -148,6 +148,8 @@ export function PrologueStage({
   melissa?: MelissaPresence
   /** Primeiro quadro do prólogo: pálpebras abrindo sobre o sigilo. */
   opening?: boolean
+  /** Caixa de fala atual: a Melissa se ancora nela. */
+  fala?: HTMLElement | null
 }) {
   const root = usePointerParallax()
   const melissaRef = useRef<HTMLDivElement>(null)
@@ -405,58 +407,33 @@ export function PrologueStage({
       </Layer>
       {/* Melissa: mesmo tratamento de retrato do elenco (PortraitFrame). Só entra depois da fala de cenário:
           primeiro como silhueta se aproximando, depois em luz; escurece quando não é ela quem fala. */}
-      <div
-        className="absolute inset-x-0 bottom-[25%] flex justify-center lg:bottom-[12%] lg:left-[6%] lg:right-auto lg:w-[36vw]"
-        style={NEAR}
-      >
-        <div
-          ref={melissaRef}
-          data-melissa={melissa}
+      <div ref={melissaRef} data-melissa={melissa} className="pointer-events-none absolute inset-0" style={NEAR}>
+        {/* Ancorada à caixa de fala (kit/npc-anchor): a base do busto passa por trás do topo da caixa, sem
+            vão, em qualquer altura de tela. Expressões trocam por opacidade; na aproximação só a silhueta. */}
+        <NpcAnchor
+          npc="melissa"
+          pose={mood}
+          poses={MELISSA_MOODS}
+          fala={fala ?? null}
+          alt={melissaOn && melissa === 'on' ? 'Melissa, da Companhia de Despertados' : undefined}
+          cabeca="min(16dvh, 148px)"
+          reserva={72}
+          outerClassName="lg:!bottom-[12%] lg:!left-[6%] lg:![transform:none]"
           className={cn(
-            'relative w-[min(72vw,320px)] transition-[opacity,transform,filter] duration-[800ms] ease-[var(--dv-ease-out)] lg:w-full lg:max-w-[440px]',
+            'transition-[opacity,transform,filter] duration-[800ms] ease-[var(--dv-ease-out)]',
             melissaOn ? 'translate-x-0 opacity-100' : 'translate-x-[14%] opacity-0',
             melissaOn && !speaking && melissa !== 'approach' ? 'brightness-[0.62] saturate-[0.8]' : 'brightness-100',
+            // só acende em cena ('on'): antes fica só a silhueta (sem piscar o retrato colorido)
+            melissa !== 'on' && '[&>.npc-pose]:!opacity-0',
           )}
         >
-          {/* Aproximação: só a silhueta do sprite (sem a moldura), com luz de borda; a moldura acende depois. */}
-          <div
-            aria-hidden="true"
-            className={cn(
-              'pointer-events-none absolute inset-0 z-10 transition-opacity duration-700 [mask-image:linear-gradient(180deg,#000_62%,transparent_96%)]',
-              melissa === 'approach' ? 'opacity-100' : 'opacity-0',
-            )}
-          >
-            {/* mesmo enquadramento do PortraitFrame (object-cover no topo), para a silhueta casar com o retrato */}
-            <Image
-              src={portraitFrameProps('melissa', 'convite')?.src ?? '/images/npc/melissa/convite.webp'}
-              alt=""
-              fill
-              sizes="320px"
-              loading="eager"
-              className="object-cover object-top"
-              style={{ filter: `brightness(0) ${RIM_GOLD}` }}
-            />
-          </div>
-          {/* uma moldura por expressão (mapa em lib/devo/npcs.ts), trocadas por opacidade */}
-          <div className="relative">
-            {MELISSA_MOODS.map((m) => {
-              const on = m === mood
-              return (
-                // Só acende com a Melissa em cena ('on'). Antes (fora/aproximação) fica apagada: se a moldura
-                // ficasse acesa em 'off', a entrada da silhueta mostrava o retrato colorido por um instante.
-                <div key={m} className={cn('transition-opacity duration-500', on ? 'relative' : 'absolute inset-0', on && melissa === 'on' ? 'opacity-100' : 'opacity-0')}>
-                  <PortraitFrame
-                    {...(portraitFrameProps('melissa', m) ?? {})}
-                    alt={melissaOn && on ? 'Melissa, da Companhia de Despertados' : ''}
-                    tone="gold"
-                    ornate
-                    className="w-full"
-                  />
-                </div>
-              )
-            })}
-          </div>
-        </div>
+          <NpcBustLayer
+            npc="melissa"
+            pose="convite"
+            className={cn('z-10 transition-opacity duration-700', melissa === 'approach' ? 'opacity-100' : 'opacity-0')}
+            style={{ filter: `brightness(0) ${RIM_GOLD}` }}
+          />
+        </NpcAnchor>
       </div>
 
       {/* Celular: objeto do mundo — moldura de aço, vidro facetado, reflexo do mostrador; o sigilo acende. */}

@@ -49,6 +49,16 @@ async function device(kind = 'phone') {
   return { ctx, page }
 }
 
+/**
+ * Cenas com fala de NPC: além de 390×844, repete o quadro numa tela alta (390×900) e numa baixa (360×740)
+ * para provar que o retrato fica ancorado na caixa de fala em qualquer altura (DIRECAO-3 §9, NpcAnchor).
+ */
+const NPC_VARIANT = /^(03-prologo-(0[2-9]|1\d)|04-tutorial-0[1-6]|26-coruja-0[13]|27-javali-[01]|34-javali-[01]|salao-0[2-5]|t10-galo-abertura|t11b-galo-fala|t23-andar-cena|poco-0[5-9]|03-melissa-3|n-1[0-7]|n-2[06]|n-3[24]|corp-0[34])/
+const VARIANT_SIZES = [
+  [390, 900],
+  [360, 740],
+]
+
 async function shot(page, name, note = '') {
   try {
     await page.screenshot({ path: `${OUT}/${name}.jpg`, type: 'jpeg', quality: 82 })
@@ -56,8 +66,21 @@ async function shot(page, name, note = '') {
   } catch (e) {
     manifest.errors.push({ step: name, error: String(e).slice(0, 300) })
   }
+  const vp = page.viewportSize()
+  if (!NPC_VARIANT.test(name) || !vp || vp.width !== 390 || vp.height !== 844) return
+  for (const [width, height] of VARIANT_SIZES) {
+    try {
+      await page.setViewportSize({ width, height })
+      await wait(450)
+      await page.screenshot({ path: `${OUT}/${name}@${width}x${height}.jpg`, type: 'jpeg', quality: 82 })
+      manifest.shots.push({ name: `${name}@${width}x${height}`, note, url: page.url() })
+    } catch (e) {
+      manifest.errors.push({ step: `${name}@${width}x${height}`, error: String(e).slice(0, 300) })
+    }
+  }
+  await page.setViewportSize(vp).catch(() => {})
+  await wait(300)
 }
-
 async function step(name, fn) {
   try {
     await fn()
