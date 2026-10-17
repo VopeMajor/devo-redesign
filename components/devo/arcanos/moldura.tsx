@@ -50,7 +50,7 @@ export function Moldura({ arcano, cor, aceso, carregar, className }: { arcano: A
 }
 
 /** A imagem (se houver e estiver liberada para carregar) ou o placeholder do sigilo. */
-export function Retrato({ arcano, tipo, cor, aceso, carregar, className }: { arcano: ArcanoKey; tipo: ArteTipo; cor: boolean; aceso?: boolean; carregar: boolean; className?: string }) {
+export function Retrato({ arcano, tipo, cor, aceso, carregar, translucido, className }: { arcano: ArcanoKey; tipo: ArteTipo; cor: boolean; aceso?: boolean; carregar: boolean; translucido?: boolean; className?: string }) {
   const arte = arteDe(arcano, tipo)
   const [falhou, setFalhou] = useState(false)
   const img = carregar && arte && !falhou
@@ -59,6 +59,7 @@ export function Retrato({ arcano, tipo, cor, aceso, carregar, className }: { arc
       <div
         className={cn(
           'absolute inset-0',
+          translucido && 'opacity-75',
           cor
             ? 'bg-[radial-gradient(70%_55%_at_50%_38%,color-mix(in_oklab,var(--dv-amethyst)_34%,transparent),transparent_72%),linear-gradient(180deg,var(--dv-night-2),var(--dv-ink))]'
             : 'bg-[radial-gradient(70%_55%_at_50%_38%,color-mix(in_oklab,var(--dv-text)_14%,transparent),transparent_72%),linear-gradient(180deg,var(--dv-ink-4),var(--dv-ink))]',

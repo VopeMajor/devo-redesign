@@ -178,7 +178,7 @@ function Arcanos({ d }: { d: Liberado }) {
 const VB = { w: 400, h: 340 }
 const GIRO = (-9 * Math.PI) / 180
 const ANEIS = [
-  { de: 0, n: 6, rx: 78, ry: 52, fase: -90 },
+  { de: 0, n: 6, rx: 82, ry: 57, fase: -90 },
   { de: 6, n: 8, rx: 122, ry: 84, fase: -67.5 },
   { de: 14, n: 8, rx: 162, ry: 118, fase: -78.75 },
 ]
@@ -214,9 +214,9 @@ function Mapa({ d, onEscolher }: { d: Liberado; onEscolher: (i: number) => void 
             type="button"
             onClick={() => onEscolher(Math.max(0, meuIdx))}
             aria-label={meu ? `Seu Arcano: ${nomeCurto(meu.titulo)}. Abrir na galeria` : 'Abrir a galeria'}
-            className="dv-focus absolute left-1/2 top-1/2 grid size-[19%] -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full bg-[radial-gradient(circle_at_50%_40%,var(--dv-ink-3),var(--dv-ink)_75%)] shadow-[inset_0_0_0_1px_var(--dv-line-gold)]"
+            className="dv-focus absolute left-1/2 top-1/2 grid size-[15%] -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full bg-[radial-gradient(circle_at_50%_40%,var(--dv-ink-3),var(--dv-ink)_75%)] shadow-[inset_0_0_0_1px_var(--dv-line-gold)]"
           >
-            {meu ? <span className="dv-brass-text font-impact text-[26px] font-semibold leading-none">{meu.numeral}</span> : <EmblemArcanos className="size-[58%] text-dv-gold" />}
+            {meu ? <span className="dv-brass-text font-impact text-[21px] font-semibold leading-none">{meu.numeral}</span> : <EmblemArcanos className="size-[58%] text-dv-gold" />}
           </button>
           {d.arcanos.map((a, i) => {
             const p = posicao(i)
@@ -448,13 +448,24 @@ function Detalhe({ a, estagio, voltar }: { a: ArcanoVista; estagio: number; volt
   return (
     <div className="relative h-full overflow-hidden bg-dv-ink">
       <div className="devo-scroll h-full overflow-y-auto overflow-x-hidden">
+        <div className="sticky top-0 z-20 -mb-14 flex h-14 items-center bg-[linear-gradient(180deg,var(--dv-ink),color-mix(in_oklab,var(--dv-ink)_70%,transparent)_70%,transparent)] px-3">
+          <button
+            type="button"
+            onClick={voltar}
+            className="dv-focus dv-cut-diag flex min-h-11 items-center gap-1 bg-dv-ink/80 pl-2 pr-4 font-mono text-[11px] uppercase tracking-[0.16em] text-dv-text shadow-[inset_0_0_0_1px_var(--dv-line-strong)]"
+            style={{ '--dv-cut': '7px' } as CSSProperties}
+          >
+            <ChevronLeft aria-hidden="true" className="size-5" strokeWidth={1.75} />
+            Galeria
+          </button>
+        </div>
         {/* cena */}
         <div className="relative h-[74svh] max-h-[640px] min-h-[500px]">
           <Altar />
-          <div className="absolute inset-x-[17%] bottom-[19%] top-[9%]">
+          <div className="absolute inset-x-[25%] bottom-[24%] top-[12%]">
             <span aria-hidden="true" className="absolute inset-x-[-10%] bottom-0 top-[10%] bg-[radial-gradient(50%_50%_at_50%_45%,color-mix(in_oklab,var(--dv-blood-text)_30%,transparent),transparent_70%)]" />
             <div className="absolute inset-0 overflow-hidden" style={{ clipPath: 'inset(0 round 50% 50% 10% 10% / 28% 28% 6% 6%)' }}>
-              <Retrato arcano={a.key} tipo="figura" cor aceso={a.proprio} carregar />
+              <Retrato arcano={a.key} tipo="figura" cor aceso={a.proprio} carregar translucido />
             </div>
             <span aria-hidden="true" className="absolute inset-0 shadow-[inset_0_0_0_1px_var(--dv-line-gold)]" style={{ clipPath: 'inset(0 round 50% 50% 10% 10% / 28% 28% 6% 6%)' }} />
           </div>
@@ -514,15 +525,6 @@ function Detalhe({ a, estagio, voltar }: { a: ArcanoVista; estagio: number; volt
           </Painel>
         </div>
       </div>
-      <button
-        type="button"
-        onClick={voltar}
-        className="dv-focus dv-cut-diag absolute left-3 top-3 z-20 flex min-h-11 items-center gap-1 bg-dv-ink/80 pl-2 pr-4 font-mono text-[11px] uppercase tracking-[0.16em] text-dv-text shadow-[inset_0_0_0_1px_var(--dv-line-strong)] backdrop-blur-sm"
-        style={{ '--dv-cut': '7px' } as CSSProperties}
-      >
-        <ChevronLeft aria-hidden="true" className="size-5" strokeWidth={1.75} />
-        Galeria
-      </button>
     </div>
   )
 }

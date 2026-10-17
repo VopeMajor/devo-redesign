@@ -221,7 +221,7 @@ function Roda({ d, porKey }: { d: Liberado; porKey: Map<VirtudeKey, Liberado['vi
             <>
               <span className="dv-label text-[10px] text-dv-text-3">Arcano</span>
               <span className="dv-brass-text font-impact text-[40px] font-semibold leading-none">{d.arcano.numeral}</span>
-              <span className="mt-1 max-w-[12ch] font-display text-[12.5px] font-semibold uppercase leading-tight tracking-[0.08em] text-dv-text">{d.arcano.titulo.replace(/^Arcano /, '')}</span>
+              <span className="mt-1 max-w-[12ch] font-display text-[12.5px] font-semibold uppercase leading-tight tracking-[0.08em] text-dv-text">{d.arcano.titulo.replace(/^Arcano d[aoe]s? /, '')}</span>
               <span className="mt-1.5 font-mono text-[10px] uppercase tracking-[0.18em] text-dv-gold">Estágio {toRoman(d.estagio)}</span>
             </>
           ) : (
