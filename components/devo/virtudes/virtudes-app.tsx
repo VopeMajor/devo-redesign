@@ -5,9 +5,11 @@ import useSWR from 'swr'
 import { AFINIDADE_ROTULO, type Afinidade, TEXTOS_VIRTUDES, VIRTUDE_KEYS, VIRTUDES, type VirtudeKey, type VirtudesPayload } from '@/lib/devo/virtudes'
 import { cn } from '@/lib/utils'
 import { Button, Spinner } from '../kit/button'
-import { EmblemMark, EmblemVirtudes } from '../kit/emblems'
+import { EmblemArcanos, EmblemMark, EmblemVirtudes } from '../kit/emblems'
 import { toRoman } from '../kit'
-import { ArcanosLista } from './arcanos-lista'
+import { ChevronRight } from 'lucide-react'
+import { useOsNav } from '../os/os-nav'
+import { Sigilo } from '../arcanos/sigilos'
 import { Naipe } from './naipes'
 
 /**
@@ -115,6 +117,8 @@ function Tela({ d }: { d: Liberado }) {
         <div className="mx-auto flex max-w-md flex-col gap-6 px-4 pb-12 pt-3">
           <Roda d={d} porKey={porKey} />
 
+          <AtalhoArcanos d={d} />
+
           {!d.arcano && (
             <p role="status" className="mx-auto -mt-2 max-w-[34ch] text-center font-mono text-[11px] uppercase leading-relaxed tracking-[0.14em] text-dv-gold">
               Sua afinidade aparece quando o Anfitrião registrar o seu Arcano.
@@ -127,7 +131,6 @@ function Tela({ d }: { d: Liberado }) {
 
           <Potencial d={d} />
 
-          {d.arcanos?.length > 0 && <ArcanosLista arcanos={d.arcanos} verTodos={d.verTodos} />}
 
           <section aria-labelledby="virt-naipes" className="flex flex-col gap-3">
             <Cabecalho id="virt-naipes" kicker="Os quatro naipes" titulo="Bases claras" />
@@ -156,6 +159,28 @@ function Tela({ d }: { d: Liberado }) {
         </div>
       </div>
     </Fundo>
+  )
+}
+
+/** Os Arcanos têm tela própria (dono, 17/10): aqui fica só a entrada "Seu Arcano → abrir Arcanos". */
+function AtalhoArcanos({ d }: { d: Liberado }) {
+  const nav = useOsNav()
+  const meu = d.arcanos.find((a) => a.proprio)
+  return (
+    <button
+      type="button"
+      onClick={() => nav.open('arcanos')}
+      className="dv-focus -mt-2 flex min-h-12 w-full items-center gap-3 px-2 py-2 text-left shadow-[inset_0_-1px_0_var(--dv-line),inset_0_1px_0_var(--dv-line)]"
+    >
+      {meu ? <Sigilo arcano={meu.key} estado="aceso" aro={false} className="size-7" /> : <EmblemMark emblem={EmblemArcanos} size={28} />}
+      <span className="min-w-0 flex-1">
+        <span className="dv-label block text-[10px] text-dv-text-3">{meu ? 'Seu Arcano' : 'Arcanos'}</span>
+        <span className="block font-display text-[14.5px] font-semibold uppercase tracking-[0.08em] text-dv-text">{meu ? meu.titulo.replace(/^Arcano d[aoe]s? /, '') : 'Os vinte e dois'}</span>
+      </span>
+      <span className="flex items-center gap-1 font-mono text-[10.5px] uppercase tracking-[0.16em] text-dv-gold">
+        Abrir Arcanos <ChevronRight aria-hidden="true" className="size-4" strokeWidth={1.75} />
+      </span>
+    </button>
   )
 }
 

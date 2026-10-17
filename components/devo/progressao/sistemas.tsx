@@ -12,6 +12,7 @@ import { PocoApp } from '../poco/poco-app'
 import { TorresApp } from '../torres/torres-app'
 import { SalaoApp } from '../salao/salao-app'
 import { VirtudesApp } from '../virtudes/virtudes-app'
+import { ArcanosApp } from '../arcanos/arcanos-app'
 import { CorporacoesApp } from '../corporacoes/corporacoes-app'
 
 /**
@@ -32,6 +33,7 @@ export const TELAS_SISTEMA: Partial<Record<SistemaId, ComponentType>> = {
   torres: TorresApp,
   corporacoes: CorporacoesApp,
   virtudes: VirtudesApp,
+  arcanos: ArcanosApp,
 }
 
 export type SistemaDef = {
@@ -56,7 +58,8 @@ export const SISTEMAS: SistemaDef[] = [
   { id: 'torres', nome: 'Torres de Ruptura', curto: 'Torres', subtitulo: 'Andares, essências e chaves', flag: 'torres', trava: TUTORIAL, emblem: EmblemTorres, janela: { w: 480, h: 820 } },
   { id: 'corporacoes', nome: 'Corporações', curto: 'Corpo­rações', subtitulo: 'Companhia de Despertados', flag: 'corporacoes', trava: 'Aguarde a Companhia', emblem: EmblemCorporacoes },
   { id: 'virtudes', nome: 'Virtudes', curto: 'Virtudes', subtitulo: 'Pontos de potencial', flag: 'virtudes', trava: 'Em breve', emblem: EmblemVirtudes, janela: { w: 460, h: 820 } },
-  { id: 'arcanos', nome: 'Arcanos', curto: 'Arcanos', subtitulo: 'Rank e poder', flag: null, trava: 'Em breve', emblem: EmblemArcanos },
+  // Arcanos: tela própria (dono, 17/10), mesma regra das Virtudes (a flag e o payload /api/virtudes são os mesmos).
+  { id: 'arcanos', nome: 'Arcanos', curto: 'Arcanos', subtitulo: 'Os vinte e dois', flag: 'virtudes', trava: 'Em breve', emblem: EmblemArcanos, janela: { w: 460, h: 820 } },
 ]
 
 export const SISTEMA_IDS = SISTEMAS.map((s) => s.id) as SistemaId[]
