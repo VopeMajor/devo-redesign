@@ -1,7 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { playSfx } from '@/lib/devo/audio'
+import { playSfx, pocoSom } from '@/lib/devo/audio'
 import { dentroDaJanela, type ManivelaParams, ponteiro } from '@/lib/devo/poco'
 import { cn } from '@/lib/utils'
 import { Button } from '../kit/button'
@@ -73,7 +73,8 @@ export function PocoManivela({ params, onFim }: { params: ManivelaParams; onFim:
       encerrar('escapou')
       return
     }
-    playSfx(rodada === total - 1 ? 'confirm' : 'chess-tick')
+    if (rodada === total - 1) playSfx('confirm')
+    else pocoSom('catraca')
     inicioRodada.current = agora
     if (rodada === total - 1) encerrar('perfeito')
     else setRodada((n) => n + 1)
@@ -96,7 +97,7 @@ export function PocoManivela({ params, onFim }: { params: ManivelaParams; onFim:
   const a1 = -180 + (r.centro + r.janela / 2) * 180
 
   return (
-    <div className="absolute inset-0 z-30 flex flex-col items-center justify-end bg-[linear-gradient(180deg,rgba(12,12,14,0.2),rgba(12,12,14,0.88)_42%,#0c0c0e_62%)] px-4 pb-4">
+    <div className="absolute inset-0 z-30 flex flex-col items-center justify-end bg-[linear-gradient(180deg,rgb(var(--dv-ink-rgb)/0.2),rgb(var(--dv-ink-rgb)/0.88)_42%,var(--dv-ink)_62%)] px-4 pb-4">
       <button
         type="button"
         onPointerDown={(e) => {
@@ -147,7 +148,7 @@ export function PocoManivela({ params, onFim }: { params: ManivelaParams; onFim:
         {/* acertos: losangos */}
         <span className="mt-1 flex items-center gap-2" aria-hidden="true">
           {Array.from({ length: total }, (_, i) => (
-            <span key={i} className={cn('size-3 rotate-45 border', i < acertos ? 'border-dv-amethyst-text bg-dv-amethyst shadow-[0_0_8px_rgba(138,124,200,0.8)]' : 'border-dv-line-strong bg-transparent')} />
+            <span key={i} className={cn('size-3 rotate-45 border', i < acertos ? 'border-dv-amethyst-text bg-dv-amethyst shadow-[0_0_8px_rgb(var(--dv-amethyst-rgb)/0.8)]' : 'border-dv-line-strong bg-transparent')} />
           ))}
         </span>
         <span className="sr-only" aria-live="polite">

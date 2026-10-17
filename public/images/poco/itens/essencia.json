@@ -1,0 +1,18 @@
+{
+  "asset": "img:/images/poco/itens/essencia",
+  "imagem": {
+    "base": "/images/poco/itens/essencia",
+    "tamanhos": [
+      64,
+      128,
+      256
+    ]
+  },
+  "origem": {
+    "pedido": "poco-essencia",
+    "variacao": "v02",
+    "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+    "seed": 11042,
+    "importado": null
+  }
+}

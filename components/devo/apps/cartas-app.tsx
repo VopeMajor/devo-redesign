@@ -467,7 +467,7 @@ function CardDetail({
   const spot = skin.glow.replace(/[\d.]+\)$/, '0.14)')
 
   return (
-    <div role="dialog" aria-modal="true" aria-label={card.name} className="dv-interior-dark absolute inset-0 z-10 flex animate-dv-fade flex-col overflow-hidden bg-[#0c0c0e]">
+    <div role="dialog" aria-modal="true" aria-label={card.name} className="dv-interior-dark absolute inset-0 z-10 flex animate-dv-fade flex-col overflow-hidden bg-dv-ink">
       <style>{DETAIL_CSS}</style>
       {/* vitrine: mármore negro neutro, luz de cima e piso xadrez quase invisível */}
       <span aria-hidden="true" className="pointer-events-none absolute inset-0 opacity-80" style={marbleBlack(640)} />

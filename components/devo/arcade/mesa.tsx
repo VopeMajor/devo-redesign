@@ -243,7 +243,7 @@ function Hero({
         className="relative m-[3px] mb-0 h-28 overflow-hidden [clip-path:polygon(15px_0,calc(100%-15px)_0,100%_15px,100%_76%,0_100%,0_15px)] @2xl:h-48"
       >
         <Image src={GAME_ART[event.gameId].src} alt="" fill priority sizes="(min-width: 1024px) 680px, 100vw" className={GAME_ART_TONE} style={{ objectPosition: GAME_ART[event.gameId].position }} />
-        <span aria-hidden="true" className="absolute inset-0 bg-[linear-gradient(180deg,rgba(12,12,14,0.25)_0%,rgba(12,12,14,0.2)_50%,var(--dv-ink-2)_100%)]" />
+        <span aria-hidden="true" className="absolute inset-0 bg-[linear-gradient(180deg,rgb(var(--dv-ink-rgb)/0.25)_0%,rgb(var(--dv-ink-rgb)/0.2)_50%,var(--dv-ink-2)_100%)]" />
         <div className="absolute inset-x-4 top-4 flex items-center justify-between gap-2">
           <Badge tone={badge.tone} live={badge.live} dot={!badge.live}>
             {badge.text}
@@ -370,7 +370,7 @@ function GameCard({
           className={cn(GAME_ART_TONE, 'transition-transform duration-500 group-hover:scale-[1.06]')}
           style={{ objectPosition: GAME_ART[gameId].position }}
         />
-        <span aria-hidden="true" className="absolute inset-0 bg-[linear-gradient(0deg,var(--dv-ink-2)_0%,rgba(12,12,14,0)_55%)]" />
+        <span aria-hidden="true" className="absolute inset-0 bg-[linear-gradient(0deg,var(--dv-ink-2)_0%,rgb(var(--dv-ink-rgb)/0)_55%)]" />
         {/* índice de canto, como numa carta */}
         <span aria-hidden="true" className="absolute left-2 top-1.5 flex flex-col items-center leading-none text-dv-gold-bright [text-shadow:0_1px_6px_rgba(0,0,0,0.9)]">
           <span className="font-impact text-[20px] font-semibold">{toRoman(index)}</span>
@@ -475,7 +475,7 @@ export function VsSplit({ duel, onBet, big = false, closed = false }: { duel: Du
               aria-hidden="true"
               className={cn(
                 'pointer-events-none absolute inset-0 -z-10',
-                left ? 'bg-[radial-gradient(70%_60%_at_0%_0%,rgba(236,229,216,0.12),transparent_70%)]' : 'bg-[radial-gradient(70%_60%_at_100%_100%,rgba(12,12,14,0.12),transparent_70%)]',
+                left ? 'bg-[radial-gradient(70%_60%_at_0%_0%,rgba(236,229,216,0.12),transparent_70%)]' : 'bg-[radial-gradient(70%_60%_at_100%_100%,rgb(var(--dv-ink-rgb)/0.12),transparent_70%)]',
               )}
             />
             <Monogram name={s.name} size={big ? 'lg' : 'md'} tone={s.isMe ? 'cobalt' : left ? 'neutral' : 'ivory'} />

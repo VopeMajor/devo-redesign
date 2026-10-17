@@ -20,6 +20,10 @@ export const CATEGORIA_LABEL: Record<PocoCategoria, string> = {
   cosmetico: 'Item estético',
 }
 
+/** Categoria de um RESULTADO: as da configuração + 'premio' (prêmio do Owner no pool do Poço). */
+export type PocoCategoriaResultado = PocoCategoria | 'premio'
+export const CATEGORIA_RESULTADO_LABEL: Record<PocoCategoriaResultado, string> = { ...CATEGORIA_LABEL, premio: 'Prêmio do Poço' }
+
 /** Pesos relativos por categoria (não são porcentagens finais). */
 export type PocoPesos = Record<PocoCategoria, number>
 
@@ -118,6 +122,12 @@ export function toquesValidos(v: unknown, max: number): number[] | null {
   return out
 }
 
+/** Fator da manivela sobre o lixo (e sobre os prêmios-lixo do Owner): 1 sem acertos, nunca abaixo de 0,05. */
+export function fatorManivela(acertos: number, cfg: ManivelaConfig) {
+  const a = Math.max(0, Math.min(cfg.max_acertos, Math.floor(acertos)))
+  return Math.max(0.05, 1 - a * cfg.reducao_lixo_por_acerto)
+}
+
 /** Pesos efetivos: cada acerto reduz o peso do lixo (o resto fica como está). Nunca zera o lixo por completo. */
 export function aplicarManivela(pesos: PocoPesos, acertos: number, cfg: ManivelaConfig): PocoPesos {
   const a = Math.max(0, Math.min(cfg.max_acertos, Math.floor(acertos)))
@@ -148,6 +158,107 @@ export function categoriaPorRolagem(pesos: PocoPesos, rolagem: number): PocoCate
     alvo -= pesos[c]
   }
   return 'lixo'
+}
+
+/* ------------------------------------------------------------------ Prêmios do Owner (pool do Poço) */
+
+export const PREMIO_TIPOS = ['item', 'carta', 'tempo', 'lixo'] as const
+export type PremioTipo = (typeof PREMIO_TIPOS)[number]
+export const PREMIO_TIPO_LABEL: Record<PremioTipo, string> = { item: 'Item do catálogo', carta: 'Carta', tempo: 'Tempo', lixo: 'Prêmio lixo' }
+
+/** Prêmio do pool (resposta da Mesa do Owner). O peso está na MESMA unidade dos pesos de categoria. */
+export type PocoPremio = {
+  id: string
+  tipo: PremioTipo
+  itemKey: string | null
+  cardId: string | null
+  minutos: number | null
+  quantidade: number
+  nome: string
+  descricao: string | null
+  imagem: string | null
+  raridade: ItemRarity
+  peso: number
+  /** Moedas em que o prêmio entra (vazio = todas). */
+  moedas: string[]
+  estoque: number | null
+  entregues: number
+  ativo: boolean
+}
+
+/** O que o sorteio precisa saber de um prêmio elegível. */
+export type PremioPeso = { id: string; peso: number; lixo: boolean }
+
+/** Prêmio entra nesta moeda? (ativo, moeda na lista ou lista vazia, estoque sobrando). */
+export function premioElegivel(p: Pick<PocoPremio, 'ativo' | 'moedas' | 'estoque' | 'entregues'>, moeda: string) {
+  return p.ativo && (p.moedas.length === 0 || p.moedas.includes(moeda)) && (p.estoque === null || p.entregues < p.estoque)
+}
+
+/**
+ * Sorteio único sobre categorias + prêmios (uma rolagem uniforme [0, 1)). Os prêmios-lixo levam o mesmo fator
+ * da manivela que o lixo (`fatorLixo`); os pesos de categoria já chegam com a manivela aplicada.
+ */
+export function sortearComPremios(
+  pesos: PocoPesos,
+  premios: PremioPeso[],
+  rolagem: number,
+  fatorLixo = 1,
+): { tipo: 'categoria'; categoria: PocoCategoria } | { tipo: 'premio'; id: string } {
+  const ps = premios.filter((p) => p.peso > 0).map((p) => ({ id: p.id, w: p.peso * (p.lixo ? fatorLixo : 1) }))
+  const totalCat = POCO_CATEGORIAS.reduce((s, c) => s + pesos[c], 0)
+  const total = totalCat + ps.reduce((s, p) => s + p.w, 0)
+  let alvo = rolagem * total
+  for (const c of POCO_CATEGORIAS) {
+    if (alvo < pesos[c]) return { tipo: 'categoria', categoria: c }
+    alvo -= pesos[c]
+  }
+  for (const p of ps) {
+    if (alvo < p.w) return { tipo: 'premio', id: p.id }
+    alvo -= p.w
+  }
+  return { tipo: 'categoria', categoria: 'lixo' }
+}
+
+export type LinhaChance = { chave: string; nome: string; pct: number; premio: boolean }
+
+/**
+ * Tabela de chances (sem manivela) de uma moeda: categorias + prêmios, em % com 1 casa, somando EXATAMENTE
+ * 100,0 (maior resto). Mesma conta no servidor (jogador) e na Mesa (prévia antes de salvar).
+ */
+export function tabelaChances(pesos: PocoPesos, premios: { id: string; nome: string; peso: number }[]): LinhaChance[] {
+  const linhas = [
+    ...POCO_CATEGORIAS.filter((c) => pesos[c] > 0).map((c) => ({ chave: c, nome: CATEGORIA_LABEL[c], w: pesos[c], premio: false })),
+    ...premios.filter((p) => p.peso > 0).map((p) => ({ chave: `premio:${p.id}`, nome: p.nome, w: p.peso, premio: true })),
+  ]
+  const total = linhas.reduce((s, l) => s + l.w, 0)
+  if (total <= 0) return []
+  const brutos = linhas.map((l) => (l.w / total) * 1000)
+  const base = brutos.map(Math.floor)
+  let falta = 1000 - base.reduce((a, b) => a + b, 0)
+  const ordem = brutos.map((b, i) => [b - Math.floor(b), i] as const).sort((a, b) => b[0] - a[0])
+  for (const [, i] of ordem) {
+    if (falta <= 0) break
+    base[i]++
+    falta--
+  }
+  return linhas.map((l, i) => ({ chave: l.chave, nome: l.nome, pct: base[i] / 10, premio: l.premio }))
+}
+
+/** Texto seguro para nome/descrição de prêmio: sem marcação, sem caracteres de controle, espaços normalizados. */
+export function textoPremioValido(v: unknown, max: number): string | null {
+  if (typeof v !== 'string') return null
+  const t = v.replace(/[\u0000-\u001f\u007f]/g, ' ').replace(/\s+/g, ' ').trim()
+  if (!t || t.length > max) return null
+  if (/[<>]|javascript:|data:|&#|\bon[a-z]+\s*=/i.test(t)) return null
+  return t
+}
+
+/** Imagem de prêmio: asset enviado pelo Owner (mesma validação dos cosméticos) ou arte do repositório. */
+export function imagemPremioValida(v: unknown): string | null {
+  if (typeof v !== 'string') return null
+  if (/^\/api\/cosmeticos\?view=asset&id=[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(v)) return v
+  if (/^\/images\/poco\/[a-z0-9_\-/]{1,80}\.webp$/.test(v) && !v.includes('..')) return v
+  return null
 }
 
 /** Porcentagens (para o painel do Owner). */
@@ -189,7 +300,7 @@ export type PocoGiroAberto = {
   balde: string
 }
 
-export type PocoLetreiro = { nome: string; item: string; raridade: ItemRarity; categoria: PocoCategoria; quando: number }
+export type PocoLetreiro = { nome: string; item: string; raridade: ItemRarity; categoria: PocoCategoriaResultado; quando: number }
 
 export type PocoOwner = {
   provisorio: boolean
@@ -216,6 +327,8 @@ export type PocoPayload =
        * nomes fictícios (pedido do dono). Os nomes já vêm filtrados contra todas as contas e personagens reais.
        */
       simulacao: { nomes: string[]; itens: { item: string; raridade: ItemRarity; categoria: PocoCategoria }[] }
+      /** Chances de cada moeda (sem manivela): categorias + prêmios do pool, somando 100%. */
+      chances: Record<string, LinhaChance[]>
       owner?: PocoOwner
     }
 
@@ -223,13 +336,13 @@ export type PocoResultado = {
   id: string
   moeda: string
   gratis: boolean
-  categoria: PocoCategoria
+  categoria: PocoCategoriaResultado
   acertos: number
   quantidade: number
-  /** Item entregue no inventário (null para lixo). */
+  /** Item entregue no inventário (null para lixo). Prêmio de carta/tempo vem aqui com kind 'outro' e meta.premio. */
   item: { key: string; kind: ItemKind; nome: string; descricao: string | null; raridade: ItemRarity; meta: Record<string, unknown> } | null
   /** Lixo: só mostrado, não vai ao inventário. */
-  lixo: { id: string; nome: string; texto: string } | null
+  lixo: { id: string; nome: string; texto: string; imagem?: string | null } | null
   /** Auditoria: compromisso mostrado antes e segredo revelado agora (sha256(seed) === seedHash). */
   seed: string
   seedHash: string

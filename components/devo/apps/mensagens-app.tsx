@@ -70,7 +70,7 @@ function Portrait({ npcId, size = 52, className }: { npcId: string; size?: numbe
   const tone = PORTRAIT_TONE[npcId] ?? 'neutral'
   return (
     <NpcMedallion npc={npcId} size={size} className={className} ring={tone === 'blood' ? 'rgba(213,31,43,0.55)' : 'rgba(206,201,192,0.42)'}>
-      <span className="grid size-full place-items-center font-impact text-[26px] font-bold text-dv-text-2 [text-shadow:2px_0_0_rgba(213,31,43,0.6),-2px_0_0_rgba(138,124,200,0.6)]">?</span>
+      <span className="grid size-full place-items-center font-impact text-[26px] font-bold text-dv-text-2 [text-shadow:2px_0_0_rgba(213,31,43,0.6),-2px_0_0_rgb(var(--dv-amethyst-rgb)/0.6)]">?</span>
     </NpcMedallion>
   )
 }
@@ -114,18 +114,18 @@ export function MensagensApp() {
                     aria-hidden="true"
                     className={cn(
                       'dv-cut-diag absolute inset-0 -z-10',
-                      selected ? 'bg-[linear-gradient(100deg,#f4efe6,#6b6357_35%,#bab09f_65%,#5f584d)]' : fresh ? 'bg-[rgba(238,237,235,0.32)]' : 'bg-dv-line',
+                      selected ? 'bg-[linear-gradient(100deg,#f4efe6,#6b6357_35%,#bab09f_65%,#5f584d)]' : fresh ? 'bg-[rgb(var(--dv-text-rgb)/0.32)]' : 'bg-dv-line',
                     )}
                   />
                   <span
                     aria-hidden="true"
                     className={cn(
                       'dv-cut-diag absolute inset-px -z-10 transition-colors',
-                      selected ? 'bg-[linear-gradient(100deg,#2c2c31,#1f1f22_70%)]' : 'bg-[linear-gradient(100deg,var(--dv-ink-3),var(--dv-ink-2)_70%)] group-hover:bg-dv-ink-3',
+                      selected ? 'bg-[linear-gradient(100deg,var(--dv-ink-4),var(--dv-ink-3)_70%)]' : 'bg-[linear-gradient(100deg,var(--dv-ink-3),var(--dv-ink-2)_70%)] group-hover:bg-dv-ink-3',
                     )}
                     style={{ '--dv-cut': '11.6px' } as CSSProperties}
                   />
-                  {(fresh || selected) && <span aria-hidden="true" className="absolute inset-y-3 left-0 w-[2px] bg-dv-amethyst shadow-[0_0_8px_rgba(138,124,200,0.8)]" />}
+                  {(fresh || selected) && <span aria-hidden="true" className="absolute inset-y-3 left-0 w-[2px] bg-dv-amethyst shadow-[0_0_8px_rgb(var(--dv-amethyst-rgb)/0.8)]" />}
                   <Portrait npcId={t.npcId} />
                   <span className="min-w-0 flex-1">
                     <span className="flex items-baseline justify-between gap-2">
@@ -185,7 +185,7 @@ export function MensagensApp() {
         <Conversation key={active.id} threadId={active.id} onBack={() => setActiveId(null)} />
       ) : (
         <div className="relative isolate hidden flex-1 flex-col items-center justify-center gap-4 overflow-hidden p-6 text-center @xl:flex">
-          <span aria-hidden="true" className="bg-[#121214] bg-[url(/images/os/marmore-negro.webp)] bg-[length:560px_560px] absolute inset-0 -z-10 opacity-70" />
+          <span aria-hidden="true" className="bg-dv-ink-2 bg-[url(/images/os/marmore-negro.webp)] bg-[length:560px_560px] absolute inset-0 -z-10 opacity-70" />
           <EmblemMensagens metal className="size-16 opacity-80 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]" />
           <p className="dv-label text-[11px] text-dv-gold">Canal seguro</p>
           <p className="max-w-[18rem] font-body text-[16px] italic leading-snug text-dv-text-2">Escolha uma conversa. Cuidado com quem responde.</p>
@@ -249,8 +249,8 @@ function Conversation({ threadId, onBack }: { threadId: string; onBack: () => vo
       {/* retrato grande ao fundo, como numa cena */}
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10">
         {/* mármore negro com veio; o retrato do remetente fica como gravura cinza, quase apagada */}
-        <div className="bg-[#121214] bg-[url(/images/os/marmore-negro.webp)] bg-[length:560px_560px] absolute inset-0" />
-        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.35),rgba(12,12,14,0.15)_40%,rgba(0,0,0,0.45))]" />
+        <div className="bg-dv-ink-2 bg-[url(/images/os/marmore-negro.webp)] bg-[length:560px_560px] absolute inset-0" />
+        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.35),rgb(var(--dv-ink-rgb)/0.15)_40%,rgba(0,0,0,0.45))]" />
         <div className="absolute -right-6 top-6 aspect-[700/740] w-[72%] max-w-[360px] opacity-[0.12] grayscale [-webkit-mask-image:radial-gradient(ellipse_60%_58%_at_50%_38%,#000_40%,transparent_80%)] [mask-image:radial-gradient(ellipse_60%_58%_at_50%_38%,#000_40%,transparent_80%)]">
           {portrait ? (
             <SpriteCrop src={portrait} win={BUSTO} className="w-full" />
@@ -260,7 +260,7 @@ function Conversation({ threadId, onBack }: { threadId: string; onBack: () => vo
         </div>
       </div>
 
-      <header className="relative flex items-center gap-3 bg-[rgba(12,12,14,0.86)] px-2 py-2.5">
+      <header className="relative flex items-center gap-3 bg-[rgb(var(--dv-ink-rgb)/0.86)] px-2 py-2.5">
         {!shellBack && (
           <IconButton label="Voltar para conversas" variant="ghost" onClick={onBack} className="@xl:hidden">
             <GlyphArrow className="rotate-180" />
@@ -292,7 +292,7 @@ function Conversation({ threadId, onBack }: { threadId: string; onBack: () => vo
         )}
       </div>
 
-      <div className="relative border-t border-dv-line bg-[rgba(12,12,14,0.94)] px-3 pb-3 pt-3">
+      <div className="relative border-t border-dv-line bg-[rgb(var(--dv-ink-rgb)/0.94)] px-3 pb-3 pt-3">
         <p className="dv-label mb-2.5 px-1 text-[10px] text-dv-text-3">{choices.length ? 'Escolha o que perguntar' : 'Nada mais a perguntar'}</p>
         {choices.length > 0 ? (
           <ul className="flex flex-col gap-2" aria-label="Escolhas de diálogo">
@@ -308,9 +308,9 @@ function Conversation({ threadId, onBack }: { threadId: string; onBack: () => vo
                   {/* opção em ink com filete neutro; sob foco/toque o filete vira ametista (único acento frio) */}
                   <span
                     aria-hidden="true"
-                    className="dv-cut-diag absolute inset-0 -z-10 bg-[rgba(238,237,235,0.2)] transition-colors group-enabled:group-hover:bg-[linear-gradient(100deg,#c2b9ec,#8a7cc8_40%,rgba(238,237,235,0.25))] group-focus-visible:bg-[linear-gradient(100deg,#c2b9ec,#8a7cc8_40%,rgba(238,237,235,0.25))]"
+                    className="dv-cut-diag absolute inset-0 -z-10 bg-[rgb(var(--dv-text-rgb)/0.2)] transition-colors group-enabled:group-hover:bg-[linear-gradient(100deg,var(--dv-amethyst-text),var(--dv-amethyst)_40%,rgb(var(--dv-text-rgb)/0.25))] group-focus-visible:bg-[linear-gradient(100deg,var(--dv-amethyst-text),var(--dv-amethyst)_40%,rgb(var(--dv-text-rgb)/0.25))]"
                   />
-                  <span aria-hidden="true" className="dv-cut-diag absolute inset-px -z-10 bg-[linear-gradient(100deg,#1f1f22,#151517_55%,#0e0e10)]" style={{ '--dv-cut': '9.6px' } as CSSProperties} />
+                  <span aria-hidden="true" className="dv-cut-diag absolute inset-px -z-10 bg-[linear-gradient(100deg,var(--dv-ink-3),var(--dv-ink-2)_55%,var(--dv-ink))]" style={{ '--dv-cut': '9.6px' } as CSSProperties} />
                   <span aria-hidden="true" className="dv-cut-diag absolute inset-px -z-10 bg-white opacity-0 transition-opacity duration-[120ms] group-enabled:group-active:opacity-10" style={{ '--dv-cut': '9.6px' } as CSSProperties} />
                   <span aria-hidden="true" className="absolute inset-y-2 left-11 -z-10 border-l border-dv-gold/30" />
                   <span aria-hidden="true" className="dv-brass-text w-7 shrink-0 text-center font-impact text-[20px] font-semibold leading-none">

@@ -197,7 +197,7 @@ export function CristalEssencia({ className, style, brilho = true }: { className
     ['M50 6L73 50L50 58Z', '#5a4f8f'],
     ['M50 6L40 50L50 58Z', '#e6e0ff'],
     ['M27 50L31 96L50 58Z', '#8a7cc8'],
-    ['M73 50L69 96L50 58Z', '#463d78'],
+    ['M73 50L69 96L50 58Z', '#4e4580'],
     ['M31 96L50 58L69 96L50 104Z', '#6f63b0'],
     ['M31 96L50 128L50 104Z', '#5a4f8f'],
     ['M69 96L50 128L50 104Z', '#2b2547'],
@@ -396,7 +396,7 @@ export function BotaoTorre({
       <span aria-hidden="true" className="tw-botao-brilho pointer-events-none absolute inset-[5px] -z-10 overflow-hidden [clip-path:polygon(5%_0,95%_0,100%_50%,95%_100%,5%_100%,0_50%)]" />
       <span className="flex flex-1 flex-col items-center justify-center px-14 py-2 text-center">
         <span className={cn('flex items-center gap-2 font-display text-[15px] font-semibold uppercase tracking-[0.2em]', disabled ? 'text-dv-text-3' : 'text-[#141416]')}>
-          {carregando ? <span aria-hidden="true" className="tw-girar inline-block size-4 [clip-path:polygon(50%_0,62%_38%,100%_50%,62%_62%,50%_100%,38%_62%,0_50%,38%_38%)] bg-[#5a4f8f]" /> : null}
+          {carregando ? <span aria-hidden="true" className="tw-girar inline-block size-4 [clip-path:polygon(50%_0,62%_38%,100%_50%,62%_62%,50%_100%,38%_62%,0_50%,38%_38%)] bg-dv-cobalt" /> : null}
           {trancado && !carregando ? <Cadeado className="h-4 w-auto opacity-80" /> : null}
           {children}
         </span>

@@ -3,7 +3,8 @@
 // Uso local: DATABASE_URL=... DEVO_URL=http://localhost:3000 node scripts/dev/poco-test.mjs
 // Cobre: trava (Deadly Vote tutorial), Dracma do encapuzado entregue uma vez, giro grátis 1×/dia, moeda
 // consumida uma vez (e nunca com outra moeda no poço), probabilidade lida da configuração, minigame contado no
-// servidor (toques fora do tempo recusados; acertos reais contados), painel do Owner e letreiro sem cargo.
+// servidor (toques fora do tempo recusados; acertos reais contados), painel do Owner, letreiro sem cargo e
+// prêmios do pool do Owner (permissão, validação, prêmio novo nos giros, desativado fora, estoque, admin_log).
 import { readFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -320,6 +321,100 @@ await test('letreiro: só nome do personagem, sem cargo, sem contas de teste', a
   assert(!JSON.stringify(j.letreiro).includes('owner'), 'nenhum cargo no letreiro')
 })
 
+/* ------------------------------------------------------------- Prêmios do Owner (pool do Poço) */
+const premiosDeTeste = []
+async function salvarPremio(s, premio) {
+  const r = await s.poco('premio.salvar', { premio })
+  if (r.status === 200 && r.json?.id) premiosDeTeste.push(r.json.id)
+  return r
+}
+
+await test('prêmios do pool: só o Owner lista e edita (jogador recebe 403)', async () => {
+  const lista = await jog.get('/api/poco?view=premios')
+  assert(lista.status === 403, `jogador listando prêmios: 403 (veio ${lista.status})`)
+  const criar = await jog.poco('premio.salvar', { premio: { tipo: 'lixo', nome: 'Hack', descricao: 'x', raridade: 'comum', peso: 10 } })
+  assert(criar.status === 403, `jogador criando prêmio: 403 (veio ${criar.status})`)
+  const [{ n }] = await q("SELECT count(*)::int AS n FROM poco_premios WHERE nome = 'Hack'")
+  assert(n === 0, 'nada gravado pelo jogador')
+  const o = await owner.get('/api/poco?view=premios')
+  assert(o.status === 200 && Array.isArray(o.json.premios) && o.json.cartas.length > 0 && o.json.moedas.some((m) => m.key === 'dracma_comum'), `Owner lista: ${o.text.slice(0, 200)}`)
+})
+
+await test('prêmios do pool: o servidor valida peso, texto (sem marcação), imagem e alvo', async () => {
+  const ruins = [
+    { tipo: 'lixo', nome: 'Peso zero', descricao: 'x', raridade: 'comum', peso: 0 },
+    { tipo: 'lixo', nome: 'Peso negativo', descricao: 'x', raridade: 'comum', peso: -3 },
+    { tipo: 'lixo', nome: '<img src=x onerror=alert(1)>', descricao: 'x', raridade: 'comum', peso: 5 },
+    { tipo: 'lixo', nome: 'Descrição suja', descricao: '<script>alert(1)</script>', raridade: 'comum', peso: 5 },
+    { tipo: 'lixo', nome: 'Sem descrição', raridade: 'comum', peso: 5 },
+    { tipo: 'lixo', nome: 'Imagem externa', descricao: 'x', raridade: 'comum', peso: 5, imagem: 'https://evil.example/x.png' },
+    { tipo: 'item', itemKey: 'nao_existe', raridade: 'raro', peso: 5 },
+    { tipo: 'carta', cardId: 'nao_existe', raridade: 'raro', peso: 5 },
+    { tipo: 'tempo', minutos: 0, raridade: 'raro', peso: 5 },
+    { tipo: 'lixo', nome: 'Moeda falsa', descricao: 'x', raridade: 'comum', peso: 5, moedas: ['moeda_falsa'] },
+    { tipo: 'lixo', nome: 'Raridade', descricao: 'x', raridade: 'divina', peso: 5 },
+  ]
+  for (const p of ruins) {
+    const r = await salvarPremio(owner, p)
+    assert(r.status === 400, `deveria recusar ${JSON.stringify(p)} (veio ${r.status} ${r.text})`)
+  }
+})
+
+await test('prêmio novo do Owner aparece nos giros; desativado nunca aparece; tudo no admin_log', async () => {
+  await setCfg({ ...originalCfg, dracma_comum: { lixo: 0.0001, capsula: 0, fragmento: 0, essencia: 0, cosmetico: 0 } })
+  await q("SELECT devo_item_grant($1, 'dracma_comum', 4, 'teste', NULL, NULL, $2)", [jog.id, `poco-test:${sfx}:premios`])
+  const nome = `Botão de teste ${sfx}`
+  const c = await salvarPremio(owner, { tipo: 'lixo', nome, descricao: 'Um botão que não abre nada.', raridade: 'comum', peso: 1000000, moedas: ['dracma_comum'] })
+  assert(c.status === 200 && c.json.id, `criar lixo: ${c.text}`)
+  const [log] = await q("SELECT action, actor_id FROM admin_log WHERE ref = $1 ORDER BY id DESC LIMIT 1", [c.json.id])
+  assert(log?.action === 'poco.premio.criado' && log.actor_id === owner.id, `admin_log da criação: ${JSON.stringify(log)}`)
+
+  // chances: o jogador vê o prêmio na tabela da moeda e a soma é 100,0
+  const pj = (await jog.get('/api/poco')).json
+  const linhas = pj.chances?.dracma_comum ?? []
+  const soma = Math.round(linhas.reduce((s, l) => s + l.pct, 0) * 10) / 10
+  assert(soma === 100 && linhas.some((l) => l.nome === nome), `chances (soma ${soma}): ${JSON.stringify(linhas)}`)
+
+  const r1 = await giro(jog, { moeda: 'dracma_comum' })
+  assert(r1.categoria === 'lixo' && r1.lixo?.nome === nome && r1.item === null, `giro com o prêmio novo: ${JSON.stringify(r1)}`)
+  const [row] = await q('SELECT categoria, premio_id FROM poco_giros WHERE id = $1', [r1.id])
+  assert(row.categoria === 'premio' && row.premio_id === c.json.id, `giro gravado com o prêmio: ${JSON.stringify(row)}`)
+  const [{ entregues }] = await q('SELECT entregues FROM poco_premios WHERE id = $1', [c.json.id])
+  assert(entregues === 1, `contador de entregues = 1 (veio ${entregues})`)
+
+  const off = await owner.poco('premio.ativar', { id: c.json.id, ativo: false })
+  assert(off.status === 200 && off.json.ativo === false, `desativar: ${off.text}`)
+  const [log2] = await q("SELECT action FROM admin_log WHERE ref = $1 ORDER BY id DESC LIMIT 1", [c.json.id])
+  assert(log2?.action === 'poco.premio.desativado', 'admin_log da desativação')
+  for (let i = 0; i < 2; i++) {
+    const r = await giro(jog, { moeda: 'dracma_comum' })
+    assert(r.lixo?.nome !== nome, `prêmio desativado saiu no giro: ${JSON.stringify(r)}`)
+    const [g] = await q('SELECT premio_id FROM poco_giros WHERE id = $1', [r.id])
+    assert(g.premio_id === null, 'giro sem prêmio do pool')
+  }
+  const pj2 = (await jog.get('/api/poco')).json
+  assert(!(pj2.chances?.dracma_comum ?? []).some((l) => l.nome === nome), 'desativado some da tabela de chances')
+})
+
+await test('prêmio de item do catálogo entra no inventário; estoque esgotado sai do sorteio', async () => {
+  await setCfg({ ...originalCfg, dracma_comum: { lixo: 0.0001, capsula: 0, fragmento: 0, essencia: 0, cosmetico: 0 } })
+  await q("SELECT devo_item_grant($1, 'dracma_comum', 2, 'teste', NULL, NULL, $2)", [jog.id, `poco-test:${sfx}:premio-item`])
+  const c = await salvarPremio(owner, { tipo: 'item', itemKey: 'fragmento_arcano', quantidade: 7, raridade: 'epico', peso: 1000000, estoque: 1, moedas: [] })
+  assert(c.status === 200, `criar prêmio de item: ${c.text}`)
+  const f0 = await saldo(jog.id, 'fragmento_arcano')
+  const r = await giro(jog, { moeda: 'dracma_comum' })
+  assert(r.categoria === 'premio' && r.item?.key === 'fragmento_arcano' && r.quantidade === 7 && r.item.raridade === 'epico', `prêmio de item: ${JSON.stringify(r)}`)
+  assert((await saldo(jog.id, 'fragmento_arcano')) === f0 + 7, 'inventário recebeu os 7 fragmentos')
+  const r2 = await giro(jog, { moeda: 'dracma_comum' })
+  assert(r2.categoria !== 'premio', `estoque 1 esgotado: não sai de novo (${JSON.stringify(r2)})`)
+  const ed = await salvarPremio(owner, { id: c.json.id, tipo: 'item', itemKey: 'fragmento_arcano', quantidade: 7, raridade: 'epico', peso: 1000000, estoque: 1, ativo: false })
+  assert(ed.status === 200, `editar: ${ed.text}`)
+  const [log] = await q("SELECT action FROM admin_log WHERE ref = $1 ORDER BY id DESC LIMIT 1", [c.json.id])
+  assert(log?.action === 'poco.premio.editado', 'admin_log da edição')
+  await setCfg(originalCfg)
+})
+
+if (premiosDeTeste.length) await q('UPDATE poco_premios SET ativo = false WHERE id = ANY($1::uuid[])', [premiosDeTeste]).catch(() => {})
 await setCfg(originalCfg).catch(() => {})
 await db.end()
 console.log(`\n${passed} ok, ${failures.length} falha(s)`)

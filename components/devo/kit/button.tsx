@@ -36,7 +36,8 @@ const SIZE: Record<ButtonSize, { h: string; text: string; px: string; cut: numbe
 const LINE: Record<ButtonVariant, string> = {
   // Primário = porcelana com filete de aço champanhe (ref. de mármore); ametista só no halo de foco/hover.
   primary: 'bg-[linear-gradient(100deg,#f4efe6,#9a9184_28%,#ece5d8_55%,#6b6357_80%,#dcd5c8)]',
-  secondary: 'bg-[linear-gradient(100deg,var(--dv-line-strong),rgba(238,237,235,0.55)_50%,var(--dv-line-strong))] group-enabled:group-hover:bg-[linear-gradient(100deg,var(--dv-gold-deep),var(--dv-gold-bright)_50%,var(--dv-gold-deep))]',
+  // contorno em aço champanhe (Refinamento 4): acetinado em repouso, reflexo no hover
+  secondary: 'bg-[linear-gradient(100deg,var(--dv-champagne-soft),var(--dv-champagne)_50%,var(--dv-champagne-soft))] group-enabled:group-hover:bg-[linear-gradient(100deg,var(--dv-champagne-deep),var(--dv-champagne-strong)_50%,var(--dv-champagne-deep))]',
   ghost: '',
   danger: 'bg-[linear-gradient(100deg,var(--dv-blood-text),var(--dv-blood)_45%,var(--dv-blood-deep))]',
 }
@@ -51,14 +52,14 @@ const FILL: Record<ButtonVariant, string> = {
 
 /** Interior: primary = bloco cobalto; secondary = bloco na cor do texto (preto no papel, claro no painel); ghost = link cobalto; danger = vermelho com faixa. */
 const INTERIOR: Record<ButtonVariant, string> = {
-  primary: 'dv-cut-diag bg-in-accent-fill text-white enabled:hover:bg-[#2c2c31] enabled:hover:shadow-[0_0_22px_-4px_rgba(138,124,200,0.8)]',
+  primary: 'dv-cut-diag bg-in-accent-fill text-white enabled:hover:bg-dv-ink-4 enabled:hover:shadow-[0_0_22px_-4px_rgb(var(--dv-amethyst-rgb)/0.8)]',
   secondary: 'dv-cut-diag bg-in-fg text-in-bg enabled:hover:bg-in-accent-fill enabled:hover:text-white',
   ghost: 'px-2 text-in-accent underline decoration-in-accent/40 underline-offset-[6px] enabled:hover:decoration-in-accent',
-  danger: 'dv-cut-diag bg-[#a3121f] text-white enabled:hover:bg-[#c01a28]',
+  danger: 'dv-cut-diag bg-dv-blood text-white enabled:hover:bg-[#c01a28]',
 }
 
 const TEXT: Record<ButtonVariant, string> = {
-  primary: 'text-[#0c0c0e]',
+  primary: 'text-dv-ink',
   secondary: 'text-dv-text group-enabled:group-hover:text-dv-gold-bright',
   ghost: 'text-dv-text-2 group-enabled:group-hover:text-dv-text',
   danger: 'text-white',
@@ -158,7 +159,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
             <span aria-hidden="true" className="dv-cut-hex absolute inset-px -z-10 bg-[linear-gradient(180deg,rgba(255,255,255,0.6),transparent_50%)]" style={{ '--dv-cut': `${s.cut - 0.5}px` } as CSSProperties} />
           )}
           {variant === 'primary' && (
-            <span aria-hidden="true" className="pointer-events-none absolute inset-x-6 -bottom-2 -z-20 h-4 rounded-[50%] bg-[rgba(138,124,200,0.45)] opacity-0 blur-lg transition-opacity group-enabled:group-hover:opacity-100 group-focus-visible:opacity-100" />
+            <span aria-hidden="true" className="pointer-events-none absolute inset-x-6 -bottom-2 -z-20 h-4 rounded-[50%] bg-[rgb(var(--dv-amethyst-rgb)/0.45)] opacity-0 blur-lg transition-opacity group-enabled:group-hover:opacity-100 group-focus-visible:opacity-100" />
           )}
         </>
       )}
@@ -173,7 +174,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
         {iconRight && <span className="flex size-[1.15em] items-center justify-center [&>svg]:size-full">{iconRight}</span>}
       </span>
       {loading && (
-        <span className={cn('absolute inset-0 flex items-center justify-center gap-2', variant === 'primary' ? 'text-[#0c0c0e]' : 'text-white')}>
+        <span className={cn('absolute inset-0 flex items-center justify-center gap-2', variant === 'primary' ? 'text-dv-ink' : 'text-white')}>
           <Spinner className="size-5" />
           <span className="sr-only">Carregando</span>
         </span>

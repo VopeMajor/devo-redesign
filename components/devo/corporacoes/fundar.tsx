@@ -118,7 +118,7 @@ export function FundarSheet({ open, onClose, criacao, agir }: { open: boolean; o
                 }}
                 className={cn(
                   'dv-focus dv-cut grid min-h-14 place-items-center p-1.5 transition-shadow',
-                  forma === f ? 'bg-dv-cobalt-dim shadow-[inset_0_0_0_1px_#c2b9ec]' : 'bg-black/40 shadow-[inset_0_0_0_1px_var(--dv-line-strong)]',
+                  forma === f ? 'bg-dv-cobalt-dim shadow-[inset_0_0_0_1px_var(--dv-amethyst-text)]' : 'bg-black/40 shadow-[inset_0_0_0_1px_var(--dv-line-strong)]',
                 )}
                 style={{ '--dv-cut': '6px' } as CSSProperties}
               >
@@ -143,7 +143,7 @@ export function FundarSheet({ open, onClose, criacao, agir }: { open: boolean; o
                     playSfx('card-select')
                     setCor(k)
                   }}
-                  className={cn('dv-focus grid min-h-12 place-items-center', cor === k ? 'shadow-[inset_0_0_0_1px_#c2b9ec]' : '')}
+                  className={cn('dv-focus grid min-h-12 place-items-center', cor === k ? 'shadow-[inset_0_0_0_1px_var(--dv-amethyst-text)]' : '')}
                 >
                   <span
                     aria-hidden="true"

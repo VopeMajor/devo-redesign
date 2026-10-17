@@ -52,18 +52,20 @@
   --color-dv-blood: var(--dv-blood);
   --color-dv-blood-deep: var(--dv-blood-deep);
   --color-dv-blood-text: var(--dv-blood-text);
-  --color-dv-abyss: var(--dv-abyss);
-  --color-dv-wine: var(--dv-wine);
-  --color-dv-wine-deep: var(--dv-wine-deep);
-  --color-dv-wine-text: var(--dv-wine-text);
-  --color-dv-fog: var(--dv-fog);
-  --color-dv-silver: var(--dv-silver);
   --color-dv-text: var(--dv-text);
   --color-dv-text-2: var(--dv-text-2);
   --color-dv-text-3: var(--dv-text-3);
   --color-dv-line: var(--dv-line);
   --color-dv-line-strong: var(--dv-line-strong);
   --color-dv-line-gold: var(--dv-line-gold);
+  /* Refinamento 4 (dono): dois acentos com escala — ametista e aço champanhe. IDENTIDADE.md §0.0 */
+  --color-dv-amethyst-light: var(--dv-amethyst-light);
+  --color-dv-champagne: var(--dv-champagne);
+  --color-dv-champagne-strong: var(--dv-champagne-strong);
+  --color-dv-champagne-soft: var(--dv-champagne-soft);
+  --color-dv-champagne-deep: var(--dv-champagne-deep);
+  --color-dv-champagne-line: var(--dv-champagne-line);
+  --color-dv-block: var(--dv-block);
   /* Interior (estética do Record) — valores mudam por escopo: .dv-interior (papel) / .dv-interior-dark (painel) */
   --color-in-bg: var(--in-bg);
   --color-in-bg-2: var(--in-bg-2);
@@ -188,10 +190,21 @@
   --dv-cobalt-deep: #463d78;
   --dv-cobalt-dim: #1e1b2b;
   --dv-cobalt-text: #dcd9e4;
-  /* Metal champanhe-prateado (aço escovado, leve dourado-claro; nunca amarelo): filigrana, molduras, conquistas. */
-  --dv-gold: #bab09f;
-  --dv-gold-bright: #ece5d8;
-  --dv-gold-deep: #6b6357;
+  /* AÇO CHAMPANHE (Refinamento 4): metal acetinado entre o aço escovado e o champanhe — nunca ouro vivo.
+     Aros, divisórias, molduras de ícone, contorno de botão, numerais, realces finos. Escala:
+     base (filete, numeral, texto de metal 10.1:1 no negro) · strong (reflexo) · soft (sombra do metal)
+     · deep (texto de metal no papel, AA 4.7) · line (filete translúcido) · grad (preenchimento metálico). */
+  --dv-champagne: #c4b9a6;
+  --dv-champagne-strong: #ece4d6;
+  --dv-champagne-soft: #8d8373;
+  --dv-champagne-deep: #6b6357;
+  --dv-champagne-line: rgba(196,185,166, 0.5);
+  --dv-champagne-rgb: 196 185 166;
+  --dv-champagne-grad: linear-gradient(135deg, #f1eadf 0%, #a69b88 22%, #ddd3c2 44%, #6f675b 66%, #cbc1af 84%, #f1eadf 100%);
+  /* Os nomes antigos do metal continuam valendo (todas as telas herdam): apontam para a escala acima. */
+  --dv-gold: var(--dv-champagne);
+  --dv-gold-bright: var(--dv-champagne-strong);
+  --dv-gold-deep: var(--dv-champagne-deep);
   /* Papel frio (Record, verso de cartas, tiras, bilhetes, polaroides). */
   --dv-paper: #e9e8e5;
   --dv-paper-2: #d9d8d4;
@@ -204,21 +217,20 @@
   --dv-marble-vein: #8f8e8b;
   --dv-marble-black: #38393c;
   /* Ametista (joias da guarda das espadas): o ÚNICO acento frio. Estado ativo, foco, joia. Pequeno. */
-  --dv-amethyst: #8a7cc8;
-  --dv-amethyst-text: #c2b9ec;
+  /* Escala da AMETISTA (Refinamento 4): deep (bloco, joia na sombra) · base (joia, foco) · light (dado,
+     rótulo ativo; 11:1 no negro) · glow/line (halo e filete translúcidos). Nunca neon: só em pontos. */
   --dv-amethyst-deep: #4e4580;
+  --dv-amethyst: #8a7cc8;
+  --dv-amethyst-light: #c2b9ec;
+  --dv-amethyst-text: var(--dv-amethyst-light);
+  --dv-amethyst-glow: rgba(138,124,200, 0.42);
+  --dv-amethyst-line: rgba(138,124,200, 0.5);
+  --dv-amethyst-rgb: 138 124 200;
+  --dv-amethyst-text-rgb: 194 185 236;
   /* Rubi: só joia/gota de detalhe e perigo real. */
   --dv-blood: #a3121f;
   --dv-blood-deep: #3f060b;
   --dv-blood-text: #ff6670;
-  /* Paleta de referência "黒鍵の祈り" (refs/paleta/kokken-no-inori.jpg, REFINAMENTO-4): Abyss Black, Blood Wine
-     (dois tons), Fog Stone e Faded Silver. Vinho = atmosfera e destaque quente sóbrio (não é alerta: alerta é rubi). */
-  --dv-abyss: #090909;
-  --dv-wine: #3f1117;
-  --dv-wine-deep: #280e11;
-  --dv-wine-text: #d9a3aa;
-  --dv-fog: #353535;
-  --dv-silver: #acacac;
   /* Texto sobre ink (branco porcelana). */
   --dv-text: #eeedeb;
   --dv-text-2: rgba(238,237,235, 0.74);
@@ -226,7 +238,15 @@
   /* Linhas. */
   --dv-line: rgba(238,237,235, 0.14);
   --dv-line-strong: rgba(238,237,235, 0.32);
-  --dv-line-gold: rgba(186,176,159, 0.6);
+  --dv-line-gold: var(--dv-champagne-line);
+  /* Bloco selecionado no papel (aba/chip ativo, selo "em uso"): preto com texto branco. */
+  --dv-block: #1c1c1f;
+  /* Canais RGB (para rgb(var(--x) / alfa) em sombras, halos e gradientes). */
+  --dv-ink-rgb: 12 12 14;
+  --dv-text-rgb: 238 237 235;
+  --dv-blood-rgb: 163 18 31;
+  --dv-blood-deep-rgb: 63 6 11;
+  --dv-violet-rgb: 111 107 130;
   /* Brilhos e sombras. */
   --dv-glow-cobalt: 0 0 28px -6px rgba(138,124,200, 0.6);
   --dv-glow-gold: 0 0 22px -8px rgba(236,229,216, 0.7);
@@ -1135,7 +1155,7 @@
    ════════════════════════════════════════════════════════════════════════════════════════ */
 :root {
   --dv-velvet: #0b0a0e;
-  --dv-brass-grad: linear-gradient(135deg, #f4efe6 0%, #9a9184 22%, #dcd5c8 44%, #5d564c 66%, #bdb4a5 84%, #f4efe6 100%);
+  --dv-brass-grad: var(--dv-champagne-grad);
   --dv-marble-white: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='420' height='420'%3E%3Cfilter id='m' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.0045 0.0105' numOctaves='5' seed='11' stitchTiles='stitch' result='n'/%3E%3CfeColorMatrix in='n' type='matrix' values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  1.4 0 0 0 -0.2' result='a'/%3E%3CfeComponentTransfer in='a' result='v1'%3E%3CfeFuncA type='table' tableValues='0 0 0 0 0 0 0 0.15 1 0.15 0 0 0 0 0 0 0 0 0 0'/%3E%3C/feComponentTransfer%3E%3CfeColorMatrix in='v1' type='matrix' values='0 0 0 0 0.2  0 0 0 0 0.2  0 0 0 0 0.26  0 0 0 0.45 0' result='c1'/%3E%3CfeComponentTransfer in='a' result='v2'%3E%3CfeFuncA type='table' tableValues='0 0 0 0 0 0 0 0 0 0 0 0 0.2 1 0.2 0 0 0 0 0'/%3E%3C/feComponentTransfer%3E%3CfeColorMatrix in='v2' type='matrix' values='0 0 0 0 0.45  0 0 0 0 0.38  0 0 0 0 0.25  0 0 0 0.3 0' result='c2'/%3E%3CfeColorMatrix in='n' type='matrix' values='0 0 0 0 0.35  0 0 0 0 0.36  0 0 0 0 0.42  0 0 0 0.09 0' result='c3'/%3E%3CfeMerge%3E%3CfeMergeNode in='c3'/%3E%3CfeMergeNode in='c2'/%3E%3CfeMergeNode in='c1'/%3E%3C/feMerge%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23m)'/%3E%3C/svg%3E");
   --dv-marble-dark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='420' height='420'%3E%3Cfilter id='m' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.0045 0.0105' numOctaves='5' seed='11' stitchTiles='stitch' result='n'/%3E%3CfeColorMatrix in='n' type='matrix' values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  1.4 0 0 0 -0.2' result='a'/%3E%3CfeComponentTransfer in='a' result='v1'%3E%3CfeFuncA type='table' tableValues='0 0 0 0 0 0 0 0.15 1 0.15 0 0 0 0 0 0 0 0 0 0'/%3E%3C/feComponentTransfer%3E%3CfeColorMatrix in='v1' type='matrix' values='0 0 0 0 0.78  0 0 0 0 0.76  0 0 0 0 0.84  0 0 0 0.26 0' result='c1'/%3E%3CfeComponentTransfer in='a' result='v2'%3E%3CfeFuncA type='table' tableValues='0 0 0 0 0 0 0 0 0 0 0 0 0.2 1 0.2 0 0 0 0 0'/%3E%3C/feComponentTransfer%3E%3CfeColorMatrix in='v2' type='matrix' values='0 0 0 0 0.72  0 0 0 0 0.62  0 0 0 0 0.42  0 0 0 0.3 0' result='c2'/%3E%3CfeColorMatrix in='n' type='matrix' values='0 0 0 0 0.5  0 0 0 0 0.48  0 0 0 0 0.6  0 0 0 0.06 0' result='c3'/%3E%3CfeMerge%3E%3CfeMergeNode in='c3'/%3E%3CfeMergeNode in='c2'/%3E%3CfeMergeNode in='c1'/%3E%3C/feMerge%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23m)'/%3E%3C/svg%3E");
 }
@@ -1235,4 +1255,33 @@
 .dv-hand-hour { transform-box: view-box; transform-origin: 50% 50%; animation: dv-spin 2880s linear infinite; }
 @media (prefers-reduced-motion: reduce) {
   .dv-lantern-sway, .dv-flame, .dv-gear-cw, .dv-gear-ccw, .dv-hand-min, .dv-hand-hour { animation: none !important; }
+}
+
+/* ── Acentos do Refinamento 4: aço champanhe e ametista (IDENTIDADE.md §0.0) ───────────────────── */
+/* Preenchimento de aço champanhe acetinado (escovado fino + reflexo), para plaquetas e aros grossos. */
+@utility dv-champagne {
+  color: #1a1916;
+  background-image: repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.06) 0 1px, transparent 1px 3px), var(--dv-champagne-grad);
+  box-shadow: inset 0 1px 0 rgba(255, 252, 245, 0.55), inset 0 -1px 0 rgba(30, 28, 24, 0.5);
+}
+/* Texto/numeral em aço champanhe (relógio, títulos de metal). */
+@utility dv-champagne-text {
+  color: var(--dv-champagne);
+  background-image: linear-gradient(180deg, #f6f0e6 0%, #d8cdbb 42%, #8d8373 68%, #e2d8c8 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+/* Aro fino de aço champanhe por dentro da borda (molduras de ícone, contorno de botão, cartões). */
+@utility dv-champagne-edge {
+  box-shadow: inset 0 0 0 1px var(--dv-champagne-line), inset 0 0 0 2px rgba(12, 12, 14, 0.85), inset 0 1px 0 2px rgba(236, 228, 214, 0.16);
+}
+/* Divisória de aço champanhe que se apaga nas pontas. */
+@utility dv-champagne-rule {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--dv-champagne-line) 18%, var(--dv-champagne-strong) 50%, var(--dv-champagne-line) 82%, transparent);
+}
+/* Halo de ametista (atrás do item ativo, joia acesa). */
+@utility dv-amethyst-halo {
+  background: radial-gradient(closest-side, var(--dv-amethyst-glow), rgb(var(--dv-amethyst-rgb) / 0.08) 60%, transparent);
 }

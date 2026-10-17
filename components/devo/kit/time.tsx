@@ -6,7 +6,7 @@ import { cn } from '@/lib/utils'
 import { formatDuration, useNow } from '../hooks'
 import { CRITICAL_MS } from './tokens'
 
-export type TimeTone = 'text' | 'cobalt' | 'gold' | 'blood' | 'paper'
+export type TimeTone = 'text' | 'cobalt' | 'gold' | 'champagne' | 'blood' | 'paper'
 export type TimeSize = 'sm' | 'md' | 'lg' | 'xl'
 
 const SIZE: Record<TimeSize, string> = {
@@ -19,8 +19,10 @@ const SIZE: Record<TimeSize, string> = {
 const TONE: Record<TimeTone, string> = {
   text: 'text-dv-text',
   // Brilho como drop-shadow no número inteiro (fica fora da máscara das casas; text-shadow seria cortado).
-  cobalt: 'text-dv-cobalt-text [filter:drop-shadow(0_0_10px_rgba(138,124,200,0.45))]',
+  cobalt: 'text-dv-cobalt-text [filter:drop-shadow(0_0_10px_rgb(var(--dv-amethyst-rgb)/0.45))]',
   gold: 'text-dv-gold-bright [filter:drop-shadow(0_0_8px_rgba(236,229,216,0.4))]',
+  // numerais em aço champanhe com um halo de ametista por baixo (relógio da home)
+  champagne: 'text-dv-champagne-strong [filter:drop-shadow(0_1px_0_rgba(0,0,0,0.9))_drop-shadow(0_0_12px_rgb(var(--dv-amethyst-rgb)/0.45))]',
   blood: 'text-dv-blood-text [filter:drop-shadow(0_0_10px_rgba(170,20,32,0.75))]',
   paper: 'text-dv-paper-ink',
 }

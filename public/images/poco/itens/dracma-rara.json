@@ -1,0 +1,31 @@
+{
+  "asset": "img:/images/poco/itens/dracma-rara",
+  "imagem": {
+    "base": "/images/poco/itens/dracma-rara",
+    "tamanhos": [
+      64,
+      128,
+      256
+    ],
+    "camadas": [
+      {
+        "src": "/images/poco/itens/dracma-rara-gema.webp",
+        "anim": "brilho",
+        "caixa": [
+          0.4199,
+          0.4414,
+          0.1494,
+          0.124
+        ],
+        "dur": 5.5
+      }
+    ]
+  },
+  "origem": {
+    "pedido": "poco-dracma-rara",
+    "variacao": "v02",
+    "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+    "seed": 11022,
+    "importado": null
+  }
+}

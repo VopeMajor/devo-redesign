@@ -1,0 +1,18 @@
+{
+  "asset": "img:/images/poco/itens/capsula",
+  "imagem": {
+    "base": "/images/poco/itens/capsula",
+    "tamanhos": [
+      64,
+      128,
+      256
+    ]
+  },
+  "origem": {
+    "pedido": "poco-capsula",
+    "variacao": "v02",
+    "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+    "seed": 11052,
+    "importado": null
+  }
+}

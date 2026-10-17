@@ -110,10 +110,10 @@ export function SalaoHerdeiro({
         ) : foco ? (
           <p
             key={foco}
-            className="dv-cut animate-dv-cut-in mt-6 flex items-center gap-3 bg-[linear-gradient(90deg,#1f1f22,#151517)] px-5 py-2.5 shadow-[0_10px_24px_rgba(0,0,0,0.6),inset_0_0_0_1px_rgba(186,176,159,0.6)]"
+            className="dv-cut animate-dv-cut-in mt-6 flex items-center gap-3 bg-[linear-gradient(90deg,var(--dv-ink-3),var(--dv-ink-2))] px-5 py-2.5 shadow-[0_10px_24px_rgba(0,0,0,0.6),inset_0_0_0_1px_rgba(186,176,159,0.6)]"
             style={{ '--dv-cut': '9px' } as CSSProperties}
           >
-            <span aria-hidden="true" className="size-2 rotate-45 bg-dv-amethyst shadow-[0_0_10px_rgba(138,124,200,0.9)]" />
+            <span aria-hidden="true" className="size-2 rotate-45 bg-dv-amethyst shadow-[0_0_10px_rgb(var(--dv-amethyst-rgb)/0.9)]" />
             <span className="font-display text-[15px] font-semibold uppercase tracking-[0.22em] text-dv-porcelain">{FOCO_ROTULO[foco]}</span>
           </p>
         ) : null}
@@ -138,7 +138,7 @@ export function SalaoHerdeiro({
       <div className="relative z-20 mt-auto px-4 pb-[max(env(safe-area-inset-bottom),1.25rem)]">
         {/* parapeito do camarote: mármore negro com filete de aço e balaústres, colado na caixa de fala */}
         <div ref={setParapeito} aria-hidden="true" className="relative -mx-4 mt-6 h-11">
-          <span className="absolute inset-0 bg-[linear-gradient(180deg,#1f1f22,#0c0c0e)] shadow-[0_-6px_18px_rgba(0,0,0,0.6)]" />
+          <span className="absolute inset-0 bg-[linear-gradient(180deg,var(--dv-ink-3),var(--dv-ink))] shadow-[0_-6px_18px_rgba(0,0,0,0.6)]" />
           <span className="absolute inset-x-0 top-0 h-[3px] bg-[linear-gradient(90deg,transparent,#bab09f_12%,#ece5d8_50%,#bab09f_88%,transparent)]" />
           <span className="absolute inset-x-[6%] top-[22%] bottom-[18%] opacity-60 [background-image:repeating-linear-gradient(90deg,rgba(186,176,159,0.5)_0_2px,transparent_2px_22px)]" />
           <span className="absolute inset-x-0 bottom-[14%] h-px bg-[#bab09f]/45" />

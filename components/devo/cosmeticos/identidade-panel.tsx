@@ -36,7 +36,7 @@ export function IdentidadePanel({ nome, fotoSrc, onAbrir }: { nome: string; foto
   return (
     <section
       aria-label="Identidade e coleção"
-      className="dv-cut relative overflow-hidden bg-[#0c0c0e] text-dv-text shadow-[inset_0_0_0_1px_rgba(186,176,159,0.45)]"
+      className="dv-cut relative overflow-hidden bg-dv-ink text-dv-text shadow-[inset_0_0_0_1px_rgba(186,176,159,0.45)]"
       style={{ '--dv-cut': '12px' } as CSSProperties}
     >
       <span aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[url(/images/os/marmore-negro.webp)] bg-[length:520px_520px] opacity-45" />

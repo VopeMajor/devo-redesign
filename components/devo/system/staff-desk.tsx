@@ -14,9 +14,10 @@ import { VirtudesMesa } from '../virtudes/virtudes-mesa'
 import { AdminCosmeticos } from '../cosmeticos/admin-cosmeticos'
 import { SemanaisPanel } from '../cosmeticos/semanais'
 import { CorporacoesMesa, useFilaCorporacoes } from '../corporacoes/corporacoes-mesa'
+import { PocoMesa } from '../poco/poco-mesa'
 import { CalendarioMesaPanel } from '../calendario/calendario-mesa'
 
-type Section = 'casos' | 'recompensas' | 'semanais' | 'salao' | 'virtudes' | 'corporacoes' | 'calendario' | 'equipe' | 'jogadores' | 'convites' | 'cosmeticos' | 'registro' | 'ajustes'
+type Section = 'casos' | 'recompensas' | 'semanais' | 'salao' | 'virtudes' | 'corporacoes' | 'calendario' | 'equipe' | 'jogadores' | 'convites' | 'cosmeticos' | 'poco' | 'registro' | 'ajustes'
 
 const LABEL: Record<Section, string> = {
   casos: 'Casos',
@@ -26,6 +27,7 @@ const LABEL: Record<Section, string> = {
   corporacoes: 'Corporações',
   calendario: 'Calendário',
   cosmeticos: 'Cosméticos',
+  poco: 'Poço',
   virtudes: 'Virtudes',
   equipe: 'Equipe',
   jogadores: 'Jogadores',
@@ -38,7 +40,7 @@ const LABEL: Record<Section, string> = {
 const SECTIONS: Record<Exclude<Cargo, 'player'>, Section[]> = {
   dealer: ['casos', 'recompensas', 'semanais', 'salao'],
   anfitriao: ['casos', 'recompensas', 'semanais', 'salao', 'virtudes', 'corporacoes', 'calendario', 'equipe', 'jogadores', 'convites'],
-  owner: ['casos', 'recompensas', 'semanais', 'salao', 'virtudes', 'corporacoes', 'calendario', 'equipe', 'jogadores', 'convites', 'cosmeticos', 'registro', 'ajustes'],
+  owner: ['casos', 'recompensas', 'semanais', 'salao', 'virtudes', 'corporacoes', 'calendario', 'equipe', 'jogadores', 'convites', 'cosmeticos', 'poco', 'registro', 'ajustes'],
 }
 
 const ROLE_LINE: Record<Exclude<Cargo, 'player'>, string> = {
@@ -111,7 +113,7 @@ export function StaffDesk({ role }: { role: Exclude<Cargo, 'player'> }) {
                 >
                   <span className="order-2 font-mono text-[10px] uppercase leading-tight tracking-[0.12em] text-in-fg-2">{t.label}</span>
                   <span className={cn('order-1 flex items-center gap-2 font-impact text-[30px] font-semibold leading-none dv-tabular', t.value ? 'text-in-fg' : 'text-in-fg-3')}>
-                    {t.hot && <span aria-hidden="true" className="size-2 rotate-45 bg-dv-amethyst shadow-[0_0_10px_rgba(138,124,200,0.8)]" />}
+                    {t.hot && <span aria-hidden="true" className="size-2 rotate-45 bg-dv-amethyst shadow-[0_0_10px_rgb(var(--dv-amethyst-rgb)/0.8)]" />}
                     {t.off ? '—' : t.value}
                   </span>
                 </button>
@@ -140,6 +142,7 @@ export function StaffDesk({ role }: { role: Exclude<Cargo, 'player'> }) {
         {section === 'convites' && <InvitePanel />}
         {section === 'semanais' && <SemanaisPanel role={role} />}
         {section === 'cosmeticos' && <AdminCosmeticos />}
+        {section === 'poco' && <PocoMesa />}
         {section === 'registro' && <AdminLogPanel />}
         {section === 'ajustes' && <ConfigPanel />}
       </Stagger>

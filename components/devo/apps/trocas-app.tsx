@@ -117,7 +117,7 @@ function Lobby() {
                   r.status === 'livre'
                     ? 'bg-[linear-gradient(90deg,#8f877a,#ece5d8_50%,#8f877a)] shadow-[0_0_6px_rgba(236,229,216,0.45)]'
                     : r.status === 'sua'
-                      ? 'bg-dv-amethyst shadow-[0_0_6px_rgba(138,124,200,0.7)]'
+                      ? 'bg-dv-amethyst shadow-[0_0_6px_rgb(var(--dv-amethyst-rgb)/0.7)]'
                       : 'bg-dv-text/12',
                 )}
               />
@@ -234,7 +234,7 @@ function Door({ room, blocked, onEnter }: { room: Room; blocked: boolean; onEnte
           <span
             className={cn(
               'size-1.5 rotate-45',
-              free ? 'bg-dv-gold-bright shadow-[0_0_8px_rgba(255,246,230,0.9)]' : mine ? 'bg-dv-amethyst shadow-[0_0_8px_rgba(138,124,200,0.9)]' : 'border border-current',
+              free ? 'bg-dv-gold-bright shadow-[0_0_8px_rgba(255,246,230,0.9)]' : mine ? 'bg-dv-amethyst shadow-[0_0_8px_rgb(var(--dv-amethyst-rgb)/0.9)]' : 'border border-current',
             )}
           />
           {locked ? 'Trancada' : meta.label}
@@ -256,7 +256,7 @@ function Door({ room, blocked, onEnter }: { room: Room; blocked: boolean; onEnte
       {/* plaqueta da condição, abaixo da porta */}
       <span
         className={cn(
-          'relative -mt-4 flex flex-1 flex-col items-center justify-center gap-1 border bg-[linear-gradient(180deg,rgba(31,31,34,0.92),rgba(12,12,14,0.94))] px-2 pb-2 pt-1.5 text-center transition-colors duration-[var(--dv-dur-2)]',
+          'relative -mt-4 flex flex-1 flex-col items-center justify-center gap-1 border bg-[linear-gradient(180deg,rgba(31,31,34,0.92),rgb(var(--dv-ink-rgb)/0.94))] px-2 pb-2 pt-1.5 text-center transition-colors duration-[var(--dv-dur-2)]',
           free ? 'border-dv-gold/45 group-hover:border-dv-gold-bright/80' : 'border-dv-line',
         )}
       >
@@ -377,7 +377,7 @@ function HouseSigil({ rule, className }: { rule: HouseRule; className?: string }
 
 function Protocol() {
   return (
-    <section aria-labelledby="trocas-protocolo" className="relative isolate overflow-hidden border border-dv-line-gold/60 bg-[linear-gradient(180deg,rgba(31,31,34,0.92),rgba(12,12,14,0.95))] px-4 pb-5 pt-4 shadow-[0_18px_40px_-20px_rgba(0,0,0,0.9)] @2xl:px-6">
+    <section aria-labelledby="trocas-protocolo" className="relative isolate overflow-hidden border border-dv-line-gold/60 bg-[linear-gradient(180deg,rgba(31,31,34,0.92),rgb(var(--dv-ink-rgb)/0.95))] px-4 pb-5 pt-4 shadow-[0_18px_40px_-20px_rgba(0,0,0,0.9)] @2xl:px-6">
       <FrameCorners tone="gold" size={20} inset={3} />
       <div className="flex items-baseline justify-between gap-3">
         <h3 id="trocas-protocolo" className="flex flex-wrap items-baseline gap-x-2.5 font-display text-[18px] font-semibold uppercase tracking-[0.12em] text-dv-text">
@@ -501,7 +501,7 @@ function HouseRuleBanner({ expanded }: { expanded: boolean }) {
     <div
       role="note"
       aria-label="Regra da casa: mesma raridade, às cegas até a revelação"
-      className="relative isolate animate-dv-cut-in overflow-hidden border border-dv-line-strong bg-[linear-gradient(100deg,rgba(44,44,49,0.95),rgba(21,21,23,0.92)_55%,rgba(12,12,14,0.9))] [animation-delay:120ms]"
+      className="relative isolate animate-dv-cut-in overflow-hidden border border-dv-line-strong bg-[linear-gradient(100deg,rgba(44,44,49,0.95),rgba(21,21,23,0.92)_55%,rgb(var(--dv-ink-rgb)/0.9))] [animation-delay:120ms]"
     >
       <div className="flex items-stretch">
         {/* faixa diagonal de aço com o sigilo da raridade; filete de ametista */}
@@ -545,7 +545,7 @@ function TradeTable({ trade }: { trade: TradeSession }) {
     <div className="relative isolate">
       <div className="dv-marble-dark relative overflow-hidden border border-dv-line-gold/70 shadow-[0_24px_50px_-24px_rgba(0,0,0,0.95),inset_0_1px_0_rgba(255,255,255,0.08)]">
         {/* véu para contraste e luz zenital da luminária */}
-        <span aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(70%_55%_at_50%_-5%,rgba(255,246,230,0.14),transparent_70%),linear-gradient(180deg,rgba(12,12,14,0.35),rgba(12,12,14,0.7))]" />
+        <span aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(70%_55%_at_50%_-5%,rgba(255,246,230,0.14),transparent_70%),linear-gradient(180deg,rgb(var(--dv-ink-rgb)/0.35),rgb(var(--dv-ink-rgb)/0.7))]" />
         <FrameCorners tone="gold" size={18} inset={3} />
 
         <div className="relative grid grid-cols-[1fr_auto_1fr] items-start gap-1 px-2 pb-4 pt-4 @md:px-6">
@@ -853,7 +853,7 @@ function TradeActions({ trade, onExit }: { trade: TradeSession; onExit: () => vo
           // Aceito: selo em ink com o check em prata (não é mais um botão — não há volta).
           <p
             role="status"
-            className="relative flex min-h-14 animate-dv-fade items-center justify-center gap-3 border border-dv-gold-bright/40 bg-[linear-gradient(180deg,#1f1f22,#0c0c0e)] font-display text-[15px] font-semibold uppercase tracking-[0.26em] text-dv-text"
+            className="relative flex min-h-14 animate-dv-fade items-center justify-center gap-3 border border-dv-gold-bright/40 bg-[linear-gradient(180deg,var(--dv-ink-3),var(--dv-ink))] font-display text-[15px] font-semibold uppercase tracking-[0.26em] text-dv-text"
           >
             <span aria-hidden="true" className="absolute -left-px -top-px size-2.5 border-l border-t border-dv-gold-bright" />
             <span aria-hidden="true" className="absolute -bottom-px -right-px size-2.5 border-b border-r border-dv-gold-bright" />
@@ -911,7 +911,7 @@ function TradeChat({ trade }: { trade: TradeSession }) {
   return (
     <aside
       aria-label="Conversa da sala"
-      className="relative isolate flex flex-col border border-dv-line-strong bg-[linear-gradient(180deg,rgba(21,21,23,0.94),rgba(12,12,14,0.96))] @3xl:sticky @3xl:top-4 @3xl:h-[34rem]"
+      className="relative isolate flex flex-col border border-dv-line-strong bg-[linear-gradient(180deg,rgba(21,21,23,0.94),rgb(var(--dv-ink-rgb)/0.96))] @3xl:sticky @3xl:top-4 @3xl:h-[34rem]"
     >
       <header className="flex items-center justify-between gap-3 border-b border-dv-line px-4 py-2.5">
         <p className="flex items-baseline gap-2 font-display text-[13px] font-semibold uppercase tracking-[0.14em] text-dv-text">
@@ -947,7 +947,7 @@ function TradeChat({ trade }: { trade: TradeSession }) {
               <p
                 className={cn(
                   'dv-cut-diag px-3 py-2 font-body text-[15px] leading-snug',
-                  me ? 'bg-dv-porcelain text-dv-porcelain-ink shadow-[inset_-2px_0_0_var(--dv-gold)]' : 'bg-[linear-gradient(180deg,#2c2c31,#1f1f22)] text-dv-text shadow-[inset_2px_0_0_var(--dv-marble-vein)]',
+                  me ? 'bg-dv-porcelain text-dv-porcelain-ink shadow-[inset_-2px_0_0_var(--dv-gold)]' : 'bg-[linear-gradient(180deg,var(--dv-ink-4),var(--dv-ink-3))] text-dv-text shadow-[inset_2px_0_0_var(--dv-marble-vein)]',
                 )}
                 style={{ '--dv-cut': '7px' } as CSSProperties}
               >

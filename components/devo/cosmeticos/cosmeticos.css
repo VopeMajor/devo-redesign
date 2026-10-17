@@ -37,11 +37,11 @@
   font-style: italic;
   font-weight: 600;
   letter-spacing: 0.02em;
-  background: linear-gradient(100deg, #f3ece0 0%, #d8ccb4 40%, #c2b9ec 75%, #ece5d8 100%);
+  background: linear-gradient(100deg, #f3ece0 0%, #d8ccb4 40%, var(--dv-amethyst-text) 75%, #ece5d8 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  text-shadow: 0 0 10px rgba(138, 124, 200, 0.35);
+  text-shadow: 0 0 10px rgb(var(--dv-amethyst-rgb) / 0.35);
 }
 .cos-ef-brasa {
   font-family: var(--font-card-banner), Georgia, serif;
@@ -50,7 +50,7 @@
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  text-shadow: 0 1px 6px rgba(163, 18, 31, 0.35);
+  text-shadow: 0 1px 6px rgb(var(--dv-blood-rgb) / 0.35);
 }
 .cos-ef-geada {
   font-family: var(--font-card-title), Georgia, serif;

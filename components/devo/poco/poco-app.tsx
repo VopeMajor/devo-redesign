@@ -3,7 +3,7 @@
 import './poco.css'
 import { useCallback, useEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react'
 import useSWR from 'swr'
-import { playSfx } from '@/lib/devo/audio'
+import { playSfx, pocoSilencio, pocoSom } from '@/lib/devo/audio'
 import type { ManivelaParams, PocoLetreiro, PocoPayload, PocoPesos, PocoResultado } from '@/lib/devo/poco'
 import { ITEM_RARITY_LABEL } from '@/lib/devo/progresso'
 import { cn } from '@/lib/utils'
@@ -13,7 +13,8 @@ import { EmblemMark, EmblemPoco } from '../kit/emblems'
 import { callName, useDevo } from '../state/devo-store'
 import { BaldesSheet, LancarSheet, MoedasSheet } from './poco-folhas'
 import { Etiqueta, FaixaOrnamental, MedalhaoDentado, PlacaGotica } from './poco-ornamentos'
-import { BaldeIcon, type BaldePosicao, DracmaIcon, PocoCena } from './poco-cena'
+import { type BaldePosicao, PocoCena } from './poco-cena'
+import { BaldePoco, IconeItemPoco, MoedaPoco } from './poco-itens'
 import { PocoManivela } from './poco-manivela'
 import { PocoNeblina } from './poco-neblina'
 import { PocoResultadoView } from './poco-resultado'
@@ -100,7 +101,7 @@ export function PocoApp() {
 
 function Fundo({ palco = 'tela', children, className }: { palco?: 'tela' | 'trancado'; children: ReactNode; className?: string }) {
   return (
-    <div className={cn('relative h-full overflow-hidden bg-dv-ink [--poco-h:min(46vh,380px)] [--poco-top:47%]', className)}>
+    <div className={cn('relative h-full overflow-hidden bg-dv-ink [--poco-base:68cqh] [--poco-h:min(46vh,380px)] [--poco-top:47%]', className)}>
       <PocoCena palco={palco} />
       <div className="relative z-10 h-full">{children}</div>
     </div>
@@ -112,8 +113,8 @@ function Trancado({ motivo }: { motivo: string }) {
     <Fundo palco="trancado">
       <div className="flex h-full flex-col justify-end px-4 pb-6">
         <section aria-label="Poço dos Milagres: trancado" className="animate-dv-rise relative" style={{ '--dv-cut': '14px' } as CSSProperties}>
-          <span aria-hidden="true" className="dv-cut absolute inset-0 bg-[linear-gradient(135deg,rgba(238,237,235,0.34),rgba(238,237,235,0.12)_45%,rgba(238,237,235,0.26))]" />
-          <span aria-hidden="true" className="dv-cut absolute inset-px bg-[linear-gradient(180deg,#1a1a1d,#0e0e10)]" style={{ '--dv-cut': '13.6px' } as CSSProperties} />
+          <span aria-hidden="true" className="dv-cut absolute inset-0 bg-[linear-gradient(135deg,rgb(var(--dv-text-rgb)/0.34),rgb(var(--dv-text-rgb)/0.12)_45%,rgb(var(--dv-text-rgb)/0.26))]" />
+          <span aria-hidden="true" className="dv-cut absolute inset-px bg-[linear-gradient(180deg,var(--dv-ink-3),var(--dv-ink))]" style={{ '--dv-cut': '13.6px' } as CSSProperties} />
           <div className="relative flex items-start gap-4 p-5">
             <EmblemMark emblem={EmblemPoco} size={56} state="locked" />
             <div className="min-w-0 flex-1">
@@ -166,8 +167,11 @@ function PocoTela({ data, refresh }: { data: Liberado; refresh: () => void }) {
       setFolha(null)
       setMoedaAnim((n) => n + 1)
       setAtivo(true)
-      later(() => setAtivo(false), reduced ? 0 : 1600)
-      playSfx('fall')
+      later(() => setAtivo(false), reduced ? 0 : 2200)
+      // tinido na mão, respingo quando a moeda toca a água (o arco dura ~900 ms)
+      playSfx('coin')
+      later(() => playSfx('splash'), reduced ? 0 : 900)
+      if (!reduced) later(() => pocoSom('nevoa'), 1150)
       refresh()
     } catch (e) {
       falhar(e)
@@ -190,13 +194,13 @@ function PocoTela({ data, refresh }: { data: Liberado; refresh: () => void }) {
       setOcupado('girar')
       setGirando(true)
       setSubindo(true)
-      playSfx('rumble')
+      pocoSom('manivela')
       try {
         await poco('manivela.girar', { toques })
         refresh()
         later(() => {
           terminarSuspense()
-          playSfx('bell')
+          pocoSom('balde')
         }, reduced ? 0 : 2000)
       } catch (e) {
         terminarSuspense()
@@ -238,8 +242,8 @@ function PocoTela({ data, refresh }: { data: Liberado; refresh: () => void }) {
     try {
       const r = await poco('balde.inspecionar')
       const res = r.resultado as PocoResultado
+      // os sons da revelação (subida, falsa partida, sting/flop) ficam com a própria revelação
       setResultado(res)
-      playSfx(res.categoria === 'lixo' ? 'card' : 'whoosh')
     } catch (e) {
       falhar(e)
       refresh()
@@ -277,7 +281,7 @@ function PocoTela({ data, refresh }: { data: Liberado; refresh: () => void }) {
         : 'O balde subiu. Inspecione o balde.'
 
   return (
-    <div className="relative h-full overflow-hidden bg-dv-ink [--poco-h:min(50vh,410px)] [--poco-top:45%]">
+    <div className="relative h-full overflow-hidden bg-dv-ink [--poco-base:65cqh] [--poco-h:min(50vh,410px)] [--poco-top:45%]">
       <PocoCena
         palco="tela"
         balde={balde}
@@ -294,7 +298,7 @@ function PocoTela({ data, refresh }: { data: Liberado; refresh: () => void }) {
         <div className="flex items-start justify-between gap-2 px-3 pt-1.5">
           <div className="animate-dv-fade flex min-w-0 flex-col gap-1">
             <Etiqueta joia={false} className="pl-2">
-              <img src={`/images/poco/balde-${['madeira', 'ferro', 'cobre', 'prata'].includes(baldeAtual?.id ?? '') ? baldeAtual?.id : 'madeira'}.webp`} alt="" className="h-7 w-7 object-cover [object-position:50%_92%]" />
+              <BaldePoco tipo={baldeAtual?.id} tamanho={28} className="h-7 w-7" />
               <span className="truncate font-display text-[12px] font-semibold uppercase tracking-[0.1em] text-dv-text-2">{baldeAtual?.nome}</span>
             </Etiqueta>
             <Etiqueta aceso={data.giroGratis.disponivel}>
@@ -328,7 +332,7 @@ function PocoTela({ data, refresh }: { data: Liberado; refresh: () => void }) {
                 setErro(null)
                 setFolha('lancar')
               }}
-              icon={<DracmaIcon raridade="incomum" className="size-9 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]" />}
+              icon={<MoedaPoco chave="dracma_incomum" tamanho={36} className="size-9 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]" />}
             />
             <Invocacao
               forma="medalhao"
@@ -348,7 +352,7 @@ function PocoTela({ data, refresh }: { data: Liberado; refresh: () => void }) {
               disabled={!!ocupado || subindo}
               loading={ocupado === 'balde' && fase === 'cheio'}
               onClick={inspecionar}
-              icon={<BaldeIcon tipo={baldeAtual?.id} className="size-9 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]" />}
+              icon={<BaldePoco tipo={baldeAtual?.id} tamanho={40} className="size-10 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]" />}
             />
           </div>
         </div>
@@ -358,6 +362,7 @@ function PocoTela({ data, refresh }: { data: Liberado; refresh: () => void }) {
         <button
           type="button"
           onClick={() => {
+            pocoSilencio()
             playSfx('click')
             terminarSuspense()
           }}
@@ -382,7 +387,7 @@ function PocoTela({ data, refresh }: { data: Liberado; refresh: () => void }) {
         />
       )}
 
-      <MoedasSheet open={folha === 'moedas'} onClose={() => setFolha(null)} moedas={data.moedas} giroGratis={data.giroGratis} owner={data.owner} onSalvarProbabilidades={salvarProbabilidades} />
+      <MoedasSheet open={folha === 'moedas'} onClose={() => setFolha(null)} moedas={data.moedas} giroGratis={data.giroGratis} chances={data.chances} owner={data.owner} onSalvarProbabilidades={salvarProbabilidades} />
       <LancarSheet open={folha === 'lancar'} onClose={() => setFolha(null)} moedas={data.moedas} giroGratis={data.giroGratis} ocupado={ocupado} erro={erro} onLancar={lancar} />
       <BaldesSheet open={folha === 'baldes'} onClose={() => setFolha(null)} baldes={data.baldes} atual={data.baldeAtual} ocupado={!!ocupado} onEscolher={escolherBalde} />
     </div>
@@ -463,7 +468,7 @@ function Invocacao({
       )}
     >
       <span className={cn('relative grid place-items-center', forma === 'medalhao' ? 'size-[104px]' : 'h-[94px] w-full max-w-[112px]')}>
-        {aceso && <span aria-hidden="true" className="poco-aura absolute inset-[-14%] -z-10 bg-[radial-gradient(50%_50%_at_50%_55%,rgba(138,124,200,0.55),transparent_70%)]" />}
+        {aceso && <span aria-hidden="true" className="poco-aura absolute inset-[-14%] -z-10 bg-[radial-gradient(50%_50%_at_50%_55%,rgb(var(--dv-amethyst-rgb)/0.55),transparent_70%)]" />}
         {forma === 'medalhao' ? <MedalhaoDentado ativo={aceso} apagado={disabled} /> : <PlacaGotica ativo={aceso} apagado={disabled} />}
         <span aria-hidden="true" className="absolute inset-0 rounded-full bg-white opacity-0 transition-opacity duration-150 group-enabled:group-active:opacity-10" />
         <span aria-hidden="true" className={cn('relative grid place-items-center transition-[opacity,filter]', forma === 'placa' && '-mt-1', disabled && 'opacity-40 grayscale')}>
@@ -482,7 +487,7 @@ function Invocacao({
 
 /* ── Faixa de prêmios (reais + simulados) ──────────────────────────────────────────────── */
 
-type Aviso = { k: string; nome: string; item: string; raridade: string; raro: boolean }
+type Aviso = { k: string; nome: string; item: string; raridade: string; raro: boolean; categoria: string }
 
 /**
  * Faixa de notificação dos prêmios: um aviso por vez, entrando pela direita. Primeiro os reais (os mais recentes
@@ -500,7 +505,7 @@ function FaixaPremios({ reais, simulacao }: { reais: PocoLetreiro[]; simulacao: 
       .filter((r) => !vistos.current.has(`${r.nome}-${r.quando}`))
       .slice(0, 4)
       .reverse()
-      .map((r) => ({ k: `${r.nome}-${r.quando}`, nome: r.nome, item: r.item, raridade: ITEM_RARITY_LABEL[r.raridade], raro: r.categoria === 'capsula' || r.categoria === 'cosmetico' || ['raro', 'epico', 'lendario', 'arcano'].includes(r.raridade) }))
+      .map((r) => ({ k: `${r.nome}-${r.quando}`, nome: r.nome, item: r.item, categoria: r.categoria, raridade: ITEM_RARITY_LABEL[r.raridade], raro: r.categoria === 'capsula' || r.categoria === 'cosmetico' || ['raro', 'epico', 'lendario', 'arcano'].includes(r.raridade) }))
     for (const n of novos) vistos.current.add(n.k)
     fila.current = [...novos, ...fila.current.filter((a) => !a.k.startsWith('sim-'))]
   }, [reais])
@@ -513,7 +518,7 @@ function FaixaPremios({ reais, simulacao }: { reais: PocoLetreiro[]; simulacao: 
         if (!a && simulacao.nomes.length && simulacao.itens.length) {
           const n = simulacao.nomes[Math.floor(Math.random() * simulacao.nomes.length)]
           const it = simulacao.itens[Math.floor(Math.random() * simulacao.itens.length)]
-          a = { k: `sim-${Date.now()}`, nome: n, item: it.item, raridade: ITEM_RARITY_LABEL[it.raridade], raro: true }
+          a = { k: `sim-${Date.now()}`, nome: n, item: it.item, categoria: it.categoria, raridade: ITEM_RARITY_LABEL[it.raridade], raro: true }
         }
         setAtual(a)
         proximo(a && !a.k.startsWith('sim-') ? 5600 : 12000 + Math.random() * 6000)
@@ -528,7 +533,8 @@ function FaixaPremios({ reais, simulacao }: { reais: PocoLetreiro[]; simulacao: 
       {atual ? (
         <div key={atual.k} className="poco-faixa absolute inset-x-1 top-1">
           <FaixaOrnamental tom={atual.raro ? 'ametista' : 'aco'} className="h-9">
-            <p className="flex min-w-0 items-baseline gap-1.5 whitespace-nowrap">
+            <p className="flex min-w-0 items-center gap-1.5 whitespace-nowrap">
+              {['fragmento', 'essencia', 'capsula'].includes(atual.categoria) && <IconeItemPoco id={atual.categoria} tamanho={22} className="size-[22px] shrink-0" />}
               <span className={cn('dv-label shrink-0 text-[10px]', atual.raro ? 'text-dv-amethyst-text' : 'text-dv-gold')}>{atual.raridade}</span>
               <span className="truncate font-body text-[14px] text-dv-text">
                 <span className="text-dv-porcelain">{atual.nome}</span> <span className="text-dv-text-3">obteve</span>{' '}

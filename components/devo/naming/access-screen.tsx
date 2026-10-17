@@ -247,7 +247,7 @@ export function AccessScreen({
             {/* Costura do diário */}
             <span aria-hidden="true" className="pointer-events-none absolute inset-[9px] border border-dashed border-dv-paper-ink/25 [clip-path:polygon(0_0,calc(100%-22px)_0,100%_22px,100%_100%,0_100%)]" />
             {/* Fita marcadora + clipe */}
-            <span aria-hidden="true" className="absolute -top-2.5 left-7 h-16 w-5 bg-[linear-gradient(90deg,#0c0c0e,#2c2c31_50%,#0c0c0e)] shadow-[inset_1px_0_0_rgba(186,176,159,0.55),inset_-1px_0_0_rgba(186,176,159,0.55),0_3px_6px_rgba(0,0,0,0.35)] [clip-path:polygon(0_0,100%_0,100%_100%,50%_80%,0_100%)]" />
+            <span aria-hidden="true" className="absolute -top-2.5 left-7 h-16 w-5 bg-[linear-gradient(90deg,var(--dv-ink),var(--dv-ink-4)_50%,var(--dv-ink))] shadow-[inset_1px_0_0_rgba(186,176,159,0.55),inset_-1px_0_0_rgba(186,176,159,0.55),0_3px_6px_rgba(0,0,0,0.35)] [clip-path:polygon(0_0,100%_0,100%_100%,50%_80%,0_100%)]" />
             <GlyphClip className="absolute -top-4 left-[3.4rem] size-9 rotate-[18deg] text-[var(--dv-marble-vein)] drop-shadow-[0_2px_1px_rgba(0,0,0,0.35)]" />
 
             <div className="devo-scroll relative min-h-0 flex-1 overflow-y-auto overscroll-contain px-6 pb-4 pt-9 text-dv-paper-ink sm:px-8">

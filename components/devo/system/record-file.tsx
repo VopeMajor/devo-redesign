@@ -51,7 +51,7 @@ export function RecordFile({
   const imgCode = `IMG_${data.recordId.slice(3, 7)}`
 
   return (
-    <article aria-label={`Record File de ${data.name}`} className={cn('relative mb-2 text-[#0d0d0f] drop-shadow-[0_16px_22px_rgba(13,13,15,0.28)]', className)}>
+    <article aria-label={`Record File de ${data.name}`} className={cn('relative mb-2 text-dv-ink drop-shadow-[0_16px_22px_rgba(13,13,15,0.28)]', className)}>
       <div className="dv-cut relative bg-[color:var(--in-porcelain)] bg-[radial-gradient(110%_60%_at_20%_0%,#ffffff,transparent_65%)] shadow-[inset_0_0_0_1px_rgba(13,13,15,0.14)]" style={{ '--dv-cut': '14px' } as CSSProperties}>
         <BrassCorners size={28} inset={4} />
         {/* pauta finíssima do formulário */}
@@ -59,7 +59,7 @@ export function RecordFile({
 
         {/* Cabeçalho do documento */}
         <header className="relative flex items-center gap-3 px-5 pb-3 pt-6">
-          <DeadlyVoteSymbol variant="full" className="size-11 text-[#1c1c1f]" />
+          <DeadlyVoteSymbol variant="full" className="size-11 text-dv-block" />
           <div className="min-w-0 flex-1">
             <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-[#58585e]">Deadly Vote · Record System</p>
             <h2 className="mt-1 flex flex-wrap items-baseline gap-x-2.5 font-serif text-[27px] font-light uppercase leading-none tracking-[0.03em]">
@@ -73,11 +73,11 @@ export function RecordFile({
 
         {/* Faixa do arquivo: tinta negra, texto branco; a joia ametista é o único acento frio */}
         <div className="relative mx-5 flex h-7 items-center gap-2 overflow-hidden">
-          <span aria-hidden="true" className="absolute inset-y-0 -left-2 right-9 -skew-x-[18deg] bg-[#1c1c1f]" />
-          <span aria-hidden="true" className="absolute inset-y-0 right-3 w-3 -skew-x-[18deg] bg-[#1c1c1f]/70" />
-          <span aria-hidden="true" className="absolute inset-y-0 right-0 w-1 -skew-x-[18deg] bg-[#1c1c1f]/40" />
+          <span aria-hidden="true" className="absolute inset-y-0 -left-2 right-9 -skew-x-[18deg] bg-dv-block" />
+          <span aria-hidden="true" className="absolute inset-y-0 right-3 w-3 -skew-x-[18deg] bg-dv-block/70" />
+          <span aria-hidden="true" className="absolute inset-y-0 right-0 w-1 -skew-x-[18deg] bg-dv-block/40" />
           <span className="relative flex min-w-0 items-center gap-2 whitespace-nowrap pl-2 font-mono text-[10px] uppercase tracking-[0.16em] text-white">
-            <span aria-hidden="true" className="size-[7px] shrink-0 rotate-45 bg-dv-amethyst shadow-[0_0_6px_rgba(138,124,200,0.9)]" />
+            <span aria-hidden="true" className="size-[7px] shrink-0 rotate-45 bg-dv-amethyst shadow-[0_0_6px_rgb(var(--dv-amethyst-rgb)/0.9)]" />
             Arquivo confidencial · {data.recordId}
           </span>
         </div>
@@ -99,7 +99,7 @@ export function RecordFile({
             ) : (
             <figure className="relative" style={{ transform: 'rotate(-2.2deg)' } as CSSProperties}>
               <div className="bg-[#fbfaf7] p-1.5 pb-6 shadow-[0_6px_14px_rgba(13,13,15,0.3),0_0_0_1px_rgba(13,13,15,0.08)]">
-                <div className="bg-[url(/images/os/marmore-negro.webp)] bg-[length:560px_560px] relative aspect-[3/4] overflow-hidden bg-[#1f1f22]">
+                <div className="bg-[url(/images/os/marmore-negro.webp)] bg-[length:560px_560px] relative aspect-[3/4] overflow-hidden bg-dv-ink-3">
                   {data.photoUrl ? (
                     // biome-ignore lint/performance/noImgElement: foto enviada pelo usuário, servida pela API privada
                     <img src={data.photoUrl} alt={`Foto de ${data.name}`} className="absolute inset-0 size-full object-cover grayscale-[0.15]" />
@@ -137,12 +137,12 @@ export function RecordFile({
             <div>
               <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-[#58585e]">Participante</p>
               <p className="mt-1 break-words font-impact text-[30px] font-bold uppercase leading-[0.95] tracking-[0.02em]">{data.name}</p>
-              <p className="mt-1.5 font-mono text-[11px] uppercase tracking-[0.12em] text-[#0d0d0f]/85">
+              <p className="mt-1.5 font-mono text-[11px] uppercase tracking-[0.12em] text-dv-ink/85">
                 <span className="text-[#58585e]">ID.Record </span>
                 {data.recordId}
               </p>
             </div>
-            <dl className="flex flex-col gap-3 border-t border-[#0d0d0f]/20 pt-3">
+            <dl className="flex flex-col gap-3 border-t border-dv-ink/20 pt-3">
               <Field label="Status atual">
                 <StatusBlock tone={data.status.tone}>{data.status.label}</StatusBlock>
               </Field>
@@ -174,27 +174,27 @@ export function RecordFile({
         )}
 
         {/* Shuffler + ação */}
-        <div className="relative mx-5 mt-5 flex flex-wrap items-center justify-between gap-3 border-t border-dashed border-[#0d0d0f]/30 pt-3">
+        <div className="relative mx-5 mt-5 flex flex-wrap items-center justify-between gap-3 border-t border-dashed border-dv-ink/30 pt-3">
           <div className="flex items-center gap-3">
-            <span aria-hidden="true" className={cn('grid size-9 place-items-center rounded-full border', awake ? 'border-[#1c1c1f] text-[#1c1c1f]' : 'border-[#0d0d0f]/30 text-[#58585e]')}>
+            <span aria-hidden="true" className={cn('grid size-9 place-items-center rounded-full border', awake ? 'border-dv-block text-dv-block' : 'border-dv-ink/30 text-[#58585e]')}>
               <GlyphClock className={cn('size-5', awake && 'animate-[spin_9s_linear_infinite] motion-reduce:animate-none')} />
             </span>
             <dl>
               <dt className="font-mono text-[10px] uppercase tracking-[0.18em] text-[#58585e]">Card Shuffler</dt>
-              <dd className={cn('font-serif text-[18px] font-light uppercase leading-tight tracking-[0.08em]', awake ? 'text-[#0d0d0f]' : 'text-[#58585e]')}>{shuffler}</dd>
+              <dd className={cn('font-serif text-[18px] font-light uppercase leading-tight tracking-[0.08em]', awake ? 'text-dv-ink' : 'text-[#58585e]')}>{shuffler}</dd>
             </dl>
           </div>
           {action}
         </div>
 
         {/* Rodapé do documento (24px de respiro antes do picote) */}
-        <footer className="relative mx-5 mt-4 flex items-end justify-between gap-3 border-t border-[#0d0d0f]/20 pb-6 pt-3">
+        <footer className="relative mx-5 mt-4 flex items-end justify-between gap-3 border-t border-dv-ink/20 pb-6 pt-3">
           <p className="font-mono text-[10px] uppercase leading-relaxed tracking-[0.16em] text-[#58585e]">
             Emitido pelo Gerente
             <br />
             Folha 01/01 · Tribunal do Relógio
           </p>
-          <Barcode value={data.recordId} height={22} width={88} className="text-[#1c1c1f]/80" />
+          <Barcode value={data.recordId} height={22} width={88} className="text-dv-block/80" />
         </footer>
       </div>
       <span aria-hidden="true" className="absolute inset-x-[14px] -bottom-[7px] h-2" style={PERFORATION} />
@@ -217,9 +217,9 @@ function StatusBlock({ tone, children }: { tone: SystemTone; children: ReactNode
     <span
       className={cn(
         'dv-cut-diag inline-flex h-8 items-center gap-2 px-3 font-mono text-[11px] font-medium uppercase tracking-[0.2em]',
-        tone === 'active' && 'bg-[#1c1c1f] text-white',
-        tone === 'critical' && 'bg-[#a3121f] text-white',
-        tone === 'idle' && 'bg-[#0d0d0f]/10 text-[#0d0d0f]',
+        tone === 'active' && 'bg-dv-block text-white',
+        tone === 'critical' && 'bg-dv-blood text-white',
+        tone === 'idle' && 'bg-dv-ink/10 text-dv-ink',
       )}
       style={{ '--dv-cut': '7px' } as CSSProperties}
     >
@@ -235,7 +235,7 @@ function LifePlate({ remainingMs, critical }: { remainingMs: number; critical: b
   return (
     <div
       className={cn(
-        'dv-cut bg-[url(/images/os/marmore-negro.webp)] bg-[length:560px_560px] relative overflow-hidden bg-[#0c0c0e] px-4 pb-3 pt-3 text-dv-text shadow-[inset_0_0_0_1px_rgba(186,176,159,0.5)]',
+        'dv-cut bg-[url(/images/os/marmore-negro.webp)] bg-[length:560px_560px] relative overflow-hidden bg-dv-ink px-4 pb-3 pt-3 text-dv-text shadow-[inset_0_0_0_1px_rgba(186,176,159,0.5)]',
         critical && 'shadow-[inset_0_0_0_1px_rgba(255,90,99,0.6)]',
       )}
       style={{ '--dv-cut': '10px' } as CSSProperties}

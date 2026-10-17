@@ -11,7 +11,7 @@ export type FrameCut = 'all' | 'diag' | 'none'
 /** Cor do filete (camada de borda) por tom. Ouro tem gradiente "metal escovado". */
 export const FRAME_LINE: Record<FrameTone, string> = {
   gold: 'bg-[linear-gradient(135deg,var(--dv-gold-bright)_0%,var(--dv-gold-deep)_28%,var(--dv-gold)_55%,var(--dv-gold-deep)_80%,var(--dv-gold-bright)_100%)]',
-  cobalt: 'bg-[linear-gradient(135deg,#8ea6ff_0%,var(--dv-cobalt)_35%,var(--dv-cobalt-dim)_70%,var(--dv-cobalt)_100%)]',
+  cobalt: 'bg-[linear-gradient(135deg,var(--dv-amethyst-light)_0%,var(--dv-cobalt)_35%,var(--dv-cobalt-dim)_70%,var(--dv-cobalt)_100%)]',
   neutral: 'bg-dv-line-strong',
   blood: 'bg-[linear-gradient(135deg,var(--dv-blood-text),var(--dv-blood)_45%,var(--dv-blood-deep))]',
 }
@@ -53,7 +53,7 @@ const PAD = { none: '', sm: 'p-3', md: 'p-4', lg: 'p-6' } as const
 
 const GLOW: Record<FrameTone, string> = {
   gold: 'drop-shadow-[0_0_14px_rgba(236,229,216,0.22)]',
-  cobalt: 'drop-shadow-[0_0_18px_rgba(138,124,200,0.4)]',
+  cobalt: 'drop-shadow-[0_0_18px_rgb(var(--dv-amethyst-rgb)/0.4)]',
   neutral: 'drop-shadow-[0_10px_24px_rgba(0,0,0,0.6)]',
   blood: 'drop-shadow-[0_0_18px_rgba(170,20,32,0.45)]',
 }

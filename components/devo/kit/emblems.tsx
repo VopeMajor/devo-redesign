@@ -435,24 +435,24 @@ export function EmblemMark({
 }) {
   return (
     <span aria-hidden="true" className={cn('relative inline-grid shrink-0 place-items-center', className)} style={{ width: size, height: size }}>
-      {state === 'selected' && <span className="absolute inset-x-[8%] bottom-[-6%] h-[40%] bg-[radial-gradient(50%_50%_at_50%_50%,rgba(138,124,200,0.55),transparent_70%)]" />}
+      {state === 'selected' && <span className="absolute inset-x-[8%] bottom-[-6%] h-[40%] bg-[radial-gradient(50%_50%_at_50%_50%,rgb(var(--dv-amethyst-rgb)/0.55),transparent_70%)]" />}
       <E
         metal={metal && state !== 'locked'}
         className={cn(
           'relative size-full transition-[filter,opacity,transform] duration-150',
           state === 'locked' ? 'text-dv-text-3 opacity-60' : 'text-dv-text',
-          state === 'rest' && 'drop-shadow-[0_1px_1.5px_rgba(0,0,0,0.7)] group-hover:drop-shadow-[0_0_6px_rgba(238,237,235,0.35)] group-active:scale-[0.96] group-active:drop-shadow-[0_0_10px_rgba(236,229,216,0.85)]',
+          state === 'rest' && 'drop-shadow-[0_1px_1.5px_rgba(0,0,0,0.7)] group-hover:drop-shadow-[0_0_6px_rgb(var(--dv-text-rgb)/0.35)] group-active:scale-[0.96] group-active:drop-shadow-[0_0_10px_rgba(236,229,216,0.85)]',
           state === 'pressed' && 'scale-[0.96] drop-shadow-[0_0_10px_rgba(236,229,216,0.85)]',
-          state === 'selected' && 'drop-shadow-[0_0_8px_rgba(194,185,236,0.7)]',
+          state === 'selected' && 'drop-shadow-[0_0_8px_rgb(var(--dv-amethyst-text-rgb)/0.7)]',
         )}
       />
       {badge ? (
         typeof badge === 'number' ? (
-          <span className="absolute -right-[6%] -top-[4%] grid h-4 min-w-4 place-items-center rounded-full bg-dv-blood px-1 font-mono text-[10px] leading-none text-white shadow-[0_0_8px_rgba(163,18,31,0.8)]">
+          <span className="absolute -right-[6%] -top-[4%] grid h-4 min-w-4 place-items-center rounded-full bg-dv-blood px-1 font-mono text-[10px] leading-none text-white shadow-[0_0_8px_rgb(var(--dv-blood-rgb)/0.8)]">
             {badge > 9 ? '9+' : badge}
           </span>
         ) : (
-          <span className="absolute right-[4%] top-[4%] size-2 rotate-45 bg-dv-blood shadow-[0_0_6px_rgba(163,18,31,0.9)]" />
+          <span className="absolute right-[4%] top-[4%] size-2 rotate-45 bg-dv-blood shadow-[0_0_6px_rgb(var(--dv-blood-rgb)/0.9)]" />
         )
       ) : null}
     </span>

@@ -41,7 +41,7 @@ function UnlockSeal({ name, className }: { name: string; className?: string }) {
   return (
     <p
       className={cn(
-        'animate-dv-toast-in relative z-10 flex w-fit items-center gap-3 bg-[linear-gradient(90deg,#1f1f22,#151517_70%,rgba(21,21,23,0.92))] py-2 pl-3.5 pr-7 shadow-[0_8px_20px_rgba(0,0,0,0.55),inset_0_0_0_1px_rgba(186,176,159,0.4)] [clip-path:polygon(0_0,100%_0,calc(100%-12px)_100%,0_100%)]',
+        'animate-dv-toast-in relative z-10 flex w-fit items-center gap-3 bg-[linear-gradient(90deg,var(--dv-ink-3),var(--dv-ink-2)_70%,rgba(21,21,23,0.92))] py-2 pl-3.5 pr-7 shadow-[0_8px_20px_rgba(0,0,0,0.55),inset_0_0_0_1px_rgba(186,176,159,0.4)] [clip-path:polygon(0_0,100%_0,calc(100%-12px)_100%,0_100%)]',
         className,
       )}
     >

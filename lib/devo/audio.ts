@@ -25,6 +25,8 @@ export type Sfx =
   | 'curtain'
   | 'chirp'
   | 'fall'
+  | 'coin'
+  | 'splash'
   | 'rumble'
   | 'bell'
   | 'ignite'
@@ -107,17 +109,17 @@ function noiseBuffer(c: AudioContext, seconds: number) {
   return buffer
 }
 
-type NoiseOpts = { gain?: number; freq?: number; q?: number; delay?: number; sweepTo?: number }
+type NoiseOpts = { gain?: number; freq?: number; q?: number; delay?: number; sweepTo?: number; dest?: AudioNode; type?: BiquadFilterType }
 
 function noise(dur: number, opts: NoiseOpts = {}) {
   const c = ensure()
   if (!c || !master) return
-  const { gain = 0.08, freq = 1200, q = 1, delay = 0, sweepTo } = opts
+  const { gain = 0.08, freq = 1200, q = 1, delay = 0, sweepTo, dest = master, type = 'bandpass' } = opts
   const t = c.currentTime + delay
   const src = c.createBufferSource()
   src.buffer = noiseBuffer(c, Math.max(dur, 0.05))
   const filter = c.createBiquadFilter()
-  filter.type = 'bandpass'
+  filter.type = type
   filter.frequency.setValueAtTime(freq, t)
   if (sweepTo) filter.frequency.exponentialRampToValueAtTime(sweepTo, t + dur)
   filter.Q.value = q
@@ -125,9 +127,117 @@ function noise(dur: number, opts: NoiseOpts = {}) {
   g.gain.setValueAtTime(0.0001, t)
   g.gain.exponentialRampToValueAtTime(gain, t + Math.min(0.02, dur / 3))
   g.gain.exponentialRampToValueAtTime(0.0001, t + dur)
-  src.connect(filter).connect(g).connect(master)
+  src.connect(filter).connect(g).connect(dest)
   src.start(t)
   src.stop(t + dur + 0.05)
+}
+
+/* ── Poço dos Milagres: sons do giro (gacha) ─────────────────────────────────────────────────────────
+ * Tudo passa por um barramento próprio: `pocoSilencio()` corta o que estiver tocando (pular/acelerar),
+ * então nada se sobrepõe entre etapas. Respeita o mudo como o resto (playSfx/master). `tier`: 0 = lixo,
+ * 1 comum, 2 incomum, 3 raro, 4 épico+. */
+export type PocoSom =
+  | 'catraca'
+  | 'manivela'
+  | 'balde'
+  | 'nevoa'
+  | 'subida'
+  | 'falso'
+  | 'revela'
+  | 'flop'
+  | 'poeira'
+let pocoBus: GainNode | null = null
+
+function pocoDest(): GainNode | null {
+  const c = ensure()
+  if (!c || !master) return null
+  if (!pocoBus) {
+    pocoBus = c.createGain()
+    pocoBus.gain.value = 1
+    pocoBus.connect(master)
+  }
+  return pocoBus
+}
+
+/** Corta (com fade de 80 ms) tudo o que o Poço estiver tocando. */
+export function pocoSilencio() {
+  if (!pocoBus || !ctx) return
+  const bus = pocoBus
+  pocoBus = null
+  bus.gain.setTargetAtTime(0, ctx.currentTime, 0.03)
+  window.setTimeout(() => bus.disconnect(), 300)
+}
+
+export function pocoSom(kind: PocoSom, tier = 1) {
+  if (muted) return
+  const dest = pocoDest()
+  if (!dest) return
+  const T = Math.max(0, Math.min(4, tier))
+  switch (kind) {
+    case 'catraca':
+      // um dente da catraca: estalo metálico seco + corpo de madeira
+      noise(0.035, { gain: 0.16, freq: 3200, q: 4, dest })
+      tone(180, 0.06, { gain: 0.07, type: 'triangle', slideTo: 120, dest })
+      break
+    case 'manivela':
+      // a manivela gira: catraca acelerando, corda rangendo, peso subindo
+      for (let i = 0; i < 16; i++) {
+        const at = 0.04 + i * (0.15 - i * 0.004)
+        noise(0.03, { gain: 0.1 + (i % 4 === 0 ? 0.05 : 0), freq: 2800 + (i % 3) * 300, q: 5, delay: at, dest })
+        if (i % 4 === 0) tone(150, 0.07, { gain: 0.05, type: 'triangle', slideTo: 110, delay: at, dest })
+      }
+      noise(1.8, { gain: 0.035, freq: 700, q: 6, delay: 0.1, sweepTo: 1100, dest })
+      tone(62, 1.9, { gain: 0.06, attack: 0.3, slideTo: 74, dest })
+      break
+    case 'balde':
+      // o balde bate na borda de pedra e respinga
+      tone(210, 0.18, { gain: 0.14, type: 'triangle', slideTo: 140, dest })
+      noise(0.12, { gain: 0.12, freq: 900, q: 1.2, dest })
+      noise(0.5, { gain: 0.05, freq: 2600, q: 1, delay: 0.08, sweepTo: 1400, dest })
+      break
+    case 'nevoa':
+      // névoa subindo da água: sopro com filtro que abre
+      noise(1.6, { gain: 0.06, freq: 500, q: 0.7, sweepTo: 2200, dest })
+      tone(880, 1.4, { gain: 0.012, attack: 0.6, slideTo: 1320, dest })
+      break
+    case 'subida': {
+      // luz subindo do poço: o timbre e a força dizem a raridade
+      const dur = 0.9 + T * 0.25
+      noise(dur, { gain: 0.04 + T * 0.02, freq: 300, q: 0.8, sweepTo: 1800 + T * 900, dest })
+      tone(110 * (1 + T * 0.12), dur, { gain: 0.05 + T * 0.012, type: 'sawtooth', attack: dur * 0.6, slideTo: 220 * (1 + T * 0.25), dest })
+      if (T >= 2) tone(330, dur, { gain: 0.025, attack: dur * 0.7, slideTo: 660, dest })
+      if (T >= 3) tone(495, dur, { gain: 0.02, attack: dur * 0.8, slideTo: 990, dest })
+      break
+    }
+    case 'falso':
+      // falsa partida: a luz engasga — corte seco, um baque e um respiro antes de voltar
+      tone(240, 0.22, { gain: 0.06, type: 'sawtooth', slideTo: 70, dest })
+      tone(46, 0.5, { gain: 0.18, delay: 0.05, slideTo: 32, dest })
+      noise(0.25, { gain: 0.05, freq: 400, q: 0.6, delay: 0.05, sweepTo: 120, dest })
+      break
+    case 'revela': {
+      // revelação: acorde que cresce com a raridade + brilho de vidro
+      const raiz = 261.6
+      const notas = T >= 4 ? [1, 1.25, 1.5, 2, 2.5, 3] : T === 3 ? [1, 1.25, 1.5, 2] : T === 2 ? [1, 1.26, 1.5] : [1, 1.5]
+      notas.forEach((n, i) => tone(raiz * n, 1.4 + T * 0.3, { gain: 0.06 / (1 + i * 0.25), attack: 0.004, delay: i * (T >= 3 ? 0.06 : 0.09), dest }))
+      if (T >= 3) for (let i = 0; i < 6 + T * 2; i++) tone(2000 + Math.random() * 2400, 0.25, { gain: 0.012, delay: 0.15 + Math.random() * 0.9, dest })
+      if (T >= 4) {
+        tone(65.4, 2, { gain: 0.16, slideTo: 60, dest })
+        ;[1, 2.01, 2.76].forEach((p, i) => tone(523.3 * p, 2.6 - i * 0.6, { gain: 0.03 / (i + 1), attack: 0.003, delay: 0.02, dest }))
+      }
+      break
+    }
+    case 'flop':
+      // prêmio lixo: "plop" sem graça e um "uóóm" murcho
+      tone(320, 0.14, { gain: 0.12, slideTo: 140, dest })
+      tone(196, 0.32, { gain: 0.05, type: 'triangle', delay: 0.2, slideTo: 185, dest })
+      tone(174.6, 0.55, { gain: 0.05, type: 'triangle', delay: 0.52, slideTo: 130, dest })
+      break
+    case 'poeira':
+      // poeira cinza caindo do balde
+      noise(0.7, { gain: 0.05, freq: 1600, q: 0.5, sweepTo: 500, dest, type: 'lowpass' })
+      break
+  }
 }
 
 export function playSfx(kind: Sfx) {
@@ -204,6 +314,21 @@ export function playSfx(kind: Sfx) {
       noise(1.8, { gain: 0.18, freq: 2000, q: 0.7, sweepTo: 120 })
       tone(52, 1.4, { gain: 0.22, delay: 1.3, slideTo: 30 })
       noise(0.5, { gain: 0.22, freq: 180, q: 0.6, delay: 1.3, sweepTo: 70 })
+      break
+    case 'coin':
+      // Poço: a moeda sai da mão — tinido metálico curto e o ar cortado pelo arco.
+      tone(2637, 0.5, { gain: 0.045, attack: 0.002 })
+      tone(3951, 0.32, { gain: 0.022, attack: 0.002, delay: 0.015 })
+      tone(1318.5, 0.7, { gain: 0.02, attack: 0.002 })
+      noise(0.7, { gain: 0.045, freq: 900, q: 0.8, delay: 0.08, sweepTo: 2600 })
+      break
+    case 'splash':
+      // Poço: a moeda toca a água — estalo, "bloop" que sobe e respingos finos.
+      noise(0.32, { gain: 0.2, freq: 1500, q: 0.6, sweepTo: 420 })
+      tone(360, 0.2, { gain: 0.1, slideTo: 1050, delay: 0.02 })
+      noise(0.9, { gain: 0.05, freq: 3400, q: 1.2, delay: 0.1, sweepTo: 1700 })
+      for (let i = 0; i < 3; i++) tone(1100 + Math.random() * 500, 0.1, { gain: 0.035, slideTo: 2600, delay: 0.3 + i * 0.22 + Math.random() * 0.1 })
+      tone(48, 0.9, { gain: 0.12, delay: 0.05, slideTo: 32 })
       break
     case 'rumble':
       noise(2.6, { gain: 0.24, freq: 90, q: 0.5, sweepTo: 55 })

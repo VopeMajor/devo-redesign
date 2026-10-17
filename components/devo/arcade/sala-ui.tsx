@@ -79,7 +79,7 @@ export function Monogram({
           tone === 'ivory'
             ? 'bg-[linear-gradient(160deg,#ffffff,#e9e8e5_55%,#cfcdc8)]'
             : tone === 'cobalt'
-              ? 'bg-[radial-gradient(90%_70%_at_50%_100%,rgba(138,124,200,0.35),transparent_70%),linear-gradient(160deg,var(--dv-ink-4),var(--dv-ink-2)_60%,var(--dv-ink))]'
+              ? 'bg-[radial-gradient(90%_70%_at_50%_100%,rgb(var(--dv-amethyst-rgb)/0.35),transparent_70%),linear-gradient(160deg,var(--dv-ink-4),var(--dv-ink-2)_60%,var(--dv-ink))]'
               : 'bg-[linear-gradient(160deg,var(--dv-ink-4),var(--dv-ink-2)_60%,var(--dv-ink))]',
         )}
       />

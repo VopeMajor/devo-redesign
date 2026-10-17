@@ -103,3 +103,46 @@ SELECT 'capsula:' || lpad(n::text, 3, '0'), 'capsula', 'Cápsula do Tempo ' || t
          'texto', '[TEXTO PROVISÓRIO] O dono vai escrever aqui uma informação ou curiosidade do mundo de DEVO.')
   FROM generate_series(1, 8) AS n
 ON CONFLICT (key) DO NOTHING;
+
+-- ---------------------------------------------------------------------------------------------
+-- 5. Prêmios do Owner no pool do Poço (Refinamento 4: "dê opção de um owner adicionar prêmios no poço").
+--    Editados só pela Mesa do Owner (POST /api/poco 'premio.salvar' / 'premio.ativar'), com admin_log.
+--    O peso está na mesma unidade dos pesos de categoria de poco.probabilidades: o sorteio é um só sobre
+--    categorias + prêmios elegíveis (ativos, da moeda, com estoque). Prêmio 'lixo' não vai ao inventário.
+-- ---------------------------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS poco_premios (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  tipo text NOT NULL,
+  item_key text REFERENCES item_defs(key) ON UPDATE CASCADE,
+  card_id text,
+  minutos integer,
+  quantidade integer NOT NULL DEFAULT 1,
+  nome text NOT NULL,
+  descricao text,
+  imagem text,
+  raridade text NOT NULL DEFAULT 'comum',
+  peso double precision NOT NULL,
+  moedas text[] NOT NULL DEFAULT '{}',
+  estoque integer,
+  entregues integer NOT NULL DEFAULT 0,
+  ativo boolean NOT NULL DEFAULT true,
+  criado_por uuid REFERENCES players(id) ON DELETE SET NULL,
+  criado_at timestamptz NOT NULL DEFAULT now(),
+  atualizado_at timestamptz NOT NULL DEFAULT now(),
+  CONSTRAINT poco_premios_tipo_chk CHECK (tipo IN ('item', 'carta', 'tempo', 'lixo')),
+  CONSTRAINT poco_premios_peso_chk CHECK (peso > 0),
+  CONSTRAINT poco_premios_qtd_chk CHECK (quantidade BETWEEN 1 AND 999),
+  CONSTRAINT poco_premios_estoque_chk CHECK (estoque IS NULL OR estoque >= 0),
+  CONSTRAINT poco_premios_raridade_chk CHECK (raridade IN ('comum', 'incomum', 'raro', 'epico', 'lendario', 'arcano')),
+  CONSTRAINT poco_premios_alvo_chk CHECK (
+    (tipo = 'item' AND item_key IS NOT NULL) OR (tipo = 'carta' AND card_id IS NOT NULL)
+    OR (tipo = 'tempo' AND minutos BETWEEN 1 AND 10080) OR tipo = 'lixo')
+);
+CREATE INDEX IF NOT EXISTS poco_premios_ativos_idx ON poco_premios (ativo) WHERE ativo;
+
+ALTER TABLE poco_giros ADD COLUMN IF NOT EXISTS premio_id uuid REFERENCES poco_premios(id) ON DELETE SET NULL;
+-- Instantâneo do prêmio sorteado (nome, descrição, imagem, tipo): o resultado não muda se o Owner editar depois.
+ALTER TABLE poco_giros ADD COLUMN IF NOT EXISTS premio jsonb;
+ALTER TABLE poco_giros DROP CONSTRAINT IF EXISTS poco_giros_categoria_chk;
+ALTER TABLE poco_giros ADD CONSTRAINT poco_giros_categoria_chk
+  CHECK (categoria IS NULL OR categoria IN ('lixo', 'capsula', 'fragmento', 'essencia', 'cosmetico', 'premio'));

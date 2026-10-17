@@ -119,7 +119,7 @@ function CosmeticosAjuste() {
           }}
           className="dv-focus relative inline-flex h-11 w-[64px] shrink-0 items-center"
         >
-          <span aria-hidden="true" className={`absolute inset-x-0 h-7 transition-colors ${on ? 'bg-dv-cobalt shadow-[0_0_12px_-3px_rgba(138,124,200,0.9)]' : 'bg-dv-ink-4 shadow-[inset_0_0_0_1px_var(--dv-line-strong)]'}`} />
+          <span aria-hidden="true" className={`absolute inset-x-0 h-7 transition-colors ${on ? 'bg-dv-cobalt shadow-[0_0_12px_-3px_rgb(var(--dv-amethyst-rgb)/0.9)]' : 'bg-dv-ink-4 shadow-[inset_0_0_0_1px_var(--dv-line-strong)]'}`} />
           <span aria-hidden="true" className={`absolute top-1/2 size-5 -translate-y-1/2 bg-dv-porcelain transition-[left] duration-200 ${on ? 'left-[38px]' : 'left-[6px]'}`} />
         </button>
       </div>

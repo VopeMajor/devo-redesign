@@ -74,7 +74,7 @@ export function EstruturasDefs() {
       <linearGradient id="vt-atual" x1="0" x2="0" y1="0" y2="1">
         <stop offset="0" stopColor="#e6e0ff" />
         <stop offset="0.5" stopColor="#8a7cc8" />
-        <stop offset="1" stopColor="#463d78" />
+        <stop offset="1" stopColor="#4e4580" />
       </linearGradient>
       <linearGradient id="vt-apagado" x1="0" x2="1" y1="0" y2="1">
         <stop offset="0" stopColor="#2b2a35" />

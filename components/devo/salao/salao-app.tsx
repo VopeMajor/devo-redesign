@@ -91,8 +91,8 @@ function Trancado({ motivo }: { motivo: string }) {
     <Fundo>
       <div className="flex h-full flex-col justify-end px-4 pb-6">
         <section aria-label="Salão das Máscaras: trancado" className="animate-dv-rise relative" style={{ '--dv-cut': '14px' } as CSSProperties}>
-          <span aria-hidden="true" className="dv-cut absolute inset-0 bg-[linear-gradient(135deg,rgba(238,237,235,0.34),rgba(238,237,235,0.12)_45%,rgba(238,237,235,0.26))]" />
-          <span aria-hidden="true" className="dv-cut absolute inset-px bg-[linear-gradient(180deg,#1a1a1d,#0e0e10)]" style={{ '--dv-cut': '13.6px' } as CSSProperties} />
+          <span aria-hidden="true" className="dv-cut absolute inset-0 bg-[linear-gradient(135deg,rgb(var(--dv-text-rgb)/0.34),rgb(var(--dv-text-rgb)/0.12)_45%,rgb(var(--dv-text-rgb)/0.26))]" />
+          <span aria-hidden="true" className="dv-cut absolute inset-px bg-[linear-gradient(180deg,var(--dv-ink-3),var(--dv-ink))]" style={{ '--dv-cut': '13.6px' } as CSSProperties} />
           <div className="relative flex items-start gap-4 p-5">
             <EmblemMark emblem={EmblemMascaras} size={56} state="locked" />
             <div className="min-w-0 flex-1">
@@ -126,7 +126,7 @@ function Tela({ d, agir, recarregar }: { d: SalaoLiberado; agir: (b: Record<stri
             className="dv-focus dv-cut-diag absolute right-3 top-3 flex min-h-11 items-center gap-2 bg-black/55 px-3 font-mono text-[10.5px] uppercase tracking-[0.16em] text-dv-text shadow-[inset_0_0_0_1px_rgba(186,176,159,0.55)] hover:shadow-[inset_0_0_0_1px_#ece5d8]"
             style={{ '--dv-cut': '7px' } as CSSProperties}
           >
-            <span aria-hidden="true" className="size-[7px] rotate-45 bg-dv-amethyst shadow-[0_0_8px_rgba(138,124,200,0.9)]" />
+            <span aria-hidden="true" className="size-[7px] rotate-45 bg-dv-amethyst shadow-[0_0_8px_rgb(var(--dv-amethyst-rgb)/0.9)]" />
             Calendário Devo
           </button>
           <ContadorSalao relogio={d.relogio} manual={!!d.owner} className="animate-dv-fade" />

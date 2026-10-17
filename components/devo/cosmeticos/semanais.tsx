@@ -29,12 +29,12 @@ const get = async <T,>(u: string): Promise<T> => {
 }
 
 const STATUS_TONE: Record<PlanoSemanal['status'], string> = {
-  sugerida: 'bg-[#0d0d0f]/10 text-in-fg',
+  sugerida: 'bg-dv-ink/10 text-in-fg',
   proposta: 'bg-in-accent-fill text-white',
-  aprovada: 'bg-[#1c1c1f] text-white',
-  rejeitada: 'bg-[#0d0d0f]/10 text-in-alert',
-  distribuida: 'bg-[#0d0d0f]/10 text-in-fg-2',
-  cancelada: 'bg-[#0d0d0f]/5 text-in-fg-3',
+  aprovada: 'bg-dv-block text-white',
+  rejeitada: 'bg-dv-ink/10 text-in-alert',
+  distribuida: 'bg-dv-ink/10 text-in-fg-2',
+  cancelada: 'bg-dv-ink/5 text-in-fg-3',
 }
 
 /**

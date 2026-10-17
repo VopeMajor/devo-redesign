@@ -101,7 +101,7 @@ export function RecordPanel({
         <header
           className={cn(
             'relative flex items-center justify-between gap-3 px-4 pb-2.5 pt-3.5',
-            variant === 'cobalt' && 'bg-[linear-gradient(100deg,rgba(238,237,235,0.12)_0%,rgba(138,124,200,0.14)_45%,transparent_100%)] pb-3 shadow-[inset_3px_0_0_var(--dv-amethyst)]',
+            variant === 'cobalt' && 'bg-[linear-gradient(100deg,rgb(var(--dv-text-rgb)/0.12)_0%,rgb(var(--dv-amethyst-rgb)/0.14)_45%,transparent_100%)] pb-3 shadow-[inset_3px_0_0_var(--dv-amethyst)]',
           )}
         >
           <RecordTitle title={title} jp={jp} className={variant === 'cobalt' ? '[&_span]:!text-white' : undefined} />

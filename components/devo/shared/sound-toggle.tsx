@@ -60,11 +60,11 @@ export function SoundToggle({ className, compact = false }: { className?: string
           muted ? 'bg-dv-line-strong' : 'bg-[linear-gradient(100deg,#f4efe6,#6b6357_35%,#bab09f_65%,#ece5d8)]',
         )}
       >
-        <span className={cn('dv-cut-hex absolute inset-px [--dv-cut:9.5px]', muted ? 'bg-dv-ink-2' : 'bg-[linear-gradient(180deg,#1f1f22,#0c0c0e)]')} />
+        <span className={cn('dv-cut-hex absolute inset-px [--dv-cut:9.5px]', muted ? 'bg-dv-ink-2' : 'bg-[linear-gradient(180deg,var(--dv-ink-3),var(--dv-ink))]')} />
         <span
           className={cn(
             'absolute top-1/2 size-4 -translate-y-1/2 rotate-45 transition-[left,background-color] duration-200 ease-out',
-            muted ? 'left-2 bg-dv-text-3' : 'left-[calc(100%-1.5rem)] bg-dv-porcelain shadow-[0_0_10px_rgba(138,124,200,0.85)]',
+            muted ? 'left-2 bg-dv-text-3' : 'left-[calc(100%-1.5rem)] bg-dv-porcelain shadow-[0_0_10px_rgb(var(--dv-amethyst-rgb)/0.85)]',
           )}
         />
       </span>

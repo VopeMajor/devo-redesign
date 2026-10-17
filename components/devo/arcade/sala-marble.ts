@@ -57,8 +57,8 @@ const PORCELAIN_SVG = url(marbleSvg({ vein: '#797c81', cloud: '0.42', cloudA: 0.
 
 /** Mármore negro (#111113) com veios cinza. */
 export const MARBLE_INK: CSSProperties = {
-  backgroundColor: '#111113',
-  backgroundImage: `radial-gradient(120% 80% at 80% 0%, rgba(238,237,235,0.06), transparent 60%), ${INK_SVG}`,
+  backgroundColor: 'var(--dv-ink-2)',
+  backgroundImage: `radial-gradient(120% 80% at 80% 0%, rgb(var(--dv-text-rgb) / 0.06), transparent 60%), ${INK_SVG}`,
   backgroundSize: 'auto, 800px 800px',
   backgroundPosition: 'center, center',
   backgroundRepeat: 'no-repeat',

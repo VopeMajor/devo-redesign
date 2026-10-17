@@ -27,10 +27,10 @@ const LINE: Record<EntradaButtonTone, string> = {
 const FILL: Record<EntradaButtonTone, string> = {
   porcelain:
     'bg-[linear-gradient(180deg,#fbfaf8_0%,#efedea_46%,#d9d6d0_100%)] group-enabled:group-hover:bg-[linear-gradient(180deg,#ffffff_0%,#f4f2ef_46%,#e2dfd9_100%)]',
-  ink: 'bg-[linear-gradient(180deg,#2c2c31_0%,#1c1c1f_50%,#0c0c0e_100%)] group-enabled:group-hover:bg-[linear-gradient(180deg,#38393c_0%,#232327_50%,#121214_100%)]',
+  ink: 'bg-[linear-gradient(180deg,var(--dv-ink-4)_0%,var(--dv-block)_50%,var(--dv-ink)_100%)] group-enabled:group-hover:bg-[linear-gradient(180deg,#38393c_0%,#232327_50%,var(--dv-ink-2)_100%)]',
 }
 const TEXT: Record<EntradaButtonTone, string> = {
-  porcelain: 'text-[#0c0c0e]',
+  porcelain: 'text-dv-ink',
   ink: 'text-[#f1f0ee]',
 }
 
@@ -96,17 +96,17 @@ export function EntradaButton({
       {/* flash ao pressionar */}
       <span
         aria-hidden="true"
-        className={cn('dv-cut-hex absolute inset-px -z-10 opacity-0 transition-opacity duration-[120ms] group-enabled:group-active:opacity-25', tone === 'porcelain' ? 'bg-[#8a7cc8]' : 'bg-white')}
+        className={cn('dv-cut-hex absolute inset-px -z-10 opacity-0 transition-opacity duration-[120ms] group-enabled:group-active:opacity-25', tone === 'porcelain' ? 'bg-dv-amethyst' : 'bg-white')}
         style={{ '--dv-cut': `${s.cut - 0.5}px` } as CSSProperties}
       />
       {/* ametista: só halo de foco/hover */}
       <span
         aria-hidden="true"
-        className="pointer-events-none absolute inset-x-8 -bottom-2 -z-20 h-4 rounded-[50%] bg-[#8a7cc8]/0 blur-lg transition-colors duration-200 group-enabled:group-hover:bg-[#8a7cc8]/45 group-focus-visible:bg-[#8a7cc8]/60"
+        className="pointer-events-none absolute inset-x-8 -bottom-2 -z-20 h-4 rounded-[50%] bg-dv-amethyst/0 blur-lg transition-colors duration-200 group-enabled:group-hover:bg-dv-amethyst/45 group-focus-visible:bg-dv-amethyst/60"
       />
       <span
         aria-hidden="true"
-        className="dv-cut-hex pointer-events-none absolute -inset-[3px] -z-20 opacity-0 transition-opacity group-focus-visible:opacity-100 bg-[#8a7cc8]"
+        className="dv-cut-hex pointer-events-none absolute -inset-[3px] -z-20 opacity-0 transition-opacity group-focus-visible:opacity-100 bg-dv-amethyst"
         style={{ '--dv-cut': `${s.cut + 1.5}px` } as CSSProperties}
       />
       <span className={cn('relative flex items-center justify-center gap-3 py-2', TEXT[tone], loading && 'invisible')}>

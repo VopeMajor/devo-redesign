@@ -65,7 +65,7 @@
   15% { opacity: 0.9; }
   100% { transform: translateY(-210px) rotate(45deg); opacity: 0; }
 }
-.poco-particula { animation: poco-particula 9s linear infinite; box-shadow: 0 0 6px rgba(194, 185, 236, 0.9); }
+.poco-particula { animation: poco-particula 9s linear infinite; box-shadow: 0 0 6px rgb(var(--dv-amethyst-text-rgb) / 0.85); }
 .poco-ativo .poco-particula { animation-duration: 2.2s !important; }
 
 /* balde: sobe pela corrente */
@@ -163,9 +163,269 @@
 }
 .poco-hit { animation: poco-hit 420ms ease-out both; }
 
+/* ── Refinamento 4: matéria antiga e luz fria ─────────────────────────────────────────────── */
+/* Camadas pintadas em violeta entram dessaturadas: prata fria, sem roxo neon. */
+.poco-dessatura { filter: saturate(0.6) brightness(1.04); }
+.poco-raro-tom { filter: saturate(0.85); }
+.poco-pedra { filter: saturate(0.42) contrast(1.05) brightness(1.02); }
+
+/* lua velada, janelas, velas e moedas no chão: tudo devagar */
+@keyframes poco-lua {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 0.62; }
+}
+.poco-lua { animation: poco-lua 14s ease-in-out infinite; }
+@keyframes poco-janela {
+  0%, 100% { opacity: 0.85; }
+  47% { opacity: 0.85; }
+  50% { opacity: 0.55; }
+  53% { opacity: 0.9; }
+}
+.poco-janela { animation: poco-janela 11s linear infinite; }
+@keyframes poco-vela-luz {
+  0%, 100% { opacity: 0.85; transform: scale(1); }
+  35% { opacity: 1; transform: scale(1.06); }
+  70% { opacity: 0.75; transform: scale(0.97); }
+}
+.poco-vela-luz { transform-box: fill-box; transform-origin: center; animation: poco-vela-luz 3.1s ease-in-out infinite; }
+@keyframes poco-cintila {
+  0%, 82%, 100% { opacity: 0; transform: scale(0.4); }
+  88% { opacity: 1; transform: scale(1); }
+  94% { opacity: 0; transform: scale(0.6); }
+}
+.poco-cintila { transform-box: fill-box; transform-origin: center; animation: poco-cintila 6.5s ease-out infinite; }
+
+/* moeda lançada: arco em parábola (x linear, y sobe e cai), giro de face e perspectiva (fica menor ao longe) */
+@keyframes poco-arco-x {
+  from { transform: translateX(0); }
+  to { transform: translateX(var(--ax, 42cqw)); }
+}
+@keyframes poco-arco-y {
+  0% { transform: translateY(0); animation-timing-function: cubic-bezier(0.15, 0.6, 0.35, 1); }
+  46% { transform: translateY(var(--apico, -104cqh)); animation-timing-function: cubic-bezier(0.6, 0, 0.9, 0.5); }
+  100% { transform: translateY(var(--ay, -63cqh)); }
+}
+@keyframes poco-arco-moeda {
+  0% { transform: translate(-50%, -50%) scale(1.35) rotateX(0deg); opacity: 0; }
+  6% { opacity: 1; }
+  46% { transform: translate(-50%, -50%) scale(0.95) rotateX(900deg); }
+  92% { opacity: 1; }
+  100% { transform: translate(-50%, -50%) scale(0.5) rotateX(1620deg); opacity: 0; }
+}
+.poco-arco-x { animation: poco-arco-x 920ms cubic-bezier(0.35, 0.1, 0.6, 1) both; }
+.poco-arco-y { animation: poco-arco-y 920ms both; }
+.poco-arco-moeda { animation: poco-arco-moeda 920ms linear both; }
+
+/* a moeda toca a água (~900 ms): lampejo, ondas, respingo pintado e gotas */
+@keyframes poco-lampejo-on {
+  0% { opacity: 0; transform: scale(0.4); }
+  18% { opacity: 1; transform: scale(1); }
+  100% { opacity: 0; transform: scale(1.25); }
+}
+.poco-lampejo { opacity: 0; animation: poco-lampejo-on 1100ms 880ms var(--dv-ease-out) both; }
+@keyframes poco-onda {
+  0% { transform: scale(0.15); opacity: 0; }
+  10% { opacity: 0.95; }
+  100% { transform: scale(1.35); opacity: 0; }
+}
+.poco-onda { animation: poco-onda 1500ms ease-out both; }
+@keyframes poco-respingo-moeda {
+  0% { transform: translateY(18%) scaleY(0.2) scaleX(0.7); opacity: 0; }
+  25% { opacity: 0.9; transform: translateY(0) scaleY(1) scaleX(1); }
+  100% { transform: translateY(6%) scaleY(0.6) scaleX(1.1); opacity: 0; }
+}
+.poco-respingo-moeda { transform-origin: 50% 100%; animation: poco-respingo-moeda 900ms 900ms var(--dv-ease-out) both; }
+@keyframes poco-gota {
+  0% { transform: translate(0, 0); opacity: 0; }
+  10% { opacity: 1; }
+  45% { transform: translate(calc(var(--gx) * 0.6), var(--gy)); }
+  100% { transform: translate(var(--gx), 6px); opacity: 0; }
+}
+.poco-gota { animation: poco-gota 760ms cubic-bezier(0.3, 0.7, 0.5, 1) both; }
+
+/* o balde se abre: véu de luz que sobe da água antes da revelação */
+@keyframes poco-veu {
+  0% { opacity: 0; transform: scaleY(0.2); }
+  35% { opacity: 1; }
+  100% { opacity: 0; transform: scaleY(1.2); }
+}
+.poco-veu { transform-origin: 50% 100%; animation: poco-veu 1000ms var(--dv-ease-out) both; }
+
+/* cena pintada: balde pela corda e névoa que pulsa na boca (poco.json: pulso 3.2 s) */
+.poco-bucket-pintado { transition: bottom 1800ms cubic-bezier(0.45, 0.05, 0.25, 1); }
+@keyframes poco-brilho-boca {
+  0%, 100% { opacity: calc(0.45 + var(--brilho, 0.5) * 0.4); transform: scale(1); }
+  50% { opacity: calc(0.7 + var(--brilho, 0.5) * 0.3); transform: scale(1.05, 1.1); }
+}
+.poco-brilho-boca { transform-origin: 50% 70%; animation: poco-brilho-boca 3.2s ease-in-out infinite; }
+.poco-ativo .poco-brilho-boca { animation-duration: 1.1s; }
+
+/* ── Giro completo (Refinamento 4: VFX de gacha) ──────────────────────────────────────────────
+   --c = cor da raridade (canais RGB), --forca = intensidade (0..1), --emerge = instante da revelação. */
+.poco-boca-luz {
+  background: radial-gradient(closest-side, rgb(var(--c) / 0.85), rgb(var(--c) / 0.25) 55%, transparent);
+  filter: blur(2px);
+  animation: poco-boca-luz 700ms var(--dv-ease-out) both;
+}
+@keyframes poco-boca-luz {
+  from { opacity: 0; transform: translateX(-50%) scale(0.5, 0.3); }
+  to { opacity: var(--forca, 0.6); transform: translateX(-50%) scale(1); }
+}
+.poco-coluna {
+  transform-origin: 50% 100%;
+  background:
+    radial-gradient(40% 20% at 50% 100%, rgb(var(--c) / 0.9), transparent 75%),
+    linear-gradient(0deg, rgb(var(--c) / 0.75) 0%, rgb(var(--c) / 0.35) 35%, rgb(var(--c) / 0.08) 75%, transparent);
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 30%, #000 70%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 30%, #000 70%, transparent);
+  filter: blur(6px);
+  mix-blend-mode: screen;
+}
+@keyframes poco-coluna-sobe {
+  0% { opacity: 0; transform: translateX(-50%) scaleY(0.05); }
+  35% { opacity: var(--forca); }
+  100% { opacity: var(--forca); transform: translateX(-50%) scaleY(1); }
+}
+.poco-coluna-sobe { animation: poco-coluna-sobe calc(var(--emerge) + 200ms) var(--dv-ease-out) both; }
+/* falsa partida: prata sobe como um comum, engasga e cai (620 ms) */
+.poco-coluna-falsa {
+  --c: 220 218 214;
+  animation: poco-coluna-falsa 900ms var(--dv-ease-out) both;
+}
+@keyframes poco-coluna-falsa {
+  0% { opacity: 0; transform: translateX(-50%) scaleY(0.05); }
+  45% { opacity: 0.8; transform: translateX(-50%) scaleY(0.62); }
+  58% { opacity: 0.22; }
+  64% { opacity: 0.6; }
+  69% { opacity: 0.08; transform: translateX(-50%) scaleY(0.4); }
+  100% { opacity: 0; transform: translateX(-50%) scaleY(0.2); }
+}
+/* surto: a cor verdadeira explode depois do engasgo (900 ms) e fica pulsando */
+.poco-coluna-surto { animation: poco-coluna-surto 900ms 900ms cubic-bezier(0.2, 0.9, 0.2, 1.15) both, poco-coluna-pulso 1.6s 1800ms ease-in-out infinite; }
+@keyframes poco-coluna-surto {
+  0% { opacity: 0; transform: translateX(-50%) scale(0.6, 0.1); }
+  40% { opacity: 1; transform: translateX(-50%) scale(1.12, 1.05); }
+  100% { opacity: var(--forca); transform: translateX(-50%) scale(1, 1); }
+}
+@keyframes poco-coluna-pulso {
+  0%, 100% { opacity: var(--forca); }
+  50% { opacity: calc(var(--forca) + 0.15); }
+}
+/* lixo: a luz tosse cinza e desiste */
+.poco-coluna-murcha { animation: poco-coluna-murcha 700ms ease-out both; }
+@keyframes poco-coluna-murcha {
+  0% { opacity: 0; transform: translateX(-50%) scaleY(0.05); }
+  30% { opacity: 0.35; transform: translateX(-50%) scaleY(0.45); }
+  45% { opacity: 0.12; }
+  55% { opacity: 0.28; transform: translateX(-50%) scaleY(0.3); }
+  100% { opacity: 0; transform: translateX(-50%) scaleY(0.1); }
+}
+/* partículas de luz subindo */
+.poco-mote {
+  background: rgb(var(--c) / 0.95);
+  box-shadow: 0 0 6px rgb(var(--c) / 0.9);
+  animation: poco-mote 1.6s ease-out infinite both;
+}
+@keyframes poco-mote {
+  0% { transform: translateY(0) rotate(45deg) scale(0.6); opacity: 0; }
+  15% { opacity: 1; }
+  100% { transform: translateY(-46vh) rotate(45deg) scale(1); opacity: 0; }
+}
+.poco-mote-lento { animation-name: poco-mote-lento; }
+@keyframes poco-mote-lento {
+  0% { transform: translateY(0) rotate(45deg); opacity: 0; }
+  20% { opacity: 0.8; }
+  100% { transform: translateY(-34vh) rotate(45deg); opacity: 0; }
+}
+/* lampejo e estouro de faíscas na revelação */
+.poco-lampejo-revela {
+  background: radial-gradient(circle at 50% 40%, rgb(255 255 255 / 0.55), rgb(var(--c) / 0.35) 25%, transparent 60%);
+  animation: poco-lampejo-revela 700ms var(--emerge) ease-out both;
+}
+@keyframes poco-lampejo-revela {
+  0% { opacity: 0; }
+  12% { opacity: 1; }
+  100% { opacity: 0; }
+}
+.poco-faisca {
+  background: rgb(var(--c));
+  box-shadow: 0 0 8px rgb(var(--c) / 0.9);
+  animation: poco-faisca 900ms cubic-bezier(0.1, 0.8, 0.3, 1) both;
+}
+@keyframes poco-faisca {
+  0% { transform: translate(-50%, -50%) rotate(var(--ang)) translateX(0) scale(1.4); opacity: 0; }
+  10% { opacity: 1; }
+  100% { transform: translate(-50%, -50%) rotate(var(--ang)) translateX(var(--dist)) scale(0.3); opacity: 0; }
+}
+/* brilho metálico que varre o prêmio uma vez */
+.poco-varre::after {
+  content: '';
+  position: absolute;
+  inset: -20% auto -20% -60%;
+  width: 45%;
+  background: linear-gradient(100deg, transparent, rgb(255 255 255 / 0.55), transparent);
+  transform: skewX(-18deg) translateX(0);
+  mix-blend-mode: overlay;
+  animation: inherit;
+  animation-name: poco-varre;
+  animation-duration: 900ms;
+  animation-timing-function: var(--dv-ease-out);
+  animation-fill-mode: both;
+}
+.poco-varre { animation: poco-varre-host 1ms both; }
+@keyframes poco-varre-host { from { opacity: 1; } to { opacity: 1; } }
+@keyframes poco-varre {
+  from { transform: skewX(-18deg) translateX(0); opacity: 0; }
+  15% { opacity: 1; }
+  to { transform: skewX(-18deg) translateX(420%); opacity: 0; }
+}
+/* lixo: cai do alto, quica sem graça e entorta; poeira cinza */
+.poco-cai-lixo { animation: poco-cai-lixo 900ms 380ms both; }
+@keyframes poco-cai-lixo {
+  0% { transform: translate(-50%, -160%) rotate(-14deg); opacity: 0; animation-timing-function: cubic-bezier(0.5, 0, 0.9, 0.6); }
+  10% { opacity: 1; }
+  52% { transform: translate(-50%, -50%) rotate(8deg) scale(1.04, 0.9); animation-timing-function: ease-out; }
+  70% { transform: translate(-50%, -58%) rotate(-3deg) scale(0.98, 1.02); animation-timing-function: ease-in; }
+  84% { transform: translate(-50%, -50%) rotate(4deg) scale(1.02, 0.96); }
+  100% { transform: translate(-50%, -50%) rotate(5deg); opacity: 1; }
+}
+.poco-poeira { animation: poco-poeira 1100ms ease-out both; opacity: 0; }
+@keyframes poco-poeira {
+  0% { transform: translate(0, 0); opacity: 0; }
+  15% { opacity: 0.8; }
+  100% { transform: translate(var(--px, 0px), 60px); opacity: 0; }
+}
+.poco-poeira-lenta { animation-duration: 3.2s; animation-iteration-count: infinite; }
+.poco-sopro { animation: poco-sopro 900ms 700ms ease-out both; }
+@keyframes poco-sopro {
+  0% { opacity: 0; transform: translateX(-50%) scale(0.4, 0.6); }
+  30% { opacity: 1; }
+  100% { opacity: 0; transform: translateX(-50%) scale(1.4, 1); }
+}
+.poco-lixo-murcho { transform: rotate(5deg) scale(0.96); filter: saturate(0.7); }
+/* névoa que sobe da água depois do respingo da moeda */
+.poco-nevoa-sobe {
+  background: radial-gradient(50% 60% at 50% 100%, rgb(236 235 233 / 0.45), rgb(172 172 172 / 0.15) 55%, transparent 75%);
+  filter: blur(4px);
+  transform-origin: 50% 100%;
+  animation: poco-nevoa-sobe 2200ms 1050ms ease-out both;
+}
+@keyframes poco-nevoa-sobe {
+  0% { opacity: 0; transform: scale(0.5, 0.2); }
+  30% { opacity: 0.9; }
+  100% { opacity: 0; transform: scale(1.3, 1.4) translateY(-20%); }
+}
+
+/* gema da Dracma Rara (camada da arte): brilho lento */
+@keyframes poco-item-brilho {
+  0%, 100% { opacity: 0.35; }
+  50% { opacity: 1; }
+}
+.poco-item-brilho { animation: poco-item-brilho 5.5s ease-in-out infinite; }
 @media (prefers-reduced-motion: reduce) {
   .poco-t,
-  .poco-bucket { transition: none !important; }
+  .poco-bucket,
+  .poco-bucket-pintado { transition: none !important; }
   .poco-fog,
   .poco-glow,
   .poco-coin,
@@ -188,6 +448,32 @@
   .poco-aro-in,
   .poco-emergir,
   .poco-sombra-sai,
-  .poco-respingo { animation: none !important; }
+  .poco-respingo,
+  .poco-lua,
+  .poco-janela,
+  .poco-vela-luz,
+  .poco-cintila,
+  .poco-arco-x,
+  .poco-arco-y,
+  .poco-arco-moeda,
+  .poco-lampejo,
+  .poco-onda,
+  .poco-respingo-moeda,
+  .poco-gota,
+  .poco-veu,
+  .poco-brilho-boca,
+  .poco-item-brilho,
+  .poco-boca-luz,
+  .poco-coluna,
+  .poco-mote,
+  .poco-lampejo-revela,
+  .poco-faisca,
+  .poco-varre::after,
+  .poco-cai-lixo,
+  .poco-poeira,
+  .poco-sopro,
+  .poco-nevoa-sobe { animation: none !important; }
+  .poco-mote, .poco-faisca, .poco-poeira, .poco-sopro, .poco-nevoa-sobe, .poco-lampejo-revela, .poco-varre::after { opacity: 0; }
+  .poco-arco-x, .poco-lampejo, .poco-onda, .poco-respingo-moeda, .poco-gota, .poco-veu { opacity: 0; }
   .poco-coin, .poco-ripple { opacity: 0; }
 }

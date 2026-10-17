@@ -272,9 +272,9 @@ export function Cena({ passos, npc, titulo, kicker, fundo = 'torre', arteFundo =
         {passo?.tipo === 'bloco' && (
           <div key={i} className="absolute inset-x-4 top-[8%] z-10 flex justify-center">
             <button type="button" onClick={tocar} className="tw-glitch dv-focus relative isolate w-full max-w-md overflow-hidden px-5 pb-5 pt-6 text-left" style={{ '--dv-cut': '16px' } as CSSProperties}>
-              <span aria-hidden="true" className="dv-cut absolute inset-0 -z-10 bg-[linear-gradient(135deg,#ece5d8,#6b6357_30%,#bab09f_62%,#5f584d_88%,#8a7cc8)]" />
-              <span aria-hidden="true" className="dv-cut absolute inset-px -z-10 bg-[linear-gradient(180deg,rgba(31,31,34,0.97),rgba(12,12,14,0.98))]" style={{ '--dv-cut': '15.6px' } as CSSProperties} />
-              <span aria-hidden="true" className="tw-scan pointer-events-none absolute inset-x-0 top-0 h-1/3 bg-[linear-gradient(180deg,transparent,rgba(138,124,200,0.18),transparent)]" />
+              <span aria-hidden="true" className="dv-cut absolute inset-0 -z-10 bg-[linear-gradient(135deg,#ece5d8,#6b6357_30%,#bab09f_62%,#5f584d_88%,var(--dv-amethyst))]" />
+              <span aria-hidden="true" className="dv-cut absolute inset-px -z-10 bg-[linear-gradient(180deg,rgba(31,31,34,0.97),rgb(var(--dv-ink-rgb)/0.98))]" style={{ '--dv-cut': '15.6px' } as CSSProperties} />
+              <span aria-hidden="true" className="tw-scan pointer-events-none absolute inset-x-0 top-0 h-1/3 bg-[linear-gradient(180deg,transparent,rgb(var(--dv-amethyst-rgb)/0.18),transparent)]" />
               <FrameCorners tone="gold" size={18} inset={5} />
               <span className="flex items-center gap-2">
                 <GlyphDiamond className="size-2.5 text-dv-amethyst" filled />
@@ -359,7 +359,7 @@ export function Essencia({ className }: { className?: string }) {
         <radialGradient id="tw-ess-c" cx="0.5" cy="0.45" r="0.5">
           <stop offset="0" stopColor="#e6e0ff" />
           <stop offset="0.6" stopColor="#8a7cc8" />
-          <stop offset="1" stopColor="#463d78" />
+          <stop offset="1" stopColor="#4e4580" />
         </radialGradient>
       </defs>
       <path d="M12 1.5 20 12 12 22.5 4 12Z" fill="url(#tw-ess)" />

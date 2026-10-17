@@ -89,8 +89,8 @@ function Trancado({ motivo }: { motivo: string }) {
           </div>
         </div>
         <section aria-label="Virtudes: trancado" className="animate-dv-rise relative" style={{ '--dv-cut': '14px' } as CSSProperties}>
-          <span aria-hidden="true" className="dv-cut absolute inset-0 bg-[linear-gradient(135deg,rgba(238,237,235,0.34),rgba(238,237,235,0.12)_45%,rgba(238,237,235,0.26))]" />
-          <span aria-hidden="true" className="dv-cut absolute inset-px bg-[linear-gradient(180deg,#1a1a1d,#0e0e10)]" style={{ '--dv-cut': '13.6px' } as CSSProperties} />
+          <span aria-hidden="true" className="dv-cut absolute inset-0 bg-[linear-gradient(135deg,rgb(var(--dv-text-rgb)/0.34),rgb(var(--dv-text-rgb)/0.12)_45%,rgb(var(--dv-text-rgb)/0.26))]" />
+          <span aria-hidden="true" className="dv-cut absolute inset-px bg-[linear-gradient(180deg,var(--dv-ink-3),var(--dv-ink))]" style={{ '--dv-cut': '13.6px' } as CSSProperties} />
           <div className="relative flex items-start gap-4 p-5">
             <EmblemMark emblem={EmblemVirtudes} size={56} state="locked" />
             <div className="min-w-0 flex-1">
@@ -215,7 +215,7 @@ function Roda({ d, porKey }: { d: Liberado; porKey: Map<VirtudeKey, Liberado['vi
         })}
       </svg>
       {/* centro */}
-      <div className="absolute inset-[25%] grid place-items-center rounded-full bg-[radial-gradient(circle_at_50%_38%,#232326,#0d0d0f_72%)] shadow-[inset_0_0_0_1px_rgba(186,176,159,0.35),0_10px_30px_rgba(0,0,0,0.6)]">
+      <div className="absolute inset-[25%] grid place-items-center rounded-full bg-[radial-gradient(circle_at_50%_38%,#232326,var(--dv-ink)_72%)] shadow-[inset_0_0_0_1px_rgba(186,176,159,0.35),0_10px_30px_rgba(0,0,0,0.6)]">
         <div className="animate-dv-fade flex flex-col items-center text-center">
           {d.arcano ? (
             <>
@@ -248,11 +248,11 @@ function Roda({ d, porKey }: { d: Liberado; porKey: Map<VirtudeKey, Liberado['vi
             style={{ left: `${50 + Math.cos(a) * R}%`, top: `${50 + Math.sin(a) * R}%`, animationDelay: `${120 + i * 70}ms` }}
           >
             <span className="relative grid place-items-center">
-              {exc && <span className="absolute inset-x-[-12%] bottom-[-14%] h-[55%] bg-[radial-gradient(50%_50%_at_50%_50%,rgba(138,124,200,0.55),transparent_70%)]" />}
+              {exc && <span className="absolute inset-x-[-12%] bottom-[-14%] h-[55%] bg-[radial-gradient(50%_50%_at_50%_50%,rgb(var(--dv-amethyst-rgb)/0.55),transparent_70%)]" />}
               <Naipe virtude={k} apagado={!v.afinidade} className={cn('relative size-[52px]', def && 'opacity-55 saturate-50')} />
             </span>
             <span className={cn('mt-1 font-display text-[11px] font-semibold uppercase tracking-[0.12em]', def ? 'text-dv-text-3' : 'text-dv-text')}>{v.nome}</span>
-            {exc && <span className="mt-0.5 size-[7px] rotate-45 bg-dv-amethyst shadow-[0_0_8px_rgba(138,124,200,0.9)]" />}
+            {exc && <span className="mt-0.5 size-[7px] rotate-45 bg-dv-amethyst shadow-[0_0_8px_rgb(var(--dv-amethyst-rgb)/0.9)]" />}
           </div>
         )
       })}
@@ -283,7 +283,7 @@ function Potencial({ d }: { d: Liberado }) {
               />
             </span>
           ))}
-          <span aria-hidden="true" className={cn('ml-1 size-2 rotate-45', a.cheio ? 'bg-dv-amethyst shadow-[0_0_8px_rgba(138,124,200,0.9)]' : 'bg-white/10')} />
+          <span aria-hidden="true" className={cn('ml-1 size-2 rotate-45', a.cheio ? 'bg-dv-amethyst shadow-[0_0_8px_rgb(var(--dv-amethyst-rgb)/0.9)]' : 'bg-white/10')} />
         </div>
         <div className="mt-1.5 flex justify-between font-mono text-[10px] uppercase tracking-[0.14em] text-dv-text-3">
           <span>Pouco</span>

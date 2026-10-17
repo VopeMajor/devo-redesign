@@ -13,15 +13,51 @@ brilhos sutis, microinterações). Nada de copiar telas, personagens, logos, íc
 
 ## 0. Paleta, material e ornamento (Direção 2 §0 e §6 — prioridade sobre o resto do guia)
 
-**Referência-mestra de cor: `refs/ref-xadrez-marmore.png`** (tabuleiro de mármore com espadas; Direção 2
-§6). As demais refs do dono (figurino gótico, valsa do relógio, gaiola, figurinos de NPC) dão material e
-motivo. Cores amostradas dos pixels (PIL): casas pretas `#1e1f21`–`#4f4f4f`, casas brancas
-`#cecece`–`#f6f5f3`, veios `#797c81`, lâminas `#968c82` → `#c8c0b5` → `#ebe1d8`, pedras da guarda em
-ametista. **Base = mármore negro e branco com veios cinza, neutros (sem azul nas superfícies)**;
-**metal = aço champanhe-prateado** (não ouro amarelo); **ametista pequena** é o único acento frio
-(joia, estado ativo, foco); **rubi só alerta**; a noite azul-violeta é só atmosfera discreta nas cenas.
-Os nomes antigos dos tokens (`--dv-gold`, `--dv-cobalt`, `--in-accent`…) continuam valendo, com os
-valores novos: todas as telas herdam.
+### 0.0 Refinamento 4 — ametista e aço champanhe (dono, 17/10; prioridade sobre a tabela abaixo)
+
+O dono provou a paleta "Kokken no Inori" (vinho/abismo) e pediu para **voltar ao esquema anterior**
+(mármore negro e porcelana, interior escuro, ametista pequena) **acrescentando dois acentos com
+intenção: ametista e aço champanhe, principalmente no início** (home, relógio, grade de apps, tela de
+Sistemas, dock, abertura e Continuar). Nada de vinho como base; o rubi continua só para alerta.
+
+**Aço champanhe** (metal acetinado entre o aço escovado e o champanhe; nunca ouro vivo): aros, divisórias,
+molduras de ícone, contorno de botão, numerais, realces finos.
+
+| Token | Valor | Uso | Contraste |
+|---|---|---|---|
+| `--dv-champagne` (`--dv-gold`) | `#c4b9a6` | filete, numeral, rótulo de metal | 10.1:1 no negro |
+| `--dv-champagne-strong` (`--dv-gold-bright`) | `#ece4d6` | reflexo, dígitos do relógio | 15:1 no negro |
+| `--dv-champagne-soft` | `#8d8373` | sombra do metal, contorno em repouso | decorativo |
+| `--dv-champagne-deep` (`--dv-gold-deep`) | `#6b6357` | texto de metal no papel | 4.7:1 no papel (AA) |
+| `--dv-champagne-line` (`--dv-line-gold`) | `rgba(196,185,166,.5)` | aro fino, divisória | decorativo |
+| `--dv-champagne-grad` (`--dv-brass-grad`) | gradiente acetinado | preenchimento metálico | — |
+
+Utilidades: `dv-champagne` (preenchimento), `dv-champagne-text` (numeral/título de metal), `dv-champagne-edge`
+(aro por dentro), `dv-champagne-rule` (divisória que se apaga), e o aro `steel` dos tampos do shell.
+
+**Ametista** (escala; nunca neon, sempre em pontos):
+
+| Token | Valor | Uso | Contraste |
+|---|---|---|---|
+| `--dv-amethyst-deep` | `#4e4580` | bloco ativo, joia na sombra | branco 8.4:1 |
+| `--dv-amethyst` | `#8a7cc8` | joia, foco, losango | 5.4:1 no negro |
+| `--dv-amethyst-light` (`--dv-amethyst-text`) | `#c2b9ec` | dado e rótulo ativo pequeno | 10.7:1 no negro |
+| `--dv-amethyst-glow` / `-line` | `rgba(138,124,200,.42/.5)` | halo atrás do item ativo, filete | — |
+
+Utilidade: `dv-amethyst-halo`. Canais para transparência: `rgb(var(--dv-amethyst-rgb) / a)`,
+`--dv-champagne-rgb`, `--dv-ink-rgb`, `--dv-text-rgb`, `--dv-blood-rgb`, `--dv-blood-deep-rgb`.
+
+**Na home:** véu de ametista atrás do relógio e no pé; relógio em tampo com aro ametista/champanhe e
+dígitos em aço champanhe; rótulos de seção em champanhe com losango de ametista e fio de champanhe; cada
+ícone (apps, dock, Sistemas) com aro fino de champanhe e halo de ametista; dock com aro de champanhe e um
+ponto de luz ametista. **Na abertura:** "Record System" entre dois losangos de ametista, bilhete do pulso
+com filetes de champanhe e dígitos de metal, contorno do Continuar em champanhe (todos os botões
+secundários do kit usam esse contorno).
+
+Não escreva hex/rgba fixos em tela: use os tokens. `node scripts/dev/paleta-tokens.mjs [pasta]` troca os
+valores antigos conhecidos por tokens (só em contexto CSS; idempotente).
+
+### 0.1 Paleta base (Direção 2)
 
 | Cor | Hex | Token | Papel | De qual ref veio |
 |---|---|---|---|---|

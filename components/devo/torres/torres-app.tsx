@@ -293,7 +293,7 @@ export function TorresApp() {
   return (
     <div ref={raiz} className="absolute inset-0 overflow-hidden bg-dv-ink text-dv-text">
       {/* céu de fundo em tela cheia (o mapa encaixa na altura e pode não cobrir as laterais) */}
-      <span aria-hidden="true" className="absolute inset-0 bg-[#0b0b0d] bg-[url(/images/torres/ceu-noite.webp)] bg-cover bg-[position:30%_0%]" />
+      <span aria-hidden="true" className="absolute inset-0 bg-dv-ink bg-[url(/images/torres/ceu-noite.webp)] bg-cover bg-[position:30%_0%]" />
 
       {/* MAPA */}
       <div ref={mapaRef} className={cn('absolute inset-0 flex flex-col', vista && !reduced && 'pointer-events-none')} inert={vista ? true : undefined} aria-hidden={vista ? true : undefined}>
@@ -422,7 +422,7 @@ function AvisoCentral({ titulo, texto, selo, tom = 'normal', acao }: { titulo: s
     <div className="absolute inset-x-0 bottom-0 z-10 flex justify-center px-4 pb-8">
       <div role={tom === 'alerta' ? 'alert' : 'group'} aria-label={`${titulo}${selo ? `: ${selo.toLowerCase()}` : ''}`} className="animate-dv-rise relative isolate w-full max-w-sm px-5 pb-5 pt-6 text-center" style={{ '--dv-cut': '16px' } as CSSProperties}>
         <span aria-hidden="true" className={cn('dv-cut absolute inset-0 -z-10', tom === 'alerta' ? 'bg-[linear-gradient(135deg,var(--dv-blood-text),var(--dv-blood)_50%,var(--dv-blood-deep))]' : 'bg-[linear-gradient(135deg,#ece5d8,#6b6357_30%,#bab09f_62%,#5f584d)]')} />
-        <span aria-hidden="true" className="dv-cut absolute inset-px -z-10 bg-[linear-gradient(180deg,rgba(31,31,34,0.97),rgba(12,12,14,0.98))]" style={{ '--dv-cut': '15.6px' } as CSSProperties} />
+        <span aria-hidden="true" className="dv-cut absolute inset-px -z-10 bg-[linear-gradient(180deg,rgba(31,31,34,0.97),rgb(var(--dv-ink-rgb)/0.98))]" style={{ '--dv-cut': '15.6px' } as CSSProperties} />
         {tom !== 'alerta' && <FrameCorners tone="gold" size={18} inset={5} />}
         <span aria-hidden="true" className="relative mx-auto -mt-16 grid h-24 place-items-center">
           <Cadeado aceso={!!selo} className="h-24 w-auto drop-shadow-[0_8px_18px_rgba(0,0,0,0.85)]" />

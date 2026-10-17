@@ -107,12 +107,12 @@ export function DesktopShell() {
       {/* O salão vem da Jornada (noite azul-violeta); no interior ele fica no mármore: tira a cor da cena. */}
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[#808080] mix-blend-saturation" />
       {critical && (
-        <div aria-hidden="true" className="animate-dv-alert pointer-events-none absolute inset-0 z-[1] bg-[radial-gradient(110%_90%_at_50%_50%,transparent_62%,rgba(163,18,31,0.3)_90%,rgba(63,6,11,0.55)_100%)]" />
+        <div aria-hidden="true" className="animate-dv-alert pointer-events-none absolute inset-0 z-[1] bg-[radial-gradient(110%_90%_at_50%_50%,transparent_62%,rgb(var(--dv-blood-rgb)/0.3)_90%,rgb(var(--dv-blood-deep-rgb)/0.55)_100%)]" />
       )}
       <PulseWidget remaining={remaining} critical={critical} onOpen={() => openApp('pulso')} />
 
       <header
-        className="absolute inset-x-0 top-0 z-40 flex items-center justify-between gap-4 bg-[linear-gradient(180deg,rgba(21,21,23,0.94),rgba(10,10,12,0.96))] px-4"
+        className="absolute inset-x-0 top-0 z-40 flex items-center justify-between gap-4 bg-[linear-gradient(180deg,rgba(21,21,23,0.94),rgb(var(--dv-ink-rgb)/0.96))] px-4"
         style={{ height: TOP }}
       >
         <span aria-hidden="true" className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-dv-gold/60 via-dv-gold/20 to-transparent" />
@@ -218,7 +218,7 @@ export function DesktopShell() {
       )}
 
       <footer
-        className="absolute inset-x-0 bottom-0 z-40 flex items-center justify-center gap-2 bg-[linear-gradient(0deg,rgba(21,21,23,0.94),rgba(10,10,12,0.96))] px-4"
+        className="absolute inset-x-0 bottom-0 z-40 flex items-center justify-center gap-2 bg-[linear-gradient(0deg,rgba(21,21,23,0.94),rgb(var(--dv-ink-rgb)/0.96))] px-4"
         style={{ height: BOTTOM }}
       >
         <span aria-hidden="true" className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-dv-gold/45 to-transparent" />
@@ -242,7 +242,7 @@ export function DesktopShell() {
             >
               <AppGlyphTile app={app} size="xs" selected={isTop} />
               {app.name}
-              <span aria-hidden="true" className={cn('absolute inset-x-2 -bottom-px h-[2px]', isTop ? 'bg-dv-gold-bright shadow-[0_0_8px_rgba(138,124,200,0.8)]' : w.minimized ? 'bg-transparent' : 'bg-dv-text-3')} />
+              <span aria-hidden="true" className={cn('absolute inset-x-2 -bottom-px h-[2px]', isTop ? 'bg-dv-gold-bright shadow-[0_0_8px_rgb(var(--dv-amethyst-rgb)/0.8)]' : w.minimized ? 'bg-transparent' : 'bg-dv-text-3')} />
             </button>
           )
         })}
@@ -413,12 +413,12 @@ function Window({
         onDoubleClick={() => onPatch({ maximized: !win.maximized })}
         className={cn(
           'relative flex h-11 shrink-0 cursor-grab touch-none select-none items-center justify-between gap-3 pl-2 pr-2 active:cursor-grabbing',
-          active ? 'bg-[linear-gradient(90deg,#2c2c31,var(--dv-ink-3)_45%,var(--dv-ink-2))]' : 'bg-dv-ink-2',
+          active ? 'bg-[linear-gradient(90deg,var(--dv-ink-4),var(--dv-ink-3)_45%,var(--dv-ink-2))]' : 'bg-dv-ink-2',
         )}
       >
         <span aria-hidden="true" className="absolute inset-x-0 bottom-0 h-px">
           <span className={cn('absolute inset-0 bg-gradient-to-r', active ? 'from-dv-gold/70 via-dv-gold/25 to-transparent' : 'from-dv-line-strong to-transparent')} />
-          {active && <span className="absolute -top-[1.5px] left-[14%] size-1 rotate-45 bg-dv-amethyst shadow-[0_0_6px_rgba(138,124,200,0.9)]" />}
+          {active && <span className="absolute -top-[1.5px] left-[14%] size-1 rotate-45 bg-dv-amethyst shadow-[0_0_6px_rgb(var(--dv-amethyst-rgb)/0.9)]" />}
         </span>
         <span className="flex min-w-0 items-center gap-2.5">
           <AppGlyphTile app={app} size="xs" selected={active} />
@@ -468,7 +468,7 @@ function GlassBack() {
   return (
     <span aria-hidden="true" className="pointer-events-none absolute inset-0 [--dv-cut:14px]">
       <span className="dv-cut absolute inset-0 bg-[linear-gradient(135deg,var(--dv-gold-bright),var(--dv-gold-deep)_30%,var(--dv-gold)_60%,var(--dv-gold-deep))] opacity-70" />
-      <span className="dv-cut bg-[#121214] bg-[url(/images/os/marmore-negro.webp)] bg-[length:560px_560px] absolute inset-px [--dv-cut:13.6px]" />
+      <span className="dv-cut bg-dv-ink-2 bg-[url(/images/os/marmore-negro.webp)] bg-[length:560px_560px] absolute inset-px [--dv-cut:13.6px]" />
       <span className="dv-cut absolute inset-px bg-[linear-gradient(180deg,rgba(0,0,0,0.2),rgba(0,0,0,0.4))] [--dv-cut:13.6px]" />
     </span>
   )

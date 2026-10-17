@@ -292,7 +292,7 @@ export function MapaTorres({
               className="dv-focus group absolute"
               style={{ left: `${(b.x0 / MAPA_W) * 100}%`, top: `${(b.y0 / MAPA_H) * 100}%`, width: `${(b.w / MAPA_W) * 100}%`, height: `${((b.h + 6) / MAPA_H) * 100}%` }}
             >
-              <span aria-hidden="true" className="absolute inset-x-[5%] bottom-0 h-1/2 bg-[radial-gradient(50%_60%_at_50%_100%,rgba(194,185,236,0.28),transparent_70%)] opacity-0 transition-opacity duration-200 group-hover:opacity-100 group-focus-visible:opacity-100 group-active:opacity-100" />
+              <span aria-hidden="true" className="absolute inset-x-[5%] bottom-0 h-1/2 bg-[radial-gradient(50%_60%_at_50%_100%,rgb(var(--dv-amethyst-text-rgb)/0.28),transparent_70%)] opacity-0 transition-opacity duration-200 group-hover:opacity-100 group-focus-visible:opacity-100 group-active:opacity-100" />
             </button>
             {/* placa pequena no pé */}
             <div aria-hidden="true" className="pointer-events-none absolute -translate-x-1/2 -translate-y-1/2" style={{ left: `${(p.cx / MAPA_W) * 100}%`, top: `${(p.cy / MAPA_H) * 100}%` }}>
@@ -452,8 +452,8 @@ export function Recursos({ torres, className }: { torres: TorreEstado[]; classNa
 export function RecursoChip({ nome, curto, quantidade, tipo, className }: { nome: string; curto: string; quantidade: number; tipo: 'essencia' | 'chave'; className?: string }) {
   return (
     <li className={cn('relative isolate flex h-9 shrink-0 snap-start items-center gap-1 pl-1 pr-2.5', !quantidade && 'opacity-70', className)} style={{ '--dv-cut': '8px' } as CSSProperties} title={nome}>
-      <span aria-hidden="true" className="dv-cut-diag absolute inset-0 -z-10 bg-[linear-gradient(100deg,#ece5d8,#6b6357_40%,#bab09f_75%,#5a4f8f)] opacity-70" />
-      <span aria-hidden="true" className="dv-cut-diag absolute inset-px -z-10 bg-[linear-gradient(180deg,rgba(31,31,34,0.96),rgba(12,12,14,0.96))]" style={{ '--dv-cut': '7.6px' } as CSSProperties} />
+      <span aria-hidden="true" className="dv-cut-diag absolute inset-0 -z-10 bg-[linear-gradient(100deg,#ece5d8,#6b6357_40%,#bab09f_75%,var(--dv-cobalt))] opacity-70" />
+      <span aria-hidden="true" className="dv-cut-diag absolute inset-px -z-10 bg-[linear-gradient(180deg,rgba(31,31,34,0.96),rgb(var(--dv-ink-rgb)/0.96))]" style={{ '--dv-cut': '7.6px' } as CSSProperties} />
       <span aria-hidden="true" className="grid h-8 w-6 place-items-center">
         {tipo === 'essencia' ? <CristalEssencia className="h-7 w-auto" brilho={quantidade > 0} /> : <ChaveOrnamental className="w-7 -rotate-45" />}
       </span>

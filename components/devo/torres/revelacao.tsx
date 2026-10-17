@@ -70,13 +70,13 @@ export function Revelacao({
   const nCristais = Math.min(Math.max(gasto, tipo === 'essencia' ? 6 : 1), 8)
 
   return (
-    <div role="dialog" aria-modal="true" aria-label={titulo} className="absolute inset-0 z-50 flex flex-col overflow-hidden bg-[#08080a]/[0.97] animate-dv-fade" data-fase={fase}>
+    <div role="dialog" aria-modal="true" aria-label={titulo} className="absolute inset-0 z-50 flex flex-col overflow-hidden bg-dv-ink/[0.97] animate-dv-fade" data-fase={fase}>
       {/* luz que cresce com a fase */}
       <div
         aria-hidden="true"
         className="absolute left-1/2 top-[40%] size-[140vmin] -translate-x-1/2 -translate-y-1/2 rounded-full transition-[opacity,transform] duration-700"
         style={{
-          background: 'radial-gradient(closest-side, rgba(194,185,236,0.5), rgba(138,124,200,0.18) 45%, transparent 72%)',
+          background: 'radial-gradient(closest-side, rgb(var(--dv-amethyst-text-rgb) / 0.5), rgb(var(--dv-amethyst-rgb) / 0.18) 45%, transparent 72%)',
           opacity: fase === 'ativacao' ? 0.25 : fase === 'suspense' ? 0.55 : 0.9,
           transform: `translate(-50%,-50%) scale(${fase === 'ativacao' ? 0.5 : fase === 'suspense' ? 0.75 : 1})`,
         }}

@@ -1,0 +1,18 @@
+{
+  "asset": "img:/images/poco/itens/lixo-tampa",
+  "imagem": {
+    "base": "/images/poco/itens/lixo-tampa",
+    "tamanhos": [
+      64,
+      128,
+      256
+    ]
+  },
+  "origem": {
+    "pedido": "poco-lixo-tampa",
+    "variacao": "v02",
+    "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+    "seed": 11182,
+    "importado": null
+  }
+}

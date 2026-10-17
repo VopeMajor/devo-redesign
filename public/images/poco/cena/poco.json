@@ -1,0 +1,31 @@
+{
+  "asset": "img:/images/poco/cena/poco",
+  "imagem": {
+    "base": "/images/poco/cena/poco",
+    "tamanhos": [
+      256,
+      512,
+      1024
+    ],
+    "camadas": [
+      {
+        "src": "/images/poco/cena/poco-brilho.webp",
+        "anim": "pulso",
+        "caixa": [
+          0.1795,
+          0.4194,
+          0.2709,
+          0.1593
+        ],
+        "dur": 3.2
+      }
+    ]
+  },
+  "origem": {
+    "pedido": "poco-poco",
+    "variacao": "v03",
+    "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+    "seed": 10403,
+    "importado": null
+  }
+}

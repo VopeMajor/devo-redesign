@@ -74,7 +74,7 @@ export function TorresDefs() {
       <radialGradient id="tw-cur" cx="0.5" cy="0.6" r="0.6">
         <stop offset="0" stopColor="#e6e0ff" />
         <stop offset="0.6" stopColor="#8a7cc8" />
-        <stop offset="1" stopColor="#463d78" />
+        <stop offset="1" stopColor="#4e4580" />
       </radialGradient>
       <radialGradient id="tw-halo" cx="0.5" cy="0.5" r="0.5">
         <stop offset="0" stopColor="#ece5d8" stopOpacity="0.55" />

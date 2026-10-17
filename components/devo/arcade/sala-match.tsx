@@ -24,7 +24,7 @@ export function Searching({ gameId, duel, onCancel }: { gameId: GameId; duel: bo
   const g = GAMES[gameId]
   const clock = `${String(Math.floor(secs / 60)).padStart(2, '0')}:${String(secs % 60).padStart(2, '0')}`
   return (
-    <div className="absolute inset-0 z-30 flex animate-dv-fade flex-col overflow-y-auto bg-[rgba(12,12,14,0.92)] backdrop-blur-sm" role="status" aria-live="polite">
+    <div className="absolute inset-0 z-30 flex animate-dv-fade flex-col overflow-y-auto bg-[rgb(var(--dv-ink-rgb)/0.92)] backdrop-blur-sm" role="status" aria-live="polite">
       <div className="relative mx-auto flex w-full max-w-sm flex-1 flex-col items-center justify-center gap-6 px-5 py-8 text-center">
         {/* radar: anéis, varredura e marcas de relógio */}
         <div aria-hidden="true" className="relative size-56 shrink-0">
@@ -40,9 +40,9 @@ export function Searching({ gameId, duel, onCancel }: { gameId: GameId; duel: bo
           ))}
           {/* varredura em prata translúcida: o feixe é luz de lanterna, não cor */}
           <span className="absolute inset-0 animate-dv-spin rounded-full bg-[conic-gradient(from_0deg,rgba(236,229,216,0.26),rgba(236,229,216,0.06)_16%,transparent_30%,transparent_100%)] [animation-duration:2.6s]" />
-          <span className="absolute left-[68%] top-[30%] size-2 animate-dv-blink rotate-45 bg-dv-porcelain shadow-[0_0_10px_rgba(138,124,200,0.8)]" />
+          <span className="absolute left-[68%] top-[30%] size-2 animate-dv-blink rotate-45 bg-dv-porcelain shadow-[0_0_10px_rgb(var(--dv-amethyst-rgb)/0.8)]" />
           <span className="absolute left-[24%] top-[62%] size-1.5 animate-dv-blink rotate-45 bg-dv-gold [animation-delay:-0.5s]" />
-          <span className="absolute inset-[37%] grid place-items-center rounded-full bg-[radial-gradient(circle,rgba(12,12,14,0.95)_55%,transparent_72%)]">
+          <span className="absolute inset-[37%] grid place-items-center rounded-full bg-[radial-gradient(circle,rgb(var(--dv-ink-rgb)/0.95)_55%,transparent_72%)]">
             <GameEmblem gameId={gameId} metal className="size-[58%] drop-shadow-[0_0_10px_rgba(236,229,216,0.35)]" />
           </span>
         </div>

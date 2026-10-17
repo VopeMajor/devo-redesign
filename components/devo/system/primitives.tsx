@@ -51,8 +51,7 @@ export function TechnicalDivider({ index, label, className }: { index?: string; 
       <span
         className="h-2.5 flex-1 opacity-70"
         style={{
-          background:
-            'repeating-linear-gradient(90deg, var(--dv-gold) 0 1px, transparent 1px 8px) bottom/100% 5px no-repeat, linear-gradient(var(--dv-line-strong), var(--dv-line-strong)) bottom/100% 1px no-repeat',
+          background: 'repeating-linear-gradient(90deg, var(--dv-gold) 0 1px, transparent 1px 8px) bottom/100% 5px no-repeat, linear-gradient(var(--dv-line-strong), var(--dv-line-strong)) bottom/100% 1px no-repeat',
         }}
       />
       {label && <span className="dv-label text-[10px]">{label}</span>}

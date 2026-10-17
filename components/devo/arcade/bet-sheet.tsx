@@ -133,7 +133,7 @@ function BetSheet({
                 className={cn('dv-cut absolute inset-[1.5px] -z-10', !on && 'bg-dv-ink-2')}
                 style={{ '--dv-cut': '11.4px', ...(on ? MARBLE_PORCELAIN : null) } as CSSProperties}
               />
-              {on && <span aria-hidden="true" className="pointer-events-none absolute inset-x-6 -bottom-2 -z-20 h-4 rounded-[50%] bg-[rgba(138,124,200,0.55)] blur-lg" />}
+              {on && <span aria-hidden="true" className="pointer-events-none absolute inset-x-6 -bottom-2 -z-20 h-4 rounded-[50%] bg-[rgb(var(--dv-amethyst-rgb)/0.55)] blur-lg" />}
               <Monogram name={s.name} size="md" tone={on ? 'ivory' : 'neutral'} />
               <span className={cn('max-w-full truncate font-display text-[15px] font-semibold uppercase tracking-[0.06em]', on ? 'text-dv-porcelain-ink' : 'text-dv-text')}>{s.isMe ? `${s.name} (você)` : s.name}</span>
               <span className={cn('font-impact text-[26px] font-semibold leading-none dv-tabular', on ? 'text-dv-porcelain-ink' : 'text-dv-text-2')}>
@@ -163,7 +163,7 @@ function BetSheet({
               className={cn(
                 'dv-focus min-h-11 -skew-x-[8deg] border font-impact text-[17px] font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-30',
                 on
-                  ? 'border-dv-gold-bright bg-dv-porcelain text-dv-porcelain-ink shadow-[0_0_14px_-4px_rgba(138,124,200,0.8)]'
+                  ? 'border-dv-gold-bright bg-dv-porcelain text-dv-porcelain-ink shadow-[0_0_14px_-4px_rgb(var(--dv-amethyst-rgb)/0.8)]'
                   : 'border-dv-line-strong bg-dv-ink-2 text-dv-text enabled:hover:border-dv-text-3',
               )}
             >

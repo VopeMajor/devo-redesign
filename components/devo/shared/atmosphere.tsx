@@ -46,7 +46,7 @@ export function CathedralBackdrop({ dim = 0.55, className }: { dim?: number; cla
     <div aria-hidden="true" className={cn('pointer-events-none absolute inset-0 overflow-hidden', className)}>
       <Image src="/images/background.png" alt="" fill priority sizes="100vw" className="object-cover object-center" />
       <div className="absolute inset-0 bg-background" style={{ opacity: dim }} />
-      <div className="animate-mist absolute -inset-[10%] bg-[radial-gradient(ellipse_at_30%_70%,rgba(138,124,200,0.18),transparent_55%),radial-gradient(ellipse_at_75%_30%,rgba(236,238,242,0.06),transparent_50%)]" />
+      <div className="animate-mist absolute -inset-[10%] bg-[radial-gradient(ellipse_at_30%_70%,rgb(var(--dv-amethyst-rgb)/0.18),transparent_55%),radial-gradient(ellipse_at_75%_30%,rgba(236,238,242,0.06),transparent_50%)]" />
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_35%,rgba(0,0,0,0.85)_100%)]" />
       <div className="devo-grain absolute inset-0 opacity-[0.07] mix-blend-overlay" />
     </div>

@@ -441,9 +441,9 @@ export function PrologueStage({
         <div className={cn('relative -mt-24 aspect-[9/18] h-[min(52dvh,420px)]', stage === 'phone' && 'en-phone-rise')}>
           {/* moldura de aço escovado */}
           <span aria-hidden="true" className="absolute inset-0 rounded-[2.1rem] bg-[linear-gradient(135deg,#ece5d8,#6b6357_22%,#bab09f_48%,#5f584d_72%,#d6cdbd)] shadow-[0_30px_60px_-10px_rgba(0,0,0,0.95),0_0_0_1px_rgba(0,0,0,0.6)]" />
-          <span aria-hidden="true" className="absolute inset-[3px] rounded-[1.95rem] bg-[linear-gradient(160deg,#2c2c31,#0c0c0e_60%)]" />
+          <span aria-hidden="true" className="absolute inset-[3px] rounded-[1.95rem] bg-[linear-gradient(160deg,var(--dv-ink-4),var(--dv-ink)_60%)]" />
           {/* vidro: tela negra com reflexo do mostrador e facetas em losango */}
-          <div className="absolute inset-[9px] overflow-hidden rounded-[1.6rem] bg-[radial-gradient(120%_70%_at_50%_42%,#1f1f22,#0c0c0e_70%)]">
+          <div className="absolute inset-[9px] overflow-hidden rounded-[1.6rem] bg-[radial-gradient(120%_70%_at_50%_42%,var(--dv-ink-3),var(--dv-ink)_70%)]">
             <svg viewBox="0 0 200 200" aria-hidden="true" className="absolute left-1/2 top-[42%] w-[150%] -translate-x-1/2 -translate-y-1/2 text-[#bab09f] opacity-[0.16]" fill="none" stroke="currentColor">
               <circle cx="100" cy="100" r="96" strokeWidth="0.8" />
               <circle cx="100" cy="100" r="72" strokeWidth="0.5" />
@@ -456,7 +456,7 @@ export function PrologueStage({
             <span aria-hidden="true" className="en-phone-glare absolute -inset-y-10 left-[-60%] w-[46%] rotate-[18deg] bg-[linear-gradient(90deg,transparent,rgba(241,240,238,0.14),transparent)]" />
             <div className="absolute inset-0 flex flex-col items-center justify-center gap-3">
               <span className="relative grid size-24 place-items-center text-dv-porcelain">
-                <span aria-hidden="true" className="en-sigil-halo absolute -inset-4 rounded-full bg-[radial-gradient(circle,rgba(241,240,238,0.22),rgba(138,124,200,0.14)_45%,transparent_70%)]" />
+                <span aria-hidden="true" className="en-sigil-halo absolute -inset-4 rounded-full bg-[radial-gradient(circle,rgba(241,240,238,0.22),rgb(var(--dv-amethyst-rgb)/0.14)_45%,transparent_70%)]" />
                 <svg viewBox="0 0 100 100" aria-hidden="true" className="absolute inset-0 size-full text-[#bab09f]" fill="none" stroke="currentColor">
                   <circle cx="50" cy="50" r="46" strokeWidth="0.8" strokeDasharray="2 3"/>
                   <circle cx="50" cy="50" r="40" strokeWidth="1" pathLength={1} strokeDasharray="1" className="en-ring-draw" />

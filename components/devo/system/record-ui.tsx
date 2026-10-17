@@ -157,12 +157,12 @@ function recClass(variant: RecButtonVariant, surface: RecSurface, size: keyof ty
     variant === 'primary' &&
       (surface === 'dark'
         ? // Porcelana com filete de aço: o primário sobre o mármore negro (ametista só no halo).
-          'bg-[linear-gradient(180deg,#f7f6f3_0%,#e6e4df_100%)] text-[#0c0c0e] shadow-[inset_0_0_0_1px_#bab09f,inset_0_1px_0_#fff] enabled:hover:bg-[linear-gradient(180deg,#ffffff_0%,#ecebe7_100%)] hover:shadow-[inset_0_0_0_1px_#ece5d8,0_0_20px_-6px_rgba(138,124,200,0.75)]'
+          'bg-[linear-gradient(180deg,#f7f6f3_0%,#e6e4df_100%)] text-dv-ink shadow-[inset_0_0_0_1px_#bab09f,inset_0_1px_0_#fff] enabled:hover:bg-[linear-gradient(180deg,#ffffff_0%,#ecebe7_100%)] hover:shadow-[inset_0_0_0_1px_#ece5d8,0_0_20px_-6px_rgb(var(--dv-amethyst-rgb)/0.75)]'
         : // Bloco negro sobre o papel.
-          'bg-[#1c1c1f] text-white shadow-[inset_0_0_0_1px_rgba(186,176,159,0.45)] enabled:hover:bg-[#0c0c0e] hover:shadow-[inset_0_0_0_1px_#bab09f,0_0_20px_-6px_rgba(138,124,200,0.7)]'),
+          'bg-dv-block text-white shadow-[inset_0_0_0_1px_rgba(186,176,159,0.45)] enabled:hover:bg-dv-ink hover:shadow-[inset_0_0_0_1px_#bab09f,0_0_20px_-6px_rgb(var(--dv-amethyst-rgb)/0.7)]'),
     variant === 'secondary' && 'text-in-fg shadow-[inset_0_0_0_1px_var(--in-line-strong)] enabled:hover:shadow-[inset_0_0_0_1px_var(--in-fg)] hover:bg-in-fg/[0.04]',
     variant === 'ghost' && 'px-2 text-in-accent underline decoration-in-accent/40 underline-offset-[6px] hover:decoration-in-accent',
-    variant === 'danger' && 'overflow-hidden bg-[#a3121f] text-white enabled:hover:bg-[#b8141f]',
+    variant === 'danger' && 'overflow-hidden bg-dv-blood text-white enabled:hover:bg-[#b8141f]',
     block && 'w-full',
   )
 }

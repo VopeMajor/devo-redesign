@@ -31,12 +31,12 @@ export function JourneyCurtain({ state, tone }: { state: CurtainState; tone: Jou
         {/* faixa de ataque: aço (não cor) */}
         <span className="dv-curtain-band absolute -inset-y-[10%] left-[-50%] w-[200%] bg-[linear-gradient(90deg,#5f584d,#bab09f_60%,#ece5d8)]" style={{ animationDelay: '-40ms' }} />
         {/* lâmina principal: mármore negro com veios cinza (frios, sem o sépia do kit — entrada.css) */}
-        <span className="dv-curtain-slab absolute -inset-y-[10%] left-[-50%] w-[200%] bg-[#0c0c0e] shadow-[0_0_60px_rgba(0,0,0,0.9)]">
+        <span className="dv-curtain-slab absolute -inset-y-[10%] left-[-50%] w-[200%] bg-dv-ink shadow-[0_0_60px_rgba(0,0,0,0.9)]">
           <span className="en-marble-cold absolute inset-0 opacity-60" />
           <span className="absolute inset-y-0 left-0 w-[2px] bg-[#bab09f] opacity-90" />
           <span className="absolute inset-y-0 right-0 w-[2px] bg-[#bab09f] opacity-90" />
           {/* corte rubi: um só, fino e diagonal, no canto direito — nunca sobre o mostrador nem sobre o rótulo */}
-          {vote && <span className="absolute inset-y-0 left-[71.5%] w-[4px] bg-[linear-gradient(180deg,transparent,#a3121f_18%,#c41a28_50%,#a3121f_82%,transparent)] shadow-[0_0_18px_rgba(163,18,31,0.65)]" />}
+          {vote && <span className="absolute inset-y-0 left-[71.5%] w-[4px] bg-[linear-gradient(180deg,transparent,var(--dv-blood)_18%,#c41a28_50%,var(--dv-blood)_82%,transparent)] shadow-[0_0_18px_rgb(var(--dv-blood-rgb)/0.65)]" />}
           <span className="absolute inset-0 dv-scanlines opacity-40" />
         </span>
       </div>
@@ -49,7 +49,7 @@ export function JourneyCurtain({ state, tone }: { state: CurtainState; tone: Jou
         <div className="dv-curtain-label flex flex-col items-center">
           <p className="font-display text-[24px] font-semibold uppercase tracking-[0.3em] text-dv-text [text-shadow:0_0_24px_rgba(0,0,0,0.9)]">{state.label}</p>
           <span aria-hidden="true" className="relative mt-3 h-px w-40 bg-white/15">
-            <span className={cn('dv-curtain-progress absolute inset-0', vote ? 'bg-[#a3121f]' : 'bg-[#bab09f]')} />
+            <span className={cn('dv-curtain-progress absolute inset-0', vote ? 'bg-dv-blood' : 'bg-[#bab09f]')} />
           </span>
           <span aria-hidden="true" className="dv-label mt-2.5 text-[10px] text-dv-text-3">
             DEVO · Record System

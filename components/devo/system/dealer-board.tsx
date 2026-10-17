@@ -262,7 +262,7 @@ function ConvokeForm({
                 onClick={() => set({ admission: value })}
                 className={cn(
                   'dv-focus dv-cut-diag flex min-h-14 flex-col items-start justify-center gap-0.5 px-3 text-left transition-colors',
-                  on ? 'bg-[#1c1c1f] text-white' : 'text-in-fg shadow-[inset_0_0_0_1px_var(--in-line-strong)] hover:bg-in-fg/[0.04]',
+                  on ? 'bg-dv-block text-white' : 'text-in-fg shadow-[inset_0_0_0_1px_var(--in-line-strong)] hover:bg-in-fg/[0.04]',
                 )}
                 style={{ '--dv-cut': '7px' } as CSSProperties}
               >
@@ -301,7 +301,7 @@ function ConvokeForm({
             type="checkbox"
             checked={f.tutorial}
             onChange={(e) => set({ tutorial: e.target.checked })}
-            className="dv-focus peer size-5 shrink-0 cursor-pointer appearance-none border border-in-line-strong bg-transparent transition-colors checked:border-[#1c1c1f] checked:bg-[#1c1c1f]"
+            className="dv-focus peer size-5 shrink-0 cursor-pointer appearance-none border border-in-line-strong bg-transparent transition-colors checked:border-dv-block checked:bg-dv-block"
           />
           <GlyphCheck aria-hidden="true" className="pointer-events-none -ml-8 size-5 p-0.5 text-white opacity-0 peer-checked:opacity-100" />
           <span className="flex flex-col">
@@ -538,9 +538,9 @@ function MiniButton({ children, label, onClick, busy, disabled, solid, on, tone 
         on
           ? tone === 'alert'
             ? 'bg-in-alert text-white'
-            : 'bg-[#1c1c1f] text-white shadow-[inset_0_0_0_1px_rgba(186,176,159,0.5)]'
+            : 'bg-dv-block text-white shadow-[inset_0_0_0_1px_rgba(186,176,159,0.5)]'
           : solid
-            ? 'bg-[#1c1c1f] text-white'
+            ? 'bg-dv-block text-white'
             : 'text-in-fg-2 shadow-[inset_0_0_0_1px_var(--in-line-strong)] hover:text-in-fg',
       )}
       style={{ '--dv-cut': '6px' } as CSSProperties}
@@ -567,7 +567,7 @@ function ResultsPanel({ vote: v, role, pending, run }: { vote: StaffVote; role?:
   return (
     <div className="flex flex-col gap-3">
       {applied ? (
-        <div className="flex flex-col gap-1 bg-[#1c1c1f] px-3 py-2.5 text-white">
+        <div className="flex flex-col gap-1 bg-dv-block px-3 py-2.5 text-white">
           <p className="flex items-center gap-2 font-mono text-[10.5px] uppercase tracking-[0.16em]">
             <span aria-hidden="true" className="size-1.5 rotate-45 bg-in-gold" />
             Resultado aplicado · {new Date(v.appliedAt!).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' })}
@@ -601,7 +601,7 @@ function ResultsPanel({ vote: v, role, pending, run }: { vote: StaffVote; role?:
                 key={e.playerId}
                 className={cn(
                   'h-1.5 flex-1 -skew-x-[20deg]',
-                  e.decision === 'premio' ? 'bg-[#1c1c1f]' : e.decision === 'morreu' ? 'bg-in-alert' : e.decision ? 'bg-in-fg-3' : 'bg-in-fg/10',
+                  e.decision === 'premio' ? 'bg-dv-block' : e.decision === 'morreu' ? 'bg-in-alert' : e.decision ? 'bg-in-fg-3' : 'bg-in-fg/10',
                 )}
               />
             ))}
@@ -761,7 +761,7 @@ function StatusControl({ vote: v, pending, onPick }: { vote: StaffVote; pending:
               <span
                 className={cn(
                   'dv-cut-diag inline-flex min-h-6 items-center gap-1.5 px-2 font-mono text-[10px] uppercase leading-tight tracking-[0.1em]',
-                  on ? 'bg-[#1c1c1f] text-white' : 'text-in-fg-2 group-hover:text-in-fg',
+                  on ? 'bg-dv-block text-white' : 'text-in-fg-2 group-hover:text-in-fg',
                 )}
                 style={{ '--dv-cut': '5px' } as CSSProperties}
               >
@@ -788,8 +788,8 @@ function StatusControl({ vote: v, pending, onPick }: { vote: StaffVote; pending:
                 'dv-focus dv-cut-diag inline-flex min-h-11 items-center gap-2 px-3 font-mono text-[10px] uppercase tracking-[0.12em] transition-colors disabled:cursor-wait',
                 on
                   ? st === 'falha'
-                    ? 'bg-[#a3121f] text-white'
-                    : 'bg-[#1c1c1f] text-white line-through decoration-white/60'
+                    ? 'bg-dv-blood text-white'
+                    : 'bg-dv-block text-white line-through decoration-white/60'
                   : 'text-in-fg-2 shadow-[inset_0_0_0_1px_var(--in-line-strong)] hover:text-in-fg',
               )}
               style={{ '--dv-cut': '6px' } as CSSProperties}
@@ -818,7 +818,7 @@ function GroupLinkField({ vote: v, pending, onSave }: { vote: StaffVote; pending
       {v.groupUrl && !editing ? (
         <div className="mt-2 flex flex-col gap-1">
           <div className="flex min-w-0 items-center gap-2.5">
-            <span className="grid size-9 shrink-0 place-items-center bg-[#1c1c1f] text-[#ece5d8]" aria-hidden="true">
+            <span className="grid size-9 shrink-0 place-items-center bg-dv-block text-[#ece5d8]" aria-hidden="true">
               <Link2 className="size-4" strokeWidth={1.4} />
             </span>
             <p className="min-w-0 flex-1 truncate font-mono text-[12px] tracking-[0.02em] text-in-fg" title={v.groupUrl}>

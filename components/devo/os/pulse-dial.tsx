@@ -44,13 +44,13 @@ export function PulseDial({
   return (
     <span className={cn('relative block', className)} aria-hidden="true">
       {/* mostrador de mármore negro (pedra com veio) atrás do aço */}
-      <span className="bg-[#121214] bg-[url(/images/os/marmore-negro.webp)] bg-[length:560px_560px] absolute inset-[3.75%] rounded-full shadow-[inset_0_0_0_1px_rgba(0,0,0,0.6),inset_0_18px_40px_rgba(0,0,0,0.55)]" />
+      <span className="bg-dv-ink-2 bg-[url(/images/os/marmore-negro.webp)] bg-[length:560px_560px] absolute inset-[3.75%] rounded-full shadow-[inset_0_0_0_1px_rgba(0,0,0,0.6),inset_0_18px_40px_rgba(0,0,0,0.55)]" />
       <span
         className={cn(
           'absolute inset-[3.75%] rounded-full',
           critical
-            ? 'bg-[radial-gradient(closest-side_at_50%_44%,rgba(63,6,11,0.55),rgba(12,12,14,0.25)_70%,rgba(0,0,0,0.5))]'
-            : 'bg-[radial-gradient(closest-side_at_50%_40%,rgba(238,237,235,0.07),rgba(12,12,14,0.2)_65%,rgba(0,0,0,0.55))]',
+            ? 'bg-[radial-gradient(closest-side_at_50%_44%,rgb(var(--dv-blood-deep-rgb)/0.55),rgb(var(--dv-ink-rgb)/0.25)_70%,rgba(0,0,0,0.5))]'
+            : 'bg-[radial-gradient(closest-side_at_50%_40%,rgb(var(--dv-text-rgb)/0.07),rgb(var(--dv-ink-rgb)/0.2)_65%,rgba(0,0,0,0.55))]',
         )}
       />
     <svg viewBox="0 0 320 320" className="relative size-full overflow-visible" fill="none">

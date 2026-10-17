@@ -1,33 +1,64 @@
 'use client'
 
 import { useEffect, useId, useState, type CSSProperties } from 'react'
-import { playSfx } from '@/lib/devo/audio'
+import { playSfx, pocoSilencio, pocoSom } from '@/lib/devo/audio'
 import { toCosmetico } from '@/lib/devo/cosmeticos'
-import { CATEGORIA_LABEL, type PocoResultado } from '@/lib/devo/poco'
+import { CATEGORIA_RESULTADO_LABEL, type PocoResultado } from '@/lib/devo/poco'
 import { ITEM_RARITY_LABEL, type ItemRarity } from '@/lib/devo/progresso'
 import { cn } from '@/lib/utils'
 import { parseAsset } from '../cosmeticos/art'
 import { BalaoChat, Emblema, FotoMoldurada } from '../cosmeticos/cosmetic-art'
 import { useMediaQuery } from '../hooks'
 import { Button } from '../kit/button'
-import { DracmaIcon } from './poco-cena'
+import { Ampulheta, CartaMini, LixoPoco, MoedaPoco, RecursoPoco } from './poco-itens'
 import { MolduraResultado } from './poco-ornamentos'
 
 const ART = '/images/poco'
 type Tier = 0 | 1 | 2 | 3 | 4
 const TIER: Record<ItemRarity, Tier> = { comum: 1, incomum: 2, raro: 3, epico: 4, lendario: 4, arcano: 4 }
-/** Duração da revelação por nível (ms): curta para o comum, mais longa (sem cansar) para o raro. */
-const DUR: Record<Tier, number> = { 0: 500, 1: 750, 2: 950, 3: 1400, 4: 1900 }
+/**
+ * Duração da revelação por nível (ms) e o instante em que o prêmio emerge. Raro e acima têm a FALSA PARTIDA:
+ * a luz sobe prata como a de um comum, engasga, e só então explode na cor da raridade.
+ */
+const DUR: Record<Tier, number> = { 0: 1500, 1: 1300, 2: 1600, 3: 2500, 4: 3000 }
+const EMERGE: Record<Tier, number> = { 0: 420, 1: 650, 2: 850, 3: 1500, 4: 1850 }
+/** Falsa partida: luz prata sobe e engasga em FALSO_MS; a cor verdadeira surge em SURTO_MS. */
+const FALSO_MS = 620
+const SURTO_MS = 900
+
+/** Cor da luz pela raridade (canais RGB, para rgb(var(--c) / a)). Sem neon: tudo puxado para a paleta. */
+const LUZ: Record<ItemRarity | 'lixo', string> = {
+  lixo: '128 126 122',
+  comum: '220 218 214',
+  incomum: '207 195 168',
+  raro: '167 159 208',
+  epico: '194 185 236',
+  lendario: '236 228 214',
+  arcano: '239 232 255',
+}
 
 function tierDe(r: PocoResultado): Tier {
   if (r.categoria === 'lixo' || !r.item) return 0
   return TIER[r.item.raridade] ?? 1
 }
 
+/** Partículas determinísticas (sem Math.random no render): posição, atraso, duração e tamanho. */
+function particulas(n: number, semente: number) {
+  return Array.from({ length: n }, (_, i) => {
+    const a = Math.sin((i + 1) * 12.9898 + semente * 78.233) * 43758.5453
+    const f = a - Math.floor(a)
+    const b = Math.sin((i + 1) * 4.1414 + semente * 19.19) * 23421.631
+    const g = b - Math.floor(b)
+    return { x: 30 + f * 40, d: g * 0.9, t: 1.1 + f * 1.2, s: 2 + Math.round(g * 3), ang: f * 360, dist: 60 + g * 90 }
+  })
+}
+
 function destino(r: PocoResultado) {
   if (r.categoria === 'lixo') return 'Não vai para o inventário.'
   if (r.categoria === 'capsula') return 'Guardada no seu Diário.'
-  if (r.categoria === 'cosmetico') return 'Guardado nos seus cosméticos.'
+  if (r.categoria === 'cosmetico' || r.item?.kind === 'cosmetico') return 'Guardado nos seus cosméticos.'
+  if (r.item?.meta.premio === 'tempo') return 'Somado ao seu Tempo.'
+  if (r.item?.meta.premio === 'carta') return 'Entregue nas suas Cartas.'
   return 'Guardado no seu inventário.'
 }
 
@@ -40,49 +71,114 @@ export function PocoResultadoView({ r, nome, onFechar }: { r: PocoResultado; nom
   const reduced = useMediaQuery('(prefers-reduced-motion: reduce)')
   const tier = tierDe(r)
   const [etapa, setEtapa] = useState<'abrindo' | 'pronto'>(reduced ? 'pronto' : 'abrindo')
+  const falso = tier >= 3
+  // Sons de cada etapa, num barramento próprio (pular corta tudo: nada se sobrepõe).
   useEffect(() => {
-    if (etapa !== 'abrindo') return
-    const t = window.setTimeout(() => {
-      setEtapa('pronto')
-      if (tier >= 3) playSfx('reveal')
-    }, DUR[tier])
-    return () => window.clearTimeout(t)
-  }, [etapa, tier])
+    if (reduced) {
+      pocoSom(tier === 0 ? 'flop' : 'revela', tier)
+      return
+    }
+    const ts: number[] = []
+    const em = (ms: number, fn: () => void) => ts.push(window.setTimeout(fn, ms))
+    if (tier === 0) {
+      pocoSom('subida', 0)
+      em(380, () => pocoSom('flop'))
+      em(700, () => pocoSom('poeira'))
+    } else if (falso) {
+      pocoSom('subida', 1)
+      em(FALSO_MS, () => pocoSom('falso'))
+      em(SURTO_MS, () => pocoSom('subida', tier))
+      em(EMERGE[tier], () => pocoSom('revela', tier))
+    } else {
+      pocoSom('subida', tier)
+      em(EMERGE[tier] - 60, () => pocoSom('revela', tier))
+    }
+    // (as capturas congelam a revelação quadro a quadro com window.__pocoCongelado; no jogo é sempre falso)
+    const fim = () => ((window as unknown as { __pocoCongelado?: boolean }).__pocoCongelado ? em(150, fim) : setEtapa('pronto'))
+    em(DUR[tier], fim)
+    return () => ts.forEach((t) => window.clearTimeout(t))
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+  const pular = () => {
+    pocoSilencio()
+    playSfx('click')
+    setEtapa('pronto')
+  }
+  const cor = LUZ[tier === 0 ? 'lixo' : (r.item?.raridade ?? 'comum')]
+  const vars = { '--c': cor, '--forca': String(0.45 + tier * 0.14), '--emerge': `${EMERGE[tier]}ms` } as CSSProperties
 
   const nomeItem = r.categoria === 'lixo' ? (r.lixo?.nome ?? 'Nada') : (r.item?.nome ?? '')
   const raios = tier >= 4 ? 'ouro' : tier === 3 ? 'ame' : 'prata'
 
   return (
     <div role="dialog" aria-modal="true" aria-label={`Resultado do balde: ${nomeItem}`} className="absolute inset-0 z-40 overflow-hidden">
-      <div className={cn('absolute inset-0 transition-colors duration-500', tier >= 3 ? 'bg-[#09080e]/90' : 'bg-[#0c0c0e]/86')} />
+      <div className={cn('absolute inset-0 transition-colors duration-500', tier >= 3 ? 'bg-dv-ink/92' : 'bg-dv-ink/86')} />
+      {/* fundo vinho que sobe do poço: mais forte quanto mais raro */}
+      <div className="absolute inset-x-0 bottom-0 h-2/3 bg-[radial-gradient(80%_70%_at_50%_100%,rgb(var(--dv-amethyst-rgb)/0.32),transparent_75%)]" style={{ opacity: tier === 0 ? 0.35 : 0.55 + tier * 0.1 } as CSSProperties} />
 
       {etapa === 'abrindo' ? (
-        <div className="absolute inset-0 flex flex-col items-center justify-center">
-          {tier > 0 && (
-            <img src={`${ART}/raios-${raios}.webp`} alt="" draggable={false} className="poco-raios-in pointer-events-none absolute left-1/2 top-[40%] w-[165%] max-w-none" style={{ animationDuration: `${DUR[tier]}ms` } as CSSProperties} />
-          )}
-          {tier >= 4 && <img src={`${ART}/raios-ame.webp`} alt="" draggable={false} className="poco-raios-in-rev pointer-events-none absolute left-1/2 top-[40%] w-[125%] max-w-none" />}
-          {/* aro de raridade: runas, joias e brasão crescem com o nível */}
-          {tier > 0 && (
-            <img src={`${ART}/aro-${tier}.webp`} alt="" draggable={false} className="poco-aro-in pointer-events-none absolute left-1/2 top-[40%] w-[78%] max-w-[320px]" style={{ animationDuration: `${DUR[tier]}ms` } as CSSProperties} />
-          )}
-          {/* o prêmio emerge da água: sombra que se dissolve sobre a arte real */}
-          <div className="absolute left-1/2 top-[40%] size-44 -translate-x-1/2 -translate-y-1/2">
-            <div className="poco-emergir absolute inset-0" style={{ animationDuration: `${DUR[tier]}ms` } as CSSProperties}>
-              <PremioArte r={r} nome={nome} />
-              <div className="poco-sombra-sai absolute inset-0" style={{ animationDuration: `${DUR[tier]}ms` } as CSSProperties}>
-                <PremioArte r={r} nome={nome} silhueta />
+        <div className="absolute inset-0 flex flex-col items-center justify-center" style={vars}>
+          {/* a boca do poço acende embaixo */}
+          <span aria-hidden="true" className="poco-boca-luz absolute bottom-[14%] left-1/2 h-[9%] w-[70%] rounded-[50%]" />
+          {tier === 0 ? (
+            <>
+              {/* lixo: a luz tosse cinza e desiste */}
+              <span aria-hidden="true" className="poco-coluna poco-coluna-murcha absolute bottom-[18%] left-1/2 h-[46%] w-[30%]" />
+              <div className="poco-cai-lixo absolute left-1/2 top-[40%] size-40">
+                <PremioArte r={r} nome={nome} />
               </div>
-            </div>
-          </div>
-          <img src={`${ART}/respingo.webp`} alt="" draggable={false} className={cn('poco-respingo pointer-events-none absolute left-1/2 top-[55%] w-[86%] max-w-[340px]', tier === 0 && 'opacity-50 grayscale')} />
-          <p className="dv-label absolute bottom-[22%] text-[11px] text-dv-text-2">{tier === 0 ? 'Algo pinga do balde…' : tier >= 3 ? 'O poço responde' : 'O balde se abre'}</p>
+              {particulas(14, 3).map((p, i) => (
+                <span key={i} aria-hidden="true" className="poco-poeira absolute top-[48%] rounded-full bg-[#8a8784]" style={{ left: `${p.x}%`, width: p.s + 1, height: p.s + 1, animationDelay: `${420 + p.d * 300}ms`, '--px': `${(p.x - 50) * 1.6}px` } as CSSProperties} />
+              ))}
+              <span aria-hidden="true" className="poco-sopro absolute left-1/2 top-[52%] h-16 w-48 rounded-[50%] bg-[radial-gradient(closest-side,rgba(138,135,132,0.55),transparent)]" />
+            </>
+          ) : (
+            <>
+              {/* coluna de luz: a cor e a força dizem a raridade; raro+ tem falsa partida em prata */}
+              {falso && <span aria-hidden="true" className="poco-coluna poco-coluna-falsa absolute bottom-[18%] left-1/2 h-[78%] w-[34%]" />}
+              <span
+                aria-hidden="true"
+                className={cn('poco-coluna absolute bottom-[18%] left-1/2 h-[82%]', falso ? 'poco-coluna-surto w-[58%]' : 'poco-coluna-sobe w-[40%]')}
+              />
+              {/* partículas em camadas: subindo com a luz (mais e mais rápidas pela raridade) */}
+              {particulas(6 + tier * 5, tier).map((p, i) => (
+                <span
+                  key={i}
+                  aria-hidden="true"
+                  className="poco-mote absolute bottom-[18%] rotate-45"
+                  style={{ left: `${p.x}%`, width: p.s, height: p.s, animationDelay: `${(falso ? SURTO_MS : 0) + p.d * 600}ms`, animationDuration: `${p.t * (1.2 - tier * 0.08)}s` } as CSSProperties}
+                />
+              ))}
+              {/* lampejo no instante da revelação */}
+              <span aria-hidden="true" className="poco-lampejo-revela absolute inset-0" />
+              <img src={`${ART}/raios-${raios}.webp`} alt="" draggable={false} className="poco-raios-in poco-raro-tom pointer-events-none absolute left-1/2 top-[40%] w-[165%] max-w-none" style={{ animationDelay: `var(--emerge)`, animationDuration: `${DUR[tier] - EMERGE[tier] + 300}ms` } as CSSProperties} />
+              {tier >= 4 && <img src={`${ART}/raios-ame.webp`} alt="" draggable={false} className="poco-raios-in-rev poco-raro-tom pointer-events-none absolute left-1/2 top-[40%] w-[125%] max-w-none" style={{ animationDelay: `var(--emerge)` } as CSSProperties} />}
+              <img src={`${ART}/aro-${tier}.webp`} alt="" draggable={false} className="poco-aro-in poco-raro-tom pointer-events-none absolute left-1/2 top-[40%] w-[78%] max-w-[320px]" style={{ animationDelay: `var(--emerge)`, animationDuration: `${DUR[tier] - EMERGE[tier]}ms` } as CSSProperties} />
+              {/* o prêmio emerge da luz: sombra que se dissolve sobre a arte real, com um brilho que varre */}
+              <div className="absolute left-1/2 top-[40%] size-44 -translate-x-1/2 -translate-y-1/2">
+                <div className="poco-emergir absolute inset-0" style={{ animationDelay: `var(--emerge)`, animationDuration: `${Math.max(700, DUR[tier] - EMERGE[tier])}ms` } as CSSProperties}>
+                  <PremioArte r={r} nome={nome} />
+                  <div className="poco-sombra-sai absolute inset-0" style={{ animationDelay: `var(--emerge)` } as CSSProperties}>
+                    <PremioArte r={r} nome={nome} silhueta />
+                  </div>
+                  <span aria-hidden="true" className="poco-varre absolute inset-0 overflow-hidden" style={{ animationDelay: `calc(var(--emerge) + 450ms)` } as CSSProperties} />
+                </div>
+              </div>
+              {/* estouro de faíscas na revelação */}
+              {particulas(tier >= 3 ? 18 : 8, tier + 7).map((p, i) => (
+                <span
+                  key={`f${i}`}
+                  aria-hidden="true"
+                  className="poco-faisca absolute left-1/2 top-[40%] rotate-45"
+                  style={{ width: p.s, height: p.s, '--ang': `${p.ang}deg`, '--dist': `${p.dist * (tier >= 3 ? 1.3 : 0.9)}px`, animationDelay: `calc(var(--emerge) + ${Math.round(p.d * 120)}ms)` } as CSSProperties}
+                />
+              ))}
+            </>
+          )}
+          <img src={`${ART}/respingo.webp`} alt="" draggable={false} className={cn('poco-respingo poco-dessatura pointer-events-none absolute left-1/2 top-[64%] w-[70%] max-w-[300px]', tier === 0 && 'opacity-50 grayscale')} />
+          <p className="dv-label absolute bottom-[24%] text-[11px] text-dv-text-2 [text-shadow:0_1px_6px_#000]">{tier === 0 ? 'Algo pinga do balde…' : tier >= 3 ? 'O poço responde' : 'O balde se abre'}</p>
           <button
             type="button"
-            onClick={() => {
-              playSfx('click')
-              setEtapa('pronto')
-            }}
+            onClick={pular}
             className="dv-focus absolute right-3 top-3 flex min-h-11 items-center gap-2 px-3 font-mono text-[11px] uppercase tracking-[0.18em] text-dv-text-2 hover:text-dv-text"
           >
             Pular
@@ -93,14 +189,25 @@ export function PocoResultadoView({ r, nome, onFechar }: { r: PocoResultado; nom
         </div>
       ) : (
         <div className="devo-scroll absolute inset-0 flex flex-col items-center overflow-y-auto px-4 pb-5 pt-4">
-          {tier >= 2 && <img src={`${ART}/raios-${raios}.webp`} alt="" draggable={false} className="poco-raios-lento pointer-events-none absolute left-1/2 top-[27%] w-[118%] max-w-none opacity-60" />}
+          {tier >= 2 && <img src={`${ART}/raios-${raios}.webp`} alt="" draggable={false} className="poco-raios-lento poco-raro-tom pointer-events-none absolute left-1/2 top-[27%] w-[118%] max-w-none opacity-60" />}
+          {/* luz da raridade atrás da moldura; lixo: poeira cinza assentando */}
+          <span aria-hidden="true" className="pointer-events-none absolute left-1/2 top-[30%] size-[120%] -translate-x-1/2 -translate-y-1/2 bg-[radial-gradient(closest-side,rgb(var(--c)/0.32),transparent_70%)]" style={{ ...vars, opacity: tier === 0 ? 0.4 : 0.5 + tier * 0.12 } as CSSProperties} />
+          {tier >= 3 &&
+            particulas(8, tier + 13).map((p, i) => (
+              <span key={i} aria-hidden="true" className="poco-mote poco-mote-lento pointer-events-none absolute top-[44%] rotate-45" style={{ ...vars, left: `${p.x}%`, width: p.s, height: p.s, animationDelay: `${p.d * 3}s`, animationDuration: `${3.5 + p.t * 2}s` } as CSSProperties} />
+            ))}
+          {tier === 0 &&
+            particulas(8, 21).map((p, i) => (
+              <span key={i} aria-hidden="true" className="poco-poeira poco-poeira-lenta pointer-events-none absolute top-[22%] rounded-full bg-[#8a8784]" style={{ left: `${p.x}%`, width: p.s, height: p.s, animationDelay: `${p.d * 2}s`, '--px': `${(p.x - 50) * 0.4}px` } as CSSProperties} />
+            ))}
           <MolduraResultado raridade={r.item?.raridade} lixo={tier === 0} className="poco-reveal mt-auto w-full max-w-[360px]">
             <div className={cn('flex flex-col items-center px-6 text-center', tier === 0 ? 'pb-5 pt-5' : 'pb-7 pt-12')}>
-              <div className={cn('relative grid place-items-center', tier === 0 ? 'size-28' : 'size-40')}>
+              <div className={cn('relative grid place-items-center', tier === 0 ? 'poco-lixo-murcho size-28' : 'size-40')} style={vars}>
                 <PremioArte r={r} nome={nome} />
+                {tier > 0 && <span aria-hidden="true" className="poco-varre absolute inset-0 overflow-hidden" style={{ animationDelay: '250ms' } as CSSProperties} />}
               </div>
               <p className={cn('dv-label mt-2 flex items-center gap-2 text-[10.5px]', tier === 0 ? 'text-dv-text-3' : 'text-dv-gold')}>
-                {CATEGORIA_LABEL[r.categoria]}
+                {CATEGORIA_RESULTADO_LABEL[r.categoria]}
                 {r.gratis && <span className="text-dv-text-3">· giro grátis</span>}
               </p>
               <h2 className={cn('mt-2 text-balance font-display font-semibold uppercase leading-tight tracking-[0.08em]', tier === 0 ? 'text-[21px] text-dv-text-2' : 'text-[25px] text-dv-porcelain')}>
@@ -115,7 +222,7 @@ export function PocoResultadoView({ r, nome, onFechar }: { r: PocoResultado; nom
               </Button>
               <details className="mt-3 w-full text-left">
                 <summary className="dv-focus flex min-h-11 cursor-pointer list-none items-center justify-center gap-2 font-mono text-[10px] uppercase tracking-[0.16em] text-dv-text-3">
-                  <DracmaIcon raridade="comum" className="size-4 opacity-70" />
+                  <MoedaPoco chave="dracma_comum" tamanho={16} className="size-4 opacity-80" />
                   Selo do sorteio · {r.acertos} {r.acertos === 1 ? 'acerto' : 'acertos'}
                 </summary>
                 <dl className="mt-1 grid gap-1 break-all font-mono text-[10.5px] leading-snug text-dv-text-3">
@@ -154,10 +261,10 @@ function SeloRaridade({ raridade, provisorio }: { raridade: ItemRarity; provisor
   const t = TIER[raridade]
   return (
     <p className="mt-2.5 flex items-center gap-2">
-      <span className="flex items-center gap-1.5 border border-dv-line-strong bg-[#0c0c0e] py-1 pl-1.5 pr-2.5">
+      <span className="flex items-center gap-1.5 border border-dv-line-strong bg-dv-ink py-1 pl-1.5 pr-2.5">
         <span className="flex gap-0.5" aria-hidden="true">
           {Array.from({ length: 4 }, (_, i) => (
-            <span key={i} className={cn('size-2 rotate-45', i < t ? (t >= 3 ? 'bg-dv-amethyst shadow-[0_0_6px_rgba(138,124,200,0.9)]' : 'bg-dv-gold') : 'border border-dv-line-strong')} />
+            <span key={i} className={cn('size-2 rotate-45', i < t ? (t >= 3 ? 'bg-dv-amethyst shadow-[0_0_6px_rgb(var(--dv-amethyst-rgb)/0.9)]' : 'bg-dv-gold') : 'border border-dv-line-strong')} />
           ))}
         </span>
         <span className={cn('dv-label text-[10.5px]', t >= 3 ? 'text-dv-amethyst-text' : 'text-dv-text-2')}>{ITEM_RARITY_LABEL[raridade]}</span>
@@ -171,13 +278,26 @@ function SeloRaridade({ raridade, provisorio }: { raridade: ItemRarity; provisor
 
 export function PremioArte({ r, nome, silhueta = false }: { r: PocoResultado; nome: string; silhueta?: boolean }) {
   const cls = cn('relative size-full object-contain', silhueta && 'brightness-0')
-  if (r.categoria === 'lixo') return <img src={`${ART}/lixo-${r.lixo?.id ?? 'nada'}.webp`} alt="" draggable={false} className={cn(cls, !silhueta && 'opacity-90 grayscale-[0.3]')} />
+  if (r.categoria === 'lixo') return <LixoPoco id={r.lixo?.id ?? 'nada'} imagem={r.lixo?.imagem} tamanho={176} className={cn(cls, !silhueta && 'opacity-90 grayscale-[0.3]')} />
+  const meta = r.item?.meta ?? {}
+  // Prêmio do pool do Owner: imagem própria, carta, Tempo ou item do catálogo.
+  if (r.categoria === 'premio' && r.item) {
+    const img = typeof meta.imagem === 'string' ? meta.imagem : null
+    const halo = !silhueta && <span aria-hidden="true" className="poco-halo absolute inset-[-12%] bg-[radial-gradient(50%_50%_at_50%_50%,rgb(var(--c,220_218_214)/0.5),rgb(var(--c,220_218_214)/0.08)_60%,transparent_72%)]" />
+    if (img) return <>{halo}<img src={img} alt="" draggable={false} className={cls} /></>
+    if (meta.premio === 'tempo') return <>{halo}<Ampulheta className={cls} /></>
+    if (meta.premio === 'carta') return <>{halo}<CartaMini className={cn(cls, 'p-4')} /></>
+    if (r.item.kind === 'cosmetico') return <Cosmetico r={r} nome={nome} silhueta={silhueta} />
+    if (r.item.kind === 'moeda') return <>{halo}<MoedaPoco chave={r.item.key} raridade={r.item.raridade} tamanho={176} className={cn(cls, 'p-6')} /></>
+    const rec = r.item.kind === 'capsula' ? 'capsula' : r.item.kind === 'essencia' ? 'essencia' : 'fragmento'
+    return <>{halo}<RecursoPoco id={rec} tamanho={176} className={cls} /></>
+  }
   if (r.categoria === 'cosmetico' && r.item) return <Cosmetico r={r} nome={nome} silhueta={silhueta} />
   const src = r.categoria === 'capsula' ? 'capsula' : r.categoria === 'essencia' ? 'essencia' : 'fragmento'
   return (
     <>
-      {!silhueta && <span aria-hidden="true" className="poco-halo absolute inset-[-12%] bg-[radial-gradient(50%_50%_at_50%_50%,rgba(138,124,200,0.5),rgba(138,124,200,0.08)_60%,transparent_72%)]" />}
-      <img src={`${ART}/${src}.webp`} alt="" draggable={false} className={cls} />
+      {!silhueta && <span aria-hidden="true" className="poco-halo absolute inset-[-12%] bg-[radial-gradient(50%_50%_at_50%_50%,rgb(var(--c,220_218_214)/0.5),rgb(var(--c,220_218_214)/0.08)_60%,transparent_72%)]" />}
+      <RecursoPoco id={src} tamanho={176} className={cls} />
     </>
   )
 }
@@ -204,7 +324,7 @@ function Cosmetico({ r, nome, silhueta }: { r: PocoResultado; nome: string; silh
     if (cat === 'emblema')
       return (
         <div className={cn('relative grid size-full place-items-center', silhueta && 'brightness-0')}>
-          <span aria-hidden="true" className="poco-halo absolute inset-[-10%] bg-[radial-gradient(50%_50%_at_50%_50%,rgba(194,185,236,0.55),transparent_70%)]" />
+          <span aria-hidden="true" className="poco-halo absolute inset-[-10%] bg-[radial-gradient(50%_50%_at_50%_50%,rgb(var(--dv-amethyst-text-rgb)/0.55),transparent_70%)]" />
           <Emblema def={def} tamanho={138} className="relative" />
         </div>
       )
@@ -233,7 +353,7 @@ function Cosmetico({ r, nome, silhueta }: { r: PocoResultado; nome: string; silh
   if (cat === 'emblema') {
     return (
       <div className={cn('relative size-full', silhueta && 'brightness-0')}>
-        <span aria-hidden="true" className="poco-halo absolute inset-[-10%] bg-[radial-gradient(50%_50%_at_50%_50%,rgba(194,185,236,0.55),transparent_70%)]" />
+        <span aria-hidden="true" className="poco-halo absolute inset-[-10%] bg-[radial-gradient(50%_50%_at_50%_50%,rgb(var(--dv-amethyst-text-rgb)/0.55),transparent_70%)]" />
         {asset ? <img src={asset} alt="" className="relative size-full object-contain" /> : <EmblemaOrnamental tier={t} />}
       </div>
     )
@@ -249,7 +369,7 @@ function Cosmetico({ r, nome, silhueta }: { r: PocoResultado; nome: string; silh
 
 function Avatar({ nome, className, fs = 30 }: { nome: string; className?: string; fs?: number }) {
   return (
-    <span className={cn('grid place-items-center overflow-hidden rounded-full bg-[#121214] bg-[url(/images/os/marmore-negro.webp)] bg-[length:240px_240px] shadow-[inset_0_0_0_1px_rgba(238,237,235,0.25)]', className)}>
+    <span className={cn('grid place-items-center overflow-hidden rounded-full bg-dv-ink-2 bg-[url(/images/os/marmore-negro.webp)] bg-[length:240px_240px] shadow-[inset_0_0_0_1px_rgb(var(--dv-text-rgb)/0.25)]', className)}>
       <span className="font-display font-semibold uppercase text-dv-porcelain" style={{ fontSize: fs }}>{(nome || '?').slice(0, 1)}</span>
     </span>
   )

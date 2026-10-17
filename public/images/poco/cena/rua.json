@@ -1,0 +1,26 @@
+{
+  "asset": "img:/images/poco/cena/rua",
+  "imagem": {
+    "base": "/images/poco/cena/rua",
+    "tamanhos": [
+      512,
+      768,
+      1024,
+      1536
+    ],
+    "poco": {
+      "camada": "/images/poco/cena/poco-<lado>.webp",
+      "base_x": 0.5,
+      "base_y": 0.83,
+      "largura": 0.56,
+      "obs": "centro da base do poço em fração da rua; largura do poço em fração da largura da rua (praça vazia no fim da rua)"
+    }
+  },
+  "origem": {
+    "pedido": "poco-cena",
+    "variacao": "v02",
+    "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+    "seed": 10302,
+    "importado": null
+  }
+}

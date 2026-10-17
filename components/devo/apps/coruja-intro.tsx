@@ -229,7 +229,7 @@ export function CorujaIntro() {
     >
       {/* salão de mármore negro: veios, luz de vela fria vinda do alto e xadrez quase invisível no chão */}
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 opacity-85" style={marbleBlack(640)} />
-      <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(70%_45%_at_50%_18%,rgba(236,229,216,0.09),transparent_70%),radial-gradient(60%_40%_at_15%_85%,rgba(111,107,130,0.14),transparent_70%)]" />
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(70%_45%_at_50%_18%,rgba(236,229,216,0.09),transparent_70%),radial-gradient(60%_40%_at_15%_85%,rgb(var(--dv-violet-rgb)/0.14),transparent_70%)]" />
       <div aria-hidden="true" className="dv-checker-faint pointer-events-none absolute inset-x-0 bottom-0 h-2/5 opacity-50 [mask-image:linear-gradient(to_top,#000,transparent)]" />
 
       <header className="relative z-10 flex items-center gap-3 px-4 pt-3 @md:px-5">
@@ -239,10 +239,10 @@ export function CorujaIntro() {
               <span
                 className={cn(
                   'relative h-[3px] transition-all duration-500',
-                  i < chapterIndex ? 'bg-[#a59d90]' : i === chapterIndex ? 'bg-[#eeedeb] shadow-[0_0_10px_rgba(138,124,200,0.8)]' : 'bg-white/15',
+                  i < chapterIndex ? 'bg-[#a59d90]' : i === chapterIndex ? 'bg-dv-text shadow-[0_0_10px_rgb(var(--dv-amethyst-rgb)/0.8)]' : 'bg-white/15',
                 )}
               />
-              <span className={cn('hidden truncate font-sans text-[10px] font-medium uppercase tracking-[0.16em] @lg:block', i === chapterIndex ? 'text-[#eeedeb]' : 'text-white/40')}>{c}</span>
+              <span className={cn('hidden truncate font-sans text-[10px] font-medium uppercase tracking-[0.16em] @lg:block', i === chapterIndex ? 'text-dv-text' : 'text-white/40')}>{c}</span>
               <span className="sr-only">{i < chapterIndex ? 'concluída' : i === chapterIndex ? 'atual' : 'pendente'}</span>
             </li>
           ))}
@@ -253,7 +253,7 @@ export function CorujaIntro() {
             playSfx('click')
             finish()
           }}
-          className="dv-focus flex min-h-11 items-center gap-1.5 px-3 font-sans text-[10px] font-medium uppercase tracking-[0.18em] text-white/60 shadow-[inset_0_0_0_1px_rgba(238,237,235,0.22)] transition-colors hover:text-white hover:shadow-[inset_0_0_0_1px_#bab09f]"
+          className="dv-focus flex min-h-11 items-center gap-1.5 px-3 font-sans text-[10px] font-medium uppercase tracking-[0.18em] text-white/60 shadow-[inset_0_0_0_1px_rgb(var(--dv-text-rgb)/0.22)] transition-colors hover:text-white hover:shadow-[inset_0_0_0_1px_#bab09f]"
         >
           <FastForward className="size-3.5" aria-hidden="true" />
           Pular
@@ -299,11 +299,11 @@ export function CorujaIntro() {
           {step.kind === 'system' ? (
             <p className="py-3 text-center font-sans text-[12px] font-medium uppercase tracking-[0.24em] text-white/70">{typer.shown}</p>
           ) : (
-            <p className="min-h-[3.5rem] font-serif text-[19px] leading-relaxed text-[#eeedeb] @md:text-xl" aria-live="polite">
+            <p className="min-h-[3.5rem] font-serif text-[19px] leading-relaxed text-dv-text @md:text-xl" aria-live="polite">
               {spoken ? (
                 <>
                   <FalaComEfeito text={falaTexto} shown={typer.count} />
-                  {!typer.done && <span className="ml-0.5 inline-block h-5 w-px translate-y-1 animate-blink bg-[#cbc5e8]" aria-hidden="true" />}
+                  {!typer.done && <span className="ml-0.5 inline-block h-5 w-px translate-y-1 animate-blink bg-dv-amethyst-text" aria-hidden="true" />}
                 </>
               ) : (
                 <span className="italic text-white/60">Pergunte o que quiser. Ou não.</span>
@@ -322,10 +322,10 @@ export function CorujaIntro() {
                       onClick={() => ask(q)}
                       className={cn(
                         'dv-focus group flex h-full min-h-11 w-full items-center gap-2.5 px-3 py-2 text-left font-sans text-[14px] leading-snug transition-colors',
-                        done ? 'text-white/45 shadow-[inset_0_0_0_1px_rgba(238,237,235,0.1)]' : 'text-[#eeedeb] shadow-[inset_0_0_0_1px_rgba(238,237,235,0.28)] hover:bg-white/[0.05] hover:shadow-[inset_0_0_0_1px_#bab09f]',
+                        done ? 'text-white/45 shadow-[inset_0_0_0_1px_rgb(var(--dv-text-rgb)/0.1)]' : 'text-dv-text shadow-[inset_0_0_0_1px_rgb(var(--dv-text-rgb)/0.28)] hover:bg-white/[0.05] hover:shadow-[inset_0_0_0_1px_#bab09f]',
                       )}
                     >
-                      <HelpCircle className={cn('size-4 shrink-0', done ? 'text-white/30' : 'text-[#cbc5e8]')} aria-hidden="true" />
+                      <HelpCircle className={cn('size-4 shrink-0', done ? 'text-white/30' : 'text-dv-amethyst-text')} aria-hidden="true" />
                       {q.prompt}
                       {done && <span className="sr-only"> (já perguntado)</span>}
                     </button>
@@ -346,7 +346,7 @@ export function CorujaIntro() {
               Voltar
             </button>
             <span className="hidden items-center gap-2 font-sans text-[10px] uppercase tracking-[0.18em] text-white/40 @md:flex" aria-hidden="true">
-              <kbd className="px-1.5 py-0.5 font-mono shadow-[inset_0_0_0_1px_rgba(238,237,235,0.25)]">Espaço</kbd>
+              <kbd className="px-1.5 py-0.5 font-mono shadow-[inset_0_0_0_1px_rgb(var(--dv-text-rgb)/0.25)]">Espaço</kbd>
               avançar
             </span>
             <button
@@ -356,8 +356,8 @@ export function CorujaIntro() {
               className={cn(
                 'dv-focus dv-cut-diag flex min-h-11 items-center gap-1.5 px-5 font-sans text-[12px] font-semibold uppercase tracking-[0.2em] transition-[background-color,box-shadow,color]',
                 typer.done && blocked
-                  ? 'cursor-not-allowed bg-white/[0.03] text-[#eeedeb]/80 shadow-[inset_0_0_0_1px_rgba(220,220,223,0.5)]'
-                  : 'bg-[#eeedeb] text-[#0c0c0e] hover:bg-white hover:shadow-[0_0_22px_-4px_rgba(138,124,200,0.8)]',
+                  ? 'cursor-not-allowed bg-white/[0.03] text-dv-text/80 shadow-[inset_0_0_0_1px_rgba(220,220,223,0.5)]'
+                  : 'bg-dv-text text-dv-ink hover:bg-white hover:shadow-[0_0_22px_-4px_rgb(var(--dv-amethyst-rgb)/0.8)]',
               )}
               style={{ '--dv-cut': '10px' } as CSSProperties}
             >
@@ -379,7 +379,7 @@ function DialogueBox({ speaker, children }: { speaker: string | null; children: 
     <div className="dv-record-panel relative px-4 pb-2 pt-6 shadow-[0_24px_50px_-20px_rgba(0,0,0,1)] @md:px-6">
       <BrassCorners size={22} inset={3} />
       {speaker && (
-        <span className="dv-porcelain absolute -top-3.5 left-5 flex items-center gap-2 px-4 py-1 font-serif text-[15px] uppercase tracking-[0.3em] text-[#0c0c0e] shadow-[0_6px_14px_-6px_rgba(0,0,0,0.9),inset_0_0_0_1px_rgba(13,13,15,0.25)] [clip-path:polygon(8px_0,calc(100%-8px)_0,100%_50%,calc(100%-8px)_100%,8px_100%,0_50%)]">
+        <span className="dv-porcelain absolute -top-3.5 left-5 flex items-center gap-2 px-4 py-1 font-serif text-[15px] uppercase tracking-[0.3em] text-dv-ink shadow-[0_6px_14px_-6px_rgba(0,0,0,0.9),inset_0_0_0_1px_rgba(13,13,15,0.25)] [clip-path:polygon(8px_0,calc(100%-8px)_0,100%_50%,calc(100%-8px)_100%,8px_100%,0_50%)]">
           {speaker}
         </span>
       )}
@@ -391,7 +391,7 @@ function DialogueBox({ speaker, children }: { speaker: string | null; children: 
 /** Vitrine da lição: painel de veludo com régua de HUD no topo. */
 function SceneFrame({ children }: { children: ReactNode }) {
   return (
-    <div className="dv-record-panel relative px-5 pb-5 pt-4 @md:px-7" style={{ backgroundColor: '#151517' }}>
+    <div className="dv-record-panel relative px-5 pb-5 pt-4 @md:px-7" style={{ backgroundColor: 'var(--dv-ink-2)' }}>
       <HudRule label="Cartas DEVO · aula" code="OWL" className="mb-4 opacity-80" />
       {children}
     </div>
@@ -425,10 +425,10 @@ function TierTile({
           'dv-focus relative flex min-h-12 w-full items-center justify-center px-2 font-sans text-[12px] font-medium uppercase tracking-[0.16em] transition-colors',
           wide && 'col-span-2',
           state === 'right'
-            ? 'bg-[#eeedeb] text-[#0c0c0e] shadow-[0_0_20px_-4px_rgba(138,124,200,0.8)]'
+            ? 'bg-dv-text text-dv-ink shadow-[0_0_20px_-4px_rgb(var(--dv-amethyst-rgb)/0.8)]'
             : state === 'wrong'
-              ? 'text-[#ff8a92] shadow-[inset_0_0_0_1px_#a3121f]'
-              : 'text-[#eeedeb] shadow-[inset_0_0_0_1px_rgba(238,237,235,0.28)] hover:bg-white/[0.05] hover:shadow-[inset_0_0_0_1px_#bab09f]',
+              ? 'text-[#ff8a92] shadow-[inset_0_0_0_1px_var(--dv-blood)]'
+              : 'text-dv-text shadow-[inset_0_0_0_1px_rgb(var(--dv-text-rgb)/0.28)] hover:bg-white/[0.05] hover:shadow-[inset_0_0_0_1px_#bab09f]',
         )}
       >
         {label}
@@ -437,7 +437,7 @@ function TierTile({
     )
   }
   return (
-    <div className="flex flex-col items-center gap-2 px-2 pb-3 pt-3.5 text-center shadow-[inset_0_0_0_1px_rgba(238,237,235,0.12)]">
+    <div className="flex flex-col items-center gap-2 px-2 pb-3 pt-3.5 text-center shadow-[inset_0_0_0_1px_rgb(var(--dv-text-rgb)/0.12)]">
       {rarity ? <RarityGem rarity={rarity} className="h-12 w-8" /> : null}
       <span
         className={cn('mt-0.5 font-sans text-[12px] font-semibold uppercase tracking-[0.18em]', rarity === 'promocional' && 'dv-txt-holo', rarity === 'unica' && 'dv-txt-unica')}
@@ -541,13 +541,13 @@ function SceneVisual({ visual, sampleCards, quiz }: { visual: Visual; sampleCard
     return (
       <div className="grid grid-cols-3 gap-2">
         {roles.map(({ label, icon: Icon, hint }, i) => (
-          <div key={label} className="flex animate-dv-rise flex-col items-center gap-2 px-1.5 pb-3 pt-3.5 text-center shadow-[inset_0_0_0_1px_rgba(238,237,235,0.12)]" style={{ animationDelay: `${i * 100}ms` }}>
+          <div key={label} className="flex animate-dv-rise flex-col items-center gap-2 px-1.5 pb-3 pt-3.5 text-center shadow-[inset_0_0_0_1px_rgb(var(--dv-text-rgb)/0.12)]" style={{ animationDelay: `${i * 100}ms` }}>
             <span className="grid size-12 place-items-center rounded-full p-[2px]" style={{ background: RARITY_SKIN.incomum.frame }}>
-              <span className="grid size-full place-items-center rounded-full bg-[radial-gradient(circle_at_50%_35%,#2c2c31,#0c0c0e_72%)] text-[#eeedeb]">
+              <span className="grid size-full place-items-center rounded-full bg-[radial-gradient(circle_at_50%_35%,var(--dv-ink-4),var(--dv-ink)_72%)] text-dv-text">
                 <Icon className="size-5" strokeWidth={1.4} aria-hidden="true" />
               </span>
             </span>
-            <span className="font-sans text-[11px] font-semibold uppercase tracking-[0.16em] text-[#eeedeb]">{label}</span>
+            <span className="font-sans text-[11px] font-semibold uppercase tracking-[0.16em] text-dv-text">{label}</span>
             <span className="font-serif text-[13px] italic leading-snug text-white/65">{hint}</span>
           </div>
         ))}
@@ -560,9 +560,9 @@ function SceneVisual({ visual, sampleCards, quiz }: { visual: Visual; sampleCard
         {getCollections().map((c, i) => (
           <li key={c.name} className={cn('flex animate-dv-rise items-center gap-3 py-2.5', i > 0 && 'border-t border-white/10')} style={{ animationDelay: `${i * 100}ms` }}>
             <span className="grid size-9 shrink-0 place-items-center rounded-full p-[1.5px]" style={{ background: RARITY_SKIN.incomum.frame }}>
-              <span className="grid size-full place-items-center rounded-full bg-[#0c0c0e] font-serif text-[15px] text-[#eeedeb]">{ROMAN_CH[i] ?? i + 1}</span>
+              <span className="grid size-full place-items-center rounded-full bg-dv-ink font-serif text-[15px] text-dv-text">{ROMAN_CH[i] ?? i + 1}</span>
             </span>
-            <span className="flex-1 font-serif text-[19px] leading-tight text-[#eeedeb]">{c.name}</span>
+            <span className="flex-1 font-serif text-[19px] leading-tight text-dv-text">{c.name}</span>
             <span className="font-mono text-[11px] uppercase tracking-[0.12em] text-white/60">{c.size} cartas</span>
           </li>
         ))}
@@ -579,7 +579,7 @@ function SceneVisual({ visual, sampleCards, quiz }: { visual: Visual; sampleCard
       <dl className="flex min-w-0 flex-col gap-4">
         <div className="border-l border-[#bab09f] pl-3">
           <dt className="font-sans text-[10px] font-medium uppercase tracking-[0.18em] text-white/60">Ordem na Coleção</dt>
-          <dd className="font-impact text-[34px] font-normal leading-none tracking-[0.02em] tabular-nums text-[#eeedeb]">{sampleMeta.orderLabel}</dd>
+          <dd className="font-impact text-[34px] font-normal leading-none tracking-[0.02em] tabular-nums text-dv-text">{sampleMeta.orderLabel}</dd>
           <dd className="mt-1 font-sans text-[11px] uppercase tracking-[0.14em] text-white/65">{sampleMeta.collection}</dd>
         </div>
         <div className="border-l border-white/25 pl-3">

@@ -334,7 +334,7 @@ function EditorAfinidades({ cfg, provisorio, agir }: { cfg: AfinidadesConfig; pr
       </div>
       {invalidas.length > 0 && <p className="mt-2 font-mono text-[11px] leading-relaxed text-in-alert">Cada posição de 1 a 6 uma vez só: {invalidas.join(', ')}.</p>}
       <label className="mt-3 flex min-h-11 items-center gap-2.5 font-sans text-[14px] text-in-fg">
-        <input type="checkbox" checked={final} onChange={(e) => setFinal(e.target.checked)} className="size-5 accent-[#1c1c1f]" />
+        <input type="checkbox" checked={final} onChange={(e) => setFinal(e.target.checked)} className="size-5 accent-dv-block" />
         Valores finais (o dono confirmou tudo)
       </label>
       <div className="mt-2">
@@ -408,7 +408,7 @@ function ArcanoLinha({
             <p className="font-body text-[14px] leading-relaxed text-in-fg-2">{div.nota}</p>
             {div.confirmar && (
               <label className="mt-1 flex min-h-10 items-center gap-2 font-sans text-[13px] text-in-fg">
-                <input type="checkbox" checked={confirmado} onChange={(e) => onConf(e.target.checked)} className="size-4 accent-[#1c1c1f]" />
+                <input type="checkbox" checked={confirmado} onChange={(e) => onConf(e.target.checked)} className="size-4 accent-dv-block" />
                 Conferido com o dono ({k})
               </label>
             )}

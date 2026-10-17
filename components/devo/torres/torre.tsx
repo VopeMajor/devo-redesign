@@ -55,7 +55,7 @@ export function TelaTorre({
   const andarFicha = ficha ? torre.andares[ficha - 1] : null
 
   return (
-    <div className="absolute inset-0 flex flex-col overflow-hidden bg-[#0b0b0d]">
+    <div className="absolute inset-0 flex flex-col overflow-hidden bg-dv-ink">
       {/* noite: textura de céu, montanhas, árvore seca, névoa */}
       <div aria-hidden="true" className="absolute inset-0 bg-[url(/images/torres/ceu-noite.webp)] bg-cover bg-[position:30%_0%]" />
       <svg aria-hidden="true" viewBox="0 0 390 640" preserveAspectRatio="xMidYMax slice" className="absolute inset-0 size-full">
@@ -73,7 +73,7 @@ export function TelaTorre({
       </svg>
       <div aria-hidden="true" className="tw-drift absolute inset-x-[-30%] bottom-[6%] h-[22%] bg-[url(/images/torres/nevoa.webp)] bg-[length:100%_100%] opacity-50" />
       {/* feixe de luz do alto sobre a escada */}
-      <div aria-hidden="true" className="pointer-events-none absolute left-[2%] top-0 h-full w-[48%] bg-[linear-gradient(180deg,rgba(236,229,216,0.16),rgba(194,185,236,0.05)_55%,transparent)] [clip-path:polygon(30%_0,70%_0,100%_100%,0_100%)] mix-blend-screen" />
+      <div aria-hidden="true" className="pointer-events-none absolute left-[2%] top-0 h-full w-[48%] bg-[linear-gradient(180deg,rgba(236,229,216,0.16),rgb(var(--dv-amethyst-text-rgb)/0.05)_55%,transparent)] [clip-path:polygon(30%_0,70%_0,100%_100%,0_100%)] mix-blend-screen" />
 
       {/* a própria torre ao fundo, à direita (pintada se houver ilustração; senão o desenho vetorial) */}
       <div aria-hidden="true" className="pointer-events-none absolute bottom-[4%] right-[-14%] top-[12%] w-[62%] opacity-40 [mask-image:linear-gradient(to_left,#000_40%,transparent),linear-gradient(to_top,transparent,#000_20%)] [mask-composite:intersect]">

@@ -16,7 +16,7 @@ import { cn } from '@/lib/utils'
  * pintura e travava a página no renderizador por software (abrir o Pulso, clicar na home).
  * Candidato ao kit (substitui a utilidade global de mármore negro).
  */
-export const MARBLE_INK = 'bg-[#121214] bg-[url(/images/os/marmore-negro.webp)] bg-[length:560px_560px]'
+export const MARBLE_INK = 'bg-dv-ink-2 bg-[url(/images/os/marmore-negro.webp)] bg-[length:560px_560px]'
 /** Mármore branco (porcelana com veio cinza): balão do jogador, superfícies claras. */
 export const MARBLE_PORCELAIN = 'bg-[#ecebe8] bg-[url(/images/os/marmore-branco.webp)] bg-[length:560px_560px]'
 
@@ -32,12 +32,15 @@ export function marbleOffset(key: string): CSSProperties {
   return { backgroundPosition: `-${x}px -${Math.floor(y)}px` }
 }
 
-type SlabEdge = 'steel' | 'blood' | 'line'
+type SlabEdge = 'steel' | 'blood' | 'line' | 'amethyst'
 
 const EDGE: Record<SlabEdge, string> = {
-  steel: 'bg-[linear-gradient(135deg,#f4efe6_0%,#6b6357_26%,#bab09f_52%,#5f584d_78%,#ece5d8_100%)]',
+  // aço champanhe acetinado (Refinamento 4): aro dos tampos de destaque
+  steel: 'bg-[image:var(--dv-champagne-grad)]',
+  // aro de ametista (joia): só para o tampo que é o herói da tela
+  amethyst: 'bg-[linear-gradient(135deg,var(--dv-amethyst-light)_0%,var(--dv-amethyst-deep)_30%,var(--dv-champagne)_55%,var(--dv-amethyst-deep)_80%,var(--dv-amethyst-light)_100%)]',
   blood: 'bg-[linear-gradient(135deg,var(--dv-blood-text),var(--dv-blood)_45%,var(--dv-blood-deep))]',
-  line: 'bg-[linear-gradient(135deg,rgba(238,237,235,0.34),rgba(238,237,235,0.12)_45%,rgba(238,237,235,0.26))]',
+  line: 'bg-[linear-gradient(135deg,rgb(var(--dv-champagne-rgb)/0.5),rgb(var(--dv-champagne-rgb)/0.14)_45%,rgb(var(--dv-champagne-rgb)/0.38))]',
 }
 
 /**
@@ -68,7 +71,7 @@ export function MarbleSlab({
   const seed = useId()
   return (
     <Tag
-      className={cn('relative isolate', glow && (edge === 'blood' ? 'drop-shadow-[0_0_18px_rgba(163,18,31,0.4)]' : 'drop-shadow-[0_14px_28px_rgba(0,0,0,0.65)]'), className)}
+      className={cn('relative isolate', glow && (edge === 'blood' ? 'drop-shadow-[0_0_18px_rgb(var(--dv-blood-rgb)/0.4)]' : 'drop-shadow-[0_14px_28px_rgba(0,0,0,0.65)]'), className)}
       style={{ '--dv-cut': `${cut}px` } as CSSProperties}
       {...rest}
     >
@@ -101,7 +104,7 @@ export function StateSeal({ children, tone = 'steel', dot = true, live = false, 
         'dv-cut-diag inline-flex h-7 shrink-0 items-center gap-2 px-3 font-mono text-[11px] font-medium uppercase leading-none tracking-[0.16em]',
         blood
           ? 'bg-[#1a0d0f] text-dv-blood-text shadow-[inset_0_0_0_1px_var(--dv-blood)]'
-          : 'bg-[rgba(12,12,14,0.72)] text-dv-text shadow-[inset_0_0_0_1px_rgba(206,201,192,0.62)]',
+          : 'bg-[rgb(var(--dv-ink-rgb)/0.72)] text-dv-text shadow-[inset_0_0_0_1px_rgba(206,201,192,0.62)]',
         className,
       )}
       style={{ '--dv-cut': '7px' } as CSSProperties}
@@ -111,7 +114,7 @@ export function StateSeal({ children, tone = 'steel', dot = true, live = false, 
           aria-hidden="true"
           className={cn(
             'size-[7px] rotate-45',
-            blood ? 'bg-dv-blood-text' : 'bg-dv-amethyst shadow-[0_0_8px_rgba(138,124,200,0.9)]',
+            blood ? 'bg-dv-blood-text' : 'bg-dv-amethyst shadow-[0_0_8px_rgb(var(--dv-amethyst-rgb)/0.9)]',
             live && 'animate-dv-blink',
           )}
         />

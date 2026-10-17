@@ -81,8 +81,8 @@ export function FaixaOrnamental({ children, className, tom = 'aco' }: { children
         <span
           aria-hidden="true"
           className={cn(
-            'absolute inset-x-0 inset-y-[5px] bg-[#121214] bg-[url(/images/os/marmore-negro.webp)] bg-[length:420px_420px]',
-            tom === 'ametista' && 'shadow-[inset_0_0_24px_rgba(138,124,200,0.35)]',
+            'absolute inset-x-0 inset-y-[5px] bg-dv-ink-2 bg-[url(/images/os/marmore-negro.webp)] bg-[length:420px_420px]',
+            tom === 'ametista' && 'shadow-[inset_0_0_24px_rgb(var(--dv-amethyst-rgb)/0.35)]',
           )}
         />
         <div className="relative flex h-full items-center justify-center px-2">{children}</div>
@@ -193,8 +193,8 @@ export function MolduraResultado({ raridade, lixo = false, children, className }
         <defs>
           <Metal id={id} />
           <linearGradient id={`${id}-fundo`} x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0" stopColor={n >= 3 ? '#211d33' : '#1c1c20'} />
-            <stop offset="0.45" stopColor="#121214" />
+            <stop offset="0" stopColor={n >= 4 ? '#3a2f5c' : n >= 3 ? '#2b2450' : '#262424'} />
+            <stop offset="0.45" stopColor="#181717" />
             <stop offset="1" stopColor="#0b0b0d" />
           </linearGradient>
         </defs>

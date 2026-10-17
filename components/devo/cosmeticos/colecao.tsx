@@ -57,8 +57,8 @@ export function Colecao({ nome, fotoSrc, onVoltar }: { nome: string; fotoSrc: st
   if (isLoading || !data || !eq)
     return (
       <div className="flex flex-col gap-3" aria-busy="true">
-        <span className="h-64 animate-pulse bg-[#1c1c1f]/80" />
-        <span className="h-40 animate-pulse bg-[#1c1c1f]/40" />
+        <span className="h-64 animate-pulse bg-dv-block/80" />
+        <span className="h-40 animate-pulse bg-dv-block/40" />
       </div>
     )
 
@@ -102,7 +102,7 @@ export function Colecao({ nome, fotoSrc, onVoltar }: { nome: string; fotoSrc: st
       </header>
 
       {/* Palco: o próprio avatar e nome com o item aplicado */}
-      <div className="dv-cut relative overflow-hidden bg-[#0c0c0e] text-dv-text shadow-[inset_0_0_0_1px_rgba(186,176,159,0.45)]" style={{ '--dv-cut': '14px' } as CSSProperties}>
+      <div className="dv-cut relative overflow-hidden bg-dv-ink text-dv-text shadow-[inset_0_0_0_1px_rgba(186,176,159,0.45)]" style={{ '--dv-cut': '14px' } as CSSProperties}>
         <span aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[url(/images/os/marmore-negro.webp)] bg-[length:520px_520px] opacity-50" />
         {/* borda do perfil (equipada ou em pré-visualização) como fundo do palco */}
         {bordaV && <BordaPerfilFundo borda={bordaV.borda} imagem={fundoBorda(bordaV)} animar={animar} className="opacity-90" />}
@@ -141,7 +141,7 @@ export function Colecao({ nome, fotoSrc, onVoltar }: { nome: string; fotoSrc: st
             }}
             className={cn(
               'dv-focus min-h-11 font-sans text-[11px] font-medium uppercase tracking-[0.1em]',
-              aba === a.id ? 'bg-in-accent-fill text-white shadow-[0_0_14px_-4px_rgba(138,124,200,0.8)]' : 'text-in-fg-2 shadow-[inset_0_0_0_1px_var(--in-line-strong)]',
+              aba === a.id ? 'bg-in-accent-fill text-white shadow-[0_0_14px_-4px_rgb(var(--dv-amethyst-rgb)/0.8)]' : 'text-in-fg-2 shadow-[inset_0_0_0_1px_var(--in-line-strong)]',
             )}
           >
             {a.label}
@@ -159,7 +159,7 @@ export function Colecao({ nome, fotoSrc, onVoltar }: { nome: string; fotoSrc: st
                 setFormato(f)
                 setSel(null)
               }}
-              className={cn('dv-focus min-h-11 flex-1 font-mono text-[11px] uppercase tracking-[0.14em]', formato === f ? 'bg-[#1c1c1f] text-white' : 'text-in-fg-2 shadow-[inset_0_0_0_1px_var(--in-line)]')}
+              className={cn('dv-focus min-h-11 flex-1 font-mono text-[11px] uppercase tracking-[0.14em]', formato === f ? 'bg-dv-block text-white' : 'text-in-fg-2 shadow-[inset_0_0_0_1px_var(--in-line)]')}
             >
               {f === 'moldura_avatar' ? 'Avatar · retrato' : 'Miniperfil · quadrada'}
             </button>
@@ -292,8 +292,8 @@ function ItemTile({
       aria-pressed={selecionado}
       aria-label={`${def.name}, ${raridade.label}${bloqueado ? ', bloqueado' : possui ? ', obtido' : ''}${equipado ? ', equipado' : ''}`}
       className={cn(
-        'dv-focus group relative flex h-full min-h-[132px] w-full flex-col items-center justify-between gap-1.5 overflow-hidden bg-[#121214] px-1.5 pb-2 pt-2.5 text-dv-text transition-transform active:scale-[0.97]',
-        selecionado ? 'shadow-[inset_0_0_0_2px_#c2b9ec,0_0_16px_-4px_rgba(138,124,200,0.9)]' : 'shadow-[inset_0_0_0_1px_rgba(186,176,159,0.3)]',
+        'dv-focus group relative flex h-full min-h-[132px] w-full flex-col items-center justify-between gap-1.5 overflow-hidden bg-dv-ink-2 px-1.5 pb-2 pt-2.5 text-dv-text transition-transform active:scale-[0.97]',
+        selecionado ? 'shadow-[inset_0_0_0_2px_var(--dv-amethyst-text),0_0_16px_-4px_rgb(var(--dv-amethyst-rgb)/0.9)]' : 'shadow-[inset_0_0_0_1px_rgba(186,176,159,0.3)]',
       )}
     >
       <span aria-hidden="true" className="absolute inset-x-0 top-0 h-[3px]" style={{ background: raridade.cor, boxShadow: `0 0 10px ${raridade.brilho}` }} />
@@ -355,7 +355,7 @@ function Detalhe({
           </p>
           <h3 className="mt-1 font-serif text-[24px] font-normal uppercase leading-none tracking-[0.03em] text-in-fg">{def.name}</h3>
         </div>
-        {equipado && <span className="shrink-0 bg-[#1c1c1f] px-2 py-1 font-mono text-[10px] uppercase tracking-[0.16em] text-white">Em uso</span>}
+        {equipado && <span className="shrink-0 bg-dv-block px-2 py-1 font-mono text-[10px] uppercase tracking-[0.16em] text-white">Em uso</span>}
       </div>
       {def.description && <p className="mt-2 font-body text-[15px] leading-relaxed text-in-fg">{def.description}</p>}
       <dl className="mt-3 grid grid-cols-1 gap-1.5 border-t border-in-line pt-2.5">
@@ -388,7 +388,7 @@ function Detalhe({
             </Button>
           )
         ) : (
-          <p className="flex min-h-11 w-full items-center justify-center gap-2 bg-[#0d0d0f]/[0.06] font-mono text-[11px] uppercase tracking-[0.14em] text-in-fg-2">
+          <p className="flex min-h-11 w-full items-center justify-center gap-2 bg-dv-ink/[0.06] font-mono text-[11px] uppercase tracking-[0.14em] text-in-fg-2">
             <Lock className="size-3.5" aria-hidden="true" /> Bloqueado · {ORIGEM_LABEL[def.origem] ?? 'evento'}
           </p>
         )}

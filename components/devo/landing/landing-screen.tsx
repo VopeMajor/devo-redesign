@@ -96,7 +96,7 @@ export function LandingScreen({
         aria-hidden="true"
         className="pointer-events-none absolute inset-0"
         style={{
-          background: `radial-gradient(${Math.round((focus?.size ?? 0.84) * 38)}vmin ${Math.round((focus?.size ?? 0.84) * 30)}vmin at ${((focus?.x ?? 0.5) * 100).toFixed(1)}% ${((focus?.y ?? 0.25) * 100).toFixed(1)}%, rgba(111,107,130,0.16), transparent 70%)`,
+          background: `radial-gradient(${Math.round((focus?.size ?? 0.84) * 38)}vmin ${Math.round((focus?.size ?? 0.84) * 30)}vmin at ${((focus?.x ?? 0.5) * 100).toFixed(1)}% ${((focus?.y ?? 0.25) * 100).toFixed(1)}%, rgb(var(--dv-violet-rgb) / 0.16), transparent 70%)`,
         }}
       />
       <ScreenFrame tone="gold" className={cn('transition-opacity duration-[360ms]', veiled && 'opacity-0')} />
@@ -141,7 +141,7 @@ export function LandingScreen({
                 className="en-band-in absolute -inset-x-8 bottom-[22%] top-[44%] [animation-delay:300ms] [mask-image:linear-gradient(90deg,transparent,#000_20%,#000_80%,transparent)]"
               >
                 <span className="dv-marble-dark absolute inset-0 opacity-90" />
-                <span className="absolute inset-x-0 top-0 h-px bg-[linear-gradient(90deg,transparent,#bab09f_30%,#ece5d8_50%,#bab09f_70%,transparent)] opacity-60" />
+                <span className="absolute inset-x-0 top-0 h-px bg-[linear-gradient(90deg,transparent,var(--dv-champagne)_30%,var(--dv-champagne-strong)_50%,var(--dv-champagne)_70%,transparent)] opacity-70" />
               </span>
               <span className="animate-dv-cut-in relative block font-serif text-[62px] font-medium uppercase leading-[0.84] tracking-[0.02em] text-dv-text [animation-delay:230ms] [text-shadow:0_4px_30px_color-mix(in_oklab,var(--dv-ink)_70%,transparent)] lg:text-[96px]">
                 Vote
@@ -150,8 +150,10 @@ export function LandingScreen({
             <span aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
               <span className="en-sweep absolute inset-y-0 left-0 w-1/4 bg-[linear-gradient(90deg,transparent,color-mix(in_oklab,var(--dv-gold-bright)_35%,transparent),transparent)] mix-blend-screen [animation-delay:520ms]" />
             </span>
-            <span className="animate-dv-fade mt-3 block font-sans text-[13px] font-medium uppercase tracking-[0.62em] text-dv-text-2 [animation-delay:380ms]">
-              Record System
+            <span className="animate-dv-fade mt-3 flex items-center gap-3 font-sans text-[13px] font-medium uppercase tracking-[0.62em] text-dv-champagne [animation-delay:380ms]">
+              <span aria-hidden="true" className="size-[5px] rotate-45 bg-dv-amethyst shadow-[0_0_8px_rgb(var(--dv-amethyst-rgb)/0.9)]" />
+              <span className="translate-x-[0.31em]">Record System</span>
+              <span aria-hidden="true" className="size-[5px] rotate-45 bg-dv-amethyst shadow-[0_0_8px_rgb(var(--dv-amethyst-rgb)/0.9)]" />
             </span>
             <span lang="ja" className="animate-dv-fade mt-1 block text-[11px] tracking-[0.3em] text-dv-text-3 [animation-delay:420ms]">
               デッドリーボート・記録
@@ -178,13 +180,14 @@ export function LandingScreen({
           )}
 
           {/* Relógio do pulso: 72h — "bilhete" com filetes dourados que se abrem do centro. */}
-          <div className="animate-dv-rise relative mt-4 flex items-center gap-3 px-5 py-2 [animation-delay:500ms]">
+          <div className="animate-dv-rise relative isolate mt-4 flex items-center gap-3 px-5 py-2 [animation-delay:500ms]">
             <span aria-hidden="true" className="absolute inset-0 bg-[linear-gradient(90deg,transparent,color-mix(in_oklab,var(--dv-ink-2)_85%,transparent)_18%,color-mix(in_oklab,var(--dv-ink-2)_85%,transparent)_82%,transparent)]" />
-            <span aria-hidden="true" className="en-rule-in absolute inset-x-0 top-0 h-px bg-[linear-gradient(90deg,transparent,var(--dv-gold)_20%,var(--dv-gold)_80%,transparent)] opacity-60 [animation-delay:540ms]" />
-            <span aria-hidden="true" className="en-rule-in absolute inset-x-0 bottom-0 h-px bg-[linear-gradient(90deg,transparent,var(--dv-gold)_20%,var(--dv-gold)_80%,transparent)] opacity-60 [animation-delay:600ms]" />
+            <span aria-hidden="true" className="en-rule-in absolute inset-x-0 top-0 h-px bg-[linear-gradient(90deg,transparent,var(--dv-champagne)_20%,var(--dv-champagne-strong)_50%,var(--dv-champagne)_80%,transparent)] opacity-80 [animation-delay:540ms]" />
+            <span aria-hidden="true" className="en-rule-in absolute inset-x-0 bottom-0 h-px bg-[linear-gradient(90deg,transparent,var(--dv-champagne)_20%,var(--dv-champagne-strong)_50%,var(--dv-champagne)_80%,transparent)] opacity-80 [animation-delay:600ms]" />
+            <span aria-hidden="true" className="absolute -inset-x-6 -inset-y-3 -z-10 bg-[radial-gradient(closest-side,rgb(var(--dv-amethyst-rgb)/0.22),transparent)]" />
             <GlyphHourglass className="relative size-5 text-dv-gold" />
             <span className="dv-label relative text-[10px] text-dv-text-3">Pulso</span>
-            <TimeDigits value={formatDuration(START_MS - elapsed)} size="md" tone="text" label="Tempo no pulso" className="relative" />
+            <TimeDigits value={formatDuration(START_MS - elapsed)} size="md" tone="champagne" label="Tempo no pulso" className="relative" />
           </div>
 
           {/* Ações por último. Só opacidade (sem transform): estáveis para toque e para o roteiro de captura. */}

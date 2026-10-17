@@ -112,7 +112,7 @@ export function ChamadaHolograma({ podePular, onFim }: { podePular: boolean; onF
       role="dialog"
       aria-modal="true"
       aria-label="Chamada holográfica da Companhia de Despertados"
-      className={cn('absolute inset-0 z-40 flex flex-col overflow-hidden bg-[#08080a]/95', fase === 'encerra' && 'corp-holo-fora')}
+      className={cn('absolute inset-0 z-40 flex flex-col overflow-hidden bg-dv-ink/95', fase === 'encerra' && 'corp-holo-fora')}
       onKeyDown={(e) => {
         if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault()
@@ -122,7 +122,7 @@ export function ChamadaHolograma({ podePular, onFim }: { podePular: boolean; onF
       tabIndex={-1}
     >
       <HoloEstilos />
-      <span aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(70%_45%_at_50%_70%,rgba(138,124,200,0.22),transparent_70%)]" />
+      <span aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(70%_45%_at_50%_70%,rgb(var(--dv-amethyst-rgb)/0.22),transparent_70%)]" />
       <header className="relative z-10 flex items-center justify-between gap-3 px-4 pt-4">
         <span className="flex items-center gap-2.5">
           <SeloCompanhia aceso className="size-8" />
@@ -146,12 +146,12 @@ export function ChamadaHolograma({ podePular, onFim }: { podePular: boolean; onF
               {[0, 1, 2].map((i) => (
                 <span key={i} aria-hidden="true" className="corp-holo-anel absolute inset-0 rounded-full border border-[#a89be0]/50" style={{ animationDelay: `${i * 0.5}s` }} />
               ))}
-              <SeloCompanhia aceso className="relative size-16 drop-shadow-[0_0_12px_rgba(168,155,224,0.5)]" />
+              <SeloCompanhia aceso className="relative size-16 drop-shadow-[0_0_12px_rgb(var(--dv-amethyst-rgb)/0.5)]" />
             </span>
           </div>
         ) : (
           <div aria-hidden="true" className="absolute inset-0">
-            <span className="absolute inset-x-0 bottom-0 top-[6%]" style={{ background: 'linear-gradient(0deg, rgba(168,155,224,0.3), rgba(186,176,159,0.08) 50%, transparent 88%)', clipPath: 'polygon(44% 100%, 56% 100%, 94% 0, 6% 0)' }} />
+            <span className="absolute inset-x-0 bottom-0 top-[6%]" style={{ background: 'linear-gradient(0deg, rgb(var(--dv-amethyst-rgb) / 0.3), rgba(186,176,159,0.08) 50%, transparent 88%)', clipPath: 'polygon(44% 100%, 56% 100%, 94% 0, 6% 0)' }} />
             {/* Melissa projetada, ANCORADA à caixa de fala (kit/npc-anchor): a base some atrás do topo da caixa */}
             <NpcAnchor
               npc="melissa"
@@ -160,7 +160,7 @@ export function ChamadaHolograma({ podePular, onFim }: { podePular: boolean; onF
               cabeca="min(16dvh, 148px)"
               reserva={8}
               sobreposicao={14}
-              className="corp-holo-entra corp-holo-tremor opacity-[0.85] [filter:grayscale(1)_sepia(0.55)_hue-rotate(205deg)_saturate(1.7)_brightness(1.12)_contrast(1.05)_drop-shadow(0_0_14px_rgba(168,155,224,0.55))]"
+              className="corp-holo-entra corp-holo-tremor opacity-[0.85] [filter:grayscale(1)_sepia(0.55)_hue-rotate(205deg)_saturate(1.7)_brightness(1.12)_contrast(1.05)_drop-shadow(0_0_14px_rgb(var(--dv-amethyst-rgb)/0.55))]"
               sobreArte={
                 <>
                   <span className="absolute inset-0 opacity-25" style={{ background: 'repeating-linear-gradient(0deg, rgba(236,229,216,0.5) 0 1px, transparent 1px 4px)' }} />
@@ -194,7 +194,7 @@ export function ChamadaHolograma({ podePular, onFim }: { podePular: boolean; onF
                 key={o.texto}
                 type="button"
                 onClick={() => escolher(i)}
-                className="dv-focus dv-cut-diag flex min-h-12 items-center gap-3 bg-[linear-gradient(100deg,#1f1f22,#121214)] px-4 py-2.5 text-left font-body text-[16px] text-dv-text shadow-[inset_0_0_0_1px_rgba(186,176,159,0.45)] hover:shadow-[inset_0_0_0_1px_#c2b9ec] active:scale-[0.99]"
+                className="dv-focus dv-cut-diag flex min-h-12 items-center gap-3 bg-[linear-gradient(100deg,var(--dv-ink-3),var(--dv-ink-2))] px-4 py-2.5 text-left font-body text-[16px] text-dv-text shadow-[inset_0_0_0_1px_rgba(186,176,159,0.45)] hover:shadow-[inset_0_0_0_1px_var(--dv-amethyst-text)] active:scale-[0.99]"
                 style={{ '--dv-cut': '9px' } as CSSProperties}
               >
                 <span aria-hidden="true" className="font-mono text-[12px] text-dv-amethyst-text">{i + 1}</span>
@@ -216,8 +216,8 @@ export function ChamadaHolograma({ podePular, onFim }: { podePular: boolean; onF
 function Caixa({ quem, children, onAvancar }: { quem: string | null; children: ReactNode; onAvancar: () => void }) {
   return (
     <section className="animate-dv-fade relative" style={{ '--dv-cut': '12px' } as CSSProperties}>
-      <span aria-hidden="true" className="dv-cut absolute inset-0 bg-[linear-gradient(135deg,rgba(194,185,236,0.55),rgba(186,176,159,0.25)_50%,rgba(194,185,236,0.4))]" />
-      <span aria-hidden="true" className="dv-cut absolute inset-px bg-[linear-gradient(180deg,rgba(24,23,30,0.96),rgba(12,12,14,0.97))]" style={{ '--dv-cut': '11.6px' } as CSSProperties} />
+      <span aria-hidden="true" className="dv-cut absolute inset-0 bg-[linear-gradient(135deg,rgb(var(--dv-amethyst-text-rgb)/0.55),rgba(186,176,159,0.25)_50%,rgb(var(--dv-amethyst-text-rgb)/0.4))]" />
+      <span aria-hidden="true" className="dv-cut absolute inset-px bg-[linear-gradient(180deg,rgba(24,23,30,0.96),rgb(var(--dv-ink-rgb)/0.97))]" style={{ '--dv-cut': '11.6px' } as CSSProperties} />
       <div className="relative p-4 pb-3">
         {quem && <p className="dv-label mb-1.5 text-[10px] text-dv-amethyst-text">{quem} · Companhia de Despertados</p>}
         {children}

@@ -97,14 +97,13 @@ export function CardFrame({
           aria-hidden="true"
           className="pointer-events-none absolute inset-[3px] rounded-[6%/4.3%] opacity-35 mix-blend-color-dodge transition-[background-position] duration-500"
           style={{
-            backgroundImage:
-              'linear-gradient(115deg, transparent 20%, rgba(203,197,232,0.35) 36%, rgba(236,229,216,0.4) 46%, rgba(255,90,99,0.22) 54%, transparent 70%)',
+            backgroundImage: 'linear-gradient(115deg, transparent 20%, rgba(203,197,232,0.35) 36%, rgba(236,229,216,0.4) 46%, rgba(255,90,99,0.22) 54%, transparent 70%)',
             backgroundSize: '250% 250%',
             backgroundPosition: 'var(--hx, 30%) var(--hy, 30%)',
           }}
         />
       )}
-      {selected && <span aria-hidden="true" className="pointer-events-none absolute -inset-[3px] rounded-[8%/6%] shadow-[0_0_0_2px_var(--dv-cobalt),0_0_22px_rgba(138,124,200,0.7)]" />}
+      {selected && <span aria-hidden="true" className="pointer-events-none absolute -inset-[3px] rounded-[8%/6%] shadow-[0_0_0_2px_var(--dv-cobalt),0_0_22px_rgb(var(--dv-amethyst-rgb)/0.7)]" />}
     </>
   )
 
@@ -147,8 +146,7 @@ function CardBack({ tone, small }: { tone: CardTone; small: boolean }) {
       <span
         className="absolute inset-[10%] opacity-50"
         style={{
-          backgroundImage:
-            'linear-gradient(45deg, transparent 47%, var(--dv-gold-deep) 48%, var(--dv-gold-deep) 52%, transparent 53%), linear-gradient(-45deg, transparent 47%, var(--dv-gold-deep) 48%, var(--dv-gold-deep) 52%, transparent 53%)',
+          backgroundImage: 'linear-gradient(45deg, transparent 47%, var(--dv-gold-deep) 48%, var(--dv-gold-deep) 52%, transparent 53%), linear-gradient(-45deg, transparent 47%, var(--dv-gold-deep) 48%, var(--dv-gold-deep) 52%, transparent 53%)',
           backgroundSize: small ? '12px 12px' : '20px 20px',
         }}
       />
