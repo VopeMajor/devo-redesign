@@ -1,0 +1,109 @@
+{
+  "pedido": "arcano-imperador-tarot",
+  "titulo": "Arcano — imperador (tarô, menos humanizado)",
+  "tipo": "ilustracao",
+  "tamanho_final": 1536,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 91051,
+      "passos": null,
+      "segundos": 3.2,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "arcano-imperador-tarot--v01--1536.png",
+          "bytes": 1526095
+        },
+        {
+          "arquivo": "arcano-imperador-tarot--v01--1536.webp",
+          "bytes": 268340
+        },
+        {
+          "arquivo": "arcano-imperador-tarot--v01--1024.webp",
+          "bytes": 111986
+        },
+        {
+          "arquivo": "arcano-imperador-tarot--v01--768.webp",
+          "bytes": 72650
+        },
+        {
+          "arquivo": "arcano-imperador-tarot--v01--512.webp",
+          "bytes": 39766
+        }
+      ],
+      "segundos_pos": 43.5,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 91052,
+      "passos": null,
+      "segundos": 3.3,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "arcano-imperador-tarot--v02--1536.png",
+          "bytes": 1371819
+        },
+        {
+          "arquivo": "arcano-imperador-tarot--v02--1536.webp",
+          "bytes": 230144
+        },
+        {
+          "arquivo": "arcano-imperador-tarot--v02--1024.webp",
+          "bytes": 100538
+        },
+        {
+          "arquivo": "arcano-imperador-tarot--v02--768.webp",
+          "bytes": 65932
+        },
+        {
+          "arquivo": "arcano-imperador-tarot--v02--512.webp",
+          "bytes": 37312
+        }
+      ],
+      "segundos_pos": 38.0,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 91053,
+      "passos": null,
+      "segundos": 4.6,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "ilhas_removidas": 1,
+      "arquivos": [
+        {
+          "arquivo": "arcano-imperador-tarot--v03--1536.png",
+          "bytes": 1364932
+        },
+        {
+          "arquivo": "arcano-imperador-tarot--v03--1536.webp",
+          "bytes": 227768
+        },
+        {
+          "arquivo": "arcano-imperador-tarot--v03--1024.webp",
+          "bytes": 95906
+        },
+        {
+          "arquivo": "arcano-imperador-tarot--v03--768.webp",
+          "bytes": 61662
+        },
+        {
+          "arquivo": "arcano-imperador-tarot--v03--512.webp",
+          "bytes": 33668
+        }
+      ],
+      "segundos_pos": 37.4,
+      "avisos": []
+    }
+  ]
+}
