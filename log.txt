@@ -1,0 +1,9 @@
+[poco-poco] v01: @cf/black-forest-labs/flux-2-klein-4b seed=10401 1024x1024 passos=None (~104 neurônios)
+    ok em 15.8s, 1024x1024
+[poco-poco] v02: @cf/black-forest-labs/flux-2-klein-4b seed=10402 1024x1024 passos=None (~104 neurônios)
+    ok em 15.8s, 1024x1024
+[poco-poco] v03: @cf/black-forest-labs/flux-2-klein-4b seed=10403 1024x1024 passos=None (~104 neurônios)
+    ok em 17.6s, 1024x1024
+[poco-poco] v01: rembg:birefnet-general; sem avisos
+[poco-poco] v02: rembg:birefnet-general; sem avisos
+[poco-poco] v03: rembg:birefnet-general; sem avisos
