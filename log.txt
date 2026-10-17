@@ -1,0 +1,9 @@
+[arcano-sigilo-carro] v01: @cf/black-forest-labs/flux-2-klein-4b seed=13071 1024x1024 passos=None (~104 neurônios)
+    ok em 10.3s, 1024x1024
+[arcano-sigilo-carro] v02: @cf/black-forest-labs/flux-2-klein-4b seed=13072 1024x1024 passos=None (~104 neurônios)
+    ok em 10.9s, 1024x1024
+[arcano-sigilo-carro] v03: @cf/black-forest-labs/flux-2-klein-4b seed=13073 1024x1024 passos=None (~104 neurônios)
+    ok em 35.9s, 1024x1024
+[arcano-sigilo-carro] v01: rembg:birefnet-general; sem avisos
+[arcano-sigilo-carro] v02: rembg:birefnet-general; sem avisos
+[arcano-sigilo-carro] v03: rembg:birefnet-general; sem avisos

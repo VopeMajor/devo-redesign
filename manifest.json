@@ -1,0 +1,122 @@
+{
+  "pedido": "arcano-sigilo-carro",
+  "titulo": "Arcano — carro (sigilo)",
+  "tipo": "emblema",
+  "tamanho_final": 1024,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 13071,
+      "passos": null,
+      "segundos": 10.3,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "ilhas_removidas": 0,
+      "arquivos": [
+        {
+          "arquivo": "arcano-sigilo-carro--v01--1024.png",
+          "bytes": 490032
+        },
+        {
+          "arquivo": "arcano-sigilo-carro--v01--1024.webp",
+          "bytes": 135184
+        },
+        {
+          "arquivo": "arcano-sigilo-carro--v01--512.webp",
+          "bytes": 48338
+        },
+        {
+          "arquivo": "arcano-sigilo-carro--v01--256.webp",
+          "bytes": 20816
+        },
+        {
+          "arquivo": "arcano-sigilo-carro--v01--128.webp",
+          "bytes": 9378
+        },
+        {
+          "arquivo": "arcano-sigilo-carro--v01--64.webp",
+          "bytes": 3368
+        }
+      ],
+      "segundos_pos": 19.1,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 13072,
+      "passos": null,
+      "segundos": 10.9,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "ilhas_removidas": 0,
+      "arquivos": [
+        {
+          "arquivo": "arcano-sigilo-carro--v02--1024.png",
+          "bytes": 410916
+        },
+        {
+          "arquivo": "arcano-sigilo-carro--v02--1024.webp",
+          "bytes": 96086
+        },
+        {
+          "arquivo": "arcano-sigilo-carro--v02--512.webp",
+          "bytes": 33596
+        },
+        {
+          "arquivo": "arcano-sigilo-carro--v02--256.webp",
+          "bytes": 15164
+        },
+        {
+          "arquivo": "arcano-sigilo-carro--v02--128.webp",
+          "bytes": 7342
+        },
+        {
+          "arquivo": "arcano-sigilo-carro--v02--64.webp",
+          "bytes": 2882
+        }
+      ],
+      "segundos_pos": 14.7,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 13073,
+      "passos": null,
+      "segundos": 35.9,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "arcano-sigilo-carro--v03--1024.png",
+          "bytes": 452308
+        },
+        {
+          "arquivo": "arcano-sigilo-carro--v03--1024.webp",
+          "bytes": 112948
+        },
+        {
+          "arquivo": "arcano-sigilo-carro--v03--512.webp",
+          "bytes": 37736
+        },
+        {
+          "arquivo": "arcano-sigilo-carro--v03--256.webp",
+          "bytes": 16504
+        },
+        {
+          "arquivo": "arcano-sigilo-carro--v03--128.webp",
+          "bytes": 7926
+        },
+        {
+          "arquivo": "arcano-sigilo-carro--v03--64.webp",
+          "bytes": 3290
+        }
+      ],
+      "segundos_pos": 14.8,
+      "avisos": []
+    }
+  ]
+}
