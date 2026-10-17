@@ -1,0 +1,289 @@
+{
+  "pedido": "balao2-ficha-marfim",
+  "titulo": "Balão — ficha-marfim",
+  "tipo": "balao",
+  "tamanho_final": 1536,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 15071,
+      "passos": null,
+      "segundos": 38.0,
+      "neuronios_estimados": 78,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "balao2-ficha-marfim--v01--1535.png",
+          "bytes": 502123
+        },
+        {
+          "arquivo": "balao2-ficha-marfim--v01--1535.webp",
+          "bytes": 50646
+        },
+        {
+          "arquivo": "balao2-ficha-marfim--v01--1024.webp",
+          "bytes": 25204
+        },
+        {
+          "arquivo": "balao2-ficha-marfim--v01--768.webp",
+          "bytes": 18660
+        },
+        {
+          "arquivo": "balao2-ficha-marfim--v01--512.webp",
+          "bytes": 10836
+        },
+        {
+          "arquivo": "balao2-ficha-marfim--v01--256.webp",
+          "bytes": 4652
+        }
+      ],
+      "balao": {
+        "tamanho_px": [
+          1535,
+          375
+        ],
+        "nove_fatias": {
+          "top": 71,
+          "right": 550,
+          "bottom": 64,
+          "left": 583,
+          "css": "border-image: url(...) 71 550 64 583 fill / auto; border-image-repeat: stretch;",
+          "obs": "medidas em px do original; nos derivados multiplique por largura/W"
+        },
+        "kit": {
+          "corpo": {
+            "altura_px": 342,
+            "topo_no_original": 16,
+            "fatias": {
+              "top": 55,
+              "bottom": 47,
+              "left": 0,
+              "right": 0
+            },
+            "obs": "uniforme na horizontal; estique livre. Centro liso (texto)."
+          },
+          "ponta_esq": {
+            "largura_px": 629,
+            "sobreposicao_px": 46
+          },
+          "ponta_dir": {
+            "largura_px": 596,
+            "sobreposicao_px": 46
+          },
+          "texto": {
+            "x0": 583,
+            "x1": 985,
+            "y0": 71,
+            "y1": 311
+          }
+        },
+        "arquivos_kit": [
+          "balao2-ficha-marfim--v01--kit-corpo--1024.webp",
+          "balao2-ficha-marfim--v01--kit-corpo--768.webp",
+          "balao2-ficha-marfim--v01--kit-corpo--512.webp",
+          "balao2-ficha-marfim--v01--kit-corpo--256.webp",
+          "balao2-ficha-marfim--v01--kit-ponta-esq--1024.webp",
+          "balao2-ficha-marfim--v01--kit-ponta-esq--768.webp",
+          "balao2-ficha-marfim--v01--kit-ponta-esq--512.webp",
+          "balao2-ficha-marfim--v01--kit-ponta-esq--256.webp",
+          "balao2-ficha-marfim--v01--kit-ponta-dir--1024.webp",
+          "balao2-ficha-marfim--v01--kit-ponta-dir--768.webp",
+          "balao2-ficha-marfim--v01--kit-ponta-dir--512.webp",
+          "balao2-ficha-marfim--v01--kit-ponta-dir--256.webp"
+        ]
+      },
+      "segundos_pos": 39.3,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 15072,
+      "passos": null,
+      "segundos": 34.6,
+      "neuronios_estimados": 78,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "balao2-ficha-marfim--v02--1535.png",
+          "bytes": 509988
+        },
+        {
+          "arquivo": "balao2-ficha-marfim--v02--1535.webp",
+          "bytes": 51556
+        },
+        {
+          "arquivo": "balao2-ficha-marfim--v02--1024.webp",
+          "bytes": 26436
+        },
+        {
+          "arquivo": "balao2-ficha-marfim--v02--768.webp",
+          "bytes": 19112
+        },
+        {
+          "arquivo": "balao2-ficha-marfim--v02--512.webp",
+          "bytes": 11488
+        },
+        {
+          "arquivo": "balao2-ficha-marfim--v02--256.webp",
+          "bytes": 4752
+        }
+      ],
+      "balao": {
+        "tamanho_px": [
+          1535,
+          337
+        ],
+        "nove_fatias": {
+          "top": 59,
+          "right": 511,
+          "bottom": 58,
+          "left": 761,
+          "css": "border-image: url(...) 59 511 58 761 fill / auto; border-image-repeat: stretch;",
+          "obs": "medidas em px do original; nos derivados multiplique por largura/W"
+        },
+        "kit": {
+          "corpo": {
+            "altura_px": 305,
+            "topo_no_original": 16,
+            "fatias": {
+              "top": 43,
+              "bottom": 42,
+              "left": 0,
+              "right": 0
+            },
+            "obs": "uniforme na horizontal; estique livre. Centro liso (texto)."
+          },
+          "ponta_esq": {
+            "largura_px": 807,
+            "sobreposicao_px": 46
+          },
+          "ponta_dir": {
+            "largura_px": 557,
+            "sobreposicao_px": 46
+          },
+          "texto": {
+            "x0": 761,
+            "x1": 1024,
+            "y0": 59,
+            "y1": 279
+          }
+        },
+        "arquivos_kit": [
+          "balao2-ficha-marfim--v02--kit-corpo--1024.webp",
+          "balao2-ficha-marfim--v02--kit-corpo--768.webp",
+          "balao2-ficha-marfim--v02--kit-corpo--512.webp",
+          "balao2-ficha-marfim--v02--kit-corpo--256.webp",
+          "balao2-ficha-marfim--v02--kit-ponta-esq--1024.webp",
+          "balao2-ficha-marfim--v02--kit-ponta-esq--768.webp",
+          "balao2-ficha-marfim--v02--kit-ponta-esq--512.webp",
+          "balao2-ficha-marfim--v02--kit-ponta-esq--256.webp",
+          "balao2-ficha-marfim--v02--kit-ponta-dir--1024.webp",
+          "balao2-ficha-marfim--v02--kit-ponta-dir--768.webp",
+          "balao2-ficha-marfim--v02--kit-ponta-dir--512.webp",
+          "balao2-ficha-marfim--v02--kit-ponta-dir--256.webp"
+        ]
+      },
+      "segundos_pos": 32.8,
+      "avisos": [
+        "9-slice: miolo liso estreito — conferir a prancha"
+      ]
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 15073,
+      "passos": null,
+      "segundos": 22.7,
+      "neuronios_estimados": 78,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "balao2-ficha-marfim--v03--1535.png",
+          "bytes": 535631
+        },
+        {
+          "arquivo": "balao2-ficha-marfim--v03--1535.webp",
+          "bytes": 52874
+        },
+        {
+          "arquivo": "balao2-ficha-marfim--v03--1024.webp",
+          "bytes": 27042
+        },
+        {
+          "arquivo": "balao2-ficha-marfim--v03--768.webp",
+          "bytes": 19764
+        },
+        {
+          "arquivo": "balao2-ficha-marfim--v03--512.webp",
+          "bytes": 11772
+        },
+        {
+          "arquivo": "balao2-ficha-marfim--v03--256.webp",
+          "bytes": 5162
+        }
+      ],
+      "balao": {
+        "tamanho_px": [
+          1535,
+          382
+        ],
+        "nove_fatias": {
+          "top": 55,
+          "right": 649,
+          "bottom": 56,
+          "left": 686,
+          "css": "border-image: url(...) 55 649 56 686 fill / auto; border-image-repeat: stretch;",
+          "obs": "medidas em px do original; nos derivados multiplique por largura/W"
+        },
+        "kit": {
+          "corpo": {
+            "altura_px": 350,
+            "topo_no_original": 16,
+            "fatias": {
+              "top": 39,
+              "bottom": 40,
+              "left": 0,
+              "right": 0
+            },
+            "obs": "uniforme na horizontal; estique livre. Centro liso (texto)."
+          },
+          "ponta_esq": {
+            "largura_px": 732,
+            "sobreposicao_px": 46
+          },
+          "ponta_dir": {
+            "largura_px": 695,
+            "sobreposicao_px": 46
+          },
+          "texto": {
+            "x0": 686,
+            "x1": 886,
+            "y0": 55,
+            "y1": 326
+          }
+        },
+        "arquivos_kit": [
+          "balao2-ficha-marfim--v03--kit-corpo--1024.webp",
+          "balao2-ficha-marfim--v03--kit-corpo--768.webp",
+          "balao2-ficha-marfim--v03--kit-corpo--512.webp",
+          "balao2-ficha-marfim--v03--kit-corpo--256.webp",
+          "balao2-ficha-marfim--v03--kit-ponta-esq--1024.webp",
+          "balao2-ficha-marfim--v03--kit-ponta-esq--768.webp",
+          "balao2-ficha-marfim--v03--kit-ponta-esq--512.webp",
+          "balao2-ficha-marfim--v03--kit-ponta-esq--256.webp",
+          "balao2-ficha-marfim--v03--kit-ponta-dir--1024.webp",
+          "balao2-ficha-marfim--v03--kit-ponta-dir--768.webp",
+          "balao2-ficha-marfim--v03--kit-ponta-dir--512.webp",
+          "balao2-ficha-marfim--v03--kit-ponta-dir--256.webp"
+        ]
+      },
+      "segundos_pos": 34.2,
+      "avisos": [
+        "9-slice: miolo liso estreito — conferir a prancha"
+      ]
+    }
+  ]
+}

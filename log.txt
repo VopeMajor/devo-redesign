@@ -1,0 +1,9 @@
+[balao2-ficha-marfim] v01: @cf/black-forest-labs/flux-2-klein-4b seed=15071 1536x512 passos=None (~78 neurônios)
+    ok em 38.0s, 1536x512
+[balao2-ficha-marfim] v02: @cf/black-forest-labs/flux-2-klein-4b seed=15072 1536x512 passos=None (~78 neurônios)
+    ok em 34.6s, 1536x512
+[balao2-ficha-marfim] v03: @cf/black-forest-labs/flux-2-klein-4b seed=15073 1536x512 passos=None (~78 neurônios)
+    ok em 22.7s, 1536x512
+[balao2-ficha-marfim] v01: rembg:birefnet-general; sem avisos
+[balao2-ficha-marfim] v02: rembg:birefnet-general; 9-slice: miolo liso estreito — conferir a prancha
+[balao2-ficha-marfim] v03: rembg:birefnet-general; 9-slice: miolo liso estreito — conferir a prancha
