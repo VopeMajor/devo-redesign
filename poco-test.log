@@ -1,0 +1,16 @@
+ok   migração do Poço é idempotente
+ok   cadastro das contas de teste
+ok   trancado sem vencer o tutorial (GET sem erro; POST 403)
+ok   Dracma do encapuzado é entregue uma vez só
+ok   giro grátis: 1 por dia na categoria normal
+ok   moeda é consumida uma vez; outra moeda com o poço ocupado é recusada
+ok   a probabilidade vem da configuração (fragmento 100% → fragmento; lixo 100% → nada no inventário)
+ok   manivela: toques fora do tempo são recusados e os acertos são contados pelo servidor
+ok   painel do Owner (provisório) só para o Owner; baldes raros ocultos ao jogador
+ok   letreiro: só nome do personagem, sem cargo, sem contas de teste
+ok   prêmios do pool: só o Owner lista e edita (jogador recebe 403)
+ok   prêmios do pool: o servidor valida peso, texto (sem marcação), imagem e alvo
+ok   prêmio novo do Owner aparece nos giros; desativado nunca aparece; tudo no admin_log
+ok   prêmio de item do catálogo entra no inventário; estoque esgotado sai do sorteio
+
+14 ok, 0 falha(s)

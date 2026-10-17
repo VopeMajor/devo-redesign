@@ -1,0 +1,188 @@
+devo-banco-novo.sql em dia
+psql:scripts/devo-banco-novo.sql:42: NOTICE:  column "role" of relation "players" already exists, skipping
+psql:scripts/devo-banco-novo.sql:43: NOTICE:  column "avatar" of relation "players" already exists, skipping
+psql:scripts/devo-banco-novo.sql:44: NOTICE:  column "avatar_updated_at" of relation "players" already exists, skipping
+psql:scripts/devo-banco-novo.sql:243: NOTICE:  column "time_pending_ms" of relation "arcade_profiles" already exists, skipping
+psql:scripts/devo-banco-novo.sql:452: NOTICE:  trigger "players_cargo_chk" for relation "players" does not exist, skipping
+psql:scripts/devo-banco-novo.sql:482: NOTICE:  trigger "players_cargo_log" for relation "players" does not exist, skipping
+psql:scripts/devo-banco-novo.sql:735: NOTICE:  trigger "deadly_votes_tutorial_default" for relation "deadly_votes" does not exist, skipping
+psql:scripts/devo-banco-novo.sql:762: NOTICE:  trigger "deadly_votes_unlock" for relation "deadly_votes" does not exist, skipping
+psql:scripts/devo-banco-novo.sql:772: NOTICE:  trigger "deadly_vote_entries_unlock" for relation "deadly_vote_entries" does not exist, skipping
+psql:scripts/devo-banco-novo.sql:885: NOTICE:  trigger "reward_proposals_guard" for relation "reward_proposals" does not exist, skipping
+psql:scripts/devo-banco-novo.sql:915: NOTICE:  trigger "reward_proposals_log" for relation "reward_proposals" does not exist, skipping
+psql:scripts/devo-banco-novo.sql:1161: NOTICE:  trigger "deadly_vote_entries_guard" for relation "deadly_vote_entries" does not exist, skipping
+psql:scripts/devo-banco-novo.sql:1177: NOTICE:  trigger "deadly_votes_guard" for relation "deadly_votes" does not exist, skipping
+psql:scripts/devo-banco-novo.sql:1529: NOTICE:  trigger "weekly_plan_guard" for relation "weekly_reward_plans" does not exist, skipping
+psql:scripts/devo-banco-novo.sql:2150: NOTICE:  trigger "corporacao_classificacao_guard" for relation "corporacoes" does not exist, skipping
+psql:scripts/devo-banco-novo.sql:2347: NOTICE:  constraint "salao_lotes_card_rarity_chk" of relation "salao_lotes" does not exist, skipping
+psql:scripts/devo-banco-novo.sql:2351: NOTICE:  constraint "salao_mercado_card_rarity_chk" of relation "salao_mercado" does not exist, skipping
+psql:scripts/devo-banco-novo.sql:21: NOTICE:  relation "players" already exists, skipping
+psql:scripts/devo-banco-novo.sql:22: NOTICE:  relation "players_name_lower_idx" already exists, skipping
+psql:scripts/devo-banco-novo.sql:28: NOTICE:  relation "player_saves" already exists, skipping
+psql:scripts/devo-banco-novo.sql:35: NOTICE:  relation "push_subscriptions" already exists, skipping
+psql:scripts/devo-banco-novo.sql:36: NOTICE:  relation "push_config" already exists, skipping
+psql:scripts/devo-banco-novo.sql:42: NOTICE:  column "role" of relation "players" already exists, skipping
+psql:scripts/devo-banco-novo.sql:43: NOTICE:  column "avatar" of relation "players" already exists, skipping
+psql:scripts/devo-banco-novo.sql:44: NOTICE:  column "avatar_updated_at" of relation "players" already exists, skipping
+psql:scripts/devo-banco-novo.sql:60: NOTICE:  relation "deadly_votes" already exists, skipping
+psql:scripts/devo-banco-novo.sql:62: NOTICE:  relation "deadly_votes_starts_idx" already exists, skipping
+psql:scripts/devo-banco-novo.sql:72: NOTICE:  relation "deadly_vote_entries" already exists, skipping
+psql:scripts/devo-banco-novo.sql:74: NOTICE:  relation "deadly_vote_entries_player_idx" already exists, skipping
+psql:scripts/devo-banco-novo.sql:83: NOTICE:  column "whatsapp_url" of relation "deadly_votes" already exists, skipping
+psql:scripts/devo-banco-novo.sql:97: NOTICE:  relation "user" already exists, skipping
+psql:scripts/devo-banco-novo.sql:98: NOTICE:  relation "session" already exists, skipping
+psql:scripts/devo-banco-novo.sql:99: NOTICE:  relation "session_user_idx" already exists, skipping
+psql:scripts/devo-banco-novo.sql:100: NOTICE:  relation "account" already exists, skipping
+psql:scripts/devo-banco-novo.sql:101: NOTICE:  relation "account_user_idx" already exists, skipping
+psql:scripts/devo-banco-novo.sql:102: NOTICE:  relation "verification" already exists, skipping
+psql:scripts/devo-banco-novo.sql:103: NOTICE:  relation "verification_identifier_idx" already exists, skipping
+psql:scripts/devo-banco-novo.sql:104: NOTICE:  column "user_id" of relation "players" already exists, skipping
+psql:scripts/devo-banco-novo.sql:105: NOTICE:  relation "invite_codes" already exists, skipping
+psql:scripts/devo-banco-novo.sql:123: NOTICE:  relation "arcade_schedule" already exists, skipping
+psql:scripts/devo-banco-novo.sql:142: NOTICE:  relation "arcade_events" already exists, skipping
+psql:scripts/devo-banco-novo.sql:152: NOTICE:  relation "arcade_entries" already exists, skipping
+psql:scripts/devo-banco-novo.sql:165: NOTICE:  relation "arcade_duels" already exists, skipping
+psql:scripts/devo-banco-novo.sql:181: NOTICE:  relation "arcade_matches" already exists, skipping
+psql:scripts/devo-banco-novo.sql:182: NOTICE:  relation "arcade_matches_player_idx" already exists, skipping
+psql:scripts/devo-banco-novo.sql:188: NOTICE:  relation "arcade_profiles" already exists, skipping
+psql:scripts/devo-banco-novo.sql:197: NOTICE:  relation "arcade_week_scores" already exists, skipping
+psql:scripts/devo-banco-novo.sql:210: NOTICE:  relation "arcade_bets" already exists, skipping
+psql:scripts/devo-banco-novo.sql:219: NOTICE:  relation "arcade_chat" already exists, skipping
+psql:scripts/devo-banco-novo.sql:220: NOTICE:  relation "arcade_chat_channel_idx" already exists, skipping
+psql:scripts/devo-banco-novo.sql:229: NOTICE:  relation "arcade_claims" already exists, skipping
+psql:scripts/devo-banco-novo.sql:242: NOTICE:  column "time_pending_ms" of relation "arcade_profiles" already exists, skipping
+psql:scripts/devo-banco-novo.sql:243: NOTICE:  column "time_pending_ms" of relation "arcade_profiles" already exists, skipping
+psql:scripts/devo-banco-novo.sql:249: NOTICE:  column "points" of relation "arcade_matches" already exists, skipping
+psql:scripts/devo-banco-novo.sql:258: NOTICE:  relation "arcade_matches_game_week_idx" already exists, skipping
+psql:scripts/devo-banco-novo.sql:286: NOTICE:  relation "arcade_rooms" already exists, skipping
+psql:scripts/devo-banco-novo.sql:288: NOTICE:  relation "arcade_rooms_waiting_idx" already exists, skipping
+psql:scripts/devo-banco-novo.sql:289: NOTICE:  relation "arcade_rooms_a_idx" already exists, skipping
+psql:scripts/devo-banco-novo.sql:290: NOTICE:  relation "arcade_rooms_b_idx" already exists, skipping
+psql:scripts/devo-banco-novo.sql:312: NOTICE:  column "is_test" of relation "players" already exists, skipping
+psql:scripts/devo-banco-novo.sql:313: NOTICE:  column "is_test" of relation "invite_codes" already exists, skipping
+psql:scripts/devo-banco-novo.sql:315: NOTICE:  relation "players_is_test_idx" already exists, skipping
+psql:scripts/devo-banco-novo.sql:329: NOTICE:  column "character_name" of relation "players" already exists, skipping
+psql:scripts/devo-banco-novo.sql:383: NOTICE:  column "supervisor_id" of relation "players" already exists, skipping
+psql:scripts/devo-banco-novo.sql:384: NOTICE:  column "karma" of relation "players" already exists, skipping
+psql:scripts/devo-banco-novo.sql:386: NOTICE:  column "supervisor_id" of relation "invite_codes" already exists, skipping
+psql:scripts/devo-banco-novo.sql:387: NOTICE:  relation "players_supervisor_idx" already exists, skipping
+psql:scripts/devo-banco-novo.sql:388: NOTICE:  relation "players_role_idx" already exists, skipping
+psql:scripts/devo-banco-novo.sql:399: NOTICE:  relation "admin_log" already exists, skipping
+psql:scripts/devo-banco-novo.sql:400: NOTICE:  relation "admin_log_target_idx" already exists, skipping
+psql:scripts/devo-banco-novo.sql:401: NOTICE:  relation "admin_log_action_idx" already exists, skipping
+psql:scripts/devo-banco-novo.sql:412: NOTICE:  relation "dealer_supervisions" already exists, skipping
+psql:scripts/devo-banco-novo.sql:413: NOTICE:  relation "dealer_supervisions_open_idx" already exists, skipping
+psql:scripts/devo-banco-novo.sql:496: NOTICE:  relation "staff_authorizations" already exists, skipping
+psql:scripts/devo-banco-novo.sql:497: NOTICE:  relation "staff_authorizations_grantee_idx" already exists, skipping
+psql:scripts/devo-banco-novo.sql:509: NOTICE:  relation "devo_config" already exists, skipping
+psql:scripts/devo-banco-novo.sql:539: NOTICE:  relation "item_defs" already exists, skipping
+psql:scripts/devo-banco-novo.sql:551: NOTICE:  relation "player_items" already exists, skipping
+psql:scripts/devo-banco-novo.sql:552: NOTICE:  relation "player_items_item_idx" already exists, skipping
+psql:scripts/devo-banco-novo.sql:566: NOTICE:  relation "item_ledger" already exists, skipping
+psql:scripts/devo-banco-novo.sql:567: NOTICE:  relation "item_ledger_idem_idx" already exists, skipping
+psql:scripts/devo-banco-novo.sql:568: NOTICE:  relation "item_ledger_player_idx" already exists, skipping
+psql:scripts/devo-banco-novo.sql:659: NOTICE:  relation "card_deliveries" already exists, skipping
+psql:scripts/devo-banco-novo.sql:660: NOTICE:  relation "card_deliveries_pending_idx" already exists, skipping
+psql:scripts/devo-banco-novo.sql:675: NOTICE:  relation "player_unlocks" already exists, skipping
+psql:scripts/devo-banco-novo.sql:694: NOTICE:  relation "karma_log" already exists, skipping
+psql:scripts/devo-banco-novo.sql:695: NOTICE:  relation "karma_log_idem_idx" already exists, skipping
+psql:scripts/devo-banco-novo.sql:696: NOTICE:  relation "karma_log_player_idx" already exists, skipping
+psql:scripts/devo-banco-novo.sql:722: NOTICE:  column "is_tutorial" of relation "deadly_votes" already exists, skipping
+psql:scripts/devo-banco-novo.sql:723: NOTICE:  column "unlocks" of relation "deadly_votes" already exists, skipping
+psql:scripts/devo-banco-novo.sql:810: NOTICE:  relation "reward_proposals" already exists, skipping
+psql:scripts/devo-banco-novo.sql:811: NOTICE:  relation "reward_proposals_status_idx" already exists, skipping
+psql:scripts/devo-banco-novo.sql:812: NOTICE:  relation "reward_proposals_supervisor_idx" already exists, skipping
+psql:scripts/devo-banco-novo.sql:813: NOTICE:  relation "reward_proposals_recipient_idx" already exists, skipping
+psql:scripts/devo-banco-novo.sql:814: NOTICE:  relation "reward_proposals_vote_idx" already exists, skipping
+psql:scripts/devo-banco-novo.sql:824: NOTICE:  relation "reward_log" already exists, skipping
+psql:scripts/devo-banco-novo.sql:825: NOTICE:  relation "reward_log_proposal_idx" already exists, skipping
+psql:scripts/devo-banco-novo.sql:924: NOTICE:  column "arcano" of relation "players" already exists, skipping
+psql:scripts/devo-banco-novo.sql:925: NOTICE:  column "arcano_estagio" of relation "players" already exists, skipping
+psql:scripts/devo-banco-novo.sql:955: NOTICE:  relation "poco_estado" already exists, skipping
+psql:scripts/devo-banco-novo.sql:991: NOTICE:  relation "poco_giros" already exists, skipping
+psql:scripts/devo-banco-novo.sql:993: NOTICE:  relation "poco_giros_gratis_idx" already exists, skipping
+psql:scripts/devo-banco-novo.sql:995: NOTICE:  relation "poco_giros_aberto_idx" already exists, skipping
+psql:scripts/devo-banco-novo.sql:996: NOTICE:  relation "poco_giros_player_idx" already exists, skipping
+psql:scripts/devo-banco-novo.sql:998: NOTICE:  relation "poco_giros_bons_idx" already exists, skipping
+psql:scripts/devo-banco-novo.sql:1076: NOTICE:  relation "poco_premios" already exists, skipping
+psql:scripts/devo-banco-novo.sql:1077: NOTICE:  relation "poco_premios_ativos_idx" already exists, skipping
+psql:scripts/devo-banco-novo.sql:1079: NOTICE:  column "premio_id" of relation "poco_giros" already exists, skipping
+psql:scripts/devo-banco-novo.sql:1081: NOTICE:  column "premio" of relation "poco_giros" already exists, skipping
+psql:scripts/devo-banco-novo.sql:1101: NOTICE:  column "location" of relation "deadly_votes" already exists, skipping
+psql:scripts/devo-banco-novo.sql:1102: NOTICE:  column "admission" of relation "deadly_votes" already exists, skipping
+psql:scripts/devo-banco-novo.sql:1103: NOTICE:  column "results_applied_at" of relation "deadly_votes" already exists, skipping
+psql:scripts/devo-banco-novo.sql:1104: NOTICE:  column "results_applied_by" of relation "deadly_votes" already exists, skipping
+psql:scripts/devo-banco-novo.sql:1113: NOTICE:  column "admission" of relation "deadly_vote_entries" already exists, skipping
+psql:scripts/devo-banco-novo.sql:1114: NOTICE:  column "decision" of relation "deadly_vote_entries" already exists, skipping
+psql:scripts/devo-banco-novo.sql:1115: NOTICE:  column "decided_by" of relation "deadly_vote_entries" already exists, skipping
+psql:scripts/devo-banco-novo.sql:1116: NOTICE:  column "decided_at" of relation "deadly_vote_entries" already exists, skipping
+psql:scripts/devo-banco-novo.sql:1142: NOTICE:  relation "deadly_vote_prizes" already exists, skipping
+psql:scripts/devo-banco-novo.sql:1143: NOTICE:  relation "deadly_vote_prizes_vote_idx" already exists, skipping
+psql:scripts/devo-banco-novo.sql:1146: NOTICE:  column "prize_id" of relation "reward_proposals" already exists, skipping
+psql:scripts/devo-banco-novo.sql:1147: NOTICE:  relation "reward_proposals_prize_uniq" already exists, skipping
+psql:scripts/devo-banco-novo.sql:1203: NOTICE:  relation "tower_progress" already exists, skipping
+psql:scripts/devo-banco-novo.sql:1215: NOTICE:  relation "tower_player" already exists, skipping
+psql:scripts/devo-banco-novo.sql:1258: NOTICE:  relation "salao_estado" already exists, skipping
+psql:scripts/devo-banco-novo.sql:1291: NOTICE:  relation "salao_lotes" already exists, skipping
+psql:scripts/devo-banco-novo.sql:1292: NOTICE:  relation "salao_lotes_carta_idx" already exists, skipping
+psql:scripts/devo-banco-novo.sql:1293: NOTICE:  relation "salao_lotes_edicao_idx" already exists, skipping
+psql:scripts/devo-banco-novo.sql:1294: NOTICE:  relation "salao_lotes_avaliacao_idx" already exists, skipping
+psql:scripts/devo-banco-novo.sql:1306: NOTICE:  relation "salao_lances" already exists, skipping
+psql:scripts/devo-banco-novo.sql:1307: NOTICE:  relation "salao_lances_ativo_idx" already exists, skipping
+psql:scripts/devo-banco-novo.sql:1308: NOTICE:  relation "salao_lances_lote_idx" already exists, skipping
+psql:scripts/devo-banco-novo.sql:1309: NOTICE:  relation "salao_lances_player_idx" already exists, skipping
+psql:scripts/devo-banco-novo.sql:1329: NOTICE:  relation "salao_mercado" already exists, skipping
+psql:scripts/devo-banco-novo.sql:1330: NOTICE:  relation "salao_mercado_carta_idx" already exists, skipping
+psql:scripts/devo-banco-novo.sql:1331: NOTICE:  relation "salao_mercado_ativa_idx" already exists, skipping
+psql:scripts/devo-banco-novo.sql:1354: NOTICE:  relation "salao_anuncios" already exists, skipping
+psql:scripts/devo-banco-novo.sql:1355: NOTICE:  relation "salao_anuncios_pub_idx" already exists, skipping
+psql:scripts/devo-banco-novo.sql:1356: NOTICE:  relation "salao_anuncios_pend_idx" already exists, skipping
+psql:scripts/devo-banco-novo.sql:1376: NOTICE:  relation "salao_eventos" already exists, skipping
+psql:scripts/devo-banco-novo.sql:1377: NOTICE:  relation "salao_eventos_inicio_idx" already exists, skipping
+psql:scripts/devo-banco-novo.sql:1392: NOTICE:  relation "salao_movimentos" already exists, skipping
+psql:scripts/devo-banco-novo.sql:1393: NOTICE:  relation "salao_movimentos_player_idx" already exists, skipping
+psql:scripts/devo-banco-novo.sql:1439: NOTICE:  column "expires_at" of relation "player_items" already exists, skipping
+psql:scripts/devo-banco-novo.sql:1453: NOTICE:  relation "player_cosmetics" already exists, skipping
+psql:scripts/devo-banco-novo.sql:1466: NOTICE:  relation "cosmetic_assets" already exists, skipping
+psql:scripts/devo-banco-novo.sql:1497: NOTICE:  relation "weekly_reward_plans" already exists, skipping
+psql:scripts/devo-banco-novo.sql:1498: NOTICE:  relation "weekly_reward_plans_week_idx" already exists, skipping
+psql:scripts/devo-banco-novo.sql:1507: NOTICE:  relation "weekly_reward_log" already exists, skipping
+psql:scripts/devo-banco-novo.sql:1787: NOTICE:  column "borda" of relation "player_cosmetics" already exists, skipping
+psql:scripts/devo-banco-novo.sql:1859: NOTICE:  relation "virtude_pp" already exists, skipping
+psql:scripts/devo-banco-novo.sql:1868: NOTICE:  relation "virtude_nivel" already exists, skipping
+psql:scripts/devo-banco-novo.sql:1884: NOTICE:  relation "virtude_pp_log" already exists, skipping
+psql:scripts/devo-banco-novo.sql:1885: NOTICE:  relation "virtude_pp_log_player_idx" already exists, skipping
+psql:scripts/devo-banco-novo.sql:1900: NOTICE:  relation "virtude_evolucoes" already exists, skipping
+psql:scripts/devo-banco-novo.sql:1901: NOTICE:  relation "virtude_evolucoes_player_idx" already exists, skipping
+psql:scripts/devo-banco-novo.sql:2022: NOTICE:  relation "corporacoes" already exists, skipping
+psql:scripts/devo-banco-novo.sql:2024: NOTICE:  column "envio_idem" of relation "corporacoes" already exists, skipping
+psql:scripts/devo-banco-novo.sql:2025: NOTICE:  relation "corporacoes_envio_idx" already exists, skipping
+psql:scripts/devo-banco-novo.sql:2026: NOTICE:  relation "corporacoes_nome_idx" already exists, skipping
+psql:scripts/devo-banco-novo.sql:2027: NOTICE:  relation "corporacoes_fundador_pendente_idx" already exists, skipping
+psql:scripts/devo-banco-novo.sql:2028: NOTICE:  relation "corporacoes_status_idx" already exists, skipping
+psql:scripts/devo-banco-novo.sql:2039: NOTICE:  relation "corporacao_membros" already exists, skipping
+psql:scripts/devo-banco-novo.sql:2040: NOTICE:  relation "corporacao_membros_lider_idx" already exists, skipping
+psql:scripts/devo-banco-novo.sql:2041: NOTICE:  relation "corporacao_membros_corp_idx" already exists, skipping
+psql:scripts/devo-banco-novo.sql:2058: NOTICE:  relation "corporacao_pedidos" already exists, skipping
+psql:scripts/devo-banco-novo.sql:2059: NOTICE:  relation "corporacao_pedidos_pendente_idx" already exists, skipping
+psql:scripts/devo-banco-novo.sql:2060: NOTICE:  relation "corporacao_pedidos_corp_idx" already exists, skipping
+psql:scripts/devo-banco-novo.sql:2074: NOTICE:  relation "corporacao_convites" already exists, skipping
+psql:scripts/devo-banco-novo.sql:2075: NOTICE:  relation "corporacao_convites_pendente_idx" already exists, skipping
+psql:scripts/devo-banco-novo.sql:2076: NOTICE:  relation "corporacao_convites_para_idx" already exists, skipping
+psql:scripts/devo-banco-novo.sql:2090: NOTICE:  relation "corporacao_transferencias" already exists, skipping
+psql:scripts/devo-banco-novo.sql:2091: NOTICE:  relation "corporacao_transferencias_carta_idx" already exists, skipping
+psql:scripts/devo-banco-novo.sql:2092: NOTICE:  relation "corporacao_transferencias_corp_idx" already exists, skipping
+psql:scripts/devo-banco-novo.sql:2106: NOTICE:  relation "corporacao_rivalidades" already exists, skipping
+psql:scripts/devo-banco-novo.sql:2115: NOTICE:  relation "corporacao_estado" already exists, skipping
+psql:scripts/devo-banco-novo.sql:2127: NOTICE:  relation "corporacao_movimentos" already exists, skipping
+psql:scripts/devo-banco-novo.sql:2128: NOTICE:  relation "corporacao_movimentos_player_idx" already exists, skipping
+psql:scripts/devo-banco-novo.sql:2201: NOTICE:  relation "dialog_progress" already exists, skipping
+psql:scripts/devo-banco-novo.sql:2215: NOTICE:  relation "dialog_events" already exists, skipping
+psql:scripts/devo-banco-novo.sql:2216: NOTICE:  relation "dialog_events_scene_idx" already exists, skipping
+psql:scripts/devo-banco-novo.sql:2271: NOTICE:  relation "calendario_eventos" already exists, skipping
+psql:scripts/devo-banco-novo.sql:2272: NOTICE:  relation "calendario_eventos_inicio_idx" already exists, skipping
+psql:scripts/devo-banco-novo.sql:2295: NOTICE:  relation "calendario_checkins" already exists, skipping
+psql:scripts/devo-banco-novo.sql:2296: NOTICE:  relation "calendario_checkins_ultimo_idx" already exists, skipping
+psql:scripts/devo-banco-novo.sql:2391: NOTICE:  relation "deadly_vote_entry_prizes" already exists, skipping
+psql:scripts/devo-banco-novo.sql:2392: NOTICE:  relation "dv_entry_prizes_vote_idx" already exists, skipping
+banco novo aplicado duas vezes: ok

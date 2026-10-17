@@ -1,0 +1,1078 @@
+{
+  "base": "http://localhost:3000",
+  "shots": [
+    {
+      "name": "20-record",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "20-record-scroll",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "20-record-mesa",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "20-record-convites",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "20-record-foto-ajuste",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "20-record-foto",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "20-record-shuffler",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "20-record-arquivo",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "20-record-deadly-votes-scroll",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "20-record-dossie",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "20-record-dealer",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "20-record-dealer-resultados",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "20-record-dealer-convocar",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "20-record-dv-gerente",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "20-record-dv-gerente-aviso",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "20-record-dv-andamento",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "20-record-dv-entrar-no-grupo",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "20-record-dv-nao-inscrito",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "20-record-dv-estados",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "20-record-dv-dossie-falha",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "20-record-dv-dossie-cancelado",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "20-record-dv-dossie-andamento",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "20-record-dealer-link",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "20-record-dealer-link-scroll",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "20-record-desktop",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "21-pulso",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "21-pulso-scroll",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "22-mensagens",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "22-mensagens-conversa",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "22-mensagens-digitando",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "22-mensagens-resposta",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "23-cartas",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "23-cartas-scroll",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "23-cartas-detalhe",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "23-cartas-detalhe-ficha",
+      "note": "scrollTop=186 scrollHeight=834 clientHeight=648",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "23-cartas-detalhe-girando",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "23-cartas-detalhe-verso",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "23-cartas-lendarias",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "23-cartas-detalhe-lendaria",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "23-cartas-colecoes",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "24-trocas",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "24-trocas-sala",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "24-trocas-sala-negociando",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "24-trocas-sala-frase",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "24-trocas-sala-chat",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "24-trocas-scroll",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "24-trocas-aceitou",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "24-trocas-revelacao",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "24-trocas-revelada",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "25-ajustes",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "25-ajustes-scroll",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "26-coruja-01",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "26-coruja-01@390x900",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "26-coruja-01@360x740",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "26-coruja-03",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "26-coruja-03@390x900",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "26-coruja-03@360x740",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "26-coruja-05",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "26-coruja-quiz",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "26-coruja-07",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "26-coruja-promocionais",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "26-coruja-promocionais@390x900",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "26-coruja-promocionais@360x740",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "26-coruja-11",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "26-coruja-14",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "26-coruja-16",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "26-coruja-18",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "27-javali-0",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "27-javali-0@390x900",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "27-javali-0@360x740",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "27-javali-1",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "27-javali-1@390x900",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "27-javali-1@360x740",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "27-javali-2",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "27-javali-3",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "28-mensagens-herdeiro",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "poco-00-home-trancado",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "poco-01-trancado",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "poco-02-diario-vazio",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "poco-03-home-liberado",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "poco-04-neblina-rua",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "poco-05-neblina-poco",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "poco-05-neblina-poco@390x900",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "poco-05-neblina-poco@360x740",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "poco-06-neblina-escolha-moeda",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "poco-06-neblina-escolha-moeda@390x900",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "poco-06-neblina-escolha-moeda@360x740",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "poco-07-neblina-figura",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "poco-07-neblina-figura@390x900",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "poco-07-neblina-figura@360x740",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "poco-08-neblina-mao",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "poco-08-neblina-mao@390x900",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "poco-08-neblina-mao@360x740",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "poco-09-neblina-dracma",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "poco-09-neblina-dracma@390x900",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "poco-09-neblina-dracma@360x740",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "poco-10-neblina-aviso",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "poco-11-tela",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "poco-12-moedas",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "poco-13-baldes-bloqueado",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "poco-14-lancar",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "poco-15-moeda-caindo",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "poco-15b-respingo",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "poco-15c-nevoa",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "poco-16-minigame",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "poco-17-minigame-fim",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "poco-18-balde-subindo",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "poco-19a-lixo-luz",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "poco-19b-lixo-cai",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "poco-19c-lixo-poeira",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "poco-19-resultado-lixo",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "poco-20-giro-gratis-usado",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "poco-21-lancar-gratis-usado",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "poco-22b-raro-prata",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "poco-22c-raro-engasgo",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "poco-22d-raro-surto",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "poco-22a-revelacao-raro",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "poco-22-resultado-raro",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "poco-26-resultado-fragmento",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "poco-27-resultado-essencia",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "poco-28-resultado-cosmetico-1",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "poco-29-resultado-cosmetico-2",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "poco-30-resultado-cosmetico-3",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "poco-23-diario",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "poco-24-owner-cena-pular",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "poco-25-owner-probabilidades",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "poco-40-mesa-premios",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "poco-41-mesa-novo-premio",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "poco-42-mesa-chances-previa",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "poco-50-comum-a-manivela",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "poco-50-comum-b-subindo",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "poco-50-comum-c-luz",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "poco-50-comum-d-revela",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "poco-50-comum-e-resultado",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "poco-51-lixo-owner-a-manivela",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "poco-51-lixo-owner-b-subindo",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "poco-51-lixo-owner-c-luz",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "poco-51-lixo-owner-d-cai",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "poco-51-lixo-owner-e-resultado",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "v01-home-trancado",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "v02-trancado",
+      "note": "jogador sem o tutorial: motivo",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "arc-00-trancado",
+      "note": "Arcanos trancado (mesma regra das Virtudes)",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "arc-00-trancado@390x900",
+      "note": "Arcanos trancado (mesma regra das Virtudes)",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "arc-00-trancado@360x740",
+      "note": "Arcanos trancado (mesma regra das Virtudes)",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "v03-sem-arcano",
+      "note": "liberado, Arcano ainda sem registro (vazio)",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "v04-imperatriz-roda",
+      "note": "Arcano da Imperatriz: Taças excelente, Paus deficiente",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "v05-imperatriz-potencial",
+      "note": "pouco acumulado",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "v06-imperatriz-antigas",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "v07-home-liberado",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "v08-morte-roda",
+      "note": "Arcano da Morte, Estágio I",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "v09-evolucao-antes",
+      "note": "P.P. perto do limite, pronto para a metamorfose",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "v10-morte-naipes",
+      "note": "afinidades em palavras",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "v11-historico-vazio",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "arc-01-virtudes-link",
+      "note": "Virtudes: só a entrada para os Arcanos, sem a lista",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "arc-01-virtudes-link@390x900",
+      "note": "Virtudes: só a entrada para os Arcanos, sem a lista",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "arc-01-virtudes-link@360x740",
+      "note": "Virtudes: só a entrada para os Arcanos, sem a lista",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "arc-02-mapa",
+      "note": "mapa orbital: o próprio aceso, os outros apagados",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "arc-02-mapa@390x900",
+      "note": "mapa orbital: o próprio aceso, os outros apagados",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "arc-02-mapa@360x740",
+      "note": "mapa orbital: o próprio aceso, os outros apagados",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "arc-03-galeria-trancado",
+      "note": "galeria centrada num trancado: estátua cinza, nome e frase breve",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "arc-03-galeria-trancado@390x900",
+      "note": "galeria centrada num trancado: estátua cinza, nome e frase breve",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "arc-03-galeria-trancado@360x740",
+      "note": "galeria centrada num trancado: estátua cinza, nome e frase breve",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "arc-04-galeria-proprio",
+      "note": "galeria no próprio: em cor, botão Abrir",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "arc-04-galeria-proprio@390x900",
+      "note": "galeria no próprio: em cor, botão Abrir",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "arc-04-galeria-proprio@360x740",
+      "note": "galeria no próprio: em cor, botão Abrir",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "arc-04b-galeria-giro",
+      "note": "no meio do arrasto: laterais giram, encolhem e perdem a cor",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "arc-04b-galeria-giro@390x900",
+      "note": "no meio do arrasto: laterais giram, encolhem e perdem a cor",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "arc-04b-galeria-giro@360x740",
+      "note": "no meio do arrasto: laterais giram, encolhem e perdem a cor",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "arc-05-detalhe",
+      "note": "altar: vitral vermelho, velas, a figura (placeholder) e o nome",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "arc-05-detalhe@390x900",
+      "note": "altar: vitral vermelho, velas, a figura (placeholder) e o nome",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "arc-05-detalhe@360x740",
+      "note": "altar: vitral vermelho, velas, a figura (placeholder) e o nome",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "arc-06-detalhe-fisiologia",
+      "note": "Descrição e Fisiologia (mais natural / mais custosa)",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "arc-06-detalhe-fisiologia@390x900",
+      "note": "Descrição e Fisiologia (mais natural / mais custosa)",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "arc-06-detalhe-fisiologia@360x740",
+      "note": "Descrição e Fisiologia (mais natural / mais custosa)",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "arc-07-detalhe-estagios",
+      "note": "Estágio I atual, os seguintes velados",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "arc-07-detalhe-estagios@390x900",
+      "note": "Estágio I atual, os seguintes velados",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "arc-07-detalhe-estagios@360x740",
+      "note": "Estágio I atual, os seguintes velados",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "v12-evolucao-depois",
+      "note": "Estágio II",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "v13-depois-potencial",
+      "note": "acúmulo recomeça",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "v14-depois-historico",
+      "note": "histórico: mais cresceu / menos cresceu",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "arc-08-estagio-ii",
+      "note": "depois da Evolução: I alcançado, II atual",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "arc-08-estagio-ii@390x900",
+      "note": "depois da Evolução: I alcançado, II atual",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "arc-08-estagio-ii@360x740",
+      "note": "depois da Evolução: I alcançado, II atual",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "v15-record-arcano",
+      "note": "ficha do Record com o Arcano",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "v16-mesa-jogadores",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "v17-mesa-detalhes",
+      "note": "P.P., atributos, afinidade e histórico com números",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "v18-mesa-evoluir-armado",
+      "note": "confirmação em dois toques",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "v19-mesa-tabela",
+      "note": "tabela editável, provisória",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "v20-mesa-divergencia",
+      "note": "nota da divergência para o dono confirmar",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "v21-mesa-limites",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "v35-mesa-textos",
+      "note": "Owner edita os textos do Arcano (provisório)",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "v35-mesa-textos@390x900",
+      "note": "Owner edita os textos do Arcano (provisório)",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "v35-mesa-textos@360x740",
+      "note": "Owner edita os textos do Arcano (provisório)",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "v36-mesa-textos-estagios",
+      "note": "Estágios e o botão de gravar",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "v36-mesa-textos-estagios@390x900",
+      "note": "Estágios e o botão de gravar",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "v36-mesa-textos-estagios@360x740",
+      "note": "Estágios e o botão de gravar",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "arc-09-owner-mapa",
+      "note": "Owner: todos os sigilos abertos",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "arc-09-owner-mapa@390x900",
+      "note": "Owner: todos os sigilos abertos",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "arc-09-owner-mapa@360x740",
+      "note": "Owner: todos os sigilos abertos",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "arc-10-owner-galeria",
+      "note": "Owner: qualquer Arcano abre",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "arc-10-owner-galeria@390x900",
+      "note": "Owner: qualquer Arcano abre",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "arc-10-owner-galeria@360x740",
+      "note": "Owner: qualquer Arcano abre",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "arc-11-owner-detalhe",
+      "note": "Owner: detalhe de outro Arcano, com o selo de provisório",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "arc-11-owner-detalhe@390x900",
+      "note": "Owner: detalhe de outro Arcano, com o selo de provisório",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "arc-11-owner-detalhe@360x740",
+      "note": "Owner: detalhe de outro Arcano, com o selo de provisório",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "v22-erro",
+      "note": "",
+      "url": "http://localhost:3000/"
+    }
+  ],
+  "errors": [],
+  "console": [
+    {
+      "page": "http://localhost:3000/",
+      "text": "Permissions policy violation: compute-pressure is not allowed in this document.",
+      "src": "https://www.youtube.com/s/player/0229cd64/player_embed_es6.vflset/pt_BR/base.js"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "Permissions policy violation: compute-pressure is not allowed in this document.",
+      "src": "https://www.youtube.com/s/player/0229cd64/player_embed_es6.vflset/pt_BR/base.js"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "HTTP 400",
+      "src": "http://localhost:3000/api/auth/sign-up/email"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "Failed to load resource: the server responded with a status of 400 (BAD_REQUEST)",
+      "src": "http://localhost:3000/api/auth/sign-up/email"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "HTTP 400",
+      "src": "http://localhost:3000/api/auth/sign-up/email"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "Failed to load resource: the server responded with a status of 400 (BAD_REQUEST)",
+      "src": "http://localhost:3000/api/auth/sign-up/email"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "HTTP 500",
+      "src": "http://localhost:3000/api/virtudes"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "Failed to load resource: the server responded with a status of 500 (Internal Server Error)",
+      "src": "http://localhost:3000/api/virtudes"
+    }
+  ]
+}
