@@ -1,0 +1,9 @@
+[casa-primeiro-plano] v01: @cf/black-forest-labs/flux-2-klein-4b seed=10201 1024x1536 passos=None (~156 neurônios)
+    ok em 12.3s, 1024x1536
+[casa-primeiro-plano] v02: @cf/black-forest-labs/flux-2-klein-4b seed=10202 1024x1536 passos=None (~156 neurônios)
+    ok em 16.6s, 1024x1536
+[casa-primeiro-plano] v03: @cf/black-forest-labs/flux-2-klein-4b seed=10203 1024x1536 passos=None (~156 neurônios)
+    ok em 17.6s, 1024x1536
+[casa-primeiro-plano] v01: rembg:birefnet-general; sem avisos
+[casa-primeiro-plano] v02: rembg:birefnet-general; sem avisos
+[casa-primeiro-plano] v03: rembg:birefnet-general; sem avisos

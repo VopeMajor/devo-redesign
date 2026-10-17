@@ -1,0 +1,56 @@
+{
+  "id": "casa-primeiro-plano",
+  "titulo": "Casa — primeiro plano (parallax)",
+  "tipo": "ilustracao",
+  "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+  "prompt": "Fantasy RPG environment foreground layer, isolated on a plain flat light gray background. Muted dark urban fantasy palette: abyss black, deep blood wine red, fog stone gray and faded silver, low saturation, no neon, no bright gold, no purple glow. Painterly, highly detailed, subtle film grain, elegant and melancholic. Only foreground elements framing the edges of a vertical image: on the left edge a heavy dark wine-red velvet curtain hanging from the top with a tasseled tie, and along the bottom edge the dark wooden edge of a table with a burning-out candle stub in a small brass holder and an old key, very close to the viewer and slightly out of focus. The whole center and right of the image is empty plain background. No room, no walls, no floor.",
+  "negative": "text, letters, watermark, people, characters, faces, neon, cartoon, saturated colors",
+  "largura": 1024,
+  "altura": 1536,
+  "variacoes": [
+    {
+      "seed": 10201,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "passos": null,
+      "largura": 1024,
+      "altura": 1536,
+      "prompt_extra": "",
+      "n": 1
+    },
+    {
+      "seed": 10202,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "passos": null,
+      "largura": 1024,
+      "altura": 1536,
+      "prompt_extra": "",
+      "n": 2
+    },
+    {
+      "seed": 10203,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "passos": null,
+      "largura": 1024,
+      "altura": 1536,
+      "prompt_extra": "",
+      "n": 3
+    }
+  ],
+  "pos": {
+    "remover_fundo": true,
+    "tamanho_final": 1536,
+    "margem": 0.0,
+    "derivados": [
+      1024,
+      768,
+      512
+    ],
+    "quadro_inteiro": true,
+    "modelo_fundo": "birefnet-general",
+    "fundo": "liso",
+    "camadas": []
+  },
+  "passos": null,
+  "guidance": null,
+  "referencias": []
+}
