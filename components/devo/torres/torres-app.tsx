@@ -304,7 +304,7 @@ export function TorresApp() {
         </div>
         <div ref={encaixe.ref} className={cn('relative min-h-0 flex-1', (trancado || !dados) && 'pointer-events-none')}>
           <div className={cn('absolute inset-0 flex items-start justify-center transition-[filter,opacity] duration-700', (trancado || !dados) && '[filter:grayscale(1)_brightness(0.45)]')}>
-            {encaixe.w ? <MapaTorres torres={torresMapa} largura={encaixe.w} inerte={!dados?.liberado || galoAberto} onAbrir={abrir} /> : null}
+            {encaixe.w ? <MapaTorres torres={torresMapa} cenario={dados?.liberado ? dados.cenario : (CONTEUDO_PADRAO.cenario ?? null)} largura={encaixe.w} inerte={!dados?.liberado || galoAberto} onAbrir={abrir} /> : null}
           </div>
         </div>
       </div>

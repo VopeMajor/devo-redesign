@@ -1,0 +1,19 @@
+{
+  "asset": "img:/images/torres/picadeiro/torre",
+  "imagem": {
+    "base": "/images/torres/picadeiro/torre",
+    "tamanhos": [
+      96,
+      256,
+      512,
+      1024
+    ]
+  },
+  "origem": {
+    "pedido": "torre-picadeiro",
+    "variacao": "v02",
+    "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+    "seed": 5222,
+    "importado": null
+  }
+}

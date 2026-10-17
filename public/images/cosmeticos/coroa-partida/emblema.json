@@ -1,0 +1,20 @@
+{
+  "asset": "img:/images/cosmeticos/coroa-partida/emblema",
+  "imagem": {
+    "base": "/images/cosmeticos/coroa-partida/emblema",
+    "tamanhos": [
+      48,
+      96,
+      256,
+      512,
+      1024
+    ]
+  },
+  "origem": {
+    "pedido": "emblema-coroa-partida",
+    "variacao": "v03",
+    "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+    "seed": 7013,
+    "importado": null
+  }
+}

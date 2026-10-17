@@ -104,19 +104,49 @@ Copie uma torre secundária e troque:
   mapa, o fundo da tela da torre e o palco das cenas usam a pintura; sem ela, o desenho vetorial de `"arte"`.
   ```json
   "ilustracao": {
-    "arquivo": "/images/torres/campanha/torre-principal-agulha--v04",
-    "larguras": [256, 512, 1024],
+    "arquivo": "/images/torres/agulha/torre",
+    "larguras": [96, 256, 512, 1024],
     "aspecto": 0.486,
     "altura": 440,
     "janelas": [[0.597, 0.825], [0.398, 0.724], [0.556, 0.633]]
   }
   ```
-  Os arquivos ficam em `public/images/torres/<id>/<nome>--<largura>.webp` (uma por largura). `aspecto` = largura ÷
+  Os arquivos ficam em `public/images/torres/<id>/torre-<largura>.webp` (uma por largura; convenção do pipeline de arte, que também grava `torre.json` com a origem). `aspecto` = largura ÷
   altura da imagem; `altura` = tamanho no mapa (390×640) com escala 1; `janelas` = posição de cada vitral em frações
   [x, y] da imagem, de baixo para cima, um por andar — acendem com o progresso (porcelana), o atual pulsa em ametista
-  e os demais escurecem. **Trocar a arte de uma secundária = copiar os WebP e preencher este campo** (sem código).
+  e os demais escurecem. **Trocar a arte de uma torre = copiar os WebP e preencher este campo** (sem código).
+  Janelas medidas por script: pixels quentes e claros da pintura (r > 150, r > b + 30, r > g + 10), agrupados; escolha
+  um vitral por andar, de baixo para cima. Hoje as quatro torres estão pintadas (agulha v04, imperador v03,
+  observatório, picadeiro).
 
 Deve haver **exatamente 1** torre `"principal"`. Requisitos de chave só podem citar torres que existem.
+
+## Cenário pintado do mapa (opcional)
+
+No topo do `conteudo.json`, `"cenario"` troca o desenho vetorial do mapa pela ilha e pelo céu pintados:
+
+```json
+"cenario": {
+  "ilha": { "arquivo": "/images/torres/mapa/ilha", "larguras": [512, 1024], "aspecto": 0.8 },
+  "ceu":  { "arquivo": "/images/torres/mapa/ceu",  "larguras": [512, 1024], "aspecto": 0.6 },
+  "pedestais": { "campanha": { "x": 0.5, "y": 0.32 }, "imperador": { "x": 0.2, "y": 0.5 } }
+}
+```
+
+- A ilha ocupa a largura do mapa, apoiada embaixo; `aspecto` = largura ÷ altura da imagem.
+- `pedestais`: centro da base de cada torre em frações [0–1] da imagem da ilha (o `json` do pipeline traz isso).
+  A escala vem da profundidade (mais ao fundo, menor; a principal 25 % maior); `"escala"` no pedestal força um valor.
+- O céu deriva devagar (paralaxe leve) e acompanha o ponteiro no desktop. `"espelhar": true` vira o céu na horizontal.
+- Céu e ilha usam o mesmo enquadramento (cobrem o mapa; se a arte é mais larga, as laterais são cortadas).
+- `"sufixo": "altura"`: o número do arquivo é o lado maior (convenção do pipeline do mapa: `ilha-1536.webp`).
+- `"afundar"` no pedestal enterra a base da torre no topo do pedestal (unidades do mapa).
+- `"enfeites": [{ "tipo": "lanterna", "x": …, "y": … }]` põe uma lanterna acesa num pedestal que ficou vazio.
+- Hoje (arte da41f23): o Picadeiro saiu do pedestal da frente-esquerda (ficava na frente do Imperador)
+  e está no piso da praça, à frente-esquerda do portão (0,36 / 0,67); o pedestal vazio ganhou uma lanterna; placas que não cabem no pé vão para acima do topo da torre; o céu está
+  espelhado para a lua não ficar atrás do Imperador.
+- Se uma imagem falhar, o mapa volta sozinho para o vetorial. Torre sem pedestal usa o `"mapa"` dela.
+- As placas de nome ficam no pé de cada torre, pequenas, com um filete até a base, e o código as desloca para
+  nunca cobrir uma ilustração ou outra placa.
 
 ## Essências: como o jogador ganha
 

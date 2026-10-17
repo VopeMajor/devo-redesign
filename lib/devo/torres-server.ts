@@ -163,6 +163,7 @@ export async function estadoTorres(playerId: string): Promise<TorresPayload> {
     apresentacao: { galoVista: !!p?.galo_intro_at, galoFa: p?.galo_fan ?? null, reflexaoPendente: !!p?.galo_intro_at && !p?.reflexao_at },
     torres: conteudo.torres.map((t) => montarTorre(t, conteudo, prog.get(t.id) ?? new Set(), s, nomes)),
     provisorio: !!conteudo.provisorio,
+    cenario: conteudo.cenario ?? null,
   }
 }
 

@@ -1,0 +1,33 @@
+{
+  "asset": "img:/images/cosmeticos/lua-escarlate/emblema",
+  "imagem": {
+    "base": "/images/cosmeticos/lua-escarlate/emblema",
+    "tamanhos": [
+      48,
+      96,
+      256,
+      512,
+      1024
+    ],
+    "camadas": [
+      {
+        "src": "/images/cosmeticos/lua-escarlate/emblema-cristal.webp",
+        "anim": "pulso",
+        "caixa": [
+          0.2178,
+          0.1895,
+          0.5527,
+          0.751
+        ],
+        "dur": 3.2
+      }
+    ]
+  },
+  "origem": {
+    "pedido": "emblema-lua-escarlate",
+    "variacao": "v01",
+    "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+    "seed": 7061,
+    "importado": null
+  }
+}

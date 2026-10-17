@@ -136,3 +136,8 @@
   .tw-drift-lento, .tw-girar, .tw-girar-lento, .tw-raios, .tw-raios-lentos, .tw-tremor, .tw-voo, .tw-surge, .tw-faisca, .tw-andar-in { animation: none !important; }
   .tw-shackle { transition: none; }
 }
+
+/* Céu pintado do mapa: deriva lentíssima (paralaxe leve; o ponteiro desloca a camada no desktop) */
+@keyframes tw-ceu { from { transform: scale(1.04) translateX(-1.2%); } to { transform: scale(1.04) translateX(1.2%); } }
+.tw-ceu-deriva { animation: tw-ceu 60s ease-in-out infinite alternate; }
+@media (prefers-reduced-motion: reduce) { .tw-ceu-deriva { animation: none !important; } }

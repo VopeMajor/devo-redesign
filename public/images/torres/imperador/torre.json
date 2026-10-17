@@ -1,0 +1,19 @@
+{
+  "asset": "img:/images/torres/imperador/torre",
+  "imagem": {
+    "base": "/images/torres/imperador/torre",
+    "tamanhos": [
+      96,
+      256,
+      512,
+      1024
+    ]
+  },
+  "origem": {
+    "pedido": "torre-imperador",
+    "variacao": "v03",
+    "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+    "seed": 5203,
+    "importado": null
+  }
+}

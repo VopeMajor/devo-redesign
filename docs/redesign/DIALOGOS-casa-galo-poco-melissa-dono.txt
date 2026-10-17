@@ -1,0 +1,556 @@
+[Relações são complicadas.]
+
+|
+
+[É difícil saber quando alguém gosta ou não de você.]
+
+|
+
+[Que bom que, no seu caso, você sempre sabe.]
+
+|
+
+[ … ]
+
+|
+
+*Som de porta se abrindo.*
+
+|
+
+— Finalmente em casa.
+
+|
+
+[Este é o endereço que encontrei entre os meus pertences.]
+
+|
+
+[É, sem sombra de dúvidas...]
+
+|
+
+Jogador:
+
+1 — Uma boa casa.
+2 — Um apartamento adequado.
+3 — Um cativeiro. Completamente.
+
+|
+
+[Ainda que você não se lembre de tudo, algumas memórias daquele lugar começam a parecer cada vez mais naturais.]
+
+|
+
+Jogador:
+
+1 — Talvez eu possa relaxar agora que tudo passou.
+2 — Ainda não posso baixar a guarda. Tenho muita coisa em que pensar.
+3 — ...
+
+|
+
+[Talvez, depois de remoer os próprios pensamentos por algumas horas, você finalmente comece a sentir sono.]
+
+|
+
+[Mesmo que ainda não tenha se deitado, a exaustão é grande demais para permitir que continue acordado.]
+
+|
+
+[Sonhos confusos começam a invadir sua mente.]
+
+|
+
+[Um pesadelo parece estar prestes a surgir...]
+
+|
+
+[Só que...]
+
+|
+
+[No meio da noite, a campainha toca.]
+
+*Som de campainha.*
+
+|
+
+"Que estranho. Alguém veio me visitar?"
+
+|
+
+"O que eu faço?"
+
+|
+
+Jogador:
+
+1 — *Ir abrir a porta.*
+2 — *Ignorar.*
+3 — Vá embora!
+
+|
+
+[Independentemente do que eu pretendesse fazer, nada disso importou.]
+
+|
+
+[A porta se abriu sozinha. E, junto dela, surgiu a figura de um homem ruivo, trajando um terno.]
+
+|
+
+[Um Anfitrião havia aparecido.]
+
+|
+
+— E aí, pé de caju! Lembra de mim?
+
+|
+
+Jogador:
+
+1 — Não...
+2 — Wilson?
+3 — Galo...?
+4 — Cláudio...?
+
+|
+
+Respostas:
+
+1 — É mais burro do que eu esperava!
+2 — Adoro aquela bola, mas não.
+3 — Bingo! Aí, sim! Pirulito!
+
+[O Galo transferiu uma determinada quantidade de tempo para você.]
+
+4 — Nada mal, mas não.
+
+|
+
+— Aqui é o Galo. Tipo Galo Capone! Cheguei pra fazer você pirar de novo, sacou?
+
+|
+
+— Dessa vez, eu vim ensinar uma coisa. Mas não é pra você.
+
+|
+
+Jogador:
+
+1 — Não é para mim?
+2 — Não sei se entendi.
+3 — Outra pessoa...?
+
+|
+
+— Shhh... Cala a boquinha. Já vai começar. Deixa o mano ou a mana aí se concentrar.
+
+|
+
+[A luz pisca.]
+
+|
+
+[Sistema de Karma]
+
+O Karma representa as consequências das ações de um indivíduo sobre o mundo, como uma espécie de ressonância moral. No mundo comum, há quem acredite em sua existência e quem a considere mera superstição. Para um Record, entretanto, o Karma é uma força objetivamente difícil de ignorar, pois existem evidências claras de que ele realmente existe.
+
+O Karma está intimamente ligado ao personagem e pode ser adquirido por meio de diálogos, decisões importantes e escolhas realizadas ao longo de uma narrativa — mesmo quando o próprio personagem desconhece sua existência ou a verdadeira dimensão de suas ações.
+
+Cada vínculo estabelecido e cada decisão tomada podem alterar o curso do destino, afetando tanto os relacionamentos quanto a maneira como o mundo percebe aquele que age.
+
+|
+
+[Seu Karma é representado pela Linha do Destino.]
+
+|
+
+[Nenhum dos lados é inteiramente bom ou mau.]
+
+|
+
+[Você começa com zero de Karma, o que representa um estado neutro.]
+
+|
+
+[A Linha do Destino sobe conforme seu personagem se aproxima do lado da Ordem.]
+
+|
+
+[E desce conforme ele se aproxima do Caos, podendo alcançar valores negativos.]
+
+|
+
+[Diferentes possibilidades aguardam aqueles que alcançam níveis significativos de Karma positivo ou negativo.]
+
+|
+
+— Em suma, pé de caju, isso só significa que você deve pensar bem antes de decidir como vai agir daqui pra frente. Afinal, sempre tem alguém anotando suas boas ações...
+
+|
+
+— É como se o Papai Noel estivesse de olho em você. Só que de verdade. Sacou?
+
+|
+
+Jogador:
+
+1 — Você não disse literalmente nada.
+2 — ...
+
+|
+
+— Quem precisa saber, sabe.
+
+|
+
+[Com um sorriso radiante e o andar de quem se considera dono do que pisa, ele começa a invadir a casa como se tivesse sido convidado.]
+
+|
+
+[Pelo visto, o Galo está indo até a cozinha procurar alguma coisa para comer.] *sons*
+
+|
+
+"Eu deveria tirar uma dúvida importante antes que ele vá embora, como esses sempre fazem..."
+
+|
+
+"Mas qual?"
+
+|
+
+Jogador:
+
+1 — O que significa Capone?
+2 — Por que Galo?
+3 — Você come minhocas?
+4 — Você sempre aparece, fica dizendo que tem alguém ouvindo e nunca explica nada. Eu nunca vejo ninguém. Quem é?
+5 — Pode me ajudar de alguma forma?
+
+|
+
+Respostas:
+
+1 — Não me lembro. Inventei agora...
+
+2 — Longa história, xuxu. Mas digamos que eu sou o melhor, sacou?
+
+3 — Tô de jejum.
+
+4 — [O Galo ignora você.]
+
+5 — Ajuda isso, ajuda aquilo... Sempre a mesma coisa! E eu aqui, achando que você podia ser diferente... Que chatice.
+
+|
+
+"Esse cara nunca diz algo útil?"
+
+|
+
+— Escuta, pé de caju.
+
+[Ele está segurando uma lata de bebida.] *Som de lata*
+
+— Vou te passar meu contato. Pode me ligar sempre que se sentir incapaz ou sozinho. Eu sou bom tanto na terapia quanto no romance. 
+
+|
+
+Jogador:
+
+1 — Agradeço.
+2 — Dispenso.
+3 — Eu não nado por essas águas...
+
+|
+
+— Hahaha! Você não tem lá muita opção...
+
+|
+
+Jogador:
+
+1 — ...
+2 — Perdão?
+3 — Uau.
+4 — Por mim tudo bem.
+
+|
+
+— Eh, tô indo!
+
+|
+
+[O Galo caminha até a porta.]
+
+|
+
+— Sabe onde me encontrar, não é? Olhe para o céu. Adeus.
+
+|
+
+[A porta se fecha.] *Som*
+
+|
+
+[ … ]
+
+|
+
+"Pelo menos ele se despediu"
+|
+
+[Em meio ao caos da cidade urbana, você se perde e encontra uma região enevoada. Aqui há muitas casas, mas todas são antigas e simples.]
+
+[Ao virar em uma esquina, você se depara com uma rua de barro.]
+
+[No fim dela, algo te chama a atenção. Brilha para você de um jeito sobrenatural.]
+
+[Ao se aproximar, você descobre um poço milenar. Ele tem uma placa ao lado, dizendo que foi construído há pelo menos 500 anos.]
+
+|
+
+*Jogador:*
+
+Um poço… Não é uma fonte, hein?
+
+|
+
+*Jogador:*
+
+Se pelo menos eu tivesse uma moeda…
+
+|
+
+*Jogador:*
+
+Talvez isso tivesse alguma utilidade.
+
+|
+
+*Jogador:*
+
+1 — Usar moeda comum.  
+2 — Usar moeda especial (se houver) *(obs: tente fazer aparecer bloqueado, tipo escuro, caso a pessoa não tenha e não coloque o se houver pro jogador ler)*  
+3 — Não jogar nada.  
+4 — Tentar com uma tampa de garrafa.
+
+|
+
+*Jogador (respostas a si próprio):*
+
+1 — Parece que nada mudou.  
+2 — *Aparecem as opções de moedas para se usar.*
+3 — …..  
+4 — …Que idiotice.
+
+|
+
+[No meio da neblina, alguém se aproxima. A silhueta revela uma pessoa alta e esguia com um manto. Não é possível ver seu rosto com tanta névoa.]
+
+|
+
+*Jogador:*
+
+1 — Quem está aí?  
+2 — Chegou a minha hora?  
+3 — Eu juro que só tava testando.
+
+|
+
+Por acaso, você precisa de uma moeda?
+
+|
+
+*Jogador:*
+
+1 — Moeda?  
+2 — Isso não funciona.  
+3 — Você tem uma?
+
+|
+
+Sim, moedas normais não funcionariam aqui. Normalmente elas não funcionam em qualquer lugar. Mas esse poço? Ele é diferente de algo como uma fonte dos desejos. É muito mais especial.
+
+|
+
+*Jogador:*
+
+1 — Entendi.  
+2 — Isso parece besteira.  
+3 — E como você pode provar?
+
+|
+
+Você quer que eu te dê uma que funciona, criança?
+
+|
+
+*Jogador:*
+
+1 — Não, obrigado.  
+2 — Sim, por favor.  
+3 — Primeiro você…
+
+|
+
+*1 e 3* — Não há por que ter medo. Eu não desejo te machucar… Você já saberia se eu quisesse. 
+*2* — (Acontece a mesma coisa que vou mandar no quadro seguinte, só que obviamente não é para repetir caso a pessoa tenha escolhido essa opção. Tem que pular e ir para o que vem na sequência.)
+
+|
+
+*[No início, pensei que fosse um pulso de mentira, mas aquela pessoa realmente ergueu a mão e ela estava o mais puro osso. Desnutrida, não tinha manga cobrindo sua carne morta ou a pele azulada e gélida. Fez arder minhas narinas com o cheiro incendiário de putrefação. Pensei ter visto uma larva devorando o tendão.]*
+
+|
+
+Aqui… É seu agora.
+
+|
+
+[Você recebeu um Dracma de Raridade Incomum]
+
+|
+
+Será muito útil para você se tiver sorte. Claro… O próximo não será tão fácil assim.
+
+|
+
+*Jogador:*
+
+1 — Obrigado.  
+2 — …
+
+|
+
+*Resposta:*
+
+1 — Não há de quê.
+
+|
+
+Agora eu preciso ir embora. Sinta-se livre para visitar o poço sempre que precisar. Use aquela alavanca depois de arremessar a moeda que eu te dei.
+
+|
+
+E lembre-se disso: caso a moeda seja lançada, não poderá ser recuperada. Nunca tente entrar no poço para pegá-las de volta. Ou sofrerá algo terrível… e vai desejar não ter nascido.
+
+|
+[Enquanto estou distraído, uma luz irrompe da tela do meu próprio celular. Um feixe azulado ilumina meu rosto, revelando-se semelhante à luz de uma lanterna.]
+
+|
+
+[Procuro entender o que está acontecendo, mas, antes que consiga formular qualquer hipótese, vejo um holograma se materializar diante de mim. Nele, reconheço o rosto de alguém que já conheço.]
+
+|
+
+— Olá, Record. Sou eu mais uma vez. Como vai?
+
+|
+
+— Você já deve ter ouvido falar da Companhia de Despertados, organização da qual faço parte. Na verdade, fui eu quem lhe contou sobre ela e sobre a nossa função. Certo?
+
+|
+
+— Pois bem. Saiba que não somos a única entidade perambulando por aí.
+
+|
+
+— Grupos menores, organizados por indivíduos como você, surgem a todo momento.
+
+|
+
+— Essas pequenas equipes são formadas para alcançar objetivos em comum, geralmente relacionados à sobrevivência de seus integrantes nos jogos perigosos que estão por vir.
+
+|
+
+— Todas elas são conhecidas como *Corporações* pela *Companhia de Despertados*.
+
+|
+
+— Existem muitas vantagens em fazer parte de uma *Corporação* competente. Você pode transferir cartas entre membros ou participar de jogos coletivos especiais, por exemplo.
+
+|
+
+— Naturalmente, algumas dessas *Corporações* acabam se desviando do caminho correto.
+
+|
+
+— Por esse motivo, nós, da *Companhia de Despertados*, estabelecemos um código de regras que toda *Corporação* precisa seguir caso queira ser reconhecida como oficial e legal.
+
+|
+
+— Quando essas regras são violadas, a *Corporação* passa a ser classificada como terrorista. São as chamadas *Necro-Corporações*.
+
+|
+
+— Eu recomendaria que você ficasse bem longe delas se quiser levar uma vida tranquila.
+
+|
+
+*Jogador:*
+
+1 — Como posso entrar em uma Corporação?
+2 — Parece interessante. Onde encontro uma Necro-Corporação?
+3 — Eu quero mais é ficar na minha.
+
+|
+
+*Respostas:*
+
+*1.* — Entrar em uma Corporação é muito fácil, mas preciso que você espere um pouco antes de dar esse passo.
+
+*2.* — Record... Que coisa horrível.
+
+*[Uma determinada quantidade de tempo é retirada do seu Shuffler.(1h:30m]*
+
+— Como você ainda é iniciante, vou deixar passar desta vez.
+
+*3.* — É uma opção, embora bastante irresponsável. Poucos Records alcançam o sucesso trabalhando sozinhos. E, entre aqueles que conseguem, a maioria já participou de alguma *Corporação* em determinado momento. Além disso, existem muito mais vantagens em fazer parte de uma equipe do que em enfrentar tudo por conta própria.
+
+|
+
+— Para entrar em uma *Corporação*, você precisa adquirir o código de identificação dela e inseri-lo no campo correspondente na página de *Corporações*.
+
+|
+
+— Feito isso, basta aguardar até que o líder ou vice-líder aprove sua entrada. Durante o processo, ele terá acesso a determinadas partes do seu perfil.
+
+|
+
+— Na maioria das vezes, você não encontrará anúncios de recrutamento por aí. Portanto, é bom aproveitar as oportunidades quando surgirem. Quando acontecem, essas divulgações são mais frequentes no *Salão das Máscaras*.
+
+|
+
+— Outra possibilidade é receber um convite diretamente de um *Record* que já faça parte de alguma *Corporação*.
+
+|
+
+*Jogador:*
+
+1 — Salão das Máscaras?
+2 — E se eu quiser criar uma?
+3 — Entendi.
+
+|
+
+*Respostas:*
+
+*1.* — Caso já tenha desbloqueado esse recurso, você encontrará o ícone de uma máscara no *Menu do Devo*. Ele representa o *Salão das Máscaras*. Caso contrário... Bem, paciência.
+
+*2.* — Se quiser criar sua própria *Corporação*, precisará investir uma determinada quantidade de tempo e obter aprovação legal. A avaliação administrativa levará em consideração se o seu perfil corresponde aos requisitos exigidos.
+
+(deixe que todas as opções sejam selecionáveis antes de continuar, exceto a terceira opção que vai direto pra próxima tela) 
+
+|
+
+— Lembre-se sempre de tomar cuidado com as *Corporações Rivais* e com as outras *Corporações Globais*. Elas não são tão boazinhas quanto nós.
+
+|
+
+[A chamada é encerrada antes que eu possa me despedir de Melissa — ou perguntar a ela o que exatamente são essas tais Corporações Globais.]
+
+|
+
+[Será que eu deveria tomar mais cuidado daqui em diante?]

@@ -10,6 +10,7 @@ import {
   type CosSlot,
   type Equipados,
   MOTIVO_LABEL,
+  naColecao,
   ORIGEM_LABEL,
   type RaridadeVisual,
   SLOT_LABEL,
@@ -45,9 +46,9 @@ export function Colecao({ nome, fotoSrc, onVoltar }: { nome: string; fotoSrc: st
 
   const posse = useMemo(() => new Map((data?.possuidos ?? []).map((p) => [p.key, p])), [data])
   const slots: CosSlot[] = aba === 'molduras' ? [formato] : (COS_ABAS.find((a) => a.id === aba)?.slots ?? [])
-  const itens = (data?.catalogo ?? []).filter((c) => slots.includes(c.categoria) && !c.automatico)
-  const total = (data?.catalogo ?? []).filter((c) => !c.automatico && c.active).length
-  const meus = (data?.catalogo ?? []).filter((c) => !c.automatico && posse.has(c.key)).length
+  const itens = (data?.catalogo ?? []).filter((c) => slots.includes(c.categoria) && naColecao(c))
+  const total = (data?.catalogo ?? []).filter((c) => naColecao(c) && c.active).length
+  const meus = (data?.catalogo ?? []).filter((c) => naColecao(c) && posse.has(c.key)).length
   const atual = itens.find((c) => c.key === sel) ?? null
   const eq = data?.equipados
 
@@ -279,11 +280,11 @@ function ItemTile({
     >
       <span aria-hidden="true" className="absolute inset-x-0 top-0 h-[3px]" style={{ background: raridade.cor, boxShadow: `0 0 10px ${raridade.brilho}` }} />
       <span aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(70%_55%_at_50%_40%,rgba(236,229,216,0.07),transparent_70%)]" />
-      <span className={cn('relative grid min-h-[86px] w-full place-items-center', bloqueado && 'opacity-90 [filter:grayscale(1)_brightness(0.42)_contrast(1.15)]')}>
+      <span className={cn('relative grid min-h-[86px] w-full place-items-center', bloqueado && 'opacity-85 [filter:grayscale(0.8)_brightness(0.86)]')}>
         <Miniatura def={def} fotoSrc={fotoSrc} apagado={bloqueado} />
       </span>
       {bloqueado && (
-        <span aria-hidden="true" className="absolute left-1/2 top-[42%] grid size-8 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full bg-black/70 shadow-[0_0_0_1px_rgba(186,176,159,0.5)]">
+        <span aria-hidden="true" className="absolute left-1/2 top-[42%] grid size-7 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full bg-black/55 shadow-[0_0_0_1px_rgba(186,176,159,0.45)] backdrop-blur-[1px]">
           <Lock className="size-3.5 text-[#bab09f]" />
         </span>
       )}

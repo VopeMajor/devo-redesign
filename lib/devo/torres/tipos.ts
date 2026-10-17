@@ -97,13 +97,13 @@ export type TorreDef = {
   provisorio?: boolean
   /**
    * Ilustração pintada (pipeline de arte). Sem ela, a torre usa o desenho vetorial de `arte`. Arquivos:
-   * `<arquivo>--<largura>.webp` (fundo transparente), uma por largura listada.
+   * `<arquivo>-<largura>.webp` (fundo transparente), uma por largura listada (convenção do pipeline de arte).
    */
   ilustracao?: Ilustracao
 }
 
 export type Ilustracao = {
-  /** Caminho sem o sufixo de largura: '/images/torres/<id>/<nome>' → '<nome>--512.webp'. */
+  /** Caminho sem o sufixo de largura: '/images/torres/<id>/torre' → 'torre-512.webp'. */
   arquivo: string
   larguras: number[]
   /** largura ÷ altura da imagem. */
@@ -114,7 +114,33 @@ export type Ilustracao = {
   janelas?: [number, number][]
 }
 
-export type ConteudoTorres = { versao: number; provisorio?: boolean; nota?: string; torres: TorreDef[] }
+/** Imagem do pipeline de arte: `<arquivo>-<largura>.webp`. */
+export type ImagemPintada = {
+  arquivo: string
+  /** Sufixos de tamanho disponíveis (`<arquivo>-<n>.webp`). */
+  larguras: number[]
+  aspecto: number
+  /** O número do sufixo é a altura (lado maior) em vez da largura — convenção do pipeline para o mapa. */
+  sufixo?: 'largura' | 'altura'
+  /** Espelha na horizontal (ex.: tirar a lua de trás de uma torre). */
+  espelhar?: boolean
+}
+
+/**
+ * Cenário pintado do mapa (ilha com praça e pedestais, e o céu separado). Sem ele, o mapa usa o desenho vetorial.
+ * `pedestais`: centro da base de cada torre, em frações [0–1] da imagem da ilha, por id de torre; `escala`
+ * opcional (sem ela, a escala vem da profundidade: quanto mais ao fundo, menor); `afundar` (unidades do mapa)
+ * enterra a base no topo do pedestal para a torre não parecer flutuar. Céu e ilha têm o mesmo enquadramento.
+ */
+export type CenarioMapa = {
+  ilha: ImagemPintada
+  ceu?: ImagemPintada
+  pedestais: Record<string, { x: number; y: number; escala?: number; afundar?: number }>
+  /** Enfeites sobre o cenário (ex.: lanterna num pedestal que ficou vazio), em frações da imagem. */
+  enfeites?: { tipo: 'lanterna'; x: number; y: number }[]
+}
+
+export type ConteudoTorres = { versao: number; provisorio?: boolean; nota?: string; cenario?: CenarioMapa; torres: TorreDef[] }
 
 /* ------------------------------------------------------------------ Regras puras */
 
@@ -185,6 +211,8 @@ export type TorresPayload =
       apresentacao: { galoVista: boolean; galoFa: boolean | null; reflexaoPendente: boolean }
       torres: TorreEstado[]
       provisorio: boolean
+      /** Cenário pintado do mapa (ou null: desenho vetorial). */
+      cenario: CenarioMapa | null
     }
 
 export type SubirResposta = { ok: true; torre: TorreEstado; andar: AndarEstado; cena: Passo[]; chavesRecebidas: number }

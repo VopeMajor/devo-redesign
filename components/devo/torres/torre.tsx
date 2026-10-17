@@ -201,7 +201,7 @@ const estadoVisual = (a: AndarEstado): EstadoAndar => (a.estado === 'atual' ? (a
 function motivoCurto(a: AndarEstado) {
   if (a.estado === 'trancado') return `Requer o andar ${toRoman(a.n - 1)}`
   if (a.estado === 'atual' && !a.podeSubir) {
-    if (a.faltaEssencias) return `Faltam ${a.faltaEssencias} ${a.faltaEssencias === 1 ? 'essência' : 'essências'}`
+    if (a.faltaEssencias) return a.faltaEssencias === 1 ? 'Falta 1 essência' : `Faltam ${a.faltaEssencias} essências`
     return 'Faltam chaves'
   }
   return null

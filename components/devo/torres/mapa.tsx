@@ -1,28 +1,166 @@
 'use client'
 
-import type { CSSProperties } from 'react'
+import { type CSSProperties, useEffect, useRef, useState } from 'react'
 import { playSfx } from '@/lib/devo/audio'
-import type { TorreEstado } from '@/lib/devo/torres/tipos'
+import type { CenarioMapa, ImagemPintada, TorreEstado } from '@/lib/devo/torres/tipos'
 import { cn } from '@/lib/utils'
 import { RomanDial, toRoman } from '../kit'
 import { ALTURA_ARTE, LARGURA_ARTE, MAPA_H, MAPA_W, Poeira, TorreArte, TorresDefs } from './arte'
 import { bordaIlha, Cerca, CidadeAoLonge, Feixe, Ilha, MolduraFrente, Portao, Poste } from './mapa-cena'
-import { TorreIlustradaSvg } from './ilustrada'
+import { larguraPara, srcDe, srcSetDe, TorreIlustradaSvg } from './ilustrada'
 import { Cartela, ChaveOrnamental, CristalEssencia } from './ornamentos'
 import './torres.css'
 
+/** Posição final de uma torre no mapa (unidades 390×640). */
+type Lugar = { x: number; y: number; escala: number }
+
+/** Retângulo da ilustração de uma torre já posicionada. */
+function caixaTorre(t: TorreEstado, l: Lugar) {
+  const altU = t.ilustracao ? t.ilustracao.altura : ALTURA_ARTE[t.arte]
+  const larU = t.ilustracao ? t.ilustracao.altura * t.ilustracao.aspecto * 0.82 : LARGURA_ARTE[t.arte] * 0.85
+  const w = larU * l.escala
+  const h = altU * l.escala
+  return { x0: l.x - w / 2, x1: l.x + w / 2, y0: l.y - h, y1: l.y, w, h }
+}
+
+type Caixa = { x0: number; x1: number; y0: number; y1: number }
+const cruza = (a: Caixa, b: Caixa) => a.x0 < b.x1 && a.x1 > b.x0 && a.y0 < b.y1 && a.y1 > b.y0
+
 /**
- * Mapa das Torres: composição cinematográfica em camadas — céu de nuvens ao luar (textura), mostrador
- * romano gigante no céu, cidade de agulhas no horizonte, névoa que corre, feixe de luar, ilha de pedra
- * suspensa com piso de mármore, cerca de ferro com cordões de luz, postes, a torre principal ao fundo e as
- * secundárias à frente, portão e moldura de ferro em primeiro plano. Cada torre é um botão (nome acessível =
- * nome da torre) com cartela ornamental de progresso.
+ * Onde ficam a ilha e o céu pintados (mesmo enquadramento): cobrem o mapa inteiro mantendo a proporção — se a
+ * arte é mais larga que o mapa, ajusta pela altura e corta as laterais (que já esmaecem); senão, pela largura,
+ * apoiada embaixo.
+ */
+function areaIlha(c: CenarioMapa) {
+  if (MAPA_W / MAPA_H < c.ilha.aspecto) {
+    const h = MAPA_H
+    const w = h * c.ilha.aspecto
+    return { x: (MAPA_W - w) / 2, y: 0, w, h }
+  }
+  const w = MAPA_W
+  const h = w / c.ilha.aspecto
+  return { x: 0, y: MAPA_H - h, w, h }
+}
+
+/** Posição de cada torre: pelos pedestais do cenário pintado (escala pela profundidade) ou pelo conteúdo. */
+export function lugares(torres: TorreEstado[], cenario: CenarioMapa | null): Record<string, Lugar> {
+  const out: Record<string, Lugar> = {}
+  const ilha = cenario ? areaIlha(cenario) : null
+  for (const t of torres) {
+    const p = cenario?.pedestais[t.id]
+    if (cenario && ilha && p) {
+      // fundo (y pequeno) menor, frente maior; a principal ganha 25 %
+      const prof = 0.62 + 0.55 * Math.min(1, Math.max(0, p.y))
+      const base = t.tipo === 'principal' ? 1.25 : 0.95
+      out[t.id] = { x: ilha.x + p.x * ilha.w, y: ilha.y + p.y * ilha.h + (p.afundar ?? 0), escala: p.escala ?? Math.min(1.05, base * prof * 0.72) }
+    } else {
+      out[t.id] = { x: (t.mapa.x / 100) * MAPA_W, y: (t.mapa.y / 100) * MAPA_H, escala: t.mapa.escala }
+    }
+  }
+  return out
+}
+
+/** Tamanho da placa de nome (unidades do mapa). */
+const placaTam = (nome: string, principal: boolean) => ({ w: 22 + nome.length * (principal ? 7.4 : 6.6) + 34, h: principal ? 28 : 25 })
+
+/**
+ * Coloca as placas no pé de cada torre sem cobrir nenhuma ilustração nem outra placa: tenta logo abaixo, depois
+ * deslocada para os lados, mais abaixo e, por último, acima do topo. Devolve o centro da placa e a âncora (pé).
+ */
+export function colocarPlacas(torres: TorreEstado[], lug: Record<string, Lugar>) {
+  const caixas = torres.map((t) => caixaTorre(t, lug[t.id]))
+  const feitas: Caixa[] = []
+  const out: Record<string, { cx: number; cy: number; w: number; h: number; ax: number; ay: number }> = {}
+  // a principal primeiro (fica no lugar ideal); depois da frente para o fundo
+  const ordem = [...torres].sort((a, b) => (a.tipo === 'principal' ? -1 : b.tipo === 'principal' ? 1 : lug[b.id].y - lug[a.id].y))
+  for (const t of ordem) {
+    const l = lug[t.id]
+    const nome = rotulo(t)
+    const { w, h } = placaTam(nome, t.tipo === 'principal')
+    const bx = caixaTorre(t, l)
+    // margem das bordas: o mapa esmaece nos 6 % de cada lado
+    const MX = MAPA_W * 0.065
+    const area = (a: Caixa, b: Caixa) => Math.max(0, Math.min(a.x1, b.x1) - Math.max(a.x0, b.x0)) * Math.max(0, Math.min(a.y1, b.y1) - Math.max(a.y0, b.y0))
+    const custoDe = (c: Caixa) => caixas.reduce((acc, k) => acc + area(c, k) * 20, 0) + feitas.reduce((acc, k) => acc + area(c, k) * 40, 0)
+    const caixaEm = (cx: number, cy: number) => {
+      const x = Math.min(MAPA_W - MX - w / 2, Math.max(MX + w / 2, cx))
+      const y = Math.min(MAPA_H - h / 2 - 4, Math.max(h / 2 + 4, cy))
+      return { x, y, c: { x0: x - w / 2, x1: x + w / 2, y0: y - h / 2, y1: y + h / 2 } }
+    }
+    // 1) no pé: anéis ao redor da base, preferindo logo abaixo e perto
+    let escolhida: [number, number] = [l.x, l.y + 10 + h / 2]
+    let acima = false
+    let melhor = Infinity
+    for (const d of [10, 24, 40, 60, 84, 112, 144])
+      for (const ang of [90, 70, 110, 50, 130, 20, 160, 0, 180]) {
+        const r = (ang * Math.PI) / 180
+        const { x, y, c } = caixaEm(l.x + Math.cos(r) * d * 1.3, l.y + Math.sin(r) * d + h / 2)
+        const custo = custoDe(c) + d + Math.abs(ang - 90) * 0.05
+        if (custo < melhor) {
+          melhor = custo
+          escolhida = [x, y]
+        }
+      }
+    // 2) se o pé está tomado, acima do topo (no céu), com o filete saindo do topo
+    for (const dx of [0, -w * 0.4, w * 0.4]) {
+      const { x, y, c } = caixaEm(l.x + dx, bx.y0 - 8 - h / 2)
+      const custo = custoDe(c) + 90 + Math.abs(dx) * 0.2
+      if (custo < melhor) {
+        melhor = custo
+        escolhida = [x, y]
+        acima = true
+      }
+    }
+    const [cx, cy] = escolhida
+    feitas.push({ x0: cx - w / 2, x1: cx + w / 2, y0: cy - h / 2, y1: cy + h / 2 })
+    out[t.id] = { cx, cy, w, h, ax: l.x, ay: acima ? bx.y0 + 4 : l.y }
+  }
+  return out
+}
+
+const rotulo = (t: TorreEstado) => t.nome.replace(/^\[PROVISÓRIO\]\s*/, '').replace(/^Torre d[oa]s? /, '')
+
+/** Céu pintado com paralaxe leve (deriva lenta e acompanha o ponteiro no desktop). */
+function CeuPintado({ img, area, onErro }: { img: ImagemPintada; area: { x: number; y: number; w: number; h: number }; onErro: () => void }) {
+  const ref = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    const el = ref.current
+    if (!el || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    const mover = (e: PointerEvent) => {
+      const dx = (e.clientX / window.innerWidth - 0.5) * -10
+      const dy = (e.clientY / window.innerHeight - 0.5) * -6
+      el.style.translate = `${dx.toFixed(1)}px ${dy.toFixed(1)}px`
+    }
+    window.addEventListener('pointermove', mover, { passive: true })
+    return () => window.removeEventListener('pointermove', mover)
+  }, [])
+  return (
+    <div
+      ref={ref}
+      aria-hidden="true"
+      className="pointer-events-none absolute transition-[translate] duration-700 ease-out"
+      style={{ left: `${(area.x / MAPA_W) * 100}%`, top: `${(area.y / MAPA_H) * 100}%`, width: `${(area.w / MAPA_W) * 100}%`, height: `${(area.h / MAPA_H) * 100}%`, transform: img.espelhar ? 'scaleX(-1)' : undefined }}
+    >
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src={srcDe(img, img.larguras[Math.min(1, img.larguras.length - 1)])} srcSet={srcSetDe(img)} sizes="(max-width: 640px) 110vw, 500px" alt="" decoding="async" onError={onErro} className="tw-ceu-deriva size-full object-cover" />
+    </div>
+  )
+}
+
+/**
+ * Mapa das Torres. Dois modos:
+ * - **pintado** (`cenario` com a ilha e o céu do pipeline de arte): céu com paralaxe leve, ilha pintada apoiada
+ *   embaixo, torres nos pedestais com escala pela profundidade; se o arquivo falhar, cai no vetorial;
+ * - **vetorial** (sem `cenario`): céu em textura, mostrador, cidade, ilha suspensa, cerca, postes e portão.
+ * Cada torre é um botão (nome acessível = nome da torre) do tamanho da ilustração; a placa de nome fica no pé,
+ * pequena, ligada por um filete, e nunca cobre uma ilustração.
  */
 export function MapaTorres({
   torres,
   onAbrir,
   inerte = false,
   largura,
+  cenario = null,
 }: {
   torres: TorreEstado[]
   /** Abre a torre; `origem` = retângulo do botão da torre na tela (a transição sai dali). */
@@ -30,34 +168,75 @@ export function MapaTorres({
   inerte?: boolean
   /** Largura em px (o pai encaixa o mapa na altura disponível). Sem ela, ocupa a largura. */
   largura?: number
+  cenario?: CenarioMapa | null
 }) {
-  const ordem = [...torres].sort((a, b) => a.mapa.y - b.mapa.y)
-  const pos = (t: TorreEstado) => ({ x: (t.mapa.x / 100) * MAPA_W, y: (t.mapa.y / 100) * MAPA_H })
-  const caminho = torres.map(pos)
+  const [falhou, setFalhou] = useState(false)
+  const pintado = !!cenario && !falhou
+  const lug = lugares(torres, pintado ? cenario : null)
+  const ordem = [...torres].sort((a, b) => lug[a.id].y - lug[b.id].y)
+  const placas = colocarPlacas(torres, lug)
+  const caminho = torres.map((t) => ({ x: lug[t.id].x, y: lug[t.id].y }))
+  const ilha = pintado && cenario ? areaIlha(cenario) : null
+  const pxU = (largura ?? MAPA_W) / MAPA_W
   return (
-    <div className={cn('relative mx-auto overflow-hidden [mask-image:linear-gradient(to_right,transparent,#000_7%,#000_93%,transparent)]', !largura && 'w-full max-w-[460px]')} style={{ aspectRatio: `${MAPA_W} / ${MAPA_H}`, width: largura }}>
-      {/* mostrador gigante no céu (o tempo julga até as torres) */}
-      <div aria-hidden="true" className="pointer-events-none absolute left-1/2 top-[1%] w-[96%] -translate-x-1/2 opacity-[0.16] [mask-image:radial-gradient(closest-side,#000_60%,transparent)]">
-        <RomanDial tone="silver" />
-      </div>
+    <div className={cn('relative mx-auto overflow-hidden [mask-image:linear-gradient(to_right,transparent,#000_6%,#000_94%,transparent)]', !largura && 'w-full max-w-[460px]')} style={{ aspectRatio: `${MAPA_W} / ${MAPA_H}`, width: largura }}>
+      {pintado && cenario?.ceu && ilha ? (
+        <CeuPintado img={cenario.ceu} area={ilha} onErro={() => setFalhou(true)} />
+      ) : (
+        <div aria-hidden="true" className="pointer-events-none absolute left-1/2 top-[1%] w-[96%] -translate-x-1/2 opacity-[0.16] [mask-image:radial-gradient(closest-side,#000_60%,transparent)]">
+          <RomanDial tone="silver" />
+        </div>
+      )}
+      {ilha && cenario && (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={srcDe(cenario.ilha, larguraPara(cenario.ilha, (largura ?? MAPA_W) * 1.1 * 2))}
+          srcSet={srcSetDe(cenario.ilha)}
+          sizes="(max-width: 640px) 110vw, 500px"
+          alt=""
+          aria-hidden="true"
+          decoding="async"
+          onError={() => setFalhou(true)}
+          className="pointer-events-none absolute max-w-none"
+          style={{ left: `${(ilha.x / MAPA_W) * 100}%`, top: `${(ilha.y / MAPA_H) * 100}%`, width: `${(ilha.w / MAPA_W) * 100}%`, height: `${(ilha.h / MAPA_H) * 100}%` }}
+        />
+      )}
       <svg aria-hidden="true" viewBox={`0 0 ${MAPA_W} ${MAPA_H}`} className="absolute inset-0 size-full">
         <TorresDefs />
-        <Feixe />
-        <CidadeAoLonge />
-        <image href="/images/torres/nevoa.webp" x={-80} y={300} width={560} height={110} opacity={0.5} className="tw-drift" preserveAspectRatio="none" />
-        <Ilha caminhos={caminho} />
-        <Cerca parte="tras" />
-        {caminho.map((p, i) => {
-          const g = bordaIlha(90, 0.93)
-          const t = 0.55
-          return <Poste key={i} x={g.x + (p.x - g.x) * t + (p.x < g.x ? -12 : 12)} y={g.y + (p.y - g.y) * t + 6} s={0.9} />
-        })}
+        {!pintado && (
+          <>
+            <Feixe />
+            <CidadeAoLonge />
+            <image href="/images/torres/nevoa.webp" x={-80} y={300} width={560} height={110} opacity={0.5} className="tw-drift" preserveAspectRatio="none" />
+            <Ilha caminhos={caminho} />
+            <Cerca parte="tras" />
+            {caminho.map((p, i) => {
+              const g = bordaIlha(90, 0.93)
+              const k = 0.55
+              return <Poste key={i} x={g.x + (p.x - g.x) * k + (p.x < g.x ? -12 : 12)} y={g.y + (p.y - g.y) * k + 6} s={0.9} />
+            })}
+          </>
+        )}
+        {pintado &&
+          ilha &&
+          (cenario?.enfeites ?? []).map((e, i) => {
+            const x = ilha.x + e.x * ilha.w
+            const y = ilha.y + e.y * ilha.h
+            return (
+              <g key={`enf-${i}`} transform={`translate(${x} ${y})`}>
+                <circle cx={0} cy={-16} r={18} fill="url(#tw-halo)" className="tw-flicker" />
+                <path d="M0 0V-8" stroke="#2c2c31" strokeWidth={2} />
+                <path d="M-4 -8H4L3.2 -19H-3.2Z" fill="#fff3dc" stroke="#6b6357" strokeWidth={0.7} />
+                <path d="M-5 -19.5H5L0 -24Z" fill="#38393c" />
+              </g>
+            )
+          })}
         {ordem.map((t) => {
-          const p = pos(t)
+          const l = lug[t.id]
           return (
-            <g key={t.id} transform={`translate(${p.x} ${p.y}) scale(${t.mapa.escala})`}>
+            <g key={t.id} transform={`translate(${l.x} ${l.y}) scale(${l.escala})`}>
               {t.ilustracao ? (
-                <TorreIlustradaSvg ilu={t.ilustracao} feitos={t.concluidos} total={t.andares.length} destaque={t.tipo === 'principal'} pxPorUnidade={((largura ?? MAPA_W) / MAPA_W) * t.mapa.escala} />
+                <TorreIlustradaSvg ilu={t.ilustracao} feitos={t.concluidos} total={t.andares.length} destaque={t.tipo === 'principal'} pxPorUnidade={pxU * l.escala} />
               ) : (
                 <>
                   <ellipse cx={0} cy={2} rx={LARGURA_ARTE[t.arte] * 0.6} ry={9} fill="#000" opacity={0.55} filter="url(#tw-blur-s)" />
@@ -67,11 +246,26 @@ export function MapaTorres({
             </g>
           )
         })}
-        <Cerca parte="frente" />
-        <Portao />
-        <image href="/images/torres/nevoa.webp" x={-120} y={MAPA_H - 120} width={640} height={130} opacity={0.65} className="tw-drift-lento" preserveAspectRatio="none" />
+        {!pintado && (
+          <>
+            <Cerca parte="frente" />
+            <Portao />
+          </>
+        )}
+        {/* filetes das placas até o pé de cada torre */}
+        {torres.map((t) => {
+          const p = placas[t.id]
+          const ty = p.cy < p.ay ? p.cy + p.h / 2 : p.cy - p.h / 2
+          return (
+            <g key={`f-${t.id}`}>
+              <path d={`M${p.ax} ${p.ay + 2}L${p.cx} ${ty}`} stroke="#ece5d8" strokeWidth={0.7} opacity={0.75} />
+              <circle cx={p.ax} cy={p.ay + 2} r={1.6} fill="#ece5d8" />
+            </g>
+          )
+        })}
+        <image href="/images/torres/nevoa.webp" x={-120} y={MAPA_H - 120} width={640} height={130} opacity={pintado ? 0.45 : 0.65} className="tw-drift-lento" preserveAspectRatio="none" />
         <Poeira />
-        <MolduraFrente />
+        {!pintado && <MolduraFrente />}
         <radialGradient id="tw-vinheta" cx="0.5" cy="0.45" r="0.75">
           <stop offset="0.6" stopColor="#000" stopOpacity="0" />
           <stop offset="1" stopColor="#000" stopOpacity="0.65" />
@@ -80,16 +274,13 @@ export function MapaTorres({
       </svg>
 
       {ordem.map((t) => {
-        const altU = t.ilustracao ? t.ilustracao.altura : ALTURA_ARTE[t.arte]
-        const larU = t.ilustracao ? t.ilustracao.altura * t.ilustracao.aspecto * 0.8 : LARGURA_ARTE[t.arte]
-        const w = (larU * t.mapa.escala) / MAPA_W
-        const h = (altU * t.mapa.escala) / MAPA_H
+        const b = caixaTorre(t, lug[t.id])
+        const p = placas[t.id]
         const total = t.andares.length
         const principal = t.tipo === 'principal'
-        // secundárias do fundo levam a cartela acima do telhado (no céu); as da frente e a principal, abaixo da base
-        const acima = !principal && t.mapa.y < 80
         return (
           <div key={t.id}>
+            {/* área de toque = a própria ilustração */}
             <button
               type="button"
               disabled={inerte}
@@ -99,23 +290,16 @@ export function MapaTorres({
                 onAbrir?.(t.id, e.currentTarget.getBoundingClientRect())
               }}
               className="dv-focus group absolute"
-              style={{ left: `${t.mapa.x - (w * 100) / 2}%`, top: `${t.mapa.y - h * 100}%`, width: `${w * 100}%`, height: `${h * 100 + 2}%` }}
+              style={{ left: `${(b.x0 / MAPA_W) * 100}%`, top: `${(b.y0 / MAPA_H) * 100}%`, width: `${(b.w / MAPA_W) * 100}%`, height: `${((b.h + 6) / MAPA_H) * 100}%` }}
             >
               <span aria-hidden="true" className="absolute inset-x-[5%] bottom-0 h-1/2 bg-[radial-gradient(50%_60%_at_50%_100%,rgba(194,185,236,0.28),transparent_70%)] opacity-0 transition-opacity duration-200 group-hover:opacity-100 group-focus-visible:opacity-100 group-active:opacity-100" />
             </button>
-            {/* cartela de progresso */}
-            <div
-              aria-hidden="true"
-              className={cn('pointer-events-none absolute -translate-x-1/2', acima && '-translate-y-full')}
-              style={{ left: `${Math.min(84, Math.max(16, t.mapa.x))}%`, top: acima ? `${t.mapa.y - h * 100 - 0.6}%` : `${t.mapa.y + 1.4}%` }}
-            >
-              <Cartela h={principal ? 46 : 40} destaque={principal}>
-                <span className={cn('whitespace-nowrap font-display font-semibold uppercase leading-none tracking-[0.1em] text-dv-text', principal ? 'text-[13px]' : 'text-[11.5px]')}>
-                  {t.nome.replace(/^\[PROVISÓRIO\]\s*/, '').replace(/^Torre d[oa]s? /, '')}
-                </span>
-                <span className="dv-tabular mt-1 flex items-center gap-1.5 whitespace-nowrap font-mono text-[10px] uppercase leading-none tracking-[0.12em] text-dv-text-3">
-                  {principal ? 'Campanha' : 'Secundária'}
-                  <span className={principal ? 'text-dv-amethyst-text' : 'text-dv-gold'}>
+            {/* placa pequena no pé */}
+            <div aria-hidden="true" className="pointer-events-none absolute -translate-x-1/2 -translate-y-1/2" style={{ left: `${(p.cx / MAPA_W) * 100}%`, top: `${(p.cy / MAPA_H) * 100}%` }}>
+              <Cartela h={principal ? 28 : 25} destaque={principal}>
+                <span className="flex items-baseline gap-1.5 whitespace-nowrap leading-none">
+                  <span className={cn('font-display font-semibold uppercase tracking-[0.08em] text-dv-text', principal ? 'text-[11px]' : 'text-[10px]')}>{rotulo(t)}</span>
+                  <span className={cn('dv-tabular font-mono text-[9.5px] tracking-[0.06em]', principal ? 'text-dv-amethyst-text' : 'text-dv-gold')}>
                     {t.concluidos ? toRoman(t.concluidos) : '0'}/{toRoman(total)}
                   </span>
                 </span>
@@ -133,7 +317,10 @@ export function Recursos({ torres, className }: { torres: TorreEstado[]; classNa
   const essencias = torres.map((t) => t.essencia)
   const chaves = torres.flatMap((t) => (t.chave ? [t.chave] : []))
   return (
-    <ul aria-label="Seus recursos das torres" className={cn('flex gap-1.5 overflow-x-auto pb-1 [scrollbar-width:none]', className)}>
+    <ul
+      aria-label="Seus recursos das torres"
+      className={cn('-mx-4 flex snap-x gap-1.5 overflow-x-auto px-4 pb-1 [mask-image:linear-gradient(to_right,transparent,#000_16px,#000_calc(100%-40px),transparent)] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden', className)}
+    >
       {essencias.map((e) => (
         <RecursoChip key={e.item} nome={e.nome} curto={e.nome.replace(/^Essência (de Afinidade )?d[oa] /, '').replace(/\s*\(provisória\)/, '')} quantidade={e.quantidade} tipo="essencia" />
       ))}
@@ -147,17 +334,17 @@ export function Recursos({ torres, className }: { torres: TorreEstado[]; classNa
 /** Medalhão de recurso: o cristal ou a chave desenhados, nome curto e quantidade. */
 export function RecursoChip({ nome, curto, quantidade, tipo, className }: { nome: string; curto: string; quantidade: number; tipo: 'essencia' | 'chave'; className?: string }) {
   return (
-    <li className={cn('relative isolate flex h-10 shrink-0 items-center gap-1.5 pl-1 pr-3', !quantidade && 'opacity-70', className)} style={{ '--dv-cut': '8px' } as CSSProperties} title={nome}>
+    <li className={cn('relative isolate flex h-9 shrink-0 snap-start items-center gap-1 pl-1 pr-2.5', !quantidade && 'opacity-70', className)} style={{ '--dv-cut': '8px' } as CSSProperties} title={nome}>
       <span aria-hidden="true" className="dv-cut-diag absolute inset-0 -z-10 bg-[linear-gradient(100deg,#ece5d8,#6b6357_40%,#bab09f_75%,#5a4f8f)] opacity-70" />
       <span aria-hidden="true" className="dv-cut-diag absolute inset-px -z-10 bg-[linear-gradient(180deg,rgba(31,31,34,0.96),rgba(12,12,14,0.96))]" style={{ '--dv-cut': '7.6px' } as CSSProperties} />
-      <span aria-hidden="true" className="grid h-9 w-7 place-items-center">
-        {tipo === 'essencia' ? <CristalEssencia className="h-8 w-auto" brilho={quantidade > 0} /> : <ChaveOrnamental className="w-8 -rotate-45" />}
+      <span aria-hidden="true" className="grid h-8 w-6 place-items-center">
+        {tipo === 'essencia' ? <CristalEssencia className="h-7 w-auto" brilho={quantidade > 0} /> : <ChaveOrnamental className="w-7 -rotate-45" />}
       </span>
       <span className="sr-only">{nome}:</span>
-      <span aria-hidden="true" className="max-w-[86px] truncate font-display text-[11px] font-semibold uppercase tracking-[0.06em] text-dv-text-2">
+      <span aria-hidden="true" className="max-w-[72px] truncate font-display text-[10.5px] font-semibold uppercase tracking-[0.05em] text-dv-text-2">
         {curto}
       </span>
-      <span className={cn('dv-tabular font-mono text-[14px]', quantidade ? 'text-dv-text' : 'text-dv-text-3')}>×{quantidade}</span>
+      <span className={cn('dv-tabular font-mono text-[13px]', quantidade ? 'text-dv-text' : 'text-dv-text-3')}>×{quantidade}</span>
     </li>
   )
 }

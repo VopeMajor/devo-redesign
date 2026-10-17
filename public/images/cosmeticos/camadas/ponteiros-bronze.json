@@ -1,0 +1,18 @@
+{
+  "asset": "img:/images/cosmeticos/camadas/ponteiros-bronze",
+  "imagem": {
+    "base": "/images/cosmeticos/camadas/ponteiros-bronze",
+    "tamanhos": [
+      128,
+      256,
+      512
+    ]
+  },
+  "origem": {
+    "pedido": "camada-ponteiros-bronze",
+    "variacao": "v01",
+    "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+    "seed": 9011,
+    "importado": null
+  }
+}

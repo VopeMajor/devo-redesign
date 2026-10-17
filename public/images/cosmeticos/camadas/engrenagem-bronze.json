@@ -1,0 +1,18 @@
+{
+  "asset": "img:/images/cosmeticos/camadas/engrenagem-bronze",
+  "imagem": {
+    "base": "/images/cosmeticos/camadas/engrenagem-bronze",
+    "tamanhos": [
+      128,
+      256,
+      512
+    ]
+  },
+  "origem": {
+    "pedido": "camada-engrenagem-bronze",
+    "variacao": "v01",
+    "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+    "seed": 9001,
+    "importado": null
+  }
+}

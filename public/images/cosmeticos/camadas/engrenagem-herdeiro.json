@@ -1,0 +1,18 @@
+{
+  "asset": "img:/images/cosmeticos/camadas/engrenagem-herdeiro",
+  "imagem": {
+    "base": "/images/cosmeticos/camadas/engrenagem-herdeiro",
+    "tamanhos": [
+      128,
+      256,
+      512
+    ]
+  },
+  "origem": {
+    "pedido": "camada-engrenagem-herdeiro",
+    "variacao": "v02",
+    "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+    "seed": 9062,
+    "importado": null
+  }
+}

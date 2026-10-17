@@ -3,7 +3,7 @@
 import { Lock } from 'lucide-react'
 import type { CSSProperties } from 'react'
 import { BrassCorners, Button } from '@/components/devo/kit'
-import type { CosmeticoDef, Visual } from '@/lib/devo/cosmeticos'
+import { type CosmeticoDef, naColecao, type Visual } from '@/lib/devo/cosmeticos'
 import { FotoMoldurada, NomeVisual } from './cosmetic-art'
 import { useMeusCosmeticos } from './use-cosmeticos'
 
@@ -21,9 +21,9 @@ export function useMinhaMolduraAvatar(): CosmeticoDef | null {
 export function IdentidadePanel({ nome, fotoSrc, onAbrir }: { nome: string; fotoSrc: string | null; onAbrir: () => void }) {
   const { data, error } = useMeusCosmeticos()
   if (error) return null
-  const total = (data?.catalogo ?? []).filter((c) => !c.automatico && c.active).length
+  const total = (data?.catalogo ?? []).filter((c) => naColecao(c) && c.active).length
   const meus = data ? new Set(data.possuidos.map((p) => p.key)) : new Set<string>()
-  const obtidos = (data?.catalogo ?? []).filter((c) => !c.automatico && meus.has(c.key)).length
+  const obtidos = (data?.catalogo ?? []).filter((c) => naColecao(c) && meus.has(c.key)).length
   const eq = data?.equipados
   const visual: Visual | null = eq ? { id: 'eu', foto: null, av: eq.moldura_avatar, mini: eq.moldura_mini, emb: eq.emblema, bal: eq.balao, ef: eq.efeito, anfitriao: false } : null
   const mini = eq?.moldura_mini ? (data?.catalogo.find((c) => c.key === eq.moldura_mini) ?? null) : null
