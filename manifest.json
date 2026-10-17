@@ -1,0 +1,120 @@
+{
+  "pedido": "emblema-ampulheta-dourada",
+  "titulo": "Ampulheta Dourada",
+  "tipo": "emblema",
+  "tamanho_final": 1024,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 7021,
+      "passos": null,
+      "segundos": 13.7,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "emblema-ampulheta-dourada--v01--1024.png",
+          "bytes": 773621
+        },
+        {
+          "arquivo": "emblema-ampulheta-dourada--v01--1024.webp",
+          "bytes": 147818
+        },
+        {
+          "arquivo": "emblema-ampulheta-dourada--v01--512.webp",
+          "bytes": 51804
+        },
+        {
+          "arquivo": "emblema-ampulheta-dourada--v01--256.webp",
+          "bytes": 21304
+        },
+        {
+          "arquivo": "emblema-ampulheta-dourada--v01--96.webp",
+          "bytes": 5948
+        },
+        {
+          "arquivo": "emblema-ampulheta-dourada--v01--48.webp",
+          "bytes": 2282
+        }
+      ],
+      "segundos_pos": 31.1,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 7022,
+      "passos": null,
+      "segundos": 18.0,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "emblema-ampulheta-dourada--v02--1024.png",
+          "bytes": 708752
+        },
+        {
+          "arquivo": "emblema-ampulheta-dourada--v02--1024.webp",
+          "bytes": 114202
+        },
+        {
+          "arquivo": "emblema-ampulheta-dourada--v02--512.webp",
+          "bytes": 41576
+        },
+        {
+          "arquivo": "emblema-ampulheta-dourada--v02--256.webp",
+          "bytes": 17162
+        },
+        {
+          "arquivo": "emblema-ampulheta-dourada--v02--96.webp",
+          "bytes": 4884
+        },
+        {
+          "arquivo": "emblema-ampulheta-dourada--v02--48.webp",
+          "bytes": 2024
+        }
+      ],
+      "segundos_pos": 25.3,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 7023,
+      "passos": null,
+      "segundos": 11.1,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "emblema-ampulheta-dourada--v03--1024.png",
+          "bytes": 784099
+        },
+        {
+          "arquivo": "emblema-ampulheta-dourada--v03--1024.webp",
+          "bytes": 148244
+        },
+        {
+          "arquivo": "emblema-ampulheta-dourada--v03--512.webp",
+          "bytes": 53890
+        },
+        {
+          "arquivo": "emblema-ampulheta-dourada--v03--256.webp",
+          "bytes": 21378
+        },
+        {
+          "arquivo": "emblema-ampulheta-dourada--v03--96.webp",
+          "bytes": 6052
+        },
+        {
+          "arquivo": "emblema-ampulheta-dourada--v03--48.webp",
+          "bytes": 2210
+        }
+      ],
+      "segundos_pos": 25.6,
+      "avisos": []
+    }
+  ]
+}

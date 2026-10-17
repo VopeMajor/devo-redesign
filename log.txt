@@ -1,0 +1,9 @@
+[emblema-ampulheta-dourada] v01: @cf/black-forest-labs/flux-2-klein-4b seed=7021 1024x1024 passos=None (~104 neurônios)
+    ok em 13.7s, 1024x1024
+[emblema-ampulheta-dourada] v02: @cf/black-forest-labs/flux-2-klein-4b seed=7022 1024x1024 passos=None (~104 neurônios)
+    ok em 18.0s, 1024x1024
+[emblema-ampulheta-dourada] v03: @cf/black-forest-labs/flux-2-klein-4b seed=7023 1024x1024 passos=None (~104 neurônios)
+    ok em 11.1s, 1024x1024
+[emblema-ampulheta-dourada] v01: rembg:birefnet-general; sem avisos
+[emblema-ampulheta-dourada] v02: rembg:birefnet-general; sem avisos
+[emblema-ampulheta-dourada] v03: rembg:birefnet-general; sem avisos
