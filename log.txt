@@ -1,0 +1,12 @@
+[balao-correspondencia-real] v01: @cf/black-forest-labs/flux-2-klein-4b seed=8001 1536x512 passos=None (~78 neurônios)
+    ok em 27.2s, 1536x512
+[balao-correspondencia-real] v02: @cf/black-forest-labs/flux-2-klein-4b seed=8002 1536x512 passos=None (~78 neurônios)
+    ok em 15.1s, 1536x512
+[balao-correspondencia-real] v03: @cf/black-forest-labs/flux-2-klein-4b seed=8003 1536x512 passos=None (~78 neurônios)
+    ok em 17.3s, 1536x512
+[balao-correspondencia-real] v04: @cf/black-forest-labs/flux-2-klein-4b seed=8004 1536x512 passos=None (~78 neurônios)
+    ok em 11.0s, 1536x512
+[balao-correspondencia-real] v01: rembg:birefnet-general; sem avisos
+[balao-correspondencia-real] v02: rembg:birefnet-general; sem avisos
+[balao-correspondencia-real] v03: rembg:birefnet-general; sem avisos
+[balao-correspondencia-real] v04: rembg:birefnet-general; sem avisos

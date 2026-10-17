@@ -1,0 +1,377 @@
+{
+  "pedido": "balao-correspondencia-real",
+  "titulo": "Correspondência Real",
+  "tipo": "balao",
+  "tamanho_final": 1536,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 8001,
+      "passos": null,
+      "segundos": 27.2,
+      "neuronios_estimados": 78,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "balao-correspondencia-real--v01--1535.png",
+          "bytes": 611754
+        },
+        {
+          "arquivo": "balao-correspondencia-real--v01--1535.webp",
+          "bytes": 71742
+        },
+        {
+          "arquivo": "balao-correspondencia-real--v01--1024.webp",
+          "bytes": 34194
+        },
+        {
+          "arquivo": "balao-correspondencia-real--v01--768.webp",
+          "bytes": 22474
+        },
+        {
+          "arquivo": "balao-correspondencia-real--v01--512.webp",
+          "bytes": 12640
+        },
+        {
+          "arquivo": "balao-correspondencia-real--v01--256.webp",
+          "bytes": 5092
+        }
+      ],
+      "balao": {
+        "tamanho_px": [
+          1535,
+          466
+        ],
+        "nove_fatias": {
+          "top": 46,
+          "right": 137,
+          "bottom": 42,
+          "left": 184,
+          "css": "border-image: url(...) 46 137 42 184 fill / auto; border-image-repeat: stretch;",
+          "obs": "medidas em px do original; nos derivados multiplique por largura/W"
+        },
+        "kit": {
+          "corpo": {
+            "altura_px": 432,
+            "topo_no_original": 17,
+            "fatias": {
+              "top": 29,
+              "bottom": 25,
+              "left": 0,
+              "right": 0
+            },
+            "obs": "uniforme na horizontal; estique livre. Centro liso (texto)."
+          },
+          "ponta_esq": {
+            "largura_px": 230,
+            "sobreposicao_px": 46
+          },
+          "ponta_dir": {
+            "largura_px": 183,
+            "sobreposicao_px": 46
+          },
+          "texto": {
+            "x0": 184,
+            "x1": 1398,
+            "y0": 46,
+            "y1": 424
+          }
+        },
+        "arquivos_kit": [
+          "balao-correspondencia-real--v01--kit-corpo--1024.webp",
+          "balao-correspondencia-real--v01--kit-corpo--768.webp",
+          "balao-correspondencia-real--v01--kit-corpo--512.webp",
+          "balao-correspondencia-real--v01--kit-corpo--256.webp",
+          "balao-correspondencia-real--v01--kit-ponta-esq--1024.webp",
+          "balao-correspondencia-real--v01--kit-ponta-esq--768.webp",
+          "balao-correspondencia-real--v01--kit-ponta-esq--512.webp",
+          "balao-correspondencia-real--v01--kit-ponta-esq--256.webp",
+          "balao-correspondencia-real--v01--kit-ponta-dir--1024.webp",
+          "balao-correspondencia-real--v01--kit-ponta-dir--768.webp",
+          "balao-correspondencia-real--v01--kit-ponta-dir--512.webp",
+          "balao-correspondencia-real--v01--kit-ponta-dir--256.webp"
+        ]
+      },
+      "segundos_pos": 36.0,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 8002,
+      "passos": null,
+      "segundos": 15.1,
+      "neuronios_estimados": 78,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "balao-correspondencia-real--v02--1535.png",
+          "bytes": 571951
+        },
+        {
+          "arquivo": "balao-correspondencia-real--v02--1535.webp",
+          "bytes": 73884
+        },
+        {
+          "arquivo": "balao-correspondencia-real--v02--1024.webp",
+          "bytes": 31862
+        },
+        {
+          "arquivo": "balao-correspondencia-real--v02--768.webp",
+          "bytes": 20782
+        },
+        {
+          "arquivo": "balao-correspondencia-real--v02--512.webp",
+          "bytes": 11530
+        },
+        {
+          "arquivo": "balao-correspondencia-real--v02--256.webp",
+          "bytes": 4810
+        }
+      ],
+      "balao": {
+        "tamanho_px": [
+          1535,
+          423
+        ],
+        "nove_fatias": {
+          "top": 83,
+          "right": 148,
+          "bottom": 49,
+          "left": 127,
+          "css": "border-image: url(...) 83 148 49 127 fill / auto; border-image-repeat: stretch;",
+          "obs": "medidas em px do original; nos derivados multiplique por largura/W"
+        },
+        "kit": {
+          "corpo": {
+            "altura_px": 345,
+            "topo_no_original": 58,
+            "fatias": {
+              "top": 25,
+              "bottom": 29,
+              "left": 0,
+              "right": 0
+            },
+            "obs": "uniforme na horizontal; estique livre. Centro liso (texto)."
+          },
+          "ponta_esq": {
+            "largura_px": 173,
+            "sobreposicao_px": 46
+          },
+          "ponta_dir": {
+            "largura_px": 194,
+            "sobreposicao_px": 46
+          },
+          "texto": {
+            "x0": 127,
+            "x1": 1387,
+            "y0": 83,
+            "y1": 374
+          }
+        },
+        "arquivos_kit": [
+          "balao-correspondencia-real--v02--kit-corpo--1024.webp",
+          "balao-correspondencia-real--v02--kit-corpo--768.webp",
+          "balao-correspondencia-real--v02--kit-corpo--512.webp",
+          "balao-correspondencia-real--v02--kit-corpo--256.webp",
+          "balao-correspondencia-real--v02--kit-ponta-esq--1024.webp",
+          "balao-correspondencia-real--v02--kit-ponta-esq--768.webp",
+          "balao-correspondencia-real--v02--kit-ponta-esq--512.webp",
+          "balao-correspondencia-real--v02--kit-ponta-esq--256.webp",
+          "balao-correspondencia-real--v02--kit-ponta-dir--1024.webp",
+          "balao-correspondencia-real--v02--kit-ponta-dir--768.webp",
+          "balao-correspondencia-real--v02--kit-ponta-dir--512.webp",
+          "balao-correspondencia-real--v02--kit-ponta-dir--256.webp"
+        ]
+      },
+      "segundos_pos": 30.9,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 8003,
+      "passos": null,
+      "segundos": 17.3,
+      "neuronios_estimados": 78,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "balao-correspondencia-real--v03--1535.png",
+          "bytes": 580363
+        },
+        {
+          "arquivo": "balao-correspondencia-real--v03--1535.webp",
+          "bytes": 71462
+        },
+        {
+          "arquivo": "balao-correspondencia-real--v03--1024.webp",
+          "bytes": 33266
+        },
+        {
+          "arquivo": "balao-correspondencia-real--v03--768.webp",
+          "bytes": 22134
+        },
+        {
+          "arquivo": "balao-correspondencia-real--v03--512.webp",
+          "bytes": 11998
+        },
+        {
+          "arquivo": "balao-correspondencia-real--v03--256.webp",
+          "bytes": 5236
+        }
+      ],
+      "balao": {
+        "tamanho_px": [
+          1535,
+          392
+        ],
+        "nove_fatias": {
+          "top": 74,
+          "right": 122,
+          "bottom": 51,
+          "left": 174,
+          "css": "border-image: url(...) 74 122 51 174 fill / auto; border-image-repeat: stretch;",
+          "obs": "medidas em px do original; nos derivados multiplique por largura/W"
+        },
+        "kit": {
+          "corpo": {
+            "altura_px": 341,
+            "topo_no_original": 32,
+            "fatias": {
+              "top": 42,
+              "bottom": 32,
+              "left": 0,
+              "right": 0
+            },
+            "obs": "uniforme na horizontal; estique livre. Centro liso (texto)."
+          },
+          "ponta_esq": {
+            "largura_px": 220,
+            "sobreposicao_px": 46
+          },
+          "ponta_dir": {
+            "largura_px": 168,
+            "sobreposicao_px": 46
+          },
+          "texto": {
+            "x0": 174,
+            "x1": 1413,
+            "y0": 74,
+            "y1": 341
+          }
+        },
+        "arquivos_kit": [
+          "balao-correspondencia-real--v03--kit-corpo--1024.webp",
+          "balao-correspondencia-real--v03--kit-corpo--768.webp",
+          "balao-correspondencia-real--v03--kit-corpo--512.webp",
+          "balao-correspondencia-real--v03--kit-corpo--256.webp",
+          "balao-correspondencia-real--v03--kit-ponta-esq--1024.webp",
+          "balao-correspondencia-real--v03--kit-ponta-esq--768.webp",
+          "balao-correspondencia-real--v03--kit-ponta-esq--512.webp",
+          "balao-correspondencia-real--v03--kit-ponta-esq--256.webp",
+          "balao-correspondencia-real--v03--kit-ponta-dir--1024.webp",
+          "balao-correspondencia-real--v03--kit-ponta-dir--768.webp",
+          "balao-correspondencia-real--v03--kit-ponta-dir--512.webp",
+          "balao-correspondencia-real--v03--kit-ponta-dir--256.webp"
+        ]
+      },
+      "segundos_pos": 30.1,
+      "avisos": []
+    },
+    {
+      "nome": "v04",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 8004,
+      "passos": null,
+      "segundos": 11.0,
+      "neuronios_estimados": 78,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "balao-correspondencia-real--v04--1535.png",
+          "bytes": 364598
+        },
+        {
+          "arquivo": "balao-correspondencia-real--v04--1535.webp",
+          "bytes": 52620
+        },
+        {
+          "arquivo": "balao-correspondencia-real--v04--1024.webp",
+          "bytes": 25610
+        },
+        {
+          "arquivo": "balao-correspondencia-real--v04--768.webp",
+          "bytes": 17684
+        },
+        {
+          "arquivo": "balao-correspondencia-real--v04--512.webp",
+          "bytes": 9800
+        },
+        {
+          "arquivo": "balao-correspondencia-real--v04--256.webp",
+          "bytes": 4178
+        }
+      ],
+      "balao": {
+        "tamanho_px": [
+          1535,
+          313
+        ],
+        "nove_fatias": {
+          "top": 32,
+          "right": 174,
+          "bottom": 34,
+          "left": 222,
+          "css": "border-image: url(...) 32 174 34 222 fill / auto; border-image-repeat: stretch;",
+          "obs": "medidas em px do original; nos derivados multiplique por largura/W"
+        },
+        "kit": {
+          "corpo": {
+            "altura_px": 280,
+            "topo_no_original": 16,
+            "fatias": {
+              "top": 16,
+              "bottom": 17,
+              "left": 0,
+              "right": 0
+            },
+            "obs": "uniforme na horizontal; estique livre. Centro liso (texto)."
+          },
+          "ponta_esq": {
+            "largura_px": 268,
+            "sobreposicao_px": 46
+          },
+          "ponta_dir": {
+            "largura_px": 220,
+            "sobreposicao_px": 46
+          },
+          "texto": {
+            "x0": 222,
+            "x1": 1361,
+            "y0": 32,
+            "y1": 279
+          }
+        },
+        "arquivos_kit": [
+          "balao-correspondencia-real--v04--kit-corpo--1024.webp",
+          "balao-correspondencia-real--v04--kit-corpo--768.webp",
+          "balao-correspondencia-real--v04--kit-corpo--512.webp",
+          "balao-correspondencia-real--v04--kit-corpo--256.webp",
+          "balao-correspondencia-real--v04--kit-ponta-esq--1024.webp",
+          "balao-correspondencia-real--v04--kit-ponta-esq--768.webp",
+          "balao-correspondencia-real--v04--kit-ponta-esq--512.webp",
+          "balao-correspondencia-real--v04--kit-ponta-esq--256.webp",
+          "balao-correspondencia-real--v04--kit-ponta-dir--1024.webp",
+          "balao-correspondencia-real--v04--kit-ponta-dir--768.webp",
+          "balao-correspondencia-real--v04--kit-ponta-dir--512.webp",
+          "balao-correspondencia-real--v04--kit-ponta-dir--256.webp"
+        ]
+      },
+      "segundos_pos": 30.4,
+      "avisos": []
+    }
+  ]
+}

@@ -1,0 +1,65 @@
+{
+  "pedido": "balao-correspondencia-real",
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 8001,
+      "passos": null,
+      "largura": 1536,
+      "altura": 512,
+      "neuronios_estimados": 78,
+      "ok": true,
+      "segundos": 27.2,
+      "tamanho_real": [
+        1536,
+        512
+      ]
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 8002,
+      "passos": null,
+      "largura": 1536,
+      "altura": 512,
+      "neuronios_estimados": 78,
+      "ok": true,
+      "segundos": 15.1,
+      "tamanho_real": [
+        1536,
+        512
+      ]
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 8003,
+      "passos": null,
+      "largura": 1536,
+      "altura": 512,
+      "neuronios_estimados": 78,
+      "ok": true,
+      "segundos": 17.3,
+      "tamanho_real": [
+        1536,
+        512
+      ]
+    },
+    {
+      "nome": "v04",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 8004,
+      "passos": null,
+      "largura": 1536,
+      "altura": 512,
+      "neuronios_estimados": 78,
+      "ok": true,
+      "segundos": 11.0,
+      "tamanho_real": [
+        1536,
+        512
+      ]
+    }
+  ]
+}
