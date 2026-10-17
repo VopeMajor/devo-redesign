@@ -1,0 +1,109 @@
+{
+  "pedido": "arcano-temperanca",
+  "titulo": "Arcano — temperanca (figura)",
+  "tipo": "ilustracao",
+  "tamanho_final": 1536,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 12141,
+      "passos": null,
+      "segundos": 3.2,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "ilhas_removidas": 1,
+      "arquivos": [
+        {
+          "arquivo": "arcano-temperanca--v01--1536.png",
+          "bytes": 1363441
+        },
+        {
+          "arquivo": "arcano-temperanca--v01--1536.webp",
+          "bytes": 273788
+        },
+        {
+          "arquivo": "arcano-temperanca--v01--1024.webp",
+          "bytes": 129794
+        },
+        {
+          "arquivo": "arcano-temperanca--v01--768.webp",
+          "bytes": 86712
+        },
+        {
+          "arquivo": "arcano-temperanca--v01--512.webp",
+          "bytes": 49336
+        }
+      ],
+      "segundos_pos": 39.6,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 12142,
+      "passos": null,
+      "segundos": 3.1,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "arcano-temperanca--v02--1536.png",
+          "bytes": 1454974
+        },
+        {
+          "arquivo": "arcano-temperanca--v02--1536.webp",
+          "bytes": 275726
+        },
+        {
+          "arquivo": "arcano-temperanca--v02--1024.webp",
+          "bytes": 130960
+        },
+        {
+          "arquivo": "arcano-temperanca--v02--768.webp",
+          "bytes": 88000
+        },
+        {
+          "arquivo": "arcano-temperanca--v02--512.webp",
+          "bytes": 51118
+        }
+      ],
+      "segundos_pos": 34.9,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 12143,
+      "passos": null,
+      "segundos": 3.4,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "arcano-temperanca--v03--1536.png",
+          "bytes": 1377684
+        },
+        {
+          "arquivo": "arcano-temperanca--v03--1536.webp",
+          "bytes": 282288
+        },
+        {
+          "arquivo": "arcano-temperanca--v03--1024.webp",
+          "bytes": 138292
+        },
+        {
+          "arquivo": "arcano-temperanca--v03--768.webp",
+          "bytes": 93338
+        },
+        {
+          "arquivo": "arcano-temperanca--v03--512.webp",
+          "bytes": 53510
+        }
+      ],
+      "segundos_pos": 34.6,
+      "avisos": []
+    }
+  ]
+}

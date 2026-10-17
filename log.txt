@@ -1,0 +1,9 @@
+[arcano-temperanca] v01: @cf/black-forest-labs/flux-2-klein-9b seed=12141 1024x1536 passos=None (~1,455 neurônios)
+    ok em 3.2s, 1024x1536
+[arcano-temperanca] v02: @cf/black-forest-labs/flux-2-klein-9b seed=12142 1024x1536 passos=None (~1,455 neurônios)
+    ok em 3.1s, 1024x1536
+[arcano-temperanca] v03: @cf/black-forest-labs/flux-2-klein-9b seed=12143 1024x1536 passos=None (~1,455 neurônios)
+    ok em 3.4s, 1024x1536
+[arcano-temperanca] v01: rembg:birefnet-general; sem avisos
+[arcano-temperanca] v02: rembg:birefnet-general; sem avisos
+[arcano-temperanca] v03: rembg:birefnet-general; sem avisos
