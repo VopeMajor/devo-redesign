@@ -1,0 +1,257 @@
+{
+  "base": "http://localhost:3000",
+  "shots": [
+    {
+      "name": "t01-torres-home-trancado",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "t02-torres-trancado",
+      "note": "jogador sem o tutorial: motivo",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "t03-torres-home-liberado",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "t10-galo-abertura",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "t10-galo-abertura@360x740",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "t11-galo-escolha",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "t11b-galo-fala",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "t11b-galo-fala@390x900",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "t11b-galo-fala@360x740",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "t12-galo-bloco",
+      "note": "quadro [Torre de Ruptura]",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "t13-galo-oferta",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "t13b-galo-revelacao",
+      "note": "cristal se formando",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "t14-galo-essencia",
+      "note": "+1 Essência de Afinidade do Galo",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "t15-galo-sistema",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "t20-mapa",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "t20-mapa@390x900",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "t20-mapa@360x740",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "t21a-transicao",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "t21-torre-imperador",
+      "note": "secundária do Galo",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "t21-torre-imperador@390x900",
+      "note": "secundária do Galo",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "t21-torre-imperador@360x740",
+      "note": "secundária do Galo",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "t22-andar-ficha",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "t22-andar-ficha@390x900",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "t22-andar-ficha@360x740",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "t23a-revelacao",
+      "note": "cadeado abrindo",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "t23b-revelacao-chave",
+      "note": "+1 Chave do Imperador",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "t23-andar-cena",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "t23-andar-cena@390x900",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "t23-andar-cena@360x740",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "t24-andar-concluido",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "t25-mapa-progresso",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "t25-mapa-progresso@390x900",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "t25-mapa-progresso@360x740",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "t30-reflexao",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "t31-reflexao-escolha",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "t32-reflexao-resposta",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "t40-torre-secundaria",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "t41a-revelacao-chave",
+      "note": "+1 Chave do Observatório",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "t41-secundaria-chave",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "t45-torre-principal",
+      "note": "principal sem NPC definido",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "t45-torre-principal@390x900",
+      "note": "principal sem NPC definido",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "t45-torre-principal@360x740",
+      "note": "principal sem NPC definido",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "t46-revelacao-selo",
+      "note": "andar I da principal",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "t42-andar-trancado-essencia",
+      "note": "tem a chave do Imperador; faltam 2 essências",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "t43-andar-trancado-chave",
+      "note": "falta a chave do Picadeiro",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "t44-andar-concluido-ficha",
+      "note": "concluído: Rever cena",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "t47-torre-picadeiro",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "t47-torre-picadeiro@390x900",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "t47-torre-picadeiro@360x740",
+      "note": "",
+      "url": "http://localhost:3000/"
+    }
+  ],
+  "errors": [
+    {
+      "step": "t10-galo-abertura@390x900",
+      "error": "TimeoutError: page.screenshot: Timeout 30000ms exceeded.\nCall log:\n  - taking page screenshot\n  - waiting for fonts to load...\n  - fonts loaded\n"
+    }
+  ],
+  "console": []
+}

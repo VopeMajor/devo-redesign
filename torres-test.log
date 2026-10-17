@@ -1,0 +1,15 @@
+ok   migração das torres é idempotente
+ok   jogador sem o tutorial vê as torres trancadas, com motivo
+ok   jogador trancado não sobe andar (403) nem ganha a essência do Galo
+ok   liberado: 1 torre principal, secundárias, 5–8 andares e custo dobrando no payload
+ok   oferta de fã do Galo entrega 1 essência, uma vez só
+ok   sobe o 1º andar da Torre do Imperador (secundária do Galo) com a essência do Galo e ganha a chave
+ok   não repete andar concluído nem pula andar
+ok   custo dobra a cada andar e a chave da secundária sai uma vez por andar
+ok   sem essência suficiente não sobe e nada muda
+ok   andar da principal exige chaves: sem a chave não sobe e não cobra essência
+ok   dois pedidos simultâneos do mesmo andar cobram uma vez só
+ok   apresentação vista e reflexão "Anfitrião de quê?" registram uma vez
+ok   torre ou andar inexistente → erro claro
+
+13 ok, 0 falha(s)

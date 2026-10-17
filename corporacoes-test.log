@@ -1,0 +1,16 @@
+ok   migração das Corporações é idempotente
+ok   cadastro das contas de teste
+ok   trancado sem a flag (GET sem erro; POST 403); Owner vê liberado
+ok   código inválido → 400; código bem formado sem Corporação → 404; prévia do código oficial
+ok   fundar exige os requisitos do perfil (nada é cobrado)
+ok   fundar debita Tempo UMA vez (dois toques simultâneos com o mesmo envio + um envio diferente)
+ok   aprovação administrativa: jogador não aprova; Owner aprova e o fundador vira líder com código
+ok   Necro-Corporação só pela equipe (servidor e gatilho do banco)
+ok   pedido pelo código; só líder ou vice aprova (membro comum e equipe não)
+ok   carta não duplica: duas transferências simultâneas do mesmo uid → uma só
+ok   save antigo não ressuscita a carta transferida; o mesmo uid não sai de novo
+ok   carta presa no Salão não sai; destinatário de fora da Corporação não recebe
+ok   recrutamento no Salão: líder publica (com o código); membro comum não
+ok   líder não sai sem passar a liderança; recusar fundação devolve o Tempo uma vez
+
+14 ok, 0 falha(s)
