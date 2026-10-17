@@ -1,0 +1,109 @@
+{
+  "pedido": "arcano-carro",
+  "titulo": "Arcano — carro (figura)",
+  "tipo": "ilustracao",
+  "tamanho_final": 1536,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 12071,
+      "passos": null,
+      "segundos": 3.4,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "arcano-carro--v01--1536.png",
+          "bytes": 1242044
+        },
+        {
+          "arquivo": "arcano-carro--v01--1536.webp",
+          "bytes": 223350
+        },
+        {
+          "arquivo": "arcano-carro--v01--1024.webp",
+          "bytes": 100980
+        },
+        {
+          "arquivo": "arcano-carro--v01--768.webp",
+          "bytes": 67062
+        },
+        {
+          "arquivo": "arcano-carro--v01--512.webp",
+          "bytes": 37356
+        }
+      ],
+      "segundos_pos": 50.3,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 12072,
+      "passos": null,
+      "segundos": 3.1,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "arcano-carro--v02--1536.png",
+          "bytes": 1160636
+        },
+        {
+          "arquivo": "arcano-carro--v02--1536.webp",
+          "bytes": 225400
+        },
+        {
+          "arquivo": "arcano-carro--v02--1024.webp",
+          "bytes": 102146
+        },
+        {
+          "arquivo": "arcano-carro--v02--768.webp",
+          "bytes": 66040
+        },
+        {
+          "arquivo": "arcano-carro--v02--512.webp",
+          "bytes": 36046
+        }
+      ],
+      "segundos_pos": 32.1,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 12073,
+      "passos": null,
+      "segundos": 2.9,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "ilhas_removidas": 1,
+      "arquivos": [
+        {
+          "arquivo": "arcano-carro--v03--1536.png",
+          "bytes": 1308071
+        },
+        {
+          "arquivo": "arcano-carro--v03--1536.webp",
+          "bytes": 232684
+        },
+        {
+          "arquivo": "arcano-carro--v03--1024.webp",
+          "bytes": 100352
+        },
+        {
+          "arquivo": "arcano-carro--v03--768.webp",
+          "bytes": 65968
+        },
+        {
+          "arquivo": "arcano-carro--v03--512.webp",
+          "bytes": 37260
+        }
+      ],
+      "segundos_pos": 30.4,
+      "avisos": []
+    }
+  ]
+}
