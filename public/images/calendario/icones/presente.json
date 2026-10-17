@@ -1,0 +1,18 @@
+{
+  "asset": "img:/images/calendario/icones/presente",
+  "imagem": {
+    "base": "/images/calendario/icones/presente",
+    "tamanhos": [
+      64,
+      128,
+      256
+    ]
+  },
+  "origem": {
+    "pedido": "ico-presente",
+    "variacao": "v02",
+    "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+    "seed": 10662,
+    "importado": null
+  }
+}

@@ -31,7 +31,7 @@ import { RewardStrip, type TicketData } from '../kit/ticket'
 import { DevoCard } from '../shared/devo-card'
 import { usePlayerText } from '../state/player-text'
 import { CalErro, useCalendario } from './dados'
-import { ArteVazia, RecompensaIcone } from './icones'
+import { ArteVazia, RecompensaIcone, srcSetArte } from './icones'
 
 /**
  * GRANDIOSO CALENDÁRIO DEVO (docs/redesign/CALENDARIO-dono.md). Check-in diário (ciclo de 7 dias, um por dia de
@@ -250,7 +250,7 @@ function Tela({ d, checkin, recarregar, onMelissa }: { d: Liberado; checkin: Che
 function tickets(slots: CheckinSlot[]): TicketData[] {
   return slots.map((s) => ({
     index: s.posicao,
-    reward: <RecompensaIcone icone={s.recompensa.icone} />,
+    reward: <RecompensaIcone icone={s.recompensa.icone} className="scale-[1.6]" />,
     amount: s.recompensa.valor,
     caption: s.recompensa.legenda,
     state: s.estado === 'feito' ? 'claimed' : s.estado === 'hoje' ? 'today' : 'upcoming',
@@ -336,11 +336,14 @@ function CheckinExtraView({ x, ocupado, onMarcar }: { x: CheckinExtra; ocupado: 
   const proximo = x.slots[x.posicao - 1]
   return (
     <Lamina tom="vinho" ariaLabel={x.titulo} className="animate-dv-rise [animation-delay:120ms]">
-      <div className="p-4 pb-3">
-        <p className="dv-label text-[10px] text-dv-wine-text">Data comemorativa · {x.evento}</p>
-        <div className="mt-1 flex items-start justify-between gap-3">
-          <h2 className="font-display text-[17px] font-semibold uppercase leading-tight tracking-[0.14em] text-dv-text">{x.titulo}</h2>
-          <span className="mt-0.5 shrink-0 font-mono text-[10.5px] uppercase tracking-[0.14em] text-dv-text-3">até {dataCurtaFaixa(x.ate, x.ate)}</span>
+      <div className="flex items-start gap-3 p-4 pb-3">
+        <span aria-hidden="true" className="-my-1 size-14 shrink-0 drop-shadow-[0_6px_14px_rgba(0,0,0,0.7)]">
+          <RecompensaIcone icone="presente" />
+        </span>
+        <div className="min-w-0 flex-1">
+          <p className="dv-label text-[10px] text-dv-wine-text">Data comemorativa · {x.evento}</p>
+          <h2 className="mt-1 font-display text-[17px] font-semibold uppercase leading-tight tracking-[0.14em] text-dv-text">{x.titulo}</h2>
+          <p className="mt-1 font-mono text-[10.5px] uppercase tracking-[0.14em] text-dv-text-3">Até {dataCurtaFaixa(x.ate, x.ate)}</p>
         </div>
       </div>
       <div ref={ref} className="px-3">
@@ -613,7 +616,7 @@ export function EventoCartao({ e, destaque = false, as = 'li' }: { e: EventoVist
           {e.arte ? (
             <>
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={e.arte} alt="" className="size-full object-cover" loading="lazy" />
+              <img src={e.arte} srcSet={srcSetArte(e.arte)} sizes="92px" alt="" className="size-full object-cover" loading="lazy" />
               <span aria-hidden="true" className="absolute inset-x-0 bottom-0 bg-[linear-gradient(180deg,transparent,var(--dv-abyss))] px-1.5 pb-1 pt-4 text-center font-mono text-[10px] uppercase tracking-[0.14em] text-dv-text">
                 {String(p.dia).padStart(2, '0')} {mesCurto(p.mes)}
               </span>
@@ -667,7 +670,7 @@ const NATAL_EXEMPLO = (hoje: Dia): EventoVista => {
     ate: `${ano}-12-25`,
     anual: true,
     enfase: 'folga',
-    arte: null,
+    arte: '/images/calendario/natal-512.webp',
     checkin: null,
     emDias: 0,
   }

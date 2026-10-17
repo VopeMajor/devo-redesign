@@ -2,32 +2,42 @@
 
 import type { IconeRecompensa } from '@/lib/devo/calendario'
 import { cn } from '@/lib/utils'
-import { EmblemCalendario, EmblemVirtudes } from '../kit/emblems'
-import { GlyphCard, GlyphHourglass, GlyphSpark } from '../kit/glyphs'
-import { DracmaIcon } from '../poco/poco-cena'
+import { EmblemCalendario } from '../kit/emblems'
+
+const ARTE_ICONE: Record<IconeRecompensa, string> = {
+  pp: 'pp',
+  fragmento: 'fragmento',
+  tempo: 'ampulheta',
+  dracma_comum: 'dracma-comum',
+  dracma_incomum: 'dracma-incomum',
+  carta: 'carta-incomum',
+  item: 'presente',
+}
 
 /**
- * Ícone de cada recompensa de check-in, com a arte que já existe no jogo: P.P. = emblema das Virtudes,
- * Fragmentos = cristais pintados do Poço, Horas = ampulheta, Dracmas = moedas do Poço, Carta = carta do Shuffler.
+ * Ícone pintado de cada recompensa de check-in (infra/arte → public/images/calendario/icones/<nome>-{64,128,256}.webp,
+ * com alfa): P.P., fragmento, ampulheta, dracmas, carta e o presente (item genérico / check-in de evento).
  */
-export function RecompensaIcone({ icone, className, grande = false }: { icone: IconeRecompensa; className?: string; grande?: boolean }) {
-  switch (icone) {
-    case 'pp':
-      return <EmblemVirtudes metal className={cn('size-full', className)} />
-    case 'fragmento':
-      // eslint-disable-next-line @next/next/no-img-element
-      return <img src="/images/poco/fragmento.webp" alt="" draggable={false} className={cn('size-full object-contain', grande ? '' : 'scale-[1.25]', className)} />
-    case 'tempo':
-      return <GlyphHourglass className={cn('size-full text-dv-gold-bright', className)} />
-    case 'dracma_comum':
-      return <DracmaIcon raridade="comum" className={cn('size-full', className)} />
-    case 'dracma_incomum':
-      return <DracmaIcon raridade="incomum" className={cn('size-full', className)} />
-    case 'carta':
-      return <GlyphCard className={cn('size-full text-dv-gold-bright', className)} />
-    default:
-      return <GlyphSpark className={cn('size-full text-dv-gold-bright', className)} />
-  }
+export function RecompensaIcone({ icone, className, grande = false }: { icone: IconeRecompensa | 'presente'; className?: string; grande?: boolean }) {
+  const nome = icone === 'presente' ? 'presente' : ARTE_ICONE[icone]
+  const base = `/images/calendario/icones/${nome}`
+  return (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      src={`${base}-${grande ? 256 : 128}.webp`}
+      srcSet={grande ? `${base}-256.webp 256w` : `${base}-64.webp 64w, ${base}-128.webp 128w, ${base}-256.webp 256w`}
+      sizes={grande ? '144px' : '46px'}
+      alt=""
+      draggable={false}
+      className={cn('size-full select-none object-contain', className)}
+    />
+  )
+}
+
+/** srcSet de uma arte de evento do pipeline (`/images/calendario/<nome>-<lado>.webp`); outras artes: só o src. */
+export function srcSetArte(arte: string): string | undefined {
+  const m = arte.match(/^(\/images\/calendario\/[a-z0-9-]+)-(256|512|768|1024)\.webp$/)
+  return m ? [256, 512, 768, 1024].map((n) => `${m[1]}-${n}.webp ${n}w`).join(', ') : undefined
 }
 
 /** Placa ornamental no espaço da arte de um evento sem ilustração própria. */

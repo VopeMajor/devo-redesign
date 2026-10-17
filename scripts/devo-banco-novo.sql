@@ -2188,3 +2188,10 @@ INSERT INTO calendario_eventos (slug, titulo, descricao, inicio, fim, anual, enf
   ('carnaval-2027', 'Carnaval', 'Quatro dias de festa pelas ruas.', '2027-02-06', '2027-02-09', false, 'folga')
 ON CONFLICT (slug) DO NOTHING;
 
+-- Arte pintada das datas comemorativas (infra/arte → public/images/calendario/<nome>-{256,512,768,1024}.webp).
+-- Só preenche quando ainda não há arte (não sobrescreve a escolha do Owner).
+UPDATE calendario_eventos SET arte = '/images/calendario/' || slug || '-512.webp'
+ WHERE slug IN ('natal', 'halloween') AND arte IS NULL;
+UPDATE calendario_eventos SET arte = '/images/calendario/carnaval-512.webp'
+ WHERE slug = 'carnaval-2027' AND arte IS NULL;
+
