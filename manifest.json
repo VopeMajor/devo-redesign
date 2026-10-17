@@ -1,0 +1,120 @@
+{
+  "pedido": "poco-dracma-incomum",
+  "titulo": "Poço — dracma-incomum",
+  "tipo": "emblema",
+  "tamanho_final": 1024,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 11011,
+      "passos": null,
+      "segundos": 16.8,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "poco-dracma-incomum--v01--1024.png",
+          "bytes": 1102953
+        },
+        {
+          "arquivo": "poco-dracma-incomum--v01--1024.webp",
+          "bytes": 144644
+        },
+        {
+          "arquivo": "poco-dracma-incomum--v01--512.webp",
+          "bytes": 51798
+        },
+        {
+          "arquivo": "poco-dracma-incomum--v01--256.webp",
+          "bytes": 20852
+        },
+        {
+          "arquivo": "poco-dracma-incomum--v01--128.webp",
+          "bytes": 8614
+        },
+        {
+          "arquivo": "poco-dracma-incomum--v01--64.webp",
+          "bytes": 3242
+        }
+      ],
+      "segundos_pos": 35.2,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 11012,
+      "passos": null,
+      "segundos": 24.3,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "poco-dracma-incomum--v02--1024.png",
+          "bytes": 1149865
+        },
+        {
+          "arquivo": "poco-dracma-incomum--v02--1024.webp",
+          "bytes": 168026
+        },
+        {
+          "arquivo": "poco-dracma-incomum--v02--512.webp",
+          "bytes": 55136
+        },
+        {
+          "arquivo": "poco-dracma-incomum--v02--256.webp",
+          "bytes": 22614
+        },
+        {
+          "arquivo": "poco-dracma-incomum--v02--128.webp",
+          "bytes": 8784
+        },
+        {
+          "arquivo": "poco-dracma-incomum--v02--64.webp",
+          "bytes": 3158
+        }
+      ],
+      "segundos_pos": 29.4,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 11013,
+      "passos": null,
+      "segundos": 13.9,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "poco-dracma-incomum--v03--1024.png",
+          "bytes": 1103141
+        },
+        {
+          "arquivo": "poco-dracma-incomum--v03--1024.webp",
+          "bytes": 152146
+        },
+        {
+          "arquivo": "poco-dracma-incomum--v03--512.webp",
+          "bytes": 52988
+        },
+        {
+          "arquivo": "poco-dracma-incomum--v03--256.webp",
+          "bytes": 22054
+        },
+        {
+          "arquivo": "poco-dracma-incomum--v03--128.webp",
+          "bytes": 8936
+        },
+        {
+          "arquivo": "poco-dracma-incomum--v03--64.webp",
+          "bytes": 3222
+        }
+      ],
+      "segundos_pos": 29.3,
+      "avisos": []
+    }
+  ]
+}

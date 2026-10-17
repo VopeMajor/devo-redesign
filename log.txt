@@ -1,0 +1,9 @@
+[poco-dracma-incomum] v01: @cf/black-forest-labs/flux-2-klein-4b seed=11011 1024x1024 passos=None (~104 neurônios)
+    ok em 16.8s, 1024x1024
+[poco-dracma-incomum] v02: @cf/black-forest-labs/flux-2-klein-4b seed=11012 1024x1024 passos=None (~104 neurônios)
+    ok em 24.3s, 1024x1024
+[poco-dracma-incomum] v03: @cf/black-forest-labs/flux-2-klein-4b seed=11013 1024x1024 passos=None (~104 neurônios)
+    ok em 13.9s, 1024x1024
+[poco-dracma-incomum] v01: rembg:birefnet-general; sem avisos
+[poco-dracma-incomum] v02: rembg:birefnet-general; sem avisos
+[poco-dracma-incomum] v03: rembg:birefnet-general; sem avisos
