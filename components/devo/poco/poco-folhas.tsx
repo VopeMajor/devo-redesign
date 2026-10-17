@@ -189,6 +189,7 @@ export function LancarSheet({
   ocupado,
   erro,
   onLancar,
+  onLancarVarias,
 }: {
   open: boolean
   onClose: () => void
@@ -197,6 +198,7 @@ export function LancarSheet({
   ocupado: string | null
   erro: string | null
   onLancar: (o: { gratis: true } | { moeda: string }) => void
+  onLancarVarias: (moeda: string, vezes: number) => void
 }) {
   const base = moedas.find((m) => m.key === giroGratis.categoria)
   return (
@@ -233,9 +235,28 @@ export function LancarSheet({
                 </p>
                 <p className="text-[13px] leading-snug text-dv-text-3">{!m.categoriaAtiva ? 'Categoria ainda não definida.' : m.quantidade === 0 ? 'Você não tem esta moeda.' : `Lança 1 ${m.nome}.`}</p>
               </div>
-              <Button size="sm" variant="secondary" disabled={!pode || !!ocupado} loading={ocupado === m.key} onClick={() => onLancar({ moeda: m.key })} aria-label={`Lançar ${m.nome}`}>
-                Lançar
-              </Button>
+              <div className="flex shrink-0 flex-col items-stretch gap-1.5">
+                <Button size="sm" variant="secondary" disabled={!pode || !!ocupado} loading={ocupado === m.key} onClick={() => onLancar({ moeda: m.key })} aria-label={`Lançar ${m.nome}`}>
+                  Lançar
+                </Button>
+                {/* lançar várias de uma vez, quando a pessoa tem moedas para isso */}
+                {pode && m.quantidade >= 5 && (
+                  <div className="flex gap-1">
+                    {[5, 10].filter((n) => m.quantidade >= n).map((n) => (
+                      <button
+                        key={n}
+                        type="button"
+                        disabled={!!ocupado}
+                        onClick={() => onLancarVarias(m.key, n)}
+                        aria-label={`Lançar ${n} ${m.nome} de uma vez`}
+                        className="dv-focus min-h-9 flex-1 border border-dv-line-gold px-2 font-impact text-[14px] leading-none text-dv-gold-bright transition-colors hover:bg-white/[0.05] disabled:opacity-40"
+                      >
+                        {ocupado === `${m.key}x${n}` ? '…' : `×${n}`}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
           )
         })}

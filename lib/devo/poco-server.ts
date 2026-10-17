@@ -478,6 +478,37 @@ export async function lancarMoeda(playerId: string, input: { moeda?: unknown; gr
   })
 }
 
+/** Quantidades aceitas no lançamento múltiplo (x5, x10). */
+export const POCO_MULTIPLOS = [5, 10] as const
+
+/**
+ * Lançamento múltiplo: várias moedas iguais de uma vez, sem o minigame da manivela (0 acertos em cada giro).
+ * Cada giro passa pelo mesmo caminho do giro único (moeda consumida uma vez, prêmio sorteado e entregue pelo
+ * servidor, balde revelado), em transações próprias. Se algo falha no meio, devolve o que já saiu e o erro.
+ */
+export async function lancarVarias(playerId: string, input: { moeda?: unknown; vezes?: unknown }) {
+  await requireUnlock(playerId, 'poco')
+  const vezes = Number(input.vezes)
+  if (!(POCO_MULTIPLOS as readonly number[]).includes(vezes)) throw new RecordError('Quantidade inválida.', 400)
+  const moeda = typeof input.moeda === 'string' ? input.moeda : ''
+  if (await giroAberto(playerId, pool)) throw new RecordError('Já há uma moeda no poço. Termine o giro aberto primeiro.', 409)
+  const [saldo] = await run<{ q: string }>(pool, 'SELECT coalesce(sum(quantity), 0) AS q FROM player_items WHERE player_id = $1 AND item_key = $2', [playerId, moeda])
+  if (Number(saldo?.q ?? 0) < vezes) throw new RecordError(`Você não tem ${vezes} moedas desta.`, 409)
+  const resultados: PocoResultado[] = []
+  let erro: string | null = null
+  for (let i = 0; i < vezes; i++) {
+    try {
+      await lancarMoeda(playerId, { moeda })
+      await girarManivela(playerId, { toques: [] })
+      resultados.push(await inspecionarBalde(playerId))
+    } catch (e) {
+      erro = e instanceof RecordError ? e.message : 'O poço parou no meio dos lançamentos.'
+      break
+    }
+  }
+  return { resultados, erro }
+}
+
 /* ------------------------------------------------------------------ Manivela */
 
 export async function iniciarManivela(playerId: string, input: { lento?: unknown }) {

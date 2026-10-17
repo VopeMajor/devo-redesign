@@ -1,6 +1,6 @@
 import { getCurrentPlayer } from '@/app/actions/player'
 import { RecordError } from '@/lib/devo/errors'
-import { ativarPremio, concluirApresentacao, escolherBalde, getPoco, girarManivela, iniciarManivela, inspecionarBalde, lancarMoeda, mesaPremios, salvarPremio } from '@/lib/devo/poco-server'
+import { ativarPremio, concluirApresentacao, escolherBalde, getPoco, girarManivela, iniciarManivela, inspecionarBalde, lancarMoeda, lancarVarias, mesaPremios, salvarPremio } from '@/lib/devo/poco-server'
 
 export const dynamic = 'force-dynamic'
 
@@ -49,6 +49,8 @@ export async function POST(req: Request) {
         return Response.json({ ok: true, ...(await escolherBalde(player.id, body.balde)) })
       case 'moeda.lancar':
         return Response.json({ ok: true, aberto: await lancarMoeda(player.id, { moeda: body.moeda, gratis: body.gratis }) })
+      case 'moeda.varias':
+        return Response.json({ ok: true, ...(await lancarVarias(player.id, { moeda: body.moeda, vezes: body.vezes })) })
       case 'manivela.iniciar':
         return Response.json({ ok: true, params: await iniciarManivela(player.id, { lento: body.lento }) })
       case 'manivela.girar':

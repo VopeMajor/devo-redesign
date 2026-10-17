@@ -17,7 +17,7 @@ import { type BaldePosicao, PocoCena } from './poco-cena'
 import { BaldePoco, IconeItemPoco, MoedaPoco } from './poco-itens'
 import { PocoManivela } from './poco-manivela'
 import { PocoNeblina } from './poco-neblina'
-import { PocoResultadoView } from './poco-resultado'
+import { PocoMultiResultado, PocoResultadoView } from './poco-resultado'
 
 type Liberado = Extract<PocoPayload, { liberado: true }>
 
@@ -143,6 +143,7 @@ function PocoTela({ data, refresh }: { data: Liberado; refresh: () => void }) {
   const [girando, setGirando] = useState(false)
   const [subindo, setSubindo] = useState(false)
   const [resultado, setResultado] = useState<PocoResultado | null>(null)
+  const [multi, setMulti] = useState<{ lista: PocoResultado[]; erro: string | null } | null>(null)
   const timers = useRef<number[]>([])
   useEffect(() => () => timers.current.forEach((t) => window.clearTimeout(t)), [])
   const later = (fn: () => void, ms: number) => timers.current.push(window.setTimeout(fn, ms))
@@ -172,6 +173,26 @@ function PocoTela({ data, refresh }: { data: Liberado; refresh: () => void }) {
       playSfx('coin')
       later(() => playSfx('splash'), reduced ? 0 : 900)
       if (!reduced) later(() => pocoSom('nevoa'), 1150)
+      refresh()
+    } catch (e) {
+      falhar(e)
+    } finally {
+      setOcupado(null)
+    }
+  }
+
+  // Lançamento múltiplo (x5, x10): o servidor faz todos os giros e devolve os resultados de uma vez.
+  const lancarVarias = async (moeda: string, vezes: number) => {
+    setOcupado(`${moeda}x${vezes}`)
+    setErro(null)
+    try {
+      const r = await poco('moeda.varias', { moeda, vezes })
+      const lista = (r.resultados ?? []) as PocoResultado[]
+      setFolha(null)
+      playSfx('coin')
+      later(() => playSfx('splash'), reduced ? 0 : 500)
+      if (lista.length) setMulti({ lista, erro: (r.erro as string | null) ?? null })
+      else if (r.erro) setErro(r.erro as string)
       refresh()
     } catch (e) {
       falhar(e)
@@ -388,7 +409,18 @@ function PocoTela({ data, refresh }: { data: Liberado; refresh: () => void }) {
       )}
 
       <MoedasSheet open={folha === 'moedas'} onClose={() => setFolha(null)} moedas={data.moedas} giroGratis={data.giroGratis} chances={data.chances} owner={data.owner} onSalvarProbabilidades={salvarProbabilidades} />
-      <LancarSheet open={folha === 'lancar'} onClose={() => setFolha(null)} moedas={data.moedas} giroGratis={data.giroGratis} ocupado={ocupado} erro={erro} onLancar={lancar} />
+      <LancarSheet open={folha === 'lancar'} onClose={() => setFolha(null)} moedas={data.moedas} giroGratis={data.giroGratis} ocupado={ocupado} erro={erro} onLancar={lancar} onLancarVarias={lancarVarias} />
+      {multi && (
+        <PocoMultiResultado
+          lista={multi.lista}
+          nome={nome}
+          erro={multi.erro}
+          onFechar={() => {
+            setMulti(null)
+            refresh()
+          }}
+        />
+      )}
       <BaldesSheet open={folha === 'baldes'} onClose={() => setFolha(null)} baldes={data.baldes} atual={data.baldeAtual} ocupado={!!ocupado} onEscolher={escolherBalde} />
     </div>
   )

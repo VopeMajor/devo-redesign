@@ -10,7 +10,7 @@ import { parseAsset } from '../cosmeticos/art'
 import { BalaoChat, Emblema, FotoMoldurada } from '../cosmeticos/cosmetic-art'
 import { useMediaQuery } from '../hooks'
 import { Button } from '../kit/button'
-import { Ampulheta, CartaMini, LixoPoco, MoedaPoco, RecursoPoco } from './poco-itens'
+import { Ampulheta, BaldePoco, CartaMini, LixoPoco, MoedaPoco, RecursoPoco } from './poco-itens'
 import { MolduraResultado } from './poco-ornamentos'
 
 const ART = '/images/poco'
@@ -447,5 +447,86 @@ function BalaoOrnamental({ tier }: { tier: Tier }) {
       <path d="M12 9H188V54H14Z" fill="none" stroke="#6b6357" strokeWidth="0.6" />
       {tier >= 2 && <path d="M186 4L196 4L196 14" fill="none" stroke="#ece5d8" strokeWidth="1.4" />}
     </svg>
+  )
+}
+
+/**
+ * Resultado do lançamento múltiplo (x5, x10): o melhor prêmio em destaque e a grade de todos os baldes, que se
+ * abrem um a um (luz da raridade em cada um; lixo murcho e acinzentado). Tudo já foi entregue pelo servidor.
+ */
+export function PocoMultiResultado({ lista, nome, erro, onFechar }: { lista: PocoResultado[]; nome: string; erro?: string | null; onFechar: () => void }) {
+  const [aberto, setAberto] = useState(0)
+  const melhor = lista.reduce((a, b) => (tierDe(b) > tierDe(a) ? b : a), lista[0])
+  const tudo = aberto >= lista.length
+  useEffect(() => {
+    if (tudo) {
+      pocoSom(tierDe(melhor) === 0 ? 'flop' : 'revela', tierDe(melhor))
+      return
+    }
+    const t = window.setTimeout(() => {
+      playSfx(tierDe(lista[aberto]) >= 3 ? 'reveal' : 'click')
+      setAberto((n) => n + 1)
+    }, aberto === 0 ? 350 : 220)
+    return () => window.clearTimeout(t)
+  }, [aberto, tudo, lista, melhor])
+  const tierM = tierDe(melhor)
+  const varsM = { '--c': LUZ[tierM === 0 ? 'lixo' : (melhor.item?.raridade ?? 'comum')] } as CSSProperties
+  return (
+    <div role="dialog" aria-modal="true" aria-label={`Resultado de ${lista.length} lançamentos`} className="absolute inset-0 z-40 flex flex-col bg-dv-ink/95 backdrop-blur-sm">
+      <span aria-hidden="true" className="pointer-events-none absolute left-1/2 top-[22%] size-[110%] -translate-x-1/2 -translate-y-1/2 bg-[radial-gradient(closest-side,rgb(var(--c)/0.3),transparent_70%)] transition-opacity duration-700" style={{ ...varsM, opacity: tudo ? 0.45 + tierM * 0.1 : 0.15 } as CSSProperties} />
+      <div className="relative flex items-center justify-between px-4 pt-3">
+        <p className="dv-label text-[11px] text-dv-text-2">Poço dos Milagres · ×{lista.length}</p>
+        {!tudo && (
+          <button type="button" onClick={() => setAberto(lista.length)} className="dv-focus flex min-h-11 items-center gap-2 px-2 font-mono text-[11px] uppercase tracking-[0.18em] text-dv-text-2 hover:text-dv-text">
+            Pular
+          </button>
+        )}
+      </div>
+      <div className="devo-scroll relative flex flex-1 flex-col items-center overflow-y-auto px-4 pb-5">
+        <div className={cn('relative mt-2 grid size-36 place-items-center transition-[opacity,transform] duration-500', tudo ? 'scale-100 opacity-100' : 'scale-90 opacity-0')} style={varsM}>
+          {tudo && <PremioArte r={melhor} nome={nome} />}
+        </div>
+        <p className={cn('dv-label mt-1 text-[10.5px] transition-opacity duration-500', tudo ? 'opacity-100' : 'opacity-0', tierM === 0 ? 'text-dv-text-3' : 'text-dv-gold')}>Melhor do balde</p>
+        <h2 className={cn('mt-1 text-center font-display text-[20px] font-semibold uppercase leading-tight tracking-[0.08em] text-dv-porcelain transition-opacity duration-500', tudo ? 'opacity-100' : 'opacity-0')}>
+          {melhor.categoria === 'lixo' ? (melhor.lixo?.nome ?? 'Nada') : (melhor.item?.nome ?? '')}
+          {melhor.quantidade > 1 && <span className="ml-2 font-impact text-[22px] tracking-normal text-dv-gold-bright">×{melhor.quantidade}</span>}
+        </h2>
+        <ul className="mt-4 grid w-full max-w-[420px] grid-cols-5 gap-1.5">
+          {lista.map((r, i) => {
+            const t = tierDe(r)
+            const vars = { '--c': LUZ[t === 0 ? 'lixo' : (r.item?.raridade ?? 'comum')] } as CSSProperties
+            const visivel = i < aberto
+            const nomeR = r.categoria === 'lixo' ? (r.lixo?.nome ?? 'Nada') : (r.item?.nome ?? '')
+            return (
+              <li key={r.id} className="flex min-w-0 flex-col items-center gap-1" title={nomeR}>
+                <div
+                  className={cn(
+                    'relative grid aspect-square w-full place-items-center overflow-hidden border transition-[opacity,transform] duration-300',
+                    visivel ? 'scale-100 opacity-100' : 'scale-75 opacity-25',
+                    t >= 3 ? 'border-[rgb(var(--c)/0.7)]' : 'border-dv-line',
+                  )}
+                  style={{ ...vars, background: visivel ? `radial-gradient(closest-side, rgb(var(--c) / ${t === 0 ? 0.08 : 0.12 + t * 0.06}), transparent 80%)` : undefined } as CSSProperties}
+                >
+                  {visivel ? (
+                    <div className={cn('relative size-[80%]', t === 0 && 'opacity-70 grayscale')}>
+                      <PremioArte r={r} nome={nome} />
+                    </div>
+                  ) : (
+                    <BaldePoco tamanho={44} className="size-[70%] opacity-60" />
+                  )}
+                  {visivel && r.quantidade > 1 && <span className="absolute bottom-0.5 right-1 font-impact text-[12px] leading-none text-dv-gold-bright">×{r.quantidade}</span>}
+                </div>
+                <span className={cn('w-full truncate text-center font-sans text-[10px] leading-tight', visivel ? (t === 0 ? 'text-dv-text-3' : 'text-dv-text-2') : 'text-transparent')}>{nomeR}</span>
+              </li>
+            )
+          })}
+        </ul>
+        {erro && <p className="mt-3 text-center text-[13px] text-dv-blood-text">{erro}</p>}
+        <p className="mt-3 text-center font-mono text-[10.5px] uppercase tracking-[0.14em] text-dv-text-3">Lançamento múltiplo não tem a manivela: cada giro conta zero acertos.</p>
+        <Button block className="mt-4 max-w-[360px]" sfx="confirm" disabled={!tudo} onClick={onFechar}>
+          Guardar tudo
+        </Button>
+      </div>
+    </div>
   )
 }
