@@ -1,0 +1,174 @@
+{
+  "pedido": "mini-olho-arcano",
+  "titulo": "olho-arcano — miniperfil (quadrada)",
+  "tipo": "moldura",
+  "tamanho_final": 1024,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 4231,
+      "passos": null,
+      "segundos": 18.4,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "miolo_aberto_por_cor": true,
+      "janela": {
+        "forma": "quadrado",
+        "centro_px": [
+          512.0,
+          512.0
+        ],
+        "lado_px": 560.1,
+        "raio_canto_px": 41.0,
+        "lado_fracao": 0.547
+      },
+      "reencaixe": {
+        "escala": 1.3072,
+        "cobertura_aro": 1.0
+      },
+      "ornamento_cortado": 0.019,
+      "arquivos": [
+        {
+          "arquivo": "mini-olho-arcano--v01--1024.png",
+          "bytes": 744188
+        },
+        {
+          "arquivo": "mini-olho-arcano--v01--1024.webp",
+          "bytes": 121736
+        },
+        {
+          "arquivo": "mini-olho-arcano--v01--512.webp",
+          "bytes": 46290
+        },
+        {
+          "arquivo": "mini-olho-arcano--v01--256.webp",
+          "bytes": 18564
+        },
+        {
+          "arquivo": "mini-olho-arcano--v01--96.webp",
+          "bytes": 5438
+        },
+        {
+          "arquivo": "mini-olho-arcano--v01--48.webp",
+          "bytes": 2130
+        }
+      ],
+      "segundos_pos": 30.7,
+      "avisos": [
+        "1.9% do ornamento ficou fora do quadro — reduza a janela ou peça mais margem no prompt"
+      ]
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 4232,
+      "passos": null,
+      "segundos": 37.6,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "miolo_aberto_por_cor": true,
+      "janela": {
+        "forma": "quadrado",
+        "centro_px": [
+          512.0,
+          512.0
+        ],
+        "lado_px": 560.1,
+        "raio_canto_px": 41.0,
+        "lado_fracao": 0.547
+      },
+      "reencaixe": {
+        "escala": 1.5304,
+        "cobertura_aro": 1.0
+      },
+      "ornamento_cortado": 0.0316,
+      "arquivos": [
+        {
+          "arquivo": "mini-olho-arcano--v02--1024.png",
+          "bytes": 683163
+        },
+        {
+          "arquivo": "mini-olho-arcano--v02--1024.webp",
+          "bytes": 110848
+        },
+        {
+          "arquivo": "mini-olho-arcano--v02--512.webp",
+          "bytes": 42576
+        },
+        {
+          "arquivo": "mini-olho-arcano--v02--256.webp",
+          "bytes": 17444
+        },
+        {
+          "arquivo": "mini-olho-arcano--v02--96.webp",
+          "bytes": 5094
+        },
+        {
+          "arquivo": "mini-olho-arcano--v02--48.webp",
+          "bytes": 2138
+        }
+      ],
+      "segundos_pos": 25.8,
+      "avisos": [
+        "3.2% do ornamento ficou fora do quadro — reduza a janela ou peça mais margem no prompt"
+      ]
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 4233,
+      "passos": null,
+      "segundos": 18.8,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "miolo_aberto_por_cor": true,
+      "janela": {
+        "forma": "quadrado",
+        "centro_px": [
+          512.0,
+          512.0
+        ],
+        "lado_px": 560.1,
+        "raio_canto_px": 41.0,
+        "lado_fracao": 0.547
+      },
+      "reencaixe": {
+        "escala": 1.3945,
+        "cobertura_aro": 1.0
+      },
+      "ornamento_cortado": 0.0356,
+      "arquivos": [
+        {
+          "arquivo": "mini-olho-arcano--v03--1024.png",
+          "bytes": 720744
+        },
+        {
+          "arquivo": "mini-olho-arcano--v03--1024.webp",
+          "bytes": 117826
+        },
+        {
+          "arquivo": "mini-olho-arcano--v03--512.webp",
+          "bytes": 45158
+        },
+        {
+          "arquivo": "mini-olho-arcano--v03--256.webp",
+          "bytes": 18208
+        },
+        {
+          "arquivo": "mini-olho-arcano--v03--96.webp",
+          "bytes": 5266
+        },
+        {
+          "arquivo": "mini-olho-arcano--v03--48.webp",
+          "bytes": 2184
+        }
+      ],
+      "segundos_pos": 25.4,
+      "avisos": [
+        "3.6% do ornamento ficou fora do quadro — reduza a janela ou peça mais margem no prompt"
+      ]
+    }
+  ]
+}
