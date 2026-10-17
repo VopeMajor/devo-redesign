@@ -1,0 +1,108 @@
+{
+  "pedido": "borda-espinhos-aco",
+  "titulo": "Borda de perfil — espinhos-aco",
+  "tipo": "ilustracao",
+  "tamanho_final": 1024,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 16041,
+      "passos": null,
+      "segundos": 16.6,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "borda-espinhos-aco--v01--1024.png",
+          "bytes": 390067
+        },
+        {
+          "arquivo": "borda-espinhos-aco--v01--1024.webp",
+          "bytes": 95384
+        },
+        {
+          "arquivo": "borda-espinhos-aco--v01--768.webp",
+          "bytes": 63324
+        },
+        {
+          "arquivo": "borda-espinhos-aco--v01--512.webp",
+          "bytes": 36090
+        },
+        {
+          "arquivo": "borda-espinhos-aco--v01--256.webp",
+          "bytes": 14116
+        }
+      ],
+      "segundos_pos": 35.3,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 16042,
+      "passos": null,
+      "segundos": 14.2,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "borda-espinhos-aco--v02--1024.png",
+          "bytes": 362375
+        },
+        {
+          "arquivo": "borda-espinhos-aco--v02--1024.webp",
+          "bytes": 92570
+        },
+        {
+          "arquivo": "borda-espinhos-aco--v02--768.webp",
+          "bytes": 63728
+        },
+        {
+          "arquivo": "borda-espinhos-aco--v02--512.webp",
+          "bytes": 36964
+        },
+        {
+          "arquivo": "borda-espinhos-aco--v02--256.webp",
+          "bytes": 14312
+        }
+      ],
+      "segundos_pos": 29.9,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 16043,
+      "passos": null,
+      "segundos": 19.8,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "borda-espinhos-aco--v03--1024.png",
+          "bytes": 329756
+        },
+        {
+          "arquivo": "borda-espinhos-aco--v03--1024.webp",
+          "bytes": 86704
+        },
+        {
+          "arquivo": "borda-espinhos-aco--v03--768.webp",
+          "bytes": 57656
+        },
+        {
+          "arquivo": "borda-espinhos-aco--v03--512.webp",
+          "bytes": 32988
+        },
+        {
+          "arquivo": "borda-espinhos-aco--v03--256.webp",
+          "bytes": 12902
+        }
+      ],
+      "segundos_pos": 28.8,
+      "avisos": []
+    }
+  ]
+}

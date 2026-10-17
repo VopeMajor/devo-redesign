@@ -1,0 +1,9 @@
+[borda-espinhos-aco] v01: @cf/black-forest-labs/flux-2-klein-4b seed=16041 1024x640 passos=None (~104 neurônios)
+    ok em 16.6s, 1024x640
+[borda-espinhos-aco] v02: @cf/black-forest-labs/flux-2-klein-4b seed=16042 1024x640 passos=None (~104 neurônios)
+    ok em 14.2s, 1024x640
+[borda-espinhos-aco] v03: @cf/black-forest-labs/flux-2-klein-4b seed=16043 1024x640 passos=None (~104 neurônios)
+    ok em 19.8s, 1024x640
+[borda-espinhos-aco] v01: rembg:birefnet-general; sem avisos
+[borda-espinhos-aco] v02: rembg:birefnet-general; sem avisos
+[borda-espinhos-aco] v03: rembg:birefnet-general; sem avisos
