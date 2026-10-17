@@ -1,0 +1,9 @@
+[arcano-julgamento] v01: @cf/black-forest-labs/flux-2-klein-9b seed=12201 1024x1536 passos=None (~1,455 neurônios)
+    ok em 3.1s, 1024x1536
+[arcano-julgamento] v02: @cf/black-forest-labs/flux-2-klein-9b seed=12202 1024x1536 passos=None (~1,455 neurônios)
+    ok em 3.2s, 1024x1536
+[arcano-julgamento] v03: @cf/black-forest-labs/flux-2-klein-9b seed=12203 1024x1536 passos=None (~1,455 neurônios)
+    ok em 2.9s, 1024x1536
+[arcano-julgamento] v01: rembg:birefnet-general; sem avisos
+[arcano-julgamento] v02: rembg:birefnet-general; sem avisos
+[arcano-julgamento] v03: rembg:birefnet-general; sem avisos

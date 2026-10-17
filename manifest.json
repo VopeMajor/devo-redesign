@@ -1,0 +1,110 @@
+{
+  "pedido": "arcano-julgamento",
+  "titulo": "Arcano — julgamento (figura)",
+  "tipo": "ilustracao",
+  "tamanho_final": 1536,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 12201,
+      "passos": null,
+      "segundos": 3.1,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "arcano-julgamento--v01--1536.png",
+          "bytes": 1492653
+        },
+        {
+          "arquivo": "arcano-julgamento--v01--1536.webp",
+          "bytes": 303530
+        },
+        {
+          "arquivo": "arcano-julgamento--v01--1024.webp",
+          "bytes": 141312
+        },
+        {
+          "arquivo": "arcano-julgamento--v01--768.webp",
+          "bytes": 93770
+        },
+        {
+          "arquivo": "arcano-julgamento--v01--512.webp",
+          "bytes": 53200
+        }
+      ],
+      "segundos_pos": 39.7,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 12202,
+      "passos": null,
+      "segundos": 3.2,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "ilhas_removidas": 1,
+      "arquivos": [
+        {
+          "arquivo": "arcano-julgamento--v02--1536.png",
+          "bytes": 1576867
+        },
+        {
+          "arquivo": "arcano-julgamento--v02--1536.webp",
+          "bytes": 306400
+        },
+        {
+          "arquivo": "arcano-julgamento--v02--1024.webp",
+          "bytes": 142370
+        },
+        {
+          "arquivo": "arcano-julgamento--v02--768.webp",
+          "bytes": 94064
+        },
+        {
+          "arquivo": "arcano-julgamento--v02--512.webp",
+          "bytes": 54074
+        }
+      ],
+      "segundos_pos": 35.0,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 12203,
+      "passos": null,
+      "segundos": 2.9,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "ilhas_removidas": 2,
+      "arquivos": [
+        {
+          "arquivo": "arcano-julgamento--v03--1536.png",
+          "bytes": 1438327
+        },
+        {
+          "arquivo": "arcano-julgamento--v03--1536.webp",
+          "bytes": 298706
+        },
+        {
+          "arquivo": "arcano-julgamento--v03--1024.webp",
+          "bytes": 143774
+        },
+        {
+          "arquivo": "arcano-julgamento--v03--768.webp",
+          "bytes": 94938
+        },
+        {
+          "arquivo": "arcano-julgamento--v03--512.webp",
+          "bytes": 53540
+        }
+      ],
+      "segundos_pos": 33.7,
+      "avisos": []
+    }
+  ]
+}
