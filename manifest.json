@@ -1,0 +1,83 @@
+{
+  "pedido": "camada-pendulo-prata",
+  "titulo": "Camada: pendulo-prata",
+  "tipo": "camada",
+  "tamanho_final": 1024,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 9031,
+      "passos": null,
+      "segundos": 12.7,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "camada-pendulo-prata--v01--1024.png",
+          "bytes": 96135
+        },
+        {
+          "arquivo": "camada-pendulo-prata--v01--1024.webp",
+          "bytes": 28568
+        },
+        {
+          "arquivo": "camada-pendulo-prata--v01--512.webp",
+          "bytes": 10628
+        },
+        {
+          "arquivo": "camada-pendulo-prata--v01--256.webp",
+          "bytes": 4658
+        },
+        {
+          "arquivo": "camada-pendulo-prata--v01--128.webp",
+          "bytes": 2352
+        },
+        {
+          "arquivo": "camada-pendulo-prata--v01--64.webp",
+          "bytes": 932
+        }
+      ],
+      "segundos_pos": 28.7,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 9032,
+      "passos": null,
+      "segundos": 9.4,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "camada-pendulo-prata--v02--1024.png",
+          "bytes": 84790
+        },
+        {
+          "arquivo": "camada-pendulo-prata--v02--1024.webp",
+          "bytes": 26906
+        },
+        {
+          "arquivo": "camada-pendulo-prata--v02--512.webp",
+          "bytes": 10010
+        },
+        {
+          "arquivo": "camada-pendulo-prata--v02--256.webp",
+          "bytes": 4360
+        },
+        {
+          "arquivo": "camada-pendulo-prata--v02--128.webp",
+          "bytes": 2134
+        },
+        {
+          "arquivo": "camada-pendulo-prata--v02--64.webp",
+          "bytes": 902
+        }
+      ],
+      "segundos_pos": 23.8,
+      "avisos": []
+    }
+  ]
+}
