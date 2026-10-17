@@ -23,10 +23,10 @@ import { SigiloPintado } from './sigilos'
 type Liberado = Extract<VirtudesPayload, { liberado: true }>
 const nomeCurto = (t: string) => t.replace(/^Arcano d[aoe]s? /, '')
 
+// Duas órbitas espaçadas (como na ref-06): 8 por dentro, 14 por fora; ninguém encosta em ninguém a 360 px.
 const ANEIS = [
-  { de: 0, n: 6, r: 0.185, ritmo: 1 },
-  { de: 6, n: 8, r: 0.305, ritmo: -0.62 },
-  { de: 14, n: 8, r: 0.42, ritmo: 0.4 },
+  { de: 0, n: 8, r: 0.25, ritmo: 1 },
+  { de: 8, n: 14, r: 0.425, ritmo: -0.55 },
 ] as const
 const anelDe = (i: number) => ANEIS.find((a) => i >= a.de && i < a.de + a.n)!
 const baseDe = (i: number) => {
@@ -34,7 +34,7 @@ const baseDe = (i: number) => {
   return ((i - a.de) / a.n) * Math.PI * 2 + a.de * 0.37
 }
 const OMEGA = (Math.PI * 2) / 180 // uma volta a cada 3 minutos no anel de dentro
-const INCL = { min: 36, max: 60, padrao: 46 }
+const INCL = { min: 20, max: 48, padrao: 30 }
 
 const CAMADAS = (() => {
   const r = prng(41)
@@ -48,15 +48,16 @@ export function Mapa({ d, onEscolher }: { d: Liberado; onEscolher: (i: number) =
   const nos = useRef<(HTMLButtonElement | null)[]>([])
   const aneis = useRef<(SVGPathElement | null)[]>([])
   const marcas = useRef<SVGPathElement>(null)
-  const trilha = useRef<SVGPathElement>(null)
   const trilhaMinha = useRef<SVGPathElement>(null)
+  const legenda = useRef<HTMLParagraphElement>(null)
+  const frenteAtual = useRef(-1)
   const camadas = useRef<(HTMLDivElement | null)[]>([])
   const fundo = useRef<HTMLDivElement>(null)
   const [w, setW] = useState(360)
   const meuIdx = d.arcanos.findIndex((a) => a.proprio)
   const orbital = comum('orbital')
   const meu = meuIdx >= 0 ? d.arcanos[meuIdx] : null
-  const H = Math.round(w * 0.98)
+  const H = Math.round(w * 0.86)
 
   const fisica = useRef({
     phi: meuIdx >= 0 ? (Math.PI / 2 - baseDe(meuIdx)) / anelDe(meuIdx).ritmo : 0,
@@ -149,10 +150,10 @@ export function Mapa({ d, onEscolher }: { d: Liberado; onEscolher: (i: number) =
         pos.push(p)
         const no = nos.current[i]
         if (!no) return
-        const k = Math.max(0.7, Math.min(1.15, p.s))
-        no.style.transform = `translate3d(${(p.X - 20).toFixed(1)}px, ${(p.Y - 20).toFixed(1)}px, 0) scale(${k.toFixed(3)})`
+        const k = Math.max(0.78, Math.min(1.12, p.s))
+        no.style.transform = `translate3d(${(p.X - 22).toFixed(1)}px, ${(p.Y - 22).toFixed(1)}px, 0) scale(${k.toFixed(3)})`
         no.style.zIndex = String(Math.round(1000 + p.prof))
-        no.style.opacity = (0.5 + 0.5 * ((Math.sin(t) + 1) / 2)).toFixed(2)
+        no.style.opacity = (0.55 + 0.45 * ((Math.sin(t) + 1) / 2)).toFixed(2)
       })
       // anéis (só mudam com a inclinação) e marcas do anel externo (giram)
       ANEIS.forEach((anel, k) => {
@@ -173,7 +174,7 @@ export function Mapa({ d, onEscolher }: { d: Liberado; onEscolher: (i: number) =
           const p = proj(Math.cos(t) * R, Math.sin(t) * R, cos, sin)
           dd += `${j ? 'L' : 'M'}${p.X.toFixed(1)} ${p.Y.toFixed(1)}`
         }
-        aneis.current[3]?.setAttribute('d', dd)
+        aneis.current[2]?.setAttribute('d', dd)
         let mm = ''
         for (let j = 0; j < 36; j++) {
           const t = (j / 36) * Math.PI * 2 + f.phi * 0.25
@@ -184,16 +185,20 @@ export function Mapa({ d, onEscolher }: { d: Liberado; onEscolher: (i: number) =
         }
         marcas.current?.setAttribute('d', mm)
       }
-      // constelação 0 → XXI (os trechos do próprio em ametista)
-      let tr = ''
-      let trm = ''
-      for (let i = 0; i < pos.length - 1; i++) {
-        const seg = `M${pos[i].X.toFixed(1)} ${pos[i].Y.toFixed(1)}L${pos[i + 1].X.toFixed(1)} ${pos[i + 1].Y.toFixed(1)}`
-        if (i === meuIdx || i + 1 === meuIdx) trm += seg
-        else tr += seg
+      // fio ametista do centro até o próprio Arcano (liga o medalhão central ao lugar dele na órbita)
+      if (meuIdx >= 0 && pos[meuIdx]) trilhaMinha.current?.setAttribute('d', `M${cx.toFixed(1)} ${cy.toFixed(1)}L${pos[meuIdx].X.toFixed(1)} ${pos[meuIdx].Y.toFixed(1)}`)
+      // legenda: o Arcano que passa na frente (mais perto de quem olha) dá o nome embaixo do mapa
+      let frente = 0
+      for (let i = 1; i < pos.length; i++) if (pos[i].prof > pos[frente].prof) frente = i
+      if (frente !== frenteAtual.current) {
+        const ant = nos.current[frenteAtual.current]
+        if (ant) ant.dataset.frente = 'false'
+        frenteAtual.current = frente
+        const no = nos.current[frente]
+        if (no) no.dataset.frente = 'true'
+        const a = d.arcanos[frente]
+        if (legenda.current && a) legenda.current.textContent = `${a.numeral} · ${nomeCurto(a.titulo)}`
       }
-      trilha.current?.setAttribute('d', tr)
-      trilhaMinha.current?.setAttribute('d', trm || 'M0 0')
       // paralaxe: a pintura orbital ao fundo anda pouco, as estrelas mais
       if (fundo.current) fundo.current.style.transform = `translate3d(${(Math.sin(f.phi * 0.5) * 4).toFixed(1)}px, ${((f.incl - INCL.padrao) * 0.3).toFixed(1)}px, 0) rotate(${(Math.sin(f.phi * 0.25) * 1.5).toFixed(2)}deg)`
       camadas.current.forEach((c, k) => {
@@ -269,13 +274,12 @@ export function Mapa({ d, onEscolher }: { d: Liberado; onEscolher: (i: number) =
                 <stop offset="1" stopColor="var(--dv-gold-deep)" />
               </linearGradient>
             </defs>
-            <path ref={(el) => void (aneis.current[3] = el)} fill="none" stroke={`url(#${id}-aco)`} strokeWidth="2.6" strokeOpacity="0.85" />
+            <path ref={(el) => void (aneis.current[2] = el)} fill="none" stroke={`url(#${id}-aco)`} strokeWidth="2" strokeOpacity="0.7" />
             <path ref={marcas} fill="none" stroke="var(--dv-gold)" strokeWidth="1" strokeOpacity="0.55" />
             {ANEIS.map((_, k) => (
-              <path key={k} ref={(el) => void (aneis.current[k] = el)} fill="none" stroke={`url(#${id}-aco)`} strokeWidth={k === 2 ? 1.6 : 1.1} strokeOpacity={0.55 - k * 0.08} strokeDasharray={k === 1 ? '6 5' : undefined} />
+              <path key={k} ref={(el) => void (aneis.current[k] = el)} fill="none" stroke={`url(#${id}-aco)`} strokeWidth={1.1} strokeOpacity={0.5} strokeDasharray={k === 0 ? '2 6' : undefined} />
             ))}
-            <path ref={trilha} fill="none" stroke="var(--dv-gold-bright)" strokeOpacity="0.32" strokeWidth="0.9" />
-            <path ref={trilhaMinha} fill="none" stroke="var(--dv-amethyst-text)" strokeOpacity="0.85" strokeWidth="1.4" style={{ filter: 'drop-shadow(0 0 3px var(--dv-amethyst))' }} />
+            <path ref={trilhaMinha} fill="none" stroke="var(--dv-amethyst-text)" strokeOpacity="0.7" strokeWidth="1" strokeDasharray="3 4" style={{ filter: 'drop-shadow(0 0 3px var(--dv-amethyst))' }} />
           </svg>
           {/* centro */}
           <button
@@ -301,15 +305,20 @@ export function Mapa({ d, onEscolher }: { d: Liberado; onEscolher: (i: number) =
                 type="button"
                 onClick={() => escolher(i)}
                 aria-label={`${a.numeral} · ${nomeCurto(a.titulo)}${a.proprio ? ', seu Arcano' : aberto ? '' : ' (trancado)'}`}
-                className="dv-focus absolute left-0 top-0 size-10 rounded-full will-change-transform before:absolute before:-inset-1 before:content-['']"
+                className="dv-focus group/no absolute left-0 top-0 size-11 rounded-full will-change-transform before:absolute before:-inset-1 before:content-[''] data-[frente=true]:[&>span:first-child]:opacity-100"
               >
+                {/* halo do que está na frente (lido pela legenda) */}
+                <span aria-hidden="true" className="pointer-events-none absolute -inset-2 rounded-full bg-[radial-gradient(closest-side,color-mix(in_oklab,var(--dv-gold-bright)_28%,transparent),transparent)] opacity-0 transition-opacity duration-500" />
                 <Medalhao estado={estado} pulso={a.proprio} className="size-full">
-                  <SigiloPintado arcano={a.key} estado={estado} px={22} className="-mt-0.5 size-[22px]" />
-                  <span className={cn('-mt-[1px] font-mono text-[7.5px] leading-none tracking-[0.04em]', a.proprio ? 'text-dv-amethyst-text' : aberto ? 'text-dv-gold' : 'text-dv-text-3')}>{a.numeral}</span>
+                  <SigiloPintado arcano={a.key} estado={estado} px={28} className="size-[28px]" />
                 </Medalhao>
               </button>
             )
           })}
+          {/* nome de quem passa na frente: muda conforme o mapa gira */}
+          <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 bottom-2 z-[1100] flex justify-center">
+            <p ref={legenda} className="bg-dv-ink/70 px-3 py-1 font-display text-[13px] font-semibold uppercase tracking-[0.16em] text-dv-gold-bright shadow-[inset_0_0_0_1px_var(--dv-line-gold)] backdrop-blur-[2px]" />
+          </div>
         </section>
 
         <div className="mt-2 flex flex-col gap-4 px-4">
