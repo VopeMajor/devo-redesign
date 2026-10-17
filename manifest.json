@@ -1,0 +1,110 @@
+{
+  "pedido": "arcano-sol",
+  "titulo": "Arcano — sol (figura)",
+  "tipo": "ilustracao",
+  "tamanho_final": 1536,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 12191,
+      "passos": null,
+      "segundos": 3.1,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "ilhas_removidas": 1,
+      "arquivos": [
+        {
+          "arquivo": "arcano-sol--v01--1536.png",
+          "bytes": 1129234
+        },
+        {
+          "arquivo": "arcano-sol--v01--1536.webp",
+          "bytes": 250488
+        },
+        {
+          "arquivo": "arcano-sol--v01--1024.webp",
+          "bytes": 115128
+        },
+        {
+          "arquivo": "arcano-sol--v01--768.webp",
+          "bytes": 75956
+        },
+        {
+          "arquivo": "arcano-sol--v01--512.webp",
+          "bytes": 41308
+        }
+      ],
+      "segundos_pos": 37.8,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 12192,
+      "passos": null,
+      "segundos": 3.1,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "arcano-sol--v02--1536.png",
+          "bytes": 1159073
+        },
+        {
+          "arquivo": "arcano-sol--v02--1536.webp",
+          "bytes": 260456
+        },
+        {
+          "arquivo": "arcano-sol--v02--1024.webp",
+          "bytes": 125474
+        },
+        {
+          "arquivo": "arcano-sol--v02--768.webp",
+          "bytes": 83048
+        },
+        {
+          "arquivo": "arcano-sol--v02--512.webp",
+          "bytes": 47334
+        }
+      ],
+      "segundos_pos": 32.9,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 12193,
+      "passos": null,
+      "segundos": 2.8,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "ilhas_removidas": 3,
+      "arquivos": [
+        {
+          "arquivo": "arcano-sol--v03--1536.png",
+          "bytes": 1117196
+        },
+        {
+          "arquivo": "arcano-sol--v03--1536.webp",
+          "bytes": 235718
+        },
+        {
+          "arquivo": "arcano-sol--v03--1024.webp",
+          "bytes": 112858
+        },
+        {
+          "arquivo": "arcano-sol--v03--768.webp",
+          "bytes": 75556
+        },
+        {
+          "arquivo": "arcano-sol--v03--512.webp",
+          "bytes": 43256
+        }
+      ],
+      "segundos_pos": 31.8,
+      "avisos": []
+    }
+  ]
+}

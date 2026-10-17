@@ -1,0 +1,9 @@
+[arcano-sol] v01: @cf/black-forest-labs/flux-2-klein-9b seed=12191 1024x1536 passos=None (~1,455 neurônios)
+    ok em 3.1s, 1024x1536
+[arcano-sol] v02: @cf/black-forest-labs/flux-2-klein-9b seed=12192 1024x1536 passos=None (~1,455 neurônios)
+    ok em 3.1s, 1024x1536
+[arcano-sol] v03: @cf/black-forest-labs/flux-2-klein-9b seed=12193 1024x1536 passos=None (~1,455 neurônios)
+    ok em 2.8s, 1024x1536
+[arcano-sol] v01: rembg:birefnet-general; sem avisos
+[arcano-sol] v02: rembg:birefnet-general; sem avisos
+[arcano-sol] v03: rembg:birefnet-general; sem avisos
