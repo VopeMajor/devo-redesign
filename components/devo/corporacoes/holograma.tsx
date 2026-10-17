@@ -39,7 +39,7 @@ export function SeloCompanhia({ className, aceso = false, style }: { className?:
         </linearGradient>
       </defs>
       <path d="M32 3 57 17.5v29L32 61 7 46.5v-29Z" stroke="url(#corp-cia-aco)" strokeWidth="1.8" />
-      <path d="M32 9 52 20.5v23L32 55 12 43.5v-23Z" stroke="#8f86b4" strokeOpacity="0.6" strokeWidth="0.9" />
+      <path d="M32 9 52 20.5v23L32 55 12 43.5v-23Z" stroke="#8a7cc8" strokeOpacity="0.6" strokeWidth="0.9" />
       <path d="M14 32c5-7.5 11-11 18-11s13 3.5 18 11c-5 7.5-11 11-18 11s-13-3.5-18-11Z" stroke="url(#corp-cia-aco)" strokeWidth="1.6" />
       <circle cx="32" cy="32" r="5.5" fill="url(#corp-cia-aco)" />
       <circle cx="32" cy="32" r="2" fill="#151517" />

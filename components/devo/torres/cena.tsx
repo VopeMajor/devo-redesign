@@ -358,8 +358,8 @@ export function Essencia({ className }: { className?: string }) {
         </linearGradient>
         <radialGradient id="tw-ess-c" cx="0.5" cy="0.45" r="0.5">
           <stop offset="0" stopColor="#e6e0ff" />
-          <stop offset="0.6" stopColor="#8f86b4" />
-          <stop offset="1" stopColor="#4d4668" />
+          <stop offset="0.6" stopColor="#8a7cc8" />
+          <stop offset="1" stopColor="#4e4580" />
         </radialGradient>
       </defs>
       <path d="M12 1.5 20 12 12 22.5 4 12Z" fill="url(#tw-ess)" />

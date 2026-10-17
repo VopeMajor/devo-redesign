@@ -36,7 +36,8 @@ const SIZE: Record<ButtonSize, { h: string; text: string; px: string; cut: numbe
 const LINE: Record<ButtonVariant, string> = {
   // Primário = porcelana com filete de aço champanhe (ref. de mármore); ametista só no halo de foco/hover.
   primary: 'bg-[linear-gradient(100deg,#f4efe6,#9a9184_28%,#ece5d8_55%,#6b6357_80%,#dcd5c8)]',
-  secondary: 'bg-[linear-gradient(100deg,var(--dv-line-strong),rgb(var(--dv-text-rgb)/0.55)_50%,var(--dv-line-strong))] group-enabled:group-hover:bg-[linear-gradient(100deg,var(--dv-gold-deep),var(--dv-gold-bright)_50%,var(--dv-gold-deep))]',
+  // contorno em aço champanhe (Refinamento 4): acetinado em repouso, reflexo no hover
+  secondary: 'bg-[linear-gradient(100deg,var(--dv-champagne-soft),var(--dv-champagne)_50%,var(--dv-champagne-soft))] group-enabled:group-hover:bg-[linear-gradient(100deg,var(--dv-champagne-deep),var(--dv-champagne-strong)_50%,var(--dv-champagne-deep))]',
   ghost: '',
   danger: 'bg-[linear-gradient(100deg,var(--dv-blood-text),var(--dv-blood)_45%,var(--dv-blood-deep))]',
 }
@@ -44,17 +45,17 @@ const LINE: Record<ButtonVariant, string> = {
 const FILL: Record<ButtonVariant, string> = {
   primary:
     'bg-[linear-gradient(180deg,#f6f5f3_0%,#e7e5e1_52%,#cdcac4_100%)] group-enabled:group-hover:bg-[linear-gradient(180deg,#ffffff_0%,#efeeeb_52%,#d6d3cd_100%)]',
-  secondary: 'bg-[linear-gradient(180deg,var(--dv-fog)_0%,var(--dv-ink-4)_38%,var(--dv-ink-2)_100%)] group-enabled:group-hover:bg-[linear-gradient(180deg,var(--dv-fog-2)_0%,var(--dv-fog)_38%,var(--dv-ink-3)_100%)]',
+  secondary: 'bg-[linear-gradient(180deg,var(--dv-ink-3),var(--dv-ink))]',
   ghost: '',
-  danger: 'bg-[linear-gradient(180deg,var(--dv-wine-line)_0%,var(--dv-wine)_60%,var(--dv-wine-deep)_100%)] group-enabled:group-hover:bg-[linear-gradient(180deg,#8e4450_0%,var(--dv-wine-2)_60%,var(--dv-wine)_100%)]',
+  danger: 'bg-[linear-gradient(180deg,#8a0f18_0%,#4a0a0f_60%,#22060a_100%)] group-enabled:group-hover:bg-[linear-gradient(180deg,#a5131d_0%,#5a0a10_60%,#2a060a_100%)]',
 }
 
 /** Interior: primary = bloco cobalto; secondary = bloco na cor do texto (preto no papel, claro no painel); ghost = link cobalto; danger = vermelho com faixa. */
 const INTERIOR: Record<ButtonVariant, string> = {
-  primary: 'dv-cut-diag bg-in-accent-fill text-white enabled:hover:bg-dv-wine-2 enabled:hover:shadow-[0_0_22px_-4px_rgb(var(--dv-wine-rgb)/0.8)]',
+  primary: 'dv-cut-diag bg-in-accent-fill text-white enabled:hover:bg-dv-ink-4 enabled:hover:shadow-[0_0_22px_-4px_rgb(var(--dv-amethyst-rgb)/0.8)]',
   secondary: 'dv-cut-diag bg-in-fg text-in-bg enabled:hover:bg-in-accent-fill enabled:hover:text-white',
   ghost: 'px-2 text-in-accent underline decoration-in-accent/40 underline-offset-[6px] enabled:hover:decoration-in-accent',
-  danger: 'dv-cut-diag bg-dv-blood text-white enabled:hover:bg-dv-wine-line',
+  danger: 'dv-cut-diag bg-dv-blood text-white enabled:hover:bg-[#c01a28]',
 }
 
 const TEXT: Record<ButtonVariant, string> = {

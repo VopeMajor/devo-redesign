@@ -73,16 +73,16 @@ export function TorresDefs() {
       </radialGradient>
       <radialGradient id="tw-cur" cx="0.5" cy="0.6" r="0.6">
         <stop offset="0" stopColor="#e6e0ff" />
-        <stop offset="0.6" stopColor="#8f86b4" />
-        <stop offset="1" stopColor="#4d4668" />
+        <stop offset="0.6" stopColor="#8a7cc8" />
+        <stop offset="1" stopColor="#4e4580" />
       </radialGradient>
       <radialGradient id="tw-halo" cx="0.5" cy="0.5" r="0.5">
         <stop offset="0" stopColor="#ece5d8" stopOpacity="0.55" />
         <stop offset="1" stopColor="#ece5d8" stopOpacity="0" />
       </radialGradient>
       <radialGradient id="tw-halo-am" cx="0.5" cy="0.5" r="0.5">
-        <stop offset="0" stopColor="#8f86b4" stopOpacity="0.6" />
-        <stop offset="1" stopColor="#8f86b4" stopOpacity="0" />
+        <stop offset="0" stopColor="#8a7cc8" stopOpacity="0.6" />
+        <stop offset="1" stopColor="#8a7cc8" stopOpacity="0" />
       </radialGradient>
       <pattern id="tw-stripes" width="12" height="10" patternUnits="userSpaceOnUse">
         <rect width="6" height="10" fill="#ebe9e4" />
@@ -300,7 +300,7 @@ function Observatorio({ feitos, total }: { feitos: number; total: number }) {
         <path key={x} d={`M0 -244Q${x * 0.9} -240 ${x * 1.55} -214`} stroke="#4a453d" strokeWidth={0.7} fill="none" />
       ))}
       <path d="M-4 -243L4 -243L6 -214L-6 -214Z" fill="#0c0c0e" />
-      <path d="M0 -242V-215" stroke="#8f86b4" strokeWidth={0.8} opacity={0.75} />
+      <path d="M0 -242V-215" stroke="#8a7cc8" strokeWidth={0.8} opacity={0.75} />
       <g transform="rotate(-38 0 -232)">
         <rect x={-3.2} y={-270} width={6.4} height={40} rx={1} fill="url(#tw-steel)" />
         <rect x={-4.4} y={-272} width={8.8} height={5} rx={1} fill="url(#tw-steel-v)" />
@@ -310,7 +310,7 @@ function Observatorio({ feitos, total }: { feitos: number; total: number }) {
         <circle cy={-8} r={8} fill="none" stroke="url(#tw-steel)" strokeWidth={1.2} />
         <ellipse cy={-8} rx={8} ry={3} fill="none" stroke="#bab09f" strokeWidth={0.8} />
         <ellipse cy={-8} rx={3} ry={8} fill="none" stroke="#bab09f" strokeWidth={0.8} transform="rotate(30 0 -8)" />
-        <circle cy={-8} r={1.8} fill="#8f86b4" />
+        <circle cy={-8} r={1.8} fill="#8a7cc8" />
       </g>
       <g transform="translate(36 -204)">
         <path d="M0 0V10" stroke="#6b6357" strokeWidth={0.8} />
@@ -388,7 +388,7 @@ function Picadeiro({ feitos, total }: { feitos: number; total: number }) {
           {[0.18, 0.34, 0.5, 0.66, 0.82].map((t, i) => {
             const x = s * (2 * (1 - t) * t * 40 + t * t * 70)
             const y = (1 - t) * (1 - t) * -272 + 2 * (1 - t) * t * -222 + t * t * -124
-            return <path key={t} d={`M${x - 3} ${y}L${x + 3} ${y}L${x} ${y + 7}Z`} fill={i % 2 ? '#ebe9e4' : '#4d4668'} />
+            return <path key={t} d={`M${x - 3} ${y}L${x + 3} ${y}L${x} ${y + 7}Z`} fill={i % 2 ? '#ebe9e4' : '#4e4580'} />
           })}
         </g>
       ))}

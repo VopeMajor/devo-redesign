@@ -294,7 +294,7 @@ function DoorArt({ status, className }: { status: Room['status']; className?: st
         </linearGradient>
         <radialGradient id={`${id}k`} cx="0.5" cy="0.5" r="0.5">
           <stop offset="0" stopColor={mine ? '#cbc5e8' : '#fff6e6'} stopOpacity="0.95" />
-          <stop offset="0.35" stopColor={mine ? '#8f86b4' : '#ece5d8'} stopOpacity="0.4" />
+          <stop offset="0.35" stopColor={mine ? '#8a7cc8' : '#ece5d8'} stopOpacity="0.4" />
           <stop offset="1" stopColor="#ece5d8" stopOpacity="0" />
         </radialGradient>
         <linearGradient id={`${id}f`} x1="0" y1="0" x2="0" y2="1">

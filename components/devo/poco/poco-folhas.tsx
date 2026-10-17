@@ -87,7 +87,7 @@ function Chances({ chances, moedas }: { chances: Record<string, LinhaChance[]>; 
             role="tab"
             aria-selected={aberta === m.key}
             onClick={() => setAberta(m.key)}
-            className={cn('dv-focus min-h-11 px-3 font-mono text-[10.5px] uppercase tracking-[0.12em]', aberta === m.key ? 'bg-dv-block text-white shadow-[inset_0_0_0_1px_var(--dv-wine-line)]' : 'text-dv-text-2 shadow-[inset_0_0_0_1px_var(--dv-line-strong)]')}
+            className={cn('dv-focus min-h-11 px-3 font-mono text-[10.5px] uppercase tracking-[0.12em]', aberta === m.key ? 'bg-dv-block text-white shadow-[inset_0_0_0_1px_var(--dv-amethyst)]' : 'text-dv-text-2 shadow-[inset_0_0_0_1px_var(--dv-line-strong)]')}
           >
             {m.nome}
           </button>
@@ -96,9 +96,9 @@ function Chances({ chances, moedas }: { chances: Record<string, LinhaChance[]>; 
       <ul className="mt-2 flex flex-col" role="tabpanel">
         {linhas.map((l) => (
           <li key={l.chave} className="flex items-center gap-3 border-b border-dv-line py-1.5 last:border-b-0">
-            <span className={cn('min-w-0 flex-1 truncate font-body text-[14.5px]', l.premio ? 'text-dv-wine-text' : 'text-dv-text-2')}>{l.nome}</span>
+            <span className={cn('min-w-0 flex-1 truncate font-body text-[14.5px]', l.premio ? 'text-dv-amethyst-text' : 'text-dv-text-2')}>{l.nome}</span>
             <span className="h-1 w-16 bg-dv-ink-4" aria-hidden="true">
-              <span className="block h-full bg-dv-silver" style={{ width: `${Math.max(2, l.pct)}%` }} />
+              <span className="block h-full bg-dv-champagne" style={{ width: `${Math.max(2, l.pct)}%` }} />
             </span>
             <span className="w-14 text-right font-mono text-[12px] tabular-nums text-dv-text">{l.pct.toLocaleString('pt-BR', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}%</span>
           </li>

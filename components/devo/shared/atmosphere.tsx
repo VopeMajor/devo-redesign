@@ -27,7 +27,7 @@ export function Embers({ className }: { className?: string }) {
               left: e.left,
               width: e.size,
               height: e.size,
-              background: e.red ? '#8f86b4' : '#eceef2',
+              background: e.red ? '#8a7cc8' : '#eceef2',
               boxShadow: e.red ? '0 0 6px 1px rgba(138,124,200,0.7)' : '0 0 4px rgba(236,238,242,0.6)',
               animation: `devo-drift ${e.duration}s linear ${e.delay}s infinite`,
               '--dx': e.dx,

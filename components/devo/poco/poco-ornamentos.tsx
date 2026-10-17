@@ -28,7 +28,7 @@ function Metal({ id }: { id: string }) {
         <stop offset="1" stopColor="#2a2621" />
       </linearGradient>
       <radialGradient id={`${id}-j`} cx="0.38" cy="0.32" r="0.75">
-        <stop offset="0" stopColor="#f1eff4" />
+        <stop offset="0" stopColor="#f3efff" />
         <stop offset="0.25" stopColor="#b6a9ee" />
         <stop offset="0.6" stopColor="#4e3f92" />
         <stop offset="1" stopColor="#15102c" />
@@ -113,7 +113,7 @@ export function PlacaGotica({ ativo, apagado, className }: { ativo: boolean; apa
         </linearGradient>
       </defs>
       <path d={corpo} fill={apagado ? '#2a2a2e' : `url(#${id}-m)`} />
-      <path d={dentro} fill={`url(#${id}-f)`} stroke={ativo ? '#8f86b4' : apagado ? '#38383d' : '#6b6357'} strokeWidth="1.2" />
+      <path d={dentro} fill={`url(#${id}-f)`} stroke={ativo ? '#8a7cc8' : apagado ? '#38383d' : '#6b6357'} strokeWidth="1.2" />
       <path d="M20 40Q20 26 50 20Q80 26 80 40" fill="none" stroke={apagado ? '#3a3a3f' : '#bab09f'} strokeWidth="0.7" opacity="0.7" />
       {/* crista */}
       <path d="M50 0L56 7L50 14L44 7Z" fill={ativo ? `url(#${id}-j)` : apagado ? '#3a3a3f' : `url(#${id}-m)`} stroke="#1d1a16" strokeWidth="0.6" />
@@ -154,7 +154,7 @@ export function MedalhaoDentado({ ativo, apagado, className }: { ativo: boolean;
       </defs>
       <path d={dentes} fill={apagado ? '#2c2c31' : `url(#${id}-m)`} stroke="#1d1a16" strokeWidth="0.6" />
       <circle cx="60" cy="60" r="50" fill="#0f0f12" stroke={apagado ? '#3a3a3f' : `url(#${id}-h)`} strokeWidth="3" />
-      <circle cx="60" cy="60" r="43" fill={`url(#${id}-d)`} stroke={ativo ? '#cbc6dc' : '#5f584d'} strokeWidth="0.8" />
+      <circle cx="60" cy="60" r="43" fill={`url(#${id}-d)`} stroke={ativo ? '#c2b9ec' : '#5f584d'} strokeWidth="0.8" />
       {Array.from({ length: 8 }, (_, i) => {
         const a = (i * 45 * Math.PI) / 180
         const x = 60 + Math.cos(a) * 46.5
@@ -193,7 +193,7 @@ export function MolduraResultado({ raridade, lixo = false, children, className }
         <defs>
           <Metal id={id} />
           <linearGradient id={`${id}-fundo`} x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0" stopColor={n >= 4 ? '#3f1117' : n >= 3 ? '#2a2638' : '#262424'} />
+            <stop offset="0" stopColor={n >= 4 ? '#3a2f5c' : n >= 3 ? '#2b2450' : '#262424'} />
             <stop offset="0.45" stopColor="#181717" />
             <stop offset="1" stopColor="#0b0b0d" />
           </linearGradient>
@@ -201,7 +201,7 @@ export function MolduraResultado({ raridade, lixo = false, children, className }
         {/* corpo: arco ogival no topo, base chanfrada */}
         <path d="M14 70Q14 30 170 12Q326 30 326 70V384L302 408H38L14 384Z" fill={`url(#${id}-fundo)`} stroke={`url(#${id}-m)`} strokeWidth={n >= 2 ? 3 : 2} />
         {n >= 2 && <path d="M24 74Q24 40 170 24Q316 40 316 74V378L296 398H44L24 378Z" fill="none" stroke="#bab09f" strokeWidth="0.8" opacity="0.6" />}
-        {n >= 4 && <path d="M32 78Q32 48 170 34Q308 48 308 78V372L292 388H48L32 372Z" fill="none" stroke="#8f86b4" strokeWidth="1" opacity="0.7" />}
+        {n >= 4 && <path d="M32 78Q32 48 170 34Q308 48 308 78V372L292 388H48L32 372Z" fill="none" stroke="#8a7cc8" strokeWidth="1" opacity="0.7" />}
         {/* volutas nos cantos */}
         {n >= 2 &&
           [
@@ -215,7 +215,7 @@ export function MolduraResultado({ raridade, lixo = false, children, className }
           <g>
             <path d="M170 0L188 14L184 34L170 44L156 34L152 14Z" fill={`url(#${id}-m)`} stroke="#1d1a16" />
             <path d="M170 7L182 16L179 31L170 37L161 31L158 16Z" fill={`url(#${id}-j)`} />
-            <path d={star4(170, 22, 7, 0.2)} fill="#f1eff4" />
+            <path d={star4(170, 22, 7, 0.2)} fill="#f3efff" />
             <path d={voluta(144, 22, 12, -1, 1.3, 20)} stroke={`url(#${id}-m)`} strokeWidth="2.4" fill="none" />
             <path d={voluta(196, 22, 12, 1, 1.3, 160)} stroke={`url(#${id}-m)`} strokeWidth="2.4" fill="none" />
           </g>
@@ -257,10 +257,10 @@ export function Etiqueta({ children, aceso = false, joia = true, className }: { 
         </defs>
         <path d="M10 2H186L198 16L186 30H10L2 16Z" fill="#0f0f12" fillOpacity="0.9" />
         <path d="M10 2H186L198 16L186 30H10L2 16Z" fill="none" stroke={`url(#${id}-m)`} strokeWidth="1.2" vectorEffect="non-scaling-stroke" />
-        <path d="M12 5H184L193 16L184 27H12L6 16Z" fill="none" stroke={aceso ? '#8f86b4' : '#5f584d'} strokeWidth="0.8" vectorEffect="non-scaling-stroke" opacity="0.9" />
+        <path d="M12 5H184L193 16L184 27H12L6 16Z" fill="none" stroke={aceso ? '#8a7cc8' : '#5f584d'} strokeWidth="0.8" vectorEffect="non-scaling-stroke" opacity="0.9" />
       </svg>
       {joia && (
-        <span aria-hidden="true" className="absolute left-[7px] top-1/2 size-2.5 -translate-y-1/2 rotate-45 border border-[#d8cfbf]" style={{ background: aceso ? 'radial-gradient(circle at 35% 30%,#f1eff4,#8f86b4 55%,#2a2638)' : 'linear-gradient(135deg,#6b6357,#2a2621)', boxShadow: aceso ? '0 0 8px rgba(138,124,200,0.9)' : undefined }} />
+        <span aria-hidden="true" className="absolute left-[7px] top-1/2 size-2.5 -translate-y-1/2 rotate-45 border border-[#d8cfbf]" style={{ background: aceso ? 'radial-gradient(circle at 35% 30%,#f3efff,#8a7cc8 55%,#2b2450)' : 'linear-gradient(135deg,#6b6357,#2a2621)', boxShadow: aceso ? '0 0 8px rgba(138,124,200,0.9)' : undefined }} />
       )}
       <div className="relative flex min-w-0 items-center gap-2">{children}</div>
     </div>

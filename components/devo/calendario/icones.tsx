@@ -47,14 +47,14 @@ export function ArteVazia({ dia, mes, enfase, className }: { dia: number; mes: s
       aria-hidden="true"
       className={cn(
         'relative grid size-full place-items-center overflow-hidden',
-        enfase === 'atencao' ? 'bg-[linear-gradient(160deg,var(--dv-wine),var(--dv-wine-deep)_60%,var(--dv-abyss))]' : 'bg-[linear-gradient(160deg,var(--dv-fog),var(--dv-ink-2)_60%,var(--dv-abyss))]',
+        enfase === 'atencao' ? 'bg-[linear-gradient(160deg,var(--dv-amethyst-deep),var(--dv-cobalt-dim)_60%,var(--dv-ink))]' : 'bg-[linear-gradient(160deg,var(--dv-ink-4),var(--dv-ink-2)_60%,var(--dv-ink))]',
         className,
       )}
     >
-      <EmblemCalendario className={cn('absolute -right-3 -top-3 size-20 opacity-[0.12]', enfase === 'atencao' ? 'text-dv-wine-text' : 'text-dv-silver')} />
+      <EmblemCalendario className={cn('absolute -right-3 -top-3 size-20 opacity-[0.12]', enfase === 'atencao' ? 'text-dv-amethyst-text' : 'text-dv-champagne')} />
       <span className="relative flex flex-col items-center leading-none">
         <span className="font-serif text-[38px] font-medium text-dv-text dv-tabular">{String(dia).padStart(2, '0')}</span>
-        <span className={cn('mt-1 font-mono text-[10px] uppercase tracking-[0.22em]', enfase === 'atencao' ? 'text-dv-wine-text' : 'text-dv-silver')}>{mes}</span>
+        <span className={cn('mt-1 font-mono text-[10px] uppercase tracking-[0.22em]', enfase === 'atencao' ? 'text-dv-amethyst-text' : 'text-dv-champagne')}>{mes}</span>
       </span>
     </span>
   )

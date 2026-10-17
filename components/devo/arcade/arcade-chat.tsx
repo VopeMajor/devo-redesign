@@ -14,7 +14,7 @@ import { BalaoChat, FotoMoldurada, NomeVisual } from '../cosmeticos/cosmetic-art
 import { useCatalogo, useVisual, useVisuais } from '../cosmeticos/use-cosmeticos'
 
 // Nomes no chat em tons da paleta (porcelana, aço, prata, lavanda, ametista clara): distintos sem virar arco-íris.
-const NAME_COLORS = ['#f1f0ee', '#ece5d8', '#bab09f', '#cbc6dc', '#b7b3c9', '#d9d8d4', '#9a9184', '#cbc5e8']
+const NAME_COLORS = ['#f1f0ee', '#ece5d8', '#bab09f', '#c2b9ec', '#b7b3c9', '#d9d8d4', '#9a9184', '#cbc5e8']
 
 export function nameColor(name: string) {
   let h = 0

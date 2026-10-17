@@ -118,15 +118,15 @@ export function PhoneShell({ current, onOpen, onHome }: { current: AppId | null;
       <SceneBackdrop preset="cathedral" intensity={0.75} dim={current && !entering ? 0.55 : 0.3} staticOnly={!!current && !entering} />
       {/* Crítico: a home NÃO vira vermelha. Fica no mármore; a vinheta rubi pulsa nas bordas. */}
       {/*
-        Véu de luz (Direção 3 §9: a home não pode ficar "preto no branco"; Refinamento 4: sem violeta):
-        halo de prata apagada atrás do cartão do tempo e um sopro vinho no pé, sobre o mármore.
+        Véu de luz (Direção 3 §9: a home não pode ficar "preto no branco"; Refinamento 4: "principalmente no
+        início"): halo de ametista alto, atrás do relógio; um sopro de aço champanhe na diagonal; ametista funda no pé.
       */}
       {!critical && (
         <div
           aria-hidden="true"
           className={cn('pointer-events-none absolute inset-0 z-[1] transition-opacity duration-500', homeHidden ? 'opacity-0' : 'opacity-100')}
           style={{
-            background: 'radial-gradient(90% 38% at 70% 22%, rgb(var(--dv-silver-rgb) / 0.12), transparent 70%), radial-gradient(120% 34% at 50% 104%, rgb(var(--dv-wine-rgb) / 0.55), transparent 70%), linear-gradient(180deg, rgb(var(--dv-silver-rgb) / 0.04), transparent 40%, rgb(var(--dv-wine-rgb) / 0.18))',
+            background: 'radial-gradient(90% 36% at 72% 20%, rgb(var(--dv-amethyst-rgb) / 0.24), transparent 70%), radial-gradient(60% 24% at 18% 46%, rgb(var(--dv-champagne-rgb) / 0.06), transparent 70%), radial-gradient(120% 32% at 50% 104%, rgb(var(--dv-amethyst-rgb) / 0.2), transparent 70%), linear-gradient(180deg, rgb(var(--dv-amethyst-rgb) / 0.06), transparent 40%, rgb(var(--dv-amethyst-rgb) / 0.08))',
           }}
         />
       )}
@@ -243,7 +243,7 @@ function StatusBar({
             aria-hidden="true"
             className={cn('dv-cut-hex absolute inset-0', critical ? 'animate-dv-alert bg-dv-blood/55' : 'bg-[linear-gradient(100deg,rgba(206,201,192,0.5),rgba(186,176,159,0.25)_50%,rgba(206,201,192,0.5))]')}
           />
-          <span aria-hidden="true" className={cn('dv-cut-hex absolute inset-px', critical ? 'bg-dv-wine-deep' : 'bg-[linear-gradient(180deg,var(--dv-ink-3),var(--dv-ink-2))]')} style={{ '--dv-cut': '7.6px' } as CSSProperties} />
+          <span aria-hidden="true" className={cn('dv-cut-hex absolute inset-px', critical ? 'bg-[#1d0609]' : 'bg-[linear-gradient(180deg,var(--dv-ink-3),var(--dv-ink-2))]')} style={{ '--dv-cut': '7.6px' } as CSSProperties} />
           <GlyphHourglass className={cn('relative size-3.5', critical && 'animate-dv-blink')} />
           <TimeDigits value={formatDuration(remaining)} size="sm" tone={critical ? 'blood' : 'text'} flip={false} blinkColon={critical} label="Tempo restante" className="relative text-[17px]" />
         </span>
@@ -342,8 +342,8 @@ function HomeScreen({
         {/* Véu atrás da grade: as cartas que flutuam na cena não passam atrás dos rótulos (< 15%). */}
         <span aria-hidden="true" className="pointer-events-none absolute -inset-x-4 -bottom-4 -top-7 -z-10 bg-[linear-gradient(180deg,transparent,rgb(var(--dv-ink-rgb)/0.9)_16%,rgb(var(--dv-ink-rgb)/0.9)_84%,transparent)]" />
         <div className="animate-dv-fade flex items-center gap-3 px-1 [animation-delay:220ms]">
-          <span className="dv-label text-[10px] text-dv-text-3">Aplicativos</span>
-          <span aria-hidden="true" className="h-px flex-1 bg-gradient-to-r from-[rgb(var(--dv-amethyst-rgb)/0.55)] via-dv-line-strong to-transparent" />
+          <span className="dv-label text-[10px] text-dv-champagne">Aplicativos</span>
+          <Fio />
         </div>
         <ul className="mt-3 grid grid-cols-4 gap-x-2 gap-y-4">
           {apps.map((id, i) => (
@@ -354,8 +354,8 @@ function HomeScreen({
 
       <section aria-label="Agora" className="mt-3 flex flex-col gap-2">
         <div className="animate-dv-fade flex items-center gap-3 px-1 [animation-delay:360ms]">
-          <span className="dv-label text-[10px] text-dv-text-3">Agora</span>
-          <span aria-hidden="true" className="h-px flex-1 bg-gradient-to-r from-[rgb(var(--dv-amethyst-rgb)/0.55)] via-dv-line-strong to-transparent" />
+          <span className="dv-label text-[10px] text-dv-champagne">Agora</span>
+          <Fio />
         </div>
         <CartaoNarrativa />
         <div className="animate-dv-rise [animation-delay:420ms]">
@@ -416,7 +416,8 @@ function HomeScreen({
     <PagerDots pager={pager} />
 
       <nav aria-label="Dock" className="animate-dv-rise shrink-0 px-4 pb-2 [animation-delay:420ms]">
-        <MarbleSlab edge="line" cut={14} innerClassName="px-2 pb-2 pt-3" className="drop-shadow-[0_-10px_24px_rgba(0,0,0,0.6)]">
+        <MarbleSlab edge="steel" cut={14} innerClassName="px-2 pb-2 pt-3" className="drop-shadow-[0_-10px_24px_rgba(0,0,0,0.6)]">
+          <span aria-hidden="true" className="pointer-events-none absolute inset-x-10 -top-px h-[3px] rounded-full bg-[radial-gradient(closest-side,rgb(var(--dv-amethyst-rgb)/0.9),transparent)]" />
           <ul className="grid grid-cols-3">
             {DOCK_APPS.map((id, i) => (
               <PhoneIcon key={id} id={id} onOpen={onOpen} unread={state.unread[id]} delay={480 + i * 60} />
@@ -425,6 +426,16 @@ function HomeScreen({
         </MarbleSlab>
       </nav>
     </div>
+  )
+}
+
+/** Divisória da home: losango de ametista + fio de aço champanhe que se apaga (Refinamento 4). */
+function Fio() {
+  return (
+    <span aria-hidden="true" className="flex flex-1 items-center gap-2">
+      <span className="size-[5px] shrink-0 rotate-45 bg-dv-amethyst shadow-[0_0_6px_rgb(var(--dv-amethyst-rgb)/0.8)]" />
+      <span className="h-px flex-1 bg-[linear-gradient(90deg,var(--dv-champagne)_0%,var(--dv-champagne-line)_45%,transparent)]" />
+    </span>
   )
 }
 
@@ -601,23 +612,23 @@ function PulseCard({ remaining, critical, onOpen }: { remaining: number; critica
       aria-label={`Tempo restante ${text}. Abrir o relógio do pulso`}
       className="dv-focus group block w-full text-left transition-transform duration-[120ms] active:scale-[0.985]"
     >
-      <MarbleSlab edge={critical ? 'blood' : 'steel'} cut={16} glow innerClassName="flex min-h-[184px] items-center gap-2 py-4 pl-5 pr-3">
+      <MarbleSlab edge={critical ? 'blood' : 'amethyst'} cut={16} glow innerClassName="flex min-h-[184px] items-center gap-2 py-4 pl-5 pr-3">
         <FrameCorners tone={critical ? 'blood' : 'gold'} />
         {critical && (
           <span aria-hidden="true" className="dv-cut pointer-events-none absolute -inset-y-5 -left-5 -right-3 overflow-hidden [--dv-cut:15.6px]">
             <span className="animate-dv-alert absolute inset-0 bg-[radial-gradient(80%_80%_at_0%_100%,rgb(var(--dv-blood-rgb)/0.32),transparent_70%)]" />
             {/* faixa diagonal de alerta que corta o tampo (não o texto: passa por baixo dos dígitos) */}
-            <span className="absolute -right-10 bottom-5 h-[14px] w-[62%] -rotate-[14deg] bg-[repeating-linear-gradient(-55deg,rgb(var(--dv-blood-rgb)/0.9)_0_7px,rgb(var(--dv-wine-rgb)/0.9)_7px_14px)] opacity-80 shadow-[0_0_14px_rgb(var(--dv-blood-rgb)/0.6)]" />
+            <span className="absolute -right-10 bottom-5 h-[14px] w-[62%] -rotate-[14deg] bg-[repeating-linear-gradient(-55deg,rgb(var(--dv-blood-rgb)/0.9)_0_7px,rgb(var(--dv-blood-deep-rgb)/0.9)_7px_14px)] opacity-80 shadow-[0_0_14px_rgb(var(--dv-blood-rgb)/0.6)]" />
           </span>
         )}
         <span className="relative flex min-w-0 flex-1 flex-col">
           <Kicker tone={critical ? 'blood' : 'gold'}>Tempo restante</Kicker>
           <span className="mt-3 block">
-            <TimeDigits value={text} size="lg" tone={critical ? 'blood' : 'text'} flip={false} blinkColon={critical} className="text-[40px] [text-shadow:0_2px_10px_rgba(0,0,0,0.8)]" />
+            <TimeDigits value={text} size="lg" tone={critical ? 'blood' : 'champagne'} flip={false} blinkColon={critical} className="text-[40px]" />
           </span>
           <span aria-hidden="true" className="mt-1 grid w-fit grid-cols-[1.2em_0.34em_1.2em_0.34em_1.2em] text-[40px] leading-none">
             {['Horas', '', 'Min', '', 'Seg'].map((u, i) => (
-              <span key={i} className={cn('dv-label text-center text-[10px] tracking-[0.14em]', critical ? 'text-dv-blood-text' : 'text-dv-text-3')}>
+              <span key={i} className={cn('dv-label text-center text-[10px] tracking-[0.14em]', critical ? 'text-dv-blood-text' : 'text-dv-champagne')}>
                 {u}
               </span>
             ))}
@@ -649,7 +660,7 @@ function PulseCard({ remaining, critical, onOpen }: { remaining: number; critica
 function CriticalVignette() {
   return (
     <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-[1]">
-      <div className="animate-dv-alert absolute inset-0 bg-[radial-gradient(120%_85%_at_50%_45%,transparent_58%,rgb(var(--dv-blood-rgb)/0.34)_88%,rgb(var(--dv-wine-rgb)/0.6)_100%)]" />
+      <div className="animate-dv-alert absolute inset-0 bg-[radial-gradient(120%_85%_at_50%_45%,transparent_58%,rgb(var(--dv-blood-rgb)/0.34)_88%,rgb(var(--dv-blood-deep-rgb)/0.6)_100%)]" />
     </div>
   )
 }
@@ -671,8 +682,8 @@ function LockedSystems({ onOpen }: { onOpen: (id: AppId) => void }) {
       {/* véu atrás da grade: as cartas da cena não passam atrás dos nomes */}
       <span aria-hidden="true" className="pointer-events-none absolute -inset-x-4 -bottom-6 -top-4 -z-10 bg-[linear-gradient(180deg,transparent,rgb(var(--dv-ink-rgb)/0.86)_12%,rgb(var(--dv-ink-rgb)/0.86)_88%,transparent)]" />
       <div className="flex items-center gap-3 px-1">
-        <span className="dv-label text-[10px] text-dv-text-3">{POR_EXTENSO[SISTEMAS.length] ?? SISTEMAS.length} sistemas</span>
-        <span aria-hidden="true" className="h-px flex-1 bg-gradient-to-r from-[rgb(var(--dv-amethyst-rgb)/0.55)] via-dv-line-strong to-transparent" />
+        <span className="dv-label text-[10px] text-dv-champagne">{POR_EXTENSO[SISTEMAS.length] ?? SISTEMAS.length} sistemas</span>
+        <Fio />
         {!algum && !eu && <span className="dv-label text-[10px] text-dv-text-3">Trancado pelo Anfitrião</span>}
       </div>
       <ul className="mt-4 grid grid-cols-3 gap-x-2 gap-y-6">
@@ -685,6 +696,7 @@ function LockedSystems({ onOpen }: { onOpen: (id: AppId) => void }) {
             <>
               <span className="relative grid size-16 place-items-center">
                 <span aria-hidden="true" className={cn('absolute -inset-1 rounded-full bg-[radial-gradient(closest-side,rgb(var(--dv-amethyst-rgb)/0.32),transparent)]', !livre && 'opacity-40')} />
+                <span aria-hidden="true" className={cn('absolute inset-0 rounded-full shadow-[inset_0_0_0_1px_var(--dv-champagne-line)]', !livre && 'opacity-45')} />
                 <E
                   {...(livre ? { metal: true } : {})}
                   className={cn('relative size-12', livre ? 'text-dv-text drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] group-active:scale-[0.96]' : 'text-dv-text-3 opacity-60')}
@@ -735,7 +747,10 @@ function PhoneIcon({ id, onOpen, unread, delay = 0 }: { id: AppId; onOpen: (id: 
       >
         <span className="relative transition-transform duration-200 group-hover:-translate-y-0.5">
           {/* halo de ametista sob o emblema (luz, não ladrilho) */}
-          <span aria-hidden="true" className="pointer-events-none absolute -inset-2 rounded-full bg-[radial-gradient(closest-side,rgb(var(--dv-amethyst-rgb)/0.3),transparent)] opacity-80 transition-opacity group-hover:opacity-100" />
+          <span aria-hidden="true" className="pointer-events-none absolute -inset-2 rounded-full bg-[radial-gradient(closest-side,rgb(var(--dv-amethyst-rgb)/0.34),transparent)] opacity-80 transition-opacity group-hover:opacity-100" />
+          {/* aro fino de aço champanhe com uma joia de ametista no alto (moldura do ícone) */}
+          <span aria-hidden="true" className="pointer-events-none absolute -inset-1.5 rounded-full shadow-[inset_0_0_0_1px_var(--dv-champagne-line),0_0_0_1px_rgb(var(--dv-ink-rgb)/0.6)] transition-shadow group-hover:shadow-[inset_0_0_0_1px_var(--dv-champagne-strong),0_0_0_1px_rgb(var(--dv-ink-rgb)/0.6)]" />
+          <span aria-hidden="true" className="pointer-events-none absolute -top-[9px] left-1/2 size-[6px] -translate-x-1/2 rotate-45 bg-dv-amethyst shadow-[0_0_6px_rgb(var(--dv-amethyst-rgb)/0.9),0_0_0_1px_var(--dv-champagne)]" />
           <AppGlyphTile app={app} className="relative" />
           <Badge count={unread} />
         </span>

@@ -12,7 +12,7 @@ const GEM: Record<GemTone, [string, string, string]> = {
   onyx: ['#4c4c52', '#16141d', '#030205'],
   blood: ['#ff8a92', '#c0142a', '#3d040a'],
   night: ['#b3a9f0', '#5d5970', '#120f2e'],
-  cobalt: ['#d6cff5', '#5a1d26', '#1a1530'],
+  cobalt: ['#d6cff5', '#5a4f8f', '#1a1530'],
 }
 
 /**

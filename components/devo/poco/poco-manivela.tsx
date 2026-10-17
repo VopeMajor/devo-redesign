@@ -133,8 +133,8 @@ export function PocoManivela({ params, onFim }: { params: ManivelaParams; onFim:
             )
           })}
           {/* janela de ametista (encolhe a cada acerto) */}
-          <path d={arc(150, 150, 116, a0, a1)} fill="none" stroke="#8f86b4" strokeWidth="22" opacity="0.85" />
-          <path d={arc(150, 150, 127, a0, a1)} fill="none" stroke="#cbc6dc" strokeWidth="2" />
+          <path d={arc(150, 150, 116, a0, a1)} fill="none" stroke="#8a7cc8" strokeWidth="22" opacity="0.85" />
+          <path d={arc(150, 150, 127, a0, a1)} fill="none" stroke="#c2b9ec" strokeWidth="2" />
           {flash && <path key={flash.k} className="poco-hit" d={arc(150, 150, 116, a0, a1)} fill="none" stroke={flash.ok ? '#f1f0ee' : '#a3121f'} strokeWidth="26" />}
           {/* ponteiro */}
           <g ref={agulha} transform="rotate(-90 150 150)">
@@ -142,7 +142,7 @@ export function PocoManivela({ params, onFim }: { params: ManivelaParams; onFim:
             <path d="M150 34L150 146" stroke="#6b6357" strokeWidth="0.8" />
           </g>
           <circle cx="150" cy="150" r="11" fill="url(#poco-dial-aco)" stroke="#0c0c0e" strokeWidth="1.5" />
-          <circle cx="150" cy="150" r="3.5" fill="#8f86b4" />
+          <circle cx="150" cy="150" r="3.5" fill="#8a7cc8" />
         </svg>
 
         {/* acertos: losangos */}

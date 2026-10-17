@@ -33,8 +33,8 @@ const LUZ: Record<ItemRarity | 'lixo', string> = {
   comum: '220 218 214',
   incomum: '207 195 168',
   raro: '167 159 208',
-  epico: '210 128 142',
-  lendario: '232 214 166',
+  epico: '194 185 236',
+  lendario: '236 228 214',
   arcano: '239 232 255',
 }
 
@@ -114,7 +114,7 @@ export function PocoResultadoView({ r, nome, onFechar }: { r: PocoResultado; nom
     <div role="dialog" aria-modal="true" aria-label={`Resultado do balde: ${nomeItem}`} className="absolute inset-0 z-40 overflow-hidden">
       <div className={cn('absolute inset-0 transition-colors duration-500', tier >= 3 ? 'bg-dv-ink/92' : 'bg-dv-ink/86')} />
       {/* fundo vinho que sobe do poço: mais forte quanto mais raro */}
-      <div className="absolute inset-x-0 bottom-0 h-2/3 bg-[radial-gradient(80%_70%_at_50%_100%,rgb(var(--dv-wine-rgb)/0.7),transparent_75%)]" style={{ opacity: tier === 0 ? 0.35 : 0.55 + tier * 0.1 } as CSSProperties} />
+      <div className="absolute inset-x-0 bottom-0 h-2/3 bg-[radial-gradient(80%_70%_at_50%_100%,rgb(var(--dv-amethyst-rgb)/0.32),transparent_75%)]" style={{ opacity: tier === 0 ? 0.35 : 0.55 + tier * 0.1 } as CSSProperties} />
 
       {etapa === 'abrindo' ? (
         <div className="absolute inset-0 flex flex-col items-center justify-center" style={vars}>
@@ -393,12 +393,12 @@ function MolduraAvatar({ tier }: { tier: Tier }) {
       <circle cx="80" cy="80" r="56" fill="none" stroke={`url(#${id}-m)`} strokeWidth="7" />
       <circle cx="80" cy="80" r="61" fill="none" stroke="#bab09f" strokeWidth="0.8" opacity="0.7" />
       {tier >= 2 && <path d="M80 6L90 22L80 30L70 22Z" fill={`url(#${id}-m)`} />}
-      {tier >= 3 && <path d="M80 12L85 21L80 26L75 21Z" fill="#8f86b4" />}
+      {tier >= 3 && <path d="M80 12L85 21L80 26L75 21Z" fill="#8a7cc8" />}
       {Array.from({ length: gems }, (_, i) => {
         const a = ((i / gems) * 360 + 90) * (Math.PI / 180)
         const x = 80 + Math.cos(a) * 56
         const y = 80 + Math.sin(a) * 56
-        return <path key={i} d={`M${x} ${y - 6}L${x + 4.5} ${y}L${x} ${y + 6}L${x - 4.5} ${y}Z`} fill="#8f86b4" stroke="#ece5d8" strokeWidth="0.8" />
+        return <path key={i} d={`M${x} ${y - 6}L${x + 4.5} ${y}L${x} ${y + 6}L${x - 4.5} ${y}Z`} fill="#8a7cc8" stroke="#ece5d8" strokeWidth="0.8" />
       })}
       {tier >= 4 &&
         Array.from({ length: 12 }, (_, i) => {
@@ -424,7 +424,7 @@ function EmblemaOrnamental({ tier }: { tier: Tier }) {
       </defs>
       <path d="M60 4L68 44L108 52L68 60L60 116L52 60L12 52L52 44Z" fill={`url(#${id}-m)`} stroke="#1d1a16" />
       <path d="M68 36A22 22 0 1 0 68 76A17 17 0 0 1 68 36Z" fill="#141217" stroke="#ece5d8" strokeWidth="1" />
-      <path d="M60 46L64 56L60 66L56 56Z" fill={tier >= 3 ? '#8f86b4' : '#bab09f'} />
+      <path d="M60 46L64 56L60 66L56 56Z" fill={tier >= 3 ? '#8a7cc8' : '#bab09f'} />
     </svg>
   )
 }
@@ -432,7 +432,7 @@ function EmblemaOrnamental({ tier }: { tier: Tier }) {
 function BalaoOrnamental({ tier }: { tier: Tier }) {
   return (
     <svg viewBox="0 0 200 70" preserveAspectRatio="none" className="absolute inset-0 size-full" aria-hidden="true">
-      <path d="M8 4H192L196 8V58L192 62H22L4 70L10 60L4 56V8Z" fill="#141417" stroke={tier >= 3 ? '#8f86b4' : '#bab09f'} strokeWidth="1.4" />
+      <path d="M8 4H192L196 8V58L192 62H22L4 70L10 60L4 56V8Z" fill="#141417" stroke={tier >= 3 ? '#8a7cc8' : '#bab09f'} strokeWidth="1.4" />
       <path d="M12 9H188V54H14Z" fill="none" stroke="#6b6357" strokeWidth="0.6" />
       {tier >= 2 && <path d="M186 4L196 4L196 14" fill="none" stroke="#ece5d8" strokeWidth="1.4" />}
     </svg>

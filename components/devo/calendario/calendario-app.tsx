@@ -110,10 +110,10 @@ type Checkin = ReturnType<typeof useCalendario>['checkin']
 /** Mármore negro sobre o abismo, com a luz vinho alta (a cor da paleta de referência). */
 function Fundo({ children }: { children: ReactNode }) {
   return (
-    <div className="relative h-full overflow-hidden bg-dv-abyss">
+    <div className="relative h-full overflow-hidden bg-dv-ink">
       <span aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[url(/images/os/marmore-negro.webp)] bg-[length:560px_560px] opacity-40" />
-      <span aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 h-[55%] bg-[radial-gradient(70%_60%_at_50%_0%,color-mix(in_srgb,var(--dv-wine)_75%,transparent),transparent_72%)]" />
-      <span aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,transparent_60%,var(--dv-abyss))]" />
+      <span aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 h-[55%] bg-[radial-gradient(70%_60%_at_50%_0%,color-mix(in_srgb,var(--dv-amethyst-deep)_75%,transparent),transparent_72%)]" />
+      <span aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,transparent_60%,var(--dv-ink))]" />
       <div className="relative z-10 h-full">{children}</div>
     </div>
   )
@@ -140,15 +140,15 @@ function Lamina({
         className={cn(
           'dv-cut absolute inset-0 -z-10',
           tom === 'vinho'
-            ? 'bg-[linear-gradient(135deg,var(--dv-wine-text),var(--dv-wine)_40%,var(--dv-wine-text)_100%)] opacity-80'
-            : 'bg-[linear-gradient(135deg,var(--dv-silver),var(--dv-fog)_45%,var(--dv-silver))] opacity-70',
+            ? 'bg-[linear-gradient(135deg,var(--dv-amethyst-text),var(--dv-amethyst-deep)_40%,var(--dv-amethyst-text)_100%)] opacity-80'
+            : 'bg-[linear-gradient(135deg,var(--dv-champagne),var(--dv-ink-4)_45%,var(--dv-champagne))] opacity-70',
         )}
       />
       <span
         aria-hidden="true"
         className={cn(
           'dv-cut absolute inset-px -z-10',
-          tom === 'vinho' ? 'bg-[linear-gradient(180deg,var(--dv-wine-deep),var(--dv-abyss)_85%)]' : 'bg-[linear-gradient(180deg,var(--dv-ink-2),var(--dv-abyss))]',
+          tom === 'vinho' ? 'bg-[linear-gradient(180deg,var(--dv-cobalt-dim),var(--dv-ink)_85%)]' : 'bg-[linear-gradient(180deg,var(--dv-ink-2),var(--dv-ink))]',
         )}
         style={{ '--dv-cut': '13.6px' } as CSSProperties}
       />
@@ -204,7 +204,7 @@ function Tela({ d, checkin, recarregar, onMelissa }: { d: Liberado; checkin: Che
     <div className="px-4 pb-12 pt-5">
       <header className="flex items-start justify-between gap-3">
         <div className="min-w-0">
-          <p className="dv-label animate-dv-fade text-[10px] text-dv-wine-text">Grandioso Calendário Devo</p>
+          <p className="dv-label animate-dv-fade text-[10px] text-dv-amethyst-text">Grandioso Calendário Devo</p>
           <h1 className="animate-dv-cut-in mt-2 font-serif text-[34px] font-medium uppercase leading-[0.95] tracking-[0.02em] text-dv-text">Calendário</h1>
           <p className="animate-dv-fade mt-2 font-body text-[15px] italic leading-snug text-dv-text-2 [animation-delay:200ms]">{hojeTxt.charAt(0).toUpperCase() + hojeTxt.slice(1)}</p>
         </div>
@@ -226,7 +226,7 @@ function Tela({ d, checkin, recarregar, onMelissa }: { d: Liberado; checkin: Che
       </header>
 
       {erro && (
-        <p role="alert" className="mt-4 border border-dv-wine-text/40 bg-dv-wine-deep/80 px-3 py-2 font-body text-[14px] leading-snug text-dv-wine-text">
+        <p role="alert" className="mt-4 border border-dv-amethyst-text/40 bg-dv-cobalt-dim/80 px-3 py-2 font-body text-[14px] leading-snug text-dv-amethyst-text">
           {erro}
         </p>
       )}
@@ -302,7 +302,7 @@ function CheckinDiarioView({ d, ocupado, onMarcar, recarregar }: { d: Liberado; 
             <h2 className="font-display text-[17px] font-semibold uppercase leading-tight tracking-[0.14em] text-dv-text">Check-in diário</h2>
             <p className="mt-1 font-mono text-[10.5px] uppercase tracking-[0.16em] text-dv-text-3">Ciclo de {c.slots.length} dias</p>
           </div>
-          <span className="dv-cut-diag shrink-0 bg-dv-wine px-2.5 py-1.5 font-mono text-[11px] uppercase leading-none tracking-[0.12em] text-dv-text shadow-[inset_0_0_0_1px_var(--dv-wine-text)]" style={{ '--dv-cut': '6px' } as CSSProperties}>
+          <span className="dv-cut-diag shrink-0 bg-dv-amethyst-deep px-2.5 py-1.5 font-mono text-[11px] uppercase leading-none tracking-[0.12em] text-dv-text shadow-[inset_0_0_0_1px_var(--dv-amethyst-text)]" style={{ '--dv-cut': '6px' } as CSSProperties}>
             Dia {c.posicao} de {c.slots.length}
           </span>
         </header>
@@ -314,7 +314,7 @@ function CheckinDiarioView({ d, ocupado, onMarcar, recarregar }: { d: Liberado; 
         {c.feitoHoje ? (
           <p role="status" className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1 font-body text-[15px] text-dv-text-2">
             <span>Presença marcada. Volte amanhã.</span>
-            <span className="font-mono text-[12px] uppercase tracking-[0.12em] text-dv-silver dv-tabular" aria-label={`Próximo check-in em ${relogio.txt}`}>
+            <span className="font-mono text-[12px] uppercase tracking-[0.12em] text-dv-champagne dv-tabular" aria-label={`Próximo check-in em ${relogio.txt}`}>
               Próximo em {relogio.txt}
             </span>
           </p>
@@ -341,7 +341,7 @@ function CheckinExtraView({ x, ocupado, onMarcar }: { x: CheckinExtra; ocupado: 
           <RecompensaIcone icone="presente" />
         </span>
         <div className="min-w-0 flex-1">
-          <p className="dv-label text-[10px] text-dv-wine-text">Data comemorativa · {x.evento}</p>
+          <p className="dv-label text-[10px] text-dv-amethyst-text">Data comemorativa · {x.evento}</p>
           <h2 className="mt-1 font-display text-[17px] font-semibold uppercase leading-tight tracking-[0.14em] text-dv-text">{x.titulo}</h2>
           <p className="mt-1 font-mono text-[10.5px] uppercase tracking-[0.14em] text-dv-text-3">Até {dataCurtaFaixa(x.ate, x.ate)}</p>
         </div>
@@ -406,14 +406,14 @@ function Revelacao({ r, onFim }: { r: ResgateResultado & { titulo: string }; onF
       aria-modal="true"
       aria-label={`Recompensa resgatada: ${r.recompensa.rotulo}`}
       onClick={() => fechar.current()}
-      className="cal-rev fixed inset-0 z-[94] flex flex-col items-center justify-center bg-dv-abyss/90 px-6 text-center backdrop-blur-[2px]"
+      className="cal-rev fixed inset-0 z-[94] flex flex-col items-center justify-center bg-dv-ink/90 px-6 text-center backdrop-blur-[2px]"
     >
       <style>{REV_CSS}</style>
       <button type="button" onClick={() => fechar.current()} className="dv-focus absolute right-3 top-[calc(env(safe-area-inset-top)+16px)] min-h-11 px-3 font-mono text-[11px] uppercase tracking-[0.18em] text-dv-text-2">
         Pular
       </button>
-      <span aria-hidden="true" className="cal-rev-halo pointer-events-none absolute left-1/2 top-[42%] size-[min(120vw,520px)] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(closest-side,color-mix(in_srgb,var(--dv-wine)_90%,transparent),color-mix(in_srgb,var(--dv-wine-deep)_60%,transparent)_55%,transparent)]" />
-      <p className="cal-rev-txt relative dv-label text-[10.5px] text-dv-wine-text">
+      <span aria-hidden="true" className="cal-rev-halo pointer-events-none absolute left-1/2 top-[42%] size-[min(120vw,520px)] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(closest-side,color-mix(in_srgb,var(--dv-amethyst-deep)_90%,transparent),color-mix(in_srgb,var(--dv-cobalt-dim)_60%,transparent)_55%,transparent)]" />
+      <p className="cal-rev-txt relative dv-label text-[10.5px] text-dv-amethyst-text">
         {r.titulo} · {r.tipo === 'diario' ? `Dia ${r.posicao}` : `Resgate ${r.posicao}`}
       </p>
       <div className="cal-rev-item relative mt-6 grid place-items-center">
@@ -525,14 +525,14 @@ function Mes({ d, selecionado, onSelecionar }: { d: Liberado; selecionado: Dia; 
                   }}
                   className={cn(
                     'dv-focus relative mx-auto flex h-11 w-full max-w-[46px] flex-col items-center justify-center font-body text-[16px] leading-none transition-colors dv-tabular',
-                    atencao ? 'bg-dv-wine text-dv-text' : folga ? 'bg-dv-fog/70 text-dv-text' : dia < d.hoje ? 'text-dv-text-3' : 'text-dv-text-2',
+                    atencao ? 'bg-dv-amethyst-deep text-dv-text' : folga ? 'bg-dv-ink-4/70 text-dv-text' : dia < d.hoje ? 'text-dv-text-3' : 'text-dv-text-2',
                     ativo && 'shadow-[inset_0_0_0_1.5px_var(--dv-gold-bright)]',
-                    hoje && !ativo && 'shadow-[inset_0_0_0_1.5px_var(--dv-silver)]',
+                    hoje && !ativo && 'shadow-[inset_0_0_0_1.5px_var(--dv-champagne)]',
                   )}
                   style={atencao || folga ? ({ clipPath: 'polygon(6px 0,100% 0,100% calc(100% - 6px),calc(100% - 6px) 100%,0 100%,0 6px)' } as CSSProperties) : undefined}
                 >
                   {n}
-                  {evs.length > 0 && <span aria-hidden="true" className={cn('absolute bottom-1 size-[5px] rotate-45', atencao ? 'bg-dv-wine-text' : 'bg-dv-silver')} />}
+                  {evs.length > 0 && <span aria-hidden="true" className={cn('absolute bottom-1 size-[5px] rotate-45', atencao ? 'bg-dv-amethyst-text' : 'bg-dv-champagne')} />}
                   {hoje && <span aria-hidden="true" className="absolute -top-px left-1/2 h-[3px] w-4 -translate-x-1/2 bg-dv-gold-bright" />}
                 </button>
               )
@@ -542,10 +542,10 @@ function Mes({ d, selecionado, onSelecionar }: { d: Liberado; selecionado: Dia; 
 
         <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1.5 font-mono text-[10px] uppercase tracking-[0.12em] text-dv-text-3">
           <span className="flex items-center gap-1.5">
-            <span aria-hidden="true" className="size-2.5 bg-dv-wine shadow-[inset_0_0_0_1px_var(--dv-wine-text)]" /> Fique atento
+            <span aria-hidden="true" className="size-2.5 bg-dv-amethyst-deep shadow-[inset_0_0_0_1px_var(--dv-amethyst-text)]" /> Fique atento
           </span>
           <span className="flex items-center gap-1.5">
-            <span aria-hidden="true" className="size-2.5 bg-dv-fog shadow-[inset_0_0_0_1px_var(--dv-silver)]" /> Dia de folga
+            <span aria-hidden="true" className="size-2.5 bg-dv-ink-4 shadow-[inset_0_0_0_1px_var(--dv-champagne)]" /> Dia de folga
           </span>
           <span className="flex items-center gap-1.5">
             <span aria-hidden="true" className="h-[3px] w-3 bg-dv-gold-bright" /> Hoje
@@ -578,7 +578,7 @@ function Mes({ d, selecionado, onSelecionar }: { d: Liberado; selecionado: Dia; 
 }
 
 function MarcaEnfase({ enfase, className }: { enfase: Enfase; className?: string }) {
-  return <span aria-hidden="true" className={cn('size-2.5 shrink-0 rotate-45', enfase === 'atencao' ? 'bg-dv-wine-text' : enfase === 'folga' ? 'bg-dv-silver' : 'shadow-[inset_0_0_0_1.5px_var(--dv-line-strong)]', className)} />
+  return <span aria-hidden="true" className={cn('size-2.5 shrink-0 rotate-45', enfase === 'atencao' ? 'bg-dv-amethyst-text' : enfase === 'folga' ? 'bg-dv-champagne' : 'shadow-[inset_0_0_0_1.5px_var(--dv-line-strong)]', className)} />
 }
 
 /* ------------------------------------------------------------------ Próximos */
@@ -591,7 +591,7 @@ function Proximos({ d }: { d: Liberado }) {
     <section aria-label="Próximos eventos" className="animate-dv-rise [animation-delay:260ms]">
       <div className="flex items-center gap-3 px-1">
         <h2 className="font-display text-[15px] font-semibold uppercase tracking-[0.16em] text-dv-text">Próximos eventos</h2>
-        <span aria-hidden="true" className="h-px flex-1 bg-gradient-to-r from-dv-wine-text/60 via-dv-line-strong to-transparent" />
+        <span aria-hidden="true" className="h-px flex-1 bg-gradient-to-r from-dv-amethyst-text/60 via-dv-line-strong to-transparent" />
       </div>
       {lista.length ? (
         <ul className="mt-3 flex flex-col gap-3">
@@ -610,14 +610,14 @@ export function EventoCartao({ e, destaque = false, as = 'li' }: { e: EventoVist
   // `destaque` = projeção do tutorial: cartão enxuto (sem o selo de check-in), para não cobrir a Melissa.
   const p = partes(e.ocorrencia)
   return (
-    <Lamina as={as} tom={e.enfase === 'atencao' ? 'vinho' : 'prata'} ariaLabel={`${e.titulo}: ${dataCurtaFaixa(e.ocorrencia, e.ate)}, ${ENFASE_ROTULO[e.enfase]}`} className={cn(destaque && 'drop-shadow-[0_0_28px_color-mix(in_srgb,var(--dv-wine-text)_45%,transparent)]')}>
+    <Lamina as={as} tom={e.enfase === 'atencao' ? 'vinho' : 'prata'} ariaLabel={`${e.titulo}: ${dataCurtaFaixa(e.ocorrencia, e.ate)}, ${ENFASE_ROTULO[e.enfase]}`} className={cn(destaque && 'drop-shadow-[0_0_28px_color-mix(in_srgb,var(--dv-amethyst-text)_45%,transparent)]')}>
       <div className="flex gap-3 p-2.5 pr-3.5">
         <span className="dv-cut relative size-[92px] shrink-0 overflow-hidden" style={{ '--dv-cut': '10px' } as CSSProperties}>
           {e.arte ? (
             <>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={e.arte} srcSet={srcSetArte(e.arte)} sizes="92px" alt="" className="size-full object-cover" loading="lazy" />
-              <span aria-hidden="true" className="absolute inset-x-0 bottom-0 bg-[linear-gradient(180deg,transparent,var(--dv-abyss))] px-1.5 pb-1 pt-4 text-center font-mono text-[10px] uppercase tracking-[0.14em] text-dv-text">
+              <span aria-hidden="true" className="absolute inset-x-0 bottom-0 bg-[linear-gradient(180deg,transparent,var(--dv-ink))] px-1.5 pb-1 pt-4 text-center font-mono text-[10px] uppercase tracking-[0.14em] text-dv-text">
                 {String(p.dia).padStart(2, '0')} {mesCurto(p.mes)}
               </span>
             </>
@@ -636,7 +636,7 @@ export function EventoCartao({ e, destaque = false, as = 'li' }: { e: EventoVist
               <span
                 className={cn(
                   'dv-cut-diag inline-flex h-6 items-center gap-1.5 px-2 font-mono text-[10px] uppercase leading-none tracking-[0.12em]',
-                  e.enfase === 'atencao' ? 'bg-dv-wine text-dv-text shadow-[inset_0_0_0_1px_var(--dv-wine-text)]' : 'bg-dv-fog/60 text-dv-text shadow-[inset_0_0_0_1px_var(--dv-silver)]',
+                  e.enfase === 'atencao' ? 'bg-dv-amethyst-deep text-dv-text shadow-[inset_0_0_0_1px_var(--dv-amethyst-text)]' : 'bg-dv-ink-4/60 text-dv-text shadow-[inset_0_0_0_1px_var(--dv-champagne)]',
                 )}
                 style={{ '--dv-cut': '5px' } as CSSProperties}
               >

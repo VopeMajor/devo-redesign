@@ -12,10 +12,10 @@ import { useCatalogo, useVisual } from '../cosmeticos/use-cosmeticos'
 
 export const BORDER_META: Record<BorderTier, { label: string; color: string; glow: string }> = {
   padrao: { label: 'Borda Padrão', color: '#58585e', glow: 'transparent' },
-  azul: { label: 'Borda Azul · Top 10', color: 'var(--dv-amethyst-text)', glow: '#cbc6dc66' },
+  azul: { label: 'Borda Azul · Top 10', color: 'var(--dv-amethyst-text)', glow: '#c2b9ec66' },
   prata: { label: 'Borda Prata · Top 3', color: '#d9d8d4', glow: '#d9d8d455' },
   ouro: { label: 'Borda Ouro · #1 da semana', color: '#ece5d8', glow: '#bab09f77' },
-  dealer: { label: 'Borda Dealer', color: 'var(--dv-amethyst-text)', glow: '#cbc6dc66' },
+  dealer: { label: 'Borda Dealer', color: 'var(--dv-amethyst-text)', glow: '#c2b9ec66' },
 }
 
 // O servidor nunca envia 'owner' aqui (publicCargo em lib/devo/cargos.ts).

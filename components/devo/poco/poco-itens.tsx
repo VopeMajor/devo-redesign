@@ -80,9 +80,9 @@ export function Ampulheta({ className }: { className?: string }) {
       </defs>
       <path d="M12 5H36V9H12ZM12 39H36V43H12Z" fill="url(#poco-amp)" />
       <path d="M15 9H33C33 17 26 20 26 24C26 28 33 31 33 39H15C15 31 22 28 22 24C22 20 15 17 15 9Z" fill="#161515" stroke="url(#poco-amp)" strokeWidth="1.6" />
-      <path d="M18 36H30L24 30Z" fill="#d49aa2" />
-      <path d="M19 13H29L24 19Z" fill="#d49aa2" opacity="0.7" />
-      <path d="M24 21V30" stroke="#d49aa2" strokeWidth="0.8" />
+      <path d="M18 36H30L24 30Z" fill="#c2b9ec" />
+      <path d="M19 13H29L24 19Z" fill="#c2b9ec" opacity="0.7" />
+      <path d="M24 21V30" stroke="#c2b9ec" strokeWidth="0.8" />
     </svg>
   )
 }
@@ -94,7 +94,7 @@ export function CartaMini({ className }: { className?: string }) {
       <rect x="3" y="3" width="42" height="58" rx="3" fill="#e9e8e5" stroke="#bab09f" strokeWidth="1.5" />
       <rect x="7" y="7" width="34" height="50" rx="1.5" fill="#161515" />
       <path d="M24 16L31 32L24 48L17 32Z" fill="none" stroke="#bab09f" strokeWidth="1.2" />
-      <path d="M24 26L27 32L24 38L21 32Z" fill="#5a1d26" stroke="#d49aa2" strokeWidth="0.6" />
+      <path d="M24 26L27 32L24 38L21 32Z" fill="#5a4f8f" stroke="#c2b9ec" strokeWidth="0.6" />
     </svg>
   )
 }

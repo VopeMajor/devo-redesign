@@ -54,8 +54,8 @@ const COLORS: { group: string; items: { name: string; v: string; use: string }[]
   {
     group: 'Sistema (ametista, discreto)',
     items: [
-      { name: '--dv-cobalt', v: '#5a1d26', use: 'ação, foco' },
-      { name: '--dv-cobalt-deep', v: '#4d4668', use: 'faixas, papel' },
+      { name: '--dv-cobalt', v: '#5a4f8f', use: 'ação, foco' },
+      { name: '--dv-cobalt-deep', v: '#4e4580', use: 'faixas, papel' },
       { name: '--dv-cobalt-dim', v: '#1e1b2b', use: 'fundo ativo' },
       { name: '--dv-cobalt-text', v: '#cbc5e8', use: 'texto AA' },
     ],

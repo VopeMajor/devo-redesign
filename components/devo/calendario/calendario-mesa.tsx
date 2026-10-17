@@ -275,7 +275,7 @@ function EventoForm({
           </RecSelect>
         </label>
         <label className="flex min-h-11 items-center gap-3 font-body text-[15px] text-in-fg">
-          <input type="checkbox" checked={form.anual} onChange={(e) => set({ anual: e.target.checked })} className="size-5 accent-[var(--dv-wine)]" />
+          <input type="checkbox" checked={form.anual} onChange={(e) => set({ anual: e.target.checked })} className="size-5 accent-[var(--dv-amethyst-deep)]" />
           Repete todo ano neste dia
         </label>
         <label className="flex flex-col gap-1.5">
@@ -291,7 +291,7 @@ function EventoForm({
                 type="checkbox"
                 checked={form.comCheckin}
                 onChange={(e) => set({ comCheckin: e.target.checked, linhas: e.target.checked && !form.linhas.length ? [{ tipo: 'pp', quantidade: '50', raridade: 'incomum' }] : form.linhas })}
-                className="size-5 accent-[var(--dv-wine)]"
+                className="size-5 accent-[var(--dv-amethyst-deep)]"
               />
               Check-in próprio nestas datas
             </label>

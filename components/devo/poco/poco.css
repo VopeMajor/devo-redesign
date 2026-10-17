@@ -65,7 +65,7 @@
   15% { opacity: 0.9; }
   100% { transform: translateY(-210px) rotate(45deg); opacity: 0; }
 }
-.poco-particula { animation: poco-particula 9s linear infinite; box-shadow: 0 0 6px rgba(226, 224, 220, 0.85); }
+.poco-particula { animation: poco-particula 9s linear infinite; box-shadow: 0 0 6px rgb(var(--dv-amethyst-text-rgb) / 0.85); }
 .poco-ativo .poco-particula { animation-duration: 2.2s !important; }
 
 /* balde: sobe pela corrente */
@@ -165,8 +165,8 @@
 
 /* ── Refinamento 4: matéria antiga e luz fria ─────────────────────────────────────────────── */
 /* Camadas pintadas em violeta entram dessaturadas: prata fria, sem roxo neon. */
-.poco-dessatura { filter: saturate(0.12) brightness(1.08); }
-.poco-raro-tom { filter: saturate(0.55); }
+.poco-dessatura { filter: saturate(0.6) brightness(1.04); }
+.poco-raro-tom { filter: saturate(0.85); }
 .poco-pedra { filter: saturate(0.42) contrast(1.05) brightness(1.02); }
 
 /* lua velada, janelas, velas e moedas no chão: tudo devagar */

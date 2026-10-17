@@ -44,18 +44,18 @@ function useDefs() {
         <linearGradient id={`twg-${id}`} x1="0" x2="1" y1="0" y2="1">
           <stop offset="0" stopColor="#e6e0ff" />
           <stop offset="0.35" stopColor="#a99be0" />
-          <stop offset="0.7" stopColor="#5a1d26" />
+          <stop offset="0.7" stopColor="#5a4f8f" />
           <stop offset="1" stopColor="#2b2547" />
         </linearGradient>
         <radialGradient id={`twgh-${id}`} cx="0.4" cy="0.35" r="0.6">
           <stop offset="0" stopColor="#ffffff" stopOpacity="0.95" />
-          <stop offset="0.4" stopColor="#cbc6dc" stopOpacity="0.6" />
-          <stop offset="1" stopColor="#8f86b4" stopOpacity="0" />
+          <stop offset="0.4" stopColor="#c2b9ec" stopOpacity="0.6" />
+          <stop offset="1" stopColor="#8a7cc8" stopOpacity="0" />
         </radialGradient>
         <radialGradient id={`twgl-${id}`} cx="0.5" cy="0.5" r="0.5">
-          <stop offset="0" stopColor="#cbc6dc" stopOpacity="0.75" />
-          <stop offset="0.45" stopColor="#8f86b4" stopOpacity="0.28" />
-          <stop offset="1" stopColor="#8f86b4" stopOpacity="0" />
+          <stop offset="0" stopColor="#c2b9ec" stopOpacity="0.75" />
+          <stop offset="0.45" stopColor="#8a7cc8" stopOpacity="0.28" />
+          <stop offset="1" stopColor="#8a7cc8" stopOpacity="0" />
         </radialGradient>
       </defs>
     ),
@@ -194,12 +194,12 @@ export function CristalEssencia({ className, style, brilho = true }: { className
   const d = useDefs()
   const F: [string, string][] = [
     ['M50 6L27 50L50 58Z', '#a99be0'],
-    ['M50 6L73 50L50 58Z', '#5a1d26'],
+    ['M50 6L73 50L50 58Z', '#5a4f8f'],
     ['M50 6L40 50L50 58Z', '#e6e0ff'],
-    ['M27 50L31 96L50 58Z', '#8f86b4'],
-    ['M73 50L69 96L50 58Z', '#4d4668'],
+    ['M27 50L31 96L50 58Z', '#8a7cc8'],
+    ['M73 50L69 96L50 58Z', '#4e4580'],
     ['M31 96L50 58L69 96L50 104Z', '#6f63b0'],
-    ['M31 96L50 128L50 104Z', '#5a1d26'],
+    ['M31 96L50 128L50 104Z', '#5a4f8f'],
     ['M69 96L50 128L50 104Z', '#2b2547'],
   ]
   return (
@@ -259,7 +259,7 @@ export function EstrelaAndar({ estado, className, style }: { estado: EstadoAndar
         <g className="tw-raios">
           <circle r={58} fill={`url(#${d.glow})`} />
           {Array.from({ length: 12 }, (_, i) => (
-            <path key={i} d="M0 -58L1.2 -30L-1.2 -30Z" fill="#cbc6dc" opacity={0.45} transform={`rotate(${i * 30 + 15})`} />
+            <path key={i} d="M0 -58L1.2 -30L-1.2 -30Z" fill="#c2b9ec" opacity={0.45} transform={`rotate(${i * 30 + 15})`} />
           ))}
         </g>
       )}
@@ -291,7 +291,7 @@ export function EstrelaAndar({ estado, className, style }: { estado: EstadoAndar
       )}
       {(estado === 'trancado' || estado === 'atual') && (
         <g transform="translate(-8.5 -11) scale(0.17)">
-          <Cadeado.Simbolo cor={estado === 'atual' ? '#cbc6dc' : '#bab09f'} />
+          <Cadeado.Simbolo cor={estado === 'atual' ? '#c2b9ec' : '#bab09f'} />
         </g>
       )}
     </svg>
@@ -375,7 +375,7 @@ export function BotaoTorre({
           <linearGradient id="tw-bt-edge" x1="0" x2="1" y1="0" y2="0">
             <stop offset="0" stopColor="#6b6357" />
             <stop offset="0.3" stopColor="#ece5d8" />
-            <stop offset="0.5" stopColor="#8f86b4" />
+            <stop offset="0.5" stopColor="#8a7cc8" />
             <stop offset="0.7" stopColor="#ece5d8" />
             <stop offset="1" stopColor="#6b6357" />
           </linearGradient>
@@ -387,11 +387,11 @@ export function BotaoTorre({
       {/* volutas e joias das pontas */}
       <svg viewBox="0 0 40 60" aria-hidden="true" className="absolute left-2 top-0 -z-10 h-full w-auto">
         <path d={voluta(26, 30, 6, -1)} fill="none" stroke={disabled ? '#5f584d' : '#6b6357'} strokeWidth={1.4} strokeLinecap="round" />
-        <path d="M30 26L34 30L30 34L26 30Z" fill={disabled ? '#38393c' : '#5a1d26'} />
+        <path d="M30 26L34 30L30 34L26 30Z" fill={disabled ? '#38393c' : '#5a4f8f'} />
       </svg>
       <svg viewBox="0 0 40 60" aria-hidden="true" className="absolute right-2 top-0 -z-10 h-full w-auto -scale-x-100">
         <path d={voluta(26, 30, 6, -1)} fill="none" stroke={disabled ? '#5f584d' : '#6b6357'} strokeWidth={1.4} strokeLinecap="round" />
-        <path d="M30 26L34 30L30 34L26 30Z" fill={disabled ? '#38393c' : '#5a1d26'} />
+        <path d="M30 26L34 30L30 34L26 30Z" fill={disabled ? '#38393c' : '#5a4f8f'} />
       </svg>
       <span aria-hidden="true" className="tw-botao-brilho pointer-events-none absolute inset-[5px] -z-10 overflow-hidden [clip-path:polygon(5%_0,95%_0,100%_50%,95%_100%,5%_100%,0_50%)]" />
       <span className="flex flex-1 flex-col items-center justify-center px-14 py-2 text-center">

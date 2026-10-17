@@ -44,7 +44,7 @@ const POP_TEXT: Record<PopTone, string> = {
 const POP_BAND: Record<PopTone, string> = {
   gold: 'bg-[linear-gradient(90deg,transparent,rgb(var(--dv-ink-rgb)/0.92)_14%,rgba(21,21,23,0.95)_50%,rgb(var(--dv-ink-rgb)/0.92)_86%,transparent)]',
   amethyst: 'bg-[linear-gradient(90deg,transparent,rgba(30,27,43,0.92)_14%,rgba(42,37,66,0.95)_50%,rgba(30,27,43,0.92)_86%,transparent)]',
-  red: 'bg-[linear-gradient(90deg,transparent,rgb(var(--dv-wine-rgb)/0.94)_14%,rgba(110,10,20,0.96)_50%,rgb(var(--dv-wine-rgb)/0.94)_86%,transparent)]',
+  red: 'bg-[linear-gradient(90deg,transparent,rgb(var(--dv-blood-deep-rgb)/0.94)_14%,rgba(110,10,20,0.96)_50%,rgb(var(--dv-blood-deep-rgb)/0.94)_86%,transparent)]',
   white: 'bg-[linear-gradient(90deg,transparent,rgb(var(--dv-ink-rgb)/0.88)_14%,rgba(21,21,23,0.9)_50%,rgb(var(--dv-ink-rgb)/0.88)_86%,transparent)]',
 }
 

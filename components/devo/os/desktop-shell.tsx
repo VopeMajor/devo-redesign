@@ -107,7 +107,7 @@ export function DesktopShell() {
       {/* O salão vem da Jornada (noite azul-violeta); no interior ele fica no mármore: tira a cor da cena. */}
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[#808080] mix-blend-saturation" />
       {critical && (
-        <div aria-hidden="true" className="animate-dv-alert pointer-events-none absolute inset-0 z-[1] bg-[radial-gradient(110%_90%_at_50%_50%,transparent_62%,rgb(var(--dv-blood-rgb)/0.3)_90%,rgb(var(--dv-wine-rgb)/0.55)_100%)]" />
+        <div aria-hidden="true" className="animate-dv-alert pointer-events-none absolute inset-0 z-[1] bg-[radial-gradient(110%_90%_at_50%_50%,transparent_62%,rgb(var(--dv-blood-rgb)/0.3)_90%,rgb(var(--dv-blood-deep-rgb)/0.55)_100%)]" />
       )}
       <PulseWidget remaining={remaining} critical={critical} onOpen={() => openApp('pulso')} />
 

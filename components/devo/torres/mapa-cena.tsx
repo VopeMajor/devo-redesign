@@ -57,7 +57,7 @@ export function CidadeAoLonge() {
             </>
           )}
           {r() > 0.5 && <rect x={x - 1} y={y - h * 0.62} width={2} height={3.2} fill="#ece5d8" opacity={0.5 * op} />}
-          {r() > 0.7 && <rect x={x + w * 0.4} y={y - h * 0.35} width={1.6} height={2.6} fill="#cbc6dc" opacity={0.45 * op} />}
+          {r() > 0.7 && <rect x={x + w * 0.4} y={y - h * 0.35} width={1.6} height={2.6} fill="#c2b9ec" opacity={0.45 * op} />}
         </g>,
       )
     }
@@ -79,8 +79,8 @@ export function Feixe() {
     <g style={{ mixBlendMode: 'screen' }}>
       <linearGradient id="tw-feixe" x1="0" x2="1" y1="0" y2="1">
         <stop offset="0" stopColor="#ece5d8" stopOpacity="0.2" />
-        <stop offset="0.6" stopColor="#cbc6dc" stopOpacity="0.06" />
-        <stop offset="1" stopColor="#cbc6dc" stopOpacity="0" />
+        <stop offset="0.6" stopColor="#c2b9ec" stopOpacity="0.06" />
+        <stop offset="1" stopColor="#c2b9ec" stopOpacity="0" />
       </linearGradient>
       <path d="M20 40L110 20L330 520L150 560Z" fill="url(#tw-feixe)" />
       <path d="M70 30L95 25L250 470L210 480Z" fill="url(#tw-feixe)" opacity={0.7} />

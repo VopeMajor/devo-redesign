@@ -32,12 +32,15 @@ export function marbleOffset(key: string): CSSProperties {
   return { backgroundPosition: `-${x}px -${Math.floor(y)}px` }
 }
 
-type SlabEdge = 'steel' | 'blood' | 'line'
+type SlabEdge = 'steel' | 'blood' | 'line' | 'amethyst'
 
 const EDGE: Record<SlabEdge, string> = {
-  steel: 'bg-[linear-gradient(135deg,#f4efe6_0%,#6b6357_26%,#bab09f_52%,#5f584d_78%,#ece5d8_100%)]',
+  // aço champanhe acetinado (Refinamento 4): aro dos tampos de destaque
+  steel: 'bg-[image:var(--dv-champagne-grad)]',
+  // aro de ametista (joia): só para o tampo que é o herói da tela
+  amethyst: 'bg-[linear-gradient(135deg,var(--dv-amethyst-light)_0%,var(--dv-amethyst-deep)_30%,var(--dv-champagne)_55%,var(--dv-amethyst-deep)_80%,var(--dv-amethyst-light)_100%)]',
   blood: 'bg-[linear-gradient(135deg,var(--dv-blood-text),var(--dv-blood)_45%,var(--dv-blood-deep))]',
-  line: 'bg-[linear-gradient(135deg,rgb(var(--dv-text-rgb)/0.34),rgb(var(--dv-text-rgb)/0.12)_45%,rgb(var(--dv-text-rgb)/0.26))]',
+  line: 'bg-[linear-gradient(135deg,rgb(var(--dv-champagne-rgb)/0.5),rgb(var(--dv-champagne-rgb)/0.14)_45%,rgb(var(--dv-champagne-rgb)/0.38))]',
 }
 
 /**

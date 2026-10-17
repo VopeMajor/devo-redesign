@@ -59,7 +59,7 @@ export function PocoCena({
   const partiu = palco === 'partiu'
   const trancado = palco === 'trancado'
   return (
-    <div aria-hidden="true" className={cn('poco-cena pointer-events-none absolute inset-0 overflow-hidden bg-dv-abyss [container-type:size]', className)}>
+    <div aria-hidden="true" className={cn('poco-cena pointer-events-none absolute inset-0 overflow-hidden bg-dv-ink [container-type:size]', className)}>
       {POCO_PINTADO ? (
         <CenaPintada longe={longe} balde={balde} baldeTipo={baldeTipo} girando={girando} ativo={ativo} moeda={moeda} brilho={trancado ? 0.12 : longe ? 0.9 : brilho} apagado={trancado} />
       ) : (
@@ -105,7 +105,7 @@ export function PocoCena({
       <div className={cn('poco-t absolute inset-0 bg-[radial-gradient(60%_45%_at_60%_48%,transparent_0%,rgba(9,9,9,0.86)_70%,#050505_100%)]', palco === 'mao' ? 'opacity-100' : 'opacity-0')} />
       {/* vinheta: pedra nas bordas, um fundo vinho no pé */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_45%,transparent_48%,rgba(9,9,9,0.8)_100%)]" />
-      <div className="absolute inset-x-0 bottom-0 h-1/3 bg-[linear-gradient(0deg,rgba(40,14,17,0.55),transparent)]" />
+      <div className="absolute inset-x-0 bottom-0 h-1/3 bg-[linear-gradient(0deg,rgba(30,27,43,0.6),transparent)]" />
       <div className="devo-grain absolute inset-0 opacity-[0.08] mix-blend-overlay" />
       {trancado && <div className="absolute inset-0 bg-dv-ink/45" />}
     </div>
@@ -152,13 +152,13 @@ function CenaPintada({ longe, balde, baldeTipo, girando, ativo, moeda, brilho, a
         className="absolute inset-0 size-full object-cover"
       />
       {/* fim da pintura: o barro some no abismo (a tela pode ser mais alta que a rua) */}
-      <div className="absolute inset-x-0 top-full h-[60%] bg-dv-abyss" />
-      <div className="absolute inset-x-0 bottom-0 h-[18%] bg-[linear-gradient(180deg,transparent,#090909)]" />
+      <div className="absolute inset-x-0 top-full h-[60%] bg-dv-ink" />
+      <div className="absolute inset-x-0 bottom-0 h-[18%] bg-[linear-gradient(180deg,transparent,var(--dv-ink))]" />
       <Nevoa layer={0} className="top-[44%] opacity-50" />
 
       <div className={cn('poco-t absolute', (girando || ativo) && 'poco-ativo')} style={poco}>
         {/* luz da boca: prata fria com o pé vinho, atrás da pedra */}
-        <span className="poco-aura absolute left-[-20%] top-[10%] h-[80%] w-[140%] bg-[radial-gradient(42%_40%_at_50%_55%,rgba(220,218,214,0.2),rgba(90,29,38,0.32)_55%,transparent_75%)]" />
+        <span className="poco-aura absolute left-[-20%] top-[10%] h-[80%] w-[140%] bg-[radial-gradient(42%_40%_at_50%_55%,rgba(220,218,214,0.2),rgb(var(--dv-amethyst-rgb)/0.26)_55%,transparent_75%)]" />
         <img
           src={`${C.poco.base}-512.webp`}
           srcSet={srcset(C.poco.base, C.poco.lados)}
@@ -201,7 +201,7 @@ function Ceu() {
   return (
     <>
       <div className="absolute inset-0 bg-[radial-gradient(120%_70%_at_50%_28%,#2c2a2a_0%,#1a1818_42%,#090909_100%)]" />
-      <div className="absolute inset-x-0 top-[26%] h-[30%] bg-[radial-gradient(70%_60%_at_50%_100%,rgba(63,17,23,0.42),transparent_75%)]" />
+      <div className="absolute inset-x-0 top-[26%] h-[30%] bg-[radial-gradient(70%_60%_at_50%_100%,rgba(78,69,128,0.32),transparent_75%)]" />
       {/* lua velada: disco de prata apagada com halo largo, quase engolido pela neblina */}
       <div className="poco-lua absolute right-[14%] top-[7%] size-[54px] rounded-full bg-[radial-gradient(circle_at_42%_40%,#d9d7d3,#a9a7a3_55%,#7d7b78)] opacity-55 blur-[1.5px]" />
       <div className="absolute right-[14%] top-[7%] size-[54px] scale-[4.2] rounded-full bg-[radial-gradient(closest-side,rgba(172,172,172,0.16),transparent)]" />
@@ -331,7 +331,7 @@ function Poco({ balde, baldeTipo, girando, ativo, moeda, brilho, apagado }: { ba
   return (
     <div className={cn('poco-stage relative', (girando || ativo) && 'poco-ativo')} style={{ aspectRatio: '400 / 500', height: 'var(--poco-h, min(64vh, 500px))', '--brilho': brilho } as CSSProperties}>
       {/* luz do poço: halo de prata fria com o pé vinho (a aura pintada entra dessaturada por cima) */}
-      <span className="poco-aura absolute left-[-24%] top-[2%] h-[90%] w-[148%] bg-[radial-gradient(45%_42%_at_50%_58%,rgba(220,218,214,0.22),rgba(90,29,38,0.28)_55%,transparent_75%)]" />
+      <span className="poco-aura absolute left-[-24%] top-[2%] h-[90%] w-[148%] bg-[radial-gradient(45%_42%_at_50%_58%,rgba(220,218,214,0.22),rgb(var(--dv-amethyst-rgb)/0.24)_55%,transparent_75%)]" />
       <img src={`${ART}/aura.webp`} alt="" draggable={false} className="poco-aura poco-dessatura absolute left-[-14%] top-[-6%] w-[128%] max-w-none opacity-70" />
       {/* anel astral: numerais e runas girando devagar (acelera na invocação) */}
       <div className="absolute left-[9%] top-[5.2%] w-[82%]">
@@ -587,10 +587,10 @@ function Oferendas({ className, apagado }: { className?: string; apagado: boolea
         <path d="M-2 10C10 14 34 16 58 12" stroke="#2b3027" strokeWidth="2" fill="none" />
         <path d="M22 13q5 -8 12 -6q-4 7 -12 6Z" fill="#30352b" />
         <path d="M40 13q3 6 10 6q-2 -7 -10 -6Z" fill="#2b2f26" />
-        <circle cx="-6" cy="6" r="9.5" fill="#3f1117" />
-        <path d="M-14 4q4 -9 12 -7q6 2 6 9q-6 -6 -12 -3Z" fill="#5a1d26" />
-        <path d="M-10 9q4 -6 9 -4q3 2 2 6q-5 -4 -11 -2Z" fill="#7d3a44" />
-        <path d="M-5 4q2 -2 4 0" stroke="#280e11" strokeWidth="1" fill="none" />
+        <circle cx="-6" cy="6" r="9.5" fill="#3a2f5c" />
+        <path d="M-14 4q4 -9 12 -7q6 2 6 9q-6 -6 -12 -3Z" fill="#5a4f8f" />
+        <path d="M-10 9q4 -6 9 -4q3 2 2 6q-5 -4 -11 -2Z" fill="#8a7cc8" />
+        <path d="M-5 4q2 -2 4 0" stroke="#1e1b2b" strokeWidth="1" fill="none" />
         <path d="M-12 1q2 -3 5 -3" stroke="#a46670" strokeWidth="0.7" fill="none" opacity="0.6" />
       </g>
       {/* moedas esquecidas, com um brilho que vem e vai */}
@@ -658,7 +658,7 @@ export function DracmaIcon({ raridade = 'comum', className }: { raridade?: strin
         return <path key={i} d={`M${16 + Math.cos(a) * 11.6} ${16 + Math.sin(a) * 11.6}L${16 + Math.cos(a) * 13.2} ${16 + Math.sin(a) * 13.2}`} stroke="#0c0c0e" strokeWidth="0.6" opacity="0.5" />
       })}
       {gem ? (
-        <path d="M16 10.5L20 16L16 21.5L12 16Z" fill="#8f86b4" stroke="#4d4668" strokeWidth="0.8" />
+        <path d="M16 10.5L20 16L16 21.5L12 16Z" fill="#8a7cc8" stroke="#4e4580" strokeWidth="0.8" />
       ) : (
         <path d="M16 9.5l1.6 4.9 4.9 1.6-4.9 1.6-1.6 4.9-1.6-4.9-4.9-1.6 4.9-1.6z" fill="#0c0c0e" opacity={raridade === 'incomum' ? 0.75 : 0.55} />
       )}

@@ -113,7 +113,7 @@ export function TelaTorre({
             ) : (
               <svg viewBox="0 0 100 140" aria-label={`${torre.npc.nome}: NPC a definir`} role="img" className="absolute inset-0 size-full">
                 <path d="M50 30C64 30 72 42 72 56S64 82 50 82 28 70 28 56 36 30 50 30ZM10 140C14 108 30 90 50 90S86 108 90 140Z" fill="#151517" stroke="#38393c" strokeWidth={1} />
-                <text x="50" y="66" textAnchor="middle" fontSize="26" fill="#8f86b4" fontFamily="serif">?</text>
+                <text x="50" y="66" textAnchor="middle" fontSize="26" fill="#8a7cc8" fontFamily="serif">?</text>
               </svg>
             )}
           </CageFrame>
@@ -239,8 +239,8 @@ function AndarLinha({ andar, essencia, recem, topo, atraso, onAbrir }: { andar: 
         </span>
         {/* filete com voluta */}
         <svg aria-hidden="true" viewBox="0 0 40 20" className="-ml-2 h-5 w-7 shrink-0">
-          <path d="M0 10H30" stroke={vivo ? '#cbc6dc' : a.estado === 'concluido' ? '#ece5d8' : '#6b6357'} strokeWidth={1} />
-          <path d={voluta(30, 10, 4, 1)} fill="none" stroke={vivo ? '#cbc6dc' : '#8f8676'} strokeWidth={1} />
+          <path d="M0 10H30" stroke={vivo ? '#c2b9ec' : a.estado === 'concluido' ? '#ece5d8' : '#6b6357'} strokeWidth={1} />
+          <path d={voluta(30, 10, 4, 1)} fill="none" stroke={vivo ? '#c2b9ec' : '#8f8676'} strokeWidth={1} />
         </svg>
         {/* texto flutuante */}
         <span className="relative min-w-0 flex-1 py-2 pl-1 pr-2">

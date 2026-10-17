@@ -38,7 +38,7 @@ function LiveToast({ item, onOpen, compact }: { item: NotificationItem; onOpen: 
         <span aria-hidden="true" className="dv-cut-diag bg-dv-ink-2 bg-[url(/images/os/marmore-negro.webp)] bg-[length:560px_560px] absolute inset-px" style={{ '--dv-cut': '9.6px' } as CSSProperties} />
         <span
           aria-hidden="true"
-          className={cn('dv-cut-diag absolute inset-px', danger ? 'bg-[linear-gradient(100deg,rgb(var(--dv-wine-rgb)/0.85),rgb(var(--dv-ink-rgb)/0.4)_60%)]' : 'bg-[linear-gradient(100deg,rgba(255,255,255,0.05),rgba(0,0,0,0.25))]')}
+          className={cn('dv-cut-diag absolute inset-px', danger ? 'bg-[linear-gradient(100deg,rgb(var(--dv-blood-deep-rgb)/0.85),rgb(var(--dv-ink-rgb)/0.4)_60%)]' : 'bg-[linear-gradient(100deg,rgba(255,255,255,0.05),rgba(0,0,0,0.25))]')}
           style={{ '--dv-cut': '9.6px' } as CSSProperties}
         />
         <div className="relative flex min-h-12 items-center gap-2.5 pl-3">
@@ -188,7 +188,7 @@ export function NotificationList({ onOpen, className }: { onOpen: (id: AppId) =>
                   aria-hidden="true"
                   className={cn(
                     'dv-cut-diag absolute inset-px -z-10 transition-colors',
-                    danger ? 'bg-[linear-gradient(100deg,rgb(var(--dv-wine-rgb)/0.8),transparent_60%)]' : 'group-hover:bg-white/[0.04]',
+                    danger ? 'bg-[linear-gradient(100deg,rgb(var(--dv-blood-deep-rgb)/0.8),transparent_60%)]' : 'group-hover:bg-white/[0.04]',
                   )}
                   style={{ '--dv-cut': '9.6px' } as CSSProperties}
                 />

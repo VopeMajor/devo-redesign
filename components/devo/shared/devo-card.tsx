@@ -187,13 +187,13 @@ export const RARITY_SKIN: Record<Rarity, RaritySkin> = {
     material: "Ametista",
     pips: 4,
     frame: "linear-gradient(150deg,#fffdf8 0%,#b3a998 17%,#f7f2e8 35%,#7b7264 55%,#efe8dc 74%,#c9c0b0 88%,#fffdf8 100%)",
-    filet: "#cbc6dc",
+    filet: "#c2b9ec",
     ink: "#4a4180",
-    light: "#cbc6dc",
+    light: "#c2b9ec",
     glow: "rgba(138,124,200,0.5)",
     duo: "mono",
     body: "white",
-    gem: ["#e4defb", "#8f86b4", "#2a2350"],
+    gem: ["#e4defb", "#8a7cc8", "#2a2350"],
   },
 };
 
@@ -291,10 +291,10 @@ function SetAmethyst({ className }: { className?: string }) {
     <svg viewBox="0 0 20 28" aria-hidden="true" className={className}>
       <path d="M10 0.5 L19.5 14 L10 27.5 L0.5 14 Z" fill="#f4efe6" />
       <path d="M10 2.6 L17.4 14 L10 25.4 L2.6 14 Z" fill="#2a2350" />
-      <path d="M10 3.4 L16.6 14 L10 14 Z" fill="#8f86b4" />
+      <path d="M10 3.4 L16.6 14 L10 14 Z" fill="#8a7cc8" />
       <path d="M10 3.4 L3.4 14 L10 14 Z" fill="#e4defb" />
-      <path d="M3.4 14 L10 24.6 L10 14 Z" fill="#8f86b4" />
-      <path d="M10 9 L13 14 L10 19 L7 14 Z" fill="#cbc6dc" />
+      <path d="M3.4 14 L10 24.6 L10 14 Z" fill="#8a7cc8" />
+      <path d="M10 9 L13 14 L10 19 L7 14 Z" fill="#c2b9ec" />
       <path d="M6.4 9 L7.6 7.8 L8.2 10.2 Z" fill="#fff" className="dvcard-gem" />
     </svg>
   );

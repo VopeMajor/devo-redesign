@@ -49,7 +49,7 @@ export function PulseDial({
         className={cn(
           'absolute inset-[3.75%] rounded-full',
           critical
-            ? 'bg-[radial-gradient(closest-side_at_50%_44%,rgb(var(--dv-wine-rgb)/0.55),rgb(var(--dv-ink-rgb)/0.25)_70%,rgba(0,0,0,0.5))]'
+            ? 'bg-[radial-gradient(closest-side_at_50%_44%,rgb(var(--dv-blood-deep-rgb)/0.55),rgb(var(--dv-ink-rgb)/0.25)_70%,rgba(0,0,0,0.5))]'
             : 'bg-[radial-gradient(closest-side_at_50%_40%,rgb(var(--dv-text-rgb)/0.07),rgb(var(--dv-ink-rgb)/0.2)_65%,rgba(0,0,0,0.55))]',
         )}
       />
