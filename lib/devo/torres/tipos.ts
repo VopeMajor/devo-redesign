@@ -97,13 +97,13 @@ export type TorreDef = {
   provisorio?: boolean
   /**
    * Ilustração pintada (pipeline de arte). Sem ela, a torre usa o desenho vetorial de `arte`. Arquivos:
-   * `<arquivo>--<largura>.webp` (fundo transparente), uma por largura listada.
+   * `<arquivo>-<largura>.webp` (fundo transparente), uma por largura listada (convenção do pipeline de arte).
    */
   ilustracao?: Ilustracao
 }
 
 export type Ilustracao = {
-  /** Caminho sem o sufixo de largura: '/images/torres/<id>/<nome>' → '<nome>--512.webp'. */
+  /** Caminho sem o sufixo de largura: '/images/torres/<id>/torre' → 'torre-512.webp'. */
   arquivo: string
   larguras: number[]
   /** largura ÷ altura da imagem. */

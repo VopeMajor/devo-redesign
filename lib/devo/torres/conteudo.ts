@@ -68,7 +68,7 @@ export function errosDoConteudo(raw: unknown): string[] {
     if (!t.mapa || !(t.mapa.x >= 0 && t.mapa.x <= 100 && t.mapa.y >= 0 && t.mapa.y <= 100)) erros.push(`${onde}: "mapa" precisa de x e y entre 0 e 100.`)
     if (t.ilustracao) {
       const il = t.ilustracao
-      if (typeof il.arquivo !== 'string' || !il.arquivo.startsWith('/')) erros.push(`${onde}: "ilustracao.arquivo" deve começar com "/" (sem o sufixo --<largura>.webp).`)
+      if (typeof il.arquivo !== 'string' || !il.arquivo.startsWith('/')) erros.push(`${onde}: "ilustracao.arquivo" deve começar com "/" (sem o sufixo -<largura>.webp).`)
       if (!Array.isArray(il.larguras) || !il.larguras.length || il.larguras.some((w) => !(Number(w) > 0))) erros.push(`${onde}: "ilustracao.larguras" deve listar as larguras dos arquivos (ex.: [256, 512, 1024]).`)
       if (!(Number(il.aspecto) > 0) || !(Number(il.altura) > 0)) erros.push(`${onde}: "ilustracao" precisa de "aspecto" (largura ÷ altura) e "altura" > 0.`)
     }

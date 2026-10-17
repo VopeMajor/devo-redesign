@@ -104,17 +104,20 @@ Copie uma torre secundária e troque:
   mapa, o fundo da tela da torre e o palco das cenas usam a pintura; sem ela, o desenho vetorial de `"arte"`.
   ```json
   "ilustracao": {
-    "arquivo": "/images/torres/campanha/torre-principal-agulha--v04",
-    "larguras": [256, 512, 1024],
+    "arquivo": "/images/torres/agulha/torre",
+    "larguras": [96, 256, 512, 1024],
     "aspecto": 0.486,
     "altura": 440,
     "janelas": [[0.597, 0.825], [0.398, 0.724], [0.556, 0.633]]
   }
   ```
-  Os arquivos ficam em `public/images/torres/<id>/<nome>--<largura>.webp` (uma por largura). `aspecto` = largura ÷
+  Os arquivos ficam em `public/images/torres/<id>/torre-<largura>.webp` (uma por largura; convenção do pipeline de arte, que também grava `torre.json` com a origem). `aspecto` = largura ÷
   altura da imagem; `altura` = tamanho no mapa (390×640) com escala 1; `janelas` = posição de cada vitral em frações
   [x, y] da imagem, de baixo para cima, um por andar — acendem com o progresso (porcelana), o atual pulsa em ametista
-  e os demais escurecem. **Trocar a arte de uma secundária = copiar os WebP e preencher este campo** (sem código).
+  e os demais escurecem. **Trocar a arte de uma torre = copiar os WebP e preencher este campo** (sem código).
+  Janelas medidas por script: pixels quentes e claros da pintura (r > 150, r > b + 30, r > g + 10), agrupados; escolha
+  um vitral por andar, de baixo para cima. Hoje as quatro torres estão pintadas (agulha v04, imperador v03,
+  observatório, picadeiro).
 
 Deve haver **exatamente 1** torre `"principal"`. Requisitos de chave só podem citar torres que existem.
 

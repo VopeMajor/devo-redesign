@@ -10,7 +10,7 @@ import { cn } from '@/lib/utils'
  * apagadas (sombra leve). Trocar a arte = trocar o arquivo e o campo `ilustracao` no conteúdo.
  */
 
-export const srcDe = (ilu: Ilustracao, largura: number) => `${ilu.arquivo}--${largura}.webp`
+export const srcDe = (ilu: Ilustracao, largura: number) => `${ilu.arquivo}-${largura}.webp`
 export const srcSetDe = (ilu: Ilustracao) => ilu.larguras.map((w) => `${srcDe(ilu, w)} ${w}w`).join(', ')
 
 /** Menor largura disponível que cobre `px` pixels de tela (com a densidade do aparelho). */

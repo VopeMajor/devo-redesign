@@ -150,8 +150,9 @@
         }
       ],
       "ilustracao": {
-        "arquivo": "/images/torres/campanha/torre-principal-agulha--v04",
+        "arquivo": "/images/torres/agulha/torre",
         "larguras": [
+          96,
           256,
           512,
           1024
@@ -279,7 +280,40 @@
             }
           ]
         }
-      ]
+      ],
+      "ilustracao": {
+        "arquivo": "/images/torres/imperador/torre",
+        "larguras": [
+          96,
+          256,
+          512,
+          1024
+        ],
+        "aspecto": 0.602,
+        "altura": 300,
+        "janelas": [
+          [
+            0.513,
+            0.782
+          ],
+          [
+            0.578,
+            0.588
+          ],
+          [
+            0.508,
+            0.519
+          ],
+          [
+            0.314,
+            0.485
+          ],
+          [
+            0.57,
+            0.42
+          ]
+        ]
+      }
     },
     {
       "id": "observatorio",
@@ -358,7 +392,40 @@
             }
           ]
         }
-      ]
+      ],
+      "ilustracao": {
+        "arquivo": "/images/torres/observatorio/torre",
+        "larguras": [
+          96,
+          256,
+          512,
+          1024
+        ],
+        "aspecto": 0.656,
+        "altura": 290,
+        "janelas": [
+          [
+            0.556,
+            0.627
+          ],
+          [
+            0.551,
+            0.499
+          ],
+          [
+            0.426,
+            0.347
+          ],
+          [
+            0.589,
+            0.332
+          ],
+          [
+            0.503,
+            0.178
+          ]
+        ]
+      }
     },
     {
       "id": "picadeiro",
@@ -448,7 +515,44 @@
             }
           ]
         }
-      ]
+      ],
+      "ilustracao": {
+        "arquivo": "/images/torres/picadeiro/torre",
+        "larguras": [
+          96,
+          256,
+          512,
+          1024
+        ],
+        "aspecto": 0.646,
+        "altura": 270,
+        "janelas": [
+          [
+            0.5,
+            0.83
+          ],
+          [
+            0.272,
+            0.528
+          ],
+          [
+            0.722,
+            0.488
+          ],
+          [
+            0.461,
+            0.548
+          ],
+          [
+            0.225,
+            0.498
+          ],
+          [
+            0.828,
+            0.524
+          ]
+        ]
+      }
     }
   ]
 }
