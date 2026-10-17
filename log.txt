@@ -1,0 +1,9 @@
+[arcanos-moldura] v01: @cf/black-forest-labs/flux-2-klein-9b seed=14001 768x1024 passos=None (~1,364 neurônios)
+    ok em 1.7s, 768x1024
+[arcanos-moldura] v02: @cf/black-forest-labs/flux-2-klein-9b seed=14002 768x1024 passos=None (~1,364 neurônios)
+    ok em 1.7s, 768x1024
+[arcanos-moldura] v03: @cf/black-forest-labs/flux-2-klein-9b seed=14003 768x1024 passos=None (~1,364 neurônios)
+    ok em 1.7s, 768x1024
+[arcanos-moldura] v01: rembg:birefnet-general; sem avisos
+[arcanos-moldura] v02: rembg:birefnet-general; sem avisos
+[arcanos-moldura] v03: rembg:birefnet-general; sem avisos

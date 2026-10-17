@@ -1,0 +1,108 @@
+{
+  "pedido": "arcanos-moldura",
+  "titulo": "Arcanos — moldura de retrato",
+  "tipo": "ilustracao",
+  "tamanho_final": 1024,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 14001,
+      "passos": null,
+      "segundos": 1.7,
+      "neuronios_estimados": 1364,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "arcanos-moldura--v01--1023.png",
+          "bytes": 564205
+        },
+        {
+          "arquivo": "arcanos-moldura--v01--1023.webp",
+          "bytes": 140890
+        },
+        {
+          "arquivo": "arcanos-moldura--v01--768.webp",
+          "bytes": 81208
+        },
+        {
+          "arquivo": "arcanos-moldura--v01--512.webp",
+          "bytes": 44952
+        },
+        {
+          "arquivo": "arcanos-moldura--v01--256.webp",
+          "bytes": 16186
+        }
+      ],
+      "segundos_pos": 23.1,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 14002,
+      "passos": null,
+      "segundos": 1.7,
+      "neuronios_estimados": 1364,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "arcanos-moldura--v02--1023.png",
+          "bytes": 628171
+        },
+        {
+          "arquivo": "arcanos-moldura--v02--1023.webp",
+          "bytes": 131438
+        },
+        {
+          "arquivo": "arcanos-moldura--v02--768.webp",
+          "bytes": 74816
+        },
+        {
+          "arquivo": "arcanos-moldura--v02--512.webp",
+          "bytes": 41350
+        },
+        {
+          "arquivo": "arcanos-moldura--v02--256.webp",
+          "bytes": 15046
+        }
+      ],
+      "segundos_pos": 17.2,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 14003,
+      "passos": null,
+      "segundos": 1.7,
+      "neuronios_estimados": 1364,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "arcanos-moldura--v03--1023.png",
+          "bytes": 543031
+        },
+        {
+          "arquivo": "arcanos-moldura--v03--1023.webp",
+          "bytes": 143920
+        },
+        {
+          "arquivo": "arcanos-moldura--v03--768.webp",
+          "bytes": 84336
+        },
+        {
+          "arquivo": "arcanos-moldura--v03--512.webp",
+          "bytes": 47302
+        },
+        {
+          "arquivo": "arcanos-moldura--v03--256.webp",
+          "bytes": 17710
+        }
+      ],
+      "segundos_pos": 16.6,
+      "avisos": []
+    }
+  ]
+}

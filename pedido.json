@@ -1,0 +1,56 @@
+{
+  "id": "arcanos-moldura",
+  "titulo": "Arcanos — moldura de retrato",
+  "tipo": "ilustracao",
+  "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+  "prompt": "Fantasy game UI asset, painted, highly detailed, isolated on a plain flat light gray background: an ornate empty portrait frame, tall arched oval shape, aged gold and tarnished silver baroque carving with thorny scrolls, small skulls of flowers and a tiny crowned crest at the top, a small wine red gem at the bottom, the inside of the frame is completely empty and plain. Front view, symmetric, the whole frame fully inside the image with margin. Muted dark palette of abyss black, deep blood wine, fog stone gray and faded silver, low saturation, no neon. ",
+  "negative": "text, letters, watermark, signature, people, characters, neon, saturated colors",
+  "largura": 768,
+  "altura": 1024,
+  "variacoes": [
+    {
+      "seed": 14001,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "passos": null,
+      "largura": 768,
+      "altura": 1024,
+      "prompt_extra": "",
+      "n": 1
+    },
+    {
+      "seed": 14002,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "passos": null,
+      "largura": 768,
+      "altura": 1024,
+      "prompt_extra": "",
+      "n": 2
+    },
+    {
+      "seed": 14003,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "passos": null,
+      "largura": 768,
+      "altura": 1024,
+      "prompt_extra": "",
+      "n": 3
+    }
+  ],
+  "pos": {
+    "remover_fundo": true,
+    "tamanho_final": 1024,
+    "margem": 0.02,
+    "quadro_inteiro": false,
+    "derivados": [
+      768,
+      512,
+      256
+    ],
+    "modelo_fundo": "birefnet-general",
+    "fundo": "liso",
+    "camadas": []
+  },
+  "passos": null,
+  "guidance": null,
+  "referencias": []
+}
