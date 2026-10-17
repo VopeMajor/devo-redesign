@@ -1,0 +1,245 @@
+{
+  "pedido": "moldura-banquete-javali",
+  "titulo": "Banquete do Javali — avatar",
+  "tipo": "moldura",
+  "tamanho_final": 1024,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 6041,
+      "passos": null,
+      "segundos": 39.3,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "miolo_aberto_por_cor": true,
+      "ilhas_removidas": 1,
+      "janela": {
+        "forma": "circulo",
+        "centro_px": [
+          512.0,
+          512.0
+        ],
+        "raio_px": [
+          256.0,
+          256.0
+        ],
+        "raio_fracao": [
+          0.25,
+          0.25
+        ]
+      },
+      "reencaixe": {
+        "escala": 1.1743,
+        "cobertura_aro": 1.0
+      },
+      "ornamento_cortado": 0.0088,
+      "arquivos": [
+        {
+          "arquivo": "moldura-banquete-javali--v01--1024.png",
+          "bytes": 915694
+        },
+        {
+          "arquivo": "moldura-banquete-javali--v01--1024.webp",
+          "bytes": 161760
+        },
+        {
+          "arquivo": "moldura-banquete-javali--v01--512.webp",
+          "bytes": 64896
+        },
+        {
+          "arquivo": "moldura-banquete-javali--v01--256.webp",
+          "bytes": 25048
+        },
+        {
+          "arquivo": "moldura-banquete-javali--v01--96.webp",
+          "bytes": 6494
+        },
+        {
+          "arquivo": "moldura-banquete-javali--v01--48.webp",
+          "bytes": 2578
+        }
+      ],
+      "segundos_pos": 36.4,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 6042,
+      "passos": null,
+      "segundos": 22.2,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "miolo_aberto_por_cor": true,
+      "ilhas_removidas": 1,
+      "janela": {
+        "forma": "circulo",
+        "centro_px": [
+          512.0,
+          512.0
+        ],
+        "raio_px": [
+          256.0,
+          256.0
+        ],
+        "raio_fracao": [
+          0.25,
+          0.25
+        ]
+      },
+      "reencaixe": {
+        "escala": 1.3128,
+        "cobertura_aro": 1.0
+      },
+      "ornamento_cortado": 0.0059,
+      "arquivos": [
+        {
+          "arquivo": "moldura-banquete-javali--v02--1024.png",
+          "bytes": 932277
+        },
+        {
+          "arquivo": "moldura-banquete-javali--v02--1024.webp",
+          "bytes": 155894
+        },
+        {
+          "arquivo": "moldura-banquete-javali--v02--512.webp",
+          "bytes": 60878
+        },
+        {
+          "arquivo": "moldura-banquete-javali--v02--256.webp",
+          "bytes": 24178
+        },
+        {
+          "arquivo": "moldura-banquete-javali--v02--96.webp",
+          "bytes": 6360
+        },
+        {
+          "arquivo": "moldura-banquete-javali--v02--48.webp",
+          "bytes": 2530
+        }
+      ],
+      "segundos_pos": 31.0,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 6043,
+      "passos": null,
+      "segundos": 21.5,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "miolo_aberto_por_cor": true,
+      "janela": {
+        "forma": "circulo",
+        "centro_px": [
+          512.0,
+          512.0
+        ],
+        "raio_px": [
+          256.0,
+          256.0
+        ],
+        "raio_fracao": [
+          0.25,
+          0.25
+        ]
+      },
+      "reencaixe": {
+        "escala": 1.3474,
+        "cobertura_aro": 1.0
+      },
+      "ornamento_cortado": 0.0276,
+      "arquivos": [
+        {
+          "arquivo": "moldura-banquete-javali--v03--1024.png",
+          "bytes": 991793
+        },
+        {
+          "arquivo": "moldura-banquete-javali--v03--1024.webp",
+          "bytes": 153630
+        },
+        {
+          "arquivo": "moldura-banquete-javali--v03--512.webp",
+          "bytes": 61838
+        },
+        {
+          "arquivo": "moldura-banquete-javali--v03--256.webp",
+          "bytes": 24574
+        },
+        {
+          "arquivo": "moldura-banquete-javali--v03--96.webp",
+          "bytes": 6368
+        },
+        {
+          "arquivo": "moldura-banquete-javali--v03--48.webp",
+          "bytes": 2464
+        }
+      ],
+      "segundos_pos": 30.9,
+      "avisos": [
+        "2.8% do ornamento ficou fora do quadro — reduza a janela ou peça mais margem no prompt"
+      ]
+    },
+    {
+      "nome": "v04",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 6044,
+      "passos": null,
+      "segundos": 26.5,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "miolo_aberto_por_cor": true,
+      "janela": {
+        "forma": "circulo",
+        "centro_px": [
+          512.0,
+          512.0
+        ],
+        "raio_px": [
+          256.0,
+          256.0
+        ],
+        "raio_fracao": [
+          0.25,
+          0.25
+        ]
+      },
+      "reencaixe": {
+        "escala": 1.0987,
+        "cobertura_aro": 1.0
+      },
+      "ornamento_cortado": 0.0,
+      "arquivos": [
+        {
+          "arquivo": "moldura-banquete-javali--v04--1024.png",
+          "bytes": 737209
+        },
+        {
+          "arquivo": "moldura-banquete-javali--v04--1024.webp",
+          "bytes": 138432
+        },
+        {
+          "arquivo": "moldura-banquete-javali--v04--512.webp",
+          "bytes": 53114
+        },
+        {
+          "arquivo": "moldura-banquete-javali--v04--256.webp",
+          "bytes": 20548
+        },
+        {
+          "arquivo": "moldura-banquete-javali--v04--96.webp",
+          "bytes": 5742
+        },
+        {
+          "arquivo": "moldura-banquete-javali--v04--48.webp",
+          "bytes": 2430
+        }
+      ],
+      "segundos_pos": 30.5,
+      "avisos": []
+    }
+  ]
+}

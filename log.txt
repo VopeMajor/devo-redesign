@@ -1,0 +1,12 @@
+[moldura-banquete-javali] v01: @cf/black-forest-labs/flux-2-klein-4b seed=6041 1024x1024 passos=None (~104 neurônios)
+    ok em 39.3s, 1024x1024
+[moldura-banquete-javali] v02: @cf/black-forest-labs/flux-2-klein-4b seed=6042 1024x1024 passos=None (~104 neurônios)
+    ok em 22.2s, 1024x1024
+[moldura-banquete-javali] v03: @cf/black-forest-labs/flux-2-klein-4b seed=6043 1024x1024 passos=None (~104 neurônios)
+    ok em 21.5s, 1024x1024
+[moldura-banquete-javali] v04: @cf/black-forest-labs/flux-2-klein-4b seed=6044 1024x1024 passos=None (~104 neurônios)
+    ok em 26.5s, 1024x1024
+[moldura-banquete-javali] v01: rembg:birefnet-general; sem avisos
+[moldura-banquete-javali] v02: rembg:birefnet-general; sem avisos
+[moldura-banquete-javali] v03: rembg:birefnet-general; 2.8% do ornamento ficou fora do quadro — reduza a janela ou peça mais margem no prompt
+[moldura-banquete-javali] v04: rembg:birefnet-general; sem avisos
