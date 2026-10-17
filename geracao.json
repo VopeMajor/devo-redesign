@@ -1,0 +1,50 @@
+{
+  "pedido": "borda-asas-porcelana",
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 16021,
+      "passos": null,
+      "largura": 1024,
+      "altura": 640,
+      "neuronios_estimados": 104,
+      "ok": true,
+      "segundos": 22.8,
+      "tamanho_real": [
+        1024,
+        640
+      ]
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 16022,
+      "passos": null,
+      "largura": 1024,
+      "altura": 640,
+      "neuronios_estimados": 104,
+      "ok": true,
+      "segundos": 17.2,
+      "tamanho_real": [
+        1024,
+        640
+      ]
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 16023,
+      "passos": null,
+      "largura": 1024,
+      "altura": 640,
+      "neuronios_estimados": 104,
+      "ok": true,
+      "segundos": 17.9,
+      "tamanho_real": [
+        1024,
+        640
+      ]
+    }
+  ]
+}

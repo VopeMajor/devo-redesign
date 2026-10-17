@@ -1,0 +1,109 @@
+{
+  "pedido": "borda-asas-porcelana",
+  "titulo": "Borda de perfil — asas-porcelana",
+  "tipo": "ilustracao",
+  "tamanho_final": 1024,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 16021,
+      "passos": null,
+      "segundos": 22.8,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "borda-asas-porcelana--v01--1024.png",
+          "bytes": 322456
+        },
+        {
+          "arquivo": "borda-asas-porcelana--v01--1024.webp",
+          "bytes": 69912
+        },
+        {
+          "arquivo": "borda-asas-porcelana--v01--768.webp",
+          "bytes": 48966
+        },
+        {
+          "arquivo": "borda-asas-porcelana--v01--512.webp",
+          "bytes": 30092
+        },
+        {
+          "arquivo": "borda-asas-porcelana--v01--256.webp",
+          "bytes": 11860
+        }
+      ],
+      "segundos_pos": 34.8,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 16022,
+      "passos": null,
+      "segundos": 17.2,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "borda-asas-porcelana--v02--1024.png",
+          "bytes": 325013
+        },
+        {
+          "arquivo": "borda-asas-porcelana--v02--1024.webp",
+          "bytes": 72320
+        },
+        {
+          "arquivo": "borda-asas-porcelana--v02--768.webp",
+          "bytes": 51172
+        },
+        {
+          "arquivo": "borda-asas-porcelana--v02--512.webp",
+          "bytes": 31066
+        },
+        {
+          "arquivo": "borda-asas-porcelana--v02--256.webp",
+          "bytes": 13044
+        }
+      ],
+      "segundos_pos": 29.1,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 16023,
+      "passos": null,
+      "segundos": 17.9,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "ilhas_removidas": 0,
+      "arquivos": [
+        {
+          "arquivo": "borda-asas-porcelana--v03--1024.png",
+          "bytes": 329631
+        },
+        {
+          "arquivo": "borda-asas-porcelana--v03--1024.webp",
+          "bytes": 74476
+        },
+        {
+          "arquivo": "borda-asas-porcelana--v03--768.webp",
+          "bytes": 53406
+        },
+        {
+          "arquivo": "borda-asas-porcelana--v03--512.webp",
+          "bytes": 33266
+        },
+        {
+          "arquivo": "borda-asas-porcelana--v03--256.webp",
+          "bytes": 13352
+        }
+      ],
+      "segundos_pos": 30.0,
+      "avisos": []
+    }
+  ]
+}
