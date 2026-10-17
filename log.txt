@@ -1,0 +1,9 @@
+[arcano-eremita-tarot] v01: @cf/black-forest-labs/flux-2-klein-9b seed=91101 1024x1536 passos=None (~1,455 neurônios)
+    ok em 3.4s, 1024x1536
+[arcano-eremita-tarot] v02: @cf/black-forest-labs/flux-2-klein-9b seed=91102 1024x1536 passos=None (~1,455 neurônios)
+    ok em 3.3s, 1024x1536
+[arcano-eremita-tarot] v03: @cf/black-forest-labs/flux-2-klein-9b seed=91103 1024x1536 passos=None (~1,455 neurônios)
+    ok em 2.9s, 1024x1536
+[arcano-eremita-tarot] v01: rembg:birefnet-general; sem avisos
+[arcano-eremita-tarot] v02: rembg:birefnet-general; sem avisos
+[arcano-eremita-tarot] v03: rembg:birefnet-general; sem avisos

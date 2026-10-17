@@ -1,0 +1,55 @@
+{
+  "id": "arcano-eremita-tarot",
+  "titulo": "Arcano — eremita (tarô, menos humanizado)",
+  "tipo": "ilustracao",
+  "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+  "prompt": "Antique tarot Major Arcana illustration reimagined as dark fantasy painted concept art, inspired by the iconography of the Rider-Waite-Smith and Tarot de Marseille decks, symbolic and allegorical rather than realistic, stylized hieratic figure like a living tarot emblem, flat elegant silhouette with clean readable shapes, fine engraved linework and soft painterly shading, isolated on a plain flat light gray background. ONE single central figure, standing still in a front view, full body from head to feet, the whole figure fills about 85 percent of the image height, feet near the bottom edge, hands simplified or hidden inside sleeves, no realistic human anatomy, no photographic face. Muted palette of abyss black, porcelain white, fog gray and champagne steel, with ONE small symbolic accent color. Soft studio key light from the upper left, gentle cool rim light, no cast shadow. No text, no letters, no numerals, no card frame, no border, no background scenery, no other characters. The Hermit: a towering hooded figure whose face is only darkness inside the deep hood, heavy gray cloaks layered like stone, leaning on a long gnarled staff, holding up a lantern with a six-pointed star of warm light inside, snow on the shoulders. Accent: warm lantern yellow.",
+  "negative": "text, letters, numbers, watermark, signature, card frame, border, cropped, cut off feet, background scenery, landscape, multiple figures, crowd, photorealistic, realistic human face, pretty face, portrait, distorted anatomy, extra limbs, extra fingers, deformed hands, melted face, asymmetrical eyes, cartoon, chibi, anime, neon, saturated colors",
+  "largura": 1024,
+  "altura": 1536,
+  "variacoes": [
+    {
+      "seed": 91101,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "passos": null,
+      "largura": 1024,
+      "altura": 1536,
+      "prompt_extra": "",
+      "n": 1
+    },
+    {
+      "seed": 91102,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "passos": null,
+      "largura": 1024,
+      "altura": 1536,
+      "prompt_extra": "",
+      "n": 2
+    },
+    {
+      "seed": 91103,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "passos": null,
+      "largura": 1024,
+      "altura": 1536,
+      "prompt_extra": "",
+      "n": 3
+    }
+  ],
+  "pos": {
+    "remover_fundo": true,
+    "tamanho_final": 1536,
+    "margem": 0.03,
+    "derivados": [
+      1024,
+      768,
+      512
+    ],
+    "modelo_fundo": "birefnet-general",
+    "fundo": "liso",
+    "camadas": []
+  },
+  "passos": null,
+  "guidance": null,
+  "referencias": []
+}
