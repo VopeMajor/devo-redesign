@@ -93,6 +93,20 @@ export function AdvanceIndicator({ visible, label, tone = 'cobalt' }: { visible:
 }
 
 /** Fundo de caixa de diálogo: ink com filete (gold/cobalt) e chanfro diagonal. */
+/**
+ * Rolo do texto da fala: falas longas não fazem a caixa crescer por cima da cena (no celular ela cobria o
+ * retrato, o título e os painéis). Altura limitada; o texto rola por dentro e fica ancorado na última linha
+ * enquanto é digitado (coluna invertida: a rolagem nasce no fim).
+ */
+export function FalaRolo({ children, className, como = 'span' }: { children: ReactNode; className?: string; como?: 'span' | 'div' }) {
+  const Caixa = como
+  return (
+    <Caixa className={cn('devo-scroll flex max-h-[min(32dvh,15rem)] flex-col-reverse overflow-y-auto overscroll-contain', className)}>
+      <Caixa className="block">{children}</Caixa>
+    </Caixa>
+  )
+}
+
 export function DialogueShell({
   tone = 'gold',
   className,

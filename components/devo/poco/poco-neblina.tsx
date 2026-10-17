@@ -9,7 +9,7 @@ import { cn } from '@/lib/utils'
 import { useAdvanceKeys } from '../hooks'
 import { GlyphKeyhole, toRoman } from '../kit/glyphs'
 import { useFalaAncora } from '../kit/npc-anchor'
-import { AdvanceIndicator, ChoiceHeader, ChoiceStrip, DialogueShell, SpeakerPlate, useTypewriter } from '../intro/vn'
+import { AdvanceIndicator, ChoiceHeader, ChoiceStrip, DialogueShell, FalaRolo, SpeakerPlate, useTypewriter } from '../intro/vn'
 import { SoundToggle } from '../shared/sound-toggle'
 import { PocoCena } from './poco-cena'
 import { MoedaPoco } from './poco-itens'
@@ -184,19 +184,21 @@ export function PocoNeblina({
               {quem === 'jogador' && <SpeakerPlate key="j" name={nomeJogador} tone="cobalt" />}
               {quem === 'figura' && <SpeakerPlate key="f" name="???" tone="void" />}
               <span className={cn('block px-6 pb-3', quem === 'jogador' || quem === 'figura' ? 'pt-8' : 'pt-5')}>
-                <span
-                  aria-live="polite"
-                  className={cn(
-                    'block min-h-[4.5rem] text-pretty font-body leading-relaxed',
-                    quem === 'narrador' && 'text-[16.5px] italic text-dv-text-2',
-                    quem === 'jogador' && 'text-[17px] text-dv-text',
-                    quem === 'figura' && 'text-[17px] text-dv-porcelain',
-                    quem === 'sistema' && 'text-center font-display text-[15px] not-italic uppercase tracking-[0.12em] text-dv-gold-bright',
-                  )}
-                >
-                  {texto.slice(0, shown)}
-                  {!done && <span aria-hidden="true" className="ml-0.5 inline-block h-4 w-[2px] translate-y-0.5 animate-dv-blink bg-dv-gold-bright" />}
-                </span>
+                <FalaRolo>
+                  <span
+                    aria-live="polite"
+                    className={cn(
+                      'block min-h-[4.5rem] text-pretty font-body leading-relaxed',
+                      quem === 'narrador' && 'text-[16.5px] italic text-dv-text-2',
+                      quem === 'jogador' && 'text-[17px] text-dv-text',
+                      quem === 'figura' && 'text-[17px] text-dv-porcelain',
+                      quem === 'sistema' && 'text-center font-display text-[15px] not-italic uppercase tracking-[0.12em] text-dv-gold-bright',
+                    )}
+                  >
+                    {texto.slice(0, shown)}
+                    {!done && <span aria-hidden="true" className="ml-0.5 inline-block h-4 w-[2px] translate-y-0.5 animate-dv-blink bg-dv-gold-bright" />}
+                  </span>
+                </FalaRolo>
                 <span className="mt-3 flex items-center gap-3" aria-hidden="true">
                   <span className="dv-label dv-tabular text-[10px] text-dv-text-3">
                     {String(index + 1).padStart(2, '0')}/{String(total).padStart(2, '0')}

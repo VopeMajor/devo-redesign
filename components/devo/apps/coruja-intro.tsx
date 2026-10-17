@@ -12,6 +12,7 @@ import { CardFace, RARITY_SKIN, RarityGem, RarityPips, marbleBlack } from '../sh
 import { useDevo } from '../state/devo-store'
 import { usePlayerText } from '../state/player-text'
 import { CORUJA_EXPRESSIONS, type CorujaExpression } from './coruja-sprite'
+import { FalaRolo } from '@/components/devo/intro/vn'
 
 type Visual = 'cards' | 'rarities' | 'secret' | 'roles' | 'collections' | 'numbers'
 type Chapter = 'Apresentação' | 'Raridades' | 'Segredos' | 'Funções' | 'Coleções'
@@ -299,16 +300,18 @@ export function CorujaIntro() {
           {step.kind === 'system' ? (
             <p className="py-3 text-center font-sans text-[12px] font-medium uppercase tracking-[0.24em] text-white/70">{typer.shown}</p>
           ) : (
-            <p className="min-h-[3.5rem] font-serif text-[19px] leading-relaxed text-dv-text @md:text-xl" aria-live="polite">
-              {spoken ? (
-                <>
-                  <FalaComEfeito text={falaTexto} shown={typer.count} />
-                  {!typer.done && <span className="ml-0.5 inline-block h-5 w-px translate-y-1 animate-blink bg-dv-amethyst-text" aria-hidden="true" />}
-                </>
-              ) : (
-                <span className="italic text-white/60">Pergunte o que quiser. Ou não.</span>
-              )}
-            </p>
+            <FalaRolo como="div">
+              <p className="min-h-[3.5rem] font-serif text-[19px] leading-relaxed text-dv-text @md:text-xl" aria-live="polite">
+                {spoken ? (
+                  <>
+                    <FalaComEfeito text={falaTexto} shown={typer.count} />
+                    {!typer.done && <span className="ml-0.5 inline-block h-5 w-px translate-y-1 animate-blink bg-dv-amethyst-text" aria-hidden="true" />}
+                  </>
+                ) : (
+                  <span className="italic text-white/60">Pergunte o que quiser. Ou não.</span>
+                )}
+              </p>
+            </FalaRolo>
           )}
 
           {step.kind === 'choice' && (

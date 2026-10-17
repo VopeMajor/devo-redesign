@@ -9,7 +9,7 @@ import { HERDEIRO_APRESENTACAO, HERDEIRO_POSES, salaoTexto, semMarcas, trechos, 
 import { useAdvanceKeys } from '../hooks'
 import { toRoman } from '../kit/glyphs'
 import { NpcAnchor } from '../kit/npc-anchor'
-import { AdvanceIndicator, DialogueShell, SpeakerPlate, useTypewriter } from '../intro/vn'
+import { AdvanceIndicator, DialogueShell, FalaRolo, SpeakerPlate, useTypewriter } from '../intro/vn'
 import { SoundToggle } from '../shared/sound-toggle'
 import { SalaoCena } from './salao-cena'
 import { ContadorSalao } from './salao-contador'
@@ -147,18 +147,20 @@ export function SalaoHerdeiro({
           <DialogueShell tone="gold" className="-mt-3">
             <SpeakerPlate name={info.name} title="Maestro do Salão" tone="gold" />
             <span className="block px-6 pb-3 pt-8">
-              <span aria-live="polite" className="block min-h-[6.2rem] text-pretty font-body text-[17px] leading-relaxed text-dv-porcelain">
-                {trechos(texto, shown).map((p, i) =>
-                  p.forte ? (
-                    <strong key={i} className="font-display font-semibold uppercase tracking-[0.08em] text-dv-gold-bright">
-                      {p.t}
-                    </strong>
-                  ) : (
-                    <span key={i}>{p.t}</span>
-                  ),
-                )}
-                {!done && <span aria-hidden="true" className="ml-0.5 inline-block h-4 w-[2px] translate-y-0.5 animate-dv-blink bg-dv-gold-bright" />}
-              </span>
+              <FalaRolo>
+                <span aria-live="polite" className="block min-h-[6.2rem] text-pretty font-body text-[17px] leading-relaxed text-dv-porcelain">
+                  {trechos(texto, shown).map((p, i) =>
+                    p.forte ? (
+                      <strong key={i} className="font-display font-semibold uppercase tracking-[0.08em] text-dv-gold-bright">
+                        {p.t}
+                      </strong>
+                    ) : (
+                      <span key={i}>{p.t}</span>
+                    ),
+                  )}
+                  {!done && <span aria-hidden="true" className="ml-0.5 inline-block h-4 w-[2px] translate-y-0.5 animate-dv-blink bg-dv-gold-bright" />}
+                </span>
+              </FalaRolo>
               <span className="mt-3 flex items-center gap-3" aria-hidden="true">
                 <span className="dv-label dv-tabular text-[10px] text-dv-text-3">
                   {String(index + 1).padStart(2, '0')}/{String(total).padStart(2, '0')}

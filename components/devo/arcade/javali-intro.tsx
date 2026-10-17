@@ -10,6 +10,7 @@ import { formatDuration, useNow } from '../hooks'
 import { useDevo } from '../state/devo-store'
 import { usePlayerText } from '../state/player-text'
 import { MARBLE_INK } from './sala-marble'
+import { FalaRolo } from '@/components/devo/intro/vn'
 
 /** Expressão do Javali (sprites OC do mapa de retratos em lib/devo/npcs.ts). */
 type Frame = Expressao
@@ -159,9 +160,11 @@ export function JavaliIntro() {
         <button type="button" onClick={advance} className="dv-focus group relative isolate mx-auto flex w-full max-w-xl flex-col gap-2 p-4 text-left" style={{ '--dv-cut': '14px' } as CSSProperties}>
           <span aria-hidden="true" className="dv-cut-diag absolute inset-0 -z-10 bg-[linear-gradient(135deg,var(--dv-gold),var(--dv-gold-deep)_45%,var(--dv-line-strong))]" />
           <span aria-hidden="true" className="dv-cut-diag absolute inset-px -z-10 bg-[linear-gradient(180deg,var(--dv-ink-3),var(--dv-ink)_90%)]" style={{ '--dv-cut': '13.6px' } as CSSProperties} />
-          <span key={index} className="animate-dv-fade font-body text-[17px] leading-relaxed text-dv-text">
-            {say(step.text)}
-          </span>
+          <FalaRolo>
+            <span key={index} className="animate-dv-fade font-body text-[17px] leading-relaxed text-dv-text">
+              {say(step.text)}
+            </span>
+          </FalaRolo>
           <span className="flex items-center justify-between gap-3">
             <span aria-hidden="true" className="flex gap-1">
               {SCRIPT.map((_, i) => (

@@ -19,7 +19,7 @@ import { EntradaButton } from '../landing/entrada-button'
 import { GlyphCard, GlyphSpark, toRoman } from '../kit/glyphs'
 import { PrologueStage } from './prologue-stage'
 import { FALL_IMPACT_MS } from './theater-fall'
-import { AdvanceIndicator, ChoiceHeader, ChoiceStrip, DialogueShell, SpeakerPlate, VnTopBar, useTypewriter } from './vn'
+import { AdvanceIndicator, ChoiceHeader, ChoiceStrip, DialogueShell, FalaRolo, SpeakerPlate, VnTopBar, useTypewriter } from './vn'
 
 const CHAR_MS = 28
 const FIRE_STAGES: StageId[] = ['fire', 'rise']
@@ -578,16 +578,18 @@ export function PrologueScreen({
               <DialogueShell tone={speaker === 'melissa' ? 'cobalt' : 'gold'}>
                 {speaker && <SpeakerPlate key={speaker} name={SPEAKER_NAME[speaker]} tone={SPEAKER_TONE[speaker]} />}
                 <span className={cn('block px-6 pb-3', speaker ? 'pt-7' : 'pt-5 text-center')}>
-                  <span
-                    aria-live="polite"
-                    className={cn(
-                      'block min-h-[3.25rem] text-pretty font-body leading-relaxed text-dv-text',
-                      speaker ? 'text-[17px]' : 'text-[17px] italic text-dv-text-2',
-                    )}
-                  >
-                    {text.slice(0, shown)}
-                    {!done && <span aria-hidden="true" className="ml-0.5 inline-block h-4 w-[2px] translate-y-0.5 animate-dv-blink bg-dv-porcelain" />}
-                  </span>
+                  <FalaRolo>
+                    <span
+                      aria-live="polite"
+                      className={cn(
+                        'block min-h-[3.25rem] text-pretty font-body leading-relaxed text-dv-text',
+                        speaker ? 'text-[17px]' : 'text-[17px] italic text-dv-text-2',
+                      )}
+                    >
+                      {text.slice(0, shown)}
+                      {!done && <span aria-hidden="true" className="ml-0.5 inline-block h-4 w-[2px] translate-y-0.5 animate-dv-blink bg-dv-porcelain" />}
+                    </span>
+                  </FalaRolo>
                   <span className={cn('mt-1.5 flex items-center', speaker ? 'justify-between' : 'justify-center')}>
                     {speaker && (
                       <span aria-hidden="true" className="dv-label text-[10px] text-dv-text-3">

@@ -8,7 +8,7 @@ import { cn } from '@/lib/utils'
 import { useAdvanceKeys } from '../hooks'
 import { useBackHandler } from '../use-back-handler'
 import { GlyphDiamond, GlyphHourglass, GlyphKeyhole } from '../kit/glyphs'
-import { AdvanceIndicator, ChoiceHeader, ChoiceStrip, DialogueShell, SpeakerPlate, VnTopBar, useTypewriter } from '../intro/vn'
+import { AdvanceIndicator, ChoiceHeader, ChoiceStrip, DialogueShell, FalaRolo, SpeakerPlate, VnTopBar, useTypewriter } from '../intro/vn'
 import { callName, useDevo } from '../state/devo-store'
 import { usePlayerText } from '../state/player-text'
 import { aplicarEfeito, concluirCena, escolher, lerCena, salvarPasso } from './cliente'
@@ -320,7 +320,7 @@ export function CenaDialogo({
       {/* Véu inferior: o texto sempre sobre fundo escuro. */}
       <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-[48%] bg-gradient-to-t from-black/90 via-black/55 to-transparent" />
 
-      <div ref={setColuna} className="absolute inset-x-0 bottom-0 z-20 mx-auto flex w-full max-w-3xl flex-col gap-2.5 px-4 pb-[max(env(safe-area-inset-bottom),1.25rem)] lg:pb-10">
+      <div ref={setColuna} className="devo-scroll absolute inset-x-0 bottom-0 z-20 mx-auto flex max-h-[calc(100dvh-5rem)] w-full max-w-3xl flex-col gap-2.5 overflow-y-auto overscroll-contain px-4 pb-[max(env(safe-area-inset-bottom),1.25rem)] pt-2 lg:pb-10">
         {selo && <SeloEfeito key={selo.key} selo={selo} />}
 
         {erro && (
@@ -408,10 +408,12 @@ function Caixa({
         <DialogueShell tone={passo.quem === 'melissa' ? 'cobalt' : 'gold'}>
           <SpeakerPlate key={placa} name={placa} title={eu ? 'você' : passo.nome ? undefined : m?.titulo} tone={eu ? 'gold' : passo.quem === 'melissa' ? 'cobalt' : 'void'} />
           <span className="block px-6 pb-3 pt-7">
-            <span aria-live="polite" className="block min-h-[3.25rem] text-pretty font-body text-[17px] leading-relaxed text-dv-text">
-              <TextoRico texto={texto} shown={shown} />
-              {cursor}
-            </span>
+            <FalaRolo>
+              <span aria-live="polite" className="block min-h-[3.25rem] text-pretty font-body text-[17px] leading-relaxed text-dv-text">
+                <TextoRico texto={texto} shown={shown} />
+                {cursor}
+              </span>
+            </FalaRolo>
             <span className="mt-1.5 flex justify-end">
               <AdvanceIndicator visible={done} tone={eu ? 'gold' : 'cobalt'} />
             </span>
@@ -425,10 +427,12 @@ function Caixa({
           <span className="flex items-stretch gap-2 px-4 pb-3 pt-5">
             <Colchete lado="esq" />
             <span className="flex-1">
-              <span aria-live="polite" className="block min-h-[3.25rem] text-pretty text-center font-body text-[17px] italic leading-relaxed text-dv-text-2">
-                <TextoRico texto={texto} shown={shown} />
-                {cursor}
-              </span>
+              <FalaRolo>
+                <span aria-live="polite" className="block min-h-[3.25rem] text-pretty text-center font-body text-[17px] italic leading-relaxed text-dv-text-2">
+                  <TextoRico texto={texto} shown={shown} />
+                  {cursor}
+                </span>
+              </FalaRolo>
               <span className="mt-1 flex justify-center">
                 <AdvanceIndicator visible={done} />
               </span>
@@ -445,12 +449,14 @@ function Caixa({
               <GlyphDiamond className="size-2 text-dv-amethyst" filled />
               {nome} · pensa
             </span>
-            <span aria-live="polite" className="block min-h-[3.25rem] text-pretty font-body text-[17px] italic leading-relaxed text-dv-text">
-              <span aria-hidden="true" className="mr-0.5 font-display text-[22px] leading-none text-dv-gold/70">“</span>
-              <TextoRico texto={texto} shown={shown} />
-              {done && <span aria-hidden="true" className="ml-0.5 font-display text-[22px] leading-none text-dv-gold/70">”</span>}
-              {cursor}
-            </span>
+            <FalaRolo>
+              <span aria-live="polite" className="block min-h-[3.25rem] text-pretty font-body text-[17px] italic leading-relaxed text-dv-text">
+                <span aria-hidden="true" className="mr-0.5 font-display text-[22px] leading-none text-dv-gold/70">“</span>
+                <TextoRico texto={texto} shown={shown} />
+                {done && <span aria-hidden="true" className="ml-0.5 font-display text-[22px] leading-none text-dv-gold/70">”</span>}
+                {cursor}
+              </span>
+            </FalaRolo>
             <span className="mt-1 flex justify-end">
               <AdvanceIndicator visible={done} />
             </span>

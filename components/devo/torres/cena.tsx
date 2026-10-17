@@ -4,7 +4,7 @@ import { type CSSProperties, useEffect, useMemo, useRef, useState } from 'react'
 import { playSfx } from '@/lib/devo/audio'
 import type { Arte, Efeito, Ilustracao, NpcRef, Opcao, Passo } from '@/lib/devo/torres/tipos'
 import { cn } from '@/lib/utils'
-import { AdvanceIndicator, ChoiceHeader, ChoiceStrip, DialogueShell, SpeakerPlate, useTypewriter } from '../intro/vn'
+import { AdvanceIndicator, ChoiceHeader, ChoiceStrip, DialogueShell, FalaRolo, SpeakerPlate, useTypewriter } from '../intro/vn'
 import { FrameCorners, GlyphDiamond, Kicker, Lantern, NpcAnchor } from '../kit'
 import { usePlayerText } from '../state/player-text'
 import { MAPA_W, starPath, TorreArte, TorresDefs } from './arte'
@@ -308,18 +308,20 @@ export function Cena({ passos, npc, titulo, kicker, fundo = 'torre', arteFundo =
             <DialogueShell tone={falante?.tone === 'system' ? 'cobalt' : falante ? 'gold' : 'neutral'} className="min-h-[136px] px-5 pb-4 pt-7">
               {falante && <SpeakerPlate name={falante.nome} title={falante.titulo} tone={falante.tone} />}
               <span className="sr-only">{texto}</span>
-              <span
-                aria-hidden="true"
-                className={cn(
-                  'block min-h-[4.5em] pt-4 font-body text-[17px] leading-relaxed',
-                  passo.tipo === 'jogador' && 'italic text-dv-text',
-                  passo.tipo === 'narra' && 'pt-1 text-center italic text-dv-text-2',
-                  passo.tipo === 'sistema' && 'text-dv-cobalt-text',
-                  passo.tipo === 'fala' && 'text-dv-text',
-                )}
-              >
-                <Falado texto={texto.slice(0, tw.shown)} />
-              </span>
+              <FalaRolo>
+                <span
+                  aria-hidden="true"
+                  className={cn(
+                    'block min-h-[4.5em] pt-4 font-body text-[17px] leading-relaxed',
+                    passo.tipo === 'jogador' && 'italic text-dv-text',
+                    passo.tipo === 'narra' && 'pt-1 text-center italic text-dv-text-2',
+                    passo.tipo === 'sistema' && 'text-dv-cobalt-text',
+                    passo.tipo === 'fala' && 'text-dv-text',
+                  )}
+                >
+                  <Falado texto={texto.slice(0, tw.shown)} />
+                </span>
+              </FalaRolo>
               <span className="mt-1 flex justify-end">
                 <AdvanceIndicator visible={tw.done} label={i + 1 < fila.length ? undefined : 'Fim'} tone="gold" />
               </span>

@@ -13,7 +13,7 @@ import { GlyphSpark, toRoman } from '../kit/glyphs'
 import { NpcAnchor, NpcMedallion } from '../kit/npc-anchor'
 import { SceneBackdrop } from '../kit/scene'
 import { TutorialVisualPanel } from './tutorial-visuals'
-import { AdvanceIndicator, DialogueShell, SpeakerPlate, VnTopBar, useTypewriter } from './vn'
+import { AdvanceIndicator, DialogueShell, FalaRolo, SpeakerPlate, VnTopBar, useTypewriter } from './vn'
 
 const CHAR_MS = 24
 
@@ -202,10 +202,12 @@ export function IntroScreen({
                   avatar={<PlateAvatar speaker={line.speaker} expression={line.expression} />}
                 />
                 <span className="block px-6 pb-3 pt-8 sm:px-8">
-                  <span className="block min-h-[4.5rem] text-pretty font-body text-[17px] leading-relaxed text-dv-text sm:text-lg" aria-live="polite">
-                    {line.text.slice(0, shown)}
-                    {!done && <span className="ml-0.5 inline-block h-4 w-[2px] translate-y-0.5 animate-dv-blink bg-dv-gold-bright" aria-hidden="true" />}
-                  </span>
+                  <FalaRolo>
+                    <span className="block min-h-[4.5rem] text-pretty font-body text-[17px] leading-relaxed text-dv-text sm:text-lg" aria-live="polite">
+                      {line.text.slice(0, shown)}
+                      {!done && <span className="ml-0.5 inline-block h-4 w-[2px] translate-y-0.5 animate-dv-blink bg-dv-gold-bright" aria-hidden="true" />}
+                    </span>
+                  </FalaRolo>
                   <span className="mt-3 flex items-center gap-3" aria-hidden="true">
                     <span className="dv-label dv-tabular text-[10px] text-dv-text-3">
                       {String(index + 1).padStart(2, '0')}/{String(total).padStart(2, '0')}
