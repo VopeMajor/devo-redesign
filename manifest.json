@@ -1,0 +1,108 @@
+{
+  "pedido": "cal-halloween",
+  "titulo": "Calendário — Halloween",
+  "tipo": "ilustracao",
+  "tamanho_final": 1024,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 10511,
+      "passos": null,
+      "segundos": 1.3,
+      "neuronios_estimados": 1364,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "cal-halloween--v01--1024.png",
+          "bytes": 1138033
+        },
+        {
+          "arquivo": "cal-halloween--v01--1024.webp",
+          "bytes": 238802
+        },
+        {
+          "arquivo": "cal-halloween--v01--768.webp",
+          "bytes": 86318
+        },
+        {
+          "arquivo": "cal-halloween--v01--512.webp",
+          "bytes": 41842
+        },
+        {
+          "arquivo": "cal-halloween--v01--256.webp",
+          "bytes": 14056
+        }
+      ],
+      "segundos_pos": 1.1,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 10512,
+      "passos": null,
+      "segundos": 1.6,
+      "neuronios_estimados": 1364,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "cal-halloween--v02--1024.png",
+          "bytes": 1099767
+        },
+        {
+          "arquivo": "cal-halloween--v02--1024.webp",
+          "bytes": 239726
+        },
+        {
+          "arquivo": "cal-halloween--v02--768.webp",
+          "bytes": 89362
+        },
+        {
+          "arquivo": "cal-halloween--v02--512.webp",
+          "bytes": 45236
+        },
+        {
+          "arquivo": "cal-halloween--v02--256.webp",
+          "bytes": 14920
+        }
+      ],
+      "segundos_pos": 1.2,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 10513,
+      "passos": null,
+      "segundos": 1.7,
+      "neuronios_estimados": 1364,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "cal-halloween--v03--1024.png",
+          "bytes": 1019914
+        },
+        {
+          "arquivo": "cal-halloween--v03--1024.webp",
+          "bytes": 204048
+        },
+        {
+          "arquivo": "cal-halloween--v03--768.webp",
+          "bytes": 69536
+        },
+        {
+          "arquivo": "cal-halloween--v03--512.webp",
+          "bytes": 37194
+        },
+        {
+          "arquivo": "cal-halloween--v03--256.webp",
+          "bytes": 13152
+        }
+      ],
+      "segundos_pos": 1.2,
+      "avisos": []
+    }
+  ]
+}

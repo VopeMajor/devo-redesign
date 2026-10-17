@@ -1,0 +1,9 @@
+[cal-halloween] v01: @cf/black-forest-labs/flux-2-klein-9b seed=10511 1024x640 passos=None (~1,364 neurônios)
+    ok em 1.3s, 1024x640
+[cal-halloween] v02: @cf/black-forest-labs/flux-2-klein-9b seed=10512 1024x640 passos=None (~1,364 neurônios)
+    ok em 1.6s, 1024x640
+[cal-halloween] v03: @cf/black-forest-labs/flux-2-klein-9b seed=10513 1024x640 passos=None (~1,364 neurônios)
+    ok em 1.7s, 1024x640
+[cal-halloween] v01: mantido; sem avisos
+[cal-halloween] v02: mantido; sem avisos
+[cal-halloween] v03: mantido; sem avisos
