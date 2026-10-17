@@ -1,0 +1,121 @@
+{
+  "pedido": "poco-lixo-dente",
+  "titulo": "Poço — lixo-dente",
+  "tipo": "emblema",
+  "tamanho_final": 1024,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 11151,
+      "passos": null,
+      "segundos": 15.0,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "ilhas_removidas": 2,
+      "arquivos": [
+        {
+          "arquivo": "poco-lixo-dente--v01--1024.png",
+          "bytes": 548296
+        },
+        {
+          "arquivo": "poco-lixo-dente--v01--1024.webp",
+          "bytes": 86652
+        },
+        {
+          "arquivo": "poco-lixo-dente--v01--512.webp",
+          "bytes": 26532
+        },
+        {
+          "arquivo": "poco-lixo-dente--v01--256.webp",
+          "bytes": 12176
+        },
+        {
+          "arquivo": "poco-lixo-dente--v01--128.webp",
+          "bytes": 5426
+        },
+        {
+          "arquivo": "poco-lixo-dente--v01--64.webp",
+          "bytes": 2600
+        }
+      ],
+      "segundos_pos": 35.2,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 11152,
+      "passos": null,
+      "segundos": 14.4,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "poco-lixo-dente--v02--1024.png",
+          "bytes": 504397
+        },
+        {
+          "arquivo": "poco-lixo-dente--v02--1024.webp",
+          "bytes": 79180
+        },
+        {
+          "arquivo": "poco-lixo-dente--v02--512.webp",
+          "bytes": 25088
+        },
+        {
+          "arquivo": "poco-lixo-dente--v02--256.webp",
+          "bytes": 10594
+        },
+        {
+          "arquivo": "poco-lixo-dente--v02--128.webp",
+          "bytes": 5104
+        },
+        {
+          "arquivo": "poco-lixo-dente--v02--64.webp",
+          "bytes": 2322
+        }
+      ],
+      "segundos_pos": 29.3,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 11153,
+      "passos": null,
+      "segundos": 24.1,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "poco-lixo-dente--v03--1024.png",
+          "bytes": 607249
+        },
+        {
+          "arquivo": "poco-lixo-dente--v03--1024.webp",
+          "bytes": 96372
+        },
+        {
+          "arquivo": "poco-lixo-dente--v03--512.webp",
+          "bytes": 28318
+        },
+        {
+          "arquivo": "poco-lixo-dente--v03--256.webp",
+          "bytes": 12002
+        },
+        {
+          "arquivo": "poco-lixo-dente--v03--128.webp",
+          "bytes": 5786
+        },
+        {
+          "arquivo": "poco-lixo-dente--v03--64.webp",
+          "bytes": 2572
+        }
+      ],
+      "segundos_pos": 29.2,
+      "avisos": []
+    }
+  ]
+}
