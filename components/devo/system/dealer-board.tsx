@@ -772,8 +772,9 @@ function StatusControl({ vote: v, pending, onPick }: { vote: StaffVote; pending:
           )
         })}
       </div>
-      <div className={cn('mt-2 flex items-center gap-2 border-t border-dashed border-in-line pt-2.5', sealed && 'hidden')}>
-        <span className="mr-auto font-mono text-[10px] uppercase tracking-[0.16em] text-in-fg-3">Interromper</span>
+      {/* Em tela estreita (ou fonte grande no Android) o rótulo vai para cima e os dois botões dividem a linha. */}
+      <div className={cn('mt-2 grid grid-cols-2 gap-2 border-t border-dashed border-in-line pt-2.5', sealed && 'hidden')}>
+        <span className="col-span-2 font-mono text-[10px] uppercase tracking-[0.16em] text-in-fg-3">Interromper</span>
         {STATUS_BREAK.map((st) => {
           const on = v.status === st
           return (
@@ -785,7 +786,7 @@ function StatusControl({ vote: v, pending, onPick }: { vote: StaffVote; pending:
               disabled={pending !== null}
               onClick={() => !on && onPick(st)}
               className={cn(
-                'dv-focus dv-cut-diag inline-flex min-h-11 items-center gap-2 px-3 font-mono text-[10px] uppercase tracking-[0.12em] transition-colors disabled:cursor-wait',
+                'dv-focus dv-cut-diag inline-flex min-h-11 min-w-0 items-center justify-center gap-2 px-2 font-mono text-[10px] uppercase tracking-[0.12em] transition-colors disabled:cursor-wait',
                 on
                   ? st === 'falha'
                     ? 'bg-dv-blood text-white'
@@ -837,7 +838,7 @@ function GroupLinkField({ vote: v, pending, onSave }: { vote: StaffVote; pending
         </div>
       ) : (
         <form
-          className="mt-2 flex items-end gap-2"
+          className="mt-2 flex flex-col gap-2"
           onSubmit={(e) => {
             e.preventDefault()
             if (!ok || pending) return
@@ -857,7 +858,7 @@ function GroupLinkField({ vote: v, pending, onSave }: { vote: StaffVote; pending
               maxLength={200}
             />
           </div>
-          <RecButton surface="paper" type="submit" size="sm" disabled={!ok} loading={pending} className="shrink-0">
+          <RecButton surface="paper" type="submit" size="sm" disabled={!ok} loading={pending} className="self-end">
             Salvar link
           </RecButton>
         </form>
