@@ -1909,14 +1909,31 @@ if (want('narrativa')) {
   const textoDlg = (page) => dlg(page).evaluate((el) => el.textContent ?? '', null, { timeout: 2000 }).catch(() => '')
   /** Avança a cena até o texto aparecer (por inteiro); escolhas no caminho: a primeira, ou `pick` por rótulo. */
   async function ate(page, alvo, { pick = {}, max = 400 } = {}) {
+    let retomou = false
+    let ultimo = ''
     for (let i = 0; i < max; i++) {
       const t = await textoDlg(page)
       if (!t) {
         // Sem cena aberta: não adianta apertar teclas na home.
         await wait(500)
-        if (!(await textoDlg(page))) break
+        if (!(await textoDlg(page))) {
+          // A cena fechou no meio (diagnóstico): registra o que havia na tela e retoma pelo cartão "Ir para casa"
+          // (o servidor guarda o passo), uma vez por chamada.
+          const casa = page.getByRole('button', { name: 'Ir para casa' }).first()
+          if (!retomou && (await casa.count())) {
+            retomou = true
+            const dialogs = await page.locator('[role=dialog]').evaluateAll((els) => els.map((e) => e.getAttribute('aria-label'))).catch(() => [])
+            const saida = await page.evaluate(() => document.documentElement.dataset.devoCenaSaida ?? 'sem motivo (fim ou desmontada)').catch(() => '?')
+            manifest.errors.push({ step: 'narrativa-cena-fechou', error: `cena fechou antes de "${alvo}" (último: ${ultimo.slice(-120)}); diálogos na tela: ${JSON.stringify(dialogs)}; saída: ${saida}; url ${page.url()}` })
+            await tryClick(casa, 4000)
+            await wait(2600)
+            continue
+          }
+          break
+        }
         continue
       }
+      ultimo = t
       if (/\*\s*som\b/i.test(t)) manifest.errors.push({ step: 'narrativa-deixa-como-fala', error: `deixa de som apareceu como texto: ${t.slice(0, 160)}` })
       if (typeof alvo === 'string' ? t.includes(alvo) : alvo.test(t)) {
         await wait(1600)

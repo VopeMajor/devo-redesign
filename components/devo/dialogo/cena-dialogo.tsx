@@ -316,7 +316,12 @@ export function CenaDialogo({
     return () => window.clearTimeout(t)
   }, [chaveAtual, atual?.tipo])
   // Voltar do aparelho = Sair (o passo fica salvo para retomar).
-  useBackHandler(true, () => onSair?.())
+  // Motivo da saída fica marcado no <html> (data-devo-cena-saida) para diagnóstico das capturas.
+  const sair = (motivo: string) => {
+    document.documentElement.dataset.devoCenaSaida = `${cenaId}:${motivo}`
+    onSair?.()
+  }
+  useBackHandler(true, () => sair('voltar'))
 
   const escolherOpcao = async (passo: Extract<Passo, { tipo: 'escolha' }>, i: number) => {
     if (!cena || ocupado) return
@@ -367,7 +372,7 @@ export function CenaDialogo({
 
       <VnTopBar
         skipLabel="Sair"
-        onSkip={() => onSair?.()}
+        onSkip={() => sair('botao-sair')}
         chapter={
           <p className="dv-label flex flex-col gap-0.5 text-[10px] text-dv-text-2">
             {cena?.capitulo && <span className="text-dv-gold">{cena.capitulo}</span>}
@@ -398,7 +403,7 @@ export function CenaDialogo({
           <DialogueShell tone="neutral">
             <span className="flex flex-col items-start gap-3 px-6 py-5">
               <span role="alert" className="font-body text-[16px] text-dv-text">{erro}</span>
-              <button type="button" onClick={() => onSair?.()} className="dv-focus dv-label min-h-11 border border-dv-line-strong px-4 text-[11px] text-dv-text-2 hover:text-dv-text">
+              <button type="button" onClick={() => sair('erro')} className="dv-focus dv-label min-h-11 border border-dv-line-strong px-4 text-[11px] text-dv-text-2 hover:text-dv-text">
                 Fechar
               </button>
             </span>
