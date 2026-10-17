@@ -1,0 +1,12 @@
+[moldura-olho-arcano] v01: @cf/black-forest-labs/flux-2-klein-4b seed=6031 1024x1024 passos=None (~104 neurônios)
+    ok em 23.0s, 1024x1024
+[moldura-olho-arcano] v02: @cf/black-forest-labs/flux-2-klein-4b seed=6032 1024x1024 passos=None (~104 neurônios)
+    ok em 24.5s, 1024x1024
+[moldura-olho-arcano] v03: @cf/black-forest-labs/flux-2-klein-4b seed=6033 1024x1024 passos=None (~104 neurônios)
+    ok em 31.4s, 1024x1024
+[moldura-olho-arcano] v04: @cf/black-forest-labs/flux-2-klein-4b seed=6034 1024x1024 passos=None (~104 neurônios)
+    ok em 20.5s, 1024x1024
+[moldura-olho-arcano] v01: rembg:birefnet-general; 3.3% do ornamento ficou fora do quadro — reduza a janela ou peça mais margem no prompt
+[moldura-olho-arcano] v02: rembg:birefnet-general; 1.1% do ornamento ficou fora do quadro — reduza a janela ou peça mais margem no prompt
+[moldura-olho-arcano] v03: rembg:birefnet-general; sem avisos
+[moldura-olho-arcano] v04: rembg:birefnet-general; 1.9% do ornamento ficou fora do quadro — reduza a janela ou peça mais margem no prompt

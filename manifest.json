@@ -1,0 +1,251 @@
+{
+  "pedido": "moldura-olho-arcano",
+  "titulo": "Olho do Arcano — avatar",
+  "tipo": "moldura",
+  "tamanho_final": 1024,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 6031,
+      "passos": null,
+      "segundos": 23.0,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "miolo_aberto_por_cor": true,
+      "ilhas_removidas": 0,
+      "janela": {
+        "forma": "circulo",
+        "centro_px": [
+          512.0,
+          512.0
+        ],
+        "raio_px": [
+          256.0,
+          256.0
+        ],
+        "raio_fracao": [
+          0.25,
+          0.25
+        ]
+      },
+      "reencaixe": {
+        "escala": 1.2929,
+        "cobertura_aro": 1.0
+      },
+      "ornamento_cortado": 0.0335,
+      "arquivos": [
+        {
+          "arquivo": "moldura-olho-arcano--v01--1024.png",
+          "bytes": 967097
+        },
+        {
+          "arquivo": "moldura-olho-arcano--v01--1024.webp",
+          "bytes": 169258
+        },
+        {
+          "arquivo": "moldura-olho-arcano--v01--512.webp",
+          "bytes": 69230
+        },
+        {
+          "arquivo": "moldura-olho-arcano--v01--256.webp",
+          "bytes": 26618
+        },
+        {
+          "arquivo": "moldura-olho-arcano--v01--96.webp",
+          "bytes": 6650
+        },
+        {
+          "arquivo": "moldura-olho-arcano--v01--48.webp",
+          "bytes": 2478
+        }
+      ],
+      "segundos_pos": 36.5,
+      "avisos": [
+        "3.3% do ornamento ficou fora do quadro — reduza a janela ou peça mais margem no prompt"
+      ]
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 6032,
+      "passos": null,
+      "segundos": 24.5,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "miolo_aberto_por_cor": true,
+      "ilhas_removidas": 0,
+      "janela": {
+        "forma": "circulo",
+        "centro_px": [
+          512.0,
+          512.0
+        ],
+        "raio_px": [
+          256.0,
+          256.0
+        ],
+        "raio_fracao": [
+          0.25,
+          0.25
+        ]
+      },
+      "reencaixe": {
+        "escala": 1.1963,
+        "cobertura_aro": 1.0
+      },
+      "ornamento_cortado": 0.0114,
+      "arquivos": [
+        {
+          "arquivo": "moldura-olho-arcano--v02--1024.png",
+          "bytes": 839889
+        },
+        {
+          "arquivo": "moldura-olho-arcano--v02--1024.webp",
+          "bytes": 149582
+        },
+        {
+          "arquivo": "moldura-olho-arcano--v02--512.webp",
+          "bytes": 63666
+        },
+        {
+          "arquivo": "moldura-olho-arcano--v02--256.webp",
+          "bytes": 25162
+        },
+        {
+          "arquivo": "moldura-olho-arcano--v02--96.webp",
+          "bytes": 6704
+        },
+        {
+          "arquivo": "moldura-olho-arcano--v02--48.webp",
+          "bytes": 2498
+        }
+      ],
+      "segundos_pos": 31.2,
+      "avisos": [
+        "1.1% do ornamento ficou fora do quadro — reduza a janela ou peça mais margem no prompt"
+      ]
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 6033,
+      "passos": null,
+      "segundos": 31.4,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "miolo_aberto_por_cor": true,
+      "ilhas_removidas": 0,
+      "janela": {
+        "forma": "circulo",
+        "centro_px": [
+          512.0,
+          512.0
+        ],
+        "raio_px": [
+          256.0,
+          256.0
+        ],
+        "raio_fracao": [
+          0.25,
+          0.25
+        ]
+      },
+      "reencaixe": {
+        "escala": 1.219,
+        "cobertura_aro": 1.0
+      },
+      "ornamento_cortado": 0.0057,
+      "arquivos": [
+        {
+          "arquivo": "moldura-olho-arcano--v03--1024.png",
+          "bytes": 883914
+        },
+        {
+          "arquivo": "moldura-olho-arcano--v03--1024.webp",
+          "bytes": 166760
+        },
+        {
+          "arquivo": "moldura-olho-arcano--v03--512.webp",
+          "bytes": 67678
+        },
+        {
+          "arquivo": "moldura-olho-arcano--v03--256.webp",
+          "bytes": 26358
+        },
+        {
+          "arquivo": "moldura-olho-arcano--v03--96.webp",
+          "bytes": 7046
+        },
+        {
+          "arquivo": "moldura-olho-arcano--v03--48.webp",
+          "bytes": 2614
+        }
+      ],
+      "segundos_pos": 31.3,
+      "avisos": []
+    },
+    {
+      "nome": "v04",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 6034,
+      "passos": null,
+      "segundos": 20.5,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "miolo_aberto_por_cor": true,
+      "ilhas_removidas": 0,
+      "janela": {
+        "forma": "circulo",
+        "centro_px": [
+          512.0,
+          512.0
+        ],
+        "raio_px": [
+          256.0,
+          256.0
+        ],
+        "raio_fracao": [
+          0.25,
+          0.25
+        ]
+      },
+      "reencaixe": {
+        "escala": 1.4302,
+        "cobertura_aro": 1.0
+      },
+      "ornamento_cortado": 0.0185,
+      "arquivos": [
+        {
+          "arquivo": "moldura-olho-arcano--v04--1024.png",
+          "bytes": 911166
+        },
+        {
+          "arquivo": "moldura-olho-arcano--v04--1024.webp",
+          "bytes": 164854
+        },
+        {
+          "arquivo": "moldura-olho-arcano--v04--512.webp",
+          "bytes": 68692
+        },
+        {
+          "arquivo": "moldura-olho-arcano--v04--256.webp",
+          "bytes": 26860
+        },
+        {
+          "arquivo": "moldura-olho-arcano--v04--96.webp",
+          "bytes": 6970
+        },
+        {
+          "arquivo": "moldura-olho-arcano--v04--48.webp",
+          "bytes": 2572
+        }
+      ],
+      "segundos_pos": 31.0,
+      "avisos": [
+        "1.9% do ornamento ficou fora do quadro — reduza a janela ou peça mais margem no prompt"
+      ]
+    }
+  ]
+}
