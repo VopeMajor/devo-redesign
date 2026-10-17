@@ -1,0 +1,120 @@
+{
+  "pedido": "arcano-sigilo-eremita",
+  "titulo": "Arcano — eremita (sigilo)",
+  "tipo": "emblema",
+  "tamanho_final": 1024,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 13091,
+      "passos": null,
+      "segundos": 11.8,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "arcano-sigilo-eremita--v01--1024.png",
+          "bytes": 447688
+        },
+        {
+          "arquivo": "arcano-sigilo-eremita--v01--1024.webp",
+          "bytes": 99146
+        },
+        {
+          "arquivo": "arcano-sigilo-eremita--v01--512.webp",
+          "bytes": 34922
+        },
+        {
+          "arquivo": "arcano-sigilo-eremita--v01--256.webp",
+          "bytes": 14534
+        },
+        {
+          "arquivo": "arcano-sigilo-eremita--v01--128.webp",
+          "bytes": 6374
+        },
+        {
+          "arquivo": "arcano-sigilo-eremita--v01--64.webp",
+          "bytes": 2486
+        }
+      ],
+      "segundos_pos": 23.0,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 13092,
+      "passos": null,
+      "segundos": 11.8,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "arcano-sigilo-eremita--v02--1024.png",
+          "bytes": 439624
+        },
+        {
+          "arquivo": "arcano-sigilo-eremita--v02--1024.webp",
+          "bytes": 71200
+        },
+        {
+          "arquivo": "arcano-sigilo-eremita--v02--512.webp",
+          "bytes": 24864
+        },
+        {
+          "arquivo": "arcano-sigilo-eremita--v02--256.webp",
+          "bytes": 10246
+        },
+        {
+          "arquivo": "arcano-sigilo-eremita--v02--128.webp",
+          "bytes": 4708
+        },
+        {
+          "arquivo": "arcano-sigilo-eremita--v02--64.webp",
+          "bytes": 1930
+        }
+      ],
+      "segundos_pos": 18.5,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 13093,
+      "passos": null,
+      "segundos": 13.2,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "arcano-sigilo-eremita--v03--1024.png",
+          "bytes": 394207
+        },
+        {
+          "arquivo": "arcano-sigilo-eremita--v03--1024.webp",
+          "bytes": 84872
+        },
+        {
+          "arquivo": "arcano-sigilo-eremita--v03--512.webp",
+          "bytes": 31096
+        },
+        {
+          "arquivo": "arcano-sigilo-eremita--v03--256.webp",
+          "bytes": 13312
+        },
+        {
+          "arquivo": "arcano-sigilo-eremita--v03--128.webp",
+          "bytes": 5780
+        },
+        {
+          "arquivo": "arcano-sigilo-eremita--v03--64.webp",
+          "bytes": 2168
+        }
+      ],
+      "segundos_pos": 14.1,
+      "avisos": []
+    }
+  ]
+}
