@@ -1,0 +1,170 @@
+{
+  "pedido": "mini-banquete-javali",
+  "titulo": "banquete-javali — miniperfil (quadrada)",
+  "tipo": "moldura",
+  "tamanho_final": 1024,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 4241,
+      "passos": null,
+      "segundos": 21.4,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "miolo_aberto_por_cor": true,
+      "janela": {
+        "forma": "quadrado",
+        "centro_px": [
+          512.0,
+          512.0
+        ],
+        "lado_px": 560.1,
+        "raio_canto_px": 41.0,
+        "lado_fracao": 0.547
+      },
+      "reencaixe": {
+        "escala": 1.2018,
+        "cobertura_aro": 1.0
+      },
+      "ornamento_cortado": 0.0091,
+      "arquivos": [
+        {
+          "arquivo": "mini-banquete-javali--v01--1024.png",
+          "bytes": 579197
+        },
+        {
+          "arquivo": "mini-banquete-javali--v01--1024.webp",
+          "bytes": 88304
+        },
+        {
+          "arquivo": "mini-banquete-javali--v01--512.webp",
+          "bytes": 32332
+        },
+        {
+          "arquivo": "mini-banquete-javali--v01--256.webp",
+          "bytes": 12988
+        },
+        {
+          "arquivo": "mini-banquete-javali--v01--96.webp",
+          "bytes": 3950
+        },
+        {
+          "arquivo": "mini-banquete-javali--v01--48.webp",
+          "bytes": 1850
+        }
+      ],
+      "segundos_pos": 33.0,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 4242,
+      "passos": null,
+      "segundos": 21.8,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "miolo_aberto_por_cor": true,
+      "janela": {
+        "forma": "quadrado",
+        "centro_px": [
+          512.0,
+          512.0
+        ],
+        "lado_px": 560.1,
+        "raio_canto_px": 41.0,
+        "lado_fracao": 0.547
+      },
+      "reencaixe": {
+        "escala": 1.2066,
+        "cobertura_aro": 1.0
+      },
+      "ornamento_cortado": 0.0246,
+      "arquivos": [
+        {
+          "arquivo": "mini-banquete-javali--v02--1024.png",
+          "bytes": 663138
+        },
+        {
+          "arquivo": "mini-banquete-javali--v02--1024.webp",
+          "bytes": 102940
+        },
+        {
+          "arquivo": "mini-banquete-javali--v02--512.webp",
+          "bytes": 38876
+        },
+        {
+          "arquivo": "mini-banquete-javali--v02--256.webp",
+          "bytes": 16096
+        },
+        {
+          "arquivo": "mini-banquete-javali--v02--96.webp",
+          "bytes": 4974
+        },
+        {
+          "arquivo": "mini-banquete-javali--v02--48.webp",
+          "bytes": 2088
+        }
+      ],
+      "segundos_pos": 31.2,
+      "avisos": [
+        "2.5% do ornamento ficou fora do quadro — reduza a janela ou peça mais margem no prompt"
+      ]
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 4243,
+      "passos": null,
+      "segundos": 26.2,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "miolo_aberto_por_cor": true,
+      "janela": {
+        "forma": "quadrado",
+        "centro_px": [
+          512.0,
+          512.0
+        ],
+        "lado_px": 560.1,
+        "raio_canto_px": 41.0,
+        "lado_fracao": 0.547
+      },
+      "reencaixe": {
+        "escala": 1.2183,
+        "cobertura_aro": 1.0
+      },
+      "ornamento_cortado": 0.0,
+      "arquivos": [
+        {
+          "arquivo": "mini-banquete-javali--v03--1024.png",
+          "bytes": 504544
+        },
+        {
+          "arquivo": "mini-banquete-javali--v03--1024.webp",
+          "bytes": 75872
+        },
+        {
+          "arquivo": "mini-banquete-javali--v03--512.webp",
+          "bytes": 29714
+        },
+        {
+          "arquivo": "mini-banquete-javali--v03--256.webp",
+          "bytes": 12762
+        },
+        {
+          "arquivo": "mini-banquete-javali--v03--96.webp",
+          "bytes": 4096
+        },
+        {
+          "arquivo": "mini-banquete-javali--v03--48.webp",
+          "bytes": 1910
+        }
+      ],
+      "segundos_pos": 29.2,
+      "avisos": []
+    }
+  ]
+}
