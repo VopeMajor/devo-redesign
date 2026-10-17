@@ -1,0 +1,6 @@
+[camada-engrenagem-bronze] v01: @cf/black-forest-labs/flux-2-klein-4b seed=9001 1024x1024 passos=None (~104 neurônios)
+    ok em 8.2s, 1024x1024
+[camada-engrenagem-bronze] v02: @cf/black-forest-labs/flux-2-klein-4b seed=9002 1024x1024 passos=None (~104 neurônios)
+    ok em 12.0s, 1024x1024
+[camada-engrenagem-bronze] v01: rembg:birefnet-general; sem avisos
+[camada-engrenagem-bronze] v02: rembg:birefnet-general; sem avisos
