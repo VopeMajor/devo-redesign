@@ -1,0 +1,62 @@
+{
+  "base": "/images/torres/mapa",
+  "tamanhos": [
+    1536,
+    1024,
+    768,
+    512
+  ],
+  "proporcao": [
+    2,
+    3
+  ],
+  "camadas": {
+    "ceu": {
+      "arquivo": "ceu-<lado>.webp",
+      "opaco": true,
+      "parallax": "fundo (move mais devagar)"
+    },
+    "ilha": {
+      "arquivo": "ilha-<lado>.webp",
+      "alfa": true
+    }
+  },
+  "pedestais": {
+    "_obs": "centro do topo de cada pedestal em fração da imagem (x da largura, y da altura); a base da torre pousa aqui. raio = meia largura do topo, em fração da largura.",
+    "principal": {
+      "x": 0.5,
+      "y": 0.352,
+      "raio": 0.045
+    },
+    "imperador": {
+      "x": 0.213,
+      "y": 0.413,
+      "raio": 0.044
+    },
+    "observatorio": {
+      "x": 0.767,
+      "y": 0.475,
+      "raio": 0.044
+    },
+    "picadeiro": {
+      "x": 0.22,
+      "y": 0.534,
+      "raio": 0.044
+    }
+  },
+  "origem": {
+    "ilha": {
+      "pedido": "mapa-ilha",
+      "variacao": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 9503,
+      "composicao": "ilha recortada, largura 1000/1024, encostada embaixo (topo em y=515 px de 1536)"
+    },
+    "ceu": {
+      "pedido": "mapa-ceu",
+      "variacao": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 9603
+    }
+  }
+}

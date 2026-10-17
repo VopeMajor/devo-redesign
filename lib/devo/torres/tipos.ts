@@ -115,17 +115,29 @@ export type Ilustracao = {
 }
 
 /** Imagem do pipeline de arte: `<arquivo>-<largura>.webp`. */
-export type ImagemPintada = { arquivo: string; larguras: number[]; aspecto: number }
+export type ImagemPintada = {
+  arquivo: string
+  /** Sufixos de tamanho disponíveis (`<arquivo>-<n>.webp`). */
+  larguras: number[]
+  aspecto: number
+  /** O número do sufixo é a altura (lado maior) em vez da largura — convenção do pipeline para o mapa. */
+  sufixo?: 'largura' | 'altura'
+  /** Espelha na horizontal (ex.: tirar a lua de trás de uma torre). */
+  espelhar?: boolean
+}
 
 /**
  * Cenário pintado do mapa (ilha com praça e pedestais, e o céu separado). Sem ele, o mapa usa o desenho vetorial.
  * `pedestais`: centro da base de cada torre, em frações [0–1] da imagem da ilha, por id de torre; `escala`
- * opcional (sem ela, a escala vem da profundidade: quanto mais ao fundo, menor).
+ * opcional (sem ela, a escala vem da profundidade: quanto mais ao fundo, menor); `afundar` (unidades do mapa)
+ * enterra a base no topo do pedestal para a torre não parecer flutuar. Céu e ilha têm o mesmo enquadramento.
  */
 export type CenarioMapa = {
   ilha: ImagemPintada
   ceu?: ImagemPintada
-  pedestais: Record<string, { x: number; y: number; escala?: number }>
+  pedestais: Record<string, { x: number; y: number; escala?: number; afundar?: number }>
+  /** Enfeites sobre o cenário (ex.: lanterna num pedestal que ficou vazio), em frações da imagem. */
+  enfeites?: { tipo: 'lanterna'; x: number; y: number }[]
 }
 
 export type ConteudoTorres = { versao: number; provisorio?: boolean; nota?: string; cenario?: CenarioMapa; torres: TorreDef[] }

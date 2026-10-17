@@ -26,10 +26,20 @@ function caixaTorre(t: TorreEstado, l: Lugar) {
 type Caixa = { x0: number; x1: number; y0: number; y1: number }
 const cruza = (a: Caixa, b: Caixa) => a.x0 < b.x1 && a.x1 > b.x0 && a.y0 < b.y1 && a.y1 > b.y0
 
-/** Onde fica a ilha pintada dentro do mapa (largura cheia, apoiada embaixo). */
+/**
+ * Onde ficam a ilha e o céu pintados (mesmo enquadramento): cobrem o mapa inteiro mantendo a proporção — se a
+ * arte é mais larga que o mapa, ajusta pela altura e corta as laterais (que já esmaecem); senão, pela largura,
+ * apoiada embaixo.
+ */
 function areaIlha(c: CenarioMapa) {
-  const h = MAPA_W / c.ilha.aspecto
-  return { x: 0, y: MAPA_H - h, w: MAPA_W, h }
+  if (MAPA_W / MAPA_H < c.ilha.aspecto) {
+    const h = MAPA_H
+    const w = h * c.ilha.aspecto
+    return { x: (MAPA_W - w) / 2, y: 0, w, h }
+  }
+  const w = MAPA_W
+  const h = w / c.ilha.aspecto
+  return { x: 0, y: MAPA_H - h, w, h }
 }
 
 /** Posição de cada torre: pelos pedestais do cenário pintado (escala pela profundidade) ou pelo conteúdo. */
@@ -42,7 +52,7 @@ export function lugares(torres: TorreEstado[], cenario: CenarioMapa | null): Rec
       // fundo (y pequeno) menor, frente maior; a principal ganha 25 %
       const prof = 0.62 + 0.55 * Math.min(1, Math.max(0, p.y))
       const base = t.tipo === 'principal' ? 1.25 : 0.95
-      out[t.id] = { x: ilha.x + p.x * ilha.w, y: ilha.y + p.y * ilha.h, escala: p.escala ?? Math.min(1.05, base * prof * 0.72) }
+      out[t.id] = { x: ilha.x + p.x * ilha.w, y: ilha.y + p.y * ilha.h + (p.afundar ?? 0), escala: p.escala ?? Math.min(1.05, base * prof * 0.72) }
     } else {
       out[t.id] = { x: (t.mapa.x / 100) * MAPA_W, y: (t.mapa.y / 100) * MAPA_H, escala: t.mapa.escala }
     }
@@ -108,7 +118,7 @@ export function colocarPlacas(torres: TorreEstado[], lug: Record<string, Lugar>)
 const rotulo = (t: TorreEstado) => t.nome.replace(/^\[PROVISÓRIO\]\s*/, '').replace(/^Torre d[oa]s? /, '')
 
 /** Céu pintado com paralaxe leve (deriva lenta e acompanha o ponteiro no desktop). */
-function CeuPintado({ img, onErro }: { img: ImagemPintada; onErro: () => void }) {
+function CeuPintado({ img, area, onErro }: { img: ImagemPintada; area: { x: number; y: number; w: number; h: number }; onErro: () => void }) {
   const ref = useRef<HTMLDivElement>(null)
   useEffect(() => {
     const el = ref.current
@@ -122,9 +132,14 @@ function CeuPintado({ img, onErro }: { img: ImagemPintada; onErro: () => void })
     return () => window.removeEventListener('pointermove', mover)
   }, [])
   return (
-    <div ref={ref} aria-hidden="true" className="pointer-events-none absolute inset-[-3%] transition-[translate] duration-700 ease-out">
+    <div
+      ref={ref}
+      aria-hidden="true"
+      className="pointer-events-none absolute transition-[translate] duration-700 ease-out"
+      style={{ left: `${(area.x / MAPA_W) * 100}%`, top: `${(area.y / MAPA_H) * 100}%`, width: `${(area.w / MAPA_W) * 100}%`, height: `${(area.h / MAPA_H) * 100}%`, transform: img.espelhar ? 'scaleX(-1)' : undefined }}
+    >
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src={srcDe(img, img.larguras[Math.min(1, img.larguras.length - 1)])} srcSet={srcSetDe(img)} sizes="(max-width: 640px) 100vw, 460px" alt="" decoding="async" onError={onErro} className="tw-ceu-deriva size-full object-cover object-top" />
+      <img src={srcDe(img, img.larguras[Math.min(1, img.larguras.length - 1)])} srcSet={srcSetDe(img)} sizes="(max-width: 640px) 110vw, 500px" alt="" decoding="async" onError={onErro} className="tw-ceu-deriva size-full object-cover" />
     </div>
   )
 }
@@ -162,8 +177,8 @@ export function MapaTorres({
   const pxU = (largura ?? MAPA_W) / MAPA_W
   return (
     <div className={cn('relative mx-auto overflow-hidden [mask-image:linear-gradient(to_right,transparent,#000_6%,#000_94%,transparent)]', !largura && 'w-full max-w-[460px]')} style={{ aspectRatio: `${MAPA_W} / ${MAPA_H}`, width: largura }}>
-      {pintado && cenario?.ceu ? (
-        <CeuPintado img={cenario.ceu} onErro={() => setFalhou(true)} />
+      {pintado && cenario?.ceu && ilha ? (
+        <CeuPintado img={cenario.ceu} area={ilha} onErro={() => setFalhou(true)} />
       ) : (
         <div aria-hidden="true" className="pointer-events-none absolute left-1/2 top-[1%] w-[96%] -translate-x-1/2 opacity-[0.16] [mask-image:radial-gradient(closest-side,#000_60%,transparent)]">
           <RomanDial tone="silver" />
@@ -172,15 +187,15 @@ export function MapaTorres({
       {ilha && cenario && (
         // eslint-disable-next-line @next/next/no-img-element
         <img
-          src={srcDe(cenario.ilha, larguraPara(cenario.ilha, (largura ?? MAPA_W) * 2))}
+          src={srcDe(cenario.ilha, larguraPara(cenario.ilha, (largura ?? MAPA_W) * 1.1 * 2))}
           srcSet={srcSetDe(cenario.ilha)}
-          sizes="(max-width: 640px) 100vw, 460px"
+          sizes="(max-width: 640px) 110vw, 500px"
           alt=""
           aria-hidden="true"
           decoding="async"
           onError={() => setFalhou(true)}
-          className="pointer-events-none absolute inset-x-0 w-full"
-          style={{ top: `${(ilha.y / MAPA_H) * 100}%`, height: `${(ilha.h / MAPA_H) * 100}%` }}
+          className="pointer-events-none absolute max-w-none"
+          style={{ left: `${(ilha.x / MAPA_W) * 100}%`, top: `${(ilha.y / MAPA_H) * 100}%`, width: `${(ilha.w / MAPA_W) * 100}%`, height: `${(ilha.h / MAPA_H) * 100}%` }}
         />
       )}
       <svg aria-hidden="true" viewBox={`0 0 ${MAPA_W} ${MAPA_H}`} className="absolute inset-0 size-full">
@@ -199,6 +214,20 @@ export function MapaTorres({
             })}
           </>
         )}
+        {pintado &&
+          ilha &&
+          (cenario?.enfeites ?? []).map((e, i) => {
+            const x = ilha.x + e.x * ilha.w
+            const y = ilha.y + e.y * ilha.h
+            return (
+              <g key={`enf-${i}`} transform={`translate(${x} ${y})`}>
+                <circle cx={0} cy={-16} r={18} fill="url(#tw-halo)" className="tw-flicker" />
+                <path d="M0 0V-8" stroke="#2c2c31" strokeWidth={2} />
+                <path d="M-4 -8H4L3.2 -19H-3.2Z" fill="#fff3dc" stroke="#6b6357" strokeWidth={0.7} />
+                <path d="M-5 -19.5H5L0 -24Z" fill="#38393c" />
+              </g>
+            )
+          })}
         {ordem.map((t) => {
           const l = lug[t.id]
           return (

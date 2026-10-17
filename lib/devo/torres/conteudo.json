@@ -2,6 +2,64 @@
   "versao": 1,
   "provisorio": true,
   "nota": "EXEMPLO PROVISÓRIO: 1 torre principal (nome/NPC/essência a definir pelo dono) e 3 secundárias (Imperador/Galo, Observatório/Coruja, Picadeiro/Javali) com andares de placeholder. Guia: docs/redesign/TORRES.md",
+  "cenario": {
+    "ilha": {
+      "arquivo": "/images/torres/mapa/ilha",
+      "larguras": [
+        512,
+        768,
+        1024,
+        1536
+      ],
+      "aspecto": 0.6667,
+      "sufixo": "altura"
+    },
+    "ceu": {
+      "arquivo": "/images/torres/mapa/ceu",
+      "larguras": [
+        512,
+        768,
+        1024,
+        1536
+      ],
+      "aspecto": 0.6667,
+      "sufixo": "altura",
+      "espelhar": true
+    },
+    "pedestais": {
+      "campanha": {
+        "x": 0.5,
+        "y": 0.352,
+        "escala": 0.55,
+        "afundar": 8
+      },
+      "imperador": {
+        "x": 0.213,
+        "y": 0.413,
+        "escala": 0.6,
+        "afundar": 10
+      },
+      "observatorio": {
+        "x": 0.767,
+        "y": 0.475,
+        "escala": 0.6,
+        "afundar": 32
+      },
+      "picadeiro": {
+        "x": 0.36,
+        "y": 0.6,
+        "escala": 0.56,
+        "afundar": 0
+      }
+    },
+    "enfeites": [
+      {
+        "tipo": "lanterna",
+        "x": 0.22,
+        "y": 0.534
+      }
+    ]
+  },
   "torres": [
     {
       "id": "campanha",

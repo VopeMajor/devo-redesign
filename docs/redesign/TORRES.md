@@ -136,7 +136,14 @@ No topo do `conteudo.json`, `"cenario"` troca o desenho vetorial do mapa pela il
 - A ilha ocupa a largura do mapa, apoiada embaixo; `aspecto` = largura ÷ altura da imagem.
 - `pedestais`: centro da base de cada torre em frações [0–1] da imagem da ilha (o `json` do pipeline traz isso).
   A escala vem da profundidade (mais ao fundo, menor; a principal 25 % maior); `"escala"` no pedestal força um valor.
-- O céu deriva devagar (paralaxe leve) e acompanha o ponteiro no desktop.
+- O céu deriva devagar (paralaxe leve) e acompanha o ponteiro no desktop. `"espelhar": true` vira o céu na horizontal.
+- Céu e ilha usam o mesmo enquadramento (cobrem o mapa; se a arte é mais larga, as laterais são cortadas).
+- `"sufixo": "altura"`: o número do arquivo é o lado maior (convenção do pipeline do mapa: `ilha-1536.webp`).
+- `"afundar"` no pedestal enterra a base da torre no topo do pedestal (unidades do mapa).
+- `"enfeites": [{ "tipo": "lanterna", "x": …, "y": … }]` põe uma lanterna acesa num pedestal que ficou vazio.
+- Hoje (arte da41f23): o Picadeiro saiu do pedestal da frente-esquerda (ficava na frente do Imperador)
+  e está no piso da praça, à frente-esquerda do portão; o pedestal vazio ganhou uma lanterna; o céu está
+  espelhado para a lua não ficar atrás do Imperador.
 - Se uma imagem falhar, o mapa volta sozinho para o vetorial. Torre sem pedestal usa o `"mapa"` dela.
 - As placas de nome ficam no pé de cada torre, pequenas, com um filete até a base, e o código as desloca para
   nunca cobrir uma ilustração ou outra placa.
