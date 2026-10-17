@@ -215,7 +215,7 @@ function PhotoCropper({ fonte: bitmap, url, onCancel, onConfirm }: { fonte: Font
                   }}
                 />
                 {/* guia: o círculo é a janela das molduras do avatar; o quadro inteiro é o miniperfil */}
-                <span aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,transparent_calc(50%-1px),rgba(236,229,216,0.85)_50%,rgba(10,10,12,0.42)_calc(50%+1px))]" />
+                <span aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_closest-side_at_50%_50%,transparent_calc(100%-1.5px),rgba(236,229,216,0.85)_100%,rgba(10,10,12,0.42)_calc(100%+1px))]" />
                 <BrassCorners size={18} inset={4} tone="silver" />
               </div>
               <GlyphClip className="absolute -top-4 left-4 size-8 -rotate-12 text-[#8f8e8b]" />
