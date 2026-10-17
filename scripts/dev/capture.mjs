@@ -11,7 +11,7 @@ const require = createRequire(process.env.PLAYWRIGHT_FROM ?? import.meta.url)
 const { chromium } = require('playwright')
 
 const BASE = process.env.CAPTURE_URL ?? 'http://localhost:3000'
-const OUT = 'shots'
+const OUT = process.env.CAPTURE_OUT || 'shots'
 const ONLY = (process.env.CAPTURE_ONLY ?? '').split(',').map((s) => s.trim()).filter(Boolean)
 mkdirSync(OUT, { recursive: true })
 
