@@ -1,0 +1,245 @@
+{
+  "pedido": "moldura-fortuna-rato",
+  "titulo": "Fortuna do Rato — avatar",
+  "tipo": "moldura",
+  "tamanho_final": 1024,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 6061,
+      "passos": null,
+      "segundos": 23.8,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "miolo_aberto_por_cor": true,
+      "janela": {
+        "forma": "circulo",
+        "centro_px": [
+          512.0,
+          512.0
+        ],
+        "raio_px": [
+          256.0,
+          256.0
+        ],
+        "raio_fracao": [
+          0.25,
+          0.25
+        ]
+      },
+      "reencaixe": {
+        "escala": 0.9884,
+        "cobertura_aro": 1.0
+      },
+      "ornamento_cortado": 0.0003,
+      "arquivos": [
+        {
+          "arquivo": "moldura-fortuna-rato--v01--1024.png",
+          "bytes": 414192
+        },
+        {
+          "arquivo": "moldura-fortuna-rato--v01--1024.webp",
+          "bytes": 95916
+        },
+        {
+          "arquivo": "moldura-fortuna-rato--v01--512.webp",
+          "bytes": 37420
+        },
+        {
+          "arquivo": "moldura-fortuna-rato--v01--256.webp",
+          "bytes": 14522
+        },
+        {
+          "arquivo": "moldura-fortuna-rato--v01--96.webp",
+          "bytes": 4236
+        },
+        {
+          "arquivo": "moldura-fortuna-rato--v01--48.webp",
+          "bytes": 1954
+        }
+      ],
+      "segundos_pos": 34.5,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 6062,
+      "passos": null,
+      "segundos": 21.5,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "miolo_aberto_por_cor": true,
+      "janela": {
+        "forma": "circulo",
+        "centro_px": [
+          512.0,
+          512.0
+        ],
+        "raio_px": [
+          256.0,
+          256.0
+        ],
+        "raio_fracao": [
+          0.25,
+          0.25
+        ]
+      },
+      "reencaixe": {
+        "escala": 1.1743,
+        "cobertura_aro": 1.0
+      },
+      "ornamento_cortado": 0.0293,
+      "arquivos": [
+        {
+          "arquivo": "moldura-fortuna-rato--v02--1024.png",
+          "bytes": 475843
+        },
+        {
+          "arquivo": "moldura-fortuna-rato--v02--1024.webp",
+          "bytes": 103372
+        },
+        {
+          "arquivo": "moldura-fortuna-rato--v02--512.webp",
+          "bytes": 40784
+        },
+        {
+          "arquivo": "moldura-fortuna-rato--v02--256.webp",
+          "bytes": 15526
+        },
+        {
+          "arquivo": "moldura-fortuna-rato--v02--96.webp",
+          "bytes": 4528
+        },
+        {
+          "arquivo": "moldura-fortuna-rato--v02--48.webp",
+          "bytes": 2018
+        }
+      ],
+      "segundos_pos": 29.5,
+      "avisos": [
+        "2.9% do ornamento ficou fora do quadro — reduza a janela ou peça mais margem no prompt"
+      ]
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 6063,
+      "passos": null,
+      "segundos": 55.5,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "miolo_aberto_por_cor": true,
+      "janela": {
+        "forma": "circulo",
+        "centro_px": [
+          512.0,
+          512.0
+        ],
+        "raio_px": [
+          256.0,
+          256.0
+        ],
+        "raio_fracao": [
+          0.25,
+          0.25
+        ]
+      },
+      "reencaixe": {
+        "escala": 1.1327,
+        "cobertura_aro": 1.0
+      },
+      "ornamento_cortado": 0.0001,
+      "arquivos": [
+        {
+          "arquivo": "moldura-fortuna-rato--v03--1024.png",
+          "bytes": 528203
+        },
+        {
+          "arquivo": "moldura-fortuna-rato--v03--1024.webp",
+          "bytes": 103820
+        },
+        {
+          "arquivo": "moldura-fortuna-rato--v03--512.webp",
+          "bytes": 41442
+        },
+        {
+          "arquivo": "moldura-fortuna-rato--v03--256.webp",
+          "bytes": 16236
+        },
+        {
+          "arquivo": "moldura-fortuna-rato--v03--96.webp",
+          "bytes": 4692
+        },
+        {
+          "arquivo": "moldura-fortuna-rato--v03--48.webp",
+          "bytes": 2018
+        }
+      ],
+      "segundos_pos": 29.4,
+      "avisos": []
+    },
+    {
+      "nome": "v04",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 6064,
+      "passos": null,
+      "segundos": 19.2,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "miolo_aberto_por_cor": true,
+      "janela": {
+        "forma": "circulo",
+        "centro_px": [
+          512.0,
+          512.0
+        ],
+        "raio_px": [
+          256.0,
+          256.0
+        ],
+        "raio_fracao": [
+          0.25,
+          0.25
+        ]
+      },
+      "reencaixe": {
+        "escala": 1.2249,
+        "cobertura_aro": 1.0
+      },
+      "ornamento_cortado": 0.0156,
+      "arquivos": [
+        {
+          "arquivo": "moldura-fortuna-rato--v04--1024.png",
+          "bytes": 535656
+        },
+        {
+          "arquivo": "moldura-fortuna-rato--v04--1024.webp",
+          "bytes": 115154
+        },
+        {
+          "arquivo": "moldura-fortuna-rato--v04--512.webp",
+          "bytes": 45260
+        },
+        {
+          "arquivo": "moldura-fortuna-rato--v04--256.webp",
+          "bytes": 17084
+        },
+        {
+          "arquivo": "moldura-fortuna-rato--v04--96.webp",
+          "bytes": 4676
+        },
+        {
+          "arquivo": "moldura-fortuna-rato--v04--48.webp",
+          "bytes": 2046
+        }
+      ],
+      "segundos_pos": 29.4,
+      "avisos": [
+        "1.6% do ornamento ficou fora do quadro — reduza a janela ou peça mais margem no prompt"
+      ]
+    }
+  ]
+}

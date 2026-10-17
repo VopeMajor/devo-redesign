@@ -1,0 +1,12 @@
+[moldura-fortuna-rato] v01: @cf/black-forest-labs/flux-2-klein-4b seed=6061 1024x1024 passos=None (~104 neurônios)
+    ok em 23.8s, 1024x1024
+[moldura-fortuna-rato] v02: @cf/black-forest-labs/flux-2-klein-4b seed=6062 1024x1024 passos=None (~104 neurônios)
+    ok em 21.5s, 1024x1024
+[moldura-fortuna-rato] v03: @cf/black-forest-labs/flux-2-klein-4b seed=6063 1024x1024 passos=None (~104 neurônios)
+    ok em 55.5s, 1024x1024
+[moldura-fortuna-rato] v04: @cf/black-forest-labs/flux-2-klein-4b seed=6064 1024x1024 passos=None (~104 neurônios)
+    ok em 19.2s, 1024x1024
+[moldura-fortuna-rato] v01: rembg:birefnet-general; sem avisos
+[moldura-fortuna-rato] v02: rembg:birefnet-general; 2.9% do ornamento ficou fora do quadro — reduza a janela ou peça mais margem no prompt
+[moldura-fortuna-rato] v03: rembg:birefnet-general; sem avisos
+[moldura-fortuna-rato] v04: rembg:birefnet-general; 1.6% do ornamento ficou fora do quadro — reduza a janela ou peça mais margem no prompt
