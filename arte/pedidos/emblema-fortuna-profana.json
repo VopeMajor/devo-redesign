@@ -1,0 +1,25 @@
+{
+  "id": "emblema-fortuna-profana",
+  "titulo": "Fortuna Profana",
+  "tipo": "emblema",
+  "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+  "prompt": "Fantasy RPG accessory illustration, painted, highly detailed, isolated on a plain flat light gray background. A legendary collectible badge, a small luxury jewel-like object seen from the front, centered: a casino-themed jewel: three ornate playing cards fanned out behind a gold and black medallion set with a large ruby, a pair of ivory dice and two red chips, gold chains draped across the front with tiny jewels, a short black satin ribbon. Rich detail that still reads at small size, crisp silhouette, the whole object fully visible with a generous empty margin, floating without a cast shadow, nothing cropped. No text, no letters, no numbers, no watermark, no people.",
+  "negative": "text, letters, watermark, signature, logo, cropped, cut off, blurry, low detail, flat vector icon, clipart, emoji, cartoon sticker, simple geometric shapes, plastic look, people, hands",
+  "largura": 1024,
+  "altura": 1024,
+  "variacoes": [
+    {
+      "seed": 7121
+    },
+    {
+      "seed": 7122
+    },
+    {
+      "seed": 7123
+    }
+  ],
+  "pos": {
+    "tamanho_final": 1024,
+    "margem": 0.03
+  }
+}

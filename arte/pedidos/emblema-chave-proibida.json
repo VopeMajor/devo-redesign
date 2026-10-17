@@ -1,0 +1,25 @@
+{
+  "id": "emblema-chave-proibida",
+  "titulo": "Chave Proibida",
+  "tipo": "emblema",
+  "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+  "prompt": "Fantasy RPG accessory illustration, painted, highly detailed, isolated on a plain flat light gray background. A rare collectible badge, a small luxury jewel-like object seen from the front, centered: an ornate antique key of blackened iron and gold, the bow shaped like a gothic rose window with a red gem in the center, the long shaft wrapped by thin thorny vines, intricate bit teeth, a small padlock charm and a short dark red tassel hanging from the bow. Rich detail that still reads at small size, crisp silhouette, the whole object fully visible with a generous empty margin, floating without a cast shadow, nothing cropped. No text, no letters, no numbers, no watermark, no people.",
+  "negative": "text, letters, watermark, signature, logo, cropped, cut off, blurry, low detail, flat vector icon, clipart, emoji, cartoon sticker, simple geometric shapes, plastic look, people, hands",
+  "largura": 1024,
+  "altura": 1024,
+  "variacoes": [
+    {
+      "seed": 7041
+    },
+    {
+      "seed": 7042
+    },
+    {
+      "seed": 7043
+    }
+  ],
+  "pos": {
+    "tamanho_final": 1024,
+    "margem": 0.03
+  }
+}

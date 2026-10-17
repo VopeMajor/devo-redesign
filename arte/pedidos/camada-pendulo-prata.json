@@ -1,0 +1,28 @@
+{
+  "id": "camada-pendulo-prata",
+  "titulo": "Camada: pendulo-prata",
+  "tipo": "camada",
+  "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+  "prompt": "Fantasy RPG game asset, a single isolated animation part, painted, highly detailed, isolated on a plain flat light gray background, perfectly centered, seen exactly from the front, flat orthographic view, no perspective, no cast shadow: one long thin otherworldly pendulum of pale silver hanging straight down from a small ring at the top, ending in an elegant crescent-shaped blade with a faint violet glow along its edge. Nothing else in the image, generous empty margin, nothing cropped, no text, no numbers, no watermark.",
+  "negative": "text, letters, numbers, watermark, cropped, blurry, background scenery, shadow, people",
+  "largura": 1024,
+  "altura": 1024,
+  "variacoes": [
+    {
+      "seed": 9031
+    },
+    {
+      "seed": 9032
+    }
+  ],
+  "pos": {
+    "tamanho_final": 1024,
+    "margem": 0.02,
+    "derivados": [
+      512,
+      256,
+      128,
+      64
+    ]
+  }
+}

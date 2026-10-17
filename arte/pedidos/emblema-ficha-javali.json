@@ -1,0 +1,25 @@
+{
+  "id": "emblema-ficha-javali",
+  "titulo": "Ficha do Javali",
+  "tipo": "emblema",
+  "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+  "prompt": "Fantasy RPG accessory illustration, painted, highly detailed, isolated on a plain flat light gray background. A common collectible badge, a small luxury jewel-like object seen from the front, centered: a round casino chip of deep red and cream with a gold inlaid edge pattern and a small embossed boar head in the center, slightly worn. Rich detail that still reads at small size, crisp silhouette, the whole object fully visible with a generous empty margin, floating without a cast shadow, nothing cropped. No text, no letters, no numbers, no watermark, no people.",
+  "negative": "text, letters, watermark, signature, logo, cropped, cut off, blurry, low detail, flat vector icon, clipart, emoji, cartoon sticker, simple geometric shapes, plastic look, people, hands",
+  "largura": 1024,
+  "altura": 1024,
+  "variacoes": [
+    {
+      "seed": 7101
+    },
+    {
+      "seed": 7102
+    },
+    {
+      "seed": 7103
+    }
+  ],
+  "pos": {
+    "tamanho_final": 1024,
+    "margem": 0.03
+  }
+}

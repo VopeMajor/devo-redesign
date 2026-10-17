@@ -1,0 +1,25 @@
+{
+  "id": "emblema-fragmento-celestial",
+  "titulo": "Fragmento Celestial",
+  "tipo": "emblema",
+  "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+  "prompt": "Fantasy RPG accessory illustration, painted, highly detailed, isolated on a plain flat dark slate gray background. A mythic arcane collectible badge, a small luxury jewel-like object seen from the front, centered: a jagged shard of a fallen star: a faceted crystal splinter of pale blue and white light with violet edges, held by a delicate silver claw setting with tiny stars, small floating sparks and glittering dust around it, faint radiant glow. Rich detail that still reads at small size, crisp silhouette, the whole object fully visible with a generous empty margin, floating without a cast shadow, nothing cropped. No text, no letters, no numbers, no watermark, no people.",
+  "negative": "text, letters, watermark, signature, logo, cropped, cut off, blurry, low detail, flat vector icon, clipart, emoji, cartoon sticker, simple geometric shapes, plastic look, people, hands",
+  "largura": 1024,
+  "altura": 1024,
+  "variacoes": [
+    {
+      "seed": 7071
+    },
+    {
+      "seed": 7072
+    },
+    {
+      "seed": 7073
+    }
+  ],
+  "pos": {
+    "tamanho_final": 1024,
+    "margem": 0.03
+  }
+}

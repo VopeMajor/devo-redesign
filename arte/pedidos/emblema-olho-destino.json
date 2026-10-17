@@ -1,0 +1,25 @@
+{
+  "id": "emblema-olho-destino",
+  "titulo": "Olho do Destino",
+  "tipo": "emblema",
+  "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+  "prompt": "Fantasy RPG accessory illustration, painted, highly detailed, isolated on a plain flat light gray background. A legendary collectible badge, a small luxury jewel-like object seen from the front, centered: a mystic eye brooch: an almond-shaped eye of white enamel with a luminous violet iris set in an ornate silver and gold frame of pointed rays, small amethyst crystals around it, a crescent moon below and three fine chains with tiny star pendants. The iris glows softly. Rich detail that still reads at small size, crisp silhouette, the whole object fully visible with a generous empty margin, floating without a cast shadow, nothing cropped. No text, no letters, no numbers, no watermark, no people.",
+  "negative": "text, letters, watermark, signature, logo, cropped, cut off, blurry, low detail, flat vector icon, clipart, emoji, cartoon sticker, simple geometric shapes, plastic look, people, hands",
+  "largura": 1024,
+  "altura": 1024,
+  "variacoes": [
+    {
+      "seed": 7031
+    },
+    {
+      "seed": 7032
+    },
+    {
+      "seed": 7033
+    }
+  ],
+  "pos": {
+    "tamanho_final": 1024,
+    "margem": 0.03
+  }
+}

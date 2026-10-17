@@ -1,0 +1,28 @@
+{
+  "id": "camada-ponteiros-prata",
+  "titulo": "Camada: ponteiros-prata",
+  "tipo": "camada",
+  "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+  "prompt": "Fantasy RPG game asset, a single isolated animation part, painted, highly detailed, isolated on a plain flat light gray background, perfectly centered, seen exactly from the front, flat orthographic view, no perspective, no cast shadow: a pair of delicate ornate clock hands of pale silver joined at one round pivot boss with a tiny violet gem, both pointing straight up and overlapping, the minute hand long with a star-shaped tip, the hour hand shorter with a crescent tip. The pivot boss sits in the lower part of the image. Nothing else in the image, generous empty margin, nothing cropped, no text, no numbers, no watermark.",
+  "negative": "text, letters, numbers, watermark, cropped, blurry, background scenery, shadow, people",
+  "largura": 1024,
+  "altura": 1024,
+  "variacoes": [
+    {
+      "seed": 9051
+    },
+    {
+      "seed": 9052
+    }
+  ],
+  "pos": {
+    "tamanho_final": 1024,
+    "margem": 0.02,
+    "derivados": [
+      512,
+      256,
+      128,
+      64
+    ]
+  }
+}

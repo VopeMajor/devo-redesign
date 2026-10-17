@@ -1,0 +1,25 @@
+{
+  "id": "emblema-rosa-sangue",
+  "titulo": "Rosa de Sangue",
+  "tipo": "emblema",
+  "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+  "prompt": "Fantasy RPG accessory illustration, painted, highly detailed, isolated on a plain flat off-white background. A rare collectible badge, a small luxury jewel-like object seen from the front, centered: a single dark crimson rose carved from translucent red crystal with layered petals, on a short blackened silver stem with sharp thorns and two silver leaves. A drop of glossy blood-red liquid slides from one petal and a single red droplet hangs below. A thin silver ribbon wraps the stem. Rich detail that still reads at small size, crisp silhouette, the whole object fully visible with a generous empty margin, floating without a cast shadow, nothing cropped. No text, no letters, no numbers, no watermark, no people.",
+  "negative": "text, letters, watermark, signature, logo, cropped, cut off, blurry, low detail, flat vector icon, clipart, emoji, cartoon sticker, simple geometric shapes, plastic look, people, hands",
+  "largura": 1024,
+  "altura": 1024,
+  "variacoes": [
+    {
+      "seed": 7001
+    },
+    {
+      "seed": 7002
+    },
+    {
+      "seed": 7003
+    }
+  ],
+  "pos": {
+    "tamanho_final": 1024,
+    "margem": 0.03
+  }
+}
