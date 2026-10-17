@@ -1,0 +1,111 @@
+{
+  "pedido": "arcano-mago",
+  "titulo": "Arcano — mago (figura)",
+  "tipo": "ilustracao",
+  "tamanho_final": 1536,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 12011,
+      "passos": null,
+      "segundos": 3.2,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "ilhas_removidas": 0,
+      "arquivos": [
+        {
+          "arquivo": "arcano-mago--v01--1536.png",
+          "bytes": 1029608
+        },
+        {
+          "arquivo": "arcano-mago--v01--1536.webp",
+          "bytes": 200192
+        },
+        {
+          "arquivo": "arcano-mago--v01--1024.webp",
+          "bytes": 98042
+        },
+        {
+          "arquivo": "arcano-mago--v01--768.webp",
+          "bytes": 65658
+        },
+        {
+          "arquivo": "arcano-mago--v01--512.webp",
+          "bytes": 38126
+        }
+      ],
+      "segundos_pos": 37.4,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 12012,
+      "passos": null,
+      "segundos": 3.4,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "ilhas_removidas": 2,
+      "arquivos": [
+        {
+          "arquivo": "arcano-mago--v02--1536.png",
+          "bytes": 1126374
+        },
+        {
+          "arquivo": "arcano-mago--v02--1536.webp",
+          "bytes": 202756
+        },
+        {
+          "arquivo": "arcano-mago--v02--1024.webp",
+          "bytes": 99484
+        },
+        {
+          "arquivo": "arcano-mago--v02--768.webp",
+          "bytes": 66464
+        },
+        {
+          "arquivo": "arcano-mago--v02--512.webp",
+          "bytes": 38494
+        }
+      ],
+      "segundos_pos": 32.5,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 12013,
+      "passos": null,
+      "segundos": 3.4,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "ilhas_removidas": 0,
+      "arquivos": [
+        {
+          "arquivo": "arcano-mago--v03--1536.png",
+          "bytes": 1070772
+        },
+        {
+          "arquivo": "arcano-mago--v03--1536.webp",
+          "bytes": 208076
+        },
+        {
+          "arquivo": "arcano-mago--v03--1024.webp",
+          "bytes": 96986
+        },
+        {
+          "arquivo": "arcano-mago--v03--768.webp",
+          "bytes": 65800
+        },
+        {
+          "arquivo": "arcano-mago--v03--512.webp",
+          "bytes": 37158
+        }
+      ],
+      "segundos_pos": 32.0,
+      "avisos": []
+    }
+  ]
+}
