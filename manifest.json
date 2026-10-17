@@ -1,0 +1,110 @@
+{
+  "pedido": "arcano-lua",
+  "titulo": "Arcano — lua (figura)",
+  "tipo": "ilustracao",
+  "tamanho_final": 1536,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 12181,
+      "passos": null,
+      "segundos": 3.1,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "ilhas_removidas": 1,
+      "arquivos": [
+        {
+          "arquivo": "arcano-lua--v01--1536.png",
+          "bytes": 1299071
+        },
+        {
+          "arquivo": "arcano-lua--v01--1536.webp",
+          "bytes": 265724
+        },
+        {
+          "arquivo": "arcano-lua--v01--1024.webp",
+          "bytes": 123440
+        },
+        {
+          "arquivo": "arcano-lua--v01--768.webp",
+          "bytes": 82944
+        },
+        {
+          "arquivo": "arcano-lua--v01--512.webp",
+          "bytes": 46852
+        }
+      ],
+      "segundos_pos": 40.1,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 12182,
+      "passos": null,
+      "segundos": 4.8,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "ilhas_removidas": 2,
+      "arquivos": [
+        {
+          "arquivo": "arcano-lua--v02--1536.png",
+          "bytes": 1277618
+        },
+        {
+          "arquivo": "arcano-lua--v02--1536.webp",
+          "bytes": 263242
+        },
+        {
+          "arquivo": "arcano-lua--v02--1024.webp",
+          "bytes": 121914
+        },
+        {
+          "arquivo": "arcano-lua--v02--768.webp",
+          "bytes": 80214
+        },
+        {
+          "arquivo": "arcano-lua--v02--512.webp",
+          "bytes": 44596
+        }
+      ],
+      "segundos_pos": 33.0,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 12183,
+      "passos": null,
+      "segundos": 3.3,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "arcano-lua--v03--1536.png",
+          "bytes": 1335292
+        },
+        {
+          "arquivo": "arcano-lua--v03--1536.webp",
+          "bytes": 262724
+        },
+        {
+          "arquivo": "arcano-lua--v03--1024.webp",
+          "bytes": 116010
+        },
+        {
+          "arquivo": "arcano-lua--v03--768.webp",
+          "bytes": 77948
+        },
+        {
+          "arquivo": "arcano-lua--v03--512.webp",
+          "bytes": 43900
+        }
+      ],
+      "segundos_pos": 32.7,
+      "avisos": []
+    }
+  ]
+}
