@@ -52,10 +52,10 @@ async function device(kind = 'phone') {
 /**
  * Cenas com fala de NPC: além de 390×844, repete o quadro numa tela alta (390×900) e numa baixa (360×740)
  * para provar que o retrato fica ancorado na caixa de fala em qualquer altura (DIRECAO-3 §9, NpcAnchor). O mapa
- * das Torres (t20/t25) também, para conferir placas e chips nas três alturas. Os Arcanos das Virtudes (v30–v37)
- * também, para conferir a lista e o painel que expande em tela estreita.
+ * das Torres (t20/t25) também, para conferir placas e chips nas três alturas. A Mesa dos textos dos Arcanos (v35/v36) e a
+ * tela própria dos Arcanos (arc-*) também: mapa, galeria e altar nas três alturas.
  */
-const NPC_VARIANT = /^(03-prologo-(0[2-9]|1\d)|04-tutorial-0[1-6]|26-coruja-0[13]|27-javali-[01]|34-javali-[01]|salao-0[2-5]|t10-galo-abertura|t11b-galo-fala|t23-andar-cena|t20-mapa|t25-mapa-progresso|t21-torre-imperador|t45-torre-principal|t22-andar-ficha|t47-torre-picadeiro|poco-0[5-9]|03-melissa-3|n-1[0-7]|n-2[06]|n-3[24]|corp-0[34]|v3[0-7]-|cal-)/
+const NPC_VARIANT = /^(03-prologo-(0[2-9]|1\d)|04-tutorial-0[1-6]|26-coruja-0[13]|27-javali-[01]|34-javali-[01]|salao-0[2-5]|t10-galo-abertura|t11b-galo-fala|t23-andar-cena|t20-mapa|t25-mapa-progresso|t21-torre-imperador|t45-torre-principal|t22-andar-ficha|t47-torre-picadeiro|poco-0[5-9]|03-melissa-3|n-1[0-7]|n-2[06]|n-3[24]|corp-0[34]|v3[0-7]-|cal-|arc-\d\d)/
 const VARIANT_SIZES = [
   [390, 900],
   [360, 740],
@@ -3331,6 +3331,21 @@ if (want('virtudes')) {
     await tryClick(b, 8000)
     await wait(2400)
   }
+  const abrirArcanos = async (page) => {
+    await enterOS(page)
+    await page.getByRole('region', { name: 'Sistemas', exact: true }).scrollIntoViewIfNeeded().catch(() => {})
+    const b = page.getByRole('button', { name: /^Arcanos/ }).first()
+    await b.waitFor({ state: 'visible', timeout: 15000 }).catch(() => {})
+    await tryClick(b, 8000)
+    await wait(2400)
+  }
+  /** Mapa → galeria no Arcano pelo nome do sigilo (ex.: /Torre/). */
+  const galeriaEm = async (page, nome) => {
+    await tryClick(page.getByRole('button', { name: 'Mapa', exact: true }).first())
+    await wait(500)
+    await tryClick(page.getByRole('region', { name: 'Mapa dos vinte e dois Arcanos' }).getByRole('button', { name: nome }).first())
+    await wait(1400)
+  }
   /** Rola a tela das Virtudes até o elemento (cabeçalho ou região) pelo nome. */
   const ir = async (page, nome) => {
     await page
@@ -3351,6 +3366,8 @@ if (want('virtudes')) {
     await shot(A.page, 'v01-home-trancado')
     await abrirVirtudes(A.page)
     await shot(A.page, 'v02-trancado', 'jogador sem o tutorial: motivo')
+    await abrirArcanos(A.page)
+    await shot(A.page, 'arc-00-trancado', 'Arcanos trancado (mesma regra das Virtudes)')
   })
   await A.ctx.close()
 
@@ -3393,19 +3410,23 @@ if (want('virtudes')) {
     await shot(B.page, 'v10-morte-naipes', 'afinidades em palavras')
     await ir(B.page, 'Evoluções de Estágio')
     await shot(B.page, 'v11-historico-vazio')
-    // Os vinte e dois: o próprio no topo (fechado), os outros trancados com a frase breve
-    await ir(B.page, 'Os vinte e dois')
-    await shot(B.page, 'v30-arcanos-lista', 'Arcano próprio fechado; os outros trancados (nome, numeral, frase breve)')
-    await B.page.getByRole('heading', { name: /^Enforcado/ }).first().evaluate((el) => el.scrollIntoView({ block: 'start' })).catch(() => {})
-    await wait(500)
-    await shot(B.page, 'v31-arcanos-trancados', 'trancados: só nome, numeral e frase breve')
-    const meu = B.page.getByRole('button', { name: /Seu Arcano/ }).first()
-    await meu.evaluate((el) => el.scrollIntoView({ block: 'start' })).catch(() => {})
-    await tryClick(meu)
-    await wait(900)
-    await shot(B.page, 'v32-arcano-aberto', 'Arcano da Morte expandido: descrição e fisiologia')
-    await ir(B.page, 'Estágios de Evolução')
-    await shot(B.page, 'v33-arcano-estagios', 'Estágio I atual; os seguintes velados (só o nome)')
+    // Arcanos: tela própria. Entrada pelas Virtudes ("Seu Arcano → abrir Arcanos")
+    await abrirVirtudes(B.page)
+    await shot(B.page, 'arc-01-virtudes-link', 'Virtudes: só a entrada para os Arcanos, sem a lista')
+    await tryClick(B.page.getByRole('button', { name: /Abrir Arcanos/ }).first())
+    await wait(2400)
+    await shot(B.page, 'arc-02-mapa', 'mapa orbital: o próprio aceso, os outros apagados')
+    await galeriaEm(B.page, /Torre \(trancado\)/)
+    await shot(B.page, 'arc-03-galeria-trancado', 'galeria centrada num trancado: estátua cinza, nome e frase breve')
+    await galeriaEm(B.page, /seu Arcano/)
+    await shot(B.page, 'arc-04-galeria-proprio', 'galeria no próprio: em cor, botão Abrir')
+    await tryClick(B.page.getByRole('button', { name: /Abrir seu Arcano/ }).first())
+    await wait(1600)
+    await shot(B.page, 'arc-05-detalhe', 'altar: vitral vermelho, velas, a figura (placeholder) e o nome')
+    await ir(B.page, 'Fisiologia')
+    await shot(B.page, 'arc-06-detalhe-fisiologia', 'Descrição e Fisiologia (mais natural / mais custosa)')
+    await ir(B.page, 'Estágios de evolução')
+    await shot(B.page, 'arc-07-detalhe-estagios', 'Estágio I atual, os seguintes velados')
   })
   await virt({ action: 'evoluir', playerId: bid })
   await virt({ action: 'potencial', playerId: bid, virtude: 'tacas', quantidade: 12, motivo: 'captura' })
@@ -3417,12 +3438,12 @@ if (want('virtudes')) {
     await shot(B.page, 'v13-depois-potencial', 'acúmulo recomeça')
     await ir(B.page, 'Evoluções de Estágio')
     await shot(B.page, 'v14-depois-historico', 'histórico: mais cresceu / menos cresceu')
-    const meu2 = B.page.getByRole('button', { name: /Seu Arcano/ }).first()
-    await meu2.evaluate((el) => el.scrollIntoView({ block: 'start' })).catch(() => {})
-    await tryClick(meu2)
-    await wait(900)
-    await ir(B.page, 'Estágios de Evolução')
-    await shot(B.page, 'v34-arcano-estagio-ii', 'depois da Evolução: I alcançado, II atual')
+    await abrirArcanos(B.page)
+    await galeriaEm(B.page, /seu Arcano/)
+    await tryClick(B.page.getByRole('button', { name: /Abrir seu Arcano/ }).first())
+    await wait(1600)
+    await ir(B.page, 'Estágios de evolução')
+    await shot(B.page, 'arc-08-estagio-ii', 'depois da Evolução: I alcançado, II atual')
     // o Record mostra o Arcano na ficha
     await openApp(B.page, 'Record')
     await wait(1500)
@@ -3473,13 +3494,14 @@ if (want('virtudes')) {
     await page.getByRole('button', { name: 'Gravar texto' }).first().evaluate((el) => el.scrollIntoView({ block: 'end' })).catch(() => {})
     await wait(400)
     await shot(page, 'v36-mesa-textos-estagios', 'Estágios e o botão de gravar')
-    // tela do jogador vista pelo Owner: todos abrem, selo "Provisório"
-    await abrirVirtudes(page)
-    await ir(page, 'Os vinte e dois')
-    await tryClick(page.getByRole('button', { name: /^0 Louco|Louco/ }).first())
-    await wait(900)
-    await ir(page, 'Os vinte e dois')
-    await shot(page, 'v37-owner-arcanos', 'Owner: todos expansíveis, com o selo de provisório')
+    // Arcanos vistos pelo Owner: todos abrem, selo "Texto provisório"
+    await abrirArcanos(page)
+    await shot(page, 'arc-09-owner-mapa', 'Owner: todos os sigilos abertos')
+    await galeriaEm(page, /Louco/)
+    await shot(page, 'arc-10-owner-galeria', 'Owner: qualquer Arcano abre')
+    await tryClick(page.getByRole('button', { name: 'Abrir', exact: true }).first())
+    await wait(1600)
+    await shot(page, 'arc-11-owner-detalhe', 'Owner: detalhe de outro Arcano, com o selo de provisório')
 
     await page.route(/\/api\/virtudes$/, (r) => r.fulfill({ status: 500, contentType: 'application/json', body: '{"ok":false,"error":"As Virtudes não responderam. Tente de novo."}' }))
     await abrirVirtudes(page)
