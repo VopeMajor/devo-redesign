@@ -2628,6 +2628,21 @@ if (want('corporacoes')) {
     await page.getByRole('status').filter({ hasText: 'foi para' }).first().scrollIntoViewIfNeeded().catch(() => {})
     await wait(400)
     await shot(page, 'corp-17-transferida')
+    // A cena da Narrativa "Uma chamada da Companhia" pode abrir por cima (gatilho do enredo): avança as falas
+    // dela (Enter / primeira escolha) e, se ainda estiver aberta, sai pelo botão "Sair" antes de seguir.
+    const chamada = page.getByRole('dialog', { name: 'Uma chamada da Companhia' })
+    if (await chamada.first().waitFor({ state: 'visible', timeout: 3000 }).then(() => true, () => false)) {
+      await shot(page, 'corp-17b-chamada-da-companhia', 'cena da Narrativa por cima das Corporações')
+      for (let k = 0; k < 40 && (await chamada.count()); k++) {
+        const opcao = chamada.locator('[aria-label="Sua resposta"] button:not([disabled]), [aria-label="Escolhas de diálogo"] button:not([disabled])')
+        if (await opcao.count()) await tryClick(opcao.first())
+        else await page.keyboard.press('Enter')
+        await wait(500)
+      }
+      if (await chamada.count()) await tryClick(chamada.getByRole('button', { name: 'Sair', exact: true }).first(), 4000)
+      await chamada.first().waitFor({ state: 'detached', timeout: 8000 }).catch(() => {})
+      await wait(800)
+    }
     await aba(page, 'Recrutar')
     await page.locator('#corp-rec-titulo').fill('Procuramos Records de nervos firmes')
     await page.locator('#corp-rec-texto').fill('Duas vagas para quem já sobreviveu a um Deadly Vote. Reuniões depois de cada edição do Salão.')
