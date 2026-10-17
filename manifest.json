@@ -1,0 +1,377 @@
+{
+  "pedido": "balao-ecos-arcano",
+  "titulo": "Ecos do Arcano",
+  "tipo": "balao",
+  "tamanho_final": 1536,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 8021,
+      "passos": null,
+      "segundos": 13.0,
+      "neuronios_estimados": 78,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "balao-ecos-arcano--v01--1535.png",
+          "bytes": 403267
+        },
+        {
+          "arquivo": "balao-ecos-arcano--v01--1535.webp",
+          "bytes": 44660
+        },
+        {
+          "arquivo": "balao-ecos-arcano--v01--1024.webp",
+          "bytes": 21998
+        },
+        {
+          "arquivo": "balao-ecos-arcano--v01--768.webp",
+          "bytes": 15012
+        },
+        {
+          "arquivo": "balao-ecos-arcano--v01--512.webp",
+          "bytes": 8228
+        },
+        {
+          "arquivo": "balao-ecos-arcano--v01--256.webp",
+          "bytes": 3550
+        }
+      ],
+      "balao": {
+        "tamanho_px": [
+          1535,
+          300
+        ],
+        "nove_fatias": {
+          "top": 37,
+          "right": 197,
+          "bottom": 34,
+          "left": 203,
+          "css": "border-image: url(...) 37 197 34 203 fill / auto; border-image-repeat: stretch;",
+          "obs": "medidas em px do original; nos derivados multiplique por largura/W"
+        },
+        "kit": {
+          "corpo": {
+            "altura_px": 267,
+            "topo_no_original": 17,
+            "fatias": {
+              "top": 20,
+              "bottom": 18,
+              "left": 0,
+              "right": 0
+            },
+            "obs": "uniforme na horizontal; estique livre. Centro liso (texto)."
+          },
+          "ponta_esq": {
+            "largura_px": 249,
+            "sobreposicao_px": 46
+          },
+          "ponta_dir": {
+            "largura_px": 243,
+            "sobreposicao_px": 46
+          },
+          "texto": {
+            "x0": 203,
+            "x1": 1338,
+            "y0": 37,
+            "y1": 266
+          }
+        },
+        "arquivos_kit": [
+          "balao-ecos-arcano--v01--kit-corpo--1024.webp",
+          "balao-ecos-arcano--v01--kit-corpo--768.webp",
+          "balao-ecos-arcano--v01--kit-corpo--512.webp",
+          "balao-ecos-arcano--v01--kit-corpo--256.webp",
+          "balao-ecos-arcano--v01--kit-ponta-esq--1024.webp",
+          "balao-ecos-arcano--v01--kit-ponta-esq--768.webp",
+          "balao-ecos-arcano--v01--kit-ponta-esq--512.webp",
+          "balao-ecos-arcano--v01--kit-ponta-esq--256.webp",
+          "balao-ecos-arcano--v01--kit-ponta-dir--1024.webp",
+          "balao-ecos-arcano--v01--kit-ponta-dir--768.webp",
+          "balao-ecos-arcano--v01--kit-ponta-dir--512.webp",
+          "balao-ecos-arcano--v01--kit-ponta-dir--256.webp"
+        ]
+      },
+      "segundos_pos": 34.2,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 8022,
+      "passos": null,
+      "segundos": 13.2,
+      "neuronios_estimados": 78,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "balao-ecos-arcano--v02--1535.png",
+          "bytes": 404662
+        },
+        {
+          "arquivo": "balao-ecos-arcano--v02--1535.webp",
+          "bytes": 50304
+        },
+        {
+          "arquivo": "balao-ecos-arcano--v02--1024.webp",
+          "bytes": 25956
+        },
+        {
+          "arquivo": "balao-ecos-arcano--v02--768.webp",
+          "bytes": 17564
+        },
+        {
+          "arquivo": "balao-ecos-arcano--v02--512.webp",
+          "bytes": 10878
+        },
+        {
+          "arquivo": "balao-ecos-arcano--v02--256.webp",
+          "bytes": 4196
+        }
+      ],
+      "balao": {
+        "tamanho_px": [
+          1535,
+          372
+        ],
+        "nove_fatias": {
+          "top": 54,
+          "right": 170,
+          "bottom": 54,
+          "left": 181,
+          "css": "border-image: url(...) 54 170 54 181 fill / auto; border-image-repeat: stretch;",
+          "obs": "medidas em px do original; nos derivados multiplique por largura/W"
+        },
+        "kit": {
+          "corpo": {
+            "altura_px": 313,
+            "topo_no_original": 29,
+            "fatias": {
+              "top": 25,
+              "bottom": 24,
+              "left": 0,
+              "right": 0
+            },
+            "obs": "uniforme na horizontal; estique livre. Centro liso (texto)."
+          },
+          "ponta_esq": {
+            "largura_px": 227,
+            "sobreposicao_px": 46
+          },
+          "ponta_dir": {
+            "largura_px": 216,
+            "sobreposicao_px": 46
+          },
+          "texto": {
+            "x0": 181,
+            "x1": 1365,
+            "y0": 54,
+            "y1": 318
+          }
+        },
+        "arquivos_kit": [
+          "balao-ecos-arcano--v02--kit-corpo--1024.webp",
+          "balao-ecos-arcano--v02--kit-corpo--768.webp",
+          "balao-ecos-arcano--v02--kit-corpo--512.webp",
+          "balao-ecos-arcano--v02--kit-corpo--256.webp",
+          "balao-ecos-arcano--v02--kit-ponta-esq--1024.webp",
+          "balao-ecos-arcano--v02--kit-ponta-esq--768.webp",
+          "balao-ecos-arcano--v02--kit-ponta-esq--512.webp",
+          "balao-ecos-arcano--v02--kit-ponta-esq--256.webp",
+          "balao-ecos-arcano--v02--kit-ponta-dir--1024.webp",
+          "balao-ecos-arcano--v02--kit-ponta-dir--768.webp",
+          "balao-ecos-arcano--v02--kit-ponta-dir--512.webp",
+          "balao-ecos-arcano--v02--kit-ponta-dir--256.webp"
+        ]
+      },
+      "segundos_pos": 30.8,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 8023,
+      "passos": null,
+      "segundos": 12.3,
+      "neuronios_estimados": 78,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "balao-ecos-arcano--v03--1535.png",
+          "bytes": 499504
+        },
+        {
+          "arquivo": "balao-ecos-arcano--v03--1535.webp",
+          "bytes": 53854
+        },
+        {
+          "arquivo": "balao-ecos-arcano--v03--1024.webp",
+          "bytes": 26206
+        },
+        {
+          "arquivo": "balao-ecos-arcano--v03--768.webp",
+          "bytes": 17440
+        },
+        {
+          "arquivo": "balao-ecos-arcano--v03--512.webp",
+          "bytes": 10230
+        },
+        {
+          "arquivo": "balao-ecos-arcano--v03--256.webp",
+          "bytes": 3988
+        }
+      ],
+      "balao": {
+        "tamanho_px": [
+          1535,
+          381
+        ],
+        "nove_fatias": {
+          "top": 36,
+          "right": 210,
+          "bottom": 35,
+          "left": 224,
+          "css": "border-image: url(...) 36 210 35 224 fill / auto; border-image-repeat: stretch;",
+          "obs": "medidas em px do original; nos derivados multiplique por largura/W"
+        },
+        "kit": {
+          "corpo": {
+            "altura_px": 348,
+            "topo_no_original": 17,
+            "fatias": {
+              "top": 19,
+              "bottom": 19,
+              "left": 0,
+              "right": 0
+            },
+            "obs": "uniforme na horizontal; estique livre. Centro liso (texto)."
+          },
+          "ponta_esq": {
+            "largura_px": 270,
+            "sobreposicao_px": 46
+          },
+          "ponta_dir": {
+            "largura_px": 256,
+            "sobreposicao_px": 46
+          },
+          "texto": {
+            "x0": 224,
+            "x1": 1325,
+            "y0": 36,
+            "y1": 346
+          }
+        },
+        "arquivos_kit": [
+          "balao-ecos-arcano--v03--kit-corpo--1024.webp",
+          "balao-ecos-arcano--v03--kit-corpo--768.webp",
+          "balao-ecos-arcano--v03--kit-corpo--512.webp",
+          "balao-ecos-arcano--v03--kit-corpo--256.webp",
+          "balao-ecos-arcano--v03--kit-ponta-esq--1024.webp",
+          "balao-ecos-arcano--v03--kit-ponta-esq--768.webp",
+          "balao-ecos-arcano--v03--kit-ponta-esq--512.webp",
+          "balao-ecos-arcano--v03--kit-ponta-esq--256.webp",
+          "balao-ecos-arcano--v03--kit-ponta-dir--1024.webp",
+          "balao-ecos-arcano--v03--kit-ponta-dir--768.webp",
+          "balao-ecos-arcano--v03--kit-ponta-dir--512.webp",
+          "balao-ecos-arcano--v03--kit-ponta-dir--256.webp"
+        ]
+      },
+      "segundos_pos": 30.9,
+      "avisos": []
+    },
+    {
+      "nome": "v04",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 8024,
+      "passos": null,
+      "segundos": 13.3,
+      "neuronios_estimados": 78,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "balao-ecos-arcano--v04--1535.png",
+          "bytes": 409720
+        },
+        {
+          "arquivo": "balao-ecos-arcano--v04--1535.webp",
+          "bytes": 47524
+        },
+        {
+          "arquivo": "balao-ecos-arcano--v04--1024.webp",
+          "bytes": 23432
+        },
+        {
+          "arquivo": "balao-ecos-arcano--v04--768.webp",
+          "bytes": 16392
+        },
+        {
+          "arquivo": "balao-ecos-arcano--v04--512.webp",
+          "bytes": 9410
+        },
+        {
+          "arquivo": "balao-ecos-arcano--v04--256.webp",
+          "bytes": 3918
+        }
+      ],
+      "balao": {
+        "tamanho_px": [
+          1535,
+          326
+        ],
+        "nove_fatias": {
+          "top": 38,
+          "right": 217,
+          "bottom": 38,
+          "left": 221,
+          "css": "border-image: url(...) 38 217 38 221 fill / auto; border-image-repeat: stretch;",
+          "obs": "medidas em px do original; nos derivados multiplique por largura/W"
+        },
+        "kit": {
+          "corpo": {
+            "altura_px": 293,
+            "topo_no_original": 17,
+            "fatias": {
+              "top": 21,
+              "bottom": 22,
+              "left": 0,
+              "right": 0
+            },
+            "obs": "uniforme na horizontal; estique livre. Centro liso (texto)."
+          },
+          "ponta_esq": {
+            "largura_px": 267,
+            "sobreposicao_px": 46
+          },
+          "ponta_dir": {
+            "largura_px": 263,
+            "sobreposicao_px": 46
+          },
+          "texto": {
+            "x0": 221,
+            "x1": 1318,
+            "y0": 38,
+            "y1": 288
+          }
+        },
+        "arquivos_kit": [
+          "balao-ecos-arcano--v04--kit-corpo--1024.webp",
+          "balao-ecos-arcano--v04--kit-corpo--768.webp",
+          "balao-ecos-arcano--v04--kit-corpo--512.webp",
+          "balao-ecos-arcano--v04--kit-corpo--256.webp",
+          "balao-ecos-arcano--v04--kit-ponta-esq--1024.webp",
+          "balao-ecos-arcano--v04--kit-ponta-esq--768.webp",
+          "balao-ecos-arcano--v04--kit-ponta-esq--512.webp",
+          "balao-ecos-arcano--v04--kit-ponta-esq--256.webp",
+          "balao-ecos-arcano--v04--kit-ponta-dir--1024.webp",
+          "balao-ecos-arcano--v04--kit-ponta-dir--768.webp",
+          "balao-ecos-arcano--v04--kit-ponta-dir--512.webp",
+          "balao-ecos-arcano--v04--kit-ponta-dir--256.webp"
+        ]
+      },
+      "segundos_pos": 29.6,
+      "avisos": []
+    }
+  ]
+}

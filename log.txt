@@ -1,0 +1,12 @@
+[balao-ecos-arcano] v01: @cf/black-forest-labs/flux-2-klein-4b seed=8021 1536x512 passos=None (~78 neurônios)
+    ok em 13.0s, 1536x512
+[balao-ecos-arcano] v02: @cf/black-forest-labs/flux-2-klein-4b seed=8022 1536x512 passos=None (~78 neurônios)
+    ok em 13.2s, 1536x512
+[balao-ecos-arcano] v03: @cf/black-forest-labs/flux-2-klein-4b seed=8023 1536x512 passos=None (~78 neurônios)
+    ok em 12.3s, 1536x512
+[balao-ecos-arcano] v04: @cf/black-forest-labs/flux-2-klein-4b seed=8024 1536x512 passos=None (~78 neurônios)
+    ok em 13.3s, 1536x512
+[balao-ecos-arcano] v01: rembg:birefnet-general; sem avisos
+[balao-ecos-arcano] v02: rembg:birefnet-general; sem avisos
+[balao-ecos-arcano] v03: rembg:birefnet-general; sem avisos
+[balao-ecos-arcano] v04: rembg:birefnet-general; sem avisos
