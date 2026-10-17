@@ -1,0 +1,18 @@
+# Asas do Crepúsculo — miniperfil (quadrada) (`mini-asas-do-crepusculo`)
+
+Tipo: **moldura** · tamanho original 1024px
+
+![prancha](prancha.png)
+
+| var. | modelo | seed | fundo | avisos/erro | arquivos |
+|---|---|---|---|---|---|
+| v01 | flux-2-klein-4b | 4111 | rembg:birefnet-general | 18.3% do ornamento ficou fora do quadro — reduza a janela ou peça mais margem no prompt | [1024.png](final/mini-asas-do-crepusculo--v01--1024.png), [1024.webp](final/mini-asas-do-crepusculo--v01--1024.webp), [512.webp](final/mini-asas-do-crepusculo--v01--512.webp), [256.webp](final/mini-asas-do-crepusculo--v01--256.webp), [96.webp](final/mini-asas-do-crepusculo--v01--96.webp), [48.webp](final/mini-asas-do-crepusculo--v01--48.webp) |
+| v02 | flux-2-klein-4b | 4112 | rembg:birefnet-general | 31.1% do ornamento ficou fora do quadro — reduza a janela ou peça mais margem no prompt | [1024.png](final/mini-asas-do-crepusculo--v02--1024.png), [1024.webp](final/mini-asas-do-crepusculo--v02--1024.webp), [512.webp](final/mini-asas-do-crepusculo--v02--512.webp), [256.webp](final/mini-asas-do-crepusculo--v02--256.webp), [96.webp](final/mini-asas-do-crepusculo--v02--96.webp), [48.webp](final/mini-asas-do-crepusculo--v02--48.webp) |
+| v03 | flux-2-klein-4b | 4113 | rembg:birefnet-general | 4.0% do ornamento ficou fora do quadro — reduza a janela ou peça mais margem no prompt | [1024.png](final/mini-asas-do-crepusculo--v03--1024.png), [1024.webp](final/mini-asas-do-crepusculo--v03--1024.webp), [512.webp](final/mini-asas-do-crepusculo--v03--512.webp), [256.webp](final/mini-asas-do-crepusculo--v03--256.webp), [96.webp](final/mini-asas-do-crepusculo--v03--96.webp), [48.webp](final/mini-asas-do-crepusculo--v03--48.webp) |
+| v04 | flux-2-klein-9b | 4114 | rembg:birefnet-general | 17.8% do ornamento ficou fora do quadro — reduza a janela ou peça mais margem no prompt | [1024.png](final/mini-asas-do-crepusculo--v04--1024.png), [1024.webp](final/mini-asas-do-crepusculo--v04--1024.webp), [512.webp](final/mini-asas-do-crepusculo--v04--512.webp), [256.webp](final/mini-asas-do-crepusculo--v04--256.webp), [96.webp](final/mini-asas-do-crepusculo--v04--96.webp), [48.webp](final/mini-asas-do-crepusculo--v04--48.webp) |
+
+Janela do avatar: `{"forma": "quadrado", "centro_px": [512.0, 512.0], "lado_px": 560.1, "raio_canto_px": 41.0, "lado_fracao": 0.547}`. No app: avatar 4% maior que a janela, sob a moldura.
+
+Prompt:
+
+> Fantasy RPG accessory illustration, painted, highly detailed, isolated on a plain flat light gray background. A SQUARE ornate avatar frame seen straight-on, a rounded square, not a circle: an empty square opening with slightly rounded corners in the exact center, about 55 percent of the image width, straight vertical and horizontal sides, perfectly clear and showing only the flat background. Around the square opening runs a slim straight-sided square bezel of blackened silver engraved with gothic tracery and tiny thorned scrollwork. Two dark raven wings made of individually painted glossy black feathers with tarnished silver edges rise from behind the upper left and upper right corners and spread outward. At the top center, a pointed gothic crest of chiseled silver holding a large faceted crimson crystal. Small crimson teardrop gems sit on the four corners of the square. Fine silver chains with tiny crystal pendants and a small cross charm hang from the two lower corners, and a short dark velvet ribbon with a crimson gem sits at the bottom center. Soft studio light from the upper left, cool silver reflections. Every ornament fully inside the image with an empty margin around it. No text, no watermark, no character, no face, nothing inside the square opening.

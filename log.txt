@@ -1,0 +1,12 @@
+[mini-asas-do-crepusculo] v01: @cf/black-forest-labs/flux-2-klein-4b seed=4111 1024x1024 passos=None (~104 neurônios)
+    ok em 21.6s, 1024x1024
+[mini-asas-do-crepusculo] v02: @cf/black-forest-labs/flux-2-klein-4b seed=4112 1024x1024 passos=None (~104 neurônios)
+    ok em 20.2s, 1024x1024
+[mini-asas-do-crepusculo] v03: @cf/black-forest-labs/flux-2-klein-4b seed=4113 1024x1024 passos=None (~104 neurônios)
+    ok em 18.9s, 1024x1024
+[mini-asas-do-crepusculo] v04: @cf/black-forest-labs/flux-2-klein-9b seed=4114 1024x1024 passos=None (~1,364 neurônios)
+    ok em 2.6s, 1024x1024
+[mini-asas-do-crepusculo] v01: rembg:birefnet-general; 18.3% do ornamento ficou fora do quadro — reduza a janela ou peça mais margem no prompt
+[mini-asas-do-crepusculo] v02: rembg:birefnet-general; 31.1% do ornamento ficou fora do quadro — reduza a janela ou peça mais margem no prompt
+[mini-asas-do-crepusculo] v03: rembg:birefnet-general; 4.0% do ornamento ficou fora do quadro — reduza a janela ou peça mais margem no prompt
+[mini-asas-do-crepusculo] v04: rembg:birefnet-general; 17.8% do ornamento ficou fora do quadro — reduza a janela ou peça mais margem no prompt

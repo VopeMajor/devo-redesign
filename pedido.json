@@ -1,0 +1,76 @@
+{
+  "id": "mini-asas-do-crepusculo",
+  "titulo": "Asas do Crepúsculo — miniperfil (quadrada)",
+  "tipo": "moldura",
+  "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+  "prompt": "Fantasy RPG accessory illustration, painted, highly detailed, isolated on a plain flat light gray background. A SQUARE ornate avatar frame seen straight-on, a rounded square, not a circle: an empty square opening with slightly rounded corners in the exact center, about 55 percent of the image width, straight vertical and horizontal sides, perfectly clear and showing only the flat background. Around the square opening runs a slim straight-sided square bezel of blackened silver engraved with gothic tracery and tiny thorned scrollwork. Two dark raven wings made of individually painted glossy black feathers with tarnished silver edges rise from behind the upper left and upper right corners and spread outward. At the top center, a pointed gothic crest of chiseled silver holding a large faceted crimson crystal. Small crimson teardrop gems sit on the four corners of the square. Fine silver chains with tiny crystal pendants and a small cross charm hang from the two lower corners, and a short dark velvet ribbon with a crimson gem sits at the bottom center. Soft studio light from the upper left, cool silver reflections. Every ornament fully inside the image with an empty margin around it. No text, no watermark, no character, no face, nothing inside the square opening.",
+  "negative": "text, letters, watermark, signature, logo, cropped, cut off, blurry, low detail, flat vector icon, clipart, emoji, cartoon sticker, simple geometric shapes, plastic look, people, hands",
+  "largura": 1024,
+  "altura": 1024,
+  "variacoes": [
+    {
+      "seed": 4111,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "passos": null,
+      "largura": 1024,
+      "altura": 1024,
+      "prompt_extra": "",
+      "n": 1
+    },
+    {
+      "seed": 4112,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "passos": null,
+      "largura": 1024,
+      "altura": 1024,
+      "prompt_extra": "",
+      "n": 2
+    },
+    {
+      "seed": 4113,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "passos": null,
+      "largura": 1024,
+      "altura": 1024,
+      "prompt_extra": "",
+      "n": 3
+    },
+    {
+      "seed": 4114,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "passos": null,
+      "largura": 1024,
+      "altura": 1024,
+      "prompt_extra": "",
+      "n": 4
+    }
+  ],
+  "pos": {
+    "tamanho_final": 1024,
+    "molde": {
+      "forma": "quadrado",
+      "centro": [
+        0.5,
+        0.5
+      ],
+      "lado": 0.547,
+      "raio_canto": 0.04,
+      "sombra": 0.35,
+      "largura_sombra": 0.045
+    },
+    "remover_fundo": true,
+    "modelo_fundo": "birefnet-general",
+    "derivados": [
+      512,
+      256,
+      96,
+      48
+    ],
+    "margem": 0.03,
+    "fundo": "liso",
+    "camadas": []
+  },
+  "passos": null,
+  "guidance": null,
+  "referencias": []
+}

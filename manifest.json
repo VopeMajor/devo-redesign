@@ -1,0 +1,229 @@
+{
+  "pedido": "mini-asas-do-crepusculo",
+  "titulo": "Asas do Crepúsculo — miniperfil (quadrada)",
+  "tipo": "moldura",
+  "tamanho_final": 1024,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 4111,
+      "passos": null,
+      "segundos": 21.6,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "miolo_aberto_por_cor": true,
+      "janela": {
+        "forma": "quadrado",
+        "centro_px": [
+          512.0,
+          512.0
+        ],
+        "lado_px": 560.1,
+        "raio_canto_px": 41.0,
+        "lado_fracao": 0.547
+      },
+      "reencaixe": {
+        "escala": 1.3553,
+        "cobertura_aro": 1.0
+      },
+      "ornamento_cortado": 0.1834,
+      "arquivos": [
+        {
+          "arquivo": "mini-asas-do-crepusculo--v01--1024.png",
+          "bytes": 814243
+        },
+        {
+          "arquivo": "mini-asas-do-crepusculo--v01--1024.webp",
+          "bytes": 144610
+        },
+        {
+          "arquivo": "mini-asas-do-crepusculo--v01--512.webp",
+          "bytes": 53050
+        },
+        {
+          "arquivo": "mini-asas-do-crepusculo--v01--256.webp",
+          "bytes": 19540
+        },
+        {
+          "arquivo": "mini-asas-do-crepusculo--v01--96.webp",
+          "bytes": 5174
+        },
+        {
+          "arquivo": "mini-asas-do-crepusculo--v01--48.webp",
+          "bytes": 2004
+        }
+      ],
+      "segundos_pos": 34.8,
+      "avisos": [
+        "18.3% do ornamento ficou fora do quadro — reduza a janela ou peça mais margem no prompt"
+      ]
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 4112,
+      "passos": null,
+      "segundos": 20.2,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "miolo_aberto_por_cor": true,
+      "janela": {
+        "forma": "quadrado",
+        "centro_px": [
+          512.0,
+          512.0
+        ],
+        "lado_px": 560.1,
+        "raio_canto_px": 41.0,
+        "lado_fracao": 0.547
+      },
+      "reencaixe": {
+        "escala": 1.5637,
+        "cobertura_aro": 1.0
+      },
+      "ornamento_cortado": 0.3111,
+      "arquivos": [
+        {
+          "arquivo": "mini-asas-do-crepusculo--v02--1024.png",
+          "bytes": 822398
+        },
+        {
+          "arquivo": "mini-asas-do-crepusculo--v02--1024.webp",
+          "bytes": 121784
+        },
+        {
+          "arquivo": "mini-asas-do-crepusculo--v02--512.webp",
+          "bytes": 45986
+        },
+        {
+          "arquivo": "mini-asas-do-crepusculo--v02--256.webp",
+          "bytes": 17656
+        },
+        {
+          "arquivo": "mini-asas-do-crepusculo--v02--96.webp",
+          "bytes": 4754
+        },
+        {
+          "arquivo": "mini-asas-do-crepusculo--v02--48.webp",
+          "bytes": 1934
+        }
+      ],
+      "segundos_pos": 29.4,
+      "avisos": [
+        "31.1% do ornamento ficou fora do quadro — reduza a janela ou peça mais margem no prompt"
+      ]
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 4113,
+      "passos": null,
+      "segundos": 18.9,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "miolo_aberto_por_cor": true,
+      "janela": {
+        "forma": "quadrado",
+        "centro_px": [
+          512.0,
+          512.0
+        ],
+        "lado_px": 560.1,
+        "raio_canto_px": 41.0,
+        "lado_fracao": 0.547
+      },
+      "reencaixe": {
+        "escala": 1.1848,
+        "cobertura_aro": 1.0
+      },
+      "ornamento_cortado": 0.0397,
+      "arquivos": [
+        {
+          "arquivo": "mini-asas-do-crepusculo--v03--1024.png",
+          "bytes": 595236
+        },
+        {
+          "arquivo": "mini-asas-do-crepusculo--v03--1024.webp",
+          "bytes": 107410
+        },
+        {
+          "arquivo": "mini-asas-do-crepusculo--v03--512.webp",
+          "bytes": 41280
+        },
+        {
+          "arquivo": "mini-asas-do-crepusculo--v03--256.webp",
+          "bytes": 15976
+        },
+        {
+          "arquivo": "mini-asas-do-crepusculo--v03--96.webp",
+          "bytes": 4502
+        },
+        {
+          "arquivo": "mini-asas-do-crepusculo--v03--48.webp",
+          "bytes": 1852
+        }
+      ],
+      "segundos_pos": 29.5,
+      "avisos": [
+        "4.0% do ornamento ficou fora do quadro — reduza a janela ou peça mais margem no prompt"
+      ]
+    },
+    {
+      "nome": "v04",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 4114,
+      "passos": null,
+      "segundos": 2.6,
+      "neuronios_estimados": 1364,
+      "fundo": "rembg:birefnet-general",
+      "miolo_aberto_por_cor": true,
+      "janela": {
+        "forma": "quadrado",
+        "centro_px": [
+          512.0,
+          512.0
+        ],
+        "lado_px": 560.1,
+        "raio_canto_px": 41.0,
+        "lado_fracao": 0.547
+      },
+      "reencaixe": {
+        "escala": 1.3459,
+        "cobertura_aro": 1.0
+      },
+      "ornamento_cortado": 0.1775,
+      "arquivos": [
+        {
+          "arquivo": "mini-asas-do-crepusculo--v04--1024.png",
+          "bytes": 846719
+        },
+        {
+          "arquivo": "mini-asas-do-crepusculo--v04--1024.webp",
+          "bytes": 152938
+        },
+        {
+          "arquivo": "mini-asas-do-crepusculo--v04--512.webp",
+          "bytes": 52332
+        },
+        {
+          "arquivo": "mini-asas-do-crepusculo--v04--256.webp",
+          "bytes": 19230
+        },
+        {
+          "arquivo": "mini-asas-do-crepusculo--v04--96.webp",
+          "bytes": 4968
+        },
+        {
+          "arquivo": "mini-asas-do-crepusculo--v04--48.webp",
+          "bytes": 2006
+        }
+      ],
+      "segundos_pos": 29.2,
+      "avisos": [
+        "17.8% do ornamento ficou fora do quadro — reduza a janela ou peça mais margem no prompt"
+      ]
+    }
+  ]
+}
