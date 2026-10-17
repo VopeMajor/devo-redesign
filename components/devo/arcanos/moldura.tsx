@@ -1,7 +1,7 @@
 'use client'
 
 import { type CSSProperties, type ReactNode, useId, useState } from 'react'
-import { arteDe, type ArteTipo, molduraArte } from '@/lib/devo/arcanos-arte'
+import { arteDe, type ArteTipo, comum, MOLDURA } from '@/lib/devo/arcanos-arte'
 import type { ArcanoKey } from '@/lib/devo/virtudes'
 import { cn } from '@/lib/utils'
 import { SIGILO, Sigilo } from './sigilos'
@@ -65,17 +65,42 @@ export type ModoRetrato = 'cor' | 'pedra'
  */
 export function Moldura({ arcano, modo, aceso, carregar, vt, className }: { arcano: ArcanoKey; modo: ModoRetrato; aceso?: boolean; carregar: boolean; vt?: string; className?: string }) {
   const id = `mo${uid(useId())}`
-  const pintada = molduraArte()
+  const pintada = comum('moldura')
   const [semMoldura, setSemMoldura] = useState(false)
+  const estilo = vt ? ({ viewTransitionName: vt } as CSSProperties) : undefined
+  if (pintada && !semMoldura) {
+    // moldura pintada (768×1024, arco aberto): o retrato vai por baixo, na janela de moldura.json
+    const j = MOLDURA.janela
+    return (
+      <div className={cn('relative aspect-[3/4] w-full', className)} style={estilo}>
+        <div
+          className="absolute overflow-hidden"
+          style={{ left: `${(j.x - 0.01) * 100}%`, top: `${(j.y - 0.005) * 100}%`, width: `${(j.w + 0.02) * 100}%`, height: `${(j.h + 0.01) * 100}%`, clipPath: 'inset(0 round 50% 50% 2% 2% / 24% 24% 1% 1%)' }}
+        >
+          <Retrato arcano={arcano} tipo="retrato" modo={modo} aceso={aceso} carregar={carregar} />
+        </div>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={pintada.src}
+          srcSet={pintada.srcSet}
+          sizes="(max-width: 480px) 60vw, 280px"
+          alt=""
+          loading="lazy"
+          decoding="async"
+          onError={() => setSemMoldura(true)}
+          className={cn('pointer-events-none absolute inset-0 size-full object-contain drop-shadow-[0_10px_18px_rgba(0,0,0,0.65)]', 'arc-tom-moldura')}
+        />
+        {aceso && <span aria-hidden="true" className="arc-halo pointer-events-none absolute bottom-[8.5%] left-1/2 size-[9%] -translate-x-1/2 rounded-full bg-[radial-gradient(closest-side,var(--dv-amethyst-text),transparent)] mix-blend-screen" />}
+        {modo === 'pedra' && <SeloRachado className="absolute bottom-[3%] left-1/2 w-[20%] -translate-x-1/2" />}
+      </div>
+    )
+  }
   return (
-    <div className={cn('relative aspect-[200/290] w-full', className)} style={vt ? ({ viewTransitionName: vt } as CSSProperties) : undefined}>
+    <div className={cn('relative aspect-[200/290] w-full', className)} style={estilo}>
       <div className="absolute inset-x-[17.5%] bottom-[11.5%] top-[12.5%] overflow-hidden" style={{ clipPath: 'inset(0 round 50% 50% 16% 16% / 26% 26% 8% 8%)' }}>
         <Retrato arcano={arcano} tipo="retrato" modo={modo} aceso={aceso} carregar={carregar} />
       </div>
-      {pintada && !semMoldura ? (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img src={pintada.src} srcSet={pintada.srcSet} sizes="(max-width: 480px) 60vw, 260px" alt="" loading="lazy" decoding="async" onError={() => setSemMoldura(true)} className="pointer-events-none absolute inset-0 size-full object-contain" />
-      ) : (
+      {(
         <svg viewBox="0 0 200 290" aria-hidden="true" className="absolute inset-0 size-full overflow-visible drop-shadow-[0_10px_18px_rgba(0,0,0,0.65)]">
           <defs>
             <Metal id={id} />
@@ -146,16 +171,23 @@ export function Retrato({ arcano, tipo, modo, aceso, carregar, translucido, clas
       {pedra && <span aria-hidden="true" className="absolute inset-0 bg-[url(/images/os/marmore-branco.webp)] bg-[length:260px_260px] opacity-[0.16] mix-blend-luminosity grayscale" />}
       {img ? (
         // eslint-disable-next-line @next/next/no-img-element
-        <img
-          src={arte.src}
-          srcSet={arte.srcSet}
-          sizes={tipo === 'figura' ? '(max-width: 480px) 90vw, 420px' : '(max-width: 480px) 60vw, 260px'}
-          alt=""
-          loading="lazy"
-          decoding="async"
-          onError={() => setFalhou(true)}
-          className={cn('absolute inset-0 size-full object-cover object-top', pedra && 'brightness-[0.62] contrast-[1.15] grayscale')}
-        />
+        <>
+          <img
+            src={pedra ? arte.menor : arte.src}
+            srcSet={pedra ? undefined : arte.srcSet}
+            sizes={tipo === 'figura' ? '(max-width: 480px) 90vw, 420px' : '(max-width: 480px) 60vw, 260px'}
+            alt=""
+            loading="lazy"
+            decoding="async"
+            onError={() => setFalhou(true)}
+            className={cn(
+              'absolute inset-0 size-full object-cover object-top',
+              // trancado: estátua — sem cor, escura, contraste alto e desfocada (a forma fica, os detalhes não)
+              pedra ? 'brightness-[0.38] contrast-[1.5] blur-[2.5px] grayscale' : 'arc-tom-figura',
+            )}
+          />
+          {pedra && <span aria-hidden="true" className="absolute inset-0 bg-[url(/images/os/marmore-branco.webp)] bg-[length:200px_200px] opacity-25 mix-blend-overlay grayscale" />}
+        </>
       ) : (
         <svg viewBox="0 0 100 140" aria-hidden="true" preserveAspectRatio="xMidYMax meet" className="absolute inset-0 size-full">
           <defs>

@@ -1,0 +1,52 @@
+{
+  "key": "estrela",
+  "figura": {
+    "tamanhos": [
+      768,
+      1024,
+      1536
+    ],
+    "tamanho": [
+      1024,
+      1536
+    ],
+    "pes_y": 0.9766,
+    "altura_figura": 0.9115
+  },
+  "retrato": {
+    "tamanhos": [
+      256,
+      512,
+      1024
+    ],
+    "tamanho": [
+      768,
+      1024
+    ],
+    "recorte_da_figura": [
+      0.2793,
+      0.0417,
+      0.7305,
+      0.4427
+    ]
+  },
+  "sigilo": {
+    "tamanhos": [
+      64,
+      128,
+      256
+    ],
+    "origem": {
+      "pedido": "arcano-sigilo-estrela",
+      "variacao": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 13172,
+      "importado": null
+    }
+  },
+  "origem": {
+    "pedido": "arcano-estrela",
+    "variacao": "v02",
+    "png": "arcano-estrela--v02--1536.png"
+  }
+}

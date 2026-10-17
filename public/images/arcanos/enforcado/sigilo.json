@@ -1,0 +1,18 @@
+{
+  "asset": "img:/images/arcanos/enforcado/sigilo",
+  "imagem": {
+    "base": "/images/arcanos/enforcado/sigilo",
+    "tamanhos": [
+      64,
+      128,
+      256
+    ]
+  },
+  "origem": {
+    "pedido": "arcano-sigilo-enforcado",
+    "variacao": "v01",
+    "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+    "seed": 13121,
+    "importado": null
+  }
+}

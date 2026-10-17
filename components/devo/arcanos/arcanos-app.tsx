@@ -12,7 +12,7 @@ import { EstilosArcanos, prng, reduzMovimento, sentir } from './fx'
 import { Galeria } from './galeria'
 import { Mapa } from './mapa'
 import { Medalhao, SeloRachado } from './moldura'
-import { Sigilo } from './sigilos'
+import { SigiloPintado } from './sigilos'
 
 /**
  * ARCANOS — tela própria (dono, 17/10; refs em docs/redesign/refs/arcanos). Três vistas:
@@ -101,7 +101,7 @@ function Trancado({ motivo }: { motivo: string }) {
           <div className="grid grid-cols-4 gap-4 opacity-55">
             {(['louco', 'mago', 'sacerdotisa', 'imperatriz', 'morte', 'torre', 'lua', 'sol'] as const).map((k) => (
               <Medalhao key={k} estado="apagado" className="size-14">
-                <Sigilo arcano={k} aro={false} estado="apagado" className="size-8" />
+                <SigiloPintado arcano={k} estado="apagado" px={32} className="size-8" />
               </Medalhao>
             ))}
           </div>

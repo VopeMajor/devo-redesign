@@ -1,0 +1,18 @@
+{
+  "asset": "img:/images/arcanos/temperanca/sigilo",
+  "imagem": {
+    "base": "/images/arcanos/temperanca/sigilo",
+    "tamanhos": [
+      64,
+      128,
+      256
+    ]
+  },
+  "origem": {
+    "pedido": "arcano-sigilo-temperanca",
+    "variacao": "v01",
+    "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+    "seed": 13141,
+    "importado": null
+  }
+}

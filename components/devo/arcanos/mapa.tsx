@@ -6,9 +6,10 @@ import type { VirtudesPayload } from '@/lib/devo/virtudes'
 import { cn } from '@/lib/utils'
 import { EmblemArcanos } from '../kit/emblems'
 import { toRoman } from '../kit'
+import { comum } from '@/lib/devo/arcanos-arte'
 import { prng, reduzMovimento, sentir } from './fx'
 import { Medalhao } from './moldura'
-import { Sigilo } from './sigilos'
+import { SigiloPintado } from './sigilos'
 
 /**
  * Mapa orbital (ref-06) com profundidade de verdade: os três anéis são círculos num plano inclinado, projetados
@@ -50,8 +51,10 @@ export function Mapa({ d, onEscolher }: { d: Liberado; onEscolher: (i: number) =
   const trilha = useRef<SVGPathElement>(null)
   const trilhaMinha = useRef<SVGPathElement>(null)
   const camadas = useRef<(HTMLDivElement | null)[]>([])
+  const fundo = useRef<HTMLDivElement>(null)
   const [w, setW] = useState(360)
   const meuIdx = d.arcanos.findIndex((a) => a.proprio)
+  const orbital = comum('orbital')
   const meu = meuIdx >= 0 ? d.arcanos[meuIdx] : null
   const H = Math.round(w * 0.98)
 
@@ -191,7 +194,8 @@ export function Mapa({ d, onEscolher }: { d: Liberado; onEscolher: (i: number) =
       }
       trilha.current?.setAttribute('d', tr)
       trilhaMinha.current?.setAttribute('d', trm || 'M0 0')
-      // paralaxe das estrelas
+      // paralaxe: a pintura orbital ao fundo anda pouco, as estrelas mais
+      if (fundo.current) fundo.current.style.transform = `translate3d(${(Math.sin(f.phi * 0.5) * 4).toFixed(1)}px, ${((f.incl - INCL.padrao) * 0.3).toFixed(1)}px, 0) rotate(${(Math.sin(f.phi * 0.25) * 1.5).toFixed(2)}deg)`
       camadas.current.forEach((c, k) => {
         if (!c) return
         const fator = (k + 1) * 7
@@ -228,7 +232,14 @@ export function Mapa({ d, onEscolher }: { d: Liberado; onEscolher: (i: number) =
           <p id={`${id}-dica`} className="sr-only">
             Arraste para girar. Cada medalhão abre a galeria naquele Arcano.
           </p>
-          {/* céu em três camadas (paralaxe) + névoa */}
+          {/* pintura orbital (infra/arte) no fundo, no tom ametista; céu em três camadas (paralaxe) + névoa */}
+          {orbital && (
+            <div ref={fundo} aria-hidden="true" className="pointer-events-none absolute -inset-[6%]">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={orbital.src} srcSet={orbital.srcSet} sizes="(max-width: 480px) 140vw, 640px" alt="" decoding="async" className="arc-tom-fundo size-full object-cover opacity-80" />
+              <span className="absolute inset-0 bg-dv-amethyst opacity-20 mix-blend-color" />
+            </div>
+          )}
           <span aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(60%_45%_at_50%_45%,color-mix(in_oklab,var(--dv-amethyst-deep)_45%,transparent),transparent_70%),radial-gradient(40%_30%_at_78%_20%,color-mix(in_oklab,var(--dv-night-2)_80%,transparent),transparent)]" />
           {CAMADAS.map((estrelas, k) => (
             <div
@@ -293,7 +304,7 @@ export function Mapa({ d, onEscolher }: { d: Liberado; onEscolher: (i: number) =
                 className="dv-focus absolute left-0 top-0 size-10 rounded-full will-change-transform before:absolute before:-inset-1 before:content-['']"
               >
                 <Medalhao estado={estado} pulso={a.proprio} className="size-full">
-                  <Sigilo arcano={a.key} aro={false} estado={estado} className="-mt-0.5 size-[20px]" />
+                  <SigiloPintado arcano={a.key} estado={estado} px={22} className="-mt-0.5 size-[22px]" />
                   <span className={cn('-mt-[1px] font-mono text-[7.5px] leading-none tracking-[0.04em]', a.proprio ? 'text-dv-amethyst-text' : aberto ? 'text-dv-gold' : 'text-dv-text-3')}>{a.numeral}</span>
                 </Medalhao>
               </button>
@@ -319,7 +330,7 @@ export function Mapa({ d, onEscolher }: { d: Liberado; onEscolher: (i: number) =
             >
               <span aria-hidden="true" className="absolute inset-y-0 left-0 w-24 bg-[radial-gradient(closest-side,color-mix(in_oklab,var(--dv-amethyst)_35%,transparent),transparent)]" />
               <Medalhao estado="aceso" className="size-12">
-                <Sigilo arcano={meu.key} aro={false} estado="aceso" className="size-7" />
+                <SigiloPintado arcano={meu.key} estado="aceso" px={30} className="size-[30px]" />
               </Medalhao>
               <span className="relative min-w-0 flex-1">
                 <span className="dv-label block text-[10px] text-dv-amethyst-text">Seu Arcano · Estágio {toRoman(d.estagio)}</span>

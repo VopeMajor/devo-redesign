@@ -1,7 +1,8 @@
 'use client'
 
 import { ChevronLeft } from 'lucide-react'
-import { type CSSProperties, type ReactNode, useEffect, useMemo, useRef } from 'react'
+import { type CSSProperties, type ReactNode, useEffect, useMemo, useRef, useState } from 'react'
+import { ALTAR, arteDe, comum, FIGURA } from '@/lib/devo/arcanos-arte'
 import { type ArcanoVista, type EstagioVista, VIRTUDES } from '@/lib/devo/virtudes'
 import { cn } from '@/lib/utils'
 import { toRoman } from '../kit'
@@ -23,6 +24,24 @@ const nomeCurto = (t: string) => t.replace(/^Arcano d[aoe]s? /, '')
 export function Altar({ a, estagio, voltar }: { a: ArcanoVista; estagio: number; voltar: () => void }) {
   const d = a.detalhe!
   const topo = useRef<HTMLHeadingElement>(null)
+  const altarArte = comum('altar')
+  const [altarFalhou, setAltarFalhou] = useState(false)
+  const placa = (
+          <div className="absolute inset-x-0 bottom-0 bg-[linear-gradient(180deg,transparent,var(--dv-ink)_62%)] px-4 pb-3 pt-16">
+            <Cartela numeral={a.numeral} aceso={a.proprio} className="mx-auto max-w-[340px]">
+              <div className="text-center">
+                <h2 ref={topo} tabIndex={-1} className="font-display text-[26px] font-semibold uppercase leading-none tracking-[0.12em] text-dv-text outline-none">
+                  {nomeCurto(a.titulo)}
+                </h2>
+                <p className="dv-label mt-1.5 text-[9.5px] text-dv-gold">
+                  Arcano {a.numeral}
+                  {a.proprio ? ` · Estágio ${toRoman(estagio)}` : ''}
+                </p>
+                {a.provisorio && <span className="mt-1.5 inline-flex h-5 items-center px-1.5 font-mono text-[9px] uppercase tracking-[0.14em] text-dv-gold shadow-[inset_0_0_0_1px_var(--dv-line-gold)]">Texto provisório</span>}
+              </div>
+            </Cartela>
+          </div>
+  )
   useEffect(() => {
     topo.current?.focus({ preventScroll: true })
   }, [])
@@ -41,7 +60,12 @@ export function Altar({ a, estagio, voltar }: { a: ArcanoVista; estagio: number;
           </button>
         </div>
 
-        {/* cena em camadas */}
+        {/* cena em camadas: pintada (infra/arte) ou, sem ela, desenhada */}
+        {altarArte && !altarFalhou ? (
+          <CenaPintada a={a} onFalha={() => setAltarFalhou(true)}>
+            {placa}
+          </CenaPintada>
+        ) : (
         <div className="relative h-[72svh] max-h-[620px] min-h-[480px]">
           <Fundo />
           <div className="absolute inset-x-[23%] bottom-[22%] top-[11%]" style={{ viewTransitionName: VT_FIGURA } as CSSProperties}>
@@ -56,21 +80,9 @@ export function Altar({ a, estagio, voltar }: { a: ArcanoVista; estagio: number;
             </svg>
           </div>
           <Velas />
-          <div className="absolute inset-x-0 bottom-0 bg-[linear-gradient(180deg,transparent,var(--dv-ink)_62%)] px-4 pb-3 pt-16">
-            <Cartela numeral={a.numeral} aceso={a.proprio} className="mx-auto max-w-[340px]">
-              <div className="text-center">
-                <h2 ref={topo} tabIndex={-1} className="font-display text-[26px] font-semibold uppercase leading-none tracking-[0.12em] text-dv-text outline-none">
-                  {nomeCurto(a.titulo)}
-                </h2>
-                <p className="dv-label mt-1.5 text-[9.5px] text-dv-gold">
-                  Arcano {a.numeral}
-                  {a.proprio ? ` · Estágio ${toRoman(estagio)}` : ''}
-                </p>
-                {a.provisorio && <span className="mt-1.5 inline-flex h-5 items-center px-1.5 font-mono text-[9px] uppercase tracking-[0.14em] text-dv-gold shadow-[inset_0_0_0_1px_var(--dv-line-gold)]">Texto provisório</span>}
-              </div>
-            </Cartela>
+            {placa}
           </div>
-        </div>
+        )}
 
         <div className="relative mx-auto flex max-w-md flex-col gap-4 px-4 pb-12 pt-2">
           <p className="arc-entra mx-auto max-w-[32ch] text-center font-body text-[16px] italic leading-relaxed text-dv-text-2">{a.breve}</p>
@@ -314,5 +326,101 @@ function Velas() {
         )
       })}
     </svg>
+  )
+}
+
+/* ------------------------------------------------------------------ cena pintada */
+
+const BRILHOS = (() => {
+  const r = prng(31)
+  return Array.from({ length: 18 }, (_, i) => {
+    const esq = i % 2 === 0
+    return { x: esq ? 3 + r() * 38 : 59 + r() * 38, y: 64 + r() * 26, s: 26 + r() * 30, d: 1.4 + r() * 1.6, a: -r() * 3 }
+  })
+})()
+const FUMACA = (() => {
+  const r = prng(17)
+  return Array.from({ length: 8 }, (_, i) => ({ x: i % 2 ? 62 + r() * 30 : 8 + r() * 30, y: 70 + r() * 10, d: 7 + r() * 5, a: -r() * 8, dx: (r() - 0.5) * 40 }))
+})()
+const BRASAS = (() => {
+  const r = prng(29)
+  return Array.from({ length: 14 }, () => ({ x: 10 + r() * 80, y: 55 + r() * 35, d: 8 + r() * 6, a: -r() * 12, dx: (r() - 0.5) * 24, s: 1 + r() * 1.6 }))
+})()
+
+/**
+ * Altar pintado (1024×1536) com a figura inteira pousada no tampo do pedestal (altar.json) e as camadas que
+ * dão movimento por cima: fachos do vitral, halo atrás da figura, brilho das velas, fumaça e brasas. Tom
+ * ametista no fundo e na figura (matriz de cor, ver fx.tsx).
+ */
+function CenaPintada({ a, onFalha, children }: { a: ArcanoVista; onFalha: () => void; children: ReactNode }) {
+  const altar = comum('altar')!
+  const fig = arteDe(a.key, 'figura')
+  const [figFalhou, setFigFalhou] = useState(false)
+  const P = ALTAR.pedestal
+  // caixa da figura em fração da cena (mesma proporção 2:3 dos dois: a fração da altura vale para a largura)
+  const h = 0.56
+  const topo = P.y - FIGURA.pesY * h
+  const centroFigura = topo + (FIGURA.pesY - FIGURA.altura / 2) * h
+  const pct = (n: number) => `${(n * 100).toFixed(2)}%`
+  return (
+    <div className="relative w-full overflow-hidden" style={{ aspectRatio: '2 / 3' }}>
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src={altar.src} srcSet={altar.srcSet} sizes="(max-width: 480px) 100vw, 460px" alt="" decoding="async" onError={onFalha} className="arc-tom-fundo absolute inset-0 size-full object-cover" />
+      <span aria-hidden="true" className="absolute inset-0 bg-dv-amethyst opacity-[0.22] mix-blend-color" />
+      {/* fachos do vitral */}
+      <svg aria-hidden="true" viewBox="0 0 400 600" preserveAspectRatio="none" className="arc-raios pointer-events-none absolute inset-0 size-full mix-blend-screen">
+        <defs>
+          <linearGradient id="altp-facho" x1="0.5" y1="0" x2="0.5" y2="1">
+            <stop offset="0" stopColor="var(--dv-amethyst-text)" stopOpacity="0.42" />
+            <stop offset="1" stopColor="var(--dv-amethyst-text)" stopOpacity="0" />
+          </linearGradient>
+        </defs>
+        <path d="M170 200L80 600H200Z" fill="url(#altp-facho)" style={{ filter: 'blur(7px)' }} />
+        <path d="M230 200L200 600H330Z" fill="url(#altp-facho)" style={{ filter: 'blur(7px)' }} />
+        <path d="M200 210L150 520H250Z" fill="url(#altp-facho)" opacity="0.6" style={{ filter: 'blur(10px)' }} />
+      </svg>
+      <span
+        aria-hidden="true"
+        className="arc-halo pointer-events-none absolute left-1/2 aspect-square w-[78%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(closest-side,color-mix(in_oklab,var(--dv-amethyst)_48%,transparent),color-mix(in_oklab,var(--dv-gold-bright)_8%,transparent)_55%,transparent)] mix-blend-screen"
+        style={{ top: pct(centroFigura), '--d': '5s' } as CSSProperties}
+      />
+      {/* figura no pedestal (elemento compartilhado com a moldura da galeria) */}
+      <div className="absolute" style={{ left: pct(P.x - h / 2), top: pct(topo), width: pct(h), height: pct(h), viewTransitionName: VT_FIGURA } as CSSProperties}>
+        <span aria-hidden="true" className="absolute bottom-[1%] left-1/2 h-[4%] w-[46%] -translate-x-1/2 rounded-[50%] bg-dv-ink/80 blur-[3px]" />
+        {fig && !figFalhou ? (
+          <div className="size-full" style={{ filter: 'drop-shadow(0 0 14px color-mix(in oklab, var(--dv-amethyst) 50%, transparent)) drop-shadow(0 10px 10px rgba(0,0,0,0.6))' }}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={fig.src} srcSet={fig.srcSet} sizes="(max-width: 480px) 60vw, 280px" alt="" decoding="async" onError={() => setFigFalhou(true)} className="arc-tom-figura size-full object-contain" />
+          </div>
+        ) : (
+          <div className="absolute inset-x-[12%] bottom-[3%] top-[8%] overflow-hidden" style={{ clipPath: 'inset(0 round 50% 50% 10% 10% / 26% 26% 6% 6%)' }}>
+            <Retrato arcano={a.key} tipo="retrato" modo="cor" aceso carregar />
+          </div>
+        )}
+      </div>
+      {/* velas pintadas ganham brilho que tremula; fumaça e brasas sobem */}
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 mix-blend-screen">
+        {BRILHOS.map((b, i) => (
+          <span
+            key={i}
+            className="arc-halo absolute -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(closest-side,color-mix(in_oklab,var(--dv-gold-bright)_40%,transparent),transparent)]"
+            style={{ left: `${b.x}%`, top: `${b.y}%`, width: b.s, height: b.s, '--d': `${b.d}s`, '--atraso': `${b.a}s` } as CSSProperties}
+          />
+        ))}
+      </div>
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0">
+        {FUMACA.map((f, i) => (
+          <span key={i} className="arc-fumaca absolute size-6 rounded-full bg-dv-text-3 blur-md" style={{ left: `${f.x}%`, top: `${f.y}%`, '--d': `${f.d}s`, '--atraso': `${f.a}s`, '--dx': `${f.dx}px`, opacity: 0 } as CSSProperties} />
+        ))}
+        {BRASAS.map((b, i) => (
+          <span
+            key={i}
+            className="arc-poeira absolute rounded-full bg-dv-gold-bright"
+            style={{ left: `${b.x}%`, top: `${b.y}%`, width: b.s, height: b.s, '--d': `${b.d}s`, '--atraso': `${b.a}s`, '--dx': `${b.dx}px`, '--o': 0.85, opacity: 0, boxShadow: '0 0 4px var(--dv-gold-bright)' } as CSSProperties}
+          />
+        ))}
+      </div>
+      {children}
+    </div>
   )
 }

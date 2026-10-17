@@ -39,10 +39,33 @@ export function sentir(g: Gesto) {
   } catch {}
 }
 
-/** Keyframes locais (prefixo arc-). */
+/**
+ * Tom ametista para a arte pintada (que puxa muito para o vinho): uma matriz de cor que leva o vermelho para o
+ * roxo e o dourado para o champanhe-prata, sem repintar. Três forças: figura/retrato (0,65: a pele continua pele),
+ * moldura (0,6) e fundos (1,0). Antes/depois em docs/redesign/refs/arcanos/tom-antes-depois.jpg.
+ * Linha da matriz (k = 1): R' = .62R + .10G + .28B · G' = .06R + .84G + .10B · B' = .40R + .06G + .62B.
+ */
+const TOM = {
+  figura: '0.753 0.065 0.182 0 0  0.039 0.896 0.065 0 0  0.260 0.039 0.753 0 0  0 0 0 1 0',
+  moldura: '0.772 0.060 0.168 0 0  0.036 0.904 0.060 0 0  0.240 0.036 0.772 0 0  0 0 0 1 0',
+  fundo: '0.620 0.100 0.280 0 0  0.060 0.840 0.100 0 0  0.400 0.060 0.620 0 0  0 0 0 1 0',
+}
+
+/** Keyframes locais (prefixo arc-) e os filtros de tom. */
 export function EstilosArcanos() {
   return (
-    <style>{`
+    <>
+      <svg aria-hidden="true" width="0" height="0" className="pointer-events-none absolute size-0 overflow-hidden">
+        {Object.entries(TOM).map(([k, v]) => (
+          <filter key={k} id={`arc-tom-${k}`} colorInterpolationFilters="sRGB">
+            <feColorMatrix type="matrix" values={v} />
+          </filter>
+        ))}
+      </svg>
+      <style>{`
+.arc-tom-figura { filter: url(#arc-tom-figura) }
+.arc-tom-moldura { filter: url(#arc-tom-moldura) }
+.arc-tom-fundo { filter: url(#arc-tom-fundo) saturate(.85) }
 @keyframes arc-cintila { 0%,100% { opacity: var(--o, .6) } 50% { opacity: calc(var(--o, .6) * .25) } }
 @keyframes arc-pulso { 0%,100% { transform: scale(1); opacity: .75 } 50% { transform: scale(1.18); opacity: 1 } }
 @keyframes arc-chama { 0%,100% { transform: scaleY(1) scaleX(1) rotate(0deg) } 25% { transform: scaleY(1.12) scaleX(.92) rotate(-2deg) } 50% { transform: scaleY(.94) scaleX(1.04) rotate(1.5deg) } 75% { transform: scaleY(1.06) scaleX(.96) rotate(-1deg) } }
@@ -65,6 +88,7 @@ export function EstilosArcanos() {
   .arc-fumaca, .arc-poeira { display: none }
 }
 `}</style>
+    </>
   )
 }
 

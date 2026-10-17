@@ -1,0 +1,29 @@
+{
+  "base": "/images/arcanos/comum/moldura",
+  "tamanhos": [
+    256,
+    512,
+    768,
+    1024
+  ],
+  "tamanho": [
+    768,
+    1024
+  ],
+  "janela": {
+    "caixa": [
+      0.2656,
+      0.208,
+      0.4674,
+      0.623
+    ],
+    "forma": "arco (topo em ogiva, base reta)",
+    "obs": "x,y,largura,altura em fração; o retrato vai por baixo"
+  },
+  "origem": {
+    "pedido": "arcanos-moldura",
+    "variacao": "v03",
+    "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+    "seed": 14003
+  }
+}
