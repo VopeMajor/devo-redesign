@@ -61,8 +61,8 @@ export function colocarPlacas(torres: TorreEstado[], lug: Record<string, Lugar>)
   const caixas = torres.map((t) => caixaTorre(t, lug[t.id]))
   const feitas: Caixa[] = []
   const out: Record<string, { cx: number; cy: number; w: number; h: number; ax: number; ay: number }> = {}
-  // da frente para o fundo (as da frente têm menos opções)
-  const ordem = [...torres].sort((a, b) => lug[b.id].y - lug[a.id].y)
+  // a principal primeiro (fica no lugar ideal); depois da frente para o fundo
+  const ordem = [...torres].sort((a, b) => (a.tipo === 'principal' ? -1 : b.tipo === 'principal' ? 1 : lug[b.id].y - lug[a.id].y))
   for (const t of ordem) {
     const l = lug[t.id]
     const nome = rotulo(t)
@@ -91,7 +91,7 @@ export function colocarPlacas(torres: TorreEstado[], lug: Record<string, Lugar>)
       const y = Math.min(MAPA_H - h / 2 - 4, Math.max(h / 2 + 4, cy))
       const c = { x0: x - w / 2, x1: x + w / 2, y0: y - h / 2, y1: y + h / 2 }
       // custo = área sobreposta (ilustrações pesam o dobro) + uma pitada pela ordem de preferência
-      const custo = caixas.reduce((a, k) => a + area(c, k) * 2, 0) + feitas.reduce((a, k) => a + area(c, k) * 3, 0) + i * 0.5
+      const custo = caixas.reduce((a, k) => a + area(c, k) * 2, 0) + feitas.reduce((a, k) => a + area(c, k) * 10, 0) + i * 0.5
       if (custo < melhor) {
         melhor = custo
         escolhida = [x, y]
