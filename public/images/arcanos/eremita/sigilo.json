@@ -1,0 +1,18 @@
+{
+  "asset": "img:/images/arcanos/eremita/sigilo",
+  "imagem": {
+    "base": "/images/arcanos/eremita/sigilo",
+    "tamanhos": [
+      64,
+      128,
+      256
+    ]
+  },
+  "origem": {
+    "pedido": "arcano-sigilo-eremita",
+    "variacao": "v01",
+    "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+    "seed": 13091,
+    "importado": null
+  }
+}

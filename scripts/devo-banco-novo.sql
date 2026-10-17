@@ -1759,7 +1759,7 @@ INSERT INTO item_defs (key, kind, name, description, rarity, stackable, meta) VA
   ('cosmetico:nome-veu-ametista', 'cosmetico', 'Véu de Ametista', 'Capitulares com um reflexo que atravessa o nome.', 'raro', false,
    '{"categoria": "efeito", "asset": "devo:nome/veu-ametista", "nome": {"fonte": "decorativa", "cores": ["#c2b9ec", "#8a7cc8", "#efe9ff"], "efeito": "brilho"}, "animado": true, "poco": true, "origem": "poco", "ordem": 16}'),
   ('cosmetico:nome-champanhe', 'cosmetico', 'Aço Champanhe', 'Champanhe e aço em gradiente que corre devagar.', 'epico', false,
-   '{"categoria": "efeito", "asset": "devo:nome/champanhe", "nome": {"fonte": "classica", "cores": ["#e3d3ae", "#9aa0b4", "#fff6e0"], "efeito": "gradiente-movel"}, "animado": true, "poco": false, "origem": "semanal", "ordem": 17}'),
+   '{"categoria": "efeito", "asset": "devo:nome/champanhe", "nome": {"fonte": "classica", "cores": ["#f3d48a", "#7f8fbf", "#fff4d6"], "efeito": "gradiente-movel"}, "animado": true, "poco": false, "origem": "semanal", "ordem": 17}'),
   ('cosmetico:nome-sangue-neon', 'cosmetico', 'Letreiro de Sangue', 'Neon vermelho de cassino, com uma falha de vez em quando.', 'epico', false,
    '{"categoria": "efeito", "asset": "devo:nome/sangue-neon", "nome": {"fonte": "impacto", "cores": ["#ff3a5c", "#a3121f"], "efeito": "neon"}, "animado": true, "poco": false, "origem": "deadly_vote", "ordem": 18}'),
   ('cosmetico:nome-aurora-arcana', 'cosmetico', 'Aurora Arcana', 'Ametista, rosa-seco e champanhe correndo pelo nome.', 'lendario', false,
@@ -1789,6 +1789,10 @@ INSERT INTO item_defs (key, kind, name, description, rarity, stackable, meta) VA
   ('cosmetico:balao-ouro-velho', 'cosmetico', 'Ouro Velho', 'Papel de cartório com moldura de ouro gasto.', 'epico', false,
    '{"categoria": "balao", "asset": "devo:balao/ouro-velho", "balao": {"fundo": "#e9dfc6", "borda": "#8a6a2a", "texto": "#2a2320", "filete": "#b8923a"}, "animado": false, "poco": false, "origem": "semanal", "ordem": 44, "provisorio": true}')
 ON CONFLICT (key) DO NOTHING;
+
+-- Aço Champanhe com mais contraste no gradiente (no miniperfil parecia texto comum). Só troca o valor antigo.
+UPDATE item_defs SET meta = jsonb_set(meta, '{nome,cores}', '["#f3d48a", "#7f8fbf", "#fff4d6"]'::jsonb)
+ WHERE key = 'cosmetico:nome-champanhe' AND meta->'nome'->'cores' = '["#e3d3ae", "#9aa0b4", "#fff6e0"]'::jsonb;
 
 
 -- =============================================================================================
@@ -2292,4 +2296,28 @@ UPDATE calendario_eventos SET arte = '/images/calendario/' || slug || '-512.webp
  WHERE slug IN ('natal', 'halloween') AND arte IS NULL;
 UPDATE calendario_eventos SET arte = '/images/calendario/carnaval-512.webp'
  WHERE slug = 'carnaval-2027' AND arte IS NULL;
+
+
+-- =============================================================================================
+-- scripts/cartas-raridade-migration.sql
+-- =============================================================================================
+-- Cartas DEVO: raridade Ultra Rara (pedido do dono 17/10) e as duas secretas (Única, Promocional).
+-- Ordem: comum < incomum < rara < ultra_rara < lendaria  (+ unica, promocional, acima e fora das recompensas).
+-- Fonte das raridades no código: lib/devo/cards.ts (RARITY_META). Idempotente: rodar duas vezes não quebra.
+--
+-- Até aqui nenhuma tabela restringia a raridade da carta (o servidor sempre grava a raridade de getCard()).
+-- Agora o Salão (lotes e Mercado) só aceita as 7 raridades conhecidas. Nenhuma carta muda de raridade.
+
+ALTER TABLE salao_lotes DROP CONSTRAINT IF EXISTS salao_lotes_card_rarity_chk;
+ALTER TABLE salao_lotes ADD CONSTRAINT salao_lotes_card_rarity_chk
+  CHECK (card_rarity IN ('comum', 'incomum', 'rara', 'ultra_rara', 'lendaria', 'unica', 'promocional'));
+
+ALTER TABLE salao_mercado DROP CONSTRAINT IF EXISTS salao_mercado_card_rarity_chk;
+ALTER TABLE salao_mercado ADD CONSTRAINT salao_mercado_card_rarity_chk
+  CHECK (card_rarity IN ('comum', 'incomum', 'rara', 'ultra_rara', 'lendaria', 'unica', 'promocional'));
+
+-- Nota da configuração da Bandeja: a escala de raridade mínima agora tem a Ultra Rara (o valor não muda).
+UPDATE devo_config
+   SET note = 'PROVISÓRIO: raridade mínima das cartas (comum < incomum < rara < ultra_rara < lendaria; unica e promocional acima), vagas por edição, lotes ativos por jogador, lance mínimo e incremento padrão (minutos de Tempo) e Tempo mínimo que o pulso precisa manter depois de pagar.'
+ WHERE key = 'salao.bandeja' AND note LIKE '%comum < incomum < rara < lendaria)%';
 

@@ -1,0 +1,18 @@
+{
+  "asset": "img:/images/arcanos/sol/sigilo",
+  "imagem": {
+    "base": "/images/arcanos/sol/sigilo",
+    "tamanhos": [
+      64,
+      128,
+      256
+    ]
+  },
+  "origem": {
+    "pedido": "arcano-sigilo-sol",
+    "variacao": "v02",
+    "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+    "seed": 13192,
+    "importado": null
+  }
+}

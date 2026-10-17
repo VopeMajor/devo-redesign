@@ -9,7 +9,7 @@ import { EmblemArcanos, EmblemMark, EmblemVirtudes } from '../kit/emblems'
 import { toRoman } from '../kit'
 import { ChevronRight } from 'lucide-react'
 import { useOsNav } from '../os/os-nav'
-import { Sigilo } from '../arcanos/sigilos'
+import { SigiloPintado } from '../arcanos/sigilos'
 import { Naipe } from './naipes'
 
 /**
@@ -172,7 +172,7 @@ function AtalhoArcanos({ d }: { d: Liberado }) {
       onClick={() => nav.open('arcanos')}
       className="dv-focus -mt-2 flex min-h-12 w-full items-center gap-3 px-2 py-2 text-left shadow-[inset_0_-1px_0_var(--dv-line),inset_0_1px_0_var(--dv-line)]"
     >
-      {meu ? <Sigilo arcano={meu.key} estado="aceso" aro={false} className="size-7" /> : <EmblemMark emblem={EmblemArcanos} size={28} />}
+      {meu ? <SigiloPintado arcano={meu.key} estado="aceso" px={28} className="size-7" /> : <EmblemMark emblem={EmblemArcanos} size={28} />}
       <span className="min-w-0 flex-1">
         <span className="dv-label block text-[10px] text-dv-text-3">{meu ? 'Seu Arcano' : 'Arcanos'}</span>
         <span className="block font-display text-[14.5px] font-semibold uppercase tracking-[0.08em] text-dv-text">{meu ? meu.titulo.replace(/^Arcano d[aoe]s? /, '') : 'Os vinte e dois'}</span>

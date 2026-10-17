@@ -1,0 +1,18 @@
+{
+  "asset": "img:/images/arcanos/mundo/sigilo",
+  "imagem": {
+    "base": "/images/arcanos/mundo/sigilo",
+    "tamanhos": [
+      64,
+      128,
+      256
+    ]
+  },
+  "origem": {
+    "pedido": "arcano-sigilo-mundo",
+    "variacao": "v01",
+    "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+    "seed": 13211,
+    "importado": null
+  }
+}

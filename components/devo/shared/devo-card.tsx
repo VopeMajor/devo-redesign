@@ -41,12 +41,18 @@ import { DeadlyVoteSymbol } from "../system/symbol";
  *   Abaixo de 132px de largura (miniatura) a carta não tem NENHUM texto: só a arte, o medalhão e
  *   os losangos de raridade (o nome fica fora da carta, legível, na grade de quem usa).
  *
- * Raridade = MATERIAL (nunca só cor; os losangos contam 1–4):
- *   Comum    → mármore negro com veio cinza e filete de ferro
- *   Incomum  → prata polida
- *   Rara     → aço champanhe
- *   Lendária → champanhe claro, corpo em MÁRMORE BRANCO e ametista engastada (o único acento frio)
- * Rubi nunca aparece na carta (é alerta).
+ * Raridade = MATERIAL (nunca só cor; os losangos contam 1–5):
+ *   Comum      → mármore negro com veio cinza e filete de ferro
+ *   Incomum    → prata polida
+ *   Rara       → aço champanhe
+ *   Ultra Rara → aço ametista: faixas de champanhe e ametista na moldura, um reflexo lento que corre só
+ *                pela borda e halo lilás discreto (corpo ainda negro: fica abaixo da Lendária)
+ *   Lendária   → champanhe claro, corpo em MÁRMORE BRANCO e ametista engastada
+ * Secretas (pedido do dono 17/10; nenhuma carta do Compêndio as tem ainda — vitrine via `rarity`):
+ *   Única       → granada: moldura em vermelho profundo, filete e halo de granada, pedra engastada
+ *   Promocional → holográfica: moldura iridescente que desliza devagar + folha holográfica no corpo
+ *                 (segue o ponteiro na inspeção); com movimento reduzido fica um gradiente parado.
+ * O vermelho da Única é granada (vinho), nunca o rubi de alerta.
  */
 
 export const GLYPHS: Record<GlyphName, LucideIcon> = {
@@ -141,8 +147,8 @@ export type RaritySkin = {
 };
 
 /**
- * Pele de cada raridade na paleta do mármore: mármore negro → prata → aço champanhe → ametista.
- * A ametista só aparece na Lendária; rubi nunca (é alerta).
+ * Pele de cada raridade na paleta do mármore: mármore negro → prata → aço champanhe → aço ametista → ametista,
+ * mais as secretas (granada e holográfica). Rubi de alerta nunca.
  */
 export const RARITY_SKIN: Record<Rarity, RaritySkin> = {
   comum: {
@@ -183,9 +189,22 @@ export const RARITY_SKIN: Record<Rarity, RaritySkin> = {
     body: "black",
     gem: ["#fffaf0", "#d6cdbd", "#6b6357"],
   },
+  ultra_rara: {
+    material: "Aço ametista",
+    pips: 4,
+    frame: "linear-gradient(150deg,#f3eee6 0%,#9c90c4 15%,#e9e2d6 31%,#4a4170 50%,#d9d0ee 67%,#8a8173 83%,#f3eee6 100%)",
+    filet: "#bcb0e2",
+    ink: "#574c8c",
+    light: "#d9c9e3",
+    glow: "rgba(160,142,220,0.4)",
+    duo: "mono",
+    tint: "linear-gradient(180deg,#e6dcef,#5b5088)",
+    body: "black",
+    gem: ["#f7eef5", "#c4abd2", "#57446c"],
+  },
   lendaria: {
     material: "Ametista",
-    pips: 4,
+    pips: 5,
     frame: "linear-gradient(150deg,#fffdf8 0%,#b3a998 17%,#f7f2e8 35%,#7b7264 55%,#efe8dc 74%,#c9c0b0 88%,#fffdf8 100%)",
     filet: "#c2b9ec",
     ink: "#4a4180",
@@ -195,6 +214,47 @@ export const RARITY_SKIN: Record<Rarity, RaritySkin> = {
     body: "white",
     gem: ["#e4defb", "#8a7cc8", "#2a2350"],
   },
+  unica: {
+    material: "Granada",
+    pips: 5,
+    frame: "linear-gradient(150deg,#f3cfd2 0%,#7a1426 17%,#d98a95 34%,#3a0810 54%,#b03d4e 72%,#5c0f1c 87%,#f3cfd2 100%)",
+    filet: "#c9566a",
+    ink: "#8a1a2d",
+    light: "#e3909a",
+    glow: "rgba(168,28,52,0.55)",
+    duo: "mono",
+    tint: "linear-gradient(180deg,#e3a0a8,#5c0f1c)",
+    body: "black",
+    gem: ["#f8ccd2", "#a3243a", "#3a0810"],
+  },
+  promocional: {
+    material: "Holográfica",
+    pips: 5,
+    frame: "linear-gradient(125deg,#f7d3e6 0%,#c7b6f3 16%,#a6dfee 32%,#e7f4c4 48%,#f6caa6 64%,#cdb9f2 80%,#a9e2ec 92%,#f7d3e6 100%)",
+    filet: "#cfc4f2",
+    ink: "#4f4a8c",
+    light: "#b4dfe8",
+    glow: "rgba(170,205,245,0.45)",
+    duo: "mono",
+    body: "black",
+    gem: ["#f9d6ea", "#9fdcea", "#8a6fd2"],
+  },
+};
+
+/** Moldura animada / reflexo de borda por raridade (classes do CARD_CSS). */
+const FRAME_FX: Partial<Record<Rarity, { frameClass?: string; frameSize?: string; edge?: boolean }>> = {
+  ultra_rara: { edge: true },
+  promocional: { frameClass: "dvcard-iris", frameSize: "320% 320%", edge: true },
+};
+
+/** Folha holográfica do corpo: champanhe-ametista (Lendária) ou arco-íris (Promocional). */
+const HOLO_FOIL = {
+  white:
+    "linear-gradient(115deg, transparent 22%, rgba(194,185,236,0.45) 38%, rgba(236,229,216,0.5) 48%, rgba(194,185,236,0.35) 58%, transparent 74%), repeating-linear-gradient(135deg, rgba(0,0,0,0.035) 0 1px, transparent 1px 4px)",
+  black:
+    "linear-gradient(115deg, transparent 18%, rgba(203,197,232,0.32) 34%, rgba(236,229,216,0.45) 46%, rgba(203,197,232,0.26) 58%, transparent 76%), repeating-linear-gradient(135deg, rgba(255,255,255,0.05) 0 1px, transparent 1px 4px)",
+  iris:
+    "linear-gradient(115deg, transparent 8%, rgba(255,140,190,0.42) 22%, rgba(170,140,255,0.42) 34%, rgba(110,215,240,0.42) 46%, rgba(200,250,150,0.36) 58%, rgba(255,195,130,0.4) 70%, rgba(255,140,190,0.3) 82%, transparent 94%), repeating-linear-gradient(135deg, rgba(255,255,255,0.07) 0 1px, transparent 1px 3px)",
 };
 
 /** Moldura do verso: aço champanhe-prateado, a mesma para todas as cartas. */
@@ -235,19 +295,23 @@ export const CARD_CSS = `
 @keyframes dvcard-sheen { 0% { background-position: 120% 0 } 55%,100% { background-position: -40% 0 } }
 @keyframes dvcard-holo { 0% { background-position: 0% 30%, 0 0 } 50% { background-position: 100% 70%, 0 0 } 100% { background-position: 0% 30%, 0 0 } }
 @keyframes dvcard-gem { 0%,100% { opacity: .55 } 50% { opacity: 1 } }
+@keyframes dvcard-iris { 0% { background-position: 0% 50% } 50% { background-position: 100% 50% } 100% { background-position: 0% 50% } }
+@keyframes dvcard-edge { 0% { background-position: 160% 0 } 60%,100% { background-position: -60% 0 } }
 .dvcard-holo { animation: dvcard-holo 9s ease-in-out infinite; }
 .dvcard-holo[data-follow] { animation: none; }
 .dvcard-sheen { animation: dvcard-sheen 7s ease-in-out infinite; }
 .dvcard-gem { animation: dvcard-gem 3.2s ease-in-out infinite; }
-@media (prefers-reduced-motion: reduce) { .dvcard-holo, .dvcard-sheen, .dvcard-gem { animation: none !important } }
+.dvcard-iris { animation: dvcard-iris 12s ease-in-out infinite; }
+.dvcard-edge { animation: dvcard-edge 5.5s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) { .dvcard-holo, .dvcard-sheen, .dvcard-gem, .dvcard-iris, .dvcard-edge { animation: none !important } }
 `;
 
-/** Losangos de raridade (1–4 cheios). Herdam a cor do texto. */
+/** Losangos de raridade (1–5 cheios). Herdam a cor do texto. */
 export function RarityPips({ rarity, className, style }: { rarity: Rarity; className?: string; style?: CSSProperties }) {
   const n = RARITY_SKIN[rarity].pips;
   return (
     <span aria-hidden="true" className={cn("inline-flex items-center gap-[0.28em]", className)} style={style}>
-      {Array.from({ length: 4 }, (_, i) => (
+      {Array.from({ length: 5 }, (_, i) => (
         <svg key={i} viewBox="0 0 10 14" className="h-[1em] w-[0.72em] shrink-0">
           <path d="M5 0.8 L9.2 7 L5 13.2 L0.8 7 Z" fill={i < n ? "currentColor" : "none"} stroke="currentColor" strokeWidth="1" opacity={i < n ? 1 : 0.4} />
         </svg>
@@ -256,10 +320,10 @@ export function RarityPips({ rarity, className, style }: { rarity: Rarity; class
   );
 }
 
-/** Pedra facetada da raridade (losango com engaste de metal: prata, ou champanhe na Rara/Lendária). */
+/** Pedra facetada da raridade (losango com engaste de metal: prata, ou champanhe da Rara para cima). */
 export function RarityGem({ rarity, className, title }: { rarity: Rarity; className?: string; title?: string }) {
   const [hi, mid, lo] = RARITY_SKIN[rarity].gem;
-  const metal = rarity === "lendaria" || rarity === "rara" ? ["#f4efe6", "#8a8173", "#ece5d8"] : ["#ffffff", "#7a7a80", "#e6e6e8"];
+  const metal = rarity === "comum" || rarity === "incomum" || rarity === "promocional" ? ["#ffffff", "#7a7a80", "#e6e6e8"] : ["#f4efe6", "#8a8173", "#ece5d8"];
   const id = `dvgem-${rarity}`;
   return (
     <svg viewBox="0 0 32 48" className={cn("drop-shadow-[0_2px_3px_rgba(0,0,0,0.45)]", className)} role={title ? "img" : undefined} aria-hidden={title ? undefined : true} aria-label={title}>
@@ -285,16 +349,23 @@ export function RarityGem({ rarity, className, title }: { rarity: Rarity; classN
   );
 }
 
-/** Ametista engastada (só na Lendária): losango facetado pequeno, sem filtro (barato na grade). */
-function SetAmethyst({ className }: { className?: string }) {
+/** Pedras engastadas na ponta do arco: ametista (Lendária) e granada (Única). [luz, meio, sombra, miolo] */
+const SET_GEMS: Partial<Record<Rarity, [string, string, string, string]>> = {
+  lendaria: ["#e4defb", "#8a7cc8", "#2a2350", "#c2b9ec"],
+  unica: ["#f8ccd2", "#a3243a", "#3a0810", "#d9707f"],
+};
+
+/** Pedra engastada: losango facetado pequeno, sem filtro (barato na grade). */
+function SetGem({ colors, className }: { colors: [string, string, string, string]; className?: string }) {
+  const [hi, mid, lo, core] = colors;
   return (
     <svg viewBox="0 0 20 28" aria-hidden="true" className={className}>
       <path d="M10 0.5 L19.5 14 L10 27.5 L0.5 14 Z" fill="#f4efe6" />
-      <path d="M10 2.6 L17.4 14 L10 25.4 L2.6 14 Z" fill="#2a2350" />
-      <path d="M10 3.4 L16.6 14 L10 14 Z" fill="#8a7cc8" />
-      <path d="M10 3.4 L3.4 14 L10 14 Z" fill="#e4defb" />
-      <path d="M3.4 14 L10 24.6 L10 14 Z" fill="#8a7cc8" />
-      <path d="M10 9 L13 14 L10 19 L7 14 Z" fill="#c2b9ec" />
+      <path d="M10 2.6 L17.4 14 L10 25.4 L2.6 14 Z" fill={lo} />
+      <path d="M10 3.4 L16.6 14 L10 14 Z" fill={mid} />
+      <path d="M10 3.4 L3.4 14 L10 14 Z" fill={hi} />
+      <path d="M3.4 14 L10 24.6 L10 14 Z" fill={mid} />
+      <path d="M10 9 L13 14 L10 19 L7 14 Z" fill={core} />
       <path d="M6.4 9 L7.6 7.8 L8.2 10.2 Z" fill="#fff" className="dvcard-gem" />
     </svg>
   );
@@ -316,14 +387,49 @@ const SIZES = {
 const CARD_SHELL = "relative aspect-[5/7] [container-type:inline-size]";
 
 /** Moldura metálica + bisel + corpo de mármore (comum à frente e ao verso). */
-function Shell({ frame, filet, glow, body, children }: { frame: string; filet: string; glow?: string; body: "black" | "white"; children: ReactNode }) {
+function Shell({
+  frame,
+  filet,
+  glow,
+  body,
+  frameClass,
+  frameSize,
+  edge,
+  children,
+}: {
+  frame: string;
+  filet: string;
+  glow?: string;
+  body: "black" | "white";
+  /** Classe de animação da moldura (ex.: iridescência da Promocional). */
+  frameClass?: string;
+  frameSize?: string;
+  /** Reflexo que corre só pela borda (o corpo cobre o miolo). */
+  edge?: boolean;
+  children: ReactNode;
+}) {
   return (
     <>
       <span
         aria-hidden="true"
-        className="absolute inset-0 rounded-[5cqw]"
-        style={{ background: frame, boxShadow: `inset 0 1px 0 rgba(255,255,255,0.3), 0 10px 26px -14px rgba(0,0,0,0.9)${glow ? `, 0 0 14px -4px ${glow}` : ""}` }}
+        className={cn("absolute inset-0 rounded-[5cqw]", frameClass)}
+        style={{
+          background: frame,
+          ...(frameSize ? { backgroundSize: frameSize } : null),
+          boxShadow: `inset 0 1px 0 rgba(255,255,255,0.3), 0 10px 26px -14px rgba(0,0,0,0.9)${glow ? `, 0 0 14px -4px ${glow}` : ""}`,
+        }}
       />
+      {edge && (
+        <span
+          aria-hidden="true"
+          className="dvcard-edge pointer-events-none absolute inset-0 rounded-[5cqw] mix-blend-screen"
+          style={{
+            backgroundImage: "linear-gradient(115deg, transparent 40%, rgba(255,255,255,0.55) 48%, rgba(236,229,216,0.25) 52%, transparent 60%)",
+            backgroundSize: "260% 100%",
+            backgroundPosition: "160% 0",
+          }}
+        />
+      )}
       <span aria-hidden="true" className="absolute inset-[1.5cqw] rounded-[3.9cqw] shadow-[0_0_0_0.5px_rgba(0,0,0,0.55),inset_0_0_0_0.5px_rgba(255,255,255,0.18)]" />
       <span
         className={cn("absolute inset-[2.6cqw] overflow-hidden rounded-[3.2cqw]", body === "white" ? "shadow-[inset_0_0_0_0.5px_rgba(0,0,0,0.4)]" : "shadow-[inset_0_0_0_0.5px_rgba(0,0,0,0.9)]")}
@@ -375,24 +481,33 @@ export function CardFace({
   cardId,
   className,
   holo,
+  rarity: rarityOverride,
 }: {
   cardId: string;
   size?: DevoCardProps["size"];
   className?: string;
-  /** `true` liga o brilho holográfico (segue --hx/--hy do ancestral); padrão: só nas Lendárias. */
+  /** `true` liga o brilho holográfico (segue --hx/--hy do ancestral); padrão: Lendárias e Promocionais. */
   holo?: boolean;
+  /** Vitrine: mostra a carta com a pele de outra raridade (aula, guia de estilo). O jogo nunca usa. */
+  rarity?: Rarity;
 }) {
   const card = getCard(cardId);
   const meta = getCardMeta(cardId);
-  const rarity = RARITY_META[card.rarity];
-  const skin = RARITY_SKIN[card.rarity];
+  const r = rarityOverride ?? card.rarity;
+  const rarity = RARITY_META[r];
+  const skin = RARITY_SKIN[r];
+  const fx = FRAME_FX[r] ?? {};
+  const setGem = SET_GEMS[r];
+  const promo = r === "promocional";
   const radius = getCardRadius(cardId);
   const archetype = ARCHETYPE_BY_TYPE[card.type];
   const Glyph = GLYPHS[card.glyph];
   const crop = CROP[cardId] ?? { pos: "50% 30%" };
-  const legendary = card.rarity === "lendaria";
+  const legendary = r === "lendaria";
+  // Halo: da Ultra Rara para cima (inclui as secretas).
+  const haloed = rarity.order >= RARITY_META.ultra_rara.order;
   const white = skin.body === "white";
-  const shine = holo ?? legendary;
+  const shine = holo ?? (legendary || promo);
   // Texto sobre o corpo (negro ou mármore branco).
   const onBody = white ? "#151517" : "#eeedeb";
   const onBodySoft = white ? skin.ink : skin.light;
@@ -403,7 +518,7 @@ export function CardFace({
       aria-label={`${card.name}. Arquétipo ${archetype}. Coleção ${meta.collection}, ordem ${meta.orderLabel}, série ${meta.serial}. Raridade ${rarity.label} (${skin.material}). Função: ${card.effect} Raio: ${radius}.`}
     >
       <style>{CARD_CSS}</style>
-      <Shell frame={skin.frame} filet={skin.filet} glow={legendary ? skin.glow : undefined} body={skin.body}>
+      <Shell frame={skin.frame} filet={skin.filet} glow={haloed ? skin.glow : undefined} body={skin.body} frameClass={fx.frameClass} frameSize={fx.frameSize} edge={fx.edge}>
         {/* janela ogival com a arte em duotom */}
         <span aria-hidden="true" className="absolute inset-x-[5.5cqw] top-[5.5cqw] h-[84cqw]">
           <span className="absolute inset-0 overflow-hidden bg-[#0c0c0e]" style={{ clipPath: ARCH_CLIP }}>
@@ -422,12 +537,12 @@ export function CardFace({
             {card.numeral}
           </span>
           <span className="absolute right-[3cqw] top-[20cqw] hidden [filter:drop-shadow(0_1px_1px_#000)] @min-[132px]:block" style={{ color: skin.light }}>
-            <RarityPips rarity={card.rarity} className="flex-col text-[4.4cqw]" />
+            <RarityPips rarity={r} className="flex-col text-[4.4cqw]" />
           </span>
         </span>
 
-        {/* ametista engastada na ponta do arco (só Lendária) */}
-        {legendary && <SetAmethyst className="absolute left-1/2 top-[0.4cqw] h-[11cqw] w-[8cqw] -translate-x-1/2 drop-shadow-[0_0.6cqw_0.8cqw_rgba(0,0,0,0.6)]" />}
+        {/* pedra engastada na ponta do arco: ametista (Lendária) ou granada (Única) */}
+        {setGem && <SetGem colors={setGem} className="absolute left-1/2 top-[0.4cqw] h-[11cqw] w-[8cqw] -translate-x-1/2 drop-shadow-[0_0.6cqw_0.8cqw_rgba(0,0,0,0.6)]" />}
 
         {/* medalhão do glifo, cravado no pé da janela */}
         <span
@@ -442,7 +557,7 @@ export function CardFace({
 
         {/* miniatura (< 132px): sem texto — losangos e uma estrela de aço */}
         <span aria-hidden="true" className="absolute inset-x-0 top-[104cqw] flex justify-center @min-[132px]:hidden" style={{ color: white ? skin.ink : skin.light }}>
-          <RarityPips rarity={card.rarity} className="text-[9cqw]" />
+          <RarityPips rarity={r} className="text-[9cqw]" />
         </span>
         <span aria-hidden="true" className="absolute inset-x-[16cqw] top-[121cqw] flex items-center gap-[2cqw] @min-[132px]:hidden" style={{ color: white ? "#8a8173" : skin.filet }}>
           <span className="h-px flex-1 bg-current opacity-50" />
@@ -480,11 +595,12 @@ export function CardFace({
           <span
             aria-hidden="true"
             data-follow={holo ? "" : undefined}
-            className={cn("dvcard-holo pointer-events-none absolute inset-0", white ? "opacity-[0.5] mix-blend-multiply" : "opacity-[0.42] mix-blend-color-dodge")}
+            className={cn(
+              "dvcard-holo pointer-events-none absolute inset-0",
+              white ? "opacity-[0.5] mix-blend-multiply" : promo ? "opacity-[0.46] mix-blend-color-dodge" : "opacity-[0.42] mix-blend-color-dodge",
+            )}
             style={{
-              backgroundImage: white
-                ? "linear-gradient(115deg, transparent 22%, rgba(194,185,236,0.45) 38%, rgba(236,229,216,0.5) 48%, rgba(194,185,236,0.35) 58%, transparent 74%), repeating-linear-gradient(135deg, rgba(0,0,0,0.035) 0 1px, transparent 1px 4px)"
-                : "linear-gradient(115deg, transparent 18%, rgba(203,197,232,0.32) 34%, rgba(236,229,216,0.45) 46%, rgba(203,197,232,0.26) 58%, transparent 76%), repeating-linear-gradient(135deg, rgba(255,255,255,0.05) 0 1px, transparent 1px 4px)",
+              backgroundImage: promo ? HOLO_FOIL.iris : white ? HOLO_FOIL.white : HOLO_FOIL.black,
               backgroundSize: "260% 260%, auto",
               backgroundPosition: "var(--hx, 30%) var(--hy, 30%), 0 0",
             }}

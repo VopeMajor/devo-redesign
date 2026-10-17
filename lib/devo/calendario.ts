@@ -2,6 +2,7 @@
  * Grandioso Calendário Devo — arquivo PURO (cliente e servidor importam): tipos, rótulos das recompensas,
  * datas no horário de Brasília e ocorrências de eventos (inclusive anuais). Contrato: docs/redesign/FUNDACAO.md §15.
  */
+import { RARITY_META } from './cards'
 import type { Rarity } from './types'
 
 export const TZ = 'America/Sao_Paulo'
@@ -31,7 +32,6 @@ export type RecompensaVista = {
   icone: IconeRecompensa
 }
 
-const RARIDADE_CARTA: Record<string, string> = { comum: 'Comum', incomum: 'Incomum', rara: 'Rara', lendaria: 'Lendária' }
 const ITEM_NOME: Record<string, [string, string, IconeRecompensa]> = {
   fragmento_arcano: ['Fragmento Arcano', 'Fragmentos Arcanos', 'fragmento'],
   dracma_comum: ['Dracma Comum', 'Dracmas Comuns', 'dracma_comum'],
@@ -51,7 +51,7 @@ export function verRecompensa(r: Recompensa, nomes?: Record<string, string>): Re
       return { recompensa: r, rotulo, valor: v, legenda: inteiro ? (h === 1 ? 'Hora' : 'Horas') : 'Tempo', icone: 'tempo' }
     }
     case 'carta': {
-      const rar = RARIDADE_CARTA[r.raridade] ?? r.raridade
+      const rar = (RARITY_META as Record<string, { label: string }>)[r.raridade]?.label ?? r.raridade
       return { recompensa: r, rotulo: `Carta ${rar}`, valor: '1', legenda: `Carta ${rar}`, icone: 'carta' }
     }
     case 'item': {

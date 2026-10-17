@@ -1,5 +1,7 @@
 'use client'
 
+import { useState } from 'react'
+import { arteDe } from '@/lib/devo/arcanos-arte'
 import type { ArcanoKey } from '@/lib/devo/virtudes'
 import { cn } from '@/lib/utils'
 
@@ -93,5 +95,34 @@ export function Sigilo({ arcano, estado = 'aberto', aro = true, className }: { a
       <path d={s.traco} fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
       {s.cheio && <path d={s.cheio} fill="currentColor" />}
     </svg>
+  )
+}
+
+/**
+ * Sigilo pintado (prata, fundo transparente; infra/arte). Cai no sigilo desenhado se não houver arte ou se falhar.
+ * `apagado`: cinza e escuro; `aceso`: brilho ametista.
+ */
+export function SigiloPintado({ arcano, estado = 'aberto', className, px = 32 }: { arcano: ArcanoKey; estado?: 'aceso' | 'aberto' | 'apagado'; className?: string; px?: number }) {
+  const arte = arteDe(arcano, 'sigilo')
+  const [falhou, setFalhou] = useState(false)
+  if (!arte || falhou) return <Sigilo arcano={arcano} aro={false} estado={estado} className={className} />
+  return (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      src={arte.src}
+      srcSet={arte.srcSet}
+      sizes={`${px}px`}
+      alt=""
+      aria-hidden="true"
+      decoding="async"
+      draggable={false}
+      onError={() => setFalhou(true)}
+      className={cn(
+        'inline-block shrink-0 object-contain',
+        estado === 'apagado' && 'brightness-[0.5] grayscale',
+        estado === 'aceso' && 'drop-shadow-[0_0_5px_var(--dv-amethyst)]',
+        className,
+      )}
+    />
   )
 }

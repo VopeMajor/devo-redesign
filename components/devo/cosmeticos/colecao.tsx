@@ -284,6 +284,7 @@ function ItemTile({
   onClick: () => void
 }) {
   const bloqueado = !possui && !livre
+  const cadeadoNoCanto = def.categoria === 'efeito' || def.categoria === 'balao' || def.categoria === 'borda'
   return (
     <button
       type="button"
@@ -297,14 +298,25 @@ function ItemTile({
     >
       <span aria-hidden="true" className="absolute inset-x-0 top-0 h-[3px]" style={{ background: raridade.cor, boxShadow: `0 0 10px ${raridade.brilho}` }} />
       <span aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(70%_55%_at_50%_40%,rgba(236,229,216,0.07),transparent_70%)]" />
-      <span className={cn('relative grid min-h-[86px] w-full place-items-center', bloqueado && 'opacity-85 [filter:grayscale(0.8)_brightness(0.86)]')}>
+      <span
+        className={cn(
+          'relative grid min-h-[86px] w-full place-items-center',
+          // nome, balão e borda: a amostra inteira continua legível (o estilo é a própria peça); molduras e emblemas, mais apagados
+          bloqueado && (cadeadoNoCanto ? 'opacity-80 [filter:grayscale(0.45)_brightness(0.82)]' : 'opacity-85 [filter:grayscale(0.8)_brightness(0.86)]'),
+        )}
+      >
         <Miniatura def={def} fotoSrc={fotoSrc} apagado={bloqueado} />
       </span>
-      {bloqueado && (
-        <span aria-hidden="true" className="absolute left-1/2 top-[42%] grid size-7 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full bg-black/55 shadow-[0_0_0_1px_rgba(186,176,159,0.45)] backdrop-blur-[1px]">
-          <Lock className="size-3.5 text-[#bab09f]" />
-        </span>
-      )}
+      {bloqueado &&
+        (cadeadoNoCanto ? (
+          <span aria-hidden="true" className="absolute right-1.5 top-2 grid size-5 place-items-center rounded-full bg-black/65 shadow-[0_0_0_1px_rgba(186,176,159,0.45)]">
+            <Lock className="size-2.5 text-[#bab09f]" />
+          </span>
+        ) : (
+          <span aria-hidden="true" className="absolute left-1/2 top-[42%] grid size-7 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full bg-black/55 shadow-[0_0_0_1px_rgba(186,176,159,0.45)] backdrop-blur-[1px]">
+            <Lock className="size-3.5 text-[#bab09f]" />
+          </span>
+        ))}
       <span className={cn('relative w-full truncate text-center font-display text-[11px] font-semibold uppercase leading-tight tracking-[0.04em]', bloqueado ? 'text-dv-text-3' : 'text-dv-text')}>{def.name}</span>
       {equipado && <span className="absolute right-1 top-1.5 bg-dv-porcelain px-1 font-mono text-[9px] font-semibold uppercase tracking-[0.08em] text-dv-porcelain-ink">Em uso</span>}
       {def.animado && !bloqueado && <span className="absolute left-1 top-1.5 font-mono text-[9px] uppercase tracking-[0.08em] text-dv-amethyst-text">Anim.</span>}

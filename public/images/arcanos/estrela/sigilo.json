@@ -1,0 +1,18 @@
+{
+  "asset": "img:/images/arcanos/estrela/sigilo",
+  "imagem": {
+    "base": "/images/arcanos/estrela/sigilo",
+    "tamanhos": [
+      64,
+      128,
+      256
+    ]
+  },
+  "origem": {
+    "pedido": "arcano-sigilo-estrela",
+    "variacao": "v02",
+    "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+    "seed": 13172,
+    "importado": null
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "asset": "img:/images/arcanos/forca/sigilo",
+  "imagem": {
+    "base": "/images/arcanos/forca/sigilo",
+    "tamanhos": [
+      64,
+      128,
+      256
+    ]
+  },
+  "origem": {
+    "pedido": "arcano-sigilo-forca",
+    "variacao": "v03",
+    "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+    "seed": 13083,
+    "importado": null
+  }
+}

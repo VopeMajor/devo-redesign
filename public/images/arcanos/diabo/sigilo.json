@@ -1,0 +1,18 @@
+{
+  "asset": "img:/images/arcanos/diabo/sigilo",
+  "imagem": {
+    "base": "/images/arcanos/diabo/sigilo",
+    "tamanhos": [
+      64,
+      128,
+      256
+    ]
+  },
+  "origem": {
+    "pedido": "arcano-sigilo-diabo",
+    "variacao": "v03",
+    "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+    "seed": 13153,
+    "importado": null
+  }
+}

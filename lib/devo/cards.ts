@@ -2,18 +2,36 @@ import type { CardDef, OwnedCard, Rarity } from './types'
 
 /**
  * Fonte única das raridades. Nomes, cores e ordem usados em qualquer tela (Cartas, Record, Trocas,
- * aula da Coruja) saem daqui. `plural` serve para textos corridos.
+ * aula da Coruja, Salão, Calendário) saem daqui. `plural` serve para textos corridos.
+ * `secreta` = Única e Promocional: existem como raridade (ordem acima da Lendária), mas não entram nos
+ * filtros, na aula de raridades nem nas recompensas configuráveis (nenhum jogo comum as entrega).
  */
-export const RARITY_META: Record<Rarity, { label: string; plural: string; color: string; order: number }> = {
-  // `color` = marca da raridade sobre o negro (mármore → prata → champanhe → ametista; sem rubi).
+export const RARITY_META: Record<Rarity, { label: string; plural: string; color: string; order: number; secreta?: true }> = {
+  // `color` = marca da raridade sobre o negro (mármore → prata → champanhe → champanhe-ametista → ametista).
   comum: { label: 'Comum', plural: 'Comuns', color: '#a3a2a6', order: 0 },
   incomum: { label: 'Incomum', plural: 'Incomuns', color: '#ececee', order: 1 },
   rara: { label: 'Rara', plural: 'Raras', color: '#d6cdbd', order: 2 },
-  lendaria: { label: 'Lendária', plural: 'Lendárias', color: '#c2b9ec', order: 3 },
+  ultra_rara: { label: 'Ultra Rara', plural: 'Ultra Raras', color: '#d9c9e3', order: 3 },
+  lendaria: { label: 'Lendária', plural: 'Lendárias', color: '#c2b9ec', order: 4 },
+  // Secretas (pedido do dono 17/10): Única em tom de granada; Promocional holográfica (cor = pérola iridescente).
+  unica: { label: 'Única', plural: 'Únicas', color: '#e3909a', order: 5, secreta: true },
+  promocional: { label: 'Promocional', plural: 'Promocionais', color: '#b4dfe8', order: 6, secreta: true },
 }
 
-/** Raridades da mais comum para a mais rara. */
-export const RARITIES: Rarity[] = (Object.keys(RARITY_META) as Rarity[]).sort((a, b) => RARITY_META[a].order - RARITY_META[b].order)
+/** Raridades "de jogo", da mais comum para a mais rara (filtros, aula, recompensas). */
+export const RARITIES: Rarity[] = (Object.keys(RARITY_META) as Rarity[])
+  .filter((r) => !RARITY_META[r].secreta)
+  .sort((a, b) => RARITY_META[a].order - RARITY_META[b].order)
+
+/** As duas raridades secretas (Única, Promocional), na ordem. */
+export const SECRET_RARITIES: Rarity[] = (Object.keys(RARITY_META) as Rarity[])
+  .filter((r) => RARITY_META[r].secreta)
+  .sort((a, b) => RARITY_META[a].order - RARITY_META[b].order)
+
+/** Todas as raridades válidas (as de jogo e as secretas), em ordem. */
+export const ALL_RARITIES: Rarity[] = [...RARITIES, ...SECRET_RARITIES]
+
+export const isCardRarity = (r: unknown): r is Rarity => typeof r === 'string' && Object.prototype.hasOwnProperty.call(RARITY_META, r)
 
 export const CARDS: CardDef[] = [
   { id: 'fosforo', name: 'Fósforo', numeral: 'I', rarity: 'comum', type: 'Ataque', glyph: 'flame', effect: 'Queima uma carta comum do oponente durante um jogo.', flavor: 'Uma chama pequena basta para um quarto escuro.' },
@@ -114,9 +132,25 @@ export function getCardMeta(id: string): CardMeta {
   }
 }
 
+/**
+ * Carta aleatória da raridade pedida. Se a raridade ainda não tem cartas (a Ultra Rara nasceu vazia em 17/10;
+ * as secretas também não têm), cai para a raridade mais próxima ABAIXO que tenha; só sobe se não houver nenhuma.
+ */
 export function randomCardOfRarity(rarity: Rarity, excludeId?: string): CardDef {
-  const pool = CARDS.filter((c) => c.rarity === rarity && c.id !== excludeId)
-  return pool[Math.floor(Math.random() * pool.length)]
+  const poolOf = (r: Rarity) => CARDS.filter((c) => c.rarity === r && c.id !== excludeId)
+  const order = RARITY_META[rarity]?.order ?? 0
+  const byDistance = [...ALL_RARITIES].sort((a, b) => {
+    const da = RARITY_META[a].order - order
+    const db = RARITY_META[b].order - order
+    // mesma raridade primeiro, depois as de baixo (mais perto primeiro), por fim as de cima
+    const rank = (d: number) => (d === 0 ? 0 : d < 0 ? 1000 - d : 2000 + d)
+    return rank(da) - rank(db)
+  })
+  for (const r of byDistance) {
+    const pool = poolOf(r)
+    if (pool.length) return pool[Math.floor(Math.random() * pool.length)]
+  }
+  return CARDS[0]
 }
 
 let uidCounter = 0

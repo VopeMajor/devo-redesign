@@ -1,0 +1,18 @@
+{
+  "asset": "img:/images/arcanos/fortuna/sigilo",
+  "imagem": {
+    "base": "/images/arcanos/fortuna/sigilo",
+    "tamanhos": [
+      64,
+      128,
+      256
+    ]
+  },
+  "origem": {
+    "pedido": "arcano-sigilo-fortuna",
+    "variacao": "v01",
+    "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+    "seed": 13101,
+    "importado": null
+  }
+}
