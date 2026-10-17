@@ -1,0 +1,9 @@
+[arcanos-orbital] v01: @cf/black-forest-labs/flux-2-klein-9b seed=14001 1536x1024 passos=None (~1,455 neurônios)
+    ok em 3.2s, 1536x1024
+[arcanos-orbital] v02: @cf/black-forest-labs/flux-2-klein-9b seed=14002 1536x1024 passos=None (~1,455 neurônios)
+    ok em 2.7s, 1536x1024
+[arcanos-orbital] v03: @cf/black-forest-labs/flux-2-klein-9b seed=14003 1536x1024 passos=None (~1,455 neurônios)
+    ok em 3.1s, 1536x1024
+[arcanos-orbital] v01: mantido; sem avisos
+[arcanos-orbital] v02: mantido; sem avisos
+[arcanos-orbital] v03: mantido; sem avisos

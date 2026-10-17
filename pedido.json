@@ -1,0 +1,56 @@
+{
+  "id": "arcanos-orbital",
+  "titulo": "Arcanos — fundo orbital",
+  "tipo": "ilustracao",
+  "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+  "prompt": "Fantasy game background, painted, full frame horizontal: a deep night cosmic void seen from slightly above, a vast tilted astrolabe-like orbital diagram of thin faded silver concentric rings, fine engraved lines and tiny star dots, soft nebula haze in dark indigo and blood wine, a scattering of tiny stars, very dark and calm, empty spots on the rings where icons will be placed. No text, no icons, no planets. Muted dark palette of abyss black, deep blood wine, fog stone gray and faded silver, low saturation, no neon. ",
+  "negative": "text, letters, watermark, signature, people, characters, neon, saturated colors",
+  "largura": 1536,
+  "altura": 1024,
+  "variacoes": [
+    {
+      "seed": 14001,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "passos": null,
+      "largura": 1536,
+      "altura": 1024,
+      "prompt_extra": "",
+      "n": 1
+    },
+    {
+      "seed": 14002,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "passos": null,
+      "largura": 1536,
+      "altura": 1024,
+      "prompt_extra": "",
+      "n": 2
+    },
+    {
+      "seed": 14003,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "passos": null,
+      "largura": 1536,
+      "altura": 1024,
+      "prompt_extra": "",
+      "n": 3
+    }
+  ],
+  "pos": {
+    "remover_fundo": false,
+    "tamanho_final": 1536,
+    "margem": 0.0,
+    "quadro_inteiro": true,
+    "derivados": [
+      1024,
+      768,
+      512
+    ],
+    "modelo_fundo": "birefnet-general",
+    "fundo": "liso",
+    "camadas": []
+  },
+  "passos": null,
+  "guidance": null,
+  "referencias": []
+}
