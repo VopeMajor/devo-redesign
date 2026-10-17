@@ -1,0 +1,108 @@
+{
+  "pedido": "arcano-justica",
+  "titulo": "Arcano — justica (figura)",
+  "tipo": "ilustracao",
+  "tamanho_final": 1536,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 12111,
+      "passos": null,
+      "segundos": 3.2,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "arcano-justica--v01--1536.png",
+          "bytes": 1075073
+        },
+        {
+          "arquivo": "arcano-justica--v01--1536.webp",
+          "bytes": 194590
+        },
+        {
+          "arquivo": "arcano-justica--v01--1024.webp",
+          "bytes": 96568
+        },
+        {
+          "arquivo": "arcano-justica--v01--768.webp",
+          "bytes": 64652
+        },
+        {
+          "arquivo": "arcano-justica--v01--512.webp",
+          "bytes": 36580
+        }
+      ],
+      "segundos_pos": 36.6,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 12112,
+      "passos": null,
+      "segundos": 3.2,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "arcano-justica--v02--1536.png",
+          "bytes": 1094005
+        },
+        {
+          "arquivo": "arcano-justica--v02--1536.webp",
+          "bytes": 197800
+        },
+        {
+          "arquivo": "arcano-justica--v02--1024.webp",
+          "bytes": 92992
+        },
+        {
+          "arquivo": "arcano-justica--v02--768.webp",
+          "bytes": 62592
+        },
+        {
+          "arquivo": "arcano-justica--v02--512.webp",
+          "bytes": 35698
+        }
+      ],
+      "segundos_pos": 30.5,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 12113,
+      "passos": null,
+      "segundos": 3.5,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "arcano-justica--v03--1536.png",
+          "bytes": 1131312
+        },
+        {
+          "arquivo": "arcano-justica--v03--1536.webp",
+          "bytes": 226962
+        },
+        {
+          "arquivo": "arcano-justica--v03--1024.webp",
+          "bytes": 102146
+        },
+        {
+          "arquivo": "arcano-justica--v03--768.webp",
+          "bytes": 66850
+        },
+        {
+          "arquivo": "arcano-justica--v03--512.webp",
+          "bytes": 37838
+        }
+      ],
+      "segundos_pos": 31.4,
+      "avisos": []
+    }
+  ]
+}
