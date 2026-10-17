@@ -1,0 +1,56 @@
+{
+  "id": "emblema-lua-escarlate",
+  "titulo": "Lua Escarlate",
+  "tipo": "emblema",
+  "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+  "prompt": "Fantasy RPG accessory illustration, painted, highly detailed, isolated on a plain flat light gray background. A epic collectible badge, a small luxury jewel-like object seen from the front, centered: a crescent moon of glowing scarlet crystal set in a thin blackened silver frame, a few small silver stars around it, wisps of red mist, and a short silver chain with a tiny red teardrop below the lower tip. The crystal glows from within. Rich detail that still reads at small size, crisp silhouette, the whole object fully visible with a generous empty margin, floating without a cast shadow, nothing cropped. No text, no letters, no numbers, no watermark, no people.",
+  "negative": "text, letters, watermark, signature, logo, cropped, cut off, blurry, low detail, flat vector icon, clipart, emoji, cartoon sticker, simple geometric shapes, plastic look, people, hands",
+  "largura": 1024,
+  "altura": 1024,
+  "variacoes": [
+    {
+      "seed": 7061,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "passos": null,
+      "largura": 1024,
+      "altura": 1024,
+      "prompt_extra": "",
+      "n": 1
+    },
+    {
+      "seed": 7062,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "passos": null,
+      "largura": 1024,
+      "altura": 1024,
+      "prompt_extra": "",
+      "n": 2
+    },
+    {
+      "seed": 7063,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "passos": null,
+      "largura": 1024,
+      "altura": 1024,
+      "prompt_extra": "",
+      "n": 3
+    }
+  ],
+  "pos": {
+    "tamanho_final": 1024,
+    "margem": 0.03,
+    "remover_fundo": true,
+    "modelo_fundo": "birefnet-general",
+    "derivados": [
+      512,
+      256,
+      96,
+      48
+    ],
+    "fundo": "liso",
+    "camadas": []
+  },
+  "passos": null,
+  "guidance": null,
+  "referencias": []
+}

@@ -1,0 +1,122 @@
+{
+  "pedido": "emblema-lua-escarlate",
+  "titulo": "Lua Escarlate",
+  "tipo": "emblema",
+  "tamanho_final": 1024,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 7061,
+      "passos": null,
+      "segundos": 15.2,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "ilhas_removidas": 1,
+      "arquivos": [
+        {
+          "arquivo": "emblema-lua-escarlate--v01--1024.png",
+          "bytes": 471396
+        },
+        {
+          "arquivo": "emblema-lua-escarlate--v01--1024.webp",
+          "bytes": 100788
+        },
+        {
+          "arquivo": "emblema-lua-escarlate--v01--512.webp",
+          "bytes": 35366
+        },
+        {
+          "arquivo": "emblema-lua-escarlate--v01--256.webp",
+          "bytes": 14448
+        },
+        {
+          "arquivo": "emblema-lua-escarlate--v01--96.webp",
+          "bytes": 4074
+        },
+        {
+          "arquivo": "emblema-lua-escarlate--v01--48.webp",
+          "bytes": 1756
+        }
+      ],
+      "segundos_pos": 29.9,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 7062,
+      "passos": null,
+      "segundos": 16.1,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "ilhas_removidas": 0,
+      "arquivos": [
+        {
+          "arquivo": "emblema-lua-escarlate--v02--1024.png",
+          "bytes": 359636
+        },
+        {
+          "arquivo": "emblema-lua-escarlate--v02--1024.webp",
+          "bytes": 86186
+        },
+        {
+          "arquivo": "emblema-lua-escarlate--v02--512.webp",
+          "bytes": 30012
+        },
+        {
+          "arquivo": "emblema-lua-escarlate--v02--256.webp",
+          "bytes": 12176
+        },
+        {
+          "arquivo": "emblema-lua-escarlate--v02--96.webp",
+          "bytes": 3476
+        },
+        {
+          "arquivo": "emblema-lua-escarlate--v02--48.webp",
+          "bytes": 1550
+        }
+      ],
+      "segundos_pos": 24.9,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 7063,
+      "passos": null,
+      "segundos": 18.0,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "emblema-lua-escarlate--v03--1024.png",
+          "bytes": 334423
+        },
+        {
+          "arquivo": "emblema-lua-escarlate--v03--1024.webp",
+          "bytes": 74276
+        },
+        {
+          "arquivo": "emblema-lua-escarlate--v03--512.webp",
+          "bytes": 26312
+        },
+        {
+          "arquivo": "emblema-lua-escarlate--v03--256.webp",
+          "bytes": 10570
+        },
+        {
+          "arquivo": "emblema-lua-escarlate--v03--96.webp",
+          "bytes": 3252
+        },
+        {
+          "arquivo": "emblema-lua-escarlate--v03--48.webp",
+          "bytes": 1388
+        }
+      ],
+      "segundos_pos": 24.5,
+      "avisos": []
+    }
+  ]
+}

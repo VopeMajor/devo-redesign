@@ -1,0 +1,9 @@
+[emblema-lua-escarlate] v01: @cf/black-forest-labs/flux-2-klein-4b seed=7061 1024x1024 passos=None (~104 neurônios)
+    ok em 15.2s, 1024x1024
+[emblema-lua-escarlate] v02: @cf/black-forest-labs/flux-2-klein-4b seed=7062 1024x1024 passos=None (~104 neurônios)
+    ok em 16.1s, 1024x1024
+[emblema-lua-escarlate] v03: @cf/black-forest-labs/flux-2-klein-4b seed=7063 1024x1024 passos=None (~104 neurônios)
+    ok em 18.0s, 1024x1024
+[emblema-lua-escarlate] v01: rembg:birefnet-general; sem avisos
+[emblema-lua-escarlate] v02: rembg:birefnet-general; sem avisos
+[emblema-lua-escarlate] v03: rembg:birefnet-general; sem avisos
