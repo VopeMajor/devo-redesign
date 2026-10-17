@@ -15,7 +15,7 @@ const OUT = 'shots'
 const ONLY = (process.env.CAPTURE_ONLY ?? '').split(',').map((s) => s.trim()).filter(Boolean)
 mkdirSync(OUT, { recursive: true })
 
-const manifest = { base: BASE, shots: [], errors: [], console: [] }
+const manifest = { base: BASE, shots: [], errors: [], console: [], tempos: [] }
 const wait = (ms) => new Promise((r) => setTimeout(r, ms))
 const want = (group) => ONLY.length === 0 || ONLY.includes(group)
 
@@ -105,10 +105,14 @@ async function shot(page, name, note = '') {
   await wait(300)
 }
 async function step(name, fn) {
+  const t0 = Date.now()
   try {
     await fn()
   } catch (e) {
     manifest.errors.push({ step: name, error: String(e).slice(0, 1500) })
+  } finally {
+    // tempo de cada etapa (s): para achar o que pesa no roteiro completo
+    manifest.tempos.push({ step: name, s: Math.round((Date.now() - t0) / 100) / 10 })
   }
 }
 
