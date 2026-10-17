@@ -2765,7 +2765,7 @@ if (want('cosmeticos')) {
     await shot(page, 'cos-81-previa-coracao')
     await view(page, 'article[aria-label="Prévia: Rosa do Destino (miniperfil)"]')
     await wait(500)
-    await shot(page, 'cos-82-previa-rosa-mini')
+    await shot(page, 'cos-89-previa-rosa-mini')
     for (const [sel, nome] of [['article[aria-label="Olho do Arcano"]', 'cos-01-galeria-arcano'], ['article[aria-label="Última Badalada"]', 'cos-02-galeria-badalada'], ['section[aria-label="Emblemas"]', 'cos-03-galeria-emblemas'], ['section[aria-label="Balões"]', 'cos-04-galeria-baloes'], ['section[aria-label="Efeitos do nome"]', 'cos-05-galeria-efeitos']]) {
       await view(page, sel)
       await wait(500)
