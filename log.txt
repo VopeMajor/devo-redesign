@@ -1,0 +1,9 @@
+[nome-lua-prata] v01: @cf/black-forest-labs/flux-2-klein-4b seed=17031 1024x1024 passos=None (~104 neurônios)
+    ok em 10.4s, 1024x1024
+[nome-lua-prata] v02: @cf/black-forest-labs/flux-2-klein-4b seed=17032 1024x1024 passos=None (~104 neurônios)
+    ok em 13.0s, 1024x1024
+[nome-lua-prata] v03: @cf/black-forest-labs/flux-2-klein-4b seed=17033 1024x1024 passos=None (~104 neurônios)
+    ok em 13.3s, 1024x1024
+[nome-lua-prata] v01: rembg:birefnet-general; sem avisos
+[nome-lua-prata] v02: rembg:birefnet-general; sem avisos
+[nome-lua-prata] v03: rembg:birefnet-general; sem avisos
