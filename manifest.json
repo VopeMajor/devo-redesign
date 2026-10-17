@@ -1,0 +1,120 @@
+{
+  "pedido": "ico-carta-incomum",
+  "titulo": "Calendário — ícone carta-incomum",
+  "tipo": "emblema",
+  "tamanho_final": 1024,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 10651,
+      "passos": null,
+      "segundos": 13.4,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "ico-carta-incomum--v01--1024.png",
+          "bytes": 1104943
+        },
+        {
+          "arquivo": "ico-carta-incomum--v01--1024.webp",
+          "bytes": 147756
+        },
+        {
+          "arquivo": "ico-carta-incomum--v01--512.webp",
+          "bytes": 44984
+        },
+        {
+          "arquivo": "ico-carta-incomum--v01--256.webp",
+          "bytes": 16020
+        },
+        {
+          "arquivo": "ico-carta-incomum--v01--128.webp",
+          "bytes": 5952
+        },
+        {
+          "arquivo": "ico-carta-incomum--v01--64.webp",
+          "bytes": 2384
+        }
+      ],
+      "segundos_pos": 33.1,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 10652,
+      "passos": null,
+      "segundos": 20.7,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "ico-carta-incomum--v02--1024.png",
+          "bytes": 997021
+        },
+        {
+          "arquivo": "ico-carta-incomum--v02--1024.webp",
+          "bytes": 127280
+        },
+        {
+          "arquivo": "ico-carta-incomum--v02--512.webp",
+          "bytes": 33128
+        },
+        {
+          "arquivo": "ico-carta-incomum--v02--256.webp",
+          "bytes": 12598
+        },
+        {
+          "arquivo": "ico-carta-incomum--v02--128.webp",
+          "bytes": 5400
+        },
+        {
+          "arquivo": "ico-carta-incomum--v02--64.webp",
+          "bytes": 2164
+        }
+      ],
+      "segundos_pos": 27.9,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 10653,
+      "passos": null,
+      "segundos": 13.5,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "ico-carta-incomum--v03--1024.png",
+          "bytes": 1035806
+        },
+        {
+          "arquivo": "ico-carta-incomum--v03--1024.webp",
+          "bytes": 129716
+        },
+        {
+          "arquivo": "ico-carta-incomum--v03--512.webp",
+          "bytes": 32528
+        },
+        {
+          "arquivo": "ico-carta-incomum--v03--256.webp",
+          "bytes": 12574
+        },
+        {
+          "arquivo": "ico-carta-incomum--v03--128.webp",
+          "bytes": 5084
+        },
+        {
+          "arquivo": "ico-carta-incomum--v03--64.webp",
+          "bytes": 2200
+        }
+      ],
+      "segundos_pos": 27.2,
+      "avisos": []
+    }
+  ]
+}
