@@ -1,0 +1,19 @@
+ok   migração das Virtudes é idempotente
+ok   tabela de afinidade padrão = arquivo do doc, provisória, com divergências marcadas
+ok   jogador sem o tutorial vê as Virtudes trancadas, com motivo
+ok   jogador não abre a Mesa nem dispara Evolução, Arcano, P.P. ou tabela (403)
+ok   Owner libera a flag e define o Arcano da Morte
+ok   P.P. respeitam o teto do Estágio (soma das seis) e o idem
+ok   payload do jogador: afinidade em palavras, acúmulo qualitativo, sem multiplicadores nem P.P.
+ok   lista dos Arcanos (jogador): trancados só com nome, numeral e breve; o próprio abre com Estágios
+ok   lista dos Arcanos: jogador sem o tutorial não recebe nada; Anfitrião abre todos, sem selo; Owner vê o selo
+ok   textos dos Arcanos: só o Owner edita (jogador e Anfitrião 403)
+ok   textos dos Arcanos: Owner grava (admin_log), jogador vê; inválido 400; voltar ao rascunho
+ok   Evolução abaixo do mínimo ou sem Arcano → 409, nada muda
+ok   Evolução distribui pela afinidade do Arcano (jogador não controla) e zera os P.P.
+ok   esforço concentrado inclina, mas a afinidade continua mandando
+ok   histórico do jogador mostra as Evoluções em palavras, sem números
+ok   Mesa (Owner) vê os números; tabela inválida é recusada; tabela válida grava
+ok   Deadly Vote aplicado rende P.P. de participação e sobrevivência (uma vez)
+
+17 ok, 0 falha(s)

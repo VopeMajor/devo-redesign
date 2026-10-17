@@ -1,0 +1,16 @@
+ok   migração é idempotente (roda de novo sem erro)
+ok   cena trancada sem a flag (403), cena e escolha inexistentes recusadas
+ok   progresso: guarda o passo e retoma de onde parou
+ok   Galo "Galo...?" transfere Tempo UMA vez (repetir/recarregar não repete)
+ok   efeito de contato e conclusão valem uma vez
+ok   Melissa: a opção da Necro-Corporação tira Tempo uma vez; concluir libera Corporações uma vez
+ok   config do Owner muda o Tempo; outro jogador sem a flag não abre a reflexão das Torres
+ok   banco: evento repetido é barrado pela chave primária
+ok   Melissa: Necro-Corporação vai para o histórico (admin_log) e tira karma uma vez
+ok   Melissa: "Salão das Máscaras?" e "E se eu quiser criar uma?" exploráveis (uma vez cada); "Entendi." registra e segue
+ok   Galo: "Agradeço." dá karma +1 uma vez só
+ok   Poço: encontro exige a flag do Poço (403 sem ela)
+ok   Poço: o encapuzado dá 1 Dracma Incomum uma vez (motor e servidor do Poço com a mesma chave)
+ok   Poço: "Sim, por favor." registra e "Obrigado/Obrigada." dá karma +1 uma vez
+
+Narrativa: 14 ok, 0 falha(s)

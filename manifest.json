@@ -1,0 +1,1083 @@
+{
+  "base": "http://localhost:3000",
+  "shots": [
+    {
+      "name": "30-jogos-mesa",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "30-jogos-mesa-scroll",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "30-jogos-mesa-scroll2",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "31-jogos-agenda",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "31-jogos-agenda-scroll",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "31-jogos-agenda-scroll2",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "31-jogos-ranking",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "31-jogos-ranking-scroll",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "31-jogos-ranking-scroll2",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "31-jogos-ranking-jogo",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "31-jogos-apostas",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "31-jogos-apostas-duelos",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "31-jogos-apostas-folha",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "32-tutorial-memory-rush-a",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "32-tutorial-memory-rush-b",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "32-tutorial-memory-rush-c",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "32-tutorial-living-chess-a",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "32-tutorial-living-chess-b",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "32-tutorial-living-chess-c",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "32-tutorial-bomba-quente-a",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "32-tutorial-bomba-quente-b",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "32-tutorial-bomba-quente-c",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "32-tutorial-blefe-a",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "32-tutorial-blefe-b",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "32-tutorial-blefe-c",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "33-jogos-fila",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "33-jogos-fila-cancelada",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "30-jogos-mesa-scroll3",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "30-jogos-mesa-scroll4",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "30-jogos-mesa-scroll5",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "30-jogos-mesa-chat",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "34-javali-0",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "34-javali-0@390x900",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "34-javali-0@360x740",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "34-javali-1",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "34-javali-1@390x900",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "34-javali-1@360x740",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "34-javali-2",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "34-javali-3",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-01-home-trancado",
+      "note": "sem o Deadly Vote tutorial: sistemas novos trancados com o motivo",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-50-cena-trancada",
+      "note": "erro: cena exige flag (403 do servidor)",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-02-cerimonia",
+      "note": "cerimônia de desbloqueio depois do tutorial",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-03-home-liberado",
+      "note": "ícones novos destrancados (losango = ainda não aberto)",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-04-sistema-aberto",
+      "note": "sistema liberado abre a própria tela (Poço) e conta como explorado",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-05-cartao-galo",
+      "note": "depois de explorar: cartão \"Ir para casa\" (visita do Galo)",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-10-galo-abertura",
+      "note": "narração entre colchetes (texto literal do dono)",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-10-galo-abertura@390x900",
+      "note": "narração entre colchetes (texto literal do dono)",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-10-galo-abertura@360x740",
+      "note": "narração entre colchetes (texto literal do dono)",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-11-galo-som",
+      "note": "a deixa de som tocou e seguiu sozinha: nenhuma caixa com *Som…*",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-11-galo-som@390x900",
+      "note": "a deixa de som tocou e seguiu sozinha: nenhuma caixa com *Som…*",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-11-galo-som@360x740",
+      "note": "a deixa de som tocou e seguiu sozinha: nenhuma caixa com *Som…*",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-12-galo-escolha",
+      "note": "escolhas numeradas (casa: luar, abajur, quadro torto)",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-12-galo-escolha@390x900",
+      "note": "escolhas numeradas (casa: luar, abajur, quadro torto)",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-12-galo-escolha@360x740",
+      "note": "escolhas numeradas (casa: luar, abajur, quadro torto)",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-12b-casa-acordada",
+      "note": "feminino: \"continue acordada\"",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-12b-casa-acordada@390x900",
+      "note": "feminino: \"continue acordada\"",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-12b-casa-acordada@360x740",
+      "note": "feminino: \"continue acordada\"",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-13-galo-campainha",
+      "note": "som desligado: \"dim… dom\" discreto no canto",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-13-galo-campainha@390x900",
+      "note": "som desligado: \"dim… dom\" discreto no canto",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-13-galo-campainha@360x740",
+      "note": "som desligado: \"dim… dom\" discreto no canto",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-14-galo-pensamento",
+      "note": "pensamento entre aspas",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-14-galo-pensamento@390x900",
+      "note": "pensamento entre aspas",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-14-galo-pensamento@360x740",
+      "note": "pensamento entre aspas",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-15-galo-escolha-acao",
+      "note": "opções de ação",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-15-galo-escolha-acao@390x900",
+      "note": "opções de ação",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-15-galo-escolha-acao@360x740",
+      "note": "opções de ação",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-16-galo-aparece",
+      "note": "porta aberta sozinha, aparição",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-16-galo-aparece@390x900",
+      "note": "porta aberta sozinha, aparição",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-16-galo-aparece@360x740",
+      "note": "porta aberta sozinha, aparição",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-16b-galo-pe-de-caju",
+      "note": "\"E aí, pé de caju! Lembra de mim?\"",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-16b-galo-pe-de-caju@390x900",
+      "note": "\"E aí, pé de caju! Lembra de mim?\"",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-16b-galo-pe-de-caju@360x740",
+      "note": "\"E aí, pé de caju! Lembra de mim?\"",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-17-galo-lembra",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-17-galo-lembra@390x900",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-17-galo-lembra@360x740",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-18-galo-bingo",
+      "note": "resposta própria da opção 3",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-19-galo-tempo",
+      "note": "Galo transfere Tempo (60 min, provisório) — selo junto da narração",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-20-galo-retomada",
+      "note": "recarregou: retoma onde parou",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-20-galo-retomada@390x900",
+      "note": "recarregou: retoma onde parou",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-20-galo-retomada@360x740",
+      "note": "recarregou: retoma onde parou",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-21-galo-luz",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-22-galo-sistema-karma",
+      "note": "caixa de sistema",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-23-destino-neutro",
+      "note": "linha do destino (sem número)",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-24-destino-ordem",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-25-destino-caos",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-26-galo-duvida",
+      "note": "cinco dúvidas, cada uma com a sua reação",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-26-galo-duvida@390x900",
+      "note": "cinco dúvidas, cada uma com a sua reação",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-26-galo-duvida@360x740",
+      "note": "cinco dúvidas, cada uma com a sua reação",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-26b-galo-jejum",
+      "note": "reação da dúvida 3",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-26b-galo-jejum@390x900",
+      "note": "reação da dúvida 3",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-26b-galo-jejum@360x740",
+      "note": "reação da dúvida 3",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-27a-galo-lata",
+      "note": "lata (som de lata)",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-27a-galo-lata@390x900",
+      "note": "lata (som de lata)",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-27a-galo-lata@360x740",
+      "note": "lata (som de lata)",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-27b-galo-sozinha",
+      "note": "feminino: \"sozinha\"",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-27b-galo-sozinha@390x900",
+      "note": "feminino: \"sozinha\"",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-27b-galo-sozinha@360x740",
+      "note": "feminino: \"sozinha\"",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-27c-galo-opcao",
+      "note": "quatro reações à provocação",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-27c-galo-opcao@390x900",
+      "note": "quatro reações à provocação",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-27c-galo-opcao@360x740",
+      "note": "quatro reações à provocação",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-27-galo-contato",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-27-galo-contato@390x900",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-27-galo-contato@360x740",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-27d-galo-adeus",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-27d-galo-adeus@390x900",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-27d-galo-adeus@360x740",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-28-galo-fim",
+      "note": "porta fechada",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-30-melissa-chamada",
+      "note": "ícone da Companhia + chamada holográfica",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-31-melissa-materializa",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-32-melissa-holograma",
+      "note": "holograma em luz fria (ametista/aço)",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-32-melissa-holograma@390x900",
+      "note": "holograma em luz fria (ametista/aço)",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-32-melissa-holograma@360x740",
+      "note": "holograma em luz fria (ametista/aço)",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-33-melissa-escolha",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-34-melissa-multa",
+      "note": "opção 2 tira 1h30 do Shuffler (selo −1h30)",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-34-melissa-multa@390x900",
+      "note": "opção 2 tira 1h30 do Shuffler (selo −1h30)",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-34-melissa-multa@360x740",
+      "note": "opção 2 tira 1h30 do Shuffler (selo −1h30)",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-35a-melissa-explorar",
+      "note": "três opções: as duas primeiras podem ser vistas antes",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-35a-melissa-explorar@390x900",
+      "note": "três opções: as duas primeiras podem ser vistas antes",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-35a-melissa-explorar@360x740",
+      "note": "três opções: as duas primeiras podem ser vistas antes",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-35b-melissa-salao",
+      "note": "resposta da opção 1",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-35b-melissa-salao@390x900",
+      "note": "resposta da opção 1",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-35b-melissa-salao@360x740",
+      "note": "resposta da opção 1",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-35c-melissa-volta",
+      "note": "voltou: só as que faltam (2 e 3)",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-35c-melissa-volta@390x900",
+      "note": "voltou: só as que faltam (2 e 3)",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-35c-melissa-volta@360x740",
+      "note": "voltou: só as que faltam (2 e 3)",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-35d-melissa-so-entendi",
+      "note": "só \"Entendi.\" resta, e ele segue",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-35d-melissa-so-entendi@390x900",
+      "note": "só \"Entendi.\" resta, e ele segue",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-35d-melissa-so-entendi@360x740",
+      "note": "só \"Entendi.\" resta, e ele segue",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-35-melissa-encerra",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-35-melissa-encerra@390x900",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-35-melissa-encerra@360x740",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-36-corporacoes-liberado",
+      "note": "Corporações liberado ao fim da chamada (cerimônia)",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-40-mensagens-galo",
+      "note": "contato do Galo em Mensagens",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-41-reflexao",
+      "note": "reflexão \"Anfitrião do quê?\" (ao sair das Torres): cinco opções",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "n-42-reflexao-resposta",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "poco-00-home-trancado",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "poco-01-trancado",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "poco-02-diario-vazio",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "poco-03-home-liberado",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "poco-04-neblina-rua",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "poco-05-neblina-poco",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "poco-05-neblina-poco@390x900",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "poco-05-neblina-poco@360x740",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "poco-06-neblina-escolha-moeda",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "poco-06-neblina-escolha-moeda@390x900",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "poco-06-neblina-escolha-moeda@360x740",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "poco-07-neblina-figura",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "poco-07-neblina-figura@390x900",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "poco-07-neblina-figura@360x740",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "poco-08-neblina-mao",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "poco-08-neblina-mao@390x900",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "poco-08-neblina-mao@360x740",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "poco-10-neblina-aviso",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "poco-10b-melissa-apos-poco",
+      "note": "a chamada da Melissa chega logo depois do encontro no Poço",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "poco-11-tela",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "poco-12-moedas",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "poco-13-baldes-bloqueado",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "poco-14-lancar",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "poco-15-moeda-caindo",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "poco-16-minigame",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "poco-17-minigame-fim",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "poco-18-balde-subindo",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "poco-19-resultado-lixo",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "poco-20-giro-gratis-usado",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "poco-21-lancar-gratis-usado",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "poco-22a-revelacao-raro",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "poco-22-resultado-raro",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "poco-26-resultado-fragmento",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "poco-27-resultado-essencia",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "poco-28-resultado-cosmetico-1",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "poco-29-resultado-cosmetico-2",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "poco-30-resultado-cosmetico-3",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "poco-23-diario",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "poco-24-owner-cena-pular",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "poco-25-owner-probabilidades",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "corp-00-home-trancado",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "corp-01-trancado",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "corp-02-holograma-chamada",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "corp-05-vazia",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "corp-06-vazia-fundar",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "corp-07-codigo-invalido",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "corp-08-codigo-necro",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "corp-09-codigo-previa",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "corp-10-pedido-enviado",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "corp-11-lider-heroi",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "corp-12-pedidos-perfil",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "corp-13-pedido-aprovado",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "corp-14-membros",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "corp-15-gerir-membro",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "corp-16-transferir-escolha",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "corp-17-transferida",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "corp-17b-chamada-da-companhia",
+      "note": "cena da Narrativa por cima das Corporações",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "corp-18-recrutamento",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "corp-19-jogos-em-breve",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "corp-20-membro-nova",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "corp-21-carta-recebida",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "corp-22-requisitos-faltando",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "corp-23-fundar-brasao",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "corp-24-fundar-custo",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "corp-25-fundacao-em-analise",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "corp-26-mesa-fila",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "corp-27-mesa-fundacao",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "corp-28-mesa-aprovada",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "corp-29-mesa-necro",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "corp-30-necro",
+      "note": "",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "corp-31-erro",
+      "note": "",
+      "url": "http://localhost:3000/"
+    }
+  ],
+  "errors": [],
+  "console": [
+    {
+      "page": "http://localhost:3000/",
+      "text": "Permissions policy violation: compute-pressure is not allowed in this document.",
+      "src": "https://www.youtube.com/s/player/0229cd64/player_embed_es6.vflset/pt_BR/base.js"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "HTTP 403",
+      "src": "http://localhost:3000/api/dialogo?cena=galo-casa"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "Failed to load resource: the server responded with a status of 403 (Forbidden)",
+      "src": "http://localhost:3000/api/dialogo?cena=galo-casa"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "HTTP 400",
+      "src": "http://localhost:3000/api/auth/sign-up/email"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "Failed to load resource: the server responded with a status of 400 (BAD_REQUEST)",
+      "src": "http://localhost:3000/api/auth/sign-up/email"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "HTTP 400",
+      "src": "http://localhost:3000/api/auth/sign-up/email"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "Failed to load resource: the server responded with a status of 400 (BAD_REQUEST)",
+      "src": "http://localhost:3000/api/auth/sign-up/email"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "HTTP 500",
+      "src": "http://localhost:3000/api/corporacoes"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "Failed to load resource: the server responded with a status of 500 (Internal Server Error)",
+      "src": "http://localhost:3000/api/corporacoes"
+    }
+  ]
+}
