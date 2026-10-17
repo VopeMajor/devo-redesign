@@ -1,0 +1,107 @@
+{
+  "pedido": "rosa-do-destino-balao",
+  "titulo": "Rosa do Destino — balão de chat (importado)",
+  "tipo": "balao",
+  "tamanho_final": 2048,
+  "importado": "arte/importados/rosa-do-destino-balao.png",
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "importado",
+      "seed": 0,
+      "passos": null,
+      "fundo": "quadriculado+rembg:birefnet-general",
+      "ilhas_removidas": 109,
+      "franja_aparada_px": 20150,
+      "beira_recolorida_px": 23005,
+      "polimento": {
+        "nevoa_px": 6366,
+        "pontos_px": 1101,
+        "ilhas_px": 318
+      },
+      "arquivos": [
+        {
+          "arquivo": "rosa-do-destino-balao--v01--2047.png",
+          "bytes": 1565276
+        },
+        {
+          "arquivo": "rosa-do-destino-balao--v01--2047.webp",
+          "bytes": 296666
+        },
+        {
+          "arquivo": "rosa-do-destino-balao--v01--1024.webp",
+          "bytes": 89798
+        },
+        {
+          "arquivo": "rosa-do-destino-balao--v01--768.webp",
+          "bytes": 56658
+        },
+        {
+          "arquivo": "rosa-do-destino-balao--v01--512.webp",
+          "bytes": 30028
+        },
+        {
+          "arquivo": "rosa-do-destino-balao--v01--256.webp",
+          "bytes": 10766
+        }
+      ],
+      "balao": {
+        "tamanho_px": [
+          2047,
+          693
+        ],
+        "nove_fatias": {
+          "top": 231,
+          "right": 390,
+          "bottom": 218,
+          "left": 350,
+          "css": "border-image: url(...) 231 390 218 350 fill / auto; border-image-repeat: stretch;",
+          "obs": "medidas em px do original; nos derivados multiplique por largura/W"
+        },
+        "kit": {
+          "corpo": {
+            "altura_px": 368,
+            "topo_no_original": 170,
+            "fatias": {
+              "top": 61,
+              "bottom": 63,
+              "left": 0,
+              "right": 0
+            },
+            "obs": "uniforme na horizontal; estique livre. Centro liso (texto)."
+          },
+          "ponta_esq": {
+            "largura_px": 411,
+            "sobreposicao_px": 61
+          },
+          "ponta_dir": {
+            "largura_px": 451,
+            "sobreposicao_px": 61
+          },
+          "texto": {
+            "x0": 350,
+            "x1": 1657,
+            "y0": 231,
+            "y1": 475
+          }
+        },
+        "arquivos_kit": [
+          "rosa-do-destino-balao--v01--kit-corpo--1024.webp",
+          "rosa-do-destino-balao--v01--kit-corpo--768.webp",
+          "rosa-do-destino-balao--v01--kit-corpo--512.webp",
+          "rosa-do-destino-balao--v01--kit-corpo--256.webp",
+          "rosa-do-destino-balao--v01--kit-ponta-esq--1024.webp",
+          "rosa-do-destino-balao--v01--kit-ponta-esq--768.webp",
+          "rosa-do-destino-balao--v01--kit-ponta-esq--512.webp",
+          "rosa-do-destino-balao--v01--kit-ponta-esq--256.webp",
+          "rosa-do-destino-balao--v01--kit-ponta-dir--1024.webp",
+          "rosa-do-destino-balao--v01--kit-ponta-dir--768.webp",
+          "rosa-do-destino-balao--v01--kit-ponta-dir--512.webp",
+          "rosa-do-destino-balao--v01--kit-ponta-dir--256.webp"
+        ]
+      },
+      "segundos_pos": 42.8,
+      "avisos": []
+    }
+  ]
+}

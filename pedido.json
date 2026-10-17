@@ -1,0 +1,39 @@
+{
+  "id": "rosa-do-destino-balao",
+  "titulo": "Rosa do Destino — balão de chat (importado)",
+  "tipo": "balao",
+  "importar": "arte/importados/rosa-do-destino-balao.png",
+  "pos": {
+    "remover_fundo": true,
+    "modelo_fundo": "birefnet-general",
+    "fundo": "quadriculado",
+    "tamanho_final": 2048,
+    "margem": 0.01,
+    "derivados": [
+      1024,
+      768,
+      512,
+      256
+    ],
+    "camadas": []
+  },
+  "prompt": "",
+  "modelo": "importado",
+  "variacoes": [
+    {
+      "seed": 0,
+      "modelo": "importado",
+      "passos": null,
+      "largura": 1024,
+      "altura": 1024,
+      "prompt_extra": "",
+      "n": 1
+    }
+  ],
+  "negative": "",
+  "largura": 1024,
+  "altura": 1024,
+  "passos": null,
+  "guidance": null,
+  "referencias": []
+}
