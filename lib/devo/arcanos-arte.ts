@@ -26,3 +26,16 @@ export function arteDe(key: ArcanoKey, tipo: ArteTipo): { src: string; srcSet: s
   const url = (l: number) => `/images/arcanos/${key}/${tipo}-${l}.webp`
   return { src: url(ord[0]), srcSet: ord.map((l) => `${url(l)} ${l}w`).join(', ') }
 }
+
+/**
+ * Moldura ornamentada VAZIA (pedido ao agente de arte): `public/images/arcanos/moldura/moldura-<lado>.webp`,
+ * proporção 200×290, vão transparente no meio. Liste aqui os lados entregues; vazio = moldura desenhada em SVG.
+ */
+export const MOLDURA_ARTE: number[] = []
+
+export function molduraArte(): { src: string; srcSet: string } | null {
+  if (!MOLDURA_ARTE.length) return null
+  const ord = [...MOLDURA_ARTE].sort((a, b) => a - b)
+  const url = (l: number) => `/images/arcanos/moldura/moldura-${l}.webp`
+  return { src: url(ord[0]), srcSet: ord.map((l) => `${url(l)} ${l}w`).join(', ') }
+}
