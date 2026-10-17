@@ -1,0 +1,121 @@
+{
+  "pedido": "arcano-sigilo-enamorados",
+  "titulo": "Arcano — enamorados (sigilo)",
+  "tipo": "emblema",
+  "tamanho_final": 1024,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 13061,
+      "passos": null,
+      "segundos": 10.2,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "ilhas_removidas": 0,
+      "arquivos": [
+        {
+          "arquivo": "arcano-sigilo-enamorados--v01--1024.png",
+          "bytes": 408523
+        },
+        {
+          "arquivo": "arcano-sigilo-enamorados--v01--1024.webp",
+          "bytes": 94514
+        },
+        {
+          "arquivo": "arcano-sigilo-enamorados--v01--512.webp",
+          "bytes": 31938
+        },
+        {
+          "arquivo": "arcano-sigilo-enamorados--v01--256.webp",
+          "bytes": 13236
+        },
+        {
+          "arquivo": "arcano-sigilo-enamorados--v01--128.webp",
+          "bytes": 6238
+        },
+        {
+          "arquivo": "arcano-sigilo-enamorados--v01--64.webp",
+          "bytes": 2480
+        }
+      ],
+      "segundos_pos": 22.7,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 13062,
+      "passos": null,
+      "segundos": 14.7,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "arcano-sigilo-enamorados--v02--1024.png",
+          "bytes": 459500
+        },
+        {
+          "arquivo": "arcano-sigilo-enamorados--v02--1024.webp",
+          "bytes": 90566
+        },
+        {
+          "arquivo": "arcano-sigilo-enamorados--v02--512.webp",
+          "bytes": 31358
+        },
+        {
+          "arquivo": "arcano-sigilo-enamorados--v02--256.webp",
+          "bytes": 13402
+        },
+        {
+          "arquivo": "arcano-sigilo-enamorados--v02--128.webp",
+          "bytes": 6048
+        },
+        {
+          "arquivo": "arcano-sigilo-enamorados--v02--64.webp",
+          "bytes": 2540
+        }
+      ],
+      "segundos_pos": 19.6,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 13063,
+      "passos": null,
+      "segundos": 17.8,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "arcano-sigilo-enamorados--v03--1024.png",
+          "bytes": 504601
+        },
+        {
+          "arquivo": "arcano-sigilo-enamorados--v03--1024.webp",
+          "bytes": 123678
+        },
+        {
+          "arquivo": "arcano-sigilo-enamorados--v03--512.webp",
+          "bytes": 39472
+        },
+        {
+          "arquivo": "arcano-sigilo-enamorados--v03--256.webp",
+          "bytes": 16160
+        },
+        {
+          "arquivo": "arcano-sigilo-enamorados--v03--128.webp",
+          "bytes": 7174
+        },
+        {
+          "arquivo": "arcano-sigilo-enamorados--v03--64.webp",
+          "bytes": 2696
+        }
+      ],
+      "segundos_pos": 20.5,
+      "avisos": []
+    }
+  ]
+}
