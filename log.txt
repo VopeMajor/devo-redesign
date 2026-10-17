@@ -1,0 +1,7 @@
+[arcano-mago-tarot] v01: @cf/black-forest-labs/flux-2-klein-9b seed=91021 1024x1536 passos=None (~1,455 neurônios)
+    ok em 3.1s, 1024x1536
+[arcano-mago-tarot] v02: @cf/black-forest-labs/flux-2-klein-9b seed=91022 1024x1536 passos=None (~1,455 neurônios)
+    ERRO: HTTP 400 — 3030: AiError: AiError: Your output has been flagged. Please choose another prompt / input image combination (64c9f3b6-8c60-4516-a3b7-394f9333d8b9)
+[arcano-mago-tarot] v03: @cf/black-forest-labs/flux-2-klein-9b seed=91023 1024x1536 passos=None (~1,455 neurônios)
+    ERRO: HTTP 400 — 3030: AiError: AiError: Your output has been flagged. Please choose another prompt / input image combination (34556c46-8881-45e7-aa09-6366a4323cbe)
+[arcano-mago-tarot] v01: rembg:birefnet-general; sem avisos
