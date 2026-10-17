@@ -1,0 +1,40 @@
+{
+  "pedido": "arcano-sigilo-mago",
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 13011,
+      "passos": null,
+      "largura": 1024,
+      "altura": 1024,
+      "neuronios_estimados": 104,
+      "erro": "HTTP 400 — 3030: AiError: AiError: Your output has been flagged. Please choose another prompt / input image combination (3a803839-9419-4a5c-8ed9-a25fb0c4e6b2)"
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 13012,
+      "passos": null,
+      "largura": 1024,
+      "altura": 1024,
+      "neuronios_estimados": 104,
+      "erro": "HTTP 400 — 3030: AiError: AiError: Your output has been flagged. Please choose another prompt / input image combination (c836d4a4-4c85-4972-8153-82b1e8a1dfab)"
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 13013,
+      "passos": null,
+      "largura": 1024,
+      "altura": 1024,
+      "neuronios_estimados": 104,
+      "ok": true,
+      "segundos": 12.3,
+      "tamanho_real": [
+        1024,
+        1024
+      ]
+    }
+  ]
+}

@@ -1,0 +1,63 @@
+{
+  "pedido": "arcano-sigilo-mago",
+  "titulo": "Arcano — mago (sigilo)",
+  "tipo": "emblema",
+  "tamanho_final": 1024,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 13011,
+      "passos": null,
+      "neuronios_estimados": 104,
+      "erro": "HTTP 400 — 3030: AiError: AiError: Your output has been flagged. Please choose another prompt / input image combination (3a803839-9419-4a5c-8ed9-a25fb0c4e6b2)"
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 13012,
+      "passos": null,
+      "neuronios_estimados": 104,
+      "erro": "HTTP 400 — 3030: AiError: AiError: Your output has been flagged. Please choose another prompt / input image combination (c836d4a4-4c85-4972-8153-82b1e8a1dfab)"
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 13013,
+      "passos": null,
+      "segundos": 12.3,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "ilhas_removidas": 0,
+      "arquivos": [
+        {
+          "arquivo": "arcano-sigilo-mago--v03--1024.png",
+          "bytes": 283086
+        },
+        {
+          "arquivo": "arcano-sigilo-mago--v03--1024.webp",
+          "bytes": 64306
+        },
+        {
+          "arquivo": "arcano-sigilo-mago--v03--512.webp",
+          "bytes": 22080
+        },
+        {
+          "arquivo": "arcano-sigilo-mago--v03--256.webp",
+          "bytes": 9748
+        },
+        {
+          "arquivo": "arcano-sigilo-mago--v03--128.webp",
+          "bytes": 4748
+        },
+        {
+          "arquivo": "arcano-sigilo-mago--v03--64.webp",
+          "bytes": 2036
+        }
+      ],
+      "segundos_pos": 22.5,
+      "avisos": []
+    }
+  ]
+}

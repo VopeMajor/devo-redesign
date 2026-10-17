@@ -1,0 +1,7 @@
+[arcano-sigilo-mago] v01: @cf/black-forest-labs/flux-2-klein-4b seed=13011 1024x1024 passos=None (~104 neurônios)
+    ERRO: HTTP 400 — 3030: AiError: AiError: Your output has been flagged. Please choose another prompt / input image combination (3a803839-9419-4a5c-8ed9-a25fb0c4e6b2)
+[arcano-sigilo-mago] v02: @cf/black-forest-labs/flux-2-klein-4b seed=13012 1024x1024 passos=None (~104 neurônios)
+    ERRO: HTTP 400 — 3030: AiError: AiError: Your output has been flagged. Please choose another prompt / input image combination (c836d4a4-4c85-4972-8153-82b1e8a1dfab)
+[arcano-sigilo-mago] v03: @cf/black-forest-labs/flux-2-klein-4b seed=13013 1024x1024 passos=None (~104 neurônios)
+    ok em 12.3s, 1024x1024
+[arcano-sigilo-mago] v03: rembg:birefnet-general; sem avisos
