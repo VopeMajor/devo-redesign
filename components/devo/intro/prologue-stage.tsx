@@ -407,7 +407,7 @@ export function PrologueStage({
       </Layer>
       {/* Melissa: mesmo tratamento de retrato do elenco (PortraitFrame). Só entra depois da fala de cenário:
           primeiro como silhueta se aproximando, depois em luz; escurece quando não é ela quem fala. */}
-      <div ref={melissaRef} className="pointer-events-none absolute inset-0" style={NEAR}>
+      <div ref={melissaRef} data-melissa={melissa} className="pointer-events-none absolute inset-0" style={NEAR}>
         {/* Ancorada à caixa de fala (kit/npc-anchor): a base do busto passa por trás do topo da caixa, sem
             vão, em qualquer altura de tela. Expressões trocam por opacidade; na aproximação só a silhueta. */}
         <NpcAnchor
