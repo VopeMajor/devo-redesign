@@ -4,13 +4,16 @@ import type { PoolClient } from 'pg'
 import { pool } from '@/lib/db'
 import { can, normalizeCargo, seesAllSystems } from './cargos'
 import { RecordError } from './errors'
-import { type Queryable, run, txAs } from './fundacao-db'
-import { consumeItem, grantItem } from './inventario-server'
-import { loadActor } from './permissoes-server'
+import { type Queryable, run, txAs, UUID_RE } from './fundacao-db'
+import { CARDS } from './cards'
+import { consumeItem, creditMinutes, deliverCard, grantItem } from './inventario-server'
+import { loadActor, requireActor, requireCan } from './permissoes-server'
 import {
   aplicarManivela,
   avaliarToques,
-  categoriaPorRolagem,
+  fatorManivela,
+  imagemPremioValida,
+  type LinhaChance,
   lerPesos,
   lixoPorId,
   MANIVELA_PADRAO,
@@ -19,6 +22,14 @@ import {
   POCO_LIXO,
   type PocoBalde,
   type PocoCategoria,
+  type PocoCategoriaResultado,
+  type PocoPremio,
+  PREMIO_TIPOS,
+  type PremioTipo,
+  premioElegivel,
+  sortearComPremios,
+  tabelaChances,
+  textoPremioValido,
   type PocoGiroAberto,
   type PocoLetreiro,
   type PocoMoeda,
@@ -27,7 +38,7 @@ import {
   type PocoResultado,
   toquesValidos,
 } from './poco'
-import type { ItemKind, ItemRarity } from './progresso'
+import { type ItemKind, type ItemRarity, ITEM_RARITY_LABEL } from './progresso'
 import { getConfig, hasUnlock, requireUnlock } from './progresso-server'
 
 /**
@@ -115,6 +126,73 @@ export function manivelaParams(seed: string, cfg: ManivelaConfig, lento: boolean
     fase: Number(unit(seed, `manivela:fase:${i}`).toFixed(4)),
   }))
   return { rodadas, rodadaMaxMs: cfg.rodada_max_ms, lento }
+}
+
+/* ------------------------------------------------------------------ Prêmios do Owner (pool) */
+
+type PremioRow = {
+  id: string
+  tipo: PremioTipo
+  item_key: string | null
+  card_id: string | null
+  minutos: number | null
+  quantidade: number
+  nome: string
+  descricao: string | null
+  imagem: string | null
+  raridade: ItemRarity
+  peso: number
+  moedas: string[]
+  estoque: number | null
+  entregues: number
+  ativo: boolean
+  stackable: boolean | null
+}
+
+const PREMIO_COLS = `p.id, p.tipo, p.item_key, p.card_id, p.minutos, p.quantidade, p.nome, p.descricao, p.imagem, p.raridade,
+  p.peso, p.moedas, p.estoque, p.entregues, p.ativo, d.stackable`
+
+async function premiosRows(q: Queryable, apenasAtivos: boolean): Promise<PremioRow[]> {
+  return run<PremioRow>(
+    q,
+    `SELECT ${PREMIO_COLS} FROM poco_premios p LEFT JOIN item_defs d ON d.key = p.item_key
+      ${apenasAtivos ? 'WHERE p.ativo AND (p.item_key IS NULL OR d.active)' : ''}
+      ORDER BY p.ativo DESC, p.criado_at`,
+  )
+}
+
+function premioInfo(r: PremioRow): PocoPremio {
+  return {
+    id: r.id,
+    tipo: r.tipo,
+    itemKey: r.item_key,
+    cardId: r.card_id,
+    minutos: r.minutos,
+    quantidade: r.quantidade,
+    nome: r.nome,
+    descricao: r.descricao,
+    imagem: r.imagem,
+    raridade: r.raridade,
+    peso: Number(r.peso),
+    moedas: r.moedas ?? [],
+    estoque: r.estoque,
+    entregues: r.entregues,
+    ativo: r.ativo,
+  }
+}
+
+/** Chances por moeda (sem manivela), categorias + prêmios elegíveis: o que o jogador e a Mesa veem. */
+function chancesPorMoeda(probs: Record<string, unknown>, moedas: string[], premios: PocoPremio[]): Record<string, LinhaChance[]> {
+  const out: Record<string, LinhaChance[]> = {}
+  for (const m of new Set(moedas)) {
+    const pesos = lerPesos(probs[m])
+    if (!pesos) continue
+    out[m] = tabelaChances(
+      pesos,
+      premios.filter((p) => premioElegivel(p, m)).map((p) => ({ id: p.id, nome: p.nome, peso: p.peso })),
+    )
+  }
+  return out
 }
 
 /* ------------------------------------------------------------------ Leitura */
@@ -277,6 +355,7 @@ export async function getPoco(playerId: string): Promise<PocoPayload> {
     letreiro(pool),
     simulacao(pool),
   ])
+  const premiosAtivos = (await premiosRows(pool, true)).map(premioInfo)
   const estado = estadoRows[0]
   const [{ n: usados }] = await run<{ n: string }>(pool, 'SELECT count(*) AS n FROM poco_giros WHERE player_id = $1 AND gratis AND dia = $2::date', [playerId, dia.dia])
   const restantes = Math.max(0, gratisCfg.quantidade - Number(usados))
@@ -303,6 +382,7 @@ export async function getPoco(playerId: string): Promise<PocoPayload> {
     aberto: aberto ? await abertoInfo(aberto, pool) : null,
     letreiro: faixa,
     simulacao: sim,
+    chances: chancesPorMoeda(probs.value, [...moedas.map((m) => m.key), gratisCfg.categoria], premiosAtivos),
   }
   if (can(ator, 'config.editar')) {
     const [nota] = await run<{ note: string | null }>(pool, "SELECT note FROM devo_config WHERE key = 'poco.probabilidades'")
@@ -475,12 +555,39 @@ export async function girarManivela(playerId: string, input: { toques?: unknown 
     if (!base) throw new RecordError('Esta categoria do poço ainda não foi definida.', 409)
     const pesos = aplicarManivela(base, acertos, cfg)
     const rolagem = unit(g.seed, 'categoria')
-    const sorteada = categoriaPorRolagem(pesos, rolagem)
 
-    let categoria: PocoCategoria = sorteada
-    let item = await escolherItem(c, playerId, categoria, g.seed)
+    // Prêmios do Owner elegíveis para esta moeda (item único que o jogador já tem fica de fora).
+    const possuidos = new Set(
+      (await run<{ item_key: string }>(c, 'SELECT item_key FROM player_items WHERE player_id = $1 AND quantity > 0', [playerId])).map((r) => r.item_key),
+    )
+    const elegiveis = (await premiosRows(c, true)).filter(
+      (p) => premioElegivel({ ...p, moedas: p.moedas ?? [] }, g.moeda) && !(p.tipo === 'item' && p.stackable === false && p.item_key && possuidos.has(p.item_key)),
+    )
+    const sorteio = sortearComPremios(
+      pesos,
+      elegiveis.map((p) => ({ id: p.id, peso: Number(p.peso), lixo: p.tipo === 'lixo' })),
+      rolagem,
+      fatorManivela(acertos, cfg),
+    )
+
+    // Prêmio do pool: reserva o estoque de forma atômica; se acabou no meio do caminho, cai para fragmento.
+    let premio: PremioRow | null = null
+    if (sorteio.tipo === 'premio') {
+      const [r] = await run<PremioRow>(
+        c,
+        `UPDATE poco_premios p SET entregues = p.entregues + 1, atualizado_at = now()
+          WHERE p.id = $1 AND p.ativo AND (p.estoque IS NULL OR p.entregues < p.estoque)
+          RETURNING ${PREMIO_COLS.replace('d.stackable', 'NULL::boolean AS stackable')}`,
+        [sorteio.id],
+      )
+      premio = r ?? null
+    }
+    const sorteada: PocoCategoriaResultado = sorteio.tipo === 'premio' ? 'premio' : sorteio.categoria
+
+    let categoria: PocoCategoriaResultado = premio ? 'premio' : sorteio.tipo === 'premio' ? 'fragmento' : sorteio.categoria
+    let item = categoria === 'premio' ? null : await escolherItem(c, playerId, categoria as PocoCategoria, g.seed)
     // Sem item elegível (ex.: já tem todas as cápsulas, nenhum cosmético no Poço): vira fragmento.
-    if (categoria !== 'lixo' && !item) {
+    if (categoria !== 'lixo' && categoria !== 'premio' && !item) {
       categoria = 'fragmento'
       item = await escolherItem(c, playerId, 'fragmento', g.seed)
       if (!item) categoria = 'lixo'
@@ -488,7 +595,22 @@ export async function girarManivela(playerId: string, input: { toques?: unknown 
 
     let quantidade = 0
     let lixo: string | null = null
-    if (categoria === 'lixo') {
+    let itemKey: string | null = item?.key ?? null
+    let snapshot: Record<string, unknown> | null = null
+    const idem = `poco:giro:${g.id}:premio`
+    if (premio) {
+      quantidade = premio.quantidade
+      snapshot = { tipo: premio.tipo, nome: premio.nome, descricao: premio.descricao, imagem: premio.imagem, raridade: premio.raridade, itemKey: premio.item_key, cardId: premio.card_id, minutos: premio.minutos }
+      if (premio.tipo === 'item' && premio.item_key) {
+        itemKey = premio.item_key
+        await grantItem({ playerId, item: premio.item_key, quantidade, motivo: 'poco', ref: g.id, idem }, c)
+      } else if (premio.tipo === 'carta' && premio.card_id) {
+        for (let i = 0; i < quantidade && i < 50; i++) await deliverCard({ playerId, cardId: premio.card_id, origem: 'Poço dos Milagres', ref: g.id, idem: `${idem}:${i}` }, c)
+      } else if (premio.tipo === 'tempo' && premio.minutos) {
+        await creditMinutes(playerId, premio.minutos * quantidade, c)
+      }
+      // 'lixo': só aparece no balde (não vai ao inventário).
+    } else if (categoria === 'lixo') {
       lixo = POCO_LIXO[Math.floor(unit(g.seed, 'lixo') * POCO_LIXO.length)].id
     } else if (item) {
       quantidade = 1
@@ -499,15 +621,20 @@ export async function girarManivela(playerId: string, input: { toques?: unknown 
         const mult = Math.max(1, Number(bd?.mult ?? 1) || 1)
         quantidade = Math.ceil((min + Math.floor(unit(g.seed, 'quantidade') * (max - min + 1))) * mult)
       }
-      await grantItem({ playerId, item: item.key, quantidade, motivo: 'poco', ref: g.id, idem: `poco:giro:${g.id}:premio` }, c)
+      await grantItem({ playerId, item: item.key, quantidade, motivo: 'poco', ref: g.id, idem }, c)
     }
 
     await run(
       c,
       `UPDATE poco_giros SET estado = 'girado', toques = $2, acertos = $3, pesos = $4, provisorio = $5, rolagem = $6,
-              categoria_sorteada = $7, categoria = $8, item_key = $9, lixo = $10, quantidade = $11, girado_at = clock_timestamp()
+              categoria_sorteada = $7, categoria = $8, item_key = $9, lixo = $10, quantidade = $11, premio_id = $12, premio = $13,
+              girado_at = clock_timestamp()
         WHERE id = $1`,
-      [g.id, JSON.stringify(toques), acertos, JSON.stringify(pesos), probs.provisional, rolagem, sorteada, categoria, item?.key ?? null, lixo, quantidade],
+      [
+        g.id, JSON.stringify(toques), acertos,
+        JSON.stringify({ ...pesos, premios: Object.fromEntries(elegiveis.map((p) => [p.id, Number(p.peso)])) }),
+        probs.provisional, rolagem, sorteada, categoria, itemKey, lixo, quantidade, premio?.id ?? null, snapshot ? JSON.stringify(snapshot) : null,
+      ],
     )
     return { acertos, maxAcertos: cfg.max_acertos }
   })
@@ -517,39 +644,221 @@ export async function girarManivela(playerId: string, input: { toques?: unknown 
 
 export async function inspecionarBalde(playerId: string): Promise<PocoResultado> {
   await requireUnlock(playerId, 'poco')
-  return txAs(playerId, async (c) => {
+  return txAs<PocoResultado>(playerId, async (c) => {
     const [g] = await run<{
       id: string
       moeda: string
       gratis: boolean
-      categoria: PocoCategoria
+      categoria: PocoCategoriaResultado
       acertos: number
       quantidade: number
       lixo: string | null
       seed: string
       seed_hash: string
       item_key: string | null
+      premio_id: string | null
+      premio: Record<string, unknown> | null
     }>(
       c,
       `UPDATE poco_giros SET estado = 'revelado', revelado_at = clock_timestamp()
         WHERE player_id = $1 AND estado = 'girado'
-        RETURNING id, moeda, gratis, categoria, acertos, quantidade, lixo, seed, seed_hash, item_key`,
+        RETURNING id, moeda, gratis, categoria, acertos, quantidade, lixo, seed, seed_hash, item_key, premio_id, premio`,
       [playerId],
     )
     if (!g) throw new RecordError('O balde está vazio.', 409)
     const [d] = g.item_key ? await run<ItemDef>(c, 'SELECT key, kind, name, description, rarity, meta FROM item_defs WHERE key = $1', [g.item_key]) : []
+    const base = { id: g.id, moeda: g.moeda, gratis: g.gratis, acertos: g.acertos ?? 0, quantidade: g.quantidade ?? 0, seed: g.seed, seedHash: g.seed_hash }
+
+    // Prêmio do pool do Owner: mostrado a partir do instantâneo gravado no giro.
+    if (g.categoria === 'premio' && g.premio) {
+      const p = g.premio
+      const nome = String(p.nome ?? '')
+      const descricao = typeof p.descricao === 'string' ? p.descricao : null
+      const raridade = (typeof p.raridade === 'string' && p.raridade in ITEM_RARITY_LABEL ? p.raridade : 'comum') as ItemRarity
+      const imagem = typeof p.imagem === 'string' ? p.imagem : null
+      if (p.tipo === 'lixo') {
+        return { ...base, categoria: 'lixo', item: null, lixo: { id: `premio:${g.premio_id ?? 'x'}`, nome, texto: descricao ?? '', imagem } }
+      }
+      if (p.tipo === 'item' && d) {
+        return { ...base, categoria: 'premio', lixo: null, item: { key: d.key, kind: d.kind, nome: d.name, descricao: d.description, raridade, meta: { ...(d.meta ?? {}), premio: 'item', imagem } } }
+      }
+      const tipo = p.tipo === 'carta' ? 'carta' : 'tempo'
+      return {
+        ...base,
+        categoria: 'premio',
+        lixo: null,
+        item: {
+          key: tipo === 'carta' ? `carta:${String(p.cardId ?? '')}` : 'tempo',
+          kind: 'outro',
+          nome,
+          descricao,
+          raridade,
+          meta: { premio: tipo, imagem, cardId: p.cardId ?? null, minutos: p.minutos ?? null },
+        },
+      }
+    }
+
     const l = g.lixo ? lixoPorId(g.lixo) : null
     return {
-      id: g.id,
-      moeda: g.moeda,
-      gratis: g.gratis,
+      ...base,
       categoria: g.categoria,
-      acertos: g.acertos ?? 0,
-      quantidade: g.quantidade ?? 0,
       item: d ? { key: d.key, kind: d.kind, nome: d.name, descricao: d.description, raridade: d.rarity, meta: d.meta ?? {} } : null,
       lixo: l,
-      seed: g.seed,
-      seedHash: g.seed_hash,
     }
+  })
+}
+
+/* ------------------------------------------------------------------ Mesa do Owner: prêmios do pool */
+
+export type PocoMesaPremios = {
+  premios: PocoPremio[]
+  /** Itens que podem virar prêmio (cosméticos, fragmentos, moedas, essências, cápsulas, chaves). */
+  catalogo: { key: string; nome: string; kind: ItemKind; raridade: ItemRarity; unico: boolean }[]
+  cartas: { id: string; nome: string; raridade: string }[]
+  moedas: { key: string; nome: string }[]
+  probabilidades: Record<string, PocoPesos>
+  chances: Record<string, LinhaChance[]>
+}
+
+async function exigeOwner(atorId: string, q: Queryable = pool) {
+  const ator = await requireActor(atorId, q)
+  requireCan(ator, 'config.editar', undefined, 'Só o Owner edita os prêmios do Poço.')
+  return ator
+}
+
+export async function mesaPremios(atorId: string): Promise<PocoMesaPremios> {
+  await exigeOwner(atorId)
+  const [rows, catalogo, moedas, probs] = await Promise.all([
+    premiosRows(pool, false),
+    run<{ key: string; name: string; kind: ItemKind; rarity: ItemRarity; stackable: boolean }>(
+      pool,
+      `SELECT key, name, kind, rarity, stackable FROM item_defs
+        WHERE active AND kind IN ('cosmetico', 'fragmento', 'moeda', 'essencia', 'capsula', 'chave')
+        ORDER BY kind, name LIMIT 400`,
+    ),
+    run<{ key: string; name: string }>(pool, "SELECT key, name FROM item_defs WHERE kind = 'moeda' AND active AND meta->>'poco' = 'true' ORDER BY key"),
+    cfgProbabilidades(pool),
+  ])
+  const premios = rows.map(premioInfo)
+  const probabilidades: Record<string, PocoPesos> = {}
+  for (const [k, v] of Object.entries(probs.value)) {
+    const p = lerPesos(v)
+    if (p) probabilidades[k] = p
+  }
+  return {
+    premios,
+    catalogo: catalogo.map((d) => ({ key: d.key, nome: d.name, kind: d.kind, raridade: d.rarity, unico: !d.stackable })),
+    cartas: CARDS.map((c) => ({ id: c.id, nome: c.name, raridade: c.rarity })),
+    moedas: moedas.map((m) => ({ key: m.key, nome: m.name })),
+    probabilidades,
+    chances: chancesPorMoeda(probs.value, moedas.map((m) => m.key), premios.filter((p) => p.ativo)),
+  }
+}
+
+/** Cria ou edita um prêmio do pool (Owner). Tudo validado aqui; o cliente só sugere. */
+export async function salvarPremio(atorId: string, raw: Record<string, unknown>) {
+  return txAs(atorId, async (c) => {
+    const ator = await exigeOwner(atorId, c)
+    const id = typeof raw.id === 'string' && raw.id ? raw.id : null
+    if (id && !UUID_RE.test(id)) throw new RecordError('Prêmio inválido.', 400)
+    const tipo = PREMIO_TIPOS.find((t) => t === raw.tipo)
+    if (!tipo) throw new RecordError('Tipo de prêmio inválido.', 400)
+
+    const peso = Number(raw.peso)
+    if (!Number.isFinite(peso) || peso <= 0 || peso > 1_000_000) throw new RecordError('O peso precisa ser maior que zero.', 400)
+    const quantidade = Math.floor(Number(raw.quantidade ?? 1))
+    if (!Number.isFinite(quantidade) || quantidade < 1 || quantidade > 999) throw new RecordError('Quantidade entre 1 e 999.', 400)
+    const raridade = typeof raw.raridade === 'string' && raw.raridade in ITEM_RARITY_LABEL ? (raw.raridade as ItemRarity) : null
+    if (!raridade) throw new RecordError('Raridade inválida.', 400)
+    let estoque: number | null = null
+    if (raw.estoque !== null && raw.estoque !== undefined && raw.estoque !== '') {
+      estoque = Math.floor(Number(raw.estoque))
+      if (!Number.isFinite(estoque) || estoque < 0 || estoque > 1_000_000) throw new RecordError('Estoque inválido.', 400)
+    }
+    const moedasValidas = new Set((await run<{ key: string }>(c, "SELECT key FROM item_defs WHERE kind = 'moeda' AND meta->>'poco' = 'true'")).map((r) => r.key))
+    const moedas = Array.isArray(raw.moedas) ? [...new Set(raw.moedas.map(String))] : []
+    if (moedas.some((m) => !moedasValidas.has(m))) throw new RecordError('Moeda desconhecida.', 400)
+
+    let itemKey: string | null = null
+    let cardId: string | null = null
+    let minutos: number | null = null
+    let nome: string | null = null
+    let descricao: string | null = null
+    let imagem: string | null = null
+    if (raw.descricao !== undefined && raw.descricao !== null && raw.descricao !== '') {
+      descricao = textoPremioValido(raw.descricao, 240)
+      if (!descricao) throw new RecordError('Descrição inválida (até 240 caracteres, sem marcação).', 400)
+    }
+    if (raw.imagem !== undefined && raw.imagem !== null && raw.imagem !== '') {
+      imagem = imagemPremioValida(raw.imagem)
+      if (!imagem) throw new RecordError('Imagem inválida: envie pelo botão de imagem.', 400)
+    }
+    if (tipo === 'item') {
+      itemKey = typeof raw.itemKey === 'string' ? raw.itemKey.slice(0, 80) : ''
+      const [d] = await run<{ name: string }>(
+        c,
+        "SELECT name FROM item_defs WHERE key = $1 AND active AND kind IN ('cosmetico', 'fragmento', 'moeda', 'essencia', 'capsula', 'chave')",
+        [itemKey],
+      )
+      if (!d) throw new RecordError('Item do catálogo não encontrado.', 400)
+      nome = raw.nome ? textoPremioValido(raw.nome, 60) : d.name
+    } else if (tipo === 'carta') {
+      const carta = CARDS.find((k) => k.id === raw.cardId)
+      if (!carta) throw new RecordError('Carta desconhecida.', 400)
+      cardId = carta.id
+      nome = raw.nome ? textoPremioValido(raw.nome, 60) : `Carta: ${carta.name}`
+    } else if (tipo === 'tempo') {
+      minutos = Math.floor(Number(raw.minutos))
+      if (!Number.isFinite(minutos) || minutos < 1 || minutos > 10080) throw new RecordError('Tempo entre 1 minuto e 7 dias.', 400)
+      nome = raw.nome ? textoPremioValido(raw.nome, 60) : `+${minutos >= 60 ? `${Math.round((minutos / 60) * 10) / 10}h` : `${minutos}min`} de Tempo`
+    } else {
+      nome = textoPremioValido(raw.nome, 60)
+      if (!descricao) throw new RecordError('Prêmio lixo precisa de uma descrição.', 400)
+    }
+    if (!nome) throw new RecordError('Nome inválido (até 60 caracteres, sem marcação).', 400)
+    const ativo = raw.ativo !== false
+
+    const vals = [tipo, itemKey, cardId, minutos, quantidade, nome, descricao, imagem, raridade, peso, moedas, estoque, ativo]
+    let premioId: string
+    if (id) {
+      const [r] = await run<{ id: string }>(
+        c,
+        `UPDATE poco_premios SET tipo = $2, item_key = $3, card_id = $4, minutos = $5, quantidade = $6, nome = $7, descricao = $8,
+                imagem = $9, raridade = $10, peso = $11, moedas = $12, estoque = $13, ativo = $14, atualizado_at = now()
+          WHERE id = $1 RETURNING id`,
+        [id, ...vals],
+      )
+      if (!r) throw new RecordError('Prêmio não encontrado.', 404)
+      premioId = r.id
+    } else {
+      const [r] = await run<{ id: string }>(
+        c,
+        `INSERT INTO poco_premios (tipo, item_key, card_id, minutos, quantidade, nome, descricao, imagem, raridade, peso, moedas, estoque, ativo, criado_por)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14) RETURNING id`,
+        [...vals, ator.id],
+      )
+      premioId = r.id
+    }
+    await run(c, 'INSERT INTO admin_log (actor_id, action, ref, data) VALUES ($1, $2, $3, $4)', [
+      ator.id,
+      id ? 'poco.premio.editado' : 'poco.premio.criado',
+      premioId,
+      JSON.stringify({ tipo, itemKey, cardId, minutos, quantidade, nome, raridade, peso, moedas, estoque, ativo }),
+    ])
+    return { id: premioId }
+  })
+}
+
+/** Liga/desliga um prêmio (Owner). Desligado não entra em nenhum sorteio. */
+export async function ativarPremio(atorId: string, idRaw: unknown, ativoRaw: unknown) {
+  return txAs(atorId, async (c) => {
+    const ator = await exigeOwner(atorId, c)
+    const id = typeof idRaw === 'string' && UUID_RE.test(idRaw) ? idRaw : null
+    if (!id) throw new RecordError('Prêmio inválido.', 400)
+    const ativo = ativoRaw === true
+    const [r] = await run<{ id: string }>(c, 'UPDATE poco_premios SET ativo = $2, atualizado_at = now() WHERE id = $1 RETURNING id', [id, ativo])
+    if (!r) throw new RecordError('Prêmio não encontrado.', 404)
+    await run(c, 'INSERT INTO admin_log (actor_id, action, ref, data) VALUES ($1, $2, $3, $4)', [ator.id, ativo ? 'poco.premio.ativado' : 'poco.premio.desativado', id, JSON.stringify({ ativo })])
+    return { id, ativo }
   })
 }

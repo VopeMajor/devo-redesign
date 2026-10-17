@@ -418,6 +418,8 @@ function Lancamento({ agua = { x: 50, y: 65 }, boca = 40 }: { agua?: { x: number
           </span>
         </span>
       ))}
+      {/* névoa que sobe da água depois do respingo */}
+      <span className="poco-nevoa-sobe absolute rounded-[50%]" style={{ left: `${agua.x - boca * 0.6}%`, top: `${agua.y - 40}%`, width: `${boca * 1.2}%`, height: '42%' }} />
       {/* água: lampejo, ondas e respingo */}
       <span className="poco-lampejo absolute rounded-[50%] bg-[radial-gradient(closest-side,rgba(236,235,233,0.7),rgba(172,172,172,0.25)_50%,transparent)]" style={{ left: `${agua.x - boca * 0.7}%`, top: `${agua.y - 5}%`, width: `${boca * 1.4}%`, height: '14%' }} />
       {[0, 1, 2].map((i) => (

@@ -1,7 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { playSfx } from '@/lib/devo/audio'
+import { playSfx, pocoSom } from '@/lib/devo/audio'
 import { dentroDaJanela, type ManivelaParams, ponteiro } from '@/lib/devo/poco'
 import { cn } from '@/lib/utils'
 import { Button } from '../kit/button'
@@ -73,7 +73,8 @@ export function PocoManivela({ params, onFim }: { params: ManivelaParams; onFim:
       encerrar('escapou')
       return
     }
-    playSfx(rodada === total - 1 ? 'confirm' : 'chess-tick')
+    if (rodada === total - 1) playSfx('confirm')
+    else pocoSom('catraca')
     inicioRodada.current = agora
     if (rodada === total - 1) encerrar('perfeito')
     else setRodada((n) => n + 1)

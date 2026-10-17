@@ -3,7 +3,7 @@
 import './poco.css'
 import { useCallback, useEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react'
 import useSWR from 'swr'
-import { playSfx } from '@/lib/devo/audio'
+import { playSfx, pocoSilencio, pocoSom } from '@/lib/devo/audio'
 import type { ManivelaParams, PocoLetreiro, PocoPayload, PocoPesos, PocoResultado } from '@/lib/devo/poco'
 import { ITEM_RARITY_LABEL } from '@/lib/devo/progresso'
 import { cn } from '@/lib/utils'
@@ -13,7 +13,8 @@ import { EmblemMark, EmblemPoco } from '../kit/emblems'
 import { callName, useDevo } from '../state/devo-store'
 import { BaldesSheet, LancarSheet, MoedasSheet } from './poco-folhas'
 import { Etiqueta, FaixaOrnamental, MedalhaoDentado, PlacaGotica } from './poco-ornamentos'
-import { BaldeIcon, type BaldePosicao, DracmaIcon, PocoCena } from './poco-cena'
+import { BaldeIcon, type BaldePosicao, PocoCena } from './poco-cena'
+import { MoedaPoco } from './poco-itens'
 import { PocoManivela } from './poco-manivela'
 import { PocoNeblina } from './poco-neblina'
 import { PocoResultadoView } from './poco-resultado'
@@ -170,6 +171,7 @@ function PocoTela({ data, refresh }: { data: Liberado; refresh: () => void }) {
       // tinido na mão, respingo quando a moeda toca a água (o arco dura ~900 ms)
       playSfx('coin')
       later(() => playSfx('splash'), reduced ? 0 : 900)
+      if (!reduced) later(() => pocoSom('nevoa'), 1150)
       refresh()
     } catch (e) {
       falhar(e)
@@ -192,13 +194,13 @@ function PocoTela({ data, refresh }: { data: Liberado; refresh: () => void }) {
       setOcupado('girar')
       setGirando(true)
       setSubindo(true)
-      playSfx('rumble')
+      pocoSom('manivela')
       try {
         await poco('manivela.girar', { toques })
         refresh()
         later(() => {
           terminarSuspense()
-          playSfx('bell')
+          pocoSom('balde')
         }, reduced ? 0 : 2000)
       } catch (e) {
         terminarSuspense()
@@ -240,8 +242,8 @@ function PocoTela({ data, refresh }: { data: Liberado; refresh: () => void }) {
     try {
       const r = await poco('balde.inspecionar')
       const res = r.resultado as PocoResultado
+      // os sons da revelação (subida, falsa partida, sting/flop) ficam com a própria revelação
       setResultado(res)
-      playSfx(res.categoria === 'lixo' ? 'card' : 'whoosh')
     } catch (e) {
       falhar(e)
       refresh()
@@ -330,7 +332,7 @@ function PocoTela({ data, refresh }: { data: Liberado; refresh: () => void }) {
                 setErro(null)
                 setFolha('lancar')
               }}
-              icon={<DracmaIcon raridade="incomum" className="size-9 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]" />}
+              icon={<MoedaPoco chave="dracma_incomum" tamanho={36} className="size-9 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]" />}
             />
             <Invocacao
               forma="medalhao"
@@ -360,6 +362,7 @@ function PocoTela({ data, refresh }: { data: Liberado; refresh: () => void }) {
         <button
           type="button"
           onClick={() => {
+            pocoSilencio()
             playSfx('click')
             terminarSuspense()
           }}
@@ -384,7 +387,7 @@ function PocoTela({ data, refresh }: { data: Liberado; refresh: () => void }) {
         />
       )}
 
-      <MoedasSheet open={folha === 'moedas'} onClose={() => setFolha(null)} moedas={data.moedas} giroGratis={data.giroGratis} owner={data.owner} onSalvarProbabilidades={salvarProbabilidades} />
+      <MoedasSheet open={folha === 'moedas'} onClose={() => setFolha(null)} moedas={data.moedas} giroGratis={data.giroGratis} chances={data.chances} owner={data.owner} onSalvarProbabilidades={salvarProbabilidades} />
       <LancarSheet open={folha === 'lancar'} onClose={() => setFolha(null)} moedas={data.moedas} giroGratis={data.giroGratis} ocupado={ocupado} erro={erro} onLancar={lancar} />
       <BaldesSheet open={folha === 'baldes'} onClose={() => setFolha(null)} baldes={data.baldes} atual={data.baldeAtual} ocupado={!!ocupado} onEscolher={escolherBalde} />
     </div>

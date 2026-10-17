@@ -1,6 +1,6 @@
 import { getCurrentPlayer } from '@/app/actions/player'
 import { RecordError } from '@/lib/devo/errors'
-import { concluirApresentacao, escolherBalde, getPoco, girarManivela, iniciarManivela, inspecionarBalde, lancarMoeda } from '@/lib/devo/poco-server'
+import { ativarPremio, concluirApresentacao, escolherBalde, getPoco, girarManivela, iniciarManivela, inspecionarBalde, lancarMoeda, mesaPremios, salvarPremio } from '@/lib/devo/poco-server'
 
 export const dynamic = 'force-dynamic'
 
@@ -14,6 +14,10 @@ export const dynamic = 'force-dynamic'
  *   'manivela.iniciar' { lento? }    → { ok, params }           (parâmetros do ponteiro, derivados do segredo)
  *   'manivela.girar' { toques }      → { ok, acertos, maxAcertos } (servidor conta os acertos e sorteia)
  *   'balde.inspecionar'              → { ok, resultado }         (revela o prêmio e o segredo do sorteio)
+ * Mesa do Owner (prêmios do pool; só quem pode 'config.editar'; tudo vai para admin_log):
+ *   GET  /api/poco?view=premios          → PocoMesaPremios
+ *   'premio.salvar' { premio }        → { ok, id }                 (cria ou edita; validado no servidor)
+ *   'premio.ativar' { id, ativo }     → { ok, id, ativo }
  */
 
 function fail(err: unknown) {
@@ -22,10 +26,11 @@ function fail(err: unknown) {
   return Response.json({ ok: false, error: 'O poço não respondeu. Tente de novo.' }, { status: 500 })
 }
 
-export async function GET() {
+export async function GET(req: Request) {
   const player = await getCurrentPlayer()
   if (!player) return Response.json({ ok: false, error: 'Sessão ausente.' }, { status: 401 })
   try {
+    if (new URL(req.url).searchParams.get('view') === 'premios') return Response.json(await mesaPremios(player.id))
     return Response.json(await getPoco(player.id))
   } catch (err) {
     return fail(err)
@@ -50,6 +55,10 @@ export async function POST(req: Request) {
         return Response.json({ ok: true, ...(await girarManivela(player.id, { toques: body.toques })) })
       case 'balde.inspecionar':
         return Response.json({ ok: true, resultado: await inspecionarBalde(player.id) })
+      case 'premio.salvar':
+        return Response.json({ ok: true, ...(await salvarPremio(player.id, (body.premio ?? {}) as Record<string, unknown>)) })
+      case 'premio.ativar':
+        return Response.json({ ok: true, ...(await ativarPremio(player.id, body.id, body.ativo)) })
       default:
         return Response.json({ ok: false, error: 'Ação desconhecida.' }, { status: 400 })
     }

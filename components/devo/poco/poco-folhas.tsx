@@ -2,14 +2,15 @@
 
 import { useState } from 'react'
 import { playSfx } from '@/lib/devo/audio'
-import { CATEGORIA_LABEL, POCO_CATEGORIAS, porcentagens, type PocoBalde, type PocoMoeda, type PocoOwner, type PocoPesos } from '@/lib/devo/poco'
+import { CATEGORIA_LABEL, type LinhaChance, POCO_CATEGORIAS, porcentagens, type PocoBalde, type PocoMoeda, type PocoOwner, type PocoPesos } from '@/lib/devo/poco'
 import { ITEM_RARITY_LABEL } from '@/lib/devo/progresso'
 import { cn } from '@/lib/utils'
 import { Button } from '../kit/button'
 import { GlyphKeyhole } from '../kit/glyphs'
 import { Sheet } from '../kit/sheet'
 import { Countdown } from '../kit/time'
-import { BaldeIcon, DracmaIcon } from './poco-cena'
+import { BaldeIcon } from './poco-cena'
+import { MoedaPoco } from './poco-itens'
 
 type GiroGratis = { disponivel: boolean; restantes: number; categoria: string; proximoEm: number }
 
@@ -21,12 +22,15 @@ export function MoedasSheet({
   moedas,
   giroGratis,
   owner,
+  chances,
   onSalvarProbabilidades,
 }: {
   open: boolean
   onClose: () => void
   moedas: PocoMoeda[]
   giroGratis: GiroGratis
+  /** Chances de cada moeda (servidor; somam 100%). */
+  chances?: Record<string, LinhaChance[]>
   owner?: PocoOwner
   onSalvarProbabilidades: (v: Record<string, PocoPesos>) => Promise<void>
 }) {
@@ -35,7 +39,7 @@ export function MoedasSheet({
       <ul className="flex flex-col">
         {moedas.map((m) => (
           <li key={m.key} className={cn('flex gap-3 border-b border-dv-line py-3 last:border-b-0', m.quantidade === 0 && 'opacity-60')}>
-            <DracmaIcon raridade={m.raridade} className="size-11 shrink-0" />
+            <MoedaPoco chave={m.key} raridade={m.raridade} tamanho={44} className="size-11 shrink-0" />
             <div className="min-w-0 flex-1">
               <p className="flex items-baseline justify-between gap-2">
                 <span className="font-display text-[15px] font-semibold uppercase tracking-[0.1em] text-dv-text">{m.nome}</span>
@@ -60,8 +64,48 @@ export function MoedasSheet({
           </span>
         )}
       </p>
+      {chances && Object.keys(chances).length > 0 && <Chances chances={chances} moedas={moedas} />}
       {owner && <OwnerProbabilidades owner={owner} moedas={moedas} onSalvar={onSalvarProbabilidades} />}
     </Sheet>
+  )
+}
+
+/** Chances de cada moeda, como o servidor sorteia (sem a manivela, que só reduz o lixo). Somam 100%. */
+function Chances({ chances, moedas }: { chances: Record<string, LinhaChance[]>; moedas: PocoMoeda[] }) {
+  const lista = moedas.filter((m) => chances[m.key]?.length)
+  const [aberta, setAberta] = useState(lista[0]?.key ?? '')
+  if (!lista.length) return null
+  const linhas = chances[aberta] ?? []
+  return (
+    <section aria-label="Chances do poço" className="mt-4 border-t border-dv-line pt-3">
+      <p className="dv-label text-[10px] text-dv-text-3">Chances por moeda</p>
+      <div className="mt-2 flex flex-wrap gap-1.5" role="tablist" aria-label="Moeda">
+        {lista.map((m) => (
+          <button
+            key={m.key}
+            type="button"
+            role="tab"
+            aria-selected={aberta === m.key}
+            onClick={() => setAberta(m.key)}
+            className={cn('dv-focus min-h-11 px-3 font-mono text-[10.5px] uppercase tracking-[0.12em]', aberta === m.key ? 'bg-dv-block text-white shadow-[inset_0_0_0_1px_var(--dv-wine-line)]' : 'text-dv-text-2 shadow-[inset_0_0_0_1px_var(--dv-line-strong)]')}
+          >
+            {m.nome}
+          </button>
+        ))}
+      </div>
+      <ul className="mt-2 flex flex-col" role="tabpanel">
+        {linhas.map((l) => (
+          <li key={l.chave} className="flex items-center gap-3 border-b border-dv-line py-1.5 last:border-b-0">
+            <span className={cn('min-w-0 flex-1 truncate font-body text-[14.5px]', l.premio ? 'text-dv-wine-text' : 'text-dv-text-2')}>{l.nome}</span>
+            <span className="h-1 w-16 bg-dv-ink-4" aria-hidden="true">
+              <span className="block h-full bg-dv-silver" style={{ width: `${Math.max(2, l.pct)}%` }} />
+            </span>
+            <span className="w-14 text-right font-mono text-[12px] tabular-nums text-dv-text">{l.pct.toLocaleString('pt-BR', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}%</span>
+          </li>
+        ))}
+      </ul>
+      <p className="mt-1.5 font-body text-[13px] italic leading-snug text-dv-text-3">Cada acerto na manivela diminui a chance de lixo.</p>
+    </section>
   )
 }
 
@@ -160,7 +204,7 @@ export function LancarSheet({
     <Sheet open={open} onClose={onClose} kicker="Poço dos Milagres" title="Lançar Moeda" description="Escolha o que vai para o fundo do poço. Depois, gire a manivela.">
       <div className="flex flex-col gap-2.5">
         <div className={cn('flex items-center gap-3 border p-3', giroGratis.disponivel ? 'border-dv-amethyst/50 bg-dv-cobalt-dim' : 'border-dv-line')}>
-          <DracmaIcon raridade="comum" className={cn('size-10 shrink-0', !giroGratis.disponivel && 'opacity-50')} />
+          <MoedaPoco chave="dracma_comum" tamanho={40} className={cn('size-10 shrink-0', !giroGratis.disponivel && 'opacity-50')} />
           <div className="min-w-0 flex-1">
             <p className="font-display text-[14px] font-semibold uppercase tracking-[0.1em] text-dv-text">Giro grátis do dia</p>
             <p className="text-[13px] leading-snug text-dv-text-2">
@@ -182,7 +226,7 @@ export function LancarSheet({
           const pode = m.quantidade > 0 && m.categoriaAtiva
           return (
             <div key={m.key} className="flex items-center gap-3 border border-dv-line p-3">
-              <DracmaIcon raridade={m.raridade} className={cn('size-10 shrink-0', !pode && 'opacity-50')} />
+              <MoedaPoco chave={m.key} raridade={m.raridade} tamanho={40} className={cn('size-10 shrink-0', !pode && 'opacity-50')} />
               <div className="min-w-0 flex-1">
                 <p className="flex items-baseline gap-2">
                   <span className="font-display text-[14px] font-semibold uppercase tracking-[0.1em] text-dv-text">{m.nome}</span>

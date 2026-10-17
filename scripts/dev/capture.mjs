@@ -2104,6 +2104,8 @@ if (want('poco')) {
   }
   const fala = (page) => page.getByRole('button', { name: /^(Próxima fala|Mostrar fala completa)$/ }).first()
   const escolhas = (page) => page.locator('[aria-label="Escolhas de diálogo"] button:not([disabled])')
+  const view = (page, sel, block = 'start') =>
+    page.locator(sel).first().evaluate((el, b) => el.scrollIntoView({ block: b }), block).catch(() => {})
 
   await step('poco-trancado', async () => {
     const { ctx, page } = await account('Cinza', 'DEVO-POCO-0002', VET_CARDS)
@@ -2194,9 +2196,13 @@ if (want('poco')) {
     await wait(900)
     await shot(page, 'poco-14-lancar')
     await tryClick(btn(page, 'Usar o giro grátis', true))
-    await wait(500)
+    // etapa 1 — ativação: a moeda em arco, o respingo e a névoa subindo
+    await wait(380)
     await shot(page, 'poco-15-moeda-caindo')
-    await wait(900)
+    await wait(560)
+    await shot(page, 'poco-15b-respingo')
+    await wait(700)
+    await shot(page, 'poco-15c-nevoa')
     await tryClick(btn(page, 'Girar Manivela', true))
     await wait(1100)
     await shot(page, 'poco-16-minigame')
@@ -2210,7 +2216,14 @@ if (want('poco')) {
     await shot(page, 'poco-18-balde-subindo')
     await wait(2200)
     await tryClick(btn(page, 'Inspecionar Balde', true))
-    await wait(1400)
+    // lixo: a luz tosse cinza, o item cai murcho, poeira
+    await wait(250)
+    await shot(page, 'poco-19a-lixo-luz')
+    await wait(500)
+    await shot(page, 'poco-19b-lixo-cai')
+    await wait(550)
+    await shot(page, 'poco-19c-lixo-poeira')
+    await wait(1200)
     await shot(page, 'poco-19-resultado-lixo')
     await tryClick(btn(page, 'Devolver ao poço', true))
     await wait(900)
@@ -2233,7 +2246,14 @@ if (want('poco')) {
     await tryClick(btn(page, 'Soltar a manivela', true))
     await wait(3800)
     await tryClick(btn(page, 'Inspecionar Balde', true))
-    await wait(900)
+    // raro: sobe prata (como um comum), engasga, explode na cor da raridade, emerge
+    await wait(300)
+    await shot(page, 'poco-22b-raro-prata')
+    await wait(420)
+    await shot(page, 'poco-22c-raro-engasgo')
+    await wait(450)
+    await shot(page, 'poco-22d-raro-surto')
+    await wait(700)
     await shot(page, 'poco-22a-revelacao-raro')
     await wait(1500)
     await shot(page, 'poco-22-resultado-raro')
@@ -2289,6 +2309,82 @@ if (want('poco')) {
     await o.page.getByRole('region', { name: 'Probabilidades do Poço' }).first().scrollIntoViewIfNeeded().catch(() => {})
     await wait(500)
     await shot(o.page, 'poco-25-owner-probabilidades')
+    await o.page.keyboard.press('Escape')
+    await wait(500)
+
+    // Prêmios do pool (Mesa do Owner). Criados pela API do próprio Owner; só na moeda Dracma Rara para não
+    // mexer nas outras capturas nem no poco-test. No fim ficam desligados.
+    const api = async (body) => {
+      const r = await o.page.request.post('/api/poco', { data: body })
+      const j = await r.json().catch(() => null)
+      if (!r.ok()) manifest.errors.push({ step: 'poco-premios-api', error: `${r.status()} ${JSON.stringify(j).slice(0, 200)}` })
+      return j
+    }
+    const tempo = await api({ action: 'premio.salvar', premio: { tipo: 'tempo', minutos: 30, nome: 'Meia hora esquecida', descricao: 'Trinta minutos que alguém jogou fora.', raridade: 'comum', peso: 1000000, moedas: ['dracma_rara'] } })
+    const botao = await api({ action: 'premio.salvar', premio: { tipo: 'lixo', nome: 'Botão sem casa', descricao: 'Um botão de casaco, sem casaco e sem casa. O poço achou graça.', imagem: '/images/poco/lixo-tampa.webp', raridade: 'comum', peso: 1000000, moedas: ['dracma_rara'], ativo: false } })
+    await api({ action: 'premio.salvar', premio: { tipo: 'carta', cardId: 'olho', raridade: 'raro', peso: 2, estoque: 3, ativo: false } })
+
+    await step('poco-mesa-premios', async () => {
+      await openApp(o.page, 'Record')
+      await tryClick(o.page.getByRole('tab', { name: /Mesa/i }).first())
+      await wait(2000)
+      await view(o.page, 'nav[aria-label="Seções da mesa"]', 'start')
+      await tryClick(desk(o.page, 'Poço'))
+      await wait(2200)
+      await shot(o.page, 'poco-40-mesa-premios')
+      if (await tryClick(btn(o.page, 'Adicionar prêmio', true))) {
+        await wait(800)
+        await o.page.getByLabel(/^Nome/).first().fill('Dente de leite').catch(() => {})
+        await o.page.getByLabel(/^Texto no balde/).first().fill('Pequeno, branco e de alguém. Não pergunte de quem.').catch(() => {})
+        await o.page.getByLabel(/^Peso/).first().fill('40').catch(() => {})
+        await wait(400)
+        await shot(o.page, 'poco-41-mesa-novo-premio')
+        await o.page.getByRole('combobox', { name: 'Moeda da tabela' }).first().selectOption('dracma_comum').catch(() => {})
+        await o.page.getByRole('combobox', { name: 'Moeda da tabela' }).first().scrollIntoViewIfNeeded().catch(() => {})
+        await wait(600)
+        await shot(o.page, 'poco-42-mesa-chances-previa')
+        await tryClick(btn(o.page, 'Cancelar', true))
+        await wait(500)
+      }
+    })
+
+    // Giro do Owner com os prêmios do pool: comum (Tempo) e o prêmio lixo novo.
+    await sql("SELECT devo_item_grant(id, 'dracma_rara', 3, 'captura', NULL, NULL, 'captura-poco-rara:' || id) FROM players WHERE lower(name) = 'veterano'")
+    if (original) await sql("UPDATE devo_config SET value = $1 WHERE key = 'poco.probabilidades'", [JSON.stringify({ ...original, dracma_rara: { lixo: 0.0001, capsula: 0, fragmento: 0, essencia: 0, cosmetico: 0 } })])
+    const giroOwner = async (prefixo, frames) => {
+      await abrirPoco(o.page, 'Poço dos Milagres')
+      await tryClick(btn(o.page, 'Lançar Moeda', true))
+      await wait(800)
+      await tryClick(btn(o.page, 'Lançar Dracma Rara', true))
+      await wait(1600)
+      await tryClick(btn(o.page, 'Girar Manivela', true))
+      await wait(900)
+      await shot(o.page, `${prefixo}-a-manivela`)
+      await tryClick(btn(o.page, 'Soltar a manivela', true))
+      await wait(700)
+      await shot(o.page, `${prefixo}-b-subindo`)
+      await wait(2300)
+      await tryClick(btn(o.page, 'Inspecionar Balde', true))
+      let t = 0
+      for (const [ms, nome] of frames) {
+        await wait(ms - t)
+        t = ms
+        await shot(o.page, `${prefixo}-${nome}`)
+      }
+      if (!(await tryClick(btn(o.page, 'Guardar', true), 1500))) await tryClick(btn(o.page, 'Devolver ao poço', true), 1500)
+      await wait(900)
+    }
+    await step('poco-giro-comum', async () => {
+      await giroOwner('poco-50-comum', [[250, 'c-luz'], [700, 'd-revela'], [2400, 'e-resultado']])
+    })
+    await step('poco-giro-premio-lixo', async () => {
+      if (tempo?.id) await api({ action: 'premio.ativar', id: tempo.id, ativo: false })
+      if (botao?.id) await api({ action: 'premio.ativar', id: botao.id, ativo: true })
+      await giroOwner('poco-51-lixo-owner', [[300, 'c-luz'], [800, 'd-cai'], [2600, 'e-resultado']])
+    })
+    if (botao?.id) await api({ action: 'premio.ativar', id: botao.id, ativo: false })
+    if (tempo?.id) await api({ action: 'premio.ativar', id: tempo.id, ativo: false })
+    await restaurar()
     await o.ctx.close()
   })
   await db?.end().catch(() => {})
