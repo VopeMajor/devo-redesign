@@ -133,7 +133,7 @@ export function PocoNeblina({
   if (!montado) return null
   return createPortal(
     <main aria-label="Poço dos Milagres: apresentação" className="fixed inset-0 z-[80] flex h-dvh flex-col overflow-hidden bg-dv-ink text-dv-text">
-      <PocoCena palco={palco} brilho={0.75} figuraBase={figuraBase} className="[--poco-h:min(58vh,470px)] [--poco-top:42%]" />
+      <PocoCena palco={palco} brilho={0.75} figuraBase={figuraBase} className="[--poco-base:60cqh] [--poco-h:min(58vh,470px)] [--poco-top:42%]" />
       {/* marcador do palco: mede a caixa de fala para ancorar a figura (kit/npc-anchor) */}
       <div ref={palcoRef} aria-hidden="true" className="pointer-events-none absolute inset-0" />
 

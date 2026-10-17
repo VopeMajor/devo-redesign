@@ -100,7 +100,7 @@ export function PocoApp() {
 
 function Fundo({ palco = 'tela', children, className }: { palco?: 'tela' | 'trancado'; children: ReactNode; className?: string }) {
   return (
-    <div className={cn('relative h-full overflow-hidden bg-dv-ink [--poco-h:min(46vh,380px)] [--poco-top:47%]', className)}>
+    <div className={cn('relative h-full overflow-hidden bg-dv-ink [--poco-base:68cqh] [--poco-h:min(46vh,380px)] [--poco-top:47%]', className)}>
       <PocoCena palco={palco} />
       <div className="relative z-10 h-full">{children}</div>
     </div>
@@ -279,7 +279,7 @@ function PocoTela({ data, refresh }: { data: Liberado; refresh: () => void }) {
         : 'O balde subiu. Inspecione o balde.'
 
   return (
-    <div className="relative h-full overflow-hidden bg-dv-ink [--poco-h:min(50vh,410px)] [--poco-top:45%]">
+    <div className="relative h-full overflow-hidden bg-dv-ink [--poco-base:65cqh] [--poco-h:min(50vh,410px)] [--poco-top:45%]">
       <PocoCena
         palco="tela"
         balde={balde}

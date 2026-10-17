@@ -3,7 +3,7 @@
 import type { CSSProperties } from 'react'
 import { cn } from '@/lib/utils'
 import type { NeblinaPalco } from '@/lib/devo/poco-neblina'
-import { POCO_PINTURA } from './poco-pintura'
+import { POCO_PINTADO, POCO_PINTURA, srcset } from './poco-pintura'
 
 /**
  * Cena do Poço dos Milagres: ilustração em camadas (sem WebGL, então não há fallback a esperar nem custo de
@@ -59,30 +59,36 @@ export function PocoCena({
   const partiu = palco === 'partiu'
   const trancado = palco === 'trancado'
   return (
-    <div aria-hidden="true" className={cn('poco-cena pointer-events-none absolute inset-0 overflow-hidden bg-dv-abyss', className)}>
-      {POCO_PINTURA.fundo ? (
-        <img src={POCO_PINTURA.fundo} alt="" draggable={false} className="absolute inset-0 size-full object-cover object-bottom" />
+    <div aria-hidden="true" className={cn('poco-cena pointer-events-none absolute inset-0 overflow-hidden bg-dv-abyss [container-type:size]', className)}>
+      {POCO_PINTADO ? (
+        <CenaPintada longe={longe} balde={balde} baldeTipo={baldeTipo} girando={girando} ativo={ativo} moeda={moeda} brilho={trancado ? 0.12 : longe ? 0.9 : brilho} apagado={trancado} />
       ) : (
         <>
-          <Ceu />
-          <Casas className={cn('poco-t absolute inset-x-0 top-[14%] h-[38%] w-full', longe ? 'opacity-95' : 'opacity-70')} />
-          <Rua className="absolute inset-x-0 bottom-0 h-[58%] w-full" />
+        {POCO_PINTURA.fundo ? (
+          <img src={POCO_PINTURA.fundo} alt="" draggable={false} className="absolute inset-0 size-full object-cover object-bottom" />
+        ) : (
+          <>
+            <Ceu />
+            <Casas className={cn('poco-t absolute inset-x-0 top-[14%] h-[38%] w-full', longe ? 'opacity-95' : 'opacity-70')} />
+            <Rua className="absolute inset-x-0 bottom-0 h-[58%] w-full" />
+          </>
+        )}
+        <Nevoa layer={0} className="top-[30%] opacity-60" />
+
+        {/* o poço: pequeno no fim da rua; de perto no resto */}
+        <div
+          className="poco-t poco-well absolute left-1/2 top-[var(--poco-top,50%)]"
+          style={
+            {
+              '--poco-y': longe ? '-44%' : '-50%',
+              '--poco-s': longe ? 0.3 : 1,
+            } as CSSProperties
+          }
+        >
+          <Poco balde={balde} baldeTipo={baldeTipo} girando={girando} ativo={ativo} moeda={moeda} brilho={trancado ? 0.12 : longe ? 0.9 : brilho} apagado={trancado} />
+        </div>
         </>
       )}
-      <Nevoa layer={0} className="top-[30%] opacity-60" />
-
-      {/* o poço: pequeno no fim da rua; de perto no resto */}
-      <div
-        className="poco-t poco-well absolute left-1/2 top-[var(--poco-top,50%)]"
-        style={
-          {
-            '--poco-y': longe ? '-44%' : '-50%',
-            '--poco-s': longe ? 0.3 : 1,
-          } as CSSProperties
-        }
-      >
-        <Poco balde={balde} baldeTipo={baldeTipo} girando={girando} ativo={ativo} moeda={moeda} brilho={trancado ? 0.12 : longe ? 0.9 : brilho} apagado={trancado} />
-      </div>
 
       {/* figura encapuzada (o Corvo, nunca nomeado): silhueta sem rosto, dissolvida na névoa */}
       <Figura estado={figura ? 'visivel' : partiu ? 'partindo' : 'oculta'} base={figuraBase} />
@@ -102,6 +108,88 @@ export function PocoCena({
       <div className="absolute inset-x-0 bottom-0 h-1/3 bg-[linear-gradient(0deg,rgba(40,14,17,0.55),transparent)]" />
       <div className="devo-grain absolute inset-0 opacity-[0.08] mix-blend-overlay" />
       {trancado && <div className="absolute inset-0 bg-dv-ink/45" />}
+    </div>
+  )
+}
+
+/* ── Cena pintada (infra/arte): rua de barro + poço milenar, com a luz e os efeitos do app por cima ─── */
+
+/**
+ * A rua cobre a tela como `object-cover`, mas ancorada pela BASE DO POÇO: o pé do poço cai em
+ * `--poco-base` (altura da tela; cada tela escolhe, para não ficar atrás dos botões). Abaixo do fim da
+ * pintura, o barro some no abismo. Tudo em unidades de contêiner (cqw/cqh) da raiz da cena.
+ */
+function CenaPintada({ longe, balde, baldeTipo, girando, ativo, moeda, brilho, apagado }: { longe: boolean; balde: BaldePosicao; baldeTipo: string; girando: boolean; ativo: boolean; moeda: number; brilho: number; apagado: boolean }) {
+  const C = POCO_PINTADO!
+  const tipo = ['madeira', 'ferro', 'cobre', 'prata'].includes(baldeTipo) ? baldeTipo : 'madeira'
+  // largura da moldura da rua: cobre a tela com folga; altura = largura / aspecto
+  const W = 'max(100cqw, 72cqh)'
+  const H = `calc(${W} / ${C.rua.aspecto})`
+  const frame = {
+    width: W,
+    height: H,
+    top: `calc(var(--poco-base, 70cqh) - ${C.baseY} * ${H})`,
+  } as CSSProperties
+  // o poço: largura em fração da rua; o pé encosta na base. Longe = menor e mais ao fundo da rua.
+  const s = longe ? 0.42 : 1
+  const poco = {
+    left: `${C.baseX * 100}%`,
+    top: `${(longe ? 0.6 : C.baseY) * 100}%`,
+    width: `${C.largura * 100}%`,
+    aspectRatio: `${C.poco.aspecto}`,
+    transform: `translate(-50%, -${C.pe * 100}%) scale(${s})`,
+    transformOrigin: `50% ${C.pe * 100}%`,
+    '--brilho': brilho,
+  } as CSSProperties
+  return (
+    <div className="absolute left-1/2 -translate-x-1/2" style={frame}>
+      <img
+        src={`${C.rua.base}-1024.webp`}
+        srcSet={srcset(C.rua.base, C.rua.lados)}
+        sizes="(max-width: 600px) 100vw, 768px"
+        alt=""
+        draggable={false}
+        className="absolute inset-0 size-full object-cover"
+      />
+      {/* fim da pintura: o barro some no abismo (a tela pode ser mais alta que a rua) */}
+      <div className="absolute inset-x-0 top-full h-[60%] bg-dv-abyss" />
+      <div className="absolute inset-x-0 bottom-0 h-[18%] bg-[linear-gradient(180deg,transparent,#090909)]" />
+      <Nevoa layer={0} className="top-[44%] opacity-50" />
+
+      <div className={cn('poco-t absolute', (girando || ativo) && 'poco-ativo')} style={poco}>
+        {/* luz da boca: prata fria com o pé vinho, atrás da pedra */}
+        <span className="poco-aura absolute left-[-20%] top-[10%] h-[80%] w-[140%] bg-[radial-gradient(42%_40%_at_50%_55%,rgba(220,218,214,0.2),rgba(90,29,38,0.32)_55%,transparent_75%)]" />
+        <img
+          src={`${C.poco.base}-512.webp`}
+          srcSet={srcset(C.poco.base, C.poco.lados)}
+          sizes="(max-width: 600px) 60vw, 420px"
+          alt=""
+          draggable={false}
+          className={cn('absolute inset-0 size-full', apagado && 'brightness-75 saturate-50')}
+        />
+        {/* névoa que pulsa na boca (camada da arte) */}
+        <img src={C.brilho} alt="" draggable={false} className="poco-brilho-boca absolute left-[22%] top-[40%] h-[20%] w-[58%] max-w-none mix-blend-screen" />
+        {/* balde subindo pela corda até a boca */}
+        <div className="absolute overflow-hidden" style={{ left: `${(C.corda.x - 0.085) * 100}%`, top: `${C.corda.topo * 100}%`, width: '17%', height: `${(C.boca.y - C.corda.topo + 0.02) * 100}%` }}>
+          <div
+            className={cn('poco-bucket-pintado absolute inset-x-0', balde === 'subindo' && 'poco-bucket-sobe')}
+            style={{ aspectRatio: '240 / 150', bottom: balde === 'fundo' ? '-70%' : '30%', backgroundImage: `url(${ART}/balde-${tipo}.webp)`, backgroundSize: '100% auto', backgroundPosition: '50% 100%', backgroundRepeat: 'no-repeat' }}
+          />
+        </div>
+        {/* partículas de névoa subindo da boca */}
+        <div className="absolute left-[24%] top-[6%] h-[48%] w-[56%] overflow-hidden">
+          {PARTICULAS.map((p, i) => (
+            <span
+              key={i}
+              className="poco-particula absolute bottom-0 rotate-45 bg-[#e2e0dc]"
+              style={{ left: `${p.x * 1.5 - 30}%`, width: p.s, height: p.s, animationDelay: `${p.d}s`, animationDuration: `${p.t}s` } as CSSProperties}
+            />
+          ))}
+        </div>
+        {/* oferendas no chão, à frente da pedra */}
+        <Oferendas apagado={apagado} className="absolute left-[-14%] top-[83%] h-[22%] w-[90%]" />
+        {moeda > 0 && <Lancamento key={moeda} agua={{ x: C.boca.x * 100, y: C.boca.y * 100 }} boca={C.boca.largura * 100 * 0.7} />}
+      </div>
     </div>
   )
 }
@@ -285,7 +373,7 @@ function Poco({ balde, baldeTipo, girando, ativo, moeda, brilho, apagado }: { ba
       </div>
       <img src={`${ART}/base.webp`} alt="" draggable={false} className="poco-pedra absolute inset-0 w-full" />
       {/* inscrição gasta na borda de pedra (o poço tem nome e regra) */}
-      <Inscricao className="absolute left-[19%] top-[73%] w-[62%]" />
+      <Inscricao className="absolute left-[19%] top-[86.5%] w-[62%]" />
       {/* roda da manivela (gira com a corrente) */}
       <div className="absolute left-[72.4%] top-[35.4%] w-[19.6%]">
         <img src={`${ART}/roda.webp`} alt="" draggable={false} className={cn('poco-roda poco-pedra block w-full', girando && 'poco-roda-on')} />
@@ -305,15 +393,23 @@ function Poco({ balde, baldeTipo, girando, ativo, moeda, brilho, apagado }: { ba
 }
 
 /**
- * Arco da moeda (de baixo à esquerda, onde fica o botão Moeda, até a boca do poço), em unidades de
- * contêiner (cqw/cqh) para cair no mesmo ponto em qualquer altura de tela. Rastro = três cópias atrasadas.
+ * Arco da moeda (de baixo à esquerda, onde fica o botão Moeda, até a água), em unidades de contêiner
+ * (cqw/cqh) para cair no mesmo ponto em qualquer altura de tela. Rastro = três cópias atrasadas.
  * Ao tocar a água (~900 ms): respingo pintado, três ondas, lampejo de prata e gotas.
+ * `agua` = ponto da água em % da caixa; `boca` = largura da boca em % da caixa.
  */
-function Lancamento() {
+function Lancamento({ agua = { x: 50, y: 65 }, boca = 40 }: { agua?: { x: number; y: number }; boca?: number }) {
+  const x0 = 8
+  const y0 = 128
+  const vars = {
+    '--ax': `${agua.x - x0}cqw`,
+    '--ay': `${agua.y - y0}cqh`,
+    '--apico': `${agua.y - y0 - 42}cqh`,
+  } as CSSProperties
   return (
-    <div className="pointer-events-none absolute inset-0 [container-type:size]">
+    <div className="pointer-events-none absolute inset-0 [container-type:size]" style={vars}>
       {[3, 2, 1, 0].map((k) => (
-        <span key={k} className="poco-arco-x absolute left-[8%] top-[128%]" style={{ animationDelay: `${k * 34}ms` } as CSSProperties}>
+        <span key={k} className="poco-arco-x absolute" style={{ left: `${x0}%`, top: `${y0}%`, animationDelay: `${k * 34}ms` } as CSSProperties}>
           <span className="poco-arco-y block" style={{ animationDelay: `${k * 34}ms` } as CSSProperties}>
             <span
               className={cn('poco-arco-moeda block size-[20px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle_at_35%_30%,#fbf6ec,#bab09f_45%,#5f584d)]', k === 0 ? 'shadow-[0_0_12px_rgba(236,229,216,0.75)]' : 'opacity-[var(--rastro)] blur-[1px]')}
@@ -323,13 +419,13 @@ function Lancamento() {
         </span>
       ))}
       {/* água: lampejo, ondas e respingo */}
-      <span className="poco-lampejo absolute left-[22%] top-[60%] h-[14%] w-[56%] rounded-[50%] bg-[radial-gradient(closest-side,rgba(236,235,233,0.7),rgba(172,172,172,0.25)_50%,transparent)]" />
+      <span className="poco-lampejo absolute rounded-[50%] bg-[radial-gradient(closest-side,rgba(236,235,233,0.7),rgba(172,172,172,0.25)_50%,transparent)]" style={{ left: `${agua.x - boca * 0.7}%`, top: `${agua.y - 5}%`, width: `${boca * 1.4}%`, height: '14%' }} />
       {[0, 1, 2].map((i) => (
-        <span key={i} className="poco-onda absolute left-[30%] top-[63.5%] h-[7%] w-[40%] rounded-[50%] border border-[#dcdad6]/70" style={{ animationDelay: `${900 + i * 260}ms` } as CSSProperties} />
+        <span key={i} className="poco-onda absolute rounded-[50%] border border-[#dcdad6]/70" style={{ left: `${agua.x - boca / 2}%`, top: `${agua.y - 3.5}%`, width: `${boca}%`, height: '7%', animationDelay: `${900 + i * 260}ms` } as CSSProperties} />
       ))}
-      <img src={`${ART}/respingo.webp`} alt="" draggable={false} className="poco-respingo-moeda poco-dessatura absolute left-[27%] top-[52%] w-[46%] max-w-none" />
+      <img src={`${ART}/respingo.webp`} alt="" draggable={false} className="poco-respingo-moeda poco-dessatura absolute max-w-none" style={{ left: `${agua.x - boca * 0.58}%`, top: `${agua.y - 13}%`, width: `${boca * 1.16}%` }} />
       {[-3, -1.6, -0.6, 0.6, 1.7, 2.8].map((dx, i) => (
-        <span key={i} className="poco-gota absolute left-1/2 top-[64%] size-[3px] rounded-full bg-[#e8e6e2]" style={{ '--gx': `${dx * 9}px`, '--gy': `${-26 - (i % 3) * 12}px`, animationDelay: `${900 + i * 20}ms` } as CSSProperties} />
+        <span key={i} className="poco-gota absolute size-[3px] rounded-full bg-[#e8e6e2]" style={{ left: `${agua.x}%`, top: `${agua.y - 1}%`, '--gx': `${dx * 9}px`, '--gy': `${-26 - (i % 3) * 12}px`, animationDelay: `${900 + i * 20}ms` } as CSSProperties} />
       ))}
     </div>
   )
