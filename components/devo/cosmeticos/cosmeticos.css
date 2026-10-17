@@ -161,7 +161,7 @@
 .cos-b-aro { box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--b1) 70%, transparent), inset 0 0 0 4px rgba(10, 10, 12, 0.6), inset 0 0 0 5px color-mix(in srgb, var(--b2) 55%, transparent), inset 0 0 40px -10px color-mix(in srgb, var(--b2) 45%, transparent); }
 
 /* aço escovado com filete champanhe */
-.cos-b-aco .cos-b-1 { background: linear-gradient(160deg, #2a2a2e, #141417 55%, #1e1e22); }
+.cos-b-aco .cos-b-1 { background: linear-gradient(160deg, #3a3a40, #17171a 55%, #26262b); }
 .cos-b-aco .cos-b-2 { background: repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.025) 0 1px, transparent 1px 3px); }
 .cos-b-aco .cos-b-3 { background: radial-gradient(60% 90% at 80% 0%, color-mix(in srgb, var(--b1) 28%, transparent), transparent 70%); }
 
@@ -177,9 +177,10 @@
 .cos-anim.cos-b-vitral .cos-b-3 { animation: cos-b-luz 6s ease-in-out infinite alternate; }
 
 /* brasas subindo */
-.cos-b-brasas .cos-b-1 { background: radial-gradient(90% 70% at 50% 120%, color-mix(in srgb, var(--b2) 75%, #000), #0b0708 70%); }
+.cos-b-brasas .cos-b-1 { background: radial-gradient(90% 80% at 50% 125%, color-mix(in srgb, var(--b3) 45%, var(--b2)), color-mix(in srgb, var(--b2) 60%, #000) 45%, #0b0708 85%); }
 .cos-b-brasas .cos-b-2, .cos-b-brasas .cos-b-3 {
-  background-image: radial-gradient(2px 2px at 12% 80%, var(--b1), transparent), radial-gradient(1.5px 1.5px at 34% 60%, var(--b1), transparent), radial-gradient(2px 2px at 58% 90%, var(--b3), transparent), radial-gradient(1.5px 1.5px at 76% 70%, var(--b1), transparent), radial-gradient(2px 2px at 90% 85%, var(--b3), transparent);
+  background-image: radial-gradient(3px 3px at 12% 80%, var(--b1), transparent), radial-gradient(2.5px 2.5px at 26% 55%, var(--b3), transparent), radial-gradient(2px 2px at 34% 70%, var(--b1), transparent), radial-gradient(3px 3px at 47% 88%, var(--b3), transparent), radial-gradient(2px 2px at 58% 62%, var(--b1), transparent), radial-gradient(3px 3px at 69% 78%, var(--b1), transparent), radial-gradient(2.5px 2.5px at 81% 58%, var(--b3), transparent), radial-gradient(3px 3px at 92% 84%, var(--b1), transparent);
+  filter: drop-shadow(0 0 3px var(--b3));
   background-size: 100% 100%;
 }
 .cos-b-brasas .cos-b-3 { transform: translate(18%, 30%); opacity: 0.7; }
@@ -196,15 +197,24 @@
 /* constelação */
 .cos-b-constelacao .cos-b-1 { background: radial-gradient(100% 80% at 30% 0%, color-mix(in srgb, var(--b2) 55%, #07070c), #07070c 80%); }
 .cos-b-constelacao .cos-b-2 {
-  background-image: radial-gradient(1.4px 1.4px at 10% 30%, #fff, transparent), radial-gradient(1px 1px at 25% 70%, var(--b1), transparent), radial-gradient(1.6px 1.6px at 48% 22%, #fff, transparent), radial-gradient(1px 1px at 62% 58%, var(--b1), transparent), radial-gradient(1.4px 1.4px at 80% 35%, #fff, transparent), radial-gradient(1px 1px at 92% 78%, var(--b3), transparent), radial-gradient(1px 1px at 37% 45%, #fff, transparent);
+  background-image: radial-gradient(2px 2px at 10% 30%, #fff, transparent), radial-gradient(1.5px 1.5px at 25% 70%, var(--b1), transparent), radial-gradient(2.5px 2.5px at 48% 22%, #fff, transparent), radial-gradient(1.5px 1.5px at 62% 58%, var(--b1), transparent), radial-gradient(2px 2px at 80% 35%, #fff, transparent), radial-gradient(1.5px 1.5px at 92% 78%, var(--b3), transparent), radial-gradient(1.5px 1.5px at 37% 45%, #fff, transparent), radial-gradient(1px 1px at 18% 12%, #fff, transparent), radial-gradient(1px 1px at 70% 15%, var(--b3), transparent), radial-gradient(1px 1px at 55% 85%, #fff, transparent), radial-gradient(1px 1px at 86% 60%, #fff, transparent);
+  filter: drop-shadow(0 0 2px #fff);
 }
-.cos-b-constelacao .cos-b-3 { background: linear-gradient(28deg, transparent 47%, color-mix(in srgb, var(--b1) 35%, transparent) 47.3% 47.6%, transparent 48%), linear-gradient(-18deg, transparent 60%, color-mix(in srgb, var(--b1) 30%, transparent) 60.3% 60.6%, transparent 61%); }
+.cos-b-constelacao .cos-b-3 { background: linear-gradient(28deg, transparent 47%, color-mix(in srgb, var(--b1) 16%, transparent) 47.3% 47.5%, transparent 47.8%), linear-gradient(-18deg, transparent 60%, color-mix(in srgb, var(--b1) 14%, transparent) 60.3% 60.5%, transparent 60.8%), radial-gradient(60% 90% at 70% 0%, color-mix(in srgb, var(--b3) 18%, transparent), transparent 70%); }
 .cos-anim.cos-b-constelacao .cos-b-2 { animation: cos-pulso 4.5s ease-in-out infinite; }
 
 /* arcano: anel rúnico de ametista */
 .cos-b-arcano .cos-b-1 { background: radial-gradient(80% 90% at 50% 50%, color-mix(in srgb, var(--b2) 40%, #0a0910), #08070c 75%); }
-.cos-b-arcano .cos-b-2 { inset: -40%; background: repeating-conic-gradient(from 0deg, color-mix(in srgb, var(--b1) 22%, transparent) 0 2deg, transparent 2deg 15deg); mask: radial-gradient(circle, transparent 38%, #000 39% 41%, transparent 42% 47%, #000 48% 49%, transparent 50%); }
-.cos-b-arcano .cos-b-3 { background: radial-gradient(35% 50% at 50% 50%, color-mix(in srgb, var(--b3) 25%, transparent), transparent 70%); }
+.cos-b-arcano .cos-b-2 {
+  inset: auto; left: 50%; top: 50%; width: min(78%, 300px); aspect-ratio: 1; translate: -50% -50%; border-radius: 50%;
+  background: radial-gradient(circle closest-side, transparent 0 79%, color-mix(in srgb, var(--b1) 60%, transparent) 79.5% 81%, transparent 81.5% 95%, color-mix(in srgb, var(--b1) 45%, transparent) 95.5% 97%, transparent 97.5%);
+}
+.cos-b-arcano .cos-b-2::before {
+  content: ''; position: absolute; inset: 0; border-radius: 50%;
+  background: repeating-conic-gradient(color-mix(in srgb, var(--b1) 70%, transparent) 0 1.4deg, transparent 1.4deg 10deg);
+  mask: radial-gradient(circle closest-side, transparent 0 84%, #000 85% 92%, transparent 93%);
+}
+.cos-b-arcano .cos-b-3 { background: radial-gradient(35% 60% at 50% 50%, color-mix(in srgb, var(--b3) 40%, transparent), transparent 70%); }
 .cos-anim.cos-b-arcano .cos-b-2 { animation: cos-giro 60s linear infinite; }
 
 @keyframes cos-b-luz { from { opacity: 0.6; } to { opacity: 1; } }
