@@ -1,0 +1,12 @@
+[moldura-relogio-fim] v01: @cf/black-forest-labs/flux-2-klein-4b seed=6011 1024x1024 passos=None (~104 neurônios)
+    ok em 24.6s, 1024x1024
+[moldura-relogio-fim] v02: @cf/black-forest-labs/flux-2-klein-4b seed=6012 1024x1024 passos=None (~104 neurônios)
+    ok em 25.5s, 1024x1024
+[moldura-relogio-fim] v03: @cf/black-forest-labs/flux-2-klein-4b seed=6013 1024x1024 passos=None (~104 neurônios)
+    ok em 24.7s, 1024x1024
+[moldura-relogio-fim] v04: @cf/black-forest-labs/flux-2-klein-4b seed=6014 1024x1024 passos=None (~104 neurônios)
+    ok em 18.0s, 1024x1024
+[moldura-relogio-fim] v01: rembg:birefnet-general; 1.1% do ornamento ficou fora do quadro — reduza a janela ou peça mais margem no prompt
+[moldura-relogio-fim] v02: rembg:birefnet-general; 4.2% do ornamento ficou fora do quadro — reduza a janela ou peça mais margem no prompt
+[moldura-relogio-fim] v03: rembg:birefnet-general; 1.0% do ornamento ficou fora do quadro — reduza a janela ou peça mais margem no prompt
+[moldura-relogio-fim] v04: rembg:birefnet-general; 3.6% do ornamento ficou fora do quadro — reduza a janela ou peça mais margem no prompt
