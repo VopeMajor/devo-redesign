@@ -1,0 +1,108 @@
+{
+  "pedido": "casa-interior-porta",
+  "titulo": "Casa — interior à noite (porta entreaberta)",
+  "tipo": "ilustracao",
+  "tamanho_final": 1536,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 10101,
+      "passos": null,
+      "segundos": 3.3,
+      "neuronios_estimados": 1455,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "casa-interior-porta--v01--1536.png",
+          "bytes": 2689420
+        },
+        {
+          "arquivo": "casa-interior-porta--v01--1536.webp",
+          "bytes": 496500
+        },
+        {
+          "arquivo": "casa-interior-porta--v01--1024.webp",
+          "bytes": 117318
+        },
+        {
+          "arquivo": "casa-interior-porta--v01--768.webp",
+          "bytes": 50548
+        },
+        {
+          "arquivo": "casa-interior-porta--v01--512.webp",
+          "bytes": 20912
+        }
+      ],
+      "segundos_pos": 2.5,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 10102,
+      "passos": null,
+      "segundos": 2.9,
+      "neuronios_estimados": 1455,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "casa-interior-porta--v02--1536.png",
+          "bytes": 2636512
+        },
+        {
+          "arquivo": "casa-interior-porta--v02--1536.webp",
+          "bytes": 468872
+        },
+        {
+          "arquivo": "casa-interior-porta--v02--1024.webp",
+          "bytes": 106420
+        },
+        {
+          "arquivo": "casa-interior-porta--v02--768.webp",
+          "bytes": 47106
+        },
+        {
+          "arquivo": "casa-interior-porta--v02--512.webp",
+          "bytes": 21148
+        }
+      ],
+      "segundos_pos": 2.6,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 10103,
+      "passos": null,
+      "segundos": 3.1,
+      "neuronios_estimados": 1455,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "casa-interior-porta--v03--1536.png",
+          "bytes": 2664589
+        },
+        {
+          "arquivo": "casa-interior-porta--v03--1536.webp",
+          "bytes": 467690
+        },
+        {
+          "arquivo": "casa-interior-porta--v03--1024.webp",
+          "bytes": 128984
+        },
+        {
+          "arquivo": "casa-interior-porta--v03--768.webp",
+          "bytes": 58624
+        },
+        {
+          "arquivo": "casa-interior-porta--v03--512.webp",
+          "bytes": 24576
+        }
+      ],
+      "segundos_pos": 2.6,
+      "avisos": []
+    }
+  ]
+}

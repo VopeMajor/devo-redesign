@@ -1,0 +1,56 @@
+{
+  "id": "casa-interior-porta",
+  "titulo": "Casa — interior à noite (porta entreaberta)",
+  "tipo": "ilustracao",
+  "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+  "prompt": "Fantasy RPG environment illustration, full frame vertical interior scene, no characters. Muted dark urban fantasy palette: abyss black, deep blood wine red, fog stone gray and faded silver, low saturation, no neon, no bright gold, no purple glow. Painterly, highly detailed, subtle film grain, elegant and melancholic. A small old apartment at night seen from inside, slightly from above: worn wooden floor, faded patterned wallpaper peeling in one corner, a window on the left with cold moonlight falling across the room in a pale rectangle, a single dim table lamp with a fringed shade giving a weak warm pool of light, a sagging old armchair with a folded blanket, a small side table with a cracked teacup, a stack of old books and a few letters, a framed photograph turned face down, a wall clock, a potted plant that is slightly wilted, a coat rack. On the right wall a wooden apartment door with a brass knob and a security chain, the door is slightly ajar, a narrow wedge of warm yellow hallway light spilling across the floor, the hallway beyond is out of view. Personal and lived-in, but subtly unsettling: deep shadows in the corners, a faint dark stain near the ceiling, the feeling that someone might knock in the middle of the night. Composition leaves the center of the room open, the door clearly visible on the right.",
+  "negative": "text, letters, watermark, people, characters, faces, neon, cartoon, saturated colors",
+  "largura": 1024,
+  "altura": 1536,
+  "variacoes": [
+    {
+      "seed": 10101,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "passos": null,
+      "largura": 1024,
+      "altura": 1536,
+      "prompt_extra": "",
+      "n": 1
+    },
+    {
+      "seed": 10102,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "passos": null,
+      "largura": 1024,
+      "altura": 1536,
+      "prompt_extra": "",
+      "n": 2
+    },
+    {
+      "seed": 10103,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "passos": null,
+      "largura": 1024,
+      "altura": 1536,
+      "prompt_extra": "",
+      "n": 3
+    }
+  ],
+  "pos": {
+    "remover_fundo": false,
+    "tamanho_final": 1536,
+    "margem": 0.0,
+    "derivados": [
+      1024,
+      768,
+      512
+    ],
+    "quadro_inteiro": true,
+    "modelo_fundo": "birefnet-general",
+    "fundo": "liso",
+    "camadas": []
+  },
+  "passos": null,
+  "guidance": null,
+  "referencias": []
+}
