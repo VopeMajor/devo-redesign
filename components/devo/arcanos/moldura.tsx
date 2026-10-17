@@ -247,7 +247,7 @@ export function Medalhao({ estado, children, pulso, className }: { estado: 'aces
 export function Cartela({ numeral, aceso, children, className }: { numeral: string; aceso?: boolean; children: ReactNode; className?: string }) {
   const id = `ca${uid(useId())}`
   return (
-    <div className={cn('relative px-7 pb-4 pt-7', className)}>
+    <div className={cn('relative px-7 pb-7 pt-8', className)}>
       <svg viewBox="0 0 320 140" preserveAspectRatio="none" aria-hidden="true" className="absolute inset-0 size-full overflow-visible">
         <defs>
           <Metal id={id} />

@@ -33,7 +33,7 @@ const baseDe = (i: number) => {
   return ((i - a.de) / a.n) * Math.PI * 2 + a.de * 0.37
 }
 const OMEGA = (Math.PI * 2) / 180 // uma volta a cada 3 minutos no anel de dentro
-const INCL = { min: 52, max: 74, padrao: 63 }
+const INCL = { min: 36, max: 60, padrao: 46 }
 
 const CAMADAS = (() => {
   const r = prng(41)
@@ -53,7 +53,7 @@ export function Mapa({ d, onEscolher }: { d: Liberado; onEscolher: (i: number) =
   const [w, setW] = useState(360)
   const meuIdx = d.arcanos.findIndex((a) => a.proprio)
   const meu = meuIdx >= 0 ? d.arcanos[meuIdx] : null
-  const H = Math.round(w * 0.84)
+  const H = Math.round(w * 0.98)
 
   const fisica = useRef({
     phi: meuIdx >= 0 ? (Math.PI / 2 - baseDe(meuIdx)) / anelDe(meuIdx).ritmo : 0,
@@ -146,8 +146,8 @@ export function Mapa({ d, onEscolher }: { d: Liberado; onEscolher: (i: number) =
         pos.push(p)
         const no = nos.current[i]
         if (!no) return
-        const k = Math.max(0.72, Math.min(1.22, p.s))
-        no.style.transform = `translate3d(${(p.X - 22).toFixed(1)}px, ${(p.Y - 22).toFixed(1)}px, 0) scale(${k.toFixed(3)})`
+        const k = Math.max(0.7, Math.min(1.15, p.s))
+        no.style.transform = `translate3d(${(p.X - 20).toFixed(1)}px, ${(p.Y - 20).toFixed(1)}px, 0) scale(${k.toFixed(3)})`
         no.style.zIndex = String(Math.round(1000 + p.prof))
         no.style.opacity = (0.5 + 0.5 * ((Math.sin(t) + 1) / 2)).toFixed(2)
       })
@@ -271,11 +271,11 @@ export function Mapa({ d, onEscolher }: { d: Liberado; onEscolher: (i: number) =
             type="button"
             onClick={() => escolher(Math.max(0, meuIdx))}
             aria-label={meu ? `Seu Arcano: ${nomeCurto(meu.titulo)}. Abrir na galeria` : 'Abrir a galeria'}
-            className="dv-focus absolute left-1/2 top-1/2 z-[1000] grid size-[68px] -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full"
+            className="dv-focus absolute left-1/2 top-1/2 z-[1000] grid size-[56px] -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full"
           >
             <span aria-hidden="true" className="absolute -inset-6 rounded-full bg-[radial-gradient(closest-side,color-mix(in_oklab,var(--dv-gold-bright)_22%,transparent),transparent)]" />
             <Medalhao estado={meu ? 'aceso' : 'aberto'} className="size-full">
-              {meu ? <span className="dv-brass-text font-impact text-[22px] font-semibold leading-none">{meu.numeral}</span> : <EmblemArcanos className="size-9 text-dv-gold" />}
+              {meu ? <span className="dv-brass-text font-impact text-[19px] font-semibold leading-none">{meu.numeral}</span> : <EmblemArcanos className="size-9 text-dv-gold" />}
             </Medalhao>
           </button>
           {d.arcanos.map((a, i) => {
@@ -290,10 +290,10 @@ export function Mapa({ d, onEscolher }: { d: Liberado; onEscolher: (i: number) =
                 type="button"
                 onClick={() => escolher(i)}
                 aria-label={`${a.numeral} · ${nomeCurto(a.titulo)}${a.proprio ? ', seu Arcano' : aberto ? '' : ' (trancado)'}`}
-                className="dv-focus absolute left-0 top-0 size-11 rounded-full will-change-transform"
+                className="dv-focus absolute left-0 top-0 size-10 rounded-full will-change-transform before:absolute before:-inset-1 before:content-['']"
               >
                 <Medalhao estado={estado} pulso={a.proprio} className="size-full">
-                  <Sigilo arcano={a.key} aro={false} estado={estado} className="-mt-0.5 size-[22px]" />
+                  <Sigilo arcano={a.key} aro={false} estado={estado} className="-mt-0.5 size-[20px]" />
                   <span className={cn('-mt-[1px] font-mono text-[7.5px] leading-none tracking-[0.04em]', a.proprio ? 'text-dv-amethyst-text' : aberto ? 'text-dv-gold' : 'text-dv-text-3')}>{a.numeral}</span>
                 </Medalhao>
               </button>
