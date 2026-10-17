@@ -10,7 +10,9 @@ import {
   type CosSlot,
   EQUIP_VAZIO,
   type Equipados,
+  IMAGENS_CATALOGO,
   isCosSlot,
+  lerImagem,
   type MeusCosmeticos,
   PLANO_CRITERIOS,
   type PlanoCriterio,
@@ -215,6 +217,9 @@ export async function salvarCosmetico(atorId: string, raw: Record<string, unknow
       origem,
       ordem: Number.isFinite(Number(raw.ordem)) ? Math.max(0, Math.min(9999, Math.round(Number(raw.ordem)))) : ((atual?.meta?.ordem as number) ?? 500),
     }
+    // arte em imagem do repositório: leva junto a janela/camadas conhecidas (sem apagar ajustes já gravados)
+    const conhecida = IMAGENS_CATALOGO[asset]
+    if (conhecida && lerImagem(atual?.meta?.imagem)?.base !== conhecida.imagem.base) Object.assign(meta, { imagem: conhecida.imagem })
     await upsertItemDef({ key, kind: 'cosmetico', name, description: str(raw.description, 300) || null, rarity, stackable: false, meta, active: raw.active !== false }, c)
     await run(c, "INSERT INTO admin_log (actor_id, action, ref, data) VALUES ($1, 'cosmetico.item', $2, $3)", [ator.id, key, JSON.stringify({ name, rarity, ...meta, active: raw.active !== false })])
     return key

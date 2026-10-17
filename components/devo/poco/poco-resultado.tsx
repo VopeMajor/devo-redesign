@@ -2,9 +2,12 @@
 
 import { useEffect, useId, useState, type CSSProperties } from 'react'
 import { playSfx } from '@/lib/devo/audio'
+import { toCosmetico } from '@/lib/devo/cosmeticos'
 import { CATEGORIA_LABEL, type PocoResultado } from '@/lib/devo/poco'
 import { ITEM_RARITY_LABEL, type ItemRarity } from '@/lib/devo/progresso'
 import { cn } from '@/lib/utils'
+import { parseAsset } from '../cosmeticos/art'
+import { BalaoChat, Emblema, FotoMoldurada } from '../cosmeticos/cosmetic-art'
 import { useMediaQuery } from '../hooks'
 import { Button } from '../kit/button'
 import { DracmaIcon } from './poco-cena'
@@ -185,6 +188,32 @@ function Cosmetico({ r, nome, silhueta }: { r: PocoResultado; nome: string; silh
   const cat = String(meta.categoria ?? '')
   const asset = typeof meta.asset === 'string' && meta.asset.startsWith('/') ? meta.asset : null
   const t = TIER[r.item?.raridade ?? 'comum']
+  // Arte real do catálogo de cosméticos (imagem do pipeline ou SVG desenhado), aplicada como no jogo
+  const def = r.item ? toCosmetico({ key: r.item.key, name: r.item.nome, description: r.item.descricao, rarity: r.item.raridade, meta: r.item.meta, active: true }) : null
+  if (def && (def.imagem || parseAsset(def.asset)) && cat !== 'efeito') {
+    if (cat === 'balao')
+      return (
+        <div className={cn('flex w-[230px] items-end gap-2', silhueta && 'brightness-0')}>
+          <Avatar nome={nome} className="size-10 shrink-0" fs={17} />
+          <BalaoChat def={def} className="min-w-0 flex-1 text-left">
+            <p className="font-mono text-[10px] uppercase tracking-[0.14em] opacity-80">{nome}</p>
+            <p className="mt-0.5 font-body text-[15px] leading-snug">O poço gostou de mim hoje.</p>
+          </BalaoChat>
+        </div>
+      )
+    if (cat === 'emblema')
+      return (
+        <div className={cn('relative grid size-full place-items-center', silhueta && 'brightness-0')}>
+          <span aria-hidden="true" className="poco-halo absolute inset-[-10%] bg-[radial-gradient(50%_50%_at_50%_50%,rgba(194,185,236,0.55),transparent_70%)]" />
+          <Emblema def={def} tamanho={138} className="relative" />
+        </div>
+      )
+    return (
+      <div className={cn('relative grid size-full place-items-center', silhueta && 'brightness-0')}>
+        <FotoMoldurada formato="mini" src={null} moldura={def} vazio={<Avatar nome={nome} className="size-full" />} />
+      </div>
+    )
+  }
   if (cat === 'balao') {
     return (
       <div className={cn('flex w-[230px] items-end gap-2', silhueta && 'brightness-0')}>

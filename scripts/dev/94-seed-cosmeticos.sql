@@ -46,9 +46,9 @@ SELECT date_trunc('week', now() AT TIME ZONE 'America/Sao_Paulo')::date, x.id::u
 FROM (VALUES ('00000000-0000-4000-8000-000000000010', 1890, 6), ('00000000-0000-4000-8000-000000000011', 1260, 4)) AS x(id, s, w)
 ON CONFLICT DO NOTHING;
 
--- Chat da mesa com balões (ordem: mais antigas primeiro).
+-- Falas de uma partida (aparecem no Registro das partidas da Mesa, janela de 90 min), com balões.
 INSERT INTO arcade_chat (channel, author, player_id, body, created_at)
-SELECT 'lobby', p.name, p.id, m.b, now() - (m.t || ' minutes')::interval FROM players p
+SELECT 'match-seed-cosmeticos', p.name, p.id, m.b, now() - (m.t || ' minutes')::interval FROM players p
 JOIN (VALUES
   ('Mordomo', 'Boa noite, convidados. A mesa abre às dez; quem chegar tarde joga em pé.', 14),
   ('Matheus', 'Guardei lugar perto da janela. Alguém topa uma rodada de memória antes?', 12),
@@ -58,12 +58,20 @@ JOIN (VALUES
   ('Corvo', 'Silêncio. O Javali está olhando para cá.', 5),
   ('Nyx', 'Aposto duas horas no Matheus. Último aviso.', 3)
 ) AS m(n, b, t) ON m.n = p.name
-WHERE NOT EXISTS (SELECT 1 FROM arcade_chat c WHERE c.channel = 'lobby' AND c.body = m.b);
+WHERE NOT EXISTS (SELECT 1 FROM arcade_chat c WHERE c.channel = 'match-seed-cosmeticos' AND c.body = m.b);
 
 -- Teste de servidor (scripts/dev/cosmeticos-test.mjs). Contas de teste (fora do ranking).
 INSERT INTO invite_codes (code, role, note, is_test) VALUES
   ('DEVO-COSM-OWNR', 'owner',     'teste cosméticos: owner', true),
   ('DEVO-COSM-ANF1', 'anfitriao', 'teste cosméticos: anfitrião', true),
   ('DEVO-COSM-JOG1', 'player',    'teste cosméticos: jogador', true),
-  ('DEVO-COSM-JOG2', 'player',    'teste cosméticos: jogador 2', true)
+  ('DEVO-COSM-JOG2', 'player',    'teste cosméticos: jogador 2', true),
+  ('DEVO-COSM-POCO', 'player',    'captura cosméticos: resultado do Poço', true)
 ON CONFLICT (code) DO NOTHING;
+
+-- Prévia da nova direção: Matheus usa Asas do Crepúsculo (avatar e mini) e o Coração da Condessa.
+SELECT devo_item_grant('00000000-0000-4000-8000-000000000003', k, 1, 'recompensa', NULL, NULL, 'seed:cos:matheus:' || k)
+FROM unnest(ARRAY['cosmetico:moldura-asas-crepusculo', 'cosmetico:mini-asas-crepusculo', 'cosmetico:emblema-coracao-condessa']) AS k;
+UPDATE player_cosmetics SET moldura_avatar = 'cosmetico:moldura-asas-crepusculo', moldura_mini = 'cosmetico:mini-asas-crepusculo',
+       emblema = 'cosmetico:emblema-coracao-condessa'
+ WHERE player_id = '00000000-0000-4000-8000-000000000003';

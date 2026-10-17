@@ -4,12 +4,23 @@
  *   devo:emblema/<id>  devo:balao/<id>  devo:efeito/<id>
  */
 import { BALOES, type Balao } from './baloes'
-import { EMBLEMAS } from './emblemas'
+import { EMBLEMAS as EMBLEMAS_BASE } from './emblemas'
 import type { Arte } from './kit'
 import { MOLDURAS, type MolduraArte } from './molduras'
 
 export type { Arte, Balao, MolduraArte }
-export { BALOES, EMBLEMAS, MOLDURAS }
+export { BALOES, MOLDURAS }
+
+/**
+ * Emblemas com sombra de contato (a própria silhueta em negro, deslocada — sem blur): o símbolo "assenta"
+ * sobre o fundo e ganha volume mesmo a 16 px.
+ */
+export const EMBLEMAS: Record<string, Arte> = Object.fromEntries(
+  Object.entries(EMBLEMAS_BASE).map(([k, a]) => [
+    k,
+    { vb: a.vb, corpo: (u: string) => `<g transform="translate(.7 1.1)" opacity=".5" style="filter:brightness(0)">${a.corpo(`${u}s`)}</g>${a.corpo(u)}` },
+  ]),
+)
 
 export type EfeitoNome = { classe: string }
 

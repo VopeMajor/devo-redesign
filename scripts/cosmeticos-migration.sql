@@ -196,3 +196,23 @@ INSERT INTO item_defs (key, kind, name, description, rarity, stackable, meta) VA
   ('cosmetico:efeito-geada-prata', 'cosmetico', 'Geada de Prata', 'O nome em prata fria, com um reflexo que passa de vez em quando.', 'raro', false,
    '{"categoria": "efeito", "asset": "devo:efeito/geada-prata", "animado": true, "poco": false, "origem": "semanal", "ordem": 30}')
 ON CONFLICT (key) DO NOTHING;
+
+-- ---------------------------------------------------------------------------------------------
+-- 7. Nova direção artística (COSMETICOS-REFORMULACAO-dono.md §12): arte gerada por IA no pipeline infra/arte
+--    (docs/redesign/ARTE-PIPELINE.md), WebP em public/images/cosmeticos/<id>/. Fora do Poço por enquanto.
+-- ---------------------------------------------------------------------------------------------
+INSERT INTO item_defs (key, kind, name, description, rarity, stackable, meta) VALUES
+  ('cosmetico:moldura-asas-crepusculo', 'cosmetico', 'Asas do Crepúsculo', 'Penas negras e prateadas abertas em volta do rosto, cristais carmesins e correntes finas que balançam.', 'lendario', false,
+   '{"categoria": "moldura_avatar", "asset": "img:/images/cosmeticos/asas-do-crepusculo/moldura", "imagem": {"base": "/images/cosmeticos/asas-do-crepusculo/moldura", "tamanhos": [48, 96, 256, 512, 1024], "janela": {"forma": "circulo", "centro": [0.5, 0.5], "raio": [0.25, 0.25]}}, "animado": false, "poco": false, "origem": "evento", "par": "cosmetico:mini-asas-crepusculo", "ordem": 5}'),
+  ('cosmetico:mini-asas-crepusculo', 'cosmetico', 'Asas do Crepúsculo', 'Versão do miniperfil: a asa negra, a prateada e o coração carmesim.', 'lendario', false,
+   '{"categoria": "moldura_mini", "asset": "img:/images/cosmeticos/asas-do-crepusculo/moldura", "imagem": {"base": "/images/cosmeticos/asas-do-crepusculo/moldura", "tamanhos": [48, 96, 256, 512, 1024], "janela": {"forma": "circulo", "centro": [0.5, 0.5], "raio": [0.25, 0.25]}}, "animado": false, "poco": false, "origem": "evento", "par": "cosmetico:moldura-asas-crepusculo", "ordem": 5}'),
+  ('cosmetico:emblema-coracao-condessa', 'cosmetico', 'Coração da Condessa', 'Coração de cristal vermelho num broche de ouro, preso a um laço de seda escura.', 'lendario', false,
+   '{"categoria": "emblema", "asset": "img:/images/cosmeticos/coracao-da-condessa/emblema", "imagem": {"base": "/images/cosmeticos/coracao-da-condessa/emblema", "tamanhos": [48, 96, 256, 512, 1024], "camadas": [{"src": "/images/cosmeticos/coracao-da-condessa/gema-256.webp", "anim": "brilho", "caixa": [0.3525, 0.3594, 0.2998, 0.2812], "dur": 5.5}]}, "animado": true, "poco": false, "origem": "evento", "ordem": 5}')
+ON CONFLICT (key) DO NOTHING;
+
+-- Arte por IA (pipeline infra/arte, escolhas do dono: Asas v02, Coração v02): troca a prévia desenhada pela imagem.
+-- Idempotente e só sobre o valor antigo — não desfaz edição do Owner no painel.
+UPDATE item_defs SET meta = meta || '{"asset": "img:/images/cosmeticos/asas-do-crepusculo/moldura", "imagem": {"base": "/images/cosmeticos/asas-do-crepusculo/moldura", "tamanhos": [48, 96, 256, 512, 1024], "janela": {"forma": "circulo", "centro": [0.5, 0.5], "raio": [0.25, 0.25]}}}'::jsonb
+ WHERE key IN ('cosmetico:moldura-asas-crepusculo', 'cosmetico:mini-asas-crepusculo') AND meta->>'asset' = 'devo:moldura/asas-crepusculo';
+UPDATE item_defs SET meta = meta || '{"asset": "img:/images/cosmeticos/coracao-da-condessa/emblema", "imagem": {"base": "/images/cosmeticos/coracao-da-condessa/emblema", "tamanhos": [48, 96, 256, 512, 1024], "camadas": [{"src": "/images/cosmeticos/coracao-da-condessa/gema-256.webp", "anim": "brilho", "caixa": [0.3525, 0.3594, 0.2998, 0.2812], "dur": 5.5}]}, "animado": true}'::jsonb
+ WHERE key = 'cosmetico:emblema-coracao-condessa' AND meta->>'asset' = 'devo:emblema/coracao-condessa';
