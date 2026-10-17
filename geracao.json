@@ -1,0 +1,50 @@
+{
+  "pedido": "arcano-sigilo-estrela",
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 13171,
+      "passos": null,
+      "largura": 1024,
+      "altura": 1024,
+      "neuronios_estimados": 104,
+      "ok": true,
+      "segundos": 12.1,
+      "tamanho_real": [
+        1024,
+        1024
+      ]
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 13172,
+      "passos": null,
+      "largura": 1024,
+      "altura": 1024,
+      "neuronios_estimados": 104,
+      "ok": true,
+      "segundos": 9.9,
+      "tamanho_real": [
+        1024,
+        1024
+      ]
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 13173,
+      "passos": null,
+      "largura": 1024,
+      "altura": 1024,
+      "neuronios_estimados": 104,
+      "ok": true,
+      "segundos": 10.0,
+      "tamanho_real": [
+        1024,
+        1024
+      ]
+    }
+  ]
+}

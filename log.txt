@@ -1,0 +1,9 @@
+[arcano-sigilo-estrela] v01: @cf/black-forest-labs/flux-2-klein-4b seed=13171 1024x1024 passos=None (~104 neurônios)
+    ok em 12.1s, 1024x1024
+[arcano-sigilo-estrela] v02: @cf/black-forest-labs/flux-2-klein-4b seed=13172 1024x1024 passos=None (~104 neurônios)
+    ok em 9.9s, 1024x1024
+[arcano-sigilo-estrela] v03: @cf/black-forest-labs/flux-2-klein-4b seed=13173 1024x1024 passos=None (~104 neurônios)
+    ok em 10.0s, 1024x1024
+[arcano-sigilo-estrela] v01: rembg:birefnet-general; sem avisos
+[arcano-sigilo-estrela] v02: rembg:birefnet-general; sem avisos
+[arcano-sigilo-estrela] v03: rembg:birefnet-general; sem avisos

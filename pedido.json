@@ -1,0 +1,56 @@
+{
+  "id": "arcano-sigilo-estrela",
+  "titulo": "Arcano — estrela (sigilo)",
+  "tipo": "emblema",
+  "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+  "prompt": "Simple elegant emblem icon, a flat-ish engraved sigil of faded polished silver on a plain flat light gray background, centered, symmetric, thin clean lines with subtle metallic shading, readable at very small size, no text, no letters, no numbers, no background circle. The sigil represents: a large eight-pointed star with seven small stars.",
+  "negative": "text, letters, numbers, watermark, color, background",
+  "largura": 1024,
+  "altura": 1024,
+  "variacoes": [
+    {
+      "seed": 13171,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "passos": null,
+      "largura": 1024,
+      "altura": 1024,
+      "prompt_extra": "",
+      "n": 1
+    },
+    {
+      "seed": 13172,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "passos": null,
+      "largura": 1024,
+      "altura": 1024,
+      "prompt_extra": "",
+      "n": 2
+    },
+    {
+      "seed": 13173,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "passos": null,
+      "largura": 1024,
+      "altura": 1024,
+      "prompt_extra": "",
+      "n": 3
+    }
+  ],
+  "pos": {
+    "remover_fundo": true,
+    "tamanho_final": 1024,
+    "margem": 0.06,
+    "derivados": [
+      512,
+      256,
+      128,
+      64
+    ],
+    "modelo_fundo": "birefnet-general",
+    "fundo": "liso",
+    "camadas": []
+  },
+  "passos": null,
+  "guidance": null,
+  "referencias": []
+}
