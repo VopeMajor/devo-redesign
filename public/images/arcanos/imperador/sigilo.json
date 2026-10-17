@@ -1,0 +1,18 @@
+{
+  "asset": "img:/images/arcanos/imperador/sigilo",
+  "imagem": {
+    "base": "/images/arcanos/imperador/sigilo",
+    "tamanhos": [
+      64,
+      128,
+      256
+    ]
+  },
+  "origem": {
+    "pedido": "arcano-sigilo-imperador",
+    "variacao": "v01",
+    "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+    "seed": 13041,
+    "importado": null
+  }
+}

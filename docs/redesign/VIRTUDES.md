@@ -50,3 +50,9 @@ Observação: as listas por Arcano no corpo do doc às vezes divergem desta tabe
 - Sistema `arcanos` (components/devo/arcanos/): mesma regra de liberação das Virtudes (flag `virtudes`; Owner/Anfitrião sempre) e o mesmo payload `/api/virtudes` (trancado = numeral, nome e frase breve).
 - Vistas: **Mapa** orbital (ref-06), **Galeria** em carrossel com molduras (ref-05/04; trancado em grisalha), **Detalhe** no altar com vitral vermelho e velas (ref-07) com Descrição, Fisiologia e Estágios.
 - Figuras pintadas: registro em `lib/devo/arcanos-arte.ts` (`public/images/arcanos/<key>/{figura,retrato,sigilo}-<lado>.webp`); sem arte, o placeholder é o sigilo do Arcano (components/devo/arcanos/sigilos.tsx) na moldura.
+
+## Arcanos: arte pintada (infra/arte 8f72fb2)
+
+- 22 Arcanos com `figura` (corpo inteiro, alfa, pés em y 0,977), `retrato` (busto) e `sigilo` (prata); comuns `moldura` (arco aberto, janela 0,266/0,208/0,467/0,623), `orbital` (fundo do mapa) e `altar` (pedestal em 0,5/0,618). Registro em `lib/devo/arcanos-arte.ts`; sem arte, cai no desenho SVG.
+- A arte puxa para o vinho; a paleta voltou à ametista + aço champanhe. Tom aplicado sem repintar: matriz de cor (SVG feColorMatrix, `components/devo/arcanos/fx.tsx`) que leva vermelho → roxo e dourado → champanhe-prata, em três forças (figura 0,65, moldura 0,6, fundo 1,0 + véu ametista em `mix-blend-mode: color`). Antes/depois: `docs/redesign/refs/arcanos/tom-antes-depois.jpg`.
+- Trancado: o retrato vira estátua (sem cor, escuro, contraste alto e desfocado) sob o selo rachado; só a forma aparece.

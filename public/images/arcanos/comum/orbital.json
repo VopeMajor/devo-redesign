@@ -1,0 +1,18 @@
+{
+  "base": "/images/arcanos/comum/orbital",
+  "tamanhos": [
+    768,
+    1024,
+    1536
+  ],
+  "tamanho": [
+    1536,
+    1024
+  ],
+  "opaco": true,
+  "origem": {
+    "pedido": "arcanos-orbital",
+    "variacao": "v03",
+    "modelo": "@cf/black-forest-labs/flux-2-klein-9b"
+  }
+}
