@@ -1,0 +1,9 @@
+[arcanos-altar] v01: @cf/black-forest-labs/flux-2-klein-9b seed=14001 1024x1536 passos=None (~1,455 neurônios)
+    ok em 3.8s, 1024x1536
+[arcanos-altar] v02: @cf/black-forest-labs/flux-2-klein-9b seed=14002 1024x1536 passos=None (~1,455 neurônios)
+    ok em 3.1s, 1024x1536
+[arcanos-altar] v03: @cf/black-forest-labs/flux-2-klein-9b seed=14003 1024x1536 passos=None (~1,455 neurônios)
+    ok em 3.3s, 1024x1536
+[arcanos-altar] v01: mantido; sem avisos
+[arcanos-altar] v02: mantido; sem avisos
+[arcanos-altar] v03: mantido; sem avisos
