@@ -1,0 +1,108 @@
+{
+  "pedido": "arcano-sacerdotisa-tarot",
+  "titulo": "Arcano — sacerdotisa (tarô, menos humanizado)",
+  "tipo": "ilustracao",
+  "tamanho_final": 1536,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 91031,
+      "passos": null,
+      "segundos": 3.6,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "arcano-sacerdotisa-tarot--v01--1536.png",
+          "bytes": 1437179
+        },
+        {
+          "arquivo": "arcano-sacerdotisa-tarot--v01--1536.webp",
+          "bytes": 252646
+        },
+        {
+          "arquivo": "arcano-sacerdotisa-tarot--v01--1024.webp",
+          "bytes": 98274
+        },
+        {
+          "arquivo": "arcano-sacerdotisa-tarot--v01--768.webp",
+          "bytes": 60858
+        },
+        {
+          "arquivo": "arcano-sacerdotisa-tarot--v01--512.webp",
+          "bytes": 33794
+        }
+      ],
+      "segundos_pos": 31.1,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 91032,
+      "passos": null,
+      "segundos": 3.4,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "arcano-sacerdotisa-tarot--v02--1536.png",
+          "bytes": 1285358
+        },
+        {
+          "arquivo": "arcano-sacerdotisa-tarot--v02--1536.webp",
+          "bytes": 189342
+        },
+        {
+          "arquivo": "arcano-sacerdotisa-tarot--v02--1024.webp",
+          "bytes": 83734
+        },
+        {
+          "arquivo": "arcano-sacerdotisa-tarot--v02--768.webp",
+          "bytes": 55646
+        },
+        {
+          "arquivo": "arcano-sacerdotisa-tarot--v02--512.webp",
+          "bytes": 32452
+        }
+      ],
+      "segundos_pos": 25.4,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 91033,
+      "passos": null,
+      "segundos": 3.1,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "arcano-sacerdotisa-tarot--v03--1536.png",
+          "bytes": 1051554
+        },
+        {
+          "arquivo": "arcano-sacerdotisa-tarot--v03--1536.webp",
+          "bytes": 168630
+        },
+        {
+          "arquivo": "arcano-sacerdotisa-tarot--v03--1024.webp",
+          "bytes": 68594
+        },
+        {
+          "arquivo": "arcano-sacerdotisa-tarot--v03--768.webp",
+          "bytes": 43670
+        },
+        {
+          "arquivo": "arcano-sacerdotisa-tarot--v03--512.webp",
+          "bytes": 25444
+        }
+      ],
+      "segundos_pos": 24.2,
+      "avisos": []
+    }
+  ]
+}
