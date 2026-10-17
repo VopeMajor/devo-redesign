@@ -41,6 +41,8 @@ type Ctx = {
   /** Cena aberta agora (ou null). */
   aberta: string | null
   vista: (id: string) => boolean
+  /** Cena com condição de história que o servidor já liberou para este jogador (e ainda não terminada). */
+  disponivel: (id: string) => boolean
   /** O resumo do servidor já chegou. */
   carregado: boolean
   config: Resumo['config']
@@ -60,6 +62,16 @@ export function CenasProvider({ children }: { children: ReactNode }) {
   }, [])
   useEffect(() => {
     void recarregar()
+    // Condições de história mudam fora da tela (ex.: o Dealer aplica o resultado do Deadly Vote): confere de novo ao voltar.
+    const onVis = () => {
+      if (document.visibilityState === 'visible') void recarregar()
+    }
+    document.addEventListener('visibilitychange', onVis)
+    const t = window.setInterval(() => void recarregar(), 5 * 60_000)
+    return () => {
+      document.removeEventListener('visibilitychange', onVis)
+      window.clearInterval(t)
+    }
   }, [recarregar])
 
   // Pedido por evento: window.dispatchEvent(new CustomEvent('devo:cena', { detail: 'id' | { id }, cancelable: true })).
@@ -81,6 +93,7 @@ export function CenasProvider({ children }: { children: ReactNode }) {
   }, [])
 
   const vista = useCallback((id: string) => !!resumo?.cenas[id]?.fim, [resumo])
+  const disponivel = useCallback((id: string) => !!resumo?.disponiveis.includes(id) && !resumo.cenas[id]?.fim, [resumo])
   const abrir = useCallback(
     (id: string, opts: AbrirOpts = {}) => {
       if (abertaRef.current) return false
@@ -94,8 +107,8 @@ export function CenasProvider({ children }: { children: ReactNode }) {
   abrirRef.current = abrir
 
   const value = useMemo<Ctx>(
-    () => ({ abrir, aberta: aberta?.id ?? null, vista, carregado: !!resumo, config: resumo?.config ?? { galoExplorarMin: 2 }, recarregar }),
-    [abrir, aberta, vista, resumo, recarregar],
+    () => ({ abrir, aberta: aberta?.id ?? null, vista, disponivel, carregado: !!resumo, config: resumo?.config ?? { galoExplorarMin: 2 }, recarregar }),
+    [abrir, aberta, vista, disponivel, resumo, recarregar],
   )
 
   return (
@@ -124,7 +137,7 @@ export function CenasProvider({ children }: { children: ReactNode }) {
   )
 }
 
-const FORA: Ctx = { abrir: () => false, aberta: null, vista: () => false, carregado: false, config: { galoExplorarMin: 2 }, recarregar: async () => {} }
+const FORA: Ctx = { abrir: () => false, aberta: null, vista: () => false, disponivel: () => false, carregado: false, config: { galoExplorarMin: 2 }, recarregar: async () => {} }
 
 /** Abrir cenas de qualquer tela do sistema (fora do host: não faz nada). */
 export function useCenas() {

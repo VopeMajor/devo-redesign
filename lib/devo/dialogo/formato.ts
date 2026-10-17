@@ -145,6 +145,12 @@ export type CenarioId =
   /** Breu. */
   | 'escuro'
 
+/**
+ * Condições de história (lib/devo/dialogo/dialogo-server.ts → condicaoCumprida):
+ * - `devolveu-e-dv`: devolveu as Cartas Iniciais à Melissa no prólogo E já terminou o primeiro Deadly Vote.
+ */
+export type CondicaoCena = 'devolveu-e-dv'
+
 export type MembroElenco = {
   /** Nome na placa. */
   nome: string
@@ -164,6 +170,11 @@ export type Cena = {
   elenco?: Record<string, MembroElenco>
   /** Flag exigida para abrir a cena (o servidor confere; Owner/Anfitrião sempre podem). */
   requer?: UnlockFlag
+  /**
+   * Condição de história conferida no servidor (além de `requer`); a cena só abre quando ela vale e aparece em
+   * `disponiveis` no resumo (GET /api/dialogo) para o cliente puxar sozinho. Owner/Anfitrião sempre podem.
+   */
+  condicao?: CondicaoCena
   /** Efeitos ao terminar (uma vez). */
   aoConcluir?: Efeito[]
   /** Pode ser fechada no meio e retomada depois (padrão true). Reflexões curtas usam false. */

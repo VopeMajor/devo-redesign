@@ -5,9 +5,9 @@ import { RecordError } from '../errors'
 import { type Queryable, run, txAs } from '../fundacao-db'
 import { consumeItem, creditMinutes, grantItem, itemBalance } from '../inventario-server'
 import { destinoDoKarma } from '../progresso'
-import { adjustKarma, getConfig, grantUnlock, hasUnlock } from '../progresso-server'
-import { CENA_ID_RE, type Cena, type CenaEstado, chaveEscolha, type Efeito, type EfeitoAplicado, type ProgressoCena } from './formato'
-import { getCena, passoPorId } from './registro'
+import { adjustKarma, getConfig, grantUnlock, hasUnlock, unlocks } from '../progresso-server'
+import { CENA_ID_RE, type Cena, type CenaEstado, type CondicaoCena, chaveEscolha, type Efeito, type EfeitoAplicado, type ProgressoCena } from './formato'
+import { CENAS, getCena, passoPorId } from './registro'
 
 /**
  * Servidor do motor de diálogo. Contrato: docs/redesign/DIALOGO.md.
@@ -23,9 +23,56 @@ function cenaOu404(id: unknown): Cena {
   return cena
 }
 
-/** A cena exige uma flag? (Owner e Anfitrião passam sempre: `devo_tem_desbloqueio`.) */
+/**
+ * Condição de história de uma cena (formato.ts → `CondicaoCena`). Lida do banco a cada pedido (nada fica em cache):
+ * - `devolveu-e-dv`: o save diz que as Cartas Iniciais foram devolvidas à Melissa (`devolveuCartas`; saves de antes do
+ *   campo: sem nenhuma carta do "Kit inicial" e sem trocas feitas) E há uma inscrição aceita num Deadly Vote já
+ *   concluído (ou com resultado aplicado) em que o jogador não ficou "ausente".
+ */
+export async function condicaoCumprida(playerId: string, condicao: CondicaoCena, q: Queryable = pool): Promise<boolean> {
+  if (condicao !== 'devolveu-e-dv') return false
+  const [r] = await run<{ ok: boolean }>(
+    q,
+    `SELECT (
+       EXISTS (
+         SELECT 1 FROM deadly_vote_entries e JOIN deadly_votes v ON v.id = e.vote_id
+          WHERE e.player_id = $1 AND e.admission = 'aceita' AND e.decision IS DISTINCT FROM 'ausente'
+            AND (v.status = 'concluido' OR v.results_applied_at IS NOT NULL)
+       )
+       AND EXISTS (
+         SELECT 1 FROM player_saves s
+          WHERE s.player_id = $1
+            AND CASE
+                  WHEN s.data ? 'devolveuCartas' THEN (s.data->>'devolveuCartas') = 'true'
+                  ELSE COALESCE((s.data->>'tradesCompleted')::int, 0) = 0
+                   AND NOT EXISTS (SELECT 1 FROM jsonb_array_elements(COALESCE(s.data->'inventory', '[]'::jsonb)) c WHERE c->>'origin' = 'Kit inicial')
+                END
+       )
+     ) AS ok`,
+    [playerId],
+  ).catch((err) => {
+    console.error('[dialogo] condição', condicao, err)
+    return [{ ok: false }]
+  })
+  return !!r?.ok
+}
+
+/** A cena exige uma flag ou uma condição de história? (Owner e Anfitrião passam sempre: `devo_tem_desbloqueio`.) */
 async function exigirAcesso(playerId: string, cena: Cena, q: Queryable = pool) {
   if (cena.requer && !(await hasUnlock(playerId, cena.requer, q))) throw new RecordError('Esta cena ainda está trancada.', 403)
+  if (cena.condicao && !(await unlocks(playerId, q)).total && !(await condicaoCumprida(playerId, cena.condicao, q)))
+    throw new RecordError('Esta cena ainda está trancada.', 403)
+}
+
+/** Cenas com condição de história que este jogador já pode ver e ainda não terminou (o cliente abre sozinho). */
+export async function cenasDisponiveis(playerId: string, feitas: Record<string, { fim: boolean }>): Promise<string[]> {
+  const out: string[] = []
+  for (const c of Object.values(CENAS)) {
+    if (!c.condicao || feitas[c.id]?.fim) continue
+    if (c.requer && !(await hasUnlock(playerId, c.requer))) continue
+    if (await condicaoCumprida(playerId, c.condicao)) out.push(c.id)
+  }
+  return out
 }
 
 /** Minutos efetivos de um efeito de Tempo (a configuração do Owner substitui o número da cena). */

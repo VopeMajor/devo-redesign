@@ -1,5 +1,5 @@
 import { getCurrentPlayer } from '@/app/actions/player'
-import { aplicarEfeito, concluir, escolher, estadoCena, resumoCenas, salvarPasso } from '@/lib/devo/dialogo/dialogo-server'
+import { aplicarEfeito, cenasDisponiveis, concluir, escolher, estadoCena, resumoCenas, salvarPasso } from '@/lib/devo/dialogo/dialogo-server'
 import { RecordError } from '@/lib/devo/errors'
 import { getConfig } from '@/lib/devo/progresso-server'
 
@@ -7,7 +7,7 @@ export const dynamic = 'force-dynamic'
 
 /**
  * Motor de diálogo (Narrativa). Contrato: docs/redesign/DIALOGO.md.
- * GET  /api/dialogo                 → { cenas: { [id]: { passo, fim } }, config: { galoExplorarMin } }
+ * GET  /api/dialogo                 → { cenas: { [id]: { passo, fim } }, disponiveis: string[], config: { galoExplorarMin } }
  * GET  /api/dialogo?cena=<id>       → CenaEstado (progresso, tempos, itens exigidos, destino)
  * POST { action: 'passo',    cena, passo }            → { ok }
  * POST { action: 'escolher', cena, escolha, opcao }   → EfeitoAplicado (efeitos uma vez só)
@@ -28,7 +28,9 @@ export async function GET(req: Request) {
     const cena = new URL(req.url).searchParams.get('cena')
     if (cena) return Response.json(await estadoCena(player.id, cena))
     const explorar = await getConfig<number>('narrativa.galo_casa.explorar_min').catch(() => null)
-    return Response.json({ cenas: await resumoCenas(player.id), config: { galoExplorarMin: Math.max(0, Number(explorar?.value ?? 2)) } })
+    const cenas = await resumoCenas(player.id)
+    const disponiveis = await cenasDisponiveis(player.id, cenas).catch(() => [] as string[])
+    return Response.json({ cenas, disponiveis, config: { galoExplorarMin: Math.max(0, Number(explorar?.value ?? 2)) } })
   } catch (err) {
     return fail(err)
   }

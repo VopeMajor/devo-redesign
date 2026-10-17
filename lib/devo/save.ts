@@ -38,6 +38,8 @@ export type SaveData = {
   sistemasVistos?: string[]
   /** Narrativa: desbloqueios cuja cerimônia já foi mostrada. */
   desbloqueiosVistos?: string[]
+  /** Prólogo: devolveu as Cartas Iniciais à Melissa (true) ou ficou com elas (false). Ausente = save antigo. */
+  devolveuCartas?: boolean
 }
 
 function story(v: unknown): StoryProgress | undefined {
@@ -111,6 +113,7 @@ export function sanitizeSave(raw: unknown): SaveData | null {
     story: story(raw.story),
     sistemasVistos: ids(raw.sistemasVistos),
     desbloqueiosVistos: ids(raw.desbloqueiosVistos),
+    devolveuCartas: typeof raw.devolveuCartas === 'boolean' ? raw.devolveuCartas : undefined,
     seenApps: Array.isArray(raw.seenApps) ? raw.seenApps.filter((x): x is string => typeof x === 'string').slice(0, 12).map((x) => x.slice(0, 20)) : [],
   }
 }

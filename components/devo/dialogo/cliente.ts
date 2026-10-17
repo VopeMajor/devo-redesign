@@ -17,13 +17,13 @@ export async function lerCena(cena: string): Promise<CenaEstado> {
   return j
 }
 
-export type Resumo = { cenas: Record<string, { passo: number; fim: boolean }>; config: { galoExplorarMin: number } }
+export type Resumo = { cenas: Record<string, { passo: number; fim: boolean }>; disponiveis: string[]; config: { galoExplorarMin: number } }
 
 export async function lerResumo(): Promise<Resumo | null> {
   const r = await fetch('/api/dialogo', { cache: 'no-store' }).catch(() => null)
   if (!r?.ok) return null
   const j = (await r.json().catch(() => null)) as Partial<Resumo> | null
-  return { cenas: j?.cenas ?? {}, config: { galoExplorarMin: j?.config?.galoExplorarMin ?? 2 } }
+  return { cenas: j?.cenas ?? {}, disponiveis: Array.isArray(j?.disponiveis) ? j.disponiveis : [], config: { galoExplorarMin: j?.config?.galoExplorarMin ?? 2 } }
 }
 
 export const salvarPasso = (cena: string, passo: number) => post<{ ok: true }>({ action: 'passo', cena, passo }).catch(() => null)

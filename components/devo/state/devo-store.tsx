@@ -54,6 +54,8 @@ export type DevoState = {
   sistemasVistos: string[]
   /** Narrativa: desbloqueios já celebrados (cerimônia de desbloqueio mostrada). */
   desbloqueiosVistos: string[]
+  /** Prólogo: devolveu (true) ou ficou (false) com as Cartas Iniciais da Melissa; undefined = save de antes do campo. */
+  devolveuCartas?: boolean
 }
 
 type Action =
@@ -70,6 +72,7 @@ type Action =
   | { type: 'SET_PHASE'; phase: Phase }
   | { type: 'START_SESSION' }
   | { type: 'RETURN_STARTER_CARDS' }
+  | { type: 'KEEP_STARTER_CARDS' }
   | { type: 'STORY'; story: StoryProgress | null }
   | { type: 'ADD_CONTACT'; npcId: string; text?: string }
   | { type: 'SEE_SYSTEM'; id: string }
@@ -166,7 +169,9 @@ function reducer(state: DevoState, action: Action): DevoState {
       return { ...freshState('intro', state.playerName, state.characterName), hasSession: true, story: { part: 'prologue', index: 0 } }
     case 'RETURN_STARTER_CARDS':
       // Escolha do prólogo: devolve à Melissa o kit inicial (o jogador começa sem cartas).
-      return { ...state, inventory: [] }
+      return { ...state, inventory: [], devolveuCartas: true }
+    case 'KEEP_STARTER_CARDS':
+      return state.devolveuCartas === false ? state : { ...state, devolveuCartas: false }
     case 'STORY':
       return { ...state, story: action.story }
     case 'ADD_CONTACT': {
@@ -378,6 +383,7 @@ function hydrate(playerName: string | null, save: SaveData | null, characterName
     seenApps: (save.seenApps ?? []).filter((a): a is AppId => STARTER_APPS.includes(a as AppId)),
     sistemasVistos: save.sistemasVistos ?? [],
     desbloqueiosVistos: save.desbloqueiosVistos ?? [],
+    devolveuCartas: save.devolveuCartas,
     threads: [
       ...base.threads.map((t) => {
         const s = savedThreads.get(t.id)
@@ -410,6 +416,7 @@ function toSave(state: DevoState): SaveData {
     story: state.story ?? undefined,
     sistemasVistos: state.sistemasVistos,
     desbloqueiosVistos: state.desbloqueiosVistos,
+    devolveuCartas: state.devolveuCartas,
     threads: state.threads.map((th) => ({ id: th.id, messages: th.messages, unread: th.unread, answered: th.answered })),
   }
 }
@@ -428,13 +435,13 @@ function useAutosave(state: DevoState) {
   const latest = useRef(state)
   latest.current = state
   const enabled = state.hasSession && !!state.playerName
-  const { welcomed, timerEndsAt, inventory, notifications, threads, tradesCompleted, trade, arcadeUnlocked, seenApps, owlMet, javaliMet, characterName, profile, story, sistemasVistos, desbloqueiosVistos } = state
+  const { welcomed, timerEndsAt, inventory, notifications, threads, tradesCompleted, trade, arcadeUnlocked, seenApps, owlMet, javaliMet, characterName, profile, story, sistemasVistos, desbloqueiosVistos, devolveuCartas } = state
 
   useEffect(() => {
     if (!enabled) return
     const id = window.setTimeout(() => postSave(latest.current), 1200)
     return () => window.clearTimeout(id)
-  }, [enabled, welcomed, timerEndsAt, inventory, notifications, threads, tradesCompleted, trade?.myCard, arcadeUnlocked, seenApps, owlMet, javaliMet, characterName, profile, story?.part, story?.index, sistemasVistos, desbloqueiosVistos])
+  }, [enabled, welcomed, timerEndsAt, inventory, notifications, threads, tradesCompleted, trade?.myCard, arcadeUnlocked, seenApps, owlMet, javaliMet, characterName, profile, story?.part, story?.index, sistemasVistos, desbloqueiosVistos, devolveuCartas])
 
   useEffect(() => {
     if (!enabled) return

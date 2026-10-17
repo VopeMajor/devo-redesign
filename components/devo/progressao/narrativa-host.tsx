@@ -22,6 +22,7 @@ import { AcessoProvider, useAcesso } from './use-acesso'
  */
 const MARCA_AVISO_GALO = 'aviso-galo'
 const MELISSA_ESPERA_MS = 6000
+const FIGURA_ESPERA_MS = 4000
 
 type Narrativa = { galoDisponivel: boolean; abrirGalo: () => void }
 const NarrativaContext = createContext<Narrativa>({ galoDisponivel: false, abrirGalo: () => {} })
@@ -87,6 +88,22 @@ function Gatilhos({ children }: { children: ReactNode }) {
       agendada.current = false
     }
   }, [melissaPendente, cenas, cerimonia])
+
+  /* 5. A figura ??? (só quem devolveu as Cartas Iniciais, depois do primeiro Deadly Vote; o servidor decide). */
+  const figuraPendente = !!eu && !total && cenas.carregado && cenas.disponivel('figura-devolveu')
+  const figuraAgendada = useRef(false)
+  useEffect(() => {
+    if (!figuraPendente || cenas.aberta || cerimonia || figuraAgendada.current) return
+    figuraAgendada.current = true
+    const t = window.setTimeout(() => {
+      figuraAgendada.current = false
+      cenas.abrir('figura-devolveu', { seNaoVista: true })
+    }, FIGURA_ESPERA_MS)
+    return () => {
+      window.clearTimeout(t)
+      figuraAgendada.current = false
+    }
+  }, [figuraPendente, cenas, cerimonia])
 
   const isDesktop = useMediaQuery('(min-width: 1024px)')
   const ctx = useMemo<Narrativa>(() => ({ galoDisponivel, abrirGalo: () => cenas.abrir('galo-casa') }), [galoDisponivel, cenas])

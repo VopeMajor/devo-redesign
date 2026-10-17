@@ -435,6 +435,7 @@ export function PrologueScreen({
     const option = beat.kind === 'choice' ? beat.options.findIndex((o) => o.label === label) : 0
     // "Devolver" as Cartas Iniciais é pra valer: o jogador fica sem cartas.
     if (beat.kind === 'choice' && beat.options[option]?.effect === 'return-starter-cards') dispatch({ type: 'RETURN_STARTER_CARDS' })
+    if (beat.kind === 'choice' && beat.options[option]?.effect === 'keep-starter-cards') dispatch({ type: 'KEEP_STARTER_CARDS' })
     setReplyFrom({ option, total: reply.length })
     setExplored((e) => [...e, label])
     setReplies(reply)
