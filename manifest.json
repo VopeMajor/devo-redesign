@@ -1,0 +1,120 @@
+{
+  "pedido": "arcano-sigilo-morte",
+  "titulo": "Arcano — morte (sigilo)",
+  "tipo": "emblema",
+  "tamanho_final": 1024,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 13131,
+      "passos": null,
+      "segundos": 10.6,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "arcano-sigilo-morte--v01--1024.png",
+          "bytes": 375459
+        },
+        {
+          "arquivo": "arcano-sigilo-morte--v01--1024.webp",
+          "bytes": 79398
+        },
+        {
+          "arquivo": "arcano-sigilo-morte--v01--512.webp",
+          "bytes": 26316
+        },
+        {
+          "arquivo": "arcano-sigilo-morte--v01--256.webp",
+          "bytes": 10634
+        },
+        {
+          "arquivo": "arcano-sigilo-morte--v01--128.webp",
+          "bytes": 4668
+        },
+        {
+          "arquivo": "arcano-sigilo-morte--v01--64.webp",
+          "bytes": 1834
+        }
+      ],
+      "segundos_pos": 17.6,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 13132,
+      "passos": null,
+      "segundos": 12.6,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "arcano-sigilo-morte--v02--1024.png",
+          "bytes": 271968
+        },
+        {
+          "arquivo": "arcano-sigilo-morte--v02--1024.webp",
+          "bytes": 70786
+        },
+        {
+          "arquivo": "arcano-sigilo-morte--v02--512.webp",
+          "bytes": 24940
+        },
+        {
+          "arquivo": "arcano-sigilo-morte--v02--256.webp",
+          "bytes": 10094
+        },
+        {
+          "arquivo": "arcano-sigilo-morte--v02--128.webp",
+          "bytes": 4414
+        },
+        {
+          "arquivo": "arcano-sigilo-morte--v02--64.webp",
+          "bytes": 1666
+        }
+      ],
+      "segundos_pos": 14.5,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 13133,
+      "passos": null,
+      "segundos": 10.5,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "arcano-sigilo-morte--v03--1024.png",
+          "bytes": 349143
+        },
+        {
+          "arquivo": "arcano-sigilo-morte--v03--1024.webp",
+          "bytes": 62468
+        },
+        {
+          "arquivo": "arcano-sigilo-morte--v03--512.webp",
+          "bytes": 21556
+        },
+        {
+          "arquivo": "arcano-sigilo-morte--v03--256.webp",
+          "bytes": 9584
+        },
+        {
+          "arquivo": "arcano-sigilo-morte--v03--128.webp",
+          "bytes": 4462
+        },
+        {
+          "arquivo": "arcano-sigilo-morte--v03--64.webp",
+          "bytes": 2060
+        }
+      ],
+      "segundos_pos": 14.3,
+      "avisos": []
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+[arcano-sigilo-morte] v01: @cf/black-forest-labs/flux-2-klein-4b seed=13131 1024x1024 passos=None (~104 neurônios)
+    ok em 10.6s, 1024x1024
+[arcano-sigilo-morte] v02: @cf/black-forest-labs/flux-2-klein-4b seed=13132 1024x1024 passos=None (~104 neurônios)
+    ok em 12.6s, 1024x1024
+[arcano-sigilo-morte] v03: @cf/black-forest-labs/flux-2-klein-4b seed=13133 1024x1024 passos=None (~104 neurônios)
+    ok em 10.5s, 1024x1024
+[arcano-sigilo-morte] v01: rembg:birefnet-general; sem avisos
+[arcano-sigilo-morte] v02: rembg:birefnet-general; sem avisos
+[arcano-sigilo-morte] v03: rembg:birefnet-general; sem avisos
