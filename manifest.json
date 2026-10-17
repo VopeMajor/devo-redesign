@@ -1,0 +1,173 @@
+{
+  "pedido": "mini-ultima-badalada",
+  "titulo": "ultima-badalada — miniperfil (quadrada)",
+  "tipo": "moldura",
+  "tamanho_final": 1024,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 4271,
+      "passos": null,
+      "segundos": 13.0,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "miolo_aberto_por_cor": true,
+      "janela": {
+        "forma": "quadrado",
+        "centro_px": [
+          512.0,
+          512.0
+        ],
+        "lado_px": 560.1,
+        "raio_canto_px": 41.0,
+        "lado_fracao": 0.547
+      },
+      "reencaixe": {
+        "escala": 1.1968,
+        "cobertura_aro": 1.0
+      },
+      "ornamento_cortado": 0.0065,
+      "arquivos": [
+        {
+          "arquivo": "mini-ultima-badalada--v01--1024.png",
+          "bytes": 479811
+        },
+        {
+          "arquivo": "mini-ultima-badalada--v01--1024.webp",
+          "bytes": 75406
+        },
+        {
+          "arquivo": "mini-ultima-badalada--v01--512.webp",
+          "bytes": 30504
+        },
+        {
+          "arquivo": "mini-ultima-badalada--v01--256.webp",
+          "bytes": 13342
+        },
+        {
+          "arquivo": "mini-ultima-badalada--v01--96.webp",
+          "bytes": 4298
+        },
+        {
+          "arquivo": "mini-ultima-badalada--v01--48.webp",
+          "bytes": 1992
+        }
+      ],
+      "segundos_pos": 30.9,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 4272,
+      "passos": null,
+      "segundos": 14.2,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "miolo_aberto_por_cor": true,
+      "ilhas_removidas": 7,
+      "janela": {
+        "forma": "quadrado",
+        "centro_px": [
+          512.0,
+          512.0
+        ],
+        "lado_px": 560.1,
+        "raio_canto_px": 41.0,
+        "lado_fracao": 0.547
+      },
+      "reencaixe": {
+        "escala": 1.3705,
+        "cobertura_aro": 1.0
+      },
+      "ornamento_cortado": 0.0308,
+      "arquivos": [
+        {
+          "arquivo": "mini-ultima-badalada--v02--1024.png",
+          "bytes": 545637
+        },
+        {
+          "arquivo": "mini-ultima-badalada--v02--1024.webp",
+          "bytes": 78014
+        },
+        {
+          "arquivo": "mini-ultima-badalada--v02--512.webp",
+          "bytes": 30106
+        },
+        {
+          "arquivo": "mini-ultima-badalada--v02--256.webp",
+          "bytes": 13138
+        },
+        {
+          "arquivo": "mini-ultima-badalada--v02--96.webp",
+          "bytes": 4120
+        },
+        {
+          "arquivo": "mini-ultima-badalada--v02--48.webp",
+          "bytes": 1956
+        }
+      ],
+      "segundos_pos": 24.8,
+      "avisos": [
+        "3.1% do ornamento ficou fora do quadro — reduza a janela ou peça mais margem no prompt"
+      ]
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 4273,
+      "passos": null,
+      "segundos": 12.5,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "miolo_aberto_por_cor": true,
+      "janela": {
+        "forma": "quadrado",
+        "centro_px": [
+          512.0,
+          512.0
+        ],
+        "lado_px": 560.1,
+        "raio_canto_px": 41.0,
+        "lado_fracao": 0.547
+      },
+      "reencaixe": {
+        "escala": 1.3305,
+        "cobertura_aro": 1.0
+      },
+      "ornamento_cortado": 0.016,
+      "arquivos": [
+        {
+          "arquivo": "mini-ultima-badalada--v03--1024.png",
+          "bytes": 622017
+        },
+        {
+          "arquivo": "mini-ultima-badalada--v03--1024.webp",
+          "bytes": 78900
+        },
+        {
+          "arquivo": "mini-ultima-badalada--v03--512.webp",
+          "bytes": 31136
+        },
+        {
+          "arquivo": "mini-ultima-badalada--v03--256.webp",
+          "bytes": 13294
+        },
+        {
+          "arquivo": "mini-ultima-badalada--v03--96.webp",
+          "bytes": 4362
+        },
+        {
+          "arquivo": "mini-ultima-badalada--v03--48.webp",
+          "bytes": 1810
+        }
+      ],
+      "segundos_pos": 24.9,
+      "avisos": [
+        "1.6% do ornamento ficou fora do quadro — reduza a janela ou peça mais margem no prompt"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+[mini-ultima-badalada] v01: @cf/black-forest-labs/flux-2-klein-4b seed=4271 1024x1024 passos=None (~104 neurônios)
+    ok em 13.0s, 1024x1024
+[mini-ultima-badalada] v02: @cf/black-forest-labs/flux-2-klein-4b seed=4272 1024x1024 passos=None (~104 neurônios)
+    ok em 14.2s, 1024x1024
+[mini-ultima-badalada] v03: @cf/black-forest-labs/flux-2-klein-4b seed=4273 1024x1024 passos=None (~104 neurônios)
+    ok em 12.5s, 1024x1024
+[mini-ultima-badalada] v01: rembg:birefnet-general; sem avisos
+[mini-ultima-badalada] v02: rembg:birefnet-general; 3.1% do ornamento ficou fora do quadro — reduza a janela ou peça mais margem no prompt
+[mini-ultima-badalada] v03: rembg:birefnet-general; 1.6% do ornamento ficou fora do quadro — reduza a janela ou peça mais margem no prompt
