@@ -1,0 +1,32 @@
+{
+  "id": "poco-balde-cobre",
+  "titulo": "Poço — balde-cobre",
+  "tipo": "emblema",
+  "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+  "prompt": "Fantasy RPG game icon illustration, painted, highly detailed, isolated on a plain flat light gray background, one single object centered, seen from the front at a slight angle, key light from the upper left, crisp silhouette readable at small size, no cast shadow, generous empty margin, no text, no letters, no numbers. Muted dark urban fantasy palette: abyss black, deep blood wine red, fog stone gray and faded silver, low saturation, no neon, no bright gold. Painterly, subtle patina and grain, elegant and melancholic. A polished copper bucket darkened by tarnish near the bottom, an elegant curved handle, warm muted copper tone.",
+  "negative": "text, letters, watermark, cartoon, neon, saturated colors",
+  "largura": 1024,
+  "altura": 1024,
+  "variacoes": [
+    {
+      "seed": 11081
+    },
+    {
+      "seed": 11082
+    },
+    {
+      "seed": 11083
+    }
+  ],
+  "pos": {
+    "remover_fundo": true,
+    "tamanho_final": 1024,
+    "margem": 0.04,
+    "derivados": [
+      512,
+      256,
+      128,
+      64
+    ]
+  }
+}
