@@ -1,0 +1,56 @@
+{
+  "id": "poco-fragmento",
+  "titulo": "Poço — fragmento",
+  "tipo": "emblema",
+  "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+  "prompt": "Fantasy RPG game icon illustration, painted, highly detailed, isolated on a plain flat light gray background, one single object centered, seen from the front at a slight angle, key light from the upper left, crisp silhouette readable at small size, no cast shadow, generous empty margin, no text, no letters, no numbers. Muted dark urban fantasy palette: abyss black, deep blood wine red, fog stone gray and faded silver, low saturation, no neon, no bright gold. Painterly, subtle patina and grain, elegant and melancholic. Arcane Fragment: a cluster of three pale lavender-gray crystal shards, the tallest in the center, with a small four-pointed silver sparkle, faceted, softly translucent.",
+  "negative": "text, letters, watermark, cartoon, neon, saturated colors",
+  "largura": 1024,
+  "altura": 1024,
+  "variacoes": [
+    {
+      "seed": 11031,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "passos": null,
+      "largura": 1024,
+      "altura": 1024,
+      "prompt_extra": "",
+      "n": 1
+    },
+    {
+      "seed": 11032,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "passos": null,
+      "largura": 1024,
+      "altura": 1024,
+      "prompt_extra": "",
+      "n": 2
+    },
+    {
+      "seed": 11033,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "passos": null,
+      "largura": 1024,
+      "altura": 1024,
+      "prompt_extra": "",
+      "n": 3
+    }
+  ],
+  "pos": {
+    "remover_fundo": true,
+    "tamanho_final": 1024,
+    "margem": 0.04,
+    "derivados": [
+      512,
+      256,
+      128,
+      64
+    ],
+    "modelo_fundo": "birefnet-general",
+    "fundo": "liso",
+    "camadas": []
+  },
+  "passos": null,
+  "guidance": null,
+  "referencias": []
+}
