@@ -1,0 +1,108 @@
+{
+  "pedido": "arcano-forca",
+  "titulo": "Arcano — forca (figura)",
+  "tipo": "ilustracao",
+  "tamanho_final": 1536,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 12081,
+      "passos": null,
+      "segundos": 3.7,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "arcano-forca--v01--1536.png",
+          "bytes": 1316838
+        },
+        {
+          "arquivo": "arcano-forca--v01--1536.webp",
+          "bytes": 271672
+        },
+        {
+          "arquivo": "arcano-forca--v01--1024.webp",
+          "bytes": 122036
+        },
+        {
+          "arquivo": "arcano-forca--v01--768.webp",
+          "bytes": 80154
+        },
+        {
+          "arquivo": "arcano-forca--v01--512.webp",
+          "bytes": 44032
+        }
+      ],
+      "segundos_pos": 37.7,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 12082,
+      "passos": null,
+      "segundos": 2.6,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "arcano-forca--v02--1536.png",
+          "bytes": 1225833
+        },
+        {
+          "arquivo": "arcano-forca--v02--1536.webp",
+          "bytes": 248808
+        },
+        {
+          "arquivo": "arcano-forca--v02--1024.webp",
+          "bytes": 115736
+        },
+        {
+          "arquivo": "arcano-forca--v02--768.webp",
+          "bytes": 77222
+        },
+        {
+          "arquivo": "arcano-forca--v02--512.webp",
+          "bytes": 42858
+        }
+      ],
+      "segundos_pos": 31.2,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 12083,
+      "passos": null,
+      "segundos": 2.9,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "arcano-forca--v03--1536.png",
+          "bytes": 1419440
+        },
+        {
+          "arquivo": "arcano-forca--v03--1536.webp",
+          "bytes": 297070
+        },
+        {
+          "arquivo": "arcano-forca--v03--1024.webp",
+          "bytes": 130348
+        },
+        {
+          "arquivo": "arcano-forca--v03--768.webp",
+          "bytes": 83814
+        },
+        {
+          "arquivo": "arcano-forca--v03--512.webp",
+          "bytes": 45898
+        }
+      ],
+      "segundos_pos": 32.0,
+      "avisos": []
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+[arcano-forca] v01: @cf/black-forest-labs/flux-2-klein-9b seed=12081 1024x1536 passos=None (~1,455 neurônios)
+    ok em 3.7s, 1024x1536
+[arcano-forca] v02: @cf/black-forest-labs/flux-2-klein-9b seed=12082 1024x1536 passos=None (~1,455 neurônios)
+    ok em 2.6s, 1024x1536
+[arcano-forca] v03: @cf/black-forest-labs/flux-2-klein-9b seed=12083 1024x1536 passos=None (~1,455 neurônios)
+    ok em 2.9s, 1024x1536
+[arcano-forca] v01: rembg:birefnet-general; sem avisos
+[arcano-forca] v02: rembg:birefnet-general; sem avisos
+[arcano-forca] v03: rembg:birefnet-general; sem avisos
