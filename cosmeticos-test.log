@@ -1,0 +1,14 @@
+contas: owner=owner anf=anfitriao j1=player j2=player
+ok   catálogo inicial: 8 molduras ×2, ≥10 emblemas, ≥5 balões, itens do Poço marcados
+ok   arte por IA: Asas e Coração com meta.imagem (janela, tamanhos, camada de brilho) e arquivos presentes
+ok   lote 2: molduras e balões em imagem (9-slice com cor de texto), itens novos lendários coerentes
+ok   jogador não equipa o que não tem; nem item de outra categoria; nem o Selo automático
+ok   Owner concede → jogador equipa → aparece no visual público; Owner revoga → some
+ok   item expirado (temporário) deixa de valer para equipar
+ok   Owner equipa qualquer cosmético, sem possuir (inclusive arcano e inativo)
+ok   payload público sem cargo de Owner (visuais, chat, miniperfil); Anfitrião é público
+ok   catálogo: só o Owner cria/edita; Anfitrião e jogador recebem 403
+ok   upload de asset: SVG com script recusado; SVG limpo servido com CSP fechada
+ok   semanais: Anfitrião propõe; só aprova com autorização; editar volta a pendente; distribui uma vez
+
+Cosméticos: 11 ok, 0 falha(s)
