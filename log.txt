@@ -1,0 +1,9 @@
+[balao2-teatro-veludo] v01: @cf/black-forest-labs/flux-2-klein-4b seed=15041 1536x512 passos=None (~78 neurônios)
+    ok em 27.0s, 1536x512
+[balao2-teatro-veludo] v02: @cf/black-forest-labs/flux-2-klein-4b seed=15042 1536x512 passos=None (~78 neurônios)
+    ok em 42.7s, 1536x512
+[balao2-teatro-veludo] v03: @cf/black-forest-labs/flux-2-klein-4b seed=15043 1536x512 passos=None (~78 neurônios)
+    ok em 24.2s, 1536x512
+[balao2-teatro-veludo] v01: rembg:birefnet-general; sem avisos
+[balao2-teatro-veludo] v02: rembg:birefnet-general; sem avisos
+[balao2-teatro-veludo] v03: rembg:birefnet-general; sem avisos
