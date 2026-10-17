@@ -58,7 +58,7 @@ def main() -> int:
     orig = max(final_dir.glob(f"{pid}--{a.var}--*.png"), key=lambda p: int(p.stem.split("--")[-1]))
     im = Image.open(orig).convert("RGBA")
     lado = max(im.size)
-    tams = sorted({int(t) for t in a.tamanhos.split(",") if int(t) <= lado})
+    tams = sorted({int(t) for t in a.tamanhos.split(",") if int(t) <= lado + 4})  # arredondamento do recorte (ex.: 1023)
     for t in tams:
         salvar_webp(im, dest / f"{peca}-{t}.webp", t)
     base = "/" + str(dest).split("public/", 1)[1] + f"/{peca}"

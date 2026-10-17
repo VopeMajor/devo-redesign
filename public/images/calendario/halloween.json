@@ -1,0 +1,19 @@
+{
+  "asset": "img:/images/calendario/halloween",
+  "imagem": {
+    "base": "/images/calendario/halloween",
+    "tamanhos": [
+      256,
+      512,
+      768,
+      1024
+    ]
+  },
+  "origem": {
+    "pedido": "cal-halloween",
+    "variacao": "v03",
+    "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+    "seed": 10513,
+    "importado": null
+  }
+}

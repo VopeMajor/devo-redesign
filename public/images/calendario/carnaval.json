@@ -1,0 +1,19 @@
+{
+  "asset": "img:/images/calendario/carnaval",
+  "imagem": {
+    "base": "/images/calendario/carnaval",
+    "tamanhos": [
+      256,
+      512,
+      768,
+      1024
+    ]
+  },
+  "origem": {
+    "pedido": "cal-carnaval",
+    "variacao": "v02",
+    "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+    "seed": 10522,
+    "importado": null
+  }
+}
