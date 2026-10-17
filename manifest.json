@@ -1,0 +1,120 @@
+{
+  "pedido": "ico-presente",
+  "titulo": "Calendário — ícone presente",
+  "tipo": "emblema",
+  "tamanho_final": 1024,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 10661,
+      "passos": null,
+      "segundos": 12.7,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "ico-presente--v01--1024.png",
+          "bytes": 975058
+        },
+        {
+          "arquivo": "ico-presente--v01--1024.webp",
+          "bytes": 140036
+        },
+        {
+          "arquivo": "ico-presente--v01--512.webp",
+          "bytes": 38510
+        },
+        {
+          "arquivo": "ico-presente--v01--256.webp",
+          "bytes": 14366
+        },
+        {
+          "arquivo": "ico-presente--v01--128.webp",
+          "bytes": 6702
+        },
+        {
+          "arquivo": "ico-presente--v01--64.webp",
+          "bytes": 2864
+        }
+      ],
+      "segundos_pos": 34.5,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 10662,
+      "passos": null,
+      "segundos": 11.9,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "ico-presente--v02--1024.png",
+          "bytes": 944585
+        },
+        {
+          "arquivo": "ico-presente--v02--1024.webp",
+          "bytes": 135382
+        },
+        {
+          "arquivo": "ico-presente--v02--512.webp",
+          "bytes": 37138
+        },
+        {
+          "arquivo": "ico-presente--v02--256.webp",
+          "bytes": 13876
+        },
+        {
+          "arquivo": "ico-presente--v02--128.webp",
+          "bytes": 6248
+        },
+        {
+          "arquivo": "ico-presente--v02--64.webp",
+          "bytes": 2652
+        }
+      ],
+      "segundos_pos": 29.5,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 10663,
+      "passos": null,
+      "segundos": 15.4,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "ico-presente--v03--1024.png",
+          "bytes": 923882
+        },
+        {
+          "arquivo": "ico-presente--v03--1024.webp",
+          "bytes": 127822
+        },
+        {
+          "arquivo": "ico-presente--v03--512.webp",
+          "bytes": 35408
+        },
+        {
+          "arquivo": "ico-presente--v03--256.webp",
+          "bytes": 12990
+        },
+        {
+          "arquivo": "ico-presente--v03--128.webp",
+          "bytes": 5796
+        },
+        {
+          "arquivo": "ico-presente--v03--64.webp",
+          "bytes": 2442
+        }
+      ],
+      "segundos_pos": 29.3,
+      "avisos": []
+    }
+  ]
+}
