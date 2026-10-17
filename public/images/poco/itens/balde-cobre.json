@@ -1,0 +1,18 @@
+{
+  "asset": "img:/images/poco/itens/balde-cobre",
+  "imagem": {
+    "base": "/images/poco/itens/balde-cobre",
+    "tamanhos": [
+      64,
+      128,
+      256
+    ]
+  },
+  "origem": {
+    "pedido": "poco-balde-cobre",
+    "variacao": "v02",
+    "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+    "seed": 11082,
+    "importado": null
+  }
+}

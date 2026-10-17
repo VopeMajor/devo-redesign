@@ -1,0 +1,25 @@
+{
+  "base": "/images/arcanos/comum/altar",
+  "tamanhos": [
+    512,
+    768,
+    1024,
+    1536
+  ],
+  "tamanho": [
+    1024,
+    1536
+  ],
+  "opaco": true,
+  "origem": {
+    "pedido": "arcanos-altar",
+    "variacao": "v02",
+    "modelo": "@cf/black-forest-labs/flux-2-klein-9b"
+  },
+  "pedestal": {
+    "x": 0.5,
+    "y": 0.618,
+    "largura": 0.233,
+    "obs": "centro do tampo do pedestal vazio (fração da largura/altura); a figura pousa aqui"
+  }
+}

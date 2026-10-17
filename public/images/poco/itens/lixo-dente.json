@@ -1,0 +1,18 @@
+{
+  "asset": "img:/images/poco/itens/lixo-dente",
+  "imagem": {
+    "base": "/images/poco/itens/lixo-dente",
+    "tamanhos": [
+      64,
+      128,
+      256
+    ]
+  },
+  "origem": {
+    "pedido": "poco-lixo-dente",
+    "variacao": "v01",
+    "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+    "seed": 11151,
+    "importado": null
+  }
+}

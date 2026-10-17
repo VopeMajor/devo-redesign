@@ -1,0 +1,18 @@
+{
+  "asset": "img:/images/poco/itens/lixo-pedra",
+  "imagem": {
+    "base": "/images/poco/itens/lixo-pedra",
+    "tamanhos": [
+      64,
+      128,
+      256
+    ]
+  },
+  "origem": {
+    "pedido": "poco-lixo-pedra",
+    "variacao": "v03",
+    "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+    "seed": 11113,
+    "importado": null
+  }
+}

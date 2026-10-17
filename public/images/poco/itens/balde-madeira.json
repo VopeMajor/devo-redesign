@@ -1,0 +1,18 @@
+{
+  "asset": "img:/images/poco/itens/balde-madeira",
+  "imagem": {
+    "base": "/images/poco/itens/balde-madeira",
+    "tamanhos": [
+      64,
+      128,
+      256
+    ]
+  },
+  "origem": {
+    "pedido": "poco-balde-madeira",
+    "variacao": "v02",
+    "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+    "seed": 11062,
+    "importado": null
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "asset": "img:/images/poco/itens/lixo-agua-suja",
+  "imagem": {
+    "base": "/images/poco/itens/lixo-agua-suja",
+    "tamanhos": [
+      64,
+      128,
+      256
+    ]
+  },
+  "origem": {
+    "pedido": "poco-lixo-agua-suja",
+    "variacao": "v02",
+    "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+    "seed": 11102,
+    "importado": null
+  }
+}

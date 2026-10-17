@@ -1,0 +1,18 @@
+{
+  "asset": "img:/images/poco/itens/lixo-meia",
+  "imagem": {
+    "base": "/images/poco/itens/lixo-meia",
+    "tamanhos": [
+      64,
+      128,
+      256
+    ]
+  },
+  "origem": {
+    "pedido": "poco-lixo-meia",
+    "variacao": "v02",
+    "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+    "seed": 11142,
+    "importado": null
+  }
+}

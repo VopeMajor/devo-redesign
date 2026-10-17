@@ -1,0 +1,18 @@
+{
+  "asset": "img:/images/poco/itens/fragmento",
+  "imagem": {
+    "base": "/images/poco/itens/fragmento",
+    "tamanhos": [
+      64,
+      128,
+      256
+    ]
+  },
+  "origem": {
+    "pedido": "poco-fragmento",
+    "variacao": "v01",
+    "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+    "seed": 11031,
+    "importado": null
+  }
+}

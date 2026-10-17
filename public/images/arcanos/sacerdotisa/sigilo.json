@@ -1,0 +1,18 @@
+{
+  "asset": "img:/images/arcanos/sacerdotisa/sigilo",
+  "imagem": {
+    "base": "/images/arcanos/sacerdotisa/sigilo",
+    "tamanhos": [
+      64,
+      128,
+      256
+    ]
+  },
+  "origem": {
+    "pedido": "arcano-sigilo-sacerdotisa",
+    "variacao": "v01",
+    "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+    "seed": 13021,
+    "importado": null
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "asset": "img:/images/poco/itens/lixo-chiclete",
+  "imagem": {
+    "base": "/images/poco/itens/lixo-chiclete",
+    "tamanhos": [
+      64,
+      128,
+      256
+    ]
+  },
+  "origem": {
+    "pedido": "poco-lixo-chiclete",
+    "variacao": "v03",
+    "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+    "seed": 11173,
+    "importado": null
+  }
+}
