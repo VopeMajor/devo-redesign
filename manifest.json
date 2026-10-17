@@ -1,0 +1,248 @@
+{
+  "pedido": "moldura-relicario-marfim",
+  "titulo": "Relicário de Marfim — avatar",
+  "tipo": "moldura",
+  "tamanho_final": 1024,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 6091,
+      "passos": null,
+      "segundos": 43.5,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "miolo_aberto_por_cor": true,
+      "ilhas_removidas": 5,
+      "janela": {
+        "forma": "circulo",
+        "centro_px": [
+          512.0,
+          512.0
+        ],
+        "raio_px": [
+          256.0,
+          256.0
+        ],
+        "raio_fracao": [
+          0.25,
+          0.25
+        ]
+      },
+      "reencaixe": {
+        "escala": 1.3333,
+        "cobertura_aro": 1.0
+      },
+      "ornamento_cortado": 0.0307,
+      "arquivos": [
+        {
+          "arquivo": "moldura-relicario-marfim--v01--1024.png",
+          "bytes": 653967
+        },
+        {
+          "arquivo": "moldura-relicario-marfim--v01--1024.webp",
+          "bytes": 167086
+        },
+        {
+          "arquivo": "moldura-relicario-marfim--v01--512.webp",
+          "bytes": 69918
+        },
+        {
+          "arquivo": "moldura-relicario-marfim--v01--256.webp",
+          "bytes": 26038
+        },
+        {
+          "arquivo": "moldura-relicario-marfim--v01--96.webp",
+          "bytes": 6084
+        },
+        {
+          "arquivo": "moldura-relicario-marfim--v01--48.webp",
+          "bytes": 2358
+        }
+      ],
+      "segundos_pos": 37.6,
+      "avisos": [
+        "3.1% do ornamento ficou fora do quadro — reduza a janela ou peça mais margem no prompt"
+      ]
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 6092,
+      "passos": null,
+      "segundos": 20.3,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "miolo_aberto_por_cor": true,
+      "ilhas_removidas": 4,
+      "janela": {
+        "forma": "circulo",
+        "centro_px": [
+          512.0,
+          512.0
+        ],
+        "raio_px": [
+          256.0,
+          256.0
+        ],
+        "raio_fracao": [
+          0.25,
+          0.25
+        ]
+      },
+      "reencaixe": {
+        "escala": 1.3838,
+        "cobertura_aro": 1.0
+      },
+      "ornamento_cortado": 0.037,
+      "arquivos": [
+        {
+          "arquivo": "moldura-relicario-marfim--v02--1024.png",
+          "bytes": 620269
+        },
+        {
+          "arquivo": "moldura-relicario-marfim--v02--1024.webp",
+          "bytes": 163058
+        },
+        {
+          "arquivo": "moldura-relicario-marfim--v02--512.webp",
+          "bytes": 65982
+        },
+        {
+          "arquivo": "moldura-relicario-marfim--v02--256.webp",
+          "bytes": 24340
+        },
+        {
+          "arquivo": "moldura-relicario-marfim--v02--96.webp",
+          "bytes": 6100
+        },
+        {
+          "arquivo": "moldura-relicario-marfim--v02--48.webp",
+          "bytes": 2326
+        }
+      ],
+      "segundos_pos": 31.9,
+      "avisos": [
+        "3.7% do ornamento ficou fora do quadro — reduza a janela ou peça mais margem no prompt"
+      ]
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 6093,
+      "passos": null,
+      "segundos": 14.4,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "miolo_aberto_por_cor": true,
+      "janela": {
+        "forma": "circulo",
+        "centro_px": [
+          512.0,
+          512.0
+        ],
+        "raio_px": [
+          256.0,
+          256.0
+        ],
+        "raio_fracao": [
+          0.25,
+          0.25
+        ]
+      },
+      "reencaixe": {
+        "escala": 1.1034,
+        "cobertura_aro": 1.0
+      },
+      "ornamento_cortado": 0.006,
+      "arquivos": [
+        {
+          "arquivo": "moldura-relicario-marfim--v03--1024.png",
+          "bytes": 551368
+        },
+        {
+          "arquivo": "moldura-relicario-marfim--v03--1024.webp",
+          "bytes": 151206
+        },
+        {
+          "arquivo": "moldura-relicario-marfim--v03--512.webp",
+          "bytes": 64174
+        },
+        {
+          "arquivo": "moldura-relicario-marfim--v03--256.webp",
+          "bytes": 23192
+        },
+        {
+          "arquivo": "moldura-relicario-marfim--v03--96.webp",
+          "bytes": 5560
+        },
+        {
+          "arquivo": "moldura-relicario-marfim--v03--48.webp",
+          "bytes": 2158
+        }
+      ],
+      "segundos_pos": 31.4,
+      "avisos": []
+    },
+    {
+      "nome": "v04",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 6094,
+      "passos": null,
+      "segundos": 21.8,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "miolo_aberto_por_cor": true,
+      "ilhas_removidas": 19,
+      "janela": {
+        "forma": "circulo",
+        "centro_px": [
+          512.0,
+          512.0
+        ],
+        "raio_px": [
+          256.0,
+          256.0
+        ],
+        "raio_fracao": [
+          0.25,
+          0.25
+        ]
+      },
+      "reencaixe": {
+        "escala": 1.0802,
+        "cobertura_aro": 1.0
+      },
+      "ornamento_cortado": 0.0008,
+      "arquivos": [
+        {
+          "arquivo": "moldura-relicario-marfim--v04--1024.png",
+          "bytes": 516187
+        },
+        {
+          "arquivo": "moldura-relicario-marfim--v04--1024.webp",
+          "bytes": 143612
+        },
+        {
+          "arquivo": "moldura-relicario-marfim--v04--512.webp",
+          "bytes": 60392
+        },
+        {
+          "arquivo": "moldura-relicario-marfim--v04--256.webp",
+          "bytes": 22106
+        },
+        {
+          "arquivo": "moldura-relicario-marfim--v04--96.webp",
+          "bytes": 5500
+        },
+        {
+          "arquivo": "moldura-relicario-marfim--v04--48.webp",
+          "bytes": 2132
+        }
+      ],
+      "segundos_pos": 31.1,
+      "avisos": []
+    }
+  ]
+}
