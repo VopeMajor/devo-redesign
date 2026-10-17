@@ -1,0 +1,10 @@
+ok   migração é idempotente (roda de novo sem erro)
+ok   cena trancada sem a flag (403), cena e escolha inexistentes recusadas
+ok   progresso: guarda o passo e retoma de onde parou
+ok   Galo "Galo…?" transfere Tempo UMA vez (repetir/recarregar não repete)
+ok   efeito de contato e conclusão valem uma vez
+ok   Melissa: a opção da Necro-Corporação tira Tempo uma vez; concluir libera Corporações uma vez
+ok   config do Owner muda o Tempo; outro jogador sem a flag não abre a reflexão das Torres
+ok   banco: evento repetido é barrado pela chave primária
+
+Narrativa: 8 ok, 0 falha(s)

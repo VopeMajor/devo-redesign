@@ -1,0 +1,16 @@
+ok   migração do Calendário é idempotente
+ok   cadastro das contas de teste
+ok   Calendário liberado desde o início para um Jogador novo (sem tutorial)
+ok   Desbloqueio livre é configurável: tirar de desbloqueio.livres tranca o Calendário
+ok   Dia 1: 50 PP na Virtude padrão (sem Arcano → Paus); a segunda vez no mesmo dia é recusada
+ok   toque duplo / simultâneo: 6 resgates ao mesmo tempo → um só entregue
+ok   o ciclo anda só com o resgate e cada dia entrega a recompensa certa no inventário
+ok   faltar dias PAUSA o ciclo (padrão): continua de onde parou
+ok   regra "reinicia" (config do Owner): faltar volta ao Dia 1
+ok   P.P. vão para a Virtude Excelente do Arcano do jogador
+ok   check-in de evento: lista própria, um por dia, separado do diário; acabou a lista → 409
+ok   Mesa: Jogador não vê nem edita; Anfitrião cria/edita/remove eventos sem check-in; tudo no admin_log
+ok   Owner: evento com check-in próprio aparece como cartão extra; regras com log
+ok   a cena da Melissa está registrada e só termina uma vez
+
+14 ok, 0 falha(s)
