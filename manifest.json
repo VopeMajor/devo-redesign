@@ -1,0 +1,120 @@
+{
+  "pedido": "arcano-sigilo-julgamento",
+  "titulo": "Arcano — julgamento (sigilo)",
+  "tipo": "emblema",
+  "tamanho_final": 1024,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 13201,
+      "passos": null,
+      "segundos": 9.7,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "arcano-sigilo-julgamento--v01--1024.png",
+          "bytes": 141492
+        },
+        {
+          "arquivo": "arcano-sigilo-julgamento--v01--1024.webp",
+          "bytes": 37960
+        },
+        {
+          "arquivo": "arcano-sigilo-julgamento--v01--512.webp",
+          "bytes": 13878
+        },
+        {
+          "arquivo": "arcano-sigilo-julgamento--v01--256.webp",
+          "bytes": 5896
+        },
+        {
+          "arquivo": "arcano-sigilo-julgamento--v01--128.webp",
+          "bytes": 2852
+        },
+        {
+          "arquivo": "arcano-sigilo-julgamento--v01--64.webp",
+          "bytes": 1240
+        }
+      ],
+      "segundos_pos": 16.8,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 13202,
+      "passos": null,
+      "segundos": 11.3,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "arcano-sigilo-julgamento--v02--1024.png",
+          "bytes": 159105
+        },
+        {
+          "arquivo": "arcano-sigilo-julgamento--v02--1024.webp",
+          "bytes": 41142
+        },
+        {
+          "arquivo": "arcano-sigilo-julgamento--v02--512.webp",
+          "bytes": 14206
+        },
+        {
+          "arquivo": "arcano-sigilo-julgamento--v02--256.webp",
+          "bytes": 6430
+        },
+        {
+          "arquivo": "arcano-sigilo-julgamento--v02--128.webp",
+          "bytes": 3228
+        },
+        {
+          "arquivo": "arcano-sigilo-julgamento--v02--64.webp",
+          "bytes": 1430
+        }
+      ],
+      "segundos_pos": 13.3,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 13203,
+      "passos": null,
+      "segundos": 14.1,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "arcano-sigilo-julgamento--v03--1024.png",
+          "bytes": 198545
+        },
+        {
+          "arquivo": "arcano-sigilo-julgamento--v03--1024.webp",
+          "bytes": 44182
+        },
+        {
+          "arquivo": "arcano-sigilo-julgamento--v03--512.webp",
+          "bytes": 15860
+        },
+        {
+          "arquivo": "arcano-sigilo-julgamento--v03--256.webp",
+          "bytes": 7002
+        },
+        {
+          "arquivo": "arcano-sigilo-julgamento--v03--128.webp",
+          "bytes": 3478
+        },
+        {
+          "arquivo": "arcano-sigilo-julgamento--v03--64.webp",
+          "bytes": 1656
+        }
+      ],
+      "segundos_pos": 13.9,
+      "avisos": []
+    }
+  ]
+}
