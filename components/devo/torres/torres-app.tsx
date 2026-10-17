@@ -12,7 +12,7 @@ import { useShellBack } from '../os/app-back'
 import { MAPA_H, MAPA_W } from './arte'
 import { Cena } from './cena'
 import { pedirCena } from './gatilho'
-import { MapaTorres, Recursos } from './mapa'
+import { MapaNavegavel, Recursos } from './mapa'
 import { TelaTorre } from './torre'
 import { Cadeado } from './ornamentos'
 import { type ItemRevelado, Revelacao } from './revelacao'
@@ -79,16 +79,20 @@ async function post<T>(body: Record<string, unknown>): Promise<{ ok: boolean; da
 function useEncaixe() {
   const ref = useRef<HTMLDivElement>(null)
   const [w, setW] = useState<number | undefined>(undefined)
+  const [h, setH] = useState<number | undefined>(undefined)
   useLayoutEffect(() => {
     const el = ref.current
     if (!el) return
-    const fit = () => setW(Math.max(260, Math.min(el.clientWidth, (el.clientHeight * MAPA_W) / MAPA_H, 520)))
+    const fit = () => {
+      setW(el.clientWidth)
+      setH(el.clientHeight)
+    }
     fit()
     const ro = new ResizeObserver(fit)
     ro.observe(el)
     return () => ro.disconnect()
   }, [])
-  return { ref, w }
+  return { ref, w, h }
 }
 
 export function TorresApp() {
@@ -303,8 +307,17 @@ export function TorresApp() {
           {dados?.liberado && <Recursos torres={dados.torres} />}
         </div>
         <div ref={encaixe.ref} className={cn('relative min-h-0 flex-1', (trancado || !dados) && 'pointer-events-none')}>
-          <div className={cn('absolute inset-0 flex items-start justify-center transition-[filter,opacity] duration-700', (trancado || !dados) && '[filter:grayscale(1)_brightness(0.45)]')}>
-            {encaixe.w ? <MapaTorres torres={torresMapa} cenario={dados?.liberado ? dados.cenario : (CONTEUDO_PADRAO.cenario ?? null)} largura={encaixe.w} inerte={!dados?.liberado || galoAberto} onAbrir={abrir} /> : null}
+          <div className={cn('absolute inset-0 transition-[filter,opacity] duration-700', (trancado || !dados) && '[filter:grayscale(1)_brightness(0.45)]')}>
+            {encaixe.w && encaixe.h ? (
+              <MapaNavegavel
+                torres={torresMapa}
+                cenario={dados?.liberado ? dados.cenario : (CONTEUDO_PADRAO.cenario ?? null)}
+                vw={encaixe.w}
+                vh={encaixe.h}
+                inerte={!dados?.liberado || galoAberto}
+                onAbrir={abrir}
+              />
+            ) : null}
           </div>
         </div>
       </div>

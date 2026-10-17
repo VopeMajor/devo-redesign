@@ -97,7 +97,10 @@ export function TelaTorre({
           )}
           <div className="min-w-0 flex-1 animate-dv-cut-in pt-1">
             <Kicker tone="gold">{torre.tipo === 'principal' ? 'Torre principal · Campanha' : `Torre secundária · ${torre.tema}`}</Kicker>
-            <h2 className="mt-1.5 font-display text-[25px] font-semibold uppercase leading-[1.02] tracking-[0.05em] text-dv-text [text-shadow:0_2px_12px_rgba(0,0,0,0.9)] [text-wrap:balance]">{torre.nome}</h2>
+            <h2 className="mt-1.5 font-display text-[clamp(20px,6.2vw,25px)] font-semibold uppercase leading-[1.04] tracking-[0.04em] text-dv-text [text-shadow:0_2px_12px_rgba(0,0,0,0.9)] [text-wrap:balance]">
+              {semProvisorio(torre.nome)}
+              {torre.provisorio && /^\[PROVISÓRIO\]/.test(torre.nome) && <span className="dv-label ml-2 align-middle text-[9px] tracking-[0.14em] text-dv-text-3">Provisório</span>}
+            </h2>
             <p className="mt-1 font-body text-[14px] italic text-dv-text-2">
               {torre.npc.nome}
               {torre.npc.titulo ? <span className="text-dv-text-3"> · {torre.npc.titulo}</span> : null}
@@ -159,7 +162,7 @@ export function TelaTorre({
         open={!!andarFicha}
         onClose={() => setFicha(null)}
         kicker={`${torre.nome} · Andar ${toRoman(andarFicha?.n ?? 1)}`}
-        title={andarFicha?.titulo ?? ''}
+        title={semProvisorio(andarFicha?.titulo ?? '')}
         footer={
           andarFicha ? (
             andarFicha.estado === 'concluido' ? (
@@ -196,6 +199,9 @@ export function TelaTorre({
   )
 }
 
+/** Tira o prefixo "[PROVISÓRIO]" do texto exibido (o selo "Provisório" já marca o andar/torre). */
+export const semProvisorio = (t: string) => t.replace(/^\[PROVISÓRIO\]\s*/, '')
+
 const estadoVisual = (a: AndarEstado): EstadoAndar => (a.estado === 'atual' ? (a.podeSubir ? 'pronto' : 'atual') : a.estado)
 
 function motivoCurto(a: AndarEstado) {
@@ -224,15 +230,15 @@ function AndarLinha({ andar, essencia, recem, topo, atraso, onAbrir }: { andar: 
       onClick={onAbrir}
       aria-label={`Andar ${toRoman(a.n)}: ${a.titulo}, ${estadoTxt}`}
       className="tw-andar-in dv-focus group absolute -translate-y-1/2 text-left"
-      style={{ top: `${topo}%`, left: `${nodeX - 11}%`, right: '2%', animationDelay: `${atraso}ms` } as CSSProperties}
+      style={{ top: `${topo}%`, left: `calc(${nodeX}% - 34px)`, right: '2%', animationDelay: `${atraso}ms` } as CSSProperties}
     >
       <span className="relative flex min-h-[112px] items-center">
         {/* estrela do patamar */}
-        <span className={cn('relative grid size-[84px] shrink-0 place-items-center transition-transform duration-200 group-hover:scale-105 group-active:scale-95', recem && 'tw-surge')}>
+        <span className={cn('relative grid size-[68px] shrink-0 place-items-center transition-transform duration-200 group-hover:scale-105 group-active:scale-95', recem && 'tw-surge')}>
           <EstrelaAndar estado={ev} className="size-full drop-shadow-[0_6px_14px_rgba(0,0,0,0.85)]" />
         </span>
         {/* filete com voluta */}
-        <svg aria-hidden="true" viewBox="0 0 40 20" className="-ml-3 h-5 w-9 shrink-0">
+        <svg aria-hidden="true" viewBox="0 0 40 20" className="-ml-2 h-5 w-7 shrink-0">
           <path d="M0 10H30" stroke={vivo ? '#c2b9ec' : a.estado === 'concluido' ? '#ece5d8' : '#6b6357'} strokeWidth={1} />
           <path d={voluta(30, 10, 4, 1)} fill="none" stroke={vivo ? '#c2b9ec' : '#8f8676'} strokeWidth={1} />
         </svg>
@@ -244,7 +250,7 @@ function AndarLinha({ andar, essencia, recem, topo, atraso, onAbrir }: { andar: 
             <span className="dv-label text-[10px] text-dv-text-3">Andar</span>
             {a.provisorio && <span className="dv-label ml-auto text-[9px] text-dv-text-3 opacity-80">Provisório</span>}
           </span>
-          <span className={cn('mt-1 line-clamp-2 font-body text-[15.5px] leading-snug [text-shadow:0_1px_6px_rgba(0,0,0,0.9)]', a.estado === 'trancado' ? 'text-dv-text-2' : 'text-dv-text')}>{a.titulo}</span>
+          <span className={cn('mt-1 line-clamp-2 font-body text-[15.5px] leading-snug [text-shadow:0_1px_6px_rgba(0,0,0,0.9)]', a.estado === 'trancado' ? 'text-dv-text-2' : 'text-dv-text')}>{semProvisorio(a.titulo)}</span>
           <span className="mt-1.5 flex flex-wrap items-center gap-x-2.5 gap-y-1">
             {a.estado === 'concluido' ? (
               <span className="font-mono text-[11px] uppercase tracking-[0.16em] text-dv-gold">Vencido</span>
