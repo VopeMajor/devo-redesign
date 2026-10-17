@@ -1,0 +1,108 @@
+{
+  "pedido": "arcano-louco-tarot",
+  "titulo": "Arcano — louco (tarô, menos humanizado)",
+  "tipo": "ilustracao",
+  "tamanho_final": 1536,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 91011,
+      "passos": null,
+      "segundos": 3.3,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "arcano-louco-tarot--v01--1536.png",
+          "bytes": 1048214
+        },
+        {
+          "arquivo": "arcano-louco-tarot--v01--1536.webp",
+          "bytes": 187576
+        },
+        {
+          "arquivo": "arcano-louco-tarot--v01--1024.webp",
+          "bytes": 90142
+        },
+        {
+          "arquivo": "arcano-louco-tarot--v01--768.webp",
+          "bytes": 59142
+        },
+        {
+          "arquivo": "arcano-louco-tarot--v01--512.webp",
+          "bytes": 33608
+        }
+      ],
+      "segundos_pos": 31.3,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 91012,
+      "passos": null,
+      "segundos": 3.5,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "arcano-louco-tarot--v02--1536.png",
+          "bytes": 1122671
+        },
+        {
+          "arquivo": "arcano-louco-tarot--v02--1536.webp",
+          "bytes": 224654
+        },
+        {
+          "arquivo": "arcano-louco-tarot--v02--1024.webp",
+          "bytes": 94208
+        },
+        {
+          "arquivo": "arcano-louco-tarot--v02--768.webp",
+          "bytes": 59386
+        },
+        {
+          "arquivo": "arcano-louco-tarot--v02--512.webp",
+          "bytes": 32380
+        }
+      ],
+      "segundos_pos": 25.9,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 91013,
+      "passos": null,
+      "segundos": 3.1,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "arcano-louco-tarot--v03--1536.png",
+          "bytes": 1115610
+        },
+        {
+          "arquivo": "arcano-louco-tarot--v03--1536.webp",
+          "bytes": 220940
+        },
+        {
+          "arquivo": "arcano-louco-tarot--v03--1024.webp",
+          "bytes": 98148
+        },
+        {
+          "arquivo": "arcano-louco-tarot--v03--768.webp",
+          "bytes": 64028
+        },
+        {
+          "arquivo": "arcano-louco-tarot--v03--512.webp",
+          "bytes": 35592
+        }
+      ],
+      "segundos_pos": 26.3,
+      "avisos": []
+    }
+  ]
+}
