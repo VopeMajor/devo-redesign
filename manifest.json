@@ -1,0 +1,123 @@
+{
+  "pedido": "arcano-sigilo-louco",
+  "titulo": "Arcano — louco (sigilo)",
+  "tipo": "emblema",
+  "tamanho_final": 1024,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 13001,
+      "passos": null,
+      "segundos": 17.5,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "ilhas_removidas": 0,
+      "arquivos": [
+        {
+          "arquivo": "arcano-sigilo-louco--v01--1024.png",
+          "bytes": 234729
+        },
+        {
+          "arquivo": "arcano-sigilo-louco--v01--1024.webp",
+          "bytes": 58912
+        },
+        {
+          "arquivo": "arcano-sigilo-louco--v01--512.webp",
+          "bytes": 19962
+        },
+        {
+          "arquivo": "arcano-sigilo-louco--v01--256.webp",
+          "bytes": 8428
+        },
+        {
+          "arquivo": "arcano-sigilo-louco--v01--128.webp",
+          "bytes": 3976
+        },
+        {
+          "arquivo": "arcano-sigilo-louco--v01--64.webp",
+          "bytes": 1604
+        }
+      ],
+      "segundos_pos": 17.3,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 13002,
+      "passos": null,
+      "segundos": 9.7,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "ilhas_removidas": 0,
+      "arquivos": [
+        {
+          "arquivo": "arcano-sigilo-louco--v02--1024.png",
+          "bytes": 258710
+        },
+        {
+          "arquivo": "arcano-sigilo-louco--v02--1024.webp",
+          "bytes": 56800
+        },
+        {
+          "arquivo": "arcano-sigilo-louco--v02--512.webp",
+          "bytes": 19032
+        },
+        {
+          "arquivo": "arcano-sigilo-louco--v02--256.webp",
+          "bytes": 7972
+        },
+        {
+          "arquivo": "arcano-sigilo-louco--v02--128.webp",
+          "bytes": 3952
+        },
+        {
+          "arquivo": "arcano-sigilo-louco--v02--64.webp",
+          "bytes": 1718
+        }
+      ],
+      "segundos_pos": 14.0,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 13003,
+      "passos": null,
+      "segundos": 10.7,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "ilhas_removidas": 0,
+      "arquivos": [
+        {
+          "arquivo": "arcano-sigilo-louco--v03--1024.png",
+          "bytes": 247099
+        },
+        {
+          "arquivo": "arcano-sigilo-louco--v03--1024.webp",
+          "bytes": 55970
+        },
+        {
+          "arquivo": "arcano-sigilo-louco--v03--512.webp",
+          "bytes": 19366
+        },
+        {
+          "arquivo": "arcano-sigilo-louco--v03--256.webp",
+          "bytes": 8416
+        },
+        {
+          "arquivo": "arcano-sigilo-louco--v03--128.webp",
+          "bytes": 4020
+        },
+        {
+          "arquivo": "arcano-sigilo-louco--v03--64.webp",
+          "bytes": 1664
+        }
+      ],
+      "segundos_pos": 13.8,
+      "avisos": []
+    }
+  ]
+}
