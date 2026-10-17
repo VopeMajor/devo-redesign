@@ -1,0 +1,378 @@
+{
+  "pedido": "balao-ultimo-suspiro",
+  "titulo": "Último Suspiro",
+  "tipo": "balao",
+  "tamanho_final": 1536,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 8031,
+      "passos": null,
+      "segundos": 11.5,
+      "neuronios_estimados": 78,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "balao-ultimo-suspiro--v01--1535.png",
+          "bytes": 501217
+        },
+        {
+          "arquivo": "balao-ultimo-suspiro--v01--1535.webp",
+          "bytes": 68108
+        },
+        {
+          "arquivo": "balao-ultimo-suspiro--v01--1024.webp",
+          "bytes": 32630
+        },
+        {
+          "arquivo": "balao-ultimo-suspiro--v01--768.webp",
+          "bytes": 21264
+        },
+        {
+          "arquivo": "balao-ultimo-suspiro--v01--512.webp",
+          "bytes": 11744
+        },
+        {
+          "arquivo": "balao-ultimo-suspiro--v01--256.webp",
+          "bytes": 4344
+        }
+      ],
+      "balao": {
+        "tamanho_px": [
+          1535,
+          410
+        ],
+        "nove_fatias": {
+          "top": 49,
+          "right": 128,
+          "bottom": 63,
+          "left": 135,
+          "css": "border-image: url(...) 49 128 63 135 fill / auto; border-image-repeat: stretch;",
+          "obs": "medidas em px do original; nos derivados multiplique por largura/W"
+        },
+        "kit": {
+          "corpo": {
+            "altura_px": 372,
+            "topo_no_original": 16,
+            "fatias": {
+              "top": 33,
+              "bottom": 41,
+              "left": 0,
+              "right": 0
+            },
+            "obs": "uniforme na horizontal; estique livre. Centro liso (texto)."
+          },
+          "ponta_esq": {
+            "largura_px": 181,
+            "sobreposicao_px": 46
+          },
+          "ponta_dir": {
+            "largura_px": 174,
+            "sobreposicao_px": 46
+          },
+          "texto": {
+            "x0": 135,
+            "x1": 1407,
+            "y0": 49,
+            "y1": 347
+          }
+        },
+        "arquivos_kit": [
+          "balao-ultimo-suspiro--v01--kit-corpo--1024.webp",
+          "balao-ultimo-suspiro--v01--kit-corpo--768.webp",
+          "balao-ultimo-suspiro--v01--kit-corpo--512.webp",
+          "balao-ultimo-suspiro--v01--kit-corpo--256.webp",
+          "balao-ultimo-suspiro--v01--kit-ponta-esq--1024.webp",
+          "balao-ultimo-suspiro--v01--kit-ponta-esq--768.webp",
+          "balao-ultimo-suspiro--v01--kit-ponta-esq--512.webp",
+          "balao-ultimo-suspiro--v01--kit-ponta-esq--256.webp",
+          "balao-ultimo-suspiro--v01--kit-ponta-dir--1024.webp",
+          "balao-ultimo-suspiro--v01--kit-ponta-dir--768.webp",
+          "balao-ultimo-suspiro--v01--kit-ponta-dir--512.webp",
+          "balao-ultimo-suspiro--v01--kit-ponta-dir--256.webp"
+        ]
+      },
+      "segundos_pos": 36.0,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 8032,
+      "passos": null,
+      "segundos": 13.6,
+      "neuronios_estimados": 78,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "balao-ultimo-suspiro--v02--1535.png",
+          "bytes": 438366
+        },
+        {
+          "arquivo": "balao-ultimo-suspiro--v02--1535.webp",
+          "bytes": 64318
+        },
+        {
+          "arquivo": "balao-ultimo-suspiro--v02--1024.webp",
+          "bytes": 32742
+        },
+        {
+          "arquivo": "balao-ultimo-suspiro--v02--768.webp",
+          "bytes": 21270
+        },
+        {
+          "arquivo": "balao-ultimo-suspiro--v02--512.webp",
+          "bytes": 12050
+        },
+        {
+          "arquivo": "balao-ultimo-suspiro--v02--256.webp",
+          "bytes": 4706
+        }
+      ],
+      "balao": {
+        "tamanho_px": [
+          1535,
+          405
+        ],
+        "nove_fatias": {
+          "top": 94,
+          "right": 230,
+          "bottom": 93,
+          "left": 160,
+          "css": "border-image: url(...) 94 230 93 160 fill / auto; border-image-repeat: stretch;",
+          "obs": "medidas em px do original; nos derivados multiplique por largura/W"
+        },
+        "kit": {
+          "corpo": {
+            "altura_px": 292,
+            "topo_no_original": 56,
+            "fatias": {
+              "top": 38,
+              "bottom": 36,
+              "left": 0,
+              "right": 0
+            },
+            "obs": "uniforme na horizontal; estique livre. Centro liso (texto)."
+          },
+          "ponta_esq": {
+            "largura_px": 206,
+            "sobreposicao_px": 46
+          },
+          "ponta_dir": {
+            "largura_px": 276,
+            "sobreposicao_px": 46
+          },
+          "texto": {
+            "x0": 160,
+            "x1": 1305,
+            "y0": 94,
+            "y1": 312
+          }
+        },
+        "arquivos_kit": [
+          "balao-ultimo-suspiro--v02--kit-corpo--1024.webp",
+          "balao-ultimo-suspiro--v02--kit-corpo--768.webp",
+          "balao-ultimo-suspiro--v02--kit-corpo--512.webp",
+          "balao-ultimo-suspiro--v02--kit-corpo--256.webp",
+          "balao-ultimo-suspiro--v02--kit-ponta-esq--1024.webp",
+          "balao-ultimo-suspiro--v02--kit-ponta-esq--768.webp",
+          "balao-ultimo-suspiro--v02--kit-ponta-esq--512.webp",
+          "balao-ultimo-suspiro--v02--kit-ponta-esq--256.webp",
+          "balao-ultimo-suspiro--v02--kit-ponta-dir--1024.webp",
+          "balao-ultimo-suspiro--v02--kit-ponta-dir--768.webp",
+          "balao-ultimo-suspiro--v02--kit-ponta-dir--512.webp",
+          "balao-ultimo-suspiro--v02--kit-ponta-dir--256.webp"
+        ]
+      },
+      "segundos_pos": 31.3,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 8033,
+      "passos": null,
+      "segundos": 17.5,
+      "neuronios_estimados": 78,
+      "fundo": "rembg:birefnet-general",
+      "ilhas_removidas": 1,
+      "arquivos": [
+        {
+          "arquivo": "balao-ultimo-suspiro--v03--1535.png",
+          "bytes": 493468
+        },
+        {
+          "arquivo": "balao-ultimo-suspiro--v03--1535.webp",
+          "bytes": 73422
+        },
+        {
+          "arquivo": "balao-ultimo-suspiro--v03--1024.webp",
+          "bytes": 34078
+        },
+        {
+          "arquivo": "balao-ultimo-suspiro--v03--768.webp",
+          "bytes": 22548
+        },
+        {
+          "arquivo": "balao-ultimo-suspiro--v03--512.webp",
+          "bytes": 12460
+        },
+        {
+          "arquivo": "balao-ultimo-suspiro--v03--256.webp",
+          "bytes": 4826
+        }
+      ],
+      "balao": {
+        "tamanho_px": [
+          1535,
+          388
+        ],
+        "nove_fatias": {
+          "top": 69,
+          "right": 209,
+          "bottom": 70,
+          "left": 170,
+          "css": "border-image: url(...) 69 209 70 170 fill / auto; border-image-repeat: stretch;",
+          "obs": "medidas em px do original; nos derivados multiplique por largura/W"
+        },
+        "kit": {
+          "corpo": {
+            "altura_px": 350,
+            "topo_no_original": 18,
+            "fatias": {
+              "top": 51,
+              "bottom": 50,
+              "left": 0,
+              "right": 0
+            },
+            "obs": "uniforme na horizontal; estique livre. Centro liso (texto)."
+          },
+          "ponta_esq": {
+            "largura_px": 216,
+            "sobreposicao_px": 46
+          },
+          "ponta_dir": {
+            "largura_px": 255,
+            "sobreposicao_px": 46
+          },
+          "texto": {
+            "x0": 170,
+            "x1": 1326,
+            "y0": 69,
+            "y1": 318
+          }
+        },
+        "arquivos_kit": [
+          "balao-ultimo-suspiro--v03--kit-corpo--1024.webp",
+          "balao-ultimo-suspiro--v03--kit-corpo--768.webp",
+          "balao-ultimo-suspiro--v03--kit-corpo--512.webp",
+          "balao-ultimo-suspiro--v03--kit-corpo--256.webp",
+          "balao-ultimo-suspiro--v03--kit-ponta-esq--1024.webp",
+          "balao-ultimo-suspiro--v03--kit-ponta-esq--768.webp",
+          "balao-ultimo-suspiro--v03--kit-ponta-esq--512.webp",
+          "balao-ultimo-suspiro--v03--kit-ponta-esq--256.webp",
+          "balao-ultimo-suspiro--v03--kit-ponta-dir--1024.webp",
+          "balao-ultimo-suspiro--v03--kit-ponta-dir--768.webp",
+          "balao-ultimo-suspiro--v03--kit-ponta-dir--512.webp",
+          "balao-ultimo-suspiro--v03--kit-ponta-dir--256.webp"
+        ]
+      },
+      "segundos_pos": 31.3,
+      "avisos": []
+    },
+    {
+      "nome": "v04",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 8034,
+      "passos": null,
+      "segundos": 15.6,
+      "neuronios_estimados": 78,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "balao-ultimo-suspiro--v04--1535.png",
+          "bytes": 399189
+        },
+        {
+          "arquivo": "balao-ultimo-suspiro--v04--1535.webp",
+          "bytes": 52532
+        },
+        {
+          "arquivo": "balao-ultimo-suspiro--v04--1024.webp",
+          "bytes": 24326
+        },
+        {
+          "arquivo": "balao-ultimo-suspiro--v04--768.webp",
+          "bytes": 17564
+        },
+        {
+          "arquivo": "balao-ultimo-suspiro--v04--512.webp",
+          "bytes": 10028
+        },
+        {
+          "arquivo": "balao-ultimo-suspiro--v04--256.webp",
+          "bytes": 4140
+        }
+      ],
+      "balao": {
+        "tamanho_px": [
+          1535,
+          408
+        ],
+        "nove_fatias": {
+          "top": 70,
+          "right": 145,
+          "bottom": 66,
+          "left": 138,
+          "css": "border-image: url(...) 70 145 66 138 fill / auto; border-image-repeat: stretch;",
+          "obs": "medidas em px do original; nos derivados multiplique por largura/W"
+        },
+        "kit": {
+          "corpo": {
+            "altura_px": 356,
+            "topo_no_original": 28,
+            "fatias": {
+              "top": 42,
+              "bottom": 42,
+              "left": 0,
+              "right": 0
+            },
+            "obs": "uniforme na horizontal; estique livre. Centro liso (texto)."
+          },
+          "ponta_esq": {
+            "largura_px": 184,
+            "sobreposicao_px": 46
+          },
+          "ponta_dir": {
+            "largura_px": 191,
+            "sobreposicao_px": 46
+          },
+          "texto": {
+            "x0": 138,
+            "x1": 1390,
+            "y0": 70,
+            "y1": 342
+          }
+        },
+        "arquivos_kit": [
+          "balao-ultimo-suspiro--v04--kit-corpo--1024.webp",
+          "balao-ultimo-suspiro--v04--kit-corpo--768.webp",
+          "balao-ultimo-suspiro--v04--kit-corpo--512.webp",
+          "balao-ultimo-suspiro--v04--kit-corpo--256.webp",
+          "balao-ultimo-suspiro--v04--kit-ponta-esq--1024.webp",
+          "balao-ultimo-suspiro--v04--kit-ponta-esq--768.webp",
+          "balao-ultimo-suspiro--v04--kit-ponta-esq--512.webp",
+          "balao-ultimo-suspiro--v04--kit-ponta-esq--256.webp",
+          "balao-ultimo-suspiro--v04--kit-ponta-dir--1024.webp",
+          "balao-ultimo-suspiro--v04--kit-ponta-dir--768.webp",
+          "balao-ultimo-suspiro--v04--kit-ponta-dir--512.webp",
+          "balao-ultimo-suspiro--v04--kit-ponta-dir--256.webp"
+        ]
+      },
+      "segundos_pos": 29.9,
+      "avisos": []
+    }
+  ]
+}

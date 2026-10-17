@@ -1,0 +1,12 @@
+[balao-ultimo-suspiro] v01: @cf/black-forest-labs/flux-2-klein-4b seed=8031 1536x512 passos=None (~78 neurônios)
+    ok em 11.5s, 1536x512
+[balao-ultimo-suspiro] v02: @cf/black-forest-labs/flux-2-klein-4b seed=8032 1536x512 passos=None (~78 neurônios)
+    ok em 13.6s, 1536x512
+[balao-ultimo-suspiro] v03: @cf/black-forest-labs/flux-2-klein-4b seed=8033 1536x512 passos=None (~78 neurônios)
+    ok em 17.5s, 1536x512
+[balao-ultimo-suspiro] v04: @cf/black-forest-labs/flux-2-klein-4b seed=8034 1536x512 passos=None (~78 neurônios)
+    ok em 15.6s, 1536x512
+[balao-ultimo-suspiro] v01: rembg:birefnet-general; sem avisos
+[balao-ultimo-suspiro] v02: rembg:birefnet-general; sem avisos
+[balao-ultimo-suspiro] v03: rembg:birefnet-general; sem avisos
+[balao-ultimo-suspiro] v04: rembg:birefnet-general; sem avisos
