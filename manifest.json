@@ -1,0 +1,120 @@
+{
+  "pedido": "emblema-pena-coruja",
+  "titulo": "Pena de Prata",
+  "tipo": "emblema",
+  "tamanho_final": 1024,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 7091,
+      "passos": null,
+      "segundos": 17.2,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "emblema-pena-coruja--v01--1024.png",
+          "bytes": 343179
+        },
+        {
+          "arquivo": "emblema-pena-coruja--v01--1024.webp",
+          "bytes": 67338
+        },
+        {
+          "arquivo": "emblema-pena-coruja--v01--512.webp",
+          "bytes": 23910
+        },
+        {
+          "arquivo": "emblema-pena-coruja--v01--256.webp",
+          "bytes": 9744
+        },
+        {
+          "arquivo": "emblema-pena-coruja--v01--96.webp",
+          "bytes": 2546
+        },
+        {
+          "arquivo": "emblema-pena-coruja--v01--48.webp",
+          "bytes": 1084
+        }
+      ],
+      "segundos_pos": 29.2,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 7092,
+      "passos": null,
+      "segundos": 24.1,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "emblema-pena-coruja--v02--1024.png",
+          "bytes": 364105
+        },
+        {
+          "arquivo": "emblema-pena-coruja--v02--1024.webp",
+          "bytes": 79678
+        },
+        {
+          "arquivo": "emblema-pena-coruja--v02--512.webp",
+          "bytes": 26840
+        },
+        {
+          "arquivo": "emblema-pena-coruja--v02--256.webp",
+          "bytes": 10632
+        },
+        {
+          "arquivo": "emblema-pena-coruja--v02--96.webp",
+          "bytes": 2830
+        },
+        {
+          "arquivo": "emblema-pena-coruja--v02--48.webp",
+          "bytes": 1226
+        }
+      ],
+      "segundos_pos": 25.0,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 7093,
+      "passos": null,
+      "segundos": 18.7,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "emblema-pena-coruja--v03--1024.png",
+          "bytes": 328182
+        },
+        {
+          "arquivo": "emblema-pena-coruja--v03--1024.webp",
+          "bytes": 66132
+        },
+        {
+          "arquivo": "emblema-pena-coruja--v03--512.webp",
+          "bytes": 23758
+        },
+        {
+          "arquivo": "emblema-pena-coruja--v03--256.webp",
+          "bytes": 9614
+        },
+        {
+          "arquivo": "emblema-pena-coruja--v03--96.webp",
+          "bytes": 2680
+        },
+        {
+          "arquivo": "emblema-pena-coruja--v03--48.webp",
+          "bytes": 1134
+        }
+      ],
+      "segundos_pos": 24.3,
+      "avisos": []
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+[emblema-pena-coruja] v01: @cf/black-forest-labs/flux-2-klein-4b seed=7091 1024x1024 passos=None (~104 neurônios)
+    ok em 17.2s, 1024x1024
+[emblema-pena-coruja] v02: @cf/black-forest-labs/flux-2-klein-4b seed=7092 1024x1024 passos=None (~104 neurônios)
+    ok em 24.1s, 1024x1024
+[emblema-pena-coruja] v03: @cf/black-forest-labs/flux-2-klein-4b seed=7093 1024x1024 passos=None (~104 neurônios)
+    ok em 18.7s, 1024x1024
+[emblema-pena-coruja] v01: rembg:birefnet-general; sem avisos
+[emblema-pena-coruja] v02: rembg:birefnet-general; sem avisos
+[emblema-pena-coruja] v03: rembg:birefnet-general; sem avisos
