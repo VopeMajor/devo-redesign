@@ -1,0 +1,9 @@
+[arcano-enamorados] v01: @cf/black-forest-labs/flux-2-klein-9b seed=12061 1024x1536 passos=None (~1,455 neurônios)
+    ok em 3.8s, 1024x1536
+[arcano-enamorados] v02: @cf/black-forest-labs/flux-2-klein-9b seed=12062 1024x1536 passos=None (~1,455 neurônios)
+    ok em 3.7s, 1024x1536
+[arcano-enamorados] v03: @cf/black-forest-labs/flux-2-klein-9b seed=12063 1024x1536 passos=None (~1,455 neurônios)
+    ok em 3.5s, 1024x1536
+[arcano-enamorados] v01: rembg:birefnet-general; sem avisos
+[arcano-enamorados] v02: rembg:birefnet-general; sem avisos
+[arcano-enamorados] v03: rembg:birefnet-general; sem avisos

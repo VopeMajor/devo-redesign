@@ -1,0 +1,55 @@
+{
+  "id": "arcano-enamorados",
+  "titulo": "Arcano — enamorados (figura)",
+  "tipo": "ilustracao",
+  "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+  "prompt": "Dark fantasy character design concept art, painted, soft painterly render, highly detailed, isolated on a plain flat light gray background. A single tall, regal and ethereal personification of a tarot Major Arcana, an original otherworldly divine being with slightly elongated graceful proportions, ornate symbolic headdress or halo, layered flowing fabrics and ribbons, ritual jewelry of faded silver, more deity than human, standing perfectly still in a front view, full body from head to feet, the whole figure fills about 85 percent of the image height, feet resting near the bottom edge on nothing, strong elegant silhouette. Muted palette of abyss black, deep blood wine, fog stone gray and faded silver, with ONE accent color: soft rose. Soft studio key light from the upper left, gentle cool rim light, no cast shadow. No text, no letters, no card frame, no background, no other characters. The Lovers: a single ethereal androgynous figure with two faces looking in opposite directions joined at the back of the head, intertwined arms, wrapped in one long rose-tinted silk ribbon that binds both halves, small feathered wings at the back, a winged heart floating above, one hand offering an apple.",
+  "negative": "text, letters, watermark, signature, cropped, cut off feet, background scenery, multiple figures, cartoon, chibi, neon, saturated colors",
+  "largura": 1024,
+  "altura": 1536,
+  "variacoes": [
+    {
+      "seed": 12061,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "passos": null,
+      "largura": 1024,
+      "altura": 1536,
+      "prompt_extra": "",
+      "n": 1
+    },
+    {
+      "seed": 12062,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "passos": null,
+      "largura": 1024,
+      "altura": 1536,
+      "prompt_extra": "",
+      "n": 2
+    },
+    {
+      "seed": 12063,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "passos": null,
+      "largura": 1024,
+      "altura": 1536,
+      "prompt_extra": "",
+      "n": 3
+    }
+  ],
+  "pos": {
+    "remover_fundo": true,
+    "tamanho_final": 1536,
+    "margem": 0.03,
+    "derivados": [
+      1024,
+      768,
+      512
+    ],
+    "modelo_fundo": "birefnet-general",
+    "fundo": "liso",
+    "camadas": []
+  },
+  "passos": null,
+  "guidance": null,
+  "referencias": []
+}

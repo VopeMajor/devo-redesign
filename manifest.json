@@ -1,0 +1,108 @@
+{
+  "pedido": "arcano-enamorados",
+  "titulo": "Arcano — enamorados (figura)",
+  "tipo": "ilustracao",
+  "tamanho_final": 1536,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 12061,
+      "passos": null,
+      "segundos": 3.8,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "arcano-enamorados--v01--1536.png",
+          "bytes": 1241512
+        },
+        {
+          "arquivo": "arcano-enamorados--v01--1536.webp",
+          "bytes": 255408
+        },
+        {
+          "arquivo": "arcano-enamorados--v01--1024.webp",
+          "bytes": 116258
+        },
+        {
+          "arquivo": "arcano-enamorados--v01--768.webp",
+          "bytes": 77182
+        },
+        {
+          "arquivo": "arcano-enamorados--v01--512.webp",
+          "bytes": 43790
+        }
+      ],
+      "segundos_pos": 36.9,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 12062,
+      "passos": null,
+      "segundos": 3.7,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "arcano-enamorados--v02--1536.png",
+          "bytes": 1188396
+        },
+        {
+          "arquivo": "arcano-enamorados--v02--1536.webp",
+          "bytes": 239574
+        },
+        {
+          "arquivo": "arcano-enamorados--v02--1024.webp",
+          "bytes": 113578
+        },
+        {
+          "arquivo": "arcano-enamorados--v02--768.webp",
+          "bytes": 74888
+        },
+        {
+          "arquivo": "arcano-enamorados--v02--512.webp",
+          "bytes": 42258
+        }
+      ],
+      "segundos_pos": 32.9,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 12063,
+      "passos": null,
+      "segundos": 3.5,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "arcano-enamorados--v03--1536.png",
+          "bytes": 1187637
+        },
+        {
+          "arquivo": "arcano-enamorados--v03--1536.webp",
+          "bytes": 237882
+        },
+        {
+          "arquivo": "arcano-enamorados--v03--1024.webp",
+          "bytes": 113258
+        },
+        {
+          "arquivo": "arcano-enamorados--v03--768.webp",
+          "bytes": 74324
+        },
+        {
+          "arquivo": "arcano-enamorados--v03--512.webp",
+          "bytes": 42158
+        }
+      ],
+      "segundos_pos": 31.4,
+      "avisos": []
+    }
+  ]
+}
