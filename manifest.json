@@ -1,0 +1,121 @@
+{
+  "pedido": "poco-lixo-meia",
+  "titulo": "Poço — lixo-meia",
+  "tipo": "emblema",
+  "tamanho_final": 1024,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 11141,
+      "passos": null,
+      "segundos": 20.7,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "ilhas_removidas": 1,
+      "arquivos": [
+        {
+          "arquivo": "poco-lixo-meia--v01--1024.png",
+          "bytes": 629793
+        },
+        {
+          "arquivo": "poco-lixo-meia--v01--1024.webp",
+          "bytes": 94060
+        },
+        {
+          "arquivo": "poco-lixo-meia--v01--512.webp",
+          "bytes": 29400
+        },
+        {
+          "arquivo": "poco-lixo-meia--v01--256.webp",
+          "bytes": 11724
+        },
+        {
+          "arquivo": "poco-lixo-meia--v01--128.webp",
+          "bytes": 5426
+        },
+        {
+          "arquivo": "poco-lixo-meia--v01--64.webp",
+          "bytes": 2152
+        }
+      ],
+      "segundos_pos": 34.7,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 11142,
+      "passos": null,
+      "segundos": 13.2,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "poco-lixo-meia--v02--1024.png",
+          "bytes": 509059
+        },
+        {
+          "arquivo": "poco-lixo-meia--v02--1024.webp",
+          "bytes": 76364
+        },
+        {
+          "arquivo": "poco-lixo-meia--v02--512.webp",
+          "bytes": 23836
+        },
+        {
+          "arquivo": "poco-lixo-meia--v02--256.webp",
+          "bytes": 9584
+        },
+        {
+          "arquivo": "poco-lixo-meia--v02--128.webp",
+          "bytes": 4640
+        },
+        {
+          "arquivo": "poco-lixo-meia--v02--64.webp",
+          "bytes": 1972
+        }
+      ],
+      "segundos_pos": 29.5,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 11143,
+      "passos": null,
+      "segundos": 14.8,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "poco-lixo-meia--v03--1024.png",
+          "bytes": 713291
+        },
+        {
+          "arquivo": "poco-lixo-meia--v03--1024.webp",
+          "bytes": 117178
+        },
+        {
+          "arquivo": "poco-lixo-meia--v03--512.webp",
+          "bytes": 36378
+        },
+        {
+          "arquivo": "poco-lixo-meia--v03--256.webp",
+          "bytes": 13530
+        },
+        {
+          "arquivo": "poco-lixo-meia--v03--128.webp",
+          "bytes": 5584
+        },
+        {
+          "arquivo": "poco-lixo-meia--v03--64.webp",
+          "bytes": 2270
+        }
+      ],
+      "segundos_pos": 29.4,
+      "avisos": []
+    }
+  ]
+}
