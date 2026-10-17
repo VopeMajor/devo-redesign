@@ -1,0 +1,9 @@
+[cal-natal] v01: @cf/black-forest-labs/flux-2-klein-9b seed=10501 1024x640 passos=None (~1,364 neurônios)
+    ok em 1.4s, 1024x640
+[cal-natal] v02: @cf/black-forest-labs/flux-2-klein-9b seed=10502 1024x640 passos=None (~1,364 neurônios)
+    ok em 1.5s, 1024x640
+[cal-natal] v03: @cf/black-forest-labs/flux-2-klein-9b seed=10503 1024x640 passos=None (~1,364 neurônios)
+    ok em 1.9s, 1024x640
+[cal-natal] v01: mantido; sem avisos
+[cal-natal] v02: mantido; sem avisos
+[cal-natal] v03: mantido; sem avisos

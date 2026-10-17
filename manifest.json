@@ -1,0 +1,108 @@
+{
+  "pedido": "cal-natal",
+  "titulo": "Calendário — Natal",
+  "tipo": "ilustracao",
+  "tamanho_final": 1024,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 10501,
+      "passos": null,
+      "segundos": 1.4,
+      "neuronios_estimados": 1364,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "cal-natal--v01--1024.png",
+          "bytes": 1097068
+        },
+        {
+          "arquivo": "cal-natal--v01--1024.webp",
+          "bytes": 200518
+        },
+        {
+          "arquivo": "cal-natal--v01--768.webp",
+          "bytes": 66820
+        },
+        {
+          "arquivo": "cal-natal--v01--512.webp",
+          "bytes": 32772
+        },
+        {
+          "arquivo": "cal-natal--v01--256.webp",
+          "bytes": 9724
+        }
+      ],
+      "segundos_pos": 1.2,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 10502,
+      "passos": null,
+      "segundos": 1.5,
+      "neuronios_estimados": 1364,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "cal-natal--v02--1024.png",
+          "bytes": 1113584
+        },
+        {
+          "arquivo": "cal-natal--v02--1024.webp",
+          "bytes": 192902
+        },
+        {
+          "arquivo": "cal-natal--v02--768.webp",
+          "bytes": 66788
+        },
+        {
+          "arquivo": "cal-natal--v02--512.webp",
+          "bytes": 34212
+        },
+        {
+          "arquivo": "cal-natal--v02--256.webp",
+          "bytes": 10296
+        }
+      ],
+      "segundos_pos": 1.1,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 10503,
+      "passos": null,
+      "segundos": 1.9,
+      "neuronios_estimados": 1364,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "cal-natal--v03--1024.png",
+          "bytes": 1115597
+        },
+        {
+          "arquivo": "cal-natal--v03--1024.webp",
+          "bytes": 198110
+        },
+        {
+          "arquivo": "cal-natal--v03--768.webp",
+          "bytes": 65548
+        },
+        {
+          "arquivo": "cal-natal--v03--512.webp",
+          "bytes": 30570
+        },
+        {
+          "arquivo": "cal-natal--v03--256.webp",
+          "bytes": 9820
+        }
+      ],
+      "segundos_pos": 1.1,
+      "avisos": []
+    }
+  ]
+}

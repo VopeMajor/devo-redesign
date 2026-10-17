@@ -1,0 +1,50 @@
+{
+  "pedido": "cal-natal",
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 10501,
+      "passos": null,
+      "largura": 1024,
+      "altura": 640,
+      "neuronios_estimados": 1364,
+      "ok": true,
+      "segundos": 1.4,
+      "tamanho_real": [
+        1024,
+        640
+      ]
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 10502,
+      "passos": null,
+      "largura": 1024,
+      "altura": 640,
+      "neuronios_estimados": 1364,
+      "ok": true,
+      "segundos": 1.5,
+      "tamanho_real": [
+        1024,
+        640
+      ]
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 10503,
+      "passos": null,
+      "largura": 1024,
+      "altura": 640,
+      "neuronios_estimados": 1364,
+      "ok": true,
+      "segundos": 1.9,
+      "tamanho_real": [
+        1024,
+        640
+      ]
+    }
+  ]
+}
