@@ -1,0 +1,9 @@
+[arcano-sigilo-sol] v01: @cf/black-forest-labs/flux-2-klein-4b seed=13191 1024x1024 passos=None (~104 neurônios)
+    ok em 7.9s, 1024x1024
+[arcano-sigilo-sol] v02: @cf/black-forest-labs/flux-2-klein-4b seed=13192 1024x1024 passos=None (~104 neurônios)
+    ok em 9.5s, 1024x1024
+[arcano-sigilo-sol] v03: @cf/black-forest-labs/flux-2-klein-4b seed=13193 1024x1024 passos=None (~104 neurônios)
+    ok em 10.8s, 1024x1024
+[arcano-sigilo-sol] v01: rembg:birefnet-general; sem avisos
+[arcano-sigilo-sol] v02: rembg:birefnet-general; sem avisos
+[arcano-sigilo-sol] v03: rembg:birefnet-general; sem avisos

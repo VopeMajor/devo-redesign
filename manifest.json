@@ -1,0 +1,120 @@
+{
+  "pedido": "arcano-sigilo-sol",
+  "titulo": "Arcano — sol (sigilo)",
+  "tipo": "emblema",
+  "tamanho_final": 1024,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 13191,
+      "passos": null,
+      "segundos": 7.9,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "arcano-sigilo-sol--v01--1024.png",
+          "bytes": 352829
+        },
+        {
+          "arquivo": "arcano-sigilo-sol--v01--1024.webp",
+          "bytes": 116080
+        },
+        {
+          "arquivo": "arcano-sigilo-sol--v01--512.webp",
+          "bytes": 38970
+        },
+        {
+          "arquivo": "arcano-sigilo-sol--v01--256.webp",
+          "bytes": 16408
+        },
+        {
+          "arquivo": "arcano-sigilo-sol--v01--128.webp",
+          "bytes": 7524
+        },
+        {
+          "arquivo": "arcano-sigilo-sol--v01--64.webp",
+          "bytes": 2892
+        }
+      ],
+      "segundos_pos": 23.5,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 13192,
+      "passos": null,
+      "segundos": 9.5,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "arcano-sigilo-sol--v02--1024.png",
+          "bytes": 385858
+        },
+        {
+          "arquivo": "arcano-sigilo-sol--v02--1024.webp",
+          "bytes": 97294
+        },
+        {
+          "arquivo": "arcano-sigilo-sol--v02--512.webp",
+          "bytes": 32678
+        },
+        {
+          "arquivo": "arcano-sigilo-sol--v02--256.webp",
+          "bytes": 13998
+        },
+        {
+          "arquivo": "arcano-sigilo-sol--v02--128.webp",
+          "bytes": 6640
+        },
+        {
+          "arquivo": "arcano-sigilo-sol--v02--64.webp",
+          "bytes": 2758
+        }
+      ],
+      "segundos_pos": 19.3,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 13193,
+      "passos": null,
+      "segundos": 10.8,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "arcano-sigilo-sol--v03--1024.png",
+          "bytes": 397716
+        },
+        {
+          "arquivo": "arcano-sigilo-sol--v03--1024.webp",
+          "bytes": 92796
+        },
+        {
+          "arquivo": "arcano-sigilo-sol--v03--512.webp",
+          "bytes": 30846
+        },
+        {
+          "arquivo": "arcano-sigilo-sol--v03--256.webp",
+          "bytes": 13382
+        },
+        {
+          "arquivo": "arcano-sigilo-sol--v03--128.webp",
+          "bytes": 6314
+        },
+        {
+          "arquivo": "arcano-sigilo-sol--v03--64.webp",
+          "bytes": 2550
+        }
+      ],
+      "segundos_pos": 14.6,
+      "avisos": []
+    }
+  ]
+}
