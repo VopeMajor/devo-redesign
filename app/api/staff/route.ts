@@ -40,6 +40,10 @@ export const dynamic = 'force-dynamic'
 function fail(err: unknown) {
   if (err instanceof RecordError) return Response.json({ ok: false, error: err.message }, { status: err.status })
   console.error('[staff]', err)
+  const code = (err as { code?: string } | null)?.code
+  if (code === '42703' || code === '42P01' || code === '42883') {
+    return Response.json({ ok: false, error: 'O banco de dados está desatualizado. Peça ao dono para rodar scripts/devo-banco-novo.sql.', code: 'banco_desatualizado' }, { status: 503 })
+  }
   return Response.json({ ok: false, error: 'Falha no servidor da equipe.' }, { status: 500 })
 }
 

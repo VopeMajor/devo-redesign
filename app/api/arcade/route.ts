@@ -27,6 +27,10 @@ const UUID_RE = /^[0-9a-f-]{36}$/i
 function fail(err: unknown) {
   if (err instanceof ArcadeError) return Response.json({ ok: false, error: err.message }, { status: err.status })
   console.error('[arcade]', err)
+  const code = (err as { code?: string } | null)?.code
+  if (code === '42703' || code === '42P01' || code === '42883') {
+    return Response.json({ ok: false, error: 'O banco de dados está desatualizado. Peça ao dono para rodar scripts/devo-banco-novo.sql.', code: 'banco_desatualizado' }, { status: 503 })
+  }
   return Response.json({ ok: false, error: 'Falha no servidor da Sala de Jogos.' }, { status: 500 })
 }
 
