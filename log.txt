@@ -1,0 +1,9 @@
+[arcano-fortuna-tarot] v01: @cf/black-forest-labs/flux-2-klein-9b seed=91111 1024x1536 passos=None (~1,455 neurônios)
+    ok em 3.2s, 1024x1536
+[arcano-fortuna-tarot] v02: @cf/black-forest-labs/flux-2-klein-9b seed=91112 1024x1536 passos=None (~1,455 neurônios)
+    ok em 3.1s, 1024x1536
+[arcano-fortuna-tarot] v03: @cf/black-forest-labs/flux-2-klein-9b seed=91113 1024x1536 passos=None (~1,455 neurônios)
+    ok em 3.1s, 1024x1536
+[arcano-fortuna-tarot] v01: rembg:birefnet-general; sem avisos
+[arcano-fortuna-tarot] v02: rembg:birefnet-general; sem avisos
+[arcano-fortuna-tarot] v03: rembg:birefnet-general; sem avisos
