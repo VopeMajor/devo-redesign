@@ -53,7 +53,20 @@ async function device(kind = 'phone') {
  * Cenas com fala de NPC: além de 390×844, repete o quadro numa tela alta (390×900) e numa baixa (360×740)
  * para provar que o retrato fica ancorado na caixa de fala em qualquer altura (DIRECAO-3 §9, NpcAnchor).
  */
-const NPC_VARIANT = /^(03-prologo-(0[2-9]|1\d)|04-tutorial-0[1-6]|26-coruja-0[13]|27-javali-[01]|34-javali-[01]|salao-0[2-5]|t10-galo-abertura|t11b-galo-fala|t23-andar-cena|poco-0[5-9]|03-melissa-3|n-1[0-7]|n-2[06]|n-3[24]|corp-0[34])/
+// Só o PRIMEIRO quadro de cada cena com retrato ancorado (NpcAnchor): as alturas extras custavam ~40 min no
+// roteiro completo quando valiam para todos os passos.
+const NPC_VARIANT = new Set([
+  '04-tutorial-00', // tutorial (Rato/Herdeiro)
+  '03-melissa-3-em-cena', // prólogo (Melissa)
+  '26-coruja-01', // Coruja
+  '27-javali-0', // Javali (mesa)
+  'salao-02-herdeiro-inicio', // Herdeiro (parapeito)
+  't10-galo-abertura', // Galo nas Torres
+  'n-10-galo-abertura', // Galo no motor de diálogo (Narrativa)
+  'n-32-melissa-holograma', // holograma (Narrativa)
+  'corp-03-holograma-melissa', // holograma (Corporações)
+  'poco-07-neblina-figura', // encapuzado do Poço
+])
 const VARIANT_SIZES = [
   [390, 900],
   [360, 740],
@@ -67,15 +80,22 @@ async function shot(page, name, note = '') {
     manifest.errors.push({ step: name, error: String(e).slice(0, 300) })
   }
   const vp = page.viewportSize()
-  if (!NPC_VARIANT.test(name) || !vp || vp.width !== 390 || vp.height !== 844) return
+  if (!NPC_VARIANT.has(name) || !vp || vp.width !== 390 || vp.height !== 844) return
   for (const [width, height] of VARIANT_SIZES) {
+    const nome = `${name}@${width}x${height}`
     try {
       await page.setViewportSize({ width, height })
-      await wait(450)
-      await page.screenshot({ path: `${OUT}/${name}@${width}x${height}.jpg`, type: 'jpeg', quality: 82 })
-      manifest.shots.push({ name: `${name}@${width}x${height}`, note, url: page.url() })
+      await wait(600)
+      // animações CSS paradas no quadro (o redimensionamento repinta a cena inteira no WebGL/raster por software)
+      await page
+        .screenshot({ path: `${OUT}/${nome}.jpg`, type: 'jpeg', quality: 82, animations: 'disabled', timeout: 20000 })
+        .catch(async () => {
+          await wait(1500)
+          await page.screenshot({ path: `${OUT}/${nome}.jpg`, type: 'jpeg', quality: 82, animations: 'disabled', timeout: 25000 })
+        })
+      manifest.shots.push({ name: nome, note, url: page.url() })
     } catch (e) {
-      manifest.errors.push({ step: `${name}@${width}x${height}`, error: String(e).slice(0, 300) })
+      manifest.errors.push({ step: nome, error: String(e).slice(0, 300) })
     }
   }
   await page.setViewportSize(vp).catch(() => {})
@@ -1897,18 +1917,35 @@ if (want('narrativa')) {
   // A cena do motor é a última <section role=dialog> (outras telas podem ter diálogos ocultos antes).
   const dlg = (page) => page.locator('section[data-cena]').last()
   // textContent (não innerText): a legenda de som é caixa-alta só no CSS.
-  const textoDlg = (page) => dlg(page).evaluate((el) => el.textContent ?? '', null, { timeout: 2000 }).catch(() => '')
+  // Só o texto da cena: sem o <style> embutido (keyframes cd-in/cd-out) e com espaços normalizados (inclusive
+  // o espaço não separável), para a busca por trecho não falhar por formatação.
+  const textoDlg = (page) =>
+    dlg(page)
+      .evaluate(
+        (el) => {
+          const c = el.cloneNode(true)
+          c.querySelectorAll('style, script, template').forEach((n) => n.remove())
+          return (c.textContent ?? '').replace(/[\s\u00a0\u202f]+/g, ' ')
+        },
+        null,
+        { timeout: 2000 },
+      )
+      .catch(() => '')
   /** Avança a cena até o texto aparecer (por inteiro); escolhas no caminho: a primeira, ou `pick` por rótulo. */
   async function ate(page, alvo, { pick = {}, max = 400 } = {}) {
+    const visto = []
     for (let i = 0; i < max; i++) {
       const t = await textoDlg(page)
+      if (t && visto[visto.length - 1] !== t) visto.push(t)
       if (!t) {
         // Sem cena aberta: não adianta apertar teclas na home.
         await wait(500)
         if (!(await textoDlg(page))) break
         continue
       }
-      if (typeof alvo === 'string' ? t.includes(alvo) : alvo.test(t)) {
+      const bate = (x) => (typeof alvo === 'string' ? x.includes(alvo) : alvo.test(x))
+      // fala curta que passou entre duas leituras também conta (a captura mostra o passo seguinte)
+      if (bate(t) || visto.slice(-3).some(bate)) {
         await wait(1600)
         return true
       }
@@ -1927,7 +1964,7 @@ if (want('narrativa')) {
         await wait(450)
       } else await wait(300)
     }
-    manifest.errors.push({ step: 'narrativa-ate', error: `não chegou em ${alvo}; último texto: ${(await textoDlg(page)).slice(-160)}` })
+    manifest.errors.push({ step: 'narrativa-ate', error: `não chegou em ${alvo}; últimas falas: ${visto.slice(-4).map((v) => v.slice(-140)).join(' | ')}` })
     return false
   }
 

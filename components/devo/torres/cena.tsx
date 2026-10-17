@@ -209,7 +209,18 @@ export function Cena({ passos, npc, titulo, kicker, fundo = 'torre', arteFundo =
           <TorreIlustradaImg ilu={ilustracaoFundo} sizes="(max-width: 640px) 45vw, 240px" className="h-full" brilho={false} />
         </div>
       )}
-      <span aria-hidden="true" className="dv-checker-marble pointer-events-none absolute inset-x-[-40%] bottom-[-6%] h-[42%] opacity-30 [mask-image:linear-gradient(to_top,black,transparent)] [transform:perspective(520px)_rotateX(62deg)]" />
+      {/* piso xadrez em perspectiva: só gradientes (o mármore em SVG com feTurbulence, repintado sob perspectiva e
+          máscara, travava o quadro no raster por software ao mudar o tamanho da tela) */}
+      <span
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-[-40%] bottom-[-6%] h-[42%] opacity-30 [mask-image:linear-gradient(to_top,black,transparent)] [transform:perspective(520px)_rotateX(62deg)]"
+        style={{
+          backgroundColor: '#0d0d0f',
+          backgroundImage:
+            'linear-gradient(90deg, rgba(186,176,159,0.55) 1px, transparent 1px), linear-gradient(0deg, rgba(186,176,159,0.55) 1px, transparent 1px), conic-gradient(#e9e6e1 25%, transparent 0 50%, #e9e6e1 0 75%, transparent 0)',
+          backgroundSize: '48px 48px, 48px 48px, 96px 96px',
+        }}
+      />
       <span aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 mx-auto h-[70%] w-[30rem] max-w-full bg-[radial-gradient(ellipse_at_top,rgba(236,229,216,0.16),transparent_70%)]" />
 
       {/* barra superior */}
