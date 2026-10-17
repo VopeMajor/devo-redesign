@@ -1,6 +1,6 @@
 import { getCurrentPlayer } from '@/app/actions/player'
 import { RecordError } from '@/lib/devo/errors'
-import { ajustarPotencial, definirAfinidades, definirArcano, definirEstagios, estadoVirtudes, evoluirEstagio, mesaVirtudes } from '@/lib/devo/virtudes-server'
+import { ajustarPotencial, definirAfinidades, definirArcano, definirEstagios, definirTextoArcano, estadoVirtudes, evoluirEstagio, mesaVirtudes } from '@/lib/devo/virtudes-server'
 
 export const dynamic = 'force-dynamic'
 
@@ -13,6 +13,7 @@ export const dynamic = 'force-dynamic'
  * POST /api/virtudes { action: 'potencial', playerId, virtude, quantidade, motivo? } → { aplicado } (Owner)
  * POST /api/virtudes { action: 'afinidades', value, provisorio? }        (Owner)
  * POST /api/virtudes { action: 'estagios', value, provisorio? }          (Owner)
+ * POST /api/virtudes { action: 'arcano-texto', arcano, value | null, provisorio? } (Owner; null = volta ao rascunho)
  */
 
 function fail(err: unknown) {
@@ -49,6 +50,8 @@ export async function POST(req: Request) {
         return Response.json(await definirAfinidades(player.id, body.value, body.provisorio !== false))
       case 'estagios':
         return Response.json(await definirEstagios(player.id, body.value, body.provisorio !== false))
+      case 'arcano-texto':
+        return Response.json(await definirTextoArcano(player.id, body.arcano, body.value ?? null, body.provisorio !== false))
       default:
         return Response.json({ ok: false, error: 'Ação desconhecida.' }, { status: 400 })
     }

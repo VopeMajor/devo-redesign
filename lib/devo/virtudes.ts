@@ -4,6 +4,7 @@
  * rótulos). Regra do dono: "NÃO É PRECISO SE PREOCUPAR COM OS NÚMEROS… O BOT É O ÚNICO QUEM CUIDA DESSAS
  * INFORMAÇÕES" → nada de multiplicador, P.P. ou teto no payload do jogador; só direção e rótulos.
  */
+import type { ArcanoTextoCfg } from './arcanos-textos'
 import padrao from './virtudes-afinidades.json'
 
 export const VIRTUDE_KEYS = ['paus', 'copas', 'ouros', 'espadas', 'tacas', 'escudos'] as const
@@ -178,6 +179,22 @@ export function acumuloQualitativo(total: number, minimo: number, teto: number):
 /* ------------------------------------------------------------------ Payloads */
 
 export type VirtudeVista = { key: VirtudeKey; nome: string; antiga: boolean; texto: string; afinidade: Afinidade | null }
+/**
+ * Um Arcano na lista "Os vinte e dois". Trancado (não é o do jogador): SÓ key, numeral, título e a frase breve.
+ * O do jogador (e todos, para Owner/Anfitrião) traz `detalhe`. Estágios futuros do próprio Arcano vêm só com o
+ * nome (sem `linha`) para quem não é da equipe. `provisorio` só vai para o Owner.
+ */
+export type EstagioVista = { nome: string; linha?: string; estado: 'passado' | 'atual' | 'futuro' | 'aberto' }
+export type ArcanoVista = {
+  key: ArcanoKey
+  numeral: string
+  titulo: string
+  breve: string
+  proprio?: true
+  provisorio?: boolean
+  detalhe?: { descricao: string; fisiologia: string; excelente: VirtudeKey | null; deficiente: VirtudeKey | null; estagios: EstagioVista[] }
+}
+
 export type EvolucaoVista = { at: number; de: number; para: number; arcano: string | null; maisCresceu: VirtudeKey; menosCresceu: VirtudeKey }
 
 /** GET /api/virtudes (jogador). Sem números de P.P., multiplicadores, teto ou mínimo. */
@@ -193,6 +210,10 @@ export type VirtudesPayload =
       /** Para onde o esforço do Estágio tem pendido (a Virtude que mais recebeu), sem quantificar. */
       tendencia: VirtudeKey | null
       evolucoes: EvolucaoVista[]
+      /** Os 22 Arcanos, na ordem do tarô. */
+      arcanos: ArcanoVista[]
+      /** Owner/Anfitrião: todos expansíveis. */
+      verTodos: boolean
     }
 
 export type MesaJogador = {
@@ -221,6 +242,8 @@ export type VirtudesMesa = {
     estagios: EstagiosConfig
     estagiosProvisorio: boolean
     evolucao: EvolucaoConfig
+    /** Textos dos Arcanos em vigor (rascunho do código ou editado). Só vem para o Owner. */
+    arcanos?: Record<string, ArcanoTextoCfg & { editado: boolean }>
   }
 }
 

@@ -52,9 +52,14 @@ async function device(kind = 'phone') {
 /**
  * Cenas com fala de NPC: além de 390×844, repete o quadro numa tela alta (390×900) e numa baixa (360×740)
  * para provar que o retrato fica ancorado na caixa de fala em qualquer altura (DIRECAO-3 §9, NpcAnchor). O mapa
- * das Torres (t20/t25) também, para conferir placas e chips nas três alturas.
+ * das Torres (t20/t25) também, para conferir placas e chips nas três alturas. Os Arcanos das Virtudes (v30–v37)
+ * também, para conferir a lista e o painel que expande em tela estreita.
  */
+<<<<<<< HEAD
 const NPC_VARIANT = /^(03-prologo-(0[2-9]|1\d)|04-tutorial-0[1-6]|26-coruja-0[13]|27-javali-[01]|34-javali-[01]|salao-0[2-5]|t10-galo-abertura|t11b-galo-fala|t23-andar-cena|t20-mapa|t25-mapa-progresso|t21-torre-imperador|t45-torre-principal|t22-andar-ficha|t47-torre-picadeiro|poco-0[5-9]|03-melissa-3|n-1[0-7]|n-2[06]|n-3[24]|corp-0[34])/
+=======
+const NPC_VARIANT = /^(03-prologo-(0[2-9]|1\d)|04-tutorial-0[1-6]|26-coruja-0[13]|27-javali-[01]|34-javali-[01]|salao-0[2-5]|t10-galo-abertura|t11b-galo-fala|t23-andar-cena|t20-mapa|t25-mapa-progresso|poco-0[5-9]|03-melissa-3|n-1[0-7]|n-2[06]|n-3[24]|corp-0[34]|v3[0-7]-)/
+>>>>>>> origin/sys/arcanos
 const VARIANT_SIZES = [
   [390, 900],
   [360, 740],
@@ -3392,6 +3397,19 @@ if (want('virtudes')) {
     await shot(B.page, 'v10-morte-naipes', 'afinidades em palavras')
     await ir(B.page, 'Evoluções de Estágio')
     await shot(B.page, 'v11-historico-vazio')
+    // Os vinte e dois: o próprio no topo (fechado), os outros trancados com a frase breve
+    await ir(B.page, 'Os vinte e dois')
+    await shot(B.page, 'v30-arcanos-lista', 'Arcano próprio fechado; os outros trancados (nome, numeral, frase breve)')
+    await B.page.getByRole('heading', { name: /^Enforcado/ }).first().evaluate((el) => el.scrollIntoView({ block: 'start' })).catch(() => {})
+    await wait(500)
+    await shot(B.page, 'v31-arcanos-trancados', 'trancados: só nome, numeral e frase breve')
+    const meu = B.page.getByRole('button', { name: /Seu Arcano/ }).first()
+    await meu.evaluate((el) => el.scrollIntoView({ block: 'start' })).catch(() => {})
+    await tryClick(meu)
+    await wait(900)
+    await shot(B.page, 'v32-arcano-aberto', 'Arcano da Morte expandido: descrição e fisiologia')
+    await ir(B.page, 'Estágios de Evolução')
+    await shot(B.page, 'v33-arcano-estagios', 'Estágio I atual; os seguintes velados (só o nome)')
   })
   await virt({ action: 'evoluir', playerId: bid })
   await virt({ action: 'potencial', playerId: bid, virtude: 'tacas', quantidade: 12, motivo: 'captura' })
@@ -3403,6 +3421,12 @@ if (want('virtudes')) {
     await shot(B.page, 'v13-depois-potencial', 'acúmulo recomeça')
     await ir(B.page, 'Evoluções de Estágio')
     await shot(B.page, 'v14-depois-historico', 'histórico: mais cresceu / menos cresceu')
+    const meu2 = B.page.getByRole('button', { name: /Seu Arcano/ }).first()
+    await meu2.evaluate((el) => el.scrollIntoView({ block: 'start' })).catch(() => {})
+    await tryClick(meu2)
+    await wait(900)
+    await ir(B.page, 'Estágios de Evolução')
+    await shot(B.page, 'v34-arcano-estagio-ii', 'depois da Evolução: I alcançado, II atual')
     // o Record mostra o Arcano na ficha
     await openApp(B.page, 'Record')
     await wait(1500)
@@ -3446,6 +3470,20 @@ if (want('virtudes')) {
     await page.getByRole('region', { name: 'Limites por Estágio' }).first().evaluate((el) => el.scrollIntoView({ block: 'start' })).catch(() => {})
     await wait(400)
     await shot(page, 'v21-mesa-limites')
+    await page.getByRole('region', { name: 'Textos dos Arcanos' }).first().evaluate((el) => el.scrollIntoView({ block: 'start' })).catch(() => {})
+    await page.getByRole('combobox', { name: 'Arcano a editar' }).first().selectOption('morte').catch(() => {})
+    await wait(600)
+    await shot(page, 'v35-mesa-textos', 'Owner edita os textos do Arcano (provisório)')
+    await page.getByRole('button', { name: 'Gravar texto' }).first().evaluate((el) => el.scrollIntoView({ block: 'end' })).catch(() => {})
+    await wait(400)
+    await shot(page, 'v36-mesa-textos-estagios', 'Estágios e o botão de gravar')
+    // tela do jogador vista pelo Owner: todos abrem, selo "Provisório"
+    await abrirVirtudes(page)
+    await ir(page, 'Os vinte e dois')
+    await tryClick(page.getByRole('button', { name: /^0 Louco|Louco/ }).first())
+    await wait(900)
+    await ir(page, 'Os vinte e dois')
+    await shot(page, 'v37-owner-arcanos', 'Owner: todos expansíveis, com o selo de provisório')
 
     await page.route(/\/api\/virtudes$/, (r) => r.fulfill({ status: 500, contentType: 'application/json', body: '{"ok":false,"error":"As Virtudes não responderam. Tente de novo."}' }))
     await abrirVirtudes(page)
