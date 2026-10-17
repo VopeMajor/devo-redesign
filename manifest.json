@@ -1,0 +1,121 @@
+{
+  "pedido": "torre-picadeiro",
+  "titulo": "Picadeiro (o Javali)",
+  "tipo": "ilustracao",
+  "tamanho_final": 1536,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 5221,
+      "passos": null,
+      "segundos": 18.4,
+      "neuronios_estimados": 156,
+      "fundo": "rembg:birefnet-general",
+      "ilhas_removidas": 1,
+      "arquivos": [
+        {
+          "arquivo": "torre-picadeiro--v01--1536.png",
+          "bytes": 998495
+        },
+        {
+          "arquivo": "torre-picadeiro--v01--1536.webp",
+          "bytes": 164930
+        },
+        {
+          "arquivo": "torre-picadeiro--v01--1024.webp",
+          "bytes": 82644
+        },
+        {
+          "arquivo": "torre-picadeiro--v01--512.webp",
+          "bytes": 33610
+        },
+        {
+          "arquivo": "torre-picadeiro--v01--256.webp",
+          "bytes": 12674
+        },
+        {
+          "arquivo": "torre-picadeiro--v01--96.webp",
+          "bytes": 3514
+        }
+      ],
+      "segundos_pos": 33.8,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 5222,
+      "passos": null,
+      "segundos": 28.8,
+      "neuronios_estimados": 156,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "torre-picadeiro--v02--1536.png",
+          "bytes": 1105378
+        },
+        {
+          "arquivo": "torre-picadeiro--v02--1536.webp",
+          "bytes": 177346
+        },
+        {
+          "arquivo": "torre-picadeiro--v02--1024.webp",
+          "bytes": 88886
+        },
+        {
+          "arquivo": "torre-picadeiro--v02--512.webp",
+          "bytes": 35536
+        },
+        {
+          "arquivo": "torre-picadeiro--v02--256.webp",
+          "bytes": 13044
+        },
+        {
+          "arquivo": "torre-picadeiro--v02--96.webp",
+          "bytes": 3684
+        }
+      ],
+      "segundos_pos": 28.9,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 5223,
+      "passos": null,
+      "segundos": 26.5,
+      "neuronios_estimados": 156,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "torre-picadeiro--v03--1536.png",
+          "bytes": 1097362
+        },
+        {
+          "arquivo": "torre-picadeiro--v03--1536.webp",
+          "bytes": 220058
+        },
+        {
+          "arquivo": "torre-picadeiro--v03--1024.webp",
+          "bytes": 107962
+        },
+        {
+          "arquivo": "torre-picadeiro--v03--512.webp",
+          "bytes": 41470
+        },
+        {
+          "arquivo": "torre-picadeiro--v03--256.webp",
+          "bytes": 15014
+        },
+        {
+          "arquivo": "torre-picadeiro--v03--96.webp",
+          "bytes": 3680
+        }
+      ],
+      "segundos_pos": 29.7,
+      "avisos": []
+    }
+  ]
+}
