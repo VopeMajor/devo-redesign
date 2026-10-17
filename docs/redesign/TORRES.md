@@ -142,7 +142,7 @@ No topo do `conteudo.json`, `"cenario"` troca o desenho vetorial do mapa pela il
 - `"afundar"` no pedestal enterra a base da torre no topo do pedestal (unidades do mapa).
 - `"enfeites": [{ "tipo": "lanterna", "x": …, "y": … }]` põe uma lanterna acesa num pedestal que ficou vazio.
 - Hoje (arte da41f23): o Picadeiro saiu do pedestal da frente-esquerda (ficava na frente do Imperador)
-  e está no piso da praça, à frente-esquerda do portão; o pedestal vazio ganhou uma lanterna; o céu está
+  e está no piso da praça, à frente-esquerda do portão (0,36 / 0,67); o pedestal vazio ganhou uma lanterna; placas que não cabem no pé vão para acima do topo da torre; o céu está
   espelhado para a lua não ficar atrás do Imperador.
 - Se uma imagem falhar, o mapa volta sozinho para o vetorial. Torre sem pedestal usa o `"mapa"` dela.
 - As placas de nome ficam no pé de cada torre, pequenas, com um filete até a base, e o código as desloca para

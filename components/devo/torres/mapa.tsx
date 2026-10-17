@@ -77,40 +77,43 @@ export function colocarPlacas(torres: TorreEstado[], lug: Record<string, Lugar>)
     const l = lug[t.id]
     const nome = rotulo(t)
     const { w, h } = placaTam(nome, t.tipo === 'principal')
-    const cx0 = l.x
     const bx = caixaTorre(t, l)
-    const tentativas: [number, number][] = [
-      [cx0, l.y + 10 + h / 2],
-      [cx0 - w * 0.55, l.y + 10 + h / 2],
-      [cx0 + w * 0.55, l.y + 10 + h / 2],
-      [bx.x1 + 6 + w / 2, l.y - h / 2],
-      [bx.x0 - 6 - w / 2, l.y - h / 2],
-      [cx0, l.y + 34 + h / 2],
-      [cx0 - w * 0.7, l.y + 30 + h / 2],
-      [cx0 + w * 0.7, l.y + 30 + h / 2],
-      [bx.x1 + 6 + w / 2, l.y - h * 1.8],
-      [bx.x0 - 6 - w / 2, l.y - h * 1.8],
-    ]
     // margem das bordas: o mapa esmaece nos 6 % de cada lado
     const MX = MAPA_W * 0.065
     const area = (a: Caixa, b: Caixa) => Math.max(0, Math.min(a.x1, b.x1) - Math.max(a.x0, b.x0)) * Math.max(0, Math.min(a.y1, b.y1) - Math.max(a.y0, b.y0))
-    let escolhida = tentativas[0]
-    let melhor = Infinity
-    for (const [i, [cx, cy]] of tentativas.entries()) {
+    const custoDe = (c: Caixa) => caixas.reduce((acc, k) => acc + area(c, k) * 20, 0) + feitas.reduce((acc, k) => acc + area(c, k) * 40, 0)
+    const caixaEm = (cx: number, cy: number) => {
       const x = Math.min(MAPA_W - MX - w / 2, Math.max(MX + w / 2, cx))
       const y = Math.min(MAPA_H - h / 2 - 4, Math.max(h / 2 + 4, cy))
-      const c = { x0: x - w / 2, x1: x + w / 2, y0: y - h / 2, y1: y + h / 2 }
-      // custo = área sobreposta (ilustrações pesam o dobro) + uma pitada pela ordem de preferência
-      const custo = caixas.reduce((a, k) => a + area(c, k) * 2, 0) + feitas.reduce((a, k) => a + area(c, k) * 10, 0) + i * 0.5
+      return { x, y, c: { x0: x - w / 2, x1: x + w / 2, y0: y - h / 2, y1: y + h / 2 } }
+    }
+    // 1) no pé: anéis ao redor da base, preferindo logo abaixo e perto
+    let escolhida: [number, number] = [l.x, l.y + 10 + h / 2]
+    let acima = false
+    let melhor = Infinity
+    for (const d of [10, 24, 40, 60, 84, 112, 144])
+      for (const ang of [90, 70, 110, 50, 130, 20, 160, 0, 180]) {
+        const r = (ang * Math.PI) / 180
+        const { x, y, c } = caixaEm(l.x + Math.cos(r) * d * 1.3, l.y + Math.sin(r) * d + h / 2)
+        const custo = custoDe(c) + d + Math.abs(ang - 90) * 0.05
+        if (custo < melhor) {
+          melhor = custo
+          escolhida = [x, y]
+        }
+      }
+    // 2) se o pé está tomado, acima do topo (no céu), com o filete saindo do topo
+    for (const dx of [0, -w * 0.4, w * 0.4]) {
+      const { x, y, c } = caixaEm(l.x + dx, bx.y0 - 8 - h / 2)
+      const custo = custoDe(c) + 90 + Math.abs(dx) * 0.2
       if (custo < melhor) {
         melhor = custo
         escolhida = [x, y]
+        acima = true
       }
-      if (custo === i * 0.5) break
     }
     const [cx, cy] = escolhida
     feitas.push({ x0: cx - w / 2, x1: cx + w / 2, y0: cy - h / 2, y1: cy + h / 2 })
-    out[t.id] = { cx, cy, w, h, ax: l.x, ay: l.y }
+    out[t.id] = { cx, cy, w, h, ax: l.x, ay: acima ? bx.y0 + 4 : l.y }
   }
   return out
 }
