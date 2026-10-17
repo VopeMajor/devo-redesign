@@ -175,6 +175,18 @@ export function PocoResultadoView({ r, nome, onFechar }: { r: PocoResultado; nom
             </>
           )}
           <img src={`${ART}/respingo.webp`} alt="" draggable={false} className={cn('poco-respingo poco-dessatura pointer-events-none absolute left-1/2 top-[64%] w-[70%] max-w-[300px]', tier === 0 && 'opacity-50 grayscale')} />
+          {/* o balde pinga: gotas caindo do alto até a água, cada uma abrindo um anel ao tocar */}
+          {tier === 0 &&
+            [
+              { x: 48, d: 0 },
+              { x: 53, d: 520 },
+              { x: 50, d: 980 },
+            ].map((g, i) => (
+              <span key={i} aria-hidden="true" className="pointer-events-none absolute top-[18%] h-[46%]" style={{ left: `${g.x}%` }}>
+                <span className="poco-pingo absolute left-0 top-0 h-[7px] w-[5px] rounded-full" style={{ animationDelay: `${g.d}ms` } as CSSProperties} />
+                <span className="poco-anel-pingo absolute left-0 top-full h-[10px] w-[60px] rounded-[50%]" style={{ animationDelay: `${g.d}ms` } as CSSProperties} />
+              </span>
+            ))}
           <p className="dv-label absolute bottom-[24%] text-[11px] text-dv-text-2 [text-shadow:0_1px_6px_#000]">{tier === 0 ? 'Algo pinga do balde…' : tier >= 3 ? 'O poço responde' : 'O balde se abre'}</p>
           <button
             type="button"

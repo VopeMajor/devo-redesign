@@ -173,8 +173,13 @@ function CenaPintada({ longe, balde, baldeTipo, girando, ativo, moeda, brilho, a
         <div className="absolute overflow-hidden" style={{ left: `${(C.corda.x - 0.085) * 100}%`, top: `${C.corda.topo * 100}%`, width: '17%', height: `${(C.boca.y - C.corda.topo + 0.02) * 100}%` }}>
           <div
             className={cn('poco-bucket-pintado absolute inset-x-0', balde === 'subindo' && 'poco-bucket-sobe')}
-            style={{ aspectRatio: '240 / 150', bottom: balde === 'fundo' ? '-70%' : '30%', backgroundImage: `url(${ART}/balde-${tipo}.webp)`, backgroundSize: '100% auto', backgroundPosition: '50% 100%', backgroundRepeat: 'no-repeat' }}
-          />
+            style={{ aspectRatio: '1 / 1', bottom: balde === 'fundo' ? '-70%' : '30%' }}
+          >
+            {/* o mesmo balde do gacha (ícone pintado do item), não um desenho à parte */}
+            <img src={`${ART}/itens/balde-${tipo}-256.webp`} alt="" draggable={false} className="absolute inset-0 size-full object-contain" />
+            {/* água escorrendo do balde enquanto sobe; pingos depois que chega à boca */}
+            {balde !== 'fundo' && <AguaDoBalde forte={balde === 'subindo'} />}
+          </div>
         </div>
         {/* partículas de névoa subindo da boca */}
         <div className="absolute left-[24%] top-[6%] h-[48%] w-[56%] overflow-hidden">
@@ -191,6 +196,38 @@ function CenaPintada({ longe, balde, baldeTipo, girando, ativo, moeda, brilho, a
         {moeda > 0 && <Lancamento key={moeda} agua={{ x: C.boca.x * 100, y: C.boca.y * 100 }} boca={C.boca.largura * 100 * 0.7} />}
       </div>
     </div>
+  )
+}
+
+/**
+ * Água que cai do balde: dois filetes finos que escorrem pela borda (só enquanto sobe) e gotas em queda com
+ * aceleração, alongando no caminho, em tempos desencontrados. Só transform/opacidade; para com movimento reduzido.
+ */
+const GOTAS_BALDE = [
+  { x: 22, d: 0, t: 900, s: 3 },
+  { x: 74, d: 260, t: 1050, s: 2.5 },
+  { x: 48, d: 520, t: 820, s: 3.5 },
+  { x: 33, d: 780, t: 980, s: 2 },
+  { x: 63, d: 1040, t: 880, s: 3 },
+  { x: 80, d: 1300, t: 1120, s: 2 },
+]
+function AguaDoBalde({ forte }: { forte: boolean }) {
+  return (
+    <span aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-[88%] h-[260%]">
+      {forte && (
+        <>
+          <span className="poco-filete absolute left-[24%] top-0 h-full w-[2px]" />
+          <span className="poco-filete absolute left-[71%] top-0 h-full w-[1.5px]" style={{ animationDelay: '-400ms' } as CSSProperties} />
+        </>
+      )}
+      {GOTAS_BALDE.slice(0, forte ? 6 : 3).map((g, i) => (
+        <span
+          key={i}
+          className="poco-gota-cai absolute top-0 rounded-full"
+          style={{ left: `${g.x}%`, width: g.s, height: g.s * 1.6, animationDelay: `${g.d * (forte ? 1 : 1.8)}ms`, animationDuration: `${forte ? g.t : g.t * 1.4}ms` } as CSSProperties}
+        />
+      ))}
+    </span>
   )
 }
 

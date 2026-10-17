@@ -477,3 +477,54 @@
   .poco-arco-x, .poco-lampejo, .poco-onda, .poco-respingo-moeda, .poco-gota, .poco-veu { opacity: 0; }
   .poco-coin, .poco-ripple { opacity: 0; }
 }
+
+/* água que cai do balde: filete escorrendo (gradiente que desce) e gotas que aceleram e alongam na queda */
+@keyframes poco-filete {
+  0% { transform: translateY(-30%) scaleY(0.6); opacity: 0; }
+  20% { opacity: 0.85; }
+  100% { transform: translateY(40%) scaleY(1); opacity: 0; }
+}
+.poco-filete {
+  background: linear-gradient(180deg, rgba(236, 235, 233, 0.9), rgba(200, 205, 220, 0.55) 45%, transparent);
+  border-radius: 2px;
+  filter: drop-shadow(0 0 2px rgba(220, 225, 240, 0.6));
+  transform-origin: 50% 0;
+  animation: poco-filete 700ms linear infinite;
+}
+@keyframes poco-gota-cai {
+  0% { transform: translateY(0) scaleY(0.8); opacity: 0; }
+  10% { opacity: 1; }
+  70% { transform: translateY(240%) scaleY(1.9); opacity: 0.95; }
+  100% { transform: translateY(420%) scaleY(2.4); opacity: 0; }
+}
+.poco-gota-cai {
+  background: radial-gradient(circle at 40% 30%, #ffffff, #d9dbe4 45%, rgba(170, 178, 200, 0.7));
+  box-shadow: 0 0 3px rgba(220, 225, 240, 0.7);
+  animation: poco-gota-cai 900ms cubic-bezier(0.55, 0, 0.9, 0.6) infinite;
+}
+
+/* revelação de lixo: o balde pinga; cada gota cai e abre um anel na água */
+@keyframes poco-pingo {
+  0% { top: 0; transform: translateX(-50%) scaleY(0.8); opacity: 0; }
+  12% { opacity: 1; }
+  78% { top: 100%; transform: translateX(-50%) scaleY(2.2); opacity: 1; }
+  80%, 100% { top: 100%; transform: translateX(-50%) scale(0); opacity: 0; }
+}
+.poco-pingo {
+  background: radial-gradient(circle at 40% 30%, #ffffff, #cfd2dc 55%, rgba(160, 165, 185, 0.6));
+  box-shadow: 0 0 4px rgba(220, 225, 240, 0.6);
+  animation: poco-pingo 1100ms cubic-bezier(0.55, 0, 0.95, 0.5) infinite;
+}
+@keyframes poco-anel-pingo {
+  0%, 76% { transform: translate(-50%, -50%) scale(0.1); opacity: 0; }
+  80% { opacity: 0.9; }
+  100% { transform: translate(-50%, -50%) scale(1); opacity: 0; }
+}
+.poco-anel-pingo {
+  border: 1px solid rgba(220, 222, 230, 0.75);
+  animation: poco-anel-pingo 1100ms ease-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .poco-filete, .poco-gota-cai, .poco-pingo, .poco-anel-pingo { animation: none; opacity: 0; }
+}
