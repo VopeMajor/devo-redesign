@@ -1,0 +1,96 @@
+{
+  "pedido": "carta-tesoura",
+  "titulo": "Carta — Tesoura Cega (ilustração da janela)",
+  "tipo": "ilustracao",
+  "tamanho_final": 1536,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 70121,
+      "passos": null,
+      "segundos": 3.0,
+      "neuronios_estimados": 1386,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "carta-tesoura--v01--1536.png",
+          "bytes": 2428013
+        },
+        {
+          "arquivo": "carta-tesoura--v01--1536.webp",
+          "bytes": 446856
+        },
+        {
+          "arquivo": "carta-tesoura--v01--1024.webp",
+          "bytes": 170454
+        },
+        {
+          "arquivo": "carta-tesoura--v01--768.webp",
+          "bytes": 108912
+        }
+      ],
+      "segundos_pos": 1.6,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 70122,
+      "passos": null,
+      "segundos": 2.8,
+      "neuronios_estimados": 1386,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "carta-tesoura--v02--1536.png",
+          "bytes": 2531050
+        },
+        {
+          "arquivo": "carta-tesoura--v02--1536.webp",
+          "bytes": 483954
+        },
+        {
+          "arquivo": "carta-tesoura--v02--1024.webp",
+          "bytes": 186786
+        },
+        {
+          "arquivo": "carta-tesoura--v02--768.webp",
+          "bytes": 116264
+        }
+      ],
+      "segundos_pos": 1.6,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 70123,
+      "passos": null,
+      "segundos": 3.0,
+      "neuronios_estimados": 1386,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "carta-tesoura--v03--1536.png",
+          "bytes": 2458165
+        },
+        {
+          "arquivo": "carta-tesoura--v03--1536.webp",
+          "bytes": 462540
+        },
+        {
+          "arquivo": "carta-tesoura--v03--1024.webp",
+          "bytes": 171470
+        },
+        {
+          "arquivo": "carta-tesoura--v03--768.webp",
+          "bytes": 109114
+        }
+      ],
+      "segundos_pos": 1.6,
+      "avisos": []
+    }
+  ]
+}
