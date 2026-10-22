@@ -1,0 +1,96 @@
+{
+  "pedido": "carta-ampulheta",
+  "titulo": "Carta — Ampulheta Invertida (ilustração da janela)",
+  "tipo": "ilustracao",
+  "tamanho_final": 1536,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 70181,
+      "passos": null,
+      "segundos": 2.7,
+      "neuronios_estimados": 1386,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "carta-ampulheta--v01--1536.png",
+          "bytes": 2481890
+        },
+        {
+          "arquivo": "carta-ampulheta--v01--1536.webp",
+          "bytes": 499068
+        },
+        {
+          "arquivo": "carta-ampulheta--v01--1024.webp",
+          "bytes": 187066
+        },
+        {
+          "arquivo": "carta-ampulheta--v01--768.webp",
+          "bytes": 114714
+        }
+      ],
+      "segundos_pos": 1.5,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 70182,
+      "passos": null,
+      "segundos": 2.7,
+      "neuronios_estimados": 1386,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "carta-ampulheta--v02--1536.png",
+          "bytes": 2582209
+        },
+        {
+          "arquivo": "carta-ampulheta--v02--1536.webp",
+          "bytes": 527958
+        },
+        {
+          "arquivo": "carta-ampulheta--v02--1024.webp",
+          "bytes": 199970
+        },
+        {
+          "arquivo": "carta-ampulheta--v02--768.webp",
+          "bytes": 120932
+        }
+      ],
+      "segundos_pos": 1.5,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 70183,
+      "passos": null,
+      "segundos": 18.6,
+      "neuronios_estimados": 1386,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "carta-ampulheta--v03--1536.png",
+          "bytes": 2383790
+        },
+        {
+          "arquivo": "carta-ampulheta--v03--1536.webp",
+          "bytes": 455124
+        },
+        {
+          "arquivo": "carta-ampulheta--v03--1024.webp",
+          "bytes": 171066
+        },
+        {
+          "arquivo": "carta-ampulheta--v03--768.webp",
+          "bytes": 108062
+        }
+      ],
+      "segundos_pos": 1.6,
+      "avisos": []
+    }
+  ]
+}

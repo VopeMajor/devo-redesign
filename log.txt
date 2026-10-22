@@ -1,0 +1,10 @@
+[carta-ampulheta] v01: @cf/black-forest-labs/flux-2-klein-9b seed=70181 768x1536 passos=None (~1,386 neurônios)
+    ok em 2.7s, 768x1536
+[carta-ampulheta] v02: @cf/black-forest-labs/flux-2-klein-9b seed=70182 768x1536 passos=None (~1,386 neurônios)
+    ok em 2.7s, 768x1536
+[carta-ampulheta] v03: @cf/black-forest-labs/flux-2-klein-9b seed=70183 768x1536 passos=None (~1,386 neurônios)
+    nova tentativa em 15s
+    ok em 18.6s, 768x1536
+[carta-ampulheta] v01: mantido; sem avisos
+[carta-ampulheta] v02: mantido; sem avisos
+[carta-ampulheta] v03: mantido; sem avisos
