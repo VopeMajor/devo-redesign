@@ -4,6 +4,7 @@ import { type CSSProperties, Fragment, type ReactNode, useEffect, useState } fro
 import { playSfx } from '@/lib/devo/audio'
 import { CENA_MELISSA_CORPORACOES, type PassoHolo, ROTEIRO_MELISSA } from '@/lib/devo/corporacoes-melissa'
 import { NpcAnchor } from '../kit/npc-anchor'
+import { SalaHolograma, SeloCompanhia as SeloBase } from '../dialogo/holograma'
 import { cn } from '@/lib/utils'
 import { GlyphArrow } from '../kit/glyphs'
 import { usePlayerText } from '../state/player-text'
@@ -28,26 +29,9 @@ export function pedirChamadaMelissa(replay = false): boolean {
   return ev.defaultPrevented
 }
 
+/** O selo da Companhia (o mesmo da Narrativa); `aceso` pulsa a luz holográfica. */
 export function SeloCompanhia({ className, aceso = false, style }: { className?: string; aceso?: boolean; style?: CSSProperties }) {
-  return (
-    <svg viewBox="0 0 64 64" className={cn(aceso && 'corp-holo-pulse', className)} style={style} fill="none" aria-hidden="true">
-      <defs>
-        <linearGradient id="corp-cia-aco" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stopColor="#ece5d8" />
-          <stop offset="0.45" stopColor="#bab09f" />
-          <stop offset="1" stopColor="#6b6357" />
-        </linearGradient>
-      </defs>
-      <path d="M32 3 57 17.5v29L32 61 7 46.5v-29Z" stroke="url(#corp-cia-aco)" strokeWidth="1.8" />
-      <path d="M32 9 52 20.5v23L32 55 12 43.5v-23Z" stroke="#8a7cc8" strokeOpacity="0.6" strokeWidth="0.9" />
-      <path d="M14 32c5-7.5 11-11 18-11s13 3.5 18 11c-5 7.5-11 11-18 11s-13-3.5-18-11Z" stroke="url(#corp-cia-aco)" strokeWidth="1.6" />
-      <circle cx="32" cy="32" r="5.5" fill="url(#corp-cia-aco)" />
-      <circle cx="32" cy="32" r="2" fill="#151517" />
-      {[-40, -20, 0, 20, 40].map((a) => (
-        <path key={a} d="M32 14v-4" stroke="#bab09f" strokeWidth="1.2" strokeLinecap="round" transform={`rotate(${a} 32 32)`} />
-      ))}
-    </svg>
-  )
+  return <SeloBase className={cn(aceso && 'corp-holo-pulse', className)} style={style} />
 }
 
 /** *ênfase* do texto do dono → itálico em aço claro. */
@@ -122,7 +106,7 @@ export function ChamadaHolograma({ podePular, onFim }: { podePular: boolean; onF
       tabIndex={-1}
     >
       <HoloEstilos />
-      <span aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(70%_45%_at_50%_70%,rgb(var(--dv-amethyst-rgb)/0.22),transparent_70%)]" />
+      <SalaHolograma />
       <header className="relative z-10 flex items-center justify-between gap-3 px-4 pt-4">
         <span className="flex items-center gap-2.5">
           <SeloCompanhia aceso className="size-8" />

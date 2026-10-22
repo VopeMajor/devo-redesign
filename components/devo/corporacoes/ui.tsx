@@ -2,11 +2,11 @@
 
 import { type CSSProperties, type InputHTMLAttributes, type ReactNode, forwardRef } from 'react'
 import { cn } from '@/lib/utils'
-import { MarbleSlab } from '../os/shell-ui'
+import { Painel } from './painel'
 
 /*
- * Peças locais das Corporações (mármore negro + aço champanhe). Candidatas ao kit (iguais em espírito às do
- * Salão): Placa (tampo com título), Selo (estado curto), Campo (input de mármore), Vazio, Erro.
+ * Peças locais das Corporações (painel de uma cor + aço champanhe, sem mármore). Candidatas ao kit (iguais em
+ * espírito às do Salão): Placa (painel com título), Selo (estado curto), Campo, Vazio, Erro.
  */
 
 export function Placa({
@@ -29,18 +29,24 @@ export function Placa({
   glow?: boolean
 }) {
   return (
-    <MarbleSlab as="section" edge={edge} cut={12} quiet glow={glow} aria-label={ariaLabel ?? titulo} className={className} innerClassName="p-4">
+    <Painel as="section" edge={edge} cut={12} quiet glow={glow} aria-label={ariaLabel ?? titulo} className={className} innerClassName="p-4">
       {titulo && (
-        <header className="mb-3 flex items-start justify-between gap-3">
-          <div className="min-w-0">
-            <h3 className="font-display text-[16px] font-semibold uppercase leading-tight tracking-[0.14em] text-dv-text">{titulo}</h3>
-            {legenda && <p className="mt-1 font-mono text-[10.5px] uppercase tracking-[0.16em] text-dv-text-3">{legenda}</p>}
+        <header className="mb-4">
+          <div className="flex items-start justify-between gap-3">
+            <div className="min-w-0">
+              <h3 className="flex items-center gap-2 font-display text-[16px] font-semibold uppercase leading-tight tracking-[0.14em] text-dv-text">
+                <span aria-hidden="true" className="size-[7px] shrink-0 rotate-45 bg-[image:var(--dv-champagne-grad)]" />
+                {titulo}
+              </h3>
+              {legenda && <p className="mt-1 pl-[15px] font-mono text-[10.5px] uppercase tracking-[0.16em] text-dv-text-3">{legenda}</p>}
+            </div>
+            {direita}
           </div>
-          {direita}
+          <span aria-hidden="true" className="mt-3 block h-px bg-[linear-gradient(90deg,rgb(var(--dv-champagne-rgb)/0.45),rgb(var(--dv-champagne-rgb)/0.08)_70%,transparent)]" />
         </header>
       )}
       {children}
-    </MarbleSlab>
+    </Painel>
   )
 }
 

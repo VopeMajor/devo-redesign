@@ -83,12 +83,21 @@ export function CorporacoesApp() {
   )
 }
 
-/** Mármore negro com uma luz fria alta (a Companhia vigia) e o piso de veios. Sem cena 3D: tela de leitura. */
+/** Hexágonos finos (a marca da Companhia), em SVG como fundo repetido. */
+const GRADE_HEX = `url("data:image/svg+xml,${encodeURIComponent(
+  '<svg xmlns="http://www.w3.org/2000/svg" width="56" height="97" viewBox="0 0 56 97"><path d="M28 0 56 16.2v32.3L28 64.7 0 48.5V16.2Z M28 64.7V97" fill="none" stroke="#d6cdbd" stroke-opacity="0.07" stroke-width="1"/></svg>',
+)}")`
+
+/** Uma cor só com degradê leve, a grade hexagonal da Companhia e uma luz fria no alto. Tela de leitura. */
 function Fundo({ children }: { children: ReactNode }) {
   return (
-    <div className="relative h-full overflow-hidden bg-dv-ink">
+    <div className="relative h-full overflow-hidden bg-[linear-gradient(180deg,#16141c_0%,#0f0e13_55%,#0b0a0e_100%)]">
       <HoloEstilos />
-      <span aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[url(/images/os/marmore-negro.webp)] bg-[length:560px_560px] opacity-50" />
+      <span
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 [mask-image:linear-gradient(180deg,#000,transparent_70%)]"
+        style={{ backgroundImage: GRADE_HEX, backgroundSize: '56px 97px', backgroundPosition: 'center top' }}
+      />
       <span aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 h-[60%] bg-[radial-gradient(60%_55%_at_50%_0%,rgb(var(--dv-amethyst-rgb)/0.16),transparent_70%)]" />
       <span aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,transparent_55%,rgba(0,0,0,0.6))]" />
       <div className="relative z-10 h-full">{children}</div>

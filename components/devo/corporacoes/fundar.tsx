@@ -17,7 +17,7 @@ import { cn } from '@/lib/utils'
 import { Button } from '../kit/button'
 import { GlyphHourglass } from '../kit/glyphs'
 import { Sheet } from '../kit/sheet'
-import { BrasaoCorp } from './brasao'
+import { BrasaoCorp, NichoBrasao } from './brasao'
 import { Campo, Erro, Rotulo } from './ui'
 
 type Agir = (b: Record<string, unknown>) => Promise<unknown>
@@ -86,7 +86,7 @@ export function FundarSheet({ open, onClose, criacao, agir }: { open: boolean; o
     >
       <div className="flex flex-col gap-5">
         <div className="flex items-center gap-4">
-          <BrasaoCorp brasao={brasao} className="h-[104px] w-[84px] shrink-0 drop-shadow-[0_10px_18px_rgba(0,0,0,0.6)]" title={`Prévia do brasão: ${BRASAO_FORMA_ROTULO[forma]}, ${BRASAO_COR[cor].rotulo}`} />
+          <NichoBrasao key={`${forma}-${cor}`} brasao={brasao} tamanho={100} title={`Prévia do brasão: ${BRASAO_FORMA_ROTULO[forma]}, ${BRASAO_COR[cor].rotulo}`} />
           <div className="min-w-0">
             <p className="dv-label text-[10px] text-dv-text-3">Sinete da Corporação</p>
             <p className="mt-1 break-words font-display text-[20px] font-semibold uppercase leading-tight tracking-[0.06em] text-dv-text">{nome.trim() || 'Sem nome'}</p>

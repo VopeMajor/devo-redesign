@@ -7,7 +7,7 @@ import type { Destino } from '@/lib/devo/progresso'
 import { cn } from '@/lib/utils'
 import { NpcAnchor, useFalaAncora } from '../kit/npc-anchor'
 import { CasaNoite } from './casa-noite'
-import { ChamadaMelissa, HologramaMelissa } from './holograma'
+import { ChamadaMelissa, HologramaMelissa, SalaHolograma } from './holograma'
 import { LinhaDestino, PlacaDestino } from './linha-destino'
 
 /**
@@ -87,9 +87,9 @@ function Cenario({ id, portaAberta, anima, fxKey, luzFalha }: { id: CenarioId; p
       return <CasaNoite portaAberta={portaAberta} anima={anima} fxKey={fxKey} luzFalha={luzFalha} />
     case 'holograma':
       return (
-        <div className="absolute inset-0 bg-[radial-gradient(120%_70%_at_50%_70%,#1a1824,#0c0c0e_60%,#050506)]">
-          <span className="absolute inset-x-0 bottom-0 h-[34%] bg-[linear-gradient(180deg,transparent,rgba(12,12,14,0.95))]" />
-          <span className="absolute inset-x-0 bottom-[30%] h-px bg-[linear-gradient(90deg,transparent,rgba(186,176,159,0.25),transparent)]" />
+        <div className="absolute inset-0">
+          <SalaHolograma />
+          <span className="absolute inset-x-0 bottom-0 h-[30%] bg-[linear-gradient(180deg,transparent,rgba(8,8,10,0.92))]" />
         </div>
       )
     case 'nevoa':

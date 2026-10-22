@@ -17,10 +17,11 @@ import { Button } from '../kit/button'
 import { GlyphCheck, GlyphClose } from '../kit/glyphs'
 import { Dialog, Sheet } from '../kit/sheet'
 import { Tabs } from '../kit/tabs'
-import { MarbleSlab } from '../os/shell-ui'
+import { Painel } from './painel'
 import { CardFace } from '../shared/devo-card'
 import { useDevo } from '../state/devo-store'
-import { BrasaoCorp } from './brasao'
+import { BrasaoCorp, NichoBrasao } from './brasao'
+import { SeloCompanhia } from './holograma'
 import { Campo, Erro, Linha, Monograma, Placa, Rotulo, Selo, Vazio, dataCurta } from './ui'
 
 type Agir = (b: Record<string, unknown>) => Promise<unknown>
@@ -97,9 +98,15 @@ function Heroi({ m }: { m: MinhaCorp }) {
   const necro = m.classificacao === 'necro'
   const [copiado, setCopiado] = useState(false)
   return (
-    <MarbleSlab as="section" edge={necro ? 'blood' : 'steel'} cut={16} glow aria-label={`Corporação ${m.nome}`} innerClassName="p-5">
+    <Painel as="section" edge={necro ? 'blood' : 'steel'} cut={16} glow aria-label={`Corporação ${m.nome}`} innerClassName="p-5">
+      {/* faixa do registro */}
+      <div className="-mx-1 mb-4 flex items-center gap-2 border-b border-dv-line pb-3">
+        <SeloCompanhia className="size-5 shrink-0" />
+        <p className="min-w-0 flex-1 truncate font-mono text-[10px] uppercase tracking-[0.2em] text-dv-text-3">Registro da Companhia</p>
+        <p className={cn('font-mono text-[10px] uppercase tracking-[0.2em]', necro ? 'text-dv-blood-text' : 'text-dv-amethyst-text')}>{necro ? 'Classe N' : 'Classe A'}</p>
+      </div>
       <div className="flex items-start gap-4">
-        <BrasaoCorp brasao={m.brasao} necro={necro} title={`Brasão de ${m.nome}`} className="animate-dv-pop h-[124px] w-[100px] shrink-0 drop-shadow-[0_12px_20px_rgba(0,0,0,0.7)]" />
+        <NichoBrasao brasao={m.brasao} necro={necro} title={`Brasão de ${m.nome}`} />
         <div className="min-w-0 flex-1 pt-1">
           <p className="dv-label text-[10px] text-dv-gold">{CORP_CARGO_ROTULO[m.meuCargo]} · {m.membros}/{m.maxMembros}</p>
           <h2 className="mt-1.5 break-words font-display text-[22px] font-semibold uppercase leading-[1.1] tracking-[0.06em] text-dv-text">{m.nome}</h2>
@@ -118,7 +125,9 @@ function Heroi({ m }: { m: MinhaCorp }) {
       <div className="mt-4 flex items-end justify-between gap-3 border-t border-dv-line pt-3">
         <div className="min-w-0">
           <p className="font-mono text-[10.5px] uppercase tracking-[0.16em] text-dv-text-3">Código de identificação</p>
-          <p className="mt-1 whitespace-nowrap font-mono text-[18px] tracking-[0.08em] text-dv-text dv-tabular">{m.codigo}</p>
+          <p className="dv-cut mt-1.5 inline-block whitespace-nowrap bg-black/35 px-2.5 py-1 font-mono text-[18px] tracking-[0.1em] text-dv-text shadow-[inset_0_0_0_1px_rgb(var(--dv-champagne-rgb)/0.35)] dv-tabular" style={{ '--dv-cut': '5px' } as CSSProperties}>
+            {m.codigo}
+          </p>
         </div>
         <Button
           size="sm"
@@ -135,7 +144,7 @@ function Heroi({ m }: { m: MinhaCorp }) {
         </Button>
       </div>
       <p className="sr-only">{CLASSIFICACAO_ROTULO[m.classificacao]}</p>
-    </MarbleSlab>
+    </Painel>
   )
 }
 
