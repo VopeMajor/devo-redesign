@@ -85,7 +85,7 @@ Claude-Session: https://claude.ai/code/session_01Fm5U3bqZz6wpuWL1ksRMyi
 
 ## Estado em 22/10/2026 (fim do dia)
 
-Na branch `ccr-a1dc3a06-5krin1` (esperando o dono autorizar o merge na `redesign`):
+Publicado na `redesign` em 22/10 (bc986b5); o dono precisa rodar o `devo-banco-novo.sql` no Neon:
 - **Casa** (ícone novo, flag `galo_casa`): Confecção de Cartas (`lib/devo/confeccao.ts`, `lib/devo/casa-server.ts`,
   `/api/casa`, `components/devo/casa/*`) e Pacotes (`lib/devo/pacotes.ts`). Mesa › Casa para regras e receitas.
   Texto do dono em `docs/redesign/CASA-CONFECCAO-dono.md`. Custos/esperas/espaços PROVISÓRIOS (`confeccao.regras`).
@@ -100,8 +100,8 @@ Na branch `ccr-a1dc3a06-5krin1` (esperando o dono autorizar o merge na `redesign
   /tmp) e `node_modules` instala com `pnpm install`; os `scripts/dev/*-test.mjs` rodam contra `next dev`.
 
 Pendente:
-1. **Arcanos no estilo tarô**: 22 pedidos `arcano-<chave>-tarot` gerados (branches `arte-saida/arcano-*-tarot`);
-   o dono escolhe numa galeria (artifact) e manda a lista; exportar com `arcanos.py`. O Mago só teve 1 variação.
+1. Prêmio "Arcano": o narrador indica três opções, um Anfitrião aprova e o jogador escolhe (`arcano_escolhas`).
+   Artes do tarô dos 22 Arcanos já estão na `redesign`.
 2. Força: o texto do dono não tem o Estágio IV e o VII ("Tirano") só tem o nome.
 3. Molde de Xadrez sem visual; cartas antigas sem peso usam o padrão por raridade (`PESO_PADRAO`).
 4. Sugestão do agente dos jogos (não feita): `session.cookieCache` no better-auth cortaria uma consulta por
