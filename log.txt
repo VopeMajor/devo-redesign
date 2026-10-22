@@ -1,0 +1,11 @@
+[arcano-sol-tarot2] v01: @cf/black-forest-labs/flux-2-klein-9b seed=93061 1024x1536 passos=None (~1,455 neurônios)
+    nova tentativa em 15s
+    nova tentativa em 45s
+    ok em 63.4s, 1024x1536
+[arcano-sol-tarot2] v02: @cf/black-forest-labs/flux-2-klein-9b seed=93062 1024x1536 passos=None (~1,455 neurônios)
+    ok em 3.4s, 1024x1536
+[arcano-sol-tarot2] v03: @cf/black-forest-labs/flux-2-klein-9b seed=93063 1024x1536 passos=None (~1,455 neurônios)
+    ok em 3.8s, 1024x1536
+[arcano-sol-tarot2] v01: rembg:birefnet-general; sem avisos
+[arcano-sol-tarot2] v02: rembg:birefnet-general; sem avisos
+[arcano-sol-tarot2] v03: rembg:birefnet-general; sem avisos

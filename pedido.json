@@ -1,0 +1,55 @@
+{
+  "id": "arcano-sol-tarot2",
+  "titulo": "Arcano — sol (tarô, menos humanizado) — refeito",
+  "tipo": "ilustracao",
+  "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+  "prompt": "Antique tarot Major Arcana illustration reimagined as dark fantasy painted concept art, inspired by the iconography of the Rider-Waite-Smith and Tarot de Marseille decks, symbolic and allegorical rather than realistic, stylized carved tarot emblem, flat elegant silhouette with clean readable shapes, fine engraved linework and soft painterly shading, isolated on a plain flat light gray background. ONE single central emblem with NO person in it, upright, the whole emblem from top to bottom filling about 85 percent of the image height, its base near the bottom edge. Muted palette of abyss black, porcelain white, fog gray and champagne steel, with ONE small symbolic accent color. Soft studio key light from the upper left, gentle cool rim light, no cast shadow. No text, no letters, no numerals, no card frame, no border, no background scenery. The Sun: a great radiant sun disc with a calm engraved face, alternating straight and wavy golden rays, above a low stone wall lined with tall sunflowers, a small white horse standing in front of the wall, perfectly symmetrical emblem. Accent: gold.",
+  "negative": "text, letters, numbers, watermark, signature, card frame, border, cropped, cut off feet, background scenery, landscape, multiple figures, crowd, photorealistic, realistic human face, pretty face, portrait, distorted anatomy, extra limbs, extra fingers, deformed hands, melted face, asymmetrical eyes, cartoon, chibi, anime, neon, saturated colors, person, human figure, people, face of a person",
+  "largura": 1024,
+  "altura": 1536,
+  "variacoes": [
+    {
+      "seed": 93061,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "passos": null,
+      "largura": 1024,
+      "altura": 1536,
+      "prompt_extra": "",
+      "n": 1
+    },
+    {
+      "seed": 93062,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "passos": null,
+      "largura": 1024,
+      "altura": 1536,
+      "prompt_extra": "",
+      "n": 2
+    },
+    {
+      "seed": 93063,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "passos": null,
+      "largura": 1024,
+      "altura": 1536,
+      "prompt_extra": "",
+      "n": 3
+    }
+  ],
+  "pos": {
+    "remover_fundo": true,
+    "tamanho_final": 1536,
+    "margem": 0.03,
+    "derivados": [
+      1024,
+      768,
+      512
+    ],
+    "modelo_fundo": "birefnet-general",
+    "fundo": "liso",
+    "camadas": []
+  },
+  "passos": null,
+  "guidance": null,
+  "referencias": []
+}
