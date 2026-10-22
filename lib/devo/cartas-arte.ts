@@ -1,7 +1,8 @@
 /**
  * Ilustrações das cartas (design do dono, 22/10: moldura de pergaminho com a arte numa janela alta).
- * Cada carta com arte própria tem `public/images/cartas/<id>/arte-{512,768,1024}.webp`. As do Xadrez são as peças 3D
- * do dono (`public/models/chess/*.glb`) renderizadas numa cena do DEVO; o Escudo de Papelão também é modelado.
+ * Cada carta com arte própria tem `public/images/cartas/<id>/arte-{512,768,1024}.webp`. As do Xadrez são pintadas
+ * (pedidos `xadrez-*` em `infra/arte`): um fundo comum da coleção com a peça por cima (`scripts/dev/arte-cartas/compor.py`);
+ * o Tabuleiro é uma cena própria. O Escudo de Papelão é modelado (`scripts/dev/arte-cartas/cena.html`).
  * Sem arte própria, a carta usa a gravura do tipo em duotom (provisório).
  * Para ligar uma arte nova: exporte os arquivos e acrescente o id aqui.
  */

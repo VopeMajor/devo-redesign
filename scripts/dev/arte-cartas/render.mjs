@@ -1,4 +1,4 @@
-// Renderiza as artes das cartas (peças 3D do Xadrez + Escudo de Papelão) em PNG 1024 de largura.
+// Renderiza a arte do Escudo de Papelão (as do Xadrez são pintadas: ver compor.py) em PNG 1024 de largura.
 // Uso (na raiz do repositório, com node_modules instalado):
 //   python3 -m http.server 8765 --bind 127.0.0.1 &
 //   node scripts/dev/arte-cartas/render.mjs [ids...]   → /var/tmp/render/final-<id>.png
@@ -7,9 +7,7 @@ import { chromium } from 'playwright'
 const b = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium-1194/chrome-linux/chrome', args: ['--use-gl=angle','--use-angle=swiftshader','--enable-unsafe-swiftshader'] })
 const W = 1024, H = Math.round(W * 144 / 74)
 const jobs = {
-  xadrez_rei: 'p=k&rot=-25&d=5.0', xadrez_rainha: 'p=q&rot=-15&d=4.9', xadrez_torre: 'p=r&rot=-20&d=5.0',
-  xadrez_bispo: 'p=b&rot=-20&d=4.6', xadrez_cavalo: 'p=n&rot=-35&d=4.6', xadrez_peao: 'p=p&rot=-20&d=4.4',
-  xadrez_tabuleiro: 'p=board&el=34&dd=13&ly=1.3&dy=5.2&ds=3.2', escudo: 'p=escudo',
+  escudo: 'p=escudo',
 }
 const so = process.argv.slice(2)
 for (const [id, v] of Object.entries(jobs)) {
