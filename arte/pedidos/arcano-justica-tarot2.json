@@ -1,0 +1,31 @@
+{
+  "id": "arcano-justica-tarot2",
+  "titulo": "Arcano — justica (tarô, menos humanizado) — refeito",
+  "tipo": "ilustracao",
+  "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+  "prompt": "Antique tarot Major Arcana illustration reimagined as dark fantasy painted concept art, inspired by the iconography of the Rider-Waite-Smith and Tarot de Marseille decks, symbolic and allegorical rather than realistic, stylized hieratic figure like a living tarot emblem, flat elegant silhouette with clean readable shapes, fine engraved linework and soft painterly shading, isolated on a plain flat light gray background. ONE single central figure, standing still in a front view, full body from head to feet, the whole figure fills about 85 percent of the image height, feet near the bottom edge, hands simplified or hidden inside sleeves, no realistic human anatomy, no photographic face. Muted palette of abyss black, porcelain white, fog gray and champagne steel, with ONE small symbolic accent color. Soft studio key light from the upper left, gentle cool rim light, no cast shadow. No text, no letters, no numerals, no card frame, no border, no background scenery, no other characters. Justice: a crowned figure carved from pale marble like a cathedral statue, smooth blank stone eyes, no blindfold, a square crown, heavy straight robes of gray stone folds under a wine red mantle, an upright double-edged sword in the right hand and golden balanced scales in the left hand, perfectly symmetrical and still, two short stone pillars at the sides. Accent: wine red.",
+  "negative": "text, letters, numbers, watermark, signature, card frame, border, cropped, cut off feet, background scenery, landscape, multiple figures, crowd, photorealistic, realistic human face, pretty face, portrait, distorted anatomy, extra limbs, extra fingers, deformed hands, melted face, asymmetrical eyes, cartoon, chibi, anime, neon, saturated colors",
+  "largura": 1024,
+  "altura": 1536,
+  "variacoes": [
+    {
+      "seed": 93021
+    },
+    {
+      "seed": 93022
+    },
+    {
+      "seed": 93023
+    }
+  ],
+  "pos": {
+    "remover_fundo": true,
+    "tamanho_final": 1536,
+    "margem": 0.03,
+    "derivados": [
+      1024,
+      768,
+      512
+    ]
+  }
+}
