@@ -24,9 +24,9 @@
       1024
     ],
     "recorte_da_figura": [
-      0.2773,
+      0.2764,
       0.599,
-      0.7285,
+      0.7275,
       1.0
     ]
   },
@@ -45,8 +45,8 @@
     }
   },
   "origem": {
-    "pedido": "arcano-enforcado-tarot",
-    "variacao": "v03",
-    "png": "arcano-enforcado-tarot--v03--1536.png"
+    "pedido": "arcano-enforcado-r3",
+    "variacao": "v02",
+    "png": "arcano-enforcado-r3--v02--1536.png"
   }
 }

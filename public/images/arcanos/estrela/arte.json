@@ -24,9 +24,9 @@
       1024
     ],
     "recorte_da_figura": [
-      0.2773,
+      0.2793,
       0.0417,
-      0.7285,
+      0.7305,
       0.4427
     ]
   },
@@ -45,8 +45,8 @@
     }
   },
   "origem": {
-    "pedido": "arcano-estrela-tarot",
-    "variacao": "v01",
-    "png": "arcano-estrela-tarot--v01--1536.png"
+    "pedido": "arcano-estrela",
+    "variacao": "v02",
+    "png": "arcano-estrela--v02--1536.png"
   }
 }

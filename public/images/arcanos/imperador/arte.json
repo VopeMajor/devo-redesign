@@ -24,9 +24,9 @@
       1024
     ],
     "recorte_da_figura": [
-      0.3398,
+      0.2793,
       0.0417,
-      0.791,
+      0.7305,
       0.4427
     ]
   },
@@ -45,8 +45,8 @@
     }
   },
   "origem": {
-    "pedido": "arcano-imperador-tarot2",
+    "pedido": "arcano-imperador",
     "variacao": "v02",
-    "png": "arcano-imperador-tarot2--v02--1536.png"
+    "png": "arcano-imperador--v02--1536.png"
   }
 }

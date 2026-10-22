@@ -24,9 +24,9 @@
       1024
     ],
     "recorte_da_figura": [
-      0.208,
+      0.2109,
       0.0417,
-      0.6592,
+      0.6621,
       0.4427
     ]
   },
@@ -45,8 +45,8 @@
     }
   },
   "origem": {
-    "pedido": "arcano-eremita-tarot",
-    "variacao": "v03",
-    "png": "arcano-eremita-tarot--v03--1536.png"
+    "pedido": "arcano-eremita",
+    "variacao": "v02",
+    "png": "arcano-eremita--v02--1536.png"
   }
 }
