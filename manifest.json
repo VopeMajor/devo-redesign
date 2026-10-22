@@ -1,0 +1,116 @@
+{
+  "pedido": "arcano-mago-tarot2",
+  "titulo": "Arcano — mago (tarô, menos humanizado) — refeito",
+  "tipo": "ilustracao",
+  "tamanho_final": 1536,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 93091,
+      "passos": null,
+      "segundos": 3.2,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "arcano-mago-tarot2--v01--1536.png",
+          "bytes": 1094903
+        },
+        {
+          "arquivo": "arcano-mago-tarot2--v01--1536.webp",
+          "bytes": 160326
+        },
+        {
+          "arquivo": "arcano-mago-tarot2--v01--1024.webp",
+          "bytes": 66648
+        },
+        {
+          "arquivo": "arcano-mago-tarot2--v01--768.webp",
+          "bytes": 43058
+        },
+        {
+          "arquivo": "arcano-mago-tarot2--v01--512.webp",
+          "bytes": 24462
+        }
+      ],
+      "segundos_pos": 31.4,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 93092,
+      "passos": null,
+      "segundos": 3.6,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "arcano-mago-tarot2--v02--1536.png",
+          "bytes": 993340
+        },
+        {
+          "arquivo": "arcano-mago-tarot2--v02--1536.webp",
+          "bytes": 141010
+        },
+        {
+          "arquivo": "arcano-mago-tarot2--v02--1024.webp",
+          "bytes": 58716
+        },
+        {
+          "arquivo": "arcano-mago-tarot2--v02--768.webp",
+          "bytes": 37856
+        },
+        {
+          "arquivo": "arcano-mago-tarot2--v02--512.webp",
+          "bytes": 21926
+        }
+      ],
+      "segundos_pos": 17.7,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 93093,
+      "passos": null,
+      "neuronios_estimados": 1455,
+      "erro": "HTTP 400 — 3030: AiError: AiError: Your output has been flagged. Please choose another prompt / input image combination (d9beba8b-9644-4847-b08e-bafd7857b8f4)"
+    },
+    {
+      "nome": "v04",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 93094,
+      "passos": null,
+      "segundos": 3.2,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "arcano-mago-tarot2--v04--1536.png",
+          "bytes": 960041
+        },
+        {
+          "arquivo": "arcano-mago-tarot2--v04--1536.webp",
+          "bytes": 139324
+        },
+        {
+          "arquivo": "arcano-mago-tarot2--v04--1024.webp",
+          "bytes": 55910
+        },
+        {
+          "arquivo": "arcano-mago-tarot2--v04--768.webp",
+          "bytes": 36388
+        },
+        {
+          "arquivo": "arcano-mago-tarot2--v04--512.webp",
+          "bytes": 21434
+        }
+      ],
+      "segundos_pos": 15.3,
+      "avisos": []
+    }
+  ]
+}
