@@ -1,0 +1,9 @@
+[carta-coracao] v01: @cf/black-forest-labs/flux-2-klein-9b seed=70231 768x1536 passos=None (~1,386 neurônios)
+    ok em 3.6s, 768x1536
+[carta-coracao] v02: @cf/black-forest-labs/flux-2-klein-9b seed=70232 768x1536 passos=None (~1,386 neurônios)
+    ok em 2.7s, 768x1536
+[carta-coracao] v03: @cf/black-forest-labs/flux-2-klein-9b seed=70233 768x1536 passos=None (~1,386 neurônios)
+    ok em 2.6s, 768x1536
+[carta-coracao] v01: mantido; sem avisos
+[carta-coracao] v02: mantido; sem avisos
+[carta-coracao] v03: mantido; sem avisos
