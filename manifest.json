@@ -1,0 +1,96 @@
+{
+  "pedido": "carta-xadrez-rainha",
+  "titulo": "Carta — Rainha do Xadrez (ilustração da janela)",
+  "tipo": "ilustracao",
+  "tamanho_final": 1536,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 70311,
+      "passos": null,
+      "segundos": 2.3,
+      "neuronios_estimados": 1386,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "carta-xadrez-rainha--v01--1536.png",
+          "bytes": 2230501
+        },
+        {
+          "arquivo": "carta-xadrez-rainha--v01--1536.webp",
+          "bytes": 417816
+        },
+        {
+          "arquivo": "carta-xadrez-rainha--v01--1024.webp",
+          "bytes": 141048
+        },
+        {
+          "arquivo": "carta-xadrez-rainha--v01--768.webp",
+          "bytes": 88338
+        }
+      ],
+      "segundos_pos": 1.9,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 70317,
+      "passos": null,
+      "segundos": 2.6,
+      "neuronios_estimados": 1386,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "carta-xadrez-rainha--v02--1536.png",
+          "bytes": 2407926
+        },
+        {
+          "arquivo": "carta-xadrez-rainha--v02--1536.webp",
+          "bytes": 455664
+        },
+        {
+          "arquivo": "carta-xadrez-rainha--v02--1024.webp",
+          "bytes": 169048
+        },
+        {
+          "arquivo": "carta-xadrez-rainha--v02--768.webp",
+          "bytes": 107616
+        }
+      ],
+      "segundos_pos": 1.8,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 70313,
+      "passos": null,
+      "segundos": 2.9,
+      "neuronios_estimados": 1386,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "carta-xadrez-rainha--v03--1536.png",
+          "bytes": 2203740
+        },
+        {
+          "arquivo": "carta-xadrez-rainha--v03--1536.webp",
+          "bytes": 382198
+        },
+        {
+          "arquivo": "carta-xadrez-rainha--v03--1024.webp",
+          "bytes": 131066
+        },
+        {
+          "arquivo": "carta-xadrez-rainha--v03--768.webp",
+          "bytes": 83404
+        }
+      ],
+      "segundos_pos": 1.9,
+      "avisos": []
+    }
+  ]
+}
