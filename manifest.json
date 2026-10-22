@@ -1,0 +1,108 @@
+{
+  "pedido": "xadrez-bispo",
+  "titulo": "Coleção Xadrez — Bispo (peça sem fundo)",
+  "tipo": "ilustracao",
+  "tamanho_final": 1536,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 81221,
+      "passos": null,
+      "segundos": 18.4,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "xadrez-bispo--v01--1536.png",
+          "bytes": 796116
+        },
+        {
+          "arquivo": "xadrez-bispo--v01--1536.webp",
+          "bytes": 131360
+        },
+        {
+          "arquivo": "xadrez-bispo--v01--1024.webp",
+          "bytes": 61972
+        },
+        {
+          "arquivo": "xadrez-bispo--v01--768.webp",
+          "bytes": 42204
+        },
+        {
+          "arquivo": "xadrez-bispo--v01--512.webp",
+          "bytes": 24744
+        }
+      ],
+      "segundos_pos": 47.8,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 81222,
+      "passos": null,
+      "segundos": 3.6,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "xadrez-bispo--v02--1536.png",
+          "bytes": 809763
+        },
+        {
+          "arquivo": "xadrez-bispo--v02--1536.webp",
+          "bytes": 140654
+        },
+        {
+          "arquivo": "xadrez-bispo--v02--1024.webp",
+          "bytes": 66652
+        },
+        {
+          "arquivo": "xadrez-bispo--v02--768.webp",
+          "bytes": 44506
+        },
+        {
+          "arquivo": "xadrez-bispo--v02--512.webp",
+          "bytes": 24752
+        }
+      ],
+      "segundos_pos": 29.5,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 81223,
+      "passos": null,
+      "segundos": 3.5,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "xadrez-bispo--v03--1536.png",
+          "bytes": 773433
+        },
+        {
+          "arquivo": "xadrez-bispo--v03--1536.webp",
+          "bytes": 123154
+        },
+        {
+          "arquivo": "xadrez-bispo--v03--1024.webp",
+          "bytes": 58388
+        },
+        {
+          "arquivo": "xadrez-bispo--v03--768.webp",
+          "bytes": 40402
+        },
+        {
+          "arquivo": "xadrez-bispo--v03--512.webp",
+          "bytes": 24034
+        }
+      ],
+      "segundos_pos": 29.4,
+      "avisos": []
+    }
+  ]
+}
