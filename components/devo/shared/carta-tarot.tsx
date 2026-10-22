@@ -16,33 +16,33 @@ import { cn } from "@/lib/utils";
 
 export const CARTA_SHELL = "relative aspect-[9/20] [container-type:inline-size]";
 
-/** Borda de fora por raridade (a do exemplo, laranja, é a Rara). Textura de papel tingido por cima. */
+/**
+ * Cor da raridade: só no filete fino por dentro da borda escura e nas pedras das estrelas (a borda inteira colorida
+ * ficava gritante). A Promocional mantém o filete iridescente.
+ */
 export const BORDA: Record<Rarity, { cor: string; escura: string }> = {
-  comum: { cor: "#8b8f96", escura: "#5c6067" },
-  incomum: { cor: "#c9ced6", escura: "#8d939d" },
-  rara: { cor: "#f2a23c", escura: "#d9822a" },
-  ultra_rara: { cor: "#9a7ae0", escura: "#6c4fb8" },
-  lendaria: { cor: "#e9c25a", escura: "#b8902c" },
-  unica: { cor: "#b0313f", escura: "#7a1426" },
-  promocional: { cor: "#9fd6e6", escura: "#8a6fd2" },
+  comum: { cor: "#8b8f96", escura: "#4a4d53" },
+  incomum: { cor: "#c9ced6", escura: "#7d838c" },
+  rara: { cor: "#d98c34", escura: "#8a531c" },
+  ultra_rara: { cor: "#9a7ae0", escura: "#4f3a8a" },
+  lendaria: { cor: "#d9b04a", escura: "#7a5c1c" },
+  unica: { cor: "#b0313f", escura: "#5c0f1c" },
+  promocional: { cor: "#9fd6e6", escura: "#6a54b0" },
 };
 
-const GOLD = "#c9a24a";
-const GOLD_LIGHT = "#f2d98c";
-const GOLD_DARK = "#8a6a24";
-const PAPER = "#f4e8c8";
-const INK = "#3b2a17";
+const GOLD = "#a8843a";
+const GOLD_LIGHT = "#d6b86c";
+const GOLD_DARK = "#5e4416";
+const PAPER = "#cdb689";
+const PAPER_DARK = "#9c8358";
+const INK = "#24170a";
 
+/** Borda de fora: couro escuro com um véu da cor da raridade, quase imperceptível. */
 function fundoBorda(r: Rarity): CSSProperties {
   const b = BORDA[r];
-  if (r === "promocional")
-    return {
-      backgroundImage:
-        "radial-gradient(60% 40% at 30% 20%, rgba(255,255,255,0.35), transparent 70%), linear-gradient(125deg,#f7d3e6 0%,#c7b6f3 18%,#a6dfee 36%,#e7f4c4 52%,#f6caa6 68%,#cdb9f2 84%,#a9e2ec 100%)",
-    };
   return {
-    backgroundColor: b.cor,
-    backgroundImage: `radial-gradient(40% 25% at 20% 15%, rgba(255,255,255,0.18), transparent 70%), radial-gradient(35% 30% at 80% 70%, ${b.escura}55, transparent 70%), radial-gradient(30% 20% at 60% 35%, ${b.escura}33, transparent 70%), repeating-radial-gradient(circle at 37% 61%, rgba(0,0,0,0.05) 0 0.6px, transparent 0.6px 2.4px), repeating-radial-gradient(circle at 71% 23%, rgba(255,255,255,0.06) 0 0.5px, transparent 0.5px 3.1px)`,
+    backgroundColor: "#16111d",
+    backgroundImage: `radial-gradient(70% 45% at 50% 0%, ${b.escura}66, transparent 70%), radial-gradient(60% 40% at 50% 100%, ${b.escura}40, transparent 70%), repeating-radial-gradient(circle at 37% 61%, rgba(255,255,255,0.035) 0 0.6px, transparent 0.6px 2.4px), linear-gradient(160deg, #221a2b, #100c15)`,
   };
 }
 
@@ -73,17 +73,17 @@ function Sol() {
 }
 
 /** Estrela de seis pontas dourada (laterais). */
-function Estrela({ x, y }: { x: number; y: number }) {
+function Estrela({ x, y, cor }: { x: number; y: number; cor: string }) {
   return (
     <g transform={`translate(${x} ${y})`}>
       <path d="M0 -4.6 L1.2 -1.4 L4 -2.3 L2 0 L4 2.3 L1.2 1.4 L0 4.6 L-1.2 1.4 L-4 2.3 L-2 0 L-4 -2.3 L-1.2 -1.4 Z" fill={`url(#ct-ouro)`} stroke={GOLD_DARK} strokeWidth="0.25" />
-      <circle r="0.7" fill="#7a2a1c" />
+      <circle r="0.9" fill={cor} />
     </g>
   );
 }
 
 /** Moldura desenhada (SVG no tamanho da carta): pergaminho, filetes, arco da janela, faixa, quadro e lua. */
-function Moldura({ verso = false }: { verso?: boolean }) {
+function Moldura({ verso = false, cor = GOLD }: { verso?: boolean; cor?: string }) {
   // janela em arco: 13..87 × 16..150 (o arco ocupa 14 de altura)
   const arco = "M13 150 V30 Q13 16 27 16 H34 Q50 6 66 16 H73 Q87 16 87 30 V150 Z";
   return (
@@ -95,13 +95,18 @@ function Moldura({ verso = false }: { verso?: boolean }) {
           <stop offset="1" stopColor={GOLD_DARK} />
         </linearGradient>
         <linearGradient id="ct-faixa" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor={GOLD_LIGHT} />
-          <stop offset="0.5" stopColor="#e3c370" />
-          <stop offset="1" stopColor="#a8822f" />
+          <stop offset="0" stopColor="#3a2a16" />
+          <stop offset="0.5" stopColor="#2a1d0f" />
+          <stop offset="1" stopColor="#1a1209" />
         </linearGradient>
+        <radialGradient id="ct-papel" cx="0.5" cy="0.45" r="0.75">
+          <stop offset="0.55" stopColor={PAPER} />
+          <stop offset="1" stopColor={PAPER_DARK} />
+        </radialGradient>
       </defs>
       {/* pergaminho com um véu quente nas bordas */}
-      <path d={`M10 5 H90 Q95 5 95 10 V212 Q95 217 90 217 H10 Q5 217 5 212 V10 Q5 5 10 5 Z${verso ? "" : ` ${arco}`}`} fill={PAPER} fillRule="evenodd" />
+      <path d={`M10 5 H90 Q95 5 95 10 V212 Q95 217 90 217 H10 Q5 217 5 212 V10 Q5 5 10 5 Z${verso ? "" : ` ${arco}`}`} fill="url(#ct-papel)" fillRule="evenodd" />
+      <rect x="2.4" y="2.4" width="95.2" height="217.2" rx="6.4" fill="none" stroke={cor} strokeWidth="0.45" opacity="0.85" />
       <rect x="5" y="5" width="90" height="212" rx="5" fill="none" stroke={GOLD_DARK} strokeWidth="0.5" />
       <rect x="7.6" y="7.6" width="84.8" height="206.8" rx="3.6" fill="none" stroke={GOLD} strokeWidth="0.9" />
       <rect x="9.2" y="9.2" width="81.6" height="203.6" rx="3" fill="none" stroke={GOLD_DARK} strokeWidth="0.25" />
@@ -120,9 +125,10 @@ function Moldura({ verso = false }: { verso?: boolean }) {
           <path d={arco} fill="none" stroke={`url(#ct-ouro)`} strokeWidth="1.6" />
           <path d="M14.3 149 V30.4 Q14.3 17.3 27.2 17.3 H34.4 Q50 7.6 65.6 17.3 H72.8 Q85.7 17.3 85.7 30.4 V149" fill="none" stroke="#2a1a0a" strokeWidth="0.35" opacity="0.7" />
           {/* faixa do nome */}
-          <path d="M6 147 L12 149.5 L9 152.5 L12 156 L6 158.5 L14 158 Z" fill="#a8822f" stroke={GOLD_DARK} strokeWidth="0.25" />
-          <path d="M94 147 L88 149.5 L91 152.5 L88 156 L94 158.5 L86 158 Z" fill="#a8822f" stroke={GOLD_DARK} strokeWidth="0.25" />
-          <path d="M12 146 Q50 143 88 146 V158.5 Q50 156 12 158.5 Z" fill="url(#ct-faixa)" stroke={GOLD_DARK} strokeWidth="0.35" />
+          <path d="M10 148.6 L13.5 150 L11.6 152.2 L13.5 154.4 L10 155.8 L15 155.4 Z" fill="#2a1d0f" stroke={GOLD} strokeWidth="0.25" />
+          <path d="M90 148.6 L86.5 150 L88.4 152.2 L86.5 154.4 L90 155.8 L85 155.4 Z" fill="#2a1d0f" stroke={GOLD} strokeWidth="0.25" />
+          <path d="M13.5 147.6 Q50 145.6 86.5 147.6 V156.6 Q50 154.8 13.5 156.6 Z" fill="url(#ct-faixa)" stroke={GOLD} strokeWidth="0.4" />
+          <path d="M15 148.8 Q50 147 85 148.8 M15 155.3 Q50 153.6 85 155.3" fill="none" stroke={GOLD_DARK} strokeWidth="0.2" />
           {/* quadro de informações */}
           <rect x="13" y="161.5" width="74" height="49" fill="none" stroke={GOLD} strokeWidth="0.55" />
           <path d="M13 179 H87 M13 197.5 H87 M37.7 161.5 V179 M62.3 161.5 V179 M33 179 V210.5" stroke={GOLD} strokeWidth="0.35" fill="none" />
@@ -138,8 +144,8 @@ function Moldura({ verso = false }: { verso?: boolean }) {
           ].map(([x, y], i) => (
             <path key={i} transform={`translate(${x} ${y})`} d="M0 -1.6 L0.5 -0.5 L1.6 0 L0.5 0.5 L0 1.6 L-0.5 0.5 L-1.6 0 L-0.5 -0.5 Z" fill={GOLD} />
           ))}
-          <Estrela x={7.4} y={85} />
-          <Estrela x={92.6} y={85} />
+          <Estrela x={7.4} y={85} cor={cor} />
+          <Estrela x={92.6} y={85} cor={cor} />
         </>
       )}
       {/* lua no pé */}
@@ -154,9 +160,9 @@ function Moldura({ verso = false }: { verso?: boolean }) {
 function Celula({ rotulo, Icone, valor, style }: { rotulo: string; Icone: LucideIcon; valor: string; style: CSSProperties }) {
   return (
     <span className="absolute flex flex-col items-center justify-start gap-[0.5cqw] pt-[1cqw] text-center" style={style}>
-      <span className="hidden font-serif text-[2.7cqw] uppercase leading-none tracking-[0.04em] @min-[260px]:block">{rotulo}</span>
+      <span className="hidden font-display text-[2.4cqw] font-semibold uppercase leading-none tracking-[0.04em] @min-[260px]:block">{rotulo}</span>
       <Icone className="size-[5.4cqw] @min-[260px]:size-[4.6cqw]" strokeWidth={1.3} />
-      <span className="hidden line-clamp-2 px-[1cqw] font-serif text-[2.6cqw] uppercase leading-[1.1] @min-[260px]:block">{valor}</span>
+      <span className="hidden line-clamp-2 px-[1cqw] font-display text-[2.3cqw] uppercase leading-[1.1] @min-[260px]:block">{valor}</span>
     </span>
   );
 }
@@ -210,10 +216,10 @@ export function CartaFrente({
           <span className="dvcard-holo absolute inset-0 opacity-40 mix-blend-color-dodge" style={{ backgroundImage: "linear-gradient(115deg, transparent 20%, rgba(242,217,140,0.45) 40%, rgba(194,185,236,0.4) 55%, transparent 75%)", backgroundSize: "260% 260%" }} />
         )}
       </span>
-      <Moldura />
+      <Moldura cor={BORDA[r].cor} />
       {/* nome na faixa */}
-      <span aria-hidden="true" className="absolute inset-x-[14cqw] top-[145cqw] hidden h-[12.5cqw] items-center justify-center text-center @min-[132px]:flex">
-        <span className="line-clamp-1 font-serif text-[5.2cqw] font-semibold leading-none tracking-[0.01em]" style={{ color: INK }}>
+      <span aria-hidden="true" className="absolute inset-x-[16cqw] top-[146.4cqw] hidden h-[9.6cqw] items-center justify-center text-center @min-[132px]:flex">
+        <span className="line-clamp-1 font-[family-name:var(--font-card-banner)] text-[4.6cqw] leading-none tracking-[0.02em]" style={{ color: GOLD_LIGHT, textShadow: "0 0.3cqw 0.6cqw rgba(0,0,0,0.6)" }}>
           {card.name}
         </span>
       </span>
@@ -223,21 +229,21 @@ export function CartaFrente({
         <Celula rotulo="Coleção" Icone={Watch} valor={meta.collection} style={{ left: "37.7cqw", top: "161.5cqw", width: "24.6cqw", height: "17.5cqw" }} />
         <Celula rotulo="Raridade" Icone={Compass} valor={rotuloRaridade} style={{ left: "62.3cqw", top: "161.5cqw", width: "24.7cqw", height: "17.5cqw" }} />
         <span className="absolute flex flex-col items-center justify-center gap-[0.6cqw]" style={{ left: "13cqw", top: "179cqw", width: "20cqw", height: "18.5cqw" }}>
-          <span className="hidden font-serif text-[2.7cqw] uppercase leading-none tracking-[0.04em] @min-[260px]:block">Função</span>
+          <span className="hidden font-display text-[2.4cqw] font-semibold uppercase leading-none tracking-[0.04em] @min-[260px]:block">Função</span>
           <Glyph className="size-[6cqw]" strokeWidth={1.3} />
         </span>
         <span className="absolute hidden items-center px-[1.6cqw] @min-[260px]:flex" style={{ left: "33cqw", top: "179cqw", width: "54cqw", height: "18.5cqw" }}>
-          <span className="line-clamp-5 font-serif text-[3.1cqw] leading-[1.18]">{card.effect}</span>
+          <span className="line-clamp-5 font-body text-[3cqw] leading-[1.18]">{card.effect}</span>
         </span>
         <span className="absolute flex flex-col items-center justify-center gap-[0.4cqw]" style={{ left: "13cqw", top: "197.5cqw", width: "20cqw", height: "13cqw" }}>
-          <span className="hidden font-serif text-[2.6cqw] uppercase leading-none tracking-[0.04em] @min-[260px]:block">{raio !== "—" ? "Raio" : "Peso"}</span>
+          <span className="hidden font-display text-[2.3cqw] font-semibold uppercase leading-none tracking-[0.04em] @min-[260px]:block">{raio !== "—" ? "Raio" : "Peso"}</span>
           <span className="flex items-center gap-[1cqw]">
             {raio !== "—" ? <Crosshair className="size-[4.4cqw]" strokeWidth={1.3} /> : <Weight className="size-[4.4cqw]" strokeWidth={1.3} />}
-            <span className="hidden font-serif text-[3.2cqw] leading-none @min-[260px]:inline">{raio !== "—" ? raio : peso}</span>
+            <span className="hidden font-body text-[3.2cqw] leading-none @min-[260px]:inline">{raio !== "—" ? raio : peso}</span>
           </span>
         </span>
         <span className="absolute hidden items-center justify-center px-[2cqw] text-center @min-[260px]:flex" style={{ left: "33cqw", top: "197.5cqw", width: "54cqw", height: "13cqw" }}>
-          <span className="line-clamp-2 font-serif text-[2.9cqw] italic leading-[1.18]">{frase ? `“${frase}”` : card.natureza ?? card.type}</span>
+          <span className="line-clamp-2 font-body text-[2.9cqw] italic leading-[1.18]">{frase ? `“${frase}”` : card.natureza ?? card.type}</span>
         </span>
       </span>
     </article>
