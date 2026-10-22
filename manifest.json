@@ -1,0 +1,96 @@
+{
+  "pedido": "carta-xadrez-torre",
+  "titulo": "Carta — Torre do Xadrez (ilustração da janela)",
+  "tipo": "ilustracao",
+  "tamanho_final": 1536,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 70301,
+      "passos": null,
+      "segundos": 2.7,
+      "neuronios_estimados": 1386,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "carta-xadrez-torre--v01--1536.png",
+          "bytes": 2330763
+        },
+        {
+          "arquivo": "carta-xadrez-torre--v01--1536.webp",
+          "bytes": 454062
+        },
+        {
+          "arquivo": "carta-xadrez-torre--v01--1024.webp",
+          "bytes": 160060
+        },
+        {
+          "arquivo": "carta-xadrez-torre--v01--768.webp",
+          "bytes": 100280
+        }
+      ],
+      "segundos_pos": 1.6,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 70302,
+      "passos": null,
+      "segundos": 2.5,
+      "neuronios_estimados": 1386,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "carta-xadrez-torre--v02--1536.png",
+          "bytes": 2345546
+        },
+        {
+          "arquivo": "carta-xadrez-torre--v02--1536.webp",
+          "bytes": 451330
+        },
+        {
+          "arquivo": "carta-xadrez-torre--v02--1024.webp",
+          "bytes": 157204
+        },
+        {
+          "arquivo": "carta-xadrez-torre--v02--768.webp",
+          "bytes": 99488
+        }
+      ],
+      "segundos_pos": 1.6,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 70303,
+      "passos": null,
+      "segundos": 2.5,
+      "neuronios_estimados": 1386,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "carta-xadrez-torre--v03--1536.png",
+          "bytes": 2386961
+        },
+        {
+          "arquivo": "carta-xadrez-torre--v03--1536.webp",
+          "bytes": 448796
+        },
+        {
+          "arquivo": "carta-xadrez-torre--v03--1024.webp",
+          "bytes": 168298
+        },
+        {
+          "arquivo": "carta-xadrez-torre--v03--768.webp",
+          "bytes": 107002
+        }
+      ],
+      "segundos_pos": 1.6,
+      "avisos": []
+    }
+  ]
+}
