@@ -1,0 +1,109 @@
+{
+  "pedido": "arcano-julgamento-mangas",
+  "titulo": "Arcano — julgamento (anjo, mãos nas mangas)",
+  "tipo": "ilustracao",
+  "tamanho_final": 1536,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 93141,
+      "passos": null,
+      "segundos": 3.7,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "arcano-julgamento-mangas--v01--1536.png",
+          "bytes": 1196925
+        },
+        {
+          "arquivo": "arcano-julgamento-mangas--v01--1536.webp",
+          "bytes": 209138
+        },
+        {
+          "arquivo": "arcano-julgamento-mangas--v01--1024.webp",
+          "bytes": 91406
+        },
+        {
+          "arquivo": "arcano-julgamento-mangas--v01--768.webp",
+          "bytes": 58878
+        },
+        {
+          "arquivo": "arcano-julgamento-mangas--v01--512.webp",
+          "bytes": 32718
+        }
+      ],
+      "segundos_pos": 37.4,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 93142,
+      "passos": null,
+      "segundos": 64.1,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "ilhas_removidas": 1,
+      "arquivos": [
+        {
+          "arquivo": "arcano-julgamento-mangas--v02--1536.png",
+          "bytes": 1264283
+        },
+        {
+          "arquivo": "arcano-julgamento-mangas--v02--1536.webp",
+          "bytes": 215430
+        },
+        {
+          "arquivo": "arcano-julgamento-mangas--v02--1024.webp",
+          "bytes": 89684
+        },
+        {
+          "arquivo": "arcano-julgamento-mangas--v02--768.webp",
+          "bytes": 61970
+        },
+        {
+          "arquivo": "arcano-julgamento-mangas--v02--512.webp",
+          "bytes": 34684
+        }
+      ],
+      "segundos_pos": 31.0,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 93143,
+      "passos": null,
+      "segundos": 3.1,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "arcano-julgamento-mangas--v03--1536.png",
+          "bytes": 1175017
+        },
+        {
+          "arquivo": "arcano-julgamento-mangas--v03--1536.webp",
+          "bytes": 191898
+        },
+        {
+          "arquivo": "arcano-julgamento-mangas--v03--1024.webp",
+          "bytes": 89904
+        },
+        {
+          "arquivo": "arcano-julgamento-mangas--v03--768.webp",
+          "bytes": 61470
+        },
+        {
+          "arquivo": "arcano-julgamento-mangas--v03--512.webp",
+          "bytes": 35504
+        }
+      ],
+      "segundos_pos": 31.2,
+      "avisos": []
+    }
+  ]
+}
