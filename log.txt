@@ -1,0 +1,9 @@
+[xadrez-cavalo] v01: @cf/black-forest-labs/flux-2-klein-9b seed=81231 1024x1536 passos=None (~1,455 neurônios)
+    ok em 3.4s, 1024x1536
+[xadrez-cavalo] v02: @cf/black-forest-labs/flux-2-klein-9b seed=81232 1024x1536 passos=None (~1,455 neurônios)
+    ok em 2.9s, 1024x1536
+[xadrez-cavalo] v03: @cf/black-forest-labs/flux-2-klein-9b seed=81233 1024x1536 passos=None (~1,455 neurônios)
+    ok em 3.4s, 1024x1536
+[xadrez-cavalo] v01: rembg:birefnet-general; sem avisos
+[xadrez-cavalo] v02: rembg:birefnet-general; sem avisos
+[xadrez-cavalo] v03: rembg:birefnet-general; sem avisos

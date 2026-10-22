@@ -1,0 +1,108 @@
+{
+  "pedido": "xadrez-cavalo",
+  "titulo": "Coleção Xadrez — Cavalo (peça sem fundo)",
+  "tipo": "ilustracao",
+  "tamanho_final": 1536,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 81231,
+      "passos": null,
+      "segundos": 3.4,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "xadrez-cavalo--v01--1536.png",
+          "bytes": 1160473
+        },
+        {
+          "arquivo": "xadrez-cavalo--v01--1536.webp",
+          "bytes": 183242
+        },
+        {
+          "arquivo": "xadrez-cavalo--v01--1024.webp",
+          "bytes": 77916
+        },
+        {
+          "arquivo": "xadrez-cavalo--v01--768.webp",
+          "bytes": 53038
+        },
+        {
+          "arquivo": "xadrez-cavalo--v01--512.webp",
+          "bytes": 30034
+        }
+      ],
+      "segundos_pos": 46.9,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 81232,
+      "passos": null,
+      "segundos": 2.9,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "xadrez-cavalo--v02--1536.png",
+          "bytes": 1136392
+        },
+        {
+          "arquivo": "xadrez-cavalo--v02--1536.webp",
+          "bytes": 175034
+        },
+        {
+          "arquivo": "xadrez-cavalo--v02--1024.webp",
+          "bytes": 80438
+        },
+        {
+          "arquivo": "xadrez-cavalo--v02--768.webp",
+          "bytes": 54438
+        },
+        {
+          "arquivo": "xadrez-cavalo--v02--512.webp",
+          "bytes": 30888
+        }
+      ],
+      "segundos_pos": 39.7,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 81233,
+      "passos": null,
+      "segundos": 3.4,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "xadrez-cavalo--v03--1536.png",
+          "bytes": 1183634
+        },
+        {
+          "arquivo": "xadrez-cavalo--v03--1536.webp",
+          "bytes": 180154
+        },
+        {
+          "arquivo": "xadrez-cavalo--v03--1024.webp",
+          "bytes": 81420
+        },
+        {
+          "arquivo": "xadrez-cavalo--v03--768.webp",
+          "bytes": 54314
+        },
+        {
+          "arquivo": "xadrez-cavalo--v03--512.webp",
+          "bytes": 30964
+        }
+      ],
+      "segundos_pos": 39.6,
+      "avisos": []
+    }
+  ]
+}
