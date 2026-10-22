@@ -63,7 +63,7 @@ export function MinhaCorpView({ d, agir }: { d: CorpLiberado; agir: Agir }) {
   const [aba, setAba] = useState<Aba>('membros')
   return (
     <div className="flex flex-col gap-5">
-      <Heroi m={m} />
+      <Heroi m={m} agir={agir} />
       <Tabs<Aba>
         label="Seções da Corporação"
         items={[
@@ -94,7 +94,7 @@ export function MinhaCorpView({ d, agir }: { d: CorpLiberado; agir: Agir }) {
   )
 }
 
-function Heroi({ m }: { m: MinhaCorp }) {
+function Heroi({ m, agir }: { m: MinhaCorp; agir: Agir }) {
   const necro = m.classificacao === 'necro'
   const [copiado, setCopiado] = useState(false)
   return (
@@ -111,6 +111,7 @@ function Heroi({ m }: { m: MinhaCorp }) {
           <p className="dv-label text-[10px] text-dv-gold">{CORP_CARGO_ROTULO[m.meuCargo]} · {m.membros}/{m.maxMembros}</p>
           <h2 className="mt-1.5 break-words font-display text-[22px] font-semibold uppercase leading-[1.1] tracking-[0.06em] text-dv-text">{m.nome}</h2>
           {m.lema && <p className="mt-1.5 font-body text-[15px] italic leading-snug text-dv-text-2">“{m.lema}”</p>}
+          {m.meuCargo === 'lider' && <EditarLema atual={m.lema} agir={agir} />}
           <div className="mt-2.5 flex flex-wrap gap-1.5">
             <Selo tom={necro ? 'rubi' : 'aco'}>{necro ? 'Necro-Corporação' : 'Oficial'}</Selo>
             {m.escopo === 'global' && <Selo tom="ametista">{ESCOPO_ROTULO.global} · provisório</Selo>}
@@ -145,6 +146,56 @@ function Heroi({ m }: { m: MinhaCorp }) {
       </div>
       <p className="sr-only">{CLASSIFICACAO_ROTULO[m.classificacao]}</p>
     </Painel>
+  )
+}
+
+/** Lema opcional: o líder põe, troca ou tira quando quiser. */
+function EditarLema({ atual, agir }: { atual: string | null; agir: Agir }) {
+  const { ocupado, erro, fazer, setErro } = useAcao(agir)
+  const [aberto, setAberto] = useState(false)
+  const [lema, setLema] = useState(atual ?? '')
+  if (!aberto)
+    return (
+      <button
+        type="button"
+        onClick={() => {
+          playSfx('open')
+          setLema(atual ?? '')
+          setErro(null)
+          setAberto(true)
+        }}
+        className="dv-focus mt-1.5 min-h-9 font-mono text-[10.5px] uppercase tracking-[0.14em] text-dv-amethyst-text hover:text-dv-text"
+      >
+        {atual ? 'Trocar o lema' : '+ Pôr um lema'}
+      </button>
+    )
+  return (
+    <form
+      className="mt-2 flex flex-col gap-2"
+      onSubmit={async (e) => {
+        e.preventDefault()
+        if (await fazer('lema', { action: 'lema.editar', lema })) setAberto(false)
+      }}
+    >
+      <label htmlFor="corp-lema-editar" className="sr-only">
+        Lema da Corporação
+      </label>
+      <Campo id="corp-lema-editar" value={lema} maxLength={90} onChange={(e) => setLema(e.target.value)} placeholder="Uma frase para o brasão (opcional)" autoComplete="off" />
+      {erro && <Erro>{erro}</Erro>}
+      <div className="flex flex-wrap gap-2">
+        <Button type="submit" size="sm" loading={ocupado === 'lema'}>
+          Salvar
+        </Button>
+        {atual && (
+          <Button type="button" size="sm" variant="ghost" disabled={!!ocupado} onClick={async () => { if (await fazer('lema', { action: 'lema.editar', lema: '' }, 'close')) setAberto(false) }}>
+            Tirar o lema
+          </Button>
+        )}
+        <Button type="button" size="sm" variant="ghost" onClick={() => setAberto(false)}>
+          Cancelar
+        </Button>
+      </div>
+    </form>
   )
 }
 

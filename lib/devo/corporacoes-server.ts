@@ -783,6 +783,18 @@ export async function recrutar(playerId: string, input: { titulo: unknown; texto
   return { anuncioId: id }
 }
 
+/** O líder põe, troca ou tira o lema da Corporação (opcional; vazio = sem lema). */
+export async function editarLema(playerId: string, input: { lema: unknown }) {
+  await requireUnlock(playerId, 'corporacoes')
+  const lema = texto(input.lema, 3, 90, 'O lema', true)
+  const eu = await membroDe(pool, playerId)
+  if (!eu || eu.cargo !== 'lider') throw new RecordError('Só o líder muda o lema.', 403)
+  const corp = await corpPorId(pool, eu.corporacao_id)
+  if (!corp || corp.status !== 'ativa') throw new RecordError('A Corporação não está ativa.', 409)
+  await run(pool, 'UPDATE corporacoes SET lema = $2 WHERE id = $1', [corp.id, lema])
+  return { lema }
+}
+
 /* ------------------------------------------------------------------ Equipe (Mesa do Record) */
 
 export async function mesaCorporacoes(atorId: string): Promise<CorpMesa> {

@@ -48,6 +48,8 @@ import { DeadlyVoteSymbol } from '@/components/devo/system/symbol'
 import { OddsBar, PaperField, Plaque, PortraitFrame, StatusSeal } from '@/components/devo/kit'
 import { CardFace, RARITY_SKIN, RarityGem, RarityPips } from '@/components/devo/shared/devo-card'
 import { PacoteVisual } from '@/components/devo/casa/pacote-visual'
+import { NichoBrasao } from '@/components/devo/corporacoes/brasao'
+import { BRASAO_COR, BRASAO_CORES, BRASAO_FORMA_ROTULO, BRASAO_FORMAS } from '@/lib/devo/corporacoes'
 import { ALL_RARITIES, RARITY_META } from '@/lib/devo/cards'
 import { portraitFrameProps } from '@/lib/devo/npcs'
 import { cn } from '@/lib/utils'
@@ -622,6 +624,16 @@ function RaridadesVitrine() {
           <p className="font-sans text-[11px] font-semibold uppercase tracking-[0.18em] text-white/80">Pacote Raro</p>
         </li>
       </ul>
+      <div data-brasoes className="mt-8 grid grid-cols-4 gap-3 sm:grid-cols-6">
+        {BRASAO_FORMAS.map((f, i) => (
+          <figure key={f} className="flex flex-col items-center gap-1">
+            <NichoBrasao brasao={{ forma: f, cor: BRASAO_CORES[i % BRASAO_CORES.length], inicial: 'DEVO'[i % 4] }} tamanho={84} />
+            <figcaption className="font-mono text-[10px] uppercase tracking-[0.14em] text-white/60">
+              {BRASAO_FORMA_ROTULO[f]} · {BRASAO_COR[BRASAO_CORES[i % BRASAO_CORES.length]].rotulo}
+            </figcaption>
+          </figure>
+        ))}
+      </div>
     </div>
   )
 }

@@ -16,7 +16,7 @@ export const ESCOPO_ROTULO: Record<CorpEscopo, string> = { local: 'Local', globa
 
 /* ------------------------------------------------------------------ Brasão (forma + cor da paleta) */
 
-export const BRASAO_FORMAS = ['escudo', 'losango', 'estrela', 'sol', 'coroa', 'chave'] as const
+export const BRASAO_FORMAS = ['escudo', 'losango', 'estrela', 'sol', 'coroa', 'chave', 'lua', 'relogio', 'ampulheta', 'torre', 'cruz', 'rosa'] as const
 export type BrasaoForma = (typeof BRASAO_FORMAS)[number]
 export const BRASAO_FORMA_ROTULO: Record<BrasaoForma, string> = {
   escudo: 'Escudo',
@@ -25,10 +25,16 @@ export const BRASAO_FORMA_ROTULO: Record<BrasaoForma, string> = {
   sol: 'Sol',
   coroa: 'Coroa',
   chave: 'Chave',
+  lua: 'Lua',
+  relogio: 'Relógio',
+  ampulheta: 'Ampulheta',
+  torre: 'Torre',
+  cruz: 'Cruz',
+  rosa: 'Rosácea',
 }
 
 /** Cores do brasão: só materiais da paleta DEVO (DIRECAO-2 §6; cosméticos podem usar vinho e noite). */
-export const BRASAO_CORES = ['aco', 'porcelana', 'onix', 'ametista', 'vinho', 'noite'] as const
+export const BRASAO_CORES = ['aco', 'porcelana', 'onix', 'ametista', 'vinho', 'noite', 'rubi', 'marfim', 'bronze', 'prata', 'cobalto', 'musgo'] as const
 export type BrasaoCor = (typeof BRASAO_CORES)[number]
 export const BRASAO_COR: Record<BrasaoCor, { rotulo: string; claro: string; meio: string; escuro: string; tinta: string }> = {
   aco: { rotulo: 'Aço champanhe', claro: '#ece5d8', meio: '#bab09f', escuro: '#6b6357', tinta: '#151517' },
@@ -37,6 +43,12 @@ export const BRASAO_COR: Record<BrasaoCor, { rotulo: string; claro: string; meio
   ametista: { rotulo: 'Ametista', claro: '#c2b9ec', meio: '#8a7cc8', escuro: '#463d78', tinta: '#f2f0ec' },
   vinho: { rotulo: 'Vinho', claro: '#8a2a33', meio: '#5c1119', escuro: '#2a0609', tinta: '#ece5d8' },
   noite: { rotulo: 'Céu noturno', claro: '#4a4760', meio: '#2b2a35', escuro: '#121118', tinta: '#cbc5e8' },
+  rubi: { rotulo: 'Rubi', claro: '#d0707c', meio: '#a3121f', escuro: '#3f060b', tinta: '#f4efe6' },
+  marfim: { rotulo: 'Marfim', claro: '#fbf6ea', meio: '#e6dcc4', escuro: '#a79a7c', tinta: '#2a241b' },
+  bronze: { rotulo: 'Bronze velho', claro: '#c8a27a', meio: '#8a6a48', escuro: '#3b2a1a', tinta: '#f4efe6' },
+  prata: { rotulo: 'Prata fria', claro: '#f1f2f5', meio: '#b8bcc6', escuro: '#5f636e', tinta: '#151517' },
+  cobalto: { rotulo: 'Cobalto', claro: '#7c86c9', meio: '#3a4590', escuro: '#141a3d', tinta: '#eef0fb' },
+  musgo: { rotulo: 'Musgo', claro: '#8fa08a', meio: '#4f5f4b', escuro: '#1c241b', tinta: '#eef2ea' },
 }
 
 export const isBrasaoForma = (v: unknown): v is BrasaoForma => (BRASAO_FORMAS as readonly unknown[]).includes(v)

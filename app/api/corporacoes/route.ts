@@ -11,6 +11,7 @@ import {
   definirCargo,
   definirEscopo,
   definirRivalidade,
+  editarLema,
   fundar,
   getCorporacoes,
   mesaCorporacoes,
@@ -101,6 +102,8 @@ export async function POST(req: Request) {
         return ok(await cancelarConvite(me, b.id))
       case 'carta.transferir':
         return ok(await transferirCarta(me, { uid: b.uid, para: b.para }))
+      case 'lema.editar':
+        return ok(await editarLema(me, { lema: b.lema }))
       case 'recrutamento.publicar':
         return ok(await recrutar(me, { titulo: b.titulo, texto: b.texto }))
       case 'mesa.fundacao':

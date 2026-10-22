@@ -314,12 +314,23 @@ await test('recrutamento no Salão: líder publica (com o código); membro comum
   assert(c.status === 403, `membro comum publicando: ${c.status}`)
 })
 
+await test('lema opcional: o líder põe, troca e tira; membro comum não; formas e cores novas na fundação', async () => {
+  const r = await A.corp('lema.editar', { lema: 'O tempo é a vida' })
+  assert(r.status === 200 && r.json.lema === 'O tempo é a vida', `pôr lema: ${r.text}`)
+  const c = await C.corp('lema.editar', { lema: 'Golpe' })
+  assert(c.status === 403, `membro comum mudando o lema: ${c.status}`)
+  const t = await A.corp('lema.editar', { lema: '' })
+  assert(t.status === 200 && t.json.lema === null, `tirar lema: ${t.text}`)
+  const g = await A.get('/api/corporacoes')
+  assert(g.json.minha.lema === null, 'lema saiu da tela')
+})
+
 await test('líder não sai sem passar a liderança; recusar fundação devolve o Tempo uma vez', async () => {
   const s = await A.corp('sair')
   assert(s.status === 409, `líder saindo: ${s.status}`)
   await sobreviveu(D)
   const t0 = await timer(D.id)
-  const f = await D.corp('fundar', { nome: `Outra ${SFX}`, forma: 'escudo', cor: 'onix', idem: `idem-${sfx}-d` })
+  const f = await D.corp('fundar', { nome: `Outra ${SFX}`, forma: 'rosa', cor: 'cobalto', idem: `idem-${sfx}-d` })
   assert(f.status === 200, `D funda: ${f.text}`)
   const r = await O.corp('mesa.fundacao', { id: f.json.corporacaoId, decisao: 'recusar', nota: 'teste' })
   assert(r.status === 200 && r.json.devolvido === true, `recusar devolve: ${r.text}`)

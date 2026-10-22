@@ -29,6 +29,12 @@ const FORMA: Record<BrasaoForma, string> = {
   })(),
   coroa: 'M14 40L30 56L40 26L50 46L60 26L70 56L86 40L80 104Q50 114 20 104Z',
   chave: 'M50 8A28 28 0 0 1 57 63.1V84H69V93H57V100H65V109H57V116H43V63.1A28 28 0 0 1 50 8Z',
+  lua: 'M64 14A48 48 0 1 0 64 110A56 56 0 0 1 64 14Z',
+  relogio: 'M50 18A45 45 0 1 1 49.99 18Z M43 6H57V18H43Z',
+  ampulheta: 'M18 8H82V18L58 62L82 106V116H18V106L42 62L18 18Z',
+  torre: 'M16 8H30V20H43V8H57V20H70V8H84V36L74 46V104L84 116H16L26 104V46L16 36Z',
+  cruz: 'M36 8H64L58 40L92 34V76L58 70L64 116H36L42 70L8 76V34L42 40Z',
+  rosa: 'M50 26Q73.73 4.72 75.46 36.54Q107.28 38.27 86 62Q107.28 85.73 75.46 87.46Q73.73 119.28 50 98Q26.27 119.28 24.54 87.46Q-7.28 85.73 14 62Q-7.28 38.27 24.54 36.54Q26.27 4.72 50 26Z',
 }
 
 /** Onde fica a inicial (o centro visual de cada forma). */
@@ -39,6 +45,12 @@ const CENTRO: Record<BrasaoForma, { x: number; y: number; s: number }> = {
   sol: { x: 50, y: 64, s: 36 },
   coroa: { x: 50, y: 82, s: 34 },
   chave: { x: 50, y: 38, s: 30 },
+  lua: { x: 27, y: 62, s: 22 },
+  relogio: { x: 50, y: 64, s: 38 },
+  ampulheta: { x: 50, y: 94, s: 24 },
+  torre: { x: 50, y: 76, s: 34 },
+  cruz: { x: 50, y: 55, s: 24 },
+  rosa: { x: 50, y: 63, s: 34 },
 }
 
 export function BrasaoCorp({
@@ -130,7 +142,7 @@ export function BrasaoCorp({
       </text>
       {/* estrela do sigilo, com raios finos */}
       {(() => {
-        const sy = brasao.forma === 'losango' || brasao.forma === 'estrela' || brasao.forma === 'sol' ? 4 : 5
+        const sy = brasao.forma === 'relogio' ? 1.5 : brasao.forma === 'rosa' ? 2.5 : brasao.forma === 'losango' || brasao.forma === 'estrela' || brasao.forma === 'sol' ? 4 : 5
         return (
           <g>
             <path d={STAR(50, sy, 11, 0.06)} fill={`url(#a${id})`} opacity="0.55" />
