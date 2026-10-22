@@ -586,6 +586,7 @@ function VoteDetail({
               }
               danger={vote.outcome === 'eliminado'}
             />
+            {vote.pesoMaximo && <PaperField label="Peso máximo de cartas" value={String(vote.pesoMaximo)} />}
             {vote.location && <PaperField label="Local" value={vote.location} className="col-span-2" />}
             {vote.host && <PaperField label="Dealer" value={vote.host} />}
             {tally && <PaperField label="Resultado público" value={tally} className="col-span-2" />}

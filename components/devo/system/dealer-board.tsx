@@ -152,6 +152,7 @@ type VoteForm = {
   date: string
   time: string
   max: string
+  peso: string
   group: string
   admission: VoteAdmission
   prizes: PrizeInput[]
@@ -168,6 +169,7 @@ function formFrom(v?: StaffVote): VoteForm {
     date: start.date,
     time: start.time,
     max: v?.maxParticipants ? String(v.maxParticipants) : '',
+    peso: v?.pesoMaximo ? String(v.pesoMaximo) : '',
     group: v?.groupUrl ?? '',
     admission: v?.admission ?? 'aprovacao',
     prizes: (v?.prizes ?? []).map((p) => ({ recurso: p.recurso, chave: p.chave, quantidade: p.quantidade, label: p.label })),
@@ -213,6 +215,7 @@ function ConvokeForm({
           briefing: f.briefing.trim() || null,
           startsAt,
           maxParticipants: f.max ? Number(f.max) : null,
+          pesoMaximo: f.peso ? Number(f.peso) : null,
           admission: f.admission,
           prizes: f.prizes,
           ...(editing ? {} : { groupUrl: f.group.trim() || null, tutorial: canTutorial && f.tutorial }),
@@ -243,6 +246,9 @@ function ConvokeForm({
           <RecInput value={f.max} onChange={(e) => set({ max: e.target.value.replace(/\D/g, '').slice(0, 3) })} inputMode="numeric" placeholder="Livre" className="dv-tabular" />
         </Field>
       </div>
+      <Field label="Peso máximo de cartas" hint="soma dos pesos que cada Record leva · opcional">
+        <RecInput value={f.peso} onChange={(e) => set({ peso: e.target.value.replace(/\D/g, '').slice(0, 2) })} inputMode="numeric" placeholder="Sem limite" className="dv-tabular" />
+      </Field>
       <div className="flex flex-col gap-1.5">
         <RecLabel>Inscrições</RecLabel>
         <div role="radiogroup" aria-label="Modo de inscrição" className="grid grid-cols-2 gap-1.5">

@@ -24,6 +24,13 @@ export type GlyphName =
   | 'coins'
   | 'door'
   | 'scissors'
+  | 'pawn'
+  | 'bishop'
+  | 'knight'
+  | 'rook'
+  | 'queen'
+  | 'king'
+  | 'board'
 
 export type CardDef = {
   id: string
@@ -34,7 +41,17 @@ export type CardDef = {
   glyph: GlyphName
   effect: string
   flavor: string
+  /** Natureza da carta (Usus, Benedictio, Mutatio, Potentia, Dominatio…). Cartas antigas não têm. */
+  natureza?: CardNatureza
+  /** Arquétipo escrito pelo dono (ex.: "Jogos de Tabuleiro"). Sem ele, vale ARCHETYPE_BY_TYPE[type]. */
+  arquetipo?: string
+  /** Peso no limite de cartas do Deadly Vote. Sem ele, vale o padrão da raridade (getCardPeso). */
+  peso?: number
+  /** Descrição detalhada (o texto longo da ficha). O `effect` fica sendo o texto curto "no card". */
+  detalhe?: string
 }
+
+export type CardNatureza = 'Usus' | 'Benedictio' | 'Mutatio' | 'Potentia' | 'Dominatio'
 
 export type OwnedCard = {
   uid: string

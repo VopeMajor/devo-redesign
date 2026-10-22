@@ -1,6 +1,13 @@
 import {
+  ChessBishop,
+  ChessKing,
+  ChessKnight,
+  ChessPawn,
+  ChessQueen,
+  ChessRook,
   Clock,
   Coins,
+  Grid3x3,
   Crown,
   Dices,
   DoorClosed,
@@ -19,7 +26,7 @@ import {
 } from "lucide-react";
 import type { CSSProperties, ReactNode } from "react";
 import { DuotoneArt, type DuotoneTone } from "@/components/devo/kit";
-import { ARCHETYPE_BY_TYPE, getCard, getCardMeta, getCardRadius, RARITY_META } from "@/lib/devo/cards";
+import { getCard, getCardArquetipo, getCardMeta, getCardRadius, RARITY_META } from "@/lib/devo/cards";
 import type { CardType, GlyphName, Rarity } from "@/lib/devo/types";
 import { cn } from "@/lib/utils";
 import { DeadlyVoteSymbol } from "../system/symbol";
@@ -72,6 +79,13 @@ export const GLYPHS: Record<GlyphName, LucideIcon> = {
   coins: Coins,
   door: DoorClosed,
   scissors: Scissors,
+  pawn: ChessPawn,
+  bishop: ChessBishop,
+  knight: ChessKnight,
+  rook: ChessRook,
+  queen: ChessQueen,
+  king: ChessKing,
+  board: Grid3x3,
 };
 
 export const TYPE_ART: Record<CardType, string> = {
@@ -499,7 +513,9 @@ export function CardFace({
   const setGem = SET_GEMS[r];
   const promo = r === "promocional";
   const radius = getCardRadius(cardId);
-  const archetype = ARCHETYPE_BY_TYPE[card.type];
+  const archetype = getCardArquetipo(card);
+  // Cartas com Natureza (Coleção Xadrez em diante) mostram Natureza · Arquétipo; as antigas, Tipo · Arquétipo.
+  const kind = card.natureza ?? card.type;
   const Glyph = GLYPHS[card.glyph];
   const crop = CROP[cardId] ?? { pos: "50% 30%" };
   const legendary = r === "lendaria";
@@ -573,9 +589,9 @@ export function CardFace({
             {card.name}
           </span>
         </span>
-        <span aria-hidden="true" className="absolute inset-x-[7cqw] top-[118cqw] hidden items-center justify-center gap-[2cqw] whitespace-nowrap font-sans text-[3.6cqw] font-medium uppercase tracking-[0.18em] @min-[132px]:flex" style={{ color: onBodySoft }}>
+        <span aria-hidden="true" className={cn("absolute inset-x-[7cqw] top-[118cqw] hidden items-center justify-center gap-[2cqw] whitespace-nowrap font-sans font-medium uppercase @min-[132px]:flex", `${kind} · ${archetype}`.length > 22 ? "text-[3cqw] tracking-[0.1em]" : "text-[3.6cqw] tracking-[0.18em]")} style={{ color: onBodySoft }}>
           <span className="h-px flex-1 bg-current opacity-40" />
-          {card.type} · {archetype}
+          {kind} · {archetype}
           <span className="h-px flex-1 bg-current opacity-40" />
         </span>
         <span aria-hidden="true" className="absolute inset-x-[7cqw] bottom-[4.4cqw] hidden items-baseline justify-between font-mono text-[3.2cqw] uppercase tracking-[0.1em] @min-[150px]:flex" style={{ color: white ? "rgba(21,21,23,0.62)" : "rgba(238,237,235,0.6)" }}>

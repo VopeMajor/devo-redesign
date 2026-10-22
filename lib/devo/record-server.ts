@@ -42,6 +42,7 @@ type VoteRow = {
   starts_at: Date
   ends_at: Date | null
   max_participants: number | null
+  peso_maximo: number | null
   participants: number
   joined_at: Date | null
   outcome: 'sobreviveu' | 'eliminado' | null
@@ -66,6 +67,7 @@ function toVote(r: VoteRow): DeadlyVote {
     startsAt: r.starts_at.getTime(),
     endsAt: r.ends_at?.getTime() ?? null,
     maxParticipants: r.max_participants,
+    pesoMaximo: r.peso_maximo ?? null,
     participants: Number(r.participants),
     joined: r.joined_at !== null && r.entry_admission !== 'recusada',
     outcome: r.outcome,
@@ -95,7 +97,7 @@ export async function getRecord(playerId: string): Promise<RecordPayload> {
   if (!me) throw new RecordError('Registro não encontrado.', 404)
   const votes = (
     await pool.query<VoteRow>(
-      `SELECT v.id, v.number, v.title, v.arc, v.briefing, v.status, v.starts_at, v.ends_at, v.max_participants,
+      `SELECT v.id, v.number, v.title, v.arc, v.briefing, v.status, v.starts_at, v.ends_at, v.max_participants, v.peso_maximo,
               ${VOTE_COUNTS},
               e.joined_at, e.outcome, e.admission AS entry_admission,
               -- O link do grupo só chega a quem foi aceito, e só enquanto o caso está em andamento.
@@ -203,7 +205,7 @@ export async function getStaffBoard(playerId: string): Promise<StaffBoard> {
   const ator = await requireStaff(playerId)
   const votes = (
     await pool.query<VoteRow & { is_tutorial: boolean; creator: string | null; creator_id: string | null; creator_role: string | null; results_applied_at: Date | null }>(
-      `SELECT v.id, v.number, v.title, v.arc, v.briefing, v.status, v.starts_at, v.ends_at, v.max_participants,
+      `SELECT v.id, v.number, v.title, v.arc, v.briefing, v.status, v.starts_at, v.ends_at, v.max_participants, v.peso_maximo,
               ${VOTE_COUNTS},
               NULL::timestamptz AS joined_at, NULL::text AS outcome, NULL::text AS entry_admission, v.whatsapp_url AS group_url,
               v.is_tutorial, v.results_applied_at, c.name AS creator, c.id AS creator_id, c.role AS creator_role
@@ -380,6 +382,7 @@ function voteFields(input: Record<string, unknown>) {
   if (title.length < 2) throw new RecordError('Título obrigatório.')
   if (!Number.isFinite(startsAt)) throw new RecordError('Data de início inválida.')
   const max = input.maxParticipants == null || input.maxParticipants === '' ? null : Math.max(1, Math.min(999, Math.floor(Number(input.maxParticipants))))
+  const peso = input.pesoMaximo == null || input.pesoMaximo === '' ? null : Math.max(1, Math.min(99, Math.floor(Number(input.pesoMaximo))))
   const rawGroup = text(input.groupUrl, 200)
   const group = rawGroup ? normalizeGroupUrl(rawGroup) : null
   if (rawGroup && !group) throw new RecordError('Link do grupo inválido. Use o convite do WhatsApp (https://chat.whatsapp.com/…).')
@@ -387,6 +390,7 @@ function voteFields(input: Record<string, unknown>) {
     title,
     startsAt,
     max: max !== null && Number.isFinite(max) ? max : null,
+    peso: peso !== null && Number.isFinite(peso) ? peso : null,
     group,
     arc: text(input.arc, 60) || null,
     briefing: text(input.briefing, 600) || null,
@@ -409,9 +413,9 @@ export async function createVote(playerId: string, input: Record<string, unknown
     const prizes = await cleanPrizes(c, input.prizes)
     const [row] = await run<{ id: string }>(
       c,
-      `INSERT INTO deadly_votes (title, arc, briefing, starts_at, max_participants, created_by, whatsapp_url, is_tutorial, location, admission)
-       VALUES ($1, $2, $3, to_timestamp($4 / 1000.0), $5, $6, $7, $8, $9, $10) RETURNING id`,
-      [f.title, f.arc, f.briefing, f.startsAt, f.max, playerId, f.group, tutorial, f.location, f.admission],
+      `INSERT INTO deadly_votes (title, arc, briefing, starts_at, max_participants, created_by, whatsapp_url, is_tutorial, location, admission, peso_maximo)
+       VALUES ($1, $2, $3, to_timestamp($4 / 1000.0), $5, $6, $7, $8, $9, $10, $11) RETURNING id`,
+      [f.title, f.arc, f.briefing, f.startsAt, f.max, playerId, f.group, tutorial, f.location, f.admission, f.peso],
     )
     await writePrizes(c, row.id, prizes)
     return row.id
@@ -430,8 +434,8 @@ export async function updateVote(playerId: string, voteId: string, input: Record
     await run(
       c,
       `UPDATE deadly_votes SET title = $2, arc = $3, briefing = $4, starts_at = to_timestamp($5 / 1000.0), max_participants = $6,
-              location = $7, admission = $8, updated_at = now() WHERE id = $1`,
-      [voteId, f.title, f.arc, f.briefing, f.startsAt, f.max, f.location, f.admission],
+              location = $7, admission = $8, peso_maximo = $9, updated_at = now() WHERE id = $1`,
+      [voteId, f.title, f.arc, f.briefing, f.startsAt, f.max, f.location, f.admission, f.peso],
     )
     if (input.prizes !== undefined) await writePrizes(c, voteId, await cleanPrizes(c, input.prizes))
   })

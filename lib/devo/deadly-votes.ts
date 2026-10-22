@@ -18,6 +18,8 @@ export type DeadlyVote = {
   startsAt: number
   endsAt: number | null
   maxParticipants: number | null
+  /** Peso máximo de cartas que cada Record pode levar (soma dos pesos); null = o Dealer não limitou. */
+  pesoMaximo: number | null
   participants: number
   joined: boolean
   outcome: 'sobreviveu' | 'eliminado' | null

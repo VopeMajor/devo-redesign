@@ -4,7 +4,7 @@ import { ChevronLeft, ChevronRight, Plus, RotateCcw, X } from 'lucide-react'
 import { useCallback, useContext, useEffect, useRef, useState, type PointerEvent } from 'react'
 import { HudCode, HudRule, PaperSheet, RecordPanel, RecordTitle, hudCode } from '@/components/devo/kit'
 import { playSfx } from '@/lib/devo/audio'
-import { ARCHETYPE_BY_TYPE, CARDS, RARITIES, RARITY_META, getCard, getCardMeta, getCardRadius, getCollections } from '@/lib/devo/cards'
+import { CARDS, RARITIES, RARITY_META, getCard, getCardArquetipo, getCardMeta, getCardPeso, getCardRadius, getCollections } from '@/lib/devo/cards'
 import type { Rarity } from '@/lib/devo/types'
 import { cn } from '@/lib/utils'
 import { OsNavContext } from '../os/os-nav'
@@ -568,12 +568,20 @@ function CardDetail({
             <span aria-hidden="true" className="mt-3 block h-px bg-[linear-gradient(90deg,var(--in-brass),rgba(186,176,159,0.3)_50%,transparent)]" />
 
             <dl className="mt-3 grid grid-cols-2 gap-x-4 gap-y-3">
-              {[
-                ['Tipo', card.type],
-                ['Arquétipo', ARCHETYPE_BY_TYPE[card.type]],
-                ['Raio', getCardRadius(cardId)],
-                ['Moldura', skin.material],
-              ].map(([k, v]) => (
+              {(card.natureza
+                ? [
+                    ['Natureza', card.natureza],
+                    ['Arquétipo', getCardArquetipo(card)],
+                    ['Peso', String(getCardPeso(cardId))],
+                    ['Moldura', skin.material],
+                  ]
+                : [
+                    ['Tipo', card.type],
+                    ['Arquétipo', getCardArquetipo(card)],
+                    ['Raio', getCardRadius(cardId)],
+                    ['Peso', String(getCardPeso(cardId))],
+                  ]
+              ).map(([k, v]) => (
                 <div key={k} className="min-w-0">
                   <dt className="font-sans text-[10px] font-medium uppercase tracking-[0.16em] text-in-fg-3">{k}</dt>
                   <dd className="mt-1 truncate font-serif text-[18px] leading-tight text-in-fg">{v}</dd>
@@ -581,15 +589,29 @@ function CardDetail({
               ))}
             </dl>
 
-            <div className="mt-4">
-              <p className="font-sans text-[10px] font-medium uppercase tracking-[0.16em] text-in-fg-3">Função</p>
-              <p className="mt-1 font-body text-[17px] leading-relaxed text-in-fg">
-                <EffectText text={card.effect} />
-              </p>
-            </div>
-            <blockquote className="mt-4 border-l pl-3 font-serif text-[17px] italic leading-snug text-in-fg-2" style={{ borderColor: skin.filet }}>
-              {`“${card.flavor}”`}
-            </blockquote>
+            {card.detalhe ? (
+              <>
+                <blockquote className="mt-4 border-l pl-3 font-serif text-[17px] italic leading-snug text-in-fg-2" style={{ borderColor: skin.filet }}>
+                  {card.effect}
+                </blockquote>
+                <div className="mt-4">
+                  <p className="font-sans text-[10px] font-medium uppercase tracking-[0.16em] text-in-fg-3">Descrição detalhada</p>
+                  <p className="mt-1 font-body text-[16px] leading-relaxed text-in-fg">{card.detalhe}</p>
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="mt-4">
+                  <p className="font-sans text-[10px] font-medium uppercase tracking-[0.16em] text-in-fg-3">Função</p>
+                  <p className="mt-1 font-body text-[17px] leading-relaxed text-in-fg">
+                    <EffectText text={card.effect} />
+                  </p>
+                </div>
+                <blockquote className="mt-4 border-l pl-3 font-serif text-[17px] italic leading-snug text-in-fg-2" style={{ borderColor: skin.filet }}>
+                  {`“${card.flavor}”`}
+                </blockquote>
+              </>
+            )}
             <p className="mt-4 flex items-center justify-between gap-3 font-mono text-[10px] uppercase tracking-[0.16em] text-in-fg-3">
               <span>Origem: {origin}</span>
               <span>{card.numeral}</span>
