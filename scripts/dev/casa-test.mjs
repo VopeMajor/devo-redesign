@@ -109,7 +109,7 @@ const liberar = (s) => q("INSERT INTO player_unlocks (player_id, flag, source) V
 /** Termina as tentativas em andamento do jogador já (e opcionalmente força a chance). */
 const terminar = (s, chance) =>
   q(`UPDATE confeccao_tentativas SET pronta_em = now() - interval '1 second'${chance === undefined ? '' : ', chance = $2'} WHERE player_id = $1 AND status = 'andamento'`, chance === undefined ? [s.id] : [s.id, chance])
-const comuns = (p, n, card = 'fosforo') => Array.from({ length: n }, (_, i) => [`${p}-c${i}`, i % 2 ? 'chave' : card])
+const comuns = (p, n, card = 'escudo') => Array.from({ length: n }, (_, i) => [`${p}-c${i}`, card])
 
 await test('migração da Casa é idempotente', async () => {
   const sql = readFileSync(join(here, '..', 'casa-migration.sql'), 'utf8')
@@ -134,7 +134,7 @@ await test('cadastro das contas de teste', async () => {
   B = await signUp(`Cas${sfx}b`, `DEVO-CA-${SFX}-B`)
   C = await signUp(`Cas${sfx}c`, `DEVO-CA-${SFX}-C`)
   O = await signUp(`Cas${sfx}o`, `DEVO-CA-${SFX}-O`)
-  const cartasA = [...comuns('a', 12), ['a-inc1', 'porta'], ['a-rara', 'olho'], ['a-peao1', 'xadrez_peao'], ['a-peao2', 'xadrez_peao'], ['a-x1', 'tesoura'], ['a-x2', 'escudo']]
+  const cartasA = [...comuns('a', 12), ['a-inc1', 'xadrez_peao'], ['a-rara', 'xadrez_bispo'], ['a-peao1', 'xadrez_peao'], ['a-peao2', 'xadrez_peao'], ['a-x1', 'escudo'], ['a-x2', 'escudo']]
   for (const [s, cards, h] of [
     [A, cartasA, 200],
     [B, [['b-peao1', 'xadrez_peao'], ['b-peao2', 'xadrez_peao']], 200],
@@ -183,7 +183,7 @@ await test('5 comuns → tentativa: cartas saem do save, Tempo debitado, save an
   assert(antes - depois === 30 * MIN && r.json.timeDeltaMs === -30 * MIN, `30 min debitados (${(antes - depois) / MIN})`)
   const inv = await inventario(A.id)
   assert(!inv.some((c) => ['a-c0', 'a-c4'].includes(c.uid)), 'materiais saíram do save')
-  const cartasA = [...comuns('a', 12), ['a-inc1', 'porta'], ['a-rara', 'olho'], ['a-peao1', 'xadrez_peao'], ['a-peao2', 'xadrez_peao'], ['a-x1', 'tesoura'], ['a-x2', 'escudo']]
+  const cartasA = [...comuns('a', 12), ['a-inc1', 'xadrez_peao'], ['a-rara', 'xadrez_bispo'], ['a-peao1', 'xadrez_peao'], ['a-peao2', 'xadrez_peao'], ['a-x1', 'escudo'], ['a-x2', 'escudo']]
   await A.post('/api/save', save(cartasA, 200))
   const inv2 = await inventario(A.id)
   assert(!inv2.some((c) => c.uid === 'a-c0'), 'save antigo não traz o material de volta')
@@ -229,7 +229,7 @@ await test('combinação sem receita: paga o Tempo e as cartas voltam (com outro
   const g = await A.get('/api/casa')
   assert(g.json.historico.find((t) => t.id === r.json.tentativa.id)?.status === 'sem_receita', 'sem receita')
   const e = (await entregas(A.id)).filter((x) => /sem efeito/.test(x.origin)).map((x) => x.card_id).sort()
-  assert(e.join() === 'escudo,tesoura', `cartas devolvidas: ${e}`)
+  assert(e.join() === 'escudo,escudo', `cartas devolvidas: ${e}`)
 })
 
 await test('receita: entrega a carta definida, entra no Livro da Corporação e não aparece para outras', async () => {

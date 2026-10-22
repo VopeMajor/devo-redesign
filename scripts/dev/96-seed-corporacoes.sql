@@ -51,7 +51,7 @@ ON CONFLICT DO NOTHING;
 -- Transferência antiga (histórico da Ordem).
 INSERT INTO corporacao_transferencias (id, corporacao_id, de_id, para_id, card_uid, card_id, created_at) VALUES
   ('c0a90001-0000-4000-8000-000000000001', 'c0a90000-0000-4000-8000-000000000001', '00000000-0000-4000-8000-000000000002',
-   '00000000-0000-4000-8000-000000000003', 'seed-corp-1', 'olho', now() - interval '2 days')
+   '00000000-0000-4000-8000-000000000003', 'seed-corp-1', 'xadrez_bispo', now() - interval '2 days')
 ON CONFLICT (id) DO NOTHING;
 
 -- Deadly Vote concluído (sem resultado aplicado) para o roteiro marcar sobrevivência e cumprir o requisito de fundação.

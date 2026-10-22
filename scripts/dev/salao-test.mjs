@@ -146,7 +146,7 @@ await test('cadastro das contas de teste', async () => {
   D = await signUp(`Sal${sfx}d`, `DEVO-ST-${SFX}-D`)
   O = await signUp(`Sal${sfx}o`, `DEVO-ST-${SFX}-O`)
   for (const [s, cards, h] of [
-    [A, [['a-rara', 'olho'], ['a-comum', 'fosforo'], ['a-lend', 'coroa'], ['a-inc', 'porta']], 50],
+    [A, [['a-rara', 'xadrez_bispo'], ['a-comum', 'escudo'], ['a-lend', 'xadrez_rainha'], ['a-inc', 'xadrez_peao']], 50],
     [B, [], 50],
     [C, [], 50],
     [D, [], 0.6],
@@ -235,11 +235,11 @@ await test('enviar à Bandeja: carta sai do save, taxa de divulgação paga, lot
   const t1 = await timer(A.id)
   assert(t0 - t1 === 20 * MIN && r.json.timeDeltaMs === -20 * MIN, `divulgação de 20 min (veio ${(t0 - t1) / MIN})`)
   const [l] = await q('SELECT status, card_id FROM salao_lotes WHERE id = $1', [lote])
-  assert(l.status === 'avaliacao' && l.card_id === 'olho', 'lote em avaliação')
+  assert(l.status === 'avaliacao' && l.card_id === 'xadrez_bispo', 'lote em avaliação')
 })
 
 await test('carta não duplica: save antigo não a devolve e o mesmo uid não entra de novo', async () => {
-  const velho = save([['a-rara', 'olho'], ['a-comum', 'fosforo'], ['a-lend', 'coroa'], ['a-inc', 'porta']])
+  const velho = save([['a-rara', 'xadrez_bispo'], ['a-comum', 'escudo'], ['a-lend', 'xadrez_rainha'], ['a-inc', 'xadrez_peao']])
   velho.timerEndsAt = await timer(A.id)
   const r = await A.post('/api/save', velho)
   assert(r.status === 200, 'save aceito')
@@ -348,10 +348,10 @@ await test('fim da edição: vencedor recebe a carta e o vendedor a parte menos 
   assert(n === 1, 'repasse registrado uma vez')
   const ganho = (await timer(A.id)) - a0 + ((await pendente(A.id)) - p0)
   assert(ganho === 34 * MIN, `vendedor recebeu 34 min uma vez (veio ${ganho / MIN})`)
-  const [{ c }] = await q('SELECT count(*)::int AS c FROM card_deliveries WHERE player_id = $1 AND card_id = $2 AND idem_key = $3', [C.id, 'olho', `salao:lote:${lote}:arremate`])
+  const [{ c }] = await q('SELECT count(*)::int AS c FROM card_deliveries WHERE player_id = $1 AND card_id = $2 AND idem_key = $3', [C.id, 'xadrez_bispo', `salao:lote:${lote}:arremate`])
   assert(c === 1, 'arremate entregue uma vez ao vencedor')
   const res = await C.post('/api/eu', { action: 'cartas.resgatar' })
-  assert(res.json?.cartas?.some((x) => x.cardId === 'olho'), 'vencedor resgata a carta')
+  assert(res.json?.cartas?.some((x) => x.cardId === 'xadrez_bispo'), 'vencedor resgata a carta')
 })
 
 /* ------------------------------------------------------------- Mercado */

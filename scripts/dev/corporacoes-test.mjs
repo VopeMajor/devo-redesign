@@ -134,10 +134,10 @@ await test('cadastro das contas de teste', async () => {
   D = await signUp(`Cor${sfx}d`, `DEVO-CT-${SFX}-D`)
   O = await signUp(`Cor${sfx}o`, `DEVO-CT-${SFX}-O`)
   for (const [s, cards] of [
-    [A, [['a-1', 'olho'], ['a-2', 'fosforo'], ['a-3', 'dado']]],
-    [B, [['b-1', 'coroa'], ['b-2', 'olho'], ['b-3', 'dado']]],
-    [C, [['c-1', 'fosforo']]],
-    [D, [['d-1', 'dado'], ['d-2', 'olho'], ['d-3', 'fosforo']]],
+    [A, [['a-1', 'xadrez_bispo'], ['a-2', 'escudo'], ['a-3', 'xadrez_cavalo']]],
+    [B, [['b-1', 'xadrez_rainha'], ['b-2', 'xadrez_bispo'], ['b-3', 'xadrez_cavalo']]],
+    [C, [['c-1', 'escudo']]],
+    [D, [['d-1', 'xadrez_cavalo'], ['d-2', 'xadrez_bispo'], ['d-3', 'escudo']]],
   ]) {
     const r = await s.post('/api/save', save(cards))
     assert(r.status === 200, `save: ${r.status}`)
@@ -273,14 +273,14 @@ await test('carta não duplica: duas transferências simultâneas do mesmo uid �
   const [x, y] = await Promise.all([B.corp('carta.transferir', { uid: 'b-1', para: A.id }), B.corp('carta.transferir', { uid: 'b-1', para: C.id })])
   assert([x, y].filter((r) => r.status === 200).length === 1, `uma transferência (${x.status} ${x.text} / ${y.status} ${y.text})`)
   assert(!(await inventario(B.id)).some((c) => c.uid === 'b-1'), 'a carta saiu do save de B')
-  const [{ d }] = await q("SELECT count(*)::int AS d FROM card_deliveries WHERE idem_key LIKE 'corp:transf:%' AND card_id = 'coroa' AND player_id IN ($1, $2)", [A.id, C.id])
+  const [{ d }] = await q("SELECT count(*)::int AS d FROM card_deliveries WHERE idem_key LIKE 'corp:transf:%' AND card_id = 'xadrez_rainha' AND player_id IN ($1, $2)", [A.id, C.id])
   assert(d === 1, `uma entrega (veio ${d})`)
   const [{ t }] = await q("SELECT count(*)::int AS t FROM corporacao_transferencias WHERE de_id = $1 AND card_uid = 'b-1'", [B.id])
   assert(t === 1, 'um registro de transferência')
 })
 
 await test('save antigo não ressuscita a carta transferida; o mesmo uid não sai de novo', async () => {
-  const velho = save([['b-1', 'coroa'], ['b-2', 'olho'], ['b-3', 'dado']])
+  const velho = save([['b-1', 'xadrez_rainha'], ['b-2', 'xadrez_bispo'], ['b-3', 'xadrez_cavalo']])
   velho.timerEndsAt = await timer(B.id)
   const r = await B.post('/api/save', velho)
   assert(r.status === 200, 'save aceito')
@@ -291,7 +291,7 @@ await test('save antigo não ressuscita a carta transferida; o mesmo uid não sa
 
 await test('carta presa no Salão não sai; destinatário de fora da Corporação não recebe', async () => {
   await q(
-    "INSERT INTO salao_mercado (seller_id, card_uid, card_id, card_rarity, preco, comissao_pct) VALUES ($1, 'b-2', 'olho', 'rara', 50, 15)",
+    "INSERT INTO salao_mercado (seller_id, card_uid, card_id, card_rarity, preco, comissao_pct) VALUES ($1, 'b-2', 'xadrez_bispo', 'rara', 50, 15)",
     [B.id],
   )
   // Força o uid de volta ao save (como se o cliente estivesse atrasado) para provar a checagem do servidor.

@@ -572,7 +572,7 @@ function SceneVisual({ visual, sampleCards, quiz }: { visual: Visual; sampleCard
       </ul>
     )
   }
-  const sampleId = sampleCards[0] ?? 'ampulheta'
+  const sampleId = sampleCards[0] ?? 'escudo'
   const sampleMeta = getCardMeta(sampleId)
   return (
     <div className="flex items-center gap-5">

@@ -1,0 +1,222 @@
+<!doctype html><html><head><meta charset="utf-8"><style>html,body{margin:0;background:#000}canvas{display:block}</style>
+<script type="importmap">{"imports":{"three":"/node_modules/three/build/three.module.js","three/addons/":"/node_modules/three/examples/jsm/"}}</script></head><body>
+<script type="module">
+import * as THREE from 'three'
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
+import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js'
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js'
+import { Reflector } from 'three/addons/objects/Reflector.js'
+
+const q = new URLSearchParams(location.search)
+const peca = q.get('p') // k q r b n p ou board
+const W = +(q.get('w') || 512), H = Math.round(W * 144 / 74)
+const rotY = +(q.get('rot') || 0)
+const seed0 = +(q.get('seed') || 7)
+let seed = seed0; const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647)
+
+const r = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true })
+r.setSize(W, H); r.outputColorSpace = THREE.SRGBColorSpace
+r.toneMapping = THREE.ACESFilmicToneMapping; r.toneMappingExposure = 1.05
+r.shadowMap.enabled = true; r.shadowMap.type = THREE.PCFShadowMap
+document.body.appendChild(r.domElement)
+const s = new THREE.Scene()
+s.background = new THREE.Color(0x08070b)
+s.fog = new THREE.Fog(0x0a0910, 3.2, 9)
+const pm = new THREE.PMREMGenerator(r)
+s.environment = pm.fromScene(new RoomEnvironment(), 0.04).texture
+s.environmentIntensity = 0.35
+
+// ---------- texturas procedurais ----------
+function marmore(tam, base, veio, n) {
+  const c = document.createElement('canvas'); c.width = c.height = tam; const g = c.getContext('2d')
+  g.fillStyle = base; g.fillRect(0, 0, tam, tam)
+  for (let i = 0; i < 1600; i++) { g.fillStyle = `rgba(255,255,255,${rnd() * 0.025})`; g.fillRect(rnd() * tam, rnd() * tam, 2 + rnd() * 6, 2 + rnd() * 6) }
+  for (let i = 0; i < n; i++) {
+    g.strokeStyle = veio; g.globalAlpha = 0.06 + rnd() * 0.18; g.lineWidth = 0.4 + rnd() * 1.1
+    g.beginPath(); let x = rnd() * tam, y = rnd() * tam; g.moveTo(x, y)
+    for (let k = 0; k < 14; k++) { const nx = x + tam * (0.04 + rnd() * 0.08), ny = y + (rnd() - 0.45) * tam * 0.07; g.lineTo(nx, ny); x = nx; y = ny }
+    g.stroke()
+  }
+  g.globalAlpha = 1
+  return c
+}
+function tabuleiroTex() {
+  const N = NC, cel = 256, c = document.createElement('canvas'); c.width = c.height = N * cel; const g = c.getContext('2d')
+  const escuro = marmore(cel * 2, '#0a090d', '#4a4258', 22), claro = marmore(cel * 2, '#2c2833', '#9a92a6', 18)
+  for (let i = 0; i < N; i++) for (let j = 0; j < N; j++) {
+    const src = (i + j) % 2 ? escuro : claro; const ox = rnd() * cel, oy = rnd() * cel
+    g.drawImage(src, ox, oy, cel, cel, i * cel, j * cel, cel, cel)
+  }
+  g.strokeStyle = 'rgba(214,205,189,0.16)'; g.lineWidth = 2
+  for (let i = 0; i <= N; i++) { g.beginPath(); g.moveTo(i * cel, 0); g.lineTo(i * cel, N * cel); g.stroke(); g.beginPath(); g.moveTo(0, i * cel); g.lineTo(N * cel, i * cel); g.stroke() }
+  const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 8; return t
+}
+function mostrador() {
+  const T = 2048, c = document.createElement('canvas'); c.width = c.height = T; const g = c.getContext('2d'); const m = T / 2
+  g.translate(m, m)
+  const anel = (rr, w, a) => { g.strokeStyle = `rgba(214,205,189,${a})`; g.lineWidth = w; g.beginPath(); g.arc(0, 0, rr, 0, Math.PI * 2); g.stroke() }
+  anel(980, 3, 0.55); anel(955, 1.5, 0.35); anel(800, 1.5, 0.3); anel(560, 1, 0.18)
+  for (let i = 0; i < 60; i++) {
+    const a = i / 60 * Math.PI * 2, longo = i % 5 === 0
+    g.strokeStyle = `rgba(214,205,189,${longo ? 0.6 : 0.3})`; g.lineWidth = longo ? 5 : 2
+    g.beginPath(); g.moveTo(Math.sin(a) * 955, -Math.cos(a) * 955); g.lineTo(Math.sin(a) * (longo ? 880 : 920), -Math.cos(a) * (longo ? 880 : 920)); g.stroke()
+  }
+  const rom = ['XII', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI']
+  g.fillStyle = 'rgba(214,205,189,0.5)'; g.font = '600 64px Georgia, serif'; g.textAlign = 'center'; g.textBaseline = 'middle'
+  rom.forEach((t, i) => { const a = i / 12 * Math.PI * 2; g.save(); g.translate(Math.sin(a) * 835, -Math.cos(a) * 835); g.rotate(a); g.fillText(t, 0, 0); g.restore() })
+  // ponteiros finos
+  const ponteiro = (a, len, w, al) => { g.save(); g.rotate(a); g.strokeStyle = `rgba(214,205,189,${al})`; g.lineWidth = w; g.beginPath(); g.moveTo(0, 60); g.lineTo(0, -len); g.stroke(); g.restore() }
+  
+  const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t
+}
+function brilhoRadial(cor, a) {
+  const T = 512, c = document.createElement('canvas'); c.width = c.height = T; const g = c.getContext('2d')
+  const gr = g.createRadialGradient(T / 2, T / 2, 0, T / 2, T / 2, T / 2); gr.addColorStop(0, cor.replace('A', a)); gr.addColorStop(0.45, cor.replace('A', a * 0.35)); gr.addColorStop(1, cor.replace('A', 0))
+  g.fillStyle = gr; g.fillRect(0, 0, T, T); const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t
+}
+
+// ---------- chão: tabuleiro de mármore com reflexo ----------
+const LADO = 0.62 // casa do tabuleiro (m)
+const NC = peca === 'board' ? 8 : 12
+const espelho = new Reflector(new THREE.PlaneGeometry(40, 40), { textureWidth: W, textureHeight: H, color: 0x8a8690 })
+espelho.rotation.x = -Math.PI / 2; espelho.position.y = -0.002; if (!q.has('semEspelho')) s.add(espelho)
+if (q.has('semMarmore')) setTimeout(()=>{},0)
+const texTab = tabuleiroTex()
+const chao = new THREE.Mesh(new THREE.PlaneGeometry(LADO * NC, LADO * NC), new THREE.MeshStandardMaterial({ map: texTab, roughness: 0.55, metalness: 0.0, transparent: true, opacity: 0.74, envMapIntensity: 0.0 }))
+chao.rotation.x = -Math.PI / 2; chao.receiveShadow = true; if (!q.has('semMarmore')) s.add(chao)
+// moldura do tabuleiro
+const borda = new THREE.Mesh(new THREE.BoxGeometry(LADO * NC + 0.24, 0.06, LADO * NC + 0.24), new THREE.MeshStandardMaterial({ color: 0x1a1720, roughness: 0.35, metalness: 0.6, envMapIntensity: 0.1 }))
+borda.position.y = -0.031; s.add(borda)
+const aco = new THREE.MeshStandardMaterial({ color: 0xd6cdbd, roughness: 0.3, metalness: 1, envMapIntensity: 0.6 })
+const M = LADO * NC / 2 + 0.03
+for (const [x, z, w, d] of [[0, M, 2 * M + 0.02, 0.02], [0, -M, 2 * M + 0.02, 0.02], [M, 0, 0.02, 2 * M], [-M, 0, 0.02, 2 * M]]) {
+  const f = new THREE.Mesh(new THREE.BoxGeometry(w, 0.008, d), aco); f.position.set(x, 0.002, z); s.add(f)
+}
+const fundoChao = new THREE.Mesh(new THREE.PlaneGeometry(60, 60), new THREE.MeshStandardMaterial({ color: 0x07060a, roughness: 0.9, envMapIntensity: 0 }))
+fundoChao.rotation.x = -Math.PI / 2; fundoChao.position.y = -0.065; s.add(fundoChao)
+
+// ---------- luz ----------
+s.add(new THREE.HemisphereLight(0xcfc6b6, 0x0c0a10, 0.08))
+const chave = new THREE.SpotLight(0xffe9cc, 70, 14, 0.3, 0.7, 1.6); chave.position.set(1.6, 4.6, 2.4)
+chave.castShadow = true; chave.shadow.mapSize.set(2048, 2048); chave.shadow.bias = -0.0004; chave.shadow.radius = 4; s.add(chave); s.add(chave.target)
+const contra = new THREE.SpotLight(0x9a8ce0, 160, 12, 0.5, 0.7, 1.4); contra.position.set(-1.6, 2.4, -2.2); s.add(contra); s.add(contra.target)
+const contra2 = new THREE.SpotLight(0xc4b8ff, 90, 12, 0.5, 0.8, 1.4); contra2.position.set(1.9, 1.5, -2.0); s.add(contra2); s.add(contra2.target)
+const preenche = new THREE.PointLight(0x6d5fb0, 0.8, 4, 1.5); preenche.position.set(-1.2, 1.2, 1.6); s.add(preenche)
+
+// ---------- fundo: brilho ametista + mostrador ----------
+const glow = new THREE.Mesh(new THREE.PlaneGeometry(4.2, 4.2), new THREE.MeshBasicMaterial({ map: brilhoRadial('rgba(92,74,170,A)', 0.32), transparent: true, depthWrite: false, fog: false }))
+s.add(glow)
+const dial = new THREE.Mesh(new THREE.PlaneGeometry(3.4, 3.4), new THREE.MeshBasicMaterial({ map: mostrador(), transparent: true, depthWrite: false, fog: false, blending: THREE.AdditiveBlending, opacity: 0.8 }))
+s.add(dial)
+
+// ---------- poeira ----------
+const nP = 420, pos = new Float32Array(nP * 3)
+for (let i = 0; i < nP; i++) { pos[i * 3] = (rnd() - 0.5) * 3.2; pos[i * 3 + 1] = rnd() * 2.6; pos[i * 3 + 2] = (rnd() - 0.6) * 2.4 }
+const pg = new THREE.BufferGeometry(); pg.setAttribute('position', new THREE.BufferAttribute(pos, 3))
+const poeira = new THREE.Points(pg, new THREE.PointsMaterial({ color: 0xe6dccb, size: 0.012, transparent: true, opacity: 0.55, depthWrite: false, blending: THREE.AdditiveBlending })); s.add(poeira)
+
+// ---------- material das peças ----------
+const metal = new THREE.MeshPhysicalMaterial({ color: 0x8a8278, metalness: 0.88, roughness: 0.34, clearcoat: 0.4, clearcoatRoughness: 0.3, envMapIntensity: 1.2 })
+const obsidiana = new THREE.MeshPhysicalMaterial({ color: 0x1b1822, metalness: 0.55, roughness: 0.22, clearcoat: 1, clearcoatRoughness: 0.12, sheen: 0.4, sheenColor: new THREE.Color(0x8a7cc8) })
+
+const loader = new GLTFLoader().setMeshoptDecoder(MeshoptDecoder)
+const carregar = (id) => new Promise((ok, erro) => loader.load(`/public/models/chess/${id}.glb`, (g) => ok(g.scene), undefined, erro))
+function preparar(o, mat, altura) {
+  o.traverse((m) => { if (m.isMesh) { m.material = mat; m.castShadow = true; m.receiveShadow = true } })
+  const b = new THREE.Box3().setFromObject(o); const sz = b.getSize(new THREE.Vector3())
+  const k = altura / sz.y; o.scale.setScalar(k)
+  const b2 = new THREE.Box3().setFromObject(o); const c = b2.getCenter(new THREE.Vector3())
+  o.position.x -= c.x; o.position.z -= c.z; o.position.y -= b2.min.y
+  const g = new THREE.Group(); g.add(o); return g
+}
+
+const cam = new THREE.PerspectiveCamera(28, W / H, 0.05, 60)
+async function montar() {
+  if (peca === 'board') {
+    const objs = {}
+    for (const id of ['k', 'q', 'r', 'b', 'n', 'p']) objs[id] = await carregar(id)
+    const por = (id, mat, c, l, ry) => { const o = preparar(objs[id].clone(true), mat, id === 'p' ? 0.36 : id === 'k' || id === 'q' ? 0.5 : 0.44); o.position.set((c - 3.5) * LADO, 0, (3.5 - l) * LADO); o.rotation.y = ry; s.add(o) }
+    // posição inicial, tabuleiro girado 45° (losango) visto do alto
+    const tab = new THREE.Group(); s.add(tab)
+    const por2 = (id, mat, c, l, ry) => { const o = preparar(objs[id].clone(true), mat, id === 'p' ? 0.4 : id === 'k' || id === 'q' ? 0.56 : 0.48); o.position.set((c - 3.5) * LADO, 0, (3.5 - l) * LADO); o.rotation.y = ry; tab.add(o) }
+    const fila = ['r', 'n', 'b', 'q', 'k', 'b', 'n', 'r']
+    fila.forEach((id, c) => { por2(id, metal, c, 0, Math.PI); por2(id, obsidiana, c, 7, 0) })
+    for (let c = 0; c < 8; c++) { por2('p', metal, c, 1, Math.PI); por2('p', obsidiana, c, 6, 0) }
+    for (const m of [chao, borda, espelho, ...s.children.filter((x) => x.isMesh && x.geometry.type === 'BoxGeometry' && x !== borda)]) { s.remove(m); tab.add(m) }
+    tab.rotation.y = Math.PI / 4
+    s.remove(fundoChao); tab.remove(espelho); s.remove(poeira); chao.material.opacity = 1
+    s.fog = new THREE.Fog(0x0a0910, 30, 60)
+    const el = +(q.get('el') || 32) * Math.PI / 180, D = +(q.get('dd') || 29)
+    cam.fov = 30; cam.far = 200; cam.position.set(0, Math.sin(el) * D, Math.cos(el) * D); cam.lookAt(0, +(q.get('ly') || 1.6), 0); cam.updateProjectionMatrix()
+    chave.position.set(3, 12, 6); chave.angle = 0.5; chave.penumbra = 0.8; chave.distance = 40; chave.decay = 1; chave.intensity = 30; chave.target.position.set(0, 0, 0)
+    contra.position.set(-6, 1.2, -6); contra.target.position.set(0, 0.4, 0); contra.angle = 0.5; contra.distance = 30; contra.decay = 1; contra.intensity = 25
+    contra2.position.set(6, 1.0, -6); contra2.target.position.set(0, 0.4, 0); contra2.angle = 0.5; contra2.distance = 30; contra2.decay = 1; contra2.intensity = 18
+    dial.position.set(0, +(q.get('dy') || 2.2), -6); dial.lookAt(cam.position); dial.scale.setScalar(+(q.get('ds') || 2.2)); dial.material.opacity = 0.75
+    glow.position.set(0, 1.6, -8); glow.lookAt(cam.position); glow.scale.setScalar(3)
+  } else if (peca === 'escudo') {
+    s.remove(chao); s.remove(borda); s.remove(espelho); s.remove(dial); s.remove(poeira)
+    s.children.filter((x) => x.isMesh && x.geometry.type === 'BoxGeometry').forEach((x) => s.remove(x))
+    fundoChao.position.y = 0; fundoChao.material.color.set(0x09080c); fundoChao.receiveShadow = true
+    // papelão kraft
+    const T = 1024, c = document.createElement('canvas'); c.width = c.height = T; const g = c.getContext('2d')
+    g.fillStyle = '#8f6a3e'; g.fillRect(0, 0, T, T)
+    for (let i = 0; i < 9000; i++) { const v = rnd(); g.fillStyle = v < 0.5 ? `rgba(70,45,20,${rnd() * 0.12})` : `rgba(230,200,150,${rnd() * 0.1})`; g.fillRect(rnd() * T, rnd() * T, 1 + rnd() * 3, 6 + rnd() * 26) }
+    for (let i = 0; i < 18; i++) { const gr = g.createRadialGradient(0, 0, 0, 0, 0, 60 + rnd() * 140); gr.addColorStop(0, `rgba(60,38,16,${0.06 + rnd() * 0.12})`); gr.addColorStop(1, 'rgba(60,38,16,0)'); g.save(); g.translate(rnd() * T, rnd() * T); g.fillStyle = gr; g.fillRect(-220, -220, 440, 440); g.restore() }
+    // ondulado aparecendo por baixo de um rasgo
+    g.save(); g.translate(T * 0.66, T * 0.3); g.rotate(-0.4); g.fillStyle = '#5e4322'; g.fillRect(-60, -18, 150, 40)
+    g.strokeStyle = 'rgba(50,30,10,0.55)'; g.lineWidth = 3; for (let x = -60; x < 90; x += 9) { g.beginPath(); g.moveTo(x, -18); g.lineTo(x, 22); g.stroke() } g.restore()
+    // dobra vincada no meio
+    g.strokeStyle = 'rgba(60,38,16,0.35)'; g.lineWidth = 4; g.beginPath(); g.moveTo(T * 0.52, 0); g.lineTo(T * 0.49, T); g.stroke()
+    g.strokeStyle = 'rgba(240,215,170,0.25)'; g.lineWidth = 2; g.beginPath(); g.moveTo(T * 0.525, 0); g.lineTo(T * 0.495, T); g.stroke()
+    // fita crepe
+    const fita = (x, y, w, h, a) => { g.save(); g.translate(x, y); g.rotate(a); g.fillStyle = 'rgba(196,176,128,0.85)'; g.fillRect(-w / 2, -h / 2, w, h)
+      for (let i = 0; i < 300; i++) { g.fillStyle = `rgba(150,130,90,${rnd() * 0.15})`; g.fillRect(-w / 2 + rnd() * w, -h / 2 + rnd() * h, 2, 1 + rnd() * 3) }
+      g.fillStyle = 'rgba(196,176,128,0.85)'; for (let k = -h / 2; k < h / 2; k += 6) { g.fillRect(-w / 2 - 3 - rnd() * 3, k, 4, 5); g.fillRect(w / 2 - 1, k, 3 + rnd() * 3, 5) } g.restore() }
+    fita(T * 0.3, T * 0.12, 300, 64, -0.5); fita(T * 0.78, T * 0.75, 260, 64, 0.65); fita(T * 0.5, T * 0.52, 120, 60, 1.4)
+    // contorno de caneta, um brasão desenhado à mão
+    const tex = new THREE.CanvasTexture(c); tex.colorSpace = THREE.SRGBColorSpace; tex.anisotropy = 8
+    // lateral ondulada
+    const c2 = document.createElement('canvas'); c2.width = 256; c2.height = 32; const g2 = c2.getContext('2d'); g2.fillStyle = '#7d5a30'; g2.fillRect(0, 0, 256, 32)
+    g2.strokeStyle = '#c9a26c'; g2.lineWidth = 3; g2.beginPath(); for (let x = 0; x <= 256; x += 2) g2.lineTo(x, 16 + Math.sin(x / 256 * Math.PI * 32) * 11); g2.stroke()
+    g2.fillStyle = '#b8935f'; g2.fillRect(0, 0, 256, 4); g2.fillRect(0, 28, 256, 4)
+    const tex2 = new THREE.CanvasTexture(c2); tex2.colorSpace = THREE.SRGBColorSpace; tex2.wrapS = tex2.wrapT = THREE.RepeatWrapping; tex2.repeat.set(12, 1)
+    // forma de escudo, com um canto amassado
+    const sh = new THREE.Shape(); sh.moveTo(-0.5, 0.62); sh.lineTo(0.5, 0.62); sh.lineTo(0.5, 0.05)
+    sh.quadraticCurveTo(0.48, -0.42, 0, -0.72); sh.quadraticCurveTo(-0.48, -0.42, -0.5, 0.05); sh.lineTo(-0.5, 0.55); sh.lineTo(-0.44, 0.62)
+    const geo = new THREE.ExtrudeGeometry(sh, { depth: 0.035, bevelEnabled: true, bevelThickness: 0.004, bevelSize: 0.004, bevelSegments: 1, curveSegments: 24 })
+    // UV da face pelo x/y
+    const uv = geo.attributes.uv, P = geo.attributes.position
+    for (let i = 0; i < uv.count; i++) uv.setXY(i, (P.getX(i) + 0.55) / 1.1, (P.getY(i) + 0.75) / 1.4)
+    // curvatura leve (papelão nunca fica plano)
+    for (let i = 0; i < P.count; i++) { const x = P.getX(i), y = P.getY(i); P.setZ(i, P.getZ(i) - x * x * 0.22 + Math.sin(y * 2.2) * 0.02) }
+    geo.computeVertexNormals()
+    const face = new THREE.MeshStandardMaterial({ map: tex, roughness: 0.92, metalness: 0, bumpMap: tex, bumpScale: 1.2 })
+    const lado = new THREE.MeshStandardMaterial({ map: tex2, roughness: 0.95 })
+    const escudo = new THREE.Mesh(geo, [face, lado]); escudo.castShadow = true
+    // alça de barbante atrás não aparece; o escudo fica de pé, levemente inclinado
+    const grupo = new THREE.Group(); grupo.add(escudo); escudo.position.y = 0.72 + 0.02
+    grupo.rotation.set(-0.06, -0.32, 0.05); s.add(grupo)
+    const alvo = new THREE.Vector3(0, 0.7, 0)
+    chave.position.set(1.5, 3.8, 2.8); chave.target.position.copy(alvo); chave.angle = 0.4; chave.penumbra = 0.9; chave.intensity = 34
+    contra.position.set(-1.6, 0.9, -1.6); contra.target.position.set(0, 1.0, 0); contra.intensity = 70
+    contra2.position.set(1.7, 0.7, -1.6); contra2.target.position.set(0, 0.9, 0); contra2.intensity = 40
+    cam.fov = 30; cam.position.set(-0.12, 0.6, 5.0); cam.lookAt(0, 0.72, 0)
+    glow.position.set(0, 0.95, -1.4); glow.scale.setScalar(0.9)
+  } else {
+    const o = preparar(await carregar(peca), metal, 1.2); o.rotation.y = rotY * Math.PI / 180
+    const dist = +(q.get('d') || 4.4)
+    o.position.set(LADO * 0.5, 0, LADO * 0.5) // no centro de uma casa
+    s.add(o)
+    const alvo = new THREE.Vector3(LADO * 0.5, 0.62, LADO * 0.5)
+    chave.target.position.copy(alvo)
+    contra.position.set(alvo.x - 1.5, 0.75, alvo.z - 2.0); contra.target.position.set(alvo.x, 1.15, alvo.z)
+    contra2.position.set(alvo.x + 1.7, 0.6, alvo.z - 1.8); contra2.target.position.set(alvo.x, 0.95, alvo.z)
+    cam.position.set(alvo.x + 0.2, 0.42, alvo.z + dist); cam.lookAt(alvo.x, 0.74, alvo.z)
+    dial.position.set(alvo.x, 1.12, alvo.z - 1.2); dial.scale.setScalar(0.62)
+    glow.position.set(alvo.x, 1.0, alvo.z - 1.8)
+  }
+  r.render(s, cam)
+  document.title = 'ok'
+}
+montar().catch((e) => (document.title = 'erro ' + e))
+</script></body></html>

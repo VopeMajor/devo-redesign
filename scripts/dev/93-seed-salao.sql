@@ -27,14 +27,14 @@ SELECT v.id::uuid, v.seller::uuid, v.uid, v.card, v.rar, 'avulso', 20, 15, v.min
        CASE WHEN v.status IN ('vendido', 'devolvido') THEN now() - interval '2 days' END,
        CASE WHEN v.status <> 'avaliacao' THEN now() - interval '1 day' END, now() - v.ha
   FROM ed, (VALUES
-    ('5a1a0001-0000-4000-8000-000000000001', '00000000-0000-4000-8000-000000000002', 'seed-salao-1', 'coroa',    'lendaria', 'aprovado',  0, 90, NULL::int, NULL, interval '3 days'),
-    ('5a1a0001-0000-4000-8000-000000000002', '00000000-0000-4000-8000-000000000005', 'seed-salao-2', 'olho',     'rara',     'aprovado',  0, 40, NULL, NULL, interval '3 days'),
-    ('5a1a0001-0000-4000-8000-000000000003', '00000000-0000-4000-8000-000000000001', 'seed-salao-3', 'dado',     'comum',    'aprovado',  0, 30, NULL, NULL, interval '2 days'),
-    ('5a1a0001-0000-4000-8000-000000000004', '00000000-0000-4000-8000-000000000001', 'seed-salao-4', 'relogio',  'lendaria', 'vendido',  -1, 120, 300, '00000000-0000-4000-8000-000000000004', interval '6 days'),
-    ('5a1a0001-0000-4000-8000-000000000005', '00000000-0000-4000-8000-000000000004', 'seed-salao-5', 'porta',    'incomum',  'devolvido', -1, 30, NULL, NULL, interval '6 days'),
-    ('5a1a0001-0000-4000-8000-000000000006', '00000000-0000-4000-8000-000000000004', 'seed-salao-6', 'mascara',  'rara',     'aprovado',  1, 60, NULL, NULL, interval '1 day'),
-    ('5a1a0001-0000-4000-8000-000000000007', '00000000-0000-4000-8000-000000000005', 'seed-salao-7', 'ampulheta','comum',     'avaliacao', 0, 45, NULL, NULL, interval '5 hours'),
-    ('5a1a0001-0000-4000-8000-000000000008', '00000000-0000-4000-8000-000000000001', 'seed-salao-8', 'laminas',  'incomum',  'avaliacao', 0, 30, NULL, NULL, interval '2 hours')
+    ('5a1a0001-0000-4000-8000-000000000001', '00000000-0000-4000-8000-000000000002', 'seed-salao-1', 'xadrez_rainha',    'ultra_rara', 'aprovado',  0, 90, NULL::int, NULL, interval '3 days'),
+    ('5a1a0001-0000-4000-8000-000000000002', '00000000-0000-4000-8000-000000000005', 'seed-salao-2', 'xadrez_bispo',     'rara',     'aprovado',  0, 40, NULL, NULL, interval '3 days'),
+    ('5a1a0001-0000-4000-8000-000000000003', '00000000-0000-4000-8000-000000000001', 'seed-salao-3', 'xadrez_cavalo',     'rara',    'aprovado',  0, 30, NULL, NULL, interval '2 days'),
+    ('5a1a0001-0000-4000-8000-000000000004', '00000000-0000-4000-8000-000000000001', 'seed-salao-4', 'xadrez_tabuleiro',  'ultra_rara', 'vendido',  -1, 120, 300, '00000000-0000-4000-8000-000000000004', interval '6 days'),
+    ('5a1a0001-0000-4000-8000-000000000005', '00000000-0000-4000-8000-000000000004', 'seed-salao-5', 'xadrez_peao',    'incomum',  'devolvido', -1, 30, NULL, NULL, interval '6 days'),
+    ('5a1a0001-0000-4000-8000-000000000006', '00000000-0000-4000-8000-000000000004', 'seed-salao-6', 'xadrez_torre',  'rara',     'aprovado',  1, 60, NULL, NULL, interval '1 day'),
+    ('5a1a0001-0000-4000-8000-000000000007', '00000000-0000-4000-8000-000000000005', 'seed-salao-7', 'escudo','comum',     'avaliacao', 0, 45, NULL, NULL, interval '5 hours'),
+    ('5a1a0001-0000-4000-8000-000000000008', '00000000-0000-4000-8000-000000000001', 'seed-salao-8', 'xadrez_peao',  'incomum',  'avaliacao', 0, 30, NULL, NULL, interval '2 hours')
   ) AS v(id, seller, uid, card, rar, status, desloc, minimo, valor, vencedor, ha)
 ON CONFLICT (id) DO NOTHING;
 
@@ -48,8 +48,8 @@ ON CONFLICT (id) DO NOTHING;
 
 -- Mercado: duas cartas à venda.
 INSERT INTO salao_mercado (id, seller_id, card_uid, card_id, card_rarity, preco, comissao_pct, created_at) VALUES
-  ('5a1a0003-0000-4000-8000-000000000001', '00000000-0000-4000-8000-000000000004', 'seed-mercado-1', 'tesoura', 'comum', 25, 15, now() - interval '5 hours'),
-  ('5a1a0003-0000-4000-8000-000000000002', '00000000-0000-4000-8000-000000000002', 'seed-mercado-2', 'cranio',  'rara',  180, 15, now() - interval '1 day')
+  ('5a1a0003-0000-4000-8000-000000000001', '00000000-0000-4000-8000-000000000004', 'seed-mercado-1', 'escudo', 'comum', 25, 15, now() - interval '5 hours'),
+  ('5a1a0003-0000-4000-8000-000000000002', '00000000-0000-4000-8000-000000000002', 'seed-mercado-2', 'xadrez_rei',  'rara',  180, 15, now() - interval '1 day')
 ON CONFLICT (id) DO NOTHING;
 
 -- Mural: recrutamento de Corporação, propaganda, proposta; e uma proposta esperando avaliação.

@@ -174,7 +174,7 @@ function DeviceVisual() {
 }
 
 function CardsVisual() {
-  const ids = ['ampulheta', 'mascara', 'chave']
+  const ids = ['xadrez_bispo', 'xadrez_rainha', 'xadrez_cavalo']
   return (
     <div className="flex flex-col items-center gap-4">
       <div className="relative flex h-52 w-72 items-end justify-center">
@@ -255,7 +255,7 @@ function SlotVisual() {
         <div className="relative flex items-start gap-6 px-1">
           <Slot label="Seu espaço" highlight>
             <div className="w-full animate-drop">
-              <CardFace cardId="mascara" size="sm" />
+              <CardFace cardId="xadrez_torre" size="sm" />
             </div>
           </Slot>
           <span className="mt-14 -skew-x-[8deg] font-impact text-[22px] text-dv-gold" aria-hidden="true">
@@ -441,7 +441,7 @@ function RevealVisual() {
           style={{ background: 'repeating-conic-gradient(color-mix(in oklab,var(--dv-gold) 35%,transparent) 0 6deg, transparent 6deg 18deg)', maskImage: 'radial-gradient(circle, black 20%, transparent 70%)' }}
           aria-hidden="true"
         />
-        {['ampulheta', 'tesoura'].map((id, i) => (
+        {['escudo', 'xadrez_peao'].map((id, i) => (
           <div key={id} className={cn('relative w-24 [perspective:800px]', i === 0 ? '-rotate-6' : 'rotate-6')}>
             <div className={cn('relative transition-transform duration-700 [transform-style:preserve-3d]', flipped ? '' : '[transform:rotateY(180deg)]')} style={{ transitionDelay: `${i * 160}ms` }}>
               <div className="[backface-visibility:hidden]">
@@ -470,7 +470,7 @@ function LostVisual() {
       <div className="dv-cut relative flex h-44 w-72 items-center justify-start overflow-hidden bg-[radial-gradient(ellipse_at_30%_50%,var(--dv-ink-4),var(--dv-ink)_75%)] pl-8" style={{ '--dv-cut': '14px' } as CSSProperties}>
         <span className="pointer-events-none absolute inset-0 animate-[devo-mist_8s_ease-in-out_infinite] bg-[radial-gradient(ellipse_at_85%_40%,rgba(241,240,238,0.07),transparent_60%)]" aria-hidden="true" />
         <div className="en-drift w-20">
-          <CardFace cardId="coroa" size="sm" />
+          <CardFace cardId="xadrez_rainha" size="sm" />
         </div>
         {[
           ['right-8 top-6', 'text-[34px]'],

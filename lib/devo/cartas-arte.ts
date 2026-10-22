@@ -1,10 +1,14 @@
 /**
  * Ilustrações das cartas (design do dono, 22/10: moldura de pergaminho com a arte numa janela alta).
- * Cada carta com arte própria tem `public/images/cartas/<id>/arte-{512,768,1024}.webp` (pipeline em `infra/arte`,
- * pedidos `carta-<id>`). Sem arte própria, a carta usa a gravura do tipo em duotom (provisório).
+ * Cada carta com arte própria tem `public/images/cartas/<id>/arte-{512,768,1024}.webp`. As do Xadrez são as peças 3D
+ * do dono (`public/models/chess/*.glb`) renderizadas numa cena do DEVO; o Escudo de Papelão também é modelado.
+ * Sem arte própria, a carta usa a gravura do tipo em duotom (provisório).
  * Para ligar uma arte nova: exporte os arquivos e acrescente o id aqui.
  */
-export const CARTAS_COM_ARTE = new Set<string>([])
+export const CARTAS_COM_ARTE = new Set<string>([
+  'escudo',
+  'xadrez_peao', 'xadrez_rei', 'xadrez_cavalo', 'xadrez_bispo', 'xadrez_torre', 'xadrez_rainha', 'xadrez_tabuleiro',
+])
 
 export function arteDaCarta(id: string): { src: string; srcSet: string } | null {
   if (!CARTAS_COM_ARTE.has(id)) return null

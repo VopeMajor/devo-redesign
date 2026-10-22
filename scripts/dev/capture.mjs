@@ -393,7 +393,7 @@ async function openApp(page, label) {
   await wait(2600)
 }
 
-const VET_CARDS = ['fosforo', 'escudo', 'moeda', 'dado', 'ampulheta', 'olho', 'relogio', 'laminas', 'chave', 'coroa']
+const VET_CARDS = ['escudo', 'xadrez_peao', 'xadrez_bispo', 'xadrez_cavalo', 'xadrez_torre', 'xadrez_rei', 'xadrez_rainha', 'xadrez_tabuleiro', 'escudo', 'xadrez_peao']
 
 if (want('sistema') || want('apps') || want('jogos')) {
   const { ctx, page } = await account('Veterano', 'DEVO-TEST-ADM1', VET_CARDS)
@@ -1192,7 +1192,7 @@ if (want('novato')) {
 // ── 3. Partidas reais entre duas contas (fila online)───────────────────────────────────
 if (want('partidas')) {
   const A = await account('Veterano', 'DEVO-TEST-ADM1', VET_CARDS)
-  const B = await account('Rival', 'DEVO-TEST-0002', ['fosforo', 'escudo', 'moeda', 'dado', 'ampulheta'])
+  const B = await account('Rival', 'DEVO-TEST-0002', ['escudo', 'xadrez_peao', 'xadrez_bispo'])
   for (const game of ['Memory Rush', 'Living Chess', 'Bomba Quente', 'Blefe']) {
     const slug = game.toLowerCase().replace(/\s+/g, '-')
     await step(`partida-${slug}`, async () => {

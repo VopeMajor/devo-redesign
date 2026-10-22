@@ -581,13 +581,13 @@ function FastClock() {
  * ainda não têm cartas no Compêndio: a vitrine usa a pele da raridade sobre uma carta existente (`rarity`).
  */
 const VITRINE_RARIDADES: { r: Rarity; card: string }[] = [
-  { r: 'comum', card: 'fosforo' },
-  { r: 'incomum', card: 'moeda' },
-  { r: 'rara', card: 'ampulheta' },
-  { r: 'ultra_rara', card: 'olho' },
-  { r: 'lendaria', card: 'relogio' },
-  { r: 'unica', card: 'coroa' },
-  { r: 'promocional', card: 'contrato' },
+  { r: 'comum', card: 'escudo' },
+  { r: 'incomum', card: 'xadrez_peao' },
+  { r: 'rara', card: 'xadrez_bispo' },
+  { r: 'ultra_rara', card: 'xadrez_rainha' },
+  { r: 'lendaria', card: 'xadrez_tabuleiro' },
+  { r: 'unica', card: 'xadrez_rei' },
+  { r: 'promocional', card: 'xadrez_torre' },
 ]
 
 function RaridadesVitrine() {
