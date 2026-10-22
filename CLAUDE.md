@@ -83,21 +83,26 @@ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
 Claude-Session: https://claude.ai/code/session_01Fm5U3bqZz6wpuWL1ksRMyi
 ```
 
-## Estado em 22/10/2026
+## Estado em 22/10/2026 (fim do dia)
 
-Feito e publicado na `redesign` (até 969291c): DV com arcano como recompensa (libera Arcanos/Virtudes), prêmios
-individuais múltiplos e recompensa geral; xadrez 10 min por jogador; Poço com ×5/×10/×20 passando pela manivela,
-corda com balde e água nova; X para sair da torre no desktop; torres pousadas no chão do mapa; Ajustes sem caixa
-de cosméticos; intro sem a estrela de toque e com NPCs nas falas sem figura; medalhões alinhados por expressão;
-falas longas rolam dentro da caixa; cena da figura ??? (`lib/devo/dialogo/cenas/figura-devolveu.ts`, para quem
-devolveu as Cartas Iniciais, após o 1º Deadly Vote, +5 Dracmas Incomuns); tela de carregamento na entrada e
-áudio sem "estouro" ao destravar; sprites novos (riso do Javali, desdém do Herdeiro).
+Na branch `ccr-a1dc3a06-5krin1` (esperando o dono autorizar o merge na `redesign`):
+- **Casa** (ícone novo, flag `galo_casa`): Confecção de Cartas (`lib/devo/confeccao.ts`, `lib/devo/casa-server.ts`,
+  `/api/casa`, `components/devo/casa/*`) e Pacotes (`lib/devo/pacotes.ts`). Mesa › Casa para regras e receitas.
+  Texto do dono em `docs/redesign/CASA-CONFECCAO-dono.md`. Custos/esperas/espaços PROVISÓRIOS (`confeccao.regras`).
+- **Coleção Xadrez** (7 cartas com Natureza/Arquétipo/Peso) e **peso máximo de cartas** no Deadly Vote.
+- **Home**: um relógio só (barra de cima); o quadro grande virou anúncios (`/api/anuncios`, Mesa › Anúncios +
+  eventos do Calendário dos próximos 14 dias).
+- **Arcanos**: Estágios 0..VII pagos com Fragmentos pelo próprio jogador, vários Arcanos por jogador (Grande
+  Fragmento Arcano), texto literal da Força (`docs/redesign/ARCANOS-forca-dono.md`), Força = XI e Justiça = VIII.
+- **Jogos**: menos travamentos (xadrez, Blefe, Memory Rush, Bomba Quente, sincronização das salas).
+- Migrações novas: `scripts/casa-migration.sql`, `scripts/arcanos-estagios-migration.sql`.
+- Teste local: há Postgres 16 em `/usr/lib/postgresql/16/bin` (initdb/pg_ctl como usuário `postgres`, dados fora de
+  /tmp) e `node_modules` instala com `pnpm install`; os `scripts/dev/*-test.mjs` rodam contra `next dev`.
 
 Pendente:
-1. **Arcanos no estilo tarô** (alta prioridade do dono): 22 pedidos `arcano-<chave>-tarot` já gerados nas branches
-   `arte-saida/arcano-*-tarot`. Esperando o dono escolher a variação de cada um; depois exportar com `arcanos.py`
-   e trazer para a `redesign`. O Mago só teve 1 variação (as outras foram barradas pelo filtro) — gerar mais seeds.
-2. A última execução das capturas da `redesign` (969291c) foi cancelada por tempo (2h) depois de Tipos e Build
-   passarem: rodar de novo (ou só os grupos tocados, via `.capture-only` numa branch de preview) e conferir se a
-   tela de carregamento nova não atrasa as primeiras capturas.
-3. Entrega final do redesign: zip + PR quando o dono pedir.
+1. **Arcanos no estilo tarô**: 22 pedidos `arcano-<chave>-tarot` gerados (branches `arte-saida/arcano-*-tarot`);
+   o dono escolhe numa galeria (artifact) e manda a lista; exportar com `arcanos.py`. O Mago só teve 1 variação.
+2. Força: o texto do dono não tem o Estágio IV e o VII ("Tirano") só tem o nome.
+3. Molde de Xadrez sem visual; cartas antigas sem peso usam o padrão por raridade (`PESO_PADRAO`).
+4. Sugestão do agente dos jogos (não feita): `session.cookieCache` no better-auth cortaria uma consulta por
+   requisição nas salas online (mexe em autenticação: pedir ao dono).

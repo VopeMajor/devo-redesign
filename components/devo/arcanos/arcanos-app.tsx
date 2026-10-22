@@ -18,7 +18,9 @@ import { SigiloPintado } from './sigilos'
  * ARCANOS — tela própria (dono, 17/10; refs em docs/redesign/refs/arcanos). Três vistas:
  *  1. Mapa (mapa.tsx): anéis em perspectiva que giram, constelação, medalhões de aço champanhe.
  *  2. Galeria (galeria.tsx): carrossel 3D com molduras, facho de luz e poeira; trancados em pedra.
- *  3. Altar (altar.tsx): vitral, velas, fumaça; Descrição, Fisiologia e Estágios.
+ *  3. Altar (altar.tsx): vitral, velas, fumaça; Descrição, Fisiologia, Evolução e Estágios (0..VII).
+ * O jogador pode ter mais de um Arcano: o original (o de nascença, que define as Virtudes) e os despertados com
+ * Grande Fragmento Arcano. Cada um tem o seu Estágio, pago em Fragmentos Arcanos (evolucao.tsx).
  * A moldura do centro e a figura do altar são o mesmo elemento numa View Transition (onde houver suporte e
  * sem movimento reduzido). Dados: o MESMO payload de /api/virtudes (trancado = numeral, nome, frase breve).
  * Cores só por tokens: base mármore negro, metal champanhe (--dv-gold*), acento ametista (--dv-amethyst*).
@@ -140,7 +142,7 @@ function Arcanos({ d }: { d: Liberado }) {
   }
   if (vista.tipo === 'detalhe') {
     const a = lista[vista.i]
-    if (a?.detalhe) return <Altar a={a} estagio={d.estagio} voltar={() => voltar(vista.i)} />
+    if (a?.detalhe) return <Altar a={a} d={d} voltar={() => voltar(vista.i)} />
   }
   return (
     <Ceu>
@@ -178,7 +180,7 @@ function Arcanos({ d }: { d: Liberado }) {
         </nav>
         <div className="min-h-0 flex-1">
           {vista.tipo === 'galeria' ? (
-            <Galeria lista={lista} inicial={vista.i} estagio={d.estagio} onIndice={marcarIndice} onAbrir={abrirDetalhe} />
+            <Galeria lista={lista} inicial={vista.i} d={d} onIndice={marcarIndice} onAbrir={abrirDetalhe} />
           ) : (
             <Mapa d={d} onEscolher={abrirGaleria} />
           )}

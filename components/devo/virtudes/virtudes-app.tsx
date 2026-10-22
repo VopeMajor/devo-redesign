@@ -2,11 +2,10 @@
 
 import { type CSSProperties, type ReactNode } from 'react'
 import useSWR from 'swr'
-import { AFINIDADE_ROTULO, type Afinidade, TEXTOS_VIRTUDES, VIRTUDE_KEYS, VIRTUDES, type VirtudeKey, type VirtudesPayload } from '@/lib/devo/virtudes'
+import { AFINIDADE_ROTULO, type Afinidade, numeralEstagio, TEXTOS_VIRTUDES, VIRTUDE_KEYS, VIRTUDES, type VirtudeKey, type VirtudesPayload } from '@/lib/devo/virtudes'
 import { cn } from '@/lib/utils'
 import { Button, Spinner } from '../kit/button'
 import { EmblemArcanos, EmblemMark, EmblemVirtudes } from '../kit/emblems'
-import { toRoman } from '../kit'
 import { ChevronRight } from 'lucide-react'
 import { useOsNav } from '../os/os-nav'
 import { SigiloPintado } from '../arcanos/sigilos'
@@ -203,7 +202,7 @@ function Cabecalho({ id, kicker, titulo, direita }: { id: string; kicker: string
 function Roda({ d, porKey }: { d: Liberado; porKey: Map<VirtudeKey, Liberado['virtudes'][number]> }) {
   const R = 41 // % do raio
   return (
-    <section aria-label={d.arcano ? `${d.arcano.titulo}, Estágio ${toRoman(d.estagio)}` : 'Arcano não revelado'} className="relative mx-auto aspect-square w-full max-w-[340px]">
+    <section aria-label={d.arcano ? `${d.arcano.titulo}, Estágio ${numeralEstagio(d.estagio)}` : 'Arcano não revelado'} className="relative mx-auto aspect-square w-full max-w-[340px]">
       {/* anéis gravados */}
       <svg aria-hidden="true" viewBox="0 0 100 100" className="absolute inset-0 size-full">
         <circle cx="50" cy="50" r="41" fill="none" stroke="#bab09f" strokeOpacity="0.32" strokeWidth="0.3" />
@@ -222,14 +221,14 @@ function Roda({ d, porKey }: { d: Liberado; porKey: Map<VirtudeKey, Liberado['vi
               <span className="dv-label text-[10px] text-dv-text-3">Arcano</span>
               <span className="dv-brass-text font-impact text-[40px] font-semibold leading-none">{d.arcano.numeral}</span>
               <span className="mt-1 max-w-[12ch] font-display text-[12.5px] font-semibold uppercase leading-tight tracking-[0.08em] text-dv-text">{d.arcano.titulo.replace(/^Arcano d[aoe]s? /, '')}</span>
-              <span className="mt-1.5 font-mono text-[10px] uppercase tracking-[0.18em] text-dv-gold">Estágio {toRoman(d.estagio)}</span>
+              <span className="mt-1.5 font-mono text-[10px] uppercase tracking-[0.18em] text-dv-gold">Estágio {numeralEstagio(d.estagio)}</span>
             </>
           ) : (
             <>
               <span className="dv-label text-[10px] text-dv-text-3">Arcano</span>
               <span className="font-impact text-[34px] font-semibold leading-none text-dv-text-3">?</span>
               <span className="mt-1 font-display text-[12px] font-semibold uppercase tracking-[0.08em] text-dv-text-2">Não revelado</span>
-              <span className="mt-1.5 font-mono text-[10px] uppercase tracking-[0.18em] text-dv-gold">Estágio {toRoman(d.estagio)}</span>
+              <span className="mt-1.5 font-mono text-[10px] uppercase tracking-[0.18em] text-dv-gold">Estágio {numeralEstagio(d.estagio)}</span>
             </>
           )}
         </div>
@@ -268,7 +267,7 @@ function Potencial({ d }: { d: Liberado }) {
     <section aria-labelledby="virt-pp" className="dv-record-panel dv-cut relative overflow-hidden" style={{ '--dv-cut': '14px' } as CSSProperties}>
       <span aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[url(/images/os/marmore-negro.webp)] bg-[length:480px_480px] opacity-40" />
       <div className="relative p-4">
-        <p className="dv-label text-[10px] text-dv-text-3">Pontos de Potencial · Estágio {toRoman(d.estagio)}</p>
+        <p className="dv-label text-[10px] text-dv-text-3">Pontos de Potencial · Estágio {numeralEstagio(d.estagio)}</p>
         <h2 id="virt-pp" className="mt-1.5 font-display text-[21px] font-semibold uppercase tracking-[0.06em] text-dv-text">
           {a.rotulo}
         </h2>
@@ -290,7 +289,9 @@ function Potencial({ d }: { d: Liberado }) {
           <span>Limite do Estágio</span>
         </div>
         <p className="mt-3 font-body text-[15px] leading-relaxed text-dv-text">
-          {d.ultimoEstagio ? 'Último Estágio conhecido. O corpo não tem para onde se transformar, por enquanto.' : a.pronto ? 'O corpo já suporta a metamorfose. A Evolução de Estágio acontece quando o Anfitrião a chamar.' : 'Ainda não basta para a metamorfose.'}
+          {d.ultimoEstagio
+            ? 'Último Estágio. O corpo não tem para onde se transformar.'
+            : 'Na próxima Evolução de Estágio do seu Arcano, paga com Fragmentos Arcanos na tela dos Arcanos, o que você acumulou se espalha pelas Virtudes.'}
         </p>
         {d.tendencia && (
           <p className="mt-2 flex items-center gap-2 font-body text-[15px] leading-relaxed text-dv-text-2">
@@ -345,24 +346,28 @@ function Historico({ d }: { d: Liberado }) {
           {d.evolucoes.map((e) => (
             <li key={e.at} className="relative flex gap-3.5 border-b border-dv-line py-3.5 pl-1 last:border-b-0">
               <span aria-hidden="true" className="dv-brass-text w-12 shrink-0 font-impact text-[24px] font-semibold leading-none">
-                {toRoman(e.para)}
+                {numeralEstagio(e.para)}
               </span>
               <div className="min-w-0 flex-1">
                 <p className="font-display text-[15px] font-semibold uppercase tracking-[0.08em] text-dv-text">
-                  Estágio {toRoman(e.de)} → {toRoman(e.para)}
+                  Estágio {numeralEstagio(e.de)} → {numeralEstagio(e.para)}
                 </p>
                 <p className="mt-0.5 font-mono text-[10.5px] uppercase tracking-[0.14em] text-dv-text-3">
                   {DATA.format(e.at)}
                   {e.arcano ? ` · ${e.arcano}` : ''}
                 </p>
-                <p className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 font-body text-[15px] text-dv-text-2">
-                  <span className="flex items-center gap-1.5">
-                    <Naipe virtude={e.maisCresceu} className="size-5" /> Mais cresceu: <span className="text-dv-text">{VIRTUDES[e.maisCresceu].nome}</span>
-                  </span>
-                  <span className="flex items-center gap-1.5">
-                    <Naipe virtude={e.menosCresceu} className="size-5" apagado /> Menos: <span className="text-dv-text">{VIRTUDES[e.menosCresceu].nome}</span>
-                  </span>
-                </p>
+                {e.maisCresceu && e.menosCresceu ? (
+                  <p className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 font-body text-[15px] text-dv-text-2">
+                    <span className="flex items-center gap-1.5">
+                      <Naipe virtude={e.maisCresceu} className="size-5" /> Mais cresceu: <span className="text-dv-text">{VIRTUDES[e.maisCresceu].nome}</span>
+                    </span>
+                    <span className="flex items-center gap-1.5">
+                      <Naipe virtude={e.menosCresceu} className="size-5" apagado /> Menos: <span className="text-dv-text">{VIRTUDES[e.menosCresceu].nome}</span>
+                    </span>
+                  </p>
+                ) : (
+                  <p className="mt-1.5 font-body text-[15px] italic text-dv-text-3">Nada acumulado para espalhar nesta metamorfose.</p>
+                )}
               </div>
             </li>
           ))}

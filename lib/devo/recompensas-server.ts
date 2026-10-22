@@ -8,6 +8,7 @@ import { run, txAs, UUID_RE } from './fundacao-db'
 import { creditMinutes, deliverCard, grantItem } from './inventario-server'
 import { loadVotoAlvo, requireActor, requireCan } from './permissoes-server'
 import { grantUnlock } from './progresso-server'
+import { concederArcano } from './virtudes-server'
 
 /**
  * Recompensas com aprovação (DIRECAO-3 §3; texto do dono "Recompensas externas" e §8).
@@ -303,19 +304,21 @@ async function deliverIn(c: PoolClient, ator: Ator | null, id: string): Promise<
     case 'tempo':
       await creditMinutes(row.recipient_id, row.quantity, c)
       break
-    case 'arcano':
-      // Concede (ou troca) o Arcano do destinatário. Registro no admin_log, como no ajuste manual das Virtudes.
+    case 'arcano': {
+      // Sem Arcano: este vira o original (Estágio 0, "A Essência"). Com outro original: entra como Arcano
+      // despertado no Estágio 0 (o original não muda). Registro no admin_log, como no ajuste manual das Virtudes.
       if (!isArcano(row.resource_key)) throw new RecordError('Arcano desconhecido.')
-      await run(c, 'UPDATE players SET arcano = $2 WHERE id = $1', [row.recipient_id, row.resource_key])
+      const r = await concederArcano(c, row.recipient_id, row.resource_key, 'recompensa')
       await run(c, "INSERT INTO admin_log (actor_id, action, target_id, ref, data) VALUES ($1, 'virtudes.arcano', $2, $3, $4)", [
         ator?.id ?? null,
         row.recipient_id,
         row.id,
-        JSON.stringify({ arcano: row.resource_key, origem: 'recompensa' }),
+        JSON.stringify({ arcano: row.resource_key, origem: 'recompensa', original: r.original }),
       ])
       // Ganhar um Arcano abre os sistemas de Arcanos e Virtudes (mesma flag) para o jogador.
       await grantUnlock(row.recipient_id, 'virtudes', 'sistema', row.id, null, c)
       break
+    }
     case 'carta':
       for (let i = 0; i < row.quantity && i < 50; i++) {
         await deliverCard({ playerId: row.recipient_id, cardId: row.resource_key!, origem: row.origin, ref: row.id, idem: `${idem}:${i}` }, c)

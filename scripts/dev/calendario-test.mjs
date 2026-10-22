@@ -351,7 +351,7 @@ await test('Owner: evento com check-in próprio aparece como cartão extra; regr
   const x = g.json.extras.find((e) => e.eventoId === id)
   assert(x && x.slots.length === 2 && x.slots[0].recompensa.rotulo === 'Carta Rara', `cartão extra do Owner: ${JSON.stringify(x?.slots?.map((s) => s.recompensa.rotulo))}`)
   r = await C.checkin({ tipo: 'evento', eventoId: id })
-  assert(r.status === 200 && ['ampulheta', 'olho', 'mascara', 'cranio'].includes(r.json.aplicado.cartaId), `carta rara: ${JSON.stringify(r.json?.aplicado)}`)
+  assert(r.status === 200 && ['ampulheta', 'olho', 'mascara', 'cranio', 'xadrez_rei', 'xadrez_cavalo', 'xadrez_bispo', 'xadrez_torre'].includes(r.json.aplicado.cartaId), `carta rara: ${JSON.stringify(r.json?.aplicado)}`)
   r = await O.cal('regras', { falta: 'pausa', ppVirtude: 'arcano', ppVirtudePadrao: 'copas', provisorio: true })
   assert(r.status === 200, `Owner muda regras: ${r.text.slice(0, 120)}`)
   const [cfg] = await q("SELECT value FROM devo_config WHERE key = 'calendario.checkin.regras'")
@@ -362,7 +362,7 @@ await test('Owner: evento com check-in próprio aparece como cartão extra; regr
   await O.cal('evento.remover', { id })
 })
 
-await test('Ultra Rara: aceita no check-in, rótulo próprio e entrega uma carta (cai para Rara enquanto não há Ultra Raras); secretas recusadas', async () => {
+await test('Ultra Rara: aceita no check-in, rótulo próprio e entrega uma carta (Rainha ou Tabuleiro do Xadrez); secretas recusadas', async () => {
   const hoje = (await q("SELECT to_char((now() AT TIME ZONE 'America/Sao_Paulo')::date, 'YYYY-MM-DD') AS d"))[0].d
   let r = await O.cal('evento.salvar', {
     titulo: `Ultra ${sfx}`,
@@ -382,7 +382,7 @@ await test('Ultra Rara: aceita no check-in, rótulo próprio e entrega uma carta
   const rotulos = x?.slots?.map((s) => s.recompensa.rotulo)
   assert(rotulos?.[0] === 'Carta Ultra Rara' && rotulos?.[1] === 'Carta Lendária', `rótulos: ${JSON.stringify(rotulos)}`)
   r = await C.checkin({ tipo: 'evento', eventoId: id })
-  assert(r.status === 200 && ['ampulheta', 'olho', 'mascara', 'cranio'].includes(r.json.aplicado.cartaId), `Ultra Rara sem cartas cai para a Rara mais próxima: ${JSON.stringify(r.json?.aplicado)}`)
+  assert(r.status === 200 && ['xadrez_rainha', 'xadrez_tabuleiro'].includes(r.json.aplicado.cartaId), `Ultra Rara entrega uma Ultra Rara (Coleção Xadrez): ${JSON.stringify(r.json?.aplicado)}`)
   await O.cal('evento.remover', { id })
 })
 

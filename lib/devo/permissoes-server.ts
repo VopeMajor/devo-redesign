@@ -226,7 +226,7 @@ export async function getPlayerSummary(atorId: string, alvoId: string, nivel: 'r
     cartas: Number(p.cartas ?? 0),
     fragmentos: Number(p.fragmentos ?? 0),
     arcano: isArcano(p.arcano) ? arcanoInfo(p.arcano).titulo : null,
-    estagio: p.arcano_estagio ?? 1,
+    estagio: p.arcano_estagio ?? 0,
     pontosPotencial: await run<{ pp: string | null }>(pool, 'SELECT sum(pp) AS pp FROM virtude_pp WHERE player_id = $1', [alvoId])
       .then((r) => Number(r[0]?.pp ?? 0))
       .catch(() => null),

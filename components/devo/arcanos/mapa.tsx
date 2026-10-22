@@ -2,10 +2,9 @@
 
 import { ChevronRight } from 'lucide-react'
 import { type CSSProperties, useEffect, useId, useRef, useState } from 'react'
-import type { VirtudesPayload } from '@/lib/devo/virtudes'
+import { numeralEstagio, type VirtudesPayload } from '@/lib/devo/virtudes'
 import { cn } from '@/lib/utils'
 import { EmblemArcanos } from '../kit/emblems'
-import { toRoman } from '../kit'
 import { comum } from '@/lib/devo/arcanos-arte'
 import { prng, reduzMovimento, sentir } from './fx'
 import { Medalhao } from './moldura'
@@ -57,6 +56,7 @@ export function Mapa({ d, onEscolher }: { d: Liberado; onEscolher: (i: number) =
   const meuIdx = d.arcanos.findIndex((a) => a.proprio)
   const orbital = comum('orbital')
   const meu = meuIdx >= 0 ? d.arcanos[meuIdx] : null
+  const despertados = d.arcanos.flatMap((a, i) => (a.posse && !a.posse.original ? [{ a, i }] : []))
   const H = Math.round(w * 0.86)
 
   const fisica = useRef({
@@ -295,7 +295,7 @@ export function Mapa({ d, onEscolher }: { d: Liberado; onEscolher: (i: number) =
           </button>
           {d.arcanos.map((a, i) => {
             const aberto = !!a.detalhe
-            const estado = a.proprio ? 'aceso' : aberto ? 'aberto' : 'apagado'
+            const estado = a.posse ? 'aceso' : aberto ? 'aberto' : 'apagado'
             return (
               <button
                 key={a.key}
@@ -304,7 +304,7 @@ export function Mapa({ d, onEscolher }: { d: Liberado; onEscolher: (i: number) =
                 }}
                 type="button"
                 onClick={() => escolher(i)}
-                aria-label={`${a.numeral} · ${nomeCurto(a.titulo)}${a.proprio ? ', seu Arcano' : aberto ? '' : ' (trancado)'}`}
+                aria-label={`${a.numeral} · ${nomeCurto(a.titulo)}${a.proprio ? ', seu Arcano' : a.posse ? ', despertado' : aberto ? '' : ' (trancado)'}`}
                 className="dv-focus group/no absolute left-0 top-0 size-11 rounded-full will-change-transform before:absolute before:-inset-1 before:content-[''] data-[frente=true]:[&>span:first-child]:opacity-100"
               >
                 {/* halo do que está na frente (lido pela legenda) */}
@@ -328,7 +328,7 @@ export function Mapa({ d, onEscolher }: { d: Liberado; onEscolher: (i: number) =
             <p className="mx-auto mt-2 max-w-[34ch] font-body text-[15px] leading-relaxed text-dv-text-2">
               {d.verTodos
                 ? 'Acesso da equipe: todos os Arcanos abrem. O jogador só abre o próprio.'
-                : 'Cada pessoa desperta sob um único Arcano. Dos outros vinte e um, só se sabe o nome.'}
+                : 'Cada pessoa desperta sob um Arcano. Outros só despertam com um Grande Fragmento Arcano; dos que você não tem, só se sabe o nome.'}
             </p>
           </header>
           {meu ? (
@@ -342,7 +342,7 @@ export function Mapa({ d, onEscolher }: { d: Liberado; onEscolher: (i: number) =
                 <SigiloPintado arcano={meu.key} estado="aceso" px={30} className="size-[30px]" />
               </Medalhao>
               <span className="relative min-w-0 flex-1">
-                <span className="dv-label block text-[10px] text-dv-amethyst-text">Seu Arcano · Estágio {toRoman(d.estagio)}</span>
+                <span className="dv-label block text-[10px] text-dv-amethyst-text">Seu Arcano · Estágio {numeralEstagio(meu.posse?.estagio ?? d.estagio)}</span>
                 <span className="block font-display text-[17px] font-semibold uppercase tracking-[0.08em] text-dv-text">
                   {meu.numeral} · {nomeCurto(meu.titulo)}
                 </span>
@@ -356,6 +356,38 @@ export function Mapa({ d, onEscolher }: { d: Liberado; onEscolher: (i: number) =
               </p>
             )
           )}
+          {despertados.length > 0 && (
+            <ul aria-label="Arcanos despertados" className="flex flex-col gap-2">
+              {despertados.map(({ a, i }) => (
+                <li key={a.key}>
+                  <button
+                    type="button"
+                    onClick={() => escolher(i)}
+                    className="dv-focus group flex min-h-12 w-full items-center gap-3 bg-dv-ink-2/80 px-3 py-2 text-left shadow-[inset_0_0_0_1px_var(--dv-line)]"
+                  >
+                    <Medalhao estado="aceso" className="size-9">
+                      <SigiloPintado arcano={a.key} estado="aceso" px={24} className="size-6" />
+                    </Medalhao>
+                    <span className="min-w-0 flex-1">
+                      <span className="dv-label block text-[9.5px] text-dv-text-3">Despertado · Estágio {numeralEstagio(a.posse!.estagio)}</span>
+                      <span className="block font-display text-[15px] font-semibold uppercase tracking-[0.08em] text-dv-text">
+                        {a.numeral} · {nomeCurto(a.titulo)}
+                      </span>
+                    </span>
+                    <ChevronRight aria-hidden="true" className="size-5 text-dv-gold transition-transform group-hover:translate-x-0.5" strokeWidth={1.75} />
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
+          <p className="flex flex-wrap justify-center gap-x-4 gap-y-1 font-mono text-[10.5px] uppercase tracking-[0.14em] text-dv-text-2 dv-tabular">
+            <span>
+              Fragmentos Arcanos <span className="text-dv-gold-bright">{d.fragmentos}</span>
+            </span>
+            <span>
+              Grandes Fragmentos <span className="text-dv-gold-bright">{d.grandesFragmentos}</span>
+            </span>
+          </p>
           <p aria-hidden="true" className="text-center font-mono text-[10px] uppercase tracking-[0.18em] text-dv-text-3">
             Arraste para girar · toque num medalhão
           </p>

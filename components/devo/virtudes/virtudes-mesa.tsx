@@ -13,7 +13,10 @@ import {
   AFINIDADE_ROTULO,
   arcanoInfo,
   type EstagioLimite,
+  CUSTO_ESTAGIO,
+  ESTAGIO_MAX,
   type MesaJogador,
+  numeralEstagio,
   ordemValida,
   VIRTUDE_KEYS,
   VIRTUDES,
@@ -26,10 +29,11 @@ import { ConfirmButton, EmptyLine, ErrorLine, Loading, RecSelect } from '../syst
 import { Naipe } from './naipes'
 
 /**
- * Mesa do Record › Virtudes (Owner/Anfitrião). Aqui os números aparecem: P.P. do Estágio por Virtude, mínimo e
- * teto, atributos acumulados, histórico. A equipe define o Arcano e dispara a Evolução de Estágio (o servidor
- * distribui pela afinidade). O Owner ainda lança P.P. à mão e edita a tabela de afinidade e os limites
- * (provisórios), com as divergências do doc marcadas para o dono confirmar.
+ * Mesa do Record › Virtudes (Owner/Anfitrião). Aqui os números aparecem: P.P. do Estágio por Virtude e teto,
+ * atributos acumulados, histórico, os Arcanos de cada jogador (o original e os despertados, cada um com o seu
+ * Estágio 0..VII) e o saldo de Fragmentos. O jogador sobe os Estágios sozinho, pagando Fragmentos Arcanos; a
+ * equipe ainda define o Arcano original e pode evoluir um Arcano pela Mesa (sem custo, sem mínimo). O Owner
+ * lança P.P. à mão e edita a tabela de afinidade, os limites e os textos (provisórios).
  */
 
 async function get(url: string): Promise<VirtudesMesa> {
@@ -46,6 +50,7 @@ async function post(body: Record<string, unknown>) {
   return j
 }
 
+const nomeArcano = (k: ArcanoKey) => arcanoInfo(k).titulo.replace(/^Arcano d[aoe]s? /, '')
 const n2 = (n: number) => (Math.round(n * 100) / 100).toLocaleString('pt-BR')
 
 export function VirtudesMesa() {
@@ -77,7 +82,7 @@ export function VirtudesMesa() {
     <div className="flex flex-col gap-5">
       <RecordPanel variant="paper" title="Virtudes" jp="美徳" ornate headerRight={<HudCode code="DV_VIRTUDES" />}>
         <p className="font-body text-[15px] leading-relaxed text-in-fg-2">
-          Pontos de Potencial do Estágio, Arcano e Evolução de Estágio. O jogador só vê palavras (afinidade, quanto acumulou); os números ficam aqui. A Evolução espalha os P.P. pela afinidade do Arcano — ninguém escolhe a distribuição.
+          Pontos de Potencial, Arcanos e Evolução de Estágio. O jogador só vê palavras (afinidade, quanto acumulou); os números ficam aqui. Quem sobe o Estágio é o próprio jogador, pagando Fragmentos Arcanos (I = 25 … VII = 1600); ao subir o Arcano original, os P.P. se espalham pela afinidade — ninguém escolhe a distribuição.
         </p>
         <RecInput aria-label="Buscar jogador" placeholder="Buscar jogador pelo nome" value={busca} onChange={(e) => setBusca(e.target.value.slice(0, 40))} className="mt-3 h-11 text-[15px]" />
         {aviso && (
@@ -126,9 +131,10 @@ function LinhaJogador({ j, owner, agir, ordem }: { j: MesaJogador; owner: boolea
     setBusy(null)
   }
   const frac = j.teto > 0 ? Math.min(1, j.total / j.teto) : 0
-  const minFrac = j.teto > 0 ? Math.min(1, j.minimo / j.teto) : 0
-  const podeEvoluir = !!j.arcano && !j.ultimoEstagio && j.total > 0 && j.total >= j.minimo
-  const motivo = !j.arcano ? 'sem Arcano' : j.ultimoEstagio ? 'último Estágio' : j.total < j.minimo || j.total <= 0 ? 'abaixo do mínimo' : null
+  const [alvo, setAlvo] = useState<ArcanoKey | ''>('')
+  const escolhido = j.arcanos.find((a) => a.key === alvo) ?? j.arcanos.find((a) => a.original) ?? null
+  const podeEvoluir = !!escolhido && escolhido.estagio < ESTAGIO_MAX
+  const motivo = !escolhido ? 'sem Arcano' : escolhido.estagio >= ESTAGIO_MAX ? 'Estágio VII, o último' : null
   return (
     <li aria-label={`Virtudes de ${j.nome}`} className="border-b border-in-line py-3.5 last:border-b-0">
       <div className="flex items-start justify-between gap-3">
@@ -138,7 +144,19 @@ function LinhaJogador({ j, owner, agir, ordem }: { j: MesaJogador; owner: boolea
             {j.isTest && <span className="ml-2 align-middle font-mono text-[9.5px] tracking-[0.14em] text-in-fg-3">teste</span>}
           </p>
           <p className="mt-1 font-mono text-[11px] uppercase tracking-[0.12em] text-in-fg-2">
-            {j.arcano ? arcanoInfo(j.arcano).titulo : 'Arcano sem registro'} · Estágio {j.estagio}
+            {j.arcano ? arcanoInfo(j.arcano).titulo : 'Arcano sem registro'} · Estágio {numeralEstagio(j.estagio)}
+          </p>
+          {j.arcanos.some((a) => !a.original) && (
+            <p className="mt-0.5 font-mono text-[10.5px] uppercase tracking-[0.1em] text-in-fg-3">
+              Despertados:{' '}
+              {j.arcanos
+                .filter((a) => !a.original)
+                .map((a) => `${nomeArcano(a.key)} ${numeralEstagio(a.estagio)}`)
+                .join(' · ')}
+            </p>
+          )}
+          <p className="mt-0.5 font-mono text-[10.5px] uppercase tracking-[0.1em] text-in-fg-3 dv-tabular">
+            {j.fragmentos} Fragmentos Arcanos · {j.grandesFragmentos} Grandes
           </p>
         </div>
         <RecButton size="sm" variant="ghost" onClick={() => setAberto(!aberto)} aria-expanded={aberto}>
@@ -146,17 +164,16 @@ function LinhaJogador({ j, owner, agir, ordem }: { j: MesaJogador; owner: boolea
         </RecButton>
       </div>
 
-      {/* P.P. do Estágio: total, mínimo e teto (números) */}
+      {/* P.P. do Estágio do original: total e teto (números) */}
       <div className="mt-2.5">
-        <div className="relative h-2.5 bg-in-fg/[0.08]" role="img" aria-label={`P.P. ${n2(j.total)} de ${n2(j.teto)}; mínimo ${n2(j.minimo)}`}>
+        <div className="relative h-2.5 bg-in-fg/[0.08]" role="img" aria-label={`P.P. ${n2(j.total)} de ${n2(j.teto)}`}>
           <span className={cn('absolute inset-y-0 left-0', j.total >= j.teto ? 'bg-in-accent' : 'bg-in-data')} style={{ width: `${frac * 100}%` }} />
-          <span aria-hidden="true" className="absolute -inset-y-1 w-px bg-in-fg" style={{ left: `${minFrac * 100}%` }} />
         </div>
         <p className="mt-1.5 flex justify-between font-mono text-[11px] uppercase tracking-[0.1em] text-in-fg-2 dv-tabular">
           <span>
             P.P. {n2(j.total)} / {n2(j.teto)}
           </span>
-          <span>mín. {n2(j.minimo)}</span>
+          <span>teto do Estágio {numeralEstagio(j.estagio)}</span>
         </p>
       </div>
 
@@ -187,13 +204,33 @@ function LinhaJogador({ j, owner, agir, ordem }: { j: MesaJogador; owner: boolea
             </tbody>
           </table>
 
+          {j.arcanos.length > 0 && (
+            <div>
+              <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-in-fg-3">Arcanos</p>
+              <ul className="mt-1">
+                {j.arcanos.map((a) => (
+                  <li key={a.key} className="flex items-baseline justify-between gap-2 border-t border-in-line py-1.5 font-sans text-[14px] text-in-fg">
+                    <span className="min-w-0">
+                      {arcanoInfo(a.key).numeral} · {nomeArcano(a.key)}
+                      <span className="ml-2 font-mono text-[10px] uppercase tracking-[0.12em] text-in-fg-3">{a.original ? 'original' : a.origem === 'grande_fragmento' ? 'Grande Fragmento' : (a.origem ?? 'despertado')}</span>
+                    </span>
+                    <span className="shrink-0 font-mono text-[12px] uppercase tracking-[0.1em] text-in-fg-2 dv-tabular">
+                      Estágio {numeralEstagio(a.estagio)}
+                      {a.estagio < ESTAGIO_MAX ? ` · próx. ${CUSTO_ESTAGIO[a.estagio + 1]}` : ''}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
           {j.evolucoes.length > 0 && (
             <div>
               <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-in-fg-3">Evoluções</p>
               <ul className="mt-1">
                 {j.evolucoes.map((e) => (
                   <li key={e.at} className="border-t border-in-line py-1.5 font-mono text-[11.5px] leading-relaxed text-in-fg-2 dv-tabular">
-                    {new Date(e.at).toLocaleDateString('pt-BR')} · {e.de}→{e.para} · total {n2(e.total)}
+                    {new Date(e.at).toLocaleDateString('pt-BR')} · {numeralEstagio(e.de)}→{numeralEstagio(e.para)} · total {n2(e.total)}
                     {e.por ? ` · por ${e.por}` : ''}
                     <br />
                     {VIRTUDE_KEYS.map((v) => `${VIRTUDES[v].nome} +${n2(e.ganhos[v] ?? 0)}`).join(' · ')}
@@ -204,7 +241,7 @@ function LinhaJogador({ j, owner, agir, ordem }: { j: MesaJogador; owner: boolea
           )}
 
           <label className="flex flex-col gap-1">
-            <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-in-fg-2">Arcano</span>
+            <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-in-fg-2">Arcano original</span>
             <RecSelect
               aria-label={`Arcano de ${j.nome}`}
               value={j.arcano ?? ''}
@@ -242,14 +279,27 @@ function LinhaJogador({ j, owner, agir, ordem }: { j: MesaJogador; owner: boolea
       )}
 
       <div className="mt-3 flex flex-wrap items-center gap-2">
+        {j.arcanos.length > 1 && (
+          <RecSelect aria-label={`Arcano a evoluir de ${j.nome}`} value={escolhido?.key ?? ''} onChange={(e) => setAlvo(e.target.value as ArcanoKey)} className="h-10 w-auto min-w-[150px] text-[14px]">
+            {j.arcanos.map((a) => (
+              <option key={a.key} value={a.key}>
+                {nomeArcano(a.key)} · {numeralEstagio(a.estagio)}
+                {a.original ? ' (original)' : ''}
+              </option>
+            ))}
+          </RecSelect>
+        )}
         <ConfirmButton
           size="sm"
-          confirmLabel={`Confirmar Evolução de ${j.nome}`}
+          confirmLabel={escolhido ? `Confirmar: ${nomeArcano(escolhido.key)} de ${j.nome} para o Estágio ${numeralEstagio(escolhido.estagio + 1)}` : 'Confirmar'}
           disabled={!podeEvoluir}
           loading={busy === 'evoluir'}
-          onConfirm={() => void run('evoluir', { action: 'evoluir', playerId: j.id }, `${j.nome} evoluiu para o Estágio ${j.estagio + 1}.`)}
+          onConfirm={() =>
+            escolhido &&
+            void run('evoluir', { action: 'evoluir', playerId: j.id, arcano: escolhido.key }, `${nomeArcano(escolhido.key)} de ${j.nome} evoluiu para o Estágio ${numeralEstagio(escolhido.estagio + 1)}.`)
+          }
         >
-          Evoluir Estágio
+          Evoluir Estágio (sem custo)
         </ConfirmButton>
         {motivo && <span className="font-mono text-[10.5px] uppercase tracking-[0.12em] text-in-fg-3">{motivo}</span>}
       </div>
@@ -428,25 +478,25 @@ function EditorEstagios({ padrao, porArcano, provisorio, agir }: { padrao: Estag
   return (
     <RecordPanel title="Limites por Estágio" jp="段階" headerRight={<RecTag tone={provisorio ? 'accent' : 'muted'}>{provisorio ? 'Provisório' : 'Final'}</RecTag>}>
       <p className="font-body text-[15px] leading-relaxed text-in-fg-2">
-        Mínimo para a Evolução e teto de acúmulo (soma das seis Virtudes). O doc diz que o Arcano define; por ora vale um padrão para todos{Object.keys(porArcano).length ? ` (${Object.keys(porArcano).length} Arcanos com tabela própria)` : ''}.
+        Teto de acúmulo de P.P. (soma das seis Virtudes) por Estágio do Arcano original, do 0 em diante; acima da última linha vale a última. O mínimo ficou só como referência: a Evolução agora é paga em Fragmentos Arcanos e não exige mínimo. O doc diz que o Arcano define; por ora vale um padrão para todos{Object.keys(porArcano).length ? ` (${Object.keys(porArcano).length} Arcanos com tabela própria)` : ''}.
       </p>
       <table className="mt-3 w-full border-collapse">
         <thead>
           <tr className="font-mono text-[10px] uppercase tracking-[0.12em] text-in-fg-3">
             <th className="py-1 text-left font-normal">Estágio</th>
-            <th className="py-1 font-normal">Mínimo</th>
+            <th className="py-1 font-normal">Mínimo (ref.)</th>
             <th className="py-1 font-normal">Teto</th>
           </tr>
         </thead>
         <tbody>
           {linhas.map((l, i) => (
             <tr key={l.estagio} className="border-t border-in-line">
-              <td className="py-1.5 font-impact text-[18px] font-semibold text-in-fg">{l.estagio}</td>
+              <td className="py-1.5 font-impact text-[18px] font-semibold text-in-fg">{numeralEstagio(l.estagio)}</td>
               <td className="px-1 py-1.5">
-                <RecInput aria-label={`Mínimo do Estágio ${l.estagio}`} inputMode="numeric" value={String(l.minimo)} onChange={(e) => set(i, 'minimo', e.target.value)} className="h-10 text-center text-[15px]" />
+                <RecInput aria-label={`Mínimo do Estágio ${numeralEstagio(l.estagio)}`} inputMode="numeric" value={String(l.minimo)} onChange={(e) => set(i, 'minimo', e.target.value)} className="h-10 text-center text-[15px]" />
               </td>
               <td className="px-1 py-1.5">
-                <RecInput aria-label={`Teto do Estágio ${l.estagio}`} inputMode="numeric" value={String(l.teto)} onChange={(e) => set(i, 'teto', e.target.value)} className="h-10 text-center text-[15px]" />
+                <RecInput aria-label={`Teto do Estágio ${numeralEstagio(l.estagio)}`} inputMode="numeric" value={String(l.teto)} onChange={(e) => set(i, 'teto', e.target.value)} className="h-10 text-center text-[15px]" />
               </td>
             </tr>
           ))}
@@ -497,10 +547,10 @@ function EditorTextos({ textos, agir }: { textos: Record<string, TextoMesa>; agi
     setFinal(!textos[k].provisorio)
   }, [k, textos])
   const L = TEXTO_LIMITES
-  const faltando = !f.breve.trim() || !f.descricao.trim() || !f.fisiologia.trim() || f.estagios.some((e) => !e.nome.trim())
+  const faltando = !f.breve.trim() || !f.descricao.trim() || !f.fisiologia.trim() || f.estagios.some((e) => !e.nome.trim() && (e.linha.trim() || e.texto?.trim())) || f.estagios.every((e) => !e.nome.trim())
   const mudou = JSON.stringify([f.breve, f.descricao, f.fisiologia, f.estagios]) !== JSON.stringify([atual.breve, atual.descricao, atual.fisiologia, atual.estagios]) || final === atual.provisorio
   const titulo = arcanoInfo(k).titulo
-  const setEstagio = (i: number, campo: 'nome' | 'linha', v: string) => setF({ ...f, estagios: f.estagios.map((e, j) => (j === i ? { ...e, [campo]: v.slice(0, L[campo]) } : e)) })
+  const setEstagio = (i: number, campo: 'nome' | 'linha' | 'texto', v: string) => setF({ ...f, estagios: f.estagios.map((e, j) => (j === i ? { ...e, [campo]: v.slice(0, L[campo]) } : e)) })
   const gravar = async () => {
     setBusy('gravar')
     await agir({ action: 'arcano-texto', arcano: k, value: { breve: f.breve, descricao: f.descricao, fisiologia: f.fisiologia, estagios: f.estagios }, provisorio: !final }, `Texto do ${titulo} gravado.`)
@@ -515,7 +565,7 @@ function EditorTextos({ textos, agir }: { textos: Record<string, TextoMesa>; agi
   return (
     <RecordPanel title="Textos dos Arcanos" jp="札文" headerRight={<RecTag tone={atual.provisorio ? 'accent' : 'muted'}>{atual.provisorio ? 'Provisório' : 'Final'}</RecTag>}>
       <p className="font-body text-[15px] leading-relaxed text-in-fg-2">
-        O doc não descreve os Arcanos; estes textos são rascunho. O jogador vê a frase breve de todos e o texto inteiro só do próprio Arcano. {editados ? `${editados} de 22 já editados.` : 'Nenhum editado ainda.'}
+        Só a Força tem texto do dono (22/10); os outros são rascunho. O jogador vê a frase breve de todos e o texto inteiro só dos Arcanos que tem; Estágios futuros, só o nome. Estágio sem nome aparece como “Ainda não revelado”. No texto longo, deixe uma linha em branco entre parágrafos; uma linha inteira entre *asteriscos* vira subtítulo. {editados ? `${editados} de 22 já editados.` : 'Nenhum editado ainda.'}
       </p>
       <label className="mt-3 flex flex-col gap-1">
         <RecLabel>Arcano</RecLabel>
@@ -547,10 +597,11 @@ function EditorTextos({ textos, agir }: { textos: Record<string, TextoMesa>; agi
           </legend>
           {f.estagios.map((e, i) => (
             <div key={i} className="flex gap-2">
-              <span className="w-7 shrink-0 pt-3 font-impact text-[17px] font-semibold text-in-fg">{['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'][i]}</span>
+              <span className="w-8 shrink-0 pt-3 font-impact text-[17px] font-semibold text-in-fg">{numeralEstagio(i)}</span>
               <div className="flex min-w-0 flex-1 flex-col gap-1.5">
-                <RecInput aria-label={`Nome do Estágio ${i + 1}`} value={e.nome} maxLength={L.nome} onChange={(ev) => setEstagio(i, 'nome', ev.target.value)} className="h-11 text-[15px]" />
-                <RecTextarea aria-label={`Linha do Estágio ${i + 1}`} rows={2} value={e.linha} maxLength={L.linha} onChange={(ev) => setEstagio(i, 'linha', ev.target.value)} className="text-[14.5px]" />
+                <RecInput aria-label={`Nome do Estágio ${numeralEstagio(i)}`} placeholder="Ainda não revelado" value={e.nome} maxLength={L.nome} onChange={(ev) => setEstagio(i, 'nome', ev.target.value)} className="h-11 text-[15px]" />
+                <RecTextarea aria-label={`Linha do Estágio ${numeralEstagio(i)}`} placeholder="Frase curta (opcional)" rows={2} value={e.linha} maxLength={L.linha} onChange={(ev) => setEstagio(i, 'linha', ev.target.value)} className="text-[14.5px]" />
+                <RecTextarea aria-label={`Texto do Estágio ${numeralEstagio(i)}`} placeholder="Texto completo do Estágio (opcional)" rows={e.texto ? 8 : 2} value={e.texto ?? ''} maxLength={L.texto} onChange={(ev) => setEstagio(i, 'texto', ev.target.value)} className="text-[14.5px]" />
               </div>
             </div>
           ))}
@@ -560,7 +611,7 @@ function EditorTextos({ textos, agir }: { textos: Record<string, TextoMesa>; agi
         <input type="checkbox" checked={final} onChange={(e) => setFinal(e.target.checked)} className="size-5 accent-[var(--in-fg)]" />
         Texto final (tira o selo de provisório)
       </label>
-      {faltando && <p className="mt-1 font-mono text-[11px] leading-relaxed text-in-alert">Frase breve, descrição, fisiologia e o nome de cada Estágio são obrigatórios.</p>}
+      {faltando && <p className="mt-1 font-mono text-[11px] leading-relaxed text-in-alert">Frase breve, descrição e fisiologia são obrigatórias, e todo Estágio com linha ou texto precisa de nome.</p>}
       <div className="mt-2 flex flex-wrap gap-2">
         <RecButton disabled={faltando || !mudou} loading={busy === 'gravar'} onClick={() => void gravar()}>
           Gravar texto
