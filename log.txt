@@ -1,0 +1,9 @@
+[carta-xadrez-tabuleiro] v01: @cf/black-forest-labs/flux-2-klein-9b seed=70321 768x1536 passos=None (~1,386 neurônios)
+    ok em 2.8s, 768x1536
+[carta-xadrez-tabuleiro] v02: @cf/black-forest-labs/flux-2-klein-9b seed=70322 768x1536 passos=None (~1,386 neurônios)
+    ok em 2.6s, 768x1536
+[carta-xadrez-tabuleiro] v03: @cf/black-forest-labs/flux-2-klein-9b seed=70323 768x1536 passos=None (~1,386 neurônios)
+    ok em 2.6s, 768x1536
+[carta-xadrez-tabuleiro] v01: mantido; sem avisos
+[carta-xadrez-tabuleiro] v02: mantido; sem avisos
+[carta-xadrez-tabuleiro] v03: mantido; sem avisos

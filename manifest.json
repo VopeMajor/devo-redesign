@@ -1,0 +1,96 @@
+{
+  "pedido": "carta-xadrez-tabuleiro",
+  "titulo": "Carta — Tabuleiro do Xadrez (ilustração da janela)",
+  "tipo": "ilustracao",
+  "tamanho_final": 1536,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 70321,
+      "passos": null,
+      "segundos": 2.8,
+      "neuronios_estimados": 1386,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "carta-xadrez-tabuleiro--v01--1536.png",
+          "bytes": 2115129
+        },
+        {
+          "arquivo": "carta-xadrez-tabuleiro--v01--1536.webp",
+          "bytes": 344666
+        },
+        {
+          "arquivo": "carta-xadrez-tabuleiro--v01--1024.webp",
+          "bytes": 125402
+        },
+        {
+          "arquivo": "carta-xadrez-tabuleiro--v01--768.webp",
+          "bytes": 81932
+        }
+      ],
+      "segundos_pos": 1.8,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 70322,
+      "passos": null,
+      "segundos": 2.6,
+      "neuronios_estimados": 1386,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "carta-xadrez-tabuleiro--v02--1536.png",
+          "bytes": 2120135
+        },
+        {
+          "arquivo": "carta-xadrez-tabuleiro--v02--1536.webp",
+          "bytes": 353710
+        },
+        {
+          "arquivo": "carta-xadrez-tabuleiro--v02--1024.webp",
+          "bytes": 132906
+        },
+        {
+          "arquivo": "carta-xadrez-tabuleiro--v02--768.webp",
+          "bytes": 84958
+        }
+      ],
+      "segundos_pos": 1.8,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 70323,
+      "passos": null,
+      "segundos": 2.6,
+      "neuronios_estimados": 1386,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "carta-xadrez-tabuleiro--v03--1536.png",
+          "bytes": 2256060
+        },
+        {
+          "arquivo": "carta-xadrez-tabuleiro--v03--1536.webp",
+          "bytes": 416956
+        },
+        {
+          "arquivo": "carta-xadrez-tabuleiro--v03--1024.webp",
+          "bytes": 144664
+        },
+        {
+          "arquivo": "carta-xadrez-tabuleiro--v03--768.webp",
+          "bytes": 91208
+        }
+      ],
+      "segundos_pos": 1.7,
+      "avisos": []
+    }
+  ]
+}
