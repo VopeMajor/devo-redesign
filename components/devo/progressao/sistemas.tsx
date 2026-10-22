@@ -3,7 +3,7 @@
 import { useEffect, type ComponentType } from 'react'
 import type { UnlockFlag } from '@/lib/devo/progresso'
 import type { AppId } from '@/lib/devo/types'
-import { EmblemArcanos, EmblemCalendario, EmblemCorporacoes, EmblemMascaras, EmblemPoco, EmblemTorres, EmblemVirtudes, type EmblemComponent, type EmblemProps } from '../kit/emblems'
+import { EmblemArcanos, EmblemCalendario, EmblemCasa, EmblemCorporacoes, EmblemMascaras, EmblemPoco, EmblemTorres, EmblemVirtudes, type EmblemComponent, type EmblemProps } from '../kit/emblems'
 import { GlyphKeyhole } from '../kit/glyphs'
 import { Panel, SectionLabel } from '../apps/app-ui'
 import { useDevo } from '../state/devo-store'
@@ -15,6 +15,7 @@ import { VirtudesApp } from '../virtudes/virtudes-app'
 import { ArcanosApp } from '../arcanos/arcanos-app'
 import { CorporacoesApp } from '../corporacoes/corporacoes-app'
 import { CalendarioApp } from '../calendario/calendario-app'
+import { CasaApp } from '../casa/casa-app'
 
 /**
  * SISTEMAS NOVOS (DIRECAO-3 §1–2) no menu do DEVO: trancados até vencer o Deadly Vote tutorial (Owner e
@@ -26,7 +27,7 @@ import { CalendarioApp } from '../calendario/calendario-app'
  *   e ELA mostra a trava (decidida no servidor). A tela é responsável por chamar a apresentação narrativa na primeira entrada
  *   (`useCenas().abrir(..., { seNaoVista: true })` — docs/redesign/DIALOGO.md).
  */
-export type SistemaId = 'calendario' | 'salao' | 'poco' | 'torres' | 'corporacoes' | 'virtudes' | 'arcanos'
+export type SistemaId = 'calendario' | 'salao' | 'poco' | 'torres' | 'corporacoes' | 'virtudes' | 'arcanos' | 'casa'
 
 export const TELAS_SISTEMA: Partial<Record<SistemaId, ComponentType>> = {
   salao: SalaoApp,
@@ -36,6 +37,7 @@ export const TELAS_SISTEMA: Partial<Record<SistemaId, ComponentType>> = {
   virtudes: VirtudesApp,
   calendario: CalendarioApp,
   arcanos: ArcanosApp,
+  casa: CasaApp,
 }
 
 export type SistemaDef = {
@@ -68,6 +70,8 @@ export const SISTEMAS: SistemaDef[] = [
   { id: 'virtudes', nome: 'Virtudes', curto: 'Virtudes', subtitulo: 'Pontos de potencial', flag: 'virtudes', trava: 'Em breve', emblem: EmblemVirtudes, janela: { w: 460, h: 820 } },
   // Arcanos: tela própria (dono, 17/10), mesma regra das Virtudes (a flag e o payload /api/virtudes são os mesmos).
   { id: 'arcanos', nome: 'Arcanos', curto: 'Arcanos', subtitulo: 'Os vinte e dois', flag: 'virtudes', trava: 'Em breve', emblem: EmblemArcanos, janela: { w: 460, h: 820 } },
+  // Casa (dono, 22/10): Confecção de Cartas e Pacotes. Abre com o tutorial (mesma flag da visita do Galo à casa).
+  { id: 'casa', nome: 'Casa', curto: 'Casa', subtitulo: 'Confecção de Cartas e Pacotes', flag: 'galo_casa', trava: TUTORIAL, emblem: EmblemCasa, janela: { w: 480, h: 840 } },
 ]
 
 export const SISTEMA_IDS = SISTEMAS.map((s) => s.id) as SistemaId[]

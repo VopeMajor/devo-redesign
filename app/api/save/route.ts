@@ -5,6 +5,7 @@ import { playerSaves } from '@/lib/db/schema'
 import { MAX_SAVE_BYTES, sanitizeSave } from '@/lib/devo/save'
 import { uidsTransferidos } from '@/lib/devo/corporacoes-server'
 import { uidsNoSalao } from '@/lib/devo/salao-server'
+import { uidsNaConfeccao } from '@/lib/devo/casa-server'
 
 export async function POST(req: Request) {
   const player = await getCurrentPlayer()
@@ -28,6 +29,9 @@ export async function POST(req: Request) {
   // O mesmo para cartas transferidas a outro membro da Corporação (saíram do save no servidor).
   const transferidas = await uidsTransferidos(player.id)
   if (transferidas.size) data.inventory = data.inventory.filter((c) => !transferidas.has(c.uid))
+  // E para cartas sacrificadas na Confecção de Cartas (Casa).
+  const naConfeccao = await uidsNaConfeccao(player.id)
+  if (naConfeccao.size) data.inventory = data.inventory.filter((c) => !naConfeccao.has(c.uid))
 
   await db
     .insert(playerSaves)

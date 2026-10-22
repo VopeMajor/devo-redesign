@@ -206,6 +206,7 @@ const SYSTEM_NAMES: Record<keyof typeof SYSTEM_EMBLEMS, string> = {
   corporacoes: 'Corporações',
   mascaras: 'Salão das Máscaras',
   calendario: 'Calendário Devo',
+  casa: 'Casa',
 }
 
 function EmblemGrid({ items }: { items: [string, EmblemComponent][] }) {

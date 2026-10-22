@@ -31,8 +31,8 @@ export const TUTORIAL_FLAGS: UnlockFlag[] = ['salao_mascaras', 'poco', 'torres',
 
 export const isUnlockFlag = (v: unknown): v is UnlockFlag => (UNLOCK_FLAGS as readonly unknown[]).includes(v)
 
-export type ItemKind = 'moeda' | 'essencia' | 'chave' | 'fragmento' | 'capsula' | 'cosmetico' | 'convite' | 'outro'
-export const ITEM_KINDS: ItemKind[] = ['moeda', 'essencia', 'chave', 'fragmento', 'capsula', 'cosmetico', 'convite', 'outro']
+export type ItemKind = 'moeda' | 'essencia' | 'chave' | 'fragmento' | 'capsula' | 'cosmetico' | 'convite' | 'outro' | 'pacote'
+export const ITEM_KINDS: ItemKind[] = ['moeda', 'essencia', 'chave', 'fragmento', 'capsula', 'cosmetico', 'convite', 'outro', 'pacote']
 
 /** Escala de raridade dos itens e cosméticos (Comum → Arcano). As cartas têm a própria (lib/devo/cards.ts). */
 export type ItemRarity = 'comum' | 'incomum' | 'raro' | 'epico' | 'lendario' | 'arcano'

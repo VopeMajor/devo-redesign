@@ -372,6 +372,23 @@ export function EmblemMascaras(p: EmblemProps) {
   )
 }
 
+/** Casa — fachada de empena com chaminé; a porta em arco traz a estrela recortada, janela em losango e agulhas no beiral. */
+export function EmblemCasa(p: EmblemProps) {
+  return (
+    <Svg {...p}>
+      <path d="M24 4L44 21.5H38.6L24 9.2L9.4 21.5H4Z" />
+      <path d="M31.5 7.2H35.5V14.6L31.5 11.2Z" />
+      <Line d="M11 21V42.5H37V21" w={2} />
+      <Cut d={"M18.6 42.5V31.5Q18.6 25.8 24 25.8Q29.4 25.8 29.4 31.5V42.5Z" + star(24, 33, 3.4, 0.18)} />
+      <path d={lozenge(24, 17.2, 2.4, 2.8)} />
+      <Line d="M6.5 44.6H41.5" w={1.8} />
+      <path d={needle(4, 21.5, 0.8, 26.5, 1, 0.4)} />
+      <path d={needle(44, 21.5, 47.2, 26.5, 1, 0.4)} />
+      <path d={star(41.5, 7.5, 3, 0.18)} />
+    </Svg>
+  )
+}
+
 /** Calendário — folha com duas argolas e faixa de cabeçalho; a data marcada é a estrela do sigilo, entre quatro losangos. */
 export function EmblemCalendario(p: EmblemProps) {
   return (
@@ -411,6 +428,7 @@ export const SYSTEM_EMBLEMS = {
   corporacoes: EmblemCorporacoes,
   mascaras: EmblemMascaras,
   calendario: EmblemCalendario,
+  casa: EmblemCasa,
 } as const satisfies Record<string, EmblemComponent>
 
 /**
