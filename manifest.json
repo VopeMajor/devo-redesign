@@ -1,0 +1,96 @@
+{
+  "pedido": "carta-olho",
+  "titulo": "Carta — Olho que Tudo Vê (ilustração da janela)",
+  "tipo": "ilustracao",
+  "tamanho_final": 1536,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 70191,
+      "passos": null,
+      "segundos": 2.8,
+      "neuronios_estimados": 1386,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "carta-olho--v01--1536.png",
+          "bytes": 2521752
+        },
+        {
+          "arquivo": "carta-olho--v01--1536.webp",
+          "bytes": 506762
+        },
+        {
+          "arquivo": "carta-olho--v01--1024.webp",
+          "bytes": 189572
+        },
+        {
+          "arquivo": "carta-olho--v01--768.webp",
+          "bytes": 117624
+        }
+      ],
+      "segundos_pos": 1.6,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 70192,
+      "passos": null,
+      "segundos": 2.8,
+      "neuronios_estimados": 1386,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "carta-olho--v02--1536.png",
+          "bytes": 2494043
+        },
+        {
+          "arquivo": "carta-olho--v02--1536.webp",
+          "bytes": 496422
+        },
+        {
+          "arquivo": "carta-olho--v02--1024.webp",
+          "bytes": 181378
+        },
+        {
+          "arquivo": "carta-olho--v02--768.webp",
+          "bytes": 113142
+        }
+      ],
+      "segundos_pos": 1.5,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 70193,
+      "passos": null,
+      "segundos": 17.7,
+      "neuronios_estimados": 1386,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "carta-olho--v03--1536.png",
+          "bytes": 2560607
+        },
+        {
+          "arquivo": "carta-olho--v03--1536.webp",
+          "bytes": 511816
+        },
+        {
+          "arquivo": "carta-olho--v03--1024.webp",
+          "bytes": 194758
+        },
+        {
+          "arquivo": "carta-olho--v03--768.webp",
+          "bytes": 117208
+        }
+      ],
+      "segundos_pos": 1.5,
+      "avisos": []
+    }
+  ]
+}
