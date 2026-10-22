@@ -21,7 +21,7 @@ import { EmblemCasa, EmblemMark } from '../kit/emblems'
 import { Dialog } from '../kit/sheet'
 import { Tabs } from '../kit/tabs'
 import { GlyphArrow } from '../kit/glyphs'
-import { CasaNoite } from '../dialogo/palco'
+import { CasaNoite } from '../dialogo/casa-noite'
 import { useBackHandler } from '../use-back-handler'
 import { CardFace, DevoCard, RarityGem } from '../shared/devo-card'
 import { useDevo } from '../state/devo-store'
@@ -110,7 +110,7 @@ function Comodos({ d, agir, resgatar }: { d: CasaLiberado; agir: Agir; resgatar:
         className="flex h-full snap-x snap-mandatory overflow-x-auto overflow-y-hidden overscroll-x-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
         <section aria-label="Sala" className="relative h-full w-full shrink-0 snap-start">
-          <CasaNoite portaAberta={false} anima={false} fxKey={0} />
+          <CasaNoite portaAberta={false} anima={false} fxKey={0} luzFalha={false} />
           <p className="absolute inset-x-0 top-5 px-6 text-center font-body text-[15px] italic text-dv-text-2">Sua casa. Silenciosa, por enquanto.</p>
           <p aria-hidden="true" className="casa-dica absolute bottom-[9%] right-5 flex items-center gap-1.5 font-mono text-[10.5px] uppercase tracking-[0.18em] text-dv-text-3 [@media(hover:hover)]:hidden">
             Deslize <GlyphArrow className="size-3" />
