@@ -1,0 +1,110 @@
+{
+  "pedido": "arcano-mundo-r2",
+  "titulo": "Arcano — mundo (figura, revisada)",
+  "tipo": "ilustracao",
+  "tamanho_final": 1536,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 22211,
+      "passos": null,
+      "segundos": 3.5,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "ilhas_removidas": 0,
+      "arquivos": [
+        {
+          "arquivo": "arcano-mundo-r2--v01--1536.png",
+          "bytes": 1148538
+        },
+        {
+          "arquivo": "arcano-mundo-r2--v01--1536.webp",
+          "bytes": 237420
+        },
+        {
+          "arquivo": "arcano-mundo-r2--v01--1024.webp",
+          "bytes": 109686
+        },
+        {
+          "arquivo": "arcano-mundo-r2--v01--768.webp",
+          "bytes": 72398
+        },
+        {
+          "arquivo": "arcano-mundo-r2--v01--512.webp",
+          "bytes": 41214
+        }
+      ],
+      "segundos_pos": 39.1,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 22212,
+      "passos": null,
+      "segundos": 3.5,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "arcano-mundo-r2--v02--1536.png",
+          "bytes": 1121340
+        },
+        {
+          "arquivo": "arcano-mundo-r2--v02--1536.webp",
+          "bytes": 222298
+        },
+        {
+          "arquivo": "arcano-mundo-r2--v02--1024.webp",
+          "bytes": 108318
+        },
+        {
+          "arquivo": "arcano-mundo-r2--v02--768.webp",
+          "bytes": 71946
+        },
+        {
+          "arquivo": "arcano-mundo-r2--v02--512.webp",
+          "bytes": 40846
+        }
+      ],
+      "segundos_pos": 32.8,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 22213,
+      "passos": null,
+      "segundos": 3.0,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "ilhas_removidas": 1,
+      "arquivos": [
+        {
+          "arquivo": "arcano-mundo-r2--v03--1536.png",
+          "bytes": 1048021
+        },
+        {
+          "arquivo": "arcano-mundo-r2--v03--1536.webp",
+          "bytes": 213730
+        },
+        {
+          "arquivo": "arcano-mundo-r2--v03--1024.webp",
+          "bytes": 98622
+        },
+        {
+          "arquivo": "arcano-mundo-r2--v03--768.webp",
+          "bytes": 65238
+        },
+        {
+          "arquivo": "arcano-mundo-r2--v03--512.webp",
+          "bytes": 36880
+        }
+      ],
+      "segundos_pos": 31.3,
+      "avisos": []
+    }
+  ]
+}
