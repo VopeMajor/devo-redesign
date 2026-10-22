@@ -2698,6 +2698,9 @@ if (want('corporacoes')) {
     ).catch((e) => manifest.errors.push({ step: `corp-flag-${nome}`, error: String(e).slice(0, 300) }))
   const abrirCorp = async (page, name = 'Corporações') => {
     await enterOS(page)
+    // o ícone fica na tela II (Sistemas)
+    await page.getByRole('region', { name: 'Sistemas' }).first().scrollIntoViewIfNeeded().catch(() => {})
+    await wait(600)
     const b = page.getByRole('button', { name, exact: true }).first()
     await b.waitFor({ state: 'visible', timeout: 15000 })
     await b.scrollIntoViewIfNeeded().catch(() => {})
