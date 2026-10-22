@@ -1,0 +1,111 @@
+{
+  "pedido": "arcano-torre-tarot2",
+  "titulo": "Arcano — torre (tarô, menos humanizado) — refeito",
+  "tipo": "ilustracao",
+  "tamanho_final": 1536,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 93041,
+      "passos": null,
+      "segundos": 3.2,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "ilhas_removidas": 8,
+      "arquivos": [
+        {
+          "arquivo": "arcano-torre-tarot2--v01--1536.png",
+          "bytes": 913776
+        },
+        {
+          "arquivo": "arcano-torre-tarot2--v01--1536.webp",
+          "bytes": 175388
+        },
+        {
+          "arquivo": "arcano-torre-tarot2--v01--1024.webp",
+          "bytes": 86278
+        },
+        {
+          "arquivo": "arcano-torre-tarot2--v01--768.webp",
+          "bytes": 57212
+        },
+        {
+          "arquivo": "arcano-torre-tarot2--v01--512.webp",
+          "bytes": 31872
+        }
+      ],
+      "segundos_pos": 38.8,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 93042,
+      "passos": null,
+      "segundos": 3.7,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "ilhas_removidas": 8,
+      "arquivos": [
+        {
+          "arquivo": "arcano-torre-tarot2--v02--1536.png",
+          "bytes": 1057326
+        },
+        {
+          "arquivo": "arcano-torre-tarot2--v02--1536.webp",
+          "bytes": 185358
+        },
+        {
+          "arquivo": "arcano-torre-tarot2--v02--1024.webp",
+          "bytes": 87662
+        },
+        {
+          "arquivo": "arcano-torre-tarot2--v02--768.webp",
+          "bytes": 58588
+        },
+        {
+          "arquivo": "arcano-torre-tarot2--v02--512.webp",
+          "bytes": 32602
+        }
+      ],
+      "segundos_pos": 30.3,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 93043,
+      "passos": null,
+      "segundos": 3.3,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "ilhas_removidas": 1,
+      "arquivos": [
+        {
+          "arquivo": "arcano-torre-tarot2--v03--1536.png",
+          "bytes": 892452
+        },
+        {
+          "arquivo": "arcano-torre-tarot2--v03--1536.webp",
+          "bytes": 168704
+        },
+        {
+          "arquivo": "arcano-torre-tarot2--v03--1024.webp",
+          "bytes": 83974
+        },
+        {
+          "arquivo": "arcano-torre-tarot2--v03--768.webp",
+          "bytes": 55990
+        },
+        {
+          "arquivo": "arcano-torre-tarot2--v03--512.webp",
+          "bytes": 32090
+        }
+      ],
+      "segundos_pos": 28.5,
+      "avisos": []
+    }
+  ]
+}
