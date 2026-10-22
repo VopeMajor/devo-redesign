@@ -1,0 +1,9 @@
+[carta-porta] v01: @cf/black-forest-labs/flux-2-klein-9b seed=70161 768x1536 passos=None (~1,386 neurônios)
+    ok em 2.8s, 768x1536
+[carta-porta] v02: @cf/black-forest-labs/flux-2-klein-9b seed=70162 768x1536 passos=None (~1,386 neurônios)
+    ok em 2.7s, 768x1536
+[carta-porta] v03: @cf/black-forest-labs/flux-2-klein-9b seed=70163 768x1536 passos=None (~1,386 neurônios)
+    ok em 2.6s, 768x1536
+[carta-porta] v01: mantido; sem avisos
+[carta-porta] v02: mantido; sem avisos
+[carta-porta] v03: mantido; sem avisos

@@ -1,0 +1,96 @@
+{
+  "pedido": "carta-porta",
+  "titulo": "Carta — A Porta Vermelha (ilustração da janela)",
+  "tipo": "ilustracao",
+  "tamanho_final": 1536,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 70161,
+      "passos": null,
+      "segundos": 2.8,
+      "neuronios_estimados": 1386,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "carta-porta--v01--1536.png",
+          "bytes": 2236905
+        },
+        {
+          "arquivo": "carta-porta--v01--1536.webp",
+          "bytes": 399932
+        },
+        {
+          "arquivo": "carta-porta--v01--1024.webp",
+          "bytes": 140444
+        },
+        {
+          "arquivo": "carta-porta--v01--768.webp",
+          "bytes": 89988
+        }
+      ],
+      "segundos_pos": 1.7,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 70162,
+      "passos": null,
+      "segundos": 2.7,
+      "neuronios_estimados": 1386,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "carta-porta--v02--1536.png",
+          "bytes": 2292561
+        },
+        {
+          "arquivo": "carta-porta--v02--1536.webp",
+          "bytes": 416140
+        },
+        {
+          "arquivo": "carta-porta--v02--1024.webp",
+          "bytes": 149170
+        },
+        {
+          "arquivo": "carta-porta--v02--768.webp",
+          "bytes": 94262
+        }
+      ],
+      "segundos_pos": 1.6,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 70163,
+      "passos": null,
+      "segundos": 2.6,
+      "neuronios_estimados": 1386,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "carta-porta--v03--1536.png",
+          "bytes": 2221322
+        },
+        {
+          "arquivo": "carta-porta--v03--1536.webp",
+          "bytes": 380628
+        },
+        {
+          "arquivo": "carta-porta--v03--1024.webp",
+          "bytes": 143664
+        },
+        {
+          "arquivo": "carta-porta--v03--768.webp",
+          "bytes": 91558
+        }
+      ],
+      "segundos_pos": 1.7,
+      "avisos": []
+    }
+  ]
+}
