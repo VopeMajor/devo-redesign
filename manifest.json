@@ -1,0 +1,96 @@
+{
+  "pedido": "xadrez-fundo",
+  "titulo": "Coleção Xadrez — fundo comum das cartas",
+  "tipo": "ilustracao",
+  "tamanho_final": 1536,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 81101,
+      "passos": null,
+      "segundos": 17.7,
+      "neuronios_estimados": 1386,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "xadrez-fundo--v01--1536.png",
+          "bytes": 1933376
+        },
+        {
+          "arquivo": "xadrez-fundo--v01--1536.webp",
+          "bytes": 318992
+        },
+        {
+          "arquivo": "xadrez-fundo--v01--1024.webp",
+          "bytes": 88030
+        },
+        {
+          "arquivo": "xadrez-fundo--v01--768.webp",
+          "bytes": 53776
+        }
+      ],
+      "segundos_pos": 2.0,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 81102,
+      "passos": null,
+      "segundos": 62.9,
+      "neuronios_estimados": 1386,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "xadrez-fundo--v02--1536.png",
+          "bytes": 2037470
+        },
+        {
+          "arquivo": "xadrez-fundo--v02--1536.webp",
+          "bytes": 350408
+        },
+        {
+          "arquivo": "xadrez-fundo--v02--1024.webp",
+          "bytes": 95296
+        },
+        {
+          "arquivo": "xadrez-fundo--v02--768.webp",
+          "bytes": 57640
+        }
+      ],
+      "segundos_pos": 1.8,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 81103,
+      "passos": null,
+      "segundos": 2.8,
+      "neuronios_estimados": 1386,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "xadrez-fundo--v03--1536.png",
+          "bytes": 1954202
+        },
+        {
+          "arquivo": "xadrez-fundo--v03--1536.webp",
+          "bytes": 316180
+        },
+        {
+          "arquivo": "xadrez-fundo--v03--1024.webp",
+          "bytes": 80718
+        },
+        {
+          "arquivo": "xadrez-fundo--v03--768.webp",
+          "bytes": 52778
+        }
+      ],
+      "segundos_pos": 1.9,
+      "avisos": []
+    }
+  ]
+}
