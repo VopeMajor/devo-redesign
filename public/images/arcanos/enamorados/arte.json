@@ -24,9 +24,9 @@
       1024
     ],
     "recorte_da_figura": [
-      0.2744,
+      0.2734,
       0.0417,
-      0.7256,
+      0.7246,
       0.4427
     ]
   },
@@ -45,8 +45,8 @@
     }
   },
   "origem": {
-    "pedido": "arcano-enamorados",
-    "variacao": "v02",
-    "png": "arcano-enamorados--v02--1536.png"
+    "pedido": "arcano-enamorados-tarot",
+    "variacao": "v03",
+    "png": "arcano-enamorados-tarot--v03--1536.png"
   }
 }
