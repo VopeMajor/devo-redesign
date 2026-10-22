@@ -1,0 +1,31 @@
+{
+  "id": "xadrez-fundo",
+  "titulo": "Coleção Xadrez — fundo comum das cartas",
+  "tipo": "ilustracao",
+  "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+  "prompt": "Richly painted storybook fantasy illustration, painterly gouache and oil, fine detail, soft dreamy light. Palette: twilight indigo and soft amethyst violet sky, pearl ivory, veined white marble and champagne gold accents, low saturation, elegant and slightly melancholic, no neon. Full-bleed tall vertical landscape that fills the whole narrow image edge to edge. A dreamlike realm of chess above the clouds at dusk: far in the upper middle a floating white castle built like a cluster of giant ornate chess pieces, slender ivory spires with dark blue-violet domes and gold finials, arched colonnades and small floating towers drifting beside it, glowing faintly in warm last light. Soft layered clouds lit champagne and rose-gold below a deep indigo sky with a few faint stars. In the lower part a wide path of black and white marble squares on a grassy cliff edge recedes from the foreground toward the castle. The lower middle foreground is open and calm, an empty stage on the checkered path, nothing standing there. Absolutely no text, no letters, no numbers, no signature, no watermark, no logo, no card frame, no border, not a collage, not photorealistic, not a 3d render, no people.",
+  "negative": "",
+  "largura": 768,
+  "altura": 1536,
+  "variacoes": [
+    {
+      "seed": 81101
+    },
+    {
+      "seed": 81102
+    },
+    {
+      "seed": 81103
+    }
+  ],
+  "pos": {
+    "remover_fundo": false,
+    "tamanho_final": 1536,
+    "margem": 0.0,
+    "derivados": [
+      1024,
+      768
+    ],
+    "quadro_inteiro": true
+  }
+}

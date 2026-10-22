@@ -1,0 +1,31 @@
+{
+  "id": "xadrez-rainha",
+  "titulo": "Coleção Xadrez — Rainha (peça sem fundo)",
+  "tipo": "ilustracao",
+  "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+  "prompt": "Fantasy illustration of a single ornate chess piece as a carved statue object, painted, highly detailed, isolated on a plain flat light gray background. Pearl ivory and white veined marble carved with great craftsmanship, champagne gold filigree inlays, a few small amethyst gems, a round stepped base with a tiny engraved clock face and fine gold rim. Soft warm light from the upper left, gentle violet rim light. The whole piece fully visible from base to top, centered, standing upright, seen slightly from below at a three-quarter angle, crisp silhouette, margin on all sides. The piece is a QUEEN: a tall elegant piece crowned with a coronet of many slender spires and gold finials like a tiny floating castle, a narrow waist with a ring of pearls, long flowing carved veil. It is clearly a chess piece, not a person, no face. Absolutely no text, no letters, no numbers, no signature, no watermark, no logo, no card frame, no border, not a collage, not photorealistic, not a 3d render, no people.",
+  "negative": "",
+  "largura": 1024,
+  "altura": 1536,
+  "variacoes": [
+    {
+      "seed": 81241
+    },
+    {
+      "seed": 81242
+    },
+    {
+      "seed": 81243
+    }
+  ],
+  "pos": {
+    "remover_fundo": true,
+    "tamanho_final": 1536,
+    "margem": 0.03,
+    "derivados": [
+      1024,
+      768,
+      512
+    ]
+  }
+}
