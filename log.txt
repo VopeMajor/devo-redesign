@@ -1,0 +1,9 @@
+[arcano-morte-tarot5] v01: @cf/black-forest-labs/flux-2-klein-9b seed=93122 1024x1536 passos=None (~1,455 neurônios)
+    ok em 3.5s, 1024x1536
+[arcano-morte-tarot5] v02: @cf/black-forest-labs/flux-2-klein-9b seed=93125 1024x1536 passos=None (~1,455 neurônios)
+    ok em 3.0s, 1024x1536
+[arcano-morte-tarot5] v03: @cf/black-forest-labs/flux-2-klein-9b seed=93126 1024x1536 passos=None (~1,455 neurônios)
+    ok em 3.6s, 1024x1536
+[arcano-morte-tarot5] v01: rembg:birefnet-general; sem avisos
+[arcano-morte-tarot5] v02: rembg:birefnet-general; sem avisos
+[arcano-morte-tarot5] v03: rembg:birefnet-general; sem avisos
