@@ -1,0 +1,10 @@
+[arcano-julgamento-tarot2] v01: @cf/black-forest-labs/flux-2-klein-9b seed=93071 1024x1536 passos=None (~1,455 neurônios)
+    ok em 3.2s, 1024x1536
+[arcano-julgamento-tarot2] v02: @cf/black-forest-labs/flux-2-klein-9b seed=93072 1024x1536 passos=None (~1,455 neurônios)
+    nova tentativa em 15s
+    ok em 18.2s, 1024x1536
+[arcano-julgamento-tarot2] v03: @cf/black-forest-labs/flux-2-klein-9b seed=93073 1024x1536 passos=None (~1,455 neurônios)
+    ok em 3.7s, 1024x1536
+[arcano-julgamento-tarot2] v01: rembg:birefnet-general; sem avisos
+[arcano-julgamento-tarot2] v02: rembg:birefnet-general; sem avisos
+[arcano-julgamento-tarot2] v03: rembg:birefnet-general; sem avisos
