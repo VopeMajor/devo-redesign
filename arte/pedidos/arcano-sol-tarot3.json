@@ -1,0 +1,31 @@
+{
+  "id": "arcano-sol-tarot3",
+  "titulo": "Arcano — sol (v01, cavalo com uma cabeça só)",
+  "tipo": "ilustracao",
+  "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+  "prompt": "Antique tarot Major Arcana illustration reimagined as dark fantasy painted concept art, inspired by the iconography of the Rider-Waite-Smith and Tarot de Marseille decks, symbolic and allegorical rather than realistic, stylized carved tarot emblem, flat elegant silhouette with clean readable shapes, fine engraved linework and soft painterly shading, isolated on a plain flat light gray background. ONE single central emblem with NO person in it, upright, the whole emblem from top to bottom filling about 85 percent of the image height, its base near the bottom edge. Muted palette of abyss black, porcelain white, fog gray and champagne steel, with ONE small symbolic accent color. Soft studio key light from the upper left, gentle cool rim light, no cast shadow. No text, no letters, no numerals, no card frame, no border, no background scenery. The Sun: a great radiant sun disc with a calm engraved face, alternating straight and wavy golden rays, above a low stone wall lined with tall sunflowers, ONE small white horse with exactly one head, one neck and four legs, standing in clear side profile in front of the wall, anatomically correct, perfectly symmetrical emblem. Accent: gold.",
+  "negative": "text, letters, numbers, watermark, signature, card frame, border, cropped, cut off feet, background scenery, landscape, multiple figures, crowd, photorealistic, realistic human face, pretty face, portrait, distorted anatomy, extra limbs, extra fingers, deformed hands, melted face, asymmetrical eyes, cartoon, chibi, anime, neon, saturated colors, person, human figure, people, face of a person, extra hands, fused fingers, floating objects, two-headed horse, two heads, conjoined animals, extra heads, extra legs",
+  "largura": 1024,
+  "altura": 1536,
+  "variacoes": [
+    {
+      "seed": 93061
+    },
+    {
+      "seed": 93064
+    },
+    {
+      "seed": 93065
+    }
+  ],
+  "pos": {
+    "remover_fundo": true,
+    "tamanho_final": 1536,
+    "margem": 0.03,
+    "derivados": [
+      1024,
+      768,
+      512
+    ]
+  }
+}
