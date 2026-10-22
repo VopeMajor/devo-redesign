@@ -1,0 +1,31 @@
+{
+  "tipo": "ilustracao",
+  "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+  "largura": 1536,
+  "altura": 1024,
+  "id": "casa-mesa-confeccao",
+  "titulo": "Casa — mesa de confecção (objeto, sem fundo)",
+  "prompt": "Fantasy RPG prop illustration, painterly, highly detailed, elegant and melancholic, muted dark palette of dark wood, blood wine red felt, faded silver and warm brass, low saturation. A single heavy antique artisan workbench for crafting magical playing cards, seen in three-quarter view from slightly above, entire object visible: dark scarred wood with carved legs and brass corners, a wine red felt inlay, fanned ornate tarot-like cards, an open leather portfolio, a brass magnifier on an articulated arm, a small cutting press, scissors, an inkwell with a quill, a wax seal, a jar of fine brushes, gold leaf sheets, an open pocket watch and a lit candle with a small warm glow. Isolated on a plain flat light gray background, soft studio light from the upper left, no cast shadow on the background.",
+  "negative": "text, letters, numbers, writing, watermark, people, hands, faces, room, walls, floor, background scenery, cropped, cut off, neon, cartoon, saturated colors",
+  "variacoes": [
+    {
+      "seed": 10311
+    },
+    {
+      "seed": 10312
+    },
+    {
+      "seed": 10313
+    }
+  ],
+  "pos": {
+    "remover_fundo": true,
+    "tamanho_final": 1536,
+    "margem": 0.03,
+    "derivados": [
+      1024,
+      768,
+      512
+    ]
+  }
+}
