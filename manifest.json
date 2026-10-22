@@ -1,0 +1,96 @@
+{
+  "pedido": "carta-xadrez-rei",
+  "titulo": "Carta — Rei do Xadrez (ilustração da janela)",
+  "tipo": "ilustracao",
+  "tamanho_final": 1536,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 70271,
+      "passos": null,
+      "segundos": 3.0,
+      "neuronios_estimados": 1386,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "carta-xadrez-rei--v01--1536.png",
+          "bytes": 2334558
+        },
+        {
+          "arquivo": "carta-xadrez-rei--v01--1536.webp",
+          "bytes": 459722
+        },
+        {
+          "arquivo": "carta-xadrez-rei--v01--1024.webp",
+          "bytes": 158844
+        },
+        {
+          "arquivo": "carta-xadrez-rei--v01--768.webp",
+          "bytes": 99142
+        }
+      ],
+      "segundos_pos": 1.6,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 70272,
+      "passos": null,
+      "segundos": 2.6,
+      "neuronios_estimados": 1386,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "carta-xadrez-rei--v02--1536.png",
+          "bytes": 2409705
+        },
+        {
+          "arquivo": "carta-xadrez-rei--v02--1536.webp",
+          "bytes": 482092
+        },
+        {
+          "arquivo": "carta-xadrez-rei--v02--1024.webp",
+          "bytes": 170980
+        },
+        {
+          "arquivo": "carta-xadrez-rei--v02--768.webp",
+          "bytes": 104806
+        }
+      ],
+      "segundos_pos": 1.5,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 70273,
+      "passos": null,
+      "segundos": 2.7,
+      "neuronios_estimados": 1386,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "carta-xadrez-rei--v03--1536.png",
+          "bytes": 2370447
+        },
+        {
+          "arquivo": "carta-xadrez-rei--v03--1536.webp",
+          "bytes": 474826
+        },
+        {
+          "arquivo": "carta-xadrez-rei--v03--1024.webp",
+          "bytes": 168802
+        },
+        {
+          "arquivo": "carta-xadrez-rei--v03--768.webp",
+          "bytes": 104642
+        }
+      ],
+      "segundos_pos": 1.6,
+      "avisos": []
+    }
+  ]
+}
