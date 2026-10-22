@@ -1,0 +1,109 @@
+{
+  "pedido": "arcano-julgamento-r2",
+  "titulo": "Arcano — julgamento (figura, revisada)",
+  "tipo": "ilustracao",
+  "tamanho_final": 1536,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 22201,
+      "passos": null,
+      "segundos": 3.5,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "ilhas_removidas": 1,
+      "arquivos": [
+        {
+          "arquivo": "arcano-julgamento-r2--v01--1536.png",
+          "bytes": 1476711
+        },
+        {
+          "arquivo": "arcano-julgamento-r2--v01--1536.webp",
+          "bytes": 289090
+        },
+        {
+          "arquivo": "arcano-julgamento-r2--v01--1024.webp",
+          "bytes": 133072
+        },
+        {
+          "arquivo": "arcano-julgamento-r2--v01--768.webp",
+          "bytes": 88784
+        },
+        {
+          "arquivo": "arcano-julgamento-r2--v01--512.webp",
+          "bytes": 50752
+        }
+      ],
+      "segundos_pos": 39.8,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 22202,
+      "passos": null,
+      "segundos": 3.5,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "arcano-julgamento-r2--v02--1536.png",
+          "bytes": 1379607
+        },
+        {
+          "arquivo": "arcano-julgamento-r2--v02--1536.webp",
+          "bytes": 296438
+        },
+        {
+          "arquivo": "arcano-julgamento-r2--v02--1024.webp",
+          "bytes": 129644
+        },
+        {
+          "arquivo": "arcano-julgamento-r2--v02--768.webp",
+          "bytes": 84384
+        },
+        {
+          "arquivo": "arcano-julgamento-r2--v02--512.webp",
+          "bytes": 47466
+        }
+      ],
+      "segundos_pos": 34.1,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 22203,
+      "passos": null,
+      "segundos": 4.0,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "arcano-julgamento-r2--v03--1536.png",
+          "bytes": 1381427
+        },
+        {
+          "arquivo": "arcano-julgamento-r2--v03--1536.webp",
+          "bytes": 275536
+        },
+        {
+          "arquivo": "arcano-julgamento-r2--v03--1024.webp",
+          "bytes": 129358
+        },
+        {
+          "arquivo": "arcano-julgamento-r2--v03--768.webp",
+          "bytes": 86412
+        },
+        {
+          "arquivo": "arcano-julgamento-r2--v03--512.webp",
+          "bytes": 49594
+        }
+      ],
+      "segundos_pos": 33.1,
+      "avisos": []
+    }
+  ]
+}
