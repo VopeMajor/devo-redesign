@@ -1,0 +1,65 @@
+{
+  "pedido": "arcano-morte-tarot4",
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 93121,
+      "passos": null,
+      "largura": 1024,
+      "altura": 1536,
+      "neuronios_estimados": 1455,
+      "ok": true,
+      "segundos": 2.8,
+      "tamanho_real": [
+        1024,
+        1536
+      ]
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 93122,
+      "passos": null,
+      "largura": 1024,
+      "altura": 1536,
+      "neuronios_estimados": 1455,
+      "ok": true,
+      "segundos": 3.5,
+      "tamanho_real": [
+        1024,
+        1536
+      ]
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 93123,
+      "passos": null,
+      "largura": 1024,
+      "altura": 1536,
+      "neuronios_estimados": 1455,
+      "ok": true,
+      "segundos": 2.9,
+      "tamanho_real": [
+        1024,
+        1536
+      ]
+    },
+    {
+      "nome": "v04",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 93124,
+      "passos": null,
+      "largura": 1024,
+      "altura": 1536,
+      "neuronios_estimados": 1455,
+      "ok": true,
+      "segundos": 3.1,
+      "tamanho_real": [
+        1024,
+        1536
+      ]
+    }
+  ]
+}

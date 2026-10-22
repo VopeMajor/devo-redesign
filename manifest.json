@@ -1,0 +1,141 @@
+{
+  "pedido": "arcano-morte-tarot4",
+  "titulo": "Arcano — morte (encapuzada, sem rosto)",
+  "tipo": "ilustracao",
+  "tamanho_final": 1536,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 93121,
+      "passos": null,
+      "segundos": 2.8,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "arcano-morte-tarot4--v01--1536.png",
+          "bytes": 930680
+        },
+        {
+          "arquivo": "arcano-morte-tarot4--v01--1536.webp",
+          "bytes": 126674
+        },
+        {
+          "arquivo": "arcano-morte-tarot4--v01--1024.webp",
+          "bytes": 59194
+        },
+        {
+          "arquivo": "arcano-morte-tarot4--v01--768.webp",
+          "bytes": 39810
+        },
+        {
+          "arquivo": "arcano-morte-tarot4--v01--512.webp",
+          "bytes": 23698
+        }
+      ],
+      "segundos_pos": 54.0,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 93122,
+      "passos": null,
+      "segundos": 3.5,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "arcano-morte-tarot4--v02--1536.png",
+          "bytes": 941430
+        },
+        {
+          "arquivo": "arcano-morte-tarot4--v02--1536.webp",
+          "bytes": 134502
+        },
+        {
+          "arquivo": "arcano-morte-tarot4--v02--1024.webp",
+          "bytes": 63942
+        },
+        {
+          "arquivo": "arcano-morte-tarot4--v02--768.webp",
+          "bytes": 43130
+        },
+        {
+          "arquivo": "arcano-morte-tarot4--v02--512.webp",
+          "bytes": 25220
+        }
+      ],
+      "segundos_pos": 32.1,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 93123,
+      "passos": null,
+      "segundos": 2.9,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "arcano-morte-tarot4--v03--1536.png",
+          "bytes": 946689
+        },
+        {
+          "arquivo": "arcano-morte-tarot4--v03--1536.webp",
+          "bytes": 127562
+        },
+        {
+          "arquivo": "arcano-morte-tarot4--v03--1024.webp",
+          "bytes": 61188
+        },
+        {
+          "arquivo": "arcano-morte-tarot4--v03--768.webp",
+          "bytes": 41252
+        },
+        {
+          "arquivo": "arcano-morte-tarot4--v03--512.webp",
+          "bytes": 24454
+        }
+      ],
+      "segundos_pos": 31.1,
+      "avisos": []
+    },
+    {
+      "nome": "v04",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 93124,
+      "passos": null,
+      "segundos": 3.1,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "arcano-morte-tarot4--v04--1536.png",
+          "bytes": 952291
+        },
+        {
+          "arquivo": "arcano-morte-tarot4--v04--1536.webp",
+          "bytes": 151402
+        },
+        {
+          "arquivo": "arcano-morte-tarot4--v04--1024.webp",
+          "bytes": 67636
+        },
+        {
+          "arquivo": "arcano-morte-tarot4--v04--768.webp",
+          "bytes": 45316
+        },
+        {
+          "arquivo": "arcano-morte-tarot4--v04--512.webp",
+          "bytes": 25990
+        }
+      ],
+      "segundos_pos": 30.4,
+      "avisos": []
+    }
+  ]
+}
