@@ -43,18 +43,12 @@
         "escala": 0.6
       },
       "picadeiro": {
-        "x": 0.36,
-        "y": 0.67,
+        "x": 0.235,
+        "y": 0.603,
         "escala": 0.5
       }
     },
-    "enfeites": [
-      {
-        "tipo": "lanterna",
-        "x": 0.22,
-        "y": 0.534
-      }
-    ]
+    "enfeites": []
   },
   "torres": [
     {

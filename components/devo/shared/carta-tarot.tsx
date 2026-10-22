@@ -10,7 +10,7 @@ import { cn } from "@/lib/utils";
  * Carta DEVO. Estrutura do design do dono (22/10, referência "Alice: Procurando o Coelho"): carta alta (9:20),
  * ornamento no alto, estrelas nas laterais, janela em arco com a ilustração, faixa com o nome, quadro
  * Arquétipo · Coleção · Raridade, Função, Raio (ou Peso) e a frase, e um selo no pé.
- * Pele do DEVO (pedido do dono: "mais devo"): mármore negro no corpo, aço champanhe nos filetes (sem ouro amarelo),
+ * Pele do DEVO (pedido do dono: "mais devo"): corpo de uma cor só com degradê leve, aço champanhe nos filetes (sem ouro amarelo),
  * relógio com ponteiros-agulha no alto (o Tempo é a vida), estrelas de quatro pontas do sigilo, ampulheta no pé,
  * acento ametista. A raridade aparece só num filete fino e nas pedras das estrelas.
  * Tudo medido em cqw (largura = 100cqw, altura = 222cqw). Abaixo de 260px de largura os textos do quadro somem
@@ -83,7 +83,7 @@ function fundoBorda(r: Rarity): CSSProperties {
   };
 }
 
-/** Reflexo que atravessa a borda (fica por baixo do mármore, então só aparece no aro). */
+/** Reflexo que atravessa a borda (fica por baixo do corpo, então só aparece no aro). */
 function Reflexo({ n }: { n: number }) {
   if (n < 2) return null;
   const a = n === 2 ? 0.35 : n === 3 ? 0.55 : 0.8;
@@ -140,11 +140,10 @@ function aura(r: Rarity): string {
   return "0 12px 28px -14px rgba(0,0,0,0.9)";
 }
 
-/** Mármore negro do corpo (a mesma pedra do shell). */
-const MARMORE: CSSProperties = {
-  backgroundColor: "#141317",
-  backgroundImage: "radial-gradient(120% 60% at 50% 0%, rgba(236,229,216,0.06), transparent 60%), url(/images/os/marmore-negro.webp)",
-  backgroundSize: "auto, 260px 260px",
+/** Corpo da carta: uma cor só com um degradê leve (pedido do dono: sem o mármore). */
+const CORPO: CSSProperties = {
+  backgroundColor: "#16141b",
+  backgroundImage: "linear-gradient(180deg, #1d1a23 0%, #16141b 45%, #0f0e13 100%)",
 };
 
 /** Agulha em losango de (0,-a) a (0,-b), meia-largura w (o traço dos emblemas do DEVO). */
@@ -314,8 +313,8 @@ export function CartaFrente({
     >
       {n >= 2 && <EstiloCarta />}
       <Reflexo n={n} />
-      {/* corpo de mármore negro */}
-      <span aria-hidden="true" className="absolute inset-[5cqw] rounded-[5cqw]" style={MARMORE} />
+      {/* corpo da carta */}
+      <span aria-hidden="true" className="absolute inset-[5cqw] rounded-[5cqw]" style={CORPO} />
       {/* ilustração na janela em arco */}
       <span
         aria-hidden="true"
@@ -382,7 +381,7 @@ function Rotulo({ children }: { children: ReactNode }) {
   );
 }
 
-/** Verso: mármore negro, treliça de aço, o sigilo do Deadly Vote num medalhão e o relógio no alto. */
+/** Verso: corpo escuro, treliça de aço, o sigilo do Deadly Vote num medalhão e o relógio no alto. */
 export function CartaVerso({ className, sigilo }: { className?: string; sigilo?: ReactNode }) {
   return (
     <div
@@ -391,7 +390,7 @@ export function CartaVerso({ className, sigilo }: { className?: string; sigilo?:
       role="img"
       aria-label="Verso de uma Carta DEVO"
     >
-      <span aria-hidden="true" className="absolute inset-[5cqw] rounded-[5cqw]" style={MARMORE} />
+      <span aria-hidden="true" className="absolute inset-[5cqw] rounded-[5cqw]" style={CORPO} />
       <span
         aria-hidden="true"
         className="absolute inset-x-[10cqw] bottom-[14cqw] top-[26cqw] opacity-45"

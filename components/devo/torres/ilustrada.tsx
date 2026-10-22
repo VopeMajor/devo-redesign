@@ -37,6 +37,9 @@ const janelaDe = (i: number, feitos: number, total: number): Janela => (i < feit
  * Versão SVG (para o mapa, que é uma única cena vetorial): base da torre em (0,0). `pxPorUnidade` = quantos
  * pixels de tela vale uma unidade do mapa (escolhe a largura do arquivo).
  */
+/** Fração transparente na base das pinturas das torres (margem do pipeline de arte). */
+const BASE_VAZIA = 0.026
+
 export function TorreIlustradaSvg({ ilu, feitos, total, destaque, pxPorUnidade = 1 }: { ilu: Ilustracao; feitos: number; total: number; destaque?: boolean; pxPorUnidade?: number }) {
   const dpr = useDpr()
   const h = ilu.altura
@@ -59,6 +62,8 @@ export function TorreIlustradaSvg({ ilu, feitos, total, destaque, pxPorUnidade =
       <ellipse cx={-w * 0.22} cy={-1} rx={w * 0.55} ry={Math.max(4, w * 0.075)} fill="#000" opacity={0.38} filter="url(#tw-blur-s)" />
       <ellipse cx={0} cy={-2} rx={w * 0.38} ry={Math.max(3, w * 0.05)} fill="#000" opacity={0.8} filter="url(#tw-blur-s)" />
       {destaque && <ellipse cx={0} cy={-h * 0.62} rx={w * 0.7} ry={h * 0.5} fill="url(#tw-halo-am)" opacity={0.35} />}
+      {/* a pintura tem uma faixa transparente embaixo: desce a imagem para as rochas tocarem o chão */}
+      <g transform={`translate(0 ${h * BASE_VAZIA})`}>
       <image href={href} x={-w / 2} y={-h} width={w} height={h} preserveAspectRatio="xMidYMax meet" />
       {/* oclusão no chão: escurece a base da pintura onde ela encosta na superfície */}
       <rect x={-w / 2} y={-h * 0.16} width={w} height={h * 0.16} fill={`url(#tg-${id})`} mask={`url(#tm-${id})`} />
@@ -74,6 +79,7 @@ export function TorreIlustradaSvg({ ilu, feitos, total, destaque, pxPorUnidade =
           </g>
         )
       })}
+      </g>
     </g>
   )
 }

@@ -37,7 +37,7 @@ import { CartaFrente, CartaVerso } from "./carta-tarot";
  *
  * LINGUAGEM COMPARTILHADA (Cartas, Record, Trocas, Blefe, tutorial): use só estes componentes —
  *   <CardFace cardId className="w-[..]" />  frente; a largura vem do pai (tudo é medido em cqw).
- *   <CardBack className="w-[..]" />          verso oficial (mármore negro, treliça e sigilo em aço).
+ *   <CardBack className="w-[..]" />          verso oficial (corpo escuro, treliça e sigilo em aço).
  *   <DevoCard cardId faceDown size />       frente/verso com giro 3D.
  *   <RarityGem rarity /> · <RarityPips rarity />  pedra e losangos da raridade (fora da carta).
  *   RARITY_SKIN[rarity]                     cores da raridade (ink = sobre papel, light = sobre negro).
@@ -50,7 +50,7 @@ import { CartaFrente, CartaVerso } from "./carta-tarot";
  *   os losangos de raridade (o nome fica fora da carta, legível, na grade de quem usa).
  *
  * Raridade = MATERIAL (nunca só cor; os losangos contam 1–5):
- *   Comum      → mármore negro com veio cinza e filete de ferro
+ *   Comum      → ferro fosco, sem brilho
  *   Incomum    → prata polida
  *   Rara       → aço champanhe
  *   Ultra Rara → aço ametista: faixas de champanhe e ametista na moldura, um reflexo lento que corre só
@@ -167,7 +167,7 @@ export type RaritySkin = {
  */
 export const RARITY_SKIN: Record<Rarity, RaritySkin> = {
   comum: {
-    material: "Mármore negro",
+    material: "Ferro fosco",
     pips: 1,
     frame:
       "linear-gradient(112deg, transparent 0 34%, rgba(143,142,139,0.55) 35%, transparent 37% 100%), linear-gradient(64deg, transparent 0 58%, rgba(143,142,139,0.35) 59%, transparent 60.5% 100%), linear-gradient(150deg,#55555a 0%,#1f1f22 28%,#3d3d41 52%,#151517 76%,#45454a 100%)",
