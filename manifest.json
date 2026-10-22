@@ -1,0 +1,96 @@
+{
+  "pedido": "carta-xadrez-peao",
+  "titulo": "Carta — Peão do Xadrez (ilustração da janela)",
+  "tipo": "ilustracao",
+  "tamanho_final": 1536,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 70261,
+      "passos": null,
+      "segundos": 17.9,
+      "neuronios_estimados": 1386,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "carta-xadrez-peao--v01--1536.png",
+          "bytes": 2360580
+        },
+        {
+          "arquivo": "carta-xadrez-peao--v01--1536.webp",
+          "bytes": 454564
+        },
+        {
+          "arquivo": "carta-xadrez-peao--v01--1024.webp",
+          "bytes": 161490
+        },
+        {
+          "arquivo": "carta-xadrez-peao--v01--768.webp",
+          "bytes": 101588
+        }
+      ],
+      "segundos_pos": 1.6,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 70262,
+      "passos": null,
+      "segundos": 18.3,
+      "neuronios_estimados": 1386,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "carta-xadrez-peao--v02--1536.png",
+          "bytes": 2124230
+        },
+        {
+          "arquivo": "carta-xadrez-peao--v02--1536.webp",
+          "bytes": 345686
+        },
+        {
+          "arquivo": "carta-xadrez-peao--v02--1024.webp",
+          "bytes": 129522
+        },
+        {
+          "arquivo": "carta-xadrez-peao--v02--768.webp",
+          "bytes": 84696
+        }
+      ],
+      "segundos_pos": 1.8,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 70263,
+      "passos": null,
+      "segundos": 2.9,
+      "neuronios_estimados": 1386,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "carta-xadrez-peao--v03--1536.png",
+          "bytes": 2182629
+        },
+        {
+          "arquivo": "carta-xadrez-peao--v03--1536.webp",
+          "bytes": 393900
+        },
+        {
+          "arquivo": "carta-xadrez-peao--v03--1024.webp",
+          "bytes": 132502
+        },
+        {
+          "arquivo": "carta-xadrez-peao--v03--768.webp",
+          "bytes": 85726
+        }
+      ],
+      "segundos_pos": 1.7,
+      "avisos": []
+    }
+  ]
+}
