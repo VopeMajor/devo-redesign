@@ -39,13 +39,105 @@ const AMETHYST = "#8a7cc8";
 const TEXT = "#ece8e1";
 const TEXT_SOFT = "#b9b2a6";
 
-/** Borda: abismo com o véu da raridade, quase imperceptível. */
+/**
+ * Brilho da borda por raridade (pedido do dono: quanto mais rara, mais reluzente).
+ * 0 comum: ferro fosco · 1 incomum: prata escovada · 2 rara: aço polido com um reflexo que passa devagar ·
+ * 3 ultra rara: aço ametista, reflexo mais vivo, pedras pulsando e uma aura leve ·
+ * 4 lendária / única / promocional: polimento alto, reflexo forte, cintilas na borda, holograma na arte e aura.
+ */
+export const NIVEL_BRILHO: Record<Rarity, number> = { comum: 0, incomum: 1, rara: 2, ultra_rara: 3, lendaria: 4, unica: 4, promocional: 4 };
+
+/** Metal da borda: cada nível um polimento. */
 function fundoBorda(r: Rarity): CSSProperties {
   const b = BORDA[r];
+  const n = NIVEL_BRILHO[r];
+  if (n === 0)
+    return {
+      backgroundColor: "#0b0a0e",
+      backgroundImage: `radial-gradient(70% 40% at 50% 0%, ${b.escura}55, transparent 70%), linear-gradient(160deg, #18161d, #08070a)`,
+    };
+  if (n === 1)
+    return {
+      backgroundColor: "#121216",
+      backgroundImage: `repeating-linear-gradient(90deg, rgba(255,255,255,0.025) 0 1px, transparent 1px 3px), linear-gradient(160deg, #3a3a40 0%, #141418 38%, #2c2c31 62%, #0e0e11 100%)`,
+    };
+  if (n === 2)
+    return {
+      backgroundColor: "#15130f",
+      backgroundImage: `linear-gradient(135deg, #6e665a 0%, #1c1915 22%, #8d8474 46%, #221f1a 58%, #5d564c 80%, #141210 100%)`,
+    };
+  if (n === 3)
+    return {
+      backgroundColor: "#141020",
+      backgroundImage: `linear-gradient(135deg, ${b.cor} 0%, #241d3c 20%, #8a7cc8 44%, #1e1833 56%, ${b.escura} 78%, #120f1e 100%)`,
+    };
+  if (r === "promocional")
+    return {
+      backgroundColor: "#140f22",
+      backgroundImage: `linear-gradient(120deg, #f9d6ea, #9fdcea 18%, #8a6fd2 34%, #f4efe6 50%, #9fdcea 66%, #c2b9ec 82%, #f9d6ea)`,
+      backgroundSize: "300% 300%",
+    };
   return {
-    backgroundColor: "#0b0a0e",
-    backgroundImage: `radial-gradient(70% 40% at 50% 0%, ${b.escura}55, transparent 70%), radial-gradient(60% 35% at 50% 100%, ${b.escura}33, transparent 70%), linear-gradient(160deg, #18161d, #08070a)`,
+    backgroundColor: "#140f22",
+    backgroundImage: `linear-gradient(135deg, #f4efe6 0%, ${b.escura} 16%, ${b.cor} 34%, #fbf8f2 48%, ${b.cor} 60%, ${b.escura} 80%, ${b.cor} 100%)`,
   };
+}
+
+/** Reflexo que atravessa a borda (fica por baixo do mármore, então só aparece no aro). */
+function Reflexo({ n }: { n: number }) {
+  if (n < 2) return null;
+  const a = n === 2 ? 0.35 : n === 3 ? 0.55 : 0.8;
+  return (
+    <span
+      aria-hidden="true"
+      className="dvcard-edge absolute inset-0"
+      style={{
+        backgroundImage: `linear-gradient(105deg, transparent 38%, rgba(255,250,240,${a}) 50%, transparent 62%)`,
+        backgroundSize: "300% 100%",
+        animationDuration: n === 2 ? "9s" : n === 3 ? "6.5s" : "4.5s",
+      }}
+    />
+  );
+}
+
+/** Cintilas de quatro pontas espalhadas no aro (só nos níveis mais altos). */
+function Cintilas() {
+  const pontos: [number, number, number][] = [
+    [2.6, 40, 0], [97.4, 64, 1.1], [2.6, 132, 2.2], [97.4, 170, 0.6], [30, 2.6, 1.7], [72, 219.4, 2.8], [97.4, 18, 3.3], [2.6, 196, 1.4],
+  ];
+  return (
+    <svg aria-hidden="true" viewBox="0 0 100 222" preserveAspectRatio="none" className="pointer-events-none absolute inset-0 size-full">
+      {pontos.map(([x, y, d], i) => (
+        <path key={i} className="dvcard-gem" style={{ animationDelay: `${d}s`, animationDuration: "2.6s" }} transform={`translate(${x} ${y})`} d={estrela4(1.9, 0.12)} fill="#fffaf0" />
+      ))}
+    </svg>
+  );
+}
+
+/** Animações da carta (mesmas classes dvcard- da DevoCard), carregadas uma vez. */
+function EstiloCarta() {
+  return (
+    <style href="dvcard-anim" precedence="default">{`
+@keyframes dvcard-edge { 0% { background-position: 160% 0 } 60%,100% { background-position: -60% 0 } }
+@keyframes dvcard-gem { 0%,100% { opacity: .15 } 50% { opacity: 1 } }
+@keyframes dvcard-holo { 0% { background-position: 0% 30% } 50% { background-position: 100% 70% } 100% { background-position: 0% 30% } }
+@keyframes dvcard-iris { 0% { background-position: 0% 50% } 50% { background-position: 100% 50% } 100% { background-position: 0% 50% } }
+.dvcard-edge { animation: dvcard-edge 6s ease-in-out infinite; }
+.dvcard-gem { animation: dvcard-gem 3.2s ease-in-out infinite; }
+.dvcard-holo { animation: dvcard-holo 9s ease-in-out infinite; }
+.dvcard-iris { animation: dvcard-iris 10s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) { .dvcard-edge, .dvcard-gem, .dvcard-holo, .dvcard-iris { animation: none !important } }
+`}</style>
+  );
+}
+
+/** Aura por nível (sombra colorida em volta da carta). */
+function aura(r: Rarity): string {
+  const n = NIVEL_BRILHO[r];
+  const c = BORDA[r].cor;
+  if (n === 3) return `0 12px 28px -14px rgba(0,0,0,0.9), 0 0 10px -3px ${c}66`;
+  if (n >= 4) return `0 12px 28px -14px rgba(0,0,0,0.9), 0 0 16px -3px ${c}aa`;
+  return "0 12px 28px -14px rgba(0,0,0,0.9)";
 }
 
 /** Mármore negro do corpo (a mesma pedra do shell). */
@@ -86,11 +178,13 @@ function Relogio({ cor }: { cor: string }) {
 }
 
 /** Estrela de quatro pontas do sigilo com uma pedra da raridade (laterais). */
-function Estrela({ x, y, cor }: { x: number; y: number; cor: string }) {
+function Estrela({ x, y, cor, n = 0 }: { x: number; y: number; cor: string; n?: number }) {
   return (
     <g transform={`translate(${x} ${y})`}>
       <path d={estrela4(4.6, 0.18)} fill="url(#ct-aco)" stroke={STEEL_DARK} strokeWidth="0.2" />
+      {n >= 3 && <circle className="dvcard-gem" r={n >= 4 ? 2.6 : 2} fill={cor} opacity="0.5" style={{ filter: "blur(0.8px)" }} />}
       <path d={`M0 -1.1 L0.8 0 L0 1.1 L-0.8 0 Z`} fill={cor} />
+      {n >= 2 && <path d="M-0.25 -0.7 L0.15 -0.2 L-0.25 0.1 Z" fill="#fffaf0" opacity="0.8" />}
     </g>
   );
 }
@@ -107,7 +201,7 @@ function Ampulheta() {
 }
 
 /** Moldura desenhada (SVG no tamanho da carta): filetes de aço, arco da janela, faixa, quadro e os selos. */
-function Moldura({ verso = false, cor }: { verso?: boolean; cor: string }) {
+function Moldura({ verso = false, cor, n = 0 }: { verso?: boolean; cor: string; n?: number }) {
   // janela em arco: 13..87 × 6..150
   const arco = "M13 150 V30 Q13 16 27 16 H34 Q50 6 66 16 H73 Q87 16 87 30 V150 Z";
   return (
@@ -121,7 +215,7 @@ function Moldura({ verso = false, cor }: { verso?: boolean; cor: string }) {
         </linearGradient>
       </defs>
       {/* filete da raridade logo dentro da borda */}
-      <rect x="2.4" y="2.4" width="95.2" height="217.2" rx="6.4" fill="none" stroke={cor} strokeWidth="0.45" opacity="0.9" />
+      <rect x="2.4" y="2.4" width="95.2" height="217.2" rx="6.4" fill="none" stroke={cor} strokeWidth={[0.35, 0.45, 0.55, 0.7, 0.85][n]} opacity={[0.6, 0.8, 0.9, 1, 1][n]} />
       {/* filetes de aço do corpo */}
       <rect x="5" y="5" width="90" height="212" rx="5" fill="none" stroke="url(#ct-aco)" strokeWidth="0.8" />
       <rect x="7.4" y="7.4" width="85.2" height="207.2" rx="3.6" fill="none" stroke={STEEL_MID} strokeWidth="0.25" opacity="0.7" />
@@ -161,8 +255,8 @@ function Moldura({ verso = false, cor }: { verso?: boolean; cor: string }) {
           ].map(([x, y], i) => (
             <path key={i} transform={`translate(${x} ${y})`} d={estrela4(1.5)} fill={STEEL} />
           ))}
-          <Estrela x={7.4} y={85} cor={cor} />
-          <Estrela x={92.6} y={85} cor={cor} />
+          <Estrela x={7.4} y={85} cor={cor} n={n} />
+          <Estrela x={92.6} y={85} cor={cor} n={n} />
         </>
       )}
       <Ampulheta />
@@ -209,14 +303,17 @@ export function CartaFrente({
   const peso = getCardPeso(cardId);
   const arte = arteDaCarta(cardId);
   const frase = card.detalhe ? "" : card.flavor;
-  const brilho = r === "lendaria" || r === "promocional";
+  const n = NIVEL_BRILHO[r];
+  const brilho = n >= 4;
   const cor = BORDA[r].cor;
   return (
     <article
-      className={cn(CARTA_SHELL, "select-none overflow-hidden rounded-[4.5cqw] shadow-[0_12px_28px_-14px_rgba(0,0,0,0.9)]", className)}
-      style={fundoBorda(r)}
+      className={cn(CARTA_SHELL, "select-none overflow-hidden rounded-[4.5cqw]", r === "promocional" && "dvcard-iris", className)}
+      style={{ ...fundoBorda(r), boxShadow: aura(r) }}
       aria-label={`${card.name}. Arquétipo ${arquetipo}. Coleção ${meta.collection}. Raridade ${rotuloRaridade}. Função: ${card.effect}${raio !== "—" ? ` Raio: ${raio}.` : ""} Peso ${peso}.`}
     >
+      {n >= 2 && <EstiloCarta />}
+      <Reflexo n={n} />
       {/* corpo de mármore negro */}
       <span aria-hidden="true" className="absolute inset-[5cqw] rounded-[5cqw]" style={MARMORE} />
       {/* ilustração na janela em arco */}
@@ -240,7 +337,8 @@ export function CartaFrente({
           />
         )}
       </span>
-      <Moldura cor={cor} />
+      <Moldura cor={cor} n={n} />
+      {n >= 4 && <Cintilas />}
       {/* nome na faixa */}
       <span aria-hidden="true" className="absolute inset-x-[15cqw] top-[147.8cqw] hidden h-[8.8cqw] items-center justify-center text-center @min-[132px]:flex">
         <span className="line-clamp-1 font-display text-[4.1cqw] font-semibold uppercase leading-none tracking-[0.08em]" style={{ color: TEXT }}>
@@ -289,7 +387,7 @@ export function CartaVerso({ className, sigilo }: { className?: string; sigilo?:
   return (
     <div
       className={cn(CARTA_SHELL, "select-none overflow-hidden rounded-[4.5cqw] shadow-[0_12px_28px_-14px_rgba(0,0,0,0.9)]", className)}
-      style={fundoBorda("rara")}
+      style={fundoBorda("comum")}
       role="img"
       aria-label="Verso de uma Carta DEVO"
     >
