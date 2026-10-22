@@ -1,0 +1,110 @@
+{
+  "pedido": "arcano-mundo-tarot2",
+  "titulo": "Arcano — mundo (tarô, menos humanizado) — refeito",
+  "tipo": "ilustracao",
+  "tamanho_final": 1536,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 93081,
+      "passos": null,
+      "segundos": 19.4,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "ilhas_removidas": 1,
+      "arquivos": [
+        {
+          "arquivo": "arcano-mundo-tarot2--v01--1536.png",
+          "bytes": 1792880
+        },
+        {
+          "arquivo": "arcano-mundo-tarot2--v01--1536.webp",
+          "bytes": 409094
+        },
+        {
+          "arquivo": "arcano-mundo-tarot2--v01--1024.webp",
+          "bytes": 189100
+        },
+        {
+          "arquivo": "arcano-mundo-tarot2--v01--768.webp",
+          "bytes": 124780
+        },
+        {
+          "arquivo": "arcano-mundo-tarot2--v01--512.webp",
+          "bytes": 68638
+        }
+      ],
+      "segundos_pos": 45.5,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 93082,
+      "passos": null,
+      "segundos": 3.7,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "arcano-mundo-tarot2--v02--1536.png",
+          "bytes": 1635057
+        },
+        {
+          "arquivo": "arcano-mundo-tarot2--v02--1536.webp",
+          "bytes": 382804
+        },
+        {
+          "arquivo": "arcano-mundo-tarot2--v02--1024.webp",
+          "bytes": 181504
+        },
+        {
+          "arquivo": "arcano-mundo-tarot2--v02--768.webp",
+          "bytes": 118560
+        },
+        {
+          "arquivo": "arcano-mundo-tarot2--v02--512.webp",
+          "bytes": 65628
+        }
+      ],
+      "segundos_pos": 37.8,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 93083,
+      "passos": null,
+      "segundos": 3.4,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "ilhas_removidas": 1,
+      "arquivos": [
+        {
+          "arquivo": "arcano-mundo-tarot2--v03--1536.png",
+          "bytes": 1673710
+        },
+        {
+          "arquivo": "arcano-mundo-tarot2--v03--1536.webp",
+          "bytes": 409858
+        },
+        {
+          "arquivo": "arcano-mundo-tarot2--v03--1024.webp",
+          "bytes": 194860
+        },
+        {
+          "arquivo": "arcano-mundo-tarot2--v03--768.webp",
+          "bytes": 130074
+        },
+        {
+          "arquivo": "arcano-mundo-tarot2--v03--512.webp",
+          "bytes": 72292
+        }
+      ],
+      "segundos_pos": 36.7,
+      "avisos": []
+    }
+  ]
+}
