@@ -1,0 +1,96 @@
+{
+  "pedido": "carta-cranio",
+  "titulo": "Carta — Crânio Polido (ilustração da janela)",
+  "tipo": "ilustracao",
+  "tamanho_final": 1536,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 70211,
+      "passos": null,
+      "segundos": 17.9,
+      "neuronios_estimados": 1386,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "carta-cranio--v01--1536.png",
+          "bytes": 2459813
+        },
+        {
+          "arquivo": "carta-cranio--v01--1536.webp",
+          "bytes": 469586
+        },
+        {
+          "arquivo": "carta-cranio--v01--1024.webp",
+          "bytes": 177398
+        },
+        {
+          "arquivo": "carta-cranio--v01--768.webp",
+          "bytes": 112290
+        }
+      ],
+      "segundos_pos": 1.6,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 70212,
+      "passos": null,
+      "segundos": 2.7,
+      "neuronios_estimados": 1386,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "carta-cranio--v02--1536.png",
+          "bytes": 2416774
+        },
+        {
+          "arquivo": "carta-cranio--v02--1536.webp",
+          "bytes": 468706
+        },
+        {
+          "arquivo": "carta-cranio--v02--1024.webp",
+          "bytes": 178126
+        },
+        {
+          "arquivo": "carta-cranio--v02--768.webp",
+          "bytes": 110802
+        }
+      ],
+      "segundos_pos": 1.6,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 70213,
+      "passos": null,
+      "segundos": 2.7,
+      "neuronios_estimados": 1386,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "carta-cranio--v03--1536.png",
+          "bytes": 2479176
+        },
+        {
+          "arquivo": "carta-cranio--v03--1536.webp",
+          "bytes": 488224
+        },
+        {
+          "arquivo": "carta-cranio--v03--1024.webp",
+          "bytes": 187444
+        },
+        {
+          "arquivo": "carta-cranio--v03--768.webp",
+          "bytes": 116628
+        }
+      ],
+      "segundos_pos": 1.6,
+      "avisos": []
+    }
+  ]
+}
