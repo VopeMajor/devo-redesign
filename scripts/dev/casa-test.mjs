@@ -286,9 +286,29 @@ await test('pacote: sem pacote → 409; com pacote abre, consome 1 e entrega o p
   assert(again.status === 200 && again.json.premio.rotulo === r.json.premio.rotulo, 'mesmo idem devolve o mesmo prêmio')
   const [{ quantity }] = await q("SELECT quantity FROM player_items WHERE player_id = $1 AND item_key = 'pacote:xadrez'", [B.id])
   assert(Number(quantity) === 1, `consumiu um (${quantity})`)
-  const recebidos = (await entregas(B.id)).filter((x) => x.origin === 'Pacote Raro: Coleção de Xadrez').length
-  const molde = await q("SELECT quantity FROM player_items WHERE player_id = $1 AND item_key = 'estetico:molde_xadrez'", [B.id])
-  assert(recebidos + (molde[0] ? Number(molde[0].quantity) : 0) === 1, 'um prêmio entregue')
+  const p = r.json.premio
+  assert(p.tipo === 'carta' || p.tipo === 'item', `prêmio concreto (nada de linha aleatória crua): ${JSON.stringify(p)}`)
+  if (p.tipo === 'carta') {
+    const recebidos = (await entregas(B.id)).filter((x) => x.origin === 'Pacote Raro: Coleção de Xadrez').length
+    assert(recebidos === 1, `uma carta entregue (${recebidos})`)
+  } else {
+    const [it] = await q('SELECT quantity FROM player_items WHERE player_id = $1 AND item_key = $2', [B.id, p.item])
+    assert(it && Number(it.quantity) >= 1, `item entregue: ${p.item}`)
+  }
+})
+
+await test('pacote: a tabela soma 100 e as linhas aleatórias viram carta ou item', async () => {
+  await q("SELECT devo_item_grant($1, 'pacote:xadrez', 12, 'teste', NULL, NULL, NULL)", [B.id])
+  const tipos = new Set()
+  for (let i = 0; i < 12; i++) {
+    const r = await B.casa('pacote.abrir', { pacote: 'xadrez', idem: `pk-${sfx}-${i}` })
+    assert(r.status === 200, `abrir ${i}: ${r.text}`)
+    assert(r.json.premio.tipo === 'carta' || r.json.premio.tipo === 'item', `prêmio ${i}: ${JSON.stringify(r.json.premio)}`)
+    tipos.add(r.json.premio.tipo)
+  }
+  const g = await B.get('/api/casa')
+  const tabela = g.json.pacotesTabela ?? null
+  if (tabela) assert(Math.abs(tabela.reduce((s, x) => s + x.chance, 0) - 100) < 0.01, 'chances somam 100')
 })
 
 await test('peso máximo do Deadly Vote: salvo na convocação e visto pelo jogador', async () => {

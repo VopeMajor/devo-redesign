@@ -3,7 +3,7 @@ import { randomInt, randomUUID } from 'node:crypto'
 import type { PoolClient } from 'pg'
 import { pool } from '@/lib/db'
 import { drainTime } from './arcade/server'
-import { getCard } from './cards'
+import { CARDS, getCard } from './cards'
 import {
   ALVOS_RARIDADE,
   type CasaPayload,
@@ -27,7 +27,7 @@ import {
 import { RecordError } from './errors'
 import { type Queryable, run, txAs, UUID_RE } from './fundacao-db'
 import { consumeItem, deliverCard, grantItem, pendingCardCount } from './inventario-server'
-import { getPacote, itemDoPacote, PACOTES, type PacotePremio, sortearPremio } from './pacotes'
+import { escolherPorPeso, getPacote, itemDoPacote, PACOTES, type PacotePremio, PESO_CARTA, PESO_ITEM, sortearPremio } from './pacotes'
 import { requireActor, requireCan } from './permissoes-server'
 import { getConfig, hasUnlock, setConfig } from './progresso-server'
 import type { Rarity } from './types'
@@ -358,6 +358,29 @@ export async function aprimorarMesa(playerId: string, input: { para?: unknown })
   })
 }
 
+/** Tipos de item que podem sair no sorteio aleatório de um pacote. */
+const KINDS_ALEATORIOS = ['moeda', 'essencia', 'chave', 'fragmento']
+
+/** Transforma as linhas "aleatórias" da tabela num prêmio concreto (carta ou item). */
+async function resolverPremio(c: Queryable, premio: PacotePremio): Promise<PacotePremio> {
+  const r = () => randomInt(1_000_000) / 1_000_000
+  if (premio.tipo === 'carta_aleatoria') {
+    const carta = escolherPorPeso(CARDS, (x) => PESO_CARTA[x.rarity] ?? 0, r())
+    if (carta) return { tipo: 'carta', cardId: carta.id, rotulo: carta.name, chance: premio.chance }
+  }
+  if (premio.tipo === 'item_aleatorio' || premio.tipo === 'carta_aleatoria') {
+    const itens = await run<{ key: string; name: string; rarity: string }>(
+      c,
+      "SELECT key, name, rarity FROM item_defs WHERE active AND kind = ANY($1) AND key NOT LIKE '%exemplo%' ORDER BY key",
+      [KINDS_ALEATORIOS],
+    )
+    const item = escolherPorPeso(itens, (x) => PESO_ITEM[x.rarity] ?? 0, r())
+    if (item) return { tipo: 'item', item: item.key, rotulo: item.name, chance: premio.chance }
+    throw new RecordError('O catálogo de itens está vazio.', 409)
+  }
+  return premio
+}
+
 /** Abre um Pacote do inventário: consome 1 e sorteia pela tabela. Carta → card_deliveries; item → inventário. */
 export async function abrirPacote(playerId: string, input: { pacote?: unknown; idem?: unknown }): Promise<{ premio: PacotePremio; cartasPendentes: number }> {
   const p = typeof input.pacote === 'string' ? getPacote(input.pacote) : null
@@ -369,9 +392,9 @@ export async function abrirPacote(playerId: string, input: { pacote?: unknown; i
     await consumeItem({ playerId, item: itemDoPacote(p.id), quantidade: 1, motivo: 'pacote', ref: p.id, idem }, c).catch((err) => {
       throw err instanceof RecordError && err.status === 409 ? new RecordError('Você não tem este pacote.', 409) : err
     })
-    const premio = sortearPremio(p, randomInt(1_000_000) / 1_000_000)
+    const premio = await resolverPremio(c, sortearPremio(p, randomInt(1_000_000) / 1_000_000))
     if (premio.tipo === 'carta') await deliverCard({ playerId, cardId: premio.cardId, origem: p.nome, ref: p.id, idem: `${idem}:carta` }, c)
-    else await grantItem({ playerId, item: premio.item, quantidade: 1, motivo: 'pacote', ref: p.id, idem: `${idem}:item` }, c)
+    else if (premio.tipo === 'item') await grantItem({ playerId, item: premio.item, quantidade: 1, motivo: 'pacote', ref: p.id, idem: `${idem}:item` }, c)
     await run(c, 'INSERT INTO pacote_aberturas (player_id, pacote, premio, idem_key) VALUES ($1, $2, $3, $4)', [playerId, p.id, JSON.stringify(premio), idem])
     return { premio, cartasPendentes: await pendingCardCount(playerId, c) }
   })

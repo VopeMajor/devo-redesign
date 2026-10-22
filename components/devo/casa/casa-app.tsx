@@ -877,7 +877,7 @@ function Pacotes({ d, agir, resgatar }: { d: CasaLiberado; agir: Agir; resgatar:
                     {p.premios.map((x) => (
                       <tr key={x.rotulo} className="border-t border-dv-line">
                         <td className="py-1.5 pr-2 text-dv-text">{x.rotulo}</td>
-                        <td className="py-1.5 text-right font-mono text-dv-text-2 dv-tabular">{x.chance}%</td>
+                        <td className="py-1.5 text-right font-mono text-dv-text-2 dv-tabular">{x.chance.toLocaleString('pt-BR')}%</td>
                       </tr>
                     ))}
                   </tbody>
@@ -904,7 +904,7 @@ function Pacotes({ d, agir, resgatar }: { d: CasaLiberado; agir: Agir; resgatar:
             <DevoCard cardId={premio.cardId} faceDown={false} size="md" />
           ) : (
             <div className="grid size-40 place-items-center bg-dv-ink-2 shadow-[inset_0_0_0_1px_var(--dv-line-gold)]">
-              <p className="px-3 text-center font-display text-[16px] font-semibold uppercase tracking-[0.06em] text-dv-gold-bright">{virada ? 'Molde de Xadrez' : '?'}</p>
+              <p className="px-3 text-center font-display text-[16px] font-semibold uppercase tracking-[0.06em] text-dv-gold-bright">{virada ? (premio?.rotulo ?? '') : '?'}</p>
             </div>
           )}
           {virada && <p className="font-body text-[14px] text-dv-text-2">{premio?.tipo === 'carta' ? 'A carta foi para o seu inventário.' : 'O item foi para o seu inventário.'}</p>}
