@@ -24,12 +24,13 @@ import {
   VenetianMask,
   type LucideIcon,
 } from "lucide-react";
-import type { CSSProperties, ReactNode } from "react";
-import { DuotoneArt, type DuotoneTone } from "@/components/devo/kit";
-import { getCard, getCardArquetipo, getCardMeta, getCardRadius, RARITY_META } from "@/lib/devo/cards";
+import type { CSSProperties } from "react";
+import type { DuotoneTone } from "@/components/devo/kit";
+import { getCard } from "@/lib/devo/cards";
 import type { CardType, GlyphName, Rarity } from "@/lib/devo/types";
 import { cn } from "@/lib/utils";
 import { DeadlyVoteSymbol } from "../system/symbol";
+import { CartaFrente, CartaVerso } from "./carta-tarot";
 
 /*
  * Carta DEVO — peça de colecionador em mármore, metal e arte em gravura (duotom P&B).
@@ -41,7 +42,7 @@ import { DeadlyVoteSymbol } from "../system/symbol";
  *   <RarityGem rarity /> · <RarityPips rarity />  pedra e losangos da raridade (fora da carta).
  *   RARITY_SKIN[rarity]                     cores da raridade (ink = sobre papel, light = sobre negro).
  *
- * Anatomia (proporção 5:7, 100cqw × 140cqw):
+ * Anatomia: ver carta-tarot.tsx (design do dono de 22/10, proporção 9:20). Abaixo, só utilidades comuns.
  *   moldura de metal (0–1.5cqw) · bisel (1.5–2.6cqw) · corpo de mármore (2.6cqw+) · filete interno.
  *   Janela ogival com a arte (5.5→89.5cqw) · medalhão do glifo cravado no pé da janela (79cqw) ·
  *   nome (101cqw) · tipo · arquétipo (118cqw) · série · coleção · ordem no rodapé.
@@ -255,55 +256,6 @@ export const RARITY_SKIN: Record<Rarity, RaritySkin> = {
   },
 };
 
-/** Moldura animada / reflexo de borda por raridade (classes do CARD_CSS). */
-const FRAME_FX: Partial<Record<Rarity, { frameClass?: string; frameSize?: string; edge?: boolean }>> = {
-  ultra_rara: { edge: true },
-  promocional: { frameClass: "dvcard-iris", frameSize: "320% 320%", edge: true },
-};
-
-/** Folha holográfica do corpo: champanhe-ametista (Lendária) ou arco-íris (Promocional). */
-const HOLO_FOIL = {
-  white:
-    "linear-gradient(115deg, transparent 22%, rgba(194,185,236,0.45) 38%, rgba(236,229,216,0.5) 48%, rgba(194,185,236,0.35) 58%, transparent 74%), repeating-linear-gradient(135deg, rgba(0,0,0,0.035) 0 1px, transparent 1px 4px)",
-  black:
-    "linear-gradient(115deg, transparent 18%, rgba(203,197,232,0.32) 34%, rgba(236,229,216,0.45) 46%, rgba(203,197,232,0.26) 58%, transparent 76%), repeating-linear-gradient(135deg, rgba(255,255,255,0.05) 0 1px, transparent 1px 4px)",
-  iris:
-    "linear-gradient(115deg, transparent 8%, rgba(255,140,190,0.42) 22%, rgba(170,140,255,0.42) 34%, rgba(110,215,240,0.42) 46%, rgba(200,250,150,0.36) 58%, rgba(255,195,130,0.4) 70%, rgba(255,140,190,0.3) 82%, transparent 94%), repeating-linear-gradient(135deg, rgba(255,255,255,0.07) 0 1px, transparent 1px 3px)",
-};
-
-/** Moldura do verso: aço champanhe-prateado, a mesma para todas as cartas. */
-const BACK_FRAME = "linear-gradient(150deg,#f6f3ec 0%,#9b958a 22%,#e9e4da 45%,#5f5a52 66%,#dcd6cb 84%,#f6f3ec 100%)";
-
-/** Arco ogival (polígono em %): laterais retas e dois arcos que se encontram numa ponta. */
-const ARCH = (() => {
-  const rise = 17; // % da altura ocupada pelo arco
-  const c = 74; // raio do arco (em % da largura): define o quão pontudo fica
-  const end = Math.acos(1 - 50 / c);
-  const pts: [number, number][] = [
-    [0, 100],
-    [0, rise],
-  ];
-  const n = 14;
-  const at = (i: number) => {
-    const a = (end * i) / n;
-    return [c - c * Math.cos(a), rise * (1 - Math.sin(a) / Math.sin(end))] as const;
-  };
-  for (let i = 1; i <= n; i++) {
-    const [x, y] = at(i);
-    pts.push([x, y]);
-  }
-  for (let i = n - 1; i >= 1; i--) {
-    const [x, y] = at(i);
-    pts.push([100 - x, y]);
-  }
-  pts.push([100, rise], [100, 100]);
-  return pts.map(([x, y]) => [Number(x.toFixed(2)), Number(y.toFixed(2))] as const);
-})();
-const ARCH_CLIP = `polygon(${ARCH.map(([x, y]) => `${x}% ${y}%`).join(",")})`;
-const ARCH_PATH = `M${ARCH.map(([x, y]) => `${x} ${y}`).join(" L")} Z`;
-
-const STAR4 = "M12 0.5 C12.6 8.6 15.4 11.4 23.5 12 C15.4 12.6 12.6 15.4 12 23.5 C11.4 15.4 8.6 12.6 0.5 12 C8.6 11.4 11.4 8.6 12 0.5 Z";
-
 /** Animações da carta (escopo pelo prefixo dvcard-). */
 export const CARD_CSS = `
 @keyframes dvcard-sheen { 0% { background-position: 120% 0 } 55%,100% { background-position: -40% 0 } }
@@ -363,28 +315,6 @@ export function RarityGem({ rarity, className, title }: { rarity: Rarity; classN
   );
 }
 
-/** Pedras engastadas na ponta do arco: ametista (Lendária) e granada (Única). [luz, meio, sombra, miolo] */
-const SET_GEMS: Partial<Record<Rarity, [string, string, string, string]>> = {
-  lendaria: ["#e4defb", "#8a7cc8", "#2a2350", "#c2b9ec"],
-  unica: ["#f8ccd2", "#a3243a", "#3a0810", "#d9707f"],
-};
-
-/** Pedra engastada: losango facetado pequeno, sem filtro (barato na grade). */
-function SetGem({ colors, className }: { colors: [string, string, string, string]; className?: string }) {
-  const [hi, mid, lo, core] = colors;
-  return (
-    <svg viewBox="0 0 20 28" aria-hidden="true" className={className}>
-      <path d="M10 0.5 L19.5 14 L10 27.5 L0.5 14 Z" fill="#f4efe6" />
-      <path d="M10 2.6 L17.4 14 L10 25.4 L2.6 14 Z" fill={lo} />
-      <path d="M10 3.4 L16.6 14 L10 14 Z" fill={mid} />
-      <path d="M10 3.4 L3.4 14 L10 14 Z" fill={hi} />
-      <path d="M3.4 14 L10 24.6 L10 14 Z" fill={mid} />
-      <path d="M10 9 L13 14 L10 19 L7 14 Z" fill={core} />
-      <path d="M6.4 9 L7.6 7.8 L8.2 10.2 Z" fill="#fff" className="dvcard-gem" />
-    </svg>
-  );
-}
-
 type DevoCardProps = {
   cardId?: string | null;
   faceDown?: boolean;
@@ -398,232 +328,30 @@ const SIZES = {
   lg: "w-48",
 };
 
-const CARD_SHELL = "relative aspect-[5/7] [container-type:inline-size]";
 
-/** Moldura metálica + bisel + corpo de mármore (comum à frente e ao verso). */
-function Shell({
-  frame,
-  filet,
-  glow,
-  body,
-  frameClass,
-  frameSize,
-  edge,
-  children,
-}: {
-  frame: string;
-  filet: string;
-  glow?: string;
-  body: "black" | "white";
-  /** Classe de animação da moldura (ex.: iridescência da Promocional). */
-  frameClass?: string;
-  frameSize?: string;
-  /** Reflexo que corre só pela borda (o corpo cobre o miolo). */
-  edge?: boolean;
-  children: ReactNode;
-}) {
-  return (
-    <>
-      <span
-        aria-hidden="true"
-        className={cn("absolute inset-0 rounded-[5cqw]", frameClass)}
-        style={{
-          background: frame,
-          ...(frameSize ? { backgroundSize: frameSize } : null),
-          boxShadow: `inset 0 1px 0 rgba(255,255,255,0.3), 0 10px 26px -14px rgba(0,0,0,0.9)${glow ? `, 0 0 14px -4px ${glow}` : ""}`,
-        }}
-      />
-      {edge && (
-        <span
-          aria-hidden="true"
-          className="dvcard-edge pointer-events-none absolute inset-0 rounded-[5cqw] mix-blend-screen"
-          style={{
-            backgroundImage: "linear-gradient(115deg, transparent 40%, rgba(255,255,255,0.55) 48%, rgba(236,229,216,0.25) 52%, transparent 60%)",
-            backgroundSize: "260% 100%",
-            backgroundPosition: "160% 0",
-          }}
-        />
-      )}
-      <span aria-hidden="true" className="absolute inset-[1.5cqw] rounded-[3.9cqw] shadow-[0_0_0_0.5px_rgba(0,0,0,0.55),inset_0_0_0_0.5px_rgba(255,255,255,0.18)]" />
-      <span
-        className={cn("absolute inset-[2.6cqw] overflow-hidden rounded-[3.2cqw]", body === "white" ? "shadow-[inset_0_0_0_0.5px_rgba(0,0,0,0.4)]" : "shadow-[inset_0_0_0_0.5px_rgba(0,0,0,0.9)]")}
-        style={body === "white" ? marbleWhite(260) : marbleBlack(260)}
-      >
-        {children}
-        <span aria-hidden="true" className="pointer-events-none absolute inset-[1.8cqw] rounded-[2cqw] border-solid opacity-50" style={{ borderColor: filet, borderWidth: "max(0.5px, 0.3cqw)" }} />
-      </span>
-    </>
-  );
-}
 
-/** Verso oficial: mármore negro, treliça de losangos em aço e o sigilo num medalhão. */
+/** Verso oficial (design do dono, 22/10): pergaminho com o sol-bússola, céu estrelado e o sigilo do Deadly Vote. */
 export function CardBack({ className }: { className?: string }) {
-  return (
-    <div className={cn(CARD_SHELL, "select-none", className)} role="img" aria-label="Verso de uma Carta DEVO">
-      <Shell frame={BACK_FRAME} filet="#d6cdbd" body="black">
-        <span
-          aria-hidden="true"
-          className="absolute inset-[5cqw] opacity-55"
-          style={{
-            backgroundImage: "linear-gradient(60deg, transparent 48.8%, #a8a39a 49.4%, #a8a39a 50.6%, transparent 51.2%), linear-gradient(-60deg, transparent 48.8%, #a8a39a 49.4%, #a8a39a 50.6%, transparent 51.2%)",
-            backgroundSize: "16cqw 27.7cqw",
-            backgroundPosition: "center",
-            maskImage: "radial-gradient(70% 58% at 50% 50%, #000 35%, transparent 100%)",
-            WebkitMaskImage: "radial-gradient(70% 58% at 50% 50%, #000 35%, transparent 100%)",
-          }}
-        />
-        <span aria-hidden="true" className="absolute left-1/2 top-1/2 aspect-square w-[54%] -translate-x-1/2 -translate-y-1/2 rounded-full p-[1.1cqw]" style={{ background: BACK_FRAME, boxShadow: "0 0 6cqw rgba(0,0,0,0.9)" }}>
-          <span className="grid size-full place-items-center rounded-full bg-[radial-gradient(circle_at_50%_38%,var(--dv-ink-4),var(--dv-ink)_70%)] text-[#e9e4da] shadow-[inset_0_0_0_0.6cqw_rgba(0,0,0,0.8)]">
-            <DeadlyVoteSymbol variant="full" className="size-[80%]" />
-          </span>
-        </span>
-        {["top-[6.5cqw]", "bottom-[6.5cqw]"].map((p) => (
-          <svg key={p} aria-hidden="true" viewBox="0 0 24 24" className={cn("absolute left-1/2 size-[8cqw] -translate-x-1/2 text-[#dcd6cb]", p)}>
-            <path d={STAR4} fill="currentColor" />
-          </svg>
-        ))}
-        <span aria-hidden="true" className="absolute inset-x-0 bottom-[17cqw] hidden text-center font-mono text-[3.4cqw] uppercase tracking-[0.4em] text-[#a8a39a] @min-[140px]:block">
-          Deadly · Vote
-        </span>
-      </Shell>
-    </div>
-  );
+  return <CartaVerso className={className} sigilo={<DeadlyVoteSymbol variant="full" className="size-full" />} />;
 }
 
+/** Frente (design do dono, 22/10): ver components/devo/shared/carta-tarot.tsx. */
 export function CardFace({
   cardId,
   className,
-  holo,
   rarity: rarityOverride,
 }: {
   cardId: string;
   size?: DevoCardProps["size"];
   className?: string;
-  /** `true` liga o brilho holográfico (segue --hx/--hy do ancestral); padrão: Lendárias e Promocionais. */
+  /** Mantido por compatibilidade (o brilho das Lendárias e Promocionais é automático). */
   holo?: boolean;
-  /** Vitrine: mostra a carta com a pele de outra raridade (aula, guia de estilo). O jogo nunca usa. */
+  /** Vitrine: mostra a carta com a borda de outra raridade (aula, guia de estilo). O jogo nunca usa. */
   rarity?: Rarity;
 }) {
   const card = getCard(cardId);
-  const meta = getCardMeta(cardId);
-  const r = rarityOverride ?? card.rarity;
-  const rarity = RARITY_META[r];
-  const skin = RARITY_SKIN[r];
-  const fx = FRAME_FX[r] ?? {};
-  const setGem = SET_GEMS[r];
-  const promo = r === "promocional";
-  const radius = getCardRadius(cardId);
-  const archetype = getCardArquetipo(card);
-  // Cartas com Natureza (Coleção Xadrez em diante) mostram Natureza · Arquétipo; as antigas, Tipo · Arquétipo.
-  const kind = card.natureza ?? card.type;
-  const Glyph = GLYPHS[card.glyph];
   const crop = CROP[cardId] ?? { pos: "50% 30%" };
-  const legendary = r === "lendaria";
-  // Halo: da Ultra Rara para cima (inclui as secretas).
-  const haloed = rarity.order >= RARITY_META.ultra_rara.order;
-  const white = skin.body === "white";
-  const shine = holo ?? (legendary || promo);
-  // Texto sobre o corpo (negro ou mármore branco).
-  const onBody = white ? "#151517" : "#eeedeb";
-  const onBodySoft = white ? skin.ink : skin.light;
-
-  return (
-    <article
-      className={cn(CARD_SHELL, "select-none", className)}
-      aria-label={`${card.name}. Arquétipo ${archetype}. Coleção ${meta.collection}, ordem ${meta.orderLabel}, série ${meta.serial}. Raridade ${rarity.label} (${skin.material}). Função: ${card.effect} Raio: ${radius}.`}
-    >
-      <style>{CARD_CSS}</style>
-      <Shell frame={skin.frame} filet={skin.filet} glow={haloed ? skin.glow : undefined} body={skin.body} frameClass={fx.frameClass} frameSize={fx.frameSize} edge={fx.edge}>
-        {/* janela ogival com a arte em duotom */}
-        <span aria-hidden="true" className="absolute inset-x-[5.5cqw] top-[5.5cqw] h-[84cqw]">
-          <span className="absolute inset-0 overflow-hidden bg-dv-ink" style={{ clipPath: ARCH_CLIP }}>
-            <span className="absolute inset-0" style={{ transform: `scale(${crop.zoom ?? 1})`, transformOrigin: crop.pos }}>
-              <DuotoneArt src={TYPE_ART[card.type]} alt="" tone={skin.duo} position={crop.pos} contrast={1.3} className="size-full" />
-            </span>
-            {skin.tint && <span className="absolute inset-0 mix-blend-color" style={{ background: skin.tint, opacity: 0.32 }} />}
-            <span className="absolute inset-0 bg-[radial-gradient(120%_90%_at_50%_30%,transparent_45%,rgb(var(--dv-ink-rgb)/0.75)_100%)]" />
-            <span className="absolute inset-x-0 bottom-0 h-[40%] bg-[linear-gradient(to_top,rgb(var(--dv-ink-rgb)/0.95),transparent)]" />
-          </span>
-          <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="absolute inset-0 size-full overflow-visible">
-            <path d={ARCH_PATH} fill="none" stroke={white ? "#b3a998" : skin.filet} strokeWidth="1.1" vectorEffect="non-scaling-stroke" opacity="0.9" />
-          </svg>
-          {/* numeral e losangos: só quando a carta tem largura para eles */}
-          <span className="absolute left-[3.4cqw] top-[20cqw] hidden font-display text-[6.2cqw] font-semibold leading-none [text-shadow:0_1px_2px_#000] @min-[132px]:block" style={{ color: skin.light }}>
-            {card.numeral}
-          </span>
-          <span className="absolute right-[3cqw] top-[20cqw] hidden [filter:drop-shadow(0_1px_1px_#000)] @min-[132px]:block" style={{ color: skin.light }}>
-            <RarityPips rarity={r} className="flex-col text-[4.4cqw]" />
-          </span>
-        </span>
-
-        {/* pedra engastada na ponta do arco: ametista (Lendária) ou granada (Única) */}
-        {setGem && <SetGem colors={setGem} className="absolute left-1/2 top-[0.4cqw] h-[11cqw] w-[8cqw] -translate-x-1/2 drop-shadow-[0_0.6cqw_0.8cqw_rgba(0,0,0,0.6)]" />}
-
-        {/* medalhão do glifo, cravado no pé da janela */}
-        <span
-          aria-hidden="true"
-          className="absolute left-1/2 top-[79cqw] aspect-square w-[19cqw] -translate-x-1/2 rounded-full p-[1cqw]"
-          style={{ background: skin.frame, boxShadow: `0 0 5cqw ${skin.glow}, 0 1cqw 2cqw rgba(0,0,0,${white ? 0.45 : 0.8})` }}
-        >
-          <span className="grid size-full place-items-center rounded-full bg-[radial-gradient(circle_at_50%_35%,var(--dv-ink-4),var(--dv-ink)_72%)]" style={{ color: skin.light }}>
-            <Glyph className="size-[56%]" strokeWidth={1.4} />
-          </span>
-        </span>
-
-        {/* miniatura (< 132px): sem texto — losangos e uma estrela de aço */}
-        <span aria-hidden="true" className="absolute inset-x-0 top-[104cqw] flex justify-center @min-[132px]:hidden" style={{ color: white ? skin.ink : skin.light }}>
-          <RarityPips rarity={r} className="text-[9cqw]" />
-        </span>
-        <span aria-hidden="true" className="absolute inset-x-[16cqw] top-[121cqw] flex items-center gap-[2cqw] @min-[132px]:hidden" style={{ color: white ? "#8a8173" : skin.filet }}>
-          <span className="h-px flex-1 bg-current opacity-50" />
-          <svg viewBox="0 0 24 24" className="size-[6cqw] opacity-80">
-            <path d={STAR4} fill="currentColor" />
-          </svg>
-          <span className="h-px flex-1 bg-current opacity-50" />
-        </span>
-
-        {/* carta grande: nome, tipo e rodapé de série */}
-        <span aria-hidden="true" className="absolute inset-x-[7cqw] top-[98.6cqw] hidden h-[18.4cqw] items-start justify-center text-center @min-[132px]:flex">
-          {/* o clamp corta no padding-box: o pt reserva a altura do acento sobre a maiúscula (Ó, Ã, Ê) */}
-          <span className="line-clamp-2 pb-[0.6cqw] pt-[3cqw] font-display text-[7cqw] font-semibold uppercase leading-[1.22] tracking-[0.04em]" style={{ color: onBody }}>
-            {card.name}
-          </span>
-        </span>
-        <span aria-hidden="true" className={cn("absolute inset-x-[7cqw] top-[118cqw] hidden items-center justify-center gap-[2cqw] whitespace-nowrap font-sans font-medium uppercase @min-[132px]:flex", `${kind} · ${archetype}`.length > 22 ? "text-[3cqw] tracking-[0.1em]" : "text-[3.6cqw] tracking-[0.18em]")} style={{ color: onBodySoft }}>
-          <span className="h-px flex-1 bg-current opacity-40" />
-          {kind} · {archetype}
-          <span className="h-px flex-1 bg-current opacity-40" />
-        </span>
-        <span aria-hidden="true" className="absolute inset-x-[7cqw] bottom-[4.4cqw] hidden items-baseline justify-between font-mono text-[3.2cqw] uppercase tracking-[0.1em] @min-[150px]:flex" style={{ color: white ? "rgba(21,21,23,0.62)" : "rgba(238,237,235,0.6)" }}>
-          <span>{meta.serial}</span>
-          <span className="truncate px-[1.5cqw]">{meta.collection}</span>
-          <span>{meta.orderLabel}</span>
-        </span>
-
-        {/* reflexo do esmalte (todas) e holografia contida (Lendárias ou inspeção) */}
-        <span
-          aria-hidden="true"
-          className="dvcard-sheen pointer-events-none absolute inset-0 mix-blend-screen"
-          style={{ backgroundImage: "linear-gradient(105deg, transparent 38%, rgba(255,255,255,0.10) 46%, rgba(255,255,255,0.02) 52%, transparent 60%)", backgroundSize: "250% 100%", backgroundPosition: "120% 0" }}
-        />
-        {shine && (
-          <span
-            aria-hidden="true"
-            data-follow={holo ? "" : undefined}
-            className={cn(
-              "dvcard-holo pointer-events-none absolute inset-0",
-              white ? "opacity-[0.5] mix-blend-multiply" : promo ? "opacity-[0.46] mix-blend-color-dodge" : "opacity-[0.42] mix-blend-color-dodge",
-            )}
-            style={{
-              backgroundImage: promo ? HOLO_FOIL.iris : white ? HOLO_FOIL.white : HOLO_FOIL.black,
-              backgroundSize: "260% 260%, auto",
-              backgroundPosition: "var(--hx, 30%) var(--hy, 30%), 0 0",
-            }}
-          />
-        )}
-      </Shell>
-    </article>
-  );
+  return <CartaFrente cardId={cardId} rarity={rarityOverride} glyph={GLYPHS[card.glyph]} fallbackArt={TYPE_ART[card.type]} fallbackPos={crop.pos} className={className} />;
 }
 
 export function DevoCard({ cardId, faceDown = false, size = "md", className }: DevoCardProps) {

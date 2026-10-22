@@ -173,7 +173,7 @@ export function CartasApp() {
                           playSfx('click')
                           nav?.open('trocas')
                         }}
-                        className="dv-focus group relative flex aspect-[5/7] w-full flex-col items-center justify-center gap-2 rounded-[5%/3.6%] text-in-fg-2 shadow-[inset_0_0_0_1px_var(--in-line-strong)] transition-colors hover:text-in-fg"
+                        className="dv-focus group relative flex aspect-[9/20] w-full flex-col items-center justify-center gap-2 rounded-[4.5cqw] text-in-fg-2 shadow-[inset_0_0_0_1px_var(--in-line-strong)] transition-colors hover:text-in-fg"
                       >
                         <span aria-hidden="true" className="absolute inset-[5px] rounded-[4%/3%] border border-dashed border-in-line transition-colors group-hover:border-in-line-strong" />
                         <Plus className="relative size-6" strokeWidth={1.1} aria-hidden="true" />
@@ -499,7 +499,7 @@ function CardDetail({
               <div
                 ref={stageRef}
                 data-stage=""
-                className={cn('relative w-[min(58cqw,250px)] touch-pan-y [perspective:1100px]', dragging ? 'cursor-grabbing' : 'cursor-grab')}
+                className={cn('relative w-[min(58cqw,250px)] @2xl:w-[320px] touch-pan-y [perspective:1100px]', dragging ? 'cursor-grabbing' : 'cursor-grab')}
                 onPointerDown={onDown}
                 onPointerMove={onMove}
                 onPointerUp={onUp}
@@ -517,11 +517,11 @@ function CardDetail({
                     >
                       <div className="relative [backface-visibility:hidden]">
                         <CardFace cardId={cardId} holo className="w-full" />
-                        {flips > 0 && <span key={flips} aria-hidden="true" className="dvcard-flash pointer-events-none absolute inset-0 rounded-[5%/3.6%]" />}
+                        {flips > 0 && <span key={flips} aria-hidden="true" className="dvcard-flash pointer-events-none absolute inset-0 rounded-[4.5cqw]" />}
                       </div>
                       <div className="absolute inset-0 [backface-visibility:hidden] [transform:rotateY(180deg)]">
                         <CardBack className="h-full w-full" />
-                        {flips > 0 && <span key={flips} aria-hidden="true" className="dvcard-flash pointer-events-none absolute inset-0 rounded-[5%/3.6%]" />}
+                        {flips > 0 && <span key={flips} aria-hidden="true" className="dvcard-flash pointer-events-none absolute inset-0 rounded-[4.5cqw]" />}
                       </div>
                     </div>
                   </div>

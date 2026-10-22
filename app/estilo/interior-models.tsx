@@ -141,7 +141,7 @@ export function CartasPanel() {
               src={c.src}
               alt={`Carta ${c.name}`}
               contrast={1.15}
-              className={i === 0 ? 'aspect-[5/7] w-full shadow-[0_0_0_2px_var(--in-accent-fill),0_0_16px_rgba(138,124,200,0.6)]' : 'aspect-[5/7] w-full shadow-[0_0_0_1px_var(--in-line-strong)]'}
+              className={i === 0 ? 'aspect-[9/20] w-full shadow-[0_0_0_2px_var(--in-accent-fill),0_0_16px_rgba(138,124,200,0.6)]' : 'aspect-[9/20] w-full shadow-[0_0_0_1px_var(--in-line-strong)]'}
             />
             <p className="mt-1.5 font-serif text-[18px] font-light leading-none text-in-fg tabular-nums">
               {String(c.n).padStart(2, '0')}
@@ -150,7 +150,7 @@ export function CartasPanel() {
           </li>
         ))}
         <li>
-          <button type="button" className="dv-focus flex aspect-[5/7] w-full flex-col items-center justify-center gap-1 text-in-fg-2 shadow-[inset_0_0_0_1px_var(--in-line-strong)] transition-colors hover:text-in-accent">
+          <button type="button" className="dv-focus flex aspect-[9/20] w-full flex-col items-center justify-center gap-1 text-in-fg-2 shadow-[inset_0_0_0_1px_var(--in-line-strong)] transition-colors hover:text-in-accent">
             <span aria-hidden="true" className="text-[24px] font-light leading-none">+</span>
             <span className="text-center font-sans text-[8px] font-medium uppercase leading-tight tracking-[0.1em]">Adquirir carta</span>
           </button>

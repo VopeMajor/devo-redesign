@@ -242,7 +242,7 @@ function Table({ children, className }: { children: ReactNode; className?: strin
 function Slot({ label, children, highlight }: { label: string; children?: ReactNode; highlight?: boolean }) {
   return (
     <div className="flex flex-col items-center gap-2">
-      <div className={cn('grid aspect-[5/7] w-[6.25rem] place-items-center border border-dashed p-1', highlight ? 'border-dv-gold-bright/70 bg-dv-ink-3/70' : 'border-dv-line-strong bg-black/30')}>{children}</div>
+      <div className={cn('grid aspect-[9/20] w-[6.25rem] place-items-center border border-dashed p-1', highlight ? 'border-dv-gold-bright/70 bg-dv-ink-3/70' : 'border-dv-line-strong bg-black/30')}>{children}</div>
       <span className={cn('dv-label text-[10px]', highlight ? 'text-dv-gold-bright' : 'text-dv-text-3')}>{label}</span>
     </div>
   )

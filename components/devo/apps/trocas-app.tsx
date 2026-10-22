@@ -689,7 +689,7 @@ function Seat({
 
 function EmptySlot({ waiting, label }: { waiting?: boolean; label?: string }) {
   return (
-    <div className="relative grid aspect-[5/7] w-[128px] place-items-center bg-[repeating-linear-gradient(135deg,rgba(255,255,255,0.025)_0_6px,transparent_6px_12px)] @lg:w-40">
+    <div className="relative grid aspect-[9/20] w-[128px] place-items-center bg-[repeating-linear-gradient(135deg,rgba(255,255,255,0.025)_0_6px,transparent_6px_12px)] @lg:w-40">
       <span aria-hidden="true" className="absolute inset-1.5 border border-dashed border-dv-line-strong" />
       {waiting ? (
         <span className="flex flex-col items-center gap-2.5 px-2 font-mono text-[10px] uppercase tracking-[0.18em] text-dv-text-3">

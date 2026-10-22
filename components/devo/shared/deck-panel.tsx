@@ -47,7 +47,7 @@ export function AcquireTile({ onClick, className }: { onClick?: () => void; clas
       onClick={onClick}
       style={{ '--dv-cut': '10px' } as CSSProperties}
       className={cn(
-        'dv-focus group relative flex aspect-[5/7] w-full flex-col items-center justify-center gap-2 text-in-fg-2 shadow-[inset_0_0_0_1px_var(--in-line-strong)] transition-[color,box-shadow] hover:text-in-fg hover:shadow-[inset_0_0_0_1px_var(--in-fg-2)]',
+        'dv-focus group relative flex aspect-[9/20] w-full flex-col items-center justify-center gap-2 text-in-fg-2 shadow-[inset_0_0_0_1px_var(--in-line-strong)] transition-[color,box-shadow] hover:text-in-fg hover:shadow-[inset_0_0_0_1px_var(--in-fg-2)]',
         className,
       )}
     >
