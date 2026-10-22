@@ -1,0 +1,9 @@
+[arcano-mundo-tarot3] v01: @cf/black-forest-labs/flux-2-klein-9b seed=93081 1024x1536 passos=None (~1,455 neurônios)
+    ok em 3.3s, 1024x1536
+[arcano-mundo-tarot3] v02: @cf/black-forest-labs/flux-2-klein-9b seed=93084 1024x1536 passos=None (~1,455 neurônios)
+    ok em 3.3s, 1024x1536
+[arcano-mundo-tarot3] v03: @cf/black-forest-labs/flux-2-klein-9b seed=93085 1024x1536 passos=None (~1,455 neurônios)
+    ok em 3.3s, 1024x1536
+[arcano-mundo-tarot3] v01: rembg:birefnet-general; sem avisos
+[arcano-mundo-tarot3] v02: rembg:birefnet-general; sem avisos
+[arcano-mundo-tarot3] v03: rembg:birefnet-general; sem avisos
