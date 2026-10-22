@@ -116,24 +116,14 @@ function Comodos({ d, agir, resgatar }: { d: CasaLiberado; agir: Agir; resgatar:
             Deslize <GlyphArrow className="size-3" />
           </p>
         </section>
-        <section aria-label="Fundos" className="relative h-full w-full shrink-0 snap-start">
-          <Fundos />
-          <button
-            type="button"
-            onClick={() => {
+        <section aria-label="Fundos" className="relative h-full w-full shrink-0 snap-start overflow-hidden bg-[#0f0e12] [container-type:size]">
+          <Fundos
+            pendentes={pendentes}
+            onMesa={() => {
               playSfx('open')
               setAberta(true)
             }}
-            aria-label={`Mesa de confecção${pendentes ? `: ${pendentes} em andamento` : ''}`}
-            className="dv-focus group absolute bottom-[22%] left-1/2 w-[min(78%,340px)] -translate-x-1/2"
-          >
-            <MesaConfeccao className="w-full transition-[filter] duration-200 group-hover:brightness-125 group-active:brightness-150" />
-            {pendentes > 0 && (
-              <span className="absolute -top-1 right-[12%] grid min-w-6 place-items-center rounded-full bg-dv-amethyst px-1.5 font-mono text-[11px] text-white shadow-[0_0_10px_var(--dv-amethyst)]">{pendentes}</span>
-            )}
-            <span className="mt-3 block text-center font-display text-[15px] font-semibold uppercase tracking-[0.12em] text-dv-text">Mesa de confecção</span>
-            <span className="block text-center font-mono text-[10px] uppercase tracking-[0.16em] text-dv-text-3">Toque para usar</span>
-          </button>
+          />
         </section>
       </div>
       {/* seta discreta no computador (no celular, o arrasto) */}
@@ -156,41 +146,54 @@ function Comodos({ d, agir, resgatar }: { d: CasaLiberado; agir: Agir; resgatar:
 const CASA_CSS = `
 .casa-dica{animation:casa-dica 2.4s ease-in-out infinite}
 @keyframes casa-dica{0%,100%{transform:translateX(0);opacity:.55}50%{transform:translateX(6px);opacity:1}}
-@media (prefers-reduced-motion: reduce){.casa-dica{animation:none}}
+.casa-vela{animation:casa-vela 3.8s ease-in-out infinite}
+@keyframes casa-vela{0%,100%{opacity:.75;transform:scale(1)}40%{opacity:1;transform:scale(1.06)}70%{opacity:.85}}
+.casa-brilho{animation:casa-brilho 3.2s ease-in-out infinite}
+@keyframes casa-brilho{0%,100%{opacity:.35}50%{opacity:.9}}
+@media (prefers-reduced-motion: reduce){.casa-dica,.casa-vela,.casa-brilho{animation:none}}
 `
 
-/** Fundos da casa: a mesma parede e o mesmo chão da sala, com o lampião baixo sobre a mesa. */
-function Fundos() {
-  return (
-    <div className="absolute inset-0 bg-[linear-gradient(180deg,#141418,#1b1a1e_55%,#0e0e10)]">
-      <span className="absolute inset-0 opacity-[0.07] bg-[repeating-linear-gradient(90deg,#ece5d8_0_1px,transparent_1px_26px)]" />
-      {/* lampião pendurado e a luz quente que ele joga na parede */}
-      <span className="absolute left-1/2 top-0 h-[18%] w-px -translate-x-1/2 bg-[#3a3833]" />
-      <span className="absolute left-1/2 top-[18%] size-5 -translate-x-1/2 rounded-b-full bg-[#d6c49a] shadow-[0_0_30px_10px_rgba(214,196,154,0.35)]" />
-      <span className="absolute inset-x-0 top-[12%] h-[70%] bg-[radial-gradient(45%_55%_at_50%_20%,rgba(214,196,154,0.16),transparent_70%)]" />
-      {/* quadro torto na parede */}
-      <span className="absolute left-[10%] top-[24%] h-[14%] w-[20%] -rotate-3 shadow-[inset_0_0_0_3px_#2a2a2e] bg-[linear-gradient(160deg,rgba(186,176,159,0.08),transparent)]" />
-      <span className="absolute inset-x-0 bottom-0 h-[30%] bg-[linear-gradient(180deg,#121114,#08080a)] shadow-[0_-1px_0_rgba(186,176,159,0.18)]" />
-      <span className="absolute inset-0 bg-[radial-gradient(120%_80%_at_50%_40%,transparent_45%,rgba(0,0,0,0.7))]" />
-    </div>
-  )
-}
+/**
+ * Fundos da casa, pintados (infra/arte `casa-oficina` v03): estante, janela com a lua e a mesa de confecção sob a
+ * vela. O quadro 2:3 cobre o cômodo (como object-cover) para o ponto clicável ficar sempre sobre a mesa da pintura.
+ */
+const QUADRO_FUNDOS: CSSProperties = { width: 'max(100cqw, 66.667cqh)', aspectRatio: '2 / 3', left: '50%', top: '50%', transform: 'translate(-50%, -50%)' }
 
-/** A mesa de confecção pintada (infra/arte `casa-mesa-confeccao` v02, sem fundo), com a luz da vela por trás. */
-function MesaConfeccao({ className }: { className?: string }) {
+function Fundos({ pendentes, onMesa }: { pendentes: number; onMesa: () => void }) {
   return (
-    <span className={cn('relative block', className)}>
-      <span aria-hidden="true" className="absolute inset-x-[10%] bottom-[6%] h-[18%] rounded-[50%] bg-black/70 blur-md" />
-      <span aria-hidden="true" className="absolute left-[60%] top-[8%] size-[30%] rounded-full bg-[radial-gradient(closest-side,rgba(243,226,176,0.28),transparent)]" />
+    <div className="absolute" style={QUADRO_FUNDOS}>
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
-        src="/images/casa/mesa-768.webp"
-        srcSet="/images/casa/mesa-512.webp 512w, /images/casa/mesa-768.webp 768w, /images/casa/mesa-1024.webp 1024w, /images/casa/mesa-1536.webp 1536w"
-        sizes="(min-width: 768px) 420px, 80vw"
+        src="/images/casa/oficina-768.webp"
+        srcSet="/images/casa/oficina-512.webp 512w, /images/casa/oficina-768.webp 768w, /images/casa/oficina-1024.webp 1024w, /images/casa/oficina-1536.webp 1536w"
+        sizes="max(100vw, 66.667dvh)"
         alt=""
-        className="relative w-full drop-shadow-[0_10px_18px_rgba(0,0,0,0.6)]"
+        className="absolute inset-0 size-full"
       />
-    </span>
+      {/* a vela respira por cima da pintura */}
+      <span aria-hidden="true" className="casa-vela absolute left-[70%] top-[33%] size-[22%] rounded-full bg-[radial-gradient(closest-side,rgba(243,214,150,0.32),transparent)] mix-blend-screen" />
+      <span aria-hidden="true" className="absolute inset-0 bg-[radial-gradient(110%_80%_at_50%_55%,transparent_45%,rgba(0,0,0,0.6))]" />
+      {/* a própria mesa da pintura é o ponto clicável */}
+      <button
+        type="button"
+        onClick={onMesa}
+        aria-label={`Mesa de confecção${pendentes ? `: ${pendentes} em andamento` : ''}`}
+        className="dv-focus group absolute left-[5%] top-[49%] h-[33%] w-[89%] rounded-[8%]"
+      >
+        <span aria-hidden="true" className="casa-brilho absolute inset-[6%] rounded-[50%] bg-[radial-gradient(closest-side,rgba(194,185,236,0.18),transparent)] transition-opacity duration-300 group-hover:opacity-100" />
+        {pendentes > 0 && (
+          <span className="absolute right-[8%] top-[4%] grid min-w-6 place-items-center rounded-full bg-dv-amethyst px-1.5 font-mono text-[11px] text-white shadow-[0_0_10px_var(--dv-amethyst)]">{pendentes}</span>
+        )}
+        <span className="absolute inset-x-0 -bottom-[14%] flex flex-col items-center gap-0.5">
+          <span className="flex items-center gap-2 font-display text-[15px] font-semibold uppercase tracking-[0.12em] text-dv-text [text-shadow:0_2px_8px_#000]">
+            <span aria-hidden="true" className="size-1.5 rotate-45 bg-dv-amethyst shadow-[0_0_8px_var(--dv-amethyst)]" />
+            Mesa de confecção
+            <span aria-hidden="true" className="size-1.5 rotate-45 bg-dv-amethyst shadow-[0_0_8px_var(--dv-amethyst)]" />
+          </span>
+          <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-dv-text-2 [text-shadow:0_1px_4px_#000]">Toque para usar</span>
+        </span>
+      </button>
+    </div>
   )
 }
 
