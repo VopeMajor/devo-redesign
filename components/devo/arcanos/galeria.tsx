@@ -2,9 +2,9 @@
 
 import { ChevronLeft, ChevronRight, Lock } from 'lucide-react'
 import { type CSSProperties, type KeyboardEvent, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
-import type { ArcanoVista } from '@/lib/devo/virtudes'
+import { type ArcanoVista, numeralEstagio, type VirtudesPayload } from '@/lib/devo/virtudes'
 import { Button } from '../kit/button'
-import { toRoman } from '../kit'
+import { DespertarArcano } from './evolucao'
 import { prng, reduzMovimento, sentir } from './fx'
 import { Cartela, Moldura } from './moldura'
 
@@ -26,14 +26,15 @@ const POEIRA = (() => {
 export function Galeria({
   lista,
   inicial,
-  estagio,
+  d,
   onIndice,
   onAbrir,
   semVt,
 }: {
   lista: ArcanoVista[]
   inicial: number
-  estagio: number
+  /** Payload inteiro: saldo de Grandes Fragmentos e acesso da equipe (botão de despertar). */
+  d: Extract<VirtudesPayload, { liberado: true }>
   onIndice: (i: number) => void
   onAbrir: (i: number) => void
   /** Durante a transição para o altar o nome compartilhado sai do carrossel. */
@@ -147,7 +148,7 @@ export function Galeria({
                 }}
                 role="group"
                 aria-roledescription="Arcano"
-                aria-label={`${x.numeral} · ${nomeCurto(x.titulo)}${x.proprio ? ', seu Arcano' : abre ? '' : ' (trancado)'}`}
+                aria-label={`${x.numeral} · ${nomeCurto(x.titulo)}${x.proprio ? ', seu Arcano' : x.posse ? ', despertado' : abre ? '' : ' (trancado)'}`}
                 className="relative -mx-[calc(var(--card)*0.13)] w-[var(--card)] shrink-0 snap-center"
                 style={{ '--t': i === inicial ? 0 : 1, '--s': i < inicial ? -1 : 1 } as CSSProperties}
               >
@@ -158,7 +159,7 @@ export function Galeria({
                   onClick={() => (i === idx ? abre && onAbrir(i) : irPara(i))}
                   className="block w-full origin-center [transform:perspective(900px)_translateY(calc(min(var(--t),1)*10px))_rotateY(calc(var(--s)*min(var(--t),1)*-38deg))_scale(calc(1-min(var(--t),1)*0.26))] [filter:grayscale(min(var(--t),1))_brightness(calc(1-min(var(--t),1)*0.55))_blur(calc(min(var(--t),1)*1px))]"
                 >
-                  <Moldura arcano={x.key} modo={abre ? 'cor' : 'pedra'} aceso={x.proprio || (abre && i === idx)} carregar={Math.abs(i - idx) <= 1} vt={i === idx && !semVt ? VT_FIGURA : undefined} />
+                  <Moldura arcano={x.key} modo={abre ? 'cor' : 'pedra'} aceso={!!x.posse || (abre && i === idx)} carregar={Math.abs(i - idx) <= 1} vt={i === idx && !semVt ? VT_FIGURA : undefined} />
                 </button>
               </li>
             )
@@ -180,7 +181,11 @@ export function Galeria({
                     {nomeCurto(a.titulo)}
                     {!aberto && <Lock aria-label="trancado" className="size-4 text-dv-text-3" strokeWidth={1.75} />}
                   </h2>
-                  {a.proprio && <p className="dv-label mt-0.5 text-[9.5px] text-dv-amethyst-text">Seu Arcano · Estágio {toRoman(estagio)}</p>}
+                  {a.posse && (
+                    <p className="dv-label mt-0.5 text-[9.5px] text-dv-amethyst-text">
+                      {a.posse.original ? 'Seu Arcano' : 'Despertado'} · Estágio {numeralEstagio(a.posse.estagio)}
+                    </p>
+                  )}
                   <p className="mx-auto mt-1.5 max-w-[30ch] font-body text-[14.5px] leading-snug text-dv-text-2">{a.breve}</p>
                 </div>
               </Cartela>
@@ -194,8 +199,10 @@ export function Galeria({
           {a &&
             (aberto ? (
               <Button size="sm" onClick={() => onAbrir(idx)}>
-                {a.proprio ? 'Abrir seu Arcano' : 'Abrir'}
+                {a.proprio ? 'Abrir seu Arcano' : a.posse ? 'Abrir Arcano despertado' : 'Abrir'}
               </Button>
+            ) : d.grandesFragmentos > 0 ? (
+              <DespertarArcano key={a.key} a={a} d={d} compacto />
             ) : (
               <p className="self-center font-mono text-[10.5px] uppercase tracking-[0.16em] text-dv-text-3">Selado · só o portador conhece o resto</p>
             ))}

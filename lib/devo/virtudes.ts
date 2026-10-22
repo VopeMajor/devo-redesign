@@ -38,7 +38,10 @@ export const TEXTOS_VIRTUDES = {
   fecho: 'Seja um destaque naquilo que faz de melhor e não se compare aos outros.',
 } as const
 
-/** Os 22 Arcanos maiores (numeração do tarô). Chaves estáveis: `imperador` é o Arcano do Galo. */
+/**
+ * Os 22 Arcanos maiores, na numeração do tarô de Marselha (Justiça VIII, Força XI: o dono, 22/10, "a 11ª (XI)
+ * carta"). O numeral sai da posição na lista. Chaves estáveis: `imperador` é o Arcano do Galo.
+ */
 export const ARCANOS = [
   ['louco', 'Arcano do Louco'],
   ['mago', 'Arcano do Mago'],
@@ -48,10 +51,10 @@ export const ARCANOS = [
   ['hierofante', 'Arcano do Hierofante'],
   ['enamorados', 'Arcano dos Enamorados'],
   ['carro', 'Arcano do Carro'],
-  ['forca', 'Arcano da Força'],
+  ['justica', 'Arcano da Justiça'],
   ['eremita', 'Arcano do Eremita'],
   ['fortuna', 'Arcano da Roda da Fortuna'],
-  ['justica', 'Arcano da Justiça'],
+  ['forca', 'Arcano da Força'],
   ['enforcado', 'Arcano do Enforcado'],
   ['morte', 'Arcano da Morte'],
   ['temperanca', 'Arcano da Temperança'],
@@ -72,6 +75,23 @@ export function arcanoInfo(key: ArcanoKey) {
   return { key, titulo: ARCANOS[i][1], numeral: NUMERAIS[i] }
 }
 export type ArcanoInfo = ReturnType<typeof arcanoInfo>
+
+/* ------------------------------------------------------------------ Estágios 0..VII (dono, 22/10) */
+
+/** Último Estágio. O 0 ("A Essência") vem com o Arcano; do I ao VII paga-se em Fragmentos Arcanos. */
+export const ESTAGIO_MAX = 7
+/** Fragmentos Arcanos para CHEGAR a cada Estágio (índice = Estágio). O 0 não se compra. */
+export const CUSTO_ESTAGIO = [0, 25, 50, 100, 200, 400, 800, 1600] as const
+export const ITEM_FRAGMENTO = 'fragmento_arcano'
+export const ITEM_GRANDE_FRAGMENTO = 'grande_fragmento_arcano'
+/** Custo para ir do Estágio `atual` ao seguinte (null no último). */
+export function custoDoProximo(atual: number): number | null {
+  return atual >= ESTAGIO_MAX ? null : CUSTO_ESTAGIO[Math.max(0, atual) + 1]
+}
+/** Numeral do Estágio: "0" para a Essência, romano do I em diante. */
+export function numeralEstagio(n: number): string {
+  return n <= 0 ? '0' : NUMERAIS[Math.min(n, NUMERAIS.length - 1)]
+}
 
 /* ------------------------------------------------------------------ Afinidade (qualitativa) */
 
@@ -108,13 +128,14 @@ export type EstagiosConfig = { padrao: EstagioLimite[]; porArcano: Record<string
 export type EvolucaoConfig = { peso_direcao: number; fragmentos: number }
 
 export const AFINIDADES_PADRAO = padrao as AfinidadesConfig
+/** Teto de P.P. por Estágio (0..; além da última linha vale a última). O mínimo ficou só de referência. */
 export const ESTAGIOS_PADRAO: EstagiosConfig = {
   padrao: [
-    { estagio: 1, minimo: 30, teto: 100 },
-    { estagio: 2, minimo: 60, teto: 160 },
-    { estagio: 3, minimo: 100, teto: 240 },
-    { estagio: 4, minimo: 150, teto: 340 },
-    { estagio: 5, minimo: 210, teto: 460 },
+    { estagio: 0, minimo: 30, teto: 100 },
+    { estagio: 1, minimo: 60, teto: 160 },
+    { estagio: 2, minimo: 100, teto: 240 },
+    { estagio: 3, minimo: 150, teto: 340 },
+    { estagio: 4, minimo: 210, teto: 460 },
   ],
   porArcano: {},
 }
@@ -127,13 +148,15 @@ export function ordemValida(o: unknown): o is OrdemArcano {
   return vals.every((n) => Number.isInteger(n)) && [...(vals as number[])].sort().join() === '1,2,3,4,5,6'
 }
 
-/** Limites do Estágio para o Arcano (override por Arcano; senão o padrão; além do último, o último). */
+/**
+ * Limites de P.P. do Estágio para o Arcano (override por Arcano; senão o padrão). Vale a linha mais alta que não
+ * passa do Estágio (abaixo da primeira, a primeira). `ultimo` = Estágio VII (mesma conta de devo_virtude_limite).
+ */
 export function limitesDoEstagio(cfg: EstagiosConfig, arcano: string | null, estagio: number): EstagioLimite & { ultimo: boolean } {
   const tabela = (arcano && cfg.porArcano?.[arcano]?.length ? cfg.porArcano[arcano] : cfg.padrao) ?? ESTAGIOS_PADRAO.padrao
-  const ord = [...tabela].sort((a, b) => a.estagio - b.estagio)
-  const max = ord[ord.length - 1]?.estagio ?? 1
-  const l = ord.find((x) => x.estagio === estagio) ?? ord[ord.length - 1]
-  return { ...l, estagio, ultimo: estagio >= max }
+  const ord = [...(tabela.length ? tabela : ESTAGIOS_PADRAO.padrao)].sort((a, b) => a.estagio - b.estagio)
+  const l = [...ord].reverse().find((x) => x.estagio <= estagio) ?? ord[0]
+  return { ...l, estagio, ultimo: estagio >= ESTAGIO_MAX }
 }
 
 /* ------------------------------------------------------------------ Evolução de Estágio */
@@ -180,22 +203,27 @@ export function acumuloQualitativo(total: number, minimo: number, teto: number):
 
 export type VirtudeVista = { key: VirtudeKey; nome: string; antiga: boolean; texto: string; afinidade: Afinidade | null }
 /**
- * Um Arcano na lista "Os vinte e dois". Trancado (não é o do jogador): SÓ key, numeral, título e a frase breve.
- * O do jogador (e todos, para Owner/Anfitrião) traz `detalhe`. Estágios futuros do próprio Arcano vêm só com o
- * nome (sem `linha`) para quem não é da equipe. `provisorio` só vai para o Owner.
+ * Um Arcano na lista "Os vinte e dois". Trancado (o jogador não tem): SÓ key, numeral, título e a frase breve.
+ * Os que o jogador tem (e todos, para Owner/Anfitrião) trazem `detalhe`; `posse` diz o Estágio daquele Arcano e
+ * se é o original (`proprio`, o que define as Virtudes). Estágios futuros vêm só com o nome (sem `linha` nem
+ * `texto`) para quem não é da equipe. `revelado: false` = o dono ainda não escreveu (nome vazio).
+ * `provisorio` só vai para o Owner.
  */
-export type EstagioVista = { nome: string; linha?: string; estado: 'passado' | 'atual' | 'futuro' | 'aberto' }
+export type EstagioVista = { numero: number; nome: string; revelado: boolean; linha?: string; texto?: string; estado: 'passado' | 'atual' | 'futuro' | 'aberto' }
+export type PosseArcano = { estagio: number; original: boolean }
 export type ArcanoVista = {
   key: ArcanoKey
   numeral: string
   titulo: string
   breve: string
   proprio?: true
+  posse?: PosseArcano
   provisorio?: boolean
   detalhe?: { descricao: string; fisiologia: string; excelente: VirtudeKey | null; deficiente: VirtudeKey | null; estagios: EstagioVista[] }
 }
 
-export type EvolucaoVista = { at: number; de: number; para: number; arcano: string | null; maisCresceu: VirtudeKey; menosCresceu: VirtudeKey }
+/** `maisCresceu`/`menosCresceu` null = não havia P.P. para espalhar naquela Evolução. */
+export type EvolucaoVista = { at: number; de: number; para: number; arcano: string | null; maisCresceu: VirtudeKey | null; menosCresceu: VirtudeKey | null }
 
 /** GET /api/virtudes (jogador). Sem números de P.P., multiplicadores, teto ou mínimo. */
 export type VirtudesPayload =
@@ -212,6 +240,9 @@ export type VirtudesPayload =
       evolucoes: EvolucaoVista[]
       /** Os 22 Arcanos, na ordem do tarô. */
       arcanos: ArcanoVista[]
+      /** Saldo de Fragmentos Arcanos (pagam os Estágios) e de Grandes Fragmentos (despertam outro Arcano). */
+      fragmentos: number
+      grandesFragmentos: number
       /** Owner/Anfitrião: todos expansíveis. */
       verTodos: boolean
     }
@@ -221,6 +252,10 @@ export type MesaJogador = {
   nome: string
   arcano: ArcanoKey | null
   estagio: number
+  /** Todos os Arcanos que o jogador tem, cada um com o seu Estágio (o original primeiro). */
+  arcanos: { key: ArcanoKey; estagio: number; original: boolean; origem: string | null }[]
+  fragmentos: number
+  grandesFragmentos: number
   pp: Record<VirtudeKey, number>
   total: number
   minimo: number
@@ -247,4 +282,7 @@ export type VirtudesMesa = {
   }
 }
 
-export type EvolucaoResultado = { ok: true; de: number; para: number; total: number; ganhos: Record<VirtudeKey, number> }
+/** Evolução de Estágio. `total`/`ganhos` só vêm para a equipe (o jogador não vê números de P.P.). */
+export type EvolucaoResultado = { ok: true; arcano: ArcanoKey; de: number; para: number; original: boolean; total?: number; ganhos?: Record<VirtudeKey, number> }
+/** Resposta do jogador ao evoluir ou despertar (sem P.P.). */
+export type ArcanoAcaoResultado = { ok: true; arcano: ArcanoKey; estagio: number; fragmentos: number; grandesFragmentos: number; jaFeito?: boolean }

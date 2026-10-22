@@ -7,6 +7,7 @@ import { HudCode, RecordPanel, Reveal } from '@/components/devo/kit'
 import { playSfx } from '@/lib/devo/audio'
 import { type Cargo, CARGO_LABEL } from '@/lib/devo/cargos'
 import { UNLOCK_FLAGS, UNLOCK_LABEL, type UnlockFlag } from '@/lib/devo/progresso'
+import { numeralEstagio } from '@/lib/devo/virtudes'
 import type { EquipeMembro, JogadorLinha, PlayerSummary } from '@/lib/devo/permissoes-server'
 import { cn } from '@/lib/utils'
 import { useStaffBoard } from './dealer-board'
@@ -337,8 +338,8 @@ function PlayerDetail({ id, role, row }: { id: string; role: Cargo; row: Jogador
     <div className="animate-dv-rise flex flex-col gap-3 px-2 pb-4 pt-1">
       <dl className="grid grid-cols-2 gap-x-5 bg-[color:var(--in-porcelain)] px-3 py-1 shadow-[inset_0_0_0_1px_var(--in-line)]">
         <DataRow label="Cartas" value={data.cartas} />
-        <DataRow label="Fragmentos" value={data.fragmentos} />
-        <DataRow label="Arcano" value={data.arcano ?? '—'} hint={data.arcano ? `Estágio ${data.estagio}` : 'sem registro'} />
+        <DataRow label="Fragmentos Arcanos" value={data.fragmentos} />
+        <DataRow label="Arcano" value={data.arcano ?? '—'} hint={data.arcano ? `Estágio ${numeralEstagio(data.estagio)}` : 'sem registro'} />
         <DataRow label="P.P." value={data.pontosPotencial ?? '—'} hint={data.pontosPotencial === null ? 'sem registro' : undefined} />
       </dl>
       <div className="flex flex-col gap-1.5">

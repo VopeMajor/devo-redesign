@@ -3,10 +3,10 @@
 import { ChevronLeft } from 'lucide-react'
 import { type CSSProperties, type ReactNode, useEffect, useMemo, useRef, useState } from 'react'
 import { ALTAR, arteDe, comum, FIGURA } from '@/lib/devo/arcanos-arte'
-import { type ArcanoVista, type EstagioVista, VIRTUDES } from '@/lib/devo/virtudes'
+import { type ArcanoVista, type EstagioVista, numeralEstagio, VIRTUDES, type VirtudesPayload } from '@/lib/devo/virtudes'
 import { cn } from '@/lib/utils'
-import { toRoman } from '../kit'
 import { Naipe } from '../virtudes/naipes'
+import { DespertarArcano, EvolucaoArcano, nomeDoEstagio, TextoRico } from './evolucao'
 import { prng } from './fx'
 import { VT_FIGURA } from './galeria'
 import { Cartela, Medalhao, Retrato, TituloOrnado } from './moldura'
@@ -14,14 +14,18 @@ import { Cartela, Medalhao, Retrato, TituloOrnado } from './moldura'
 /**
  * Detalhe no altar (ref-07, sem copiar): parede de mármore, rosácea de vitral em ametista com a luz passando
  * (fachos que respiram), colunas, a figura num nicho com brilho suave e luz de contorno, degraus com velas que
- * tremulam, fumaça e brasas subindo. Por cima, em painéis: Descrição, Fisiologia (mais natural / mais custosa) e
- * a linha dos Estágios (medalhões ligados por um fio: alcançados em aço, o atual em ametista pulsando, os
- * seguintes velados). A figura é o elemento compartilhado com a moldura da galeria (View Transitions).
+ * tremulam, fumaça e brasas subindo. Por cima, em painéis: Descrição, Fisiologia (mais natural / mais custosa),
+ * Evolução (Estágio do Arcano, Fragmentos Arcanos e o botão de evoluir) ou Despertar (Grande Fragmento Arcano), e
+ * a linha dos Estágios 0..VII (medalhões ligados por um fio: alcançados em aço, o atual em ametista pulsando, os
+ * seguintes velados; o texto longo de cada Estágio abre por baixo). A figura é o elemento compartilhado com a
+ * moldura da galeria (View Transitions).
  */
+
+type Liberado = Extract<VirtudesPayload, { liberado: true }>
 
 const nomeCurto = (t: string) => t.replace(/^Arcano d[aoe]s? /, '')
 
-export function Altar({ a, estagio, voltar }: { a: ArcanoVista; estagio: number; voltar: () => void }) {
+export function Altar({ a, d: payload, voltar }: { a: ArcanoVista; d: Liberado; voltar: () => void }) {
   const d = a.detalhe!
   const topo = useRef<HTMLHeadingElement>(null)
   const altarArte = comum('altar')
@@ -35,8 +39,9 @@ export function Altar({ a, estagio, voltar }: { a: ArcanoVista; estagio: number;
                 </h2>
                 <p className="dv-label mt-1.5 text-[9.5px] text-dv-gold">
                   Arcano {a.numeral}
-                  {a.proprio ? ` · Estágio ${toRoman(estagio)}` : ''}
+                  {a.posse ? ` · Estágio ${numeralEstagio(a.posse.estagio)}` : ''}
                 </p>
+                {a.posse && <p className="dv-label mt-0.5 text-[9px] text-dv-amethyst-text">{a.posse.original ? 'Seu Arcano original' : 'Arcano despertado'}</p>}
                 {a.provisorio && <span className="mt-1.5 inline-flex h-5 items-center px-1.5 font-mono text-[9px] uppercase tracking-[0.14em] text-dv-gold shadow-[inset_0_0_0_1px_var(--dv-line-gold)]">Texto provisório</span>}
               </div>
             </Cartela>
@@ -87,10 +92,10 @@ export function Altar({ a, estagio, voltar }: { a: ArcanoVista; estagio: number;
         <div className="relative mx-auto flex max-w-md flex-col gap-4 px-4 pb-12 pt-2">
           <p className="arc-entra mx-auto max-w-[32ch] text-center font-body text-[16px] italic leading-relaxed text-dv-text-2">{a.breve}</p>
           <Painel titulo="Descrição" atraso={0.05}>
-            <p className="font-body text-[15.5px] leading-relaxed text-dv-text">{d.descricao}</p>
+            <TextoRico texto={d.descricao} className="text-dv-text" />
           </Painel>
           <Painel titulo="Fisiologia" atraso={0.12}>
-            <p className="font-body text-[15.5px] leading-relaxed text-dv-text">{d.fisiologia}</p>
+            <TextoRico texto={d.fisiologia} className="text-dv-text" />
             {(d.excelente || d.deficiente) && (
               <div className="mt-3.5 grid grid-cols-2 gap-2">
                 {d.excelente && (
@@ -115,6 +120,15 @@ export function Altar({ a, estagio, voltar }: { a: ArcanoVista; estagio: number;
               </div>
             )}
           </Painel>
+          {a.posse ? (
+            <Painel titulo="Evolução" atraso={0.16}>
+              <EvolucaoArcano a={a} d={payload} />
+            </Painel>
+          ) : (
+            <Painel titulo="Despertar" atraso={0.16}>
+              <DespertarArcano a={a} d={payload} />
+            </Painel>
+          )}
           <Painel titulo="Estágios de evolução" atraso={0.2}>
             <Linha estagios={d.estagios} />
           </Painel>
@@ -139,7 +153,10 @@ function Painel({ titulo, atraso, children }: { titulo: string; atraso: number; 
   )
 }
 
-/** Linha dos Estágios: medalhões ligados por um fio (inteiro até o atual, tracejado depois). */
+/**
+ * Linha dos Estágios 0..VII: medalhões ligados por um fio (inteiro até o atual, tracejado depois). O texto longo
+ * de cada Estágio (quando há) abre por baixo; o do atual já vem aberto. Estágio sem nome = ainda não revelado.
+ */
 function Linha({ estagios }: { estagios: EstagioVista[] }) {
   const atual = estagios.findIndex((e) => e.estado === 'atual')
   const ate = atual >= 0 ? atual : estagios.every((e) => e.estado === 'aberto') ? estagios.length - 1 : -1
@@ -149,29 +166,43 @@ function Linha({ estagios }: { estagios: EstagioVista[] }) {
         const futuro = e.estado === 'futuro'
         const cur = e.estado === 'atual'
         const ultimo = i === estagios.length - 1
+        const tom = cur ? 'text-dv-text' : futuro ? 'text-dv-text-3' : 'text-dv-text-2'
         return (
-          <li key={i} aria-current={cur ? 'step' : undefined} className="relative flex gap-3.5 pb-4 last:pb-0">
+          <li key={e.numero} aria-current={cur ? 'step' : undefined} className="relative flex gap-3.5 pb-4 last:pb-0">
             {!ultimo && (
               <span
                 aria-hidden="true"
                 className={cn('absolute left-[21px] top-11 -bottom-0 w-[2px]', i < ate ? 'bg-[linear-gradient(180deg,var(--dv-gold-bright),var(--dv-gold))]' : 'bg-[repeating-linear-gradient(180deg,var(--dv-line-strong)_0_4px,transparent_4px_8px)]')}
               />
             )}
-            <Medalhao estado={cur ? 'aceso' : futuro ? 'apagado' : 'aberto'} pulso={cur} className="size-11 shrink-0">
-              <span className={cn('font-impact text-[15px] font-semibold leading-none', cur ? 'text-dv-gold-bright' : futuro ? 'text-dv-text-3' : 'dv-brass-text')}>{toRoman(i + 1)}</span>
+            <Medalhao estado={cur ? 'aceso' : futuro || !e.revelado ? 'apagado' : 'aberto'} pulso={cur} className="size-11 shrink-0">
+              <span className={cn('font-impact text-[15px] font-semibold leading-none', cur ? 'text-dv-gold-bright' : futuro ? 'text-dv-text-3' : 'dv-brass-text')}>{numeralEstagio(e.numero)}</span>
             </Medalhao>
             <div className={cn('min-w-0 flex-1 pt-1', cur && '-mr-1 bg-[linear-gradient(90deg,color-mix(in_oklab,var(--dv-amethyst)_16%,transparent),transparent)] px-2 py-1.5')}>
               <p className="flex flex-wrap items-baseline gap-x-2">
-                <span className={cn('font-display text-[15.5px] font-semibold uppercase tracking-[0.08em]', cur ? 'text-dv-text' : futuro ? 'text-dv-text-3' : 'text-dv-text-2')}>{e.nome}</span>
+                <span className="sr-only">Estágio {numeralEstagio(e.numero)}: </span>
+                <span className={cn('font-display text-[15.5px] font-semibold uppercase tracking-[0.08em]', !e.revelado && 'font-body text-[15px] normal-case italic tracking-normal', tom)}>
+                  {nomeDoEstagio(e.nome)}
+                </span>
                 {cur && <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-dv-amethyst-text">Atual</span>}
                 {e.estado === 'passado' && <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-dv-gold">Alcançado</span>}
                 {futuro && <span className="sr-only">(ainda não alcançado)</span>}
               </p>
               {e.linha ? (
-                <p className={cn('mt-0.5 font-body text-[15px] leading-relaxed', cur ? 'text-dv-text' : futuro ? 'text-dv-text-3' : 'text-dv-text-2')}>{e.linha}</p>
-              ) : futuro ? (
+                <p className={cn('mt-0.5 font-body text-[15px] leading-relaxed', tom)}>{e.linha}</p>
+              ) : futuro && e.revelado ? (
                 <p className="mt-0.5 font-body text-[14px] italic leading-relaxed text-dv-text-3">Ainda velado.</p>
               ) : null}
+              {e.texto && (
+                <details open={cur} className="group/est mt-1.5">
+                  <summary className="dv-focus flex min-h-11 cursor-pointer list-none items-center gap-1.5 font-mono text-[10.5px] uppercase tracking-[0.16em] text-dv-gold [&::-webkit-details-marker]:hidden">
+                    <span aria-hidden="true" className="inline-block transition-transform group-open/est:rotate-90">›</span>
+                    <span className="group-open/est:hidden">Ler o Estágio</span>
+                    <span className="hidden group-open/est:inline">Fechar</span>
+                  </summary>
+                  <TextoRico texto={e.texto} className={cn('pb-1 pt-1', tom)} />
+                </details>
+              )}
             </div>
           </li>
         )

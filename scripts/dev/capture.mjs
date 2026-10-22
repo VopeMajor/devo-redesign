@@ -3650,7 +3650,7 @@ if (want('virtudes')) {
     await wait(500)
     await shot(B.page, 'v07-home-liberado')
     await abrirVirtudes(B.page)
-    await shot(B.page, 'v08-morte-roda', 'Arcano da Morte, Estágio I')
+    await shot(B.page, 'v08-morte-roda', 'Arcano da Morte, Estágio 0 (A Essência)')
     await ir(B.page, 'Perto do limite')
     await shot(B.page, 'v09-evolucao-antes', 'P.P. perto do limite, pronto para a metamorfose')
     await ir(B.page, 'Bases claras')
