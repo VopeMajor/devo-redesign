@@ -24,10 +24,10 @@
       1024
     ],
     "recorte_da_figura": [
-      0.2773,
-      0.599,
-      0.7285,
-      1.0
+      0.2705,
+      0.0417,
+      0.7217,
+      0.4427
     ]
   },
   "sigilo": {
@@ -45,8 +45,8 @@
     }
   },
   "origem": {
-    "pedido": "arcano-enforcado-tarot",
-    "variacao": "v03",
-    "png": "arcano-enforcado-tarot--v03--1536.png"
+    "pedido": "arcano-enforcado",
+    "variacao": "v02",
+    "png": "arcano-enforcado--v02--1536.png"
   }
 }

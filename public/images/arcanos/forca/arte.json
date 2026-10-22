@@ -24,9 +24,9 @@
       1024
     ],
     "recorte_da_figura": [
-      0.1963,
+      0.291,
       0.0417,
-      0.6475,
+      0.7422,
       0.4427
     ]
   },
@@ -45,8 +45,8 @@
     }
   },
   "origem": {
-    "pedido": "arcano-forca-tarot2",
-    "variacao": "v01",
-    "png": "arcano-forca-tarot2--v01--1536.png"
+    "pedido": "arcano-forca",
+    "variacao": "v02",
+    "png": "arcano-forca--v02--1536.png"
   }
 }

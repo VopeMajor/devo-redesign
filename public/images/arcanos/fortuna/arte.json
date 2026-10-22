@@ -24,9 +24,9 @@
       1024
     ],
     "recorte_da_figura": [
-      0.2666,
+      0.2891,
       0.0417,
-      0.7178,
+      0.7402,
       0.4427
     ]
   },
@@ -45,8 +45,8 @@
     }
   },
   "origem": {
-    "pedido": "arcano-fortuna-tarot",
+    "pedido": "arcano-fortuna",
     "variacao": "v03",
-    "png": "arcano-fortuna-tarot--v03--1536.png"
+    "png": "arcano-fortuna--v03--1536.png"
   }
 }

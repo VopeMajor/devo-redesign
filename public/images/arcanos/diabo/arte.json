@@ -24,9 +24,9 @@
       1024
     ],
     "recorte_da_figura": [
-      0.2705,
+      0.2939,
       0.0417,
-      0.7217,
+      0.7451,
       0.4427
     ]
   },
@@ -45,8 +45,8 @@
     }
   },
   "origem": {
-    "pedido": "arcano-diabo-tarot",
-    "variacao": "v02",
-    "png": "arcano-diabo-tarot--v02--1536.png"
+    "pedido": "arcano-diabo",
+    "variacao": "v01",
+    "png": "arcano-diabo--v01--1536.png"
   }
 }
