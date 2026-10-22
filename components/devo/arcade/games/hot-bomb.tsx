@@ -201,8 +201,9 @@ export default function HotBomb({ start, settings, onFinish, onQuit }: GameProps
     }
 
     /* ===== Cena ===== */
-    const rd = new THREE.WebGLRenderer({ antialias: quality !== 'low' })
-    rd.setPixelRatio(Math.min(devicePixelRatio, quality === 'low' ? 1 : 2))
+    const rd = new THREE.WebGLRenderer({ antialias: quality !== 'low', powerPreference: 'high-performance' })
+    let dpr = Math.min(devicePixelRatio, quality === 'low' ? 1 : 2)
+    rd.setPixelRatio(dpr)
     rd.shadowMap.enabled = shadows
     rd.shadowMap.type = THREE.PCFSoftShadowMap
     host.appendChild(rd.domElement)
@@ -1044,7 +1045,9 @@ export default function HotBomb({ start, settings, onFinish, onQuit }: GameProps
           p.vz += ((p.z - pz) / Math.max(dt, 0.001) - p.vz) * k2
         }
       }
-      me.current = { x: ME.x, y: ME.y, z: ME.z }
+      me.current.x = ME.x
+      me.current.y = ME.y
+      me.current.z = ME.z
 
       const a = P[0]
       const b = P[1]
@@ -1264,9 +1267,11 @@ export default function HotBomb({ start, settings, onFinish, onQuit }: GameProps
       L2.position.set(Math.cos(T * 0.9 + 3.14) * 10, 5, Math.sin(T * 0.9 + 3.14) * 10)
       bgc.setHSL(0.7, 0.12, 0.014 + 0.004 * Math.sin(T * 0.3))
       ;(scene.fog as THREE.Fog).color.copy(bgc)
+      let liveParts = false
       for (let i = 0; i < NP; i++) {
         const p = pd[i]
         if (p.l > 0) {
+          liveParts = true
           p.l -= dt
           p.vy -= 14 * dt
           p.x += p.vx * dt
@@ -1284,7 +1289,8 @@ export default function HotBomb({ start, settings, onFinish, onQuit }: GameProps
           }
         }
       }
-      pm.instanceMatrix.needsUpdate = true
+      // Sem partículas vivas a matriz não muda: não reenviar 360 instâncias à GPU a cada quadro.
+      if (liveParts) pm.instanceMatrix.needsUpdate = true
       const sk = shake * 0.5
       cam.position.set(camP.x + rnd(-sk, sk), camP.y + rnd(-sk, sk), camP.z)
       cam.lookAt(0, 0, 0)
@@ -1340,9 +1346,31 @@ export default function HotBomb({ start, settings, onFinish, onQuit }: GameProps
 
     let raf = 0
     let prev = performance.now()
+    // Qualidade automática: se o aparelho não sustenta o quadro (comum em celulares com tela de
+    // densidade 3), baixa a resolução interna do canvas em degraus até ficar fluido. Nada muda
+    // em quem já roda liso.
+    let slowAvg = 16
+    let slowSince = 0
+    const adapt = (ms: number, t: number) => {
+      if (quality !== 'auto' || dpr <= 1) return
+      slowAvg += (Math.min(ms, 100) - slowAvg) * 0.05
+      if (slowAvg < 24) {
+        slowSince = 0
+        return
+      }
+      if (!slowSince) slowSince = t
+      if (t - slowSince < 2000) return
+      dpr = Math.max(1, dpr > 1.5 ? 1.5 : dpr - 0.25)
+      rd.setPixelRatio(dpr)
+      resize()
+      slowSince = 0
+      slowAvg = 16
+    }
     const loop = (t: number) => {
-      const dt = Math.min((t - prev) / 1000, 0.05)
+      const ms = t - prev
+      const dt = Math.min(ms / 1000, 0.05)
       prev = t
+      if (!document.hidden) adapt(ms, t)
       update(dt)
       rd.render(scene, cam)
       raf = requestAnimationFrame(loop)

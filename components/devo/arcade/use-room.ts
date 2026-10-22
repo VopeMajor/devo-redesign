@@ -16,10 +16,30 @@ export function useRoom(start: MatchStart, intervalMs: number, heartbeat?: () =>
   const beat = useRef(heartbeat)
   beat.current = heartbeat
   const [error, setError] = useState<string | null>(null)
+  /**
+   * A consulta periódica e as ações correm em paralelo. Sem ordem, uma resposta antiga que chega
+   * depois de uma nova desfazia o estado por um instante (a bomba "voltava" de mão e o efeito de
+   * passe disparava de novo). Cada requisição leva um número; só vale a mais recente que voltou.
+   */
+  const sent = useRef(0)
+  const applied = useRef(0)
+  const latest = useRef<RoomPoll | undefined>(undefined)
+  const request = useCallback(
+    async (a?: Act) => {
+      const seq = ++sent.current
+      const next = await pollRoom(start.roomId!, a)
+      if (seq < applied.current) return { next: latest.current ?? next, fresh: false }
+      applied.current = seq
+      latest.current = next
+      offset.current = next.serverNow - Date.now()
+      return { next, fresh: true }
+    },
+    [start.roomId],
+  )
 
   const { data, mutate } = useSWR<RoomPoll>(
     online ? ['arcade-room', start.roomId] : null,
-    () => pollRoom(start.roomId!, beat.current?.()),
+    async () => (await request(beat.current?.())).next,
     {
       refreshInterval: (d) => (d?.status === 'finished' || d?.status === 'cancelled' ? 0 : intervalMs),
       dedupingInterval: 0,
@@ -27,10 +47,7 @@ export function useRoom(start: MatchStart, intervalMs: number, heartbeat?: () =>
       refreshWhenOffline: false,
       revalidateOnFocus: false,
       keepPreviousData: true,
-      onSuccess: (d) => {
-        offset.current = d.serverNow - Date.now()
-        setError(null)
-      },
+      onSuccess: () => setError(null),
       onError: (e: Error) => setError(e.message),
     },
   )
@@ -39,15 +56,14 @@ export function useRoom(start: MatchStart, intervalMs: number, heartbeat?: () =>
     async (a: Act) => {
       if (!online) return
       try {
-        const next = await pollRoom(start.roomId!, a)
-        offset.current = next.serverNow - Date.now()
-        mutate(next, { revalidate: false })
+        const { next, fresh } = await request(a)
+        if (fresh) mutate(next, { revalidate: false })
       } catch (e) {
         setError((e as Error).message)
         mutate()
       }
     },
-    [online, start.roomId, mutate],
+    [online, request, mutate],
   )
 
   /** Converte um horário do servidor para o relógio local. */

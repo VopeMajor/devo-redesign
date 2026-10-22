@@ -386,7 +386,7 @@ async function applyAction(c: PoolClient, room: RoomRow, side: Side, action: Act
     const live = { x: action.x * k, y: action.y * k, h, t: now }
     if (side === 'a') room.a_live = live
     else room.b_live = live
-    await q(`UPDATE arcade_rooms SET ${side}_live = $2, ${side}_seen = now() WHERE id = $1`, [room.id, live], c)
+    await q(`UPDATE arcade_rooms SET ${side}_live = $2 WHERE id = $1`, [room.id, live], c)
     return
   }
   if (action.type === 'tag') {
@@ -448,11 +448,9 @@ async function findOpponentRoom(c: PoolClient, gameId: GameId, playerId: string)
   return open ?? null
 }
 
-async function matchWaitingRoom(player: Player, roomId: string) {
-  const [peek] = await q<RoomRow>('SELECT game_id, status, mode, a_id FROM arcade_rooms WHERE id = $1', [roomId])
-  if (!peek || peek.status !== 'waiting' || peek.mode !== 'casual' || peek.a_id !== player.id) return null
+async function matchWaitingRoom(player: Player, roomId: string, gameId: GameId) {
   return tx(async (c) => {
-    await lockQueue(c, peek.game_id)
+    await lockQueue(c, gameId)
     const mine = await lockRoom(c, roomId)
     if (mine.status !== 'waiting') return null
     await q('UPDATE arcade_rooms SET a_seen = now() WHERE id = $1', [mine.id], c)
@@ -529,21 +527,40 @@ export async function joinDuel(player: Player, eventId: string) {
   })
 }
 
+/**
+ * Trava a sala e marca o jogador como presente num único comando (o UPDATE já segura a linha),
+ * em vez de SELECT ... FOR UPDATE seguido de UPDATE: um vaivém a menos com o banco a cada consulta.
+ */
+async function touchRoom(c: PoolClient, id: string, playerId: string) {
+  const [room] = await q<RoomRow>(
+    `UPDATE arcade_rooms SET
+       a_seen = CASE WHEN a_id = $2 THEN now() ELSE a_seen END,
+       b_seen = CASE WHEN b_id = $2 THEN now() ELSE b_seen END
+     WHERE id = $1 RETURNING *`,
+    [id, playerId],
+    c,
+  )
+  if (!room) throw new ArcadeError('Sala não encontrada.', 404)
+  return room
+}
+
 export async function pollRoom(player: Player, roomId: string, rawAction?: unknown) {
   const action = rawAction ? parseAction(rawAction) : null
-  const matched = await matchWaitingRoom(player, roomId)
-  if (matched) return { ...matched, finish: null }
   const out = await tx(async (c) => {
-    const room = await lockRoom(c, roomId)
+    const room = await touchRoom(c, roomId, player.id)
     const side = sideOf(room, player.id)
     const now = Date.now()
     if (side === 'a') room.a_seen = new Date(now)
     else room.b_seen = new Date(now)
-    if (action?.type !== 'pos') await q(`UPDATE arcade_rooms SET ${side}_seen = now() WHERE id = $1`, [room.id], c)
     await tick(c, room, now)
     if (action) await applyAction(c, room, side, action, now)
     return { room, side, now }
   })
+  // Só a sala casual ainda à espera do próprio dono procura adversário (as ativas pulam este passo).
+  if (out.room.status === 'waiting' && out.room.mode === 'casual' && out.room.a_id === player.id) {
+    const matched = await matchWaitingRoom(player, roomId, out.room.game_id)
+    if (matched) return { ...matched, finish: null }
+  }
   return withFinish(player, out.room, out.side, out.now)
 }
 

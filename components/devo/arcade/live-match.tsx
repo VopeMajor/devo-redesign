@@ -1,7 +1,7 @@
 'use client'
 
 import { Flame, Heart, MessageSquare, Rat, Skull, X, Zap, type LucideIcon } from 'lucide-react'
-import { createContext, useContext, useEffect, useRef, useState, type ReactNode } from 'react'
+import { createContext, memo, useContext, useEffect, useRef, useState, type ReactNode } from 'react'
 import { createPortal } from 'react-dom'
 import { playSfx } from '@/lib/devo/audio'
 import { arcadePost, type ChatLine } from '@/lib/devo/arcade/client'
@@ -45,8 +45,11 @@ function ReactionGlyph({ id, className }: { id: ReactionId; className?: string }
   )
 }
 
-/** Chat ao vivo da partida: botão no cabeçalho, painel lateral, reações flutuantes e mensagens rápidas sobre o jogo. */
-export function LiveMatchLayer({ channel }: { channel: string }) {
+/**
+ * Chat ao vivo da partida: botão no cabeçalho, painel lateral, reações flutuantes e mensagens rápidas sobre o jogo.
+ * Memoizado: o cabeçalho do jogo redesenha a cada tique do relógio; esta camada só muda com o chat.
+ */
+export const LiveMatchLayer = memo(function LiveMatchLayer({ channel }: { channel: string }) {
   const [open, setOpen] = useState(false)
   const { data, mutate } = useChatLines(channel, 2000)
   const [floating, setFloating] = useState<Floating[]>([])
@@ -132,7 +135,7 @@ export function LiveMatchLayer({ channel }: { channel: string }) {
           {floating.map((f) => (
             <span
               key={f.key}
-              className="dv-react-rise absolute bottom-16 grid size-11 place-items-center rounded-full border border-white/15 bg-black/55 backdrop-blur-sm"
+              className="dv-react-rise absolute bottom-16 grid size-11 place-items-center rounded-full border border-white/15 bg-black/55 backdrop-blur-sm pointer-coarse:bg-black/70 pointer-coarse:backdrop-blur-none"
               style={{ right: `${f.x}%`, ['--drift' as string]: `${f.drift}px` }}
             >
               <ReactionGlyph id={f.id} className="size-5 text-sm" />
@@ -199,7 +202,7 @@ export function LiveMatchLayer({ channel }: { channel: string }) {
       </LivePortalTarget>
     </>
   )
-}
+})
 
 function ReactionBar({ onReact }: { onReact: (id: ReactionId) => void }) {
   return (

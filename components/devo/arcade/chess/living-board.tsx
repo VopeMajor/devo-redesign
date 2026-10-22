@@ -962,7 +962,8 @@ function StudioLights({ shadows, quality }: { shadows: boolean; quality: Quality
   )
 }
 
-export function LivingScene(props: {
+/** Memoizada: o relógio da partida redesenha a tela 10x por segundo; a cena só muda com lances, seleção e ajustes. */
+export const LivingScene = memo(function LivingScene(props: {
   units: UnitState[]
   theme: BoardTheme
   set: PieceSet
@@ -1008,4 +1009,4 @@ export function LivingScene(props: {
       <Effects animRef={animRef} theme={theme} quality={quality} />
     </>
   )
-}
+})

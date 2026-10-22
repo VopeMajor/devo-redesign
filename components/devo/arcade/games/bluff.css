@@ -112,7 +112,7 @@
 .bf-pl-top .t { display: flex; flex-direction: column; gap: 2px; }
 .bf-pl-top .t b { font-family: var(--font-plex-mono), ui-monospace, monospace; font-size: 13px; font-weight: 600; letter-spacing: 0.1em; }
 .bf-timer { height: 2px; width: 100%; background: rgba(255, 255, 255, 0.08); overflow: hidden; }
-.bf-timer i { display: block; height: 100%; transition: width 0.2s linear; }
+.bf-timer i { display: block; width: 100%; height: 100%; transform-origin: left center; transition: transform 0.2s linear; }
 .bf-hand { position: relative; margin: 18px auto 14px; width: 100%; }
 .bf-pcard { position: absolute; left: 50%; bottom: 0; width: var(--cw); height: var(--ch); margin-left: calc(var(--cw) / -2); transform-origin: 50% 140%; transform: translate(var(--x), var(--y)) rotate(var(--r)); transition: transform 0.18s cubic-bezier(0.3, 0.8, 0.3, 1); z-index: var(--z); padding: 0; border: 0; background: none; cursor: pointer; }
 .bf-pcard:disabled { cursor: default; }
