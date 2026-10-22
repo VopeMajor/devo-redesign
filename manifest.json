@@ -1,0 +1,108 @@
+{
+  "pedido": "xadrez-rainha",
+  "titulo": "Coleção Xadrez — Rainha (peça sem fundo)",
+  "tipo": "ilustracao",
+  "tamanho_final": 1536,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 81241,
+      "passos": null,
+      "segundos": 3.3,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "xadrez-rainha--v01--1536.png",
+          "bytes": 892638
+        },
+        {
+          "arquivo": "xadrez-rainha--v01--1536.webp",
+          "bytes": 153722
+        },
+        {
+          "arquivo": "xadrez-rainha--v01--1024.webp",
+          "bytes": 74680
+        },
+        {
+          "arquivo": "xadrez-rainha--v01--768.webp",
+          "bytes": 50722
+        },
+        {
+          "arquivo": "xadrez-rainha--v01--512.webp",
+          "bytes": 28670
+        }
+      ],
+      "segundos_pos": 37.0,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 81242,
+      "passos": null,
+      "segundos": 18.5,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "xadrez-rainha--v02--1536.png",
+          "bytes": 848356
+        },
+        {
+          "arquivo": "xadrez-rainha--v02--1536.webp",
+          "bytes": 148352
+        },
+        {
+          "arquivo": "xadrez-rainha--v02--1024.webp",
+          "bytes": 69444
+        },
+        {
+          "arquivo": "xadrez-rainha--v02--768.webp",
+          "bytes": 47148
+        },
+        {
+          "arquivo": "xadrez-rainha--v02--512.webp",
+          "bytes": 26648
+        }
+      ],
+      "segundos_pos": 32.3,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 81243,
+      "passos": null,
+      "segundos": 18.4,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "xadrez-rainha--v03--1536.png",
+          "bytes": 842250
+        },
+        {
+          "arquivo": "xadrez-rainha--v03--1536.webp",
+          "bytes": 140628
+        },
+        {
+          "arquivo": "xadrez-rainha--v03--1024.webp",
+          "bytes": 67180
+        },
+        {
+          "arquivo": "xadrez-rainha--v03--768.webp",
+          "bytes": 46186
+        },
+        {
+          "arquivo": "xadrez-rainha--v03--512.webp",
+          "bytes": 26714
+        }
+      ],
+      "segundos_pos": 42.0,
+      "avisos": []
+    }
+  ]
+}
