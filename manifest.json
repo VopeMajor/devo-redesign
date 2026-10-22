@@ -1,0 +1,96 @@
+{
+  "pedido": "xadrez-tabuleiro",
+  "titulo": "Coleção Xadrez — Tabuleiro (cena)",
+  "tipo": "ilustracao",
+  "tamanho_final": 1536,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 81301,
+      "passos": null,
+      "segundos": 2.4,
+      "neuronios_estimados": 1386,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "xadrez-tabuleiro--v01--1536.png",
+          "bytes": 2075175
+        },
+        {
+          "arquivo": "xadrez-tabuleiro--v01--1536.webp",
+          "bytes": 336572
+        },
+        {
+          "arquivo": "xadrez-tabuleiro--v01--1024.webp",
+          "bytes": 115304
+        },
+        {
+          "arquivo": "xadrez-tabuleiro--v01--768.webp",
+          "bytes": 73862
+        }
+      ],
+      "segundos_pos": 2.0,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 81302,
+      "passos": null,
+      "segundos": 3.0,
+      "neuronios_estimados": 1386,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "xadrez-tabuleiro--v02--1536.png",
+          "bytes": 2083207
+        },
+        {
+          "arquivo": "xadrez-tabuleiro--v02--1536.webp",
+          "bytes": 357796
+        },
+        {
+          "arquivo": "xadrez-tabuleiro--v02--1024.webp",
+          "bytes": 111876
+        },
+        {
+          "arquivo": "xadrez-tabuleiro--v02--768.webp",
+          "bytes": 70474
+        }
+      ],
+      "segundos_pos": 1.9,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 81303,
+      "passos": null,
+      "segundos": 2.5,
+      "neuronios_estimados": 1386,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "xadrez-tabuleiro--v03--1536.png",
+          "bytes": 2107449
+        },
+        {
+          "arquivo": "xadrez-tabuleiro--v03--1536.webp",
+          "bytes": 349210
+        },
+        {
+          "arquivo": "xadrez-tabuleiro--v03--1024.webp",
+          "bytes": 115848
+        },
+        {
+          "arquivo": "xadrez-tabuleiro--v03--768.webp",
+          "bytes": 72530
+        }
+      ],
+      "segundos_pos": 1.9,
+      "avisos": []
+    }
+  ]
+}

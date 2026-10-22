@@ -1,0 +1,55 @@
+{
+  "id": "xadrez-tabuleiro",
+  "titulo": "Coleção Xadrez — Tabuleiro (cena)",
+  "tipo": "ilustracao",
+  "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+  "prompt": "Richly painted storybook fantasy illustration, painterly gouache and oil, fine detail, soft dreamy light. Palette: twilight indigo and soft amethyst violet sky, pearl ivory, veined white marble and champagne gold accents, low saturation, elegant and slightly melancholic, no neon. Full-bleed tall vertical scene that fills the whole narrow image edge to edge. An immense ornate chessboard of black obsidian and white marble squares with gold inlaid borders floats among the clouds at dusk, seen from a low dramatic angle so it recedes far into the distance. On it two armies of giant carved chess pieces face each other mid-game: ivory and marble pieces with gold filigree on one side, dark obsidian and amethyst pieces on the other, a carved horse-head knight towering in the foreground at one side, a tall rook and a queen further away. Some squares have broken off and drift as floating stones, a waterfall of light spills over the board's far edge, and beyond it a white castle of chess spires floats in the sky. In the sky, faint enormous clock rings and Roman numerals made of light. Epic, magical, no characters. Absolutely no text, no letters, no numbers, no signature, no watermark, no logo, no card frame, no border, not a collage, not photorealistic, not a 3d render, no people.",
+  "negative": "",
+  "largura": 768,
+  "altura": 1536,
+  "variacoes": [
+    {
+      "seed": 81301,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "passos": null,
+      "largura": 768,
+      "altura": 1536,
+      "prompt_extra": "",
+      "n": 1
+    },
+    {
+      "seed": 81302,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "passos": null,
+      "largura": 768,
+      "altura": 1536,
+      "prompt_extra": "",
+      "n": 2
+    },
+    {
+      "seed": 81303,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "passos": null,
+      "largura": 768,
+      "altura": 1536,
+      "prompt_extra": "",
+      "n": 3
+    }
+  ],
+  "pos": {
+    "remover_fundo": false,
+    "tamanho_final": 1536,
+    "margem": 0.0,
+    "derivados": [
+      1024,
+      768
+    ],
+    "quadro_inteiro": true,
+    "modelo_fundo": "birefnet-general",
+    "fundo": "liso",
+    "camadas": []
+  },
+  "passos": null,
+  "guidance": null,
+  "referencias": []
+}
