@@ -1,0 +1,96 @@
+{
+  "pedido": "carta-coroa",
+  "titulo": "Carta — Coroa do Anfitrião (ilustração da janela)",
+  "tipo": "ilustracao",
+  "tamanho_final": 1536,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 70241,
+      "passos": null,
+      "segundos": 153.8,
+      "neuronios_estimados": 1386,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "carta-coroa--v01--1536.png",
+          "bytes": 2445084
+        },
+        {
+          "arquivo": "carta-coroa--v01--1536.webp",
+          "bytes": 475834
+        },
+        {
+          "arquivo": "carta-coroa--v01--1024.webp",
+          "bytes": 181048
+        },
+        {
+          "arquivo": "carta-coroa--v01--768.webp",
+          "bytes": 112818
+        }
+      ],
+      "segundos_pos": 1.6,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 70242,
+      "passos": null,
+      "segundos": 2.8,
+      "neuronios_estimados": 1386,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "carta-coroa--v02--1536.png",
+          "bytes": 2516381
+        },
+        {
+          "arquivo": "carta-coroa--v02--1536.webp",
+          "bytes": 504976
+        },
+        {
+          "arquivo": "carta-coroa--v02--1024.webp",
+          "bytes": 193812
+        },
+        {
+          "arquivo": "carta-coroa--v02--768.webp",
+          "bytes": 118548
+        }
+      ],
+      "segundos_pos": 1.5,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 70243,
+      "passos": null,
+      "segundos": 3.0,
+      "neuronios_estimados": 1386,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "carta-coroa--v03--1536.png",
+          "bytes": 2494469
+        },
+        {
+          "arquivo": "carta-coroa--v03--1536.webp",
+          "bytes": 491456
+        },
+        {
+          "arquivo": "carta-coroa--v03--1024.webp",
+          "bytes": 190684
+        },
+        {
+          "arquivo": "carta-coroa--v03--768.webp",
+          "bytes": 118628
+        }
+      ],
+      "segundos_pos": 1.5,
+      "avisos": []
+    }
+  ]
+}

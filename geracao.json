@@ -1,0 +1,50 @@
+{
+  "pedido": "carta-coroa",
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 70241,
+      "passos": null,
+      "largura": 768,
+      "altura": 1536,
+      "neuronios_estimados": 1386,
+      "ok": true,
+      "segundos": 153.8,
+      "tamanho_real": [
+        768,
+        1536
+      ]
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 70242,
+      "passos": null,
+      "largura": 768,
+      "altura": 1536,
+      "neuronios_estimados": 1386,
+      "ok": true,
+      "segundos": 2.8,
+      "tamanho_real": [
+        768,
+        1536
+      ]
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 70243,
+      "passos": null,
+      "largura": 768,
+      "altura": 1536,
+      "neuronios_estimados": 1386,
+      "ok": true,
+      "segundos": 3.0,
+      "tamanho_real": [
+        768,
+        1536
+      ]
+    }
+  ]
+}
