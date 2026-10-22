@@ -42,7 +42,17 @@ export function RewardsPanel({ role }: { role: Cargo }) {
   const [busy, setBusy] = useState<string | null>(null)
   const [actionError, setActionError] = useState<string | null>(null)
   const [showHistory, setShowHistory] = useState(false)
-  const list = data?.recompensas ?? []
+  const [busca, setBusca] = useState('')
+  const [tipoFiltro, setTipoFiltro] = useState<RecompensaTipo | ''>('')
+  const norm = (t: string) => t.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase()
+  const todas = data?.recompensas ?? []
+  const list = todas.filter((r) => {
+    if (tipoFiltro && r.tipo !== tipoFiltro) return false
+    const q = norm(busca.trim())
+    if (!q) return true
+    return [r.destinatario, r.propostoPorNome ?? '', r.justificativa, r.origem, resourceText(r, names)].some((t) => norm(t).includes(q))
+  })
+  const filtrando = !!busca.trim() || !!tipoFiltro
   const approver = role === 'owner' || role === 'anfitriao'
 
   const fila = list.filter((r) => r.podeAprovar && r.status === 'pendente')
@@ -105,6 +115,30 @@ export function RewardsPanel({ role }: { role: Cargo }) {
         )}
       </RecordPanel>
 
+      {todas.length > 0 && (
+        <div role="search" aria-label="Filtrar recompensas" className="grid grid-cols-[minmax(0,3fr)_minmax(0,2fr)] gap-2">
+          <span className="relative block">
+            <RecInput value={busca} onChange={(e) => setBusca(e.target.value)} placeholder="Jogador, item ou motivo" aria-label="Buscar nas recompensas" className="pr-10" />
+            <Search aria-hidden="true" className="pointer-events-none absolute right-3 top-1/2 size-4 -translate-y-1/2 text-in-fg-3" strokeWidth={1.4} />
+          </span>
+          <RecSelect value={tipoFiltro} onChange={(e) => setTipoFiltro(e.target.value as RecompensaTipo | '')} aria-label="Tipo de recompensa">
+            <option value="">Todos os tipos</option>
+            {(Object.keys(TIPO_LABEL) as RecompensaTipo[]).map((t) => (
+              <option key={t} value={t}>
+                {TIPO_LABEL[t]}
+              </option>
+            ))}
+          </RecSelect>
+          {filtrando && (
+            <p className="col-span-2 font-mono text-[11px] uppercase tracking-[0.14em] text-in-fg-2">
+              {list.length} de {todas.length} ·{' '}
+              <button type="button" className="dv-focus underline underline-offset-2 hover:text-in-fg" onClick={() => { setBusca(''); setTipoFiltro('') }}>
+                limpar filtro
+              </button>
+            </p>
+          )}
+        </div>
+      )}
       {isLoading ? (
         <Loading>Abrindo as recompensas…</Loading>
       ) : error ? (

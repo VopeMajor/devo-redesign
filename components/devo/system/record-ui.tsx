@@ -81,7 +81,7 @@ export function StatusChip({ status, label, className }: { status: DeadlyVoteSta
   return (
     <span
       className={cn(
-        'dv-cut-diag inline-flex h-7 items-center gap-2 px-2.5 font-mono text-[10.5px] font-medium uppercase leading-none tracking-[0.16em]',
+        'dv-cut-diag inline-flex h-7 shrink-0 items-center gap-2 whitespace-nowrap px-2.5 font-mono text-[10.5px] font-medium uppercase leading-none tracking-[0.16em]',
         live ? 'bg-in-fg text-in-bg' : status === 'falha' ? 'bg-in-alert text-white' : 'shadow-[inset_0_0_0_1px_var(--in-line-strong)]',
         !live && status !== 'falha' && STATUS_TEXT[status],
         className,

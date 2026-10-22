@@ -1,7 +1,7 @@
 'use client'
 
 import { Minus, Plus } from 'lucide-react'
-import { type CSSProperties, type ReactNode, type SelectHTMLAttributes, useState } from 'react'
+import { type CSSProperties, type ReactNode, type SelectHTMLAttributes, useEffect, useMemo, useState } from 'react'
 import useSWR from 'swr'
 import { Spinner } from '@/components/devo/kit'
 import { playSfx } from '@/lib/devo/audio'
@@ -219,19 +219,7 @@ export function ResourceFields({
           ))}
         </RecSelect>
       </label>
-      {value.recurso === 'item' && (
-        <label className="col-span-2 flex min-w-0 flex-col gap-1.5">
-          <RecLabel>Item</RecLabel>
-          <RecSelect value={value.chave ?? ''} onChange={(e) => set({ chave: e.target.value })}>
-            {!usable.length && <option value="">Carregando catálogo…</option>}
-            {usable.map((i) => (
-              <option key={i.key} value={i.key}>
-                {i.name}
-              </option>
-            ))}
-          </RecSelect>
-        </label>
-      )}
+      {value.recurso === 'item' && <FiltroItem itens={usable} chave={value.chave ?? null} onChange={(chave) => set({ chave })} />}
       {value.recurso === 'carta' && (
         <label className="col-span-2 flex min-w-0 flex-col gap-1.5">
           <RecLabel>Carta</RecLabel>
@@ -258,6 +246,57 @@ export function ResourceFields({
         <RecLabel hint="opcional">Rótulo</RecLabel>
         <RecInput value={value.label ?? ''} onChange={(e) => set({ label: e.target.value.slice(0, 60) })} placeholder="Ex.: prêmio do vencedor" />
       </label>
+    </div>
+  )
+}
+
+const TIPO_ITEM: Record<string, string> = {
+  moeda: 'Moedas',
+  essencia: 'Essências',
+  chave: 'Chaves',
+  fragmento: 'Fragmentos',
+  capsula: 'Cápsulas',
+  cosmetico: 'Cosméticos',
+  pacote: 'Pacotes',
+  outro: 'Outros',
+}
+
+/** Escolha do item com filtro: tipo + busca pelo nome (o catálogo passa de cem itens). */
+function FiltroItem({ itens, chave, onChange }: { itens: ItemDef[]; chave: string | null; onChange: (chave: string) => void }) {
+  const [tipo, setTipo] = useState('')
+  const [q, setQ] = useState('')
+  const tipos = useMemo(() => Array.from(new Set(itens.map((i) => i.kind))), [itens])
+  const norm = (t: string) => t.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase()
+  const lista = itens.filter((i) => (!tipo || i.kind === tipo) && (!q.trim() || norm(i.name).includes(norm(q.trim()))))
+  const atual = itens.find((i) => i.key === chave)
+  // se o filtro esconder o item escolhido, escolhe o primeiro da lista filtrada
+  useEffect(() => {
+    if (lista.length && !lista.some((i) => i.key === chave)) onChange(lista[0].key)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tipo, q])
+  return (
+    <div className="col-span-2 flex min-w-0 flex-col gap-1.5">
+      <RecLabel hint={`${lista.length} de ${itens.length}`}>Item</RecLabel>
+      <div className="grid grid-cols-[minmax(0,2fr)_minmax(0,3fr)] gap-2">
+        <RecSelect value={tipo} onChange={(e) => setTipo(e.target.value)} aria-label="Tipo de item">
+          <option value="">Todos os tipos</option>
+          {tipos.map((t) => (
+            <option key={t} value={t}>
+              {TIPO_ITEM[t] ?? t}
+            </option>
+          ))}
+        </RecSelect>
+        <RecInput value={q} onChange={(e) => setQ(e.target.value)} placeholder="Buscar pelo nome" aria-label="Buscar item" />
+      </div>
+      <RecSelect value={chave ?? ''} onChange={(e) => onChange(e.target.value)} aria-label="Item">
+        {!itens.length && <option value="">Carregando catálogo…</option>}
+        {itens.length > 0 && !lista.length && <option value={chave ?? ''}>{atual ? `${atual.name} (fora do filtro)` : 'Nenhum item com esse filtro'}</option>}
+        {lista.map((i) => (
+          <option key={i.key} value={i.key}>
+            {i.name}
+          </option>
+        ))}
+      </RecSelect>
     </div>
   )
 }

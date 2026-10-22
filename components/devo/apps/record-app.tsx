@@ -417,15 +417,15 @@ function ConvocationPoster({
   return (
     <article
       aria-label={`Convocação: ${voteTitle(vote)}`}
-      className={cn('dv-interior-dark dv-record-panel dv-cut relative', live && 'shadow-[0_0_0_1px_rgba(241,240,238,0.5),0_18px_40px_-18px_rgb(var(--dv-amethyst-rgb)/0.55)]')}
+      className={cn('dv-interior-dark dv-record-panel dv-cut relative [container-type:inline-size]', live && 'shadow-[0_0_0_1px_rgba(241,240,238,0.5),0_18px_40px_-18px_rgb(var(--dv-amethyst-rgb)/0.55)]')}
       style={{ '--dv-cut': '16px' } as CSSProperties}
     >
       <BrassCorners size={30} inset={4} />
       <span aria-hidden="true" className="bg-[url(/images/os/marmore-negro.webp)] bg-[length:560px_560px] pointer-events-none absolute inset-0 opacity-60" />
       <div className="relative p-5 pb-4">
-        <div className="flex items-center justify-between gap-3">
-          <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-in-fg-2">
-            Deadly Vote № {String(vote.number).padStart(3, '0')}
+        <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2">
+          <p className="min-w-0 font-mono text-[10px] uppercase tracking-[0.2em] text-in-fg-2">
+            <span className="whitespace-nowrap">Deadly Vote № {String(vote.number).padStart(3, '0')}</span>
             {vote.host && <span className="text-in-fg-3"> · Dealer {vote.host}</span>}
           </p>
           <StatusChip status={vote.status} />
@@ -434,7 +434,7 @@ function ConvocationPoster({
         <div className="relative mt-4 flex items-start justify-between gap-2">
           <h2 className="relative">
             <span aria-hidden="true" className="absolute -left-5 bottom-[0.18em] h-[0.2em] w-[calc(100%+2.6rem)] -skew-x-[18deg] bg-[linear-gradient(90deg,rgba(186,176,159,0.55),rgba(186,176,159,0.12)_70%,transparent)]" />
-            <span className="relative font-impact text-[46px] font-bold uppercase leading-[0.9] tracking-[0.01em] text-[#f1f0ee] drop-shadow-[0_2px_0_rgba(0,0,0,0.6)]">
+            <span className="relative font-impact text-[min(46px,12cqw)] font-bold uppercase leading-[0.9] tracking-[0.01em] text-[#f1f0ee] drop-shadow-[0_2px_0_rgba(0,0,0,0.6)]">
               {live ? 'Em sessão' : 'Convocação'}
             </span>
           </h2>
@@ -442,7 +442,7 @@ function ConvocationPoster({
         </div>
 
         {vote.arc && <p className="mt-4 font-mono text-[10px] uppercase tracking-[0.2em] text-dv-gold">{arcLabel(vote.arc)}</p>}
-        <h3 className={cn('font-serif text-[28px] font-light uppercase leading-[1.02] tracking-[0.02em] text-in-fg text-balance', vote.arc ? 'mt-1' : 'mt-4')}>{vote.title}</h3>
+        <h3 className={cn('break-words font-serif text-[min(28px,8.4cqw)] font-light uppercase leading-[1.02] tracking-[0.02em] text-in-fg text-balance', vote.arc ? 'mt-1' : 'mt-4')}>{vote.title}</h3>
 
         <LifecycleTrack status={vote.status} className="mt-5" />
 
