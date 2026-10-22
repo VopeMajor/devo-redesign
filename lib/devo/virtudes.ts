@@ -76,6 +76,21 @@ export function arcanoInfo(key: ArcanoKey) {
 }
 export type ArcanoInfo = ReturnType<typeof arcanoInfo>
 
+/**
+ * Prêmio "Arcano" (dono, 22/10): o narrador indica TRÊS Arcanos, um Anfitrião aprova e o jogador escolhe um.
+ * A chave da recompensa guarda as opções separadas por vírgula ("forca,lua,sol"). Aceita 1 a 3 na leitura
+ * (prêmios antigos tinham um só); `exigirTres` vale para prêmios novos.
+ */
+export const ARCANO_OPCOES = 3
+export function lerOpcoesArcano(chave: unknown, exigirTres = false): ArcanoKey[] | null {
+  if (typeof chave !== 'string') return null
+  const ks = chave.split(',').map((x) => x.trim()).filter(Boolean)
+  if (!ks.length || ks.length > ARCANO_OPCOES || !ks.every(isArcano) || new Set(ks).size !== ks.length) return null
+  if (exigirTres && ks.length !== ARCANO_OPCOES) return null
+  return ks as ArcanoKey[]
+}
+export const chaveOpcoesArcano = (ks: string[]) => ks.join(',')
+
 /* ------------------------------------------------------------------ Estágios 0..VII (dono, 22/10) */
 
 /** Último Estágio. O 0 ("A Essência") vem com o Arcano; do I ao VII paga-se em Fragmentos Arcanos. */
@@ -243,6 +258,8 @@ export type VirtudesPayload =
       /** Saldo de Fragmentos Arcanos (pagam os Estágios) e de Grandes Fragmentos (despertam outro Arcano). */
       fragmentos: number
       grandesFragmentos: number
+      /** Prêmio "Arcano" esperando o jogador escolher entre as opções (só quem ainda não tem Arcano). */
+      escolha: { id: string; origem: string; opcoes: { key: ArcanoKey; numeral: string; titulo: string; breve: string }[] } | null
       /** Owner/Anfitrião: todos expansíveis. */
       verTodos: boolean
     }

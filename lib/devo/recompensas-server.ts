@@ -1,5 +1,5 @@
 import 'server-only'
-import { isArcano } from './virtudes'
+import { chaveOpcoesArcano, lerOpcoesArcano } from './virtudes'
 import type { PoolClient } from 'pg'
 import { pool } from '@/lib/db'
 import { type Ator, can, type PropostaAlvo, type RecompensaTipo } from './cargos'
@@ -8,7 +8,6 @@ import { run, txAs, UUID_RE } from './fundacao-db'
 import { creditMinutes, deliverCard, grantItem } from './inventario-server'
 import { loadVotoAlvo, requireActor, requireCan } from './permissoes-server'
 import { grantUnlock } from './progresso-server'
-import { concederArcano } from './virtudes-server'
 
 /**
  * Recompensas com aprovação (DIRECAO-3 §3; texto do dono "Recompensas externas" e §8).
@@ -158,8 +157,10 @@ async function validate(c: PoolClient, input: PropostaInput) {
     chave = clean(input.chave, 80)
     if (!/^[a-z0-9_-]{1,80}$/.test(chave)) throw new RecordError('Carta inválida.')
   } else if (input.recurso === 'arcano') {
-    chave = clean(input.chave, 40)
-    if (!isArcano(chave)) throw new RecordError('Arcano desconhecido.')
+    // Até três opções (prêmios antigos tinham uma); o jogador escolhe depois da aprovação.
+    const ks = lerOpcoesArcano(clean(input.chave, 80))
+    if (!ks) throw new RecordError('Escolha três Arcanos diferentes para o jogador escolher.')
+    chave = chaveOpcoesArcano(ks)
   }
   const [dest] = await run(c, 'SELECT 1 FROM players WHERE id = $1', [input.destinatarioId])
   if (!dest) throw new RecordError('Destinatário não encontrado.', 404)
@@ -192,6 +193,14 @@ export async function proposeRewardIn(
   opts: { aprovar?: boolean | 'se-puder'; entregar?: boolean; prizeId?: string | null } = {},
 ): Promise<string | null> {
   const v = await validate(c, input)
+  // Prêmio "Arcano" é só para quem ainda não tem um: no resultado do caso, pula; numa proposta avulsa, recusa.
+  if (input.recurso === 'arcano') {
+    const [p] = await run<{ arcano: string | null }>(c, 'SELECT arcano FROM players WHERE id = $1', [input.destinatarioId])
+    if (p?.arcano) {
+      if (v.voteId) return null
+      throw new RecordError('Este jogador já tem um Arcano.', 409)
+    }
+  }
   const voto = v.voteId ? await loadVotoAlvo(v.voteId, c) : null
   requireCan(ator, 'recompensa.propor', { tipo: input.tipo, voto }, 'Você não pode propor esta recompensa.')
   const [row] = await run<{ id: string }>(
@@ -305,17 +314,25 @@ async function deliverIn(c: PoolClient, ator: Ator | null, id: string): Promise<
       await creditMinutes(row.recipient_id, row.quantity, c)
       break
     case 'arcano': {
-      // Sem Arcano: este vira o original (Estágio 0, "A Essência"). Com outro original: entra como Arcano
-      // despertado no Estágio 0 (o original não muda). Registro no admin_log, como no ajuste manual das Virtudes.
-      if (!isArcano(row.resource_key)) throw new RecordError('Arcano desconhecido.')
-      const r = await concederArcano(c, row.recipient_id, row.resource_key, 'recompensa')
+      // O jogador escolhe entre as opções do narrador (tela dos Arcanos). Quem já tem Arcano não recebe outro.
+      const opcoes = lerOpcoesArcano(row.resource_key)
+      if (!opcoes) throw new RecordError('Arcano desconhecido.')
+      const [p] = await run<{ arcano: string | null }>(c, 'SELECT arcano FROM players WHERE id = $1', [row.recipient_id])
+      if (!p?.arcano) {
+        await run(c, 'INSERT INTO arcano_escolhas (player_id, opcoes, origem, reward_id) VALUES ($1, $2, $3, $4) ON CONFLICT (reward_id) DO NOTHING', [
+          row.recipient_id,
+          opcoes,
+          row.origin.slice(0, 120),
+          row.id,
+        ])
+      }
       await run(c, "INSERT INTO admin_log (actor_id, action, target_id, ref, data) VALUES ($1, 'virtudes.arcano', $2, $3, $4)", [
         ator?.id ?? null,
         row.recipient_id,
         row.id,
-        JSON.stringify({ arcano: row.resource_key, origem: 'recompensa', original: r.original }),
+        JSON.stringify({ opcoes, origem: 'recompensa', escolha: !p?.arcano, jaTinha: p?.arcano ?? null }),
       ])
-      // Ganhar um Arcano abre os sistemas de Arcanos e Virtudes (mesma flag) para o jogador.
+      // Ganhar um Arcano abre os sistemas de Arcanos e Virtudes (mesma flag): é lá que o jogador escolhe.
       await grantUnlock(row.recipient_id, 'virtudes', 'sistema', row.id, null, c)
       break
     }

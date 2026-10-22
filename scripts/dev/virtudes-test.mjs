@@ -464,6 +464,38 @@ await test('Deadly Vote aplicado rende P.P. de participação e sobrevivência (
   assert(after[0].n === rows.length, 'segunda aplicação não duplica')
 })
 
+await test('prêmio Arcano: três opções do narrador; aprovado, quem não tem Arcano escolhe um; quem já tem não recebe', async () => {
+  // `trancado` ganhou Arcano num teste anterior: volta a ficar sem nenhum.
+  await q('UPDATE players SET arcano = NULL WHERE id = $1', [trancado.id])
+  await q('DELETE FROM player_arcanos WHERE player_id = $1', [trancado.id])
+  const um = await own.post('/api/record', { action: 'create', title: `Arcano 1 ${sfx}`, startsAt: Date.now() + 60_000, prizes: [{ recurso: 'arcano', chave: 'forca', quantidade: 1 }] })
+  assert(um.status === 400, `um Arcano só deveria ser recusado (veio ${um.status})`)
+  const rep = await own.post('/api/record', { action: 'create', title: `Arcano 2 ${sfx}`, startsAt: Date.now() + 60_000, prizes: [{ recurso: 'arcano', chave: 'forca,forca,lua', quantidade: 1 }] })
+  assert(rep.status === 400, `repetido deveria ser recusado (veio ${rep.status})`)
+  const c = await own.post('/api/record', { action: 'create', title: `Arcano 3 ${sfx}`, startsAt: Date.now() + 60_000, admission: 'livre', prizes: [{ recurso: 'arcano', chave: 'forca,lua,sol', quantidade: 1 }] })
+  assert(c.status === 200, `criar com três: ${c.status} ${c.text}`)
+  const voteId = c.json.id
+  for (const s of [jog, trancado]) assert((await s.post('/api/record', { action: 'join', voteId })).status === 200, 'inscrição')
+  for (const st of ['em-progresso', 'concluido']) assert((await own.post('/api/record', { action: 'status', voteId, status: st })).status === 200, st)
+  for (const s of [jog, trancado]) assert((await own.post('/api/record', { action: 'decision', voteId, playerId: s.id, decision: 'premio' })).status === 200, 'decisão')
+  const a = await own.post('/api/record', { action: 'apply', voteId })
+  assert(a.status === 200, `aplicar: ${a.status} ${a.text}`)
+  const props = await q("SELECT recipient_id FROM reward_proposals WHERE vote_id = $1 AND resource = 'arcano'", [voteId])
+  assert(props.length === 1 && props[0].recipient_id === trancado.id, `só quem não tinha Arcano recebe a proposta: ${JSON.stringify(props)}`)
+  const g = await trancado.get('/api/virtudes')
+  assert(g.json.liberado && g.json.escolha?.opcoes?.map((o) => o.key).join() === 'forca,lua,sol', `escolha pendente: ${JSON.stringify(g.json.escolha)}`)
+  const fora = await trancado.virt({ action: 'arcano.escolher', escolha: g.json.escolha.id, arcano: 'mago' })
+  assert(fora.status === 400, `fora das opções → 400 (veio ${fora.status})`)
+  const ok = await trancado.virt({ action: 'arcano.escolher', escolha: g.json.escolha.id, arcano: 'lua' })
+  assert(ok.status === 200 && ok.json.estagio === 0, `escolher: ${ok.status} ${ok.text}`)
+  const [p] = await q('SELECT arcano FROM players WHERE id = $1', [trancado.id])
+  assert(p.arcano === 'lua', `Arcano original = lua (${p.arcano})`)
+  const de2 = await trancado.virt({ action: 'arcano.escolher', escolha: g.json.escolha.id, arcano: 'sol' })
+  assert(de2.status === 409, `não troca depois de escolher (veio ${de2.status})`)
+  const g2 = await trancado.get('/api/virtudes')
+  assert(g2.json.escolha === null && g2.json.arcano?.key === 'lua', 'sem escolha pendente e com o Arcano escolhido')
+})
+
 await db.end()
 console.log(`\n${passed} ok, ${failures.length} falha(s)`)
 if (failures.length) {

@@ -8,6 +8,7 @@ import { Button, Spinner } from '../kit/button'
 import { EmblemArcanos, EmblemMark } from '../kit/emblems'
 import { useVirtudes } from '../virtudes/virtudes-app'
 import { Altar } from './altar'
+import { EscolhaArcano } from './evolucao'
 import { EstilosArcanos, prng, reduzMovimento, sentir } from './fx'
 import { Galeria } from './galeria'
 import { Mapa } from './mapa'
@@ -61,7 +62,13 @@ export function ArcanosApp() {
       </Ceu>
     )
   } else if (!data.liberado) corpo = <Trancado motivo={data.motivo} />
-  else corpo = <Arcanos d={data} />
+  else
+    corpo = (
+      <div className="relative h-full">
+        <Arcanos d={data} />
+        {data.escolha && <EscolhaArcano escolha={data.escolha} />}
+      </div>
+    )
   return (
     <>
       <EstilosArcanos />

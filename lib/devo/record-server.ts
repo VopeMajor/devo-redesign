@@ -1,6 +1,6 @@
 import type { PoolClient } from 'pg'
 import { pool } from '@/lib/db'
-import { isArcano } from './virtudes'
+import { chaveOpcoesArcano, lerOpcoesArcano } from './virtudes'
 import {
   type DeadlyVote,
   type DeadlyVoteStatus,
@@ -327,8 +327,10 @@ async function cleanPrizes(c: PoolClient, raw: unknown): Promise<PrizeInput[]> {
       chave = text(r.chave, 80)
       if (!/^[a-z0-9_-]{1,80}$/.test(chave)) throw new RecordError('Carta inválida.')
     } else if (recurso === 'arcano') {
-      chave = text(r.chave, 40)
-      if (!isArcano(chave)) throw new RecordError('Arcano desconhecido.')
+      // Três opções do narrador; o jogador escolhe uma depois que um Anfitrião aprovar.
+      const ks = lerOpcoesArcano(text(r.chave, 80), true)
+      if (!ks) throw new RecordError('Escolha três Arcanos diferentes para o jogador escolher.')
+      chave = chaveOpcoesArcano(ks)
     }
     out.push({ recurso, chave, quantidade: recurso === 'arcano' ? 1 : quantidade, label: text(r.label, 60) || null })
   }

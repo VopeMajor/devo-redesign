@@ -6,7 +6,7 @@ import useSWR from 'swr'
 import { Spinner } from '@/components/devo/kit'
 import { playSfx } from '@/lib/devo/audio'
 import { CARDS } from '@/lib/devo/cards'
-import { ARCANO_KEYS, arcanoInfo, isArcano } from '@/lib/devo/virtudes'
+import { ARCANO_KEYS, ARCANO_OPCOES, arcanoInfo, chaveOpcoesArcano, lerOpcoesArcano } from '@/lib/devo/virtudes'
 import type { PrizeInput, PrizeResource } from '@/lib/devo/deadly-votes'
 import { cn } from '@/lib/utils'
 import { RecButton, RecInput, RecLabel } from './record-ui'
@@ -169,7 +169,12 @@ export function resourceText(r: { recurso: PrizeResource; chave: string | null; 
     return `${h ? `${h} h` : ''}${h && m ? ' ' : ''}${m ? `${m} min` : ''} de tempo`
   }
   if (r.recurso === 'convite') return r.quantidade === 1 ? '1 convite' : `${r.quantidade} convites`
-  if (r.recurso === 'arcano') return isArcano(r.chave) ? arcanoInfo(r.chave).titulo : 'Arcano'
+  if (r.recurso === 'arcano') {
+    const ks = lerOpcoesArcano(r.chave)
+    if (!ks) return 'Arcano'
+    const nomes = ks.map((k) => arcanoInfo(k).titulo.replace(/^Arcano (d[aeo]s?) /, ''))
+    return ks.length === 1 ? arcanoInfo(ks[0]).titulo : `Arcano à escolha: ${nomes.slice(0, -1).join(', ')} ou ${nomes[nomes.length - 1]}`
+  }
   if (r.recurso === 'carta') {
     const name = CARDS.find((c) => c.id === r.chave)?.name ?? r.chave
     return `${r.quantidade > 1 ? `${r.quantidade} × ` : ''}Carta ${name}`
@@ -202,7 +207,7 @@ export function ResourceFields({
             const recurso = e.target.value as PrizeResource
             set({
               recurso,
-              chave: recurso === 'item' ? (usable[0]?.key ?? null) : recurso === 'carta' ? CARDS[0]?.id : recurso === 'arcano' ? ARCANO_KEYS[0] : null,
+              chave: recurso === 'item' ? (usable[0]?.key ?? null) : recurso === 'carta' ? CARDS[0]?.id : recurso === 'arcano' ? chaveOpcoesArcano(ARCANO_KEYS.slice(0, ARCANO_OPCOES)) : null,
               quantidade: recurso === 'tempo' ? 60 : 1,
             })
           }}
@@ -239,21 +244,7 @@ export function ResourceFields({
           </RecSelect>
         </label>
       )}
-      {value.recurso === 'arcano' && (
-        <label className="col-span-2 flex min-w-0 flex-col gap-1.5">
-          <RecLabel hint="define o Arcano do jogador">Arcano</RecLabel>
-          <RecSelect value={value.chave ?? ''} onChange={(e) => set({ chave: e.target.value, quantidade: 1 })}>
-            {ARCANO_KEYS.map((k) => {
-              const a = arcanoInfo(k)
-              return (
-                <option key={k} value={k}>
-                  {a.numeral} · {a.titulo}
-                </option>
-              )
-            })}
-          </RecSelect>
-        </label>
-      )}
+      {value.recurso === 'arcano' && <OpcoesArcano chave={value.chave ?? null} onChange={(chave) => set({ chave, quantidade: 1 })} />}
       <label className={cn('flex min-w-0 flex-col gap-1.5', value.recurso === 'arcano' && 'hidden')}>
         <RecLabel hint={value.recurso === 'tempo' ? 'minutos' : undefined}>Quantidade</RecLabel>
         <RecInput
@@ -267,6 +258,35 @@ export function ResourceFields({
         <RecLabel hint="opcional">Rótulo</RecLabel>
         <RecInput value={value.label ?? ''} onChange={(e) => set({ label: e.target.value.slice(0, 60) })} placeholder="Ex.: prêmio do vencedor" />
       </label>
+    </div>
+  )
+}
+
+/**
+ * Prêmio "Arcano" (dono, 22/10): o narrador indica três Arcanos diferentes; depois da aprovação de um Anfitrião, o
+ * jogador escolhe um deles na tela dos Arcanos. Só quem ainda não tem Arcano recebe.
+ */
+function OpcoesArcano({ chave, onChange }: { chave: string | null; onChange: (chave: string) => void }) {
+  const atual = (chave ?? '').split(',')
+  const ks = Array.from({ length: ARCANO_OPCOES }, (_, i) => atual[i] ?? '')
+  const repetido = new Set(ks.filter(Boolean)).size !== ks.filter(Boolean).length
+  return (
+    <div className="col-span-2 flex min-w-0 flex-col gap-1.5">
+      <RecLabel hint="o jogador escolhe um · só para quem ainda não tem Arcano">Três Arcanos à escolha</RecLabel>
+      {ks.map((k, i) => (
+        <RecSelect key={i} aria-label={`Opção ${i + 1}`} value={k} onChange={(e) => onChange(ks.map((x, j) => (j === i ? e.target.value : x)).join(','))}>
+          {ARCANO_KEYS.map((key) => {
+            const a = arcanoInfo(key)
+            return (
+              <option key={key} value={key}>
+                {a.numeral} · {a.titulo}
+              </option>
+            )
+          })}
+        </RecSelect>
+      ))}
+      {repetido && <p className="font-mono text-[11px] text-in-alert">Escolha três Arcanos diferentes.</p>}
+      <p className="font-body text-[13px] text-in-fg-3">A recompensa só é entregue depois da aprovação de um Anfitrião.</p>
     </div>
   )
 }

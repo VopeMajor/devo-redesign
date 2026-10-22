@@ -1,6 +1,6 @@
 import { getCurrentPlayer } from '@/app/actions/player'
 import { RecordError } from '@/lib/devo/errors'
-import { ajustarPotencial, definirAfinidades, definirArcano, definirEstagios, definirTextoArcano, despertarArcano, estadoVirtudes, evoluirArcano, evoluirEstagio, mesaVirtudes } from '@/lib/devo/virtudes-server'
+import { ajustarPotencial, definirAfinidades, definirArcano, definirEstagios, definirTextoArcano, despertarArcano, escolherArcano, estadoVirtudes, evoluirArcano, evoluirEstagio, mesaVirtudes } from '@/lib/devo/virtudes-server'
 
 export const dynamic = 'force-dynamic'
 
@@ -52,6 +52,8 @@ export async function POST(req: Request) {
     switch (body?.action) {
       case 'arcano.evoluir':
         return Response.json(await evoluirArcano(player.id, body.arcano, body.de))
+      case 'arcano.escolher':
+        return Response.json(await escolherArcano(player.id, body.escolha, body.arcano))
       case 'arcano.despertar':
         return Response.json(await despertarArcano(player.id, body.arcano))
       case 'evoluir':

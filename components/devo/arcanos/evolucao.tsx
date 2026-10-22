@@ -6,6 +6,7 @@ import { type ArcanoVista, custoDoProximo, ESTAGIO_MAX, numeralEstagio, type Vir
 import { cn } from '@/lib/utils'
 import { Button } from '../kit/button'
 import { useVirtudes } from '../virtudes/virtudes-app'
+import { Moldura } from './moldura'
 
 /**
  * Evolução e despertar dos Arcanos (dono, 22/10). O jogador sobe o Estágio do Arcano que tem pagando Fragmentos
@@ -221,5 +222,59 @@ export function DespertarArcano({ a, d, compacto }: { a: ArcanoVista; d: Liberad
       {!equipe && tem < 1 && <p className="font-mono text-[11px] uppercase leading-relaxed tracking-[0.12em] text-dv-text-3">Você não tem um Grande Fragmento Arcano.</p>}
       <Aviso aviso={aviso} />
     </div>
+  )
+}
+
+/* ------------------------------------------------------------------ escolha do prêmio */
+
+/**
+ * Prêmio "Arcano" (dono, 22/10): o narrador indicou três Arcanos, um Anfitrião aprovou, e o jogador escolhe um.
+ * Aparece por cima da tela dos Arcanos enquanto a escolha estiver pendente. A escolha é definitiva.
+ */
+export function EscolhaArcano({ escolha }: { escolha: NonNullable<Liberado['escolha']> }) {
+  const { busy, aviso, agir } = useAcao()
+  const [sel, setSel] = useState<string | null>(null)
+  const alvo = escolha.opcoes.find((o) => o.key === sel) ?? null
+  return (
+    <section aria-label="Escolha o seu Arcano" className="devo-scroll absolute inset-0 z-30 overflow-y-auto bg-dv-ink/95 px-4 pb-8 pt-5 backdrop-blur-[2px]">
+      <p className="text-center font-mono text-[10.5px] uppercase tracking-[0.2em] text-dv-gold">{escolha.origem || 'Prêmio'}</p>
+      <h2 className="mt-2 text-center font-display text-[24px] font-semibold uppercase leading-tight tracking-[0.08em] text-dv-text">Escolha o seu Arcano</h2>
+      <p className="mx-auto mt-2 max-w-[34ch] text-center font-body text-[15px] leading-relaxed text-dv-text-2">
+        O narrador separou {escolha.opcoes.length === 1 ? 'um Arcano' : `${escolha.opcoes.length} Arcanos`} para você. O que escolher vira o seu Arcano original, no Estágio 0, e não poderá ser trocado.
+      </p>
+      <ul className="mt-5 grid grid-cols-3 gap-2.5">
+        {escolha.opcoes.map((o) => (
+          <li key={o.key}>
+            <button
+              type="button"
+              aria-pressed={sel === o.key}
+              onClick={() => {
+                playSfx('click')
+                setSel(o.key)
+              }}
+              className={cn('dv-focus flex w-full flex-col items-center gap-2 p-1.5 transition-colors', sel === o.key ? 'bg-dv-amethyst/15 shadow-[inset_0_0_0_1px_var(--dv-amethyst)]' : 'shadow-[inset_0_0_0_1px_var(--dv-line)]')}
+            >
+              <Moldura arcano={o.key} modo="cor" aceso={sel === o.key} carregar />
+              <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-dv-gold">{o.numeral}</span>
+              <span className="pb-1 text-center font-display text-[13px] font-semibold uppercase leading-tight tracking-[0.06em] text-dv-text">{o.titulo.replace(/^Arcano (d[aeo]s?) /, '')}</span>
+            </button>
+          </li>
+        ))}
+      </ul>
+      {alvo && (
+        <div className="mt-5 flex flex-col gap-3">
+          <p className="font-body text-[15.5px] italic leading-relaxed text-dv-text">{alvo.breve}</p>
+          <BotaoConfirma
+            rotulo={`Escolher o ${alvo.titulo}`}
+            confirmar={`Confirmar: ${alvo.titulo}`}
+            loading={busy}
+            onConfirm={() => agir({ action: 'arcano.escolher', escolha: escolha.id, arcano: alvo.key }, `O ${alvo.titulo} agora é seu.`)}
+          />
+        </div>
+      )}
+      <div className="mt-3">
+        <Aviso aviso={aviso} />
+      </div>
+    </section>
   )
 }

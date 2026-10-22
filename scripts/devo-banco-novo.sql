@@ -2640,3 +2640,20 @@ INSERT INTO item_defs (key, kind, name, description, rarity, stackable, meta) VA
    'Um pedaço inteiro de um Arcano. Desperta um Arcano que não é o seu, no Estágio 0.', 'lendario', true, '{}')
 ON CONFLICT (key) DO NOTHING;
 
+-- ---------------------------------------------------------------------------------------------
+-- 6. Prêmio "Arcano" com escolha (dono, 22/10): o narrador indica três Arcanos, um Anfitrião aprova a
+--    recompensa e o jogador escolhe um deles. Só quem ainda não tem Arcano recebe. Uma escolha por recompensa.
+-- ---------------------------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS arcano_escolhas (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  player_id uuid NOT NULL REFERENCES players(id) ON DELETE CASCADE,
+  opcoes text[] NOT NULL CHECK (array_length(opcoes, 1) BETWEEN 1 AND 3),
+  origem text NOT NULL DEFAULT '',
+  reward_id uuid UNIQUE,
+  criada_em timestamptz NOT NULL DEFAULT now(),
+  escolhido text,
+  escolhido_em timestamptz,
+  CONSTRAINT arcano_escolha_feita_chk CHECK ((escolhido IS NULL) = (escolhido_em IS NULL))
+);
+CREATE INDEX IF NOT EXISTS arcano_escolhas_pendentes_idx ON arcano_escolhas (player_id) WHERE escolhido IS NULL;
+

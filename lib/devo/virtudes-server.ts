@@ -333,6 +333,21 @@ export async function estadoVirtudes(playerId: string): Promise<VirtudesPayload>
   )
   const top = VIRTUDE_KEYS.reduce<VirtudeKey | null>((best, v) => (pp[v] > 0 && (!best || pp[v] > pp[best]) ? v : best), null)
   const s = saldo.get(p.id)!
+  // Prêmio "Arcano" esperando a escolha do jogador (só enquanto ele ainda não tem Arcano).
+  const [esc] = arcano
+    ? []
+    : await run<{ id: string; opcoes: string[]; origem: string }>(
+        pool,
+        'SELECT id, opcoes, origem FROM arcano_escolhas WHERE player_id = $1 AND escolhido IS NULL ORDER BY criada_em LIMIT 1',
+        [p.id],
+      ).catch(() => [])
+  const escolha = esc
+    ? {
+        id: esc.id,
+        origem: esc.origem,
+        opcoes: esc.opcoes.filter(isArcano).map((k) => ({ ...arcanoInfo(k), breve: textos[k]?.breve ?? '' })),
+      }
+    : null
   return {
     liberado: true,
     arcano: arcano ? arcanoInfo(arcano) : null,
@@ -354,6 +369,7 @@ export async function estadoVirtudes(playerId: string): Promise<VirtudesPayload>
     arcanos: listaArcanos(textos, cfg.afinidades.ordem, posse, equipe, cargo === 'owner'),
     fragmentos: s.fragmentos,
     grandesFragmentos: s.grandes,
+    escolha,
     verTodos: equipe,
   }
 }
@@ -688,6 +704,48 @@ export async function despertarArcano(playerId: string, arcanoRaw: unknown): Pro
       JSON.stringify({ arcano, grandeFragmento: !equipe }),
     ])
     return { ok: true, arcano, estagio: 0, ...(await saldoDe(c, playerId)) }
+  })
+}
+
+/**
+ * O JOGADOR escolhe o Arcano do prêmio entre as opções do narrador (aprovadas por um Anfitrião). Vira o original,
+ * no Estágio 0. Só quem ainda não tem Arcano; cada escolha vale uma vez (as outras pendentes se fecham).
+ */
+export async function escolherArcano(playerId: string, escolhaIdRaw: unknown, arcanoRaw: unknown): Promise<ArcanoAcaoResultado> {
+  if (typeof escolhaIdRaw !== 'string' || !UUID_RE.test(escolhaIdRaw)) throw new RecordError('Escolha inválida.')
+  if (!isArcano(arcanoRaw)) throw new RecordError('Arcano desconhecido.')
+  const arcano = arcanoRaw
+  return txAs(playerId, async (c) => {
+    await travar(c, playerId)
+    const [e] = await run<{ opcoes: string[]; escolhido: string | null; origem: string }>(
+      c,
+      'SELECT opcoes, escolhido, origem FROM arcano_escolhas WHERE id = $1 AND player_id = $2 FOR UPDATE',
+      [escolhaIdRaw, playerId],
+    )
+    if (!e) throw new RecordError('Esta escolha não existe.', 404)
+    if (e.escolhido) {
+      if (e.escolhido === arcano) return { ok: true, arcano, estagio: 0, ...(await saldoDe(c, playerId)), jaFeito: true }
+      throw new RecordError('Você já escolheu o seu Arcano.', 409)
+    }
+    if (!e.opcoes.includes(arcano)) throw new RecordError('Este Arcano não está entre as opções.', 400)
+    const [p] = await run<{ arcano: string | null }>(c, 'SELECT arcano FROM players WHERE id = $1', [playerId])
+    if (p?.arcano) throw new RecordError('Você já tem um Arcano.', 409)
+    const r = await concederArcano(c, playerId, arcano, 'recompensa')
+    // Arcano novo começa na Essência (Estágio 0), mesmo que um Arcano antigo apagado pela equipe tenha deixado outro Estágio.
+    if (r.novo) {
+      await run(c, 'UPDATE player_arcanos SET estagio = 0 WHERE player_id = $1 AND arcano = $2', [playerId, arcano])
+      await run(c, 'UPDATE players SET arcano_estagio = 0 WHERE id = $1', [playerId])
+    }
+    await run(c, 'UPDATE arcano_escolhas SET escolhido = $2, escolhido_em = now() WHERE id = $1', [escolhaIdRaw, arcano])
+    // Outras escolhas pendentes perdem o sentido (o jogador agora tem Arcano).
+    await run(c, "UPDATE arcano_escolhas SET escolhido = '-', escolhido_em = now() WHERE player_id = $1 AND escolhido IS NULL", [playerId])
+    await run(c, "INSERT INTO admin_log (actor_id, action, target_id, data) VALUES ($1, 'virtudes.arcano_escolhido', $2, $3)", [
+      playerId,
+      playerId,
+      JSON.stringify({ arcano, opcoes: e.opcoes, origem: e.origem, original: r.original }),
+    ])
+    const [x] = await run<{ estagio: number }>(c, 'SELECT estagio FROM player_arcanos WHERE player_id = $1 AND arcano = $2', [playerId, arcano])
+    return { ok: true, arcano, estagio: x?.estagio ?? 0, ...(await saldoDe(c, playerId)) }
   })
 }
 

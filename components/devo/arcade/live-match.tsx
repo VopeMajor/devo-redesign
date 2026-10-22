@@ -13,7 +13,7 @@ const REACTIONS: Record<ReactionId, { label: string; icon?: LucideIcon; text?: s
   gg: { label: 'GG', text: 'GG', color: '#f1f0ee' },
   fogo: { label: 'Fogo', icon: Flame, color: 'var(--dv-blood-text)' },
   caveira: { label: 'Caveira', icon: Skull, color: '#e8e8ee' },
-  kkk: { label: 'Risada', text: 'KKK', color: '#bab09f' },
+  kkk: { label: 'Risada', text: 'KKKK', color: '#bab09f' },
   choque: { label: 'Choque', icon: Zap, color: '#ece5d8' },
   coracao: { label: 'Coração', icon: Heart, color: 'var(--dv-amethyst-text)' },
   f: { label: 'F', text: 'F', color: 'var(--dv-amethyst-text)' },
