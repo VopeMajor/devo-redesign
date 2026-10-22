@@ -24,3 +24,8 @@ shots/
 !.dev.vars.example
 cloudflare-env.d.ts
 .cf-secrets.json
+
+# Gerados localmente (next dev, worktrees de agentes)
+.claude/worktrees/
+next-env.d.ts
+AGENTS.md
