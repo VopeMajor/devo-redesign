@@ -1,0 +1,109 @@
+{
+  "pedido": "arcano-louco-tarot2",
+  "titulo": "Arcano — louco (tarô, menos humanizado) — correção",
+  "tipo": "ilustracao",
+  "tamanho_final": 1536,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 91011,
+      "passos": null,
+      "segundos": 3.6,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "arcano-louco-tarot2--v01--1536.png",
+          "bytes": 1064381
+        },
+        {
+          "arquivo": "arcano-louco-tarot2--v01--1536.webp",
+          "bytes": 211484
+        },
+        {
+          "arquivo": "arcano-louco-tarot2--v01--1024.webp",
+          "bytes": 95862
+        },
+        {
+          "arquivo": "arcano-louco-tarot2--v01--768.webp",
+          "bytes": 63468
+        },
+        {
+          "arquivo": "arcano-louco-tarot2--v01--512.webp",
+          "bytes": 35938
+        }
+      ],
+      "segundos_pos": 39.9,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 91012,
+      "passos": null,
+      "segundos": 3.6,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "ilhas_removidas": 1,
+      "arquivos": [
+        {
+          "arquivo": "arcano-louco-tarot2--v02--1536.png",
+          "bytes": 1099458
+        },
+        {
+          "arquivo": "arcano-louco-tarot2--v02--1536.webp",
+          "bytes": 231256
+        },
+        {
+          "arquivo": "arcano-louco-tarot2--v02--1024.webp",
+          "bytes": 98766
+        },
+        {
+          "arquivo": "arcano-louco-tarot2--v02--768.webp",
+          "bytes": 62144
+        },
+        {
+          "arquivo": "arcano-louco-tarot2--v02--512.webp",
+          "bytes": 34186
+        }
+      ],
+      "segundos_pos": 30.9,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 91013,
+      "passos": null,
+      "segundos": 4.4,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "arcano-louco-tarot2--v03--1536.png",
+          "bytes": 942916
+        },
+        {
+          "arquivo": "arcano-louco-tarot2--v03--1536.webp",
+          "bytes": 191558
+        },
+        {
+          "arquivo": "arcano-louco-tarot2--v03--1024.webp",
+          "bytes": 83920
+        },
+        {
+          "arquivo": "arcano-louco-tarot2--v03--768.webp",
+          "bytes": 54594
+        },
+        {
+          "arquivo": "arcano-louco-tarot2--v03--512.webp",
+          "bytes": 30378
+        }
+      ],
+      "segundos_pos": 28.6,
+      "avisos": []
+    }
+  ]
+}
