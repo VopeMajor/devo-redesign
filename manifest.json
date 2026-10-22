@@ -1,0 +1,96 @@
+{
+  "pedido": "carta-chave",
+  "titulo": "Carta — Chave Enferrujada (ilustração da janela)",
+  "tipo": "ilustracao",
+  "tamanho_final": 1536,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 70111,
+      "passos": null,
+      "segundos": 3.0,
+      "neuronios_estimados": 1386,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "carta-chave--v01--1536.png",
+          "bytes": 2327018
+        },
+        {
+          "arquivo": "carta-chave--v01--1536.webp",
+          "bytes": 460078
+        },
+        {
+          "arquivo": "carta-chave--v01--1024.webp",
+          "bytes": 163976
+        },
+        {
+          "arquivo": "carta-chave--v01--768.webp",
+          "bytes": 102262
+        }
+      ],
+      "segundos_pos": 1.6,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 70112,
+      "passos": null,
+      "segundos": 2.5,
+      "neuronios_estimados": 1386,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "carta-chave--v02--1536.png",
+          "bytes": 2455406
+        },
+        {
+          "arquivo": "carta-chave--v02--1536.webp",
+          "bytes": 485200
+        },
+        {
+          "arquivo": "carta-chave--v02--1024.webp",
+          "bytes": 181010
+        },
+        {
+          "arquivo": "carta-chave--v02--768.webp",
+          "bytes": 116372
+        }
+      ],
+      "segundos_pos": 1.5,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 70113,
+      "passos": null,
+      "segundos": 18.0,
+      "neuronios_estimados": 1386,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "carta-chave--v03--1536.png",
+          "bytes": 2441472
+        },
+        {
+          "arquivo": "carta-chave--v03--1536.webp",
+          "bytes": 490890
+        },
+        {
+          "arquivo": "carta-chave--v03--1024.webp",
+          "bytes": 175776
+        },
+        {
+          "arquivo": "carta-chave--v03--768.webp",
+          "bytes": 114006
+        }
+      ],
+      "segundos_pos": 1.6,
+      "avisos": []
+    }
+  ]
+}
