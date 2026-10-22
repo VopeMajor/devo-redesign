@@ -176,51 +176,21 @@ function Fundos() {
   )
 }
 
-/** A mesa de confecção: tampo de madeira escura, cartas abertas em leque, tesoura, tinteiro e a vela. */
+/** A mesa de confecção pintada (infra/arte `casa-mesa-confeccao` v02, sem fundo), com a luz da vela por trás. */
 function MesaConfeccao({ className }: { className?: string }) {
   return (
-    <svg viewBox="0 0 320 190" className={className} aria-hidden="true">
-      <defs>
-        <linearGradient id="casa-tampo" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#3a2d22" />
-          <stop offset="1" stopColor="#1e1712" />
-        </linearGradient>
-        <linearGradient id="casa-carta" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#ece5d8" />
-          <stop offset="1" stopColor="#bab09f" />
-        </linearGradient>
-        <radialGradient id="casa-vela" cx="0.5" cy="0.5" r="0.5">
-          <stop offset="0" stopColor="#f3e2b0" stopOpacity="0.9" />
-          <stop offset="1" stopColor="#f3e2b0" stopOpacity="0" />
-        </radialGradient>
-      </defs>
-      {/* pernas */}
-      <path d="M38 96 30 186h12l10-90ZM282 96l8 90h-12l-10-90Z" fill="#17120e" />
-      {/* tampo em perspectiva */}
-      <path d="M22 70h276l14 28H8Z" fill="url(#casa-tampo)" stroke="#5a4636" strokeWidth="1" />
-      <path d="M8 98h304v10H8Z" fill="#140f0b" />
-      {/* cartas em leque */}
-      {[-24, -10, 4, 18].map((r, i) => (
-        <g key={r} transform={`translate(${120 + i * 16} 82) rotate(${r})`}>
-          <rect x="-13" y="-40" width="26" height="40" rx="2" fill="url(#casa-carta)" stroke="#6b6357" strokeWidth="0.8" />
-          <rect x="-9" y="-36" width="18" height="24" fill="none" stroke="#9a8f7c" strokeWidth="0.6" />
-          <path d="M0 -28l3 4-3 4-3-4Z" fill="#8b7bd0" opacity="0.8" />
-        </g>
-      ))}
-      {/* tesoura */}
-      <g transform="translate(232 84) rotate(-18)" fill="none" stroke="#bab09f" strokeWidth="1.6">
-        <circle cx="-8" cy="4" r="4" />
-        <circle cx="4" cy="6" r="4" />
-        <path d="M-5 1 22-12M1 3 22-6" />
-      </g>
-      {/* tinteiro e pena */}
-      <path d="M58 70h18l2-12H56Z" fill="#101014" stroke="#3a3833" />
-      <path d="M68 58c6-18 14-30 26-38-6 12-12 24-22 38Z" fill="#d9d1c2" opacity="0.85" />
-      {/* vela */}
-      <circle cx="268" cy="42" r="26" fill="url(#casa-vela)" />
-      <rect x="262" y="48" width="12" height="22" fill="#ece5d8" />
-      <path d="M268 36c4 4 4 9 0 12-4-3-4-8 0-12Z" fill="#f3d58a" />
-    </svg>
+    <span className={cn('relative block', className)}>
+      <span aria-hidden="true" className="absolute inset-x-[10%] bottom-[6%] h-[18%] rounded-[50%] bg-black/70 blur-md" />
+      <span aria-hidden="true" className="absolute left-[60%] top-[8%] size-[30%] rounded-full bg-[radial-gradient(closest-side,rgba(243,226,176,0.28),transparent)]" />
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src="/images/casa/mesa-768.webp"
+        srcSet="/images/casa/mesa-512.webp 512w, /images/casa/mesa-768.webp 768w, /images/casa/mesa-1024.webp 1024w, /images/casa/mesa-1536.webp 1536w"
+        sizes="(min-width: 768px) 420px, 80vw"
+        alt=""
+        className="relative w-full drop-shadow-[0_10px_18px_rgba(0,0,0,0.6)]"
+      />
+    </span>
   )
 }
 
