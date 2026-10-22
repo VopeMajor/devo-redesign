@@ -24,9 +24,9 @@
       1024
     ],
     "recorte_da_figura": [
-      0.2393,
+      0.2217,
       0.0417,
-      0.6904,
+      0.6729,
       0.4427
     ]
   },
@@ -45,8 +45,8 @@
     }
   },
   "origem": {
-    "pedido": "arcano-justica",
+    "pedido": "arcano-justica-tarot3",
     "variacao": "v01",
-    "png": "arcano-justica--v01--1536.png"
+    "png": "arcano-justica-tarot3--v01--1536.png"
   }
 }
