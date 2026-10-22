@@ -1,0 +1,96 @@
+{
+  "pedido": "carta-xadrez-cavalo",
+  "titulo": "Carta — Cavalo do Xadrez (ilustração da janela)",
+  "tipo": "ilustracao",
+  "tamanho_final": 1536,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 70281,
+      "passos": null,
+      "segundos": 2.4,
+      "neuronios_estimados": 1386,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "carta-xadrez-cavalo--v01--1536.png",
+          "bytes": 2084266
+        },
+        {
+          "arquivo": "carta-xadrez-cavalo--v01--1536.webp",
+          "bytes": 321750
+        },
+        {
+          "arquivo": "carta-xadrez-cavalo--v01--1024.webp",
+          "bytes": 121550
+        },
+        {
+          "arquivo": "carta-xadrez-cavalo--v01--768.webp",
+          "bytes": 79532
+        }
+      ],
+      "segundos_pos": 1.9,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 70282,
+      "passos": null,
+      "segundos": 3.2,
+      "neuronios_estimados": 1386,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "carta-xadrez-cavalo--v02--1536.png",
+          "bytes": 2201371
+        },
+        {
+          "arquivo": "carta-xadrez-cavalo--v02--1536.webp",
+          "bytes": 397674
+        },
+        {
+          "arquivo": "carta-xadrez-cavalo--v02--1024.webp",
+          "bytes": 135626
+        },
+        {
+          "arquivo": "carta-xadrez-cavalo--v02--768.webp",
+          "bytes": 89550
+        }
+      ],
+      "segundos_pos": 1.7,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 70283,
+      "passos": null,
+      "segundos": 63.6,
+      "neuronios_estimados": 1386,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "carta-xadrez-cavalo--v03--1536.png",
+          "bytes": 2235133
+        },
+        {
+          "arquivo": "carta-xadrez-cavalo--v03--1536.webp",
+          "bytes": 413372
+        },
+        {
+          "arquivo": "carta-xadrez-cavalo--v03--1024.webp",
+          "bytes": 143578
+        },
+        {
+          "arquivo": "carta-xadrez-cavalo--v03--768.webp",
+          "bytes": 91898
+        }
+      ],
+      "segundos_pos": 1.7,
+      "avisos": []
+    }
+  ]
+}
