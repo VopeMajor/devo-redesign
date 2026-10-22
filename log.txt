@@ -1,0 +1,9 @@
+[arcano-imperador-tarot2] v01: @cf/black-forest-labs/flux-2-klein-9b seed=91051 1024x1536 passos=None (~1,455 neurônios)
+    ok em 3.6s, 1024x1536
+[arcano-imperador-tarot2] v02: @cf/black-forest-labs/flux-2-klein-9b seed=91052 1024x1536 passos=None (~1,455 neurônios)
+    ok em 3.3s, 1024x1536
+[arcano-imperador-tarot2] v03: @cf/black-forest-labs/flux-2-klein-9b seed=91053 1024x1536 passos=None (~1,455 neurônios)
+    ok em 3.6s, 1024x1536
+[arcano-imperador-tarot2] v01: rembg:birefnet-general; sem avisos
+[arcano-imperador-tarot2] v02: rembg:birefnet-general; sem avisos
+[arcano-imperador-tarot2] v03: rembg:birefnet-general; sem avisos
