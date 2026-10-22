@@ -24,9 +24,9 @@
       1024
     ],
     "recorte_da_figura": [
-      0.2725,
+      0.2852,
       0.0417,
-      0.7236,
+      0.7363,
       0.4427
     ]
   },
@@ -45,8 +45,8 @@
     }
   },
   "origem": {
-    "pedido": "arcano-torre",
-    "variacao": "v02",
-    "png": "arcano-torre--v02--1536.png"
+    "pedido": "arcano-torre-tarot2",
+    "variacao": "v01",
+    "png": "arcano-torre-tarot2--v01--1536.png"
   }
 }
