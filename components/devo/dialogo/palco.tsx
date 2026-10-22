@@ -121,7 +121,7 @@ function Cenario({ id, portaAberta, anima, fxKey }: { id: CenarioId; portaAberta
 }
 
 /** Casa do jogador à noite: parede, janela com luar frio, porta com moldura (a luz do corredor entra ao abrir). */
-function CasaNoite({ portaAberta, anima, fxKey }: { portaAberta: boolean; anima: boolean; fxKey: number }) {
+export function CasaNoite({ portaAberta, anima, fxKey }: { portaAberta: boolean; anima: boolean; fxKey: number }) {
   return (
     <div className="absolute inset-0 bg-[linear-gradient(180deg,#141418,#1b1a1e_55%,#0e0e10)]">
       {/* papel de parede: listras finas quase invisíveis */}

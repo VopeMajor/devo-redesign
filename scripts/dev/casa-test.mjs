@@ -134,7 +134,7 @@ await test('cadastro das contas de teste', async () => {
   B = await signUp(`Cas${sfx}b`, `DEVO-CA-${SFX}-B`)
   C = await signUp(`Cas${sfx}c`, `DEVO-CA-${SFX}-C`)
   O = await signUp(`Cas${sfx}o`, `DEVO-CA-${SFX}-O`)
-  const cartasA = [...comuns('a', 12), ['a-inc1', 'dado'], ['a-rara', 'olho'], ['a-peao1', 'xadrez_peao'], ['a-peao2', 'xadrez_peao'], ['a-x1', 'tesoura'], ['a-x2', 'escudo']]
+  const cartasA = [...comuns('a', 12), ['a-inc1', 'porta'], ['a-rara', 'olho'], ['a-peao1', 'xadrez_peao'], ['a-peao2', 'xadrez_peao'], ['a-x1', 'tesoura'], ['a-x2', 'escudo']]
   for (const [s, cards, h] of [
     [A, cartasA, 200],
     [B, [['b-peao1', 'xadrez_peao'], ['b-peao2', 'xadrez_peao']], 200],
@@ -183,7 +183,7 @@ await test('5 comuns → tentativa: cartas saem do save, Tempo debitado, save an
   assert(antes - depois === 30 * MIN && r.json.timeDeltaMs === -30 * MIN, `30 min debitados (${(antes - depois) / MIN})`)
   const inv = await inventario(A.id)
   assert(!inv.some((c) => ['a-c0', 'a-c4'].includes(c.uid)), 'materiais saíram do save')
-  const cartasA = [...comuns('a', 12), ['a-inc1', 'dado'], ['a-rara', 'olho'], ['a-peao1', 'xadrez_peao'], ['a-peao2', 'xadrez_peao'], ['a-x1', 'tesoura'], ['a-x2', 'escudo']]
+  const cartasA = [...comuns('a', 12), ['a-inc1', 'porta'], ['a-rara', 'olho'], ['a-peao1', 'xadrez_peao'], ['a-peao2', 'xadrez_peao'], ['a-x1', 'tesoura'], ['a-x2', 'escudo']]
   await A.post('/api/save', save(cartasA, 200))
   const inv2 = await inventario(A.id)
   assert(!inv2.some((c) => c.uid === 'a-c0'), 'save antigo não traz o material de volta')

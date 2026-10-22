@@ -1,6 +1,6 @@
 'use client'
 
-import { type CSSProperties, type ReactNode, useEffect, useMemo, useState } from 'react'
+import { type CSSProperties, type ReactNode, useEffect, useMemo, useRef, useState } from 'react'
 import { playSfx } from '@/lib/devo/audio'
 import { getCard, RARITY_META } from '@/lib/devo/cards'
 import {
@@ -20,6 +20,9 @@ import { Button, Spinner } from '../kit/button'
 import { EmblemCasa, EmblemMark } from '../kit/emblems'
 import { Dialog } from '../kit/sheet'
 import { Tabs } from '../kit/tabs'
+import { GlyphArrow } from '../kit/glyphs'
+import { CasaNoite } from '../dialogo/palco'
+import { useBackHandler } from '../use-back-handler'
 import { CardFace, DevoCard, RarityGem } from '../shared/devo-card'
 import { useDevo } from '../state/devo-store'
 import { useCasa } from './dados'
@@ -60,10 +63,164 @@ export function CasaApp() {
     )
   }
   if (!data.liberado) return <Trancado motivo={data.motivo} />
+  return <Comodos d={data} agir={agir} resgatar={resgatar} />
+}
+
+/* ------------------------------------------------------------------ A casa (cômodos) */
+
+/**
+ * A mesma casa por onde o Galo entra (cenário `casa-noite`). Deslizando para o lado (no celular) ou pela seta
+ * discreta (no computador), aparecem os fundos com a mesa de confecção; tocar na mesa abre a Confecção.
+ */
+function Comodos({ d, agir, resgatar }: { d: CasaLiberado; agir: Agir; resgatar: Resgatar }) {
+  const [aberta, setAberta] = useState(false)
+  const [quadro, setQuadro] = useState(0)
+  const trilho = useRef<HTMLDivElement>(null)
+  useBackHandler(aberta, () => setAberta(false))
+  const ir = (i: number) => {
+    const el = trilho.current
+    if (!el) return
+    el.scrollTo({ left: i * el.clientWidth, behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' })
+  }
+  if (aberta)
+    return (
+      <Fundo>
+        <div className="flex h-full flex-col">
+          <button type="button" onClick={() => setAberta(false)} className="dv-focus flex min-h-11 shrink-0 items-center gap-2 px-4 pt-2 font-mono text-[11px] uppercase tracking-[0.18em] text-dv-gold">
+            <GlyphArrow className="size-3.5 rotate-180" /> Voltar para a casa
+          </button>
+          <div className="min-h-0 flex-1">
+            <Tela d={d} agir={agir} resgatar={resgatar} />
+          </div>
+        </div>
+      </Fundo>
+    )
+  const pendentes = d.andamento.length
   return (
-    <Fundo>
-      <Tela d={data} agir={agir} resgatar={resgatar} />
-    </Fundo>
+    <div className="relative h-full overflow-hidden bg-black">
+      <div
+        ref={trilho}
+        role="group"
+        aria-roledescription="carrossel"
+        aria-label="Cômodos da casa"
+        onScroll={(e) => {
+          const el = e.currentTarget
+          setQuadro(Math.round(el.scrollLeft / Math.max(1, el.clientWidth)))
+        }}
+        className="flex h-full snap-x snap-mandatory overflow-x-auto overflow-y-hidden overscroll-x-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+      >
+        <section aria-label="Sala" className="relative h-full w-full shrink-0 snap-start">
+          <CasaNoite portaAberta={false} anima={false} fxKey={0} />
+          <p className="absolute inset-x-0 top-5 px-6 text-center font-body text-[15px] italic text-dv-text-2">Sua casa. Silenciosa, por enquanto.</p>
+          <p aria-hidden="true" className="casa-dica absolute bottom-[9%] right-5 flex items-center gap-1.5 font-mono text-[10.5px] uppercase tracking-[0.18em] text-dv-text-3 [@media(hover:hover)]:hidden">
+            Deslize <GlyphArrow className="size-3" />
+          </p>
+        </section>
+        <section aria-label="Fundos" className="relative h-full w-full shrink-0 snap-start">
+          <Fundos />
+          <button
+            type="button"
+            onClick={() => {
+              playSfx('open')
+              setAberta(true)
+            }}
+            aria-label={`Mesa de confecção${pendentes ? `: ${pendentes} em andamento` : ''}`}
+            className="dv-focus group absolute bottom-[22%] left-1/2 w-[min(78%,340px)] -translate-x-1/2"
+          >
+            <MesaConfeccao className="w-full transition-[filter] duration-200 group-hover:brightness-125 group-active:brightness-150" />
+            {pendentes > 0 && (
+              <span className="absolute -top-1 right-[12%] grid min-w-6 place-items-center rounded-full bg-dv-amethyst px-1.5 font-mono text-[11px] text-white shadow-[0_0_10px_var(--dv-amethyst)]">{pendentes}</span>
+            )}
+            <span className="mt-3 block text-center font-display text-[15px] font-semibold uppercase tracking-[0.12em] text-dv-text">Mesa de confecção</span>
+            <span className="block text-center font-mono text-[10px] uppercase tracking-[0.16em] text-dv-text-3">Toque para usar</span>
+          </button>
+        </section>
+      </div>
+      {/* seta discreta no computador (no celular, o arrasto) */}
+      <button
+        type="button"
+        onClick={() => ir(quadro === 0 ? 1 : 0)}
+        aria-label={quadro === 0 ? 'Ir para os fundos da casa' : 'Voltar para a sala'}
+        className={cn(
+          'dv-focus absolute top-1/2 z-10 hidden size-11 -translate-y-1/2 place-items-center text-dv-text-3 opacity-60 transition-opacity hover:opacity-100 [@media(hover:hover)]:grid',
+          quadro === 0 ? 'right-2' : 'left-2',
+        )}
+      >
+        <GlyphArrow className={cn('size-5', quadro !== 0 && 'rotate-180')} />
+      </button>
+      <style>{CASA_CSS}</style>
+    </div>
+  )
+}
+
+const CASA_CSS = `
+.casa-dica{animation:casa-dica 2.4s ease-in-out infinite}
+@keyframes casa-dica{0%,100%{transform:translateX(0);opacity:.55}50%{transform:translateX(6px);opacity:1}}
+@media (prefers-reduced-motion: reduce){.casa-dica{animation:none}}
+`
+
+/** Fundos da casa: a mesma parede e o mesmo chão da sala, com o lampião baixo sobre a mesa. */
+function Fundos() {
+  return (
+    <div className="absolute inset-0 bg-[linear-gradient(180deg,#141418,#1b1a1e_55%,#0e0e10)]">
+      <span className="absolute inset-0 opacity-[0.07] bg-[repeating-linear-gradient(90deg,#ece5d8_0_1px,transparent_1px_26px)]" />
+      {/* lampião pendurado e a luz quente que ele joga na parede */}
+      <span className="absolute left-1/2 top-0 h-[18%] w-px -translate-x-1/2 bg-[#3a3833]" />
+      <span className="absolute left-1/2 top-[18%] size-5 -translate-x-1/2 rounded-b-full bg-[#d6c49a] shadow-[0_0_30px_10px_rgba(214,196,154,0.35)]" />
+      <span className="absolute inset-x-0 top-[12%] h-[70%] bg-[radial-gradient(45%_55%_at_50%_20%,rgba(214,196,154,0.16),transparent_70%)]" />
+      {/* quadro torto na parede */}
+      <span className="absolute left-[10%] top-[24%] h-[14%] w-[20%] -rotate-3 shadow-[inset_0_0_0_3px_#2a2a2e] bg-[linear-gradient(160deg,rgba(186,176,159,0.08),transparent)]" />
+      <span className="absolute inset-x-0 bottom-0 h-[30%] bg-[linear-gradient(180deg,#121114,#08080a)] shadow-[0_-1px_0_rgba(186,176,159,0.18)]" />
+      <span className="absolute inset-0 bg-[radial-gradient(120%_80%_at_50%_40%,transparent_45%,rgba(0,0,0,0.7))]" />
+    </div>
+  )
+}
+
+/** A mesa de confecção: tampo de madeira escura, cartas abertas em leque, tesoura, tinteiro e a vela. */
+function MesaConfeccao({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 320 190" className={className} aria-hidden="true">
+      <defs>
+        <linearGradient id="casa-tampo" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor="#3a2d22" />
+          <stop offset="1" stopColor="#1e1712" />
+        </linearGradient>
+        <linearGradient id="casa-carta" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor="#ece5d8" />
+          <stop offset="1" stopColor="#bab09f" />
+        </linearGradient>
+        <radialGradient id="casa-vela" cx="0.5" cy="0.5" r="0.5">
+          <stop offset="0" stopColor="#f3e2b0" stopOpacity="0.9" />
+          <stop offset="1" stopColor="#f3e2b0" stopOpacity="0" />
+        </radialGradient>
+      </defs>
+      {/* pernas */}
+      <path d="M38 96 30 186h12l10-90ZM282 96l8 90h-12l-10-90Z" fill="#17120e" />
+      {/* tampo em perspectiva */}
+      <path d="M22 70h276l14 28H8Z" fill="url(#casa-tampo)" stroke="#5a4636" strokeWidth="1" />
+      <path d="M8 98h304v10H8Z" fill="#140f0b" />
+      {/* cartas em leque */}
+      {[-24, -10, 4, 18].map((r, i) => (
+        <g key={r} transform={`translate(${120 + i * 16} 82) rotate(${r})`}>
+          <rect x="-13" y="-40" width="26" height="40" rx="2" fill="url(#casa-carta)" stroke="#6b6357" strokeWidth="0.8" />
+          <rect x="-9" y="-36" width="18" height="24" fill="none" stroke="#9a8f7c" strokeWidth="0.6" />
+          <path d="M0 -28l3 4-3 4-3-4Z" fill="#8b7bd0" opacity="0.8" />
+        </g>
+      ))}
+      {/* tesoura */}
+      <g transform="translate(232 84) rotate(-18)" fill="none" stroke="#bab09f" strokeWidth="1.6">
+        <circle cx="-8" cy="4" r="4" />
+        <circle cx="4" cy="6" r="4" />
+        <path d="M-5 1 22-12M1 3 22-6" />
+      </g>
+      {/* tinteiro e pena */}
+      <path d="M58 70h18l2-12H56Z" fill="#101014" stroke="#3a3833" />
+      <path d="M68 58c6-18 14-30 26-38-6 12-12 24-22 38Z" fill="#d9d1c2" opacity="0.85" />
+      {/* vela */}
+      <circle cx="268" cy="42" r="26" fill="url(#casa-vela)" />
+      <rect x="262" y="48" width="12" height="22" fill="#ece5d8" />
+      <path d="M268 36c4 4 4 9 0 12-4-3-4-8 0-12Z" fill="#f3d58a" />
+    </svg>
   )
 }
 
@@ -123,7 +280,6 @@ function Tela({ d, agir, resgatar }: { d: CasaLiberado; agir: Agir; resgatar: Re
   const pacotes = d.pacotes.reduce((s, p) => s + p.quantidade, 0)
   return (
     <div className="devo-scroll h-full overflow-y-auto overflow-x-hidden pb-10">
-      <p className="px-4 pb-2 pt-4 font-body text-[14px] italic text-dv-text-2">A mesa de confecção fica nos fundos, perto da janela.</p>
       <div className="sticky top-0 z-20 bg-dv-ink/90 px-2 backdrop-blur-[2px]">
         <Tabs
           label="Cômodos da casa"

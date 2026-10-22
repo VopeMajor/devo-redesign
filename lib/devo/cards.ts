@@ -38,11 +38,11 @@ export const CARDS: CardDef[] = [
   { id: 'chave', name: 'Chave Enferrujada', numeral: 'II', rarity: 'comum', type: 'Informação', glyph: 'key', effect: 'Revela a saída de uma sala trancada.', flavor: 'Toda porta tem um preço.' },
   { id: 'tesoura', name: 'Tesoura Cega', numeral: 'III', rarity: 'comum', type: 'Trapaça', glyph: 'scissors', effect: 'Corta uma regra secundária do jogo atual.', flavor: 'Não corta nada. Quase nada.' },
   { id: 'escudo', name: 'Escudo de Papelão', numeral: 'IV', rarity: 'comum', type: 'Defesa', glyph: 'shield', effect: 'Anula a primeira penalidade de tempo recebida.', flavor: 'Melhor que nada. Por pouco.' },
-  { id: 'moeda', name: 'Moeda de Duas Caras', numeral: 'V', rarity: 'incomum', type: 'Trapaça', glyph: 'coins', effect: 'Força um cara-ou-coroa a seu favor uma vez.', flavor: 'O destino também aceita suborno.' },
-  { id: 'dado', name: 'Dado Viciado', numeral: 'VI', rarity: 'incomum', type: 'Trapaça', glyph: 'dice', effect: 'Escolha o resultado de uma rolagem.', flavor: 'Seis lados. Uma verdade.' },
+  { id: 'moeda', name: 'Moeda de Duas Caras', numeral: 'V', rarity: 'comum', type: 'Trapaça', glyph: 'coins', effect: 'Força um cara-ou-coroa a seu favor uma vez.', flavor: 'O destino também aceita suborno.' },
+  { id: 'dado', name: 'Dado Viciado', numeral: 'VI', rarity: 'comum', type: 'Trapaça', glyph: 'dice', effect: 'Escolha o resultado de uma rolagem.', flavor: 'Seis lados. Uma verdade.' },
   { id: 'porta', name: 'A Porta Vermelha', numeral: 'VII', rarity: 'incomum', type: 'Informação', glyph: 'door', effect: 'Mostra quantos jogadores restam no andar.', flavor: 'Não abra. Ou abra.' },
   { id: 'laminas', name: 'Lâminas Cruzadas', numeral: 'VIII', rarity: 'incomum', type: 'Ataque', glyph: 'swords', effect: 'Rouba 1 hora de um oponente derrotado.', flavor: 'O tempo dos outros também é seu.' },
-  { id: 'ampulheta', name: 'Ampulheta Invertida', numeral: 'IX', rarity: 'rara', type: 'Tempo', glyph: 'hourglass', effect: 'Concede +3 horas ao seu pulso.', flavor: 'A areia sobe quando ninguém olha.' },
+  { id: 'ampulheta', name: 'Ampulheta Invertida', numeral: 'IX', rarity: 'comum', type: 'Tempo', glyph: 'hourglass', effect: 'Concede +3 horas ao seu pulso.', flavor: 'A areia sobe quando ninguém olha.' },
   { id: 'olho', name: 'Olho que Tudo Vê', numeral: 'X', rarity: 'rara', type: 'Informação', glyph: 'eye', effect: 'Revela a carta oculta em uma troca antes de aceitar.', flavor: 'Saber é sobreviver.' },
   { id: 'mascara', name: 'Máscara do Rato', numeral: 'XI', rarity: 'rara', type: 'Trapaça', glyph: 'mask', effect: 'Assume a identidade de outro jogador por um jogo.', flavor: 'Ninguém confia num rato. Todos confiam numa máscara.' },
   { id: 'cranio', name: 'Crânio Polido', numeral: 'XII', rarity: 'rara', type: 'Ataque', glyph: 'skull', effect: 'Elimina um jogador com menos de 1 hora restante.', flavor: 'Limpo como uma promessa.' },
@@ -224,6 +224,18 @@ export function makeOwned(cardId: string, origin: string): OwnedCard {
   return { uid: `c-${Date.now().toString(36)}-${uidCounter}`, cardId, origin, acquiredAt: Date.now() }
 }
 
+/**
+ * Cartas Iniciais (dono, 22/10): o jogador começa só com o Escudo de Papelão. Fósforo, Moeda, Dado e Ampulheta
+ * continuam existindo (Comuns), mas não vêm mais no kit; as cópias antigas do kit saem dos saves (`semKitAntigo`).
+ */
+export const KIT_INICIAL = ['escudo']
+export const ORIGEM_KIT = 'Kit inicial'
+
 export function starterInventory(): OwnedCard[] {
-  return ['fosforo', 'escudo', 'moeda', 'dado', 'ampulheta'].map((id) => makeOwned(id, 'Kit inicial'))
+  return KIT_INICIAL.map((id) => makeOwned(id, ORIGEM_KIT))
+}
+
+/** Tira do inventário as cópias do kit antigo que não fazem mais parte do kit (só o Escudo fica). */
+export function semKitAntigo<T extends { cardId: string; origin: string }>(inventario: T[]): T[] {
+  return inventario.filter((c) => c.origin !== ORIGEM_KIT || KIT_INICIAL.includes(c.cardId))
 }

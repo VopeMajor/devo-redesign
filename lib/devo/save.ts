@@ -1,4 +1,5 @@
 import { sanitizeProfile, type PlayerProfile } from './appearances'
+import { semKitAntigo } from './cards'
 import type { ChatMessage, NotificationItem, OwnedCard } from './types'
 
 export type SavedThread = {
@@ -68,10 +69,12 @@ function messages(v: unknown): ChatMessage[] {
 export function sanitizeSave(raw: unknown): SaveData | null {
   if (!isObj(raw) || raw.v !== 1) return null
   const inventory = Array.isArray(raw.inventory)
-    ? raw.inventory
-        .filter(isObj)
-        .slice(0, 300)
-        .map((c) => ({ uid: str(c.uid, 80), cardId: str(c.cardId, 80), origin: str(c.origin, 120), acquiredAt: num(c.acquiredAt) }))
+    ? semKitAntigo(
+        raw.inventory
+          .filter(isObj)
+          .slice(0, 300)
+          .map((c) => ({ uid: str(c.uid, 80), cardId: str(c.cardId, 80), origin: str(c.origin, 120), acquiredAt: num(c.acquiredAt) })),
+      )
     : []
   const notifications = Array.isArray(raw.notifications)
     ? raw.notifications

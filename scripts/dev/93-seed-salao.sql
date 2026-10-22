@@ -29,11 +29,11 @@ SELECT v.id::uuid, v.seller::uuid, v.uid, v.card, v.rar, 'avulso', 20, 15, v.min
   FROM ed, (VALUES
     ('5a1a0001-0000-4000-8000-000000000001', '00000000-0000-4000-8000-000000000002', 'seed-salao-1', 'coroa',    'lendaria', 'aprovado',  0, 90, NULL::int, NULL, interval '3 days'),
     ('5a1a0001-0000-4000-8000-000000000002', '00000000-0000-4000-8000-000000000005', 'seed-salao-2', 'olho',     'rara',     'aprovado',  0, 40, NULL, NULL, interval '3 days'),
-    ('5a1a0001-0000-4000-8000-000000000003', '00000000-0000-4000-8000-000000000001', 'seed-salao-3', 'dado',     'incomum',  'aprovado',  0, 30, NULL, NULL, interval '2 days'),
+    ('5a1a0001-0000-4000-8000-000000000003', '00000000-0000-4000-8000-000000000001', 'seed-salao-3', 'dado',     'comum',    'aprovado',  0, 30, NULL, NULL, interval '2 days'),
     ('5a1a0001-0000-4000-8000-000000000004', '00000000-0000-4000-8000-000000000001', 'seed-salao-4', 'relogio',  'lendaria', 'vendido',  -1, 120, 300, '00000000-0000-4000-8000-000000000004', interval '6 days'),
     ('5a1a0001-0000-4000-8000-000000000005', '00000000-0000-4000-8000-000000000004', 'seed-salao-5', 'porta',    'incomum',  'devolvido', -1, 30, NULL, NULL, interval '6 days'),
     ('5a1a0001-0000-4000-8000-000000000006', '00000000-0000-4000-8000-000000000004', 'seed-salao-6', 'mascara',  'rara',     'aprovado',  1, 60, NULL, NULL, interval '1 day'),
-    ('5a1a0001-0000-4000-8000-000000000007', '00000000-0000-4000-8000-000000000005', 'seed-salao-7', 'ampulheta','rara',     'avaliacao', 0, 45, NULL, NULL, interval '5 hours'),
+    ('5a1a0001-0000-4000-8000-000000000007', '00000000-0000-4000-8000-000000000005', 'seed-salao-7', 'ampulheta','comum',     'avaliacao', 0, 45, NULL, NULL, interval '5 hours'),
     ('5a1a0001-0000-4000-8000-000000000008', '00000000-0000-4000-8000-000000000001', 'seed-salao-8', 'laminas',  'incomum',  'avaliacao', 0, 30, NULL, NULL, interval '2 hours')
   ) AS v(id, seller, uid, card, rar, status, desloc, minimo, valor, vencedor, ha)
 ON CONFLICT (id) DO NOTHING;

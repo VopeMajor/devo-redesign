@@ -146,7 +146,7 @@ await test('cadastro das contas de teste', async () => {
   D = await signUp(`Sal${sfx}d`, `DEVO-ST-${SFX}-D`)
   O = await signUp(`Sal${sfx}o`, `DEVO-ST-${SFX}-O`)
   for (const [s, cards, h] of [
-    [A, [['a-rara', 'olho'], ['a-comum', 'fosforo'], ['a-lend', 'coroa'], ['a-inc', 'dado']], 50],
+    [A, [['a-rara', 'olho'], ['a-comum', 'fosforo'], ['a-lend', 'coroa'], ['a-inc', 'porta']], 50],
     [B, [], 50],
     [C, [], 50],
     [D, [], 0.6],
@@ -239,7 +239,7 @@ await test('enviar à Bandeja: carta sai do save, taxa de divulgação paga, lot
 })
 
 await test('carta não duplica: save antigo não a devolve e o mesmo uid não entra de novo', async () => {
-  const velho = save([['a-rara', 'olho'], ['a-comum', 'fosforo'], ['a-lend', 'coroa'], ['a-inc', 'dado']])
+  const velho = save([['a-rara', 'olho'], ['a-comum', 'fosforo'], ['a-lend', 'coroa'], ['a-inc', 'porta']])
   velho.timerEndsAt = await timer(A.id)
   const r = await A.post('/api/save', velho)
   assert(r.status === 200, 'save aceito')

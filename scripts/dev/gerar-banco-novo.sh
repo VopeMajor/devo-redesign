@@ -34,6 +34,7 @@ FILES=(
   scripts/dv-recompensas-migration.sql
   scripts/casa-migration.sql
   scripts/arcanos-estagios-migration.sql
+  scripts/kit-inicial-migration.sql
 )
 {
   echo "-- DEVO — banco novo de produção (gerado; NÃO editar à mão)."

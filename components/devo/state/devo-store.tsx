@@ -3,7 +3,7 @@
 import { showSystemNotification } from '@/lib/devo/pwa'
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useReducer, useRef, type ReactNode } from 'react'
-import { makeOwned, starterInventory } from '@/lib/devo/cards'
+import { makeOwned, semKitAntigo, starterInventory } from '@/lib/devo/cards'
 import { EMPTY_PROFILE, appearanceChangesFor, appearanceOf, changeAppearanceIn, type Appearance, type PlayerProfile } from '@/lib/devo/appearances'
 import { PULSE_START_HOURS } from '@/lib/devo/pulse'
 import type { SaveData, StoryProgress } from '@/lib/devo/save'
@@ -373,7 +373,7 @@ function hydrate(playerName: string | null, save: SaveData | null, characterName
     profile: save.profile ?? base.profile,
     welcomed: save.welcomed,
     timerEndsAt: save.timerEndsAt || base.timerEndsAt,
-    inventory: save.inventory,
+    inventory: semKitAntigo(save.inventory),
     notifications: save.notifications,
     tradesCompleted: save.tradesCompleted,
     arcadeUnlocked: !!save.arcadeUnlocked,
