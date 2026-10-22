@@ -1,0 +1,96 @@
+{
+  "pedido": "carta-fosforo",
+  "titulo": "Carta — Fósforo (ilustração da janela)",
+  "tipo": "ilustracao",
+  "tamanho_final": 1536,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 70101,
+      "passos": null,
+      "segundos": 2.4,
+      "neuronios_estimados": 1386,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "carta-fosforo--v01--1536.png",
+          "bytes": 2360698
+        },
+        {
+          "arquivo": "carta-fosforo--v01--1536.webp",
+          "bytes": 467586
+        },
+        {
+          "arquivo": "carta-fosforo--v01--1024.webp",
+          "bytes": 159494
+        },
+        {
+          "arquivo": "carta-fosforo--v01--768.webp",
+          "bytes": 96740
+        }
+      ],
+      "segundos_pos": 1.6,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 70102,
+      "passos": null,
+      "segundos": 2.6,
+      "neuronios_estimados": 1386,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "carta-fosforo--v02--1536.png",
+          "bytes": 2321632
+        },
+        {
+          "arquivo": "carta-fosforo--v02--1536.webp",
+          "bytes": 452792
+        },
+        {
+          "arquivo": "carta-fosforo--v02--1024.webp",
+          "bytes": 155948
+        },
+        {
+          "arquivo": "carta-fosforo--v02--768.webp",
+          "bytes": 96922
+        }
+      ],
+      "segundos_pos": 1.6,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 70103,
+      "passos": null,
+      "segundos": 2.4,
+      "neuronios_estimados": 1386,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "carta-fosforo--v03--1536.png",
+          "bytes": 2266703
+        },
+        {
+          "arquivo": "carta-fosforo--v03--1536.webp",
+          "bytes": 413000
+        },
+        {
+          "arquivo": "carta-fosforo--v03--1024.webp",
+          "bytes": 142722
+        },
+        {
+          "arquivo": "carta-fosforo--v03--768.webp",
+          "bytes": 87200
+        }
+      ],
+      "segundos_pos": 1.6,
+      "avisos": []
+    }
+  ]
+}
