@@ -1,0 +1,96 @@
+{
+  "pedido": "carta-mascara",
+  "titulo": "Carta — Máscara do Rato (ilustração da janela)",
+  "tipo": "ilustracao",
+  "tamanho_final": 1536,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 70201,
+      "passos": null,
+      "segundos": 63.5,
+      "neuronios_estimados": 1386,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "carta-mascara--v01--1536.png",
+          "bytes": 2369465
+        },
+        {
+          "arquivo": "carta-mascara--v01--1536.webp",
+          "bytes": 457062
+        },
+        {
+          "arquivo": "carta-mascara--v01--1024.webp",
+          "bytes": 157914
+        },
+        {
+          "arquivo": "carta-mascara--v01--768.webp",
+          "bytes": 98100
+        }
+      ],
+      "segundos_pos": 1.6,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 70202,
+      "passos": null,
+      "segundos": 2.8,
+      "neuronios_estimados": 1386,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "carta-mascara--v02--1536.png",
+          "bytes": 2396331
+        },
+        {
+          "arquivo": "carta-mascara--v02--1536.webp",
+          "bytes": 458232
+        },
+        {
+          "arquivo": "carta-mascara--v02--1024.webp",
+          "bytes": 164682
+        },
+        {
+          "arquivo": "carta-mascara--v02--768.webp",
+          "bytes": 101522
+        }
+      ],
+      "segundos_pos": 1.5,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 70203,
+      "passos": null,
+      "segundos": 2.5,
+      "neuronios_estimados": 1386,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "carta-mascara--v03--1536.png",
+          "bytes": 2470122
+        },
+        {
+          "arquivo": "carta-mascara--v03--1536.webp",
+          "bytes": 490122
+        },
+        {
+          "arquivo": "carta-mascara--v03--1024.webp",
+          "bytes": 179976
+        },
+        {
+          "arquivo": "carta-mascara--v03--768.webp",
+          "bytes": 112442
+        }
+      ],
+      "segundos_pos": 1.5,
+      "avisos": []
+    }
+  ]
+}
