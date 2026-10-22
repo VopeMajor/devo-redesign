@@ -1,0 +1,96 @@
+{
+  "pedido": "carta-moeda",
+  "titulo": "Carta — Moeda de Duas Caras (ilustração da janela)",
+  "tipo": "ilustracao",
+  "tamanho_final": 1536,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 70147,
+      "passos": null,
+      "segundos": 2.8,
+      "neuronios_estimados": 1386,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "carta-moeda--v01--1536.png",
+          "bytes": 2414762
+        },
+        {
+          "arquivo": "carta-moeda--v01--1536.webp",
+          "bytes": 453344
+        },
+        {
+          "arquivo": "carta-moeda--v01--1024.webp",
+          "bytes": 172802
+        },
+        {
+          "arquivo": "carta-moeda--v01--768.webp",
+          "bytes": 109280
+        }
+      ],
+      "segundos_pos": 1.8,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 70142,
+      "passos": null,
+      "segundos": 2.8,
+      "neuronios_estimados": 1386,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "carta-moeda--v02--1536.png",
+          "bytes": 2429785
+        },
+        {
+          "arquivo": "carta-moeda--v02--1536.webp",
+          "bytes": 460338
+        },
+        {
+          "arquivo": "carta-moeda--v02--1024.webp",
+          "bytes": 175100
+        },
+        {
+          "arquivo": "carta-moeda--v02--768.webp",
+          "bytes": 109714
+        }
+      ],
+      "segundos_pos": 1.7,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 70149,
+      "passos": null,
+      "segundos": 153.6,
+      "neuronios_estimados": 1386,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "carta-moeda--v03--1536.png",
+          "bytes": 2381284
+        },
+        {
+          "arquivo": "carta-moeda--v03--1536.webp",
+          "bytes": 458290
+        },
+        {
+          "arquivo": "carta-moeda--v03--1024.webp",
+          "bytes": 164462
+        },
+        {
+          "arquivo": "carta-moeda--v03--768.webp",
+          "bytes": 103370
+        }
+      ],
+      "segundos_pos": 1.7,
+      "avisos": []
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+[carta-moeda] v01: @cf/black-forest-labs/flux-2-klein-9b seed=70147 768x1536 passos=None (~1,386 neurônios)
+    ok em 2.8s, 768x1536
+[carta-moeda] v02: @cf/black-forest-labs/flux-2-klein-9b seed=70142 768x1536 passos=None (~1,386 neurônios)
+    ok em 2.8s, 768x1536
+[carta-moeda] v03: @cf/black-forest-labs/flux-2-klein-9b seed=70149 768x1536 passos=None (~1,386 neurônios)
+    nova tentativa em 15s
+    nova tentativa em 45s
+    nova tentativa em 90s
+    ok em 153.6s, 768x1536
+[carta-moeda] v01: mantido; sem avisos
+[carta-moeda] v02: mantido; sem avisos
+[carta-moeda] v03: mantido; sem avisos
