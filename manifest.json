@@ -1,0 +1,108 @@
+{
+  "pedido": "arcano-lua-tarot2",
+  "titulo": "Arcano — lua (tarô, menos humanizado) — refeito",
+  "tipo": "ilustracao",
+  "tamanho_final": 1536,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 93051,
+      "passos": null,
+      "segundos": 19.2,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "arcano-lua-tarot2--v01--1536.png",
+          "bytes": 1875069
+        },
+        {
+          "arquivo": "arcano-lua-tarot2--v01--1536.webp",
+          "bytes": 255796
+        },
+        {
+          "arquivo": "arcano-lua-tarot2--v01--1024.webp",
+          "bytes": 105766
+        },
+        {
+          "arquivo": "arcano-lua-tarot2--v01--768.webp",
+          "bytes": 67782
+        },
+        {
+          "arquivo": "arcano-lua-tarot2--v01--512.webp",
+          "bytes": 37430
+        }
+      ],
+      "segundos_pos": 37.7,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 93052,
+      "passos": null,
+      "segundos": 3.4,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "arcano-lua-tarot2--v02--1536.png",
+          "bytes": 1973945
+        },
+        {
+          "arquivo": "arcano-lua-tarot2--v02--1536.webp",
+          "bytes": 294576
+        },
+        {
+          "arquivo": "arcano-lua-tarot2--v02--1024.webp",
+          "bytes": 122642
+        },
+        {
+          "arquivo": "arcano-lua-tarot2--v02--768.webp",
+          "bytes": 79254
+        },
+        {
+          "arquivo": "arcano-lua-tarot2--v02--512.webp",
+          "bytes": 42088
+        }
+      ],
+      "segundos_pos": 30.4,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 93053,
+      "passos": null,
+      "segundos": 3.4,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "arcano-lua-tarot2--v03--1536.png",
+          "bytes": 1956408
+        },
+        {
+          "arquivo": "arcano-lua-tarot2--v03--1536.webp",
+          "bytes": 291000
+        },
+        {
+          "arquivo": "arcano-lua-tarot2--v03--1024.webp",
+          "bytes": 124678
+        },
+        {
+          "arquivo": "arcano-lua-tarot2--v03--768.webp",
+          "bytes": 79492
+        },
+        {
+          "arquivo": "arcano-lua-tarot2--v03--512.webp",
+          "bytes": 44762
+        }
+      ],
+      "segundos_pos": 30.4,
+      "avisos": []
+    }
+  ]
+}

@@ -1,0 +1,55 @@
+{
+  "id": "arcano-lua-tarot2",
+  "titulo": "Arcano — lua (tarô, menos humanizado) — refeito",
+  "tipo": "ilustracao",
+  "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+  "prompt": "Antique tarot Major Arcana illustration reimagined as dark fantasy painted concept art, inspired by the iconography of the Rider-Waite-Smith and Tarot de Marseille decks, symbolic and allegorical rather than realistic, stylized carved tarot emblem, flat elegant silhouette with clean readable shapes, fine engraved linework and soft painterly shading, isolated on a plain flat light gray background. ONE single central emblem with NO person in it, upright, the whole emblem from top to bottom filling about 85 percent of the image height, its base near the bottom edge. Muted palette of abyss black, porcelain white, fog gray and champagne steel, with ONE small symbolic accent color. Soft studio key light from the upper left, gentle cool rim light, no cast shadow. No text, no letters, no numerals, no card frame, no border, no background scenery. The Moon: a large pale full moon disc with a calm crescent-shaped moon face in profile inside it and long thin rays, hanging above two small stone towers, a winding path between the towers leading down to a small pool at the bottom with a crayfish climbing out, a wolf sitting on the left and a dog sitting on the right both howling up at the moon, perfectly symmetrical emblem. Accent: cold silver blue.",
+  "negative": "text, letters, numbers, watermark, signature, card frame, border, cropped, cut off feet, background scenery, landscape, multiple figures, crowd, photorealistic, realistic human face, pretty face, portrait, distorted anatomy, extra limbs, extra fingers, deformed hands, melted face, asymmetrical eyes, cartoon, chibi, anime, neon, saturated colors, person, human figure, people, face of a person",
+  "largura": 1024,
+  "altura": 1536,
+  "variacoes": [
+    {
+      "seed": 93051,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "passos": null,
+      "largura": 1024,
+      "altura": 1536,
+      "prompt_extra": "",
+      "n": 1
+    },
+    {
+      "seed": 93052,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "passos": null,
+      "largura": 1024,
+      "altura": 1536,
+      "prompt_extra": "",
+      "n": 2
+    },
+    {
+      "seed": 93053,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "passos": null,
+      "largura": 1024,
+      "altura": 1536,
+      "prompt_extra": "",
+      "n": 3
+    }
+  ],
+  "pos": {
+    "remover_fundo": true,
+    "tamanho_final": 1536,
+    "margem": 0.03,
+    "derivados": [
+      1024,
+      768,
+      512
+    ],
+    "modelo_fundo": "birefnet-general",
+    "fundo": "liso",
+    "camadas": []
+  },
+  "passos": null,
+  "guidance": null,
+  "referencias": []
+}
