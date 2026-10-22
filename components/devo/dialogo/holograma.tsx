@@ -83,7 +83,7 @@ export function SalaHolograma({ className }: { className?: string }) {
     <div aria-hidden="true" className={cn('holo-root pointer-events-none absolute inset-0 overflow-hidden', className)}>
       <div className="absolute inset-0 bg-[radial-gradient(120%_70%_at_50%_68%,#1c1928,#0e0d12_58%,#060608)]" />
       {/* mostrador da Companhia */}
-      <svg viewBox="0 0 200 200" className="holo-gira absolute left-1/2 top-[34%] w-[118%] max-w-[560px] -translate-x-1/2 -translate-y-1/2 opacity-[0.55]">
+      <svg viewBox="0 0 200 200" className="holo-gira absolute left-1/2 top-[27%] w-[100%] max-w-[520px] -translate-x-1/2 -translate-y-1/2 opacity-[0.5]">
         <defs>
           <path id={`arco${id}`} d="M100 100m-84 0a84 84 0 1 1 168 0a84 84 0 1 1-168 0" />
         </defs>
@@ -116,13 +116,13 @@ export function SalaHolograma({ className }: { className?: string }) {
         />
       ))}
       {/* cantoneiras e leituras */}
-      {(['left-3 top-[12%]', 'right-3 top-[12%] rotate-90', 'left-3 bottom-[34%] -rotate-90', 'right-3 bottom-[34%] rotate-180'] as const).map((c) => (
+      {(['left-3 top-[12%]', 'right-3 top-[12%] rotate-90', 'left-3 bottom-[30%] -rotate-90', 'right-3 bottom-[30%] rotate-180'] as const).map((c) => (
         <svg key={c} viewBox="0 0 20 20" className={cn('absolute size-5', c)}>
           <path d="M1 14V1H14" stroke="#bab09f" strokeOpacity="0.5" strokeWidth="1" fill="none" />
         </svg>
       ))}
-      <span className="absolute left-9 top-[12.4%] font-mono text-[9px] uppercase tracking-[0.22em] text-[#bab09f]/55">Canal 07 · seguro</span>
-      <span className="absolute right-9 top-[12.4%] flex items-end gap-[2px]">
+      <span className="absolute bottom-[30.6%] left-9 font-mono text-[9px] uppercase tracking-[0.22em] text-[#bab09f]/55">Canal 07 · seguro</span>
+      <span className="absolute bottom-[30.8%] right-9 flex items-end gap-[2px]">
         {[3, 5, 7, 9].map((h, i) => (
           <span key={h} className="holo-sinal w-[3px] bg-[#b9b0e6]/70" style={{ height: h, animationDelay: `${i * 0.18}s` }} />
         ))}

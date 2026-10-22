@@ -125,7 +125,7 @@ function Heroi({ m }: { m: MinhaCorp }) {
       <div className="mt-4 flex items-end justify-between gap-3 border-t border-dv-line pt-3">
         <div className="min-w-0">
           <p className="font-mono text-[10.5px] uppercase tracking-[0.16em] text-dv-text-3">Código de identificação</p>
-          <p className="dv-cut mt-1.5 inline-block whitespace-nowrap bg-black/35 px-2.5 py-1 font-mono text-[18px] tracking-[0.1em] text-dv-text shadow-[inset_0_0_0_1px_rgb(var(--dv-champagne-rgb)/0.35)] dv-tabular" style={{ '--dv-cut': '5px' } as CSSProperties}>
+          <p className="dv-cut mt-1.5 inline-block whitespace-nowrap bg-black/35 px-2 py-1 font-mono text-[15px] tracking-[0.08em] text-dv-text shadow-[inset_0_0_0_1px_rgb(var(--dv-champagne-rgb)/0.35)] dv-tabular" style={{ '--dv-cut': '5px' } as CSSProperties}>
             {m.codigo}
           </p>
         </div>

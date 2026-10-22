@@ -47,6 +47,7 @@ import {
 import { DeadlyVoteSymbol } from '@/components/devo/system/symbol'
 import { OddsBar, PaperField, Plaque, PortraitFrame, StatusSeal } from '@/components/devo/kit'
 import { CardFace, RARITY_SKIN, RarityGem, RarityPips } from '@/components/devo/shared/devo-card'
+import { PacoteVisual } from '@/components/devo/casa/pacote-visual'
 import { ALL_RARITIES, RARITY_META } from '@/lib/devo/cards'
 import { portraitFrameProps } from '@/lib/devo/npcs'
 import { cn } from '@/lib/utils'
@@ -616,6 +617,10 @@ function RaridadesVitrine() {
             </li>
           )
         })}
+        <li data-pacote="xadrez" className="flex min-w-0 flex-col items-center gap-2">
+          <PacoteVisual id="xadrez" colecao="Xadrez" className="w-full max-w-[11rem]" />
+          <p className="font-sans text-[11px] font-semibold uppercase tracking-[0.18em] text-white/80">Pacote Raro</p>
+        </li>
       </ul>
     </div>
   )

@@ -26,6 +26,7 @@ import { useBackHandler } from '../use-back-handler'
 import { CardFace, DevoCard, RarityGem } from '../shared/devo-card'
 import { useDevo } from '../state/devo-store'
 import { useCasa } from './dados'
+import { PacoteVisual } from './pacote-visual'
 
 /**
  * CASA (texto do dono: docs/redesign/CASA-CONFECCAO-dono.md). Por enquanto, dois cômodos:
@@ -815,15 +816,17 @@ function Pacotes({ d, agir, resgatar }: { d: CasaLiberado; agir: Agir; resgatar:
   const [erro, setErro] = useState<string | null>(null)
   const [premio, setPremio] = useState<PacotePremio | null>(null)
   const [virada, setVirada] = useState(false)
+  const [aberto, setAberto] = useState<string | null>(null)
   const abrir = async (id: string) => {
     setBusy(id)
+    setAberto(id)
     setErro(null)
     try {
       const r = await agir<{ premio: PacotePremio }>({ action: 'pacote.abrir', pacote: id, idem: crypto.randomUUID() })
       setVirada(false)
       setPremio(r.premio)
       playSfx('reveal')
-      window.setTimeout(() => setVirada(true), 700)
+      window.setTimeout(() => setVirada(true), 900)
       if (r.premio.tipo === 'carta') void resgatar()
     } catch (e) {
       playSfx('error')
@@ -845,14 +848,17 @@ function Pacotes({ d, agir, resgatar }: { d: CasaLiberado; agir: Agir; resgatar:
         return (
           <Lamina key={p.id} ariaLabel={p.nome}>
             <div className="p-4">
-              <div className="flex items-start justify-between gap-3">
-                <div className="min-w-0">
+              <div className="flex items-start gap-4">
+                <span className="relative w-[96px] shrink-0">
+                  <PacoteVisual id={p.id} colecao={p.colecao} className={cn(!n && 'opacity-45 grayscale-[0.6]')} />
+                  <span className="absolute -right-2 -top-2 grid min-w-9 place-items-center bg-dv-ink px-1.5 py-0.5 font-impact text-[20px] font-semibold leading-none text-dv-gold-bright shadow-[inset_0_0_0_1px_var(--dv-line-gold)] dv-tabular" aria-label={`Você tem ${n}`}>
+                    ×{n}
+                  </span>
+                </span>
+                <div className="min-w-0 flex-1 pt-1">
                   <Rotulo>Coleção {p.colecao}</Rotulo>
                   <h3 className="mt-1 font-display text-[18px] font-semibold uppercase leading-tight tracking-[0.05em] text-dv-text">{p.nome}</h3>
                 </div>
-                <p className="shrink-0 font-impact text-[26px] font-semibold leading-none text-dv-gold-bright dv-tabular" aria-label={`Você tem ${n}`}>
-                  ×{n}
-                </p>
               </div>
               <p className="mt-2 font-body text-[14.5px] leading-relaxed text-dv-text-2">{p.descricao}</p>
               <div className="mt-3 flex flex-wrap gap-2">
@@ -892,8 +898,10 @@ function Pacotes({ d, agir, resgatar }: { d: CasaLiberado; agir: Agir; resgatar:
         }
       >
         <div className="flex flex-col items-center gap-3 py-2">
-          {premio?.tipo === 'carta' ? (
-            <DevoCard cardId={premio.cardId} faceDown={!virada} size="md" />
+          {!virada && premio ? (
+            <PacoteVisual id={aberto ?? 'xadrez'} colecao={PACOTES.find((x) => x.id === aberto)?.colecao ?? ''} rasgando className="w-[150px]" />
+          ) : premio?.tipo === 'carta' ? (
+            <DevoCard cardId={premio.cardId} faceDown={false} size="md" />
           ) : (
             <div className="grid size-40 place-items-center bg-dv-ink-2 shadow-[inset_0_0_0_1px_var(--dv-line-gold)]">
               <p className="px-3 text-center font-display text-[16px] font-semibold uppercase tracking-[0.06em] text-dv-gold-bright">{virada ? 'Molde de Xadrez' : '?'}</p>
