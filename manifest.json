@@ -1,0 +1,108 @@
+{
+  "pedido": "arcano-justica-tarot3",
+  "titulo": "Arcano — justica (v03 com mãos, espada e balança corrigidas)",
+  "tipo": "ilustracao",
+  "tamanho_final": 1536,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 93023,
+      "passos": null,
+      "segundos": 18.9,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "arcano-justica-tarot3--v01--1536.png",
+          "bytes": 1218502
+        },
+        {
+          "arquivo": "arcano-justica-tarot3--v01--1536.webp",
+          "bytes": 206616
+        },
+        {
+          "arquivo": "arcano-justica-tarot3--v01--1024.webp",
+          "bytes": 86462
+        },
+        {
+          "arquivo": "arcano-justica-tarot3--v01--768.webp",
+          "bytes": 55992
+        },
+        {
+          "arquivo": "arcano-justica-tarot3--v01--512.webp",
+          "bytes": 30170
+        }
+      ],
+      "segundos_pos": 50.5,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 93024,
+      "passos": null,
+      "segundos": 3.2,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "arcano-justica-tarot3--v02--1536.png",
+          "bytes": 1203639
+        },
+        {
+          "arquivo": "arcano-justica-tarot3--v02--1536.webp",
+          "bytes": 202382
+        },
+        {
+          "arquivo": "arcano-justica-tarot3--v02--1024.webp",
+          "bytes": 81304
+        },
+        {
+          "arquivo": "arcano-justica-tarot3--v02--768.webp",
+          "bytes": 52882
+        },
+        {
+          "arquivo": "arcano-justica-tarot3--v02--512.webp",
+          "bytes": 29746
+        }
+      ],
+      "segundos_pos": 31.3,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 93025,
+      "passos": null,
+      "segundos": 18.5,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "arcano-justica-tarot3--v03--1536.png",
+          "bytes": 1207087
+        },
+        {
+          "arquivo": "arcano-justica-tarot3--v03--1536.webp",
+          "bytes": 198096
+        },
+        {
+          "arquivo": "arcano-justica-tarot3--v03--1024.webp",
+          "bytes": 84934
+        },
+        {
+          "arquivo": "arcano-justica-tarot3--v03--768.webp",
+          "bytes": 55234
+        },
+        {
+          "arquivo": "arcano-justica-tarot3--v03--512.webp",
+          "bytes": 30594
+        }
+      ],
+      "segundos_pos": 30.5,
+      "avisos": []
+    }
+  ]
+}
