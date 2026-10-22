@@ -1,0 +1,108 @@
+{
+  "pedido": "casa-mesa-confeccao",
+  "titulo": "Casa — mesa de confecção (objeto, sem fundo)",
+  "tipo": "ilustracao",
+  "tamanho_final": 1536,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 10311,
+      "passos": null,
+      "segundos": 3.3,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "casa-mesa-confeccao--v01--1536.png",
+          "bytes": 1518037
+        },
+        {
+          "arquivo": "casa-mesa-confeccao--v01--1536.webp",
+          "bytes": 266114
+        },
+        {
+          "arquivo": "casa-mesa-confeccao--v01--1024.webp",
+          "bytes": 126092
+        },
+        {
+          "arquivo": "casa-mesa-confeccao--v01--768.webp",
+          "bytes": 86516
+        },
+        {
+          "arquivo": "casa-mesa-confeccao--v01--512.webp",
+          "bytes": 48910
+        }
+      ],
+      "segundos_pos": 51.7,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 10312,
+      "passos": null,
+      "segundos": 3.4,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "casa-mesa-confeccao--v02--1536.png",
+          "bytes": 1444103
+        },
+        {
+          "arquivo": "casa-mesa-confeccao--v02--1536.webp",
+          "bytes": 266788
+        },
+        {
+          "arquivo": "casa-mesa-confeccao--v02--1024.webp",
+          "bytes": 127784
+        },
+        {
+          "arquivo": "casa-mesa-confeccao--v02--768.webp",
+          "bytes": 87546
+        },
+        {
+          "arquivo": "casa-mesa-confeccao--v02--512.webp",
+          "bytes": 48350
+        }
+      ],
+      "segundos_pos": 32.0,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 10313,
+      "passos": null,
+      "segundos": 3.2,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "casa-mesa-confeccao--v03--1536.png",
+          "bytes": 1325722
+        },
+        {
+          "arquivo": "casa-mesa-confeccao--v03--1536.webp",
+          "bytes": 245404
+        },
+        {
+          "arquivo": "casa-mesa-confeccao--v03--1024.webp",
+          "bytes": 114332
+        },
+        {
+          "arquivo": "casa-mesa-confeccao--v03--768.webp",
+          "bytes": 76252
+        },
+        {
+          "arquivo": "casa-mesa-confeccao--v03--512.webp",
+          "bytes": 43702
+        }
+      ],
+      "segundos_pos": 30.5,
+      "avisos": []
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+[casa-mesa-confeccao] v01: @cf/black-forest-labs/flux-2-klein-9b seed=10311 1536x1024 passos=None (~1,455 neurônios)
+    ok em 3.3s, 1536x1024
+[casa-mesa-confeccao] v02: @cf/black-forest-labs/flux-2-klein-9b seed=10312 1536x1024 passos=None (~1,455 neurônios)
+    ok em 3.4s, 1536x1024
+[casa-mesa-confeccao] v03: @cf/black-forest-labs/flux-2-klein-9b seed=10313 1536x1024 passos=None (~1,455 neurônios)
+    ok em 3.2s, 1536x1024
+[casa-mesa-confeccao] v01: rembg:birefnet-general; sem avisos
+[casa-mesa-confeccao] v02: rembg:birefnet-general; sem avisos
+[casa-mesa-confeccao] v03: rembg:birefnet-general; sem avisos
