@@ -2,7 +2,7 @@
 
 import { useEffect, useLayoutEffect, useMemo, useRef, useState, type CSSProperties } from 'react'
 import { playSfx } from '@/lib/devo/audio'
-import { PULSE_CRITICAL_MS, pulseRemaining, pulseRing } from '@/lib/devo/pulse'
+import { PULSE_CRITICAL_MS, pulseRemaining } from '@/lib/devo/pulse'
 import type { AppId } from '@/lib/devo/types'
 import { cn } from '@/lib/utils'
 import { formatClock, formatDuration, useMediaQuery, useNow } from '../hooks'
@@ -28,7 +28,7 @@ import { useBackHandler } from '../use-back-handler'
 import { appIndex, getApp, type AppDef } from './apps'
 import { AppGlyphTile, Badge } from './app-icon'
 import { NotificationList, ToastStack } from './notifications'
-import { PulseDial } from './pulse-dial'
+import { AnunciosCard } from './anuncios-card'
 
 /** Apps da grade e do dock são listas distintas para não repetir ícones. */
 const HOME_APPS: AppId[] = ['record', 'pulso', 'cartas']
@@ -157,7 +157,7 @@ export function PhoneShell({ current, onOpen, onHome }: { current: AppId | null;
           folha sai para a direita revelando a home pronta, sem repetir a entrada escalonada.
         */}
         <div className={cn('absolute inset-0', homeHidden && 'invisible')} inert={homeHidden || undefined} aria-hidden={homeHidden || undefined}>
-          <HomeScreen remaining={remaining} critical={critical} onOpen={open} onShowNotices={() => setShade(true)} />
+          <HomeScreen onOpen={open} onShowNotices={() => setShade(true)} />
         </div>
         {app && (
           <AppBackContext.Provider value={backCtx}>
@@ -286,13 +286,9 @@ function BatteryGlyph({ className }: { className?: string }) {
 /* ── Home ────────────────────────────────────────────────────────────────────────────────── */
 
 function HomeScreen({
-  remaining,
-  critical,
   onOpen,
   onShowNotices,
 }: {
-  remaining: number
-  critical: boolean
   onOpen: (id: AppId) => void
   onShowNotices: () => void
 }) {
@@ -335,7 +331,7 @@ function HomeScreen({
       </header>
 
       <div className="animate-dv-cut-in mt-3 [animation-delay:120ms]">
-        <PulseCard remaining={remaining} critical={critical} onOpen={() => onOpen('pulso')} />
+        <AnunciosCard onOpen={onOpen} />
       </div>
 
       <section aria-label="Aplicativos" className="relative mt-4">
@@ -595,62 +591,6 @@ function SummonsCard({ onOpen }: { onOpen: () => void }) {
         </span>
         {next?.joined && <StateSeal>Inscrito</StateSeal>}
         <GlyphArrow className="size-4 shrink-0 text-dv-text-3 transition-transform group-hover:translate-x-0.5" />
-      </MarbleSlab>
-    </button>
-  )
-}
-
-/** Cartão-herói "Tempo restante": tampo de mármore negro, dígitos de impacto e o mostrador de aço. */
-function PulseCard({ remaining, critical, onOpen }: { remaining: number; critical: boolean; onOpen: () => void }) {
-  const { state } = useDevo()
-  const { excess } = pulseRing(remaining)
-  const text = formatDuration(remaining)
-  return (
-    <button
-      type="button"
-      onClick={onOpen}
-      aria-label={`Tempo restante ${text}. Abrir o relógio do pulso`}
-      className="dv-focus group block w-full text-left transition-transform duration-[120ms] active:scale-[0.985]"
-    >
-      <MarbleSlab edge={critical ? 'blood' : 'amethyst'} cut={16} glow innerClassName="flex min-h-[184px] items-center gap-2 py-4 pl-5 pr-3">
-        <FrameCorners tone={critical ? 'blood' : 'gold'} />
-        {critical && (
-          <span aria-hidden="true" className="dv-cut pointer-events-none absolute -inset-y-5 -left-5 -right-3 overflow-hidden [--dv-cut:15.6px]">
-            <span className="animate-dv-alert absolute inset-0 bg-[radial-gradient(80%_80%_at_0%_100%,rgb(var(--dv-blood-rgb)/0.32),transparent_70%)]" />
-            {/* faixa diagonal de alerta que corta o tampo (não o texto: passa por baixo dos dígitos) */}
-            <span className="absolute -right-10 bottom-5 h-[14px] w-[62%] -rotate-[14deg] bg-[repeating-linear-gradient(-55deg,rgb(var(--dv-blood-rgb)/0.9)_0_7px,rgb(var(--dv-blood-deep-rgb)/0.9)_7px_14px)] opacity-80 shadow-[0_0_14px_rgb(var(--dv-blood-rgb)/0.6)]" />
-          </span>
-        )}
-        <span className="relative flex min-w-0 flex-1 flex-col">
-          <Kicker tone={critical ? 'blood' : 'gold'}>Tempo restante</Kicker>
-          <span className="mt-3 block">
-            <TimeDigits value={text} size="lg" tone={critical ? 'blood' : 'champagne'} flip={false} blinkColon={critical} className="text-[40px]" />
-          </span>
-          <span aria-hidden="true" className="mt-1 grid w-fit grid-cols-[1.2em_0.34em_1.2em_0.34em_1.2em] text-[40px] leading-none">
-            {['Horas', '', 'Min', '', 'Seg'].map((u, i) => (
-              <span key={i} className={cn('dv-label text-center text-[10px] tracking-[0.14em]', critical ? 'text-dv-blood-text' : 'text-dv-champagne')}>
-                {u}
-              </span>
-            ))}
-          </span>
-          <span className="mt-4 flex flex-wrap items-center gap-2">
-            {critical ? (
-              <StateSeal tone="blood" live>
-                Crítico
-              </StateSeal>
-            ) : (
-              <StateSeal>Estável</StateSeal>
-            )}
-            {excess > 0 && <StateSeal tone="quiet">+72h</StateSeal>}
-          </span>
-        </span>
-        <span aria-hidden="true" className="relative grid size-[136px] shrink-0 place-items-center">
-          {!critical && <span className="absolute -inset-3 rounded-full bg-[radial-gradient(closest-side,rgb(var(--dv-amethyst-rgb)/0.38),rgb(var(--dv-amethyst-rgb)/0.1)_60%,transparent)]" />}
-          <PulseDial remaining={remaining} timerEndsAt={state.timerEndsAt} critical={critical} variant="compact" className="size-full" />
-          <span className="dv-label absolute -bottom-3 left-1/2 flex -translate-x-1/2 items-center gap-1 whitespace-nowrap text-[10px] text-dv-text-3 transition-colors group-hover:text-dv-text-2">
-            Abrir <GlyphArrow className="size-3" />
-          </span>
-        </span>
       </MarbleSlab>
     </button>
   )

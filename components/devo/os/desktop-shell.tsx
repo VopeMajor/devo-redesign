@@ -1,5 +1,6 @@
 'use client'
 
+import { AnunciosCard } from './anuncios-card'
 import { Maximize2, Minimize2, Minus, X } from 'lucide-react'
 import { createContext, useCallback, useContext, useEffect, useRef, useState, type PointerEvent as RPointerEvent } from 'react'
 import { playSfx } from '@/lib/devo/audio'
@@ -22,9 +23,6 @@ import { AppGlyphTile, Badge } from './app-icon'
 import { NotificationList, ToastStack } from './notifications'
 import { PULSE_CRITICAL_MS, pulseRemaining } from '@/lib/devo/pulse'
 import { useOsNav } from './os-nav'
-import { PulseDial } from './pulse-dial'
-import { MarbleSlab, StateSeal } from './shell-ui'
-import { FrameCorners } from '../kit/frame'
 
 type Win = { id: AppId; x: number; y: number; z: number; minimized: boolean; maximized: boolean }
 
@@ -109,7 +107,10 @@ export function DesktopShell() {
       {critical && (
         <div aria-hidden="true" className="animate-dv-alert pointer-events-none absolute inset-0 z-[1] bg-[radial-gradient(110%_90%_at_50%_50%,transparent_62%,rgb(var(--dv-blood-rgb)/0.3)_90%,rgb(var(--dv-blood-deep-rgb)/0.55)_100%)]" />
       )}
-      <PulseWidget remaining={remaining} critical={critical} onOpen={() => openApp('pulso')} />
+      {/* Anúncios rápidos no lugar do segundo relógio (o Tempo fica na barra de cima). */}
+      <div onPointerDown={(e) => e.stopPropagation()} className="absolute right-8 z-[5] w-[340px]" style={{ bottom: BOTTOM + 28 }}>
+        <AnunciosCard onOpen={openApp} />
+      </div>
 
       <header
         className="absolute inset-x-0 top-0 z-40 flex items-center justify-between gap-4 bg-[linear-gradient(180deg,rgba(21,21,23,0.94),rgb(var(--dv-ink-rgb)/0.96))] px-4"
@@ -253,44 +254,6 @@ export function DesktopShell() {
       {/* Mesma regra do celular: um aviso por vez, no topo, logo abaixo da barra (canto direito). */}
       <ToastStack onOpen={openApp} compact max={1} className={cn('right-3 top-[48px] w-[360px]', panel === 'notifications' && 'hidden')} />
     </div>
-  )
-}
-
-/**
- * Widget do tempo ancorado no papel de parede (canto inferior direito, abaixo das janelas): tampo de
- * mármore negro, mostrador de aço e os dígitos. Clique abre o Pulso.
- */
-function PulseWidget({ remaining, critical, onOpen }: { remaining: number; critical: boolean; onOpen: () => void }) {
-  const { state } = useDevo()
-  const text = formatDuration(remaining)
-  return (
-    <button
-      type="button"
-      onPointerDown={(e) => e.stopPropagation()}
-      onClick={onOpen}
-      aria-label={`Tempo restante ${text}. Abrir o Pulso`}
-      className="dv-focus group absolute right-8 z-[5] w-[340px] text-left transition-transform duration-150 active:scale-[0.99]"
-      style={{ bottom: BOTTOM + 28 }}
-    >
-      <MarbleSlab edge={critical ? 'blood' : 'steel'} cut={16} glow innerClassName="flex items-center gap-4 py-4 pl-5 pr-4">
-        <FrameCorners tone={critical ? 'blood' : 'gold'} size={18} />
-        <span className="min-w-0 flex-1">
-          <Kicker tone={critical ? 'blood' : 'gold'}>Tempo restante</Kicker>
-          <TimeDigits value={text} size="lg" tone={critical ? 'blood' : 'text'} flip={false} blinkColon={critical} className="mt-2 text-[34px]" />
-          <span className="mt-3 flex items-center gap-2">
-            {critical ? (
-              <StateSeal tone="blood" live>
-                Crítico
-              </StateSeal>
-            ) : (
-              <StateSeal>Estável</StateSeal>
-            )}
-            <span className="dv-label text-[10px] text-dv-text-3 transition-colors group-hover:text-dv-text-2">Abrir ›</span>
-          </span>
-        </span>
-        <PulseDial remaining={remaining} timerEndsAt={state.timerEndsAt} critical={critical} variant="compact" className="size-[112px] shrink-0" />
-      </MarbleSlab>
-    </button>
   )
 }
 

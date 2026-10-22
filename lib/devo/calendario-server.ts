@@ -17,6 +17,7 @@ import {
   isEnfase,
   ocorrenciaEm,
   ocorrencias,
+  type Ocorrencia,
   type Recompensa,
   type ResgateResultado,
   somaDias,
@@ -496,4 +497,16 @@ export async function definirRegras(atorId: string, b: Record<string, unknown>) 
     await run(c, "INSERT INTO admin_log (actor_id, action, ref, data) VALUES ($1, 'calendario.regras', 'calendario.checkin.regras', $2)", [ator.id, JSON.stringify({ ...value, provisional })])
     return { regras: value }
   })
+}
+
+/* ------------------------------------------------------------------ Anúncios da tela inicial */
+
+/** Eventos acontecendo hoje ou começando nos próximos `dias` (para os anúncios rápidos da home). */
+export async function eventosProximos(dias = 14): Promise<(Ocorrencia & { emDias: number })[]> {
+  const [hoje, eventos] = await Promise.all([hojeDb(pool), lerEventos(pool)])
+  const ate = somaDias(hoje, dias)
+  return eventos
+    .flatMap((e) => ocorrencias(e, hoje, ate))
+    .map((o) => ({ ...o, emDias: diasEntre(hoje, o.ocorrencia) }))
+    .sort((a, b) => a.emDias - b.emDias)
 }

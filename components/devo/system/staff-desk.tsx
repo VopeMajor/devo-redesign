@@ -17,8 +17,9 @@ import { CorporacoesMesa, useFilaCorporacoes } from '../corporacoes/corporacoes-
 import { PocoMesa } from '../poco/poco-mesa'
 import { CalendarioMesaPanel } from '../calendario/calendario-mesa'
 import { CasaMesa } from '../casa/casa-mesa'
+import { AnunciosMesa } from './anuncios-mesa'
 
-type Section = 'casos' | 'recompensas' | 'semanais' | 'salao' | 'virtudes' | 'corporacoes' | 'calendario' | 'equipe' | 'jogadores' | 'convites' | 'cosmeticos' | 'poco' | 'casa' | 'registro' | 'ajustes'
+type Section = 'casos' | 'recompensas' | 'semanais' | 'salao' | 'virtudes' | 'corporacoes' | 'calendario' | 'equipe' | 'jogadores' | 'convites' | 'cosmeticos' | 'poco' | 'casa' | 'anuncios' | 'registro' | 'ajustes'
 
 const LABEL: Record<Section, string> = {
   casos: 'Casos',
@@ -30,6 +31,7 @@ const LABEL: Record<Section, string> = {
   cosmeticos: 'Cosméticos',
   poco: 'Poço',
   casa: 'Casa',
+  anuncios: 'Anúncios',
   virtudes: 'Virtudes',
   equipe: 'Equipe',
   jogadores: 'Jogadores',
@@ -42,7 +44,7 @@ const LABEL: Record<Section, string> = {
 const SECTIONS: Record<Exclude<Cargo, 'player'>, Section[]> = {
   dealer: ['casos', 'recompensas', 'semanais', 'salao'],
   anfitriao: ['casos', 'recompensas', 'semanais', 'salao', 'virtudes', 'corporacoes', 'calendario', 'equipe', 'jogadores', 'convites'],
-  owner: ['casos', 'recompensas', 'semanais', 'salao', 'virtudes', 'corporacoes', 'calendario', 'equipe', 'jogadores', 'convites', 'cosmeticos', 'poco', 'casa', 'registro', 'ajustes'],
+  owner: ['casos', 'recompensas', 'semanais', 'salao', 'virtudes', 'corporacoes', 'calendario', 'equipe', 'jogadores', 'convites', 'cosmeticos', 'poco', 'casa', 'anuncios', 'registro', 'ajustes'],
 }
 
 const ROLE_LINE: Record<Exclude<Cargo, 'player'>, string> = {
@@ -146,6 +148,7 @@ export function StaffDesk({ role }: { role: Exclude<Cargo, 'player'> }) {
         {section === 'cosmeticos' && <AdminCosmeticos />}
         {section === 'poco' && <PocoMesa />}
         {section === 'casa' && <CasaMesa />}
+        {section === 'anuncios' && <AnunciosMesa />}
         {section === 'registro' && <AdminLogPanel />}
         {section === 'ajustes' && <ConfigPanel />}
       </Stagger>
