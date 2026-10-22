@@ -1,0 +1,10 @@
+[xadrez-rei] v01: @cf/black-forest-labs/flux-2-klein-9b seed=81251 1024x1536 passos=None (~1,455 neurônios)
+    ok em 3.7s, 1024x1536
+[xadrez-rei] v02: @cf/black-forest-labs/flux-2-klein-9b seed=81252 1024x1536 passos=None (~1,455 neurônios)
+    ok em 3.0s, 1024x1536
+[xadrez-rei] v03: @cf/black-forest-labs/flux-2-klein-9b seed=81253 1024x1536 passos=None (~1,455 neurônios)
+    nova tentativa em 15s
+    ok em 18.2s, 1024x1536
+[xadrez-rei] v01: rembg:birefnet-general; sem avisos
+[xadrez-rei] v02: rembg:birefnet-general; sem avisos
+[xadrez-rei] v03: rembg:birefnet-general; sem avisos
