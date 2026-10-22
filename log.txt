@@ -1,0 +1,10 @@
+[carta-contrato] v01: @cf/black-forest-labs/flux-2-klein-9b seed=70251 768x1536 passos=None (~1,386 neurônios)
+    ok em 2.9s, 768x1536
+[carta-contrato] v02: @cf/black-forest-labs/flux-2-klein-9b seed=70252 768x1536 passos=None (~1,386 neurônios)
+    nova tentativa em 15s
+    ok em 18.0s, 768x1536
+[carta-contrato] v03: @cf/black-forest-labs/flux-2-klein-9b seed=70253 768x1536 passos=None (~1,386 neurônios)
+    ok em 2.6s, 768x1536
+[carta-contrato] v01: mantido; sem avisos
+[carta-contrato] v02: mantido; sem avisos
+[carta-contrato] v03: mantido; sem avisos

@@ -1,0 +1,96 @@
+{
+  "pedido": "carta-contrato",
+  "titulo": "Carta — Contrato em Branco (ilustração da janela)",
+  "tipo": "ilustracao",
+  "tamanho_final": 1536,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 70251,
+      "passos": null,
+      "segundos": 2.9,
+      "neuronios_estimados": 1386,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "carta-contrato--v01--1536.png",
+          "bytes": 2392003
+        },
+        {
+          "arquivo": "carta-contrato--v01--1536.webp",
+          "bytes": 440208
+        },
+        {
+          "arquivo": "carta-contrato--v01--1024.webp",
+          "bytes": 167788
+        },
+        {
+          "arquivo": "carta-contrato--v01--768.webp",
+          "bytes": 107466
+        }
+      ],
+      "segundos_pos": 1.7,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 70252,
+      "passos": null,
+      "segundos": 18.0,
+      "neuronios_estimados": 1386,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "carta-contrato--v02--1536.png",
+          "bytes": 2349899
+        },
+        {
+          "arquivo": "carta-contrato--v02--1536.webp",
+          "bytes": 436618
+        },
+        {
+          "arquivo": "carta-contrato--v02--1024.webp",
+          "bytes": 161580
+        },
+        {
+          "arquivo": "carta-contrato--v02--768.webp",
+          "bytes": 101328
+        }
+      ],
+      "segundos_pos": 1.6,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 70253,
+      "passos": null,
+      "segundos": 2.6,
+      "neuronios_estimados": 1386,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "carta-contrato--v03--1536.png",
+          "bytes": 2293655
+        },
+        {
+          "arquivo": "carta-contrato--v03--1536.webp",
+          "bytes": 418556
+        },
+        {
+          "arquivo": "carta-contrato--v03--1024.webp",
+          "bytes": 155902
+        },
+        {
+          "arquivo": "carta-contrato--v03--768.webp",
+          "bytes": 96680
+        }
+      ],
+      "segundos_pos": 1.7,
+      "avisos": []
+    }
+  ]
+}
