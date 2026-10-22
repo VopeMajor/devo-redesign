@@ -1,0 +1,31 @@
+{
+  "id": "arcano-enforcado-r2",
+  "titulo": "Arcano — enforcado (figura, revisada)",
+  "tipo": "ilustracao",
+  "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+  "prompt": "Dark fantasy character design concept art, painted, soft painterly render, highly detailed, isolated on a plain flat light gray background. A single tall, regal and ethereal personification of a tarot Major Arcana, an original otherworldly divine being with slightly elongated graceful proportions, ornate symbolic headdress or halo, layered flowing fabrics and ribbons, ritual jewelry of faded silver, more deity than human, standing perfectly still in a front view, full body from head to feet, the whole figure fills about 85 percent of the image height, feet resting near the bottom edge on nothing, strong elegant silhouette. Muted palette of abyss black, deep blood wine, fog stone gray and faded silver, with ONE accent color: pale cyan. Soft studio key light from the upper left, gentle cool rim light, no cast shadow. No text, no letters, no card frame, no background, no other characters. The Hanged One: a calm figure hanging upside down, the whole body inverted with the feet at the top and the head at the bottom, one ankle tied by a short rope to a wooden crossbeam overgrown with leaves, the crossbeam held up by two upright wooden posts whose bases stand on the ground at both sides, the free leg bent behind the other forming a cross, arms folded behind the back, long hair and robes falling downward toward the ground, a soft pale cyan halo around the head, expression of peaceful insight. Only one person and only one head, at the bottom. Exactly two arms and two legs, natural anatomy, nothing floating in the air.",
+  "negative": "text, letters, watermark, signature, cropped, cut off feet, background scenery, multiple figures, cartoon, chibi, neon, saturated colors, extra limbs, extra arms, extra hands, extra fingers, extra heads, floating objects",
+  "largura": 1024,
+  "altura": 1536,
+  "variacoes": [
+    {
+      "seed": 22121
+    },
+    {
+      "seed": 22122
+    },
+    {
+      "seed": 22123
+    }
+  ],
+  "pos": {
+    "remover_fundo": true,
+    "tamanho_final": 1536,
+    "margem": 0.03,
+    "derivados": [
+      1024,
+      768,
+      512
+    ]
+  }
+}
