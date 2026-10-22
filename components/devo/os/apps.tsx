@@ -2,12 +2,13 @@
 
 import type { LucideProps } from 'lucide-react'
 import type { ComponentType } from 'react'
-import { CardsGlyph, GamesGlyph, MessagesGlyph, PulseGlyph, RecordGlyph, SettingsGlyph, TradeGlyph } from './app-glyphs'
+import { CardsGlyph, GamesGlyph, InventoryGlyph, MessagesGlyph, PulseGlyph, RecordGlyph, SettingsGlyph, TradeGlyph } from './app-glyphs'
 
 type AppIconComponent = ComponentType<Pick<LucideProps, 'className' | 'strokeWidth' | 'aria-hidden'>>
 import type { AppId } from '@/lib/devo/types'
 import { AjustesApp } from '../apps/ajustes-app'
 import { CartasApp } from '../apps/cartas-app'
+import { InventarioApp } from '../apps/inventario-app'
 import { JogosApp } from '../apps/jogos-app'
 import { MensagensApp } from '../apps/mensagens-app'
 import { PulsoApp } from '../apps/pulso-app'
@@ -41,6 +42,8 @@ export const APPS: AppDef[] = [
   { id: 'jogos', name: 'Sala de Jogos', subtitle: 'Minigames e apostas', icon: GamesGlyph, Component: JogosApp, window: { w: 1040, h: 680 } },
   // Sistemas novos (Salão, Poço, Torres, Corporações, Virtudes): trancados até o servidor liberar.
   ...SISTEMA_APPS,
+  // no fim da lista para não mudar o número romano dos outros apps
+  { id: 'inventario', name: 'Inventário', subtitle: 'Tudo o que é seu', icon: InventoryGlyph, Component: InventarioApp, window: { w: 720, h: 620 } },
 ]
 
 /** Ids dos sistemas novos (compatibilidade com quem já importava). */

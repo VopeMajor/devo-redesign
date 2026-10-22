@@ -6,6 +6,7 @@
 export {
   EmblemAjustes as SettingsGlyph,
   EmblemCartas as CardsGlyph,
+  EmblemInventario as InventoryGlyph,
   EmblemJogos as GamesGlyph,
   EmblemMensagens as MessagesGlyph,
   EmblemPulso as PulseGlyph,

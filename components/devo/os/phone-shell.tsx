@@ -31,7 +31,7 @@ import { NotificationList, ToastStack } from './notifications'
 import { AnunciosCard } from './anuncios-card'
 
 /** Apps da grade e do dock são listas distintas para não repetir ícones. */
-const HOME_APPS: AppId[] = ['record', 'pulso', 'cartas']
+const HOME_APPS: AppId[] = ['record', 'pulso', 'cartas', 'inventario']
 const DOCK_APPS: AppId[] = ['mensagens', 'trocas', 'ajustes']
 
 /** Altura da barra de status (sem a área segura). */

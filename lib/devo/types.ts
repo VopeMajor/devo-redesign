@@ -60,7 +60,7 @@ export type OwnedCard = {
   acquiredAt: number
 }
 
-export type AppId = 'record' | 'pulso' | 'mensagens' | 'cartas' | 'trocas' | 'ajustes' | 'jogos'
+export type AppId = 'record' | 'pulso' | 'mensagens' | 'cartas' | 'trocas' | 'ajustes' | 'jogos' | 'inventario'
   /** Sistemas novos (DIRECAO-3), abertos como app; registro em components/devo/progressao/sistemas.tsx. */
   | 'salao'
   | 'poco'

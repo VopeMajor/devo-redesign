@@ -389,6 +389,23 @@ export function EmblemCasa(p: EmblemProps) {
   )
 }
 
+/** Inventário — baú de tampa abaulada com cintas de aço, fechadura com a estrela do sigilo e agulhas nos cantos. */
+export function EmblemInventario(p: EmblemProps) {
+  return (
+    <Svg {...p}>
+      <Line d="M7 21.5Q7 10 24 10Q41 10 41 21.5" w={2.2} />
+      <Line d="M7 21.5H41V40.5H7Z" w={2.2} />
+      <path d="M7 21.5H41V24.6H7Z" />
+      <Line d="M15 11.6V40.5M33 11.6V40.5" w={1.5} />
+      <Cut d={'M20.5 21.5H27.5V31.5L24 34.2L20.5 31.5Z' + star(24, 27.4, 2.6, 0.18)} />
+      <Line d="M5 43.4H43" w={1.8} />
+      <path d={needle(7, 40.5, 3.6, 45, 1, 0.4)} />
+      <path d={needle(41, 40.5, 44.4, 45, 1, 0.4)} />
+      <path d={star(24, 4.6, 3.4, 0.18)} />
+    </Svg>
+  )
+}
+
 /** Calendário — folha com duas argolas e faixa de cabeçalho; a data marcada é a estrela do sigilo, entre quatro losangos. */
 export function EmblemCalendario(p: EmblemProps) {
   return (
@@ -429,6 +446,7 @@ export const SYSTEM_EMBLEMS = {
   mascaras: EmblemMascaras,
   calendario: EmblemCalendario,
   casa: EmblemCasa,
+  inventario: EmblemInventario,
 } as const satisfies Record<string, EmblemComponent>
 
 /**
