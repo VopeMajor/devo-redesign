@@ -1,0 +1,96 @@
+{
+  "pedido": "carta-xadrez-bispo",
+  "titulo": "Carta — Bispo do Xadrez (ilustração da janela)",
+  "tipo": "ilustracao",
+  "tamanho_final": 1536,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 70291,
+      "passos": null,
+      "segundos": 2.8,
+      "neuronios_estimados": 1386,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "carta-xadrez-bispo--v01--1536.png",
+          "bytes": 2204758
+        },
+        {
+          "arquivo": "carta-xadrez-bispo--v01--1536.webp",
+          "bytes": 392240
+        },
+        {
+          "arquivo": "carta-xadrez-bispo--v01--1024.webp",
+          "bytes": 142530
+        },
+        {
+          "arquivo": "carta-xadrez-bispo--v01--768.webp",
+          "bytes": 88896
+        }
+      ],
+      "segundos_pos": 1.7,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 70292,
+      "passos": null,
+      "segundos": 17.9,
+      "neuronios_estimados": 1386,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "carta-xadrez-bispo--v02--1536.png",
+          "bytes": 2167184
+        },
+        {
+          "arquivo": "carta-xadrez-bispo--v02--1536.webp",
+          "bytes": 355662
+        },
+        {
+          "arquivo": "carta-xadrez-bispo--v02--1024.webp",
+          "bytes": 133574
+        },
+        {
+          "arquivo": "carta-xadrez-bispo--v02--768.webp",
+          "bytes": 86890
+        }
+      ],
+      "segundos_pos": 1.7,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 70293,
+      "passos": null,
+      "segundos": 2.8,
+      "neuronios_estimados": 1386,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "carta-xadrez-bispo--v03--1536.png",
+          "bytes": 2189484
+        },
+        {
+          "arquivo": "carta-xadrez-bispo--v03--1536.webp",
+          "bytes": 371072
+        },
+        {
+          "arquivo": "carta-xadrez-bispo--v03--1024.webp",
+          "bytes": 146252
+        },
+        {
+          "arquivo": "carta-xadrez-bispo--v03--768.webp",
+          "bytes": 93138
+        }
+      ],
+      "segundos_pos": 1.8,
+      "avisos": []
+    }
+  ]
+}

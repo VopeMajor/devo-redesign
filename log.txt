@@ -1,0 +1,10 @@
+[carta-xadrez-bispo] v01: @cf/black-forest-labs/flux-2-klein-9b seed=70291 768x1536 passos=None (~1,386 neurônios)
+    ok em 2.8s, 768x1536
+[carta-xadrez-bispo] v02: @cf/black-forest-labs/flux-2-klein-9b seed=70292 768x1536 passos=None (~1,386 neurônios)
+    nova tentativa em 15s
+    ok em 17.9s, 768x1536
+[carta-xadrez-bispo] v03: @cf/black-forest-labs/flux-2-klein-9b seed=70293 768x1536 passos=None (~1,386 neurônios)
+    ok em 2.8s, 768x1536
+[carta-xadrez-bispo] v01: mantido; sem avisos
+[carta-xadrez-bispo] v02: mantido; sem avisos
+[carta-xadrez-bispo] v03: mantido; sem avisos
