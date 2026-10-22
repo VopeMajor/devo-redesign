@@ -24,9 +24,9 @@
       1024
     ],
     "recorte_da_figura": [
-      0.2656,
+      0.2715,
       0.0417,
-      0.7168,
+      0.7227,
       0.4427
     ]
   },
@@ -45,8 +45,8 @@
     }
   },
   "origem": {
-    "pedido": "arcano-sacerdotisa",
+    "pedido": "arcano-sacerdotisa-r2",
     "variacao": "v02",
-    "png": "arcano-sacerdotisa--v02--1536.png"
+    "png": "arcano-sacerdotisa-r2--v02--1536.png"
   }
 }

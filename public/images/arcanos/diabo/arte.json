@@ -24,9 +24,9 @@
       1024
     ],
     "recorte_da_figura": [
-      0.2939,
+      0.2861,
       0.0417,
-      0.7451,
+      0.7373,
       0.4427
     ]
   },
@@ -45,8 +45,8 @@
     }
   },
   "origem": {
-    "pedido": "arcano-diabo",
-    "variacao": "v01",
-    "png": "arcano-diabo--v01--1536.png"
+    "pedido": "arcano-diabo-r2",
+    "variacao": "v02",
+    "png": "arcano-diabo-r2--v02--1536.png"
   }
 }
