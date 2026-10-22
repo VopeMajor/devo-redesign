@@ -1,0 +1,108 @@
+{
+  "pedido": "xadrez-peao",
+  "titulo": "Coleção Xadrez — Peão (peça sem fundo)",
+  "tipo": "ilustracao",
+  "tamanho_final": 1536,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 81201,
+      "passos": null,
+      "segundos": 3.3,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "xadrez-peao--v01--1536.png",
+          "bytes": 867436
+        },
+        {
+          "arquivo": "xadrez-peao--v01--1536.webp",
+          "bytes": 141252
+        },
+        {
+          "arquivo": "xadrez-peao--v01--1024.webp",
+          "bytes": 65432
+        },
+        {
+          "arquivo": "xadrez-peao--v01--768.webp",
+          "bytes": 45248
+        },
+        {
+          "arquivo": "xadrez-peao--v01--512.webp",
+          "bytes": 26294
+        }
+      ],
+      "segundos_pos": 32.9,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 81202,
+      "passos": null,
+      "segundos": 3.2,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "xadrez-peao--v02--1536.png",
+          "bytes": 902495
+        },
+        {
+          "arquivo": "xadrez-peao--v02--1536.webp",
+          "bytes": 148170
+        },
+        {
+          "arquivo": "xadrez-peao--v02--1024.webp",
+          "bytes": 64568
+        },
+        {
+          "arquivo": "xadrez-peao--v02--768.webp",
+          "bytes": 44544
+        },
+        {
+          "arquivo": "xadrez-peao--v02--512.webp",
+          "bytes": 25678
+        }
+      ],
+      "segundos_pos": 27.1,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 81203,
+      "passos": null,
+      "segundos": 3.5,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "xadrez-peao--v03--1536.png",
+          "bytes": 1046336
+        },
+        {
+          "arquivo": "xadrez-peao--v03--1536.webp",
+          "bytes": 178296
+        },
+        {
+          "arquivo": "xadrez-peao--v03--1024.webp",
+          "bytes": 75396
+        },
+        {
+          "arquivo": "xadrez-peao--v03--768.webp",
+          "bytes": 50630
+        },
+        {
+          "arquivo": "xadrez-peao--v03--512.webp",
+          "bytes": 28078
+        }
+      ],
+      "segundos_pos": 26.9,
+      "avisos": []
+    }
+  ]
+}
