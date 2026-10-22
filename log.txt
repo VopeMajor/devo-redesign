@@ -1,0 +1,10 @@
+[arcano-justica-tarot6] v01: @cf/black-forest-labs/flux-2-klein-9b seed=93025 1024x1536 passos=None (~1,455 neurônios)
+    ok em 3.3s, 1024x1536
+[arcano-justica-tarot6] v02: @cf/black-forest-labs/flux-2-klein-9b seed=93026 1024x1536 passos=None (~1,455 neurônios)
+    nova tentativa em 15s
+    ok em 18.6s, 1024x1536
+[arcano-justica-tarot6] v03: @cf/black-forest-labs/flux-2-klein-9b seed=93027 1024x1536 passos=None (~1,455 neurônios)
+    ok em 3.4s, 1024x1536
+[arcano-justica-tarot6] v01: rembg:birefnet-general; sem avisos
+[arcano-justica-tarot6] v02: rembg:birefnet-general; sem avisos
+[arcano-justica-tarot6] v03: rembg:birefnet-general; sem avisos
