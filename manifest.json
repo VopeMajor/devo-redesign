@@ -1,0 +1,96 @@
+{
+  "pedido": "carta-escudo",
+  "titulo": "Carta — Escudo de Papelão (ilustração da janela)",
+  "tipo": "ilustracao",
+  "tamanho_final": 1536,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 70137,
+      "passos": null,
+      "segundos": 3.1,
+      "neuronios_estimados": 1386,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "carta-escudo--v01--1536.png",
+          "bytes": 2445241
+        },
+        {
+          "arquivo": "carta-escudo--v01--1536.webp",
+          "bytes": 462766
+        },
+        {
+          "arquivo": "carta-escudo--v01--1024.webp",
+          "bytes": 174810
+        },
+        {
+          "arquivo": "carta-escudo--v01--768.webp",
+          "bytes": 110242
+        }
+      ],
+      "segundos_pos": 1.9,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 70132,
+      "passos": null,
+      "segundos": 2.3,
+      "neuronios_estimados": 1386,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "carta-escudo--v02--1536.png",
+          "bytes": 2466113
+        },
+        {
+          "arquivo": "carta-escudo--v02--1536.webp",
+          "bytes": 471120
+        },
+        {
+          "arquivo": "carta-escudo--v02--1024.webp",
+          "bytes": 175192
+        },
+        {
+          "arquivo": "carta-escudo--v02--768.webp",
+          "bytes": 108936
+        }
+      ],
+      "segundos_pos": 1.8,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 70138,
+      "passos": null,
+      "segundos": 63.8,
+      "neuronios_estimados": 1386,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "carta-escudo--v03--1536.png",
+          "bytes": 2550328
+        },
+        {
+          "arquivo": "carta-escudo--v03--1536.webp",
+          "bytes": 508218
+        },
+        {
+          "arquivo": "carta-escudo--v03--1024.webp",
+          "bytes": 186340
+        },
+        {
+          "arquivo": "carta-escudo--v03--768.webp",
+          "bytes": 117014
+        }
+      ],
+      "segundos_pos": 1.7,
+      "avisos": []
+    }
+  ]
+}
