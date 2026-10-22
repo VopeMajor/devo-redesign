@@ -1,0 +1,109 @@
+{
+  "pedido": "arcano-sacerdotisa-r2",
+  "titulo": "Arcano — sacerdotisa (figura, revisada)",
+  "tipo": "ilustracao",
+  "tamanho_final": 1536,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 22021,
+      "passos": null,
+      "segundos": 3.5,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "arcano-sacerdotisa-r2--v01--1536.png",
+          "bytes": 1046800
+        },
+        {
+          "arquivo": "arcano-sacerdotisa-r2--v01--1536.webp",
+          "bytes": 208040
+        },
+        {
+          "arquivo": "arcano-sacerdotisa-r2--v01--1024.webp",
+          "bytes": 97340
+        },
+        {
+          "arquivo": "arcano-sacerdotisa-r2--v01--768.webp",
+          "bytes": 65016
+        },
+        {
+          "arquivo": "arcano-sacerdotisa-r2--v01--512.webp",
+          "bytes": 36806
+        }
+      ],
+      "segundos_pos": 37.3,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 22022,
+      "passos": null,
+      "segundos": 3.3,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "arcano-sacerdotisa-r2--v02--1536.png",
+          "bytes": 1202957
+        },
+        {
+          "arquivo": "arcano-sacerdotisa-r2--v02--1536.webp",
+          "bytes": 223632
+        },
+        {
+          "arquivo": "arcano-sacerdotisa-r2--v02--1024.webp",
+          "bytes": 100476
+        },
+        {
+          "arquivo": "arcano-sacerdotisa-r2--v02--768.webp",
+          "bytes": 68156
+        },
+        {
+          "arquivo": "arcano-sacerdotisa-r2--v02--512.webp",
+          "bytes": 38944
+        }
+      ],
+      "segundos_pos": 33.2,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 22023,
+      "passos": null,
+      "segundos": 3.6,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "ilhas_removidas": 0,
+      "arquivos": [
+        {
+          "arquivo": "arcano-sacerdotisa-r2--v03--1536.png",
+          "bytes": 1036351
+        },
+        {
+          "arquivo": "arcano-sacerdotisa-r2--v03--1536.webp",
+          "bytes": 195854
+        },
+        {
+          "arquivo": "arcano-sacerdotisa-r2--v03--1024.webp",
+          "bytes": 87772
+        },
+        {
+          "arquivo": "arcano-sacerdotisa-r2--v03--768.webp",
+          "bytes": 58786
+        },
+        {
+          "arquivo": "arcano-sacerdotisa-r2--v03--512.webp",
+          "bytes": 33532
+        }
+      ],
+      "segundos_pos": 30.5,
+      "avisos": []
+    }
+  ]
+}
