@@ -2,6 +2,7 @@
 
 Uso: python3 arte/ferramentas/arcanos.py <pasta arte-saida/arcano-<key>> <vNN> <key> [--cabeca-embaixo]
      --cabeca-embaixo: figura de ponta-cabeça (Enforcado) — o retrato pega a cabeça no pé da figura.
+     --maior-massa: centra o retrato no maior bloco opaco do topo (ignora estandarte, cajado ou asa ao lado).
 
 Contrato (lib/devo/arcanos-arte.ts): public/images/arcanos/<key>/{figura,retrato}-<lado>.webp, <lado> = maior lado.
   figura   1024×1536, figura com 1400 px de altura, pés em y=1500, centrada (ou limitada pela largura).
@@ -25,6 +26,7 @@ ALTURA, PES, W, H = 1400, 1500, 1024, 1536
 def main() -> int:
     saida, var, key = Path(sys.argv[1]), sys.argv[2], sys.argv[3]
     embaixo = "--cabeca-embaixo" in sys.argv[4:]
+    massa = "--maior-massa" in sys.argv[4:]
     pid = json.loads((saida / "manifest.json").read_text())["pedido"]
     png = max(saida.glob(f"final/{pid}--{var}--*.png"), key=lambda p: int(p.stem.split("--")[-1]))
     im = Image.open(png).convert("RGBA")
@@ -53,6 +55,23 @@ def main() -> int:
         faixa = fa[topo:topo + int(obj.height * 0.14)]
         by = topo - int(bh * 0.06)
     cx = float((faixa.sum(0) * np.arange(W)).sum() / max(faixa.sum(), 1))
+    if massa:
+        # o corpo (bloco mais largo a 45% da altura) diz onde está a cabeça: o centróide do topo só conta as colunas
+        # dentro dele — estandarte, cajado ou asa ao lado não puxam o retrato
+        linha = fa[topo + int(obj.height * 0.45)] > 24
+        melhor, ini = (0, 0, 0), None
+        for x in range(W + 1):
+            if x < W and linha[x]:
+                ini = x if ini is None else ini
+            elif ini is not None:
+                if x - ini > melhor[0]:
+                    melhor = (x - ini, ini, x)
+                ini = None
+        faixa_c = fa[topo:topo + int(obj.height * 0.3)].copy()
+        faixa_c[:, :melhor[1]] = 0
+        faixa_c[:, melhor[2]:] = 0
+        if faixa_c.sum():
+            cx = float((faixa_c.sum(0) * np.arange(W)).sum() / faixa_c.sum())
     bx = int(round(cx - bw / 2))
     caixa = (bx, by, bx + bw, by + bh)
     ret = Image.new("RGBA", (bw, bh), (0, 0, 0, 0))
