@@ -1,0 +1,108 @@
+{
+  "pedido": "xadrez-torre",
+  "titulo": "Coleção Xadrez — Torre (peça sem fundo)",
+  "tipo": "ilustracao",
+  "tamanho_final": 1536,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 81211,
+      "passos": null,
+      "segundos": 63.5,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "xadrez-torre--v01--1536.png",
+          "bytes": 972660
+        },
+        {
+          "arquivo": "xadrez-torre--v01--1536.webp",
+          "bytes": 167644
+        },
+        {
+          "arquivo": "xadrez-torre--v01--1024.webp",
+          "bytes": 74936
+        },
+        {
+          "arquivo": "xadrez-torre--v01--768.webp",
+          "bytes": 50146
+        },
+        {
+          "arquivo": "xadrez-torre--v01--512.webp",
+          "bytes": 28888
+        }
+      ],
+      "segundos_pos": 33.0,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 81212,
+      "passos": null,
+      "segundos": 3.3,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "xadrez-torre--v02--1536.png",
+          "bytes": 900308
+        },
+        {
+          "arquivo": "xadrez-torre--v02--1536.webp",
+          "bytes": 138564
+        },
+        {
+          "arquivo": "xadrez-torre--v02--1024.webp",
+          "bytes": 65118
+        },
+        {
+          "arquivo": "xadrez-torre--v02--768.webp",
+          "bytes": 45158
+        },
+        {
+          "arquivo": "xadrez-torre--v02--512.webp",
+          "bytes": 27146
+        }
+      ],
+      "segundos_pos": 27.0,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 81213,
+      "passos": null,
+      "segundos": 3.1,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "xadrez-torre--v03--1536.png",
+          "bytes": 921672
+        },
+        {
+          "arquivo": "xadrez-torre--v03--1536.webp",
+          "bytes": 151914
+        },
+        {
+          "arquivo": "xadrez-torre--v03--1024.webp",
+          "bytes": 70378
+        },
+        {
+          "arquivo": "xadrez-torre--v03--768.webp",
+          "bytes": 47604
+        },
+        {
+          "arquivo": "xadrez-torre--v03--512.webp",
+          "bytes": 28008
+        }
+      ],
+      "segundos_pos": 26.8,
+      "avisos": []
+    }
+  ]
+}
