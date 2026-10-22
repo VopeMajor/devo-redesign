@@ -24,9 +24,9 @@
       1024
     ],
     "recorte_da_figura": [
-      0.3311,
+      0.2363,
       0.0417,
-      0.7822,
+      0.6875,
       0.4427
     ]
   },
@@ -45,8 +45,8 @@
     }
   },
   "origem": {
-    "pedido": "arcano-hierofante",
-    "variacao": "v01",
-    "png": "arcano-hierofante--v01--1536.png"
+    "pedido": "arcano-hierofante-tarot",
+    "variacao": "v03",
+    "png": "arcano-hierofante-tarot--v03--1536.png"
   }
 }

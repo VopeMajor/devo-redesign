@@ -1,6 +1,7 @@
 """Exporta figura + retrato dos Arcanos com escala e base iguais (pés na mesma altura).
 
-Uso: python3 arte/ferramentas/arcanos.py <pasta arte-saida/arcano-<key>> <vNN> <key>
+Uso: python3 arte/ferramentas/arcanos.py <pasta arte-saida/arcano-<key>> <vNN> <key> [--cabeca-embaixo]
+     --cabeca-embaixo: figura de ponta-cabeça (Enforcado) — o retrato pega a cabeça no pé da figura.
 
 Contrato (lib/devo/arcanos-arte.ts): public/images/arcanos/<key>/{figura,retrato}-<lado>.webp, <lado> = maior lado.
   figura   1024×1536, figura com 1400 px de altura, pés em y=1500, centrada (ou limitada pela largura).
@@ -23,6 +24,7 @@ ALTURA, PES, W, H = 1400, 1500, 1024, 1536
 
 def main() -> int:
     saida, var, key = Path(sys.argv[1]), sys.argv[2], sys.argv[3]
+    embaixo = "--cabeca-embaixo" in sys.argv[4:]
     pid = json.loads((saida / "manifest.json").read_text())["pedido"]
     png = max(saida.glob(f"final/{pid}--{var}--*.png"), key=lambda p: int(p.stem.split("--")[-1]))
     im = Image.open(png).convert("RGBA")
@@ -42,18 +44,22 @@ def main() -> int:
     # retrato: busto = 44% de cima da figura, cabeça centrada pelo centróide do alfa no topo
     fa = np.asarray(fig)[..., 3].astype(np.float32)
     topo = y0
-    faixa = fa[topo:topo + int(obj.height * 0.14)]
-    cx = float((faixa.sum(0) * np.arange(W)).sum() / max(faixa.sum(), 1))
     bh = int(obj.height * 0.44)
     bw = int(bh * 3 / 4)
+    if embaixo:
+        faixa = fa[PES - int(obj.height * 0.14):PES]
+        by = PES + int(bh * 0.06) - bh
+    else:
+        faixa = fa[topo:topo + int(obj.height * 0.14)]
+        by = topo - int(bh * 0.06)
+    cx = float((faixa.sum(0) * np.arange(W)).sum() / max(faixa.sum(), 1))
     bx = int(round(cx - bw / 2))
-    by = topo - int(bh * 0.06)
     caixa = (bx, by, bx + bw, by + bh)
     ret = Image.new("RGBA", (bw, bh), (0, 0, 0, 0))
     ret.alpha_composite(fig.crop((max(0, bx), max(0, by), min(W, bx + bw), min(H, by + bh))), (max(0, -bx), max(0, -by)))
     ret = redimensionar(ret, (768, 1024))
     arr = np.asarray(ret, dtype=np.float32).copy()  # busto some suave embaixo (sem corte reto)
-    rampa = np.clip((1024 - np.arange(1024)) / 180.0, 0, 1)[:, None]
+    rampa = np.clip(((np.arange(1024)) if embaixo else (1024 - np.arange(1024))) / 180.0, 0, 1)[:, None]
     arr[..., 3] *= rampa
     ret = Image.fromarray(arr.round().astype(np.uint8), "RGBA")
     for t in (1024, 512, 256):
