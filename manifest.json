@@ -1,0 +1,96 @@
+{
+  "pedido": "carta-laminas",
+  "titulo": "Carta — Lâminas Cruzadas (ilustração da janela)",
+  "tipo": "ilustracao",
+  "tamanho_final": 1536,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 70171,
+      "passos": null,
+      "segundos": 2.7,
+      "neuronios_estimados": 1386,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "carta-laminas--v01--1536.png",
+          "bytes": 2609821
+        },
+        {
+          "arquivo": "carta-laminas--v01--1536.webp",
+          "bytes": 534256
+        },
+        {
+          "arquivo": "carta-laminas--v01--1024.webp",
+          "bytes": 207632
+        },
+        {
+          "arquivo": "carta-laminas--v01--768.webp",
+          "bytes": 124772
+        }
+      ],
+      "segundos_pos": 1.5,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 70172,
+      "passos": null,
+      "segundos": 2.6,
+      "neuronios_estimados": 1386,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "carta-laminas--v02--1536.png",
+          "bytes": 2564580
+        },
+        {
+          "arquivo": "carta-laminas--v02--1536.webp",
+          "bytes": 500858
+        },
+        {
+          "arquivo": "carta-laminas--v02--1024.webp",
+          "bytes": 195300
+        },
+        {
+          "arquivo": "carta-laminas--v02--768.webp",
+          "bytes": 120618
+        }
+      ],
+      "segundos_pos": 1.5,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 70173,
+      "passos": null,
+      "segundos": 3.1,
+      "neuronios_estimados": 1386,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "carta-laminas--v03--1536.png",
+          "bytes": 2625951
+        },
+        {
+          "arquivo": "carta-laminas--v03--1536.webp",
+          "bytes": 533572
+        },
+        {
+          "arquivo": "carta-laminas--v03--1024.webp",
+          "bytes": 208428
+        },
+        {
+          "arquivo": "carta-laminas--v03--768.webp",
+          "bytes": 126456
+        }
+      ],
+      "segundos_pos": 1.5,
+      "avisos": []
+    }
+  ]
+}
