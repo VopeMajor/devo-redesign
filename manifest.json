@@ -1,0 +1,96 @@
+{
+  "pedido": "carta-relogio",
+  "titulo": "Carta — O Relógio Parado (ilustração da janela)",
+  "tipo": "ilustracao",
+  "tamanho_final": 1536,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 70221,
+      "passos": null,
+      "segundos": 2.6,
+      "neuronios_estimados": 1386,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "carta-relogio--v01--1536.png",
+          "bytes": 2692937
+        },
+        {
+          "arquivo": "carta-relogio--v01--1536.webp",
+          "bytes": 576616
+        },
+        {
+          "arquivo": "carta-relogio--v01--1024.webp",
+          "bytes": 219022
+        },
+        {
+          "arquivo": "carta-relogio--v01--768.webp",
+          "bytes": 132416
+        }
+      ],
+      "segundos_pos": 1.5,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 70222,
+      "passos": null,
+      "segundos": 17.8,
+      "neuronios_estimados": 1386,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "carta-relogio--v02--1536.png",
+          "bytes": 2664907
+        },
+        {
+          "arquivo": "carta-relogio--v02--1536.webp",
+          "bytes": 566680
+        },
+        {
+          "arquivo": "carta-relogio--v02--1024.webp",
+          "bytes": 215224
+        },
+        {
+          "arquivo": "carta-relogio--v02--768.webp",
+          "bytes": 131470
+        }
+      ],
+      "segundos_pos": 1.4,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 70223,
+      "passos": null,
+      "segundos": 2.9,
+      "neuronios_estimados": 1386,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "carta-relogio--v03--1536.png",
+          "bytes": 2661465
+        },
+        {
+          "arquivo": "carta-relogio--v03--1536.webp",
+          "bytes": 568230
+        },
+        {
+          "arquivo": "carta-relogio--v03--1024.webp",
+          "bytes": 216538
+        },
+        {
+          "arquivo": "carta-relogio--v03--768.webp",
+          "bytes": 129136
+        }
+      ],
+      "segundos_pos": 1.4,
+      "avisos": []
+    }
+  ]
+}
