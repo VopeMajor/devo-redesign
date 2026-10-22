@@ -69,7 +69,8 @@ export default function MemoryRush({ start, onFinish, onQuit }: GameProps) {
   const [me, setMe] = useState({ score: 0, pairs: 0, combo: 0, bestCombo: 0, misses: 0 })
   const [opp, setOpp] = useState({ score: 0, pairs: 0, combo: 0 })
   const [endsAt, setEndsAt] = useState(0)
-  const [now, setNow] = useState(0)
+  /** Tempo restante arredondado para o segundo de cima: o relógio só mostra segundos, então a tela só redesenha 1x por segundo. */
+  const [left, setLeft] = useState(TOTAL_MS)
   const [oppFlash, setOppFlash] = useState<number[]>([])
   /** Tutorial: cartas que o bot virou e errou ficam à mostra por um instante (didático). */
   const [oppPeek, setOppPeek] = useState<number[]>([])
@@ -110,8 +111,17 @@ export default function MemoryRush({ start, onFinish, onQuit }: GameProps) {
       onFinish(roomOutcome(room, { bonusLabel: `COMBO MÁX x${Math.max(1, mine.bestCombo ?? 1)}` }))
       return
     }
-    setMe((m) => ({ ...m, score: s.score[side], pairs: s.pairs[side], combo: s.combo[side], bestCombo: s.best[side], misses: s.misses[side] }))
-    setOpp({ score: s.score[oppSide], pairs: s.pairs[oppSide], combo: s.combo[oppSide] })
+    // Cada consulta (a cada ~0,5s) devolvia objetos novos e redesenhava o tabuleiro inteiro mesmo sem mudança.
+    setMe((m) =>
+      m.score === s.score[side] && m.pairs === s.pairs[side] && m.combo === s.combo[side] && m.bestCombo === s.best[side] && m.misses === s.misses[side]
+        ? m
+        : { ...m, score: s.score[side], pairs: s.pairs[side], combo: s.combo[side], bestCombo: s.best[side], misses: s.misses[side] },
+    )
+    setOpp((o) =>
+      o.score === s.score[oppSide] && o.pairs === s.pairs[oppSide] && o.combo === s.combo[oppSide]
+        ? o
+        : { score: s.score[oppSide], pairs: s.pairs[oppSide], combo: s.combo[oppSide] },
+    )
     setPhase((p) => {
       if (s.phase !== p) {
         push(s.phase === PHASES.length - 1 ? 'FASE FINAL' : `FASE ${s.phase + 1}`, 'white')
@@ -123,16 +133,25 @@ export default function MemoryRush({ start, onFinish, onQuit }: GameProps) {
     const fresh: number[] = []
     setCards((prev) => {
       const base = prev.length && Math.floor(prev[0].id / 100) === s.phase ? prev : buildPhase(start.seed, s.phase)
-      return base.map((c) => {
+      let changed = base !== prev
+      const next = base.map((c) => {
         const owner = s.claimed[`${s.phase}:${c.sym}`]
-        if (!owner) return c.owner === 'me' ? c : { ...c, owner: null }
+        if (!owner) {
+          if (c.owner === 'me' || c.owner === null) return c
+          changed = true
+          return { ...c, owner: null }
+        }
         const key = `${s.phase}:${c.sym}`
         if (owner === oppSide && !seenOppClaims.current.has(key)) {
           fresh.push(c.id)
           if (fresh.length % 2 === 0) seenOppClaims.current.add(key)
         }
-        return { ...c, owner: owner === side ? 'me' : 'opp' }
+        const mine: Card['owner'] = owner === side ? 'me' : 'opp'
+        if (c.owner === mine) return c
+        changed = true
+        return { ...c, owner: mine }
       })
+      return changed ? next : prev
     })
     if (fresh.length) {
       setOppFlash(fresh)
@@ -145,14 +164,14 @@ export default function MemoryRush({ start, onFinish, onQuit }: GameProps) {
 
   useEffect(() => {
     if (!running) return
-    const id = window.setInterval(() => setNow(Date.now()), 100)
+    const id = window.setInterval(() => setLeft(Math.ceil(Math.max(0, endsAt - Date.now()) / 1000) * 1000), 100)
     return () => window.clearInterval(id)
-  }, [running])
+  }, [running, endsAt])
 
-  const remaining = running ? Math.max(0, endsAt - now) : TOTAL_MS
+  const remaining = running ? left : TOTAL_MS
   useEffect(() => {
-    if (running && now > 0 && remaining <= 0) finish()
-  }, [running, now, remaining, finish])
+    if (running && remaining <= 0) finish()
+  }, [running, remaining, finish])
 
   const lastTen = running && remaining <= 10_000
   useEffect(() => {
@@ -270,7 +289,7 @@ export default function MemoryRush({ start, onFinish, onQuit }: GameProps) {
 
   // Par levado pelo oponente fecha qualquer carta minha aberta nele.
   useEffect(() => {
-    setOpen((o) => o.filter((id) => !cards.find((c) => c.id === id)?.owner))
+    setOpen((o) => (o.some((id) => cards.find((c) => c.id === id)?.owner) ? o.filter((id) => !cards.find((c) => c.id === id)?.owner) : o))
   }, [cards])
 
   const diff = me.score - opp.score
@@ -371,8 +390,9 @@ export default function MemoryRush({ start, onFinish, onQuit }: GameProps) {
       {!running && !finished.current && gateOpen && (
         <Countdown321
           onDone={() => {
-            setEndsAt(online ? toLocal(start.startedAt + TOTAL_MS) : Date.now() + TOTAL_MS)
-            setNow(Date.now())
+            const ends = online ? toLocal(start.startedAt + TOTAL_MS) : Date.now() + TOTAL_MS
+            setEndsAt(ends)
+            setLeft(Math.ceil(Math.max(0, ends - Date.now()) / 1000) * 1000)
             setRunning(true)
           }}
         />

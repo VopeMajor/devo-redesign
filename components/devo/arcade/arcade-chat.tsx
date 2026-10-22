@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState, type ReactNode } from 'react'
+import { memo, useEffect, useRef, useState, type ReactNode } from 'react'
 import useSWR from 'swr'
 import { IconButton } from '@/components/devo/kit'
 import { playSfx } from '@/lib/devo/audio'
@@ -37,13 +37,17 @@ export function fotoPublica(pid: string | undefined, v: Visual | null | undefine
  * o Owner não tem marca nenhuma — aparece só com o que equipou, como qualquer jogador.
  * Em listas, as animações dos cosméticos ficam paradas (desempenho no celular).
  */
+/** Um formatador só: toLocaleTimeString monta um novo a cada chamada, e o chat tem até 60 linhas. */
+let timeFmt: Intl.DateTimeFormat | null = null
+const formatTime = (at: number) => (timeFmt ??= new Intl.DateTimeFormat('pt-BR', { hour: '2-digit', minute: '2-digit' })).format(at)
+
 export function ChatMessage({ m, compact, visual }: { m: ChatLine; compact?: boolean; visual?: Visual | null }) {
   const openProfile = useOpenProfile()
   const proprio = useVisual(visual === undefined ? m.pid : null)
   const v = visual === undefined ? proprio : visual
   const { mapa } = useCatalogo()
   const color = m.bot ? '#8a90a0' : nameColor(m.author)
-  const time = new Date(m.at).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })
+  const time = formatTime(m.at)
   const balao = v?.bal ? (mapa.get(v.bal) ?? null) : null
   const dealer = m.role === 'dealer' && (
     <span title="Dealer" className="inline-grid size-[18px] shrink-0 place-items-center bg-dv-gold font-mono text-[10px] font-bold text-dv-ink">
@@ -99,7 +103,8 @@ export function ChatMessage({ m, compact, visual }: { m: ChatLine; compact?: boo
   )
 }
 
-export function ArcadeChat({
+/** Memoizado: dentro de um jogo o pai redesenha a cada tique do relógio; o chat só muda quando chegam mensagens. */
+export const ArcadeChat = memo(function ArcadeChat({
   channel,
   placeholder = 'Diga algo à mesa…',
   className,
@@ -185,4 +190,4 @@ export function ArcadeChat({
       )}
     </div>
   )
-}
+})

@@ -1,4 +1,4 @@
-import type { CSSProperties } from 'react'
+import { memo, type CSSProperties } from 'react'
 import { cn } from '@/lib/utils'
 
 const NUMERALS = ['XII', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI']
@@ -94,7 +94,7 @@ const anim = (value: string): CSSProperties => ({ animation: value })
  * engrenagens trabalham nos cantos, poeira sobe, e a cor do tema escolhido tinge a cena.
  * A cada troca de turno uma onda percorre o mostrador.
  */
-export function ClockBackdrop({ danger, tint, turnKey }: { danger: boolean; tint: string; turnKey: string }) {
+export const ClockBackdrop = memo(function ClockBackdrop({ danger, tint, turnKey }: { danger: boolean; tint: string; turnKey: string }) {
   return (
     <div className="pointer-events-none absolute inset-0 overflow-hidden bg-[#0c0c0e]" aria-hidden="true">
       <div
@@ -163,4 +163,4 @@ export function ClockBackdrop({ danger, tint, turnKey }: { danger: boolean; tint
       />
     </div>
   )
-}
+})

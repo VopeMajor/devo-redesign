@@ -1,7 +1,7 @@
 'use client'
 
 import './bluff.css'
-import { type CSSProperties, useCallback, useEffect, useId, useLayoutEffect, useMemo, useRef, useState } from 'react'
+import { type CSSProperties, memo, useCallback, useEffect, useId, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import type { GameProps } from '@/lib/devo/arcade/client'
 import {
   BLUFF_BULLETS,
@@ -79,7 +79,9 @@ export default function Bluff({ start, onFinish, onQuit }: GameProps) {
   const seenSeq = useRef(0)
   const finished = useRef(false)
 
-  const view: BluffView | null = online ? ((room?.state as unknown as BluffView | undefined) ?? null) : local ? bluffView(local, 'a') : null
+  // No treino a visão era recriada a cada tique do relógio (5x/s), e com ela a mão inteira.
+  const localView = useMemo(() => (local ? bluffView(local, 'a') : null), [local])
+  const view: BluffView | null = online ? ((room?.state as unknown as BluffView | undefined) ?? null) : localView
   /** Relógio do servidor online; relógio local no treino. */
   const toClock = useCallback((ms: number) => (online ? toLocal(ms) : ms), [online, toLocal])
   const nameOf = useCallback((s: Side) => (s === me ? 'Você' : oppName), [me, oppName])
@@ -225,6 +227,10 @@ export default function Bluff({ start, onFinish, onQuit }: GameProps) {
     playSfx('card-select')
     setSel((s) => (s.includes(id) ? s.filter((x) => x !== id) : s.length >= 4 ? s : [...s, id]))
   }
+  // O relógio do turno redesenha a tela 5x por segundo; a mão (até 26 cartas em SVG) recebe uma função estável e só redesenha quando muda.
+  const toggleRef = useRef(toggle)
+  toggleRef.current = toggle
+  const onToggle = useCallback((id: number) => toggleRef.current(id), [])
   const pickRank = () => {
     if (!myTurn || pending || !view) return
     playSfx('card-select')
@@ -297,13 +303,13 @@ export default function Bluff({ start, onFinish, onQuit }: GameProps) {
           <div className="bf-timer" aria-hidden="true">
             <i
               style={{
-                width: live ? `${Math.min(100, (left / BLUFF_TURN_MS) * 100)}%` : '0%',
+                transform: `scaleX(${live ? Math.min(1, left / BLUFF_TURN_MS) : 0})`,
                 background: left < 6000 ? RUBY : myTurn ? 'var(--dv-amethyst)' : 'var(--dv-gold-deep)',
               }}
             />
           </div>
 
-          <Hand cards={myHand} sel={sel} active={myTurn && !pending} rank={view?.rk ?? 0} onToggle={toggle} />
+          <Hand cards={myHand} sel={sel} active={myTurn && !pending} rank={view?.rk ?? 0} onToggle={onToggle} />
 
           <div className="bf-acts">
             {pending && myTurn ? (
@@ -336,7 +342,7 @@ export default function Bluff({ start, onFinish, onQuit }: GameProps) {
   )
 }
 
-function Stage({ view, me, oppName, oppTurn, rank }: { view: BluffView | null; me: Side; oppName: string; oppTurn: boolean; rank: string }) {
+const Stage = memo(function Stage({ view, me, oppName, oppTurn, rank }: { view: BluffView | null; me: Side; oppName: string; oppTurn: boolean; rank: string }) {
   const stageRef = useRef<HTMLDivElement>(null)
   const markRef = useRef<HTMLDivElement>(null)
   const [pos, setPos] = useState({ x: 0, y: 0, w: 0 })
@@ -454,7 +460,7 @@ function Stage({ view, me, oppName, oppTurn, rank }: { view: BluffView | null; m
       )}
     </div>
   )
-}
+})
 
 function SuitIcon({ s, className, style }: { s: number; className?: string; style?: CSSProperties }) {
   return (
@@ -464,7 +470,8 @@ function SuitIcon({ s, className, style }: { s: number; className?: string; styl
   )
 }
 
-function CardFace({ c }: { c: BluffCard }) {
+/** O id da carta define valor e naipe: pula o redesenho mesmo quando o servidor manda um objeto novo. */
+const CardFace = memo(function CardFace({ c }: { c: BluffCard }) {
   const red = c.s === 1 || c.s === 2
   const R = BLUFF_RANKS[c.r]
   const ixStyle = { fontSize: R === '10' ? '.82em' : '1em' }
@@ -490,9 +497,9 @@ function CardFace({ c }: { c: BluffCard }) {
       <div className="shine" />
     </div>
   )
-}
+}, (a, b) => a.c.id === b.c.id && a.c.r === b.c.r && a.c.s === b.c.s)
 
-function Cylinder({ n, size, mark }: { n: number; size: number; mark?: { idx: number; name: 'spent' | 'ret' } }) {
+const Cylinder = memo(function Cylinder({ n, size, mark }: { n: number; size: number; mark?: { idx: number; name: 'spent' | 'ret' } }) {
   const uid = useId().replace(/:/g, '')
   const chambers = Array.from({ length: 6 }, (_, i) => {
     const a = ((i * 60 - 90) * Math.PI) / 180
@@ -547,9 +554,9 @@ function Cylinder({ n, size, mark }: { n: number; size: number; mark?: { idx: nu
       </g>
     </svg>
   )
-}
+})
 
-function Hand({ cards, sel, active, rank, onToggle }: { cards: BluffCard[]; sel: number[]; active: boolean; rank: number; onToggle: (id: number) => void }) {
+const Hand = memo(function Hand({ cards, sel, active, rank, onToggle }: { cards: BluffCard[]; sel: number[]; active: boolean; rank: number; onToggle: (id: number) => void }) {
   const ref = useRef<HTMLDivElement>(null)
   const [W, setW] = useState(340)
   const [deal, setDeal] = useState(true)
@@ -612,7 +619,7 @@ function Hand({ cards, sel, active, rank, onToggle }: { cards: BluffCard[]; sel:
       })}
     </div>
   )
-}
+})
 
 function Reveal({ ev, nameOf }: { ev: CallEvent; nameOf: (s: Side) => string }) {
   const n = ev.cards.length

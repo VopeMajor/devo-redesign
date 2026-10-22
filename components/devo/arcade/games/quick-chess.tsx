@@ -79,7 +79,7 @@ function ChessIconButton({ icon: Icon, label, active, onClick, className, title 
 export default function QuickChess({ start, settings, onFinish, onQuit }: GameProps) {
   const game = useMemo(() => new Chess(), [])
   const [units, setUnits] = useState<UnitState[]>(() => initialUnits(game))
-  const [, setTick] = useState(0)
+  const [tick, setTick] = useState(0)
   const [running, setRunning] = useState(false)
   const [animating, setAnimating] = useState(false)
   const [selected, setSelected] = useState<string | null>(null)
@@ -373,7 +373,9 @@ export default function QuickChess({ start, settings, onFinish, onQuit }: GamePr
 
   const turn = game.turn()
   const ticking = running && !animating
-  const plies = game.history().length
+  // chess.js refaz a partida inteira (com geração de lances) a cada history(): calcula só quando o tabuleiro muda, não a cada tique do relógio.
+  const history = useMemo(() => game.history(), [game, tick]) // eslint-disable-line react-hooks/exhaustive-deps
+  const plies = history.length
   const serverState = online && room && room.status !== 'waiting' ? (room.state as ChessState) : null
   const synced = !!serverState?.moves && serverState.moves.length === plies
   const clockTotal = CLOCK_MS
@@ -420,6 +422,7 @@ export default function QuickChess({ start, settings, onFinish, onQuit }: GamePr
 
   const replayDemo = () => {
     game.reset()
+    setTick((t) => t + 1)
     mateRef.current = null
     animRef.current = null
     setUnits(initialUnits(game))
@@ -467,6 +470,13 @@ export default function QuickChess({ start, settings, onFinish, onQuit }: GamePr
     },
     [demo, spectator, ticking, turn, myColor, myLeft, game, selected, targets, legal, play, sound],
   )
+
+  // O relógio redesenha a tela 10x por segundo e `onSquare` muda junto (depende do tempo restante).
+  // A cena 3D recebe uma função estável e só é refeita quando algo dela muda de verdade.
+  const onSquareRef = useRef(onSquare)
+  onSquareRef.current = onSquare
+  const onSquareStable = useCallback((sq: string) => onSquareRef.current(sq), [])
+  const clearSelection = useCallback(() => setSelected(null), [])
 
   const onPointerDown = (e: ReactPointerEvent) => {
     pointers.current.set(e.pointerId, { x: e.clientX, y: e.clientY })
@@ -521,7 +531,6 @@ export default function QuickChess({ start, settings, onFinish, onQuit }: GamePr
     arcadePost({ action: 'settings', settings: patch }).catch(() => {})
   }
 
-  const history = game.history()
   const pairs: [string, string | undefined][] = []
   for (let i = 0; i < history.length; i += 2) pairs.push([history[i], history[i + 1]])
 
@@ -621,7 +630,7 @@ export default function QuickChess({ start, settings, onFinish, onQuit }: GamePr
               dpr={quality === 'low' ? 1 : quality === 'medium' ? [1, 1.5] : [1, 2]}
               camera={{ position: [0, 9, 9], fov: 40 }}
               gl={{ antialias: quality !== 'low', alpha: true, powerPreference: 'high-performance' }}
-              onPointerMissed={() => setSelected(null)}
+              onPointerMissed={clearSelection}
               onCreated={({ gl, setDpr }) => {
                 // Renderizador por software (SwiftShader/llvmpipe): qualidade baixa e DPR 0,75, como as cenas do kit.
                 try {
@@ -649,7 +658,7 @@ export default function QuickChess({ start, settings, onFinish, onQuit }: GamePr
                 lastFrom={lastMove?.from ?? null}
                 lastTo={lastMove?.to ?? null}
                 checkSq={checkSq}
-                onSquare={onSquare}
+                onSquare={onSquareStable}
               />
             </Canvas>
 

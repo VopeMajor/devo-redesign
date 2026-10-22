@@ -813,9 +813,9 @@ function finishView(f: {
 export type MatchFinish = ReturnType<typeof finishView>
 
 export async function finishViewFor(player: Player, f: Omit<Parameters<typeof finishView>[0], 'timeDeltaMs' | 'rank' | 'weekScore'>) {
-  const timeDeltaMs = await drainTime(player.id)
   const now = Date.now()
-  const board = await leaderboard(weekStartMs(now), now, player.id)
+  // Independentes: rodam juntas para o resultado aparecer mais rápido no fim da partida.
+  const [timeDeltaMs, board] = await Promise.all([drainTime(player.id), leaderboard(weekStartMs(now), now, player.id)])
   const me = board.find((r) => r.isMe)
   return finishView({ ...f, timeDeltaMs, rank: me?.rank ?? null, weekScore: me?.score ?? f.awarded })
 }
