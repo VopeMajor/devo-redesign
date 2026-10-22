@@ -311,6 +311,34 @@ await test('pacote: a tabela soma 100 e as linhas aleatórias viram carta ou ite
   if (tabela) assert(Math.abs(tabela.reduce((s, x) => s + x.chance, 0) - 100) < 0.01, 'chances somam 100')
 })
 
+await test('peso das cartas: acima do limite não se inscreve; dentro do limite entra; troca também respeita o peso', async () => {
+  const r = await O.post('/api/record', { action: 'create', title: `Peso ${sfx} b`, startsAt: Date.now() + 86400_000, pesoMaximo: 5, admission: 'livre' })
+  assert(r.status === 200, `convocar: ${r.text.slice(0, 200)}`)
+  const id = r.json.id
+  const inv = [['pw-rainha', 'xadrez_rainha'], ['pw-torre', 'xadrez_torre'], ['pw-peao', 'xadrez_peao'], ['pw-bispo', 'xadrez_bispo']].map(([uid, cardId]) => ({ uid, cardId, origin: 'teste', acquiredAt: Date.now() }))
+  await q("UPDATE player_saves SET data = jsonb_set(data, '{inventory}', $2::jsonb) WHERE player_id = $1", [A.id, JSON.stringify(inv)])
+  const acima = await A.post('/api/record', { action: 'join', voteId: id, cartas: ['pw-rainha', 'pw-torre'] })
+  assert(acima.status === 409 && /peso/i.test(acima.json?.error ?? ''), `rainha 4 + torre 3 = 7 > 5 recusado: ${acima.status} ${acima.text}`)
+  const alheia = await A.post('/api/record', { action: 'join', voteId: id, cartas: ['nao-e-minha'] })
+  assert(alheia.status === 409, `carta de fora do inventário: ${alheia.status}`)
+  const g0 = await A.get('/api/record')
+  assert(!g0.json.votes.find((v) => v.id === id)?.joined, 'recusado não ficou inscrito')
+  const ok = await A.post('/api/record', { action: 'join', voteId: id, cartas: ['pw-rainha', 'pw-peao'] })
+  assert(ok.status === 200, `rainha 4 + peão 1 = 5 entra: ${ok.text}`)
+  const g = await A.get('/api/record')
+  const v = g.json.votes.find((x) => x.id === id)
+  assert(v.joined && v.minhasCartas.length === 2, `inscrito com 2 cartas: ${JSON.stringify(v.minhasCartas)}`)
+  const trocaRuim = await A.post('/api/record', { action: 'cartas', voteId: id, cartas: ['pw-rainha', 'pw-bispo'] })
+  assert(trocaRuim.status === 409, `troca para 6 recusada: ${trocaRuim.status}`)
+  const troca = await A.post('/api/record', { action: 'cartas', voteId: id, cartas: ['pw-torre', 'pw-bispo'] })
+  assert(troca.status === 200 && troca.json.cartas.length === 2, `troca para torre 3 + bispo 2 = 5: ${troca.text}`)
+  const board = await O.get('/api/record?view=staff').catch(() => null)
+  if (board?.status === 200 && board.json?.votes) {
+    const e = board.json.votes.find((x) => x.id === id)?.entries?.find((x) => x.playerId === A.id)
+    assert(e?.cartas?.length === 2, 'a Mesa vê as cartas do participante')
+  }
+})
+
 await test('peso máximo do Deadly Vote: salvo na convocação e visto pelo jogador', async () => {
   const r = await O.post('/api/record', { action: 'create', title: `Peso ${sfx}`, startsAt: Date.now() + 86400_000, pesoMaximo: 7, admission: 'livre' })
   assert(r.status === 200, `convocar: ${r.status} ${r.text.slice(0, 200)}`)

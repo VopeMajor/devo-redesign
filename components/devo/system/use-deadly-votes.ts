@@ -30,8 +30,13 @@ export function useDeadlyVotes() {
     error: error as Error | undefined,
     isLoading,
     refresh: () => mutate(),
-    join: async (voteId: string) => {
-      await recordAction({ action: 'join', voteId })
+    /** `cartas`: uids que o Record leva (exigido quando o caso tem peso máximo). */
+    join: async (voteId: string, cartas?: string[]) => {
+      await recordAction({ action: 'join', voteId, ...(cartas ? { cartas } : {}) })
+      await mutate()
+    },
+    trocarCartas: async (voteId: string, cartas: string[]) => {
+      await recordAction({ action: 'cartas', voteId, cartas })
       await mutate()
     },
     leave: async (voteId: string) => {

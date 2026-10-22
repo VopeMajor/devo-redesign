@@ -20,6 +20,8 @@ export type DeadlyVote = {
   maxParticipants: number | null
   /** Peso máximo de cartas que cada Record pode levar (soma dos pesos); null = o Dealer não limitou. */
   pesoMaximo: number | null
+  /** Cartas que o próprio Record escolheu levar (só no payload dele; vazio se não está inscrito). */
+  minhasCartas: CartaLevada[]
   participants: number
   joined: boolean
   outcome: 'sobreviveu' | 'eliminado' | null
@@ -45,6 +47,9 @@ export type DeadlyVote = {
 
 export type VoteAdmission = 'livre' | 'aprovacao'
 export type EntryAdmission = 'pendente' | 'aceita' | 'recusada'
+
+/** Carta que o Record leva para o Deadly Vote (uid do inventário + id da carta). */
+export type CartaLevada = { uid: string; cardId: string }
 /** Decisão por participante depois de concluir (DIRECAO-3 §4), antes de aplicar aos perfis. */
 export type EntryDecision = 'premio' | 'morreu' | 'ausente' | 'outro'
 
@@ -77,6 +82,8 @@ export type StaffEntry = {
   joinedAt: number
   /** Recompensas individuais deste participante (além da geral do caso). PRIVADAS: só a equipe vê. */
   prizes: DvPrize[]
+  /** Cartas que o participante escolheu levar (o Dealer confere o peso). */
+  cartas: CartaLevada[]
 }
 export type StaffRewardTally = { pendente: number; aprovada: number; entregue: number; rejeitada: number }
 export type StaffVote = DeadlyVote & {

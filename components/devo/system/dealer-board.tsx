@@ -24,6 +24,7 @@ import {
   type VoteAdmission,
   voteTitle,
 } from '@/lib/devo/deadly-votes'
+import { cartaExiste, getCard, getCardPeso } from '@/lib/devo/cards'
 import { cn } from '@/lib/utils'
 import { tallyText } from './deadly-vote-history'
 import { CaseTab, RecButton, RecInput, RecLabel, RecTag, RecTextarea, StatusChip, StatusMark } from './record-ui'
@@ -505,6 +506,12 @@ function AdmissionList({ vote: v, pending, run }: { vote: StaffVote; pending: st
               <span className={cn('font-mono text-[10px] uppercase tracking-[0.14em]', e.admission === 'pendente' ? 'text-in-accent' : e.admission === 'recusada' ? 'text-in-fg-3 line-through' : 'text-in-fg-2')}>
                 {ENTRY_ADMISSION_LABEL[e.admission]}
               </span>
+              {v.pesoMaximo != null && (
+                <span className="block font-mono text-[10px] uppercase tracking-[0.12em] text-in-fg-3">
+                  Cartas: {e.cartas.length ? e.cartas.map((c) => (cartaExiste(c.cardId) ? getCard(c.cardId).name : c.cardId)).join(', ') : 'nenhuma'} · peso{' '}
+                  {e.cartas.reduce((s, c) => s + (cartaExiste(c.cardId) ? getCardPeso(c.cardId) : 0), 0)}/{v.pesoMaximo}
+                </span>
+              )}
             </span>
             {!sealed &&
               (e.admission === 'pendente' ? (

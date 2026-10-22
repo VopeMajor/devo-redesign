@@ -31,6 +31,7 @@ import { cn } from '@/lib/utils'
 import { formatDuration, useNow } from '../hooks'
 import { useOsNav } from '../os/os-nav'
 import { DeckPanel } from '../shared/deck-panel'
+import { CartasLevadas, EscolherCartasSheet } from './dv-cartas'
 import { EnviarBandejaAcao } from '../salao/salao-enviar'
 import { callName, useDevo } from '../state/devo-store'
 import { usePlayerText } from '../state/player-text'
@@ -287,7 +288,7 @@ function VotesBoard({
   loading: boolean
   error?: Error
   onSelect: (id: string) => void
-  onJoin: (id: string) => Promise<void>
+  onJoin: (id: string, cartas?: string[]) => Promise<void>
   onLeave: (id: string) => Promise<void>
 }) {
   const open = entries.filter((e) => OPEN.includes(e.status))
@@ -400,12 +401,13 @@ function ConvocationPoster({
   onOpen,
 }: {
   vote: DeadlyVote
-  onJoin: (id: string) => Promise<void>
+  onJoin: (id: string, cartas?: string[]) => Promise<void>
   onLeave: (id: string) => Promise<void>
   onOpen: () => void
 }) {
   const now = useNow(1000)
   const { busy, error, run } = useVoteAction(vote.id)
+  const [escolher, setEscolher] = useState(false)
   const live = vote.status === 'em-progresso'
   const full = vote.maxParticipants !== null && vote.participants >= vote.maxParticipants
   const refused = vote.entryStatus === 'recusada'
@@ -486,9 +488,24 @@ function ConvocationPoster({
 
       <div className="relative flex flex-col gap-2.5 border-t border-in-line px-5 pb-5 pt-4">
         {canJoin && (
-          <RecButton block size="lg" loading={busy} sfx="confirm" onClick={() => run(onJoin)}>
+          <RecButton block size="lg" loading={busy} sfx="confirm" onClick={() => (vote.pesoMaximo != null ? setEscolher(true) : run(onJoin))}>
             {vote.admission === 'aprovacao' ? 'Pedir inscrição' : 'Inscrever-se'}
           </RecButton>
+        )}
+        {vote.pesoMaximo != null && !vote.joined && vote.status === 'convocado' && (
+          <p className="font-mono text-[10.5px] uppercase tracking-[0.14em] text-in-fg-2">Peso máximo de cartas: {vote.pesoMaximo}</p>
+        )}
+        <CartasLevadas vote={vote} />
+        {vote.pesoMaximo != null && (
+          <EscolherCartasSheet
+            open={escolher}
+            onClose={() => setEscolher(false)}
+            pesoMaximo={vote.pesoMaximo}
+            inicial={[]}
+            titulo="Cartas que você vai levar"
+            acao={vote.admission === 'aprovacao' ? 'Pedir inscrição' : 'Inscrever-se'}
+            onConfirm={(uids) => onJoin(vote.id, uids)}
+          />
         )}
         {vote.status === 'convocado' && vote.entryStatus === 'pendente' && (
           <p className="flex items-center gap-2.5 font-body text-[15px] leading-snug text-in-fg-2">
@@ -533,10 +550,11 @@ function VoteDetail({
 }: {
   vote: DeadlyVote
   onBack: () => void
-  onJoin: (id: string) => Promise<void>
+  onJoin: (id: string, cartas?: string[]) => Promise<void>
   onLeave: (id: string) => Promise<void>
 }) {
   const { busy, error, run } = useVoteAction(vote.id)
+  const [escolher, setEscolher] = useState(false)
   const full = vote.maxParticipants !== null && vote.participants >= vote.maxParticipants
   const canJoin = vote.status === 'convocado' && !vote.joined && !full && vote.entryStatus !== 'recusada'
   const canLeave = vote.status === 'convocado' && vote.joined
@@ -611,9 +629,21 @@ function VoteDetail({
 
           <div className="mx-5 mt-4 flex flex-col gap-2.5 border-t border-dv-ink/20 pb-6 pt-4">
             {canJoin && (
-              <RecButton surface="paper" block loading={busy} sfx="confirm" onClick={() => run(onJoin)}>
+              <RecButton surface="paper" block loading={busy} sfx="confirm" onClick={() => (vote.pesoMaximo != null ? setEscolher(true) : run(onJoin))}>
                 {vote.admission === 'aprovacao' ? 'Pedir inscrição' : 'Inscrever-se'}
               </RecButton>
+            )}
+            <CartasLevadas vote={vote} surface="paper" />
+            {vote.pesoMaximo != null && (
+              <EscolherCartasSheet
+                open={escolher}
+                onClose={() => setEscolher(false)}
+                pesoMaximo={vote.pesoMaximo}
+                inicial={[]}
+                titulo="Cartas que você vai levar"
+                acao={vote.admission === 'aprovacao' ? 'Pedir inscrição' : 'Inscrever-se'}
+                onConfirm={(uids) => onJoin(vote.id, uids)}
+              />
             )}
             {canLeave && (
               <RecButton surface="paper" block variant="secondary" loading={busy} sfx="click" onClick={() => run(onLeave)}>

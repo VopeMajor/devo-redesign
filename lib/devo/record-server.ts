@@ -1,7 +1,9 @@
 import type { PoolClient } from 'pg'
 import { pool } from '@/lib/db'
+import { cartaExiste, getCardPeso } from './cards'
 import { chaveOpcoesArcano, lerOpcoesArcano } from './virtudes'
 import {
+  type CartaLevada,
   type DeadlyVote,
   type DeadlyVoteStatus,
   DECISIONS,
@@ -54,6 +56,7 @@ type VoteRow = {
   location: string | null
   admission: VoteAdmission
   entry_admission: EntryAdmission | null
+  entry_cartas?: CartaLevada[] | null
 }
 
 function toVote(r: VoteRow): DeadlyVote {
@@ -79,6 +82,7 @@ function toVote(r: VoteRow): DeadlyVote {
     location: r.location ?? null,
     admission: r.admission === 'aprovacao' ? 'aprovacao' : 'livre',
     entryStatus: r.joined_at !== null ? (r.entry_admission ?? 'aceita') : null,
+    minhasCartas: Array.isArray(r.entry_cartas) ? r.entry_cartas : [],
   }
 }
 
@@ -99,7 +103,7 @@ export async function getRecord(playerId: string): Promise<RecordPayload> {
     await pool.query<VoteRow>(
       `SELECT v.id, v.number, v.title, v.arc, v.briefing, v.status, v.starts_at, v.ends_at, v.max_participants, v.peso_maximo,
               ${VOTE_COUNTS},
-              e.joined_at, e.outcome, e.admission AS entry_admission,
+              e.joined_at, e.outcome, e.admission AS entry_admission, e.cartas AS entry_cartas,
               -- O link do grupo só chega a quem foi aceito, e só enquanto o caso está em andamento.
               -- As recompensas planejadas (deadly_vote_prizes) NUNCA entram neste payload.
               CASE WHEN e.player_id IS NOT NULL AND e.admission = 'aceita' AND v.status = 'em-progresso' THEN v.whatsapp_url END AS group_url
@@ -118,14 +122,41 @@ export async function getRecord(playerId: string): Promise<RecordPayload> {
   return { role, avatarVersion: me.avatar_updated_at?.getTime() ?? null, votes: votes.map(toVote) }
 }
 
-export async function joinVote(playerId: string, voteId: string) {
+/**
+ * Cartas que o Record leva (dono, 22/10): uids do PRÓPRIO inventário (o save do servidor), sem repetir, e a soma dos
+ * pesos (getCardPeso) não pode passar do peso máximo do caso. Sem limite no caso, nada é exigido nem guardado.
+ */
+async function validarCartas(c: PoolClient, playerId: string, pesoMaximo: number | null, raw: unknown): Promise<CartaLevada[]> {
+  if (pesoMaximo == null) return []
+  const uids = Array.isArray(raw) ? raw.filter((u): u is string => typeof u === 'string' && u.length > 0 && u.length <= 80) : []
+  if (Array.isArray(raw) && uids.length !== raw.length) throw new RecordError('Cartas inválidas.')
+  if (new Set(uids).size !== uids.length) throw new RecordError('A mesma carta foi escolhida duas vezes.')
+  if (uids.length > 40) throw new RecordError('Cartas demais.')
+  const inv = uids.length
+    ? (
+        await c.query<{ uid: string; card_id: string }>(
+          `SELECT e->>'uid' AS uid, e->>'cardId' AS card_id
+             FROM player_saves s, jsonb_array_elements(coalesce(s.data->'inventory', '[]'::jsonb)) e
+            WHERE s.player_id = $1 AND e->>'uid' = ANY($2)`,
+          [playerId, uids],
+        )
+      ).rows
+    : []
+  if (inv.length !== uids.length) throw new RecordError('Alguma carta escolhida não está no seu inventário.', 409)
+  const cartas = inv.map((r) => ({ uid: r.uid, cardId: r.card_id }))
+  const peso = cartas.reduce((s, x) => s + (cartaExiste(x.cardId) ? getCardPeso(x.cardId) : 0), 0)
+  if (peso > pesoMaximo) throw new RecordError(`As cartas escolhidas pesam ${peso}, acima do peso máximo deste Deadly Vote (${pesoMaximo}). Tire alguma carta para participar.`, 409)
+  return cartas
+}
+
+export async function joinVote(playerId: string, voteId: string, cartasRaw?: unknown) {
   if (!UUID_RE.test(voteId)) throw new RecordError('ID inválido.')
   const c = await pool.connect()
   try {
     await c.query('BEGIN')
     const [v] = (
-      await c.query<{ status: string; max_participants: number | null; admission: VoteAdmission }>(
-        'SELECT status, max_participants, admission FROM deadly_votes WHERE id = $1 FOR UPDATE',
+      await c.query<{ status: string; max_participants: number | null; admission: VoteAdmission; peso_maximo: number | null }>(
+        'SELECT status, max_participants, admission, peso_maximo FROM deadly_votes WHERE id = $1 FOR UPDATE',
         [voteId],
       )
     ).rows
@@ -137,13 +168,37 @@ export async function joinVote(playerId: string, voteId: string) {
       const [{ n }] = (await c.query<{ n: string }>("SELECT count(*) AS n FROM deadly_vote_entries WHERE vote_id = $1 AND admission <> 'recusada'", [voteId])).rows
       if (Number(n) >= v.max_participants) throw new RecordError('Não há mais vagas neste Deadly Vote.', 409)
     }
+    const cartas = await validarCartas(c, playerId, v.peso_maximo, cartasRaw)
     // Inscrição com aprovação: entra "pendente" até o dono do Deadly Vote aceitar.
-    await c.query('INSERT INTO deadly_vote_entries (vote_id, player_id, admission) VALUES ($1, $2, $3) ON CONFLICT DO NOTHING', [
+    await c.query('INSERT INTO deadly_vote_entries (vote_id, player_id, admission, cartas) VALUES ($1, $2, $3, $4) ON CONFLICT DO NOTHING', [
       voteId,
       playerId,
       v.admission === 'aprovacao' ? 'pendente' : 'aceita',
+      JSON.stringify(cartas),
     ])
     await c.query('COMMIT')
+  } catch (err) {
+    await c.query('ROLLBACK')
+    throw err
+  } finally {
+    c.release()
+  }
+}
+
+/** Troca as cartas que o Record leva (só enquanto o caso está convocado). */
+export async function trocarCartas(playerId: string, voteId: string, cartasRaw: unknown) {
+  if (!UUID_RE.test(voteId)) throw new RecordError('ID inválido.')
+  const c = await pool.connect()
+  try {
+    await c.query('BEGIN')
+    const [v] = (await c.query<{ status: string; peso_maximo: number | null }>('SELECT status, peso_maximo FROM deadly_votes WHERE id = $1', [voteId])).rows
+    if (!v) throw new RecordError('Deadly Vote não encontrado.', 404)
+    if (v.status !== 'convocado') throw new RecordError('As cartas só mudam antes de o Deadly Vote começar.', 409)
+    const cartas = await validarCartas(c, playerId, v.peso_maximo, cartasRaw)
+    const res = await c.query("UPDATE deadly_vote_entries SET cartas = $3 WHERE vote_id = $1 AND player_id = $2 AND admission <> 'recusada'", [voteId, playerId, JSON.stringify(cartas)])
+    if (!res.rowCount) throw new RecordError('Você não está inscrito neste Deadly Vote.', 409)
+    await c.query('COMMIT')
+    return cartas
   } catch (err) {
     await c.query('ROLLBACK')
     throw err
@@ -229,8 +284,9 @@ export async function getStaffBoard(playerId: string): Promise<StaffBoard> {
       decision: EntryDecision | null
       note: string | null
       joined_at: Date
+      cartas: CartaLevada[] | null
     }>(
-      `SELECT e.vote_id, e.player_id, p.name, e.outcome, e.admission, e.decision, e.note, e.joined_at
+      `SELECT e.vote_id, e.player_id, p.name, e.outcome, e.admission, e.decision, e.note, e.joined_at, e.cartas
          FROM deadly_vote_entries e
          JOIN players p ON p.id = e.player_id
         WHERE e.vote_id = ANY($1::uuid[])
@@ -273,6 +329,7 @@ export async function getStaffBoard(playerId: string): Promise<StaffBoard> {
       note: e.note,
       joinedAt: e.joined_at.getTime(),
       prizes: entryPrizesBy.get(`${e.vote_id}:${e.player_id}`) ?? [],
+      cartas: Array.isArray(e.cartas) ? e.cartas : [],
     })
     byVote.set(e.vote_id, list)
   }

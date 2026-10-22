@@ -11,6 +11,7 @@ import {
   setAvatar,
   setEntryAdmission,
   setEntryDecision,
+  trocarCartas,
   setEntryOutcome,
   setVoteGroup,
   setVoteStatus,
@@ -54,8 +55,10 @@ export async function POST(req: Request) {
   try {
     switch (body.action) {
       case 'join':
-        await joinVote(player.id, voteId)
+        await joinVote(player.id, voteId, body.cartas)
         break
+      case 'cartas':
+        return Response.json({ ok: true, cartas: await trocarCartas(player.id, voteId, body.cartas) })
       case 'leave':
         await leaveVote(player.id, voteId)
         break
