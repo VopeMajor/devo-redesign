@@ -1,0 +1,45 @@
+{
+  "pedido": "arcano-forca-tarot2",
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 93011,
+      "passos": null,
+      "largura": 1024,
+      "altura": 1536,
+      "neuronios_estimados": 1455,
+      "ok": true,
+      "segundos": 3.8,
+      "tamanho_real": [
+        1024,
+        1536
+      ]
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 93012,
+      "passos": null,
+      "largura": 1024,
+      "altura": 1536,
+      "neuronios_estimados": 1455,
+      "erro": "HTTP 400 — 3030: AiError: AiError: Your output has been flagged. Please choose another prompt / input image combination (f9fbb395-00fe-40bb-a504-db06779222d4)"
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 93013,
+      "passos": null,
+      "largura": 1024,
+      "altura": 1536,
+      "neuronios_estimados": 1455,
+      "ok": true,
+      "segundos": 3.7,
+      "tamanho_real": [
+        1024,
+        1536
+      ]
+    }
+  ]
+}

@@ -1,0 +1,85 @@
+{
+  "pedido": "arcano-forca-tarot2",
+  "titulo": "Arcano — forca (tarô, menos humanizado) — refeito",
+  "tipo": "ilustracao",
+  "tamanho_final": 1536,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 93011,
+      "passos": null,
+      "segundos": 3.8,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "ilhas_removidas": 0,
+      "arquivos": [
+        {
+          "arquivo": "arcano-forca-tarot2--v01--1536.png",
+          "bytes": 1506227
+        },
+        {
+          "arquivo": "arcano-forca-tarot2--v01--1536.webp",
+          "bytes": 326710
+        },
+        {
+          "arquivo": "arcano-forca-tarot2--v01--1024.webp",
+          "bytes": 141850
+        },
+        {
+          "arquivo": "arcano-forca-tarot2--v01--768.webp",
+          "bytes": 89876
+        },
+        {
+          "arquivo": "arcano-forca-tarot2--v01--512.webp",
+          "bytes": 47820
+        }
+      ],
+      "segundos_pos": 52.6,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 93012,
+      "passos": null,
+      "neuronios_estimados": 1455,
+      "erro": "HTTP 400 — 3030: AiError: AiError: Your output has been flagged. Please choose another prompt / input image combination (f9fbb395-00fe-40bb-a504-db06779222d4)"
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 93013,
+      "passos": null,
+      "segundos": 3.7,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "ilhas_removidas": 1,
+      "arquivos": [
+        {
+          "arquivo": "arcano-forca-tarot2--v03--1536.png",
+          "bytes": 1586286
+        },
+        {
+          "arquivo": "arcano-forca-tarot2--v03--1536.webp",
+          "bytes": 330866
+        },
+        {
+          "arquivo": "arcano-forca-tarot2--v03--1024.webp",
+          "bytes": 147752
+        },
+        {
+          "arquivo": "arcano-forca-tarot2--v03--768.webp",
+          "bytes": 96490
+        },
+        {
+          "arquivo": "arcano-forca-tarot2--v03--512.webp",
+          "bytes": 51938
+        }
+      ],
+      "segundos_pos": 31.6,
+      "avisos": []
+    }
+  ]
+}
