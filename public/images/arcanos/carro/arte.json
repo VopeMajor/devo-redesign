@@ -24,9 +24,9 @@
       1024
     ],
     "recorte_da_figura": [
-      0.2744,
+      0.2764,
       0.0417,
-      0.7256,
+      0.7275,
       0.4427
     ]
   },
@@ -45,8 +45,8 @@
     }
   },
   "origem": {
-    "pedido": "arcano-carro",
-    "variacao": "v03",
-    "png": "arcano-carro--v03--1536.png"
+    "pedido": "arcano-carro-r2",
+    "variacao": "v02",
+    "png": "arcano-carro-r2--v02--1536.png"
   }
 }
