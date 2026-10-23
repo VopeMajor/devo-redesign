@@ -1,0 +1,96 @@
+{
+  "pedido": "pacote-intermediario",
+  "titulo": "Pacote Intermediário (capa)",
+  "tipo": "ilustracao",
+  "tamanho_final": 1024,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 82111,
+      "passos": null,
+      "segundos": 2.3,
+      "neuronios_estimados": 1364,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "pacote-intermediario--v01--1024.png",
+          "bytes": 1268396
+        },
+        {
+          "arquivo": "pacote-intermediario--v01--1024.webp",
+          "bytes": 206828
+        },
+        {
+          "arquivo": "pacote-intermediario--v01--768.webp",
+          "bytes": 86170
+        },
+        {
+          "arquivo": "pacote-intermediario--v01--384.webp",
+          "bytes": 30832
+        }
+      ],
+      "segundos_pos": 1.6,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 82112,
+      "passos": null,
+      "segundos": 17.5,
+      "neuronios_estimados": 1364,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "pacote-intermediario--v02--1024.png",
+          "bytes": 1256641
+        },
+        {
+          "arquivo": "pacote-intermediario--v02--1024.webp",
+          "bytes": 187002
+        },
+        {
+          "arquivo": "pacote-intermediario--v02--768.webp",
+          "bytes": 75932
+        },
+        {
+          "arquivo": "pacote-intermediario--v02--384.webp",
+          "bytes": 26262
+        }
+      ],
+      "segundos_pos": 1.6,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 82113,
+      "passos": null,
+      "segundos": 2.0,
+      "neuronios_estimados": 1364,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "pacote-intermediario--v03--1024.png",
+          "bytes": 1305126
+        },
+        {
+          "arquivo": "pacote-intermediario--v03--1024.webp",
+          "bytes": 189542
+        },
+        {
+          "arquivo": "pacote-intermediario--v03--768.webp",
+          "bytes": 84462
+        },
+        {
+          "arquivo": "pacote-intermediario--v03--384.webp",
+          "bytes": 29960
+        }
+      ],
+      "segundos_pos": 1.6,
+      "avisos": []
+    }
+  ]
+}

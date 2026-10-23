@@ -1,0 +1,50 @@
+{
+  "pedido": "pacote-intermediario",
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 82111,
+      "passos": null,
+      "largura": 768,
+      "altura": 1024,
+      "neuronios_estimados": 1364,
+      "ok": true,
+      "segundos": 2.3,
+      "tamanho_real": [
+        768,
+        1024
+      ]
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 82112,
+      "passos": null,
+      "largura": 768,
+      "altura": 1024,
+      "neuronios_estimados": 1364,
+      "ok": true,
+      "segundos": 17.5,
+      "tamanho_real": [
+        768,
+        1024
+      ]
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 82113,
+      "passos": null,
+      "largura": 768,
+      "altura": 1024,
+      "neuronios_estimados": 1364,
+      "ok": true,
+      "segundos": 2.0,
+      "tamanho_real": [
+        768,
+        1024
+      ]
+    }
+  ]
+}
