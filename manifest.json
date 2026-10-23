@@ -1,0 +1,120 @@
+{
+  "pedido": "essencia-campanha",
+  "titulo": "Essência — Essence of Rupture",
+  "tipo": "emblema",
+  "tamanho_final": 1024,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 12130,
+      "passos": null,
+      "segundos": 17.0,
+      "neuronios_estimados": 1364,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "essencia-campanha--v01--1024.png",
+          "bytes": 454931
+        },
+        {
+          "arquivo": "essencia-campanha--v01--1024.webp",
+          "bytes": 75626
+        },
+        {
+          "arquivo": "essencia-campanha--v01--512.webp",
+          "bytes": 24416
+        },
+        {
+          "arquivo": "essencia-campanha--v01--256.webp",
+          "bytes": 9500
+        },
+        {
+          "arquivo": "essencia-campanha--v01--128.webp",
+          "bytes": 3980
+        },
+        {
+          "arquivo": "essencia-campanha--v01--64.webp",
+          "bytes": 1692
+        }
+      ],
+      "segundos_pos": 49.1,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 12131,
+      "passos": null,
+      "segundos": 1.8,
+      "neuronios_estimados": 1364,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "essencia-campanha--v02--1024.png",
+          "bytes": 414641
+        },
+        {
+          "arquivo": "essencia-campanha--v02--1024.webp",
+          "bytes": 65278
+        },
+        {
+          "arquivo": "essencia-campanha--v02--512.webp",
+          "bytes": 23352
+        },
+        {
+          "arquivo": "essencia-campanha--v02--256.webp",
+          "bytes": 8902
+        },
+        {
+          "arquivo": "essencia-campanha--v02--128.webp",
+          "bytes": 3688
+        },
+        {
+          "arquivo": "essencia-campanha--v02--64.webp",
+          "bytes": 1584
+        }
+      ],
+      "segundos_pos": 30.1,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 12132,
+      "passos": null,
+      "segundos": 16.9,
+      "neuronios_estimados": 1364,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "essencia-campanha--v03--1024.png",
+          "bytes": 468241
+        },
+        {
+          "arquivo": "essencia-campanha--v03--1024.webp",
+          "bytes": 78968
+        },
+        {
+          "arquivo": "essencia-campanha--v03--512.webp",
+          "bytes": 26130
+        },
+        {
+          "arquivo": "essencia-campanha--v03--256.webp",
+          "bytes": 9380
+        },
+        {
+          "arquivo": "essencia-campanha--v03--128.webp",
+          "bytes": 4098
+        },
+        {
+          "arquivo": "essencia-campanha--v03--64.webp",
+          "bytes": 1658
+        }
+      ],
+      "segundos_pos": 29.5,
+      "avisos": []
+    }
+  ]
+}
