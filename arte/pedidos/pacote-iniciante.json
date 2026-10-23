@@ -1,0 +1,31 @@
+{
+  "id": "pacote-iniciante",
+  "titulo": "Pacote Iniciante (capa)",
+  "tipo": "ilustracao",
+  "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+  "prompt": "Richly painted storybook fantasy illustration, painterly gouache and oil, fine detail, soft dreamy light. Palette: abyss black, twilight indigo and soft amethyst violet, pearl ivory and faded champagne silver accents, low saturation, elegant and slightly melancholic, no neon. Full-bleed tall vertical scene that fills the whole image edge to edge. A small worn leather card pouch lies open on an old dark wooden table under the warm glow of a single brass oil lamp. Out of it slides a short neat stack of face-down playing cards with simple silver-and-violet diamond backs, tied with a thin twine, one card slightly fanned out. A few dust motes float in the lamplight, a quiet beginning. Calm, intimate still life seen from slightly above. Absolutely no text, no letters, no numbers, no signature, no watermark, no logo, no card frame, no border, not a collage, not photorealistic, not a 3d render, no people, no hands.",
+  "negative": "",
+  "largura": 768,
+  "altura": 1024,
+  "variacoes": [
+    {
+      "seed": 82101
+    },
+    {
+      "seed": 82102
+    },
+    {
+      "seed": 82103
+    }
+  ],
+  "pos": {
+    "remover_fundo": false,
+    "tamanho_final": 1024,
+    "margem": 0.0,
+    "derivados": [
+      768,
+      384
+    ],
+    "quadro_inteiro": true
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "id": "pacote-intermediario",
+  "titulo": "Pacote Intermediário (capa)",
+  "tipo": "ilustracao",
+  "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+  "prompt": "Richly painted storybook fantasy illustration, painterly gouache and oil, fine detail, soft dreamy light. Palette: abyss black, twilight indigo and soft amethyst violet, pearl ivory and faded champagne silver accents, low saturation, elegant and slightly melancholic, no neon. Full-bleed tall vertical scene that fills the whole image edge to edge. An ornate black lacquered card case lined with deep violet velvet stands open on a marble ledge in a gothic study at night. Inside, a fan of elegant playing cards with silver filigree backs; one card in the middle rises slightly and glows with a cold silver-violet light that lights up the velvet. Tall arched window with moonlight and faint clock gears in the dark background. Precious, mysterious still life. Absolutely no text, no letters, no numbers, no signature, no watermark, no logo, no card frame, no border, not a collage, not photorealistic, not a 3d render, no people, no hands.",
+  "negative": "",
+  "largura": 768,
+  "altura": 1024,
+  "variacoes": [
+    {
+      "seed": 82111
+    },
+    {
+      "seed": 82112
+    },
+    {
+      "seed": 82113
+    }
+  ],
+  "pos": {
+    "remover_fundo": false,
+    "tamanho_final": 1024,
+    "margem": 0.0,
+    "derivados": [
+      768,
+      384
+    ],
+    "quadro_inteiro": true
+  }
+}
