@@ -1,6 +1,6 @@
 'use client'
 
-import type { CSSProperties } from 'react'
+import { type CSSProperties, useId } from 'react'
 import { cn } from '@/lib/utils'
 import type { NeblinaPalco } from '@/lib/devo/poco-neblina'
 import { POCO_PINTADO, POCO_PINTURA, srcset } from './poco-pintura'
@@ -167,33 +167,12 @@ function CenaPintada({ longe, balde, baldeTipo, girando, ativo, moeda, brilho, a
           draggable={false}
           className={cn('absolute inset-0 size-full', apagado && 'brightness-75 saturate-50')}
         />
-        {/* névoa que pulsa na boca (camada da arte) */}
-        <img src={C.brilho} alt="" draggable={false} className="poco-brilho-boca absolute left-[22%] top-[40%] h-[20%] w-[58%] max-w-none mix-blend-screen" />
-        {/* balde subindo pela corda até a boca */}
-        <div className="absolute overflow-hidden" style={{ left: `${(C.corda.x - 0.085) * 100}%`, top: `${C.corda.topo * 100}%`, width: '17%', height: `${(C.boca.y - C.corda.topo + 0.02) * 100}%` }}>
-          <div
-            className={cn('poco-bucket-pintado absolute inset-x-0', balde === 'subindo' && 'poco-bucket-sobe')}
-            style={{ aspectRatio: '1 / 1', bottom: balde === 'fundo' ? '-70%' : '30%' }}
-          >
-            {/* corda: sobe do nó da alça até o sarilho (o recorte do contêiner a corta na altura do sarilho) */}
-            <span aria-hidden="true" className={cn('poco-corda absolute bottom-[112%] left-1/2 h-[900%] w-[5%] -translate-x-1/2', balde === 'subindo' && 'poco-corda-enrola')} />
-            {/* alça de corda: das argolas laterais do balde até o nó */}
-            <svg aria-hidden="true" viewBox="0 0 100 100" className="absolute inset-0 size-full overflow-visible">
-              <path d="M13 34 Q24 -2 50 -12 Q76 -2 87 34" fill="none" stroke="#3a2c1d" strokeWidth="4.2" strokeLinecap="round" />
-              <path d="M13 34 Q24 -2 50 -12 Q76 -2 87 34" fill="none" stroke="#8a6c47" strokeWidth="2.6" strokeLinecap="round" />
-              <path d="M13 34 Q24 -2 50 -12 Q76 -2 87 34" fill="none" stroke="#c9ad82" strokeWidth="1.1" strokeDasharray="1.4 2.4" strokeLinecap="round" opacity="0.8" />
-              <circle cx="50" cy="-12" r="3.6" fill="#5b4530" stroke="#2b2016" strokeWidth="1" />
-            </svg>
-            {/* o mesmo balde do gacha (ícone pintado do item), não um desenho à parte */}
-            <img src={`${ART}/itens/balde-${tipo}-256.webp`} alt="" draggable={false} className="absolute inset-0 size-full object-contain" />
-            {/* água na boca do balde: espelho escuro que balança e brilha */}
-            {balde !== 'fundo' && (
-              <span aria-hidden="true" className={cn('poco-agua-balde absolute left-[19%] top-[12%] h-[13%] w-[62%] rounded-[50%]', balde === 'subindo' && 'poco-agua-balanca')} />
-            )}
-            {/* água escorrendo do balde enquanto sobe; pingos depois que chega à boca */}
-            {balde !== 'fundo' && <AguaDoBalde forte={balde === 'subindo'} />}
-          </div>
-        </div>
+        {/* superfície d'água viva na boca (ondulação contínua; mais forte quando o poço é ativado) */}
+        <AguaPoco ativo={girando || ativo} apagado={apagado} style={{ left: '30%', top: '46.5%', width: '42%', height: '6.4%', WebkitMaskImage: 'radial-gradient(closest-side, #000 72%, transparent)', maskImage: 'radial-gradient(closest-side, #000 72%, transparent)' }} />
+        {/* névoa que pulsa na boca (camada da arte), por cima da água */}
+        <img src={C.brilho} alt="" draggable={false} className="poco-brilho-boca absolute left-[22%] top-[40%] h-[20%] w-[58%] max-w-none opacity-70 mix-blend-screen" />
+        {/* balde na PONTA da corda: a corda sai do sarilho na mesma linha da corda pintada e o balde sobe por ela */}
+        <BaldeNaCorda balde={balde} tipo={tipo} />
         {/* partículas de névoa subindo da boca */}
         <div className="absolute left-[24%] top-[6%] h-[48%] w-[56%] overflow-hidden">
           {PARTICULAS.map((p, i) => (
@@ -206,7 +185,7 @@ function CenaPintada({ longe, balde, baldeTipo, girando, ativo, moeda, brilho, a
         </div>
         {/* oferendas no chão, à frente da pedra */}
         <Oferendas apagado={apagado} className="absolute left-[-14%] top-[83%] h-[22%] w-[90%]" />
-        {moeda > 0 && <Lancamento key={moeda} agua={{ x: C.boca.x * 100, y: C.boca.y * 100 }} boca={C.boca.largura * 100 * 0.7} />}
+        {moeda > 0 && <Lancamento key={moeda} agua={{ x: 51, y: 49.7 }} boca={36} />}
       </div>
     </div>
   )
@@ -442,6 +421,110 @@ function Poco({ balde, baldeTipo, girando, ativo, moeda, brilho, apagado }: { ba
   )
 }
 
+/* ── Corda e balde (cena pintada) ─────────────────────────────────────────────────────────────────── */
+
+/** A corda pintada sai do sarilho em (0.352, 0.215) da imagem do poço e desce em diagonal até a água. */
+const CORDA = { x: 0.352, y: 0.215, inclinacao: 0.303 }
+/** Ângulo da corda (a imagem do poço é 898 × 1024): para desenhar a corda como uma faixa girada. */
+const CORDA_ANG = Math.atan((CORDA.inclinacao * 898) / 1024)
+/** Altura do nó do balde (fração da imagem do poço) em cada posição. */
+const NO_Y: Record<BaldePosicao, number> = { fundo: 0.64, subindo: 0.36, cima: 0.36 }
+/** Recorte: abaixo da boca o balde some dentro do poço. */
+const RECORTE = { x0: 0.18, x1: 0.66, y0: 0.18, y1: 0.548 }
+
+function BaldeNaCorda({ balde, tipo }: { balde: BaldePosicao; tipo: string }) {
+  const ky = NO_Y[balde]
+  const kx = CORDA.x + CORDA.inclinacao * (ky - CORDA.y)
+  const largura = 0.17
+  const altura = (largura * 898) / 1024
+  const L = (ky - CORDA.y) / Math.cos(CORDA_ANG)
+  const rw = RECORTE.x1 - RECORTE.x0
+  const rh = RECORTE.y1 - RECORTE.y0
+  // camada interna com o tamanho da imagem inteira: posições em fração do poço, cortadas pelo recorte
+  const interna = { left: `${(-RECORTE.x0 / rw) * 100}%`, top: `${(-RECORTE.y0 / rh) * 100}%`, width: `${(1 / rw) * 100}%`, height: `${(1 / rh) * 100}%` } as CSSProperties
+  return (
+    <div className="pointer-events-none absolute overflow-hidden" style={{ left: `${RECORTE.x0 * 100}%`, top: `${RECORTE.y0 * 100}%`, width: `${rw * 100}%`, height: `${rh * 100}%` }}>
+      <div className="absolute" style={interna}>
+        {/* corda: do sarilho até o nó, na linha da corda pintada (por cima dela) */}
+        <span
+          aria-hidden="true"
+          className={cn('poco-corda poco-corda-desce absolute w-[1.1%] origin-top', balde === 'subindo' && 'poco-corda-enrola')}
+          style={{ left: `${CORDA.x * 100}%`, top: `${CORDA.y * 100}%`, height: `${L * 100}%`, transform: `translateX(-50%) rotate(${(-CORDA_ANG * 180) / Math.PI}deg)` }}
+        />
+        <div
+          className={cn('poco-balde-corda absolute', balde === 'subindo' && 'poco-bucket-sobe')}
+          style={{ left: `${(kx - largura / 2) * 100}%`, top: `${(ky + altura * 0.12) * 100}%`, width: `${largura * 100}%`, height: `${altura * 100}%` }}
+        >
+          {/* alça de corda: das argolas laterais do balde até o nó na ponta da corda */}
+          <svg aria-hidden="true" viewBox="0 0 100 100" className="absolute inset-0 size-full overflow-visible">
+            <path d="M13 34 Q24 -2 50 -12 Q76 -2 87 34" fill="none" stroke="#3a2c1d" strokeWidth="4.2" strokeLinecap="round" />
+            <path d="M13 34 Q24 -2 50 -12 Q76 -2 87 34" fill="none" stroke="#8a6c47" strokeWidth="2.6" strokeLinecap="round" />
+            <path d="M13 34 Q24 -2 50 -12 Q76 -2 87 34" fill="none" stroke="#c9ad82" strokeWidth="1.1" strokeDasharray="1.4 2.4" strokeLinecap="round" opacity="0.8" />
+            <circle cx="50" cy="-12" r="4.2" fill="#5b4530" stroke="#2b2016" strokeWidth="1" />
+          </svg>
+          {/* o mesmo balde do gacha (ícone pintado do item), não um desenho à parte */}
+          <img src={`${ART}/itens/balde-${tipo}-256.webp`} alt="" draggable={false} className="absolute inset-0 size-full object-contain" />
+          {balde !== 'fundo' && <span aria-hidden="true" className={cn('poco-agua-balde absolute left-[19%] top-[12%] h-[13%] w-[62%] rounded-[50%]', balde === 'subindo' && 'poco-agua-balanca')} />}
+          {balde !== 'fundo' && <AguaDoBalde forte={balde === 'subindo'} />}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+/* ── Água do poço ─────────────────────────────────────────────────────────────────────────────────── */
+
+/**
+ * Superfície d'água na boca: espelho escuro com reflexos que tremem (turbulência SVG animada) e ondas calmas que
+ * nascem do centro; ativo (moeda/manivela) = ondas mais rápidas e reflexo mais forte.
+ */
+function AguaPoco({ ativo, apagado, style }: { ativo: boolean; apagado: boolean; style: CSSProperties }) {
+  const id = useId().replace(/[^a-zA-Z0-9]/g, '')
+  return (
+    <svg aria-hidden="true" viewBox="0 0 100 20" preserveAspectRatio="none" className={cn('pointer-events-none absolute', apagado && 'opacity-50')} style={style}>
+      <defs>
+        <clipPath id={`agua${id}`}>
+          <ellipse cx="50" cy="10" rx="50" ry="10" />
+        </clipPath>
+        <radialGradient id={`fundo${id}`} cx="0.5" cy="0.45" r="0.6">
+          <stop offset="0" stopColor="#2a2340" />
+          <stop offset="0.6" stopColor="#151221" />
+          <stop offset="1" stopColor="#0a0910" />
+        </radialGradient>
+        <filter id={`reflexo${id}`} x="0" y="0" width="1" height="1">
+          <feTurbulence type="fractalNoise" baseFrequency="0.06 0.42" numOctaves="2" seed="7" result="ruido">
+            <animate attributeName="baseFrequency" dur={ativo ? '3s' : '9s'} values="0.06 0.42;0.075 0.5;0.06 0.42" repeatCount="indefinite" />
+          </feTurbulence>
+          <feColorMatrix in="ruido" type="matrix" values="0 0 0 0 0.86  0 0 0 0 0.84  0 0 0 0 0.95  0 0 0 9 -5.6" />
+        </filter>
+      </defs>
+      <g clipPath={`url(#agua${id})`}>
+        <rect width="100" height="20" fill={`url(#fundo${id})`} opacity="0.9" />
+        <rect width="100" height="20" filter={`url(#reflexo${id})`} opacity={ativo ? 0.55 : 0.32} />
+        {[0, 1, 2].map((i) => (
+          <ellipse
+            key={i}
+            className={ativo ? 'poco-onda-viva-rapida' : 'poco-onda-viva'}
+            cx="50"
+            cy="10"
+            rx="48"
+            ry="9.6"
+            fill="none"
+            stroke="#dcd6ee"
+            strokeWidth="0.35"
+            vectorEffect="non-scaling-stroke"
+            style={{ animationDelay: `${i * (ativo ? 0.6 : 2.2)}s` }}
+          />
+        ))}
+        {/* brilho da lua na água */}
+        <ellipse cx="38" cy="7" rx="14" ry="2.2" fill="#efeaf8" opacity="0.18" className="poco-agua-lua" />
+      </g>
+      <ellipse cx="50" cy="10" rx="49.6" ry="9.7" fill="none" stroke="#000" strokeOpacity="0.55" strokeWidth="0.8" vectorEffect="non-scaling-stroke" />
+    </svg>
+  )
+}
+
+
 /**
  * Arco da moeda (de baixo à esquerda, onde fica o botão Moeda, até a água), em unidades de contêiner
  * (cqw/cqh) para cair no mesmo ponto em qualquer altura de tela. Rastro = três cópias atrasadas.
@@ -478,6 +561,24 @@ function Lancamento({ agua = { x: 50, y: 65 }, boca = 40 }: { agua?: { x: number
       <img src={`${ART}/respingo.webp`} alt="" draggable={false} className="poco-respingo-moeda poco-dessatura absolute max-w-none" style={{ left: `${agua.x - boca * 0.58}%`, top: `${agua.y - 13}%`, width: `${boca * 1.16}%` }} />
       {[-3, -1.6, -0.6, 0.6, 1.7, 2.8].map((dx, i) => (
         <span key={i} className="poco-gota absolute size-[3px] rounded-full bg-[#e8e6e2]" style={{ left: `${agua.x}%`, top: `${agua.y - 1}%`, '--gx': `${dx * 9}px`, '--gy': `${-26 - (i % 3) * 12}px`, animationDelay: `${900 + i * 20}ms` } as CSSProperties} />
+      ))}
+      {/* coroa do respingo: gotas que abrem em leque e caem de volta */}
+      {Array.from({ length: 14 }, (_, i) => {
+        const a = (i / 14) * Math.PI * 2
+        const r = 16 + (i % 3) * 7
+        return (
+          <span
+            key={`c${i}`}
+            className="poco-coroa absolute rounded-full bg-[radial-gradient(circle_at_35%_30%,#ffffff,#cfc9e0_55%,#8d84a8)]"
+            style={{ left: `${agua.x}%`, top: `${agua.y}%`, width: 3 + (i % 3), height: 4 + (i % 3), '--gx': `${Math.cos(a) * r}px`, '--gy': `${-18 - Math.abs(Math.sin(a)) * 22 - (i % 4) * 6}px`, '--cy': `${Math.sin(a) * r * 0.25}px`, animationDelay: `${890 + (i % 5) * 18}ms` } as CSSProperties}
+          />
+        )
+      })}
+      {/* jato no centro: sobe e desaba */}
+      <span className="poco-jato absolute w-[5px] origin-bottom rounded-t-full bg-[linear-gradient(0deg,rgba(220,214,238,0.1),#f4f1fb_70%,#ffffff)]" style={{ left: `calc(${agua.x}% - 2.5px)`, bottom: `${100 - agua.y}%`, height: '13%' }} />
+      {/* anéis fortes na superfície */}
+      {[0, 1, 2, 3].map((i) => (
+        <span key={`r${i}`} className="poco-onda-forte absolute rounded-[50%] border-[1.5px] border-[#efeaf8]/80" style={{ left: `${agua.x - boca / 2}%`, top: `${agua.y - 3.5}%`, width: `${boca}%`, height: '7%', animationDelay: `${880 + i * 180}ms` } as CSSProperties} />
       ))}
     </div>
   )
