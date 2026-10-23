@@ -4,19 +4,21 @@ import { useMemo, useRef, useState } from 'react'
 import useSWR from 'swr'
 import { HudCode, RecordPanel } from '@/components/devo/kit'
 import { playSfx } from '@/lib/devo/audio'
-import { lerPesos, type PocoPremio, PREMIO_TIPO_LABEL, PREMIO_TIPOS, type PremioTipo, premioElegivel, tabelaChances } from '@/lib/devo/poco'
+import { CATEGORIA_LABEL, lerPesos, POCO_CATEGORIAS, type PocoCategoria, type PocoPesos, type PocoPremio, PREMIO_TIPO_LABEL, PREMIO_TIPOS, type PremioTipo, premioElegivel, tabelaChances } from '@/lib/devo/poco'
 import type { PocoMesaPremios } from '@/lib/devo/poco-server'
 import { ITEM_RARITY_LABEL, type ItemRarity } from '@/lib/devo/progresso'
 import { cn } from '@/lib/utils'
 import { RecButton, RecInput, RecLabel, RecTag, RecTextarea } from '../system/record-ui'
-import { EmptyLine, ErrorLine, Loading, RecSelect } from '../system/staff-ui'
-import { ItemPoco } from './poco-itens'
+import { ConfirmButton, EmptyLine, ErrorLine, Loading, RecSelect } from '../system/staff-ui'
+import { ItemPoco, MoedaPoco } from './poco-itens'
 
 /**
- * Mesa do Record › Poço (só Owner): prêmios do pool do Poço. Escolher um item existente (cosmético, fragmento,
- * moeda, essência, cápsula, chave), uma carta, Tempo, ou criar um prêmio lixo (nome, descrição e imagem, que não
- * vai ao inventário). Raridade, peso, moedas e estoque. A tabela de chances é recalculada ANTES de salvar com a
- * mesma conta do servidor (lib/devo/poco.ts tabelaChances). O servidor valida tudo e grava no admin_log.
+ * Mesa do Record › Poço (só Owner). Por Dracma: as seções do sorteio (nada de valor, cápsula, fragmento,
+ * essência, item estético) com peso e porcentagem — peso 0 tira a seção — e o que cada seção sorteia por dentro
+ * (liga/desliga cada item). Abaixo, as recompensas do Owner: qualquer coisa que vá ao inventário (o mesmo
+ * catálogo das recompensas normais), uma carta, Tempo ou um prêmio lixo; editar, desligar ou remover.
+ * A tabela de chances é recalculada ANTES de salvar com a mesma conta do servidor (lib/devo/poco.ts
+ * tabelaChances). O servidor valida tudo e grava no admin_log.
  */
 
 async function get(url: string): Promise<PocoMesaPremios> {
@@ -72,6 +74,10 @@ function deRascunho(p: PocoPremio): Rascunho {
 }
 
 const RARIDADES = Object.keys(ITEM_RARITY_LABEL) as ItemRarity[]
+const ZERO: PocoPesos = { lixo: 0, capsula: 0, fragmento: 0, essencia: 0, cosmetico: 0 }
+/** Seções que sorteiam um item por dentro (o Owner liga/desliga cada um). */
+const COM_ITENS = ['capsula', 'essencia', 'cosmetico'] as const
+const KIND_ROTULO: Record<string, string> = { cosmetico: 'Cosméticos', fragmento: 'Fragmentos', moeda: 'Moedas', essencia: 'Essências', capsula: 'Cápsulas', chave: 'Chaves', pacote: 'Pacotes', outro: 'Outros' }
 
 export function PocoMesa() {
   const { data, error, isLoading, mutate } = useSWR<PocoMesaPremios>('/api/poco?view=premios', get, { revalidateOnFocus: false })
@@ -80,6 +86,9 @@ export function PocoMesa() {
   const [salvando, setSalvando] = useState(false)
   const [aviso, setAviso] = useState<{ tom: 'ok' | 'erro'; texto: string } | null>(null)
   const file = useRef<HTMLInputElement>(null)
+  const [pesosRasc, setPesosRasc] = useState<Record<string, PocoPesos>>({})
+  const [aberta, setAberta] = useState<PocoCategoria | null>(null)
+  const [ocupado, setOcupado] = useState<string | null>(null)
 
   const nomeDoRascunho = (x: Rascunho) =>
     x.nome.trim() ||
@@ -90,9 +99,10 @@ export function PocoMesa() {
     if (!data) return { antes: [], depois: [] }
     const pesos = lerPesos(data.probabilidades[moedaVista])
     if (!pesos) return { antes: [], depois: [] }
-    const linhas = (lista: PocoPremio[]) => tabelaChances(pesos, lista.filter((p) => premioElegivel(p, moedaVista)).map((p) => ({ id: p.id, nome: p.nome, peso: p.peso })))
+    const pesosNovos = lerPesos(pesosRasc[moedaVista]) ?? pesos
+    const linhas = (lista: PocoPremio[], ps: PocoPesos = pesos) => tabelaChances(ps, lista.filter((p) => premioElegivel(p, moedaVista)).map((p) => ({ id: p.id, nome: p.nome, peso: p.peso })))
     const antes = linhas(data.premios)
-    if (!r) return { antes, depois: antes }
+    if (!r) return { antes, depois: linhas(data.premios, pesosNovos) }
     const peso = Number(r.peso)
     const novo: PocoPremio = {
       id: r.id ?? 'novo',
@@ -112,8 +122,8 @@ export function PocoMesa() {
       ativo: r.ativo,
     }
     const lista = r.id ? data.premios.map((p) => (p.id === r.id ? novo : p)) : [...data.premios, novo]
-    return { antes, depois: linhas(lista) }
-  }, [data, r, moedaVista]) // eslint-disable-line react-hooks/exhaustive-deps
+    return { antes, depois: linhas(lista, pesosNovos) }
+  }, [data, r, moedaVista, pesosRasc]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const enviarImagem = async (fl: File) => {
     setAviso(null)
@@ -180,6 +190,24 @@ export function PocoMesa() {
     }
   }
 
+  const acao = async (chave: string, body: Record<string, unknown>, ok: string) => {
+    setOcupado(chave)
+    setAviso(null)
+    try {
+      await post(body)
+      setAviso({ tom: 'ok', texto: ok })
+      playSfx('confirm')
+      await mutate()
+      return true
+    } catch (e) {
+      setAviso({ tom: 'erro', texto: e instanceof Error ? e.message : 'Não foi possível salvar.' })
+      playSfx('error')
+      return false
+    } finally {
+      setOcupado(null)
+    }
+  }
+
   if (error) return <ErrorLine>{error.message}</ErrorLine>
   if (isLoading || !data) return <Loading>Descendo ao poço…</Loading>
 
@@ -188,49 +216,107 @@ export function PocoMesa() {
 
   return (
     <div className="flex flex-col gap-5">
-      <RecordPanel variant="paper" title="Poço · Prêmios" jp="井戸" ornate headerRight={<HudCode code="DV_POCO_POOL" />}>
+      <RecordPanel variant="paper" title="Poço · Recompensas" jp="井戸" ornate headerRight={<HudCode code="DV_POCO_POOL" />}>
         <p className="font-body text-[15px] leading-relaxed text-in-fg-2">
-          Prêmios que você coloca no fundo do poço. O peso usa a mesma escala das categorias da moeda: a tabela abaixo mostra a chance de cada coisa sair (sem a manivela, que reduz o lixo). Prêmio desligado não sai para ninguém.
+          Escolha a Dracma. Cada seção tem um peso e a porcentagem que ele dá; peso 0 tira a seção dessa moeda. Abaixo ficam as suas recompensas: qualquer coisa que vá ao inventário, uma carta ou Tempo. A manivela reduz só o lixo.
         </p>
         {aviso && (
           <p role={aviso.tom === 'erro' ? 'alert' : 'status'} className={cn('mt-3 border-l-2 px-3 py-2 font-sans text-[14px]', aviso.tom === 'erro' ? 'border-in-alert text-in-alert' : 'border-in-fg text-in-fg')}>
             {aviso.texto}
           </p>
         )}
-        <div className="mt-4 flex flex-col gap-2">
-          {data.premios.length === 0 && <EmptyLine title="Nenhum prêmio do Owner ainda">O poço sorteia só as categorias da configuração.</EmptyLine>}
-          {data.premios.map((p) => (
-            <div key={p.id} className={cn('flex items-center gap-3 py-2 shadow-[inset_0_-1px_0_var(--in-line)]', !p.ativo && 'opacity-55')}>
-              <span className="grid size-12 shrink-0 place-items-center bg-in-panel">
-                <ItemPoco premio={p} tamanho={64} className="size-10" />
-              </span>
-              <div className="min-w-0 flex-1">
-                <p className="truncate font-sans text-[15px] font-medium text-in-fg">{p.nome}</p>
-                <p className="truncate font-mono text-[10.5px] uppercase tracking-[0.12em] text-in-fg-3">
-                  {PREMIO_TIPO_LABEL[p.tipo]} · {ITEM_RARITY_LABEL[p.raridade]} · peso {p.peso}
-                  {p.estoque !== null && ` · estoque ${p.entregues}/${p.estoque}`}
-                  {p.moedas.length > 0 && ` · ${p.moedas.map((m) => moedasNome.get(m) ?? m).join(', ')}`}
-                </p>
+
+        {/* Dracma */}
+        <div role="radiogroup" aria-label="Dracma" className="mt-4 flex flex-wrap gap-2">
+          {data.moedas.map((m) => {
+            const on = m.key === moedaVista
+            return (
+              <button
+                key={m.key}
+                type="button"
+                role="radio"
+                aria-checked={on}
+                onClick={() => {
+                  playSfx('click')
+                  setMoedaVista(m.key)
+                  setAberta(null)
+                }}
+                className={cn('dv-focus dv-cut-diag flex min-h-11 items-center gap-2 px-3 font-mono text-[11px] uppercase tracking-[0.12em]', on ? 'bg-in-accent-fill text-white' : 'text-in-fg-2 shadow-[inset_0_0_0_1px_var(--in-line-strong)]')}
+              >
+                <MoedaPoco chave={m.key} tamanho={22} className="size-5" />
+                {m.nome}
+              </button>
+            )
+          })}
+        </div>
+
+        <Secoes
+          data={data}
+          moeda={moedaVista}
+          pesos={pesosRasc[moedaVista] ?? data.probabilidades[moedaVista] ?? null}
+          salvos={data.probabilidades[moedaVista] ?? null}
+          linhas={previa.depois}
+          aberta={aberta}
+          onAbrir={(k) => setAberta((x) => (x === k ? null : k))}
+          onPeso={(k, n) => setPesosRasc((x) => ({ ...x, [moedaVista]: { ...(x[moedaVista] ?? data.probabilidades[moedaVista] ?? ZERO), [k]: n } }))}
+          onDescartar={() => setPesosRasc((x) => { const { [moedaVista]: _, ...resto } = x; return resto })}
+          salvando={ocupado === 'pesos'}
+          onSalvar={async () => {
+            if (await acao('pesos', { action: 'pesos.salvar', moeda: moedaVista, pesos: pesosRasc[moedaVista] }, 'Seções salvas.')) setPesosRasc((x) => { const { [moedaVista]: _, ...resto } = x; return resto })
+          }}
+          ocupado={ocupado}
+          onItem={(key, noPoco, nome) => acao(`item:${key}`, { action: 'secao.item', key, noPoco }, noPoco ? `${nome} voltou ao poço.` : `${nome} saiu do poço.`)}
+        />
+
+        {/* recompensas do Owner nesta moeda */}
+        <header className="mt-6 flex items-center gap-2">
+          <h3 className="font-mono text-[11px] uppercase tracking-[0.16em] text-in-fg-2">Suas recompensas nesta Dracma</h3>
+          <span aria-hidden="true" className="h-px flex-1 bg-in-line" />
+        </header>
+        <div className="mt-2 flex flex-col gap-2">
+          {(() => {
+            const pct = new Map(previa.depois.map((l) => [l.chave, l.pct]))
+            const lista = data.premios.filter((p) => p.moedas.length === 0 || p.moedas.includes(moedaVista))
+            if (!lista.length) return <EmptyLine title="Nenhuma recompensa sua nesta Dracma">O poço sorteia só as seções acima.</EmptyLine>
+            return lista.map((p) => (
+              <div key={p.id} className={cn('flex flex-wrap items-center gap-x-3 gap-y-2 py-2 shadow-[inset_0_-1px_0_var(--in-line)]', !p.ativo && 'opacity-55')}>
+                <span className="grid size-12 shrink-0 place-items-center bg-in-panel">
+                  <ItemPoco premio={p} tamanho={64} className="size-10" />
+                </span>
+                <div className="min-w-0 flex-1">
+                  <p className="truncate font-sans text-[15px] font-medium text-in-fg">{p.nome}</p>
+                  <p className="truncate font-mono text-[10.5px] uppercase tracking-[0.12em] text-in-fg-3">
+                    {PREMIO_TIPO_LABEL[p.tipo]} · {ITEM_RARITY_LABEL[p.raridade]} · peso {p.peso}
+                    {p.quantidade > 1 && ` · ×${p.quantidade}`}
+                    {p.estoque !== null && ` · estoque ${p.entregues}/${p.estoque}`}
+                    {p.moedas.length > 0 ? ` · ${p.moedas.map((m) => moedasNome.get(m) ?? m).join(', ')}` : ' · todas as Dracmas'}
+                  </p>
+                </div>
+                <span className="w-14 shrink-0 text-right font-mono text-[14px] font-semibold text-in-fg tabular-nums">{p.ativo && premioElegivel(p, moedaVista) ? `${(pct.get(`premio:${p.id}`) ?? 0).toFixed(1)}%` : '—'}</span>
+                <div className="flex w-full justify-end gap-2 sm:w-auto">
+                  <RecButton surface="paper" variant="ghost" size="sm" onClick={() => setR(deRascunho(p))} aria-label={`Alterar ${p.nome}`}>
+                    Alterar
+                  </RecButton>
+                  <RecButton surface="paper" variant="secondary" size="sm" onClick={() => alternar(p)} aria-label={`${p.ativo ? 'Desligar' : 'Ligar'} ${p.nome}`}>
+                    {p.ativo ? 'Desligar' : 'Ligar'}
+                  </RecButton>
+                  <ConfirmButton size="sm" variant="secondary" confirmLabel="Remover de vez" loading={ocupado === `rm:${p.id}`} onConfirm={() => acao(`rm:${p.id}`, { action: 'premio.remover', id: p.id }, `${p.nome} saiu do poço.`)}>
+                    Remover
+                  </ConfirmButton>
+                </div>
               </div>
-              <RecTag tone={p.ativo ? 'solid' : 'line'}>{p.ativo ? 'Ativo' : 'Desligado'}</RecTag>
-              <RecButton surface="paper" variant="ghost" size="sm" onClick={() => setR(deRascunho(p))} aria-label={`Editar ${p.nome}`}>
-                Editar
-              </RecButton>
-              <RecButton surface="paper" variant="secondary" size="sm" onClick={() => alternar(p)} aria-label={`${p.ativo ? 'Desligar' : 'Ligar'} ${p.nome}`}>
-                {p.ativo ? 'Desligar' : 'Ligar'}
-              </RecButton>
-            </div>
-          ))}
+            ))
+          })()}
         </div>
         {!r && (
-          <RecButton surface="paper" className="mt-4" block onClick={() => setR({ ...VAZIO })}>
-            Adicionar prêmio
+          <RecButton surface="paper" className="mt-4" block onClick={() => setR({ ...VAZIO, tipo: 'item', moedas: [moedaVista] })}>
+            Adicionar recompensa
           </RecButton>
         )}
       </RecordPanel>
 
       {r && (
-        <RecordPanel variant="paper" title={r.id ? 'Editar prêmio' : 'Novo prêmio'} jp="景品">
+        <RecordPanel variant="paper" title={r.id ? 'Alterar recompensa' : 'Nova recompensa'} jp="景品">
           <form
             className="flex flex-col gap-4"
             onSubmit={(e) => {
@@ -251,13 +337,26 @@ export function PocoMesa() {
 
             {r.tipo === 'item' && (
               <label className="flex flex-col gap-1.5">
-                <RecLabel hint="cosmético, fragmento, moeda, essência, cápsula, chave">Item existente</RecLabel>
-                <RecSelect value={r.itemKey} onChange={(e) => set({ itemKey: e.target.value })} required>
+                <RecLabel hint="o mesmo inventário das recompensas normais">Item</RecLabel>
+                <RecSelect
+                  value={r.itemKey}
+                  onChange={(e) => {
+                    const c = data.catalogo.find((x) => x.key === e.target.value)
+                    set({ itemKey: e.target.value, ...(c ? { raridade: c.raridade } : {}) })
+                  }}
+                  required
+                >
                   <option value="">Escolha…</option>
-                  {data.catalogo.map((c) => (
-                    <option key={c.key} value={c.key}>
-                      {c.nome} ({c.kind}, {ITEM_RARITY_LABEL[c.raridade]}){c.unico ? ' · único' : ''}
-                    </option>
+                  {[...new Set(data.catalogo.map((c) => c.kind))].map((k) => (
+                    <optgroup key={k} label={KIND_ROTULO[k] ?? k}>
+                      {data.catalogo
+                        .filter((c) => c.kind === k)
+                        .map((c) => (
+                          <option key={c.key} value={c.key}>
+                            {c.nome} ({ITEM_RARITY_LABEL[c.raridade]}){c.unico ? ' · único' : ''}
+                          </option>
+                        ))}
+                    </optgroup>
                   ))}
                 </RecSelect>
               </label>
@@ -376,7 +475,7 @@ export function PocoMesa() {
 
       {!r && (
         <RecordPanel variant="paper" title="Chances por moeda" jp="確率">
-          <Chances moedas={data.moedas} moeda={moedaVista} onMoeda={setMoedaVista} antes={previa.antes} depois={previa.antes} />
+          <Chances moedas={data.moedas} moeda={moedaVista} onMoeda={setMoedaVista} antes={previa.antes} depois={previa.depois} />
         </RecordPanel>
       )}
     </div>
@@ -437,5 +536,121 @@ function Chances({
         </table>
       )}
     </div>
+  )
+}
+
+function Secoes({
+  data,
+  moeda,
+  pesos,
+  salvos,
+  linhas,
+  aberta,
+  onAbrir,
+  onPeso,
+  onDescartar,
+  onSalvar,
+  salvando,
+  ocupado,
+  onItem,
+}: {
+  data: PocoMesaPremios
+  moeda: string
+  pesos: PocoPesos | null
+  salvos: PocoPesos | null
+  linhas: { chave: string; pct: number }[]
+  aberta: PocoCategoria | null
+  onAbrir: (k: PocoCategoria) => void
+  onPeso: (k: PocoCategoria, n: number) => void
+  onDescartar: () => void
+  onSalvar: () => void
+  salvando: boolean
+  ocupado: string | null
+  onItem: (key: string, noPoco: boolean, nome: string) => void
+}) {
+  const p = pesos ?? ZERO
+  const pct = new Map(linhas.map((l) => [l.chave, l.pct]))
+  const sujo = !!pesos && JSON.stringify(pesos) !== JSON.stringify(salvos ?? ZERO)
+  return (
+    <section aria-label="Seções do sorteio" className="mt-5">
+      <header className="flex items-center gap-2">
+        <h3 className="font-mono text-[11px] uppercase tracking-[0.16em] text-in-fg-2">Seções</h3>
+        <span aria-hidden="true" className="h-px flex-1 bg-in-line" />
+      </header>
+      {!salvos && !pesos && <p className="mt-2 font-sans text-[14px] text-in-fg-3">Esta Dracma ainda não tem seções: dê peso a alguma abaixo.</p>}
+      <ul className="mt-1 flex flex-col">
+        {POCO_CATEGORIAS.map((k) => {
+          const peso = p[k] ?? 0
+          const fora = peso <= 0
+          const itens = (COM_ITENS as readonly string[]).includes(k) ? data.secoes[k as (typeof COM_ITENS)[number]] : null
+          const ligados = itens?.filter((i) => i.noPoco).length ?? 0
+          return (
+            <li key={`${moeda}:${k}`} className="border-b border-dashed border-in-line last:border-b-0">
+              <div className={cn('flex flex-col gap-2 py-3', fora && 'opacity-60')}>
+                <div className="flex items-baseline gap-3">
+                  <span className="min-w-0 flex-1">
+                    <span className="block font-sans text-[15px] text-in-fg">{CATEGORIA_LABEL[k]}</span>
+                    <span className="block font-mono text-[10px] uppercase tracking-[0.12em] text-in-fg-3">
+                      {fora ? 'fora desta Dracma' : itens ? `${ligados} de ${itens.length} itens no poço` : k === 'fragmento' ? 'Fragmento Arcano' : 'some no balde'}
+                    </span>
+                  </span>
+                  <span className="shrink-0 font-mono text-[16px] font-semibold text-in-fg tabular-nums">{fora ? '—' : `${(pct.get(k) ?? 0).toFixed(1)}%`}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <label className="flex items-center gap-2">
+                    <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-in-fg-3">Peso</span>
+                    <input
+                      inputMode="decimal"
+                      aria-label={`Peso de ${CATEGORIA_LABEL[k]}`}
+                      value={String(peso)}
+                      onChange={(e) => {
+                        const n = Number(e.target.value.replace(',', '.').replace(/[^\d.]/g, '').slice(0, 7) || 0)
+                        if (Number.isFinite(n)) onPeso(k, n)
+                      }}
+                      className="dv-focus h-10 w-16 border-b-2 border-in-line-strong bg-in-fg/[0.035] px-2 text-right font-mono text-[15px] text-in-fg outline-none focus:border-in-fg dv-tabular"
+                    />
+                  </label>
+                  <span className="flex-1" />
+                  {itens && (
+                    <RecButton surface="paper" variant="ghost" size="sm" aria-expanded={aberta === k} onClick={() => onAbrir(k)}>
+                      {aberta === k ? 'Fechar' : 'Itens'}
+                    </RecButton>
+                  )}
+                  <RecButton surface="paper" variant="secondary" size="sm" onClick={() => onPeso(k, fora ? Math.max(1, salvos?.[k] || 5) : 0)} aria-label={`${fora ? 'Repor' : 'Remover'} ${CATEGORIA_LABEL[k]}`}>
+                    {fora ? 'Repor' : 'Remover'}
+                  </RecButton>
+                </div>
+              </div>
+              {itens && aberta === k && (
+                <ul className="mb-3 flex flex-col bg-[color:var(--in-porcelain)] px-3 py-1 shadow-[inset_0_0_0_1px_var(--in-line)]">
+                  {itens.length === 0 && <li className="py-2 font-sans text-[14px] text-in-fg-3">Nenhum item desta seção no catálogo.</li>}
+                  {itens.map((i) => (
+                    <li key={i.key} className={cn('flex min-h-11 items-center gap-3 border-b border-in-line last:border-b-0', !i.noPoco && 'opacity-60')}>
+                      <span className="min-w-0 flex-1">
+                        <span className="block truncate font-sans text-[14px] text-in-fg">{i.nome}</span>
+                        <span className="block font-mono text-[10px] uppercase tracking-[0.12em] text-in-fg-3">{ITEM_RARITY_LABEL[i.raridade]}</span>
+                      </span>
+                      <RecButton surface="paper" variant={i.noPoco ? 'secondary' : 'primary'} size="sm" loading={ocupado === `item:${i.key}`} onClick={() => onItem(i.key, !i.noPoco, i.nome)} aria-label={`${i.noPoco ? 'Tirar' : 'Pôr'} ${i.nome} ${i.noPoco ? 'do' : 'no'} poço`}>
+                        {i.noPoco ? 'Tirar' : 'Pôr'}
+                      </RecButton>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </li>
+          )
+        })}
+      </ul>
+      {sujo && (
+        <div className="mt-3 flex gap-2">
+          <RecButton surface="paper" block loading={salvando} onClick={onSalvar}>
+            Salvar seções
+          </RecButton>
+          <RecButton surface="paper" variant="secondary" onClick={onDescartar}>
+            Desfazer
+          </RecButton>
+        </div>
+      )}
+    </section>
   )
 }

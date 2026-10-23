@@ -1,6 +1,6 @@
 import { getCurrentPlayer } from '@/app/actions/player'
 import { RecordError } from '@/lib/devo/errors'
-import { ativarPremio, concluirApresentacao, escolherBalde, getPoco, girarManivela, iniciarManivela, inspecionarBalde, lancarMoeda, lancarVarias, mesaPremios, salvarPremio } from '@/lib/devo/poco-server'
+import { ativarPremio, concluirApresentacao, escolherBalde, getPoco, girarManivela, iniciarManivela, inspecionarBalde, lancarMoeda, lancarVarias, itemNaSecao, mesaPremios, removerPremio, salvarPesos, salvarPremio } from '@/lib/devo/poco-server'
 
 export const dynamic = 'force-dynamic'
 
@@ -18,6 +18,9 @@ export const dynamic = 'force-dynamic'
  *   GET  /api/poco?view=premios          → PocoMesaPremios
  *   'premio.salvar' { premio }        → { ok, id }                 (cria ou edita; validado no servidor)
  *   'premio.ativar' { id, ativo }     → { ok, id, ativo }
+ *   'premio.remover' { id }           → { ok, id }                 (tira do pool de vez)
+ *   'pesos.salvar' { moeda, pesos }   → { ok, moeda, pesos }       (seções de uma moeda; 0 = fora)
+ *   'secao.item' { key, noPoco }      → { ok, key, noPoco }        (item dentro de cápsula/essência/estético)
  */
 
 function fail(err: unknown) {
@@ -61,6 +64,12 @@ export async function POST(req: Request) {
         return Response.json({ ok: true, ...(await salvarPremio(player.id, (body.premio ?? {}) as Record<string, unknown>)) })
       case 'premio.ativar':
         return Response.json({ ok: true, ...(await ativarPremio(player.id, body.id, body.ativo)) })
+      case 'premio.remover':
+        return Response.json({ ok: true, ...(await removerPremio(player.id, body.id)) })
+      case 'pesos.salvar':
+        return Response.json({ ok: true, ...(await salvarPesos(player.id, body.moeda, body.pesos)) })
+      case 'secao.item':
+        return Response.json({ ok: true, ...(await itemNaSecao(player.id, body.key, body.noPoco)) })
       default:
         return Response.json({ ok: false, error: 'Ação desconhecida.' }, { status: 400 })
     }

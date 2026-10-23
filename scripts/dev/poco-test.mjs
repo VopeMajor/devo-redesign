@@ -414,6 +414,53 @@ await test('prêmio de item do catálogo entra no inventário; estoque esgotado 
   await setCfg(originalCfg)
 })
 
+await test('Mesa: recompensa de pacote (mesmo catálogo das recompensas normais), remover de vez', async () => {
+  const o = (await owner.get('/api/poco?view=premios')).json
+  assert(o.catalogo.some((c) => c.kind === 'pacote'), 'catálogo inclui pacotes')
+  assert(!o.catalogo.some((c) => c.kind === 'convite'), 'catálogo sem convites')
+  assert(o.secoes && Array.isArray(o.secoes.essencia) && o.secoes.essencia.length > 0, 'seções trazem os itens de cada uma')
+  const pac = o.catalogo.find((c) => c.kind === 'pacote')
+  const c = await salvarPremio(owner, { tipo: 'item', itemKey: pac.key, quantidade: 1, raridade: 'raro', peso: 2, moedas: ['dracma_rara'] })
+  assert(c.status === 200, `criar prêmio de pacote: ${c.text}`)
+  const rmJog = await jog.poco('premio.remover', { id: c.json.id })
+  assert(rmJog.status === 403, `jogador não remove (${rmJog.status})`)
+  const rm = await owner.poco('premio.remover', { id: c.json.id })
+  assert(rm.status === 200, `remover: ${rm.text}`)
+  const [row] = await q('SELECT 1 FROM poco_premios WHERE id = $1', [c.json.id])
+  assert(!row, 'saiu da tabela')
+  const [log] = await q("SELECT action FROM admin_log WHERE ref = $1 ORDER BY id DESC LIMIT 1", [c.json.id])
+  assert(log?.action === 'poco.premio.removido', 'admin_log da remoção')
+})
+
+await test('Mesa: pesos das seções por Dracma (0 tira a seção; não deixa zerar tudo)', async () => {
+  const novo = { lixo: 40, capsula: 0, fragmento: 30, essencia: 30, cosmetico: 0 }
+  const r = await owner.poco('pesos.salvar', { moeda: 'dracma_incomum', pesos: novo })
+  assert(r.status === 200, `salvar pesos: ${r.text}`)
+  const [cfg] = await q("SELECT value FROM devo_config WHERE key = 'poco.probabilidades'")
+  const igual = (a, b) => Object.keys({ ...a, ...b }).every((k) => Number(a?.[k] ?? 0) === Number(b?.[k] ?? 0))
+  assert(igual(cfg.value.dracma_incomum, novo), `gravou a moeda: ${JSON.stringify(cfg.value.dracma_incomum)}`)
+  assert(igual(cfg.value.dracma_comum, originalCfg.dracma_comum), 'outras moedas intactas')
+  const ch = (await owner.get('/api/poco')).json.chances.dracma_incomum
+  assert(!ch.some((l) => l.chave === 'capsula'), 'seção com peso 0 sai da tabela')
+  const zero = await owner.poco('pesos.salvar', { moeda: 'dracma_incomum', pesos: { lixo: 0, capsula: 0, fragmento: 0, essencia: 0, cosmetico: 0 } })
+  assert(zero.status === 400, `zerar tudo é recusado (${zero.status})`)
+  const jg = await jog.poco('pesos.salvar', { moeda: 'dracma_incomum', pesos: novo })
+  assert(jg.status === 403, `jogador não mexe (${jg.status})`)
+  await setCfg(originalCfg)
+})
+
+await test('Mesa: tirar e pôr um item dentro de uma seção', async () => {
+  const [ess] = await q("SELECT key FROM item_defs WHERE kind = 'essencia' AND active ORDER BY key LIMIT 1")
+  const fora = await owner.poco('secao.item', { key: ess.key, noPoco: false })
+  assert(fora.status === 200, `tirar: ${fora.text}`)
+  const o = (await owner.get('/api/poco?view=premios')).json
+  assert(o.secoes.essencia.find((i) => i.key === ess.key)?.noPoco === false, 'aparece fora do poço')
+  const volta = await owner.poco('secao.item', { key: ess.key, noPoco: true })
+  assert(volta.status === 200, `pôr de volta: ${volta.text}`)
+  const ruim = await owner.poco('secao.item', { key: 'dracma_comum', noPoco: false })
+  assert(ruim.status === 404, `item fora das seções é recusado (${ruim.status})`)
+})
+
 if (premiosDeTeste.length) await q('UPDATE poco_premios SET ativo = false WHERE id = ANY($1::uuid[])', [premiosDeTeste]).catch(() => {})
 await setCfg(originalCfg).catch(() => {})
 await db.end()

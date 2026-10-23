@@ -19,6 +19,7 @@ import {
   MANIVELA_PADRAO,
   type ManivelaConfig,
   type ManivelaParams,
+  POCO_CATEGORIAS,
   POCO_LIXO,
   type PocoBalde,
   type PocoCategoria,
@@ -746,12 +747,14 @@ export async function inspecionarBalde(playerId: string): Promise<PocoResultado>
 
 export type PocoMesaPremios = {
   premios: PocoPremio[]
-  /** Itens que podem virar prêmio (cosméticos, fragmentos, moedas, essências, cápsulas, chaves). */
+  /** Itens que podem virar prêmio: o mesmo catálogo das recompensas normais (tudo que vai ao inventário). */
   catalogo: { key: string; nome: string; kind: ItemKind; raridade: ItemRarity; unico: boolean }[]
   cartas: { id: string; nome: string; raridade: string }[]
   moedas: { key: string; nome: string }[]
   probabilidades: Record<string, PocoPesos>
   chances: Record<string, LinhaChance[]>
+  /** O que cada seção sorteia por dentro (cápsula, essência, item estético) e se está no Poço. */
+  secoes: Record<'capsula' | 'essencia' | 'cosmetico', { key: string; nome: string; raridade: ItemRarity; noPoco: boolean }[]>
 }
 
 async function exigeOwner(atorId: string, q: Queryable = pool) {
@@ -767,12 +770,20 @@ export async function mesaPremios(atorId: string): Promise<PocoMesaPremios> {
     run<{ key: string; name: string; kind: ItemKind; rarity: ItemRarity; stackable: boolean }>(
       pool,
       `SELECT key, name, kind, rarity, stackable FROM item_defs
-        WHERE active AND kind IN ('cosmetico', 'fragmento', 'moeda', 'essencia', 'capsula', 'chave')
-        ORDER BY kind, name LIMIT 400`,
+        WHERE active AND kind <> 'convite'
+        ORDER BY kind, name LIMIT 600`,
     ),
     run<{ key: string; name: string }>(pool, "SELECT key, name FROM item_defs WHERE kind = 'moeda' AND active AND meta->>'poco' = 'true' ORDER BY key"),
     cfgProbabilidades(pool),
   ])
+  const secRows = await run<{ key: string; name: string; kind: 'capsula' | 'essencia' | 'cosmetico'; rarity: ItemRarity; no_poco: boolean }>(
+    pool,
+    `SELECT key, name, kind, rarity,
+            (CASE WHEN kind = 'essencia' THEN coalesce(meta->>'poco', 'true') <> 'false' ELSE meta->>'poco' = 'true' END) AS no_poco
+       FROM item_defs WHERE active AND kind IN ('capsula', 'essencia', 'cosmetico') ORDER BY kind, name LIMIT 600`,
+  )
+  const secoes: PocoMesaPremios['secoes'] = { capsula: [], essencia: [], cosmetico: [] }
+  for (const r of secRows) secoes[r.kind].push({ key: r.key, nome: r.name, raridade: r.rarity, noPoco: r.no_poco })
   const premios = rows.map(premioInfo)
   const probabilidades: Record<string, PocoPesos> = {}
   for (const [k, v] of Object.entries(probs.value)) {
@@ -786,6 +797,7 @@ export async function mesaPremios(atorId: string): Promise<PocoMesaPremios> {
     moedas: moedas.map((m) => ({ key: m.key, nome: m.name })),
     probabilidades,
     chances: chancesPorMoeda(probs.value, moedas.map((m) => m.key), premios.filter((p) => p.ativo)),
+    secoes,
   }
 }
 
@@ -831,7 +843,7 @@ export async function salvarPremio(atorId: string, raw: Record<string, unknown>)
       itemKey = typeof raw.itemKey === 'string' ? raw.itemKey.slice(0, 80) : ''
       const [d] = await run<{ name: string }>(
         c,
-        "SELECT name FROM item_defs WHERE key = $1 AND active AND kind IN ('cosmetico', 'fragmento', 'moeda', 'essencia', 'capsula', 'chave')",
+        "SELECT name FROM item_defs WHERE key = $1 AND active AND kind <> 'convite'",
         [itemKey],
       )
       if (!d) throw new RecordError('Item do catálogo não encontrado.', 400)
@@ -894,5 +906,65 @@ export async function ativarPremio(atorId: string, idRaw: unknown, ativoRaw: unk
     if (!r) throw new RecordError('Prêmio não encontrado.', 404)
     await run(c, 'INSERT INTO admin_log (actor_id, action, ref, data) VALUES ($1, $2, $3, $4)', [ator.id, ativo ? 'poco.premio.ativado' : 'poco.premio.desativado', id, JSON.stringify({ ativo })])
     return { id, ativo }
+  })
+}
+
+/** Tira um prêmio do pool de vez (Owner). Giros antigos guardam a cópia do prêmio, então o histórico fica. */
+export async function removerPremio(atorId: string, idRaw: unknown) {
+  return txAs(atorId, async (c) => {
+    const ator = await exigeOwner(atorId, c)
+    const id = typeof idRaw === 'string' && UUID_RE.test(idRaw) ? idRaw : null
+    if (!id) throw new RecordError('Prêmio inválido.', 400)
+    const [r] = await run<{ id: string; nome: string }>(c, 'DELETE FROM poco_premios WHERE id = $1 RETURNING id, nome', [id])
+    if (!r) throw new RecordError('Prêmio não encontrado.', 404)
+    await run(c, 'INSERT INTO admin_log (actor_id, action, ref, data) VALUES ($1, $2, $3, $4)', [ator.id, 'poco.premio.removido', id, JSON.stringify({ nome: r.nome })])
+    return { id }
+  })
+}
+
+/** Pesos das seções de UMA moeda (Owner). Peso 0 tira a seção do sorteio dessa moeda. */
+export async function salvarPesos(atorId: string, moedaRaw: unknown, pesosRaw: unknown) {
+  return txAs(atorId, async (c) => {
+    const ator = await exigeOwner(atorId, c)
+    const moeda = typeof moedaRaw === 'string' ? moedaRaw : ''
+    const [m] = await run<{ key: string }>(c, "SELECT key FROM item_defs WHERE key = $1 AND kind = 'moeda' AND meta->>'poco' = 'true'", [moeda])
+    if (!m) throw new RecordError('Moeda desconhecida.', 400)
+    const o = (pesosRaw && typeof pesosRaw === 'object' ? pesosRaw : {}) as Record<string, unknown>
+    const pesos = {} as PocoPesos
+    for (const k of POCO_CATEGORIAS) {
+      const n = Number(o[k] ?? 0)
+      if (!Number.isFinite(n) || n < 0 || n > 1_000_000) throw new RecordError('Peso inválido.', 400)
+      pesos[k] = n
+    }
+    const atual = await cfgProbabilidades(c)
+    // O sorteio parte das seções: sem nenhuma, a moeda deixaria de poder ser lançada.
+    if (POCO_CATEGORIAS.every((k) => pesos[k] === 0)) throw new RecordError('Deixe ao menos uma seção com peso nesta moeda.', 400)
+    const value = { ...atual.value, [moeda]: pesos }
+    await run(
+      c,
+      `INSERT INTO devo_config (key, value, provisional, updated_by, updated_at) VALUES ('poco.probabilidades', $1, $2, $3, now())
+       ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value, updated_by = EXCLUDED.updated_by, updated_at = now()`,
+      [JSON.stringify(value), atual.provisional, ator.id],
+    )
+    await run(c, 'INSERT INTO admin_log (actor_id, action, ref, data) VALUES ($1, $2, $3, $4)', [ator.id, 'poco.pesos', moeda, JSON.stringify(pesos)])
+    return { moeda, pesos }
+  })
+}
+
+/** Põe ou tira um item de dentro de uma seção (cápsula, essência, item estético) — item_defs.meta.poco. */
+export async function itemNaSecao(atorId: string, keyRaw: unknown, noPocoRaw: unknown) {
+  return txAs(atorId, async (c) => {
+    const ator = await exigeOwner(atorId, c)
+    const key = typeof keyRaw === 'string' ? keyRaw.slice(0, 80) : ''
+    const noPoco = noPocoRaw === true
+    const [r] = await run<{ key: string }>(
+      c,
+      `UPDATE item_defs SET meta = coalesce(meta, '{}'::jsonb) || jsonb_build_object('poco', $2::text)
+        WHERE key = $1 AND kind IN ('capsula', 'essencia', 'cosmetico') RETURNING key`,
+      [key, noPoco ? 'true' : 'false'],
+    )
+    if (!r) throw new RecordError('Item não encontrado nesta seção.', 404)
+    await run(c, 'INSERT INTO admin_log (actor_id, action, ref, data) VALUES ($1, $2, $3, $4)', [ator.id, noPoco ? 'poco.secao.item_incluido' : 'poco.secao.item_removido', key, JSON.stringify({ noPoco })])
+    return { key, noPoco }
   })
 }

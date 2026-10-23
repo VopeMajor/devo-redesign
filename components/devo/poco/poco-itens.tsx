@@ -2,6 +2,7 @@
 
 import type { PocoPremio } from '@/lib/devo/poco'
 import { cn } from '@/lib/utils'
+import { PacoteVisual } from '../casa/pacote-visual'
 import { BaldeIcon, DracmaIcon } from './poco-cena'
 
 /**
@@ -128,6 +129,11 @@ export function ItemPoco({ premio, tamanho = 64, className }: { premio: PocoPrem
   if (k === 'fragmento_arcano') return <RecursoPoco id="fragmento" tamanho={tamanho} className={className} />
   if (k.startsWith('essencia')) return <RecursoPoco id="essencia" tamanho={tamanho} className={className} />
   if (k.startsWith('capsula')) return <RecursoPoco id="capsula" tamanho={tamanho} className={className} />
+  if (k.startsWith('pacote:')) return (
+      <span className={cn('grid place-items-center', className)}>
+        <PacoteVisual id={k.slice(7)} colecao="" className="h-full w-auto" />
+      </span>
+    )
   return <span className={cn('grid place-items-center font-display text-[18px] text-dv-gold', className)}>✦</span>
 }
 
