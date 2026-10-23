@@ -1,6 +1,7 @@
 'use client'
 
 import { type ButtonHTMLAttributes, type CSSProperties, type ReactNode, useId } from 'react'
+import { arteEssencia } from '@/lib/devo/essencias-arte'
 import { cn } from '@/lib/utils'
 
 /**
@@ -190,7 +191,13 @@ export function ChaveOrnamental({ className, style }: { className?: string; styl
 /* ------------------------------------------------------------------ Cristal de essência */
 
 /** Cristal de Essência de Afinidade: bipirâmide facetada em ametista, presa por garras de aço com asas de filigrana. */
-export function CristalEssencia({ className, style, brilho = true }: { className?: string; style?: CSSProperties; brilho?: boolean }) {
+export function CristalEssencia({ className, style, brilho = true, chave, tamanho = 64 }: { className?: string; style?: CSSProperties; brilho?: boolean; chave?: string; tamanho?: number }) {
+  const arte = arteEssencia(chave, tamanho)
+  if (arte) return <img {...arte} alt="" aria-hidden="true" draggable={false} className={cn('object-contain', !brilho && 'opacity-60 saturate-50', className)} style={style} />
+  return <CristalDesenhado className={className} style={style} brilho={brilho} />
+}
+
+function CristalDesenhado({ className, style, brilho = true }: { className?: string; style?: CSSProperties; brilho?: boolean }) {
   const d = useDefs()
   const F: [string, string][] = [
     ['M50 6L27 50L50 58Z', '#a99be0'],

@@ -1,5 +1,6 @@
 'use client'
 
+import { arteEssencia } from '@/lib/devo/essencias-arte'
 import type { PocoPremio } from '@/lib/devo/poco'
 import { cn } from '@/lib/utils'
 import { PacoteVisual } from '../casa/pacote-visual'
@@ -98,7 +99,9 @@ export function LixoPoco({ id, imagem, tamanho = 160, className }: { id: string;
 }
 
 /** Recurso do poço (fragmento, essência, cápsula). */
-export function RecursoPoco({ id, tamanho = 160, className }: { id: 'fragmento' | 'essencia' | 'capsula'; tamanho?: number; className?: string }) {
+export function RecursoPoco({ id, chave, tamanho = 160, className }: { id: 'fragmento' | 'essencia' | 'capsula'; chave?: string; tamanho?: number; className?: string }) {
+  const ess = id === 'essencia' ? arteEssencia(chave, tamanho) : null
+  if (ess) return <img {...ess} alt="" draggable={false} className={cn('object-contain', className)} />
   if (arteItem(id, tamanho)) return <ImgItem id={id} tamanho={tamanho} className={className} />
   return <img src={`/images/poco/${id}.webp`} alt="" draggable={false} className={cn('object-contain', className)} />
 }
@@ -114,6 +117,7 @@ export function BaldePoco({ tipo = 'madeira', tamanho = 44, className }: { tipo?
 export function IconeItemPoco({ id, tamanho = 32, className }: { id: string; tamanho?: number; className?: string }) {
   if (id.startsWith('dracma_')) return <MoedaPoco chave={id} tamanho={tamanho} className={className} />
   if (id.startsWith('balde:')) return <BaldePoco tipo={id.slice(6)} tamanho={tamanho} className={className} />
+  if (id.startsWith('essencia:') && arteEssencia(id, tamanho)) return <RecursoPoco id="essencia" chave={id} tamanho={tamanho} className={className} />
   if (arteItem(id, tamanho)) return <ImgItem id={id} tamanho={tamanho} className={className} />
   return null
 }
@@ -127,7 +131,7 @@ export function ItemPoco({ premio, tamanho = 64, className }: { premio: PocoPrem
   const k = premio.itemKey ?? ''
   if (k.startsWith('dracma_')) return <MoedaPoco chave={k} tamanho={tamanho} className={className} />
   if (k === 'fragmento_arcano') return <RecursoPoco id="fragmento" tamanho={tamanho} className={className} />
-  if (k.startsWith('essencia')) return <RecursoPoco id="essencia" tamanho={tamanho} className={className} />
+  if (k.startsWith('essencia')) return <RecursoPoco id="essencia" chave={k} tamanho={tamanho} className={className} />
   if (k.startsWith('capsula')) return <RecursoPoco id="capsula" tamanho={tamanho} className={className} />
   if (k.startsWith('pacote:')) return (
       <span className={cn('grid place-items-center', className)}>

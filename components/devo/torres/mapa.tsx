@@ -439,7 +439,7 @@ export function Recursos({ torres, className }: { torres: TorreEstado[]; classNa
       className={cn('-mx-4 flex snap-x gap-1.5 overflow-x-auto px-4 pb-1 [mask-image:linear-gradient(to_right,transparent,#000_16px,#000_calc(100%-40px),transparent)] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden', className)}
     >
       {essencias.map((e) => (
-        <RecursoChip key={e.item} nome={e.nome} curto={e.nome.replace(/^Essência (de Afinidade )?d[oa] /, '').replace(/\s*\(provisória\)/, '')} quantidade={e.quantidade} tipo="essencia" />
+        <RecursoChip key={e.item} nome={e.nome} curto={e.nome.replace(/^Essência (de Afinidade )?d[oa] /, '').replace(/\s*\(provisória\)/, '')} quantidade={e.quantidade} tipo="essencia" chave={e.item} />
       ))}
       {chaves.map((c) => (
         <RecursoChip key={c.item} nome={c.nome} curto={c.nome.replace(/^Chave d[oa] /, '')} quantidade={c.quantidade} tipo="chave" />
@@ -449,13 +449,13 @@ export function Recursos({ torres, className }: { torres: TorreEstado[]; classNa
 }
 
 /** Medalhão de recurso: o cristal ou a chave desenhados, nome curto e quantidade. */
-export function RecursoChip({ nome, curto, quantidade, tipo, className }: { nome: string; curto: string; quantidade: number; tipo: 'essencia' | 'chave'; className?: string }) {
+export function RecursoChip({ nome, curto, quantidade, tipo, chave, className }: { nome: string; curto: string; quantidade: number; tipo: 'essencia' | 'chave'; chave?: string; className?: string }) {
   return (
     <li className={cn('relative isolate flex h-9 shrink-0 snap-start items-center gap-1 pl-1 pr-2.5', !quantidade && 'opacity-70', className)} style={{ '--dv-cut': '8px' } as CSSProperties} title={nome}>
       <span aria-hidden="true" className="dv-cut-diag absolute inset-0 -z-10 bg-[linear-gradient(100deg,#ece5d8,#6b6357_40%,#bab09f_75%,var(--dv-cobalt))] opacity-70" />
       <span aria-hidden="true" className="dv-cut-diag absolute inset-px -z-10 bg-[linear-gradient(180deg,rgba(31,31,34,0.96),rgb(var(--dv-ink-rgb)/0.96))]" style={{ '--dv-cut': '7.6px' } as CSSProperties} />
       <span aria-hidden="true" className="grid h-8 w-6 place-items-center">
-        {tipo === 'essencia' ? <CristalEssencia className="h-7 w-auto" brilho={quantidade > 0} /> : <ChaveOrnamental className="w-7 -rotate-45" />}
+        {tipo === 'essencia' ? <CristalEssencia chave={chave} tamanho={28} className="h-8 w-auto" brilho={quantidade > 0} /> : <ChaveOrnamental className="w-7 -rotate-45" />}
       </span>
       <span className="sr-only">{nome}:</span>
       <span aria-hidden="true" className="max-w-[72px] truncate font-display text-[10.5px] font-semibold uppercase tracking-[0.05em] text-dv-text-2">

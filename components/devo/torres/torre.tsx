@@ -129,7 +129,7 @@ export function TelaTorre({
           </CageFrame>
         </div>
         <ul aria-label="Recursos desta torre" className="mt-1 flex items-center gap-1.5">
-          <RecursoChip nome={torre.essencia.nome} curto="Essências" quantidade={torre.essencia.quantidade} tipo="essencia" />
+          <RecursoChip nome={torre.essencia.nome} curto="Essências" quantidade={torre.essencia.quantidade} tipo="essencia" chave={torre.essencia.item} />
           {torre.chave && <RecursoChip nome={torre.chave.nome} curto="Chaves" quantidade={torre.chave.quantidade} tipo="chave" />}
           <li className="ml-auto flex items-baseline gap-1 font-mono text-[11px] uppercase tracking-[0.14em] text-dv-text-3">
             <span className="dv-tabular font-impact text-[20px] text-dv-gold-bright">{torre.concluidos}</span>/{N}
@@ -156,6 +156,7 @@ export function TelaTorre({
               key={a.n}
               andar={a}
               essencia={torre.essencia.nome}
+              essenciaChave={torre.essencia.item}
               recem={recemConcluido === a.n}
               topo={(yDoAndar(a.n, N) / H) * 100}
               atraso={(N - i) * 50}
@@ -227,7 +228,7 @@ function motivoCurto(a: AndarEstado) {
  * Um andar na escada: estrela facetada no patamar e o texto flutuando à direita, ligado por um filete com
  * voluta. A linha inteira é o botão.
  */
-function AndarLinha({ andar, essencia, recem, topo, atraso, onAbrir }: { andar: AndarEstado; essencia: string; recem: boolean; topo: number; atraso: number; onAbrir: () => void }) {
+function AndarLinha({ andar, essencia, essenciaChave, recem, topo, atraso, onAbrir }: { andar: AndarEstado; essencia: string; essenciaChave?: string; recem: boolean; topo: number; atraso: number; onAbrir: () => void }) {
   const a = andar
   const ev = estadoVisual(a)
   const motivo = motivoCurto(a)
@@ -267,7 +268,7 @@ function AndarLinha({ andar, essencia, recem, topo, atraso, onAbrir }: { andar: 
             ) : (
               <>
                 <span className={cn('dv-tabular flex items-center gap-1 font-mono text-[12px]', vivo && a.faltaEssencias ? 'text-dv-blood-text' : vivo ? 'text-dv-text' : 'text-dv-text-3')} title={essencia}>
-                  <CristalEssencia className="h-4 w-auto" brilho={false} />×{a.custo}
+                  <CristalEssencia chave={essenciaChave} tamanho={18} className="h-[18px] w-auto" brilho={false} />×{a.custo}
                 </span>
                 {a.chaves.map((k) => (
                   <span key={k.item} className={cn('dv-tabular flex items-center gap-1 font-mono text-[12px]', vivo && k.tem < k.quantidade ? 'text-dv-blood-text' : vivo ? 'text-dv-text' : 'text-dv-text-3')} title={k.nome}>
@@ -303,7 +304,7 @@ function FichaAndar({ andar, torre }: { andar: AndarEstado; torre: TorreEstado }
       </div>
       {a.estado !== 'concluido' && (
         <ul className="grid gap-2">
-          <Linha ok={temEss >= a.custo} icone={<CristalEssencia className="h-9 w-auto" />} rotulo={torre.essencia.nome} valor={`${Math.min(temEss, a.custo)}/${a.custo}`} nota={a.n > 1 ? `Andar ${toRoman(a.n)}: o dobro do anterior.` : 'Custo do primeiro andar.'} />
+          <Linha ok={temEss >= a.custo} icone={<CristalEssencia chave={torre.essencia.item} tamanho={40} className="h-10 w-auto" />} rotulo={torre.essencia.nome} valor={`${Math.min(temEss, a.custo)}/${a.custo}`} nota={a.n > 1 ? `Andar ${toRoman(a.n)}: o dobro do anterior.` : 'Custo do primeiro andar.'} />
           {a.chaves.map((k) => (
             <Linha key={k.item} ok={k.tem >= k.quantidade} icone={<ChaveOrnamental className="w-10 -rotate-45" />} rotulo={k.nome} valor={`${Math.min(k.tem, k.quantidade)}/${k.quantidade}`} nota={a.gastaChaves ? 'As chaves são gastas ao subir.' : 'Basta ter as chaves; elas não são gastas.'} />
           ))}

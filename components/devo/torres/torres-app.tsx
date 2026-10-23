@@ -271,6 +271,7 @@ export function TorresApp() {
         item: {
           tipo: 'essencia',
           nome: 'Essência de Afinidade do Galo',
+          chave: 'essencia:galo',
           quantidade: 1,
           raridade: 'incomum',
           descricao: 'Do Galo, Anfitrião do Arcano do Imperador. Abre andares da Torre do Imperador. Fica no seu inventário.',
@@ -406,6 +407,7 @@ export function TorresApp() {
           andar={revelar.andar}
           gasto={revelar.gasto}
           item={revelar.item}
+          essencia={torreAtual?.essencia.item}
           onFim={() => {
             const depois = revelar.depois
             setRevelar(null)

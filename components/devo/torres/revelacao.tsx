@@ -18,7 +18,7 @@ import './torres.css'
  * - essencia: estilhaços de luz convergem e o cristal se forma (oferta do Galo).
  * A pompa cresce com a raridade (raios, segundo anel e faíscas a partir de "raro").
  */
-export type ItemRevelado = { tipo: 'chave' | 'essencia' | 'selo'; nome: string; quantidade: number; raridade: ItemRarity; descricao: string }
+export type ItemRevelado = { tipo: 'chave' | 'essencia' | 'selo'; nome: string; quantidade: number; raridade: ItemRarity; descricao: string; /** item_defs.key da essência (arte pintada). */ chave?: string }
 
 type Fase = 'ativacao' | 'suspense' | 'revelacao' | 'resultado'
 const TEMPOS: Record<Exclude<Fase, 'ativacao'>, number> = { suspense: 850, revelacao: 1750, resultado: 2700 }
@@ -30,6 +30,7 @@ export function Revelacao({
   andar,
   gasto = 0,
   item,
+  essencia,
   onFim,
 }: {
   tipo: 'andar' | 'essencia'
@@ -38,6 +39,8 @@ export function Revelacao({
   /** Essências pagas (animação). */
   gasto?: number
   item: ItemRevelado
+  /** Essência que paga o andar (arte das que voam para o centro). */
+  essencia?: string
   onFim: () => void
 }) {
   const reduced = useMediaQuery('(prefers-reduced-motion: reduce)')
@@ -134,7 +137,7 @@ export function Revelacao({
                   className="tw-voo absolute left-1/2 top-1/2"
                   style={{ '--dx': `${Math.cos(a) * 150}px`, '--dy': `${Math.sin(a) * 170}px`, animationDelay: `${120 + i * 70}ms` } as CSSProperties}
                 >
-                  <CristalEssencia className="h-12 w-auto -translate-x-1/2 -translate-y-1/2" />
+                  <CristalEssencia chave={essencia ?? item.chave} tamanho={56} className="h-14 w-auto -translate-x-1/2 -translate-y-1/2" />
                 </span>
               )
             })}
@@ -145,7 +148,7 @@ export function Revelacao({
         {mostraItem && (
           <div className="tw-surge relative grid place-items-center">
             {item.tipo === 'chave' && <ChaveOrnamental className="w-[min(78vw,320px)] -rotate-[18deg] drop-shadow-[0_14px_30px_rgba(0,0,0,0.85)]" />}
-            {item.tipo === 'essencia' && <CristalEssencia className="h-[min(42vh,300px)] w-auto drop-shadow-[0_14px_30px_rgba(0,0,0,0.85)]" />}
+            {item.tipo === 'essencia' && <CristalEssencia chave={item.chave} tamanho={300} className="h-[min(42vh,300px)] w-auto drop-shadow-[0_14px_30px_rgba(0,0,0,0.85)]" />}
             {item.tipo === 'selo' && (
               <div className="relative grid place-items-center">
                 <EstrelaAndar estado="concluido" className="size-[min(62vw,240px)] drop-shadow-[0_14px_30px_rgba(0,0,0,0.85)]" />

@@ -4,6 +4,7 @@ import { type CSSProperties, type ReactNode, useContext, useMemo, useState } fro
 import useSWR from 'swr'
 import { playSfx } from '@/lib/devo/audio'
 import { getCard, RARITY_META } from '@/lib/devo/cards'
+import { arteEssencia } from '@/lib/devo/essencias-arte'
 import { ITEM_RARITY_LABEL, type InventoryItem, type ItemKind, type ItemRarity } from '@/lib/devo/progresso'
 import { cn } from '@/lib/utils'
 import { Spinner } from '../kit/button'
@@ -196,10 +197,14 @@ function Secao({ titulo, acao, children }: { titulo: string; acao?: { rotulo: st
 function LinhaItem({ item }: { item: InventoryItem }) {
   const cor = COR_RARIDADE[item.rarity] ?? COR_RARIDADE.comum
   const pacote = item.kind === 'pacote' ? item.key.replace(/^pacote:/, '') : null
+  const essencia = item.kind === 'essencia' ? arteEssencia(item.key, 52) : null
   return (
     <li className="flex min-h-16 items-center gap-3 border-b border-dv-line py-2.5 last:border-b-0">
       {pacote ? (
         <PacoteVisual id={pacote} colecao={pacote === 'xadrez' ? 'Xadrez' : ''} className="w-11 shrink-0" />
+      ) : essencia ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img {...essencia} alt="" aria-hidden="true" draggable={false} className="size-13 shrink-0 object-contain drop-shadow-[0_4px_10px_rgba(0,0,0,0.6)]" />
       ) : (
         <span aria-hidden="true" className="relative grid size-11 shrink-0 place-items-center">
           <span className="absolute inset-1.5 rotate-45 bg-[linear-gradient(135deg,rgba(255,255,255,0.08),rgba(0,0,0,0.3))]" style={{ boxShadow: `inset 0 0 0 1px ${cor}` }} />

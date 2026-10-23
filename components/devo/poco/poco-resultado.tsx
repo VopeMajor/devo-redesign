@@ -302,14 +302,14 @@ export function PremioArte({ r, nome, silhueta = false }: { r: PocoResultado; no
     if (r.item.kind === 'cosmetico') return <Cosmetico r={r} nome={nome} silhueta={silhueta} />
     if (r.item.kind === 'moeda') return <>{halo}<MoedaPoco chave={r.item.key} raridade={r.item.raridade} tamanho={176} className={cn(cls, 'p-6')} /></>
     const rec = r.item.kind === 'capsula' ? 'capsula' : r.item.kind === 'essencia' ? 'essencia' : 'fragmento'
-    return <>{halo}<RecursoPoco id={rec} tamanho={176} className={cls} /></>
+    return <>{halo}<RecursoPoco id={rec} chave={r.item.key} tamanho={176} className={cls} /></>
   }
   if (r.categoria === 'cosmetico' && r.item) return <Cosmetico r={r} nome={nome} silhueta={silhueta} />
   const src = r.categoria === 'capsula' ? 'capsula' : r.categoria === 'essencia' ? 'essencia' : 'fragmento'
   return (
     <>
       {!silhueta && <span aria-hidden="true" className="poco-halo absolute inset-[-12%] bg-[radial-gradient(50%_50%_at_50%_50%,rgb(var(--c,220_218_214)/0.5),rgb(var(--c,220_218_214)/0.08)_60%,transparent_72%)]" />}
-      <RecursoPoco id={src} tamanho={176} className={cls} />
+      <RecursoPoco id={src} chave={r.item?.key} tamanho={176} className={cls} />
     </>
   )
 }
