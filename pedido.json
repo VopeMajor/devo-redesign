@@ -1,0 +1,55 @@
+{
+  "id": "pacote-presente",
+  "titulo": "Presente (capa)",
+  "tipo": "ilustracao",
+  "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+  "prompt": "Richly painted storybook fantasy illustration, painterly gouache and oil, fine detail, soft dreamy light. Palette: abyss black, twilight indigo and soft amethyst violet, pearl ivory and faded champagne silver accents, low saturation, elegant and slightly melancholic, no neon. Full-bleed tall vertical scene that fills the whole image edge to edge. A small gift box wrapped in dark violet paper and tied with a wide pale silver satin ribbon and bow, still dripping with water, rests on the mossy stone rim of an ancient wishing well at night. Thin mist rises from the well, a few silver coins glint on the wet stones, the rope and wooden crank are half visible behind. Soft moonlight, quiet wonder. Absolutely no text, no letters, no numbers, no signature, no watermark, no logo, no card frame, no border, not a collage, not photorealistic, not a 3d render, no people, no hands.",
+  "negative": "",
+  "largura": 768,
+  "altura": 1024,
+  "variacoes": [
+    {
+      "seed": 82121,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "passos": null,
+      "largura": 768,
+      "altura": 1024,
+      "prompt_extra": "",
+      "n": 1
+    },
+    {
+      "seed": 82122,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "passos": null,
+      "largura": 768,
+      "altura": 1024,
+      "prompt_extra": "",
+      "n": 2
+    },
+    {
+      "seed": 82123,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "passos": null,
+      "largura": 768,
+      "altura": 1024,
+      "prompt_extra": "",
+      "n": 3
+    }
+  ],
+  "pos": {
+    "remover_fundo": false,
+    "tamanho_final": 1024,
+    "margem": 0.0,
+    "derivados": [
+      768,
+      384
+    ],
+    "quadro_inteiro": true,
+    "modelo_fundo": "birefnet-general",
+    "fundo": "liso",
+    "camadas": []
+  },
+  "passos": null,
+  "guidance": null,
+  "referencias": []
+}

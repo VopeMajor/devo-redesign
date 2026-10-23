@@ -1,0 +1,96 @@
+{
+  "pedido": "pacote-presente",
+  "titulo": "Presente (capa)",
+  "tipo": "ilustracao",
+  "tamanho_final": 1024,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 82121,
+      "passos": null,
+      "segundos": 2.0,
+      "neuronios_estimados": 1364,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "pacote-presente--v01--1024.png",
+          "bytes": 1306837
+        },
+        {
+          "arquivo": "pacote-presente--v01--1024.webp",
+          "bytes": 221388
+        },
+        {
+          "arquivo": "pacote-presente--v01--768.webp",
+          "bytes": 81304
+        },
+        {
+          "arquivo": "pacote-presente--v01--384.webp",
+          "bytes": 28164
+        }
+      ],
+      "segundos_pos": 1.4,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 82122,
+      "passos": null,
+      "segundos": 2.1,
+      "neuronios_estimados": 1364,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "pacote-presente--v02--1024.png",
+          "bytes": 1320579
+        },
+        {
+          "arquivo": "pacote-presente--v02--1024.webp",
+          "bytes": 211582
+        },
+        {
+          "arquivo": "pacote-presente--v02--768.webp",
+          "bytes": 83504
+        },
+        {
+          "arquivo": "pacote-presente--v02--384.webp",
+          "bytes": 28582
+        }
+      ],
+      "segundos_pos": 1.5,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 82123,
+      "passos": null,
+      "segundos": 17.8,
+      "neuronios_estimados": 1364,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "pacote-presente--v03--1024.png",
+          "bytes": 1256040
+        },
+        {
+          "arquivo": "pacote-presente--v03--1024.webp",
+          "bytes": 201146
+        },
+        {
+          "arquivo": "pacote-presente--v03--768.webp",
+          "bytes": 68730
+        },
+        {
+          "arquivo": "pacote-presente--v03--384.webp",
+          "bytes": 23380
+        }
+      ],
+      "segundos_pos": 1.5,
+      "avisos": []
+    }
+  ]
+}
