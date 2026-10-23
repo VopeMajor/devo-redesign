@@ -1,0 +1,109 @@
+{
+  "pedido": "arcano-louco-r2",
+  "titulo": "Arcano — louco (figura, revisada)",
+  "tipo": "ilustracao",
+  "tamanho_final": 1536,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 42001,
+      "passos": null,
+      "segundos": 18.7,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "ilhas_removidas": 0,
+      "arquivos": [
+        {
+          "arquivo": "arcano-louco-r2--v01--1536.png",
+          "bytes": 1108266
+        },
+        {
+          "arquivo": "arcano-louco-r2--v01--1536.webp",
+          "bytes": 241948
+        },
+        {
+          "arquivo": "arcano-louco-r2--v01--1024.webp",
+          "bytes": 112836
+        },
+        {
+          "arquivo": "arcano-louco-r2--v01--768.webp",
+          "bytes": 73878
+        },
+        {
+          "arquivo": "arcano-louco-r2--v01--512.webp",
+          "bytes": 40888
+        }
+      ],
+      "segundos_pos": 32.1,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 42002,
+      "passos": null,
+      "segundos": 2.9,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "arcano-louco-r2--v02--1536.png",
+          "bytes": 1326964
+        },
+        {
+          "arquivo": "arcano-louco-r2--v02--1536.webp",
+          "bytes": 296070
+        },
+        {
+          "arquivo": "arcano-louco-r2--v02--1024.webp",
+          "bytes": 132694
+        },
+        {
+          "arquivo": "arcano-louco-r2--v02--768.webp",
+          "bytes": 86368
+        },
+        {
+          "arquivo": "arcano-louco-r2--v02--512.webp",
+          "bytes": 47326
+        }
+      ],
+      "segundos_pos": 29.0,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 42003,
+      "passos": null,
+      "segundos": 3.0,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "arcano-louco-r2--v03--1536.png",
+          "bytes": 1070593
+        },
+        {
+          "arquivo": "arcano-louco-r2--v03--1536.webp",
+          "bytes": 230144
+        },
+        {
+          "arquivo": "arcano-louco-r2--v03--1024.webp",
+          "bytes": 113716
+        },
+        {
+          "arquivo": "arcano-louco-r2--v03--768.webp",
+          "bytes": 76098
+        },
+        {
+          "arquivo": "arcano-louco-r2--v03--512.webp",
+          "bytes": 42304
+        }
+      ],
+      "segundos_pos": 27.9,
+      "avisos": []
+    }
+  ]
+}
