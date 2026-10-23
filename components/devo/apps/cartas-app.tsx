@@ -499,7 +499,7 @@ function CardDetail({
               <div
                 ref={stageRef}
                 data-stage=""
-                className={cn('relative w-[min(58cqw,250px)] @2xl:w-[320px] touch-pan-y [perspective:1100px]', dragging ? 'cursor-grabbing' : 'cursor-grab')}
+                className={cn('relative w-[min(76cqw,300px)] @2xl:w-[340px] touch-pan-y [perspective:1100px]', dragging ? 'cursor-grabbing' : 'cursor-grab')}
                 onPointerDown={onDown}
                 onPointerMove={onMove}
                 onPointerUp={onUp}

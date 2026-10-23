@@ -13,7 +13,7 @@ import { cn } from "@/lib/utils";
  * Pele do DEVO (pedido do dono: "mais devo"): corpo de uma cor só com degradê leve, aço champanhe nos filetes (sem ouro amarelo),
  * relógio com ponteiros-agulha no alto (o Tempo é a vida), estrelas de quatro pontas do sigilo, ampulheta no pé,
  * acento ametista. A raridade aparece só num filete fino e nas pedras das estrelas.
- * Tudo medido em cqw (largura = 100cqw, altura = 222cqw). Abaixo de 260px de largura os textos do quadro somem
+ * Tudo medido em cqw (largura = 100cqw, altura = 222cqw). Abaixo de 190px de largura os textos do quadro somem
  * (ficam os ícones); abaixo de 132px, também o nome.
  */
 
@@ -146,6 +146,10 @@ const CORPO: CSSProperties = {
   backgroundImage: "linear-gradient(180deg, #1d1a23 0%, #16141b 45%, #0f0e13 100%)",
 };
 
+/** Grade do quadro de informações (unidades do viewBox = cqw). SVG e textos usam os mesmos números: tudo alinha. */
+const Q = { x0: 13, x1: 87, y0: 161.5, y1: 178, y2: 195.5, y3: 207.5, col: 33 }
+const QC = (Q.x1 - Q.x0) / 3
+
 /** Agulha em losango de (0,-a) a (0,-b), meia-largura w (o traço dos emblemas do DEVO). */
 const agulha = (a: number, b: number, w: number) => `M0 ${-a} L${w} ${-(a + (b - a) * 0.35)} L0 ${-b} L${-w} ${-(a + (b - a) * 0.35)} Z`;
 /** Estrela de quatro pontas côncava (o sigilo). */
@@ -191,7 +195,7 @@ function Estrela({ x, y, cor, n = 0 }: { x: number; y: number; cor: string; n?: 
 /** Ampulheta no pé (no lugar da lua). */
 function Ampulheta() {
   return (
-    <g transform="translate(50 213.4)">
+    <g transform="translate(50 213)">
       <path d="M-2.6 -3.4 H2.6 M-2.6 3.4 H2.6" stroke={STEEL} strokeWidth="0.55" />
       <path d="M-2 -3 L2 -3 L0.25 0 L2 3 L-2 3 L-0.25 0 Z" fill="#0e0d11" stroke="url(#ct-aco)" strokeWidth="0.45" />
       <path d="M-1.1 -2.4 L1.1 -2.4 L0 -0.6 Z M-1.3 2.6 L1.3 2.6 L0 1.4 Z" fill={AMETHYST} opacity="0.85" />
@@ -240,17 +244,23 @@ function Moldura({ verso = false, cor, n = 0 }: { verso?: boolean; cor: string; 
           <path d="M14 147.8 H86 V156.6 H14 Z" fill="#0b0a0e" stroke="url(#ct-aco)" strokeWidth="0.45" />
           <path d="M16 149.2 H84 M16 155.2 H84" stroke={STEEL_MID} strokeWidth="0.18" opacity="0.6" />
           {/* quadro de informações */}
-          <rect x="13" y="161.5" width="74" height="49" fill="rgba(11,10,14,0.55)" stroke="url(#ct-aco)" strokeWidth="0.5" />
-          <path d="M13 179 H87 M13 197.5 H87 M37.7 161.5 V179 M62.3 161.5 V179 M33 179 V210.5" stroke={STEEL_MID} strokeWidth="0.3" fill="none" opacity="0.8" />
+          <rect x={Q.x0} y={Q.y0} width={Q.x1 - Q.x0} height={Q.y3 - Q.y0} fill="rgba(11,10,14,0.55)" stroke="url(#ct-aco)" strokeWidth="0.5" />
+          <path
+            d={`M${Q.x0} ${Q.y1} H${Q.x1} M${Q.x0} ${Q.y2} H${Q.x1} M${Q.x0 + QC} ${Q.y0} V${Q.y1} M${Q.x0 + 2 * QC} ${Q.y0} V${Q.y1} M${Q.col} ${Q.y1} V${Q.y3}`}
+            stroke={STEEL_MID}
+            strokeWidth="0.3"
+            fill="none"
+            opacity="0.8"
+          />
           {[
-            [13, 161.5],
-            [87, 161.5],
-            [13, 179],
-            [87, 179],
-            [13, 197.5],
-            [87, 197.5],
-            [13, 210.5],
-            [87, 210.5],
+            [Q.x0, Q.y0],
+            [Q.x1, Q.y0],
+            [Q.x0, Q.y1],
+            [Q.x1, Q.y1],
+            [Q.x0, Q.y2],
+            [Q.x1, Q.y2],
+            [Q.x0, Q.y3],
+            [Q.x1, Q.y3],
           ].map(([x, y], i) => (
             <path key={i} transform={`translate(${x} ${y})`} d={estrela4(1.5)} fill={STEEL} />
           ))}
@@ -264,14 +274,17 @@ function Moldura({ verso = false, cor, n = 0 }: { verso?: boolean; cor: string; 
   );
 }
 
+/** Posição de uma célula do quadro (x relativo à borda esquerda do quadro). */
+const celula = (x: number, y: number, w: number, h: number): CSSProperties => ({ left: `${Q.x0 + x}cqw`, top: `${y}cqw`, width: `${w}cqw`, height: `${h}cqw` })
+
 function Celula({ rotulo, Icone, valor, style }: { rotulo: string; Icone: LucideIcon; valor: string; style: CSSProperties }) {
   return (
-    <span className="absolute flex flex-col items-center justify-start gap-[0.6cqw] pt-[1.2cqw] text-center" style={style}>
-      <span className="hidden font-mono text-[2cqw] uppercase leading-none tracking-[0.16em] @min-[260px]:block" style={{ color: TEXT_SOFT }}>
+    <span className="absolute flex flex-col items-center justify-center gap-[0.7cqw] px-[0.8cqw] text-center" style={style}>
+      <span className="hidden font-mono text-[2.4cqw] uppercase leading-none tracking-[0.12em] @min-[190px]:block" style={{ color: TEXT_SOFT }}>
         {rotulo}
       </span>
-      <Icone className="size-[5.4cqw] @min-[260px]:size-[4.4cqw]" strokeWidth={1.2} style={{ color: STEEL }} />
-      <span className="hidden line-clamp-2 px-[1cqw] font-display text-[2.3cqw] uppercase leading-[1.1] tracking-[0.04em] @min-[260px]:block">{valor}</span>
+      <Icone className="size-[5.4cqw] @min-[190px]:size-[4.4cqw]" strokeWidth={1.2} style={{ color: STEEL }} />
+      <span className="hidden px-[1cqw] font-display text-[2.9cqw] uppercase leading-[1.3] tracking-[0.02em] @min-[190px]:[display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:2] overflow-hidden">{valor}</span>
     </span>
   );
 }
@@ -340,31 +353,31 @@ export function CartaFrente({
       {n >= 4 && <Cintilas />}
       {/* nome na faixa */}
       <span aria-hidden="true" className="absolute inset-x-[15cqw] top-[147.8cqw] hidden h-[8.8cqw] items-center justify-center text-center @min-[132px]:flex">
-        <span className="line-clamp-1 font-display text-[4.1cqw] font-semibold uppercase leading-none tracking-[0.08em]" style={{ color: TEXT }}>
+        <span className="truncate pt-[0.5cqw] font-display text-[4.1cqw] font-semibold uppercase leading-[1.45] tracking-[0.08em]" style={{ color: TEXT }}>
           {card.name}
         </span>
       </span>
       {/* quadro de informações */}
       <span aria-hidden="true" className="absolute inset-0" style={{ color: TEXT }}>
-        <Celula rotulo="Arquétipo" Icone={BookOpen} valor={arquetipo} style={{ left: "13cqw", top: "161.5cqw", width: "24.7cqw", height: "17.5cqw" }} />
-        <Celula rotulo="Coleção" Icone={Hourglass} valor={meta.collection} style={{ left: "37.7cqw", top: "161.5cqw", width: "24.6cqw", height: "17.5cqw" }} />
-        <Celula rotulo="Raridade" Icone={Gem} valor={rotuloRaridade} style={{ left: "62.3cqw", top: "161.5cqw", width: "24.7cqw", height: "17.5cqw" }} />
-        <span className="absolute flex flex-col items-center justify-center gap-[0.6cqw]" style={{ left: "13cqw", top: "179cqw", width: "20cqw", height: "18.5cqw" }}>
+        <Celula rotulo="Arquétipo" Icone={BookOpen} valor={arquetipo} style={celula(0, Q.y0, QC, Q.y1 - Q.y0)} />
+        <Celula rotulo="Coleção" Icone={Hourglass} valor={meta.collection} style={celula(QC, Q.y0, QC, Q.y1 - Q.y0)} />
+        <Celula rotulo="Raridade" Icone={Gem} valor={rotuloRaridade} style={celula(2 * QC, Q.y0, QC, Q.y1 - Q.y0)} />
+        <span className="absolute flex flex-col items-center justify-center gap-[0.6cqw]" style={celula(0, Q.y1, Q.col - Q.x0, Q.y2 - Q.y1)}>
           <Rotulo>Função</Rotulo>
           <Glyph className="size-[6cqw]" strokeWidth={1.2} style={{ color: STEEL }} />
         </span>
-        <span className="absolute hidden items-center px-[1.8cqw] @min-[260px]:flex" style={{ left: "33cqw", top: "179cqw", width: "54cqw", height: "18.5cqw" }}>
-          <span className="line-clamp-5 font-body text-[3cqw] leading-[1.18]">{card.effect}</span>
+        <span className="absolute hidden items-center px-[1.8cqw] @min-[190px]:flex" style={celula(Q.col - Q.x0, Q.y1, Q.x1 - Q.col, Q.y2 - Q.y1)}>
+          <span className="line-clamp-4 font-body text-[3.5cqw] leading-[1.15]">{card.effect}</span>
         </span>
-        <span className="absolute flex flex-col items-center justify-center gap-[0.5cqw]" style={{ left: "13cqw", top: "197.5cqw", width: "20cqw", height: "13cqw" }}>
+        <span className="absolute flex flex-col items-center justify-center gap-[0.5cqw]" style={celula(0, Q.y2, Q.col - Q.x0, Q.y3 - Q.y2)}>
           <Rotulo>{raio !== "—" ? "Raio" : "Peso"}</Rotulo>
           <span className="flex items-center gap-[1cqw]">
             {raio !== "—" ? <Crosshair className="size-[4.2cqw]" strokeWidth={1.2} style={{ color: STEEL }} /> : <Weight className="size-[4.2cqw]" strokeWidth={1.2} style={{ color: STEEL }} />}
-            <span className="hidden font-impact text-[3.4cqw] leading-none @min-[260px]:inline">{raio !== "—" ? raio : peso}</span>
+            <span className="hidden font-impact text-[4.2cqw] leading-none @min-[190px]:inline">{raio !== "—" ? raio : peso}</span>
           </span>
         </span>
-        <span className="absolute hidden items-center justify-center px-[2cqw] text-center @min-[260px]:flex" style={{ left: "33cqw", top: "197.5cqw", width: "54cqw", height: "13cqw" }}>
-          <span className="line-clamp-2 font-body text-[2.9cqw] italic leading-[1.18]" style={{ color: TEXT_SOFT }}>
+        <span className="absolute hidden items-center justify-center px-[2cqw] text-center @min-[190px]:flex" style={celula(Q.col - Q.x0, Q.y2, Q.x1 - Q.col, Q.y3 - Q.y2)}>
+          <span className="line-clamp-3 font-body text-[3.1cqw] italic leading-[1.15]" style={{ color: TEXT_SOFT }}>
             {frase ? `“${frase}”` : card.natureza ?? card.type}
           </span>
         </span>
@@ -375,7 +388,7 @@ export function CartaFrente({
 
 function Rotulo({ children }: { children: ReactNode }) {
   return (
-    <span className="hidden font-mono text-[2cqw] uppercase leading-none tracking-[0.16em] @min-[260px]:block" style={{ color: TEXT_SOFT }}>
+    <span className="hidden font-mono text-[2.4cqw] uppercase leading-none tracking-[0.12em] @min-[190px]:block" style={{ color: TEXT_SOFT }}>
       {children}
     </span>
   );
