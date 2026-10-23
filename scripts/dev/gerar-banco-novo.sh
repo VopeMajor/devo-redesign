@@ -37,6 +37,7 @@ FILES=(
   scripts/kit-inicial-migration.sql
   scripts/dv-peso-migration.sql
   scripts/corp-brasao-migration.sql
+  scripts/essencia-corvo-migration.sql
 )
 {
   echo "-- DEVO — banco novo de produção (gerado; NÃO editar à mão)."

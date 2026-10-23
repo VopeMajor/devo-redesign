@@ -1,10 +1,10 @@
 /**
  * Arte pintada das Essências de Afinidade (infra/arte, pedidos essencia-<npc>, variação v01):
  * frasco de cristal com o motivo do Anfitrião — gaiola com galo, coruja de asas abertas, cabeça de javali com
- * cintas de ferro, frasco rachado com relógio e obsidiana (Ruptura). Arquivos em
+ * cintas de ferro, frasco rachado com relógio e obsidiana (Ruptura), corvo de ferro pousado no gargalo. Arquivos em
  * `public/images/essencias/<npc>-{64,128,256,512}.webp`. Chave sem arte → null (quem chama desenha o cristal antigo).
  */
-const COM_ARTE = new Set(['galo', 'coruja', 'javali', 'campanha'])
+const COM_ARTE = new Set(['galo', 'coruja', 'javali', 'campanha', 'corvo'])
 const LADOS = [64, 128, 256, 512] as const
 
 export function arteEssencia(chave: string | null | undefined, tamanho: number) {
