@@ -9,8 +9,12 @@ import { cn } from '@/lib/utils'
  * frente, faixa com o nome, selo de raridade e um reflexo que atravessa a embalagem. `rasgando` arranca a tira
  * de cima (animação da abertura). A arte vem de `public/images/pacotes/<id>/arte-{384,768}.webp`.
  */
+const arteDe = (id: string) => ({ src: `/images/pacotes/${id}/arte-384.webp`, srcSet: `/images/pacotes/${id}/arte-384.webp 384w, /images/pacotes/${id}/arte-768.webp 768w` })
 const ARTE: Record<string, { src: string; srcSet: string }> = {
-  xadrez: { src: '/images/pacotes/xadrez/arte-384.webp', srcSet: '/images/pacotes/xadrez/arte-384.webp 384w, /images/pacotes/xadrez/arte-768.webp 768w' },
+  xadrez: arteDe('xadrez'),
+  iniciante: arteDe('iniciante'),
+  intermediario: arteDe('intermediario'),
+  presente: arteDe('presente'),
 }
 
 /** Serrilhado: dentes ao longo de uma borda (25 dentes, profundidade em % da altura do elemento). */
