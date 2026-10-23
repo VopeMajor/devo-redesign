@@ -42,6 +42,7 @@ const files = [
   join(root, 'scripts', 'arcanos-estagios-migration.sql'),
   join(root, 'scripts', 'kit-inicial-migration.sql'),
   join(root, 'scripts', 'dv-peso-migration.sql'),
+  join(root, 'scripts', 'corp-brasao-migration.sql'),
   ...(fresh ? [join(here, '90-seed.sql'), join(here, '91-seed-poco.sql'), join(here, '92-seed-torres.sql'), join(here, '93-seed-salao.sql'), join(here, '94-seed-cosmeticos.sql'), join(here, '95-seed-virtudes.sql'), join(here, '96-seed-corporacoes.sql'), join(here, '91-seed-narrativa.sql'), join(here, '97-seed-calendario.sql')] : []),
 ]
 for (const f of files) await db.exec(readFileSync(f, 'utf8'))

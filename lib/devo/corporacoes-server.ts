@@ -21,7 +21,10 @@ import {
   type CriacaoInfo,
   inicialDe,
   isBrasaoCor,
+  isBrasaoDivisao,
   isBrasaoForma,
+  isBrasaoOrnamento,
+  isBrasaoSimbolo,
   type JogoColetivo,
   type MinhaCorp,
   normalizarCodigo,
@@ -115,6 +118,10 @@ type CorpRow = {
   lema: string | null
   brasao_forma: string
   brasao_cor: string
+  brasao_cor2?: string | null
+  brasao_divisao?: string | null
+  brasao_simbolo?: string | null
+  brasao_ornamento?: string | null
   status: string
   classificacao: CorpClassificacao
   classificacao_nota: string | null
@@ -129,11 +136,31 @@ type CorpRow = {
 
 const CORP_SELECT = `SELECT c.*, (SELECT count(*) FROM corporacao_membros m WHERE m.corporacao_id = c.id) AS membros FROM corporacoes c`
 
-const brasaoDe = (r: Pick<CorpRow, 'brasao_forma' | 'brasao_cor' | 'nome'>): Brasao => ({
+const brasaoDe = (r: Pick<CorpRow, 'brasao_forma' | 'brasao_cor' | 'nome' | 'brasao_cor2' | 'brasao_divisao' | 'brasao_simbolo' | 'brasao_ornamento'>): Brasao => ({
   forma: isBrasaoForma(r.brasao_forma) ? r.brasao_forma : 'escudo',
   cor: isBrasaoCor(r.brasao_cor) ? r.brasao_cor : 'aco',
   inicial: inicialDe(r.nome),
+  cor2: isBrasaoCor(r.brasao_cor2) ? r.brasao_cor2 : null,
+  divisao: isBrasaoDivisao(r.brasao_divisao) ? r.brasao_divisao : 'pleno',
+  simbolo: isBrasaoSimbolo(r.brasao_simbolo) ? r.brasao_simbolo : 'inicial',
+  ornamento: isBrasaoOrnamento(r.brasao_ornamento) ? r.brasao_ornamento : 'nenhum',
 })
+
+/** Desenho do brasão vindo do cliente (forma e cor obrigatórias; o resto tem padrão). */
+function lerBrasao(input: Record<string, unknown>) {
+  if (!isBrasaoForma(input.forma)) throw new RecordError('Escolha a forma do brasão.')
+  if (!isBrasaoCor(input.cor)) throw new RecordError('Escolha a cor do brasão.')
+  const divisao = input.divisao == null ? 'pleno' : input.divisao
+  const simbolo = input.simbolo == null ? 'inicial' : input.simbolo
+  const ornamento = input.ornamento == null ? 'nenhum' : input.ornamento
+  if (!isBrasaoDivisao(divisao)) throw new RecordError('Divisão do brasão inválida.')
+  if (!isBrasaoSimbolo(simbolo)) throw new RecordError('Figura do brasão inválida.')
+  if (!isBrasaoOrnamento(ornamento)) throw new RecordError('Ornamento do brasão inválido.')
+  const cor2 = divisao === 'pleno' ? null : input.cor2
+  if (cor2 != null && !isBrasaoCor(cor2)) throw new RecordError('Segunda cor do brasão inválida.')
+  if (divisao !== 'pleno' && cor2 == null) throw new RecordError('Escolha a segunda cor do campo.')
+  return { forma: input.forma as BrasaoForma, cor: input.cor as BrasaoCor, cor2: (cor2 ?? null) as BrasaoCor | null, divisao, simbolo, ornamento }
+}
 
 const resumo = (r: CorpRow): CorpResumo => ({
   id: r.id,
@@ -578,14 +605,14 @@ export async function passarLideranca(playerId: string, alvoRaw: unknown) {
 
 /* ------------------------------------------------------------------ Fundar (Tempo + aprovação administrativa) */
 
-export async function fundar(playerId: string, input: { nome: unknown; lema?: unknown; forma: unknown; cor: unknown; idem?: unknown }) {
+export async function fundar(
+  playerId: string,
+  input: { nome: unknown; lema?: unknown; forma: unknown; cor: unknown; cor2?: unknown; divisao?: unknown; simbolo?: unknown; ornamento?: unknown; idem?: unknown },
+) {
   await requireUnlock(playerId, 'corporacoes')
   const nome = texto(input.nome, 3, 40, 'O nome')!
   const lema = texto(input.lema, 3, 90, 'O lema', true)
-  if (!isBrasaoForma(input.forma)) throw new RecordError('Escolha a forma do brasão.')
-  if (!isBrasaoCor(input.cor)) throw new RecordError('Escolha a cor do brasão.')
-  const forma: BrasaoForma = input.forma
-  const cor: BrasaoCor = input.cor
+  const br = lerBrasao(input)
   const idem = typeof input.idem === 'string' && /^[A-Za-z0-9-]{8,64}$/.test(input.idem) ? input.idem : null
   const c0 = await cfg()
   return txAs(playerId, async (c) => {
@@ -602,8 +629,9 @@ export async function fundar(playerId: string, input: { nome: unknown; lema?: un
     if (dup) throw new RecordError('Já existe uma Corporação com esse nome.', 409)
     const [corp] = await run<{ id: string }>(
       c,
-      `INSERT INTO corporacoes (nome, lema, brasao_forma, brasao_cor, fundador_id, custo_pago, requisitos, envio_idem) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id`,
-      [nome, lema, forma, cor, playerId, c0.custo, JSON.stringify(reqs), idem],
+      `INSERT INTO corporacoes (nome, lema, brasao_forma, brasao_cor, fundador_id, custo_pago, requisitos, envio_idem, brasao_cor2, brasao_divisao, brasao_simbolo, brasao_ornamento)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12) RETURNING id`,
+      [nome, lema, br.forma, br.cor, playerId, c0.custo, JSON.stringify(reqs), idem, br.cor2, br.divisao, br.simbolo, br.ornamento],
     )
     const timeDeltaMs = await debitar(c, { playerId, minutos: c0.custo, motivo: 'fundar', ref: corp.id, idem: `corp:fundar:${corp.id}`, reserva: c0.reserva })
     return { corporacaoId: corp.id, timeDeltaMs, repetido: false }
@@ -793,6 +821,22 @@ export async function editarLema(playerId: string, input: { lema: unknown }) {
   if (!corp || corp.status !== 'ativa') throw new RecordError('A Corporação não está ativa.', 409)
   await run(pool, 'UPDATE corporacoes SET lema = $2 WHERE id = $1', [corp.id, lema])
   return { lema }
+}
+
+/** O líder redesenha o brasão (forma, cores, divisão, figura e ornamento). */
+export async function editarBrasao(playerId: string, input: Record<string, unknown>) {
+  await requireUnlock(playerId, 'corporacoes')
+  const br = lerBrasao(input)
+  const eu = await membroDe(pool, playerId)
+  if (!eu || eu.cargo !== 'lider') throw new RecordError('Só o líder muda o brasão.', 403)
+  const corp = await corpPorId(pool, eu.corporacao_id)
+  if (!corp || corp.status !== 'ativa') throw new RecordError('A Corporação não está ativa.', 409)
+  await run(
+    pool,
+    'UPDATE corporacoes SET brasao_forma = $2, brasao_cor = $3, brasao_cor2 = $4, brasao_divisao = $5, brasao_simbolo = $6, brasao_ornamento = $7 WHERE id = $1',
+    [corp.id, br.forma, br.cor, br.cor2, br.divisao, br.simbolo, br.ornamento],
+  )
+  return { brasao: brasaoDe({ ...corp, brasao_forma: br.forma, brasao_cor: br.cor, brasao_cor2: br.cor2, brasao_divisao: br.divisao, brasao_simbolo: br.simbolo, brasao_ornamento: br.ornamento }) }
 }
 
 /* ------------------------------------------------------------------ Equipe (Mesa do Record) */

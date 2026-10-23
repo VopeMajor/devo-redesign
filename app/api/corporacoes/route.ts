@@ -11,6 +11,7 @@ import {
   definirCargo,
   definirEscopo,
   definirRivalidade,
+  editarBrasao,
   editarLema,
   fundar,
   getCorporacoes,
@@ -91,7 +92,7 @@ export async function POST(req: Request) {
       case 'lideranca.passar':
         return ok(await passarLideranca(me, b.playerId))
       case 'fundar':
-        return ok(await fundar(me, { nome: b.nome, lema: b.lema, forma: b.forma, cor: b.cor, idem: b.idem }))
+        return ok(await fundar(me, { nome: b.nome, lema: b.lema, forma: b.forma, cor: b.cor, cor2: b.cor2, divisao: b.divisao, simbolo: b.simbolo, ornamento: b.ornamento, idem: b.idem }))
       case 'fundacao.cancelar':
         return ok(await cancelarFundacao(me))
       case 'convite.enviar':
@@ -102,6 +103,8 @@ export async function POST(req: Request) {
         return ok(await cancelarConvite(me, b.id))
       case 'carta.transferir':
         return ok(await transferirCarta(me, { uid: b.uid, para: b.para }))
+      case 'brasao.editar':
+        return ok(await editarBrasao(me, b))
       case 'lema.editar':
         return ok(await editarLema(me, { lema: b.lema }))
       case 'recrutamento.publicar':

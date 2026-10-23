@@ -325,12 +325,28 @@ await test('lema opcional: o líder põe, troca e tira; membro comum não; forma
   assert(g.json.minha.lema === null, 'lema saiu da tela')
 })
 
+await test('brasão: o líder redesenha (divisão, segunda cor, figura, ornamento); membro não; desenho inválido recusado', async () => {
+  const r = await A.corp('brasao.editar', { forma: 'torre', cor: 'cobalto', cor2: 'marfim', divisao: 'quartelado', simbolo: 'corvo', ornamento: 'asas' })
+  assert(r.status === 200, `redesenhar: ${r.text}`)
+  const g = await A.get('/api/corporacoes')
+  const b = g.json.minha.brasao
+  assert(b.forma === 'torre' && b.cor2 === 'marfim' && b.divisao === 'quartelado' && b.simbolo === 'corvo' && b.ornamento === 'asas', `brasão salvo: ${JSON.stringify(b)}`)
+  const c = await C.corp('brasao.editar', { forma: 'escudo', cor: 'aco' })
+  assert(c.status === 403, `membro redesenhando: ${c.status}`)
+  const sem2 = await A.corp('brasao.editar', { forma: 'escudo', cor: 'aco', divisao: 'partido' })
+  assert(sem2.status === 400, `divisão sem segunda cor: ${sem2.status}`)
+  const ruim = await A.corp('brasao.editar', { forma: 'escudo', cor: 'aco', simbolo: 'dragao' })
+  assert(ruim.status === 400, `figura inválida: ${ruim.status}`)
+  const pleno = await A.corp('brasao.editar', { forma: 'escudo', cor: 'aco' })
+  assert(pleno.status === 200, 'brasão simples continua valendo (padrões)')
+})
+
 await test('líder não sai sem passar a liderança; recusar fundação devolve o Tempo uma vez', async () => {
   const s = await A.corp('sair')
   assert(s.status === 409, `líder saindo: ${s.status}`)
   await sobreviveu(D)
   const t0 = await timer(D.id)
-  const f = await D.corp('fundar', { nome: `Outra ${SFX}`, forma: 'rosa', cor: 'cobalto', idem: `idem-${sfx}-d` })
+  const f = await D.corp('fundar', { nome: `Outra ${SFX}`, forma: 'rosa', cor: 'cobalto', cor2: 'rubi', divisao: 'banda', simbolo: 'rosa', ornamento: 'louros', idem: `idem-${sfx}-d` })
   assert(f.status === 200, `D funda: ${f.text}`)
   const r = await O.corp('mesa.fundacao', { id: f.json.corporacaoId, decisao: 'recusar', nota: 'teste' })
   assert(r.status === 200 && r.json.devolvido === true, `recusar devolve: ${r.text}`)

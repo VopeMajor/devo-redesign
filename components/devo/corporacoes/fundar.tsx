@@ -1,14 +1,23 @@
 'use client'
 
-import { type CSSProperties, useEffect, useMemo, useState } from 'react'
+import { type CSSProperties, type ReactNode, useEffect, useMemo, useState } from 'react'
 import { playSfx } from '@/lib/devo/audio'
 import {
   BRASAO_COR,
   BRASAO_CORES,
+  BRASAO_DIVISAO_ROTULO,
+  BRASAO_DIVISOES,
   BRASAO_FORMA_ROTULO,
   BRASAO_FORMAS,
+  BRASAO_ORNAMENTO_ROTULO,
+  BRASAO_ORNAMENTOS,
+  BRASAO_SIMBOLO_ROTULO,
+  BRASAO_SIMBOLOS,
   type BrasaoCor,
+  type BrasaoDivisao,
   type BrasaoForma,
+  type BrasaoOrnamento,
+  type BrasaoSimbolo,
   type CriacaoInfo,
   formatMin,
   inicialDe,
@@ -31,14 +40,14 @@ function novoIdem() {
 }
 
 /**
- * Fundar uma Corporação: nome, lema, brasão (forma + cor da paleta), custo em Tempo e envio à Companhia.
+ * Fundar uma Corporação: nome, lema, brasão (forma, cores, divisão, figura e ornamento), custo em Tempo e envio à Companhia.
  * O servidor cobra uma vez (idem por abertura da folha) e confere os requisitos de novo.
  */
 export function FundarSheet({ open, onClose, criacao, agir }: { open: boolean; onClose: () => void; criacao: CriacaoInfo; agir: Agir }) {
   const [nome, setNome] = useState('')
   const [lema, setLema] = useState('')
-  const [forma, setForma] = useState<BrasaoForma>('escudo')
-  const [cor, setCor] = useState<BrasaoCor>('aco')
+  const [desenho, setDesenho] = useState<DesenhoBrasao>(DESENHO_PADRAO)
+  const { forma, cor } = desenho
   const [erro, setErro] = useState<string | null>(null)
   const [ocupado, setOcupado] = useState(false)
   const [idem, setIdem] = useState(novoIdem)
@@ -48,14 +57,14 @@ export function FundarSheet({ open, onClose, criacao, agir }: { open: boolean; o
       setErro(null)
     }
   }, [open])
-  const brasao = useMemo(() => ({ forma, cor, inicial: inicialDe(nome || 'Corporação') }), [forma, cor, nome])
+  const brasao = useMemo(() => ({ ...desenho, inicial: inicialDe(nome || 'Corporação') }), [desenho, nome])
   const valido = nome.trim().length >= 3 && criacao.atende
 
   const enviar = async () => {
     setOcupado(true)
     setErro(null)
     try {
-      await agir({ action: 'fundar', nome, lema, forma, cor, idem })
+      await agir({ action: 'fundar', nome, lema, ...desenho, idem })
       playSfx('confirm')
       setNome('')
       setLema('')
@@ -86,7 +95,7 @@ export function FundarSheet({ open, onClose, criacao, agir }: { open: boolean; o
     >
       <div className="flex flex-col gap-5">
         <div className="flex items-center gap-4">
-          <NichoBrasao key={`${forma}-${cor}`} brasao={brasao} tamanho={100} title={`Prévia do brasão: ${BRASAO_FORMA_ROTULO[forma]}, ${BRASAO_COR[cor].rotulo}`} />
+          <NichoBrasao key={JSON.stringify(desenho)} brasao={brasao} lema={lema.trim() || null} tamanho={110} title={`Prévia do brasão: ${BRASAO_FORMA_ROTULO[forma]}, ${BRASAO_COR[cor].rotulo}`} />
           <div className="min-w-0">
             <p className="dv-label text-[10px] text-dv-text-3">Sinete da Corporação</p>
             <p className="mt-1 break-words font-display text-[20px] font-semibold uppercase leading-tight tracking-[0.06em] text-dv-text">{nome.trim() || 'Sem nome'}</p>
@@ -103,58 +112,7 @@ export function FundarSheet({ open, onClose, criacao, agir }: { open: boolean; o
           <Campo id="corp-lema" value={lema} maxLength={90} placeholder="Uma frase para o brasão" onChange={(e) => setLema(e.target.value)} autoComplete="off" />
         </div>
 
-        <fieldset>
-          <legend className="dv-label mb-2 block text-[10px] tracking-[0.2em] text-dv-text-2">Forma do brasão</legend>
-          <div className="grid grid-cols-6 gap-1.5">
-            {BRASAO_FORMAS.map((f) => (
-              <button
-                key={f}
-                type="button"
-                aria-pressed={forma === f}
-                aria-label={`Forma: ${BRASAO_FORMA_ROTULO[f]}`}
-                onClick={() => {
-                  playSfx('card-select')
-                  setForma(f)
-                }}
-                className={cn(
-                  'dv-focus dv-cut grid min-h-14 place-items-center p-1.5 transition-shadow',
-                  forma === f ? 'bg-dv-cobalt-dim shadow-[inset_0_0_0_1px_var(--dv-amethyst-text)]' : 'bg-black/40 shadow-[inset_0_0_0_1px_var(--dv-line-strong)]',
-                )}
-                style={{ '--dv-cut': '6px' } as CSSProperties}
-              >
-                <BrasaoCorp brasao={{ forma: f, cor, inicial: '' }} className="h-10 w-8" />
-              </button>
-            ))}
-          </div>
-        </fieldset>
-
-        <fieldset>
-          <legend className="dv-label mb-2 block text-[10px] tracking-[0.2em] text-dv-text-2">Cor · {BRASAO_COR[cor].rotulo}</legend>
-          <div className="grid grid-cols-6 gap-1.5">
-            {BRASAO_CORES.map((k) => {
-              const c = BRASAO_COR[k]
-              return (
-                <button
-                  key={k}
-                  type="button"
-                  aria-pressed={cor === k}
-                  aria-label={`Cor: ${c.rotulo}`}
-                  onClick={() => {
-                    playSfx('card-select')
-                    setCor(k)
-                  }}
-                  className={cn('dv-focus grid min-h-12 place-items-center', cor === k ? 'shadow-[inset_0_0_0_1px_var(--dv-amethyst-text)]' : '')}
-                >
-                  <span
-                    aria-hidden="true"
-                    className="size-8 rotate-45 shadow-[0_0_0_1.5px_#bab09f,0_4px_10px_rgba(0,0,0,0.6)]"
-                    style={{ background: `linear-gradient(135deg, ${c.claro}, ${c.meio} 50%, ${c.escuro})` }}
-                  />
-                </button>
-              )
-            })}
-          </div>
-        </fieldset>
+        <EditorBrasao valor={desenho} onChange={setDesenho} />
 
         <div className="border-t border-dv-line pt-4">
           <div className="flex items-center justify-between gap-3">
@@ -172,5 +130,128 @@ export function FundarSheet({ open, onClose, criacao, agir }: { open: boolean; o
         </div>
       </div>
     </Sheet>
+  )
+}
+
+/* ------------------------------------------------------------------ Editor do brasão (fundar e redesenhar) */
+
+export type DesenhoBrasao = { forma: BrasaoForma; cor: BrasaoCor; cor2: BrasaoCor | null; divisao: BrasaoDivisao; simbolo: BrasaoSimbolo; ornamento: BrasaoOrnamento }
+export const DESENHO_PADRAO: DesenhoBrasao = { forma: 'escudo', cor: 'aco', cor2: null, divisao: 'pleno', simbolo: 'inicial', ornamento: 'nenhum' }
+
+/** Botão de escolha com a miniatura do brasão (forma, divisão, figura, ornamento). */
+function Opcao({ ativo, rotulo, onClick, children }: { ativo: boolean; rotulo: string; onClick: () => void; children: ReactNode }) {
+  return (
+    <button
+      type="button"
+      aria-pressed={ativo}
+      aria-label={rotulo}
+      title={rotulo}
+      onClick={() => {
+        playSfx('card-select')
+        onClick()
+      }}
+      className={cn(
+        'dv-focus dv-cut grid min-h-14 place-items-center p-1.5 transition-shadow',
+        ativo ? 'bg-dv-cobalt-dim shadow-[inset_0_0_0_1px_var(--dv-amethyst-text)]' : 'bg-black/40 shadow-[inset_0_0_0_1px_var(--dv-line-strong)]',
+      )}
+      style={{ '--dv-cut': '6px' } as CSSProperties}
+    >
+      {children}
+    </button>
+  )
+}
+
+function Grupo({ titulo, children }: { titulo: string; children: ReactNode }) {
+  return (
+    <fieldset>
+      <legend className="dv-label mb-2 block text-[10px] tracking-[0.2em] text-dv-text-2">{titulo}</legend>
+      {children}
+    </fieldset>
+  )
+}
+
+function Cores({ valor, onChange, rotulo }: { valor: BrasaoCor | null; onChange: (c: BrasaoCor) => void; rotulo: string }) {
+  return (
+    <div className="grid grid-cols-6 gap-1.5">
+      {BRASAO_CORES.map((k) => {
+        const c = BRASAO_COR[k]
+        return (
+          <button
+            key={k}
+            type="button"
+            aria-pressed={valor === k}
+            aria-label={`${rotulo}: ${c.rotulo}`}
+            title={c.rotulo}
+            onClick={() => {
+              playSfx('card-select')
+              onChange(k)
+            }}
+            className={cn('dv-focus grid min-h-12 place-items-center', valor === k ? 'shadow-[inset_0_0_0_1px_var(--dv-amethyst-text)]' : '')}
+          >
+            <span aria-hidden="true" className="size-8 rotate-45 shadow-[0_0_0_1.5px_#bab09f,0_4px_10px_rgba(0,0,0,0.6)]" style={{ background: `linear-gradient(135deg, ${c.claro}, ${c.meio} 50%, ${c.escuro})` }} />
+          </button>
+        )
+      })}
+    </div>
+  )
+}
+
+/** Escolhas do brasão: forma, cor, divisão do campo (+ segunda cor), figura e ornamento. */
+export function EditorBrasao({ valor, onChange }: { valor: DesenhoBrasao; onChange: (v: DesenhoBrasao) => void }) {
+  const set = (p: Partial<DesenhoBrasao>) => onChange({ ...valor, ...p })
+  const mini = (p: Partial<DesenhoBrasao>) => ({ ...valor, inicial: 'A', ...p })
+  const segunda = valor.cor2 ?? BRASAO_CORES.find((c) => c !== valor.cor) ?? 'onix'
+  return (
+    <div className="flex flex-col gap-5">
+      <Grupo titulo="Forma">
+        <div className="grid grid-cols-6 gap-1.5">
+          {BRASAO_FORMAS.map((f) => (
+            <Opcao key={f} ativo={valor.forma === f} rotulo={`Forma: ${BRASAO_FORMA_ROTULO[f]}`} onClick={() => set({ forma: f })}>
+              <BrasaoCorp brasao={mini({ forma: f, ornamento: 'nenhum', simbolo: 'inicial' })} className="h-10 w-8" />
+            </Opcao>
+          ))}
+        </div>
+      </Grupo>
+      <Grupo titulo={`Cor · ${BRASAO_COR[valor.cor].rotulo}`}>
+        <Cores valor={valor.cor} onChange={(cor) => set({ cor })} rotulo="Cor" />
+      </Grupo>
+      <Grupo titulo={`Campo · ${BRASAO_DIVISAO_ROTULO[valor.divisao]}`}>
+        <div className="grid grid-cols-7 gap-1.5">
+          {BRASAO_DIVISOES.map((dv) => (
+            <Opcao
+              key={dv}
+              ativo={valor.divisao === dv}
+              rotulo={`Campo: ${BRASAO_DIVISAO_ROTULO[dv]}`}
+              onClick={() => set({ divisao: dv, cor2: dv === 'pleno' ? null : segunda })}
+            >
+              <BrasaoCorp brasao={mini({ forma: 'escudo', divisao: dv, cor2: segunda, ornamento: 'nenhum', simbolo: 'inicial', })} className="h-10 w-8" />
+            </Opcao>
+          ))}
+        </div>
+      </Grupo>
+      {valor.divisao !== 'pleno' && (
+        <Grupo titulo={`Segunda cor · ${BRASAO_COR[segunda].rotulo}`}>
+          <Cores valor={segunda} onChange={(cor2) => set({ cor2 })} rotulo="Segunda cor" />
+        </Grupo>
+      )}
+      <Grupo titulo={`Figura · ${BRASAO_SIMBOLO_ROTULO[valor.simbolo]}`}>
+        <div className="grid grid-cols-5 gap-1.5 min-[400px]:grid-cols-7">
+          {BRASAO_SIMBOLOS.map((sb) => (
+            <Opcao key={sb} ativo={valor.simbolo === sb} rotulo={`Figura: ${BRASAO_SIMBOLO_ROTULO[sb]}`} onClick={() => set({ simbolo: sb })}>
+              <BrasaoCorp brasao={mini({ forma: 'escudo', simbolo: sb, ornamento: 'nenhum', divisao: 'pleno' })} className="h-10 w-8" />
+            </Opcao>
+          ))}
+        </div>
+      </Grupo>
+      <Grupo titulo={`Ornamento · ${BRASAO_ORNAMENTO_ROTULO[valor.ornamento]}`}>
+        <div className="grid grid-cols-6 gap-1.5">
+          {BRASAO_ORNAMENTOS.map((o) => (
+            <Opcao key={o} ativo={valor.ornamento === o} rotulo={`Ornamento: ${BRASAO_ORNAMENTO_ROTULO[o]}`} onClick={() => set({ ornamento: o })}>
+              <BrasaoCorp brasao={mini({ forma: 'escudo', ornamento: o, divisao: 'pleno', simbolo: 'inicial' })} className="h-7 w-6" />
+            </Opcao>
+          ))}
+        </div>
+      </Grupo>
+    </div>
   )
 }

@@ -21,6 +21,7 @@ import { Painel } from './painel'
 import { CardFace } from '../shared/devo-card'
 import { useDevo } from '../state/devo-store'
 import { BrasaoCorp, NichoBrasao } from './brasao'
+import { type DesenhoBrasao, EditorBrasao } from './fundar'
 import { SeloCompanhia } from './holograma'
 import { Campo, Erro, Linha, Monograma, Placa, Rotulo, Selo, Vazio, dataCurta } from './ui'
 
@@ -106,12 +107,13 @@ function Heroi({ m, agir }: { m: MinhaCorp; agir: Agir }) {
         <p className={cn('font-mono text-[10px] uppercase tracking-[0.2em]', necro ? 'text-dv-blood-text' : 'text-dv-amethyst-text')}>{necro ? 'Classe N' : 'Classe A'}</p>
       </div>
       <div className="flex items-start gap-4">
-        <NichoBrasao brasao={m.brasao} necro={necro} title={`Brasão de ${m.nome}`} />
+        <NichoBrasao brasao={m.brasao} necro={necro} lema={m.lema} title={`Brasão de ${m.nome}`} />
         <div className="min-w-0 flex-1 pt-1">
           <p className="dv-label text-[10px] text-dv-gold">{CORP_CARGO_ROTULO[m.meuCargo]} · {m.membros}/{m.maxMembros}</p>
           <h2 className="mt-1.5 break-words font-display text-[22px] font-semibold uppercase leading-[1.1] tracking-[0.06em] text-dv-text">{m.nome}</h2>
           {m.lema && <p className="mt-1.5 font-body text-[15px] italic leading-snug text-dv-text-2">“{m.lema}”</p>}
           {m.meuCargo === 'lider' && <EditarLema atual={m.lema} agir={agir} />}
+          {m.meuCargo === 'lider' && <RedesenharBrasao m={m} agir={agir} />}
           <div className="mt-2.5 flex flex-wrap gap-1.5">
             <Selo tom={necro ? 'rubi' : 'aco'}>{necro ? 'Necro-Corporação' : 'Oficial'}</Selo>
             {m.escopo === 'global' && <Selo tom="ametista">{ESCOPO_ROTULO.global} · provisório</Selo>}
@@ -146,6 +148,58 @@ function Heroi({ m, agir }: { m: MinhaCorp; agir: Agir }) {
       </div>
       <p className="sr-only">{CLASSIFICACAO_ROTULO[m.classificacao]}</p>
     </Painel>
+  )
+}
+
+/** O líder redesenha o brasão (forma, cores, divisão, figura e ornamento). */
+function RedesenharBrasao({ m, agir }: { m: MinhaCorp; agir: Agir }) {
+  const { ocupado, erro, fazer, setErro } = useAcao(agir)
+  const [aberto, setAberto] = useState(false)
+  const atual: DesenhoBrasao = {
+    forma: m.brasao.forma,
+    cor: m.brasao.cor,
+    cor2: m.brasao.cor2 ?? null,
+    divisao: m.brasao.divisao ?? 'pleno',
+    simbolo: m.brasao.simbolo ?? 'inicial',
+    ornamento: m.brasao.ornamento ?? 'nenhum',
+  }
+  const [desenho, setDesenho] = useState<DesenhoBrasao>(atual)
+  return (
+    <>
+      <button
+        type="button"
+        onClick={() => {
+          playSfx('open')
+          setDesenho(atual)
+          setErro(null)
+          setAberto(true)
+        }}
+        className="dv-focus block min-h-9 font-mono text-[10.5px] uppercase tracking-[0.14em] text-dv-amethyst-text hover:text-dv-text"
+      >
+        Redesenhar o brasão
+      </button>
+      <Sheet
+        open={aberto}
+        onClose={() => setAberto(false)}
+        kicker={m.nome}
+        title="Redesenhar o brasão"
+        footer={
+          <div className="flex flex-col gap-2">
+            {erro && <Erro>{erro}</Erro>}
+            <Button block loading={ocupado === 'brasao'} onClick={async () => { if (await fazer('brasao', { action: 'brasao.editar', ...desenho })) setAberto(false) }}>
+              Salvar o brasão
+            </Button>
+          </div>
+        }
+      >
+        <div className="flex flex-col gap-5">
+          <div className="flex justify-center">
+            <NichoBrasao key={JSON.stringify(desenho)} brasao={{ ...desenho, inicial: m.brasao.inicial }} lema={m.lema} tamanho={130} title="Prévia do brasão" />
+          </div>
+          <EditorBrasao valor={desenho} onChange={setDesenho} />
+        </div>
+      </Sheet>
+    </>
   )
 }
 

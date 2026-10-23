@@ -51,10 +51,69 @@ export const BRASAO_COR: Record<BrasaoCor, { rotulo: string; claro: string; meio
   musgo: { rotulo: 'Musgo', claro: '#8fa08a', meio: '#4f5f4b', escuro: '#1c241b', tinta: '#eef2ea' },
 }
 
+/** Divisão do campo (heráldica): o campo em duas cores. */
+export const BRASAO_DIVISOES = ['pleno', 'partido', 'cortado', 'quartelado', 'banda', 'chaveirao', 'faixa'] as const
+export type BrasaoDivisao = (typeof BRASAO_DIVISOES)[number]
+export const BRASAO_DIVISAO_ROTULO: Record<BrasaoDivisao, string> = {
+  pleno: 'Pleno',
+  partido: 'Partido',
+  cortado: 'Cortado',
+  quartelado: 'Quartelado',
+  banda: 'Em banda',
+  chaveirao: 'Chaveirão',
+  faixa: 'Faixa',
+}
+
+/** Figura no centro do brasão (a inicial do nome é uma delas). */
+export const BRASAO_SIMBOLOS = ['inicial', 'olho', 'chave', 'ampulheta', 'espada', 'rosa', 'lua', 'coroa', 'relogio', 'torre', 'mascara', 'estrela', 'corvo'] as const
+export type BrasaoSimbolo = (typeof BRASAO_SIMBOLOS)[number]
+export const BRASAO_SIMBOLO_ROTULO: Record<BrasaoSimbolo, string> = {
+  inicial: 'Inicial',
+  olho: 'Olho',
+  chave: 'Chave',
+  ampulheta: 'Ampulheta',
+  espada: 'Espada',
+  rosa: 'Rosa',
+  lua: 'Lua',
+  coroa: 'Coroa',
+  relogio: 'Relógio',
+  torre: 'Torre',
+  mascara: 'Máscara',
+  estrela: 'Estrela',
+  corvo: 'Corvo',
+}
+
+/** Ornamento atrás e em volta do brasão. */
+export const BRASAO_ORNAMENTOS = ['nenhum', 'louros', 'asas', 'espadas', 'correntes', 'raios'] as const
+export type BrasaoOrnamento = (typeof BRASAO_ORNAMENTOS)[number]
+export const BRASAO_ORNAMENTO_ROTULO: Record<BrasaoOrnamento, string> = {
+  nenhum: 'Nenhum',
+  louros: 'Louros',
+  asas: 'Asas',
+  espadas: 'Espadas cruzadas',
+  correntes: 'Correntes',
+  raios: 'Raios',
+}
+
 export const isBrasaoForma = (v: unknown): v is BrasaoForma => (BRASAO_FORMAS as readonly unknown[]).includes(v)
 export const isBrasaoCor = (v: unknown): v is BrasaoCor => (BRASAO_CORES as readonly unknown[]).includes(v)
+export const isBrasaoDivisao = (v: unknown): v is BrasaoDivisao => (BRASAO_DIVISOES as readonly unknown[]).includes(v)
+export const isBrasaoSimbolo = (v: unknown): v is BrasaoSimbolo => (BRASAO_SIMBOLOS as readonly unknown[]).includes(v)
+export const isBrasaoOrnamento = (v: unknown): v is BrasaoOrnamento => (BRASAO_ORNAMENTOS as readonly unknown[]).includes(v)
 
-export type Brasao = { forma: BrasaoForma; cor: BrasaoCor; inicial: string }
+/**
+ * Brasão: forma + cor (o básico) e, desde 23/10 (dono: "ainda muito simples"), divisão do campo com segunda cor,
+ * figura no centro e ornamento em volta. Brasões antigos ficam "pleno", com a inicial e sem ornamento.
+ */
+export type Brasao = {
+  forma: BrasaoForma
+  cor: BrasaoCor
+  inicial: string
+  cor2?: BrasaoCor | null
+  divisao?: BrasaoDivisao
+  simbolo?: BrasaoSimbolo
+  ornamento?: BrasaoOrnamento
+}
 
 /** Inicial do brasão: primeira letra do nome (ignora artigos curtos). */
 export function inicialDe(nome: string) {
