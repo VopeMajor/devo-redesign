@@ -1,0 +1,96 @@
+{
+  "pedido": "pacote-iniciante",
+  "titulo": "Pacote Iniciante (capa)",
+  "tipo": "ilustracao",
+  "tamanho_final": 1024,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 82101,
+      "passos": null,
+      "segundos": 17.6,
+      "neuronios_estimados": 1364,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "pacote-iniciante--v01--1024.png",
+          "bytes": 1354246
+        },
+        {
+          "arquivo": "pacote-iniciante--v01--1024.webp",
+          "bytes": 241622
+        },
+        {
+          "arquivo": "pacote-iniciante--v01--768.webp",
+          "bytes": 86660
+        },
+        {
+          "arquivo": "pacote-iniciante--v01--384.webp",
+          "bytes": 24346
+        }
+      ],
+      "segundos_pos": 1.4,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 82102,
+      "passos": null,
+      "segundos": 17.3,
+      "neuronios_estimados": 1364,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "pacote-iniciante--v02--1024.png",
+          "bytes": 1151678
+        },
+        {
+          "arquivo": "pacote-iniciante--v02--1024.webp",
+          "bytes": 171566
+        },
+        {
+          "arquivo": "pacote-iniciante--v02--768.webp",
+          "bytes": 68636
+        },
+        {
+          "arquivo": "pacote-iniciante--v02--384.webp",
+          "bytes": 22816
+        }
+      ],
+      "segundos_pos": 1.8,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 82103,
+      "passos": null,
+      "segundos": 2.8,
+      "neuronios_estimados": 1364,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "pacote-iniciante--v03--1024.png",
+          "bytes": 1325521
+        },
+        {
+          "arquivo": "pacote-iniciante--v03--1024.webp",
+          "bytes": 210700
+        },
+        {
+          "arquivo": "pacote-iniciante--v03--768.webp",
+          "bytes": 80996
+        },
+        {
+          "arquivo": "pacote-iniciante--v03--384.webp",
+          "bytes": 25402
+        }
+      ],
+      "segundos_pos": 1.5,
+      "avisos": []
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+[pacote-iniciante] v01: @cf/black-forest-labs/flux-2-klein-9b seed=82101 768x1024 passos=None (~1,364 neurônios)
+    nova tentativa em 15s
+    ok em 17.6s, 768x1024
+[pacote-iniciante] v02: @cf/black-forest-labs/flux-2-klein-9b seed=82102 768x1024 passos=None (~1,364 neurônios)
+    nova tentativa em 15s
+    ok em 17.3s, 768x1024
+[pacote-iniciante] v03: @cf/black-forest-labs/flux-2-klein-9b seed=82103 768x1024 passos=None (~1,364 neurônios)
+    ok em 2.8s, 768x1024
+[pacote-iniciante] v01: mantido; sem avisos
+[pacote-iniciante] v02: mantido; sem avisos
+[pacote-iniciante] v03: mantido; sem avisos
