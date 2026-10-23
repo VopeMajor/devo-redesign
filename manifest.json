@@ -1,0 +1,120 @@
+{
+  "pedido": "essencia-corvo",
+  "titulo": "Essência — Essence of the Raven",
+  "tipo": "emblema",
+  "tamanho_final": 1024,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 12140,
+      "passos": null,
+      "segundos": 1.8,
+      "neuronios_estimados": 1364,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "essencia-corvo--v01--1024.png",
+          "bytes": 395591
+        },
+        {
+          "arquivo": "essencia-corvo--v01--1024.webp",
+          "bytes": 65472
+        },
+        {
+          "arquivo": "essencia-corvo--v01--512.webp",
+          "bytes": 23162
+        },
+        {
+          "arquivo": "essencia-corvo--v01--256.webp",
+          "bytes": 9150
+        },
+        {
+          "arquivo": "essencia-corvo--v01--128.webp",
+          "bytes": 4082
+        },
+        {
+          "arquivo": "essencia-corvo--v01--64.webp",
+          "bytes": 1686
+        }
+      ],
+      "segundos_pos": 52.7,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 12141,
+      "passos": null,
+      "segundos": 17.5,
+      "neuronios_estimados": 1364,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "essencia-corvo--v02--1024.png",
+          "bytes": 472862
+        },
+        {
+          "arquivo": "essencia-corvo--v02--1024.webp",
+          "bytes": 80290
+        },
+        {
+          "arquivo": "essencia-corvo--v02--512.webp",
+          "bytes": 26852
+        },
+        {
+          "arquivo": "essencia-corvo--v02--256.webp",
+          "bytes": 10362
+        },
+        {
+          "arquivo": "essencia-corvo--v02--128.webp",
+          "bytes": 4396
+        },
+        {
+          "arquivo": "essencia-corvo--v02--64.webp",
+          "bytes": 1822
+        }
+      ],
+      "segundos_pos": 29.1,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 12142,
+      "passos": null,
+      "segundos": 1.7,
+      "neuronios_estimados": 1364,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "essencia-corvo--v03--1024.png",
+          "bytes": 448793
+        },
+        {
+          "arquivo": "essencia-corvo--v03--1024.webp",
+          "bytes": 73820
+        },
+        {
+          "arquivo": "essencia-corvo--v03--512.webp",
+          "bytes": 25886
+        },
+        {
+          "arquivo": "essencia-corvo--v03--256.webp",
+          "bytes": 10204
+        },
+        {
+          "arquivo": "essencia-corvo--v03--128.webp",
+          "bytes": 4448
+        },
+        {
+          "arquivo": "essencia-corvo--v03--64.webp",
+          "bytes": 1890
+        }
+      ],
+      "segundos_pos": 28.0,
+      "avisos": []
+    }
+  ]
+}

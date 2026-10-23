@@ -1,0 +1,10 @@
+[essencia-corvo] v01: @cf/black-forest-labs/flux-2-klein-9b seed=12140 1024x1024 passos=None (~1,364 neurônios)
+    ok em 1.8s, 1024x1024
+[essencia-corvo] v02: @cf/black-forest-labs/flux-2-klein-9b seed=12141 1024x1024 passos=None (~1,364 neurônios)
+    nova tentativa em 15s
+    ok em 17.5s, 1024x1024
+[essencia-corvo] v03: @cf/black-forest-labs/flux-2-klein-9b seed=12142 1024x1024 passos=None (~1,364 neurônios)
+    ok em 1.7s, 1024x1024
+[essencia-corvo] v01: rembg:birefnet-general; sem avisos
+[essencia-corvo] v02: rembg:birefnet-general; sem avisos
+[essencia-corvo] v03: rembg:birefnet-general; sem avisos
