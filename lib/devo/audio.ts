@@ -670,38 +670,51 @@ export function stopChessAmbience() {
   chessAmbient = null
 }
 
-export function startAmbient(level = 0.32) {
+/**
+ * Som ambiente do sistema (dono, 23/10: o antigo — zumbido grave + tique-taque a cada segundo — incomodava).
+ * Agora é um leito suave em lá menor: três senos com respiração lenta, filtro aberto devagar, vento quase
+ * inaudível e um sino raro. Toca só na primeira sessão; depois fica desligado, a não ser que o jogador ligue
+ * em Ajustes (`ambientePreferencia`).
+ */
+export function startAmbient(level = 0.16) {
   const c = ensure()
   if (!c || !master || ambient) return
   const bus = c.createGain()
   bus.gain.setValueAtTime(0.0001, c.currentTime)
-  bus.gain.exponentialRampToValueAtTime(ambientDucked ? level * 0.25 : level, c.currentTime + 4)
+  bus.gain.exponentialRampToValueAtTime(ambientDucked ? level * 0.25 : level, c.currentTime + 6)
   const lowpass = c.createBiquadFilter()
   lowpass.type = 'lowpass'
-  lowpass.frequency.value = 380
+  lowpass.frequency.value = 900
+  lowpass.Q.value = 0.3
   lowpass.connect(bus)
   bus.connect(master)
 
-  const oscillators = [
-    { f: 55, type: 'triangle' as const, g: 0.28 },
-    { f: 55.35, type: 'sawtooth' as const, g: 0.12 },
-    { f: 82.4, type: 'triangle' as const, g: 0.08 },
-    { f: 116.5, type: 'sine' as const, g: 0.05 },
-  ].map(({ f, type, g }) => {
+  // acorde aberto (lá, mi, dó), cada voz com a própria respiração
+  const vozes = [
+    { f: 110, g: 0.16, r: 0.05 },
+    { f: 164.81, g: 0.09, r: 0.037 },
+    { f: 261.63, g: 0.045, r: 0.029 },
+  ].map(({ f, g, r }) => {
     const o = c.createOscillator()
-    o.type = type
+    o.type = 'sine'
     o.frequency.value = f
     const gain = c.createGain()
-    gain.gain.value = g
+    gain.gain.value = g * 0.6
+    const resp = c.createOscillator()
+    resp.frequency.value = r
+    const respGain = c.createGain()
+    respGain.gain.value = g * 0.4
+    resp.connect(respGain).connect(gain.gain)
     o.connect(gain).connect(lowpass)
     o.start()
-    return o
+    resp.start()
+    return [o, resp]
   })
 
   const lfo = c.createOscillator()
-  lfo.frequency.value = 0.06
+  lfo.frequency.value = 0.02
   const lfoGain = c.createGain()
-  lfoGain.gain.value = 160
+  lfoGain.gain.value = 250
   lfo.connect(lfoGain).connect(lowpass.frequency)
   lfo.start()
 
@@ -710,22 +723,18 @@ export function startAmbient(level = 0.32) {
   wind.loop = true
   const windFilter = c.createBiquadFilter()
   windFilter.type = 'bandpass'
-  windFilter.frequency.value = 500
-  windFilter.Q.value = 0.5
+  windFilter.frequency.value = 700
+  windFilter.Q.value = 0.4
   const windGain = c.createGain()
-  windGain.gain.value = 0.05
+  windGain.gain.value = 0.012
   wind.connect(windFilter).connect(windGain).connect(bus)
   wind.start()
 
-  const bells = [311.1, 293.7, 233.1, 207.7, 155.6]
+  const bells = [440, 523.25, 659.25, 587.33]
   const bellTimer = window.setInterval(() => {
-    if (muted) return
-    tone(bells[Math.floor(Math.random() * bells.length)], 5, { gain: 0.025, attack: 0.01, dest: bus })
-  }, 6500)
-  const tickTimer = window.setInterval(() => {
-    if (muted) return
-    noise(0.025, { gain: 0.035, freq: 3200, q: 9 })
-  }, 1000)
+    if (muted || Math.random() < 0.5) return
+    tone(bells[Math.floor(Math.random() * bells.length)], 6, { gain: 0.012, attack: 0.02, dest: bus })
+  }, 16000)
 
   ambient = {
     bus,
@@ -736,15 +745,59 @@ export function startAmbient(level = 0.32) {
       bus.gain.setValueAtTime(Math.max(bus.gain.value, 0.0001), t)
       bus.gain.exponentialRampToValueAtTime(0.0001, t + 1.2)
       window.clearInterval(bellTimer)
-      window.clearInterval(tickTimer)
       window.setTimeout(() => {
-        oscillators.forEach((o) => o.stop())
+        vozes.flat().forEach((o) => o.stop())
         lfo.stop()
         wind.stop()
         bus.disconnect()
       }, 1300)
     },
   }
+}
+
+const AMBIENTE_KEY = 'devo.ambiente'
+const AMBIENTE_VISTO = 'devo.ambiente.visto'
+export type AmbientePreferencia = 'auto' | 'ligado' | 'desligado'
+
+/** Preferência do som ambiente: 'auto' = só na primeira sessão (padrão). */
+export function ambientePreferencia(): AmbientePreferencia {
+  try {
+    const v = localStorage.getItem(AMBIENTE_KEY)
+    return v === 'ligado' || v === 'desligado' ? v : 'auto'
+  } catch {
+    return 'auto'
+  }
+}
+
+export function setAmbientePreferencia(v: AmbientePreferencia) {
+  try {
+    localStorage.setItem(AMBIENTE_KEY, v)
+  } catch {
+    /* sem armazenamento: vale só nesta sessão */
+  }
+  if (v === 'desligado') stopAmbient()
+  else if (v === 'ligado') startAmbient()
+}
+
+/** Liga o ambiente se a preferência deixa: sempre ('ligado') ou só na primeira sessão ('auto'). */
+export function startAmbientSePermitido() {
+  const pref = ambientePreferencia()
+  if (pref === 'desligado') return
+  if (pref === 'auto') {
+    // a "primeira sessão" vale até fechar a aba (recarregar a página não corta o som)
+    let tocar = true
+    try {
+      if (sessionStorage.getItem(AMBIENTE_VISTO) !== '1') {
+        tocar = localStorage.getItem(AMBIENTE_VISTO) !== '1'
+        localStorage.setItem(AMBIENTE_VISTO, '1')
+        if (tocar) sessionStorage.setItem(AMBIENTE_VISTO, '1')
+      }
+    } catch {
+      tocar = true
+    }
+    if (!tocar) return
+  }
+  startAmbient()
 }
 
 export function stopAmbient() {

@@ -1,7 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useState } from 'react'
-import { playMusic, startAmbient, stopMusic, unlockAudio } from '@/lib/devo/audio'
+import { playMusic, startAmbientSePermitido, stopMusic, unlockAudio } from '@/lib/devo/audio'
 import { IntroScreen } from './intro/intro-screen'
 import { PrologueScreen } from './intro/prologue-screen'
 import { LandingScreen } from './landing/landing-screen'
@@ -68,7 +68,7 @@ function DevoRoot() {
   useEffect(() => {
     const wake = () => {
       unlockAudio()
-      startAmbient(0.28)
+      startAmbientSePermitido()
     }
     window.addEventListener('pointerdown', wake, { once: true })
     window.addEventListener('keydown', wake, { once: true })

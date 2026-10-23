@@ -1,7 +1,8 @@
 'use client'
 
-import { useState, type ReactNode } from 'react'
-import { playSfx } from '@/lib/devo/audio'
+import { useEffect, useState, type ReactNode } from 'react'
+import { cn } from '@/lib/utils'
+import { ambientePreferencia, type AmbientePreferencia, playSfx, setAmbientePreferencia } from '@/lib/devo/audio'
 import { Button } from '../kit/button'
 import { Frame, FrameCorners } from '../kit/frame'
 import { GlyphAlert, GlyphCheck } from '../kit/glyphs'
@@ -36,6 +37,7 @@ export function AjustesApp() {
             <p className="font-body text-[15px] text-dv-text-2">Trilha e sons de interface</p>
             <SoundToggle />
           </div>
+          <AmbienteEscolha />
         </Panel>
 
 
@@ -90,6 +92,43 @@ export function AjustesApp() {
           </div>
         </MarbleSlab>
       </Stagger>
+    </div>
+  )
+}
+
+/** Som ambiente: só na primeira sessão (padrão), sempre ou desligado. */
+function AmbienteEscolha() {
+  const [pref, setPref] = useState<AmbientePreferencia>('auto')
+  useEffect(() => setPref(ambientePreferencia()), [])
+  const opcoes: [AmbientePreferencia, string][] = [
+    ['auto', 'Só na 1ª sessão'],
+    ['ligado', 'Sempre'],
+    ['desligado', 'Desligado'],
+  ]
+  return (
+    <div className="mt-3 border-t border-dv-line pt-3">
+      <p className="font-body text-[15px] text-dv-text-2">Som ambiente</p>
+      <div role="radiogroup" aria-label="Som ambiente" className="mt-2 grid grid-cols-3 gap-1.5">
+        {opcoes.map(([v, rotulo]) => (
+          <button
+            key={v}
+            type="button"
+            role="radio"
+            aria-checked={pref === v}
+            onClick={() => {
+              playSfx('click')
+              setPref(v)
+              setAmbientePreferencia(v)
+            }}
+            className={cn(
+              'dv-focus dv-cut-diag min-h-11 px-2 font-mono text-[10.5px] uppercase tracking-[0.1em] [--dv-cut:6px]',
+              pref === v ? 'bg-[rgb(var(--dv-amethyst-rgb)/0.35)] text-dv-text shadow-[inset_0_0_0_1px_var(--dv-amethyst-text)]' : 'text-dv-text-2 shadow-[inset_0_0_0_1px_var(--dv-line-strong)]',
+            )}
+          >
+            {rotulo}
+          </button>
+        ))}
+      </div>
     </div>
   )
 }
