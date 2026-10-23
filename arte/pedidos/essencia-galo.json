@@ -1,0 +1,32 @@
+{
+  "id": "essencia-galo",
+  "titulo": "Essência — Essence of the Rooster",
+  "tipo": "emblema",
+  "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+  "prompt": "Fantasy RPG game item illustration, painted, highly detailed, isolated on a plain flat light gray background, one single object centered, seen from the front at a slight three-quarter angle, key light from the upper left, crisp silhouette readable at small size, no cast shadow, generous empty margin. Muted dark gothic fantasy palette: abyss black, faded silver and champagne steel, soft amethyst violet glow, low saturation, no neon, no bright gold. Painterly, ornate, subtle patina and grain, elegant and mysterious. Absolutely no text, no letters, no numbers, no labels. An ornate antique perfume flask of thick faceted crystal shaped like a teardrop, held in a filigree cage of tarnished silver that forms a proud rooster: the rooster's crested head and sharp beak rise as the stopper, its sweeping tail feathers curl around the flask. Inside swirls a glowing liquid of deep crimson and amethyst with tiny drifting golden embers, like a sunrise trapped in glass. A small silver crown sits on the rooster's crest.",
+  "negative": "",
+  "largura": 1024,
+  "altura": 1024,
+  "variacoes": [
+    {
+      "seed": 12100
+    },
+    {
+      "seed": 12101
+    },
+    {
+      "seed": 12102
+    }
+  ],
+  "pos": {
+    "remover_fundo": true,
+    "tamanho_final": 1024,
+    "margem": 0.04,
+    "derivados": [
+      512,
+      256,
+      128,
+      64
+    ]
+  }
+}
