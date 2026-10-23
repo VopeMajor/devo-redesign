@@ -1,0 +1,56 @@
+{
+  "id": "essencia-javali",
+  "titulo": "Essência — Essence of the Boar",
+  "tipo": "emblema",
+  "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+  "prompt": "Fantasy RPG game item illustration, painted, highly detailed, isolated on a plain flat light gray background, one single object centered, seen from the front at a slight three-quarter angle, key light from the upper left, crisp silhouette readable at small size, no cast shadow, generous empty margin. Muted dark gothic fantasy palette: abyss black, faded silver and champagne steel, soft amethyst violet glow, low saturation, no neon, no bright gold. Painterly, ornate, subtle patina and grain, elegant and mysterious. Absolutely no text, no letters, no numbers, no labels. A sturdy ornate crystal vial with a heavy dark iron and silver frame, the stopper shaped like a fierce boar head with curved ivory tusks, rough iron bands with rivets around the glass. Inside churns a thick glowing liquid of dark ember red and smoky violet with sparks, like a forge fire trapped in glass. Bits of rope and a tiny circus-tent striped ribbon tied around the neck.",
+  "negative": "",
+  "largura": 1024,
+  "altura": 1024,
+  "variacoes": [
+    {
+      "seed": 12120,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "passos": null,
+      "largura": 1024,
+      "altura": 1024,
+      "prompt_extra": "",
+      "n": 1
+    },
+    {
+      "seed": 12121,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "passos": null,
+      "largura": 1024,
+      "altura": 1024,
+      "prompt_extra": "",
+      "n": 2
+    },
+    {
+      "seed": 12122,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "passos": null,
+      "largura": 1024,
+      "altura": 1024,
+      "prompt_extra": "",
+      "n": 3
+    }
+  ],
+  "pos": {
+    "remover_fundo": true,
+    "tamanho_final": 1024,
+    "margem": 0.04,
+    "derivados": [
+      512,
+      256,
+      128,
+      64
+    ],
+    "modelo_fundo": "birefnet-general",
+    "fundo": "liso",
+    "camadas": []
+  },
+  "passos": null,
+  "guidance": null,
+  "referencias": []
+}

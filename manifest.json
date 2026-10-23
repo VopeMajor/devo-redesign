@@ -1,0 +1,120 @@
+{
+  "pedido": "essencia-javali",
+  "titulo": "Essência — Essence of the Boar",
+  "tipo": "emblema",
+  "tamanho_final": 1024,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 12120,
+      "passos": null,
+      "segundos": 63.0,
+      "neuronios_estimados": 1364,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "essencia-javali--v01--1024.png",
+          "bytes": 555782
+        },
+        {
+          "arquivo": "essencia-javali--v01--1024.webp",
+          "bytes": 87758
+        },
+        {
+          "arquivo": "essencia-javali--v01--512.webp",
+          "bytes": 31160
+        },
+        {
+          "arquivo": "essencia-javali--v01--256.webp",
+          "bytes": 13194
+        },
+        {
+          "arquivo": "essencia-javali--v01--128.webp",
+          "bytes": 5438
+        },
+        {
+          "arquivo": "essencia-javali--v01--64.webp",
+          "bytes": 2192
+        }
+      ],
+      "segundos_pos": 36.0,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 12121,
+      "passos": null,
+      "segundos": 2.2,
+      "neuronios_estimados": 1364,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "essencia-javali--v02--1024.png",
+          "bytes": 596401
+        },
+        {
+          "arquivo": "essencia-javali--v02--1024.webp",
+          "bytes": 98746
+        },
+        {
+          "arquivo": "essencia-javali--v02--512.webp",
+          "bytes": 35446
+        },
+        {
+          "arquivo": "essencia-javali--v02--256.webp",
+          "bytes": 14420
+        },
+        {
+          "arquivo": "essencia-javali--v02--128.webp",
+          "bytes": 5774
+        },
+        {
+          "arquivo": "essencia-javali--v02--64.webp",
+          "bytes": 2338
+        }
+      ],
+      "segundos_pos": 31.1,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 12122,
+      "passos": null,
+      "segundos": 17.3,
+      "neuronios_estimados": 1364,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "essencia-javali--v03--1024.png",
+          "bytes": 595512
+        },
+        {
+          "arquivo": "essencia-javali--v03--1024.webp",
+          "bytes": 99178
+        },
+        {
+          "arquivo": "essencia-javali--v03--512.webp",
+          "bytes": 35134
+        },
+        {
+          "arquivo": "essencia-javali--v03--256.webp",
+          "bytes": 14222
+        },
+        {
+          "arquivo": "essencia-javali--v03--128.webp",
+          "bytes": 5934
+        },
+        {
+          "arquivo": "essencia-javali--v03--64.webp",
+          "bytes": 2452
+        }
+      ],
+      "segundos_pos": 30.5,
+      "avisos": []
+    }
+  ]
+}
