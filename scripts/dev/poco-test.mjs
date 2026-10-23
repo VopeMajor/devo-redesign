@@ -107,6 +107,12 @@ async function giro(s, lancar) {
 const sfx = Date.now().toString(36)
 const SFX = sfx.toUpperCase()
 const originalCfg = await getCfg()
+// Isola o teste da tabela do dono: prêmios do pool que já existem ficam desligados e a configuração volta a
+// "provisória" durante a execução; tudo é restaurado no fim.
+const premiosDoDono = (await q('SELECT id FROM poco_premios WHERE ativo')).map((r) => r.id)
+const [{ provisional: provOriginal }] = await q("SELECT provisional FROM devo_config WHERE key = 'poco.probabilidades'")
+if (premiosDoDono.length) await q('UPDATE poco_premios SET ativo = false WHERE id = ANY($1::uuid[])', [premiosDoDono])
+await q("UPDATE devo_config SET provisional = true WHERE key = 'poco.probabilidades'")
 
 await test('migração do Poço é idempotente', async () => {
   const sql = readFileSync(join(here, '..', 'poco-migration.sql'), 'utf8')
@@ -463,6 +469,8 @@ await test('Mesa: tirar e pôr um item dentro de uma seção', async () => {
 
 if (premiosDeTeste.length) await q('UPDATE poco_premios SET ativo = false WHERE id = ANY($1::uuid[])', [premiosDeTeste]).catch(() => {})
 await setCfg(originalCfg).catch(() => {})
+if (premiosDoDono.length) await q('UPDATE poco_premios SET ativo = true WHERE id = ANY($1::uuid[])', [premiosDoDono]).catch(() => {})
+await q("UPDATE devo_config SET provisional = $1 WHERE key = 'poco.probabilidades'", [provOriginal]).catch(() => {})
 await db.end()
 console.log(`\n${passed} ok, ${failures.length} falha(s)`)
 if (failures.length) {

@@ -10,6 +10,7 @@ import { parseAsset } from '../cosmeticos/art'
 import { BalaoChat, Emblema, FotoMoldurada } from '../cosmeticos/cosmetic-art'
 import { useMediaQuery } from '../hooks'
 import { Button } from '../kit/button'
+import { PacoteVisual } from '../casa/pacote-visual'
 import { Ampulheta, BaldePoco, CartaMini, LixoPoco, MoedaPoco, RecursoPoco } from './poco-itens'
 import { MolduraResultado } from './poco-ornamentos'
 
@@ -300,6 +301,7 @@ export function PremioArte({ r, nome, silhueta = false }: { r: PocoResultado; no
     if (meta.premio === 'tempo') return <>{halo}<Ampulheta className={cls} /></>
     if (meta.premio === 'carta') return <>{halo}<CartaMini className={cn(cls, 'p-4')} /></>
     if (r.item.kind === 'cosmetico') return <Cosmetico r={r} nome={nome} silhueta={silhueta} />
+    if (r.item.kind === 'pacote') return <>{halo}<PacoteVisual id={r.item.key.replace(/^pacote:/, '')} className="h-full w-auto py-2" /></>
     if (r.item.kind === 'moeda') return <>{halo}<MoedaPoco chave={r.item.key} raridade={r.item.raridade} tamanho={176} className={cn(cls, 'p-6')} /></>
     const rec = r.item.kind === 'capsula' ? 'capsula' : r.item.kind === 'essencia' ? 'essencia' : 'fragmento'
     return <>{halo}<RecursoPoco id={rec} chave={r.item.key} tamanho={176} className={cls} /></>

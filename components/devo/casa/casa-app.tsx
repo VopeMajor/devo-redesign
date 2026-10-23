@@ -827,7 +827,7 @@ function Pacotes({ d, agir, resgatar }: { d: CasaLiberado; agir: Agir; resgatar:
       setPremio(r.premio)
       playSfx('reveal')
       window.setTimeout(() => setVirada(true), 900)
-      if (r.premio.tipo === 'carta') void resgatar()
+      if (r.premio.tipo === 'carta' || r.premio.tipo === 'cartas') void resgatar()
     } catch (e) {
       playSfx('error')
       setErro((e as Error).message)
@@ -850,13 +850,13 @@ function Pacotes({ d, agir, resgatar }: { d: CasaLiberado; agir: Agir; resgatar:
             <div className="p-4">
               <div className="flex items-start gap-4">
                 <span className="relative w-[96px] shrink-0">
-                  <PacoteVisual id={p.id} colecao={p.colecao} className={cn(!n && 'opacity-45 grayscale-[0.6]')} />
+                  <PacoteVisual id={p.id} className={cn(!n && 'opacity-45 grayscale-[0.6]')} />
                   <span className="absolute -right-2 -top-2 grid min-w-9 place-items-center bg-dv-ink px-1.5 py-0.5 font-impact text-[20px] font-semibold leading-none text-dv-gold-bright shadow-[inset_0_0_0_1px_var(--dv-line-gold)] dv-tabular" aria-label={`Você tem ${n}`}>
                     ×{n}
                   </span>
                 </span>
                 <div className="min-w-0 flex-1 pt-1">
-                  <Rotulo>Coleção {p.colecao}</Rotulo>
+                  <Rotulo>{p.colecao ? `Coleção ${p.colecao}` : p.selo}{p.provisorio ? ' · provisório' : ''}</Rotulo>
                   <h3 className="mt-1 font-display text-[18px] font-semibold uppercase leading-tight tracking-[0.05em] text-dv-text">{p.nome}</h3>
                 </div>
               </div>
@@ -874,6 +874,12 @@ function Pacotes({ d, agir, resgatar }: { d: CasaLiberado; agir: Agir; resgatar:
                 <table className="mt-3 w-full text-left font-body text-[14px]">
                   <caption className="mb-1 text-left font-mono text-[10px] uppercase tracking-[0.14em] text-dv-text-3">Recompensas possíveis</caption>
                   <tbody>
+                    {p.cartas?.map((l) => (
+                      <tr key={l.rotulo} className="border-t border-dv-line">
+                        <td className="py-1.5 pr-2 text-dv-text">{l.rotulo}</td>
+                        <td className="py-1.5 text-right font-mono text-dv-text-2 dv-tabular">{l.opcoes.reduce((s, o) => s + o.chance, 0) >= 100 ? 'sempre' : `${l.opcoes.reduce((s, o) => s + o.chance, 0).toLocaleString('pt-BR')}%`}</td>
+                      </tr>
+                    ))}
                     {p.premios.map((x) => (
                       <tr key={x.rotulo} className="border-t border-dv-line">
                         <td className="py-1.5 pr-2 text-dv-text">{x.rotulo}</td>
@@ -899,7 +905,15 @@ function Pacotes({ d, agir, resgatar }: { d: CasaLiberado; agir: Agir; resgatar:
       >
         <div className="flex flex-col items-center gap-3 py-2">
           {!virada && premio ? (
-            <PacoteVisual id={aberto ?? 'xadrez'} colecao={PACOTES.find((x) => x.id === aberto)?.colecao ?? ''} rasgando className="w-[150px]" />
+            <PacoteVisual id={aberto ?? 'xadrez'} rasgando className="w-[150px]" />
+          ) : premio?.tipo === 'cartas' ? (
+            <ul className="grid w-full grid-cols-3 gap-2 sm:grid-cols-5">
+              {premio.cartas.map((k, i) => (
+                <li key={i} className="animate-dv-rise" style={{ animationDelay: `${i * 90}ms` }}>
+                  <CardFace cardId={k.cardId} className="w-full" />
+                </li>
+              ))}
+            </ul>
           ) : premio?.tipo === 'carta' ? (
             <DevoCard cardId={premio.cardId} faceDown={false} size="md" />
           ) : (
@@ -907,7 +921,7 @@ function Pacotes({ d, agir, resgatar }: { d: CasaLiberado; agir: Agir; resgatar:
               <p className="px-3 text-center font-display text-[16px] font-semibold uppercase tracking-[0.06em] text-dv-gold-bright">{virada ? (premio?.rotulo ?? '') : '?'}</p>
             </div>
           )}
-          {virada && <p className="font-body text-[14px] text-dv-text-2">{premio?.tipo === 'carta' ? 'A carta foi para o seu inventário.' : 'O item foi para o seu inventário.'}</p>}
+          {virada && <p className="font-body text-[14px] text-dv-text-2">{premio?.tipo === 'cartas' ? 'As cartas foram para o seu inventário.' : premio?.tipo === 'carta' ? 'A carta foi para o seu inventário.' : 'O item foi para o seu inventário.'}</p>}
         </div>
       </Dialog>
     </>

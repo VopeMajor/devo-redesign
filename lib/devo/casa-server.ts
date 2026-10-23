@@ -27,7 +27,7 @@ import {
 import { RecordError } from './errors'
 import { type Queryable, run, txAs, UUID_RE } from './fundacao-db'
 import { consumeItem, deliverCard, grantItem, pendingCardCount } from './inventario-server'
-import { escolherPorPeso, getPacote, itemDoPacote, PACOTES, type PacotePremio, PESO_CARTA, PESO_ITEM, sortearPremio } from './pacotes'
+import { escolherPorPeso, getPacote, itemDoPacote, type Pacote, PACOTES, type PacotePremio, PESO_CARTA, PESO_ITEM, sortearLinhas, sortearPremio } from './pacotes'
 import { requireActor, requireCan } from './permissoes-server'
 import { getConfig, hasUnlock, setConfig } from './progresso-server'
 import type { Rarity } from './types'
@@ -372,13 +372,33 @@ async function resolverPremio(c: Queryable, premio: PacotePremio): Promise<Pacot
     const itens = await run<{ key: string; name: string; rarity: string }>(
       c,
       "SELECT key, name, rarity FROM item_defs WHERE active AND kind = ANY($1) AND key NOT LIKE '%exemplo%' ORDER BY key",
-      [KINDS_ALEATORIOS],
+      [premio.tipo === 'item_aleatorio' && premio.kinds?.length ? premio.kinds : KINDS_ALEATORIOS],
     )
     const item = escolherPorPeso(itens, (x) => PESO_ITEM[x.rarity] ?? 0, r())
     if (item) return { tipo: 'item', item: item.key, rotulo: item.name, chance: premio.chance }
     throw new RecordError('O catálogo de itens está vazio.', 409)
   }
   return premio
+}
+
+/** Ordem das raridades que saem de pacote (a de baixo é o recuo quando falta carta da raridade sorteada). */
+const ESCADA: Rarity[] = ['comum', 'incomum', 'rara', 'ultra_rara', 'lendaria']
+
+/** Pacote de várias cartas: sorteia as linhas e escolhe cada carta entre todas as cartas do jogo daquela raridade. */
+function cartasDoPacote(p: Pacote): Extract<PacotePremio, { tipo: 'cartas' }> {
+  const r = () => randomInt(1_000_000) / 1_000_000
+  const cartas: { cardId: string; rotulo: string }[] = []
+  for (const l of sortearLinhas(p, r)) {
+    for (let n = 0; n < l.qtd; n++) {
+      let i = ESCADA.indexOf(l.raridade)
+      let lista = CARDS.filter((k) => k.rarity === l.raridade)
+      while (!lista.length && i > 0) lista = CARDS.filter((k) => k.rarity === ESCADA[--i])
+      const k = lista[Math.floor(r() * lista.length)]
+      if (k) cartas.push({ cardId: k.id, rotulo: k.name })
+    }
+  }
+  if (!cartas.length) throw new RecordError('Não há cartas para este pacote.', 409)
+  return { tipo: 'cartas', cartas, rotulo: `${cartas.length} cartas`, chance: 100 }
 }
 
 /** Abre um Pacote do inventário: consome 1 e sorteia pela tabela. Carta → card_deliveries; item → inventário. */
@@ -392,8 +412,10 @@ export async function abrirPacote(playerId: string, input: { pacote?: unknown; i
     await consumeItem({ playerId, item: itemDoPacote(p.id), quantidade: 1, motivo: 'pacote', ref: p.id, idem }, c).catch((err) => {
       throw err instanceof RecordError && err.status === 409 ? new RecordError('Você não tem este pacote.', 409) : err
     })
-    const premio = await resolverPremio(c, sortearPremio(p, randomInt(1_000_000) / 1_000_000))
-    if (premio.tipo === 'carta') await deliverCard({ playerId, cardId: premio.cardId, origem: p.nome, ref: p.id, idem: `${idem}:carta` }, c)
+    const premio = p.cartas?.length ? cartasDoPacote(p) : await resolverPremio(c, sortearPremio(p, randomInt(1_000_000) / 1_000_000))
+    if (premio.tipo === 'cartas') {
+      for (const [i, k] of premio.cartas.entries()) await deliverCard({ playerId, cardId: k.cardId, origem: p.nome, ref: p.id, idem: `${idem}:carta:${i}` }, c)
+    } else if (premio.tipo === 'carta') await deliverCard({ playerId, cardId: premio.cardId, origem: p.nome, ref: p.id, idem: `${idem}:carta` }, c)
     else if (premio.tipo === 'item') await grantItem({ playerId, item: premio.item, quantidade: 1, motivo: 'pacote', ref: p.id, idem: `${idem}:item` }, c)
     await run(c, 'INSERT INTO pacote_aberturas (player_id, pacote, premio, idem_key) VALUES ($1, $2, $3, $4)', [playerId, p.id, JSON.stringify(premio), idem])
     return { premio, cartasPendentes: await pendingCardCount(playerId, c) }

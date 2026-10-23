@@ -311,6 +311,28 @@ await test('pacote: a tabela soma 100 e as linhas aleatórias viram carta ou ite
   if (tabela) assert(Math.abs(tabela.reduce((s, x) => s + x.chance, 0) - 100) < 0.01, 'chances somam 100')
 })
 
+await test('Pacote Iniciante e Intermediário: várias cartas por pacote, todas entregues', async () => {
+  const pendentes = async () => Number((await q("SELECT count(*)::int AS n FROM card_deliveries WHERE player_id = $1 AND claimed_at IS NULL", [B.id]))[0].n)
+  await q("SELECT devo_item_grant($1, 'pacote:iniciante', 3, 'teste', NULL, NULL, NULL), devo_item_grant($1, 'pacote:intermediario', 2, 'teste', NULL, NULL, NULL), devo_item_grant($1, 'pacote:presente', 1, 'teste', NULL, NULL, NULL)", [B.id])
+  for (let i = 0; i < 3; i++) {
+    const p0 = await pendentes()
+    const r = await B.casa('pacote.abrir', { pacote: 'iniciante', idem: `pi-${sfx}-${i}` })
+    assert(r.status === 200 && r.json.premio.tipo === 'cartas', `iniciante ${i}: ${r.text}`)
+    const n = r.json.premio.cartas.length
+    assert(n >= 5 && n <= 6, `iniciante entrega 5 ou 6 cartas (${n})`)
+    assert((await pendentes()) - p0 === n, 'todas as cartas viraram entrega')
+  }
+  for (let i = 0; i < 2; i++) {
+    const r = await B.casa('pacote.abrir', { pacote: 'intermediario', idem: `pm-${sfx}-${i}` })
+    assert(r.status === 200 && r.json.premio.tipo === 'cartas', `intermediário ${i}: ${r.text}`)
+    const n = r.json.premio.cartas.length
+    assert(n >= 9 && n <= 12, `intermediário entrega 9 a 12 cartas (${n})`)
+  }
+  const pr = await B.casa('pacote.abrir', { pacote: 'presente', idem: `pp-${sfx}` })
+  assert(pr.status === 200 && (pr.json.premio.tipo === 'carta' || pr.json.premio.tipo === 'item'), `presente: ${pr.text}`)
+  if (pr.json.premio.tipo === 'item') assert(!pr.json.premio.item.startsWith('essencia'), 'presente não dá essência')
+})
+
 await test('peso das cartas: acima do limite não se inscreve; dentro do limite entra; troca também respeita o peso', async () => {
   const r = await O.post('/api/record', { action: 'create', title: `Peso ${sfx} b`, startsAt: Date.now() + 86400_000, pesoMaximo: 5, admission: 'livre' })
   assert(r.status === 200, `convocar: ${r.text.slice(0, 200)}`)

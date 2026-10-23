@@ -1,6 +1,7 @@
 'use client'
 
 import type { CSSProperties } from 'react'
+import { getPacote } from '@/lib/devo/pacotes'
 import { cn } from '@/lib/utils'
 
 /**
@@ -26,19 +27,24 @@ const CLIP_CORPO = `polygon(0% 0%, 100% 0%, ${dentes(100, 97.5, true)})`
 export function PacoteVisual({
   id,
   colecao,
-  raro = true,
+  raro,
   rasgando = false,
   className,
   style,
 }: {
   id: string
-  colecao: string
+  /** Nome grande no envelope (padrão: a coleção do pacote, ou o nome dele). */
+  colecao?: string
   raro?: boolean
   rasgando?: boolean
   className?: string
   style?: CSSProperties
 }) {
   const arte = ARTE[id]
+  const def = getPacote(id)
+  const titulo = colecao || def?.colecao || def?.nome.replace(/^Pacote /, '') || ''
+  const selo = def?.selo ?? 'Pacote · Coleção'
+  const ehRaro = raro ?? def?.raro ?? true
   return (
     <div className={cn('pv-raiz relative aspect-[5/8] [container-type:inline-size]', className)} style={style} aria-hidden="true">
       <style>{PV_CSS}</style>
@@ -63,7 +69,7 @@ export function PacoteVisual({
             )}
             <span className="absolute inset-0 bg-[linear-gradient(180deg,rgba(14,13,18,0.1)_40%,rgba(14,13,18,0.9))]" />
             {/* selo de raridade no alto */}
-            {raro && (
+            {ehRaro && (
               <span className="absolute left-1/2 top-[4%] flex -translate-x-1/2 items-center gap-[1.5cqw] bg-[rgba(14,13,18,0.75)] px-[3cqw] py-[1.2cqw] font-mono text-[4.2cqw] uppercase tracking-[0.2em] text-[#d9d2f5] shadow-[inset_0_0_0_1px_rgba(185,174,234,0.7)]">
                 <span className="size-[2.4cqw] rotate-45 bg-[#b9aeea] shadow-[0_0_6px_#b9aeea]" />
                 Raro
@@ -72,8 +78,8 @@ export function PacoteVisual({
           </div>
           {/* faixa do nome */}
           <div className="absolute inset-x-0 bottom-[5%] flex h-[12%] flex-col items-center justify-center">
-            <span className="font-mono text-[3.6cqw] uppercase tracking-[0.3em] text-[#9a9184]">Pacote · Coleção</span>
-            <span className="mt-[0.6cqw] font-display text-[9cqw] font-semibold uppercase leading-none tracking-[0.12em] text-[#f4efe6]">{colecao}</span>
+            <span className="font-mono text-[3.6cqw] uppercase tracking-[0.3em] text-[#9a9184]">{selo}</span>
+            <span className={cn('mt-[0.6cqw] font-display font-semibold uppercase leading-none tracking-[0.1em] text-[#f4efe6]', titulo.length > 9 ? 'text-[7cqw]' : 'text-[9cqw]')}>{titulo}</span>
           </div>
           {/* ponta de alumínio de baixo */}
           <span className="absolute inset-x-0 bottom-0 h-[4.5%] overflow-hidden">

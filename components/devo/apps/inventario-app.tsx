@@ -201,7 +201,7 @@ function LinhaItem({ item }: { item: InventoryItem }) {
   return (
     <li className="flex min-h-16 items-center gap-3 border-b border-dv-line py-2.5 last:border-b-0">
       {pacote ? (
-        <PacoteVisual id={pacote} colecao={pacote === 'xadrez' ? 'Xadrez' : ''} className="w-11 shrink-0" />
+        <PacoteVisual id={pacote} className="w-11 shrink-0" />
       ) : essencia ? (
         // eslint-disable-next-line @next/next/no-img-element
         <img {...essencia} alt="" aria-hidden="true" draggable={false} className="size-13 shrink-0 object-contain drop-shadow-[0_4px_10px_rgba(0,0,0,0.6)]" />
