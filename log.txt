@@ -1,0 +1,10 @@
+[doce-bolodepote] v01: @cf/black-forest-labs/flux-2-klein-9b seed=71021 1024x1024 passos=None (~1,364 neurônios)
+    ok em 2.7s, 1024x1024
+[doce-bolodepote] v02: @cf/black-forest-labs/flux-2-klein-9b seed=71022 1024x1024 passos=None (~1,364 neurônios)
+    ok em 2.3s, 1024x1024
+[doce-bolodepote] v03: @cf/black-forest-labs/flux-2-klein-9b seed=71023 1024x1024 passos=None (~1,364 neurônios)
+    nova tentativa em 15s
+    ok em 17.6s, 1024x1024
+[doce-bolodepote] v01: rembg:birefnet-general; sem avisos
+[doce-bolodepote] v02: rembg:birefnet-general; sem avisos
+[doce-bolodepote] v03: rembg:birefnet-general; sem avisos

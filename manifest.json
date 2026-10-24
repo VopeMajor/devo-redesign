@@ -1,0 +1,96 @@
+{
+  "pedido": "doce-bolodepote",
+  "titulo": "Bolo de pote",
+  "tipo": "emblema",
+  "tamanho_final": 1024,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 71021,
+      "passos": null,
+      "segundos": 2.7,
+      "neuronios_estimados": 1364,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "doce-bolodepote--v01--1024.png",
+          "bytes": 714881
+        },
+        {
+          "arquivo": "doce-bolodepote--v01--1024.webp",
+          "bytes": 121488
+        },
+        {
+          "arquivo": "doce-bolodepote--v01--768.webp",
+          "bytes": 64982
+        },
+        {
+          "arquivo": "doce-bolodepote--v01--512.webp",
+          "bytes": 36672
+        }
+      ],
+      "segundos_pos": 35.9,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 71022,
+      "passos": null,
+      "segundos": 2.3,
+      "neuronios_estimados": 1364,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "doce-bolodepote--v02--1024.png",
+          "bytes": 671126
+        },
+        {
+          "arquivo": "doce-bolodepote--v02--1024.webp",
+          "bytes": 106776
+        },
+        {
+          "arquivo": "doce-bolodepote--v02--768.webp",
+          "bytes": 55486
+        },
+        {
+          "arquivo": "doce-bolodepote--v02--512.webp",
+          "bytes": 31874
+        }
+      ],
+      "segundos_pos": 30.1,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 71023,
+      "passos": null,
+      "segundos": 17.6,
+      "neuronios_estimados": 1364,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "doce-bolodepote--v03--1024.png",
+          "bytes": 799720
+        },
+        {
+          "arquivo": "doce-bolodepote--v03--1024.webp",
+          "bytes": 135612
+        },
+        {
+          "arquivo": "doce-bolodepote--v03--768.webp",
+          "bytes": 72338
+        },
+        {
+          "arquivo": "doce-bolodepote--v03--512.webp",
+          "bytes": 41380
+        }
+      ],
+      "segundos_pos": 29.8,
+      "avisos": []
+    }
+  ]
+}
