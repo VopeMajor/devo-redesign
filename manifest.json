@@ -1,0 +1,96 @@
+{
+  "pedido": "doce-tortalimao",
+  "titulo": "Torta de limão",
+  "tipo": "emblema",
+  "tamanho_final": 1024,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 71031,
+      "passos": null,
+      "segundos": 2.3,
+      "neuronios_estimados": 1364,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "doce-tortalimao--v01--1024.png",
+          "bytes": 674035
+        },
+        {
+          "arquivo": "doce-tortalimao--v01--1024.webp",
+          "bytes": 107578
+        },
+        {
+          "arquivo": "doce-tortalimao--v01--768.webp",
+          "bytes": 55056
+        },
+        {
+          "arquivo": "doce-tortalimao--v01--512.webp",
+          "bytes": 31122
+        }
+      ],
+      "segundos_pos": 34.4,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 71032,
+      "passos": null,
+      "segundos": 2.2,
+      "neuronios_estimados": 1364,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "doce-tortalimao--v02--1024.png",
+          "bytes": 602453
+        },
+        {
+          "arquivo": "doce-tortalimao--v02--1024.webp",
+          "bytes": 96690
+        },
+        {
+          "arquivo": "doce-tortalimao--v02--768.webp",
+          "bytes": 49400
+        },
+        {
+          "arquivo": "doce-tortalimao--v02--512.webp",
+          "bytes": 28570
+        }
+      ],
+      "segundos_pos": 29.0,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 71033,
+      "passos": null,
+      "segundos": 2.6,
+      "neuronios_estimados": 1364,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "doce-tortalimao--v03--1024.png",
+          "bytes": 663519
+        },
+        {
+          "arquivo": "doce-tortalimao--v03--1024.webp",
+          "bytes": 107754
+        },
+        {
+          "arquivo": "doce-tortalimao--v03--768.webp",
+          "bytes": 55550
+        },
+        {
+          "arquivo": "doce-tortalimao--v03--512.webp",
+          "bytes": 32148
+        }
+      ],
+      "segundos_pos": 28.8,
+      "avisos": []
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+[doce-tortalimao] v01: @cf/black-forest-labs/flux-2-klein-9b seed=71031 1024x1024 passos=None (~1,364 neurônios)
+    ok em 2.3s, 1024x1024
+[doce-tortalimao] v02: @cf/black-forest-labs/flux-2-klein-9b seed=71032 1024x1024 passos=None (~1,364 neurônios)
+    ok em 2.2s, 1024x1024
+[doce-tortalimao] v03: @cf/black-forest-labs/flux-2-klein-9b seed=71033 1024x1024 passos=None (~1,364 neurônios)
+    ok em 2.6s, 1024x1024
+[doce-tortalimao] v01: rembg:birefnet-general; sem avisos
+[doce-tortalimao] v02: rembg:birefnet-general; sem avisos
+[doce-tortalimao] v03: rembg:birefnet-general; sem avisos
