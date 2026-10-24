@@ -1,0 +1,96 @@
+{
+  "pedido": "doce-morango",
+  "titulo": "Bombom de morango",
+  "tipo": "emblema",
+  "tamanho_final": 1024,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 71051,
+      "passos": null,
+      "segundos": 62.5,
+      "neuronios_estimados": 1364,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "doce-morango--v01--1024.png",
+          "bytes": 938884
+        },
+        {
+          "arquivo": "doce-morango--v01--1024.webp",
+          "bytes": 118338
+        },
+        {
+          "arquivo": "doce-morango--v01--768.webp",
+          "bytes": 60450
+        },
+        {
+          "arquivo": "doce-morango--v01--512.webp",
+          "bytes": 36946
+        }
+      ],
+      "segundos_pos": 35.4,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 71052,
+      "passos": null,
+      "segundos": 17.5,
+      "neuronios_estimados": 1364,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "doce-morango--v02--1024.png",
+          "bytes": 826268
+        },
+        {
+          "arquivo": "doce-morango--v02--1024.webp",
+          "bytes": 103174
+        },
+        {
+          "arquivo": "doce-morango--v02--768.webp",
+          "bytes": 53864
+        },
+        {
+          "arquivo": "doce-morango--v02--512.webp",
+          "bytes": 32602
+        }
+      ],
+      "segundos_pos": 29.6,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 71053,
+      "passos": null,
+      "segundos": 17.3,
+      "neuronios_estimados": 1364,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "doce-morango--v03--1024.png",
+          "bytes": 739927
+        },
+        {
+          "arquivo": "doce-morango--v03--1024.webp",
+          "bytes": 96856
+        },
+        {
+          "arquivo": "doce-morango--v03--768.webp",
+          "bytes": 51050
+        },
+        {
+          "arquivo": "doce-morango--v03--512.webp",
+          "bytes": 30724
+        }
+      ],
+      "segundos_pos": 29.2,
+      "avisos": []
+    }
+  ]
+}
