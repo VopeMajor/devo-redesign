@@ -1,0 +1,30 @@
+{
+  "id": "doce-banoffee",
+  "titulo": "Banoffee",
+  "tipo": "emblema",
+  "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+  "prompt": "Appetizing professional food photography of Brazilian homemade sweets, isolated on a plain flat light gray background, one single subject centered, soft natural window light from the upper left, gentle soft shadow only directly under the object, shallow depth of field, fresh, glossy and delicious, warm pastel tones (cream, peach, soft pink, sage green accents), high detail. Absolutely no text, no letters, no labels, no logos, no hands, no people. A small round banoffee pie in a fluted tart shell: caramel dulce de leche layer, sliced bananas, whipped cream swirls and cocoa powder dusting on top.",
+  "negative": "",
+  "largura": 1024,
+  "altura": 1024,
+  "variacoes": [
+    {
+      "seed": 71061
+    },
+    {
+      "seed": 71062
+    },
+    {
+      "seed": 71063
+    }
+  ],
+  "pos": {
+    "remover_fundo": true,
+    "tamanho_final": 1024,
+    "margem": 0.04,
+    "derivados": [
+      768,
+      512
+    ]
+  }
+}

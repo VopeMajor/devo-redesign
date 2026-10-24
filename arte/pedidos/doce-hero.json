@@ -1,0 +1,30 @@
+{
+  "id": "doce-hero",
+  "titulo": "Doce Quintal — destaque",
+  "tipo": "emblema",
+  "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+  "prompt": "Appetizing professional food photography of Brazilian homemade sweets, isolated on a plain flat light gray background, one single subject centered, soft natural window light from the upper left, gentle soft shadow only directly under the object, shallow depth of field, fresh, glossy and delicious, warm pastel tones (cream, peach, soft pink, sage green accents), high detail. Absolutely no text, no letters, no labels, no logos, no hands, no people. A tall stack of assorted Brazilian party sweets on a small cream ceramic cake stand: glossy chocolate brigadeiros with sprinkles, pink strawberry beijinhos rolled in sugar, a few white bem-casados wrapped in tissue paper, fresh strawberries and mint leaves, a couple of crumbs and sprinkles falling around.",
+  "negative": "",
+  "largura": 1024,
+  "altura": 1024,
+  "variacoes": [
+    {
+      "seed": 71001
+    },
+    {
+      "seed": 71002
+    },
+    {
+      "seed": 71003
+    }
+  ],
+  "pos": {
+    "remover_fundo": true,
+    "tamanho_final": 1024,
+    "margem": 0.04,
+    "derivados": [
+      768,
+      512
+    ]
+  }
+}

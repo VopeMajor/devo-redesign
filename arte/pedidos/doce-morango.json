@@ -1,0 +1,30 @@
+{
+  "id": "doce-morango",
+  "titulo": "Bombom de morango",
+  "tipo": "emblema",
+  "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+  "prompt": "Appetizing professional food photography of Brazilian homemade sweets, isolated on a plain flat light gray background, one single subject centered, soft natural window light from the upper left, gentle soft shadow only directly under the object, shallow depth of field, fresh, glossy and delicious, warm pastel tones (cream, peach, soft pink, sage green accents), high detail. Absolutely no text, no letters, no labels, no logos, no hands, no people. A clear plastic dessert cup of Brazilian strawberry bonbon dessert (bombom de morango no pote): layers of white condensed milk cream, whole fresh strawberries and a thick glossy chocolate ganache on top, seen from a slight angle.",
+  "negative": "",
+  "largura": 1024,
+  "altura": 1024,
+  "variacoes": [
+    {
+      "seed": 71051
+    },
+    {
+      "seed": 71052
+    },
+    {
+      "seed": 71053
+    }
+  ],
+  "pos": {
+    "remover_fundo": true,
+    "tamanho_final": 1024,
+    "margem": 0.04,
+    "derivados": [
+      768,
+      512
+    ]
+  }
+}
