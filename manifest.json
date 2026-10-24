@@ -1,0 +1,97 @@
+{
+  "pedido": "doce-hero",
+  "titulo": "Doce Quintal — destaque",
+  "tipo": "emblema",
+  "tamanho_final": 1024,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 71001,
+      "passos": null,
+      "segundos": 62.6,
+      "neuronios_estimados": 1364,
+      "fundo": "rembg:birefnet-general",
+      "ilhas_removidas": 0,
+      "arquivos": [
+        {
+          "arquivo": "doce-hero--v01--1024.png",
+          "bytes": 655072
+        },
+        {
+          "arquivo": "doce-hero--v01--1024.webp",
+          "bytes": 121724
+        },
+        {
+          "arquivo": "doce-hero--v01--768.webp",
+          "bytes": 67128
+        },
+        {
+          "arquivo": "doce-hero--v01--512.webp",
+          "bytes": 38478
+        }
+      ],
+      "segundos_pos": 35.5,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 71002,
+      "passos": null,
+      "segundos": 2.3,
+      "neuronios_estimados": 1364,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "doce-hero--v02--1024.png",
+          "bytes": 689389
+        },
+        {
+          "arquivo": "doce-hero--v02--1024.webp",
+          "bytes": 125056
+        },
+        {
+          "arquivo": "doce-hero--v02--768.webp",
+          "bytes": 68004
+        },
+        {
+          "arquivo": "doce-hero--v02--512.webp",
+          "bytes": 39614
+        }
+      ],
+      "segundos_pos": 30.4,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 71003,
+      "passos": null,
+      "segundos": 17.4,
+      "neuronios_estimados": 1364,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "doce-hero--v03--1024.png",
+          "bytes": 657582
+        },
+        {
+          "arquivo": "doce-hero--v03--1024.webp",
+          "bytes": 113478
+        },
+        {
+          "arquivo": "doce-hero--v03--768.webp",
+          "bytes": 61786
+        },
+        {
+          "arquivo": "doce-hero--v03--512.webp",
+          "bytes": 35862
+        }
+      ],
+      "segundos_pos": 29.4,
+      "avisos": []
+    }
+  ]
+}
