@@ -1,0 +1,11 @@
+[doce-cookies] v01: @cf/black-forest-labs/flux-2-klein-9b seed=71041 1024x1024 passos=None (~1,364 neurônios)
+    ok em 2.4s, 1024x1024
+[doce-cookies] v02: @cf/black-forest-labs/flux-2-klein-9b seed=71042 1024x1024 passos=None (~1,364 neurônios)
+    nova tentativa em 15s
+    ok em 17.4s, 1024x1024
+[doce-cookies] v03: @cf/black-forest-labs/flux-2-klein-9b seed=71043 1024x1024 passos=None (~1,364 neurônios)
+    nova tentativa em 15s
+    ok em 18.3s, 1024x1024
+[doce-cookies] v01: rembg:birefnet-general; sem avisos
+[doce-cookies] v02: rembg:birefnet-general; sem avisos
+[doce-cookies] v03: rembg:birefnet-general; sem avisos

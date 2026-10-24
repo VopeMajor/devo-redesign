@@ -1,0 +1,96 @@
+{
+  "pedido": "doce-cookies",
+  "titulo": "Cookies",
+  "tipo": "emblema",
+  "tamanho_final": 1024,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 71041,
+      "passos": null,
+      "segundos": 2.4,
+      "neuronios_estimados": 1364,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "doce-cookies--v01--1024.png",
+          "bytes": 1159648
+        },
+        {
+          "arquivo": "doce-cookies--v01--1024.webp",
+          "bytes": 181276
+        },
+        {
+          "arquivo": "doce-cookies--v01--768.webp",
+          "bytes": 94306
+        },
+        {
+          "arquivo": "doce-cookies--v01--512.webp",
+          "bytes": 54902
+        }
+      ],
+      "segundos_pos": 35.4,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 71042,
+      "passos": null,
+      "segundos": 17.4,
+      "neuronios_estimados": 1364,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "doce-cookies--v02--1024.png",
+          "bytes": 1092082
+        },
+        {
+          "arquivo": "doce-cookies--v02--1024.webp",
+          "bytes": 176636
+        },
+        {
+          "arquivo": "doce-cookies--v02--768.webp",
+          "bytes": 93568
+        },
+        {
+          "arquivo": "doce-cookies--v02--512.webp",
+          "bytes": 53394
+        }
+      ],
+      "segundos_pos": 29.9,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 71043,
+      "passos": null,
+      "segundos": 18.3,
+      "neuronios_estimados": 1364,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "doce-cookies--v03--1024.png",
+          "bytes": 1140614
+        },
+        {
+          "arquivo": "doce-cookies--v03--1024.webp",
+          "bytes": 185850
+        },
+        {
+          "arquivo": "doce-cookies--v03--768.webp",
+          "bytes": 95990
+        },
+        {
+          "arquivo": "doce-cookies--v03--512.webp",
+          "bytes": 53952
+        }
+      ],
+      "segundos_pos": 29.4,
+      "avisos": []
+    }
+  ]
+}

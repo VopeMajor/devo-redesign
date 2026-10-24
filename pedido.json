@@ -1,0 +1,54 @@
+{
+  "id": "doce-cookies",
+  "titulo": "Cookies",
+  "tipo": "emblema",
+  "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+  "prompt": "Appetizing professional food photography of Brazilian homemade sweets, isolated on a plain flat light gray background, one single subject centered, soft natural window light from the upper left, gentle soft shadow only directly under the object, shallow depth of field, fresh, glossy and delicious, warm pastel tones (cream, peach, soft pink, sage green accents), high detail. Absolutely no text, no letters, no labels, no logos, no hands, no people. A small stack of three thick soft-baked chocolate chip cookies with melted chocolate chunks, slightly broken on top showing the gooey center, a few crumbs around.",
+  "negative": "",
+  "largura": 1024,
+  "altura": 1024,
+  "variacoes": [
+    {
+      "seed": 71041,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "passos": null,
+      "largura": 1024,
+      "altura": 1024,
+      "prompt_extra": "",
+      "n": 1
+    },
+    {
+      "seed": 71042,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "passos": null,
+      "largura": 1024,
+      "altura": 1024,
+      "prompt_extra": "",
+      "n": 2
+    },
+    {
+      "seed": 71043,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "passos": null,
+      "largura": 1024,
+      "altura": 1024,
+      "prompt_extra": "",
+      "n": 3
+    }
+  ],
+  "pos": {
+    "remover_fundo": true,
+    "tamanho_final": 1024,
+    "margem": 0.04,
+    "derivados": [
+      768,
+      512
+    ],
+    "modelo_fundo": "birefnet-general",
+    "fundo": "liso",
+    "camadas": []
+  },
+  "passos": null,
+  "guidance": null,
+  "referencias": []
+}
