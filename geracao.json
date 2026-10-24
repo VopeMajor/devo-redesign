@@ -1,0 +1,50 @@
+{
+  "pedido": "conceito-mesa",
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 90101,
+      "passos": null,
+      "largura": 768,
+      "altura": 1536,
+      "neuronios_estimados": 1386,
+      "ok": true,
+      "segundos": 2.9,
+      "tamanho_real": [
+        768,
+        1536
+      ]
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 90102,
+      "passos": null,
+      "largura": 768,
+      "altura": 1536,
+      "neuronios_estimados": 1386,
+      "ok": true,
+      "segundos": 2.4,
+      "tamanho_real": [
+        768,
+        1536
+      ]
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 90103,
+      "passos": null,
+      "largura": 768,
+      "altura": 1536,
+      "neuronios_estimados": 1386,
+      "ok": true,
+      "segundos": 2.9,
+      "tamanho_real": [
+        768,
+        1536
+      ]
+    }
+  ]
+}

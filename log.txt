@@ -1,0 +1,9 @@
+[conceito-mesa] v01: @cf/black-forest-labs/flux-2-klein-9b seed=90101 768x1536 passos=None (~1,386 neurônios)
+    ok em 2.9s, 768x1536
+[conceito-mesa] v02: @cf/black-forest-labs/flux-2-klein-9b seed=90102 768x1536 passos=None (~1,386 neurônios)
+    ok em 2.4s, 768x1536
+[conceito-mesa] v03: @cf/black-forest-labs/flux-2-klein-9b seed=90103 768x1536 passos=None (~1,386 neurônios)
+    ok em 2.9s, 768x1536
+[conceito-mesa] v01: mantido; sem avisos
+[conceito-mesa] v02: mantido; sem avisos
+[conceito-mesa] v03: mantido; sem avisos

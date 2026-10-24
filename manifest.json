@@ -1,0 +1,96 @@
+{
+  "pedido": "conceito-mesa",
+  "titulo": "Conceito: tela inicial como mesa",
+  "tipo": "ilustracao",
+  "tamanho_final": 1536,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 90101,
+      "passos": null,
+      "segundos": 2.9,
+      "neuronios_estimados": 1386,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "conceito-mesa--v01--1536.png",
+          "bytes": 2263063
+        },
+        {
+          "arquivo": "conceito-mesa--v01--1536.webp",
+          "bytes": 419830
+        },
+        {
+          "arquivo": "conceito-mesa--v01--1024.webp",
+          "bytes": 146072
+        },
+        {
+          "arquivo": "conceito-mesa--v01--768.webp",
+          "bytes": 87268
+        }
+      ],
+      "segundos_pos": 2.1,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 90102,
+      "passos": null,
+      "segundos": 2.4,
+      "neuronios_estimados": 1386,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "conceito-mesa--v02--1536.png",
+          "bytes": 2178030
+        },
+        {
+          "arquivo": "conceito-mesa--v02--1536.webp",
+          "bytes": 375824
+        },
+        {
+          "arquivo": "conceito-mesa--v02--1024.webp",
+          "bytes": 133240
+        },
+        {
+          "arquivo": "conceito-mesa--v02--768.webp",
+          "bytes": 80050
+        }
+      ],
+      "segundos_pos": 2.2,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 90103,
+      "passos": null,
+      "segundos": 2.9,
+      "neuronios_estimados": 1386,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "conceito-mesa--v03--1536.png",
+          "bytes": 2188625
+        },
+        {
+          "arquivo": "conceito-mesa--v03--1536.webp",
+          "bytes": 384056
+        },
+        {
+          "arquivo": "conceito-mesa--v03--1024.webp",
+          "bytes": 136308
+        },
+        {
+          "arquivo": "conceito-mesa--v03--768.webp",
+          "bytes": 81532
+        }
+      ],
+      "segundos_pos": 2.1,
+      "avisos": []
+    }
+  ]
+}
