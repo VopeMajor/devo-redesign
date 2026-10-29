@@ -311,8 +311,26 @@ def el_online():
                   f'<g fill="#c9f3ff">{rects}</g>')
 
 
+def sticker_filter(id_, color, radius):
+    return (f'<filter id="{id_}" x="-15%" y="-15%" width="130%" height="130%">'
+            f'<feMorphology in="SourceAlpha" operator="dilate" radius="{radius}" result="d"/>'
+            f'<feFlood flood-color="{color}"/><feComposite in2="d" operator="in" result="o"/>'
+            f'<feDropShadow in="o" dx="0" dy="8" stdDeviation="9" flood-opacity=".35" result="os"/>'
+            f'<feMerge><feMergeNode in="os"/><feMergeNode in="SourceGraphic"/></feMerge></filter>')
+
+
 DEFS = ('<defs><filter id="sh" x="-20%" y="-20%" width="140%" height="140%">'
-        '<feDropShadow dx="0" dy="6" stdDeviation="8" flood-opacity=".28"/></filter></defs>')
+        '<feDropShadow dx="0" dy="6" stdDeviation="8" flood-opacity=".28"/></filter>'
+        + sticker_filter("stkW", "#fff", 8) + sticker_filter("stkK", INK, 3) + '</defs>')
+
+
+def png_sticker(name, height, filt):
+    from PIL import Image
+    p = os.path.join(ROOT, "assets", f"{name}.png")
+    iw, ih = Image.open(p).size
+    w, h = round(height * iw / ih), height
+    data = base64.b64encode(open(p, "rb").read()).decode()
+    return w, h, f'<image href="data:image/png;base64,{data}" width="{w}" height="{h}" filter="url(#{filt})"/>'
 
 # nome, função, x, y, rotação — ordem = camadas (de trás pra frente)
 LAYOUT = [
@@ -323,16 +341,17 @@ LAYOUT = [
     ("eye", el_eye, 870, 0, 0),
     ("starburst", el_burst, 420, 30, 8),
     ("skull_headphones", el_skull, 664, 30, -8),
-    ("cybersigil", el_sigil, 1170, 190, 4),
+    ("cybersigil", el_sigil, 1250, 330, 10),
     ("notepad_window", el_notepad, 670, 220, 0),
     ("photo_setup", el_photo_setup, 70, 390, 0),
     ("scribble", el_scribble, 420, 230, -10),
     ("context_menu", el_menu, 430, 488, 0),
     ("graffiti_tiles", el_tiles, 1000, 690, 0),
-    ("winamp", el_player, 1110, 470, 5),
-    ("boot_window", el_boot, 30, 790, -3),
-    ("guitar", el_guitar, 820, 520, -32),
-    ("online_now", el_online, 330, 826, 0),
+    ("guitar_angel", lambda: png_sticker("guitar_angel", 600, "stkK"), 1215, 120, 6),
+    ("winamp", el_player, 6, 770, -3),
+    ("boot_window", el_boot, 10, 36, -4),
+    ("guitar_scythe", lambda: png_sticker("guitar_scythe", 360, "stkW"), 800, 590, 30),
+    ("online_now", el_online, 372, 826, 0),
 ]
 
 
@@ -345,7 +364,7 @@ def main():
     pad = 30
     for name, fn, x, y, rot in LAYOUT:
         w, h, inner = fn()
-        if name != "bg_checker":
+        if name != "bg_checker" and not name.startswith("guitar_"):
             open(os.path.join(ROOT, "assets", f"{name}.svg"), "w").write(
                 svg(w + 2 * pad, h + 2 * pad, f'<g transform="translate({pad},{pad})">{inner}</g>'))
         comp += f'<g transform="translate({x},{y}) rotate({rot} {w/2} {h/2})">{inner}</g>'
