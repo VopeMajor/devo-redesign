@@ -16,3 +16,8 @@ node_modules
 # Banco local de teste
 .devo-local-db/
 shots/
+
+# Prospector: leads, chave da API e config pessoal ficam só na sua máquina
+prospector/dados/
+prospector/config.json
+prospector/.env

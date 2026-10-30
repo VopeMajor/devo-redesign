@@ -1,0 +1,23 @@
+{
+  "seuNome": "Seu Nome",
+  "portfolio": "https://seu-portfolio.com.br",
+  "oferta": "um site profissional, rápido e que aparece no Google",
+  "limiteDiario": 30,
+  "diasParaFollowUp": 3,
+  "apenasCelular": true,
+  "mensagens": {
+    "sem_site": [
+      "Olá, tudo bem? Aqui é {seuNome}, eu crio sites para negócios de {cidade}. Encontrei a {empresa} no Google Maps{avaliacao} e reparei que vocês ainda não têm um site.\n\nHoje muita gente pesquisa no Google antes de escolher um(a) {nicho}, e quem tem site passa mais confiança e recebe mais contatos. Posso te mostrar um exemplo de como ficaria o site da {empresa}? Alguns trabalhos meus: {portfolio}\n\nSe não tiver interesse, é só me avisar que não mando mais mensagens.",
+      "Oi! Meu nome é {seuNome}. Vi a {empresa} no Google{avaliacao} e notei que ainda não existe um site de vocês.\n\nEu faço {oferta}, com botão direto para o WhatsApp e endereço no mapa. Posso montar uma prévia gratuita para vocês verem como ficaria? Meu portfólio: {portfolio}\n\nSe preferir não receber mensagens, é só responder \"não\" que eu não volto a escrever.",
+      "Olá! Sou {seuNome}, desenvolvo sites aqui na região de {cidade}. Pesquisando por {nicho} na cidade, achei a {empresa}{avaliacao}, mas não encontrei um site de vocês.\n\nUm site simples já ajuda clientes novos a acharem vocês e verem serviços, horários e localização. Quer que eu te mande uma ideia de como ficaria? Exemplos: {portfolio}\n\nSe não for do seu interesse, é só avisar e eu não envio mais nada."
+    ],
+    "so_rede_social": [
+      "Olá, tudo bem? Aqui é {seuNome}, eu crio sites para negócios de {cidade}. Vi a {empresa} no Google Maps{avaliacao} e reparei que o link de vocês leva só para a rede social.\n\nUm site próprio aparece melhor nas buscas do Google e passa mais confiança para quem ainda não conhece vocês, e a rede social continua junto. Posso te mostrar um exemplo de como ficaria? Trabalhos meus: {portfolio}\n\nSe não tiver interesse, é só me avisar que não mando mais mensagens.",
+      "Oi! Meu nome é {seuNome}. Encontrei a {empresa} no Google{avaliacao}, e o perfil de vocês aponta só para a rede social.\n\nEu faço {oferta}, que funciona junto com o Instagram e traz clientes que procuram no Google. Posso montar uma prévia gratuita para vocês verem? Portfólio: {portfolio}\n\nSe preferir não receber mensagens, é só responder \"não\" que eu não volto a escrever."
+    ],
+    "followup": [
+      "Oi, tudo bem? Passando só para saber se você viu minha mensagem sobre o site da {empresa}. Se quiser, preparo uma prévia sem compromisso. Se não for o momento, sem problemas!",
+      "Olá! Só retomando o contato sobre o site da {empresa}. Ainda posso te mostrar um exemplo de como ficaria, sem custo. Se não tiver interesse, me avisa que eu encerro por aqui."
+    ]
+  }
+}
