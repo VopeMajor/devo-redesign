@@ -1,0 +1,113 @@
+{
+  "pedido": "v2-npc-javali-corpo-r2",
+  "titulo": "DEVO v2 — Javali, corpo inteiro (2º lote: o filtro recusou o 1º; texto ajustado e klein-4b de reserva)",
+  "tipo": "ilustracao",
+  "tamanho_final": 1536,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 9871,
+      "passos": null,
+      "neuronios_estimados": 1455,
+      "erro": "HTTP 400 — 3030: AiError: AiError: Your output has been flagged. Please choose another prompt / input image combination (acb324f4-4219-4ffb-aba7-02565a415180)"
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 9872,
+      "passos": null,
+      "neuronios_estimados": 1455,
+      "erro": "HTTP 400 — 3030: AiError: AiError: Your output has been flagged. Please choose another prompt / input image combination (46ae41a2-cbbf-4e23-92b1-eb1fd4de20e4)"
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 9873,
+      "passos": null,
+      "segundos": 10.2,
+      "neuronios_estimados": 156,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "v2-npc-javali-corpo-r2--v03--1536.png",
+          "bytes": 665504
+        },
+        {
+          "arquivo": "v2-npc-javali-corpo-r2--v03--1536.webp",
+          "bytes": 149224
+        },
+        {
+          "arquivo": "v2-npc-javali-corpo-r2--v03--1024.webp",
+          "bytes": 77626
+        },
+        {
+          "arquivo": "v2-npc-javali-corpo-r2--v03--512.webp",
+          "bytes": 31898
+        }
+      ],
+      "segundos_pos": 32.6,
+      "avisos": []
+    },
+    {
+      "nome": "v04",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 9874,
+      "passos": null,
+      "segundos": 14.4,
+      "neuronios_estimados": 156,
+      "fundo": "rembg:birefnet-general",
+      "ilhas_removidas": 1,
+      "arquivos": [
+        {
+          "arquivo": "v2-npc-javali-corpo-r2--v04--1536.png",
+          "bytes": 681302
+        },
+        {
+          "arquivo": "v2-npc-javali-corpo-r2--v04--1536.webp",
+          "bytes": 130356
+        },
+        {
+          "arquivo": "v2-npc-javali-corpo-r2--v04--1024.webp",
+          "bytes": 68260
+        },
+        {
+          "arquivo": "v2-npc-javali-corpo-r2--v04--512.webp",
+          "bytes": 28626
+        }
+      ],
+      "segundos_pos": 26.1,
+      "avisos": []
+    },
+    {
+      "nome": "v05",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 9875,
+      "passos": null,
+      "segundos": 9.7,
+      "neuronios_estimados": 156,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "v2-npc-javali-corpo-r2--v05--1536.png",
+          "bytes": 418915
+        },
+        {
+          "arquivo": "v2-npc-javali-corpo-r2--v05--1536.webp",
+          "bytes": 109402
+        },
+        {
+          "arquivo": "v2-npc-javali-corpo-r2--v05--1024.webp",
+          "bytes": 58542
+        },
+        {
+          "arquivo": "v2-npc-javali-corpo-r2--v05--512.webp",
+          "bytes": 24078
+        }
+      ],
+      "segundos_pos": 24.3,
+      "avisos": []
+    }
+  ]
+}
