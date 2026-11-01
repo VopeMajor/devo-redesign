@@ -12,6 +12,11 @@ Decisões tomadas na conversa (31/10):
   - Arte e enquadramento precisam ser mais ricos; o primeiro kit foi julgado simples demais.
   - Mais tarde, no mesmo dia: "os npcs também tem que passar pelo redesign. pegue como referencia o persona"
   - Depois, com 14 referências novas (`refs/ref-09.jpg` … `refs/ref-22.jpg`): "a vibe anterior, mas não um reaproveitamento ok? isso é um redesgn afinal. algumas referências (mas não se prenda a elas.) pode inserir elementos 2.5/3D em algumas telas. também refaça os cosméticos. quero tudo Melhor e mais bonito"
+  - Sobre a segunda proposta (kit2), 01/11: "não. muita coisa foi reaproveitada, não quero isso. pedi um REDESGN. . A casa não está parecida em NADA com as referências enviadas. Os sprites quero em pixel art. Boa parte parece que está em geometria simples, sendo que quero um design de ponta."
+    - O kit2 foi REPROVADO. Nada de reaproveitar arte, telas, retratos ou cenários atuais (nem como placeholder).
+    - A Casa tem que seguir as refs 01–06 (casas e cômodos isométricos, cerejeiras, interiores detalhados).
+    - Sprites (avatar e NPCs andando) em pixel art. Retratos e CGs continuam em ilustração.
+    - Nada de geometria simples (formas chapadas, círculos e retângulos de CSS): design de ponta.
 - Pinterest: sem conexão nesta sessão; o dono pode mandar links ou imagens.
 
 ---

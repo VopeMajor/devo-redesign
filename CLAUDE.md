@@ -106,3 +106,12 @@ Pendente:
 3. Molde de Xadrez sem visual; cartas antigas sem peso usam o padrão por raridade (`PESO_PADRAO`).
 4. Sugestão do agente dos jogos (não feita): `session.cookieCache` no better-auth cortaria uma consulta por
    requisição nas salas online (mexe em autenticação: pedir ao dono).
+
+## DEVO v2 (redesign em andamento, nov/2026)
+
+Tudo em `docs/redesign/v2/` (branch `ccr-a1dc3a06-5krin1`). Ler primeiro `PEDIDO-V2-dono.md` (texto literal do dono e as
+correções no topo; a mais recente vale). Kits `kit/` (pixel geral) e `kit2/` (reaproveitava arte) foram REPROVADOS.
+Direção atual: redesign de verdade, sem reaproveitar nada; vibe gótica do DEVO na interface geral; Casa e Torres em
+RPG Maker/VN seguindo as refs 01–06; sprites em pixel art; retratos e CGs ilustrados (NPCs com Persona como referência);
+cosméticos refeitos; 2.5D/3D permitido; nível "design de ponta", nada de geometria simples.
+O dono quer trabalhar no app Claude no computador dele, com o navegador ao lado (Pinterest com a conta dele).
