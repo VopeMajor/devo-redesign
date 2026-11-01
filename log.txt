@@ -1,0 +1,6 @@
+[v2-ui-mostrador] v01: @cf/black-forest-labs/flux-2-klein-9b seed=9661 1024x1024 passos=None (~1,364 neurônios)
+    ok em 2.3s, 1024x1024
+[v2-ui-mostrador] v02: @cf/black-forest-labs/flux-2-klein-9b seed=9662 1024x1024 passos=None (~1,364 neurônios)
+    ok em 1.9s, 1024x1024
+[v2-ui-mostrador] v01: mantido; sem avisos
+[v2-ui-mostrador] v02: mantido; sem avisos

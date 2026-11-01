@@ -1,0 +1,59 @@
+{
+  "pedido": "v2-ui-mostrador",
+  "titulo": "DEVO v2 — mostrador pintado do relógio da home (textura para R3F)",
+  "tipo": "ilustracao",
+  "tamanho_final": 1024,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 9661,
+      "passos": null,
+      "segundos": 2.3,
+      "neuronios_estimados": 1364,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "v2-ui-mostrador--v01--1024.png",
+          "bytes": 1607645
+        },
+        {
+          "arquivo": "v2-ui-mostrador--v01--1024.webp",
+          "bytes": 260982
+        },
+        {
+          "arquivo": "v2-ui-mostrador--v01--512.webp",
+          "bytes": 54750
+        }
+      ],
+      "segundos_pos": 1.7,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 9662,
+      "passos": null,
+      "segundos": 1.9,
+      "neuronios_estimados": 1364,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "v2-ui-mostrador--v02--1024.png",
+          "bytes": 1704491
+        },
+        {
+          "arquivo": "v2-ui-mostrador--v02--1024.webp",
+          "bytes": 314972
+        },
+        {
+          "arquivo": "v2-ui-mostrador--v02--512.webp",
+          "bytes": 64054
+        }
+      ],
+      "segundos_pos": 1.3,
+      "avisos": []
+    }
+  ]
+}
