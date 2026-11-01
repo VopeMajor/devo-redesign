@@ -1,0 +1,26 @@
+{
+  "id": "v2-home-vitral",
+  "titulo": "DEVO v2 — fundo da home: salão do relógio com vitrais",
+  "tipo": "ilustracao",
+  "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+  "prompt": "Painted dark gothic fantasy background, highly detailed, cinematic, symmetrical. A tall cathedral-like hall at night dominated by a huge round stained glass rose window behind, its glass in deep amethyst violet, cobalt blue and champagne gold, shaped like a clock face with roman numerals; brass clockwork gears half hidden in shadow at the sides, black marble floor with reflections, thin violet mist, moonlight pouring through the glass casting colored light, floating dust motes. The center of the image is calm and darker so interface can sit on top. No people, no text, no letters, no watermark.",
+  "negative": "text, letters, watermark, people, cartoon, flat vector, blurry, low detail, red",
+  "largura": 1024,
+  "altura": 1536,
+  "variacoes": [
+    {
+      "seed": 7701
+    },
+    {
+      "seed": 7702
+    }
+  ],
+  "pos": {
+    "remover_fundo": false,
+    "tamanho_final": 1536,
+    "margem": 0,
+    "derivados": [
+      1024
+    ]
+  }
+}

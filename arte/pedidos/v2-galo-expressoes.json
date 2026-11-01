@@ -1,0 +1,36 @@
+{
+  "id": "v2-galo-expressoes",
+  "titulo": "DEVO v2 — Galo, três expressões fortes (busto)",
+  "tipo": "ilustracao",
+  "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+  "prompt": "Bold clean anime lineart, two-tone cel shading with a third deep shadow tone, high-contrast graphic poster style, crisp thick black contour, sharp highlights. Same character as the reference image: a tall lean man in his late twenties, copper-red hair swept up into a tall crest of sharp spikes, one lock across the forehead toward the viewer's left, shaved dark brown temples, golden-tan skin, heavy-lidded grey-green eyes, straight brows, long jaw, strong neck. Long black coat worn over the shoulders like a cape, empty sleeves hanging, hem cut into curved rooster tail feathers, copper silk lining embroidered with feathers; burnt copper shirt open at the chest; copper silk scarf knotted like a wattle; small gold rooster brooch on the lapel on the viewer's right. Bust portrait from the chest up, plain flat medium grey background, headroom above the hair, warm copper key light from the viewer's right, ember rim light on hair and jaw, cool violet shadow side. Palette: black #0C0C0E, copper #C9542A, ember #F2A15E. No text, letters or logos anywhere.",
+  "negative": "text, letters, watermark, signature, logo, cropped head, cut off hair, extra fingers, extra arms, deformed hands, blurry, low detail, chibi, 3d render, photo, multiple people, red and black persona logo",
+  "largura": 1024,
+  "altura": 1536,
+  "variacoes": [
+    {
+      "seed": 7301,
+      "prompt_extra": "Expression: explosive laughter, head thrown back, eyes squeezed shut, mouth wide open, one hand slapping his own forehead."
+    },
+    {
+      "seed": 7302,
+      "prompt_extra": "Expression: cold serious judgement, looking down at the viewer from above, eyes half closed and hard, no smile, jaw set, the warm light gone flat, more of the face in shadow."
+    },
+    {
+      "seed": 7303,
+      "prompt_extra": "Expression: sly conspiratorial wink, leaning close to the viewer, one finger raised to his grinning lips as if telling a secret."
+    }
+  ],
+  "pos": {
+    "remover_fundo": true,
+    "tamanho_final": 1536,
+    "margem": 0.02,
+    "derivados": [
+      1024,
+      512
+    ]
+  },
+  "referencias": [
+    "public/images/npc/galo/confiante.webp"
+  ]
+}

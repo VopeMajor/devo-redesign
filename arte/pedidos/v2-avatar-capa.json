@@ -1,0 +1,27 @@
+{
+  "id": "v2-avatar-capa",
+  "titulo": "DEVO v2 — avatar provisório de capa (costas e três quartos)",
+  "tipo": "ilustracao",
+  "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+  "prompt": "Dark fantasy character concept art, painted, soft painterly render with crisp edges, highly detailed. Full body, head to toe, plain flat light grey background, margin around the figure. A young person of ambiguous gender seen from behind in three-quarter view, walking forward and glancing slightly over the shoulder so only the jawline shows, wearing a long hooded charcoal cloak with a deep amethyst violet lining and a thin champagne-steel clasp shaped like a four-pointed star, the hood up, dark trousers and boots, a slim silver wristwatch glowing faintly on the left wrist. Warm candle rim light from the right outlining the hood and shoulder, cool violet fill on the shadow side. Elegant gothic, restrained, no weapons. No text, letters or logos anywhere.",
+  "negative": "text, letters, watermark, cropped, cut off feet, multiple figures, face visible, weapon, chibi, cartoon, neon, saturated colors, armor",
+  "largura": 1024,
+  "altura": 1536,
+  "variacoes": [
+    {
+      "seed": 7401
+    },
+    {
+      "seed": 7402
+    }
+  ],
+  "pos": {
+    "remover_fundo": true,
+    "tamanho_final": 1536,
+    "margem": 0.03,
+    "derivados": [
+      1024,
+      512
+    ]
+  }
+}
