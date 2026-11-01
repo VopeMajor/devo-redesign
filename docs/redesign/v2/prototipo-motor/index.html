@@ -1,0 +1,505 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<title>Motor da Casa</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600&family=EB+Garamond:ital,wght@0,400;1,400&family=IBM+Plex+Sans:wght@400;500&display=swap" rel="stylesheet">
+<!--
+  Protótipo do motor da Casa e das Torres (DEVO v2). Não é código do app.
+  ?motor=pixi | canvas   escolhe o renderizador (mesma cena, mesma lógica)
+  ?demo=1                anda sozinho (usado na medição de FPS)
+  ?debug=1               mostra o chão andável, as caixas de toque e a linha de oclusão
+  Doc: ../MOTOR-CASA-TORRES.md
+-->
+<style>
+  :root{
+    --ink:#0c0c0e; --ink-2:#151517; --ink-3:#1f1f22; --text:#eeedeb;
+    --champ:#c4b9a6; --champ-strong:#ece4d6; --champ-soft:#8d8373;
+    --ame:#8a7cc8; --ame-deep:#4e4580; --ame-light:#c2b9ec; --night:#19181f;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;height:100%;background:var(--ink);color:var(--text);overflow:hidden;
+    overscroll-behavior:none;touch-action:none;user-select:none;-webkit-user-select:none}
+  #palco{position:fixed;inset:0}
+  #palco canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+  /* vinheta parada fica no CSS: o compositor do navegador junta de graça, o canvas não repinta */
+  #vinheta{position:fixed;inset:-8% -15%;pointer-events:none;transition:opacity .4s;opacity:.85;
+    background:radial-gradient(ellipse 62% 58% at 50% 46%,rgba(12,12,14,0) 30%,rgba(12,12,14,.35) 62%,rgba(8,7,12,.92) 100%)}
+  #vinheta.forte{opacity:1}
+  .sem-vinheta-css #vinheta{display:none}
+  #ui{position:fixed;inset:0;pointer-events:none;font-family:'EB Garamond',Georgia,serif}
+
+  /* barra de cima: o Tempo continua no pulso, como no resto do DEVO */
+  .topo{position:absolute;left:0;right:0;top:0;padding:calc(env(safe-area-inset-top) + 10px) 16px 18px;
+    display:flex;align-items:center;gap:10px;
+    background:linear-gradient(180deg,rgba(12,12,14,.82),rgba(12,12,14,0))}
+  .lugar{font-family:Cinzel,serif;font-weight:600;letter-spacing:.14em;font-size:13px;color:var(--champ-strong);
+    text-transform:uppercase}
+  .lugar small{display:block;font-family:'IBM Plex Sans',sans-serif;font-weight:400;letter-spacing:.06em;
+    font-size:10.5px;color:var(--champ-soft);text-transform:none;margin-top:2px}
+  .pulso{margin-left:auto;display:flex;align-items:center;gap:7px;font-family:'IBM Plex Sans',sans-serif;
+    font-size:11px;color:var(--champ);border:1px solid rgba(196,185,166,.35);padding:5px 9px 5px 7px;
+    background:rgba(21,21,23,.7)}
+  .pulso i{width:7px;height:7px;transform:rotate(45deg);background:var(--ame);box-shadow:0 0 8px var(--ame)}
+  .dbg{position:absolute;right:16px;top:calc(env(safe-area-inset-top) + 50px);pointer-events:auto;
+    display:flex;gap:6px;font-family:'IBM Plex Sans',sans-serif;font-size:10.5px}
+  .dbg button,.dbg span{border:1px solid rgba(138,124,200,.45);background:rgba(12,12,14,.72);color:var(--ame-light);
+    padding:4px 7px;font:inherit}
+  .dbg button{cursor:pointer}
+
+  /* rótulo do objeto: losango + nome, perto do objeto */
+  .rot{position:absolute;left:0;top:0;transform:translate(-50%,-100%);display:flex;align-items:center;gap:6px;
+    padding:4px 9px 4px 7px;background:rgba(12,12,14,.78);border:1px solid rgba(138,124,200,.55);
+    font-family:Cinzel,serif;font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--champ-strong);opacity:0;transition:opacity .25s;white-space:nowrap}
+  .rot::before{content:"";width:6px;height:6px;transform:rotate(45deg);background:var(--ame);box-shadow:0 0 6px var(--ame)}
+  .rot.on{opacity:1}
+
+  /* caixa de VN: placa de nome em diagonal, texto em Garamond, ações */
+  .vn{position:absolute;left:10px;right:10px;bottom:calc(env(safe-area-inset-bottom) + 14px);
+    transform:translateY(130%);transition:transform .38s cubic-bezier(.2,.8,.2,1);pointer-events:auto}
+  .vn.on{transform:none}
+  .vn .placa{position:absolute;left:12px;top:-22px;padding:6px 18px 6px 14px;background:var(--ame-deep);
+    color:#fff;font-family:Cinzel,serif;font-weight:600;font-size:14px;letter-spacing:.12em;text-transform:uppercase;
+    transform:skewX(-12deg);box-shadow:4px 4px 0 var(--ink)}
+  .vn .placa span{display:inline-block;transform:skewX(12deg)}
+  .vn .caixa{background:linear-gradient(180deg,rgba(21,21,23,.94),rgba(12,12,14,.97));
+    border:1px solid rgba(196,185,166,.42);outline:1px solid rgba(12,12,14,.9);outline-offset:2px;
+    padding:22px 16px 12px;min-height:120px}
+  .vn p{margin:0 0 4px;font-size:16px;line-height:1.5;color:var(--text)}
+  .vn .meta{font-family:'IBM Plex Sans',sans-serif;font-size:11px;color:var(--champ-soft);margin-bottom:10px}
+  .vn .acoes{display:flex;gap:8px;justify-content:flex-end}
+  .vn button{font-family:Cinzel,serif;font-weight:600;font-size:12px;letter-spacing:.2em;text-transform:uppercase;
+    padding:10px 14px;min-height:44px;border:1px solid rgba(196,185,166,.5);background:var(--ink-3);color:var(--champ-strong)}
+  .vn button.prim{background:var(--ame-deep);border-color:var(--ame);color:#fff}
+  .vn button[disabled]{opacity:.55}
+  .dica{position:absolute;left:50%;bottom:calc(env(safe-area-inset-bottom) + 22px);transform:translateX(-50%);
+    font-family:'IBM Plex Sans',sans-serif;font-size:11.5px;letter-spacing:.04em;color:var(--champ);
+    background:rgba(12,12,14,.6);padding:6px 12px;border:1px solid rgba(196,185,166,.25);transition:opacity .4s}
+</style>
+</head>
+<body>
+<div id="palco"></div>
+<div id="vinheta"></div>
+<div id="ui">
+  <div class="topo">
+    <div class="lugar">Casa<small>Sala · protótipo do motor</small></div>
+    <div class="pulso"><i></i>Tempo</div>
+  </div>
+  <div class="dbg"><span id="fps">-- fps</span><button id="troca">motor</button></div>
+  <div id="rotulos"></div>
+  <div class="dica" id="dica">Toque no chão para andar · toque num objeto</div>
+  <div class="vn" id="vn">
+    <div class="placa"><span id="vn-nome">Porta</span></div>
+    <div class="caixa">
+      <p id="vn-texto">[fala pendente]</p>
+      <div class="meta" id="vn-meta"></div>
+      <div class="acoes"><button id="vn-sair">Sair</button><button class="prim" id="vn-abrir" disabled>Abrir</button></div>
+    </div>
+  </div>
+</div>
+<script src="vendor/pixi.min.js"></script>
+<script>
+'use strict';
+// ---------------------------------------------------------------------------------------------
+// Parâmetros e cena (coordenadas no espaço da pintura: 683 x 1024)
+// ---------------------------------------------------------------------------------------------
+const Q = new URLSearchParams(location.search);
+const MOTOR = Q.get('motor') === 'canvas' ? 'canvas' : 'pixi';
+const DEMO = Q.get('demo') === '1';
+const DEBUG = Q.get('debug') === '1';
+const FX = Q.get('fx') !== '0';
+if(!FX || Q.get('assar')==='0') document.documentElement.classList.add('sem-vinheta-css');
+const ASSAR = Q.get('assar') !== '0';                 // luz parada assada na pintura no carregamento (1 camada cheia em vez de 5)                       // fx=0 desliga luz, partículas e acabamento (só medição)
+const W = 683, H = 1024;
+
+const CENA = {
+  // chão andável (polígono); o motor de verdade usa navmesh/A* (ver doc)
+  chao: [[338,742],[455,752],[520,775],[650,800],[683,806],[683,1024],[0,1024],[0,975],[140,948],[205,890],
+         [300,836],[332,790]],
+  // camada que cobre o avatar quando o pé dele está acima desta linha (poltrona, mesinha, abajur)
+  oclusor: { x:0, y:532, w:349, h:427, base:868 },
+  frente: { x:-292, y:150, w:521, h:1024, paralaxe:0.38 },     // cortina e velas, desfocadas
+  objetos: [
+    { id:'porta', nome:'Porta', abre:'Visitantes · proposta (SPEC-CASA 2.2-b)',
+      caixa:[455,180,650,795], brilho:[566,500,150], pe:[548,840], rot:[566,250] },
+    { id:'relogio', nome:'Relógio', abre:'[sistema pendente]',
+      circ:[345,340,52], brilho:[345,340,70], pe:[405,790], rot:[345,280] },
+    { id:'poltrona', nome:'Poltrona', abre:'[sistema pendente]',
+      caixa:[150,545,335,860], brilho:[245,700,120], pe:[300,880], rot:[245,560] },
+    { id:'mesinha', nome:'Mesinha e livro', abre:'[sistema pendente · nome do objeto: PENDENTE 7]',
+      caixa:[0,540,182,800], brilho:[80,700,90], pe:[170,962], rot:[80,545] },
+    { id:'janela', nome:'Janela', abre:'só olhar',
+      caixa:[15,140,165,530], brilho:[90,330,110], pe:[120,985], rot:[90,140] },
+  ],
+  luzes: [
+    { id:'abajur', x:84, y:612, r:300, cor:'#f2c58a', a:0.34, tremor:1 },
+    { id:'xicara', x:130, y:735, r:90, cor:'#f2c58a', a:0.18, tremor:1 },
+    { id:'fresta', x:560, y:790, r:120, cor:'#c2b9ec', a:0.16, tremor:0, sx:1.8, sy:0.35 },
+  ],
+  // facho da lua: trapézio da janela até o chão
+  facho: [[30,200],[160,175],[600,980],[250,1024]],
+};
+
+// ---------------------------------------------------------------------------------------------
+// Texturas geradas (avatar placeholder, brilhos, partículas, vinheta)
+// ---------------------------------------------------------------------------------------------
+function cv(w,h){ const c=document.createElement('canvas'); c.width=w; c.height=h; return c; }
+function radial(size, cor, stops){
+  const c=cv(size,size), g=c.getContext('2d'), r=size/2;
+  const gr=g.createRadialGradient(r,r,0,r,r,r);
+  (stops||[[0,1],[0.35,0.45],[1,0]]).forEach(([p,a])=>gr.addColorStop(p, rgba(cor,a)));
+  g.fillStyle=gr; g.fillRect(0,0,size,size); return c;
+}
+function rgba(hex,a){ const n=parseInt(hex.slice(1),16); return `rgba(${n>>16},${(n>>8)&255},${n&255},${a})`; }
+function estrela(size,cor){
+  const c=cv(size,size), g=c.getContext('2d'), r=size/2;
+  g.translate(r,r); g.fillStyle=cor; g.shadowColor=cor; g.shadowBlur=size*0.18;
+  g.beginPath(); g.moveTo(0,-r*0.9); g.quadraticCurveTo(r*0.08,-r*0.08,r*0.9,0); g.quadraticCurveTo(r*0.08,r*0.08,0,r*0.9);
+  g.quadraticCurveTo(-r*0.08,r*0.08,-r*0.9,0); g.quadraticCurveTo(-r*0.08,-r*0.08,0,-r*0.9); g.fill(); return c;
+}
+function anel(size,cor){
+  const c=cv(size,size), g=c.getContext('2d'), r=size/2;
+  g.strokeStyle=cor; g.lineWidth=size*0.035; g.shadowColor=cor; g.shadowBlur=size*0.08;
+  g.beginPath(); g.ellipse(r,r,r*0.86,r*0.86,0,0,Math.PI*2); g.stroke();
+  g.beginPath(); g.moveTo(r,r-r*0.3); g.lineTo(r+r*0.3,r); g.lineTo(r,r+r*0.3); g.lineTo(r-r*0.3,r); g.closePath(); g.stroke();
+  return c;
+}
+function facho(){
+  const k=0.5, c=cv(W*k,H*k), g=c.getContext('2d');
+  g.scale(k,k); g.filter='blur(18px)';
+  const gr=g.createLinearGradient(80,180,420,1000);
+  gr.addColorStop(0,'rgba(214,210,240,0.95)'); gr.addColorStop(0.55,'rgba(183,179,201,0.45)'); gr.addColorStop(1,'rgba(138,124,200,0)');
+  g.fillStyle=gr; g.beginPath(); CENA.facho.forEach(([x,y],i)=>i?g.lineTo(x,y):g.moveTo(x,y)); g.closePath(); g.fill();
+  return c;
+}
+function nevoa(){
+  const c=cv(512,128), g=c.getContext('2d'); let s=7;
+  const rnd=()=>((s=(s*16807)%2147483647)/2147483647);
+  for(let i=0;i<70;i++){ const x=rnd()*512, y=40+rnd()*70, r=20+rnd()*55;
+    for(const dx of [-512,0,512]){ const gr=g.createRadialGradient(x+dx,y,0,x+dx,y,r);
+      gr.addColorStop(0,'rgba(183,179,201,0.10)'); gr.addColorStop(1,'rgba(183,179,201,0)'); g.fillStyle=gr; g.fillRect(x+dx-r,y-r,r*2,r*2);} }
+  g.globalCompositeOperation='destination-in';
+  const m=g.createLinearGradient(0,0,0,128); m.addColorStop(0,'rgba(0,0,0,0)'); m.addColorStop(0.45,'rgba(0,0,0,1)'); m.addColorStop(1,'rgba(0,0,0,0)');
+  g.fillStyle=m; g.fillRect(0,0,512,128);
+  return c;
+}
+function vinheta(){
+  const c=cv(512,512), g=c.getContext('2d');
+  const gr=g.createRadialGradient(256,240,90,256,256,380);
+  gr.addColorStop(0,'rgba(12,12,14,0)'); gr.addColorStop(0.6,'rgba(12,12,14,0.35)'); gr.addColorStop(1,'rgba(8,7,12,0.92)');
+  g.fillStyle=gr; g.fillRect(0,0,512,512); return c;
+}
+function chapado(cor){ const c=cv(4,4), g=c.getContext('2d'); g.fillStyle=cor; g.fillRect(0,0,4,4); return c; }
+
+// Avatar placeholder: silhueta de casaco longo com luz de recorte ametista. 8 quadros de passo + parado,
+// nas duas direções. Será trocado pelo avatar da SPEC-AVATAR (camadas de roupa/cabelo).
+function avatarQuadros(){
+  const QW=180, QH=520, out={dir:[],esq:[]};
+  for(let f=0; f<9; f++){
+    const c=cv(QW,QH), g=c.getContext('2d');
+    const fase = f===8 ? 0 : (f/8)*Math.PI*2, parado = f===8;
+    const sw = parado?0:Math.sin(fase)*22, bob = parado?0:Math.abs(Math.cos(fase))*-6;
+    g.translate(0,bob);
+    // pernas
+    g.fillStyle='#151517';
+    g.save(); g.translate(78,330); g.rotate(sw*0.012); g.fillRect(-13,0,26,175); g.fillStyle='#0c0c0e'; g.fillRect(-15,165,32,14); g.restore();
+    g.fillStyle='#1f1f22';
+    g.save(); g.translate(104,330); g.rotate(-sw*0.012); g.fillRect(-13,0,26,175); g.fillStyle='#0c0c0e'; g.fillRect(-15,165,32,14); g.restore();
+    // casaco
+    const gc=g.createLinearGradient(40,0,150,0); gc.addColorStop(0,'#2c2c31'); gc.addColorStop(0.6,'#1f1f22'); gc.addColorStop(1,'#151517');
+    g.fillStyle=gc; g.beginPath(); g.moveTo(58,118); g.quadraticCurveTo(90,100,124,118); g.lineTo(140,250);
+    g.lineTo(150+sw*0.3,392); g.lineTo(30+sw*0.3,392); g.lineTo(42,250); g.closePath(); g.fill();
+    // braços
+    g.fillStyle='#19181f';
+    g.save(); g.translate(52,128); g.rotate(-sw*0.01+0.06); g.fillRect(-12,0,22,150); g.fillStyle='#2c2a35'; g.fillRect(-10,146,18,20); g.restore();
+    g.save(); g.translate(130,128); g.rotate(sw*0.01-0.06); g.fillRect(-10,0,22,150); g.fillStyle='#24232b'; g.fillRect(-8,146,18,20); g.restore();
+    // gola, botões de aço
+    g.fillStyle='#8a7cc8'; g.beginPath(); g.moveTo(78,118); g.lineTo(91,150); g.lineTo(104,118); g.closePath(); g.fill();
+    g.fillStyle='#bab09f'; for(let i=0;i<4;i++){ g.beginPath(); g.arc(91,170+i*42,3.2,0,7); g.fill(); }
+    // cabeça e cabelo
+    g.fillStyle='#24232b'; g.beginPath(); g.ellipse(91,72,30,36,0,0,7); g.fill();
+    g.fillStyle='#0c0c0e'; g.beginPath(); g.ellipse(91,58,35,30,0,Math.PI,0); g.lineTo(126,90); g.quadraticCurveTo(110,60,91,62);
+    g.quadraticCurveTo(70,60,56,96); g.closePath(); g.fill();
+    g.fillStyle='#4e4580'; g.beginPath(); g.ellipse(100,40,14,5,-0.4,0,7); g.fill();
+    // luz de recorte (lado da janela/lua) em ametista
+    g.globalCompositeOperation='source-atop';
+    const rl=g.createLinearGradient(20,0,72,0); rl.addColorStop(0,'rgba(194,185,236,0.95)'); rl.addColorStop(1,'rgba(194,185,236,0)');
+    g.fillStyle=rl; g.fillRect(0,0,80,QH);
+    const quente=g.createLinearGradient(QW,0,QW-50,0); quente.addColorStop(0,'rgba(242,197,138,0.45)'); quente.addColorStop(1,'rgba(242,197,138,0)');
+    g.fillStyle=quente; g.fillRect(QW-60,0,60,QH);
+    out.dir.push(c);
+    const m=cv(QW,QH), mg=m.getContext('2d'); mg.translate(QW,0); mg.scale(-1,1); mg.drawImage(c,0,0); out.esq.push(m);
+  }
+  out.w=QW; out.h=QH; return out;
+}
+
+// ---------------------------------------------------------------------------------------------
+// Geometria
+// ---------------------------------------------------------------------------------------------
+function dentro(p,poly){ let c=false; for(let i=0,j=poly.length-1;i<poly.length;j=i++){ const [xi,yi]=poly[i],[xj,yj]=poly[j];
+  if(((yi>p[1])!==(yj>p[1])) && (p[0] < (xj-xi)*(p[1]-yi)/(yj-yi)+xi)) c=!c; } return c; }
+function maisPerto(p,poly){ if(dentro(p,poly)) return p; let best=null,bd=1e9;
+  for(let i=0,j=poly.length-1;i<poly.length;j=i++){ const a=poly[j],b=poly[i],dx=b[0]-a[0],dy=b[1]-a[1];
+    let t=((p[0]-a[0])*dx+(p[1]-a[1])*dy)/(dx*dx+dy*dy); t=Math.max(0,Math.min(1,t));
+    const q=[a[0]+dx*t,a[1]+dy*t], d=(q[0]-p[0])**2+(q[1]-p[1])**2; if(d<bd){bd=d;best=q;} }
+  // um passo para dentro, para não grudar na borda
+  const cx=420, cy=930; return [best[0]+(cx-best[0])*0.02, best[1]+(cy-best[1])*0.02]; }
+// escala do avatar pela profundidade (linha do chão): fundo y=742 -> 0.78, frente y=1024 -> 1.18
+function escalaProf(y){ return 0.78 + (y-742)/(1024-742)*0.40; }
+const ALTURA_BASE = 430; // altura do avatar (px da pintura) na escala 1, proporcional à porta
+
+// ---------------------------------------------------------------------------------------------
+// Estado
+// ---------------------------------------------------------------------------------------------
+const S = {
+  t:0, av:{ x:430, y:930, dir:1, andando:false, alvo:null, fase:0, obj:null },
+  cam:{ x:430, y:H/2, z:1, zAlvo:1, foco:null },
+  toques:[], aberto:null, motes:[], brasas:[],
+};
+let rnd = (()=>{ let s=11; return ()=>((s=(s*16807)%2147483647)/2147483647); })();
+for(let i=0;i<90;i++) S.motes.push({ u:rnd(), v:rnd(), f:rnd()*6.28, vel:0.004+rnd()*0.01, tam:2+rnd()*4.5 });
+for(let i=0;i<14;i++) S.brasas.push({ x:0, y:0, vida:rnd(), vx:(rnd()-0.5)*8, base:i%2 });
+
+// ---------------------------------------------------------------------------------------------
+// Renderizadores: os dois recebem a mesma lista de comandos por quadro
+// cmd = { id, tex, x, y, w, h, a, blend:'normal'|'add'|'screen', rot, ax, ay }
+// ---------------------------------------------------------------------------------------------
+function RendererCanvas(host){
+  const c=document.createElement('canvas'); host.appendChild(c); const g=c.getContext('2d',{alpha:false});
+  const self={ nome:'canvas 2D', res:1,
+    resize(w,h,res){ self.res=res; c.width=Math.round(w*res); c.height=Math.round(h*res); },
+    async carregar(){},
+    desenhar(cmds){
+      g.setTransform(1,0,0,1,0,0); g.globalAlpha=1; g.globalCompositeOperation='source-over';
+      g.fillStyle='#0c0c0e'; g.fillRect(0,0,c.width,c.height); g.setTransform(self.res,0,0,self.res,0,0);
+      g.imageSmoothingQuality='high';
+      for(const m of cmds){ if(m.a<=0.003) continue; g.globalAlpha=Math.min(1,m.a);
+        g.globalCompositeOperation = m.blend==='add'?'lighter': m.blend==='screen'?'screen':'source-over';
+        const ax=m.ax??0, ay=m.ay??0;
+        if(m.rot){ g.save(); g.translate(m.x,m.y); g.rotate(m.rot); g.drawImage(m.tex,-m.w*ax,-m.h*ay,m.w,m.h); g.restore(); }
+        else g.drawImage(m.tex, m.x-m.w*ax, m.y-m.h*ay, m.w, m.h); }
+    },
+    canvas:c };
+  return self;
+}
+function RendererPixi(host){
+  const app=new PIXI.Application(); const sprites=new Map(), texs=new Map();
+  const self={ nome:'PixiJS '+PIXI.VERSION, res:1, app,
+    async carregar(w,h,res){ self.res=res;
+      await app.init({ width:w, height:h, resolution:res, autoDensity:true, background:'#0c0c0e', antialias:false,
+        preference:'webgl', autoStart:false, sharedTicker:false, powerPreference:'high-performance' });
+      app.ticker.stop(); host.appendChild(app.canvas); app.stage.sortableChildren=true; },
+    resize(w,h,res){ if(app.renderer){ app.renderer.resolution=res; app.renderer.resize(w,h); } },
+    tex(src){ let t=texs.get(src); if(!t){ t=PIXI.Texture.from(src); texs.set(src,t);} return t; },
+    desenhar(cmds){
+      for(const s of sprites.values()) s.visible=false;
+      cmds.forEach((m,i)=>{ let s=sprites.get(m.id); if(!s){ s=new PIXI.Sprite(); sprites.set(m.id,s); app.stage.addChild(s); }
+        const t=self.tex(m.tex); if(s.texture!==t) s.texture=t;
+        s.visible=m.a>0.003; s.zIndex=i; s.anchor.set(m.ax??0, m.ay??0); s.x=m.x; s.y=m.y; s.width=m.w; s.height=m.h;
+        s.alpha=Math.min(1,m.a); s.rotation=m.rot||0; s.blendMode = m.blend==='add'?'add': m.blend==='screen'?'screen':'normal'; });
+      app.renderer.render(app.stage);
+    } };
+  return self;
+}
+
+// ---------------------------------------------------------------------------------------------
+// Montagem
+// ---------------------------------------------------------------------------------------------
+const palco=document.getElementById('palco');
+let VW=innerWidth, VH=innerHeight;
+const RES = Q.get('res') ? +Q.get('res') : Math.min(devicePixelRatio||1, 2);           // teto de 2x: no celular 3x custa 2,25x mais pixels
+const HD = VH*RES > 1100;                                // usa a pintura de 1536 quando a tela pede
+function img(src){ return new Promise((ok,err)=>{ const i=new Image(); i.decoding='async'; i.onload=()=>ok(i); i.onerror=err; i.src=src; }); }
+
+let R, TX={};
+(async function iniciar(){
+  const suf = HD ? '1536' : '1024';
+  const [cena, oclusor, frente] = await Promise.all([img(`assets/cena-${suf}.webp`), img(`assets/oclusor-${suf}.webp`), img(`assets/primeiro-plano-${suf}.webp`)]);
+  TX = { cena, oclusor, frente, av:avatarQuadros(), sombra:radial(128,'#000000',[[0,0.75],[0.6,0.35],[1,0]]),
+    quente:radial(256,'#f2c58a'), fria:radial(256,'#c2b9ec'), halo:radial(256,'#8a7cc8',[[0,0.9],[0.4,0.35],[1,0]]),
+    mote:radial(32,'#ece4d6',[[0,1],[0.3,0.6],[1,0]]), brasa:radial(32,'#f2c58a',[[0,1],[0.4,0.5],[1,0]]),
+    estrela:estrela(64,'#c2b9ec'), anel:anel(128,'#c2b9ec'), facho:facho(), nevoa:nevoa(), vinheta:vinheta(),
+    tinta:chapado('#4e4580'), teto:(()=>{ const c=cv(4,256), g=c.getContext('2d'); const gr=g.createLinearGradient(0,0,0,256);
+      gr.addColorStop(0,'rgba(8,7,12,0.85)'); gr.addColorStop(1,'rgba(8,7,12,0)'); g.fillStyle=gr; g.fillRect(0,0,4,256); return c; })(),
+    dbg:chapado('#ff3cff') };
+  if(ASSAR) TX.assada = assar();
+  R = MOTOR==='pixi' && window.PIXI ? RendererPixi(palco) : RendererCanvas(palco);
+  await R.carregar(VW,VH,RES); R.resize(VW,VH,RES);
+  document.getElementById('troca').textContent = R.nome + ' ⇄';
+  montarRotulos();
+  requestAnimationFrame(quadro);
+  if(DEMO) demo();
+})();
+
+addEventListener('resize',()=>{ VW=innerWidth; VH=innerHeight; R&&R.resize(VW,VH,RES); });
+document.getElementById('troca').addEventListener('click',()=>{ Q.set('motor', MOTOR==='pixi'?'canvas':'pixi'); location.search=Q.toString(); });
+
+// Assa a luz que não se mexe (facho da lua, base das luzes, tinta ametista, teto escuro) dentro da pintura.
+// No jogo isto sai do pipeline de arte; aqui é feito no navegador para provar o ganho.
+function assar(){
+  const im=TX.cena, kk=im.naturalWidth/W, c=cv(im.naturalWidth, im.naturalHeight), g=c.getContext('2d');
+  g.drawImage(im,0,0); g.globalCompositeOperation='lighter';
+  g.globalAlpha=0.20; g.drawImage(TX.facho,0,0,c.width,c.height);
+  for(const l of CENA.luzes){ const r=l.r*2*kk; g.globalAlpha=Math.max(0,l.a-0.06);
+    g.drawImage(l.cor==='#f2c58a'?TX.quente:TX.fria, l.x*kk-r*(l.sx||1)/2, l.y*kk-r*(l.sy||1)/2, r*(l.sx||1), r*(l.sy||1)); }
+  g.globalCompositeOperation='screen'; g.globalAlpha=0.10; g.fillStyle='#4e4580'; g.fillRect(0,0,c.width,c.height);
+  g.globalCompositeOperation='source-over'; g.globalAlpha=0.9; g.drawImage(TX.teto,0,0,c.width,c.height*0.30);
+  g.globalAlpha=1; return c;
+}
+
+// câmera: mundo -> tela
+function esc(){ return VH/H*S.cam.z; }
+function paraTela(x,y){ const k=esc(); return [(x-S.cam.x)*k+VW/2, (y-S.cam.y)*k+VH/2]; }
+function paraMundo(sx,sy){ const k=esc(); return [(sx-VW/2)/k+S.cam.x, (sy-VH/2)/k+S.cam.y]; }
+
+// ---------------------------------------------------------------------------------------------
+// Toque
+// ---------------------------------------------------------------------------------------------
+function acharObjeto(p){ for(const o of CENA.objetos){
+  if(o.caixa){ const [a,b,c,d]=o.caixa; if(p[0]>=a&&p[0]<=c&&p[1]>=b&&p[1]<=d) return o; }
+  if(o.circ){ const [x,y,r]=o.circ; if((p[0]-x)**2+(p[1]-y)**2<=r*r) return o; } } return null; }
+function tocar(sx,sy){
+  if(S.aberto) fecharVN();
+  const p=paraMundo(sx,sy); const o=acharObjeto(p);
+  // no chão, o toque tem prioridade sobre o objeto (exceto se for um objeto de chão como a poltrona)
+  const noChao=dentro(p,CENA.chao);
+  if(o && !(noChao && o.id!=='poltrona' && o.id!=='porta')) irPara(o.pe, o);
+  else irPara(maisPerto(p,CENA.chao), null);
+  esconderDica();
+}
+function irPara(p,o){ S.av.alvo=[p[0],p[1]]; S.av.obj=o; S.av.andando=true;
+  S.toques.push({x:p[0],y:p[1],t:0,obj:!!o}); }
+palco.addEventListener('pointerdown',e=>{ e.preventDefault(); tocar(e.clientX,e.clientY); });
+let dicaFora=false; function esconderDica(){ if(dicaFora) return; dicaFora=true; document.getElementById('dica').style.opacity=0; }
+
+// VN
+const vn=document.getElementById('vn');
+function abrirVN(o){ S.aberto=o; document.getElementById('vn-nome').textContent=o.nome;
+  document.getElementById('vn-texto').textContent='[fala pendente]';
+  document.getElementById('vn-meta').textContent='Abre: '+o.abre; vn.classList.add('on'); document.getElementById('vinheta').classList.add('forte');
+  S.cam.zAlvo=1.16; S.cam.foco=[(o.brilho[0]+S.av.x)/2, (o.brilho[1]+S.av.y-ALTURA_BASE*0.4)/2]; }
+function fecharVN(){ S.aberto=null; vn.classList.remove('on'); document.getElementById('vinheta').classList.remove('forte'); S.cam.zAlvo=1; S.cam.foco=null; }
+document.getElementById('vn-sair').addEventListener('pointerdown',e=>{ e.stopPropagation(); fecharVN(); });
+vn.addEventListener('pointerdown',e=>e.stopPropagation());
+
+// rótulos DOM
+const rots={}; function montarRotulos(){ const box=document.getElementById('rotulos');
+  for(const o of CENA.objetos){ const d=document.createElement('div'); d.className='rot'; d.textContent=o.nome; box.appendChild(d); rots[o.id]=d; } }
+
+// ---------------------------------------------------------------------------------------------
+// Laço
+// ---------------------------------------------------------------------------------------------
+let ultimo=performance.now();
+const FPS={ quadros:0, tempos:[], ini:performance.now(), mostrar:performance.now(), n:0 };
+window.__fps=FPS;
+function quadro(agora){
+  const dt=Math.min(0.05,(agora-ultimo)/1000); ultimo=agora; S.t+=dt;
+  FPS.quadros++; FPS.tempos.push(dt*1000); FPS.n++;
+  if(agora-FPS.mostrar>500){ document.getElementById('fps').textContent=Math.round(FPS.n*1000/(agora-FPS.mostrar))+' fps'; FPS.n=0; FPS.mostrar=agora; }
+  const j0=performance.now(); atualizar(dt); const cmds=compor(); const j1=performance.now(); R.desenhar(cmds);
+  FPS.js=(FPS.js||[]); FPS.js.push([j1-j0, performance.now()-j1, cmds.length]); requestAnimationFrame(quadro);
+}
+
+function atualizar(dt){
+  const av=S.av;
+  if(av.andando && av.alvo){
+    const dx=av.alvo[0]-av.x, dy=av.alvo[1]-av.y, d=Math.hypot(dx,dy);
+    const vel=300*escalaProf(av.y);
+    if(d<4){ av.andando=false; if(av.obj){ av.dir = av.obj.brilho[0]>=av.x?1:-1; abrirVN(av.obj); } }
+    else { const st=Math.min(d, vel*dt); let nx=av.x+dx/d*st, ny=av.y+dy/d*st;
+      if(!dentro([nx,ny],CENA.chao)) [nx,ny]=maisPerto([nx,ny],CENA.chao);
+      if(Math.abs(dx)>2) av.dir = dx>0?1:-1; av.x=nx; av.y=ny; av.fase+=dt*vel/120; }
+  }
+  // câmera: segue o avatar com antecipação na direção do passo; foca o objeto quando a caixa abre
+  const cam=S.cam; cam.z += (cam.zAlvo-cam.z)*Math.min(1,dt*3.2);
+  let tx = cam.foco ? cam.foco[0] : av.x + (av.andando? av.dir*40 : 0);
+  let ty = cam.foco ? cam.foco[1] : H/2 + Math.sin(S.t*0.6)*3;
+  cam.x += (tx-cam.x)*Math.min(1,dt*2.6); cam.y += (ty-cam.y)*Math.min(1,dt*2.6);
+  const k=esc(), meiaW=VW/2/k, meiaH=VH/2/k;
+  cam.x = meiaW*2>=W ? W/2 : Math.max(meiaW, Math.min(W-meiaW, cam.x));
+  cam.y = meiaH*2>=H ? H/2 : Math.max(meiaH, Math.min(H-meiaH, cam.y));
+  for(const t of S.toques) t.t+=dt; S.toques=S.toques.filter(t=>t.t<0.9);
+  for(const m of S.motes){ m.v-=m.vel*dt*0.9; m.u+=Math.sin(S.t*0.5+m.f)*0.0009; if(m.v<0){ m.v=1; m.u=rnd(); } }
+  for(const b of S.brasas){ b.vida+=dt*0.55; if(b.vida>1){ b.vida=0; b.vx=(rnd()-0.5)*10; } }
+}
+
+function compor(){
+  const k=esc(), cmds=[], t=S.t;
+  const pt=(x,y)=>paraTela(x,y);
+  // 0. pintura
+  let [x0,y0]=pt(0,0); cmds.push({id:'cena',tex:ASSAR?TX.assada:TX.cena,x:x0,y:y0,w:W*k,h:H*k,a:1});
+  // 1. facho da lua e névoa baixa
+  if(FX && !ASSAR) cmds.push({id:'facho',tex:TX.facho,x:x0,y:y0,w:W*k,h:H*k,a:0.20+Math.sin(t*0.4)*0.03,blend:'add'});
+  if(FX){ const off=(t*7)%(512*1.6); for(let i=0;i<2;i++){ const [nx,ny]=pt(-off+i*512*1.6,720);
+    cmds.push({id:'nevoa'+i,tex:TX.nevoa,x:nx,y:ny,w:512*k*1.6,h:128*k*2.4,a:0.8,blend:'add'}); } }
+  // 2. luzes quentes (tremor de chama)
+  if(FX) for(const l of CENA.luzes){ const fl = l.tremor ? Math.sin(t*7.3+l.x)*0.03+Math.sin(t*13.1)*0.02 : 0;
+    const [lx,ly]=pt(l.x,l.y); const r=l.r*k*2*(ASSAR?0.5:1);
+    if(ASSAR && !l.tremor) continue;
+    cmds.push({id:'luz-'+l.id,tex:l.cor==='#f2c58a'?TX.quente:TX.fria,x:lx,y:ly,w:r*(l.sx||1),h:r*(l.sy||1),ax:.5,ay:.5,a:ASSAR?0.07+fl:l.a+fl,blend:'add'}); }
+  // 3. brilho dos objetos tocáveis (pulso lento, losango girando)
+  const av=S.av;
+  for(const o of CENA.objetos){ const [gx,gy,gr]=o.brilho; const [sx,sy]=pt(gx,gy);
+    const perto = Math.hypot(av.x-o.pe[0], av.y-o.pe[1]) < 230 || S.aberto===o;
+    const pul = 0.5+0.5*Math.sin(t*2.2+gx*0.01);
+    cmds.push({id:'halo-'+o.id,tex:TX.halo,x:sx,y:sy,w:gr*2*k,h:gr*2*k,ax:.5,ay:.5,a:(perto?0.32:0.12)+pul*0.10,blend:'add'});
+    const es=(perto?20:13)*k*2*(0.85+pul*0.25);
+    cmds.push({id:'est-'+o.id,tex:TX.estrela,x:sx,y:sy,w:es,h:es,ax:.5,ay:.5,rot:t*0.6,a:perto?0.8:0.45,blend:'add'});
+    const [rx,ry]=pt(o.rot[0],o.rot[1]); const el=rots[o.id];
+    if(el){ el.style.transform=`translate(${rx}px,${ry-6}px) translate(-50%,-100%)`; el.classList.toggle('on', perto && !S.aberto); } }
+  // 4. marca do toque
+  for(const m of S.toques){ const [mx,my]=pt(m.x,m.y); const p=m.t/0.9; const s=(30+p*50)*k*2*escalaProf(m.y);
+    cmds.push({id:'toque'+m.x.toFixed(1)+m.y.toFixed(1),tex:TX.anel,x:mx,y:my,w:s,h:s*0.42,ax:.5,ay:.5,a:(1-p)*0.9,blend:'add'}); }
+  // 5. avatar (sombra + quadro) e oclusor ordenados pelo pé
+  const e=escalaProf(av.y), ah=ALTURA_BASE*e, aw=ah*TX.av.w/TX.av.h;
+  const [ax,ay]=pt(av.x,av.y);
+  const q = av.andando ? Math.floor(av.fase*8)%8 : 8;
+  const sombra={id:'sombra',tex:TX.sombra,x:ax,y:ay,w:aw*1.3*k,h:aw*0.34*k,ax:.5,ay:.5,a:0.75};
+  const corpo={id:'avatar',tex:(av.dir>0?TX.av.dir:TX.av.esq)[q],x:ax,y:ay+4*k,w:aw*k,h:ah*k,ax:.5,ay:.985,
+    a:1};
+  const oc=CENA.oclusor; const [ox,oy]=pt(oc.x,oc.y);
+  const occ={id:'oclusor',tex:TX.oclusor,x:ox,y:oy,w:oc.w*k,h:oc.h*k,a:1};
+  if(av.y < oc.base) cmds.push(sombra, corpo, occ); else cmds.push(occ, sombra, corpo);
+  // luz de recorte do abajur no avatar quando está perto
+  const dl=Math.hypot(av.x-84, av.y-760); if(dl<380) cmds.push({id:'av-luz',tex:TX.quente,x:ax-aw*0.3*k,y:ay-ah*0.55*k,w:ah*0.9*k,h:ah*0.9*k,ax:.5,ay:.5,a:(1-dl/380)*0.22,blend:'add'});
+  // 6. poeira no facho da lua
+  const [f0x,f0y]=CENA.facho[0], [f1x]=CENA.facho[1];
+  if(FX) S.motes.forEach((m,i)=>{ const yy=180+m.v*820, lerp=(yy-180)/820;
+    const xl=f0x+(250-f0x)*lerp, xr=f1x+(600-f1x)*lerp, xx=xl+(xr-xl)*m.u;
+    const [px,py]=pt(xx,yy); const s=m.tam*k*2.2; const tw=0.45+0.55*Math.sin(t*1.7+m.f*3);
+    cmds.push({id:'m'+i,tex:TX.mote,x:px,y:py,w:s,h:s,ax:.5,ay:.5,a:tw*0.55*(1-Math.abs(m.u-0.5)),blend:'add'}); });
+  // 7. primeiro plano (paralaxe maior que a cena) + chama das velas e brasas
+  const fr=CENA.frente; const par=(S.cam.x-W/2)*fr.paralaxe;
+  const [fx,fy]=pt(fr.x-par, fr.y);
+  cmds.push({id:'frente',tex:TX.frente,x:fx,y:fy,w:fr.w*k,h:fr.h*k,a:1});
+  const velas=[[fr.x-par+82, fr.y+650],[fr.x-par+203, fr.y+640]];
+  if(FX) velas.forEach(([vx,vy],i)=>{ const [cx,cy]=pt(vx,vy); const fl=Math.sin(t*9+i*2)*0.06+Math.sin(t*15.7+i)*0.04;
+    cmds.push({id:'vela'+i,tex:TX.quente,x:cx,y:cy,w:180*k*2,h:180*k*2,ax:.5,ay:.5,a:0.42+fl,blend:'add'}); });
+  if(FX) S.brasas.forEach((b,i)=>{ const [bx,by]=velas[b.base]; const [px,py]=pt(bx+b.vx*b.vida*6+Math.sin(t*3+i)*4, by-30-b.vida*190);
+    cmds.push({id:'b'+i,tex:TX.brasa,x:px,y:py,w:8*k*2,h:8*k*2,ax:.5,ay:.5,a:(1-b.vida)*0.8,blend:'add'}); });
+  // 8. acabamento: teto escuro, tinta ametista nas sombras, vinheta
+  if(FX && !ASSAR){ cmds.push({id:'teto',tex:TX.teto,x:0,y:0,w:VW,h:VH*0.32,a:0.9});
+  cmds.push({id:'tinta',tex:TX.tinta,x:0,y:0,w:VW,h:VH,a:0.10,blend:'screen'});
+  cmds.push({id:'vinheta',tex:TX.vinheta,x:-VW*0.15,y:-VH*0.08,w:VW*1.3,h:VH*1.16,a:S.aberto?1:0.85}); }
+  if(DEBUG) debugCmds(cmds,pt,k);
+  return cmds;
+}
+function debugCmds(cmds,pt,k){
+  CENA.chao.forEach((p,i)=>{ const [x,y]=pt(p[0],p[1]); cmds.push({id:'dc'+i,tex:TX.dbg,x,y,w:8,h:8,ax:.5,ay:.5,a:0.9}); });
+  const [lx,ly]=pt(0,CENA.oclusor.base); cmds.push({id:'dl',tex:TX.dbg,x:lx,y:ly,w:349*k,h:2,a:0.8});
+}
+
+// demo para medir: caminha por pontos e abre objetos
+function demo(){
+  const roteiro=[[600,980],[200,1000],'porta',[420,900],'poltrona',[640,900],[360,800],'mesinha',[520,1010],'relogio'];
+  let i=0; const passo=()=>{ const r=roteiro[i++%roteiro.length];
+    if(typeof r==='string'){ const o=CENA.objetos.find(o=>o.id===r); if(S.aberto) fecharVN(); irPara(o.pe,o); }
+    else { if(S.aberto) fecharVN(); irPara(r,null); } };
+  passo(); setInterval(passo, 2200);
+}
+</script>
+</body>
+</html>

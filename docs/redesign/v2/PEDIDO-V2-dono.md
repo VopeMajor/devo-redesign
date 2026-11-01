@@ -11,6 +11,7 @@ Decisões tomadas na conversa (31/10):
   - Só a **Casa** e as **Torres** viram RPG Maker / visual novel (mapa onde o avatar anda, diálogos com retrato).
   - Arte e enquadramento precisam ser mais ricos; o primeiro kit foi julgado simples demais.
   - Mais tarde, no mesmo dia: "os npcs também tem que passar pelo redesign. pegue como referencia o persona"
+  - Depois, com 14 referências novas (`refs/ref-09.jpg` … `refs/ref-22.jpg`): "a vibe anterior, mas não um reaproveitamento ok? isso é um redesgn afinal. algumas referências (mas não se prenda a elas.) pode inserir elementos 2.5/3D em algumas telas. também refaça os cosméticos. quero tudo Melhor e mais bonito"
 - Pinterest: sem conexão nesta sessão; o dono pode mandar links ou imagens.
 
 ---
