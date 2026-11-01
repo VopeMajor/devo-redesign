@@ -1,0 +1,6 @@
+[v2-cos2-asas-crepusculo] v01: @cf/black-forest-labs/flux-2-klein-9b seed=8131 1536x1024 passos=None (~1,455 neurônios)
+    ok em 2.7s, 1536x1024
+[v2-cos2-asas-crepusculo] v02: @cf/black-forest-labs/flux-2-klein-9b seed=8132 1536x1024 passos=None (~1,455 neurônios)
+    ok em 2.8s, 1536x1024
+[v2-cos2-asas-crepusculo] v01: rembg:birefnet-general; sem avisos
+[v2-cos2-asas-crepusculo] v02: rembg:birefnet-general; sem avisos

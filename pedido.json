@@ -1,0 +1,45 @@
+{
+  "id": "v2-cos2-asas-crepusculo",
+  "titulo": "DEVO v2 — cosméticos r2: Asas do Crepúsculo com asas para fora do quadro (Lendário)",
+  "tipo": "ilustracao",
+  "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+  "prompt": "Ornate jewelry object concept art, painted, highly detailed, isolated on a plain flat light grey background. A wide avatar frame with a small round window in the center left completely empty and plain, and two huge spread wings extending far out to the left and right well beyond the frame, the left wing of glossy black feathers, the right wing of silver white feathers, layered long flight feathers. Above the window a faceted crimson crystal heart in an old gold setting, thin gold chains looping under the window with small crimson drops, a few loose feathers falling. Dramatic dusk studio light, rim light on the feathers. No text, letters, numbers or logos anywhere.",
+  "negative": "text, letters, watermark, person, face in center, cartoon, flat vector, blurry, low detail, pixel art",
+  "largura": 1536,
+  "altura": 1024,
+  "variacoes": [
+    {
+      "seed": 8131,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "passos": null,
+      "largura": 1536,
+      "altura": 1024,
+      "prompt_extra": "",
+      "n": 1
+    },
+    {
+      "seed": 8132,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "passos": null,
+      "largura": 1536,
+      "altura": 1024,
+      "prompt_extra": "",
+      "n": 2
+    }
+  ],
+  "pos": {
+    "remover_fundo": true,
+    "tamanho_final": 1536,
+    "margem": 0.03,
+    "derivados": [
+      512,
+      256
+    ],
+    "modelo_fundo": "birefnet-general",
+    "fundo": "liso",
+    "camadas": []
+  },
+  "passos": null,
+  "guidance": null,
+  "referencias": []
+}
