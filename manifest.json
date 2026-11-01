@@ -1,0 +1,59 @@
+{
+  "pedido": "v2-npc-rato-cutin",
+  "titulo": "DEVO v2 — Rato, cut-in 2048x640",
+  "tipo": "ilustracao",
+  "tamanho_final": 2048,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 9529,
+      "passos": null,
+      "segundos": 2.4,
+      "neuronios_estimados": 1409,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "v2-npc-rato-cutin--v01--2048.png",
+          "bytes": 1116420
+        },
+        {
+          "arquivo": "v2-npc-rato-cutin--v01--2048.webp",
+          "bytes": 188394
+        },
+        {
+          "arquivo": "v2-npc-rato-cutin--v01--1024.webp",
+          "bytes": 62500
+        }
+      ],
+      "segundos_pos": 1.9,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 9530,
+      "passos": null,
+      "segundos": 2.3,
+      "neuronios_estimados": 1409,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "v2-npc-rato-cutin--v02--2048.png",
+          "bytes": 1199249
+        },
+        {
+          "arquivo": "v2-npc-rato-cutin--v02--2048.webp",
+          "bytes": 182898
+        },
+        {
+          "arquivo": "v2-npc-rato-cutin--v02--1024.webp",
+          "bytes": 57306
+        }
+      ],
+      "segundos_pos": 1.8,
+      "avisos": []
+    }
+  ]
+}

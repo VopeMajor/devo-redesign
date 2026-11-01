@@ -1,0 +1,6 @@
+[v2-npc-rato-cutin] v01: @cf/black-forest-labs/flux-2-klein-9b seed=9529 2048x640 passos=None (~1,409 neurônios)
+    ok em 2.4s, 2048x640
+[v2-npc-rato-cutin] v02: @cf/black-forest-labs/flux-2-klein-9b seed=9530 2048x640 passos=None (~1,409 neurônios)
+    ok em 2.3s, 2048x640
+[v2-npc-rato-cutin] v01: mantido; sem avisos
+[v2-npc-rato-cutin] v02: mantido; sem avisos
