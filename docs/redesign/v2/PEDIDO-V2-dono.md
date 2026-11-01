@@ -10,6 +10,7 @@ Decisões tomadas na conversa (31/10):
   - O DEVO em geral (celular do sistema, Record, Deadly Vote, Poço, Mesa, Salão, Companhias etc.) mantém a identidade atual (gótico ametista, arte pintada; ver `docs/redesign/IDENTIDADE.md`). Nada de pixel nessas telas.
   - Só a **Casa** e as **Torres** viram RPG Maker / visual novel (mapa onde o avatar anda, diálogos com retrato).
   - Arte e enquadramento precisam ser mais ricos; o primeiro kit foi julgado simples demais.
+  - Mais tarde, no mesmo dia: "os npcs também tem que passar pelo redesign. pegue como referencia o persona"
 - Pinterest: sem conexão nesta sessão; o dono pode mandar links ou imagens.
 
 ---
