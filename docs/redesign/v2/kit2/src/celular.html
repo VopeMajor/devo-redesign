@@ -1,0 +1,369 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DEVO v2 · kit2 (revisão) · celular</title>
+<link rel="stylesheet" href="kit2.css">
+<link rel="stylesheet" href="telas.css">
+<script type="importmap">{"imports":{"three":"/node_modules/three/build/three.module.js","three/addons/":"/node_modules/three/examples/jsm/"}}</script>
+</head>
+<body>
+<main class="prancha">
+
+<!-- ===================== a) HOME ===================== -->
+<figure id="f-home"><figcaption><b>a</b>Home do sistema</figcaption>
+<section class="tela home" id="home">
+  <img class="cena-pintura home-vitral" src="img/v2/home-vitral.webp" alt="">
+  <div class="camada home-escuro"></div>
+  <div class="camada home-facho"></div>
+  <div class="poeira" id="home-poeira"></div>
+
+  <canvas class="home-3d" id="c-relogio"></canvas>
+
+  <header class="home-topo">
+    <div class="perfil">
+      <div class="perfil-med"><div class="perfil-rosto"></div><img src="img/v2/badalada.webp" alt=""></div>
+      <div>
+        <div class="kicker">RECORD · DV-0518</div>
+        <div class="perfil-nome">Helena Varga</div>
+      </div>
+    </div>
+    <div class="home-data"><b>Sáb · 01 de novembro</b><span class="kicker">NOITE · LUA CRESCENTE</span></div>
+  </header>
+
+  <button class="app-disco" style="left:18px;top:206px"><span class="app-vidro"><svg><use href="#e-mensagens"/></svg></span><span class="app-nome">Mensagens</span></button>
+  <button class="app-disco" style="left:20px;top:364px"><span class="app-vidro"><svg><use href="#e-record"/></svg></span><span class="app-nome">Record</span></button>
+  <button class="app-disco" style="right:18px;top:206px"><span class="app-vidro"><svg><use href="#e-jogos"/></svg></span><span class="app-nome">Jogos</span></button>
+  <button class="app-disco" style="right:20px;top:364px"><span class="app-vidro"><svg><use href="#e-cartas"/></svg></span><span class="app-nome">Cartas</span></button>
+
+  <img class="home-avatar" src="img/v2/avatar-capa.webp" alt="">
+
+  <div class="home-tempo">
+    <div class="tempo-corrente"></div>
+    <div class="tempo-cartela">
+      <span class="kicker">TEMPO NO PULSO</span>
+      <div class="tempo-dig num metal-txt"><span>71</span><i>:</i><span>42</span><i>:</i><span>09</span></div>
+      <div class="tempo-un"><span>HORAS</span><span>MIN</span><span>SEG</span></div>
+      <div class="filete" id="tempo-fil"></div>
+    </div>
+  </div>
+
+  <article class="convocacao">
+    <div class="conv-corpo">
+      <div class="conv-selo"><svg viewBox="0 0 48 48"><use href="#e-espadas"/></svg></div>
+      <div>
+        <span class="kicker" style="color:#ff9aa1">CONVOCAÇÃO · ABERTA</span>
+        <h3>Deadly Vote</h3>
+        <p>Sáb, 08/11 · 21h · 6/12 inscritos</p>
+      </div>
+    </div>
+    <div class="conv-canhoto"><span class="kicker">COMEÇA EM</span><b class="num">6d 23h</b><span class="conv-ir">Inscrever ›</span></div>
+  </article>
+
+  <nav class="doca">
+    <div class="doca-placa"></div>
+    <button class="doca-it"><svg><use href="#e-inventario"/></svg><span>Baú</span></button>
+    <button class="doca-it"><svg><use href="#e-avisos"/></svg><span>Avisos</span><em>2</em></button>
+    <button class="doca-casa" aria-label="Entrar na Casa"><div class="porta-luz"></div><svg><use href="#e-casa"/></svg><span>CASA</span></button>
+    <button class="doca-it"><svg><use href="#e-confidentes"/></svg><span>Vínculos</span></button>
+    <button class="doca-it"><svg><use href="#e-calendario"/></svg><span>Agenda</span></button>
+  </nav>
+  <div class="indicador"></div>
+  <div class="vinheta"></div><div class="grao"></div>
+</section>
+</figure>
+
+<!-- ===================== b) CASA · EXPLORAR ===================== -->
+<figure id="f-explorar"><figcaption><b>b</b>Casa · explorar</figcaption>
+<section class="tela explorar" id="explorar">
+  <img class="cena-pintura explorar-sala" src="img/v2/casa-sala.webp" alt="">
+  <div class="camada explorar-facho"></div>
+  <div class="poeira" id="exp-poeira"></div>
+
+  <div class="hotspot" style="left:150px;top:392px"><i class="anel"></i><span class="hs-rot"><svg><use href="#e-casa"/></svg>Porta</span></div>
+  <div class="hotspot quente" style="left:132px;top:498px"><i class="anel"></i><span class="hs-rot dir"><svg><use href="#e-cartas"/></svg>Cartão por baixo da porta</span></div>
+  <div class="hotspot" style="left:48px;top:318px"><i class="anel"></i><span class="hs-rot"><svg><use href="#e-record"/></svg>Estante</span></div>
+  <div class="hotspot" style="left:330px;top:470px"><i class="anel"></i><span class="hs-rot esq"><svg><use href="#e-confidentes"/></svg>Sofá</span></div>
+
+  <div class="explorar-sombra"></div>
+  <img class="explorar-avatar" src="img/v2/avatar-capa-costas.webp" alt="avatar">
+  <div class="explorar-alvo"><i></i><i></i></div>
+  <div class="explorar-frente"></div>
+
+  <div class="hud-lugar"><svg><use href="#e-casa"/></svg><div><span class="kicker">CASA</span><b>Sala de estar</b></div></div>
+  <div class="hud-pulso" id="exp-pulso"></div>
+  <div class="aviso-sistema"><span class="losango"></span><span>[Um Visitante apareceu]</span><span class="losango"></span></div>
+
+  <div class="trilho trilho-mundo">
+    <button class="tr-bt"><svg><use href="#e-mensagens"/></svg><span>Diário</span></button>
+    <span class="tr-dica">toque no chão para andar</span>
+    <button class="tr-celular" aria-label="Abrir o celular"><i></i><span>Celular</span></button>
+  </div>
+  <div class="indicador"></div>
+  <div class="vinheta"></div><div class="grao"></div>
+</section>
+</figure>
+
+<!-- ===================== c) CASA · VN ===================== -->
+<figure id="f-casa"><figcaption><b>c</b>Casa · visitante e VN</figcaption>
+<section class="tela casa" id="casa">
+  <img class="cena-pintura casa-fundo" src="img/v2/casa-sala.webp" alt="">
+  <div class="camada casa-tinta"></div>
+  <div class="vn-faixa galo"><div class="vn-faixa-tinta"></div><canvas id="mt-casa"></canvas></div>
+  <div class="vn-arco" id="vn-arco"></div>
+  <div class="poeira" id="casa-poeira"></div>
+  <img class="vn-retrato pose" src="img/v2/galo-pose.webp" alt="O Galo">
+  <img class="vn-ombro" src="img/v2/avatar-capa-costas.webp" alt="">
+
+  <div class="hud-lugar"><svg><use href="#e-casa"/></svg><div><span class="kicker">CASA</span><b>Sala de estar</b></div></div>
+  <div class="hud-pulso" id="casa-pulso"></div>
+
+  <div class="vn-caixa">
+    <div class="vn-caixa-mat"></div>
+    <div class="filete" id="vn-fil"></div>
+    <div class="vn-nome"><b>O GALO</b><span>ANFITRIÃO · IV</span></div>
+    <div class="vn-afin"><img src="img/itens/galo-128.webp" alt=""><div id="vn-vinc"></div></div>
+    <p class="vn-fala">— E aí, pé de caju! Lembra de mim?<span class="cursor"></span></p>
+    <div class="vn-rodape"><span>HISTÓRICO</span><span>AUTO</span><span>PULAR</span><b>tocar ›</b></div>
+  </div>
+  <div class="indicador"></div>
+  <div class="vinheta"></div><div class="grao"></div>
+</section>
+</figure>
+
+<!-- ===================== d) CUT-IN ===================== -->
+<figure id="f-cutin"><figcaption><b>d</b>Cut-in de NPC</figcaption>
+<section class="tela cutin q3" id="cutin">
+  <img class="cena-pintura cut-fundo" src="img/v2/casa-sala.webp" alt="">
+  <div class="camada cut-tinta"></div>
+  <canvas class="camada cut-vel" id="cut-vel"></canvas>
+  <div class="cut-nome"><span class="recorte"><span>O</span><span class="esp"></span><span>G</span><span>A</span><span>L</span><span>O</span></span></div>
+  <div class="cut-sub"></div>
+  <div class="cut-faixa"><img src="img/v2/galo-cutin.webp" alt=""><canvas id="mt-cut"></canvas></div>
+  <div class="cut-metal"><span>ANFITRIÃO · IV · O IMPERADOR · ANFITRIÃO · IV · O IMPERADOR · ANFITRIÃO · IV</span></div>
+  <div class="cut-estilhacos" id="cut-est"></div>
+  <div class="cut-frase"><p>— Cheguei pra fazer você pirar de novo, sacou?</p></div>
+  <div class="cut-arcano"><b>IV</b></div>
+  <div class="poeira" id="cut-poeira"></div>
+  <div class="indicador"></div>
+  <div class="vinheta"></div><div class="grao"></div>
+</section>
+</figure>
+
+<!-- ===================== e) CONFIDENTES ===================== -->
+<figure id="f-confidentes"><figcaption><b>e</b>Confidentes</figcaption>
+<section class="tela conf" id="confidentes">
+  <div class="camada conf-fundo"></div>
+  <div class="conf-laje marmore-branco"></div>
+  <div class="conf-laje-fio"></div>
+  <div class="conf-tarot"><img src="img/arcanos/imperador-figura.webp" alt=""><b>IV</b><span>O IMPERADOR</span><div class="filete" id="tarot-fil"></div></div>
+  <div class="conf-assin"><canvas id="mt-conf"></canvas></div>
+  <img class="conf-ret" src="img/v2/galo-segredo.webp" alt="O Galo">
+  <div class="poeira" id="conf-poeira"></div>
+
+  <header class="conf-topo">
+    <span class="kicker">VÍNCULOS · 6 CONHECIDOS</span>
+    <h1 class="conf-titulo">Confi<span>dentes</span></h1>
+  </header>
+
+  <article class="conf-foco">
+    <div class="conf-rank"><span class="kicker">ARCANO</span><b>IV</b></div>
+    <div class="conf-foco-corpo">
+      <div class="conf-nome">O Galo</div>
+      <div class="kicker" style="color:var(--galo-hi)">ANFITRIÃO · VISITANTE DA CASA</div>
+      <div class="conf-barras">
+        <div class="lin"><span class="rotulo">Afinidade</span><div id="b-afin"></div></div>
+        <div class="lin"><span class="rotulo" style="color:var(--paixao-hi)">Romance</span><div id="b-rom"></div></div>
+      </div>
+      <div class="conf-meta"><span class="paixao on"><svg viewBox="0 0 48 48"><use href="#e-confidentes"/></svg>Paixão</span><span class="prox"><span class="kicker">PRÓXIMO</span> ??? · Chave de Torre</span></div>
+    </div>
+  </article>
+
+  <ul class="conf-lista" id="conf-lista"></ul>
+  <div class="trilho"><button class="tr-voltar"><svg viewBox="0 0 24 24"><use href="#e-voltar"/></svg><span>Voltar</span></button><span class="tr-dica">deslize para ver todos</span><button class="tr-bt"><svg><use href="#e-mensagens"/></svg><span>Mensagem</span></button></div>
+  <div class="indicador"></div>
+  <div class="vinheta" style="opacity:.6"></div><div class="grao"></div>
+</section>
+</figure>
+
+<!-- ===================== f) MAPA DAS TORRES ===================== -->
+<figure id="f-mapa"><figcaption><b>f</b>Mapa das Torres · órbita</figcaption>
+<section class="tela mapa" id="mapa">
+  <div class="camada mapa-ceu"></div>
+  <canvas class="mapa-3d" id="c-orbita"></canvas>
+  <div class="mapa-rotulos" id="mapa-rot"></div>
+  <div class="poeira" id="mapa-poeira"></div>
+  <header class="tela-topo"><div><span class="kicker">SISTEMA · TORRES</span><h1>O Céu das Torres</h1></div><div class="hud-pulso" id="mapa-pulso"></div></header>
+  <div class="folha">
+    <i class="folha-alca"></i>
+    <div class="folha-cab"><div class="emblema-no galo"><svg><use href="#e-torre"/></svg></div><div><span class="kicker">TORRE SECUNDÁRIA · DO GALO</span><h2>Torre do Imperador</h2><p>Andar atual: IV · chave: Essência do Galo</p></div></div>
+    <div class="folha-acoes"><button class="tr-voltar"><svg viewBox="0 0 24 24"><use href="#e-voltar"/></svg></button><button class="btn-metal"><span>Entrar na torre</span></button></div>
+  </div>
+  <div class="indicador"></div>
+  <div class="vinheta"></div><div class="grao"></div>
+</section>
+</figure>
+
+<!-- ===================== g) TORRE POR DENTRO ===================== -->
+<figure id="f-torre"><figcaption><b>g</b>Torre por dentro</figcaption>
+<section class="tela torre" id="torre">
+  <img class="cena-pintura torre-escada" src="img/v2/torre-escada.webp" alt="">
+  <div class="camada torre-luz"></div>
+  <div class="poeira" id="torre-poeira"></div>
+  <div class="torre-nos" id="torre-nos"></div>
+
+  <header class="tela-topo"><div><span class="kicker">TORRE SECUNDÁRIA</span><h1>Torre do Imperador</h1></div><div class="torre-ess"><img src="img/itens/galo-128.webp" alt=""><b class="num">× 3</b></div></header>
+  <div class="torre-guia"><div class="med"></div><p>“Sobe logo, xuxu.”</p></div>
+
+  <div class="folha folha-andar">
+    <i class="folha-alca"></i>
+    <div class="folha-cab"><div class="andar-num"><span class="kicker">ANDAR</span><b>IV</b></div><div><h2>Título do andar</h2><p>Custo: Essência do Galo, dobra a cada andar · Entrega: Chave da Torre do Imperador</p></div></div>
+    <div class="folha-acoes"><button class="tr-voltar"><svg viewBox="0 0 24 24"><use href="#e-voltar"/></svg></button><button class="btn-metal"><span>Subir ao Andar IV</span></button></div>
+  </div>
+  <div class="indicador"></div>
+  <div class="vinheta"></div><div class="grao"></div>
+</section>
+</figure>
+
+<!-- ===================== h) DEADLY VOTE ===================== -->
+<figure id="f-dv"><figcaption><b>h</b>Deadly Vote · convocação</figcaption>
+<section class="tela dv" id="dv">
+  <div class="camada dv-fundo"></div>
+  <canvas class="dv-3d" id="c-tabuleiro"></canvas>
+  <div class="poeira" id="dv-poeira"></div>
+  <header class="tela-topo"><div><span class="kicker" style="color:#ff9aa1">CONVOCAÇÃO · ABERTA</span><h1 class="dv-titulo">Deadly Vote</h1></div><div class="hud-pulso" id="dv-pulso"></div></header>
+  <div class="dv-selo"><svg viewBox="0 0 48 48"><use href="#e-espadas"/></svg></div>
+
+  <article class="dv-bilhete">
+    <div class="dv-bil-corpo">
+      <span class="kicker">MESA DO DEALER · SÁBADO</span>
+      <h2>08 de novembro, 21h</h2>
+      <div class="dv-jogadores" id="dv-jog"></div>
+      <p>6 de 12 lugares ocupados</p>
+    </div>
+    <div class="dv-canhoto"><span class="kicker">COMEÇA EM</span><b class="num">6d 23h</b><span class="kicker">Nº 0518</span></div>
+  </article>
+
+  <section class="dv-mao">
+    <div class="dv-mao-cab"><span class="rotulo">Sua mão</span><span class="kicker">PESO DAS CARTAS</span><div class="dv-peso"><i style="width:58%"></i></div><b class="num">7 / 12</b></div>
+    <div class="dv-cartas" id="dv-cartas"></div>
+  </section>
+  <div class="trilho"><button class="tr-voltar"><svg viewBox="0 0 24 24"><use href="#e-voltar"/></svg><span>Voltar</span></button><button class="btn-rubi"><span>Inscrever-se</span></button></div>
+  <div class="indicador"></div>
+  <div class="vinheta"></div><div class="grao"></div>
+</section>
+</figure>
+
+<!-- ===================== i) POÇO ===================== -->
+<figure id="f-poco"><figcaption><b>i</b>Poço</figcaption>
+<section class="tela poco" id="poco">
+  <img class="cena-pintura poco-cena" src="img/poco/poco-1024.webp" alt="">
+  <div class="camada poco-raios"></div>
+  <img class="poco-brilho" src="img/poco/poco-brilho.webp" alt="">
+  <div class="poeira" id="poco-poeira"></div>
+  <header class="tela-topo"><div><span class="kicker">SISTEMA · POÇO</span><h1>O Poço</h1></div><div class="poco-moedas"><img src="img/itens/dracma-comum-128.webp" alt=""><b class="num">× 4</b></div></header>
+  <div class="poco-letreiro"><span class="kicker">ÚLTIMOS DO POÇO</span><div class="poco-fita"><span><img src="img/poco/fragmento.webp" alt="">Fragmento · Helena</span><span><img src="img/poco/essencia.webp" alt="">Essência · Dante</span><span><img src="img/poco/capsula.webp" alt="">Cápsula · Íris</span></div></div>
+  <div class="poco-acoes">
+    <button class="btn-metal grande"><span>Lançar Moeda</span></button>
+    <div class="poco-sec"><button class="btn-vidro"><span>Girar Manivela</span></button><button class="btn-vidro"><span>Inspecionar Balde</span></button></div>
+  </div>
+  <div class="trilho trilho-curto"><button class="tr-voltar"><svg viewBox="0 0 24 24"><use href="#e-voltar"/></svg><span>Voltar</span></button><span class="tr-dica">balde de madeira · Diário do Poço ›</span></div>
+  <div class="indicador"></div>
+  <div class="vinheta"></div><div class="grao"></div>
+</section>
+</figure>
+
+<!-- ===================== j) COSMÉTICOS · VITRINE ===================== -->
+<figure id="f-vitrine"><figcaption><b>j</b>Cosméticos · vitrine</figcaption>
+<section class="tela vitrine" id="vitrine">
+  <div class="camada vit-fundo"></div>
+  <canvas class="vit-3d" id="c-pedestal"></canvas>
+  <div class="poeira" id="vit-poeira"></div>
+  <header class="tela-topo"><div><span class="kicker">IDENTIDADE · VITRINE</span><h1>Molduras</h1></div><div class="hud-pulso" id="vit-pulso"></div></header>
+  <nav class="vit-abas"><span class="on">Molduras</span><span>Miniperfil</span><span>Balões</span><span>Nome</span></nav>
+  <div class="vit-moldura">
+    <div class="vit-halo"></div>
+    <div class="vit-rosto"></div>
+    <img src="img/v2/badalada.webp" alt="Última Badalada">
+    <svg class="vit-oscila" viewBox="0 0 120 60"><path d="M18 8 Q60 58 102 8" fill="none" stroke="rgba(211,202,245,.55)" stroke-width="1" stroke-dasharray="2 4"/><path d="M28 18 Q60 50 92 18" fill="none" stroke="rgba(211,202,245,.35)" stroke-width="1"/></svg>
+  </div>
+  <div class="vit-info">
+    <div class="vit-rar"><span class="gema-rar arcano"></span><span>Arcano</span><i>· Prêmio de Deadly Vote</i></div>
+    <h2>Última Badalada</h2>
+    <p>Um relógio que não pertence a este mundo. O pêndulo não para e o sino toca uma última vez.</p>
+  </div>
+  <div class="vit-carrossel" id="vit-car"></div>
+  <div class="trilho"><button class="tr-voltar"><svg viewBox="0 0 24 24"><use href="#e-voltar"/></svg><span>Voltar</span></button><button class="btn-metal"><span>Equipar</span></button></div>
+  <div class="indicador"></div>
+  <div class="vinheta"></div><div class="grao"></div>
+</section>
+</figure>
+
+<!-- ===================== k) COSMÉTICOS · INVENTÁRIO ===================== -->
+<figure id="f-inventario"><figcaption><b>k</b>Cosméticos · coleção</figcaption>
+<section class="tela inv" id="inventario">
+  <div class="camada marmore-negro" style="opacity:.5"></div>
+  <div class="camada inv-luz"></div>
+  <header class="tela-topo"><div><span class="kicker">IDENTIDADE · COLEÇÃO</span><h1>Coleção</h1></div><div class="inv-cont"><b class="num">11</b><span class="kicker">PEÇAS</span></div></header>
+  <nav class="inv-filtros"><span class="on">Tudo</span><span>Molduras</span><span>Miniperfil</span><span>Balões</span><span>Evento</span></nav>
+  <section class="inv-duas">
+    <div class="inv-duas-cab"><span class="kicker">ITEM DE EVENTO · DUAS ETAPAS</span><b>Casulo do Crepúsculo</b></div>
+    <div class="inv-etapas"><div class="etapa"><img src="img/v2/casulo-1.webp" alt=""><span>fechado</span></div><div class="inv-seta"><i></i><span>abre no fim do evento</span></div><div class="etapa"><img src="img/v2/casulo-2.webp" alt=""><span>aberto</span></div></div>
+  </section>
+  <div class="inv-grade" id="inv-grade"></div>
+  <div class="trilho"><button class="tr-voltar"><svg viewBox="0 0 24 24"><use href="#e-voltar"/></svg><span>Voltar</span></button><span class="tr-dica">toque para ver na vitrine</span></div>
+  <div class="indicador"></div>
+  <div class="vinheta" style="opacity:.6"></div><div class="grao"></div>
+</section>
+</figure>
+
+<!-- ===================== l) FICHA DA CARTA ===================== -->
+<figure id="f-carta"><figcaption><b>l</b>Ficha da carta · Rito</figcaption>
+<section class="tela carta" id="carta">
+  <div class="camada carta-fundo"></div>
+  <div class="camada carta-holofote"></div>
+  <div class="poeira" id="carta-poeira"></div>
+  <header class="tela-topo"><div><span class="kicker">FICHA · XADREZ III/VII</span><h1>Rei do Xadrez</h1></div><div class="hud-pulso" id="carta-pulso"></div></header>
+
+  <div class="carta3d">
+    <div class="carta-obj">
+      <div class="carta-borda" style="transform:translateZ(-1px)"></div><div class="carta-borda" style="transform:translateZ(-2px)"></div><div class="carta-borda" style="transform:translateZ(-3px)"></div><div class="carta-borda" style="transform:translateZ(-4px)"></div><div class="carta-borda" style="transform:translateZ(-5px)"></div>
+      <div class="carta-face">
+        <img src="img/cartas/rei.webp" alt="">
+        <div class="carta-holo"></div>
+        <div class="carta-moldura" id="carta-mold"></div>
+        <div class="carta-num">III</div>
+        <div class="carta-rodape"><b>Rei do Xadrez</b><span>TRAPAÇA</span></div>
+      </div>
+    </div>
+    <div class="carta-sombra"></div>
+  </div>
+  <div class="carta-pedras">
+    <div class="pedra"><span class="kicker">PESO</span><b class="num">2</b></div>
+    <div class="pedra"><span class="kicker">RARIDADE</span><b style="color:#9fb6f0">Rara</b></div>
+    <div class="pedra"><span class="kicker">NATUREZA</span><b>Benedictio</b></div>
+    <div class="pedra"><span class="kicker">ARQUÉTIPO</span><b>Tabuleiro</b></div>
+  </div>
+  <nav class="carta-abas"><span>Efeito</span><span class="on">Rito</span><span>Coleção</span></nav>
+  <section class="rito">
+    <div class="rito-cab"><span class="rotulo">Gestos</span><span class="kicker">3 · EM ORDEM</span></div>
+    <div class="gestos" id="gestos"></div>
+    <div class="rito-cantico">
+      <div class="rito-cab"><span class="rotulo" style="color:var(--ink)">Cântico</span><span class="kicker" style="color:#5b5446">EXEMPLO DO MANUAL · INÚTEIS</span></div>
+      <ol class="cant" id="cant"></ol>
+    </div>
+  </section>
+  <div class="trilho"><button class="tr-voltar"><svg viewBox="0 0 24 24"><use href="#e-voltar"/></svg><span>Voltar</span></button><span class="tr-dica">Recuo paranormal · dano-base da Rara 30</span></div>
+  <div class="indicador"></div>
+  <div class="vinheta" style="opacity:.7"></div><div class="grao"></div>
+</section>
+</figure>
+
+</main>
+<aside class="legenda-pend" id="legenda"></aside>
+<script src="pecas.js"></script>
+<script src="telas.js"></script>
+<script type="module" src="telas3d.js"></script>
+</body>
+</html>

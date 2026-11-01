@@ -1,0 +1,654 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DEVO v2 · Cosméticos</title>
+<!-- Mockups do redesign dos cosméticos, rodada 2 (SPEC-COSMETICOS.md). Abrir com o servidor estático na RAIZ do repositório:
+     cd <raiz> && python3 -m http.server 8767 → http://127.0.0.1:8767/docs/redesign/v2/kit2/cosmeticos.html?tela=espelho
+     Telas: espelho · material · album · revelacao · cena · camadas. Sem ?tela, todas lado a lado.
+     Todos os caminhos relativos partem de src/ (tag base). Arte nova em src/img/cos2 (pipeline infra/arte, pedidos v2-cos2-*). -->
+<base href="src/">
+<script type="importmap">{"imports":{"three":"/node_modules/three/build/three.module.js","three/addons/":"/node_modules/three/examples/jsm/"}}</script>
+<link rel="stylesheet" href="kit2.css">
+<style>
+:root {
+  --r-comum: #a8a39a; --r-incomum: #7fa38f; --r-raro: #7f9fe0; --r-epico: #b98bd6; --r-lendario: #d9b86a; --r-arcano: #d3caf5;
+  --irid: linear-gradient(110deg, #f6eedf, #b9aef0 22%, #7f9fe0 42%, #f2b3cb 62%, #d3caf5 80%, #f6eedf);
+  --P: url(../../../../../public/images/cosmeticos/);
+}
+.tela { background: #07060b; overflow: hidden; }
+.bg-pint { inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; }
+.bg-veu { inset: 0; z-index: 1; }
+
+/* cabeçalho */
+.topo { z-index: 40; top: 54px; left: 18px; right: 18px; display: flex; justify-content: space-between; align-items: flex-start; }
+.topo h1 { font: italic 900 40px/.95 var(--f-marca); color: var(--porcelana); letter-spacing: -.02em; margin-top: 6px;
+  text-shadow: 3px 3px 0 var(--ame-deep), 0 0 26px rgba(0,0,0,.7); }
+.topo .sub { font: italic 500 15px/1.2 var(--f-titulo); color: var(--texto-2); margin-top: 3px; }
+.selo-prop { display: inline-block; margin-top: 8px; padding: 4px 8px; font: 600 10px/1 var(--f-dado); letter-spacing: .16em; color: var(--r-lendario);
+  border: 1px dashed rgba(217,184,106,.7); background: rgba(10,9,13,.6); }
+
+/* notas (no máximo três por tela, 10 px) */
+.nota { z-index: 45; font: 500 10px/1.3 var(--f-dado); letter-spacing: .14em; text-transform: uppercase; color: var(--champ); white-space: nowrap;
+  text-shadow: 0 1px 6px #000, 0 0 2px #000; }
+.nota b { display: block; color: var(--porcelana); font-weight: 600; }
+
+/* trilho de botões */
+.trilho { z-index: 60; left: 14px; right: 14px; bottom: 16px; height: 52px; display: flex; gap: 10px; align-items: center; }
+.btn-volta { height: 46px; padding: 0 16px; border-radius: 23px; display: inline-flex; align-items: center; gap: 8px;
+  font: 600 10.5px/1 var(--f-rotulo); letter-spacing: .2em; color: var(--champ); background: rgba(12,11,16,.85); box-shadow: inset 0 0 0 1px var(--champ-linha); }
+.btn-volta svg { width: 14px; height: 14px; }
+.btn-sec { height: 46px; flex: 1; transform: skewX(-12deg); display: grid; place-items: center; background: rgba(28,23,48,.92);
+  box-shadow: inset 0 0 0 1px rgba(211,202,245,.45), 3px 3px 0 #000; }
+.btn-sec span { transform: skewX(12deg); font: 600 10.5px/1 var(--f-rotulo); letter-spacing: .2em; color: var(--ame-hi); }
+.btn-pri { height: 48px; flex: 1.25; transform: skewX(-12deg); display: grid; place-items: center; background: var(--champ-grad);
+  box-shadow: 4px 4px 0 var(--ame-deep), 0 10px 24px rgba(0,0,0,.5); }
+.btn-pri span { transform: skewX(12deg); font: 700 12px/1 var(--f-rotulo); letter-spacing: .26em; color: #17141c; }
+
+/* nome com efeito (Aurora Arcana) */
+.nome-aurora { display: block; font: italic 900 28px/.92 var(--f-marca); letter-spacing: -.02em;
+  background: linear-gradient(100deg, #d3caf5 0%, #b98bd6 22%, #f2b3cb 40%, #f6eedf 52%, #c9bda6 64%, #8a7cc8 86%, #d3caf5 100%);
+  background-size: 220% 100%; background-position: 30% 0; -webkit-background-clip: text; background-clip: text; color: transparent;
+  filter: drop-shadow(2px 2px 0 #1c1730) drop-shadow(0 0 10px rgba(185,139,214,.35)); }
+
+/* placa de raridade (cartão de coleção) */
+.pl { position: relative; overflow: hidden; background-size: cover; background-position: center; border-radius: 3px;
+  box-shadow: 0 0 0 1px rgba(0,0,0,.6), 0 10px 22px rgba(0,0,0,.55); }
+.pl::after { content: ''; position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(80% 60% at 50% 42%, transparent 40%, rgba(5,4,8,.55)); }
+.pl img.peca { position: absolute; left: 50%; top: 48%; transform: translate(-50%, -50%); max-width: 88%; max-height: 84%; z-index: 2;
+  filter: drop-shadow(0 8px 10px rgba(0,0,0,.6)); }
+.pl.falta img.peca { filter: brightness(0) drop-shadow(0 0 1px rgba(211,202,245,.55)); opacity: .82; }
+.pl.falta { filter: saturate(.25) brightness(.62); }
+.pl .luz { position: absolute; inset: 0; z-index: 1; mix-blend-mode: screen; }
+.p-comum { background-image: url(img/cos2/placa-comum.webp); }
+.p-incomum { background-image: url(img/cos2/placa-incomum.webp); }
+.p-raro { background-image: url(img/cos2/placa-raro.webp); }
+.p-epico { background-image: url(img/cos2/placa-epico.webp); }
+.p-lendario { background-image: url(img/cos2/placa-lendario.webp); }
+.p-arcano { background-image: url(img/cos2/placa-arcano.webp); }
+
+/* balões */
+.bal-pint { position: relative; display: inline-block; max-width: 230px; border-style: solid; border-width: 14px 20px 20px 18px;
+  border-image: url(img/cos2/balao-correspondencia-9.webp) 26% 22% 32% 20% fill / 14px 20px 20px 18px / 0 stretch;
+  font: 500 14px/1.22 var(--f-corpo); color: #2a1a16; filter: drop-shadow(0 6px 8px rgba(0,0,0,.45)); }
+.bal-pint span { position: relative; display: block; margin: -4px 0 -6px 2px; }
+.bal-pint .selo { position: absolute; left: 86%; top: -22px; width: 22px; transform: translateX(-50%) rotate(-8deg); filter: drop-shadow(0 2px 2px rgba(0,0,0,.4)); }
+.bal-vet { position: relative; display: inline-flex; align-items: center; min-height: 32px; padding: 7px 18px; font: 400 14px/1.25 var(--f-corpo); color: #eef1ff; white-space: nowrap; }
+.bal-vet > svg { position: absolute; inset: -4px -6px; width: calc(100% + 12px); height: calc(100% + 8px); overflow: visible; }
+.bal-vet span { position: relative; }
+
+/* ===== ESPELHO ===== */
+.esp-card { z-index: 20; left: 196px; top: 214px; width: 178px; height: 214px; perspective: 800px; }
+.esp-card .ficha { position: absolute; inset: 0; transform-style: preserve-3d; transform: rotateY(-16deg) rotateX(5deg) rotateZ(2deg); }
+.esp-card .fundo { position: absolute; inset: 0; border-radius: 4px; overflow: hidden; background: url(img/cos2/vitral.webp) 22% 40%/auto 150%;
+  box-shadow: 0 26px 44px rgba(0,0,0,.7), 0 0 0 1px rgba(242,233,216,.5), 0 0 36px rgba(138,124,200,.3); }
+.esp-card .fundo::after { content: ''; position: absolute; inset: 0; background: linear-gradient(200deg, rgba(8,7,12,.25), rgba(8,7,12,.62) 45%, rgba(8,7,12,.88)); }
+.esp-card .filete { position: absolute; inset: 6px; border: 1px solid rgba(242,233,216,.55); outline: 1px solid rgba(242,233,216,.18); outline-offset: 3px; }
+.esp-card .esp { position: absolute; left: 100%; top: 0; width: 9px; height: 100%; transform-origin: left; transform: rotateY(90deg); background: linear-gradient(180deg, #f2e9d8, #8f846f 50%, #cfc2a8); }
+.esp-card .txt { position: absolute; left: 22px; right: 14px; top: 18px; transform: translateZ(16px); }
+.esp-card .txt .kicker { font-size: 9px; color: var(--ame-hi); }
+.esp-card .dados { margin-top: 8px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.esp-card .dados div { border-top: 1px solid rgba(201,189,166,.35); padding-top: 4px; }
+.esp-card .dados span { display: block; font: 500 9px/1 var(--f-dado); letter-spacing: .18em; color: var(--champ); }
+.esp-card .dados b { display: block; margin-top: 3px; font: 500 18px/1 var(--f-num); color: var(--porcelana); }
+.esp-card .bal { position: absolute; left: 8px; bottom: 10px; transform: translateZ(30px) scale(.8); transform-origin: left bottom; }
+.esp-card .broche { position: absolute; right: -22px; top: -44px; width: 76px; transform: translateZ(70px) rotate(8deg); }
+.esp-card .broche .fita { position: absolute; left: 30px; top: 0; width: 15px; height: 40px; background: linear-gradient(90deg, #1a0d18, #4a1630 40%, #2a0f1e 60%, #12080f); clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 86%, 0 100%); }
+.esp-card .broche img { position: relative; display: block; width: 76px; margin-top: 18px; filter: drop-shadow(0 12px 12px rgba(0,0,0,.65)); }
+.esp-feixe { z-index: 12; left: 214px; top: 400px; width: 90px; height: 150px; transform: rotate(46deg); transform-origin: top center;
+  background: linear-gradient(180deg, rgba(211,202,245,.32), rgba(211,202,245,.06) 70%, transparent); filter: blur(5px); mix-blend-mode: screen;
+  clip-path: polygon(30% 0, 70% 0, 100% 100%, 0 100%); }
+.esp-3d { z-index: 15; left: 0; top: 200px; width: 390px; height: 560px; }
+.esp-arco { z-index: 30; left: 0; top: 0; width: 390px; height: 844px; pointer-events: none; }
+.esp-med { position: absolute; z-index: 32; width: 54px; text-align: center; transform: translate(-50%, -50%); }
+.esp-med .m { position: relative; width: 50px; height: 50px; margin: 0 auto; border-radius: 50%; overflow: hidden; background-size: cover; background-position: center;
+  box-shadow: 0 0 0 2px #0b0a0f, 0 0 0 3.5px var(--c), 0 0 16px color-mix(in srgb, var(--c) 55%, transparent), 0 8px 14px rgba(0,0,0,.7); }
+.esp-med .m img { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); max-width: 84%; max-height: 84%; }
+.esp-med .m svg { position: absolute; inset: 7px; }
+.esp-med b { display: block; margin-top: 6px; font: 600 10px/1 var(--f-rotulo); letter-spacing: .12em; color: var(--porcelana); text-shadow: 0 1px 4px #000; }
+.esp-med i { display: block; margin-top: 2px; font: 500 9px/1 var(--f-dado); letter-spacing: .12em; color: var(--c); font-style: normal; }
+.esp-med.ativo .m { width: 60px; height: 60px; box-shadow: 0 0 0 2px #0b0a0f, 0 0 0 3.5px #f6eedf, 0 0 26px rgba(211,202,245,.75), 0 8px 18px rgba(0,0,0,.7); }
+
+/* ===== MATERIAL ===== */
+.duelo { z-index: 20; left: 14px; right: 14px; top: 146px; height: 280px; perspective: 900px; }
+.duelo .lado { position: absolute; top: 0; width: 152px; height: 206px; transform-style: preserve-3d; }
+.duelo .lado.l { left: 8px; transform: rotateY(7deg); }
+.duelo .lado.a { right: 8px; transform: rotateY(-7deg); }
+.duelo .pl { width: 100%; height: 100%; }
+.duelo .pl img.peca { max-height: 90%; top: 50%; }
+.duelo .cap { position: absolute; left: -6px; right: -6px; top: 214px; text-align: center; }
+.duelo .cap b { display: block; font: 700 12px/1 var(--f-rotulo); letter-spacing: .26em; }
+.duelo .cap strong { display: block; margin-top: 5px; font: italic 700 17px/1 var(--f-marca); white-space: nowrap; color: var(--porcelana); }
+.duelo .cap span { display: block; margin-top: 4px; font: italic 500 13.5px/1.15 var(--f-titulo); color: var(--texto-2); }
+.duelo .x { position: absolute; left: 50%; top: 88px; width: 30px; height: 30px; transform: translateX(-50%) rotate(45deg); z-index: 5;
+  background: #0b0a0f; box-shadow: inset 0 0 0 1px var(--champ), 0 0 18px rgba(0,0,0,.8); }
+.duelo .x::after { content: '×'; position: absolute; inset: 0; display: grid; place-items: center; transform: rotate(-45deg); font: 500 18px/1 var(--f-titulo); color: var(--champ-hi); }
+.escada { z-index: 20; left: 14px; right: 14px; top: 436px; display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px; }
+.escada .pl { height: 78px; }
+.escada .cap { text-align: center; margin-top: 6px; }
+.escada .cap b { display: block; font: 600 9px/1 var(--f-rotulo); letter-spacing: .1em; text-transform: uppercase; }
+.escada .cap span { display: block; margin-top: 3px; font: italic 500 11.5px/1.05 var(--f-titulo); color: var(--texto-2); }
+.faixa { z-index: 20; left: 14px; right: 14px; padding: 10px 12px; background: linear-gradient(180deg, rgba(22,19,30,.94), rgba(10,9,14,.95)); box-shadow: inset 0 0 0 1px rgba(201,189,166,.28); }
+.faixa .cab { display: flex; justify-content: space-between; align-items: baseline; }
+.faixa .cab h2 { font: italic 600 16px/1 var(--f-titulo); color: var(--porcelana); }
+.faixa .cab small { font: 500 9.5px/1 var(--f-dado); letter-spacing: .14em; color: var(--champ); }
+.aros { display: grid; grid-template-columns: repeat(6, 1fr); margin-top: 8px; align-items: end; text-align: center; }
+.aros div svg { display: block; margin: 0 auto; }
+.tracos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; margin-top: 4px; }
+.tracos > div { display: flex; align-items: flex-end; gap: 7px; justify-content: center; }
+.tracos img { width: 26px; height: 34px; object-fit: contain; }
+.tracos svg { color: var(--champ-hi); display: block; }
+.tracos p { grid-column: span 1; }
+
+/* ===== ÁLBUM ===== */
+.serie { position: absolute; z-index: 20; left: 14px; right: 14px; padding: 10px 10px 10px; background: linear-gradient(180deg, rgba(22,19,30,.92), rgba(9,8,12,.95)); box-shadow: inset 0 0 0 1px rgba(201,189,166,.26); }
+.serie .cab { display: flex; align-items: baseline; gap: 8px; }
+.serie .cab h2 { font: italic 700 19px/1 var(--f-marca); color: var(--porcelana); text-shadow: 2px 2px 0 var(--ame-deep); }
+.serie .cab small { font: 500 9.5px/1 var(--f-dado); letter-spacing: .14em; color: var(--champ); }
+.serie .cab .cont { margin-left: auto; font: 500 17px/1 var(--f-num); color: var(--porcelana); }
+.serie .cab .cont em { font-style: normal; color: var(--champ-lo); }
+.serie .linha { display: grid; gap: 6px; margin-top: 9px; }
+.serie .pl { height: 70px; }
+.serie .rot { margin-top: 5px; text-align: center; font: italic 500 11.5px/1.05 var(--f-titulo); color: var(--texto-2); }
+.serie .rot b { display: block; font: 600 8.5px/1 var(--f-rotulo); letter-spacing: .12em; text-transform: uppercase; font-style: normal; margin-bottom: 2px; }
+.serie .rot.falta { color: var(--texto-3); }
+.serie .barra { position: relative; height: 4px; margin-top: 9px; background: rgba(255,255,255,.08); }
+.serie .barra i { position: absolute; left: 0; top: 0; bottom: 0; background: linear-gradient(90deg, var(--ame), var(--ame-hi)); box-shadow: 0 0 8px var(--ame); }
+.serie .lacre { position: absolute; right: -8px; top: -30px; width: 66px; height: 66px; transform: rotate(-12deg); z-index: 4; }
+.serie.completa { box-shadow: inset 0 0 0 1px rgba(217,184,106,.6), 0 0 26px rgba(217,184,106,.18); }
+.detalhe { z-index: 22; left: 14px; right: 14px; top: 646px; height: 122px; display: flex; gap: 12px; padding: 10px;
+  background: linear-gradient(180deg, rgba(30,24,16,.94), rgba(10,9,12,.96)); box-shadow: inset 0 0 0 1px rgba(217,184,106,.5); }
+.detalhe .pl { width: 82px; flex: none; }
+.detalhe h3 { font: italic 700 18px/1 var(--f-marca); color: var(--porcelana); }
+.detalhe .rar { font: 700 9.5px/1 var(--f-rotulo); letter-spacing: .22em; color: var(--r-lendario); }
+.detalhe p { margin-top: 5px; font: 400 13px/1.25 var(--f-corpo); color: var(--texto-2); }
+.detalhe .proc { display: flex; gap: 6px; margin-top: 7px; flex-wrap: wrap; }
+.detalhe .proc span { font: 500 9.5px/1 var(--f-dado); letter-spacing: .12em; padding: 4px 6px; color: var(--champ-hi); background: rgba(255,255,255,.05); box-shadow: inset 0 0 0 1px rgba(201,189,166,.35); }
+.detalhe .proc span.x { color: var(--r-lendario); box-shadow: inset 0 0 0 1px rgba(217,184,106,.7); border: 0; }
+
+/* ===== REVELAÇÃO ===== */
+.rev-3d { z-index: 10; left: 0; top: 70px; width: 390px; height: 540px; -webkit-mask: linear-gradient(transparent, #000 14%, #000 82%, transparent); mask: linear-gradient(transparent, #000 14%, #000 82%, transparent); }
+.rev-raios { z-index: 5; left: 50%; top: 330px; width: 900px; height: 900px; transform: translate(-50%, -50%);
+  background: repeating-conic-gradient(from 0deg, rgba(211,202,245,.09) 0 4deg, transparent 4deg 13deg); -webkit-mask: radial-gradient(circle, #000 0, transparent 60%); mask: radial-gradient(circle, #000 0, transparent 60%); }
+.rev-cap { z-index: 30; left: 18px; right: 18px; top: 606px; text-align: center; }
+.rev-cap .rar { display: inline-block; padding: 5px 14px; font: 700 11px/1 var(--f-rotulo); letter-spacing: .4em; color: #17141c; background: var(--irid); transform: skewX(-12deg); box-shadow: 3px 3px 0 var(--ame-deep); }
+.rev-cap h2 { margin-top: 8px; font: italic 900 34px/1 var(--f-marca); color: var(--porcelana); text-shadow: 3px 3px 0 var(--ame-deep), 0 0 30px rgba(185,174,240,.5); }
+.rev-cap p { margin: 6px auto 0; max-width: 330px; font: italic 500 14.5px/1.25 var(--f-titulo); color: var(--texto-2); }
+.rev-cap .proc { margin-top: 8px; font: 500 10px/1 var(--f-dado); letter-spacing: .18em; color: var(--champ); }
+.rev-passos { z-index: 30; left: 18px; right: 18px; top: 104px; display: flex; justify-content: space-between; }
+.rev-passos div { font: 500 9.5px/1.25 var(--f-dado); letter-spacing: .12em; color: var(--texto-3); text-transform: uppercase; }
+.rev-passos div b { color: var(--ame-hi); font-weight: 600; margin-right: 4px; }
+.rev-passos div.on { color: var(--porcelana); }
+
+/* ===== CENA ===== */
+.painel { z-index: 30; left: 14px; right: 14px; overflow: hidden; }
+.painel .tit { position: absolute; left: 12px; top: 10px; z-index: 6; display: flex; gap: 8px; align-items: baseline; }
+.painel .tit h3 { font: italic 700 18px/1 var(--f-marca); color: var(--porcelana); text-shadow: 2px 2px 0 var(--ame-deep), 0 0 10px #000; }
+.painel .tit small { font: 500 9.5px/1 var(--f-dado); letter-spacing: .14em; color: var(--champ); text-shadow: 0 0 6px #000; }
+.chat { top: 122px; height: 256px; background: linear-gradient(180deg, rgba(20,17,28,.96), rgba(9,8,12,.97)); box-shadow: inset 0 0 0 1px rgba(201,189,166,.28); }
+.msg { position: absolute; left: 12px; right: 12px; display: flex; gap: 10px; align-items: flex-start; }
+.msg .mini { position: relative; flex: none; width: 50px; height: 50px; }
+.msg .mini .foto { position: absolute; inset: 11px; border-radius: 3px; background-size: cover; background-position: 50% 20%; }
+.msg .mini img { position: absolute; inset: 0; width: 100%; height: 100%; }
+.msg .quem { font: italic 700 14px/1 var(--f-marca); margin: 2px 0 7px; display: flex; gap: 6px; align-items: center; }
+.msg .quem img { width: 18px; height: 18px; object-fit: contain; }
+.msg .quem small { font: 500 9px/1 var(--f-dado); letter-spacing: .14em; color: var(--texto-3); font-style: normal; }
+.dv { top: 388px; height: 216px; background: #08060a; box-shadow: inset 0 0 0 1px rgba(255,102,112,.3); }
+.dv .tab { position: absolute; left: -30px; top: -20px; width: 430px; height: 286px; object-fit: cover; }
+.dv .cone { position: absolute; left: 128px; top: -10px; width: 150px; height: 220px; z-index: 2; mix-blend-mode: screen;
+  background: linear-gradient(180deg, rgba(255,240,225,.0), rgba(255,236,220,.28) 70%, rgba(255,236,220,.38)); clip-path: polygon(44% 0, 56% 0, 100% 100%, 0 100%); filter: blur(3px); }
+.dv .poca { position: absolute; left: 140px; top: 150px; width: 130px; height: 44px; border-radius: 50%; z-index: 2; mix-blend-mode: screen; background: radial-gradient(closest-side, rgba(255,238,220,.45), transparent); }
+.dv .vinheta { position: absolute; inset: 0; z-index: 3; background: radial-gradient(52% 70% at 56% 58%, transparent 30%, rgba(4,3,6,.78) 80%); }
+.assento { position: absolute; z-index: 4; transform: translate(-50%, -50%); }
+.assento .foto { position: absolute; border-radius: 50%; background-size: cover; }
+.assento img.m { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
+.assento .placa-nome { position: absolute; left: 50%; transform: translateX(-50%) skewX(-12deg); background: #0b0a0f; padding: 3px 7px; box-shadow: 2px 2px 0 #3a0a10; white-space: nowrap; }
+.assento .placa-nome span { display: block; transform: skewX(12deg); font: italic 700 10px/1 var(--f-marca); color: var(--porcelana); }
+.assento.parado { filter: brightness(.62) saturate(.8); }
+.assento.apagado { filter: grayscale(1) brightness(.42); }
+.assento.apagado::after { content: ''; position: absolute; left: 4px; right: 4px; top: 46%; height: 2px; background: #ff6670; transform: rotate(-28deg); box-shadow: 0 0 6px #a3121f; }
+.voto { position: absolute; z-index: 5; right: 12px; top: 40px; width: 106px; padding: 9px 9px 10px; background: #f2efe9 url(img/os/marmore-branco.webp) center/260px; color: #17141c;
+  transform: rotate(4deg); box-shadow: 4px 4px 0 #3a0a10, 0 12px 24px rgba(0,0,0,.6); }
+.voto .kicker { color: #6b1018; font-size: 8.5px; }
+.voto b { display: block; font: italic 900 16px/1 var(--f-marca); margin-top: 5px; }
+.voto img { width: 42px; position: absolute; right: -14px; bottom: -22px; transform: rotate(-10deg); filter: drop-shadow(0 6px 6px rgba(0,0,0,.5)); }
+.casa { top: 614px; height: 154px; background: #120d0a; box-shadow: inset 0 0 0 1px rgba(201,189,166,.3); }
+.casa .pint { position: absolute; left: -14px; top: -62px; width: 230px; }
+.casa .brasao { position: absolute; z-index: 3; left: 70px; top: 22px; width: 50px; filter: drop-shadow(3px 7px 4px rgba(0,0,0,.75)) drop-shadow(0 0 1px rgba(0,0,0,.6)) brightness(.92) sepia(.08); }
+.casa .chama { position: absolute; z-index: 4; left: -40px; top: -30px; width: 200px; height: 200px; mix-blend-mode: screen; background: radial-gradient(closest-side, rgba(255,190,110,.32), transparent); }
+.casa .vn { position: absolute; z-index: 5; left: 178px; right: 8px; top: 40px; bottom: 10px; }
+.casa .vn .caixa { position: absolute; inset: 20px 0 0 0; background: linear-gradient(180deg, rgba(14,12,20,.95), rgba(8,7,11,.97)); box-shadow: inset 0 0 0 1px rgba(242,233,216,.42); padding: 22px 10px 8px 12px;
+  font: 400 13.5px/1.3 var(--f-corpo); color: var(--texto); }
+.casa .vn .placa-vn { position: absolute; left: -8px; top: 2px; z-index: 2; display: flex; align-items: center; gap: 4px; }
+.casa .vn .med { width: 44px; height: 44px; border-radius: 50%; margin-top: -16px; box-shadow: 0 0 0 2px #0b0a0f, 0 0 0 3.5px var(--coruja-hi), 0 6px 12px rgba(0,0,0,.6); }
+.casa .vn .nomeplaca { transform: skewX(-12deg); background: var(--coruja); padding: 4px 10px; box-shadow: 3px 3px 0 #000; }
+.casa .vn .nomeplaca span { display: block; transform: skewX(12deg); font: italic 700 13px/1 var(--f-marca); color: #fff; }
+
+/* ===== CAMADAS ===== */
+.explodido { z-index: 20; left: 0; top: 196px; width: 390px; height: 300px; perspective: 900px; perspective-origin: 40% 40%; }
+.pilha { position: absolute; left: 220px; top: 18px; width: 150px; height: 200px; transform-style: preserve-3d; transform: rotateX(6deg) rotateY(-58deg); }
+.plano { position: absolute; inset: 0; transform-style: preserve-3d; }
+.plano .vidro { position: absolute; inset: 0; border: 1px dashed rgba(211,202,245,.32); background: rgba(138,124,200,.04); }
+.rot-z { position: absolute; z-index: 30; width: 90px; font: 600 10px/1.3 var(--f-dado); letter-spacing: .12em; text-transform: uppercase; color: var(--champ); }
+.rot-z b { color: var(--ame-hi); margin-right: 5px; }
+.rot-z span { display: block; color: var(--texto-3); letter-spacing: 0; text-transform: none; font: italic 500 12px/1.15 var(--f-titulo); }
+.etapas { z-index: 30; left: 14px; right: 14px; top: 510px; height: 150px; padding: 10px 12px; background: linear-gradient(180deg, rgba(26,21,40,.94), rgba(10,9,14,.95)); box-shadow: inset 0 0 0 1px rgba(185,139,214,.4); }
+.etapas .linha { position: absolute; left: 12px; right: 12px; top: 34px; bottom: 8px; display: flex; align-items: center; justify-content: space-between; }
+.etapas .linha .pl { width: 92px; height: 106px; }
+.etapas .seta { flex: 1; text-align: center; font: italic 500 13px/1.2 var(--f-titulo); color: var(--texto-2); }
+.etapas .seta i { display: block; height: 1px; margin: 6px 8px; background: linear-gradient(90deg, transparent, var(--ame-hi), transparent); }
+.lod { z-index: 30; left: 14px; right: 14px; bottom: 22px; display: flex; gap: 6px; align-items: flex-end; }
+.lod > div { flex: 1; text-align: center; }
+.lod .q { position: relative; margin: 0 auto; }
+.lod b { display: block; margin-top: 6px; font: 600 9.5px/1.2 var(--f-dado); letter-spacing: .1em; color: var(--champ); }
+.lod span { display: block; font: italic 500 11.5px/1.1 var(--f-titulo); color: var(--texto-3); }
+
+@media (prefers-reduced-motion: no-preference) {
+  .anima .nome-aurora { animation: aurora 9s linear infinite; }
+  @keyframes aurora { to { background-position: 250% 0; } }
+}
+</style>
+</head>
+<body>
+<main class="prancha" id="prancha">
+
+<!-- ===================== ESPELHO ===================== -->
+<figure id="f-espelho"><figcaption><b>a</b>Espelho · a peça no pedestal</figcaption>
+<section class="tela" id="espelho">
+  <img class="bg-pint" src="img/cos2/vitral.webp" style="object-position:12% 50%;filter:brightness(.42) saturate(.9) blur(1.5px);transform:scale(1.08)" alt="">
+  <div class="bg-veu" style="background:radial-gradient(70% 45% at 30% 66%, rgba(92,72,170,.35), transparent 70%), linear-gradient(180deg, rgba(7,6,11,.55), rgba(7,6,11,.15) 40%, rgba(7,6,11,.85) 92%)"></div>
+  <div class="poeira" id="p-esp" style="z-index:2"></div>
+  <div class="ap"></div>
+  <header class="topo">
+    <div><div class="kicker">IDENTIDADE · ESPELHO</div><h1>Espelho</h1><div class="sub">Como os outros te veem na mesa.</div></div>
+    <div class="pul"></div>
+  </header>
+
+  <div class="esp-feixe"></div>
+  <canvas class="esp-3d" id="esp3d"></canvas>
+
+  <div class="esp-card">
+    <div class="ficha">
+      <div class="fundo"></div><div class="filete"></div><div class="esp"></div>
+      <div class="txt">
+        <div class="kicker">DV-0518</div>
+        <span class="nome-aurora" style="margin-top:5px">Helena<br>Varga</span>
+        <div class="dados"><div><span>VITÓRIAS</span><b>14</b></div><div><span>MESAS</span><b>31</b></div></div>
+      </div>
+      <div class="bal"><div class="bal-pint"><span>Boa noite à mesa.</span><img class="selo" src="img/cos2/balao-selo.webp" alt=""></div></div>
+      <div class="broche"><i class="fita"></i><img src="../../../../../public/images/cosmeticos/coracao-da-condessa/emblema-256.webp" alt=""></div>
+    </div>
+  </div>
+
+  <svg class="esp-arco" id="esp-arco" viewBox="0 0 390 844"></svg>
+  <div id="esp-meds" style="inset:0;z-index:32;pointer-events:none"></div>
+
+  <div class="nota" style="left:18px;top:196px"><b>Moldura · Arcano</b>Última Badalada</div>
+  <div class="nota" style="right:18px;top:160px;text-align:right"><b>Emblema · Lendário</b>Coração da Condessa</div>
+  <div class="nota" style="right:18px;top:446px;text-align:right"><b>Fundo · Épico</b>Vitral da Capela</div>
+
+  <div class="trilho">
+    <span class="btn-volta"><svg viewBox="0 0 24 24"><use href="#e-voltar"/></svg>VOLTAR</span>
+    <span class="btn-sec"><span>ÁLBUM</span></span>
+    <span class="btn-pri"><span>GIRAR</span></span>
+  </div>
+</section></figure>
+
+<!-- ===================== MATERIAL ===================== -->
+<figure id="f-material"><figcaption><b>b</b>Raridade é material</figcaption>
+<section class="tela" id="material">
+  <div class="bg-veu" style="background:radial-gradient(60% 34% at 28% 34%, rgba(217,184,106,.16), transparent 70%), radial-gradient(60% 34% at 74% 34%, rgba(127,159,224,.2), transparent 70%), linear-gradient(180deg,#0d0b16,#08070c 60%,#060509)"></div>
+  <div class="poeira" id="p-mat" style="z-index:2"></div>
+  <div class="ap"></div>
+  <header class="topo">
+    <div><div class="kicker">COLEÇÃO · RARIDADE</div><h1>Material</h1><div class="sub">Lendário e Arcano lado a lado.</div></div>
+    <div class="pul"></div>
+  </header>
+  <div class="duelo">
+    <div class="lado l">
+      <div class="pl p-lendario"><div class="luz" style="background:radial-gradient(60% 50% at 50% 38%, rgba(255,214,140,.32), transparent 70%)"></div><img class="peca" src="img/cos2/banquete.webp" alt=""></div>
+      <div class="cap"><b style="color:var(--r-lendario)">LENDÁRIO</b><strong>Banquete do Javali</strong><span>ouro velho e veludo</span></div>
+    </div>
+    <i class="x"></i>
+    <div class="lado a">
+      <div class="pl p-arcano"><div class="luz" style="background:radial-gradient(60% 50% at 50% 42%, rgba(185,174,240,.42), transparent 70%)"></div><img class="peca" src="img/cos2/badalada-janela.webp" alt=""></div>
+      <div class="cap"><b style="background:var(--irid);-webkit-background-clip:text;background-clip:text;color:transparent">ARCANO</b><strong>Última Badalada</strong><span>cristal e mecanismo</span></div>
+    </div>
+  </div>
+  <div class="escada" id="escada"></div>
+  <div class="faixa" style="top:560px;height:148px">
+    <div class="cab"><h2>Na lista, a forma fala</h2><small>48 PX · 24 PX</small></div>
+    <div class="aros" id="aros48"></div>
+  </div>
+  <div class="faixa" style="top:716px;height:96px;padding-top:8px">
+    <div class="cab"><h2>Emblemas em traço</h2><small>26 · 22 · 18 PX</small></div>
+    <div class="tracos" id="tracos"></div>
+  </div>
+  <div class="trilho" style="display:none"></div>
+</section></figure>
+
+<!-- ===================== ÁLBUM ===================== -->
+<figure id="f-album"><figcaption><b>c</b>Álbum por série</figcaption>
+<section class="tela" id="album">
+  <img class="bg-pint" src="img/cos2/placa-arcano.webp" style="filter:brightness(.25) blur(2px);transform:scale(1.2)" alt="">
+  <div class="bg-veu" style="background:linear-gradient(180deg, rgba(7,6,11,.5), rgba(7,6,11,.85))"></div>
+  <div class="ap"></div>
+  <header class="topo">
+    <div><div class="kicker">COLEÇÃO · ÁLBUM</div><h1>Séries</h1><span class="selo-prop">NOMES DAS SÉRIES · PROPOSTA</span></div>
+    <div class="pul"></div>
+  </header>
+  <div id="series" style="inset:0;z-index:20"></div>
+  <div class="detalhe">
+    <div class="pl p-lendario"><img class="peca" src="img/cos2/banquete.webp" alt=""></div>
+    <div>
+      <div class="rar">LENDÁRIO · MOLDURA</div>
+      <h3>Banquete do Javali</h3>
+      <p>Ouro envelhecido, presas no alto e a mesa posta: cartas e fichas da casa do Javali.</p>
+      <div class="proc"><span>ORIGEM · SEMANAL</span><span class="x">TEMPORADA · X</span><span>2 DE 3 FALTAM</span></div>
+    </div>
+  </div>
+  <div class="trilho">
+    <span class="btn-volta"><svg viewBox="0 0 24 24"><use href="#e-voltar"/></svg>VOLTAR</span>
+    <span class="btn-sec"><span>SÓ AS QUE FALTAM</span></span>
+  </div>
+</section></figure>
+
+<!-- ===================== REVELAÇÃO ===================== -->
+<figure id="f-revelacao"><figcaption><b>d</b>Revelação · proposta</figcaption>
+<section class="tela" id="revelacao">
+  <div class="bg-veu" style="z-index:0;background:radial-gradient(70% 40% at 50% 40%, rgba(74,60,140,.55), transparent 70%), linear-gradient(180deg,#0b0914,#07060b 70%,#050409)"></div>
+  <div class="rev-raios"></div>
+  <div class="ap"></div>
+  <header class="topo" style="top:52px">
+    <div><div class="kicker">DEADLY VOTE · RECOMPENSA</div><span class="selo-prop" style="margin-top:6px">PROPOSTA · O SORTEIO NÃO MUDA</span></div>
+    <div class="pul"></div>
+  </header>
+  <div class="rev-passos" style="top:578px"><div><b>1</b>desce</div><div><b>2</b>a placa acende</div><div class="on"><b>3</b>gira em 3D</div></div>
+  <canvas class="rev-3d" id="rev3d"></canvas>
+  <div class="rev-cap">
+    <span class="rar">ARCANO</span>
+    <h2>Última Badalada</h2>
+    <p>Um relógio que não pertence a este mundo. O pêndulo não para e o sino toca uma última vez.</p>
+    <div class="proc">MOLDURA · ORIGEM DEADLY VOTE</div>
+  </div>
+  <div class="trilho">
+    <span class="btn-volta"><svg viewBox="0 0 24 24"><use href="#e-voltar"/></svg>DEPOIS</span>
+    <span class="btn-pri"><span>EQUIPAR</span></span>
+  </div>
+</section></figure>
+
+<!-- ===================== CENA ===================== -->
+<figure id="f-cena"><figcaption><b>e</b>Em cena · chat, Deadly Vote, Casa</figcaption>
+<section class="tela" id="cena">
+  <div class="bg-veu" style="z-index:0;background:radial-gradient(80% 40% at 50% 20%, rgba(92,72,170,.3), transparent 70%), linear-gradient(180deg,#0d0b16,#08070c)"></div>
+  <div class="ap"></div>
+  <header class="topo">
+    <div><div class="kicker">IDENTIDADE · ONDE APARECE</div><h1>Em cena</h1></div>
+    <div class="pul"></div>
+  </header>
+  <div class="painel chat">
+    <div class="tit"><h3>Chat da mesa</h3><small>PINTADO × VETOR</small></div>
+    <div class="msg" style="top:44px">
+      <div class="mini"><div class="foto" style="background-image:url(../../../../../public/images/cosmeticos/amostra-retrato.jpg)"></div><img src="../../../../../public/images/cosmeticos/asas-do-crepusculo/mini-96.webp" alt=""></div>
+      <div><div class="quem"><span class="nome-aurora" style="font-size:15px;filter:none">Helena Varga</span><img src="../../../../../public/images/cosmeticos/coracao-da-condessa/emblema-96.webp" alt=""></div>
+        <div class="bal-pint"><span>Não confio no Rato. Ele riu cedo demais.</span><img class="selo" src="img/cos2/balao-selo.webp" alt=""></div></div>
+    </div>
+    <div class="msg" style="top:132px">
+      <div class="mini"><div class="foto" style="background:url(img/npc/herdeiro-neutro.webp) 50% 22%/300%"></div><img src="../../../../../public/images/cosmeticos/olho-arcano/mini-96.webp" alt=""></div>
+      <div><div class="quem" style="color:#dfe6ff">Ícaro <small>RARO · CORRESPONDÊNCIA EM VETOR</small></div>
+        <div class="bal-vet" data-bal="papel"><span>Ele riu porque já votou.</span></div></div>
+    </div>
+    <div class="msg" style="top:196px">
+      <div class="mini"><div class="foto" style="inset:6px;border-radius:50%;background:#3a3542"></div><img src="img/cos2/comum.webp" alt="" style="inset:2px;width:46px;height:46px"></div>
+      <div><div class="quem" style="color:var(--texto-2)">Bia <small>SEM COSMÉTICO · ARO DE PEDRA</small></div>
+        <div class="bal-vet" data-bal="comum"><span>Eu voto no Galo.</span></div></div>
+    </div>
+  </div>
+  <div class="painel dv">
+    <img class="tab" src="img/cos2/tabuleiro.webp" alt="">
+    <div class="cone"></div><div class="poca"></div><div class="vinheta"></div>
+    <div class="tit"><h3>Deadly Vote</h3><small>A MESA OLHA PARA QUEM FALA</small></div>
+    <div id="assentos"></div>
+    <div class="voto"><div class="kicker">SEU VOTO</div><b>Ícaro</b><img src="../../../../../public/images/cosmeticos/coracao-da-condessa/emblema-96.webp" alt=""></div>
+  </div>
+  <div class="painel casa">
+    <img class="pint" src="img/cos2/porta.webp" alt="">
+    <img class="brasao" src="../../../../../public/images/cosmeticos/coracao-da-condessa/emblema-256.webp" alt="">
+    <div class="chama"></div>
+    <div class="tit"><h3>Casa</h3></div><div class="tit" style="left:auto;right:12px;top:12px"><small>BRASÃO NA PORTA</small></div>
+    <div class="vn">
+      <div class="placa-vn"><div class="med" id="med-coruja"></div><div class="nomeplaca"><span>A Coruja</span></div></div>
+      <div class="caixa">— Bonito o coração na sua porta. É de verdade?</div>
+    </div>
+  </div>
+  <div class="nota" style="right:18px;bottom:28px;text-align:right;z-index:60">A fala da Coruja é exemplo,<br>não texto final</div>
+  <div class="trilho" style="right:auto">
+    <span class="btn-volta"><svg viewBox="0 0 24 24"><use href="#e-voltar"/></svg>VOLTAR</span>
+  </div>
+</section></figure>
+
+<!-- ===================== CAMADAS ===================== -->
+<figure id="f-camadas"><figcaption><b>f</b>Camadas, duas etapas, tamanhos</figcaption>
+<section class="tela" id="camadas">
+  <div class="bg-veu" style="z-index:0;background:radial-gradient(70% 36% at 50% 40%, rgba(92,72,170,.36), transparent 70%), linear-gradient(180deg,#0d0b16,#08070c)"></div>
+  <div class="poeira" id="p-cam" style="z-index:2"></div>
+  <div class="ap"></div>
+  <header class="topo">
+    <div><div class="kicker">VITRINE · PRÉVIA 2.5D</div><h1>Camadas</h1><div class="sub">Incline o celular: cada camada anda<br>numa velocidade.</div></div>
+    <div class="pul"></div>
+  </header>
+  <div class="explodido"><div class="pilha" id="pilha"></div></div>
+  <div id="rotz" style="inset:0;z-index:30"></div>
+  <div class="etapas">
+    <div class="painel-tit" style="display:flex;justify-content:space-between;align-items:baseline">
+      <h3 style="font:italic 700 17px/1 var(--f-marca);color:var(--porcelana);text-shadow:2px 2px 0 var(--ame-deep);white-space:nowrap">Duas etapas <small style="font:500 9.5px/1 var(--f-dado);letter-spacing:.14em;color:var(--r-epico);text-shadow:none">ÉPICO</small></h3>
+      <span class="selo-prop" style="margin:0;white-space:nowrap">ABRE: PENDENTE</span>
+    </div>
+    <div class="linha">
+      <div class="pl p-epico"><img class="peca" src="img/cos2/casulo-1.webp" alt=""></div>
+      <div class="seta">fechado: a luz<br>escapa pela fresta<i></i>aberto: a boneca<br>segura o relógio</div>
+      <div class="pl p-epico"><div class="luz" style="background:radial-gradient(50% 45% at 50% 48%, rgba(211,202,245,.45), transparent 70%)"></div><img class="peca" src="img/cos2/casulo-2.webp" alt=""></div>
+    </div>
+  </div>
+  <div class="lod" id="lod"></div>
+</section></figure>
+
+</main>
+
+<script src="pecas.js"></script>
+<script>
+const $ = (s) => document.querySelector(s);
+const params = new URLSearchParams(location.search);
+const tela = params.get('tela');
+if (tela) { document.body.classList.add('so'); $('#f-' + tela)?.classList.add('ativa'); }
+if (params.get('anima') !== '0') document.body.classList.add('anima');
+const P = '../../../../../public/images/cosmeticos/';
+const RET = P + 'amostra-retrato.jpg';
+const COR = { comum: '#a8a39a', incomum: '#7fa38f', raro: '#7f9fe0', epico: '#b98bd6', lendario: '#d9b86a', arcano: '#d3caf5' };
+const NOME_R = { comum: 'Comum', incomum: 'Incomum', raro: 'Raro', epico: 'Épico', lendario: 'Lendário', arcano: 'Arcano' };
+
+document.querySelectorAll('.ap').forEach((el) => el.outerHTML = barraAparelho());
+document.querySelectorAll('.pul').forEach((el) => el.innerHTML = pulso());
+
+// ---------- Aros de nível Lista: a FORMA diz a raridade (sobrevive a 48 e 24 px) ----------
+function aroLista(r, d = 48, foto = true) {
+  const c = 24, id = 'al' + r + d;
+  const grad = {
+    comum: ['#d4cfc5', '#8a857c', '#4c4943'], incomum: ['#e2c9a0', '#8d6b3f', '#4a3a24'], raro: ['#ffffff', '#b9c3e6', '#5d6a9e'],
+    epico: ['#f3e2ff', '#a77cc6', '#4a2a62'], lendario: ['#fff3cf', '#d9b86a', '#7a5a1e'], arcano: ['#f6eedf', '#b9aef0', '#7f9fe0'],
+  }[r];
+  let s = `<defs><linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${grad[0]}"/><stop offset=".5" stop-color="${grad[1]}"/><stop offset="1" stop-color="${grad[2]}"/></linearGradient>
+    <clipPath id="${id}c"><circle cx="24" cy="24" r="15.5"/></clipPath></defs>`;
+  if (r === 'arcano') s += `<ellipse cx="24" cy="24" rx="23" ry="8" fill="none" stroke="#d3caf5" stroke-width="1.6" transform="rotate(-28 24 24)" opacity=".9"/>`;
+  s += foto ? `<image href="${RET}" x="6" y="5" width="36" height="44" clip-path="url(#${id}c)" preserveAspectRatio="xMidYMin slice"/>` : `<circle cx="24" cy="24" r="15.5" fill="#2a2333"/>`;
+  const lw = { comum: 3.5, incomum: 4, raro: 4, epico: 4, lendario: 4.5, arcano: 3.5 }[r];
+  s += `<circle cx="24" cy="24" r="${15.5 + lw / 2}" fill="none" stroke="url(#${id})" stroke-width="${lw}"/>`;
+  if (r === 'arcano') s += `<circle cx="24" cy="24" r="21.5" fill="none" stroke="url(#${id})" stroke-width="1.4"/><path d="M5 31 A21 8 -28 0 0 43 17" fill="none" stroke="#fff" stroke-width="1.8" transform="rotate(0)" opacity=".95"/>`;
+  if (r === 'incomum') s += `<path d="M20 4.5 L24 9.5 L28 4.5Z" fill="#0b0a0f"/><circle cx="24" cy="6.6" r="2.4" fill="#a9d6bd" stroke="#e2c9a0" stroke-width=".8"/>`;
+  if (r === 'raro') for (let k = 0; k < 4; k++) { const a = (k * 90 + 45) * Math.PI / 180, x = c + 19 * Math.cos(a), y = c + 19 * Math.sin(a); s += `<use href="#estrela4" x="${x - 5}" y="${y - 5}" width="10" height="10" fill="#f4f6ff"/>`; }
+  if (r === 'epico') s += `<path d="M24 41 V44" stroke="#d9b6ee" stroke-width="1.4"/><path d="M24 43 L27.4 47.5 L24 52 L20.6 47.5Z" fill="#b98bd6" stroke="#f3e2ff" stroke-width=".9"/>`;
+  if (r === 'lendario') s += `<path d="M14 9 L15 1 L19.5 5.5 L24 -1.5 L28.5 5.5 L33 1 L34 9Z" fill="url(#${id})" stroke="#5a4416" stroke-width=".6"/><circle cx="24" cy="4" r="1.8" fill="#a3121f"/>`;
+  return `<svg viewBox="0 -3 48 56" width="${d}" height="${d * 56 / 48}" style="overflow:visible">${s}</svg>`;
+}
+const RS = ['comum', 'incomum', 'raro', 'epico', 'lendario', 'arcano'];
+$('#aros48').innerHTML = RS.map((r) => `<div>${aroLista(r, 48)}<div style="height:4px"></div>${aroLista(r, 24, false)}<b style="display:block;margin-top:5px;font:600 9px/1 var(--f-rotulo);letter-spacing:.08em;color:${COR[r]}">${NOME_R[r].toUpperCase()}</b><span style="display:block;margin-top:2px;font:italic 500 11px/1 var(--f-titulo);color:var(--texto-3)">${{ comum: 'liso', incomum: 'entalhe', raro: '4 estrelas', epico: 'pingente', lendario: 'coroa', arcano: 'órbita' }[r]}</span></div>`).join('');
+
+// ---------- Escada de materiais com placas pintadas ----------
+const ESC = [
+  ['comum', 'img/cos2/comum.webp', 'pedra fosca'], ['incomum', 'img/cos2/incomum.webp', 'bronze e jade'],
+  ['raro', P + 'heranca-marfim/moldura-256.webp', 'prata e safira'], ['epico', 'img/cos2/catedral.webp', 'pedra, orquídea'],
+  ['lendario', 'img/cos2/asas.webp', 'ouro, penas'], ['arcano', 'img/cos2/badalada-janela.webp', 'cristal'],
+];
+$('#escada').innerHTML = ESC.map(([r, img, m]) => `<div><div class="pl p-${r}"><img class="peca" src="${img}" alt="" ${r === 'lendario' ? 'style="max-width:120%"' : ''}></div><div class="cap"><b style="color:${COR[r]}">${NOME_R[r]}</b><span>${m}</span></div></div>`).join('');
+
+// ---------- Emblemas em traço (refs 17/18): 32, 24 e 18 px ----------
+const TRACO = {
+  coracao: `<path d="M24 44 C12 35 6 28 6 20 C6 13.5 10.5 10 15.5 10 C19.5 10 22.5 12.4 24 15.4 C25.5 12.4 28.5 10 32.5 10 C37.5 10 42 13.5 42 20 C42 28 36 35 24 44Z" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linejoin="round"/>
+    <path d="M24 18 L30 24 L24 36 L18 24Z" fill="currentColor"/><path d="M14 6 C18 9 21 9 24 7 C27 9 30 9 34 6 C33 3 29 2 24 5 C19 2 15 3 14 6Z" fill="currentColor"/>`,
+  fragmento: `<path d="M24 3 L30 14 L28 34 L24 40 L20 34 L18 14Z" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"/>
+    <path d="M24 3 L24 40 M18 14 L30 14" stroke="currentColor" stroke-width="1.3"/><ellipse cx="24" cy="24" rx="19" ry="6" fill="none" stroke="currentColor" stroke-width="1.8" transform="rotate(-18 24 24)"/>
+    <path d="M18 34 C12 32 8 28 6 22 C11 25 14 27 18 28 M30 34 C36 32 40 28 42 22 C37 25 34 27 30 28" fill="currentColor"/><circle cx="24" cy="44" r="2.6" fill="currentColor"/>`,
+  as: `<rect x="11" y="4" width="26" height="38" rx="2.5" fill="none" stroke="currentColor" stroke-width="2.4"/>
+    <path d="M24 11 C29 17 33 20 33 25 C33 29 29 31 26 28 L27.5 34 H20.5 L22 28 C19 31 15 29 15 25 C15 20 19 17 24 11Z" fill="currentColor"/>
+    <path d="M19 41 V46 H29 V41" fill="none" stroke="currentColor" stroke-width="2.2"/><circle cx="24" cy="46" r="2" fill="currentColor"/>`,
+};
+const TR = [['coracao', P + 'coracao-da-condessa/emblema-96.webp', 'Coração da Condessa', 'lendario'], ['fragmento', 'img/cos2/fragmento.webp', 'Fragmento Celestial', 'arcano'], ['as', P + 'as-espadas/emblema-96.webp', 'Ás de Espadas', 'comum']];
+$('#tracos').innerHTML = TR.map(([k, img, n, r]) => `<div style="flex-direction:column;gap:5px;align-items:center"><div style="display:flex;align-items:flex-end;gap:5px">
+  <img src="${img}" alt="">${[26, 22, 18].map((t) => `<svg viewBox="0 0 48 48" width="${t}" height="${t}" style="color:${COR[r]}">${TRACO[k]}</svg>`).join('')}</div>
+  <span style="font:italic 500 11px/1 var(--f-titulo);color:var(--texto-2)">${n}</span></div>`).join('');
+
+// ---------- Espelho: arco de medalhões abraçando o pedestal (ref-15) ----------
+(function () {
+  const cx = 150, cy = 664, rx = 214, ry = 50;
+  let s = `<defs><linearGradient id="arc-g" x1="0" x2="1"><stop offset="0" stop-color="#c9bda6" stop-opacity=".1"/><stop offset=".3" stop-color="#c9bda6" stop-opacity=".8"/><stop offset=".7" stop-color="#d3caf5" stop-opacity=".8"/><stop offset="1" stop-color="#d3caf5" stop-opacity=".1"/></linearGradient></defs>`;
+  s += `<path d="M${cx - rx} ${cy} A${rx} ${ry} 0 0 0 ${cx + rx} ${cy}" fill="none" stroke="url(#arc-g)" stroke-width="1.3"/>`;
+  s += `<path d="M${cx - rx + 10} ${cy} A${rx - 10} ${ry - 4} 0 0 0 ${cx + rx - 10} ${cy}" fill="none" stroke="#c9bda6" stroke-width=".6" opacity=".5" stroke-dasharray="1 4"/>`;
+  for (let i = 0; i <= 48; i++) { const a = i / 48 * Math.PI, x = cx + (rx + 3) * Math.cos(a), y = cy + (ry + 1) * Math.sin(a), x2 = cx + (rx + (i % 4 ? 8 : 13)) * Math.cos(a), y2 = cy + (ry + (i % 4 ? 3 : 5)) * Math.sin(a); s += `<line x1="${x}" y1="${y}" x2="${x2}" y2="${y2}" stroke="#d9ccb3" stroke-width="${i % 4 ? .5 : 1}" opacity=".6"/>`; }
+  $('#esp-arco').innerHTML = s;
+  const M = [
+    ['Moldura', 'arcano', `<img src="img/cos2/badalada-janela.webp" style="max-height:90%">`, 'img/cos2/placa-arcano.webp', true],
+    ['Mini', 'lendario', `<img src="${P}asas-do-crepusculo/mini-96.webp">`, 'img/cos2/placa-lendario.webp'],
+    ['Emblema', 'lendario', `<img src="${P}coracao-da-condessa/emblema-96.webp">`, 'img/cos2/placa-lendario.webp'],
+    ['Balão', 'raro', `<img src="img/cos2/balao-correspondencia.webp" style="max-width:76%">`, 'img/cos2/placa-raro.webp'],
+    ['Nome', 'lendario', `<svg viewBox="0 0 40 40"><defs><linearGradient id="an" x1="0" x2="1"><stop offset="0" stop-color="#d3caf5"/><stop offset=".5" stop-color="#f2b3cb"/><stop offset="1" stop-color="#f6eedf"/></linearGradient></defs><text x="20" y="28" text-anchor="middle" font-family="Bodoni Moda" font-style="italic" font-weight="900" font-size="23" fill="url(#an)">Aa</text></svg>`, 'img/cos2/placa-lendario.webp'],
+    ['Fundo', 'epico', '', 'img/cos2/vitral.webp'],
+  ];
+  $('#esp-meds').innerHTML = M.map(([n, r, inner, bg, ativo], i) => {
+    const x = 38 + i * 63, t = (x - cx) / rx, y = cy + ry * Math.sqrt(Math.max(0, 1 - t * t)) - 6;
+    return `<div class="esp-med ${ativo ? 'ativo' : ''}" style="left:${x}px;top:${y}px;--c:${COR[r]}"><div class="m" style="background-image:url(${bg})">${inner}</div><b>${n}</b><i>${NOME_R[r].toUpperCase()}</i></div>`;
+  }).join('');
+})();
+
+// ---------- Assentos do Deadly Vote ----------
+(function () {
+  const npc = (id) => `background-image:url(img/npc/${id}.webp);background-position:50% 22%;background-size:300%`;
+  const A = [
+    { x: 54, y: 92, d: 58, m: P + 'pacto-carmesim/moldura-256.webp', f: npc('rato-sorriso'), n: 'Rato', c: 'parado' },
+    { x: 104, y: 60, d: 50, m: P + 'relogio-fim/moldura-256.webp', f: npc('melissa-sorriso'), n: 'Lia', c: 'apagado' },
+    { x: 200, y: 122, d: 104, m: 'img/cos2/asas.webp', f: `background-image:url(${RET});background-position:50% 12%;background-size:140%`, n: 'Helena Varga', foco: 1, asas: 1 },
+    { x: 54, y: 176, d: 58, m: P + 'fortuna-rato/moldura-256.webp', f: npc('javali-riso'), n: 'Duda', c: 'parado' },
+    { x: 312, y: 176, d: 58, m: P + 'olho-arcano/moldura-256.webp', f: npc('herdeiro-neutro'), n: 'Ícaro', c: 'parado' },
+  ];
+  $('#assentos').innerHTML = A.map((a) => {
+    const w = a.asas ? a.d * 1.75 : a.d, h = a.asas ? a.d : a.d;
+    const fo = a.asas ? `left:${w * .49 - a.d * .26}px;top:${h * .523 - a.d * .26}px;width:${a.d * .52}px;height:${a.d * .52}px` : `left:${a.d * .2}px;top:${a.d * .2}px;width:${a.d * .6}px;height:${a.d * .6}px`;
+    return `<div class="assento ${a.c || ''}" style="left:${a.x}px;top:${a.y}px;width:${w}px;height:${h}px">
+      <div class="foto" style="${a.f};${fo}"></div><img class="m" src="${a.m}" alt="">
+      <div class="placa-nome" style="top:${h - 4}px"><span ${a.foco ? 'class="nome-aurora" style="font-size:12px;filter:none"' : ''}>${a.n}</span></div></div>`;
+  }).join('');
+  $('#med-coruja').style.cssText += rosto('coruja-sorriso', 44, 1.1);
+})();
+
+// ---------- Balão vetorial (para comparar com o pintado) ----------
+function balaoVet(el, tipo) {
+  const B = { papel: { f: ['#efe6d4', '#ddd0b6'], aro: '#b7a27a', orn: '#b7a27a', txt: '#2a1a16' }, comum: { f: ['#26242c', '#18171c'], aro: 'rgba(168,163,154,.55)', txt: '#e6e2dc' } }[tipo];
+  const w = el.offsetWidth + 12, h = el.offsetHeight + 8, id = 'bv' + Math.random().toString(36).slice(2, 7);
+  let s = `<defs><linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${B.f[0]}"/><stop offset="1" stop-color="${B.f[1]}"/></linearGradient></defs>`;
+  s += `<path d="M10 4 H${w - 10} Q${w - 4} 4 ${w - 4} 10 V${h - 12} Q${w - 4} ${h - 5} ${w - 10} ${h - 5} H18 L8 ${h} L11 ${h - 6} Q4 ${h - 8} 4 ${h - 14} V10 Q4 4 10 4Z" fill="url(#${id})" stroke="${B.aro}" stroke-width="1"/>`;
+  if (B.orn) s += [[6, 8, 1], [w - 6, 8, -1]].map(([x, y, sx]) => `<g transform="translate(${x} ${y}) scale(${sx} 1)" fill="none" stroke="${B.orn}" stroke-width=".9"><path d="M0 0 C5 -5 12 -4 14 1 C15 5 10 6 8 3"/><path d="M0 0 C4 5 10 7 17 6"/></g>`).join('');
+  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg'); svg.setAttribute('viewBox', `0 0 ${w} ${h}`); svg.setAttribute('preserveAspectRatio', 'none'); svg.innerHTML = s;
+  el.prepend(svg); el.style.color = B.txt;
+}
+
+// ---------- Álbum por série ----------
+(function () {
+  const S = [
+    { nome: 'Relojoaria', sub: 'TEMPO E MECANISMO', top: 146, itens: [
+      ['arcano', 'img/cos2/badalada-janela.webp', 'Última Badalada', 'moldura', 1],
+      ['epico', P + 'relogio-fim/moldura-256.webp', 'Relógio do Fim', 'moldura', 1],
+      ['epico', P + 'engrenagem-herdeiro/emblema-256.webp', 'Engrenagem do Herdeiro', 'emblema', 0],
+      ['incomum', P + 'ampulheta-dourada/emblema-256.webp', 'Ampulheta Dourada', 'emblema', 1],
+      ['arcano', null, 'Assinatura Noturna', 'nome', 0]] },
+    { nome: 'Capela', sub: 'PEDRA, VIDRO E VELA', top: 316, completa: 1, itens: [
+      ['epico', 'img/cos2/catedral.webp', 'Catedral Esquecida', 'moldura', 1],
+      ['epico', null, 'Vitral da Capela', 'fundo', 1, 'img/cos2/vitral.webp'],
+      ['raro', P + 'relicario-marfim/moldura-256.webp', 'Relicário de Marfim', 'moldura', 1],
+      ['raro', null, 'Vela Fúnebre', 'nome', 1]] },
+    { nome: 'Banquete', sub: 'A CASA DO JAVALI', top: 486, itens: [
+      ['lendario', 'img/cos2/banquete.webp', 'Banquete do Javali', 'moldura', 1],
+      ['comum', P + 'ficha-javali/emblema-256.webp', 'Ficha do Javali', 'emblema', 0],
+      ['incomum', P + 'mesa-destino/balao-256.webp', 'Mesa do Destino', 'balão', 0]] },
+  ];
+  const nomeSvg = (t, cor, falta) => `<svg viewBox="0 0 60 40" style="position:absolute;inset:14% 10%;width:80%;height:72%;z-index:2"><text x="30" y="28" text-anchor="middle" font-family="Bodoni Moda" font-style="italic" font-weight="900" font-size="24" fill="${falta ? '#000' : cor}" ${falta ? 'stroke="rgba(211,202,245,.5)" stroke-width=".6"' : ''}>${t}</text></svg>`;
+  $('#series').innerHTML = S.map((s) => {
+    const tem = s.itens.filter((i) => i[4]).length;
+    const cards = s.itens.map(([r, img, n, tipo, ok, bg]) => `<div><div class="pl p-${r} ${ok ? '' : 'falta'}" ${bg ? `style="background-image:url(${bg});background-size:cover"` : ''}>${img ? `<img class="peca" src="${img}" alt="">` : bg ? '' : nomeSvg('Aa', COR[r], !ok)}</div>
+      <div class="rot ${ok ? '' : 'falta'}"><b style="color:${ok ? COR[r] : 'var(--texto-3)'}">${tipo}</b>${ok ? n : '???'}</div></div>`).join('');
+    const lacre = s.completa ? `<svg class="lacre" viewBox="0 0 80 80"><defs><radialGradient id="lac" cx=".4" cy=".35" r=".7"><stop offset="0" stop-color="#e6c77a"/><stop offset=".55" stop-color="#a8822e"/><stop offset="1" stop-color="#5a4416"/></radialGradient></defs>
+      <path d="M40 4 C50 2 54 10 62 10 C70 12 68 22 74 28 C80 36 72 42 74 50 C76 60 66 62 62 70 C56 78 48 72 40 76 C32 80 26 72 18 70 C10 66 12 58 6 50 C2 42 10 36 8 28 C6 20 14 16 18 10 C24 2 32 6 40 4Z" fill="url(#lac)"/>
+      <circle cx="40" cy="40" r="25" fill="none" stroke="#fff3cf" stroke-width="1" opacity=".7"/><use href="#estrela4" x="26" y="20" width="28" height="28" fill="#fff3cf" opacity=".9"/>
+      <text x="40" y="58" text-anchor="middle" font-family="Cinzel" font-weight="700" font-size="7.5" letter-spacing="1.2" fill="#3a2a0e">COMPLETA</text></svg>` : '';
+    return `<div class="serie ${s.completa ? 'completa' : ''}" style="top:${s.top}px">${lacre}
+      <div class="cab"><h2>${s.nome}</h2><small>${s.sub}</small><span class="cont" ${s.completa ? 'style="margin-right:52px;color:var(--r-lendario)"' : ''}>${tem}<em>/${s.itens.length}</em></span></div>
+      <div class="linha" style="grid-template-columns:repeat(${s.itens.length},1fr)">${cards}</div>
+      <div class="barra"><i style="width:${tem / s.itens.length * 100}%;${s.completa ? 'background:linear-gradient(90deg,#a8822e,#fff3cf);box-shadow:0 0 8px #d9b86a' : ''}"></i></div></div>`;
+  }).join('');
+})();
+
+// ---------- Pilha de camadas (Z0..Z3) ----------
+(function () {
+  const C = [
+    { z: 0, html: `<div style="position:absolute;inset:0;background:url(img/cos2/vitral.webp) 12% 50%/auto 100%;box-shadow:0 0 0 1px rgba(242,233,216,.5)"></div>` },
+    { z: 80, html: `<div style="position:absolute;left:35px;top:71px;width:48px;height:48px;border-radius:50%;background:#2a2333 url(${RET}) 50% 12%/140% auto;box-shadow:0 0 24px rgba(0,0,0,.6)"></div>` },
+    { z: 160, html: `<img src="img/cos2/badalada-janela.webp" style="position:absolute;left:12px;top:-6px;width:84%;filter:drop-shadow(0 10px 14px rgba(0,0,0,.6))">` },
+    { z: 240, html: `<img src="img/cos/card-back.webp" style="position:absolute;left:96px;top:6px;width:34px;transform:rotate(18deg);box-shadow:0 6px 10px rgba(0,0,0,.5)"><img src="img/cos/card-back.webp" style="position:absolute;left:110px;top:58px;width:28px;transform:rotate(32deg);box-shadow:0 6px 10px rgba(0,0,0,.5)">
+      <div style="position:absolute;left:58px;top:160px;width:30px;height:30px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.95),rgba(211,202,245,.35) 40%,transparent 70%)"></div>
+      ${Array.from({ length: 16 }, (_, i) => `<i style="position:absolute;left:${(i * 47) % 146}px;top:${(i * 83) % 196}px;width:${2 + i % 3}px;height:${2 + i % 3}px;border-radius:50%;background:#f2e9d8;box-shadow:0 0 6px #d3caf5"></i>`).join('')}` },
+  ];
+  $('#pilha').innerHTML = C.map((c) => `<div class="plano" style="transform:translateZ(${c.z}px)"><div class="vidro"></div>${c.html}</div>`).join('');
+  const R = [['Z3', 'Soltas', 'cartas, brilho, poeira', 14], ['Z2', 'Moldura', 'o cristal pintado', 110], ['Z1', 'Retrato', 'a foto do jogador', 204], ['Z0', 'Fundo', 'Vitral da Capela', 298]];
+  $('#rotz').innerHTML = R.map(([z, t, s, x]) => `<div class="rot-z" style="left:${x}px;top:448px"><b>${z}</b>${t}<span>${s}</span></div>`).join('');
+})();
+
+// ---------- LOD: a mesma moldura em quatro tamanhos ----------
+(function () {
+  const T = [[54, 'PERFIL 1024', 'tudo, com camadas'], [44, 'MESA 256', 'sem peça solta'], [44, 'CHAT 96', 'mini quadrada'], [48, 'LISTA 48', 'só o aro com forma']];
+  $('#lod').innerHTML = T.map(([d, t, s], i) => {
+    let inner;
+    if (i < 2) { const h = d * 1.66; inner = `<div class="q" style="width:${d}px;height:${h}px"><img src="img/cos2/badalada-retrato.webp" style="position:absolute;inset:0;width:100%;height:100%;${i ? '' : 'filter:drop-shadow(0 0 8px rgba(185,174,240,.6))'}"></div>`; }
+    else if (i === 2) inner = `<div class="q" style="width:${d}px;height:${d}px"><div style="position:absolute;inset:${d * .22}px;border-radius:3px;background:#2a2333 url(${RET}) 50% 12%/140% auto"></div><img src="${P}ultima-badalada/mini-96.webp" style="position:absolute;inset:0;width:100%;height:100%"></div>`;
+    else inner = `<div class="q" style="width:${d}px">${aroLista('arcano', d)}</div>`;
+    return `<div>${inner}<b>${t}</b><span>${s}</span></div>`;
+  }).join('');
+})();
+
+poeira($('#p-esp'), 70, [0, 120, 390, 600], 5, '#d3caf5');
+poeira($('#p-mat'), 40, [0, 120, 390, 340], 9);
+poeira($('#p-cam'), 50, [0, 140, 390, 360], 13, '#d3caf5');
+
+window.__pend = 0;
+document.fonts.ready.then(async () => {
+  document.querySelectorAll('[data-bal]').forEach((el) => balaoVet(el, el.dataset.bal));
+  const vis = (id) => !tela || tela === id;
+  try {
+        const { arcanoCristal } = await import('./cos3d.js');
+    if (vis('espelho')) await arcanoCristal($('#esp3d'), { figura: 'img/cos2/badalada-retrato.webp', semFundo: true, camX: 1.25, camZ: 13.2, alturaFig: 3.7, olharY: 2.7 });
+    if (vis('revelacao')) await arcanoCristal($('#rev3d'), { retrato: RET, carta: 'img/cos/card-back.webp', fundo: 'img/v2/home-vitral.webp', camZ: 16.5, olharY: 3.1 });
+  } catch (e) { console.error(e); }
+  window.__ok = true;
+});
+</script>
+</body>
+</html>

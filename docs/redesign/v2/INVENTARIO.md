@@ -26,7 +26,7 @@ Fases em `components/devo/devo-experience.tsx` (landing → acesso → intro →
 
 | função | quem usa | onde está hoje (arquivo) | no v2 | observação |
 |---|---|---|---|---|
-| Tela de carregamento (cobre até fontes e imagens chegarem) | todos | `components/devo/shared/tela-entrada.tsx` | INTERFACE | Mínimo curto e teto. Na Casa/Torres precisa carregar também o tileset e os retratos. |
+| Tela de carregamento (cobre até fontes e imagens chegarem) | todos | `components/devo/shared/tela-entrada.tsx` | INTERFACE | Mínimo curto e teto. Na Casa/Torres precisa carregar também as pinturas em camadas do cômodo e os retratos. |
 | Landing: sigilo 3D, "DEADLY VOTE", relógio 71:59:59, Começar / Continuar, som | todos | `components/devo/landing/landing-screen.tsx`, `landing/entrada-button.tsx`, `system/logo.tsx`, `system/symbol.tsx`, `kit/scene/*` | INTERFACE | Identidade a preservar (MAPA.md). |
 | Começar → pede convite; Continuar → login / prólogo / sistema | todos | `components/devo/devo-experience.tsx` | INTERFACE | Regra de navegação, não pode quebrar. |
 | Acesso: código de convite de uso único, cadastro (nome, senha, confirmação), login | todos | `components/devo/naming/access-screen.tsx`, `app/api/auth/[...all]/route.ts`, `lib/devo/invites-server.ts` | INTERFACE | ids `#devo-code #devo-user #devo-pass #devo-pass2` usados pelos testes de captura. |

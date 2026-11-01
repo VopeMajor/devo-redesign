@@ -5,6 +5,13 @@ Base: pedido do dono em `PEDIDO-V2-dono.md` (31/10/2026, linhas 238-242), códig
 (`lib/devo/corporacoes.ts`, `lib/devo/corporacoes-server.ts`), livro-caixa do Tempo
 (`lib/devo/inventario-server.ts → creditMinutes`) e Torres (`lib/devo/torres/*`).
 
+> **Harmonização de 01/11 (noite).** Esta spec é de 31/10. Duas trocas: (1) nada de pixel fora da Casa e das
+> Torres, então o selo da faixa e o aviso de mudança ficam na interface gótica do DEVO (§5 corrigido, como pediu a
+> `SPEC-VISITANTES.md` §8.1); (2) nomes: "Companhia" é como o dono e a tela chamam o grupo do jogador (código
+> `corporacoes`, por isso "Corporação" no texto abaixo quer dizer a mesma coisa); "Companhia de Despertados" é a
+> organização da equipe; "Hostil" é só o nome da faixa, e a visita de NPC hostil se chama `ameaca`
+> (`SPEC-VISITANTES.md`). Não existe cidade: "no mapa" quer dizer dentro da Casa ou de uma Torre.
+
 Convenções deste documento:
 - Trechos em bloco de citação são **texto literal do dono**. Não reescrever.
 - **PENDENTE** marca o que só o dono decide. Todo número que o dono não deu aparece como `X` no texto e como
@@ -167,7 +174,7 @@ Só a doação criminosa vem do dono. As outras linhas são sugestões para ele 
   faixa do jogador; NPCs do lado necro reagem ao contrário (**PENDENTE**: se existem NPCs do lado necro).
 - No motor de diálogo (`lib/devo/dialogo/*`), uma condição nova `ordem.faixa` deixa a cena escolher falas.
   Nenhuma fala nova é escrita aqui: as falas são do dono ou da narrativa aprovada.
-- No mapa, a postura do sprite do NPC muda com a faixa (braços cruzados, de costas), sem bloquear sistemas
+- Na Casa e nas Torres, a pose do NPC em cena muda com a faixa (braços cruzados, de costas), sem bloquear sistemas
   essenciais. **Nenhuma função atual pode ficar inacessível por causa do necro** sem o dono decidir isso.
 
 ### 4.4 Torres de companhia
@@ -180,12 +187,14 @@ vazio no `conteudo.json` (`ordem: null`).
 
 ## 5. Telas (celular primeiro)
 
-- **Selo no HUD:** um ícone pequeno ao lado do relógio, em pixel, com a faixa atual (balança para Ordeiro,
+- **Selo no HUD:** um emblema pequeno ao lado da pílula do Tempo, na família de emblemas da `BIBLIA.md` §5 (traço
+  claro, simetria; nada de pixel), com a faixa atual (balança para Ordeiro,
   caveira para Hostil). Toque abre o detalhe.
 - **Tela "Caos e Ordem":** os dois contadores, a faixa, o que ela faz agora e o **histórico** ("por que ganhei
   necro": ação, data, valor, e se foi desfeita pela equipe). Inspirado no aviso gradual do Honor de Red Dead
   Redemption 2: o jogador sempre vê o efeito antes de cair de faixa.
-- **Aviso de mudança de faixa:** caixa de diálogo no estilo RPG Maker, uma vez por mudança.
+- **Aviso de mudança de faixa:** uma vez por mudança. No celular, placa diagonal com o emblema da faixa (interface
+  do DEVO); dentro da Casa ou de uma Torre, caixa de VN pintada.
 - **Mesa do Record (equipe):** lista de doações com filtro (crime, contas novas, valores altos), botão Desfazer,
   painel de necro por Corporação e a fila de "revisar classificação".
 - Desktop: as mesmas telas, em painel lateral.

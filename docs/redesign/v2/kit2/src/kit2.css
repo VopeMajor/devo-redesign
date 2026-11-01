@@ -1,0 +1,188 @@
+/* DEVO v2 — kit2. Tokens e peças da BIBLIA.md (versão de 01/11/2026).
+   Tudo aqui é protótipo de direção de arte: HTML/CSS com as imagens reais do projeto. */
+
+@import url('https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,500;0,6..96,700;0,6..96,900;1,6..96,500;1,6..96,700;1,6..96,900&family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600;1,700&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=IBM+Plex+Mono:wght@400;500;600&family=Oswald:wght@400;500;600&display=block');
+
+:root {
+  /* Base: mármore negro e porcelana */
+  --ink: #0a090d;
+  --ink-2: #121016;
+  --ink-3: #1b1821;
+  --ink-4: #27232f;
+  --porcelana: #f2efe9;
+  --papel: #e6e1d8;
+  --texto: #eeebe6;
+  --texto-2: rgba(238, 235, 230, .74);
+  --texto-3: rgba(238, 235, 230, .54);
+
+  /* Metal: aço champanhe */
+  --champ: #c9bda6;
+  --champ-hi: #f2e9d8;
+  --champ-lo: #857a68;
+  --champ-deep: #4f483d;
+  --champ-linha: rgba(201, 189, 166, .55);
+  --champ-grad: linear-gradient(180deg, #f6eedf 0%, #d4c7ad 34%, #8f846f 52%, #cfc2a8 70%, #f0e6d2 100%);
+
+  /* Ametista: joia, foco, ativo */
+  --ame: #8a7cc8;
+  --ame-hi: #d3caf5;
+  --ame-deep: #3b3168;
+  --ame-noite: #1c1730;
+  --ame-glow: rgba(138, 124, 200, .45);
+
+  /* Cobalto: tinta do Record e da Companhia (pequeno, dados) */
+  --cob: #4a62e8;
+  --cob-hi: #a4b5ff;
+  --cob-deep: #18226a;
+
+  /* Rubi: só alerta */
+  --rubi: #a3121f;
+  --rubi-hi: #ff6670;
+
+  /* Paixão e romance (só no Vínculo) */
+  --paixao: #c9668f;
+  --paixao-hi: #f2b3cb;
+
+  /* Assinaturas do elenco (ELENCO.md §1, pendente do dono) */
+  --galo: #c9542a; --galo-hi: #f2a15e; --galo-lo: #7a3315;
+  --javali: #e0ac1c; --javali-hi: #ffd36b;
+  --rato: #a8c82e; --rato-hi: #e4f27a;
+  --coruja: #2f7a55; --coruja-hi: #8fd1a8;
+  --corvo: #3a9fb0; --corvo-hi: #a6e4ec;
+  --melissa: #4a6cf0; --melissa-hi: #9db2ff;
+  --herdeiro: #8c1d47; --herdeiro-hi: #d9809f;
+
+  /* Movimento */
+  --ease-out: cubic-bezier(.16, 1, .3, 1);
+  --ease-cut: cubic-bezier(.7, 0, .2, 1);
+  --ease-snap: cubic-bezier(.3, 1.5, .5, 1);
+
+  --f-marca: 'Bodoni Moda', 'Cormorant Garamond', serif;
+  --f-titulo: 'Cormorant Garamond', serif;
+  --f-rotulo: 'Cinzel', serif;
+  --f-corpo: 'EB Garamond', serif;
+  --f-num: 'Oswald', sans-serif;
+  --f-dado: 'IBM Plex Mono', monospace;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { text-rendering: geometricPrecision; -webkit-font-smoothing: antialiased; }
+body { background: #050407; color: var(--texto); font-family: var(--f-corpo); }
+img { display: block; }
+
+/* ---------- Tela ---------- */
+.tela {
+  position: relative; width: 390px; height: 844px; overflow: hidden; flex: none;
+  background: var(--ink); isolation: isolate;
+}
+.tela > * { position: absolute; }
+.camada { inset: 0; pointer-events: none; }
+
+/* Grão de pintura sobre tudo (une imagem e interface) */
+.grao {
+  inset: 0; z-index: 90; pointer-events: none; opacity: .14; mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .5  0 0 0 0 .5  0 0 0 0 .5  0 0 0 1.2 -.1'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+.vinheta { inset: 0; z-index: 80; pointer-events: none;
+  background: radial-gradient(120% 90% at 50% 45%, transparent 55%, rgba(0,0,0,.55) 100%); }
+
+/* Barra do aparelho (fora do jogo) */
+.aparelho {
+  top: 0; left: 0; right: 0; height: 44px; z-index: 95; display: flex; align-items: center;
+  justify-content: space-between; padding: 0 26px 0 30px; font: 600 15px/1 -apple-system, 'Helvetica Neue', Arial, sans-serif;
+  color: #fff; letter-spacing: .01em;
+}
+.aparelho i { display: inline-block; width: 26px; height: 12px; border: 1.5px solid rgba(255,255,255,.8); border-radius: 3.5px; position: relative; margin-left: 6px; }
+.aparelho i::after { content: ''; position: absolute; inset: 1.5px 5px 1.5px 1.5px; background: #fff; border-radius: 1.5px; }
+.aparelho b { font-weight: 600; }
+.aparelho .sinal { display: inline-flex; gap: 2px; align-items: flex-end; margin-right: 4px; }
+.aparelho .sinal s { display: block; width: 3px; background: #fff; border-radius: 1px; }
+
+/* ---------- Tipografia ---------- */
+.kicker { font: 500 10px/1 var(--f-dado); letter-spacing: .26em; text-transform: uppercase; color: var(--champ); }
+.rotulo { font: 600 11px/1 var(--f-rotulo); letter-spacing: .2em; text-transform: uppercase; color: var(--champ); }
+.titulo { font: italic 600 30px/1 var(--f-titulo); letter-spacing: -.005em; }
+.marca { font: italic 900 44px/.9 var(--f-marca); letter-spacing: -.02em; }
+.num { font-family: var(--f-num); font-variant-numeric: tabular-nums; }
+.metal-txt { background: var(--champ-grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.jp { font: 400 9px/1 var(--f-dado); letter-spacing: .3em; color: var(--texto-3); }
+
+/* Letras de cartão (recortadas): cada letra num ladrilho de material diferente */
+.recorte { display: inline-flex; align-items: flex-end; gap: 1px; }
+.recorte span {
+  display: inline-block; font-family: var(--f-marca); font-weight: 900; line-height: .86; padding: .06em .08em .02em;
+  background: var(--ink); color: var(--porcelana); box-shadow: 0 2px 0 rgba(0,0,0,.6);
+}
+.recorte span:nth-child(3n+1) { transform: rotate(-4deg) translateY(1px); }
+.recorte span:nth-child(3n+2) { background: var(--porcelana); color: var(--ink); font-style: italic; transform: rotate(3deg); }
+.recorte span:nth-child(4n) { font-family: var(--f-rotulo); font-weight: 700; transform: rotate(-2deg) translateY(-2px) scale(.9); }
+.recorte span:nth-child(5n) { background: var(--ame-deep); color: var(--ame-hi); }
+.recorte .esp { background: none !important; box-shadow: none; width: .3em; }
+
+/* ---------- Materiais ---------- */
+.marmore-negro { background: #0d0c10 url(img/os/marmore-negro.webp) center/360px; }
+.marmore-branco { background: var(--porcelana) url(img/os/marmore-branco.webp) center/360px; }
+.veludo {
+  background:
+    radial-gradient(140% 90% at 30% 0%, rgba(255,255,255,.06), transparent 55%),
+    linear-gradient(180deg, #17141c, #0c0b0f);
+}
+.vidro {
+  background: linear-gradient(160deg, rgba(36, 31, 48, .78), rgba(12, 11, 16, .86));
+  backdrop-filter: blur(10px) saturate(1.2); -webkit-backdrop-filter: blur(10px) saturate(1.2);
+}
+
+/* Moldura relicário: filete duplo de champanhe, cantos cortados, remate no topo */
+.relicario {
+  --c: 12px;
+  clip-path: polygon(var(--c) 0, calc(100% - var(--c)) 0, 100% var(--c), 100% calc(100% - var(--c)), calc(100% - var(--c)) 100%, var(--c) 100%, 0 calc(100% - var(--c)), 0 var(--c));
+}
+.filete { position: absolute; inset: 0; pointer-events: none; }
+.filete svg { width: 100%; height: 100%; overflow: visible; }
+
+/* Pílula do Tempo (o relógio do pulso) */
+.pulso {
+  display: flex; align-items: center; gap: 9px; height: 40px; padding: 0 14px 0 5px; border-radius: 20px;
+  background: linear-gradient(180deg, rgba(28,24,36,.92), rgba(10,9,13,.92));
+  box-shadow: inset 0 0 0 1px var(--champ-linha), inset 0 1px 0 rgba(255,255,255,.12), 0 6px 18px rgba(0,0,0,.5);
+}
+.pulso .mostrador { width: 30px; height: 30px; flex: none; }
+.pulso .dig { font: 500 19px/1 var(--f-num); letter-spacing: .02em; font-variant-numeric: tabular-nums; }
+.pulso .dig small { font-size: 11px; color: var(--champ-lo); margin: 0 1px; }
+.pulso .rot { font: 500 7.5px/1 var(--f-dado); letter-spacing: .28em; color: var(--champ-lo); display: block; margin-bottom: 3px; }
+
+/* Placa diagonal (Persona, adaptada): bloco inclinado com texto reto */
+.placa {
+  display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px 6px 12px; transform: skewX(-14deg);
+  background: var(--ink); box-shadow: 3px 3px 0 var(--ame-deep);
+}
+.placa > * { transform: skewX(14deg); }
+
+/* Losango e estrela do sigilo */
+.losango { width: 7px; height: 7px; transform: rotate(45deg); background: var(--ame); box-shadow: 0 0 8px var(--ame-glow); display: inline-block; }
+
+/* Partículas (poeira de luz) */
+.poeira { inset: 0; pointer-events: none; }
+.poeira i { position: absolute; border-radius: 50%; background: var(--champ-hi); filter: blur(.4px); }
+
+/* Barra de vínculo (sem número: valores pendentes) */
+.vinculo { display: flex; gap: 3px; align-items: center; }
+.vinculo b { width: 13px; height: 7px; transform: skewX(-20deg); background: rgba(255,255,255,.1); box-shadow: inset 0 0 0 1px rgba(255,255,255,.08); }
+.vinculo b.on { background: linear-gradient(180deg, var(--ame-hi), var(--ame)); box-shadow: 0 0 6px var(--ame-glow); }
+.vinculo.romance b.on { background: linear-gradient(180deg, var(--paixao-hi), var(--paixao)); box-shadow: 0 0 6px rgba(201,102,143,.5); }
+
+.pendente {
+  font: 500 8.5px/1 var(--f-dado); letter-spacing: .14em; text-transform: uppercase; color: #f2c46b;
+  border: 1px dashed rgba(242, 196, 107, .55); padding: 3px 5px 2px; display: inline-block; white-space: nowrap;
+}
+
+/* Prancha (todas as telas lado a lado) */
+.prancha { display: flex; gap: 32px; padding: 60px 48px 48px; flex-wrap: nowrap; background: #08070a; width: max-content; }
+.prancha figure { display: flex; flex-direction: column; gap: 14px; }
+.prancha figcaption { font: 500 12px/1.3 var(--f-dado); letter-spacing: .18em; color: var(--champ); text-transform: uppercase; }
+.prancha figcaption b { color: var(--ame-hi); font-weight: 500; margin-right: 8px; }
+.prancha .tela { border-radius: 34px; box-shadow: 0 0 0 1px rgba(201,189,166,.25), 0 30px 80px rgba(0,0,0,.7); }
+body.so .prancha { padding: 0; gap: 0; background: none; }
+body.so .prancha figcaption { display: none; }
+body.so .prancha figure:not(.ativa) { display: none; }
+body.so .prancha .tela { border-radius: 0; box-shadow: none; }

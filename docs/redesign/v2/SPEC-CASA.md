@@ -9,6 +9,38 @@ Base: pedido do dono em `PEDIDO-V2-dono.md` (31/10/2026), texto da Confecção e
 Revisão 1 (31/10/2026): aplicada a crítica da rodada de revisão. O que mudou e onde houve discordância está em
 "Decisões de revisão", no fim.
 
+> **Harmonização de 01/11 (noite).** Esta spec é anterior à correção do dono ("não gostei. o devo em geral deve ter
+> a vibe antiga, não em pixel. mas a casa e torres rpg maker/visual novel."). Cômodos, objetos, estados, níveis,
+> skins, decoração, Confecção, Pacotes e banco continuam valendo. O que mudou (texto do dono → `BIBLIA.md` → spec
+> dona do assunto):
+> 1. **Técnica.** Cenário pintado em alta definição, em camadas com profundidade (`MOTOR-CASA-TORRES.md` §0–1). Onde
+>    abaixo se lê pixel, tile, tileset, grade de tiles, "menu pixel" ou "painel em pixel", leia: pintura do cômodo,
+>    chão andável em polígono (malha de navegação no app), oclusores, primeiro plano, e por cima a interface gótica
+>    do DEVO. Fonte pixel não existe. Pacotes CC0/CC-BY de tiles deixam de ser a base da arte.
+> 2. **Escala.** P12 (tile de 32 px, personagem 32×48) sai. Vale a `SPEC-AVATAR.md` §2.3: avatar pintado de corpo
+>    inteiro, 1,70 m na régua do `npcs/ELENCO.md` §2, escala pela profundidade.
+> 3. **Ordem de entrada e trava.** P14, PENDENTE 19 e o estado `so_quarto` saem. Vale a D-1
+>    (`SPEC-TUTORIAL-E-EQUIPE.md` §2.8): a Casa inteira fica trancada até `galo_casa`; a criação do avatar acontece
+>    na primeira entrada, depois da vitória; a cena do Galo entrega as chaves. A placa "Vença o Deadly Vote do
+>    tutorial…" sai (não era texto do dono). O estado `trancada` da porta continua só para Owner/Anfitrião verem.
+> 4. **Não existe cidade.** "Mapa da cidade → porta da casa" vira "ícone da Casa no celular → porta"; sair da Casa é
+>    voltar ao celular (`BIBLIA.md` §2). A loja de decorações não pode ficar "na cidade" (PENDENTE 5 fica entre Poço
+>    e aba da Casa).
+> 5. **Avatar e foto.** Saem `casas.avatar`, o kind `avatar_parte` e `avatar.salvar`; valem `aparencias`,
+>    `aparencia_parte` e `/api/aparencia` (`SPEC-AVATAR.md` §0 e §9). O objeto Espelho abre `'aparencia'`. A foto
+>    continua em `players.avatar`.
+> 6. **Visitas, aviso na porta, carregando e menu.** Vale a tabela da `SPEC-VISITANTES.md` §8.1 (ações de visita,
+>    tipo `ameaca`, `visitas.regras`, luz azul fria na ameaça, selo e faixa "[Um Visitante apareceu]" no lugar do
+>    balão "!"). A tela dos NPCs conhecidos se chama **Vínculos**.
+> 7. **Projeção** (P1, P2). `topdown` e `iso` saem. Cada cômodo é uma pintura em perspectiva de três-quartos, como
+>    `arte/v2-casa-noite.webp`. A Vista da Casa passa a ser o diorama em R3F (`BIBLIA.md` §8, ref-13), depois do motor.
+> 8. **Decorar.** Numa pintura não há grade livre. **Proposta padrão:** cada cômodo tem **pontos de encaixe**
+>    desenhados (parede, chão, mesa, teto, janela), cada um com tamanho e estilo aceitos; a decoração é pintada no
+>    mesmo estilo e com a luz do cômodo. Arrastar, girar e a gaveta do modo Decorar continuam, só que o item encaixa
+>    no ponto mais próximo. Decisão do dono no `LEIA-PRIMEIRO.md`.
+> 9. **Nomes.** O objeto de rito que substitui o Card Shuffler é da `SPEC-RITOS.md` (nome de trabalho Retábulo);
+>    "Oficina" é o cômodo; "Mesa de Confecção" é o objeto.
+
 Convenções deste documento:
 - Trechos entre aspas e em bloco de citação são **texto literal do dono**, tirados da parte do `PEDIDO-V2-dono.md`
   abaixo da linha `---` ou do `CASA-CONFECCAO-dono.md`. Não reescrever. O resumo "Decisões tomadas na conversa"
@@ -117,9 +149,9 @@ O dono não disse qual objeto, nem onde ele fica. Ver 2.2-b e PENDENTE 7.
 tabela de chance por nível da mesa, combinações exatas, Livro de Receitas da Corporação, histórico, Pacote Raro:
 Coleção de Xadrez). O nível da **mesa** é separado de qualquer nível da casa.
 
-**Estilo.** Não há texto do dono sobre estilo da casa. O que vale vem do resumo da conversa de 31/10 (escrito
-pelo agente no topo do PEDIDO, não literal): pixel art em mapa, casa e menus; retratos dos NPCs e imagens de
-encontro em ilustração anime de alta qualidade. A frase "casas em 2D, isométricas quando o caso pedir" vem do
+**Estilo.** *(Harmonizado em 01/11.)* Texto do dono de 01/11: "a casa e torres rpg maker/visual novel" e
+"não em pixel" para o resto. A técnica escolhida é cenário pintado em camadas (`MOTOR-CASA-TORRES.md`). O resumo
+antigo de 31/10 (pixel art em mapa, casa e menus) foi substituído pela correção do dono. A frase "casas em 2D, isométricas quando o caso pedir" vem do
 enunciado da tarefa, também não literal. Ambas ficam como direção registrada, sujeitas a confirmação na PENDENTE 3.
 
 ### 2.2 Regras propostas por esta spec (para o dono aprovar)
@@ -260,7 +292,7 @@ l) **Vínculos.** A "segunda tela" do dono (NPCs conhecidos, marca "paixão", ba
    descobre por diálogo, por comentário do Visitante sobre a casa ou por dar presente, como a ficha de presentes
    do Stardew (**PROPOSTA P11**).
 
-m) **Escala e avatar em camadas** (**PROPOSTA P12**). A criação de avatar é "inspirada em animes" com penteado,
+m) *(Substituída: vale a `SPEC-AVATAR.md` §2.3.)* **Escala e avatar em camadas** (**PROPOSTA P12**). A criação de avatar é "inspirada em animes" com penteado,
    olhos, cor e roupas; num personagem de 16 × 32 px quase nada disso aparece no mapa. Proposta:
    - Tiles de **32 px de arte** (mostrados a 2× no celular = 64 px por tile, 6 colunas em 390 px) e personagem de
      32 × 48 px de arte (maior que o tile, como nos RPG Maker de 48 px).
@@ -296,7 +328,9 @@ Distribuição da tela no mapa:
 └──────────────────────────────┘  844 (respeitar safe-area)
 ```
 
-1. **Primeira entrada no jogo** (**PROPOSTA P14**, alinhada à `SPEC-TUTORIAL-E-EQUIPE.md` §3.1): a casa é a
+1. *(Substituído pela D-1, `SPEC-TUTORIAL-E-EQUIPE.md` §2.8: a Casa só abre depois da vitória no tutorial e a
+   criação do avatar acontece na primeira entrada. O texto abaixo fica como histórico.)*
+   **Primeira entrada no jogo** (**PROPOSTA P14**, alinhada à `SPEC-TUTORIAL-E-EQUIPE.md` §3.1): a casa é a
    primeira tela do jogo. O novato abre o jogo dentro do Quarto, ainda sem avatar → **Criação do Avatar** (tela
    cheia, menu pixel; retrato anime grande no alto mostrando o resultado, abas penteado / pele / olhos / cor /
    roupas / acessórios). Confirmar → o avatar em pixel aparece no Quarto. Assim a cidade nunca precisa de sprite
@@ -306,7 +340,8 @@ Distribuição da tela no mapa:
    - Com a flag: a cena do Galo (`lib/devo/dialogo/cenas/galo-casa.ts`) vira a entrega das chaves → Sala e
      Oficina abrem → tutorial curto com o próprio mapa: andar até a mesa e até o baú.
    - A alternativa (cidade primeiro com sprite provisório) está registrada na PENDENTE 19.
-2. **Entradas seguintes**: mapa da cidade → porta da casa → fade (300 ms) → Sala, avatar na porta. Se houver
+2. **Entradas seguintes**: ícone da Casa no celular → a porta abre para dentro (`BIBLIA.md` §2, 600–800 ms) → Sala,
+   avatar na porta. Se houver
    visita agendada (2.2-h), ela começa aqui.
 3. **Andar**: tocar num tile → caminho calculado (A*) → avatar anda. Tocar num objeto → anda até o tile ao lado e
    interage. Arrastar o dedo mantém a direção (opcional, ligado nas configurações).
@@ -356,7 +391,7 @@ Distribuição da tela no mapa:
 
 ## 4. Estados de animação e de interface
 
-### 4.1 Avatar (pixel, 4 direções)
+### 4.1 Avatar (pintado em camadas, 4 direções; ver `SPEC-AVATAR.md` §4.1, que manda)
 
 | Estado | Quando | Quadros (proposta) |
 |---|---|---|
@@ -396,7 +431,7 @@ Luz do cômodo: `dia` / `tarde` / `noite` pela hora local do jogador (PENDENTE 1
 |---|---|
 | `carregando` | porta fechada em pixel + "Abrindo a porta…" (texto atual) |
 | `sem_avatar` | vai direto para a Criação do Avatar |
-| `so_quarto` | antes da flag `galo_casa`: só o Quarto aberto, outras portas com a placa do motivo do servidor |
+| ~~`so_quarto`~~ | *(sai com a D-1: antes da flag `galo_casa` o jogador não entra na Casa; o ícone fica selado no celular)* |
 | `jogando` | mapa + HUD |
 | `painel` | painel aberto, mapa escurecido |
 | `decorando` | grade + gaveta; HUD reduzido a "Pronto" e "Desfazer" |
@@ -608,7 +643,7 @@ iguais. A cobrança de Tempo reusa `debitar` de `casa-server.ts`.
 |---|---|---|
 | `CasaApp` (abas Confecção / Pacotes / Livro / Histórico) | abas em tela única | cada aba vira o painel de um objeto do mapa **e** continua no menu global (2.2-k); a lógica (`useCasa`, `agir`, `resgatar`) é reaproveitada |
 | `CasaNoite` / `casa-arte.ts` (cena pintada 2:3) | fundo da casa | sai do caminho principal; a pintura pode virar a cena de chegada ou de descanso na cama (PENDENTE 16) |
-| Cena `galo-casa` + flag `galo_casa` | cartão "Ir para casa" → cena | a casa (só o Quarto) existe desde a primeira entrada; a flag abre o resto da casa e a cena vira a entrega das chaves (P14) |
+| Cena `galo-casa` + flag `galo_casa` | cartão "Ir para casa" → cena | D-1: a flag abre a Casa; na primeira entrada vêm a criação do avatar e a cena, que vira a entrega das chaves |
 | Card Shuffler (`deck-panel.tsx`, `shuffler.ts`) | widget no painel do deck e no Salão | fica onde está, redesenhado. Que "outro objeto" ele vira e onde: PENDENTE 7 |
 | Confecção (`confeccao_*`) | — | sem mudança de regra; a mesa ganha aparência por nível |
 | Pacotes (`pacote_aberturas`) | — | sem mudança de regra; abrir também pela notificação e pelo menu |
@@ -679,10 +714,10 @@ iguais. A cobrança de Tempo reusa `debitar` de `casa-server.ts`.
    limite de decoração por cômodo `X`, número de quartos de hóspedes `X`).
 2. **Lista de cômodos**: além de Sala, Oficina, Quarto e Quartos de Hóspedes, quais existem (jardim, sótão,
    porão, biblioteca...) e em que nível cada um abre.
-3. **Estilo e projeção**: confirmar pixel art na casa e `topdown` nos cômodos, Vista da Casa esquemática e iso fora
-   da v1 (P1, P2); confirmar a escala de 32 px de arte (P12).
+3. **Estilo e projeção** *(harmonizado)*: confirmar o cenário pintado em camadas (`MOTOR-CASA-TORRES.md`) e a
+   Vista da Casa como diorama R3F depois do motor. A escala segue a `SPEC-AVATAR.md` §2.3.
 4. **Casa inicial**: um cômodo só com tudo dentro, ou já são três cômodos pequenos?
-5. **Loja de decorações**: onde fica (Poço, loja na cidade, aba da casa), com que moeda e se tem rotação.
+5. **Loja de decorações**: onde fica (Poço ou aba da casa; não há cidade), com que moeda e se tem rotação.
 6. **Skins**: de onde vêm (nível, Poço, evento, Owner), se são por cômodo ou da casa inteira, se a fachada é
    separada.
 7. **Card Shuffler**: qual é o "outro objeto" e onde ele fica. Se o rito só acontece no Deadly Vote, o Shuffler
@@ -704,8 +739,8 @@ iguais. A cobrança de Tempo reusa `debitar` de `casa-server.ts`.
     o jogador pode refazer o avatar de graça depois.
 18. **Decoração e presentes**: item de decoração pode ser presente para NPC, ou presentes (que o dono diz virem do
     Poço e de eventos) são outra categoria? E item de decoração pode ser trocado entre jogadores?
-19. **Ordem de entrada**: aprovar a casa (só o Quarto) como primeira tela, com a criação do avatar antes do
-    tutorial (P14), ou preferir cidade primeiro com sprite provisório e avatar só depois da flag `galo_casa`.
+19. **Ordem de entrada**: *(fechada como proposta D-1 na `SPEC-TUTORIAL-E-EQUIPE.md` §2.8; a alternativa é a
+    D-1-A.)*
 20. **Pesos do sorteio**: aprovar a fórmula decoração × paixão × karma (P6) e os valores (`X`).
 
 ---

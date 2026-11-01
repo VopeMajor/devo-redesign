@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>DEVO v2 · kit2 (revisão) · desktop</title>
+<link rel="stylesheet" href="kit2.css">
+<link rel="stylesheet" href="telas.css">
+<style>
+  body { width: 1440px; height: 900px; overflow: hidden; background: #050407; }
+  .dk { position: relative; width: 1440px; height: 900px; overflow: hidden; isolation: isolate; }
+  .dk > * { position: absolute; }
+  .dk-ext { inset: -60px; background: url(img/v2/casa-sala.webp) 50% 45%/cover; filter: blur(28px) brightness(.38) saturate(.85); }
+  .dk-cena { left: 420px; top: -40px; width: 1020px; height: 980px; z-index: 1; background: url(img/v2/casa-sala.webp) 50% 38%/1020px auto no-repeat;
+    -webkit-mask: linear-gradient(90deg, transparent 0, #000 16%, #000 88%, transparent); mask: linear-gradient(90deg, transparent 0, #000 16%, #000 88%, transparent); filter: brightness(.82) saturate(1.05); }
+  .dk-luz { inset: 0; z-index: 2; mix-blend-mode: screen; background: radial-gradient(14% 26% at 62% 40%, rgba(255,178,102,.35), transparent 70%), linear-gradient(104deg, transparent 50%, rgba(255,190,120,.12) 58%, transparent 70%); }
+  .dk-tinta { inset: 0; z-index: 3; background: linear-gradient(90deg, rgba(10,9,13,.97) 0, rgba(10,9,13,.7) 30%, rgba(10,9,13,.1) 46%, transparent 60%), linear-gradient(180deg, rgba(10,9,13,.6), transparent 16%, transparent 66%, rgba(10,9,13,.92) 88%); }
+  .dk-faixa { z-index: 6; left: 380px; top: 250px; width: 640px; height: 210px; transform: rotate(-18deg); -webkit-mask: url(img/v2/rasgo-faixa.png) center/100% 100%; mask: url(img/v2/rasgo-faixa.png) center/100% 100%; background: linear-gradient(90deg, #7a3315, #c9542a 45%, #e07a3e 60%, #7a3315); }
+  .dk-faixa canvas { position: absolute; inset: 0; width: 100%; height: 100%; mix-blend-mode: multiply; opacity: .55; }
+  .dk-arco { z-index: 7; left: 560px; top: 150px; width: 300px; height: 540px; }
+  .dk-ret { z-index: 10; left: 460px; top: 60px; height: 820px; filter: drop-shadow(2px 0 0 rgba(255,190,130,.85)) drop-shadow(0 0 30px rgba(242,161,94,.3)) drop-shadow(0 30px 40px rgba(0,0,0,.6)); }
+  .dk-ombro { z-index: 12; right: -70px; top: 470px; height: 560px; filter: blur(4px) brightness(.4); }
+  .dk .hud-lugar { top: 30px; left: 480px; }
+  .dk .hud-pulso { top: 30px; right: 34px; }
+  .dk .aviso-sistema { top: 46px; left: 900px; right: auto; }
+  .celular { left: 40px; top: 34px; width: 392px; height: 832px; z-index: 50; border-radius: 52px; padding: 12px;
+    background: linear-gradient(160deg, #2b2733, #0c0b10 40%, #1b1821); box-shadow: inset 0 0 0 1.5px #c9bda6, inset 0 0 0 5px #0a090d, inset 0 0 0 6px rgba(201,189,166,.35), 0 40px 80px rgba(0,0,0,.7), 0 0 60px rgba(138,124,200,.25);
+    transform: perspective(1400px) rotateY(6deg); transform-origin: left center; }
+  .celular iframe { width: 390px; height: 844px; border: 0; transform: scale(.9128); transform-origin: 0 0; border-radius: 44px; display: block; }
+  .celular-tela { width: 368px; height: 808px; overflow: hidden; border-radius: 42px; }
+  .cel-dica { left: 40px; top: 874px; width: 392px; text-align: center; z-index: 50; font: 500 10px/1 var(--f-dado); letter-spacing: .26em; color: var(--champ-lo); }
+  .escolhas { z-index: 30; left: 930px; top: 210px; width: 440px; display: flex; flex-direction: column; gap: 14px; }
+  .esc-cab { font: 500 10px/1 var(--f-dado); letter-spacing: .3em; color: var(--champ); margin-bottom: 4px; display: flex; align-items: center; gap: 10px; }
+  .esc-cab::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, var(--champ-linha), transparent); }
+  .esc { position: relative; height: 62px; display: flex; align-items: center; gap: 16px; padding: 0 22px 0 14px; transform: skewX(-12deg);
+    background: linear-gradient(90deg, rgba(14,12,18,.94), rgba(26,22,34,.88)); box-shadow: inset 0 0 0 1px rgba(201,189,166,.4), inset 0 0 0 5px rgba(10,9,13,.9), inset 0 0 0 6px rgba(201,189,166,.18), 5px 5px 0 rgba(0,0,0,.55); }
+  .esc > * { transform: skewX(12deg); }
+  .esc:nth-child(2) { margin-left: 36px; } .esc:nth-child(3) { margin-left: 24px; } .esc:nth-child(4) { margin-left: -12px; } .esc:nth-child(5) { margin-left: 12px; }
+  .esc b { width: 38px; height: 38px; flex: none; display: grid; place-items: center; transform: skewX(12deg) rotate(45deg) scale(.8); font: 700 13px/1 var(--f-rotulo); color: var(--champ-hi); box-shadow: inset 0 0 0 1px var(--champ); }
+  .esc b i { font-style: normal; transform: rotate(-45deg); }
+  .esc span { font: italic 600 25px/1 var(--f-titulo); color: var(--porcelana); }
+  .esc.on { background: linear-gradient(90deg, #3b3168, #8a7cc8); box-shadow: inset 0 0 0 1px var(--ame-hi), 6px 6px 0 #c9542a, 0 0 40px rgba(138,124,200,.55); margin-left: -12px; }
+  .esc.on b { background: var(--champ-grad); color: var(--ink); }
+  .esc.on::before { content: ''; position: absolute; left: -26px; top: 50%; width: 12px; height: 12px; margin-top: -6px; transform: rotate(45deg); background: var(--ame-hi); box-shadow: 0 0 12px var(--ame); }
+  .esc kbd { margin-left: auto; font: 600 10px/1 var(--f-dado); color: var(--champ-lo); }
+  .dk .vn-caixa { left: 460px; right: 30px; top: 704px; height: 166px; }
+  .dk .vn-fala { font-size: 27px; top: 46px; left: 32px; }
+  .dk .vn-nome { left: 22px; top: -26px; }
+  .dk .vn-nome b { font-size: 30px; }
+  .dk .vn-rodape { left: 32px; right: 22px; font-size: 10px; }
+  .dk .vn-rodape kbd { font: 600 10px/1 var(--f-dado); color: var(--ink); background: var(--champ); padding: 3px 5px 2px; margin-right: 6px; }
+</style>
+</head>
+<body>
+<div class="dk">
+  <div class="dk-ext"></div>
+  <div class="dk-cena"></div>
+  <div class="dk-luz"></div>
+  <div class="dk-tinta"></div>
+  <div class="dk-faixa"><canvas id="dk-mt"></canvas></div>
+  <div class="dk-arco" id="dk-arco"></div>
+  <div class="poeira" id="dk-poeira" style="inset:0;z-index:8"></div>
+  <img class="dk-ret" src="img/v2/galo-pose.webp" alt="O Galo">
+  <img class="dk-ombro" src="img/v2/avatar-capa-costas.webp" alt="">
+
+  <div class="hud-lugar"><svg><use href="#e-casa"/></svg><div><span class="kicker">CASA</span><b>Sala de estar</b></div></div>
+  <div class="hud-pulso" id="dk-pulso"></div>
+  <div class="aviso-sistema"><span class="losango"></span><span>[Um Visitante apareceu]</span><span class="losango"></span></div>
+
+  <div class="escolhas">
+    <div class="esc-cab">ESCOLHA</div>
+    <div class="esc"><b><i>I</i></b><span>Não...</span><kbd>1</kbd></div>
+    <div class="esc"><b><i>II</i></b><span>Wilson?</span><kbd>2</kbd></div>
+    <div class="esc on"><b><i>III</i></b><span>Galo...?</span><kbd>3</kbd></div>
+    <div class="esc"><b><i>IV</i></b><span>Cláudio...?</span><kbd>4</kbd></div>
+  </div>
+
+  <div class="vn-caixa">
+    <div class="vn-caixa-mat"></div>
+    <div class="filete" id="dk-fil"></div>
+    <div class="vn-nome"><b>O GALO</b><span>ANFITRIÃO · IV</span></div>
+    <div class="vn-afin"><img src="img/itens/galo-128.webp" alt=""><div id="dk-vinc"></div></div>
+    <p class="vn-fala">— E aí, pé de caju! Lembra de mim?</p>
+    <div class="vn-rodape"><span><kbd>TAB</kbd>CELULAR</span><span><kbd>H</kbd>OCULTAR</span><span><kbd>B</kbd>HISTÓRICO</span><span><kbd>CTRL</kbd>PULAR</span></div>
+  </div>
+
+  <div class="celular"><div class="celular-tela"><iframe id="cel" src="celular.html?tela=home" title="Celular do sistema"></iframe></div></div>
+  <div class="cel-dica">CELULAR DO SISTEMA · TAB</div>
+  <div class="vinheta"></div><div class="grao"></div>
+</div>
+<script src="pecas.js"></script>
+<script>
+  const $ = (s) => document.querySelector(s);
+  $('#dk-pulso').innerHTML = pulso('71', '42', '09');
+  $('#dk-fil').innerHTML = moldura(950, 166, { corte: 16, cristaX: 640 });
+  $('#dk-vinc').innerHTML = vinculo(8, 3);
+  $('#dk-arco').innerHTML = `<svg width="300" height="540" viewBox="0 0 300 540" style="overflow:visible">
+    <path d="M4 540 V170 Q4 40 150 4 Q296 40 296 170 V540" fill="rgba(10,9,13,.4)" stroke="url(#g-metal)" stroke-width="2"/>
+    <path d="M14 540 V172 Q14 52 150 16 Q286 52 286 172 V540" fill="none" stroke="rgba(201,189,166,.35)" stroke-width="1"/>
+    <use href="#estrela4" x="136" y="-12" width="28" height="28" fill="#f2e9d8"/></svg>`;
+  // meio-tom com gradiente de tamanho
+  const c = $('#dk-mt'), w = c.clientWidth, h = c.clientHeight; c.width = w * 2; c.height = h * 2;
+  const g = c.getContext('2d'); g.scale(2, 2); g.fillStyle = '#2a0f08';
+  for (let y = 0; y < h; y += 9) for (let x = 0; x < w; x += 9) { const r = 4.4 * Math.pow(x / w, 1.4); if (r > .3) { g.beginPath(); g.arc(x + (y / 9 % 2) * 4.5, y, r, 0, 7); g.fill(); } }
+  poeira($('#dk-poeira'), 120, [460, 100, 960, 600], 5, '#ffd7a8');
+  poeira($('#dk-poeira'), 40, [440, 100, 1000, 600], 9, '#d3caf5');
+  // espera o celular (peças 3D) pintar
+  const ifr = $('#cel');
+  const espera = () => { try { if (ifr.contentWindow.__ok) { window.__ok = 1; return; } } catch (e) {} setTimeout(espera, 300); };
+  ifr.addEventListener('load', espera);
+</script>
+</body>
+</html>

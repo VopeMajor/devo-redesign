@@ -9,6 +9,14 @@ Convenções desta spec (as mesmas das outras specs v2):
 - **PENDENTE** = decisão que só o dono toma. Número que ele não deu aparece como `X`, nunca como valor final.
 - Falas do guia e de NPCs ainda não foram escritas pelo dono: aparecem como `[fala do guia · roteiro pendente]`.
 
+> **Harmonização de 01/11 (noite).** A primeira versão desta spec seguia a bíblia em pixel que o dono reprovou.
+> Agora valem o texto do dono, a `BIBLIA.md` atual e o `MOTOR-CASA-TORRES.md` (Casa e Torres em cenário pintado em
+> camadas). Mudou: a **ordem de entrada** segue a D-1 da `SPEC-TUTORIAL-E-EQUIPE.md` §2.8 (§2.2 reescrita); a
+> **escala** é a do avatar pintado de corpo inteiro (§2.3 reescrita); saíram a paleta de 44 cores, o pacote em pixel e
+> o `pixelated` (§5.4, §5.5, §7). Onde o texto ainda disser "sprite", leia "avatar de corpo inteiro no cenário"; "mapa"
+> é o cômodo da Casa ou o andar da Torre, porque não existe cidade. A divisão foto × aparência (§0) continua e a
+> `SPEC-CASA.md` já foi alinhada a ela.
+
 ---
 
 ## 0. Duas palavras, duas coisas
@@ -41,8 +49,8 @@ O dono:
 Para quem joga, a criação precisa:
 1. **Ser rápida na primeira vez.** O novato quer chegar ao Devo tutorial. Uma tela, abas por categoria,
    "Aleatório" e "Pronto" sempre à mão. Dá para terminar em menos de um minuto ou ficar o tempo que quiser.
-2. **Mostrar o mesmo personagem nos dois tamanhos.** O que ele escolhe no retrato anime aparece no sprite
-   pixel, e vice-versa. Nada de opção que só existe num dos dois (`REFERENCIAS.md` §2.2).
+2. **Mostrar o mesmo personagem nos dois tamanhos.** O que ele escolhe no retrato anime aparece no avatar
+   de corpo inteiro do cenário, e vice-versa. Nada de opção que só existe num dos dois (`REFERENCIAS.md` §2.2).
 3. **Ser dele.** O avatar aparece no mapa, na casa, no diálogo (quando o Record fala) e na ficha do jogador.
 
 Leitura da palavra "fantasia": em português ela também quer dizer roupa de personagem, como a de carnaval. O
@@ -67,56 +75,56 @@ tutorial** (o Deadly Vote do tipo Tutorial, `SPEC-TUTORIAL-E-EQUIPE.md` §2.1). 
   ele pode ver todos os outros devos que estão abertos para inscrição e as demais coisas."
 - Owner e Anfitrião têm acesso liberado a todas as telas (regra permanente do dono).
 
-### 2.2 Ordem de entrada (**PROPOSTA A1**, para o dono aprovar)
+### 2.2 Ordem de entrada (fonte: `SPEC-TUTORIAL-E-EQUIPE.md` §2.8, decisão D-1)
 
-As specs anteriores deixaram uma contradição aparente. A `SPEC-TUTORIAL-E-EQUIPE.md` §3.1 põe a criação antes do
-Devo tutorial. A `SPEC-CASA.md` §3.1 abre a casa inteira só com a flag `galo_casa` (vitória no tutorial). E o
-dono diz que, antes do tutorial, o novato não vê "as demais coisas".
-
-**A1 (recomendada): a criação acontece na primeira vez que a porta da casa se abre, e essa primeira entrada é
-uma exceção explícita à trava do tutorial.**
+A ordem de entrada é decidida num lugar só, a D-1 da spec do tutorial. Aqui fica só o resumo do que toca o avatar:
 
 | Momento | O que o novato vê |
 |---|---|
-| Primeira entrada no jogo | A porta da casa, fechada. Tocar → a porta abre → **Criação do avatar**. |
-| Depois de "Pronto" | O avatar aparece no Quarto. A casa fica **em visita**: só o Quarto e o Espelho funcionam. Sala e Oficina trancadas com a placa da `SPEC-CASA.md` ("Vença o Deadly Vote do tutorial para receber as chaves da casa."). |
-| Celular do jogo | Só o Devo tutorial (`SPEC-TUTORIAL-E-EQUIPE.md` §3.1, passo 2). |
-| Vitória no Devo tutorial | Flag `galo_casa`: a cena do Galo entrega as chaves, a casa abre inteira. |
+| Prólogo, aula, celular | A identidade gótica do sistema. Ainda não há avatar. O celular mostra só o Devo tutorial. |
+| Antes da vitória | O ícone da Casa aparece selado (selo de cera ametista). A Casa inteira está trancada. |
+| Vitória no Devo tutorial | Flag `galo_casa`. O ícone da Casa acende na cerimônia de desbloqueio. |
+| Primeira entrada na Casa | A porta abre para dentro (passagem da `BIBLIA.md` §2) → **Criação do avatar** → o avatar aparece no Quarto → a cena `galo-casa` entrega as chaves e a casa abre inteira. |
 
-Por que A1: o texto do dono põe a criação "ao entrar nesse sistema de casa", e A1 faz exatamente isso; o novato
-nunca anda com um boneco provisório; e a exceção é pequena (um cômodo, um objeto), sem abrir nenhum sistema de
-jogo antes da vitória.
+Não há avatar provisório, nem "casa em visita", nem a placa "Vença o Deadly Vote do tutorial…" (texto que não era
+do dono). Owner e Anfitrião entram sem a flag e recebem a aparência padrão.
 
-**A1-b (alternativa):** a casa só abre com `galo_casa`, e a criação acontece nessa primeira entrada, depois da
-vitória. Até lá o novato usa um **avatar provisório** (silhueta coberta por uma capa, sem escolhas). Segue o
-texto do dono ao pé da letra nas duas frases, mas custa uma folha de sprite extra (51 quadros, §5.2) e faz o
-novato jogar o tutorial sem rosto.
+A alternativa continua aberta para o dono (`LEIA-PRIMEIRO.md`): **D-1-A**, a criação como tela do celular (espelho
+gótico em 2.5D) logo depois da aula, com a Casa trancada até a vitória do mesmo jeito.
 
-PENDENTE 1 decide entre A1 e A1-b.
+As antigas A1 (criação antes do tutorial, casa "em visita") e A1-b (avatar provisório) saíram na harmonização de
+01/11.
 
-### 2.3 Escala e o que cabe em cada tamanho
+### 2.3 Escala e o que aparece em cada tamanho (harmonizada em 01/11)
 
-Segue a `BIBLIA.md` §4, que é o documento mais novo e o que o kit já desenha (`kit/src/pix.js`, `boneco`):
-- **Sprite: 16×32 px de arte**, chibi 3/4, 4 direções, sobre tile de 16 px.
-- **Escala ×3 no celular** (≈ 8 tiles de largura em 390 px), ×4 no desktop. Nada fracionado.
+Base: `MOTOR-CASA-TORRES.md` §1 (cenário pintado em camadas; avatar "em camadas, escala pela profundidade, sombra
+no chão, luz de recorte") e a régua de alturas do `npcs/ELENCO.md` §2. O sprite 16×32 em pixel, a escala ×3 e a
+grade de tiles vinham da primeira bíblia, que o dono reprovou, e saíram.
 
-Isso derruba duas propostas antigas: `REFERENCIAS.md` §1.4 (sprite 32×48 ou 48×64, ×2, 12 tiles) e
-`SPEC-CASA.md` P12 (tile de 32 px e personagem 32×48). Vale a bíblia.
+- **Avatar pintado de corpo inteiro**, na mesma linguagem dos NPCs (anime pintado, `npcs/ELENCO.md` §8), montado
+  com as mesmas camadas do retrato (§5.1).
+- **Altura de referência: 1,70 m** na régua do elenco. O Rato bate no peito dele; o Corvo passa uma cabeça.
+- **Na tela** (*proposta, ajustar no protótipo do motor*): no celular 390×844, cerca de 300 px CSS de altura no
+  plano da frente do cômodo e cerca de 160 px no fundo, com a escala seguindo a linha do chão. Arte-fonte com
+  768 px de altura, o que cobre DPR 3 no plano da frente sem perder nitidez.
+- **Direções:** 4 (frente, costas, três-quartos para a esquerda e para a direita). Uma das três-quartos pode ser a
+  outra espelhada, desde que a peça não seja assimétrica; peça assimétrica pede as duas.
+- Nada de escala inteira nem `image-rendering: pixelated`: é pintura e escala suave.
 
-Consequência direta: num boneco de 16×32 o olho tem 1×2 px. Por isso cada categoria tem um lugar onde aparece:
+Como o corpo inteiro tem tamanho de sobra, quase tudo o que se escolhe aparece nele:
 
-| Categoria | No sprite (16×32) | No retrato anime |
+| Categoria | No avatar de corpo inteiro | No retrato (busto) |
 |---|---|---|
-| Penteado | silhueta e franja (é o que mais identifica o boneco) | desenho completo, camada de trás e da frente |
-| Cor do cabelo | sim, rampa de 2 tons | sim, rampa de 3 tons |
-| Pele | sim, rampa de 2 tons | sim, rampa de 3 tons |
-| Formato dos olhos | não (o olho do sprite é 1×2 px igual para todos) | sim |
-| Cor dos olhos | só no quadro de frente, 1 px | sim (com a exceção de cor da `BIBLIA.md` §6, ver §5.4) |
-| Roupa | silhueta e duas cores | desenho completo, só busto |
-| Acessório de cabeça | só se tiver mais de 2 px de altura | sim |
+| Penteado | sim, completo | sim, camada de trás e da frente |
+| Cor do cabelo | sim | sim |
+| Pele | sim | sim |
+| Formato dos olhos | só de frente e no plano da frente; no fundo vira detalhe pequeno | sim |
+| Cor dos olhos | idem | sim |
+| Roupa | sim, completa | só o busto |
+| Acessório | sim | sim |
 
-O teste de legibilidade da `SPEC-CASA.md` (3 penteados, 3 cores de olho, 2 roupas numa captura de 390 px) continua
-valendo, mas como **conferência** da regra acima, não como decisão de escala.
+O teste de legibilidade (3 penteados, 3 cores de olho e 2 roupas numa captura de 390 px, com o avatar no fundo do
+cômodo) continua valendo como **conferência**.
 
 ### 2.4 Escolhas sempre de catálogo
 
@@ -162,18 +170,18 @@ Enquanto PENDENTE 4 estiver aberta, o Espelho deixa refazer de graça e sem inte
 
 ### 3.1 Celular (primeiro; retrato 390×844)
 
-Medidas em px CSS, alinhadas ao orçamento de altura da `BIBLIA.md` §5.
+Medidas em px CSS, alinhadas ao orçamento de altura da `BIBLIA.md` §9.
 
 ```
 ┌──────────────────────────────┐ 0
 │ área segura do aparelho      │ 44
 ├──────────────────────────────┤
-│ CRIAÇÃO DO AVATAR (Silkscreen)│ 48–92  título na Moldura Pulso, mostrador no canto
+│ CRIAÇÃO DO AVATAR (Bodoni)    │ 48–92  título em placa diagonal, pílula do Tempo
 ├──────────────────────────────┤
 │ ┌───────────────┐  ┌──────┐  │
-│ │ retrato anime │  │sprite│  │ 96–420 prévia
-│ │ busto 250×228 │  │48×96 │  │ sprite ×3 girando nas 4 direções;
-│ │               │  │ ↻    │  │ tocar no sprite para girar à mão
+│ │ retrato anime │  │corpo │  │ 96–420 prévia sobre o cômodo desfocado
+│ │ busto 250×228 │  │inteiro│ │ avatar pintado girando nas 4 direções;
+│ │               │  │ ↻    │  │ tocar no corpo para girar à mão
 │ └───────────────┘  └──────┘  │
 ├──────────────────────────────┤
 │ Penteado Pele Olhos Cor Roupa…│ 428–476 abas roláveis (alvo ≥ 48)
@@ -185,11 +193,12 @@ Medidas em px CSS, alinhadas ao orçamento de altura da `BIBLIA.md` §5.
 └──────────────────────────────┘ 810 + 34 área segura
 ```
 
-1. **Porta.** Primeira entrada: a porta da casa em pixel. Tocar → abre (300 ms) → a tela da criação entra.
+1. **Porta.** Primeira entrada na Casa, depois da vitória (D-1): a porta em arco abre para dentro (passagem da
+   `BIBLIA.md` §2) e a criação entra, com o cômodo desfocado atrás.
 2. **Guia.** Uma caixa de diálogo padrão cobre o rodapé por um momento: `[fala do guia · roteiro pendente]`.
    Quem é o guia depende do redesenho dos NPCs (PENDENTE 7). Tocar fecha a caixa e libera a tela. O guia não
    volta a interromper; reaparece só se o jogador tocar em "?" no título.
-3. **Escolher.** Cada toque troca a prévia na hora (retrato e sprite juntos). Abas na ordem do dono: Penteado,
+3. **Escolher.** Cada toque troca a prévia na hora (retrato e corpo inteiro juntos). Abas na ordem do dono: Penteado,
    Pele, Olhos, Cor, Roupa, depois Acessório. "Cor" abre sub-amostras para cabelo e olhos. Opção paga
    (se PENDENTE 3 criar) mostra um cadeado e o preço `X`; tocar mostra de onde ela vem, sem comprar dali.
 4. **Aleatório.** Sorteia só entre partes que o jogador possui ou que são grátis. Um toque longo em
@@ -197,7 +206,8 @@ Medidas em px CSS, alinhadas ao orçamento de altura da `BIBLIA.md` §5.
 5. **Pronto.** Pede confirmação curta só na primeira vez ("Dá para mudar depois no Espelho do Quarto." se
    PENDENTE 4 deixar grátis; senão, o custo `X` aparece aqui). Confirmar → `POST /api/aparencia salvar` →
    transição em íris → o avatar aparece no Quarto, olhando para baixo, com o estado `parado`.
-6. **Depois.** O celular do jogo vibra e o fluxo segue para a `SPEC-TUTORIAL-E-EQUIPE.md` §3.1, passo 1.
+6. **Depois.** A cena `galo-casa` entrega as chaves e a casa abre inteira (`SPEC-TUTORIAL-E-EQUIPE.md` §3.1,
+   passo 8; `SPEC-CASA.md`).
 
 **Espelho (reabrir).** No Quarto, andar até o Espelho → o avatar olha para ele (estado `interagindo`) → mesma
 tela, com título "Espelho", botão "Cancelar" no lugar de "Aleatório" à esquerda e "Salvar" à direita. Se houver
@@ -206,18 +216,18 @@ fica no menu global (☰ › Avatar), porque nada fica preso à casa (`SPEC-CASA
 
 ### 3.2 Desktop (depois)
 
-1440×900, mesmo layout da `BIBLIA.md` §5: celular do jogo fixo à esquerda (372 px), cena à direita em ×4. Na
-criação, a cena vira a prévia: retrato grande à esquerda da cena, sprite ×4 à direita, abas e grade numa coluna
+1440×900, mesmo layout da `BIBLIA.md` §2 (`kit2/desktop.png`): celular fixo à esquerda, cena à direita. Na
+criação, a cena vira a prévia: retrato grande à esquerda da cena, corpo inteiro à direita, abas e grade numa coluna
 de 420 px encostada no celular. Teclado: setas trocam a opção, Tab troca a aba, R sorteia, Enter confirma.
 
 ### 3.3 Onde o avatar aparece depois
 
 | Lugar | Forma |
 |---|---|
-| Mapa da cidade, interiores, casa | sprite 16×32, estados do §4 |
-| Casa em corte (diorama iso) | miniatura parada ou sentada (`BIBLIA.md` §4) |
-| Diálogo, quando o Record fala | retrato do avatar (busto) à esquerda da caixa, espelhado em relação ao NPC (**PROPOSTA A5**) |
-| Escolhas | sem retrato do avatar: o medalhão é sempre do NPC (`BIBLIA.md` §5) |
+| Cômodos da Casa e andares das Torres | avatar pintado de corpo inteiro, estados do §4 |
+| Vista da Casa (diorama em R3F, `BIBLIA.md` §8) | miniatura parada ou sentada |
+| Diálogo, quando o Record fala | retrato do avatar (busto) à esquerda da caixa, espelhado em relação ao NPC, com a moldura mini equipada (`SPEC-COSMETICOS.md`) (**PROPOSTA A5**) |
+| Escolhas | o ombro do avatar aparece desfocado no primeiro plano (`BIBLIA.md` §10); o retrato grande é do NPC |
 | CG de encontro (romance) | **PENDENTE 8**: a CG mostra o avatar do jogador (exige desenhar cada CG em camadas com todas as partes, custo alto) ou o enquadramento evita o rosto do Record (mãos, costas, ponto de vista), como Amor Doce faz em parte das cenas |
 | Ficha do jogador, Record, ranking, arcade, Deadly Vote | ver §3.4 |
 
@@ -239,9 +249,12 @@ PENDENTE 9: o dono aprova A6, ou prefere aposentar a foto no v2 (ela seguiria no
 
 ---
 
-## 4. Estados de animação (sprite) e de interface
+## 4. Estados de animação (avatar no cenário) e de interface
 
-### 4.1 Sprite do avatar
+### 4.1 Avatar no cenário
+
+Com o avatar pintado, cada "quadro" abaixo é uma pose desenhada em todas as camadas. As contagens são proposta
+e servem para medir o custo de arte (§5.2).
 
 Junta a `SPEC-CASA.md` §4.1 e a `SPEC-TUTORIAL-E-EQUIPE.md` §4.2. "Direções 4" quer dizer baixo, cima, esquerda e
 direita; esquerda pode ser direita espelhada (ver §5.2).
@@ -266,7 +279,7 @@ Ficam fora da estreia, até o dono decidir: `gesto` (um por gesto do repertório
 `SPEC-CASA.md` P4 for aprovado) e `segurando_presente` (`REFERENCIAS.md` §1.4; depende da spec de Visitantes).
 Cada um soma quadros à folha do corpo e, portanto, a toda roupa (§5.3).
 
-"De costas olhando o horizonte" (abertura da cidade) reaproveita `parado` para cima. Nenhum quadro novo.
+"De costas olhando o horizonte" (abertura) reaproveita `parado` para cima. Nenhum quadro novo.
 
 ### 4.2 Retrato do avatar
 
@@ -293,7 +306,7 @@ expressão multiplica a camada de olhos de todas as opções. O número final de
 
 ### 5.1 Como o avatar é montado
 
-Camadas, de trás para a frente, iguais no sprite e no retrato:
+Camadas, de trás para a frente, iguais no corpo inteiro e no retrato:
 
 `cabelo_tras` → `corpo` (pele) → `roupa` → `olhos` (só retrato) → `boca` (só retrato, fixa por expressão) →
 `cabelo_frente` → `acessorio`
@@ -351,27 +364,26 @@ estreia (prêmios do Poço, eventos) entram uma a uma com o custo da tabela §5.
 cenário enxuto e cresce depois; é melhor ter 6 penteados que batem em todos os lugares do que 15 que falham na
 CG ou no diorama.
 
-### 5.4 Coerência entre retrato e sprite
+### 5.4 Coerência entre retrato e corpo inteiro
 
-1. **Paleta.** O mundo tem 44 cores e teto de 48 (`BIBLIA.md` §2). Com essas cores não há tons de pele escura nem
-   cabelos fora da paleta pastel. **PROPOSTA A9**: as rampas de personagem (pele, cabelo, olhos) formam uma tabela
-   à parte, `aparencia.rampas`, que não conta no teto do mundo. Cada rampa tem 2 tons no sprite e 3 no retrato,
-   sempre com contorno em `tinta`/`tinta2`. A bíblia precisa registrar essa exceção.
-2. **Retrato.** Regras da `BIBLIA.md` §6 (luz chapada, traço `#3d3247`, até 64 cores). A troca de paleta só
-   funciona porque a sombra é chapada; pintura difusa quebraria a recoloração.
-3. **Olhos.** A bíblia já anotou que a quantização desbota a cor dos olhos. A camada `olhos` tem rampa própria
-   de 4 tons e fica fora da redução de cores.
+1. **Paleta.** O teto de 44/48 cores era da bíblia em pixel e saiu. As rampas de personagem (pele, cabelo, olhos)
+   ficam numa tabela à parte, `aparencia.rampas`, com 3 tons e uma luz, iguais no retrato e no corpo inteiro.
+   **PROPOSTA A9 (revista):** a tabela cobre de pele muito clara a muito escura desde a estreia.
+2. **Retrato.** Mesmo estilo dos NPCs (`npcs/ELENCO.md` §8: anime pintado, sombra suave e um recorte duro de
+   luz). A recoloração por camada funciona porque cada camada é pintada em tons de cinza e colorida por mapa de
+   gradiente; a luz suave fica numa camada separada, que não recebe cor.
+3. **Olhos.** A camada `olhos` tem rampa própria de 4 tons.
 4. **Mesma opção, mesmo nome.** Cada `aparencia_parte` aponta para as duas artes (`meta.camadas.retrato` e
    `meta.camadas.sprite`). Uma parte sem as duas não entra no catálogo; o servidor recusa.
-5. **Prévia lado a lado.** Na criação, retrato e sprite estão sempre na mesma tela (§3.1).
+5. **Prévia lado a lado.** Na criação, retrato e corpo inteiro estão sempre na mesma tela (§3.1).
 
 ### 5.5 De onde vem a arte
 
-- **Sprite:** base em pacote CC0 de personagens 16 px em 4 direções (Ninja Adventure, `BIBLIA.md` §7) só como
-  estrutura de quadros e ritmo de caminhada. Todas as camadas são redesenhadas na paleta. LPC fica fora (licença
-  com compartilhamento obrigatório, `BIBLIA.md` §7).
+- **Corpo inteiro:** pintado no pipeline `infra/arte` sobre um gabarito fixo de corpo (a mesma pose-base em cada
+  direção) e separado em camadas à mão, como o retrato. Caminhada em 6 a 8 poses por direção (o protótipo do motor
+  anda com 8). Pacote CC0 em pixel não entra mais.
 - **Retrato:** IA do pipeline `infra/arte` (`flux-2-klein-9b`) para esboço de cada opção sobre um modelo fixo de
-  busto, com o prompt da `BIBLIA.md` §6; depois limpeza à mão para separar em camadas e encaixar no gabarito.
+  busto, com o prefixo de estilo do `npcs/ELENCO.md` §8; depois limpeza à mão para separar em camadas e encaixar no gabarito.
   O modelo não entrega camadas alinhadas sozinho. Esse passo de limpeza é o gargalo, e é por isso que o §5.3
   conta peças.
 - Cada parte registra licença e autor em `item_defs.meta` (como a decoração da `SPEC-CASA.md` §5.1) e entra em
@@ -488,8 +500,8 @@ guardada continua com o id dela até o próximo GET; o GET troca a parte perdida
    jogador possui.
 
 **Técnicos**
-9. **Desempenho.** Composição de camadas num canvas fora da tela, uma vez por mudança, com `image-rendering:
-   pixelated` e escala inteira. A tela de criação carrega só as miniaturas da aba aberta.
+9. **Desempenho.** Composição de camadas num canvas fora da tela, uma vez por mudança, em escala suave (sem
+   `pixelated`). A tela de criação carrega só as miniaturas da aba aberta.
 10. **Mistura de estilos.** Já tratada no §5.4. O risco que sobra é a CG de encontro (PENDENTE 8).
 11. **Custo de arte crescer sem ninguém ver.** Toda proposta de estado novo do sprite (gesto, presente, poses de
     evento) precisa dizer quantos quadros soma à folha do corpo, porque cada quadro novo multiplica por todas as
@@ -499,8 +511,8 @@ guardada continua com o id dela até o próximo GET; o GET troca a parte perdida
 
 ## 8. Pendências que só o dono decide
 
-1. **Ordem de entrada**: A1 (criação na primeira abertura da porta, casa em visita até a vitória) ou A1-b
-   (criação só depois da vitória, avatar provisório antes).
+1. **Ordem de entrada**: D-1 (criação na primeira entrada da Casa, depois da vitória) ou D-1-A (espelho 2.5D no
+   celular, antes do tutorial). Fonte única: `SPEC-TUTORIAL-E-EQUIPE.md` §2.8.
 2. **Quantas opções por categoria na estreia**: `X` (ver os cenários do §5.3).
 3. **Partes pagas**: existem? Quais, por quanto (`X`), em que moeda e de onde vêm.
 4. **Refazer o avatar**: grátis ou com custo (`X`); intervalo mínimo entre trocas (`X`).
@@ -511,7 +523,7 @@ guardada continua com o id dela até o próximo GET; o GET troca a parte perdida
 9. **Foto**: aprovar A6 (foto no sistema, avatar no mundo, escolha no perfil) ou aposentar a foto no v2.
 10. **Expressões do retrato do avatar**: aprovar as 5 da A7 ou outro número.
 
-Propostas desta spec: A1 (ordem), A2 (sem nome novo), A3 (roupa trocada de graça), A4 (falas sem gênero),
+Propostas desta spec: A1 (ordem; substituída pela D-1), A2 (sem nome novo), A3 (roupa trocada de graça), A4 (falas sem gênero),
 A5 (retrato do Record à esquerda no diálogo), A6 (foto e retrato), A7 (5 expressões), A8 (estreia enxuta),
 A9 (rampas de personagem fora do teto da paleta), A10 (aparência congelada no Deadly Vote).
 
@@ -523,13 +535,13 @@ A9 (rampas de personagem fora do teto da paleta), A10 (aparência congelada no D
 |---|---|
 | `SPEC-CASA.md` §5.1 | sai `casas.avatar`; a aparência mora em `aparencias`. Sai o kind `avatar_parte`; entra `aparencia_parte`. |
 | `SPEC-CASA.md` §5.2 | sai `avatar.salvar` de `/api/casa`; passa a ser `salvar` em `/api/aparencia`. O objeto do mapa `abre: 'avatar'` passa a `'aparencia'`. |
-| `SPEC-CASA.md` P12, 3.1 e 7-Técnicos 4 | escala de 32 px substituída pela `BIBLIA.md` §4 (16×32, ×3). O teste de 3 penteados vira conferência. |
-| `SPEC-CASA.md` P14 e PENDENTE 17/19 | passam a apontar para esta spec (A1 e PENDENTES 1–4). |
-| `REFERENCIAS.md` §1.4 | a grade 32×48/48×64 ×2 não vale; vale a bíblia. |
-| `BIBLIA.md` §2 | registrar a exceção A9 (rampas de personagem fora do teto de 48 cores), se aprovada. |
+| `SPEC-CASA.md` P12, 3.1 e 7-Técnicos 4 | escala de 32 px (e a de 16×32) substituída pelo avatar pintado de corpo inteiro (§2.3). O teste de 3 penteados vira conferência. |
+| `SPEC-CASA.md` P14 e PENDENTE 17/19 | P14 e PENDENTE 19 apontam para a D-1 (`SPEC-TUTORIAL-E-EQUIPE.md` §2.8); PENDENTE 17 aponta para as PENDENTES 2–4 daqui. |
+| `REFERENCIAS.md` §1.4 | a grade 32×48/48×64 ×2 não vale; vale o §2.3. |
+| `BIBLIA.md` | nada a registrar: a bíblia atual não tem teto de cores. |
 | Spec do Deadly Vote (a escrever) | coluna `aparencia_snapshot` em `deadly_vote_entries` (A10). |
 
-Esta spec não editou esses documentos; só registra o que precisa mudar neles.
+Aplicado na harmonização de 01/11 (noite): `SPEC-CASA.md` e `REFERENCIAS.md` ganharam nota no topo com estas trocas.
 
 ---
 
@@ -539,13 +551,13 @@ A crítica deu nota 0 porque o arquivo não existia quando ela rodou. Esta vers�
 problemas e sugestões que ela já tinha levantado olhando as outras specs. Ponto a ponto:
 
 Aceitas:
-1. **Escala**: adotada a da `BIBLIA.md` (16×32, ×3 no celular); `REFERENCIAS.md` §1.4 e `SPEC-CASA.md` P12 ficam
+1. **Escala** (*superado na harmonização de 01/11: vale o §2.3*): adotada a da primeira `BIBLIA.md` (16×32, ×3 no celular); `REFERENCIAS.md` §1.4 e `SPEC-CASA.md` P12 ficam
    substituídas (§2.3, §9). Junto, uma tabela do que cada categoria mostra no sprite e no retrato, já que o
    sprite pequeno não comporta detalhe de rosto.
 2. **Nome**: as escolhas do personagem se chamam `aparencia` no código e no banco; a foto continua em
    `players.avatar` e se chama "Foto" na tela (§0). Decidido o que a foto vira e qual imagem recebe a moldura,
    como proposta (A6, §3.4).
-3. **Ordem de entrada**: fechada como PROPOSTA A1, com a exceção explícita (a primeira abertura da porta é a
+3. **Ordem de entrada** (*superado: vale a D-1*): fechada como PROPOSTA A1, com a exceção explícita (a primeira abertura da porta é a
    criação; a casa fica em visita até a vitória) e a alternativa A1-b com o custo dela (§2.2).
 4. **Pendências sem número inventado**: quantidade de opções, partes pagas e preço, custo e intervalo de refazer
    ficam como `X` (§2.5, §8). Os campos no banco começam em `null`.

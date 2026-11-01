@@ -7,6 +7,21 @@ celular em retrato (alvo 390×844). Nada aqui é regra nova do jogo: onde o dono
 Fontes confirmadas por busca estão no fim. O que vem de conhecimento geral dos jogos está escrito como
 padrão de interface, sem números.
 
+> **Harmonização de 01/11 (noite).** Esta pesquisa é de antes da correção do dono ("não gostei. o devo em geral deve
+> ter a vibe antiga, não em pixel. mas a casa e torres rpg maker/visual novel."). Continua valendo como base de
+> **padrões**: caixa de VN, retratos e expressões, escolhas, Confidentes, Amor Doce (paixão, romance, CG), visitas,
+> ameaça, novatos e o "o que não copiar". **Deixa de valer:**
+> - tudo que pede pixel: fonte pixel, moldura pixel, glifos 16×16, menus e janelas pixel, "aparelho em pixel"
+>   (§0 síntese, §1.1, §1.6, §2.8, §2.9, §2.15). O sistema é a interface gótica da `BIBLIA.md`;
+> - a grade de sprite 32×48/48×64 ×2 (§1.4) e o "sprite pixel" ao lado do retrato na criação (§2.2): vale a
+>   `SPEC-AVATAR.md` §2.3 (avatar pintado de corpo inteiro);
+> - o mapa da cidade (§2.7) e os lugares "no mapa" (Poço como poço de pedra em pixel §2.11, torre em corte pixel
+>   §2.12, interior do Salão §2.13, sede da Companhia §2.14): não existe cidade andável. Só a Casa e as Torres são
+>   cenário, e as Torres usam a escada espiral pintada (ref-10) e o mapa em astrolábio 3D (`BIBLIA.md` §8, §10);
+> - a Casa em `topdown` com tiles (§2.3): vale o cenário pintado em camadas (`MOTOR-CASA-TORRES.md`).
+> As refs 09–22 (relógio gótico, escada espiral, gaiola, cartões pretos, diorama, xadrez de mármore, emblemas,
+> astrolábio) entram pela `BIBLIA.md`. A tela de NPCs conhecidos se chama **Vínculos** (padrão Confidentes).
+
 ---
 
 ## 0. O que as referências do dono já decidem

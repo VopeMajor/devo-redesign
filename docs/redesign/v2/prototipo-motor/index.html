@@ -11,6 +11,8 @@
   ?motor=pixi | canvas   escolhe o renderizador (mesma cena, mesma lógica)
   ?demo=1                anda sozinho (usado na medição de FPS)
   ?debug=1               mostra o chão andável, as caixas de toque e a linha de oclusão
+  ?visita=0              sem visitante batendo na porta
+  ?res=1 · ?fx=0 · ?assar=0   variações usadas na medição
   Doc: ../MOTOR-CASA-TORRES.md
 -->
 <style>
@@ -57,24 +59,73 @@
   .rot::before{content:"";width:6px;height:6px;transform:rotate(45deg);background:var(--ame);box-shadow:0 0 6px var(--ame)}
   .rot.on{opacity:1}
 
-  /* caixa de VN: placa de nome em diagonal, texto em Garamond, ações */
-  .vn{position:absolute;left:10px;right:10px;bottom:calc(env(safe-area-inset-bottom) + 14px);
-    transform:translateY(130%);transition:transform .38s cubic-bezier(.2,.8,.2,1);pointer-events:auto}
+  /* caixa de VN: retrato grande que sai da moldura, placa de nome em diagonal, escolhas em barras inclinadas */
+  .vn{position:absolute;left:0;right:0;bottom:0;padding:0 10px calc(env(safe-area-inset-bottom) + 12px);
+    transform:translateY(calc(100% + 80px));transition:transform .42s cubic-bezier(.2,.85,.25,1);pointer-events:auto}
   .vn.on{transform:none}
-  .vn .placa{position:absolute;left:12px;top:-22px;padding:6px 18px 6px 14px;background:var(--ame-deep);
-    color:#fff;font-family:Cinzel,serif;font-weight:600;font-size:14px;letter-spacing:.12em;text-transform:uppercase;
-    transform:skewX(-12deg);box-shadow:4px 4px 0 var(--ink)}
-  .vn .placa span{display:inline-block;transform:skewX(12deg)}
-  .vn .caixa{background:linear-gradient(180deg,rgba(21,21,23,.94),rgba(12,12,14,.97));
-    border:1px solid rgba(196,185,166,.42);outline:1px solid rgba(12,12,14,.9);outline-offset:2px;
-    padding:22px 16px 12px;min-height:120px}
-  .vn p{margin:0 0 4px;font-size:16px;line-height:1.5;color:var(--text)}
+  .vn .retrato{position:absolute;left:-6px;right:-6px;bottom:calc(100% - 40px);height:47vh;max-height:430px;pointer-events:none;
+    display:none;opacity:0;transition:opacity .25s}
+  .vn.on .retrato{opacity:1}
+  .vn.com-retrato .retrato{display:block}
+  /* lâmina diagonal atrás do retrato: ametista profundo + filete champanhe; o retrato passa por cima da borda */
+  .vn .retrato::before{content:"";position:absolute;left:4%;right:-4%;bottom:8%;height:44%;
+    background:linear-gradient(160deg,rgba(78,69,128,.92),rgba(25,24,31,.94) 70%);
+    clip-path:polygon(14% 0,100% 9%,100% 100%,0 86%);box-shadow:none}
+  .vn .retrato::after{content:"";position:absolute;left:4%;right:-4%;bottom:8%;height:44%;
+    clip-path:polygon(14% 0,100% 9%,100% 9.6%,14.2% .7%,.4% 86%,0 86%);background:var(--champ)}
+  .vn .retrato img{position:absolute;z-index:1;right:-12%;bottom:0;height:100%;width:auto;
+    -webkit-mask-image:linear-gradient(180deg,transparent 0,#000 9%);mask-image:linear-gradient(180deg,transparent 0,#000 9%);
+    filter:drop-shadow(-10px 6px 0 rgba(12,12,14,.85)) drop-shadow(0 0 22px rgba(138,124,200,.35));
+    transform-origin:60% 100%;animation:respira 4.6s ease-in-out infinite}
+  .vn .retrato img.troca{animation:entra .32s cubic-bezier(.2,.9,.3,1.2), respira 4.6s ease-in-out .32s infinite}
+  @keyframes respira{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-4px) scale(1.006)}}
+  @keyframes entra{from{transform:translateX(26px) scale(1.03);opacity:.4}to{transform:none;opacity:1}}
+  .vn .placa{position:absolute;left:14px;top:-26px;z-index:2;display:flex;align-items:baseline;gap:10px;padding:7px 20px 7px 16px;
+    background:var(--ink);border-left:4px solid var(--ame);transform:skewX(-14deg);box-shadow:5px 5px 0 var(--ame-deep)}
+  .vn .placa>*{transform:skewX(14deg)}
+  .vn .placa span{font-family:Cinzel,serif;font-weight:600;font-size:16px;letter-spacing:.14em;text-transform:uppercase;color:#fff}
+  .vn .placa em{font-style:normal;font-family:'IBM Plex Sans',sans-serif;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--ame-light)}
+  .vn .caixa{position:relative;z-index:1;background:linear-gradient(180deg,rgba(21,21,23,.95),rgba(10,10,12,.98));
+    border:1px solid rgba(196,185,166,.45);outline:1px solid rgba(12,12,14,.9);outline-offset:3px;
+    padding:24px 16px 12px;min-height:128px;clip-path:polygon(0 0,100% 0,100% calc(100% - 14px),calc(100% - 14px) 100%,0 100%)}
+  .vn .caixa::before{content:"";position:absolute;right:10px;top:8px;width:46px;height:1px;background:linear-gradient(90deg,transparent,var(--champ))}
+  .vn p{margin:0 0 4px;font-size:17px;line-height:1.5;color:var(--text);min-height:50px}
+  .vn p .cur{display:inline-block;width:7px;height:7px;margin-left:6px;transform:rotate(45deg);background:var(--ame);animation:pisca 1s steps(2) infinite}
+  @keyframes pisca{50%{opacity:0}}
   .vn .meta{font-family:'IBM Plex Sans',sans-serif;font-size:11px;color:var(--champ-soft);margin-bottom:10px}
-  .vn .acoes{display:flex;gap:8px;justify-content:flex-end}
-  .vn button{font-family:Cinzel,serif;font-weight:600;font-size:12px;letter-spacing:.2em;text-transform:uppercase;
-    padding:10px 14px;min-height:44px;border:1px solid rgba(196,185,166,.5);background:var(--ink-3);color:var(--champ-strong)}
-  .vn button.prim{background:var(--ame-deep);border-color:var(--ame);color:#fff}
-  .vn button[disabled]{opacity:.55}
+  .vn .escolhas{display:flex;flex-direction:column;gap:7px;align-items:flex-end}
+  .vn .escolhas button{position:relative;min-width:62%;min-height:44px;padding:9px 18px 9px 30px;text-align:left;
+    font-family:Cinzel,serif;font-weight:600;font-size:13px;letter-spacing:.16em;text-transform:uppercase;
+    border:0;background:var(--ink-3);color:var(--champ-strong);transform:skewX(-12deg);
+    box-shadow:inset 0 0 0 1px rgba(196,185,166,.35);transition:transform .15s, background .15s}
+  .vn .escolhas button>span{display:inline-block;transform:skewX(12deg)}
+  .vn .escolhas button::before{content:"";position:absolute;left:12px;top:50%;width:7px;height:7px;margin-top:-4px;
+    transform:skewX(12deg) rotate(45deg);background:var(--champ-soft)}
+  .vn .escolhas button.prim{background:linear-gradient(90deg,var(--ame-deep),#352f5c);color:#fff;box-shadow:inset 0 0 0 1px var(--ame),4px 4px 0 var(--ink)}
+  .vn .escolhas button.prim::before{background:#fff;box-shadow:0 0 8px var(--ame-light)}
+  .vn .escolhas button:active{transform:skewX(-12deg) translateX(-4px)}
+  .vn .escolhas button[disabled]{opacity:.5}
+
+  /* cut-in: faixa diagonal com os olhos do visitante quando ele bate na porta */
+  .cutin{position:absolute;left:-10%;right:-10%;top:30%;height:150px;pointer-events:none;opacity:0;transform:rotate(-8deg)}
+  .cutin .faixa{position:absolute;inset:0;background:linear-gradient(90deg,#0c0c0e 0%,#19181f 40%,var(--ame-deep) 100%);
+    border-top:2px solid var(--champ);border-bottom:2px solid var(--champ);overflow:hidden;
+    transform:translateX(110%);box-shadow:0 18px 40px rgba(0,0,0,.6)}
+  .cutin .faixa::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(90deg,rgba(194,185,236,.06) 0 2px,transparent 2px 14px)}
+  .cutin .olhos{position:absolute;right:-6%;top:-92px;width:440px;transform:rotate(8deg);
+    -webkit-mask-image:linear-gradient(90deg,transparent 4%,#000 30%);mask-image:linear-gradient(90deg,transparent 4%,#000 30%)}
+  .cutin .olhos img{width:100%;display:block;filter:contrast(1.08)}
+  .cutin .txt{position:absolute;left:11%;bottom:10px;padding:6px 14px 7px;background:rgba(12,12,14,.9);border-left:3px solid var(--ame);font-family:Cinzel,serif;color:#fff;z-index:1}
+  .cutin .txt b{display:block;font-size:19px;letter-spacing:.16em;text-transform:uppercase;text-shadow:3px 3px 0 var(--ame-deep)}
+  .cutin .txt span{font-family:'IBM Plex Sans',sans-serif;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--ame-light)}
+  .cutin.on{opacity:1}
+  .cutin.on .faixa{animation:corta 1.9s cubic-bezier(.15,.85,.25,1) forwards}
+  @keyframes corta{0%{transform:translateX(110%)}22%{transform:translateX(0)}78%{transform:translateX(-3%)}100%{transform:translateX(-120%)}}
+  .flash{position:absolute;inset:0;background:var(--ame-light);opacity:0;pointer-events:none;mix-blend-mode:screen}
+  .flash.on{animation:fl .5s ease-out}
+  @keyframes fl{0%{opacity:.35}100%{opacity:0}}
+  .rot.alerta{opacity:1;border-color:var(--ame-light);box-shadow:0 0 14px rgba(138,124,200,.6)}
+  .rot.alerta::after{content:"!";margin-left:4px;font-family:Cinzel,serif;color:#fff;font-size:13px;animation:pisca .8s steps(2) infinite}
   .dica{position:absolute;left:50%;bottom:calc(env(safe-area-inset-bottom) + 22px);transform:translateX(-50%);
     font-family:'IBM Plex Sans',sans-serif;font-size:11.5px;letter-spacing:.04em;color:var(--champ);
     background:rgba(12,12,14,.6);padding:6px 12px;border:1px solid rgba(196,185,166,.25);transition:opacity .4s}
@@ -91,12 +142,16 @@
   <div class="dbg"><span id="fps">-- fps</span><button id="troca">motor</button></div>
   <div id="rotulos"></div>
   <div class="dica" id="dica">Toque no chão para andar · toque num objeto</div>
+  <div class="flash" id="flash"></div>
+  <div class="cutin" id="cutin"><div class="faixa"><div class="olhos"><img src="assets/visitante-surpreso.webp" alt=""></div>
+    <div class="txt"><b>Batida na porta</b><span>Visitante · placeholder</span></div></div></div>
   <div class="vn" id="vn">
-    <div class="placa"><span id="vn-nome">Porta</span></div>
+    <div class="retrato"><img id="vn-img" alt=""></div>
+    <div class="placa"><span id="vn-nome">Porta</span><em id="vn-tag"></em></div>
     <div class="caixa">
       <p id="vn-texto">[fala pendente]</p>
       <div class="meta" id="vn-meta"></div>
-      <div class="acoes"><button id="vn-sair">Sair</button><button class="prim" id="vn-abrir" disabled>Abrir</button></div>
+      <div class="escolhas" id="vn-escolhas"></div>
     </div>
   </div>
 </div>
@@ -197,39 +252,63 @@ function chapado(cor){ const c=cv(4,4), g=c.getContext('2d'); g.fillStyle=cor; g
 // Avatar placeholder: silhueta de casaco longo com luz de recorte ametista. 8 quadros de passo + parado,
 // nas duas direções. Será trocado pelo avatar da SPEC-AVATAR (camadas de roupa/cabelo).
 function avatarQuadros(){
-  const QW=180, QH=520, out={dir:[],esq:[]};
+  // Silhueta pintada à mão em canvas: sobretudo longo com barra que balança, cachecol ametista, cabelo com mecha,
+  // botas e luz de recorte (fria do lado da janela, quente do lado do abajur). 8 quadros de passo + parado.
+  const QW=200, QH=520, out={dir:[],esq:[]};
+  const perna=(g,x,ang,cor,bota)=>{ g.save(); g.translate(x,318); g.rotate(ang);
+    const gp=g.createLinearGradient(-14,0,14,0); gp.addColorStop(0,cor); gp.addColorStop(1,'#0c0c0e');
+    g.fillStyle=gp; g.beginPath(); g.moveTo(-13,0); g.quadraticCurveTo(-15,90,-11,168); g.lineTo(11,168); g.quadraticCurveTo(15,90,13,0); g.closePath(); g.fill();
+    g.fillStyle=bota; g.beginPath(); g.moveTo(-13,150); g.lineTo(12,150); g.quadraticCurveTo(16,172,30,176); g.quadraticCurveTo(32,186,22,188);
+    g.lineTo(-14,188); g.quadraticCurveTo(-17,170,-13,150); g.fill();
+    g.fillStyle='rgba(186,176,159,.35)'; g.fillRect(-12,186,40,2); g.restore(); };
+  const braco=(g,x,ang,cor)=>{ g.save(); g.translate(x,122); g.rotate(ang);
+    g.fillStyle=cor; g.beginPath(); g.moveTo(-14,0); g.quadraticCurveTo(-20,80,-12,160); g.lineTo(10,162); g.quadraticCurveTo(16,80,14,0); g.closePath(); g.fill();
+    g.fillStyle='#2a2833'; g.beginPath(); g.ellipse(-1,168,10,13,0,0,7); g.fill(); g.restore(); };
   for(let f=0; f<9; f++){
     const c=cv(QW,QH), g=c.getContext('2d');
-    const fase = f===8 ? 0 : (f/8)*Math.PI*2, parado = f===8;
-    const sw = parado?0:Math.sin(fase)*22, bob = parado?0:Math.abs(Math.cos(fase))*-6;
-    g.translate(0,bob);
-    // pernas
-    g.fillStyle='#151517';
-    g.save(); g.translate(78,330); g.rotate(sw*0.012); g.fillRect(-13,0,26,175); g.fillStyle='#0c0c0e'; g.fillRect(-15,165,32,14); g.restore();
-    g.fillStyle='#1f1f22';
-    g.save(); g.translate(104,330); g.rotate(-sw*0.012); g.fillRect(-13,0,26,175); g.fillStyle='#0c0c0e'; g.fillRect(-15,165,32,14); g.restore();
-    // casaco
-    const gc=g.createLinearGradient(40,0,150,0); gc.addColorStop(0,'#2c2c31'); gc.addColorStop(0.6,'#1f1f22'); gc.addColorStop(1,'#151517');
-    g.fillStyle=gc; g.beginPath(); g.moveTo(58,118); g.quadraticCurveTo(90,100,124,118); g.lineTo(140,250);
-    g.lineTo(150+sw*0.3,392); g.lineTo(30+sw*0.3,392); g.lineTo(42,250); g.closePath(); g.fill();
-    // braços
-    g.fillStyle='#19181f';
-    g.save(); g.translate(52,128); g.rotate(-sw*0.01+0.06); g.fillRect(-12,0,22,150); g.fillStyle='#2c2a35'; g.fillRect(-10,146,18,20); g.restore();
-    g.save(); g.translate(130,128); g.rotate(sw*0.01-0.06); g.fillRect(-10,0,22,150); g.fillStyle='#24232b'; g.fillRect(-8,146,18,20); g.restore();
-    // gola, botões de aço
-    g.fillStyle='#8a7cc8'; g.beginPath(); g.moveTo(78,118); g.lineTo(91,150); g.lineTo(104,118); g.closePath(); g.fill();
-    g.fillStyle='#bab09f'; for(let i=0;i<4;i++){ g.beginPath(); g.arc(91,170+i*42,3.2,0,7); g.fill(); }
-    // cabeça e cabelo
-    g.fillStyle='#24232b'; g.beginPath(); g.ellipse(91,72,30,36,0,0,7); g.fill();
-    g.fillStyle='#0c0c0e'; g.beginPath(); g.ellipse(91,58,35,30,0,Math.PI,0); g.lineTo(126,90); g.quadraticCurveTo(110,60,91,62);
-    g.quadraticCurveTo(70,60,56,96); g.closePath(); g.fill();
-    g.fillStyle='#4e4580'; g.beginPath(); g.ellipse(100,40,14,5,-0.4,0,7); g.fill();
-    // luz de recorte (lado da janela/lua) em ametista
+    const parado=f===8, fase=parado?0:(f/8)*Math.PI*2;
+    const sw=parado?0:Math.sin(fase), bob=parado?0:-Math.abs(Math.cos(fase))*5;
+    g.translate(0,bob+8);
+    // perna e braço de trás (mais escuros)
+    braco(g,128,-sw*0.20-0.04,'#141319');
+    perna(g,108,-sw*0.32,'#17161c','#08080a');
+    perna(g,90,sw*0.32,'#22212a','#0c0c0e');
+    // sobretudo: corpo e barra que abre com o passo
+    const gc=g.createLinearGradient(30,0,170,0); gc.addColorStop(0,'#34313f'); gc.addColorStop(0.45,'#1f1e26'); gc.addColorStop(1,'#101014');
+    g.fillStyle=gc; g.beginPath();
+    g.moveTo(66,112); g.bezierCurveTo(84,98,118,98,136,112);           // ombros
+    g.bezierCurveTo(146,160,140,220,142,262);                           // lado direito
+    g.bezierCurveTo(152+sw*10,320,160+sw*16,360,166+sw*20,386);        // barra direita
+    g.quadraticCurveTo(122+sw*8,398,100+sw*6,392);
+    g.quadraticCurveTo(70+sw*4,398,32+sw*12,384);                      // barra esquerda
+    g.bezierCurveTo(44+sw*8,350,56,300,60,262);
+    g.bezierCurveTo(62,220,56,160,66,112); g.closePath(); g.fill();
+    // abertura do casaco e cinto
+    g.strokeStyle='rgba(8,8,10,.9)'; g.lineWidth=2.4; g.beginPath(); g.moveTo(101,140); g.quadraticCurveTo(99,260,100+sw*6,390); g.stroke();
+    g.fillStyle='#0c0c0e'; g.fillRect(62,238,80,12); g.fillStyle='#bab09f'; g.fillRect(96,239,9,10); g.fillStyle='#0c0c0e'; g.fillRect(99,242,3,4);
+    // botões de aço
+    g.fillStyle='#bab09f'; for(let i=0;i<3;i++){ g.beginPath(); g.arc(108,162+i*26,2.6,0,7); g.fill(); }
+    // braço da frente
+    braco(g,70,sw*0.20+0.05,'#26242e');
+    // cachecol ametista com ponta que voa
+    const gs=g.createLinearGradient(70,100,130,140); gs.addColorStop(0,'#8a7cc8'); gs.addColorStop(1,'#4e4580');
+    g.fillStyle=gs; g.beginPath(); g.moveTo(70,104); g.quadraticCurveTo(100,124,134,104); g.lineTo(134,120); g.quadraticCurveTo(100,140,70,120); g.closePath(); g.fill();
+    g.beginPath(); g.moveTo(118,120); g.quadraticCurveTo(128+sw*6,170,124-6+sw*10,196); g.lineTo(108+sw*8,192); g.quadraticCurveTo(110,160,106,124); g.closePath(); g.fill();
+    // pescoço, rosto (de perfil 3/4), cabelo
+    g.fillStyle='#2a2731'; g.fillRect(92,84,18,22);
+    const gr=g.createLinearGradient(70,30,130,90); gr.addColorStop(0,'#3a3644'); gr.addColorStop(1,'#1e1c24');
+    g.fillStyle=gr; g.beginPath(); g.ellipse(103,62,25,31,0.08,0,7); g.fill();
+    g.fillStyle='#0b0b0e'; g.beginPath(); g.moveTo(74,70); g.bezierCurveTo(66,28,96,18,112,22); g.bezierCurveTo(136,26,140,52,132,70);
+    g.quadraticCurveTo(124,46,108,44); g.quadraticCurveTo(96,58,82,56); g.quadraticCurveTo(80,80,86,96); g.quadraticCurveTo(70,92,74,70); g.fill();
+    g.strokeStyle='#4e4580'; g.lineWidth=2; g.beginPath(); g.moveTo(92,28); g.quadraticCurveTo(116,26,128,42); g.stroke();
+    // luz de recorte: fria (janela/lua) à esquerda, quente (abajur) à direita
     g.globalCompositeOperation='source-atop';
-    const rl=g.createLinearGradient(20,0,72,0); rl.addColorStop(0,'rgba(194,185,236,0.95)'); rl.addColorStop(1,'rgba(194,185,236,0)');
-    g.fillStyle=rl; g.fillRect(0,0,80,QH);
-    const quente=g.createLinearGradient(QW,0,QW-50,0); quente.addColorStop(0,'rgba(242,197,138,0.45)'); quente.addColorStop(1,'rgba(242,197,138,0)');
-    g.fillStyle=quente; g.fillRect(QW-60,0,60,QH);
+    const rl=g.createLinearGradient(26,0,84,0); rl.addColorStop(0,'rgba(194,185,236,0.95)'); rl.addColorStop(0.35,'rgba(194,185,236,0.35)'); rl.addColorStop(1,'rgba(194,185,236,0)');
+    g.fillStyle=rl; g.fillRect(-10,-20,100,QH);
+    const q=g.createLinearGradient(QW,0,QW-56,0); q.addColorStop(0,'rgba(242,197,138,0.5)'); q.addColorStop(1,'rgba(242,197,138,0)');
+    g.fillStyle=q; g.fillRect(QW-70,-20,70,QH);
+    const ch=g.createLinearGradient(0,330,0,420); ch.addColorStop(0,'rgba(8,7,12,0)'); ch.addColorStop(1,'rgba(8,7,12,0.55)');
+    g.fillStyle=ch; g.fillRect(0,300,QW,QH);
     out.dir.push(c);
     const m=cv(QW,QH), mg=m.getContext('2d'); mg.translate(QW,0); mg.scale(-1,1); mg.drawImage(c,0,0); out.esq.push(m);
   }
@@ -325,7 +404,11 @@ let R, TX={};
     tinta:chapado('#4e4580'), teto:(()=>{ const c=cv(4,256), g=c.getContext('2d'); const gr=g.createLinearGradient(0,0,0,256);
       gr.addColorStop(0,'rgba(8,7,12,0.85)'); gr.addColorStop(1,'rgba(8,7,12,0)'); g.fillStyle=gr; g.fillRect(0,0,4,256); return c; })(),
     dbg:chapado('#ff3cff') };
-  if(ASSAR) TX.assada = assar();
+  if(ASSAR){ TX.assada = assar();
+    // o oclusor recorta a pintura JÁ iluminada; senão a poltrona fica mais escura que o resto (emenda visível)
+    const oc=CENA.oclusor, kk=TX.assada.width/W, o2=cv(TX.oclusor.naturalWidth, TX.oclusor.naturalHeight), og=o2.getContext('2d');
+    og.drawImage(TX.oclusor,0,0); og.globalCompositeOperation='source-in';
+    og.drawImage(TX.assada, oc.x*kk, oc.y*kk, oc.w*kk, oc.h*kk, 0, 0, o2.width, o2.height); TX.oclusor=o2; }
   R = MOTOR==='pixi' && window.PIXI ? RendererPixi(palco) : RendererCanvas(palco);
   await R.carregar(VW,VH,RES); R.resize(VW,VH,RES);
   document.getElementById('troca').textContent = R.nome + ' ⇄';
@@ -376,13 +459,42 @@ palco.addEventListener('pointerdown',e=>{ e.preventDefault(); tocar(e.clientX,e.
 let dicaFora=false; function esconderDica(){ if(dicaFora) return; dicaFora=true; document.getElementById('dica').style.opacity=0; }
 
 // VN
-const vn=document.getElementById('vn');
-function abrirVN(o){ S.aberto=o; document.getElementById('vn-nome').textContent=o.nome;
-  document.getElementById('vn-texto').textContent='[fala pendente]';
-  document.getElementById('vn-meta').textContent='Abre: '+o.abre; vn.classList.add('on'); document.getElementById('vinheta').classList.add('forte');
-  S.cam.zAlvo=1.16; S.cam.foco=[(o.brilho[0]+S.av.x)/2, (o.brilho[1]+S.av.y-ALTURA_BASE*0.4)/2]; }
-function fecharVN(){ S.aberto=null; vn.classList.remove('on'); document.getElementById('vinheta').classList.remove('forte'); S.cam.zAlvo=1; S.cam.foco=null; }
-document.getElementById('vn-sair').addEventListener('pointerdown',e=>{ e.stopPropagation(); fecharVN(); });
+// Visitante: bate na porta alguns segundos depois de entrar (?visita=0 desliga). A porta pisca, o rótulo ganha "!",
+// entra o cut-in e a câmera treme de leve. Tocar na porta leva o avatar até ela e abre a VN com retrato grande.
+// O retrato é a Melissa só como placeholder de visitante; as falas ficam pendentes (texto do dono entra literal).
+const vn=document.getElementById('vn'), vnImg=document.getElementById('vn-img'), vnEsc=document.getElementById('vn-escolhas');
+const VISITA = Q.get('visita')!=='0', T0=performance.now();
+S.visita = { estado: VISITA ? 'espera' : 'nenhuma', t:0, tremor:0 };
+function retrato(expr){ if(!expr){ vn.classList.remove('com-retrato'); return; }
+  vn.classList.add('com-retrato'); const src='assets/visitante-'+expr+'.webp';
+  if(!vnImg.src.endsWith(src)){ vnImg.src=src; vnImg.classList.remove('troca'); void vnImg.offsetWidth; vnImg.classList.add('troca'); } }
+function escolhas(lista){ vnEsc.innerHTML='';
+  lista.forEach(([rot,fn,prim,off])=>{ const b=document.createElement('button'); b.innerHTML='<span>'+rot+'</span>';
+    if(prim) b.className='prim'; if(off) b.disabled=true;
+    b.addEventListener('pointerdown',e=>{ e.stopPropagation(); fn&&fn(); }); vnEsc.appendChild(b); }); }
+function fala(nome,tag,texto,meta){ document.getElementById('vn-nome').textContent=nome; document.getElementById('vn-tag').textContent=tag||'';
+  document.getElementById('vn-texto').innerHTML=texto+'<span class="cur"></span>'; document.getElementById('vn-meta').textContent=meta||''; }
+function abrirVN(o){ S.aberto=o;
+  if(o.id==='porta' && S.visita.estado==='batendo'){
+    S.visita.estado='na-porta'; retrato('surpreso');
+    fala('Visitante','na porta','[fala do visitante pendente]','Visitantes · SPEC-CASA 2.2-h. Retrato: placeholder.');
+    escolhas([['Atender',()=>{ retrato('convite'); fala('Visitante','na sala','[fala pendente]','');
+                escolhas([['Conversar',()=>{ retrato('sorriso'); fala('Visitante','na sala','[fala pendente]',''); escolhas([['Até logo',fecharVN,true]]); },true],
+                          ['Dar presente',null,false,true]]); },true],
+              ['Não atender',()=>{ S.visita.estado='bilhete'; fecharVN(); }]]);
+    S.cam.zAlvo=1.32; S.cam.foco=[o.brilho[0]-40, o.brilho[1]-60];
+  } else {
+    retrato(null); fala(o.nome,'','[fala pendente]','Abre: '+o.abre);
+    escolhas([['Abrir',null,true,true],['Sair',fecharVN]]);
+    S.cam.zAlvo=1.16; S.cam.foco=[(o.brilho[0]+S.av.x)/2, (o.brilho[1]+S.av.y-ALTURA_BASE*0.4)/2];
+  }
+  vn.classList.add('on'); document.getElementById('vinheta').classList.add('forte'); }
+function fecharVN(){ if(S.aberto&&S.aberto.id==='porta'&&S.visita.estado==='na-porta') S.visita.estado='atendida';
+  S.aberto=null; vn.classList.remove('on'); document.getElementById('vinheta').classList.remove('forte'); S.cam.zAlvo=1; S.cam.foco=null; }
+function bater(){ S.visita.estado='batendo'; S.visita.tremor=0.5;
+  const ci=document.getElementById('cutin'), fl=document.getElementById('flash');
+  ci.classList.remove('on'); fl.classList.remove('on'); void ci.offsetWidth; ci.classList.add('on'); fl.classList.add('on');
+  window.__cutinFora=setTimeout(()=>ci.classList.remove('on'),2000); }
 vn.addEventListener('pointerdown',e=>e.stopPropagation());
 
 // rótulos DOM
@@ -421,6 +533,9 @@ function atualizar(dt){
   const k=esc(), meiaW=VW/2/k, meiaH=VH/2/k;
   cam.x = meiaW*2>=W ? W/2 : Math.max(meiaW, Math.min(W-meiaW, cam.x));
   cam.y = meiaH*2>=H ? H/2 : Math.max(meiaH, Math.min(H-meiaH, cam.y));
+  if(S.visita.estado==='espera'){ if(performance.now()-T0>(DEMO?1500:3000)) bater(); }
+  if(S.visita.tremor>0){ S.visita.tremor=Math.max(0,S.visita.tremor-dt); const a=S.visita.tremor*14;
+    cam.x+=Math.sin(S.t*61)*a; cam.y+=Math.cos(S.t*47)*a*0.6; }
   for(const t of S.toques) t.t+=dt; S.toques=S.toques.filter(t=>t.t<0.9);
   for(const m of S.motes){ m.v-=m.vel*dt*0.9; m.u+=Math.sin(S.t*0.5+m.f)*0.0009; if(m.v<0){ m.v=1; m.u=rnd(); } }
   for(const b of S.brasas){ b.vida+=dt*0.55; if(b.vida>1){ b.vida=0; b.vx=(rnd()-0.5)*10; } }
@@ -443,13 +558,15 @@ function compor(){
   // 3. brilho dos objetos tocáveis (pulso lento, losango girando)
   const av=S.av;
   for(const o of CENA.objetos){ const [gx,gy,gr]=o.brilho; const [sx,sy]=pt(gx,gy);
-    const perto = Math.hypot(av.x-o.pe[0], av.y-o.pe[1]) < 230 || S.aberto===o;
+    const bat = o.id==='porta' && S.visita.estado==='batendo';
+    const perto = Math.hypot(av.x-o.pe[0], av.y-o.pe[1]) < 230 || S.aberto===o || bat;
     const pul = 0.5+0.5*Math.sin(t*2.2+gx*0.01);
     cmds.push({id:'halo-'+o.id,tex:TX.halo,x:sx,y:sy,w:gr*2*k,h:gr*2*k,ax:.5,ay:.5,a:(perto?0.32:0.12)+pul*0.10,blend:'add'});
     const es=(perto?20:13)*k*2*(0.85+pul*0.25);
     cmds.push({id:'est-'+o.id,tex:TX.estrela,x:sx,y:sy,w:es,h:es,ax:.5,ay:.5,rot:t*0.6,a:perto?0.8:0.45,blend:'add'});
     const [rx,ry]=pt(o.rot[0],o.rot[1]); const el=rots[o.id];
-    if(el){ el.style.transform=`translate(${rx}px,${ry-6}px) translate(-50%,-100%)`; el.classList.toggle('on', perto && !S.aberto); } }
+    if(el){ el.style.transform=`translate(${rx}px,${ry-6}px) translate(-50%,-100%)`; el.classList.toggle('on', perto && !S.aberto); el.classList.toggle('alerta', bat && !S.aberto); }
+    if(bat){ const pb=0.5+0.5*Math.sin(t*9); cmds.push({id:'bat-'+o.id,tex:TX.fria,x:sx,y:sy+120*k,w:300*k,h:620*k,ax:.5,ay:.5,a:0.18+pb*0.22,blend:'add'}); } }
   // 4. marca do toque
   for(const m of S.toques){ const [mx,my]=pt(m.x,m.y); const p=m.t/0.9; const s=(30+p*50)*k*2*escalaProf(m.y);
     cmds.push({id:'toque'+m.x.toFixed(1)+m.y.toFixed(1),tex:TX.anel,x:mx,y:my,w:s,h:s*0.42,ax:.5,ay:.5,a:(1-p)*0.9,blend:'add'}); }

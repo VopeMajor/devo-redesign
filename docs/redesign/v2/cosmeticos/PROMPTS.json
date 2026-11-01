@@ -1,0 +1,451 @@
+[
+  {
+    "id": "v2-cos2-aros-base",
+    "titulo": "DEVO v2 — cosméticos r2: molduras Comum e Incomum pintadas (peça única, fosca)",
+    "tipo": "ilustracao",
+    "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+    "prompt": "Ornate jewelry object concept art, painted, highly detailed, isolated on a plain flat light grey background. A simple avatar frame made of a single piece of material, a plain round window in the center left completely empty and plain, quiet and elegant, matte finish, soft top light, front view. No text, letters, numbers or logos anywhere.",
+    "negative": "text, letters, watermark, person, face in center, cartoon, flat vector, blurry, low detail, pixel art",
+    "largura": 1024,
+    "altura": 1024,
+    "variacoes": [
+      {
+        "seed": 8151,
+        "prompt_extra": "Common: a ring of matte grey carved stone with a shallow chiselled groove and a small keystone at the top, nothing else."
+      },
+      {
+        "seed": 8152,
+        "prompt_extra": "Common: a ring of matte dark iron with a hammered texture and four small rivets, nothing else."
+      },
+      {
+        "seed": 8153,
+        "prompt_extra": "Uncommon: a ring of matte bronze with one notch at the top holding a small polished pale jade cabochon, a single thin polished line along the rim."
+      },
+      {
+        "seed": 8154,
+        "prompt_extra": "Uncommon: a ring of dark green jade stone with pale veins and a thin bronze inner rim, one small notch at the top."
+      }
+    ],
+    "pos": {
+      "remover_fundo": true,
+      "tamanho_final": 1024,
+      "margem": 0.03,
+      "derivados": [
+        512,
+        256
+      ]
+    },
+    "escolhida": "v01 Comum, v03 Incomum",
+    "saida": "branch arte-saida/v2-cos2-aros-base"
+  },
+  {
+    "id": "v2-cos2-asas-crepusculo",
+    "titulo": "DEVO v2 — cosméticos r2: Asas do Crepúsculo com asas para fora do quadro (Lendário)",
+    "tipo": "ilustracao",
+    "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+    "prompt": "Ornate jewelry object concept art, painted, highly detailed, isolated on a plain flat light grey background. A wide avatar frame with a small round window in the center left completely empty and plain, and two huge spread wings extending far out to the left and right well beyond the frame, the left wing of glossy black feathers, the right wing of silver white feathers, layered long flight feathers. Above the window a faceted crimson crystal heart in an old gold setting, thin gold chains looping under the window with small crimson drops, a few loose feathers falling. Dramatic dusk studio light, rim light on the feathers. No text, letters, numbers or logos anywhere.",
+    "negative": "text, letters, watermark, person, face in center, cartoon, flat vector, blurry, low detail, pixel art",
+    "largura": 1536,
+    "altura": 1024,
+    "variacoes": [
+      {
+        "seed": 8131
+      },
+      {
+        "seed": 8132
+      }
+    ],
+    "pos": {
+      "remover_fundo": true,
+      "tamanho_final": 1536,
+      "margem": 0.03,
+      "derivados": [
+        512,
+        256
+      ]
+    },
+    "escolhida": "v01 (janela cinza recortada à mão)",
+    "saida": "branch arte-saida/v2-cos2-asas-crepusculo"
+  },
+  {
+    "id": "v2-cos2-badalada-arcano",
+    "titulo": "DEVO v2 — cosméticos r2: Última Badalada como Arcano (cristal de relógio)",
+    "tipo": "ilustracao",
+    "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+    "prompt": "Ornate jewelry object concept art, painted, highly detailed, isolated on a plain flat light grey background. A tall avatar frame shaped like a gothic clock carved entirely from clear iridescent crystal, tall arched silhouette, taller than wide, the round window in the middle left completely empty and plain. Inside the thick transparent crystal rim you can see a delicate working clockwork mechanism of tiny champagne gold and blued steel gears. One long slender clock hand pierces diagonally across the top of the window and out past the frame. A small crystal bell hangs from a thin chain below the window, a short crystal pendulum beneath it. Three blank white playing cards with thin gold edges float in an orbit around the upper right of the frame at different depths, slightly tilted. The crystal refracts lilac, pale cobalt blue and rose light, tiny four-pointed sparkles. Cool night studio light from above, glassy caustics. No text, letters, numbers or logos anywhere.",
+    "negative": "text, letters, watermark, person, face in center, cartoon, flat vector, blurry, low detail, pixel art",
+    "largura": 1024,
+    "altura": 1536,
+    "variacoes": [
+      {
+        "seed": 8101
+      },
+      {
+        "seed": 8102
+      },
+      {
+        "seed": 8103
+      }
+    ],
+    "pos": {
+      "remover_fundo": true,
+      "tamanho_final": 1536,
+      "margem": 0.03,
+      "derivados": [
+        512,
+        256
+      ]
+    },
+    "escolhida": "(substituída pela -janela)",
+    "saida": "branch arte-saida/v2-cos2-badalada-arcano"
+  },
+  {
+    "id": "v2-cos2-badalada-janela",
+    "titulo": "DEVO v2 — cosméticos r2: Última Badalada Arcano com janela vazia para o retrato",
+    "tipo": "ilustracao",
+    "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+    "prompt": "Ornate jewelry object concept art, painted, highly detailed, isolated on a plain flat light grey background. A tall avatar frame shaped like a gothic clock tower carved from clear iridescent crystal, pointed arch top. In the middle a large round window framed by a very thick crystal ring, the inside of the window left completely empty and plain. Inside the thickness of the crystal ring a delicate clockwork mechanism of tiny champagne gold and blued steel gears is visible all around the window, roman numeral marks engraved on the ring. One long slender gold clock hand lies across the ring diagonally and pokes out past the frame. A small crystal bell on a thin chain hangs under the window with a short crystal pendulum. Three blank white playing cards with thin gold edges float around the upper right at different depths. Crystal refracts lilac, pale cobalt blue and rose light, tiny four-pointed sparkles, cool night studio light. No text, letters, numbers or logos anywhere.",
+    "negative": "text, letters, watermark, person, face in center, cartoon, flat vector, blurry, low detail, pixel art",
+    "largura": 1024,
+    "altura": 1536,
+    "variacoes": [
+      {
+        "seed": 8104
+      },
+      {
+        "seed": 8105
+      },
+      {
+        "seed": 8106
+      }
+    ],
+    "pos": {
+      "remover_fundo": true,
+      "tamanho_final": 1536,
+      "margem": 0.03,
+      "derivados": [
+        512,
+        256
+      ]
+    },
+    "escolhida": "v01",
+    "saida": "branch arte-saida/v2-cos2-badalada-janela"
+  },
+  {
+    "id": "v2-cos2-balao-correspondencia",
+    "titulo": "DEVO v2 — cosméticos r2: balão Correspondência Real pintado (Raro)",
+    "tipo": "ilustracao",
+    "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+    "prompt": "Ornate jewelry object concept art, painted, highly detailed, isolated on a plain flat light grey background. A wide horizontal speech bubble frame made of thick cream letter paper with a soft deckled edge, the large center left completely empty, plain and flat. Ornament only on the two top corners: delicate pale gilt and silver filigree scrolls engraved into the paper corners, a small round dark wine red wax seal with a star stamped pressed onto the middle of the top edge, a tiny triangular tail at the bottom left. Soft studio light, subtle paper texture and shadow. No text, letters, numbers or logos anywhere.",
+    "negative": "text, letters, watermark, person, face in center, cartoon, flat vector, blurry, low detail, pixel art",
+    "largura": 1536,
+    "altura": 1024,
+    "variacoes": [
+      {
+        "seed": 8171
+      },
+      {
+        "seed": 8172
+      }
+    ],
+    "pos": {
+      "remover_fundo": true,
+      "tamanho_final": 1536,
+      "margem": 0.03,
+      "derivados": [
+        512,
+        256
+      ]
+    },
+    "escolhida": "v01 (selo separado em camada)",
+    "saida": "branch arte-saida/v2-cos2-balao-correspondencia"
+  },
+  {
+    "id": "v2-cos2-banquete-gaiola-r2",
+    "titulo": "DEVO v2 — cosméticos r2: Banquete do Javali, gaiola com presas de javali (nova seed)",
+    "tipo": "ilustracao",
+    "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+    "prompt": "Ornate jewelry object concept art, painted, highly detailed, isolated on a plain flat light grey background. An avatar frame shaped like an ornamental birdcage dome in aged old gold, tall silhouette with a domed top and a round base plinth. In the front of the cage a large round empty opening framed by a thick gold ring, the inside of the ring left completely empty and plain. Two long curved ivory wild boar tusks rise from the sides of the base ring and curve upward around the opening like a pair of sabres, NOT horns, no animal head. Thin cage bars curve to a small crown with a ruby on top, a band of diamond-shaped black enamel lozenges with tiny four-pointed stars around the middle, a heavy dark blue velvet banner with gold embroidery and tassels hanging from the left side, two playing cards and round gold casino chips hanging on short chains. No text, letters, numbers or logos anywhere.",
+    "negative": "text, letters, watermark, person, face in center, cartoon, flat vector, blurry, low detail, pixel art, horns, bull, cow, ram, animal head",
+    "largura": 1024,
+    "altura": 1536,
+    "variacoes": [
+      {
+        "seed": 8113
+      },
+      {
+        "seed": 8114
+      },
+      {
+        "seed": 8115
+      }
+    ],
+    "pos": {
+      "remover_fundo": true,
+      "tamanho_final": 1536,
+      "margem": 0.03,
+      "derivados": [
+        512,
+        256
+      ]
+    },
+    "escolhida": "v01",
+    "saida": "branch arte-saida/v2-cos2-banquete-gaiola-r2"
+  },
+  {
+    "id": "v2-cos2-banquete-gaiola",
+    "titulo": "DEVO v2 — cosméticos r2: Banquete do Javali como gaiola dourada (Lendário)",
+    "tipo": "ilustracao",
+    "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+    "prompt": "Ornate jewelry object concept art, painted, highly detailed, isolated on a plain flat light grey background. An avatar frame shaped like an ornamental birdcage dome in aged old gold, tall silhouette with a domed top and a round base plinth, a round window in the front of the cage left completely empty and plain. Two curved ivory boar tusks cross above the dome like crossed swords, thin cage bars curve down from a small crown, a row of diamond-shaped black and gold lozenges with four-pointed stars around the middle, a heavy dark blue velvet banner with gold embroidery and tassels hangs from the left side and drapes across the bottom, a few playing cards and round gold casino chips hang on short chains from the bars. Warm candle studio light, worn gold with bright highlights and dark recesses. No text, letters, numbers or logos anywhere.",
+    "negative": "text, letters, watermark, person, face in center, cartoon, flat vector, blurry, low detail, pixel art",
+    "largura": 1024,
+    "altura": 1536,
+    "variacoes": [
+      {
+        "seed": 8111
+      },
+      {
+        "seed": 8112
+      }
+    ],
+    "pos": {
+      "remover_fundo": true,
+      "tamanho_final": 1536,
+      "margem": 0.03,
+      "derivados": [
+        512,
+        256
+      ]
+    },
+    "escolhida": "(chifres em vez de presas; substituída pela -r2)",
+    "saida": "branch arte-saida/v2-cos2-banquete-gaiola"
+  },
+  {
+    "id": "v2-cos2-casulo-epico",
+    "titulo": "DEVO v2 — cosméticos r2: peça em duas etapas, casulo de prata e orquídea (Épico)",
+    "tipo": "ilustracao",
+    "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+    "prompt": "Ornate jewelry object concept art, painted, highly detailed, isolated on a plain flat light grey background. A small gothic reliquary pendant of tarnished antique silver and lilac orchid enamel with white lace details and amethyst gems, about the size of a brooch, on a short silver chain, front view, soft cool light. Absolutely no gold. No text, letters, numbers or logos anywhere.",
+    "negative": "text, letters, watermark, face in center, cartoon, flat vector, blurry, low detail, pixel art, gold, wings, heart",
+    "largura": 1024,
+    "altura": 1024,
+    "variacoes": [
+      {
+        "seed": 8181,
+        "prompt_extra": "Stage one: a closed oval cocoon of folded silver petals and layered white lace, tightly shut, a thin seam of lilac light glowing through, a tiny crystal clock face set at the base."
+      },
+      {
+        "seed": 8182,
+        "prompt_extra": "Stage one: a closed oval cocoon of folded silver petals and layered white lace, tightly shut, a thin seam of lilac light glowing through, a tiny crystal clock face set at the base."
+      },
+      {
+        "seed": 8183,
+        "prompt_extra": "Stage two: the same cocoon split open into silver petals, and standing inside a tiny porcelain doll girl in a white lace dress holding a small glowing crystal clock in her hands, eyes closed, delicate lace streamers floating up."
+      },
+      {
+        "seed": 8184,
+        "prompt_extra": "Stage two: the same cocoon split open into silver petals, and standing inside a tiny porcelain doll girl in a white lace dress holding a small glowing crystal clock in her hands, eyes closed, delicate lace streamers floating up."
+      }
+    ],
+    "pos": {
+      "remover_fundo": true,
+      "tamanho_final": 1024,
+      "margem": 0.03,
+      "derivados": [
+        512,
+        256
+      ]
+    },
+    "escolhida": "v01 fechado, v03 aberto",
+    "saida": "branch arte-saida/v2-cos2-casulo-epico"
+  },
+  {
+    "id": "v2-cos2-catedral-ogiva",
+    "titulo": "DEVO v2 — cosméticos r2: Catedral Esquecida como arco ogival (Épico)",
+    "tipo": "ilustracao",
+    "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+    "prompt": "Ornate jewelry object concept art, painted, highly detailed, isolated on a plain flat light grey background. An avatar frame shaped like a tall pointed gothic cathedral arch made of dark weathered stone and tarnished silver, the tall oval window inside the arch left completely empty and plain. A round stained glass rose window sits at the top point of the arch with black lead lines and dim amethyst violet and cobalt glass, slender twin columns with carved capitals on both sides, small pinnacles and crockets along the outer edge, pale orchid flowers and ivy growing over one base, cracked stone, a thin silver chain with a small amethyst hanging under the window. Cool moonlight, quiet and abandoned. No text, letters, numbers or logos anywhere.",
+    "negative": "text, letters, watermark, person, face in center, cartoon, flat vector, blurry, low detail, pixel art, gold",
+    "largura": 1024,
+    "altura": 1536,
+    "variacoes": [
+      {
+        "seed": 8121
+      },
+      {
+        "seed": 8122
+      }
+    ],
+    "pos": {
+      "remover_fundo": true,
+      "tamanho_final": 1536,
+      "margem": 0.03,
+      "derivados": [
+        512,
+        256
+      ]
+    },
+    "escolhida": "v02",
+    "saida": "branch arte-saida/v2-cos2-catedral-ogiva"
+  },
+  {
+    "id": "v2-cos2-fragmento-celestial",
+    "titulo": "DEVO v2 — cosméticos r2: emblema Fragmento Celestial (Arcano)",
+    "tipo": "ilustracao",
+    "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+    "prompt": "Ornate jewelry object concept art, painted, highly detailed, isolated on a plain flat light grey background. Luxury fantasy brooch. A tall faceted crystal shard glowing pale lilac and cobalt blue, held upright by a champagne setting shaped like two small folded wings, a thin ring orbiting the crystal at a tilt, a tiny clock face set at the base, three short fine chains with small star charms hanging below. Light passes through the crystal and casts colored reflections. Studio light, front view, symmetrical. No text, letters, numbers or logos anywhere.",
+    "negative": "text, letters, watermark, person, face in center, cartoon, flat vector, blurry, low detail, pixel art",
+    "largura": 1024,
+    "altura": 1536,
+    "variacoes": [
+      {
+        "seed": 8211
+      },
+      {
+        "seed": 8212
+      }
+    ],
+    "pos": {
+      "remover_fundo": true,
+      "tamanho_final": 1536,
+      "margem": 0.03,
+      "derivados": [
+        512,
+        256
+      ]
+    },
+    "escolhida": "v02",
+    "saida": "branch arte-saida/v2-cos2-fragmento-celestial"
+  },
+  {
+    "id": "v2-cos2-placas-raridade",
+    "titulo": "DEVO v2 — cosméticos r2: placas de fundo por raridade (Comum a Arcano)",
+    "tipo": "ilustracao",
+    "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+    "prompt": "Square item card background plate for a luxury gothic game collection screen, seen straight on, flat front view filling the whole image, the center left calm and darker so an object can be placed on it, no object, painterly and rich material texture. No text, letters, numbers or logos anywhere.",
+    "negative": "text, letters, watermark, people, cartoon, flat vector, blurry, low detail, pixel art, neon",
+    "largura": 1024,
+    "altura": 1024,
+    "variacoes": [
+      {
+        "seed": 8141,
+        "prompt_extra": "Comum: smooth matte grey limestone surface, very subtle carved bevel border, plain and quiet, soft top light."
+      },
+      {
+        "seed": 8142,
+        "prompt_extra": "Incomum: dark green-grey stone surface with thin pale jade veins running diagonally, one polished bevel border catching a single reflection."
+      },
+      {
+        "seed": 8143,
+        "prompt_extra": "Raro: deep blue glass surface with fine silver stardust and tiny four-pointed stars suspended inside, thin engraved silver border, cool light."
+      },
+      {
+        "seed": 8144,
+        "prompt_extra": "Epico: rich orchid violet velvet surface overlaid with antique white lace pattern at the corners, tarnished silver thread border, soft light."
+      },
+      {
+        "seed": 8145,
+        "prompt_extra": "Lendario: very dark plum velvet surface with dense old gold embroidery of scrolls and stars around the edges, gold braided border, warm light."
+      },
+      {
+        "seed": 8146,
+        "prompt_extra": "Arcano: a window of dark glass sky with a faint huge clock dial of thin champagne lines and roman numeral marks, iridescent lilac and cobalt light leaking through, star particles, thin crystal border."
+      }
+    ],
+    "pos": {
+      "remover_fundo": false,
+      "tamanho_final": 1024,
+      "margem": 0,
+      "derivados": [
+        1024
+      ]
+    },
+    "escolhida": "v01..v06 = Comum..Arcano",
+    "saida": "branch arte-saida/v2-cos2-placas-raridade"
+  },
+  {
+    "id": "v2-cos2-porta-casa",
+    "titulo": "DEVO v2 — cosméticos r2: porta da Casa para o brasão",
+    "tipo": "ilustracao",
+    "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+    "prompt": "Painted visual novel background, close view of a tall old wooden front door inside a dark gothic house hallway at night, dark carved walnut panels, wrought iron strap hinges and studs, a heavy iron ring knocker, an empty smooth carved round plaque in the upper center of the door where a crest would hang, warm candlelight from a wall sconce on the left, cool moonlight from the right, dust in the light, worn red and violet rug on the floor. Painterly, rich, cinematic, no people. No text, letters, numbers or logos anywhere.",
+    "negative": "text, letters, watermark, people, cartoon, flat vector, blurry, low detail, pixel art, neon",
+    "largura": 1024,
+    "altura": 1536,
+    "variacoes": [
+      {
+        "seed": 8201
+      },
+      {
+        "seed": 8202
+      }
+    ],
+    "pos": {
+      "remover_fundo": false,
+      "tamanho_final": 1536,
+      "margem": 0,
+      "derivados": [
+        1024
+      ]
+    },
+    "escolhida": "v01",
+    "saida": "branch arte-saida/v2-cos2-porta-casa"
+  },
+  {
+    "id": "v2-cos2-tabuleiro-marmore",
+    "titulo": "DEVO v2 — cosméticos r2: tabuleiro de mármore do Deadly Vote (ref-16)",
+    "tipo": "ilustracao",
+    "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+    "prompt": "Painted 3D render style illustration, a large thick chessboard slab of polished white Carrara marble and black marble squares with grey veins and thin champagne inlay lines between squares, visible slab thickness at the front edge, a few cracks, seen from a high three-quarter angle receding into darkness, two ornate long swords stuck into the board at the far corners, dark amethyst violet background fading to black, one soft spotlight from above lighting the center. No chess pieces, no people. No text, letters, numbers or logos anywhere.",
+    "negative": "text, letters, watermark, people, cartoon, flat vector, blurry, low detail, pixel art, neon",
+    "largura": 1536,
+    "altura": 1024,
+    "variacoes": [
+      {
+        "seed": 8191
+      },
+      {
+        "seed": 8192
+      }
+    ],
+    "pos": {
+      "remover_fundo": false,
+      "tamanho_final": 1536,
+      "margem": 0,
+      "derivados": [
+        1024
+      ]
+    },
+    "escolhida": "v01",
+    "saida": "branch arte-saida/v2-cos2-tabuleiro-marmore"
+  },
+  {
+    "id": "v2-cos2-vitral-capela",
+    "titulo": "DEVO v2 — cosméticos r2: fundo do perfil Vitral da Capela (pintura)",
+    "tipo": "ilustracao",
+    "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+    "prompt": "Painted background for a profile card, wide horizontal composition, no characters. The inside of a dark gothic chapel at night seen from close: a large round stained glass rose window on the left with intricate black lead tracery, petals and a central rosette in deep amethyst violet, cobalt blue and dark wine red glass, moonlight pouring through it in strong visible beams of colored light crossing the air diagonally to the right, floating dust in the beams, black marble pillars and a polished black marble floor catching colored reflections. The right half stays darker and calm, almost empty. Painterly, rich, moody, cinematic. No text, letters, numbers or logos anywhere.",
+    "negative": "text, letters, watermark, people, cartoon, flat vector, blurry, low detail, pixel art, neon",
+    "largura": 1536,
+    "altura": 1024,
+    "variacoes": [
+      {
+        "seed": 8161
+      },
+      {
+        "seed": 8162
+      }
+    ],
+    "pos": {
+      "remover_fundo": false,
+      "tamanho_final": 1536,
+      "margem": 0,
+      "derivados": [
+        1024
+      ]
+    },
+    "escolhida": "v01",
+    "saida": "branch arte-saida/v2-cos2-vitral-capela"
+  }
+]
