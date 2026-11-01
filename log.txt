@@ -1,0 +1,7 @@
+[v2-npc-rato-retrato] v01: @cf/black-forest-labs/flux-2-klein-9b seed=9521 1024x1536 passos=None (~1,455 neurônios)
+    ERRO: HTTP 400 — 3030: AiError: AiError: Your output has been flagged. Please choose another prompt / input image combination (814073a5-e876-47d2-aea2-682f30aa87aa)
+[v2-npc-rato-retrato] v02: @cf/black-forest-labs/flux-2-klein-9b seed=9522 1024x1536 passos=None (~1,455 neurônios)
+    ERRO: HTTP 400 — 3030: AiError: AiError: Your output has been flagged. Please choose another prompt / input image combination (c3215555-c3c8-4805-8ace-e453e39b0632)
+[v2-npc-rato-retrato] v03: @cf/black-forest-labs/flux-2-klein-9b seed=9523 1024x1536 passos=None (~1,455 neurônios)
+    ok em 3.0s, 1024x1536
+[v2-npc-rato-retrato] v03: rembg:birefnet-general; sem avisos
