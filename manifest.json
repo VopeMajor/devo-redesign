@@ -1,0 +1,99 @@
+{
+  "pedido": "v2-cos2-badalada-arcano",
+  "titulo": "DEVO v2 — cosméticos r2: Última Badalada como Arcano (cristal de relógio)",
+  "tipo": "ilustracao",
+  "tamanho_final": 1536,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 8101,
+      "passos": null,
+      "segundos": 3.3,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "ilhas_removidas": 0,
+      "arquivos": [
+        {
+          "arquivo": "v2-cos2-badalada-arcano--v01--1536.png",
+          "bytes": 1152514
+        },
+        {
+          "arquivo": "v2-cos2-badalada-arcano--v01--1536.webp",
+          "bytes": 226422
+        },
+        {
+          "arquivo": "v2-cos2-badalada-arcano--v01--512.webp",
+          "bytes": 39600
+        },
+        {
+          "arquivo": "v2-cos2-badalada-arcano--v01--256.webp",
+          "bytes": 15050
+        }
+      ],
+      "segundos_pos": 19.1,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 8102,
+      "passos": null,
+      "segundos": 3.2,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "ilhas_removidas": 0,
+      "arquivos": [
+        {
+          "arquivo": "v2-cos2-badalada-arcano--v02--1536.png",
+          "bytes": 1118226
+        },
+        {
+          "arquivo": "v2-cos2-badalada-arcano--v02--1536.webp",
+          "bytes": 250356
+        },
+        {
+          "arquivo": "v2-cos2-badalada-arcano--v02--512.webp",
+          "bytes": 46472
+        },
+        {
+          "arquivo": "v2-cos2-badalada-arcano--v02--256.webp",
+          "bytes": 17532
+        }
+      ],
+      "segundos_pos": 15.0,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 8103,
+      "passos": null,
+      "segundos": 3.3,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "ilhas_removidas": 0,
+      "arquivos": [
+        {
+          "arquivo": "v2-cos2-badalada-arcano--v03--1536.png",
+          "bytes": 1272560
+        },
+        {
+          "arquivo": "v2-cos2-badalada-arcano--v03--1536.webp",
+          "bytes": 257354
+        },
+        {
+          "arquivo": "v2-cos2-badalada-arcano--v03--512.webp",
+          "bytes": 43334
+        },
+        {
+          "arquivo": "v2-cos2-badalada-arcano--v03--256.webp",
+          "bytes": 16556
+        }
+      ],
+      "segundos_pos": 19.0,
+      "avisos": []
+    }
+  ]
+}
