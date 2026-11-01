@@ -1,0 +1,71 @@
+{
+  "id": "v2-npc-coruja-cutin-r2",
+  "titulo": "DEVO v2 — Coruja, cut-in 2048x640 (2º lote: o filtro recusou o 1º; texto ajustado e klein-4b de reserva)",
+  "tipo": "ilustracao",
+  "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+  "prompt": "Bold clean anime lineart, two-tone cel shading, high-contrast graphic poster style. Ultra-wide horizontal cut-in banner on a black field, crossed by one diagonal strip whose upper and lower edges are torn in sharp jagged rips. The strip rises from lower left to upper right. Inside the strip, an extreme close-up of a mature adult woman's face, in her thirties, cropped from just above the eyebrows to just below the nose: heavy-lidded glowing amber eyes looking straight at the viewer, one eyebrow raised, a narrow straight streak of white hair falling on the viewer's left, dark brown hair, the tip of a steel hairpin, a gold crescent moon earring catching the light, skin with flat cel shadows and thick black contour. Behind the face, deep library green tones with faint vertical lines like the spines of shelved books, black feathers and fine silver dust flying along the diagonal, speed lines. Cool moonlight from above, amber glow only in the eyes. Palette: black #0C0C0E, library green #2F7A55, amber #E3A13B. No text, letters or logos anywhere.",
+  "negative": "text, letters, watermark, logo, blurry, low detail, pixel art, extra fingers, extra limbs",
+  "largura": 2048,
+  "altura": 640,
+  "variacoes": [
+    {
+      "seed": 9841,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "passos": null,
+      "largura": 2048,
+      "altura": 640,
+      "prompt_extra": "",
+      "n": 1
+    },
+    {
+      "seed": 9842,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "passos": null,
+      "largura": 2048,
+      "altura": 640,
+      "prompt_extra": "",
+      "n": 2
+    },
+    {
+      "seed": 9843,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "passos": null,
+      "largura": 2048,
+      "altura": 640,
+      "prompt_extra": "",
+      "n": 3
+    },
+    {
+      "seed": 9844,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "passos": null,
+      "largura": 2048,
+      "altura": 640,
+      "prompt_extra": "",
+      "n": 4
+    },
+    {
+      "seed": 9845,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "passos": null,
+      "largura": 2048,
+      "altura": 640,
+      "prompt_extra": "",
+      "n": 5
+    }
+  ],
+  "pos": {
+    "remover_fundo": false,
+    "tamanho_final": 2048,
+    "margem": 0,
+    "derivados": [
+      1024
+    ],
+    "modelo_fundo": "birefnet-general",
+    "fundo": "liso",
+    "camadas": []
+  },
+  "passos": null,
+  "guidance": null,
+  "referencias": []
+}

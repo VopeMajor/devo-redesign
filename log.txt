@@ -1,0 +1,15 @@
+[v2-npc-coruja-cutin-r2] v01: @cf/black-forest-labs/flux-2-klein-9b seed=9841 2048x640 passos=None (~1,409 neurônios)
+    ok em 2.5s, 2048x640
+[v2-npc-coruja-cutin-r2] v02: @cf/black-forest-labs/flux-2-klein-9b seed=9842 2048x640 passos=None (~1,409 neurônios)
+    ok em 4.1s, 2048x640
+[v2-npc-coruja-cutin-r2] v03: @cf/black-forest-labs/flux-2-klein-4b seed=9843 2048x640 passos=None (~208 neurônios)
+    ok em 12.1s, 2048x640
+[v2-npc-coruja-cutin-r2] v04: @cf/black-forest-labs/flux-2-klein-4b seed=9844 2048x640 passos=None (~208 neurônios)
+    ok em 14.2s, 2048x640
+[v2-npc-coruja-cutin-r2] v05: @cf/black-forest-labs/flux-2-klein-4b seed=9845 2048x640 passos=None (~208 neurônios)
+    ok em 11.7s, 2048x640
+[v2-npc-coruja-cutin-r2] v01: mantido; sem avisos
+[v2-npc-coruja-cutin-r2] v02: mantido; sem avisos
+[v2-npc-coruja-cutin-r2] v03: mantido; sem avisos
+[v2-npc-coruja-cutin-r2] v04: mantido; sem avisos
+[v2-npc-coruja-cutin-r2] v05: mantido; sem avisos
