@@ -1,0 +1,67 @@
+{
+  "pedido": "v2-cos2-balao-correspondencia",
+  "titulo": "DEVO v2 — cosméticos r2: balão Correspondência Real pintado (Raro)",
+  "tipo": "ilustracao",
+  "tamanho_final": 1536,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 8171,
+      "passos": null,
+      "segundos": 3.0,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "v2-cos2-balao-correspondencia--v01--1536.png",
+          "bytes": 1607929
+        },
+        {
+          "arquivo": "v2-cos2-balao-correspondencia--v01--1536.webp",
+          "bytes": 201370
+        },
+        {
+          "arquivo": "v2-cos2-balao-correspondencia--v01--512.webp",
+          "bytes": 19640
+        },
+        {
+          "arquivo": "v2-cos2-balao-correspondencia--v01--256.webp",
+          "bytes": 8544
+        }
+      ],
+      "segundos_pos": 19.8,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 8172,
+      "passos": null,
+      "segundos": 2.8,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "v2-cos2-balao-correspondencia--v02--1536.png",
+          "bytes": 1488820
+        },
+        {
+          "arquivo": "v2-cos2-balao-correspondencia--v02--1536.webp",
+          "bytes": 165348
+        },
+        {
+          "arquivo": "v2-cos2-balao-correspondencia--v02--512.webp",
+          "bytes": 19278
+        },
+        {
+          "arquivo": "v2-cos2-balao-correspondencia--v02--256.webp",
+          "bytes": 8366
+        }
+      ],
+      "segundos_pos": 14.6,
+      "avisos": []
+    }
+  ]
+}

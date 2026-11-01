@@ -1,0 +1,35 @@
+{
+  "pedido": "v2-cos2-balao-correspondencia",
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 8171,
+      "passos": null,
+      "largura": 1536,
+      "altura": 1024,
+      "neuronios_estimados": 1455,
+      "ok": true,
+      "segundos": 3.0,
+      "tamanho_real": [
+        1536,
+        1024
+      ]
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 8172,
+      "passos": null,
+      "largura": 1536,
+      "altura": 1024,
+      "neuronios_estimados": 1455,
+      "ok": true,
+      "segundos": 2.8,
+      "tamanho_real": [
+        1536,
+        1024
+      ]
+    }
+  ]
+}
