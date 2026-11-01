@@ -1,0 +1,8 @@
+[v2-npc-herdeiro-retrato] v01: @cf/black-forest-labs/flux-2-klein-9b seed=9501 1024x1536 passos=None (~1,455 neurônios)
+    ok em 2.8s, 1024x1536
+[v2-npc-herdeiro-retrato] v02: @cf/black-forest-labs/flux-2-klein-9b seed=9502 1024x1536 passos=None (~1,455 neurônios)
+    ERRO: HTTP 400 — 3030: AiError: AiError: Your output has been flagged. Please choose another prompt / input image combination (ea94480d-257a-429b-bd7f-5855f64a0761)
+[v2-npc-herdeiro-retrato] v03: @cf/black-forest-labs/flux-2-klein-9b seed=9503 1024x1536 passos=None (~1,455 neurônios)
+    ok em 3.4s, 1024x1536
+[v2-npc-herdeiro-retrato] v01: rembg:birefnet-general; sem avisos
+[v2-npc-herdeiro-retrato] v03: rembg:birefnet-general; sem avisos

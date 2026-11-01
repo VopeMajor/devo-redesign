@@ -1,0 +1,75 @@
+{
+  "pedido": "v2-npc-herdeiro-retrato",
+  "titulo": "DEVO v2 — Herdeiro, retrato em pose (meio corpo, ref. Persona)",
+  "tipo": "ilustracao",
+  "tamanho_final": 1536,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 9501,
+      "passos": null,
+      "segundos": 2.8,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "v2-npc-herdeiro-retrato--v01--1536.png",
+          "bytes": 1241425
+        },
+        {
+          "arquivo": "v2-npc-herdeiro-retrato--v01--1536.webp",
+          "bytes": 196154
+        },
+        {
+          "arquivo": "v2-npc-herdeiro-retrato--v01--1024.webp",
+          "bytes": 93250
+        },
+        {
+          "arquivo": "v2-npc-herdeiro-retrato--v01--512.webp",
+          "bytes": 36392
+        }
+      ],
+      "segundos_pos": 38.9,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 9502,
+      "passos": null,
+      "neuronios_estimados": 1455,
+      "erro": "HTTP 400 — 3030: AiError: AiError: Your output has been flagged. Please choose another prompt / input image combination (ea94480d-257a-429b-bd7f-5855f64a0761)"
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 9503,
+      "passos": null,
+      "segundos": 3.4,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "v2-npc-herdeiro-retrato--v03--1536.png",
+          "bytes": 1208573
+        },
+        {
+          "arquivo": "v2-npc-herdeiro-retrato--v03--1536.webp",
+          "bytes": 194738
+        },
+        {
+          "arquivo": "v2-npc-herdeiro-retrato--v03--1024.webp",
+          "bytes": 93190
+        },
+        {
+          "arquivo": "v2-npc-herdeiro-retrato--v03--512.webp",
+          "bytes": 36318
+        }
+      ],
+      "segundos_pos": 31.9,
+      "avisos": []
+    }
+  ]
+}
