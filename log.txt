@@ -1,0 +1,6 @@
+[v2-cos2-banquete-gaiola] v01: @cf/black-forest-labs/flux-2-klein-9b seed=8111 1024x1536 passos=None (~1,455 neurônios)
+    ok em 2.6s, 1024x1536
+[v2-cos2-banquete-gaiola] v02: @cf/black-forest-labs/flux-2-klein-9b seed=8112 1024x1536 passos=None (~1,455 neurônios)
+    ok em 3.3s, 1024x1536
+[v2-cos2-banquete-gaiola] v01: rembg:birefnet-general; sem avisos
+[v2-cos2-banquete-gaiola] v02: rembg:birefnet-general; sem avisos

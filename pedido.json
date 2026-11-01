@@ -1,0 +1,45 @@
+{
+  "id": "v2-cos2-banquete-gaiola",
+  "titulo": "DEVO v2 — cosméticos r2: Banquete do Javali como gaiola dourada (Lendário)",
+  "tipo": "ilustracao",
+  "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+  "prompt": "Ornate jewelry object concept art, painted, highly detailed, isolated on a plain flat light grey background. An avatar frame shaped like an ornamental birdcage dome in aged old gold, tall silhouette with a domed top and a round base plinth, a round window in the front of the cage left completely empty and plain. Two curved ivory boar tusks cross above the dome like crossed swords, thin cage bars curve down from a small crown, a row of diamond-shaped black and gold lozenges with four-pointed stars around the middle, a heavy dark blue velvet banner with gold embroidery and tassels hangs from the left side and drapes across the bottom, a few playing cards and round gold casino chips hang on short chains from the bars. Warm candle studio light, worn gold with bright highlights and dark recesses. No text, letters, numbers or logos anywhere.",
+  "negative": "text, letters, watermark, person, face in center, cartoon, flat vector, blurry, low detail, pixel art",
+  "largura": 1024,
+  "altura": 1536,
+  "variacoes": [
+    {
+      "seed": 8111,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "passos": null,
+      "largura": 1024,
+      "altura": 1536,
+      "prompt_extra": "",
+      "n": 1
+    },
+    {
+      "seed": 8112,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "passos": null,
+      "largura": 1024,
+      "altura": 1536,
+      "prompt_extra": "",
+      "n": 2
+    }
+  ],
+  "pos": {
+    "remover_fundo": true,
+    "tamanho_final": 1536,
+    "margem": 0.03,
+    "derivados": [
+      512,
+      256
+    ],
+    "modelo_fundo": "birefnet-general",
+    "fundo": "liso",
+    "camadas": []
+  },
+  "passos": null,
+  "guidance": null,
+  "referencias": []
+}
