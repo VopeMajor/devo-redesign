@@ -1,0 +1,65 @@
+{
+  "id": "v2-galo-expressoes-r2",
+  "titulo": "DEVO v2 — Galo, expressões fortes (nova seed das duas recusadas)",
+  "tipo": "ilustracao",
+  "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+  "prompt": "Bold clean anime lineart, two-tone cel shading with a third deep shadow tone, high-contrast graphic poster style, crisp thick black contour, sharp highlights. Same character as the reference image: a tall lean man in his late twenties, copper-red hair swept up into a tall crest of sharp spikes, one lock across the forehead toward the viewer's left, shaved dark brown temples, golden-tan skin, heavy-lidded grey-green eyes, straight brows, long jaw, strong neck. Long black coat worn over the shoulders like a cape, empty sleeves hanging, hem cut into curved rooster tail feathers, copper silk lining embroidered with feathers; burnt copper shirt open at the chest; copper silk scarf knotted like a wattle; small gold rooster brooch on the lapel on the viewer's right. Bust portrait from the chest up, plain flat medium grey background, headroom above the hair, warm copper key light from the viewer's right, ember rim light on hair and jaw, cool violet shadow side. Palette: black #0C0C0E, copper #C9542A, ember #F2A15E. No text, letters or logos anywhere.",
+  "negative": "text, letters, watermark, signature, logo, cropped head, cut off hair, extra fingers, extra arms, deformed hands, blurry, low detail, chibi, 3d render, photo, multiple people, red and black persona logo",
+  "largura": 1024,
+  "altura": 1536,
+  "variacoes": [
+    {
+      "seed": 7311,
+      "prompt_extra": "Expression: big hearty laugh, head tilted back, eyes closed in joy, mouth open showing teeth, one hand raised at his temple.",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "passos": null,
+      "largura": 1024,
+      "altura": 1536,
+      "n": 1
+    },
+    {
+      "seed": 7312,
+      "prompt_extra": "Expression: cold serious stare, chin lowered, eyes narrowed and hard, no smile, mouth a straight line, most of the face in cool shadow.",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "passos": null,
+      "largura": 1024,
+      "altura": 1536,
+      "n": 2
+    },
+    {
+      "seed": 7313,
+      "prompt_extra": "Expression: big hearty laugh, head tilted back, eyes closed in joy, mouth open showing teeth, one hand raised at his temple.",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "passos": null,
+      "largura": 1024,
+      "altura": 1536,
+      "n": 3
+    },
+    {
+      "seed": 7314,
+      "prompt_extra": "Expression: cold serious stare, chin lowered, eyes narrowed and hard, no smile, mouth a straight line, most of the face in cool shadow.",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "passos": null,
+      "largura": 1024,
+      "altura": 1536,
+      "n": 4
+    }
+  ],
+  "pos": {
+    "remover_fundo": true,
+    "tamanho_final": 1536,
+    "margem": 0.02,
+    "derivados": [
+      1024,
+      512
+    ],
+    "modelo_fundo": "birefnet-general",
+    "fundo": "liso",
+    "camadas": []
+  },
+  "referencias": [
+    "public/images/npc/galo/confiante.webp"
+  ],
+  "passos": null,
+  "guidance": null
+}
