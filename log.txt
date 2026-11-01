@@ -1,0 +1,6 @@
+[v2-cos2-catedral-ogiva] v01: @cf/black-forest-labs/flux-2-klein-9b seed=8121 1024x1536 passos=None (~1,455 neurônios)
+    ok em 2.9s, 1024x1536
+[v2-cos2-catedral-ogiva] v02: @cf/black-forest-labs/flux-2-klein-9b seed=8122 1024x1536 passos=None (~1,455 neurônios)
+    ok em 2.9s, 1024x1536
+[v2-cos2-catedral-ogiva] v01: rembg:birefnet-general; sem avisos
+[v2-cos2-catedral-ogiva] v02: rembg:birefnet-general; sem avisos
