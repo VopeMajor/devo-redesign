@@ -6,6 +6,10 @@ Decisões tomadas na conversa (31/10):
 - Arte: mistura de pacotes com licença aberta (base) e geração por IA (retratos, cenas, itens únicos).
 - Troca: versão nova em paralelo (branch e endereço separados, mesmo banco); o site atual fica no ar até o dono aprovar.
 - Referências enviadas: `refs/ref-01.jpg` … `refs/ref-08.jpg` (diálogo com retrato e moldura floral, cerejeiras isométricas, casas isométricas, D1AL-ogue, diário rosa/preto).
+- **Correção do dono (01/11/2026), substitui o Motor/Estilo acima:** "não gostei. o devo em geral deve ter a vibe antiga, não em pixel. mas a casa e torres rpg maker/visual novel. além disso tudo parece muito simples, aprimore as artes e enquadramento"
+  - O DEVO em geral (celular do sistema, Record, Deadly Vote, Poço, Mesa, Salão, Companhias etc.) mantém a identidade atual (gótico ametista, arte pintada; ver `docs/redesign/IDENTIDADE.md`). Nada de pixel nessas telas.
+  - Só a **Casa** e as **Torres** viram RPG Maker / visual novel (mapa onde o avatar anda, diálogos com retrato).
+  - Arte e enquadramento precisam ser mais ricos; o primeiro kit foi julgado simples demais.
 - Pinterest: sem conexão nesta sessão; o dono pode mandar links ou imagens.
 
 ---
