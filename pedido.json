@@ -1,0 +1,72 @@
+{
+  "id": "v2-npc-coruja-corpo-r2",
+  "titulo": "DEVO v2 — Coruja, corpo inteiro (2º lote: o filtro recusou o 1º; texto ajustado e klein-4b de reserva)",
+  "tipo": "ilustracao",
+  "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+  "prompt": "Bold clean anime lineart, two-tone cel shading, high-contrast graphic poster style. Full-body character design, head to toe, plain flat medium grey background, no floor, margin around the figure. A tall slender adult woman in her thirties perches sideways on a narrow stone balustrade like an owl on a branch, one knee drawn up, the other leg hanging, turned toward the viewer's right, head turned back over her shoulder, amber eyes narrowed, sly half smile; one hand on the knee holds a single face-down card, the other lies flat on the stone. Near-black braided crown, narrow straight white streak on the viewer's left, steel hairpins like owl ear tufts. Brown scalloped capelet spilling over the stone; dark bottle-green vest with gold trim; white collar and jabot with gold owl brooch; long white gloves; long black skirt and tall boots; brass spyglass on the belt. Silhouette: ear-tuft pins, teardrop of a perched owl, white chest. Cool moonlight from above, green rim light. Palette: black #0C0C0E, library green #2F7A55, warm brown #6B4A32. No text, letters or logos anywhere.",
+  "negative": "text, letters, watermark, logo, blurry, low detail, pixel art, extra fingers, extra limbs",
+  "largura": 1024,
+  "altura": 1536,
+  "variacoes": [
+    {
+      "seed": 9831,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "passos": null,
+      "largura": 1024,
+      "altura": 1536,
+      "prompt_extra": "",
+      "n": 1
+    },
+    {
+      "seed": 9832,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "passos": null,
+      "largura": 1024,
+      "altura": 1536,
+      "prompt_extra": "",
+      "n": 2
+    },
+    {
+      "seed": 9833,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "passos": null,
+      "largura": 1024,
+      "altura": 1536,
+      "prompt_extra": "",
+      "n": 3
+    },
+    {
+      "seed": 9834,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "passos": null,
+      "largura": 1024,
+      "altura": 1536,
+      "prompt_extra": "",
+      "n": 4
+    },
+    {
+      "seed": 9835,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "passos": null,
+      "largura": 1024,
+      "altura": 1536,
+      "prompt_extra": "",
+      "n": 5
+    }
+  ],
+  "pos": {
+    "remover_fundo": true,
+    "tamanho_final": 1536,
+    "margem": 0.03,
+    "derivados": [
+      1024,
+      512
+    ],
+    "modelo_fundo": "birefnet-general",
+    "fundo": "liso",
+    "camadas": []
+  },
+  "passos": null,
+  "guidance": null,
+  "referencias": []
+}

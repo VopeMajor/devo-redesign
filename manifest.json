@@ -1,0 +1,133 @@
+{
+  "pedido": "v2-npc-coruja-corpo-r2",
+  "titulo": "DEVO v2 — Coruja, corpo inteiro (2º lote: o filtro recusou o 1º; texto ajustado e klein-4b de reserva)",
+  "tipo": "ilustracao",
+  "tamanho_final": 1536,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 9831,
+      "passos": null,
+      "neuronios_estimados": 1455,
+      "erro": "HTTP 400 — 3030: AiError: AiError: Your output has been flagged. Please choose another prompt / input image combination (0fb31884-751d-4c5b-8262-335ade9e2316)"
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 9832,
+      "passos": null,
+      "segundos": 2.7,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "v2-npc-coruja-corpo-r2--v02--1536.png",
+          "bytes": 541012
+        },
+        {
+          "arquivo": "v2-npc-coruja-corpo-r2--v02--1536.webp",
+          "bytes": 115506
+        },
+        {
+          "arquivo": "v2-npc-coruja-corpo-r2--v02--1024.webp",
+          "bytes": 58634
+        },
+        {
+          "arquivo": "v2-npc-coruja-corpo-r2--v02--512.webp",
+          "bytes": 23366
+        }
+      ],
+      "segundos_pos": 44.9,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 9833,
+      "passos": null,
+      "segundos": 10.5,
+      "neuronios_estimados": 156,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "v2-npc-coruja-corpo-r2--v03--1536.png",
+          "bytes": 554250
+        },
+        {
+          "arquivo": "v2-npc-coruja-corpo-r2--v03--1536.webp",
+          "bytes": 121344
+        },
+        {
+          "arquivo": "v2-npc-coruja-corpo-r2--v03--1024.webp",
+          "bytes": 61506
+        },
+        {
+          "arquivo": "v2-npc-coruja-corpo-r2--v03--512.webp",
+          "bytes": 24678
+        }
+      ],
+      "segundos_pos": 26.1,
+      "avisos": []
+    },
+    {
+      "nome": "v04",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 9834,
+      "passos": null,
+      "segundos": 12.5,
+      "neuronios_estimados": 156,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "v2-npc-coruja-corpo-r2--v04--1536.png",
+          "bytes": 598674
+        },
+        {
+          "arquivo": "v2-npc-coruja-corpo-r2--v04--1536.webp",
+          "bytes": 121018
+        },
+        {
+          "arquivo": "v2-npc-coruja-corpo-r2--v04--1024.webp",
+          "bytes": 59702
+        },
+        {
+          "arquivo": "v2-npc-coruja-corpo-r2--v04--512.webp",
+          "bytes": 23730
+        }
+      ],
+      "segundos_pos": 24.4,
+      "avisos": []
+    },
+    {
+      "nome": "v05",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 9835,
+      "passos": null,
+      "segundos": 15.2,
+      "neuronios_estimados": 156,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "v2-npc-coruja-corpo-r2--v05--1536.png",
+          "bytes": 590225
+        },
+        {
+          "arquivo": "v2-npc-coruja-corpo-r2--v05--1536.webp",
+          "bytes": 124312
+        },
+        {
+          "arquivo": "v2-npc-coruja-corpo-r2--v05--1024.webp",
+          "bytes": 62666
+        },
+        {
+          "arquivo": "v2-npc-coruja-corpo-r2--v05--512.webp",
+          "bytes": 25880
+        }
+      ],
+      "segundos_pos": 24.6,
+      "avisos": []
+    }
+  ]
+}
