@@ -1,0 +1,6 @@
+[v2-torre-escada] v01: @cf/black-forest-labs/flux-2-klein-9b seed=7601 1024x1536 passos=None (~1,455 neurônios)
+    ok em 3.3s, 1024x1536
+[v2-torre-escada] v02: @cf/black-forest-labs/flux-2-klein-9b seed=7602 1024x1536 passos=None (~1,455 neurônios)
+    ok em 3.0s, 1024x1536
+[v2-torre-escada] v01: mantido; sem avisos
+[v2-torre-escada] v02: mantido; sem avisos

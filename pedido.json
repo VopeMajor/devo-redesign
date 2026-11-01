@@ -1,0 +1,44 @@
+{
+  "id": "v2-torre-escada",
+  "titulo": "DEVO v2 — Torre por dentro, escada em espiral pintada",
+  "tipo": "ilustracao",
+  "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+  "prompt": "Painted fantasy game background, dark gothic, highly detailed, cinematic. Inside a tall round tower, looking down from high above into a grand spiral staircase of pale veined marble that winds around a central dark stone column and descends into deep shadow; ornate wrought iron balustrades with gilded details; on each landing a small glowing faceted amethyst gem set into the floor; warm lantern light on the current landing in the middle, the lower floors fading into darkness and the upper steps washed in a cold pale light falling from a round glass oculus above, light shafts with floating dust; crimson banners with a golden crown hanging from the walls. Painterly brushwork, strong depth. No people, no text, no letters, no watermark.",
+  "negative": "text, letters, watermark, people, cartoon, flat vector, low poly, blurry, low detail",
+  "largura": 1024,
+  "altura": 1536,
+  "variacoes": [
+    {
+      "seed": 7601,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "passos": null,
+      "largura": 1024,
+      "altura": 1536,
+      "prompt_extra": "",
+      "n": 1
+    },
+    {
+      "seed": 7602,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "passos": null,
+      "largura": 1024,
+      "altura": 1536,
+      "prompt_extra": "",
+      "n": 2
+    }
+  ],
+  "pos": {
+    "remover_fundo": false,
+    "tamanho_final": 1536,
+    "margem": 0,
+    "derivados": [
+      1024
+    ],
+    "modelo_fundo": "birefnet-general",
+    "fundo": "liso",
+    "camadas": []
+  },
+  "passos": null,
+  "guidance": null,
+  "referencias": []
+}
