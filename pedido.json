@@ -1,0 +1,54 @@
+{
+  "id": "v2-npc-corvo-retrato",
+  "titulo": "DEVO v2 — Corvo, retrato em pose (meio corpo, ref. Persona)",
+  "tipo": "ilustracao",
+  "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+  "prompt": "Bold clean anime lineart, two-tone cel shading, high-contrast graphic poster style. Half-body portrait from mid-thigh up, plain flat medium grey background, headroom above the head. A very tall gaunt hooded figure bends forward in three-quarter view as if over a well; his bare bony left hand, palm down at chest height, lets a small old coin drop from its fingertips, relaxed hand, five fingers clearly separated; his gloved right hand with iron claw tips holds the cloak closed. Deep pointed black hood drooping back like a perched crow's head; inside, a cracked bone-white crow-skull half mask with a long downward beak, one glowing teal eye on the viewer's left, the other socket dark, only shadow below the beak. Black crow-feather capelet with teal-sheened tips and an iron bird-skull clasp; long black cloak lined with teal-sheened feathers; bare forearm turning from bluish dead skin into aged bone; small iron crow with an amethyst eye on the shoulder on the viewer's right. Pale teal will-o'-the-wisp light from below. Palette: black #0C0C0E, teal #3A9FB0, aged bone #D9D0BC. No text, letters or logos anywhere.",
+  "negative": "text, letters, watermark, logo, blurry, low detail, pixel art, extra fingers, extra limbs",
+  "largura": 1024,
+  "altura": 1536,
+  "variacoes": [
+    {
+      "seed": 9461,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "passos": null,
+      "largura": 1024,
+      "altura": 1536,
+      "prompt_extra": "",
+      "n": 1
+    },
+    {
+      "seed": 9462,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "passos": null,
+      "largura": 1024,
+      "altura": 1536,
+      "prompt_extra": "",
+      "n": 2
+    },
+    {
+      "seed": 9463,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "passos": null,
+      "largura": 1024,
+      "altura": 1536,
+      "prompt_extra": "",
+      "n": 3
+    }
+  ],
+  "pos": {
+    "remover_fundo": true,
+    "tamanho_final": 1536,
+    "margem": 0.03,
+    "derivados": [
+      1024,
+      512
+    ],
+    "modelo_fundo": "birefnet-general",
+    "fundo": "liso",
+    "camadas": []
+  },
+  "passos": null,
+  "guidance": null,
+  "referencias": []
+}
