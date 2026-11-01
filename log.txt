@@ -1,0 +1,6 @@
+[v2-cos2-fragmento-celestial] v01: @cf/black-forest-labs/flux-2-klein-9b seed=8211 1024x1536 passos=None (~1,455 neurônios)
+    ok em 2.8s, 1024x1536
+[v2-cos2-fragmento-celestial] v02: @cf/black-forest-labs/flux-2-klein-9b seed=8212 1024x1536 passos=None (~1,455 neurônios)
+    ok em 3.2s, 1024x1536
+[v2-cos2-fragmento-celestial] v01: rembg:birefnet-general; sem avisos
+[v2-cos2-fragmento-celestial] v02: rembg:birefnet-general; sem avisos
