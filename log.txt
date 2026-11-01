@@ -1,0 +1,11 @@
+[v2-npc-galo-corpo-r2] v01: @cf/black-forest-labs/flux-2-klein-9b seed=9811 1024x1536 passos=None (~1,455 neurônios)
+    ERRO: HTTP 400 — 3030: AiError: AiError: Your output has been flagged. Please choose another prompt / input image combination (40acfb44-f9cb-465e-a66f-a09fb6b99ef3)
+[v2-npc-galo-corpo-r2] v02: @cf/black-forest-labs/flux-2-klein-9b seed=9812 1024x1536 passos=None (~1,455 neurônios)
+    ERRO: HTTP 400 — 3030: AiError: AiError: Your output has been flagged. Please choose another prompt / input image combination (e37f8056-bc21-41da-b214-12f0c66da040)
+[v2-npc-galo-corpo-r2] v03: @cf/black-forest-labs/flux-2-klein-4b seed=9813 1024x1536 passos=None (~156 neurônios)
+    ok em 11.9s, 1024x1536
+[v2-npc-galo-corpo-r2] v04: @cf/black-forest-labs/flux-2-klein-4b seed=9814 1024x1536 passos=None (~156 neurônios)
+    ERRO: HTTP 400 — 3030: AiError: AiError: Your output has been flagged. Please choose another prompt / input image combination (8f322ffc-cc38-4b13-b765-56af50e1f3e0)
+[v2-npc-galo-corpo-r2] v05: @cf/black-forest-labs/flux-2-klein-4b seed=9815 1024x1536 passos=None (~156 neurônios)
+    ERRO: HTTP 400 — 3030: AiError: AiError: Your output has been flagged. Please choose another prompt / input image combination (c227b40d-83a6-4246-86d7-22b81eacb112)
+[v2-npc-galo-corpo-r2] v03: rembg:birefnet-general; sem avisos

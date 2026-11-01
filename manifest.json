@@ -1,0 +1,70 @@
+{
+  "pedido": "v2-npc-galo-corpo-r2",
+  "titulo": "DEVO v2 — Galo, corpo inteiro (2º lote: o filtro recusou o 1º; texto ajustado e klein-4b de reserva)",
+  "tipo": "ilustracao",
+  "tamanho_final": 1536,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 9811,
+      "passos": null,
+      "neuronios_estimados": 1455,
+      "erro": "HTTP 400 — 3030: AiError: AiError: Your output has been flagged. Please choose another prompt / input image combination (40acfb44-f9cb-465e-a66f-a09fb6b99ef3)"
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 9812,
+      "passos": null,
+      "neuronios_estimados": 1455,
+      "erro": "HTTP 400 — 3030: AiError: AiError: Your output has been flagged. Please choose another prompt / input image combination (e37f8056-bc21-41da-b214-12f0c66da040)"
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 9813,
+      "passos": null,
+      "segundos": 11.9,
+      "neuronios_estimados": 156,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "v2-npc-galo-corpo-r2--v03--1536.png",
+          "bytes": 633889
+        },
+        {
+          "arquivo": "v2-npc-galo-corpo-r2--v03--1536.webp",
+          "bytes": 151708
+        },
+        {
+          "arquivo": "v2-npc-galo-corpo-r2--v03--1024.webp",
+          "bytes": 78054
+        },
+        {
+          "arquivo": "v2-npc-galo-corpo-r2--v03--512.webp",
+          "bytes": 30248
+        }
+      ],
+      "segundos_pos": 32.7,
+      "avisos": []
+    },
+    {
+      "nome": "v04",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 9814,
+      "passos": null,
+      "neuronios_estimados": 156,
+      "erro": "HTTP 400 — 3030: AiError: AiError: Your output has been flagged. Please choose another prompt / input image combination (8f322ffc-cc38-4b13-b765-56af50e1f3e0)"
+    },
+    {
+      "nome": "v05",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 9815,
+      "passos": null,
+      "neuronios_estimados": 156,
+      "erro": "HTTP 400 — 3030: AiError: AiError: Your output has been flagged. Please choose another prompt / input image combination (c227b40d-83a6-4246-86d7-22b81eacb112)"
+    }
+  ]
+}
