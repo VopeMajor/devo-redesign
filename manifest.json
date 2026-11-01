@@ -1,0 +1,67 @@
+{
+  "pedido": "v2-cosmetico-badalada",
+  "titulo": "DEVO v2 — cosmético: moldura Última Badalada (gaiola com sino)",
+  "tipo": "ilustracao",
+  "tamanho_final": 1024,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 7801,
+      "passos": null,
+      "segundos": 1.8,
+      "neuronios_estimados": 1364,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "v2-cosmetico-badalada--v01--1025.png",
+          "bytes": 671142
+        },
+        {
+          "arquivo": "v2-cosmetico-badalada--v01--1025.webp",
+          "bytes": 178884
+        },
+        {
+          "arquivo": "v2-cosmetico-badalada--v01--512.webp",
+          "bytes": 59924
+        },
+        {
+          "arquivo": "v2-cosmetico-badalada--v01--256.webp",
+          "bytes": 22432
+        }
+      ],
+      "segundos_pos": 37.0,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 7802,
+      "passos": null,
+      "segundos": 1.7,
+      "neuronios_estimados": 1364,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "v2-cosmetico-badalada--v02--1025.png",
+          "bytes": 578881
+        },
+        {
+          "arquivo": "v2-cosmetico-badalada--v02--1025.webp",
+          "bytes": 162770
+        },
+        {
+          "arquivo": "v2-cosmetico-badalada--v02--512.webp",
+          "bytes": 56478
+        },
+        {
+          "arquivo": "v2-cosmetico-badalada--v02--256.webp",
+          "bytes": 21088
+        }
+      ],
+      "segundos_pos": 27.7,
+      "avisos": []
+    }
+  ]
+}

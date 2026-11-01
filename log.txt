@@ -1,0 +1,6 @@
+[v2-cosmetico-badalada] v01: @cf/black-forest-labs/flux-2-klein-9b seed=7801 1024x1024 passos=None (~1,364 neurônios)
+    ok em 1.8s, 1024x1024
+[v2-cosmetico-badalada] v02: @cf/black-forest-labs/flux-2-klein-9b seed=7802 1024x1024 passos=None (~1,364 neurônios)
+    ok em 1.7s, 1024x1024
+[v2-cosmetico-badalada] v01: rembg:birefnet-general; sem avisos
+[v2-cosmetico-badalada] v02: rembg:birefnet-general; sem avisos

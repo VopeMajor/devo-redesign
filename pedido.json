@@ -1,0 +1,45 @@
+{
+  "id": "v2-cosmetico-badalada",
+  "titulo": "DEVO v2 — cosmético: moldura Última Badalada (gaiola com sino)",
+  "tipo": "ilustracao",
+  "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+  "prompt": "Ornate jewelry object concept art, painted, highly detailed, isolated on a plain flat light grey background. A circular avatar frame shaped like an ornate gothic birdcage made of champagne gold and dark blued steel filigree, the round center left completely empty and plain, a small hanging bronze bell at the bottom, a clock face with roman numerals worked into the top crest, tiny amethyst gems set around the ring, a black velvet ribbon banner curling across the lower part, delicate gears visible inside the rim. Soft studio light, bright specular highlights on metal, front view, symmetrical. No text, letters or logos anywhere.",
+  "negative": "text, letters, watermark, person, face in center, cartoon, flat vector, blurry, low detail",
+  "largura": 1024,
+  "altura": 1024,
+  "variacoes": [
+    {
+      "seed": 7801,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "passos": null,
+      "largura": 1024,
+      "altura": 1024,
+      "prompt_extra": "",
+      "n": 1
+    },
+    {
+      "seed": 7802,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "passos": null,
+      "largura": 1024,
+      "altura": 1024,
+      "prompt_extra": "",
+      "n": 2
+    }
+  ],
+  "pos": {
+    "remover_fundo": true,
+    "tamanho_final": 1024,
+    "margem": 0.03,
+    "derivados": [
+      512,
+      256
+    ],
+    "modelo_fundo": "birefnet-general",
+    "fundo": "liso",
+    "camadas": []
+  },
+  "passos": null,
+  "guidance": null,
+  "referencias": []
+}
