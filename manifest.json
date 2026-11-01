@@ -1,0 +1,69 @@
+{
+  "pedido": "v2-ui-relogio-heroi",
+  "titulo": "DEVO v2 — relógio-herói da home (conceito 2.5D, refs 09 e 20)",
+  "tipo": "ilustracao",
+  "tamanho_final": 1536,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 9681,
+      "passos": null,
+      "segundos": 3.7,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "ilhas_removidas": 0,
+      "arquivos": [
+        {
+          "arquivo": "v2-ui-relogio-heroi--v01--1536.png",
+          "bytes": 1812010
+        },
+        {
+          "arquivo": "v2-ui-relogio-heroi--v01--1536.webp",
+          "bytes": 357014
+        },
+        {
+          "arquivo": "v2-ui-relogio-heroi--v01--1024.webp",
+          "bytes": 165568
+        },
+        {
+          "arquivo": "v2-ui-relogio-heroi--v01--512.webp",
+          "bytes": 60304
+        }
+      ],
+      "segundos_pos": 41.0,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 9682,
+      "passos": null,
+      "segundos": 3.1,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "ilhas_removidas": 1,
+      "arquivos": [
+        {
+          "arquivo": "v2-ui-relogio-heroi--v02--1536.png",
+          "bytes": 1633944
+        },
+        {
+          "arquivo": "v2-ui-relogio-heroi--v02--1536.webp",
+          "bytes": 333674
+        },
+        {
+          "arquivo": "v2-ui-relogio-heroi--v02--1024.webp",
+          "bytes": 162498
+        },
+        {
+          "arquivo": "v2-ui-relogio-heroi--v02--512.webp",
+          "bytes": 61052
+        }
+      ],
+      "segundos_pos": 33.4,
+      "avisos": []
+    }
+  ]
+}
