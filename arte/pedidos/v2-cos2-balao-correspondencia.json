@@ -1,0 +1,27 @@
+{
+  "id": "v2-cos2-balao-correspondencia",
+  "titulo": "DEVO v2 — cosméticos r2: balão Correspondência Real pintado (Raro)",
+  "tipo": "ilustracao",
+  "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+  "prompt": "Ornate jewelry object concept art, painted, highly detailed, isolated on a plain flat light grey background. A wide horizontal speech bubble frame made of thick cream letter paper with a soft deckled edge, the large center left completely empty, plain and flat. Ornament only on the two top corners: delicate pale gilt and silver filigree scrolls engraved into the paper corners, a small round dark wine red wax seal with a star stamped pressed onto the middle of the top edge, a tiny triangular tail at the bottom left. Soft studio light, subtle paper texture and shadow. No text, letters, numbers or logos anywhere.",
+  "negative": "text, letters, watermark, person, face in center, cartoon, flat vector, blurry, low detail, pixel art",
+  "largura": 1536,
+  "altura": 1024,
+  "variacoes": [
+    {
+      "seed": 8171
+    },
+    {
+      "seed": 8172
+    }
+  ],
+  "pos": {
+    "remover_fundo": true,
+    "tamanho_final": 1536,
+    "margem": 0.03,
+    "derivados": [
+      512,
+      256
+    ]
+  }
+}

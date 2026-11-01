@@ -1,0 +1,26 @@
+{
+  "id": "v2-cos2-vitral-capela",
+  "titulo": "DEVO v2 — cosméticos r2: fundo do perfil Vitral da Capela (pintura)",
+  "tipo": "ilustracao",
+  "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+  "prompt": "Painted background for a profile card, wide horizontal composition, no characters. The inside of a dark gothic chapel at night seen from close: a large round stained glass rose window on the left with intricate black lead tracery, petals and a central rosette in deep amethyst violet, cobalt blue and dark wine red glass, moonlight pouring through it in strong visible beams of colored light crossing the air diagonally to the right, floating dust in the beams, black marble pillars and a polished black marble floor catching colored reflections. The right half stays darker and calm, almost empty. Painterly, rich, moody, cinematic. No text, letters, numbers or logos anywhere.",
+  "negative": "text, letters, watermark, people, cartoon, flat vector, blurry, low detail, pixel art, neon",
+  "largura": 1536,
+  "altura": 1024,
+  "variacoes": [
+    {
+      "seed": 8161
+    },
+    {
+      "seed": 8162
+    }
+  ],
+  "pos": {
+    "remover_fundo": false,
+    "tamanho_final": 1536,
+    "margem": 0,
+    "derivados": [
+      1024
+    ]
+  }
+}

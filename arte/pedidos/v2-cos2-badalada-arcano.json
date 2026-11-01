@@ -1,0 +1,30 @@
+{
+  "id": "v2-cos2-badalada-arcano",
+  "titulo": "DEVO v2 — cosméticos r2: Última Badalada como Arcano (cristal de relógio)",
+  "tipo": "ilustracao",
+  "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+  "prompt": "Ornate jewelry object concept art, painted, highly detailed, isolated on a plain flat light grey background. A tall avatar frame shaped like a gothic clock carved entirely from clear iridescent crystal, tall arched silhouette, taller than wide, the round window in the middle left completely empty and plain. Inside the thick transparent crystal rim you can see a delicate working clockwork mechanism of tiny champagne gold and blued steel gears. One long slender clock hand pierces diagonally across the top of the window and out past the frame. A small crystal bell hangs from a thin chain below the window, a short crystal pendulum beneath it. Three blank white playing cards with thin gold edges float in an orbit around the upper right of the frame at different depths, slightly tilted. The crystal refracts lilac, pale cobalt blue and rose light, tiny four-pointed sparkles. Cool night studio light from above, glassy caustics. No text, letters, numbers or logos anywhere.",
+  "negative": "text, letters, watermark, person, face in center, cartoon, flat vector, blurry, low detail, pixel art",
+  "largura": 1024,
+  "altura": 1536,
+  "variacoes": [
+    {
+      "seed": 8101
+    },
+    {
+      "seed": 8102
+    },
+    {
+      "seed": 8103
+    }
+  ],
+  "pos": {
+    "remover_fundo": true,
+    "tamanho_final": 1536,
+    "margem": 0.03,
+    "derivados": [
+      512,
+      256
+    ]
+  }
+}

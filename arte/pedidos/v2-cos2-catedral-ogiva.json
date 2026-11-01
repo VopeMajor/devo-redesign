@@ -1,0 +1,27 @@
+{
+  "id": "v2-cos2-catedral-ogiva",
+  "titulo": "DEVO v2 — cosméticos r2: Catedral Esquecida como arco ogival (Épico)",
+  "tipo": "ilustracao",
+  "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+  "prompt": "Ornate jewelry object concept art, painted, highly detailed, isolated on a plain flat light grey background. An avatar frame shaped like a tall pointed gothic cathedral arch made of dark weathered stone and tarnished silver, the tall oval window inside the arch left completely empty and plain. A round stained glass rose window sits at the top point of the arch with black lead lines and dim amethyst violet and cobalt glass, slender twin columns with carved capitals on both sides, small pinnacles and crockets along the outer edge, pale orchid flowers and ivy growing over one base, cracked stone, a thin silver chain with a small amethyst hanging under the window. Cool moonlight, quiet and abandoned. No text, letters, numbers or logos anywhere.",
+  "negative": "text, letters, watermark, person, face in center, cartoon, flat vector, blurry, low detail, pixel art, gold",
+  "largura": 1024,
+  "altura": 1536,
+  "variacoes": [
+    {
+      "seed": 8121
+    },
+    {
+      "seed": 8122
+    }
+  ],
+  "pos": {
+    "remover_fundo": true,
+    "tamanho_final": 1536,
+    "margem": 0.03,
+    "derivados": [
+      512,
+      256
+    ]
+  }
+}

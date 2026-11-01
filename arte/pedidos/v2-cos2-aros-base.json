@@ -1,0 +1,37 @@
+{
+  "id": "v2-cos2-aros-base",
+  "titulo": "DEVO v2 — cosméticos r2: molduras Comum e Incomum pintadas (peça única, fosca)",
+  "tipo": "ilustracao",
+  "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+  "prompt": "Ornate jewelry object concept art, painted, highly detailed, isolated on a plain flat light grey background. A simple avatar frame made of a single piece of material, a plain round window in the center left completely empty and plain, quiet and elegant, matte finish, soft top light, front view. No text, letters, numbers or logos anywhere.",
+  "negative": "text, letters, watermark, person, face in center, cartoon, flat vector, blurry, low detail, pixel art",
+  "largura": 1024,
+  "altura": 1024,
+  "variacoes": [
+    {
+      "seed": 8151,
+      "prompt_extra": "Common: a ring of matte grey carved stone with a shallow chiselled groove and a small keystone at the top, nothing else."
+    },
+    {
+      "seed": 8152,
+      "prompt_extra": "Common: a ring of matte dark iron with a hammered texture and four small rivets, nothing else."
+    },
+    {
+      "seed": 8153,
+      "prompt_extra": "Uncommon: a ring of matte bronze with one notch at the top holding a small polished pale jade cabochon, a single thin polished line along the rim."
+    },
+    {
+      "seed": 8154,
+      "prompt_extra": "Uncommon: a ring of dark green jade stone with pale veins and a thin bronze inner rim, one small notch at the top."
+    }
+  ],
+  "pos": {
+    "remover_fundo": true,
+    "tamanho_final": 1024,
+    "margem": 0.03,
+    "derivados": [
+      512,
+      256
+    ]
+  }
+}
