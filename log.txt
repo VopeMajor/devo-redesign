@@ -1,0 +1,12 @@
+[v2-cosmetico-casulo] v01: @cf/black-forest-labs/flux-2-klein-9b seed=7901 1024x1024 passos=None (~1,364 neurônios)
+    ok em 1.8s, 1024x1024
+[v2-cosmetico-casulo] v02: @cf/black-forest-labs/flux-2-klein-9b seed=7902 1024x1024 passos=None (~1,364 neurônios)
+    ok em 2.1s, 1024x1024
+[v2-cosmetico-casulo] v03: @cf/black-forest-labs/flux-2-klein-9b seed=7903 1024x1024 passos=None (~1,364 neurônios)
+    ok em 2.0s, 1024x1024
+[v2-cosmetico-casulo] v04: @cf/black-forest-labs/flux-2-klein-9b seed=7904 1024x1024 passos=None (~1,364 neurônios)
+    ok em 2.1s, 1024x1024
+[v2-cosmetico-casulo] v01: rembg:birefnet-general; sem avisos
+[v2-cosmetico-casulo] v02: rembg:birefnet-general; sem avisos
+[v2-cosmetico-casulo] v03: rembg:birefnet-general; sem avisos
+[v2-cosmetico-casulo] v04: rembg:birefnet-general; sem avisos

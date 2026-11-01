@@ -1,0 +1,63 @@
+{
+  "id": "v2-cosmetico-casulo",
+  "titulo": "DEVO v2 — cosmético em duas etapas: casulo fechado e asas abertas",
+  "tipo": "ilustracao",
+  "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+  "prompt": "Ornate jewelry object concept art, painted, highly detailed, isolated on a plain flat light grey background, front view, symmetrical, soft studio light with bright specular highlights. A small gothic reliquary emblem of champagne gold filigree and black enamel with amethyst gems, about the size of a brooch. No text, letters or logos anywhere.",
+  "negative": "text, letters, watermark, person, cartoon, flat vector, blurry, low detail, insect body, bug",
+  "largura": 1024,
+  "altura": 1024,
+  "variacoes": [
+    {
+      "seed": 7901,
+      "prompt_extra": "Stage one: a closed cocoon-shaped locket wrapped in folded metal petals like sleeping wings, tightly shut, a single amethyst glowing faintly through a seam.",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "passos": null,
+      "largura": 1024,
+      "altura": 1024,
+      "n": 1
+    },
+    {
+      "seed": 7902,
+      "prompt_extra": "Stage two: the same locket opened, two large spread wings of gold filigree and violet stained glass unfolding to both sides, a bright amethyst heart in the center, tiny sparks.",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "passos": null,
+      "largura": 1024,
+      "altura": 1024,
+      "n": 2
+    },
+    {
+      "seed": 7903,
+      "prompt_extra": "Stage one: a closed cocoon-shaped locket wrapped in folded metal petals like sleeping wings, tightly shut, a single amethyst glowing faintly through a seam.",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "passos": null,
+      "largura": 1024,
+      "altura": 1024,
+      "n": 3
+    },
+    {
+      "seed": 7904,
+      "prompt_extra": "Stage two: the same locket opened, two large spread wings of gold filigree and violet stained glass unfolding to both sides, a bright amethyst heart in the center, tiny sparks.",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "passos": null,
+      "largura": 1024,
+      "altura": 1024,
+      "n": 4
+    }
+  ],
+  "pos": {
+    "remover_fundo": true,
+    "tamanho_final": 1024,
+    "margem": 0.03,
+    "derivados": [
+      512,
+      256
+    ],
+    "modelo_fundo": "birefnet-general",
+    "fundo": "liso",
+    "camadas": []
+  },
+  "passos": null,
+  "guidance": null,
+  "referencias": []
+}

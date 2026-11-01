@@ -1,0 +1,126 @@
+{
+  "pedido": "v2-cosmetico-casulo",
+  "titulo": "DEVO v2 — cosmético em duas etapas: casulo fechado e asas abertas",
+  "tipo": "ilustracao",
+  "tamanho_final": 1024,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 7901,
+      "passos": null,
+      "segundos": 1.8,
+      "neuronios_estimados": 1364,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "v2-cosmetico-casulo--v01--1025.png",
+          "bytes": 898255
+        },
+        {
+          "arquivo": "v2-cosmetico-casulo--v01--1025.webp",
+          "bytes": 142448
+        },
+        {
+          "arquivo": "v2-cosmetico-casulo--v01--512.webp",
+          "bytes": 49852
+        },
+        {
+          "arquivo": "v2-cosmetico-casulo--v01--256.webp",
+          "bytes": 20204
+        }
+      ],
+      "segundos_pos": 50.8,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 7902,
+      "passos": null,
+      "segundos": 2.1,
+      "neuronios_estimados": 1364,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "v2-cosmetico-casulo--v02--1025.png",
+          "bytes": 835162
+        },
+        {
+          "arquivo": "v2-cosmetico-casulo--v02--1025.webp",
+          "bytes": 162770
+        },
+        {
+          "arquivo": "v2-cosmetico-casulo--v02--512.webp",
+          "bytes": 54022
+        },
+        {
+          "arquivo": "v2-cosmetico-casulo--v02--256.webp",
+          "bytes": 20094
+        }
+      ],
+      "segundos_pos": 28.2,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 7903,
+      "passos": null,
+      "segundos": 2.0,
+      "neuronios_estimados": 1364,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "v2-cosmetico-casulo--v03--1025.png",
+          "bytes": 1045746
+        },
+        {
+          "arquivo": "v2-cosmetico-casulo--v03--1025.webp",
+          "bytes": 176772
+        },
+        {
+          "arquivo": "v2-cosmetico-casulo--v03--512.webp",
+          "bytes": 59436
+        },
+        {
+          "arquivo": "v2-cosmetico-casulo--v03--256.webp",
+          "bytes": 22078
+        }
+      ],
+      "segundos_pos": 27.1,
+      "avisos": []
+    },
+    {
+      "nome": "v04",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 7904,
+      "passos": null,
+      "segundos": 2.1,
+      "neuronios_estimados": 1364,
+      "fundo": "rembg:birefnet-general",
+      "ilhas_removidas": 2,
+      "arquivos": [
+        {
+          "arquivo": "v2-cosmetico-casulo--v04--1025.png",
+          "bytes": 701043
+        },
+        {
+          "arquivo": "v2-cosmetico-casulo--v04--1025.webp",
+          "bytes": 143614
+        },
+        {
+          "arquivo": "v2-cosmetico-casulo--v04--512.webp",
+          "bytes": 48912
+        },
+        {
+          "arquivo": "v2-cosmetico-casulo--v04--256.webp",
+          "bytes": 17972
+        }
+      ],
+      "segundos_pos": 26.6,
+      "avisos": []
+    }
+  ]
+}
