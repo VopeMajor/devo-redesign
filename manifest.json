@@ -1,0 +1,98 @@
+{
+  "pedido": "v2-cos2-badalada-janela",
+  "titulo": "DEVO v2 — cosméticos r2: Última Badalada Arcano com janela vazia para o retrato",
+  "tipo": "ilustracao",
+  "tamanho_final": 1536,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 8104,
+      "passos": null,
+      "segundos": 2.9,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "v2-cos2-badalada-janela--v01--1536.png",
+          "bytes": 1364054
+        },
+        {
+          "arquivo": "v2-cos2-badalada-janela--v01--1536.webp",
+          "bytes": 310744
+        },
+        {
+          "arquivo": "v2-cos2-badalada-janela--v01--512.webp",
+          "bytes": 54544
+        },
+        {
+          "arquivo": "v2-cos2-badalada-janela--v01--256.webp",
+          "bytes": 20688
+        }
+      ],
+      "segundos_pos": 47.6,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 8105,
+      "passos": null,
+      "segundos": 3.0,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "ilhas_removidas": 0,
+      "arquivos": [
+        {
+          "arquivo": "v2-cos2-badalada-janela--v02--1536.png",
+          "bytes": 1384908
+        },
+        {
+          "arquivo": "v2-cos2-badalada-janela--v02--1536.webp",
+          "bytes": 274984
+        },
+        {
+          "arquivo": "v2-cos2-badalada-janela--v02--512.webp",
+          "bytes": 45552
+        },
+        {
+          "arquivo": "v2-cos2-badalada-janela--v02--256.webp",
+          "bytes": 16980
+        }
+      ],
+      "segundos_pos": 25.8,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 8106,
+      "passos": null,
+      "segundos": 2.8,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "ilhas_removidas": 0,
+      "arquivos": [
+        {
+          "arquivo": "v2-cos2-badalada-janela--v03--1536.png",
+          "bytes": 1175524
+        },
+        {
+          "arquivo": "v2-cos2-badalada-janela--v03--1536.webp",
+          "bytes": 256994
+        },
+        {
+          "arquivo": "v2-cos2-badalada-janela--v03--512.webp",
+          "bytes": 45276
+        },
+        {
+          "arquivo": "v2-cos2-badalada-janela--v03--256.webp",
+          "bytes": 17348
+        }
+      ],
+      "segundos_pos": 24.6,
+      "avisos": []
+    }
+  ]
+}

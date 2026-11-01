@@ -1,0 +1,9 @@
+[v2-cos2-badalada-janela] v01: @cf/black-forest-labs/flux-2-klein-9b seed=8104 1024x1536 passos=None (~1,455 neurônios)
+    ok em 2.9s, 1024x1536
+[v2-cos2-badalada-janela] v02: @cf/black-forest-labs/flux-2-klein-9b seed=8105 1024x1536 passos=None (~1,455 neurônios)
+    ok em 3.0s, 1024x1536
+[v2-cos2-badalada-janela] v03: @cf/black-forest-labs/flux-2-klein-9b seed=8106 1024x1536 passos=None (~1,455 neurônios)
+    ok em 2.8s, 1024x1536
+[v2-cos2-badalada-janela] v01: rembg:birefnet-general; sem avisos
+[v2-cos2-badalada-janela] v02: rembg:birefnet-general; sem avisos
+[v2-cos2-badalada-janela] v03: rembg:birefnet-general; sem avisos
