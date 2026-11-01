@@ -1,0 +1,5 @@
+[v2-npc-javali-cutin] v01: @cf/black-forest-labs/flux-2-klein-9b seed=9449 2048x640 passos=None (~1,409 neurônios)
+    ERRO: HTTP 400 — 3030: AiError: AiError: Your output has been flagged. Please choose another prompt / input image combination (41d20c82-5ce5-49a5-be34-166bec35a8c0)
+[v2-npc-javali-cutin] v02: @cf/black-forest-labs/flux-2-klein-9b seed=9450 2048x640 passos=None (~1,409 neurônios)
+    ok em 2.4s, 2048x640
+[v2-npc-javali-cutin] v02: mantido; sem avisos

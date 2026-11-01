@@ -1,0 +1,30 @@
+{
+  "pedido": "v2-npc-javali-cutin",
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 9449,
+      "passos": null,
+      "largura": 2048,
+      "altura": 640,
+      "neuronios_estimados": 1409,
+      "erro": "HTTP 400 — 3030: AiError: AiError: Your output has been flagged. Please choose another prompt / input image combination (41d20c82-5ce5-49a5-be34-166bec35a8c0)"
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 9450,
+      "passos": null,
+      "largura": 2048,
+      "altura": 640,
+      "neuronios_estimados": 1409,
+      "ok": true,
+      "segundos": 2.4,
+      "tamanho_real": [
+        2048,
+        640
+      ]
+    }
+  ]
+}

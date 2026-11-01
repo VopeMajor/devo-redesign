@@ -1,0 +1,42 @@
+{
+  "pedido": "v2-npc-javali-cutin",
+  "titulo": "DEVO v2 — Javali, cut-in 2048x640",
+  "tipo": "ilustracao",
+  "tamanho_final": 2048,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 9449,
+      "passos": null,
+      "neuronios_estimados": 1409,
+      "erro": "HTTP 400 — 3030: AiError: AiError: Your output has been flagged. Please choose another prompt / input image combination (41d20c82-5ce5-49a5-be34-166bec35a8c0)"
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 9450,
+      "passos": null,
+      "segundos": 2.4,
+      "neuronios_estimados": 1409,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "v2-npc-javali-cutin--v02--2048.png",
+          "bytes": 1128966
+        },
+        {
+          "arquivo": "v2-npc-javali-cutin--v02--2048.webp",
+          "bytes": 174108
+        },
+        {
+          "arquivo": "v2-npc-javali-cutin--v02--1024.webp",
+          "bytes": 54710
+        }
+      ],
+      "segundos_pos": 2.1,
+      "avisos": []
+    }
+  ]
+}
