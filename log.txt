@@ -1,0 +1,6 @@
+[v2-npc-corvo-cutin] v01: @cf/black-forest-labs/flux-2-klein-9b seed=9469 2048x640 passos=None (~1,409 neurônios)
+    ok em 2.8s, 2048x640
+[v2-npc-corvo-cutin] v02: @cf/black-forest-labs/flux-2-klein-9b seed=9470 2048x640 passos=None (~1,409 neurônios)
+    ok em 2.4s, 2048x640
+[v2-npc-corvo-cutin] v01: mantido; sem avisos
+[v2-npc-corvo-cutin] v02: mantido; sem avisos

@@ -1,0 +1,59 @@
+{
+  "pedido": "v2-npc-corvo-cutin",
+  "titulo": "DEVO v2 — Corvo, cut-in 2048x640",
+  "tipo": "ilustracao",
+  "tamanho_final": 2048,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 9469,
+      "passos": null,
+      "segundos": 2.8,
+      "neuronios_estimados": 1409,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "v2-npc-corvo-cutin--v01--2048.png",
+          "bytes": 1230311
+        },
+        {
+          "arquivo": "v2-npc-corvo-cutin--v01--2048.webp",
+          "bytes": 166596
+        },
+        {
+          "arquivo": "v2-npc-corvo-cutin--v01--1024.webp",
+          "bytes": 52200
+        }
+      ],
+      "segundos_pos": 1.9,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 9470,
+      "passos": null,
+      "segundos": 2.4,
+      "neuronios_estimados": 1409,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "v2-npc-corvo-cutin--v02--2048.png",
+          "bytes": 943015
+        },
+        {
+          "arquivo": "v2-npc-corvo-cutin--v02--2048.webp",
+          "bytes": 140852
+        },
+        {
+          "arquivo": "v2-npc-corvo-cutin--v02--1024.webp",
+          "bytes": 47372
+        }
+      ],
+      "segundos_pos": 1.4,
+      "avisos": []
+    }
+  ]
+}
