@@ -1,0 +1,44 @@
+{
+  "id": "v2-cos2-tabuleiro-marmore",
+  "titulo": "DEVO v2 — cosméticos r2: tabuleiro de mármore do Deadly Vote (ref-16)",
+  "tipo": "ilustracao",
+  "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+  "prompt": "Painted 3D render style illustration, a large thick chessboard slab of polished white Carrara marble and black marble squares with grey veins and thin champagne inlay lines between squares, visible slab thickness at the front edge, a few cracks, seen from a high three-quarter angle receding into darkness, two ornate long swords stuck into the board at the far corners, dark amethyst violet background fading to black, one soft spotlight from above lighting the center. No chess pieces, no people. No text, letters, numbers or logos anywhere.",
+  "negative": "text, letters, watermark, people, cartoon, flat vector, blurry, low detail, pixel art, neon",
+  "largura": 1536,
+  "altura": 1024,
+  "variacoes": [
+    {
+      "seed": 8191,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "passos": null,
+      "largura": 1536,
+      "altura": 1024,
+      "prompt_extra": "",
+      "n": 1
+    },
+    {
+      "seed": 8192,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "passos": null,
+      "largura": 1536,
+      "altura": 1024,
+      "prompt_extra": "",
+      "n": 2
+    }
+  ],
+  "pos": {
+    "remover_fundo": false,
+    "tamanho_final": 1536,
+    "margem": 0,
+    "derivados": [
+      1024
+    ],
+    "modelo_fundo": "birefnet-general",
+    "fundo": "liso",
+    "camadas": []
+  },
+  "passos": null,
+  "guidance": null,
+  "referencias": []
+}

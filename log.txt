@@ -1,0 +1,6 @@
+[v2-cos2-tabuleiro-marmore] v01: @cf/black-forest-labs/flux-2-klein-9b seed=8191 1536x1024 passos=None (~1,455 neurônios)
+    ok em 3.6s, 1536x1024
+[v2-cos2-tabuleiro-marmore] v02: @cf/black-forest-labs/flux-2-klein-9b seed=8192 1536x1024 passos=None (~1,455 neurônios)
+    ok em 3.2s, 1536x1024
+[v2-cos2-tabuleiro-marmore] v01: mantido; sem avisos
+[v2-cos2-tabuleiro-marmore] v02: mantido; sem avisos
