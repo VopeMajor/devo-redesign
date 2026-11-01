@@ -1,0 +1,72 @@
+{
+  "id": "v2-npc-herdeiro-corpo-r2",
+  "titulo": "DEVO v2 — Herdeiro, corpo inteiro (2º lote: o filtro recusou o 1º; texto ajustado e klein-4b de reserva)",
+  "tipo": "ilustracao",
+  "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+  "prompt": "Bold clean anime lineart, two-tone cel shading, high-contrast graphic poster style. Full-body character design, head to toe, plain flat medium grey background, no floor, margin around the figure. A slender aristocratic adult man in his late twenties stands turned three-quarters away toward the viewer's left, looking back over his shoulder with a calm cold smile; his right hand holds a black baton low, pointing diagonally down; his left hand on his hip. Ash-sand swept-back hair with one wide white hooked streak on the viewer's left, thin gold glasses catching the light. Wine-burgundy velvet tailcoat, short in front, two long tails flaring in a wide V to show a old parchment-colored lining; tall black stand collar; white lace jabot with a gold brooch and a deep red gem; black trousers with a satin stripe and patent shoes with gold buckles; a porcelain half masquerade mask hanging from the belt by a ribbon. Silhouette: hooked streak, tall collar, square shoulders, split V tails, baton as a diagonal line. Cold white spotlight from above. Palette: black #0C0C0E, burgundy #8C1D47, antique gold #BAA16A. No text, letters or logos anywhere.",
+  "negative": "text, letters, watermark, logo, blurry, low detail, pixel art, extra fingers, extra limbs",
+  "largura": 1024,
+  "altura": 1536,
+  "variacoes": [
+    {
+      "seed": 9851,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "passos": null,
+      "largura": 1024,
+      "altura": 1536,
+      "prompt_extra": "",
+      "n": 1
+    },
+    {
+      "seed": 9852,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "passos": null,
+      "largura": 1024,
+      "altura": 1536,
+      "prompt_extra": "",
+      "n": 2
+    },
+    {
+      "seed": 9853,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "passos": null,
+      "largura": 1024,
+      "altura": 1536,
+      "prompt_extra": "",
+      "n": 3
+    },
+    {
+      "seed": 9854,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "passos": null,
+      "largura": 1024,
+      "altura": 1536,
+      "prompt_extra": "",
+      "n": 4
+    },
+    {
+      "seed": 9855,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "passos": null,
+      "largura": 1024,
+      "altura": 1536,
+      "prompt_extra": "",
+      "n": 5
+    }
+  ],
+  "pos": {
+    "remover_fundo": true,
+    "tamanho_final": 1536,
+    "margem": 0.03,
+    "derivados": [
+      1024,
+      512
+    ],
+    "modelo_fundo": "birefnet-general",
+    "fundo": "liso",
+    "camadas": []
+  },
+  "passos": null,
+  "guidance": null,
+  "referencias": []
+}

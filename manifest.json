@@ -1,0 +1,112 @@
+{
+  "pedido": "v2-npc-herdeiro-corpo-r2",
+  "titulo": "DEVO v2 — Herdeiro, corpo inteiro (2º lote: o filtro recusou o 1º; texto ajustado e klein-4b de reserva)",
+  "tipo": "ilustracao",
+  "tamanho_final": 1536,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 9851,
+      "passos": null,
+      "neuronios_estimados": 1455,
+      "erro": "HTTP 400 — 3030: AiError: AiError: Your output has been flagged. Please choose another prompt / input image combination (7c0acf06-12fc-4f32-a20e-a5dfc014d868)"
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 9852,
+      "passos": null,
+      "neuronios_estimados": 1455,
+      "erro": "HTTP 400 — 3030: AiError: AiError: Your output has been flagged. Please choose another prompt / input image combination (790ca191-daa3-4bfb-b156-3aae3e1826df)"
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 9853,
+      "passos": null,
+      "segundos": 10.7,
+      "neuronios_estimados": 156,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "v2-npc-herdeiro-corpo-r2--v03--1536.png",
+          "bytes": 530743
+        },
+        {
+          "arquivo": "v2-npc-herdeiro-corpo-r2--v03--1536.webp",
+          "bytes": 116266
+        },
+        {
+          "arquivo": "v2-npc-herdeiro-corpo-r2--v03--1024.webp",
+          "bytes": 61600
+        },
+        {
+          "arquivo": "v2-npc-herdeiro-corpo-r2--v03--512.webp",
+          "bytes": 25334
+        }
+      ],
+      "segundos_pos": 31.5,
+      "avisos": []
+    },
+    {
+      "nome": "v04",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 9854,
+      "passos": null,
+      "segundos": 10.9,
+      "neuronios_estimados": 156,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "v2-npc-herdeiro-corpo-r2--v04--1536.png",
+          "bytes": 622893
+        },
+        {
+          "arquivo": "v2-npc-herdeiro-corpo-r2--v04--1536.webp",
+          "bytes": 131336
+        },
+        {
+          "arquivo": "v2-npc-herdeiro-corpo-r2--v04--1024.webp",
+          "bytes": 65554
+        },
+        {
+          "arquivo": "v2-npc-herdeiro-corpo-r2--v04--512.webp",
+          "bytes": 26282
+        }
+      ],
+      "segundos_pos": 26.4,
+      "avisos": []
+    },
+    {
+      "nome": "v05",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 9855,
+      "passos": null,
+      "segundos": 12.9,
+      "neuronios_estimados": 156,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "v2-npc-herdeiro-corpo-r2--v05--1536.png",
+          "bytes": 688412
+        },
+        {
+          "arquivo": "v2-npc-herdeiro-corpo-r2--v05--1536.webp",
+          "bytes": 131838
+        },
+        {
+          "arquivo": "v2-npc-herdeiro-corpo-r2--v05--1024.webp",
+          "bytes": 66140
+        },
+        {
+          "arquivo": "v2-npc-herdeiro-corpo-r2--v05--512.webp",
+          "bytes": 26528
+        }
+      ],
+      "segundos_pos": 25.3,
+      "avisos": []
+    }
+  ]
+}
