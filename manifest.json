@@ -1,0 +1,54 @@
+{
+  "pedido": "v2-npc-coruja-corpo",
+  "titulo": "DEVO v2 — Coruja, corpo inteiro (ficha de personagem)",
+  "tipo": "ilustracao",
+  "tamanho_final": 1536,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 9425,
+      "passos": null,
+      "segundos": 3.1,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "v2-npc-coruja-corpo--v01--1536.png",
+          "bytes": 726594
+        },
+        {
+          "arquivo": "v2-npc-coruja-corpo--v01--1536.webp",
+          "bytes": 151490
+        },
+        {
+          "arquivo": "v2-npc-coruja-corpo--v01--1024.webp",
+          "bytes": 76898
+        },
+        {
+          "arquivo": "v2-npc-coruja-corpo--v01--512.webp",
+          "bytes": 30736
+        }
+      ],
+      "segundos_pos": 54.2,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 9426,
+      "passos": null,
+      "neuronios_estimados": 1455,
+      "erro": "HTTP 400 — 3030: AiError: AiError: Your output has been flagged. Please choose another prompt / input image combination (0cd3af58-0a1e-4d0d-b2e1-d57413c2b705)"
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 9427,
+      "passos": null,
+      "neuronios_estimados": 1455,
+      "erro": "HTTP 400 — 3030: AiError: AiError: Your output has been flagged. Please choose another prompt / input image combination (d14d3d3b-47c6-4252-a754-af073c42f20c)"
+    }
+  ]
+}
