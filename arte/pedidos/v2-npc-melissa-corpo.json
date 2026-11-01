@@ -1,0 +1,30 @@
+{
+  "id": "v2-npc-melissa-corpo",
+  "titulo": "DEVO v2 — Melissa, corpo inteiro (ficha de personagem)",
+  "tipo": "ilustracao",
+  "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+  "prompt": "Bold clean anime lineart, two-tone cel shading, high-contrast graphic poster style. Full-body character design, head to toe, plain flat medium grey background, no floor, margin around the figure. A slender young woman sweeps her right arm up and out in a wide arc, palm up, as if unveiling a grand stage, relaxed hand, five fingers clearly separated, while her left hand holds a plain black folder against her chest; one foot kicked up behind her, head tilted back, excited open smile, bright violet eyes. Platinum blonde asymmetrical bob, large blue rose with a long black ribbon on the viewer's right. Royal cobalt-blue pinstriped blazer with puffed shoulders; short black capelet lined in marble-veined amethyst, flaring; white ruffled jabot and thin black tie; wide white lace bell cuffs; wide black belt with a square silver buckle; black pencil skirt, dark tights, short square-heeled boots. Silhouette: asymmetrical bob with the rose bow, bell of capelet and puffed shoulders, bright lace cuff at the end of the raised arm, slim column skirt. Clean frontal light, pale blue rim light. Palette: black #0C0C0E, cobalt blue #4A6CF0, amethyst #8A7CC8. No text, letters or logos anywhere.",
+  "negative": "text, letters, watermark, logo, blurry, low detail, pixel art, extra fingers, extra limbs",
+  "largura": 1024,
+  "altura": 1536,
+  "variacoes": [
+    {
+      "seed": 9485
+    },
+    {
+      "seed": 9486
+    },
+    {
+      "seed": 9487
+    }
+  ],
+  "pos": {
+    "remover_fundo": true,
+    "tamanho_final": 1536,
+    "margem": 0.03,
+    "derivados": [
+      1024,
+      512
+    ]
+  }
+}

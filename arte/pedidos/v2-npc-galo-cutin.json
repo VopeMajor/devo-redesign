@@ -1,0 +1,26 @@
+{
+  "id": "v2-npc-galo-cutin",
+  "titulo": "DEVO v2 — Galo, cut-in 2048x640",
+  "tipo": "ilustracao",
+  "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+  "prompt": "Bold clean anime lineart, two-tone cel shading, high-contrast graphic poster style. Ultra-wide horizontal cut-in banner on a black field, crossed by one diagonal strip whose upper and lower edges are torn in sharp jagged rips. The strip rises from lower left to upper right. Inside the strip, an extreme close-up of a man's face cropped from just above the eyebrows to just below the nose: heavy-lidded grey-green eyes, one narrowed in a mischievous smirk, one eyebrow raised, a lock of spiky copper-red hair cutting across the forehead, golden-tan skin with flat cel shadows and thick black contour. Behind the face, burnt copper tones with stylized rooster tail feathers and speed lines streaking along the diagonal, small ember sparks flying. Warm copper key light from the right, smoky violet shadow on the far cheek. Palette: black #0C0C0E, copper #C9542A, ember #F2A15E. No text, letters or logos anywhere.",
+  "negative": "text, letters, watermark, logo, blurry, low detail, pixel art, extra fingers, extra limbs",
+  "largura": 2048,
+  "altura": 640,
+  "variacoes": [
+    {
+      "seed": 9409
+    },
+    {
+      "seed": 9410
+    }
+  ],
+  "pos": {
+    "remover_fundo": false,
+    "tamanho_final": 2048,
+    "margem": 0,
+    "derivados": [
+      1024
+    ]
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "id": "v2-npc-corvo-corpo",
+  "titulo": "DEVO v2 — Corvo, corpo inteiro (ficha de personagem)",
+  "tipo": "ilustracao",
+  "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+  "prompt": "Bold clean anime lineart, two-tone cel shading, high-contrast graphic poster style. Full-body character design, head to toe, plain flat medium grey background, no floor, margin around the figure. An extremely tall gaunt hooded figure stands facing the viewer, both arms spread wide like folding wings, the black cloak opening on a lining of teal-sheened crow feathers, its hem torn into long ragged strips lifting upward, no feet visible. Pointed black hood drooping back, cracked bone-white crow-skull half mask with a long downward beak, one glowing teal eye on the viewer's left, only shadow below the beak. Feather capelet with an iron bird-skull clasp; left arm bare from the elbow, bluish skin turning into a skeletal hand of aged bone, relaxed hand, five fingers clearly separated; right arm in a black glove with iron claw tips; small iron crow with an amethyst eye taking off from the shoulder on the viewer's right. Silhouette: pointed hood, beak breaking its outline, V capelet, spread arms. Pale teal light from below. Palette: black #0C0C0E, teal #3A9FB0, aged bone #D9D0BC. No text, letters or logos anywhere.",
+  "negative": "text, letters, watermark, logo, blurry, low detail, pixel art, extra fingers, extra limbs",
+  "largura": 1024,
+  "altura": 1536,
+  "variacoes": [
+    {
+      "seed": 9465
+    },
+    {
+      "seed": 9466
+    },
+    {
+      "seed": 9467
+    }
+  ],
+  "pos": {
+    "remover_fundo": true,
+    "tamanho_final": 1536,
+    "margem": 0.03,
+    "derivados": [
+      1024,
+      512
+    ]
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "id": "v2-npc-herdeiro-retrato",
+  "titulo": "DEVO v2 — Herdeiro, retrato em pose (meio corpo, ref. Persona)",
+  "tipo": "ilustracao",
+  "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+  "prompt": "Bold clean anime lineart, two-tone cel shading, high-contrast graphic poster style. Half-body portrait from mid-thigh up, plain flat medium grey background, headroom above the head. A slender aristocratic young man in three-quarter view, turned toward the viewer's left, spine straight, chin raised, looking down over his lenses with a thin one-sided smirk; his right arm raised diagonally holds a black conductor's baton with a gold tip pointing out of frame; his left hand behind his back. Ash-sand beige hair swept back, one wide white streak hooking across the far eye on the viewer's left down to the jaw, thin gold half-rim glasses, heavy-lidded olive eyes, beauty mark under the eye on the viewer's right. Wine-burgundy velvet conductor's tailcoat with black satin lapels and thin gold right-angled embroidery; tall black stand collar with gold piping; white lace jabot with a gold diamond brooch and a deep red gem; charred parchment lining with faint ruled lines; thin black gloves. Cold white spotlight from directly above, thin amethyst rim light. Palette: black #0C0C0E, burgundy #8C1D47, amethyst #8A7CC8. No text, letters or logos anywhere.",
+  "negative": "text, letters, watermark, logo, blurry, low detail, pixel art, extra fingers, extra limbs",
+  "largura": 1024,
+  "altura": 1536,
+  "variacoes": [
+    {
+      "seed": 9501
+    },
+    {
+      "seed": 9502
+    },
+    {
+      "seed": 9503
+    }
+  ],
+  "pos": {
+    "remover_fundo": true,
+    "tamanho_final": 1536,
+    "margem": 0.03,
+    "derivados": [
+      1024,
+      512
+    ]
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "id": "v2-npc-corvo-cutin",
+  "titulo": "DEVO v2 — Corvo, cut-in 2048x640",
+  "tipo": "ilustracao",
+  "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+  "prompt": "Bold clean anime lineart, two-tone cel shading, high-contrast graphic poster style. Ultra-wide horizontal cut-in banner on a black field, crossed by one diagonal strip whose upper and lower edges are torn in sharp jagged rips. The strip falls from upper left to lower right. Inside the strip, an extreme close-up cropped from the brow to the tip of a long bone beak: the edge of a black hood framing a cracked bone-white crow-skull half mask, its beak cutting diagonally across the frame, one fierce glowing teal eye in the socket on the viewer's left, the other socket dark, deep shadow where the face would be, strands of black feather-tipped hair. Behind, iridescent teal tones with black crow feather texture, black feathers bursting outward, wisps of amethyst mist and small pale teal sparks. Pale teal light from below. Palette: black #0C0C0E, teal #3A9FB0, aged bone #D9D0BC. No text, letters or logos anywhere.",
+  "negative": "text, letters, watermark, logo, blurry, low detail, pixel art, extra fingers, extra limbs",
+  "largura": 2048,
+  "altura": 640,
+  "variacoes": [
+    {
+      "seed": 9469
+    },
+    {
+      "seed": 9470
+    }
+  ],
+  "pos": {
+    "remover_fundo": false,
+    "tamanho_final": 2048,
+    "margem": 0,
+    "derivados": [
+      1024
+    ]
+  }
+}

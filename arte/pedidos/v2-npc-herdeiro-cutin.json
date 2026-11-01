@@ -1,0 +1,26 @@
+{
+  "id": "v2-npc-herdeiro-cutin",
+  "titulo": "DEVO v2 — Herdeiro, cut-in 2048x640",
+  "tipo": "ilustracao",
+  "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+  "prompt": "Bold clean anime lineart, two-tone cel shading, high-contrast graphic poster style. Ultra-wide horizontal cut-in banner on a black field, crossed by one diagonal strip whose upper and lower edges are torn in sharp jagged rips. The strip falls from upper left to lower right. Inside the strip, an extreme close-up of a young man's face cropped from just above the eyebrows to just below the nose: heavy-lidded olive green eyes narrowed in a cold look, one eyebrow raised, thin gold half-rim glasses with a bright gold flare on one lens, a wide white hooked streak of hair cutting diagonally across the frame on the viewer's left, ash-sand beige hair, small beauty mark under the eye on the viewer's right. Behind the face, wine-burgundy velvet with five thin parallel gold lines running along the diagonal, small black petals flying, the gold tip of a baton slashing a bright streak through the upper corner. Cold light from above, amethyst shadow on the far cheek. Palette: black #0C0C0E, burgundy #8C1D47, antique gold #BAA16A. No text, letters or logos anywhere.",
+  "negative": "text, letters, watermark, logo, blurry, low detail, pixel art, extra fingers, extra limbs",
+  "largura": 2048,
+  "altura": 640,
+  "variacoes": [
+    {
+      "seed": 9509
+    },
+    {
+      "seed": 9510
+    }
+  ],
+  "pos": {
+    "remover_fundo": false,
+    "tamanho_final": 2048,
+    "margem": 0,
+    "derivados": [
+      1024
+    ]
+  }
+}

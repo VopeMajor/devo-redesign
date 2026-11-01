@@ -1,0 +1,30 @@
+{
+  "id": "v2-npc-coruja-retrato",
+  "titulo": "DEVO v2 — Coruja, retrato em pose (meio corpo, ref. Persona)",
+  "tipo": "ilustracao",
+  "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+  "prompt": "Bold clean anime lineart, two-tone cel shading, high-contrast graphic poster style. Half-body portrait from mid-thigh up, plain flat medium grey background, headroom above the head. A tall elegant woman in her thirties in three-quarter view, turned toward the viewer's right, head tilted, heavy-lidded amber eyes, faint knowing smile; her right hand near her chin holds one face-down card with a geometric owl-eye back, relaxed hand, five fingers clearly separated; her other arm rests under her capelet. Near-black braided crown, a narrow straight white streak from the braid to the chin on the viewer's left, a loose wavy lock on the viewer's right, two long steel hairpins rising like owl ear tufts, gold crescent earrings. High white collar and lace jabot with a gold owl brooch; dark bottle-green vest with gold trim; short brown capelet with a scalloped hem of small diamonds. Cool moonlight from above, thin green rim light. Palette: black #0C0C0E, library green #2F7A55, warm brown #6B4A32. No text, letters or logos anywhere.",
+  "negative": "text, letters, watermark, logo, blurry, low detail, pixel art, extra fingers, extra limbs",
+  "largura": 1024,
+  "altura": 1536,
+  "variacoes": [
+    {
+      "seed": 9421
+    },
+    {
+      "seed": 9422
+    },
+    {
+      "seed": 9423
+    }
+  ],
+  "pos": {
+    "remover_fundo": true,
+    "tamanho_final": 1536,
+    "margem": 0.03,
+    "derivados": [
+      1024,
+      512
+    ]
+  }
+}
