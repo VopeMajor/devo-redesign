@@ -1,0 +1,63 @@
+{
+  "id": "v2-cos2-casulo-epico",
+  "titulo": "DEVO v2 — cosméticos r2: peça em duas etapas, casulo de prata e orquídea (Épico)",
+  "tipo": "ilustracao",
+  "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+  "prompt": "Ornate jewelry object concept art, painted, highly detailed, isolated on a plain flat light grey background. A small gothic reliquary pendant of tarnished antique silver and lilac orchid enamel with white lace details and amethyst gems, about the size of a brooch, on a short silver chain, front view, soft cool light. Absolutely no gold. No text, letters, numbers or logos anywhere.",
+  "negative": "text, letters, watermark, face in center, cartoon, flat vector, blurry, low detail, pixel art, gold, wings, heart",
+  "largura": 1024,
+  "altura": 1024,
+  "variacoes": [
+    {
+      "seed": 8181,
+      "prompt_extra": "Stage one: a closed oval cocoon of folded silver petals and layered white lace, tightly shut, a thin seam of lilac light glowing through, a tiny crystal clock face set at the base.",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "passos": null,
+      "largura": 1024,
+      "altura": 1024,
+      "n": 1
+    },
+    {
+      "seed": 8182,
+      "prompt_extra": "Stage one: a closed oval cocoon of folded silver petals and layered white lace, tightly shut, a thin seam of lilac light glowing through, a tiny crystal clock face set at the base.",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "passos": null,
+      "largura": 1024,
+      "altura": 1024,
+      "n": 2
+    },
+    {
+      "seed": 8183,
+      "prompt_extra": "Stage two: the same cocoon split open into silver petals, and standing inside a tiny porcelain doll girl in a white lace dress holding a small glowing crystal clock in her hands, eyes closed, delicate lace streamers floating up.",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "passos": null,
+      "largura": 1024,
+      "altura": 1024,
+      "n": 3
+    },
+    {
+      "seed": 8184,
+      "prompt_extra": "Stage two: the same cocoon split open into silver petals, and standing inside a tiny porcelain doll girl in a white lace dress holding a small glowing crystal clock in her hands, eyes closed, delicate lace streamers floating up.",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "passos": null,
+      "largura": 1024,
+      "altura": 1024,
+      "n": 4
+    }
+  ],
+  "pos": {
+    "remover_fundo": true,
+    "tamanho_final": 1024,
+    "margem": 0.03,
+    "derivados": [
+      512,
+      256
+    ],
+    "modelo_fundo": "birefnet-general",
+    "fundo": "liso",
+    "camadas": []
+  },
+  "passos": null,
+  "guidance": null,
+  "referencias": []
+}

@@ -1,0 +1,125 @@
+{
+  "pedido": "v2-cos2-casulo-epico",
+  "titulo": "DEVO v2 — cosméticos r2: peça em duas etapas, casulo de prata e orquídea (Épico)",
+  "tipo": "ilustracao",
+  "tamanho_final": 1024,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 8181,
+      "passos": null,
+      "segundos": 2.2,
+      "neuronios_estimados": 1364,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "v2-cos2-casulo-epico--v01--1025.png",
+          "bytes": 605455
+        },
+        {
+          "arquivo": "v2-cos2-casulo-epico--v01--1025.webp",
+          "bytes": 115726
+        },
+        {
+          "arquivo": "v2-cos2-casulo-epico--v01--512.webp",
+          "bytes": 40594
+        },
+        {
+          "arquivo": "v2-cos2-casulo-epico--v01--256.webp",
+          "bytes": 14868
+        }
+      ],
+      "segundos_pos": 18.0,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 8182,
+      "passos": null,
+      "segundos": 2.1,
+      "neuronios_estimados": 1364,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "v2-cos2-casulo-epico--v02--1025.png",
+          "bytes": 546130
+        },
+        {
+          "arquivo": "v2-cos2-casulo-epico--v02--1025.webp",
+          "bytes": 113714
+        },
+        {
+          "arquivo": "v2-cos2-casulo-epico--v02--512.webp",
+          "bytes": 36986
+        },
+        {
+          "arquivo": "v2-cos2-casulo-epico--v02--256.webp",
+          "bytes": 13594
+        }
+      ],
+      "segundos_pos": 13.7,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 8183,
+      "passos": null,
+      "segundos": 1.7,
+      "neuronios_estimados": 1364,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "v2-cos2-casulo-epico--v03--1025.png",
+          "bytes": 605903
+        },
+        {
+          "arquivo": "v2-cos2-casulo-epico--v03--1025.webp",
+          "bytes": 114252
+        },
+        {
+          "arquivo": "v2-cos2-casulo-epico--v03--512.webp",
+          "bytes": 39128
+        },
+        {
+          "arquivo": "v2-cos2-casulo-epico--v03--256.webp",
+          "bytes": 14730
+        }
+      ],
+      "segundos_pos": 17.9,
+      "avisos": []
+    },
+    {
+      "nome": "v04",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 8184,
+      "passos": null,
+      "segundos": 1.7,
+      "neuronios_estimados": 1364,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "v2-cos2-casulo-epico--v04--1025.png",
+          "bytes": 568183
+        },
+        {
+          "arquivo": "v2-cos2-casulo-epico--v04--1025.webp",
+          "bytes": 104480
+        },
+        {
+          "arquivo": "v2-cos2-casulo-epico--v04--512.webp",
+          "bytes": 35194
+        },
+        {
+          "arquivo": "v2-cos2-casulo-epico--v04--256.webp",
+          "bytes": 13196
+        }
+      ],
+      "segundos_pos": 17.7,
+      "avisos": []
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+[v2-cos2-casulo-epico] v01: @cf/black-forest-labs/flux-2-klein-9b seed=8181 1024x1024 passos=None (~1,364 neurônios)
+    ok em 2.2s, 1024x1024
+[v2-cos2-casulo-epico] v02: @cf/black-forest-labs/flux-2-klein-9b seed=8182 1024x1024 passos=None (~1,364 neurônios)
+    ok em 2.1s, 1024x1024
+[v2-cos2-casulo-epico] v03: @cf/black-forest-labs/flux-2-klein-9b seed=8183 1024x1024 passos=None (~1,364 neurônios)
+    ok em 1.7s, 1024x1024
+[v2-cos2-casulo-epico] v04: @cf/black-forest-labs/flux-2-klein-9b seed=8184 1024x1024 passos=None (~1,364 neurônios)
+    ok em 1.7s, 1024x1024
+[v2-cos2-casulo-epico] v01: rembg:birefnet-general; sem avisos
+[v2-cos2-casulo-epico] v02: rembg:birefnet-general; sem avisos
+[v2-cos2-casulo-epico] v03: rembg:birefnet-general; sem avisos
+[v2-cos2-casulo-epico] v04: rembg:birefnet-general; sem avisos
