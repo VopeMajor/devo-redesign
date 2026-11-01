@@ -1,0 +1,13 @@
+[v2-npc-melissa-cutin-r2] v01: @cf/black-forest-labs/flux-2-klein-9b seed=9891 2048x640 passos=None (~1,409 neurônios)
+    ERRO: HTTP 400 — 3030: AiError: AiError: Your output has been flagged. Please choose another prompt / input image combination (0371cc49-e2e9-454d-963d-ae7b40844f23)
+[v2-npc-melissa-cutin-r2] v02: @cf/black-forest-labs/flux-2-klein-9b seed=9892 2048x640 passos=None (~1,409 neurônios)
+    ERRO: HTTP 400 — 3030: AiError: AiError: Your output has been flagged. Please choose another prompt / input image combination (4b692cfb-85fb-4a8f-8702-17ecc706e281)
+[v2-npc-melissa-cutin-r2] v03: @cf/black-forest-labs/flux-2-klein-4b seed=9893 2048x640 passos=None (~208 neurônios)
+    ok em 13.2s, 2048x640
+[v2-npc-melissa-cutin-r2] v04: @cf/black-forest-labs/flux-2-klein-4b seed=9894 2048x640 passos=None (~208 neurônios)
+    ok em 9.5s, 2048x640
+[v2-npc-melissa-cutin-r2] v05: @cf/black-forest-labs/flux-2-klein-4b seed=9895 2048x640 passos=None (~208 neurônios)
+    ok em 15.5s, 2048x640
+[v2-npc-melissa-cutin-r2] v03: mantido; sem avisos
+[v2-npc-melissa-cutin-r2] v04: mantido; sem avisos
+[v2-npc-melissa-cutin-r2] v05: mantido; sem avisos

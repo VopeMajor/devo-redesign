@@ -1,0 +1,71 @@
+{
+  "id": "v2-npc-melissa-cutin-r2",
+  "titulo": "DEVO v2 — Melissa, cut-in 2048x640 (2º lote: o filtro recusou o 1º; texto ajustado e klein-4b de reserva)",
+  "tipo": "ilustracao",
+  "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+  "prompt": "Bold clean anime lineart, two-tone cel shading, high-contrast graphic poster style. Ultra-wide horizontal cut-in banner on a black field, crossed by one diagonal strip whose upper and lower edges are torn in sharp jagged rips. The strip rises from lower left to upper right. Inside the strip, an extreme close-up of an adult woman's face, in her late twenties, cropped from just above the eyebrows to just below the nose: large warm half-lidded violet eyes with a small blue diamond-shaped highlight, a gentle knowing look, a lock of platinum blonde hair cutting across the frame, porcelain skin with flat cel shadows and thick black contour, the edge of a blue rose with a black ribbon on the viewer's right. Behind the face, saturated cobalt blue tones with black marble texture and blue rose petals flying along the diagonal. Clean frontal light, deep navy shadow on the far cheek. Palette: black #0C0C0E, cobalt blue #4A6CF0, amethyst #8A7CC8. No text, letters or logos anywhere.",
+  "negative": "text, letters, watermark, logo, blurry, low detail, pixel art, extra fingers, extra limbs",
+  "largura": 2048,
+  "altura": 640,
+  "variacoes": [
+    {
+      "seed": 9891,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "passos": null,
+      "largura": 2048,
+      "altura": 640,
+      "prompt_extra": "",
+      "n": 1
+    },
+    {
+      "seed": 9892,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "passos": null,
+      "largura": 2048,
+      "altura": 640,
+      "prompt_extra": "",
+      "n": 2
+    },
+    {
+      "seed": 9893,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "passos": null,
+      "largura": 2048,
+      "altura": 640,
+      "prompt_extra": "",
+      "n": 3
+    },
+    {
+      "seed": 9894,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "passos": null,
+      "largura": 2048,
+      "altura": 640,
+      "prompt_extra": "",
+      "n": 4
+    },
+    {
+      "seed": 9895,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "passos": null,
+      "largura": 2048,
+      "altura": 640,
+      "prompt_extra": "",
+      "n": 5
+    }
+  ],
+  "pos": {
+    "remover_fundo": false,
+    "tamanho_final": 2048,
+    "margem": 0,
+    "derivados": [
+      1024
+    ],
+    "modelo_fundo": "birefnet-general",
+    "fundo": "liso",
+    "camadas": []
+  },
+  "passos": null,
+  "guidance": null,
+  "referencias": []
+}

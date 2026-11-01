@@ -1,0 +1,70 @@
+{
+  "pedido": "v2-npc-melissa-cutin-r2",
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 9891,
+      "passos": null,
+      "largura": 2048,
+      "altura": 640,
+      "neuronios_estimados": 1409,
+      "erro": "HTTP 400 — 3030: AiError: AiError: Your output has been flagged. Please choose another prompt / input image combination (0371cc49-e2e9-454d-963d-ae7b40844f23)"
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 9892,
+      "passos": null,
+      "largura": 2048,
+      "altura": 640,
+      "neuronios_estimados": 1409,
+      "erro": "HTTP 400 — 3030: AiError: AiError: Your output has been flagged. Please choose another prompt / input image combination (4b692cfb-85fb-4a8f-8702-17ecc706e281)"
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 9893,
+      "passos": null,
+      "largura": 2048,
+      "altura": 640,
+      "neuronios_estimados": 208,
+      "ok": true,
+      "segundos": 13.2,
+      "tamanho_real": [
+        2048,
+        640
+      ]
+    },
+    {
+      "nome": "v04",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 9894,
+      "passos": null,
+      "largura": 2048,
+      "altura": 640,
+      "neuronios_estimados": 208,
+      "ok": true,
+      "segundos": 9.5,
+      "tamanho_real": [
+        2048,
+        640
+      ]
+    },
+    {
+      "nome": "v05",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 9895,
+      "passos": null,
+      "largura": 2048,
+      "altura": 640,
+      "neuronios_estimados": 208,
+      "ok": true,
+      "segundos": 15.5,
+      "tamanho_real": [
+        2048,
+        640
+      ]
+    }
+  ]
+}
