@@ -1,0 +1,84 @@
+{
+  "pedido": "v2-cg-melissa-encontro",
+  "titulo": "DEVO v2 — CG de encontro: Melissa e o avatar de costas (9:16)",
+  "tipo": "ilustracao",
+  "tamanho_final": 1536,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 9641,
+      "passos": null,
+      "segundos": 3.2,
+      "neuronios_estimados": 1455,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "v2-cg-melissa-encontro--v01--1536.png",
+          "bytes": 2683237
+        },
+        {
+          "arquivo": "v2-cg-melissa-encontro--v01--1536.webp",
+          "bytes": 430106
+        },
+        {
+          "arquivo": "v2-cg-melissa-encontro--v01--1024.webp",
+          "bytes": 115544
+        }
+      ],
+      "segundos_pos": 2.5,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 9642,
+      "passos": null,
+      "segundos": 3.0,
+      "neuronios_estimados": 1455,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "v2-cg-melissa-encontro--v02--1536.png",
+          "bytes": 2655931
+        },
+        {
+          "arquivo": "v2-cg-melissa-encontro--v02--1536.webp",
+          "bytes": 379770
+        },
+        {
+          "arquivo": "v2-cg-melissa-encontro--v02--1024.webp",
+          "bytes": 120666
+        }
+      ],
+      "segundos_pos": 2.6,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 9643,
+      "passos": null,
+      "segundos": 3.2,
+      "neuronios_estimados": 1455,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "v2-cg-melissa-encontro--v03--1536.png",
+          "bytes": 2556678
+        },
+        {
+          "arquivo": "v2-cg-melissa-encontro--v03--1536.webp",
+          "bytes": 339248
+        },
+        {
+          "arquivo": "v2-cg-melissa-encontro--v03--1024.webp",
+          "bytes": 122802
+        }
+      ],
+      "segundos_pos": 2.8,
+      "avisos": []
+    }
+  ]
+}
