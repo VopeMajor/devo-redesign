@@ -1,0 +1,8 @@
+[v2-npc-coruja-retrato] v01: @cf/black-forest-labs/flux-2-klein-9b seed=9421 1024x1536 passos=None (~1,455 neurônios)
+    ERRO: HTTP 400 — 3030: AiError: AiError: Your output has been flagged. Please choose another prompt / input image combination (e44410c5-c49b-45c6-9bbe-3d71d4d7867c)
+[v2-npc-coruja-retrato] v02: @cf/black-forest-labs/flux-2-klein-9b seed=9422 1024x1536 passos=None (~1,455 neurônios)
+    ok em 3.8s, 1024x1536
+[v2-npc-coruja-retrato] v03: @cf/black-forest-labs/flux-2-klein-9b seed=9423 1024x1536 passos=None (~1,455 neurônios)
+    ok em 3.2s, 1024x1536
+[v2-npc-coruja-retrato] v02: rembg:birefnet-general; sem avisos
+[v2-npc-coruja-retrato] v03: rembg:birefnet-general; sem avisos
