@@ -1,0 +1,230 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><title>DEVO v2 · kit celular</title>
+<link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600&family=Silkscreen&family=Literata:opsz,wght@7..72,400;7..72,500&display=block" rel="stylesheet">
+<link rel="stylesheet" href="kit.css">
+<style>
+body{background:#d9cbb8;padding:32px;font-family:var(--f-pixel)}
+.prancha{display:flex;gap:28px;flex-wrap:wrap;width:2510px}
+.cab{width:100%;display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px}
+.cab h1{font:600 30px var(--f-pixel);margin:0;color:var(--tinta)}
+.cab p{margin:0;font:400 13px var(--f-placa);color:var(--tinta2)}
+.leg{font:400 12px var(--f-placa);color:var(--tinta2);margin:10px 0 0;width:390px}
+body.solo{padding:0;background:var(--papel1)} body.solo .cab, body.solo .leg{display:none} body.solo .prancha{gap:0}
+</style></head><body>
+<div class="prancha" id="pr">
+  <div class="cab"><h1>DEVO v2 · kit celular 390×844</h1><p>provisório · paleta, moldura Pulso, escala ×3 · arte de cena desenhada só para o kit</p></div>
+</div>
+<script type="module">
+import * as X from './pix.js';
+import { rua, interior, casaCorte, mostrador, avancar } from './cenas.js';
+const { P } = X;
+const q = new URLSearchParams(location.search);
+const ANOT = q.get('anot') === '1';
+const SO = q.get('tela');
+if (SO) document.body.classList.add('solo');
+const pr = document.getElementById('pr');
+const h = (html) => { const t = document.createElement('template'); t.innerHTML = html.trim(); return t.content.firstChild; };
+function tela(id, legenda) {
+  const w = h(`<div><div class="tela" id="${id}"></div><p class="leg">${legenda}</p></div>`);
+  if (!SO || SO === id) pr.appendChild(w);
+  return w.querySelector('.tela');
+}
+function anot(t, x, y, w, hh, txt, lx, ly) {
+  if (!ANOT) return;
+  t.appendChild(h(`<div class="medida" style="left:${x}px;top:${y}px;width:${w}px;height:${hh}px"></div>`));
+  t.appendChild(h(`<div class="anot" style="left:${lx ?? x}px;top:${ly ?? (y - 16)}px">${txt}</div>`));
+}
+const status = (t, claro) => t.appendChild(h(`<div class="status ${claro ? 'claro' : ''}"><span>9:41</span><span>▮▮▮ ◔</span></div>`));
+
+// ---------- HUD do mundo ----------
+function hud(t) {
+  const loc = h(`<div class="placa" style="left:12px;top:52px">Rua das Cerejeiras</div>`); t.appendChild(loc);
+  const pul = h(`<div class="moldura sem-pesponto" style="right:12px;top:48px;width:150px;height:42px"></div>`);
+  const m = mostrador(3, 1); m.classList.add('mostrador'); m.style.left = '9px'; m.style.top = '5px'; pul.appendChild(m);
+  pul.appendChild(h(`<div style="position:absolute;left:50px;top:6px;font:500 11px var(--f-placa);color:var(--tinta3)">TEMPO</div>`));
+  pul.appendChild(h(`<div style="position:absolute;left:50px;top:18px;font:600 17px var(--f-pixel);color:var(--tinta)">41:12:07</div>`));
+  t.appendChild(pul);
+}
+function botaoCelular(t) {
+  const b = h(`<div class="moldura sistema sem-pesponto" style="right:16px;bottom:40px;width:66px;height:66px"></div>`);
+  const gl = X.glifoCanvas('pulso', P.cob1, 3); gl.style.position = 'absolute'; gl.style.left = '9px'; gl.style.top = '9px';
+  b.appendChild(gl); t.appendChild(b); t.appendChild(h(`<div style="position:absolute;right:10px;bottom:96px;z-index:3;width:18px;height:18px;background:var(--verm);color:#fff;font:600 11px/18px var(--f-pixel);text-align:center;clip-path:polygon(3px 0,15px 0,18px 3px,18px 15px,15px 18px,3px 18px,0 15px,0 3px)">2</div>`));
+}
+
+// ---------- 1. Mapa ----------
+{
+  const t = tela('mapa', '1 · Mapa. Top-down 3/4, tile 16 px ×3. Toque para andar (anel cobalto). HUD só com lugar, Tempo e o botão do celular na zona do polegar.');
+  status(t);
+  const [c, g] = rua(130, 282, 11, 30);
+  X.boneco(g, 84, 176, X.NPC_CORUJA, 'baixo');
+  X.boneco(g, 56, 206, X.AVATAR, 'cima', 1);
+  // marcador de toque
+  const mx = 63, my = 154; for (const [x, y] of [[0, -3], [1, -3], [-1, -3], [3, 0], [3, 1], [3, -1], [0, 3], [1, 3], [-1, 3], [-3, 0], [-3, 1], [-3, -1], [2, -2], [-2, -2], [2, 2], [-2, 2]]) X.D(g, mx + x, my + y, P.cob2);
+  for (let y = 162; y < 206; y += 6) X.D(g, 63, y, P.cob1);
+  X.montar(c, t.appendChild(h('<div class="cena"></div>')), 3);
+  hud(t); botaoCelular(t);
+  t.appendChild(h(`<div class="placa cob" style="left:216px;top:494px;font-size:11px">Coruja</div>`));
+  anot(t, 0, 44, 390, 52, 'HUD 48 px (abaixo da área segura de 44)', 4, 100);
+  anot(t, 308, 722, 82, 82, 'polegar: 66×66', 268, 704);
+}
+
+// ---------- 2. Diálogo ----------
+function caixaDialogo(t, { nome, texto, mostrarRetrato = true, medalhao = false, alturaCaixa = 216 }) {
+  const top = 844 - 34 - alturaCaixa;
+  if (mostrarRetrato) {
+    const r = h(`<img src="retrato-tratado.png" style="position:absolute;left:150px;top:${top - 210}px;width:250px;height:228px;z-index:2">`);
+    t.appendChild(r);
+  }
+  const box = h(`<div class="moldura" style="left:9px;right:9px;top:${top}px;height:${alturaCaixa}px;z-index:4"></div>`);
+  const m = mostrador(3, 2); m.classList.add('mostrador'); m.style.left = '12px'; m.style.top = `${top - 15}px`; m.style.zIndex = 6;
+  t.appendChild(m);
+  box.appendChild(h(`<div class="texto-dialogo" style="position:absolute;left:24px;right:24px;top:36px">${texto}</div>`));
+  box.appendChild(h(`<div style="position:absolute;left:24px;bottom:22px;display:flex;gap:16px;font:400 11px var(--f-placa);color:var(--tinta3)"><span>◷ Histórico</span><span>▶ Auto</span><span>»» Pular</span></div>`));
+  const av = avancar(3); av.style.position = 'absolute'; av.style.right = '24px'; av.style.bottom = '18px'; box.appendChild(av);
+  t.appendChild(box);
+  t.appendChild(h(`<div class="placa" style="left:54px;top:${top - 15}px;z-index:5">${nome}</div>`));
+  if (medalhao) {
+    const md = h(`<div style="position:absolute;right:20px;top:${top - 50}px;width:84px;height:84px;z-index:5;background:var(--papel0);clip-path:polygon(9px 0,75px 0,84px 9px,84px 75px,75px 84px,9px 84px,0 75px,0 9px);box-shadow:inset 0 0 0 3px var(--tinta2),inset 0 0 0 6px var(--rosa1);overflow:hidden">
+      <img src="retrato-tratado.png" style="position:absolute;left:-74px;top:-34px;width:230px"></div>`);
+    t.appendChild(md);
+  }
+  return top;
+}
+{
+  const t = tela('dialogo', '2 · Diálogo. Caixa na largura toda, retrato em busto sai por cima à direita (z abaixo da caixa). Mostrador no canto = assinatura. Avançar no canto do polegar.');
+  status(t);
+  const [c, g] = rua(130, 282, 11, 30);
+  X.boneco(g, 84, 176, X.NPC_CORUJA, 'esq'); X.boneco(g, 66, 150, X.AVATAR, 'dir');
+  X.montar(c, t.appendChild(h('<div class="cena"></div>')), 3);
+  t.appendChild(h(`<div style="position:absolute;inset:0;background:rgba(36,29,43,.28);z-index:1"></div>`));
+  const top = caixaDialogo(t, { nome: 'Coruja', texto: 'Sim, <span class="chave">Record</span>. Você precisará lidar com isso.<br><span style="color:var(--tinta3);font-size:13px">[texto de teste: linha literal do Manual]</span>' });
+  anot(t, 9, top, 372, 216, 'caixa 216 px · 4 linhas no máx. a 18 px', 9, top + 220);
+  anot(t, 150, top - 210, 240, 210, 'retrato 250×228, 18 px escondidos', 150, top - 226);
+  anot(t, 330, 760, 50, 46, 'avançar', 330, 744);
+}
+
+// ---------- 3. Visitante + escolha + vínculo ----------
+{
+  const t = tela('escolha', '3 · Visitante e escolha. Faixa literal do dono, barras de afinidade e romance (sem número), três escolhas de 52 px acima da caixa. Na escolha o retrato vira medalhão.');
+  status(t, true);
+  const [c, g] = interior(130, 282, 5);
+  X.boneco(g, 78, 84, X.NPC_CORUJA, 'esq'); X.boneco(g, 52, 88, X.AVATAR, 'dir');
+  X.montar(c, t.appendChild(h('<div class="cena"></div>')), 3);
+  t.appendChild(h(`<div style="position:absolute;inset:0;background:rgba(36,29,43,.42);z-index:1"></div>`));
+  // faixa de sistema
+  const fx = h(`<div class="moldura sistema sem-pesponto" style="left:9px;right:9px;top:50px;height:48px;z-index:3;display:flex;align-items:center;justify-content:center;font:500 18px var(--f-pixel)">[Um Visitante apareceu]</div>`);
+  t.appendChild(fx);
+  // vínculo compacto
+  const vb = h(`<div class="moldura sem-pesponto" style="left:9px;right:9px;top:106px;height:78px;z-index:3"></div>`);
+  vb.appendChild(h(`<div style="position:absolute;left:18px;top:14px;width:50px;height:50px;overflow:hidden;background:var(--rosa0);box-shadow:inset 0 0 0 3px var(--tinta2)"><img src="retrato-tratado.png" style="position:absolute;left:-58px;top:-26px;width:170px"></div>`));
+  const barra = (y, nome, cor, fill, icone) => `<div style="position:absolute;left:82px;right:18px;top:${y}px;display:flex;align-items:center;gap:8px;font:400 11px var(--f-placa);color:var(--tinta2)"><span style="width:104px;white-space:nowrap">${icone} ${nome}</span><span style="flex:1;height:12px;background:var(--papel2);box-shadow:inset 0 0 0 3px var(--tinta2);position:relative"><span style="position:absolute;left:3px;top:3px;bottom:3px;width:${fill}%;background:repeating-linear-gradient(90deg,${cor} 0 9px,transparent 9px 12px)"></span></span></div>`;
+  vb.insertAdjacentHTML('beforeend', barra(18, 'Afinidade', 'var(--rosa2)', 46, '◆') + barra(44, 'Romance', 'var(--cob2)', 18, '♥'));
+  t.appendChild(vb);
+  const top = caixaDialogo(t, { nome: 'Coruja', texto: '<span style="color:var(--tinta3)">[fala do Visitante · roteiro pendente]</span>', mostrarRetrato: false, medalhao: true, alturaCaixa: 168 });
+  const ops = [['Presentear', '✿'], ['Conversar', '…'], ['Pedir que vá embora', '✕']];
+  ops.forEach(([o, ic], i) => {
+    const b = h(`<div class="moldura sem-pesponto btn" style="left:24px;right:24px;top:${top - 62 - (3 - i) * 60}px;height:52px;z-index:4"><span style="color:var(--cob2);width:18px">${ic}</span>${o}</div>`);
+    if (i === 0) { b.style.boxShadow = 'inset 0 0 0 3px var(--cob2),inset 0 0 0 6px var(--cob0)'; b.insertAdjacentHTML('beforeend', '<span style="margin-left:auto;color:var(--cob2)">◀</span>'); }
+    t.appendChild(b);
+  });
+  anot(t, 24, top - 242, 342, 172, 'escolhas: 3×52 + 8 de vão', 24, top - 258);
+  anot(t, 9, 106, 372, 78, 'vínculo: barras sem número (valores pendentes)', 9, 188);
+}
+
+// ---------- 4. Celular do jogo ----------
+{
+  const t = tela('celular', '4 · Celular do jogo (registro de sistema: preto e cobalto), mesma moldura Pulso. Apps cinza para novatos até concluir o Devo tutorial.');
+  t.style.background = 'var(--rec0)';
+  status(t, true);
+  // grade de fundo em pixel
+  t.appendChild(h(`<div style="position:absolute;inset:0;background-image:linear-gradient(var(--rec1) 3px,transparent 3px),linear-gradient(90deg,var(--rec1) 3px,transparent 3px);background-size:48px 48px;opacity:.9"></div>`));
+  // Pulso grande
+  const pu = h(`<div class="moldura sistema" style="left:12px;right:12px;top:52px;height:132px"></div>`);
+  const m = mostrador(6, 1); m.classList.add('mostrador'); m.style.width = m.style.height = '66px'; m.style.left = '18px'; m.style.top = '30px'; pu.appendChild(m);
+  pu.appendChild(h(`<div style="position:absolute;left:102px;top:26px;font:400 12px var(--f-placa);color:var(--cob1)">TEMPO NO PULSO</div>`));
+  pu.appendChild(h(`<div style="position:absolute;left:102px;top:44px;font:600 40px/1 var(--f-pixel);color:var(--papel0);letter-spacing:1px">41:12:07</div>`));
+  pu.appendChild(h(`<div style="position:absolute;left:102px;top:92px;font:400 12px var(--f-pixel);color:var(--cob0)">Record · Companhia · Honra ⇄ Necro</div>`));
+  t.appendChild(pu);
+  // player (ref-07)
+  const pl = h(`<div class="moldura sistema sem-pesponto" style="left:12px;right:12px;top:194px;height:60px"></div>`);
+  pl.appendChild(h(`<div><div style="position:absolute;left:20px;top:13px;font:400 11px var(--f-placa);color:var(--cob1)">TRILHA</div><div style="position:absolute;left:20px;top:29px;font:500 15px var(--f-pixel);color:var(--papel0)">faixa atual</div><div style="position:absolute;right:20px;top:16px;display:flex;gap:10px;font:600 16px var(--f-pixel);color:var(--cob1)"><span>◀</span><span>❚❚</span><span>▶</span></div></div>`));
+  t.appendChild(pl);
+  const apps = [['record', 'Record'], ['pulso', 'Pulso'], ['msg', 'Mensagens', 2], ['cartas', 'Cartas', 0, 1], ['vinculo', 'Vínculos'], ['casa', 'Casa'], ['mapa', 'Mapa'], ['inv', 'Inventário'], ['ajustes', 'Ajustes']];
+  apps.forEach(([g, n, badge, lock], i) => {
+    const x = 12 + (i % 3) * 124, y = 268 + ((i / 3) | 0) * 124;
+    const a = h(`<div class="moldura sistema sem-pesponto" style="left:${x}px;top:${y}px;width:118px;height:116px;${lock ? 'opacity:.42' : ''}"></div>`);
+    const gl = X.glifoCanvas(g, lock ? P.ped2 : P.cob1, 3); gl.style.position = 'absolute'; gl.style.left = '35px'; gl.style.top = '18px'; a.appendChild(gl);
+    a.appendChild(h(`<div style="position:absolute;left:0;right:0;top:76px;text-align:center;font:500 15px var(--f-pixel);color:var(--papel0)">${n}</div>`));
+    if (badge) a.appendChild(h(`<div style="position:absolute;right:12px;top:12px;width:21px;height:21px;background:var(--verm);color:#fff;font:600 13px/21px var(--f-pixel);text-align:center">${badge}</div>`));
+    if (lock) a.appendChild(h(`<div style="position:absolute;left:0;right:0;top:96px;text-align:center;font:400 9px var(--f-placa);color:var(--ped1)">APÓS O TUTORIAL</div>`));
+    t.appendChild(a);
+  });
+  const nav = h(`<div style="position:absolute;left:12px;right:12px;bottom:34px;height:60px;display:flex;gap:6px"></div>`);
+  ['◀ Voltar', '● Mundo', '☰ Mesa'].forEach(s => nav.appendChild(h(`<div class="moldura sistema sem-pesponto" style="position:relative;flex:1;display:flex;align-items:center;justify-content:center;font:500 15px var(--f-pixel);color:var(--cob0)">${s}</div>`)));
+  t.appendChild(nav);
+  anot(t, 12, 268, 366, 364, 'apps 118×116 (3 por linha)', 12, 636);
+}
+
+// ---------- 5. Casa em corte (isométrico) ----------
+{
+  const t = tela('casa', '5 · Casa em corte. Isométrico só aqui e no modo decorar (diorama). Cômodo trancado com cadeado e grade escura. Andar dentro do cômodo volta ao top-down.');
+  status(t);
+  const [c, g] = casaCorte(130, 180);
+  const cena = h('<div class="cena"></div>'); X.montar(c, cena, 3); t.appendChild(cena);
+  t.appendChild(h(`<div style="position:absolute;left:0;right:0;top:540px;bottom:0;background:var(--papel1)"></div>`));
+  t.appendChild(h(`<div class="placa" style="left:12px;top:52px">Casa · nível 1</div>`));
+  t.appendChild(h(`<div class="placa cob" style="right:12px;top:52px">Decorar</div>`));
+  const sh = h(`<div class="moldura" style="left:9px;right:9px;top:520px;height:290px"></div>`);
+  sh.appendChild(h(`<div style="position:absolute;left:24px;top:24px;font:600 20px var(--f-pixel)">Quarto de Hóspedes</div>`));
+  sh.appendChild(h(`<div style="position:absolute;left:24px;right:24px;top:56px;font:400 15px/1.45 var(--f-pixel);color:var(--tinta2)">Trancado. Abre com a melhoria da casa <span class="pend">nível x · em discussão</span>. Quando abrir, um Visitante com afinidade alta pode morar aqui.</div>`));
+  const linha = (y, a, b) => `<div style="position:absolute;left:24px;right:24px;top:${y}px;display:flex;justify-content:space-between;font:400 12px var(--f-placa);color:var(--tinta3);border-top:3px solid var(--papel2);padding-top:9px"><span>${a}</span><span style="color:var(--tinta)">${b}</span></div>`;
+  sh.insertAdjacentHTML('beforeend', linha(138, 'SKIN DA CASA', 'Chalé (exemplo)') + linha(174, 'CÔMODOS', '3 abertos · 1 trancado'));
+  sh.appendChild(h(`<div class="moldura sem-pesponto btn" style="left:18px;width:162px;bottom:24px;height:56px;justify-content:center">Ver cômodo</div>`));
+  sh.appendChild(h(`<div class="moldura sistema sem-pesponto btn" style="right:18px;width:162px;bottom:24px;height:56px;justify-content:center;color:var(--papel0)">Entrar</div>`));
+  t.appendChild(sh);
+  anot(t, 0, 0, 390, 540, 'diorama 130×180 px de arte ×3', 140, 100);
+}
+
+// ---------- 6. Carta: Rito de Invocação ----------
+{
+  const t = tela('rito', '6 · Carta, aba Rito. Gestos como glifos 16 px; Cântico em fonte de leitura dentro da moldura; a cor de cada raridade desce até a linha exigida (texto literal do dono).');
+  status(t);
+  // carta
+  const cd = h(`<div class="moldura sem-pesponto" style="left:12px;top:52px;width:132px;height:186px;background:var(--lav0)"></div>`);
+  cd.appendChild(h(`<div style="position:absolute;left:12px;right:12px;top:12px;height:108px;background:repeating-linear-gradient(45deg,var(--lav1) 0 6px,var(--lav0) 6px 12px);box-shadow:inset 0 0 0 3px var(--tinta2);display:flex;align-items:center;justify-content:center;font:400 10px var(--f-placa);color:var(--tinta3);text-align:center">arte da<br>carta</div>`));
+  cd.appendChild(h(`<div style="position:absolute;left:12px;right:12px;top:126px;font:600 14px var(--f-pixel);text-align:center">Teste</div>`));
+  cd.appendChild(h(`<div style="position:absolute;left:12px;right:12px;top:150px;text-align:center;font:400 10px var(--f-placa);color:var(--cob3)">RARA · INÚTEIS</div>`));
+  t.appendChild(cd);
+  const kv = (y, k, v) => `<div style="position:absolute;left:158px;right:12px;top:${y}px;font:400 11px var(--f-placa);color:var(--tinta3)">${k}<div style="font:500 16px var(--f-pixel);color:var(--tinta);margin-top:2px">${v}</div></div>`;
+  t.insertAdjacentHTML('beforeend', kv(56, 'PESO', '—') + kv(100, 'NATUREZA', '—') + kv(144, 'ARQUÉTIPO', '—') + kv(188, 'COLEÇÃO', 'Básica · 5 linhas'));
+  // abas
+  const ab = h(`<div style="position:absolute;left:12px;right:12px;top:250px;height:44px;display:flex;gap:6px"></div>`);
+  ['Efeito', 'Rito', 'Coleção'].forEach((s, i) => ab.appendChild(h(`<div class="moldura sem-pesponto ${i === 1 ? 'sistema' : ''}" style="position:relative;flex:1;display:flex;align-items:center;justify-content:center;font:500 16px var(--f-pixel)">${s}</div>`)));
+  t.appendChild(ab);
+  // gestos
+  t.appendChild(h(`<div style="position:absolute;left:14px;top:306px;font:400 12px var(--f-placa);color:var(--tinta2)">GESTOS · NA ORDEM</div>`));
+  [['g_mao', 'Mão aberta'], ['g_circ', 'Círculo'], ['g_dois', 'Dois dedos']].forEach(([gn, nome], i) => {
+    const b = h(`<div class="moldura sem-pesponto" style="left:${12 + i * 124}px;top:326px;width:118px;height:84px"></div>`);
+    const gl = X.glifoCanvas(gn, i === 2 ? P.ped2 : P.tinta2, 3); gl.style.position = 'absolute'; gl.style.left = '12px'; gl.style.top = '15px'; b.appendChild(gl);
+    b.appendChild(h(`<div style="position:absolute;left:62px;top:16px;font:600 18px var(--f-pixel);color:var(--cob2)">${i + 1}</div>`));
+    b.appendChild(h(`<div style="position:absolute;left:12px;right:6px;top:62px;font:400 9px var(--f-placa);color:var(--tinta3)">${nome.toUpperCase()}</div>`));
+    if (i === 2) { b.appendChild(h(`<div style="position:absolute;left:6px;right:6px;top:40px;height:3px;background:var(--verm);transform:rotate(-14deg)"></div>`)); }
+    t.appendChild(b);
+  });
+  t.appendChild(h(`<div style="position:absolute;left:14px;right:14px;top:412px;font:400 12px var(--f-pixel);color:var(--tinta3)">Gesto 3 riscado por Taças (nível <span class="pend">?</span>). Os nomes dos gestos são de teste.</div>`));
+  // cântico
+  const ca = h(`<div class="moldura" style="left:9px;right:9px;top:440px;height:368px"></div>`);
+  ca.appendChild(h(`<div style="position:absolute;left:24px;top:20px;font:400 12px var(--f-placa);color:var(--tinta2)">CÂNTICO · COLEÇÃO INÚTEIS</div>`));
+  const linhas = ['Imagine que isso é um poema muito bom.', 'Esse poema é tão incrível que você vai amar.', 'Sinta a força desse poema maravilhoso.', 'Sob o luar.', 'Lindo.'];
+  const rar = [['Comum', '#c9b5ad', 1], ['Rara', '#7fb5c6', 2]];
+  const lista = h(`<div style="position:absolute;left:24px;right:20px;top:44px"></div>`);
+  linhas.forEach((l, i) => {
+    const marcas = rar.map(([n, cor, k]) => `<i style="flex:none;width:9px;align-self:stretch;background:${i < k ? cor : 'transparent'}"></i>`).join('');
+    lista.appendChild(h(`<div style="display:flex;gap:6px;margin-bottom:3px">${marcas}<div style="flex:1;margin-left:6px;font:400 16px/1.45 var(--f-leitura);padding:3px 6px;${i < 2 ? 'background:rgba(127,181,198,.28);color:var(--tinta)' : 'color:var(--tinta3)'}">${l}</div></div>`));
+  });
+  ca.appendChild(lista);
+  ca.appendChild(h(`<div style="position:absolute;left:24px;right:20px;bottom:28px;display:flex;gap:12px;flex-wrap:wrap;font:400 11px var(--f-placa);color:var(--tinta2)"><span><i style="display:inline-block;width:9px;height:9px;background:#c9b5ad"></i> COMUM · 1 LINHA</span><span><i style="display:inline-block;width:9px;height:9px;background:#7fb5c6"></i> RARA · 2 LINHAS</span><span>OUTRAS: PELA POSIÇÃO NA ESCALA</span></div>`));
+  t.appendChild(ca);
+  anot(t, 9, 440, 372, 368, 'Literata 16 px dentro da moldura pixel', 9, 424);
+}
+document.body.dataset.pronto = '1';
+</script></body></html>

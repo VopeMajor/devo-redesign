@@ -1,0 +1,30 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600&family=VT323&family=Silkscreen&family=Jersey+10&family=Micro+5&family=Literata:opsz,wght@7..72,400;7..72,500&family=Atkinson+Hyperlegible&display=block" rel="stylesheet">
+<style>
+body{margin:0;background:#f3e4cc;color:#241d2b;font-family:'Atkinson Hyperlegible';width:1200px;padding:24px;box-sizing:border-box}
+h1{font:600 28px 'Pixelify Sans';margin:0 0 6px}
+.note{font-size:14px;margin:0 0 18px;color:#5e4f69}
+.row{display:grid;grid-template-columns:200px 390px 1fr;gap:18px;align-items:start;border-top:3px solid #c9a985;padding:14px 0}
+.lab{font-size:14px}.lab b{display:block;font-size:16px}
+.box{width:390px;box-sizing:border-box;padding:12px 15px;background:#fbf3e4;border:3px solid #3d3247;box-shadow:inset 0 0 0 3px #e6cfae}
+.acc{font-size:16px}
+.v{color:#1647ff}
+</style></head><body>
+<h1>Teste de fontes — texto do dono em 16 px reais, caixa de 390 px</h1>
+<p class="note">Mesmo parágrafo do Manual de Cartas em cada fonte. A coluna da direita testa os acentos: ã õ ç ê é á í ú à â Ã Ç É Ê Õ « » — “ ” …</p>
+<div id="rows"></div>
+<script>
+const txt='Record, nem toda carta pode ser utilizada simplesmente porque você deseja fazê-lo. Algumas exigem movimentos específicos, outras demandam palavras cuidadosamente pronunciadas e há aquelas que, felizmente para você, não exigem absolutamente nada.';
+const acc='ã õ ç ê é á í ú à â ô ü<br>Ã Ç É Ê Õ Á Í Ú Ô<br>“Invocação” — Cânticos… Taças, Paus, Ação, Coração, Fé';
+const fs=[
+ ['Pixelify Sans','Pixelify Sans 400 · OFL','400',16,1.5],
+ ['Pixelify Sans','Pixelify Sans 500 · OFL','500',18,1.45],
+ ['VT323','VT323 · OFL (20 px)','400',20,1.25],
+ ['Silkscreen','Silkscreen · OFL','400',14,1.6],
+ ['Jersey 10','Jersey 10 · OFL (20 px)','400',20,1.25],
+ ['Micro 5','Micro 5 · OFL (22 px)','400',22,1.1],
+ ['Literata','Literata 400 · OFL (leitura)','400',16,1.55],
+ ['Atkinson Hyperlegible','Atkinson Hyperlegible · OFL','400',16,1.5],
+];
+document.getElementById('rows').innerHTML=fs.map(([f,l,w,s,lh])=>`<div class="row"><div class="lab"><b>${l}</b>${s} px · entrelinha ${lh}</div><div class="box" style="font-family:'${f}';font-weight:${w};font-size:${s}px;line-height:${lh}">${txt.replace('Record','<span class=v>Record</span>')}</div><div class="acc" style="font-family:'${f}';font-weight:${w};font-size:${s}px;line-height:1.5">${acc}</div></div>`).join('');
+</script></body></html>

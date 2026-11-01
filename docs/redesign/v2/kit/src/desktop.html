@@ -1,0 +1,48 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><title>DEVO v2 · kit desktop</title>
+<link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600&family=Silkscreen&family=Literata:opsz,wght@7..72,400&display=block" rel="stylesheet">
+<link rel="stylesheet" href="kit.css">
+<style>
+body{width:1440px;height:900px;overflow:hidden;background:var(--rec0);font-family:var(--f-pixel);position:relative}
+.texto-dialogo{font-size:22px}
+</style></head><body>
+<script type="module">
+import * as X from './pix.js';
+import { rua, mostrador, avancar } from './cenas.js';
+const { P } = X;
+const h = (html) => { const t = document.createElement('template'); t.innerHTML = html.trim(); return t.content.firstChild; };
+const B = document.body;
+B.appendChild(h(`<div style="position:absolute;inset:0;background-image:linear-gradient(var(--rec1) 4px,transparent 4px),linear-gradient(90deg,var(--rec1) 4px,transparent 4px);background-size:64px 64px"></div>`));
+// coluna do celular (ref-07): 380 px
+const col = h(`<div style="position:absolute;left:24px;top:24px;width:372px;bottom:24px"></div>`); B.appendChild(col);
+const pu = h(`<div class="moldura sistema" style="left:0;right:0;top:0;height:132px"></div>`);
+const m = mostrador(6, 1); m.classList.add('mostrador'); m.style.width = m.style.height = '66px'; m.style.left = '18px'; m.style.top = '30px'; pu.appendChild(m);
+pu.appendChild(h(`<div><div style="position:absolute;left:102px;top:26px;font:400 12px var(--f-placa);color:var(--cob1)">TEMPO NO PULSO</div><div style="position:absolute;left:102px;top:44px;font:600 40px/1 var(--f-pixel);color:var(--papel0)">41:12:07</div><div style="position:absolute;left:102px;top:92px;font:400 13px var(--f-pixel);color:var(--cob0)">Rua das Cerejeiras · sábado</div></div>`));
+col.appendChild(pu);
+const pl = h(`<div class="moldura sistema sem-pesponto" style="left:0;right:0;top:144px;height:60px"><div style="position:absolute;left:20px;top:13px;font:400 11px var(--f-placa);color:var(--cob1)">TRILHA</div><div style="position:absolute;left:20px;top:29px;font:500 15px var(--f-pixel);color:var(--papel0)">faixa atual</div><div style="position:absolute;right:20px;top:16px;display:flex;gap:12px;font:600 16px var(--f-pixel);color:var(--cob1)"><span>◀</span><span>❚❚</span><span>▶</span></div></div>`);
+col.appendChild(pl);
+const apps = [['record', 'Record'], ['pulso', 'Pulso'], ['msg', 'Mensagens'], ['cartas', 'Cartas'], ['vinculo', 'Vínculos'], ['casa', 'Casa'], ['mapa', 'Mapa'], ['inv', 'Inventário'], ['ajustes', 'Ajustes']];
+apps.forEach(([g, n], i) => {
+  const x = (i % 3) * 126, y = 216 + ((i / 3) | 0) * 126;
+  const a = h(`<div class="moldura sistema sem-pesponto" style="left:${x}px;top:${y}px;width:120px;height:118px"></div>`);
+  const gl = X.glifoCanvas(g, P.cob1, 3); gl.style.position = 'absolute'; gl.style.left = '36px'; gl.style.top = '18px'; a.appendChild(gl);
+  a.appendChild(h(`<div style="position:absolute;left:0;right:0;top:78px;text-align:center;font:500 15px var(--f-pixel);color:var(--papel0)">${n}</div>`));
+  col.appendChild(a);
+});
+col.appendChild(h(`<div class="moldura sistema sem-pesponto" style="left:0;right:0;bottom:0;height:64px;display:flex;align-items:center;justify-content:space-around;font:400 10px var(--f-placa);color:var(--cob0)"><span>TAB CELULAR</span><span>H OCULTAR</span><span>B HISTÓRICO</span><span>CTRL PULAR</span></div>`));
+// cena: 1000x852, arte 250x213 ×4
+const cena = h(`<div class="moldura sem-pesponto" style="left:416px;top:24px;width:1000px;height:852px;overflow:hidden;background:var(--tinta2)"></div>`);
+B.appendChild(cena);
+const [c, g] = rua(250, 213, 21, 4);
+X.boneco(g, 96, 96, X.NPC_CORUJA, 'esq'); X.boneco(g, 76, 100, X.AVATAR, 'dir');
+c.style.position = 'absolute'; c.style.left = '0'; c.style.top = '0'; X.montar(c, cena, 4); c.style.position = 'absolute';
+cena.appendChild(h(`<div style="position:absolute;inset:0;background:rgba(36,29,43,.25)"></div>`));
+cena.appendChild(h(`<img src="retrato-tratado.png" style="position:absolute;right:30px;top:300px;width:440px;height:401px">`));
+const top = 852 - 176 - 18;
+const box = h(`<div class="moldura" style="left:18px;right:18px;top:${top}px;height:176px"></div>`);
+box.appendChild(h(`<div class="texto-dialogo" style="position:absolute;left:36px;right:36px;top:40px">Sim, <span class="chave">Record</span>. Você precisará lidar com isso.</div>`));
+const av = avancar(4); av.style.position = 'absolute'; av.style.right = '30px'; av.style.bottom = '22px'; box.appendChild(av);
+cena.appendChild(box);
+const md = mostrador(4, 2); md.classList.add('mostrador'); md.style.width = md.style.height = '44px'; md.style.left = '24px'; md.style.top = `${top - 20}px`; md.style.zIndex = 6; cena.appendChild(md);
+cena.appendChild(h(`<div class="placa" style="left:76px;top:${top - 16}px;z-index:5;font-size:15px">Coruja</div>`));
+cena.appendChild(h(`<div class="placa" style="left:18px;top:18px">Rua das Cerejeiras</div>`));
+</script></body></html>

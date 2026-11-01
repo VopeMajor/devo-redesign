@@ -1,0 +1,51 @@
+/* DEVO v2 — tokens e molduras do kit. Valores aqui são os da BIBLIA.md. */
+:root{
+  --tinta:#241d2b;--tinta2:#3d3247;--tinta3:#5e4f69;
+  --papel0:#fbf3e4;--papel1:#f3e4cc;--papel2:#e6cfae;--papel3:#c9a985;--papel4:#9c7b5e;
+  --lav0:#ece4f3;--lav1:#cdbfe2;--lav2:#a493c6;--lav3:#7b6aa3;
+  --rosa0:#f7d9de;--rosa1:#e9aab7;--rosa2:#c97a8f;--rosa3:#94506a;
+  --ver1:#b5c98f;--ver2:#82a46a;--ver3:#587a4e;
+  --agua0:#bfe0e6;--agua1:#7fb5c6;
+  --cob0:#c9d3ff;--cob1:#6d85ff;--cob2:#1647ff;--cob3:#0b23a0;
+  --ouro0:#f6e3a1;--ouro1:#e2b85c;--ouro2:#b07f2e;
+  --nec0:#9be3b5;--nec1:#6b4e8f;--nec2:#2a2138;
+  --verm:#e0533f;--lar:#f2a65a;
+  --rec0:#0b0b12;--rec1:#1a1a26;--rec2:#2b2b3d;
+  --u:3px; /* 1 pixel de arte no celular */
+  --f-pixel:'Pixelify Sans',monospace;
+  --f-placa:'Silkscreen',monospace;
+  --f-leitura:'Literata',Georgia,serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+.px{image-rendering:pixelated;display:block}
+.tela{position:relative;width:390px;height:844px;overflow:hidden;background:var(--papel1);font-family:var(--f-pixel);color:var(--tinta);flex:none}
+.cena{position:absolute;inset:0}
+.cena canvas{position:absolute;left:0;top:0}
+/* barra de status do aparelho real (área segura, 44 px) */
+.status{position:absolute;left:0;right:0;top:0;height:44px;display:flex;justify-content:space-between;align-items:center;padding:0 24px;font:600 14px system-ui;color:var(--tinta);z-index:9;opacity:.75}
+.status.claro{color:#fff}
+
+/* ---------- MOLDURA PULSO (assinatura) ----------
+   - borda de 1 px de tinta + 1 px de papel2 por dentro (em px de arte: 3 px CSS cada);
+   - cantos recortados em degrau de 1 px de arte;
+   - pesponto de pulseira na borda de baixo (tracejado 2/2 px de arte);
+   - o mostrador (relógio) fica cravado no canto de cima à esquerda quando a caixa fala ou conta tempo. */
+.moldura{position:absolute;background:var(--papel0);
+  clip-path:polygon(6px 0,calc(100% - 6px) 0,calc(100% - 6px) 3px,calc(100% - 3px) 3px,calc(100% - 3px) 6px,100% 6px,100% calc(100% - 6px),calc(100% - 3px) calc(100% - 6px),calc(100% - 3px) calc(100% - 3px),calc(100% - 6px) calc(100% - 3px),calc(100% - 6px) 100%,6px 100%,6px calc(100% - 3px),3px calc(100% - 3px),3px calc(100% - 6px),0 calc(100% - 6px),0 6px,3px 6px,3px 3px,6px 3px);
+  box-shadow:inset 0 0 0 3px var(--tinta2),inset 0 0 0 6px var(--papel2);}
+.moldura::after{content:"";position:absolute;left:18px;right:18px;bottom:9px;height:3px;
+  background:repeating-linear-gradient(90deg,var(--papel3) 0 6px,transparent 6px 12px)}
+.moldura.sem-pesponto::after{display:none}
+.moldura.sistema{background:var(--rec1);box-shadow:inset 0 0 0 3px var(--cob2),inset 0 0 0 6px var(--rec2);color:var(--papel0)}
+.moldura.sistema::after{background:repeating-linear-gradient(90deg,var(--cob3) 0 6px,transparent 6px 12px)}
+.mostrador{position:absolute;width:33px;height:33px;z-index:3}
+.placa{position:absolute;font:400 13px/1 var(--f-placa);letter-spacing:.5px;padding:9px 12px 8px;background:var(--tinta2);color:var(--papel0);
+  clip-path:polygon(3px 0,calc(100% - 3px) 0,100% 3px,100% calc(100% - 3px),calc(100% - 3px) 100%,3px 100%,0 calc(100% - 3px),0 3px)}
+.placa.cob{background:var(--cob2)}
+.chave{color:var(--cob2)} /* palavra-chave do sistema */
+.texto-dialogo{font:500 18px/1.45 var(--f-pixel)}
+.btn{position:absolute;display:flex;align-items:center;gap:12px;padding:0 18px;font:500 17px/1 var(--f-pixel);color:var(--tinta)}
+.anot{position:absolute;font:400 10px/1.2 var(--f-placa);color:var(--cob3);background:rgba(201,211,255,.92);padding:3px 5px;z-index:20;border:1px solid var(--cob2)}
+.medida{position:absolute;z-index:19;border:1px dashed var(--cob2);pointer-events:none}
+.pend{background:var(--lar);color:var(--tinta);padding:0 4px}
