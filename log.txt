@@ -1,0 +1,13 @@
+[v2-npc-rato-corpo-r2] v01: @cf/black-forest-labs/flux-2-klein-9b seed=9901 1024x1536 passos=None (~1,455 neurônios)
+    ERRO: HTTP 400 — 3030: AiError: AiError: Your output has been flagged. Please choose another prompt / input image combination (c1f13574-8f69-48a5-a648-d78d086ef6ae)
+[v2-npc-rato-corpo-r2] v02: @cf/black-forest-labs/flux-2-klein-9b seed=9902 1024x1536 passos=None (~1,455 neurônios)
+    ERRO: HTTP 400 — 3030: AiError: AiError: Your output has been flagged. Please choose another prompt / input image combination (c0ece705-ef89-48c3-8bce-ea2dde188313)
+[v2-npc-rato-corpo-r2] v03: @cf/black-forest-labs/flux-2-klein-4b seed=9903 1024x1536 passos=None (~156 neurônios)
+    ok em 10.1s, 1024x1536
+[v2-npc-rato-corpo-r2] v04: @cf/black-forest-labs/flux-2-klein-4b seed=9904 1024x1536 passos=None (~156 neurônios)
+    ok em 9.7s, 1024x1536
+[v2-npc-rato-corpo-r2] v05: @cf/black-forest-labs/flux-2-klein-4b seed=9905 1024x1536 passos=None (~156 neurônios)
+    ok em 12.9s, 1024x1536
+[v2-npc-rato-corpo-r2] v03: rembg:birefnet-general; sem avisos
+[v2-npc-rato-corpo-r2] v04: rembg:birefnet-general; sem avisos
+[v2-npc-rato-corpo-r2] v05: rembg:birefnet-general; sem avisos
