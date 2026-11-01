@@ -1,0 +1,96 @@
+{
+  "pedido": "v2-cos2-banquete-gaiola-r2",
+  "titulo": "DEVO v2 — cosméticos r2: Banquete do Javali, gaiola com presas de javali (nova seed)",
+  "tipo": "ilustracao",
+  "tamanho_final": 1536,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 8113,
+      "passos": null,
+      "segundos": 2.8,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "v2-cos2-banquete-gaiola-r2--v01--1536.png",
+          "bytes": 1331461
+        },
+        {
+          "arquivo": "v2-cos2-banquete-gaiola-r2--v01--1536.webp",
+          "bytes": 314964
+        },
+        {
+          "arquivo": "v2-cos2-banquete-gaiola-r2--v01--512.webp",
+          "bytes": 57990
+        },
+        {
+          "arquivo": "v2-cos2-banquete-gaiola-r2--v01--256.webp",
+          "bytes": 21812
+        }
+      ],
+      "segundos_pos": 34.6,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 8114,
+      "passos": null,
+      "segundos": 3.2,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "v2-cos2-banquete-gaiola-r2--v02--1536.png",
+          "bytes": 1405862
+        },
+        {
+          "arquivo": "v2-cos2-banquete-gaiola-r2--v02--1536.webp",
+          "bytes": 314854
+        },
+        {
+          "arquivo": "v2-cos2-banquete-gaiola-r2--v02--512.webp",
+          "bytes": 61976
+        },
+        {
+          "arquivo": "v2-cos2-banquete-gaiola-r2--v02--256.webp",
+          "bytes": 23014
+        }
+      ],
+      "segundos_pos": 27.3,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 8115,
+      "passos": null,
+      "segundos": 3.1,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "v2-cos2-banquete-gaiola-r2--v03--1536.png",
+          "bytes": 1232956
+        },
+        {
+          "arquivo": "v2-cos2-banquete-gaiola-r2--v03--1536.webp",
+          "bytes": 297664
+        },
+        {
+          "arquivo": "v2-cos2-banquete-gaiola-r2--v03--512.webp",
+          "bytes": 55906
+        },
+        {
+          "arquivo": "v2-cos2-banquete-gaiola-r2--v03--256.webp",
+          "bytes": 20734
+        }
+      ],
+      "segundos_pos": 26.7,
+      "avisos": []
+    }
+  ]
+}

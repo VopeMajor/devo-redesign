@@ -1,0 +1,54 @@
+{
+  "id": "v2-cos2-banquete-gaiola-r2",
+  "titulo": "DEVO v2 — cosméticos r2: Banquete do Javali, gaiola com presas de javali (nova seed)",
+  "tipo": "ilustracao",
+  "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+  "prompt": "Ornate jewelry object concept art, painted, highly detailed, isolated on a plain flat light grey background. An avatar frame shaped like an ornamental birdcage dome in aged old gold, tall silhouette with a domed top and a round base plinth. In the front of the cage a large round empty opening framed by a thick gold ring, the inside of the ring left completely empty and plain. Two long curved ivory wild boar tusks rise from the sides of the base ring and curve upward around the opening like a pair of sabres, NOT horns, no animal head. Thin cage bars curve to a small crown with a ruby on top, a band of diamond-shaped black enamel lozenges with tiny four-pointed stars around the middle, a heavy dark blue velvet banner with gold embroidery and tassels hanging from the left side, two playing cards and round gold casino chips hanging on short chains. No text, letters, numbers or logos anywhere.",
+  "negative": "text, letters, watermark, person, face in center, cartoon, flat vector, blurry, low detail, pixel art, horns, bull, cow, ram, animal head",
+  "largura": 1024,
+  "altura": 1536,
+  "variacoes": [
+    {
+      "seed": 8113,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "passos": null,
+      "largura": 1024,
+      "altura": 1536,
+      "prompt_extra": "",
+      "n": 1
+    },
+    {
+      "seed": 8114,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "passos": null,
+      "largura": 1024,
+      "altura": 1536,
+      "prompt_extra": "",
+      "n": 2
+    },
+    {
+      "seed": 8115,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "passos": null,
+      "largura": 1024,
+      "altura": 1536,
+      "prompt_extra": "",
+      "n": 3
+    }
+  ],
+  "pos": {
+    "remover_fundo": true,
+    "tamanho_final": 1536,
+    "margem": 0.03,
+    "derivados": [
+      512,
+      256
+    ],
+    "modelo_fundo": "birefnet-general",
+    "fundo": "liso",
+    "camadas": []
+  },
+  "passos": null,
+  "guidance": null,
+  "referencias": []
+}
