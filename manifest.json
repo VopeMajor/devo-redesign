@@ -1,0 +1,75 @@
+{
+  "pedido": "v2-npc-melissa-retrato",
+  "titulo": "DEVO v2 — Melissa, retrato em pose (meio corpo, ref. Persona)",
+  "tipo": "ilustracao",
+  "tamanho_final": 1536,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 9481,
+      "passos": null,
+      "neuronios_estimados": 1455,
+      "erro": "HTTP 400 — 3030: AiError: AiError: Your output has been flagged. Please choose another prompt / input image combination (8752beba-068f-4ef6-806b-ba2b42d11dd5)"
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 9482,
+      "passos": null,
+      "segundos": 3.6,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "v2-npc-melissa-retrato--v02--1536.png",
+          "bytes": 1442141
+        },
+        {
+          "arquivo": "v2-npc-melissa-retrato--v02--1536.webp",
+          "bytes": 240840
+        },
+        {
+          "arquivo": "v2-npc-melissa-retrato--v02--1024.webp",
+          "bytes": 117082
+        },
+        {
+          "arquivo": "v2-npc-melissa-retrato--v02--512.webp",
+          "bytes": 44300
+        }
+      ],
+      "segundos_pos": 38.0,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 9483,
+      "passos": null,
+      "segundos": 4.0,
+      "neuronios_estimados": 1455,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "v2-npc-melissa-retrato--v03--1536.png",
+          "bytes": 1377836
+        },
+        {
+          "arquivo": "v2-npc-melissa-retrato--v03--1536.webp",
+          "bytes": 245230
+        },
+        {
+          "arquivo": "v2-npc-melissa-retrato--v03--1024.webp",
+          "bytes": 121784
+        },
+        {
+          "arquivo": "v2-npc-melissa-retrato--v03--512.webp",
+          "bytes": 46374
+        }
+      ],
+      "segundos_pos": 30.4,
+      "avisos": []
+    }
+  ]
+}

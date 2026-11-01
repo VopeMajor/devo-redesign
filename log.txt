@@ -1,0 +1,8 @@
+[v2-npc-melissa-retrato] v01: @cf/black-forest-labs/flux-2-klein-9b seed=9481 1024x1536 passos=None (~1,455 neurônios)
+    ERRO: HTTP 400 — 3030: AiError: AiError: Your output has been flagged. Please choose another prompt / input image combination (8752beba-068f-4ef6-806b-ba2b42d11dd5)
+[v2-npc-melissa-retrato] v02: @cf/black-forest-labs/flux-2-klein-9b seed=9482 1024x1536 passos=None (~1,455 neurônios)
+    ok em 3.6s, 1024x1536
+[v2-npc-melissa-retrato] v03: @cf/black-forest-labs/flux-2-klein-9b seed=9483 1024x1536 passos=None (~1,455 neurônios)
+    ok em 4.0s, 1024x1536
+[v2-npc-melissa-retrato] v02: rembg:birefnet-general; sem avisos
+[v2-npc-melissa-retrato] v03: rembg:birefnet-general; sem avisos
