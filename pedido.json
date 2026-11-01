@@ -1,0 +1,80 @@
+{
+  "id": "v2-cos2-placas-raridade",
+  "titulo": "DEVO v2 — cosméticos r2: placas de fundo por raridade (Comum a Arcano)",
+  "tipo": "ilustracao",
+  "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+  "prompt": "Square item card background plate for a luxury gothic game collection screen, seen straight on, flat front view filling the whole image, the center left calm and darker so an object can be placed on it, no object, painterly and rich material texture. No text, letters, numbers or logos anywhere.",
+  "negative": "text, letters, watermark, people, cartoon, flat vector, blurry, low detail, pixel art, neon",
+  "largura": 1024,
+  "altura": 1024,
+  "variacoes": [
+    {
+      "seed": 8141,
+      "prompt_extra": "Comum: smooth matte grey limestone surface, very subtle carved bevel border, plain and quiet, soft top light.",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "passos": null,
+      "largura": 1024,
+      "altura": 1024,
+      "n": 1
+    },
+    {
+      "seed": 8142,
+      "prompt_extra": "Incomum: dark green-grey stone surface with thin pale jade veins running diagonally, one polished bevel border catching a single reflection.",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "passos": null,
+      "largura": 1024,
+      "altura": 1024,
+      "n": 2
+    },
+    {
+      "seed": 8143,
+      "prompt_extra": "Raro: deep blue glass surface with fine silver stardust and tiny four-pointed stars suspended inside, thin engraved silver border, cool light.",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "passos": null,
+      "largura": 1024,
+      "altura": 1024,
+      "n": 3
+    },
+    {
+      "seed": 8144,
+      "prompt_extra": "Epico: rich orchid violet velvet surface overlaid with antique white lace pattern at the corners, tarnished silver thread border, soft light.",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "passos": null,
+      "largura": 1024,
+      "altura": 1024,
+      "n": 4
+    },
+    {
+      "seed": 8145,
+      "prompt_extra": "Lendario: very dark plum velvet surface with dense old gold embroidery of scrolls and stars around the edges, gold braided border, warm light.",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "passos": null,
+      "largura": 1024,
+      "altura": 1024,
+      "n": 5
+    },
+    {
+      "seed": 8146,
+      "prompt_extra": "Arcano: a window of dark glass sky with a faint huge clock dial of thin champagne lines and roman numeral marks, iridescent lilac and cobalt light leaking through, star particles, thin crystal border.",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "passos": null,
+      "largura": 1024,
+      "altura": 1024,
+      "n": 6
+    }
+  ],
+  "pos": {
+    "remover_fundo": false,
+    "tamanho_final": 1024,
+    "margem": 0,
+    "derivados": [
+      1024
+    ],
+    "modelo_fundo": "birefnet-general",
+    "fundo": "liso",
+    "camadas": []
+  },
+  "passos": null,
+  "guidance": null,
+  "referencias": []
+}

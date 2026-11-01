@@ -1,0 +1,135 @@
+{
+  "pedido": "v2-cos2-placas-raridade",
+  "titulo": "DEVO v2 — cosméticos r2: placas de fundo por raridade (Comum a Arcano)",
+  "tipo": "ilustracao",
+  "tamanho_final": 1024,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 8141,
+      "passos": null,
+      "segundos": 2.0,
+      "neuronios_estimados": 1364,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "v2-cos2-placas-raridade--v01--1024.png",
+          "bytes": 1237115
+        },
+        {
+          "arquivo": "v2-cos2-placas-raridade--v01--1024.webp",
+          "bytes": 161000
+        }
+      ],
+      "segundos_pos": 1.5,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 8142,
+      "passos": null,
+      "segundos": 2.2,
+      "neuronios_estimados": 1364,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "v2-cos2-placas-raridade--v02--1024.png",
+          "bytes": 1540278
+        },
+        {
+          "arquivo": "v2-cos2-placas-raridade--v02--1024.webp",
+          "bytes": 184320
+        }
+      ],
+      "segundos_pos": 1.2,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 8143,
+      "passos": null,
+      "segundos": 2.2,
+      "neuronios_estimados": 1364,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "v2-cos2-placas-raridade--v03--1024.png",
+          "bytes": 1828256
+        },
+        {
+          "arquivo": "v2-cos2-placas-raridade--v03--1024.webp",
+          "bytes": 339012
+        }
+      ],
+      "segundos_pos": 1.0,
+      "avisos": []
+    },
+    {
+      "nome": "v04",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 8144,
+      "passos": null,
+      "segundos": 2.3,
+      "neuronios_estimados": 1364,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "v2-cos2-placas-raridade--v04--1024.png",
+          "bytes": 2236120
+        },
+        {
+          "arquivo": "v2-cos2-placas-raridade--v04--1024.webp",
+          "bytes": 412066
+        }
+      ],
+      "segundos_pos": 0.8,
+      "avisos": []
+    },
+    {
+      "nome": "v05",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 8145,
+      "passos": null,
+      "segundos": 2.8,
+      "neuronios_estimados": 1364,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "v2-cos2-placas-raridade--v05--1024.png",
+          "bytes": 1907811
+        },
+        {
+          "arquivo": "v2-cos2-placas-raridade--v05--1024.webp",
+          "bytes": 312704
+        }
+      ],
+      "segundos_pos": 1.1,
+      "avisos": []
+    },
+    {
+      "nome": "v06",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 8146,
+      "passos": null,
+      "segundos": 2.0,
+      "neuronios_estimados": 1364,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "v2-cos2-placas-raridade--v06--1024.png",
+          "bytes": 1626499
+        },
+        {
+          "arquivo": "v2-cos2-placas-raridade--v06--1024.webp",
+          "bytes": 227956
+        }
+      ],
+      "segundos_pos": 1.2,
+      "avisos": []
+    }
+  ]
+}
