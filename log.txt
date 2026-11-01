@@ -1,0 +1,6 @@
+[v2-cos2-vitral-capela] v01: @cf/black-forest-labs/flux-2-klein-9b seed=8161 1536x1024 passos=None (~1,455 neurônios)
+    ok em 3.2s, 1536x1024
+[v2-cos2-vitral-capela] v02: @cf/black-forest-labs/flux-2-klein-9b seed=8162 1536x1024 passos=None (~1,455 neurônios)
+    ok em 3.3s, 1536x1024
+[v2-cos2-vitral-capela] v01: mantido; sem avisos
+[v2-cos2-vitral-capela] v02: mantido; sem avisos
