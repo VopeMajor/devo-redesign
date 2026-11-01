@@ -1,0 +1,11 @@
+[v2-npc-galo-cutin-r2] v01: @cf/black-forest-labs/flux-2-klein-9b seed=9821 2048x640 passos=None (~1,409 neurônios)
+    ERRO: HTTP 400 — 3030: AiError: AiError: Your output has been flagged. Please choose another prompt / input image combination (2dec9a0d-7837-44aa-9257-940cb386494a)
+[v2-npc-galo-cutin-r2] v02: @cf/black-forest-labs/flux-2-klein-9b seed=9822 2048x640 passos=None (~1,409 neurônios)
+    ERRO: HTTP 400 — 3030: AiError: AiError: Your output has been flagged. Please choose another prompt / input image combination (a42d7b38-7236-4f29-b030-625580732320)
+[v2-npc-galo-cutin-r2] v03: @cf/black-forest-labs/flux-2-klein-4b seed=9823 2048x640 passos=None (~208 neurônios)
+    ERRO: HTTP 400 — 3030: AiError: AiError: Your output has been flagged. Please choose another prompt / input image combination (d7725ba2-3723-423f-84b6-4fd549c9cf09)
+[v2-npc-galo-cutin-r2] v04: @cf/black-forest-labs/flux-2-klein-4b seed=9824 2048x640 passos=None (~208 neurônios)
+    ok em 10.5s, 2048x640
+[v2-npc-galo-cutin-r2] v05: @cf/black-forest-labs/flux-2-klein-4b seed=9825 2048x640 passos=None (~208 neurônios)
+    ERRO: HTTP 400 — 3030: AiError: AiError: Your output has been flagged. Please choose another prompt / input image combination (caaf423a-6580-4eea-b003-66923b6faba0)
+[v2-npc-galo-cutin-r2] v04: mantido; sem avisos

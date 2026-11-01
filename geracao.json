@@ -1,0 +1,60 @@
+{
+  "pedido": "v2-npc-galo-cutin-r2",
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 9821,
+      "passos": null,
+      "largura": 2048,
+      "altura": 640,
+      "neuronios_estimados": 1409,
+      "erro": "HTTP 400 — 3030: AiError: AiError: Your output has been flagged. Please choose another prompt / input image combination (2dec9a0d-7837-44aa-9257-940cb386494a)"
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 9822,
+      "passos": null,
+      "largura": 2048,
+      "altura": 640,
+      "neuronios_estimados": 1409,
+      "erro": "HTTP 400 — 3030: AiError: AiError: Your output has been flagged. Please choose another prompt / input image combination (a42d7b38-7236-4f29-b030-625580732320)"
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 9823,
+      "passos": null,
+      "largura": 2048,
+      "altura": 640,
+      "neuronios_estimados": 208,
+      "erro": "HTTP 400 — 3030: AiError: AiError: Your output has been flagged. Please choose another prompt / input image combination (d7725ba2-3723-423f-84b6-4fd549c9cf09)"
+    },
+    {
+      "nome": "v04",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 9824,
+      "passos": null,
+      "largura": 2048,
+      "altura": 640,
+      "neuronios_estimados": 208,
+      "ok": true,
+      "segundos": 10.5,
+      "tamanho_real": [
+        2048,
+        640
+      ]
+    },
+    {
+      "nome": "v05",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 9825,
+      "passos": null,
+      "largura": 2048,
+      "altura": 640,
+      "neuronios_estimados": 208,
+      "erro": "HTTP 400 — 3030: AiError: AiError: Your output has been flagged. Please choose another prompt / input image combination (caaf423a-6580-4eea-b003-66923b6faba0)"
+    }
+  ]
+}
