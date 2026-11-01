@@ -1,0 +1,39 @@
+{
+  "id": "v2-npc-javali-corpo-r2",
+  "titulo": "DEVO v2 — Javali, corpo inteiro (2º lote: o filtro recusou o 1º; texto ajustado e klein-4b de reserva)",
+  "tipo": "ilustracao",
+  "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+  "prompt": "Bold clean anime lineart, two-tone cel shading, high-contrast graphic poster style. Full-body character design, head to toe, plain flat medium grey background, no floor, margin around the figure. A tall anthropomorphic gambling-hall host with a black boar head laughs proudly with his chin raised, eyes shut, two curved ivory tusks; left gloved hand on his chest, right hand resting on a giant knee-high ivory die with amber pips beside him. Black swept-back crest, the longest lock curling toward the viewer's right like a jester's cap tip. Tall flared white collar; long black frock coat with broad square shoulders, hem cut into uneven pennant points like torn circus canvas, flying back; black and deep amber harlequin lining; black gloves; short boots with steel toe caps; gold chip medallion with amber tassel. Silhouette: curled crest, tusks, flared collar, square shoulders, ragged hem. Warm amber light from below. Palette: black #0C0C0E, amber #E0AC1C, ivory #EFE6D2. No text, letters or logos anywhere.",
+  "negative": "text, letters, watermark, logo, blurry, low detail, pixel art, extra fingers, extra limbs",
+  "largura": 1024,
+  "altura": 1536,
+  "variacoes": [
+    {
+      "seed": 9871
+    },
+    {
+      "seed": 9872
+    },
+    {
+      "seed": 9873,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b"
+    },
+    {
+      "seed": 9874,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b"
+    },
+    {
+      "seed": 9875,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b"
+    }
+  ],
+  "pos": {
+    "remover_fundo": true,
+    "tamanho_final": 1536,
+    "margem": 0.03,
+    "derivados": [
+      1024,
+      512
+    ]
+  }
+}

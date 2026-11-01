@@ -1,0 +1,39 @@
+{
+  "id": "v2-npc-melissa-corpo-r2",
+  "titulo": "DEVO v2 — Melissa, corpo inteiro (2º lote: o filtro recusou o 1º; texto ajustado e klein-4b de reserva)",
+  "tipo": "ilustracao",
+  "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+  "prompt": "Bold clean anime lineart, two-tone cel shading, high-contrast graphic poster style. Full-body character design, head to toe, plain flat medium grey background, no floor, margin around the figure. A slender adult woman in her late twenties sweeps her right arm up and out in a wide arc, palm up, as if unveiling a grand stage, relaxed hand, five fingers clearly separated, while her left hand holds a plain black folder against her chest; standing firmly on both feet, head tilted back, excited open smile, bright violet eyes. Platinum blonde asymmetrical bob, large blue rose with a long black ribbon on the viewer's right. Royal cobalt-blue pinstriped blazer with puffed shoulders; short black capelet lined in marble-veined amethyst, flaring; white ruffled jabot and thin black tie; wide white lace bell cuffs; wide black belt with a square silver buckle; long black skirt to the ankles, short square-heeled boots. Silhouette: asymmetrical bob with the rose bow, bell of capelet and puffed shoulders, bright lace cuff at the end of the raised arm, slim column skirt. Clean frontal light, pale blue rim light. Palette: black #0C0C0E, cobalt blue #4A6CF0, amethyst #8A7CC8. No text, letters or logos anywhere.",
+  "negative": "text, letters, watermark, logo, blurry, low detail, pixel art, extra fingers, extra limbs",
+  "largura": 1024,
+  "altura": 1536,
+  "variacoes": [
+    {
+      "seed": 9881
+    },
+    {
+      "seed": 9882
+    },
+    {
+      "seed": 9883,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b"
+    },
+    {
+      "seed": 9884,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b"
+    },
+    {
+      "seed": 9885,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b"
+    }
+  ],
+  "pos": {
+    "remover_fundo": true,
+    "tamanho_final": 1536,
+    "margem": 0.03,
+    "derivados": [
+      1024,
+      512
+    ]
+  }
+}

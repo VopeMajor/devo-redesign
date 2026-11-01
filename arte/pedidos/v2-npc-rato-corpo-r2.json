@@ -1,0 +1,39 @@
+{
+  "id": "v2-npc-rato-corpo-r2",
+  "titulo": "DEVO v2 — Rato, corpo inteiro (2º lote: o filtro recusou o 1º; texto ajustado e klein-4b de reserva)",
+  "tipo": "ilustracao",
+  "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+  "prompt": "Bold clean anime lineart, two-tone cel shading, high-contrast graphic poster style. Full-body character design, head to toe, plain flat dusty slate-blue background, no floor, margin around the figure, hat and tail included. A short anthropomorphic rat gentleman with top-heavy puppet proportions in a showman's pose: his right hand points a thin ebony cane at the empty space beside him, his left hand on his waistcoat, his bare tail curved behind him in a perfect question mark with a brass ring near the tip. Grey-beige fur, huge round ears, long wedge snout and whiskers, front incisors in a wide grin, black button eyes with gold X stitches. Tall crooked black top hat with a burgundy hatband; black tailcoat with split tails behind the knees and absinthe felt lining; burgundy damask waistcoat; mustard cravat; brass chain of holed coins; thin legs, pointed shoes. Silhouette: round ears around a tilted hat, wedge snout, split tails, question-mark tail. Hard circus spotlight from above. Palette: black #0D0C10, absinthe #A8C82E, old brass #B08A4A. No text, letters or logos anywhere.",
+  "negative": "text, letters, watermark, logo, blurry, low detail, pixel art, extra fingers, extra limbs",
+  "largura": 1024,
+  "altura": 1536,
+  "variacoes": [
+    {
+      "seed": 9901
+    },
+    {
+      "seed": 9902
+    },
+    {
+      "seed": 9903,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b"
+    },
+    {
+      "seed": 9904,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b"
+    },
+    {
+      "seed": 9905,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b"
+    }
+  ],
+  "pos": {
+    "remover_fundo": true,
+    "tamanho_final": 1536,
+    "margem": 0.03,
+    "derivados": [
+      1024,
+      512
+    ]
+  }
+}

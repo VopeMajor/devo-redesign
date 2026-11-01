@@ -1,0 +1,39 @@
+{
+  "id": "v2-npc-galo-retrato-r2",
+  "titulo": "DEVO v2 — Galo, retrato em pose (2º lote: o filtro recusou o 1º; texto ajustado e klein-4b de reserva)",
+  "tipo": "ilustracao",
+  "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+  "prompt": "Bold clean anime lineart, two-tone cel shading, high-contrast graphic poster style. Half-body portrait from mid-thigh up, plain flat medium grey background, headroom above the head. A tall lean adult man in his thirties leans back in three-quarter view, chin raised, crooked confident grin; his right hand raised in a casual two-finger salute near his brow; his left hand rests on his hip. Copper-red hair swept up into a tall crest of five sharp spikes, one lock across the forehead toward the viewer's left, shaved dark temples, golden-tan skin, heavy-lidded grey-green eyes. Long black coat worn over the shoulders like a cape, empty sleeves hanging, hem cut into curved rooster tail feathers, copper lining embroidered with feathers; burnt copper shirt buttoned up to the collar; copper silk scarf knotted like a wattle; small gold rooster brooch on the lapel on the viewer's right. Hard warm key light from the viewer's right, deep shadow on the other half. Palette: black #0C0C0E, copper #C9542A. No text, letters or logos anywhere.",
+  "negative": "text, letters, watermark, logo, blurry, low detail, pixel art, extra fingers, extra limbs",
+  "largura": 1024,
+  "altura": 1536,
+  "variacoes": [
+    {
+      "seed": 9801
+    },
+    {
+      "seed": 9802
+    },
+    {
+      "seed": 9803,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b"
+    },
+    {
+      "seed": 9804,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b"
+    },
+    {
+      "seed": 9805,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b"
+    }
+  ],
+  "pos": {
+    "remover_fundo": true,
+    "tamanho_final": 1536,
+    "margem": 0.03,
+    "derivados": [
+      1024,
+      512
+    ]
+  }
+}
