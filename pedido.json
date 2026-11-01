@@ -1,0 +1,54 @@
+{
+  "id": "v2-npc-javali-retrato",
+  "titulo": "DEVO v2 — Javali, retrato em pose (meio corpo, ref. Persona)",
+  "tipo": "ilustracao",
+  "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+  "prompt": "Bold clean anime lineart, two-tone cel shading, high-contrast graphic poster style. Half-body portrait from mid-thigh up, plain flat medium grey background, headroom above the head. An elegant anthropomorphic casino host with a black boar head bows courteously in three-quarter view, right gloved hand flat on his chest, left arm behind his back, sly closed-mouth smile. Matte ebony boar head like a lacquered mask, ridge down the long snout, two curved ivory tusks, glowing amber slit-pupil eyes, black swept-back crest of three blade-like locks, the longest curling toward the viewer's right like a jester's cap tip. Tall white collar flaring up to the tusks; loose white cravat; long black frock coat with square shoulders and ragged pennant hem; black and deep amber harlequin lining; black gloves; plain gold casino chip medallion with an amber tassel on the lapel on the viewer's right. Warm amber light from below like a gaming-table lamp. Palette: black #0C0C0E, amber #E0AC1C, ivory #EFE6D2. No text, letters or logos anywhere.",
+  "negative": "text, letters, watermark, logo, blurry, low detail, pixel art, extra fingers, extra limbs",
+  "largura": 1024,
+  "altura": 1536,
+  "variacoes": [
+    {
+      "seed": 9441,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "passos": null,
+      "largura": 1024,
+      "altura": 1536,
+      "prompt_extra": "",
+      "n": 1
+    },
+    {
+      "seed": 9442,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "passos": null,
+      "largura": 1024,
+      "altura": 1536,
+      "prompt_extra": "",
+      "n": 2
+    },
+    {
+      "seed": 9443,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "passos": null,
+      "largura": 1024,
+      "altura": 1536,
+      "prompt_extra": "",
+      "n": 3
+    }
+  ],
+  "pos": {
+    "remover_fundo": true,
+    "tamanho_final": 1536,
+    "margem": 0.03,
+    "derivados": [
+      1024,
+      512
+    ],
+    "modelo_fundo": "birefnet-general",
+    "fundo": "liso",
+    "camadas": []
+  },
+  "passos": null,
+  "guidance": null,
+  "referencias": []
+}
