@@ -1,0 +1,59 @@
+{
+  "pedido": "v2-casa-sala",
+  "titulo": "DEVO v2 — Casa, cômodo para exploração (chão em perspectiva)",
+  "tipo": "ilustracao",
+  "tamanho_final": 1536,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 7501,
+      "passos": null,
+      "segundos": 3.1,
+      "neuronios_estimados": 1455,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "v2-casa-sala--v01--1536.png",
+          "bytes": 2378548
+        },
+        {
+          "arquivo": "v2-casa-sala--v01--1536.webp",
+          "bytes": 310902
+        },
+        {
+          "arquivo": "v2-casa-sala--v01--1024.webp",
+          "bytes": 100752
+        }
+      ],
+      "segundos_pos": 3.3,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 7502,
+      "passos": null,
+      "segundos": 3.5,
+      "neuronios_estimados": 1455,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "v2-casa-sala--v02--1536.png",
+          "bytes": 2443230
+        },
+        {
+          "arquivo": "v2-casa-sala--v02--1536.webp",
+          "bytes": 342434
+        },
+        {
+          "arquivo": "v2-casa-sala--v02--1024.webp",
+          "bytes": 108008
+        }
+      ],
+      "segundos_pos": 3.1,
+      "avisos": []
+    }
+  ]
+}
