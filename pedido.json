@@ -1,0 +1,44 @@
+{
+  "id": "v2-cos2-porta-casa",
+  "titulo": "DEVO v2 — cosméticos r2: porta da Casa para o brasão",
+  "tipo": "ilustracao",
+  "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+  "prompt": "Painted visual novel background, close view of a tall old wooden front door inside a dark gothic house hallway at night, dark carved walnut panels, wrought iron strap hinges and studs, a heavy iron ring knocker, an empty smooth carved round plaque in the upper center of the door where a crest would hang, warm candlelight from a wall sconce on the left, cool moonlight from the right, dust in the light, worn red and violet rug on the floor. Painterly, rich, cinematic, no people. No text, letters, numbers or logos anywhere.",
+  "negative": "text, letters, watermark, people, cartoon, flat vector, blurry, low detail, pixel art, neon",
+  "largura": 1024,
+  "altura": 1536,
+  "variacoes": [
+    {
+      "seed": 8201,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "passos": null,
+      "largura": 1024,
+      "altura": 1536,
+      "prompt_extra": "",
+      "n": 1
+    },
+    {
+      "seed": 8202,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "passos": null,
+      "largura": 1024,
+      "altura": 1536,
+      "prompt_extra": "",
+      "n": 2
+    }
+  ],
+  "pos": {
+    "remover_fundo": false,
+    "tamanho_final": 1536,
+    "margem": 0,
+    "derivados": [
+      1024
+    ],
+    "modelo_fundo": "birefnet-general",
+    "fundo": "liso",
+    "camadas": []
+  },
+  "passos": null,
+  "guidance": null,
+  "referencias": []
+}

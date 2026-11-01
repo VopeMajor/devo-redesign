@@ -1,0 +1,6 @@
+[v2-cos2-porta-casa] v01: @cf/black-forest-labs/flux-2-klein-9b seed=8201 1024x1536 passos=None (~1,455 neurônios)
+    ok em 4.0s, 1024x1536
+[v2-cos2-porta-casa] v02: @cf/black-forest-labs/flux-2-klein-9b seed=8202 1024x1536 passos=None (~1,455 neurônios)
+    ok em 3.2s, 1024x1536
+[v2-cos2-porta-casa] v01: mantido; sem avisos
+[v2-cos2-porta-casa] v02: mantido; sem avisos
