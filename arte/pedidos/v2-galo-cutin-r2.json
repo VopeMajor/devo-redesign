@@ -1,0 +1,35 @@
+{
+  "id": "v2-galo-cutin-r2",
+  "titulo": "DEVO v2 — Galo, cut-in nativo (nova tentativa)",
+  "tipo": "ilustracao",
+  "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+  "prompt": "Bold clean anime lineart, two-tone cel shading, high-contrast graphic poster style. Ultra-wide horizontal banner illustration on a pure black field. In the center, a close-up of the same man as the reference image, his face filling the banner height from the top of the eyebrows to the chin, three-quarter view facing right, a confident sly smirk, heavy-lidded grey-green eyes, spiky copper-red hair, golden-tan skin with flat cel shadows and thick black contour. Behind him, burnt copper halftone dots, stylized rooster tail feathers and horizontal speed lines, small ember sparks. Warm copper key light from the right with an ember rim light, smoky violet shadow on the far cheek. Palette: black #0C0C0E, copper #C9542A, ember #F2A15E. No text, letters or logos anywhere.",
+  "negative": "text, letters, watermark, logo, blurry, low detail, multiple faces, photo, 3d render",
+  "largura": 2048,
+  "altura": 640,
+  "variacoes": [
+    {
+      "seed": 7221
+    },
+    {
+      "seed": 7222
+    },
+    {
+      "seed": 7223
+    },
+    {
+      "seed": 7224
+    }
+  ],
+  "pos": {
+    "remover_fundo": false,
+    "tamanho_final": 2048,
+    "margem": 0,
+    "derivados": [
+      1024
+    ]
+  },
+  "referencias": [
+    "public/images/npc/galo/confiante.webp"
+  ]
+}

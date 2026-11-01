@@ -1,0 +1,37 @@
+{
+  "id": "v2-galo-pose-r2",
+  "titulo": "DEVO v2 — Galo, retrato em pose (nova tentativa, sem gesto de apontar)",
+  "tipo": "ilustracao",
+  "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+  "prompt": "Bold clean anime lineart, two-tone cel shading with a third deep shadow tone, high-contrast graphic poster style, crisp thick black contour, sharp highlights. Same character as the reference image: a tall lean man in his late twenties, copper-red hair swept up into a tall crest of sharp spikes, one lock across the forehead toward the viewer's left, shaved dark brown temples, golden-tan skin, heavy-lidded grey-green eyes, straight brows, long jaw, strong neck. Long black coat worn over the shoulders like a cape, empty sleeves hanging, hem cut into curved rooster tail feathers, copper silk lining embroidered with feathers; burnt copper shirt open at the chest; copper silk scarf knotted like a wattle; small gold rooster brooch on the lapel on the viewer's right. Half-body portrait from mid-thigh up, plain flat medium grey background, generous headroom above the hair. Theatrical showman pose in three-quarter view, leaning back with confidence, chin raised, crooked toothy grin, his right hand open and raised beside his face with the palm toward the viewer as if presenting himself on stage, his left hand holding a soda can at his hip, the cape flaring behind him. Hard warm copper key light from the viewer's right with a bright ember rim light along the hair, cheek and shoulder; the other half in deep cool violet shadow. Palette: black #0C0C0E, copper #C9542A, ember #F2A15E, smoky violet #5A4F8F. No text, letters or logos anywhere.",
+  "negative": "text, letters, watermark, signature, logo, cropped head, cut off hair, extra fingers, extra arms, deformed hands, blurry, low detail, chibi, 3d render, photo, multiple people, red and black persona logo",
+  "largura": 1024,
+  "altura": 1536,
+  "variacoes": [
+    {
+      "seed": 7121
+    },
+    {
+      "seed": 7122
+    },
+    {
+      "seed": 7123
+    },
+    {
+      "seed": 7124
+    }
+  ],
+  "pos": {
+    "remover_fundo": true,
+    "tamanho_final": 1536,
+    "margem": 0.02,
+    "derivados": [
+      1024,
+      768,
+      512
+    ]
+  },
+  "referencias": [
+    "public/images/npc/galo/confiante.webp"
+  ]
+}
