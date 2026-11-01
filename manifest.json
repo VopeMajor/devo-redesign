@@ -1,0 +1,54 @@
+{
+  "pedido": "v2-galo-expressoes",
+  "titulo": "DEVO v2 — Galo, três expressões fortes (busto)",
+  "tipo": "ilustracao",
+  "tamanho_final": 1536,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 7301,
+      "passos": null,
+      "neuronios_estimados": 1500,
+      "erro": "HTTP 400 — 3030: AiError: AiError: Your output has been flagged. Please choose another prompt / input image combination (f604243b-b7d1-474f-9dd2-926795782d6d)"
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 7302,
+      "passos": null,
+      "neuronios_estimados": 1500,
+      "erro": "HTTP 400 — 3030: AiError: AiError: Your output has been flagged. Please choose another prompt / input image combination (cc8c81f1-648b-4942-89e1-207a524cc7df)"
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 7303,
+      "passos": null,
+      "segundos": 3.1,
+      "neuronios_estimados": 1500,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "v2-galo-expressoes--v03--1537.png",
+          "bytes": 1482397
+        },
+        {
+          "arquivo": "v2-galo-expressoes--v03--1537.webp",
+          "bytes": 206066
+        },
+        {
+          "arquivo": "v2-galo-expressoes--v03--1024.webp",
+          "bytes": 96368
+        },
+        {
+          "arquivo": "v2-galo-expressoes--v03--512.webp",
+          "bytes": 36982
+        }
+      ],
+      "segundos_pos": 48.6,
+      "avisos": []
+    }
+  ]
+}
