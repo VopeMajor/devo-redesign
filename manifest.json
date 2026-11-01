@@ -1,0 +1,59 @@
+{
+  "pedido": "v2-casa-dia",
+  "titulo": "DEVO v2 — Casa, sala com profundidade (dia)",
+  "tipo": "ilustracao",
+  "tamanho_final": 1536,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 9601,
+      "passos": null,
+      "segundos": 3.5,
+      "neuronios_estimados": 1455,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "v2-casa-dia--v01--1536.png",
+          "bytes": 2761149
+        },
+        {
+          "arquivo": "v2-casa-dia--v01--1536.webp",
+          "bytes": 431754
+        },
+        {
+          "arquivo": "v2-casa-dia--v01--1024.webp",
+          "bytes": 147652
+        }
+      ],
+      "segundos_pos": 2.6,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 9602,
+      "passos": null,
+      "segundos": 3.0,
+      "neuronios_estimados": 1455,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "v2-casa-dia--v02--1536.png",
+          "bytes": 2859648
+        },
+        {
+          "arquivo": "v2-casa-dia--v02--1536.webp",
+          "bytes": 493516
+        },
+        {
+          "arquivo": "v2-casa-dia--v02--1024.webp",
+          "bytes": 159436
+        }
+      ],
+      "segundos_pos": 2.4,
+      "avisos": []
+    }
+  ]
+}
