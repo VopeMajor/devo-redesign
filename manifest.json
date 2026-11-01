@@ -1,0 +1,125 @@
+{
+  "pedido": "v2-cos2-aros-base",
+  "titulo": "DEVO v2 — cosméticos r2: molduras Comum e Incomum pintadas (peça única, fosca)",
+  "tipo": "ilustracao",
+  "tamanho_final": 1024,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 8151,
+      "passos": null,
+      "segundos": 1.9,
+      "neuronios_estimados": 1364,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "v2-cos2-aros-base--v01--1025.png",
+          "bytes": 580312
+        },
+        {
+          "arquivo": "v2-cos2-aros-base--v01--1025.webp",
+          "bytes": 95256
+        },
+        {
+          "arquivo": "v2-cos2-aros-base--v01--512.webp",
+          "bytes": 30776
+        },
+        {
+          "arquivo": "v2-cos2-aros-base--v01--256.webp",
+          "bytes": 13372
+        }
+      ],
+      "segundos_pos": 33.8,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 8152,
+      "passos": null,
+      "segundos": 2.1,
+      "neuronios_estimados": 1364,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "v2-cos2-aros-base--v02--1025.png",
+          "bytes": 598864
+        },
+        {
+          "arquivo": "v2-cos2-aros-base--v02--1025.webp",
+          "bytes": 107434
+        },
+        {
+          "arquivo": "v2-cos2-aros-base--v02--512.webp",
+          "bytes": 34222
+        },
+        {
+          "arquivo": "v2-cos2-aros-base--v02--256.webp",
+          "bytes": 14562
+        }
+      ],
+      "segundos_pos": 15.2,
+      "avisos": []
+    },
+    {
+      "nome": "v03",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 8153,
+      "passos": null,
+      "segundos": 2.0,
+      "neuronios_estimados": 1364,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "v2-cos2-aros-base--v03--1025.png",
+          "bytes": 388668
+        },
+        {
+          "arquivo": "v2-cos2-aros-base--v03--1025.webp",
+          "bytes": 84604
+        },
+        {
+          "arquivo": "v2-cos2-aros-base--v03--512.webp",
+          "bytes": 26912
+        },
+        {
+          "arquivo": "v2-cos2-aros-base--v03--256.webp",
+          "bytes": 12470
+        }
+      ],
+      "segundos_pos": 13.7,
+      "avisos": []
+    },
+    {
+      "nome": "v04",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-9b",
+      "seed": 8154,
+      "passos": null,
+      "segundos": 2.0,
+      "neuronios_estimados": 1364,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "v2-cos2-aros-base--v04--1025.png",
+          "bytes": 730787
+        },
+        {
+          "arquivo": "v2-cos2-aros-base--v04--1025.webp",
+          "bytes": 113766
+        },
+        {
+          "arquivo": "v2-cos2-aros-base--v04--512.webp",
+          "bytes": 36544
+        },
+        {
+          "arquivo": "v2-cos2-aros-base--v04--256.webp",
+          "bytes": 16478
+        }
+      ],
+      "segundos_pos": 14.3,
+      "avisos": []
+    }
+  ]
+}
