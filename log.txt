@@ -1,0 +1,13 @@
+[v2-npc-melissa-corpo-r2] v01: @cf/black-forest-labs/flux-2-klein-9b seed=9881 1024x1536 passos=None (~1,455 neurônios)
+    ERRO: HTTP 400 — 3030: AiError: AiError: Your output has been flagged. Please choose another prompt / input image combination (0ff31057-0c45-4499-9004-24027bc05306)
+[v2-npc-melissa-corpo-r2] v02: @cf/black-forest-labs/flux-2-klein-9b seed=9882 1024x1536 passos=None (~1,455 neurônios)
+    ERRO: HTTP 400 — 3030: AiError: AiError: Your output has been flagged. Please choose another prompt / input image combination (e546653a-9b72-4103-ad15-6ba8578122a6)
+[v2-npc-melissa-corpo-r2] v03: @cf/black-forest-labs/flux-2-klein-4b seed=9883 1024x1536 passos=None (~156 neurônios)
+    ok em 13.6s, 1024x1536
+[v2-npc-melissa-corpo-r2] v04: @cf/black-forest-labs/flux-2-klein-4b seed=9884 1024x1536 passos=None (~156 neurônios)
+    ok em 11.8s, 1024x1536
+[v2-npc-melissa-corpo-r2] v05: @cf/black-forest-labs/flux-2-klein-4b seed=9885 1024x1536 passos=None (~156 neurônios)
+    ok em 12.7s, 1024x1536
+[v2-npc-melissa-corpo-r2] v03: rembg:birefnet-general; sem avisos
+[v2-npc-melissa-corpo-r2] v04: rembg:birefnet-general; sem avisos
+[v2-npc-melissa-corpo-r2] v05: rembg:birefnet-general; sem avisos
