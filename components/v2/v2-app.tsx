@@ -16,6 +16,7 @@ import { APPS } from '@/components/devo/os/apps'
 import { OsNavContext, type OsNav } from '@/components/devo/os/os-nav'
 import { useDevoEngine } from '@/components/devo/os/use-devo-engine'
 import { CenasGatilho } from '@/components/devo/torres/gatilho'
+import { CasaV2 } from './casa/casa-v2'
 import type { AppId } from '@/lib/devo/types'
 import './os.css'
 import './v2-ajustes.css'
@@ -169,7 +170,11 @@ function Casca() {
   const osRef = useRef<HTMLElement>(null)
   const foco = useMemo(() => janelas.filter((j) => !j.oculta).sort((a, b) => b.z - a.z)[0] ?? null, [janelas])
 
+  /* ---- a Casa em RPG Maker abre na tela inteira, fora das janelas (etapas 5 e 6) ---- */
+  const [casa, setCasa] = useState(false)
+
   const abre = useCallback((id0: string) => {
+    if (id0 === 'casa') return setCasa(true)
     const id = ABRE_COMO[id0] ?? id0
     setJanelas((js) => {
       const ja = js.find((j) => j.id === id)
@@ -373,6 +378,15 @@ function Casca() {
         </button>
       </nav>
       <CenasGatilho />
+      {casa && (
+        <CasaV2
+          onFechar={() => setCasa(false)}
+          onAbre={(id) => {
+            setCasa(false)
+            abre(id)
+          }}
+        />
+      )}
     </main>
     </OsNavContext.Provider>
   )

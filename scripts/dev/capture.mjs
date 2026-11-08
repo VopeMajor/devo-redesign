@@ -4009,6 +4009,244 @@ if (want('v2')) {
   })
 }
 
+// ── DEVO v2, etapas 5 e 6: a Casa em RPG Maker (avatar, mapa, mesa, guarda-roupa, visita do Simon) ────────────────
+if (want('casa-v2')) {
+  const SENT = '00000000-0000-4000-8000-000000000010'
+  const MAT = '00000000-0000-4000-8000-000000000003'
+  const conta = async (kind, id, name, invite) => {
+    const d = await device(kind)
+    await d.ctx.addCookies([{ name: 'devo_player', value: id, url: BASE }])
+    await d.page.goto(BASE, { waitUntil: 'networkidle' })
+    let up
+    for (let i = 0; i < 6; i++) {
+      up = await api(d.page, '/api/auth/sign-up/email', { email: hexEmail(name), password: 'teste123', name, username: name, displayUsername: name }, { 'x-devo-invite': invite })
+      if (up.status !== 429) break
+      await wait(11000)
+    }
+    if (up.status >= 400) {
+      const inn = await api(d.page, '/api/auth/sign-in/username', { username: name, password: 'teste123' })
+      if (inn.status >= 400) manifest.errors.push({ step: `casa-${name}-auth`, error: `signup ${up.status} ${up.text}; signin ${inn.status}` })
+    }
+    const saved = await api(d.page, '/api/save', makeSave(VET_CARDS))
+    if (saved.status >= 400) manifest.errors.push({ step: `casa-${name}-save`, error: `${saved.status} ${saved.text}` })
+    return d
+  }
+  const getJ = (page, path) => page.evaluate(async (p) => (await fetch(p, { cache: 'no-store' })).json().catch(() => null), path)
+  const nota = (name, note, extra = {}) => manifest.shots.push({ name, note, ...extra })
+  const toca = (page, x = 20, y = 200) => page.locator('.cv .visita').click({ position: { x, y } }).catch(() => {})
+  // avança a conversa até aparecerem escolhas (ou a conversa acabar)
+  const avanca = async (page, max = 40) => {
+    for (let i = 0; i < max; i++) {
+      if (await page.locator('.cv .v-esc button').count()) return true
+      if (!(await page.locator('.cv .visita').count())) return false
+      await toca(page)
+      await wait(300)
+    }
+    return false
+  }
+  const escolhe = async (page, texto) => {
+    await page.locator('.cv .v-esc button', { hasText: texto }).first().click({ timeout: 4000 })
+    await wait(500)
+  }
+  const ponto = async (page, rotulo) => {
+    // o losango do objeto (ou a seta na borda, se ele estiver fora da tela)
+    if (!(await tryClick(page.locator(`.cv .ponto[aria-label^="${rotulo}"]`)))) await tryClick(page.locator(`.cv .seta[aria-label="Ir até: ${rotulo}"]`))
+    await page.locator('.cv .cv-cartao:not([hidden])').waitFor({ timeout: 12000 }).catch(() => {})
+    await wait(500)
+  }
+
+  // celular: o caminho inteiro de quem chega pela primeira vez
+  await step('casa-v2-cel', async () => {
+    const d = await conta('phone', SENT, 'Sentinela', 'DEVO-STAF-SENT')
+    const page = d.page
+    await page.goto(`${BASE}/v2?semraf=1`, { waitUntil: 'networkidle' })
+    await wait(1500)
+    await tryClick(page.locator('#mesa .ic[data-id="casa"]'))
+    await page.locator('.cv .cv-av-tela').waitFor({ timeout: 15000 })
+    await wait(3000)
+    await shot(page, 'casa-01-criacao-cel', 'Casa aberta pela 1ª vez: criação do avatar, grátis (aba Cabelo)')
+    await tryClick(page.locator('.cv-av-abas button', { hasText: 'Rosto' }))
+    await wait(1200)
+    await tryClick(page.locator('.cv-av .grade .op').nth(4))
+    await tryClick(page.locator('.cv-av .cores .cor').nth(6))
+    await wait(900)
+    await shot(page, 'casa-02-criacao-rosto-cel', 'aba Rosto: rosto 5, olhos azul-petróleo')
+    await tryClick(page.locator('.cv-av-abas button', { hasText: 'Roupa' }))
+    await wait(1200)
+    await tryClick(page.locator('.cv-av .grade .op').nth(1))
+    await wait(900)
+    await shot(page, 'casa-03-criacao-roupa-cel', 'aba Roupa: Dândi')
+    await tryClick(page.locator('.cv-av footer .principal'))
+    await page.locator('.cv .cv-mapa .ator').waitFor({ timeout: 15000 })
+    await wait(1500)
+    await shot(page, 'casa-04-mapa-cel', 'Térreo com a mesa; o chibi com a aparência escolhida')
+    nota('casa-04-api', 'GET /api/casa/mapa depois da criação', { json: await getJ(page, '/api/casa/mapa') })
+    // a campainha toca sozinha (Simon é o primeiro e ainda não foi atendido): o chibi vai até a porta
+    await page.locator('.cv .visita').waitFor({ timeout: 20000 })
+    await wait(700)
+    await shot(page, 'casa-05-visita-campainha-cel', 'campainha: visita do Simon (narração)')
+    await avanca(page)
+    await shot(page, 'casa-06-visita-escolha-cel', 'Ignorar ou abrir a porta')
+    await escolhe(page, 'Abrir a porta')
+    await wait(400)
+    await shot(page, 'casa-07-visita-olho-cel', 'olho mágico')
+    for (let i = 0; i < 3; i++) {
+      await toca(page)
+      await wait(800)
+    }
+    await shot(page, 'casa-08-visita-porta-cel', 'a porta se abre: Simon de corpo inteiro')
+    for (let i = 0; i < 3; i++) {
+      await toca(page)
+      await wait(800)
+    }
+    await shot(page, 'casa-09-visita-simon-cel', 'Simon fala (busto, retrato grande)')
+    await avanca(page)
+    await escolhe(page, 'antigo morador')
+    await avanca(page)
+    await escolhe(page, 'Quanto você quer')
+    await toca(page)
+    await wait(1000)
+    await shot(page, 'casa-10-visita-malicia-cel', 'Simon: malícia')
+    await avanca(page)
+    await escolhe(page, 'Entre')
+    await avanca(page)
+    await shot(page, 'casa-11-visita-guarda-chuva-cel', 'oferecer ou ficar com o guarda-chuva')
+    await escolhe(page, 'Ficar com o guarda-chuva')
+    await avanca(page)
+    await page.locator('.cv .cv-aviso:not([hidden])').waitFor({ timeout: 6000 }).catch(() => {})
+    await wait(300)
+    await shot(page, 'casa-12-visita-fim-cel', 'fim da visita: guarda-chuva no inventário')
+    await wait(1500)
+    nota('casa-12-api', 'GET /api/casa/mapa depois da visita (visita: null, simon atendeu)', { json: await getJ(page, '/api/casa/mapa') })
+    nota('casa-12-inventario', 'inventário (outros): o guarda-chuva', { json: await getJ(page, '/api/eu?parte=inventario&tipo=outro') })
+    // andar: tocar no chão
+    await page.mouse.click(250, 520)
+    await wait(2400)
+    await shot(page, 'casa-13-andou-cel', 'tocou no chão: o chibi anda até lá')
+    // a mesa: o chibi vai até ela e o cartão abre embaixo; "Usar a mesa" abre a Confecção de verdade
+    await ponto(page, 'Mesa de Confecção')
+    await shot(page, 'casa-14-mesa-cartao-cel', 'cartão da mesa')
+    await tryClick(page.locator('.cv .c-acoes button', { hasText: 'Usar a mesa' }))
+    await wait(3000)
+    await shot(page, 'casa-15-mesa-confeccao-cel', 'Mesa: a Confecção de Cartas (mesma tela, mesmos dados)')
+    await tryClick(page.locator('.cv .cv-mesa [role="tab"]', { hasText: 'Pacotes' }))
+    await wait(1200)
+    await shot(page, 'casa-16-mesa-pacotes-cel', 'Mesa: Pacotes')
+    await tryClick(page.locator('.cv .cv-mesa-topo button'))
+    await wait(900)
+    // andares e quartos (Owner vê tudo)
+    await tryClick(page.locator('.cv .cv-andares'))
+    await wait(800)
+    await shot(page, 'casa-17-andares-cel', 'Andares: térreo e quartos')
+    await tryClick(page.locator('.cv .a-quartos'))
+    await wait(2000)
+    await shot(page, 'casa-18-quarto-cel', 'Andar dos quartos')
+    await ponto(page, 'Guarda-roupa')
+    await shot(page, 'casa-19-guarda-cartao-cel', 'cartão do guarda-roupa (1 hora de Tempo)')
+    await tryClick(page.locator('.cv .c-acoes button', { hasText: 'Abrir' }))
+    await page.locator('.cv-av .cv-av-tela').waitFor({ timeout: 15000 })
+    await wait(2500)
+    await shot(page, 'casa-20-guarda-roupa-cel', 'Guarda-roupa (Cancelar · Salvar 1 hora)')
+    // salvar sem mudar nada: não cobra
+    await tryClick(page.locator('.cv-av footer .principal'))
+    await wait(600)
+    await shot(page, 'casa-21-guarda-nada-mudou-cel', 'Salvar sem mudar: nada cobrado')
+    const antes = await page.evaluate(() => document.querySelector('#hora b')?.textContent ?? '')
+    await tryClick(page.locator('.cv-av-abas button', { hasText: 'Cabelo' }))
+    await wait(1200)
+    await tryClick(page.locator('.cv-av .grade .op').nth(7))
+    await tryClick(page.locator('.cv-av .cores .cor').nth(12))
+    await wait(700)
+    await tryClick(page.locator('.cv-av footer .principal'))
+    await page.locator('.cv .cv-mapa .cv-aviso:not([hidden])').waitFor({ timeout: 10000 }).catch(() => {})
+    await wait(400)
+    await shot(page, 'casa-22-guarda-salvo-cel', 'aparência trocada: 1 hora de Tempo')
+    const depois = await page.evaluate(() => document.querySelector('#hora b')?.textContent ?? '')
+    nota('casa-22-tempo', `Tempo antes ${antes} → depois ${depois}`, { json: await getJ(page, '/api/casa/mapa') })
+    await wait(2500)
+    await shot(page, 'casa-23-quarto-novo-chibi-cel', 'o chibi com o cabelo novo')
+    // a porta: viagem
+    await tryClick(page.locator('.cv .cv-andares'))
+    await wait(600)
+    await tryClick(page.locator('.cv .a-terreo'))
+    await wait(1800)
+    await ponto(page, 'Porta de entrada')
+    await tryClick(page.locator('.cv .c-acoes button', { hasText: 'Sair de casa' }))
+    await wait(700)
+    await shot(page, 'casa-24-viagem-cel', 'Sair de casa: Torres, ??? (Catedral) e celular')
+    await tryClick(page.locator('.cv .destino[data-ir="celular"]'))
+    await wait(1200)
+    await shot(page, 'casa-25-volta-celular-cel', 'de volta ao Mapa do Devo')
+    // a Casa de novo: sem campainha (Simon já atendido), direto no mapa
+    await tryClick(page.locator('#mesa .ic[data-id="casa"]'))
+    await wait(5000)
+    await shot(page, 'casa-26-reabre-cel', 'reabrir a Casa: sem visita, direto no mapa')
+    await d.ctx.close()
+  })
+
+  // computador: a mesma Casa no quadro largo
+  await step('casa-v2-pc', async () => {
+    const d = await conta('desktop', SENT, 'Sentinela', 'DEVO-STAF-SENT')
+    const page = d.page
+    await page.goto(`${BASE}/v2?semraf=1`, { waitUntil: 'networkidle' })
+    await wait(1500)
+    await tryClick(page.locator('#mesa .ic[data-id="casa"]'))
+    await page.locator('.cv .cv-mapa .ator').waitFor({ timeout: 15000 })
+    await wait(2500)
+    await shot(page, 'casa-30-mapa-pc', 'Térreo no computador')
+    await ponto(page, 'Mesa de Confecção')
+    await shot(page, 'casa-31-mesa-cartao-pc', 'cartão da mesa (à direita, no computador)')
+    await tryClick(page.locator('.cv .c-acoes button', { hasText: 'Usar a mesa' }))
+    await wait(3000)
+    await shot(page, 'casa-32-mesa-pc', 'Mesa de Confecção no computador')
+    await tryClick(page.locator('.cv .cv-mesa-topo button'))
+    await wait(700)
+    // a campainha do teste da equipe: a visita do Simon de novo (só Owner e Anfitrião)
+    await tryClick(page.locator('.cv .cv-campainha'))
+    await page.locator('.cv .visita').waitFor({ timeout: 12000 }).catch(() => {})
+    await avanca(page)
+    await escolhe(page, 'Abrir a porta').catch(() => {})
+    for (let i = 0; i < 6; i++) {
+      await toca(page, 40, 300)
+      await wait(700)
+    }
+    await shot(page, 'casa-33-visita-pc', 'visita do Simon no computador (campainha do teste da equipe)')
+    await d.ctx.close()
+  })
+
+  // computador: andares e guarda-roupa (sessão nova, sem a visita aberta)
+  await step('casa-v2-pc-2', async () => {
+    const d = await conta('desktop', SENT, 'Sentinela', 'DEVO-STAF-SENT')
+    const page = d.page
+    await page.goto(`${BASE}/v2?semraf=1`, { waitUntil: 'networkidle' })
+    await wait(1500)
+    await tryClick(page.locator('#mesa .ic[data-id="casa"]'))
+    await page.locator('.cv .cv-mapa .ator').waitFor({ timeout: 15000 })
+    await wait(1500)
+    await tryClick(page.locator('.cv .cv-andares'))
+    await wait(700)
+    await shot(page, 'casa-34-andares-pc', 'Andares no computador')
+    await tryClick(page.locator('.cv .a-quartos'))
+    await wait(2000)
+    await shot(page, 'casa-35-quarto-pc', 'Andar dos quartos no computador')
+    await ponto(page, 'Guarda-roupa')
+    await tryClick(page.locator('.cv .c-acoes button', { hasText: 'Abrir' }))
+    await page.locator('.cv-av .cv-av-tela').waitFor({ timeout: 15000 }).catch(() => {})
+    await wait(2500)
+    await shot(page, 'casa-36-guarda-roupa-pc', 'Guarda-roupa no computador')
+    await d.ctx.close()
+  })
+
+  // jogador sem a Casa: a API responde trancada (o /v2 ainda é só da equipe)
+  await step('casa-v2-jogador', async () => {
+    const d = await conta('phone', MAT, 'Matheus', 'DEVO-STAF-MATH')
+    nota('casa-40-jogador-api', 'jogador comum: GET /api/casa/mapa', { json: await getJ(d.page, '/api/casa/mapa') })
+    const r = await api(d.page, '/api/casa/mapa', { action: 'aparencia.salvar', aparencia: { corpo: 0, cabelo: 0, rosto: 0, roupa: 0, corCabelo: 0, corOlhos: 0, pele: 0 } })
+    nota('casa-41-jogador-salvar', `jogador comum: salvar aparência → ${r.status} ${r.text}`)
+    await d.ctx.close()
+  })
+}
+
 await browser.close()
 writeFileSync(`${OUT}/manifest.json`, JSON.stringify(manifest, null, 2))
 console.log(`capturas: ${manifest.shots.length}, erros: ${manifest.errors.length}, console: ${manifest.console.length}`)

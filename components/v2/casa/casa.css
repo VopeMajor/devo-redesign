@@ -1,0 +1,1071 @@
+/* Casa em RPG Maker (DEVO v2): o estilo do protótipo aprovado (kit3/casa.html, avatar.html, npc-chibi.js,
+   chibi-vida.js), preso dentro de .cv para não mexer no resto do /v2. A Casa ocupa a tela inteira. */
+
+.cv {
+  --noite: #130e1b;
+  --painel: #1d1529;
+  --por: #f4eee6;
+  --tinta: #231832;
+  --ame: #3a1f5c;
+  --vio: #6b3fa0;
+  --steel: #c9b78e;
+  --teal: #7df5e0;
+  --font: var(--cv-pixel), 'Pixelify Sans', monospace;
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  overflow: hidden;
+  background: var(--noite);
+  font-family: var(--font);
+  color: var(--por);
+  font-size: 16px;
+  line-height: normal;
+  letter-spacing: normal;
+  text-align: left;
+  touch-action: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+.cv *,
+.cv *::before,
+.cv *::after {
+  box-sizing: border-box;
+  margin: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+/* botões como no protótipo (o os.css do v2 zera o padding e alinha à esquerda) */
+.cv .cv-mapa button,
+.cv .cv-av button,
+.cv .cv-tranca button,
+.cv .cv-mesa-topo button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  padding: 1px 6px;
+  text-align: center;
+}
+.cv button:focus-visible {
+  outline: 3px solid var(--teal);
+  outline-offset: 2px;
+}
+.cv [hidden] {
+  display: none !important;
+}
+
+/* ---------------------------------------------------------------- mapa */
+.cv-mapa {
+  position: absolute;
+  inset: 0;
+}
+.cv-vista {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  touch-action: none;
+  cursor: pointer;
+  background: var(--noite);
+}
+.cv-mundo {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 768px;
+  height: 512px;
+  transform-origin: 0 0;
+  will-change: transform;
+}
+.cv .fundo,
+.cv .oc {
+  position: absolute;
+  inset: 0;
+  background-size: 768px 512px;
+  image-rendering: pixelated;
+  pointer-events: none;
+}
+.cv-fim {
+  position: absolute;
+  inset: 0;
+  background: #fff;
+  opacity: 0;
+  pointer-events: none;
+  mix-blend-mode: screen;
+  transition: opacity 0.35s;
+}
+.cv .ator {
+  position: absolute;
+  width: 80px;
+  height: 96px;
+  margin: -96px 0 0 -40px;
+  background-size: 320px 384px;
+  image-rendering: pixelated;
+  pointer-events: none;
+}
+.cv .sombra {
+  position: absolute;
+  width: 40px;
+  height: 12px;
+  margin: -6px 0 0 -20px;
+  background: rgba(5, 2, 10, 0.5);
+  pointer-events: none;
+  clip-path: polygon(15% 0, 85% 0, 100% 33%, 100% 67%, 85% 100%, 15% 100%, 0 67%, 0 33%);
+}
+.cv-alvo {
+  position: absolute;
+  width: 18px;
+  height: 10px;
+  margin: -5px 0 0 -9px;
+  border: 2px solid var(--teal);
+  border-radius: 50%;
+  opacity: 0;
+  pointer-events: none;
+}
+.cv-alvo.on {
+  animation: cv-alvo 0.5s steps(4);
+}
+@keyframes cv-alvo {
+  0% {
+    opacity: 1;
+    transform: scale(1.8);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+}
+.cv .ponto {
+  position: absolute;
+  width: 48px;
+  height: 48px;
+  margin: -24px 0 0 -24px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+}
+.cv .ponto i {
+  display: block;
+  width: 14px;
+  height: 14px;
+  background: var(--teal);
+  transform: rotate(45deg);
+  box-shadow: 0 0 0 3px #100b18;
+  animation: cv-ponto 1.4s steps(3) infinite;
+}
+.cv .ponto.fechado i {
+  background: var(--steel);
+  animation: none;
+}
+.cv .ponto.novo i {
+  animation: cv-novo 0.5s steps(2) infinite;
+}
+@keyframes cv-ponto {
+  50% {
+    transform: rotate(45deg) translateY(-3px);
+  }
+}
+@keyframes cv-novo {
+  50% {
+    transform: rotate(45deg) scale(1.7);
+    background: #fff;
+  }
+}
+
+/* barra de cima: sair, onde estou; "Andares" fica embaixo, ao alcance do polegar */
+.cv-topo {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: max(10px, env(safe-area-inset-top)) 10px 8px;
+  pointer-events: none;
+}
+.cv-topo button,
+.cv-lugar {
+  pointer-events: auto;
+  min-height: 48px;
+  background: var(--por);
+  color: var(--tinta);
+  box-shadow:
+    0 0 0 3px var(--tinta),
+    0 0 0 5px var(--steel);
+  font-weight: 600;
+  font-size: 18px;
+  padding: 0 12px;
+}
+.cv .cv-topo button {
+  padding: 0 12px;
+}
+.cv-lugar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  min-width: 0;
+  pointer-events: none;
+  background: var(--ame);
+  color: var(--por);
+  font-size: 19px;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.cv .cv-sair {
+  min-width: 48px;
+  font-size: 24px;
+}
+.cv .cv-topo .cv-andares {
+  /* .cv-topo é posicionado: fixed leva o botão para o pé da tela */
+  position: fixed;
+  right: 10px;
+  bottom: calc(max(12px, env(safe-area-inset-bottom)) + 2px);
+  padding: 0 16px;
+}
+
+/* objeto fora da tela: seta na borda, que também leva até ele */
+.cv .seta {
+  position: absolute;
+  z-index: 4;
+  min-width: 48px;
+  min-height: 48px;
+  padding: 0 10px;
+  display: none;
+  align-items: center;
+  gap: 5px;
+  background: var(--tinta);
+  color: var(--por);
+  font-size: 18px;
+  font-weight: 600;
+  white-space: nowrap;
+  box-shadow: 0 0 0 2px var(--teal);
+}
+.cv .seta.fechado {
+  box-shadow: 0 0 0 2px var(--steel);
+}
+.cv .seta.on {
+  display: flex;
+}
+
+/* cartão do objeto: fica embaixo, ao alcance do polegar */
+.cv-cartao {
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  bottom: max(10px, env(safe-area-inset-bottom));
+  z-index: 6;
+  max-width: 560px;
+  margin: auto;
+  background: var(--por);
+  color: var(--tinta);
+  padding: 12px 14px;
+  box-shadow:
+    0 0 0 3px var(--tinta),
+    0 0 0 6px var(--steel),
+    8px 10px 0 rgba(5, 3, 10, 0.6);
+  animation: cv-cartao 0.16s steps(4);
+}
+@keyframes cv-cartao {
+  from {
+    translate: 0 40px;
+  }
+}
+.cv-cartao h2 {
+  font-size: 23px;
+  font-weight: 600;
+  line-height: 1.1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.cv-cartao p {
+  font-size: 19px;
+  line-height: 1.2;
+  margin: 4px 0 10px;
+}
+.c-acoes {
+  display: flex;
+  gap: 8px;
+}
+.cv .c-acoes button {
+  min-height: 50px;
+  flex: 1;
+  font-size: 20px;
+  font-weight: 600;
+  background: var(--ame);
+  color: var(--por);
+  box-shadow: 0 0 0 3px var(--steel);
+}
+.cv .c-acoes button.fraco {
+  flex: 0 0 auto;
+  padding: 0 16px;
+  background: transparent;
+  color: var(--tinta);
+  box-shadow: 0 0 0 3px var(--tinta);
+}
+.cv-cartao q.fala {
+  display: block;
+  quotes: none;
+  font-style: italic;
+  color: var(--vio);
+  margin-bottom: 6px;
+}
+.cv-cartao small.req {
+  display: block;
+  font-size: 16px;
+  color: #5a4a72;
+}
+.cv-dica {
+  position: absolute;
+  left: 50%;
+  bottom: calc(max(12px, env(safe-area-inset-bottom)) + 66px);
+  translate: -50% 0;
+  z-index: 4;
+  background: rgba(16, 11, 24, 0.9);
+  padding: 8px 14px;
+  font-size: 19px;
+  white-space: nowrap;
+  box-shadow: 0 0 0 2px var(--steel);
+  pointer-events: none;
+}
+
+/* faixa de novidade */
+.cv-aviso {
+  position: absolute;
+  left: 50%;
+  top: 22%;
+  translate: -50% 0;
+  z-index: 30;
+  background: var(--tinta);
+  color: var(--por);
+  padding: 12px 18px;
+  font-size: 23px;
+  font-weight: 600;
+  text-align: center;
+  box-shadow:
+    0 0 0 3px var(--steel),
+    0 0 0 6px var(--tinta);
+  width: max-content;
+  max-width: calc(100% - 32px);
+  pointer-events: none;
+  animation: cv-aviso 0.2s steps(3);
+}
+@keyframes cv-aviso {
+  from {
+    translate: -50% -14px;
+  }
+}
+
+/* a casa inteira (andares) e o painel de viagem */
+.cv-casa,
+.cv-viagem {
+  position: absolute;
+  inset: 0;
+  z-index: 8;
+  background: rgba(10, 6, 16, 0.97);
+  display: flex;
+  flex-direction: column;
+  padding: max(14px, env(safe-area-inset-top)) 14px max(14px, env(safe-area-inset-bottom));
+  gap: 12px;
+  overflow: auto;
+}
+.cv-viagem {
+  gap: 10px;
+}
+.cv-casa header,
+.cv-viagem header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: 560px;
+  margin: 0 auto;
+}
+.cv-casa h2,
+.cv-viagem h2 {
+  font-size: 26px;
+  font-weight: 600;
+}
+.cv .cv-c-fechar,
+.cv .cv-v-fechar {
+  min-width: 48px;
+  min-height: 48px;
+  background: var(--por);
+  color: var(--tinta);
+  font-size: 22px;
+  font-weight: 600;
+  box-shadow: 0 0 0 3px var(--steel);
+}
+.cv .andar {
+  position: relative;
+  flex: 1 1 0;
+  min-height: 190px;
+  max-height: 320px;
+  width: 100%;
+  max-width: 560px;
+  margin: 0 auto;
+  overflow: hidden;
+  text-align: left;
+  padding: 0;
+  background: #000 center/cover no-repeat;
+  image-rendering: pixelated;
+  box-shadow: 0 0 0 3px var(--steel);
+}
+.cv .andar.fechado {
+  filter: grayscale(0.85) brightness(0.5);
+}
+.cv .andar.aqui {
+  box-shadow: 0 0 0 3px var(--teal);
+}
+.cv .andar b {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: var(--tinta);
+  color: var(--por);
+  padding: 8px 12px;
+  font-size: 21px;
+  font-weight: 600;
+  line-height: 1.1;
+}
+.cv .andar b small {
+  display: block;
+  font-size: 17px;
+  font-weight: 400;
+  color: #d9cfe6;
+}
+.cv .v-sub {
+  font-size: 19px;
+  color: #cdbfe6;
+  width: 100%;
+  max-width: 560px;
+  margin: 0 auto;
+}
+.cv .destino {
+  display: grid;
+  gap: 2px;
+  width: 100%;
+  max-width: 560px;
+  margin: 0 auto;
+  min-height: 72px;
+  padding: 12px 14px;
+  text-align: left;
+  background: var(--tinta);
+  box-shadow: 0 0 0 3px var(--steel);
+}
+.cv .destino b {
+  font-size: 22px;
+  font-weight: 600;
+}
+.cv .destino small {
+  font-size: 16px;
+  color: #cdbfe6;
+}
+.cv .destino.trancado {
+  box-shadow: 0 0 0 3px #5a4f6e;
+}
+.cv .historia {
+  width: 100%;
+  max-width: 560px;
+  margin: 0 auto;
+  font-size: 17px;
+  line-height: 1.25;
+  color: #cdbfe6;
+}
+
+/* visita na porta (Simon): cena VN por cima da casa */
+.cv .visita {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 0 10px calc(max(12px, env(safe-area-inset-bottom)) + 8px);
+  background: linear-gradient(180deg, rgba(8, 5, 14, 0.35), rgba(8, 5, 14, 0.92) 70%);
+  cursor: pointer;
+}
+.cv .v-fig {
+  position: absolute;
+  left: 50%;
+  top: max(104px, 13vh);
+  height: min(1300px, calc((100dvh - max(104px, 13vh) - 120px) * 1.5));
+  translate: -50% 0;
+  image-rendering: pixelated;
+  filter: drop-shadow(0 10px 18px rgba(0, 0, 0, 0.6));
+  pointer-events: none;
+  max-width: none;
+}
+/* falas: do busto para cima; corpo inteiro só em cena especial */
+.cv .v-fig.inteiro {
+  top: auto;
+  bottom: 150px;
+  height: min(60vh, 660px);
+  clip-path: none;
+}
+.cv .v-fig.longe {
+  top: auto;
+  bottom: 150px;
+  clip-path: none;
+  height: min(34vh, 280px);
+  opacity: 0.55;
+  filter: brightness(0.6);
+}
+.cv .v-olho {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: #000;
+}
+.cv .v-olho img {
+  width: min(90vw, 520px);
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: 50%;
+}
+.cv .v-caixa {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 620px;
+  min-height: 150px;
+  margin: 0 auto;
+  background: var(--por);
+  color: var(--tinta);
+  padding: 12px 16px 14px;
+  box-shadow:
+    0 0 0 3px var(--tinta),
+    0 0 0 6px var(--steel);
+}
+.cv .v-nome {
+  display: block;
+  min-height: 0;
+  font-size: 18px;
+  color: var(--vio);
+}
+.cv .v-nome[data-sinal]:not([data-sinal=''])::after {
+  content: ' ' attr(data-sinal);
+  color: #c9a45a;
+}
+.cv .v-tx {
+  height: calc(4 * 1.28em);
+  overflow: hidden;
+  font-size: 20px;
+  line-height: 1.28;
+  margin-top: 2px;
+  white-space: pre-line;
+}
+.cv .visita:has(.v-esc button) .v-tx {
+  height: auto;
+  max-height: calc(4 * 1.28em);
+}
+.cv .v-seg {
+  position: absolute;
+  right: 12px;
+  bottom: 6px;
+  font-size: 14px;
+  color: #6a5a80;
+  animation: cv-pisca 1s steps(2) infinite;
+}
+@keyframes cv-pisca {
+  50% {
+    opacity: 0;
+  }
+}
+.cv .v-esc {
+  display: grid;
+  gap: 8px;
+  margin-top: 10px;
+}
+.cv .v-esc:empty {
+  display: none;
+}
+.cv .v-esc button {
+  min-height: 48px;
+  padding: 6px 12px;
+  text-align: left;
+  background: var(--ame);
+  color: var(--por);
+  font: inherit;
+  font-size: 18px;
+  font-weight: 600;
+  border: 0;
+  cursor: pointer;
+  box-shadow: 0 0 0 3px var(--steel);
+}
+.cv .visita[data-quem='narra'] .v-tx {
+  font-style: italic;
+  color: #3a2a52;
+}
+.cv .visita[data-quem='sistema'] .v-caixa {
+  background: var(--tinta);
+  color: var(--por);
+}
+.cv .visita[data-quem='sistema'] .v-nome {
+  color: var(--teal);
+}
+.cv .visita.alerta .v-caixa {
+  box-shadow:
+    0 0 0 3px var(--tinta),
+    0 0 0 6px #d9b65c;
+}
+.cv .visita.alerta .v-nome {
+  color: #d9b65c;
+}
+.cv .visita[data-quem='jogador'] .v-nome {
+  color: #2f6b5a;
+}
+.cv .visita.mapa {
+  background: linear-gradient(180deg, rgba(8, 5, 14, 0) 50%, rgba(8, 5, 14, 0.55) 80%);
+}
+.cv .v-rosto {
+  position: absolute;
+  left: 10px;
+  bottom: calc(100% + 12px);
+  background: #1b1424 no-repeat;
+  image-rendering: pixelated;
+  box-shadow:
+    0 0 0 3px var(--tinta),
+    0 0 0 6px var(--steel);
+}
+.cv .npc-porta {
+  position: absolute;
+  inset: 0 0 0 auto;
+  width: 100%;
+  z-index: 0;
+  background: linear-gradient(90deg, #120c1a, #07050b);
+  transform-origin: right center;
+  pointer-events: none;
+}
+.cv.em-visita .ponto,
+.cv.em-visita .seta {
+  display: none;
+}
+.cv .npc-chibi {
+  position: absolute;
+  width: 80px;
+  height: 96px;
+  margin: -96px 0 0 -40px;
+  background-size: 640px 384px;
+  image-rendering: pixelated;
+  pointer-events: none;
+}
+.cv .npc-chibi-sombra {
+  position: absolute;
+  width: 40px;
+  height: 12px;
+  margin: -6px 0 0 -20px;
+  background: rgba(5, 2, 10, 0.5);
+  pointer-events: none;
+  clip-path: polygon(15% 0, 85% 0, 100% 33%, 100% 67%, 85% 100%, 15% 100%, 0 67%, 0 33%);
+}
+.cv .chibi-balao {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  margin: -138px 0 0 2px;
+  pointer-events: none;
+  image-rendering: pixelated;
+  background-size: 320px 240px;
+  z-index: 9999;
+}
+
+/* controle de teste: só para Owner e Anfitrião */
+.cv-teste {
+  position: absolute;
+  right: 10px;
+  top: calc(max(10px, env(safe-area-inset-top)) + 66px);
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(16, 11, 24, 0.88);
+  padding: 4px 6px;
+  font-size: 15px;
+  box-shadow: 0 0 0 2px #5a4f6e;
+}
+.cv .cv-teste button {
+  min-width: 36px;
+  min-height: 36px;
+  background: #2b2138;
+  font-size: 17px;
+}
+.cv .cv-teste button.on {
+  background: var(--vio);
+}
+
+@media (min-width: 900px) {
+  .cv-cartao {
+    left: auto;
+    right: 24px;
+    bottom: 24px;
+    width: 420px;
+    margin: 0;
+  }
+  .cv-topo {
+    max-width: 520px;
+  }
+  .cv-dica {
+    bottom: 24px;
+  }
+}
+
+/* ---------------------------------------------------------------- mesa de confecção (a tela do jogo, dentro da casa) */
+.cv-mesa {
+  position: absolute;
+  inset: 0;
+  z-index: 40;
+  display: flex;
+  flex-direction: column;
+  background: rgba(10, 6, 16, 0.97);
+  animation: cv-sobe 0.16s steps(4);
+}
+@keyframes cv-sobe {
+  from {
+    translate: 0 24px;
+    opacity: 0.4;
+  }
+}
+.cv-mesa-topo {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: max(10px, env(safe-area-inset-top)) 12px 10px;
+  background: var(--tinta);
+  box-shadow: 0 3px 0 var(--steel);
+  z-index: 1;
+}
+.cv-mesa-topo h2 {
+  flex: 1;
+  min-width: 0;
+  font-size: 22px;
+  font-weight: 600;
+}
+.cv-mesa-topo h2 small {
+  display: block;
+  font-size: 15px;
+  font-weight: 400;
+  color: #cdbfe6;
+}
+.cv .cv-mesa-topo button {
+  min-width: 48px;
+  min-height: 48px;
+  background: var(--por);
+  color: var(--tinta);
+  font-size: 22px;
+  font-weight: 600;
+  box-shadow: 0 0 0 3px var(--steel);
+}
+.cv-mesa-corpo {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+  touch-action: auto;
+  -webkit-user-select: text;
+  user-select: text;
+}
+.cv-mesa-corpo > .v2-legado {
+  height: 100%;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.cv-mesa-corpo > .v2-legado > * {
+  min-height: 100%;
+}
+
+/* ---------------------------------------------------------------- trancada / carregando */
+.cv-tranca {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 24px 16px;
+  background: var(--noite) url(/v2/art/casa/andar-terreo.png) center/cover no-repeat;
+  image-rendering: pixelated;
+}
+.cv-tranca::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(10, 6, 16, 0.78);
+}
+.cv-tranca section {
+  position: relative;
+  width: 100%;
+  max-width: 460px;
+  background: var(--por);
+  color: var(--tinta);
+  padding: 14px 16px;
+  box-shadow:
+    0 0 0 3px var(--tinta),
+    0 0 0 6px var(--steel),
+    8px 10px 0 rgba(5, 3, 10, 0.6);
+}
+.cv-tranca h2 {
+  font-size: 23px;
+  font-weight: 600;
+}
+.cv-tranca p {
+  font-size: 19px;
+  line-height: 1.2;
+  margin: 6px 0 12px;
+}
+.cv .cv-tranca button {
+  min-height: 50px;
+  width: 100%;
+  font-size: 20px;
+  font-weight: 600;
+  background: var(--ame);
+  color: var(--por);
+  box-shadow: 0 0 0 3px var(--steel);
+}
+.cv-carrega {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: var(--noite);
+  font-size: 22px;
+}
+
+/* ---------------------------------------------------------------- criação do avatar e guarda-roupa (kit3/avatar.html) */
+.cv-av {
+  position: absolute;
+  inset: 0;
+  z-index: 45;
+  background: var(--noite);
+  touch-action: auto;
+}
+.cv-av-app {
+  height: 100%;
+  max-width: 560px;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+}
+.cv-av header {
+  flex: none;
+  position: relative;
+  padding: max(10px, env(safe-area-inset-top)) 14px 6px;
+}
+.cv-av h1 {
+  font-size: 22px;
+  font-weight: 600;
+  text-align: center;
+  line-height: 1.6;
+}
+.cv .cv-av .cv-av-volta {
+  position: absolute;
+  left: 10px;
+  top: max(4px, calc(env(safe-area-inset-top) - 6px));
+  min-width: 44px;
+  min-height: 44px;
+  font-size: 24px;
+  color: #cdbfe0;
+}
+.cv-av-previa {
+  flex: none;
+  position: relative;
+  height: min(38dvh, 330px);
+  overflow: hidden;
+  background: var(--noite) url(/v2/art/casa/quarto-fundo.webp) 50% 45% / cover;
+}
+.cv-av-previa::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 38%, rgba(120, 96, 160, 0.5), rgba(14, 9, 24, 0.78) 62%);
+}
+.cv-av-tela {
+  position: absolute;
+  z-index: 1;
+  left: 50%;
+  top: 0;
+  translate: -50% 0;
+  height: calc(100% * 1.22);
+  aspect-ratio: 1;
+  max-width: none;
+}
+.cv-av-abas {
+  flex: none;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  background: var(--tinta);
+  box-shadow: 0 -3px 0 var(--steel);
+}
+.cv .cv-av-abas button {
+  min-height: 50px;
+  font-size: 17px;
+  font-weight: 600;
+  color: #cdbfe0;
+}
+.cv .cv-av-abas button[aria-selected='true'] {
+  background: var(--por);
+  color: var(--tinta);
+}
+.cv-av-painel {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 12px 12px 16px;
+  background: var(--painel);
+  overscroll-behavior: contain;
+}
+.cv-av .rotulo {
+  font-size: 18px;
+  font-weight: 500;
+  margin: 2px 2px 8px;
+  color: #e4daee;
+}
+.cv-av .cores {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 4px 3px 10px;
+  margin-bottom: 6px;
+  scrollbar-width: none;
+}
+.cv .cv-av .cor {
+  flex: 0 0 48px;
+  height: 48px;
+  padding: 0;
+  box-shadow: inset 0 0 0 2px rgba(0, 0, 0, 0.55);
+}
+.cv-av .cores.todas {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+  overflow: visible;
+}
+.cv .cv-av .cores.todas .cor {
+  height: auto;
+  aspect-ratio: 1;
+}
+.cv .cv-av .cor[aria-pressed='true'] {
+  outline: 3px solid var(--por);
+  outline-offset: 2px;
+}
+.cv-av .grade {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+.cv-av .grade.dois {
+  grid-template-columns: repeat(2, 1fr);
+}
+.cv-av .grade.tres {
+  grid-template-columns: repeat(3, 1fr);
+}
+.cv .cv-av .op {
+  position: relative;
+  aspect-ratio: 1;
+  padding: 0;
+  background: #2a2038;
+  overflow: hidden;
+  box-shadow: inset 0 0 0 2px #40325a;
+}
+.cv-av .grade.tres .op {
+  aspect-ratio: auto;
+  display: flex;
+  flex-direction: column;
+}
+.cv .cv-av .op[aria-pressed='true'] {
+  box-shadow: inset 0 0 0 3px var(--teal);
+  background: #35284a;
+}
+.cv-av .op canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.cv-av .grade.tres .op canvas {
+  height: auto;
+  aspect-ratio: 1;
+}
+.cv-av .op small {
+  display: grid;
+  place-items: center;
+  flex: 1;
+  min-height: 38px;
+  padding: 2px 3px;
+  background: rgba(20, 14, 26, 0.88);
+  font-size: 15px;
+  line-height: 1.1;
+}
+.cv-av footer {
+  flex: none;
+  display: grid;
+  grid-template-columns: 1fr 1.4fr;
+  gap: 8px;
+  padding: 8px 12px max(10px, env(safe-area-inset-bottom));
+  background: var(--tinta);
+}
+.cv .cv-av footer button {
+  min-height: 52px;
+  font-size: 21px;
+  font-weight: 600;
+  box-shadow: 0 0 0 3px var(--steel);
+}
+.cv .cv-av footer .principal {
+  background: var(--por);
+  color: var(--tinta);
+}
+.cv .cv-av footer button:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+.cv-av .cv-aviso {
+  top: 24%;
+  font-size: 21px;
+}
+@media (min-width: 900px) {
+  .cv-av-app {
+    max-width: 1000px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto 1fr auto;
+  }
+  .cv-av header {
+    grid-column: 1/3;
+  }
+  .cv-av-previa {
+    grid-row: 2/5;
+    height: auto;
+  }
+  .cv-av-tela {
+    height: 100%;
+  }
+  .cv-av-abas,
+  .cv-av-painel,
+  .cv-av footer {
+    grid-column: 2;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cv .v-fig.surge,
+  .cv .ponto i,
+  .cv .ponto.novo i,
+  .cv-alvo.on,
+  .cv-aviso,
+  .cv-cartao,
+  .cv-mesa,
+  .cv .v-seg {
+    animation: none;
+  }
+  .cv-alvo.on {
+    opacity: 1;
+  }
+  .cv .ponto.novo i {
+    background: #fff;
+  }
+  .cv-fim {
+    display: none;
+  }
+}

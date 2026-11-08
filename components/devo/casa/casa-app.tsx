@@ -249,7 +249,8 @@ function Trancado({ motivo }: { motivo: string }) {
 
 /* ------------------------------------------------------------------ Tela */
 
-function Tela({ d, agir, resgatar }: { d: CasaLiberado; agir: Agir; resgatar: Resgatar }) {
+/** As abas da Confecção e dos Pacotes (também usadas pela mesa da Casa do v2, components/v2/casa). */
+export function Tela({ d, agir, resgatar }: { d: CasaLiberado; agir: Agir; resgatar: Resgatar }) {
   const [aba, setAba] = useState<Aba>('confeccao')
   const pacotes = d.pacotes.reduce((s, p) => s + p.quantidade, 0)
   return (
