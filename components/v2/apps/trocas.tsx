@@ -11,6 +11,7 @@ import { CardBack, CardFace } from '@/components/devo/shared/devo-card'
 import { nextId, useDevo } from '@/components/devo/state/devo-store'
 import { useBackHandler } from '@/components/devo/use-back-handler'
 import { px } from '../comum'
+import { Estrelas } from './cartas'
 
 /**
  * Sala de Trocas no v2 (protótipo kit3/os-trocas.js): o corredor com as oito portas, a placa de livres e ocupadas, o
@@ -180,6 +181,14 @@ function Sala({ trade }: { trade: TradeSession }) {
   }
   useBackHandler(true, sai)
 
+  // uma carta de cada tipo, com as cópias; as que estão no Salão das Máscaras vão para o fim, trancadas
+  const pilhas = useMemo(() => {
+    const m = new Map<string, string[]>()
+    for (const c of state.inventory) m.set(c.cardId, [...(m.get(c.cardId) ?? []), c.uid])
+    return [...m.entries()]
+      .map(([cardId, uids]) => ({ cardId, uids }))
+      .sort((x, y) => Number(x.uids.every((u) => presas.has(u))) - Number(y.uids.every((u) => presas.has(u))) || RARITY_META[getCard(y.cardId).rarity].order - RARITY_META[getCard(x.cardId).rarity].order)
+  }, [state.inventory, presas])
   const minhaRar = trade.myCard ? RARITY_META[getCard(trade.myCard.cardId).rarity] : null
   const outro = saiu ? (
     <Vaga>Cadeira vazia</Vaga>
@@ -192,7 +201,7 @@ function Sala({ trade }: { trade: TradeSession }) {
   ) : (
     <Vaga>{e === 'waiting' ? 'Passos no corredor…' : ''}</Vaga>
   )
-  const meu = trade.myCard ? <CardFace cardId={trade.myCard.cardId} className="w-full" /> : <Vaga>Escolha abaixo</Vaga>
+  const meu = trade.myCard ? <CardFace cardId={trade.myCard.cardId} className="w-full" /> : <Vaga>Escolha sua carta</Vaga>
 
   return (
     <div className="t-sala">
@@ -226,28 +235,29 @@ function Sala({ trade }: { trade: TradeSession }) {
           <>
             <h4>Suas cartas</h4>
             <ul className="t-escolha" aria-label="Suas cartas">
-              {[...state.inventory]
-                .sort((a, b) => Number(presas.has(a.uid)) - Number(presas.has(b.uid)) || RARITY_META[getCard(b.cardId).rarity].order - RARITY_META[getCard(a.cardId).rarity].order)
-                .map((c) => {
-                  const presa = presas.has(c.uid)
-                  const nome = getCard(c.cardId).name
-                  return (
-                    <li key={c.uid}>
-                      <button
-                        className={presa ? 'presa' : undefined}
-                        disabled={presa}
-                        aria-label={presa ? `${nome}: no Salão das Máscaras, não vai à mesa` : `Colocar ${nome} na mesa`}
-                        onClick={() => {
-                          playSfx('card-select')
-                          dispatch({ type: 'TRADE_PLACE', uid: c.uid })
-                        }}
-                      >
-                        <CardFace cardId={c.cardId} className="w-full" />
-                        <span>{presa ? 'No Salão' : nome}</span>
-                      </button>
-                    </li>
-                  )
-                })}
+              {pilhas.map((pl) => {
+                const nome = getCard(pl.cardId).name
+                const livre = pl.uids.find((u) => !presas.has(u))
+                return (
+                  <li key={pl.cardId}>
+                    <button
+                      className={livre ? undefined : 'presa'}
+                      disabled={!livre}
+                      aria-label={livre ? `Colocar ${nome} na mesa` : `${nome}: no Salão das Máscaras, não vai à mesa`}
+                      onClick={() => {
+                        if (!livre) return
+                        playSfx('card-select')
+                        dispatch({ type: 'TRADE_PLACE', uid: livre })
+                      }}
+                    >
+                      <CardFace cardId={pl.cardId} className="w-full" />
+                      {pl.uids.length > 1 && <b className="t-cop">×{pl.uids.length}</b>}
+                      <Estrelas r={getCard(pl.cardId).rarity} />
+                      <span>{livre ? nome : 'No Salão'}</span>
+                    </button>
+                  </li>
+                )
+              })}
               {!state.inventory.length && <li className="r-sub">Você não tem cartas para trocar.</li>}
             </ul>
           </>

@@ -129,7 +129,7 @@ export function CartasV2() {
               <i />
             </span>
             <span className="cx-shuf-tx">
-              <small>Card Shuffler · {shufflerStatus(state.arcadeUnlocked, embaralhando ? 'shuffling' : 'idle')}</small>
+              <small>Shuffler · {shufflerStatus(state.arcadeUnlocked, embaralhando ? 'shuffling' : 'idle')}</small>
               <span>{state.arcadeUnlocked ? 'Sorteia uma das suas cartas para ver.' : 'Desperta junto com a Sala de Jogos.'}</span>
             </span>
             <button className="r-bt chanfro" disabled={!state.arcadeUnlocked || embaralhando || !copias} onClick={embaralha}>

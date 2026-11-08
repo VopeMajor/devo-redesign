@@ -139,6 +139,13 @@ type Checkin = ReturnType<typeof useCalendario>['checkin']
 function Tela({ d, checkin, recarregar, onMelissa }: { d: Liberado; checkin: Checkin; recarregar: () => void; onMelissa: () => void }) {
   const [aba, setAba] = useState<Aba>('semana')
   const ancora = useRef<HTMLSpanElement>(null)
+  const dir = useRef<HTMLElement>(null)
+  // no celular a folha fica em cima: trocar de aba leva o olhar até a seção escolhida
+  const trocou = useRef(false)
+  useEffect(() => {
+    if (!trocou.current) return
+    if (window.matchMedia('(max-width: 899.9px)').matches) dir.current?.scrollIntoView({ block: 'start', behavior: 'smooth' })
+  }, [aba])
   const [revela, setRevela] = useState<(ResgateResultado & { titulo: string }) | null>(null)
   const [ocupado, setOcupado] = useState<string | null>(null)
   const [erro, setErro] = useState<string | null>(null)
@@ -202,6 +209,7 @@ function Tela({ d, checkin, recarregar, onMelissa }: { d: Liberado; checkin: Che
               aria-selected={aba === k}
               onClick={() => {
                 playSfx('click')
+                trocou.current = true
                 setAba(k)
               }}
             >
@@ -297,14 +305,14 @@ function Tela({ d, checkin, recarregar, onMelissa }: { d: Liberado; checkin: Che
               <em>{x.slots.every((s) => s.estado === 'feito') ? 'Tudo resgatado' : 'Volte amanhã'}</em>
             ) : (
               <button className="r-bt chanfro" disabled={ocupado === x.eventoId} onClick={() => marca(x.eventoId, { tipo: 'evento', eventoId: x.eventoId }, x.titulo)}>
-                {ocupado === x.eventoId ? 'Marcando…' : 'Marcar presença'}
+                {ocupado === x.eventoId ? 'Resgatando…' : 'Resgatar'}
               </button>
             )}
           </div>
         ))}
       </section>
 
-      <section className="r19-dir">
+      <section className="r19-dir" ref={dir}>
         {aba === 'semana' ? <Semana slots={c.slots} /> : aba === 'eventos' ? <Eventos d={d} /> : <Mes d={d} />}
       </section>
       <p className="r19-rodape">Grandioso Calendário Devo · ciclo de {n} dias · as datas seguem o horário de Brasília</p>

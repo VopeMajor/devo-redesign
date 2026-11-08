@@ -85,7 +85,7 @@ const TELAS: Record<string, { C: React.ComponentType; cx: string; caixa: [number
   cartas: { C: CartasV2, cx: '', caixa: [1000, 960, 760], corpo: 'r-corpo' },
   inventario: { C: InventarioV2, cx: 'inv', caixa: [800, 760, 680] },
   trocas: { C: TrocasV2, cx: '', caixa: [1020, 980, 720], corpo: 'r-corpo' },
-  ajustes: { C: AjustesV2, cx: 'aju', caixa: [540, 500, 700] },
+  ajustes: { C: AjustesV2, cx: 'aju', caixa: [540, 500, 700], corpo: 'r-corpo' },
   calendario: { C: CalendarioV2, cx: '', caixa: [1000, 960, 780], corpo: 'r-corpo' },
 }
 const ico = (id: string) => `/v2/art/os/ico/${id}.webp`

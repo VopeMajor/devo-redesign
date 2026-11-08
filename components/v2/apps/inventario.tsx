@@ -154,7 +154,9 @@ export function InventarioV2() {
             </Secao>
           ))}
         {data && !itens.length && filtro === 'tudo' && (
-          <p className="r-sub i-vazio">Nenhum item ainda. Itens chegam do Poço, das Torres, dos Deadly Votes e dos prêmios da casa.</p>
+          <Secao titulo="Itens" acao={null}>
+            <p className="r-sub i-vazio">Nenhum item ainda. Itens chegam do Poço, das Torres, dos Deadly Votes e dos prêmios da casa.</p>
+          </Secao>
         )}
       </div>
     </>

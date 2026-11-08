@@ -616,7 +616,7 @@ function Votos({ votes, caso, onCaso }: { votes: Votes; caso: string | null; onC
         {TODOS.map((k) => (
           <div key={k} className={'fundo e-' + k + (conta(k) ? ' tem' : '')}>
             <dd>{conta(k)}</dd>
-            <dt>{DEADLY_VOTE_STATUS[k].short}</dt>
+            <dt>{k === 'em-progresso' ? 'Em curso' : DEADLY_VOTE_STATUS[k].short}</dt>
           </div>
         ))}
       </dl>
