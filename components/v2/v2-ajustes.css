@@ -52,6 +52,8 @@
   min-height: 100%;
   font-family: var(--font-plex-sans), system-ui, sans-serif;
   letter-spacing: normal;
+  font-size: 16px;
+  line-height: 1.5;
   text-align: left;
   color: var(--color-foreground, #e8e4dc);
 }
