@@ -709,3 +709,11 @@ todas as poses, cabeça erguida nas poses 1, 4 e 8, crista de capuz também na p
 - Capturas: `art-src/capturas-02-11/torres-<galo|coruja|javali>-longa.png`, `-curta.png`, `torres-ruptura.png`,
   `torres-cartao.png`, `torres-chibis-rosto.png`. Testado sem erros (Edge sem janela).
 Sobre as Torres com os anfitriões: "Aprovo". Com isso, "Torres e Melissa" está feito. Nada commitado.
+
+### 07/11/2026 — Commit e próximo grande passo
+
+Dono: "Commitar tudo" → "Tudo, 1,5 GB" → "Enviar". Commit 0398f8c5 na branch `ccr-a1dc3a06-5krin1`, enviado ao GitHub
+(o protótipo kit3 inteiro, fontes da arte e capturas). A `redesign` e o site não mudaram.
+Dono: "quando acabar atualize o site" → "Levar o v2 ao jogo": quando o v2 estiver todo aprovado, passar o que está no
+protótipo (Casa, chibis, Torres, Catedral, sistema…) para o jogo de verdade (Next.js) e publicar pela `redesign`.
+
