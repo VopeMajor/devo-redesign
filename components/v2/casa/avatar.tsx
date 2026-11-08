@@ -85,6 +85,11 @@ export function CriacaoAvatar({
     if (p && tela.current) desenhaBusto(tela.current.getContext('2d', { willReadFrequently: true })!, L, p, cfg)
   }, [p, cfg])
   useEffect(() => {
+    const k = (e: KeyboardEvent) => e.key === 'Escape' && onVoltar()
+    addEventListener('keydown', k)
+    return () => removeEventListener('keydown', k)
+  }, [onVoltar])
+  useEffect(() => {
     if (!aviso) return
     const t = setTimeout(() => setAviso(null), 2000)
     return () => clearTimeout(t)
@@ -134,10 +139,8 @@ export function CriacaoAvatar({
     <div className="cv-av" role="dialog" aria-label={guarda ? 'Guarda-roupa' : 'Criação do avatar'}>
       {!p && <div className="cv-carrega">{erro ? 'Não foi possível abrir. Tente de novo.' : 'Abrindo a porta…'}</div>}
       <main className="cv-av-app">
+        {/* sem seta, como no protótipo: no guarda-roupa sai pelo "Cancelar"; Esc e o voltar do aparelho também saem */}
         <header>
-          <button className="cv-av-volta" aria-label={guarda ? 'Voltar ao quarto' : 'Sair da casa'} onClick={onVoltar}>
-            ‹
-          </button>
           <h1>{guarda ? 'Guarda-roupa' : 'Criação do avatar'}</h1>
         </header>
         <div className="cv-av-previa">

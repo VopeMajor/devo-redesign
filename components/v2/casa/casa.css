@@ -1089,3 +1089,26 @@
   padding: revert-layer;
   text-align: revert-layer;
 }
+
+/* acertos do crítico de arte (08/11) */
+/* o os.css do v2 põe font-size-adjust:.35 no <html>, o que encolhia a letra em pixel: aqui volta o tamanho do protótipo */
+.cv {
+  font-size-adjust: none;
+}
+/* durante a visita, os losangos e as etiquetas de borda saem de cena */
+.cv-mapa:has(.visita) .ponto,
+.cv-mapa:has(.visita) .cv-seta {
+  display: none;
+}
+.cv .cv-seta {
+  width: max-content;
+}
+/* roupa: imagem e nome num bloco só, com a borda por dentro de tudo */
+.cv .cv-av .grade.tres .op {
+  aspect-ratio: auto;
+  display: flex;
+  flex-direction: column;
+}
+.cv .andar b {
+  text-align: left;
+}
