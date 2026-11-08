@@ -16,7 +16,7 @@ permissions:
 
 jobs:
   capturas:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 120
     services:
       postgres:
@@ -62,9 +62,8 @@ jobs:
           npm i --prefix /tmp/pw playwright@1.56.1
           PW=/tmp/pw/node_modules/.bin/playwright
           $PW --version
-          # dependências do sistema podem falhar no Ubuntu novo do GitHub: o navegador é instalado de qualquer jeito
-          for i in 1 2 3; do $PW install --with-deps chromium chromium-headless-shell && break; echo "tentativa $i com dependências falhou"; sleep 15; done
-          ls ~/.cache/ms-playwright 2>/dev/null | grep -q headless_shell || $PW install chromium chromium-headless-shell
+          # o Playwright 1.56 não roda no Ubuntu 26.04 (o ubuntu-latest de nov/2026): por isso o job fica no 24.04
+          for i in 1 2 3; do $PW install --with-deps chromium && break; echo "tentativa $i falhou"; sleep 15; done
           ls ~/.cache/ms-playwright
           } 2>&1 | tee playwright.log
       - name: Capturas
