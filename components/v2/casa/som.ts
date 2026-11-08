@@ -23,8 +23,19 @@ export function audio(): AudioContext | null {
 
 export type Voz = { tipo: OscillatorType; f0: number; f1: number; dur: number; cada: number; vol?: number }
 
-export function bip({ tipo, f0, f1, dur, vol = 0.06 }: Voz) {
+/** Destrava o som num toque (o iPhone só deixa o áudio começar dentro de um gesto). */
+export function destravaSom() {
+  void audio()
+}
+
+/** Só agenda som com o contexto rodando: agendar suspenso faz tudo sair junto ("estouro") quando ele destrava. */
+const pronto = () => {
   const c = audio()
+  return c && c.state === 'running' ? c : null
+}
+
+export function bip({ tipo, f0, f1, dur, vol = 0.06 }: Voz) {
+  const c = pronto()
   if (!c) return
   const o = c.createOscillator()
   const g = c.createGain()
@@ -41,7 +52,7 @@ export function bip({ tipo, f0, f1, dur, vol = 0.06 }: Voz) {
 export type Som = 'range' | 'holograma' | 'holograma-sai' | 'baque' | 'campainha'
 
 export function som(nome: Som) {
-  const c = audio()
+  const c = pronto()
   if (!c) return
   const t = c.currentTime
   const tom = (tipo: OscillatorType, ini: number, vol: number, dur: number, f: (o: OscillatorNode) => void) => {
@@ -78,7 +89,7 @@ export function som(nome: Som) {
 
 /** Passo baixo dentro de casa (o pé que toca o chão). */
 export function passo(alto: boolean) {
-  const c = audio()
+  const c = calmo() ? null : pronto()
   if (!c || c.state !== 'running') return
   const t = c.currentTime
   const o = c.createOscillator()

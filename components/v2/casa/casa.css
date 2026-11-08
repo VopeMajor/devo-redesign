@@ -26,18 +26,18 @@
   -webkit-user-select: none;
   user-select: none;
 }
-.cv *,
-.cv *::before,
-.cv *::after {
+/* reset só nas partes da Casa: a tela antiga da mesa usa o Tailwind (utilitários em layer, que perderiam deste) */
+.cv :where(.cv-mapa, .cv-av, .cv-tranca, .cv-mesa-topo, .cv-carrega),
+.cv :where(.cv-mapa, .cv-av, .cv-tranca, .cv-mesa-topo, .cv-carrega) *,
+.cv :where(.cv-mapa, .cv-av, .cv-tranca, .cv-mesa-topo, .cv-carrega) *::before,
+.cv :where(.cv-mapa, .cv-av, .cv-tranca, .cv-mesa-topo, .cv-carrega) *::after {
   box-sizing: border-box;
   margin: 0;
   -webkit-tap-highlight-color: transparent;
 }
-/* botões como no protótipo (o os.css do v2 zera o padding e alinha à esquerda) */
-.cv .cv-mapa button,
-.cv .cv-av button,
-.cv .cv-tranca button,
-.cv .cv-mesa-topo button {
+/* botões como no protótipo (o os.css do v2 zera o padding e alinha à esquerda); :where() deixa a especificidade baixa
+   para os estilos de cada botão abaixo valerem. A mesa fica de fora: a tela antiga tem o próprio estilo. */
+.cv :where(.cv-mapa, .cv-av, .cv-tranca, .cv-mesa-topo) button {
   font: inherit;
   color: inherit;
   background: none;
@@ -76,7 +76,7 @@
   transform-origin: 0 0;
   will-change: transform;
 }
-.cv .fundo,
+.cv .cv-fundo,
 .cv .oc {
   position: absolute;
   inset: 0;
@@ -226,7 +226,7 @@
 }
 
 /* objeto fora da tela: seta na borda, que também leva até ele */
-.cv .seta {
+.cv .cv-seta {
   position: absolute;
   z-index: 4;
   min-width: 48px;
@@ -242,10 +242,10 @@
   white-space: nowrap;
   box-shadow: 0 0 0 2px var(--teal);
 }
-.cv .seta.fechado {
+.cv .cv-seta.fechado {
   box-shadow: 0 0 0 2px var(--steel);
 }
-.cv .seta.on {
+.cv .cv-seta.on {
   display: flex;
 }
 
@@ -542,6 +542,10 @@
     0 0 0 6px var(--steel);
 }
 .cv .v-nome {
+  /* o os.css do v2 também tem .v-nome (Barlow, caixa alta): aqui volta a letra do protótipo */
+  font: inherit;
+  letter-spacing: normal;
+  text-transform: none;
   display: block;
   min-height: 0;
   font-size: 18px;
@@ -641,8 +645,8 @@
   transform-origin: right center;
   pointer-events: none;
 }
-.cv.em-visita .ponto,
-.cv.em-visita .seta {
+.cv-mapa.em-visita .ponto,
+.cv-mapa.em-visita .cv-seta {
   display: none;
 }
 .cv .npc-chibi {

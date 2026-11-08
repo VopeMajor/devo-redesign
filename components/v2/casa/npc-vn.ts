@@ -266,6 +266,7 @@ export function monta(img: HTMLImageElement, o: Opcoes = {}) {
     if (rosto) void rostoPronto.then(() => srcs.forEach((s) => variantes(s).forEach(um)))
   }
   async function pose(src: string, { reage = null, mesma = false }: { reage?: string | null; mesma?: boolean } = {}) {
+    if (!vivo) return
     if (!carregadas.has(src)) precarrega([src])
     await carregadas.get(src)
     const nova = src !== ultimaPose
@@ -287,6 +288,7 @@ export function monta(img: HTMLImageElement, o: Opcoes = {}) {
     }
   }
   function fala(el: HTMLElement, texto: string, fim?: () => void, { comVoz = true }: { comVoz?: boolean } = {}) {
+    if (!vivo) return
     completa(true)
     if (calmo || rapido()) {
       el.textContent = texto

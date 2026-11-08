@@ -41,6 +41,19 @@ const idem = () => Math.random().toString(36).slice(2, 12) + Date.now().toString
 
 type Vista = 'mapa' | 'guarda' | 'mesa'
 const aplicados = new WeakSet<object>()
+const QUARTOS = 'devo-casa-quartos-vistos'
+const quartosVistos = () => {
+  try {
+    return localStorage.getItem(QUARTOS) === '1'
+  } catch {
+    return true
+  }
+}
+const marcaQuartos = () => {
+  try {
+    localStorage.setItem(QUARTOS, '1')
+  } catch {}
+}
 
 export function CasaV2({ onFechar, onAbre }: { onFechar: () => void; onAbre: (id: string) => void }) {
   const [alvo, setAlvo] = useState<HTMLElement | null>(null)
@@ -50,7 +63,7 @@ export function CasaV2({ onFechar, onAbre }: { onFechar: () => void; onAbre: (id
 }
 
 function Casa({ onFechar, onAbre }: { onFechar: () => void; onAbre: (id: string) => void }) {
-  const { dispatch, notify } = useDevo()
+  const { dispatch } = useDevo()
   const { data, error, mutate } = useSWR(MAPA, getMapa, {
     revalidateOnFocus: false,
     onSuccess: (d) => {
@@ -67,20 +80,33 @@ function Casa({ onFechar, onAbre }: { onFechar: () => void; onAbre: (id: string)
   telaRef.current = tela
   const tocou = useRef(false)
 
-  useBackHandler(tela !== 'mapa', () => setTela('mapa'))
-  useBackHandler(tela === 'mapa', onFechar)
+  const fecharMesa = () => {
+    setTela('mapa')
+    void mutate()
+  }
+  // o voltar do aparelho fecha só a camada de cima: mesa/guarda-roupa → cartão, viagem, andares → a Casa.
+  // No meio da visita do Simon ele não faz nada (a visita se perderia).
+  useBackHandler(true, () => {
+    if (telaRef.current === 'mesa') return fecharMesa()
+    if (telaRef.current === 'guarda') return setTela('mapa')
+    const m = motor.current
+    if (m?.emVisita) return
+    if (m?.fechaTopo()) return
+    onFechar()
+  })
 
   const fimVisita = useCallback(
     async (r: FimSimon) => {
       try {
         const j = await postMapa<{ guardaChuva: boolean }>({ action: 'visita.simon', fim: r.fim, guardaChuva: r.guardaChuva, escolhas: r.escolhas })
-        if (j.guardaChuva) notify({ appId: 'inventario', title: 'Guarda-chuva do antigo morador', body: 'Guardado no inventário' })
+        // o aviso só depois de o servidor confirmar o item
+        if (j.guardaChuva) motor.current?.aviso('Guarda-chuva guardado no inventário')
       } catch (e) {
         motor.current?.aviso((e as Error).message, 3200)
       }
       void mutate()
     },
-    [mutate, notify],
+    [mutate],
   )
 
   const liberada = data?.liberado ? data : null
@@ -92,9 +118,12 @@ function Casa({ onFechar, onAbre }: { onFechar: () => void; onAbre: (id: string)
   const temMapa = !!(liberada && aparencia)
   useEffect(() => {
     if (!temMapa || !raiz.current || !liberada || !aparencia) return
+    // o andar dos quartos abriu longe da Casa (a fabricação terminou com ela fechada): o motor nasce na etapa 2 e o
+    // aviso "O andar dos quartos abriu" aparece ao entrar, uma vez
+    const etapa = liberada.etapa === 3 && !liberada.equipe && !quartosVistos() ? 2 : liberada.etapa
     const m = criaCasa(raiz.current, {
       aparencia,
-      etapa: liberada.etapa,
+      etapa,
       andamento: liberada.andamento,
       equipe: liberada.equipe,
       onSair: () => cb.current.onFechar(),
@@ -115,18 +144,20 @@ function Casa({ onFechar, onAbre }: { onFechar: () => void; onAbre: (id: string)
 
   // dados novos do servidor: fabricações, andar dos quartos, aparência
   useEffect(() => {
-    if (liberada && aparencia) motor.current?.atualiza({ etapa: liberada.etapa, andamento: liberada.andamento, aparencia })
+    if (!liberada || !aparencia || !motor.current) return
+    motor.current.atualiza({ etapa: liberada.etapa, andamento: liberada.andamento, aparencia })
+    if (liberada.etapa === 3) marcaQuartos()
   }, [liberada, aparencia])
 
-  // a campainha: o Simon bate enquanto não for atendido (uma vez a cada vez que a Casa abre)
+  // a campainha: o Simon bate enquanto não for atendido (uma vez a cada vez que a Casa abre), quando o jogador estiver
+  // livre (sem painel aberto, parado, com a aba à vista)
   useEffect(() => {
     if (!temMapa || liberada?.visita !== 'simon' || tocou.current) return
     tocou.current = true
     let foi = false
     const t = setTimeout(() => {
       foi = true
-      if (telaRef.current === 'mapa') motor.current?.campainha()
-      else tocou.current = false
+      motor.current?.campainhaQuandoLivre()
     }, 2600)
     return () => {
       clearTimeout(t)
@@ -150,16 +181,20 @@ function Casa({ onFechar, onAbre }: { onFechar: () => void; onAbre: (id: string)
     }
   }
 
-  const fecharMesa = () => {
-    setTela('mapa')
-    void mutate()
-  }
-
   let conteudo: React.ReactNode
   if (!data) {
     conteudo = (
-      <div className="cv-carrega" role="status">
-        {error ? (error as Error).message : 'Abrindo a porta…'}
+      <div className="cv-tranca">
+        <section role={error ? 'alert' : 'status'}>
+          <h2>{error ? 'A casa não respondeu' : 'Abrindo a porta…'}</h2>
+          {error && <p>{(error as Error).message}</p>}
+          {error && (
+            <button onClick={() => void mutate()} style={{ marginBottom: 10 }}>
+              Tentar de novo
+            </button>
+          )}
+          <button onClick={onFechar}>Voltar ao celular</button>
+        </section>
       </div>
     )
   } else if (!data.liberado) {

@@ -108,7 +108,11 @@ const json = new Map<string, Promise<unknown>>()
 function carregaJson<T>(src: string): Promise<T> {
   let p = json.get(src)
   if (!p) {
-    p = fetch(src).then((r) => r.json())
+    p = fetch(src).then((r) => {
+      if (!r.ok) throw new Error(String(r.status))
+      return r.json()
+    })
+    p.catch(() => json.delete(src))
     json.set(src, p)
   }
   return p as Promise<T>

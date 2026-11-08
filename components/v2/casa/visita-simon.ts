@@ -233,12 +233,14 @@ export function visitaSimon(raiz: HTMLElement, { aparencia, aoFim, palco = null 
       fig.hidden = false
       npc.escala()
       await npc.pose(src(p), { reage: f.longe ? null : REAGE[p] })
+      if (fechou) return
     } else if (porta) {
       fig.classList.remove('longe')
       fig.classList.add('inteiro')
       fig.hidden = false
       npc.escala()
       await npc.pose(src('sorriso'), { mesma: true })
+      if (fechou) return
       npc.mostra(true)
       void npc.entra('porta')
     } else if (f.texto.startsWith('[Simon entra na casa')) {
@@ -246,6 +248,7 @@ export function visitaSimon(raiz: HTMLElement, { aparencia, aoFim, palco = null 
       npc.mostra(false)
     } else if (f.texto === '[Fecho a porta.]') {
       await npc.sai('porta', el)
+      if (fechou) return
       fig.hidden = true
       npc.mostra(false)
     } else if (f.texto === '[Ele foi embora.]') fig.hidden = true
@@ -294,7 +297,10 @@ export function visitaSimon(raiz: HTMLElement, { aparencia, aoFim, palco = null 
     if (!esperaEscolha) void passo()
   })
   addEventListener('keydown', tecla)
-  vaiPara('inicio')
+  // o primeiro balão é medido com a fonte em pixel já carregada (senão o corte das páginas sai errado)
+  const fontes = (document as Document & { fonts?: FontFaceSet }).fonts
+  if (fontes) void fontes.ready.then(() => !fechou && vaiPara('inicio'))
+  else vaiPara('inicio')
   return {
     /** Sai sem salvar (a Casa fechou no meio da visita). */
     cancela() {

@@ -204,11 +204,12 @@ function Casca() {
   const muda = (id: string, f: (j: Janela) => Janela) => setJanelas((js) => js.map((j) => (j.id === id ? f(j) : j)))
   useEffect(() => {
     const k = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && foco) fecha(foco.id)
+      // com a Casa aberta, o Esc é dela (fecha o cartão, a viagem ou os andares), não da janela que ficou atrás
+      if (e.key === 'Escape' && foco && !casa) fecha(foco.id)
     }
     window.addEventListener('keydown', k)
     return () => window.removeEventListener('keydown', k)
-  }, [foco])
+  }, [foco, casa])
 
   /* ---- anúncios ---- */
   const [qi, setQi] = useState(0)

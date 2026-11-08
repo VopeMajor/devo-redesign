@@ -1,7 +1,7 @@
 import type { Aparencia, CasaEtapa } from '@/lib/devo/casa-aparencia'
 import { ANDAR_BOB, COL, folhaAndarFofo, PX_QUADRO } from './avatar-cor'
 import { criaChibi, type ChibiNpc } from './npc-chibi'
-import { calmo as calmoAgora, passo as passoSom, som } from './som'
+import { calmo as calmoAgora, destravaSom, passo as passoSom, som } from './som'
 import { type FimSimon, type PalcoVisita, visitaSimon } from './visita-simon'
 
 /**
@@ -78,7 +78,7 @@ function dentro(x: number, y: number, p: Pt[]) {
 
 const ESQUELETO = `
 <div class="cv-vista" aria-label="Cena da casa. Toque no chão para andar.">
-  <div class="cv-mundo"><div class="fundo cv-fundo"></div><div class="cv-alvo"></div><div class="cv-fim"></div></div>
+  <div class="cv-mundo"><div class="cv-fundo"></div><div class="cv-alvo"></div><div class="cv-fim"></div></div>
 </div>
 <div class="cv-topo">
   <button class="cv-sair" aria-label="Sair da casa">‹</button>
@@ -333,6 +333,7 @@ export function criaCasa(raiz: HTMLElement, o: MotorOpcoes) {
     mundo.style.transform = `translate(${Math.round(cam.x)}px,${Math.round(cam.y)}px) scale(${esc})`
   }
   function anda(p: Pt, aoChegar?: () => void) {
+    clearTimeout(cartaoT)
     const c = acha([eu.x, eu.y], p)
     olha = { x: 0, y: 0 }
     eu.rota = c.length ? c.slice(1) : []
@@ -369,7 +370,7 @@ export function criaCasa(raiz: HTMLElement, o: MotorOpcoes) {
     const lista = S.pontos(etapa)
     setas = lista.map((p) => {
       const el = document.createElement('button')
-      el.className = 'seta' + (p.fechado ? ' fechado' : '')
+      el.className = 'cv-seta' + (p.fechado ? ' fechado' : '')
       el.setAttribute('aria-label', 'Ir até: ' + p.titulo)
       el.append(document.createElement('span'), (p.fechado ? '🔒 ' : '') + p.curto)
       el.onclick = () => escolhe(p)
@@ -398,12 +399,14 @@ export function criaCasa(raiz: HTMLElement, o: MotorOpcoes) {
     const dy = y - eu.y
     eu.dir = Math.abs(dx) > Math.abs(dy) ? (dx < 0 ? 1 : 2) : dy > 0 ? 0 : 3
   }
+  // o cartão abre 160 ms depois de chegar; qualquer outro toque, a campainha ou fechar cancela
+  let cartaoT = 0
   function escolhe(p: Ponto) {
     $('.cv-dica').hidden = true
     fechaCartao()
     anda(SEL([p.ir])[0], () => {
       viraPara(p.x / 2, p.y / 2)
-      depois(() => abreCartao(p), 160)
+      cartaoT = depois(() => abreCartao(p), 160)
     })
   }
   function abreCartao(p: Ponto) {
@@ -439,6 +442,7 @@ export function criaCasa(raiz: HTMLElement, o: MotorOpcoes) {
     ;(a.firstChild as HTMLButtonElement).focus({ preventScroll: true })
   }
   const fechaCartao = () => {
+    clearTimeout(cartaoT)
     $('.cv-cartao').hidden = true
   }
   let avisoT = 0
@@ -487,7 +491,7 @@ export function criaCasa(raiz: HTMLElement, o: MotorOpcoes) {
       desenha()
       camera(0)
       $('.cv-fim').style.opacity = '0'
-    }, 350)
+    }, calmo ? 0 : 350)
   }
   function mudaEtapa(e: CasaEtapa, anuncia = true) {
     const subiu = e > etapa
@@ -532,6 +536,8 @@ export function criaCasa(raiz: HTMLElement, o: MotorOpcoes) {
   /* ---------- toque: tocar anda; arrastar olha em volta ---------- */
   let ini: { x: number; y: number; lx: number; ly: number; moveu: boolean } | null = null
   const vista = $('.cv-vista')
+  // o primeiro toque também destrava o som (iPhone)
+  raiz.addEventListener('pointerdown', destravaSom, true)
   vista.addEventListener('pointerdown', (e) => {
     if (!e.isPrimary) {
       ini = null
@@ -612,9 +618,9 @@ export function criaCasa(raiz: HTMLElement, o: MotorOpcoes) {
       const porta = S.pontos(etapa).find((p) => p.id === 'porta')
       let foi = false
       const abre = () => {
+        soltaPula()
         if (foi || !vivo) return
         foi = true
-        document.removeEventListener('pointerdown', pula, true)
         // você fica de frente para a porta, do lado de dentro
         if (porta) {
           eu.rota = []
@@ -629,8 +635,8 @@ export function criaCasa(raiz: HTMLElement, o: MotorOpcoes) {
           palco,
           aoFim: (r) => {
             visita = null
-            if (r.guardaChuva === 'ficou' && r.fim === 'atendeu') aviso('Guarda-chuva guardado no inventário')
-            else if (r.fim === 'ignorou') aviso('Ninguém mais na porta')
+            // o aviso do guarda-chuva vem do React, depois de o servidor confirmar
+            if (r.fim === 'ignorou') aviso('Ninguém mais na porta')
             o.onFimVisita(r)
           },
         })
@@ -641,24 +647,44 @@ export function criaCasa(raiz: HTMLElement, o: MotorOpcoes) {
         abre()
       }
       if (!porta || calmo) return abre()
-      // a campainha toca: "!" sobre o chibi, a cabeça vira para a porta e ele vai atender (um toque pula)
-      som('campainha')
+      // a campainha toca (o som sai na fala "[Som de campainha]", como no protótipo): "!" sobre o chibi, a cabeça vira
+      // para a porta e ele vai atender (um toque pula)
       balao('!')
+      const ate = SEL([porta.ir])[0]
+      const rota = acha([eu.x, eu.y], ate)
+      let dist = 0
+      for (let k = 1; k < rota.length; k++) dist += Math.hypot(rota[k][0] - rota[k - 1][0], rota[k][1] - rota[k - 1][1])
       depois(() => {
         viraPara(porta.x / 2, porta.y / 2)
         depois(
           () =>
-            anda(SEL([porta.ir])[0], () => {
+            anda(ate, () => {
               viraPara(porta.x / 2, porta.y / 2)
               depois(abre, 240)
             }),
           240,
         )
       }, 500)
+      pulaAtivo = pula
       document.addEventListener('pointerdown', pula, true)
-      depois(abre, 6000)
+      // reserva: se algo travar a caminhada, a porta abre mesmo assim (sem teleportar no meio do caminho)
+      depois(abre, 980 + (dist / 62) * 1000 + 1500)
     }
     continua()
+  }
+  let pulaAtivo: ((e: Event) => void) | null = null
+  function soltaPula() {
+    if (pulaAtivo) document.removeEventListener('pointerdown', pulaAtivo, true)
+    pulaAtivo = null
+  }
+  /** Toca quando o jogador estiver livre: sem painel aberto, parado e com a aba à vista. */
+  let esperaT = 0
+  function campainhaQuandoLivre() {
+    clearTimeout(esperaT)
+    const livreAgora =
+      $('.cv-cartao').hidden && $('.cv-viagem').hidden && $('.cv-casa').hidden && !eu.rota.length && document.visibilityState === 'visible' && !o.ocupado()
+    if (livreAgora) campainha()
+    else esperaT = depois(campainhaQuandoLivre, 1000)
   }
   /* palco das visitas curtas: o chibi do NPC na soleira, de frente para você; entra, revira a casa e volta */
   function palcoVisita(porta: Ponto): PalcoVisita {
@@ -845,6 +871,12 @@ export function criaCasa(raiz: HTMLElement, o: MotorOpcoes) {
   let respT = 0
   function laco(t: number) {
     if (!vivo) return
+    // mesa ou guarda-roupa por cima (painel opaco): o mapa não precisa desenhar
+    if (o.ocupado()) {
+      t0 = t
+      requestAnimationFrame(laco)
+      return
+    }
     const dt = Math.min(0.05, (t - t0) / 1000)
     t0 = t
     // anda: 62 px/s, casa com o passo do chibi (PX_QUADRO), o pé quase não patina
@@ -1002,21 +1034,50 @@ export function criaCasa(raiz: HTMLElement, o: MotorOpcoes) {
   requestAnimationFrame(laco)
 
   // o chibi segue a aparência escolhida
-  function vestir(ap: Aparencia) {
-    void folhaAndarFofo(ap).then((cv) => {
-      if (!vivo) return
-      ator.style.backgroundImage = `url(${cv.toDataURL()})`
-      ator.style.backgroundSize = `${cv.width}px ${cv.height}px`
-      folhaPronta = true
-    })
+  // (o pedido mais novo vence; uma falha de rede tenta de novo uma vez)
+  let pedidoFolha = 0
+  let urlFolha: string | null = null
+  function vestir(ap: Aparencia, tentativa = 0) {
+    const meu = ++pedidoFolha
+    folhaAndarFofo(ap)
+      .then(
+        (cv) =>
+          new Promise<void>((ok) =>
+            cv.toBlob((b) => {
+              if (!vivo || meu !== pedidoFolha || !b) return ok()
+              if (urlFolha) URL.revokeObjectURL(urlFolha)
+              urlFolha = URL.createObjectURL(b)
+              ator.style.backgroundImage = `url(${urlFolha})`
+              ator.style.backgroundSize = `${cv.width}px ${cv.height}px`
+              folhaPronta = true
+              ok()
+            }),
+          ),
+      )
+      .catch(() => {
+        if (vivo && meu === pedidoFolha && tentativa < 1) depois(() => vestir(ap, tentativa + 1), 1500)
+      })
   }
   vestir(o.aparencia)
+  ;($('.cv-sair') as HTMLButtonElement).focus({ preventScroll: true })
 
   return {
     aviso,
     campainha,
+    campainhaQuandoLivre,
     mudaEtapa,
     vai,
+    /** Fecha a camada de cima (cartão, viagem, andares). Devolve false se não havia nenhuma. */
+    fechaTopo() {
+      if (!$('.cv-cartao').hidden) return fechaCartao(), true
+      if (!$('.cv-viagem').hidden) return ($('.cv-viagem').hidden = true), true
+      if (!$('.cv-casa').hidden) return ($('.cv-casa').hidden = true), true
+      return false
+    },
+    /** Visita na porta (ou a campainha tocando): o voltar não fecha a Casa no meio dela. */
+    get emVisita() {
+      return !!visita || tocando
+    },
     /** Dados novos do servidor (fabricações, etapa, aparência). */
     atualiza(n: { etapa?: CasaEtapa; andamento?: number; aparencia?: Aparencia }) {
       if (n.aparencia && JSON.stringify(n.aparencia) !== JSON.stringify(o.aparencia)) {
@@ -1027,13 +1088,16 @@ export function criaCasa(raiz: HTMLElement, o: MotorOpcoes) {
         andamento = n.andamento
         pintaPontos()
       }
-      if (n.etapa && n.etapa !== etapa) mudaEtapa(n.etapa)
+      // a equipe testa as etapas pelo painel: o servidor (sempre 3 para ela) não desfaz o teste
+      if (n.etapa && n.etapa !== etapa && !o.equipe) mudaEtapa(n.etapa)
     },
     get sala() {
       return sala
     },
     destroi() {
       vivo = false
+      soltaPula()
+      if (urlFolha) URL.revokeObjectURL(urlFolha)
       visita?.cancela()
       timers.forEach(clearTimeout)
       timers.clear()

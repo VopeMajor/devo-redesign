@@ -4050,7 +4050,7 @@ if (want('casa-v2')) {
   }
   const ponto = async (page, rotulo) => {
     // o losango do objeto (ou a seta na borda, se ele estiver fora da tela)
-    if (!(await tryClick(page.locator(`.cv .ponto[aria-label^="${rotulo}"]`)))) await tryClick(page.locator(`.cv .seta[aria-label="Ir até: ${rotulo}"]`))
+    if (!(await tryClick(page.locator(`.cv .ponto[aria-label^="${rotulo}"]`)))) await tryClick(page.locator(`.cv .cv-seta[aria-label="Ir até: ${rotulo}"]`))
     await page.locator('.cv .cv-cartao:not([hidden])').waitFor({ timeout: 12000 }).catch(() => {})
     await wait(500)
   }
