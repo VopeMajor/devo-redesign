@@ -1073,3 +1073,19 @@
     display: none;
   }
 }
+
+/* a tela antiga da mesa volta ao estilo dela: o os.css do v2 (fora de layer) zera margens e o padding dos botões, e
+   isso venceria os utilitários do Tailwind (em layer). revert-layer devolve o valor das camadas. */
+.cv .cv-mesa-corpo *,
+.cv .cv-mesa-corpo *::before,
+.cv .cv-mesa-corpo *::after {
+  margin: revert-layer;
+}
+.cv .cv-mesa-corpo button {
+  font: revert-layer;
+  color: revert-layer;
+  background: revert-layer;
+  border: revert-layer;
+  padding: revert-layer;
+  text-align: revert-layer;
+}
