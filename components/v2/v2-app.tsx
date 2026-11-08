@@ -103,7 +103,11 @@ async function getJson<T>(url: string): Promise<T> {
 function Casca() {
   const { state } = useDevo()
   const now = useNow(1000)
+  // o relógio só aparece depois de montar: o horário do servidor e o do aparelho nunca batem (hidratação)
+  const [montado, setMontado] = useState(false)
+  useEffect(() => setMontado(true), [])
   const resta = pulseRemaining(state.timerEndsAt, now)
+  const tempo = montado ? relogio(resta) : '--:--:--'
   const critico = resta < PULSE_CRITICAL_MS
   const est = critico ? 'Crítico' : 'Estável'
   const nome = callName(state) ?? 'Record'
@@ -179,12 +183,12 @@ function Casca() {
             Devo<i>.System</i>
           </b>
         </span>
-        <button id="hora" onClick={() => abre('pulso')} aria-label={`Tempo no pulso: ${relogio(resta)}. ${est}. Abrir Pulso`}>
+        <button id="hora" onClick={() => abre('pulso')} aria-label={`Tempo no pulso: ${tempo}. ${est}. Abrir Pulso`}>
           <svg className="ampulheta" viewBox="0 0 24 24" aria-hidden="true">
             <path d="M6 3h12M6 21h12M7.5 3c0 5.5 9 6.5 9 9s-9 3.5-9 9M16.5 3c0 5.5-9 6.5-9 9s9 3.5 9 9" />
           </svg>
           <i>Pulso</i>
-          <b>{relogio(resta)}</b>
+          <b>{tempo}</b>
         </button>
         <span aria-hidden="true" />
       </header>
