@@ -717,3 +717,17 @@ Dono: "Commitar tudo" → "Tudo, 1,5 GB" → "Enviar". Commit 0398f8c5 na branch
 Dono: "quando acabar atualize o site" → "Levar o v2 ao jogo": quando o v2 estiver todo aprovado, passar o que está no
 protótipo (Casa, chibis, Torres, Catedral, sistema…) para o jogo de verdade (Next.js) e publicar pela `redesign`.
 
+### 08/11/2026 — v2 no jogo: caminho do meio, etapa 1 publicada
+
+Dono: "acha mais facil lançar num link a parte do que editar tudo?" → "como está no github, acha melhor criar outro site
+pra ser o devo, ou editar o original?" → "Caminho do meio": interface do v2 nova, feita do zero a partir do protótipo,
+no mesmo projeto, sobre o mesmo login, banco e regras; em /v2 só para Owner e Anfitrião até ficar completa; depois o
+endereço principal troca para o v2.
+- Etapa 1 (branch `v2/base`, entrou na `redesign` em 7fda7726): casca do sistema em /v2 com o CSS do protótipo
+  (`components/v2/os.css` + `v2-ajustes.css`), cartão do Record, Tempo, check-in, próximo evento, anúncios, Mapa do
+  Devo, doca, janelas e avisos, com os dados reais. As telas dos sistemas vêm nas próximas etapas (a janela leva ao
+  DEVO atual). Jogador comum em /v2 volta para o site atual. Crítico de arte comparou com o protótipo; acertos feitos.
+- CI de capturas: o GitHub trocou o ubuntu-latest para o 26.04 e o Playwright do projeto não roda nele; o job foi
+  fixado no Ubuntu 24.04 (valia para todas as branches). Grupo de capturas novo: `v2`.
+Dono: "Publicar". No ar em devo.devorpg.workers.dev/v2. Banco sem mudança.
+
