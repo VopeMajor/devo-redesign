@@ -58,3 +58,21 @@
 .v2-legado button {
   text-align: inherit;
 }
+/* a janela com tela antiga: o corpo vira coluna sem margem e a tela ganha a altura toda (o Record rola por dentro e
+   precisa de altura definida) */
+.jan .corpo:has(> .v2-legado) {
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  overflow: hidden;
+}
+.jan .corpo > .v2-legado {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.jan .corpo > .v2-legado > * {
+  min-height: 100%;
+}
