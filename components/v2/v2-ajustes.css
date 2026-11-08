@@ -1,0 +1,47 @@
+/* DEVO v2: acertos da passagem do protótipo para o jogo (crítico, 08/11). Vem depois de os.css. */
+
+/* fontes servidas pelo próprio site (next/font), como no resto do jogo: as do Google carregadas na hora deixavam
+   buracos entre as letras no Chromium do Linux ("DI ÁRIO", "EVEN TO") */
+#os {
+  --font: var(--v2-barlow), system-ui, sans-serif;
+  --ui: var(--v2-barlow), system-ui, sans-serif;
+  --cond: var(--v2-barlow-cond), var(--v2-barlow), sans-serif;
+  --relogio: var(--v2-jersey), monospace;
+  font-family: var(--font);
+  font-kerning: normal;
+}
+
+/* no celular o painel rola por baixo da barra de cima: um degradê escuro atrás dela esconde o que passa */
+@media (max-width: 899.9px) {
+  #menu {
+    background: linear-gradient(180deg, var(--fundo) 0%, color-mix(in srgb, var(--fundo) 88%, transparent) 70%, transparent);
+  }
+}
+
+/* o título do evento pode quebrar em duas linhas em vez de cortar */
+.hj strong {
+  white-space: normal;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  line-height: 1.12;
+}
+
+/* avisos sem nada: centrado no painel, com o sino apagado */
+.v2-vazio {
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 12px;
+  min-height: 100%;
+  padding: 32px 16px;
+  text-align: center;
+  color: var(--sec);
+  font: 500 15px/1.4 var(--ui);
+}
+.v2-vazio img {
+  width: 72px;
+  height: 72px;
+  opacity: 0.45;
+  filter: grayscale(0.6);
+}

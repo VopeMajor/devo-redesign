@@ -10,7 +10,9 @@ import { recordIdFor } from '@/lib/devo/deadly-votes'
 import { PULSE_CRITICAL_MS, pulseRemaining } from '@/lib/devo/pulse'
 import type { CalendarioPayload } from '@/lib/devo/calendario'
 import type { SaveData } from '@/lib/devo/save'
+import { Barlow, Barlow_Semi_Condensed, Jersey_15 } from 'next/font/google'
 import './os.css'
+import './v2-ajustes.css'
 
 /**
  * Casca do DEVO v2: a mesma estrutura de elementos do protótipo aprovado (kit3/os-janelas.html: barra de cima com o
@@ -19,6 +21,12 @@ import './os.css'
  * Os sistemas abrem janelas; cada tela entra nas próximas etapas do plano (PLANO-PUBLICACAO.md).
  */
 
+const barlow = Barlow({ subsets: ['latin', 'latin-ext'], weight: ['400', '500', '600', '700'], variable: '--v2-barlow' })
+const barlowCond = Barlow_Semi_Condensed({ subsets: ['latin', 'latin-ext'], weight: ['500', '600', '700'], variable: '--v2-barlow-cond' })
+const jersey = Jersey_15({ subsets: ['latin'], weight: '400', variable: '--v2-jersey' })
+const FONTES_V2 = [barlow.variable, barlowCond.variable, jersey.variable].join(' ')
+
+/** Fontes dos apps do protótipo que ainda virão (Cinzel, EB Garamond, VT323…): pelo Google, como no protótipo. */
 const FONTES =
   'https://fonts.googleapis.com/css2?family=Jersey+15&family=VT323&family=Cinzel:wght@500;600;700&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=IBM+Plex+Mono:wght@400;500&family=Oswald:wght@500&family=Manrope:wght@500;600;700;800&family=IBM+Plex+Sans:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Barlow:wght@400;500;600;700&family=Barlow+Semi+Condensed:wght@500;600;700&display=swap'
 
@@ -143,10 +151,11 @@ function Casca() {
       let caixa: Janela['caixa'] = null
       if (pc() && osRef.current) {
         const a = osRef.current.getBoundingClientRect()
-        cascata.current = (cascata.current + 1) % 6
-        const w = Math.min(860, a.width - 8)
-        const h = Math.min(620, a.height - 44 - 54 - 14)
-        caixa = { l: Math.max(8, Math.min(a.width - w - 14, 380 + cascata.current * 26)), t: 54 + cascata.current * 22, w, h }
+        cascata.current = (cascata.current + 1) % 4
+        const w = Math.min(760, a.width - 8)
+        const h = Math.min(680, a.height - 44 - 54 - 14)
+        const l = Math.max(460, a.width - w - 40) - cascata.current * 22
+        caixa = { l: Math.max(8, Math.min(a.width - w - 8, l)), t: 56 + cascata.current * 18, w, h }
       }
       return [...js, { id, z: ++zRef.current, oculta: false, max: false, caixa }]
     })
@@ -175,7 +184,7 @@ function Casca() {
   const avisos = state.notifications.length
 
   return (
-    <main id="os" ref={osRef} className={[critico && 'critico', foco && 'aberta'].filter(Boolean).join(' ')}>
+    <main id="os" ref={osRef} className={[FONTES_V2, critico && 'critico', foco && 'aberta'].filter(Boolean).join(' ')}>
       <header id="menu">
         <span id="marca">
           <Sigilo anel />
@@ -306,7 +315,7 @@ function Casca() {
             return (
               <button key={j.id} className={'chanfro' + (foco?.id === j.id ? ' foco' : '')} aria-label={nomeJ}
                 onClick={() => muda(j.id, (x) => (foco?.id === j.id ? { ...x, oculta: true } : { ...x, oculta: false, z: ++zRef.current }))}>
-                <img src={ico(j.id === 'avisos' ? 'mensagens' : j.id)} alt="" />
+                <img src={ico(j.id === 'avisos' ? 'sino' : j.id)} alt="" />
                 {janelas.length < 4 && <span>{j.id === 'avisos' ? 'Avisos' : a?.curto ?? a?.nome}</span>}
               </button>
             )
@@ -438,7 +447,7 @@ function JanelaSistema({ j, emFoco, os, onFoco, onMini, onMax, onFecha, onMove, 
     <section ref={ref} className={['jan chanfro', !j.caixa && 'cheia', j.max && 'max', emFoco && 'foco'].filter(Boolean).join(' ')} role="dialog" aria-label={titulo}
       tabIndex={-1} hidden={j.oculta} style={estilo} data-sis={j.id} onPointerDownCapture={() => !emFoco && onFoco()}>
       <header className="tit" onPointerDown={arrasta('move')}>
-        <img src={ico(j.id === 'avisos' ? 'mensagens' : j.id)} alt="" />
+        <img src={ico(j.id === 'avisos' ? 'sino' : j.id)} alt="" />
         <span>
           <small aria-hidden="true">Devo · Sistema</small>
           {titulo}
@@ -468,7 +477,8 @@ function JanelaSistema({ j, emFoco, os, onFoco, onMini, onMax, onFecha, onMove, 
                 </li>
               ))
             ) : (
-              <li className="vazio" style={{ border: 0 }}>
+              <li className="v2-vazio" style={{ border: 0 }}>
+                <img src={ico('sino')} alt="" />
                 Nada de novo por enquanto.
               </li>
             )}
