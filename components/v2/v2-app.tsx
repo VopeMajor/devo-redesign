@@ -23,6 +23,9 @@ import { APPS } from '@/components/devo/os/apps'
 import { OsNavContext, type OsNav } from '@/components/devo/os/os-nav'
 import { useDevoEngine } from '@/components/devo/os/use-devo-engine'
 import { CenasGatilho } from '@/components/devo/torres/gatilho'
+import { isSistema, SISTEMAS as SISTEMAS_JOGO } from '@/components/devo/progressao/sistemas'
+import { useAcesso as useAcessoSistemas } from '@/components/devo/progressao/use-acesso'
+import { useBackHandler } from '@/components/devo/use-back-handler'
 import { CasaV2 } from './casa/casa-v2'
 import type { AppId } from '@/lib/devo/types'
 import './os.css'
@@ -118,6 +121,18 @@ const Seta = ({ volta = false }: { volta?: boolean }) => (
 export function V2App(props: { initialPlayerName: string | null; initialCharacterName: string | null; initialSave: SaveData | null }) {
   return (
     <DevoProvider initialPlayerName={props.initialPlayerName} initialCharacterName={props.initialCharacterName} initialSave={props.initialSave}>
+      <V2Sistema onExit={() => window.location.assign('/')} />
+    </DevoProvider>
+  )
+}
+
+/**
+ * O sistema v2 dentro de um DevoProvider já montado. Desde 08/11/2026 (dono: "v2 para todos") é o sistema do jogo
+ * principal, depois do prólogo (components/devo/devo-experience.tsx); /v2 continua como atalho da equipe.
+ */
+export function V2Sistema({ onExit }: { onExit: () => void }) {
+  return (
+    <>
       <link rel="stylesheet" href={FONTES} precedence="default" />
       <svg width="0" height="0" style={{ position: 'absolute' }} aria-hidden="true">
         <symbol id="sigilo-devo" viewBox="0 0 64 64">
@@ -128,8 +143,8 @@ export function V2App(props: { initialPlayerName: string | null; initialCharacte
         </symbol>
       </svg>
       <Motor />
-      <Casca />
-    </DevoProvider>
+      <Casca onExit={onExit} />
+    </>
   )
 }
 
@@ -149,8 +164,20 @@ async function getJson<T>(url: string): Promise<T> {
   return r.json()
 }
 
-function Casca() {
-  const { state } = useDevo()
+function Casca({ onExit }: { onExit: () => void }) {
+  const { state, dispatch } = useDevo()
+  // o que o jogador pode abrir (o servidor decide; Owner e Anfitrião veem tudo)
+  const acesso = useAcessoSistemas()
+  const travaDe = useCallback(
+    (id: string): string | null => {
+      const s = SISTEMAS_JOGO.find((x) => x.id === id)
+      if (!s || !acesso.eu) return null
+      return s.flag && acesso.liberado(s.flag) ? null : s.trava
+    },
+    [acesso],
+  )
+  const travaRef = useRef(travaDe)
+  travaRef.current = travaDe
   const now = useNow(1000)
   // o relógio só aparece depois de montar: o horário do servidor e o do aparelho nunca batem (hidratação)
   const [montado, setMontado] = useState(false)
@@ -189,7 +216,11 @@ function Casca() {
   const [casa, setCasa] = useState(false)
 
   const abre = useCallback((id0: string) => {
-    if (id0 === 'casa') return setCasa(true)
+    const trava = travaRef.current(id0)
+    // sistema liberado e aberto pela primeira vez: conta como explorado (visita do Galo), como no sistema antigo
+    if (isSistema(id0) && !trava) dispatch({ type: 'SEE_SYSTEM', id: id0 })
+    // trancada, a Casa abre na janela com o motivo (a tela antiga mostra a trava)
+    if (id0 === 'casa' && !trava) return setCasa(true)
     const id = ABRE_COMO[id0] ?? id0
     setJanelas((js) => {
       const ja = js.find((j) => j.id === id)
@@ -226,6 +257,8 @@ function Casca() {
     return () => window.removeEventListener('keydown', k)
   }, [foco, casa])
 
+  useBackHandler(!!foco && !casa, () => foco && fecha(foco.id))
+
   /* ---- anúncios ---- */
   const [qi, setQi] = useState(0)
   const an = anuncios.length ? anuncios[qi % anuncios.length] : null
@@ -239,10 +272,10 @@ function Casca() {
     () => ({
       layout: pc() ? 'desktop' : 'phone',
       open: (id: AppId) => abre(id),
-      exitToLanding: () => window.location.assign('/'),
+      exitToLanding: onExit,
       restart: () => abre('ajustes'),
     }),
-    [abre],
+    [abre, onExit],
   )
 
   const arcano = eu?.arcano ?? null
@@ -359,7 +392,20 @@ function Casca() {
             <circle cx="96" cy="555" r="3" />
             <circle cx="262" cy="392" r="5" />
           </svg>
-          <Mapa onAbre={abre} contas={state.unread as Record<string, number | undefined>} />
+          <Mapa
+            onAbre={abre}
+            contas={state.unread as Record<string, number | undefined>}
+            travaDe={travaDe}
+            visivel={(id) =>
+              id === 'mesa'
+                ? !!eu && eu.cargo !== 'player'
+                : id === 'jogos'
+                  ? state.arcadeUnlocked || acesso.salaJogos
+                  : id === 'conflito' || id === 'ranking'
+                    ? !!eu?.acesso.total
+                    : true
+            }
+          />
         </section>
       </div>
 
@@ -393,6 +439,7 @@ function Casca() {
           {avisos > 0 && <b>{avisos}</b>}
         </button>
       </nav>
+      <AvisoQueChega onAbre={abre} />
       <CenasGatilho />
       {casa && (
         <CasaV2
@@ -409,7 +456,17 @@ function Casca() {
 }
 
 /** O Mapa do Devo: cada sistema é um local, o objeto dentro de uma mira dourada e o nome entre dois filetes. */
-function Mapa({ onAbre, contas }: { onAbre: (id: string) => void; contas: Record<string, number | undefined> }) {
+function Mapa({
+  onAbre,
+  contas,
+  travaDe,
+  visivel,
+}: {
+  onAbre: (id: string) => void
+  contas: Record<string, number | undefined>
+  travaDe: (id: string) => string | null
+  visivel: (id: string) => boolean
+}) {
   const ref = useRef<HTMLDivElement>(null)
   // no computador o mapa se arrasta com o mouse (no toque, o rolar lateral já é nativo)
   useEffect(() => {
@@ -459,15 +516,30 @@ function Mapa({ onAbre, contas }: { onAbre: (id: string) => void; contas: Record
   }, [])
   return (
     <div id="mesa" ref={ref}>
-      {SISTEMAS.map((a) => {
+      {SISTEMAS.filter((a) => visivel(a.id)).map((a) => {
         const n = contas[a.id] ?? 0
+        const trava = travaDe(a.id)
         return (
-          <button key={a.id} className="ic" data-id={a.id} aria-label={n ? `${a.nome}, ${n} novas` : a.nome} onClick={() => onAbre(a.id)}>
+          <button
+            key={a.id}
+            className={'ic' + (trava ? ' trancado' : '')}
+            data-id={a.id}
+            title={trava ? `${a.nome} · ${trava}` : undefined}
+            aria-label={trava ? `${a.nome}: trancado. ${trava}` : n ? `${a.nome}, ${n} novas` : a.nome}
+            onClick={() => onAbre(a.id)}
+          >
             <i className="disco">
               <img src={ico(a.id)} alt="" />
             </i>
             <span>{a.curto ?? a.nome}</span>
-            {n > 0 && <u>{n}</u>}
+            {trava ? (
+              <>
+                <img className="ic-cad" src="/v2/art/os/px/aco/cadeado.png" alt="" />
+                <small className="ic-trava">{trava}</small>
+              </>
+            ) : (
+              n > 0 && <u>{n}</u>
+            )}
           </button>
         )
       })}
@@ -588,5 +660,37 @@ function JanelaSistema({ j, emFoco, os, onFoco, onMini, onMax, onFecha, onMove, 
       </div>
       <i className="canto" aria-hidden="true" onPointerDown={arrasta('tam')} />
     </section>
+  )
+}
+
+/**
+ * Aviso que chega (os "toasts" do jogo: carta recebida, alguém sentou na mesa, mensagem nova…): uma cápsula de vidro
+ * sob o Tempo, um de cada vez. Tocar abre o sistema; some sozinho depois de alguns segundos (fica na central do sino).
+ */
+function AvisoQueChega({ onAbre }: { onAbre: (id: string) => void }) {
+  const { state, dispatch } = useDevo()
+  const t = state.toasts[0]
+  useEffect(() => {
+    if (!t) return
+    const x = window.setTimeout(() => dispatch({ type: 'DISMISS_TOAST', id: t.id }), 6000)
+    return () => window.clearTimeout(x)
+  }, [t, dispatch])
+  if (!t) return null
+  return (
+    <button
+      key={t.id}
+      className={'v2-aviso' + (t.tone === 'danger' ? ' perigo' : '')}
+      role="status"
+      onClick={() => {
+        dispatch({ type: 'DISMISS_TOAST', id: t.id })
+        if (t.appId) onAbre(t.appId)
+      }}
+    >
+      <img src={ico(t.appId && SIS.has(t.appId) ? t.appId : 'sino')} alt="" />
+      <span>
+        <b>{t.title}</b>
+        {t.body && <small>{t.body}</small>}
+      </span>
+    </button>
   )
 }

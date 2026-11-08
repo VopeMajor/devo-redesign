@@ -18,10 +18,12 @@
 .corpo h3.aj{font-size:24px;font-weight:400}
 .corpo p.aj{margin-top:12px;color:var(--sec);font-size:20px}
 :root{--font:"VT323",monospace;--relogio:"Jersey 15",monospace;--tarefa:54px;--topo:44px}
-*{box-sizing:border-box;margin:0;-webkit-tap-highlight-color:transparent}
-html,body{height:100%;background:var(--fundo);overflow:hidden;font-family:var(--font);color:var(--tx)}
-button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;padding:0;text-align:left}
-button:focus-visible{outline:2px solid var(--dest);outline-offset:1px}
+/* as regras gerais do protótipo valem só dentro do v2 (#os), e as da página só com ele na tela (data-tema no <html>):
+   o v2 divide a página com a entrada, o prólogo e as cenas do jogo desde 08/11/2026. :where() mantém a mesma força. */
+:where(#os,#os *,.cv,.cv *){box-sizing:border-box;margin:0;-webkit-tap-highlight-color:transparent}
+html[data-tema],html[data-tema] body{height:100%;background:var(--fundo);overflow:hidden;font-family:var(--font);color:var(--tx)}
+:where(#os,.cv) button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;padding:0;text-align:left}
+:where(#os,.cv) button:focus-visible{outline:2px solid var(--dest);outline-offset:1px}
 [hidden]{display:none!important}
 #os{position:relative;height:100dvh;overflow:hidden;overflow:clip;background:var(--fundo) center/cover no-repeat;image-rendering:pixelated}
 #os *{image-rendering:auto}
@@ -1560,7 +1562,7 @@ img[src*="art/os/poco/dracma"],img[src*="fragmento.png"]{image-rendering:pixelat
 /* o texto corrido sai do pixel: a letra nova é reduzida pela altura do x, então os tamanhos pensados para o VT323 continuam valendo;
    quem usa o atalho font: (o Tempo e os números em Jersey 15) não herda o ajuste e segue em pixel */
 :root{--font:"Manrope",system-ui,sans-serif}
-html{font-size-adjust:.35}
+html[data-tema]{font-size-adjust:.35}
 .i-resumo small,.j-p-dados dd.p,.j-p-dados small,.bl-op u{font-size-adjust:.35}
 :root{--ui:"Manrope",system-ui,sans-serif;--topo:56px;--tarefa:66px;--r:18px;--r-p:12px;--linha:color-mix(in srgb,var(--rel) 20%,transparent);--linha2:color-mix(in srgb,var(--rel) 34%,transparent);--vidro:color-mix(in srgb,var(--jan) 84%,transparent);--vidro2:color-mix(in srgb,var(--barra) 70%,transparent);--brilho:color-mix(in srgb,var(--dest) 30%,transparent);--sombra:0 28px 64px -12px rgba(0,0,0,.72),0 0 0 1px rgba(0,0,0,.45)}
 #os::before{content:"";position:absolute;inset:0;z-index:0;pointer-events:none;background:radial-gradient(70% 55% at 72% 28%,color-mix(in srgb,var(--dest) 13%,transparent),transparent 70%),radial-gradient(60% 50% at 10% 100%,color-mix(in srgb,var(--barra2) 30%,transparent),transparent 70%),linear-gradient(to bottom,transparent 55%,color-mix(in srgb,var(--fundo) 70%,transparent))}

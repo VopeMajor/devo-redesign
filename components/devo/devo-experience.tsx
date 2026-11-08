@@ -10,6 +10,7 @@ import { authClient } from '@/lib/auth-client'
 
 const AUTO_START_KEY = 'devo_auto_start'
 import { DevoOS } from './os/devo-os'
+import { V2Sistema } from '../v2/v2-app'
 import { callName, DevoProvider, useDevo } from './state/devo-store'
 import type { SaveData } from '@/lib/devo/save'
 import { BackExitHint, useBackHandler } from './use-back-handler'
@@ -65,6 +66,8 @@ function DevoRoot() {
   const [naming, setNaming] = useState<AccessMode | null>(null)
   const [offerPwa, setOfferPwa] = useState(false)
   const [prologue, setPrologue] = useState(true)
+  const [antigo, setAntigo] = useState(false)
+  useEffect(() => setAntigo(new URLSearchParams(window.location.search).has('antigo')), [])
 
   useEffect(() => {
     const wake = () => {
@@ -180,7 +183,8 @@ function DevoRoot() {
       )}
       {state.phase === 'os' && (
         <NarrativaHost>
-          <DevoOS onExit={exitToLanding} />
+          {/* DEVO v2 para todos (dono, 08/11/2026). O sistema antigo ainda abre com ?antigo no endereço. */}
+          {antigo ? <DevoOS onExit={exitToLanding} /> : <V2Sistema onExit={exitToLanding} />}
         </NarrativaHost>
       )}
       {state.phase === 'os' && offerPwa && <PwaOffer onClose={() => setOfferPwa(false)} />}

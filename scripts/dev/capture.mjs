@@ -11,6 +11,8 @@ const require = createRequire(process.env.PLAYWRIGHT_FROM ?? import.meta.url)
 const { chromium } = require('playwright')
 
 const BASE = process.env.CAPTURE_URL ?? 'http://localhost:3000'
+// desde 08/11/2026 o jogo abre o sistema v2 depois do prólogo; os roteiros do sistema antigo entram com ?antigo
+const BASE_ANTIGO = `${BASE}/?antigo`
 const OUT = 'shots'
 const ONLY = (process.env.CAPTURE_ONLY ?? '').split(',').map((s) => s.trim()).filter(Boolean)
 mkdirSync(OUT, { recursive: true })
@@ -182,7 +184,7 @@ async function thawCurtain(page, label) {
 if (want('novato')) {
   const { ctx, page } = await device()
   await step('landing', async () => {
-    await page.goto(BASE, { waitUntil: 'networkidle' })
+    await page.goto(BASE_ANTIGO, { waitUntil: 'networkidle' })
     await wait(2500)
     await shot(page, '01-landing')
     await page.mouse.wheel(0, 900)
@@ -190,7 +192,7 @@ if (want('novato')) {
     await shot(page, '01-landing-scroll')
   })
   await step('convite', async () => {
-    await page.goto(BASE, { waitUntil: 'networkidle' })
+    await page.goto(BASE_ANTIGO, { waitUntil: 'networkidle' })
     await wait(1200)
     await btn(page, 'Começar').click({ timeout: 4000 })
     await wait(300)
@@ -303,7 +305,7 @@ if (want('novato')) {
       arcadeUnlocked: false,
       seenApps: ['pulso', 'mensagens', 'cartas', 'trocas', 'ajustes'],
     }).then((r) => r.status >= 400 && manifest.errors.push({ step: 'sala-de-jogos-save', error: `${r.status} ${r.text}` }))
-    await p2.goto(BASE, { waitUntil: 'networkidle' })
+    await p2.goto(BASE_ANTIGO, { waitUntil: 'networkidle' })
     await wait(1000)
     await btn(p2, 'Continuar').click({ timeout: 15000 })
     await p2.getByText('Novo aplicativo desbloqueado').first().waitFor({ timeout: 12000 })
@@ -332,7 +334,7 @@ const makeSave = (cards, extra = {}) => ({
 
 async function account(name, invite, cards, kind = 'phone', extra = {}) {
   const d = await device(kind)
-  await d.page.goto(BASE, { waitUntil: 'networkidle' })
+  await d.page.goto(BASE_ANTIGO, { waitUntil: 'networkidle' })
   const up = await api(d.page, '/api/auth/sign-up/email', { email: hexEmail(name), password: 'teste123', name, username: name, displayUsername: name }, { 'x-devo-invite': invite })
   if (up.status >= 400) {
     const inn = await api(d.page, '/api/auth/sign-in/username', { username: name, password: 'teste123' })
@@ -344,7 +346,7 @@ async function account(name, invite, cards, kind = 'phone', extra = {}) {
 }
 
 async function enterOS(page) {
-  await page.goto(BASE, { waitUntil: 'networkidle' })
+  await page.goto(BASE_ANTIGO, { waitUntil: 'networkidle' })
   await wait(1000)
   await btn(page, 'Continuar').click({ timeout: 15000 })
   await wait(3600)
@@ -675,7 +677,7 @@ if (want('sistema') || want('apps') || want('jogos')) {
     // Record no desktop (janela), com o mesmo Veterano.
     await step('record-desktop', async () => {
       const d = await device('desktop')
-      await d.page.goto(BASE, { waitUntil: 'networkidle' })
+      await d.page.goto(BASE_ANTIGO, { waitUntil: 'networkidle' })
       const inn = await api(d.page, '/api/auth/sign-in/username', { username: 'Veterano', password: 'teste123' })
       if (inn.status >= 400) throw new Error(`signin ${inn.status} ${inn.text}`)
       await enterOS(d.page)
@@ -1017,7 +1019,7 @@ if (want('genero')) {
     story: { part: 'prologue', index: 32, vars: { name: 'Lumina' } },
   })
   await step('genero-prologo', async () => {
-    await page.goto(BASE, { waitUntil: 'networkidle' })
+    await page.goto(BASE_ANTIGO, { waitUntil: 'networkidle' })
     await wait(1000)
     await btn(page, 'Continuar').click({ timeout: 15000 })
     await wait(3600)
@@ -1125,7 +1127,7 @@ if (want('novato')) {
   const thaw = () => page.evaluate(() => document.getAnimations().forEach((a) => a.play())).catch(() => {})
   await step('queda', async () => {
     await page.clock.install()
-    await page.goto(BASE, { waitUntil: 'networkidle' })
+    await page.goto(BASE_ANTIGO, { waitUntil: 'networkidle' })
     await wait(1000)
     await btn(page, 'Continuar').click({ timeout: 15000 })
     await page.getByText('Com um simples acidente.').first().waitFor({ timeout: 8000 })
@@ -1160,7 +1162,7 @@ if (want('novato')) {
       (r) => r.status >= 400 && manifest.errors.push({ step: 'melissa-save', error: `${r.status} ${r.text}` }),
     )
     await p2.close()
-    await page.goto(BASE, { waitUntil: 'networkidle' })
+    await page.goto(BASE_ANTIGO, { waitUntil: 'networkidle' })
     await wait(1000)
     await btn(page, 'Continuar').click({ timeout: 15000 })
     await page.getByText(/A paisagem se abre/).first().waitFor({ timeout: 8000 })
@@ -1486,7 +1488,7 @@ if (want('staff')) {
   const seedAccount = async (name, invite) => {
     const d = await device('phone')
     await d.ctx.addCookies([{ name: 'devo_player', value: SEED[name], url: BASE }])
-    await d.page.goto(BASE, { waitUntil: 'networkidle' })
+    await d.page.goto(BASE_ANTIGO, { waitUntil: 'networkidle' })
     let up
     for (let i = 0; i < 6; i++) {
       up = await api(d.page, '/api/auth/sign-up/email', { email: hexEmail(name), password: 'teste123', name, username: name, displayUsername: name }, { 'x-devo-invite': invite })
@@ -1936,7 +1938,7 @@ if (want('torres')) {
 if (want('desktop')) {
   await step('desktop', async () => {
     const { ctx, page } = await device('desktop')
-    await page.goto(BASE, { waitUntil: 'networkidle' })
+    await page.goto(BASE_ANTIGO, { waitUntil: 'networkidle' })
     await wait(2000)
     await shot(page, '90-desktop-landing')
     await ctx.close()
@@ -2944,7 +2946,7 @@ if (want('cosmeticos')) {
   const seedAcc = async (name, kind = 'phone') => {
     const d = await device(kind)
     await d.ctx.addCookies([{ name: 'devo_player', value: SEED[name], url: BASE }])
-    await d.page.goto(BASE, { waitUntil: 'networkidle' })
+    await d.page.goto(BASE_ANTIGO, { waitUntil: 'networkidle' })
     let up
     for (let i = 0; i < 6; i++) {
       up = await api(d.page, '/api/auth/sign-up/email', { email: hexEmail(name), password: 'teste123', name, username: name, displayUsername: name }, { 'x-devo-invite': INV[name] })
@@ -3521,7 +3523,7 @@ if (want('cosmeticos')) {
       // rodada da janela quadrada): aqui o clique não espera a navegação e a entrada é refeita uma vez se preciso.
       const abrir = page.getByRole('button', { name: 'Poço dos Milagres', exact: true }).first()
       for (let t = 0; t < 2; t++) {
-        await page.goto(BASE, { waitUntil: 'networkidle' }).catch(() => {})
+        await page.goto(BASE_ANTIGO, { waitUntil: 'networkidle' }).catch(() => {})
         await wait(1000)
         await btn(page, 'Continuar').click({ timeout: 15000, noWaitAfter: true }).catch((e) => manifest.errors.push({ step: `cos-ia-poco-entrada-${t}`, error: String(e).slice(0, 200) }))
         await wait(3600)
@@ -3955,7 +3957,7 @@ if (want('v2')) {
   const conta = async (kind, id, name, invite) => {
     const d = await device(kind)
     await d.ctx.addCookies([{ name: 'devo_player', value: id, url: BASE }])
-    await d.page.goto(BASE, { waitUntil: 'networkidle' })
+    await d.page.goto(BASE_ANTIGO, { waitUntil: 'networkidle' })
     let up
     for (let i = 0; i < 6; i++) {
       up = await api(d.page, '/api/auth/sign-up/email', { email: hexEmail(name), password: 'teste123', name, username: name, displayUsername: name }, { 'x-devo-invite': invite })
@@ -4042,15 +4044,36 @@ if (want('v2')) {
       await d.ctx.close()
     })
   }
-  // jogador comum não entra: volta para o site atual
-  await step('v2-jogador', async () => {
-    const d = await conta('phone', MAT, 'Matheus', 'DEVO-STAF-MATH')
-    await d.page.goto(`${BASE}/v2`, { waitUntil: 'networkidle' })
-    await wait(1500)
-    manifest.shots.push({ name: 'v2-05-jogador-url', note: `jogador em /v2 foi para: ${d.page.url()}`, url: d.page.url() })
-    await shot(d.page, 'v2-05-jogador', 'jogador comum em /v2: volta para o site atual')
-    await d.ctx.close()
-  })
+  // v2 para todos (08/11/2026): o jogador comum entra pelo endereço principal e o sistema é o v2, com as travas dele
+  for (const kind of ['phone', 'desktop']) {
+    await step(`v2-jogador-${kind}`, async () => {
+      const d = await conta(kind, MAT, 'Matheus', 'DEVO-STAF-MATH')
+      const page = d.page
+      const tag = kind === 'phone' ? 'cel' : 'pc'
+      await page.goto(BASE, { waitUntil: 'networkidle' })
+      await wait(1000)
+      await btn(page, 'Continuar').click({ timeout: 15000 })
+      await wait(4200)
+      const temV2 = await page.locator('#os #mesa').count()
+      manifest.shots.push({ name: `v2-05-jogador-${tag}-sistema`, note: temV2 ? 'jogador comum no sistema v2' : 'ERRO: jogador comum não caiu no v2', url: page.url() })
+      if (!temV2) manifest.errors.push({ step: `v2-jogador-${kind}`, error: 'o sistema v2 não abriu depois do Continuar' })
+      await shot(page, `v2-05-jogador-${tag}`, 'jogador comum: início do v2')
+      if (kind === 'phone') {
+        await page.locator('#inicio').evaluate((el) => el.scrollTo(0, el.scrollHeight)).catch(() => {})
+        await wait(600)
+        await shot(page, `v2-05-jogador-mapa-${tag}`, 'jogador comum: Mapa do Devo com as travas')
+        await page.locator('#inicio').evaluate((el) => el.scrollTo(0, 0)).catch(() => {})
+      }
+      for (const id of ['record', 'poco']) {
+        await tryClick(page.locator(`#mesa .ic[data-id="${id}"]`))
+        await wait(1800)
+        await shot(page, `v2-05-jogador-${id}-${tag}`, `jogador comum: ${id}`)
+        await page.keyboard.press('Escape').catch(() => {})
+        await wait(400)
+      }
+      await d.ctx.close()
+    })
+  }
 }
 
 // ── DEVO v2, etapas 5 e 6: a Casa em RPG Maker (avatar, mapa, mesa, guarda-roupa, visita do Simon) ────────────────
@@ -4060,7 +4083,7 @@ if (want('casa-v2')) {
   const conta = async (kind, id, name, invite) => {
     const d = await device(kind)
     await d.ctx.addCookies([{ name: 'devo_player', value: id, url: BASE }])
-    await d.page.goto(BASE, { waitUntil: 'networkidle' })
+    await d.page.goto(BASE_ANTIGO, { waitUntil: 'networkidle' })
     let up
     for (let i = 0; i < 6; i++) {
       up = await api(d.page, '/api/auth/sign-up/email', { email: hexEmail(name), password: 'teste123', name, username: name, displayUsername: name }, { 'x-devo-invite': invite })
