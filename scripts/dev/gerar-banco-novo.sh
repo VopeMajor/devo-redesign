@@ -39,6 +39,7 @@ FILES=(
   scripts/corp-brasao-migration.sql
   scripts/essencia-corvo-migration.sql
   scripts/poco-tabela-dono-migration.sql
+  scripts/casa-mapa-migration.sql
 )
 {
   echo "-- DEVO — banco novo de produção (gerado; NÃO editar à mão)."

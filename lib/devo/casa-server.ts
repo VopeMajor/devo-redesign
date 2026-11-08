@@ -56,8 +56,23 @@ async function cfg(q: Queryable = pool) {
 
 /* ------------------------------------------------------------------ Tempo */
 
+/** Minutos que o pulso precisa manter depois de pagar (a mesma reserva da Confecção; usada também pelo guarda-roupa). */
+export async function reservaDoTempo(q: Queryable = pool) {
+  return (await cfg(q)).regras.reserva
+}
+
+/** Quantas fabricações o jogador já começou (o andar dos quartos abre depois da primeira). */
+export async function contaFabricacoes(playerId: string, q: Queryable = pool) {
+  const [r] = await run<{ n: string; a: string }>(
+    q,
+    "SELECT count(*) AS n, count(*) FILTER (WHERE status = 'andamento') AS a FROM confeccao_tentativas WHERE player_id = $1",
+    [playerId],
+  )
+  return { total: Number(r?.n ?? 0), andamento: Number(r?.a ?? 0) }
+}
+
 /** Tira minutos do pulso mantendo a reserva. Sem Tempo → 409 (a transação inteira volta). Devolve o delta em ms. */
-async function debitar(c: PoolClient, playerId: string, minutos: number, reserva: number) {
+export async function debitar(c: PoolClient, playerId: string, minutos: number, reserva: number) {
   const min = Math.floor(minutos)
   if (!Number.isFinite(min) || min <= 0) return 0
   const [paid] = await run<{ t: string }>(
