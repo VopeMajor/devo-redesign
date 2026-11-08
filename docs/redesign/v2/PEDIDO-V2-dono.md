@@ -731,3 +731,12 @@ endereço principal troca para o v2.
   fixado no Ubuntu 24.04 (valia para todas as branches). Grupo de capturas novo: `v2`.
 Dono: "Publicar". No ar em devo.devorpg.workers.dev/v2. Banco sem mudança.
 
+### 08/11/2026 — v2 no jogo, etapa 2 (primeira parte) publicada
+
+Dono: "Aprovo, siga" (etapa 2). Mudança de caminho dentro da etapa, para o /v2 ficar usável já: o /v2 roda o mesmo motor do
+jogo e dá às telas atuais o contexto de navegação, então todos os sistemas que já existem abrem dentro das janelas do v2
+com as funções completas (Record com Deadly Votes, Diário e Mesa; Mensagens, Cartas, Trocas, Inventário, Ajustes,
+Calendário, Casa, Torres, Poço, Salão, Jogos, Corporações, Virtudes, Arcanos). O Pulso já está na versão nova do protótipo;
+as outras telas trocam de visual uma a uma. Conflito e Ranking ainda não existem no jogo (etapa 8).
+Dono: "Publicar" (6b548618 na `redesign`). Banco sem mudança.
+
