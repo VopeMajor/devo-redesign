@@ -3997,6 +3997,40 @@ if (want('v2')) {
       await shot(page, `v2-04-avisos-${tag}`, 'central de avisos')
       await d.ctx.close()
     })
+    // etapa 2: as telas novas, aba por aba (texto da aba) e o fim de cada uma ('rolar')
+    await step(`v2-telas-${kind}`, async () => {
+      const d = await conta(kind, SENT, 'Sentinela', 'DEVO-STAF-SENT')
+      const page = d.page
+      const tag = kind === 'phone' ? 'cel' : 'pc'
+      await page.goto(`${BASE}/v2`, { waitUntil: 'networkidle' })
+      await wait(2000)
+      const TELAS = {
+        record: ['desce', 'desce', 'desce', 'Deadly Votes', 'desce', 'Convites', 'Diário', 'Mesa'],
+      }
+      for (const [id, passos] of Object.entries(TELAS)) {
+        await tryClick(page.locator(`#mesa .ic[data-id="${id}"]`))
+        await wait(1800)
+        if (kind === 'desktop') await tryClick(page.locator(`.jan[data-sis="${id}"] .maxi`))
+        await wait(400)
+        await shot(page, `v2-10-${id}-${tag}`, `${id}: abertura`)
+        let n = 0
+        for (const p of passos) {
+          n++
+          if (p === 'desce') {
+            await page.locator(`.jan[data-sis="${id}"] .corpo`).evaluate((el) => el.scrollBy(0, el.clientHeight * 0.85)).catch(() => {})
+          } else if (p === 'rolar') {
+            await page.locator(`.jan[data-sis="${id}"] .corpo`).evaluate((el) => el.scrollTo(0, el.scrollHeight)).catch(() => {})
+          } else {
+            await page.locator(`.jan[data-sis="${id}"] [role=tab]`, { hasText: p }).first().click({ timeout: 4000 }).catch(() => {})
+          }
+          await wait(1400)
+          await shot(page, `v2-10-${id}-${n}-${tag}`, `${id}: ${p}`)
+        }
+        await page.keyboard.press('Escape').catch(() => {})
+        await wait(400)
+      }
+      await d.ctx.close()
+    })
   }
   // jogador comum não entra: volta para o site atual
   await step('v2-jogador', async () => {

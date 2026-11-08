@@ -12,6 +12,7 @@ import type { CalendarioPayload } from '@/lib/devo/calendario'
 import type { SaveData } from '@/lib/devo/save'
 import { Barlow, Barlow_Semi_Condensed, Jersey_15 } from 'next/font/google'
 import { PulsoV2 } from './apps/pulso'
+import { RecordV2 } from './apps/record'
 import { APPS } from '@/components/devo/os/apps'
 import { OsNavContext, type OsNav } from '@/components/devo/os/os-nav'
 import { useDevoEngine } from '@/components/devo/os/use-devo-engine'
@@ -19,6 +20,7 @@ import { CenasGatilho } from '@/components/devo/torres/gatilho'
 import type { AppId } from '@/lib/devo/types'
 import './os.css'
 import './v2-ajustes.css'
+import './v2-telas.css'
 
 /**
  * Casca do DEVO v2: a mesma estrutura de elementos do protótipo aprovado (kit3/os-janelas.html: barra de cima com o
@@ -70,8 +72,9 @@ const ABRE_COMO: Record<string, string> = { mesa: 'record' }
  * Telas que já existem no v2: o componente, o id do contêiner (o CSS do protótipo usa #pul, #rec…) e o tamanho da
  * janela no computador, como no protótipo (kit3/os-janelas.html, abre()): [distância da direita, largura, altura].
  */
-const TELAS: Record<string, { C: React.ComponentType; cx: string; caixa: [number, number, number] }> = {
-  pulso: { C: PulsoV2, cx: 'pul', caixa: [580, 540, 760] },
+const TELAS: Record<string, { C: React.ComponentType; cx: string; caixa: [number, number, number]; corpo?: string }> = {
+  pulso: { C: PulsoV2, cx: 'pul', caixa: [580, 540, 760], corpo: 'r-corpo' },
+  record: { C: RecordV2, cx: 'rec', caixa: [930, 900, 700], corpo: 'r-corpo' },
 }
 const ico = (id: string) => `/v2/art/os/ico/${id}.webp`
 const ROMANOS = ['0', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII']
@@ -510,7 +513,7 @@ function JanelaSistema({ j, emFoco, os, onFoco, onMini, onMax, onFecha, onMove, 
           <svg viewBox="0 0 16 16" aria-hidden="true">{TRACO.x}</svg>
         </button>
       </header>
-      <div className="corpo">
+      <div className={['corpo', TELAS[j.id]?.corpo].filter(Boolean).join(' ')}>
         {j.id === 'avisos' ? (
           <ul className="lista" id="l-avisos">
             {avisos.length ? (
