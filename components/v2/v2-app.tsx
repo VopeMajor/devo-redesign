@@ -13,6 +13,12 @@ import type { SaveData } from '@/lib/devo/save'
 import { Barlow, Barlow_Semi_Condensed, Jersey_15 } from 'next/font/google'
 import { PulsoV2 } from './apps/pulso'
 import { RecordV2 } from './apps/record'
+import { MensagensV2 } from './apps/mensagens'
+import { CartasV2 } from './apps/cartas'
+import { InventarioV2 } from './apps/inventario'
+import { TrocasV2 } from './apps/trocas'
+import { AjustesV2 } from './apps/ajustes'
+import { CalendarioV2 } from './apps/calendario'
 import { APPS } from '@/components/devo/os/apps'
 import { OsNavContext, type OsNav } from '@/components/devo/os/os-nav'
 import { useDevoEngine } from '@/components/devo/os/use-devo-engine'
@@ -75,6 +81,12 @@ const ABRE_COMO: Record<string, string> = { mesa: 'record' }
 const TELAS: Record<string, { C: React.ComponentType; cx: string; caixa: [number, number, number]; corpo?: string }> = {
   pulso: { C: PulsoV2, cx: 'pul', caixa: [580, 540, 760], corpo: 'r-corpo' },
   record: { C: RecordV2, cx: 'rec', caixa: [930, 900, 700], corpo: 'r-corpo' },
+  mensagens: { C: MensagensV2, cx: '', caixa: [930, 880, 640], corpo: 'r-corpo m-corpo' },
+  cartas: { C: CartasV2, cx: '', caixa: [1000, 960, 760], corpo: 'r-corpo' },
+  inventario: { C: InventarioV2, cx: 'inv', caixa: [800, 760, 680] },
+  trocas: { C: TrocasV2, cx: '', caixa: [1020, 980, 720], corpo: 'r-corpo' },
+  ajustes: { C: AjustesV2, cx: 'aju', caixa: [540, 500, 700] },
+  calendario: { C: CalendarioV2, cx: '', caixa: [1000, 960, 780], corpo: 'r-corpo' },
 }
 const ico = (id: string) => `/v2/art/os/ico/${id}.webp`
 const ROMANOS = ['0', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII']
@@ -538,9 +550,7 @@ function JanelaSistema({ j, emFoco, os, onFoco, onMini, onMax, onFecha, onMove, 
           (() => {
             const T = TELAS[j.id]
             return (
-              <div id={T.cx}>
-                <T.C />
-              </div>
+              T.cx ? <div id={T.cx}><T.C /></div> : <T.C />
             )
           })()
         ) : LEGADO.has(j.id) ? (

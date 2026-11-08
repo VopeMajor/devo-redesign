@@ -164,3 +164,63 @@
 .rv-convites .cod { display: block; font: 400 24px/1 var(--relogio); letter-spacing: 0.08em; color: #fff; user-select: all; }
 .rv-convites small { display: block; margin-top: 3px; font: 500 12.5px/1.35 var(--ui); color: var(--sec); }
 .rv-convites .r-bt { min-height: 38px; padding: 0 14px; }
+
+/* ================================ Mensagens ================================ */
+#msg .m-tx small time { color: var(--sec); letter-spacing: 0; }
+#msg .m-op.acao { font-style: italic; color: var(--sec); }
+#msg .m-fig { width: 112px; height: 112px; object-fit: contain; }
+
+/* ================================ Cartas ================================ */
+/* o Card Shuffler do jogo: faixa com três cartas em leque que giram ao embaralhar */
+.cx-shuf { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 16px; background: linear-gradient(110deg, rgba(173, 144, 88, 0.1), rgba(10, 22, 52, 0.6) 60%); border: 1px solid rgba(173, 144, 88, 0.22); }
+.cx-shuf-ic { position: relative; width: 44px; height: 44px; flex: none; }
+.cx-shuf-ic i { position: absolute; left: 50%; top: 50%; width: 20px; height: 30px; margin: -15px 0 0 -10px; border-radius: 3px; border: 1px solid rgba(173, 144, 88, 0.7); background: linear-gradient(160deg, #1d2a4f, #0b1430); transform-origin: 50% 120%; }
+.cx-shuf-ic i:nth-child(1) { transform: rotate(-18deg); }
+.cx-shuf-ic i:nth-child(3) { transform: rotate(18deg); }
+.cx-shuf.gira .cx-shuf-ic i { animation: cx-embaralha 0.6s ease-in-out infinite alternate; }
+.cx-shuf.gira .cx-shuf-ic i:nth-child(2) { animation-delay: 0.15s; }
+.cx-shuf.gira .cx-shuf-ic i:nth-child(3) { animation-delay: 0.3s; }
+@keyframes cx-embaralha { from { transform: rotate(-24deg) translateY(0); } to { transform: rotate(24deg) translateY(-4px); } }
+.cx-shuf-tx { flex: 1; min-width: 0; display: grid; gap: 3px; }
+.cx-shuf-tx small { font: 600 10px/1.2 var(--ui); letter-spacing: 0.16em; text-transform: uppercase; color: #ad9058; }
+.cx-shuf-tx span { font: 500 12.5px/1.35 var(--ui); color: var(--sec); }
+.cx-shuf .r-bt { flex: none; min-height: 38px; padding: 0 14px; }
+.cx-serie { font: 600 10.5px/1.3 var(--ui); letter-spacing: 0.14em; text-transform: uppercase; color: var(--sec); }
+@media (prefers-reduced-motion: reduce) { .cx-shuf.gira .cx-shuf-ic i { animation: none; } }
+
+/* Record: correções da 1ª rodada de fotos */
+/* foto com moldura de avatar equipada (cosmético): retrato 3:4 com a moldura, fora do círculo */
+#os #rec .r-topo .r-foto.com-moldura { border-radius: 0; aspect-ratio: 3 / 4; background: none; box-shadow: none; overflow: visible; }
+#rec .r-mold { width: 100%; height: 100%; display: grid; place-items: center; }
+#rec .r-mold > * { width: 100%; }
+/* rótulos dos números da ficha: pequenos, como os outros rótulos */
+#os #rec .r-stats span { display: grid; gap: 4px; padding: 8px 2px; font: 600 9.5px/1.1 var(--ui); letter-spacing: 0.12em; text-transform: uppercase; color: var(--sec); }
+/* janela maximizada: a ficha não estica além do desenho */
+#rec .r-painel { max-width: 920px; margin-inline: auto; width: 100%; }
+/* a folha de papel das partes antigas: cantos do v2, sem a borda de vidro por fora */
+#os .v2-dentro { padding: 0; background: none; border: 0; overflow: hidden; border-radius: 14px; }
+.v2-papel { border-radius: 14px; }
+.v2-papel-in { padding: 16px 14px 20px; }
+
+/* ================================ Inventário ================================ */
+#inv .i-pacote { display: block; width: 44px; flex: none; filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.5)); }
+#inv .i-vazio { font: 500 14px/1.45 var(--ui); }
+
+/* ================================ Calendário ================================ */
+#cal .r19-msg { display: grid; place-items: center; align-content: center; gap: 10px; min-height: 320px; padding: 24px; text-align: center; font: 500 15px/1.45 var(--ui); color: var(--sec); }
+#cal .r19-msg img { width: 56px; height: 56px; opacity: 0.7; }
+#cal .r19-msg strong { font: 600 20px/1.1 var(--cond); color: var(--tx); }
+#cal .r19-data { margin: 0; font: 600 10.5px/1.2 var(--ui); letter-spacing: 0.18em; text-transform: uppercase; color: rgba(58, 47, 38, 0.7); text-align: center; }
+#cal .r19-erro { margin: 0; padding: 8px 12px; border-radius: 10px; background: rgba(138, 58, 42, 0.14); border: 1px solid rgba(138, 58, 42, 0.4); color: #6e2a1e; font: 600 13px/1.35 var(--ui); text-align: center; }
+/* check-in extra de uma data comemorativa, dentro da folha */
+#cal .r19-extra { display: flex; align-items: center; gap: 10px; width: 100%; margin-top: 6px; padding: 10px 12px; border-top: 1px dashed rgba(58, 47, 38, 0.35); color: #3a2f26; text-align: left; }
+#cal .r19-extra img { width: 46px; height: 46px; flex: none; }
+#cal .r19-extra > div { flex: 1; min-width: 0; display: grid; gap: 2px; }
+#cal .r19-extra small { font: 600 9.5px/1.2 var(--ui); letter-spacing: 0.14em; text-transform: uppercase; color: #8a3a2a; }
+#cal .r19-extra strong { font: 600 15px/1.15 var(--cond); }
+#cal .r19-extra span { font: 500 12px/1.3 var(--ui); color: rgba(58, 47, 38, 0.75); }
+#cal .r19-extra em { font: italic 500 12.5px/1.2 var(--ui); color: #4b6b3a; }
+#os #cal .r19-extra .r-bt { flex: none; min-height: 38px; padding: 0 12px; background: #3a2f26; color: #f1ebe0; border-color: transparent; }
+.kc-revela .kc-rv-carta { position: relative; display: block; width: 130px; filter: drop-shadow(0 10px 24px rgba(0, 0, 0, 0.6)) drop-shadow(0 0 30px rgba(191, 163, 107, 0.5)); }
+#cal .k-revela { cursor: pointer; border: 0; }
+.jan > .k-revela { border: 0; cursor: pointer; }

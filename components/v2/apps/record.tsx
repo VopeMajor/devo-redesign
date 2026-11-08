@@ -191,7 +191,9 @@ function Ficha({ votes, role, onVotos }: { votes: Votes; role: PlayerRole | null
         <div className="r-foto-col">
           <div className={'r-foto fundo' + (moldura ? ' com-moldura' : '')}>
             {moldura ? (
-              <FotoMoldurada formato="avatar" src={foto} moldura={moldura} alt={`Foto de ${nome}`} />
+              <div className="r-mold">
+                <FotoMoldurada formato="avatar" src={foto} moldura={moldura} alt={`Foto de ${nome}`} />
+              </div>
             ) : foto ? (
               <img src={foto} alt="Sua foto de perfil" />
             ) : (

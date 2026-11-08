@@ -680,7 +680,7 @@ const NATAL_EXEMPLO = (hoje: Dia): EventoVista => {
  * "*Mostra exemplo de Evento de Natal*": por cima da cena da Melissa (z acima do motor), o cartão do Natal do
  * próprio calendário (ou um exemplo, se o Owner tirou o Natal) desce com a marca "Exemplo".
  */
-function ProjecaoNatal({ eventos, hoje }: { eventos: EventoVista[]; hoje: Dia }) {
+export function ProjecaoNatal({ eventos, hoje }: { eventos: EventoVista[]; hoje: Dia }) {
   const [alvo, setAlvo] = useState<HTMLElement | null>(null)
   useEffect(() => setAlvo(document.body), [])
   const natal = eventos.find((e) => e.ocorrencia.slice(5) === '12-25' && /natal/i.test(e.titulo)) ?? NATAL_EXEMPLO(hoje)

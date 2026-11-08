@@ -1,6 +1,7 @@
 'use client'
 
 import type { ReactNode } from 'react'
+import { PaperSheet } from '@/components/devo/kit'
 
 /**
  * Peças comuns às telas do v2 (as mesmas do protótipo kit3): o símbolo do DEVO, os ícones, a seta e o invólucro das
@@ -41,9 +42,18 @@ export function Volta({ children, onClick }: { children: ReactNode; onClick: () 
   )
 }
 
-/** Parte do jogo atual dentro de uma tela nova (ainda sem desenho no v2): cores do interior escuro, letra do jogo. */
+/**
+ * Parte do jogo atual dentro de uma tela nova (ainda sem desenho no v2: Mesa, Diário, Coleção). Fica na mesma folha
+ * de papel do Record antigo, onde as cores dela foram pensadas, com a letra do jogo.
+ */
 export function Legado({ children }: { children: ReactNode }) {
-  return <div className="dv-interior-dark v2-legado v2-dentro">{children}</div>
+  return (
+    <div className="v2-legado v2-dentro">
+      <PaperSheet code={false} className="v2-papel">
+        <div className="v2-papel-in">{children}</div>
+      </PaperSheet>
+    </div>
+  )
 }
 
 export const erroTexto = (e: unknown, padrao = 'Não foi possível concluir a ação.') =>

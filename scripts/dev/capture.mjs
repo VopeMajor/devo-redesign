@@ -4004,13 +4004,19 @@ if (want('v2')) {
       const tag = kind === 'phone' ? 'cel' : 'pc'
       await page.goto(`${BASE}/v2`, { waitUntil: 'networkidle' })
       await wait(2000)
+      // passos: texto de uma aba, 'desce' (rola uma tela), 'rolar' (até o fim) ou '>seletor' (clica no primeiro)
       const TELAS = {
-        record: ['desce', 'desce', 'desce', 'Deadly Votes', 'desce', 'Convites', 'Diário', 'Mesa'],
+        record: ['desce', 'desce', 'desce', 'Deadly Votes', 'desce', '>.dv-como', 'Convites', 'Diário', 'Mesa'],
+        mensagens: ['>.m-item', '>.m-op', 'rolar'],
+        cartas: ['desce', '>.cx-tile', 'rolar', '>.cx-carta-g'],
+        inventario: ['desce'],
+        trocas: ['>.t-prot', '>.t-porta:not(.fechada)', '>.t-escolha button:not(.presa)', 'espera', 'espera'],
+        ajustes: ['desce'],
+        calendario: ['>button:has-text("Pular")', 'Eventos', 'Mês', 'Semana', '>.k-marca', '>.kc-revela', 'desce'],
       }
       for (const [id, passos] of Object.entries(TELAS)) {
         await tryClick(page.locator(`#mesa .ic[data-id="${id}"]`))
         await wait(1800)
-        if (kind === 'desktop') await tryClick(page.locator(`.jan[data-sis="${id}"] .maxi`))
         await wait(400)
         await shot(page, `v2-10-${id}-${tag}`, `${id}: abertura`)
         let n = 0
@@ -4018,6 +4024,10 @@ if (want('v2')) {
           n++
           if (p === 'desce') {
             await page.locator(`.jan[data-sis="${id}"] .corpo`).evaluate((el) => el.scrollBy(0, el.clientHeight * 0.85)).catch(() => {})
+          } else if (p === 'espera') {
+            await wait(2600)
+          } else if (p.startsWith('>')) {
+            await page.locator(p.slice(1)).first().click({ timeout: 4000 }).catch(() => {})
           } else if (p === 'rolar') {
             await page.locator(`.jan[data-sis="${id}"] .corpo`).evaluate((el) => el.scrollTo(0, el.scrollHeight)).catch(() => {})
           } else {
