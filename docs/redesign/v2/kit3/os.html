@@ -1,0 +1,691 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>DEVO v2 · Sistema</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo+Narrow:wght@500;700&display=swap">
+<style>
+:root{--preto:#0B0812;--vio:#2A1450;--ame:#A45CFF;--papel:#F1ECE0;--sec:rgba(241,236,224,.74);--disp:"Anton",Impact,sans-serif;--txt:"Archivo Narrow",sans-serif;
+  --barra:84px;--nav:calc(62px + env(safe-area-inset-bottom));--arco:58px;--grande:118px}
+*{box-sizing:border-box;margin:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;background:var(--preto);overflow:hidden;font-family:var(--txt);color:var(--papel)}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;text-align:left}
+button:focus-visible,a:focus-visible{outline:3px solid var(--ame);outline-offset:-3px}
+.jan:focus{outline:0}
+[hidden]{display:none!important}
+img{display:block}
+.l{display:inline-block;transform:rotate(var(--g)) translateY(var(--y)) scale(var(--e))}
+#os{position:relative;height:100dvh;overflow:hidden;overflow:clip;background:var(--preto);user-select:none;-webkit-user-select:none}
+#papel{position:absolute;inset:0;background:url(art/os/fundo-calmo.webp) 100% 0/auto 100% no-repeat}
+/* crítico: uma faixa de tinta invade a tela inteira */
+.critico::after,.critico #bloqueio::before{content:"";position:absolute;z-index:1;left:-35%;top:44%;width:170%;height:150px;background:url(art/home/faixa-1-ame.webp) center/100% 100% no-repeat;transform:rotate(-38deg);pointer-events:none}
+.critico #bloqueio::before{z-index:0}
+
+/* barra de status: o relógio do sistema é o Tempo no pulso, e ele é a maior peça da tela */
+#barra{position:absolute;z-index:7;left:0;right:0;top:0;height:calc(var(--barra) + env(safe-area-inset-top));padding:env(safe-area-inset-top) 4px 0 10px;display:flex;align-items:center;gap:4px;touch-action:none}
+#barra::before{content:"";position:absolute;z-index:-1;left:-10%;right:-10%;top:0;height:calc(100% + 12px);background:url(art/home/folha.webp) center top/100% auto no-repeat,linear-gradient(var(--preto),var(--preto)) bottom/100% calc(100% - 30px) no-repeat;transform:scaleY(-1)}
+#iniciar,#tarefas{display:none}
+#hora{flex:none;font:400 min(16vw,62px)/1 var(--disp);letter-spacing:.01em;font-variant-numeric:tabular-nums;min-height:44px;display:flex;align-items:center;color:var(--papel);text-shadow:3px 3px 0 var(--ame);transform:rotate(-1.4deg)}
+.dp{margin:0 .035em;font-style:normal}
+.critico #hora{padding:2px 8px 0;background:var(--ame);color:var(--preto);text-shadow:none;clip-path:polygon(0 8%,30% 3%,62% 9%,100% 4%,97% 52%,100% 95%,64% 91%,32% 97%,3% 93%,0 50%)}
+#estado{display:flex;flex-direction:column;align-items:center;gap:2px;margin-left:auto;font:400 13px/1 var(--disp);letter-spacing:.07em;text-transform:uppercase;color:var(--sec)}
+.critico #estado{color:var(--ame)}
+#onda{width:50px;height:18px;color:var(--ame)}
+#onda path{fill:none;stroke:currentColor;stroke-width:2.2;stroke-linejoin:bevel;stroke-dasharray:90 34;animation:onda 2.1s linear infinite}
+.critico #onda path{animation-duration:.8s}
+@keyframes onda{to{stroke-dashoffset:-124}}
+#sino{position:relative;flex:none;width:46px;height:48px;display:grid;place-items:center}
+#sino svg{width:25px;height:25px}
+#sino b{position:absolute;right:3px;top:3px;min-width:19px;height:19px;padding:0 4px;display:grid;place-items:center;background:var(--ame);color:var(--preto);font:400 13px/1 var(--disp);transform:rotate(6deg)}
+
+/* início: um mosaico de vitral, cada peça do tamanho do seu peso no jogo */
+#inicio{position:absolute;z-index:2;left:0;right:0;top:calc(var(--barra) + env(safe-area-inset-top));bottom:var(--nav);overflow-y:auto;overscroll-behavior:contain;scrollbar-width:none}
+#coluna{min-height:100%;display:flex;flex-direction:column;padding:12px 0 22px}
+.espelho{position:relative;isolation:isolate}
+.espelho::before{content:"";position:absolute;z-index:-1;inset:0;background:var(--img) right center/auto 100% no-repeat;transform:scaleX(-1)}
+#quadro{position:relative;display:flex;align-items:center;gap:10px;width:min(366px,calc(100% - 6px));min-height:60px;margin-left:-12px;padding:0 50px 0 26px;background:url(art/home/faixa-3-vio.webp) right center/auto 100% no-repeat;transform:rotate(-1deg);flex:none}
+#quadro::before{content:"";position:absolute;left:62%;top:-3px;width:52px;height:13px;background:var(--papel);clip-path:polygon(0 0,3% 22%,0 45%,4% 68%,0 100%,100% 100%,97% 74%,100% 50%,96% 26%,100% 0);transform:rotate(-4deg)}
+#quadro>span:first-child{flex:1;min-width:0}
+#quadro .k{display:block;font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ame)}
+#quadro .t{display:block;font:400 21px/1.12 var(--disp);letter-spacing:.015em;text-transform:uppercase;white-space:nowrap;overflow:hidden}
+#pontos{display:flex;gap:4px}
+#pontos u{width:3px;height:11px;background:var(--sec);transform:skewX(-14deg)}
+#pontos u.on{width:7px;background:var(--ame)}
+#trilha{--img:url(art/home/faixa-1-vio.webp);align-self:flex-end;display:flex;align-items:center;flex:none;width:min(300px,calc(100% - 26px));min-height:54px;margin:2px -10px 0 0;padding:0 16px 0 44px;transform:rotate(.8deg)}
+#trilha>span{flex:1;min-width:0}
+#trilha small{display:block;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ame)}
+#trilha strong{display:block;font-size:15px;font-weight:700;line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#trilha button{flex:none;width:42px;height:44px;display:grid;place-items:center}
+#trilha svg{width:20px;height:20px}
+#destaques{flex:none;display:flex;align-items:center;gap:4px;margin-top:auto;padding:10px 0 2px 14px}
+.grande{--arco:var(--grande);flex:none}
+.grande .rot{font:400 22px/1.1 var(--disp);letter-spacing:.03em;text-transform:uppercase;margin-top:-1px}
+.grande .arco .emb{max-width:76%;max-height:50%}
+#largas{flex:1;min-width:0;display:flex;flex-direction:column;gap:6px;margin-right:-8px}
+.larga{display:flex;align-items:center;gap:6px;width:100%;min-height:80px;padding:6px 14px 6px 26px;color:var(--preto);filter:drop-shadow(-2px 3px 0 var(--vio));transition:translate .09s ease-out}
+.larga:nth-child(1){transform:rotate(-1.2deg)}
+.larga:nth-child(2){transform:rotate(1deg)}
+.larga:hover{translate:-6px 0}
+.larga:active{--img:var(--ame-img)!important}
+.larga>img{flex:none;width:44px;height:44px;object-fit:contain}
+.larga>span{flex:1;min-width:0}
+.larga b{display:block;font:400 23px/1.15 var(--disp);letter-spacing:.015em;text-transform:uppercase;white-space:nowrap}
+.larga em{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;font-size:13px;font-style:normal;font-weight:700;line-height:1.1}
+.larga .conta,.larga .novo{position:static;display:inline-block;margin-left:7px;box-shadow:none;letter-spacing:.04em;vertical-align:4px}
+.larga .conta{background:var(--preto);color:var(--papel)}
+#grade{flex:none;padding:8px 6px 4px;display:grid;grid-template-columns:repeat(4,1fr);row-gap:0}
+.ic{position:relative;display:flex;flex-direction:column;align-items:center;gap:2px;min-height:48px;padding:3px 0 5px}
+#grade .ic:nth-child(even){translate:0 7px}
+#grade .ic:nth-child(3n){rotate:-1.2deg}
+#grade .ic:nth-child(5n){rotate:1.3deg}
+.arco{position:relative;display:block;width:var(--arco);transition:translate .09s ease-out}
+.arco>img:first-child{width:100%;height:auto;filter:drop-shadow(3px 3px 0 var(--preto))}
+.arco .emb{position:absolute;left:50%;top:60%;translate:-50% -50%;max-width:72%;max-height:52%;width:auto;height:auto;filter:drop-shadow(0 0 .6px var(--preto)) drop-shadow(1px 1px 0 var(--preto))}
+.ic:hover .arco{translate:0 -3px}
+.ic:active .arco{translate:0 2px}
+.rot{font-size:14px;font-weight:700;line-height:1.1;text-align:center;-webkit-text-stroke:2px var(--preto);paint-order:stroke fill}
+.conta,.novo{position:absolute;z-index:1;right:-9px;top:4px;padding:3px 6px 2px;font:400 13px/1 var(--disp);letter-spacing:.04em}
+.conta{min-width:21px;text-align:center;background:var(--papel);color:var(--preto);box-shadow:2px 2px 0 var(--preto);transform:rotate(6deg)}
+.novo{background:var(--ame);color:var(--preto);box-shadow:2px 2px 0 var(--preto);transform:rotate(7deg)}
+/* os trancados viram um só vitral lacrado, para não fazer um muro de correntes */
+#lacrado{display:flex;flex-direction:row;align-items:center;justify-content:center;gap:0;padding:6px 2px}
+#lacrado .pilha{position:relative;display:block;flex:none;width:72px;height:74px}
+#lacrado .pilha img{position:absolute;bottom:0;width:44px;height:auto;opacity:.82}
+#lacrado .pilha img:nth-child(1){left:0;rotate:-9deg}
+#lacrado .pilha img:nth-child(2){left:28px;rotate:9deg}
+#lacrado .pilha img:nth-child(3){left:14px;width:50px;opacity:1}
+#lacrado .tx{text-align:left;padding-left:4px;font-size:14px;font-weight:700;line-height:1.1;color:var(--sec);-webkit-text-stroke:2px var(--preto);paint-order:stroke fill}
+#lacrado .tx b{display:block;font:400 24px/1 var(--disp);color:var(--papel)}
+
+/* navegação: o sigilo no meio volta ao início */
+#nav{position:absolute;z-index:5;left:0;right:0;bottom:0;height:var(--nav);padding:12px 0 env(safe-area-inset-bottom);display:grid;grid-template-columns:1fr 92px 1fr;background:url(art/home/folha.webp) center top/130% auto no-repeat,linear-gradient(var(--preto),var(--preto)) bottom/100% calc(100% - 20px) no-repeat}
+#nav button{position:relative;display:grid;place-items:center}
+#nav svg{width:25px;height:25px}
+#nav button:active{color:var(--ame)}
+#n-inicio{width:68px;height:72px;margin:-24px auto 0;background:var(--ame);clip-path:polygon(50% 0,64% 7%,77% 17%,88% 31%,94% 48%,96% 100%,4% 100%,6% 48%,12% 31%,23% 17%,36% 7%)}
+#n-inicio img{width:44px;height:44px;margin-top:10px;filter:brightness(0)}
+#n-conta{position:absolute;right:calc(50% - 26px);top:5px;min-width:18px;height:18px;padding:0 4px;display:grid;place-items:center;background:var(--papel);color:var(--preto);font:400 12px/1 var(--disp)}
+
+/* janelas */
+#janelas{position:absolute;z-index:3;left:0;right:0;top:calc(var(--barra) + env(safe-area-inset-top));bottom:var(--nav);pointer-events:none}
+.jan{position:absolute;inset:10px 6px 8px;display:flex;flex-direction:column;background:var(--preto);box-shadow:0 0 0 2px var(--papel),5px 5px 0 var(--ame);pointer-events:auto}
+.jan.atras{display:none}
+.jan-topo{position:relative;flex:none;display:flex;align-items:center;min-height:58px;padding-top:2px;touch-action:none}
+.jan-tit{flex:0 1 480px;min-width:0;display:flex;align-items:center;gap:8px;height:56px;margin-left:-12px;padding:0 42px 0 24px;background:var(--img) right center/auto 100% no-repeat;color:var(--preto);filter:drop-shadow(2px 3px 0 var(--ame))}
+.jan-tit img{flex:none;height:38px;width:auto;max-width:48px}
+.jan-tit b{font:400 27px/1.15 var(--disp);letter-spacing:.015em;text-transform:uppercase;white-space:nowrap;overflow:hidden}
+.jan-bts{flex:none;display:flex;margin-left:auto;padding-right:2px}
+.jan-bts button{width:46px;height:46px;display:grid;place-items:center}
+.jan-bts svg{width:22px;height:22px}
+.jan-bts .so-pc{display:none}
+.jan-bts .fechar:hover{color:var(--ame)}
+.jan-corpo{flex:1;min-height:0;overflow:auto;overscroll-behavior:contain;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:24px;text-align:center;user-select:text;-webkit-user-select:text}
+.jan-corpo .grande{height:130px;width:auto;max-width:70%;margin-bottom:6px}
+.jan-corpo h3{font:400 30px/1.1 var(--disp);letter-spacing:.02em;text-transform:uppercase}
+.jan-corpo p{font-size:17px;font-weight:500;line-height:1.3;color:var(--sec);max-width:30em}
+.jan-corpo.quadro{padding:0;display:block}
+.jan-corpo iframe{display:block;width:100%;height:100%;border:0}
+.jan-canto{display:none}
+
+/* abertos */
+#abertos{position:absolute;z-index:4;left:0;right:0;top:calc(var(--barra) + env(safe-area-inset-top));bottom:var(--nav);display:flex;flex-direction:column;background:rgba(11,8,18,.9)}
+#abertos h2,#gaveta h2{font:400 30px/1.15 var(--disp);letter-spacing:.02em;text-transform:uppercase;padding:14px 16px 8px}
+#abertos ul{flex:1;min-height:0;overflow:auto;list-style:none;padding:0 0 16px}
+#abertos li{position:relative;display:flex;align-items:center;margin-bottom:4px}
+#abertos .ir{flex:1;min-width:0;display:flex;align-items:center;gap:10px;min-height:68px;margin-left:-12px;padding:0 48px 0 28px;background:var(--img) right center/auto 100% no-repeat;color:var(--preto)}
+#abertos .ir img{height:44px;width:auto;max-width:56px}
+#abertos .ir b{font:400 25px/1.15 var(--disp);text-transform:uppercase;white-space:nowrap}
+#abertos .tira{flex:none;width:48px;height:48px;display:grid;place-items:center}
+#abertos .tira svg{width:22px;height:22px}
+#abertos .vazio{padding:8px 16px;font-size:17px;font-weight:500;color:var(--sec)}
+
+/* central de avisos */
+#gaveta{position:absolute;z-index:6;left:0;right:0;top:calc(var(--barra) + env(safe-area-inset-top));max-height:calc(100% - var(--barra) - var(--nav));display:flex;flex-direction:column;overflow:auto}
+#gaveta .miolo{background:var(--preto);padding-top:12px}
+#gaveta .fim{flex:none;height:30px;margin-top:-1px;background:url(art/home/folha.webp) center top/130% auto no-repeat;transform:scaleY(-1)}
+#gaveta .cab{display:flex;align-items:center;justify-content:space-between;padding-right:8px}
+#limpar{min-height:44px;padding:0 10px;font-size:15px;font-weight:700;color:var(--sec)}
+#avisos{list-style:none;padding:0 0 10px}
+#avisos li{display:flex;align-items:center;margin:0 0 2px -12px;background:url(art/home/faixa-2-vio.webp) right center/auto 100% no-repeat}
+#avisos li:nth-child(2){background-image:url(art/home/faixa-4-vio.webp)}
+#avisos li:nth-child(3){background-image:url(art/home/faixa-5-vio.webp)}
+#avisos .ir{flex:1;min-width:0;display:flex;align-items:center;gap:12px;min-height:70px;padding:8px 0 8px 26px}
+#avisos .ir img{flex:none;height:42px;width:48px;object-fit:contain}
+#avisos .ir span{min-width:0}
+#avisos small{display:block;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ame)}
+#avisos strong{display:block;font-size:16px;font-weight:700;line-height:1.15}
+#avisos .tira{flex:none;width:44px;height:46px;margin-right:18px;display:grid;place-items:center;color:var(--sec)}
+#avisos .tira svg{width:18px;height:18px}
+#avisos .vazio{margin:0;background:none;padding:12px 16px 12px 28px;font-size:17px;font-weight:500;color:var(--sec)}
+#teste{padding:6px 12px 4px}
+#teste p{font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--sec);margin-bottom:6px}
+#teste div{display:flex;flex-wrap:wrap;gap:6px}
+#teste button{min-height:40px;padding:0 10px;background:var(--vio);font-size:15px;font-weight:700}
+#teste button.on{background:var(--ame);color:var(--preto)}
+
+/* diálogo do sistema e aviso solto */
+#dialogo{position:absolute;z-index:8;inset:0;display:grid;place-items:center;padding:24px;background:rgba(11,8,18,.72)}
+#dialogo>div{width:min(350px,100%);max-height:100%;overflow:auto;display:flex;flex-direction:column;align-items:center;gap:8px;padding:34px 16px 18px;background:url(art/home/folha.webp) center top/150% auto no-repeat,linear-gradient(var(--preto),var(--preto)) bottom/100% calc(100% - 16px) no-repeat;filter:drop-shadow(5px 5px 0 var(--ame));text-align:center}
+#dialogo>div>img{width:64px;height:auto}
+#dialogo h2{font:400 28px/1.1 var(--disp);letter-spacing:.02em;text-transform:uppercase}
+#dialogo p{font-size:18px;font-weight:500;line-height:1.25}
+#d-lista{width:100%;list-style:none;padding:0;text-align:left}
+#d-lista li{display:flex;align-items:center;gap:10px;min-height:52px;padding:4px 0;border-top:2px solid var(--vio)}
+#d-lista img{flex:none;height:38px;width:42px;object-fit:contain;opacity:.65}
+#d-lista b{display:block;font:400 19px/1.15 var(--disp);letter-spacing:.015em;text-transform:uppercase}
+#d-lista span span{display:block;font-size:15px;font-weight:700;line-height:1.1;color:var(--sec)}
+#dialogo button{min-height:48px;min-width:130px;margin-top:8px;padding:0 18px;text-align:center;background:var(--papel);color:var(--preto);font:400 21px/1 var(--disp);letter-spacing:.03em;text-transform:uppercase}
+#aviso{position:absolute;z-index:7;left:10px;right:10px;top:calc(var(--barra) + env(safe-area-inset-top) + 12px);min-height:62px;display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--papel);color:var(--preto);box-shadow:5px 5px 0 var(--ame);transform:rotate(-.6deg);animation:desce .2s ease-out both;width:calc(100% - 20px)}
+#aviso img{flex:none;height:44px;width:50px;object-fit:contain}
+#aviso small{display:block;font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+#aviso strong{display:block;font-size:17px;font-weight:700;line-height:1.2}
+@keyframes desce{from{translate:0 -120%}}
+
+/* tela de bloqueio */
+#bloqueio{position:absolute;z-index:9;inset:0;display:flex;flex-direction:column;background:var(--preto) url(art/home/fundo.webp) 100% 0/auto 100% no-repeat;touch-action:none;will-change:transform}
+.critico #bloqueio{background-image:url(art/os/fundo-calmo.webp)}
+#bloqueio>*{position:relative;z-index:2}
+/* a folha sobe e a beirada de baixo é rasgada: abrir é rasgar a tela */
+#bloqueio::after{content:"";position:absolute;left:-10%;right:-10%;top:100%;height:60px;background:url(art/home/folha.webp) center bottom/100% auto no-repeat;transform:scaleY(-1)}
+#b-tempo{position:relative;margin:calc(env(safe-area-inset-top) + 64px) 8px 0 12px;transform:rotate(-2.8deg);transform-origin:0 50%}
+#b-tempo small{display:inline-block;margin:0 0 8px 6px;padding:3px 8px 2px;background:var(--papel);color:var(--preto);font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;transform:skewX(-8deg)}
+#relogio{display:block;width:max-content;font:400 min(25.8vw,15.4dvh)/.98 var(--disp);letter-spacing:.005em;color:var(--papel);white-space:nowrap;font-variant-numeric:tabular-nums;-webkit-text-stroke:5px var(--preto);paint-order:stroke fill;text-shadow:5px 6px 0 var(--ame)}
+#selo{position:absolute;right:6px;bottom:-32px;padding:4px 10px 3px;background:var(--preto);color:var(--papel);font:400 19px/1 var(--disp);letter-spacing:.06em;text-transform:uppercase;box-shadow:3px 3px 0 var(--ame);transform:rotate(5deg)}
+.critico #relogio{color:var(--preto);-webkit-text-stroke:0;text-shadow:none;padding:2px 14px 0 10px;background:var(--ame);clip-path:polygon(0 4%,14% 0,31% 5%,47% 1%,66% 4%,83% 0,100% 5%,98% 34%,100% 58%,98% 96%,80% 100%,62% 95%,41% 100%,22% 96%,2% 100%,0 66%,2% 36%)}
+.critico #selo{background:var(--ame);color:var(--preto);box-shadow:3px 3px 0 var(--papel)}
+#b-avisos{margin:auto 0 12px;display:flex;flex-direction:column;gap:2px;list-style:none;padding:0}
+#b-avisos li{display:flex;align-items:center;gap:10px;width:calc(100% + 12px);min-height:66px;margin-left:-12px;padding:6px 40px 6px 26px;background:url(art/home/faixa-2-vio.webp) right center/auto 100% no-repeat}
+#b-avisos li:nth-child(2){width:96%;background-image:url(art/home/faixa-4-vio.webp)}
+#b-avisos img{flex:none;height:38px;width:44px;object-fit:contain}
+#b-avisos small{display:block;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ame)}
+#b-avisos strong{display:block;font-size:16px;font-weight:700;line-height:1.15}
+#b-abre{flex:none;display:flex;flex-direction:column;align-items:center;gap:0;width:100%;min-height:92px;padding:6px 0 calc(14px + env(safe-area-inset-bottom));text-align:center;font:400 22px/1.1 var(--disp);letter-spacing:.04em;text-transform:uppercase;background:url(art/home/folha.webp) center top/130% auto no-repeat,linear-gradient(var(--preto),var(--preto)) bottom/100% calc(100% - 20px) no-repeat;padding-top:30px}
+#b-abre svg{width:26px;height:18px;color:var(--ame);animation:sobe 1.3s ease-in-out infinite}
+@keyframes sobe{50%{translate:0 -5px}}
+
+/* inicialização */
+#boot{position:absolute;z-index:10;inset:0;display:grid;place-items:center;align-content:center;gap:18px;background:#000}
+#boot img{width:min(64vw,44dvh);height:auto;animation:brota .5s steps(5) both}
+#boot i{display:block;width:min(50vw,240px);height:5px;background:var(--vio);overflow:hidden}
+#boot i::after{content:"";display:block;height:100%;background:var(--ame);animation:carrega 1.1s steps(9) both}
+@keyframes brota{from{opacity:0}}
+@keyframes carrega{from{width:0}to{width:100%}}
+
+@media (max-height:760px){#trilha{display:none}:root{--arco:52px;--grande:100px}.larga{min-height:68px}.larga>img{width:38px;height:38px}}
+
+/* computador: folha preta em pé com o mosaico, arte inteira do lado, janelas soltas */
+@media (min-width:900px){
+  :root{--arco:64px;--grande:150px;--barra:62px;--nav:0px}
+  .larga{min-height:96px}
+  #papel,#bloqueio{background-image:url(art/home/fundo.webp);background-size:cover;background-position:100% 8%}
+  .critico #papel,.critico #bloqueio{background-image:url(art/os/fundo-calmo.webp)}
+  #nav{display:none!important}
+  #abertos{display:none!important}
+  #folha-pc{display:flex!important;position:absolute;z-index:1;flex-direction:column;left:calc(240px - 75dvh);top:calc(50dvh - 300px);width:150dvh;height:600px;transform:rotate(92deg);filter:drop-shadow(0 -5px 0 var(--ame));pointer-events:none}
+  #folha-pc img{display:block;width:100%;height:auto;margin-bottom:-1px}
+  #folha-pc i{flex:1;background:var(--preto)}
+  #barra{top:auto;bottom:0;padding:0 8px 0 0;height:var(--barra);touch-action:auto;gap:8px}
+  #barra::before{top:auto;bottom:0;left:0;right:0;height:80px;background:url(art/home/folha.webp) 0 0/1200px auto repeat-x;transform:none}
+  #iniciar{display:grid;place-items:center;flex:none;width:76px;height:var(--barra);background:var(--ame);clip-path:polygon(0 14%,88% 8%,100% 54%,92% 100%,0 100%)}
+  #iniciar img{width:46px;height:46px;filter:brightness(0)}
+  #tarefas{display:flex;flex:1;min-width:0;gap:4px;height:100%;padding-top:12px;list-style:none;overflow:hidden}
+  #tarefas button{height:44px;display:flex;align-items:center;gap:7px;max-width:190px;padding:0 12px 0 8px;font-size:16px;font-weight:700;white-space:nowrap}
+  #tarefas button.foco{background:var(--vio);box-shadow:inset 0 -3px 0 var(--ame)}
+  #tarefas button.min{color:var(--sec)}
+  #tarefas img{height:30px;width:32px;object-fit:contain}
+  /* o Tempo sai da barra para cima: nenhuma janela o cobre */
+  #hora{order:3;position:relative;top:-14px;font-size:68px;-webkit-text-stroke:5px var(--preto);paint-order:stroke fill;text-shadow:4px 4px 0 var(--ame)}
+  #estado{order:2;margin-left:0;padding-top:12px}
+  #sino{order:4;padding-top:12px;height:54px}
+  .critico #hora{-webkit-text-stroke:0;text-shadow:none}
+  #inicio{top:0;bottom:var(--barra);width:470px;right:auto;scrollbar-width:thin}
+  #coluna{padding:18px 0 28px}
+  #largas{margin-right:18px}
+  #quadro{width:430px}
+  #trilha{align-self:flex-start;margin:4px 0 0 56px;width:350px}
+  #grade{padding:10px 26px 4px 10px;row-gap:6px}
+  #janelas{top:0;bottom:var(--barra)}
+  .jan{inset:auto;box-shadow:0 0 0 2px var(--papel),8px 8px 0 var(--ame);min-width:320px;min-height:240px}
+  .jan.atras{display:flex;box-shadow:0 0 0 2px var(--sec),6px 6px 0 var(--vio)}
+  .jan.min{display:none}
+  .jan.max{left:0!important;top:0!important;width:100%!important;height:100%!important}
+  .jan-topo{cursor:grab}
+  .jan-topo:active{cursor:grabbing}
+  .jan-bts .so-pc{display:grid}
+  .jan-tit{height:50px;flex-basis:420px}
+  .jan-canto{display:block;position:absolute;right:0;bottom:0;width:22px;height:22px;cursor:nwse-resize;touch-action:none;background:linear-gradient(135deg,transparent 50%,var(--ame) 50%)}
+  #gaveta{left:auto;right:12px;top:auto;bottom:calc(var(--barra) + 20px);width:420px;max-height:calc(100% - var(--barra) - 34px)}
+  #aviso{left:auto;right:18px;top:auto;bottom:calc(var(--barra) + 26px);width:380px}
+  #b-tempo{margin:7dvh 0 0 4vw;width:max-content}
+  #relogio{font-size:min(15vw,30dvh)}
+  #b-avisos{width:520px;margin:auto 0 18px}
+  #b-avisos li{width:100%}
+  #b-abre{background:url(art/home/folha.webp) 0 0/1200px auto repeat-x}
+}
+@media (prefers-reduced-motion:reduce){
+  #onda path,#b-abre svg,#boot img,#boot i::after,#aviso{animation:none}
+  .arco{transition:none}
+}
+</style>
+</head>
+<body>
+<main id="os">
+  <div id="papel" aria-hidden="true"></div>
+
+  <div id="folha-pc" hidden aria-hidden="true"><img src="art/home/folha.webp" alt=""><i></i></div>
+  <section id="inicio" aria-label="Início">
+    <div id="coluna">
+      <button id="quadro"><span><span class="k" id="q-k"></span><span class="t" id="q-t"></span></span><span id="pontos" aria-hidden="true"></span></button>
+      <div id="trilha" class="espelho" aria-label="Trilha">
+        <span><small>Trilha</small><strong>Nome da faixa</strong></span>
+        <button id="t-ant" aria-label="Faixa anterior"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20 4 9 12l11 8zM4 4h3v16H4z"/></svg></button>
+        <button id="t-toca" aria-label="Tocar" aria-pressed="false"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path id="t-ico" d="M6 3l15 9-15 9z"/></svg></button>
+        <button id="t-prox" aria-label="Próxima faixa"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4 4l11 8-11 8zM17 4h3v16h-3z"/></svg></button>
+      </div>
+      <div id="destaques"></div>
+      <div id="grade"></div>
+    </div>
+  </section>
+
+  <div id="janelas"></div>
+
+  <section id="abertos" hidden aria-labelledby="ab-t"><h2 id="ab-t"></h2><ul id="ab-lista"></ul></section>
+
+  <header id="barra">
+    <button id="iniciar" aria-label="Início"><img src="art/os/sigilo-mini.webp" alt=""></button>
+    <ul id="tarefas" aria-label="Sistemas abertos"></ul>
+    <button id="hora"></button>
+    <span id="estado"><svg id="onda" viewBox="0 0 44 18" aria-hidden="true"><path d="M0 10h10l3-3 3 3h3l2 6 4-15 3 12 2-3h14"/></svg><span id="est-t"></span></span>
+    <button id="sino" aria-expanded="false" aria-controls="gaveta"><svg viewBox="0 0 24 24" fill="#F1ECE0" aria-hidden="true"><path d="M12 2.5l1.6 2.2c3.4.6 5 3.2 5 6.6 0 3 .7 4.6 2.4 6.2l-.5 1.5H3.5L3 17.5c1.7-1.6 2.4-3.2 2.4-6.2 0-3.4 1.6-6 5-6.6zM9.2 20.5h5.6L12 23z"/></svg><b id="sino-n"></b></button>
+  </header>
+
+  <nav id="nav" aria-label="Navegação do sistema">
+    <button id="n-abertos" aria-label="Sistemas abertos"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3 5l18-1.5V8L3 9.5zM3 11.5 21 10v4.5L3 16zM3 18l18-1.5V21L3 22.500z"/></svg><span id="n-conta" hidden></span></button>
+    <button id="n-inicio" aria-label="Início"><img src="art/os/sigilo-mini.webp" alt=""></button>
+    <button id="n-voltar" aria-label="Voltar"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13.500 2.500 2.500 12l11 9.500.8-5.600 7.200-.6-.5-6.800-7-.4z"/></svg></button>
+  </nav>
+
+  <section id="gaveta" hidden aria-labelledby="g-t">
+    <div class="miolo">
+    <div class="cab"><h2 id="g-t"></h2><button id="limpar">Limpar</button></div>
+    <ul id="avisos"></ul>
+    <div id="teste">
+      <p>Teste do protótipo</p>
+      <div>
+        <button data-estado="novato">Novato</button>
+        <button data-estado="jogador">Jogador</button>
+        <button data-estado="owner">Owner</button>
+        <button id="t-critico">Tempo crítico</button>
+        <button id="t-bloq">Bloquear</button>
+        <button id="t-boot">Ligar de novo</button>
+      </div>
+    </div>
+    </div>
+    <div class="fim" aria-hidden="true"></div>
+  </section>
+
+  <div id="aviso" role="status" hidden></div>
+  <div id="dialogo" hidden role="alertdialog" aria-labelledby="d-t" aria-describedby="d-p"><div><img id="d-img" src="art/os/arco-fechado.webp" alt=""><h2 id="d-t"></h2><p id="d-p"></p><ul id="d-lista"></ul><button id="d-ok">Entendi</button></div></div>
+
+  <section id="bloqueio" aria-label="Tela de bloqueio">
+    <div id="b-tempo"><small>Tempo no pulso</small><span id="relogio"></span><span id="selo"></span></div>
+    <ul id="b-avisos"></ul>
+    <button id="b-abre"><svg viewBox="0 0 26 18" fill="currentColor" aria-hidden="true"><path d="M13 0l13 13-3 5-10-9-10 9-3-5z"/></svg><span id="b-texto"></span></button>
+  </section>
+
+  <div id="boot" hidden aria-hidden="true"><img src="art/os/sigilo.webp" alt=""><i></i></div>
+</main>
+<script>
+const $=i=>document.getElementById(i);
+const q=new URLSearchParams(location.search);
+const parado=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const noPc=()=>matchMedia('(min-width:900px)').matches;
+const CADEADO='<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a5 5 0 0 0-5 5v3H5v12h14V10h-2V7a5 5 0 0 0-5-5zm-3 8V7a3 3 0 0 1 6 0v3zm3 4a2 2 0 0 1 1 3.700V20h-2v-2.300A2 2 0 0 1 12 14z"/></svg>';
+const XIS='<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4 2.500 12 9.500l8-7 2 3-7 6.500 7 7-2.500 3L12 15l-7.500 7L2 19l7-7-7-6.500z"/></svg>';
+const MINI='<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3 17l18-1.500V20L3 21.500z"/></svg>';
+const MAXI='<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2c4 3 7 7 7 12v8H5v-8c0-5 3-9 7-12zm0 5.500c-2 2-3 4.300-3 6.500v4h6v-4c0-2.200-1-4.500-3-6.500z"/></svg>';
+// Neste protótipo o estado vem do parâmetro; no jogo, do servidor (/api/eu).
+let estado=q.get('estado')||'jogador';
+let critico=q.get('tempo')==='critico';
+const TUTORIAL='Vença o Deadly Vote tutorial';
+// nomes, subtítulos, motivos e tamanhos de janela são os do jogo atual (os/apps.tsx e progressao/sistemas.tsx)
+const APPS=[
+  {id:'record',nome:'Record',s:'Deadly Vote Record System',j:[900,640]},
+  {id:'mensagens',nome:'Mensagens',s:'Conversas e ameaças',conta:3,j:[760,540]},
+  {id:'cartas',nome:'Cartas',s:'Seu inventário',novo:true,j:[780,580]},
+  {id:'ajustes',nome:'Ajustes',s:'Sistema',j:[480,520]},
+  {id:'pulso',nome:'Pulso',s:'Seu tempo de vida',j:[520,560]},
+  {id:'inventario',nome:'Inventário',s:'Tudo o que é seu',j:[720,620]},
+  {id:'trocas',nome:'Sala de Trocas',curto:'Trocas',s:'Trocas às cegas',j:[980,640]},
+  {id:'calendario',nome:'Calendário',s:'Eventos e check-in diário',j:[460,820]},
+  {id:'casa',nome:'Casa',s:'Confecção de Cartas e Pacotes',trava:TUTORIAL,j:[480,840],quadro:'casa.html?etapa=3'},
+  {id:'torres',nome:'Torres de Ruptura',curto:'Torres',s:'Andares, essências e chaves',trava:TUTORIAL,novo:true,j:[480,820]},
+  {id:'poco',nome:'Poço dos Milagres',curto:'Poço',s:'Moedas, manivela e balde',trava:TUTORIAL,j:[460,820]},
+  {id:'salao',nome:'Salão das Máscaras',curto:'Máscaras',s:'Leilões, mercado e anúncios',trava:TUTORIAL,j:[480,840]},
+  {id:'jogos',nome:'Sala de Jogos',curto:'Jogos',s:'Minigames e apostas',revelada:true,j:[1040,680]},
+  {id:'corporacoes',nome:'Corporações',s:'Companhia de Despertados',trava:'Aguarde a Companhia',sempre:true,j:[860,620]},
+  {id:'virtudes',nome:'Virtudes',s:'Pontos de potencial',trava:'Em breve',sempre:true,j:[460,820]},
+  {id:'arcanos',nome:'Arcanos',s:'Os vinte e dois',trava:'Em breve',sempre:true,j:[460,820]},
+  {id:'mesa',nome:'Mesa',s:'Painel da equipe',equipe:true,j:[860,620]},
+];
+const app=id=>APPS.find(a=>a.id===id);
+// Owner e Anfitrião têm tudo liberado
+const trancado=a=>estado==='owner'?false:a.sempre?true:estado==='novato'&&!!a.trava;
+const visivel=a=>!(a.equipe&&estado!=='owner')&&!(a.revelada&&estado==='novato');
+const emb=id=>`art/home/emblema-${id}.webp`;
+// Letra por letra, cada uma levemente torta. Fixo por posição, nunca sorteado.
+function letras(txt){
+  return [...txt].map((c,i)=>{
+    if(c===' ')return ' ';
+    const k=(i*7+c.charCodeAt(0)*3)%11,g=((k-5)*.62).toFixed(1),y=((k%5-2)*.6).toFixed(1),e=(1+(k%4)*.022+(i===0?.14:0)).toFixed(3);
+    return `<span class="l" style="--g:${g}deg;--y:${y}px;--e:${e}">${c}</span>`;
+  }).join('');
+}
+
+/* ---- mosaico: Record é a peça maior, Mensagens e Cartas mostram o que chegou, o resto são vitrais ---- */
+// Textos de exemplo: no jogo vêm dos sistemas.
+const LARGAS={mensagens:'A última mensagem aparece aqui',cartas:'A carta mais recente aparece aqui'};
+function icone(a,grande=false){
+  const b=document.createElement('button');
+  b.className='ic'+(grande?' grande':'');
+  b.dataset.id=a.id;
+  b.setAttribute('aria-label',a.conta?`${a.nome}, ${a.conta} novas`:a.nome);
+  const selo=a.conta?`<span class="conta">${a.conta}</span>`:a.novo?'<span class="novo">NOVO</span>':'';
+  b.innerHTML=`<span class="arco"><img src="art/os/arco.webp" alt=""><img class="emb" src="${emb(a.id)}" alt="">${selo}</span><span class="rot">${a.curto||a.nome}</span>`;
+  b.onclick=()=>abre(a.id,b);
+  return b;
+}
+function larga(a,i){
+  const b=document.createElement('button');
+  b.className='larga espelho';b.dataset.id=a.id;
+  b.style.setProperty('--img',`url(art/home/faixa-${i+2}.webp)`);
+  b.style.setProperty('--ame-img',`url(art/home/faixa-${i+2}-ame.webp)`);
+  b.setAttribute('aria-label',a.conta?`${a.nome}, ${a.conta} novas`:a.nome);
+  b.innerHTML=`<img src="${emb(a.id)}" alt=""><span><b>${letras(a.nome)}${a.conta?`<span class="conta">${a.conta}</span>`:a.novo?'<span class="novo">NOVO</span>':''}</b><em>${LARGAS[a.id]}</em></span>`;
+  b.onclick=()=>abre(a.id,b);
+  return b;
+}
+function montaIcones(){
+  const largas=document.createElement('div');largas.id='largas';
+  largas.append(larga(app('mensagens'),0),larga(app('cartas'),1));
+  $('destaques').replaceChildren(icone(app('record'),true),largas);
+  const resto=APPS.filter(a=>visivel(a)&&!['record','mensagens','cartas'].includes(a.id));
+  const abertos=resto.filter(a=>!trancado(a)),fechados=resto.filter(trancado);
+  const pecas=abertos.map(a=>icone(a));
+  if(fechados.length){
+    const b=document.createElement('button');
+    const n=fechados.length,sobra=(4-abertos.length%4)%4||4;
+    b.id='lacrado';b.className='ic';b.style.gridColumn=`span ${sobra}`;
+    b.setAttribute('aria-label',`${n} sistemas trancados. Ver quais e por quê`);
+    b.innerHTML=`<span class="pilha"><img src="art/os/arco-fechado.webp" alt=""><img src="art/os/arco-fechado.webp" alt=""><img src="art/os/arco-fechado.webp" alt=""></span>${sobra>1?`<span class="tx"><b>${n}</b>trancados</span>`:''}`;
+    b.onclick=()=>listaTrancados(fechados);
+    pecas.push(b);
+  }
+  $('grade').replaceChildren(...pecas);
+}
+
+/* ---- janelas: no celular ocupam a tela, no computador se movem e se sobrepõem ---- */
+const janelas=new Map();let z=1,cascata=0;
+function foco(){return [...janelas.values()].filter(j=>!j.min).sort((a,b)=>b.z-a.z)[0]||null}
+function pintaJanelas(){
+  const f=foco();
+  for(const j of janelas.values()){
+    j.el.classList.toggle('atras',j!==f);
+    j.el.classList.toggle('min',j.min);
+    j.el.style.zIndex=j.z;
+    if(!noPc()&&j.min)j.el.classList.add('atras');
+  }
+  $('tarefas').innerHTML='';
+  for(const j of janelas.values()){
+    const li=document.createElement('li'),b=document.createElement('button');
+    b.className=(j===f?'foco':'')+(j.min?' min':'');
+    b.innerHTML=`<img src="${emb(j.a.id)}" alt="">${j.a.curto||j.a.nome}`;
+    b.setAttribute('aria-pressed',j===f);
+    b.onclick=()=>{if(j===f&&!j.min){j.min=true}else{j.min=false;j.z=++z}pintaJanelas()};
+    li.append(b);$('tarefas').append(li);
+  }
+  if(!$('abertos').hidden)pintaAbertos();
+  const n=janelas.size;$('n-conta').textContent=n;$('n-conta').hidden=!n;
+}
+function animaDe(el,origem,inverso){
+  if(parado||!origem||q.has('semraf'))return Promise.resolve();
+  const a=origem.getBoundingClientRect(),b=el.getBoundingClientRect();
+  if(!a.width||!b.width)return Promise.resolve();
+  const de={transform:`translate(${a.left+a.width/2-b.left-b.width/2}px,${a.top+a.height/2-b.top-b.height/2}px) scale(${a.width/b.width},${a.height/b.height})`,opacity:.3};
+  const para={transform:'none',opacity:1};
+  const an=el.animate(inverso?[para,de]:[de,para],{duration:inverso?150:210,easing:'cubic-bezier(.2,.85,.25,1)'});
+  return Promise.race([an.finished.catch(()=>{}),new Promise(r=>setTimeout(r,inverso?190:250))]);
+}
+function criaJanela(a,origem){
+  const el=document.createElement('section');el.className='jan';el.setAttribute('role','dialog');el.setAttribute('aria-label',a.nome);
+  const n=APPS.indexOf(a)%5+1;
+  el.innerHTML=`<header class="jan-topo"><span class="jan-tit" style="--img:url(art/home/faixa-${n}.webp)"><img src="${emb(a.id)}" alt=""><b>${letras(a.nome)}</b></span>
+    <span class="jan-bts"><button class="so-pc mini" aria-label="Minimizar ${a.nome}">${MINI}</button><button class="so-pc maxi" aria-label="Maximizar ${a.nome}">${MAXI}</button><button class="fechar" aria-label="Fechar ${a.nome}">${XIS}</button></span></header>
+    <div class="jan-corpo${a.quadro?' quadro':''}">${a.quadro?`<iframe src="${a.quadro}" title="${a.nome}"></iframe>`:`<img class="grande" src="${emb(a.id)}" alt=""><h3>${letras(a.nome)}</h3><p>${a.s}</p><p>Esta tela vem nas próximas etapas.</p>`}</div>
+    <i class="jan-canto" aria-hidden="true"></i>`;
+  const j={a,el,min:false,z:++z,origem};el.tabIndex=-1;
+  if(noPc()){
+    const area=$('janelas').getBoundingClientRect(),w=Math.min(a.j[0],area.width-60),h=Math.min(a.j[1],area.height-24);
+    cascata=(cascata+1)%6;
+    el.style.width=w+'px';el.style.height=h+'px';
+    el.style.left=Math.max(8,Math.min(area.width-w-14,500+cascata*28))+'px';
+    el.style.top=Math.max(8,(area.height-h)/2-30+cascata*22)+'px';
+  }
+  el.addEventListener('pointerdown',()=>{if(foco()!==j){j.z=++z;pintaJanelas()}},true);
+  el.querySelector('.fechar').onclick=()=>fecha(a.id);
+  el.querySelector('.mini').onclick=()=>{j.min=true;pintaJanelas()};
+  el.querySelector('.maxi').onclick=()=>el.classList.toggle('max');
+  arrastavel(j);
+  $('janelas').append(el);janelas.set(a.id,j);
+  pintaJanelas();
+  animaDe(el,origem);
+  el.focus({preventScroll:true});
+}
+function arrastavel(j){
+  const el=j.el,arrasta=(alvo,muda)=>{
+    alvo.addEventListener('pointerdown',e=>{
+      if(!noPc()||e.target.closest('button')||el.classList.contains('max'))return;
+      e.preventDefault();alvo.setPointerCapture(e.pointerId);
+      const r0={x:e.clientX,y:e.clientY,l:el.offsetLeft,t:el.offsetTop,w:el.offsetWidth,h:el.offsetHeight};
+      const f=el.querySelector('iframe');if(f)f.style.pointerEvents='none';
+      const mv=ev=>muda(ev.clientX-r0.x,ev.clientY-r0.y,r0);
+      const fim=()=>{alvo.removeEventListener('pointermove',mv);if(f)f.style.pointerEvents=''};
+      alvo.addEventListener('pointermove',mv);alvo.addEventListener('pointerup',fim,{once:true});alvo.addEventListener('pointercancel',fim,{once:true});
+    });
+  };
+  // a barra de título nunca sai inteira da área: sempre sobra por onde pegar
+  arrasta(el.querySelector('.jan-topo'),(dx,dy,r)=>{
+    const a=$('janelas').getBoundingClientRect();
+    el.style.left=Math.min(a.width-120,Math.max(120-r.w,r.l+dx))+'px';
+    el.style.top=Math.min(a.height-62,Math.max(0,r.t+dy))+'px';
+  });
+  arrasta(el.querySelector('.jan-canto'),(dx,dy,r)=>{el.style.width=Math.max(320,r.w+dx)+'px';el.style.height=Math.max(240,r.h+dy)+'px'});
+}
+function abre(id,origem){
+  const a=app(id);
+  if(trancado(a))return dialogo(a);
+  fechaGaveta();$('abertos').hidden=true;
+  const j=janelas.get(id);
+  if(j){j.min=false;j.z=++z;pintaJanelas();return}
+  criaJanela(a,origem);
+}
+async function fecha(id){
+  const j=janelas.get(id);if(!j)return;
+  const origem=j.origem&&j.origem.isConnected?j.origem:document.querySelector(`[data-id="${id}"]`);
+  await animaDe(j.el,origem,true);
+  j.el.remove();janelas.delete(id);pintaJanelas();
+  if(origem&&origem.isConnected)origem.focus({preventScroll:true});
+}
+// Casa e Avatar rodam dentro da janela: a saída delas fecha a janela
+addEventListener('message',e=>{if(e.origin===location.origin&&e.data==='devo-fechar-app')fecha('casa')});
+function dialogo(a){
+  $('d-t').innerHTML=letras(a.nome);$('d-p').textContent=`Trancado. ${a.trava}.`;$('d-p').hidden=false;$('d-lista').innerHTML='';$('d-img').hidden=false;
+  $('dialogo').hidden=false;$('d-ok').focus();
+}
+function listaTrancados(lista){
+  $('d-t').innerHTML=letras('Trancados');$('d-p').hidden=true;$('d-img').hidden=true;
+  $('d-lista').innerHTML=lista.map(a=>`<li><img src="${emb(a.id)}" alt=""><span><b>${a.nome}</b><span>${a.trava}</span></span></li>`).join('');
+  $('dialogo').hidden=false;$('d-ok').focus();
+}
+$('d-ok').onclick=()=>$('dialogo').hidden=true;
+$('dialogo').addEventListener('pointerdown',e=>{if(e.target===$('dialogo'))$('dialogo').hidden=true});
+
+/* ---- navegação do celular ---- */
+function pintaAbertos(){
+  const l=$('ab-lista');l.innerHTML='';
+  if(!janelas.size){l.innerHTML='<li class="vazio">Nenhum sistema aberto.</li>';return}
+  [...janelas.values()].sort((a,b)=>b.z-a.z).forEach(j=>{
+    const li=document.createElement('li'),n=APPS.indexOf(j.a)%5+1;
+    li.innerHTML=`<button class="ir" style="--img:url(art/home/faixa-${n}.webp)"><img src="${emb(j.a.id)}" alt=""><b>${letras(j.a.curto||j.a.nome)}</b></button><button class="tira" aria-label="Fechar ${j.a.nome}">${XIS}</button>`;
+    li.querySelector('.ir').onclick=()=>{$('abertos').hidden=true;j.min=false;j.z=++z;pintaJanelas()};
+    li.querySelector('.tira').onclick=()=>fecha(j.a.id);
+    l.append(li);
+  });
+}
+$('n-abertos').onclick=()=>{fechaGaveta();const a=$('abertos');a.hidden=!a.hidden;if(!a.hidden)pintaAbertos()};
+$('n-inicio').onclick=$('iniciar').onclick=()=>{fechaGaveta();$('abertos').hidden=true;for(const j of janelas.values())j.min=true;pintaJanelas()};
+function volta(){
+  if(!$('dialogo').hidden)return $('dialogo').hidden=true;
+  if(!$('gaveta').hidden)return fechaGaveta();
+  if(!$('abertos').hidden)return $('abertos').hidden=true;
+  const f=foco();if(f)fecha(f.a.id);
+}
+$('n-voltar').onclick=volta;
+addEventListener('keydown',e=>{
+  if(e.key!=='Escape'||!$('bloqueio').hidden)return;
+  volta();
+});
+
+/* ---- central de avisos: toque no sino ou puxe a barra de cima para baixo ---- */
+// Textos de exemplo: no jogo vêm dos sistemas.
+let AVISOS=[{id:'mensagens',t:'Você tem uma mensagem nova'},{id:'cartas',t:'Uma carta nova entrou no inventário'},{id:'calendario',t:'Um evento começa em 3 dias'}];
+function pintaAvisos(){
+  const n=AVISOS.length;
+  $('sino-n').textContent=n;$('sino-n').hidden=!n;
+  $('sino').setAttribute('aria-label',n?`Central de avisos, ${n} novos`:'Central de avisos');
+  const l=$('avisos');l.innerHTML=n?'':'<li class="vazio" style="border:0">Nada de novo por enquanto.</li>';
+  AVISOS.forEach(v=>{
+    const a=app(v.id),li=document.createElement('li');
+    li.innerHTML=`<button class="ir"><img src="${emb(v.id)}" alt=""><span><small>${a.nome}</small><strong>${v.t}</strong></span></button><button class="tira" aria-label="Dispensar aviso">${XIS}</button>`;
+    li.querySelector('.ir').onclick=()=>{AVISOS=AVISOS.filter(x=>x!==v);pintaAvisos();abre(v.id,$('sino'))};
+    li.querySelector('.tira').onclick=()=>{AVISOS=AVISOS.filter(x=>x!==v);pintaAvisos()};
+    l.append(li);
+  });
+  $('b-avisos').innerHTML=AVISOS.slice(0,2).map(v=>`<li><img src="${emb(v.id)}" alt=""><span><small>${app(v.id).nome}</small><strong>${v.t}</strong></span></li>`).join('');
+}
+const abreGaveta=()=>{$('gaveta').hidden=false;$('sino').setAttribute('aria-expanded',true)};
+function fechaGaveta(){$('gaveta').hidden=true;$('sino').setAttribute('aria-expanded',false)}
+$('sino').onclick=()=>$('gaveta').hidden?abreGaveta():fechaGaveta();
+$('limpar').onclick=()=>{AVISOS=[];pintaAvisos()};
+let puxa=null;
+$('barra').addEventListener('pointerdown',e=>{if(!noPc())puxa=e.clientY});
+$('barra').addEventListener('pointermove',e=>{if(puxa!==null&&e.clientY-puxa>22){puxa=null;abreGaveta()}});
+addEventListener('pointerup',()=>puxa=null);
+$('os').addEventListener('pointerdown',e=>{
+  if(!$('gaveta').hidden&&!e.target.closest('#gaveta,#sino'))fechaGaveta();
+});
+
+/* ---- o relógio do sistema é o Tempo no pulso: um só na tela de cada vez ---- */
+const CHEIO=71*3600+59*60+59,POUCO=2*3600+14*60+9;
+let seg=critico?POUCO:CHEIO;
+function pintaTempo(){
+  const h=String(Math.floor(seg/3600)).padStart(2,'0'),m=String(Math.floor(seg%3600/60)).padStart(2,'0'),s=String(seg%60).padStart(2,'0'),t=`${h}:${m}:${s}`,est=critico?'Crítico':'Estável';
+  const comDp=t.replaceAll(':','<i class="dp">:</i>');$('hora').innerHTML=comDp;$('relogio').innerHTML=comDp;$('selo').textContent=est;$('est-t').textContent=est;
+  $('hora').setAttribute('aria-label',`Tempo no pulso: ${h} horas, ${m} minutos. ${est}. Abrir Pulso`);
+  $('os').classList.toggle('critico',critico);
+}
+if(!q.has('semraf'))setInterval(()=>{if(seg>0){seg--;pintaTempo()}},1000);
+$('hora').onclick=()=>abre('pulso',$('hora'));
+
+/* ---- quadro de anúncios: passa sozinho (parado com movimento reduzido), como no jogo ---- */
+// Textos provisórios: no jogo vêm do Owner e do Calendário dos próximos 14 dias.
+const ANUNCIOS=[{k:'Aviso do Owner',t:'Título do aviso',x:'Aqui entra o texto que o Owner escrever.',app:'calendario'},{k:'Calendário',t:'Próximo evento',x:'Eventos dos próximos 14 dias aparecem aqui.',app:'calendario'}];
+let qi=0;
+function pintaQuadro(){
+  const a=ANUNCIOS[qi];
+  $('q-k').textContent=a.k;$('q-t').innerHTML=letras(a.t);
+  $('quadro').setAttribute('aria-label',`Anúncio: ${a.t}. ${a.x}`);
+  $('pontos').innerHTML=ANUNCIOS.map((_,i)=>`<u class="${i===qi?'on':''}"></u>`).join('');
+}
+$('quadro').onclick=()=>abre(ANUNCIOS[qi].app,$('quadro'));
+if(!parado&&!q.has('semraf'))setInterval(()=>{qi=(qi+1)%ANUNCIOS.length;pintaQuadro()},7000);
+
+/* ---- trilha: neste protótipo só o controle, sem som ---- */
+$('t-toca').onclick=()=>{
+  const b=$('t-toca'),on=b.getAttribute('aria-pressed')!=='true';
+  b.setAttribute('aria-pressed',on);b.setAttribute('aria-label',on?'Pausar':'Tocar');
+  $('t-ico').setAttribute('d',on?'M6 3h4.500v18H6zM14 3h4.500v18H14z':'M6 3l15 9-15 9z');
+};
+
+/* ---- bloqueio: deslize para cima no celular; clique ou tecla no computador ---- */
+function pintaTextoBloqueio(){$('b-texto').textContent=noPc()?'Clique para abrir':'Deslize para abrir'}
+function desbloqueia(){
+  const b=$('bloqueio');
+  if(b.hidden)return;
+  if(parado||q.has('semraf')){b.hidden=true;b.style.transform='';return mostraAviso()}
+  const an=b.animate([{transform:b.style.transform||'none'},{transform:'translateY(-105%)'}],{duration:240,easing:'cubic-bezier(.5,0,.8,.4)',fill:'forwards'});
+  Promise.race([an.finished.catch(()=>{}),new Promise(r=>setTimeout(r,280))]).then(()=>{b.hidden=true;an.cancel();b.style.transform='';mostraAviso()});
+}
+function bloqueia(){fechaGaveta();$('bloqueio').hidden=false;pintaTextoBloqueio();$('b-abre').focus({preventScroll:true})}
+$('b-abre').onclick=desbloqueia;
+let sobe=null;
+$('bloqueio').addEventListener('pointerdown',e=>{sobe=e.clientY;$('bloqueio').setPointerCapture(e.pointerId)});
+$('bloqueio').addEventListener('pointermove',e=>{if(sobe===null||noPc())return;const d=Math.min(0,e.clientY-sobe);$('bloqueio').style.transform=d?`translateY(${d}px)`:''});
+$('bloqueio').addEventListener('pointerup',e=>{
+  if(sobe===null)return;
+  const d=e.clientY-sobe;sobe=null;
+  if(noPc()||d<-110||(Math.abs(d)<8&&e.target.closest('#b-abre')))return desbloqueia();
+  if(!parado)$('bloqueio').animate([{transform:$('bloqueio').style.transform||'none'},{transform:'none'}],{duration:160,easing:'ease-out'});
+  $('bloqueio').style.transform='';
+});
+addEventListener('keydown',e=>{if(!$('bloqueio').hidden&&noPc()&&e.key!=='Tab'&&e.key!=='Shift')desbloqueia()});
+
+/* um aviso solto logo depois de abrir, como qualquer sistema faz */
+let avisoT,avisado=false;
+function mostraAviso(){
+  if(avisado||q.has('semraf')||!AVISOS.length)return;
+  avisado=true;
+  setTimeout(()=>{
+    const v=AVISOS[0],a=$('aviso');
+    a.innerHTML=`<img src="${emb(v.id)}" alt=""><span><small>${app(v.id).nome}</small><strong>${v.t}</strong></span>`;
+    a.hidden=false;clearTimeout(avisoT);avisoT=setTimeout(()=>a.hidden=true,3400);
+  },700);
+}
+
+/* ---- ligar: sigilo e barra; só uma vez por visita, e um toque pula ---- */
+function liga(forcar){
+  let visto=false;try{visto=!!sessionStorage.getItem('devo-os-ligou')}catch{}
+  if(q.has('semraf')||parado||(visto&&!forcar))return;
+  try{sessionStorage.setItem('devo-os-ligou','1')}catch{}
+  const b=$('boot');b.hidden=false;
+  const fim=()=>{b.hidden=true;clearTimeout(t);b.removeEventListener('pointerdown',fim)};
+  const t=setTimeout(fim,1500);b.addEventListener('pointerdown',fim);
+}
+
+/* ---- controle de teste ---- */
+function pintaTeste(){
+  document.querySelectorAll('[data-estado]').forEach(b=>b.classList.toggle('on',b.dataset.estado===estado));
+  $('t-critico').classList.toggle('on',critico);
+}
+function aplicaEstado(){
+  for(const [id] of [...janelas])if(trancado(app(id))){janelas.get(id).el.remove();janelas.delete(id)}
+  montaIcones();pintaJanelas();pintaTeste();
+}
+document.querySelectorAll('[data-estado]').forEach(b=>b.onclick=()=>{estado=b.dataset.estado;aplicaEstado()});
+$('t-critico').onclick=()=>{critico=!critico;seg=critico?POUCO:CHEIO;pintaTempo();pintaTeste()};
+$('t-bloq').onclick=bloqueia;
+$('t-boot').onclick=()=>{bloqueia();liga(true)};
+
+$('ab-t').innerHTML=letras('Abertos');$('g-t').innerHTML=letras('Avisos');
+pintaTempo();pintaQuadro();pintaAvisos();aplicaEstado();pintaTextoBloqueio();
+addEventListener('resize',pintaTextoBloqueio);
+if(q.get('tela')==='inicio'||q.has('abrir')||q.has('avisos'))$('bloqueio').hidden=true;
+liga(false);
+if(q.has('abrir'))abre(q.get('abrir'),null);
+if(q.has('avisos'))abreGaveta();
+window.__os={janelas,abre,fecha,get estado(){return estado}};
+</script>
+</body>
+</html>

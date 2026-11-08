@@ -1,5 +1,12 @@
 # Melissa: ficha de redesign (Persona)
 
+> **Novo design aprovado (01/11, computador do dono).** O dono achou o desenho antigo "o mais genérico e com cara de
+> inteligência artificial" e pediu: "melissa é uma personagem que deve parecer doce e acolhedora ao jogador".
+> **Rosto e poses:** `../kit3/art-src/melissa-12-poses.png`, cabelo em cuia com a parte de baixo preta, olhos grandes de
+> pupila redonda olhando para o jogador, nariz de ponto, boca mínima. **Uniforme:** `../kit3/art-src/melissa-uniforme.png`,
+> a partir de `../refs/ref-24.jpg`. O figurino e o cabelo descritos abaixo são histórico. Conceito, voz, cor, palma para
+> cima e pasta continuam valendo.
+
 > **Harmonização de 01/11 (noite).** O estilo de desenho desta ficha mudou: sai o cel de duas sombras chapadas com
 > contorno grosso; entra anime pintado, sombra suave com um recorte duro de luz (`ELENCO.md` §8, nota no topo). As
 > regras de "cel shading" e os prompts abaixo valem pelo conteúdo (silhueta, figurino, pose, cor), não pelo estilo;

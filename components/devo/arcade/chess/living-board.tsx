@@ -2,11 +2,12 @@
 
 import { useFrame, useThree, type ThreeEvent } from '@react-three/fiber'
 import type { Color, PieceSymbol } from 'chess.js'
-import { Suspense, memo, useEffect, useMemo, useRef, type RefObject } from 'react'
+import { memo, useEffect, useLayoutEffect, useMemo, useRef, type RefObject } from 'react'
 import * as THREE from 'three'
+import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js'
 import type { BoardTheme, PieceSet, Quality } from '@/lib/devo/arcade/chess-themes'
 import { drawMarble, makeMarbleTexture, mixHex } from './marble'
-import { BASE_EMISSIVE, makeUnitMaterials, usePieceModel } from './pieces3d'
+import { BASE_EMISSIVE, getPieceModel, makeSideMaterials, type PieceModel } from './pieces3d'
 
 /*
  * Living Chess — o tabuleiro de mármore do DEVO (ref. `refs/ref-xadrez-marmore.png`).
@@ -14,6 +15,10 @@ import { BASE_EMISSIVE, makeUnitMaterials, usePieceModel } from './pieces3d'
  * com órbita suave por arrasto que volta sozinha; peças grandes em escultura; mármore branco e
  * negro com veios, rejunte de aço champanhe com estrelas do sigilo nos cruzamentos e espadas de
  * cerimônia cravadas ao redor. Lances deslizam; capturas viram um golpe curto com estilhaços.
+ *
+ * Desempenho: a cena desenha sob demanda (`Pacer`). Parada, gasta quase nada; só anda em ritmo
+ * cheio durante lance, seleção, xeque ou arrasto. As peças saem em lote (uma malha por tipo e lado)
+ * e nenhuma luz entra ou sai durante a partida, porque isso recompila todos os shaders e trava a tela.
  */
 
 export type UnitState = { id: number; type: PieceSymbol; color: Color; square: string }
@@ -140,241 +145,410 @@ export function fitCamera(aspect: number) {
   return { pol, rad: hi }
 }
 
-const HIT = new THREE.CylinderGeometry(0.4, 0.4, 1, 10).translate(0, 0.5, 0)
+const HIT = new THREE.CylinderGeometry(0.4, 0.4, 1, 8).translate(0, 0.5, 0)
 const HIT_MAT = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0, depthWrite: false, colorWrite: false })
 const LEAN_AXIS = new THREE.Vector3()
-
-type UnitProps = {
-  u: UnitState
-  animRef: RefObject<Anim | null>
-  mateRef: RefObject<MateFx>
-  selected: boolean
-  set: PieceSet
-  shadows: boolean
-  lite: boolean
-  onPick: (sq: string) => void
-}
 
 const wrapAngle = (a: number) => Math.atan2(Math.sin(a), Math.cos(a))
 const bump = (t: number) => Math.sin(clamp01(t) * Math.PI)
 
-const Unit = memo(function Unit({ u, animRef, mateRef, selected, set, shadows, lite, onPick }: UnitProps) {
-  const root = useRef<THREE.Group>(null)
-  const leanG = useRef<THREE.Group>(null)
-  const yawG = useRef<THREE.Group>(null)
-  const restYaw = u.color === 'w' ? Math.PI : 0
-  const heading = useRef(restYaw)
+/** Estado "precisa de quadro" que cada parte da cena informa ao `Pacer`. */
+type Busy = { army: boolean; cam: boolean }
+
+/** Uma peça saindo em quadro: posição, giro e o que o shader deforma. */
+type Pose = { x: number; y: number; z: number; lean: number; tilt: number; spin: number; dissolve: number; flash: number; kneel: number; glow: number; bend: number; side: number; squash: number; moveDir: [number, number] | null; face: number | null }
+
+/** Coreografia de uma peça neste instante (lance, golpe, queda, promoção). */
+function poseOf(u: UnitState, a: Anim | null, n: number, p: Pose) {
   const [sx, sz] = sqPos(u.square)
-  const model = usePieceModel(u.type)
-  const mats = useMemo(() => makeUnitMaterials(u.color, set, lite), [u.color, set, lite])
-  const baseColor = useMemo(() => mats.body.color.clone(), [mats])
-  useEffect(
-    () => () => {
-      mats.body.dispose()
-      mats.trim.dispose()
-      mats.glow.dispose()
-    },
-    [mats],
-  )
+  p.x = sx
+  p.y = 0
+  p.z = sz
+  p.lean = p.tilt = p.spin = p.dissolve = p.flash = p.kneel = p.glow = p.bend = p.squash = 0
+  p.side = Math.sin(n * 1.3 + u.id) * 0.012
+  p.moveDir = null
+  p.face = null
+  if (!a) return
+  const t = Math.min(n - a.start, a.dur)
+  const [fx, fz] = sqPos(a.from)
+  const [tx, tz] = sqPos(a.to)
+  const dx = tx - fx
+  const dz = tz - fz
+  const len = Math.hypot(dx, dz) || 1
 
-  useFrame((_, delta) => {
-    const g = root.current
-    const lg = leanG.current
-    const yg = yawG.current
-    if (!g || !lg || !yg) return
-    const n = nowS()
-    let [x, z] = sqPos(u.square)
-    let y = 0
-    let lean = 0
-    let tilt = 0
-    let spin = 0
-    let dissolve = 0
-    let flash = 0
-    let kneel = 0
-    let glow = 0
-    let bend = 0
-    let side = Math.sin(n * 1.3 + u.id) * 0.012
-    let squash = 0
-    let moveDir: [number, number] | null = null
-    let face: number | null = null
-    const a = animRef.current
-    const t = a ? Math.min(n - a.start, a.dur) : 99
-
-    if (a) {
-      const [fx, fz] = sqPos(a.from)
-      const [tx, tz] = sqPos(a.to)
-      const dx = tx - fx
-      const dz = tz - fz
-      const len = Math.hypot(dx, dz) || 1
-
-      if (a.moverId === u.id) {
-        moveDir = [dx, dz]
-        const moveEnd = a.dur - (a.promo ? 0.7 : 0)
-        if (t < moveEnd) face = Math.atan2(dx, dz)
-        if (a.kind === 'walk' || a.kind === 'jump') {
-          const e = ease(t / moveEnd)
-          x = fx + dx * e
-          z = fz + dz * e
-          y = a.kind === 'jump' ? Math.sin(e * Math.PI) * 0.85 : Math.abs(Math.sin(e * Math.PI * Math.max(2, Math.round(len * 2)))) * 0.025
-          lean = a.kind === 'jump' ? Math.sin(e * Math.PI * 2) * 0.15 : 0.06 * Math.sin(e * Math.PI)
-          const p = clamp01(t / moveEnd)
-          if (a.kind === 'jump') {
-            squash = p < 0.15 ? -0.2 * bump(p / 0.15) : p > 0.8 ? -0.18 * bump((p - 0.8) / 0.2) : 0.16 * bump((p - 0.15) / 0.65)
-            bend = 0.3 * bump(p) - 0.12 * bump(p / 0.15)
-          } else {
-            const ph = p * Math.PI * Math.max(2, Math.round(len * 2))
-            const env = bump(p)
-            bend = 0.22 * env - 0.1 * bump(t / 0.2)
-            side = 0.09 * Math.sin(ph) * env
-            squash = -0.07 * Math.abs(Math.cos(ph)) * env - 0.1 * bump(t / 0.2)
-          }
-        } else if (a.kind === 'cast') {
-          const raise = clamp01(t / 0.3)
-          const lower = clamp01((t - a.impact - 0.05) / 0.2)
-          lean = -0.12 * raise * (1 - lower)
-          glow = raise * (1 - lower)
-          bend = -0.3 * raise * (1 - lower) + 0.45 * bump((t - a.impact + 0.08) / 0.28)
-          squash = 0.16 * raise * (1 - lower) - 0.08 * bump((t - a.impact) / 0.25)
-          side = 0.06 * Math.sin(t * 9) * raise * (1 - lower)
-          if (a.queenFx && t > a.impact && t < a.impact + 0.3) y = Math.sin(((t - a.impact) / 0.3) * Math.PI) * 0.14
-          const w = ease((t - a.impact - 0.1) / Math.max(0.1, moveEnd - a.impact - 0.1))
-          x = fx + dx * w
-          z = fz + dz * w
-        } else {
-          const approach = a.kind === 'heavy' ? 0.5 : 0.42
-          const px = tx - (dx / len) * 0.62
-          const pz = tz - (dz / len) * 0.62
-          const e1 = ease(t / approach)
-          x = fx + (px - fx) * e1
-          z = fz + (pz - fz) * e1
-          if (a.kind === 'charge') y = Math.sin(clamp01(t / approach) * Math.PI) * 0.45
-          const wind = clamp01((t - approach) / (a.impact - approach))
-          const strike = clamp01((t - a.impact + 0.06) / 0.12)
-          const recover = clamp01((t - a.impact - 0.12) / 0.2)
-          const amp = 1 + (a.variant - 0.5) * 0.4
-          lean = (0.22 * strike - 0.1 * wind) * (1 - recover) * amp
-          const heavy = a.kind === 'heavy' ? 1.25 : 1
-          bend = (0.7 * strike - 0.45 * wind) * (1 - recover) * amp * heavy + 0.12 * bump(t / approach)
-          squash = (0.14 * strike - 0.14 * wind) * (1 - recover) * heavy + (a.kind === 'charge' ? 0.12 * bump(t / approach) : 0)
-          side = 0.07 * Math.sin(clamp01(t / approach) * Math.PI * 4) * (1 - wind) + (a.variant - 0.5) * 0.25 * strike * (1 - recover)
-          const e2 = ease((t - a.impact - 0.15) / Math.max(0.1, moveEnd - a.impact - 0.15))
-          x += (tx - px) * e2
-          z += (tz - pz) * e2
-        }
-        if (a.promo && t > moveEnd) {
-          const p = clamp01((t - moveEnd) / 0.7)
-          y = Math.sin(p * Math.PI) * 0.3
-          spin = ease(p) * Math.PI * 2
-          glow = Math.sin(p * Math.PI)
-          squash = 0.22 * bump(p) - 0.12 * bump((p - 0.8) / 0.2)
-        }
-      } else if (a.rook && a.rook.id === u.id) {
-        const [rfx, rfz] = sqPos(a.rook.from)
-        const [rtx, rtz] = sqPos(a.rook.to)
-        const e = ease((t - 0.15) / (a.dur - 0.2))
-        x = rfx + (rtx - rfx) * e
-        z = rfz + (rtz - rfz) * e
-        y = Math.abs(Math.sin(e * Math.PI * 3)) * 0.04
-        moveDir = [rtx - rfx, rtz - rfz]
-        if (t < a.dur - 0.05) face = Math.atan2(rtx - rfx, rtz - rfz)
-      } else if (a.victimId === u.id) {
-        moveDir = [dx, dz]
-        face = Math.atan2(-dx, -dz)
-        if (t < a.impact) {
-          const brace = clamp01((t - a.impact + 0.35) / 0.25)
-          lean = -0.06 * brace
-          squash = -0.1 * brace
-          side = 0.05 * Math.sin(n * 30) * brace
-        } else {
-          const k = clamp01((t - a.impact) / 0.35)
-          bend = -0.65 * (1 - Math.pow(1 - k, 3))
-          squash = -0.1 - 0.12 * k
-          x += (dx / len) * 0.3 * k
-          z += (dz / len) * 0.3 * k
-          tilt = 0.85 * ease(k)
-          y = Math.sin(k * Math.PI) * 0.12
-          flash = 1 - k
-          dissolve = clamp01((t - a.impact - 0.08) / 0.4)
-        }
+  if (a.moverId === u.id) {
+    p.moveDir = [dx, dz]
+    const moveEnd = a.dur - (a.promo ? 0.7 : 0)
+    if (t < moveEnd) p.face = Math.atan2(dx, dz)
+    if (a.kind === 'walk' || a.kind === 'jump') {
+      const e = ease(t / moveEnd)
+      p.x = fx + dx * e
+      p.z = fz + dz * e
+      p.y = a.kind === 'jump' ? Math.sin(e * Math.PI) * 0.85 : Math.abs(Math.sin(e * Math.PI * Math.max(2, Math.round(len * 2)))) * 0.025
+      p.lean = a.kind === 'jump' ? Math.sin(e * Math.PI * 2) * 0.15 : 0.06 * Math.sin(e * Math.PI)
+      const q = clamp01(t / moveEnd)
+      if (a.kind === 'jump') {
+        p.squash = q < 0.15 ? -0.2 * bump(q / 0.15) : q > 0.8 ? -0.18 * bump((q - 0.8) / 0.2) : 0.16 * bump((q - 0.15) / 0.65)
+        p.bend = 0.3 * bump(q) - 0.12 * bump(q / 0.15)
+      } else {
+        const ph = q * Math.PI * Math.max(2, Math.round(len * 2))
+        const env = bump(q)
+        p.bend = 0.22 * env - 0.1 * bump(t / 0.2)
+        p.side = 0.09 * Math.sin(ph) * env
+        p.squash = -0.07 * Math.abs(Math.cos(ph)) * env - 0.1 * bump(t / 0.2)
       }
-    }
-
-    const mate = mateRef.current
-    if (mate && mate.loserKing === u.id) kneel = ease((n - mate.start - 0.4) / 0.8)
-
-    const target = face ?? restYaw
-    heading.current += wrapAngle(target - heading.current) * Math.min(1, delta * 9)
-
-    g.position.set(x, y + (selected ? 0.16 + Math.sin(n * 4) * 0.03 : 0) - dissolve * 0.35, z)
-    yg.rotation.y = heading.current + spin
-    if (moveDir && (moveDir[0] || moveDir[1])) {
-      LEAN_AXIS.set(moveDir[1], 0, -moveDir[0]).normalize()
-      lg.quaternion.setFromAxisAngle(LEAN_AXIS, lean + tilt + kneel * 0.12)
+    } else if (a.kind === 'cast') {
+      const raise = clamp01(t / 0.3)
+      const lower = clamp01((t - a.impact - 0.05) / 0.2)
+      p.lean = -0.12 * raise * (1 - lower)
+      p.glow = raise * (1 - lower)
+      p.bend = -0.3 * raise * (1 - lower) + 0.45 * bump((t - a.impact + 0.08) / 0.28)
+      p.squash = 0.16 * raise * (1 - lower) - 0.08 * bump((t - a.impact) / 0.25)
+      p.side = 0.06 * Math.sin(t * 9) * raise * (1 - lower)
+      if (a.queenFx && t > a.impact && t < a.impact + 0.3) p.y = Math.sin(((t - a.impact) / 0.3) * Math.PI) * 0.14
+      const w = ease((t - a.impact - 0.1) / Math.max(0.1, moveEnd - a.impact - 0.1))
+      p.x = fx + dx * w
+      p.z = fz + dz * w
     } else {
-      lg.quaternion.setFromAxisAngle(LEAN_AXIS.set(u.color === 'w' ? -1 : 1, 0, 0), kneel * 0.22)
+      const approach = a.kind === 'heavy' ? 0.5 : 0.42
+      const px = tx - (dx / len) * 0.62
+      const pz = tz - (dz / len) * 0.62
+      const e1 = ease(t / approach)
+      p.x = fx + (px - fx) * e1
+      p.z = fz + (pz - fz) * e1
+      if (a.kind === 'charge') p.y = Math.sin(clamp01(t / approach) * Math.PI) * 0.45
+      const wind = clamp01((t - approach) / (a.impact - approach))
+      const strike = clamp01((t - a.impact + 0.06) / 0.12)
+      const recover = clamp01((t - a.impact - 0.12) / 0.2)
+      const amp = 1 + (a.variant - 0.5) * 0.4
+      p.lean = (0.22 * strike - 0.1 * wind) * (1 - recover) * amp
+      const heavy = a.kind === 'heavy' ? 1.25 : 1
+      p.bend = (0.7 * strike - 0.45 * wind) * (1 - recover) * amp * heavy + 0.12 * bump(t / approach)
+      p.squash = (0.14 * strike - 0.14 * wind) * (1 - recover) * heavy + (a.kind === 'charge' ? 0.12 * bump(t / approach) : 0)
+      p.side = 0.07 * Math.sin(clamp01(t / approach) * Math.PI * 4) * (1 - wind) + (a.variant - 0.5) * 0.25 * strike * (1 - recover)
+      const e2 = ease((t - a.impact - 0.15) / Math.max(0.1, moveEnd - a.impact - 0.15))
+      p.x += (tx - px) * e2
+      p.z += (tz - pz) * e2
     }
-    const breath = 1 + Math.sin(n * 1.6 + u.id * 1.7) * 0.006
-    const shrink = 1 - dissolve * 0.85
-    yg.scale.set(shrink * PIECE_SX, breath * shrink * (1 - kneel * 0.12) * PIECE_SY, shrink * PIECE_SX)
+    if (a.promo && t > moveEnd) {
+      const q = clamp01((t - moveEnd) / 0.7)
+      p.y = Math.sin(q * Math.PI) * 0.3
+      p.spin = ease(q) * Math.PI * 2
+      p.glow = Math.sin(q * Math.PI)
+      p.squash = 0.22 * bump(q) - 0.12 * bump((q - 0.8) / 0.2)
+    }
+  } else if (a.rook && a.rook.id === u.id) {
+    const [rfx, rfz] = sqPos(a.rook.from)
+    const [rtx, rtz] = sqPos(a.rook.to)
+    const e = ease((t - 0.15) / (a.dur - 0.2))
+    p.x = rfx + (rtx - rfx) * e
+    p.z = rfz + (rtz - rfz) * e
+    p.y = Math.abs(Math.sin(e * Math.PI * 3)) * 0.04
+    p.moveDir = [rtx - rfx, rtz - rfz]
+    if (t < a.dur - 0.05) p.face = Math.atan2(rtx - rfx, rtz - rfz)
+  } else if (a.victimId === u.id) {
+    p.moveDir = [dx, dz]
+    p.face = Math.atan2(-dx, -dz)
+    if (t < a.impact) {
+      const brace = clamp01((t - a.impact + 0.35) / 0.25)
+      p.lean = -0.06 * brace
+      p.squash = -0.1 * brace
+      p.side = 0.05 * Math.sin(n * 30) * brace
+    } else {
+      const k = clamp01((t - a.impact) / 0.35)
+      p.bend = -0.65 * (1 - Math.pow(1 - k, 3))
+      p.squash = -0.1 - 0.12 * k
+      p.x += (dx / len) * 0.3 * k
+      p.z += (dz / len) * 0.3 * k
+      p.tilt = 0.85 * ease(k)
+      p.y = Math.sin(k * Math.PI) * 0.12
+      p.flash = 1 - k
+      p.dissolve = clamp01((t - a.impact - 0.08) / 0.4)
+    }
+  }
+}
 
-    if (selected) bend += 0.04 * Math.sin(n * 4)
-    bend += kneel * 0.4
-    mats.deform.uHeight.value = model.height
-    mats.deform.uBend.value = Math.max(-0.8, Math.min(0.8, bend))
-    mats.deform.uSide.value = side
-    mats.deform.uSquash.value = Math.max(-0.3, Math.min(0.3, squash))
+/** Lote de um tipo de peça de um lado: até três malhas que compartilham posições e dados por peça. */
+type Lote = { model: PieceModel; meshes: THREE.InstancedMesh[]; life: THREE.InstancedBufferAttribute; fx: THREE.InstancedBufferAttribute; n: number }
 
-    mats.body.emissiveIntensity = BASE_EMISSIVE[u.color] + glow * 0.5 + flash * 1.2 + (selected ? 0.12 : 0)
-    mats.body.color.copy(baseColor).multiplyScalar(1 - kneel * 0.55)
-  })
+/** Promoção pode criar até oito peças a mais do mesmo tipo. */
+const CAPACITY: Record<PieceSymbol, number> = { p: 8, n: 10, b: 10, r: 10, q: 9, k: 1 }
+const TYPES: PieceSymbol[] = ['p', 'n', 'b', 'r', 'q', 'k']
 
-  return (
-    <group ref={root} position={[sx, 0, sz]}>
-      <group ref={leanG}>
-        <group ref={yawG} rotation={[0, restYaw, 0]} scale={[PIECE_SX, PIECE_SY, PIECE_SX]}>
-          <mesh geometry={model.body} material={mats.body} castShadow={shadows} raycast={() => null} />
-          <mesh geometry={model.trim} material={mats.trim} castShadow={shadows} raycast={() => null} />
-          <mesh geometry={model.glow} material={mats.glow} raycast={() => null} />
-        </group>
-      </group>
-      <mesh
-        geometry={HIT}
-        material={HIT_MAT}
-        scale={[1.1, model.height * PIECE_SY, 1.1]}
-        onClick={(e: ThreeEvent<MouseEvent>) => {
-          e.stopPropagation()
-          onPick(u.square)
-        }}
-      />
-    </group>
-  )
-})
+function makeLote(type: PieceSymbol, color: Color, quality: Quality, mats: ReturnType<typeof makeSideMaterials>, shadows: boolean): Lote {
+  const model = getPieceModel(type, quality)
+  const cap = CAPACITY[type]
+  const life = new THREE.InstancedBufferAttribute(new Float32Array(cap * 4), 4).setUsage(THREE.DynamicDrawUsage)
+  const fx = new THREE.InstancedBufferAttribute(new Float32Array(cap * 2), 2).setUsage(THREE.DynamicDrawUsage)
+  const mk = (g: THREE.BufferGeometry, m: THREE.Material, cast: boolean, shared?: THREE.InstancedBufferAttribute) => {
+    const shell = new THREE.BufferGeometry()
+    shell.setIndex(g.index)
+    for (const k of Object.keys(g.attributes)) shell.setAttribute(k, g.attributes[k])
+    shell.setAttribute('aLife', life)
+    shell.setAttribute('aFx', fx)
+    const mesh = new THREE.InstancedMesh(shell, m, cap)
+    if (shared) mesh.instanceMatrix = shared
+    else mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage)
+    mesh.count = 0
+    mesh.frustumCulled = false
+    mesh.castShadow = cast
+    mesh.raycast = () => null
+    mesh.name = `${color}${type}`
+    return mesh
+  }
+  const body = mk(model.body, mats.body, shadows)
+  const meshes = [body, mk(model.trim, mats.trim, false, body.instanceMatrix)]
+  if (model.glow) meshes.push(mk(model.glow, mats.glow, false, body.instanceMatrix))
+  return { model, meshes, life, fx, n: 0 }
+}
 
-function Army(props: {
+const m4 = new THREE.Matrix4()
+const v3 = new THREE.Vector3()
+const v3s = new THREE.Vector3()
+const qLean = new THREE.Quaternion()
+const qYaw = new THREE.Quaternion()
+const AXIS_Y = new THREE.Vector3(0, 1, 0)
+const AXIS_REST = new THREE.Vector3()
+const PLANE_Y0 = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0)
+
+/** Sombra de contato (qualidade baixa, sem mapa de sombras): um disco escuro sob cada peça. */
+function makeBlobTexture() {
+  const c = document.createElement('canvas')
+  c.width = c.height = 64
+  const x = c.getContext('2d')!
+  const g = x.createRadialGradient(32, 32, 6, 32, 32, 32)
+  g.addColorStop(0, 'rgba(0,0,0,0.72)')
+  g.addColorStop(0.6, 'rgba(0,0,0,0.42)')
+  g.addColorStop(1, 'rgba(0,0,0,0)')
+  x.fillStyle = g
+  x.fillRect(0, 0, 64, 64)
+  return new THREE.CanvasTexture(c)
+}
+const BLOB_GEO = new THREE.PlaneGeometry(1, 1).rotateX(-Math.PI / 2)
+
+/**
+ * Qual peça o toque quis dizer: a que está mais perto do eixo do dedo, com a área afinando para o
+ * alto como as próprias peças (um cilindro reto fazia o rei cobrir por inteiro o peão atrás dele).
+ * Tocar de novo na peça já selecionada passa para a próxima que está sob o dedo.
+ */
+function pickUnit(ray: THREE.Ray, units: UnitState[], quality: Quality, selected: string | null) {
+  const { origin: o, direction: d } = ray
+  const dd = d.x * d.x + d.z * d.z || 1e-6
+  const hits: { u: UnitState; score: number }[] = []
+  for (const u of units) {
+    const [x, z] = sqPos(u.square)
+    const H = getPieceModel(u.type, quality).height * PIECE_SY
+    let t = Math.max(0, ((x - o.x) * d.x + (z - o.z) * d.z) / dd)
+    const y = Math.max(0, Math.min(H, o.y + d.y * t))
+    if (d.y) t = (y - o.y) / d.y
+    const r = Math.hypot(o.x + d.x * t - x, o.z + d.z * t - z)
+    const R = 0.42 - 0.22 * (y / H)
+    if (r <= R) hits.push({ u, score: r / R + t * 0.01 })
+  }
+  hits.sort((a, b) => a.score - b.score)
+  return hits.length > 1 && hits[0].u.square === selected ? hits[1].u : hits[0]?.u
+}
+
+function Army({
+  units,
+  animRef,
+  mateRef,
+  selected,
+  set,
+  quality,
+  busy,
+  targets,
+  onSquare,
+}: {
   units: UnitState[]
   animRef: RefObject<Anim | null>
   mateRef: RefObject<MateFx>
   selected: string | null
   set: PieceSet
-  shadows: boolean
-  lite: boolean
+  quality: Quality
+  busy: RefObject<Busy>
+  targets: string[]
   onSquare: (sq: string) => void
 }) {
+  const shadows = quality !== 'low'
+  const gl = useThree((s) => s.gl)
+  const mats = useMemo(() => ({ w: makeSideMaterials('w', set, quality), b: makeSideMaterials('b', set, quality) }), [set, quality])
+  useEffect(
+    () => () => {
+      for (const m of [mats.w, mats.b]) {
+        m.body.dispose()
+        m.trim.dispose()
+        m.glow.dispose()
+      }
+    },
+    [mats],
+  )
+  const lotes = useMemo(() => {
+    const out = new Map<string, Lote>()
+    for (const c of ['w', 'b'] as const) for (const t of TYPES) out.set(`${c}${t}`, makeLote(t, c, quality, mats[c], shadows))
+    return out
+  }, [mats, quality, shadows])
+  const todas = useMemo(() => [...lotes.values()].flatMap((l) => l.meshes), [lotes])
+  useEffect(
+    () => () => {
+      for (const m of todas) {
+        m.geometry.dispose()
+        m.dispose()
+      }
+    },
+    [todas],
+  )
+
+  const blobTex = useMemo(() => (shadows ? null : makeBlobTexture()), [shadows])
+  const blobMat = useMemo(() => (blobTex ? new THREE.MeshBasicMaterial({ map: blobTex, transparent: true, depthWrite: false, toneMapped: false }) : null), [blobTex])
+  const blobs = useMemo(() => {
+    if (!blobMat) return null
+    const m = new THREE.InstancedMesh(BLOB_GEO, blobMat, 40)
+    m.count = 0
+    m.frustumCulled = false
+    m.raycast = () => null
+    return m
+  }, [blobMat])
+  useEffect(
+    () => () => {
+      blobTex?.dispose()
+      blobMat?.dispose()
+      blobs?.dispose()
+    },
+    [blobTex, blobMat, blobs],
+  )
+
+  const heading = useRef(new Map<number, number>())
+  const pose = useRef<Pose>({ x: 0, y: 0, z: 0, lean: 0, tilt: 0, spin: 0, dissolve: 0, flash: 0, kneel: 0, glow: 0, bend: 0, side: 0, squash: 0, moveDir: null, face: null })
+
+  // Mapa de sombras sob demanda: só é refeito quando alguma peça se move de verdade.
+  useEffect(() => {
+    const sm = gl.shadowMap
+    const prev = sm.autoUpdate
+    sm.autoUpdate = false
+    sm.needsUpdate = true
+    return () => {
+      sm.autoUpdate = prev
+    }
+  }, [gl])
+
+  // Toque nas peças: um único lote invisível de cilindros, refeito só quando as peças mudam de casa.
+  const hit = useRef<THREE.InstancedMesh>(null)
+  const hitUnits = useRef<UnitState[]>([])
+  useLayoutEffect(() => {
+    const h = hit.current
+    if (!h) return
+    units.forEach((u, i) => {
+      const [x, z] = sqPos(u.square)
+      m4.makeScale(1.1, getPieceModel(u.type, quality).height * PIECE_SY, 1.1).setPosition(x, 0, z)
+      h.setMatrixAt(i, m4)
+    })
+    h.count = units.length
+    h.instanceMatrix.needsUpdate = true
+    h.boundingSphere = null
+    h.computeBoundingSphere()
+    hitUnits.current = units
+    gl.shadowMap.needsUpdate = true
+  }, [units, quality, gl])
+
+  useFrame((_, delta) => {
+    const n = nowS()
+    const a = animRef.current
+    const mate = mateRef.current
+    const p = pose.current
+    let moving = !!a
+    for (const l of lotes.values()) l.n = 0
+    let nb = 0
+    for (const u of units) {
+      const l = lotes.get(`${u.color}${u.type}`)
+      if (!l || l.n >= CAPACITY[u.type]) continue
+      poseOf(u, a, n, p)
+      // O cavalo descansa de perfil, olhando para o centro: de frente, a cabeça vira uma placa fina.
+      const restYaw = (u.color === 'w' ? Math.PI : 0) + (u.type === 'n' ? (u.square[0] < 'e' ? 1 : -1) * (u.color === 'w' ? -1 : 1) * 1.05 : 0)
+      if (mate && mate.loserKing === u.id) {
+        const age = n - mate.start
+        p.kneel = ease((age - 0.4) / 0.8)
+        if (age < 1.4) moving = true
+      }
+      const isSel = selected === u.square
+      const target = p.face ?? restYaw
+      let h = heading.current.get(u.id) ?? restYaw
+      const dh = wrapAngle(target - h)
+      if (Math.abs(dh) > 0.002) {
+        h += dh * Math.min(1, delta * 9)
+        moving = true
+      }
+      heading.current.set(u.id, h)
+      if (isSel) moving = true
+
+      const breath = 1 + Math.sin(n * 1.6 + u.id * 1.7) * 0.006
+      const shrink = 1 - p.dissolve * 0.85
+      v3.set(p.x, p.y + (isSel ? 0.16 + Math.sin(n * 4) * 0.03 : 0) - p.dissolve * 0.35, p.z)
+      if (p.moveDir && (p.moveDir[0] || p.moveDir[1])) qLean.setFromAxisAngle(AXIS_REST.set(p.moveDir[1], 0, -p.moveDir[0]).normalize(), p.lean + p.tilt + p.kneel * 0.12)
+      else if (p.kneel) qLean.setFromAxisAngle(AXIS_REST.set(u.color === 'w' ? -1 : 1, 0, 0), p.kneel * 0.22)
+      else qLean.identity()
+      qYaw.setFromAxisAngle(AXIS_Y, h + p.spin)
+      qLean.multiply(qYaw)
+      v3s.set(shrink * PIECE_SX, breath * shrink * (1 - p.kneel * 0.12) * PIECE_SY, shrink * PIECE_SX)
+      m4.compose(v3, qLean, v3s)
+      const i = l.n++
+      m4.toArray(l.meshes[0].instanceMatrix.array, i * 16)
+
+      let bend = p.bend
+      if (isSel) bend += 0.04 * Math.sin(n * 4)
+      bend += p.kneel * 0.4
+      l.life.setXYZW(i, Math.max(-0.8, Math.min(0.8, bend)), p.side, Math.max(-0.3, Math.min(0.3, p.squash)), l.model.height)
+      l.fx.setXY(i, BASE_EMISSIVE[u.color] + p.glow * 0.5 + p.flash * 1.2 + (isSel ? 0.12 : 0), 1 - p.kneel * 0.55)
+
+      if (blobs) {
+        m4.makeScale(0.98 * shrink, 1, 0.98 * shrink).setPosition(p.x, 0.006, p.z)
+        blobs.setMatrixAt(nb++, m4)
+      }
+    }
+    for (const l of lotes.values()) {
+      for (const m of l.meshes) m.count = l.n
+      if (l.n) {
+        l.meshes[0].instanceMatrix.needsUpdate = true
+        l.life.needsUpdate = true
+        l.fx.needsUpdate = true
+      }
+    }
+    if (blobs) {
+      blobs.count = nb
+      blobs.instanceMatrix.needsUpdate = true
+    }
+    busy.current.army = moving
+    if (moving && shadows) gl.shadowMap.needsUpdate = true
+  })
+
   return (
     <>
-      {props.units.map((u) => (
-        <Unit
-          key={u.id}
-          u={u}
-          animRef={props.animRef}
-          mateRef={props.mateRef}
-          selected={props.selected === u.square}
-          set={props.set}
-          shadows={props.shadows}
-          lite={props.lite}
-          onPick={props.onSquare}
-        />
+      {todas.map((m) => (
+        <primitive key={m.uuid} object={m} />
       ))}
+      {blobs && <primitive object={blobs} />}
+      <instancedMesh
+        ref={hit}
+        args={[HIT, HIT_MAT, 40]}
+        frustumCulled={false}
+        onClick={(e: ThreeEvent<MouseEvent>) => {
+          e.stopPropagation()
+          // Uma casa possível atrás de uma peça alta: o toque vale para a casa, não para a peça da frente.
+          if (e.ray.intersectPlane(PLANE_Y0, v3)) {
+            const under = SQ_FROM_POINT(v3.x, v3.z)
+            if (under && targets.includes(under)) {
+              onSquare(under)
+              return
+            }
+          }
+          const u = pickUnit(e.ray, hitUnits.current, quality, selected)
+          if (u) onSquare(u.square)
+          else if (e.ray.intersectPlane(PLANE_Y0, v3)) {
+            const sq = SQ_FROM_POINT(v3.x, v3.z)
+            if (sq) onSquare(sq)
+          }
+        }}
+      />
     </>
   )
 }
@@ -391,11 +565,12 @@ function Effects({ animRef, theme, quality }: { animRef: RefObject<Anim | null>;
   const ringMat = useRef<THREE.MeshBasicMaterial>(null)
   const pillar = useRef<THREE.Mesh>(null)
   const pillarMat = useRef<THREE.MeshBasicMaterial>(null)
-  const shards = useRef<THREE.Group>(null)
+  const shards = useRef<THREE.InstancedMesh>(null)
   const shardMat = useMemo(() => new THREE.MeshStandardMaterial({ color: '#ffffff', roughness: 0.3, metalness: 0.1 }), [])
   useEffect(() => () => shardMat.dispose(), [shardMat])
   const count = quality === 'low' ? 6 : 12
-  const dirs = useMemo(() => Array.from({ length: count }, (_, i) => ({ a: (i / count) * Math.PI * 2 + (i % 3) * 0.3, up: 0.6 + ((i * 37) % 10) / 10, s: 0.6 + ((i * 53) % 10) / 14 })), [count])
+  const dirs = useMemo(() => Array.from({ length: count }, (_, i) => ({ a: (i / count) * Math.PI * 2 + (i % 3) * 0.3, up: 0.6 + ((i * 37) % 10) / 10, s: (0.6 + ((i * 53) % 10) / 14) * (1 + (i % 3) * 0.4) })), [count])
+  const dummy = useMemo(() => new THREE.Object3D(), [])
 
   useFrame(() => {
     const a = animRef.current
@@ -446,14 +621,16 @@ function Effects({ animRef, theme, quality }: { animRef: RefObject<Anim | null>;
       shards.current.visible = hit
       if (hit) {
         shardMat.color.set(a.side === 'w' ? '#2a2a2e' : '#ecebe8')
-        shards.current.position.set(tx, 0.55, tz)
-        shards.current.children.forEach((c, i) => {
-          const d = dirs[i]
+        const sm = shards.current
+        dirs.forEach((d, i) => {
           const r = it * 2.2 * d.s
-          c.position.set(Math.cos(d.a) * r, it * (2.4 * d.up) - it * it * 9, Math.sin(d.a) * r)
-          c.rotation.set(it * 9 * d.s, it * 7, 0)
-          c.scale.setScalar(Math.max(0.001, 1 - it * 1.6))
+          dummy.position.set(tx + Math.cos(d.a) * r, 0.55 + it * (2.4 * d.up) - it * it * 9, tz + Math.sin(d.a) * r)
+          dummy.rotation.set(it * 9 * d.s, it * 7, 0)
+          dummy.scale.setScalar(Math.max(0.001, (1 - it * 1.6) * (1 + (i % 3) * 0.4)))
+          dummy.updateMatrix()
+          sm.setMatrixAt(i, dummy.matrix)
         })
+        sm.instanceMatrix.needsUpdate = true
       }
     }
     if (pillar.current && pillarMat.current) {
@@ -483,13 +660,9 @@ function Effects({ animRef, theme, quality }: { animRef: RefObject<Anim | null>;
         <ringGeometry args={[0.34, 0.42, 4, 1, Math.PI / 4]} />
         <meshBasicMaterial ref={ringMat} transparent depthWrite={false} toneMapped={false} />
       </mesh>
-      <group ref={shards} visible={false}>
-        {dirs.map((d, i) => (
-          <mesh key={i} material={shardMat}>
-            <tetrahedronGeometry args={[0.05 + (i % 3) * 0.02, 0]} />
-          </mesh>
-        ))}
-      </group>
+      <instancedMesh ref={shards} args={[undefined, shardMat, count]} visible={false} frustumCulled={false} raycast={() => null}>
+        <tetrahedronGeometry args={[0.05, 0]} />
+      </instancedMesh>
       <mesh ref={pillar} visible={false}>
         <cylinderGeometry args={[0.34, 0.42, 2.8, 24, 1, true]} />
         <meshBasicMaterial ref={pillarMat} color={theme.glow} transparent side={THREE.DoubleSide} depthWrite={false} toneMapped={false} />
@@ -498,7 +671,7 @@ function Effects({ animRef, theme, quality }: { animRef: RefObject<Anim | null>;
   )
 }
 
-function CameraRig({ cam, animRef }: { cam: RefObject<CamState>; animRef: RefObject<Anim | null> }) {
+function CameraRig({ cam, animRef, busy, breathe }: { cam: RefObject<CamState>; animRef: RefObject<Anim | null>; busy: RefObject<Busy>; breathe: boolean }) {
   const look = useRef(LOOK.clone())
   const focus = useRef(new THREE.Vector3())
   const cur = useRef<{ az: number; pol: number; rad: number } | null>(null)
@@ -551,13 +724,23 @@ function CameraRig({ cam, animRef }: { cam: RefObject<CamState>; animRef: RefObj
       if (a.victimSq && it > 0 && it < 0.22) shake = (1 - it / 0.22) * (a.queenFx ? 0.05 : 0.025)
     }
     // Respiração lenta da câmera (órbita de ±1,6°): a cena nunca fica congelada.
-    const idle = Math.sin(clock.elapsedTime * 0.32) * 0.028
+    const idle = breathe ? Math.sin(clock.elapsedTime * 0.32) * 0.028 : 0
     const k = 1 - Math.pow(0.004, dt)
     const s = cur.current
     s.az += (c.az + (c.orbitX ?? 0) + idle - s.az) * (1 - Math.pow(0.04, dt))
     s.pol += (Math.max(0.35, Math.min(1.1, pol + tilt + (c.orbitY ?? 0))) - s.pol) * k
     s.rad += (rad * c.zoom * zoom - s.rad) * k
     look.current.lerp(focus.current, k)
+    // Ainda chegando ao assento (entrada, arrasto, zoom ou retorno do golpe): pede quadro cheio.
+    const azGoal = c.az + (c.orbitX ?? 0) + idle
+    busy.current.cam =
+      Math.abs(wrapAngle(azGoal - s.az)) > 0.004 ||
+      Math.abs(rad * c.zoom * zoom - s.rad) > 0.01 ||
+      Math.abs(pol + tilt + (c.orbitY ?? 0) - s.pol) > 0.002 ||
+      look.current.distanceToSquared(focus.current) > 1e-5 ||
+      Math.abs(c.orbitX ?? 0) > 0.002 ||
+      Math.abs(c.orbitY ?? 0) > 0.002 ||
+      shake > 0
     camera.position.set(
       look.current.x + Math.sin(s.az) * Math.sin(s.pol) * s.rad + (Math.random() - 0.5) * shake,
       look.current.y + Math.cos(s.pol) * s.rad + (Math.random() - 0.5) * shake,
@@ -585,7 +768,7 @@ function canvasStar(ctx: CanvasRenderingContext2D, x: number, y: number, r: numb
  * Textura do tampo (um canvas só, uma malha só): 64 casas de mármore com veios próprios, chanfro
  * claro/escuro nas bordas de cada pedra, rejunte de aço champanhe e estrelas nos cruzamentos.
  */
-function makeBoardTexture(theme: BoardTheme, px: number) {
+function drawBoardTexture(theme: BoardTheme, px: number) {
   const c = document.createElement('canvas')
   c.width = c.height = px
   const ctx = c.getContext('2d')!
@@ -651,8 +834,18 @@ function makeBoardTexture(theme: BoardTheme, px: number) {
     }
   const tex = new THREE.CanvasTexture(c)
   tex.colorSpace = THREE.SRGBColorSpace
-  tex.anisotropy = 8
+  tex.anisotropy = px > 1024 ? 8 : 4
   return tex
+}
+
+/** Pintar o tampo é o passo mais caro de abrir a partida: guarda o último para a revanche abrir na hora. */
+let boardCache: { key: string; tex: THREE.CanvasTexture } | null = null
+function boardTexture(theme: BoardTheme, px: number) {
+  const key = `${theme.id}-${px}`
+  if (boardCache?.key === key) return boardCache.tex
+  boardCache?.tex.dispose()
+  boardCache = { key, tex: drawBoardTexture(theme, px) }
+  return boardCache.tex
 }
 
 const SQ_FROM_POINT = (x: number, z: number) => {
@@ -666,58 +859,71 @@ const TOP = new THREE.PlaneGeometry(8, 8).rotateX(-Math.PI / 2)
 const FRAME_W = 0.55
 const SLAB_H = 0.42
 
+/** Junta caixas numa malha só (um desenho, em vez de um por régua). */
+function mergedBoxes(list: readonly (readonly [x: number, y: number, z: number, sx: number, sy: number, sz: number])[]) {
+  const parts = list.map(([x, y, z, sx, sy, sz]) => new THREE.BoxGeometry(sx, sy, sz).translate(x, y, z))
+  const g = mergeGeometries(parts, false)!
+  parts.forEach((p) => p.dispose())
+  return g
+}
+
 /** Moldura em mármore negro: quatro réguas com filete de aço por dentro e por fora. */
-function BoardFrame({ theme }: { theme: BoardTheme }) {
+function BoardFrame({ theme, quality }: { theme: BoardTheme; quality: Quality }) {
   const marble = useMemo(() => {
-    const t = makeMarbleTexture({ base: theme.frame, mottle: mixHex(theme.frame, '#3a3a40', 0.7), vein: '#8f8e8b', veinAlpha: 0.38, seed: 771, size: 512, cracks: 3 })
+    const t = makeMarbleTexture({ base: theme.frame, mottle: mixHex(theme.frame, '#3a3a40', 0.7), vein: '#8f8e8b', veinAlpha: 0.38, seed: 771, size: quality === 'high' ? 512 : 256, cracks: 3 })
     t.repeat.set(3, 0.4)
     return t
-  }, [theme.frame])
+  }, [theme.frame, quality])
   useEffect(() => () => marble.dispose(), [marble])
-  const stone = useMemo(() => new THREE.MeshPhysicalMaterial({ map: marble, roughness: 0.32, clearcoat: 0.8, clearcoatRoughness: 0.2, envMapIntensity: 0.6 }), [marble])
+  const stone = useMemo(
+    () =>
+      quality === 'high'
+        ? new THREE.MeshPhysicalMaterial({ map: marble, roughness: 0.32, clearcoat: 0.8, clearcoatRoughness: 0.2, envMapIntensity: 0.6 })
+        : new THREE.MeshStandardMaterial({ map: marble, roughness: 0.36, envMapIntensity: 0.42 }),
+    [marble, quality],
+  )
   const metal = useMemo(() => new THREE.MeshStandardMaterial({ color: theme.trim, metalness: 1, roughness: 0.28, envMapIntensity: 1.3 }), [theme.trim])
   useEffect(() => () => {
     stone.dispose()
     metal.dispose()
   }, [stone, metal])
-  const outer = 4 + FRAME_W
-  const bars: [number, number, number, number][] = [
-    [0, -(4 + FRAME_W / 2), outer * 2, FRAME_W],
-    [0, 4 + FRAME_W / 2, outer * 2, FRAME_W],
-    [-(4 + FRAME_W / 2), 0, FRAME_W, 8],
-    [4 + FRAME_W / 2, 0, FRAME_W, 8],
-  ]
-  const rims = (half: number, y: number, w: number) =>
-    ([
-      [0, -half, half * 2 + w, w],
-      [0, half, half * 2 + w, w],
-      [-half, 0, w, half * 2 + w],
-      [half, 0, w, half * 2 + w],
-    ] as const).map(([x, z, sx, sz], i) => (
-      <mesh key={`${half}-${i}`} position={[x, y, z]} material={metal}>
-        <boxGeometry args={[sx, 0.03, sz]} />
-      </mesh>
-    ))
+  const geos = useMemo(() => {
+    const outer = 4 + FRAME_W
+    const y = -SLAB_H / 2 + 0.005
+    const stoneGeo = mergedBoxes([
+      [0, y, -(4 + FRAME_W / 2), outer * 2, SLAB_H, FRAME_W],
+      [0, y, 4 + FRAME_W / 2, outer * 2, SLAB_H, FRAME_W],
+      [-(4 + FRAME_W / 2), y, 0, FRAME_W, SLAB_H, 8],
+      [4 + FRAME_W / 2, y, 0, FRAME_W, SLAB_H, 8],
+      [0, -SLAB_H / 2 - 0.02, 0, 8, SLAB_H - 0.04, 8],
+    ])
+    const rims = (half: number, ry: number, w: number) =>
+      [
+        [0, ry, -half, half * 2 + w, 0.03, w],
+        [0, ry, half, half * 2 + w, 0.03, w],
+        [-half, ry, 0, w, 0.03, half * 2 + w],
+        [half, ry, 0, w, 0.03, half * 2 + w],
+      ] as const
+    // Filetes por dentro e por fora + rodapé de aço na base da laje.
+    const metalGeo = mergedBoxes([...rims(4.02, 0.012, 0.05), ...rims(outer - 0.03, 0.012, 0.05), ...rims(outer - 0.01, -SLAB_H + 0.03, 0.06)])
+    return { stoneGeo, metalGeo }
+  }, [])
+  useEffect(() => () => {
+    geos.stoneGeo.dispose()
+    geos.metalGeo.dispose()
+  }, [geos])
   return (
     <group>
-      {bars.map(([x, z, w, d], i) => (
-        <mesh key={i} position={[x, -SLAB_H / 2 + 0.005, z]} material={stone} receiveShadow>
-          <boxGeometry args={[w, SLAB_H, d]} />
-        </mesh>
-      ))}
-      <mesh position={[0, -SLAB_H / 2 - 0.02, 0]} material={stone}>
-        <boxGeometry args={[8, SLAB_H - 0.04, 8]} />
-      </mesh>
-      {rims(4.02, 0.012, 0.05)}
-      {rims(outer - 0.03, 0.012, 0.05)}
-      {/* Rodapé de aço na base da laje. */}
-      {rims(outer - 0.01, -SLAB_H + 0.03, 0.06)}
+      <mesh geometry={geos.stoneGeo} material={stone} receiveShadow raycast={() => null} />
+      <mesh geometry={geos.metalGeo} material={metal} raycast={() => null} />
     </group>
   )
 }
 
-/** Espada de cerimônia cravada (lâmina em losango, guarda com pontas, punho escuro, pomo com ametista). */
-function Sword({ position, rotation, scale = 1 }: { position: [number, number, number]; rotation: [number, number, number]; scale?: number }) {
+type SwordSpot = { position: [number, number, number]; rotation: [number, number, number]; scale?: number }
+
+/** Espadas de cerimônia cravadas: uma malha por material, com as quatro espadas juntas. */
+function Swords({ spots }: { spots: SwordSpot[] }) {
   const parts = useMemo(() => {
     const steel = new THREE.MeshStandardMaterial({ color: '#d9d1c3', metalness: 1, roughness: 0.22, envMapIntensity: 1.4 })
     const brass = new THREE.MeshStandardMaterial({ color: '#bab09f', metalness: 1, roughness: 0.3, envMapIntensity: 1.2 })
@@ -725,109 +931,165 @@ function Sword({ position, rotation, scale = 1 }: { position: [number, number, n
     const gem = new THREE.MeshStandardMaterial({ color: '#8a7cc8', metalness: 0.2, roughness: 0.1, emissive: new THREE.Color('#8a7cc8'), emissiveIntensity: 0.5 })
     return { steel, brass, grip, gem }
   }, [])
-  useEffect(() => () => Object.values(parts).forEach((m) => m.dispose()), [parts])
+  const geos = useMemo(() => {
+    const bag = { steel: [] as THREE.BufferGeometry[], brass: [] as THREE.BufferGeometry[], grip: [] as THREE.BufferGeometry[], gem: [] as THREE.BufferGeometry[] }
+    const dummy = new THREE.Object3D()
+    const flat = (g: THREE.BufferGeometry) => (g.index ? g.toNonIndexed() : g)
+    const put = (list: THREE.BufferGeometry[], g: THREE.BufferGeometry, base: THREE.Matrix4, p: [number, number, number], r: [number, number, number] = [0, 0, 0], s: [number, number, number] = [1, 1, 1]) => {
+      dummy.position.set(...p)
+      dummy.rotation.set(...r)
+      dummy.scale.set(...s)
+      dummy.updateMatrix()
+      list.push(flat(g).applyMatrix4(new THREE.Matrix4().multiplyMatrices(base, dummy.matrix)))
+    }
+    for (const { position, rotation, scale = 1 } of spots) {
+      dummy.position.set(...position)
+      dummy.rotation.set(...rotation)
+      dummy.scale.setScalar(scale)
+      dummy.updateMatrix()
+      const base = dummy.matrix.clone()
+      // lâmina: losango que afina até a ponta (enterrada no chão)
+      put(bag.steel, new THREE.CylinderGeometry(0.1, 0.012, 3.1, 4), base, [0, 1.55, 0], [0, 0, 0], [1, 1, 0.22])
+      put(bag.brass, new THREE.BoxGeometry(0.9, 0.07, 0.1), base, [0, 3.13, 0])
+      for (const k of [-1, 1]) put(bag.brass, new THREE.ConeGeometry(0.05, 0.2, 6), base, [k * 0.5, 3.17, 0], [0, 0, k * -0.6])
+      put(bag.brass, new THREE.OctahedronGeometry(0.07, 0), base, [0, 3.13, 0.06])
+      put(bag.grip, new THREE.CylinderGeometry(0.045, 0.05, 0.55, 8), base, [0, 3.45, 0])
+      put(bag.brass, new THREE.SphereGeometry(0.085, 10, 8), base, [0, 3.76, 0])
+      put(bag.gem, new THREE.OctahedronGeometry(0.055, 0), base, [0, 3.86, 0], [0, 0, 0], [0.8, 1.3, 0.8])
+    }
+    const merge = (l: THREE.BufferGeometry[]) => {
+      const g = mergeGeometries(l, false)!
+      l.forEach((x) => x.dispose())
+      return g
+    }
+    return { steel: merge(bag.steel), brass: merge(bag.brass), grip: merge(bag.grip), gem: merge(bag.gem) }
+  }, [spots])
+  useEffect(() => () => {
+    Object.values(parts).forEach((m) => m.dispose())
+    Object.values(geos).forEach((g) => g.dispose())
+  }, [parts, geos])
   return (
-    <group position={position} rotation={rotation} scale={scale}>
-      {/* lâmina: losango que afina até a ponta (enterrada no chão) */}
-      <mesh material={parts.steel} position={[0, 1.55, 0]} scale={[1, 1, 0.22]}>
-        <cylinderGeometry args={[0.1, 0.012, 3.1, 4]} />
-      </mesh>
-      <mesh material={parts.brass} position={[0, 3.13, 0]}>
-        <boxGeometry args={[0.9, 0.07, 0.1]} />
-      </mesh>
-      {[-1, 1].map((s) => (
-        <mesh key={s} material={parts.brass} position={[s * 0.5, 3.17, 0]} rotation={[0, 0, s * -0.6]}>
-          <coneGeometry args={[0.05, 0.2, 8]} />
-        </mesh>
-      ))}
-      <mesh material={parts.brass} position={[0, 3.13, 0.06]}>
-        <octahedronGeometry args={[0.07, 0]} />
-      </mesh>
-      <mesh material={parts.grip} position={[0, 3.45, 0]}>
-        <cylinderGeometry args={[0.045, 0.05, 0.55, 10]} />
-      </mesh>
-      <mesh material={parts.brass} position={[0, 3.76, 0]}>
-        <sphereGeometry args={[0.085, 16, 12]} />
-      </mesh>
-      <mesh material={parts.gem} position={[0, 3.86, 0]} scale={[0.8, 1.3, 0.8]}>
-        <octahedronGeometry args={[0.055, 0]} />
-      </mesh>
-    </group>
+    <>
+      <mesh geometry={geos.steel} material={parts.steel} raycast={() => null} />
+      <mesh geometry={geos.brass} material={parts.brass} raycast={() => null} />
+      <mesh geometry={geos.grip} material={parts.grip} raycast={() => null} />
+      <mesh geometry={geos.gem} material={parts.gem} raycast={() => null} />
+    </>
   )
 }
 
 /** Chão: mármore negro que se dissolve no escuro (nenhum fundo chapado atrás do tabuleiro). */
-function Floor() {
+function Floor({ quality }: { quality: Quality }) {
+  const high = quality === 'high'
   const tex = useMemo(() => {
+    const size = high ? 512 : 256
     const c = document.createElement('canvas')
-    c.width = c.height = 512
+    c.width = c.height = size
     const ctx = c.getContext('2d')!
-    drawMarble(ctx, { base: '#121214', mottle: '#1d1d21', vein: '#55555c', veinAlpha: 0.35, seed: 4242, size: 512, cracks: 4 })
-    const g = ctx.createRadialGradient(256, 256, 60, 256, 256, 256)
+    drawMarble(ctx, { base: '#121214', mottle: '#1d1d21', vein: '#55555c', veinAlpha: 0.35, seed: 4242, size, cracks: 4 })
+    const g = ctx.createRadialGradient(size / 2, size / 2, size * 0.12, size / 2, size / 2, size / 2)
     g.addColorStop(0, 'rgba(0,0,0,0)')
     g.addColorStop(1, 'rgba(0,0,0,1)')
     ctx.globalCompositeOperation = 'destination-out'
     ctx.fillStyle = g
-    ctx.fillRect(0, 0, 512, 512)
+    ctx.fillRect(0, 0, size, size)
     const t = new THREE.CanvasTexture(c)
     t.colorSpace = THREE.SRGBColorSpace
     return t
-  }, [])
+  }, [high])
   useEffect(() => () => tex.dispose(), [tex])
+  // O chão cobre boa parte da tela: fora da qualidade alta, sem cálculo de luz nele.
   return (
-    <mesh position={[0, -SLAB_H, 0]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
+    <mesh position={[0, -SLAB_H, 0]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow={high} raycast={() => null}>
       <circleGeometry args={[16, 48]} />
-      <meshStandardMaterial map={tex} transparent roughness={0.5} metalness={0} depthWrite={false} />
+      {high ? <meshStandardMaterial map={tex} transparent roughness={0.5} metalness={0} depthWrite={false} /> : <meshBasicMaterial map={tex} transparent depthWrite={false} color="#c8c8cc" />}
     </mesh>
   )
 }
 
 const MK_PLANE = new THREE.PlaneGeometry(0.94, 0.94)
 const MK_EDGE = new THREE.RingGeometry(0.6, 0.66, 4, 1, Math.PI / 4)
-const MK_DOT = new THREE.CircleGeometry(0.15, 28)
-const MK_DOT_EDGE = new THREE.RingGeometry(0.15, 0.19, 28)
-const MK_RING = new THREE.RingGeometry(0.36, 0.46, 40)
+const MK_DOT = new THREE.CircleGeometry(0.15, 20)
+const MK_DOT_EDGE = new THREE.RingGeometry(0.15, 0.19, 20)
+const MK_RING = new THREE.RingGeometry(0.36, 0.46, 28)
+const MK_HALO = new THREE.PlaneGeometry(2.2, 2.2)
 
-/** Marca plana sobre a casa (último lance, seleção, xeque, destinos). */
-function FlatMark({ geo, sq, color, opacity, y, onSquare, blend }: { geo: THREE.BufferGeometry; sq: string; color: string; opacity: number; y: number; onSquare?: (sq: string) => void; blend?: boolean }) {
-  const [x, z] = sqPos(sq)
-  return (
-    <mesh
-      geometry={geo}
-      position={[x, y, z]}
-      rotation={[-Math.PI / 2, 0, 0]}
-      raycast={onSquare ? undefined : () => null}
-      onClick={
-        onSquare
-          ? (e: ThreeEvent<MouseEvent>) => {
-              e.stopPropagation()
-              onSquare(sq)
-            }
-          : undefined
-      }
-    >
-      <meshBasicMaterial color={color} transparent opacity={opacity} depthWrite={false} toneMapped={false} blending={blend ? THREE.AdditiveBlending : THREE.NormalBlending} />
-    </mesh>
-  )
+const markMats = new Map<string, THREE.MeshBasicMaterial>()
+/** Materiais das marcas, compartilhados: selecionar uma peça não cria material nenhum. */
+function markMat(color: string, opacity: number) {
+  const key = `${color}-${opacity}`
+  let m = markMats.get(key)
+  if (!m) {
+    m = new THREE.MeshBasicMaterial({ color, transparent: true, opacity, depthWrite: false, toneMapped: false })
+    markMats.set(key, m)
+  }
+  return m
 }
 
-/** Xeque: casa do rei em rubi pulsando (perigo real). */
-function CheckGlow({ square }: { square: string }) {
-  const ref = useRef<THREE.MeshBasicMaterial>(null)
-  const light = useRef<THREE.PointLight>(null)
+/** Marca plana sobre a casa (último lance, seleção). Fica montada e só aparece quando há casa, para já nascer compilada. */
+function FlatMark({ geo, sq, color, opacity, y }: { geo: THREE.BufferGeometry; sq: string | null; color: string; opacity: number; y: number }) {
+  const [x, z] = sq ? sqPos(sq) : [0, 0]
+  return <mesh geometry={geo} material={markMat(color, opacity)} position={[x, y, z]} rotation={[-Math.PI / 2, 0, 0]} visible={!!sq} raycast={() => null} />
+}
+
+/** Casas possíveis da peça selecionada, em lote (uma dama no meio do tabuleiro chega a 27 casas). */
+function TargetLayer({ geo, squares, color, opacity, y }: { geo: THREE.BufferGeometry; squares: string[]; color: string; opacity: number; y: number }) {
+  const ref = useRef<THREE.InstancedMesh>(null)
+  useLayoutEffect(() => {
+    const m = ref.current
+    if (!m) return
+    const d = new THREE.Object3D()
+    d.rotation.x = -Math.PI / 2
+    squares.forEach((sq, i) => {
+      const [x, z] = sqPos(sq)
+      d.position.set(x, y, z)
+      d.updateMatrix()
+      m.setMatrixAt(i, d.matrix)
+    })
+    m.count = squares.length
+    m.instanceMatrix.needsUpdate = true
+  }, [squares, y])
+  return <instancedMesh ref={ref} args={[geo, markMat(color, opacity), 28]} frustumCulled={false} raycast={() => null} />
+}
+
+let haloTex: THREE.CanvasTexture | null = null
+function checkHaloTexture() {
+  if (haloTex) return haloTex
+  const c = document.createElement('canvas')
+  c.width = c.height = 64
+  const x = c.getContext('2d')!
+  const g = x.createRadialGradient(32, 32, 2, 32, 32, 32)
+  g.addColorStop(0, 'rgba(255,59,74,0.9)')
+  g.addColorStop(1, 'rgba(255,59,74,0)')
+  x.fillStyle = g
+  x.fillRect(0, 0, 64, 64)
+  haloTex = new THREE.CanvasTexture(c)
+  return haloTex
+}
+
+/**
+ * Xeque: casa do rei em rubi pulsando (perigo real). Antes era uma luz de verdade, e acender uma
+ * luz nova recompila todos os shaders e trava a tela bem na hora do xeque; agora é um halo pintado.
+ */
+function CheckGlow({ square }: { square: string | null }) {
+  const plane = useRef<THREE.MeshBasicMaterial>(null)
+  const halo = useRef<THREE.MeshBasicMaterial>(null)
   useFrame(() => {
+    if (!square) return
     const p = (Math.sin(nowS() * 6) + 1) / 2
-    if (ref.current) ref.current.opacity = 0.35 + p * 0.35
-    if (light.current) light.current.intensity = 1.5 + p * 2.5
+    if (plane.current) plane.current.opacity = 0.35 + p * 0.35
+    if (halo.current) halo.current.opacity = 0.45 + p * 0.45
   })
-  const [x, z] = sqPos(square)
+  const [x, z] = square ? sqPos(square) : [0, 0]
   return (
-    <>
-      <mesh geometry={MK_PLANE} position={[x, 0.014, z]} rotation={[-Math.PI / 2, 0, 0]} raycast={() => null}>
-        <meshBasicMaterial ref={ref} color="#a3121f" transparent depthWrite={false} toneMapped={false} />
+    <group visible={!!square} position={[x, 0, z]}>
+      <mesh geometry={MK_PLANE} position={[0, 0.014, 0]} rotation={[-Math.PI / 2, 0, 0]} raycast={() => null}>
+        <meshBasicMaterial ref={plane} color="#a3121f" transparent depthWrite={false} toneMapped={false} />
       </mesh>
-      <pointLight ref={light} color="#ff3b4a" distance={2.6} position={[x, 0.9, z]} />
-    </>
+      <mesh geometry={MK_HALO} position={[0, 0.017, 0]} rotation={[-Math.PI / 2, 0, 0]} raycast={() => null}>
+        <meshBasicMaterial ref={halo} map={checkHaloTexture()} transparent depthWrite={false} toneMapped={false} blending={THREE.AdditiveBlending} />
+      </mesh>
+    </group>
   )
 }
 
@@ -843,16 +1105,17 @@ function Board(props: {
   onSquare: (sq: string) => void
 }) {
   const { theme, quality, lastFrom, lastTo, selected, targets, captureTargets, onSquare } = props
-  const tex = useMemo(() => makeBoardTexture(theme, quality === 'low' ? 1024 : 2048), [theme, quality])
-  useEffect(() => () => tex.dispose(), [tex])
+  const tex = useMemo(() => boardTexture(theme, quality === 'high' ? 2048 : 1024), [theme, quality])
   const top = useMemo(
     () =>
-      quality === 'low'
-        ? new THREE.MeshStandardMaterial({ map: tex, roughness: 0.3, metalness: 0, envMapIntensity: 0.6 })
-        : new THREE.MeshPhysicalMaterial({ map: tex, roughness: 0.24, metalness: 0, clearcoat: 1, clearcoatRoughness: 0.1, envMapIntensity: 0.55 }),
+      quality === 'high'
+        ? new THREE.MeshPhysicalMaterial({ map: tex, roughness: 0.24, metalness: 0, clearcoat: 1, clearcoatRoughness: 0.1, envMapIntensity: 0.55 })
+        : new THREE.MeshStandardMaterial({ map: tex, roughness: 0.22, metalness: 0, envMapIntensity: 0.62 }),
     [tex, quality],
   )
   useEffect(() => () => top.dispose(), [top])
+  const quiet = useMemo(() => targets.filter((sq) => !captureTargets.has(sq)), [targets, captureTargets])
+  const hits = useMemo(() => targets.filter((sq) => captureTargets.has(sq)), [targets, captureTargets])
   return (
     <group>
       <mesh
@@ -865,26 +1128,17 @@ function Board(props: {
           if (sq) onSquare(sq)
         }}
       />
-      <BoardFrame theme={theme} />
-      {lastFrom && <FlatMark geo={MK_PLANE} sq={lastFrom} color={theme.trim} opacity={0.22} y={0.01} />}
-      {lastTo && <FlatMark geo={MK_PLANE} sq={lastTo} color={theme.trim} opacity={0.34} y={0.01} />}
-      {lastTo && <FlatMark geo={MK_EDGE} sq={lastTo} color="#ece5d8" opacity={0.7} y={0.012} />}
-      {props.checkSq && <CheckGlow square={props.checkSq} />}
-      {selected && <FlatMark geo={MK_PLANE} sq={selected} color="#8a7cc8" opacity={0.5} y={0.014} />}
-      {selected && <FlatMark geo={MK_EDGE} sq={selected} color="#cbc5e8" opacity={0.95} y={0.016} />}
-      {targets.map((sq) =>
-        captureTargets.has(sq) ? (
-          <group key={sq}>
-            <FlatMark geo={MK_RING} sq={sq} color="#cbc5e8" opacity={0.95} y={0.02} onSquare={onSquare} />
-            <FlatMark geo={MK_PLANE} sq={sq} color="#8a7cc8" opacity={0.28} y={0.018} />
-          </group>
-        ) : (
-          <group key={sq}>
-            <FlatMark geo={MK_DOT_EDGE} sq={sq} color="#0c0c0e" opacity={0.55} y={0.019} />
-            <FlatMark geo={MK_DOT} sq={sq} color="#a99be0" opacity={0.95} y={0.02} onSquare={onSquare} />
-          </group>
-        ),
-      )}
+      <BoardFrame theme={theme} quality={quality} />
+      <FlatMark geo={MK_PLANE} sq={lastFrom} color={theme.trim} opacity={0.22} y={0.01} />
+      <FlatMark geo={MK_PLANE} sq={lastTo} color={theme.trim} opacity={0.34} y={0.01} />
+      <FlatMark geo={MK_EDGE} sq={lastTo} color="#ece5d8" opacity={0.7} y={0.012} />
+      <CheckGlow square={props.checkSq} />
+      <FlatMark geo={MK_PLANE} sq={selected} color="#8a7cc8" opacity={0.5} y={0.014} />
+      <FlatMark geo={MK_EDGE} sq={selected} color="#cbc5e8" opacity={0.95} y={0.016} />
+      <TargetLayer geo={MK_PLANE} squares={hits} color="#8a7cc8" opacity={0.28} y={0.018} />
+      <TargetLayer geo={MK_RING} squares={hits} color="#cbc5e8" opacity={0.95} y={0.02} />
+      <TargetLayer geo={MK_DOT_EDGE} squares={quiet} color="#0c0c0e" opacity={0.55} y={0.019} />
+      <TargetLayer geo={MK_DOT} squares={quiet} color="#a99be0" opacity={0.95} y={0.02} />
     </group>
   )
 }
@@ -895,9 +1149,11 @@ function StudioEnvironment() {
   const scene = useThree((s) => s.scene)
   useEffect(() => {
     const c = document.createElement('canvas')
-    c.width = 512
-    c.height = 256
+    // 256×128 basta para reflexos largos como estes, e o pré-filtro fica quatro vezes menor.
+    c.width = 256
+    c.height = 128
     const x = c.getContext('2d')!
+    x.scale(0.5, 0.5)
     const g = x.createLinearGradient(0, 0, 0, 256)
     g.addColorStop(0, '#e9e7e3')
     g.addColorStop(0.45, '#6a6970')
@@ -934,7 +1190,10 @@ function StudioEnvironment() {
   return null
 }
 
-/** Luz de estúdio: chave quente-neutra do alto, contraluz ametista discreta e preenchimento frio. */
+/**
+ * Luz de estúdio: chave quente-neutra do alto, contraluz ametista discreta e preenchimento frio.
+ * Cada luz é repetida em todo pixel: fora da qualidade alta, o preenchimento vem do hemisfério.
+ */
 function StudioLights({ shadows, quality }: { shadows: boolean; quality: Quality }) {
   const sun = useRef<THREE.DirectionalLight>(null)
   useEffect(() => {
@@ -943,26 +1202,131 @@ function StudioLights({ shadows, quality }: { shadows: boolean; quality: Quality
     Object.assign(s.shadow.camera, { left: -6.5, right: 6.5, top: 6.5, bottom: -6.5, near: 1, far: 40 })
     s.shadow.camera.updateProjectionMatrix()
   }, [])
+  const high = quality === 'high'
   return (
     <>
-      <hemisphereLight args={['#f3f1ed', '#1a1a1f', 1.1]} />
+      <hemisphereLight args={['#f3f1ed', '#1a1a1f', high ? 1.1 : 1.28]} />
       <directionalLight
         ref={sun}
         position={[5, 14, 8]}
         intensity={3.2}
         color="#fff6ea"
         castShadow={shadows}
-        shadow-mapSize={quality === 'high' ? [2048, 2048] : [1024, 1024]}
+        shadow-mapSize={high ? [2048, 2048] : [1024, 1024]}
         shadow-bias={-0.0005}
         shadow-normalBias={0.02}
       />
       <directionalLight position={[-6, 6, -9]} intensity={1.6} color="#b7b3c9" />
-      <pointLight position={[0, 5, 9]} intensity={8} distance={22} decay={1.4} color="#eeedeb" />
+      {high && <pointLight position={[0, 5, 9]} intensity={8} distance={22} decay={1.4} color="#eeedeb" />}
     </>
   )
 }
 
-/** Memoizada: o relógio da partida redesenha a tela 10x por segundo; a cena só muda com lances, seleção e ajustes. */
+/** Desenha uma vez o que hoje está escondido. O quadro seguinte, no mesmo instante, cobre este. */
+function warmUp(gl: THREE.WebGLRenderer, scene: THREE.Scene, camera: THREE.Camera) {
+  const hidden: THREE.Object3D[] = []
+  const empty: THREE.InstancedMesh[] = []
+  scene.traverse((o) => {
+    if (!o.visible) {
+      o.visible = true
+      hidden.push(o)
+    }
+    if (o instanceof THREE.InstancedMesh && o.count === 0) {
+      o.count = 1
+      empty.push(o)
+    }
+  })
+  gl.render(scene, camera)
+  for (const o of hidden) o.visible = false
+  for (const o of empty) o.count = 0
+}
+
+/** Quadros por segundo com a cena parada (só a respiração da câmera e das peças). Baixa: nenhum. */
+const IDLE_FPS: Record<Quality, number> = { low: 0, medium: 20, high: 30 }
+
+/**
+ * Marca-passo da cena (`frameloop="demand"`): pede quadro cheio só quando há o que mostrar e, com
+ * tudo parado, um ritmo baixo. Se os quadros cheios não derem conta, baixa a resolução aos poucos e,
+ * no limite, avisa para cair de qualidade (`onSlow`, só com gráficos em automático).
+ */
+function Pacer({ animRef, mateRef, cam, busy, selected, checkSq, quality, onSlow }: { animRef: RefObject<Anim | null>; mateRef: RefObject<MateFx>; cam: RefObject<CamState>; busy: RefObject<Busy>; selected: string | null; checkSq: string | null; quality: Quality; onSlow?: () => void }) {
+  const invalidate = useThree((s) => s.invalidate)
+  const setDpr = useThree((s) => s.setDpr)
+  const dprNow = useRef(0)
+  const dpr = useThree((s) => s.viewport.dpr)
+  dprNow.current = dpr
+  const need = useRef(false)
+  need.current = !!selected || !!checkSq
+  const amostra = useRef({ soma: 0, n: 0 })
+  const gl = useThree((s) => s.gl)
+  const scene = useThree((s) => s.scene)
+  const camera = useThree((s) => s.camera)
+
+  // Já compila os shaders de tudo (efeitos de golpe e marcas inclusive) e, no primeiro quadro, desenha
+  // tudo uma vez por baixo do quadro real: alguns drivers só terminam o shader no primeiro uso, e sem
+  // isso a primeira captura travaria a tela.
+  const aquecido = useRef<Quality | null>(null)
+  useEffect(() => {
+    gl.compile(scene, camera)
+    invalidate()
+  }, [gl, scene, camera, invalidate, quality])
+
+  // O lance chega por ref, sem passar pelo React: uma olhada leve a cada 50 ms acorda a cena a tempo.
+  useEffect(() => {
+    let ult = 0
+    let visto = 0
+    const idle = IDLE_FPS[quality]
+    const id = window.setInterval(() => {
+      const c = cam.current
+      const agora = performance.now()
+      // Zoom, órbita e assento também chegam por ref: qualquer mudança neles acorda a cena.
+      const sinal = c ? c.az + c.zoom * 7 + (c.orbitX ?? 0) * 13 + (c.orbitY ?? 0) * 17 : 0
+      const mudou = sinal !== visto
+      visto = sinal
+      const ativo = mudou || !!animRef.current || need.current || busy.current.army || busy.current.cam || !!(c?.holdUntil && c.holdUntil > agora)
+      if (ativo || (idle > 0 && agora - ult >= 1000 / idle - 5)) {
+        ult = agora
+        invalidate()
+      }
+    }, 50)
+    return () => window.clearInterval(id)
+  }, [animRef, busy, cam, invalidate, quality])
+
+  useFrame((_, delta) => {
+    if (aquecido.current !== quality) {
+      aquecido.current = quality
+      warmUp(gl, scene, camera)
+    }
+    const c = cam.current
+    const m = mateRef.current
+    const ativo = !!animRef.current || need.current || busy.current.army || busy.current.cam || !!(c?.holdUntil && c.holdUntil > performance.now()) || !!(m && nowS() - m.start < 1.4)
+    if (!ativo) {
+      amostra.current = { soma: 0, n: 0 }
+      return
+    }
+    invalidate()
+    if (!onSlow || delta > 0.25) return
+    const a = amostra.current
+    a.soma += delta
+    a.n++
+    if (a.n < 45) return
+    const media = a.soma / a.n
+    amostra.current = { soma: 0, n: 0 }
+    if (media < 0.036) return
+    if (dprNow.current > 0.8) setDpr(Math.max(0.75, dprNow.current - 0.25))
+    else if (quality !== 'low') onSlow()
+  })
+  return null
+}
+
+const SWORD_SPOTS: SwordSpot[] = [
+  { position: [-5.6, -SLAB_H, -4.6], rotation: [0.22, 0.5, -0.3] },
+  { position: [5.5, -SLAB_H, -5.2], rotation: [0.3, -0.4, 0.26], scale: 1.08 },
+  { position: [-5.3, -SLAB_H, 3.2], rotation: [-0.1, 0.9, -0.34], scale: 0.92 },
+  { position: [5.4, -SLAB_H, 2.4], rotation: [-0.16, -0.7, 0.3], scale: 0.95 },
+]
+
+/** Memoizada: o relógio da partida redesenha a tela; a cena só muda com lances, seleção e ajustes. */
 export const LivingScene = memo(function LivingScene(props: {
   units: UnitState[]
   theme: BoardTheme
@@ -978,15 +1342,18 @@ export const LivingScene = memo(function LivingScene(props: {
   lastTo: string | null
   checkSq: string | null
   onSquare: (sq: string) => void
+  /** Chamado se a cena não der conta nem na menor resolução (só com gráficos em automático). */
+  onSlow?: () => void
 }) {
-  const { units, theme, set, quality, animRef, mateRef, cam, selected, onSquare } = props
+  const { units, theme, set, quality, animRef, mateRef, cam, selected, onSquare, onSlow } = props
   const shadows = quality !== 'low'
+  const busy = useRef<Busy>({ army: false, cam: false })
   return (
     <>
-      <CameraRig cam={cam} animRef={animRef} />
+      <CameraRig cam={cam} animRef={animRef} busy={busy} breathe={IDLE_FPS[quality] > 0} />
       <StudioEnvironment />
       <StudioLights shadows={shadows} quality={quality} />
-      <Floor />
+      <Floor quality={quality} />
       <Board
         theme={theme}
         quality={quality}
@@ -999,14 +1366,10 @@ export const LivingScene = memo(function LivingScene(props: {
         onSquare={onSquare}
       />
       {/* Espadas de cerimônia cravadas ao redor (como na ref): duas atrás, uma de cada lado à frente. */}
-      <Sword position={[-5.6, -SLAB_H, -4.6]} rotation={[0.22, 0.5, -0.3]} />
-      <Sword position={[5.5, -SLAB_H, -5.2]} rotation={[0.3, -0.4, 0.26]} scale={1.08} />
-      <Sword position={[-5.3, -SLAB_H, 3.2]} rotation={[-0.1, 0.9, -0.34]} scale={0.92} />
-      <Sword position={[5.4, -SLAB_H, 2.4]} rotation={[-0.16, -0.7, 0.3]} scale={0.95} />
-      <Suspense fallback={null}>
-        <Army units={units} animRef={animRef} mateRef={mateRef} selected={selected} set={set} shadows={shadows} lite={quality === 'low'} onSquare={onSquare} />
-      </Suspense>
+      <Swords spots={SWORD_SPOTS} />
+      <Army units={units} animRef={animRef} mateRef={mateRef} selected={selected} set={set} quality={quality} busy={busy} targets={props.targets} onSquare={onSquare} />
       <Effects animRef={animRef} theme={theme} quality={quality} />
+      <Pacer animRef={animRef} mateRef={mateRef} cam={cam} busy={busy} selected={selected} checkSq={props.checkSq} quality={quality} onSlow={onSlow} />
     </>
   )
 })

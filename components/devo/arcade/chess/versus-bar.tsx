@@ -64,7 +64,7 @@ export function PlayerPlate({ side, total, className }: { side: PlateSide; total
         </div>
       </div>
       <div className="mx-2.5 mb-1.5 h-[3px] bg-white/10" aria-hidden="true">
-        {/* Régua por transform (composição na GPU) em vez de width: o relógio a atualiza 10x por segundo. */}
+        {/* Régua por transform (composição na GPU) em vez de width: o relógio a atualiza a cada segundo. */}
         <div
           className={cn('h-full w-full origin-left transition-transform duration-200 ease-linear', level === 2 ? 'bg-dv-blood-text' : side.mine ? 'bg-dv-amethyst' : 'bg-dv-gold')}
           style={{ transform: `scaleX(${(side.active ? pct : 100) / 100})`, opacity: side.active ? 1 : 0.35 }}

@@ -1,0 +1,13 @@
+Generate images with the built-in image_gen tool. Make exactly 3 image_gen calls, all 1536x1024.
+Copy each result into this folder with the given name (keep PNG). Do not edit other files. Do not write code.
+
+The attached capa-memory.png and moedas-fragmentos.png set the discipline, already approved by the owner: TRUE PIXEL ART from a 16-bit RPG, big square crisp pixels of one uniform size, no anti-aliasing, no blur, no gradients, no painterly brushwork, thick dark outlines, limited flat colours. Gothic game about time and survival. No text, letters or numerals anywhere.
+
+1) mr-simbolos.png: a sprite sheet in a strict grid of 5 columns and 3 rows, one icon per cell, centred, with a wide empty margin, none touching another; the last 2 cells stay empty. Background pure chroma green #00FF00 everywhere, no green inside the icons, no shadow. Each icon is drawn on a 32 by 32 pixel grid and enlarged, with a bold silhouette that reads instantly at small size, at most 6 flat colours, and a thick near-black outline. They are symbols printed on playing cards, each one different in shape and colour so that two of them are never confused:
+ 1 a white skull, 2 a gold crown, 3 one ivory die showing five black pips, 4 a black spade, 5 a ruby red heart, 6 a black club, 7 a ruby red diamond, 8 a violet crescent moon, 9 an orange and red flame, 10 a wide open violet eye, 11 an old brass key, 12 a brass hourglass with amber sand, 13 a steel blue anchor.
+
+2) mr-cartas.png: exactly 2 playing cards side by side on pure chroma green #00FF00, upright portrait, the same size, centred with a wide margin, not touching, no shadow on the background. Each card is drawn on a 48 by 64 pixel grid and enlarged, with slightly cut corners.
+ Left card, the BACK: black veined marble, a thin tarnished brass double border, and one bold four-pointed brass star in the centre inside a small ring.
+ Right card, the FRONT: blank warm bone porcelain with a thin tarnished brass double border and small ornaments in the four corners. The centre stays completely empty and flat, because a symbol will be placed on it.
+
+3) mr-mesa.png: a card table seen exactly from straight above, filling the whole frame edge to edge, drawn on a 216 by 144 pixel grid and enlarged. Deep bottle green felt with one soft pool of warm amber lamplight in the middle, darker towards the edges with a little ordered dithering, one very faint thin ornamental ring on the felt, and a tarnished brass rim with dark wood running along all four edges of the frame. Completely calm and empty: nothing on the table, because cards will be placed on it.

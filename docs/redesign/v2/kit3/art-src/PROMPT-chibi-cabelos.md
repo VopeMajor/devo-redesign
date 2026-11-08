@@ -1,0 +1,8 @@
+Generate one sprite sheet with the built-in image_gen tool. Make exactly 1 image_gen call, starting from the attached chibi-molde.png.
+Copy the result into this folder as chibi-cabelos1.png (keep PNG). Do not edit other files. Do not write code.
+
+chibi-molde.png is a template: 4 columns x 4 rows of flat magenta #FF00FF chibi heads on chroma green #00FF00. The columns are four views of one head: column 1 front, column 2 facing left, column 3 facing right, column 4 from behind. Keep every magenta shape exactly the same size and position, and keep magenta and green flat wherever nothing is drawn.
+
+Each ROW is one hairstyle, drawn on the head in all four views, consistent between the views. The attached avatar-catalogo-cabelos.png shows the hairstyles, numbered. Row 1 = number 1 (round helmet bob with blunt fringe). Row 2 = number 16 (big round afro). Row 3 = number 13 (one huge thick braid over one shoulder, blunt side fringe). Row 4 = number 15 (swept tall mohawk with shaved sides). Keep each silhouette and its asymmetry: a braid on the viewer's left in the front view stays on the same side of the body in the other views.
+
+TRUE PIXEL ART: each visible pixel is a square of exactly 4x4 image pixels on a strict grid aligned with the template. Clean clusters, 1 pixel dark outline. Draw ONLY in neutral greyscale with exactly 4 tones: outline #151515, shadow #787878, main #B4B4B4, highlight #E8E8E8. No colour, no gradients, no blur. In the front and side views leave the face area magenta: eyes and mouth are in another layer, and the fringe may only come down to the eyebrow line. In the back view the hair covers the head. Long hair may hang over the shoulders and back. No face, no clothes, no text or watermark. Output size 1024x1024.

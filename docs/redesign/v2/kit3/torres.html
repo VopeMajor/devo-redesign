@@ -1,0 +1,470 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>DEVO v2 · Torres de Ruptura</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600&display=swap">
+<style>
+/* Torres de Ruptura em pixel, no mesmo motor e acabamento da Casa (RPG Maker): a porta da Casa leva a esta ilha;
+   o avatar anda até a porta de cada torre; dentro, a escada em espiral com os andares. Conteúdo de
+   lib/devo/torres/conteudo.json (ainda provisório pelo dono). */
+:root{--noite:#130e1b;--por:#F4EEE6;--tinta:#231832;--ame:#3a1f5c;--vio:#6b3fa0;--steel:#c9b78e;--teal:#7df5e0;--rubi:#b8324a;--font:"Pixelify Sans",monospace}
+*{box-sizing:border-box;margin:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;background:var(--noite);overflow:hidden;font-family:var(--font);color:var(--por)}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+button:focus-visible{outline:3px solid var(--teal);outline-offset:2px}
+#vista{position:fixed;inset:0;overflow:hidden;touch-action:none;cursor:pointer;background:var(--noite)}
+#mundo{position:absolute;left:0;top:0;width:768px;height:512px;transform-origin:0 0;will-change:transform}
+.fundo,.oc{position:absolute;inset:0;background-size:768px 512px;image-rendering:pixelated;pointer-events:none}
+#fim{position:absolute;inset:0;background:#000;opacity:0;pointer-events:none;transition:opacity .25s steps(5)}
+.ator{position:absolute;width:80px;height:96px;margin:-96px 0 0 -40px;background-size:320px 384px;image-rendering:pixelated;pointer-events:none}
+.sombra{position:absolute;width:40px;height:12px;margin:-6px 0 0 -20px;background:rgba(5,2,10,.5);border-radius:50%;pointer-events:none}
+#alvo{position:absolute;width:18px;height:10px;margin:-5px 0 0 -9px;border:2px solid var(--teal);border-radius:50%;opacity:0;pointer-events:none}
+#alvo.on{animation:alvo .5s steps(4)}
+@keyframes alvo{0%{opacity:1;transform:scale(1.8)}100%{opacity:0;transform:scale(.6)}}
+.ponto{position:absolute;width:48px;height:48px;margin:-24px 0 0 -24px;display:grid;place-items:center}
+.ponto i{display:block;width:14px;height:14px;background:var(--teal);transform:rotate(45deg);box-shadow:0 0 0 3px #100b18;animation:ponto 1.4s steps(3) infinite}
+.ponto.casa i{background:var(--steel)}
+@keyframes ponto{50%{transform:rotate(45deg) translateY(-3px)}}
+/* névoa baixa que passa pela ilha */
+.nevoa{position:absolute;inset:0;pointer-events:none;z-index:950;background:radial-gradient(40% 18% at 20% 92%,rgba(120,100,150,.16),transparent 70%),radial-gradient(35% 16% at 80% 88%,rgba(120,100,150,.14),transparent 70%);animation:nevoa 30s steps(30) infinite alternate}
+@keyframes nevoa{to{transform:translateX(24px)}}
+#topo{position:fixed;left:0;right:0;top:0;z-index:5;display:flex;align-items:center;gap:8px;padding:max(10px,env(safe-area-inset-top)) 10px 8px;pointer-events:none}
+#topo button,#lugar{pointer-events:auto;min-height:48px;background:var(--por);color:var(--tinta);box-shadow:0 0 0 3px var(--tinta),0 0 0 5px var(--steel);font-weight:600;font-size:18px;padding:0 12px}
+#lugar{display:flex;align-items:center;justify-content:center;flex:1;min-width:0;pointer-events:none;background:var(--ame);color:var(--por);font-size:19px;white-space:nowrap;overflow:hidden}
+#sair{min-width:48px;font-size:24px!important}
+.seta{position:fixed;z-index:4;min-width:48px;min-height:48px;padding:0 10px;display:none;align-items:center;gap:5px;background:var(--tinta);color:var(--por);font-size:18px;font-weight:600;white-space:nowrap;box-shadow:0 0 0 2px var(--teal)}
+.seta.on{display:flex}
+/* bolsa: essências e chaves, sempre à vista */
+#bolsa{position:fixed;left:10px;bottom:calc(max(12px,env(safe-area-inset-bottom)) + 2px);z-index:5;display:flex;gap:6px;flex-wrap:wrap;max-width:calc(100% - 20px)}
+#bolsa span{display:flex;align-items:center;gap:5px;min-height:34px;padding:0 9px;background:rgba(16,11,24,.92);box-shadow:0 0 0 2px var(--steel);font-size:16px}
+#bolsa i{width:10px;height:10px;transform:rotate(45deg);background:var(--c,#b9a3e8);box-shadow:0 0 0 2px #100b18}
+#bolsa span.chave i{transform:none;width:12px;height:6px;border-radius:3px;background:#d9b65c}
+#cartao{position:fixed;left:10px;right:10px;bottom:calc(max(10px,env(safe-area-inset-bottom)) + 48px);z-index:6;max-width:560px;margin:auto;background:var(--por);color:var(--tinta);padding:12px 14px;box-shadow:0 0 0 3px var(--tinta),0 0 0 6px var(--steel),8px 10px 0 rgba(5,3,10,.6);transition:translate .16s steps(4)}
+#cartao[hidden]{display:block;translate:0 200%;visibility:hidden}
+#cartao h2{display:flex;align-items:center;gap:10px;font-size:23px;font-weight:600;line-height:1.1}
+#cartao h2 img{width:48px;height:48px;image-rendering:pixelated;background:var(--ame);box-shadow:0 0 0 2px var(--tinta)}
+#cartao h2 small{display:block;font-size:15px;font-weight:500;color:#5a4a72}
+#cartao p{font-size:18px;line-height:1.2;margin:6px 0 10px}
+#acoes{display:flex;gap:8px}
+#acoes button{min-height:50px;flex:1;font-size:20px;font-weight:600;background:var(--ame);color:var(--por);box-shadow:0 0 0 3px var(--steel)}
+#acoes button.fraco{flex:0 0 auto;padding:0 16px;background:transparent;color:var(--tinta);box-shadow:0 0 0 3px var(--tinta)}
+#acoes button:disabled{opacity:.45;cursor:default}
+#dica{position:fixed;left:50%;bottom:calc(max(12px,env(safe-area-inset-bottom)) + 56px);translate:-50% 0;z-index:4;background:rgba(16,11,24,.9);padding:8px 14px;font-size:19px;white-space:nowrap;box-shadow:0 0 0 2px var(--steel);pointer-events:none}
+#dica[hidden],#aviso[hidden]{display:none}
+#aviso{position:fixed;left:50%;top:22%;translate:-50% 0;z-index:30;background:var(--tinta);color:var(--por);padding:12px 18px;font-size:23px;font-weight:600;text-align:center;box-shadow:0 0 0 3px var(--steel),0 0 0 6px var(--tinta);width:max-content;max-width:calc(100% - 32px);pointer-events:none}
+
+/* dentro da torre: a escada em espiral, um marcador por andar */
+#torre{position:fixed;inset:0;z-index:10;background:var(--noite);display:flex;flex-direction:column}
+#torre[hidden]{display:none}
+#t-topo{flex:none;display:flex;align-items:center;gap:8px;padding:max(10px,env(safe-area-inset-top)) 10px 8px}
+#t-topo button,#t-nome{min-height:48px;background:var(--por);color:var(--tinta);box-shadow:0 0 0 3px var(--tinta),0 0 0 5px var(--steel);font-weight:600;font-size:18px;padding:0 12px}
+#t-nome{flex:1;display:grid;align-content:center;background:var(--ame);color:var(--por);font-size:19px;line-height:1.05;white-space:nowrap;overflow:hidden}
+#t-nome small{font-size:14px;font-weight:500;color:#cdbfe6}
+#t-vista{position:relative;flex:1;overflow-y:auto;overflow-x:hidden;scrollbar-width:none}
+#t-vista::-webkit-scrollbar{display:none}
+#t-arte{position:relative;width:512px;height:768px;margin:0 auto;background:url(art/torres/interior.png) 0 0/512px 768px;image-rendering:pixelated;transform-origin:50% 0}
+.andar{position:absolute;display:flex;align-items:center;gap:6px;transform:translate(-50%,-50%);padding:4px 10px 4px 6px;background:var(--tinta);color:var(--por);font-size:15px;font-weight:600;white-space:nowrap;box-shadow:0 0 0 2px var(--steel)}
+.andar b{display:grid;place-items:center;min-width:24px;height:24px;background:var(--ame);font-size:15px}
+.andar.feito{box-shadow:0 0 0 2px #6a8a5a;color:#cfe6c4}
+.andar.feito b{background:#3d5a33}
+.andar.prox{box-shadow:0 0 0 2px var(--teal);animation:prox 1.2s steps(2) infinite}
+.andar.prox b{background:var(--vio)}
+@keyframes prox{50%{box-shadow:0 0 0 2px var(--teal),0 0 0 5px rgba(125,245,224,.35)}}
+.andar.fechado{opacity:.6}
+.andar.fechado b{background:#3a3142}
+/* cena do andar: retrato pixel e balão, no modo VN */
+#vn{position:fixed;inset:0;z-index:20;display:flex;flex-direction:column;justify-content:flex-end;padding:0 10px calc(max(12px,env(safe-area-inset-bottom)) + 8px);background:linear-gradient(180deg,transparent 30%,rgba(8,5,14,.9));cursor:pointer}
+#vn[hidden]{display:none}
+#vn .ret{align-self:flex-start;width:128px;height:128px;margin:0 0 -6px 12px;image-rendering:pixelated;background:var(--ame);box-shadow:0 0 0 3px var(--tinta),0 0 0 6px var(--steel)}
+#vn .bal{max-width:560px;width:100%;margin:0 auto;background:var(--por);color:var(--tinta);padding:12px 16px 14px;box-shadow:0 0 0 3px var(--tinta),0 0 0 6px var(--steel)}
+#vn .bal b{display:block;font-size:17px;color:var(--vio)}
+#vn .bal p{font-size:20px;line-height:1.25;margin-top:4px;height:calc(4 * 1.25em);overflow:hidden}
+#vn .bal small{display:block;text-align:right;font-size:14px;color:#6a5a80}
+#vn.sistema .ret,#vn.sistema .ret-oc{display:none}
+#vn .ret-oc{display:none;align-self:flex-start;width:128px;height:128px;margin:0 0 -6px 12px;place-items:center;background:#0d0914;color:#5a4a72;font-size:72px;font-weight:600;box-shadow:0 0 0 3px var(--tinta),0 0 0 6px var(--steel)}
+#vn.oculto:not(.sistema) .ret-oc{display:grid}
+#vn.sistema .bal{background:var(--tinta);color:var(--por)}
+#vn.sistema .bal b{color:var(--teal)}
+/* 1º andar: o encontro com o anfitrião é diálogo longo, com o retrato grande (dono, 06/11: "dialogos mais longos ...
+   deixe o NPC ocupado a tela mesmo"); escala inteira, presa pela cabeça, respira e pisca (npc-vn.js) */
+#vn .fig{position:absolute;left:50%;top:max(96px,12vh);height:min(1300px,calc((100dvh - max(96px,12vh) - 120px) * 1.5));translate:-50% 0;image-rendering:pixelated;filter:drop-shadow(0 10px 18px rgba(0,0,0,.6));pointer-events:none}
+#vn .fig[hidden]{display:none}
+#vn .bal{position:relative;z-index:2}
+#vn.longa .ret,#vn.longa .ret-oc{display:none}
+#vn.longa{background:rgba(8,5,14,.84)}
+#vn .bal small.seg{animation:vn-pisca 1s steps(2) infinite}
+@keyframes vn-pisca{50%{opacity:0}}
+@media (prefers-reduced-motion:reduce){#vn .bal small.seg{animation:none}}
+#patamar.entra{animation:pa-entra .3s steps(5)}
+@keyframes pa-entra{from{opacity:0}}
+#vn .bal b[data-sinal]:not([data-sinal=""])::after{content:" " attr(data-sinal);color:#c9a45a}
+/* andares seguintes: conversa curta no próprio patamar, de perto; a arte do andar aparece em dobro para a porta ficar
+   do tamanho dos chibis; o seu chibi olha para o anfitrião e a boca dele mexe com as letras (conversa-curta.js) */
+#patamar{position:fixed;inset:0;z-index:18;background:#0d0914;overflow:hidden}
+#patamar[hidden]{display:none}
+#pa-mundo{position:absolute;left:0;top:0;width:400px;height:520px;transform-origin:0 0;background:url(art/torres/interior.png) no-repeat;background-size:1024px 1536px;image-rendering:pixelated}
+#pa-mundo .eu{position:absolute;width:80px;height:96px;margin:-96px 0 0 -40px;image-rendering:pixelated;pointer-events:none}
+#pa-mundo .eu-sombra{position:absolute;width:40px;height:12px;margin:-6px 0 0 -20px;background:rgba(5,2,10,.5);pointer-events:none;clip-path:polygon(15% 0,85% 0,100% 33%,100% 67%,85% 100%,15% 100%,0 67%,0 33%)}
+#patamar::after{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(80% 55% at 50% 40%,transparent 55%,rgba(8,5,14,.75))}
+/* prêmio do andar */
+#premio{position:fixed;inset:0;z-index:25;display:grid;place-content:center;justify-items:center;gap:10px;padding:20px;text-align:center;background:rgba(8,5,14,.94);cursor:pointer}
+#premio[hidden]{display:none}
+#premio i{width:64px;height:64px;transform:rotate(45deg);background:var(--c,#d9b65c);box-shadow:0 0 0 4px #100b18,0 0 0 8px var(--steel);animation:surge .5s steps(5)}
+@keyframes surge{from{transform:rotate(45deg) scale(.2)}}
+#premio small{margin-top:14px;font-size:17px;color:var(--steel)}
+#premio strong{font-size:28px;font-weight:600}
+#premio p{font-size:18px;color:#cdbfe6}
+#teste{position:fixed;right:10px;top:calc(max(10px,env(safe-area-inset-top)) + 66px);z-index:4;display:flex;align-items:center;gap:4px;background:rgba(16,11,24,.88);padding:4px 6px;font-size:15px;box-shadow:0 0 0 2px #5a4f6e}
+#teste button{min-height:32px;padding:0 8px;background:#2b2138;font-size:15px}
+@media (min-width:900px){#cartao{left:auto;right:24px;bottom:24px;width:440px;margin:0}#topo{max-width:520px}#dica{bottom:24px}}
+@media (prefers-reduced-motion:reduce){.ponto i,#alvo.on,.andar.prox,.nevoa,#premio i{animation:none}#cartao{transition:none}}
+</style>
+</head>
+<body>
+<div id="vista" aria-label="Ilha das Torres. Toque no chão para andar.">
+  <div id="mundo"><div class="fundo" id="fundo"></div><div class="nevoa" aria-hidden="true"></div><div id="alvo"></div><div id="fim"></div></div>
+</div>
+<div id="topo"><button id="sair" aria-label="Voltar para a Casa">‹</button><div id="lugar">Torres de Ruptura</div></div>
+<div id="teste" aria-label="Controle de teste"><button id="t-reset">Recomeçar</button></div>
+<div id="bolsa" aria-label="Essências e chaves"></div>
+<div id="dica">Toque no chão para andar</div>
+<div id="aviso" hidden role="status"></div>
+<section id="cartao" hidden aria-live="polite"><h2 id="c-tit"></h2><p id="c-txt"></p><div id="acoes"></div></section>
+
+<section id="torre" hidden aria-label="Dentro da torre">
+  <div id="t-topo"><button id="t-sair" aria-label="Sair da torre">‹</button><div id="t-nome"></div></div>
+  <div id="t-vista"><div id="t-arte"></div></div>
+</section>
+<div id="patamar" hidden aria-hidden="true"><div id="pa-mundo"></div></div>
+<section id="vn" hidden role="dialog" aria-label="Cena do andar"><img class="fig" alt="" hidden><span class="ret-oc" aria-hidden="true">?</span><img class="ret" alt=""><div class="bal"><b></b><p aria-live="polite"></p><small class="seg">▼</small></div></section>
+<section id="premio" hidden role="dialog" aria-label="Prêmio do andar"><i aria-hidden="true"></i><small>Andar concluído</small><strong></strong><p></p></section>
+
+<script src="avatar-cor.js?v=202611071700"></script>
+<script src="balao.js?v=202611030500"></script>
+<script src="npc-vn.js?v=202611071300"></script>
+<script src="npc-chibi.js?v=202611071300"></script>
+<script src="conversa-curta.js?v=202611071300"></script>
+<script>
+const $=i=>document.getElementById(i);
+const q=new URLSearchParams(location.search);
+const W=768,H=512,SEL=(p)=>p.map(([x,y])=>[x/2,y/2]);
+// Coordenadas medidas na arte original de 1536x1024
+const PORTAS={
+  casa:{x:428,y:790,ir:[440,860]},
+  campanha:{x:810,y:330,ir:[810,410]},
+  imperador:{x:395,y:400,ir:[400,470]},
+  observatorio:{x:1205,y:395,ir:[1215,465]},
+  picadeiro:{x:1235,y:770,ir:[1235,845]},
+};
+const S={
+  chao:SEL([[40,480],[180,430],[560,400],[600,350],[1020,350],[1100,440],[1470,420],[1490,700],[1330,830],[1100,890],[700,950],[420,900],[170,870],[60,830]]),
+  bloqueios:()=>[
+    [[150,520],[580,520],[585,820],[400,840],[150,845]],
+    [[200,160],[495,160],[495,450],[200,450]],
+    [[590,0],[1020,0],[1020,385],[590,385]],
+    [[1095,160],[1395,160],[1395,445],[1095,445]],
+    [[1065,450],[1420,450],[1425,805],[1075,805]],
+    [[80,340],[205,340],[205,520],[80,520]],
+    [[820,600],[930,600],[930,690],[820,690]],
+    [[690,840],[800,840],[800,920],[690,920]],
+  ].map(SEL),
+  frente:()=>[],
+};
+let etapa=1,grade;
+/* ---------- caminho: A* numa grade de 6 px, sem cortar quina de móvel ---------- */
+const PASSO=6,GW=Math.ceil(W/PASSO),GH=Math.ceil(H/PASSO);
+function dentro(x,y,p){let c=false;for(let i=0,j=p.length-1;i<p.length;j=i++){if((p[i][1]>y)!==(p[j][1]>y)&&x<(p[j][0]-p[i][0])*(y-p[i][1])/(p[j][1]-p[i][1])+p[i][0])c=!c}return c}
+function montaGrade(){
+  const bl=S.bloqueios(etapa);grade=new Uint8Array(GW*GH);
+  for(let j=0;j<GH;j++)for(let i=0;i<GW;i++){const x=i*PASSO+3,y=j*PASSO+3;grade[j*GW+i]=dentro(x,y,S.chao)&&!bl.some(b=>dentro(x,y,b))?1:0}
+}
+const livre=(i,j)=>i>=0&&j>=0&&i<GW&&j<GH&&grade[j*GW+i]===1;
+function maisPerto(x,y){let m=null,d=1e9;for(let j=0;j<GH;j++)for(let i=0;i<GW;i++)if(livre(i,j)){const v=(i*PASSO+3-x)**2+(j*PASSO+3-y)**2;if(v<d){d=v;m=[i,j]}}return m}
+function acha(de,para){
+  const a=maisPerto(...de),b=maisPerto(...para);if(!a||!b)return[];
+  const id=(i,j)=>j*GW+i,g=new Map([[id(...a),0]]),veio=new Map(),aberto=[[...a,0]];
+  while(aberto.length){
+    let k=0;for(let n=1;n<aberto.length;n++)if(aberto[n][2]<aberto[k][2])k=n;
+    const [i,j]=aberto.splice(k,1)[0];
+    if(i===b[0]&&j===b[1])break;
+    for(const [dx,dy] of [[1,0],[-1,0],[0,1],[0,-1],[1,1],[1,-1],[-1,1],[-1,-1]]){
+      const u=i+dx,v=j+dy;if(!livre(u,v))continue;if(dx&&dy&&(!livre(i+dx,j)||!livre(i,j+dy)))continue;
+      const n=g.get(id(i,j))+Math.hypot(dx,dy);
+      if(!g.has(id(u,v))||n<g.get(id(u,v))){g.set(id(u,v),n);veio.set(id(u,v),[i,j]);aberto.push([u,v,n+Math.hypot(u-b[0],v-b[1])])}
+    }
+  }
+  if(!g.has(id(...b)))return[];
+  const c=[];let p=b;while(p){c.unshift([p[0]*PASSO+3,p[1]*PASSO+3]);p=veio.get(id(...p))}
+  return alisa(c);
+}
+function visivel(a,b){const n=Math.ceil(Math.hypot(b[0]-a[0],b[1]-a[1])/3);for(let k=0;k<=n;k++){const x=a[0]+(b[0]-a[0])*k/n,y=a[1]+(b[1]-a[1])*k/n;if(!livre(Math.floor(x/PASSO),Math.floor(y/PASSO)))return false}return true}
+function alisa(c){if(c.length<3)return c;const r=[c[0]];let i=0;while(i<c.length-1){let j=c.length-1;while(j>i+1&&!visivel(c[i],c[j]))j--;r.push(c[j]);i=j}return r}
+
+/* ---------- personagem e câmera ---------- */
+const sombra=Object.assign(document.createElement('div'),{className:'sombra'}),ator=Object.assign(document.createElement('div'),{className:'ator'});
+$('mundo').append(sombra,ator);
+const eu={x:0,y:0,dir:0,q:1,rota:[],aoChegar:null};
+let esc=1,cam={x:0,y:0},olha={x:0,y:0},alvoCam=null;
+const calmo=matchMedia('(prefers-reduced-motion:reduce)').matches;
+const limita=(v,lado,tela,sobra=0)=>lado<=tela?(tela-lado)/2-sobra:Math.min(0,Math.max(tela-lado,v));
+function medida(){esc=Math.max(1,Math.floor(Math.min(innerWidth/W,innerHeight/H)));}
+function desenha(){
+  ator.style.left=Math.round(eu.x)+'px';ator.style.top=Math.round(eu.y)+'px';ator.style.zIndex=Math.round(eu.y);
+  ator.style.backgroundPosition=`-${eu.q*80}px -${eu.dir*96}px`;
+  sombra.style.left=Math.round(eu.x)+'px';sombra.style.top=Math.round(eu.y)+'px';sombra.style.zIndex=Math.round(eu.y)-1;
+}
+function camera(dt){
+  const vw=innerWidth,vh=innerHeight,mw=W*esc,mh=H*esc,foco=alvoCam||[eu.x,eu.y-40];
+  // o espaço de baixo fica livre para o cartão, então a cena sobe um pouco no celular
+  const sobe=vh>mh+120?46:0;
+  const rx=vw/2-foco[0]*esc+olha.x,ry=vh/2-foco[1]*esc+olha.y-sobe;
+  const x=limita(rx,mw,vw),y=limita(ry,mh,vh,sobe);
+  // o que passa do limite não acumula: soltar o dedo não deixa uma zona morta
+  if(!alvoCam){olha.x+=x-rx;olha.y+=y-ry}
+  const k=dt===0||calmo?1:Math.min(1,dt*(alvoCam?3.5:7));
+  cam.x+=(x-cam.x)*k;cam.y+=(y-cam.y)*k;
+  $('mundo').style.transform=`translate(${Math.round(cam.x)}px,${Math.round(cam.y)}px) scale(${esc})`;
+}
+let t0=performance.now(),relogio=0;
+function laco(t){
+  const dt=Math.min(.05,(t-t0)/1000);t0=t;
+  if(eu.rota.length){
+    const [x,y]=eu.rota[0],dx=x-eu.x,dy=y-eu.y,d=Math.hypot(dx,dy),v=62*dt; // 62 px/s: casa com o passo do chibi (PX_QUADRO), o pé quase não patina
+    if(d<=v){eu.x=x;eu.y=y;eu.rota.shift();if(!eu.rota.length){eu.q=1;const f=eu.aoChegar;eu.aoChegar=null;f&&f()}}
+    else{eu.x+=dx/d*v;eu.y+=dy/d*v;eu.dir=Math.abs(dx)>Math.abs(dy)*(eu.dir===1||eu.dir===2?1:1.3)?(dx<0?1:2):(dy>0?0:3);if(!ator.dataset.andar){relogio+=dt;eu.q=Math.floor(relogio/.13)%4}}
+  }
+  desenha();camera(dt);posicionaSetas();requestAnimationFrame(laco);
+}
+let setas=[];
+function posicionaSetas(){
+  const vw=innerWidth,vh=innerHeight;
+  for(const {el,p} of setas){
+    const sx=p.x/2*esc+cam.x,sy=p.y/2*esc+cam.y,fora=sx<6?'e':sx>vw-6?'d':'';
+    el.classList.toggle('on',!!fora);
+    if(!fora)continue;
+    el.firstChild.textContent=fora==='e'?'◂':'▸';
+    el.style.left=fora==='e'?'8px':'auto';el.style.right=fora==='d'?'8px':'auto';
+    el.style.top=Math.round(Math.min(vh-130,Math.max(130,sy-24)))+'px';
+  }
+}
+function anda(p,depois){
+  const c=acha([eu.x,eu.y],p);
+  olha={x:0,y:0};eu.rota=c.length?c.slice(1):[];eu.aoChegar=depois||null;
+  if(!eu.rota.length&&depois){eu.aoChegar=null;depois()}
+}
+
+
+
+/* ---------- torres, saldo e progresso (exemplo do protótipo; no jogo vem de /api/torres) ---------- */
+const COR={campanha:'#b9a3e8',imperador:'#d9b65c',observatorio:'#8fc7d6',picadeiro:'#d98a8a'};
+const NPC_V='202611071300';
+// rostos dos cartões: recortados das figuras novas (art-src/anima_torres.py); o NPC da Ruptura ainda não existe
+const ROSTO={desconhecido:null,galo:`art/torres/npc/galo-rosto.png?v=${NPC_V}`,coruja:`art/torres/npc/coruja-rosto.png?v=${NPC_V}`,javali:`art/torres/npc/javali-rosto.png?v=${NPC_V}`};
+// anfitriões: poses da folha aprovada (07/11), voz, respiração e reação de cada pose. O Galo é teatral e reage a tudo;
+// a Coruja quase não se mexe; o Javali é lento e grave
+const NPC_T={
+  galo:{padrao:'sombrio',poses:['sorriso','entediado','confiante','malicia','surpreso','riso','irritado','sombrio'],
+    voz:{tipo:'square',f0:300,f1:380,dur:30,cada:2,vol:.035},resp:2.6,piscar:[2.2,5],bocaMs:90,
+    reage:{sorriso:'assenta',entediado:'murcha',confiante:'ergue',malicia:'inclina',surpreso:'susto',riso:'pula',irritado:'treme',sombrio:'nada'}},
+  coruja:{padrao:'neutro',poses:['neutro','sorriso','serio','piscadela','surpreso','riso','desdem','irritado'],
+    voz:{tipo:'triangle',f0:520,f1:600,dur:34,cada:2,vol:.06},resp:3.8,piscar:[3,6.5],bocaMs:120,
+    reage:{surpreso:'susto',desdem:'ergue',riso:'assenta'}},
+  javali:{padrao:'convite',poses:['convite','neutro','explica','trama','surpreso','riso','desdem','sombrio'],
+    voz:{tipo:'sawtooth',f0:150,f1:200,dur:40,cada:3,vol:.03},resp:4.2,piscar:[3.5,7.5],bocaMs:130,
+    reage:{surpreso:'susto',riso:'balanca',desdem:'ergue',trama:'inclina',explica:'assenta'}},
+};
+const poseSrc=(id,p)=>`art/torres/npc/${id}-${p}.png?v=${NPC_V}`;
+const SALDO0={'essencia:campanha':3,'essencia:galo':1,'essencia:coruja':0,'essencia:javali':2};
+let TORRES=[],st={saldo:{...SALDO0},chaves:{},feitos:{}};
+try{Object.assign(st,JSON.parse(localStorage.getItem('devo-torres')||'{}'))}catch{}
+const grava=()=>{try{localStorage.setItem('devo-torres',JSON.stringify(st))}catch{}};
+const limpa=t=>String(t).replace(/^\[PROVISÓRIO\]\s*/,'');
+const custo=(t,n)=>t.custoBase*2**n; // dobra a cada andar
+function pintaBolsa(){
+  $('bolsa').innerHTML=TORRES.map(t=>`<span style="--c:${COR[t.id]}" title="${t.essencia.nome}"><i></i>${st.saldo[t.essencia.item]||0}</span>`).join('')+
+    Object.entries(st.chaves).filter(([,n])=>n).map(([k,n])=>`<span class="chave" title="${k}"><i></i>${n}</span>`).join('');
+}
+function pontos(){
+  return [{id:'casa',curto:'Casa',titulo:'Sua casa',sub:'Porta de entrada',texto:'Volta para dentro de casa.',acao:'Entrar em casa',faz:()=>{$('fim').style.opacity=1;setTimeout(()=>location.href='casa.html?etapa=3',260)}},
+    ...TORRES.map(t=>{const feitos=st.feitos[t.id]||0,total=t.andares.length;
+      return {id:t.id,curto:limpa(t.nome).replace(/^Torre (do |da )?/,''),titulo:limpa(t.nome),sub:`${t.npc.nome} · ${limpa(t.npc.titulo)}`,rosto:ROSTO[t.npc.id],
+        texto:`${limpa(t.descricao||'')} Andares: ${feitos} de ${total}.`.trim(),acao:'Entrar',faz:()=>entraTorre(t)}})]
+    .map(p=>({...p,...PORTAS[p.id]}));
+}
+let pts=[];
+function pintaPontos(){
+  pts.forEach(e=>e.remove());setas.forEach(s=>s.el.remove());
+  const ps=pontos();
+  setas=ps.map(p=>{const el=document.createElement('button');el.className='seta';el.append(document.createElement('span'),p.curto);el.onclick=()=>escolhe(p);document.body.append(el);return {el,p}});
+  pts=ps.map(p=>{const b=document.createElement('button');b.className='ponto'+(p.id==='casa'?' casa':'');b.style.left=p.x/2+'px';b.style.top=p.y/2+'px';b.style.zIndex=900;
+    b.setAttribute('aria-label',p.titulo);b.innerHTML='<i></i>';b.addEventListener('pointerdown',e=>e.stopPropagation());b.addEventListener('click',e=>{e.stopPropagation();escolhe(p)});$('mundo').append(b);return b});
+}
+function escolhe(p){$('dica').hidden=true;fechaCartao();anda(SEL([p.ir])[0],()=>{const dx=p.x/2-eu.x,dy=p.y/2-eu.y;eu.dir=Math.abs(dx)>Math.abs(dy)?(dx<0?1:2):(dy>0?0:3);setTimeout(()=>abreCartao(p),160)})}
+function abreCartao(p){
+  $('c-tit').innerHTML=`${p.rosto?`<img src="${p.rosto}" alt="">`:''}<span>${p.titulo}${p.sub?`<small>${p.sub}</small>`:''}</span>`;
+  $('c-txt').textContent=p.texto;
+  const a=$('acoes');a.innerHTML='';
+  const b=document.createElement('button');b.textContent=p.acao;b.onclick=()=>{fechaCartao();p.faz()};a.append(b);
+  const v=document.createElement('button');v.textContent='Agora não';v.className='fraco';v.onclick=fechaCartao;a.append(v);
+  $('cartao').hidden=false;b.focus({preventScroll:true});
+}
+function fechaCartao(){$('cartao').hidden=true}
+let avisoT;function aviso(t,ms=1900){$('aviso').textContent=t;$('aviso').hidden=false;clearTimeout(avisoT);avisoT=setTimeout(()=>$('aviso').hidden=true,ms)}
+
+/* ---------- dentro da torre ---------- */
+// centro de cada patamar na arte de 1024x1536, de baixo para cima
+const PATAMAR=[[560,1100],[560,915],[560,735],[560,555],[560,375],[560,195]];
+let torre=null;
+function entraTorre(t){torre=t;$('fim').style.opacity=1;setTimeout(()=>{pintaTorre();$('torre').hidden=false;$('fim').style.opacity=0;const v=$('t-vista');v.scrollTop=v.scrollHeight},260)}
+function pintaTorre(){
+  const t=torre,feitos=st.feitos[t.id]||0,saldo=st.saldo[t.essencia.item]||0;
+  $('t-nome').innerHTML=`${limpa(t.nome)}<small>${t.essencia.nome.replace(/\s*\(provisória\)/,'')}: ${saldo}</small>`;
+  const arte=$('t-arte');arte.innerHTML='';
+  const k=Math.min(1,(innerWidth-8)/512);arte.style.transform=`scale(${k})`;arte.style.marginBottom=`${-(768*(1-k))}px`;
+  t.andares.forEach((a,n)=>{
+    const pos=PATAMAR[Math.min(n,PATAMAR.length-1)],acima=n>=PATAMAR.length;
+    const est=n<feitos?'feito':n===feitos?'prox':'fechado';
+    const b=document.createElement('button');b.className='andar '+est;
+    b.style.left=pos[0]/2+'px';b.style.top=(acima?pos[1]/2-44:pos[1]/2)+'px';
+    b.innerHTML=`<b>${n+1}</b>${est==='feito'?'✓ ':''}${limpa(a.titulo)}`;
+    b.onclick=()=>andar(n);arte.append(b);
+  });
+}
+function andar(n){
+  const t=torre,a=t.andares[n],feitos=st.feitos[t.id]||0,c=custo(t,n),saldo=st.saldo[t.essencia.item]||0;
+  const p={titulo:`Andar ${n+1} · ${limpa(a.titulo)}`,sub:t.essencia.nome.replace(/\s*\(provisória\)/,''),rosto:ROSTO[t.npc.id]};
+  if(n<feitos)return abreCartaoT({...p,texto:'Você já subiu este andar.',acao:'Rever a cena',faz:()=>cenaAndar(n,false)});
+  if(n>feitos)return abreCartaoT({...p,texto:'Suba os andares de baixo primeiro.'});
+  abreCartaoT({...p,texto:`Subir custa ${c} ${c===1?'Essência':'Essências'} (você tem ${saldo}). O custo dobra a cada andar.`,acao:saldo>=c?'Subir':'Faltam Essências',des:saldo<c,faz:()=>{st.saldo[t.essencia.item]=saldo-c;grava();pintaBolsa();cenaAndar(n,true)}});
+}
+function abreCartaoT(p){
+  $('cartao').style.zIndex=15;abreCartao({acao:p.acao||'Entendi',faz:p.faz||(()=>{}),...p});
+  if(p.des){const b=$('acoes').firstChild;b.disabled=true}
+  if(!p.acao)$('acoes').lastChild.remove();
+}
+function cenaAndar(n,premia){
+  const t=torre,a=t.andares[n],cfg=NPC_T[t.npc.id];
+  const falas=(a.cena||[]).filter(f=>f.texto).map(f=>({...f,texto:limpa(f.texto),pose:f.pose||t.npc.pose||(cfg&&cfg.padrao)}));
+  const fim=()=>{if(!premia)return;
+    st.feitos[t.id]=n+1;
+    const chave=t.tipo==='secundaria'?(t.chave&&t.chave.nome)||`Chave da ${limpa(t.nome)}`:null;
+    if(chave)st.chaves[chave]=(st.chaves[chave]||0)+1;
+    grava();pintaBolsa();pintaTorre();
+    $('premio').style.setProperty('--c',COR[t.id]);
+    $('premio').querySelector('strong').textContent=chave||'Andar concluído';
+    $('premio').querySelector('p').textContent=chave?'A chave abre andares da Torre da Ruptura.':limpa(a.resumo||'O que este andar guarda ainda não foi escrito pelo dono.');
+    $('premio').hidden=false};
+  // 1º andar: o encontro, longo, com o retrato grande; os outros: conversa curta no patamar
+  if(cfg&&n>0&&typeof conversaCurta==='function')return cenaCurta(t,n,falas,cfg,fim);
+  if(!cfg&&typeof conversaCurta==='function')return conversaCurta({nome:t.npc.nome,falas:falas.map(f=>f.tipo==='fala'?{texto:f.texto}:{quem:'Sistema',texto:f.texto}),retrato:()=>null,boneco:()=>null,voz:{tipo:'square',f0:240,f1:300,dur:30,cada:2,vol:.03},aoFim:fim});
+  cenaLonga(t,falas,cfg,fim);
+}
+function cenaLonga(t,falas,cfg,fim){
+  const vn=$('vn'),fig=vn.querySelector('.fig'),tx=vn.querySelector('p'),nome=vn.querySelector('.bal b'),seg=vn.querySelector('.bal small');
+  vn.classList.toggle('longa',!!cfg);
+  const npc=cfg&&typeof NPCVN!=='undefined'?NPCVN.monta(fig,{voz:cfg.voz,resp:cfg.resp,nome:()=>nome,caixa:()=>vn.querySelector('.bal'),rosto:'art/torres/npc/anim/',versao:NPC_V,piscar:cfg.piscar}):null;
+  npc&&npc.precarrega([...new Set(falas.map(f=>f.pose))].map(p=>poseSrc(t.npc.id,p)));
+  const fila=[...falas];let pronto=0,ocupado=false;
+  const acaba=()=>{npc&&npc.destroi();fig.hidden=true;vn.hidden=true;vn.onclick=null;vn.classList.remove('longa');removeEventListener('keydown',tecla);fim()};
+  async function passo(){
+    if(performance.now()<pronto||ocupado)return;
+    if(npc&&npc.completa())return; // o primeiro toque completa o texto
+    const f=fila.shift();if(!f)return acaba();
+    ocupado=true;
+    try{
+      const fala=f.tipo==='fala';
+      vn.classList.toggle('sistema',!fala);
+      if(!npc){const r=vn.querySelector('.ret');r.hidden=!ROSTO[t.npc.id];if(ROSTO[t.npc.id])r.src=ROSTO[t.npc.id];vn.classList.toggle('oculto',!ROSTO[t.npc.id])}
+      nome.textContent=fala?t.npc.nome:'Sistema';tx.textContent='';seg.hidden=true;
+      if(npc&&fala&&!f.cont){
+        const src=poseSrc(t.npc.id,f.pose);
+        if(fig.hidden){await npc.pose(src,{mesma:true});npc.mostra(true)}
+        else{npc.escala();await npc.pose(src,{reage:cfg.reage[f.pose]||'nada'})}
+      }
+      const pags=typeof paginar==='function'?paginar(tx,f.texto):[f.texto];
+      if(pags.length>1)fila.unshift(...pags.slice(1).map(x=>({...f,texto:x,cont:true})));
+      seg.hidden=true;pronto=performance.now()+120;
+      if(npc)npc.fala(tx,pags[0],()=>{seg.hidden=false},{comVoz:fala});else{tx.textContent=pags[0];seg.hidden=false}
+    }finally{ocupado=false}
+  }
+  const tecla=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();passo()}};
+  vn.hidden=false;vn.onclick=passo;addEventListener('keydown',tecla);passo();
+}
+function cenaCurta(t,n,falas,cfg,fim){
+  const pos=PATAMAR[Math.min(n,PATAMAR.length-1)],cx=pos[0]/2,cy=pos[1]/2;
+  const pa=$('patamar'),m=$('pa-mundo');m.innerHTML='';
+  // você, parado, olhando para o anfitrião (mesma folha do chibi da ilha)
+  const sb=document.createElement('i');sb.className='eu-sombra';
+  const eu1=document.createElement('i');eu1.className='eu';
+  if(ator.dataset.andar){eu1.style.backgroundImage=ator.style.backgroundImage;eu1.style.backgroundSize=ator.style.backgroundSize;eu1.style.backgroundPosition=`0px -${2*96}px`}
+  else{eu1.style.background='url(art/chibi-melissa.png) 0 -160px/320px 320px';eu1.style.height='80px';eu1.style.marginTop='-80px'}
+  m.append(sb,eu1);
+  const s=NPCChibi.cria(t.npc.id,{mundo:m,x:0,y:0,dir:1,versao:NPC_V,bocaMs:cfg.bocaMs,piscar:cfg.piscar,resp:cfg.resp});
+  // a arte do andar em dobro (a porta fica do tamanho dos chibis), em escala inteira; o recorte acompanha o tamanho da
+  // tela e deixa o patamar a 72% da altura livre acima da caixa de texto
+  const ajusta=()=>{
+    const cx2=document.querySelector('.conversa .cc-caixa'),topo=(cx2?cx2.getBoundingClientRect().top:innerHeight-170)-100;
+    const e=Math.max(1,Math.floor(Math.min(innerWidth/400,topo/520)));
+    const W=Math.ceil(innerWidth/e),H=Math.max(300,Math.floor(topo/e));
+    const x0=cx-W/4,y0=cy-(H*.72-14)/2;
+    m.style.width=W+'px';m.style.height=H+'px';m.style.backgroundPosition=`${Math.round(-x0*2)}px ${Math.round(-y0*2)}px`;
+    m.style.transform=`translate(${Math.round((innerWidth-W*e)/2)}px,0) scale(${e})`;
+    const px=v=>Math.round(v),chao=(cy-y0)*2+14,voce=[px((cx-30-x0)*2),px(chao)],anf=[px((cx+30-x0)*2),px(chao-10)];
+    sb.style.cssText=`left:${voce[0]}px;top:${voce[1]}px;z-index:${voce[1]-1}`;
+    eu1.style.left=voce[0]+'px';eu1.style.top=voce[1]+'px';eu1.style.zIndex=voce[1];
+    s.poe(anf[0],anf[1]);
+  };
+  pa.getAnimations().forEach(x=>x.cancel());pa.hidden=false;pa.classList.remove('entra');void pa.offsetWidth;if(!NPCVN.calmo)pa.classList.add('entra');
+  conversaCurta({nome:t.npc.nome,falas:falas.map(f=>f.tipo==='fala'?{texto:f.texto,pose:f.pose}:{quem:'Sistema',texto:f.texto}),
+    retrato:p=>poseSrc(t.npc.id,p),boneco:()=>s,voz:cfg.voz,
+    aoFim:()=>{removeEventListener('resize',ajusta);
+      const sai=()=>{s.destroi();m.innerHTML='';pa.hidden=true;pa.getAnimations().forEach(x=>x.cancel());fim()};
+      if(NPCVN.calmo)return sai();
+      // sai como entrou: escurece em 5 quadros
+      pa.animate([{opacity:1},{opacity:0}],{duration:260,easing:'steps(5,end)',fill:'forwards'}).finished.then(sai,sai)}});
+  ajusta();addEventListener('resize',ajusta);
+}
+let premioAte=0;
+new MutationObserver(()=>{if(!$('premio').hidden)premioAte=performance.now()+500}).observe($('premio'),{attributes:true,attributeFilter:['hidden']});
+$('premio').onclick=()=>{if(performance.now()<premioAte)return;$('premio').hidden=true};
+addEventListener('keydown',e=>{if(!$('premio').hidden&&(e.key==='Enter'||e.key===' ')&&performance.now()>=premioAte){e.preventDefault();$('premio').hidden=true}});
+$('t-sair').onclick=()=>{fechaCartao();$('fim').style.opacity=1;setTimeout(()=>{$('torre').hidden=true;$('cartao').style.zIndex='';$('fim').style.opacity=0;pintaPontos()},260)};
+
+/* ---------- toque na ilha ---------- */
+let ini=null;const v=$('vista');
+v.addEventListener('pointerdown',e=>{if(!e.isPrimary){ini=null;return}ini={x:e.clientX,y:e.clientY,lx:e.clientX,ly:e.clientY,moveu:false};try{v.setPointerCapture(e.pointerId)}catch{}});
+v.addEventListener('pointermove',e=>{if(!ini||!e.isPrimary)return;if(Math.hypot(e.clientX-ini.x,e.clientY-ini.y)>10)ini.moveu=true;if(ini.moveu){olha.x+=e.clientX-ini.lx;olha.y+=e.clientY-ini.ly}ini.lx=e.clientX;ini.ly=e.clientY});
+v.addEventListener('pointercancel',()=>{ini=null});
+v.addEventListener('pointerup',e=>{
+  const i=ini;ini=null;if(!i||i.moveu||!e.isPrimary)return;
+  fechaCartao();$('dica').hidden=true;
+  const x=(e.clientX-cam.x)/esc,y=(e.clientY-cam.y)/esc;
+  const tocado=pontos().find(p=>Math.hypot(p.x/2-x,p.y/2-y)<40);
+  if(tocado)return escolhe(tocado);
+  const a=$('alvo'),c=maisPerto(x,y);if(!c)return;
+  a.style.left=c[0]*PASSO+3+'px';a.style.top=c[1]*PASSO+3+'px';a.classList.remove('on');void a.offsetWidth;a.classList.add('on');
+  anda([x,y]);
+});
+$('sair').onclick=()=>{$('fim').style.opacity=1;setTimeout(()=>location.href='casa.html?etapa=3',260)};
+$('t-reset').onclick=()=>{try{localStorage.removeItem('devo-torres')}catch{}location.reload()};
+addEventListener('keydown',e=>{if(e.key==='Escape'){fechaCartao();$('premio').hidden=true}});
+addEventListener('resize',()=>{medida();camera(0);if(!$('torre').hidden)pintaTorre()});
+if(q.has('semraf'))window.requestAnimationFrame=f=>setTimeout(()=>f(performance.now()),16);
+
+fetch('../../../../lib/devo/torres/conteudo.json').then(r=>r.json()).then(c=>{
+  TORRES=c.torres;
+  fetch(`art/torres/npc/centros.json?v=${NPC_V}`).then(r=>r.json()).then(j=>Object.assign(NPCVN.centros,j)).catch(()=>{});
+  $('fundo').style.backgroundImage='url(art/torres/mapa.png)';
+  medida();montaGrade();[eu.x,eu.y]=SEL([PORTAS.casa.ir])[0];eu.dir=3;pintaPontos();pintaBolsa();desenha();camera(0);requestAnimationFrame(laco);
+  const ap=aparenciaSalva();if(ap)folhaAndar(ap).then(cv=>{ator.style.backgroundImage=`url(${cv.toDataURL()})`;ator.style.backgroundSize=`${cv.width}px ${cv.height}px`;ator.dataset.andar=1});
+  if(q.get('torre')){const t=TORRES.find(x=>x.id===q.get('torre'));if(t){torre=t;pintaTorre();$('torre').hidden=false;const v=$('t-vista');v.scrollTop=v.scrollHeight}}
+  if(q.get('abrir')){const p=pontos().find(x=>x.id===q.get('abrir'));if(p){[eu.x,eu.y]=SEL([p.ir])[0];$('dica').hidden=true;abreCartao(p)}}
+  window.__torres={eu,TORRES,st};
+});
+</script>
+<script src="chibi-vida.js?v=202611070900"></script>
+</body>
+</html>

@@ -1,0 +1,143 @@
+/* ---- Ranking Geral da Temporada · "O Relógio dos Autômatos" (direção do crítico de arte, 03/11) ----
+   Bronze patinado, pedra calcária e esmalte azul-noite, luz de lampião vinda de cima. Um eixo só, o vertical:
+   círculos e arcos, nada de diagonal, de aba inclinada ou de canto cortado (isso é do Conflito).
+   Números em EB Garamond com algarismos alinhados; Cinzel nos rótulos; Cormorant itálico só nas linhas de apoio. */
+#rk{
+  --fundo:#07090D;--painel:#0F141B;--nevoa:#1C1F27;--osso:#E4DCCB;--tx2:#A79F91;
+  --esm:#0E1A2B;--esm2:#18283C;--br-s:#3B2A1A;--br:#7A5A34;--ouro:#B8924E;--brilho:#E2C27A;--verde:#3F6B62;--verde2:#6E9A8E;
+  --pedra:#24262B;--pedra2:#5E5C57;--lampiao:#F0B860;
+  --m1:#C9A45A;--m2:#9DA3A6;--m3:#9A5E3A;
+  --luz:var(--lampiao);--acento:var(--brilho);--valor:var(--osso);
+  --cinzel:'Cinzel',serif;--gara:'EB Garamond',serif;--corm:'Cormorant Garamond',serif;--bsc:'Barlow Semi Condensed','Barlow',sans-serif;
+  container-type:inline-size;position:relative;display:grid;overflow-x:clip;color:var(--osso);font:400 15px/1.5 var(--gara);
+  background:radial-gradient(120% 50% at 50% 0,#121822,var(--fundo) 60%)
+}
+/* mortes: meio-luto, cal e luar no lugar do ouro e do lampião */
+#rk[data-cat=mortes]{--luz:#9FB0B8;--acento:#8E7FA3;--valor:#CFC6B0;--m1:#8E7FA3;--m2:#9FB0B8;--m3:#7d7468}
+.jan[data-sis=ranking] .mais{display:none}
+.jan[data-sis=ranking] .corpo{padding-bottom:0}
+#rk p,#rk h3,#rk ol{margin:0}
+#rk img{display:block}
+#rk button{font:inherit;color:inherit;border:0;background:none;cursor:pointer}
+#rk button:focus-visible{outline:2px solid var(--osso);outline-offset:3px}
+
+/* ---------- topo: a torre, o mostrador e o tempo ---------- */
+.rk-topo{position:relative;height:214px;overflow:hidden;display:grid;justify-items:center;align-content:start}
+.rk-torre{position:absolute;inset:0;background:url(art/os/ranking/topo-v.webp?v=1) center 2%/cover}
+@container (min-width:620px){.rk-torre{background-image:url(art/os/ranking/topo-h.webp?v=1);background-position:center 6%}}
+.rk-topo::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(7,9,13,.2),transparent 30%,rgba(7,9,13,.6) 66%,var(--fundo) 92%)}
+.rk-fita{position:absolute;z-index:2;top:14px;left:0;padding:6px 18px 6px 16px;font:600 11px/1 var(--cinzel);letter-spacing:.3em;text-transform:uppercase;color:var(--osso);background:rgba(7,9,13,.8);border-radius:0 999px 999px 0;box-shadow:inset 0 -1px 0 var(--br)}
+.rk-relogio{position:relative;z-index:1;margin-top:14px;width:120px;height:120px;filter:drop-shadow(0 8px 16px #000)}
+.rk-relogio img{position:absolute;inset:0;width:100%;height:100%}
+/* setor da temporada já percorrido, em verdete por cima do esmalte */
+.rk-setor{position:absolute;inset:22%;border-radius:50%;background:conic-gradient(rgba(110,154,142,.38) calc(var(--p) * 360deg),transparent 0);mix-blend-mode:screen}
+.rk-ponteiro{rotate:calc(var(--p) * 360deg);transition:rotate 1.2s cubic-bezier(.3,1.4,.5,1)}
+.rk-resta{position:relative;z-index:1;display:grid;justify-items:center;gap:2px;margin-top:8px;padding:6px 18px 7px;background:linear-gradient(rgba(20,14,8,.6),rgba(20,14,8,.6)),url(art/os/ranking/tex-bronze.webp?v=1) center/180px;box-shadow:inset 0 1px 0 rgba(226,194,122,.5),inset 0 -1px 0 #000;-webkit-mask:radial-gradient(circle 10px at 0 0,#0000 98%,#000) top left/51% 51% no-repeat,radial-gradient(circle 10px at 100% 0,#0000 98%,#000) top right/51% 51% no-repeat,radial-gradient(circle 10px at 0 100%,#0000 98%,#000) bottom left/51% 51% no-repeat,radial-gradient(circle 10px at 100% 100%,#0000 98%,#000) bottom right/51% 51% no-repeat;mask:radial-gradient(circle 10px at 0 0,#0000 98%,#000) top left/51% 51% no-repeat,radial-gradient(circle 10px at 100% 0,#0000 98%,#000) top right/51% 51% no-repeat,radial-gradient(circle 10px at 0 100%,#0000 98%,#000) bottom left/51% 51% no-repeat,radial-gradient(circle 10px at 100% 100%,#0000 98%,#000) bottom right/51% 51% no-repeat}
+.rk-resta b{font:600 20px/1 var(--cinzel);letter-spacing:.06em;color:var(--osso)}
+.rk-resta small{font:italic 500 14px/1 var(--corm);color:#d3c8b4}
+
+/* ---------- os cinco nichos ---------- */
+.rk-marca{display:block;height:1px;margin-top:-27px}
+.rk-nichos{position:sticky;top:0;z-index:5;display:flex;justify-content:center;gap:10px;padding:10px 12px 26px;transition:background .2s}
+.rk-nichos.preso{background:var(--fundo);box-shadow:0 14px 14px -4px var(--fundo)}
+.rk-nichos::after{content:"";position:absolute;left:22px;right:22px;bottom:22px;height:3px;background:url(art/os/ranking/tex-bronze.webp?v=1) center/120px;box-shadow:0 1px 0 #000}
+.rk-nicho{position:relative;width:60px;height:76px;transition:translate .25s,filter .25s;filter:brightness(.5) grayscale(.4)}
+.rk-nicho[aria-selected=true]{translate:0 -6px;filter:none}
+.rk-moldura{position:absolute;inset:0;width:100%;height:100%;object-fit:fill;z-index:2;pointer-events:none}
+.rk-dentro{position:absolute;left:16%;right:16%;top:16%;bottom:6%;overflow:hidden;border-radius:999px 999px 0 0;background:radial-gradient(60% 60% at 50% 30%,color-mix(in srgb,var(--luz) 30%,transparent),#090b10 80%)}
+.rk-dentro img{width:210%;max-width:none;height:auto;margin-left:-55%;margin-top:-2%}
+.rk-dentro img.puxa{animation:rk-puxa .7s steps(2)}
+@keyframes rk-puxa{50%{translate:0 3px}}
+.rk-porta{position:absolute;z-index:3;top:16%;bottom:6%;width:34%;scale:.55 1;background:url(art/os/ranking/tex-bronze.webp?v=1) center/80px;box-shadow:inset 0 0 0 1px var(--br-s);transition:scale .25s;transform-origin:left}
+.rk-porta.e{left:16%;border-radius:999px 0 0 0;transform-origin:left center}
+.rk-porta.d{right:16%;border-radius:0 999px 0 0;transform-origin:right center}
+.rk-nicho[aria-selected=true] .rk-porta{scale:0 1}
+.rk-nicho[aria-selected=true]::before{content:"";position:absolute;inset:-6px;z-index:0;background:radial-gradient(closest-side,color-mix(in srgb,var(--luz) 28%,transparent),transparent)}
+.rk-nicho small{display:none}
+.rk-un{position:absolute;left:50%;top:100%;translate:-50% 6px;width:16px;height:16px;opacity:.55}
+.rk-nicho[aria-selected=true] .rk-un{opacity:1}
+.rk-ini{display:grid;place-items:center;border-radius:50%;background:radial-gradient(circle at 40% 30%,#2a2f3a,#12151c);font:600 17px/1 var(--cinzel);color:var(--tx2)}
+@container (min-width:620px){.rk-nichos{gap:44px}.rk-un{display:none}.rk-nicho small{display:block;position:absolute;top:100%;left:50%;translate:-50% 8px;white-space:nowrap;font:500 10px/1 var(--bsc);letter-spacing:.08em;text-transform:uppercase;color:var(--tx2)}.rk-nicho[aria-selected=true] small{color:var(--acento)}.rk-nichos{padding-bottom:34px}.rk-nichos::after{bottom:30px}}
+
+/* ---------- pódio ---------- */
+.rk-palco{display:grid;gap:10px;padding:0 14px 90px;touch-action:pan-y;background:linear-gradient(180deg,var(--fundo),rgba(7,9,13,.6) 18%,rgba(7,9,13,.62) 40%,var(--fundo) 62%),url(art/os/ranking/tex-pedra.webp?v=1) center top/256px}
+.rk-cat{max-width:30ch;margin:0 auto!important;font:500 18px/1.3 var(--gara);text-align:center;color:var(--osso);min-height:2.6em;display:grid;place-items:center}
+.rk-podio{position:relative;display:grid;grid-template-columns:1fr 1.2fr 1fr;max-width:362px;margin:0 auto;width:100%;justify-content:center;align-items:end;gap:4px;padding-top:24px}
+.rk-podio::before{content:"";position:absolute;left:50%;top:-20px;width:120%;height:380px;translate:-50% 0;pointer-events:none;background:radial-gradient(45% 60% at 50% 0,color-mix(in srgb,var(--luz) 24%,transparent),transparent 72%)}
+.rk-lampiao{position:absolute;right:4px;top:-6px;width:44px;height:44px;opacity:.9;filter:drop-shadow(0 0 10px color-mix(in srgb,var(--luz) 45%,transparent))}
+.rk-chao{position:absolute;left:-14px;right:-14px;bottom:-10px;height:64px;z-index:0;background:linear-gradient(180deg,rgba(7,9,13,.25),rgba(7,9,13,.92)),url(art/os/ranking/tex-pedra.webp?v=1) center/180px;box-shadow:inset 0 1px 0 rgba(184,146,78,.35)}
+.rk-col{z-index:1}
+.rk-base{display:flex;align-items:flex-end;justify-content:center;height:72px;width:100%;margin-bottom:-18px;position:relative}
+.rk-col.c1 .rk-base{height:94px}
+.rk-base::after{content:"";position:absolute;left:12%;right:12%;bottom:-4px;height:10px;border-radius:50%;background:rgba(0,0,0,.5);filter:blur(3px);z-index:-1}
+.rk-col{position:relative;display:grid;justify-items:center;gap:3px;text-align:center}
+.rk-col.c1{order:2}.rk-col.c2{order:1}.rk-col.c3{order:3}
+.rk-ret{position:relative;display:block;width:72px;height:72px;margin-bottom:6px}
+.rk-col.c1 .rk-ret{width:96px;height:96px}
+.rk-foto{position:absolute;inset:13%;width:74%;height:74%;border-radius:50%;object-fit:cover}
+.rk-foto.rk-ini{font-size:24px}
+.rk-anel{position:absolute;inset:0;width:100%;height:100%}
+.rk-rom{position:absolute;left:50%;top:-3px;translate:-50% 0;font:700 10px/1 var(--cinzel);color:#120d06}
+.rk-coroa{position:absolute;left:-34%;top:-30%;width:168%;height:150%;object-fit:contain;object-position:top;z-index:0;opacity:.95}
+.rk-col.c1:has(.rk-coroa) .rk-foto,.rk-col.c1:has(.rk-coroa) .rk-anel{z-index:1}
+.rk-luto{position:absolute;right:-8%;top:-6%;width:44%;height:44%;z-index:3;rotate:20deg}
+.rk-nome{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font:500 15px/1.2 var(--gara);color:var(--osso)}
+.rk-col.c1 .rk-nome{font-size:16px}
+.rk-val{display:flex;align-items:center;gap:4px;font:600 19px/1 var(--gara);font-variant-numeric:lining-nums tabular-nums}
+.rk-col.c1 .rk-val{font-size:24px}
+.rk-col.c1 .rk-val{color:var(--m1)}.rk-col.c2 .rk-val{color:var(--m2)}.rk-col.c3 .rk-val{color:var(--m3)}
+.rk-val img{width:16px;height:16px}
+#rk[data-cat=eliminacoes] .rk-val small{letter-spacing:.04em}
+.rk-val small{font:500 10px/1 var(--bsc);letter-spacing:.12em;text-transform:uppercase;color:var(--tx2)}
+.rk-ped{max-width:92%;max-height:100%;width:auto;height:auto;object-fit:contain;object-position:bottom}
+
+.rk-ped-n{display:none}
+#rk[data-cat=mortes] .rk-ped{max-width:70%;max-height:80%}
+#rk[data-cat=mortes] .rk-col.c1 .rk-ped{max-width:76%;max-height:84%;rotate:-3deg}
+#rk[data-cat=mortes] .rk-col.c1 .rk-nome{margin-top:14px}
+#rk[data-cat=mortes] .rk-col.c2 .rk-ped{rotate:2deg}
+#rk[data-cat=mortes] .rk-col.c3 .rk-ped{rotate:-1deg}
+.rk-col.eu .rk-nome{color:var(--acento)}
+
+/* ---------- lista ---------- */
+.rk-lista{list-style:none;padding:10px 0 0!important;margin:6px -14px 0!important;background:linear-gradient(180deg,rgba(7,9,13,.4),rgba(7,9,13,.75)),url(art/os/ranking/tex-pedra.webp?v=1) center/256px;box-shadow:inset 0 3px 0 -1px var(--br)}
+.rk-lista li{position:relative;display:grid;grid-template-columns:40px 40px minmax(0,1fr) auto;align-items:center;gap:12px;min-height:52px;padding:0 16px 0 10px}
+.rk-lista li+li::before{content:"";position:absolute;left:62px;right:16px;top:0;height:1px;background:rgba(184,146,78,.16)}
+.rk-pos{text-align:right;font:600 15px/1 var(--cinzel);color:var(--tx2);white-space:nowrap}
+.rk-pos i{font-style:normal;opacity:.6}
+.rk-lista img,.rk-lista .rk-ini{width:40px;height:40px;border-radius:50%;object-fit:cover;box-shadow:0 0 0 2px var(--br),0 0 0 3px #000}
+.rk-n{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font:500 16px/1.2 var(--gara);color:var(--osso)}
+.rk-v{display:flex;align-items:baseline;gap:5px;font:500 17px/1 var(--gara);font-variant-numeric:lining-nums tabular-nums;color:var(--valor)}
+.rk-v small{font:500 10px/1 var(--bsc);letter-spacing:.12em;text-transform:uppercase;color:var(--tx2)}
+.rk-lista li.eu{background:linear-gradient(90deg,color-mix(in srgb,var(--luz) 16%,transparent),transparent);box-shadow:inset 3px 0 0 var(--ouro)}
+.rk-lista li.eu .rk-n,.rk-lista li.eu .rk-pos{color:var(--acento)}
+.rk-mais{justify-self:center;min-height:44px;font:italic 500 16px/1 var(--corm)!important;color:var(--tx2)!important;text-decoration:underline;text-underline-offset:4px}
+
+/* ---------- sua posição: placa de relojoeiro de cantos côncavos ---------- */
+.rk-eu-pe{position:sticky;bottom:0;z-index:6;margin:-80px -0px 0;min-height:64px;display:flex;align-items:center;gap:12px;padding:8px 16px;
+  background:linear-gradient(rgba(16,11,6,.72),rgba(16,11,6,.72)),url(art/os/ranking/tex-bronze.webp?v=1) center/200px;
+  -webkit-mask:radial-gradient(circle 10px at 0 0,#0000 98%,#000) top left,radial-gradient(circle 10px at 100% 0,#0000 98%,#000) top right,radial-gradient(circle 10px at 0 100%,#0000 98%,#000) bottom left,radial-gradient(circle 10px at 100% 100%,#0000 98%,#000) bottom right;
+  -webkit-mask-size:51% 51%;-webkit-mask-repeat:no-repeat;
+  mask:radial-gradient(circle 10px at 0 0,#0000 98%,#000) top left,radial-gradient(circle 10px at 100% 0,#0000 98%,#000) top right,radial-gradient(circle 10px at 0 100%,#0000 98%,#000) bottom left,radial-gradient(circle 10px at 100% 100%,#0000 98%,#000) bottom right;
+  mask-size:51% 51%;mask-repeat:no-repeat;
+  filter:drop-shadow(0 -4px 12px rgba(0,0,0,.6));transition:opacity .25s,translate .25s}
+.rk-eu-pe{box-shadow:inset 0 1px 0 rgba(226,194,122,.55),inset 0 -1px 0 #000}
+.rk-eu-pe.some{opacity:0;translate:0 12px;pointer-events:none}
+.rk-eu-pe b{font:600 26px/1 var(--gara);font-variant-numeric:lining-nums;color:var(--acento)}
+.rk-eu-pe img{width:40px;height:40px;border-radius:50%;object-fit:cover;box-shadow:0 0 0 2px var(--ouro)}
+.rk-eu-id{display:grid;font:500 15px/1.2 var(--gara);color:var(--osso)}
+.rk-eu-id small{font:600 11px/1 var(--cinzel);letter-spacing:.18em;text-transform:uppercase;color:var(--tx2)}
+.rk-eu-pe em{margin-left:auto;max-width:13ch;text-align:right;font:italic 500 15px/1.15 var(--corm);color:#d3c8b4}
+.rk-eu-tx{font:italic 500 16px/1.2 var(--corm);color:var(--osso)}
+
+/* ---------- computador: pódio e lista lado a lado ---------- */
+@container (min-width:620px){
+  .rk-topo{height:300px}
+  .rk-palco{grid-template-columns:40% 1fr;align-items:start;column-gap:24px;padding-inline:24px}
+  .rk-cat{grid-column:1/-1}
+  .rk-podio{grid-template-columns:100px 120px 100px;position:sticky;top:120px}
+  .rk-lista{margin:0!important;grid-row:2}
+  .rk-podio{grid-row:2}
+}
+@media (prefers-reduced-motion:reduce){.rk-ponteiro,.rk-nicho,.rk-porta,.rk-eu-pe{transition:none}.rk-dentro img.puxa{animation:none}}
+@container (min-width:620px){.rk-topo{height:330px}.rk-relogio{width:178px;height:178px;margin-top:20px}.rk-resta{margin-top:14px}}

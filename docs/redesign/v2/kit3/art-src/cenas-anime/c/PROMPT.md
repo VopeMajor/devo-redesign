@@ -1,0 +1,11 @@
+Generate images with the built-in image_gen tool. Make exactly 9 image_gen calls, one per file below, with the size given. Copy each result into this folder with the given name (PNG). Do not edit other files. Do not write code.
+Art for DEVO, a gothic game about time. Style for every image: premium ANIME 2.5D game art like the backgrounds and UI art of Honkai: Star Rail: clean shapes, cel-shaded lighting with smooth gradients, crisp highlights, atmospheric depth. Palette anchored in deep royal navy (#0B1A3A to #1C3366) with pale gold (#E2C07D) accents plus the colours named per image. NOT pixel art (the attached references are old pixel versions: keep their composition and story, redraw them in the new style), NOT painterly AI mush, no noise. No text, no letters, no UI, no watermark. Characters only where described, drawn as small silhouettes.
+corp-sala.png, 1536x1024 (ref ref-corp-sala.png): the hall of a noble Corporation: a grand gothic council chamber with tall windows, banners, a long table, blue and gold heraldry, the centre of the wall left calm (a crest is shown on top later).
+corp-sala-necro.png, 1536x1024 (ref ref-corp-sala-necro.png): the same council chamber corrupted: darker, crimson light, torn banners, bones and candles, an ominous mood.
+evento-natal.png, 1536x768 (ref ref-evento-natal.png): Christmas night in a gothic town square, warm lights, a tall decorated tree, snow.
+evento-halloween.png, 1536x768 (ref ref-evento-halloween.png): Halloween night street full of masks and pumpkins, orange and violet lights.
+evento-carnaval.png, 1536x768 (ref ref-evento-carnaval.png): Carnival night parade in a gothic city, confetti, masks, colourful lights.
+evento-junina.png, 1536x768 (ref ref-evento-junina.png): Brazilian Festa Junina at night: bonfire, colourful paper flags (bandeirinhas) strung across, a small chapel.
+porta-livre.png, 768x1024 (ref ref-porta-livre.png): an ornate gothic arched door of a trading room, closed, dark wood and gold metal, cool blue glow lines, on a plain flat #0B1A3A background, centred, nothing else.
+porta-ocupada.png, 768x1024 (ref ref-porta-ocupada.png): the same door, closed, a red glowing lock seal on it, on plain flat #0B1A3A, centred.
+porta-sua.png, 768x1024 (ref ref-porta-sua.png): the same door slightly open with warm gold light pouring out, on plain flat #0B1A3A, centred.

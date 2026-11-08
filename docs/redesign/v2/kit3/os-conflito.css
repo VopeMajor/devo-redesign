@@ -1,0 +1,281 @@
+/* ---- Evento de Conflito · "Dossiê e Grimório" (direção do crítico de arte, 03/11) ----
+   Neutro: ferro e névoa. Companhia: aço, papel de ofício, prata, luz fria (Barlow Semi Condensed, IBM Plex).
+   Ordem: pergaminho, veludo, cera, ouro gasto, vela (Cormorant Garamond, EB Garamond, Cinzel).
+   Um ângulo só na tela inteira: o da fenda da arte (de cima à direita para baixo à esquerda). Sem botões lisos de site,
+   sem caixas de 1 px dourado em tudo, sem vermelho como cor de erro (vermelho é da Ordem). */
+#cf,.cf-veu{
+  --fundo:#08090D;--painel:#101218;--nevoa:#1C1F27;--ferro:#2E3038;--osso:#E4DCCB;--tx2:#A79F91;
+  --c-fundo:#0D1520;--c-placa:#172234;--c-aco:#2B3D55;--c-azul:#4A6A8E;--c-acento:#9FB3C8;--c-prata:#C8CED6;--c-sombra:#707B8A;--c-tinta:#2C4A73;
+  --o-fundo:#120709;--o-placa:#2A0E11;--o-sangue:#5A1419;--o-ox:#7E1F24;--o-ouro:#B08A45;--o-ouro-s:#6E5428;--o-perg:#2B1F17;--o-tx:#DCCDB0;--o-chama:#E3B062;
+  --ferrugem:#8A6A3A;
+  --cinzel:'Cinzel',serif;--corm:'Cormorant Garamond',serif;--gara:'EB Garamond',serif;--bsc:'Barlow Semi Condensed','Barlow',sans-serif;--plex:'IBM Plex Sans',sans-serif;--mono:'IBM Plex Mono',monospace;
+  /* material do momento (neutro); troca com o lado */
+  --m-fundo:var(--fundo);--m-placa:var(--nevoa);--m-fio:#3A3D47;--m-acento:var(--osso);--m-tx:var(--osso);--m-tit:var(--cinzel);--m-num:var(--cinzel);--m-tex:none;
+}
+#cf{container-type:inline-size;position:relative;display:grid;color:var(--m-tx);font:400 15px/1.55 var(--plex);
+  background:var(--m-tex),radial-gradient(120% 60% at 50% 0,#14161d,var(--m-fundo) 60%);background-size:256px,auto
+}
+#cf[data-lado=companhia],.cf-veu[data-mat=companhia]{--m-fundo:var(--c-fundo);--m-placa:var(--c-placa);--m-fio:var(--c-sombra);--m-acento:var(--c-acento);--m-tx:#D9DEE5;--m-tit:var(--bsc);--m-num:var(--mono);--m-tex:url(art/os/conflito/tex-dossie.webp?v=2)}
+#cf[data-lado=ordem],.cf-veu[data-mat=ordem]{--m-fundo:var(--o-fundo);--m-placa:var(--o-placa);--m-fio:var(--o-ouro-s);--m-acento:var(--o-ouro);--m-tx:var(--o-tx);--m-tit:var(--corm);--m-num:var(--corm);--m-tex:url(art/os/conflito/tex-grimorio.webp?v=2)}
+.jan[data-sis=conflito] .mais{display:none}
+#cf p,.cf-veu p{margin:0}
+#cf img,.cf-veu img{display:block}
+#cf button,.cf-veu button{font:inherit;color:inherit;text-align:center}
+#cf button:focus-visible,.cf-veu button:focus-visible{outline:2px solid var(--osso);outline-offset:3px}
+#cf .cf-abre,#cf .cf-pergunta,#cf .cf-dica{margin-inline:auto}
+
+/* ---------- topo ---------- */
+.cf-topo{position:relative;height:clamp(400px,112cqi,500px);overflow:hidden;isolation:isolate}
+.cf-arte{position:absolute;inset:0;background:url(art/os/conflito/topo-v.webp?v=2) center 38%/cover}
+@container (min-width:620px){.cf-topo{height:380px}.cf-arte{background-image:url(art/os/conflito/topo-h.webp?v=2);background-position:center 30%}}
+.cf-topo::after{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,rgba(8,9,13,.55),transparent 22%,transparent 52%,rgba(8,9,13,.8) 76%,var(--m-fundo))}
+/* com um lado escolhido, a metade do outro lado apaga */
+.cf-sombra{position:absolute;inset:0;z-index:1;pointer-events:none;opacity:0;transition:opacity .5s;background:url(art/os/conflito/topo-v.webp?v=2) center 38%/cover;filter:grayscale(.7) brightness(.42)}
+#cf[data-lado=companhia] .cf-sombra,#cf[data-lado=ordem] .cf-sombra{opacity:1}
+#cf[data-lado=companhia] .cf-sombra{clip-path:polygon(100% 18%,64% 52%,48% 72%,30% 100%,100% 100%)}
+#cf[data-lado=ordem] .cf-sombra{clip-path:polygon(0 0,100% 0,100% 18%,64% 52%,48% 72%,30% 100%,0 100%)}
+@container (min-width:620px){
+  .cf-sombra{background-image:url(art/os/conflito/topo-h.webp?v=2);background-position:center 30%}
+  #cf[data-lado=companhia] .cf-sombra{clip-path:polygon(66% 0,100% 0,100% 100%,40% 100%,52% 50%)}
+  #cf[data-lado=ordem] .cf-sombra{clip-path:polygon(0 0,66% 0,52% 50%,40% 100%,0 100%)}
+  .cf-titulo{left:28px;right:auto;bottom:84px;justify-items:start;text-align:left}
+}
+.cf-fita{position:absolute;z-index:2;top:14px;left:0;padding:6px 26px 6px 16px;font:600 11px/1 var(--cinzel);letter-spacing:.3em;text-transform:uppercase;color:var(--osso);background:rgba(8,9,13,.78);clip-path:polygon(0 0,100% 0,calc(100% - 10px) 100%,0 100%);box-shadow:inset 0 -1px 0 var(--m-fio)}
+.cf-titulo{position:absolute;z-index:2;left:0;right:0;bottom:58px;display:grid;justify-items:center;text-align:center}
+.cf-titulo em{font:italic 500 16px/1 var(--corm);color:var(--osso);letter-spacing:.04em;text-shadow:0 0 6px #000,0 0 14px #000}
+.cf-titulo h2{position:relative;margin:2px 0 0;font:600 44px/1 var(--cinzel);letter-spacing:.12em;text-transform:uppercase}
+.cf-titulo h2 span{display:block}
+.cf-t-cia{color:var(--c-prata);clip-path:polygon(0 0,61% 0,39% 100%,0 100%);text-shadow:0 2px 10px #000}
+.cf-t-ord{position:absolute;inset:0;color:var(--o-ouro);clip-path:polygon(61% 0,100% 0,100% 100%,39% 100%);text-shadow:0 2px 10px #000}
+.cf-relogio{position:absolute;z-index:2;top:12px;right:12px;display:grid;justify-items:end;gap:3px;padding:7px 12px 7px 20px;background:rgba(8,9,13,.78);clip-path:polygon(10px 0,100% 0,100% 100%,0 100%);margin:0}
+.cf-relogio b{font:600 18px/1 var(--cinzel);color:var(--osso);letter-spacing:.06em}
+.cf-relogio small{font:500 11px/1 var(--plex);color:var(--tx2);letter-spacing:.04em}
+.cf-escolha{position:absolute;z-index:2;left:12px;right:12px;bottom:10px;display:flex;align-items:center;justify-content:space-between}
+.cf-escolha img{width:56px;height:56px;opacity:.6;filter:drop-shadow(0 4px 8px #000)}
+.cf-escolha em{font:italic 500 16px/1 var(--corm);color:var(--osso)}
+.cf-id{position:absolute;z-index:2;left:50%;bottom:6px;translate:-50% 0;display:flex;align-items:center;gap:10px;padding-right:14px}
+.cf-id img{width:58px;height:58px;filter:drop-shadow(0 4px 8px #000)}
+.cf-id span{display:grid;font:600 15px/1.15 var(--m-tit);color:var(--m-acento);text-shadow:0 1px 6px #000}
+.cf-id small{font:500 10px/1.2 var(--mono);letter-spacing:.18em;text-transform:uppercase;color:var(--tx2)}
+.cf-id.ordem span{font-variant:small-caps;font-size:18px}
+
+/* ---------- abas: placas no ângulo da fenda ---------- */
+.cf-abas{position:sticky;top:0;z-index:5;display:grid;grid-template-columns:repeat(3,1fr);gap:4px;padding:8px 14px;background:linear-gradient(180deg,var(--m-fundo) 70%,transparent)}
+.cf-abas button{min-height:44px;padding:0 4px;border:0;cursor:pointer;background:transparent;position:relative}
+.cf-abas button::before{content:"";position:absolute;inset:0;transform:skewX(-22deg);box-shadow:inset 0 0 0 1px var(--ferro);background:rgba(8,9,13,.5)}
+.cf-abas button span{position:relative;white-space:nowrap;font:600 11px/1 var(--cinzel);letter-spacing:.1em;text-transform:uppercase;color:var(--tx2)}
+.cf-abas button[aria-selected=true]::before{background:var(--nevoa);box-shadow:inset 0 0 0 1px var(--osso)}
+.cf-abas button[aria-selected=true] span{color:var(--osso)}
+#cf[data-lado=companhia] .cf-abas button[aria-selected=true]::before{background:url(art/os/conflito/tex-aco.webp?v=2) center/256px;box-shadow:inset 0 0 0 1px var(--c-prata)}
+#cf[data-lado=ordem] .cf-abas button[aria-selected=true]::before{background:url(art/os/conflito/tex-veludo.webp?v=2) center/256px;box-shadow:inset 0 0 0 1px var(--o-ouro)}
+#cf[data-lado=ordem] .cf-abas button[aria-selected=true] span{color:var(--o-tx)}
+
+.cf-corpo{display:grid;gap:18px;padding:10px 16px 32px}
+.cf-regua{display:flex;align-items:center;gap:10px;margin:0 auto;width:min(100%,360px)}
+.cf-regua i{flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--ferro),transparent)}
+.cf-regua img{width:22px;height:22px;opacity:.75}
+.cf-abre{max-width:34ch;margin:0 auto;font:500 17px/1.5 var(--corm);color:var(--osso);text-align:center}
+
+/* ---------- Conheça: as duas capas ---------- */
+.cf-capas{display:grid;grid-template-columns:1fr 14px 1fr;align-items:stretch;margin:0 -4px}
+.cf-capa{position:relative;height:280px;padding:0;border:0;cursor:pointer;overflow:hidden;display:grid;align-content:end;justify-items:center;transition:filter .3s}
+.cf-capa.companhia{background:linear-gradient(180deg,rgba(23,34,52,.2),rgba(13,21,32,.95) 82%),url(art/os/conflito/tex-dossie.webp?v=2) center/220px;clip-path:polygon(0 0,100% 0,100% 100%,0 100%,0 0);box-shadow:inset 0 0 0 1px rgba(200,206,214,.35),inset 0 0 0 4px rgba(13,21,32,.9),inset 0 0 0 5px rgba(112,123,138,.6)}
+.cf-capa.ordem{background:linear-gradient(180deg,rgba(42,14,17,.2),rgba(18,7,9,.95) 82%),url(art/os/conflito/tex-veludo.webp?v=2) center/220px;border-radius:46% 46% 0 0/18% 18% 0 0;box-shadow:inset 0 0 0 1px rgba(176,138,69,.55),inset 0 0 0 4px rgba(18,7,9,.9),inset 0 0 0 5px rgba(110,84,40,.7)}
+.cf-capa-fig{position:absolute;left:50%;bottom:30px;translate:-50% 0;height:250px;width:auto;max-width:none;filter:drop-shadow(0 6px 10px #000)}
+.cf-capa.companhia .cf-capa-fig{filter:drop-shadow(0 6px 10px #000) saturate(.9)}
+.cf-capa-bra{position:absolute;top:10px;width:44px;height:44px;filter:drop-shadow(0 3px 6px #000)}
+.cf-capa.companhia .cf-capa-bra{left:10px}.cf-capa.ordem .cf-capa-bra{right:10px}
+.cf-capa-nome{position:relative;z-index:1;width:100%;padding:10px 8px 12px;background:linear-gradient(180deg,transparent,rgba(0,0,0,.85) 40%)}
+.cf-capa.companhia .cf-capa-nome{font:600 13px/1.15 var(--bsc);letter-spacing:.08em;text-transform:uppercase;color:var(--c-prata)}
+.cf-capa.ordem .cf-capa-nome{font:600 17px/1.1 var(--corm);font-variant:small-caps;color:var(--o-ouro)}
+.cf-capas:has(.aberta) .cf-capa:not(.aberta){filter:grayscale(.6) brightness(.55)}
+.cf-capa.aberta.companhia{box-shadow:inset 0 0 0 2px var(--c-prata),inset 0 0 0 5px rgba(13,21,32,.9),inset 0 0 0 6px var(--c-azul)}
+.cf-capa.aberta.ordem{box-shadow:inset 0 0 0 2px var(--o-ouro),inset 0 0 0 5px rgba(18,7,9,.9),inset 0 0 0 6px var(--o-ox)}
+.cf-emenda{display:block;background:linear-gradient(90deg,transparent 30%,#0a0b0f 30% 70%,transparent 70%);position:relative}
+.cf-emenda::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent,rgba(228,220,203,.5) 30%,rgba(126,31,36,.5) 70%,transparent);clip-path:polygon(60% 0,70% 18%,35% 34%,62% 52%,30% 70%,56% 86%,40% 100%,48% 100%,64% 86%,38% 70%,70% 52%,43% 34%,78% 18%,68% 0)}
+.cf-pergunta{max-width:28ch;margin:0 auto;font:italic 500 20px/1.35 var(--corm);color:var(--osso);text-align:center}
+.cf-dica{text-align:center;font:italic 500 15px/1.4 var(--corm);color:var(--tx2)}
+
+/* página de cada lado */
+.cf-pagina{position:relative;display:grid;gap:12px;padding:20px 18px 18px;scroll-margin-top:64px}
+.cf-pagina header{display:flex;align-items:center;gap:12px}
+.cf-pagina header img{width:40px;height:40px}
+.cf-pagina.companhia{background:url(art/os/conflito/tex-dossie.webp?v=2) center/256px;box-shadow:inset 3px 0 0 var(--c-azul),inset 0 0 0 1px rgba(112,123,138,.45);clip-path:polygon(0 0,calc(100% - 14px) 0,100% 14px,100% 100%,14px 100%,0 calc(100% - 14px))}
+.cf-pagina.companhia::after{content:"";position:absolute;right:12px;bottom:12px;width:110px;height:110px;background:url(art/os/conflito/brasao-companhia.webp?v=2) center/contain no-repeat;opacity:.08;pointer-events:none}
+.cf-pagina.companhia h3{margin:0;font:600 19px/1.15 var(--bsc);letter-spacing:.08em;text-transform:uppercase;color:var(--c-prata)}
+.cf-pagina.companhia p{font:400 15px/1.6 var(--plex);color:#CFD5DD;max-width:60ch}
+.cf-pagina.ordem{background:radial-gradient(120% 90% at 50% 40%,transparent 55%,rgba(0,0,0,.55)),url(art/os/conflito/tex-grimorio.webp?v=2) center/256px;box-shadow:inset 0 0 0 1px rgba(176,138,69,.45),inset 0 0 0 6px rgba(18,7,9,.35),inset 0 0 0 7px rgba(110,84,40,.5);border-radius:28px 28px 2px 2px/18px 18px 2px 2px}
+.cf-pagina.ordem h3{margin:0;font:600 23px/1.1 var(--corm);font-variant:small-caps;color:var(--o-ouro)}
+.cf-pagina.ordem p{font:400 17px/1.55 var(--gara);color:var(--o-tx);max-width:60ch}
+.cf-pagina.ordem header+p::first-letter{float:left;margin:4px 8px 0 0;padding:4px 7px 2px;font:600 38px/.9 var(--cinzel);color:var(--o-ouro);background:var(--o-sangue);box-shadow:inset 0 0 0 1px var(--o-ouro-s)}
+.cf-orna{width:22px;height:22px;margin:0 auto;opacity:.55}
+.cf-outra{justify-self:start;min-height:40px;padding:0 4px;border:0;background:none;cursor:pointer;font:500 14px/1 var(--plex);color:var(--tx2);text-decoration:underline;text-underline-offset:4px}
+.cf-pagina.ordem .cf-outra{font:italic 500 16px/1 var(--corm)}
+
+/* botão de apoiar, preso no pé */
+.cf-pe{position:sticky;bottom:0;z-index:4;margin:0 -16px -32px;padding:10px 16px 14px;background:linear-gradient(180deg,transparent,var(--m-fundo) 40%)}
+.cf-apoia{position:relative;width:100%;min-height:52px;display:flex;align-items:center;justify-content:center;gap:10px;border:0;cursor:pointer}
+.cf-apoia img{width:34px;height:34px;position:absolute;left:12px}
+.cf-apoia.companhia{background:url(art/os/conflito/tex-aco.webp?v=2) center/256px;clip-path:polygon(12px 0,calc(100% - 12px) 0,100% 12px,100% calc(100% - 12px),calc(100% - 12px) 100%,12px 100%,0 calc(100% - 12px),0 12px);box-shadow:inset 0 0 0 1px var(--c-prata)}
+.cf-apoia.companhia span{font:600 15px/1 var(--bsc);letter-spacing:.12em;text-transform:uppercase;color:#EEF2F6}
+.cf-apoia.ordem{background:linear-gradient(180deg,rgba(126,31,36,.6),rgba(90,20,25,.6)),url(art/os/conflito/tex-veludo.webp?v=2) center/256px;border-radius:22px 22px 4px 4px/14px 14px 4px 4px;box-shadow:inset 0 0 0 1px var(--o-ouro),inset 0 0 0 4px rgba(18,7,9,.5),inset 0 0 0 5px var(--o-ouro-s)}
+.cf-apoia.ordem img{width:42px;height:42px;left:4px;top:50%;translate:0 -50%}
+.cf-apoia.ordem span{font:600 19px/1 var(--corm);font-variant:small-caps;color:var(--o-tx)}
+.cf-apoia:disabled{cursor:default;background:transparent!important;box-shadow:inset 0 0 0 1px var(--m-fio)!important}
+.cf-apoia:disabled span{color:var(--m-acento)!important}
+
+/* ---------- Marcos ---------- */
+.cf-placar{display:grid;gap:10px}
+.cf-rot{font:600 11px/1.2 var(--cinzel);letter-spacing:.22em;text-transform:uppercase;color:var(--osso);text-align:center}
+.cf-cabo{position:relative;height:56px;display:grid;grid-template-columns:calc(var(--v) * 100%) 1fr;box-shadow:0 0 0 1px var(--ferro),0 10px 24px -10px #000}
+.cf-cabo .cia{background:linear-gradient(90deg,rgba(13,21,32,.2),rgba(74,106,142,.35)),url(art/os/conflito/tex-aco.webp?v=2) center/256px}
+.cf-cabo .ord{background:linear-gradient(270deg,rgba(18,7,9,.2),rgba(126,31,36,.45)),url(art/os/conflito/tex-veludo.webp?v=2) center/256px}
+.cf-no-cabo{position:absolute;top:-6px;bottom:-6px;left:calc(var(--v) * 100%);width:18px;translate:-50% 0;background:#0a0b0f;clip-path:polygon(40% 0,80% 22%,30% 48%,74% 74%,46% 100%,10% 100%,46% 74%,0 48%,52% 22%,8% 0)}
+.cf-no-cabo img{position:absolute;left:50%;top:50%;width:30px;height:30px;translate:-50% -50%}
+.cf-cabo>.cf-no-cabo{overflow:visible;clip-path:none;background:none}
+.cf-cabo>.cf-no-cabo::before{content:"";position:absolute;inset:0;background:#07080b;clip-path:polygon(40% 0,80% 22%,30% 48%,74% 74%,46% 100%,10% 100%,46% 74%,0 48%,52% 22%,8% 0)}
+.cf-nevoa{position:absolute;inset:-1px;display:flex;align-items:center;justify-content:center;gap:10px;background:linear-gradient(90deg,rgba(28,31,39,.9),rgba(8,9,13,.82),rgba(28,31,39,.9));-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px)}
+.cf-nevoa img{width:46px;height:46px;filter:drop-shadow(0 3px 6px #000)}
+.cf-nevoa b{font:600 12px/1.2 var(--cinzel);letter-spacing:.12em;color:var(--osso);text-transform:uppercase}
+.cf-nums{display:flex;justify-content:space-between;gap:12px}
+.cf-nums span{display:grid;gap:2px;font:500 11px/1.2 var(--plex);color:var(--tx2);letter-spacing:.04em}
+.cf-nums .ord{text-align:right}
+.cf-nums .cia b{font:500 28px/1 var(--mono);color:var(--c-acento)}
+.cf-nums .ord b{font:600 32px/1 var(--corm);font-variant-numeric:oldstyle-nums;color:var(--o-ouro)}
+.cf-placar.selado .cf-nums b{opacity:.45;letter-spacing:.1em}
+.cf-trilha{list-style:none;margin:6px 0 0;padding:0;display:grid}
+.cf-trilha>li{position:relative;display:grid;grid-template-columns:64px 1fr;gap:12px;padding-bottom:22px}
+.cf-trilha>li::before{content:"";position:absolute;left:30px;top:60px;bottom:-2px;width:4px}
+.cf-trilha.companhia>li::before{background:url(art/os/conflito/tex-aco.webp?v=2) center/64px;box-shadow:0 0 0 1px #0a0f16}
+.cf-trilha.ordem>li::before{width:2px;left:31px;background:linear-gradient(180deg,var(--o-ouro-s),#2a2016)}
+.cf-trilha>li:last-child::before{display:none}
+.cf-marco{position:relative;display:grid;place-items:center;width:64px;height:64px}
+.cf-marco img{width:64px;height:64px}
+.cf-trilha.ordem .cf-marco img{width:46px;height:auto;max-height:64px}
+.cf-trilha li.ok .cf-marco b{display:none}
+.cf-marco b{position:absolute;font:500 13px/1 var(--mono);color:var(--c-acento)}
+.cf-trilha li:not(.ok) .cf-marco{filter:brightness(.7)}
+.cf-trilha li:not(.ok) .cf-marco b{color:var(--c-sombra)}
+.cf-marco-tx{padding-top:6px}
+.cf-trilha h4{margin:0;font:600 17px/1.1 var(--m-tit);color:var(--m-tx)}
+.cf-trilha.companhia h4{text-transform:uppercase;letter-spacing:.1em;font-size:15px}
+.cf-trilha.ordem h4{font-variant:small-caps;font-size:20px}
+.cf-meta{display:block;margin-top:2px;font:500 12px/1.2 var(--m-num);color:var(--tx2)}
+.cf-trilha.ordem .cf-meta{font-variant-numeric:oldstyle-nums;font-size:14px}
+.cf-premios{list-style:none;margin:10px 0 0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(88px,1fr));gap:8px}
+.cf-premios li{display:grid;justify-items:center;gap:4px;padding:8px 6px;text-align:center;font:400 11px/1.3 var(--plex);color:var(--m-tx);background:rgba(8,9,13,.45)}
+.cf-trilha.companhia .cf-premios li{clip-path:polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px);box-shadow:inset 0 0 0 1px rgba(112,123,138,.35)}
+.cf-trilha.ordem .cf-premios li{border-radius:16px 16px 2px 2px/10px 10px 2px 2px;box-shadow:inset 0 0 0 1px rgba(110,84,40,.5);font-family:var(--gara);font-size:12px}
+.cf-premios img{width:40px;height:40px}
+.cf-cena{display:inline-flex;align-items:center;gap:6px;margin-top:10px;padding:6px 10px;font:500 12px/1 var(--plex);color:var(--m-acento);background:rgba(8,9,13,.55);box-shadow:inset 0 0 0 1px var(--m-fio)}
+.cf-cena svg{width:12px;height:12px;fill:currentColor}
+.cf-falta{display:grid;gap:5px;margin-top:10px;font:500 12px/1 var(--m-num);color:var(--tx2)}
+.cf-falta i{display:block;height:3px;background:var(--ferro);position:relative}
+.cf-falta i::after{content:"";position:absolute;inset:0 auto 0 0;width:calc(var(--p) * 100%);background:var(--m-acento)}
+.cf-silhueta{display:grid;gap:12px;justify-items:center;text-align:center}
+.cf-silhueta p{font:italic 500 17px/1.4 var(--corm);color:var(--osso)}
+.cf-mini{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%}
+.cf-mini button{display:grid;justify-items:center;gap:6px;padding:14px 8px;border:0;cursor:pointer}
+.cf-mini img{width:56px;height:56px}
+.cf-mini .companhia{background:url(art/os/conflito/tex-dossie.webp?v=2) center/200px;box-shadow:inset 0 0 0 1px rgba(200,206,214,.35);font:600 12px/1.15 var(--bsc);letter-spacing:.08em;text-transform:uppercase;color:var(--c-prata)}
+.cf-mini .ordem{background:url(art/os/conflito/tex-grimorio.webp?v=2) center/200px;box-shadow:inset 0 0 0 1px rgba(176,138,69,.5);border-radius:22px 22px 2px 2px/14px 14px 2px 2px;font:600 15px/1.1 var(--corm);font-variant:small-caps;color:var(--o-ouro)}
+.cf-regras{padding:12px 14px;background:rgba(8,9,13,.45);box-shadow:inset 0 1px 0 var(--ferro)}
+.cf-regras summary{cursor:pointer;font:600 11px/1.2 var(--cinzel);letter-spacing:.2em;text-transform:uppercase;color:var(--tx2);min-height:28px;display:flex;align-items:center}
+.cf-regras p{margin-top:10px;font:400 14px/1.55 var(--plex);color:var(--tx2);max-width:60ch}
+
+/* ---------- Loja ---------- */
+.cf-loja-topo{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.cf-loja-topo h3{margin:0;font:600 20px/1.1 var(--m-tit);color:var(--m-tx)}
+#cf[data-lado=companhia] .cf-loja-topo h3{text-transform:uppercase;letter-spacing:.1em;font-size:17px}
+#cf[data-lado=ordem] .cf-loja-topo h3{font-variant:small-caps;font-size:23px}
+.cf-saldo{display:grid;grid-template-columns:auto auto;align-items:center;column-gap:8px}
+.cf-saldo img{grid-row:span 2;width:34px;height:34px}
+.cf-saldo b{font:500 26px/1 var(--m-num);color:var(--m-acento)}
+#cf[data-lado=ordem] .cf-saldo b{font-weight:600;font-size:30px;font-variant-numeric:oldstyle-nums}
+.cf-saldo small{font:500 10px/1 var(--plex);letter-spacing:.14em;text-transform:uppercase;color:var(--tx2)}
+.cf-itens{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@container (min-width:620px){.cf-itens{grid-template-columns:repeat(3,1fr)}.cf-abre{max-width:52ch}}
+.cf-item-bt{position:relative;width:100%;height:100%;min-height:250px;display:grid;grid-template-rows:auto 1fr auto auto;gap:6px;padding:0 0 0;border:0;cursor:pointer;overflow:hidden;background:var(--m-placa)}
+#cf[data-lado=companhia] .cf-item-bt{background:linear-gradient(180deg,rgba(23,34,52,.3),rgba(13,21,32,.9)),url(art/os/conflito/tex-dossie.webp?v=2) center/220px;clip-path:polygon(10px 0,100% 0,100% calc(100% - 10px),calc(100% - 10px) 100%,0 100%,0 10px);box-shadow:inset 0 0 0 1px rgba(112,123,138,.45)}
+#cf[data-lado=ordem] .cf-item-bt{background:linear-gradient(180deg,rgba(42,14,17,.25),rgba(18,7,9,.92)),url(art/os/conflito/tex-grimorio.webp?v=2) center/220px;border-radius:40px 40px 2px 2px/22px 22px 2px 2px;box-shadow:inset 0 0 0 1px rgba(176,138,69,.5),inset 0 0 0 4px rgba(18,7,9,.4),inset 0 0 0 5px rgba(110,84,40,.45)}
+.cf-vitrine{position:relative;display:block;height:120px}
+.cf-vitrine .cf-ped{position:absolute;left:50%;bottom:0;width:120px;height:auto;translate:-50% 0;opacity:.95}
+.cf-vitrine .cf-obj{position:absolute;left:50%;bottom:34px;width:84px;height:84px;translate:-50% 0;filter:drop-shadow(0 6px 8px rgba(0,0,0,.7))}
+#cf[data-lado=ordem] .cf-vitrine .cf-obj{bottom:30px;width:70px;height:70px}
+.cf-item-nome{align-self:start;padding:0 10px;font:600 15px/1.2 var(--m-tit);color:var(--m-tx)}
+#cf[data-lado=companhia] .cf-item-nome{font-size:13px;letter-spacing:.07em;text-transform:uppercase}
+#cf[data-lado=ordem] .cf-item-nome{font-size:17px;font-variant:small-caps}
+.cf-estoque{display:grid;gap:4px;padding:0 10px}
+.cf-estoque small{font:400 11px/1.2 var(--plex);color:var(--tx2)}
+.cf-entalhes{display:flex;flex-wrap:nowrap;gap:2px;justify-content:center}
+.cf-entalhes i{flex:1 1 0;min-width:1px;max-width:4px;height:9px;background:var(--m-acento);opacity:.9}
+.cf-entalhes i.ido{background:var(--ferro);opacity:.8}
+.cf-regua-estoque{display:block;height:6px;background:var(--m-acento);position:relative;box-shadow:inset 0 0 0 1px rgba(0,0,0,.4)}
+.cf-regua-estoque i{position:absolute;inset:0 auto 0 0;width:calc(var(--p) * 100%);background:var(--ferro)}
+.cf-preco{display:flex;align-items:baseline;justify-content:center;gap:5px;min-height:44px;align-items:center;font:500 18px/1 var(--m-num);color:#0b0d12}
+#cf[data-lado=companhia] .cf-preco{background:url(art/os/conflito/tex-aco.webp?v=2) center/256px;color:#EEF2F6;box-shadow:inset 0 1px 0 var(--c-prata)}
+#cf[data-lado=ordem] .cf-preco{background:linear-gradient(180deg,rgba(126,31,36,.6),rgba(90,20,25,.6)),url(art/os/conflito/tex-veludo.webp?v=2) center/256px;color:var(--o-tx);font-size:21px;font-weight:600;font-variant-numeric:oldstyle-nums;box-shadow:inset 0 1px 0 var(--o-ouro)}
+.cf-preco small{font:500 10px/1 var(--plex);letter-spacing:.14em;text-transform:uppercase;opacity:.8}
+.cf-preco.falta{filter:grayscale(.6) brightness(.7)}
+.cf-item.esgotado .cf-item-bt{cursor:default}
+.cf-item.esgotado .cf-vitrine,.cf-item.esgotado .cf-item-nome,.cf-item.esgotado .cf-estoque,.cf-item.esgotado .cf-preco{filter:grayscale(.8) brightness(.45)}
+.cf-carimbo{position:absolute;left:50%;top:40%;translate:-50% -50%;rotate:-22deg;display:grid;place-items:center;width:150px}
+.cf-carimbo img{width:150px;height:auto}
+.cf-carimbo b{position:absolute;font:700 16px/1 var(--cinzel);letter-spacing:.2em;text-transform:uppercase}
+#cf[data-lado=companhia] .cf-carimbo b{color:#7d9cc4}
+#cf[data-lado=ordem] .cf-carimbo b{color:var(--o-tx);font-size:12px}
+.cf-aviso{padding:12px 14px;background:rgba(8,9,13,.5);box-shadow:inset 3px 0 0 var(--ferrugem)}
+.cf-aviso p{font:400 13px/1.5 var(--plex);color:var(--tx2);max-width:60ch}
+.cf-aviso p+p{margin-top:6px}
+
+/* ---------- gavetas e cena de troca ---------- */
+.cf-veu{position:absolute;inset:0;z-index:60;display:grid;align-items:end;overflow:hidden;color:var(--osso);font:400 15px/1.55 var(--plex);background:rgba(4,4,6,.72);animation:cf-veu .25s ease-out}
+@keyframes cf-veu{from{opacity:0}}
+.cf-gaveta{display:grid;gap:12px;max-height:88dvh;overflow:auto;padding:22px 18px calc(16px + env(safe-area-inset-bottom));background:var(--nevoa);box-shadow:0 -1px 0 var(--ferro);animation:cf-sobe .3s ease-out;max-width:560px;width:100%;margin:0 auto}
+@keyframes cf-sobe{from{translate:0 40px}}
+.cf-veu[data-mat=companhia] .cf-gaveta{background:linear-gradient(180deg,rgba(13,21,32,.6),rgba(13,21,32,.95)),url(art/os/conflito/tex-dossie.webp?v=2) center/256px;box-shadow:0 -2px 0 var(--c-prata);clip-path:polygon(16px 0,calc(100% - 16px) 0,100% 16px,100% 100%,0 100%,0 16px)}
+.cf-veu[data-mat=ordem] .cf-gaveta{background:linear-gradient(180deg,rgba(18,7,9,.5),rgba(18,7,9,.95)),url(art/os/conflito/tex-grimorio.webp?v=2) center/256px;box-shadow:0 -2px 0 var(--o-ouro);border-radius:40px 40px 0 0/22px 22px 0 0}
+.cf-gaveta h3{margin:0;font:600 22px/1.15 var(--cinzel);color:var(--osso);outline:none;text-align:center}
+.cf-veu[data-mat=companhia] .cf-gaveta h3{font:600 20px/1.15 var(--bsc);letter-spacing:.1em;text-transform:uppercase;color:var(--c-prata)}
+.cf-veu[data-mat=ordem] .cf-gaveta h3{font:600 26px/1.1 var(--corm);font-variant:small-caps;color:var(--o-ouro)}
+.cf-gaveta p{font:400 15px/1.55 var(--plex);color:var(--osso)}
+.cf-veu[data-mat=ordem] .cf-gaveta p{font:400 17px/1.5 var(--gara);color:var(--o-tx)}
+.cf-g-bra{width:96px;height:96px;margin:0 auto}
+.cf-vitrine.grande{height:190px}
+.cf-vitrine.grande .cf-ped{width:190px}
+.cf-vitrine.grande .cf-obj{width:130px;height:130px;bottom:52px}
+.cf-conta{display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px;font:500 13px/1.3 var(--mono)!important;color:var(--tx2)!important}
+.cf-conta b{color:var(--osso)}
+.cf-falta-k{color:var(--osso)!important;box-shadow:inset 3px 0 0 var(--ferrugem);padding-left:10px}
+.cf-bts{display:grid;gap:8px;margin-top:4px}
+.cf-bts button{min-height:50px;border:0;cursor:pointer;font:600 15px/1 var(--plex);color:var(--osso);background:transparent;box-shadow:inset 0 0 0 1px var(--ferro)}
+.cf-bts .companhia,.cf-bts .sim.companhia{background:url(art/os/conflito/tex-aco.webp?v=2) center/256px;box-shadow:inset 0 0 0 1px var(--c-prata);font:600 15px/1 var(--bsc);letter-spacing:.12em;text-transform:uppercase;clip-path:polygon(10px 0,calc(100% - 10px) 0,100% 10px,100% calc(100% - 10px),calc(100% - 10px) 100%,10px 100%,0 calc(100% - 10px),0 10px)}
+.cf-bts .ordem,.cf-bts .sim.ordem{background:linear-gradient(180deg,rgba(126,31,36,.6),rgba(90,20,25,.6)),url(art/os/conflito/tex-veludo.webp?v=2) center/256px;box-shadow:inset 0 0 0 1px var(--o-ouro);font:600 19px/1 var(--corm);font-variant:small-caps;color:var(--o-tx);border-radius:18px 18px 3px 3px/12px 12px 3px 3px}
+/* na troca: ficar é o botão principal (material de agora); trocar é só contorno, na cor do lado de destino */
+.cf-bts .vai{background:transparent!important;clip-path:none!important;border-radius:0!important}
+.cf-bts .vai.companhia{box-shadow:inset 0 0 0 1px var(--c-acento);color:var(--c-acento)}
+.cf-bts .vai.ordem{box-shadow:inset 0 0 0 1px var(--o-ouro);color:var(--o-ouro)}
+.cf-veu.cena{align-items:safe center;overflow:auto;padding:28px 12px;background:radial-gradient(80% 60% at 50% 25%,#1a1c23,#07080b 75%)}
+.cf-veu.cena .cf-gaveta{border-radius:0;clip-path:none;box-shadow:none;background:none;max-height:none;overflow:visible;animation:none}
+.cf-racha{position:relative;width:150px;height:150px;margin:12px auto 0}
+.cf-racha img{position:absolute;inset:0;width:150px;height:150px;filter:drop-shadow(0 8px 14px #000)}
+.cf-racha img:first-child{clip-path:polygon(0 0,62% 0,42% 100%,0 100%);animation:cf-racha-e .4s ease-out .15s both}
+.cf-racha img:last-child{clip-path:polygon(62% 0,100% 0,100% 100%,42% 100%);animation:cf-racha-d .4s ease-out .15s both}
+@keyframes cf-racha-e{to{translate:-6px 3px;rotate:-3deg}}
+@keyframes cf-racha-d{to{translate:6px -3px;rotate:3deg}}
+.cf-folha{padding:14px;display:grid;gap:8px}
+.cf-folha.companhia{background:url(art/os/conflito/tex-dossie.webp?v=2) center/256px;box-shadow:inset 3px 0 0 var(--c-azul),inset 0 0 0 1px rgba(112,123,138,.4)}
+.cf-folha.ordem{background:url(art/os/conflito/tex-grimorio.webp?v=2) center/256px;box-shadow:inset 0 0 0 1px rgba(176,138,69,.45);border-radius:18px 18px 2px 2px/12px 12px 2px 2px}
+.cf-folha.ordem p{font:400 16px/1.5 var(--gara)!important;color:var(--o-tx)!important}
+.cf-folha.companhia p{font:400 14px/1.55 var(--plex)!important;color:#CFD5DD!important}
+.cf-fiel{display:grid;justify-items:center;gap:6px}
+.cf-fiel span{display:flex;gap:10px;align-items:end}
+.cf-fiel img{width:40px;height:40px}
+.cf-fiel small{display:flex;align-items:center;gap:6px;font:italic 500 16px/1.3 var(--corm);color:var(--osso)}
+.cf-fiel small::before{content:"";width:8px;height:8px;rotate:45deg;background:var(--ferrugem)}
+.cf-certeza{font:italic 500 20px/1.35 var(--corm)!important;color:var(--osso)!important;text-align:center}
+@media (prefers-reduced-motion:reduce){.cf-veu,.cf-gaveta,.cf-racha img{animation:none}.cf-sombra{transition:none}}
+#cf[data-lado=companhia] .cf-vitrine .cf-obj{bottom:56px;width:70px;height:70px;z-index:1;filter:drop-shadow(0 3px 2px rgba(0,0,0,.85))}
+#cf[data-lado=companhia] .cf-vitrine .cf-ped{z-index:0}
+.jan[data-sis=conflito] .corpo{padding-bottom:0;margin-bottom:0}
+@container (min-width:620px){#cf .cf-titulo{left:28px;right:auto;bottom:70px;justify-items:start;text-align:left}}

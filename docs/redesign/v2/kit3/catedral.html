@@ -1,0 +1,321 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>DEVO v2 · Catedral de Damasco</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600&display=swap">
+<style>
+/* Catedral de Damasco (Ordem Ortodoxa): sem roxo (dono, 02/11): pedra fria, ferro, ouro velho e vermelho-sangue.
+   Catedral de Damasco (Ordem Ortodoxa), destino de "Sair de casa". Textos literais do Rup
+   (docs/redesign/v2/NOTAS-RUP-02-11.md, itens 9, 10 e 11). Cenário em pixel, Erick Zorak em meio pixel, como a Melissa. */
+:root{--noite:#100c0c;--por:#EEE7DC;--tinta:#1d1716;--ame:#4a1c1f;--vio:#8a2a2e;--steel:#c9b78e;--teal:#7df5e0;--vinho:#7a2233;--font:"Pixelify Sans",monospace}
+*{box-sizing:border-box;margin:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;background:var(--noite);overflow:hidden;font-family:var(--font);color:var(--por)}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+button:focus-visible{outline:3px solid var(--teal);outline-offset:2px}
+#cena{position:fixed;inset:0;background:var(--noite) center/cover no-repeat;image-rendering:pixelated;transition:filter .4s}
+#cena::after{content:"";position:absolute;inset:0;background:radial-gradient(70% 60% at 50% 40%,transparent 40%,rgba(6,4,4,.85));pointer-events:none}
+#cena.escuro,#palco.escuro{filter:brightness(.25)}
+#palco{transition:filter .4s}
+/* cena com chibis (dono, 06/11: "Rosto na caixa"): o retrato grande sai; o Erick e você ficam no cenário, na escala da
+   arte do fundo, e a caixa mostra o rostinho da pose dele */
+#palco{position:fixed;left:0;top:0;width:768px;height:512px;transform-origin:0 0;pointer-events:none;z-index:1}
+#palco[hidden]{display:none}
+#palco .eu{position:absolute;width:80px;height:96px;margin:-96px 0 0 -40px;image-rendering:pixelated}
+#palco .eu-sombra{position:absolute;width:40px;height:12px;margin:-6px 0 0 -20px;background:rgba(5,2,10,.5);clip-path:polygon(15% 0,85% 0,100% 33%,100% 67%,85% 100%,15% 100%,0 67%,0 33%)}
+.caixa .rosto{position:absolute;left:10px;bottom:calc(100% + 12px);background:#1b1414 no-repeat;image-rendering:pixelated;box-shadow:0 0 0 3px var(--tinta),0 0 0 6px var(--steel)}
+.caixa .rosto[hidden]{display:none}
+#fig{position:fixed;left:50%;top:max(104px,13vh);height:min(1300px,calc((100dvh - max(104px,13vh) - 130px) * 1.5));translate:-50% 0;image-rendering:pixelated;filter:drop-shadow(0 10px 18px rgba(0,0,0,.7));pointer-events:none;z-index:2}
+#fig[hidden]{display:none}
+#fig.inteiro{top:auto;bottom:170px;height:min(62vh,700px);clip-path:none}
+
+@keyframes surge{from{opacity:0}}
+#topo{position:fixed;left:10px;right:10px;top:max(10px,env(safe-area-inset-top));z-index:5;display:flex;gap:8px;pointer-events:none}
+#topo>*{pointer-events:auto;min-height:48px;background:var(--por);color:var(--tinta);box-shadow:0 0 0 3px var(--tinta),0 0 0 5px var(--steel);font-weight:600;font-size:18px;padding:0 12px}
+#lugar{flex:1;display:flex;align-items:center;justify-content:center;background:var(--ame);color:var(--por);font-size:19px;white-space:nowrap;overflow:hidden}
+#sair{min-width:48px;font-size:24px}
+/* caixa de diálogo (mesmo padrão da Casa) */
+#vn{position:fixed;left:0;right:0;bottom:0;z-index:4;padding:0 10px calc(max(12px,env(safe-area-inset-bottom)) + 8px);cursor:pointer}
+#vn[hidden]{display:none}
+.caixa{position:relative;width:100%;max-width:620px;min-height:150px;margin:0 auto;background:var(--por);color:var(--tinta);padding:12px 16px 14px;box-shadow:0 0 0 3px var(--tinta),0 0 0 6px var(--steel)}
+.nome{display:block;font-size:18px;color:var(--vio)}
+.tx{height:calc(4 * 1.28em);overflow:hidden;font-size:20px;line-height:1.28;margin-top:2px;white-space:pre-line}
+#vn:has(.esc button) .tx{height:auto;max-height:calc(4 * 1.28em)}
+.seg{position:absolute;right:12px;bottom:6px;font-size:14px;color:#6a5a80;animation:pisca 1s steps(2) infinite}
+@keyframes pisca{50%{opacity:0}}
+.esc{display:grid;gap:8px;margin-top:10px}
+.esc:empty{display:none}
+.esc button{min-height:48px;padding:6px 12px;text-align:left;background:var(--ame);color:var(--por);font-size:18px;font-weight:600;box-shadow:0 0 0 3px var(--steel)}
+#vn[data-quem=narra] .tx{font-style:italic;color:#3a2a2a}
+#vn[data-quem=sistema] .caixa{background:var(--tinta);color:var(--por)}
+#vn[data-quem=sistema] .nome{color:var(--teal)}
+#vn[data-quem=jogador] .nome{color:#2f6b5a}
+#vn[data-quem=jogador] .tx{font-style:italic}
+/* altar: orar e oferendas */
+#altar{position:fixed;left:0;right:0;bottom:0;z-index:4;max-height:78dvh;overflow-y:auto;padding:14px 12px calc(max(14px,env(safe-area-inset-bottom)) + 4px);background:linear-gradient(180deg,rgba(20,15,14,.92),rgba(20,15,14,.98));box-shadow:0 -3px 0 var(--steel)}
+#altar[hidden]{display:none}
+#altar h2{font-size:24px;font-weight:600}
+#altar .sub{font-size:16px;color:#d8cfc4;margin:4px 0 10px;line-height:1.25}
+.lista{display:grid;gap:8px;max-width:620px;margin:0 auto}
+.op{display:grid;gap:4px;width:100%;padding:10px 12px;text-align:left;background:var(--tinta);box-shadow:0 0 0 3px var(--steel)}
+.op b{font-size:20px;font-weight:600}
+.op small{font-size:15px;color:#d8cfc4;line-height:1.25}
+.op .prob{display:flex;gap:4px;margin-top:4px}
+.op .prob i{flex:var(--p);height:22px;display:grid;place-items:center;font-size:12px;font-style:normal;white-space:nowrap;overflow:hidden;color:#130e1b}
+.prob .nada{background:#8a8580}.prob .ben{background:#c9b78e}.prob .mal{background:#c46a7a}
+.op:disabled{opacity:.5;cursor:default}
+.op em{font-style:normal;font-size:14px;color:var(--steel)}
+.voltar{margin-top:6px;min-height:48px;width:100%;max-width:620px;display:block;margin-inline:auto;background:transparent;box-shadow:0 0 0 3px var(--steel);font-size:18px}
+/* resultado do ritual */
+#res{position:fixed;inset:0;z-index:8;display:grid;place-content:center;justify-items:center;gap:10px;padding:24px;text-align:center;background:rgba(8,5,14,.95);cursor:pointer}
+#res[hidden]{display:none}
+#res .selo{width:72px;height:72px;transform:rotate(45deg);background:var(--c);box-shadow:0 0 0 4px #100b18,0 0 0 8px var(--steel);animation:surge2 .5s steps(5)}
+@keyframes surge2{from{transform:rotate(45deg) scale(.2)}}
+#res small{margin-top:16px;font-size:16px;color:var(--steel)}
+#res strong{font-size:30px;font-weight:600}
+#res p{max-width:30ch;font-size:19px;line-height:1.3;color:#ece4da}
+#res .k{font-size:15px;color:#9a8db0}
+#teste{position:fixed;right:10px;top:calc(max(10px,env(safe-area-inset-top)) + 64px);z-index:6;display:flex;gap:4px;background:rgba(18,13,12,.88);padding:4px 6px;font-size:14px;box-shadow:0 0 0 2px #5e5148}
+#teste button{min-height:32px;padding:0 8px;background:#2a211f}
+#vn .nome[data-sinal]:not([data-sinal=""])::after{content:" " attr(data-sinal);color:var(--steel)}
+@media (prefers-reduced-motion:reduce){.seg,#fig.surge,#res .selo{animation:none}}
+</style>
+</head>
+<body>
+<div id="cena" aria-hidden="true"></div>
+<div id="palco" aria-hidden="true" hidden></div>
+<img id="fig" alt="" hidden>
+<div id="topo"><button id="sair" aria-label="Voltar para casa">‹</button><div id="lugar">Catedral de Damasco</div></div>
+<div id="teste" aria-label="Controle de teste"><button id="t-primeira">1ª visita</button><button id="t-volta">Visita comum</button></div>
+<section id="vn" hidden aria-live="polite"><div class="caixa"><i class="rosto" hidden></i><b class="nome"></b><p class="tx"></p><div class="esc"></div><small class="seg">▼</small></div></section>
+<section id="altar" hidden aria-label="Altar"></section>
+<section id="res" hidden role="dialog" aria-label="Resultado do ritual"><span class="selo" aria-hidden="true"></span><small></small><strong></strong><p></p><span class="k">Toque para continuar</span></section>
+
+<script src="avatar-cor.js?v=202611071700"></script>
+<script src="balao.js?v=202611030500"></script>
+<script src="npc-vn.js?v=202611060800"></script>
+<script src="npc-chibi.js?v=202611060800"></script>
+<script>
+const $=i=>document.getElementById(i),q=new URLSearchParams(location.search);
+const ap=(typeof aparenciaSalva==='function'&&aparenciaSalva())||{},g=(m,f)=>ap.corpo?m:f;
+const ler=(k,d)=>{try{const v=localStorage.getItem(k);return v===null?d:JSON.parse(v)}catch{return d}};
+const grava=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch{}};
+const sorteia=l=>l[Math.floor(Math.random()*l.length)];
+const cena=(img,escuro)=>{$('cena').style.backgroundImage=`url(art/catedral/${img}.png?v=202611030500)`;$('cena').classList.toggle('escuro',!!escuro);$('palco').classList.toggle('escuro',!!escuro);cenaAtual=img;palco.mostra(img==='dentro'&&modoPalco)};
+let cenaAtual='';
+/* palco: os chibis por cima do fundo, na mesma escala e no mesmo recorte do "cover" do fundo (768x512, centralizado).
+   O Erick fica no corredor, perto dos degraus do altar, de frente; você fica alguns passos para trás, olhando para ele */
+const palco=(()=>{
+  const el=$('palco'),ERICK=[385,300],VOCE=[385,396];
+  const ajusta=()=>{const k=Math.max(innerWidth/768,innerHeight/512);el.style.transform=`translate(${Math.round((innerWidth-768*k)/2)}px,${Math.round((innerHeight-512*k)/2)}px) scale(${k})`};
+  ajusta();addEventListener('resize',ajusta);
+  let e=null,eu=null,euDir=3;
+  const pintaEu=()=>{if(eu)eu.style.backgroundPosition=`0 -${euDir*96}px`};
+  const ap=typeof aparenciaSalva==='function'&&aparenciaSalva();
+  if(ap&&typeof folhaAndar==='function')folhaAndar(ap).then(cv=>{
+    const sb=document.createElement('i');sb.className='eu-sombra';sb.style.cssText=`left:${VOCE[0]}px;top:${VOCE[1]}px;z-index:${VOCE[1]-1}`;
+    eu=document.createElement('i');eu.className='eu';eu.style.cssText+=`left:${VOCE[0]}px;top:${VOCE[1]}px;z-index:${VOCE[1]};background-image:url(${cv.toDataURL()});background-size:${cv.width}px ${cv.height}px`;
+    el.append(sb,eu);pintaEu()}).catch(()=>{});
+  return {
+    mostra(on){el.hidden=!on},
+    get erick(){return e&&e.visivel?e:null},
+    erickAparece(on){
+      if(on&&!e){e=NPCChibi.cria('erick',{mundo:el,x:ERICK[0],y:ERICK[1],dir:0,versao:'202611060700',bocaMs:150,piscar:[3.5,7.5],piscaMs:160,resp:4.4});e.visivel=true}
+      else if(e){e.mostra(on);e.visivel=on}
+    },
+    vira(d){euDir=d;pintaEu()},
+  };
+})();
+// nas falas, do busto para cima (dono, 02/11); corpo inteiro só em cena especial (a primeira vez que ele aparece)
+const ARTE_V='202611030500';
+// motor das figuras (npc-vn.js): o Erick quase não se mexe; a quietude é dele. Respira devagar (4,4 s), voz grave.
+const ERICK_POSES=['neutro','livro','sorriso','suspiro','observando','interessado','decepcionado','convite'];
+const ERICK_REAGE={suspiro:'murchaLenta',interessado:'inclina',decepcionado:'ergue',sorriso:'nada',neutro:'nada',observando:'nada',convite:'nada',livro:'nada'};
+const erickSrc=p=>`art/catedral/erick-${p}.png?v=${ARTE_V}`;
+const npcE=typeof NPCVN!=='undefined'?NPCVN.monta($('fig'),{boca:()=>palco.erick,voz:{tipo:'triangle',f0:180,f1:220,dur:45,cada:4,vol:.07},resp:4.4,nome:()=>document.querySelector('#vn .nome'),caixa:()=>document.querySelector('#vn .caixa'),rosto:'art/catedral/anim/',versao:'202611060600',piscar:[3.5,7.5],piscaMs:160,bocaMs:150,letraMs:34}):null;
+npcE&&npcE.precarrega(ERICK_POSES.map(erickSrc));NPCVN.preRostos(ERICK_POSES.map(erickSrc));
+// vira: o susto da narração ("O susto me faz virar…"): a cena corre de lado em 2 quadros e ele está lá, de corte
+async function vira(){
+  if(!NPCVN.calmo){const c=$('cena');await c.animate([{backgroundPosition:'50% 50%'},{backgroundPosition:'58% 50%'},{backgroundPosition:'50% 50%'}],{duration:160,easing:'steps(2,end)'}).finished.catch(()=>{})}
+}
+let erickPedido=0;
+// dois modos (dono, 06/11): "nas interações normais, deixe assim [chibis no cenário, rostinho na caixa]. porém
+// diálogos mais longos (como a própria primeira aparição), deixe o NPC ocupando a tela mesmo" → retrato grande
+let poseErick=null,modoPalco=false;
+function usaPalco(on){
+  modoPalco=on;palco.mostra(on&&cenaAtual==='dentro');
+  if(on){$('fig').hidden=true;npcE&&npcE.mostra(false);if(poseErick)palco.erickAparece(true)}
+  else{palco.erickAparece(false);NPCVN.rostinho(document.querySelector('#vn .rosto'),null)}
+}
+const erick=async(pose,inteiro,{reage,entra}={})=>{
+  const meu=++erickPedido;
+  const f=$('fig');
+  if(modoPalco){
+    f.hidden=true;npcE&&npcE.mostra(false);
+    if(!pose){poseErick=null;palco.erickAparece(false);return}
+    const aparece=!palco.erick;
+    if(aparece&&entra==='vira'){await vira();palco.vira(3)}
+    if(meu!==erickPedido)return;
+    poseErick=pose;palco.erickAparece(true);
+    return;
+  }
+  poseErick=pose||null;
+  if(!pose){f.hidden=true;npcE&&npcE.mostra(false);return}
+  const aparece=f.hidden;f.classList.toggle('inteiro',!!inteiro);
+  if(!npcE){f.hidden=false;f.src=erickSrc(pose);return}
+  if(aparece&&entra==='vira'){await vira();palco.vira(3)}
+  if(meu!==erickPedido)return;
+  if(aparece){await npcE.pose(erickSrc(pose),{mesma:true});f.hidden=false;npcE.mostra(true);return}
+  npcE.escala();await npcE.pose(erickSrc(pose),{reage:reage||ERICK_REAGE[pose]});
+};
+
+/* ---------- motor de diálogo (o mesmo modelo da visita do Simon) ---------- */
+function dialogo(NOS,inicio,aoFim){
+  let fila=[],no=null,espera=false,pronto=0;
+  const box=$('vn'),s=x=>box.querySelector(x);
+  function vai(id){no=NOS[id];if(no.efeito)no.efeito();fila=[...no.falas];passo()}
+  let ocupado=false;
+  async function passo(){
+    if(npcE&&npcE.completa())return; // o primeiro toque completa o texto
+    if(performance.now()<pronto||ocupado)return;
+    ocupado=true;try{await passo2()}finally{ocupado=false}
+  }
+  async function passo2(){
+    let f=fila.shift();
+    if(!f){if(no.escolha)return escolhe(no.escolha);if(no.proximo)return vai(no.proximo);box.hidden=true;box.onclick=null;return aoFim&&aoFim(no.fim)}
+    if(f.antes&&!f.cont)await f.antes();
+    // balão de tamanho fixo: o que não cabe vira o balão seguinte, com o mesmo falante
+    if(!f.cont){const pags=paginar(s('.tx'),f.t);if(pags.length>1){fila.unshift(...pags.slice(1).map(t=>({...f,t,cont:true})));f={...f,t:pags[0]}}}
+    box.dataset.quem=f.q==='narra'?'narra':f.q==='Sistema'?'sistema':f.q==='Jogador'?'jogador':'npc';
+    s('.nome').textContent=f.q==='narra'?'':f.q==='Jogador'?'Você':f.q;
+    NPCVN.rostinho(s('.rosto'),modoPalco&&(f.q==='Erick Zorak'||f.q==='???')&&palco.erick&&poseErick?erickSrc(poseErick):null);
+    s('.esc').innerHTML='';s('.seg').hidden=true;espera=false;pronto=q.has('semraf')?0:performance.now()+120;
+    const fim=()=>{s('.seg').hidden=false};
+    if(npcE)npcE.fala(s('.tx'),f.t,fim,{comVoz:f.q==='Erick Zorak'||f.q==='???'});else{s('.tx').textContent=f.t;fim()}
+  }
+  function escolhe(ops){espera=true;s('.seg').hidden=true;
+    s('.esc').innerHTML=ops.map(([t,id],i)=>`<button data-id="${id}">${i+1} — ${t}</button>`).join('');
+    s('.esc').querySelectorAll('button').forEach(b=>b.onclick=e=>{e.stopPropagation();vai(b.dataset.id)});
+    s('.esc button').focus({preventScroll:true})}
+  box.hidden=false;box.onclick=()=>{if(!espera)passo()};vai(inicio);
+}
+const N=(t,antes)=>({q:'narra',t,antes}),J=t=>({q:'Jogador',t}),E=(t,pose='neutro',quem='Erick Zorak')=>({q:quem,t,antes:()=>erick(pose)}),SIS=t=>({q:'Sistema',t});
+
+/* ---------- item 9: Ordem Ortodoxa, primeiro diálogo (literal) ---------- */
+function primeiraVisita(){
+  usaPalco(false);cena('fora');erick(null);palco.vira(0);$('altar').hidden=true; // diálogo longo: retrato grande
+  const NOS={
+    a:{falas:[J('“O mundo não possui mais as mesmas cores desde que esses acontecimentos estranhos começaram a fazer parte da minha vida.”'),J('“Talvez exista algum lugar onde eu ainda possa me sentir bem.”'),J('“Ouvi dizer que existe uma igreja nas redondezas...”'),J('“Eu deveria ir até lá.”'),
+      N('[ … ]'),N('[Ouço o tinido de um sino pesado.]'),N('[O som é tão alto que sinto vontade de cobrir os ouvidos.]'),
+      N('[Nunca considerei a possibilidade de encontrar algo tão fantasioso nesta cidade. Parece uma igreja antiga, semelhante a uma basílica histórica da qual nunca ouvi falar em lugar algum, nem na internet, nem na televisão. Sua presença transmite uma sensação muito mais pesada e sufocante do que a de qualquer outro templo religioso. Não é acolhedora. É intimidadora.]'),
+      N('[Tanto sua arquitetura quanto o silêncio que a envolve parecem deliberadamente construídos para afastar visitantes. Nada nela me parece convidativo o bastante para despertar o desejo de entrar.]'),
+      N('[E os simbolismos espalhados pela entrada... Embora lembrem vagamente aqueles encontrados em algumas vertentes do cristianismo, são diferentes demais para serem associados a qualquer religião que eu conheça.]'),
+      J('“Mesmo com toda essa arquitetura, duvido que seja um templo comum de alguma religião convencional.”'),J('“É completamente diferente de todos os outros templos pelos quais passei até hoje.”'),
+      J('“Talvez agora, sendo alguma coisa diferente de um ser humano, eu finalmente consiga enxergar essas coisas. Essa energia absurda, essa aura... É completamente sobrenatural. Ela me lembra um Deadly Vote.”'),
+      J('“Será que eu deveria mesmo entrar?”')],
+      escolha:[['[Deixar para outro dia]','casa'],['[Usar a aldrava]','aldrava']]},
+    casa:{falas:[],fim:'casa'},
+    aldrava:{falas:[N('[Som de uma batida pesada.]'),J('“Foi bem mais alto do que eu esperava.”'),N('[ … ]'),N('[Depois de alguns minutos esperando, percebi que ninguém viria me atender.]'),N('[Decidi, então, tentar abrir a porta por conta própria. E, para minha surpresa...]'),N('[Crec.]'),
+      N('[ ... ]',()=>cena('dentro')),J('“É tão grande quanto parecia por fora.”'),J('“Tudo aqui parece tão silencioso. Não vejo ninguém além de mim.”'),J('“Será que vim em um horário ruim?”'),
+      {q:'???',t:'De forma alguma, Record.'},
+      N('[O susto me faz virar imediatamente na direção da voz. Só então percebo a presença de alguém que esteve bem atrás de mim durante todo esse tempo.]',()=>erick('neutro',true,{entra:'vira'})),
+      N('[Era uma figura alta, de aparência masculina, pele acobreada e rosto completamente desprovido de pelos. Seus cabelos eram finos, e vestia uma batina preta, ornamentada com diversos acessórios prateados.]'),
+      E('Não tenha medo.','neutro','???'),E('Estive observando. Apenas fiquei curioso para saber se você realmente entraria ou não...','observando','???')],
+      escolha:[['Quem é você?','q1'],['Como você leu minha mente?','q2'],['Por quê?','q3']]},
+    q1:{falas:[E(`Meu nome é Erick Zorak. Sou o Bispo e humilde aprendiz do Arcebispo desta Catedral que tu, ${g('humilde servo','humilde serva')}, agora contemplas.`,'sorriso','???')],proximo:'obs'},
+    q2:{falas:[E('Perdão, mas isso não parece algo que alguém consiga fazer com tanta facilidade.','neutro','???')],proximo:'obs'},
+    q3:{falas:[E('...','neutro','???')],proximo:'obs'},
+    obs:{falas:[E('Consigo observar as pessoas que passam pela rua lá de cima. Geralmente fico imaginando quem será a próxima a atravessar aquela porta... E gosto de tentar adivinhar.','observando')],
+      escolha:[['O que é este lugar?','l1'],['Aqui não é normal, certo?','l2']]},
+    l1:{falas:[E('Uma Catedral... Conhecida como Igreja Ortodoxa de Damasco. Cuidamos de todos os assuntos que você possa imaginar.')],proximo:'p3'},
+    l2:{falas:[E('Isso quem deve me dizer é você. Para mim, tudo aqui parece completamente normal.','interessado')],proximo:'p3'},
+    p3:{falas:[],escolha:[['Você é um péssimo mentiroso.','r'],['Quero sair daqui. Não sei do que você está falando!','r'],['O que posso conseguir neste lugar?','r']]},
+    r:{falas:[E('[Suspiro...]','suspiro'),E('Eu estava desconfiando. Então é verdade. Você é um de nós.','neutro'),
+      E('Mencionei aquela palavra com R logo no início da nossa conversa. Mas você reagiu tão naturalmente... Nem sequer me perguntou o que eu queria dizer com aquilo. Acho que acabei acertando meu palpite.','sorriso')],
+      escolha:[['...','d'],['Você está errado.','d'],['Isso é verdade.','d'],['E daí?','d']]},
+    d:{falas:[E('Diga-me, o que um Record que nunca vi antes está fazendo por aqui?','observando')],
+      escolha:[[`Estou... ${g('confuso','confusa')}.`,'e12'],['Eu não sei.','e12'],['Senti que este lugar era especial, então decidi entrar.','e3'],['Sou um novato da Companhia de Despertados.','e4']]},
+    e12:{falas:[E('Isso era esperado.')],proximo:'fim'},
+    e3:{falas:[E('Então você sente...','interessado'),SIS('+100 Karma de Caos.')],proximo:'fim',efeito:()=>grava('devo-karma-caos',ler('devo-karma-caos',0)+100)},
+    e4:{falas:[E('É mesmo? Decepcionante.','decepcionado')],proximo:'fim'},
+    fim:{falas:[E('Parece existir muito conflito dentro de você. Talvez devesse aproveitar esta oportunidade que o destino lhe concedeu... Quem sabe este não seja, afinal, o seu verdadeiro lugar?'),
+      E('Por que não aproveita esta oportunidade para orar comigo?','convite'),
+      SIS('[Sistema: Nova área desbloqueada — Catedral de Damasco.]'),SIS('[Sistema: A partir de agora, sempre que sair de casa, você poderá escolher a Catedral de Damasco como um de seus destinos.]'),
+      E('Venha. Tente pelo menos uma vez.','convite')],fim:'altar',efeito:()=>grava('devo-catedral',1)},
+  };
+  dialogo(NOS,'a',fim=>fim==='casa'?vaiCasa():altar());
+}
+
+/* ---------- item 11: saudações e despedidas (literais) ---------- */
+const SAUDA=[`Você de novo? Seja ${g('bem-vindo','bem-vinda')}.`,'Fico feliz que isso tenha se tornado um hábito.','É sempre bom encontrar rostos familiares.','O que há de tão interessante nesta igreja?','Você, hum?','Não sei exatamente no que acredita, mas devo admitir que sua fé é admirável.'];
+const ADEUS=['É um pouco mais cedo do que eu gostaria, mas... até logo.','Já vai, não é? Então, adeus.','É sempre bom ver você... Ficarei aguardando nosso próximo encontro.','Ora, ora. Saindo de fininho, hum? Vá pela sombra.','Ainda consigo enxergar você da torre do sino. Vá pela calçada... E tome cuidado.','[ Suspira tristemente... ]'];
+function visitaComum(){usaPalco(true);palco.vira(3);cena('dentro');const p=sorteia(['sorriso','observando','interessado','livro']);erick(p);dialogo({s:{falas:[E(sorteia(SAUDA),p)],fim:'altar'}},'s',altar)}
+function despede(){$('altar').hidden=true;const t=sorteia(ADEUS);dialogo({d:{falas:[E(t,t.startsWith('[')?'suspiro':sorteia(['neutro','observando','sorriso']))],fim:'casa'}},'d',vaiCasa)}
+function vaiCasa(){$('cena').classList.add('escuro');$('palco').classList.add('escuro');setTimeout(()=>location.href='casa.html?etapa=3'+(q.has('semraf')?'&semraf=1':''),420)}
+
+/* ---------- item 10: altar ---------- */
+const BEN={
+  'Bênção do Amigo':'Faz com que seu NPC favorito apareça em sua residência durante três dias consecutivos, a partir do seu próximo retorno para casa.',
+  'Bênção do Guerreiro':'Reduz passivamente em 50% a perda de Tempo durante 24 horas.',
+  'Bênção do Artista':'Aumenta em 30% suas chances de sucesso na confecção de cartas durante as próximas 4 horas.',
+  'Bênção do Vidente':'Dobra sua recompensa de Tempo uma única vez no próximo Deadly Vote que você vencer.',
+  'Maldição do Alcoólatra':'Reduz em 5% sua afinidade com o NPC favorito.',
+  'Maldição do Tolo':'Aumenta em 25% a velocidade de perda de Tempo durante as próximas 24 horas.',
+  'Maldição do Golpista':'Aumenta em 30% suas chances de falha na confecção de cartas durante as próximas 5 tentativas.',
+  'Maldição do Charlatão':'Reduz em 30% suas recompensas de Tempo nos próximos três Deadly Votes dos quais participar.',
+};
+const OFERENDAS=[
+  {id:'arroz',n:'Arroz Branco',d:'Arroz fresquinho, ainda dentro do pacote. Despeje-o sobre si mesmo para atrair boa sorte.',r:[['Nada',30],['Bênção do Amigo',40],['Maldição do Alcoólatra',30]]},
+  {id:'tambor',n:'Tambor Antigo',d:'Um antigo tambor tribal. Bata nele com força até que se quebre, atraindo energias poderosas.',r:[['Nada',30],['Bênção do Guerreiro',30],['Maldição do Tolo',40]]},
+  {id:'flauta',n:'Flauta de Osso',d:'Uma flauta confeccionada com os ossos de alguém. Toque uma melodia de olhos fechados e aguarde para descobrir o que os espíritos reservaram para você.',r:[['Nada',30],['Bênção do Artista',30],['Maldição do Golpista',40]]},
+  {id:'mascara',n:'Máscara Xamã',d:'A antiga máscara de madeira de um mestre da feitiçaria. Dance enquanto a utiliza e, antes de quebrá-la, pronuncie seu nome em voz alta para tornar possível o impossível.',r:[['Nada',20],['Bênção do Vidente',40],['Maldição do Charlatão',40]]},
+];
+// a Orar o Rup não deu probabilidades nem definiu "Créditos": fica marcado como pendente
+const ORAR=[
+  {id:'saude',n:'A — Desejar por saúde',d:'Possibilidade de receber uma bênção que concede Tempo adicional.'},
+  {id:'estab',n:'B — Desejar estabilidade',d:'Possibilidade de receber uma bênção que concede Créditos adicionais.'},
+  {id:'rel',n:'C — Desejar melhores relações',d:'Possibilidade de receber Essências de Afinidade correspondentes aos três NPCs com os quais você possui os maiores vínculos.'},
+];
+let INV=ler('devo-oferendas',{arroz:2,tambor:1,flauta:1,mascara:1});
+function altar(){
+  usaPalco(true);palco.vira(3);cena('dentro');erick('livro');$('vn').hidden=true;const a=$('altar');a.hidden=false;
+  a.innerHTML=`<div class="lista"><h2>Erick Zorak</h2><p class="sub">O que você deseja fazer?</p>
+    <button class="op" data-v="orar"><b>1 - Orar.</b><small>Mesmo sem oferecer qualquer objeto, você ainda pode realizar uma oração e manifestar determinados desejos.</small></button>
+    <button class="op" data-v="ofer"><b>2 - Oferecer uma oferenda.</b><small>Selecione uma das oferendas disponíveis e realize o ritual correspondente para tentar obter uma bênção ou maldição.</small></button>
+    <button class="voltar" data-v="sair">Sair da Catedral</button></div>`;
+  a.querySelectorAll('[data-v]').forEach(b=>b.onclick=()=>({orar,ofer,sair:despede})[b.dataset.v]());
+}
+function orar(){const a=$('altar');
+  a.innerHTML=`<div class="lista"><h2>Orar</h2><p class="sub">As orações realizadas sem oferendas possuem opções limitadas e resultados mais modestos.</p>
+    ${ORAR.map(o=>`<button class="op" data-o="${o.id}"><b>${o.n}</b><small>[${o.d}]</small></button>`).join('')}
+    <button class="voltar" data-v="v">Voltar</button></div>`;
+  a.querySelector('[data-v]').onclick=altar;
+  a.querySelectorAll('[data-o]').forEach(b=>b.onclick=()=>{const o=ORAR.find(x=>x.id===b.dataset.o);
+    resultado('#c9b78e','Oração',o.n.slice(4),`${o.d} [probabilidade e valor ainda não definidos${o.id==='estab'?'; "Créditos" ainda não existe no jogo':''}]`)})}
+function ofer(){const a=$('altar');
+  a.innerHTML=`<div class="lista"><h2>Oferendas disponíveis</h2><p class="sub">Cada oferenda possui probabilidades próprias de resultado. Portanto, consulte atentamente as informações disponíveis antes de decidir o que deseja sacrificar.</p>
+    ${OFERENDAS.map((o,i)=>{const n=INV[o.id]||0;return `<button class="op" data-f="${o.id}"${n?'':' disabled'}><b>${String(i+1).padStart(2,'0')}. ${o.n} <em>· você tem ${n}</em></b><small>${o.d}</small>
+      <span class="prob">${o.r.map(([r,p])=>`<i class="${r==='Nada'?'nada':r.startsWith('Bênção')?'ben':'mal'}" style="--p:${p}" title="${r} ${p}%">${p}%</i>`).join('')}</span>
+      <small>${o.r.map(([r,p])=>`${r} ${p}%`).join(' · ')}</small></button>`}).join('')}
+    <button class="voltar" data-v="v">Voltar</button></div>`;
+  a.querySelector('[data-v]').onclick=altar;
+  a.querySelectorAll('[data-f]').forEach(b=>b.onclick=()=>{const o=OFERENDAS.find(x=>x.id===b.dataset.f);INV[o.id]--;grava('devo-oferendas',INV);
+    let x=Math.random()*100,r='Nada';for(const [n,p] of o.r){if(x<p){r=n;break}x-=p}
+    if(q.get('forca'))r=o.r[+q.get('forca')][0];
+    resultado(r==='Nada'?'#8a8296':r.startsWith('Bênção')?'#c9b78e':'#c46a7a',o.n,r,r==='Nada'?'Nada aconteceu.':BEN[r])})}
+let resPose=null;
+function resultado(cor,de,tit,txt){const r=$('res');r.style.setProperty('--c',cor);r.querySelector('small').textContent=de;r.querySelector('strong').textContent=tit;r.querySelector('p').textContent=txt;r.hidden=false;
+  resPose=tit.startsWith('Maldição')?['sorriso','inclina']:tit==='Nada'?['suspiro','murchaLenta']:['neutro','nada']}
+$('res').onclick=()=>{$('res').hidden=true;altar();if(resPose){const [p,r]=resPose;resPose=null;erick(p,false,{reage:r})}};
+
+$('sair').onclick=()=>{if(!$('altar').hidden||$('vn').hidden)despede();else vaiCasa()};
+$('t-primeira').onclick=()=>{try{localStorage.removeItem('devo-catedral')}catch{}location.search='?primeira=1'};
+$('t-volta').onclick=()=>{grava('devo-catedral',1);location.search=''};
+if(ler('devo-catedral',0)&&!q.has('primeira'))visitaComum();else primeiraVisita();
+if(q.get('altar')==='ofer'){$('vn').hidden=true;altar();ofer()}
+window.__cat={altar,ofer,orar};
+</script>
+</body>
+</html>

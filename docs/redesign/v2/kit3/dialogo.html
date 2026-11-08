@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>DEVO v2 · diálogo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600&display=swap">
+<style>
+:root{--noite:#16101f;--por:#F4EEE6;--tinta:#231832;--ame:#3a1f5c;--steel:#c9b78e;--font:"Pixelify Sans",monospace;
+  --alt:min(calc(100dvh - 200px),740px)}
+*{box-sizing:border-box;margin:0}
+html,body{height:100%;background:var(--noite);overflow:hidden}
+#cena{position:fixed;inset:0;overflow:hidden;cursor:pointer;background:var(--noite) url(art/quarto.webp) 50% 60%/cover no-repeat;touch-action:manipulation;user-select:none}
+#cena::after{content:"";position:absolute;inset:0;background:linear-gradient(rgba(14,9,24,.62),rgba(14,9,24,.5) 60%,rgba(14,9,24,.82));pointer-events:none}
+#fig{position:absolute;bottom:-6px;left:50%;height:var(--alt);z-index:2;animation:respira 2.6s steps(2) infinite}
+#fig.troca{animation:pulo .18s steps(3)}
+#fig img{position:absolute;left:0;bottom:0;height:100%;width:auto;max-width:none;display:block}
+#fig img.camada{visibility:hidden}
+#fig img.camada.on{visibility:visible}
+@keyframes respira{50%{translate:0 -2px}}
+@keyframes pulo{0%{translate:0 10px}60%{translate:0 -6px}100%{translate:0 0}}
+#balao{position:absolute;z-index:3;left:50%;top:max(26px,calc(env(safe-area-inset-top) + 18px));transform:translateX(-50%);width:min(calc(100% - 28px),560px);min-height:132px;background:var(--por);color:var(--tinta);padding:24px 18px 28px;font:500 clamp(21px,5.6vw,27px)/1.18 var(--font);
+  box-shadow:0 -3px 0 var(--tinta),0 3px 0 var(--tinta),-3px 0 0 var(--tinta),3px 0 0 var(--tinta),0 -6px 0 var(--steel),0 6px 0 var(--steel),-6px 0 0 var(--steel),6px 0 0 var(--steel),10px 14px 0 rgba(5,3,10,.55)}
+#balao::after{content:"";position:absolute;left:var(--cauda,50%);bottom:-27px;margin-left:-16px;width:32px;height:24px;background:var(--por);clip-path:polygon(0 0,100% 0,100% 25%,75% 25%,75% 50%,62% 50%,62% 75%,50% 75%,50% 100%,38% 100%,38% 50%,25% 50%,25% 25%,0 25%)}
+#nome{position:absolute;left:12px;top:-15px;background:var(--ame);color:var(--por);padding:2px 12px 3px;font:600 20px/1.1 var(--font);box-shadow:0 0 0 3px var(--steel)}
+#seta{position:absolute;right:12px;bottom:6px;font-size:16px;animation:s 1s steps(2) infinite}
+#seta[hidden]{display:none}
+@keyframes s{50%{translate:0 -3px}}
+@media (min-width:900px){
+  :root{--alt:min(calc(100dvh - 40px),740px)}
+  #fig{left:62%}
+  #balao{left:calc(62% - 170px - min(36%,460px));top:11%;transform:none;width:min(36%,460px)}
+  #balao::after{left:auto;right:-27px;top:34px;bottom:auto;margin:0;width:24px;height:32px;clip-path:polygon(0 0,25% 0,25% 25%,50% 25%,50% 38%,100% 50%,50% 62%,50% 75%,25% 75%,25% 100%,0 100%)}
+}
+@media (prefers-reduced-motion:reduce){#fig,#fig.troca,#seta{animation:none}}
+</style>
+</head>
+<body>
+<main id="cena" role="button" tabindex="0" aria-label="Avançar o diálogo">
+  <div id="fig" aria-hidden="true">
+    <img id="b" alt=""><img id="p" class="camada" alt=""><img id="m" class="camada" alt="">
+  </div>
+  <section id="balao" aria-live="polite"><span id="nome">Melissa</span><span id="fala"></span><span id="seta" aria-hidden="true" hidden>▼</span></section>
+</main>
+<script>
+// Falas literais do jogo (docs/redesign/v2/npcs/melissa.md §5)
+const FALAS=[
+  ['convite','Olá, Record. Eu estive te esperando.'],
+  ['explica','Pois bem. Saiba que não somos a única entidade perambulando por aí.'],
+  ['confiante','Eu recomendaria que você ficasse bem longe delas se quiser levar uma vida tranquila.'],
+  ['preocupado','Precisa se apressar.'],
+  ['surpreso','Record... Que coisa horrível.'],
+  ['riso','Caso contrário... Bem, paciência.'],
+  ['sorriso','É um prazer te conhecer.'],
+];
+const $=i=>document.getElementById(i), q=new URLSearchParams(location.search);
+const parado=q.has('f')||matchMedia('(prefers-reduced-motion:reduce)').matches;
+let META={},n=+(q.get('f')||0),tid,flap,idx=0,txt='';
+// boca desligada em art/anim.json (dono, 06/11: a boca falando fica só nos chibis dos NPCs); o retrato só pisca
+const url=(p,s)=>s?`art/anim/${p}-${s}.png`:`art/melissa-q-${p}.png`;
+
+function posiciona(p){
+  const m=META[p],alt=$('fig').clientHeight,e=alt/m.tam[1];
+  $('fig').style.width=m.tam[0]*e+'px';
+  $('fig').style.marginLeft=-(m.cabeca_x*e)+'px';
+  const bx=$('balao').getBoundingClientRect(),hx=$('fig').getBoundingClientRect().left+m.cabeca_x*e;
+  if(innerWidth<900)$('balao').style.setProperty('--cauda',Math.max(40,Math.min(bx.width-40,hx-bx.left))+'px');
+}
+function mostra(k,trocar=true){
+  const [p,t]=FALAS[k],m=META[p];
+  $('b').src=url(p);
+  $('p').classList.remove('on');$('m').classList.remove('on');
+  if(m.pisca)$('p').src=url(p,'pisca');
+  if(m.boca)$('m').src=url(p,'boca');
+  posiciona(p);
+  if(trocar&&!parado){const f=$('fig');f.classList.remove('troca');void f.offsetWidth;f.classList.add('troca');f.onanimationend=()=>f.classList.remove('troca')}
+  txt=t;idx=0;$('seta').hidden=true;clearInterval(tid);clearInterval(flap);
+  if(parado){$('fala').textContent=t;$('seta').hidden=false;return}
+  $('fala').textContent='';
+  tid=setInterval(()=>{$('fala').textContent=t.slice(0,++idx);if(idx>=t.length)fim()},26);
+  if(m.boca)flap=setInterval(()=>$('m').classList.toggle('on'),110);
+}
+function fim(){clearInterval(tid);clearInterval(flap);$('m').classList.remove('on');$('fala').textContent=txt;idx=txt.length;$('seta').hidden=false}
+function avanca(){if(idx<txt.length&&!parado){fim();return}n=(n+1)%FALAS.length;mostra(n)}
+function pisca(){
+  if(META[FALAS[n][0]].pisca){$('p').classList.add('on');setTimeout(()=>$('p').classList.remove('on'),110)}
+  setTimeout(pisca,2200+Math.random()*2800);
+}
+$('cena').addEventListener('click',avanca);
+$('cena').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();avanca()}});
+addEventListener('resize',()=>posiciona(FALAS[n][0]));
+fetch('art/anim.json').then(r=>r.json()).then(j=>{
+  META=j;
+  for(const [p] of FALAS){for(const s of [0,'pisca','boca']){if(!s||j[p][s]){new Image().src=url(p,s||'')}}}
+  mostra(n,false);
+  if(!parado)setTimeout(pisca,2000);
+});
+</script>
+</body>
+</html>

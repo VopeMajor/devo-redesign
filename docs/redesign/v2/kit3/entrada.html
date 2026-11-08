@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>DEVO v2 · Entrada (não usar)</title>
+<!-- Dono, 02/11: "a tela inicial do devo e convite, pode manter o da versão anterior". Este protótipo fica só como registro. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Barlow:wght@400;500;600;700&family=Barlow+Semi+Condensed:wght@500;600;700&family=Noto+Serif+JP:wght@500&display=swap">
+<style>
+/* Tela de entrada no modo da tela de título de Honkai: Star Rail: arte-chave cheia, logo no céu, "toque para começar",
+   atalhos discretos nos cantos. Funções de hoje (components/devo/landing/landing-screen.tsx): Começar (sempre pede convite),
+   Continuar, Sair, som, saudação, Tempo de 72 h, "toque para ouvir". Acesso: convite, cadastro e login. */
+:root{--ouro:#e2c07d;--ouro2:#f6dc9c;--creme:#fbf6ea;--tx:#f1f4fb;--sec:#a9b6d6;--fundo:#071330;--ui:"Barlow",system-ui,sans-serif;--cond:"Barlow Semi Condensed","Barlow",sans-serif;--serif:"Cormorant Garamond",Georgia,serif}
+*{box-sizing:border-box;margin:0}
+html,body{height:100%;background:var(--fundo);color:var(--tx);font:400 15px/1.45 var(--ui);overflow:hidden}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;padding:0}
+button:focus-visible,input:focus-visible{outline:2px solid var(--ouro);outline-offset:2px}
+#tela{position:relative;height:100dvh;overflow:hidden;isolation:isolate}
+/* arte-chave com leve movimento de câmera e partículas */
+.arte{position:absolute;inset:-3%;z-index:-3;background:url(art/os/entrada-cel.webp) center 60%/cover no-repeat,var(--fundo);animation:respira 26s ease-in-out infinite alternate}
+@keyframes respira{to{transform:scale(1.05) translate(-1%,-1%)}}
+.veu{position:absolute;inset:0;z-index:-2;background:linear-gradient(180deg,rgba(5,10,28,.55),transparent 30%,transparent 55%,rgba(5,10,28,.9) 92%)}
+.poeira{position:absolute;inset:0;z-index:-1;pointer-events:none;overflow:hidden}
+.poeira i{position:absolute;bottom:-10px;width:3px;height:3px;border-radius:50%;background:var(--ouro2);box-shadow:0 0 8px var(--ouro2);opacity:0;animation:sobe linear infinite}
+@keyframes sobe{10%{opacity:.9}80%{opacity:.6}to{transform:translateY(-105dvh) translateX(var(--dx));opacity:0}}
+/* barra de cima: Tempo no centro, som à direita */
+.topo{position:absolute;inset:max(14px,env(safe-area-inset-top)) 14px auto;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.marca{display:flex;align-items:center;gap:8px;font:600 11px/1 var(--ui);letter-spacing:.3em;text-transform:uppercase;color:#fff;text-shadow:0 1px 6px #000}
+.marca svg{width:26px;height:26px;color:#fff}
+.tempo{display:flex;align-items:center;gap:8px;height:38px;padding:0 16px 0 4px;border-radius:999px;background:rgba(0,0,0,.42);border:1px solid rgba(226,192,125,.35);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+.tempo .amp{display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:var(--creme)}
+.tempo .amp svg{width:15px;height:15px;fill:none;stroke:#1a2226;stroke-width:1.9;stroke-linecap:round}
+.tempo small{font:600 9px/1 var(--ui);letter-spacing:.2em;text-transform:uppercase;color:var(--ouro)}
+.tempo b{font:600 20px/1 var(--cond);letter-spacing:.05em;font-variant-numeric:tabular-nums}
+.redondo{display:grid;place-items:center;width:40px;height:40px;border-radius:50%;background:rgba(0,0,0,.42);border:1px solid rgba(255,255,255,.16);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+.redondo svg{width:19px;height:19px;fill:none;stroke:#fff;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.redondo[aria-pressed=false] .on,.redondo[aria-pressed=true] .off{display:none}
+/* logo no céu */
+.logo{position:absolute;left:0;right:0;top:15%;display:grid;justify-items:center;text-align:center;pointer-events:none;isolation:isolate}
+.logo::before{content:"";position:absolute;z-index:-1;left:-10%;right:-10%;top:-12%;bottom:-18%;background:radial-gradient(50% 50% at 50% 50%,rgba(5,10,28,.78),rgba(5,10,28,.45) 55%,transparent 75%)}
+.logo .sig{width:86px;height:86px;color:var(--creme);filter:drop-shadow(0 0 18px rgba(246,220,156,.7));animation:brilha 4s ease-in-out infinite}
+@keyframes brilha{50%{filter:drop-shadow(0 0 30px rgba(246,220,156,.95))}}
+.logo .k{margin-top:10px;font:600 11px/1 var(--ui);letter-spacing:.42em;text-transform:uppercase;color:var(--ouro2);text-shadow:0 1px 8px #000}
+.logo h1{margin-top:8px;font:700 clamp(46px,14vw,104px)/.86 var(--serif);letter-spacing:.04em;text-transform:uppercase;background:linear-gradient(180deg,#fffaf0 30%,#d9c08a 75%,#a8864a);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 4px 22px rgba(0,0,0,.7))}
+.logo .sub{display:flex;align-items:center;gap:12px;margin-top:10px;font:600 12px/1 var(--ui);letter-spacing:.55em;text-transform:uppercase;color:#fff;text-shadow:0 1px 6px #000}
+.logo .sub::before,.logo .sub::after{content:"";width:28px;height:1px;background:linear-gradient(90deg,transparent,var(--ouro))}
+.logo .sub::after{transform:scaleX(-1)}
+.logo .jp{margin-top:8px;font:500 11px/1 "Noto Serif JP",serif;letter-spacing:.3em;color:rgba(255,255,255,.7)}
+.logo .frase{margin-top:14px;font:italic 500 17px/1.3 var(--serif);color:rgba(255,255,255,.9);text-shadow:0 1px 8px #000}
+/* parte de baixo: saudação, Começar / Continuar, dica */
+.baixo{position:absolute;left:0;right:0;bottom:max(18px,env(safe-area-inset-bottom));display:grid;justify-items:center;gap:12px;padding:0 20px}
+.ola{font:600 11px/1.3 var(--ui);letter-spacing:.24em;text-transform:uppercase;color:rgba(255,255,255,.8);text-align:center;text-shadow:0 1px 6px #000}
+.ola b{color:#fff}
+.ola button{margin-left:6px;padding:4px 8px;border-radius:999px;border:1px solid rgba(255,255,255,.25);font-size:10px;letter-spacing:.14em;color:#fff}
+.acoes{display:grid;gap:10px;width:min(100%,360px)}
+.bt{position:relative;display:flex;align-items:center;justify-content:center;gap:12px;height:54px;border-radius:999px;font:600 17px/1 var(--ui);letter-spacing:.04em;transition:transform .15s,box-shadow .2s}
+.bt:active{transform:scale(.98)}
+.bt.pri{background:linear-gradient(180deg,#fffaf0,#e6dac1);color:#1a2226;box-shadow:0 10px 30px -10px rgba(246,220,156,.7),inset 0 -2px 0 rgba(0,0,0,.08)}
+.bt.pri::before{content:"";width:16px;height:16px;border-radius:50%;border:2px solid #1a2226;box-sizing:border-box}
+.bt.pri::after{content:"";position:absolute;inset:-5px;border-radius:999px;border:1px solid rgba(246,220,156,.5);animation:anel 2.6s ease-out infinite}
+@keyframes anel{from{opacity:.9;transform:scale(1)}to{opacity:0;transform:scale(1.12)}}
+.bt.sec{background:rgba(0,0,0,.42);border:1px solid rgba(255,255,255,.22);color:#fff;-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+.bt:disabled{opacity:.4;cursor:default}
+.dica{height:14px;font:600 10px/1 var(--ui);letter-spacing:.24em;text-transform:uppercase;color:rgba(255,255,255,.6);animation:pisca 2.4s ease-in-out infinite}
+@keyframes pisca{50%{opacity:.35}}
+.rodape{display:flex;align-items:center;justify-content:space-between;width:100%;font:500 10px/1.3 var(--ui);color:rgba(255,255,255,.45)}
+.rodape .cantos{display:flex;gap:8px}
+.rodape .redondo{width:34px;height:34px}
+.rodape .redondo svg{width:16px;height:16px}
+/* painéis de acesso (convite, cadastro, login) e avisos: folha de vidro que sobe */
+.painel{position:absolute;inset:auto 0 0;z-index:5;max-height:92dvh;overflow-y:auto;padding:22px 20px max(22px,env(safe-area-inset-bottom));border-radius:24px 24px 0 0;background:linear-gradient(180deg,rgba(14,29,64,.96),rgba(7,19,48,.98));border-top:1px solid rgba(226,192,125,.4);box-shadow:0 -20px 60px rgba(0,0,0,.7);transform:translateY(105%);transition:transform .45s cubic-bezier(.2,.8,.2,1)}
+.painel.on{transform:none}
+.painel::before{content:"";display:block;width:44px;height:4px;margin:-8px auto 14px;border-radius:4px;background:rgba(255,255,255,.25)}
+.painel small.k{display:block;font:600 10.5px/1 var(--ui);letter-spacing:.22em;text-transform:uppercase;color:var(--ouro)}
+.painel h2{margin:6px 0 4px;font:600 28px/1.05 var(--cond)}
+.painel p.s{color:var(--sec);font-size:14px}
+.passos{display:flex;gap:6px;margin:14px 0}
+.passos i{flex:1;height:3px;border-radius:3px;background:rgba(255,255,255,.12)}
+.passos i.on{background:var(--ouro)}
+.campo{display:grid;gap:6px;margin-top:12px}
+.campo span{font:600 10.5px/1 var(--ui);letter-spacing:.16em;text-transform:uppercase;color:var(--sec)}
+.campo input{height:50px;padding:0 16px;border-radius:14px;border:1px solid rgba(255,255,255,.16);background:rgba(0,0,0,.3);color:#fff;font:500 16px var(--ui)}
+.campo input#devo-code{font:600 22px var(--cond);letter-spacing:.3em;text-transform:uppercase;text-align:center}
+.erro{min-height:18px;margin-top:8px;font:600 13px/1.3 var(--ui);color:#ff9a8a}
+.painel .acoes{width:100%;margin-top:16px}
+.fechar{position:absolute;right:14px;top:16px}
+.avs{display:grid;gap:10px;margin-top:14px}
+.avs article{padding:14px;border-radius:14px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1)}
+.avs small{font:600 10px/1 var(--ui);letter-spacing:.16em;text-transform:uppercase;color:var(--ouro)}
+.avs strong{display:block;margin-top:4px;font:600 17px/1.2 var(--cond)}
+/* cortina de transição */
+.cortina{position:absolute;inset:0;z-index:9;display:grid;place-content:center;justify-items:center;gap:14px;background:radial-gradient(circle,#0e1d40,#030714);opacity:0;pointer-events:none;transition:opacity .5s}
+.cortina.on{opacity:1;pointer-events:auto}
+.cortina svg{width:64px;height:64px;color:var(--creme);animation:gira 3s linear infinite}
+@keyframes gira{to{transform:rotate(360deg)}}
+.cortina p{font:600 12px/1 var(--ui);letter-spacing:.4em;text-transform:uppercase;color:var(--ouro2)}
+@media (min-width:900px){
+  .logo::before{left:-30%;right:-40%}
+  .arte{background-image:url(art/os/entrada-pc.webp);background-position:center}
+  .veu{background:linear-gradient(90deg,rgba(5,10,28,.7),transparent 55%),linear-gradient(180deg,rgba(5,10,28,.5),transparent 25%,transparent 70%,rgba(5,10,28,.85))}
+  .logo{left:7%;right:auto;top:22%;justify-items:start;text-align:left}
+  .logo h1{font-size:112px}
+  .logo .sub{justify-content:flex-start}
+  .baixo{left:7%;right:auto;justify-items:start;bottom:40px;width:420px;padding:0}
+  .ola{text-align:left}
+  .rodape{position:fixed;left:24px;right:24px;bottom:16px;width:auto}
+  .painel{left:auto;right:40px;bottom:40px;width:440px;border-radius:24px;border:1px solid rgba(226,192,125,.4);transform:translateX(120%)}
+  .painel::before{display:none}
+}
+@media (prefers-reduced-motion:reduce){.arte,.poeira i,.logo .sig,.bt.pri::after,.dica,.cortina svg{animation:none}}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="sigilo" viewBox="0 0 64 64"><circle cx="32" cy="32" r="29.5" fill="none" stroke="currentColor" stroke-width=".8" opacity=".55"/><circle cx="32" cy="32" r="26" fill="none" stroke="currentColor" stroke-width="1.4" stroke-dasharray=".8 3.3" opacity=".7"/><ellipse cx="32" cy="32" rx="27" ry="9.5" transform="rotate(-24 32 32)" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="55.6" cy="21.9" r="2.4" fill="currentColor"/><path d="M32 7C33.4 25.2 38.8 30.6 57 32C38.8 33.4 33.4 38.8 32 57C30.6 38.8 25.2 33.4 7 32C25.2 30.6 30.6 25.2 32 7ZM32 27.6a4.4 4.4 0 1 0 0.001 0Z" fill="currentColor" fill-rule="evenodd"/></symbol></svg>
+<main id="tela">
+  <div class="arte" aria-hidden="true"></div><div class="veu" aria-hidden="true"></div><div class="poeira" aria-hidden="true"></div>
+  <header class="topo">
+    <span class="marca"><svg viewBox="0 0 64 64"><use href="#sigilo"/></svg>Devo</span>
+    <span class="tempo" role="timer" aria-label="Tempo no pulso"><span class="amp"><svg viewBox="0 0 24 24"><path d="M6 3h12M6 21h12M7.5 3c0 5.5 9 6.5 9 9s-9 3.5-9 9M16.5 3c0 5.5-9 6.5-9 9s9 3.5 9 9"/></svg></span><span><small>Pulso</small><br><b id="tempo">72:00:00</b></span></span>
+    <button class="redondo" id="som" aria-pressed="false" aria-label="Som"><svg viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9z"/><path class="on" d="M16 9a4 4 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11"/><path class="off" d="M17 9l5 6M22 9l-5 6"/></svg></button>
+  </header>
+  <section class="logo">
+    <svg class="sig" viewBox="0 0 64 64" aria-hidden="true"><use href="#sigilo"/></svg>
+    <span class="k">A verdade é um voto</span>
+    <h1>Deadly<br>Vote</h1>
+    <span class="sub">Record System</span>
+    <span class="jp" lang="ja">デッドリーボート・記録</span>
+    <p class="frase">O tempo é a vida. O jogo é a única fonte dela.</p>
+  </section>
+  <section class="baixo">
+    <p class="ola" id="ola"></p>
+    <div class="acoes">
+      <button class="bt pri" id="comecar">Começar</button>
+      <button class="bt sec" id="continuar">Continuar</button>
+    </div>
+    <p class="dica" id="dica" aria-live="polite">Toque em qualquer lugar para ouvir</p>
+    <div class="rodape"><span>DEVO 0.1 · experimental · Record System</span><span class="cantos"><button class="redondo" id="b-avisos" aria-label="Avisos"><svg viewBox="0 0 24 24"><path d="M4 10v4l12 5V5L4 10z"/><path d="M16 9a3 3 0 0 1 0 6"/></svg></button></span></div>
+  </section>
+
+  <!-- acesso: Começar sempre pede convite (cadastro); Continuar sem sessão pede login -->
+  <section class="painel" id="p-convite" role="dialog" aria-label="Acesso por convite">
+    <button class="redondo fechar" data-fecha aria-label="Fechar"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    <small class="k">Acesso</small><h2>Código de convite</h2><p class="s">O DEVO só abre para quem foi convidado. Cada código vale uma vez.</p>
+    <div class="passos"><i class="on"></i><i></i></div>
+    <label class="campo"><span>Código</span><input id="devo-code" autocomplete="off" maxlength="12" placeholder="XXXX-XXXX"></label>
+    <p class="erro" id="e-code" role="alert"></p>
+    <div class="acoes"><button class="bt pri" id="b-code">Validar convite</button></div>
+  </section>
+  <section class="painel" id="p-cadastro" role="dialog" aria-label="Cadastro">
+    <button class="redondo fechar" data-fecha aria-label="Fechar"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    <small class="k">Convite aceito</small><h2>Seu Record</h2><p class="s">Escolha como vai ser chamado e uma senha.</p>
+    <div class="passos"><i class="on"></i><i class="on"></i></div>
+    <label class="campo"><span>Nome</span><input id="devo-user" autocomplete="username"></label>
+    <label class="campo"><span>Senha</span><input id="devo-pass" type="password" autocomplete="new-password"></label>
+    <label class="campo"><span>Confirme a senha</span><input id="devo-pass2" type="password" autocomplete="new-password"></label>
+    <p class="erro" id="e-cad" role="alert"></p>
+    <div class="acoes"><button class="bt pri" id="b-cad">Criar Record</button></div>
+  </section>
+  <section class="painel" id="p-login" role="dialog" aria-label="Entrar">
+    <button class="redondo fechar" data-fecha aria-label="Fechar"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    <small class="k">Continuar</small><h2>Entrar</h2><p class="s">Use o nome e a senha do seu Record.</p>
+    <label class="campo"><span>Nome</span><input id="l-user" autocomplete="username"></label>
+    <label class="campo"><span>Senha</span><input id="l-pass" type="password" autocomplete="current-password"></label>
+    <p class="erro" id="e-log" role="alert"></p>
+    <div class="acoes"><button class="bt pri" id="b-log">Entrar</button></div>
+  </section>
+  <section class="painel" id="p-avisos" role="dialog" aria-label="Avisos">
+    <button class="redondo fechar" data-fecha aria-label="Fechar"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    <small class="k">Avisos</small><h2>Do Owner</h2>
+    <div class="avs"><article><small>Aviso do Owner</small><strong>Aqui entra o aviso que o Owner escrever</strong></article><article><small>Calendário</small><strong>Natal · em 53 dias</strong></article></div>
+  </section>
+  <div class="cortina" id="cortina" aria-live="polite"><svg viewBox="0 0 64 64" aria-hidden="true"><use href="#sigilo"/></svg><p id="c-tx">Despertando</p></div>
+</main>
+<script>
+const q=new URLSearchParams(location.search),$=i=>document.getElementById(i);
+// ?estado=novo: sem sessão (Continuar pede login); padrão: jogador que já entrou
+const novo=q.get('estado')==='novo',nome=novo?null:'Velada',feminino=true;
+let seg=72*3600;
+const fmt=s=>[Math.floor(s/3600),Math.floor(s%3600/60),s%60].map(n=>String(n).padStart(2,'0')).join(':');
+const pinta=()=>$('tempo').textContent=fmt(seg);pinta();
+if(!q.has('semraf'))setInterval(()=>{seg=Math.max(0,seg-1);pinta()},1000);
+$('ola').innerHTML=nome?`${feminino?'Bem-vinda':'Bem-vindo'} de volta, <b>${nome}</b><button id="sair">Sair</button>`:'';
+if($('sair'))$('sair').onclick=()=>location.search='?estado=novo';
+// poeira de luz
+const po=document.querySelector('.poeira');
+if(!matchMedia('(prefers-reduced-motion: reduce)').matches)for(let i=0;i<26;i++){const e=document.createElement('i');e.style.left=Math.random()*100+'%';e.style.setProperty('--dx',(Math.random()*60-30)+'px');e.style.animationDuration=(9+Math.random()*12)+'s';e.style.animationDelay=(-Math.random()*20)+'s';e.style.transform=`scale(${.5+Math.random()})`;po.append(e)}
+// som e "toque para ouvir"
+let acordou=false;
+addEventListener('pointerdown',()=>{if(acordou)return;acordou=true;$('som').setAttribute('aria-pressed','true');$('dica').textContent=''},{once:true});
+$('som').onclick=e=>{e.stopPropagation();const on=$('som').getAttribute('aria-pressed')!=='true';$('som').setAttribute('aria-pressed',on);acordou=true;$('dica').textContent=''};
+// painéis
+const abre=id=>{document.querySelectorAll('.painel.on').forEach(p=>p.classList.remove('on'));$(id).classList.add('on');setTimeout(()=>{const i=$(id).querySelector('input');if(i)i.focus()},450)};
+const fechaTudo=()=>document.querySelectorAll('.painel.on').forEach(p=>p.classList.remove('on'));
+document.querySelectorAll('[data-fecha]').forEach(b=>b.onclick=fechaTudo);
+addEventListener('keydown',e=>{if(e.key==='Escape')fechaTudo()});
+const entra=(t,dest)=>{fechaTudo();$('c-tx').textContent=t;$('cortina').classList.add('on');setTimeout(()=>location.href=dest,1400)};
+$('comecar').onclick=()=>abre('p-convite');
+$('continuar').onclick=()=>nome?entra('Reconectando','os-janelas.html?estado=jogador'):abre('p-login');
+$('b-avisos').onclick=()=>abre('p-avisos');
+// exemplos do protótipo: CRP aceita qualquer código com 8 letras ou números
+$('b-code').onclick=()=>{const c=$('devo-code').value.replace(/[^a-z0-9]/gi,'');if(c.length<8){$('e-code').textContent='Código inválido ou já usado.';return}$('e-code').textContent='';abre('p-cadastro')};
+$('b-cad').onclick=()=>{const u=$('devo-user').value.trim(),a=$('devo-pass').value,b=$('devo-pass2').value;
+  $('e-cad').textContent=u.length<2?'Escolha um nome com pelo menos 2 letras.':a.length<6?'A senha precisa de pelo menos 6 caracteres.':a!==b?'As senhas não conferem.':'';
+  if(!$('e-cad').textContent)entra('Despertando','os-janelas.html?estado=novato')};
+$('b-log').onclick=()=>{if(!$('l-user').value.trim()||!$('l-pass').value){$('e-log').textContent='Preencha nome e senha.';return}entra('Reconectando','os-janelas.html?estado=jogador')};
+if(q.get('painel'))abre('p-'+q.get('painel'));
+</script>
+</body>
+</html>

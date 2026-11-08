@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>DEVO v2 · site</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:ital,wght@0,400;0,600;0,800;1,800&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+:root{
+  --ink:#08060d; --ink2:#150e22; --ame:#6b3fa0; --ame-hot:#a45cff; --lil:#cdb6ea; --por:#f1ecf4; --steel:#c9b78e; --rub:#ff2e5b;
+  --disp:"Anton",Impact,sans-serif; --body:"Archivo",system-ui,sans-serif; --mono:"JetBrains Mono",monospace;
+}
+*{box-sizing:border-box;margin:0}
+html,body{height:100%;background:var(--ink);color:var(--por);font-family:var(--body);-webkit-font-smoothing:antialiased}
+.tela{position:relative;height:100dvh;min-height:640px;overflow:hidden;isolation:isolate;background:var(--ink)}
+.tela[hidden]{display:none}
+.halftone{position:absolute;inset:0;z-index:-2;background:
+  radial-gradient(circle at 1px 1px,rgba(164,92,255,.5) 1.3px,transparent 1.6px) 0 0/9px 9px;
+  -webkit-mask-image:linear-gradient(125deg,#000 0%,transparent 55%);mask-image:linear-gradient(125deg,#000 0%,transparent 55%)}
+.faixa{position:absolute;z-index:-1;background:var(--ame);transform-origin:center}
+.retrato{position:absolute;z-index:0;pointer-events:none;object-fit:contain;filter:drop-shadow(-14px 8px 0 rgba(164,92,255,.55))}
+
+/* HOME */
+#home .faixa{left:-30%;right:-30%;top:27%;height:31%;transform:rotate(-11deg);background:linear-gradient(90deg,#2a1450,var(--ame) 60%,var(--ame-hot))}
+#home .retrato{right:-22%;top:7%;height:66%;width:auto}
+.topo{position:absolute;left:18px;right:18px;top:max(16px,env(safe-area-inset-top));display:flex;justify-content:space-between;align-items:center;font:700 11px var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--lil);z-index:3}
+.tempo{position:absolute;left:14px;top:50px;z-index:3;transform:rotate(-4deg);transform-origin:left top}
+.tempo small{display:block;font:800 italic 13px var(--body);letter-spacing:.02em;background:var(--por);color:var(--ink);width:max-content;padding:2px 10px 2px 8px;clip-path:polygon(0 0,100% 0,calc(100% - 8px) 100%,0 100%)}
+.tempo b{display:block;font:400 clamp(66px,21vw,120px)/.95 var(--disp);letter-spacing:-.005em;color:var(--por);text-shadow:4px 4px 0 var(--ame)}
+.menu{position:absolute;left:0;bottom:calc(14px + env(safe-area-inset-bottom));width:min(74%,420px);z-index:4;display:grid;gap:7px;list-style:none;padding:0}
+.menu a{display:flex;align-items:baseline;gap:10px;text-decoration:none;color:var(--ink);background:var(--por);min-height:48px;padding:7px 26px 5px 18px;font:400 clamp(28px,8vw,40px)/1 var(--disp);letter-spacing:.015em;clip-path:polygon(0 0,100% 0,calc(100% - 16px) 100%,0 100%);transition:transform .14s cubic-bezier(.2,.9,.2,1),background .14s,color .14s}
+.menu li:nth-child(2) a{margin-left:0;width:92%}.menu li:nth-child(3) a{width:84%}.menu li:nth-child(4) a{width:78%}.menu li:nth-child(5) a{width:90%}
+.menu a i{font:700 10px var(--mono);letter-spacing:.1em;font-style:normal;opacity:.6;margin-left:auto}
+.menu a:hover,.menu a:focus-visible,.menu a.on{background:var(--ame-hot);color:#fff;transform:translateX(12px) skewX(-4deg);outline:none}
+.casa-link{position:absolute;right:14px;bottom:calc(16px + env(safe-area-inset-bottom));z-index:5;width:92px;height:118px;background:var(--ink2) center/cover;border:2px solid var(--steel);border-radius:46px 46px 4px 4px;overflow:hidden;display:flex;align-items:flex-end;text-decoration:none}
+.casa-link img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.casa-link span{position:relative;width:100%;text-align:center;background:var(--ink);color:var(--por);font:400 19px/1.25 var(--disp);letter-spacing:.06em}
+
+/* DEADLY VOTE */
+#dv{background:#050308}
+#dv .faixa.a{left:-20%;right:-20%;top:-6%;height:36%;transform:rotate(7deg);background:var(--rub)}
+#dv .retrato{left:-16%;bottom:15%;height:66%;width:auto;filter:drop-shadow(12px 0 0 var(--rub))}
+.caso{position:absolute;left:14px;top:max(14px,env(safe-area-inset-top));z-index:3;transform:rotate(7deg);transform-origin:left top;font:400 clamp(58px,17vw,112px)/.86 var(--disp);color:#050308}
+.caso span{display:block;color:var(--por)}
+.voz{position:absolute;right:12px;top:37%;width:58%;z-index:3;transform:rotate(-3deg)}
+.voz p{font:800 italic clamp(23px,6.4vw,36px)/1.08 var(--body);letter-spacing:-.015em;text-shadow:0 2px 0 #000,2px 0 0 #000,-2px 0 0 #000,0 -2px 0 #000}
+.voz mark{background:none;color:var(--rub)}
+.cartucho{position:absolute;left:0;right:0;bottom:0;z-index:4;background:var(--por);color:var(--ink);padding:10px 14px calc(12px + env(safe-area-inset-bottom));clip-path:polygon(0 18px,100% 0,100% 100%,0 100%)}
+.cartucho h2{font:400 15px var(--disp);letter-spacing:.1em;margin:12px 0 7px}
+.cartas{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none}
+.cartas button{flex:0 0 auto;min-height:48px;padding:0 18px 0 12px;border:0;background:var(--ink);color:var(--por);font:800 italic 15px var(--body);cursor:pointer;clip-path:polygon(0 0,100% 0,calc(100% - 10px) 100%,0 100%)}
+.cartas button:hover,.cartas button:focus-visible{background:var(--rub);outline:none}
+
+@media (min-width:900px){
+  #home .retrato{right:4%;top:-4%;height:112%}
+  #home .faixa{top:18%;height:48%}
+  .tempo{left:6%;top:12%}.tempo b{font-size:clamp(120px,14vw,220px)}
+  .menu{left:6%;bottom:6%;width:440px}
+  .casa-link{right:3%;bottom:5%;width:150px;height:200px;border-radius:75px 75px 4px 4px}
+  #dv .retrato{left:4%;bottom:0;height:100%}
+  .voz{right:7%;top:30%;width:44%}.voz p{font-size:clamp(34px,3.6vw,56px)}
+  .cartucho{left:38%;clip-path:polygon(24px 0,100% 0,100% 100%,0 100%);padding-left:42px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<section class="tela" id="home" data-tela="home">
+  <div class="halftone"></div><div class="faixa"></div>
+  <img class="retrato" src="../../../../../public/images/npc/melissa/apresenta.webp" alt="Melissa">
+  <div class="topo"><span>Record System</span><span>Ametista</span></div>
+  <div class="tempo"><small>TEMPO NO PULSO</small><b>71:59:59</b></div>
+  <ul class="menu">
+    <li><a class="on" href="?tela=dv">DEADLY VOTE <i>01</i></a></li>
+    <li><a href="#">RECORD <i>02</i></a></li>
+    <li><a href="#">CARTAS <i>03</i></a></li>
+    <li><a href="#">POÇO <i>04</i></a></li>
+    <li><a href="#">VÍNCULOS <i>05</i></a></li>
+  </ul>
+  <a class="casa-link" href="casa.html"><img src="art/casa-corte-thumb.png" alt=""><span>CASA</span></a>
+</section>
+
+<section class="tela" id="dv" data-tela="dv" hidden>
+  <div class="halftone"></div><div class="faixa a"></div>
+  <div class="caso">DEADLY<span>VOTE</span></div>
+  <img class="retrato" src="../../../../../public/images/npc/galo/riso.webp" alt="Galo">
+  <div class="voz"><p>Sim, Record. <mark>Você precisará lidar</mark> com isso.</p></div>
+  <div class="cartucho">
+    <h2>SUAS CARTAS</h2>
+    <div class="cartas"><button>[carta 1]</button><button>[carta 2]</button><button>[carta 3]</button><button>[carta 4]</button></div>
+  </div>
+</section>
+<script>
+const t=new URLSearchParams(location.search).get('tela')||'home';
+document.querySelectorAll('.tela').forEach(s=>s.hidden=s.dataset.tela!==t);
+</script>
+</body>
+</html>

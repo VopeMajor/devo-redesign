@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>DEVO v2 · Criação do avatar</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600&display=swap">
+<style>
+:root{--noite:#130e1b;--painel:#1d1529;--por:#F4EEE6;--tinta:#231832;--ame:#3a1f5c;--vio:#6b3fa0;--steel:#c9b78e;--teal:#7df5e0;--font:"Pixelify Sans",monospace}
+*{box-sizing:border-box;margin:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;background:var(--noite);overflow:hidden;font-family:var(--font);color:var(--por)}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+button:focus-visible{outline:3px solid var(--teal);outline-offset:2px}
+#app{height:100dvh;max-width:560px;margin:auto;display:flex;flex-direction:column}
+header{flex:none;padding:max(10px,env(safe-area-inset-top)) 14px 6px}
+h1{font-size:22px;font-weight:600;text-align:center}
+#previa{flex:none;position:relative;height:min(38dvh,330px);overflow:hidden;background:var(--noite) url(art/quarto.webp) 50% 45%/cover}
+#previa::after{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 38%,rgba(120,96,160,.5),rgba(14,9,24,.78) 62%)}
+#tela{position:absolute;z-index:1;left:50%;top:0;translate:-50% 0;height:calc(100% * 1.22);aspect-ratio:1;max-width:none}
+[role=tablist]{flex:none;display:grid;grid-template-columns:repeat(5,1fr);background:var(--tinta);box-shadow:0 -3px 0 var(--steel)}
+[role=tab]{min-height:50px;font-size:17px;font-weight:600;color:#cdbfe0}
+[role=tab][aria-selected=true]{background:var(--por);color:var(--tinta)}
+#painel{flex:1;min-height:0;overflow-y:auto;padding:12px 12px 16px;background:var(--painel);overscroll-behavior:contain}
+.rotulo{font-size:18px;font-weight:500;margin:2px 2px 8px;color:#e4daee}
+.cores{display:flex;gap:8px;overflow-x:auto;padding:4px 3px 10px;margin-bottom:6px;scrollbar-width:none}
+.cor{flex:0 0 48px;height:48px;box-shadow:inset 0 0 0 2px rgba(0,0,0,.55)}
+.cores.todas{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;overflow:visible}
+.cores.todas .cor{height:auto;aspect-ratio:1}
+.cor[aria-pressed=true]{outline:3px solid var(--por);outline-offset:2px}
+.grade{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.grade.dois{grid-template-columns:repeat(2,1fr)}
+.grade.tres{grid-template-columns:repeat(3,1fr)}
+.grade.tres .op{aspect-ratio:auto;display:flex;flex-direction:column}
+.grade.tres .op canvas{height:auto;aspect-ratio:1}
+.op small{display:grid;place-items:center;flex:1;min-height:38px;padding:2px 3px;background:rgba(20,14,26,.88);font-size:15px;line-height:1.1}
+.op{position:relative;aspect-ratio:1;background:#2a2038;overflow:hidden;box-shadow:inset 0 0 0 2px #40325a}
+.op[aria-pressed=true]{box-shadow:inset 0 0 0 3px var(--teal);background:#35284a}
+.op canvas{display:block;width:100%;height:100%}
+footer{flex:none;display:grid;grid-template-columns:1fr 1.4fr;gap:8px;padding:8px 12px max(10px,env(safe-area-inset-bottom));background:var(--tinta)}
+footer button{min-height:52px;font-size:21px;font-weight:600;box-shadow:0 0 0 3px var(--steel)}
+#sorte{background:transparent}
+#pronto{background:var(--por);color:var(--tinta)}
+#aviso{position:fixed;left:50%;top:24%;translate:-50% 0;z-index:9;background:var(--tinta);padding:12px 18px;font-size:21px;font-weight:600;text-align:center;box-shadow:0 0 0 3px var(--steel);width:max-content;max-width:calc(100% - 32px)}
+#aviso[hidden]{display:none}
+#carrega{position:fixed;inset:0;z-index:10;display:grid;place-items:center;background:var(--noite);font-size:22px}
+#carrega[hidden]{display:none}
+@media (min-width:900px){#app{max-width:1000px;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:auto auto 1fr auto;height:100dvh}header{grid-column:1/3}#previa{grid-row:2/5;height:auto}#tela{height:100%}[role=tablist]{grid-column:2}#painel{grid-column:2}footer{grid-column:2}}
+</style>
+</head>
+<body>
+<div id="carrega">Abrindo a porta…</div>
+<main id="app">
+  <header><h1>Criação do avatar</h1></header>
+  <div id="previa"><canvas id="tela" width="512" height="512" role="img" aria-label="Prévia do seu avatar"></canvas></div>
+  <div role="tablist" aria-label="Partes do avatar" id="abas"></div>
+  <section id="painel" role="tabpanel"></section>
+  <footer><button id="sorte">Aleatório</button><button id="pronto">Pronto</button></footer>
+</main>
+<div id="aviso" hidden role="status"></div>
+<script src="avatar-cor.js"></script>
+<script>
+const $=i=>document.getElementById(i);
+const N=18,L=512;
+const q=new URLSearchParams(location.search);
+const cfg={corpo:0,cabelo:0,rosto:0,roupa:0,corCabelo:6,corOlhos:0,pele:1};
+const ABAS=[['corpo','Corpo'],['cabelo','Cabelo'],['rosto','Rosto'],['pele','Pele'],['roupa','Roupa']];
+const ROUPAS=['Casaco do Record','Dândi','Paróquia','Turno da noite','Enlutado','Andarilho'];
+let aba=q.get('aba')||'cabelo';
+for(const k of Object.keys(cfg))if(q.has(k))cfg[k]=+q.get(k);
+const img={corpo:[],cabelo:[],rosto:[],roupa:[[],[]]};
+
+/* ---- cor por código: as peças são cinza, e a cor vem das amostras ---- */
+const tmp=document.createElement('canvas'),tctx=tmp.getContext('2d',{willReadFrequently:true});
+function camada(im,w,fn){
+  tmp.width=tmp.height=w;tctx.imageSmoothingQuality='high';tctx.drawImage(im,0,0,w,w);
+  const id=tctx.getImageData(0,0,w,w);fn(id.data,w);tctx.putImageData(id,0,0);return tmp;
+}
+function desenha(ctx,w,c,{semCabelo=false,semRosto=false}={}){
+  const cc=CAB[c.corCabelo],pl=PELES[c.pele];
+  ctx.clearRect(0,0,w,w);
+  ctx.drawImage(camada(img.corpo[c.corpo],w,d=>pintaCorpo(d,pl)),0,0);
+  ctx.imageSmoothingQuality='high';ctx.drawImage(img.roupa[c.corpo][c.roupa],0,0,w,w);
+  if(!semRosto)ctx.drawImage(camada(img.rosto[c.rosto],w,(d,ww)=>pintaRosto(d,ww,c.rosto,OLHOS[c.corOlhos],cc,pl)),0,0);
+  if(!semCabelo)ctx.drawImage(camada(img.cabelo[c.cabelo],w,d=>pintaCabelo(d,cc)),0,0);
+}
+const tela=$('tela').getContext('2d');
+const atualiza=()=>desenha(tela,L,cfg);
+
+/* ---- interface ---- */
+function miniatura(c,corpoInteiro=false){
+  const b=document.createElement('canvas');b.width=b.height=corpoInteiro?192:128;
+  const off=document.createElement('canvas');off.width=off.height=192;
+  desenha(off.getContext('2d'),192,c);
+  if(corpoInteiro==='tronco')b.getContext('2d').drawImage(off,26,72,140,120,0,16,192,165);
+  else if(corpoInteiro)b.getContext('2d').drawImage(off,0,0);
+  else b.getContext('2d').drawImage(off,30,0,132,132,0,0,128,128);
+  return b;
+}
+function amostras(lista,chave,titulo,ver){
+  const w=document.createElement('div');
+  w.innerHTML=`<p class="rotulo">${titulo}</p>`;
+  const f=document.createElement('div');f.className='cores';f.setAttribute('role','group');f.setAttribute('aria-label',titulo);
+  lista.forEach((c,i)=>{const b=document.createElement('button');b.className='cor';b.style.background=ver(c);b.setAttribute('aria-label',c[0]);b.setAttribute('aria-pressed',cfg[chave]===i);b.onclick=()=>{cfg[chave]=i;const x=f.scrollLeft;pintaPainel();atualiza();$('painel').querySelector('.cores').scrollLeft=x};f.append(b)});
+  w.append(f);return w;
+}
+const rgb=a=>`rgb(${a})`;
+function grade(chave,n,nome,classe='',nomes=null){
+  const g=document.createElement('div');g.className='grade '+classe;
+  for(let i=0;i<n;i++){
+    const b=document.createElement('button');b.className='op';b.setAttribute('aria-label',nomes?nomes[i]:`${nome} ${i+1}`);b.setAttribute('aria-pressed',cfg[chave]===i);
+    b.append(miniatura({...cfg,[chave]:i},nomes?'tronco':chave==='corpo'));
+    if(nomes){const s=document.createElement('small');s.textContent=nomes[i];b.append(s)}
+    b.onclick=()=>{cfg[chave]=i;g.querySelectorAll('.op').forEach((o,k)=>o.setAttribute('aria-pressed',k===i));atualiza()};
+    g.append(b);
+  }
+  return g;
+}
+function pintaPainel(){
+  const p=$('painel'),top=p.scrollTop;p.innerHTML='';
+  if(aba==='corpo'){p.append(grade('corpo',2,'Corpo','dois'))}
+  if(aba==='cabelo'){p.append(amostras(CAB,'corCabelo','Cor do cabelo',c=>`linear-gradient(135deg,${rgb(c[3])},${rgb(c[2])} 50%,${rgb(c[1])})`),grade('cabelo',N,'Penteado'))}
+  if(aba==='rosto'){p.append(amostras(OLHOS,'corOlhos','Cor dos olhos',c=>`radial-gradient(circle,#111 18%,${rgb(c[2])} 22%,${rgb(c[1])} 70%)`),grade('rosto',N,'Rosto'))}
+  if(aba==='pele'){p.append(amostras(PELES,'pele','Tom de pele',c=>`linear-gradient(135deg,${rgb(c[1])} 60%,${rgb(c[2])})`));p.querySelector('.cores').classList.add('todas')}
+  if(aba==='roupa'){p.append(grade('roupa',ROUPAS.length,'Roupa','tres',ROUPAS))}
+  p.scrollTop=top;
+  document.querySelectorAll('[role=tab]').forEach(t=>t.setAttribute('aria-selected',t.dataset.aba===aba));
+}
+ABAS.forEach(([id,nome])=>{const b=document.createElement('button');b.setAttribute('role','tab');b.dataset.aba=id;b.textContent=nome;b.onclick=()=>{aba=id;$('painel').scrollTop=0;pintaPainel()};$('abas').append(b)});
+const sorteia=n=>Math.floor(Math.random()*n);
+$('sorte').onclick=()=>{Object.assign(cfg,{corpo:sorteia(2),cabelo:sorteia(N),rosto:sorteia(N),roupa:sorteia(ROUPAS.length),corCabelo:sorteia(CAB.length),corOlhos:sorteia(OLHOS.length),pele:sorteia(PELES.length)});pintaPainel();atualiza()};
+// Primeira escolha: grátis, ao desbloquear a Casa. Depois: guarda-roupa do quarto, por 1 hora de Tempo.
+// Neste protótipo a aparência fica no aparelho; no jogo é o servidor quem salva e cobra.
+const GUARDA=q.get('modo')==='guarda-roupa';
+let salva=null;
+try{salva=JSON.parse(localStorage.getItem('devo-aparencia'))}catch{}
+if(salva)for(const k of Object.keys(cfg))if(!q.has(k)&&Number.isInteger(salva[k]))cfg[k]=salva[k];
+const antes=JSON.stringify(cfg);
+if(GUARDA){
+  document.querySelector('h1').textContent='Guarda-roupa';
+  $('sorte').textContent='Cancelar';$('sorte').onclick=()=>location.href='casa.html?etapa=3&sala=quarto';
+  $('pronto').textContent='Salvar · 1 hora';
+}
+let avisoT;
+function aviso(t){const a=$('aviso');a.textContent=t;a.hidden=false;clearTimeout(avisoT);avisoT=setTimeout(()=>a.hidden=true,2000)}
+$('pronto').onclick=()=>{
+  if(GUARDA&&JSON.stringify(cfg)===antes)return aviso('Nada mudou, então nada foi cobrado');
+  try{localStorage.setItem('devo-aparencia',JSON.stringify(cfg))}catch{}
+  location.href=GUARDA?'casa.html?etapa=3&sala=quarto&pago=1':'casa.html?etapa=1&novo=1';
+};
+
+const carrega=src=>new Promise((ok,erro)=>{const i=new Image();i.onload=()=>ok(i);i.onerror=erro;i.src=src});
+Promise.all([
+  ...['f','m'].map(c=>carrega(`art/avatar/corpo-${c}.png`)),
+  ...Array.from({length:N},(_,i)=>carrega(`art/avatar/cabelo-${i+1}.png`)),
+  ...Array.from({length:N},(_,i)=>carrega(`art/avatar/rosto-${i+1}.png`)),
+  ...['f','m'].flatMap(c=>ROUPAS.map((_,i)=>carrega(`art/avatar/roupa-${i+1}-${c}.png`))),
+]).then(t=>{
+  const R=ROUPAS.length;
+  img.corpo=t.slice(0,2);img.cabelo=t.slice(2,2+N);img.rosto=t.slice(2+N,2+N*2);
+  img.roupa=[t.slice(2+N*2,2+N*2+R),t.slice(2+N*2+R)];
+  $('carrega').hidden=true;pintaPainel();atualiza();
+}).catch(()=>{$('carrega').textContent='Não foi possível abrir. Tente de novo.'});
+window.__av={cfg,CAB,OLHOS,PELES};
+</script>
+</body>
+</html>

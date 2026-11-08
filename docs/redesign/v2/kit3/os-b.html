@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>DEVO v2 · Proposta B, as janelas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&family=Jersey+15&display=swap">
+<style>
+:root{--preto:#0B0812;--tinta:#160D26;--vio:#2A1450;--vio2:#4A2A86;--ame:#A45CFF;--lila:#CFA9FF;--papel:#F1ECE0;--sec:#C7BCD8;--font:"Pixelify Sans",monospace;--tarefa:46px}
+*{box-sizing:border-box;margin:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;background:var(--preto);overflow:hidden;font-family:var(--font);color:var(--papel)}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;padding:0}
+button:focus-visible{outline:2px solid var(--papel);outline-offset:1px}
+#os{position:relative;height:100dvh;overflow:hidden;overflow:clip;background:var(--preto) url(art/os/fundo-pixel.png) 100% 0/auto 100% no-repeat;image-rendering:pixelated}
+#os *{image-rendering:auto}
+.chanfro{border:2px solid;border-color:var(--lila) #000 #000 var(--lila)}
+.fundo{border:2px solid;border-color:#000 var(--lila) var(--lila) #000}
+/* barra de cima do sistema, como a da ref-08 */
+#menu{position:absolute;z-index:40;left:0;right:0;top:0;height:calc(32px + env(safe-area-inset-top));padding:env(safe-area-inset-top) 8px 0;display:flex;align-items:center;gap:12px;background:var(--vio);border-bottom:2px solid #000;font-size:17px;font-weight:600}
+#menu img{width:24px;height:24px}
+#menu b{font-weight:700;letter-spacing:.06em}
+/* ícones soltos na área de trabalho */
+#mesa{position:absolute;z-index:1;left:0;right:0;bottom:calc(var(--tarefa) + env(safe-area-inset-bottom));padding:0 4px 6px;display:grid;grid-template-columns:repeat(5,1fr);row-gap:2px}
+.ic{position:relative;display:flex;flex-direction:column;align-items:center;gap:1px;min-height:68px;padding:3px 0 2px;font-size:13px;font-weight:500;line-height:1.05;text-align:center}
+.ic img{width:44px;height:44px;object-fit:contain;image-rendering:pixelated}
+.ic span{padding:0 3px;background:var(--preto)}
+.ic:hover span,.ic:focus-visible span{background:var(--ame);color:var(--preto)}
+.ic.fech img{opacity:.38;filter:grayscale(1)}
+.ic.fech span{color:var(--sec)}
+.ic u{position:absolute;right:calc(50% - 26px);top:0;min-width:17px;padding:1px 3px;background:var(--ame);color:var(--preto);font-size:13px;font-weight:700;text-decoration:none}
+/* janelas */
+.jan{position:absolute;display:flex;flex-direction:column;background:var(--tinta);box-shadow:4px 4px 0 #000}
+.tit{flex:none;display:flex;align-items:center;gap:6px;height:30px;padding:0 3px 0 6px;background:repeating-linear-gradient(90deg,var(--vio2) 0 2px,var(--vio) 2px 4px);color:var(--sec);font-size:16px;font-weight:600;touch-action:none;cursor:grab;white-space:nowrap;overflow:hidden}
+.jan.foco .tit{background:repeating-linear-gradient(90deg,var(--ame) 0 2px,#8A44E6 2px 4px);color:var(--preto)}
+.tit img{flex:none;width:22px;height:22px;object-fit:contain;image-rendering:pixelated}
+.tit>span{flex:1;overflow:hidden;text-overflow:ellipsis}
+.tit button{flex:none;width:24px;height:22px;display:grid;place-items:center;background:var(--tinta);color:var(--papel);font-size:15px;line-height:1;position:relative}
+.tit button::after{content:"";position:absolute;inset:-11px -2px}
+.corpo{flex:1;min-height:0;padding:8px;overflow:auto;font-size:16px;line-height:1.2}
+#relogio{display:block;font:400 min(29vw,124px)/.86 "Jersey 15",monospace;letter-spacing:.01em;font-variant-numeric:tabular-nums;white-space:nowrap;color:var(--papel);text-shadow:3px 3px 0 var(--ame)}
+.critico #relogio{color:var(--ame);text-shadow:3px 3px 0 #000}
+#barra{display:grid;grid-template-columns:repeat(24,1fr);gap:2px;height:16px;margin:6px 0 4px;padding:2px;background:#000}
+#barra i{background:var(--ame)}
+#barra i.vazio{background:var(--vio)}
+.linha-est{display:flex;justify-content:space-between;font-weight:500;color:var(--sec)}
+.critico .linha-est b{color:var(--ame)}
+.linha-est b{font-weight:700;color:var(--papel)}
+.msg{display:flex;align-items:center;gap:7px;width:100%;min-height:44px;padding:3px 4px;text-align:left;border-bottom:2px solid var(--vio)}
+.msg:last-child{border:0}
+.msg:hover{background:var(--vio)}
+.msg i{flex:none;width:9px;height:9px;background:var(--ame)}
+.msg strong{display:block;font-size:15px;font-weight:600}
+.msg em{display:block;font-size:14px;font-style:normal;color:var(--sec);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.msg>span{min-width:0}
+#qt{font-size:17px;font-weight:600}
+#qk{color:var(--lila);font-size:14px;font-weight:600;text-transform:uppercase;letter-spacing:.04em}
+.abre{text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:6px}
+.abre img{height:88px;width:auto;max-width:80%;object-fit:contain}
+.abre h3{font-size:24px;font-weight:700}
+.abre p{color:var(--sec)}
+/* barra de tarefas */
+#tarefas{position:absolute;z-index:40;left:0;right:0;bottom:0;height:calc(var(--tarefa) + env(safe-area-inset-bottom));padding:4px 4px calc(4px + env(safe-area-inset-bottom));display:flex;align-items:stretch;gap:4px;background:var(--vio);border-top:2px solid var(--lila)}
+#tarefas button{display:flex;align-items:center;gap:5px;padding:0 7px;background:var(--vio);font-size:15px;font-weight:600;white-space:nowrap;min-width:0}
+#iniciar img{width:26px;height:26px}
+#tabs{flex:1;min-width:0;display:flex;gap:3px;overflow:hidden}
+#tabs button{flex:0 1 auto;overflow:hidden;min-width:40px;padding:0 4px}
+#tabs img{flex:none;width:24px;height:24px;object-fit:contain;image-rendering:pixelated}
+#tabs button.foco{border-color:#000 var(--lila) var(--lila) #000;background:var(--tinta)}
+#sino{position:relative;width:44px;flex:none;justify-content:center;padding:0!important}
+#sino svg{width:24px;height:24px}
+#sino b{position:absolute;right:1px;top:0;padding:0 3px;background:var(--ame);color:var(--preto);font-size:13px;font-weight:700;line-height:15px}
+@media (min-width:900px){
+  #mesa{left:0;top:40px;right:auto;bottom:auto;width:330px;grid-template-columns:repeat(3,1fr);row-gap:8px;padding:6px}
+  .ic{min-height:80px}.ic img{width:48px;height:48px}
+  #relogio{font-size:124px}
+  #os{background-size:cover;background-position:100% 10%}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<main id="os">
+  <div id="menu"><img src="art/os/sigilo-mini.webp" alt=""><b>DEVO</b></div>
+  <div id="mesa" aria-label="Sistemas"></div>
+  <div id="janelas"></div>
+  <nav id="tarefas" aria-label="Barra de tarefas">
+    <button id="iniciar" class="chanfro" aria-label="Início: minimizar tudo"><img src="art/os/sigilo-mini.webp" alt=""></button>
+    <div id="tabs"></div>
+    <button id="sino" class="chanfro" aria-label="Central de avisos, 3 novos"></button>
+  </nav>
+</main>
+<script src="os-dados.js"></script>
+<script>
+$('sino').innerHTML=SINO+'<b>3</b>';
+const px=id=>`art/os/px/${id}.png`;
+// cada área de trabalho começa com o Tempo, o Quadro e as Mensagens abertos
+const pc=()=>matchMedia('(min-width:900px)').matches;
+const janelas=new Map();let z=2;
+function focaliza(j){j.el.style.zIndex=++z;document.querySelectorAll('.jan').forEach(e=>e.classList.toggle('foco',e===j.el));pintaTabs()}
+function pintaTabs(){
+  const t=$('tabs');t.innerHTML='';
+  for(const j of janelas.values()){
+    const b=document.createElement('button');b.className='chanfro'+(j.el.classList.contains('foco')&&!j.el.hidden?' foco':'');
+    b.innerHTML=`<img src="${px(j.ic)}" alt="">${janelas.size<4?`<span>${j.curto}</span>`:''}`;b.setAttribute('aria-label',j.titulo);
+    b.onclick=()=>{j.el.hidden=false;focaliza(j)};t.append(b);
+  }
+}
+function janela(id,titulo,ic,caixa,html,curto){
+  if(janelas.has(id)){const j=janelas.get(id);j.el.hidden=false;return focaliza(j)}
+  const el=document.createElement('section');el.className='jan chanfro';el.setAttribute('aria-label',titulo);
+  const [l,t,w,h]=caixa;
+  Object.assign(el.style,{left:l,top:t,width:w,height:h||'auto'});
+  el.innerHTML=`<header class="tit"><img src="${px(ic)}" alt=""><span>${titulo}</span><button class="chanfro mini" aria-label="Minimizar ${titulo}">_</button><button class="chanfro x" aria-label="Fechar ${titulo}">×</button></header><div class="corpo">${html}</div>`;
+  const j={el,titulo,ic,curto:curto||titulo};janelas.set(id,j);
+  el.addEventListener('pointerdown',()=>focaliza(j),true);
+  el.querySelector('.x').onclick=()=>{el.remove();janelas.delete(id);pintaTabs()};
+  el.querySelector('.mini').onclick=()=>{el.hidden=true;el.classList.remove('foco');pintaTabs()};
+  // arrastar pela barra de título; a barra nunca sai inteira da tela
+  const tit=el.querySelector('.tit');
+  tit.addEventListener('pointerdown',e=>{
+    if(e.target.closest('button'))return;
+    e.preventDefault();tit.setPointerCapture(e.pointerId);
+    const x=e.clientX,y=e.clientY,l0=el.offsetLeft,t0=el.offsetTop;
+    const mv=ev=>{el.style.left=Math.min(innerWidth-60,Math.max(60-el.offsetWidth,l0+ev.clientX-x))+'px';el.style.top=Math.min(innerHeight-90,Math.max(32,t0+ev.clientY-y))+'px'};
+    tit.addEventListener('pointermove',mv);
+    tit.addEventListener('pointerup',()=>tit.removeEventListener('pointermove',mv),{once:true});
+  });
+  $('janelas').append(el);focaliza(j);return j;
+}
+$('iniciar').onclick=()=>{for(const j of janelas.values()){j.el.hidden=true;j.el.classList.remove('foco')}pintaTabs()};
+$('sino').onclick=()=>janela('avisos','Avisos','calendario',pc()?['calc(100% - 340px)','auto','320px']:['16px','180px','calc(100% - 32px)'],'<p>A central de avisos fica para a próxima etapa.</p>','Avisos');
+
+SISTEMAS.forEach(a=>{
+  const tr=trancado(a),b=document.createElement('button');
+  b.className='ic'+(tr?' fech':'');
+  b.setAttribute('aria-label',tr?`${a.nome}: trancado. ${a.trava}`:a.nome);
+  b.innerHTML=`<img src="${px(a.id)}" alt=""><span>${a.curto||a.nome}</span>`+(a.conta&&!tr?`<u>${a.conta}</u>`:a.novo&&!tr?'<u>!</u>':'');
+  b.onclick=()=>{
+    const caixa=pc()?['380px','90px','520px','420px']:['14px','120px','calc(100% - 28px)','300px'];
+    janela(a.id,a.nome,a.id,caixa,tr?`<div class="abre"><img src="${emb(a.id)}" alt="" style="opacity:.4"><h3>Trancado</h3><p>${a.trava}</p></div>`:`<div class="abre"><img src="${emb(a.id)}" alt=""><h3>${a.nome}</h3><p>${a.s}</p><p>Esta tela vem nas próximas etapas.</p></div>`,a.curto||a.nome);
+  };
+  $('mesa').append(b);
+});
+
+const blocos=Array.from({length:24},(_,i)=>`<i class="${i>=(critico?2:24)?'vazio':''}"></i>`).join('');
+janela('tempo','Tempo no pulso','pulso',pc()?['380px','48px','520px']:['6px','38px','calc(100% - 12px)'],`<span id="relogio"></span><div id="barra" aria-hidden="true">${blocos}</div><div class="linha-est"><span>Estado</span><b id="est"></b></div>`,'Tempo');
+janela('quadro','Quadro','calendario',pc()?['950px','48px','300px']:['6px','calc(38px + min(29vw,124px)*.86 + 92px)','66%'],`<div id="qk"></div><div id="qt"></div>`,'Quadro');
+janela('msgs','Mensagens (3)','mensagens',pc()?['950px','230px','300px']:['26%','calc(38px + min(29vw,124px)*.86 + 188px)','calc(74% - 8px)'],
+  ['Remetente','Remetente','Remetente'].map((r,i)=>`<button class="msg"><i></i><span><strong>${r} ${i+1}</strong><em>A mensagem aparece aqui</em></span></button>`).join(''),'Msgs');
+relogio((t,est)=>{$('relogio').textContent=t;$('est').textContent=est});
+$('os').classList.toggle('critico',critico);
+let qi=0;const pq=()=>{$('qk').textContent=ANUNCIOS[qi][0];$('qt').textContent=ANUNCIOS[qi][1]};pq();
+if(!parado&&!q.has('semraf'))setInterval(()=>{qi=(qi+1)%ANUNCIOS.length;pq()},7000);
+focaliza(janelas.get('tempo'));
+</script>
+</body>
+</html>

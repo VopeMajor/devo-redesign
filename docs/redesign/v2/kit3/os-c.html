@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>DEVO v2 · Proposta C, a mão de cartas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo+Narrow:wght@500;700&display=swap">
+<style>
+:root{--preto:#0B0812;--vio:#2A1450;--ame:#A45CFF;--papel:#F1ECE0;--sec:rgba(241,236,224,.74);--disp:"Anton",Impact,sans-serif;--txt:"Archivo Narrow",sans-serif;
+  --cw:min(62vw,31dvh);--ch:calc(var(--cw)*1.5)}
+*{box-sizing:border-box;margin:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;background:var(--preto);overflow:hidden;font-family:var(--txt);color:var(--papel)}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+button:focus-visible{outline:3px solid var(--ame);outline-offset:3px}
+.l{display:inline-block;transform:rotate(var(--g)) translateY(var(--y)) scale(var(--e))}
+#os{position:relative;height:100dvh;display:flex;flex-direction:column;overflow:hidden;overflow:clip;background:var(--preto) url(art/os/fundo-calmo.webp) 100% 0/auto 100% no-repeat}
+/* o Tempo manda na tela */
+#topo{flex:none;position:relative;z-index:3;padding:max(8px,env(safe-area-inset-top)) 12px 0;text-align:center}
+#marca{position:absolute;left:14px;top:max(12px,env(safe-area-inset-top));font:400 22px/1 var(--disp);letter-spacing:.05em}
+#sino{position:absolute;right:6px;top:max(4px,env(safe-area-inset-top));width:48px;height:48px;display:grid;place-items:center}
+#sino svg{width:25px;height:25px}
+#sino b{position:absolute;right:4px;top:5px;min-width:19px;height:19px;padding:0 4px;display:grid;place-items:center;background:var(--ame);color:var(--preto);font:400 13px/1 var(--disp);transform:rotate(6deg)}
+#tempo{display:block;width:100%;padding-top:32px}
+#relogio{display:block;font:400 min(21vw,10.4dvh)/1 var(--disp);letter-spacing:.012em;font-variant-numeric:tabular-nums;color:var(--papel);text-shadow:4px 4px 0 var(--ame);white-space:nowrap}
+#selo{display:inline-block;margin-top:2px;font-size:13px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--sec)}
+.critico #relogio{color:var(--ame);text-shadow:4px 4px 0 var(--papel)}
+.critico #selo{color:var(--ame)}
+/* a mesa: a carta do meio é o sistema escolhido */
+#mesa{position:relative;flex:1;min-height:0;touch-action:pan-y;user-select:none;-webkit-user-select:none}
+.carta{position:absolute;left:50%;top:50%;width:var(--cw);height:var(--ch);margin:calc(var(--ch)/-2) calc(var(--cw)/-2);transition:transform .28s cubic-bezier(.2,.9,.25,1.05),filter .28s,opacity .2s;transform-origin:50% 120%;cursor:pointer;filter:drop-shadow(4px 5px 0 #000)}
+.carta img{pointer-events:none;-webkit-user-drag:none}
+.carta img.f{position:absolute;inset:0;width:100%;height:100%}
+.carta.atras{filter:brightness(.55) drop-shadow(3px 4px 0 #000)}
+.carta.sumiu{opacity:0;pointer-events:none}
+.carta .num{position:absolute;left:50%;top:8.2%;translate:-50% -50%;font:400 calc(var(--cw)*.085)/1 var(--disp);color:var(--preto)}
+.carta .emb{position:absolute;left:50%;top:50%;translate:-50% -50%;width:60%;height:38%;object-fit:contain}
+.carta .nom{position:absolute;left:14%;right:14%;top:90.3%;translate:0 -50%;text-align:center;font:400 calc(var(--cw)*.105)/1 var(--disp);letter-spacing:.015em;text-transform:uppercase;color:var(--preto);white-space:nowrap}
+.carta .nom.longo{font-size:calc(var(--cw)*.078)}
+.carta i{position:absolute;right:6%;top:6%;min-width:28px;padding:4px 7px 3px;font:400 15px/1 var(--disp);font-style:normal;text-align:center;background:var(--ame);color:var(--preto);transform:rotate(7deg);box-shadow:2px 2px 0 #000}
+/* o que a carta do meio faz */
+#fala{flex:none;position:relative;z-index:3;text-align:center;padding:2px 16px 0}
+#sub{min-height:22px;font-size:17px;font-weight:700;line-height:1.2;color:var(--sec);display:flex;align-items:center;justify-content:center;gap:6px}
+#sub svg{flex:none;width:20px;height:20px;color:var(--papel)}
+#abre{display:inline-block;width:min(250px,70vw);height:60px;margin-top:4px;padding:0 34px 0 28px;background:var(--img) right center/auto 100% no-repeat;color:var(--preto);font:400 28px/1 var(--disp);letter-spacing:.03em;text-transform:uppercase;text-align:left;filter:drop-shadow(3px 4px 0 var(--ame))}
+#abre[disabled]{--img:url(art/home/faixa-2-vio.webp)!important;color:var(--sec);filter:none;cursor:default}
+/* o resto da mão, para pular direto */
+#mao{flex:none;position:relative;z-index:3;display:flex;gap:2px;overflow-x:auto;overscroll-behavior:contain;scrollbar-width:none;padding:6px 8px 4px;scroll-padding:0 40%}
+#mao button{flex:none;width:50px;height:50px;display:grid;place-items:center;opacity:.72}
+#mao button.on{opacity:1;box-shadow:inset 0 -3px 0 var(--ame)}
+#mao img{max-width:42px;max-height:40px}
+#mao .fech img{filter:grayscale(1);opacity:.5}
+#quadro{flex:none;position:relative;z-index:3;display:block;width:100%;padding:2px 16px max(8px,env(safe-area-inset-bottom));text-align:left;background:var(--preto)}
+#quadro small{display:block;font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ame)}
+#quadro strong{display:block;font-size:16px;font-weight:700;line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#aviso{position:absolute;z-index:6;left:50%;top:40%;translate:-50% 0;rotate:-2deg;width:max-content;max-width:calc(100% - 40px);padding:10px 16px;background:var(--papel);color:var(--preto);font-size:18px;font-weight:700;text-align:center;box-shadow:5px 5px 0 var(--ame)}
+#aviso[hidden]{display:none}
+@media (max-height:700px){#mao{display:none}}
+@media (min-width:900px){
+  :root{--cw:min(22vw,38dvh)}
+  #os{background-image:url(art/home/fundo.webp);background-size:cover}
+  #relogio{font-size:min(10vw,15dvh)}
+  #tempo{padding-top:0}
+  #mao{justify-content:center}
+}
+@media (prefers-reduced-motion:reduce){.carta{transition:none}}
+</style>
+</head>
+<body>
+<main id="os">
+  <header id="topo">
+    <span id="marca">DEVO</span>
+    <button id="sino" aria-label="Central de avisos, 3 novos"></button>
+    <button id="tempo"><span id="relogio"></span><span id="selo"></span></button>
+  </header>
+  <section id="mesa" aria-label="Sistemas"></section>
+  <div id="fala"><div id="sub" aria-live="polite"></div><button id="abre" style="--img:url(art/home/faixa-1.webp)">Abrir</button></div>
+  <div id="mao" aria-label="Todos os sistemas"></div>
+  <button id="quadro"><small id="q-k"></small><strong id="q-t"></strong></button>
+  <div id="aviso" role="status" hidden></div>
+</main>
+<script src="os-dados.js"></script>
+<script>
+$('sino').innerHTML=SINO+'<b>3</b>';
+const N=SISTEMAS.length;let sel=0;
+const cartas=SISTEMAS.map((a,i)=>{
+  const tr=trancado(a),c=document.createElement('div');
+  c.className='carta';c.setAttribute('role','button');c.tabIndex=-1;
+  c.setAttribute('aria-label',tr?`${a.nome}: trancado. ${a.trava}`:a.nome);
+  c.innerHTML=tr?`<img class="f" src="art/os/verso.webp" alt="">`:
+    `<img class="f" src="art/os/carta.webp" alt=""><span class="num">${ROMANOS[i]}</span><img class="emb" src="${emb(a.id)}" alt=""><span class="nom${(a.curto||a.nome).length>9?' longo':''}">${letras(a.curto||a.nome)}</span>`+(a.conta?`<i>${a.conta}</i>`:a.novo?'<i>NOVO</i>':'');
+  c.onclick=()=>{if(arrastou)return;if(i===sel)abre();else vai(i)};
+  $('mesa').append(c);
+  const b=document.createElement('button');
+  b.className=tr?'fech':'';b.setAttribute('aria-label',tr?`${a.nome}: trancado`:a.nome);
+  b.innerHTML=`<img src="${emb(a.id)}" alt="">`;b.onclick=()=>vai(i);
+  $('mao').append(b);
+  return c;
+});
+function pinta(desloc=0){
+  cartas.forEach((c,i)=>{
+    let d=i-sel;if(d>N/2)d-=N;if(d<-N/2)d+=N;
+    const p=d+desloc,abs=Math.abs(p);
+    // leque: as vizinhas abrem para os lados, giradas em volta de um ponto abaixo da mão
+    c.style.transform=`translateX(${p*(matchMedia('(min-width:900px)').matches?78:58)}%) rotate(${p*9}deg) scale(${1-Math.min(abs,2)*.14})`;
+    c.style.zIndex=20-Math.round(abs*2);
+    c.classList.toggle('atras',abs>.5);
+    c.classList.toggle('sumiu',abs>(matchMedia('(min-width:900px)').matches?3.4:2.4));
+    c.tabIndex=i===sel?0:-1;
+  });
+}
+function vai(i){
+  sel=(i%N+N)%N;pinta();
+  const a=SISTEMAS[sel],tr=trancado(a);
+  $('sub').innerHTML=tr?CADEADO+`${a.nome}. ${a.trava}`:a.conta?`${a.s} · ${a.conta} novas`:a.s;
+  $('abre').disabled=tr;$('abre').textContent=tr?'Trancado':'Abrir';
+  [...$('mao').children].forEach((b,k)=>b.classList.toggle('on',k===sel));
+  const b=$('mao').children[sel];if(b)$('mao').scrollTo({left:b.offsetLeft-$('mao').clientWidth/2+25,behavior:parado?'auto':'smooth'});
+}
+let avisoT;const aviso=t=>{const a=$('aviso');a.textContent=t;a.hidden=false;clearTimeout(avisoT);avisoT=setTimeout(()=>a.hidden=true,2000)};
+function abre(){const a=SISTEMAS[sel];if(trancado(a))return aviso(`Trancado. ${a.trava}.`);aviso(`${a.nome} abriria aqui`)}
+$('abre').onclick=abre;
+$('tempo').onclick=()=>vai(SISTEMAS.findIndex(a=>a.id==='pulso'));
+$('sino').onclick=()=>aviso('Central de avisos: fica para a próxima etapa');
+addEventListener('keydown',e=>{if(e.key==='ArrowLeft')vai(sel-1);if(e.key==='ArrowRight')vai(sel+1)});
+
+/* deslizar troca de carta; a mão acompanha o dedo */
+let x0=null,arrastou=false;
+const mesa=$('mesa');
+mesa.addEventListener('pointerdown',e=>{x0=e.clientX;arrastou=false});
+addEventListener('pointermove',e=>{
+  if(x0===null)return;
+  const d=e.clientX-x0;if(Math.abs(d)>6)arrastou=true;
+  if(!arrastou)return;
+  cartas.forEach(c=>c.style.transition='none');
+  pinta(d/(mesa.clientWidth*.45));
+});
+addEventListener('pointercancel',()=>{x0=null;arrastou=false;cartas.forEach(c=>c.style.transition='');pinta()});
+addEventListener('pointerup',e=>{
+  if(x0===null)return;
+  const d=e.clientX-x0;x0=null;
+  cartas.forEach(c=>c.style.transition='');
+  if(arrastou){vai(sel-Math.round(d/(mesa.clientWidth*.45)));setTimeout(()=>arrastou=false,60)}
+});
+
+relogio((t,est)=>{$('relogio').textContent=t;$('selo').textContent=`Tempo no pulso · ${est}`;$('tempo').setAttribute('aria-label',`Tempo no pulso: ${t}. ${est}. Ir para Pulso`)});
+$('os').classList.toggle('critico',critico);
+let qi=0;const pq=()=>{$('q-k').textContent=ANUNCIOS[qi][0];$('q-t').textContent=ANUNCIOS[qi][1]};pq();
+if(!parado&&!q.has('semraf'))setInterval(()=>{qi=(qi+1)%ANUNCIOS.length;pq()},7000);
+vai(0);
+</script>
+</body>
+</html>

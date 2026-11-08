@@ -1,0 +1,7 @@
+Generate images with the built-in image_gen tool. Make exactly 1 image_gen call. Copy the result into this folder with the given name (keep PNG). Do not edit other files. Do not write code.
+Keep EXACTLY the drawing style of the attached reference: hand-designed 2D, cel shading in 3 tones plus one clean highlight, thin dark outlines, one light from the top left, tarnished antique gold, dark iron, bone white, one muted accent. DEVO is a dark somber gothic survival game about time. No glitter, no particles, no glow halos, no text, no letters, no numbers. Strictly frontal, no perspective.
+figuras.png, 1536x512: a strict grid of 3 columns x 1 row of equal square cells (512x512), no gaps, no borders, every cell the same plain flat background #E4DCCB (bone paper). In each cell ONLY THE UPPER HALF of a playing-card court figure, cut by a straight horizontal line exactly at the bottom edge of the cell (the figure may touch only the bottom edge), centred horizontally, filling about 80% of the cell width.
+(1) JACK: a young page in a hooded doublet, face replaced by a plain featureless bone mask, holding a small hourglass upright.
+(2) QUEEN: a queen in a high collar, a black lace veil hiding the face to the chin, a pocket watch hanging on a chain from her hand.
+(3) KING: a king with a tall dark-iron crown, a curtain of fine chains hanging from the crown hiding the face, holding a short sword whose blade is shaped like a clock hand.
+Faces always hidden; clothing in ink black, bone, tarnished gold and one muted oxblood; no suit symbols, no background objects.

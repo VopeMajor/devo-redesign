@@ -1,5 +1,11 @@
 # DEVO v2 — Spec do avatar (criação, aparência, sprite e retrato)
 
+> **Decisões do dono em 01/11 (computador dele), valem sobre o resto desta spec.** Dois corpos-base, masculino e
+> feminino, sem trava de gênero em nenhuma peça. Todos os 18 penteados e 18 rostos de `kit3/` ficam. Cor de cabelo, olhos
+> e pele selecionável. Chibi em pixel andando na Casa e fotos especiais sempre com a aparência atual, "assim como amor
+> doce". A primeira escolha é grátis e aparece assim que a Casa é desbloqueada. Trocar depois: no guarda-roupa do quarto,
+> por 1 hora de Tempo (substitui o Espelho). Protótipo em `kit3/avatar.html`. Ver `PEDIDO-V2-dono.md`.
+
 Primeira versão em 01/11/2026. Vale junto com `BIBLIA.md` (direção de arte), `SPEC-CASA.md` (onde a criação
 acontece) e `SPEC-TUTORIAL-E-EQUIPE.md` (o que o novato faz depois).
 

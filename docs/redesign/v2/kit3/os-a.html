@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>DEVO v2 · Proposta A, o mostrador</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo+Narrow:wght@500;700&display=swap">
+<style>
+:root{--preto:#0B0812;--vio:#2A1450;--ame:#A45CFF;--papel:#F1ECE0;--sec:rgba(241,236,224,.74);--disp:"Anton",Impact,sans-serif;--txt:"Archivo Narrow",sans-serif;
+  --d:min(calc(100vw + 34px),53dvh)}
+*{box-sizing:border-box;margin:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;background:var(--preto);overflow:hidden;font-family:var(--txt);color:var(--papel)}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+button:focus-visible{outline:3px solid var(--ame);outline-offset:2px}
+.l{display:inline-block;transform:rotate(var(--g)) translateY(var(--y)) scale(var(--e))}
+#os{position:relative;height:100dvh;overflow:hidden;overflow:clip;background:var(--preto) url(art/os/fundo-calmo.webp) 100% 0/auto 100% no-repeat}
+#marca{position:absolute;z-index:4;left:14px;top:max(10px,env(safe-area-inset-top));font:400 24px/1 var(--disp);letter-spacing:.05em}
+#sino{position:absolute;z-index:4;right:6px;top:max(2px,env(safe-area-inset-top));width:48px;height:48px;display:grid;place-items:center}
+#sino svg{width:25px;height:25px}
+#sino b{position:absolute;right:4px;top:5px;min-width:19px;height:19px;padding:0 4px;display:grid;place-items:center;background:var(--ame);color:var(--preto);font:400 13px/1 var(--disp);transform:rotate(6deg)}
+
+/* o início é o próprio relógio: girar o aro é escolher o sistema */
+#dial{position:absolute;z-index:1;left:50%;top:calc(max(6px,env(safe-area-inset-top)) + 34px);width:var(--d);height:var(--d);translate:-50% 0;touch-action:none}
+#aro{position:absolute;inset:0;transition:transform .3s cubic-bezier(.2,.9,.25,1.05)}
+#aro>img{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;user-select:none}
+.sl{position:absolute;left:50%;top:50%;width:calc(var(--d)*.125);height:calc(var(--d)*.125);margin:calc(var(--d)*-.0625);display:grid;place-items:center;transform:rotate(var(--a)) translateY(calc(var(--d)*-.355)) rotate(calc(-1*var(--a) - var(--giro)));transition:transform .3s cubic-bezier(.2,.9,.25,1.05)}
+.sl img{max-width:100%;max-height:100%;width:auto;height:auto;filter:drop-shadow(1px 1px 0 var(--preto));transition:scale .2s}
+.sl.fech img{opacity:.42;filter:grayscale(1)}
+.sl.sel img{scale:1.5}
+.sl.sel.fech img{opacity:.8}
+.sl i{position:absolute;right:0;top:0;min-width:15px;height:15px;background:var(--ame);border-radius:0;box-shadow:1px 1px 0 var(--preto);transform:rotate(45deg) scale(.55)}
+#ponteiro{position:absolute;z-index:2;left:50%;top:calc(var(--d)*.17);width:22px;height:calc(var(--d)*.1);translate:-50% 0;color:var(--papel);pointer-events:none}
+#ponteiro svg{display:block;width:100%;height:100%}
+#centro{position:absolute;z-index:3;left:50%;top:50%;translate:-50% -50%;display:block;text-align:center;width:calc(var(--d)*.56)}
+#centro small{display:block;font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--sec)}
+#relogio{display:block;font:400 calc(var(--d)*.136)/1.05 var(--disp);letter-spacing:.01em;font-variant-numeric:tabular-nums;white-space:nowrap;color:var(--papel);text-shadow:3px 3px 0 var(--ame)}
+#selo{display:inline-block;margin-top:2px;padding:3px 9px 2px;background:var(--papel);color:var(--preto);font:400 15px/1 var(--disp);letter-spacing:.06em;text-transform:uppercase;transform:rotate(-2deg)}
+.critico #relogio{color:var(--ame);text-shadow:3px 3px 0 var(--papel)}
+.critico #selo{background:var(--ame)}
+.critico #aro{animation:treme .3s steps(2) infinite}
+@keyframes treme{50%{translate:1px -1px}}
+
+/* o que está no ponteiro */
+#painel{position:absolute;z-index:2;left:0;right:0;bottom:0;top:calc(max(6px,env(safe-area-inset-top)) + 34px + var(--d)*.93);display:flex;flex-direction:column}
+#painel::before{content:"";position:absolute;z-index:-1;left:-12%;right:-12%;top:0;bottom:-40px;background:url(art/home/folha.webp) center top/100% auto no-repeat,linear-gradient(var(--preto),var(--preto)) bottom/100% calc(100% - 26px) no-repeat;filter:drop-shadow(0 -4px 0 var(--ame));transform:rotate(-2deg);transform-origin:50% 0}
+#info{flex:1;min-height:0;display:grid;grid-template-columns:48px 1fr 48px;align-items:center;padding:26px 2px 0}
+#grande{display:block;height:clamp(0px,calc(100dvh - var(--d)*.93 - 330px),112px);width:auto;max-width:60%;margin:0 auto 4px}
+.seta{width:48px;height:64px;display:grid;place-items:center}
+.seta svg{width:26px;height:26px}
+#txt{min-width:0;text-align:center}
+#nome{font:400 clamp(38px,12.4vw,60px)/1.08 var(--disp);letter-spacing:.015em;text-transform:uppercase;white-space:nowrap}
+#nome.longo{font-size:clamp(30px,9.6vw,44px)}
+#sub{font-size:17px;font-weight:700;line-height:1.2;color:var(--sec);display:flex;align-items:center;justify-content:center;gap:6px}
+#sub svg{flex:none;width:20px;height:20px;color:var(--papel)}
+#abre{flex:none;align-self:center;min-width:236px;height:64px;padding:0 40px 0 30px;margin:6px 0 4px;background:var(--img) right center/auto 100% no-repeat;color:var(--preto);font:400 30px/1 var(--disp);letter-spacing:.03em;text-transform:uppercase;text-align:left;filter:drop-shadow(3px 4px 0 var(--ame))}
+#abre[disabled]{--img:url(art/home/faixa-2-vio.webp)!important;color:var(--sec);filter:none;cursor:default}
+#quadro{flex:none;display:block;width:100%;padding:6px 16px max(10px,env(safe-area-inset-bottom));text-align:left}
+#quadro small{display:block;font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ame)}
+#quadro strong{display:block;font-size:16px;font-weight:700;line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#aviso{position:absolute;z-index:6;left:50%;top:36%;translate:-50% 0;rotate:-2deg;width:max-content;max-width:calc(100% - 40px);padding:10px 16px;background:var(--papel);color:var(--preto);font-size:18px;font-weight:700;text-align:center;box-shadow:5px 5px 0 var(--ame)}
+#aviso[hidden]{display:none}
+@media (min-width:900px){
+  :root{--d:min(92dvh,56vw)}
+  #os{background-image:url(art/home/fundo.webp);background-size:cover}
+  #dial{left:32%;top:4dvh}
+  #painel{left:58%;top:0;bottom:0;justify-content:center;background:var(--preto);box-shadow:-6px 0 0 var(--ame)}
+  #painel::before{display:none}
+  #info{flex:none;padding:0 10px}
+  #nome,#nome.longo{font-size:clamp(40px,5vw,72px);white-space:normal}
+  #sino{right:12px;top:10px}
+}
+@media (prefers-reduced-motion:reduce){#aro,.sl{transition:none}.critico #aro{animation:none}}
+</style>
+</head>
+<body>
+<main id="os">
+  <span id="marca">DEVO</span>
+  <button id="sino" aria-label="Central de avisos, 3 novos"></button>
+  <div id="dial">
+    <div id="aro"><img src="art/os/mostrador.webp" alt=""></div>
+    <div id="ponteiro" aria-hidden="true"><svg viewBox="0 0 22 80" preserveAspectRatio="none" fill="currentColor"><path d="M11 0l5 26-3 2 1 52h-6l1-52-3-2z"/></svg></div>
+    <button id="centro" aria-label="Abrir Pulso"><small>Tempo no pulso</small><span id="relogio"></span><span id="selo"></span></button>
+  </div>
+  <section id="painel">
+    <div id="info">
+      <button class="seta" id="ant" aria-label="Sistema anterior"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16 2 5 12l11 10 2-3-7-7 7-7z"/></svg></button>
+      <div id="txt" aria-live="polite"><img id="grande" alt=""><div id="nome"></div><div id="sub"></div></div>
+      <button class="seta" id="prox" aria-label="Próximo sistema"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 2l11 10L8 22l-2-3 7-7-7-7z"/></svg></button>
+    </div>
+    <button id="abre" style="--img:url(art/home/faixa-1.webp)">Abrir</button>
+    <button id="quadro"><small id="q-k"></small><strong id="q-t"></strong></button>
+  </section>
+  <div id="aviso" role="status" hidden></div>
+</main>
+<script src="os-dados.js"></script>
+<script>
+$('sino').innerHTML=SINO+'<b>3</b>';
+const N=SISTEMAS.length,PASSO=360/N;
+let sel=0,giro=0;
+const aro=$('aro');
+SISTEMAS.forEach((a,i)=>{
+  const b=document.createElement('button');
+  b.className='sl'+(trancado(a)?' fech':'');
+  b.style.setProperty('--a',i*PASSO+'deg');
+  b.setAttribute('aria-label',trancado(a)?`${a.nome}: trancado. ${a.trava}`:a.nome);
+  b.innerHTML=`<img src="${emb(a.id)}" alt="">`+((a.conta||a.novo)&&!trancado(a)?'<i></i>':'');
+  b.onclick=()=>{if(!arrastou)vai(i)};
+  aro.append(b);
+});
+function pinta(){
+  const a=SISTEMAS[sel],tr=trancado(a);
+  aro.style.transform=`rotate(${giro}deg)`;
+  aro.style.setProperty('--giro',giro+'deg');
+  [...aro.querySelectorAll('.sl')].forEach((b,i)=>b.classList.toggle('sel',i===sel));
+  $('grande').src=emb(a.id);$('grande').style.opacity=tr?.4:1;$('nome').innerHTML=letras(a.nome);$('nome').classList.toggle('longo',a.nome.length>11);
+  $('sub').innerHTML=tr?CADEADO+a.trava:a.conta?`${a.s} · ${a.conta} novas`:a.s;
+  $('abre').disabled=tr;$('abre').textContent=tr?'Trancado':'Abrir';
+}
+function vai(i){
+  // gira pelo caminho mais curto
+  const alvo=(i%N+N)%N;let d=alvo-sel;if(d>N/2)d-=N;if(d<-N/2)d+=N;
+  sel=alvo;giro-=d*PASSO;pinta();
+}
+$('ant').onclick=()=>vai(sel-1);$('prox').onclick=()=>vai(sel+1);
+addEventListener('keydown',e=>{if(e.key==='ArrowLeft')vai(sel-1);if(e.key==='ArrowRight')vai(sel+1)});
+let avisoT;const aviso=t=>{const a=$('aviso');a.textContent=t;a.hidden=false;clearTimeout(avisoT);avisoT=setTimeout(()=>a.hidden=true,2000)};
+$('abre').onclick=()=>aviso(`${SISTEMAS[sel].nome} abriria aqui`);
+$('centro').onclick=()=>{if(!arrastou)vai(SISTEMAS.findIndex(a=>a.id==='pulso'))};
+$('sino').onclick=()=>aviso('Central de avisos: fica para a próxima etapa');
+
+/* arrastar em volta do centro gira o aro, e ao soltar ele encaixa no sistema mais próximo */
+let arrastou=false,ang0=null,giro0=0;
+const dial=$('dial');
+const angulo=e=>{const r=dial.getBoundingClientRect();return Math.atan2(e.clientY-r.top-r.height/2,e.clientX-r.left-r.width/2)*180/Math.PI};
+dial.addEventListener('pointerdown',e=>{ang0=angulo(e);giro0=giro;arrastou=false});
+addEventListener('pointermove',e=>{
+  if(ang0===null)return;
+  let d=angulo(e)-ang0;if(d>180)d-=360;if(d<-180)d+=360;
+  if(Math.abs(d)>3)arrastou=true;
+  if(!arrastou)return;
+  aro.style.transition='none';aro.style.transform=`rotate(${giro0+d}deg)`;aro.style.setProperty('--giro',giro0+d+'deg');
+  aro.querySelectorAll('.sl').forEach(s=>s.style.transition='none');
+});
+addEventListener('pointerup',e=>{
+  if(ang0===null)return;
+  ang0=null;
+  aro.style.transition='';aro.querySelectorAll('.sl').forEach(s=>s.style.transition='');
+  if(arrastou){
+    const atual=parseFloat(aro.style.getPropertyValue('--giro'))||giro,passos=Math.round(atual/PASSO);
+    giro=passos*PASSO;sel=((-passos)%N+N)%N;pinta();
+    setTimeout(()=>arrastou=false,60);
+  }
+});
+
+relogio((t,est)=>{$('relogio').textContent=t;$('selo').textContent=est;$('centro').setAttribute('aria-label',`Tempo no pulso: ${t}. ${est}. Ir para Pulso`)});
+$('os').classList.toggle('critico',critico);
+let qi=0;const pq=()=>{$('q-k').textContent=ANUNCIOS[qi][0];$('q-t').textContent=ANUNCIOS[qi][1]};pq();
+if(!parado&&!q.has('semraf'))setInterval(()=>{qi=(qi+1)%ANUNCIOS.length;pq()},7000);
+pinta();
+</script>
+</body>
+</html>

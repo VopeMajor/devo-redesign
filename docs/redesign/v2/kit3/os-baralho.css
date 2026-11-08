@@ -1,0 +1,119 @@
+/* ---- Cartas de dificuldade do Deadly Vote · "O Peso do Destino" (crítico de arte, 03/11) ----
+   Papel osso que escurece do Ás ao Dez (--peso), cantoneiras de latão (4 a 7) e de ferro (8 a 10), corrente no Dez.
+   Naipes desenhados (nunca os símbolos do teclado). Escarlate só no Red Coringa. A carta não muda com o tema. */
+.dv-carta{--w:96px;position:relative;display:inline-block;flex:none;width:var(--w);aspect-ratio:400/594;font-size:calc(var(--w) / 10);vertical-align:middle;
+  filter:drop-shadow(0 calc(.4em + var(--peso,0) * .14em) calc(.8em + var(--peso,0) * .2em) rgba(0,0,0,calc(.45 + var(--peso,0) * .03)))}
+.dv-carta>img,.dv-carta>span{position:absolute}
+.dv-papel,.dv-arte,.dv-carta.verso img{inset:0;width:100%;height:100%}
+.dv-papel{filter:none}
+/* cartas escuras: o peso aparece nas cantoneiras e num brilho de borda que esquenta do Ás ao Dez */
+.dv-carta:not(.verso)::before{content:"";position:absolute;inset:1.5%;border-radius:.45em;pointer-events:none;box-shadow:inset 0 0 calc(var(--peso,0) * .25em) rgba(0,0,0,.6)}
+.dv-pips{inset:17% 16% 17% 16%}
+.dv-pips img{position:absolute;width:1.9em;height:1.9em;translate:-50% -50%}
+.dv-pips.as img{width:4.4em;height:4.4em}
+.dv-fig{inset:12% 10% 12% 10%;overflow:hidden;border-radius:.3em;box-shadow:inset 0 0 0 .08em rgba(184,146,78,.45)}
+[data-baralho=b] .dv-fig{box-shadow:inset 0 0 0 .08em rgba(169,176,184,.45)}
+.dv-fig::after{content:"";position:absolute;left:0;right:0;top:50%;height:.08em;background:rgba(184,146,78,.45)}
+.dv-fig img{position:absolute;left:0;width:100%;height:50%;object-fit:cover;object-position:bottom}
+.dv-fig img:first-child{top:0}
+.dv-fig img.b{bottom:0;rotate:180deg}
+.dv-ind{display:grid;justify-items:center;gap:.05em;width:1.6em}
+.dv-ind.a{left:5.5%;top:4.5%}
+.dv-ind.z{right:5.5%;bottom:4.5%;rotate:180deg}
+.dv-ind b{font:600 1.55em/1 'Cinzel',serif;color:#E4DCCB;letter-spacing:-.04em}
+.dv-carta.n-copas .dv-ind b,.dv-carta.n-ouros .dv-ind b{color:#C2585A}
+[data-baralho=b] .dv-ind b{color:#C8CED6}
+[data-baralho=b] .dv-carta.n-copas .dv-ind b,[data-baralho=b] .dv-carta.n-ouros .dv-ind b{color:#C9474E}
+.dv-ind img{width:1.1em;height:1.1em}
+.dv-ind .dv-guizo{width:1.5em;height:1.5em}
+.dv-canto{width:2.6em;height:2.6em}
+.dv-canto.k-tl{left:-.15em;top:-.15em}
+.dv-canto.k-tr{right:-.15em;top:-.15em;scale:-1 1}
+.dv-canto.k-bl{left:-.15em;bottom:-.15em;scale:1 -1}
+.dv-canto.k-br{right:-.15em;bottom:-.15em;scale:-1 -1}
+.dv-corrente{position:absolute;right:.5em;bottom:-1.1em;width:.7em;height:1.3em;border:.18em solid #3a3d47;border-radius:.4em;box-shadow:0 .1em 0 #1f2128}
+.dv-mancha{left:0;top:0;width:78%;height:auto;opacity:.92}
+.dv-carta.red{filter:drop-shadow(0 .5em 1.2em rgba(0,0,0,.6)) drop-shadow(0 0 .8em rgba(200,32,47,.35))}
+.dv-carta.red::after{content:"";position:absolute;inset:1.5%;border-radius:.45em;box-shadow:inset 0 0 0 .14em #C8202F;pointer-events:none}
+/* small cards: drop pips detail weight */
+.dv-carta[style*="--w:24px"] .dv-ind,.dv-carta[style*="--w:34px"] .dv-ind,.dv-carta[style*="--w:36px"] .dv-ind{display:none}
+.dv-carta[style*="--w:24px"] .dv-pips img,.dv-carta[style*="--w:34px"] .dv-pips img,.dv-carta[style*="--w:36px"] .dv-pips img{width:2.4em;height:2.4em}
+
+/* Mesa: mini carta presa ao clipe do dossiê */
+.ms-dossie .ms-dv{position:absolute;right:8px;top:4px;rotate:6deg;z-index:0}
+.ms-dossie .ms-caso-tx{padding-right:52px}
+.dv-mesa .dv-linha{display:flex;align-items:center;gap:14px}
+.dv-mesa .dv-linha>div>strong{display:block;font:600 18px/1.15 var(--cond)}
+.dv-mesa .dv-linha>div>small{display:block;margin-top:4px;font:500 13px/1.35 var(--ui);color:var(--sec)}
+.dv-carimbo{display:inline-block;margin-top:8px;mix-blend-mode:normal!important;opacity:1!important;color:#E7838B!important;border-color:#C8202F!important;background:rgba(200,32,47,.08)}
+.dv-red-bt{min-height:44px;padding:0 16px;border-radius:999px;font:600 13.5px/1 var(--ui);color:#E59A92;background:none;border:1px solid #7E1F24}
+.dv-sel{display:grid;gap:10px}
+.dv-naipes{display:flex;gap:8px}
+.dv-naipes button{display:grid;place-items:center;width:44px;height:44px;border-radius:8px;background:#15161B;box-shadow:inset 0 0 0 1px rgba(184,146,78,.45)}
+[data-baralho=b] .dv-naipes button{background:#101A2C;box-shadow:inset 0 0 0 1px rgba(169,176,184,.45)}
+.dv-naipes img{width:26px;height:26px}
+.dv-naipes button[aria-checked=true]{box-shadow:0 0 0 2px var(--fundo,#05060a),0 0 0 4px #B8924E}
+.dv-tira{display:flex;gap:8px;overflow-x:auto;scroll-snap-type:x mandatory;padding:6px 2px 12px;scrollbar-width:thin}
+.dv-tira button{scroll-snap-align:start;flex:none;padding:0;border-radius:6px;transition:translate .15s}
+.dv-tira button[aria-checked=true]{translate:0 -4px;outline:2px solid #B8924E;outline-offset:3px}
+.dv-previa{display:flex;align-items:center;gap:16px;padding:12px;border-radius:14px;background:rgba(0,0,0,.25)}
+.dv-previa .dv-carta{rotate:-3deg}
+.dv-previa>div>strong{display:block;font:600 19px/1.15 var(--cond)}
+.dv-previa>div>b{display:block;margin-top:4px;font:600 15px/1.2 var(--ui);font-variant-numeric:tabular-nums;color:var(--creme,#e9e2d6)}
+.dv-previa>div>small{display:block;margin-top:6px;font:500 12px/1.35 var(--ui);color:var(--sec)}
+/* folha do Red Coringa: segurar para revelar */
+.dv-folha{position:absolute;left:0;right:0;bottom:0;z-index:70;display:grid;align-items:end;background:rgba(4,4,6,.82)}
+.dv-folha-in{display:grid;justify-items:center;gap:12px;padding:22px 18px 18px;text-align:center;background:#0b0d14;box-shadow:0 -1px 0 #7E1F24}
+.dv-folha-in h3{margin:0;font:600 20px/1.1 'Cinzel',serif;letter-spacing:.1em;text-transform:uppercase;color:#E59A92}
+.dv-folha-in p{margin:0;max-width:34ch;font:400 15px/1.45 var(--ui);color:var(--tx)}
+.dv-folha-in .r-bt{width:min(360px,100%);min-height:44px;border:1px solid rgba(233,226,214,.18)!important;box-shadow:none!important;outline:none}
+.dv-folha-in .r-bt:focus-visible{outline:1px solid rgba(233,226,214,.5);outline-offset:3px}
+.dv-segura{position:relative;width:min(360px,100%);min-height:52px;border-radius:999px;overflow:hidden;font:600 14px/1 var(--ui);color:#f6e6e3;background:#3a1214;border:1px solid #C8202F;touch-action:none;user-select:none}
+.dv-segura i{position:absolute;inset:0;width:0;background:#8c1d24;transition:width .15s linear}
+.dv-segura.enchendo i{width:100%;transition:width 1.5s linear}
+.dv-segura span{position:relative;display:block;text-align:center}
+/* Record: cartão da convocação, regras e mini cartas */
+.dv-conv{display:flex;align-items:center;gap:14px;margin-bottom:10px}
+.dv-conv strong{display:block}
+.dv-nome{display:block;margin-top:4px;font:600 16px/1.2 'Cinzel',serif;letter-spacing:.04em}
+.dv-conv small{display:block;margin-top:4px;font-size:15px;opacity:.8;font-variant-numeric:tabular-nums}
+.dv-mudou{display:block;margin-top:6px;font-size:14px;font-style:normal;color:#E7838B}
+.dv-como{display:flex;align-items:center;justify-content:space-between;width:100%;min-height:44px;margin:6px 0;padding:0 4px;font-size:17px;border-top:1px solid rgba(255,255,255,.1)}
+.dv-como svg,.dv-volta svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2}
+.r-hist li .dv-carta{margin-right:10px}
+.dv-volta{display:inline-flex;align-items:center;gap:4px;min-height:40px;font-size:16px;margin-bottom:8px}
+.dv-regras{display:grid;gap:14px}
+.dv-regras h4{margin:0}
+.dv-regras p{margin:0;font-family:'EB Garamond',serif;font-size:19px;line-height:1.45}
+.dv-sub{margin:10px 0 0;font:600 15px/1 'Cinzel',serif;letter-spacing:.16em;text-transform:uppercase}
+.dv-escada{list-style:none;margin:0;padding:0;display:grid;gap:4px}
+.dv-escada li{display:grid;grid-template-columns:36px 1fr auto;grid-template-rows:auto auto;align-items:center;column-gap:12px;row-gap:2px;padding:6px 10px;border-left:calc(var(--i) * 1px) solid #B8924E;background:rgba(0,0,0,calc(.08 + var(--i) * .035))}
+.dv-escada li .dv-carta{grid-column:1;grid-row:1/3}
+.dv-escada li>span:not(.dv-carta){grid-column:2;grid-row:1/3;font:600 17px/1 'Cinzel',serif}
+.dv-escada li>b{grid-column:3;justify-self:end;font:500 14px/1.2 'IBM Plex Sans',sans-serif;font-variant-numeric:tabular-nums}
+.dv-fileira{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;padding:8px 0}
+/* aviso do Red Coringa */
+.dv-aviso{position:fixed;inset:0;z-index:220;display:grid;place-content:center;justify-items:center;gap:10px;padding:20px 16px calc(20px + env(safe-area-inset-bottom));text-align:center;background:radial-gradient(60% 50% at 50% 38%,rgba(200,32,47,.12),transparent 70%),#07090D;color:#e9e2d6}
+.dv-av-carta{position:relative;width:200px;aspect-ratio:400/594;perspective:900px;margin-bottom:12px}
+.dv-vira{position:absolute;inset:0;transform-style:preserve-3d;animation:dv-vira 1.6s .6s ease-in-out both}
+.dv-vira .dv-carta{position:absolute;inset:0;backface-visibility:hidden}
+.dv-vira .f2{transform:rotateY(180deg)}
+@keyframes dv-vira{to{transform:rotateY(180deg)}}
+.dv-racha{position:absolute;left:-20%;top:-14%;width:90%;opacity:0;animation:dv-racha .6s ease-out both}
+@keyframes dv-racha{to{opacity:.85}}
+.dv-aviso.pronto .dv-vira{animation:none;transform:rotateY(180deg)}
+.dv-aviso.pronto .dv-racha{animation:none;opacity:0}
+.dv-aviso h2{margin:0;font:600 28px/1 'Cinzel',serif;letter-spacing:.12em;text-transform:uppercase;color:#C8202F}
+.dv-aviso p{margin:0;font:400 18px/1.4 'EB Garamond',serif}
+.dv-av-ok{justify-self:center;text-align:center;width:min(360px,100%);min-height:48px;margin-top:14px;font:600 13px/1 'Cinzel',serif;letter-spacing:.18em;text-transform:uppercase;color:#e9e2d6;background:none;border:1px solid rgba(226,194,122,.4);opacity:0;transition:opacity .3s}
+.dv-aviso.pronto .dv-av-ok{opacity:1}
+@media (prefers-reduced-motion:reduce){.dv-vira,.dv-racha{animation:none}.dv-tira button{transition:none}.dv-segura.enchendo i{transition:none}}
+.dv-carta[style*="--w:24px"] .dv-canto,.dv-carta[style*="--w:34px"] .dv-canto,.dv-carta[style*="--w:36px"] .dv-canto,.dv-carta[style*="--w:24px"] .dv-corrente,.dv-carta[style*="--w:34px"] .dv-corrente,.dv-carta[style*="--w:36px"] .dv-corrente{display:none}
+.dv-carta[style*="--w:36px"] .dv-pips img{width:1.9em;height:1.9em}
+.dv-carta[style*="--w:36px"] .dv-pips.as img{width:4.4em;height:4.4em}
+/* cartas brancas (escolha do dono): tinta preta e carmim, filete de ouro; o peso escurece só a borda */
+[data-baralho=c] .dv-ind b{color:#16171C}
+[data-baralho=c] .dv-carta.n-copas .dv-ind b,[data-baralho=c] .dv-carta.n-ouros .dv-ind b{color:#9B1F2A}
+[data-baralho=c] .dv-carta:not(.verso)::before{box-shadow:inset 0 0 calc(var(--peso,0) * .3em) rgba(40,30,20,.28)}
+[data-baralho=c] .dv-fig{box-shadow:inset 0 0 0 .08em rgba(22,23,28,.5)}
+[data-baralho=c] .dv-naipes button{background:#F5F5F2;box-shadow:inset 0 0 0 1px rgba(0,0,0,.25)}

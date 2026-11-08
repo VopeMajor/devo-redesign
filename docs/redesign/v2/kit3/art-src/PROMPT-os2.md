@@ -1,0 +1,10 @@
+Generate images with the built-in image_gen tool. Make exactly 3 image_gen calls.
+Copy each result into this folder with the given name (keep PNG). Do not edit other files. Do not write code.
+
+The attached home-fundo.png and home-emblemas.png set the style: screen-printed gothic poster, carved linocut, coarse halftone, hard flat inks, no gradients, no glow, no 3D. Palette only: near black #0B0812, deep violet #2A1450, loud amethyst #A45CFF, cream paper #F1ECE0. No text, letters, numerals, logos or watermark. No people.
+
+1) os-mostrador.png, 1024x1024. A huge ornate gothic clock face seen perfectly from the front, one perfect circle filling the image edge to edge, plain solid chroma green #00ff00 in the corners outside the circle. Thick carved cream stone outer ring with thorn and tracery ornament, cracked in a few places. Inside the ring, a dark band of deep violet stained glass panes. The whole central disc, about 55% of the diameter, is calm near black with only very faint violet lead lines, because a large countdown goes on top of it later. No numbers, no hour marks, no clock hands, no medallions.
+
+2) os-carta.png, 1024x1536. The empty front of a gothic tarot card, seen straight on, perfectly symmetrical, filling the image with a small margin. Thick cream paper border with carved thorn, rose and tracery ornament, a pointed gothic arch at the top of the inner panel and a blank cartouche at the bottom for a name, and a small blank roundel at the top centre for a roman numeral. The inner panel is calm near black with faint violet radiating lines and nothing else, because an emblem goes on top of it later. Leave the cartouche and the roundel completely blank. Plain solid chroma green #00ff00 outside the card, clean cut edges.
+
+3) os-verso.png, 1024x1536. The back of the same card, same size and silhouette, seen straight on, perfectly symmetrical: deep violet and near black, with a cream border, a central shattered clock with no numbers, thorned vines, and two heavy chains crossing it in an X with a padlock in the middle, because this is a locked card. Plain solid chroma green #00ff00 outside the card, clean cut edges.

@@ -1,0 +1,10 @@
+Generate images with the built-in image_gen tool. Make exactly 2 image_gen calls.
+Copy each result into this folder with the given name (keep PNG). Do not edit other files. Do not write code.
+
+The attached ui-00, ui-05 and ui-09 are menu screens from Persona 5 and Danganronpa. Study only their energy: poster composition, hard diagonals, torn collage, halftone, extreme contrast, one loud accent colour. Do NOT copy their shapes, stars, characters, red colour or logos. This game is called DEVO: a gothic survival game about a countdown on your wrist. Its own motifs: a shattered gothic clock, stained glass, black marble, thorned roses.
+
+Palette only: near black #0B0812, deep violet #2A1450, loud amethyst #A45CFF, cream paper #F1ECE0. No other colours. No text, letters, numerals, logos or watermark. No characters or people.
+
+1) home-fundo.png, 1024x1536. Background for a phone menu screen, printed like a screen-printed gothic poster: hand-cut paper collage with rough torn edges, ink splatter, coarse halftone dots, and hard ink shadows. A huge shattered gothic clock face fills the upper right, without numbers, its broken clock hands and gear fragments flying outward along a strong diagonal from the upper right to the lower left, with shards of amethyst stained glass and thorned rose vines between them. The left side and the bottom third stay darker and calmer, because menu text and a character sit on top of them. It must feel designed by a graphic designer, not like a 3D render: flat inks only, no gradients, no glow, no photorealism.
+
+2) home-faixas.png, 1536x1024. Five long horizontal strips of torn cream paper #F1ECE0, one under the other, each one about 1400 wide and 150 tall, with a straight clean left end running off the image and a right end that is cut at an angle and torn. Rough deckled edges along the top and the bottom, each strip with a different silhouette. A very subtle printed ink texture and a thin black ink line near the edges, flat and empty in the middle because text will be placed on them. Plain solid chroma green background #00ff00 between the strips, with generous gaps, no shadows on the background.

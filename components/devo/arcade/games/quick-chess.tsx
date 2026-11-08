@@ -365,10 +365,19 @@ export default function QuickChess({ start, settings, onFinish, onQuit }: GamePr
     window.setTimeout(() => onFinish(roomOutcome(room)), mate ? 4200 : 3000)
   }, [online, room, animating, game, apply, resync, sound, onFinish])
 
+  // O relógio só redesenha a tela quando o segundo de quem joga muda (e cai certinho no zero).
+  const leftAt = useRef<(t: number) => number>(() => 1000)
   useEffect(() => {
     if (!running || animating) return
-    const id = window.setInterval(() => setNow(Date.now()), 100)
-    return () => window.clearInterval(id)
+    let id = 0
+    const tick = () => {
+      const t = Date.now()
+      setNow(t)
+      const rest = leftAt.current(t)
+      id = window.setTimeout(tick, rest > 0 ? (rest % 1000 || 1000) + 5 : 1000)
+    }
+    tick()
+    return () => window.clearTimeout(id)
   }, [running, animating])
 
   const turn = game.turn()
@@ -382,6 +391,7 @@ export default function QuickChess({ start, settings, onFinish, onQuit }: GamePr
   const clockOf = (side: Color) => (synced && serverState ? serverState.clock[side === 'w' ? 'a' : 'b'] : clocks[side])
   const turnFrom = synced && serverState ? toLocal(serverState.turnAt) : turnStart.current
   const live = (side: Color) => (ticking && turn === side ? Math.max(0, Math.min(clockOf(side), clockOf(side) - (now - turnFrom))) : clockOf(side))
+  leftAt.current = (t) => Math.max(0, Math.min(clockOf(turn), clockOf(turn) - (t - turnFrom)))
   const wLeft = live('w')
   const bLeft = live('b')
   const myLeft = myColor === 'w' ? wLeft : bLeft
@@ -471,7 +481,7 @@ export default function QuickChess({ start, settings, onFinish, onQuit }: GamePr
     [demo, spectator, ticking, turn, myColor, myLeft, game, selected, targets, legal, play, sound],
   )
 
-  // O relógio redesenha a tela 10x por segundo e `onSquare` muda junto (depende do tempo restante).
+  // O relógio redesenha a tela a cada segundo e `onSquare` muda junto (depende do tempo restante).
   // A cena 3D recebe uma função estável e só é refeita quando algo dela muda de verdade.
   const onSquareRef = useRef(onSquare)
   onSquareRef.current = onSquare
@@ -524,6 +534,10 @@ export default function QuickChess({ start, settings, onFinish, onQuit }: GamePr
     c.holdUntil = 0
     sound('click')
   }
+
+  // Com gráficos em automático, se o aparelho não der conta a cena desce para a qualidade baixa sozinha.
+  const autoQuality = !local.quality || local.quality === 'auto'
+  const dropQuality = useCallback(() => setQuality('low'), [])
 
   const saveLocal = (patch: Record<string, string>) => {
     setLocal((cur) => ({ ...cur, ...patch }))
@@ -595,7 +609,7 @@ export default function QuickChess({ start, settings, onFinish, onQuit }: GamePr
     >
       <div className="relative flex min-h-0 flex-1">
         <div className="relative flex min-h-0 flex-1 flex-col">
-          <ClockBackdrop danger={ticking && turn === myColor && myLeft <= 5000} tint={theme.glow} turnKey={`${turn}-${lastMove?.to ?? ''}`} />
+          <ClockBackdrop danger={ticking && turn === myColor && myLeft <= 5000} tint={theme.glow} turnKey={`${turn}-${lastMove?.to ?? ''}`} quality={quality} />
           {/* Oponente no alto, você embaixo: o tabuleiro fica entre as duas plaquetas. */}
           <div className="relative z-20 shrink-0 px-3 pt-2.5">
             <PlayerPlate side={plate(oppColor)} total={clockTotal} />
@@ -626,7 +640,8 @@ export default function QuickChess({ start, settings, onFinish, onQuit }: GamePr
             }}
           >
             <Canvas
-              shadows="soft"
+              shadows="percentage"
+              frameloop="demand"
               dpr={quality === 'low' ? 1 : quality === 'medium' ? [1, 1.5] : [1, 2]}
               camera={{ position: [0, 9, 9], fov: 40 }}
               gl={{ antialias: quality !== 'low', alpha: true, powerPreference: 'high-performance' }}
@@ -659,6 +674,7 @@ export default function QuickChess({ start, settings, onFinish, onQuit }: GamePr
                 lastTo={lastMove?.to ?? null}
                 checkSq={checkSq}
                 onSquare={onSquareStable}
+                onSlow={autoQuality ? dropQuality : undefined}
               />
             </Canvas>
 
