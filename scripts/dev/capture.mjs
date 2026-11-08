@@ -3948,6 +3948,62 @@ if (want('calendario')) {
   if (db) await db.end().catch(() => {})
 }
 
+// ── DEVO v2 (PLANO-PUBLICACAO.md, caminho do meio): a casca nova em /v2, só para Owner e Anfitrião ──────────────
+if (want('v2')) {
+  const SENT = '00000000-0000-4000-8000-000000000010'
+  const MAT = '00000000-0000-4000-8000-000000000003'
+  const conta = async (kind, id, name, invite) => {
+    const d = await device(kind)
+    await d.ctx.addCookies([{ name: 'devo_player', value: id, url: BASE }])
+    await d.page.goto(BASE, { waitUntil: 'networkidle' })
+    let up
+    for (let i = 0; i < 6; i++) {
+      up = await api(d.page, '/api/auth/sign-up/email', { email: hexEmail(name), password: 'teste123', name, username: name, displayUsername: name }, { 'x-devo-invite': invite })
+      if (up.status !== 429) break
+      await wait(11000)
+    }
+    if (up.status >= 400) {
+      const inn = await api(d.page, '/api/auth/sign-in/username', { username: name, password: 'teste123' })
+      if (inn.status >= 400) manifest.errors.push({ step: `v2-${name}-auth`, error: `signup ${up.status} ${up.text}; signin ${inn.status}` })
+    }
+    const saved = await api(d.page, '/api/save', makeSave(VET_CARDS))
+    if (saved.status >= 400) manifest.errors.push({ step: `v2-${name}-save`, error: `${saved.status} ${saved.text}` })
+    return d
+  }
+  for (const kind of ['phone', 'desktop']) {
+    await step(`v2-casca-${kind}`, async () => {
+      const d = await conta(kind, SENT, 'Sentinela', 'DEVO-STAF-SENT')
+      const page = d.page
+      const tag = kind === 'phone' ? 'cel' : 'pc'
+      await page.goto(`${BASE}/v2`, { waitUntil: 'networkidle' })
+      await wait(2500)
+      await shot(page, `v2-01-inicio-${tag}`, 'Owner: painel, Mapa do Devo e doca')
+      if (kind === 'phone') {
+        await page.locator('#inicio').evaluate((el) => el.scrollTo(0, el.scrollHeight)).catch(() => {})
+        await wait(600)
+        await shot(page, `v2-02-mapa-${tag}`, 'fim do Mapa do Devo')
+        await page.locator('#inicio').evaluate((el) => el.scrollTo(0, 0)).catch(() => {})
+      }
+      await tryClick(page.locator('#mesa .ic[data-id="cartas"]'))
+      await wait(900)
+      await shot(page, `v2-03-janela-${tag}`, 'janela de um sistema (tela nas próximas etapas)')
+      await tryClick(page.locator('#sino'))
+      await wait(700)
+      await shot(page, `v2-04-avisos-${tag}`, 'central de avisos')
+      await d.ctx.close()
+    })
+  }
+  // jogador comum não entra: volta para o site atual
+  await step('v2-jogador', async () => {
+    const d = await conta('phone', MAT, 'Matheus', 'DEVO-STAF-MATH')
+    await d.page.goto(`${BASE}/v2`, { waitUntil: 'networkidle' })
+    await wait(1500)
+    manifest.shots.push({ name: 'v2-05-jogador-url', note: `jogador em /v2 foi para: ${d.page.url()}`, url: d.page.url() })
+    await shot(d.page, 'v2-05-jogador', 'jogador comum em /v2: volta para o site atual')
+    await d.ctx.close()
+  })
+}
+
 await browser.close()
 writeFileSync(`${OUT}/manifest.json`, JSON.stringify(manifest, null, 2))
 console.log(`capturas: ${manifest.shots.length}, erros: ${manifest.errors.length}, console: ${manifest.console.length}`)
