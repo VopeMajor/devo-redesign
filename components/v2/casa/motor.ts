@@ -296,6 +296,8 @@ export function criaCasa(raiz: HTMLElement, o: MotorOpcoes) {
   const eu = { x: 0, y: 0, dir: 0, rota: [] as Pt[], aoChegar: null as null | (() => void) }
   let esc = 1
   const cam = { x: 0, y: 0 }
+  // a câmera de verdade, na grade do pixel (o toque e as setas usam esta)
+  const camG = { x: 0, y: 0 }
   let olha = { x: 0, y: 0 }
   let alvoCam: Pt | null = null
   const limita = (v: number, lado: number, tela: number, sobra = 0) => (lado <= tela ? (tela - lado) / 2 - sobra : Math.min(0, Math.max(tela - lado, v)))
@@ -317,7 +319,7 @@ export function criaCasa(raiz: HTMLElement, o: MotorOpcoes) {
     const vh = raiz.clientHeight
     const mw = W * esc
     const mh = H * esc
-    const foco = alvoCam || [eu.x, eu.y - 40]
+    const foco = alvoCam || [Math.round(eu.x), Math.round(eu.y) - 40]
     // o espaço de baixo fica livre para o cartão, então a cena sobe um pouco no celular
     const sobe = vh > mh + 120 ? 46 : 0
     const rx = vw / 2 - foco[0] * esc + olha.x
@@ -329,13 +331,16 @@ export function criaCasa(raiz: HTMLElement, o: MotorOpcoes) {
       olha.x += x - rx
       olha.y += y - ry
     }
-    const k = dt === 0 || calmo ? 1 : Math.min(1, dt * (alvoCam ? 3.5 : eu.rota.length ? 9 : 7))
+    const perto = Math.abs(x - cam.x) < 2 * esc && Math.abs(y - cam.y) < 2 * esc
+    const k = dt === 0 || calmo || (perto && !alvoCam && eu.rota.length) ? 1 : Math.min(1, dt * (alvoCam ? 3.5 : eu.rota.length ? 9 : 7))
     cam.x += (x - cam.x) * k
     cam.y += (y - cam.y) * k
     // a câmera anda na grade do pixel da arte (múltiplos da escala): o chibi e o chão andam juntos, sem o chibi tremer
     // 1 px de tela para lá e para cá enquanto a câmera o segue
     const gx = Math.round(cam.x / esc) * esc
     const gy = Math.round(cam.y / esc) * esc
+    camG.x = gx
+    camG.y = gy
     mundo.style.transform = `translate(${gx}px,${gy}px) scale(${esc})`
   }
   function anda(p: Pt, aoChegar?: () => void) {
@@ -356,8 +361,8 @@ export function criaCasa(raiz: HTMLElement, o: MotorOpcoes) {
     const vw = raiz.clientWidth
     const vh = raiz.clientHeight
     for (const { el, p } of setas) {
-      const sx = (p.x / 2) * esc + cam.x
-      const sy = (p.y / 2) * esc + cam.y
+      const sx = Math.round(p.x / 2) * esc + camG.x
+      const sy = Math.round(p.y / 2) * esc + camG.y
       const fora = sx < 6 ? 'e' : sx > vw - 6 ? 'd' : ''
       el.classList.toggle('on', !!fora)
       if (!fora) continue
@@ -386,8 +391,8 @@ export function criaCasa(raiz: HTMLElement, o: MotorOpcoes) {
     for (const p of lista) {
       const b = document.createElement('button')
       b.className = 'ponto' + (p.fechado ? ' fechado' : '') + (p.id === novoId ? ' novo' : '')
-      b.style.left = p.x / 2 + 'px'
-      b.style.top = p.y / 2 + 'px'
+      b.style.left = Math.round(p.x / 2) + 'px'
+      b.style.top = Math.round(p.y / 2) + 'px'
       b.style.zIndex = '900'
       b.setAttribute('aria-label', p.titulo + (p.fechado ? ', trancado' : ''))
       b.innerHTML = '<i></i>'
@@ -401,6 +406,8 @@ export function criaCasa(raiz: HTMLElement, o: MotorOpcoes) {
     }
   }
   const viraPara = (x: number, y: number) => {
+    if (ocio?.tipo === 'vira') ocio.volta = undefined
+    acorda()
     const dx = x - eu.x
     const dy = y - eu.y
     eu.dir = Math.abs(dx) > Math.abs(dy) ? (dx < 0 ? 1 : 2) : dy > 0 ? 0 : 3
@@ -408,6 +415,8 @@ export function criaCasa(raiz: HTMLElement, o: MotorOpcoes) {
   // o cartão abre 160 ms depois de chegar; qualquer outro toque, a campainha ou fechar cancela
   let cartaoT = 0
   function escolhe(p: Ponto) {
+    if (dormindo) balao('!')
+    acorda()
     $('.cv-dica').hidden = true
     fechaCartao()
     anda(SEL([p.ir])[0], () => {
@@ -575,8 +584,8 @@ export function criaCasa(raiz: HTMLElement, o: MotorOpcoes) {
     fechaCartao()
     $('.cv-dica').hidden = true
     const r = raiz.getBoundingClientRect()
-    const x = (e.clientX - r.left - cam.x) / esc
-    const y = (e.clientY - r.top - cam.y) / esc
+    const x = (e.clientX - r.left - camG.x) / esc
+    const y = (e.clientY - r.top - camG.y) / esc
     // tocar no próprio móvel leva até ele e abre o cartão
     const tocado = S.pontos(etapa).find((p) => dentro(x * 2, y * 2, p.area))
     if (tocado) return escolhe(tocado)
@@ -886,13 +895,16 @@ export function criaCasa(raiz: HTMLElement, o: MotorOpcoes) {
   let tParado = 0
   // ?ocio=rapido (só para as capturas): tudo acontece mais cedo, para caber num vídeo curto
   const OCIO_RAPIDO = new URLSearchParams(window.location.search).get('ocio') === 'rapido'
-  const SONO = OCIO_RAPIDO ? 16 : 45
+  const SONO = OCIO_RAPIDO ? 16 : 60
   const esperaOcio = () => (OCIO_RAPIDO ? 1.5 + Math.random() : 7 + Math.random() * 7)
   let proxOcio = OCIO_RAPIDO ? 2 : 6 + Math.random() * 5
   let dormindo = false
   let zzT = 0
   let pulo = -1
-  const PULO = [-1, -2, -1, 0]
+  const PULO = [0, -1, -2, -1, 0]
+  const PULO_ASSENTA = [true, false, false, false, true]
+  let ocioCol = -1
+  let notaT = 0
   function acorda() {
     if (dormindo) {
       dormindo = false
@@ -907,6 +919,7 @@ export function criaCasa(raiz: HTMLElement, o: MotorOpcoes) {
     oc0.x = 0
     oc0.y = 0
     pulo = -1
+    ocioCol = -1
   }
   function ocioso(dt: number) {
     tParado += dt
@@ -926,17 +939,26 @@ export function criaCasa(raiz: HTMLElement, o: MotorOpcoes) {
     }
     if (ocio) {
       ocio.t += dt
-      // cantarola: balança 1 px para cada lado, no ritmo da musiquinha
-      if (ocio.tipo === 'cantarola') oc0.x = [0, 1, 0, -1][Math.floor(ocio.t / 0.28) % 4]
-      // pulinho: sobe 1, 2, 1 e assenta (um quadro de 80 ms cada)
+      // cantarola: o peito sobe e desce no ritmo da musiquinha (os pés ficam no chão) e a nota se repete
+      if (ocio.tipo === 'cantarola') {
+        ocioCol = Math.floor(ocio.t / 0.28) % 2 ? COL.peito : COL.parado
+        notaT -= dt
+        if (notaT <= 0 && ocio.t < ocio.dur - 0.6) {
+          balao('♪')
+          notaT = 1.1
+        }
+      }
+      // pulinho: agacha, sobe 1, 2, 1 e assenta de novo (um quadro de 80 ms cada)
       if (ocio.tipo === 'pulo') {
         const q = Math.floor(ocio.t / TIQUE)
         pulo = q < PULO.length ? q : -1
         oc0.y = q < PULO.length ? PULO[q] : 0
+        ocioCol = q < PULO.length && PULO_ASSENTA[q] ? COL.assenta : -1
       }
       if (ocio.t >= ocio.dur) {
         if (ocio.tipo === 'vira' && ocio.volta != null) eu.dir = ocio.volta
         ocio = null
+        ocioCol = -1
         oc0.x = 0
         oc0.y = 0
         pulo = -1
@@ -948,14 +970,14 @@ export function criaCasa(raiz: HTMLElement, o: MotorOpcoes) {
     proxOcio -= dt
     if (proxOcio > 0) return
     const r = Math.random()
-    if (r < 0.45) {
+    if (r < 0.25) {
       // vira o corpo para olhar em volta e depois volta para onde estava
       const volta = eu.dir
       eu.dir = eu.dir === 0 ? (Math.random() < 0.5 ? 1 : 2) : eu.dir === 3 ? 0 : Math.random() < 0.6 ? 0 : eu.dir === 1 ? 2 : 1
       ocio = { tipo: 'vira', t: 0, dur: 1.3 + Math.random() * 0.8, volta }
-    } else if (r < 0.8) {
-      balao('♪')
-      ocio = { tipo: 'cantarola', t: 0, dur: 2.2 }
+    } else if (r < 0.75) {
+      notaT = 0
+      ocio = { tipo: 'cantarola', t: 0, dur: 2.4 }
     } else {
       ocio = { tipo: 'pulo', t: 0, dur: TIQUE * PULO.length + 0.05 }
       if (Math.random() < 0.5) balao('♪')
@@ -1008,7 +1030,8 @@ export function criaCasa(raiz: HTMLElement, o: MotorOpcoes) {
       const lado = eu.dir === 1 || eu.dir === 2
       const mx = Math.abs(eu.x - xAnt)
       const my = Math.abs(eu.y - yAnt)
-      andado += (lado ? Math.max(mx, my * 0.35) : Math.max(my, mx * 0.35)) / PX_QUADRO
+      andado += Math.hypot(mx, my) / PX_QUADRO
+      void lado
       olhando = 0
       const k = Math.floor(andado) % 8
       col = 1 + k
@@ -1068,8 +1091,9 @@ export function criaCasa(raiz: HTMLElement, o: MotorOpcoes) {
           olhando -= dt
           col = colOlha
         } else if (pisca > 0 && eu.dir !== 3) col = peito ? COL.piscaPeito : COL.pisca
+        else if (ocioCol >= 0) col = ocioCol
         else if (peito) col = COL.peito
-        if (pulo >= 0) sobe = true
+        if (oc0.y < 0) sobe = true
       } else acorda()
     }
     if (andando || calmo) acorda()
@@ -1082,7 +1106,7 @@ export function criaCasa(raiz: HTMLElement, o: MotorOpcoes) {
     sombra.style.marginLeft = sobe ? '-19px' : ''
     if (balT !== null) {
       balT += dt
-      while (balT >= BAL_Q[balQ] * TIQUE && balQ < 8) {
+      while (!calmo && balT >= BAL_Q[balQ] * TIQUE && balQ < 8) {
         balT -= BAL_Q[balQ] * TIQUE
         balQ++
       }

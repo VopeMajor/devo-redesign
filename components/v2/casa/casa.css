@@ -161,7 +161,7 @@
 }
 @keyframes cv-ponto {
   50% {
-    transform: rotate(45deg) translateY(-3px);
+    transform: translateY(-3px) rotate(45deg);
   }
 }
 @keyframes cv-novo {

@@ -54,6 +54,7 @@ export function criaChibi(
   let bocaT = 0
   let bocaPasso = bocaMs
   let respT = Math.random() * resp
+  let trecho: [number, number] | undefined
   function pinta(sobe: boolean) {
     let col = 4
     if (s.rota.length) col = Math.floor(s.andado) % 4
@@ -101,7 +102,11 @@ export function criaChibi(
       } else {
         s.x += (dx / d) * v
         s.y += (dy / d) * v
-        s.dir = Math.abs(dx) > Math.abs(dy) ? (dx < 0 ? 1 : 2) : dy > 0 ? 0 : 3
+        // a direção muda uma vez por trecho do caminho (como o chibi do jogador); trecho curtinho não vira o corpo
+        if (s.rota[0] !== trecho) {
+          trecho = s.rota[0]
+          if (d >= 8) s.dir = Math.abs(dx) > Math.abs(dy) * (s.dir === 1 || s.dir === 2 ? 1 : 1.3) ? (dx < 0 ? 1 : 2) : dy > 0 ? 0 : 3
+        }
         s.andado += v / 7
         sobe = Math.floor(s.andado) % 2 === 1
       }

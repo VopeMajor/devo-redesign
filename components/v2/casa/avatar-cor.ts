@@ -210,6 +210,8 @@ export async function folhaAndarFofo(cfg: Aparencia): Promise<HTMLCanvasElement>
       const y = dir * CEL_Y + 1
       const dx = A[dir][src][0] + ox
       const dy = A[dir][src][1] + oy
+      // cabelo com 1 quadro de atraso no andar (dono, 08/11: "corpo e cabeça"): quica de leve em vez de grudar na cabeça
+      const hdy = (src < 8 ? A[dir][(src + 7) % 8][1] : A[dir][src][1]) + oy
       const testa = T[dir]
       cel.clearRect(0, 0, CEL_X, CEL_Y)
       cel.drawImage(rc, src * CEL_X, dir * CEL_Y, CEL_X, CEL_Y, 0, 0, CEL_X, CEL_Y)
@@ -224,7 +226,7 @@ export async function folhaAndarFofo(cfg: Aparencia): Promise<HTMLCanvasElement>
           if (hx2 >= 0 && hx2 < CEL_X)
             for (let yy = 0; yy < CEL_Y; yy++) {
               if (hd[(yy * CEL_X + hx2) * 4 + 3]) {
-                primeiro = yy + dy
+                primeiro = yy + hdy
                 break
               }
             }
@@ -233,7 +235,7 @@ export async function folhaAndarFofo(cfg: Aparencia): Promise<HTMLCanvasElement>
         // de lado, até a altura das orelhas: a cabeça não passa da borda de trás do cabelo
         if (dir === 1 || dir === 2)
           for (let yy = 0; yy < Math.min(CEL_Y, testa + A[dir][src][1] + 12); yy++) {
-            const hy = yy - dy
+            const hy = yy - hdy
             if (hy < 0 || hy >= CEL_Y) continue
             let borda = -1
             for (let xx = 0; xx < CEL_X; xx++)
@@ -250,7 +252,7 @@ export async function folhaAndarFofo(cfg: Aparencia): Promise<HTMLCanvasElement>
         cel.putImageData(cd, 0, 0)
       }
       ctx.drawImage(celv, x, y)
-      ctx.drawImage(hc, dir * CEL_X, 0, CEL_X, CEL_Y, x + dx, y + dy, CEL_X, CEL_Y)
+      ctx.drawImage(hc, dir * CEL_X, 0, CEL_X, CEL_Y, x + dx, y + hdy, CEL_X, CEL_Y)
     }
   }
   return cv
