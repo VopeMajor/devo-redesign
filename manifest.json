@@ -1,0 +1,911 @@
+{
+  "base": "http://localhost:3000",
+  "shots": [
+    {
+      "name": "v2-01-inicio-cel",
+      "note": "Owner: painel, Mapa do Devo e doca",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-02-mapa-cel",
+      "note": "fim do Mapa do Devo",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-03-pulso-cel",
+      "note": "janela: pulso",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-03-record-cel",
+      "note": "janela: record",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-03-mensagens-cel",
+      "note": "janela: mensagens",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-03-cartas-cel",
+      "note": "janela: cartas",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-03-calendario-cel",
+      "note": "janela: calendario",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-03-torres-cel",
+      "note": "janela: torres",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-03-ranking-cel",
+      "note": "janela: ranking",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-04-avisos-cel",
+      "note": "central de avisos",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-record-cel",
+      "note": "record: abertura",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-record-1-cel",
+      "note": "record: desce",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-record-2-cel",
+      "note": "record: desce",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-record-3-cel",
+      "note": "record: desce",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-record-4-cel",
+      "note": "record: Deadly Votes",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-record-5-cel",
+      "note": "record: desce",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-record-6-cel",
+      "note": "record: >.dv-como",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-record-7-cel",
+      "note": "record: Convites",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-record-8-cel",
+      "note": "record: Diário",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-record-9-cel",
+      "note": "record: Mesa",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-mensagens-cel",
+      "note": "mensagens: abertura",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-mensagens-1-cel",
+      "note": "mensagens: >.m-item",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-mensagens-2-cel",
+      "note": "mensagens: >.m-op",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-mensagens-3-cel",
+      "note": "mensagens: rolar",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-cartas-cel",
+      "note": "cartas: abertura",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-cartas-1-cel",
+      "note": "cartas: desce",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-cartas-2-cel",
+      "note": "cartas: >.cx-tile",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-cartas-3-cel",
+      "note": "cartas: rolar",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-cartas-4-cel",
+      "note": "cartas: >.cx-carta-g",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-inventario-cel",
+      "note": "inventario: abertura",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-inventario-1-cel",
+      "note": "inventario: desce",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-trocas-cel",
+      "note": "trocas: abertura",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-trocas-1-cel",
+      "note": "trocas: >.t-prot",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-trocas-2-cel",
+      "note": "trocas: >.t-porta:not(.fechada)",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-trocas-3-cel",
+      "note": "trocas: >.t-escolha button:not(.presa)",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-trocas-4-cel",
+      "note": "trocas: espera",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-trocas-5-cel",
+      "note": "trocas: espera",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-ajustes-cel",
+      "note": "ajustes: abertura",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-ajustes-1-cel",
+      "note": "ajustes: desce",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-calendario-cel",
+      "note": "calendario: abertura",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-calendario-1-cel",
+      "note": "calendario: >button:has-text(\"Pular\")",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-calendario-2-cel",
+      "note": "calendario: Eventos",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-calendario-3-cel",
+      "note": "calendario: Mês",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-calendario-4-cel",
+      "note": "calendario: Semana",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-calendario-5-cel",
+      "note": "calendario: >.k-marca",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-calendario-6-cel",
+      "note": "calendario: >.kc-revela",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-calendario-7-cel",
+      "note": "calendario: desce",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-01-inicio-pc",
+      "note": "Owner: painel, Mapa do Devo e doca",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-03-pulso-pc",
+      "note": "janela: pulso",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-03-record-pc",
+      "note": "janela: record",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-03-mensagens-pc",
+      "note": "janela: mensagens",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-03-cartas-pc",
+      "note": "janela: cartas",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-03-calendario-pc",
+      "note": "janela: calendario",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-03-torres-pc",
+      "note": "janela: torres",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-03-ranking-pc",
+      "note": "janela: ranking",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-04-avisos-pc",
+      "note": "central de avisos",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-record-pc",
+      "note": "record: abertura",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-record-1-pc",
+      "note": "record: desce",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-record-2-pc",
+      "note": "record: desce",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-record-3-pc",
+      "note": "record: desce",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-record-4-pc",
+      "note": "record: Deadly Votes",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-record-5-pc",
+      "note": "record: desce",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-record-6-pc",
+      "note": "record: >.dv-como",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-record-7-pc",
+      "note": "record: Convites",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-record-8-pc",
+      "note": "record: Diário",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-record-9-pc",
+      "note": "record: Mesa",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-mensagens-pc",
+      "note": "mensagens: abertura",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-mensagens-1-pc",
+      "note": "mensagens: >.m-item",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-mensagens-2-pc",
+      "note": "mensagens: >.m-op",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-mensagens-3-pc",
+      "note": "mensagens: rolar",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-cartas-pc",
+      "note": "cartas: abertura",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-cartas-1-pc",
+      "note": "cartas: desce",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-cartas-2-pc",
+      "note": "cartas: >.cx-tile",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-cartas-3-pc",
+      "note": "cartas: rolar",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-cartas-4-pc",
+      "note": "cartas: >.cx-carta-g",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-inventario-pc",
+      "note": "inventario: abertura",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-inventario-1-pc",
+      "note": "inventario: desce",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-trocas-pc",
+      "note": "trocas: abertura",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-trocas-1-pc",
+      "note": "trocas: >.t-prot",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-trocas-2-pc",
+      "note": "trocas: >.t-porta:not(.fechada)",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-trocas-3-pc",
+      "note": "trocas: >.t-escolha button:not(.presa)",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-trocas-4-pc",
+      "note": "trocas: espera",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-trocas-5-pc",
+      "note": "trocas: espera",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-ajustes-pc",
+      "note": "ajustes: abertura",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-ajustes-1-pc",
+      "note": "ajustes: desce",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-calendario-pc",
+      "note": "calendario: abertura",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-calendario-1-pc",
+      "note": "calendario: >button:has-text(\"Pular\")",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-calendario-2-pc",
+      "note": "calendario: Eventos",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-calendario-3-pc",
+      "note": "calendario: Mês",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-calendario-4-pc",
+      "note": "calendario: Semana",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-calendario-5-pc",
+      "note": "calendario: >.k-marca",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-calendario-6-pc",
+      "note": "calendario: >.kc-revela",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-calendario-7-pc",
+      "note": "calendario: desce",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-05-jogador-cel-sistema",
+      "note": "jogador comum no sistema v2",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "v2-05-jogador-cel",
+      "note": "jogador comum: início do v2",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "v2-05-jogador-mapa-cel",
+      "note": "jogador comum: Mapa do Devo com as travas",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "v2-05-jogador-record-cel",
+      "note": "jogador comum: record",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "v2-05-jogador-poco-cel",
+      "note": "jogador comum: poco",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "v2-05-jogador-pc-sistema",
+      "note": "jogador comum no sistema v2",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "v2-05-jogador-pc",
+      "note": "jogador comum: início do v2",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "v2-05-jogador-record-pc",
+      "note": "jogador comum: record",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "v2-05-jogador-poco-pc",
+      "note": "jogador comum: poco",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "casa-01-criacao-cel",
+      "note": "Casa aberta pela 1ª vez: criação do avatar, grátis (aba Cabelo)",
+      "url": "http://localhost:3000/v2?semraf=1"
+    },
+    {
+      "name": "casa-02-criacao-rosto-cel",
+      "note": "aba Rosto: rosto 5, olhos azul-petróleo",
+      "url": "http://localhost:3000/v2?semraf=1"
+    },
+    {
+      "name": "casa-03-criacao-roupa-cel",
+      "note": "aba Roupa: Dândi",
+      "url": "http://localhost:3000/v2?semraf=1"
+    },
+    {
+      "name": "casa-04-mapa-cel",
+      "note": "Térreo com a mesa; o chibi com a aparência escolhida",
+      "url": "http://localhost:3000/v2?semraf=1"
+    },
+    {
+      "name": "casa-04-api",
+      "note": "GET /api/casa/mapa depois da criação",
+      "json": {
+        "liberado": true,
+        "aparencia": {
+          "corpo": 0,
+          "cabelo": 0,
+          "rosto": 4,
+          "roupa": 1,
+          "corCabelo": 6,
+          "corOlhos": 6,
+          "pele": 1
+        },
+        "etapa": 3,
+        "andamento": 0,
+        "visita": "simon",
+        "simon": null,
+        "trocaMinutos": 60,
+        "equipe": true,
+        "timeDeltaMs": 0
+      }
+    },
+    {
+      "name": "casa-05-visita-campainha-cel",
+      "note": "campainha: visita do Simon (narração)",
+      "url": "http://localhost:3000/v2?semraf=1"
+    },
+    {
+      "name": "casa-06-visita-escolha-cel",
+      "note": "Ignorar ou abrir a porta",
+      "url": "http://localhost:3000/v2?semraf=1"
+    },
+    {
+      "name": "casa-07-visita-olho-cel",
+      "note": "olho mágico",
+      "url": "http://localhost:3000/v2?semraf=1"
+    },
+    {
+      "name": "casa-08-visita-porta-cel",
+      "note": "a porta se abre: Simon de corpo inteiro",
+      "url": "http://localhost:3000/v2?semraf=1"
+    },
+    {
+      "name": "casa-09-visita-simon-cel",
+      "note": "Simon fala (busto, retrato grande)",
+      "url": "http://localhost:3000/v2?semraf=1"
+    },
+    {
+      "name": "casa-10-visita-malicia-cel",
+      "note": "Simon: malícia",
+      "url": "http://localhost:3000/v2?semraf=1"
+    },
+    {
+      "name": "casa-11-visita-guarda-chuva-cel",
+      "note": "oferecer ou ficar com o guarda-chuva",
+      "url": "http://localhost:3000/v2?semraf=1"
+    },
+    {
+      "name": "casa-12-visita-fim-cel",
+      "note": "fim da visita: guarda-chuva no inventário",
+      "url": "http://localhost:3000/v2?semraf=1"
+    },
+    {
+      "name": "casa-12-api",
+      "note": "GET /api/casa/mapa depois da visita (visita: null, simon atendeu)",
+      "json": {
+        "liberado": true,
+        "aparencia": {
+          "corpo": 0,
+          "cabelo": 0,
+          "rosto": 4,
+          "roupa": 1,
+          "corCabelo": 6,
+          "corOlhos": 6,
+          "pele": 1
+        },
+        "etapa": 3,
+        "andamento": 0,
+        "visita": null,
+        "simon": {
+          "resultado": "atendeu",
+          "detalhe": {
+            "escolhas": [
+              "abrir",
+              "antigo",
+              "preco",
+              "quanto",
+              "ajuda",
+              "entra",
+              "ficou",
+              "adeus"
+            ],
+            "guardaChuva": "ficou"
+          }
+        },
+        "trocaMinutos": 60,
+        "equipe": true,
+        "timeDeltaMs": 0
+      }
+    },
+    {
+      "name": "casa-12-inventario",
+      "note": "inventário (outros): o guarda-chuva",
+      "json": {
+        "inventario": [
+          {
+            "key": "heranca:guarda_chuva",
+            "kind": "outro",
+            "name": "Guarda-chuva do antigo morador",
+            "description": "Tudo o que o antigo morador deixou na casa. Ainda é uma herança, talvez.",
+            "rarity": "comum",
+            "quantity": 1,
+            "source": "visita",
+            "firstAt": 1794144157004,
+            "meta": {
+              "origem": "visita:simon"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "casa-13-andou-cel",
+      "note": "tocou no chão: o chibi anda até lá",
+      "url": "http://localhost:3000/v2?semraf=1"
+    },
+    {
+      "name": "casa-14-mesa-cartao-cel",
+      "note": "cartão da mesa",
+      "url": "http://localhost:3000/v2?semraf=1"
+    },
+    {
+      "name": "casa-15-mesa-confeccao-cel",
+      "note": "Mesa: a Confecção de Cartas (mesma tela, mesmos dados)",
+      "url": "http://localhost:3000/v2?semraf=1"
+    },
+    {
+      "name": "casa-16-mesa-pacotes-cel",
+      "note": "Mesa: Pacotes",
+      "url": "http://localhost:3000/v2?semraf=1"
+    },
+    {
+      "name": "casa-17-andares-cel",
+      "note": "Andares: térreo e quartos",
+      "url": "http://localhost:3000/v2?semraf=1"
+    },
+    {
+      "name": "casa-18-quarto-cel",
+      "note": "Andar dos quartos",
+      "url": "http://localhost:3000/v2?semraf=1"
+    },
+    {
+      "name": "casa-19-guarda-cartao-cel",
+      "note": "cartão do guarda-roupa (1 hora de Tempo)",
+      "url": "http://localhost:3000/v2?semraf=1"
+    },
+    {
+      "name": "casa-20-guarda-roupa-cel",
+      "note": "Guarda-roupa (Cancelar · Salvar 1 hora)",
+      "url": "http://localhost:3000/v2?semraf=1"
+    },
+    {
+      "name": "casa-21-guarda-nada-mudou-cel",
+      "note": "Salvar sem mudar: nada cobrado",
+      "url": "http://localhost:3000/v2?semraf=1"
+    },
+    {
+      "name": "casa-22-guarda-salvo-cel",
+      "note": "aparência trocada: 1 hora de Tempo",
+      "url": "http://localhost:3000/v2?semraf=1"
+    },
+    {
+      "name": "casa-22-tempo",
+      "note": "Tempo antes 51:08:23 → depois 50:08:19",
+      "json": {
+        "liberado": true,
+        "aparencia": {
+          "corpo": 0,
+          "cabelo": 7,
+          "rosto": 4,
+          "roupa": 1,
+          "corCabelo": 12,
+          "corOlhos": 6,
+          "pele": 1
+        },
+        "etapa": 3,
+        "andamento": 0,
+        "visita": null,
+        "simon": {
+          "resultado": "atendeu",
+          "detalhe": {
+            "escolhas": [
+              "abrir",
+              "antigo",
+              "preco",
+              "quanto",
+              "ajuda",
+              "entra",
+              "ficou",
+              "adeus"
+            ],
+            "guardaChuva": "ficou"
+          }
+        },
+        "trocaMinutos": 60,
+        "equipe": true,
+        "timeDeltaMs": 0
+      }
+    },
+    {
+      "name": "casa-23-quarto-novo-chibi-cel",
+      "note": "o chibi com o cabelo novo",
+      "url": "http://localhost:3000/v2?semraf=1"
+    },
+    {
+      "name": "casa-24-viagem-cel",
+      "note": "Sair de casa: Torres, ??? (Catedral) e celular",
+      "url": "http://localhost:3000/v2?semraf=1"
+    },
+    {
+      "name": "casa-25-volta-celular-cel",
+      "note": "de volta ao Mapa do Devo",
+      "url": "http://localhost:3000/v2?semraf=1"
+    },
+    {
+      "name": "casa-26-reabre-cel",
+      "note": "reabrir a Casa: sem visita, direto no mapa",
+      "url": "http://localhost:3000/v2?semraf=1"
+    },
+    {
+      "name": "casa-30-mapa-pc",
+      "note": "Térreo no computador",
+      "url": "http://localhost:3000/v2?semraf=1"
+    },
+    {
+      "name": "casa-31-mesa-cartao-pc",
+      "note": "cartão da mesa (à direita, no computador)",
+      "url": "http://localhost:3000/v2?semraf=1"
+    },
+    {
+      "name": "casa-32-mesa-pc",
+      "note": "Mesa de Confecção no computador",
+      "url": "http://localhost:3000/v2?semraf=1"
+    },
+    {
+      "name": "casa-33-visita-pc",
+      "note": "visita do Simon no computador (campainha do teste da equipe)",
+      "url": "http://localhost:3000/v2?semraf=1"
+    },
+    {
+      "name": "casa-34-andares-pc",
+      "note": "Andares no computador",
+      "url": "http://localhost:3000/v2?semraf=1"
+    },
+    {
+      "name": "casa-35-quarto-pc",
+      "note": "Andar dos quartos no computador",
+      "url": "http://localhost:3000/v2?semraf=1"
+    },
+    {
+      "name": "casa-36-guarda-roupa-pc",
+      "note": "Guarda-roupa no computador",
+      "url": "http://localhost:3000/v2?semraf=1"
+    },
+    {
+      "name": "casa-40-jogador-api",
+      "note": "jogador comum: GET /api/casa/mapa",
+      "json": {
+        "liberado": true,
+        "aparencia": null,
+        "etapa": 2,
+        "andamento": 0,
+        "visita": null,
+        "simon": null,
+        "trocaMinutos": 60,
+        "equipe": false,
+        "timeDeltaMs": 0
+      }
+    },
+    {
+      "name": "casa-41-jogador-salvar",
+      "note": "jogador comum: salvar aparência → 200 {\"ok\":true,\"aparencia\":{\"corpo\":0,\"cabelo\":0,\"rosto\":0,\"roupa\":0,\"corCabelo\":0,\"corOlhos\":0,\"pele\":0},\"mudou\":true,\"primeira\":true,\"timeDeltaMs\":0}"
+    },
+    {
+      "name": "casa-50-video-cel",
+      "note": "vídeo: andar, ociosidade, cochilo e diálogo letra a letra (webm)"
+    }
+  ],
+  "errors": [],
+  "console": [
+    {
+      "page": "http://localhost:3000/?antigo",
+      "text": "HTTP 400",
+      "src": "http://localhost:3000/api/auth/sign-up/email"
+    },
+    {
+      "page": "http://localhost:3000/?antigo",
+      "text": "Failed to load resource: the server responded with a status of 400 (BAD_REQUEST)",
+      "src": "http://localhost:3000/api/auth/sign-up/email"
+    },
+    {
+      "page": "http://localhost:3000/?antigo",
+      "text": "HTTP 400",
+      "src": "http://localhost:3000/api/auth/sign-up/email"
+    },
+    {
+      "page": "http://localhost:3000/?antigo",
+      "text": "Failed to load resource: the server responded with a status of 400 (BAD_REQUEST)",
+      "src": "http://localhost:3000/api/auth/sign-up/email"
+    },
+    {
+      "page": "http://localhost:3000/?antigo",
+      "text": "Permissions policy violation: compute-pressure is not allowed in this document.",
+      "src": "https://www.youtube.com/s/player/a5c2aafe/player_embed.vflset/pt_BR/base.js"
+    },
+    {
+      "page": "http://localhost:3000/?antigo",
+      "text": "HTTP 400",
+      "src": "http://localhost:3000/api/auth/sign-up/email"
+    },
+    {
+      "page": "http://localhost:3000/?antigo",
+      "text": "Failed to load resource: the server responded with a status of 400 (BAD_REQUEST)",
+      "src": "http://localhost:3000/api/auth/sign-up/email"
+    },
+    {
+      "page": "http://localhost:3000/?antigo",
+      "text": "HTTP 400",
+      "src": "http://localhost:3000/api/auth/sign-up/email"
+    },
+    {
+      "page": "http://localhost:3000/?antigo",
+      "text": "Failed to load resource: the server responded with a status of 400 (BAD_REQUEST)",
+      "src": "http://localhost:3000/api/auth/sign-up/email"
+    },
+    {
+      "page": "http://localhost:3000/?antigo",
+      "text": "HTTP 400",
+      "src": "http://localhost:3000/api/auth/sign-up/email"
+    },
+    {
+      "page": "http://localhost:3000/?antigo",
+      "text": "Failed to load resource: the server responded with a status of 400 (BAD_REQUEST)",
+      "src": "http://localhost:3000/api/auth/sign-up/email"
+    },
+    {
+      "page": "http://localhost:3000/?antigo",
+      "text": "HTTP 400",
+      "src": "http://localhost:3000/api/auth/sign-up/email"
+    },
+    {
+      "page": "http://localhost:3000/?antigo",
+      "text": "Failed to load resource: the server responded with a status of 400 (BAD_REQUEST)",
+      "src": "http://localhost:3000/api/auth/sign-up/email"
+    },
+    {
+      "page": "http://localhost:3000/?antigo",
+      "text": "HTTP 400",
+      "src": "http://localhost:3000/api/auth/sign-up/email"
+    },
+    {
+      "page": "http://localhost:3000/?antigo",
+      "text": "Failed to load resource: the server responded with a status of 400 (BAD_REQUEST)",
+      "src": "http://localhost:3000/api/auth/sign-up/email"
+    },
+    {
+      "page": "http://localhost:3000/?antigo",
+      "text": "HTTP 400",
+      "src": "http://localhost:3000/api/auth/sign-up/email"
+    },
+    {
+      "page": "http://localhost:3000/?antigo",
+      "text": "Failed to load resource: the server responded with a status of 400 (BAD_REQUEST)",
+      "src": "http://localhost:3000/api/auth/sign-up/email"
+    }
+  ]
+}
