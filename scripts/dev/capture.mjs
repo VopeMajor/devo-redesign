@@ -4312,6 +4312,61 @@ if (want('casa-v2')) {
     nota('casa-41-jogador-salvar', `jogador comum: salvar aparência → ${r.status} ${r.text}`)
     await d.ctx.close()
   })
+
+  // vídeo (dono, 08/11: andar, balões, piscadas e ociosidade): o movimento de verdade, num celular, com a ociosidade
+  // adiantada (?ocio=rapido) e o texto letra a letra
+  await step('casa-v2-video', async () => {
+    const ctx = await browser.newContext({
+      viewport: { width: 390, height: 844 },
+      deviceScaleFactor: 2,
+      isMobile: true,
+      hasTouch: true,
+      locale: 'pt-BR',
+      timezoneId: 'America/Sao_Paulo',
+      recordVideo: { dir: `${OUT}/video`, size: { width: 390, height: 844 } },
+    })
+    await ctx.addCookies([{ name: 'devo_player', value: SENT, url: BASE }])
+    const page = await ctx.newPage()
+    page.on('pageerror', (e) => manifest.console.push({ page: page.url(), text: `pageerror: ${String(e).slice(0, 400)}` }))
+    await page.goto(BASE, { waitUntil: 'networkidle' })
+    await api(page, '/api/auth/sign-in/username', { username: 'Sentinela', password: 'teste123' })
+    await page.goto(`${BASE}/v2?ocio=rapido`, { waitUntil: 'networkidle' })
+    await wait(1200)
+    await tryClick(page.locator('#mesa .ic[data-id="casa"]'))
+    await page.locator('.cv .cv-mapa .ator').waitFor({ timeout: 15000 })
+    await wait(1500)
+    // anda: para a esquerda, para baixo, para a mesa
+    for (const [x, y] of [[120, 640], [300, 760], [250, 520]]) {
+      await page.mouse.click(x, y)
+      await wait(2600)
+    }
+    // parado (nenhum cartão aberto): olha em volta, cantarola, pulinho e cochila
+    await page.keyboard.press('Escape').catch(() => {})
+    await wait(20000)
+    // um toque acorda
+    await page.mouse.click(200, 600)
+    await wait(2500)
+    // a campainha do teste da equipe: o diálogo letra a letra
+    await tryClick(page.locator('.cv .cv-campainha'))
+    await page.locator('.cv .visita').waitFor({ timeout: 12000 }).catch(() => {})
+    for (let i = 0; i < 5; i++) {
+      await wait(3200)
+      await toca(page)
+    }
+    await wait(1500)
+    if (await page.locator('.cv .v-esc button').count()) await escolhe(page, 'Abrir a porta')
+    for (let i = 0; i < 6; i++) {
+      await wait(3600)
+      await toca(page)
+    }
+    const v = page.video()
+    await ctx.close()
+    if (v) {
+      const { rename } = await import('node:fs/promises')
+      await rename(await v.path(), `${OUT}/casa-50-video-cel.webm`).catch((e) => manifest.errors.push({ step: 'casa-video', error: String(e) }))
+      nota('casa-50-video-cel', 'vídeo: andar, ociosidade, cochilo e diálogo letra a letra (webm)')
+    }
+  })
 }
 
 await browser.close()

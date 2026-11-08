@@ -301,22 +301,39 @@ export function monta(img: HTMLImageElement, o: Opcoes = {}) {
     let bocaPasso = bocaMs
     let bocaT = 0
     el.textContent = ''
-    const pausa = (ch: string) => (ch === ',' ? 90 : '.!?'.includes(ch) ? 220 : ch === '…' ? 300 : 0)
+    // pausa da pontuação (dono, 08/11: cadência dos balões): uma pausa só no fim de cada sequência ("...", "?!", "…"),
+    // e só quando a frase respira de verdade (depois vem espaço, quebra ou o fim); "3.5" e "H-Hum" não param
+    const SINAIS = /[.,!?…;:—]/
+    const pausaEm = (k: number) => {
+      const ch = texto[k]
+      if (!ch || !SINAIS.test(ch)) return 0
+      const prox = texto[k + 1]
+      if (prox && SINAIS.test(prox)) return 0
+      if (prox && !/[\s"”')\]]/.test(prox)) return 0
+      let a = k
+      while (a > 0 && SINAIS.test(texto[a - 1])) a--
+      const seq = texto.slice(a, k + 1)
+      if (/…|\.\./.test(seq)) return 380
+      if (/[.!?]/.test(seq)) return 260
+      if (/[;:—]/.test(seq)) return 160
+      return 110
+    }
     digitando = { el, texto, fim, t: 0 }
     const passo = (t: number) => {
       if (!digitando) return
       let bipou = false
       while (i < texto.length && t >= proxima) {
         const ch = texto[i++]
+        const pz = pausaEm(i - 1)
         el.textContent = texto.slice(0, i)
-        proxima += letraMs + pausa(ch)
+        proxima += letraMs + pz
         if (comVoz && voz && !bipou && /[A-Za-zÀ-ú0-9]/.test(ch) && ++letras % voz.cada === 0) {
           bip(voz)
           bipou = true
         }
-        if (comVoz) bocaChibi(!pausa(ch))
+        if (comVoz) bocaChibi(!pz)
         if (comVoz && rostoInfo) {
-          if (pausa(ch)) {
+          if (pz) {
             if (bocaTrocada) {
               bocaTrocada = false
               mostraRosto()

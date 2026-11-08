@@ -302,9 +302,11 @@ export function criaCasa(raiz: HTMLElement, o: MotorOpcoes) {
   const medida = () => {
     esc = Math.max(1, Math.floor(Math.min(raiz.clientWidth / W, raiz.clientHeight / H)))
   }
+  // deslocamento das animações de ociosidade (balançar ao cantarolar, pulinho), em pixel de arte inteiro
+  const oc0 = { x: 0, y: 0 }
   function desenha() {
-    ator.style.left = Math.round(eu.x) + 'px'
-    ator.style.top = Math.round(eu.y) + 'px'
+    ator.style.left = Math.round(eu.x) + oc0.x + 'px'
+    ator.style.top = Math.round(eu.y) + oc0.y + 'px'
     ator.style.zIndex = String(Math.round(eu.y))
     sombra.style.left = Math.round(eu.x) + 'px'
     sombra.style.top = Math.round(eu.y) + 'px'
@@ -327,10 +329,14 @@ export function criaCasa(raiz: HTMLElement, o: MotorOpcoes) {
       olha.x += x - rx
       olha.y += y - ry
     }
-    const k = dt === 0 || calmo ? 1 : Math.min(1, dt * (alvoCam ? 3.5 : 7))
+    const k = dt === 0 || calmo ? 1 : Math.min(1, dt * (alvoCam ? 3.5 : eu.rota.length ? 9 : 7))
     cam.x += (x - cam.x) * k
     cam.y += (y - cam.y) * k
-    mundo.style.transform = `translate(${Math.round(cam.x)}px,${Math.round(cam.y)}px) scale(${esc})`
+    // a câmera anda na grade do pixel da arte (múltiplos da escala): o chibi e o chão andam juntos, sem o chibi tremer
+    // 1 px de tela para lá e para cá enquanto a câmera o segue
+    const gx = Math.round(cam.x / esc) * esc
+    const gy = Math.round(cam.y / esc) * esc
+    mundo.style.transform = `translate(${gx}px,${gy}px) scale(${esc})`
   }
   function anda(p: Pt, aoChegar?: () => void) {
     clearTimeout(cartaoT)
@@ -539,6 +545,9 @@ export function criaCasa(raiz: HTMLElement, o: MotorOpcoes) {
   // o primeiro toque também destrava o som (iPhone)
   raiz.addEventListener('pointerdown', destravaSom, true)
   vista.addEventListener('pointerdown', (e) => {
+    // um toque acorda o chibi que cochilava
+    if (dormindo) balao('!')
+    acorda()
     if (!e.isPrimary) {
       ini = null
       return
@@ -869,6 +878,89 @@ export function criaCasa(raiz: HTMLElement, o: MotorOpcoes) {
   let olhando = 0
   let colOlha = 0
   let respT = 0
+  let trecho: Pt | undefined
+  let dirAnt = 0
+  /* ---- ociosidade: depois de ~4 s parado, de tempos em tempos (7-14 s) uma destas; parado 45 s, cochila ---- */
+  type Ocio = { tipo: 'vira' | 'cantarola' | 'pulo'; t: number; dur: number; volta?: number }
+  let ocio: Ocio | null = null
+  let tParado = 0
+  // ?ocio=rapido (só para as capturas): tudo acontece mais cedo, para caber num vídeo curto
+  const OCIO_RAPIDO = new URLSearchParams(window.location.search).get('ocio') === 'rapido'
+  const SONO = OCIO_RAPIDO ? 16 : 45
+  const esperaOcio = () => (OCIO_RAPIDO ? 1.5 + Math.random() : 7 + Math.random() * 7)
+  let proxOcio = OCIO_RAPIDO ? 2 : 6 + Math.random() * 5
+  let dormindo = false
+  let zzT = 0
+  let pulo = -1
+  const PULO = [-1, -2, -1, 0]
+  function acorda() {
+    if (dormindo) {
+      dormindo = false
+      proxPisca = 0.25
+    }
+    tParado = 0
+    if (ocio) {
+      if (ocio.tipo === 'vira' && !eu.rota.length && ocio.volta != null) eu.dir = ocio.volta
+      ocio = null
+      proxOcio = esperaOcio()
+    }
+    oc0.x = 0
+    oc0.y = 0
+    pulo = -1
+  }
+  function ocioso(dt: number) {
+    tParado += dt
+    if (dormindo) {
+      zzT -= dt
+      if (zzT <= 0) {
+        balao('zz')
+        zzT = 3.2
+      }
+      return
+    }
+    if (tParado > SONO && !ocio) {
+      dormindo = true
+      zzT = 0.6
+      olhando = 0
+      return
+    }
+    if (ocio) {
+      ocio.t += dt
+      // cantarola: balança 1 px para cada lado, no ritmo da musiquinha
+      if (ocio.tipo === 'cantarola') oc0.x = [0, 1, 0, -1][Math.floor(ocio.t / 0.28) % 4]
+      // pulinho: sobe 1, 2, 1 e assenta (um quadro de 80 ms cada)
+      if (ocio.tipo === 'pulo') {
+        const q = Math.floor(ocio.t / TIQUE)
+        pulo = q < PULO.length ? q : -1
+        oc0.y = q < PULO.length ? PULO[q] : 0
+      }
+      if (ocio.t >= ocio.dur) {
+        if (ocio.tipo === 'vira' && ocio.volta != null) eu.dir = ocio.volta
+        ocio = null
+        oc0.x = 0
+        oc0.y = 0
+        pulo = -1
+        proxOcio = esperaOcio()
+      }
+      return
+    }
+    if (tParado < (OCIO_RAPIDO ? 1 : 4) || olhando > 0 || balT !== null) return
+    proxOcio -= dt
+    if (proxOcio > 0) return
+    const r = Math.random()
+    if (r < 0.45) {
+      // vira o corpo para olhar em volta e depois volta para onde estava
+      const volta = eu.dir
+      eu.dir = eu.dir === 0 ? (Math.random() < 0.5 ? 1 : 2) : eu.dir === 3 ? 0 : Math.random() < 0.6 ? 0 : eu.dir === 1 ? 2 : 1
+      ocio = { tipo: 'vira', t: 0, dur: 1.3 + Math.random() * 0.8, volta }
+    } else if (r < 0.8) {
+      balao('♪')
+      ocio = { tipo: 'cantarola', t: 0, dur: 2.2 }
+    } else {
+      ocio = { tipo: 'pulo', t: 0, dur: TIQUE * PULO.length + 0.05 }
+      if (Math.random() < 0.5) balao('♪')
+    }
+  }
   function laco(t: number) {
     if (!vivo) return
     // mesa ou guarda-roupa por cima (painel opaco): o mapa não precisa desenhar
@@ -896,9 +988,14 @@ export function criaCasa(raiz: HTMLElement, o: MotorOpcoes) {
           f?.()
         }
       } else {
+        // a direção é decidida uma vez por trecho do caminho (não a cada quadro): nas curvas o corpo não fica
+        // trocando entre frente e lado; trecho curtinho (menos de 8 px) não vira o corpo
+        if (eu.rota[0] !== trecho) {
+          trecho = eu.rota[0]
+          if (d >= 8 || !andava) eu.dir = Math.abs(dx) > Math.abs(dy) * (eu.dir === 1 || eu.dir === 2 ? 1 : 1.3) ? (dx < 0 ? 1 : 2) : dy > 0 ? 0 : 3
+        }
         eu.x += (dx / d) * v
         eu.y += (dy / d) * v
-        eu.dir = Math.abs(dx) > Math.abs(dy) * (eu.dir === 1 || eu.dir === 2 ? 1 : 1.3) ? (dx < 0 ? 1 : 2) : dy > 0 ? 0 : 3
         relogio += dt
       }
     }
@@ -930,12 +1027,17 @@ export function criaCasa(raiz: HTMLElement, o: MotorOpcoes) {
         // respira: peito sobe por ~0,9 s a cada 2,6 s
         respT = (respT + dt) % 2.6
         const peito = respT > 1.7
-        // pisca: fecha 1-2 tiques a cada 2,5-6 s; 15% das vezes duas vezes
+        // pisca: fecha ~110 ms a cada 3-6,5 s (às vezes duas vezes); pisca também logo depois de virar o corpo, como
+        // quem vira a cabeça
+        if (eu.dir !== dirAnt) {
+          proxPisca = Math.min(proxPisca, 0.14)
+          dirAnt = eu.dir
+        }
         proxPisca -= dt
         if (proxPisca <= 0 && pisca <= 0) {
-          pisca = TIQUE * 1.5
-          piscaDupla = Math.random() < 0.15
-          proxPisca = 2.5 + Math.random() * 3.5
+          pisca = TIQUE * 1.4
+          piscaDupla = Math.random() < 0.1
+          proxPisca = 3 + Math.random() * 3.5
         }
         if (pisca > 0) {
           pisca -= dt
@@ -951,19 +1053,26 @@ export function criaCasa(raiz: HTMLElement, o: MotorOpcoes) {
         }
         // olha para o lado só com a cabeça, segura 1-1,6 s; de costas não olha
         proxOlha -= dt
-        if (proxOlha <= 0 && olhando <= 0 && eu.dir !== 3) {
+        if (proxOlha <= 0 && olhando <= 0 && eu.dir !== 3 && !ocio && !dormindo) {
           olhando = 1 + Math.random() * 0.6
           colOlha = eu.dir === 0 ? (Math.random() < 0.5 ? COL.olhaE : COL.olhaD) : COL.olhaF
           proxOlha = 6 + Math.random() * 7
           if (Math.random() < 0.2) balao(Math.random() < 0.5 ? '?' : '…')
         }
-        if (olhando > 0) {
+        // animações de ociosidade (dono, 08/11: "crie animações de ociosidade"): virar o corpo para olhar em volta,
+        // cantarolar balançando, um pulinho e, parado por muito tempo, cochilar
+        ocioso(dt)
+        if (dormindo) {
+          col = peito ? COL.piscaPeito : COL.pisca
+        } else if (olhando > 0) {
           olhando -= dt
           col = colOlha
         } else if (pisca > 0 && eu.dir !== 3) col = peito ? COL.piscaPeito : COL.pisca
         else if (peito) col = COL.peito
-      }
+        if (pulo >= 0) sobe = true
+      } else acorda()
     }
+    if (andando || calmo) acorda()
     andava = andando
     if (folhaPronta) ator.style.backgroundPosition = `-${col * 80}px -${eu.dir * 96}px`
     xAnt = eu.x

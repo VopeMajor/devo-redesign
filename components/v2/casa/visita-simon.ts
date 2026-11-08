@@ -172,8 +172,8 @@ export function visitaSimon(raiz: HTMLElement, { aparencia, aoFim, palco = null 
     caixa: () => $v('.v-caixa'),
     rosto: '/v2/art/simon/anim/',
     versao: '202611060600',
-    piscar: [2.2, 5],
-    piscaMs: 100,
+    piscar: [3, 6],
+    piscaMs: 120,
     bocaMs: 100,
     boca: () => (palco ? palco.boneco : null),
   })
