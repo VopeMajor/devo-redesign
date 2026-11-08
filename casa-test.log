@@ -1,0 +1,19 @@
+ok   migração da Casa é idempotente
+ok   cadastro das contas de teste
+ok   trancado sem o tutorial (GET liberado:false; POST 403); Owner vê liberado com as receitas
+ok   raridade: quantidade errada e raridade errada são recusadas sem tirar cartas
+ok   5 comuns → tentativa: cartas saem do save, Tempo debitado, save antigo não devolve
+ok   mesa nível 1 tem um espaço: segunda fabricação recusada
+ok   sucesso (chance 100): uma carta Incomum entregue, uma vez só
+ok   falha (chance 0): nada entregue e os materiais se perdem
+ok   combinação sem receita: paga o Tempo e as cartas voltam (com outro uid)
+ok   receita: entrega a carta definida, entra no Livro da Corporação e não aparece para outras
+ok   aprimorar a mesa: nível 2 (60%), Tempo debitado, repetir recusa
+ok   reserva: sem Tempo suficiente a fabricação é recusada e nada muda
+ok   pacote: sem pacote → 409; com pacote abre, consome 1 e entrega o prêmio
+ok   pacote: a tabela soma 100 e as linhas aleatórias viram carta ou item
+ok   Pacote Iniciante e Intermediário: várias cartas por pacote, todas entregues
+ok   peso das cartas: acima do limite não se inscreve; dentro do limite entra; troca também respeita o peso
+ok   peso máximo do Deadly Vote: salvo na convocação e visto pelo jogador
+
+17 ok, 0 falhas
