@@ -3984,9 +3984,14 @@ if (want('v2')) {
         await shot(page, `v2-02-mapa-${tag}`, 'fim do Mapa do Devo')
         await page.locator('#inicio').evaluate((el) => el.scrollTo(0, 0)).catch(() => {})
       }
-      await tryClick(page.locator('#mesa .ic[data-id="cartas"]'))
-      await wait(900)
-      await shot(page, `v2-03-janela-${tag}`, 'janela de um sistema (tela nas próximas etapas)')
+      // cada sistema abre na janela: o Pulso já na versão nova; os outros com a tela do jogo atual dentro (etapa 2)
+      for (const id of ['pulso', 'record', 'mensagens', 'cartas', 'calendario', 'torres', 'ranking']) {
+        await tryClick(page.locator(`#mesa .ic[data-id="${id}"]`))
+        await wait(1800)
+        await shot(page, `v2-03-${id}-${tag}`, `janela: ${id}`)
+        await page.keyboard.press('Escape').catch(() => {})
+        await wait(400)
+      }
       await tryClick(page.locator('#sino'))
       await wait(700)
       await shot(page, `v2-04-avisos-${tag}`, 'central de avisos')

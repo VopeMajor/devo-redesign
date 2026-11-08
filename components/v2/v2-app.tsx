@@ -11,6 +11,12 @@ import { PULSE_CRITICAL_MS, pulseRemaining } from '@/lib/devo/pulse'
 import type { CalendarioPayload } from '@/lib/devo/calendario'
 import type { SaveData } from '@/lib/devo/save'
 import { Barlow, Barlow_Semi_Condensed, Jersey_15 } from 'next/font/google'
+import { PulsoV2 } from './apps/pulso'
+import { APPS } from '@/components/devo/os/apps'
+import { OsNavContext, type OsNav } from '@/components/devo/os/os-nav'
+import { useDevoEngine } from '@/components/devo/os/use-devo-engine'
+import { CenasGatilho } from '@/components/devo/torres/gatilho'
+import type { AppId } from '@/lib/devo/types'
 import './os.css'
 import './v2-ajustes.css'
 
@@ -55,6 +61,18 @@ const SISTEMAS: Sistema[] = [
   { id: 'mesa', nome: 'Mesa', s: 'Painel da equipe' },
 ]
 const SIS = new Map(SISTEMAS.map((a) => [a.id, a]))
+/** Telas do jogo atual, usadas dentro das janelas do v2 até a versão nova de cada uma ficar pronta (etapa 2 em diante). */
+const LEGADO = new Map(APPS.map((a) => [a.id as string, a]))
+/** No jogo a Mesa da equipe é uma aba do Record. */
+const ABRE_COMO: Record<string, string> = { mesa: 'record' }
+
+/**
+ * Telas que já existem no v2: o componente, o id do contêiner (o CSS do protótipo usa #pul, #rec…) e o tamanho da
+ * janela no computador, como no protótipo (kit3/os-janelas.html, abre()): [distância da direita, largura, altura].
+ */
+const TELAS: Record<string, { C: React.ComponentType; cx: string; caixa: [number, number, number] }> = {
+  pulso: { C: PulsoV2, cx: 'pul', caixa: [580, 540, 760] },
+}
 const ico = (id: string) => `/v2/art/os/ico/${id}.webp`
 const ROMANOS = ['0', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII']
 
@@ -93,9 +111,16 @@ export function V2App(props: { initialPlayerName: string | null; initialCharacte
           <circle cx="32" cy="32" r="1.6" fill="currentColor" />
         </symbol>
       </svg>
+      <Motor />
       <Casca />
     </DevoProvider>
   )
+}
+
+/** O mesmo motor do jogo (relógio, boas-vindas, mensagens, trocas): /v2 é o jogo de verdade, só com outra cara. */
+function Motor() {
+  useDevoEngine()
+  return null
 }
 
 type Janela = { id: string; z: number; oculta: boolean; max: boolean; caixa: { l: number; t: number; w: number; h: number } | null }
@@ -144,12 +169,22 @@ function Casca() {
   const osRef = useRef<HTMLElement>(null)
   const foco = useMemo(() => janelas.filter((j) => !j.oculta).sort((a, b) => b.z - a.z)[0] ?? null, [janelas])
 
-  const abre = useCallback((id: string) => {
+  const abre = useCallback((id0: string) => {
+    const id = ABRE_COMO[id0] ?? id0
     setJanelas((js) => {
       const ja = js.find((j) => j.id === id)
       if (ja) return js.map((j) => (j.id === id ? { ...j, oculta: false, z: ++zRef.current } : j))
       let caixa: Janela['caixa'] = null
-      if (pc() && osRef.current) {
+      const tela = TELAS[id]
+      if (pc() && osRef.current && tela) {
+        const a = osRef.current.getBoundingClientRect()
+        const [dir, w, h] = tela.caixa
+        caixa = { l: Math.max(380, a.width - dir), t: 56, w: Math.min(w, a.width - 8), h: Math.min(h, a.height - 44 - 54 - 14) }
+      } else if (pc() && osRef.current && LEGADO.has(id)) {
+        const a = osRef.current.getBoundingClientRect()
+        const { w, h } = LEGADO.get(id)!.window
+        caixa = { l: Math.max(380, a.width - w - 40), t: 56, w: Math.min(w, a.width - 8), h: Math.min(h + 62, a.height - 44 - 54 - 14) }
+      } else if (pc() && osRef.current) {
         const a = osRef.current.getBoundingClientRect()
         cascata.current = (cascata.current + 1) % 4
         const w = Math.min(760, a.width - 8)
@@ -179,11 +214,22 @@ function Casca() {
   const prox = cal && cal.liberado ? [...cal.eventos].filter((e) => e.emDias >= 0).sort((a, b) => a.emDias - b.emDias)[0] : null
   const quando = (d: number) => (d === 0 ? 'Hoje' : d === 1 ? 'Amanhã' : `Em ${d} dias`)
 
+  const nav = useMemo<OsNav>(
+    () => ({
+      layout: pc() ? 'desktop' : 'phone',
+      open: (id: AppId) => abre(id),
+      exitToLanding: () => window.location.assign('/'),
+      restart: () => abre('ajustes'),
+    }),
+    [abre],
+  )
+
   const arcano = eu?.arcano ?? null
   const retrato = arcano ? `url(/images/arcanos/${arcano.key}/retrato-512.webp)` : 'none'
   const avisos = state.notifications.length
 
   return (
+    <OsNavContext.Provider value={nav}>
     <main id="os" ref={osRef} className={[FONTES_V2, critico && 'critico', foco && 'aberta'].filter(Boolean).join(' ')}>
       <header id="menu">
         <span id="marca">
@@ -326,7 +372,9 @@ function Casca() {
           {avisos > 0 && <b>{avisos}</b>}
         </button>
       </nav>
+      <CenasGatilho />
     </main>
+    </OsNavContext.Provider>
   )
 }
 
@@ -483,17 +531,30 @@ function JanelaSistema({ j, emFoco, os, onFoco, onMini, onMax, onFecha, onMove, 
               </li>
             )}
           </ul>
+        ) : TELAS[j.id] ? (
+          (() => {
+            const T = TELAS[j.id]
+            return (
+              <div id={T.cx}>
+                <T.C />
+              </div>
+            )
+          })()
+        ) : LEGADO.has(j.id) ? (
+          (() => {
+            const L = LEGADO.get(j.id)!.Component
+            return (
+              <div className="v2-legado">
+                <L />
+              </div>
+            )
+          })()
         ) : (
           <div className="abre">
             <img src={ico(j.id)} alt="" />
             <h3>{titulo}</h3>
             <p>{a?.s}</p>
-            <p>Esta tela entra nas próximas etapas do v2. Enquanto isso, ela continua no DEVO atual.</p>
-            <p>
-              <a className="r-bt s-forte" href="/">
-                Abrir o DEVO atual
-              </a>
-            </p>
+            <p>Este sistema ainda não existe no jogo. Ele entra numa das próximas etapas do v2.</p>
           </div>
         )}
       </div>

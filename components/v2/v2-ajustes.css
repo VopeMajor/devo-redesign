@@ -45,3 +45,16 @@
   opacity: 0.45;
   filter: grayscale(0.6);
 }
+
+/* telas do jogo atual dentro das janelas do v2 (até a versão nova de cada uma): voltam à letra e ao alinhamento do
+   jogo, sem herdar o estilo do protótipo, e ocupam a janela inteira */
+.v2-legado {
+  min-height: 100%;
+  font-family: var(--font-plex-sans), system-ui, sans-serif;
+  letter-spacing: normal;
+  text-align: left;
+  color: var(--color-foreground, #e8e4dc);
+}
+.v2-legado button {
+  text-align: inherit;
+}
