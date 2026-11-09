@@ -317,8 +317,10 @@
 @media (max-width:899.9px){
   #os #mesa{grid-auto-flow:row;grid-template-columns:repeat(3,minmax(0,1fr))!important;grid-template-rows:none;grid-auto-columns:auto;column-gap:0!important;row-gap:26px!important;overflow:visible;scroll-snap-type:none;padding:0 4px 64px!important;touch-action:pan-y}
   #os #mesa .ic,#os #mesa .ic:nth-child(n){transform:none!important}
-  #os #mesa .ic:nth-child(3n+2){transform:translateY(40px)!important}
-  #os #mesa .ic:nth-child(3n+2):active{transform:translateY(40px) scale(.97)!important}
+  /* a ordem do mapa de arrastar (fileira e coluna vêm do Mapa: --fila, --coluna), a coluna do meio mais baixa */
+  #os #mesa .ic{grid-row:var(--fila,auto);grid-column:var(--coluna,auto)}
+  #os #mesa .ic[data-col="1"]{transform:translateY(40px)!important}
+  #os #mesa .ic[data-col="1"]:active{transform:translateY(40px) scale(.97)!important}
   #os #mesa .ic:active{transform:scale(.97)!important}
   #os .mapa-dica{display:none}
 }
