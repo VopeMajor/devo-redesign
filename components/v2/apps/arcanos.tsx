@@ -473,7 +473,7 @@ function Detalhe({
         <Recursos d={d} />
       </div>
       <div className="a-pagina">
-        <section className={'a-palco' + (ab ? '' : ' fechada') + (subiu != null ? ' a-evoluiu' : '')} aria-label={`${a.numeral} · ${nome}`}>
+        <section className={'a-palco' + (ab && p ? '' : ' fechada') + (subiu != null ? ' a-evoluiu' : '')} aria-label={`${a.numeral} · ${nome}`}>
           {orbital && (
             // eslint-disable-next-line @next/next/no-img-element
             <img className="a-orbita" src={orbital.src} srcSet={orbital.srcSet} sizes="(min-width: 900px) 480px, 100vw" alt="" decoding="async" />

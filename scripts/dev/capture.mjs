@@ -4002,6 +4002,23 @@ if (want('v2')) {
     // etapa 2: as telas novas, aba por aba (texto da aba) e o fim de cada uma ('rolar')
     await step(`v2-telas-${kind}`, async () => {
       const d = await conta(kind, SENT, 'Sentinela', 'DEVO-STAF-SENT')
+      // estado zerado para cada aparelho (banco de teste): o giro grátis de hoje volta, a Sentinela sai da Corporação
+      // (o passo v2-corp a põe como líder) e a chamada da Melissa aparece de novo
+      try {
+        const pg = (await import('pg')).default
+        if (process.env.DATABASE_URL) {
+          const db = new pg.Pool({ connectionString: process.env.DATABASE_URL })
+          const eu = "(SELECT id FROM players WHERE lower(name) = 'sentinela' LIMIT 1)"
+          for (const q of [
+            `UPDATE poco_giros SET gratis = false WHERE gratis AND player_id = ${eu}`,
+            `DELETE FROM corporacao_membros WHERE player_id = ${eu}`,
+            `UPDATE corporacao_membros SET cargo = 'lider' WHERE player_id = '00000000-0000-4000-8000-000000000001' AND NOT EXISTS (SELECT 1 FROM corporacao_membros WHERE corporacao_id = 'c0a90000-0000-4000-8000-000000000001' AND cargo = 'lider')`,
+            `UPDATE corporacao_estado SET apresentado_at = NULL WHERE player_id = ${eu}`,
+          ])
+            await db.query(q).catch((e) => manifest.errors.push({ step: `v2-telas-${kind}-zera`, error: String(e).slice(0, 300) }))
+          await db.end().catch(() => {})
+        }
+      } catch {}
       const page = d.page
       const tag = kind === 'phone' ? 'cel' : 'pc'
       await page.goto(`${BASE}/v2`, { waitUntil: 'networkidle' })

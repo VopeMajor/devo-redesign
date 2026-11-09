@@ -398,7 +398,6 @@ function Topo({ d, agir, onMel, onRedesenho }: { d: CorpLiberado; agir: Agir; on
           <img className="co-fundo" src={corpArte('registro')} alt="O salão de registro da Companhia, com um projetor de hexágonos sobre o balcão" />
           {mel}
         </div>
-        <i className="s-dit" aria-hidden="true" />
         <section className="co-titulo">
           <small>Companhia de Despertados · registro</small>
           <h3>Corporações</h3>
@@ -422,7 +421,6 @@ function Topo({ d, agir, onMel, onRedesenho }: { d: CorpLiberado; agir: Agir; on
         </div>
         {mel}
       </div>
-      <i className="s-dit" aria-hidden="true" />
       <Ficha m={m} agir={agir} onRedesenho={onRedesenho} />
     </>
   )

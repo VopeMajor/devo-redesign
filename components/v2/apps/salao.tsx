@@ -360,7 +360,6 @@ function Palco({
           <span>Herdeiro</span>
         </button>
       </div>
-      <i className="s-dit" aria-hidden="true" />
       <section className="s-placar" aria-label={r.aberto ? 'Salão aberto: tempo até o fim da edição' : 'Contagem até a próxima abertura'}>
         <p className="s-selo">
           {r.aberto ? `Aberto · Edição ${ed(r.corrente.n)}` : 'Fechado'}

@@ -24,7 +24,7 @@ import { useMediaQuery } from '@/components/devo/hooks'
 import { arteItem } from '@/components/devo/poco/poco-itens'
 import { PremioArte } from '@/components/devo/poco/poco-resultado'
 import { callName, useDevo } from '@/components/devo/state/devo-store'
-import { erroTexto, Legado, px } from '../comum'
+import { erroTexto, px } from '../comum'
 import { NeblinaV2 } from './poco-neblina'
 import { OwnerProbabilidades } from './poco-owner'
 
@@ -35,7 +35,7 @@ import { OwnerProbabilidades } from './poco-owner'
  * da manivela (o cliente só manda os instantes dos toques), o prêmio (sorteado antes da revelação), o lançamento
  * múltiplo (a 1ª moeda passa pela manivela; as outras saem juntas depois) e a troca de balde. Primeira entrada: a cena
  * da neblina (poco-neblina.tsx), que entrega o Dracma Incomum. O painel de probabilidades do Owner fica em "Suas
- * moedas", dentro de <Legado>; a Mesa do Poço (prêmios do Owner) continua na Mesa da equipe, no Record.
+ * moedas", no fundo da janela (as cores dele são as do tema escuro); a Mesa do Poço (prêmios do Owner) continua na Mesa da equipe, no Record.
  */
 
 type Liberado = Extract<PocoPayload, { liberado: true }>
@@ -690,10 +690,8 @@ function Moedas({
       </ul>
       <p className="r-sub">Cada acerto na manivela diminui a chance de lixo.</p>
       {!lancando && data.owner && (
-        <div className="p-owner">
-          <Legado>
-            <OwnerProbabilidades owner={data.owner} moedas={data.moedas} onSalvar={onSalvar} />
-          </Legado>
+        <div className="p-owner v2-dentro">
+          <OwnerProbabilidades owner={data.owner} moedas={data.moedas} onSalvar={onSalvar} />
         </div>
       )}
     </>
