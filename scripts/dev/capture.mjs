@@ -4479,12 +4479,16 @@ if (want('catedral')) {
       await tryClick(page.locator('.cv-av footer .principal'))
       await page.locator('.cv .cv-mapa .ator').waitFor({ timeout: 15000 }).catch(() => {})
     }
-    await wait(3600)
+    // o Simon bate à porta enquanto não for atendido: espera a campainha (até 9 s) e deixa para outra hora
+    await page.locator(VN).first().waitFor({ timeout: 9000 }).catch(() => {})
     if (await page.locator(VN).count()) {
       await avanca(page)
       await escolhe(page, 'Ignorar')
-      await avanca(page)
-      await wait(800)
+      for (let i = 0; i < 8 && (await page.locator(VN).count()); i++) {
+        await toca(page)
+        await wait(400)
+      }
+      await wait(1200)
     }
     if (!(await tryClick(page.locator('.cv .ponto[aria-label^="Porta de entrada"]')))) await tryClick(page.locator('.cv .cv-seta[aria-label="Ir até: Porta de entrada"]'))
     await page.locator('.cv .cv-cartao:not([hidden])').waitFor({ timeout: 12000 }).catch(() => {})

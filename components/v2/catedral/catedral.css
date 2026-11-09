@@ -353,3 +353,10 @@
     animation: none;
   }
 }
+
+/* a Pixelify Sans tem a ligadura "fi", que sai como um "A" ("Aquei", "oAcina"): na Casa e na Catedral cada letra
+   é desenhada sozinha */
+.cv {
+  font-variant-ligatures: none;
+  font-feature-settings: 'liga' 0, 'clig' 0;
+}
