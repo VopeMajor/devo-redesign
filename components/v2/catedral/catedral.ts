@@ -58,7 +58,7 @@ export function criaCatedral(raiz: HTMLElement, o: CatedralOpcoes) {
 <div class="cat-palco" aria-hidden="true" hidden></div>
 <img class="v-fig cat-fig" alt="" hidden>
 <div class="cat-topo"><button class="cat-sair" aria-label="Voltar para casa">‹</button><div class="cat-lugar">Catedral de Damasco</div></div>
-${o.equipe ? '<div class="cat-teste" aria-label="Controle de teste da equipe"><button data-t="primeira">1ª visita</button><button data-t="comum">Visita comum</button></div>' : ''}
+${o.equipe && new URLSearchParams(location.search).has('teste') ? '<div class="cat-teste" aria-label="Controle de teste da equipe"><button data-t="primeira">1ª visita</button><button data-t="comum">Visita comum</button></div>' : ''}
 <section class="visita cat-vn" hidden aria-live="polite"><div class="v-caixa"><i class="v-rosto" hidden></i><b class="v-nome"></b><p class="v-tx"></p><div class="v-esc"></div><small class="v-seg">▼</small></div></section>
 <section class="cat-altar" hidden aria-label="Altar"></section>
 <section class="cat-res" hidden role="dialog" aria-label="Resultado do ritual"><span class="selo" aria-hidden="true"></span><small></small><strong></strong><p></p><span class="k">Toque para continuar</span></section>
@@ -539,7 +539,7 @@ ${o.equipe ? '<div class="cat-teste" aria-label="Controle de teste da equipe"><b
       (b) =>
         (b.onclick = () => {
           const x = ORAR.find((y) => y.id === b.dataset.o)!
-          resultado('#c9b78e', 'Oração', x.nome.slice(4), `${x.descricao} [probabilidade e valor ainda não definidos${x.id === 'estab' ? '; "Créditos" ainda não existe no jogo' : ''}]`)
+          resultado('#c9b78e', 'Oração', x.nome.slice(4), x.descricao)
         }),
     )
     altarEl.scrollTop = 0
@@ -574,7 +574,7 @@ ${o.equipe ? '<div class="cat-teste" aria-label="Controle de teste da equipe"><b
             if (!vivo) return
             inv[x.id] = r.restam
             const nada = r.resultado === 'Nada'
-            resultado(nada ? '#8a8296' : r.resultado.startsWith('Bênção') ? '#c9b78e' : '#c46a7a', x.nome, r.resultado, nada ? 'Nada aconteceu.' : (BENCAOS[r.resultado] ?? ''))
+            resultado(nada ? '#8a8580' : r.resultado.startsWith('Bênção') ? '#c9b78e' : '#8a2a2e', x.nome, r.resultado, nada ? 'Nada aconteceu.' : (BENCAOS[r.resultado] ?? ''))
           } catch (e) {
             aviso((e as Error).message, 3200)
             ofer()

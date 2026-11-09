@@ -323,4 +323,8 @@
   #os #mesa .ic[data-col="1"]:active{transform:translateY(40px) scale(.97)!important}
   #os #mesa .ic:active{transform:scale(.97)!important}
   #os .mapa-dica{display:none}
+  /* rolando, os nomes passam por baixo do Tempo: a barra de cima ganha um fundo que some para baixo */
+  #os #menu{background:linear-gradient(180deg,#0b1020 64%,rgba(11,16,32,0))}
+  /* rolando, os nomes passam por baixo do Tempo: a barra de cima ganha um fundo que some para baixo */
+  #os #menu{background:linear-gradient(180deg,#0b1020 64%,rgba(11,16,32,0))}
 }

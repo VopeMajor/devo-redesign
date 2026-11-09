@@ -4622,7 +4622,7 @@ if (want('catedral')) {
   await step('catedral-pc', async () => {
     const d = await conta('desktop', SENT, 'Sentinela', 'DEVO-STAF-SENT')
     const page = d.page
-    await page.goto(`${BASE}/v2?semraf=1`, { waitUntil: 'networkidle' })
+    await page.goto(`${BASE}/v2?semraf=1&teste=1`, { waitUntil: 'networkidle' })
     await wait(1500)
     await ateViagem(page)
     await tryClick(page.locator('.cv .destino[data-ir="catedral"]'))
