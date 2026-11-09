@@ -114,12 +114,22 @@ export function pesoPontas(d: Px, w: number, cel = w, minimo = 4, fade = 0.35, l
   const opaco = (x: number, y: number) => d[(y * w + x) * 4 + 3] > 24
   for (let c0 = 0; c0 < w; c0 += cel) {
     for (let x = c0; x < Math.min(w, c0 + cel); x++) {
-      let yb = h - 1
-      while (yb >= 0 && !opaco(x, yb)) yb--
-      if (yb < 0 || yb < h * limiar) continue
-      // do topo do cabelo na coluna até o fim (os vãos entre as mechas não cortam a medida)
+      // do topo do cabelo na coluna para baixo, até o primeiro vão grande (vãos pequenos entre mechas não cortam;
+      // pixels soltos lá embaixo não contam)
       let ya = 0
-      while (ya < yb && !opaco(x, ya)) ya++
+      while (ya < h && !opaco(x, ya)) ya++
+      if (ya >= h) continue
+      const vao = Math.max(3, Math.round(h / 40))
+      let yb = ya
+      let y = ya
+      while (y < h) {
+        if (opaco(x, y)) {
+          yb = y
+          y++
+        } else if (y - yb > vao) break
+        else y++
+      }
+      if (yb < h * limiar) continue
       const len = yb - ya + 1
       const ponta = Math.max(minimo, Math.round(len / 3))
       const ini = yb - ponta
