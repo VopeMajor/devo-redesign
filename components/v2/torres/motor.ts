@@ -790,8 +790,8 @@ export function criaTorres(raiz: HTMLElement, o: TorresMotorOpcoes) {
     if (!vivo) return
     const dt = Math.min(0.05, (t - t0) / 1000)
     t0 = t
-    // dentro da torre a ilha não aparece: não precisa desenhar
-    if (torreId) {
+    // dentro da torre (ou com a janela minimizada) a ilha não aparece: não precisa desenhar
+    if (torreId || !raiz.offsetWidth) {
       requestAnimationFrame(laco)
       return
     }
@@ -884,8 +884,18 @@ export function criaTorres(raiz: HTMLElement, o: TorresMotorOpcoes) {
     if (torreId) return saiTorre(), true
     return false
   }
+  // só a janela da frente responde ao teclado (outra janela por cima fica com o Esc)
+  const naFrente = () => {
+    // a Casa aberta na tela inteira fica com o teclado
+    if (document.querySelector('.cv')) return false
+    const jan = raiz.closest<HTMLElement>('[data-sis]')
+    if (!jan) return true
+    if (jan.hidden) return false
+    const z = +jan.style.zIndex || 0
+    return ![...document.querySelectorAll<HTMLElement>('[data-sis]')].some((j) => j !== jan && !j.hidden && (+j.style.zIndex || 0) > z)
+  }
   const tecla = (e: KeyboardEvent) => {
-    if (!raiz.isConnected) return
+    if (!raiz.isConnected || !naFrente()) return
     if (!$('.tv-premio').hidden && (e.key === 'Enter' || e.key === ' ' || e.key === 'Escape')) {
       e.preventDefault()
       e.stopImmediatePropagation()
