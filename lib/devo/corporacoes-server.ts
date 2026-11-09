@@ -15,11 +15,16 @@ import {
   type CorpClassificacao,
   type CorpConviteRecebido,
   type CorpEscopo,
+  CHAT_MAX_CARACTERES,
+  type CorpChat,
+  type CorpMensagem,
   type CorpMesa,
+  type CorpPapel,
   type CorpPayload,
   type CorpResumo,
   type CriacaoInfo,
   inicialDe,
+  isCorpPapel,
   isBrasaoCor,
   isBrasaoDivisao,
   isBrasaoForma,
@@ -132,6 +137,9 @@ type CorpRow = {
   decisao_nota: string | null
   created_at: Date
   membros: string
+  /** scripts/corporacoes-chat-migration.sql (sem a migração: undefined → fundo do sistema). */
+  papel?: string | null
+  papel_at?: Date | null
 }
 
 const CORP_SELECT = `SELECT c.*, (SELECT count(*) FROM corporacao_membros m WHERE m.corporacao_id = c.id) AS membros FROM corporacoes c`
@@ -417,6 +425,7 @@ async function minhaCorp(playerId: string, eu: Membro, c: Cfg): Promise<MinhaCor
   const perfis = await Promise.all(pedidos.map((d) => perfilRow(pool, d.player_id)))
   return {
     ...resumo(corp),
+    papel: papelDe(corp),
     meuCargo: eu.cargo,
     membrosLista: membros.map((m) => ({ id: m.id, personagem: m.nome, cargo: m.cargo, entrouAt: m.entrou_at.getTime(), eu: m.id === playerId })),
     pedidos: pedidos.flatMap((d, i) => {
@@ -837,6 +846,138 @@ export async function editarBrasao(playerId: string, input: Record<string, unkno
     [corp.id, br.forma, br.cor, br.cor2, br.divisao, br.simbolo, br.ornamento],
   )
   return { brasao: brasaoDe({ ...corp, brasao_forma: br.forma, brasao_cor: br.cor, brasao_cor2: br.cor2, brasao_divisao: br.divisao, brasao_simbolo: br.simbolo, brasao_ornamento: br.ornamento }) }
+}
+
+/* ------------------------------------------------------------------ Papel de parede (scripts/corporacoes-chat-migration.sql) */
+
+const PAPEL_RE = /^data:image\/(jpeg|webp|png);base64,([A-Za-z0-9+/=]+)$/
+/** Limite da imagem do aparelho, depois de reduzida a 1600 px no cliente (bytes da imagem, não do texto base64). */
+const MAX_PAPEL_BYTES = 900_000
+
+function papelDe(r: Pick<CorpRow, 'papel' | 'papel_at'>): CorpPapel {
+  if (isCorpPapel(r.papel)) return { tipo: 'padrao', id: r.papel }
+  if (r.papel === 'imagem') return { tipo: 'imagem', versao: r.papel_at?.getTime() ?? 0 }
+  return null
+}
+
+/**
+ * O líder escolhe o papel de parede: um dos seis padrões, `null` (fundo do sistema) ou `'imagem'` com o arquivo do
+ * aparelho (data URL JPEG/PNG/WebP, já reduzida no cliente). A imagem fica numa tabela à parte (corporacao_papeis),
+ * para não pesar nas consultas das Corporações; trocar para um padrão apaga a imagem.
+ */
+export async function definirPapel(playerId: string, input: { papel: unknown; imagem?: unknown }) {
+  await requireUnlock(playerId, 'corporacoes')
+  const papel = input.papel === null || input.papel === undefined || input.papel === '' || input.papel === 'sistema' ? null : input.papel
+  if (papel !== null && papel !== 'imagem' && !isCorpPapel(papel)) throw new RecordError('Papel de parede desconhecido.')
+  let imagem: string | null = null
+  if (papel === 'imagem') {
+    const m = typeof input.imagem === 'string' ? PAPEL_RE.exec(input.imagem) : null
+    if (!m) throw new RecordError('Formato de imagem inválido: envie JPEG, PNG ou WebP.')
+    if (Math.floor((m[2].length * 3) / 4) > MAX_PAPEL_BYTES)
+      throw new RecordError(`Imagem grande demais (limite de ${Math.round(MAX_PAPEL_BYTES / 1000)} KB depois de reduzida). Tente outra imagem.`, 413)
+    // o conteúdo precisa ser mesmo do tipo declarado (não só o prefixo do data URL)
+    const head = Buffer.from(m[2].slice(0, 24), 'base64')
+    const tipoOk =
+      head.length >= 12 &&
+      (m[1] === 'jpeg' ? head[0] === 0xff && head[1] === 0xd8 : m[1] === 'png' ? head.readUInt32BE(0) === 0x89504e47 : head.toString('ascii', 0, 4) === 'RIFF' && head.toString('ascii', 8, 12) === 'WEBP')
+    if (!tipoOk) throw new RecordError('O arquivo não é uma imagem válida.')
+    imagem = input.imagem as string
+  }
+  return txAs(playerId, async (c) => {
+    const eu = await membroDe(c, playerId)
+    if (!eu || eu.cargo !== 'lider') throw new RecordError('Só o líder escolhe o papel de parede.', 403)
+    const [corp] = await run<{ id: string; status: string }>(c, 'SELECT id, status FROM corporacoes WHERE id = $1 FOR UPDATE', [eu.corporacao_id])
+    if (!corp || corp.status !== 'ativa') throw new RecordError('A Corporação não está ativa.', 409)
+    if (imagem) {
+      await run(
+        c,
+        `INSERT INTO corporacao_papeis (corporacao_id, imagem, enviada_por) VALUES ($1, $2, $3)
+         ON CONFLICT (corporacao_id) DO UPDATE SET imagem = EXCLUDED.imagem, enviada_por = EXCLUDED.enviada_por, atualizado_at = now()`,
+        [corp.id, imagem, playerId],
+      )
+    } else {
+      await run(c, 'DELETE FROM corporacao_papeis WHERE corporacao_id = $1', [corp.id])
+    }
+    const [r] = await run<{ papel: string | null; papel_at: Date | null }>(c, 'UPDATE corporacoes SET papel = $2, papel_at = now() WHERE id = $1 RETURNING papel, papel_at', [corp.id, papel])
+    return { papel: papelDe(r) }
+  })
+}
+
+/** A imagem do aparelho do líder, só para membros da mesma Corporação (rota /api/corporacoes/papel). */
+export async function papelImagem(playerId: string) {
+  if (!UUID_RE.test(playerId)) return null
+  const eu = await membroDe(pool, playerId)
+  if (!eu) return null
+  const [row] = await run<{ imagem: string }>(pool, 'SELECT imagem FROM corporacao_papeis WHERE corporacao_id = $1', [eu.corporacao_id])
+  const m = row?.imagem ? PAPEL_RE.exec(row.imagem) : null
+  if (!m) return null
+  return { type: `image/${m[1]}`, body: Buffer.from(m[2], 'base64') }
+}
+
+/* ------------------------------------------------------------------ Chat da Corporação (scripts/corporacoes-chat-migration.sql) */
+
+const CHAT_LISTA = 60
+/** Ritmo: uma mensagem a cada 1,5 s e no máximo 12 por minuto por Record. */
+const CHAT_INTERVALO_MS = 1500
+const CHAT_POR_MINUTO = 12
+
+type MensagemRow = { id: string; player_id: string | null; texto: string; created_at: Date; nome: string; cargo: CorpCargo | null }
+
+const mensagem = (r: MensagemRow, playerId: string): CorpMensagem => ({
+  id: r.id,
+  de: r.nome,
+  deId: r.player_id,
+  cargo: r.cargo,
+  eu: r.player_id === playerId,
+  texto: r.texto,
+  em: r.created_at.getTime(),
+})
+
+/** As mensagens recentes (as últimas 60, da mais velha para a mais nova). Só membros. */
+export async function chatRecentes(playerId: string): Promise<CorpChat> {
+  const eu = await membroDe(pool, playerId)
+  if (!eu) throw new RecordError('Só membros da Corporação leem o chat.', 403)
+  const rows = await run<MensagemRow>(
+    pool,
+    `SELECT * FROM (
+       SELECT m.id, m.player_id, m.texto, m.created_at, coalesce(${NOME}, 'Record') AS nome, cm.cargo
+         FROM corporacao_mensagens m
+         LEFT JOIN players p ON p.id = m.player_id
+         LEFT JOIN corporacao_membros cm ON cm.player_id = m.player_id AND cm.corporacao_id = m.corporacao_id
+        WHERE m.corporacao_id = $1
+        ORDER BY m.created_at DESC LIMIT $2
+     ) x ORDER BY created_at, id`,
+    [eu.corporacao_id, CHAT_LISTA],
+  )
+  return { mensagens: rows.map((r) => mensagem(r, playerId)), max: CHAT_MAX_CARACTERES }
+}
+
+/** Envia uma mensagem ao chat (só membros de Corporação ativa; até 300 caracteres; com limite de ritmo). */
+export async function enviarMensagem(playerId: string, input: { texto: unknown }) {
+  await requireUnlock(playerId, 'corporacoes')
+  const t = texto(input.texto, 1, CHAT_MAX_CARACTERES, 'A mensagem')!
+  return txAs(playerId, async (c) => {
+    // a linha do membro travada serializa os envios do mesmo Record (o ritmo vale mesmo com toques duplos)
+    const [eu] = await run<Membro>(c, 'SELECT corporacao_id, cargo FROM corporacao_membros WHERE player_id = $1 FOR UPDATE', [playerId])
+    if (!eu) throw new RecordError('Só membros da Corporação escrevem no chat.', 403)
+    const [corp] = await run<{ status: string }>(c, 'SELECT status FROM corporacoes WHERE id = $1', [eu.corporacao_id])
+    if (!corp || corp.status !== 'ativa') throw new RecordError('A Corporação não está ativa.', 409)
+    const [ritmo] = await run<{ n: string; desde: string | null }>(
+      c,
+      `SELECT count(*) AS n, extract(epoch FROM now() - max(created_at)) * 1000 AS desde
+         FROM corporacao_mensagens WHERE player_id = $1 AND created_at > now() - interval '1 minute'`,
+      [playerId],
+    )
+    if (ritmo?.desde != null && Number(ritmo.desde) < CHAT_INTERVALO_MS) throw new RecordError('Espere um instante antes de mandar outra mensagem.', 429)
+    if (Number(ritmo?.n ?? 0) >= CHAT_POR_MINUTO) throw new RecordError('Muitas mensagens seguidas. Espere um minuto.', 429)
+    const [r] = await run<MensagemRow>(
+      c,
+      `INSERT INTO corporacao_mensagens (corporacao_id, player_id, texto) VALUES ($1, $2, $3)
+       RETURNING id, player_id, texto, created_at, (SELECT coalesce(${NOME}, 'Record') FROM players p WHERE p.id = $2) AS nome, $4::text AS cargo`,
+      [eu.corporacao_id, playerId, t, eu.cargo],
+    )
+    return { mensagem: mensagem(r, playerId) }
+  })
 }
 
 /* ------------------------------------------------------------------ Equipe (Mesa do Record) */

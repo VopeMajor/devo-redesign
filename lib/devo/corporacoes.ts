@@ -203,7 +203,33 @@ export type CriacaoInfo = {
   recusada: { nome: string; nota: string | null; devolvido: boolean } | null
 }
 
+/* ------------------------------------------------------------------ Papel de parede e chat (v2, dono 03/11/2026) */
+
+/**
+ * Papel de parede da Corporação (Rup, NOTAS-RUP-02-11.md item 3; dono, 03/11): o líder escolhe um dos seis padrões,
+ * uma imagem do aparelho dele ou o fundo do sistema. Fica atrás do chat, na parede do salão e no fundo do sistema
+ * de todos os membros enquanto a Corporação está aberta.
+ */
+export const CORP_PAPEIS = [
+  ['biblioteca', 'Biblioteca dos relógios'],
+  ['porto', 'Porto na névoa'],
+  ['salao', 'Salão abandonado'],
+  ['telhados', 'Telhados ao luar'],
+  ['floresta', 'Floresta de lanternas'],
+  ['abismo', 'Engrenagem do abismo'],
+] as const
+export type CorpPapelId = (typeof CORP_PAPEIS)[number][0]
+export const isCorpPapel = (v: unknown): v is CorpPapelId => CORP_PAPEIS.some(([id]) => id === v)
+/** `null` = fundo do sistema. `imagem`: enviada pelo líder, servida a membros em /api/corporacoes/papel?v=<versao>. */
+export type CorpPapel = { tipo: 'padrao'; id: CorpPapelId } | { tipo: 'imagem'; versao: number } | null
+
+/** Uma mensagem do chat da Corporação (só membros leem e escrevem). */
+export type CorpMensagem = { id: string; de: string; deId: string | null; cargo: CorpCargo | null; eu: boolean; texto: string; em: number }
+export type CorpChat = { mensagens: CorpMensagem[]; max: number }
+export const CHAT_MAX_CARACTERES = 300
+
 export type MinhaCorp = CorpResumo & {
+  papel: CorpPapel
   meuCargo: CorpCargo
   membrosLista: CorpMembro[]
   pedidos: CorpPedido[]
