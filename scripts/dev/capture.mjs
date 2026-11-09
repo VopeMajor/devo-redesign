@@ -3987,6 +3987,44 @@ if (want('v2')) {
         // arrastar para baixo com o dedo (gesto de toque de verdade, não a roda do mouse), em tela normal e baixa:
         // todos os ícones precisam aparecer acima da barra de baixo
         const cdp = await page.context().newCDPSession(page)
+        // diagnóstico: o que está debaixo do dedo, e se a roda, o JS e um arrasto de toque cru (touchStart/Move/End) rolam
+        {
+          const x = 195
+          const y = 590
+          const sob = await page.evaluate(([x, y]) => {
+            const out = []
+            for (let el = document.elementFromPoint(x, y); el; el = el.parentElement) {
+              const c = getComputedStyle(el)
+              out.push(`${el.tagName.toLowerCase()}${el.id ? '#' + el.id : ''}${el.className && typeof el.className === 'string' ? '.' + el.className.split(' ').join('.') : ''} ta=${c.touchAction} ov=${c.overflowY} pe=${c.pointerEvents}`)
+            }
+            return out
+          }, [x, y])
+          manifest.shots.push({ name: 'v2-toque-sob-o-dedo', note: JSON.stringify(sob) })
+          const topo = () => page.locator('#inicio').evaluate((el) => el.scrollTop).catch(() => -1)
+          await page.locator('#inicio').evaluate((el) => el.scrollTo(0, 0)).catch(() => {})
+          await page.mouse.move(x, y)
+          await page.mouse.wheel(0, 300)
+          await wait(600)
+          const roda = await topo()
+          await page.locator('#inicio').evaluate((el) => el.scrollTo(0, 0)).catch(() => {})
+          await wait(300)
+          const pts = (yy) => [{ x, y: yy, id: 1, radiusX: 4, radiusY: 4, force: 1 }]
+          await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: pts(y) })
+          for (let i = 1; i <= 12; i++) {
+            await cdp.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: pts(y - i * 30) })
+            await wait(16)
+          }
+          await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] })
+          await wait(800)
+          const toque = await topo()
+          await page.locator('#inicio').evaluate((el) => el.scrollTo(0, 0)).catch(() => {})
+          await wait(300)
+          await cdp.send('Input.synthesizeScrollGesture', { x, y, yDistance: -300, gestureSourceType: 'touch', speed: 800 }).catch(() => {})
+          await wait(800)
+          const gesto = await topo()
+          manifest.shots.push({ name: 'v2-toque-diagnostico', note: JSON.stringify({ roda, toque, gesto }) })
+          await page.locator('#inicio').evaluate((el) => el.scrollTo(0, 0)).catch(() => {})
+        }
         for (const [w, h] of [[390, 844], [360, 640]]) {
           await page.setViewportSize({ width: w, height: h })
           await page.locator('#inicio').evaluate((el) => el.scrollTo(0, 0)).catch(() => {})
