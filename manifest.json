@@ -1,0 +1,336 @@
+{
+  "base": "http://localhost:3000",
+  "shots": [
+    {
+      "name": "casa-01-criacao-cel",
+      "note": "Casa aberta pela 1ª vez: criação do avatar, grátis (aba Cabelo)",
+      "url": "http://localhost:3000/v2?semraf=1"
+    },
+    {
+      "name": "casa-02-criacao-rosto-cel",
+      "note": "aba Rosto: rosto 5, olhos azul-petróleo",
+      "url": "http://localhost:3000/v2?semraf=1"
+    },
+    {
+      "name": "casa-03-criacao-roupa-cel",
+      "note": "aba Roupa: Dândi",
+      "url": "http://localhost:3000/v2?semraf=1"
+    },
+    {
+      "name": "casa-04-mapa-cel",
+      "note": "Térreo com a mesa; o chibi com a aparência escolhida",
+      "url": "http://localhost:3000/v2?semraf=1"
+    },
+    {
+      "name": "casa-04-api",
+      "note": "GET /api/casa/mapa depois da criação",
+      "json": {
+        "liberado": true,
+        "aparencia": {
+          "corpo": 0,
+          "cabelo": 0,
+          "rosto": 4,
+          "roupa": 1,
+          "corCabelo": 6,
+          "corOlhos": 6,
+          "pele": 1
+        },
+        "etapa": 3,
+        "andamento": 0,
+        "visita": "simon",
+        "simon": null,
+        "trocaMinutos": 60,
+        "equipe": true,
+        "timeDeltaMs": 0
+      }
+    },
+    {
+      "name": "casa-05-visita-campainha-cel",
+      "note": "campainha: visita do Simon (narração)",
+      "url": "http://localhost:3000/v2?semraf=1"
+    },
+    {
+      "name": "casa-06-visita-escolha-cel",
+      "note": "Ignorar ou abrir a porta",
+      "url": "http://localhost:3000/v2?semraf=1"
+    },
+    {
+      "name": "casa-07-visita-olho-cel",
+      "note": "olho mágico",
+      "url": "http://localhost:3000/v2?semraf=1"
+    },
+    {
+      "name": "casa-08-visita-porta-cel",
+      "note": "a porta se abre: Simon de corpo inteiro",
+      "url": "http://localhost:3000/v2?semraf=1"
+    },
+    {
+      "name": "casa-09-visita-simon-cel",
+      "note": "Simon fala (busto, retrato grande)",
+      "url": "http://localhost:3000/v2?semraf=1"
+    },
+    {
+      "name": "casa-10-visita-malicia-cel",
+      "note": "Simon: malícia",
+      "url": "http://localhost:3000/v2?semraf=1"
+    },
+    {
+      "name": "casa-11-visita-guarda-chuva-cel",
+      "note": "oferecer ou ficar com o guarda-chuva",
+      "url": "http://localhost:3000/v2?semraf=1"
+    },
+    {
+      "name": "casa-12-visita-fim-cel",
+      "note": "fim da visita: guarda-chuva no inventário",
+      "url": "http://localhost:3000/v2?semraf=1"
+    },
+    {
+      "name": "casa-12-api",
+      "note": "GET /api/casa/mapa depois da visita (visita: null, simon atendeu)",
+      "json": {
+        "liberado": true,
+        "aparencia": {
+          "corpo": 0,
+          "cabelo": 0,
+          "rosto": 4,
+          "roupa": 1,
+          "corCabelo": 6,
+          "corOlhos": 6,
+          "pele": 1
+        },
+        "etapa": 3,
+        "andamento": 0,
+        "visita": null,
+        "simon": {
+          "resultado": "atendeu",
+          "detalhe": {
+            "escolhas": [
+              "abrir",
+              "antigo",
+              "preco",
+              "quanto",
+              "ajuda",
+              "entra",
+              "ficou",
+              "adeus"
+            ],
+            "guardaChuva": "ficou"
+          }
+        },
+        "trocaMinutos": 60,
+        "equipe": true,
+        "timeDeltaMs": 0
+      }
+    },
+    {
+      "name": "casa-12-inventario",
+      "note": "inventário (outros): o guarda-chuva",
+      "json": {
+        "inventario": [
+          {
+            "key": "heranca:guarda_chuva",
+            "kind": "outro",
+            "name": "Guarda-chuva do antigo morador",
+            "description": "Tudo o que o antigo morador deixou na casa. Ainda é uma herança, talvez.",
+            "rarity": "comum",
+            "quantity": 1,
+            "source": "visita",
+            "firstAt": 1794254043252,
+            "meta": {
+              "origem": "visita:simon"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "casa-13-andou-cel",
+      "note": "tocou no chão: o chibi anda até lá",
+      "url": "http://localhost:3000/v2?semraf=1"
+    },
+    {
+      "name": "casa-14-mesa-cartao-cel",
+      "note": "cartão da mesa",
+      "url": "http://localhost:3000/v2?semraf=1"
+    },
+    {
+      "name": "casa-15-mesa-confeccao-cel",
+      "note": "Mesa: a Confecção de Cartas (mesma tela, mesmos dados)",
+      "url": "http://localhost:3000/v2?semraf=1"
+    },
+    {
+      "name": "casa-16-mesa-pacotes-cel",
+      "note": "Mesa: Pacotes",
+      "url": "http://localhost:3000/v2?semraf=1"
+    },
+    {
+      "name": "casa-17-andares-cel",
+      "note": "Andares: térreo e quartos",
+      "url": "http://localhost:3000/v2?semraf=1"
+    },
+    {
+      "name": "casa-18-quarto-cel",
+      "note": "Andar dos quartos",
+      "url": "http://localhost:3000/v2?semraf=1"
+    },
+    {
+      "name": "casa-19-guarda-cartao-cel",
+      "note": "cartão do guarda-roupa (1 hora de Tempo)",
+      "url": "http://localhost:3000/v2?semraf=1"
+    },
+    {
+      "name": "casa-20-guarda-roupa-cel",
+      "note": "Guarda-roupa (Cancelar · Salvar 1 hora)",
+      "url": "http://localhost:3000/v2?semraf=1"
+    },
+    {
+      "name": "casa-21-guarda-nada-mudou-cel",
+      "note": "Salvar sem mudar: nada cobrado",
+      "url": "http://localhost:3000/v2?semraf=1"
+    },
+    {
+      "name": "casa-22-guarda-salvo-cel",
+      "note": "aparência trocada: 1 hora de Tempo",
+      "url": "http://localhost:3000/v2?semraf=1"
+    },
+    {
+      "name": "casa-22-tempo",
+      "note": "Tempo antes 51:15:41 → depois 50:15:38",
+      "json": {
+        "liberado": true,
+        "aparencia": {
+          "corpo": 0,
+          "cabelo": 7,
+          "rosto": 4,
+          "roupa": 1,
+          "corCabelo": 12,
+          "corOlhos": 6,
+          "pele": 1
+        },
+        "etapa": 3,
+        "andamento": 0,
+        "visita": null,
+        "simon": {
+          "resultado": "atendeu",
+          "detalhe": {
+            "escolhas": [
+              "abrir",
+              "antigo",
+              "preco",
+              "quanto",
+              "ajuda",
+              "entra",
+              "ficou",
+              "adeus"
+            ],
+            "guardaChuva": "ficou"
+          }
+        },
+        "trocaMinutos": 60,
+        "equipe": true,
+        "timeDeltaMs": 0
+      }
+    },
+    {
+      "name": "casa-23-quarto-novo-chibi-cel",
+      "note": "o chibi com o cabelo novo",
+      "url": "http://localhost:3000/v2?semraf=1"
+    },
+    {
+      "name": "casa-24-viagem-cel",
+      "note": "Sair de casa: Torres, ??? (Catedral) e celular",
+      "url": "http://localhost:3000/v2?semraf=1"
+    },
+    {
+      "name": "casa-25-volta-celular-cel",
+      "note": "de volta ao Mapa do Devo",
+      "url": "http://localhost:3000/v2?semraf=1"
+    },
+    {
+      "name": "casa-26-reabre-cel",
+      "note": "reabrir a Casa: sem visita, direto no mapa",
+      "url": "http://localhost:3000/v2?semraf=1"
+    },
+    {
+      "name": "casa-30-mapa-pc",
+      "note": "Térreo no computador",
+      "url": "http://localhost:3000/v2?semraf=1"
+    },
+    {
+      "name": "casa-31-mesa-cartao-pc",
+      "note": "cartão da mesa (à direita, no computador)",
+      "url": "http://localhost:3000/v2?semraf=1"
+    },
+    {
+      "name": "casa-32-mesa-pc",
+      "note": "Mesa de Confecção no computador",
+      "url": "http://localhost:3000/v2?semraf=1"
+    },
+    {
+      "name": "casa-33-visita-pc",
+      "note": "visita do Simon no computador (campainha do teste da equipe)",
+      "url": "http://localhost:3000/v2?semraf=1"
+    },
+    {
+      "name": "casa-34-andares-pc",
+      "note": "Andares no computador",
+      "url": "http://localhost:3000/v2?semraf=1"
+    },
+    {
+      "name": "casa-35-quarto-pc",
+      "note": "Andar dos quartos no computador",
+      "url": "http://localhost:3000/v2?semraf=1"
+    },
+    {
+      "name": "casa-36-guarda-roupa-pc",
+      "note": "Guarda-roupa no computador",
+      "url": "http://localhost:3000/v2?semraf=1"
+    },
+    {
+      "name": "casa-40-jogador-api",
+      "note": "jogador comum: GET /api/casa/mapa",
+      "json": {
+        "liberado": true,
+        "aparencia": null,
+        "etapa": 2,
+        "andamento": 0,
+        "visita": null,
+        "simon": null,
+        "trocaMinutos": 60,
+        "equipe": false,
+        "timeDeltaMs": 0
+      }
+    },
+    {
+      "name": "casa-41-jogador-salvar",
+      "note": "jogador comum: salvar aparência → 200 {\"ok\":true,\"aparencia\":{\"corpo\":0,\"cabelo\":0,\"rosto\":0,\"roupa\":0,\"corCabelo\":0,\"corOlhos\":0,\"pele\":0},\"mudou\":true,\"primeira\":true,\"timeDeltaMs\":0}"
+    },
+    {
+      "name": "casa-50-video-cel",
+      "note": "vídeo: andar, ociosidade, cochilo e diálogo letra a letra (webm)"
+    }
+  ],
+  "errors": [],
+  "console": [
+    {
+      "page": "http://localhost:3000/?antigo",
+      "text": "HTTP 400",
+      "src": "http://localhost:3000/api/auth/sign-up/email"
+    },
+    {
+      "page": "http://localhost:3000/?antigo",
+      "text": "Failed to load resource: the server responded with a status of 400 (BAD_REQUEST)",
+      "src": "http://localhost:3000/api/auth/sign-up/email"
+    },
+    {
+      "page": "http://localhost:3000/?antigo",
+      "text": "HTTP 400",
+      "src": "http://localhost:3000/api/auth/sign-up/email"
+    },
+    {
+      "page": "http://localhost:3000/?antigo",
+      "text": "Failed to load resource: the server responded with a status of 400 (BAD_REQUEST)",
+      "src": "http://localhost:3000/api/auth/sign-up/email"
+    }
+  ]
+}
