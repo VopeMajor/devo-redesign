@@ -3984,6 +3984,30 @@ if (want('v2')) {
         await page.locator('#inicio').evaluate((el) => el.scrollTo(0, el.scrollHeight)).catch(() => {})
         await wait(600)
         await shot(page, `v2-02-mapa-${tag}`, 'fim do Mapa do Devo')
+        // arrastar para baixo com o dedo (gesto de toque de verdade, não a roda do mouse), em tela normal e baixa:
+        // todos os ícones precisam aparecer acima da barra de baixo
+        const cdp = await page.context().newCDPSession(page)
+        for (const [w, h] of [[390, 844], [360, 640]]) {
+          await page.setViewportSize({ width: w, height: h })
+          await page.locator('#inicio').evaluate((el) => el.scrollTo(0, 0)).catch(() => {})
+          await wait(500)
+          for (let g = 0; g < 4; g++) {
+            await cdp.send('Input.synthesizeScrollGesture', { x: Math.round(w / 2), y: Math.round(h * 0.7), yDistance: -Math.round(h * 0.5), gestureSourceType: 'touch', speed: 1200 }).catch((e) => manifest.errors.push({ step: `v2-toque-${w}x${h}`, error: String(e).slice(0, 200) }))
+            await wait(350)
+          }
+          await wait(500)
+          const r = await page.evaluate(() => {
+            const ini = document.querySelector('#inicio')
+            const doca = document.querySelector('#tarefas')?.getBoundingClientRect().top ?? innerHeight
+            const ics = [...document.querySelectorAll('#mesa .ic')].map((b) => ({ id: b.dataset.id, r: b.getBoundingClientRect() }))
+            const ultimo = ics[ics.length - 1]
+            return { topo: ini?.scrollTop ?? 0, max: ini ? ini.scrollHeight - ini.clientHeight : 0, ultimo: ultimo?.id, base: ultimo ? Math.round(ultimo.r.bottom) : 0, doca: Math.round(doca), largo: Math.max(...ics.map((i) => Math.round(i.r.right))), w: innerWidth }
+          })
+          manifest.shots.push({ name: `v2-toque-${w}x${h}`, note: JSON.stringify(r), url: page.url() })
+          if (r.topo < 1 || r.base > r.doca || r.largo > r.w) manifest.errors.push({ step: `v2-toque-${w}x${h}`, error: `ícones fora do alcance pelo toque: ${JSON.stringify(r)}` })
+          await shot(page, `v2-02-toque-${w}x${h}`, `depois de arrastar com o dedo: ${JSON.stringify(r)}`)
+        }
+        await page.setViewportSize({ width: 390, height: 844 })
         await page.locator('#inicio').evaluate((el) => el.scrollTo(0, 0)).catch(() => {})
       }
       // cada sistema abre na janela: o Pulso já na versão nova; os outros com a tela do jogo atual dentro (etapa 2)
