@@ -20,6 +20,7 @@
   color: var(--por);
   font-size: 16px;
   font-size-adjust: none;
+  font-variant-ligatures: none;
   line-height: normal;
   letter-spacing: normal;
   text-align: left;
@@ -70,7 +71,7 @@
   overflow: hidden;
   touch-action: none;
   cursor: pointer;
-  background: var(--noite);
+  background: #1b0f24;
 }
 .tv-mundo {
   position: absolute;
@@ -162,6 +163,9 @@
   box-shadow: 0 0 0 3px #100b18;
   animation: tv-ponto 1.4s steps(3) infinite;
 }
+.tv .ponto.perto {
+  opacity: 0;
+}
 .tv .ponto.casa i {
   background: var(--steel);
 }
@@ -208,8 +212,8 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  min-height: 34px;
-  padding: 0 9px;
+  min-height: 44px;
+  padding: 0 10px;
   background: rgba(16, 11, 24, 0.92);
   box-shadow: 0 0 0 2px var(--steel);
   font-size: 17px;
@@ -234,13 +238,11 @@
   right: 10px;
   bottom: calc(max(12px, env(safe-area-inset-bottom)) + 2px);
   z-index: 5;
-  min-height: 48px;
+  min-height: 44px;
   padding: 0 16px;
-  background: var(--por);
-  color: var(--tinta);
-  box-shadow:
-    0 0 0 3px var(--tinta),
-    0 0 0 5px var(--steel);
+  background: var(--tinta);
+  color: var(--por);
+  box-shadow: 0 0 0 2px var(--steel);
   font-weight: 600;
   font-size: 18px;
 }
@@ -366,7 +368,9 @@
   box-shadow: 0 0 0 3px var(--tinta);
 }
 .tv .c-acoes button:disabled {
-  opacity: 0.45;
+  background: #2a2236;
+  color: #8a7aa6;
+  box-shadow: 0 0 0 3px #5a4f6e;
   cursor: default;
 }
 
@@ -445,12 +449,24 @@
   color: #cdbfe6;
 }
 
+/* com um cartão, a lista, uma cena, o prêmio ou a torre aberta, o que é do mapa sai de cena */
+.tv-ilha:has(> .tv-cartao:not([hidden]), > .tv-lista:not([hidden]), > .tv-cena, > .tv-premio:not([hidden]), > .tv-torre:not([hidden])) :is(.tv-seta, .tv-dica, .tv-lista-bt) {
+  display: none !important;
+}
+.tv-ilha:has(> .tv-cena, > .tv-premio:not([hidden])) .tv-bolsa {
+  display: none;
+}
+/* durante o prêmio a cena de trás some */
+.tv-ilha:has(> .tv-premio:not([hidden])) > .tv-cena {
+  visibility: hidden;
+}
+
 /* ---------------------------------------------------------------- dentro da torre: a escada em espiral */
 .tv-torre {
   position: absolute;
   inset: 0;
   z-index: 10;
-  background: var(--noite);
+  background: #180d22;
   display: flex;
   flex-direction: column;
 }
@@ -502,6 +518,24 @@
   scrollbar-width: none;
   touch-action: pan-y;
   overscroll-behavior: contain;
+}
+.tv-t-vista {
+  -webkit-mask-image: linear-gradient(transparent, #000 28px);
+  mask-image: linear-gradient(transparent, #000 28px);
+}
+.tv .tv-t-mais {
+  position: absolute;
+  left: 50%;
+  top: 74px;
+  translate: -50% 0;
+  z-index: 2;
+  min-height: 36px;
+  padding: 0 12px;
+  background: var(--tinta);
+  color: var(--por);
+  font-size: 16px;
+  font-weight: 600;
+  box-shadow: 0 0 0 2px var(--teal);
 }
 .tv-t-vista::-webkit-scrollbar {
   display: none;
@@ -574,7 +608,7 @@
   position: absolute;
   inset: 0;
   z-index: 18;
-  background: #0d0914;
+  background: #180d22;
   overflow: hidden;
 }
 .tv-patamar::after {
@@ -714,7 +748,6 @@
 }
 /* escolha de ação ("*Aceitar*"): em itálico, com o selo "Ação" */
 .tv .tv-esc button.acao {
-  font-style: italic;
   background: var(--tinta);
   box-shadow: 0 0 0 3px #d9b65c;
 }
@@ -723,7 +756,6 @@
   margin-right: 8px;
   padding: 0 6px;
   font-size: 13px;
-  font-style: normal;
   vertical-align: 2px;
   background: #d9b65c;
   color: var(--tinta);
@@ -779,6 +811,20 @@
     0 0 0 8px var(--steel);
   animation: tv-surge 0.5s steps(5);
 }
+.tv-premio.chave i {
+  width: 72px;
+  height: 36px;
+  transform: none;
+  box-shadow: none;
+  background: #d9b65c;
+  clip-path: polygon(0 0, 50% 0, 50% 33%, 100% 33%, 100% 67%, 50% 67%, 50% 100%, 0 100%);
+  animation-name: tv-surge-chave;
+}
+@keyframes tv-surge-chave {
+  from {
+    transform: scale(0.2);
+  }
+}
 @keyframes tv-surge {
   from {
     transform: rotate(45deg) scale(0.2);
@@ -790,6 +836,8 @@
   color: var(--steel);
 }
 .tv-premio strong {
+  max-width: 420px;
+  text-wrap: balance;
   font-size: 28px;
   font-weight: 600;
 }
@@ -858,7 +906,11 @@
     margin: 0;
   }
   .tv-dica {
-    bottom: 24px;
+    bottom: calc(max(12px, env(safe-area-inset-bottom)) + 2px);
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    padding: 0 14px;
   }
 }
 @media (prefers-reduced-motion: reduce) {

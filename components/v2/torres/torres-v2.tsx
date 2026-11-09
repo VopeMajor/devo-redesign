@@ -164,7 +164,7 @@ export function TorresV2() {
   } else if (!data.liberado) {
     aviso = (
       <section role="alert">
-        <h2>🔒 Torres de Ruptura</h2>
+        <h2>Torres de Ruptura</h2>
         <p>{data.motivo}</p>
       </section>
     )

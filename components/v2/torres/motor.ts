@@ -28,7 +28,7 @@ type Ponto = Porta & {
   faz: () => void
 }
 
-export type Premio = { titulo: string; nome: string; texto: string; cor: string }
+export type Premio = { titulo: string; nome: string; texto: string; cor: string; chave?: boolean }
 
 export type TorresMotorOpcoes = {
   torres: TorreEstado[]
@@ -95,12 +95,13 @@ const ESQUELETO = `
 <div class="tv-dica">Toque no chão para andar</div>
 <div class="tv-aviso" hidden role="status"></div>
 <section class="tv-lista" hidden role="dialog" aria-label="As torres">
-  <header><h2>Torres de Ruptura</h2><button class="tv-l-fechar" aria-label="Fechar">✕</button></header>
+  <header><h2>As torres</h2><button class="tv-l-fechar" aria-label="Fechar">✕</button></header>
   <div class="tv-l-itens"></div>
 </section>
 <section class="tv-torre" hidden aria-label="Dentro da torre">
   <div class="tv-t-topo"><button class="tv-t-sair" aria-label="Sair da torre">‹</button><div class="tv-t-nome"></div></div>
   <div class="tv-t-vista"><div class="tv-t-palco"><div class="tv-t-arte"></div></div></div>
+  <button class="tv-t-mais" hidden></button>
 </section>
 <div class="tv-patamar" hidden aria-hidden="true"><div class="tv-pa-mundo"></div></div>
 <section class="tv-cartao" hidden aria-live="polite"><h2 class="c-tit"></h2><p class="c-txt"></p><div class="c-mais"></div><div class="c-acoes"></div></section>
@@ -295,7 +296,7 @@ export function criaTorres(raiz: HTMLElement, o: TorresMotorOpcoes) {
       b.className = 'ponto' + (p.id === 'casa' ? ' casa' : '')
       b.style.left = Math.round(p.x / 2) + 'px'
       b.style.top = Math.round(p.y / 2) + 'px'
-      b.style.zIndex = '900'
+      b.style.zIndex = String(Math.round(p.y / 2))
       b.setAttribute('aria-label', p.titulo)
       b.innerHTML = '<i></i>'
       b.addEventListener('pointerdown', (e) => e.stopPropagation())
@@ -313,7 +314,7 @@ export function criaTorres(raiz: HTMLElement, o: TorresMotorOpcoes) {
     for (const { el, p } of setas) {
       const sx = Math.round(p.x / 2) * esc + camG.x
       const sy = Math.round(p.y / 2) * esc + camG.y
-      const fora = sx < 6 ? 'e' : sx > vw - 6 ? 'd' : ''
+      const fora = sx < 16 ? 'e' : sx > vw - 16 ? 'd' : ''
       el.classList.toggle('on', !!fora)
       if (!fora) continue
       ;(el.firstChild as HTMLElement).textContent = fora === 'e' ? '◂' : '▸'
@@ -503,7 +504,7 @@ export function criaTorres(raiz: HTMLElement, o: TorresMotorOpcoes) {
     arte.textContent = ''
     const v = $('.tv-t-vista')
     // escala inteira; num lugar estreito a arte fica cortada dos lados, centrada na escada
-    escT = v.clientWidth >= 1100 && v.clientHeight >= 900 ? 2 : 1
+    escT = v.clientWidth >= 1024 ? 2 : 1
     const aw = 512 * escT
     const left = aw <= v.clientWidth ? Math.round((v.clientWidth - aw) / 2) : Math.round(Math.min(0, Math.max(v.clientWidth - aw, v.clientWidth / 2 - 280 * escT)))
     arte.style.transform = `translate(${left}px,0) scale(${escT})`
@@ -529,7 +530,18 @@ export function criaTorres(raiz: HTMLElement, o: TorresMotorOpcoes) {
       const y = atual ? parseFloat((atual as HTMLElement).style.top) * escT : 768 * escT
       v.scrollTop = Math.max(0, y - v.clientHeight * 0.6)
     }
+    marcaAcima()
   }
+  /* andares fora da vista, para cima: um aviso que leva até eles */
+  function marcaAcima() {
+    const v = $('.tv-t-vista')
+    const mais = $('.tv-t-mais')
+    const n = [...raiz.querySelectorAll<HTMLElement>('.tv-andar')].filter((b) => parseFloat(b.style.top) * escT < v.scrollTop + 24).length
+    mais.hidden = !n
+    mais.textContent = `▲ ${n} ${n === 1 ? 'andar acima' : 'andares acima'}`
+  }
+  $('.tv-t-vista').addEventListener('scroll', marcaAcima, { passive: true })
+  $('.tv-t-mais').onclick = () => $('.tv-t-vista').scrollTo({ top: 0, behavior: calmo ? 'auto' : 'smooth' })
   function cartaoAndar(t: TorreEstado, a: AndarEstado) {
     const base = { titulo: `Andar ${a.n} · ${limpa(a.titulo)}`, sub: semProvisoria(t.essencia.nome), rosto: rostoSrc(a.npc.id) }
     if (a.estado === 'concluido')
@@ -580,6 +592,7 @@ export function criaTorres(raiz: HTMLElement, o: TorresMotorOpcoes) {
         nome: r.chavesRecebidas > 1 ? `${r.chavesRecebidas} × ${t.chave.nome}` : t.chave.nome,
         texto: ['Guardada no seu inventário. Abre andares da Torre da Ruptura.', ...itens].join(' '),
         cor: cor(t.id),
+        chave: true,
       }
     return {
       titulo: 'Andar concluído',
@@ -596,6 +609,7 @@ export function criaTorres(raiz: HTMLElement, o: TorresMotorOpcoes) {
     return new Promise<void>((ok) => {
       const el = $('.tv-premio')
       el.style.setProperty('--c', p.cor)
+      el.classList.toggle('chave', !!p.chave)
       el.querySelector('small')!.textContent = p.titulo
       el.querySelector('strong')!.textContent = p.nome
       el.querySelector('p')!.textContent = p.texto
@@ -670,7 +684,8 @@ export function criaTorres(raiz: HTMLElement, o: TorresMotorOpcoes) {
       const e = Math.max(1, Math.floor(Math.min(r.width / 400, topo / 520)))
       const Wp = Math.ceil(r.width / e)
       const Hp = Math.max(300, Math.floor(topo / e))
-      const x0 = cx - Wp / 4
+      // o recorte não passa da borda da arte (sem faixa vazia do lado)
+      const x0 = Math.max(0, Math.min(512 - Wp / 2, cx - Wp / 4))
       const y0 = cy - (Hp * 0.72 - 14) / 2
       m.style.width = Wp + 'px'
       m.style.height = Hp + 'px'
@@ -865,6 +880,12 @@ export function criaTorres(raiz: HTMLElement, o: TorresMotorOpcoes) {
     sombra.style.zIndex = String(Math.round(eu.y) - 1)
     sombra.style.width = sobe ? '38px' : ''
     sombra.style.marginLeft = sobe ? '-19px' : ''
+    // o losango de uma porta some enquanto o chibi está na frente dele (não fica pintado em cima do corpo)
+    pts.forEach((b) => {
+      const px = parseFloat(b.style.left)
+      const py = parseFloat(b.style.top)
+      b.classList.toggle('perto', Math.abs(px - eu.x) < 30 && py > eu.y - 92 && py < eu.y + 6)
+    })
     camera(dt)
     posicionaSetas()
     requestAnimationFrame(laco)
@@ -916,6 +937,7 @@ export function criaTorres(raiz: HTMLElement, o: TorresMotorOpcoes) {
   })
   ro.observe(raiz)
 
+  if (window.matchMedia('(hover: hover)').matches) $('.tv-dica').textContent = 'Clique no chão para andar'
   medida()
   ;[eu.x, eu.y] = SEL([PORTAS.casa.ir])[0]
   xAnt = eu.x

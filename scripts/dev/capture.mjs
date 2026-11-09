@@ -4475,9 +4475,11 @@ if (want('torres-v2')) {
   const toca = (page) => cena(page).click({ position: { x: 24, y: 160 } }).catch(() => {})
   const premioAberto = async (page) => (await page.locator('.tv .tv-premio:not([hidden])').count()) > 0
   /** Avança a cena até ela acabar; nas escolhas, a opção com `quer` (ou a primeira). `foto(o)` pode fotografar. */
-  const passa = async (page, { quer = [], foto = async () => {} } = {}, max = 90) => {
+  const passa = async (page, { quer = [], foto = async () => {}, premios = false } = {}, max = 90) => {
     for (let i = 0; i < max; i++) {
       if (await premioAberto(page)) {
+        // o prêmio do andar fica para quem chamou fotografar
+        if (!premios) return
         await foto('premio')
         await wait(700)
         await page.locator('.tv .tv-premio').click().catch(() => {})
@@ -4544,6 +4546,7 @@ if (want('torres-v2')) {
     const vistas = new Set()
     await passa(page, {
       quer: ['Aceitar'],
+      premios: true,
       foto: async (o) => {
         if (o === 'escolha' && !vistas.has('escolha')) {
           vistas.add('escolha')
@@ -4580,11 +4583,13 @@ if (want('torres-v2')) {
     await wait(2500)
     await shot(page, 'tv-08-andou-cel', 'tocou no chão: o chibi anda')
     await ponto(page, 'Imperador')
+    await wait(400)
     await shot(page, 'tv-09-cartao-torre-cel', 'cartão da Torre do Imperador')
     await acao(page, 'Entrar')
     await wait(1500)
     await shot(page, 'tv-10-torre-cel', 'dentro da torre: a escada e os andares')
     await andar(page, 1)
+    await wait(400)
     await shot(page, 'tv-11-cartao-andar-cel', 'andar 1: custo, saldo e prêmio')
     await acao(page, 'Subir')
     await cena(page).waitFor({ timeout: 12000 }).catch(() => {})
@@ -4601,6 +4606,7 @@ if (want('torres-v2')) {
     await passa(page)
     await premio(page, 'tv-16-premio-2-cel', 'prêmio do 2º andar')
     await andar(page, 3)
+    await wait(400)
     await shot(page, 'tv-17-andar3-faltam-cel', 'andar 3: faltam Essências')
     await page.keyboard.press('Escape')
     await wait(500)
@@ -4627,6 +4633,7 @@ if (want('torres-v2')) {
     await passa(page)
     await premio(page, 'tv-22-ruptura-premio-cel', 'prêmio da principal')
     await andar(page, 2)
+    await wait(400)
     await shot(page, 'tv-23-ruptura-chaves-cel', 'andar 2: pede a Chave do Imperador')
     await page.keyboard.press('Escape')
     await wait(300)

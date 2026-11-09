@@ -94,7 +94,7 @@ const TELAS: Record<string, { C: React.ComponentType; cx: string; caixa: [number
   ajustes: { C: AjustesV2, cx: 'aju', caixa: [540, 500, 700], corpo: 'r-corpo' },
   calendario: { C: CalendarioV2, cx: '', caixa: [1000, 960, 780], corpo: 'r-corpo' },
   // a ilha das Torres em pixel (kit3/torres.html): 768x512 em escala inteira; a janela grande mostra a ilha inteira
-  torres: { C: TorresV2, cx: '', caixa: [1010, 960, 720], corpo: 'quadro' },
+  torres: { C: TorresV2, cx: '', caixa: [1080, 1040, 760], corpo: 'quadro' },
 }
 const ico = (id: string) => `/v2/art/os/ico/${id}.webp`
 const ROMANOS = ['0', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII']
