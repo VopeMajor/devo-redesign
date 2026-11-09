@@ -4393,6 +4393,200 @@ if (want('casa-v2')) {
   })
 }
 
+// Catedral de Damasco (dono, 09/11: "trazer a catedral e todo o conteudo gerado"): pelo "Sair de casa" da Casa
+if (want('catedral')) {
+  const MAT = '00000000-0000-4000-8000-000000000003'
+  const SENT = '00000000-0000-4000-8000-000000000010'
+  const conta = async (kind, id, name, invite) => {
+    const d = await device(kind)
+    await d.ctx.addCookies([{ name: 'devo_player', value: id, url: BASE }])
+    await d.page.goto(BASE_ANTIGO, { waitUntil: 'networkidle' })
+    let up
+    for (let i = 0; i < 6; i++) {
+      up = await api(d.page, '/api/auth/sign-up/email', { email: hexEmail(name), password: 'teste123', name, username: name, displayUsername: name }, { 'x-devo-invite': invite })
+      if (up.status !== 429) break
+      await wait(11000)
+    }
+    if (up.status >= 400) {
+      const inn = await api(d.page, '/api/auth/sign-in/username', { username: name, password: 'teste123' })
+      if (inn.status >= 400) manifest.errors.push({ step: `catedral-${name}-auth`, error: `signup ${up.status} ${up.text}; signin ${inn.status}` })
+    }
+    const saved = await api(d.page, '/api/save', makeSave(VET_CARDS))
+    if (saved.status >= 400) manifest.errors.push({ step: `catedral-${name}-save`, error: `${saved.status} ${saved.text}` })
+    return d
+  }
+  const getJ = (page, path) => page.evaluate(async (p) => (await fetch(p, { cache: 'no-store' })).json().catch(() => null), path)
+  const nota = (name, note, extra = {}) => manifest.shots.push({ name, note, ...extra })
+  const VN = '.cv .visita:not([hidden])'
+  const toca = (page) => page.locator(VN).first().click({ position: { x: 20, y: 200 } }).catch(() => {})
+  const avanca = async (page, max = 50) => {
+    for (let i = 0; i < max; i++) {
+      if (await page.locator(`${VN} .v-esc button`).count()) return true
+      if (!(await page.locator(VN).count())) return false
+      await toca(page)
+      await wait(320)
+    }
+    return false
+  }
+  const escolhe = async (page, texto) => {
+    await page.locator(`${VN} .v-esc button`, { hasText: texto }).first().click({ timeout: 4000 }).catch((e) => manifest.errors.push({ step: `catedral-escolha:${texto}`, error: String(e).slice(0, 160) }))
+    await wait(500)
+  }
+  // abre a Casa (cria a aparência se for a primeira vez; ignora o Simon se ele bater) e vai até "Sair de casa"
+  const ateViagem = async (page) => {
+    await tryClick(page.locator('#mesa .ic[data-id="casa"]'))
+    await page.locator('.cv .cv-av-tela, .cv .cv-mapa .ator').first().waitFor({ timeout: 20000 }).catch(() => {})
+    if (await page.locator('.cv .cv-av-tela').count()) {
+      await wait(2500)
+      await tryClick(page.locator('.cv-av footer .principal'))
+      await page.locator('.cv .cv-mapa .ator').waitFor({ timeout: 15000 }).catch(() => {})
+    }
+    await wait(3600)
+    if (await page.locator(VN).count()) {
+      await avanca(page)
+      await escolhe(page, 'Ignorar')
+      await avanca(page)
+      await wait(800)
+    }
+    if (!(await tryClick(page.locator('.cv .ponto[aria-label^="Porta de entrada"]')))) await tryClick(page.locator('.cv .cv-seta[aria-label="Ir até: Porta de entrada"]'))
+    await page.locator('.cv .cv-cartao:not([hidden])').waitFor({ timeout: 12000 }).catch(() => {})
+    await wait(500)
+    await tryClick(page.locator('.cv .c-acoes button', { hasText: 'Sair de casa' }))
+    await wait(700)
+  }
+  await step('catedral-cel', async () => {
+    const d = await conta('phone', MAT, 'Matheus', 'DEVO-STAF-MATH')
+    const page = d.page
+    await page.goto(`${BASE}/?semraf=1`, { waitUntil: 'networkidle' })
+    await tryClick(btn(page, 'Continuar'))
+    await wait(2500)
+    // a cerimônia "O DEVO se abriu" e a cena do Poço podem aparecer por cima na primeira entrada
+    for (let i = 0; i < 4 && !(await page.locator('#os #mesa').isVisible().catch(() => false)); i++) {
+      await page.mouse.click(195, 700)
+      await wait(1200)
+    }
+    nota('catedral-00-api', 'GET /api/catedral antes', { json: await getJ(page, '/api/catedral') })
+    await ateViagem(page)
+    await shot(page, 'catedral-00-viagem-cel', 'Sair de casa: a igreja (???) sem cadeado')
+    await tryClick(page.locator('.cv .destino[data-ir="catedral"]'))
+    await page.locator('.cv .cat-raiz:not([hidden])').waitFor({ timeout: 15000 }).catch((e) => manifest.errors.push({ step: 'catedral-abre', error: String(e).slice(0, 160) }))
+    await wait(2200)
+    await shot(page, 'catedral-01-fora-cel', 'primeira visita: diante da Catedral')
+    await avanca(page)
+    await shot(page, 'catedral-02-aldrava-cel', 'Deixar para outro dia ou usar a aldrava')
+    await escolhe(page, 'Usar a aldrava')
+    for (let i = 0; i < 10; i++) {
+      await toca(page)
+      await wait(420)
+    }
+    await shot(page, 'catedral-03-dentro-cel', 'dentro da Catedral')
+    for (let i = 0; i < 4; i++) {
+      await toca(page)
+      await wait(700)
+    }
+    await shot(page, 'catedral-04-erick-cel', 'o Erick aparece (corpo inteiro)')
+    await avanca(page)
+    await shot(page, 'catedral-05-escolha-cel', 'Quem é você? · Como você leu minha mente? · Por quê?')
+    await escolhe(page, 'Quem é você')
+    await wait(900)
+    await shot(page, 'catedral-06-erick-fala-cel', 'Erick Zorak se apresenta (busto)')
+    await avanca(page)
+    await escolhe(page, 'O que é este lugar')
+    await avanca(page)
+    await escolhe(page, 'O que posso conseguir')
+    await avanca(page)
+    await escolhe(page, 'Isso é verdade')
+    await avanca(page)
+    await shot(page, 'catedral-07-pergunta-cel', 'o que um Record que nunca vi antes está fazendo por aqui?')
+    await escolhe(page, 'Senti que este lugar era especial')
+    await toca(page)
+    await wait(700)
+    await toca(page)
+    await wait(900)
+    await shot(page, 'catedral-08-karma-cel', '+100 Karma de Caos')
+    for (let i = 0; i < 30 && !(await page.locator('.cv .cat-altar:not([hidden])').count()); i++) {
+      await toca(page)
+      await wait(380)
+    }
+    await wait(1500)
+    await shot(page, 'catedral-09-altar-cel', 'altar: Orar ou Oferecer uma oferenda')
+    nota('catedral-09-api', 'GET /api/catedral depois da primeira visita (descoberta, oferendas iniciais)', { json: await getJ(page, '/api/catedral') })
+    await tryClick(page.locator('.cv .cat-altar .op[data-v="orar"]'))
+    await wait(700)
+    await shot(page, 'catedral-10-orar-cel', 'Orar: saúde, estabilidade, relações')
+    await tryClick(page.locator('.cv .cat-altar .op[data-o="saude"]'))
+    await wait(900)
+    await shot(page, 'catedral-11-orar-resultado-cel', 'oração (probabilidade ainda não definida pelo Rup)')
+    await tryClick(page.locator('.cv .cat-res'))
+    await wait(500)
+    await tryClick(page.locator('.cv .cat-altar .voltar'))
+    await wait(500)
+    await tryClick(page.locator('.cv .cat-altar .op[data-v="ofer"]'))
+    await wait(800)
+    await shot(page, 'catedral-12-oferendas-cel', 'oferendas: probabilidades do Rup e quantas você tem')
+    await page.locator('.cv .cat-altar').evaluate((el) => el.scrollTo(0, el.scrollHeight)).catch(() => {})
+    await wait(400)
+    await shot(page, 'catedral-12b-oferendas-fim-cel', 'oferendas: o fim da lista')
+    await page.locator('.cv .cat-altar').evaluate((el) => el.scrollTo(0, 0)).catch(() => {})
+    await tryClick(page.locator('.cv .cat-altar .op[data-f="arroz"]'))
+    await page.locator('.cv .cat-res:not([hidden])').waitFor({ timeout: 10000 }).catch((e) => manifest.errors.push({ step: 'catedral-ritual', error: String(e).slice(0, 160) }))
+    await wait(700)
+    await shot(page, 'catedral-13-ritual-cel', 'resultado do ritual com o Arroz Branco')
+    await tryClick(page.locator('.cv .cat-res'))
+    await wait(1200)
+    await shot(page, 'catedral-14-depois-cel', 'de volta às oferendas: um Arroz a menos')
+    const depois = await getJ(page, '/api/catedral')
+    nota('catedral-14-api', 'GET /api/catedral depois do ritual', { json: depois })
+    if (!depois?.descoberta || depois?.oferendas?.arroz !== 1) manifest.errors.push({ step: 'catedral-servidor', error: `esperado descoberta e 1 arroz: ${JSON.stringify(depois)}` })
+    nota('catedral-14-inventario', 'inventário (outros): oferendas', { json: await getJ(page, '/api/eu?parte=inventario&tipo=outro') })
+    await tryClick(page.locator('.cv .cat-altar .voltar'))
+    await wait(500)
+    await tryClick(page.locator('.cv .cat-altar .voltar'))
+    await wait(1600)
+    await shot(page, 'catedral-15-despedida-cel', 'despedida do Erick (sorteada)')
+    await avanca(page, 6)
+    await wait(1800)
+    await shot(page, 'catedral-16-volta-casa-cel', 'de volta à Casa')
+    await tryClick(page.locator('.cv .ponto[aria-label^="Porta de entrada"]'))
+    await page.locator('.cv .cv-cartao:not([hidden])').waitFor({ timeout: 12000 }).catch(() => {})
+    await wait(500)
+    await tryClick(page.locator('.cv .c-acoes button', { hasText: 'Sair de casa' }))
+    await wait(700)
+    await shot(page, 'catedral-17-viagem-nome-cel', 'Sair de casa: agora "Catedral de Damasco"')
+    await tryClick(page.locator('.cv .destino[data-ir="catedral"]'))
+    await page.locator('.cv .cat-raiz:not([hidden])').waitFor({ timeout: 15000 }).catch(() => {})
+    await wait(3000)
+    await shot(page, 'catedral-18-visita-comum-cel', 'visita comum: o Erick e você no corredor, o rostinho na caixa')
+    await d.ctx.close()
+  })
+  await step('catedral-pc', async () => {
+    const d = await conta('desktop', SENT, 'Sentinela', 'DEVO-STAF-SENT')
+    const page = d.page
+    await page.goto(`${BASE}/v2?semraf=1`, { waitUntil: 'networkidle' })
+    await wait(1500)
+    await ateViagem(page)
+    await tryClick(page.locator('.cv .destino[data-ir="catedral"]'))
+    await page.locator('.cv .cat-raiz:not([hidden])').waitFor({ timeout: 15000 }).catch(() => {})
+    await wait(2200)
+    await shot(page, 'catedral-30-pc', 'Catedral no computador (primeira visita ou visita comum)')
+    // a equipe tem o botão de teste: a primeira visita de novo, até o Erick em retrato grande
+    await tryClick(page.locator('.cv .cat-teste [data-t="primeira"]'))
+    await wait(800)
+    await avanca(page)
+    await escolhe(page, 'Usar a aldrava')
+    for (let i = 0; i < 14; i++) {
+      await toca(page)
+      await wait(450)
+    }
+    await avanca(page)
+    await shot(page, 'catedral-31-erick-pc', 'o Erick no computador')
+    await tryClick(page.locator('.cv .cat-teste [data-t="comum"]'))
+    await wait(2600)
+    await shot(page, 'catedral-32-comum-pc', 'visita comum no computador')
+    await d.ctx.close()
+  })
+}
+
 await browser.close()
 writeFileSync(`${OUT}/manifest.json`, JSON.stringify(manifest, null, 2))
 console.log(`capturas: ${manifest.shots.length}, erros: ${manifest.errors.length}, console: ${manifest.console.length}`)
