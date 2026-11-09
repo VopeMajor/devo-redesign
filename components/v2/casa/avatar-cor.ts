@@ -44,6 +44,83 @@ export function pintaCabelo(d: Px, c: (typeof CAB)[number]) {
   }
 }
 
+/**
+ * Cabelo do chibi em 4 tons fixos (contorno, sombra, meio, luz), sem os cinzas intermediários da redução da arte, que
+ * deixavam o cabelo granulado (crítico de arte, 09/11). Sombra puxada para o frio e luz para o quente. O busto da
+ * criação continua com pintaCabelo (ilustração, tons contínuos).
+ */
+export function pintaCabeloChibi(d: Px, c: (typeof CAB)[number], indice: number, w: number) {
+  const [, s0, m, l0] = c
+  // no Preto a sombra clareia um pouco, para o contorno se separar dela
+  const s = indice === 0 ? s0.map((v) => lerp(v, 255, 0.06)) : s0.map((v, k) => lerp(v, [48, 32, 72][k], 0.2))
+  const l = indice === 0 ? [84, 78, 96] : l0.map((v, k) => lerp(v, [255, 244, 226][k], 0.15))
+  const cont = [20, 14, 26]
+  for (let i = 0, p = 0; i < d.length; i += 4, p++) {
+    if (!d[i + 3]) continue
+    const v = d[i]
+    // entre a sombra e o meio, xadrez 1x1 (a mecha escura mantém o desenho em vez de virar chapa)
+    const xadrez = ((p % w) + Math.floor(p / w)) & 1
+    const cor = v < 48 ? cont : v < 105 ? s : v < 135 ? (xadrez ? s : m) : v < 205 ? m : l
+    for (let k = 0; k < 3; k++) d[i + k] = cor[k]
+  }
+}
+
+/** Brilhos brancos soltos na roupa (pareciam sujeira): grupos claros de até 4 px cercados de tons escuros viram a média
+ *  da borda do grupo. */
+function limpaPontinhos(c: HTMLCanvasElement, msk: HTMLImageElement) {
+  const x = c.getContext('2d', { willReadFrequently: true })!
+  const im = x.getImageData(0, 0, c.width, c.height)
+  const d = im.data
+  const o = new Uint8ClampedArray(d)
+  const mc = document.createElement('canvas')
+  mc.width = msk.width
+  mc.height = msk.height
+  const mx = mc.getContext('2d', { willReadFrequently: true })!
+  mx.drawImage(msk, 0, 0)
+  const m = mx.getImageData(0, 0, mc.width, mc.height).data
+  const W = c.width
+  const H = c.height
+  const lum = (i: number) => 0.3 * o[i] + 0.59 * o[i + 1] + 0.11 * o[i + 2]
+  const claro = (p: number) => o[p * 4 + 3] > 0 && !m[p * 4] && !m[p * 4 + 1] && lum(p * 4) > 200
+  const visto = new Uint8Array(W * H)
+  for (let p0 = 0; p0 < W * H; p0++) {
+    if (visto[p0] || !claro(p0)) continue
+    const grupo: number[] = []
+    const borda = new Set<number>()
+    const fila = [p0]
+    visto[p0] = 1
+    let ok = true
+    while (fila.length) {
+      const p = fila.pop()!
+      grupo.push(p)
+      if (grupo.length > 4) ok = false
+      const xx = p % W
+      const yy = Math.floor(p / W)
+      for (const [a, b] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
+        const nx = xx + a
+        const ny = yy + b
+        if (nx < 0 || ny < 0 || nx >= W || ny >= H) {
+          ok = false
+          continue
+        }
+        const q = ny * W + nx
+        if (claro(q)) {
+          if (!visto[q]) {
+            visto[q] = 1
+            fila.push(q)
+          }
+        } else if (!o[q * 4 + 3] || lum(q * 4) >= 130) ok = false
+        else borda.add(q)
+      }
+    }
+    if (!ok || !borda.size) continue
+    const med = [0, 0, 0]
+    for (const q of borda) for (let k = 0; k < 3; k++) med[k] += o[q * 4 + k] / borda.size
+    for (const p of grupo) for (let k = 0; k < 3; k++) d[p * 4 + k] = med[k]
+  }
+  x.putImageData(im, 0, 0)
+}
+
 export function pintaCorpo(d: Px, pele: (typeof PELES)[number]) {
   const [, tom, som] = pele
   for (let i = 0; i < d.length; i += 4) {
@@ -176,8 +253,11 @@ export async function folhaAndarFofo(cfg: Aparencia): Promise<HTMLCanvasElement>
       if (m[i] > 0) {
         for (let k = 0; k < 3; k++) d[i + k] = Math.min(255, (d[i + k] * tom[k]) / ref[k])
       } else if (m[i + 1] > 0) {
-        const t = sat((0.3 * d[i] + 0.59 * d[i + 1] + 0.11 * d[i + 2] - 40) / 95)
-        for (let k = 0; k < 3; k++) d[i + k] = lerp(os[k], om[k], 0.25 + 0.75 * t)
+        // íris em 3 tons (pupila, íris, luz); o brilho branco da arte continua branco (crítico de arte, 09/11)
+        const l = 0.3 * d[i] + 0.59 * d[i + 1] + 0.11 * d[i + 2]
+        if (l > 215) continue
+        const t = sat((l - 40) / 95)
+        for (let k = 0; k < 3; k++) d[i + k] = t < 0.25 ? os[k] * 0.55 : t < 0.6 ? os[k] : om[k]
       }
     }
     x.putImageData(id, 0, 0)
@@ -185,9 +265,17 @@ export async function folhaAndarFofo(cfg: Aparencia): Promise<HTMLCanvasElement>
   }
   const rc = pinta(roupa, msk)
   const fc = pinta(rosto, rmsk)
+  limpaPontinhos(rc, msk)
+  const [, mkx] = tela(msk)
+  const mskL = msk.width
+  const mskDados = mkx.getImageData(0, 0, msk.width, msk.height).data
+  const [, rmx] = tela(rmsk)
+  const rmL = rmsk.width
+  const rmDados = rmx.getImageData(0, 0, rmsk.width, rmsk.height).data
+  const olhosCache = new Map<number, HTMLCanvasElement | null>()
   const [hc, hx] = tela(cab)
   const ih = hx.getImageData(0, 0, hc.width, hc.height)
-  pintaCabelo(ih.data, CAB[cfg.corCabelo || 0])
+  pintaCabeloChibi(ih.data, CAB[cfg.corCabelo || 0], cfg.corCabelo || 0, hc.width)
   hx.putImageData(ih, 0, 0)
   const A = info.anc
   const T = info.testa || {}
@@ -201,7 +289,63 @@ export async function folhaAndarFofo(cfg: Aparencia): Promise<HTMLCanvasElement>
   celv.width = CEL_X
   celv.height = CEL_Y
   const cel = celv.getContext('2d', { willReadFrequently: true })!
-  const hDados = [0, 1, 2, 3].map((d) => hx.getImageData(d * CEL_X, 0, CEL_X, CEL_Y).data)
+  const hBase = [0, 1, 2, 3].map((d) => hx.getImageData(d * CEL_X, 0, CEL_X, CEL_Y))
+  // limites do cabelo em cada direção (primeira e última linha com pixel)
+  const hLim = hBase.map((im) => {
+    let topo = CEL_Y
+    let fundo = 0
+    for (let yy = 0; yy < CEL_Y; yy++)
+      for (let xx = 0; xx < CEL_X; xx++)
+        if (im.data[(yy * CEL_X + xx) * 4 + 3]) {
+          topo = Math.min(topo, yy)
+          fundo = Math.max(fundo, yy)
+        }
+    return { topo, fundo }
+  })
+  /* Cabelo que anda (dono, 09/11: "parece que meu boneco anda e o cabelo é um objeto estático"): a coroa fica presa à
+     cabeça e, da linha dos olhos para baixo, o cabelo se curva aos poucos até as pontas (deslocamento por linha, em
+     pixel inteiro). As pontas sobem e descem 1 quadro depois da cabeça, ficam para trás no andar de lado e balançam
+     de um lado para o outro de frente e de costas. Parado, o cabelo fica como na arte. */
+  const LADO = [1, 2, 3, 2, 1, 2, 3, 2]
+  const FRENTE = [0, 1, 1, 1, 0, -1, -1, -1]
+  const hCache = new Map<string, { cv: HTMLCanvasElement; d: Uint8ClampedArray }>()
+  const cabeloQuadro = (dir: number, src: number) => {
+    const anda = src < 8
+    const vLag = anda ? A[dir][(src + 7) % 8][1] - A[dir][src][1] : 0
+    const lado = dir === 1 || dir === 2
+    const hs = anda ? (lado ? (dir === 1 ? 1 : -1) * LADO[src] : 2 * FRENTE[src]) : src === 14 && lado ? (dir === 1 ? 1 : -1) : 0
+    const chave = `${dir}:${vLag}:${hs}`
+    const ja = hCache.get(chave)
+    if (ja) return ja
+    const base = hBase[dir]
+    const { fundo } = hLim[dir]
+    const coroa = Math.min(fundo - 2, (T[dir] ?? hLim[dir].topo + 20) + 8)
+    const out = new ImageData(CEL_X, CEL_Y)
+    for (let yy = 0; yy < CEL_Y; yy++) {
+      const w = yy <= coroa ? 0 : Math.pow(Math.min(1, (yy - coroa) / Math.max(1, fundo - coroa)), 1.3)
+      const oy = Math.round(w * vLag)
+      const ox = Math.round(w * hs)
+      const sy = yy - oy
+      if (sy < 0 || sy >= CEL_Y) continue
+      for (let xx = 0; xx < CEL_X; xx++) {
+        const sx = xx - ox
+        if (sx < 0 || sx >= CEL_X) continue
+        const i = (sy * CEL_X + sx) * 4
+        const o = (yy * CEL_X + xx) * 4
+        out.data[o] = base.data[i]
+        out.data[o + 1] = base.data[i + 1]
+        out.data[o + 2] = base.data[i + 2]
+        out.data[o + 3] = base.data[i + 3]
+      }
+    }
+    const cv = document.createElement('canvas')
+    cv.width = CEL_X
+    cv.height = CEL_Y
+    cv.getContext('2d')!.putImageData(out, 0, 0)
+    const r = { cv, d: out.data }
+    hCache.set(chave, r)
+    return r
+  }
   for (let dir = 0; dir < 4; dir++) {
     const [ox, oy] = D[dir] || [0, 0]
     for (let col = 0; col < ANDAR_COLS; col++) {
@@ -210,8 +354,9 @@ export async function folhaAndarFofo(cfg: Aparencia): Promise<HTMLCanvasElement>
       const y = dir * CEL_Y + 1
       const dx = A[dir][src][0] + ox
       const dy = A[dir][src][1] + oy
-      // cabelo com 1 quadro de atraso no andar (dono, 08/11: "corpo e cabeça"): quica de leve em vez de grudar na cabeça
-      const hdy = (src < 8 ? A[dir][(src + 7) % 8][1] : A[dir][src][1]) + oy
+      // o cabelo acompanha a cabeça (a coroa) e as pontas atrasam e balançam (cabeloQuadro)
+      const hdy = dy
+      const hq = cabeloQuadro(dir, src)
       const testa = T[dir]
       cel.clearRect(0, 0, CEL_X, CEL_Y)
       cel.drawImage(rc, src * CEL_X, dir * CEL_Y, CEL_X, CEL_Y, 0, 0, CEL_X, CEL_Y)
@@ -219,7 +364,7 @@ export async function folhaAndarFofo(cfg: Aparencia): Promise<HTMLCanvasElement>
       // acima da testa, a cabeça careca só fica onde há cabelo por cima na mesma coluna
       if (testa != null) {
         const cd = cel.getImageData(0, 0, CEL_X, CEL_Y)
-        const hd = hDados[dir]
+        const hd = hq.d
         for (let xx = 0; xx < CEL_X; xx++) {
           const hx2 = xx - dx
           let primeiro = CEL_Y
@@ -251,11 +396,171 @@ export async function folhaAndarFofo(cfg: Aparencia): Promise<HTMLCanvasElement>
           }
         cel.putImageData(cd, 0, 0)
       }
+      // mãos balançando de frente e de costas (de lado a arte já balança)
+      if ((dir === 0 || dir === 3) && src < 8 && testa != null) balancaMaos(dir, src, dx, testa + A[dir][src][1] + 14)
+      // o cabelo entra na mesma célula (para o contorno valer para o boneco inteiro)
+      cel.drawImage(hq.cv, dx, hdy)
+      // de frente, olhos, cílios e sobrancelhas por cima da franja (como no anime): a borda da franja não corta mais os
+      // olhos nem os faz "piscar" quando o cabelo balança
+      if (dir === 0) {
+        const ov = olhosPorCima(FOFO_ROSTO[src] || 0)
+        if (ov) olhosSobreFranja(ov, src, dx, dy, hq.d, hdy)
+      }
+      contorno()
       ctx.drawImage(celv, x, y)
-      ctx.drawImage(hc, dir * CEL_X, 0, CEL_X, CEL_Y, x + dx, y + hdy, CEL_X, CEL_Y)
     }
   }
   return cv
+
+  /* ---- design (crítico de arte, 09/11) ---- */
+  // o olho passa por cima da franja só onde ela cobre no máximo 2 px dele (mecha que desce bem abaixo do olho continua
+  // escondendo); e só dentro da cabeça (máscara de pele da roupa)
+  function olhosSobreFranja(ov: HTMLCanvasElement, src: number, dx: number, dy: number, hd: Uint8ClampedArray, hdy: number) {
+    const od = ov.getContext('2d', { willReadFrequently: true })!.getImageData(0, 0, CEL_X, CEL_Y).data
+    const im = cel.getImageData(0, 0, CEL_X, CEL_Y)
+    const d = im.data
+    const fimFranja = new Int16Array(CEL_X).fill(-99)
+    for (let xx = 0; xx < CEL_X; xx++) {
+      const hx2 = xx - dx
+      if (hx2 < 0 || hx2 >= CEL_X) continue
+      let yy = 0
+      while (yy < CEL_Y && !hd[(yy * CEL_X + hx2) * 4 + 3]) yy++
+      if (yy >= CEL_Y) continue // coluna sem cabelo: o olho aparece normal
+      while (yy < CEL_Y && hd[(yy * CEL_X + hx2) * 4 + 3]) yy++
+      fimFranja[xx] = yy - 1 + hdy
+    }
+    for (let oy = 0; oy < CEL_Y; oy++)
+      for (let ox = 0; ox < CEL_X; ox++) {
+        const s = (oy * CEL_X + ox) * 4
+        if (!od[s + 3]) continue
+        const xx = ox + dx
+        const yy = oy + dy
+        if (xx < 0 || yy < 0 || xx >= CEL_X || yy >= CEL_Y) continue
+        if (!mskDados[(yy * mskL + src * CEL_X + xx) * 4]) continue
+        if (yy < fimFranja[xx] - 2) continue
+        const t = (yy * CEL_X + xx) * 4
+        for (let k = 0; k < 4; k++) d[t + k] = od[s + k]
+      }
+    cel.putImageData(im, 0, 0)
+  }
+  // contorno único do boneco inteiro: borda opaca com vizinho vazio (4 direções) e luz acima de 70 vira o tom escuro
+  // do contorno; pixels já escuros ficam, e o boneco não engorda
+  function contorno() {
+    const im = cel.getImageData(0, 0, CEL_X, CEL_Y)
+    const d = im.data
+    for (let i = 3; i < d.length; i += 4) d[i] = d[i] < 128 ? 0 : 255
+    const borda: number[] = []
+    for (let yy = 0; yy < CEL_Y; yy++)
+      for (let xx = 0; xx < CEL_X; xx++) {
+        const i = (yy * CEL_X + xx) * 4
+        if (!d[i + 3]) continue
+        const vazio = (a: number, b: number) => a < 0 || b < 0 || a >= CEL_X || b >= CEL_Y || !d[(b * CEL_X + a) * 4 + 3]
+        if (!(vazio(xx - 1, yy) || vazio(xx + 1, yy) || vazio(xx, yy - 1) || vazio(xx, yy + 1))) continue
+        if (Math.abs(d[i] - 20) + Math.abs(d[i + 1] - 14) + Math.abs(d[i + 2] - 26) > 30) borda.push(i)
+      }
+    for (const i of borda) {
+      d[i] = 20
+      d[i + 1] = 14
+      d[i + 2] = 26
+    }
+    cel.putImageData(im, 0, 0)
+  }
+  // mãos: pixels de pele (máscara vermelha) abaixo do queixo, separados pelo meio do corpo; sobem e descem 1 px em
+  // oposição, no ritmo do passo; o buraco de cima é coberto pelo pixel do punho
+  function balancaMaos(dir: number, src: number, dx: number, abaixo: number) {
+    const fase = src >= 1 && src <= 3 ? 1 : src >= 5 && src <= 7 ? -1 : 0
+    if (!fase) return
+    const im = cel.getImageData(0, 0, CEL_X, CEL_Y)
+    const d = im.data
+    const orig = new Uint8ClampedArray(d)
+    const m = mskDados
+    const meio = CEL_X / 2 + dx
+    const pele = (xx: number, yy: number) => {
+      const mi = ((dir * CEL_Y + yy) * mskL + src * CEL_X + xx) * 4
+      return m[mi] > 0 && orig[(yy * CEL_X + xx) * 4 + 3] > 0
+    }
+    // só grupos de pele separados da cabeça (as mãos): o grupo que sobe acima do queixo (cabeça, pescoço) não mexe
+    const mov = new Uint8Array(CEL_X * CEL_Y)
+    const visto = new Uint8Array(CEL_X * CEL_Y)
+    for (let p0 = 0; p0 < CEL_X * CEL_Y; p0++) {
+      if (visto[p0] || !pele(p0 % CEL_X, Math.floor(p0 / CEL_X))) continue
+      const grupo: number[] = []
+      const fila = [p0]
+      visto[p0] = 1
+      let topo = CEL_Y
+      while (fila.length) {
+        const q = fila.pop()!
+        grupo.push(q)
+        const qx = q % CEL_X
+        const qy = Math.floor(q / CEL_X)
+        topo = Math.min(topo, qy)
+        for (const [a, b] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
+          const nx = qx + a
+          const ny = qy + b
+          if (nx < 0 || ny < 0 || nx >= CEL_X || ny >= CEL_Y) continue
+          const r = ny * CEL_X + nx
+          if (!visto[r] && pele(nx, ny)) {
+            visto[r] = 1
+            fila.push(r)
+          }
+        }
+      }
+      if (topo >= abaixo) for (const q of grupo) mov[q] = 1
+    }
+    for (let yy = CEL_Y - 1; yy >= 0; yy--)
+      for (let xx = 0; xx < CEL_X; xx++) if (mov[yy * CEL_X + xx]) d[(yy * CEL_X + xx) * 4 + 3] = 0
+    for (let yy = 0; yy < CEL_Y; yy++)
+      for (let xx = 0; xx < CEL_X; xx++) {
+        if (!mov[yy * CEL_X + xx]) continue
+        const lado = (xx < meio ? 1 : -1) * (dir === 3 ? -1 : 1)
+        const ny = yy + lado * fase
+        if (ny < 0 || ny >= CEL_Y) continue
+        const s = (yy * CEL_X + xx) * 4
+        const t = (ny * CEL_X + xx) * 4
+        for (let k = 0; k < 4; k++) d[t + k] = orig[s + k]
+      }
+    // buraco que sobrou: o pixel de cima (o punho)
+    for (let yy = abaixo; yy < CEL_Y; yy++)
+      for (let xx = 0; xx < CEL_X; xx++) {
+        const i = (yy * CEL_X + xx) * 4
+        if (d[i + 3] || !orig[i + 3]) continue
+        const a = ((yy - 1) * CEL_X + xx) * 4
+        for (let k = 0; k < 4; k++) d[i + k] = orig[a + k]
+      }
+    cel.putImageData(im, 0, 0)
+  }
+  // a parte dos olhos do rosto (sem a pele), numa faixa da íris −3 até +1, para desenhar por cima da franja
+  function olhosPorCima(v: number) {
+    if (olhosCache.has(v)) return olhosCache.get(v)!
+    const faixa = (vv: number) => {
+      let a = CEL_Y
+      let b = -1
+      for (let yy = 0; yy < CEL_Y; yy++)
+        for (let xx = 0; xx < CEL_X; xx++)
+          if (rmDados[((vv * CEL_Y + yy) * rmL + xx) * 4 + 1] > 0) {
+            a = Math.min(a, yy)
+            b = Math.max(b, yy)
+          }
+      return b >= 0 ? [a, b] : null
+    }
+    const f = faixa(v) ?? faixa(0)
+    if (!f) return olhosCache.set(v, null), null
+    const o = document.createElement('canvas')
+    o.width = CEL_X
+    o.height = CEL_Y
+    const ox = o.getContext('2d')!
+    ox.drawImage(fc, 0, v * CEL_Y, CEL_X, CEL_Y, 0, 0, CEL_X, CEL_Y)
+    const im = ox.getImageData(0, 0, CEL_X, CEL_Y)
+    for (let yy = 0; yy < CEL_Y; yy++)
+      for (let xx = 0; xx < CEL_X; xx++) {
+        const i = (yy * CEL_X + xx) * 4
+        const pele = rmDados[((v * CEL_Y + yy) * rmL + xx) * 4] > 0
+        if (yy < f[0] - 3 || yy > f[1] + 1 || pele) im.data[i + 3] = 0
+      }
+    ox.putImageData(im, 0, 0)
+    olhosCache.set(v, o)
+    return o
+  }
 }
 
 /* ---- busto da criação e do guarda-roupa (kit3/avatar.html) ---- */
