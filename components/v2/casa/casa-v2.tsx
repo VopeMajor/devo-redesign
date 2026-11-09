@@ -3,12 +3,12 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import useSWR from 'swr'
-import { Pixelify_Sans } from 'next/font/google'
 import { APARENCIA_PADRAO, type Aparencia, type CasaMapaPayload } from '@/lib/devo/casa-aparencia'
 import { Tela } from '@/components/devo/casa/casa-app'
 import { useCasa } from '@/components/devo/casa/dados'
 import { useDevo } from '@/components/devo/state/devo-store'
 import { useBackHandler } from '@/components/devo/use-back-handler'
+import { type CatedralControle, CatedralV2 } from '../catedral/catedral-v2'
 import { CriacaoAvatar } from './avatar'
 import { type CasaMotor, criaCasa } from './motor'
 import type { FimSimon } from './visita-simon'
@@ -22,7 +22,8 @@ import './casa.css'
  *  · a mesa de confecção abre a mesma Confecção e os mesmos Pacotes de antes (/api/casa), nada se perde;
  *  · a campainha toca enquanto o Simon não for atendido; o fim da visita fica salvo no servidor.
  */
-const pixel = Pixelify_Sans({ subsets: ['latin', 'latin-ext'], weight: ['400', '500', '600'], variable: '--cv-pixel' })
+// a letra em pixel (Pixelify Sans, OFL) vem do próprio site: public/v2/fonts (o next/font/google quebrou o build com o
+// conjunto cirílico novo do Google, 09/11)
 
 const MAPA = '/api/casa/mapa'
 async function getMapa(url: string): Promise<CasaMapaPayload & { timeDeltaMs?: number }> {
@@ -39,7 +40,7 @@ async function postMapa<T>(body: Record<string, unknown>): Promise<T> {
 }
 const idem = () => Math.random().toString(36).slice(2, 12) + Date.now().toString(36)
 
-type Vista = 'mapa' | 'guarda' | 'mesa'
+type Vista = 'mapa' | 'guarda' | 'mesa' | 'catedral'
 const aplicados = new WeakSet<object>()
 const QUARTOS = 'devo-casa-quartos-vistos'
 const quartosVistos = () => {
@@ -79,6 +80,8 @@ function Casa({ onFechar, onAbre }: { onFechar: () => void; onAbre: (id: string)
   const telaRef = useRef<Vista>('mapa')
   telaRef.current = tela
   const tocou = useRef(false)
+  const catedral = useRef<CatedralControle | null>(null)
+  const [catedralConhecida, setCatedralConhecida] = useState(false)
 
   const fecharMesa = () => {
     setTela('mapa')
@@ -89,6 +92,10 @@ function Casa({ onFechar, onAbre }: { onFechar: () => void; onAbre: (id: string)
   useBackHandler(true, () => {
     if (telaRef.current === 'mesa') return fecharMesa()
     if (telaRef.current === 'guarda') return setTela('mapa')
+    if (telaRef.current === 'catedral') {
+      if (!catedral.current?.voltar()) setTela('mapa')
+      return
+    }
     const m = motor.current
     if (m?.emVisita) return
     if (m?.fechaTopo()) return
@@ -128,6 +135,7 @@ function Casa({ onFechar, onAbre }: { onFechar: () => void; onAbre: (id: string)
       equipe: liberada.equipe,
       onSair: () => cb.current.onFechar(),
       onTorres: () => cb.current.onAbre('torres'),
+      onCatedral: () => setTela('catedral'),
       onMesa: () => setTela('mesa'),
       onGuardaRoupa: () => setTela('guarda'),
       onFimVisita: (r) => void cb.current.fimVisita(r),
@@ -165,6 +173,25 @@ function Casa({ onFechar, onAbre }: { onFechar: () => void; onAbre: (id: string)
       if (!foi) tocou.current = false
     }
   }, [temMapa, liberada?.visita])
+
+  // a Catedral (dono, 09/11: liberada para todos): depois da primeira visita, o destino aparece com o nome
+  useEffect(() => {
+    if (!temMapa) return
+    let vivo = true
+    fetch('/api/catedral', { cache: 'no-store' })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((j) => vivo && j?.liberado && setCatedralConhecida(!!j.descoberta))
+      .catch(() => {})
+    return () => {
+      vivo = false
+    }
+  }, [temMapa])
+  useEffect(() => {
+    const b = raiz.current?.querySelector('.destino[data-ir=catedral]')
+    if (!b) return
+    b.querySelector('b')!.textContent = catedralConhecida ? 'Catedral de Damasco' : '???'
+    b.querySelector('small')!.textContent = catedralConhecida ? 'Igreja Ortodoxa de Damasco' : 'Ouvi dizer que existe uma igreja nas redondezas...'
+  }, [catedralConhecida, temMapa])
 
   const salvar = async (ap: Aparencia) => {
     try {
@@ -213,11 +240,14 @@ function Casa({ onFechar, onAbre }: { onFechar: () => void; onAbre: (id: string)
   }
 
   return (
-    <div className={`cv ${pixel.variable}`} data-tela={tela}>
+    <div className="cv" data-tela={tela}>
       {conteudo}
       <div ref={raiz} className="cv-mapa" hidden={!temMapa} />
       {temMapa && tela === 'guarda' && aparencia && (
         <CriacaoAvatar modo="guarda" inicial={aparencia} trocaMinutos={data!.liberado ? data!.trocaMinutos : 60} onPronto={salvar} onVoltar={() => setTela('mapa')} />
+      )}
+      {temMapa && tela === 'catedral' && (
+        <CatedralV2 aparencia={aparencia} controle={catedral} onSair={() => setTela('mapa')} onDescoberta={() => setCatedralConhecida(true)} />
       )}
       {temMapa && tela === 'mesa' && (
         <section className="cv-mesa" role="dialog" aria-label="Mesa de Confecção">

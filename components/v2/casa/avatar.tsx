@@ -1,8 +1,8 @@
 'use client'
 
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { type Aparencia, APARENCIA_LIMITES, mesmaAparencia, ROUPAS } from '@/lib/devo/casa-aparencia'
-import { CAB, carregaBusto, desenhaBusto, OLHOS, type PecasBusto, PELES } from './avatar-cor'
+import { type Aparencia, APARENCIA_LIMITES, CORES_ROUPA, MARCAS, mesmaAparencia, ROUPAS } from '@/lib/devo/casa-aparencia'
+import { AMOSTRA_ROUPA, CAB, carregaBusto, CEL_X, CEL_Y, desenhaBusto, folhaAndarFofo, OLHOS, type PecasBusto, PELES } from './avatar-cor'
 
 /**
  * Criação do avatar e guarda-roupa (kit3/avatar.html, aprovado): prévia do busto no quarto, abas Corpo, Cabelo,
@@ -45,6 +45,59 @@ function Mini({ p, cfg, modo }: { p: PecasBusto; cfg: Aparencia; modo: 'cabeca' 
   return <canvas ref={ref} width={lado} height={lado} />
 }
 
+/**
+ * O chibi da Casa ao lado do retrato (dono, 09/11: "deixe o avatar mais bonito"): anda no lugar e vira devagar
+ * (frente, direita, costas, esquerda), em pixel 2x, com a aparência que está sendo escolhida. Com movimento reduzido,
+ * fica parado de frente.
+ */
+function ChibiPrevia({ cfg }: { cfg: Aparencia }) {
+  const ref = useRef<HTMLCanvasElement>(null)
+  const folha = useRef<HTMLCanvasElement | null>(null)
+  const chave = JSON.stringify(cfg)
+  useEffect(() => {
+    let vivo = true
+    const t = setTimeout(() => {
+      folhaAndarFofo(cfg).then(
+        (f) => {
+          if (vivo) folha.current = f
+        },
+        () => {},
+      )
+    }, 180)
+    return () => {
+      vivo = false
+      clearTimeout(t)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [chave])
+  useEffect(() => {
+    const calmo = window.matchMedia('(prefers-reduced-motion:reduce)').matches
+    // de frente na maior parte do tempo (é onde o rosto aparece); de lado e de costas, uma volta curta
+    const ORDEM = [0, 0, 2, 0, 3, 0, 1]
+    let q = 0
+    const desenha = () => {
+      const c = ref.current
+      const f = folha.current
+      if (!c || !f) return
+      const x = c.getContext('2d')!
+      x.imageSmoothingEnabled = false
+      x.clearRect(0, 0, c.width, c.height)
+      // 16 passos em cada etapa da volta
+      const dir = calmo ? 0 : ORDEM[Math.floor(q / 16) % ORDEM.length]
+      const col = calmo ? 0 : 1 + (q % 8)
+      x.drawImage(f, col * CEL_X, dir * CEL_Y, CEL_X, CEL_Y, 0, 0, CEL_X * 2, CEL_Y * 2)
+      q++
+    }
+    desenha()
+    const t = setInterval(desenha, 90)
+    return () => clearInterval(t)
+  }, [])
+  return (
+    <span className="cv-av-chibi" aria-hidden="true">
+      <canvas ref={ref} width={CEL_X * 2} height={CEL_Y * 2} />
+    </span>
+  )
+}
 export function CriacaoAvatar({
   modo,
   inicial,
@@ -67,7 +120,6 @@ export function CriacaoAvatar({
   const [salvando, setSalvando] = useState(false)
   const tela = useRef<HTMLCanvasElement>(null)
   const painel = useRef<HTMLElement>(null)
-  const cores = useRef<HTMLDivElement>(null)
   const guarda = modo === 'guarda'
   const antes = useMemo(() => inicial, [inicial])
 
@@ -95,25 +147,54 @@ export function CriacaoAvatar({
     return () => clearTimeout(t)
   }, [aviso])
 
-  const muda = (k: keyof Aparencia, i: number) => {
-    const x = cores.current?.scrollLeft ?? 0
+  // muda uma opção sem perder a rolagem da fileira de cores em que o toque aconteceu
+  const muda = (k: keyof Aparencia, i: number, el?: HTMLElement | null) => {
+    const fila = el?.closest('.cores') as HTMLElement | null
+    const x = fila?.scrollLeft ?? 0
     setCfg((c) => ({ ...c, [k]: i }))
     requestAnimationFrame(() => {
-      if (cores.current) cores.current.scrollLeft = x
+      if (fila) fila.scrollLeft = x
     })
   }
 
+  /** Fileira de cores. "zero" (opcional) é a primeira amostra, sem cor (vale 0); as outras valem índice + 1. */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const amostras = (lista: any[][], chave: keyof Aparencia, titulo: string, ver: (c: any[]) => string, todas = false) => (
+  const amostras = (lista: any[][], chave: keyof Aparencia, titulo: string, ver: (c: any[]) => string, todas = false, zero: string | null = null) => {
+    const base = zero ? 1 : 0
+    return (
+      <div>
+        <p className="rotulo">{titulo}</p>
+        <div className={'cores' + (todas ? ' todas' : '')} role="group" aria-label={titulo}>
+          {zero && <button className="cor nenhuma" aria-label={zero} aria-pressed={cfg[chave] === 0} onClick={(e) => muda(chave, 0, e.currentTarget)} />}
+          {lista.map((c, i) => (
+            <button
+              key={i}
+              className="cor"
+              style={{ background: ver(c) }}
+              aria-label={String(c[0])}
+              aria-pressed={cfg[chave] === i + base}
+              onClick={(e) => muda(chave, i + base, e.currentTarget)}
+            />
+          ))}
+        </div>
+      </div>
+    )
+  }
+  /** Opções em texto (detalhes do rosto). */
+  const chips = (chave: keyof Aparencia, titulo: string, nomes: readonly string[]) => (
     <div>
       <p className="rotulo">{titulo}</p>
-      <div ref={cores} className={'cores' + (todas ? ' todas' : '')} role="group" aria-label={titulo}>
-        {lista.map((c, i) => (
-          <button key={i} className="cor" style={{ background: ver(c) }} aria-label={String(c[0])} aria-pressed={cfg[chave] === i} onClick={() => muda(chave, i)} />
+      <div className="chips" role="group" aria-label={titulo}>
+        {nomes.map((n, i) => (
+          <button key={n} aria-pressed={cfg[chave] === i} onClick={() => muda(chave, i)}>
+            {n}
+          </button>
         ))}
       </div>
     </div>
   )
+  const corCab = (c: number[][]) => `linear-gradient(135deg,${rgb(c[3])},${rgb(c[2])} 50%,${rgb(c[1])})`
+  const corOlho = (c: number[][]) => `radial-gradient(circle,#111 18%,${rgb(c[2])} 22%,${rgb(c[1])} 70%)`
   const grade = (chave: keyof Aparencia, n: number, nome: string, classe = '', nomes: readonly string[] | null = null) =>
     p && (
       <div className={'grade ' + classe}>
@@ -145,6 +226,7 @@ export function CriacaoAvatar({
         </header>
         <div className="cv-av-previa">
           <canvas ref={tela} className="cv-av-tela" width={L} height={L} role="img" aria-label="Prévia do seu avatar" />
+          <ChibiPrevia cfg={cfg} />
         </div>
         <div role="tablist" aria-label="Partes do avatar" className="cv-av-abas">
           {ABAS.map(([id, nome]) => (
@@ -165,18 +247,45 @@ export function CriacaoAvatar({
           {aba === 'corpo' && grade('corpo', APARENCIA_LIMITES.corpo, 'Corpo', 'dois')}
           {aba === 'cabelo' && (
             <>
-              {amostras(CAB, 'corCabelo', 'Cor do cabelo', (c) => `linear-gradient(135deg,${rgb(c[3])},${rgb(c[2])} 50%,${rgb(c[1])})`)}
+              {amostras(CAB, 'corCabelo', 'Cor do cabelo', corCab)}
+              {amostras(CAB, 'corPontas', 'Pontas de outra cor', corCab, false, 'Sem pontas coloridas')}
               {grade('cabelo', APARENCIA_LIMITES.cabelo, 'Penteado')}
             </>
           )}
           {aba === 'rosto' && (
             <>
-              {amostras(OLHOS, 'corOlhos', 'Cor dos olhos', (c) => `radial-gradient(circle,#111 18%,${rgb(c[2])} 22%,${rgb(c[1])} 70%)`)}
+              {amostras(OLHOS, 'corOlhos', 'Cor dos olhos', corOlho)}
+              {amostras(OLHOS, 'olho2', 'Outro olho de outra cor', corOlho, false, 'Os dois olhos iguais')}
+              {chips('marca', 'Detalhes do rosto', MARCAS)}
               {grade('rosto', APARENCIA_LIMITES.rosto, 'Rosto')}
             </>
           )}
           {aba === 'pele' && amostras(PELES, 'pele', 'Tom de pele', (c) => `linear-gradient(135deg,${rgb(c[1])} 60%,${rgb(c[2])})`, true)}
-          {aba === 'roupa' && grade('roupa', ROUPAS.length, 'Roupa', 'tres', ROUPAS)}
+          {aba === 'roupa' && (
+            <>
+              <div>
+                <p className="rotulo">Cor da roupa</p>
+                <div className="cores" role="group" aria-label="Cor da roupa">
+                  {CORES_ROUPA.map((n, i) => {
+                    const a = AMOSTRA_ROUPA[i]
+                    return (
+                      <button
+                        key={n}
+                        className={'cor' + (a ? '' : ' original')}
+                        style={a ? { background: `rgb(${a.map(Math.round).join(',')})` } : undefined}
+                        aria-label={n}
+                        title={n}
+                        aria-pressed={cfg.corRoupa === i}
+                        onClick={(e) => muda('corRoupa', i, e.currentTarget)}
+                      />
+                    )
+                  })}
+                </div>
+              </div>
+              {grade('roupa', ROUPAS.length, 'Roupa', 'tres', ROUPAS)}
+            </>
+          )}
+
         </section>
         <footer>
           {guarda ? (
@@ -192,6 +301,11 @@ export function CriacaoAvatar({
                   corCabelo: sorteia(CAB.length),
                   corOlhos: sorteia(OLHOS.length),
                   pele: sorteia(PELES.length),
+                  // as opções novas aparecem às vezes, não sempre
+                  corPontas: Math.random() < 0.25 ? 1 + sorteia(CAB.length) : 0,
+                  olho2: Math.random() < 0.12 ? 1 + sorteia(OLHOS.length) : 0,
+                  corRoupa: Math.random() < 0.5 ? sorteia(CORES_ROUPA.length) : 0,
+                  marca: Math.random() < 0.3 ? sorteia(MARCAS.length) : 0,
                 })
               }
             >

@@ -1,6 +1,24 @@
 /* Casa em RPG Maker (DEVO v2): o estilo do protótipo aprovado (kit3/casa.html, avatar.html, npc-chibi.js,
    chibi-vida.js), preso dentro de .cv para não mexer no resto do /v2. A Casa ocupa a tela inteira. */
 
+/* letra em pixel servida pelo próprio site (Pixelify Sans, SIL Open Font License: public/v2/fonts/OFL-pixelify-sans.txt) */
+@font-face {
+  font-family: 'Cv Pixelify';
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url(/v2/fonts/pixelify-sans-latin.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Cv Pixelify';
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url(/v2/fonts/pixelify-sans-latin-ext.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
 .cv {
   --noite: #130e1b;
   --painel: #1d1529;
@@ -10,7 +28,7 @@
   --vio: #6b3fa0;
   --steel: #c9b78e;
   --teal: #7df5e0;
-  --font: var(--cv-pixel), 'Pixelify Sans', monospace;
+  --font: 'Cv Pixelify', 'Pixelify Sans', monospace;
   position: fixed;
   inset: 0;
   z-index: 60;
@@ -1111,4 +1129,65 @@
 }
 .cv .andar b {
   text-align: left;
+}
+
+/* criação do avatar: o chibi ao lado do retrato e as opções novas (dono, 09/11) */
+.cv-av-chibi {
+  position: absolute;
+  z-index: 2;
+  right: 10px;
+  bottom: 6px;
+  width: 112px;
+  height: 134px;
+  pointer-events: none;
+}
+.cv-av-chibi::before {
+  /* sombra no chão, em pixel */
+  content: '';
+  position: absolute;
+  left: 34px;
+  bottom: 8px;
+  width: 44px;
+  height: 10px;
+  background: rgba(5, 2, 10, 0.55);
+  clip-path: polygon(15% 0, 85% 0, 100% 33%, 100% 67%, 85% 100%, 15% 100%, 0 67%, 0 33%);
+}
+.cv-av-chibi canvas {
+  position: absolute;
+  left: -24px;
+  bottom: 0;
+  width: 160px;
+  height: 192px;
+  image-rendering: pixelated;
+}
+.cv .cv-av .cor.nenhuma {
+  background: linear-gradient(135deg, transparent 45%, #c9b78e 45% 55%, transparent 55%), #2a2038;
+}
+.cv .cv-av .cor.original {
+  background: conic-gradient(#7a2333 0 25%, #2a3b74 0 50%, #46602b 0 75%, #5a2f6e 0);
+}
+.cv-av .chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0 2px 12px;
+}
+.cv .cv-av .chips button {
+  min-height: 44px;
+  padding: 0 14px;
+  font-size: 17px;
+  background: #2a2038;
+  box-shadow: inset 0 0 0 2px #40325a;
+}
+.cv .cv-av .chips button[aria-pressed='true'] {
+  background: #35284a;
+  box-shadow: inset 0 0 0 3px var(--teal);
+}
+@media (min-width: 900px) {
+  .cv-av-chibi {
+    right: 24px;
+    bottom: 24px;
+    transform: scale(1.5);
+    transform-origin: right bottom;
+  }
 }
