@@ -1,0 +1,605 @@
+{
+  "base": "http://localhost:3000",
+  "shots": [
+    {
+      "name": "v2-01-inicio-cel",
+      "note": "Owner: painel, Mapa do Devo e doca",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-02-mapa-cel",
+      "note": "fim do Mapa do Devo",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-toque-sob-o-dedo",
+      "note": "[\"div#mesa ta=pan-y ov=visible pe=auto\",\"section#sistemas ta=auto ov=visible pe=auto\",\"div#inicio ta=auto ov=auto pe=auto\",\"main#os._9jXE9G_variable.QojL5W_variable.TOc94W_variable ta=auto ov=clip pe=auto\",\"body.font-serif.antialiased ta=auto ov=hidden pe=auto\",\"html.Kbl3na_variable._0kNb5q_variable.OhBwPW_variable.zfTmVG_variable.AN9ZVa_variable.QUiNZq_variable.oe9sPq_variable.N107GW_variable ta=auto ov=hidden pe=auto\"]"
+    },
+    {
+      "name": "v2-toque-diagnostico",
+      "note": "{\"roda\":300,\"toque\":345,\"gesto\":0}"
+    },
+    {
+      "name": "v2-toque-390x844",
+      "note": "{\"topo\":0,\"max\":854,\"ultimo\":\"mesa\",\"base\":1550,\"doca\":778,\"largo\":386,\"w\":390}",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-02-toque-390x844",
+      "note": "depois de arrastar com o dedo: {\"topo\":0,\"max\":854,\"ultimo\":\"mesa\",\"base\":1550,\"doca\":778,\"largo\":386,\"w\":390}",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-toque-360x640",
+      "note": "{\"topo\":0,\"max\":1047,\"ultimo\":\"mesa\",\"base\":1539,\"doca\":574,\"largo\":356,\"w\":360}",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-02-toque-360x640",
+      "note": "depois de arrastar com o dedo: {\"topo\":0,\"max\":1047,\"ultimo\":\"mesa\",\"base\":1539,\"doca\":574,\"largo\":356,\"w\":360}",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-03-pulso-cel",
+      "note": "janela: pulso",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-03-record-cel",
+      "note": "janela: record",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-03-mensagens-cel",
+      "note": "janela: mensagens",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-03-cartas-cel",
+      "note": "janela: cartas",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-03-calendario-cel",
+      "note": "janela: calendario",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-03-torres-cel",
+      "note": "janela: torres",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-03-ranking-cel",
+      "note": "janela: ranking",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-04-avisos-cel",
+      "note": "central de avisos",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-record-cel",
+      "note": "record: abertura",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-record-1-cel",
+      "note": "record: desce",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-record-2-cel",
+      "note": "record: desce",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-record-3-cel",
+      "note": "record: desce",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-record-4-cel",
+      "note": "record: Deadly Votes",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-record-5-cel",
+      "note": "record: desce",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-record-6-cel",
+      "note": "record: >.dv-como",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-record-7-cel",
+      "note": "record: Convites",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-record-8-cel",
+      "note": "record: Diário",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-record-9-cel",
+      "note": "record: Mesa",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-mensagens-cel",
+      "note": "mensagens: abertura",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-mensagens-1-cel",
+      "note": "mensagens: >.m-item",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-mensagens-2-cel",
+      "note": "mensagens: >.m-op",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-mensagens-3-cel",
+      "note": "mensagens: rolar",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-cartas-cel",
+      "note": "cartas: abertura",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-cartas-1-cel",
+      "note": "cartas: desce",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-cartas-2-cel",
+      "note": "cartas: >.cx-tile",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-cartas-3-cel",
+      "note": "cartas: rolar",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-cartas-4-cel",
+      "note": "cartas: >.cx-carta-g",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-inventario-cel",
+      "note": "inventario: abertura",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-inventario-1-cel",
+      "note": "inventario: desce",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-trocas-cel",
+      "note": "trocas: abertura",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-trocas-1-cel",
+      "note": "trocas: >.t-prot",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-trocas-2-cel",
+      "note": "trocas: >.t-porta:not(.fechada)",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-trocas-3-cel",
+      "note": "trocas: >.t-escolha button:not(.presa)",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-trocas-4-cel",
+      "note": "trocas: espera",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-trocas-5-cel",
+      "note": "trocas: espera",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-ajustes-cel",
+      "note": "ajustes: abertura",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-ajustes-1-cel",
+      "note": "ajustes: desce",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-calendario-cel",
+      "note": "calendario: abertura",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-calendario-1-cel",
+      "note": "calendario: >button:has-text(\"Pular\")",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-calendario-2-cel",
+      "note": "calendario: Eventos",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-calendario-3-cel",
+      "note": "calendario: Mês",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-calendario-4-cel",
+      "note": "calendario: Semana",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-calendario-5-cel",
+      "note": "calendario: >.k-marca",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-calendario-6-cel",
+      "note": "calendario: >.kc-revela",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-calendario-7-cel",
+      "note": "calendario: desce",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-01-inicio-pc",
+      "note": "Owner: painel, Mapa do Devo e doca",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-03-pulso-pc",
+      "note": "janela: pulso",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-03-record-pc",
+      "note": "janela: record",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-03-mensagens-pc",
+      "note": "janela: mensagens",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-03-cartas-pc",
+      "note": "janela: cartas",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-03-calendario-pc",
+      "note": "janela: calendario",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-03-torres-pc",
+      "note": "janela: torres",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-03-ranking-pc",
+      "note": "janela: ranking",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-04-avisos-pc",
+      "note": "central de avisos",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-record-pc",
+      "note": "record: abertura",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-record-1-pc",
+      "note": "record: desce",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-record-2-pc",
+      "note": "record: desce",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-record-3-pc",
+      "note": "record: desce",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-record-4-pc",
+      "note": "record: Deadly Votes",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-record-5-pc",
+      "note": "record: desce",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-record-6-pc",
+      "note": "record: >.dv-como",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-record-7-pc",
+      "note": "record: Convites",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-record-8-pc",
+      "note": "record: Diário",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-record-9-pc",
+      "note": "record: Mesa",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-mensagens-pc",
+      "note": "mensagens: abertura",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-mensagens-1-pc",
+      "note": "mensagens: >.m-item",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-mensagens-2-pc",
+      "note": "mensagens: >.m-op",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-mensagens-3-pc",
+      "note": "mensagens: rolar",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-cartas-pc",
+      "note": "cartas: abertura",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-cartas-1-pc",
+      "note": "cartas: desce",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-cartas-2-pc",
+      "note": "cartas: >.cx-tile",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-cartas-3-pc",
+      "note": "cartas: rolar",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-cartas-4-pc",
+      "note": "cartas: >.cx-carta-g",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-inventario-pc",
+      "note": "inventario: abertura",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-inventario-1-pc",
+      "note": "inventario: desce",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-trocas-pc",
+      "note": "trocas: abertura",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-trocas-1-pc",
+      "note": "trocas: >.t-prot",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-trocas-2-pc",
+      "note": "trocas: >.t-porta:not(.fechada)",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-trocas-3-pc",
+      "note": "trocas: >.t-escolha button:not(.presa)",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-trocas-4-pc",
+      "note": "trocas: espera",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-trocas-5-pc",
+      "note": "trocas: espera",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-ajustes-pc",
+      "note": "ajustes: abertura",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-ajustes-1-pc",
+      "note": "ajustes: desce",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-calendario-pc",
+      "note": "calendario: abertura",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-calendario-1-pc",
+      "note": "calendario: >button:has-text(\"Pular\")",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-calendario-2-pc",
+      "note": "calendario: Eventos",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-calendario-3-pc",
+      "note": "calendario: Mês",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-calendario-4-pc",
+      "note": "calendario: Semana",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-calendario-5-pc",
+      "note": "calendario: >.k-marca",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-calendario-6-pc",
+      "note": "calendario: >.kc-revela",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-calendario-7-pc",
+      "note": "calendario: desce",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-05-jogador-cel-sistema",
+      "note": "jogador comum no sistema v2",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "v2-05-jogador-cel",
+      "note": "jogador comum: início do v2",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "v2-05-jogador-mapa-cel",
+      "note": "jogador comum: Mapa do Devo com as travas",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "v2-05-jogador-record-cel",
+      "note": "jogador comum: record",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "v2-05-jogador-poco-cel",
+      "note": "jogador comum: poco",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "v2-05-jogador-pc-sistema",
+      "note": "jogador comum no sistema v2",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "v2-05-jogador-pc",
+      "note": "jogador comum: início do v2",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "v2-05-jogador-record-pc",
+      "note": "jogador comum: record",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "v2-05-jogador-poco-pc",
+      "note": "jogador comum: poco",
+      "url": "http://localhost:3000/"
+    }
+  ],
+  "errors": [
+    {
+      "step": "v2-toque-390x844",
+      "error": "ícones fora do alcance pelo toque: {\"topo\":0,\"max\":854,\"ultimo\":\"mesa\",\"base\":1550,\"doca\":778,\"largo\":386,\"w\":390}"
+    },
+    {
+      "step": "v2-toque-360x640",
+      "error": "ícones fora do alcance pelo toque: {\"topo\":0,\"max\":1047,\"ultimo\":\"mesa\",\"base\":1539,\"doca\":574,\"largo\":356,\"w\":360}"
+    }
+  ],
+  "console": [
+    {
+      "page": "http://localhost:3000/?antigo",
+      "text": "HTTP 400",
+      "src": "http://localhost:3000/api/auth/sign-up/email"
+    },
+    {
+      "page": "http://localhost:3000/?antigo",
+      "text": "Failed to load resource: the server responded with a status of 400 (BAD_REQUEST)",
+      "src": "http://localhost:3000/api/auth/sign-up/email"
+    },
+    {
+      "page": "http://localhost:3000/?antigo",
+      "text": "HTTP 400",
+      "src": "http://localhost:3000/api/auth/sign-up/email"
+    },
+    {
+      "page": "http://localhost:3000/?antigo",
+      "text": "Failed to load resource: the server responded with a status of 400 (BAD_REQUEST)",
+      "src": "http://localhost:3000/api/auth/sign-up/email"
+    },
+    {
+      "page": "http://localhost:3000/?antigo",
+      "text": "HTTP 400",
+      "src": "http://localhost:3000/api/auth/sign-up/email"
+    },
+    {
+      "page": "http://localhost:3000/?antigo",
+      "text": "Failed to load resource: the server responded with a status of 400 (BAD_REQUEST)",
+      "src": "http://localhost:3000/api/auth/sign-up/email"
+    },
+    {
+      "page": "http://localhost:3000/?antigo",
+      "text": "Permissions policy violation: compute-pressure is not allowed in this document.",
+      "src": "https://www.youtube.com/s/player/a5c2aafe/player_embed.vflset/pt_BR/base.js"
+    },
+    {
+      "page": "http://localhost:3000/?antigo",
+      "text": "HTTP 400",
+      "src": "http://localhost:3000/api/auth/sign-up/email"
+    },
+    {
+      "page": "http://localhost:3000/?antigo",
+      "text": "Failed to load resource: the server responded with a status of 400 (BAD_REQUEST)",
+      "src": "http://localhost:3000/api/auth/sign-up/email"
+    },
+    {
+      "page": "http://localhost:3000/",
+      "text": "Permissions policy violation: compute-pressure is not allowed in this document.",
+      "src": "https://www.youtube.com/s/player/a5c2aafe/player_embed.vflset/pt_BR/base.js"
+    }
+  ]
+}
