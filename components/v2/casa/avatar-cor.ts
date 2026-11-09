@@ -49,20 +49,24 @@ export function pintaCabelo(d: Px, c: (typeof CAB)[number]) {
  * deixavam o cabelo granulado (crítico de arte, 09/11). Sombra puxada para o frio e luz para o quente. O busto da
  * criação continua com pintaCabelo (ilustração, tons contínuos).
  */
-export function pintaCabeloChibi(d: Px, c: (typeof CAB)[number], indice: number) {
+export function pintaCabeloChibi(d: Px, c: (typeof CAB)[number], indice: number, w: number) {
   const [, s0, m, l0] = c
-  const s = s0.map((v, k) => lerp(v, [48, 32, 72][k], 0.2))
+  // no Preto a sombra clareia um pouco, para o contorno se separar dela
+  const s = indice === 0 ? s0.map((v) => lerp(v, 255, 0.06)) : s0.map((v, k) => lerp(v, [48, 32, 72][k], 0.2))
   const l = indice === 0 ? [84, 78, 96] : l0.map((v, k) => lerp(v, [255, 244, 226][k], 0.15))
   const cont = [20, 14, 26]
-  for (let i = 0; i < d.length; i += 4) {
+  for (let i = 0, p = 0; i < d.length; i += 4, p++) {
     if (!d[i + 3]) continue
     const v = d[i]
-    const cor = v < 48 ? cont : v < 135 ? s : v < 205 ? m : l
+    // entre a sombra e o meio, xadrez 1x1 (a mecha escura mantém o desenho em vez de virar chapa)
+    const xadrez = ((p % w) + Math.floor(p / w)) & 1
+    const cor = v < 48 ? cont : v < 105 ? s : v < 135 ? (xadrez ? s : m) : v < 205 ? m : l
     for (let k = 0; k < 3; k++) d[i + k] = cor[k]
   }
 }
 
-/** Brilhos brancos de 1 px soltos na roupa (pareciam sujeira): viram a média dos vizinhos. */
+/** Brilhos brancos soltos na roupa (pareciam sujeira): grupos claros de até 4 px cercados de tons escuros viram a média
+ *  da borda do grupo. */
 function limpaPontinhos(c: HTMLCanvasElement, msk: HTMLImageElement) {
   const x = c.getContext('2d', { willReadFrequently: true })!
   const im = x.getImageData(0, 0, c.width, c.height)
@@ -75,27 +79,45 @@ function limpaPontinhos(c: HTMLCanvasElement, msk: HTMLImageElement) {
   mx.drawImage(msk, 0, 0)
   const m = mx.getImageData(0, 0, mc.width, mc.height).data
   const W = c.width
+  const H = c.height
   const lum = (i: number) => 0.3 * o[i] + 0.59 * o[i + 1] + 0.11 * o[i + 2]
-  for (let yy = 1; yy < c.height - 1; yy++)
-    for (let xx = 1; xx < W - 1; xx++) {
-      const i = (yy * W + xx) * 4
-      if (!o[i + 3] || m[i] > 0 || m[i + 1] > 0 || lum(i) <= 200) continue
-      let isolado = true
-      for (let b = -1; b <= 1 && isolado; b++)
-        for (let a = -1; a <= 1; a++) {
-          if (!a && !b) continue
-          const j = ((yy + b) * W + xx + a) * 4
-          if (!o[j + 3] || lum(j) >= 130) {
-            isolado = false
-            break
-          }
+  const claro = (p: number) => o[p * 4 + 3] > 0 && !m[p * 4] && !m[p * 4 + 1] && lum(p * 4) > 200
+  const visto = new Uint8Array(W * H)
+  for (let p0 = 0; p0 < W * H; p0++) {
+    if (visto[p0] || !claro(p0)) continue
+    const grupo: number[] = []
+    const borda = new Set<number>()
+    const fila = [p0]
+    visto[p0] = 1
+    let ok = true
+    while (fila.length) {
+      const p = fila.pop()!
+      grupo.push(p)
+      if (grupo.length > 4) ok = false
+      const xx = p % W
+      const yy = Math.floor(p / W)
+      for (const [a, b] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
+        const nx = xx + a
+        const ny = yy + b
+        if (nx < 0 || ny < 0 || nx >= W || ny >= H) {
+          ok = false
+          continue
         }
-      if (!isolado) continue
-      for (let k = 0; k < 3; k++) {
-        const v = [((yy - 1) * W + xx) * 4, ((yy + 1) * W + xx) * 4, (yy * W + xx - 1) * 4, (yy * W + xx + 1) * 4].reduce((s, j) => s + o[j + k], 0)
-        d[i + k] = v / 4
+        const q = ny * W + nx
+        if (claro(q)) {
+          if (!visto[q]) {
+            visto[q] = 1
+            fila.push(q)
+          }
+        } else if (!o[q * 4 + 3] || lum(q * 4) >= 130) ok = false
+        else borda.add(q)
       }
     }
+    if (!ok || !borda.size) continue
+    const med = [0, 0, 0]
+    for (const q of borda) for (let k = 0; k < 3; k++) med[k] += o[q * 4 + k] / borda.size
+    for (const p of grupo) for (let k = 0; k < 3; k++) d[p * 4 + k] = med[k]
+  }
   x.putImageData(im, 0, 0)
 }
 
@@ -253,7 +275,7 @@ export async function folhaAndarFofo(cfg: Aparencia): Promise<HTMLCanvasElement>
   const olhosCache = new Map<number, HTMLCanvasElement | null>()
   const [hc, hx] = tela(cab)
   const ih = hx.getImageData(0, 0, hc.width, hc.height)
-  pintaCabeloChibi(ih.data, CAB[cfg.corCabelo || 0], cfg.corCabelo || 0)
+  pintaCabeloChibi(ih.data, CAB[cfg.corCabelo || 0], cfg.corCabelo || 0, hc.width)
   hx.putImageData(ih, 0, 0)
   const A = info.anc
   const T = info.testa || {}
@@ -284,13 +306,14 @@ export async function folhaAndarFofo(cfg: Aparencia): Promise<HTMLCanvasElement>
      cabeça e, da linha dos olhos para baixo, o cabelo se curva aos poucos até as pontas (deslocamento por linha, em
      pixel inteiro). As pontas sobem e descem 1 quadro depois da cabeça, ficam para trás no andar de lado e balançam
      de um lado para o outro de frente e de costas. Parado, o cabelo fica como na arte. */
-  const LADO = [0, 1, 1, 0, 0, 1, 1, 0]
+  const LADO = [1, 2, 3, 2, 1, 2, 3, 2]
   const FRENTE = [0, 1, 1, 1, 0, -1, -1, -1]
   const hCache = new Map<string, { cv: HTMLCanvasElement; d: Uint8ClampedArray }>()
   const cabeloQuadro = (dir: number, src: number) => {
     const anda = src < 8
     const vLag = anda ? A[dir][(src + 7) % 8][1] - A[dir][src][1] : 0
-    const hs = anda ? (dir === 1 || dir === 2 ? (dir === 1 ? 1 : -1) * (2 + LADO[src]) : 2 * FRENTE[src]) : 0
+    const lado = dir === 1 || dir === 2
+    const hs = anda ? (lado ? (dir === 1 ? 1 : -1) * LADO[src] : 2 * FRENTE[src]) : src === 14 && lado ? (dir === 1 ? 1 : -1) : 0
     const chave = `${dir}:${vLag}:${hs}`
     const ja = hCache.get(chave)
     if (ja) return ja
@@ -381,7 +404,7 @@ export async function folhaAndarFofo(cfg: Aparencia): Promise<HTMLCanvasElement>
       // olhos nem os faz "piscar" quando o cabelo balança
       if (dir === 0) {
         const ov = olhosPorCima(FOFO_ROSTO[src] || 0)
-        if (ov) cel.drawImage(ov, dx, dy)
+        if (ov) olhosSobreFranja(ov, src, dx, dy, hq.d, hdy)
       }
       contorno()
       ctx.drawImage(celv, x, y)
@@ -390,6 +413,36 @@ export async function folhaAndarFofo(cfg: Aparencia): Promise<HTMLCanvasElement>
   return cv
 
   /* ---- design (crítico de arte, 09/11) ---- */
+  // o olho passa por cima da franja só onde ela cobre no máximo 2 px dele (mecha que desce bem abaixo do olho continua
+  // escondendo); e só dentro da cabeça (máscara de pele da roupa)
+  function olhosSobreFranja(ov: HTMLCanvasElement, src: number, dx: number, dy: number, hd: Uint8ClampedArray, hdy: number) {
+    const od = ov.getContext('2d', { willReadFrequently: true })!.getImageData(0, 0, CEL_X, CEL_Y).data
+    const im = cel.getImageData(0, 0, CEL_X, CEL_Y)
+    const d = im.data
+    const fimFranja = new Int16Array(CEL_X).fill(-99)
+    for (let xx = 0; xx < CEL_X; xx++) {
+      const hx2 = xx - dx
+      if (hx2 < 0 || hx2 >= CEL_X) continue
+      let yy = 0
+      while (yy < CEL_Y && !hd[(yy * CEL_X + hx2) * 4 + 3]) yy++
+      if (yy >= CEL_Y) continue // coluna sem cabelo: o olho aparece normal
+      while (yy < CEL_Y && hd[(yy * CEL_X + hx2) * 4 + 3]) yy++
+      fimFranja[xx] = yy - 1 + hdy
+    }
+    for (let oy = 0; oy < CEL_Y; oy++)
+      for (let ox = 0; ox < CEL_X; ox++) {
+        const s = (oy * CEL_X + ox) * 4
+        if (!od[s + 3]) continue
+        const xx = ox + dx
+        const yy = oy + dy
+        if (xx < 0 || yy < 0 || xx >= CEL_X || yy >= CEL_Y) continue
+        if (!mskDados[(yy * mskL + src * CEL_X + xx) * 4]) continue
+        if (yy < fimFranja[xx] - 2) continue
+        const t = (yy * CEL_X + xx) * 4
+        for (let k = 0; k < 4; k++) d[t + k] = od[s + k]
+      }
+    cel.putImageData(im, 0, 0)
+  }
   // contorno único do boneco inteiro: borda opaca com vizinho vazio (4 direções) e luz acima de 70 vira o tom escuro
   // do contorno; pixels já escuros ficam, e o boneco não engorda
   function contorno() {
@@ -403,7 +456,7 @@ export async function folhaAndarFofo(cfg: Aparencia): Promise<HTMLCanvasElement>
         if (!d[i + 3]) continue
         const vazio = (a: number, b: number) => a < 0 || b < 0 || a >= CEL_X || b >= CEL_Y || !d[(b * CEL_X + a) * 4 + 3]
         if (!(vazio(xx - 1, yy) || vazio(xx + 1, yy) || vazio(xx, yy - 1) || vazio(xx, yy + 1))) continue
-        if (0.3 * d[i] + 0.59 * d[i + 1] + 0.11 * d[i + 2] > 70) borda.push(i)
+        if (Math.abs(d[i] - 20) + Math.abs(d[i + 1] - 14) + Math.abs(d[i + 2] - 26) > 30) borda.push(i)
       }
     for (const i of borda) {
       d[i] = 20
@@ -426,11 +479,39 @@ export async function folhaAndarFofo(cfg: Aparencia): Promise<HTMLCanvasElement>
       const mi = ((dir * CEL_Y + yy) * mskL + src * CEL_X + xx) * 4
       return m[mi] > 0 && orig[(yy * CEL_X + xx) * 4 + 3] > 0
     }
+    // só grupos de pele separados da cabeça (as mãos): o grupo que sobe acima do queixo (cabeça, pescoço) não mexe
+    const mov = new Uint8Array(CEL_X * CEL_Y)
+    const visto = new Uint8Array(CEL_X * CEL_Y)
+    for (let p0 = 0; p0 < CEL_X * CEL_Y; p0++) {
+      if (visto[p0] || !pele(p0 % CEL_X, Math.floor(p0 / CEL_X))) continue
+      const grupo: number[] = []
+      const fila = [p0]
+      visto[p0] = 1
+      let topo = CEL_Y
+      while (fila.length) {
+        const q = fila.pop()!
+        grupo.push(q)
+        const qx = q % CEL_X
+        const qy = Math.floor(q / CEL_X)
+        topo = Math.min(topo, qy)
+        for (const [a, b] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
+          const nx = qx + a
+          const ny = qy + b
+          if (nx < 0 || ny < 0 || nx >= CEL_X || ny >= CEL_Y) continue
+          const r = ny * CEL_X + nx
+          if (!visto[r] && pele(nx, ny)) {
+            visto[r] = 1
+            fila.push(r)
+          }
+        }
+      }
+      if (topo >= abaixo) for (const q of grupo) mov[q] = 1
+    }
     for (let yy = CEL_Y - 1; yy >= 0; yy--)
-      for (let xx = 0; xx < CEL_X; xx++) if (yy >= abaixo && pele(xx, yy)) d[(yy * CEL_X + xx) * 4 + 3] = 0
+      for (let xx = 0; xx < CEL_X; xx++) if (mov[yy * CEL_X + xx]) d[(yy * CEL_X + xx) * 4 + 3] = 0
     for (let yy = 0; yy < CEL_Y; yy++)
       for (let xx = 0; xx < CEL_X; xx++) {
-        if (yy < abaixo || !pele(xx, yy)) continue
+        if (!mov[yy * CEL_X + xx]) continue
         const lado = (xx < meio ? 1 : -1) * (dir === 3 ? -1 : 1)
         const ny = yy + lado * fase
         if (ny < 0 || ny >= CEL_Y) continue
