@@ -4029,9 +4029,19 @@ if (want('v2')) {
           await page.setViewportSize({ width: w, height: h })
           await page.locator('#inicio').evaluate((el) => el.scrollTo(0, 0)).catch(() => {})
           await wait(500)
-          for (let g = 0; g < 4; g++) {
-            await cdp.send('Input.synthesizeScrollGesture', { x: Math.round(w / 2), y: Math.round(h * 0.7), yDistance: -Math.round(h * 0.5), gestureSourceType: 'touch', speed: 1200 }).catch((e) => manifest.errors.push({ step: `v2-toque-${w}x${h}`, error: String(e).slice(0, 200) }))
-            await wait(350)
+          // arrasto de toque cru (touchStart, touchMove…, touchEnd): o synthesizeScrollGesture não rola no Chromium sem
+          // janela (diagnóstico de 09/11: roda 300, toque 345, gesto 0)
+          const x = Math.round(w / 2)
+          for (let g = 0; g < 6; g++) {
+            const y0 = Math.round(h * 0.75)
+            const pt = (yy) => [{ x, y: yy, id: 1, radiusX: 4, radiusY: 4, force: 1 }]
+            await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: pt(y0) }).catch(() => {})
+            for (let i = 1; i <= 12; i++) {
+              await cdp.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: pt(y0 - Math.round((h * 0.5 * i) / 12)) }).catch(() => {})
+              await wait(16)
+            }
+            await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] }).catch(() => {})
+            await wait(500)
           }
           await wait(500)
           const r = await page.evaluate(() => {
