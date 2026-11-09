@@ -1130,3 +1130,64 @@
 .cv .andar b {
   text-align: left;
 }
+
+/* criação do avatar: o chibi ao lado do retrato e as opções novas (dono, 09/11) */
+.cv-av-chibi {
+  position: absolute;
+  z-index: 2;
+  right: 10px;
+  bottom: 6px;
+  width: 112px;
+  height: 134px;
+  pointer-events: none;
+}
+.cv-av-chibi::before {
+  /* sombra no chão, em pixel */
+  content: '';
+  position: absolute;
+  left: 34px;
+  bottom: 8px;
+  width: 44px;
+  height: 10px;
+  background: rgba(5, 2, 10, 0.55);
+  clip-path: polygon(15% 0, 85% 0, 100% 33%, 100% 67%, 85% 100%, 15% 100%, 0 67%, 0 33%);
+}
+.cv-av-chibi canvas {
+  position: absolute;
+  left: -24px;
+  bottom: 0;
+  width: 160px;
+  height: 192px;
+  image-rendering: pixelated;
+}
+.cv .cv-av .cor.nenhuma {
+  background: linear-gradient(135deg, transparent 45%, #c9b78e 45% 55%, transparent 55%), #2a2038;
+}
+.cv .cv-av .cor.original {
+  background: conic-gradient(#7a2333 0 25%, #2a3b74 0 50%, #46602b 0 75%, #5a2f6e 0);
+}
+.cv-av .chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0 2px 12px;
+}
+.cv .cv-av .chips button {
+  min-height: 44px;
+  padding: 0 14px;
+  font-size: 17px;
+  background: #2a2038;
+  box-shadow: inset 0 0 0 2px #40325a;
+}
+.cv .cv-av .chips button[aria-pressed='true'] {
+  background: #35284a;
+  box-shadow: inset 0 0 0 3px var(--teal);
+}
+@media (min-width: 900px) {
+  .cv-av-chibi {
+    right: 24px;
+    bottom: 24px;
+    transform: scale(1.5);
+    transform-origin: right bottom;
+  }
+}

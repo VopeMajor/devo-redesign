@@ -27,18 +27,96 @@ const lerp = (a: number, b: number, t: number) => a + (b - a) * t
 const sat = (v: number) => (v < 0 ? 0 : v > 1 ? 1 : v)
 type Px = Uint8ClampedArray
 
-export function pintaCabelo(d: Px, c: (typeof CAB)[number]) {
-  const [, s, m, l] = c
-  const base = [20, 14, 26]
+/* ---- opções novas (dono, 09/11: "deixe o avatar mais bonito e adicione mais opções de customização") ---- */
+function rgbHsl(r: number, g: number, b: number): [number, number, number] {
+  r /= 255
+  g /= 255
+  b /= 255
+  const mx = Math.max(r, g, b)
+  const mn = Math.min(r, g, b)
+  const l = (mx + mn) / 2
+  if (mx === mn) return [0, 0, l]
+  const d = mx - mn
+  const s = l > 0.5 ? d / (2 - mx - mn) : d / (mx + mn)
+  const h = mx === r ? (g - b) / d + (g < b ? 6 : 0) : mx === g ? (b - r) / d + 2 : (r - g) / d + 4
+  return [h * 60, s, l]
+}
+function hslRgb(h: number, s: number, l: number): [number, number, number] {
+  const q = l < 0.5 ? l * (1 + s) : l + s - l * s
+  const p = 2 * l - q
+  const f = (t: number) => {
+    t = ((t % 1) + 1) % 1
+    return t < 1 / 6 ? p + (q - p) * 6 * t : t < 1 / 2 ? q : t < 2 / 3 ? p + (q - p) * (2 / 3 - t) * 6 : p
+  }
+  return [f(h / 360 + 1 / 3) * 255, f(h / 360) * 255, f(h / 360 - 1 / 3) * 255]
+}
+/** Variações de cor das roupas (CORES_ROUPA): matiz novo; Grafite e Preto tiram a cor; Areia clareia. */
+const ALVOS_ROUPA: ({ h: number; s?: number; l?: number; claro?: number } | null)[] = [
+  null,
+  { h: 348 },
+  { h: 224 },
+  { h: 95, s: 0.32 },
+  { h: 290 },
+  { h: 250, s: 0.07, l: 0.95 },
+  { h: 36, s: 0.34, l: 1, claro: 0.3 },
+  { h: 270, s: 0.06, l: 0.62 },
+]
+/** Amostra de cada cor de roupa, para os botões da criação. */
+export const AMOSTRA_ROUPA = ALVOS_ROUPA.map((a) => (a ? hslRgb(a.h, a.s ?? 0.5, (a.claro ?? 0) + 0.36 * (a.l ?? 1)) : null))
+/** Cor da roupa: muda o tecido colorido; branco, cinza e o dourado dos detalhes ficam (pele e íris nunca mudam). */
+export function pintaRoupa(d: Px, indice: number, mascara?: Px) {
+  const a = ALVOS_ROUPA[indice]
+  if (!a) return
   for (let i = 0; i < d.length; i += 4) {
+    if (!d[i + 3]) continue
+    if (mascara && (mascara[i] > 0 || mascara[i + 1] > 0)) continue
+    const [h, s, l] = rgbHsl(d[i], d[i + 1], d[i + 2])
+    // camisa, renda e outros tecidos claros ficam (só o tecido de cor muda)
+    if (s < 0.1 || l < 0.06 || l > 0.74) continue
+    if (h >= 34 && h <= 62 && s > 0.4 && l > 0.42) continue // dourado dos detalhes
+    const c = hslRgb(a.h, a.s ?? Math.min(0.75, s), Math.min(0.92, (a.claro ?? 0) + l * (a.l ?? 1)))
+    d[i] = c[0]
+    d[i + 1] = c[1]
+    d[i + 2] = c[2]
+  }
+}
+/** Pontas do cabelo de outra cor: de 55% da altura do cabelo para baixo a cor passa para a segunda (inteira a 85%).
+ *  Cada célula de largura "cel" é medida à parte (o chibi tem uma célula por direção). Devolve o peso por pixel. */
+export function pesoPontas(d: Px, w: number, cel = w): Float32Array {
+  const h = d.length / 4 / w
+  const out = new Float32Array(w * h)
+  for (let c0 = 0; c0 < w; c0 += cel) {
+    let topo = h
+    let fundo = 0
+    for (let y = 0; y < h; y++)
+      for (let x = c0; x < Math.min(w, c0 + cel); x++)
+        if (d[(y * w + x) * 4 + 3]) {
+          topo = Math.min(topo, y)
+          fundo = Math.max(fundo, y)
+        }
+    if (fundo <= topo) continue
+    const a = topo + (fundo - topo) * 0.55
+    const b = topo + (fundo - topo) * 0.85
+    for (let y = 0; y < h; y++) for (let x = c0; x < Math.min(w, c0 + cel); x++) out[y * w + x] = sat((y - a) / Math.max(1, b - a))
+  }
+  return out
+}
+export function pintaCabelo(d: Px, c: (typeof CAB)[number], pontas?: (typeof CAB)[number] | null, w = 0) {
+  const peso = pontas && w ? pesoPontas(d, w) : null
+  const base = [20, 14, 26]
+  for (let i = 0, p = 0; i < d.length; i += 4, p++) {
     if (!d[i + 3]) continue
     const v = d[i]
     const t1 = sat((v - 95) / 80)
     const t2 = sat((v - 175) / 60)
     const t0 = sat((v - 25) / 46)
+    const tp = peso ? peso[p] : 0
     for (let k = 0; k < 3; k++) {
-      let x = lerp(s[k], m[k], t1)
-      x = lerp(x, l[k], t2)
+      const s = pontas ? lerp(c[1][k], pontas[1][k], tp) : c[1][k]
+      const m = pontas ? lerp(c[2][k], pontas[2][k], tp) : c[2][k]
+      const l = pontas ? lerp(c[3][k], pontas[3][k], tp) : c[3][k]
+      let x = lerp(s, m, t1)
+      x = lerp(x, l, t2)
       d[i + k] = lerp(base[k], x, t0)
     }
   }
@@ -49,18 +127,30 @@ export function pintaCabelo(d: Px, c: (typeof CAB)[number]) {
  * deixavam o cabelo granulado (crítico de arte, 09/11). Sombra puxada para o frio e luz para o quente. O busto da
  * criação continua com pintaCabelo (ilustração, tons contínuos).
  */
-export function pintaCabeloChibi(d: Px, c: (typeof CAB)[number], indice: number, w: number) {
+function tonsChibi(c: (typeof CAB)[number], indice: number) {
   const [, s0, m, l0] = c
   // no Preto a sombra clareia um pouco, para o contorno se separar dela
   const s = indice === 0 ? s0.map((v) => lerp(v, 255, 0.06)) : s0.map((v, k) => lerp(v, [48, 32, 72][k], 0.2))
   const l = indice === 0 ? [84, 78, 96] : l0.map((v, k) => lerp(v, [255, 244, 226][k], 0.15))
+  return { s, m: m as number[], l }
+}
+/**
+ * Cabelo do chibi em 4 tons fixos (contorno, sombra, meio, luz), sem os cinzas intermediários da redução da arte, que
+ * deixavam o cabelo granulado (crítico de arte, 09/11). Sombra puxada para o frio e luz para o quente. Com "pontas",
+ * a segunda cor entra em xadrez na transição e fica inteira no fim do cabelo.
+ */
+export function pintaCabeloChibi(d: Px, c: (typeof CAB)[number], indice: number, w: number, pontas = -1) {
+  const a = tonsChibi(c, indice)
+  const b = pontas >= 0 ? tonsChibi(CAB[pontas], pontas) : null
+  const peso = b ? pesoPontas(d, w, CEL_X) : null
   const cont = [20, 14, 26]
   for (let i = 0, p = 0; i < d.length; i += 4, p++) {
     if (!d[i + 3]) continue
     const v = d[i]
     // entre a sombra e o meio, xadrez 1x1 (a mecha escura mantém o desenho em vez de virar chapa)
     const xadrez = ((p % w) + Math.floor(p / w)) & 1
-    const cor = v < 48 ? cont : v < 105 ? s : v < 135 ? (xadrez ? s : m) : v < 205 ? m : l
+    const T = peso && b && (peso[p] >= 0.75 || (peso[p] >= 0.25 && xadrez)) ? b : a
+    const cor = v < 48 ? cont : v < 105 ? T.s : v < 135 ? (xadrez ? T.s : T.m) : v < 205 ? T.m : T.l
     for (let k = 0; k < 3; k++) d[i + k] = cor[k]
   }
 }
@@ -132,7 +222,21 @@ export function pintaCorpo(d: Px, pele: (typeof PELES)[number]) {
 }
 
 /** Faixa dos olhos: acima são sobrancelhas, abaixo é a boca (e as olheiras do rosto 14). */
-export function pintaRosto(d: Px, w: number, indice: number, olho: (typeof OLHOS)[number], cabelo: (typeof CAB)[number], pele: (typeof PELES)[number]) {
+export type CaixaOlho = { x0: number; x1: number; y0: number; y1: number }
+export function pintaRosto(
+  d: Px,
+  w: number,
+  indice: number,
+  olho: (typeof OLHOS)[number],
+  cabelo: (typeof CAB)[number],
+  pele: (typeof PELES)[number],
+  olho2?: (typeof OLHOS)[number] | null,
+  caixas?: CaixaOlho[],
+) {
+  const cx: CaixaOlho[] = [
+    { x0: w, x1: -1, y0: w, y1: -1 },
+    { x0: w, x1: -1, y0: w, y1: -1 },
+  ]
   const esc = w / 512
   const y0 = 186 * esc
   const y1 = (indice === 13 ? 219 : 240) * esc
@@ -146,9 +250,59 @@ export function pintaRosto(d: Px, w: number, indice: number, olho: (typeof OLHOS
     const v = d[i]
     if (v <= 58 || v >= max) continue
     const y = Math.floor(p / w)
+    const x = p % w
     const t = sat((v - 58) / 90)
-    for (let k = 0; k < 3; k++) d[i + k] = y < y0 ? sob[k] * (0.75 + 0.5 * t) : y < y1 ? lerp(s[k], m[k], t) : lab[k] * (0.7 + 0.6 * t)
+    // segundo olho (heterocromia): o olho da metade direita da imagem
+    const o2 = x >= w / 2 && olho2
+    const ss = o2 ? olho2[1] : s
+    const mm = o2 ? olho2[2] : m
+    if (y >= y0 && y < y1) {
+      const c = cx[x < w / 2 ? 0 : 1]
+      c.x0 = Math.min(c.x0, x)
+      c.x1 = Math.max(c.x1, x)
+      c.y0 = Math.min(c.y0, y)
+      c.y1 = Math.max(c.y1, y)
+    }
+    for (let k = 0; k < 3; k++) d[i + k] = y < y0 ? sob[k] * (0.75 + 0.5 * t) : y < y1 ? lerp(ss[k], mm[k], t) : lab[k] * (0.7 + 0.6 * t)
   }
+  if (caixas) caixas.push(...cx.filter((c) => c.x1 >= 0))
+}
+
+/** Detalhe do rosto no busto (MARCAS): sardas, pinta ou bochechas coradas, logo abaixo dos olhos. */
+export function marcasBusto(ctx: CanvasRenderingContext2D, w: number, marca: number, caixas: CaixaOlho[], pele: (typeof PELES)[number]) {
+  if (!marca || !caixas.length) return
+  const e = w / 512
+  const som = pele[2]
+  ctx.save()
+  caixas.forEach((c, n) => {
+    const cx = (c.x0 + c.x1) / 2
+    const by = c.y1 + 18 * e
+    if (marca === 1) {
+      ctx.fillStyle = `rgba(${Math.round(som[0] * 0.72)},${Math.round(som[1] * 0.6)},${Math.round(som[2] * 0.55)},0.85)`
+      for (const [dx, dy] of [
+        [-16, 2],
+        [-6, 8],
+        [4, 1],
+        [13, 7],
+        [-1, 14],
+      ]) {
+        ctx.beginPath()
+        ctx.arc(cx + dx * e, by + dy * e, 2.1 * e, 0, Math.PI * 2)
+        ctx.fill()
+      }
+    } else if (marca === 2 && n === caixas.length - 1) {
+      ctx.fillStyle = 'rgb(62,34,36)'
+      ctx.beginPath()
+      ctx.arc(c.x1 - 2 * e, by + 6 * e, 3 * e, 0, Math.PI * 2)
+      ctx.fill()
+    } else if (marca === 3) {
+      ctx.fillStyle = 'rgba(236,104,122,0.30)'
+      ctx.beginPath()
+      ctx.ellipse(cx, by + 8 * e, 24 * e, 10 * e, 0, 0, Math.PI * 2)
+      ctx.fill()
+    }
+  })
+  ctx.restore()
 }
 
 export const CEL_X = 80
@@ -211,6 +365,55 @@ function tela(im: CanvasImageSource & { width: number; height: number }): [HTMLC
   return [c, x]
 }
 
+/** Detalhe do rosto no chibi, em pixel: sardas (2 px por bochecha), pinta (1 px) ou bochechas coradas (2 px rosados),
+ *  logo abaixo dos olhos, só em cima de pele. Uma célula por direção (colunas) e por variação do rosto (linhas). */
+function marcasChibi(fc: HTMLCanvasElement, rmsk: HTMLImageElement, marca: number, tom: number[]) {
+  const x = fc.getContext('2d', { willReadFrequently: true })!
+  const im = x.getImageData(0, 0, fc.width, fc.height)
+  const d = im.data
+  const [, mx] = tela(rmsk)
+  const m = mx.getImageData(0, 0, rmsk.width, rmsk.height).data
+  const W = fc.width
+  const pele = (xx: number, yy: number) => m[(yy * W + xx) * 4] > 0 && d[(yy * W + xx) * 4 + 3] > 0
+  const poe = (xx: number, yy: number, cor: number[]) => {
+    if (xx < 0 || yy < 0 || xx >= W || yy >= fc.height || !pele(xx, yy)) return
+    const i = (yy * W + xx) * 4
+    d[i] = cor[0]
+    d[i + 1] = cor[1]
+    d[i + 2] = cor[2]
+  }
+  const sarda = tom.map((v, k) => v * [0.72, 0.6, 0.55][k])
+  const rosa = tom.map((v, k) => lerp(v, [236, 104, 122][k], 0.55))
+  for (let cy = 0; cy * CEL_Y < fc.height; cy++)
+    for (let cxx = 0; cxx * CEL_X < W; cxx++) {
+      // olhos da célula: colunas com íris (verde), agrupadas
+      const cols = new Map<number, number>()
+      for (let yy = cy * CEL_Y; yy < Math.min(fc.height, (cy + 1) * CEL_Y); yy++)
+        for (let xx = cxx * CEL_X; xx < Math.min(W, (cxx + 1) * CEL_X); xx++) if (m[(yy * W + xx) * 4 + 1] > 0) cols.set(xx, Math.max(cols.get(xx) ?? 0, yy))
+      if (!cols.size) continue
+      const xs = [...cols.keys()].sort((a, b) => a - b)
+      const grupos: number[][] = []
+      for (const xx of xs) {
+        const g = grupos[grupos.length - 1]
+        if (g && xx - g[g.length - 1] <= 2) g.push(xx)
+        else grupos.push([xx])
+      }
+      grupos.forEach((g, n) => {
+        const cx = Math.round((g[0] + g[g.length - 1]) / 2)
+        const by = Math.max(...g.map((xx) => cols.get(xx)!)) + 2
+        if (marca === 1) {
+          poe(cx - 1, by, sarda)
+          poe(cx + 1, by + 1, sarda)
+        } else if (marca === 2 && n === grupos.length - 1) poe(g[g.length - 1] + 1, by + 1, [62, 34, 36])
+        else if (marca === 3) {
+          poe(cx, by + 1, rosa)
+          poe(cx + 1, by + 1, rosa)
+        }
+      })
+    }
+  x.putImageData(im, 0, 0)
+}
+
 export async function folhaAndarFofo(cfg: Aparencia): Promise<HTMLCanvasElement> {
   const b = ARTE + 'fofo/'
   const lado = cfg.corpo ? 'm' : 'f'
@@ -226,6 +429,7 @@ export async function folhaAndarFofo(cfg: Aparencia): Promise<HTMLCanvasElement>
   // pele: cada canal pela razão entre o tom escolhido e o tom da arte; íris pela rampa da cor dos olhos
   const tom = PELES[cfg.pele || 0][1]
   const [, os, om] = OLHOS[cfg.corOlhos || 0]
+  const [, os2, om2] = OLHOS[cfg.olho2 ? cfg.olho2 - 1 : cfg.corOlhos || 0]
   let ref: number[] | null = null
   const pinta = (im: HTMLImageElement, mk: HTMLImageElement) => {
     const [c, x] = tela(im)
@@ -257,7 +461,9 @@ export async function folhaAndarFofo(cfg: Aparencia): Promise<HTMLCanvasElement>
         const l = 0.3 * d[i] + 0.59 * d[i + 1] + 0.11 * d[i + 2]
         if (l > 215) continue
         const t = sat((l - 40) / 95)
-        for (let k = 0; k < 3; k++) d[i + k] = t < 0.25 ? os[k] * 0.55 : t < 0.6 ? os[k] : om[k]
+        // segundo olho (heterocromia): a metade direita de cada célula
+        const [a1, a2] = ((i / 4) % c.width) % CEL_X >= CEL_X / 2 ? [os2, om2] : [os, om]
+        for (let k = 0; k < 3; k++) d[i + k] = t < 0.25 ? a1[k] * 0.55 : t < 0.6 ? a1[k] : a2[k]
       }
     }
     x.putImageData(id, 0, 0)
@@ -266,6 +472,14 @@ export async function folhaAndarFofo(cfg: Aparencia): Promise<HTMLCanvasElement>
   const rc = pinta(roupa, msk)
   const fc = pinta(rosto, rmsk)
   limpaPontinhos(rc, msk)
+  if (cfg.corRoupa) {
+    const rx = rc.getContext('2d', { willReadFrequently: true })!
+    const ri = rx.getImageData(0, 0, rc.width, rc.height)
+    const [, mmx] = tela(msk)
+    pintaRoupa(ri.data, cfg.corRoupa, mmx.getImageData(0, 0, msk.width, msk.height).data)
+    rx.putImageData(ri, 0, 0)
+  }
+  if (cfg.marca) marcasChibi(fc, rmsk, cfg.marca, tom)
   const [, mkx] = tela(msk)
   const mskL = msk.width
   const mskDados = mkx.getImageData(0, 0, msk.width, msk.height).data
@@ -275,7 +489,7 @@ export async function folhaAndarFofo(cfg: Aparencia): Promise<HTMLCanvasElement>
   const olhosCache = new Map<number, HTMLCanvasElement | null>()
   const [hc, hx] = tela(cab)
   const ih = hx.getImageData(0, 0, hc.width, hc.height)
-  pintaCabeloChibi(ih.data, CAB[cfg.corCabelo || 0], cfg.corCabelo || 0, hc.width)
+  pintaCabeloChibi(ih.data, CAB[cfg.corCabelo || 0], cfg.corCabelo || 0, hc.width, cfg.corPontas ? cfg.corPontas - 1 : -1)
   hx.putImageData(ih, 0, 0)
   const A = info.anc
   const T = info.testa || {}
@@ -597,7 +811,10 @@ export function desenhaBusto(ctx: CanvasRenderingContext2D, w: number, p: PecasB
   ctx.clearRect(0, 0, w, w)
   ctx.drawImage(camada(p.corpo[c.corpo], w, (d) => pintaCorpo(d, pl)), 0, 0)
   ctx.imageSmoothingQuality = 'high'
-  ctx.drawImage(p.roupa[c.corpo][c.roupa], 0, 0, w, w)
-  ctx.drawImage(camada(p.rosto[c.rosto], w, (d, ww) => pintaRosto(d, ww, c.rosto, OLHOS[c.corOlhos], cc, pl)), 0, 0)
-  ctx.drawImage(camada(p.cabelo[c.cabelo], w, (d) => pintaCabelo(d, cc)), 0, 0)
+  if (c.corRoupa) ctx.drawImage(camada(p.roupa[c.corpo][c.roupa], w, (d) => pintaRoupa(d, c.corRoupa)), 0, 0)
+  else ctx.drawImage(p.roupa[c.corpo][c.roupa], 0, 0, w, w)
+  const caixas: CaixaOlho[] = []
+  ctx.drawImage(camada(p.rosto[c.rosto], w, (d, ww) => pintaRosto(d, ww, c.rosto, OLHOS[c.corOlhos], cc, pl, c.olho2 ? OLHOS[c.olho2 - 1] : null, caixas)), 0, 0)
+  marcasBusto(ctx, w, c.marca, caixas, pl)
+  ctx.drawImage(camada(p.cabelo[c.cabelo], w, (d, ww) => pintaCabelo(d, cc, c.corPontas ? CAB[c.corPontas - 1] : null, ww)), 0, 0)
 }
