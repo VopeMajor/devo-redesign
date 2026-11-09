@@ -4459,8 +4459,12 @@ if (want('torres-v2')) {
   }
   const getJ = (page, path) => page.evaluate(async (p) => (await fetch(p, { cache: 'no-store' })).json().catch(() => null), path)
   const nota = (name, note, extra = {}) => manifest.shots.push({ name, note, ...extra })
+  // o /v2 é só da equipe: o jogador entra pelo endereço principal (abertura → "Continuar" → sistema v2)
   const abre = async (page) => {
-    await page.goto(`${BASE}/v2`, { waitUntil: 'networkidle' })
+    await page.goto(BASE, { waitUntil: 'networkidle' })
+    await wait(1000)
+    await btn(page, 'Continuar').click({ timeout: 15000 }).catch(() => {})
+    await page.locator('#mesa .ic[data-id="torres"]').waitFor({ timeout: 20000 }).catch(() => {})
     await wait(1500)
     await tryClick(page.locator('#mesa .ic[data-id="torres"]'), 8000)
     await page.locator('.tv').waitFor({ timeout: 15000 }).catch(() => {})
