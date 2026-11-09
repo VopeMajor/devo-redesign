@@ -137,6 +137,24 @@ export function pesoPontas(d: Px, w: number, cel = w, minimo = 4, fade = 0.35, l
       for (let y = Math.max(ya, ini - meio); y <= yb; y++) out[y * w + x] = sat((y - (ini - meio)) / (2 * meio))
     }
   }
+  // no retrato (ilustração grande), a cor das pontas se espalha um pouco para os lados: sem emenda reta entre colunas
+  if (cel >= 256) {
+    const R = Math.round(cel / 64)
+    const tmp = new Float32Array(out)
+    for (let y = 0; y < h; y++)
+      for (let x = 0; x < w; x++) {
+        if (!opaco(x, y)) continue
+        let soma = 0
+        let n = 0
+        for (let k = -R; k <= R; k++) {
+          const xx = x + k
+          if (xx < 0 || xx >= w || !opaco(xx, y)) continue
+          soma += tmp[y * w + xx]
+          n++
+        }
+        out[y * w + x] = Math.max(tmp[y * w + x] * 0.5, n ? soma / n : 0)
+      }
+  }
   return out
 }
 /** Mistura de duas cores pelo HSL (matiz pelo caminho mais curto): o meio do degradê não acinzenta. */

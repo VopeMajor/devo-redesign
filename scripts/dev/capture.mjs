@@ -4335,7 +4335,7 @@ if (want('casa-v2')) {
   await step('casa-v2-pc', async () => {
     const d = await conta('desktop', SENT, 'Sentinela', 'DEVO-STAF-SENT')
     const page = d.page
-    await page.goto(`${BASE}/v2?semraf=1`, { waitUntil: 'networkidle' })
+    await page.goto(`${BASE}/v2?semraf=1&teste=1`, { waitUntil: 'networkidle' })
     await wait(1500)
     await tryClick(page.locator('#mesa .ic[data-id="casa"]'))
     await page.locator('.cv .cv-mapa .ator').waitFor({ timeout: 15000 })
@@ -4410,7 +4410,7 @@ if (want('casa-v2')) {
     page.on('pageerror', (e) => manifest.console.push({ page: page.url(), text: `pageerror: ${String(e).slice(0, 400)}` }))
     await page.goto(BASE, { waitUntil: 'networkidle' })
     await api(page, '/api/auth/sign-in/username', { username: 'Sentinela', password: 'teste123' })
-    await page.goto(`${BASE}/v2?ocio=rapido`, { waitUntil: 'networkidle' })
+    await page.goto(`${BASE}/v2?ocio=rapido&teste=1`, { waitUntil: 'networkidle' })
     await wait(1200)
     await tryClick(page.locator('#mesa .ic[data-id="casa"]'))
     await page.locator('.cv .cv-mapa .ator').waitFor({ timeout: 15000 })

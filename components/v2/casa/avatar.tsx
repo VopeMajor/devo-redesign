@@ -72,7 +72,8 @@ function ChibiPrevia({ cfg }: { cfg: Aparencia }) {
   }, [chave])
   useEffect(() => {
     const calmo = window.matchMedia('(prefers-reduced-motion:reduce)').matches
-    const ORDEM = [0, 2, 3, 1]
+    // de frente na maior parte do tempo (é onde o rosto aparece); de lado e de costas, uma volta curta
+    const ORDEM = [0, 0, 2, 0, 3, 0, 1]
     let q = 0
     const desenha = () => {
       const c = ref.current
@@ -81,8 +82,8 @@ function ChibiPrevia({ cfg }: { cfg: Aparencia }) {
       const x = c.getContext('2d')!
       x.imageSmoothingEnabled = false
       x.clearRect(0, 0, c.width, c.height)
-      // 16 passos em cada direção, depois vira
-      const dir = calmo ? 0 : ORDEM[Math.floor(q / 16) % 4]
+      // 16 passos em cada etapa da volta
+      const dir = calmo ? 0 : ORDEM[Math.floor(q / 16) % ORDEM.length]
       const col = calmo ? 0 : 1 + (q % 8)
       x.drawImage(f, col * CEL_X, dir * CEL_Y, CEL_X, CEL_Y, 0, 0, CEL_X * 2, CEL_Y * 2)
       q++

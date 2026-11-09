@@ -1142,7 +1142,8 @@ export function criaCasa(raiz: HTMLElement, o: MotorOpcoes) {
     else vai('quarto')
   }
   $('.cv-sair').onclick = () => o.onSair()
-  if (o.equipe) {
+  // controle de teste (etapas e campainha): só para a equipe e só com ?teste na URL (como na Catedral)
+  if (o.equipe && new URLSearchParams(window.location.search).has('teste')) {
     $('.cv-teste').hidden = false
     raiz.querySelectorAll<HTMLButtonElement>('.cv-teste button[data-e]').forEach((b) => (b.onclick = () => mudaEtapa(+b.dataset.e! as CasaEtapa)))
     $('.cv-campainha').onclick = campainha
