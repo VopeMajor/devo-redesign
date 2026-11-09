@@ -2,7 +2,6 @@
 
 import { useCallback, useEffect, useRef } from 'react'
 import useSWR from 'swr'
-import { Pixelify_Sans } from 'next/font/google'
 import { APARENCIA_PADRAO, type CasaMapaPayload } from '@/lib/devo/casa-aparencia'
 import { CENA_ANFITRIAO_DE_QUE, CENA_GALO_TORRES } from '@/lib/devo/torres/galo'
 import type { Efeito, NpcRef, SubirResposta, TorresPayload } from '@/lib/devo/torres/tipos'
@@ -20,7 +19,7 @@ import './torres.css'
  * chaves, os andares, os prêmios, as cenas que já existem, a apresentação do Galo (com o presente de fã) e a reflexão
  * "Anfitrião de quê?" ao sair. O seu chibi é o da Casa (/api/casa/mapa); sem Casa ainda, o chibi padrão.
  */
-const pixel = Pixelify_Sans({ subsets: ['latin', 'latin-ext'], weight: ['400', '500', '600'], variable: '--tv-pixel' })
+// a letra em pixel (Pixelify Sans, OFL) vem do próprio site, como na Casa: public/v2/fonts (torres.css)
 
 const API = '/api/torres'
 async function getTorres(url: string): Promise<TorresPayload> {
@@ -171,7 +170,7 @@ export function TorresV2() {
   }
 
   return (
-    <div className={`tv ${pixel.variable}`}>
+    <div className="tv">
       {aviso && <div className="tv-tranca">{aviso}</div>}
       <div ref={raiz} className="tv-ilha" hidden={!temMotor} />
     </div>
