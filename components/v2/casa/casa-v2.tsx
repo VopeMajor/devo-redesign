@@ -3,7 +3,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import useSWR from 'swr'
-import { Pixelify_Sans } from 'next/font/google'
 import { APARENCIA_PADRAO, type Aparencia, type CasaMapaPayload } from '@/lib/devo/casa-aparencia'
 import { Tela } from '@/components/devo/casa/casa-app'
 import { useCasa } from '@/components/devo/casa/dados'
@@ -23,7 +22,8 @@ import './casa.css'
  *  · a mesa de confecção abre a mesma Confecção e os mesmos Pacotes de antes (/api/casa), nada se perde;
  *  · a campainha toca enquanto o Simon não for atendido; o fim da visita fica salvo no servidor.
  */
-const pixel = Pixelify_Sans({ subsets: ['latin', 'latin-ext'], weight: ['400', '500', '600'], variable: '--cv-pixel' })
+// a letra em pixel (Pixelify Sans, OFL) vem do próprio site: public/v2/fonts (o next/font/google quebrou o build com o
+// conjunto cirílico novo do Google, 09/11)
 
 const MAPA = '/api/casa/mapa'
 async function getMapa(url: string): Promise<CasaMapaPayload & { timeDeltaMs?: number }> {
@@ -240,7 +240,7 @@ function Casa({ onFechar, onAbre }: { onFechar: () => void; onAbre: (id: string)
   }
 
   return (
-    <div className={`cv ${pixel.variable}`} data-tela={tela}>
+    <div className="cv" data-tela={tela}>
       {conteudo}
       <div ref={raiz} className="cv-mapa" hidden={!temMapa} />
       {temMapa && tela === 'guarda' && aparencia && (
