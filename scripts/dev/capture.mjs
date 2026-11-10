@@ -4560,6 +4560,234 @@ if (want('casa-v2')) {
   })
 }
 
+// ── DEVO v2: Torres de Ruptura em pixel (kit3/torres.html) na janela do v2, com o servidor de sempre (/api/torres) ──
+if (want('torres-v2')) {
+  const own = await account('Veterano', 'DEVO-TEST-ADM1', VET_CARDS)
+  const meuId = (page) => page.evaluate(async () => (await (await fetch('/api/eu')).json()).id)
+  const staff = async (body) => {
+    const r = await api(own.page, '/api/staff', body)
+    if (r.status >= 400) manifest.errors.push({ step: `tv-staff-${body.action}`, error: `${r.status} ${r.text}` })
+  }
+  const getJ = (page, path) => page.evaluate(async (p) => (await fetch(p, { cache: 'no-store' })).json().catch(() => null), path)
+  const nota = (name, note, extra = {}) => manifest.shots.push({ name, note, ...extra })
+  // o /v2 é só da equipe: o jogador entra pelo endereço principal (abertura → "Continuar" → sistema v2)
+  const abre = async (page) => {
+    await page.goto(BASE, { waitUntil: 'networkidle' })
+    await wait(1000)
+    await btn(page, 'Continuar').click({ timeout: 15000 }).catch(() => {})
+    await page.locator('#mesa .ic[data-id="torres"]').waitFor({ timeout: 20000 }).catch(() => {})
+    await wait(1500)
+    await tryClick(page.locator('#mesa .ic[data-id="torres"]'), 8000)
+    await page.locator('.tv').waitFor({ timeout: 15000 }).catch(() => {})
+    await wait(2500)
+  }
+  const cena = (page) => page.locator('.tv .tv-cena')
+  // toca a cena (longe da caixa e do "Pular")
+  const toca = (page) => cena(page).click({ position: { x: 24, y: 160 } }).catch(() => {})
+  const premioAberto = async (page) => (await page.locator('.tv .tv-premio:not([hidden])').count()) > 0
+  /** Avança a cena até ela acabar; nas escolhas, a opção com `quer` (ou a primeira). `foto(o)` pode fotografar. */
+  const passa = async (page, { quer = [], foto = async () => {}, premios = false } = {}, max = 90) => {
+    for (let i = 0; i < max; i++) {
+      if (await premioAberto(page)) {
+        // o prêmio do andar fica para quem chamou fotografar
+        if (!premios) return
+        await foto('premio')
+        await wait(700)
+        await page.locator('.tv .tv-premio').click().catch(() => {})
+        await wait(500)
+        continue
+      }
+      if (!(await cena(page).count())) return
+      const bs = page.locator('.tv .tv-esc button:not([disabled])')
+      if (await bs.count()) {
+        await foto('escolha')
+        const textos = await bs.allTextContents()
+        const k = Math.max(0, textos.findIndex((t) => quer.some((q) => t.includes(q))))
+        await bs.nth(k).click().catch(() => {})
+        await wait(700)
+        continue
+      }
+      await foto((await page.locator('.tv .tv-nome').textContent().catch(() => '')) ?? '')
+      await toca(page)
+      await wait(350)
+    }
+  }
+  const premio = async (page, nome, nota0) => {
+    await page.locator('.tv .tv-premio:not([hidden])').waitFor({ timeout: 12000 }).catch(() => {})
+    await wait(900)
+    await shot(page, nome, nota0)
+    await page.locator('.tv .tv-premio').click().catch(() => {})
+    await wait(700)
+  }
+  const ponto = async (page, rotulo) => {
+    await tryClick(page.locator('.tv .tv-lista-bt'))
+    await wait(400)
+    await tryClick(page.locator('.tv .tv-l-item', { hasText: rotulo }))
+    await page.locator('.tv .tv-cartao:not([hidden])').waitFor({ timeout: 15000 }).catch(() => {})
+    await wait(600)
+  }
+  const andar = async (page, n) => {
+    await tryClick(page.locator('.tv .tv-andar').nth(n - 1))
+    await page.locator('.tv .tv-cartao:not([hidden])').waitFor({ timeout: 8000 }).catch(() => {})
+    await wait(500)
+  }
+  const acao = (page, texto) => tryClick(page.locator('.tv .c-acoes button', { hasText: texto }).first(), 6000)
+
+  // jogador sem as Torres: a janela mostra a trava com o motivo do servidor
+  const A = await account('Torreada', 'DEVO-TORR-CAP1', VET_CARDS)
+  await step('torres-v2-trancado', async () => {
+    await abre(A.page)
+    await shot(A.page, 'tv-01-trancado-cel', 'jogador sem as Torres: trava com o motivo')
+  })
+  await A.ctx.close()
+
+  const B = await account('Torreira', 'DEVO-TORR-CAP2', VET_CARDS)
+  const bid = await meuId(B.page).catch(() => null)
+  await staff({ action: 'desbloqueio.definir', playerId: bid, flag: 'torres', on: true })
+  // o chibi do jogador vem da Casa: libera a Casa e escolhe a aparência (a primeira é grátis)
+  await staff({ action: 'desbloqueio.definir', playerId: bid, flag: 'galo_casa', on: true })
+  const ap = await api(B.page, '/api/casa/mapa', { action: 'aparencia.salvar', aparencia: { corpo: 1, cabelo: 4, rosto: 3, roupa: 1, corCabelo: 2, corOlhos: 1, pele: 2 }, idem: 'torresv2ap1' })
+  if (ap.status >= 400) manifest.errors.push({ step: 'tv-aparencia', error: `${ap.status} ${ap.text}` })
+
+  await step('torres-v2-galo', async () => {
+    const page = B.page
+    await abre(page)
+    await wait(1500)
+    await shot(page, 'tv-02-galo-abre-cel', 'primeira vez: o Galo apresenta as Torres (retrato grande)')
+    const vistas = new Set()
+    await passa(page, {
+      quer: ['Aceitar'],
+      premios: true,
+      foto: async (o) => {
+        if (o === 'escolha' && !vistas.has('escolha')) {
+          vistas.add('escolha')
+          await wait(400)
+          await shot(page, 'tv-03-galo-escolha-cel', 'escolhas na caixa')
+        }
+        if (o === 'escolha' && !vistas.has('aceitar') && (await page.locator('.tv .tv-esc button', { hasText: 'Aceitar' }).count())) {
+          vistas.add('aceitar')
+          await shot(page, 'tv-05-galo-oferta-cel', 'ser fã do Galo: Recusar ou Aceitar (ações)')
+        }
+        if (typeof o === 'string' && o.startsWith('[') && !vistas.has('bloco')) {
+          vistas.add('bloco')
+          await wait(1200)
+          await shot(page, 'tv-04-galo-bloco-cel', 'quadro do sistema [Torre de Ruptura]')
+        }
+        if (o === 'premio' && !vistas.has('premio')) {
+          vistas.add('premio')
+          await wait(600)
+          await shot(page, 'tv-06-galo-presente-cel', 'presente: Essência de Afinidade do Galo')
+        }
+      },
+    })
+    await wait(1500)
+    await shot(page, 'tv-07-ilha-cel', 'a ilha: o seu chibi, as portas e a bolsa (essência do Galo: 1)')
+    nota('tv-07-api', 'GET /api/torres depois da apresentação', { json: await getJ(page, '/api/torres') })
+  })
+
+  await staff({ action: 'item.conceder', playerId: bid, item: 'essencia:galo', quantidade: 2, motivo: 'captura' })
+  await staff({ action: 'item.conceder', playerId: bid, item: 'essencia:campanha', quantidade: 1, motivo: 'captura' })
+  await step('torres-v2-imperador', async () => {
+    const page = B.page
+    await abre(page)
+    await page.mouse.click(300, 520)
+    await wait(2500)
+    await shot(page, 'tv-08-andou-cel', 'tocou no chão: o chibi anda')
+    await ponto(page, 'Imperador')
+    await wait(400)
+    await shot(page, 'tv-09-cartao-torre-cel', 'cartão da Torre do Imperador')
+    await acao(page, 'Entrar')
+    await wait(1500)
+    await shot(page, 'tv-10-torre-cel', 'dentro da torre: a escada e os andares')
+    await andar(page, 1)
+    await wait(400)
+    await shot(page, 'tv-11-cartao-andar-cel', 'andar 1: custo, saldo e prêmio')
+    await acao(page, 'Subir')
+    await cena(page).waitFor({ timeout: 12000 }).catch(() => {})
+    await wait(2500)
+    await shot(page, 'tv-12-andar1-longa-cel', '1º andar: o encontro, retrato grande')
+    await passa(page)
+    await premio(page, 'tv-13-premio-chave-cel', 'prêmio: Chave do Imperador')
+    await shot(page, 'tv-14-torre-feito-cel', 'andar 1 concluído, o 2 é o próximo')
+    await andar(page, 2)
+    await acao(page, 'Subir')
+    await cena(page).waitFor({ timeout: 12000 }).catch(() => {})
+    await wait(2500)
+    await shot(page, 'tv-15-andar2-patamar-cel', '2º andar: conversa curta no patamar, com os chibis')
+    await passa(page)
+    await premio(page, 'tv-16-premio-2-cel', 'prêmio do 2º andar')
+    await andar(page, 3)
+    await wait(400)
+    await shot(page, 'tv-17-andar3-faltam-cel', 'andar 3: faltam Essências')
+    await page.keyboard.press('Escape')
+    await wait(500)
+    await andar(page, 1)
+    await shot(page, 'tv-18-rever-cel', 'andar já subido: Rever a cena')
+    await page.keyboard.press('Escape')
+    await wait(400)
+    await page.keyboard.press('Escape')
+    await wait(1200)
+    await shot(page, 'tv-19-volta-ilha-cel', 'Esc fecha o cartão e depois sai da torre (a janela continua)')
+  })
+
+  await step('torres-v2-ruptura', async () => {
+    const page = B.page
+    await ponto(page, 'Ruptura')
+    await acao(page, 'Entrar')
+    await wait(1500)
+    await shot(page, 'tv-20-ruptura-cel', 'Torre da Ruptura: 7 andares')
+    await andar(page, 1)
+    await acao(page, 'Subir')
+    await cena(page).waitFor({ timeout: 12000 }).catch(() => {})
+    await wait(2000)
+    await shot(page, 'tv-21-ruptura-oculta-cel', 'NPC "???": conversa sem rosto')
+    await passa(page)
+    await premio(page, 'tv-22-ruptura-premio-cel', 'prêmio da principal')
+    await andar(page, 2)
+    await wait(400)
+    await shot(page, 'tv-23-ruptura-chaves-cel', 'andar 2: pede a Chave do Imperador')
+    await page.keyboard.press('Escape')
+    await wait(300)
+    await page.keyboard.press('Escape')
+    await wait(1200)
+    await tryClick(page.locator('.tv .tv-lista-bt'))
+    await wait(600)
+    await shot(page, 'tv-24-lista-cel', 'lista das torres, com o progresso')
+    await page.keyboard.press('Escape')
+    await wait(400)
+    nota('tv-24-api', 'GET /api/torres no fim', { json: await getJ(page, '/api/torres') })
+    // fechar a janela: a reflexão "Anfitrião de quê?" (cena de sempre)
+    await page.keyboard.press('Escape')
+    await wait(2500)
+    await shot(page, 'tv-25-reflexao-cel', 'ao sair das Torres: reflexão "Anfitrião de quê?"')
+  })
+  await B.ctx.close()
+
+  await step('torres-v2-pc', async () => {
+    const d = await account('Torreira', 'DEVO-TORR-CAP2', VET_CARDS, 'desktop')
+    const page = d.page
+    await abre(page)
+    await shot(page, 'tv-30-ilha-pc', 'a ilha inteira na janela do computador')
+    await ponto(page, 'Imperador')
+    await shot(page, 'tv-31-cartao-pc', 'cartão à direita, no computador')
+    await acao(page, 'Entrar')
+    await wait(1500)
+    await shot(page, 'tv-32-torre-pc', 'dentro da torre no computador')
+    await andar(page, 1)
+    await acao(page, 'Rever a cena')
+    await wait(3000)
+    await shot(page, 'tv-33-longa-pc', 'cena longa no computador')
+    await passa(page)
+    await andar(page, 2)
+    await acao(page, 'Rever a cena')
+    await wait(3000)
+    await shot(page, 'tv-34-patamar-pc', 'patamar no computador')
+    await passa(page)
+    await d.ctx.close()
+  })
+  await own.ctx.close()
+}
+
 // Catedral de Damasco (dono, 09/11: "trazer a catedral e todo o conteudo gerado"): pelo "Sair de casa" da Casa
 if (want('catedral')) {
   const MAT = '00000000-0000-4000-8000-000000000003'

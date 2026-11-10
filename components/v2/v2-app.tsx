@@ -32,6 +32,8 @@ import { isSistema, SISTEMAS as SISTEMAS_JOGO } from '@/components/devo/progress
 import { useAcesso as useAcessoSistemas } from '@/components/devo/progressao/use-acesso'
 import { useBackHandler } from '@/components/devo/use-back-handler'
 import { CasaV2 } from './casa/casa-v2'
+import { TorresV2 } from './torres/torres-v2'
+import { voltarJanela } from './voltar'
 import type { AppId } from '@/lib/devo/types'
 import './os.css'
 import './v2-ajustes.css'
@@ -101,6 +103,8 @@ const TELAS: Record<string, { C: React.ComponentType; cx: string; caixa: [number
   corporacoes: { C: CorporacoesV2, cx: 'cor', caixa: [1010, 980, 740], corpo: 'r-corpo' },
   virtudes: { C: VirtudesV2, cx: 'vir', caixa: [620, 580, 760], corpo: 'r-corpo' },
   arcanos: { C: ArcanosV2, cx: 'arc', caixa: [1040, 1000, 780], corpo: 'r-corpo' },
+  // a ilha das Torres em pixel (kit3/torres.html): 768x512 em escala inteira; a janela grande mostra a ilha inteira
+  torres: { C: TorresV2, cx: '', caixa: [1080, 1040, 760], corpo: 'quadro' },
 }
 const ico = (id: string) => `/v2/art/os/ico/${id}.webp`
 const ROMANOS = ['0', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII']
@@ -267,7 +271,8 @@ function Casca({ onExit }: { onExit: () => void }) {
     return () => window.removeEventListener('keydown', k)
   }, [foco, casa])
 
-  useBackHandler(!!foco && !casa, () => foco && fecha(foco.id))
+  // a tela pode fechar antes a camada de cima dela (Torres: o cartão, a torre aberta)
+  useBackHandler(!!foco && !casa, () => foco && !voltarJanela[foco.id]?.() && fecha(foco.id))
 
   /* ---- anúncios ---- */
   const [qi, setQi] = useState(0)
