@@ -19,6 +19,11 @@ import { InventarioV2 } from './apps/inventario'
 import { TrocasV2 } from './apps/trocas'
 import { AjustesV2 } from './apps/ajustes'
 import { CalendarioV2 } from './apps/calendario'
+import { PocoV2 } from './apps/poco'
+import { SalaoV2 } from './apps/salao'
+import { CorporacoesV2 } from './apps/corporacoes'
+import { VirtudesV2 } from './apps/virtudes'
+import { ArcanosV2 } from './apps/arcanos'
 import { APPS } from '@/components/devo/os/apps'
 import { OsNavContext, type OsNav } from '@/components/devo/os/os-nav'
 import { useDevoEngine } from '@/components/devo/os/use-devo-engine'
@@ -95,6 +100,11 @@ const TELAS: Record<string, { C: React.ComponentType; cx: string; caixa: [number
   calendario: { C: CalendarioV2, cx: '', caixa: [1000, 960, 780], corpo: 'r-corpo' },
   // a ilha das Torres em pixel (kit3/torres.html): 768x512 em escala inteira; a janela grande mostra a ilha inteira
   torres: { C: TorresV2, cx: '', caixa: [1080, 1040, 760], corpo: 'quadro' },
+  poco: { C: PocoV2, cx: '', caixa: [620, 560, 720], corpo: 'r-corpo' },
+  salao: { C: SalaoV2, cx: '', caixa: [1010, 980, 740], corpo: 'r-corpo' },
+  corporacoes: { C: CorporacoesV2, cx: 'cor', caixa: [1010, 980, 740], corpo: 'r-corpo' },
+  virtudes: { C: VirtudesV2, cx: 'vir', caixa: [620, 580, 760], corpo: 'r-corpo' },
+  arcanos: { C: ArcanosV2, cx: 'arc', caixa: [1040, 1000, 780], corpo: 'r-corpo' },
 }
 const ico = (id: string) => `/v2/art/os/ico/${id}.webp`
 const ROMANOS = ['0', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII']

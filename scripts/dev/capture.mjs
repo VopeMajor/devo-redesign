@@ -4074,6 +4074,23 @@ if (want('v2')) {
     // etapa 2: as telas novas, aba por aba (texto da aba) e o fim de cada uma ('rolar')
     await step(`v2-telas-${kind}`, async () => {
       const d = await conta(kind, SENT, 'Sentinela', 'DEVO-STAF-SENT')
+      // estado zerado para cada aparelho (banco de teste): o giro grátis de hoje volta, a Sentinela sai da Corporação
+      // (o passo v2-corp a põe como líder) e a chamada da Melissa aparece de novo
+      try {
+        const pg = (await import('pg')).default
+        if (process.env.DATABASE_URL) {
+          const db = new pg.Pool({ connectionString: process.env.DATABASE_URL })
+          const eu = "(SELECT id FROM players WHERE lower(name) = 'sentinela' LIMIT 1)"
+          for (const q of [
+            `UPDATE poco_giros SET gratis = false WHERE gratis AND player_id = ${eu}`,
+            `DELETE FROM corporacao_membros WHERE player_id = ${eu}`,
+            `UPDATE corporacao_membros SET cargo = 'lider' WHERE player_id = '00000000-0000-4000-8000-000000000001' AND NOT EXISTS (SELECT 1 FROM corporacao_membros WHERE corporacao_id = 'c0a90000-0000-4000-8000-000000000001' AND cargo = 'lider')`,
+            `UPDATE corporacao_estado SET apresentado_at = NULL WHERE player_id = ${eu}`,
+          ])
+            await db.query(q).catch((e) => manifest.errors.push({ step: `v2-telas-${kind}-zera`, error: String(e).slice(0, 300) }))
+          await db.end().catch(() => {})
+        }
+      } catch {}
       const page = d.page
       const tag = kind === 'phone' ? 'cel' : 'pc'
       await page.goto(`${BASE}/v2`, { waitUntil: 'networkidle' })
@@ -4087,6 +4104,31 @@ if (want('v2')) {
         trocas: ['>.t-prot', '>.t-porta:not(.fechada)', '>.t-escolha button:not(.presa)', 'espera', 'espera'],
         ajustes: ['desce'],
         calendario: ['>button:has-text("Pular")', 'Eventos', 'Mês', 'Semana', '>.k-marca', '>.kc-revela', 'desce'],
+        // etapa 3 (primeira leva): Poço, Salão, Corporações, Virtudes e Arcanos
+        poco: [
+          '>.p-neb', '>.p-neb', '>.p-neb', '>.p-neb .p-neb-topo button:last-child',
+          '>#p-moedas', 'rolar', '>#p-volta', '>#p-balde', '>#p-volta',
+          '>#p-lanca', '>#p-grat', 'espera', '>#p-gira', '>#p-puxa', 'espera', '>#p-balde', 'espera', '>#p-ok',
+        ],
+        salao: [
+          '>.s-ap-pula', 'desce', '>.s-pe .r-bt', '>.s-folha .m-volta', 'Mercado', '>.s-placa .r-bt', '>.s-folha .m-volta',
+          'Anúncios', '>.s-placa .r-bt', '>.s-folha .m-volta', 'Bandeja', 'rolar', '>.s-placa .s-forte',
+          '>.s-esc button:not(:disabled)', '>.s-folha .m-volta', 'Leilões', '>.s-bt', '>.s-folha .m-volta', '>.s-equipe',
+          '>.s-folha [role=tab]:has-text("Edições")', '>.s-folha [role=tab]:has-text("Relógio")', '>.s-folha .m-volta',
+          '>.s-her', '>.s-apres',
+        ],
+        // a Sentinela ainda sem Corporação: a chamada da Melissa em holograma, depois o salão de registro
+        corporacoes: [
+          '>.co-holo .k-balao', '>.co-holo .k-balao', '>.co-holo .k-balao', '>.co-ops-h button', '>.co-holo .k-balao',
+          '>.co-holo .k-pula', 'desce', 'rolar',
+        ],
+        virtudes: ['>.v-ceu .v-no:nth-of-type(5)', 'desce', '>.v-como summary', 'rolar', 'Mesa', 'Virtudes'],
+        arcanos: [
+          'rolar', '>.a-filtro button:nth-child(2)', '>.a-filtro button:nth-child(1)', '>.a-grade li:nth-child(12) .a-carta',
+          '>.a-trilha li:nth-child(5) button', '>.a-trilha li:nth-child(8) button', 'desce', '>.a-acao .a-bt',
+          '>.a-confirma .r-bt:nth-child(2)', 'Descrição', 'Fisiologia', 'Estágios', '>.a-volta',
+          '>.a-grade li:nth-child(1) .a-carta', '>.a-volta',
+        ],
       }
       for (const [id, passos] of Object.entries(TELAS)) {
         await tryClick(page.locator(`#mesa .ic[data-id="${id}"]`))
@@ -4113,6 +4155,75 @@ if (want('v2')) {
         await page.keyboard.press('Escape').catch(() => {})
         await wait(400)
       }
+      await d.ctx.close()
+    })
+    // Corporações com a Sentinela líder da Ordem (banco de teste): chat, abas, Parede e o papel atrás de tudo
+    await step(`v2-corp-${kind}`, async () => {
+      let db = null
+      try {
+        const pg = (await import('pg')).default
+        if (process.env.DATABASE_URL) db = new pg.Pool({ connectionString: process.env.DATABASE_URL })
+      } catch {}
+      const d = await conta(kind, SENT, 'Sentinela', 'DEVO-STAF-SENT')
+      const page = d.page
+      const tag = kind === 'phone' ? 'cel' : 'pc'
+      const ORDEM = 'c0a90000-0000-4000-8000-000000000001'
+      if (db) {
+        await db
+          .query(
+            `WITH p AS (SELECT id FROM players WHERE lower(name) = 'sentinela' LIMIT 1)
+             , f AS (INSERT INTO corporacao_estado (player_id, apresentado_at) SELECT id, now() FROM p ON CONFLICT (player_id) DO UPDATE SET apresentado_at = now())
+             , v AS (UPDATE corporacao_membros SET cargo = 'vice' WHERE corporacao_id = $1 AND cargo = 'lider' AND player_id NOT IN (SELECT id FROM p))
+             SELECT 1`,
+            [ORDEM],
+          )
+          .catch((e) => manifest.errors.push({ step: `v2-corp-${kind}-vice`, error: String(e).slice(0, 300) }))
+        await db
+          .query(
+            `INSERT INTO corporacao_membros (player_id, corporacao_id, cargo, entrou_at)
+             SELECT id, $1, 'lider', now() FROM players WHERE lower(name) = 'sentinela' LIMIT 1
+             ON CONFLICT (player_id) DO UPDATE SET corporacao_id = EXCLUDED.corporacao_id, cargo = 'lider'`,
+            [ORDEM],
+          )
+          .catch((e) => manifest.errors.push({ step: `v2-corp-${kind}-lider`, error: String(e).slice(0, 300) }))
+        await db.end().catch(() => {})
+      } else manifest.errors.push({ step: `v2-corp-${kind}`, error: 'sem DATABASE_URL: a Sentinela não virou líder' })
+      await page.goto(`${BASE}/v2`, { waitUntil: 'networkidle' })
+      await wait(2000)
+      if (kind === 'phone') {
+        for (const texto of ['Boa noite, Ordem.', 'Alguém viu o relógio da praça parar?', 'Reunião na sala às 21h.']) {
+          const r = await api(page, '/api/corporacoes', { action: 'chat.enviar', texto })
+          if (r.status >= 400) manifest.errors.push({ step: `v2-corp-chat`, error: `${r.status} ${r.text}`.slice(0, 300) })
+          await wait(1700)
+        }
+      }
+      await tryClick(page.locator('#mesa .ic[data-id="corporacoes"]'))
+      await wait(2400)
+      const jan = '.jan[data-sis="corporacoes"]'
+      const aba = async (nome) => {
+        await page.locator(`${jan} [role=tab]`, { hasText: nome }).first().click({ timeout: 4000 }).catch(() => {})
+        await wait(1400)
+      }
+      await shot(page, `v2-11-corp-${tag}`, 'Corporações: sala da Ordem com a Sentinela líder')
+      await page.locator(`${jan} .corpo`).evaluate((el) => el.scrollBy(0, el.clientHeight * 0.85)).catch(() => {})
+      await wait(900)
+      await shot(page, `v2-11-corp-1-${tag}`, 'Corporações: ficha e abas')
+      for (const [n, nome] of [['2', 'Chat'], ['3', 'Membros'], ['4', 'Pedidos'], ['5', 'Cartas'], ['6', 'Recrutar'], ['7', 'Parede']]) {
+        await aba(nome)
+        await shot(page, `v2-11-corp-${n}-${tag}`, `Corporações: ${nome}`)
+      }
+      // escolhe o primeiro padrão pintado e volta ao chat: o papel aparece atrás do chat, na sala e no fundo do sistema
+      await page.locator(`${jan} .co-pp-grade button.co-pp`).first().click({ timeout: 4000 }).catch(() => {})
+      await wait(1600)
+      await shot(page, `v2-11-corp-8-${tag}`, 'Corporações: papel escolhido (Na parede)')
+      await aba('Chat')
+      await shot(page, `v2-11-corp-9-${tag}`, 'Corporações: chat por cima do papel de parede')
+      await page.locator(`${jan} .corpo`).evaluate((el) => el.scrollTo(0, 0)).catch(() => {})
+      await wait(900)
+      await shot(page, `v2-11-corp-10-${tag}`, 'Corporações: sala com o papel atrás do brasão')
+      await page.locator(`${jan} .s-equipe`).first().click({ timeout: 4000 }).catch(() => {})
+      await wait(1400)
+      await shot(page, `v2-11-corp-11-${tag}`, 'Corporações: painel da equipe (Owner)')
       await d.ctx.close()
     })
   }

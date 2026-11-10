@@ -328,3 +328,425 @@
   /* rolando, os nomes passam por baixo do Tempo: a barra de cima ganha um fundo que some para baixo */
   #os #menu{background:linear-gradient(180deg,#0b1020 64%,rgba(11,16,32,0))}
 }
+
+/* ── Etapa 3: Poço dos Milagres (kit3/os-poco.js) ───────────────────────────────────────────────────────────────── */
+/* Poço dos Milagres no v2: só o que o protótipo (kit3/os-janelas.html, bloco "Poço") não tinha.
+   Carregando, erro e trancado; erros nas subpáginas; chances de prêmio do Owner; baldes que ainda não são seus;
+   a arte do jogo para prêmios sem pixel (cosmético, carta, Tempo); a cápsula e o selo do sorteio na revelação. */
+
+#poc .p-msg { display: grid; place-items: center; align-content: center; gap: 10px; min-height: 320px; padding: 24px; text-align: center; color: var(--sec); }
+#poc .p-msg img { width: 56px; height: 56px; opacity: 0.7; image-rendering: pixelated; }
+#poc .p-msg small { font-size: 20px; color: var(--sec); }
+#poc .p-msg strong { font-size: 32px; font-weight: 400; line-height: 1; color: var(--tx); }
+
+#poc > .r-erro { margin: 8px 12px 0; }
+#poc > .p-gratis { margin-top: 6px; }
+#poc .p-gratis time { color: var(--tx); font-variant-numeric: tabular-nums; }
+#poc .p-ch dt.p-premio { color: var(--dest); }
+[data-tema=papel] #poc .p-ch dt.p-premio { color: var(--tx); }
+#poc .p-lista > li.p-zero .p-m img { opacity: 0.55; }
+#poc .p-lista .r-acoes .r-bt { flex: 1 1 auto; }
+
+/* baldes que o jogador ainda não tem: escuros, com cadeado */
+#poc .p-lista > li.p-sem .p-m img { filter: grayscale(1) brightness(0.3); }
+#poc .p-lista > li.p-sem strong { color: var(--sec); }
+#poc .p-bloq { display: flex; align-items: center; justify-content: center; gap: 6px; color: var(--sec); }
+#poc .p-bloq img { width: 24px; height: 24px; image-rendering: pixelated; opacity: 0.8; }
+
+/* painel do Owner (jogo atual, em Legado) no fim de "Suas moedas" */
+#poc .p-owner { padding: 4px 12px 14px; }
+
+/* lançamento múltiplo */
+#poc .p-fim { display: grid; padding: 4px 12px 8px; }
+
+/* prêmio sem arte em pixel: a arte do jogo num quadro do mesmo tamanho */
+.p-arte { position: relative; flex: none; display: grid; place-items: center; }
+.p-multi .p-arte { overflow: hidden; }
+
+/* revelação: rolagem quando o texto é longo, a cápsula em papel e o selo do sorteio */
+.p-rev .p-res { max-height: calc(100% - 28px); overflow-y: auto; }
+.p-res .p-capsula { width: 100%; padding: 8px 12px; background: #ece5d8; color: #2a2620; text-align: left; box-shadow: inset 0 0 0 2px rgba(0, 0, 0, 0.2); }
+.p-res .p-selo { width: 100%; margin-top: 4px; text-align: left; color: var(--sec); font-size: 16px; }
+.p-res .p-selo summary { display: flex; align-items: center; justify-content: center; min-height: 44px; cursor: pointer; }
+.p-res .p-selo dt { color: var(--tx); }
+.p-res .p-selo dd { margin: 0 0 4px; word-break: break-all; font-size: 14px; }
+
+/* manivela: o toque precisa ser imediato */
+#poc .p-puxa { touch-action: manipulation; user-select: none; -webkit-user-select: none; }
+
+/* neblina: erro da moeda dentro das escolhas */
+.p-esc .r-erro { margin: 0; }
+.p-neb:focus { outline: 0; }
+/* alto da neblina: som e "Pular" lado a lado, no acabamento do k-pula */
+.p-neb-topo { position: absolute; z-index: 4; top: 8px; right: 8px; display: flex; gap: 6px; }
+.p-neb-topo .k-pula { position: static; }
+#os .p-neb-topo .p-som { display: grid; place-items: center; min-width: 44px; padding: 0 12px; color: var(--tx); letter-spacing: 0; }
+#os .p-neb-topo .p-som:hover, #os .p-neb-topo .p-som:focus-visible { background: var(--dest); color: var(--sob-dest); }
+.p-neb-topo .p-som > span { height: 16px; }
+
+/* ── Etapa 3: Salão das Máscaras (kit3/os-salao.js) ─────────────────────────────────────────────────────────────── */
+/* Salão das Máscaras (v2): ajustes do protótipo kit3/os-salao.js à tela do jogo. O resto já está em os.css. */
+/* a face da carta do jogo não é .ct-carta: abaixo da raridade mínima ela apaga do mesmo jeito */
+.s-esc button:disabled>:first-child{opacity:.35;filter:grayscale(1)}
+/* a apresentação recebe o foco (Enter/Espaço avançam) sem contorno na cena inteira */
+.s-apres:focus{outline:none}
+/* no protótipo o Painel da equipe é outra janela; aqui é uma folha, então as abas não grudam por cima do "Voltar" */
+.s-folha>.r-abas{position:static}
+/* links da faixa da equipe no palco ficam do tamanho do texto */
+.s-eqpalco .r-link{width:auto;padding:0 6px}
+.s-pe .r-bt[aria-busy=true],.s-acao [aria-busy=true],.s-duo [aria-busy=true],.s-larga[aria-busy=true]{opacity:.7;cursor:progress}
+
+/* ── Etapa 3: Corporações, chat e papel de parede (kit3/os-corp.js) ─────────────────────────────────────────────── */
+/* Corporações (components/v2/apps/corporacoes*.tsx): só os acertos do que o protótipo não tinha. O visual aprovado
+   (co-*, co-chat, co-pp, co-holo, #os.papel) já está em components/v2/os.css. */
+
+/* chat: aviso de vazio/carregando e o erro de envio, por cima do papel de parede */
+#cor .co-chat-nada { margin: auto; padding: 8px 12px; text-align: center; background: rgba(3, 4, 8, 0.55); border-radius: 10px }
+#cor .co-chat-erro { margin: 0; padding: 0 10px 8px; background: rgba(3, 4, 8, 0.82) }
+#cor .co-chat-env .r-bt:disabled { opacity: 0.55 }
+
+/* parede: enquanto a imagem sobe, as escolhas ficam paradas */
+#cor .co-papel[aria-busy='true'] .co-pp { cursor: progress }
+#cor .co-pp:disabled { cursor: default }
+#cor .co-pp:disabled:not([aria-checked='true']) { opacity: 0.7 }
+#cor .co-papel .r-erro, #cor .co-papel .s-ok { margin: 0 }
+
+/* painel da equipe (Mesa › Corporações do jogo atual) dentro da folha */
+.jan[data-sis='corporacoes'] .s-folha .v2-legado { margin: 0 -2px }
+
+/* ── Etapa 3: Virtudes (kit3/os-virtudes.js) ────────────────────────────────────────────────────────────────────── */
+/* Virtudes no v2 (components/v2/apps/virtudes.tsx). O visual aprovado está em os.css (#vir, .v-*, copiado do
+   protótipo kit3); aqui só o que o protótipo não tinha: carregando/erro/trancado, a aba Mesa da equipe e as
+   entradas curtas (constelação que acende, cartão da Virtude, gomos que enchem). Tudo some com movimento reduzido. */
+
+#vir .v-msg {
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 10px;
+  min-height: 320px;
+  padding: 24px;
+  text-align: center;
+  font: 500 15px/1.45 var(--ui);
+  color: var(--sec);
+}
+#vir .v-msg img {
+  width: 56px;
+  height: 56px;
+  opacity: 0.7;
+}
+#vir .v-msg strong {
+  font: 600 20px/1.1 var(--cond);
+  color: var(--tx);
+}
+#vir .v-msg .r-bt {
+  min-width: 180px;
+}
+
+/* abas da equipe (só Owner/Anfitrião): grudadas no alto da janela, por cima do respiro do #vir */
+#vir > .v-abas {
+  margin: -12px -16px 0;
+}
+.v-mesa {
+  display: grid;
+  gap: 10px;
+}
+.v-mesa .sec {
+  margin-bottom: 0;
+}
+
+/* entradas */
+@keyframes v-acende {
+  from {
+    opacity: 0;
+    scale: 0.6;
+  }
+}
+@keyframes v-centro {
+  from {
+    opacity: 0;
+    scale: 0.85;
+  }
+}
+@keyframes v-traco {
+  from {
+    stroke-dashoffset: 40;
+  }
+}
+@keyframes v-entra {
+  from {
+    opacity: 0;
+    translate: 0 8px;
+  }
+}
+@keyframes v-gomo {
+  from {
+    opacity: 0.2;
+    scale: 0.2 1;
+  }
+}
+@keyframes v-limite {
+  50% {
+    box-shadow: 0 0 2px var(--creme);
+  }
+}
+.v-ceu .v-no {
+  animation: v-acende 0.42s cubic-bezier(0.2, 0.9, 0.3, 1.3) both;
+  animation-delay: calc(120ms + var(--i, 0) * 70ms);
+}
+.v-ceu .v-centro {
+  animation: v-centro 0.5s ease-out both;
+}
+.v-ceu .v-raio {
+  stroke-dasharray: 40;
+  animation: v-traco 0.7s ease-out both;
+  animation-delay: 0.2s;
+}
+.v-detalhe {
+  animation: v-entra 0.28s ease-out both;
+}
+.v-barra i.on {
+  transform-origin: left center;
+  animation: v-gomo 0.36s ease-out both;
+  animation-delay: calc(300ms + var(--i, 0) * 90ms);
+}
+.v-barra u.on {
+  animation: v-limite 2.4s ease-in-out infinite;
+}
+.v-arcano {
+  transition: border-color 0.2s, translate 0.2s;
+}
+.v-arcano:hover {
+  translate: 0 -1px;
+}
+.v-arcano:focus-visible,
+.v-como summary:focus-visible {
+  outline: 2px solid var(--dest);
+  outline-offset: 3px;
+}
+.v-como summary {
+  min-height: 44px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .v-ceu .v-no,
+  .v-ceu .v-centro,
+  .v-ceu .v-raio,
+  .v-detalhe,
+  .v-barra i.on,
+  .v-barra u.on {
+    animation: none;
+  }
+  .v-arcano,
+  .v-arcano:hover {
+    transition: none;
+    translate: none;
+  }
+}
+
+/* ── Etapa 3: Arcanos (kit3/os-arcanos.js) ──────────────────────────────────────────────────────────────────────── */
+/* Arcanos no v2 (components/v2/apps/arcanos.tsx). O visual aprovado está em os.css (#arc, .a-*, copiado do
+   protótipo kit3); aqui só o que o protótipo não tinha: carregando/erro/trancado, a frase sob o título, foco, e os
+   efeitos (cartas que entram, página que sobe, Estágio recém-alcançado que acende). Tudo some com movimento reduzido. */
+
+#arc .a-msg {
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 10px;
+  min-height: 320px;
+  padding: 24px;
+  text-align: center;
+  font: 500 15px/1.45 var(--ui);
+  color: var(--sec);
+}
+#arc .a-msg img {
+  width: 56px;
+  height: 56px;
+  opacity: 0.7;
+}
+#arc .a-msg strong {
+  font: 600 20px/1.1 var(--cond);
+  color: var(--tx);
+}
+#arc .a-msg .r-bt {
+  min-width: 180px;
+}
+#arc .a-sub {
+  margin-top: -8px;
+  max-width: 52ch;
+  font: 400 14px/1.5 var(--ui);
+  color: var(--sec);
+}
+/* a escolha do prêmio cobre a janela inteira mesmo com pouca coisa embaixo */
+#arc:has(> .a-escolha) {
+  min-height: 100%;
+}
+#arc .a-nomeplaca h3:focus,
+#arc .a-escolha h3:focus {
+  outline: none;
+}
+#arc :is(.a-carta, .a-heroi, .a-volta, .a-filtro button, .a-abas button):focus-visible {
+  outline: 2px solid var(--dest);
+  outline-offset: 3px;
+}
+#arc .a-trilha button:focus-visible {
+  outline: 2px solid var(--dest);
+  outline-offset: 3px;
+}
+#arc .a-trilha button {
+  min-width: 36px;
+}
+
+/* efeitos */
+@keyframes a-entra {
+  from {
+    opacity: 0;
+    translate: 0 10px;
+  }
+}
+@keyframes a-sobe {
+  from {
+    opacity: 0;
+    translate: -50% 4%;
+  }
+  to {
+    translate: -50% 0;
+  }
+}
+@keyframes a-heroi-fig {
+  from {
+    opacity: 0;
+    translate: 6% 0;
+  }
+}
+@keyframes a-acende {
+  0% {
+    box-shadow: 0 0 0 0 var(--dest);
+    scale: 1.35;
+  }
+  100% {
+    box-shadow: 0 0 0 14px transparent;
+    scale: 1;
+  }
+}
+@keyframes a-clarao {
+  0% {
+    opacity: 0.85;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+#arc .a-grade li {
+  animation: a-entra 0.32s ease-out both;
+}
+#arc .a-grade li:nth-child(n + 4) {
+  animation-delay: 40ms;
+}
+#arc .a-grade li:nth-child(n + 7) {
+  animation-delay: 80ms;
+}
+#arc .a-grade li:nth-child(n + 10) {
+  animation-delay: 120ms;
+}
+#arc .a-grade li:nth-child(n + 13) {
+  animation-delay: 160ms;
+}
+#arc .a-heroi-fig {
+  animation: a-heroi-fig 0.6s ease-out both;
+}
+#arc .a-pagina {
+  animation: a-entra 0.3s ease-out both;
+}
+#arc .a-fig {
+  translate: -50% 0;
+  transform: none;
+  animation: a-sobe 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+#arc .a-est-cartao,
+#arc .a-texto,
+#arc .a-aviso {
+  animation: a-entra 0.26s ease-out both;
+}
+#arc .a-trilha button.a-subiu {
+  animation: a-acende 0.9s ease-out;
+}
+#arc .a-palco.a-evoluiu::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(55% 45% at 50% 45%, color-mix(in srgb, var(--dest) 55%, transparent), transparent 70%);
+  animation: a-clarao 1.4s ease-out both;
+}
+@media (prefers-reduced-motion: reduce) {
+  #arc .a-grade li,
+  #arc .a-heroi-fig,
+  #arc .a-pagina,
+  #arc .a-fig,
+  #arc .a-est-cartao,
+  #arc .a-texto,
+  #arc .a-aviso,
+  #arc .a-trilha button.a-subiu {
+    animation: none;
+  }
+  #arc .a-palco.a-evoluiu::before {
+    display: none;
+  }
+}
+
+/* ── Etapa 3: acertos do crítico de arte (09/11), só nas cinco janelas desta leva ─────────────────────────────── */
+/* números e títulos na letra condensada do protótipo (o v2-ajustes.css põe --relogio em pixel para o #os inteiro) */
+#os .jan:is([data-sis=poco], [data-sis=salao], [data-sis=corporacoes], [data-sis=virtudes], [data-sis=arcanos]) {
+  --relogio: var(--v2-barlow-cond), var(--v2-barlow), sans-serif;
+}
+/* subpáginas começam embaixo da barra de título nova (62px), não da antiga em pixel (40px) */
+#os .jan > .s-folha { top: 62px; }
+#os .jan > .s-folha .c-nav strong { font: 600 24px/1.1 var(--cond); }
+/* caixa de fala das cenas (neblina do Poço, Herdeiro) no acabamento das janelas */
+#os .p-caixa {
+  border-radius: 14px;
+  background: rgba(5, 12, 32, 0.88);
+  box-shadow: inset 0 0 0 1px rgba(173, 144, 88, 0.45), 0 10px 30px rgba(0, 0, 0, 0.45);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+}
+/* revelação do Poço: o feixe é luz (não um bloco chapado) e o cartão segue a revelação do Calendário */
+#os .p-rev .p-col {
+  clip-path: none;
+  background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--rel) 55%, transparent) 35%, color-mix(in srgb, #fff 40%, var(--rel)) 50%, color-mix(in srgb, var(--rel) 55%, transparent) 65%, transparent);
+  -webkit-mask-image: linear-gradient(180deg, transparent, #000 30%, #000 70%, transparent);
+  mask-image: linear-gradient(180deg, transparent, #000 30%, #000 70%, transparent);
+  filter: blur(6px);
+}
+#os .p-rev:is(.t3, .t4) .p-col {
+  background: linear-gradient(90deg, transparent, color-mix(in srgb, #d9b25c 60%, transparent) 35%, #f3e3b8 50%, color-mix(in srgb, #d9b25c 60%, transparent) 65%, transparent);
+}
+#os .p-rev .p-res {
+  border-radius: 20px;
+  background: rgba(8, 16, 38, 0.86);
+  box-shadow: inset 0 0 0 1px rgba(173, 144, 88, 0.55), 0 24px 60px rgba(0, 0, 0, 0.55);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+}
+/* botões desligados no Poço não parecem ativos; "Puxar" com peso; losangos da manivela visíveis */
+#poc .r-bt:disabled { opacity: 0.4; cursor: not-allowed; }
+#poc .p-puxa { font-weight: 600; border-radius: 999px; }
+#poc .p-pips u { background: rgba(255, 255, 255, 0.22); }
+#poc .p-pips u.on { background: var(--dest); }
+#poc .p-trilho { border-radius: 10px; box-shadow: inset 0 0 0 1px rgba(173, 144, 88, 0.45); }
+#poc .p-owner { margin-top: 14px; }
+/* Salão: respiro na lista dos encerrados */
+#sal .s-enc li { padding-inline: 14px; }
+/* Corporações: abas que rolam avisam que há mais; chat arredondado e o campo não fica sob a barra da equipe */
+@media (max-width: 899.9px) {
+  #os #cor .r-abas { -webkit-mask-image: linear-gradient(90deg, #000 85%, transparent); mask-image: linear-gradient(90deg, #000 85%, transparent); }
+}
+#cor .co-chat { border-radius: 16px; }
+#cor .co-chat-env { border-radius: 0 0 16px 16px; }
+#os .jan[data-sis=corporacoes] .corpo:has(.s-equipe) #cor { padding-bottom: 8px; }
+#cor .co-chat { scroll-margin-bottom: 64px; }
+/* Virtudes: o aviso não encosta nos losangos de Espadas; o nome do naipe fica por cima do raio dourado */
+#vir .v-aviso { margin-top: 14px !important; }
+#vir .v-nome { position: relative; z-index: 1; padding: 0 6px; border-radius: 999px; background: color-mix(in srgb, var(--fundo) 78%, transparent); }

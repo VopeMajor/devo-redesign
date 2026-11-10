@@ -3,6 +3,7 @@ import {
   cancelarConvite,
   cancelarFundacao,
   cancelarPedido,
+  chatRecentes,
   classificar,
   concluirApresentacao,
   convidar,
@@ -10,9 +11,11 @@ import {
   decidirPedido,
   definirCargo,
   definirEscopo,
+  definirPapel,
   definirRivalidade,
   editarBrasao,
   editarLema,
+  enviarMensagem,
   fundar,
   getCorporacoes,
   mesaCorporacoes,
@@ -34,6 +37,8 @@ export const dynamic = 'force-dynamic'
  * GET  /api/corporacoes                  → CorpPayload ({ liberado: false, motivo } quando trancado)
  * GET  /api/corporacoes?codigo=CRP-…     → { corporacao } (prévia antes de pedir entrada) · 400/404
  * GET  /api/corporacoes?view=mesa        → CorpMesa (Owner/Anfitrião)
+ * GET  /api/corporacoes?view=chat        → CorpChat (as últimas mensagens do chat; só membros)
+ * GET  /api/corporacoes/papel?v=…        → a imagem do papel de parede enviada pelo líder (só membros)
  * POST /api/corporacoes { action }:
  *   'apresentacao.concluir'
  *   'entrar' { codigo } · 'pedido.cancelar' { id } · 'pedido.decidir' { id, decisao: 'aprovar'|'recusar' } (líder/vice)
@@ -41,6 +46,9 @@ export const dynamic = 'force-dynamic'
  *   'fundar' { nome, lema?, forma, cor, idem } → { corporacaoId, timeDeltaMs } · 'fundacao.cancelar'
  *   'convite.enviar' { nome } · 'convite.responder' { id, aceitar } · 'convite.cancelar' { id }
  *   'carta.transferir' { uid, para } → { uid, carta } · 'recrutamento.publicar' { titulo, texto } (líder/vice)
+ *   'chat.listar' → CorpChat · 'chat.enviar' { texto } → { mensagem } (membros; até 300 caracteres; ritmo → 429)
+ *   'papel.definir' { papel: id do padrão | 'imagem' | null, imagem?: data URL } → { papel } (líder)
+ *   (sem scripts/corporacoes-chat-migration.sql: 503 { code: 'banco_desatualizado' })
  *   equipe: 'mesa.fundacao' { id, decisao, nota? } · 'mesa.classificar' { id, classificacao: 'oficial'|'necro', nota? }
  *           'mesa.escopo' { id, escopo: 'local'|'global' } · 'mesa.rivalidade' { a, b, on, nota? }
  *   (custos, requisitos, perfil visível, regras e jogos: POST /api/staff {action:'config.definir', key:'corporacoes.*'})
@@ -49,6 +57,10 @@ export const dynamic = 'force-dynamic'
 function fail(err: unknown) {
   if (err instanceof RecordError) return Response.json({ ok: false, error: err.message }, { status: err.status })
   console.error('[corporacoes]', err)
+  const code = (err as { code?: string } | null)?.code
+  if (code === '42703' || code === '42P01' || code === '42883') {
+    return Response.json({ ok: false, error: 'O banco de dados está desatualizado. Peça ao dono para rodar scripts/devo-banco-novo.sql.', code: 'banco_desatualizado' }, { status: 503 })
+  }
   return Response.json({ ok: false, error: 'A Companhia não respondeu. Tente de novo.' }, { status: 500 })
 }
 
@@ -58,6 +70,7 @@ export async function GET(req: Request) {
   try {
     const url = new URL(req.url)
     if (url.searchParams.get('view') === 'mesa') return Response.json(await mesaCorporacoes(player.id))
+    if (url.searchParams.get('view') === 'chat') return Response.json(await chatRecentes(player.id))
     const codigo = url.searchParams.get('codigo')
     if (codigo !== null) return Response.json({ ok: true, ...(await previaCodigo(player.id, codigo)) })
     return Response.json(await getCorporacoes(player.id))
@@ -109,6 +122,12 @@ export async function POST(req: Request) {
         return ok(await editarLema(me, { lema: b.lema }))
       case 'recrutamento.publicar':
         return ok(await recrutar(me, { titulo: b.titulo, texto: b.texto }))
+      case 'chat.listar':
+        return ok(await chatRecentes(me))
+      case 'chat.enviar':
+        return ok(await enviarMensagem(me, { texto: b.texto }))
+      case 'papel.definir':
+        return ok(await definirPapel(me, { papel: b.papel, imagem: b.imagem }))
       case 'mesa.fundacao':
         return ok(await decidirFundacao(me, { id: b.id, decisao: b.decisao, nota: b.nota }))
       case 'mesa.classificar':
