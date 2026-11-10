@@ -544,9 +544,8 @@
 }
 .tv .tv-t-mais {
   position: absolute;
-  left: 50%;
+  right: 14px;
   top: 74px;
-  translate: -50% 0;
   z-index: 2;
   min-height: 36px;
   padding: 0 12px;
@@ -836,7 +835,7 @@
   transform: none;
   box-shadow: none;
   background: #d9b65c;
-  clip-path: polygon(0 0, 50% 0, 50% 33%, 100% 33%, 100% 67%, 50% 67%, 50% 100%, 0 100%);
+  clip-path: path(evenodd, 'M0 4H28V14H72V22H70V32H64V22H58V30H52V22H28V32H0Z M9 13H19V23H9Z');
   animation-name: tv-surge-chave;
 }
 @keyframes tv-surge-chave {
