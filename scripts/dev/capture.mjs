@@ -3987,73 +3987,63 @@ if (want('v2')) {
         // arrastar para baixo com o dedo (gesto de toque de verdade, não a roda do mouse), em tela normal e baixa:
         // todos os ícones precisam aparecer acima da barra de baixo
         const cdp = await page.context().newCDPSession(page)
-        // diagnóstico: o que está debaixo do dedo, e se a roda, o JS e um arrasto de toque cru (touchStart/Move/End) rolam
-        {
-          const x = 195
-          const y = 590
-          const sob = await page.evaluate(([x, y]) => {
-            const out = []
-            for (let el = document.elementFromPoint(x, y); el; el = el.parentElement) {
-              const c = getComputedStyle(el)
-              out.push(`${el.tagName.toLowerCase()}${el.id ? '#' + el.id : ''}${el.className && typeof el.className === 'string' ? '.' + el.className.split(' ').join('.') : ''} ta=${c.touchAction} ov=${c.overflowY} pe=${c.pointerEvents}`)
-            }
-            return out
-          }, [x, y])
-          manifest.shots.push({ name: 'v2-toque-sob-o-dedo', note: JSON.stringify(sob) })
-          const topo = () => page.locator('#inicio').evaluate((el) => el.scrollTop).catch(() => -1)
-          await page.locator('#inicio').evaluate((el) => el.scrollTo(0, 0)).catch(() => {})
-          await page.mouse.move(x, y)
-          await page.mouse.wheel(0, 300)
-          await wait(600)
-          const roda = await topo()
-          await page.locator('#inicio').evaluate((el) => el.scrollTo(0, 0)).catch(() => {})
-          await wait(300)
-          const pts = (yy) => [{ x, y: yy, id: 1, radiusX: 4, radiusY: 4, force: 1 }]
-          await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: pts(y) })
+        // celular (dono, 10/11): a tela inicial cabe sem rolar para baixo; o Mapa do Devo corre para o LADO com o dedo.
+        // Arrasto de toque cru (touchStart/Move/End): o synthesizeScrollGesture não rola no Chromium sem janela.
+        const arrasto = async (x0, y0, x1, y1) => {
+          const pt = (xx, yy) => [{ x: Math.round(xx), y: Math.round(yy), id: 1, radiusX: 4, radiusY: 4, force: 1 }]
+          await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: pt(x0, y0) }).catch(() => {})
           for (let i = 1; i <= 12; i++) {
-            await cdp.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: pts(y - i * 30) })
+            await cdp.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: pt(x0 + ((x1 - x0) * i) / 12, y0 + ((y1 - y0) * i) / 12) }).catch(() => {})
             await wait(16)
           }
-          await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] })
-          await wait(800)
-          const toque = await topo()
-          await page.locator('#inicio').evaluate((el) => el.scrollTo(0, 0)).catch(() => {})
-          await wait(300)
-          await cdp.send('Input.synthesizeScrollGesture', { x, y, yDistance: -300, gestureSourceType: 'touch', speed: 800 }).catch(() => {})
-          await wait(800)
-          const gesto = await topo()
-          manifest.shots.push({ name: 'v2-toque-diagnostico', note: JSON.stringify({ roda, toque, gesto }) })
-          await page.locator('#inicio').evaluate((el) => el.scrollTo(0, 0)).catch(() => {})
+          await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] }).catch(() => {})
+          await wait(600)
         }
-        for (const [w, h] of [[390, 844], [360, 640]]) {
-          await page.setViewportSize({ width: w, height: h })
-          await page.locator('#inicio').evaluate((el) => el.scrollTo(0, 0)).catch(() => {})
-          await wait(500)
-          // arrasto de toque cru (touchStart, touchMove…, touchEnd): o synthesizeScrollGesture não rola no Chromium sem
-          // janela (diagnóstico de 09/11: roda 300, toque 345, gesto 0)
-          const x = Math.round(w / 2)
-          for (let g = 0; g < 6; g++) {
-            const y0 = Math.round(h * 0.75)
-            const pt = (yy) => [{ x, y: yy, id: 1, radiusX: 4, radiusY: 4, force: 1 }]
-            await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: pt(y0) }).catch(() => {})
-            for (let i = 1; i <= 12; i++) {
-              await cdp.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: pt(y0 - Math.round((h * 0.5 * i) / 12)) }).catch(() => {})
-              await wait(16)
-            }
-            await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] }).catch(() => {})
-            await wait(500)
-          }
-          await wait(500)
-          const r = await page.evaluate(() => {
+        const mede = () =>
+          page.evaluate(() => {
             const ini = document.querySelector('#inicio')
+            const mesa = document.querySelector('#mesa')
             const doca = document.querySelector('#tarefas')?.getBoundingClientRect().top ?? innerHeight
-            const ics = [...document.querySelectorAll('#mesa .ic')].map((b) => ({ id: b.dataset.id, r: b.getBoundingClientRect() }))
-            const ultimo = ics[ics.length - 1]
-            return { topo: ini?.scrollTop ?? 0, max: ini ? ini.scrollHeight - ini.clientHeight : 0, ultimo: ultimo?.id, base: ultimo ? Math.round(ultimo.r.bottom) : 0, doca: Math.round(doca), largo: Math.max(...ics.map((i) => Math.round(i.r.right))), w: innerWidth }
+            const mr = mesa?.getBoundingClientRect()
+            const ics = [...document.querySelectorAll('#mesa .ic')].map((b) => b.getBoundingClientRect())
+            const disco = document.querySelector('#mesa .disco')?.getBoundingClientRect()
+            return {
+              sobra: ini ? ini.scrollHeight - ini.clientHeight : 0,
+              topo: ini?.scrollTop ?? 0,
+              pagina: document.scrollingElement.scrollHeight - innerHeight,
+              base: Math.round(Math.max(...ics.map((r) => r.bottom))),
+              doca: Math.round(doca),
+              lado: mesa ? mesa.scrollLeft : 0,
+              ladoMax: mesa ? mesa.scrollWidth - mesa.clientWidth : 0,
+              mesa: mr ? [Math.round(mr.top), Math.round(mr.height)] : null,
+              disco: disco ? Math.round(disco.width) : 0,
+              n: ics.length,
+            }
           })
-          manifest.shots.push({ name: `v2-toque-${w}x${h}`, note: JSON.stringify(r), url: page.url() })
-          if (r.topo < 1 || r.base > r.doca || r.largo > r.w) manifest.errors.push({ step: `v2-toque-${w}x${h}`, error: `ícones fora do alcance pelo toque: ${JSON.stringify(r)}` })
-          await shot(page, `v2-02-toque-${w}x${h}`, `depois de arrastar com o dedo: ${JSON.stringify(r)}`)
+        for (const [w, h] of [[360, 640], [390, 844], [412, 915]]) {
+          await page.setViewportSize({ width: w, height: h })
+          await page.locator('#mesa').evaluate((el) => el.scrollTo(0, 0)).catch(() => {})
+          await wait(900)
+          const r0 = await mede()
+          await shot(page, `v2-02-mapa-${w}x${h}`, `tela inicial sem rolar: ${JSON.stringify(r0)}`)
+          // dedo para cima no meio do mapa: a página não pode descer
+          const mr = await page.locator('#mesa').boundingBox()
+          const cy = mr ? mr.y + mr.height / 2 : h * 0.7
+          await arrasto(w / 2, cy + 60, w / 2, cy - 160)
+          const r1 = await mede()
+          // dedo para o lado: o mapa corre
+          await arrasto(w * 0.85, cy, w * 0.15, cy)
+          await arrasto(w * 0.85, cy, w * 0.15, cy)
+          const r2 = await mede()
+          await shot(page, `v2-02-mapa-${w}x${h}-lado`, `depois de arrastar para o lado: ${JSON.stringify(r2)}`)
+          manifest.shots.push({ name: `v2-toque-${w}x${h}`, note: JSON.stringify({ r0, r1, r2 }) })
+          const erros = []
+          if (r0.sobra > 1 || r0.pagina > 1) erros.push('a tela inicial ainda rola para baixo')
+          if (r1.topo > 0) erros.push('o dedo para cima desceu a página')
+          if (r0.base > r0.doca) erros.push('ícones atrás da barra de baixo')
+          if (r0.ladoMax > 0 && r2.lado < 1) erros.push('o arrasto para o lado não moveu o mapa')
+          if (erros.length) manifest.errors.push({ step: `v2-toque-${w}x${h}`, error: `${erros.join('; ')}: ${JSON.stringify({ r0, r1, r2 })}` })
+          await page.locator('#mesa').evaluate((el) => el.scrollTo(0, 0)).catch(() => {})
         }
         await page.setViewportSize({ width: 390, height: 844 })
         await page.locator('#inicio').evaluate((el) => el.scrollTo(0, 0)).catch(() => {})

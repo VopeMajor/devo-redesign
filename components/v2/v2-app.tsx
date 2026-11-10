@@ -531,21 +531,14 @@ function Mapa({
   }, [])
   return (
     <div id="mesa" ref={ref}>
-      {SISTEMAS.filter((a) => visivel(a.id)).map((a, k) => {
+      {SISTEMAS.filter((a) => visivel(a.id)).map((a) => {
         const n = contas[a.id] ?? 0
-        // no celular o mapa desce (dono, 09/11: "para não depender tanto de arrastar"): a mesma ordem do mapa de
-        // arrastar (três fileiras, coluna por coluna), em blocos de três colunas, um abaixo do outro
-        const j = k % 9
-        const col = Math.floor(j / 3)
-        const fila = Math.floor(k / 9) * 3 + (j % 3) + 1
         const trava = travaDe(a.id)
         return (
           <button
             key={a.id}
             className={'ic' + (trava ? ' trancado' : '')}
             data-id={a.id}
-            data-col={col}
-            style={{ '--fila': fila, '--coluna': col + 1 } as CSSProperties}
             title={trava ? `${a.nome} · ${trava}` : undefined}
             aria-label={trava ? `${a.nome}: trancado. ${trava}` : n ? `${a.nome}, ${n} novas` : a.nome}
             onClick={() => onAbre(a.id)}
