@@ -1,6 +1,6 @@
 'use client'
 
-import { useLayoutEffect, useRef, useState, type CSSProperties, type ReactNode, type RefObject } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties, type ReactNode, type RefObject } from 'react'
 import { npcPortrait, resolveExpressao } from '@/lib/devo/npcs'
 import ROSTOS from '@/lib/devo/npc-rostos.json'
 import { cn } from '@/lib/utils'
@@ -41,6 +41,38 @@ const ROSTO: Record<string, { cx: number; cy: number; lado: number }> = {
   rato: { cx: 415, cy: 380, lado: 560 },
 }
 const ROSTO_PADRAO = { cx: 540, cy: 335, lado: 560 }
+
+/**
+ * Poses que piscam: o quadro de olhos fechados fica em /images/npc/<npc>/<pose>-pisca.webp (mesma tela do sprite).
+ * Melissa nova (DEVO v2, aprovada no protótipo kit3: "o retrato agora só pisca"); as poses de olhos já fechados não piscam.
+ */
+const PISCA: Record<string, readonly string[]> = {
+  melissa: ['convite', 'explica', 'preocupado', 'pensativo', 'confiante', 'surpreso', 'animado', 'apresenta', 'triste'],
+}
+
+/** Pisca de tempos em tempos (3,5 a 7,5 s, 160 ms de olho fechado); parado com movimento reduzido. */
+function usePisca(ligado: boolean) {
+  const [fechado, setFechado] = useState(false)
+  useEffect(() => {
+    if (!ligado || typeof window === 'undefined' || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    let t = 0
+    const agenda = () => {
+      t = window.setTimeout(() => {
+        setFechado(true)
+        t = window.setTimeout(() => {
+          setFechado(false)
+          agenda()
+        }, 160)
+      }, 3500 + Math.random() * 4000)
+    }
+    agenda()
+    return () => {
+      window.clearTimeout(t)
+      setFechado(false)
+    }
+  }, [ligado])
+  return fechado
+}
 
 /**
  * Janela do rosto da EXPRESSÃO (a cabeça muda de lugar entre as poses): medida na própria imagem por
@@ -191,6 +223,8 @@ export function NpcAnchor({
   const ratio = (base - topo) / NPC_SPRITE.cabeca
   const atual = resolveExpressao(npc, pose)
   const lista = Array.from(new Set([...(poses ?? []).map((p) => resolveExpressao(npc, p)), atual]))
+  const pisca = PISCA[npc]?.includes(atual) ?? false
+  const fechado = usePisca(pisca)
   const altura = pos ? `min(calc(${cabeca} * ${ratio.toFixed(4)}), ${pos.espaco + sobreposicao}px)` : `calc(${cabeca} * ${ratio.toFixed(4)})`
   return (
     <div
@@ -215,6 +249,11 @@ export function NpcAnchor({
           return (
             <div key={p} className={cn('npc-pose absolute inset-0 overflow-hidden transition-opacity duration-500', p === atual ? 'opacity-100' : 'opacity-0')}>
               <BustArt npc={npc} src={src} fade={dissolver} overlay={p === atual ? sobreArte : undefined} />
+              {p === atual && pisca && (
+                <div className={cn('absolute inset-0 overflow-hidden', !fechado && 'opacity-0')}>
+                  <BustArt npc={npc} src={src.replace(/\.webp$/, '-pisca.webp')} fade={dissolver} />
+                </div>
+              )}
             </div>
           )
         })}

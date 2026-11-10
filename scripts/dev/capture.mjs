@@ -3984,6 +3984,78 @@ if (want('v2')) {
         await page.locator('#inicio').evaluate((el) => el.scrollTo(0, el.scrollHeight)).catch(() => {})
         await wait(600)
         await shot(page, `v2-02-mapa-${tag}`, 'fim do Mapa do Devo')
+        // arrastar para baixo com o dedo (gesto de toque de verdade, não a roda do mouse), em tela normal e baixa:
+        // todos os ícones precisam aparecer acima da barra de baixo
+        const cdp = await page.context().newCDPSession(page)
+        // diagnóstico: o que está debaixo do dedo, e se a roda, o JS e um arrasto de toque cru (touchStart/Move/End) rolam
+        {
+          const x = 195
+          const y = 590
+          const sob = await page.evaluate(([x, y]) => {
+            const out = []
+            for (let el = document.elementFromPoint(x, y); el; el = el.parentElement) {
+              const c = getComputedStyle(el)
+              out.push(`${el.tagName.toLowerCase()}${el.id ? '#' + el.id : ''}${el.className && typeof el.className === 'string' ? '.' + el.className.split(' ').join('.') : ''} ta=${c.touchAction} ov=${c.overflowY} pe=${c.pointerEvents}`)
+            }
+            return out
+          }, [x, y])
+          manifest.shots.push({ name: 'v2-toque-sob-o-dedo', note: JSON.stringify(sob) })
+          const topo = () => page.locator('#inicio').evaluate((el) => el.scrollTop).catch(() => -1)
+          await page.locator('#inicio').evaluate((el) => el.scrollTo(0, 0)).catch(() => {})
+          await page.mouse.move(x, y)
+          await page.mouse.wheel(0, 300)
+          await wait(600)
+          const roda = await topo()
+          await page.locator('#inicio').evaluate((el) => el.scrollTo(0, 0)).catch(() => {})
+          await wait(300)
+          const pts = (yy) => [{ x, y: yy, id: 1, radiusX: 4, radiusY: 4, force: 1 }]
+          await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: pts(y) })
+          for (let i = 1; i <= 12; i++) {
+            await cdp.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: pts(y - i * 30) })
+            await wait(16)
+          }
+          await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] })
+          await wait(800)
+          const toque = await topo()
+          await page.locator('#inicio').evaluate((el) => el.scrollTo(0, 0)).catch(() => {})
+          await wait(300)
+          await cdp.send('Input.synthesizeScrollGesture', { x, y, yDistance: -300, gestureSourceType: 'touch', speed: 800 }).catch(() => {})
+          await wait(800)
+          const gesto = await topo()
+          manifest.shots.push({ name: 'v2-toque-diagnostico', note: JSON.stringify({ roda, toque, gesto }) })
+          await page.locator('#inicio').evaluate((el) => el.scrollTo(0, 0)).catch(() => {})
+        }
+        for (const [w, h] of [[390, 844], [360, 640]]) {
+          await page.setViewportSize({ width: w, height: h })
+          await page.locator('#inicio').evaluate((el) => el.scrollTo(0, 0)).catch(() => {})
+          await wait(500)
+          // arrasto de toque cru (touchStart, touchMove…, touchEnd): o synthesizeScrollGesture não rola no Chromium sem
+          // janela (diagnóstico de 09/11: roda 300, toque 345, gesto 0)
+          const x = Math.round(w / 2)
+          for (let g = 0; g < 6; g++) {
+            const y0 = Math.round(h * 0.75)
+            const pt = (yy) => [{ x, y: yy, id: 1, radiusX: 4, radiusY: 4, force: 1 }]
+            await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: pt(y0) }).catch(() => {})
+            for (let i = 1; i <= 12; i++) {
+              await cdp.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: pt(y0 - Math.round((h * 0.5 * i) / 12)) }).catch(() => {})
+              await wait(16)
+            }
+            await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] }).catch(() => {})
+            await wait(500)
+          }
+          await wait(500)
+          const r = await page.evaluate(() => {
+            const ini = document.querySelector('#inicio')
+            const doca = document.querySelector('#tarefas')?.getBoundingClientRect().top ?? innerHeight
+            const ics = [...document.querySelectorAll('#mesa .ic')].map((b) => ({ id: b.dataset.id, r: b.getBoundingClientRect() }))
+            const ultimo = ics[ics.length - 1]
+            return { topo: ini?.scrollTop ?? 0, max: ini ? ini.scrollHeight - ini.clientHeight : 0, ultimo: ultimo?.id, base: ultimo ? Math.round(ultimo.r.bottom) : 0, doca: Math.round(doca), largo: Math.max(...ics.map((i) => Math.round(i.r.right))), w: innerWidth }
+          })
+          manifest.shots.push({ name: `v2-toque-${w}x${h}`, note: JSON.stringify(r), url: page.url() })
+          if (r.topo < 1 || r.base > r.doca || r.largo > r.w) manifest.errors.push({ step: `v2-toque-${w}x${h}`, error: `ícones fora do alcance pelo toque: ${JSON.stringify(r)}` })
+          await shot(page, `v2-02-toque-${w}x${h}`, `depois de arrastar com o dedo: ${JSON.stringify(r)}`)
+        }
+        await page.setViewportSize({ width: 390, height: 844 })
         await page.locator('#inicio').evaluate((el) => el.scrollTo(0, 0)).catch(() => {})
       }
       // cada sistema abre na janela: o Pulso já na versão nova; os outros com a tela do jogo atual dentro (etapa 2)
@@ -4242,18 +4314,26 @@ if (want('casa-v2')) {
     await tryClick(page.locator('#mesa .ic[data-id="casa"]'))
     await page.locator('.cv .cv-av-tela').waitFor({ timeout: 15000 })
     await wait(3000)
-    await shot(page, 'casa-01-criacao-cel', 'Casa aberta pela 1ª vez: criação do avatar, grátis (aba Cabelo)')
+    await shot(page, 'casa-01-criacao-cel', 'Casa aberta pela 1ª vez: criação do avatar, grátis (aba Cabelo), com o chibi ao lado')
+    // opções novas (dono, 09/11): pontas do cabelo de outra cor
+    await tryClick(page.locator('.cv-av .cores').nth(1).locator('.cor').nth(14))
+    await wait(1200)
+    await shot(page, 'casa-01b-criacao-pontas-cel', 'Cabelo: pontas de outra cor (opção nova)')
     await tryClick(page.locator('.cv-av-abas button', { hasText: 'Rosto' }))
     await wait(1200)
     await tryClick(page.locator('.cv-av .grade .op').nth(4))
-    await tryClick(page.locator('.cv-av .cores .cor').nth(6))
-    await wait(900)
-    await shot(page, 'casa-02-criacao-rosto-cel', 'aba Rosto: rosto 5, olhos azul-petróleo')
+    await tryClick(page.locator('.cv-av .cores').first().locator('.cor').nth(6))
+    await tryClick(page.locator('.cv-av .cores').nth(1).locator('.cor').nth(2))
+    await tryClick(page.locator('.cv-av .chips button', { hasText: 'Sardas' }))
+    await wait(1200)
+    await shot(page, 'casa-02-criacao-rosto-cel', 'aba Rosto: rosto 5, olhos azul-petróleo, o outro olho âmbar e sardas (opções novas)')
+    await page.locator('.cv-av-painel').evaluate((el) => el.scrollTo(0, 0)).catch(() => {})
     await tryClick(page.locator('.cv-av-abas button', { hasText: 'Roupa' }))
     await wait(1200)
     await tryClick(page.locator('.cv-av .grade .op').nth(1))
-    await wait(900)
-    await shot(page, 'casa-03-criacao-roupa-cel', 'aba Roupa: Dândi')
+    await tryClick(page.locator('.cv-av .cores .cor').nth(2))
+    await wait(1200)
+    await shot(page, 'casa-03-criacao-roupa-cel', 'aba Roupa: Dândi em azul-noite (cor da roupa, opção nova)')
     await tryClick(page.locator('.cv-av footer .principal'))
     await page.locator('.cv .cv-mapa .ator').waitFor({ timeout: 15000 })
     await wait(1500)
@@ -4366,7 +4446,7 @@ if (want('casa-v2')) {
   await step('casa-v2-pc', async () => {
     const d = await conta('desktop', SENT, 'Sentinela', 'DEVO-STAF-SENT')
     const page = d.page
-    await page.goto(`${BASE}/v2?semraf=1`, { waitUntil: 'networkidle' })
+    await page.goto(`${BASE}/v2?semraf=1&teste=1`, { waitUntil: 'networkidle' })
     await wait(1500)
     await tryClick(page.locator('#mesa .ic[data-id="casa"]'))
     await page.locator('.cv .cv-mapa .ator').waitFor({ timeout: 15000 })
@@ -4441,7 +4521,7 @@ if (want('casa-v2')) {
     page.on('pageerror', (e) => manifest.console.push({ page: page.url(), text: `pageerror: ${String(e).slice(0, 400)}` }))
     await page.goto(BASE, { waitUntil: 'networkidle' })
     await api(page, '/api/auth/sign-in/username', { username: 'Sentinela', password: 'teste123' })
-    await page.goto(`${BASE}/v2?ocio=rapido`, { waitUntil: 'networkidle' })
+    await page.goto(`${BASE}/v2?ocio=rapido&teste=1`, { waitUntil: 'networkidle' })
     await wait(1200)
     await tryClick(page.locator('#mesa .ic[data-id="casa"]'))
     await page.locator('.cv .cv-mapa .ator').waitFor({ timeout: 15000 })
@@ -4477,6 +4557,204 @@ if (want('casa-v2')) {
       await rename(await v.path(), `${OUT}/casa-50-video-cel.webm`).catch((e) => manifest.errors.push({ step: 'casa-video', error: String(e) }))
       nota('casa-50-video-cel', 'vídeo: andar, ociosidade, cochilo e diálogo letra a letra (webm)')
     }
+  })
+}
+
+// Catedral de Damasco (dono, 09/11: "trazer a catedral e todo o conteudo gerado"): pelo "Sair de casa" da Casa
+if (want('catedral')) {
+  const MAT = '00000000-0000-4000-8000-000000000003'
+  const SENT = '00000000-0000-4000-8000-000000000010'
+  const conta = async (kind, id, name, invite) => {
+    const d = await device(kind)
+    await d.ctx.addCookies([{ name: 'devo_player', value: id, url: BASE }])
+    await d.page.goto(BASE_ANTIGO, { waitUntil: 'networkidle' })
+    let up
+    for (let i = 0; i < 6; i++) {
+      up = await api(d.page, '/api/auth/sign-up/email', { email: hexEmail(name), password: 'teste123', name, username: name, displayUsername: name }, { 'x-devo-invite': invite })
+      if (up.status !== 429) break
+      await wait(11000)
+    }
+    if (up.status >= 400) {
+      const inn = await api(d.page, '/api/auth/sign-in/username', { username: name, password: 'teste123' })
+      if (inn.status >= 400) manifest.errors.push({ step: `catedral-${name}-auth`, error: `signup ${up.status} ${up.text}; signin ${inn.status}` })
+    }
+    const saved = await api(d.page, '/api/save', makeSave(VET_CARDS))
+    if (saved.status >= 400) manifest.errors.push({ step: `catedral-${name}-save`, error: `${saved.status} ${saved.text}` })
+    return d
+  }
+  const getJ = (page, path) => page.evaluate(async (p) => (await fetch(p, { cache: 'no-store' })).json().catch(() => null), path)
+  const nota = (name, note, extra = {}) => manifest.shots.push({ name, note, ...extra })
+  const VN = '.cv .visita:not([hidden])'
+  const toca = (page) => page.locator(VN).first().click({ position: { x: 20, y: 200 } }).catch(() => {})
+  const avanca = async (page, max = 50) => {
+    for (let i = 0; i < max; i++) {
+      if (await page.locator(`${VN} .v-esc button`).count()) return true
+      if (!(await page.locator(VN).count())) return false
+      await toca(page)
+      await wait(320)
+    }
+    return false
+  }
+  const escolhe = async (page, texto) => {
+    await page.locator(`${VN} .v-esc button`, { hasText: texto }).first().click({ timeout: 4000 }).catch((e) => manifest.errors.push({ step: `catedral-escolha:${texto}`, error: String(e).slice(0, 160) }))
+    await wait(500)
+  }
+  // abre a Casa (cria a aparência se for a primeira vez; ignora o Simon se ele bater) e vai até "Sair de casa"
+  const ateViagem = async (page) => {
+    await tryClick(page.locator('#mesa .ic[data-id="casa"]'))
+    await page.locator('.cv .cv-av-tela, .cv .cv-mapa .ator').first().waitFor({ timeout: 20000 }).catch(() => {})
+    if (await page.locator('.cv .cv-av-tela').count()) {
+      await wait(2500)
+      await tryClick(page.locator('.cv-av footer .principal'))
+      await page.locator('.cv .cv-mapa .ator').waitFor({ timeout: 15000 }).catch(() => {})
+    }
+    // o Simon bate à porta enquanto não for atendido: espera a campainha (até 9 s) e deixa para outra hora
+    await page.locator(VN).first().waitFor({ timeout: 9000 }).catch(() => {})
+    if (await page.locator(VN).count()) {
+      await avanca(page)
+      await escolhe(page, 'Ignorar')
+      for (let i = 0; i < 8 && (await page.locator(VN).count()); i++) {
+        await toca(page)
+        await wait(400)
+      }
+      await wait(1200)
+    }
+    if (!(await tryClick(page.locator('.cv .ponto[aria-label^="Porta de entrada"]')))) await tryClick(page.locator('.cv .cv-seta[aria-label="Ir até: Porta de entrada"]'))
+    await page.locator('.cv .cv-cartao:not([hidden])').waitFor({ timeout: 12000 }).catch(() => {})
+    await wait(500)
+    await tryClick(page.locator('.cv .c-acoes button', { hasText: 'Sair de casa' }))
+    await wait(700)
+  }
+  await step('catedral-cel', async () => {
+    const d = await conta('phone', MAT, 'Matheus', 'DEVO-STAF-MATH')
+    const page = d.page
+    await page.goto(`${BASE}/?semraf=1`, { waitUntil: 'networkidle' })
+    await tryClick(btn(page, 'Continuar'))
+    await wait(2500)
+    // a cerimônia "O DEVO se abriu" e a cena do Poço podem aparecer por cima na primeira entrada
+    for (let i = 0; i < 4 && !(await page.locator('#os #mesa').isVisible().catch(() => false)); i++) {
+      await page.mouse.click(195, 700)
+      await wait(1200)
+    }
+    nota('catedral-00-api', 'GET /api/catedral antes', { json: await getJ(page, '/api/catedral') })
+    await ateViagem(page)
+    await shot(page, 'catedral-00-viagem-cel', 'Sair de casa: a igreja (???) sem cadeado')
+    await tryClick(page.locator('.cv .destino[data-ir="catedral"]'))
+    await page.locator('.cv .cat-raiz:not([hidden])').waitFor({ timeout: 15000 }).catch((e) => manifest.errors.push({ step: 'catedral-abre', error: String(e).slice(0, 160) }))
+    await wait(2200)
+    await shot(page, 'catedral-01-fora-cel', 'primeira visita: diante da Catedral')
+    await avanca(page)
+    await shot(page, 'catedral-02-aldrava-cel', 'Deixar para outro dia ou usar a aldrava')
+    await escolhe(page, 'Usar a aldrava')
+    for (let i = 0; i < 10; i++) {
+      await toca(page)
+      await wait(420)
+    }
+    await shot(page, 'catedral-03-dentro-cel', 'dentro da Catedral')
+    for (let i = 0; i < 4; i++) {
+      await toca(page)
+      await wait(700)
+    }
+    await shot(page, 'catedral-04-erick-cel', 'o Erick aparece (corpo inteiro)')
+    await avanca(page)
+    await shot(page, 'catedral-05-escolha-cel', 'Quem é você? · Como você leu minha mente? · Por quê?')
+    await escolhe(page, 'Quem é você')
+    await wait(900)
+    await shot(page, 'catedral-06-erick-fala-cel', 'Erick Zorak se apresenta (busto)')
+    await avanca(page)
+    await escolhe(page, 'O que é este lugar')
+    await avanca(page)
+    await escolhe(page, 'O que posso conseguir')
+    await avanca(page)
+    await escolhe(page, 'Isso é verdade')
+    await avanca(page)
+    await shot(page, 'catedral-07-pergunta-cel', 'o que um Record que nunca vi antes está fazendo por aqui?')
+    await escolhe(page, 'Senti que este lugar era especial')
+    await toca(page)
+    await wait(700)
+    await toca(page)
+    await wait(900)
+    await shot(page, 'catedral-08-karma-cel', '+100 Karma de Caos')
+    for (let i = 0; i < 30 && !(await page.locator('.cv .cat-altar:not([hidden])').count()); i++) {
+      await toca(page)
+      await wait(380)
+    }
+    await wait(1500)
+    await shot(page, 'catedral-09-altar-cel', 'altar: Orar ou Oferecer uma oferenda')
+    nota('catedral-09-api', 'GET /api/catedral depois da primeira visita (descoberta, oferendas iniciais)', { json: await getJ(page, '/api/catedral') })
+    await tryClick(page.locator('.cv .cat-altar .op[data-v="orar"]'))
+    await wait(700)
+    await shot(page, 'catedral-10-orar-cel', 'Orar: saúde, estabilidade, relações')
+    await tryClick(page.locator('.cv .cat-altar .op[data-o="saude"]'))
+    await wait(900)
+    await shot(page, 'catedral-11-orar-resultado-cel', 'oração (probabilidade ainda não definida pelo Rup)')
+    await tryClick(page.locator('.cv .cat-res'))
+    await wait(500)
+    await tryClick(page.locator('.cv .cat-altar .voltar'))
+    await wait(500)
+    await tryClick(page.locator('.cv .cat-altar .op[data-v="ofer"]'))
+    await wait(800)
+    await shot(page, 'catedral-12-oferendas-cel', 'oferendas: probabilidades do Rup e quantas você tem')
+    await page.locator('.cv .cat-altar').evaluate((el) => el.scrollTo(0, el.scrollHeight)).catch(() => {})
+    await wait(400)
+    await shot(page, 'catedral-12b-oferendas-fim-cel', 'oferendas: o fim da lista')
+    await page.locator('.cv .cat-altar').evaluate((el) => el.scrollTo(0, 0)).catch(() => {})
+    await tryClick(page.locator('.cv .cat-altar .op[data-f="arroz"]'))
+    await page.locator('.cv .cat-res:not([hidden])').waitFor({ timeout: 10000 }).catch((e) => manifest.errors.push({ step: 'catedral-ritual', error: String(e).slice(0, 160) }))
+    await wait(700)
+    await shot(page, 'catedral-13-ritual-cel', 'resultado do ritual com o Arroz Branco')
+    await tryClick(page.locator('.cv .cat-res'))
+    await wait(1200)
+    await shot(page, 'catedral-14-depois-cel', 'de volta às oferendas: um Arroz a menos')
+    const depois = await getJ(page, '/api/catedral')
+    nota('catedral-14-api', 'GET /api/catedral depois do ritual', { json: depois })
+    if (!depois?.descoberta || depois?.oferendas?.arroz !== 1) manifest.errors.push({ step: 'catedral-servidor', error: `esperado descoberta e 1 arroz: ${JSON.stringify(depois)}` })
+    nota('catedral-14-inventario', 'inventário (outros): oferendas', { json: await getJ(page, '/api/eu?parte=inventario&tipo=outro') })
+    await tryClick(page.locator('.cv .cat-altar .voltar'))
+    await wait(500)
+    await tryClick(page.locator('.cv .cat-altar .voltar'))
+    await wait(1600)
+    await shot(page, 'catedral-15-despedida-cel', 'despedida do Erick (sorteada)')
+    await avanca(page, 6)
+    await wait(1800)
+    await shot(page, 'catedral-16-volta-casa-cel', 'de volta à Casa')
+    await tryClick(page.locator('.cv .ponto[aria-label^="Porta de entrada"]'))
+    await page.locator('.cv .cv-cartao:not([hidden])').waitFor({ timeout: 12000 }).catch(() => {})
+    await wait(500)
+    await tryClick(page.locator('.cv .c-acoes button', { hasText: 'Sair de casa' }))
+    await wait(700)
+    await shot(page, 'catedral-17-viagem-nome-cel', 'Sair de casa: agora "Catedral de Damasco"')
+    await tryClick(page.locator('.cv .destino[data-ir="catedral"]'))
+    await page.locator('.cv .cat-raiz:not([hidden])').waitFor({ timeout: 15000 }).catch(() => {})
+    await wait(3000)
+    await shot(page, 'catedral-18-visita-comum-cel', 'visita comum: o Erick e você no corredor, o rostinho na caixa')
+    await d.ctx.close()
+  })
+  await step('catedral-pc', async () => {
+    const d = await conta('desktop', SENT, 'Sentinela', 'DEVO-STAF-SENT')
+    const page = d.page
+    await page.goto(`${BASE}/v2?semraf=1&teste=1`, { waitUntil: 'networkidle' })
+    await wait(1500)
+    await ateViagem(page)
+    await tryClick(page.locator('.cv .destino[data-ir="catedral"]'))
+    await page.locator('.cv .cat-raiz:not([hidden])').waitFor({ timeout: 15000 }).catch(() => {})
+    await wait(2200)
+    await shot(page, 'catedral-30-pc', 'Catedral no computador (primeira visita ou visita comum)')
+    // a equipe tem o botão de teste: a primeira visita de novo, até o Erick em retrato grande
+    await tryClick(page.locator('.cv .cat-teste [data-t="primeira"]'))
+    await wait(800)
+    await avanca(page)
+    await escolhe(page, 'Usar a aldrava')
+    for (let i = 0; i < 14; i++) {
+      await toca(page)
+      await wait(450)
+    }
+    await avanca(page)
+    await shot(page, 'catedral-31-erick-pc', 'o Erick no computador')
+    await tryClick(page.locator('.cv .cat-teste [data-t="comum"]'))
+    await wait(2600)
+    await shot(page, 'catedral-32-comum-pc', 'visita comum no computador')
+    await d.ctx.close()
   })
 }
 

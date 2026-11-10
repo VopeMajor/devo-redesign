@@ -58,7 +58,8 @@ export function Palco({
       )}
 
       {estado.cenario === 'holograma' && estado.holo && estado.holo !== 'chamada' && (
-        <div className="absolute inset-x-0 bottom-[30%] top-[9%] mx-auto max-w-md" style={ancora ? { bottom: ancora.bottom - 6 } : undefined}>
+        // presa ao anel do canal (não à caixa de fala): a cabeça fica dentro do anel e não pula de uma fala para outra
+        <div className="absolute inset-x-0 bottom-[36%] top-[12%] mx-auto max-w-md">
           <HologramaMelissa fase={estado.holo} expressao={estado.expressao} />
         </div>
       )}

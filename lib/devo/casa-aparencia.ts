@@ -13,6 +13,16 @@ export type Aparencia = {
   corCabelo: number
   corOlhos: number
   pele: number
+  /** Opções novas (dono, 09/11: "adicione mais opções de customização"); 0 = sem efeito, então as aparências salvas
+   *  antes continuam iguais. */
+  /** cor das pontas do cabelo: 0 nenhuma, n = cor de cabelo n-1 */
+  corPontas: number
+  /** segundo olho de outra cor (heterocromia): 0 igual, n = cor de olho n-1 */
+  olho2: number
+  /** cor da roupa: 0 a original, n = uma das variações (CORES_ROUPA) */
+  corRoupa: number
+  /** detalhe do rosto: 0 nenhum, 1 sardas, 2 pinta, 3 bochechas coradas */
+  marca: number
 }
 
 /** Quantas opções há de cada parte (kit3/avatar.html): 2 corpos, 18 cabelos, 18 rostos, 6 roupas e as cores. */
@@ -24,9 +34,19 @@ export const APARENCIA_LIMITES: Record<keyof Aparencia, number> = {
   corCabelo: 18,
   corOlhos: 12,
   pele: 10,
+  corPontas: 19,
+  olho2: 13,
+  corRoupa: 8,
+  marca: 4,
 }
 
-export const APARENCIA_PADRAO: Aparencia = { corpo: 0, cabelo: 0, rosto: 0, roupa: 0, corCabelo: 6, corOlhos: 0, pele: 1 }
+/** Campos novos: quando faltam numa aparência salva antes, valem 0. */
+const OPCIONAIS = new Set<keyof Aparencia>(['corPontas', 'olho2', 'corRoupa', 'marca'])
+
+export const CORES_ROUPA = ['Original', 'Vinho', 'Azul-noite', 'Musgo', 'Ameixa', 'Grafite', 'Areia', 'Preto'] as const
+export const MARCAS = ['Nenhum', 'Sardas', 'Pinta', 'Bochechas coradas'] as const
+
+export const APARENCIA_PADRAO: Aparencia = { corpo: 0, cabelo: 0, rosto: 0, roupa: 0, corCabelo: 6, corOlhos: 0, pele: 1, corPontas: 0, olho2: 0, corRoupa: 0, marca: 0 }
 
 export const ROUPAS = ['Casaco do Record', 'Dândi', 'Paróquia', 'Turno da noite', 'Enlutado', 'Andarilho'] as const
 
@@ -39,7 +59,7 @@ export function lerAparencia(v: unknown): Aparencia | null {
   const o = v as Record<string, unknown>
   const out = {} as Aparencia
   for (const k of Object.keys(APARENCIA_LIMITES) as (keyof Aparencia)[]) {
-    const n = o[k]
+    const n = o[k] === undefined && OPCIONAIS.has(k) ? 0 : o[k]
     if (typeof n !== 'number' || !Number.isInteger(n) || n < 0 || n >= APARENCIA_LIMITES[k]) return null
     out[k] = n
   }

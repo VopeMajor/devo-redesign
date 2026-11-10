@@ -732,3 +732,20 @@
 /* Virtudes: o aviso não encosta nos losangos de Espadas; o nome do naipe fica por cima do raio dourado */
 #vir .v-aviso { margin-top: 14px !important; }
 #vir .v-nome { position: relative; z-index: 1; padding: 0 6px; border-radius: 999px; background: color-mix(in srgb, var(--fundo) 78%, transparent); }
+/* ---- Celular: o Mapa do Devo desce em vez de correr para o lado (dono, 09/11: "no mobile não dá pra arrastar pra
+   baixo pra ver o resto dos ícones"). Três colunas, a do meio um pouco abaixo; todos os ícones ficam na rolagem da
+   tela inicial (#inicio), acima da barra de baixo. O computador continua com o mapa que se arrasta para o lado. ---- */
+@media (max-width:899.9px){
+  #os #mesa{grid-auto-flow:row;grid-template-columns:repeat(3,minmax(0,1fr))!important;grid-template-rows:none;grid-auto-columns:auto;column-gap:0!important;row-gap:26px!important;overflow:visible;scroll-snap-type:none;padding:0 4px 64px!important;touch-action:pan-y}
+  #os #mesa .ic,#os #mesa .ic:nth-child(n){transform:none!important}
+  /* a ordem do mapa de arrastar (fileira e coluna vêm do Mapa: --fila, --coluna), a coluna do meio mais baixa */
+  #os #mesa .ic{grid-row:var(--fila,auto);grid-column:var(--coluna,auto)}
+  #os #mesa .ic[data-col="1"]{transform:translateY(40px)!important}
+  #os #mesa .ic[data-col="1"]:active{transform:translateY(40px) scale(.97)!important}
+  #os #mesa .ic:active{transform:scale(.97)!important}
+  #os .mapa-dica{display:none}
+  /* rolando, os nomes passam por baixo do Tempo: a barra de cima ganha um fundo que some para baixo */
+  #os #menu{background:linear-gradient(180deg,#0b1020 64%,rgba(11,16,32,0))}
+  /* rolando, os nomes passam por baixo do Tempo: a barra de cima ganha um fundo que some para baixo */
+  #os #menu{background:linear-gradient(180deg,#0b1020 64%,rgba(11,16,32,0))}
+}

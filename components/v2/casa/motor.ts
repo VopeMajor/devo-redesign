@@ -49,6 +49,8 @@ export type MotorOpcoes = {
   onMesa: () => void
   onGuardaRoupa: () => void
   onTorres: () => void
+  /** a Catedral de Damasco (dono, 09/11: liberada para todos): o nome aparece depois da primeira visita */
+  onCatedral?: () => void
   onFimVisita: (r: FimSimon) => void
   /** Algo do React aberto por cima (mesa, guarda-roupa): o chibi fica quieto. */
   ocupado: () => boolean
@@ -93,7 +95,7 @@ const ESQUELETO = `
   <header><h2>Sair de casa</h2><button class="cv-v-fechar" aria-label="Fechar">✕</button></header>
   <p class="v-sub">Para onde?</p>
   <button class="destino" data-ir="torres"><b>Torres de Ruptura</b><small>A ilha das torres, logo ali fora</small></button>
-  <button class="destino trancado" data-ir="catedral"><b>???</b><small>Ouvi dizer que existe uma igreja nas redondezas...</small></button>
+  <button class="destino" data-ir="catedral"><b>???</b><small>Ouvi dizer que existe uma igreja nas redondezas...</small></button>
   <button class="destino" data-ir="celular"><b>Voltar ao celular</b><small>O sistema do DEVO</small></button>
 </section>
 <section class="cv-casa" hidden aria-label="A casa inteira">
@@ -601,7 +603,7 @@ export function criaCasa(raiz: HTMLElement, o: MotorOpcoes) {
     anda([x, y])
   })
 
-  /* ---------- Sair de Casa / Viagem: a Catedral ainda não foi descoberta no jogo ---------- */
+  /* ---------- Sair de Casa / Viagem: Torres, a Catedral de Damasco (aberta para todos, provisório) e o celular ---------- */
   function abreViagem() {
     $('.cv-viagem').hidden = false
     $('.cv-v-fechar').focus({ preventScroll: true })
@@ -610,7 +612,11 @@ export function criaCasa(raiz: HTMLElement, o: MotorOpcoes) {
     (b) =>
       (b.onclick = () => {
         const ir = b.dataset.ir
-        if (ir === 'catedral') return aviso('Ainda não sei o caminho.')
+        if (ir === 'catedral') {
+          if (!o.onCatedral) return aviso('Ainda não sei o caminho.')
+          $('.cv-viagem').hidden = true
+          return o.onCatedral()
+        }
         $('.cv-viagem').hidden = true
         $('.cv-fim').style.opacity = '.9'
         depois(() => (ir === 'torres' ? o.onTorres() : o.onSair()), 220)
@@ -1136,7 +1142,8 @@ export function criaCasa(raiz: HTMLElement, o: MotorOpcoes) {
     else vai('quarto')
   }
   $('.cv-sair').onclick = () => o.onSair()
-  if (o.equipe) {
+  // controle de teste (etapas e campainha): só para a equipe e só com ?teste na URL (como na Catedral)
+  if (o.equipe && new URLSearchParams(window.location.search).has('teste')) {
     $('.cv-teste').hidden = false
     raiz.querySelectorAll<HTMLButtonElement>('.cv-teste button[data-e]').forEach((b) => (b.onclick = () => mudaEtapa(+b.dataset.e! as CasaEtapa)))
     $('.cv-campainha').onclick = campainha

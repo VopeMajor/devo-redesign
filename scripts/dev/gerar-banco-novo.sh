@@ -40,6 +40,7 @@ FILES=(
   scripts/essencia-corvo-migration.sql
   scripts/poco-tabela-dono-migration.sql
   scripts/casa-mapa-migration.sql
+  scripts/catedral-migration.sql
   scripts/corporacoes-chat-migration.sql
 )
 {
