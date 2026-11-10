@@ -1,0 +1,5520 @@
+{
+  "base": "http://localhost:3000",
+  "shots": [
+    {
+      "name": "t01-torres-home-trancado",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "t02-torres-trancado",
+      "note": "jogador sem o tutorial: motivo",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "t03-torres-home-liberado",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "t10-galo-abertura",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "t10-galo-abertura@390x900",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "t10-galo-abertura@360x740",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "t11-galo-escolha",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "t11b-galo-fala",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "t11b-galo-fala@390x900",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "t11b-galo-fala@360x740",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "t12-galo-bloco",
+      "note": "quadro [Torre de Ruptura]",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "t13-galo-oferta",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "t13b-galo-revelacao",
+      "note": "cristal se formando",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "t14-galo-essencia",
+      "note": "+1 Essência de Afinidade do Galo",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "t13-galo-oferta",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "t13b-galo-revelacao",
+      "note": "cristal se formando",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "t14-galo-essencia",
+      "note": "+1 Essência de Afinidade do Galo",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "t15-galo-sistema",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "t20-mapa",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "t20-mapa@390x900",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "t20-mapa@360x740",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "t21a-transicao",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "t21-torre-imperador",
+      "note": "secundária do Galo",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "t21-torre-imperador@390x900",
+      "note": "secundária do Galo",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "t21-torre-imperador@360x740",
+      "note": "secundária do Galo",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "t22-andar-ficha",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "t22-andar-ficha@390x900",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "t22-andar-ficha@360x740",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "t23a-revelacao",
+      "note": "cadeado abrindo",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "t23b-revelacao-chave",
+      "note": "+1 Chave do Imperador",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "t23-andar-cena",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "t23-andar-cena@390x900",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "t23-andar-cena@360x740",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "t24-andar-concluido",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "t25-mapa-progresso",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "t25-mapa-progresso@390x900",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "t25-mapa-progresso@360x740",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "t30-reflexao",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "t31-reflexao-escolha",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "t32-reflexao-resposta",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "t40-torre-secundaria",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "t41a-revelacao-chave",
+      "note": "+1 Chave do Observatório",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "t41-secundaria-chave",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "t45-torre-principal",
+      "note": "principal sem NPC definido",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "t45-torre-principal@390x900",
+      "note": "principal sem NPC definido",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "t45-torre-principal@360x740",
+      "note": "principal sem NPC definido",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "t46-revelacao-selo",
+      "note": "andar I da principal",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "t42-andar-trancado-essencia",
+      "note": "tem a chave do Imperador; faltam 2 essências",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "t43-andar-trancado-chave",
+      "note": "falta a chave do Picadeiro",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "t44-andar-concluido-ficha",
+      "note": "concluído: Rever cena",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "t47-torre-picadeiro",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "t47-torre-picadeiro@390x900",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "t47-torre-picadeiro@360x740",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "poco-00-home-trancado",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "poco-01-trancado",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "poco-02-diario-vazio",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "poco-03-home-liberado",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "poco-04-neblina-rua",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "poco-05-neblina-poco",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "poco-05-neblina-poco@390x900",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "poco-05-neblina-poco@360x740",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "poco-06-neblina-escolha-moeda",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "poco-06-neblina-escolha-moeda@390x900",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "poco-06-neblina-escolha-moeda@360x740",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "poco-07-neblina-figura",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "poco-07-neblina-figura@390x900",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "poco-07-neblina-figura@360x740",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "poco-08-neblina-mao",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "poco-08-neblina-mao@390x900",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "poco-08-neblina-mao@360x740",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "poco-09-neblina-dracma",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "poco-09-neblina-dracma@390x900",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "poco-09-neblina-dracma@360x740",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "poco-10-neblina-aviso",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "poco-11-tela",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "poco-12-moedas",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "poco-13-baldes-bloqueado",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "poco-14-lancar",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "poco-15-moeda-caindo",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "poco-15b-respingo",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "poco-15c-nevoa",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "poco-16-minigame",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "poco-17-minigame-fim",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "poco-18-balde-subindo",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "poco-19a-lixo-luz",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "poco-19b-lixo-cai",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "poco-19c-lixo-poeira",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "poco-19-resultado-lixo",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "poco-20-giro-gratis-usado",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "poco-21-lancar-gratis-usado",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "poco-22b-raro-prata",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "poco-22c-raro-engasgo",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "poco-22d-raro-surto",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "poco-22a-revelacao-raro",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "poco-22-resultado-raro",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "poco-26-resultado-fragmento",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "poco-27-resultado-essencia",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "poco-28-resultado-cosmetico-1",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "poco-29-resultado-cosmetico-2",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "poco-30-resultado-cosmetico-3",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "poco-23-diario",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "poco-24-owner-cena-pular",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "poco-25-owner-probabilidades",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "poco-40-mesa-premios",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "poco-50-comum-a-manivela",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "poco-50-comum-b-subindo",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "poco-50-comum-c-luz",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "poco-50-comum-d-revela",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "poco-50-comum-e-resultado",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "poco-51-lixo-owner-a-manivela",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "poco-51-lixo-owner-b-subindo",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "poco-51-lixo-owner-c-luz",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "poco-51-lixo-owner-d-cai",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "poco-51-lixo-owner-e-resultado",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "salao-00-home-trancado",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "salao-01-trancado",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "salao-02-herdeiro-inicio",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "salao-02-herdeiro-inicio@390x900",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "salao-02-herdeiro-inicio@360x740",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "salao-03-herdeiro-salao",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "salao-03-herdeiro-salao@390x900",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "salao-03-herdeiro-salao@360x740",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "salao-04-herdeiro-contador",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "salao-04-herdeiro-contador@390x900",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "salao-04-herdeiro-contador@360x740",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "salao-05-herdeiro-bandeja",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "salao-05-herdeiro-bandeja@390x900",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "salao-05-herdeiro-bandeja@360x740",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "salao-06-herdeiro-fim",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "salao-07-fechado-contador",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "salao-08-fechado-proxima-edicao",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "salao-09-aberto",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "salao-10-leilao-lotes",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "salao-11-lance-folha",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "salao-12-leilao-voce-lidera",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "salao-13-mercado",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "salao-14-mercado-vender",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "salao-15-anuncios",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "salao-16-anuncio-novo",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "salao-17-bandeja-aviso",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "salao-18-bandeja-escolher",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "salao-19-bandeja-carta",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "salao-20-bandeja-enviado",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "salao-21-bandeja-em-avaliacao",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "salao-22-calendario",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "salao-23-record-shuffler",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "salao-24-mesa-fila",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "salao-25-mesa-avaliacao",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "salao-26-mesa-aprovado",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "salao-27-owner-pular",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "salao-28-owner-calendario",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "salao-29-erro",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "corp-00-home-trancado",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "corp-01-trancado",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "corp-02-holograma-chamada",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "corp-05-vazia",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "corp-06-vazia-fundar",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "corp-07-codigo-invalido",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "corp-08-codigo-necro",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "corp-09-codigo-previa",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "corp-10-pedido-enviado",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "corp-11-lider-heroi",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "corp-12-pedidos-perfil",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "corp-13-pedido-aprovado",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "corp-14-membros",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "corp-15-gerir-membro",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "corp-16-transferir-escolha",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "corp-17-transferida",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "corp-17b-chamada-da-companhia",
+      "note": "cena da Narrativa por cima das Corporações",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "corp-18-recrutamento",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "corp-19-jogos-em-breve",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "corp-20-membro-nova",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "corp-21-carta-recebida",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "corp-22-requisitos-faltando",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "corp-26-mesa-fila",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "corp-27-mesa-fundacao",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "corp-28-mesa-aprovada",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "corp-29-mesa-necro",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "corp-30-necro",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "corp-31-erro",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "v01-home-trancado",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "v02-trancado",
+      "note": "jogador sem o tutorial: motivo",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "arc-00-trancado",
+      "note": "Arcanos trancado (mesma regra das Virtudes)",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "arc-00-trancado@390x900",
+      "note": "Arcanos trancado (mesma regra das Virtudes)",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "arc-00-trancado@360x740",
+      "note": "Arcanos trancado (mesma regra das Virtudes)",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "v03-sem-arcano",
+      "note": "liberado, Arcano ainda sem registro (vazio)",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "v04-imperatriz-roda",
+      "note": "Arcano da Imperatriz: Taças excelente, Paus deficiente",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "v05-imperatriz-potencial",
+      "note": "pouco acumulado",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "v06-imperatriz-antigas",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "v07-home-liberado",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "v08-morte-roda",
+      "note": "Arcano da Morte, Estágio 0 (A Essência)",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "v09-evolucao-antes",
+      "note": "P.P. perto do limite, pronto para a metamorfose",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "v10-morte-naipes",
+      "note": "afinidades em palavras",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "v11-historico-vazio",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "arc-01-virtudes-link",
+      "note": "Virtudes: só a entrada para os Arcanos, sem a lista",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "arc-01-virtudes-link@390x900",
+      "note": "Virtudes: só a entrada para os Arcanos, sem a lista",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "arc-01-virtudes-link@360x740",
+      "note": "Virtudes: só a entrada para os Arcanos, sem a lista",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "arc-02-mapa",
+      "note": "mapa orbital: o próprio aceso, os outros apagados",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "arc-02-mapa@390x900",
+      "note": "mapa orbital: o próprio aceso, os outros apagados",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "arc-02-mapa@360x740",
+      "note": "mapa orbital: o próprio aceso, os outros apagados",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "arc-03-galeria-trancado",
+      "note": "galeria centrada num trancado: estátua cinza, nome e frase breve",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "arc-03-galeria-trancado@390x900",
+      "note": "galeria centrada num trancado: estátua cinza, nome e frase breve",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "arc-03-galeria-trancado@360x740",
+      "note": "galeria centrada num trancado: estátua cinza, nome e frase breve",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "arc-04-galeria-proprio",
+      "note": "galeria no próprio: em cor, botão Abrir",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "arc-04-galeria-proprio@390x900",
+      "note": "galeria no próprio: em cor, botão Abrir",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "arc-04-galeria-proprio@360x740",
+      "note": "galeria no próprio: em cor, botão Abrir",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "arc-04b-galeria-giro",
+      "note": "no meio do arrasto: laterais giram, encolhem e perdem a cor",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "arc-04b-galeria-giro@390x900",
+      "note": "no meio do arrasto: laterais giram, encolhem e perdem a cor",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "arc-04b-galeria-giro@360x740",
+      "note": "no meio do arrasto: laterais giram, encolhem e perdem a cor",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "arc-05-detalhe",
+      "note": "altar: vitral vermelho, velas, a figura (placeholder) e o nome",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "arc-05-detalhe@390x900",
+      "note": "altar: vitral vermelho, velas, a figura (placeholder) e o nome",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "arc-05-detalhe@360x740",
+      "note": "altar: vitral vermelho, velas, a figura (placeholder) e o nome",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "arc-06-detalhe-fisiologia",
+      "note": "Descrição e Fisiologia (mais natural / mais custosa)",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "arc-06-detalhe-fisiologia@390x900",
+      "note": "Descrição e Fisiologia (mais natural / mais custosa)",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "arc-06-detalhe-fisiologia@360x740",
+      "note": "Descrição e Fisiologia (mais natural / mais custosa)",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "arc-07-detalhe-estagios",
+      "note": "Estágio I atual, os seguintes velados",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "arc-07-detalhe-estagios@390x900",
+      "note": "Estágio I atual, os seguintes velados",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "arc-07-detalhe-estagios@360x740",
+      "note": "Estágio I atual, os seguintes velados",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "v12-evolucao-depois",
+      "note": "Estágio II",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "v13-depois-potencial",
+      "note": "acúmulo recomeça",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "v14-depois-historico",
+      "note": "histórico: mais cresceu / menos cresceu",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "arc-08-estagio-ii",
+      "note": "depois da Evolução: I alcançado, II atual",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "arc-08-estagio-ii@390x900",
+      "note": "depois da Evolução: I alcançado, II atual",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "arc-08-estagio-ii@360x740",
+      "note": "depois da Evolução: I alcançado, II atual",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "v15-record-arcano",
+      "note": "ficha do Record com o Arcano",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "v16-mesa-jogadores",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "v17-mesa-detalhes",
+      "note": "P.P., atributos, afinidade e histórico com números",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "v18-mesa-evoluir-armado",
+      "note": "confirmação em dois toques",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "v19-mesa-tabela",
+      "note": "tabela editável, provisória",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "v20-mesa-divergencia",
+      "note": "nota da divergência para o dono confirmar",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "v21-mesa-limites",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "v35-mesa-textos",
+      "note": "Owner edita os textos do Arcano (provisório)",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "v35-mesa-textos@390x900",
+      "note": "Owner edita os textos do Arcano (provisório)",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "v35-mesa-textos@360x740",
+      "note": "Owner edita os textos do Arcano (provisório)",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "v36-mesa-textos-estagios",
+      "note": "Estágios e o botão de gravar",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "v36-mesa-textos-estagios@390x900",
+      "note": "Estágios e o botão de gravar",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "v36-mesa-textos-estagios@360x740",
+      "note": "Estágios e o botão de gravar",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "arc-09-owner-mapa",
+      "note": "Owner: todos os sigilos abertos",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "arc-09-owner-mapa@390x900",
+      "note": "Owner: todos os sigilos abertos",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "arc-09-owner-mapa@360x740",
+      "note": "Owner: todos os sigilos abertos",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "arc-10-owner-galeria",
+      "note": "Owner: qualquer Arcano abre",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "arc-10-owner-galeria@390x900",
+      "note": "Owner: qualquer Arcano abre",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "arc-10-owner-galeria@360x740",
+      "note": "Owner: qualquer Arcano abre",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "arc-11-owner-detalhe",
+      "note": "Owner: detalhe de outro Arcano, com o selo de provisório",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "arc-11-owner-detalhe@390x900",
+      "note": "Owner: detalhe de outro Arcano, com o selo de provisório",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "arc-11-owner-detalhe@360x740",
+      "note": "Owner: detalhe de outro Arcano, com o selo de provisório",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "v22-erro",
+      "note": "",
+      "url": "http://localhost:3000/?antigo"
+    },
+    {
+      "name": "v2-01-inicio-cel",
+      "note": "Owner: painel, Mapa do Devo e doca",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-02-mapa-cel",
+      "note": "fim do Mapa do Devo",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-toque-sob-o-dedo",
+      "note": "[\"div#mesa ta=pan-y ov=visible pe=auto\",\"section#sistemas ta=auto ov=visible pe=auto\",\"div#inicio ta=auto ov=auto pe=auto\",\"main#os._9jXE9G_variable.QojL5W_variable.TOc94W_variable ta=auto ov=clip pe=auto\",\"body.font-serif.antialiased ta=auto ov=hidden pe=auto\",\"html.Kbl3na_variable._0kNb5q_variable.OhBwPW_variable.zfTmVG_variable.AN9ZVa_variable.QUiNZq_variable.oe9sPq_variable.N107GW_variable ta=auto ov=hidden pe=auto\"]"
+    },
+    {
+      "name": "v2-toque-diagnostico",
+      "note": "{\"roda\":300,\"toque\":345,\"gesto\":0}"
+    },
+    {
+      "name": "v2-toque-390x844",
+      "note": "{\"topo\":854,\"max\":854,\"ultimo\":\"mesa\",\"base\":696,\"doca\":778,\"largo\":386,\"w\":390}",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-02-toque-390x844",
+      "note": "depois de arrastar com o dedo: {\"topo\":854,\"max\":854,\"ultimo\":\"mesa\",\"base\":696,\"doca\":778,\"largo\":386,\"w\":390}",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-toque-360x640",
+      "note": "{\"topo\":1047,\"max\":1047,\"ultimo\":\"mesa\",\"base\":492,\"doca\":574,\"largo\":356,\"w\":360}",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-02-toque-360x640",
+      "note": "depois de arrastar com o dedo: {\"topo\":1047,\"max\":1047,\"ultimo\":\"mesa\",\"base\":492,\"doca\":574,\"largo\":356,\"w\":360}",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-03-pulso-cel",
+      "note": "janela: pulso",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-03-record-cel",
+      "note": "janela: record",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-03-mensagens-cel",
+      "note": "janela: mensagens",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-03-cartas-cel",
+      "note": "janela: cartas",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-03-calendario-cel",
+      "note": "janela: calendario",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-03-torres-cel",
+      "note": "janela: torres",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-03-ranking-cel",
+      "note": "janela: ranking",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-04-avisos-cel",
+      "note": "central de avisos",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-record-cel",
+      "note": "record: abertura",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-record-1-cel",
+      "note": "record: desce",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-record-2-cel",
+      "note": "record: desce",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-record-3-cel",
+      "note": "record: desce",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-record-4-cel",
+      "note": "record: Deadly Votes",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-record-5-cel",
+      "note": "record: desce",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-record-6-cel",
+      "note": "record: >.dv-como",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-record-7-cel",
+      "note": "record: Convites",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-record-8-cel",
+      "note": "record: Diário",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-record-9-cel",
+      "note": "record: Mesa",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-mensagens-cel",
+      "note": "mensagens: abertura",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-mensagens-1-cel",
+      "note": "mensagens: >.m-item",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-mensagens-2-cel",
+      "note": "mensagens: >.m-op",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-mensagens-3-cel",
+      "note": "mensagens: rolar",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-cartas-cel",
+      "note": "cartas: abertura",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-cartas-1-cel",
+      "note": "cartas: desce",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-cartas-2-cel",
+      "note": "cartas: >.cx-tile",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-cartas-3-cel",
+      "note": "cartas: rolar",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-cartas-4-cel",
+      "note": "cartas: >.cx-carta-g",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-inventario-cel",
+      "note": "inventario: abertura",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-inventario-1-cel",
+      "note": "inventario: desce",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-trocas-cel",
+      "note": "trocas: abertura",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-trocas-1-cel",
+      "note": "trocas: >.t-prot",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-trocas-2-cel",
+      "note": "trocas: >.t-porta:not(.fechada)",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-trocas-3-cel",
+      "note": "trocas: >.t-escolha button:not(.presa)",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-trocas-4-cel",
+      "note": "trocas: espera",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-trocas-5-cel",
+      "note": "trocas: espera",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-ajustes-cel",
+      "note": "ajustes: abertura",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-ajustes-1-cel",
+      "note": "ajustes: desce",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-calendario-cel",
+      "note": "calendario: abertura",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-calendario-1-cel",
+      "note": "calendario: >button:has-text(\"Pular\")",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-calendario-2-cel",
+      "note": "calendario: Eventos",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-calendario-3-cel",
+      "note": "calendario: Mês",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-calendario-4-cel",
+      "note": "calendario: Semana",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-calendario-5-cel",
+      "note": "calendario: >.k-marca",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-calendario-6-cel",
+      "note": "calendario: >.kc-revela",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-calendario-7-cel",
+      "note": "calendario: desce",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-poco-cel",
+      "note": "poco: abertura",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-poco-1-cel",
+      "note": "poco: >.p-neb",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-poco-2-cel",
+      "note": "poco: >.p-neb",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-poco-3-cel",
+      "note": "poco: >.p-neb",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-poco-4-cel",
+      "note": "poco: >.p-neb .p-neb-topo button:last-child",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-poco-5-cel",
+      "note": "poco: >#p-moedas",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-poco-6-cel",
+      "note": "poco: rolar",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-poco-7-cel",
+      "note": "poco: >#p-volta",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-poco-8-cel",
+      "note": "poco: >#p-balde",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-poco-9-cel",
+      "note": "poco: >#p-volta",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-poco-10-cel",
+      "note": "poco: >#p-lanca",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-poco-11-cel",
+      "note": "poco: >#p-grat",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-poco-12-cel",
+      "note": "poco: espera",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-poco-13-cel",
+      "note": "poco: >#p-gira",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-poco-14-cel",
+      "note": "poco: >#p-puxa",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-poco-15-cel",
+      "note": "poco: espera",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-poco-16-cel",
+      "note": "poco: >#p-balde",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-poco-17-cel",
+      "note": "poco: espera",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-poco-18-cel",
+      "note": "poco: >#p-ok",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-salao-cel",
+      "note": "salao: abertura",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-salao-1-cel",
+      "note": "salao: >.s-ap-pula",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-salao-2-cel",
+      "note": "salao: desce",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-salao-3-cel",
+      "note": "salao: >.s-pe .r-bt",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-salao-4-cel",
+      "note": "salao: >.s-folha .m-volta",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-salao-5-cel",
+      "note": "salao: Mercado",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-salao-6-cel",
+      "note": "salao: >.s-placa .r-bt",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-salao-7-cel",
+      "note": "salao: >.s-folha .m-volta",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-salao-8-cel",
+      "note": "salao: Anúncios",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-salao-9-cel",
+      "note": "salao: >.s-placa .r-bt",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-salao-10-cel",
+      "note": "salao: >.s-folha .m-volta",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-salao-11-cel",
+      "note": "salao: Bandeja",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-salao-12-cel",
+      "note": "salao: rolar",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-salao-13-cel",
+      "note": "salao: >.s-placa .s-forte",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-salao-14-cel",
+      "note": "salao: >.s-esc button:not(:disabled)",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-salao-15-cel",
+      "note": "salao: >.s-folha .m-volta",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-salao-16-cel",
+      "note": "salao: Leilões",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-salao-17-cel",
+      "note": "salao: >.s-bt",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-salao-18-cel",
+      "note": "salao: >.s-folha .m-volta",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-salao-19-cel",
+      "note": "salao: >.s-equipe",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-salao-20-cel",
+      "note": "salao: >.s-folha [role=tab]:has-text(\"Edições\")",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-salao-21-cel",
+      "note": "salao: >.s-folha [role=tab]:has-text(\"Relógio\")",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-salao-22-cel",
+      "note": "salao: >.s-folha .m-volta",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-salao-23-cel",
+      "note": "salao: >.s-her",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-salao-24-cel",
+      "note": "salao: >.s-apres",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-corporacoes-cel",
+      "note": "corporacoes: abertura",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-corporacoes-1-cel",
+      "note": "corporacoes: >.co-holo .k-balao",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-corporacoes-2-cel",
+      "note": "corporacoes: >.co-holo .k-balao",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-corporacoes-3-cel",
+      "note": "corporacoes: >.co-holo .k-balao",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-corporacoes-4-cel",
+      "note": "corporacoes: >.co-ops-h button",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-corporacoes-5-cel",
+      "note": "corporacoes: >.co-holo .k-balao",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-corporacoes-6-cel",
+      "note": "corporacoes: >.co-holo .k-pula",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-corporacoes-7-cel",
+      "note": "corporacoes: desce",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-corporacoes-8-cel",
+      "note": "corporacoes: rolar",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-virtudes-cel",
+      "note": "virtudes: abertura",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-virtudes-1-cel",
+      "note": "virtudes: >.v-ceu .v-no:nth-of-type(5)",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-virtudes-2-cel",
+      "note": "virtudes: desce",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-virtudes-3-cel",
+      "note": "virtudes: >.v-como summary",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-virtudes-4-cel",
+      "note": "virtudes: rolar",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-virtudes-5-cel",
+      "note": "virtudes: Mesa",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-virtudes-6-cel",
+      "note": "virtudes: Virtudes",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-arcanos-cel",
+      "note": "arcanos: abertura",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-arcanos-1-cel",
+      "note": "arcanos: rolar",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-arcanos-2-cel",
+      "note": "arcanos: >.a-filtro button:nth-child(2)",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-arcanos-3-cel",
+      "note": "arcanos: >.a-filtro button:nth-child(1)",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-arcanos-4-cel",
+      "note": "arcanos: >.a-grade li:nth-child(12) .a-carta",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-arcanos-5-cel",
+      "note": "arcanos: >.a-trilha li:nth-child(5) button",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-arcanos-6-cel",
+      "note": "arcanos: >.a-trilha li:nth-child(8) button",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-arcanos-7-cel",
+      "note": "arcanos: desce",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-arcanos-8-cel",
+      "note": "arcanos: >.a-acao .a-bt",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-arcanos-9-cel",
+      "note": "arcanos: >.a-confirma .r-bt:nth-child(2)",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-arcanos-10-cel",
+      "note": "arcanos: Descrição",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-arcanos-11-cel",
+      "note": "arcanos: Fisiologia",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-arcanos-12-cel",
+      "note": "arcanos: Estágios",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-arcanos-13-cel",
+      "note": "arcanos: >.a-volta",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-arcanos-14-cel",
+      "note": "arcanos: >.a-grade li:nth-child(1) .a-carta",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-arcanos-15-cel",
+      "note": "arcanos: >.a-volta",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-11-corp-cel",
+      "note": "Corporações: sala da Ordem com a Sentinela líder",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-11-corp-1-cel",
+      "note": "Corporações: ficha e abas",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-11-corp-2-cel",
+      "note": "Corporações: Chat",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-11-corp-3-cel",
+      "note": "Corporações: Membros",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-11-corp-4-cel",
+      "note": "Corporações: Pedidos",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-11-corp-5-cel",
+      "note": "Corporações: Cartas",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-11-corp-6-cel",
+      "note": "Corporações: Recrutar",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-11-corp-7-cel",
+      "note": "Corporações: Parede",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-11-corp-8-cel",
+      "note": "Corporações: papel escolhido (Na parede)",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-11-corp-9-cel",
+      "note": "Corporações: chat por cima do papel de parede",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-11-corp-10-cel",
+      "note": "Corporações: sala com o papel atrás do brasão",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-11-corp-11-cel",
+      "note": "Corporações: painel da equipe (Owner)",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-01-inicio-pc",
+      "note": "Owner: painel, Mapa do Devo e doca",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-03-pulso-pc",
+      "note": "janela: pulso",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-03-record-pc",
+      "note": "janela: record",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-03-mensagens-pc",
+      "note": "janela: mensagens",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-03-cartas-pc",
+      "note": "janela: cartas",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-03-calendario-pc",
+      "note": "janela: calendario",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-03-ranking-pc",
+      "note": "janela: ranking",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-04-avisos-pc",
+      "note": "central de avisos",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-record-pc",
+      "note": "record: abertura",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-record-1-pc",
+      "note": "record: desce",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-record-2-pc",
+      "note": "record: desce",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-record-3-pc",
+      "note": "record: desce",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-record-4-pc",
+      "note": "record: Deadly Votes",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-record-5-pc",
+      "note": "record: desce",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-record-6-pc",
+      "note": "record: >.dv-como",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-record-7-pc",
+      "note": "record: Convites",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-record-8-pc",
+      "note": "record: Diário",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-record-9-pc",
+      "note": "record: Mesa",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-mensagens-pc",
+      "note": "mensagens: abertura",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-mensagens-1-pc",
+      "note": "mensagens: >.m-item",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-mensagens-2-pc",
+      "note": "mensagens: >.m-op",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-mensagens-3-pc",
+      "note": "mensagens: rolar",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-cartas-pc",
+      "note": "cartas: abertura",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-cartas-1-pc",
+      "note": "cartas: desce",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-cartas-2-pc",
+      "note": "cartas: >.cx-tile",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-cartas-3-pc",
+      "note": "cartas: rolar",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-cartas-4-pc",
+      "note": "cartas: >.cx-carta-g",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-inventario-pc",
+      "note": "inventario: abertura",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-inventario-1-pc",
+      "note": "inventario: desce",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-trocas-pc",
+      "note": "trocas: abertura",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-trocas-1-pc",
+      "note": "trocas: >.t-prot",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-trocas-2-pc",
+      "note": "trocas: >.t-porta:not(.fechada)",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-trocas-3-pc",
+      "note": "trocas: >.t-escolha button:not(.presa)",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-trocas-4-pc",
+      "note": "trocas: espera",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-trocas-5-pc",
+      "note": "trocas: espera",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-ajustes-pc",
+      "note": "ajustes: abertura",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-ajustes-1-pc",
+      "note": "ajustes: desce",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-calendario-pc",
+      "note": "calendario: abertura",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-calendario-1-pc",
+      "note": "calendario: >button:has-text(\"Pular\")",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-calendario-2-pc",
+      "note": "calendario: Eventos",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-calendario-3-pc",
+      "note": "calendario: Mês",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-calendario-4-pc",
+      "note": "calendario: Semana",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-calendario-5-pc",
+      "note": "calendario: >.k-marca",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-calendario-6-pc",
+      "note": "calendario: >.kc-revela",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-calendario-7-pc",
+      "note": "calendario: desce",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-poco-pc",
+      "note": "poco: abertura",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-poco-1-pc",
+      "note": "poco: >.p-neb",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-poco-2-pc",
+      "note": "poco: >.p-neb",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-poco-3-pc",
+      "note": "poco: >.p-neb",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-poco-4-pc",
+      "note": "poco: >.p-neb .p-neb-topo button:last-child",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-poco-5-pc",
+      "note": "poco: >#p-moedas",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-poco-6-pc",
+      "note": "poco: rolar",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-poco-7-pc",
+      "note": "poco: >#p-volta",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-poco-8-pc",
+      "note": "poco: >#p-balde",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-poco-9-pc",
+      "note": "poco: >#p-volta",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-poco-10-pc",
+      "note": "poco: >#p-lanca",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-poco-11-pc",
+      "note": "poco: >#p-grat",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-poco-12-pc",
+      "note": "poco: espera",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-poco-13-pc",
+      "note": "poco: >#p-gira",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-poco-14-pc",
+      "note": "poco: >#p-puxa",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-poco-15-pc",
+      "note": "poco: espera",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-poco-16-pc",
+      "note": "poco: >#p-balde",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-poco-17-pc",
+      "note": "poco: espera",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-poco-18-pc",
+      "note": "poco: >#p-ok",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-salao-pc",
+      "note": "salao: abertura",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-salao-1-pc",
+      "note": "salao: >.s-ap-pula",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-salao-2-pc",
+      "note": "salao: desce",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-salao-3-pc",
+      "note": "salao: >.s-pe .r-bt",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-salao-4-pc",
+      "note": "salao: >.s-folha .m-volta",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-salao-5-pc",
+      "note": "salao: Mercado",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-salao-6-pc",
+      "note": "salao: >.s-placa .r-bt",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-salao-7-pc",
+      "note": "salao: >.s-folha .m-volta",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-salao-8-pc",
+      "note": "salao: Anúncios",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-salao-9-pc",
+      "note": "salao: >.s-placa .r-bt",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-salao-10-pc",
+      "note": "salao: >.s-folha .m-volta",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-salao-11-pc",
+      "note": "salao: Bandeja",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-salao-12-pc",
+      "note": "salao: rolar",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-salao-13-pc",
+      "note": "salao: >.s-placa .s-forte",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-salao-14-pc",
+      "note": "salao: >.s-esc button:not(:disabled)",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-salao-15-pc",
+      "note": "salao: >.s-folha .m-volta",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-salao-16-pc",
+      "note": "salao: Leilões",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-salao-17-pc",
+      "note": "salao: >.s-bt",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-salao-18-pc",
+      "note": "salao: >.s-folha .m-volta",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-salao-19-pc",
+      "note": "salao: >.s-equipe",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-salao-20-pc",
+      "note": "salao: >.s-folha [role=tab]:has-text(\"Edições\")",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-salao-21-pc",
+      "note": "salao: >.s-folha [role=tab]:has-text(\"Relógio\")",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-salao-22-pc",
+      "note": "salao: >.s-folha .m-volta",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-salao-23-pc",
+      "note": "salao: >.s-her",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-salao-24-pc",
+      "note": "salao: >.s-apres",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-corporacoes-pc",
+      "note": "corporacoes: abertura",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-corporacoes-1-pc",
+      "note": "corporacoes: >.co-holo .k-balao",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-corporacoes-2-pc",
+      "note": "corporacoes: >.co-holo .k-balao",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-corporacoes-3-pc",
+      "note": "corporacoes: >.co-holo .k-balao",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-corporacoes-4-pc",
+      "note": "corporacoes: >.co-ops-h button",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-corporacoes-5-pc",
+      "note": "corporacoes: >.co-holo .k-balao",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-corporacoes-6-pc",
+      "note": "corporacoes: >.co-holo .k-pula",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-corporacoes-7-pc",
+      "note": "corporacoes: desce",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-corporacoes-8-pc",
+      "note": "corporacoes: rolar",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-virtudes-pc",
+      "note": "virtudes: abertura",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-virtudes-1-pc",
+      "note": "virtudes: >.v-ceu .v-no:nth-of-type(5)",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-virtudes-2-pc",
+      "note": "virtudes: desce",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-virtudes-3-pc",
+      "note": "virtudes: >.v-como summary",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-virtudes-4-pc",
+      "note": "virtudes: rolar",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-virtudes-5-pc",
+      "note": "virtudes: Mesa",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-virtudes-6-pc",
+      "note": "virtudes: Virtudes",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-arcanos-pc",
+      "note": "arcanos: abertura",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-arcanos-1-pc",
+      "note": "arcanos: rolar",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-arcanos-2-pc",
+      "note": "arcanos: >.a-filtro button:nth-child(2)",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-arcanos-3-pc",
+      "note": "arcanos: >.a-filtro button:nth-child(1)",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-arcanos-4-pc",
+      "note": "arcanos: >.a-grade li:nth-child(12) .a-carta",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-arcanos-5-pc",
+      "note": "arcanos: >.a-trilha li:nth-child(5) button",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-arcanos-6-pc",
+      "note": "arcanos: >.a-trilha li:nth-child(8) button",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-arcanos-7-pc",
+      "note": "arcanos: desce",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-arcanos-8-pc",
+      "note": "arcanos: >.a-acao .a-bt",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-arcanos-9-pc",
+      "note": "arcanos: >.a-confirma .r-bt:nth-child(2)",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-arcanos-10-pc",
+      "note": "arcanos: Descrição",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-arcanos-11-pc",
+      "note": "arcanos: Fisiologia",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-arcanos-12-pc",
+      "note": "arcanos: Estágios",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-arcanos-13-pc",
+      "note": "arcanos: >.a-volta",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-arcanos-14-pc",
+      "note": "arcanos: >.a-grade li:nth-child(1) .a-carta",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-10-arcanos-15-pc",
+      "note": "arcanos: >.a-volta",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-11-corp-pc",
+      "note": "Corporações: sala da Ordem com a Sentinela líder",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-11-corp-1-pc",
+      "note": "Corporações: ficha e abas",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-11-corp-2-pc",
+      "note": "Corporações: Chat",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-11-corp-3-pc",
+      "note": "Corporações: Membros",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-11-corp-4-pc",
+      "note": "Corporações: Pedidos",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-11-corp-5-pc",
+      "note": "Corporações: Cartas",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-11-corp-6-pc",
+      "note": "Corporações: Recrutar",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-11-corp-7-pc",
+      "note": "Corporações: Parede",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-11-corp-8-pc",
+      "note": "Corporações: papel escolhido (Na parede)",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-11-corp-9-pc",
+      "note": "Corporações: chat por cima do papel de parede",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-11-corp-10-pc",
+      "note": "Corporações: sala com o papel atrás do brasão",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-11-corp-11-pc",
+      "note": "Corporações: painel da equipe (Owner)",
+      "url": "http://localhost:3000/v2"
+    },
+    {
+      "name": "v2-05-jogador-cel-sistema",
+      "note": "jogador comum no sistema v2",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "v2-05-jogador-cel",
+      "note": "jogador comum: início do v2",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "v2-05-jogador-mapa-cel",
+      "note": "jogador comum: Mapa do Devo com as travas",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "v2-05-jogador-record-cel",
+      "note": "jogador comum: record",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "v2-05-jogador-poco-cel",
+      "note": "jogador comum: poco",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "v2-05-jogador-pc-sistema",
+      "note": "jogador comum no sistema v2",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "v2-05-jogador-pc",
+      "note": "jogador comum: início do v2",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "v2-05-jogador-record-pc",
+      "note": "jogador comum: record",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "v2-05-jogador-poco-pc",
+      "note": "jogador comum: poco",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "casa-01-criacao-cel",
+      "note": "Casa aberta pela 1ª vez: criação do avatar, grátis (aba Cabelo), com o chibi ao lado",
+      "url": "http://localhost:3000/v2?semraf=1"
+    },
+    {
+      "name": "casa-01b-criacao-pontas-cel",
+      "note": "Cabelo: pontas de outra cor (opção nova)",
+      "url": "http://localhost:3000/v2?semraf=1"
+    },
+    {
+      "name": "casa-02-criacao-rosto-cel",
+      "note": "aba Rosto: rosto 5, olhos azul-petróleo, o outro olho âmbar e sardas (opções novas)",
+      "url": "http://localhost:3000/v2?semraf=1"
+    },
+    {
+      "name": "casa-03-criacao-roupa-cel",
+      "note": "aba Roupa: Dândi em azul-noite (cor da roupa, opção nova)",
+      "url": "http://localhost:3000/v2?semraf=1"
+    },
+    {
+      "name": "casa-04-mapa-cel",
+      "note": "Térreo com a mesa; o chibi com a aparência escolhida",
+      "url": "http://localhost:3000/v2?semraf=1"
+    },
+    {
+      "name": "casa-04-api",
+      "note": "GET /api/casa/mapa depois da criação",
+      "json": {
+        "liberado": true,
+        "aparencia": {
+          "corpo": 0,
+          "cabelo": 0,
+          "rosto": 4,
+          "roupa": 1,
+          "corCabelo": 6,
+          "corOlhos": 6,
+          "pele": 1,
+          "corPontas": 14,
+          "olho2": 2,
+          "corRoupa": 2,
+          "marca": 1
+        },
+        "etapa": 3,
+        "andamento": 0,
+        "visita": "simon",
+        "simon": null,
+        "trocaMinutos": 60,
+        "equipe": true,
+        "timeDeltaMs": 0
+      }
+    },
+    {
+      "name": "casa-05-visita-campainha-cel",
+      "note": "campainha: visita do Simon (narração)",
+      "url": "http://localhost:3000/v2?semraf=1"
+    },
+    {
+      "name": "casa-06-visita-escolha-cel",
+      "note": "Ignorar ou abrir a porta",
+      "url": "http://localhost:3000/v2?semraf=1"
+    },
+    {
+      "name": "casa-07-visita-olho-cel",
+      "note": "olho mágico",
+      "url": "http://localhost:3000/v2?semraf=1"
+    },
+    {
+      "name": "casa-08-visita-porta-cel",
+      "note": "a porta se abre: Simon de corpo inteiro",
+      "url": "http://localhost:3000/v2?semraf=1"
+    },
+    {
+      "name": "casa-09-visita-simon-cel",
+      "note": "Simon fala (busto, retrato grande)",
+      "url": "http://localhost:3000/v2?semraf=1"
+    },
+    {
+      "name": "casa-10-visita-malicia-cel",
+      "note": "Simon: malícia",
+      "url": "http://localhost:3000/v2?semraf=1"
+    },
+    {
+      "name": "casa-11-visita-guarda-chuva-cel",
+      "note": "oferecer ou ficar com o guarda-chuva",
+      "url": "http://localhost:3000/v2?semraf=1"
+    },
+    {
+      "name": "casa-12-visita-fim-cel",
+      "note": "fim da visita: guarda-chuva no inventário",
+      "url": "http://localhost:3000/v2?semraf=1"
+    },
+    {
+      "name": "casa-12-api",
+      "note": "GET /api/casa/mapa depois da visita (visita: null, simon atendeu)",
+      "json": {
+        "liberado": true,
+        "aparencia": {
+          "corpo": 0,
+          "cabelo": 0,
+          "rosto": 4,
+          "roupa": 1,
+          "corCabelo": 6,
+          "corOlhos": 6,
+          "pele": 1,
+          "corPontas": 14,
+          "olho2": 2,
+          "corRoupa": 2,
+          "marca": 1
+        },
+        "etapa": 3,
+        "andamento": 0,
+        "visita": null,
+        "simon": {
+          "resultado": "atendeu",
+          "detalhe": {
+            "escolhas": [
+              "abrir",
+              "antigo",
+              "preco",
+              "quanto",
+              "ajuda",
+              "entra",
+              "ficou",
+              "adeus"
+            ],
+            "guardaChuva": "ficou"
+          }
+        },
+        "trocaMinutos": 60,
+        "equipe": true,
+        "timeDeltaMs": 0
+      }
+    },
+    {
+      "name": "casa-12-inventario",
+      "note": "inventário (outros): o guarda-chuva",
+      "json": {
+        "inventario": [
+          {
+            "key": "heranca:guarda_chuva",
+            "kind": "outro",
+            "name": "Guarda-chuva do antigo morador",
+            "description": "Tudo o que o antigo morador deixou na casa. Ainda é uma herança, talvez.",
+            "rarity": "comum",
+            "quantity": 1,
+            "source": "visita",
+            "firstAt": 1794277518252,
+            "meta": {
+              "origem": "visita:simon"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "casa-13-andou-cel",
+      "note": "tocou no chão: o chibi anda até lá",
+      "url": "http://localhost:3000/v2?semraf=1"
+    },
+    {
+      "name": "casa-14-mesa-cartao-cel",
+      "note": "cartão da mesa",
+      "url": "http://localhost:3000/v2?semraf=1"
+    },
+    {
+      "name": "casa-15-mesa-confeccao-cel",
+      "note": "Mesa: a Confecção de Cartas (mesma tela, mesmos dados)",
+      "url": "http://localhost:3000/v2?semraf=1"
+    },
+    {
+      "name": "casa-16-mesa-pacotes-cel",
+      "note": "Mesa: Pacotes",
+      "url": "http://localhost:3000/v2?semraf=1"
+    },
+    {
+      "name": "casa-17-andares-cel",
+      "note": "Andares: térreo e quartos",
+      "url": "http://localhost:3000/v2?semraf=1"
+    },
+    {
+      "name": "casa-18-quarto-cel",
+      "note": "Andar dos quartos",
+      "url": "http://localhost:3000/v2?semraf=1"
+    },
+    {
+      "name": "casa-19-guarda-cartao-cel",
+      "note": "cartão do guarda-roupa (1 hora de Tempo)",
+      "url": "http://localhost:3000/v2?semraf=1"
+    },
+    {
+      "name": "casa-20-guarda-roupa-cel",
+      "note": "Guarda-roupa (Cancelar · Salvar 1 hora)",
+      "url": "http://localhost:3000/v2?semraf=1"
+    },
+    {
+      "name": "casa-21-guarda-nada-mudou-cel",
+      "note": "Salvar sem mudar: nada cobrado",
+      "url": "http://localhost:3000/v2?semraf=1"
+    },
+    {
+      "name": "casa-22-guarda-salvo-cel",
+      "note": "aparência trocada: 1 hora de Tempo",
+      "url": "http://localhost:3000/v2?semraf=1"
+    },
+    {
+      "name": "casa-22-tempo",
+      "note": "Tempo antes 50:15:14 → depois 49:15:09",
+      "json": {
+        "liberado": true,
+        "aparencia": {
+          "corpo": 0,
+          "cabelo": 7,
+          "rosto": 4,
+          "roupa": 1,
+          "corCabelo": 12,
+          "corOlhos": 6,
+          "pele": 1,
+          "corPontas": 14,
+          "olho2": 2,
+          "corRoupa": 2,
+          "marca": 1
+        },
+        "etapa": 3,
+        "andamento": 0,
+        "visita": null,
+        "simon": {
+          "resultado": "atendeu",
+          "detalhe": {
+            "escolhas": [
+              "abrir",
+              "antigo",
+              "preco",
+              "quanto",
+              "ajuda",
+              "entra",
+              "ficou",
+              "adeus"
+            ],
+            "guardaChuva": "ficou"
+          }
+        },
+        "trocaMinutos": 60,
+        "equipe": true,
+        "timeDeltaMs": 0
+      }
+    },
+    {
+      "name": "casa-23-quarto-novo-chibi-cel",
+      "note": "o chibi com o cabelo novo",
+      "url": "http://localhost:3000/v2?semraf=1"
+    },
+    {
+      "name": "casa-24-viagem-cel",
+      "note": "Sair de casa: Torres, ??? (Catedral) e celular",
+      "url": "http://localhost:3000/v2?semraf=1"
+    },
+    {
+      "name": "casa-25-volta-celular-cel",
+      "note": "de volta ao Mapa do Devo",
+      "url": "http://localhost:3000/v2?semraf=1"
+    },
+    {
+      "name": "casa-26-reabre-cel",
+      "note": "reabrir a Casa: sem visita, direto no mapa",
+      "url": "http://localhost:3000/v2?semraf=1"
+    },
+    {
+      "name": "casa-30-mapa-pc",
+      "note": "Térreo no computador",
+      "url": "http://localhost:3000/v2?semraf=1&teste=1"
+    },
+    {
+      "name": "casa-31-mesa-cartao-pc",
+      "note": "cartão da mesa (à direita, no computador)",
+      "url": "http://localhost:3000/v2?semraf=1&teste=1"
+    },
+    {
+      "name": "casa-32-mesa-pc",
+      "note": "Mesa de Confecção no computador",
+      "url": "http://localhost:3000/v2?semraf=1&teste=1"
+    },
+    {
+      "name": "casa-33-visita-pc",
+      "note": "visita do Simon no computador (campainha do teste da equipe)",
+      "url": "http://localhost:3000/v2?semraf=1&teste=1"
+    },
+    {
+      "name": "casa-34-andares-pc",
+      "note": "Andares no computador",
+      "url": "http://localhost:3000/v2?semraf=1"
+    },
+    {
+      "name": "casa-35-quarto-pc",
+      "note": "Andar dos quartos no computador",
+      "url": "http://localhost:3000/v2?semraf=1"
+    },
+    {
+      "name": "casa-36-guarda-roupa-pc",
+      "note": "Guarda-roupa no computador",
+      "url": "http://localhost:3000/v2?semraf=1"
+    },
+    {
+      "name": "casa-40-jogador-api",
+      "note": "jogador comum: GET /api/casa/mapa",
+      "json": {
+        "liberado": true,
+        "aparencia": null,
+        "etapa": 2,
+        "andamento": 0,
+        "visita": null,
+        "simon": null,
+        "trocaMinutos": 60,
+        "equipe": false,
+        "timeDeltaMs": 0
+      }
+    },
+    {
+      "name": "casa-41-jogador-salvar",
+      "note": "jogador comum: salvar aparência → 200 {\"ok\":true,\"aparencia\":{\"corpo\":0,\"cabelo\":0,\"rosto\":0,\"roupa\":0,\"corCabelo\":0,\"corOlhos\":0,\"pele\":0,\"corPontas\":0,\"olho2\":0,\"corRoupa\":0,\"marca\":0},\"mudou\":true,\"primeira\":true,\"timeDeltaMs\":0}"
+    },
+    {
+      "name": "casa-50-video-cel",
+      "note": "vídeo: andar, ociosidade, cochilo e diálogo letra a letra (webm)"
+    },
+    {
+      "name": "tv-01-trancado-cel",
+      "note": "jogador sem as Torres: trava com o motivo",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "tv-02-galo-abre-cel",
+      "note": "primeira vez: o Galo apresenta as Torres (retrato grande)",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "tv-07-ilha-cel",
+      "note": "a ilha: o seu chibi, as portas e a bolsa (essência do Galo: 1)",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "tv-07-api",
+      "note": "GET /api/torres depois da apresentação",
+      "json": {
+        "liberado": true,
+        "pularApresentacao": false,
+        "apresentacao": {
+          "galoVista": true,
+          "galoFa": true,
+          "reflexaoPendente": true
+        },
+        "torres": [
+          {
+            "id": "campanha",
+            "nome": "[PROVISÓRIO] Torre da Ruptura",
+            "tipo": "principal",
+            "tema": "Campanha",
+            "descricao": "A torre da trama principal. Nome, NPC e essência ainda a definir pelo dono. Alguns andares só abrem para quem trouxer chaves das torres secundárias.",
+            "npc": {
+              "id": "desconhecido",
+              "nome": "???",
+              "titulo": "NPC a definir pelo dono"
+            },
+            "essencia": {
+              "item": "essencia:campanha",
+              "nome": "Essência da Ruptura (provisória)",
+              "quantidade": 0
+            },
+            "chave": null,
+            "arte": "agulha",
+            "mapa": {
+              "x": 50,
+              "y": 61,
+              "escala": 0.92
+            },
+            "andares": [
+              {
+                "n": 1,
+                "titulo": "[PROVISÓRIO] O Saguão",
+                "resumo": "Placeholder: o primeiro andar da campanha.",
+                "npc": {
+                  "id": "desconhecido",
+                  "nome": "???",
+                  "titulo": "NPC a definir pelo dono"
+                },
+                "estado": "concluido",
+                "custo": 1,
+                "chaves": [],
+                "gastaChaves": false,
+                "faltaEssencias": 0,
+                "faltaChaves": 0,
+                "podeSubir": false,
+                "recompensas": {
+                  "chaves": 0,
+                  "itens": []
+                },
+                "provisorio": true,
+                "cena": [
+                  {
+                    "tipo": "fala",
+                    "texto": "[PROVISÓRIO] Diálogo do 1º andar da torre principal ainda não escrito pelo dono."
+                  }
+                ]
+              },
+              {
+                "n": 2,
+                "titulo": "[PROVISÓRIO] A Escadaria Fria",
+                "resumo": "Placeholder: pede 1 chave da Torre do Imperador.",
+                "npc": {
+                  "id": "desconhecido",
+                  "nome": "???",
+                  "titulo": "NPC a definir pelo dono"
+                },
+                "estado": "concluido",
+                "custo": 2,
+                "chaves": [
+                  {
+                    "torre": "imperador",
+                    "quantidade": 1,
+                    "item": "chave:imperador",
+                    "nome": "Chave do Imperador",
+                    "tem": 1
+                  }
+                ],
+                "gastaChaves": false,
+                "faltaEssencias": 0,
+                "faltaChaves": 0,
+                "podeSubir": false,
+                "recompensas": {
+                  "chaves": 0,
+                  "itens": []
+                },
+                "provisorio": true,
+                "cena": [
+                  {
+                    "tipo": "fala",
+                    "texto": "[PROVISÓRIO] Diálogo do 2º andar da torre principal ainda não escrito pelo dono."
+                  }
+                ]
+              },
+              {
+                "n": 3,
+                "titulo": "[PROVISÓRIO] O Corredor dos Retratos",
+                "resumo": "Placeholder: pede 1 chave do Observatório e 1 do Picadeiro.",
+                "npc": {
+                  "id": "desconhecido",
+                  "nome": "???",
+                  "titulo": "NPC a definir pelo dono"
+                },
+                "estado": "atual",
+                "custo": 4,
+                "chaves": [
+                  {
+                    "torre": "observatorio",
+                    "quantidade": 1,
+                    "item": "chave:observatorio",
+                    "nome": "Chave do Observatório",
+                    "tem": 1
+                  },
+                  {
+                    "torre": "picadeiro",
+                    "quantidade": 1,
+                    "item": "chave:picadeiro",
+                    "nome": "Chave do Picadeiro",
+                    "tem": 0
+                  }
+                ],
+                "gastaChaves": false,
+                "faltaEssencias": 4,
+                "faltaChaves": 1,
+                "podeSubir": false,
+                "recompensas": {
+                  "chaves": 0,
+                  "itens": []
+                },
+                "provisorio": true,
+                "cena": null
+              },
+              {
+                "n": 4,
+                "titulo": "[PROVISÓRIO] A Sala do Trono Vazio",
+                "resumo": null,
+                "npc": {
+                  "id": "desconhecido",
+                  "nome": "???",
+                  "titulo": "NPC a definir pelo dono"
+                },
+                "estado": "trancado",
+                "custo": 8,
+                "chaves": [],
+                "gastaChaves": false,
+                "faltaEssencias": 0,
+                "faltaChaves": 0,
+                "podeSubir": false,
+                "recompensas": {
+                  "chaves": 0,
+                  "itens": []
+                },
+                "provisorio": true,
+                "cena": null
+              },
+              {
+                "n": 5,
+                "titulo": "[PROVISÓRIO] O Mirante",
+                "resumo": null,
+                "npc": {
+                  "id": "desconhecido",
+                  "nome": "???",
+                  "titulo": "NPC a definir pelo dono"
+                },
+                "estado": "trancado",
+                "custo": 16,
+                "chaves": [
+                  {
+                    "torre": "imperador",
+                    "quantidade": 3,
+                    "item": "chave:imperador",
+                    "nome": "Chave do Imperador",
+                    "tem": 1
+                  },
+                  {
+                    "torre": "observatorio",
+                    "quantidade": 3,
+                    "item": "chave:observatorio",
+                    "nome": "Chave do Observatório",
+                    "tem": 1
+                  }
+                ],
+                "gastaChaves": false,
+                "faltaEssencias": 0,
+                "faltaChaves": 0,
+                "podeSubir": false,
+                "recompensas": {
+                  "chaves": 0,
+                  "itens": []
+                },
+                "provisorio": true,
+                "cena": null
+              },
+              {
+                "n": 6,
+                "titulo": "[PROVISÓRIO] A Coroa Partida",
+                "resumo": null,
+                "npc": {
+                  "id": "desconhecido",
+                  "nome": "???",
+                  "titulo": "NPC a definir pelo dono"
+                },
+                "estado": "trancado",
+                "custo": 32,
+                "chaves": [],
+                "gastaChaves": false,
+                "faltaEssencias": 0,
+                "faltaChaves": 0,
+                "podeSubir": false,
+                "recompensas": {
+                  "chaves": 0,
+                  "itens": []
+                },
+                "provisorio": true,
+                "cena": null
+              },
+              {
+                "n": 7,
+                "titulo": "[PROVISÓRIO] O Topo",
+                "resumo": null,
+                "npc": {
+                  "id": "desconhecido",
+                  "nome": "???",
+                  "titulo": "NPC a definir pelo dono"
+                },
+                "estado": "trancado",
+                "custo": 64,
+                "chaves": [
+                  {
+                    "torre": "imperador",
+                    "quantidade": 5,
+                    "item": "chave:imperador",
+                    "nome": "Chave do Imperador",
+                    "tem": 1
+                  },
+                  {
+                    "torre": "observatorio",
+                    "quantidade": 5,
+                    "item": "chave:observatorio",
+                    "nome": "Chave do Observatório",
+                    "tem": 1
+                  },
+                  {
+                    "torre": "picadeiro",
+                    "quantidade": 5,
+                    "item": "chave:picadeiro",
+                    "nome": "Chave do Picadeiro",
+                    "tem": 0
+                  }
+                ],
+                "gastaChaves": false,
+                "faltaEssencias": 0,
+                "faltaChaves": 0,
+                "podeSubir": false,
+                "recompensas": {
+                  "chaves": 0,
+                  "itens": []
+                },
+                "provisorio": true,
+                "cena": null
+              }
+            ],
+            "concluidos": 2,
+            "provisorio": true,
+            "ilustracao": {
+              "arquivo": "/images/torres/agulha/torre",
+              "larguras": [
+                96,
+                256,
+                512,
+                1024
+              ],
+              "aspecto": 0.486,
+              "altura": 440,
+              "janelas": [
+                [
+                  0.597,
+                  0.825
+                ],
+                [
+                  0.398,
+                  0.724
+                ],
+                [
+                  0.556,
+                  0.633
+                ],
+                [
+                  0.386,
+                  0.59
+                ],
+                [
+                  0.554,
+                  0.501
+                ],
+                [
+                  0.393,
+                  0.418
+                ],
+                [
+                  0.566,
+                  0.39
+                ],
+                [
+                  0.407,
+                  0.325
+                ]
+              ]
+            }
+          },
+          {
+            "id": "imperador",
+            "nome": "Torre do Imperador",
+            "tipo": "secundaria",
+            "tema": "Coroa e fanfarronice",
+            "descricao": "A torre-palácio do Galo, Anfitrião do Arcano do Imperador. Cada andar vencido entrega uma chave do Imperador.",
+            "npc": {
+              "id": "galo",
+              "nome": "O Galo",
+              "titulo": "Anfitrião do Arcano do Imperador",
+              "pose": "confiante"
+            },
+            "essencia": {
+              "item": "essencia:galo",
+              "nome": "Essência de Afinidade do Galo",
+              "quantidade": 0
+            },
+            "chave": {
+              "item": "chave:imperador",
+              "nome": "Chave do Imperador",
+              "quantidade": 1
+            },
+            "arte": "palacio",
+            "mapa": {
+              "x": 17,
+              "y": 67,
+              "escala": 0.66
+            },
+            "andares": [
+              {
+                "n": 1,
+                "titulo": "[PROVISÓRIO] O Salão do Trono",
+                "resumo": null,
+                "npc": {
+                  "id": "galo",
+                  "nome": "O Galo",
+                  "titulo": "Anfitrião do Arcano do Imperador",
+                  "pose": "confiante"
+                },
+                "estado": "concluido",
+                "custo": 1,
+                "chaves": [],
+                "gastaChaves": false,
+                "faltaEssencias": 0,
+                "faltaChaves": 0,
+                "podeSubir": false,
+                "recompensas": {
+                  "chaves": 1,
+                  "itens": []
+                },
+                "provisorio": true,
+                "cena": [
+                  {
+                    "tipo": "fala",
+                    "pose": "malicia",
+                    "texto": "[PROVISÓRIO] Diálogo do 1º andar da Torre do Imperador ainda não escrito pelo dono."
+                  },
+                  {
+                    "tipo": "sistema",
+                    "texto": "Andar concluído. Este texto é um exemplo e será substituído."
+                  }
+                ]
+              },
+              {
+                "n": 2,
+                "titulo": "[PROVISÓRIO] A Galeria dos Brasões",
+                "resumo": null,
+                "npc": {
+                  "id": "galo",
+                  "nome": "O Galo",
+                  "titulo": "Anfitrião do Arcano do Imperador",
+                  "pose": "confiante"
+                },
+                "estado": "atual",
+                "custo": 2,
+                "chaves": [],
+                "gastaChaves": false,
+                "faltaEssencias": 2,
+                "faltaChaves": 0,
+                "podeSubir": false,
+                "recompensas": {
+                  "chaves": 1,
+                  "itens": []
+                },
+                "provisorio": true,
+                "cena": null
+              },
+              {
+                "n": 3,
+                "titulo": "[PROVISÓRIO] O Poleiro Real",
+                "resumo": null,
+                "npc": {
+                  "id": "galo",
+                  "nome": "O Galo",
+                  "titulo": "Anfitrião do Arcano do Imperador",
+                  "pose": "confiante"
+                },
+                "estado": "trancado",
+                "custo": 4,
+                "chaves": [],
+                "gastaChaves": false,
+                "faltaEssencias": 0,
+                "faltaChaves": 0,
+                "podeSubir": false,
+                "recompensas": {
+                  "chaves": 1,
+                  "itens": []
+                },
+                "provisorio": true,
+                "cena": null
+              },
+              {
+                "n": 4,
+                "titulo": "[PROVISÓRIO] A Coroa de Ferro",
+                "resumo": null,
+                "npc": {
+                  "id": "galo",
+                  "nome": "O Galo",
+                  "titulo": "Anfitrião do Arcano do Imperador",
+                  "pose": "confiante"
+                },
+                "estado": "trancado",
+                "custo": 8,
+                "chaves": [],
+                "gastaChaves": false,
+                "faltaEssencias": 0,
+                "faltaChaves": 0,
+                "podeSubir": false,
+                "recompensas": {
+                  "chaves": 1,
+                  "itens": []
+                },
+                "provisorio": true,
+                "cena": null
+              },
+              {
+                "n": 5,
+                "titulo": "[PROVISÓRIO] O Cetro",
+                "resumo": null,
+                "npc": {
+                  "id": "galo",
+                  "nome": "O Galo",
+                  "titulo": "Anfitrião do Arcano do Imperador",
+                  "pose": "confiante"
+                },
+                "estado": "trancado",
+                "custo": 16,
+                "chaves": [],
+                "gastaChaves": false,
+                "faltaEssencias": 0,
+                "faltaChaves": 0,
+                "podeSubir": false,
+                "recompensas": {
+                  "chaves": 1,
+                  "itens": []
+                },
+                "provisorio": true,
+                "cena": null
+              }
+            ],
+            "concluidos": 1,
+            "provisorio": true,
+            "ilustracao": {
+              "arquivo": "/images/torres/imperador/torre",
+              "larguras": [
+                96,
+                256,
+                512,
+                1024
+              ],
+              "aspecto": 0.602,
+              "altura": 300,
+              "janelas": [
+                [
+                  0.513,
+                  0.782
+                ],
+                [
+                  0.578,
+                  0.588
+                ],
+                [
+                  0.508,
+                  0.519
+                ],
+                [
+                  0.314,
+                  0.485
+                ],
+                [
+                  0.57,
+                  0.42
+                ]
+              ]
+            }
+          },
+          {
+            "id": "observatorio",
+            "nome": "Torre do Observatório",
+            "tipo": "secundaria",
+            "tema": "Estrelas e segredos",
+            "descricao": "Uma torre de vigia com cúpula de aço. Cada andar vencido entrega uma chave do Observatório.",
+            "npc": {
+              "id": "coruja",
+              "nome": "A Coruja",
+              "titulo": "Guardiã das cartas"
+            },
+            "essencia": {
+              "item": "essencia:coruja",
+              "nome": "Essência de Afinidade da Coruja",
+              "quantidade": 0
+            },
+            "chave": {
+              "item": "chave:observatorio",
+              "nome": "Chave do Observatório",
+              "quantidade": 1
+            },
+            "arte": "observatorio",
+            "mapa": {
+              "x": 83,
+              "y": 71,
+              "escala": 0.64
+            },
+            "andares": [
+              {
+                "n": 1,
+                "titulo": "[PROVISÓRIO] A Luneta",
+                "resumo": null,
+                "npc": {
+                  "id": "coruja",
+                  "nome": "A Coruja",
+                  "titulo": "Guardiã das cartas"
+                },
+                "estado": "concluido",
+                "custo": 1,
+                "chaves": [],
+                "gastaChaves": false,
+                "faltaEssencias": 0,
+                "faltaChaves": 0,
+                "podeSubir": false,
+                "recompensas": {
+                  "chaves": 1,
+                  "itens": []
+                },
+                "provisorio": true,
+                "cena": [
+                  {
+                    "tipo": "fala",
+                    "texto": "[PROVISÓRIO] Diálogo do 1º andar do Observatório ainda não escrito."
+                  }
+                ]
+              },
+              {
+                "n": 2,
+                "titulo": "[PROVISÓRIO] O Mapa Celeste",
+                "resumo": null,
+                "npc": {
+                  "id": "coruja",
+                  "nome": "A Coruja",
+                  "titulo": "Guardiã das cartas"
+                },
+                "estado": "atual",
+                "custo": 2,
+                "chaves": [],
+                "gastaChaves": false,
+                "faltaEssencias": 2,
+                "faltaChaves": 0,
+                "podeSubir": false,
+                "recompensas": {
+                  "chaves": 1,
+                  "itens": []
+                },
+                "provisorio": true,
+                "cena": null
+              },
+              {
+                "n": 3,
+                "titulo": "[PROVISÓRIO] A Biblioteca Suspensa",
+                "resumo": null,
+                "npc": {
+                  "id": "coruja",
+                  "nome": "A Coruja",
+                  "titulo": "Guardiã das cartas"
+                },
+                "estado": "trancado",
+                "custo": 4,
+                "chaves": [],
+                "gastaChaves": false,
+                "faltaEssencias": 0,
+                "faltaChaves": 0,
+                "podeSubir": false,
+                "recompensas": {
+                  "chaves": 1,
+                  "itens": []
+                },
+                "provisorio": true,
+                "cena": null
+              },
+              {
+                "n": 4,
+                "titulo": "[PROVISÓRIO] O Eclipse",
+                "resumo": null,
+                "npc": {
+                  "id": "coruja",
+                  "nome": "A Coruja",
+                  "titulo": "Guardiã das cartas"
+                },
+                "estado": "trancado",
+                "custo": 8,
+                "chaves": [],
+                "gastaChaves": false,
+                "faltaEssencias": 0,
+                "faltaChaves": 0,
+                "podeSubir": false,
+                "recompensas": {
+                  "chaves": 1,
+                  "itens": []
+                },
+                "provisorio": true,
+                "cena": null
+              },
+              {
+                "n": 5,
+                "titulo": "[PROVISÓRIO] A Cúpula",
+                "resumo": null,
+                "npc": {
+                  "id": "coruja",
+                  "nome": "A Coruja",
+                  "titulo": "Guardiã das cartas"
+                },
+                "estado": "trancado",
+                "custo": 16,
+                "chaves": [],
+                "gastaChaves": false,
+                "faltaEssencias": 0,
+                "faltaChaves": 0,
+                "podeSubir": false,
+                "recompensas": {
+                  "chaves": 1,
+                  "itens": []
+                },
+                "provisorio": true,
+                "cena": null
+              }
+            ],
+            "concluidos": 1,
+            "provisorio": true,
+            "ilustracao": {
+              "arquivo": "/images/torres/observatorio/torre",
+              "larguras": [
+                96,
+                256,
+                512,
+                1024
+              ],
+              "aspecto": 0.656,
+              "altura": 290,
+              "janelas": [
+                [
+                  0.556,
+                  0.627
+                ],
+                [
+                  0.551,
+                  0.499
+                ],
+                [
+                  0.426,
+                  0.347
+                ],
+                [
+                  0.589,
+                  0.332
+                ],
+                [
+                  0.503,
+                  0.178
+                ]
+              ]
+            }
+          },
+          {
+            "id": "picadeiro",
+            "nome": "Torre do Picadeiro",
+            "tipo": "secundaria",
+            "tema": "Lona e apostas",
+            "descricao": "Uma torre de lona listrada onde a casa sempre ganha. Cada andar vencido entrega uma chave do Picadeiro.",
+            "npc": {
+              "id": "javali",
+              "nome": "O Javali",
+              "titulo": "Anfitrião da Sala de Jogos",
+              "pose": "convite"
+            },
+            "essencia": {
+              "item": "essencia:javali",
+              "nome": "Essência de Afinidade do Javali",
+              "quantidade": 0
+            },
+            "chave": {
+              "item": "chave:picadeiro",
+              "nome": "Chave do Picadeiro",
+              "quantidade": 0
+            },
+            "arte": "picadeiro",
+            "mapa": {
+              "x": 40,
+              "y": 93,
+              "escala": 0.54
+            },
+            "andares": [
+              {
+                "n": 1,
+                "titulo": "[PROVISÓRIO] A Bilheteria",
+                "resumo": null,
+                "npc": {
+                  "id": "javali",
+                  "nome": "O Javali",
+                  "titulo": "Anfitrião da Sala de Jogos",
+                  "pose": "convite"
+                },
+                "estado": "atual",
+                "custo": 1,
+                "chaves": [],
+                "gastaChaves": false,
+                "faltaEssencias": 1,
+                "faltaChaves": 0,
+                "podeSubir": false,
+                "recompensas": {
+                  "chaves": 1,
+                  "itens": []
+                },
+                "provisorio": true,
+                "cena": null
+              },
+              {
+                "n": 2,
+                "titulo": "[PROVISÓRIO] O Trapézio",
+                "resumo": null,
+                "npc": {
+                  "id": "javali",
+                  "nome": "O Javali",
+                  "titulo": "Anfitrião da Sala de Jogos",
+                  "pose": "convite"
+                },
+                "estado": "trancado",
+                "custo": 2,
+                "chaves": [],
+                "gastaChaves": false,
+                "faltaEssencias": 0,
+                "faltaChaves": 0,
+                "podeSubir": false,
+                "recompensas": {
+                  "chaves": 1,
+                  "itens": []
+                },
+                "provisorio": true,
+                "cena": null
+              },
+              {
+                "n": 3,
+                "titulo": "[PROVISÓRIO] A Jaula Dourada",
+                "resumo": null,
+                "npc": {
+                  "id": "javali",
+                  "nome": "O Javali",
+                  "titulo": "Anfitrião da Sala de Jogos",
+                  "pose": "convite"
+                },
+                "estado": "trancado",
+                "custo": 4,
+                "chaves": [],
+                "gastaChaves": false,
+                "faltaEssencias": 0,
+                "faltaChaves": 0,
+                "podeSubir": false,
+                "recompensas": {
+                  "chaves": 1,
+                  "itens": []
+                },
+                "provisorio": true,
+                "cena": null
+              },
+              {
+                "n": 4,
+                "titulo": "[PROVISÓRIO] O Mestre de Cerimônias",
+                "resumo": null,
+                "npc": {
+                  "id": "javali",
+                  "nome": "O Javali",
+                  "titulo": "Anfitrião da Sala de Jogos",
+                  "pose": "convite"
+                },
+                "estado": "trancado",
+                "custo": 8,
+                "chaves": [],
+                "gastaChaves": false,
+                "faltaEssencias": 0,
+                "faltaChaves": 0,
+                "podeSubir": false,
+                "recompensas": {
+                  "chaves": 1,
+                  "itens": []
+                },
+                "provisorio": true,
+                "cena": null
+              },
+              {
+                "n": 5,
+                "titulo": "[PROVISÓRIO] A Última Volta",
+                "resumo": null,
+                "npc": {
+                  "id": "javali",
+                  "nome": "O Javali",
+                  "titulo": "Anfitrião da Sala de Jogos",
+                  "pose": "convite"
+                },
+                "estado": "trancado",
+                "custo": 16,
+                "chaves": [],
+                "gastaChaves": false,
+                "faltaEssencias": 0,
+                "faltaChaves": 0,
+                "podeSubir": false,
+                "recompensas": {
+                  "chaves": 1,
+                  "itens": []
+                },
+                "provisorio": true,
+                "cena": null
+              },
+              {
+                "n": 6,
+                "titulo": "[PROVISÓRIO] O Apagar das Luzes",
+                "resumo": null,
+                "npc": {
+                  "id": "javali",
+                  "nome": "O Javali",
+                  "titulo": "Anfitrião da Sala de Jogos",
+                  "pose": "convite"
+                },
+                "estado": "trancado",
+                "custo": 32,
+                "chaves": [],
+                "gastaChaves": false,
+                "faltaEssencias": 0,
+                "faltaChaves": 0,
+                "podeSubir": false,
+                "recompensas": {
+                  "chaves": 1,
+                  "itens": []
+                },
+                "provisorio": true,
+                "cena": null
+              }
+            ],
+            "concluidos": 0,
+            "provisorio": true,
+            "ilustracao": {
+              "arquivo": "/images/torres/picadeiro/torre",
+              "larguras": [
+                96,
+                256,
+                512,
+                1024
+              ],
+              "aspecto": 0.646,
+              "altura": 270,
+              "janelas": [
+                [
+                  0.5,
+                  0.83
+                ],
+                [
+                  0.272,
+                  0.528
+                ],
+                [
+                  0.722,
+                  0.488
+                ],
+                [
+                  0.461,
+                  0.548
+                ],
+                [
+                  0.225,
+                  0.498
+                ],
+                [
+                  0.828,
+                  0.524
+                ]
+              ]
+            }
+          }
+        ],
+        "provisorio": true,
+        "cenario": {
+          "ilha": {
+            "arquivo": "/images/torres/mapa/ilha",
+            "larguras": [
+              512,
+              768,
+              1024,
+              1536
+            ],
+            "aspecto": 0.6667,
+            "sufixo": "altura"
+          },
+          "ceu": {
+            "arquivo": "/images/torres/mapa/ceu",
+            "larguras": [
+              512,
+              768,
+              1024,
+              1536
+            ],
+            "aspecto": 0.6667,
+            "sufixo": "altura",
+            "espelhar": true
+          },
+          "pedestais": {
+            "campanha": {
+              "x": 0.5,
+              "y": 0.475,
+              "escala": 0.6
+            },
+            "imperador": {
+              "x": 0.205,
+              "y": 0.512,
+              "escala": 0.6
+            },
+            "observatorio": {
+              "x": 0.775,
+              "y": 0.562,
+              "escala": 0.6
+            },
+            "picadeiro": {
+              "x": 0.37,
+              "y": 0.588,
+              "escala": 0.5
+            }
+          },
+          "enfeites": []
+        }
+      }
+    },
+    {
+      "name": "tv-08-andou-cel",
+      "note": "tocou no chão: o chibi anda",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "tv-09-cartao-torre-cel",
+      "note": "cartão da Torre do Imperador",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "tv-10-torre-cel",
+      "note": "dentro da torre: a escada e os andares",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "tv-11-cartao-andar-cel",
+      "note": "andar 1: custo, saldo e prêmio",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "tv-12-andar1-longa-cel",
+      "note": "1º andar: o encontro, retrato grande",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "tv-13-premio-chave-cel",
+      "note": "prêmio: Chave do Imperador",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "tv-14-torre-feito-cel",
+      "note": "andar 1 concluído, o 2 é o próximo",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "tv-15-andar2-patamar-cel",
+      "note": "2º andar: conversa curta no patamar, com os chibis",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "tv-16-premio-2-cel",
+      "note": "prêmio do 2º andar",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "tv-17-andar3-faltam-cel",
+      "note": "andar 3: faltam Essências",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "tv-18-rever-cel",
+      "note": "andar já subido: Rever a cena",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "tv-19-volta-ilha-cel",
+      "note": "Esc fecha o cartão e depois sai da torre (a janela continua)",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "tv-20-ruptura-cel",
+      "note": "Torre da Ruptura: 7 andares",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "tv-21-ruptura-oculta-cel",
+      "note": "NPC \"???\": conversa sem rosto",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "tv-22-ruptura-premio-cel",
+      "note": "prêmio da principal",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "tv-23-ruptura-chaves-cel",
+      "note": "andar 2: pede a Chave do Imperador",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "tv-24-lista-cel",
+      "note": "lista das torres, com o progresso",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "tv-24-api",
+      "note": "GET /api/torres no fim",
+      "json": {
+        "liberado": true,
+        "pularApresentacao": false,
+        "apresentacao": {
+          "galoVista": true,
+          "galoFa": true,
+          "reflexaoPendente": true
+        },
+        "torres": [
+          {
+            "id": "campanha",
+            "nome": "[PROVISÓRIO] Torre da Ruptura",
+            "tipo": "principal",
+            "tema": "Campanha",
+            "descricao": "A torre da trama principal. Nome, NPC e essência ainda a definir pelo dono. Alguns andares só abrem para quem trouxer chaves das torres secundárias.",
+            "npc": {
+              "id": "desconhecido",
+              "nome": "???",
+              "titulo": "NPC a definir pelo dono"
+            },
+            "essencia": {
+              "item": "essencia:campanha",
+              "nome": "Essência da Ruptura (provisória)",
+              "quantidade": 1
+            },
+            "chave": null,
+            "arte": "agulha",
+            "mapa": {
+              "x": 50,
+              "y": 61,
+              "escala": 0.92
+            },
+            "andares": [
+              {
+                "n": 1,
+                "titulo": "[PROVISÓRIO] O Saguão",
+                "resumo": "Placeholder: o primeiro andar da campanha.",
+                "npc": {
+                  "id": "desconhecido",
+                  "nome": "???",
+                  "titulo": "NPC a definir pelo dono"
+                },
+                "estado": "concluido",
+                "custo": 1,
+                "chaves": [],
+                "gastaChaves": false,
+                "faltaEssencias": 0,
+                "faltaChaves": 0,
+                "podeSubir": false,
+                "recompensas": {
+                  "chaves": 0,
+                  "itens": []
+                },
+                "provisorio": true,
+                "cena": [
+                  {
+                    "tipo": "fala",
+                    "texto": "[PROVISÓRIO] Diálogo do 1º andar da torre principal ainda não escrito pelo dono."
+                  }
+                ]
+              },
+              {
+                "n": 2,
+                "titulo": "[PROVISÓRIO] A Escadaria Fria",
+                "resumo": "Placeholder: pede 1 chave da Torre do Imperador.",
+                "npc": {
+                  "id": "desconhecido",
+                  "nome": "???",
+                  "titulo": "NPC a definir pelo dono"
+                },
+                "estado": "concluido",
+                "custo": 2,
+                "chaves": [
+                  {
+                    "torre": "imperador",
+                    "quantidade": 1,
+                    "item": "chave:imperador",
+                    "nome": "Chave do Imperador",
+                    "tem": 2
+                  }
+                ],
+                "gastaChaves": false,
+                "faltaEssencias": 0,
+                "faltaChaves": 0,
+                "podeSubir": false,
+                "recompensas": {
+                  "chaves": 0,
+                  "itens": []
+                },
+                "provisorio": true,
+                "cena": [
+                  {
+                    "tipo": "fala",
+                    "texto": "[PROVISÓRIO] Diálogo do 2º andar da torre principal ainda não escrito pelo dono."
+                  }
+                ]
+              },
+              {
+                "n": 3,
+                "titulo": "[PROVISÓRIO] O Corredor dos Retratos",
+                "resumo": "Placeholder: pede 1 chave do Observatório e 1 do Picadeiro.",
+                "npc": {
+                  "id": "desconhecido",
+                  "nome": "???",
+                  "titulo": "NPC a definir pelo dono"
+                },
+                "estado": "atual",
+                "custo": 4,
+                "chaves": [
+                  {
+                    "torre": "observatorio",
+                    "quantidade": 1,
+                    "item": "chave:observatorio",
+                    "nome": "Chave do Observatório",
+                    "tem": 1
+                  },
+                  {
+                    "torre": "picadeiro",
+                    "quantidade": 1,
+                    "item": "chave:picadeiro",
+                    "nome": "Chave do Picadeiro",
+                    "tem": 0
+                  }
+                ],
+                "gastaChaves": false,
+                "faltaEssencias": 3,
+                "faltaChaves": 1,
+                "podeSubir": false,
+                "recompensas": {
+                  "chaves": 0,
+                  "itens": []
+                },
+                "provisorio": true,
+                "cena": null
+              },
+              {
+                "n": 4,
+                "titulo": "[PROVISÓRIO] A Sala do Trono Vazio",
+                "resumo": null,
+                "npc": {
+                  "id": "desconhecido",
+                  "nome": "???",
+                  "titulo": "NPC a definir pelo dono"
+                },
+                "estado": "trancado",
+                "custo": 8,
+                "chaves": [],
+                "gastaChaves": false,
+                "faltaEssencias": 0,
+                "faltaChaves": 0,
+                "podeSubir": false,
+                "recompensas": {
+                  "chaves": 0,
+                  "itens": []
+                },
+                "provisorio": true,
+                "cena": null
+              },
+              {
+                "n": 5,
+                "titulo": "[PROVISÓRIO] O Mirante",
+                "resumo": null,
+                "npc": {
+                  "id": "desconhecido",
+                  "nome": "???",
+                  "titulo": "NPC a definir pelo dono"
+                },
+                "estado": "trancado",
+                "custo": 16,
+                "chaves": [
+                  {
+                    "torre": "imperador",
+                    "quantidade": 3,
+                    "item": "chave:imperador",
+                    "nome": "Chave do Imperador",
+                    "tem": 2
+                  },
+                  {
+                    "torre": "observatorio",
+                    "quantidade": 3,
+                    "item": "chave:observatorio",
+                    "nome": "Chave do Observatório",
+                    "tem": 1
+                  }
+                ],
+                "gastaChaves": false,
+                "faltaEssencias": 0,
+                "faltaChaves": 0,
+                "podeSubir": false,
+                "recompensas": {
+                  "chaves": 0,
+                  "itens": []
+                },
+                "provisorio": true,
+                "cena": null
+              },
+              {
+                "n": 6,
+                "titulo": "[PROVISÓRIO] A Coroa Partida",
+                "resumo": null,
+                "npc": {
+                  "id": "desconhecido",
+                  "nome": "???",
+                  "titulo": "NPC a definir pelo dono"
+                },
+                "estado": "trancado",
+                "custo": 32,
+                "chaves": [],
+                "gastaChaves": false,
+                "faltaEssencias": 0,
+                "faltaChaves": 0,
+                "podeSubir": false,
+                "recompensas": {
+                  "chaves": 0,
+                  "itens": []
+                },
+                "provisorio": true,
+                "cena": null
+              },
+              {
+                "n": 7,
+                "titulo": "[PROVISÓRIO] O Topo",
+                "resumo": null,
+                "npc": {
+                  "id": "desconhecido",
+                  "nome": "???",
+                  "titulo": "NPC a definir pelo dono"
+                },
+                "estado": "trancado",
+                "custo": 64,
+                "chaves": [
+                  {
+                    "torre": "imperador",
+                    "quantidade": 5,
+                    "item": "chave:imperador",
+                    "nome": "Chave do Imperador",
+                    "tem": 2
+                  },
+                  {
+                    "torre": "observatorio",
+                    "quantidade": 5,
+                    "item": "chave:observatorio",
+                    "nome": "Chave do Observatório",
+                    "tem": 1
+                  },
+                  {
+                    "torre": "picadeiro",
+                    "quantidade": 5,
+                    "item": "chave:picadeiro",
+                    "nome": "Chave do Picadeiro",
+                    "tem": 0
+                  }
+                ],
+                "gastaChaves": false,
+                "faltaEssencias": 0,
+                "faltaChaves": 0,
+                "podeSubir": false,
+                "recompensas": {
+                  "chaves": 0,
+                  "itens": []
+                },
+                "provisorio": true,
+                "cena": null
+              }
+            ],
+            "concluidos": 2,
+            "provisorio": true,
+            "ilustracao": {
+              "arquivo": "/images/torres/agulha/torre",
+              "larguras": [
+                96,
+                256,
+                512,
+                1024
+              ],
+              "aspecto": 0.486,
+              "altura": 440,
+              "janelas": [
+                [
+                  0.597,
+                  0.825
+                ],
+                [
+                  0.398,
+                  0.724
+                ],
+                [
+                  0.556,
+                  0.633
+                ],
+                [
+                  0.386,
+                  0.59
+                ],
+                [
+                  0.554,
+                  0.501
+                ],
+                [
+                  0.393,
+                  0.418
+                ],
+                [
+                  0.566,
+                  0.39
+                ],
+                [
+                  0.407,
+                  0.325
+                ]
+              ]
+            }
+          },
+          {
+            "id": "imperador",
+            "nome": "Torre do Imperador",
+            "tipo": "secundaria",
+            "tema": "Coroa e fanfarronice",
+            "descricao": "A torre-palácio do Galo, Anfitrião do Arcano do Imperador. Cada andar vencido entrega uma chave do Imperador.",
+            "npc": {
+              "id": "galo",
+              "nome": "O Galo",
+              "titulo": "Anfitrião do Arcano do Imperador",
+              "pose": "confiante"
+            },
+            "essencia": {
+              "item": "essencia:galo",
+              "nome": "Essência de Afinidade do Galo",
+              "quantidade": 0
+            },
+            "chave": {
+              "item": "chave:imperador",
+              "nome": "Chave do Imperador",
+              "quantidade": 2
+            },
+            "arte": "palacio",
+            "mapa": {
+              "x": 17,
+              "y": 67,
+              "escala": 0.66
+            },
+            "andares": [
+              {
+                "n": 1,
+                "titulo": "[PROVISÓRIO] O Salão do Trono",
+                "resumo": null,
+                "npc": {
+                  "id": "galo",
+                  "nome": "O Galo",
+                  "titulo": "Anfitrião do Arcano do Imperador",
+                  "pose": "confiante"
+                },
+                "estado": "concluido",
+                "custo": 1,
+                "chaves": [],
+                "gastaChaves": false,
+                "faltaEssencias": 0,
+                "faltaChaves": 0,
+                "podeSubir": false,
+                "recompensas": {
+                  "chaves": 1,
+                  "itens": []
+                },
+                "provisorio": true,
+                "cena": [
+                  {
+                    "tipo": "fala",
+                    "pose": "malicia",
+                    "texto": "[PROVISÓRIO] Diálogo do 1º andar da Torre do Imperador ainda não escrito pelo dono."
+                  },
+                  {
+                    "tipo": "sistema",
+                    "texto": "Andar concluído. Este texto é um exemplo e será substituído."
+                  }
+                ]
+              },
+              {
+                "n": 2,
+                "titulo": "[PROVISÓRIO] A Galeria dos Brasões",
+                "resumo": null,
+                "npc": {
+                  "id": "galo",
+                  "nome": "O Galo",
+                  "titulo": "Anfitrião do Arcano do Imperador",
+                  "pose": "confiante"
+                },
+                "estado": "concluido",
+                "custo": 2,
+                "chaves": [],
+                "gastaChaves": false,
+                "faltaEssencias": 0,
+                "faltaChaves": 0,
+                "podeSubir": false,
+                "recompensas": {
+                  "chaves": 1,
+                  "itens": []
+                },
+                "provisorio": true,
+                "cena": [
+                  {
+                    "tipo": "fala",
+                    "pose": "desdem",
+                    "texto": "[PROVISÓRIO] Diálogo do 2º andar ainda não escrito."
+                  }
+                ]
+              },
+              {
+                "n": 3,
+                "titulo": "[PROVISÓRIO] O Poleiro Real",
+                "resumo": null,
+                "npc": {
+                  "id": "galo",
+                  "nome": "O Galo",
+                  "titulo": "Anfitrião do Arcano do Imperador",
+                  "pose": "confiante"
+                },
+                "estado": "atual",
+                "custo": 4,
+                "chaves": [],
+                "gastaChaves": false,
+                "faltaEssencias": 4,
+                "faltaChaves": 0,
+                "podeSubir": false,
+                "recompensas": {
+                  "chaves": 1,
+                  "itens": []
+                },
+                "provisorio": true,
+                "cena": null
+              },
+              {
+                "n": 4,
+                "titulo": "[PROVISÓRIO] A Coroa de Ferro",
+                "resumo": null,
+                "npc": {
+                  "id": "galo",
+                  "nome": "O Galo",
+                  "titulo": "Anfitrião do Arcano do Imperador",
+                  "pose": "confiante"
+                },
+                "estado": "trancado",
+                "custo": 8,
+                "chaves": [],
+                "gastaChaves": false,
+                "faltaEssencias": 0,
+                "faltaChaves": 0,
+                "podeSubir": false,
+                "recompensas": {
+                  "chaves": 1,
+                  "itens": []
+                },
+                "provisorio": true,
+                "cena": null
+              },
+              {
+                "n": 5,
+                "titulo": "[PROVISÓRIO] O Cetro",
+                "resumo": null,
+                "npc": {
+                  "id": "galo",
+                  "nome": "O Galo",
+                  "titulo": "Anfitrião do Arcano do Imperador",
+                  "pose": "confiante"
+                },
+                "estado": "trancado",
+                "custo": 16,
+                "chaves": [],
+                "gastaChaves": false,
+                "faltaEssencias": 0,
+                "faltaChaves": 0,
+                "podeSubir": false,
+                "recompensas": {
+                  "chaves": 1,
+                  "itens": []
+                },
+                "provisorio": true,
+                "cena": null
+              }
+            ],
+            "concluidos": 2,
+            "provisorio": true,
+            "ilustracao": {
+              "arquivo": "/images/torres/imperador/torre",
+              "larguras": [
+                96,
+                256,
+                512,
+                1024
+              ],
+              "aspecto": 0.602,
+              "altura": 300,
+              "janelas": [
+                [
+                  0.513,
+                  0.782
+                ],
+                [
+                  0.578,
+                  0.588
+                ],
+                [
+                  0.508,
+                  0.519
+                ],
+                [
+                  0.314,
+                  0.485
+                ],
+                [
+                  0.57,
+                  0.42
+                ]
+              ]
+            }
+          },
+          {
+            "id": "observatorio",
+            "nome": "Torre do Observatório",
+            "tipo": "secundaria",
+            "tema": "Estrelas e segredos",
+            "descricao": "Uma torre de vigia com cúpula de aço. Cada andar vencido entrega uma chave do Observatório.",
+            "npc": {
+              "id": "coruja",
+              "nome": "A Coruja",
+              "titulo": "Guardiã das cartas"
+            },
+            "essencia": {
+              "item": "essencia:coruja",
+              "nome": "Essência de Afinidade da Coruja",
+              "quantidade": 0
+            },
+            "chave": {
+              "item": "chave:observatorio",
+              "nome": "Chave do Observatório",
+              "quantidade": 1
+            },
+            "arte": "observatorio",
+            "mapa": {
+              "x": 83,
+              "y": 71,
+              "escala": 0.64
+            },
+            "andares": [
+              {
+                "n": 1,
+                "titulo": "[PROVISÓRIO] A Luneta",
+                "resumo": null,
+                "npc": {
+                  "id": "coruja",
+                  "nome": "A Coruja",
+                  "titulo": "Guardiã das cartas"
+                },
+                "estado": "concluido",
+                "custo": 1,
+                "chaves": [],
+                "gastaChaves": false,
+                "faltaEssencias": 0,
+                "faltaChaves": 0,
+                "podeSubir": false,
+                "recompensas": {
+                  "chaves": 1,
+                  "itens": []
+                },
+                "provisorio": true,
+                "cena": [
+                  {
+                    "tipo": "fala",
+                    "texto": "[PROVISÓRIO] Diálogo do 1º andar do Observatório ainda não escrito."
+                  }
+                ]
+              },
+              {
+                "n": 2,
+                "titulo": "[PROVISÓRIO] O Mapa Celeste",
+                "resumo": null,
+                "npc": {
+                  "id": "coruja",
+                  "nome": "A Coruja",
+                  "titulo": "Guardiã das cartas"
+                },
+                "estado": "atual",
+                "custo": 2,
+                "chaves": [],
+                "gastaChaves": false,
+                "faltaEssencias": 2,
+                "faltaChaves": 0,
+                "podeSubir": false,
+                "recompensas": {
+                  "chaves": 1,
+                  "itens": []
+                },
+                "provisorio": true,
+                "cena": null
+              },
+              {
+                "n": 3,
+                "titulo": "[PROVISÓRIO] A Biblioteca Suspensa",
+                "resumo": null,
+                "npc": {
+                  "id": "coruja",
+                  "nome": "A Coruja",
+                  "titulo": "Guardiã das cartas"
+                },
+                "estado": "trancado",
+                "custo": 4,
+                "chaves": [],
+                "gastaChaves": false,
+                "faltaEssencias": 0,
+                "faltaChaves": 0,
+                "podeSubir": false,
+                "recompensas": {
+                  "chaves": 1,
+                  "itens": []
+                },
+                "provisorio": true,
+                "cena": null
+              },
+              {
+                "n": 4,
+                "titulo": "[PROVISÓRIO] O Eclipse",
+                "resumo": null,
+                "npc": {
+                  "id": "coruja",
+                  "nome": "A Coruja",
+                  "titulo": "Guardiã das cartas"
+                },
+                "estado": "trancado",
+                "custo": 8,
+                "chaves": [],
+                "gastaChaves": false,
+                "faltaEssencias": 0,
+                "faltaChaves": 0,
+                "podeSubir": false,
+                "recompensas": {
+                  "chaves": 1,
+                  "itens": []
+                },
+                "provisorio": true,
+                "cena": null
+              },
+              {
+                "n": 5,
+                "titulo": "[PROVISÓRIO] A Cúpula",
+                "resumo": null,
+                "npc": {
+                  "id": "coruja",
+                  "nome": "A Coruja",
+                  "titulo": "Guardiã das cartas"
+                },
+                "estado": "trancado",
+                "custo": 16,
+                "chaves": [],
+                "gastaChaves": false,
+                "faltaEssencias": 0,
+                "faltaChaves": 0,
+                "podeSubir": false,
+                "recompensas": {
+                  "chaves": 1,
+                  "itens": []
+                },
+                "provisorio": true,
+                "cena": null
+              }
+            ],
+            "concluidos": 1,
+            "provisorio": true,
+            "ilustracao": {
+              "arquivo": "/images/torres/observatorio/torre",
+              "larguras": [
+                96,
+                256,
+                512,
+                1024
+              ],
+              "aspecto": 0.656,
+              "altura": 290,
+              "janelas": [
+                [
+                  0.556,
+                  0.627
+                ],
+                [
+                  0.551,
+                  0.499
+                ],
+                [
+                  0.426,
+                  0.347
+                ],
+                [
+                  0.589,
+                  0.332
+                ],
+                [
+                  0.503,
+                  0.178
+                ]
+              ]
+            }
+          },
+          {
+            "id": "picadeiro",
+            "nome": "Torre do Picadeiro",
+            "tipo": "secundaria",
+            "tema": "Lona e apostas",
+            "descricao": "Uma torre de lona listrada onde a casa sempre ganha. Cada andar vencido entrega uma chave do Picadeiro.",
+            "npc": {
+              "id": "javali",
+              "nome": "O Javali",
+              "titulo": "Anfitrião da Sala de Jogos",
+              "pose": "convite"
+            },
+            "essencia": {
+              "item": "essencia:javali",
+              "nome": "Essência de Afinidade do Javali",
+              "quantidade": 0
+            },
+            "chave": {
+              "item": "chave:picadeiro",
+              "nome": "Chave do Picadeiro",
+              "quantidade": 0
+            },
+            "arte": "picadeiro",
+            "mapa": {
+              "x": 40,
+              "y": 93,
+              "escala": 0.54
+            },
+            "andares": [
+              {
+                "n": 1,
+                "titulo": "[PROVISÓRIO] A Bilheteria",
+                "resumo": null,
+                "npc": {
+                  "id": "javali",
+                  "nome": "O Javali",
+                  "titulo": "Anfitrião da Sala de Jogos",
+                  "pose": "convite"
+                },
+                "estado": "atual",
+                "custo": 1,
+                "chaves": [],
+                "gastaChaves": false,
+                "faltaEssencias": 1,
+                "faltaChaves": 0,
+                "podeSubir": false,
+                "recompensas": {
+                  "chaves": 1,
+                  "itens": []
+                },
+                "provisorio": true,
+                "cena": null
+              },
+              {
+                "n": 2,
+                "titulo": "[PROVISÓRIO] O Trapézio",
+                "resumo": null,
+                "npc": {
+                  "id": "javali",
+                  "nome": "O Javali",
+                  "titulo": "Anfitrião da Sala de Jogos",
+                  "pose": "convite"
+                },
+                "estado": "trancado",
+                "custo": 2,
+                "chaves": [],
+                "gastaChaves": false,
+                "faltaEssencias": 0,
+                "faltaChaves": 0,
+                "podeSubir": false,
+                "recompensas": {
+                  "chaves": 1,
+                  "itens": []
+                },
+                "provisorio": true,
+                "cena": null
+              },
+              {
+                "n": 3,
+                "titulo": "[PROVISÓRIO] A Jaula Dourada",
+                "resumo": null,
+                "npc": {
+                  "id": "javali",
+                  "nome": "O Javali",
+                  "titulo": "Anfitrião da Sala de Jogos",
+                  "pose": "convite"
+                },
+                "estado": "trancado",
+                "custo": 4,
+                "chaves": [],
+                "gastaChaves": false,
+                "faltaEssencias": 0,
+                "faltaChaves": 0,
+                "podeSubir": false,
+                "recompensas": {
+                  "chaves": 1,
+                  "itens": []
+                },
+                "provisorio": true,
+                "cena": null
+              },
+              {
+                "n": 4,
+                "titulo": "[PROVISÓRIO] O Mestre de Cerimônias",
+                "resumo": null,
+                "npc": {
+                  "id": "javali",
+                  "nome": "O Javali",
+                  "titulo": "Anfitrião da Sala de Jogos",
+                  "pose": "convite"
+                },
+                "estado": "trancado",
+                "custo": 8,
+                "chaves": [],
+                "gastaChaves": false,
+                "faltaEssencias": 0,
+                "faltaChaves": 0,
+                "podeSubir": false,
+                "recompensas": {
+                  "chaves": 1,
+                  "itens": []
+                },
+                "provisorio": true,
+                "cena": null
+              },
+              {
+                "n": 5,
+                "titulo": "[PROVISÓRIO] A Última Volta",
+                "resumo": null,
+                "npc": {
+                  "id": "javali",
+                  "nome": "O Javali",
+                  "titulo": "Anfitrião da Sala de Jogos",
+                  "pose": "convite"
+                },
+                "estado": "trancado",
+                "custo": 16,
+                "chaves": [],
+                "gastaChaves": false,
+                "faltaEssencias": 0,
+                "faltaChaves": 0,
+                "podeSubir": false,
+                "recompensas": {
+                  "chaves": 1,
+                  "itens": []
+                },
+                "provisorio": true,
+                "cena": null
+              },
+              {
+                "n": 6,
+                "titulo": "[PROVISÓRIO] O Apagar das Luzes",
+                "resumo": null,
+                "npc": {
+                  "id": "javali",
+                  "nome": "O Javali",
+                  "titulo": "Anfitrião da Sala de Jogos",
+                  "pose": "convite"
+                },
+                "estado": "trancado",
+                "custo": 32,
+                "chaves": [],
+                "gastaChaves": false,
+                "faltaEssencias": 0,
+                "faltaChaves": 0,
+                "podeSubir": false,
+                "recompensas": {
+                  "chaves": 1,
+                  "itens": []
+                },
+                "provisorio": true,
+                "cena": null
+              }
+            ],
+            "concluidos": 0,
+            "provisorio": true,
+            "ilustracao": {
+              "arquivo": "/images/torres/picadeiro/torre",
+              "larguras": [
+                96,
+                256,
+                512,
+                1024
+              ],
+              "aspecto": 0.646,
+              "altura": 270,
+              "janelas": [
+                [
+                  0.5,
+                  0.83
+                ],
+                [
+                  0.272,
+                  0.528
+                ],
+                [
+                  0.722,
+                  0.488
+                ],
+                [
+                  0.461,
+                  0.548
+                ],
+                [
+                  0.225,
+                  0.498
+                ],
+                [
+                  0.828,
+                  0.524
+                ]
+              ]
+            }
+          }
+        ],
+        "provisorio": true,
+        "cenario": {
+          "ilha": {
+            "arquivo": "/images/torres/mapa/ilha",
+            "larguras": [
+              512,
+              768,
+              1024,
+              1536
+            ],
+            "aspecto": 0.6667,
+            "sufixo": "altura"
+          },
+          "ceu": {
+            "arquivo": "/images/torres/mapa/ceu",
+            "larguras": [
+              512,
+              768,
+              1024,
+              1536
+            ],
+            "aspecto": 0.6667,
+            "sufixo": "altura",
+            "espelhar": true
+          },
+          "pedestais": {
+            "campanha": {
+              "x": 0.5,
+              "y": 0.475,
+              "escala": 0.6
+            },
+            "imperador": {
+              "x": 0.205,
+              "y": 0.512,
+              "escala": 0.6
+            },
+            "observatorio": {
+              "x": 0.775,
+              "y": 0.562,
+              "escala": 0.6
+            },
+            "picadeiro": {
+              "x": 0.37,
+              "y": 0.588,
+              "escala": 0.5
+            }
+          },
+          "enfeites": []
+        }
+      }
+    },
+    {
+      "name": "tv-25-reflexao-cel",
+      "note": "ao sair das Torres: reflexão \"Anfitrião de quê?\"",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "tv-30-ilha-pc",
+      "note": "a ilha inteira na janela do computador",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "tv-31-cartao-pc",
+      "note": "cartão à direita, no computador",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "tv-32-torre-pc",
+      "note": "dentro da torre no computador",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "tv-33-longa-pc",
+      "note": "cena longa no computador",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "tv-34-patamar-pc",
+      "note": "patamar no computador",
+      "url": "http://localhost:3000/"
+    },
+    {
+      "name": "catedral-00-api",
+      "note": "GET /api/catedral antes",
+      "json": {
+        "liberado": true,
+        "descoberta": false,
+        "oferendas": {
+          "arroz": 0,
+          "tambor": 0,
+          "flauta": 0,
+          "mascara": 0
+        },
+        "equipe": false
+      }
+    },
+    {
+      "name": "catedral-00-viagem-cel",
+      "note": "Sair de casa: a igreja (???) sem cadeado",
+      "url": "http://localhost:3000/?semraf=1"
+    },
+    {
+      "name": "catedral-01-fora-cel",
+      "note": "primeira visita: diante da Catedral",
+      "url": "http://localhost:3000/?semraf=1"
+    },
+    {
+      "name": "catedral-02-aldrava-cel",
+      "note": "Deixar para outro dia ou usar a aldrava",
+      "url": "http://localhost:3000/?semraf=1"
+    },
+    {
+      "name": "catedral-03-dentro-cel",
+      "note": "dentro da Catedral",
+      "url": "http://localhost:3000/?semraf=1"
+    },
+    {
+      "name": "catedral-04-erick-cel",
+      "note": "o Erick aparece (corpo inteiro)",
+      "url": "http://localhost:3000/?semraf=1"
+    },
+    {
+      "name": "catedral-05-escolha-cel",
+      "note": "Quem é você? · Como você leu minha mente? · Por quê?",
+      "url": "http://localhost:3000/?semraf=1"
+    },
+    {
+      "name": "catedral-06-erick-fala-cel",
+      "note": "Erick Zorak se apresenta (busto)",
+      "url": "http://localhost:3000/?semraf=1"
+    },
+    {
+      "name": "catedral-07-pergunta-cel",
+      "note": "o que um Record que nunca vi antes está fazendo por aqui?",
+      "url": "http://localhost:3000/?semraf=1"
+    },
+    {
+      "name": "catedral-08-karma-cel",
+      "note": "+100 Karma de Caos",
+      "url": "http://localhost:3000/?semraf=1"
+    },
+    {
+      "name": "catedral-09-altar-cel",
+      "note": "altar: Orar ou Oferecer uma oferenda",
+      "url": "http://localhost:3000/?semraf=1"
+    },
+    {
+      "name": "catedral-09-api",
+      "note": "GET /api/catedral depois da primeira visita (descoberta, oferendas iniciais)",
+      "json": {
+        "liberado": true,
+        "descoberta": true,
+        "oferendas": {
+          "arroz": 2,
+          "tambor": 1,
+          "flauta": 1,
+          "mascara": 1
+        },
+        "equipe": false
+      }
+    },
+    {
+      "name": "catedral-10-orar-cel",
+      "note": "Orar: saúde, estabilidade, relações",
+      "url": "http://localhost:3000/?semraf=1"
+    },
+    {
+      "name": "catedral-11-orar-resultado-cel",
+      "note": "oração (probabilidade ainda não definida pelo Rup)",
+      "url": "http://localhost:3000/?semraf=1"
+    },
+    {
+      "name": "catedral-12-oferendas-cel",
+      "note": "oferendas: probabilidades do Rup e quantas você tem",
+      "url": "http://localhost:3000/?semraf=1"
+    },
+    {
+      "name": "catedral-12b-oferendas-fim-cel",
+      "note": "oferendas: o fim da lista",
+      "url": "http://localhost:3000/?semraf=1"
+    },
+    {
+      "name": "catedral-13-ritual-cel",
+      "note": "resultado do ritual com o Arroz Branco",
+      "url": "http://localhost:3000/?semraf=1"
+    },
+    {
+      "name": "catedral-14-depois-cel",
+      "note": "de volta às oferendas: um Arroz a menos",
+      "url": "http://localhost:3000/?semraf=1"
+    },
+    {
+      "name": "catedral-14-api",
+      "note": "GET /api/catedral depois do ritual",
+      "json": {
+        "liberado": true,
+        "descoberta": true,
+        "oferendas": {
+          "arroz": 1,
+          "tambor": 1,
+          "flauta": 1,
+          "mascara": 1
+        },
+        "equipe": false
+      }
+    },
+    {
+      "name": "catedral-14-inventario",
+      "note": "inventário (outros): oferendas",
+      "json": {
+        "inventario": [
+          {
+            "key": "oferenda:arroz",
+            "kind": "outro",
+            "name": "Arroz Branco",
+            "description": "Arroz fresquinho, ainda dentro do pacote. Despeje-o sobre si mesmo para atrair boa sorte.",
+            "rarity": "comum",
+            "quantity": 1,
+            "source": "catedral",
+            "firstAt": 1794278186229,
+            "meta": {
+              "origem": "catedral",
+              "oferenda": true
+            }
+          },
+          {
+            "key": "oferenda:flauta",
+            "kind": "outro",
+            "name": "Flauta de Osso",
+            "description": "Uma flauta confeccionada com os ossos de alguém. Toque uma melodia de olhos fechados e aguarde para descobrir o que os espíritos reservaram para você.",
+            "rarity": "comum",
+            "quantity": 1,
+            "source": "catedral",
+            "firstAt": 1794278186229,
+            "meta": {
+              "origem": "catedral",
+              "oferenda": true
+            }
+          },
+          {
+            "key": "oferenda:mascara",
+            "kind": "outro",
+            "name": "Máscara Xamã",
+            "description": "A antiga máscara de madeira de um mestre da feitiçaria. Dance enquanto a utiliza e, antes de quebrá-la, pronuncie seu nome em voz alta para tornar possível o impossível.",
+            "rarity": "comum",
+            "quantity": 1,
+            "source": "catedral",
+            "firstAt": 1794278186229,
+            "meta": {
+              "origem": "catedral",
+              "oferenda": true
+            }
+          },
+          {
+            "key": "oferenda:tambor",
+            "kind": "outro",
+            "name": "Tambor Antigo",
+            "description": "Um antigo tambor tribal. Bata nele com força até que se quebre, atraindo energias poderosas.",
+            "rarity": "comum",
+            "quantity": 1,
+            "source": "catedral",
+            "firstAt": 1794278186229,
+            "meta": {
+              "origem": "catedral",
+              "oferenda": true
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "catedral-15-despedida-cel",
+      "note": "despedida do Erick (sorteada)",
+      "url": "http://localhost:3000/?semraf=1"
+    },
+    {
+      "name": "catedral-16-volta-casa-cel",
+      "note": "de volta à Casa",
+      "url": "http://localhost:3000/?semraf=1"
+    },
+    {
+      "name": "catedral-17-viagem-nome-cel",
+      "note": "Sair de casa: agora \"Catedral de Damasco\"",
+      "url": "http://localhost:3000/?semraf=1"
+    },
+    {
+      "name": "catedral-18-visita-comum-cel",
+      "note": "visita comum: o Erick e você no corredor, o rostinho na caixa",
+      "url": "http://localhost:3000/?semraf=1"
+    },
+    {
+      "name": "catedral-30-pc",
+      "note": "Catedral no computador (primeira visita ou visita comum)",
+      "url": "http://localhost:3000/v2?semraf=1&teste=1"
+    },
+    {
+      "name": "catedral-31-erick-pc",
+      "note": "o Erick no computador",
+      "url": "http://localhost:3000/v2?semraf=1&teste=1"
+    },
+    {
+      "name": "catedral-32-comum-pc",
+      "note": "visita comum no computador",
+      "url": "http://localhost:3000/v2?semraf=1&teste=1"
+    }
+  ],
+  "errors": [
+    {
+      "step": "poco-premios-api",
+      "error": "400 {\"ok\":false,\"error\":\"Carta desconhecida.\"}"
+    },
+    {
+      "step": "corp-fundar",
+      "error": "TimeoutError: locator.fill: Timeout 30000ms exceeded.\nCall log:\n  - waiting for locator('#corp-nome')\n"
+    },
+    {
+      "step": "v2-03-torres-pc",
+      "error": "TimeoutError: page.screenshot: Timeout 30000ms exceeded.\nCall log:\n  - taking page screenshot\n"
+    }
+  ],
+  "console": [
+    {
+      "page": "http://localhost:3000/?antigo",
+      "text": "HTTP 400",
+      "src": "http://localhost:3000/api/auth/sign-up/email"
+    },
+    {
+      "page": "http://localhost:3000/?antigo",
+      "text": "Failed to load resource: the server responded with a status of 400 (BAD_REQUEST)",
+      "src": "http://localhost:3000/api/auth/sign-up/email"
+    },
+    {
+      "page": "http://localhost:3000/?antigo",
+      "text": "HTTP 400",
+      "src": "http://localhost:3000/api/auth/sign-up/email"
+    },
+    {
+      "page": "http://localhost:3000/?antigo",
+      "text": "Failed to load resource: the server responded with a status of 400 (BAD_REQUEST)",
+      "src": "http://localhost:3000/api/auth/sign-up/email"
+    },
+    {
+      "page": "http://localhost:3000/?antigo",
+      "text": "HTTP 409",
+      "src": "http://localhost:3000/api/salao"
+    },
+    {
+      "page": "http://localhost:3000/?antigo",
+      "text": "Failed to load resource: the server responded with a status of 409 (Conflict)",
+      "src": "http://localhost:3000/api/salao"
+    },
+    {
+      "page": "http://localhost:3000/?antigo",
+      "text": "HTTP 500",
+      "src": "http://localhost:3000/api/salao"
+    },
+    {
+      "page": "http://localhost:3000/?antigo",
+      "text": "Failed to load resource: the server responded with a status of 500 (Internal Server Error)",
+      "src": "http://localhost:3000/api/salao"
+    },
+    {
+      "page": "http://localhost:3000/?antigo",
+      "text": "HTTP 400",
+      "src": "http://localhost:3000/api/auth/sign-up/email"
+    },
+    {
+      "page": "http://localhost:3000/?antigo",
+      "text": "Failed to load resource: the server responded with a status of 400 (BAD_REQUEST)",
+      "src": "http://localhost:3000/api/auth/sign-up/email"
+    },
+    {
+      "page": "http://localhost:3000/?antigo",
+      "text": "HTTP 500",
+      "src": "http://localhost:3000/api/corporacoes"
+    },
+    {
+      "page": "http://localhost:3000/?antigo",
+      "text": "Failed to load resource: the server responded with a status of 500 (Internal Server Error)",
+      "src": "http://localhost:3000/api/corporacoes"
+    },
+    {
+      "page": "http://localhost:3000/?antigo",
+      "text": "HTTP 400",
+      "src": "http://localhost:3000/api/auth/sign-up/email"
+    },
+    {
+      "page": "http://localhost:3000/?antigo",
+      "text": "Failed to load resource: the server responded with a status of 400 (BAD_REQUEST)",
+      "src": "http://localhost:3000/api/auth/sign-up/email"
+    },
+    {
+      "page": "http://localhost:3000/?antigo",
+      "text": "HTTP 500",
+      "src": "http://localhost:3000/api/virtudes"
+    },
+    {
+      "page": "http://localhost:3000/?antigo",
+      "text": "Failed to load resource: the server responded with a status of 500 (Internal Server Error)",
+      "src": "http://localhost:3000/api/virtudes"
+    },
+    {
+      "page": "http://localhost:3000/?antigo",
+      "text": "HTTP 400",
+      "src": "http://localhost:3000/api/auth/sign-up/email"
+    },
+    {
+      "page": "http://localhost:3000/?antigo",
+      "text": "Failed to load resource: the server responded with a status of 400 (BAD_REQUEST)",
+      "src": "http://localhost:3000/api/auth/sign-up/email"
+    },
+    {
+      "page": "http://localhost:3000/?antigo",
+      "text": "HTTP 400",
+      "src": "http://localhost:3000/api/auth/sign-up/email"
+    },
+    {
+      "page": "http://localhost:3000/?antigo",
+      "text": "Failed to load resource: the server responded with a status of 400 (BAD_REQUEST)",
+      "src": "http://localhost:3000/api/auth/sign-up/email"
+    },
+    {
+      "page": "http://localhost:3000/?antigo",
+      "text": "HTTP 400",
+      "src": "http://localhost:3000/api/auth/sign-up/email"
+    },
+    {
+      "page": "http://localhost:3000/?antigo",
+      "text": "Failed to load resource: the server responded with a status of 400 (BAD_REQUEST)",
+      "src": "http://localhost:3000/api/auth/sign-up/email"
+    },
+    {
+      "page": "http://localhost:3000/?antigo",
+      "text": "HTTP 400",
+      "src": "http://localhost:3000/api/auth/sign-up/email"
+    },
+    {
+      "page": "http://localhost:3000/?antigo",
+      "text": "Failed to load resource: the server responded with a status of 400 (BAD_REQUEST)",
+      "src": "http://localhost:3000/api/auth/sign-up/email"
+    },
+    {
+      "page": "http://localhost:3000/?antigo",
+      "text": "HTTP 400",
+      "src": "http://localhost:3000/api/auth/sign-up/email"
+    },
+    {
+      "page": "http://localhost:3000/?antigo",
+      "text": "Failed to load resource: the server responded with a status of 400 (BAD_REQUEST)",
+      "src": "http://localhost:3000/api/auth/sign-up/email"
+    },
+    {
+      "page": "http://localhost:3000/?antigo",
+      "text": "HTTP 400",
+      "src": "http://localhost:3000/api/auth/sign-up/email"
+    },
+    {
+      "page": "http://localhost:3000/?antigo",
+      "text": "Failed to load resource: the server responded with a status of 400 (BAD_REQUEST)",
+      "src": "http://localhost:3000/api/auth/sign-up/email"
+    },
+    {
+      "page": "http://localhost:3000/?antigo",
+      "text": "HTTP 400",
+      "src": "http://localhost:3000/api/auth/sign-up/email"
+    },
+    {
+      "page": "http://localhost:3000/?antigo",
+      "text": "Failed to load resource: the server responded with a status of 400 (BAD_REQUEST)",
+      "src": "http://localhost:3000/api/auth/sign-up/email"
+    },
+    {
+      "page": "http://localhost:3000/?antigo",
+      "text": "HTTP 400",
+      "src": "http://localhost:3000/api/auth/sign-up/email"
+    },
+    {
+      "page": "http://localhost:3000/?antigo",
+      "text": "Failed to load resource: the server responded with a status of 400 (BAD_REQUEST)",
+      "src": "http://localhost:3000/api/auth/sign-up/email"
+    },
+    {
+      "page": "http://localhost:3000/?antigo",
+      "text": "HTTP 400",
+      "src": "http://localhost:3000/api/auth/sign-up/email"
+    },
+    {
+      "page": "http://localhost:3000/?antigo",
+      "text": "Failed to load resource: the server responded with a status of 400 (BAD_REQUEST)",
+      "src": "http://localhost:3000/api/auth/sign-up/email"
+    },
+    {
+      "page": "http://localhost:3000/?antigo",
+      "text": "HTTP 400",
+      "src": "http://localhost:3000/api/auth/sign-up/email"
+    },
+    {
+      "page": "http://localhost:3000/?antigo",
+      "text": "Failed to load resource: the server responded with a status of 400 (BAD_REQUEST)",
+      "src": "http://localhost:3000/api/auth/sign-up/email"
+    },
+    {
+      "page": "http://localhost:3000/?antigo",
+      "text": "HTTP 400",
+      "src": "http://localhost:3000/api/auth/sign-up/email"
+    },
+    {
+      "page": "http://localhost:3000/?antigo",
+      "text": "Failed to load resource: the server responded with a status of 400 (BAD_REQUEST)",
+      "src": "http://localhost:3000/api/auth/sign-up/email"
+    },
+    {
+      "page": "http://localhost:3000/?antigo",
+      "text": "HTTP 400",
+      "src": "http://localhost:3000/api/auth/sign-up/email"
+    },
+    {
+      "page": "http://localhost:3000/?antigo",
+      "text": "Failed to load resource: the server responded with a status of 400 (BAD_REQUEST)",
+      "src": "http://localhost:3000/api/auth/sign-up/email"
+    },
+    {
+      "page": "http://localhost:3000/?antigo",
+      "text": "HTTP 400",
+      "src": "http://localhost:3000/api/auth/sign-up/email"
+    },
+    {
+      "page": "http://localhost:3000/?antigo",
+      "text": "Failed to load resource: the server responded with a status of 400 (BAD_REQUEST)",
+      "src": "http://localhost:3000/api/auth/sign-up/email"
+    },
+    {
+      "page": "http://localhost:3000/?antigo",
+      "text": "HTTP 400",
+      "src": "http://localhost:3000/api/auth/sign-up/email"
+    },
+    {
+      "page": "http://localhost:3000/?antigo",
+      "text": "Failed to load resource: the server responded with a status of 400 (BAD_REQUEST)",
+      "src": "http://localhost:3000/api/auth/sign-up/email"
+    },
+    {
+      "page": "http://localhost:3000/?antigo",
+      "text": "HTTP 400",
+      "src": "http://localhost:3000/api/auth/sign-up/email"
+    },
+    {
+      "page": "http://localhost:3000/?antigo",
+      "text": "Failed to load resource: the server responded with a status of 400 (BAD_REQUEST)",
+      "src": "http://localhost:3000/api/auth/sign-up/email"
+    },
+    {
+      "page": "http://localhost:3000/?antigo",
+      "text": "HTTP 400",
+      "src": "http://localhost:3000/api/auth/sign-up/email"
+    },
+    {
+      "page": "http://localhost:3000/?antigo",
+      "text": "Failed to load resource: the server responded with a status of 400 (BAD_REQUEST)",
+      "src": "http://localhost:3000/api/auth/sign-up/email"
+    }
+  ]
+}

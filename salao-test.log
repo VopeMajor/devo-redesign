@@ -1,0 +1,19 @@
+ok   migração do Salão é idempotente
+ok   cadastro das contas de teste
+ok   trancado sem vencer o tutorial (GET sem erro; POST 403); Owner vê liberado
+ok   raridade mínima: carta comum recusada e continua no inventário
+ok   Ultra Rara na ordem: mínimo "ultra_rara" recusa a Rara (rara < ultra_rara < lendaria) com o rótulo novo
+ok   migração das raridades das cartas: idempotente; o banco aceita ultra_rara/unica/promocional e recusa o resto
+ok   enviar à Bandeja: carta sai do save, taxa de divulgação paga, lote em avaliação
+ok   carta não duplica: save antigo não a devolve e o mesmo uid não entra de novo
+ok   especialista: jogador não decide; equipe aprova para a próxima edição
+ok   recusa do especialista devolve a carta (entrega) e a taxa (uma vez)
+ok   lance fora da abertura é recusado (Salão fechado)
+ok   lote de outra edição não aceita lance mesmo com o Salão aberto
+ok   lances inválidos: negativo, fracionado, abaixo do mínimo, no próprio lote
+ok   saldo não fica negativo: lance maior que o pulso (com reserva) é recusado e nada muda
+ok   lance debita na hora; lance superado é devolvido uma vez; dois lances simultâneos → um só
+ok   fim da edição: vencedor recebe a carta e o vendedor a parte menos a comissão — uma vez
+ok   Mercado: compra só na abertura; vendedor recebe uma vez; carta não vende duas vezes
+
+17 ok, 0 falha(s)
