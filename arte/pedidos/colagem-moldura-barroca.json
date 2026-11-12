@@ -1,0 +1,26 @@
+{
+  "id": "colagem-moldura-barroca",
+  "titulo": "Colagem — moldura barroca",
+  "tipo": "ilustracao",
+  "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+  "prompt": "An ornate antique baroque picture frame of carved gilded wood: deep acanthus scrolls, rococo shells in the corners, small carved roses and a fine pearl-bead inner lip, warm aged gold leaf with burnished highlights and dark patina in the recesses. Shown perfectly straight-on and symmetrical, the entire frame visible with generous margin, centered. The opening in the middle is plain flat pure white and the area around the frame is plain flat pure white. Soft even studio light from the upper left. Realistic museum catalogue photograph, sharp focus, rich carved detail.",
+  "negative": "text, letters, watermark, signature, logo, cartoon, flat vector, cropped, cut off",
+  "largura": 896,
+  "altura": 1152,
+  "variacoes": [
+    {
+      "seed": 4101
+    },
+    {
+      "seed": 4102
+    }
+  ],
+  "pos": {
+    "remover_fundo": false,
+    "tamanho_final": 1536,
+    "margem": 0.03,
+    "derivados": [
+      512
+    ]
+  }
+}

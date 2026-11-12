@@ -1,0 +1,23 @@
+{
+  "id": "colagem-fundo",
+  "titulo": "Colagem — fundo damasco",
+  "tipo": "ilustracao",
+  "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+  "prompt": "A wide flat frontal view of an old cream and ivory damask silk wallpaper in a European palace: faded tone-on-tone floral pattern, faint gold leaf accents, soft age stains and gentle darkening toward the edges, lit by warm soft window light from the left. Empty wall, calm and elegant. Realistic photograph with fine texture.",
+  "negative": "text, letters, watermark, signature, logo, cartoon, flat vector, cropped, cut off",
+  "largura": 1536,
+  "altura": 1024,
+  "variacoes": [
+    {
+      "seed": 4101
+    }
+  ],
+  "pos": {
+    "remover_fundo": false,
+    "tamanho_final": 1536,
+    "margem": 0.03,
+    "derivados": [
+      512
+    ]
+  }
+}

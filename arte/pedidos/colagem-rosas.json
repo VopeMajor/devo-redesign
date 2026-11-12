@@ -1,0 +1,26 @@
+{
+  "id": "colagem-rosas",
+  "titulo": "Colagem — rosas a oleo",
+  "tipo": "ilustracao",
+  "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+  "prompt": "A small posy of three cream and blush garden roses with dark green leaves and a sprig of red winterberries, painted in thick impasto classical oil paint with visible brush and palette-knife texture, romantic academic painting style. The object floats alone, centered with generous empty margin, on a plain flat pure white background, soft daylight from the upper left, no cast shadow.",
+  "negative": "text, letters, watermark, signature, logo, cartoon, flat vector, cropped, cut off",
+  "largura": 1024,
+  "altura": 1024,
+  "variacoes": [
+    {
+      "seed": 4101
+    },
+    {
+      "seed": 4102
+    }
+  ],
+  "pos": {
+    "remover_fundo": true,
+    "tamanho_final": 2048,
+    "margem": 0.03,
+    "derivados": [
+      512
+    ]
+  }
+}
