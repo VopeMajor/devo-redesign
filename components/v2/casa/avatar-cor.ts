@@ -1,4 +1,4 @@
-import type { Aparencia } from '@/lib/devo/casa-aparencia'
+import { type Aparencia, APARENCIA_LIMITES } from '@/lib/devo/casa-aparencia'
 
 /**
  * Aparência do avatar (kit3/avatar-cor.js, aprovado): as peças são cinza e a cor vem destas amostras, sempre de
@@ -20,7 +20,7 @@ export const OLHOS: [string, Rgb, Rgb][] = [
 ]
 export const PELES: [string, Rgb, Rgb][] = [
   ['Pele 1', [250, 226, 214], [228, 196, 186]], ['Pele 2', [248, 217, 195], [226, 184, 162]], ['Pele 3', [240, 204, 170], [212, 166, 132]], ['Pele 4', [226, 180, 140], [194, 144, 106]], ['Pele 5', [196, 142, 104], [160, 106, 76]],
-  ['Pele 6', [168, 116, 82], [134, 88, 60]], ['Pele 7', [140, 92, 64], [106, 66, 46]], ['Pele 8', [112, 72, 50], [84, 52, 38]], ['Pele 9', [92, 60, 44], [66, 42, 32]], ['Pele 10', [66, 44, 36], [46, 30, 26]],
+  ['Pele 6', [168, 116, 82], [134, 88, 60]], ['Pele 7', [140, 92, 64], [106, 66, 46]], ['Pele 8', [112, 72, 50], [84, 52, 38]], ['Pele 9', [106, 66, 46], [78, 46, 32]], ['Pele 10', [86, 54, 40], [62, 38, 28]],
 ]
 
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t
@@ -77,6 +77,7 @@ const difMatiz = (a: number, b: number) => {
  * pela saturação e pela luz (sem manchas). Couro, renda, camisa clara, dourado, pele e íris ficam. Se a cor pedida já
  * é a da roupa (menos de 25°), entra o verdete, para o botão sempre mudar algo.
  */
+const linho = (h: number, s: number, l: number) => l > 0.45 && s < 0.55 && h >= 15 && h <= 50
 export function pintaRoupa(d: Px, indice: number, mascara?: Px) {
   const a0 = ALVOS_ROUPA[indice]
   if (!a0) return
@@ -84,7 +85,10 @@ export function pintaRoupa(d: Px, indice: number, mascara?: Px) {
   for (let i = 0; i < d.length; i += 4) {
     if (!d[i + 3] || (mascara && (mascara[i] > 0 || mascara[i + 1] > 0))) continue
     const [h, s, l] = rgbHsl(d[i], d[i + 1], d[i + 2])
-    if (s > 0.3 && l > 0.08 && l < 0.7) hist[Math.floor(h / 10) % 36] += s
+    // estilo E (12/11): conta a área (não a saturação), para o tecido grande vencer o couro e os detalhes; a sombra do
+    // linho e do creme (camisa, jabô) não conta
+    if (linho(h, s, l)) continue
+    if (s > 0.12 && l > 0.06 && l < 0.62) hist[Math.floor(h / 10) % 36] += 1
   }
   let pico = 0
   for (let k = 1; k < 36; k++) if (hist[k] + hist[(k + 35) % 36] + hist[(k + 1) % 36] > hist[pico] + hist[(pico + 35) % 36] + hist[(pico + 1) % 36]) pico = k
@@ -94,12 +98,14 @@ export function pintaRoupa(d: Px, indice: number, mascara?: Px) {
     if (!d[i + 3]) continue
     if (mascara && (mascara[i] > 0 || mascara[i + 1] > 0)) continue
     const [h, s, l] = rgbHsl(d[i], d[i + 1], d[i + 2])
-    if (l > 0.6 && s < 0.35) continue // renda, camisa e outros tecidos claros
+    if (l > 0.66) continue // renda, jabô, camisa e outros tecidos claros (o creme do estilo E é bem saturado)
+    if (linho(h, s, l)) continue
     if (h >= 34 && h <= 62 && s > 0.4 && l > 0.42) continue // dourado dos detalhes
-    const w = suave(0.1, 0.28, s) * suave(0.04, 0.12, l) * (1 - suave(30, 45, difMatiz(h, principal)))
+    const w = suave(0.06, 0.16, s) * suave(0.04, 0.12, l) * (1 - suave(18, 32, difMatiz(h, principal)))
     if (w <= 0) continue
     const nl = Math.min(0.92, l * (a.l ?? 1) + (a.claro ?? 0) * sat((l - 0.15) / 0.3))
-    const c = hslRgb(a.h, a.s ?? Math.min(0.75, s), nl)
+    // tecido escuro e pouco saturado (casaco preto) ganha cor de verdade, senão Vinho, Azul e Ameixa ficam iguais
+    const c = hslRgb(a.h, a.s ?? Math.max(0.4, Math.min(0.75, s)), a.s == null ? Math.max(nl, 0.12 + nl * 0.6) : nl)
     for (let k = 0; k < 3; k++) d[i + k] = d[i + k] * (1 - w) + c[k] * w
   }
 }
@@ -283,10 +289,22 @@ export function pintaCorpo(d: Px, pele: (typeof PELES)[number]) {
   for (let i = 0; i < d.length; i += 4) {
     if (!d[i + 3] || d[i] - d[i + 2] <= 30) continue
     const v = 0.3 * d[i] + 0.59 * d[i + 1] + 0.11 * d[i + 2]
+    if (v < 150) {
+      // borda do traço (pele misturada com a tinta): continua escura, senão o contorno fino vira pontilhado
+      const k2 = sat((v - 44) / 106)
+      for (let k = 0; k < 3; k++) d[i + k] = lerp(TINTA_PELE[k], som[k], k2)
+      continue
+    }
     const t = sat((v - 150) / 65)
     for (let k = 0; k < 3; k++) d[i + k] = lerp(som[k], tom[k], t)
   }
 }
+const TINTA_PELE = [58, 32, 38]
+
+const FAIXA_OLHOS: [number, number][] = [
+  [205, 235], [205, 232], [205, 230], [198, 239], [202, 232], [205, 230], [199, 229], [194, 225], [197, 228],
+  [202, 225], [194, 225], [195, 232], [203, 245], [204, 229], [199, 236], [211, 239], [201, 230], [211, 241],
+]
 
 /** Faixa dos olhos: acima são sobrancelhas, abaixo é a boca (e as olheiras do rosto 14). */
 export type CaixaOlho = { x0: number; x1: number; y0: number; y1: number }
@@ -305,13 +323,18 @@ export function pintaRosto(
     { x0: w, x1: -1, y0: w, y1: -1 },
   ]
   const esc = w / 512
-  const y0 = 186 * esc
-  const y1 = (indice === 13 ? 219 : 240) * esc
-  const max = indice === 7 ? 176 : 208
+  // estilo E (12/11): cada rosto tem a sua faixa dos olhos (medida na arte); acima é sobrancelha, abaixo é boca
+  const [b0, b1] = FAIXA_OLHOS[indice] ?? [186, 240]
+  const y0 = b0 * esc
+  const y1 = b1 * esc
+  const max = 208
   const [, s, m] = olho
   const sob = cabelo[1]
   const claro = pele[1]
-  const lab = [Math.max(70, claro[0] - 70), Math.max(40, claro[1] - 90), Math.max(40, claro[2] - 80)]
+  const escura = 0.3 * claro[0] + 0.59 * claro[1] + 0.11 * claro[2] < 150
+  const lab = escura
+    ? [Math.round(lerp(claro[0], 170, 0.4)), Math.round(lerp(claro[1], 86, 0.4)), Math.round(lerp(claro[2], 96, 0.4))]
+    : [Math.max(70, claro[0] - 70), Math.max(40, claro[1] - 90), Math.max(40, claro[2] - 80)]
   for (let i = 0, p = 0; i < d.length; i += 4, p++) {
     if (!d[i + 3]) continue
     const v = d[i]
@@ -336,9 +359,16 @@ export function pintaRosto(
 }
 
 /** Detalhe do rosto no busto (MARCAS): sardas, pinta ou bochechas coradas, logo abaixo dos olhos. */
-export function marcasBusto(ctx: CanvasRenderingContext2D, w: number, marca: number, caixas: CaixaOlho[], pele: (typeof PELES)[number]) {
-  if (!marca || !caixas.length) return
+export function marcasBusto(ctx: CanvasRenderingContext2D, w: number, marca: number, _medidas: CaixaOlho[], pele: (typeof PELES)[number]) {
+  if (!marca) return
   const e = w / 512
+  // bug das bochechas (dono, 12/11): as caixas medidas pela cor pegavam também o contorno do rosto, os cílios e as
+  // olheiras, e as duas bochechas saíam tortas. Todos os rostos usam o mesmo molde de cabeça: os olhos ficam sempre
+  // no mesmo lugar, então as marcas usam posições fixas e simétricas
+  const caixas: CaixaOlho[] = [
+    { x0: 197 * e, x1: 240 * e, y0: 205 * e, y1: 226 * e },
+    { x0: 272 * e, x1: 315 * e, y0: 205 * e, y1: 226 * e },
+  ]
   const som = pele[2]
   const cor = (a: number) => `rgba(${Math.round(som[0] * 0.7)},${Math.round(som[1] * 0.56)},${Math.round(som[2] * 0.5)},${a})`
   ctx.save()
@@ -421,7 +451,8 @@ export const COL = { parado: 0, assenta: 9, pisca: 10, peito: 11, olhaE: 12, olh
 export const ANDAR_BOB = [0, 1, 0, -1, 0, 1, 0, -1]
 
 const ARTE = '/v2/art/avatar/'
-const V = '?v=202611071900'
+// estilo E (12/11): arte nova do retrato e do chibi; a versão muda para o navegador não usar as imagens antigas
+const V = '?v=202611130100'
 
 const imgs = new Map<string, Promise<HTMLImageElement>>()
 export function carregaImg(src: string): Promise<HTMLImageElement> {
@@ -470,19 +501,30 @@ function tela(im: CanvasImageSource & { width: number; height: number }): [HTMLC
 
 /** Detalhe do rosto no chibi, em pixel: sardas (2 px por bochecha), pinta (1 px) ou bochechas coradas (2 px rosados),
  *  logo abaixo dos olhos, só em cima de pele. Uma célula por direção (colunas) e por variação do rosto (linhas). */
-function marcasChibi(fc: HTMLCanvasElement, rmsk: HTMLImageElement, marca: number, tom: number[]) {
+function marcasChibi(fc: HTMLCanvasElement, rmsk: HTMLImageElement, marca: number, tom: number[], molde: HTMLImageElement) {
   const x = fc.getContext('2d', { willReadFrequently: true })!
   const im = x.getImageData(0, 0, fc.width, fc.height)
   const d = im.data
   const [, mx] = tela(rmsk)
   const m = mx.getImageData(0, 0, rmsk.width, rmsk.height).data
   const W = fc.width
+  // a posição vem do molde (rosto 1): todos os rostos têm os olhos no mesmo lugar, e os de olhos fechados não têm íris
+  // na máscara (a marca sumia neles)
+  const [, mox] = tela(molde)
+  const mo = mox.getImageData(0, 0, molde.width, molde.height).data
   const pele = (xx: number, yy: number) => m[(yy * W + xx) * 4] > 0 && d[(yy * W + xx) * 4 + 3] > 0
   const poe = (xx: number, yy0: number, cor: number[]) => {
     // se o pixel exato não é pele (cílio de baixo), procura até 3 px para baixo
     let yy = yy0
-    while (yy < yy0 + 3 && yy < fc.height && !(xx >= 0 && xx < W && pele(xx, yy))) yy++
-    if (xx < 0 || yy < 0 || xx >= W || yy >= fc.height || !pele(xx, yy)) return
+    // (e só pele de verdade: nem o branco do olho, nem contorno escuro)
+    const boa = (y: number) => {
+      if (xx < 0 || xx >= W || y < 0 || y >= fc.height || !pele(xx, y)) return false
+      const i = (y * W + xx) * 4
+      const l = 0.3 * d[i] + 0.59 * d[i + 1] + 0.11 * d[i + 2]
+      return l < 232 && l > 50
+    }
+    while (yy < yy0 + 5 && yy < fc.height && !boa(yy)) yy++
+    if (!boa(yy)) return
     const i = (yy * W + xx) * 4
     d[i] = cor[0]
     d[i + 1] = cor[1]
@@ -490,13 +532,14 @@ function marcasChibi(fc: HTMLCanvasElement, rmsk: HTMLImageElement, marca: numbe
   }
 
   const sarda = tom.map((v, k) => v * [0.72, 0.6, 0.55][k])
-  const rosa = tom.map((v, k) => lerp(v, [236, 104, 122][k], 0.55))
+  const rosa = tom.map((v, k) => lerp(v, [236, 96, 118][k], 0.62))
+  const rosa2 = tom.map((v, k) => lerp(v, [236, 96, 118][k], 0.4))
   for (let cy = 0; cy * CEL_Y < fc.height; cy++)
     for (let cxx = 0; cxx * CEL_X < W; cxx++) {
       // olhos da célula: colunas com íris (verde), agrupadas
       const cols = new Map<number, number>()
       for (let yy = cy * CEL_Y; yy < Math.min(fc.height, (cy + 1) * CEL_Y); yy++)
-        for (let xx = cxx * CEL_X; xx < Math.min(W, (cxx + 1) * CEL_X); xx++) if (m[(yy * W + xx) * 4 + 1] > 0) cols.set(xx, Math.max(cols.get(xx) ?? 0, yy))
+        for (let xx = cxx * CEL_X; xx < Math.min(W, (cxx + 1) * CEL_X); xx++) if (mo[((yy - cy * CEL_Y) * W + xx) * 4 + 1] > 0) cols.set(xx, Math.max(cols.get(xx) ?? 0, yy))
       if (!cols.size) continue
       const xs = [...cols.keys()].sort((a, b) => a - b)
       const grupos: number[][] = []
@@ -513,8 +556,10 @@ function marcasChibi(fc: HTMLCanvasElement, rmsk: HTMLImageElement, marca: numbe
           poe(cx + 1, by + 1, sarda)
         } else if (marca === 2 && n === grupos.length - 1) poe(g[g.length - 1] + 1, by + 1, [62, 34, 36])
         else if (marca === 3) {
-          poe(cx, by + 1, rosa)
-          poe(cx + 1, by + 1, rosa)
+          // bochecha: bloco de 3x2 (o miolo mais rosado), só em pele; a arte já tem um rosado leve, então este precisa
+          // aparecer por cima dele
+          for (const [dx, dy, c] of [[-1, 1, rosa2], [0, 1, rosa], [1, 1, rosa2], [0, 2, rosa2], [-1, 2, rosa2], [1, 2, rosa2]] as [number, number, number[]][])
+            poe(cx + dx, by + dy, c)
         }
       })
     }
@@ -577,7 +622,29 @@ export async function folhaAndarFofo(cfg: Aparencia): Promise<HTMLCanvasElement>
     return c
   }
   const rc = pinta(roupa, msk)
+  // rapaz: o batom vermelho de alguns rostos vira uma boca neutra (dono, 12/11: "rostos estranhos"). O vermelho é
+  // achado na arte original (antes da pele): no batom o azul acompanha o verde; na sombra da pele o azul fica bem abaixo
+  let batom: Uint8Array | null = null
+  if (cfg.corpo === 1) {
+    const [, ox] = tela(rosto)
+    const od = ox.getImageData(0, 0, rosto.width, rosto.height).data
+    batom = new Uint8Array(od.length / 4)
+    for (let i = 0; i < od.length; i += 4)
+      batom[i / 4] = od[i + 3] && od[i] > 140 && od[i] - od[i + 1] > 70 && od[i + 2] >= od[i + 1] - 15 ? 1 : 0
+  }
   const fc = pinta(rosto, rmsk)
+  if (batom) {
+    const fx = fc.getContext('2d', { willReadFrequently: true })!
+    const fi = fx.getImageData(0, 0, fc.width, fc.height)
+    const fd = fi.data
+    for (let i = 0; i < fd.length; i += 4)
+      if (batom[i / 4]) {
+        fd[i] = 112
+        fd[i + 1] = 58
+        fd[i + 2] = 62
+      }
+    fx.putImageData(fi, 0, 0)
+  }
   limpaPontinhos(rc, msk)
   if (cfg.corRoupa) {
     const rx = rc.getContext('2d', { willReadFrequently: true })!
@@ -586,7 +653,7 @@ export async function folhaAndarFofo(cfg: Aparencia): Promise<HTMLCanvasElement>
     pintaRoupa(ri.data, cfg.corRoupa, mmx.getImageData(0, 0, msk.width, msk.height).data)
     rx.putImageData(ri, 0, 0)
   }
-  if (cfg.marca) marcasChibi(fc, rmsk, cfg.marca, tom)
+  if (cfg.marca) marcasChibi(fc, rmsk, cfg.marca, tom, await carregaImg(`${b}rosto-1-mascara.png${V}`))
   const [, mkx] = tela(msk)
   const mskL = msk.width
   const mskDados = mkx.getImageData(0, 0, msk.width, msk.height).data
@@ -888,13 +955,12 @@ export async function folhaAndarFofo(cfg: Aparencia): Promise<HTMLCanvasElement>
 export type PecasBusto = { corpo: HTMLImageElement[]; cabelo: HTMLImageElement[]; rosto: HTMLImageElement[]; roupa: HTMLImageElement[][] }
 
 export async function carregaBusto(): Promise<PecasBusto> {
-  const n = 18
   const [corpo, cabelo, rosto, roupaF, roupaM] = await Promise.all([
-    Promise.all(['f', 'm'].map((c) => carregaImg(`${ARTE}corpo-${c}.png`))),
-    Promise.all(Array.from({ length: n }, (_, i) => carregaImg(`${ARTE}cabelo-${i + 1}.png`))),
-    Promise.all(Array.from({ length: n }, (_, i) => carregaImg(`${ARTE}rosto-${i + 1}.png`))),
-    Promise.all(Array.from({ length: 6 }, (_, i) => carregaImg(`${ARTE}roupa-${i + 1}-f.png`))),
-    Promise.all(Array.from({ length: 6 }, (_, i) => carregaImg(`${ARTE}roupa-${i + 1}-m.png`))),
+    Promise.all(['f', 'm'].map((c) => carregaImg(`${ARTE}corpo-${c}.png${V}`))),
+    Promise.all(Array.from({ length: APARENCIA_LIMITES.cabelo }, (_, i) => carregaImg(`${ARTE}cabelo-${i + 1}.png${V}`))),
+    Promise.all(Array.from({ length: APARENCIA_LIMITES.rosto }, (_, i) => carregaImg(`${ARTE}rosto-${i + 1}.png${V}`))),
+    Promise.all(Array.from({ length: 6 }, (_, i) => carregaImg(`${ARTE}roupa-${i + 1}-f.png${V}`))),
+    Promise.all(Array.from({ length: 6 }, (_, i) => carregaImg(`${ARTE}roupa-${i + 1}-m.png${V}`))),
   ])
   return { corpo, cabelo, rosto, roupa: [roupaF, roupaM] }
 }
@@ -912,7 +978,20 @@ function camada(im: HTMLImageElement, w: number, fn: (d: Px, w: number) => void)
   return tmp
 }
 
+let telaBusto: HTMLCanvasElement | null = null
+/** Busto inteiro a 92%, preso embaixo (estilo E, 12/11): os cabelos altos (moicano, tranças, espetado) não encostam
+ * mais no topo. */
 export function desenhaBusto(ctx: CanvasRenderingContext2D, w: number, p: PecasBusto, c: Aparencia) {
+  telaBusto = telaBusto ?? document.createElement('canvas')
+  telaBusto.width = telaBusto.height = w
+  desenhaBustoPleno(telaBusto.getContext('2d', { willReadFrequently: true })!, w, p, c)
+  const k = 0.92
+  ctx.clearRect(0, 0, w, w)
+  ctx.imageSmoothingQuality = 'high'
+  ctx.drawImage(telaBusto, (w * (1 - k)) / 2, w * (1 - k), w * k, w * k)
+}
+
+function desenhaBustoPleno(ctx: CanvasRenderingContext2D, w: number, p: PecasBusto, c: Aparencia) {
   const cc = CAB[c.corCabelo]
   const pl = PELES[c.pele]
   ctx.clearRect(0, 0, w, w)
