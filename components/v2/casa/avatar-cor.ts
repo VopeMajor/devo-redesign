@@ -452,7 +452,7 @@ export const ANDAR_BOB = [0, 1, 0, -1, 0, 1, 0, -1]
 
 const ARTE = '/v2/art/avatar/'
 // estilo E (12/11): arte nova do retrato e do chibi; a versão muda para o navegador não usar as imagens antigas
-const V = '?v=202611122300'
+const V = '?v=202611130100'
 
 const imgs = new Map<string, Promise<HTMLImageElement>>()
 export function carregaImg(src: string): Promise<HTMLImageElement> {
@@ -622,7 +622,29 @@ export async function folhaAndarFofo(cfg: Aparencia): Promise<HTMLCanvasElement>
     return c
   }
   const rc = pinta(roupa, msk)
+  // rapaz: o batom vermelho de alguns rostos vira uma boca neutra (dono, 12/11: "rostos estranhos"). O vermelho é
+  // achado na arte original (antes da pele): no batom o azul acompanha o verde; na sombra da pele o azul fica bem abaixo
+  let batom: Uint8Array | null = null
+  if (cfg.corpo === 1) {
+    const [, ox] = tela(rosto)
+    const od = ox.getImageData(0, 0, rosto.width, rosto.height).data
+    batom = new Uint8Array(od.length / 4)
+    for (let i = 0; i < od.length; i += 4)
+      batom[i / 4] = od[i + 3] && od[i] > 140 && od[i] - od[i + 1] > 70 && od[i + 2] >= od[i + 1] - 15 ? 1 : 0
+  }
   const fc = pinta(rosto, rmsk)
+  if (batom) {
+    const fx = fc.getContext('2d', { willReadFrequently: true })!
+    const fi = fx.getImageData(0, 0, fc.width, fc.height)
+    const fd = fi.data
+    for (let i = 0; i < fd.length; i += 4)
+      if (batom[i / 4]) {
+        fd[i] = 112
+        fd[i + 1] = 58
+        fd[i + 2] = 62
+      }
+    fx.putImageData(fi, 0, 0)
+  }
   limpaPontinhos(rc, msk)
   if (cfg.corRoupa) {
     const rx = rc.getContext('2d', { willReadFrequently: true })!
