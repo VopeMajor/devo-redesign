@@ -1,0 +1,60 @@
+{
+  "pedido": "colagem-relogio",
+  "titulo": "Colagem — relogio de bolso",
+  "tipo": "ilustracao",
+  "tamanho_final": 2048,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 4101,
+      "passos": null,
+      "segundos": 15.8,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "arquivos": [
+        {
+          "arquivo": "colagem-relogio--v01--2047.png",
+          "bytes": 2427089
+        },
+        {
+          "arquivo": "colagem-relogio--v01--2047.webp",
+          "bytes": 476336
+        },
+        {
+          "arquivo": "colagem-relogio--v01--512.webp",
+          "bytes": 63860
+        }
+      ],
+      "segundos_pos": 34.1,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 4102,
+      "passos": null,
+      "segundos": 7.0,
+      "neuronios_estimados": 104,
+      "fundo": "rembg:birefnet-general",
+      "ilhas_removidas": 1,
+      "arquivos": [
+        {
+          "arquivo": "colagem-relogio--v02--2047.png",
+          "bytes": 2128586
+        },
+        {
+          "arquivo": "colagem-relogio--v02--2047.webp",
+          "bytes": 439390
+        },
+        {
+          "arquivo": "colagem-relogio--v02--512.webp",
+          "bytes": 57336
+        }
+      ],
+      "segundos_pos": 28.0,
+      "avisos": []
+    }
+  ]
+}

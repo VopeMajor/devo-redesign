@@ -1,0 +1,6 @@
+[colagem-relogio] v01: @cf/black-forest-labs/flux-2-klein-4b seed=4101 1024x1024 passos=None (~104 neurônios)
+    ok em 15.8s, 1024x1024
+[colagem-relogio] v02: @cf/black-forest-labs/flux-2-klein-4b seed=4102 1024x1024 passos=None (~104 neurônios)
+    ok em 7.0s, 1024x1024
+[colagem-relogio] v01: rembg:birefnet-general; sem avisos
+[colagem-relogio] v02: rembg:birefnet-general; sem avisos
