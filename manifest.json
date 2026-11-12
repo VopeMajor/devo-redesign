@@ -1,0 +1,59 @@
+{
+  "pedido": "colagem-moldura-luis",
+  "titulo": "Colagem — moldura Luis XVI",
+  "tipo": "ilustracao",
+  "tamanho_final": 1536,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 4101,
+      "passos": null,
+      "segundos": 8.4,
+      "neuronios_estimados": 156,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "colagem-moldura-luis--v01--1536.png",
+          "bytes": 1673787
+        },
+        {
+          "arquivo": "colagem-moldura-luis--v01--1536.webp",
+          "bytes": 177526
+        },
+        {
+          "arquivo": "colagem-moldura-luis--v01--512.webp",
+          "bytes": 22628
+        }
+      ],
+      "segundos_pos": 3.9,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 4102,
+      "passos": null,
+      "segundos": 8.0,
+      "neuronios_estimados": 156,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "colagem-moldura-luis--v02--1536.png",
+          "bytes": 1208977
+        },
+        {
+          "arquivo": "colagem-moldura-luis--v02--1536.webp",
+          "bytes": 145360
+        },
+        {
+          "arquivo": "colagem-moldura-luis--v02--512.webp",
+          "bytes": 20900
+        }
+      ],
+      "segundos_pos": 2.6,
+      "avisos": []
+    }
+  ]
+}

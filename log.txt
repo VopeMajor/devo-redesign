@@ -1,0 +1,6 @@
+[colagem-moldura-luis] v01: @cf/black-forest-labs/flux-2-klein-4b seed=4101 896x1152 passos=None (~156 neurônios)
+    ok em 8.4s, 896x1152
+[colagem-moldura-luis] v02: @cf/black-forest-labs/flux-2-klein-4b seed=4102 896x1152 passos=None (~156 neurônios)
+    ok em 8.0s, 896x1152
+[colagem-moldura-luis] v01: mantido; sem avisos
+[colagem-moldura-luis] v02: mantido; sem avisos

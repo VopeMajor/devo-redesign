@@ -1,0 +1,44 @@
+{
+  "id": "colagem-moldura-luis",
+  "titulo": "Colagem — moldura Luis XVI",
+  "tipo": "ilustracao",
+  "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+  "prompt": "A slim antique Louis XVI picture frame in pale champagne gold with soft white gesso showing through, a delicate laurel leaf garland running along all four sides, a carved bow-knot with ribbons at the top center and a beaded inner lip. Shown perfectly straight-on and symmetrical, the entire frame visible with generous margin, centered. The opening in the middle is plain flat pure white and the area around the frame is plain flat pure white. Soft even studio light from the upper left. Realistic museum catalogue photograph, sharp focus, rich carved detail.",
+  "negative": "text, letters, watermark, signature, logo, cartoon, flat vector, cropped, cut off",
+  "largura": 896,
+  "altura": 1152,
+  "variacoes": [
+    {
+      "seed": 4101,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "passos": null,
+      "largura": 896,
+      "altura": 1152,
+      "prompt_extra": "",
+      "n": 1
+    },
+    {
+      "seed": 4102,
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "passos": null,
+      "largura": 896,
+      "altura": 1152,
+      "prompt_extra": "",
+      "n": 2
+    }
+  ],
+  "pos": {
+    "remover_fundo": false,
+    "tamanho_final": 1536,
+    "margem": 0.03,
+    "derivados": [
+      512
+    ],
+    "modelo_fundo": "birefnet-general",
+    "fundo": "liso",
+    "camadas": []
+  },
+  "passos": null,
+  "guidance": null,
+  "referencias": []
+}
