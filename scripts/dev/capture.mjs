@@ -2078,6 +2078,31 @@ if (want('narrativa') || want('galo-v2')) {
   })
 
   await step('narrativa-galo', async () => {
+    if (V2) {
+      // no v2 a visita abre pelo aviso "Talvez seja hora de ir para casa" (marca limpa no save para ele voltar)
+      await page.goto(`${BASE}/images/card-back.png`)
+      await api(page, '/api/save', makeSave(VET_CARDS, { sistemasVistos: ['poco', 'torres'], desbloqueiosVistos: ['salao', 'poco', 'torres'] }))
+      await entrar(page)
+      const aviso = page.locator('.v2-aviso', { hasText: 'Um endereço' }).first()
+      await aviso.click({ timeout: 6000 }).catch((e) => manifest.errors.push({ step: 'galo-v2-aviso-toque', error: String(e).slice(0, 200) }))
+      await wait(2600)
+      await shot(page, 'n-10-galo-abertura', 'tocou no aviso: a visita do Galo abre')
+      if (!(await dlg(page).count())) manifest.errors.push({ step: 'galo-v2-cena', error: 'tocar no aviso não abriu a visita do Galo' })
+      // até o fim da visita: escolhe a primeira opção e avança
+      for (let i = 0; i < 400 && (await dlg(page).count()); i++) {
+        if (await page.getByRole('dialog', { name: 'Uma chamada da Companhia' }).count()) break
+        const grupo = page.locator('[aria-label="Escolha o que dizer"] button:not([disabled])')
+        if (await grupo.count()) await tryClick(grupo.first(), 3000)
+        else {
+          const c = dlg(page).getByRole('button', { name: 'Continuar', exact: true }).first()
+          if (await c.count()) await tryClick(c, 2000)
+          else await page.keyboard.press('Enter').catch(() => {})
+        }
+        await wait(350)
+      }
+      await shot(page, 'n-28-galo-fim', 'fim da visita do Galo')
+      return
+    }
     await page.getByRole('button', { name: 'Ir para casa' }).first().click({ timeout: 8000 })
     await wait(2600)
     await shot(page, 'n-10-galo-abertura', 'narração entre colchetes')
@@ -2102,18 +2127,9 @@ if (want('narrativa') || want('galo-v2')) {
     await shot(page, 'n-19-galo-tempo', 'Galo transfere Tempo (valor provisório) — selo de Tempo')
     // Recarregar no meio: retoma no passo salvo e não repete o Tempo.
     await wait(1200)
-    if (V2) {
-      // o aviso volta (marca limpa no save) e tocar nele abre a visita, não o Pulso
-      await page.goto(`${BASE}/images/card-back.png`)
-      await api(page, '/api/save', makeSave(VET_CARDS, { sistemasVistos: ['poco', 'torres'], desbloqueiosVistos: ['salao', 'poco', 'torres'] }))
-      await entrar(page)
-      const aviso = page.locator('.v2-aviso', { hasText: 'Um endereço' }).first()
-      await aviso.click({ timeout: 6000 }).catch((e) => manifest.errors.push({ step: 'galo-v2-aviso-toque', error: String(e).slice(0, 200) }))
-    } else {
-      await entrar(page)
-      await wait(1500)
-      await page.getByRole('button', { name: 'Ir para casa' }).first().click({ timeout: 8000 })
-    }
+    await entrar(page)
+    await wait(1500)
+    await page.getByRole('button', { name: 'Ir para casa' }).first().click({ timeout: 8000 })
     await wait(2800)
     await shot(page, 'n-20-galo-retomada', 'recarregou: retoma onde parou')
     await ate(page, 'A luz pisca')

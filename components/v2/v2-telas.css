@@ -746,10 +746,11 @@
   #os .mapa-cab{flex:none;margin-bottom:clamp(2px,1dvh,12px)}
   #os .mapa-dica{display:flex}
   #os #mesa{flex:1 1 0;min-height:0;container-type:size;grid-template-rows:repeat(3,minmax(0,1fr));align-content:stretch;grid-auto-columns:calc((100vw - 12px) / 3.45);column-gap:0!important;row-gap:0!important;padding:10px 10px 0!important;overflow-x:auto;overflow-y:hidden;touch-action:pan-x}
-  #os #mesa .ic{--d:clamp(34px,calc(24cqh - 24px),84px);justify-content:start;gap:4px;padding:0;min-height:0}
+  #os #mesa .ic{--d:clamp(34px,calc(24cqh - 24px),84px);align-self:start;justify-content:start;gap:4px;padding:0;min-height:0}
+  #os #mesa .ic span{padding:4px 8px}
   /* (as unidades cqh valem para os ícones, medidas na altura do #mesa: três fileiras de 33cqh) */
   /* a coluna do meio de cada par desce um pouco, como no print */
-  #os #mesa .ic:nth-child(6n+4),#os #mesa .ic:nth-child(6n+5),#os #mesa .ic:nth-child(6n+6){transform:translateY(clamp(0px,calc(33cqh - var(--d) - 22px),8cqh))!important}
+  #os #mesa .ic:nth-child(6n+4),#os #mesa .ic:nth-child(6n+5),#os #mesa .ic:nth-child(6n+6){transform:translateY(clamp(0px,calc(33cqh - var(--d) - 30px),8cqh))!important}
   #os #mesa .disco{width:var(--d)!important;height:var(--d)!important}
   #os #mesa .disco img{width:calc(var(--d) * 1.27)!important;height:calc(var(--d) * 1.27)!important}
   #os #mesa .ic[data-id=pulso] .disco img{width:calc(var(--d) * 1.03)!important;height:calc(var(--d) * 1.03)!important}
