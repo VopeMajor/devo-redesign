@@ -295,8 +295,8 @@ export function CriacaoAvatar({
               onClick={() =>
                 setCfg({
                   corpo: sorteia(2),
-                  cabelo: sorteia(18),
-                  rosto: sorteia(18),
+                  cabelo: sorteia(APARENCIA_LIMITES.cabelo),
+                  rosto: sorteia(APARENCIA_LIMITES.rosto),
                   roupa: sorteia(ROUPAS.length),
                   corCabelo: sorteia(CAB.length),
                   corOlhos: sorteia(OLHOS.length),

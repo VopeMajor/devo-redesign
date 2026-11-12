@@ -25,10 +25,10 @@ export type Aparencia = {
   marca: number
 }
 
-/** Quantas opções há de cada parte (kit3/avatar.html): 2 corpos, 18 cabelos, 18 rostos, 6 roupas e as cores. */
+/** Quantas opções há de cada parte (kit3/avatar.html): 2 corpos, 24 cabelos, 18 rostos, 6 roupas e as cores. */
 export const APARENCIA_LIMITES: Record<keyof Aparencia, number> = {
   corpo: 2,
-  cabelo: 18,
+  cabelo: 24,
   rosto: 18,
   roupa: 6,
   corCabelo: 18,

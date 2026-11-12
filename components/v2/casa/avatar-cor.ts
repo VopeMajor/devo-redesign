@@ -1,4 +1,4 @@
-import type { Aparencia } from '@/lib/devo/casa-aparencia'
+import { type Aparencia, APARENCIA_LIMITES } from '@/lib/devo/casa-aparencia'
 
 /**
  * Aparência do avatar (kit3/avatar-cor.js, aprovado): as peças são cinza e a cor vem destas amostras, sempre de
@@ -452,7 +452,7 @@ export const ANDAR_BOB = [0, 1, 0, -1, 0, 1, 0, -1]
 
 const ARTE = '/v2/art/avatar/'
 // estilo E (12/11): arte nova do retrato e do chibi; a versão muda para o navegador não usar as imagens antigas
-const V = '?v=202611121900'
+const V = '?v=202611122300'
 
 const imgs = new Map<string, Promise<HTMLImageElement>>()
 export function carregaImg(src: string): Promise<HTMLImageElement> {
@@ -933,11 +933,10 @@ export async function folhaAndarFofo(cfg: Aparencia): Promise<HTMLCanvasElement>
 export type PecasBusto = { corpo: HTMLImageElement[]; cabelo: HTMLImageElement[]; rosto: HTMLImageElement[]; roupa: HTMLImageElement[][] }
 
 export async function carregaBusto(): Promise<PecasBusto> {
-  const n = 18
   const [corpo, cabelo, rosto, roupaF, roupaM] = await Promise.all([
     Promise.all(['f', 'm'].map((c) => carregaImg(`${ARTE}corpo-${c}.png${V}`))),
-    Promise.all(Array.from({ length: n }, (_, i) => carregaImg(`${ARTE}cabelo-${i + 1}.png${V}`))),
-    Promise.all(Array.from({ length: n }, (_, i) => carregaImg(`${ARTE}rosto-${i + 1}.png${V}`))),
+    Promise.all(Array.from({ length: APARENCIA_LIMITES.cabelo }, (_, i) => carregaImg(`${ARTE}cabelo-${i + 1}.png${V}`))),
+    Promise.all(Array.from({ length: APARENCIA_LIMITES.rosto }, (_, i) => carregaImg(`${ARTE}rosto-${i + 1}.png${V}`))),
     Promise.all(Array.from({ length: 6 }, (_, i) => carregaImg(`${ARTE}roupa-${i + 1}-f.png${V}`))),
     Promise.all(Array.from({ length: 6 }, (_, i) => carregaImg(`${ARTE}roupa-${i + 1}-m.png${V}`))),
   ])
