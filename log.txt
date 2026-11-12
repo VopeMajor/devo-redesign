@@ -1,0 +1,6 @@
+[colagem-perolas] v01: @cf/black-forest-labs/flux-2-klein-4b seed=4101 1536x768 passos=None (~156 neurônios)
+    ok em 8.8s, 1536x768
+[colagem-perolas] v02: @cf/black-forest-labs/flux-2-klein-4b seed=4102 1536x768 passos=None (~156 neurônios)
+    ok em 9.4s, 1536x768
+[colagem-perolas] v01: rembg:birefnet-general; sem avisos
+[colagem-perolas] v02: rembg:birefnet-general; sem avisos
