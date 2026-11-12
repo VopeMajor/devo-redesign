@@ -1,0 +1,59 @@
+{
+  "pedido": "colagem-moldura-oval",
+  "titulo": "Colagem — moldura oval",
+  "tipo": "ilustracao",
+  "tamanho_final": 1536,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 4101,
+      "passos": null,
+      "segundos": 8.7,
+      "neuronios_estimados": 156,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "colagem-moldura-oval--v01--1536.png",
+          "bytes": 1671793
+        },
+        {
+          "arquivo": "colagem-moldura-oval--v01--1536.webp",
+          "bytes": 217228
+        },
+        {
+          "arquivo": "colagem-moldura-oval--v01--512.webp",
+          "bytes": 29694
+        }
+      ],
+      "segundos_pos": 3.1,
+      "avisos": []
+    },
+    {
+      "nome": "v02",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 4102,
+      "passos": null,
+      "segundos": 10.1,
+      "neuronios_estimados": 156,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "colagem-moldura-oval--v02--1536.png",
+          "bytes": 1729984
+        },
+        {
+          "arquivo": "colagem-moldura-oval--v02--1536.webp",
+          "bytes": 232810
+        },
+        {
+          "arquivo": "colagem-moldura-oval--v02--512.webp",
+          "bytes": 33500
+        }
+      ],
+      "segundos_pos": 2.9,
+      "avisos": []
+    }
+  ]
+}
