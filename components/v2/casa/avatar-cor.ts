@@ -336,9 +336,16 @@ export function pintaRosto(
 }
 
 /** Detalhe do rosto no busto (MARCAS): sardas, pinta ou bochechas coradas, logo abaixo dos olhos. */
-export function marcasBusto(ctx: CanvasRenderingContext2D, w: number, marca: number, caixas: CaixaOlho[], pele: (typeof PELES)[number]) {
-  if (!marca || !caixas.length) return
+export function marcasBusto(ctx: CanvasRenderingContext2D, w: number, marca: number, _medidas: CaixaOlho[], pele: (typeof PELES)[number]) {
+  if (!marca) return
   const e = w / 512
+  // bug das bochechas (dono, 12/11): as caixas medidas pela cor pegavam também o contorno do rosto, os cílios e as
+  // olheiras, e as duas bochechas saíam tortas. Todos os rostos usam o mesmo molde de cabeça: os olhos ficam sempre
+  // no mesmo lugar, então as marcas usam posições fixas e simétricas
+  const caixas: CaixaOlho[] = [
+    { x0: 188 * e, x1: 238 * e, y0: 188 * e, y1: 226 * e },
+    { x0: 274 * e, x1: 326 * e, y0: 188 * e, y1: 226 * e },
+  ]
   const som = pele[2]
   const cor = (a: number) => `rgba(${Math.round(som[0] * 0.7)},${Math.round(som[1] * 0.56)},${Math.round(som[2] * 0.5)},${a})`
   ctx.save()
@@ -470,19 +477,30 @@ function tela(im: CanvasImageSource & { width: number; height: number }): [HTMLC
 
 /** Detalhe do rosto no chibi, em pixel: sardas (2 px por bochecha), pinta (1 px) ou bochechas coradas (2 px rosados),
  *  logo abaixo dos olhos, só em cima de pele. Uma célula por direção (colunas) e por variação do rosto (linhas). */
-function marcasChibi(fc: HTMLCanvasElement, rmsk: HTMLImageElement, marca: number, tom: number[]) {
+function marcasChibi(fc: HTMLCanvasElement, rmsk: HTMLImageElement, marca: number, tom: number[], molde: HTMLImageElement) {
   const x = fc.getContext('2d', { willReadFrequently: true })!
   const im = x.getImageData(0, 0, fc.width, fc.height)
   const d = im.data
   const [, mx] = tela(rmsk)
   const m = mx.getImageData(0, 0, rmsk.width, rmsk.height).data
   const W = fc.width
+  // a posição vem do molde (rosto 1): todos os rostos têm os olhos no mesmo lugar, e os de olhos fechados não têm íris
+  // na máscara (a marca sumia neles)
+  const [, mox] = tela(molde)
+  const mo = mox.getImageData(0, 0, molde.width, molde.height).data
   const pele = (xx: number, yy: number) => m[(yy * W + xx) * 4] > 0 && d[(yy * W + xx) * 4 + 3] > 0
   const poe = (xx: number, yy0: number, cor: number[]) => {
     // se o pixel exato não é pele (cílio de baixo), procura até 3 px para baixo
     let yy = yy0
-    while (yy < yy0 + 3 && yy < fc.height && !(xx >= 0 && xx < W && pele(xx, yy))) yy++
-    if (xx < 0 || yy < 0 || xx >= W || yy >= fc.height || !pele(xx, yy)) return
+    // (e só pele de verdade: nem o branco do olho, nem contorno escuro)
+    const boa = (y: number) => {
+      if (xx < 0 || xx >= W || y < 0 || y >= fc.height || !pele(xx, y)) return false
+      const i = (y * W + xx) * 4
+      const l = 0.3 * d[i] + 0.59 * d[i + 1] + 0.11 * d[i + 2]
+      return l < 232 && l > 50
+    }
+    while (yy < yy0 + 5 && yy < fc.height && !boa(yy)) yy++
+    if (!boa(yy)) return
     const i = (yy * W + xx) * 4
     d[i] = cor[0]
     d[i + 1] = cor[1]
@@ -490,13 +508,14 @@ function marcasChibi(fc: HTMLCanvasElement, rmsk: HTMLImageElement, marca: numbe
   }
 
   const sarda = tom.map((v, k) => v * [0.72, 0.6, 0.55][k])
-  const rosa = tom.map((v, k) => lerp(v, [236, 104, 122][k], 0.55))
+  const rosa = tom.map((v, k) => lerp(v, [236, 96, 118][k], 0.62))
+  const rosa2 = tom.map((v, k) => lerp(v, [236, 96, 118][k], 0.4))
   for (let cy = 0; cy * CEL_Y < fc.height; cy++)
     for (let cxx = 0; cxx * CEL_X < W; cxx++) {
       // olhos da célula: colunas com íris (verde), agrupadas
       const cols = new Map<number, number>()
       for (let yy = cy * CEL_Y; yy < Math.min(fc.height, (cy + 1) * CEL_Y); yy++)
-        for (let xx = cxx * CEL_X; xx < Math.min(W, (cxx + 1) * CEL_X); xx++) if (m[(yy * W + xx) * 4 + 1] > 0) cols.set(xx, Math.max(cols.get(xx) ?? 0, yy))
+        for (let xx = cxx * CEL_X; xx < Math.min(W, (cxx + 1) * CEL_X); xx++) if (mo[((yy - cy * CEL_Y) * W + xx) * 4 + 1] > 0) cols.set(xx, Math.max(cols.get(xx) ?? 0, yy))
       if (!cols.size) continue
       const xs = [...cols.keys()].sort((a, b) => a - b)
       const grupos: number[][] = []
@@ -513,8 +532,10 @@ function marcasChibi(fc: HTMLCanvasElement, rmsk: HTMLImageElement, marca: numbe
           poe(cx + 1, by + 1, sarda)
         } else if (marca === 2 && n === grupos.length - 1) poe(g[g.length - 1] + 1, by + 1, [62, 34, 36])
         else if (marca === 3) {
-          poe(cx, by + 1, rosa)
-          poe(cx + 1, by + 1, rosa)
+          // bochecha: bloco de 3x2 (o miolo mais rosado), só em pele; a arte já tem um rosado leve, então este precisa
+          // aparecer por cima dele
+          for (const [dx, dy, c] of [[-1, 1, rosa2], [0, 1, rosa], [1, 1, rosa2], [0, 2, rosa2], [-1, 2, rosa2], [1, 2, rosa2]] as [number, number, number[]][])
+            poe(cx + dx, by + dy, c)
         }
       })
     }
@@ -586,7 +607,7 @@ export async function folhaAndarFofo(cfg: Aparencia): Promise<HTMLCanvasElement>
     pintaRoupa(ri.data, cfg.corRoupa, mmx.getImageData(0, 0, msk.width, msk.height).data)
     rx.putImageData(ri, 0, 0)
   }
-  if (cfg.marca) marcasChibi(fc, rmsk, cfg.marca, tom)
+  if (cfg.marca) marcasChibi(fc, rmsk, cfg.marca, tom, await carregaImg(`${b}rosto-1-mascara.png${V}`))
   const [, mkx] = tela(msk)
   const mskL = msk.width
   const mskDados = mkx.getImageData(0, 0, msk.width, msk.height).data
