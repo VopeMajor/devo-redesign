@@ -20,7 +20,7 @@ export const OLHOS: [string, Rgb, Rgb][] = [
 ]
 export const PELES: [string, Rgb, Rgb][] = [
   ['Pele 1', [250, 226, 214], [228, 196, 186]], ['Pele 2', [248, 217, 195], [226, 184, 162]], ['Pele 3', [240, 204, 170], [212, 166, 132]], ['Pele 4', [226, 180, 140], [194, 144, 106]], ['Pele 5', [196, 142, 104], [160, 106, 76]],
-  ['Pele 6', [168, 116, 82], [134, 88, 60]], ['Pele 7', [140, 92, 64], [106, 66, 46]], ['Pele 8', [112, 72, 50], [84, 52, 38]], ['Pele 9', [92, 60, 44], [66, 42, 32]], ['Pele 10', [66, 44, 36], [46, 30, 26]],
+  ['Pele 6', [168, 116, 82], [134, 88, 60]], ['Pele 7', [140, 92, 64], [106, 66, 46]], ['Pele 8', [112, 72, 50], [84, 52, 38]], ['Pele 9', [106, 66, 46], [78, 46, 32]], ['Pele 10', [86, 54, 40], [62, 38, 28]],
 ]
 
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t
@@ -77,6 +77,7 @@ const difMatiz = (a: number, b: number) => {
  * pela saturação e pela luz (sem manchas). Couro, renda, camisa clara, dourado, pele e íris ficam. Se a cor pedida já
  * é a da roupa (menos de 25°), entra o verdete, para o botão sempre mudar algo.
  */
+const linho = (h: number, s: number, l: number) => l > 0.45 && s < 0.55 && h >= 15 && h <= 50
 export function pintaRoupa(d: Px, indice: number, mascara?: Px) {
   const a0 = ALVOS_ROUPA[indice]
   if (!a0) return
@@ -84,7 +85,10 @@ export function pintaRoupa(d: Px, indice: number, mascara?: Px) {
   for (let i = 0; i < d.length; i += 4) {
     if (!d[i + 3] || (mascara && (mascara[i] > 0 || mascara[i + 1] > 0))) continue
     const [h, s, l] = rgbHsl(d[i], d[i + 1], d[i + 2])
-    if (s > 0.3 && l > 0.08 && l < 0.7) hist[Math.floor(h / 10) % 36] += s
+    // estilo E (12/11): conta a área (não a saturação), para o tecido grande vencer o couro e os detalhes; a sombra do
+    // linho e do creme (camisa, jabô) não conta
+    if (linho(h, s, l)) continue
+    if (s > 0.12 && l > 0.06 && l < 0.62) hist[Math.floor(h / 10) % 36] += 1
   }
   let pico = 0
   for (let k = 1; k < 36; k++) if (hist[k] + hist[(k + 35) % 36] + hist[(k + 1) % 36] > hist[pico] + hist[(pico + 35) % 36] + hist[(pico + 1) % 36]) pico = k
@@ -94,12 +98,14 @@ export function pintaRoupa(d: Px, indice: number, mascara?: Px) {
     if (!d[i + 3]) continue
     if (mascara && (mascara[i] > 0 || mascara[i + 1] > 0)) continue
     const [h, s, l] = rgbHsl(d[i], d[i + 1], d[i + 2])
-    if (l > 0.6 && s < 0.35) continue // renda, camisa e outros tecidos claros
+    if (l > 0.66) continue // renda, jabô, camisa e outros tecidos claros (o creme do estilo E é bem saturado)
+    if (linho(h, s, l)) continue
     if (h >= 34 && h <= 62 && s > 0.4 && l > 0.42) continue // dourado dos detalhes
-    const w = suave(0.1, 0.28, s) * suave(0.04, 0.12, l) * (1 - suave(30, 45, difMatiz(h, principal)))
+    const w = suave(0.06, 0.16, s) * suave(0.04, 0.12, l) * (1 - suave(18, 32, difMatiz(h, principal)))
     if (w <= 0) continue
     const nl = Math.min(0.92, l * (a.l ?? 1) + (a.claro ?? 0) * sat((l - 0.15) / 0.3))
-    const c = hslRgb(a.h, a.s ?? Math.min(0.75, s), nl)
+    // tecido escuro e pouco saturado (casaco preto) ganha cor de verdade, senão Vinho, Azul e Ameixa ficam iguais
+    const c = hslRgb(a.h, a.s ?? Math.max(0.4, Math.min(0.75, s)), a.s == null ? Math.max(nl, 0.12 + nl * 0.6) : nl)
     for (let k = 0; k < 3; k++) d[i + k] = d[i + k] * (1 - w) + c[k] * w
   }
 }
@@ -325,7 +331,10 @@ export function pintaRosto(
   const [, s, m] = olho
   const sob = cabelo[1]
   const claro = pele[1]
-  const lab = [Math.max(70, claro[0] - 70), Math.max(40, claro[1] - 90), Math.max(40, claro[2] - 80)]
+  const escura = 0.3 * claro[0] + 0.59 * claro[1] + 0.11 * claro[2] < 150
+  const lab = escura
+    ? [Math.round(lerp(claro[0], 170, 0.4)), Math.round(lerp(claro[1], 86, 0.4)), Math.round(lerp(claro[2], 96, 0.4))]
+    : [Math.max(70, claro[0] - 70), Math.max(40, claro[1] - 90), Math.max(40, claro[2] - 80)]
   for (let i = 0, p = 0; i < d.length; i += 4, p++) {
     if (!d[i + 3]) continue
     const v = d[i]
@@ -948,7 +957,20 @@ function camada(im: HTMLImageElement, w: number, fn: (d: Px, w: number) => void)
   return tmp
 }
 
+let telaBusto: HTMLCanvasElement | null = null
+/** Busto inteiro a 92%, preso embaixo (estilo E, 12/11): os cabelos altos (moicano, tranças, espetado) não encostam
+ * mais no topo. */
 export function desenhaBusto(ctx: CanvasRenderingContext2D, w: number, p: PecasBusto, c: Aparencia) {
+  telaBusto = telaBusto ?? document.createElement('canvas')
+  telaBusto.width = telaBusto.height = w
+  desenhaBustoPleno(telaBusto.getContext('2d', { willReadFrequently: true })!, w, p, c)
+  const k = 0.92
+  ctx.clearRect(0, 0, w, w)
+  ctx.imageSmoothingQuality = 'high'
+  ctx.drawImage(telaBusto, (w * (1 - k)) / 2, w * (1 - k), w * k, w * k)
+}
+
+function desenhaBustoPleno(ctx: CanvasRenderingContext2D, w: number, p: PecasBusto, c: Aparencia) {
   const cc = CAB[c.corCabelo]
   const pl = PELES[c.pele]
   ctx.clearRect(0, 0, w, w)
