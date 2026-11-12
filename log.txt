@@ -1,0 +1,6 @@
+[colagem-laco] v01: @cf/black-forest-labs/flux-2-klein-4b seed=4101 1024x1024 passos=None (~104 neurônios)
+    ok em 27.6s, 1024x1024
+[colagem-laco] v02: @cf/black-forest-labs/flux-2-klein-4b seed=4102 1024x1024 passos=None (~104 neurônios)
+    ok em 61.0s, 1024x1024
+[colagem-laco] v01: rembg:birefnet-general; sem avisos
+[colagem-laco] v02: rembg:birefnet-general; sem avisos
