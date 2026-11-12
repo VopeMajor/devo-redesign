@@ -1965,7 +1965,18 @@ if (want('desktop')) {
 
 // ── 5. Narrativa e progressão (sys/narrativa): trava → cerimônia → explorar → Galo (Karma) → Melissa ──────
 // Contas: Lacre (DEVO-NARR-0002, sem tutorial) e Sirius (DEVO-NARR-0001, tutorial vencido via SQL).
-if (want('narrativa')) {
+if (want('narrativa') || want('galo-v2')) {
+  // galo-v2: a mesma cadeia (Fundação → explorar → "Ir para casa" → Galo → Melissa → Corporações) no sistema v2, pelo
+  // endereço principal, como o jogador comum entra (dono, 11/11: no celular do v2 o cartão da visita não aparecia)
+  const V2 = want('galo-v2') && !want('narrativa')
+  const entrar = V2
+    ? async (page) => {
+        await page.goto(BASE, { waitUntil: 'networkidle' })
+        await wait(1000)
+        await btn(page, 'Continuar').click({ timeout: 15000 }).catch(() => {})
+        await wait(3600)
+      }
+    : enterOS
   const { default: pg } = await import('pg')
   const db = new pg.Pool({ connectionString: process.env.DATABASE_URL })
   const sql = (t, p) => db.query(t, p).then((r) => r.rows)
@@ -2008,7 +2019,7 @@ if (want('narrativa')) {
 
   await step('narrativa-trancado', async () => {
     const { ctx, page } = await account('Lacre', 'DEVO-NARR-0002', VET_CARDS)
-    await enterOS(page)
+    await entrar(page)
     await wait(1500)
     await page.locator('section[aria-label="Sistemas"]').first().scrollIntoViewIfNeeded({ timeout: 5000 }).catch(() => {})
     await wait(800)
@@ -2026,7 +2037,7 @@ if (want('narrativa')) {
     for (const f of ['salao_mascaras', 'poco', 'torres', 'diario', 'galo_casa']) {
       await sql("INSERT INTO player_unlocks (player_id, flag, source, ref) VALUES ($1, $2, 'deadly_vote', 'captura') ON CONFLICT DO NOTHING", [p.id, f])
     }
-    await enterOS(page)
+    await entrar(page)
     await wait(1200)
     await shot(page, 'n-02-cerimonia', 'cerimônia de desbloqueio depois do tutorial')
     await wait(7000)
@@ -2039,12 +2050,31 @@ if (want('narrativa')) {
     // Explorou Poço e Torres (as apresentações deles têm roteiro próprio): grava no save e volta à home.
     await page.goto(`${BASE}/images/card-back.png`)
     await api(page, '/api/save', makeSave(VET_CARDS, { sistemasVistos: ['poco', 'torres'], desbloqueiosVistos: ['salao', 'poco', 'torres'] }))
-    await enterOS(page)
+    await entrar(page)
+    if (V2) {
+      const aviso = page.locator('.v2-aviso', { hasText: 'Um endereço' })
+      if (!(await aviso.isVisible().catch(() => false))) await aviso.waitFor({ timeout: 6000 }).catch(() => {})
+      await shot(page, 'n-05a-aviso-galo', 'aviso "Talvez seja hora de ir para casa"')
+      if (!(await aviso.count())) manifest.errors.push({ step: 'galo-v2-aviso', error: 'o aviso da visita não apareceu' })
+      await wait(6500)
+    }
     await wait(1500)
     const agora = page.getByRole('button', { name: 'Ir para casa' }).first()
     await agora.scrollIntoViewIfNeeded({ timeout: 5000 }).catch(() => {})
     await wait(600)
     await shot(page, 'n-05-cartao-galo', 'depois de explorar: cartão "Ir para casa" (visita do Galo)')
+    if (!(await agora.isVisible().catch(() => false))) manifest.errors.push({ step: 'narrativa-cartao-galo', error: 'o cartão "Ir para casa" não aparece no celular' })
+    // e na faixa de 900 a 1023 px (o v2 já usa o layout de computador; o cartão flutuante antigo só vinha a partir de 1024)
+    const vp = page.viewportSize()
+    for (const [w, h] of [[960, 800], [1280, 800]]) {
+      await page.setViewportSize({ width: w, height: h })
+      await wait(900)
+      await shot(page, `n-05-cartao-galo-${w}`, `cartão "Ir para casa" com ${w}px de largura`)
+      if (!(await page.getByRole('button', { name: 'Ir para casa' }).first().isVisible().catch(() => false)))
+        manifest.errors.push({ step: `narrativa-cartao-galo-${w}`, error: `o cartão "Ir para casa" não aparece com ${w}px` })
+    }
+    if (vp) await page.setViewportSize(vp)
+    await wait(900)
   })
 
   await step('narrativa-galo', async () => {
@@ -2072,9 +2102,18 @@ if (want('narrativa')) {
     await shot(page, 'n-19-galo-tempo', 'Galo transfere Tempo (valor provisório) — selo de Tempo')
     // Recarregar no meio: retoma no passo salvo e não repete o Tempo.
     await wait(1200)
-    await enterOS(page)
-    await wait(1500)
-    await page.getByRole('button', { name: 'Ir para casa' }).first().click({ timeout: 8000 })
+    if (V2) {
+      // o aviso volta (marca limpa no save) e tocar nele abre a visita, não o Pulso
+      await page.goto(`${BASE}/images/card-back.png`)
+      await api(page, '/api/save', makeSave(VET_CARDS, { sistemasVistos: ['poco', 'torres'], desbloqueiosVistos: ['salao', 'poco', 'torres'] }))
+      await entrar(page)
+      const aviso = page.locator('.v2-aviso', { hasText: 'Um endereço' }).first()
+      await aviso.click({ timeout: 6000 }).catch((e) => manifest.errors.push({ step: 'galo-v2-aviso-toque', error: String(e).slice(0, 200) }))
+    } else {
+      await entrar(page)
+      await wait(1500)
+      await page.getByRole('button', { name: 'Ir para casa' }).first().click({ timeout: 8000 })
+    }
     await wait(2800)
     await shot(page, 'n-20-galo-retomada', 'recarregou: retoma onde parou')
     await ate(page, 'A luz pisca')
@@ -2100,7 +2139,7 @@ if (want('narrativa')) {
 
   await step('narrativa-melissa', async () => {
     // A chamada da Companhia chega alguns segundos depois de voltar para a home.
-    await enterOS(page)
+    await entrar(page)
     await page.getByRole('dialog', { name: 'Uma chamada da Companhia' }).waitFor({ timeout: 20000 })
     await wait(1800)
     await shot(page, 'n-30-melissa-chamada', 'ícone da Companhia + chamada holográfica')
@@ -2122,6 +2161,17 @@ if (want('narrativa')) {
     await shot(page, 'n-36-corporacoes-liberado', 'Corporações liberado ao fim da chamada (cerimônia)')
   })
 
+  if (V2) {
+    await step('galo-v2-corporacoes', async () => {
+      await wait(6000)
+      await shot(page, 'n-37-corporacoes-v2', 'Mapa do Devo do v2 depois da chamada: Corporações aberta')
+      const ic = page.locator('#mesa .ic[data-id="corporacoes"]').first()
+      const trancado = await ic.evaluate((el) => el.classList.contains('trancado')).catch(() => null)
+      if (trancado !== false) manifest.errors.push({ step: 'galo-v2-corporacoes', error: `Corporações ${trancado === null ? 'não está no Mapa' : 'continua trancada'}` })
+    })
+    await ctx.close()
+    await db.end()
+  } else {
   await step('narrativa-mensagens', async () => {
     await wait(6000)
     await openApp(page, 'Mensagens')
@@ -2129,7 +2179,7 @@ if (want('narrativa')) {
   })
 
   await step('narrativa-reflexao', async () => {
-    await enterOS(page)
+    await entrar(page)
     await wait(1500)
     await page.evaluate(() => window.dispatchEvent(new CustomEvent('devo:cena', { detail: { id: 'anfitriao-de-que' }, cancelable: true })))
     await wait(1500)
@@ -2141,6 +2191,7 @@ if (want('narrativa')) {
   })
   await ctx.close()
   await db.end()
+  }
 }
 
 // ── Poço dos Milagres (sistema novo, DIRECAO-3 §2) ─────────────────────────────────────────

@@ -29,6 +29,7 @@ import { OsNavContext, type OsNav } from '@/components/devo/os/os-nav'
 import { useDevoEngine } from '@/components/devo/os/use-devo-engine'
 import { CenasGatilho } from '@/components/devo/torres/gatilho'
 import { isSistema, SISTEMAS as SISTEMAS_JOGO } from '@/components/devo/progressao/sistemas'
+import { AVISO_GALO_TITULO, useNarrativa } from '@/components/devo/progressao/narrativa-host'
 import { useAcesso as useAcessoSistemas } from '@/components/devo/progressao/use-acesso'
 import { useBackHandler } from '@/components/devo/use-back-handler'
 import { CasaV2 } from './casa/casa-v2'
@@ -293,6 +294,7 @@ function Casca({ onExit }: { onExit: () => void }) {
     [abre, onExit],
   )
 
+  const narrativa = useNarrativa()
   const arcano = eu?.arcano ?? null
   const retrato = arcano ? `url(/images/arcanos/${arcano.key}/retrato-512.webp)` : 'none'
   const avisos = state.notifications.length
@@ -368,6 +370,22 @@ function Casca({ onExit }: { onExit: () => void }) {
               </button>
             )}
           </div>
+
+          {/* a visita do Galo está pronta: no v2 o cartão fica aqui, no celular e no computador (no sistema antigo ele
+              vinha na home do celular e flutuava no computador) */}
+          {narrativa.galoDisponivel && (
+            <button id="ir-casa" onClick={() => narrativa.abrirGalo()}>
+              <span className="ic-casa">
+                <img src={ico('casa')} alt="" />
+              </span>
+              <span>
+                <small>Casa · noite</small>
+                <strong>Ir para casa</strong>
+                <em>Um endereço entre seus pertences.</em>
+              </span>
+              <Seta />
+            </button>
+          )}
 
           {an && (
             <div id="faixa">
@@ -684,6 +702,7 @@ function JanelaSistema({ j, emFoco, os, onFoco, onMini, onMax, onFecha, onMove, 
  */
 function AvisoQueChega({ onAbre }: { onAbre: (id: string) => void }) {
   const { state, dispatch } = useDevo()
+  const narrativa = useNarrativa()
   const t = state.toasts[0]
   useEffect(() => {
     if (!t) return
@@ -698,7 +717,9 @@ function AvisoQueChega({ onAbre }: { onAbre: (id: string) => void }) {
       role="status"
       onClick={() => {
         dispatch({ type: 'DISMISS_TOAST', id: t.id })
-        if (t.appId) onAbre(t.appId)
+        // "Talvez seja hora de ir para casa": abre a visita do Galo, não o Pulso
+        if (t.title === AVISO_GALO_TITULO && narrativa.galoDisponivel) narrativa.abrirGalo()
+        else if (t.appId) onAbre(t.appId)
       }}
     >
       <img src={ico(t.appId && SIS.has(t.appId) ? t.appId : 'sino')} alt="" />

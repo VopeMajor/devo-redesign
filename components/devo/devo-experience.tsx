@@ -182,7 +182,7 @@ function DevoRoot() {
         />
       )}
       {state.phase === 'os' && (
-        <NarrativaHost>
+        <NarrativaHost cartaoFlutuante={antigo}>
           {/* DEVO v2 para todos (dono, 08/11/2026). O sistema antigo ainda abre com ?antigo no endereço. */}
           {antigo ? <DevoOS onExit={exitToLanding} /> : <V2Sistema onExit={exitToLanding} />}
         </NarrativaHost>

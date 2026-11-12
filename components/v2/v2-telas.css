@@ -741,14 +741,15 @@
   #os #inicio{display:flex;flex-direction:column;overflow:hidden;padding-top:clamp(6px,1.4dvh,14px);padding-bottom:4px}
   #os #painel{flex:none;gap:clamp(8px,1.5dvh,14px)}
   /* o cartão do Record guarda a proporção da moldura: em tela baixa ele fica menor, no centro */
-  #os #perfil{justify-self:center;width:min(100%,calc(clamp(88px,17dvh,170px) * 2.4))}
+  #os #perfil{justify-self:center;width:min(100%,calc(clamp(84px,15dvh,150px) * 2.4))}
   #os #sistemas{flex:1 1 0;min-height:0;display:flex;flex-direction:column;margin-top:clamp(6px,1.8dvh,24px)}
   #os .mapa-cab{flex:none;margin-bottom:clamp(2px,1dvh,12px)}
   #os .mapa-dica{display:flex}
-  #os #mesa{flex:1 1 0;min-height:0;container-type:size;grid-template-rows:repeat(3,29cqh);align-content:start;grid-auto-columns:calc((100vw - 12px) / 3.45);column-gap:0!important;row-gap:0!important;padding:10px 10px 0!important;overflow-x:auto;overflow-y:hidden;touch-action:pan-x}
-  #os #mesa .ic{--d:clamp(38px,calc(29cqh - 32px),84px);justify-content:start;gap:5px;padding:0}
+  #os #mesa{flex:1 1 0;min-height:0;container-type:size;grid-template-rows:repeat(3,minmax(0,1fr));align-content:stretch;grid-auto-columns:calc((100vw - 12px) / 3.45);column-gap:0!important;row-gap:0!important;padding:10px 10px 0!important;overflow-x:auto;overflow-y:hidden;touch-action:pan-x}
+  #os #mesa .ic{--d:clamp(34px,calc(24cqh - 24px),84px);justify-content:start;gap:4px;padding:0;min-height:0}
+  /* (as unidades cqh valem para os ícones, medidas na altura do #mesa: três fileiras de 33cqh) */
   /* a coluna do meio de cada par desce um pouco, como no print */
-  #os #mesa .ic:nth-child(6n+4),#os #mesa .ic:nth-child(6n+5),#os #mesa .ic:nth-child(6n+6){transform:translateY(9cqh)!important}
+  #os #mesa .ic:nth-child(6n+4),#os #mesa .ic:nth-child(6n+5),#os #mesa .ic:nth-child(6n+6){transform:translateY(clamp(0px,calc(33cqh - var(--d) - 22px),8cqh))!important}
   #os #mesa .disco{width:var(--d)!important;height:var(--d)!important}
   #os #mesa .disco img{width:calc(var(--d) * 1.27)!important;height:calc(var(--d) * 1.27)!important}
   #os #mesa .ic[data-id=pulso] .disco img{width:calc(var(--d) * 1.03)!important;height:calc(var(--d) * 1.03)!important}
@@ -767,3 +768,19 @@
   #os .mapa-cab h2{font-size:19px;margin-top:3px}
 }
 
+/* ---- Visita do Galo pronta: o cartão "Ir para casa" na tela inicial do v2 (antes só existia no sistema antigo; no
+   celular do v2 ninguém o via, e sem a visita a Melissa não liga nem as Corporações abrem). Bilhete como o check-in. ---- */
+#ir-casa{position:relative;display:flex;align-items:stretch;gap:12px;width:100%;min-height:58px;padding:0 14px 0 0;border-radius:14px;overflow:hidden;text-align:left;color:var(--tx);background:linear-gradient(100deg,color-mix(in srgb,var(--ouro-mapa,#ad9058) 20%,rgba(10,22,52,.9)),rgba(10,22,52,.78) 60%);border:1px solid color-mix(in srgb,var(--ouro-mapa,#ad9058) 60%,transparent);box-shadow:0 0 22px -8px var(--ouro-mapa,#ad9058);cursor:pointer;animation:ir-casa-brilho 2.6s ease-in-out infinite}
+#ir-casa .ic-casa{flex:none;display:grid;place-items:center;width:58px;border-right:2px dashed rgba(0,0,0,.45);background:linear-gradient(160deg,color-mix(in srgb,var(--ouro-mapa,#ad9058) 38%,#0b1a3a),color-mix(in srgb,var(--ouro-mapa,#ad9058) 10%,#0b1a3a))}
+#ir-casa .ic-casa img{width:42px;height:42px;object-fit:contain;filter:drop-shadow(0 3px 6px rgba(0,0,0,.6))}
+#ir-casa>span:nth-child(2){flex:1;min-width:0;display:grid;align-content:center;gap:2px;padding:8px 0}
+#ir-casa small{font:600 10px/1.1 var(--ui);letter-spacing:.16em;text-transform:uppercase;color:var(--ouro-mapa,#ad9058)}
+#ir-casa strong{font:600 17px/1.1 var(--cond);color:#fff}
+#ir-casa em{font:italic 500 12.5px/1.2 var(--ui);color:var(--sec);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#ir-casa>svg{align-self:center;flex:none;width:18px;height:18px;fill:none;stroke:var(--ouro-mapa,#ad9058);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+#ir-casa:hover,#ir-casa:focus-visible{border-color:var(--ouro-mapa,#ad9058)}
+#ir-casa:focus-visible{outline:2px solid var(--dest);outline-offset:3px}
+#ir-casa:active{transform:scale(.985)}
+@keyframes ir-casa-brilho{50%{box-shadow:0 0 30px -4px var(--ouro-mapa,#ad9058)}}
+@media (prefers-reduced-motion:reduce){#ir-casa{animation:none}}
+@media (max-width:899.9px) and (min-height:560px) and (max-height:760px){#ir-casa{min-height:48px}#ir-casa .ic-casa{width:48px}#ir-casa .ic-casa img{width:34px;height:34px}#ir-casa>span:nth-child(2){padding:5px 0}}

@@ -26,18 +26,23 @@ const FIGURA_ESPERA_MS = 4000
 
 type Narrativa = { galoDisponivel: boolean; abrirGalo: () => void }
 const NarrativaContext = createContext<Narrativa>({ galoDisponivel: false, abrirGalo: () => {} })
+/** A visita do Galo pronta e como abri-la (o v2 desenha o próprio cartão "Ir para casa" na tela inicial). */
+export const useNarrativa = () => useContext(NarrativaContext)
+/** Título do aviso que chama para casa: no v2, tocar nele abre a visita do Galo. */
+export const AVISO_GALO_TITULO = 'Um endereço entre seus pertences'
 
-export function NarrativaHost({ children }: { children: ReactNode }) {
+/** `cartaoFlutuante`: o cartão "Ir para casa" flutuando no computador (sistema antigo); o v2 tem o dele. */
+export function NarrativaHost({ children, cartaoFlutuante = true }: { children: ReactNode; cartaoFlutuante?: boolean }) {
   return (
     <AcessoProvider>
       <CenasProvider>
-        <Gatilhos>{children}</Gatilhos>
+        <Gatilhos cartaoFlutuante={cartaoFlutuante}>{children}</Gatilhos>
       </CenasProvider>
     </AcessoProvider>
   )
 }
 
-function Gatilhos({ children }: { children: ReactNode }) {
+function Gatilhos({ children, cartaoFlutuante }: { children: ReactNode; cartaoFlutuante: boolean }) {
   const { state, dispatch, notify } = useDevo()
   const { eu } = useAcesso()
   const cenas = useCenas()
@@ -69,7 +74,7 @@ function Gatilhos({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (!galoDisponivel || total || state.desbloqueiosVistos.includes(MARCA_AVISO_GALO)) return
     dispatch({ type: 'CELEBRATE_UNLOCKS', flags: [MARCA_AVISO_GALO] })
-    notify({ appId: 'pulso', title: 'Um endereço entre seus pertences', body: 'Talvez seja hora de ir para casa.' })
+    notify({ appId: 'pulso', title: AVISO_GALO_TITULO, body: 'Talvez seja hora de ir para casa.' })
   }, [galoDisponivel, total, state.desbloqueiosVistos, dispatch, notify])
 
   /* 4. Chamada da Melissa (Companhia de Despertados). */
@@ -111,7 +116,7 @@ function Gatilhos({ children }: { children: ReactNode }) {
   return (
     <NarrativaContext.Provider value={ctx}>
       {children}
-      {isDesktop && galoDisponivel && !cenas.aberta && (
+      {cartaoFlutuante && isDesktop && galoDisponivel && !cenas.aberta && (
         <div className="fixed bottom-20 right-6 z-[60] w-[340px]">
           <CartaoNarrativa />
         </div>
