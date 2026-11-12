@@ -767,6 +767,15 @@
   #os #faixa::before{width:34px;height:34px}
   #os .mapa-cab small{font-size:11px}
   #os .mapa-cab h2{font-size:19px;margin-top:3px}
+  /* o cartão do Record menor: letras e medalhão acompanham, cada linha numa linha só */
+  #os #perfil{gap:10px}
+  #os #perfil .pf-av{width:46px;height:46px}
+  #os #perfil .pf-av .sigilo{padding:8px}
+  #os #perfil .pf-tx{gap:2px;min-width:0}
+  #os #perfil .pf-tx small{font-size:8.5px;letter-spacing:.12em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  #os #perfil .pf-tx strong{font-size:21px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  #os #perfil .pf-barra{font-size:10.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  #os #perfil .pf-arc{font-size:10.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 }
 
 /* ---- Visita do Galo pronta: o cartão "Ir para casa" na tela inicial do v2 (antes só existia no sistema antigo; no
