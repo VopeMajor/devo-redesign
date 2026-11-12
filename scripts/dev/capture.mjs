@@ -2083,8 +2083,12 @@ if (want('narrativa') || want('galo-v2')) {
       await page.goto(`${BASE}/images/card-back.png`)
       await api(page, '/api/save', makeSave(VET_CARDS, { sistemasVistos: ['poco', 'torres'], desbloqueiosVistos: ['salao', 'poco', 'torres'] }))
       await entrar(page)
+      // os avisos chegam um de cada vez (o da Coruja pode vir antes): espera o da visita aparecer e assentar, e toca
       const aviso = page.locator('.v2-aviso', { hasText: 'Um endereço' }).first()
-      await aviso.click({ timeout: 6000 }).catch((e) => manifest.errors.push({ step: 'galo-v2-aviso-toque', error: String(e).slice(0, 200) }))
+      await aviso.waitFor({ state: 'visible', timeout: 20000 }).catch(() => {})
+      await wait(800)
+      await shot(page, 'n-09-aviso-galo', 'o aviso da visita, antes do toque')
+      await aviso.click({ timeout: 6000, force: true }).catch((e) => manifest.errors.push({ step: 'galo-v2-aviso-toque', error: String(e).slice(0, 600) }))
       await wait(2600)
       await shot(page, 'n-10-galo-abertura', 'tocou no aviso: a visita do Galo abre')
       if (!(await dlg(page).count())) manifest.errors.push({ step: 'galo-v2-cena', error: 'tocar no aviso não abriu a visita do Galo' })
