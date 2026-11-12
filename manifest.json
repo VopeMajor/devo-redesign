@@ -1,0 +1,34 @@
+{
+  "pedido": "colagem-fundo",
+  "titulo": "Colagem — fundo damasco",
+  "tipo": "ilustracao",
+  "tamanho_final": 1536,
+  "importado": null,
+  "variacoes": [
+    {
+      "nome": "v01",
+      "modelo": "@cf/black-forest-labs/flux-2-klein-4b",
+      "seed": 4101,
+      "passos": null,
+      "segundos": 8.3,
+      "neuronios_estimados": 156,
+      "fundo": "mantido",
+      "arquivos": [
+        {
+          "arquivo": "colagem-fundo--v01--1536.png",
+          "bytes": 2737970
+        },
+        {
+          "arquivo": "colagem-fundo--v01--1536.webp",
+          "bytes": 494824
+        },
+        {
+          "arquivo": "colagem-fundo--v01--512.webp",
+          "bytes": 45370
+        }
+      ],
+      "segundos_pos": 2.6,
+      "avisos": []
+    }
+  ]
+}
