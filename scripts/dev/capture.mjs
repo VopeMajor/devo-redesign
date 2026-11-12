@@ -2079,9 +2079,10 @@ if (want('narrativa') || want('galo-v2')) {
 
   await step('narrativa-galo', async () => {
     if (V2) {
-      // no v2 a visita abre pelo aviso "Talvez seja hora de ir para casa" (marca limpa no save para ele voltar)
+      // no v2 a visita abre pelo aviso "Talvez seja hora de ir para casa" (marca limpa no save para ele voltar; as
+      // cerimônias de desbloqueio já vistas, como as de um jogador de verdade, para não cobrirem o aviso)
       await page.goto(`${BASE}/images/card-back.png`)
-      await api(page, '/api/save', makeSave(VET_CARDS, { sistemasVistos: ['poco', 'torres'], desbloqueiosVistos: ['salao', 'poco', 'torres'] }))
+      await api(page, '/api/save', makeSave(VET_CARDS, { sistemasVistos: ['poco', 'torres'], desbloqueiosVistos: ['salao', 'poco', 'torres', 'casa', 'calendario', 'diario'] }))
       await entrar(page)
       // os avisos chegam um de cada vez (o da Coruja pode vir antes): espera o da visita aparecer e assentar, e toca
       const aviso = page.locator('.v2-aviso', { hasText: 'Um endereço' }).first()
