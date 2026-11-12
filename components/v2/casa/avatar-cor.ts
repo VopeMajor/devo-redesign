@@ -283,10 +283,22 @@ export function pintaCorpo(d: Px, pele: (typeof PELES)[number]) {
   for (let i = 0; i < d.length; i += 4) {
     if (!d[i + 3] || d[i] - d[i + 2] <= 30) continue
     const v = 0.3 * d[i] + 0.59 * d[i + 1] + 0.11 * d[i + 2]
+    if (v < 150) {
+      // borda do traço (pele misturada com a tinta): continua escura, senão o contorno fino vira pontilhado
+      const k2 = sat((v - 44) / 106)
+      for (let k = 0; k < 3; k++) d[i + k] = lerp(TINTA_PELE[k], som[k], k2)
+      continue
+    }
     const t = sat((v - 150) / 65)
     for (let k = 0; k < 3; k++) d[i + k] = lerp(som[k], tom[k], t)
   }
 }
+const TINTA_PELE = [58, 32, 38]
+
+const FAIXA_OLHOS: [number, number][] = [
+  [205, 235], [205, 232], [205, 230], [198, 239], [202, 232], [205, 230], [199, 229], [194, 225], [197, 228],
+  [202, 225], [194, 225], [195, 232], [203, 245], [204, 229], [199, 236], [211, 239], [201, 230], [211, 241],
+]
 
 /** Faixa dos olhos: acima são sobrancelhas, abaixo é a boca (e as olheiras do rosto 14). */
 export type CaixaOlho = { x0: number; x1: number; y0: number; y1: number }
@@ -305,9 +317,11 @@ export function pintaRosto(
     { x0: w, x1: -1, y0: w, y1: -1 },
   ]
   const esc = w / 512
-  const y0 = 186 * esc
-  const y1 = (indice === 13 ? 219 : 240) * esc
-  const max = indice === 7 ? 176 : 208
+  // estilo E (12/11): cada rosto tem a sua faixa dos olhos (medida na arte); acima é sobrancelha, abaixo é boca
+  const [b0, b1] = FAIXA_OLHOS[indice] ?? [186, 240]
+  const y0 = b0 * esc
+  const y1 = b1 * esc
+  const max = 208
   const [, s, m] = olho
   const sob = cabelo[1]
   const claro = pele[1]
@@ -343,8 +357,8 @@ export function marcasBusto(ctx: CanvasRenderingContext2D, w: number, marca: num
   // olheiras, e as duas bochechas saíam tortas. Todos os rostos usam o mesmo molde de cabeça: os olhos ficam sempre
   // no mesmo lugar, então as marcas usam posições fixas e simétricas
   const caixas: CaixaOlho[] = [
-    { x0: 188 * e, x1: 238 * e, y0: 188 * e, y1: 226 * e },
-    { x0: 274 * e, x1: 326 * e, y0: 188 * e, y1: 226 * e },
+    { x0: 197 * e, x1: 240 * e, y0: 205 * e, y1: 226 * e },
+    { x0: 272 * e, x1: 315 * e, y0: 205 * e, y1: 226 * e },
   ]
   const som = pele[2]
   const cor = (a: number) => `rgba(${Math.round(som[0] * 0.7)},${Math.round(som[1] * 0.56)},${Math.round(som[2] * 0.5)},${a})`
@@ -428,7 +442,8 @@ export const COL = { parado: 0, assenta: 9, pisca: 10, peito: 11, olhaE: 12, olh
 export const ANDAR_BOB = [0, 1, 0, -1, 0, 1, 0, -1]
 
 const ARTE = '/v2/art/avatar/'
-const V = '?v=202611071900'
+// estilo E (12/11): arte nova do retrato e do chibi; a versão muda para o navegador não usar as imagens antigas
+const V = '?v=202611121900'
 
 const imgs = new Map<string, Promise<HTMLImageElement>>()
 export function carregaImg(src: string): Promise<HTMLImageElement> {
@@ -911,11 +926,11 @@ export type PecasBusto = { corpo: HTMLImageElement[]; cabelo: HTMLImageElement[]
 export async function carregaBusto(): Promise<PecasBusto> {
   const n = 18
   const [corpo, cabelo, rosto, roupaF, roupaM] = await Promise.all([
-    Promise.all(['f', 'm'].map((c) => carregaImg(`${ARTE}corpo-${c}.png`))),
-    Promise.all(Array.from({ length: n }, (_, i) => carregaImg(`${ARTE}cabelo-${i + 1}.png`))),
-    Promise.all(Array.from({ length: n }, (_, i) => carregaImg(`${ARTE}rosto-${i + 1}.png`))),
-    Promise.all(Array.from({ length: 6 }, (_, i) => carregaImg(`${ARTE}roupa-${i + 1}-f.png`))),
-    Promise.all(Array.from({ length: 6 }, (_, i) => carregaImg(`${ARTE}roupa-${i + 1}-m.png`))),
+    Promise.all(['f', 'm'].map((c) => carregaImg(`${ARTE}corpo-${c}.png${V}`))),
+    Promise.all(Array.from({ length: n }, (_, i) => carregaImg(`${ARTE}cabelo-${i + 1}.png${V}`))),
+    Promise.all(Array.from({ length: n }, (_, i) => carregaImg(`${ARTE}rosto-${i + 1}.png${V}`))),
+    Promise.all(Array.from({ length: 6 }, (_, i) => carregaImg(`${ARTE}roupa-${i + 1}-f.png${V}`))),
+    Promise.all(Array.from({ length: 6 }, (_, i) => carregaImg(`${ARTE}roupa-${i + 1}-m.png${V}`))),
   ])
   return { corpo, cabelo, rosto, roupa: [roupaF, roupaM] }
 }
