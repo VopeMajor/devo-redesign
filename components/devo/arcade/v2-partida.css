@@ -17,10 +17,39 @@
 .v2-partida > .bl {
   top: 0;
 }
-/* fora do v2 (sem janela): a partida ocupa a tela */
+/* as fontes do v2 valem na partida mesmo fora do #os (o mesmo que v2-ajustes.css faz no #os) */
+.v2-partida {
+  --font: var(--v2-barlow), system-ui, sans-serif;
+  --ui: var(--v2-barlow), system-ui, sans-serif;
+  --cond: var(--v2-barlow-cond), var(--v2-barlow), sans-serif;
+  --relogio: var(--v2-jersey), monospace;
+  font-family: var(--font);
+  font-kerning: normal;
+  color: var(--tx);
+}
+/* fora do v2 (sistema antigo, ?antigo): a partida ocupa a tela e recebe a mesma base que o #os dá às telas */
 .v2-partida.solta {
   position: fixed;
   z-index: 80;
+  border-radius: 0;
+}
+:where(.v2-partida.solta, .v2-partida.solta *) {
+  box-sizing: border-box;
+  margin: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+:where(.v2-partida.solta) button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  padding: 0;
+  text-align: left;
+}
+:where(.v2-partida.solta) button:focus-visible {
+  outline: 2px solid var(--dest);
+  outline-offset: 1px;
 }
 
 .v2p-veu {
@@ -113,6 +142,23 @@
   letter-spacing: 0.08em;
   white-space: nowrap;
   pointer-events: none;
+}
+
+/* Memory Rush online: com o botão do chat na linha do placar, o placar não quebra e a frase encolhe */
+.mr-status > span:first-child {
+  flex: none;
+  white-space: nowrap;
+}
+.mr-status > em {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: right;
+}
+.mr-status .v2p-chat > button {
+  height: 36px;
+  min-height: 36px;
 }
 
 /* o botão do chat ao vivo veste o cabeçalho do jogo */

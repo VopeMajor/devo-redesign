@@ -39,6 +39,7 @@ import { markStartReceived } from '../arcade/use-room'
 import { useNow } from '../hooks'
 import { useDevo } from '../state/devo-store'
 import { voltarJanela } from '@/components/v2/voltar'
+import { FONTES_V2 } from '@/components/v2/fontes'
 
 type Tab = ArcadeView
 const TABS: { value: Tab; label: string }[] = [
@@ -301,7 +302,7 @@ export function JogosApp() {
           !running.finish &&
           !running.error &&
           createPortal(
-            <div className={cn('v2-partida', !jan && 'solta')}>
+            <div className={cn('v2-partida', FONTES_V2, !jan && 'solta')}>
               <GameRunner run={running} settings={(data?.me.settings ?? {}) as Record<string, string>} onFinish={finish} onQuit={quit} />
             </div>,
             jan ?? document.body,

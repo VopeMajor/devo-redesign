@@ -10,7 +10,7 @@ import { recordIdFor } from '@/lib/devo/deadly-votes'
 import { PULSE_CRITICAL_MS, pulseRemaining } from '@/lib/devo/pulse'
 import type { CalendarioPayload } from '@/lib/devo/calendario'
 import type { SaveData } from '@/lib/devo/save'
-import { Barlow, Barlow_Semi_Condensed, Jersey_15 } from 'next/font/google'
+import { FONTES_V2 } from './fontes'
 import { PulsoV2 } from './apps/pulso'
 import { RecordV2 } from './apps/record'
 import { MensagensV2 } from './apps/mensagens'
@@ -45,11 +45,6 @@ import './v2-telas.css'
  * (os.css) valer sem mudança. Os dados são os do jogo: nome, Tempo, Arcano, check-in, eventos e anúncios.
  * Os sistemas abrem janelas; cada tela entra nas próximas etapas do plano (PLANO-PUBLICACAO.md).
  */
-
-const barlow = Barlow({ subsets: ['latin', 'latin-ext'], weight: ['400', '500', '600', '700'], variable: '--v2-barlow' })
-const barlowCond = Barlow_Semi_Condensed({ subsets: ['latin', 'latin-ext'], weight: ['500', '600', '700'], variable: '--v2-barlow-cond' })
-const jersey = Jersey_15({ subsets: ['latin'], weight: '400', variable: '--v2-jersey' })
-const FONTES_V2 = [barlow.variable, barlowCond.variable, jersey.variable].join(' ')
 
 /** Fontes dos apps do protótipo que ainda virão (Cinzel, EB Garamond, VT323…): pelo Google, como no protótipo. */
 const FONTES =

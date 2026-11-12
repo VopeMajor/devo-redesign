@@ -868,7 +868,7 @@ if (want('sistema') || want('apps') || want('jogos')) {
       await step(`jogos-${tab}`, async () => {
         await openApp(page, 'Sala de Jogos')
         // As seções da Sala de Jogos são abas do kit (role="tab").
-        await page.getByRole('tab', { name: tab, exact: true }).first().click({ timeout: 3000 })
+        await page.getByRole('tab', { name: tab, exact: true }).first().click({ timeout: 10000 })
         await wait(1800)
         await shot(page, `31-jogos-${tab.toLowerCase()}`)
         if (tab !== 'Apostas') {
@@ -902,7 +902,7 @@ if (want('sistema') || want('apps') || want('jogos')) {
       await step(`tutorial-${slug}`, async () => {
         await openApp(page, 'Sala de Jogos')
         const card = page.locator('[aria-label="Jogos da semana"] > *').filter({ hasText: new RegExp(game, 'i') }).first()
-        await card.getByRole('button', { name: /tutorial/i }).first().click({ timeout: 3000 })
+        await card.getByRole('button', { name: /tutorial/i }).first().click({ timeout: 10000 })
         await wait(3000)
         await shot(page, `32-tutorial-${slug}-a`)
         await wait(5000)
@@ -1202,6 +1202,8 @@ if (want('partidas')) {
       // sem isso a sala continua ativa e a próxima fila reconecta nela.
       for (const { page } of [A, B]) {
         await tryClick(page.getByRole('button', { name: /desistir e sair/i }).first(), 4000)
+        // partida online valendo Tempo: o X pede confirmação antes de desistir
+        await tryClick(page.getByRole('button', { name: 'Desistir', exact: true }).first(), 2500)
         await wait(1500)
         await tryClick(page.getByRole('button', { name: /voltar à mesa/i }).first(), 4000)
       }
@@ -4224,6 +4226,91 @@ if (want('v2')) {
       await page.locator(`${jan} .s-equipe`).first().click({ timeout: 4000 }).catch(() => {})
       await wait(1400)
       await shot(page, `v2-11-corp-11-${tag}`, 'Corporações: painel da equipe (Owner)')
+      await d.ctx.close()
+    })
+  }
+  // Sala de Jogos no v2: os quatro jogos por dentro (treino), dentro da janela, no visual aprovado do protótipo
+  for (const kind of ['phone', 'desktop']) {
+    await step(`v2-jogos-${kind}`, async () => {
+      const d = await conta(kind, SENT, 'Sentinela', 'DEVO-STAF-SENT')
+      const page = d.page
+      const tag = kind === 'phone' ? 'cel' : 'pc'
+      const jan = '.jan[data-sis="jogos"]'
+      const nome = (n) => `v2-12-jogos-${n}-${tag}`
+      await page.goto(`${BASE}/v2`, { waitUntil: 'networkidle' })
+      await wait(2000)
+      await tryClick(page.locator('#mesa .ic[data-id="jogos"]'))
+      await wait(3000)
+      await shot(page, nome('0-sala'), 'Sala de Jogos aberta')
+      const treino = async (jogo) => {
+        const card = page.locator(`${jan} [aria-label="Jogos da semana"] > *`).filter({ hasText: new RegExp(jogo, 'i') }).first()
+        await card.getByRole('button', { name: /tutorial/i }).first().click({ timeout: 8000 })
+      }
+      const sai = async () => {
+        await tryClick(page.locator(`${jan} .v2-partida`).getByRole('button', { name: /desistir e sair/i }).first(), 4000)
+        await wait(1500)
+        await tryClick(page.getByRole('button', { name: /voltar à mesa/i }).first(), 3000)
+        await wait(1200)
+      }
+      const passo = async (slug, fn) => {
+        try {
+          await fn()
+        } catch (e) {
+          manifest.errors.push({ step: `v2-jogos-${slug}-${kind}`, error: String(e).slice(0, 400) })
+        }
+        await sai()
+      }
+      await passo('memory', async () => {
+        await treino('Memory Rush')
+        await wait(4200)
+        await shot(page, nome('1-memory-a'), 'Memory Rush: cartas na mesa')
+        // um par certo (combo e faíscas) e uma carta aberta
+        await page.evaluate(() => {
+          const bs = [...document.querySelectorAll('.v2-partida .mr-c')]
+          const por = {}
+          for (const b of bs) (por[b.querySelector('.s')?.getAttribute('src')] ||= []).push(b)
+          const [p] = Object.values(por)
+          p[0].click()
+          setTimeout(() => p[1].click(), 80)
+          setTimeout(() => bs.find((b) => !p.includes(b))?.click(), 900)
+        })
+        await wait(1100)
+        await shot(page, nome('1-memory-b'), 'Memory Rush: par feito e uma carta aberta')
+      })
+      await passo('xadrez', async () => {
+        await treino('Living Chess')
+        await wait(7000)
+        await shot(page, nome('2-xadrez-a'), 'Living Chess: demonstração do Javali')
+        await wait(9000)
+        await shot(page, nome('2-xadrez-b'), 'Living Chess: lances da demonstração')
+        await tryClick(page.getByRole('button', { name: 'Configurações' }).first(), 3000)
+        await wait(900)
+        await shot(page, nome('2-xadrez-c'), 'Living Chess: configurações')
+        await tryClick(page.getByRole('button', { name: 'Configurações' }).first(), 3000)
+      })
+      await passo('bomba', async () => {
+        await treino('Bomba Quente')
+        await wait(3000)
+        await shot(page, nome('3-bomba-a'), 'Bomba Quente: entrada')
+        await tryClick(page.locator(`${jan} .v2-partida`).getByRole('button', { name: /jogar/i }).first(), 3000)
+        await wait(5500)
+        await shot(page, nome('3-bomba-b'), 'Bomba Quente: partida')
+        await wait(6000)
+        await shot(page, nome('3-bomba-c'), 'Bomba Quente: partida, mais adiante')
+      })
+      await passo('blefe', async () => {
+        await treino('Blefe')
+        await wait(4500)
+        await shot(page, nome('4-blefe-a'), 'Blefe: a mão e a mesa do Javali')
+        await page.evaluate(() => [...document.querySelectorAll('.v2-partida .bl-c.ok')].slice(0, 2).forEach((c) => c.click()))
+        await wait(500)
+        await shot(page, nome('4-blefe-b'), 'Blefe: cartas marcadas')
+        await tryClick(page.locator(`${jan} .bl-acoes button`).first(), 3000)
+        await wait(4000)
+        await shot(page, nome('4-blefe-c'), 'Blefe: depois da jogada')
+        await wait(9000)
+        await shot(page, nome('4-blefe-d'), 'Blefe: o Javali jogou')
+      })
       await d.ctx.close()
     })
   }
