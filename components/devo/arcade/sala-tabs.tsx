@@ -311,7 +311,16 @@ function AgendaEvent({
 }
 
 function EventPanel({ id }: { id: string }) {
-  const { data } = useSWR<EventDetail>(arcadeKey('event', `&id=${id}`), arcadeFetcher, { refreshInterval: 15_000 })
+  const { data, error, mutate } = useSWR<EventDetail>(arcadeKey('event', `&id=${id}`), arcadeFetcher, { refreshInterval: 15_000 })
+  if (!data && error)
+    return (
+      <p className="flex flex-wrap items-center gap-3 border-t border-dv-line p-3 font-body text-[14px] text-dv-text-2">
+        <span>{(error as Error).message}</span>
+        <Button size="sm" variant="ghost" onClick={() => void mutate()} sfx="click">
+          Tentar de novo
+        </Button>
+      </p>
+    )
   if (!data)
     return (
       <p className="flex items-center gap-2 border-t border-dv-line p-3 text-dv-text-3">
@@ -600,7 +609,7 @@ export function Apostas() {
   const applyTime = useApplyTime()
   const { state } = useDevo()
   const now = useNow(1000)
-  const { data, mutate } = useSWR<BetBoard>(arcadeKey('bets'), arcadeFetcher, { refreshInterval: 20_000, onSuccess: (d) => applyTime(d) })
+  const { data, error, mutate } = useSWR<BetBoard>(arcadeKey('bets'), arcadeFetcher, { refreshInterval: 20_000, onSuccess: (d) => applyTime(d) })
   const [amount, setAmount] = useState(15)
   const sheet = useBetSheet(() => mutate(), amount)
   const remaining = Math.max(0, state.timerEndsAt - now)
@@ -609,7 +618,7 @@ export function Apostas() {
   const open = data?.events.filter((e) => e.duels.length > 0) ?? []
   const closed = data?.events.filter((e) => e.duels.length === 0) ?? []
   const bettable = open.some((e) => (e.status === 'LOCKED' || e.status === 'LIVE') && e.duels.some((d) => !d.winner && !d.myBet))
-  const reason = !data ? 'Abrindo o livro…' : bettable ? 'Escolha o valor e toque num lado do confronto.' : 'Sem confronto aberto agora — o valor fica guardado para a próxima.'
+  const reason = !data ? (error ? `O livro não abriu: ${(error as Error).message}` : 'Abrindo o livro…') : bettable ? 'Escolha o valor e toque num lado do confronto.' : 'Sem confronto aberto agora — o valor fica guardado para a próxima.'
 
   return (
     <div className="flex flex-col gap-6">

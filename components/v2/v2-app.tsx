@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties, type PointerEvent as RPointerEvent } from 'react'
 import useSWR from 'swr'
-import { callName, DevoProvider, useDevo } from '@/components/devo/state/devo-store'
+import { callName, DevoProvider, STARTER_APPS, useDevo } from '@/components/devo/state/devo-store'
 import { useEu } from '@/components/devo/state/use-acesso'
 import { useAnuncios } from '@/components/devo/os/anuncios-card'
 import { useNow } from '@/components/devo/hooks'
@@ -233,6 +233,11 @@ function Casca({ onExit }: { onExit: () => void }) {
     const trava = travaRef.current(id0)
     // sistema liberado e aberto pela primeira vez: conta como explorado (visita do Galo), como no sistema antigo
     if (isSistema(id0) && !trava) dispatch({ type: 'SEE_SYSTEM', id: id0 })
+    // os 5 apps iniciais abertos liberam a Sala de Jogos (ArcadeUnlock), como no sistema antigo
+    if ((STARTER_APPS as string[]).includes(id0)) {
+      dispatch({ type: 'SEE_APP', appId: id0 as AppId })
+      dispatch({ type: 'READ_APP', appId: id0 as AppId })
+    }
     // trancada, a Casa abre na janela com o motivo (a tela antiga mostra a trava)
     if (id0 === 'casa' && !trava) return setCasa(true)
     const id = ABRE_COMO[id0] ?? id0
@@ -248,7 +253,9 @@ function Casca({ onExit }: { onExit: () => void }) {
       } else if (pc() && osRef.current && LEGADO.has(id)) {
         const a = osRef.current.getBoundingClientRect()
         const { w, h } = LEGADO.get(id)!.window
-        caixa = { l: Math.max(380, a.width - w - 40), t: 56, w: Math.min(w, a.width - 8), h: Math.min(h + 62, a.height - 44 - 54 - 14) }
+        const lw = Math.min(w, a.width - 8)
+        // em telas de 900 a 1420 px a janela larga (Sala de Jogos) saía pela direita, com os botões fora da tela
+        caixa = { l: Math.max(8, Math.min(a.width - lw - 8, Math.max(380, a.width - w - 40))), t: 56, w: lw, h: Math.min(h + 62, a.height - 44 - 54 - 14) }
       } else if (pc() && osRef.current) {
         const a = osRef.current.getBoundingClientRect()
         cascata.current = (cascata.current + 1) % 4
@@ -265,7 +272,11 @@ function Casca({ onExit }: { onExit: () => void }) {
   useEffect(() => {
     const k = (e: KeyboardEvent) => {
       // com a Casa aberta, o Esc é dela (fecha o cartão, a viagem ou os andares), não da janela que ficou atrás
-      if (e.key === 'Escape' && foco && !casa) fecha(foco.id)
+      // uma folha ou perfil aberto dentro da tela já tratou o Esc (preventDefault); a tela também pode fechar
+      // primeiro a camada de cima dela ou recusar (partida em andamento)
+      if (e.key !== 'Escape' || !foco || casa || e.defaultPrevented) return
+      if (voltarJanela[foco.id]?.()) return
+      fecha(foco.id)
     }
     window.addEventListener('keydown', k)
     return () => window.removeEventListener('keydown', k)

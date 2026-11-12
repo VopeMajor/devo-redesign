@@ -10,6 +10,7 @@ import { stackInventory } from '@/components/devo/shared/deck-panel'
 import { CorujaIntro } from '@/components/devo/apps/coruja-intro'
 import { useOsNav } from '@/components/devo/os/os-nav'
 import { useDevo } from '@/components/devo/state/devo-store'
+import { useAcesso } from '@/components/devo/state/use-acesso'
 import { useBackHandler } from '@/components/devo/use-back-handler'
 
 /**
@@ -60,6 +61,9 @@ function inclina(forca: number) {
 
 export function CartasV2() {
   const { state } = useDevo()
+  // Owner e Anfitrião veem a Sala de Jogos sem a marca no save: aqui ela também conta como liberada
+  const acessoJogos = !!useAcesso()?.salaJogos
+  const salaLiberada = state.arcadeUnlocked || acessoJogos
   const nav = useOsNav()
   const [filtro, setFiltro] = useState<Filtro>('todas')
   const [sel, setSel] = useState<string | null>(null)
@@ -81,7 +85,7 @@ export function CartasV2() {
   }, [sel])
 
   const embaralha = () => {
-    if (!state.arcadeUnlocked || embaralhando || !state.inventory.length) return
+    if (!salaLiberada || embaralhando || !state.inventory.length) return
     playSfx('card')
     setEmbaralhando(true)
     window.setTimeout(
@@ -129,10 +133,10 @@ export function CartasV2() {
               <i />
             </span>
             <span className="cx-shuf-tx">
-              <small>Shuffler · {shufflerStatus(state.arcadeUnlocked, embaralhando ? 'shuffling' : 'idle')}</small>
-              <span>{state.arcadeUnlocked ? 'Sorteia uma das suas cartas para ver.' : 'Desperta junto com a Sala de Jogos.'}</span>
+              <small>Shuffler · {shufflerStatus(salaLiberada, embaralhando ? 'shuffling' : 'idle')}</small>
+              <span>{salaLiberada ? 'Sorteia uma das suas cartas para ver.' : 'Desperta junto com a Sala de Jogos.'}</span>
             </span>
-            <button className="r-bt chanfro" disabled={!state.arcadeUnlocked || embaralhando || !copias} onClick={embaralha}>
+            <button className="r-bt chanfro" disabled={!salaLiberada || embaralhando || !copias} onClick={embaralha}>
               {embaralhando ? 'Embaralhando…' : 'Embaralhar'}
             </button>
           </div>

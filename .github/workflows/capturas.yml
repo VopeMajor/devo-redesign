@@ -102,6 +102,9 @@ jobs:
       - name: Teste de servidor (Casa)
         run: node scripts/dev/casa-test.mjs 2>&1 | tee casa-test.log
         continue-on-error: true
+      - name: Teste de servidor (Sala de Jogos)
+        run: node scripts/dev/arcade-test.mjs 2>&1 | tee arcade-test.log
+        continue-on-error: true
       - name: Banco novo confere com as migrações
         run: |
           bash scripts/dev/gerar-banco-novo.sh /tmp/devo-banco-novo.sql
@@ -113,7 +116,7 @@ jobs:
         continue-on-error: true
       - name: Logs
         if: always()
-        run: mkdir -p shots && cp -f build.log typecheck.log server.log playwright.log capture.log fundacao-test.log poco-test.log staff-test.log torres-test.log salao-test.log cosmeticos-test.log virtudes-test.log corporacoes-test.log narrativa-test.log calendario-test.log casa-test.log banco-novo.log shots/ 2>/dev/null || true
+        run: mkdir -p shots && cp -f build.log typecheck.log server.log playwright.log capture.log fundacao-test.log poco-test.log staff-test.log torres-test.log salao-test.log cosmeticos-test.log virtudes-test.log corporacoes-test.log narrativa-test.log calendario-test.log casa-test.log arcade-test.log banco-novo.log shots/ 2>/dev/null || true
       - name: Publicar capturas na branch capturas/<branch>
         if: always()
         run: |

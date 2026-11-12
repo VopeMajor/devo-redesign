@@ -56,7 +56,7 @@ const pairPoints = memoryPairPoints
 const shownScore = (n: number) => Math.max(0, Math.min(meta.maxScore, n))
 
 export default function MemoryRush({ start, onFinish, onQuit }: GameProps) {
-  const { online, room, act, toLocal } = useRoom(start, 450)
+  const { online, room, act, toLocal, lost } = useRoom(start, 450)
   const gateOpen = useOnlineGate(start)
   const side = start.side ?? 'a'
   const oppSide = side === 'a' ? 'b' : 'a'
@@ -78,18 +78,33 @@ export default function MemoryRush({ start, onFinish, onQuit }: GameProps) {
   const phaseMisses = useRef(0)
   const wasBehind = useRef(false)
   const finished = useRef(false)
-  const live = useRef({ cards, me, opp, open })
-  live.current = { cards, me, opp, open }
+  const live = useRef({ cards, me, opp, open, phase })
+  live.current = { cards, me, opp, open, phase }
+  /** `onFinish` muda de identidade a cada render da Sala; pela ref, `finish` e `nextPhase` ficam estáveis. */
+  const onFinishRef = useRef(onFinish)
+  onFinishRef.current = onFinish
+  /** Treino: troca de fase em andamento (os 700 ms em que o tabuleiro ainda está todo tomado). */
+  const advancing = useRef(false)
+  /** Online: pares que eu mandei e o servidor ainda não respondeu (a carta fica minha enquanto isso). */
+  const pendingPairs = useRef(new Set<string>())
+  const gone = useRef(false)
+  useEffect(() => {
+    gone.current = false
+    return () => {
+      gone.current = true
+    }
+  }, [])
 
   const botRand = useMemo(() => rng(start.seed ^ 0x9e3779b9), [start.seed])
 
   const finish = useCallback(() => {
-    if (online || finished.current) return
+    // Depois de sair da partida, nenhum temporizador atrasado pode gravar o treino.
+    if (online || finished.current || gone.current) return
     finished.current = true
     setRunning(false)
     const { me: m, opp: o } = live.current
     const myScore = shownScore(m.score)
-    onFinish({
+    onFinishRef.current({
       result: m.score > o.score ? 'win' : m.score < o.score ? 'loss' : 'draw',
       score: myScore,
       oppScore: shownScore(o.score),
@@ -97,7 +112,7 @@ export default function MemoryRush({ start, onFinish, onQuit }: GameProps) {
       bonusLabel: `COMBO MÁX x${Math.max(1, m.bestCombo)}`,
       stats: { pairs: m.pairs, misses: m.misses, bestCombo: m.bestCombo, oppPairs: o.pairs },
     })
-  }, [online, onFinish])
+  }, [online])
 
   // Online: o servidor é a fonte da verdade para pares, fases, placar e fim de jogo.
   useEffect(() => {
@@ -108,7 +123,7 @@ export default function MemoryRush({ start, onFinish, onQuit }: GameProps) {
       finished.current = true
       setRunning(false)
       const mine = room.result?.mine?.stats ?? {}
-      onFinish(roomOutcome(room, { bonusLabel: `COMBO MÁX x${Math.max(1, mine.bestCombo ?? 1)}` }))
+      onFinishRef.current(roomOutcome(room, { bonusLabel: `COMBO MÁX x${Math.max(1, mine.bestCombo ?? 1)}` }))
       return
     }
     // Cada consulta (a cada ~0,5s) devolvia objetos novos e redesenhava o tabuleiro inteiro mesmo sem mudança.
@@ -122,37 +137,44 @@ export default function MemoryRush({ start, onFinish, onQuit }: GameProps) {
         ? o
         : { score: s.score[oppSide], pairs: s.pairs[oppSide], combo: s.combo[oppSide] },
     )
-    setPhase((p) => {
-      if (s.phase !== p) {
-        push(s.phase === PHASES.length - 1 ? 'FASE FINAL' : `FASE ${s.phase + 1}`, 'white')
-        playSfx('whoosh')
-        setOpen([])
-      }
-      return s.phase
-    })
-    const fresh: number[] = []
-    setCards((prev) => {
+    // A diferença é calculada fora dos atualizadores de estado (o React pode rodá-los depois, ou duas
+    // vezes): antes o aviso "oponente encontrou um par" quase nunca saía.
+    if (s.phase !== live.current.phase) {
+      push(s.phase === PHASES.length - 1 ? 'FASE FINAL' : `FASE ${s.phase + 1}`, 'white')
+      playSfx('whoosh')
+      setOpen([])
+      setPhase(s.phase)
+      live.current.phase = s.phase
+    }
+    /** Aplica o estado do servidor às cartas, sem efeitos colaterais (pode rodar dentro do atualizador). */
+    const reconcile = (prev: Card[]) => {
       const base = prev.length && Math.floor(prev[0].id / 100) === s.phase ? prev : buildPhase(start.seed, s.phase)
       let changed = base !== prev
+      const fresh: number[] = []
+      const freshKeys = new Set<string>()
       const next = base.map((c) => {
-        const owner = s.claimed[`${s.phase}:${c.sym}`]
+        const key = `${s.phase}:${c.sym}`
+        const owner = s.claimed[key]
         if (!owner) {
-          if (c.owner === 'me' || c.owner === null) return c
+          // Par marcado como meu que o servidor não confirmou (e já respondeu): volta a ficar livre.
+          if (c.owner === null || (c.owner === 'me' && pendingPairs.current.has(key))) return c
           changed = true
           return { ...c, owner: null }
         }
-        const key = `${s.phase}:${c.sym}`
-        if (owner === oppSide && !seenOppClaims.current.has(key)) {
+        if (owner === oppSide && (!seenOppClaims.current.has(key) || freshKeys.has(key))) {
           fresh.push(c.id)
-          if (fresh.length % 2 === 0) seenOppClaims.current.add(key)
+          freshKeys.add(key)
         }
         const mine: Card['owner'] = owner === side ? 'me' : 'opp'
         if (c.owner === mine) return c
         changed = true
         return { ...c, owner: mine }
       })
-      return changed ? next : prev
-    })
+      return { next: changed ? next : prev, fresh, freshKeys }
+    }
+    const { fresh, freshKeys } = reconcile(live.current.cards)
+    freshKeys.forEach((k) => seenOppClaims.current.add(k))
+    setCards((cur) => reconcile(cur).next)
     if (fresh.length) {
       setOppFlash(fresh)
       window.setTimeout(() => setOppFlash([]), 700)
@@ -181,23 +203,27 @@ export default function MemoryRush({ start, onFinish, onQuit }: GameProps) {
     }
   }, [lastTen, push])
 
+  // Treino: o tabuleiro fica todo tomado por 700 ms antes da fase nova; `advancing` impede que o efeito
+  // abaixo, rodando de novo nesse intervalo, pule uma fase. Os efeitos ficam fora do atualizador.
   const nextPhase = useCallback(() => {
+    if (advancing.current) return
+    advancing.current = true
     if (phaseMisses.current === 0) push('PERFECT', 'gold')
     phaseMisses.current = 0
-    setPhase((p) => {
-      const n = p + 1
-      if (n >= PHASES.length) {
-        window.setTimeout(finish, 500)
-        return p
-      }
-      window.setTimeout(() => {
-        setCards(buildPhase(start.seed, n))
-        setOpen([])
-        playSfx('whoosh')
-      }, 700)
-      push(n === PHASES.length - 1 ? 'FASE FINAL' : `FASE ${n + 1}`, 'white')
-      return n
-    })
+    const n = live.current.phase + 1
+    if (n >= PHASES.length) {
+      window.setTimeout(finish, 500)
+      return
+    }
+    setPhase(n)
+    live.current.phase = n
+    push(n === PHASES.length - 1 ? 'FASE FINAL' : `FASE ${n + 1}`, 'white')
+    window.setTimeout(() => {
+      setCards(buildPhase(start.seed, n))
+      setOpen([])
+      playSfx('whoosh')
+      advancing.current = false
+    }, 700)
   }, [finish, push, start.seed])
 
   useEffect(() => {
@@ -271,7 +297,13 @@ export default function MemoryRush({ start, onFinish, onQuit }: GameProps) {
       setCards((prev) => prev.map((c) => (c.id === a.id || c.id === b.id ? { ...c, owner: 'me' } : c)))
       setOpen([])
       playSfx('confirm')
-      if (online) act({ type: 'pair', phase, sym: a.sym })
+      if (online) {
+        // A carta fica minha até o servidor responder; se ele não confirmar o par, a próxima leitura
+        // da sala devolve as cartas (antes elas ficavam roxas para sempre).
+        const key = `${phase}:${a.sym}`
+        pendingPairs.current.add(key)
+        act({ type: 'pair', phase, sym: a.sym }).finally(() => pendingPairs.current.delete(key))
+      }
       if (combo >= 2) push(`COMBO x${Math.min(combo, 5)}`, 'gold', 800)
       if (lastTen && me.score + pts > opp.score && me.score <= opp.score) push('CLUTCH', 'gold')
     } else {
@@ -311,6 +343,8 @@ export default function MemoryRush({ start, onFinish, onQuit }: GameProps) {
       sub={`${phase === PHASES.length - 1 ? 'Fase final' : `Fase ${phase + 1}/${PHASES.length}`} · ${PHASES[phase]} pares`}
       accent={meta.accent}
       onQuit={onQuit}
+      confirmQuit={online && room?.status !== 'finished' && room?.status !== 'cancelled'}
+      connLost={lost}
       top={<HudClock ms={remaining} critical={lastTen} />}
     >
       {/* Últimos 10 segundos: a borda da tela respira em rubi (perigo real). */}

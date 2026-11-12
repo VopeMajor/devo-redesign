@@ -2,6 +2,7 @@
 
 import useSWR from 'swr'
 import { useDevo } from '@/components/devo/state/devo-store'
+import { useAcesso } from '@/components/devo/state/use-acesso'
 import { useNow } from '@/components/devo/hooks'
 import { arcadeFetcher, arcadeKey, type PlayerStats } from '@/lib/devo/arcade/client'
 import { PULSE_CRITICAL_MS, PULSE_START_HOURS, pulseRemaining } from '@/lib/devo/pulse'
@@ -28,12 +29,15 @@ function ecg(crit: boolean) {
 
 export function PulsoV2() {
   const { state } = useDevo()
+  // Owner e Anfitrião veem a Sala de Jogos sem a marca no save: aqui ela também conta como liberada
+  const acessoJogos = !!useAcesso()?.salaJogos
+  const salaLiberada = state.arcadeUnlocked || acessoJogos
   const now = useNow(1000)
   const resta = pulseRemaining(state.timerEndsAt, now)
   const crit = resta < PULSE_CRITICAL_MS
   const horas = Math.ceil(resta / 3_600_000)
   const f = Math.min(1, resta / 3_600_000 / MAX)
-  const { data: stats } = useSWR<PlayerStats>(state.arcadeUnlocked ? arcadeKey('stats') : null, arcadeFetcher, { revalidateOnFocus: false })
+  const { data: stats } = useSWR<PlayerStats>(salaLiberada ? arcadeKey('stats') : null, arcadeFetcher, { revalidateOnFocus: false })
   return (
     <div className={'pu' + (crit ? ' crit' : '')}>
       <header className="pu-cab">
@@ -99,7 +103,7 @@ export function PulsoV2() {
           <small>Trocas</small>
         </div>
         <div>
-          <b>{state.arcadeUnlocked ? (stats?.games ?? '—') : 0}</b>
+          <b>{salaLiberada ? (stats?.games ?? '—') : 0}</b>
           <small>Jogos</small>
         </div>
       </div>

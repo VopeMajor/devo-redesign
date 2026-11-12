@@ -18,7 +18,7 @@ type Player = { id: string; name: string }
 type Pair<T> = { a: T; b: T }
 
 const COUNTDOWN_MS = 4000
-const ABANDON_MS = 15_000
+const ABANDON_MS = 45_000 // celular bloqueado ou outra aba por alguns segundos não vira derrota
 const WAIT_FRESH_MS = 12_000
 /** Relógio total por jogador (10 min). Só corre na vez de quem joga; para quando ele faz o lance. */
 const CHESS_MOVE_MS = 600_000
@@ -212,6 +212,15 @@ async function finalize(c: PoolClient, room: RoomRow, winner: Side | null, reaso
 
 /* ---------- relógio do servidor ---------- */
 
+/**
+ * Fechamento do evento (server.ts): roda o relógio de uma sala em jogo mesmo sem nenhum dos dois consultando,
+ * para que abandono e tempo esgotado terminem a partida e as apostas do confronto sejam acertadas.
+ */
+export async function closeAbandonedRoom(c: PoolClient, id: string) {
+  const room = await lockRoom(c, id)
+  await tick(c, room, Date.now())
+}
+
 async function tick(c: PoolClient, room: RoomRow, now: number) {
   if (room.status !== 'active' || !room.started_at) return
   const start = room.started_at.getTime()
@@ -315,7 +324,8 @@ async function applyAction(c: PoolClient, room: RoomRow, side: Side, action: Act
 
   if (room.game_id === 'memory-rush') {
     const s = room.state as MemoryState
-    if (now - s.lastAt[side] < 220) return
+    // o limite vale só para os erros: um par confirmado nunca é descartado (o cliente já o mostrou como seu)
+    if (action.type === 'miss' && now - s.lastAt[side] < 220) return
     s.lastAt[side] = now
     if (action.type === 'miss') {
       s.score[side] = memoryAfterMiss(s.score[side])
@@ -415,7 +425,8 @@ function view(room: RoomRow, side: Side, now: number) {
     status: room.status,
     gameId: room.game_id,
     mode: room.mode,
-    seed: room.seed,
+    // No Blefe a seed recria o baralho e mostraria a mão adversária; online o cliente não precisa dela.
+    seed: room.game_id === 'bluff' ? 0 : room.seed,
     side,
     me: side === 'a' ? { name: room.a_name, rating: room.a_rating } : { name: room.b_name ?? '', rating: room.b_rating ?? 1000 },
     opponent: room.b_id ? (opp === 'a' ? { name: room.a_name, rating: room.a_rating } : { name: room.b_name ?? '', rating: room.b_rating ?? 1000 }) : null,

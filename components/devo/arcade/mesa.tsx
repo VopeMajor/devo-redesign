@@ -63,7 +63,7 @@ export function Mesa({
   onView: (v: ArcadeView) => void
 }) {
   const applyTime = useApplyTime()
-  const { data: bets, mutate: mutateBets } = useSWR<BetBoard>(arcadeKey('bets'), arcadeFetcher, {
+  const { data: bets, error: betsError, mutate: mutateBets } = useSWR<BetBoard>(arcadeKey('bets'), arcadeFetcher, {
     refreshInterval: 20_000,
     onSuccess: (d) => applyTime(d),
   })
@@ -133,7 +133,7 @@ export function Mesa({
           </div>
 
           <div className="grid gap-6 @2xl:grid-cols-[minmax(0,1.25fr)_minmax(0,1fr)]">
-            <FeaturedDuel item={featured} loading={!bets} onBet={sheet.open} onMore={() => onView('apostas')} />
+            <FeaturedDuel item={featured} loading={!bets && !betsError} onBet={sheet.open} onMore={() => onView('apostas')} />
             <RankingPanel data={data} onMore={() => onView('ranking')} />
           </div>
 

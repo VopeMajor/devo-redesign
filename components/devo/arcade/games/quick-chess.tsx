@@ -18,7 +18,7 @@ import { cn } from '@/lib/utils'
 import { PlayerPlate } from '../chess/versus-bar'
 import { Button, SigilStar } from '@/components/devo/kit'
 import { LivingScene, planAnim, type Anim, type CamState, type MateFx, type UnitState } from '../chess/living-board'
-import { Countdown321, GameFrame, PopLayer, WaitingStart, usePops, vibrate } from '../game-hud'
+import { Countdown321, GameFrame, PopLayer, QuitConfirm, WaitingStart, usePops, vibrate } from '../game-hud'
 import { roomOutcome, useOnlineGate, useRoom } from '../use-room'
 import type { ChessState } from '@/lib/devo/arcade/client'
 
@@ -28,6 +28,13 @@ const meta = GAMES.chess
 const CLOCK_MS = 600_000
 const VALUE: Record<PieceSymbol, number> = { p: 1, n: 3, b: 3, r: 5, q: 9, k: 0 }
 const REACTIONS = ['🔥', '😱', '💀', '👏', '👀']
+/** Peças da promoção (o servidor aceita q/r/b/n); o seletor de variação U+FE0E força o glifo de texto, não o emoji. */
+const PROMO_PIECES: [PieceSymbol, string, string][] = [
+  ['q', 'Dama', '♛︎'],
+  ['r', 'Torre', '♜︎'],
+  ['b', 'Bispo', '♝︎'],
+  ['n', 'Cavalo', '♞︎'],
+]
 
 /**
  * Demonstração guiada (o antigo "tutorial"): não existe partida contra bot no Living Chess
@@ -93,6 +100,10 @@ export default function QuickChess({ start, settings, onFinish, onQuit }: GamePr
   const chatChannel = liveChannelFor(start)
   const [spectator, setSpectator] = useState(false)
   const [ending, setEnding] = useState<Ending | null>(null)
+  /** Lances de promoção à espera da escolha da peça. */
+  const [promo, setPromo] = useState<Move[] | null>(null)
+  /** Online: confirmação antes de desistir (conta como derrota). */
+  const [askResign, setAskResign] = useState(false)
   const [reactions, setReactions] = useState<{ id: number; e: string; x: number }[]>([])
   const [now, setNow] = useState(0)
   const { pops, push } = usePops()
@@ -111,7 +122,7 @@ export default function QuickChess({ start, settings, onFinish, onQuit }: GamePr
   const capturesRef = useRef(captures)
   capturesRef.current = captures
   const bestCapture = useRef(0)
-  const { online, room, act, toLocal } = useRoom(start, 900)
+  const { online, room, act, toLocal, lost } = useRoom(start, 900)
   const gateOpen = useOnlineGate(start)
   const myColor: Color = online && start.side === 'b' ? 'b' : 'w'
   const oppColor: Color = myColor === 'w' ? 'b' : 'w'
@@ -141,6 +152,12 @@ export default function QuickChess({ start, settings, onFinish, onQuit }: GamePr
     window.setTimeout(() => setReactions((list) => list.filter((x) => x.id !== id)), 1800)
   }, [])
 
+  /** Temporizadores do fim (faixa e resultado): limpos ao desmontar, senão o resultado reaparecia depois de sair. */
+  const endTimers = useRef<number[]>([])
+  useEffect(() => () => endTimers.current.forEach((id) => window.clearTimeout(id)), [])
+  const onFinishRef = useRef(onFinish)
+  onFinishRef.current = onFinish
+
   const end = useCallback(
     (result: 'win' | 'loss' | 'draw', reason: string, mate = false) => {
       // Online, o servidor fecha a partida; o efeito da sala exibe o resultado oficial.
@@ -154,21 +171,23 @@ export default function QuickChess({ start, settings, onFinish, onQuit }: GamePr
       const score = Math.min(meta.maxScore, (result === 'win' ? 600 : result === 'draw' ? 200 : 0) + cap.w * 10 + timeBonus)
       sound(result === 'win' ? 'reveal' : result === 'loss' ? 'error' : 'notify')
       vibrate(result === 'win' ? [30, 40, 60] : 80)
-      window.setTimeout(() => setEnding({ result, reason, score }), mate ? 1300 : 300)
-      window.setTimeout(
-        () =>
-          onFinish({
-            result,
-            score,
-            oppScore: (result === 'loss' ? 600 : result === 'draw' ? 200 : 0) + cap.b * 10,
-            bonus: timeBonus,
-            bonusLabel: 'TEMPO RESTANTE',
-            stats: { moves: game.history().length, captured: cap.w, lost: cap.b, best: bestCapture.current },
-          }),
-        mate ? 4200 : 3000,
+      endTimers.current.push(
+        window.setTimeout(() => setEnding({ result, reason, score }), mate ? 1300 : 300),
+        window.setTimeout(
+          () =>
+            onFinishRef.current({
+              result,
+              score,
+              oppScore: (result === 'loss' ? 600 : result === 'draw' ? 200 : 0) + cap.b * 10,
+              bonus: timeBonus,
+              bonusLabel: 'TEMPO RESTANTE',
+              stats: { moves: game.history().length, captured: cap.w, lost: cap.b, best: bestCapture.current },
+            }),
+          mate ? 4200 : 3000,
+        ),
       )
     },
-    [game, onFinish, sound, online],
+    [game, sound, online],
   )
 
   const checkEnd = useCallback(() => {
@@ -329,14 +348,18 @@ export default function QuickChess({ start, settings, onFinish, onQuit }: GamePr
     const local = game.history({ verbose: true })
     if (s.moves.length > local.length) {
       const consistent = local.every((m, i) => m.lan === s.moves[i])
-      const next = consistent ? game.moves({ verbose: true }).find((m) => m.lan === s.moves[local.length]) : undefined
-      if (next) apply(next)
-      else resync(s)
-      return
-    }
-    if (s.moves.length < local.length) {
-      if (!pending.current) resync(s)
-      return
+      // Só o último lance é animado; atrasado em mais de um (ex.: ao voltar para a partida), o tabuleiro
+      // é reconstruído de uma vez em vez de reanimar lance por lance com o relógio correndo.
+      const next = consistent && s.moves.length - local.length === 1 ? game.moves({ verbose: true }).find((m) => m.lan === s.moves[local.length]) : undefined
+      if (next) {
+        apply(next)
+        return
+      }
+      // Depois de reconstruir, segue para o fim: com a sala encerrada a consulta para e o efeito não roda de novo.
+      resync(s)
+    } else if (s.moves.length < local.length) {
+      if (pending.current) return
+      resync(s)
     }
     if (room.status !== 'finished' || finished.current) return
     finished.current = true
@@ -361,9 +384,11 @@ export default function QuickChess({ start, settings, onFinish, onQuit }: GamePr
     const mate = raw === 'xeque-mate'
     sound(won ? 'reveal' : result === 'loss' ? 'error' : 'notify')
     vibrate(won ? [30, 40, 60] : 80)
-    window.setTimeout(() => setEnding({ result, reason, score: mine?.score ?? 0 }), mate ? 1300 : 300)
-    window.setTimeout(() => onFinish(roomOutcome(room)), mate ? 4200 : 3000)
-  }, [online, room, animating, game, apply, resync, sound, onFinish])
+    endTimers.current.push(
+      window.setTimeout(() => setEnding({ result, reason, score: mine?.score ?? 0 }), mate ? 1300 : 300),
+      window.setTimeout(() => onFinishRef.current(roomOutcome(room)), mate ? 4200 : 3000),
+    )
+  }, [online, room, animating, game, apply, resync, sound])
 
   useEffect(() => {
     if (!running || animating) return
@@ -459,7 +484,14 @@ export default function QuickChess({ start, settings, onFinish, onQuit }: GamePr
       if (demo || spectator || !ticking || turn !== myColor || myLeft <= 0 || finished.current) return
       const piece = game.get(sq as Square)
       if (selected && targets.includes(sq)) {
-        const m = legal.find((x) => x.to === sq && (!x.promotion || x.promotion === 'q'))
+        const options = legal.filter((x) => x.to === sq)
+        // Peão chegando ao fim: o jogador escolhe a peça (dama, torre, bispo ou cavalo).
+        if (options.some((x) => x.promotion)) {
+          sound('hover')
+          setPromo(options.filter((x) => x.promotion))
+          return
+        }
+        const m = options[0]
         if (m) play(m)
         return
       }
@@ -567,6 +599,19 @@ export default function QuickChess({ start, settings, onFinish, onQuit }: GamePr
           : `Turno de ${start.opponent.name}`
       : ''
   const myTurn = running && !animating && turn === myColor && !spectator
+  useEffect(() => {
+    if (!myTurn) setPromo(null)
+  }, [myTurn])
+  const choosePromo = (m: Move) => {
+    setPromo(null)
+    if (demo || spectator || !ticking || turn !== myColor || myLeft <= 0 || finished.current) return
+    play(m)
+  }
+  const resign = () => {
+    setAskResign(false)
+    if (online) act({ type: 'resign' })
+    else end('loss', 'VOCÊ DESISTIU')
+  }
   const plate = (side: Color) => ({
     name: demo ? `Javali · ${side === 'w' ? 'brancas' : 'pretas'}` : side === myColor ? 'Você' : start.opponent.name,
     court: side === 'w' ? 'Corte de Marfim' : 'Corte de Ônix',
@@ -585,6 +630,8 @@ export default function QuickChess({ start, settings, onFinish, onQuit }: GamePr
       sub={`${demo ? 'Demonstração' : 'Ao vivo'} · #${String(start.seed % 1000).padStart(3, '0')}`}
       accent={meta.accent}
       onQuit={onQuit}
+      confirmQuit={online && !ending && room?.status !== 'finished' && room?.status !== 'cancelled'}
+      connLost={lost}
       top={
         <div className="flex items-center">
           <ChessIconButton icon={Eye} label="Modo espectador" active={spectator} onClick={() => setSpectator((s) => !s)} />
@@ -675,6 +722,33 @@ export default function QuickChess({ start, settings, onFinish, onQuit }: GamePr
                 <span className="dv-label text-[10px] tracking-[0.2em] [text-shadow:0_1px_6px_#000]">{statusText}</span>
                 <SigilStar className={cn('size-2.5', myTurn ? 'text-dv-amethyst' : 'text-dv-gold/60')} />
               </p>
+            )}
+
+            {promo && (
+              <div
+                className="bg-[linear-gradient(180deg,#1c1c1f,#0e0e10)] absolute inset-x-3 bottom-14 z-30 mx-auto max-w-xs animate-dv-rise border border-dv-line-gold p-3 shadow-[0_10px_24px_rgba(0,0,0,0.5)]"
+                role="dialog"
+                aria-label="Promoção do peão"
+              >
+                <p className="dv-label mb-2 text-[10px] text-dv-gold">Promover o peão a</p>
+                <div className="grid grid-cols-4 gap-1.5">
+                  {PROMO_PIECES.map(([p, name, glyph]) => {
+                    const m = promo.find((x) => x.promotion === p)
+                    if (!m) return null
+                    return (
+                      <button key={p} type="button" onClick={() => choosePromo(m)} className={cn(optionBtn(p === 'q'), 'flex flex-col items-center gap-1 px-1 text-center tracking-[0.06em]')}>
+                        <span aria-hidden="true" className="font-serif text-[22px] leading-none">
+                          {glyph}
+                        </span>
+                        {name}
+                      </button>
+                    )
+                  })}
+                </div>
+                <button type="button" onClick={() => setPromo(null)} className={cn(optionBtn(false), 'mt-1.5 w-full text-center')}>
+                  Cancelar
+                </button>
+              </div>
             )}
 
             <ChessIconButton icon={RotateCcw} label="Resetar câmera" onClick={resetCam} className="absolute bottom-2 left-2 z-20 border border-dv-line-strong bg-dv-ink/70 backdrop-blur-sm" />
@@ -847,12 +921,13 @@ export default function QuickChess({ start, settings, onFinish, onQuit }: GamePr
             size="sm"
             className="ml-auto"
             disabled={!running || spectator}
-            onClick={() => (online ? act({ type: 'resign' }) : end('loss', 'VOCÊ DESISTIU'))}
+            onClick={() => (online ? setAskResign(true) : resign())}
           >
             Desistir
           </Button>
         )}
       </div>
+      {askResign && online && !finished.current && <QuitConfirm onCancel={() => setAskResign(false)} onConfirm={resign} />}
 
       <PopLayer pops={pops} />
       {!demo && !running && !finished.current && !gateOpen && <WaitingStart name={start.opponent.name} />}

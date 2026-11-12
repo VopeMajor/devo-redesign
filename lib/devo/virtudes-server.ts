@@ -267,7 +267,15 @@ export async function addPotencialSeguro(c: PoolClient, playerId: string, virtud
 
 /** Sala de Jogos: participação e vitória numa partida real (chamado no fechamento da sala). */
 export async function potencialDaPartida(c: PoolClient, r: { playerId: string; gameId: string; result: 'win' | 'loss' | 'draw'; matchRef: string }) {
-  const cfg = await getConfig<Fontes>('virtudes.fontes', c).catch(() => null)
+  // dentro da transação da sala: uma falha aqui (tabela de config ausente) abortaria o fechamento inteiro
+  let cfg: { value: Fontes } | null = null
+  try {
+    await c.query('SAVEPOINT devo_pp_cfg')
+    cfg = await getConfig<Fontes>('virtudes.fontes', c)
+    await c.query('RELEASE SAVEPOINT devo_pp_cfg')
+  } catch {
+    await c.query('ROLLBACK TO SAVEPOINT devo_pp_cfg').catch(() => {})
+  }
   const f = (cfg?.value ?? FONTES_PADRAO).jogos?.[r.gameId]
   if (!f) return 0
   const qtd = r.result === 'win' ? f.vitoria : r.result === 'draw' ? f.empate : f.derrota

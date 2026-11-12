@@ -3,6 +3,7 @@ import { pool } from '@/lib/db'
 import { publicCargo } from '../cargos'
 import { potencialDaPartida } from '../virtudes-server'
 import { REACTION_IDS } from './reactions'
+import { closeAbandonedRoom } from './rooms'
 import {
   type EventStatus,
   type GameId,
@@ -222,14 +223,21 @@ async function progressEvent(e: EventRow, now: number) {
   await tx(async (c) => {
     let pending = 0
     for (const d of duels) {
-      const [room] = await q<{ status: string; a_name: string }>('SELECT status, a_name FROM arcade_rooms WHERE duel_id = $1', [d.id], c)
+      let [room] = await q<{ id: string; status: string; a_name: string }>('SELECT id, status, a_name FROM arcade_rooms WHERE duel_id = $1 FOR UPDATE', [d.id], c)
       if (room?.status === 'active') {
-        pending += 1
-        continue
+        // os dois podem ter fechado o app: sem consulta à sala, ninguém roda o abandono e as apostas ficam presas
+        await closeAbandonedRoom(c, room.id)
+        ;[room] = await q<{ id: string; status: string; a_name: string }>('SELECT id, status, a_name FROM arcade_rooms WHERE duel_id = $1', [d.id], c)
+        if (room?.status === 'active') {
+          pending += 1
+          continue
+        }
       }
+      const [ja] = await q<{ winner_name: string | null }>('SELECT winner_name FROM arcade_duels WHERE id = $1', [d.id], c)
+      if (ja?.winner_name) continue
       const winner = room?.status === 'waiting' ? room.a_name : d.a_rating >= d.b_rating ? d.a_name : d.b_name
       await settleDuel(c, d.id, winner)
-      if (room?.status === 'waiting') await q("UPDATE arcade_rooms SET status = 'cancelled' WHERE duel_id = $1", [d.id], c)
+      if (room?.status === 'waiting') await q("UPDATE arcade_rooms SET status = 'cancelled' WHERE duel_id = $1 AND status = 'waiting'", [d.id], c)
     }
     if (!pending) await q('UPDATE arcade_events SET resolved_at = now() WHERE id = $1', [e.id], c)
   })
@@ -456,7 +464,7 @@ export async function getDashboard(player: Player) {
   const me = board.find((r) => r.isMe)
   const views = await eventViews(events, player, now)
   const best = await q<{ game_id: GameId; best: number }>(
-    'SELECT game_id, max(score)::int AS best FROM arcade_matches WHERE player_id = $1 AND finished_at >= $2 GROUP BY game_id',
+    "SELECT game_id, max(score)::int AS best FROM arcade_matches WHERE player_id = $1 AND finished_at >= $2 AND mode <> 'treino' GROUP BY game_id",
     [player.id, new Date(week)],
   )
   const timeDeltaMs = await drainTime(player.id)
@@ -611,9 +619,9 @@ export async function registerEntry(player: Player, eventId: string) {
   const week = weekStartMs()
   const mine = await myWeek(player.id, week)
   await tx(async (c) => {
-    const [{ n }] = await q<{ n: number }>('SELECT count(*)::int AS n FROM arcade_entries WHERE event_id = $1 FOR UPDATE', [eventId], c).catch(
-      () => q<{ n: number }>('SELECT count(*)::int AS n FROM arcade_entries WHERE event_id = $1', [eventId], c),
-    )
+    // trava o evento (FOR UPDATE não vale com count(*)): duas inscrições ao mesmo tempo entram em fila
+    await q('SELECT 1 FROM arcade_events WHERE id = $1 FOR UPDATE', [eventId], c)
+    const [{ n }] = await q<{ n: number }>('SELECT count(*)::int AS n FROM arcade_entries WHERE event_id = $1', [eventId], c)
     if (n >= e.max_players) throw new ArcadeError('A lista já está cheia.')
     await q(
       'INSERT INTO arcade_entries (event_id, name, player_id, rating) VALUES ($1,$2,$3,$4) ON CONFLICT DO NOTHING',
@@ -685,6 +693,8 @@ export async function placeBet(player: Player, duelId: string, pick: string, raw
   const odds = view?.sides.find((s) => s.name === pick)?.odds ?? 1.5
   const cost = amount * MINUTE
   return tx(async (c) => {
+    const [aberto] = await q<{ winner_name: string | null }>('SELECT winner_name FROM arcade_duels WHERE id = $1 FOR UPDATE', [duelId], c)
+    if (!aberto || aberto.winner_name) throw new ArcadeError('Esse confronto já terminou.')
     const [paid] = await q<{ t: string }>(
       `UPDATE player_saves SET data = jsonb_set(data, '{timerEndsAt}', to_jsonb((data->>'timerEndsAt')::bigint - $2))
        WHERE player_id = $1 AND (data->>'timerEndsAt')::bigint - $2 > $3 RETURNING data->>'timerEndsAt' AS t`,
@@ -748,6 +758,10 @@ export async function recordMatchResult(
   } else {
     awarded = rankingPoints('casual', score, r.result)
   }
+  // Partida casual curta demais (desistência logo no começo): fica no histórico, mas não rende Tempo, pontos nem
+  // Potencial. Sem isso, duas contas combinadas fabricavam Tempo saindo da sala em segundos.
+  const curta = r.mode !== 'evento' && Date.now() - r.startedAt.getTime() < meta.minDurationSec * 1000
+  if (curta) awarded = 0
   const [match] = await q<{ id: string }>(
     `INSERT INTO arcade_matches (player_id, game_id, mode, duel_id, opponent_name, opponent_rating, seed, started_at, finished_at, result, score, stats, points)
      VALUES ($1,$2,$3,$4,$5,$6,$7,$8,now(),$9,$10,$11,$12) RETURNING id`,
@@ -755,14 +769,14 @@ export async function recordMatchResult(
     c,
   )
   // Virtudes: a partida rende Pontos de Potencial (participação; mais na vitória). Nunca derruba o fechamento.
-  if (match) await potencialDaPartida(c, { playerId: r.playerId, gameId: r.gameId, result: r.result, matchRef: String(match.id) })
+  if (match && !curta) await potencialDaPartida(c, { playerId: r.playerId, gameId: r.gameId, result: r.result, matchRef: String(match.id) })
   await q(
     `INSERT INTO arcade_week_scores (week_start, player_id, score, wins, games) VALUES ($1,$2,$3,$4,1)
      ON CONFLICT (week_start, player_id) DO UPDATE SET score = arcade_week_scores.score + $3, wins = arcade_week_scores.wins + $4, games = arcade_week_scores.games + 1`,
-    [weekKey(weekStartMs()), r.playerId, awarded, r.result === 'win' ? 1 : 0],
+    [weekKey(weekStartMs()), r.playerId, awarded, r.result === 'win' && !curta ? 1 : 0],
     c,
   )
-  const timeGainMin = r.mode === 'evento' ? (reward.hours ?? 0) * 60 : r.result === 'win' ? 3 : r.result === 'draw' ? 1 : 0
+  const timeGainMin = r.mode === 'evento' ? (reward.hours ?? 0) * 60 : curta ? 0 : r.result === 'win' ? 3 : r.result === 'draw' ? 1 : 0
   await creditTime(c, r.playerId, timeGainMin * MINUTE)
   return { awarded, score, result: r.result, timeGainMin, reward }
 }

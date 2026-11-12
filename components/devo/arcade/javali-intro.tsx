@@ -74,7 +74,7 @@ export function JavaliIntro() {
       aria-modal="true"
       aria-label="Javali apresenta a Sala de Jogos"
       className={cn(
-        'absolute inset-0 z-40 flex animate-dv-fade flex-col overflow-hidden bg-[radial-gradient(120%_70%_at_50%_0%,#2a2a2e,var(--dv-ink)_65%)] transition-opacity duration-700',
+        'absolute inset-0 z-40 flex animate-dv-fade flex-col overflow-y-auto overflow-x-hidden bg-[radial-gradient(120%_70%_at_50%_0%,#2a2a2e,var(--dv-ink)_65%)] transition-opacity duration-700',
         leaving && 'opacity-0',
       )}
     >
@@ -102,7 +102,7 @@ export function JavaliIntro() {
 
       {/* palco: ocupa todo o espaço livre, mesmo enquadramento em todos os passos */}
       <div className="relative flex min-h-0 flex-1 flex-col px-4 pt-3">
-        <div className="relative isolate mx-auto min-h-[220px] w-full max-w-xl flex-1" style={{ '--dv-cut': '18px' } as CSSProperties}>
+        <div className="relative isolate mx-auto min-h-[150px] w-full max-w-xl flex-1" style={{ '--dv-cut': '18px' } as CSSProperties}>
           <span aria-hidden="true" className="dv-cut absolute inset-0 -z-10 bg-[linear-gradient(135deg,var(--dv-gold-bright),var(--dv-gold-deep)_30%,var(--dv-gold)_60%,var(--dv-gold-deep))]" />
           <div className="dv-cut absolute inset-[2px] overflow-hidden bg-dv-ink" style={{ '--dv-cut': '17px' } as CSSProperties}>
             {/* fundo do salão: mostrador romano lento atrás do anfitrião, holofote de lanterna */}
@@ -118,7 +118,7 @@ export function JavaliIntro() {
               poses={FRAMES}
               fala={mesa}
               alt="Javali, anfitrião da Sala de Jogos"
-              cabeca="min(16dvh, 150px)"
+              cabeca="min(13dvh, 150px)"
               reserva={10}
               sobreposicao={10}
               className="drop-shadow-[0_18px_22px_rgba(0,0,0,0.65)]"

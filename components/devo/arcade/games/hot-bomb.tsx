@@ -5,7 +5,8 @@ import { useEffect, useRef, useState, type ReactNode } from 'react'
 import * as THREE from 'three'
 import type { BombState, GameOutcome, GameProps } from '@/lib/devo/arcade/client'
 import { GAMES, botSkill, rng } from '@/lib/devo/arcade/games'
-import { roomOutcome, useRoom } from '../use-room'
+import { roomOutcome, startOffset, useRoom } from '../use-room'
+import { ConnectionNotice, QuitConfirm } from '../game-hud'
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js'
 import { SigilStar, Spinner } from '@/components/devo/kit'
 import { cn } from '@/lib/utils'
@@ -133,12 +134,18 @@ export default function HotBomb({ start, settings, onFinish, onQuit }: GameProps
   const ended = useRef(false)
   const me = useRef({ x: 0, y: 0, z: 0 })
   const oppNet = useRef<{ x: number; z: number; h: number } | null>(null)
-  const startLocal = useRef(start.startedAt - (start.serverNow - Date.now()))
+  // Relógio medido na chegada do início (não na montagem, que vem depois da cortina e do download).
+  const startLocal = useRef(start.startedAt - startOffset(start))
   const finishRef = useRef(onFinish)
   finishRef.current = onFinish
+  /** Temporizador do resultado: limpo ao desmontar (sair na faixa final não traz o resultado de volta). */
+  const finishTimer = useRef(0)
+  useEffect(() => () => window.clearTimeout(finishTimer.current), [])
   const startOffline = useRef<() => void>(() => {})
+  /** Online: confirmação antes de sair (conta como derrota). */
+  const [askQuit, setAskQuit] = useState(false)
 
-  const { room, act, toLocal } = useRoom(start, 110, () =>
+  const { room, act, toLocal, lost } = useRoom(start, 110, () =>
     started.current && !ended.current ? { type: 'pos', x: me.current.x, y: me.current.z, h: me.current.y } : undefined,
   )
   const actRef = useRef(act)
@@ -155,9 +162,10 @@ export default function HotBomb({ start, settings, onFinish, onQuit }: GameProps
       const mine = room.result?.mine?.stats ?? {}
       setMenu({
         title: winner === 'a' ? 'O Coelho venceu' : winner === 'b' ? 'O Urso venceu' : 'Empate',
-        sub: room.result?.reason === 'abandono' ? 'O oponente abandonou a partida.' : `Placar: ${st?.wins.a ?? 0} × ${st?.wins.b ?? 0}`,
+        // "O oponente abandonou" só para quem ficou e venceu; quem abandonou vê o placar.
+        sub: room.result?.reason === 'abandono' && winner === mySide ? 'O oponente abandonou a partida.' : `Placar: ${st?.wins.a ?? 0} × ${st?.wins.b ?? 0}`,
       })
-      window.setTimeout(() => finishRef.current(roomOutcome(room, { bonus: (mine.clutch ?? 0) * 100, bonusLabel: `${mine.clutch ?? 0} CLUTCH` })), 2600)
+      finishTimer.current = window.setTimeout(() => finishRef.current(roomOutcome(room, { bonus: (mine.clutch ?? 0) * 100, bonusLabel: `${mine.clutch ?? 0} CLUTCH` })), 2600)
       return
     }
     const st = room.state as BombState
@@ -748,7 +756,7 @@ export default function HotBomb({ start, settings, onFinish, onQuit }: GameProps
         bonusLabel: `${A.clutch[mySide]} CLUTCH`,
         stats: { passes: A.passes[mySide], clutch: A.clutch[mySide], roundsWon: meWins, roundsLost: oppWins },
       }
-      window.setTimeout(() => finishRef.current(out), 2600)
+      finishTimer.current = window.setTimeout(() => finishRef.current(out), 2600)
     }
     const driveOffline = (now: number) => {
       const A = auth.current
@@ -1395,6 +1403,8 @@ export default function HotBomb({ start, settings, onFinish, onQuit }: GameProps
         if (Array.isArray(mat)) mat.forEach((x) => x.dispose())
         else mat?.dispose()
       })
+      // Solta o contexto WebGL na hora (o navegador limita quantos podem existir ao mesmo tempo).
+      rd.forceContextLoss()
       rd.dispose()
       rd.domElement.remove()
       AC?.close().catch(() => {})
@@ -1433,6 +1443,13 @@ export default function HotBomb({ start, settings, onFinish, onQuit }: GameProps
   // Moldura de entrada (antes da 1ª rodada) fica de pé no celular: o jogador ainda segura o aparelho
   // em retrato. Só a arena gira para paisagem; o joystick segue o giro (coordenadas em `pdown`).
   const entry = !!menu && (!!menu.button || !!menu.note)
+  // Online, sair antes do fim conta como derrota: pede confirmação (inclusive na contagem). Treino sai num toque.
+  const askFirst = online && !ended.current && room?.status !== 'finished' && room?.status !== 'cancelled'
+  const quit = () => (askFirst ? setAskQuit(true) : onQuit())
+  const confirmQuit = () => {
+    setAskQuit(false)
+    onQuit()
+  }
 
   return (
     <div className="relative h-full w-full">
@@ -1462,7 +1479,7 @@ export default function HotBomb({ start, settings, onFinish, onQuit }: GameProps
           PULA
         </button>
         {!entry && (
-          <button type="button" className="bq-quit" onClick={onQuit} aria-label="Desistir e sair">
+          <button type="button" className="bq-quit" onClick={quit} aria-label="Desistir e sair">
             <X className="size-5" strokeWidth={1.4} />
           </button>
         )}
@@ -1473,7 +1490,11 @@ export default function HotBomb({ start, settings, onFinish, onQuit }: GameProps
             <p>{menu.sub}</p>
           </div>
         )}
+        {lost && !entry && <ConnectionNotice className="top-[calc(84px+env(safe-area-inset-top,0px))]" />}
+        {/* Dentro da arena: gira junto com ela quando o celular está deitado. */}
+        {askQuit && askFirst && !entry && <QuitConfirm onCancel={() => setAskQuit(false)} onConfirm={confirmQuit} />}
       </div>
+      {askQuit && askFirst && entry && <QuitConfirm className={rotated ? 'fixed z-[62]' : 'z-30'} onCancel={() => setAskQuit(false)} onConfirm={confirmQuit} />}
       {menu && entry && (
         <BombEntry
           fixed={rotated}
@@ -1485,7 +1506,7 @@ export default function HotBomb({ start, settings, onFinish, onQuit }: GameProps
           training={!online}
           rotateHint={rotated}
           onPlay={() => startOffline.current()}
-          onQuit={onQuit}
+          onQuit={quit}
         />
       )}
     </div>
