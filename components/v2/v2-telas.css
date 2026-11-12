@@ -732,20 +732,65 @@
 /* Virtudes: o aviso não encosta nos losangos de Espadas; o nome do naipe fica por cima do raio dourado */
 #vir .v-aviso { margin-top: 14px !important; }
 #vir .v-nome { position: relative; z-index: 1; padding: 0 6px; border-radius: 999px; background: color-mix(in srgb, var(--fundo) 78%, transparent); }
-/* ---- Celular: o Mapa do Devo desce em vez de correr para o lado (dono, 09/11: "no mobile não dá pra arrastar pra
-   baixo pra ver o resto dos ícones"). Três colunas, a do meio um pouco abaixo; todos os ícones ficam na rolagem da
-   tela inicial (#inicio), acima da barra de baixo. O computador continua com o mapa que se arrasta para o lado. ---- */
-@media (max-width:899.9px){
-  #os #mesa{grid-auto-flow:row;grid-template-columns:repeat(3,minmax(0,1fr))!important;grid-template-rows:none;grid-auto-columns:auto;column-gap:0!important;row-gap:26px!important;overflow:visible;scroll-snap-type:none;padding:0 4px 64px!important;touch-action:pan-y}
-  #os #mesa .ic,#os #mesa .ic:nth-child(n){transform:none!important}
-  /* a ordem do mapa de arrastar (fileira e coluna vêm do Mapa: --fila, --coluna), a coluna do meio mais baixa */
-  #os #mesa .ic{grid-row:var(--fila,auto);grid-column:var(--coluna,auto)}
-  #os #mesa .ic[data-col="1"]{transform:translateY(40px)!important}
-  #os #mesa .ic[data-col="1"]:active{transform:translateY(40px) scale(.97)!important}
-  #os #mesa .ic:active{transform:scale(.97)!important}
-  #os .mapa-dica{display:none}
-  /* rolando, os nomes passam por baixo do Tempo: a barra de cima ganha um fundo que some para baixo */
-  #os #menu{background:linear-gradient(180deg,#0b1020 64%,rgba(11,16,32,0))}
-  /* rolando, os nomes passam por baixo do Tempo: a barra de cima ganha um fundo que some para baixo */
-  #os #menu{background:linear-gradient(180deg,#0b1020 64%,rgba(11,16,32,0))}
+/* ---- Celular: a tela inicial cabe inteira, sem rolar para baixo; o Mapa do Devo corre para o lado (dono, 10/11:
+   "quero a tela assim sem a necessidade de ficar arrastando pra baixo, mas se não couber todo quero que arraste para o
+   lado. deixe assim como está o print, diminuindo as coisas se precisar"). Três fileiras desencontradas, como no
+   print; o mapa ocupa a altura que sobra e os ícones encolhem com ela. Em tela deitada (baixa demais) a página volta
+   a rolar. O computador não muda. ---- */
+@media (max-width:899.9px) and (min-height:560px){
+  #os #inicio{display:flex;flex-direction:column;overflow:hidden;padding-top:clamp(6px,1.4dvh,14px);padding-bottom:4px}
+  #os #painel{flex:none;gap:clamp(8px,1.5dvh,14px)}
+  /* o cartão do Record guarda a proporção da moldura: em tela baixa ele fica menor, no centro */
+  #os #perfil{justify-self:center;width:min(100%,calc(clamp(84px,15dvh,150px) * 2.4))}
+  #os #sistemas{flex:1 1 0;min-height:0;display:flex;flex-direction:column;margin-top:clamp(6px,1.8dvh,24px)}
+  #os .mapa-cab{flex:none;margin-bottom:clamp(2px,1dvh,12px)}
+  #os .mapa-dica{display:flex}
+  #os #mesa{flex:1 1 0;min-height:0;container-type:size;grid-template-rows:repeat(3,minmax(0,1fr));align-content:stretch;grid-auto-columns:calc((100vw - 12px) / 3.45);column-gap:0!important;row-gap:0!important;padding:10px 10px 0!important;overflow-x:auto;overflow-y:hidden;touch-action:pan-x}
+  #os #mesa .ic{--d:clamp(34px,calc(24cqh - 24px),84px);align-self:start;justify-content:start;gap:4px;padding:0;min-height:0}
+  #os #mesa .ic span{padding:4px 8px}
+  /* (as unidades cqh valem para os ícones, medidas na altura do #mesa: três fileiras de 33cqh) */
+  /* a coluna do meio de cada par desce um pouco, como no print */
+  #os #mesa .ic:nth-child(6n+4),#os #mesa .ic:nth-child(6n+5),#os #mesa .ic:nth-child(6n+6){transform:translateY(clamp(0px,calc(33cqh - var(--d) - 30px),8cqh))!important}
+  #os #mesa .disco{width:var(--d)!important;height:var(--d)!important}
+  #os #mesa .disco img{width:calc(var(--d) * 1.27)!important;height:calc(var(--d) * 1.27)!important}
+  #os #mesa .ic[data-id=pulso] .disco img{width:calc(var(--d) * 1.03)!important;height:calc(var(--d) * 1.03)!important}
+  #os #mesa .ic span{font-size:clamp(11px,calc(4cqh + 4px),13px)}
+  /* o motivo do cadeado fica numa linha só; o cadeado acompanha o tamanho do ícone */
+  #os #mesa .ic .ic-trava{max-width:100%;margin-top:0;font-size:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  #os #mesa .ic .ic-cad{top:calc(var(--d) * 0.5);left:calc(50% + var(--d) * 0.18)}
 }
+/* tela baixa: o resumo de cima fica mais compacto para sobrar altura ao mapa */
+@media (max-width:899.9px) and (min-height:560px) and (max-height:760px){
+  #os .hj>span:last-child{padding-block:6px}
+  #os .hj .hj-ic img{width:32px;height:32px}
+  #os #faixa{padding-block:8px}
+  #os #faixa::before{width:34px;height:34px}
+  #os .mapa-cab small{font-size:11px}
+  #os .mapa-cab h2{font-size:19px;margin-top:3px}
+  /* o cartão do Record menor: letras e medalhão acompanham, cada linha numa linha só */
+  #os #perfil{gap:10px}
+  #os #perfil .pf-av{width:46px;height:46px}
+  #os #perfil .pf-av .sigilo{padding:8px}
+  #os #perfil .pf-tx{gap:2px;min-width:0}
+  #os #perfil .pf-tx small{font-size:8.5px;letter-spacing:.12em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  #os #perfil .pf-tx strong{font-size:21px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  #os #perfil .pf-barra{font-size:10.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  #os #perfil .pf-arc{font-size:10.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+}
+
+/* ---- Visita do Galo pronta: o cartão "Ir para casa" na tela inicial do v2 (antes só existia no sistema antigo; no
+   celular do v2 ninguém o via, e sem a visita a Melissa não liga nem as Corporações abrem). Bilhete como o check-in. ---- */
+#ir-casa{position:relative;display:flex;align-items:stretch;gap:12px;width:100%;min-height:58px;padding:0 14px 0 0;border-radius:14px;overflow:hidden;text-align:left;color:var(--tx);background:linear-gradient(100deg,color-mix(in srgb,var(--ouro-mapa,#ad9058) 20%,rgba(10,22,52,.9)),rgba(10,22,52,.78) 60%);border:1px solid color-mix(in srgb,var(--ouro-mapa,#ad9058) 60%,transparent);box-shadow:0 0 22px -8px var(--ouro-mapa,#ad9058);cursor:pointer;animation:ir-casa-brilho 2.6s ease-in-out infinite}
+#ir-casa .ic-casa{flex:none;display:grid;place-items:center;width:58px;border-right:2px dashed rgba(0,0,0,.45);background:linear-gradient(160deg,color-mix(in srgb,var(--ouro-mapa,#ad9058) 38%,#0b1a3a),color-mix(in srgb,var(--ouro-mapa,#ad9058) 10%,#0b1a3a))}
+#ir-casa .ic-casa img{width:42px;height:42px;object-fit:contain;filter:drop-shadow(0 3px 6px rgba(0,0,0,.6))}
+#ir-casa>span:nth-child(2){flex:1;min-width:0;display:grid;align-content:center;gap:2px;padding:8px 0}
+#ir-casa small{font:600 10px/1.1 var(--ui);letter-spacing:.16em;text-transform:uppercase;color:var(--ouro-mapa,#ad9058)}
+#ir-casa strong{font:600 17px/1.1 var(--cond);color:#fff}
+#ir-casa em{font:italic 500 12.5px/1.2 var(--ui);color:var(--sec);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#ir-casa>svg{align-self:center;flex:none;width:18px;height:18px;fill:none;stroke:var(--ouro-mapa,#ad9058);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+#ir-casa:hover,#ir-casa:focus-visible{border-color:var(--ouro-mapa,#ad9058)}
+#ir-casa:focus-visible{outline:2px solid var(--dest);outline-offset:3px}
+#ir-casa:active{transform:scale(.985)}
+@keyframes ir-casa-brilho{50%{box-shadow:0 0 30px -4px var(--ouro-mapa,#ad9058)}}
+@media (prefers-reduced-motion:reduce){#ir-casa{animation:none}}
+@media (max-width:899.9px) and (min-height:560px) and (max-height:760px){#ir-casa{min-height:48px}#ir-casa .ic-casa{width:48px}#ir-casa .ic-casa img{width:34px;height:34px}#ir-casa>span:nth-child(2){padding:5px 0}}

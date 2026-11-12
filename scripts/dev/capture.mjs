@@ -1965,7 +1965,18 @@ if (want('desktop')) {
 
 // ── 5. Narrativa e progressão (sys/narrativa): trava → cerimônia → explorar → Galo (Karma) → Melissa ──────
 // Contas: Lacre (DEVO-NARR-0002, sem tutorial) e Sirius (DEVO-NARR-0001, tutorial vencido via SQL).
-if (want('narrativa')) {
+if (want('narrativa') || want('galo-v2')) {
+  // galo-v2: a mesma cadeia (Fundação → explorar → "Ir para casa" → Galo → Melissa → Corporações) no sistema v2, pelo
+  // endereço principal, como o jogador comum entra (dono, 11/11: no celular do v2 o cartão da visita não aparecia)
+  const V2 = want('galo-v2') && !want('narrativa')
+  const entrar = V2
+    ? async (page) => {
+        await page.goto(BASE, { waitUntil: 'networkidle' })
+        await wait(1000)
+        await btn(page, 'Continuar').click({ timeout: 15000 }).catch(() => {})
+        await wait(3600)
+      }
+    : enterOS
   const { default: pg } = await import('pg')
   const db = new pg.Pool({ connectionString: process.env.DATABASE_URL })
   const sql = (t, p) => db.query(t, p).then((r) => r.rows)
@@ -2008,7 +2019,7 @@ if (want('narrativa')) {
 
   await step('narrativa-trancado', async () => {
     const { ctx, page } = await account('Lacre', 'DEVO-NARR-0002', VET_CARDS)
-    await enterOS(page)
+    await entrar(page)
     await wait(1500)
     await page.locator('section[aria-label="Sistemas"]').first().scrollIntoViewIfNeeded({ timeout: 5000 }).catch(() => {})
     await wait(800)
@@ -2026,7 +2037,7 @@ if (want('narrativa')) {
     for (const f of ['salao_mascaras', 'poco', 'torres', 'diario', 'galo_casa']) {
       await sql("INSERT INTO player_unlocks (player_id, flag, source, ref) VALUES ($1, $2, 'deadly_vote', 'captura') ON CONFLICT DO NOTHING", [p.id, f])
     }
-    await enterOS(page)
+    await entrar(page)
     await wait(1200)
     await shot(page, 'n-02-cerimonia', 'cerimônia de desbloqueio depois do tutorial')
     await wait(7000)
@@ -2039,15 +2050,64 @@ if (want('narrativa')) {
     // Explorou Poço e Torres (as apresentações deles têm roteiro próprio): grava no save e volta à home.
     await page.goto(`${BASE}/images/card-back.png`)
     await api(page, '/api/save', makeSave(VET_CARDS, { sistemasVistos: ['poco', 'torres'], desbloqueiosVistos: ['salao', 'poco', 'torres'] }))
-    await enterOS(page)
+    await entrar(page)
+    if (V2) {
+      const aviso = page.locator('.v2-aviso', { hasText: 'Um endereço' })
+      if (!(await aviso.isVisible().catch(() => false))) await aviso.waitFor({ timeout: 6000 }).catch(() => {})
+      await shot(page, 'n-05a-aviso-galo', 'aviso "Talvez seja hora de ir para casa"')
+      if (!(await aviso.count())) manifest.errors.push({ step: 'galo-v2-aviso', error: 'o aviso da visita não apareceu' })
+      await wait(6500)
+    }
     await wait(1500)
     const agora = page.getByRole('button', { name: 'Ir para casa' }).first()
     await agora.scrollIntoViewIfNeeded({ timeout: 5000 }).catch(() => {})
     await wait(600)
     await shot(page, 'n-05-cartao-galo', 'depois de explorar: cartão "Ir para casa" (visita do Galo)')
+    if (!(await agora.isVisible().catch(() => false))) manifest.errors.push({ step: 'narrativa-cartao-galo', error: 'o cartão "Ir para casa" não aparece no celular' })
+    // e na faixa de 900 a 1023 px (o v2 já usa o layout de computador; o cartão flutuante antigo só vinha a partir de 1024)
+    const vp = page.viewportSize()
+    for (const [w, h] of [[960, 800], [1280, 800]]) {
+      await page.setViewportSize({ width: w, height: h })
+      await wait(900)
+      await shot(page, `n-05-cartao-galo-${w}`, `cartão "Ir para casa" com ${w}px de largura`)
+      if (!(await page.getByRole('button', { name: 'Ir para casa' }).first().isVisible().catch(() => false)))
+        manifest.errors.push({ step: `narrativa-cartao-galo-${w}`, error: `o cartão "Ir para casa" não aparece com ${w}px` })
+    }
+    if (vp) await page.setViewportSize(vp)
+    await wait(900)
   })
 
   await step('narrativa-galo', async () => {
+    if (V2) {
+      // no v2 a visita abre pelo aviso "Talvez seja hora de ir para casa" (marca limpa no save para ele voltar; as
+      // cerimônias de desbloqueio já vistas, como as de um jogador de verdade, para não cobrirem o aviso)
+      await page.goto(`${BASE}/images/card-back.png`)
+      await api(page, '/api/save', makeSave(VET_CARDS, { sistemasVistos: ['poco', 'torres'], desbloqueiosVistos: ['salao', 'poco', 'torres', 'casa', 'calendario', 'diario'] }))
+      await entrar(page)
+      // os avisos chegam um de cada vez (o da Coruja pode vir antes): espera o da visita aparecer e assentar, e toca
+      const aviso = page.locator('.v2-aviso', { hasText: 'Um endereço' }).first()
+      await aviso.waitFor({ state: 'visible', timeout: 20000 }).catch(() => {})
+      await wait(800)
+      await shot(page, 'n-09-aviso-galo', 'o aviso da visita, antes do toque')
+      await aviso.click({ timeout: 6000, force: true }).catch((e) => manifest.errors.push({ step: 'galo-v2-aviso-toque', error: String(e).slice(0, 600) }))
+      await wait(2600)
+      await shot(page, 'n-10-galo-abertura', 'tocou no aviso: a visita do Galo abre')
+      if (!(await dlg(page).count())) manifest.errors.push({ step: 'galo-v2-cena', error: 'tocar no aviso não abriu a visita do Galo' })
+      // até o fim da visita: escolhe a primeira opção e avança
+      for (let i = 0; i < 400 && (await dlg(page).count()); i++) {
+        if (await page.getByRole('dialog', { name: 'Uma chamada da Companhia' }).count()) break
+        const grupo = page.locator('[aria-label="Escolha o que dizer"] button:not([disabled])')
+        if (await grupo.count()) await tryClick(grupo.first(), 3000)
+        else {
+          const c = dlg(page).getByRole('button', { name: 'Continuar', exact: true }).first()
+          if (await c.count()) await tryClick(c, 2000)
+          else await page.keyboard.press('Enter').catch(() => {})
+        }
+        await wait(350)
+      }
+      await shot(page, 'n-28-galo-fim', 'fim da visita do Galo')
+      return
+    }
     await page.getByRole('button', { name: 'Ir para casa' }).first().click({ timeout: 8000 })
     await wait(2600)
     await shot(page, 'n-10-galo-abertura', 'narração entre colchetes')
@@ -2072,7 +2132,7 @@ if (want('narrativa')) {
     await shot(page, 'n-19-galo-tempo', 'Galo transfere Tempo (valor provisório) — selo de Tempo')
     // Recarregar no meio: retoma no passo salvo e não repete o Tempo.
     await wait(1200)
-    await enterOS(page)
+    await entrar(page)
     await wait(1500)
     await page.getByRole('button', { name: 'Ir para casa' }).first().click({ timeout: 8000 })
     await wait(2800)
@@ -2100,7 +2160,7 @@ if (want('narrativa')) {
 
   await step('narrativa-melissa', async () => {
     // A chamada da Companhia chega alguns segundos depois de voltar para a home.
-    await enterOS(page)
+    await entrar(page)
     await page.getByRole('dialog', { name: 'Uma chamada da Companhia' }).waitFor({ timeout: 20000 })
     await wait(1800)
     await shot(page, 'n-30-melissa-chamada', 'ícone da Companhia + chamada holográfica')
@@ -2122,6 +2182,17 @@ if (want('narrativa')) {
     await shot(page, 'n-36-corporacoes-liberado', 'Corporações liberado ao fim da chamada (cerimônia)')
   })
 
+  if (V2) {
+    await step('galo-v2-corporacoes', async () => {
+      await wait(6000)
+      await shot(page, 'n-37-corporacoes-v2', 'Mapa do Devo do v2 depois da chamada: Corporações aberta')
+      const ic = page.locator('#mesa .ic[data-id="corporacoes"]').first()
+      const trancado = await ic.evaluate((el) => el.classList.contains('trancado')).catch(() => null)
+      if (trancado !== false) manifest.errors.push({ step: 'galo-v2-corporacoes', error: `Corporações ${trancado === null ? 'não está no Mapa' : 'continua trancada'}` })
+    })
+    await ctx.close()
+    await db.end()
+  } else {
   await step('narrativa-mensagens', async () => {
     await wait(6000)
     await openApp(page, 'Mensagens')
@@ -2129,7 +2200,7 @@ if (want('narrativa')) {
   })
 
   await step('narrativa-reflexao', async () => {
-    await enterOS(page)
+    await entrar(page)
     await wait(1500)
     await page.evaluate(() => window.dispatchEvent(new CustomEvent('devo:cena', { detail: { id: 'anfitriao-de-que' }, cancelable: true })))
     await wait(1500)
@@ -2141,6 +2212,7 @@ if (want('narrativa')) {
   })
   await ctx.close()
   await db.end()
+  }
 }
 
 // ── Poço dos Milagres (sistema novo, DIRECAO-3 §2) ─────────────────────────────────────────
@@ -3987,73 +4059,63 @@ if (want('v2')) {
         // arrastar para baixo com o dedo (gesto de toque de verdade, não a roda do mouse), em tela normal e baixa:
         // todos os ícones precisam aparecer acima da barra de baixo
         const cdp = await page.context().newCDPSession(page)
-        // diagnóstico: o que está debaixo do dedo, e se a roda, o JS e um arrasto de toque cru (touchStart/Move/End) rolam
-        {
-          const x = 195
-          const y = 590
-          const sob = await page.evaluate(([x, y]) => {
-            const out = []
-            for (let el = document.elementFromPoint(x, y); el; el = el.parentElement) {
-              const c = getComputedStyle(el)
-              out.push(`${el.tagName.toLowerCase()}${el.id ? '#' + el.id : ''}${el.className && typeof el.className === 'string' ? '.' + el.className.split(' ').join('.') : ''} ta=${c.touchAction} ov=${c.overflowY} pe=${c.pointerEvents}`)
-            }
-            return out
-          }, [x, y])
-          manifest.shots.push({ name: 'v2-toque-sob-o-dedo', note: JSON.stringify(sob) })
-          const topo = () => page.locator('#inicio').evaluate((el) => el.scrollTop).catch(() => -1)
-          await page.locator('#inicio').evaluate((el) => el.scrollTo(0, 0)).catch(() => {})
-          await page.mouse.move(x, y)
-          await page.mouse.wheel(0, 300)
-          await wait(600)
-          const roda = await topo()
-          await page.locator('#inicio').evaluate((el) => el.scrollTo(0, 0)).catch(() => {})
-          await wait(300)
-          const pts = (yy) => [{ x, y: yy, id: 1, radiusX: 4, radiusY: 4, force: 1 }]
-          await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: pts(y) })
+        // celular (dono, 10/11): a tela inicial cabe sem rolar para baixo; o Mapa do Devo corre para o LADO com o dedo.
+        // Arrasto de toque cru (touchStart/Move/End): o synthesizeScrollGesture não rola no Chromium sem janela.
+        const arrasto = async (x0, y0, x1, y1) => {
+          const pt = (xx, yy) => [{ x: Math.round(xx), y: Math.round(yy), id: 1, radiusX: 4, radiusY: 4, force: 1 }]
+          await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: pt(x0, y0) }).catch(() => {})
           for (let i = 1; i <= 12; i++) {
-            await cdp.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: pts(y - i * 30) })
+            await cdp.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: pt(x0 + ((x1 - x0) * i) / 12, y0 + ((y1 - y0) * i) / 12) }).catch(() => {})
             await wait(16)
           }
-          await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] })
-          await wait(800)
-          const toque = await topo()
-          await page.locator('#inicio').evaluate((el) => el.scrollTo(0, 0)).catch(() => {})
-          await wait(300)
-          await cdp.send('Input.synthesizeScrollGesture', { x, y, yDistance: -300, gestureSourceType: 'touch', speed: 800 }).catch(() => {})
-          await wait(800)
-          const gesto = await topo()
-          manifest.shots.push({ name: 'v2-toque-diagnostico', note: JSON.stringify({ roda, toque, gesto }) })
-          await page.locator('#inicio').evaluate((el) => el.scrollTo(0, 0)).catch(() => {})
+          await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] }).catch(() => {})
+          await wait(600)
         }
-        for (const [w, h] of [[390, 844], [360, 640]]) {
-          await page.setViewportSize({ width: w, height: h })
-          await page.locator('#inicio').evaluate((el) => el.scrollTo(0, 0)).catch(() => {})
-          await wait(500)
-          // arrasto de toque cru (touchStart, touchMove…, touchEnd): o synthesizeScrollGesture não rola no Chromium sem
-          // janela (diagnóstico de 09/11: roda 300, toque 345, gesto 0)
-          const x = Math.round(w / 2)
-          for (let g = 0; g < 6; g++) {
-            const y0 = Math.round(h * 0.75)
-            const pt = (yy) => [{ x, y: yy, id: 1, radiusX: 4, radiusY: 4, force: 1 }]
-            await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: pt(y0) }).catch(() => {})
-            for (let i = 1; i <= 12; i++) {
-              await cdp.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: pt(y0 - Math.round((h * 0.5 * i) / 12)) }).catch(() => {})
-              await wait(16)
-            }
-            await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] }).catch(() => {})
-            await wait(500)
-          }
-          await wait(500)
-          const r = await page.evaluate(() => {
+        const mede = () =>
+          page.evaluate(() => {
             const ini = document.querySelector('#inicio')
+            const mesa = document.querySelector('#mesa')
             const doca = document.querySelector('#tarefas')?.getBoundingClientRect().top ?? innerHeight
-            const ics = [...document.querySelectorAll('#mesa .ic')].map((b) => ({ id: b.dataset.id, r: b.getBoundingClientRect() }))
-            const ultimo = ics[ics.length - 1]
-            return { topo: ini?.scrollTop ?? 0, max: ini ? ini.scrollHeight - ini.clientHeight : 0, ultimo: ultimo?.id, base: ultimo ? Math.round(ultimo.r.bottom) : 0, doca: Math.round(doca), largo: Math.max(...ics.map((i) => Math.round(i.r.right))), w: innerWidth }
+            const mr = mesa?.getBoundingClientRect()
+            const ics = [...document.querySelectorAll('#mesa .ic')].map((b) => b.getBoundingClientRect())
+            const disco = document.querySelector('#mesa .disco')?.getBoundingClientRect()
+            return {
+              sobra: ini ? ini.scrollHeight - ini.clientHeight : 0,
+              topo: ini?.scrollTop ?? 0,
+              pagina: document.scrollingElement.scrollHeight - innerHeight,
+              base: Math.round(Math.max(...ics.map((r) => r.bottom))),
+              doca: Math.round(doca),
+              lado: mesa ? mesa.scrollLeft : 0,
+              ladoMax: mesa ? mesa.scrollWidth - mesa.clientWidth : 0,
+              mesa: mr ? [Math.round(mr.top), Math.round(mr.height)] : null,
+              disco: disco ? Math.round(disco.width) : 0,
+              n: ics.length,
+            }
           })
-          manifest.shots.push({ name: `v2-toque-${w}x${h}`, note: JSON.stringify(r), url: page.url() })
-          if (r.topo < 1 || r.base > r.doca || r.largo > r.w) manifest.errors.push({ step: `v2-toque-${w}x${h}`, error: `ícones fora do alcance pelo toque: ${JSON.stringify(r)}` })
-          await shot(page, `v2-02-toque-${w}x${h}`, `depois de arrastar com o dedo: ${JSON.stringify(r)}`)
+        for (const [w, h] of [[360, 640], [390, 844], [412, 915]]) {
+          await page.setViewportSize({ width: w, height: h })
+          await page.locator('#mesa').evaluate((el) => el.scrollTo(0, 0)).catch(() => {})
+          await wait(900)
+          const r0 = await mede()
+          await shot(page, `v2-02-mapa-${w}x${h}`, `tela inicial sem rolar: ${JSON.stringify(r0)}`)
+          // dedo para cima no meio do mapa: a página não pode descer
+          const mr = await page.locator('#mesa').boundingBox()
+          const cy = mr ? mr.y + mr.height / 2 : h * 0.7
+          await arrasto(w / 2, cy + 60, w / 2, cy - 160)
+          const r1 = await mede()
+          // dedo para o lado: o mapa corre
+          await arrasto(w * 0.85, cy, w * 0.15, cy)
+          await arrasto(w * 0.85, cy, w * 0.15, cy)
+          const r2 = await mede()
+          await shot(page, `v2-02-mapa-${w}x${h}-lado`, `depois de arrastar para o lado: ${JSON.stringify(r2)}`)
+          manifest.shots.push({ name: `v2-toque-${w}x${h}`, note: JSON.stringify({ r0, r1, r2 }) })
+          const erros = []
+          if (r0.sobra > 1 || r0.pagina > 1) erros.push('a tela inicial ainda rola para baixo')
+          if (r1.topo > 0) erros.push('o dedo para cima desceu a página')
+          if (r0.base > r0.doca) erros.push('ícones atrás da barra de baixo')
+          if (r0.ladoMax > 0 && r2.lado < 1) erros.push('o arrasto para o lado não moveu o mapa')
+          if (erros.length) manifest.errors.push({ step: `v2-toque-${w}x${h}`, error: `${erros.join('; ')}: ${JSON.stringify({ r0, r1, r2 })}` })
+          await page.locator('#mesa').evaluate((el) => el.scrollTo(0, 0)).catch(() => {})
         }
         await page.setViewportSize({ width: 390, height: 844 })
         await page.locator('#inicio').evaluate((el) => el.scrollTo(0, 0)).catch(() => {})

@@ -29,6 +29,7 @@ import { OsNavContext, type OsNav } from '@/components/devo/os/os-nav'
 import { useDevoEngine } from '@/components/devo/os/use-devo-engine'
 import { CenasGatilho } from '@/components/devo/torres/gatilho'
 import { isSistema, SISTEMAS as SISTEMAS_JOGO } from '@/components/devo/progressao/sistemas'
+import { AVISO_GALO_TITULO, useNarrativa } from '@/components/devo/progressao/narrativa-host'
 import { useAcesso as useAcessoSistemas } from '@/components/devo/progressao/use-acesso'
 import { useBackHandler } from '@/components/devo/use-back-handler'
 import { CasaV2 } from './casa/casa-v2'
@@ -304,6 +305,7 @@ function Casca({ onExit }: { onExit: () => void }) {
     [abre, onExit],
   )
 
+  const narrativa = useNarrativa()
   const arcano = eu?.arcano ?? null
   const retrato = arcano ? `url(/images/arcanos/${arcano.key}/retrato-512.webp)` : 'none'
   const avisos = state.notifications.length
@@ -379,6 +381,22 @@ function Casca({ onExit }: { onExit: () => void }) {
               </button>
             )}
           </div>
+
+          {/* a visita do Galo está pronta: no v2 o cartão fica aqui, no celular e no computador (no sistema antigo ele
+              vinha na home do celular e flutuava no computador) */}
+          {narrativa.galoDisponivel && (
+            <button id="ir-casa" onClick={() => narrativa.abrirGalo()}>
+              <span className="ic-casa">
+                <img src={ico('casa')} alt="" />
+              </span>
+              <span>
+                <small>Casa · noite</small>
+                <strong>Ir para casa</strong>
+                <em>Um endereço entre seus pertences.</em>
+              </span>
+              <Seta />
+            </button>
+          )}
 
           {an && (
             <div id="faixa">
@@ -542,21 +560,14 @@ function Mapa({
   }, [])
   return (
     <div id="mesa" ref={ref}>
-      {SISTEMAS.filter((a) => visivel(a.id)).map((a, k) => {
+      {SISTEMAS.filter((a) => visivel(a.id)).map((a) => {
         const n = contas[a.id] ?? 0
-        // no celular o mapa desce (dono, 09/11: "para não depender tanto de arrastar"): a mesma ordem do mapa de
-        // arrastar (três fileiras, coluna por coluna), em blocos de três colunas, um abaixo do outro
-        const j = k % 9
-        const col = Math.floor(j / 3)
-        const fila = Math.floor(k / 9) * 3 + (j % 3) + 1
         const trava = travaDe(a.id)
         return (
           <button
             key={a.id}
             className={'ic' + (trava ? ' trancado' : '')}
             data-id={a.id}
-            data-col={col}
-            style={{ '--fila': fila, '--coluna': col + 1 } as CSSProperties}
             title={trava ? `${a.nome} · ${trava}` : undefined}
             aria-label={trava ? `${a.nome}: trancado. ${trava}` : n ? `${a.nome}, ${n} novas` : a.nome}
             onClick={() => onAbre(a.id)}
@@ -702,6 +713,7 @@ function JanelaSistema({ j, emFoco, os, onFoco, onMini, onMax, onFecha, onMove, 
  */
 function AvisoQueChega({ onAbre }: { onAbre: (id: string) => void }) {
   const { state, dispatch } = useDevo()
+  const narrativa = useNarrativa()
   const t = state.toasts[0]
   useEffect(() => {
     if (!t) return
@@ -716,7 +728,9 @@ function AvisoQueChega({ onAbre }: { onAbre: (id: string) => void }) {
       role="status"
       onClick={() => {
         dispatch({ type: 'DISMISS_TOAST', id: t.id })
-        if (t.appId) onAbre(t.appId)
+        // "Talvez seja hora de ir para casa": abre a visita do Galo, não o Pulso
+        if (t.title === AVISO_GALO_TITULO && narrativa.galoDisponivel) narrativa.abrirGalo()
+        else if (t.appId) onAbre(t.appId)
       }}
     >
       <img src={ico(t.appId && SIS.has(t.appId) ? t.appId : 'sino')} alt="" />
