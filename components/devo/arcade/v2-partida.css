@@ -1,0 +1,136 @@
+/* Partidas da Sala de Jogos no v2: o lugar da partida dentro da janela e as peças comuns (desistir, conexão, chat).
+   As regras de cada jogo (.mr, .xz, .bq, .bl) vêm do protótipo, em components/v2/os.css. */
+
+/* a partida cobre a janela inteira da Sala, barra de título incluída: no meio dela a janela não fecha nem
+   minimiza sem passar pela confirmação do próprio jogo */
+.v2-partida {
+  position: absolute;
+  inset: 0;
+  z-index: 7;
+  overflow: hidden;
+  border-radius: inherit;
+  background: #06100c;
+}
+.v2-partida > .mr,
+.v2-partida > .xz,
+.v2-partida > .bq,
+.v2-partida > .bl {
+  top: 0;
+}
+/* fora do v2 (sem janela): a partida ocupa a tela */
+.v2-partida.solta {
+  position: fixed;
+  z-index: 80;
+}
+
+.v2p-veu {
+  position: absolute !important;
+  z-index: 50;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: #06100ccc;
+}
+.v2p-caixa {
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+  width: 100%;
+  max-width: 320px;
+  padding: 18px 16px 16px;
+  text-align: center;
+  background: #0b0a08;
+  color: #efe6d8;
+  box-shadow: 0 0 0 2px #7a6233, 6px 6px 0 2px #000;
+  border-radius: var(--r-p, 0);
+  animation: v2p-entra 0.14s steps(3);
+}
+.v2p-caixa small {
+  font: 600 13px/1 var(--cond, var(--font));
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #ff6a5a;
+}
+.v2p-caixa strong {
+  font: 400 34px/1 var(--relogio);
+  color: #f2cf7a;
+}
+.v2p-caixa p {
+  margin: 0;
+  font: 500 16px/1.3 var(--font);
+  color: #a89a80;
+}
+.v2p-caixa div {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  width: 100%;
+  margin-top: 6px;
+}
+.v2p-bt {
+  min-height: 44px;
+  padding: 0 10px;
+  background: #191610;
+  color: #efe6d8;
+  border: 2px solid #3a2f1c;
+  border-radius: var(--r-p, 0);
+  font: 600 17px/1 var(--cond, var(--font));
+  text-align: center;
+  cursor: pointer;
+}
+.v2p-bt:hover {
+  border-color: #7a6233;
+}
+.v2p-bt.perigo {
+  background: #7a1a12;
+  border-color: #ff6a5a;
+  color: #fff;
+}
+.v2p-bt:focus-visible {
+  outline: 2px solid #f2cf7a;
+  outline-offset: 2px;
+}
+@keyframes v2p-entra {
+  from {
+    scale: 1.2;
+    opacity: 0;
+  }
+}
+
+.v2p-conexao {
+  position: absolute !important;
+  z-index: 45;
+  left: 50%;
+  top: 64px;
+  translate: -50% 0;
+  margin: 0;
+  padding: 6px 12px;
+  background: #7a1a12;
+  color: #fff;
+  box-shadow: 0 0 0 2px #ff6a5a, 4px 4px 0 1px #000;
+  font: 600 14px/1 var(--cond, var(--font));
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+/* o botão do chat ao vivo veste o cabeçalho do jogo */
+.v2p-chat {
+  display: contents;
+}
+.v2p-chat > button {
+  height: 100%;
+  min-height: 44px;
+  border: 2px solid #3a2f1c !important;
+  background: #191610 !important;
+  color: #efe6d8 !important;
+  border-radius: var(--r-p, 0);
+  font-family: var(--cond, var(--font)) !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .v2p-caixa {
+    animation: none;
+  }
+}

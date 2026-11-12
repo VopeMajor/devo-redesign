@@ -1,4 +1,5 @@
 import { memo, type CSSProperties } from 'react'
+import type { Quality } from '@/lib/devo/arcade/chess-themes'
 import { cn } from '@/lib/utils'
 
 const NUMERALS = ['XII', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI']
@@ -90,40 +91,53 @@ function Sparkle({ size }: { size: number }) {
 const anim = (value: string): CSSProperties => ({ animation: value })
 
 /**
+ * Peso do fundo por qualidade. Cada elemento animado é uma camada a mais para a placa de vídeo
+ * compor a cada quadro, por baixo do tabuleiro, mesmo com o jogo parado. Fora da qualidade alta,
+ * o que não gira fica desenhado do mesmo jeito, só que parado.
+ */
+const PESO: Record<Quality, { dust: number; sparkles: number; rings: number; gears: number; drift: boolean; blend: boolean }> = {
+  high: { dust: 26, sparkles: 10, rings: 3, gears: 4, drift: true, blend: true },
+  medium: { dust: 8, sparkles: 3, rings: 2, gears: 2, drift: false, blend: false },
+  low: { dust: 0, sparkles: 0, rings: 0, gears: 0, drift: false, blend: false },
+}
+
+/**
  * Fundo vivo do xadrez: a arte do relógio respira, anéis de numerais giram em sentidos opostos,
  * engrenagens trabalham nos cantos, poeira sobe, e a cor do tema escolhido tinge a cena.
  * A cada troca de turno uma onda percorre o mostrador.
  */
-export const ClockBackdrop = memo(function ClockBackdrop({ danger, tint, turnKey }: { danger: boolean; tint: string; turnKey: string }) {
+export const ClockBackdrop = memo(function ClockBackdrop({ danger, tint, turnKey, quality = 'high' }: { danger: boolean; tint: string; turnKey: string; quality?: Quality }) {
+  const peso = PESO[quality]
+  const gira = (i: number, value: string) => (i < peso.rings ? anim(value) : undefined)
   return (
     <div className="pointer-events-none absolute inset-0 overflow-hidden bg-[#0c0c0e]" aria-hidden="true">
       <div
         className="chess-anim absolute -inset-[6%] bg-cover bg-center"
-        style={{ backgroundImage: "url('/images/chess/clock-arena.webp')", filter: 'grayscale(0.82) brightness(0.42) contrast(1.08)', ...anim('chess-drift 18s ease-in-out infinite alternate') }}
+        style={{ backgroundImage: "url('/images/chess/clock-arena.webp')", filter: `grayscale(0.82) brightness(${peso.blend ? 0.42 : 0.56}) contrast(1.08)`, ...(peso.drift ? anim('chess-drift 18s ease-in-out infinite alternate') : undefined) }}
       />
 
       <div className="absolute left-1/2 top-[48%] size-[118vmin] -translate-x-1/2 -translate-y-1/2">
-        <div className="chess-anim absolute inset-0" style={anim('chess-spin 120s linear infinite')}>
+        <div className="chess-anim absolute inset-0" style={gira(0, 'chess-spin 120s linear infinite')}>
           <NumeralRing radius={86} font={9} />
         </div>
-        <div className="chess-anim absolute inset-[22%]" style={anim('chess-spin 70s linear infinite reverse')}>
+        <div className="chess-anim absolute inset-[22%]" style={gira(2, 'chess-spin 70s linear infinite reverse')}>
           <NumeralRing radius={82} font={11} />
         </div>
-        <div className="chess-anim absolute inset-[38%]" style={anim('chess-spin 40s linear infinite')}>
+        <div className="chess-anim absolute inset-[38%]" style={gira(1, 'chess-spin 40s linear infinite')}>
           <NumeralRing radius={76} font={14} />
         </div>
         <div key={turnKey} className="chess-anim absolute inset-[30%] rounded-full border-2 opacity-0" style={{ borderColor: tint, ...anim('chess-ripple 1.4s ease-out 1') }} />
       </div>
 
       <div className="absolute left-1/2 top-[48%] size-0">
-        <div className="chess-anim absolute -left-px bottom-0 h-[40vmin] w-[2px] origin-bottom rounded-full bg-[#ece5d8]/70 shadow-[0_0_8px_rgba(236,229,216,0.5)]" style={anim('chess-spin 60s linear infinite')} />
-        <div className="chess-anim absolute -left-[2px] bottom-0 h-[26vmin] w-[4px] origin-bottom rounded-full bg-[#ece5d8]/45" style={anim('chess-spin 720s linear infinite')} />
+        <div className="chess-anim absolute -left-px bottom-0 h-[40vmin] w-[2px] origin-bottom rounded-full bg-[#ece5d8]/70 shadow-[0_0_8px_rgba(236,229,216,0.5)]" style={anim(`chess-spin 60s ${quality === 'low' ? 'steps(60)' : 'linear'} infinite`)} />
+        <div className="chess-anim absolute -left-[2px] bottom-0 h-[26vmin] w-[4px] origin-bottom rounded-full bg-[#ece5d8]/45" style={quality === 'high' ? anim('chess-spin 720s linear infinite') : undefined} />
         <div className="absolute -left-[6px] -top-[6px] size-[12px] rounded-full bg-[#bab09f]" />
       </div>
 
       {GEARS.map((g, i) => (
         <div key={i} className="absolute opacity-70" style={{ left: g.x, top: g.y, width: g.size, height: g.size }}>
-          <div className="chess-anim size-full" style={anim(`chess-spin ${g.dur}s linear infinite${g.rev ? ' reverse' : ''}`)}>
+          <div className="chess-anim size-full" style={i < peso.gears ? anim(`chess-spin ${g.dur}s linear infinite${g.rev ? ' reverse' : ''}`) : undefined}>
             <Gear teeth={g.teeth} />
           </div>
         </div>
@@ -131,10 +145,10 @@ export const ClockBackdrop = memo(function ClockBackdrop({ danger, tint, turnKey
 
       <div
         className="chess-anim absolute -inset-x-1/4 bottom-0 h-3/5 bg-[radial-gradient(ellipse_at_30%_80%,#6f6b8233,transparent_60%),radial-gradient(ellipse_at_75%_90%,#2b2a3555,transparent_55%)]"
-        style={anim('chess-mist 11s ease-in-out infinite alternate')}
+        style={peso.drift ? anim('chess-mist 11s ease-in-out infinite alternate') : undefined}
       />
 
-      {DUST.map((p, i) => (
+      {DUST.slice(0, peso.dust).map((p, i) => (
         <span
           key={i}
           className="chess-anim absolute bottom-[-4%] rounded-full bg-[#ece5d8]"
@@ -143,19 +157,19 @@ export const ClockBackdrop = memo(function ClockBackdrop({ danger, tint, turnKey
             width: p.size,
             height: p.size,
             ['--dust-x' as string]: `${p.drift}px`,
-            boxShadow: '0 0 5px rgba(236,229,216,0.5)',
+            boxShadow: peso.blend ? '0 0 5px rgba(236,229,216,0.5)' : undefined,
             ...anim(`chess-rise ${p.dur}s linear ${p.delay}s infinite`),
           }}
         />
       ))}
 
-      {SPARKLES.map((p, i) => (
+      {SPARKLES.slice(0, peso.sparkles).map((p, i) => (
         <span key={i} className="chess-anim absolute opacity-0" style={{ left: `${p.x}%`, top: `${p.y}%`, ...anim(`chess-twinkle 4s ease-in-out ${p.d}s infinite`) }}>
           <Sparkle size={p.s} />
         </span>
       ))}
 
-      <div className="absolute inset-0 mix-blend-soft-light transition-colors duration-700" style={{ backgroundColor: tint, opacity: 0.12 }} />
+      <div className={cn('absolute inset-0 transition-colors duration-700', peso.blend && 'mix-blend-soft-light')} style={{ backgroundColor: tint, opacity: peso.blend ? 0.12 : 0.05 }} />
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_55%,transparent_40%,rgba(8,8,10,0.88)_100%)]" />
       <div
         className={cn('absolute inset-0 shadow-[inset_0_0_90px_rgba(163,18,31,0.55)] transition-opacity duration-300', danger ? 'opacity-100' : 'opacity-0')}

@@ -1,6 +1,7 @@
 import type { PieceSymbol } from 'chess.js'
 import * as THREE from 'three'
-import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js'
+import { mergeGeometries, mergeVertices } from 'three/examples/jsm/utils/BufferGeometryUtils.js'
+import type { Quality } from '@/lib/devo/arcade/chess-themes'
 import type { PieceModel } from './pieces3d'
 
 /*
@@ -23,18 +24,24 @@ function place(g: THREE.BufferGeometry, p: V3 = [0, 0, 0], r: V3 = [0, 0, 0], s:
   return out
 }
 
-const SEG = 48
-const lathe = (pts: P2[]) => new THREE.LatheGeometry(pts.map(([x, y]) => new THREE.Vector2(x, y)), SEG)
+/** Detalhe das malhas por qualidade: no celular uma peça tem ~45 px de largura, curvas a mais só custam vértice. */
+const DETAIL: Record<Quality, { seg: number; perfil: number; esfera: [number, number]; toro: [number, number]; crina: number; chanfro: number }> = {
+  low: { seg: 14, perfil: 2, esfera: [12, 8], toro: [4, 14], crina: 2, chanfro: 1 },
+  medium: { seg: 20, perfil: 3, esfera: [16, 10], toro: [5, 20], crina: 3, chanfro: 2 },
+  high: { seg: 32, perfil: 5, esfera: [24, 14], toro: [8, 32], crina: 6, chanfro: 3 },
+}
+let D = DETAIL.medium
+const lathe = (pts: P2[]) => new THREE.LatheGeometry(pts.map(([x, y]) => new THREE.Vector2(x, y)), D.seg)
 /** Perfil suave (spline) fechado no eixo no topo. */
 const smooth = (pts: P2[], close = true) => {
-  const v = new THREE.SplineCurve(pts.map(([x, y]) => new THREE.Vector2(x, y))).getPoints(pts.length * 10)
+  const v = new THREE.SplineCurve(pts.map(([x, y]) => new THREE.Vector2(x, y))).getPoints(pts.length * D.perfil)
   const out = v.map((p) => [Math.max(p.x, 0), p.y] as P2)
   if (close) out.push([0, out[out.length - 1][1]])
   return lathe(out)
 }
-const sph = (r: number) => new THREE.SphereGeometry(r, 32, 20)
-const cyl = (top: number, bottom: number, h: number, seg = SEG) => new THREE.CylinderGeometry(top, bottom, h, seg)
-const tor = (r: number, t: number) => new THREE.TorusGeometry(r, t, 12, SEG).rotateX(Math.PI / 2)
+const sph = (r: number) => new THREE.SphereGeometry(r, D.esfera[0], D.esfera[1])
+const cyl = (top: number, bottom: number, h: number, seg = D.seg) => new THREE.CylinderGeometry(top, bottom, h, seg)
+const tor = (r: number, t: number) => new THREE.TorusGeometry(r, t, D.toro[0], D.toro[1]).rotateX(Math.PI / 2)
 
 /** Pé comum: degraus com chanfro (o metal vai no filete do meio). */
 const FOOT: P2[] = [
@@ -80,16 +87,18 @@ function horse() {
   sh.moveTo(pts[0][0], pts[0][1])
   sh.splineThru(pts.slice(1).map(([x, y]) => new THREE.Vector2(x, y)))
   sh.closePath()
-  return new THREE.ExtrudeGeometry(sh, { depth: 0.16, bevelEnabled: true, bevelSize: 0.05, bevelThickness: 0.07, bevelSegments: 5, curveSegments: 48 }).translate(0, 0, -0.08)
+  return new THREE.ExtrudeGeometry(sh, { depth: 0.16, bevelEnabled: true, bevelSize: 0.05, bevelThickness: 0.07, bevelSegments: D.chanfro, curveSegments: D.crina }).translate(0, 0, -0.08)
 }
 
 const HEIGHT: Record<PieceSymbol, number> = { p: 0.9, r: 1.06, n: 1.2, b: 1.34, q: 1.5, k: 1.72 }
 
-const cache = new Map<PieceSymbol, PieceModel>()
+const cache = new Map<string, PieceModel>()
 
-export function getTitanModel(t: PieceSymbol): PieceModel {
-  const hit = cache.get(t)
+export function getTitanModel(t: PieceSymbol, quality: Quality = 'medium'): PieceModel {
+  const key = `${t}-${quality}`
+  const hit = cache.get(key)
   if (hit) return hit
+  D = DETAIL[quality]
   const body: THREE.BufferGeometry[] = []
   const trim: THREE.BufferGeometry[] = []
   const glow: THREE.BufferGeometry[] = []
@@ -154,7 +163,7 @@ export function getTitanModel(t: PieceSymbol): PieceModel {
   if (t === 'k') {
     // Coroa fechada com cúpula e cruz de metal (a joia fica no centro da cruz).
     B(smooth([[0.13, 1.13], [0.2, 1.22], [0.23, 1.32], [0.22, 1.36]], false))
-    B(new THREE.SphereGeometry(0.2, 32, 14, 0, Math.PI * 2, 0, Math.PI / 2), [0, 1.34, 0])
+    B(new THREE.SphereGeometry(0.2, D.esfera[0], Math.ceil(D.esfera[1] / 2), 0, Math.PI * 2, 0, Math.PI / 2), [0, 1.34, 0])
     T(tor(0.215, 0.016), [0, 1.34, 0])
     T(cyl(0.04, 0.05, 0.06, 16), [0, 1.56, 0])
     T(new THREE.BoxGeometry(0.075, 0.24, 0.075), [0, 1.7, 0])
@@ -168,15 +177,17 @@ export function getTitanModel(t: PieceSymbol): PieceModel {
     B(horse(), [0, 0, 0], [0, -Math.PI / 2, 0])
     for (const s of [-1, 1]) L(sph(0.03), [s * 0.15, 0.87, 0.2])
   }
-  if (!glow.length) L(sph(0.001), [0, 0.05, 0])
 
+  // Com índice, cada vértice roda uma vez só no shader (sem índice, roda uma vez por triângulo que o usa).
   const merge = (list: THREE.BufferGeometry[]) => {
-    const g = mergeGeometries(list, false)!
+    const raw = mergeGeometries(list, false)!
     list.forEach((x) => x.dispose())
+    const g = mergeVertices(raw, 1e-4)
+    raw.dispose()
     g.computeBoundingSphere()
     return g
   }
-  const model: PieceModel = { body: merge(body), trim: merge(trim), glow: merge(glow), halos: [], height: HEIGHT[t] }
-  cache.set(t, model)
+  const model: PieceModel = { body: merge(body), trim: merge(trim), glow: glow.length ? merge(glow) : null, height: HEIGHT[t] }
+  cache.set(key, model)
   return model
 }

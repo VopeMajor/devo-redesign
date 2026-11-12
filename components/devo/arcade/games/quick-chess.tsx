@@ -3,7 +3,6 @@
 import { liveChannelFor } from '@/lib/devo/arcade/reactions'
 import { Canvas } from '@react-three/fiber'
 import { Chess, type Color, type Move, type PieceSymbol, type Square } from 'chess.js'
-import { Eye, History, MessageSquare, RotateCcw, Settings2, type LucideIcon } from 'lucide-react'
 import { ArcadeChat } from '@/components/devo/arcade/arcade-chat'
 import { useDeadlyVotes } from '@/components/devo/system/use-deadly-votes'
 import { useCallback, useEffect, useMemo, useRef, useState, type PointerEvent as ReactPointerEvent } from 'react'
@@ -13,21 +12,44 @@ import { arcadePost, type GameProps } from '@/lib/devo/arcade/client'
 import { BOARD_THEMES, PIECE_SETS, boardTheme, pieceSet, resolveQuality } from '@/lib/devo/arcade/chess-themes'
 import { GAMES } from '@/lib/devo/arcade/games'
 import type { Expressao } from '@/lib/devo/npcs'
-import { JavaliPortrait } from '../sala-ui'
-import { cn } from '@/lib/utils'
-import { PlayerPlate } from '../chess/versus-bar'
-import { Button, SigilStar } from '@/components/devo/kit'
 import { LivingScene, planAnim, type Anim, type CamState, type MateFx, type UnitState } from '../chess/living-board'
-import { Countdown321, GameFrame, PopLayer, QuitConfirm, WaitingStart, usePops, vibrate } from '../game-hud'
+import { usePops, vibrate, type PopTone } from '../game-hud'
 import { roomOutcome, useOnlineGate, useRoom } from '../use-room'
+import { Desistir, PartidaV2, Sincronizando, mmss } from '../v2-partida'
 import type { ChessState } from '@/lib/devo/arcade/client'
+import './quick-chess-v2.css'
+
+/*
+ * Living Chess no visual do v2 (protótipo aprovado: docs/redesign/v2/kit3/art-src/xadrez-3d-entrada.tsx,
+ * estilo .xz* em components/v2/os.css). A cena 3D é a mesma do jogo (components/devo/arcade/chess/*), com
+ * desenho sob demanda e queda automática de qualidade. O que o protótipo simulava (oponente, chat) aqui é o
+ * de verdade: servidor da sala, relógio do servidor e chat da partida.
+ */
 
 const meta = GAMES.chess
-/** Relógio por lance (mesmo valor da partida online; na demonstração ele não corre). */
 /** 10 minutos por jogador; o relógio de cada um só corre na própria vez. */
 const CLOCK_MS = 600_000
 const VALUE: Record<PieceSymbol, number> = { p: 1, n: 3, b: 3, r: 5, q: 9, k: 0 }
-const REACTIONS = ['🔥', '😱', '💀', '👏', '👀']
+const ARTE = '/v2/art/os'
+/** Reações da barra de baixo (as mesmas do protótipo, em pixel). Aparecem só na sua tela, como antes. */
+const REACOES = [
+  { id: 'fogo', img: `${ARTE}/memory/s8.png`, nome: 'Fogo' },
+  { id: 'caveira', img: `${ARTE}/memory/s0.png`, nome: 'Caveira' },
+  { id: 'olho', img: `${ARTE}/memory/s9.png`, nome: 'De olho' },
+  { id: 'coroa', img: `${ARTE}/memory/s1.png`, nome: 'Coroa' },
+  { id: 'chama', img: `${ARTE}/memory/s7.png`, nome: 'Ousadia' },
+]
+/** Tons dos avisos do HUD → classes do protótipo (.mr-pop). */
+const TOM: Record<PopTone, string> = { gold: '', amethyst: 'violeta', red: 'perigo', white: 'neutro' }
+/** Motivo do fim vindo do servidor → texto da tela (o "você"/"oponente" depende de quem venceu). */
+function motivo(raw: string, won: boolean) {
+  if (raw === 'tempo') return won ? 'Tempo do oponente esgotou' : 'Tempo esgotado'
+  if (raw === 'xeque-mate') return 'Xeque-mate'
+  if (raw === 'desistência') return won ? 'Oponente desistiu' : 'Você desistiu'
+  if (raw === 'abandono') return won ? 'Oponente abandonou' : 'Abandono'
+  if (raw === 'empate') return 'Empate'
+  return raw.charAt(0).toUpperCase() + raw.slice(1)
+}
 /** Peças da promoção (o servidor aceita q/r/b/n); o seletor de variação U+FE0E força o glifo de texto, não o emoji. */
 const PROMO_PIECES: [PieceSymbol, string, string][] = [
   ['q', 'Dama', '♛︎'],
@@ -62,24 +84,20 @@ function initialUnits(g: Chess): UnitState[] {
 
 type Ending = { result: 'win' | 'loss' | 'draw'; reason: string; score: number }
 
-/** Botão de ícone do cabeçalho/tabuleiro: 44px, filete de aço quando ativo. */
-function ChessIconButton({ icon: Icon, label, active, onClick, className, title }: { icon: LucideIcon; label: string; active?: boolean; onClick: () => void; className?: string; title?: string }) {
+/** 3 · 2 · 1 · JÁ em dígitos grandes de bronze (mesmo ritmo da contagem antiga). */
+function Contagem({ onDone }: { onDone: () => void }) {
+  const [n, setN] = useState(3)
+  const done = useRef(onDone)
+  done.current = onDone
+  useEffect(() => {
+    const t = [1, 2, 3].map((i) => window.setTimeout(() => setN(3 - i), i * 650))
+    t.push(window.setTimeout(() => done.current(), 3 * 650 + 400))
+    return () => t.forEach(clearTimeout)
+  }, [])
   return (
-    <button
-      type="button"
-      onClick={onClick}
-      aria-label={label}
-      aria-pressed={active}
-      title={title ?? label}
-      className={cn(
-        'dv-focus relative grid size-11 shrink-0 place-items-center transition-[color,transform] duration-[120ms] active:scale-95',
-        active ? 'text-white' : 'text-dv-text-3 hover:text-dv-text',
-        className,
-      )}
-    >
-      <Icon className="size-[18px]" strokeWidth={1.4} />
-      {active && <span aria-hidden="true" className="absolute bottom-1.5 left-1/2 size-1.5 -translate-x-1/2 rotate-45 bg-dv-amethyst shadow-[0_0_6px_var(--dv-amethyst)]" />}
-    </button>
+    <div className="mr-conta" role="status" aria-label={n ? String(n) : 'Já'}>
+      <b key={n}>{n || 'JÁ'}</b>
+    </div>
   )
 }
 
@@ -94,7 +112,7 @@ export default function QuickChess({ start, settings, onFinish, onQuit }: GamePr
   const [clocks, setClocks] = useState({ w: CLOCK_MS, b: CLOCK_MS })
   const [captures, setCaptures] = useState({ w: 0, b: 0 })
   const [local, setLocal] = useState(settings)
-  const [panel, setPanel] = useState<'none' | 'settings' | 'history' | 'chat'>('none')
+  const [panel, setPanel] = useState<'' | 'ajustes' | 'lances' | 'chat'>('')
   const { record } = useDeadlyVotes()
   const playerPhoto = record?.avatarVersion ? `/api/record/avatar?v=${record.avatarVersion}` : null
   const chatChannel = liveChannelFor(start)
@@ -104,7 +122,7 @@ export default function QuickChess({ start, settings, onFinish, onQuit }: GamePr
   const [promo, setPromo] = useState<Move[] | null>(null)
   /** Online: confirmação antes de desistir (conta como derrota). */
   const [askResign, setAskResign] = useState(false)
-  const [reactions, setReactions] = useState<{ id: number; e: string; x: number }[]>([])
+  const [reactions, setReactions] = useState<{ id: number; img: string; x: number }[]>([])
   const [now, setNow] = useState(0)
   const { pops, push } = usePops()
 
@@ -145,10 +163,10 @@ export default function QuickChess({ start, settings, onFinish, onQuit }: GamePr
   }, [sfx])
 
 
-  const react = useCallback((e?: string) => {
-    const emoji = e ?? REACTIONS[Math.floor(Math.random() * REACTIONS.length)]
+  const react = useCallback((img?: string) => {
+    const pick = img ?? REACOES[Math.floor(Math.random() * REACOES.length)].img
     const id = Date.now() + Math.random()
-    setReactions((list) => [...list.slice(-6), { id, e: emoji, x: 10 + Math.random() * 80 }])
+    setReactions((list) => [...list.slice(-6), { id, img: pick, x: 10 + Math.random() * 80 }])
     window.setTimeout(() => setReactions((list) => list.filter((x) => x.id !== id)), 1800)
   }, [])
 
@@ -200,11 +218,11 @@ export default function QuickChess({ start, settings, onFinish, onQuit }: GamePr
         window.setTimeout(() => setDemoDone(true), 1500)
         return true
       }
-      end(loser === 'b' ? 'win' : 'loss', 'XEQUE-MATE', true)
+      end(loser === 'b' ? 'win' : 'loss', 'Xeque-mate', true)
       return true
     }
     if (game.isDraw() || game.isStalemate()) {
-      end('draw', 'EMPATE')
+      end('draw', 'Empate')
       return true
     }
     return false
@@ -261,17 +279,17 @@ export default function QuickChess({ start, settings, onFinish, onQuit }: GamePr
         window.setTimeout(() => {
           sound('chess-capture')
           vibrate(captured === 'q' ? [40, 30, 60] : 25)
-          if (captured === 'q') push(by === myColor ? 'DAMA ABATIDA' : 'SUA DAMA CAIU', by === myColor ? 'gold' : 'red', 1400)
-          else if (VALUE[captured] >= 3) push('CAPTURA', by === myColor ? 'gold' : 'red', 900)
+          if (captured === 'q') push(by === myColor ? 'Dama abatida' : 'Sua dama caiu', by === myColor ? 'gold' : 'red', 1400)
+          else if (VALUE[captured] >= 3) push('Captura', by === myColor ? 'gold' : 'red', 900)
           if (Math.random() < 0.6) react()
         }, anim.impact * 1000)
       }
       if (m.promotion)
         window.setTimeout(() => {
           sound('reveal')
-          push('PROMOÇÃO', by === myColor ? 'gold' : 'red', 1100)
+          push('Promoção', by === myColor ? 'gold' : 'red', 1100)
         }, (anim.dur - 0.5) * 1000)
-      if (rook) push('ROQUE', 'white', 900)
+      if (rook) push('Roque', 'white', 900)
 
       window.setTimeout(() => {
         setUnits((cur) =>
@@ -294,8 +312,8 @@ export default function QuickChess({ start, settings, onFinish, onQuit }: GamePr
           if (finished.current) return
           if (!checkEnd() && game.inCheck()) {
             sound('chess-check')
-            push('XEQUE', by === myColor ? 'gold' : 'red', 900)
-            react('😱')
+            push('Xeque', by === myColor ? 'gold' : 'red', 900)
+            react(REACOES[2].img)
           }
         })
       }, anim.dur * 1000 + 40)
@@ -369,18 +387,7 @@ export default function QuickChess({ start, settings, onFinish, onQuit }: GamePr
     const result = (mine?.result ?? 'draw') as Ending['result']
     const raw = room.result?.reason ?? ''
     const won = result === 'win'
-    const reason =
-      raw === 'tempo'
-        ? won ? 'TEMPO DO OPONENTE ESGOTOU' : 'TEMPO ESGOTADO'
-        : raw === 'xeque-mate'
-          ? 'XEQUE-MATE'
-          : raw === 'desistência'
-            ? won ? 'OPONENTE DESISTIU' : 'VOCÊ DESISTIU'
-            : raw === 'abandono'
-              ? won ? 'OPONENTE ABANDONOU' : 'ABANDONO'
-              : raw === 'empate'
-                ? 'EMPATE'
-                : raw.toUpperCase()
+    const reason = motivo(raw, won)
     const mate = raw === 'xeque-mate'
     sound(won ? 'reveal' : result === 'loss' ? 'error' : 'notify')
     vibrate(won ? [30, 40, 60] : 80)
@@ -390,10 +397,19 @@ export default function QuickChess({ start, settings, onFinish, onQuit }: GamePr
     )
   }, [online, room, animating, game, apply, resync, sound])
 
+  // O relógio só redesenha a tela quando o segundo de quem joga muda (e cai certinho no zero).
+  const leftAt = useRef<(t: number) => number>(() => 1000)
   useEffect(() => {
     if (!running || animating) return
-    const id = window.setInterval(() => setNow(Date.now()), 100)
-    return () => window.clearInterval(id)
+    let id = 0
+    const tick = () => {
+      const t = Date.now()
+      setNow(t)
+      const rest = leftAt.current(t)
+      id = window.setTimeout(tick, rest > 0 ? (rest % 1000 || 1000) + 5 : 1000)
+    }
+    tick()
+    return () => window.clearTimeout(id)
   }, [running, animating])
 
   const turn = game.turn()
@@ -403,10 +419,10 @@ export default function QuickChess({ start, settings, onFinish, onQuit }: GamePr
   const plies = history.length
   const serverState = online && room && room.status !== 'waiting' ? (room.state as ChessState) : null
   const synced = !!serverState?.moves && serverState.moves.length === plies
-  const clockTotal = CLOCK_MS
   const clockOf = (side: Color) => (synced && serverState ? serverState.clock[side === 'w' ? 'a' : 'b'] : clocks[side])
   const turnFrom = synced && serverState ? toLocal(serverState.turnAt) : turnStart.current
   const live = (side: Color) => (ticking && turn === side ? Math.max(0, Math.min(clockOf(side), clockOf(side) - (now - turnFrom))) : clockOf(side))
+  leftAt.current = (t) => Math.max(0, Math.min(clockOf(turn), clockOf(turn) - (t - turnFrom)))
   const wLeft = live('w')
   const bLeft = live('b')
   const myLeft = myColor === 'w' ? wLeft : bLeft
@@ -414,8 +430,8 @@ export default function QuickChess({ start, settings, onFinish, onQuit }: GamePr
 
   useEffect(() => {
     if (!ticking) return
-    if (myLeft <= 0) end('loss', 'TEMPO ESGOTADO')
-    else if (oppLeft <= 0) end('win', 'TEMPO DO OPONENTE ESGOTOU')
+    if (myLeft <= 0) end('loss', 'Tempo esgotado')
+    else if (oppLeft <= 0) end('win', 'Tempo do oponente esgotou')
   }, [ticking, myLeft, oppLeft, end])
 
   const lastSec = useRef(0)
@@ -503,7 +519,7 @@ export default function QuickChess({ start, settings, onFinish, onQuit }: GamePr
     [demo, spectator, ticking, turn, myColor, myLeft, game, selected, targets, legal, play, sound],
   )
 
-  // O relógio redesenha a tela 10x por segundo e `onSquare` muda junto (depende do tempo restante).
+  // O relógio redesenha a tela a cada segundo e `onSquare` muda junto (depende do tempo restante).
   // A cena 3D recebe uma função estável e só é refeita quando algo dela muda de verdade.
   const onSquareRef = useRef(onSquare)
   onSquareRef.current = onSquare
@@ -557,47 +573,49 @@ export default function QuickChess({ start, settings, onFinish, onQuit }: GamePr
     sound('click')
   }
 
+  // Com gráficos em automático, se o aparelho não der conta a cena desce para a qualidade baixa sozinha.
+  const autoQuality = !local.quality || local.quality === 'auto'
+  const dropQuality = useCallback(() => setQuality('low'), [])
+
   const saveLocal = (patch: Record<string, string>) => {
     setLocal((cur) => ({ ...cur, ...patch }))
     if (patch.quality) setQuality(resolveQuality(patch.quality))
     arcadePost({ action: 'settings', settings: patch }).catch(() => {})
   }
 
+  const sfxOn = () => saveLocal({ sfx: sfx ? 'off' : 'on' })
+
   const pairs: [string, string | undefined][] = []
   for (let i = 0; i < history.length; i += 2) pairs.push([history[i], history[i + 1]])
 
   const historyList = (
-    <ol className="space-y-0.5 font-mono text-[13px] dv-tabular">
-      {pairs.length === 0 && <li className="font-body text-[14px] italic text-dv-text-3">Nenhum lance ainda.</li>}
+    <ol className="xz-lances">
+      {pairs.length === 0 && <li className="xz-vazio">Nenhum lance ainda.</li>}
       {pairs.map(([w, b], i) => (
-        <li key={i} className={cn('grid grid-cols-[2rem_1fr_1fr] gap-1 px-1.5 py-0.5', i === pairs.length - 1 && 'bg-dv-ink-4/80 shadow-[inset_2px_0_0_var(--dv-gold)]')}>
-          <span className="text-dv-text-3">{i + 1}.</span>
-          <span className="text-dv-text">{w}</span>
-          <span className="text-dv-text-2">{b ?? ''}</span>
+        <li key={i} className={i === pairs.length - 1 ? 'on' : undefined}>
+          <i>{i + 1}.</i>
+          <span>{w}</span>
+          <span>{b ?? ''}</span>
         </li>
       ))}
     </ol>
   )
-
-  const optionBtn = (active: boolean) =>
-    cn(
-      'dv-focus min-h-11 border px-2.5 py-2 text-left font-display text-[12px] font-semibold uppercase tracking-[0.12em] transition-colors duration-[220ms]',
-      active ? 'border-dv-gold-bright bg-dv-ink-4 text-white shadow-[inset_0_-2px_0_var(--dv-amethyst)]' : 'border-dv-line-strong bg-dv-ink/60 text-dv-text-2 hover:border-dv-gold hover:text-dv-text',
-    )
+  /** Chat da mesa: o mesmo canal da partida de antes (ArcadeChat, memoizado), no lugar do chat do protótipo. */
+  const chatMesa = <ArcadeChat channel={chatChannel} className="xz-conversa" placeholder="Escreva para a mesa" emptyText="A mesa está em silêncio." />
 
   const statusText = demo
     ? ''
     : spectator
-    ? 'Modo espectador'
-    : running
-      ? animating
-        ? 'Combate…'
-        : turn === myColor
-          ? myLeft <= 0
-            ? 'Tempo esgotado…'
-            : 'Sua vez — toque numa peça'
-          : `Turno de ${start.opponent.name}`
-      : ''
+      ? 'Modo espectador'
+      : running
+        ? animating
+          ? 'Combate…'
+          : turn === myColor
+            ? myLeft <= 0
+              ? 'Tempo esgotado…'
+              : 'Sua vez · toque numa peça'
+            : `Turno de ${start.opponent.name}`
+        : ''
   const myTurn = running && !animating && turn === myColor && !spectator
   useEffect(() => {
     if (!myTurn) setPromo(null)
@@ -610,336 +628,349 @@ export default function QuickChess({ start, settings, onFinish, onQuit }: GamePr
   const resign = () => {
     setAskResign(false)
     if (online) act({ type: 'resign' })
-    else end('loss', 'VOCÊ DESISTIU')
+    else end('loss', 'Você desistiu')
   }
-  const plate = (side: Color) => ({
-    name: demo ? `Javali · ${side === 'w' ? 'brancas' : 'pretas'}` : side === myColor ? 'Você' : start.opponent.name,
-    court: side === 'w' ? 'Corte de Marfim' : 'Corte de Ônix',
-    color: side,
-    portrait: side === myColor ? playerPhoto : null,
-    ms: side === 'w' ? wLeft : bLeft,
-    captures: captures[side],
-    active: demo ? turn === side && !demoDone : ticking && turn === side,
-    mine: !demo && side === myColor,
-  })
+
+  /** Plaqueta de um lado (protótipo .xz-pl): rosto, nome, corte e material, relógio e régua. */
+  const plaqueta = (side: Color) => {
+    const ativo = demo ? turn === side && !demoDone : ticking && turn === side
+    const ms = side === 'w' ? wLeft : bLeft
+    const mine = !demo && side === myColor
+    const nome = demo ? `Javali · ${side === 'w' ? 'brancas' : 'pretas'}` : mine ? 'Você' : start.opponent.name
+    const perigo = ativo && ms <= 5000
+    const foto = mine ? playerPhoto : null
+    return (
+      <div className={['xz-pl', ativo && 'ativo', mine && 'eu', perigo && 'perigo'].filter(Boolean).join(' ')}>
+        <i className={`xz-pl-rosto ${side}`} aria-hidden="true">
+          {foto ? <img src={foto} alt="" /> : nome.trim().charAt(0).toUpperCase() || '?'}
+        </i>
+        <div className="xz-pl-nome">
+          <b>{nome}</b>
+          <small>
+            {side === 'w' ? 'Corte de Marfim' : 'Corte de Ônix'}
+            {captures[side] > 0 && <em> +{captures[side]}</em>}
+          </small>
+        </div>
+        <b className="xz-pl-rel" role="timer" aria-label={`Relógio de ${nome}`}>
+          {mmss(ms)}
+        </b>
+        <u className="xz-pl-regua" aria-hidden="true">
+          <s style={{ transform: `scaleX(${(ativo ? Math.max(0, Math.min(1, ms / CLOCK_MS)) : 1).toFixed(4)})` }} />
+        </u>
+      </div>
+    )
+  }
+  const opcao = (on: boolean) => (on ? 'chanfro xz-op on' : 'chanfro xz-op')
+  const alterna = (p: 'ajustes' | 'lances' | 'chat') => setPanel((cur) => (cur === p ? '' : p))
 
   return (
-    <GameFrame
-      chat={false}
-      title="Living Chess"
-      sub={`${demo ? 'Demonstração' : 'Ao vivo'} · #${String(start.seed % 1000).padStart(3, '0')}`}
-      accent={meta.accent}
+    <PartidaV2
+      className="xz"
+      label={meta.name}
       onQuit={onQuit}
       confirmQuit={online && !ending && room?.status !== 'finished' && room?.status !== 'cancelled'}
       connLost={lost}
-      top={
-        <div className="flex items-center">
-          <ChessIconButton icon={Eye} label="Modo espectador" active={spectator} onClick={() => setSpectator((s) => !s)} />
-          <ChessIconButton icon={MessageSquare} label="Chat da partida" active={panel === 'chat'} onClick={() => setPanel((p) => (p === 'chat' ? 'none' : 'chat'))} className="md:hidden" />
-          <ChessIconButton icon={Settings2} label="Configurações" active={panel === 'settings'} onClick={() => setPanel((p) => (p === 'settings' ? 'none' : 'settings'))} />
-        </div>
-      }
     >
-      <div className="relative flex min-h-0 flex-1">
-        <div className="relative flex min-h-0 flex-1 flex-col">
-          <ClockBackdrop danger={ticking && turn === myColor && myLeft <= 5000} tint={theme.glow} turnKey={`${turn}-${lastMove?.to ?? ''}`} />
-          {/* Oponente no alto, você embaixo: o tabuleiro fica entre as duas plaquetas. */}
-          <div className="relative z-20 shrink-0 px-3 pt-2.5">
-            <PlayerPlate side={plate(oppColor)} total={clockTotal} />
-          </div>
-          {demo && (
-            <div className="relative z-20 shrink-0 px-3 pt-2" aria-live="polite">
-              <div className="flex items-center gap-3 border border-dv-line-gold bg-[linear-gradient(180deg,rgba(28,28,31,0.94),rgba(14,14,16,0.94))] py-2 pl-2 pr-3 shadow-[0_10px_24px_rgba(0,0,0,0.5)]">
-                <JavaliPortrait pose={demoStep >= 0 ? DEMO[demoStep].pose : 'convite'} shape="round" className="size-12 shrink-0" />
-                <div className="min-w-0 flex-1">
-                  <p className="dv-label text-[10px] text-dv-gold">
-                    Javali · {demoStep >= 0 ? `lance ${demoStep + 1} de ${DEMO.length}` : 'demonstração'}
-                  </p>
-                  <p key={demoStep} className="mt-0.5 animate-dv-fade font-body text-[15px] leading-snug text-dv-text">
+      {({ sair }) => (
+        <>
+          <div className="xz-pc">
+            <div className="xz-central">
+              <ClockBackdrop danger={ticking && turn === myColor && myLeft <= 5000} tint={theme.glow} turnKey={`${turn}-${lastMove?.to ?? ''}`} quality={quality} />
+              <header className="xz-topo">
+                <button type="button" className="chanfro xz-ic" aria-label="Desistir e sair" title="Sair da partida" onClick={sair}>
+                  ×
+                </button>
+                <div className="xz-tit">
+                  <b>Living Chess</b>
+                  <small>{demo ? 'Demonstração' : 'Ao vivo'}</small>
+                </div>
+                <button
+                  type="button"
+                  className={spectator ? 'chanfro xz-ic on' : 'chanfro xz-ic'}
+                  aria-pressed={spectator}
+                  aria-label="Modo espectador"
+                  title="Modo espectador"
+                  onClick={() => setSpectator((s) => !s)}
+                >
+                  <img src={`${ARTE}/memory/s9.png`} alt="" />
+                </button>
+                <button
+                  type="button"
+                  className={panel === 'lances' ? 'chanfro xz-ic xz-so-cel on' : 'chanfro xz-ic xz-so-cel'}
+                  aria-pressed={panel === 'lances'}
+                  aria-label="Histórico de lances"
+                  title="Histórico de lances"
+                  onClick={() => alterna('lances')}
+                >
+                  <span aria-hidden="true">≡</span>
+                </button>
+                <button
+                  type="button"
+                  className={panel === 'chat' ? 'chanfro xz-ic xz-so-cel on' : 'chanfro xz-ic xz-so-cel'}
+                  aria-pressed={panel === 'chat'}
+                  aria-label="Chat da mesa"
+                  title="Chat da mesa"
+                  onClick={() => alterna('chat')}
+                >
+                  <span aria-hidden="true">✉</span>
+                </button>
+                <button
+                  type="button"
+                  className={panel === 'ajustes' ? 'chanfro xz-ic on' : 'chanfro xz-ic'}
+                  aria-pressed={panel === 'ajustes'}
+                  aria-label="Configurações"
+                  title="Configurações"
+                  onClick={() => alterna('ajustes')}
+                >
+                  <span aria-hidden="true">⚙</span>
+                </button>
+              </header>
+              {/* Oponente no alto, você embaixo: o tabuleiro fica entre as duas plaquetas. */}
+              <div className="xz-faixa">{plaqueta(oppColor)}</div>
+              {demo && (
+                <div className="xz-demo" aria-live="polite">
+                  <span className="xz-rosto" aria-hidden="true">
+                    <img src={`${ARTE}/npc/javali-${demoStep >= 0 ? DEMO[demoStep].pose : 'convite'}.png`} alt="" />
+                  </span>
+                  <p key={demoStep}>
+                    <small>Javali · {demoStep >= 0 ? `lance ${demoStep + 1} de ${DEMO.length}` : 'demonstração'}</small>
                     {demoStep >= 0 ? DEMO[demoStep].say : DEMO_INTRO}
                   </p>
                 </div>
-              </div>
-            </div>
-          )}
-          <div
-            className="relative min-h-0 flex-1 touch-none"
-            onPointerDown={onPointerDown}
-            onPointerMove={onPointerMove}
-            onPointerUp={onPointerUp}
-            onPointerCancel={onPointerUp}
-            onWheel={(e) => {
-              cam.current.zoom = Math.min(1.2, Math.max(0.75, cam.current.zoom + e.deltaY * 0.0008))
-            }}
-          >
-            <Canvas
-              shadows="soft"
-              dpr={quality === 'low' ? 1 : quality === 'medium' ? [1, 1.5] : [1, 2]}
-              camera={{ position: [0, 9, 9], fov: 40 }}
-              gl={{ antialias: quality !== 'low', alpha: true, powerPreference: 'high-performance' }}
-              onPointerMissed={clearSelection}
-              onCreated={({ gl, setDpr }) => {
-                // Renderizador por software (SwiftShader/llvmpipe): qualidade baixa e DPR 0,75, como as cenas do kit.
-                try {
-                  const ctx = gl.getContext()
-                  const ext = ctx.getExtension('WEBGL_debug_renderer_info')
-                  const name = ext ? String(ctx.getParameter(ext.UNMASKED_RENDERER_WEBGL)) : ''
-                  if (/swiftshader|llvmpipe|software/i.test(name)) {
-                    setQuality('low')
-                    setDpr(0.75)
-                  }
-                } catch {}
-              }}
-            >
-              <LivingScene
-                units={units}
-                theme={theme}
-                set={set}
-                quality={quality}
-                animRef={animRef}
-                mateRef={mateRef}
-                cam={cam}
-                selected={selected}
-                targets={targets}
-                captureTargets={captureTargets}
-                lastFrom={lastMove?.from ?? null}
-                lastTo={lastMove?.to ?? null}
-                checkSq={checkSq}
-                onSquare={onSquareStable}
-              />
-            </Canvas>
-
-            {statusText && (
-              <p
-                key={statusText}
-                className={cn(
-                  'pointer-events-none absolute inset-x-0 top-2 z-20 flex animate-dv-fade items-center justify-center gap-2 text-center',
-                  myTurn ? 'text-white' : 'text-dv-text-3',
-                )}
-                role="status"
-              >
-                <SigilStar className={cn('size-2.5', myTurn ? 'text-dv-amethyst' : 'text-dv-gold/60')} />
-                <span className="dv-label text-[10px] tracking-[0.2em] [text-shadow:0_1px_6px_#000]">{statusText}</span>
-                <SigilStar className={cn('size-2.5', myTurn ? 'text-dv-amethyst' : 'text-dv-gold/60')} />
-              </p>
-            )}
-
-            {promo && (
+              )}
               <div
-                className="bg-[linear-gradient(180deg,#1c1c1f,#0e0e10)] absolute inset-x-3 bottom-14 z-30 mx-auto max-w-xs animate-dv-rise border border-dv-line-gold p-3 shadow-[0_10px_24px_rgba(0,0,0,0.5)]"
-                role="dialog"
-                aria-label="Promoção do peão"
+                className="xz-cena"
+                onPointerDown={onPointerDown}
+                onPointerMove={onPointerMove}
+                onPointerUp={onPointerUp}
+                onPointerCancel={onPointerUp}
+                onWheel={(e) => {
+                  cam.current.zoom = Math.min(1.2, Math.max(0.75, cam.current.zoom + e.deltaY * 0.0008))
+                }}
               >
-                <p className="dv-label mb-2 text-[10px] text-dv-gold">Promover o peão a</p>
-                <div className="grid grid-cols-4 gap-1.5">
-                  {PROMO_PIECES.map(([p, name, glyph]) => {
-                    const m = promo.find((x) => x.promotion === p)
-                    if (!m) return null
-                    return (
-                      <button key={p} type="button" onClick={() => choosePromo(m)} className={cn(optionBtn(p === 'q'), 'flex flex-col items-center gap-1 px-1 text-center tracking-[0.06em]')}>
-                        <span aria-hidden="true" className="font-serif text-[22px] leading-none">
-                          {glyph}
-                        </span>
-                        {name}
-                      </button>
-                    )
-                  })}
+                <Canvas
+                  shadows="percentage"
+                  frameloop="demand"
+                  dpr={quality === 'low' ? 1 : quality === 'medium' ? [1, 1.5] : [1, 2]}
+                  camera={{ position: [0, 9, 9], fov: 40 }}
+                  gl={{ antialias: quality !== 'low', alpha: true, powerPreference: 'high-performance' }}
+                  onPointerMissed={clearSelection}
+                  onCreated={({ gl, setDpr }) => {
+                    // Renderizador por software (SwiftShader/llvmpipe): qualidade baixa e DPR 0,75, como as cenas do kit.
+                    try {
+                      const ctx = gl.getContext()
+                      const ext = ctx.getExtension('WEBGL_debug_renderer_info')
+                      const name = ext ? String(ctx.getParameter(ext.UNMASKED_RENDERER_WEBGL)) : ''
+                      if (/swiftshader|llvmpipe|software/i.test(name)) {
+                        setQuality('low')
+                        setDpr(0.75)
+                      }
+                    } catch {}
+                  }}
+                >
+                  <LivingScene
+                    units={units}
+                    theme={theme}
+                    set={set}
+                    quality={quality}
+                    animRef={animRef}
+                    mateRef={mateRef}
+                    cam={cam}
+                    selected={selected}
+                    targets={targets}
+                    captureTargets={captureTargets}
+                    lastFrom={lastMove?.from ?? null}
+                    lastTo={lastMove?.to ?? null}
+                    checkSq={checkSq}
+                    onSquare={onSquareStable}
+                    onSlow={autoQuality ? dropQuality : undefined}
+                  />
+                </Canvas>
+                {statusText && (
+                  <p key={statusText} className={myTurn ? 'xz-estado on' : 'xz-estado'} role="status">
+                    {statusText}
+                  </p>
+                )}
+                <div className="xz-reacoes" aria-hidden="true">
+                  {reactions.map((r) => (
+                    <img key={r.id} src={r.img} alt="" style={{ left: `${r.x}%` }} />
+                  ))}
                 </div>
-                <button type="button" onClick={() => setPromo(null)} className={cn(optionBtn(false), 'mt-1.5 w-full text-center')}>
-                  Cancelar
-                </button>
+                <div className="mr-pops" aria-live="polite">
+                  {pops.map((p) => (
+                    <p key={p.id} className={TOM[p.tone] ? `mr-pop ${TOM[p.tone]}` : 'mr-pop'}>
+                      {p.text}
+                    </p>
+                  ))}
+                </div>
+                {promo && (
+                  <div className="xz-promo" role="dialog" aria-label="Promoção do peão">
+                    <h4>Promover o peão a</h4>
+                    <div className="xz-ops q4">
+                      {PROMO_PIECES.map(([p, name, glyph]) => {
+                        const m = promo.find((x) => x.promotion === p)
+                        if (!m) return null
+                        return (
+                          <button key={p} type="button" className={opcao(p === 'q')} onClick={() => choosePromo(m)}>
+                            <span aria-hidden="true">{glyph}</span>
+                            {name}
+                          </button>
+                        )
+                      })}
+                    </div>
+                    <button type="button" className="chanfro xz-op xz-larga" onClick={() => setPromo(null)}>
+                      Cancelar
+                    </button>
+                  </div>
+                )}
               </div>
-            )}
-
-            <ChessIconButton icon={RotateCcw} label="Resetar câmera" onClick={resetCam} className="absolute bottom-2 left-2 z-20 border border-dv-line-strong bg-dv-ink/70 backdrop-blur-sm" />
-            <ChessIconButton
-              icon={History}
-              label="Histórico de lances"
-              active={panel === 'history'}
-              onClick={() => setPanel((p) => (p === 'history' ? 'none' : 'history'))}
-              className="absolute bottom-2 right-2 z-20 border border-dv-line-strong bg-dv-ink/70 backdrop-blur-sm lg:hidden"
-            />
-
-            <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20 h-40 overflow-hidden" aria-hidden="true">
-              {reactions.map((x) => (
-                <span key={x.id} className="devo-react absolute bottom-2 text-2xl" style={{ left: `${x.x}%` }}>
-                  {x.e}
-                </span>
-              ))}
+              <div className="xz-faixa">{plaqueta(myColor)}</div>
+              <footer className="xz-base">
+                <div className="xz-bt-reacoes">
+                  {REACOES.map((r) => (
+                    <button key={r.id} type="button" className="chanfro" aria-label={`Reagir: ${r.nome}`} onClick={() => react(r.img)}>
+                      <img src={r.img} alt="" />
+                    </button>
+                  ))}
+                </div>
+                {demo ? (
+                  <button type="button" className="chanfro xz-sair" onClick={onQuit}>
+                    Sair
+                  </button>
+                ) : (
+                  <button type="button" className="chanfro xz-sair perigo" disabled={!running || spectator} onClick={() => (online ? setAskResign(true) : resign())}>
+                    Desistir
+                  </button>
+                )}
+              </footer>
+              {panel && (
+                <div
+                  className={panel === 'chat' ? 'xz-painel fundo conversa' : 'xz-painel fundo'}
+                  role="dialog"
+                  aria-label={panel === 'lances' ? 'Lances' : panel === 'chat' ? 'Chat da mesa' : 'Configurações'}
+                >
+                  {panel === 'lances' && (
+                    <>
+                      <h4>Lances</h4>
+                      {historyList}
+                    </>
+                  )}
+                  {panel === 'chat' && (
+                    <>
+                      <h4>Chat da mesa</h4>
+                      {chatMesa}
+                    </>
+                  )}
+                  {panel === 'ajustes' && (
+                    <>
+                      <h4>Tabuleiro</h4>
+                      <div className="xz-ops">
+                        {BOARD_THEMES.map((t) => (
+                          <button key={t.id} type="button" className={opcao(theme.id === t.id)} aria-pressed={theme.id === t.id} onClick={() => saveLocal({ chessTheme: t.id })}>
+                            <span className="xz-am" aria-hidden="true">
+                              <i style={{ background: t.light }} />
+                              <i style={{ background: t.dark }} />
+                            </span>
+                            {t.name}
+                          </button>
+                        ))}
+                      </div>
+                      <h4>Exércitos</h4>
+                      <div className="xz-ops">
+                        {PIECE_SETS.map((s) => (
+                          <button key={s.id} type="button" className={opcao(set.id === s.id)} aria-pressed={set.id === s.id} onClick={() => saveLocal({ pieceSet: s.id })}>
+                            <span className="xz-am" aria-hidden="true">
+                              <i style={{ background: s.w.body }} />
+                              <i style={{ background: s.b.body }} />
+                            </span>
+                            {s.name}
+                          </button>
+                        ))}
+                      </div>
+                      <h4>Gráficos</h4>
+                      <div className="xz-ops q4">
+                        {[
+                          ['auto', 'Auto'],
+                          ['low', 'Baixo'],
+                          ['medium', 'Médio'],
+                          ['high', 'Alto'],
+                        ].map(([k, l]) => (
+                          <button key={k} type="button" className={opcao((local.quality ?? 'auto') === k)} aria-pressed={(local.quality ?? 'auto') === k} onClick={() => saveLocal({ quality: k })}>
+                            {l}
+                          </button>
+                        ))}
+                      </div>
+                      <h4>Som</h4>
+                      <button type="button" className={`${opcao(sfx)} xz-larga xz-som`} aria-pressed={sfx} onClick={sfxOn}>
+                        SFX {sfx ? 'ON' : 'OFF'}
+                      </button>
+                      <button type="button" className="chanfro xz-op xz-larga" onClick={resetCam}>
+                        Resetar câmera
+                      </button>
+                      <p className="r-sub">Arraste para girar a mesa (ela volta sozinha ao seu assento). Pinça ou roda do mouse ajustam a distância.</p>
+                    </>
+                  )}
+                </div>
+              )}
+              {!demo && !running && !finished.current && gateOpen && (
+                <Contagem
+                  onDone={() => {
+                    turnStart.current = Date.now()
+                    setNow(Date.now())
+                    setRunning(true)
+                  }}
+                />
+              )}
+              {demo && demoDone && (
+                <div className="xz-fim" role="status">
+                  <small>Xeque-mate em {DEMO.length} lances</small>
+                  <h2>Demonstração concluída</h2>
+                  <p>Na mesa de verdade você enfrenta outro jogador, com dez minutos de relógio para cada um. Toque em “Jogar” no cartaz do Living Chess para entrar na fila.</p>
+                  <button type="button" className="r-bt chanfro s-forte s-larga" onClick={onQuit}>
+                    Voltar à mesa
+                  </button>
+                  <button type="button" className="r-bt chanfro s-larga" onClick={replayDemo}>
+                    Rever
+                  </button>
+                </div>
+              )}
+              {ending && (
+                <div className="xz-fim" role="status">
+                  <small>{ending.reason}</small>
+                  <h2 className={ending.result === 'win' ? 'vitoria' : ending.result === 'loss' && online ? 'derrota' : undefined}>
+                    {ending.result === 'win' ? 'Vitória' : ending.result === 'loss' ? 'Derrota' : 'Empate'}
+                  </h2>
+                  <p>{ending.result === 'draw' ? 'Ninguém cai hoje' : `${ending.result === 'win' ? 'Você' : start.opponent.name} venceu`}</p>
+                  <dl className="xz-fim-dados">
+                    {(
+                      [
+                        ['Lances', history.length],
+                        ['Capturas', captures[myColor]],
+                        ['Tempo', `${Math.ceil(myLeft / 1000)}s`],
+                        ['Melhor', bestCapture.current ? `+${bestCapture.current}` : '—'],
+                      ] as const
+                    ).map(([k, v]) => (
+                      <div key={k}>
+                        <dt>{k}</dt>
+                        <dd>{v}</dd>
+                      </div>
+                    ))}
+                  </dl>
+                  <b className="xz-fim-placar">+{ending.score} score</b>
+                </div>
+              )}
             </div>
-
-            {panel === 'history' && (
-              <div className="bg-[linear-gradient(180deg,#1c1c1f,#0e0e10)] absolute inset-x-3 bottom-14 z-30 max-h-[55%] animate-dv-rise overflow-y-auto border border-dv-line-gold p-3 lg:hidden">
-                <p className="dv-label mb-2 text-[10px] text-dv-gold">Lances</p>
-                {historyList}
-              </div>
-            )}
-
-            <aside className="bg-[linear-gradient(180deg,#1c1c1f,#0e0e10)] absolute left-3 top-10 z-20 hidden max-h-[60%] w-48 flex-col border border-dv-line-gold p-3 lg:flex" aria-label="Histórico de lances">
-              <p className="dv-label mb-2 text-[10px] text-dv-gold">Movimentos</p>
-              <div className="min-h-0 flex-1 overflow-y-auto">{historyList}</div>
+            <aside className="xz-lado fundo" aria-label="Lances e chat">
+              <h4>Movimentos</h4>
+              {historyList}
+              <h4>Chat da mesa</h4>
+              {chatMesa}
             </aside>
           </div>
-          <div className="relative z-20 shrink-0 px-3 pb-1">
-            <PlayerPlate side={plate(myColor)} total={clockTotal} />
-          </div>
-
-          {panel === 'settings' && (
-            <div className="bg-[linear-gradient(180deg,#1c1c1f,#0e0e10)] absolute right-3 top-2 z-40 max-h-[calc(100%-1rem)] w-[min(19rem,calc(100%-1.5rem))] animate-dv-rise overflow-y-auto border border-dv-line-gold p-4">
-              <p className="dv-label mb-2 text-[10px] text-dv-gold">Tabuleiro</p>
-              <div className="grid grid-cols-3 gap-1.5">
-                {BOARD_THEMES.map((t) => (
-                  <button key={t.id} type="button" aria-pressed={theme.id === t.id} onClick={() => saveLocal({ chessTheme: t.id })} className={cn(optionBtn(theme.id === t.id), 'flex flex-col items-start gap-1.5')}>
-                    <span className="flex shrink-0 border border-dv-gold/60" aria-hidden="true">
-                      <span className="size-3.5" style={{ background: t.light }} />
-                      <span className="size-3.5" style={{ background: t.dark }} />
-                    </span>
-                    {t.name}
-                  </button>
-                ))}
-              </div>
-              <p className="dv-label mb-2 mt-4 text-[10px] text-dv-gold">Exércitos</p>
-              <div className="grid gap-1.5">
-                {PIECE_SETS.map((s) => (
-                  <button key={s.id} type="button" aria-pressed={set.id === s.id} onClick={() => saveLocal({ pieceSet: s.id })} className={cn(optionBtn(set.id === s.id), 'flex items-center gap-2.5')}>
-                    <span className="flex shrink-0 gap-0.5" aria-hidden="true">
-                      <span className="size-3.5 rotate-45 border border-dv-gold/60" style={{ background: s.w.body }} />
-                      <span className="size-3.5 rotate-45 border border-dv-gold/60" style={{ background: s.b.body }} />
-                    </span>
-                    {s.name}
-                  </button>
-                ))}
-              </div>
-              <p className="dv-label mb-2 mt-4 text-[10px] text-dv-gold">Gráficos</p>
-              <div className="grid grid-cols-4 gap-1.5">
-                {[
-                  ['auto', 'Auto'],
-                  ['low', 'Baixo'],
-                  ['medium', 'Médio'],
-                  ['high', 'Alto'],
-                ].map(([k, l]) => (
-                  <button key={k} type="button" aria-pressed={(local.quality ?? 'auto') === k} onClick={() => saveLocal({ quality: k })} className={cn(optionBtn((local.quality ?? 'auto') === k), 'px-1 text-center tracking-[0.06em]')}>
-                    {l}
-                  </button>
-                ))}
-              </div>
-              <p className="dv-label mb-2 mt-4 text-[10px] text-dv-gold">Som</p>
-              <div className="grid grid-cols-2 gap-1.5">
-                <button type="button" aria-pressed={sfx} onClick={() => saveLocal({ sfx: sfx ? 'off' : 'on' })} className={cn(optionBtn(sfx), 'text-center')}>
-                  SFX {sfx ? 'ON' : 'OFF'}
-                </button>
-                <button type="button" onClick={resetCam} className={cn(optionBtn(false), 'text-center')}>
-                  Resetar câmera
-                </button>
-              </div>
-              <p className="mt-4 font-body text-[14px] leading-snug text-dv-text-3">Arraste para girar a mesa (ela volta sozinha ao seu assento). Pinça ou roda do mouse ajustam a distância.</p>
-            </div>
-          )}
-
-          {demo && demoDone && (
-            <div className="absolute inset-0 z-40 grid place-items-center bg-dv-ink/70 p-6 backdrop-blur-[2px]" role="status">
-              <div className="flex w-full max-w-sm animate-dv-cut-in flex-col items-center gap-4 text-center">
-                <p className="dv-label text-[10px] text-dv-gold">Xeque-mate em {DEMO.length} lances</p>
-                <h2 className="-skew-x-[8deg] font-impact text-[44px] font-semibold uppercase leading-none tracking-[0.04em] text-white">Demonstração concluída</h2>
-                <p className="font-body text-[16px] leading-relaxed text-dv-text-2">Na mesa de verdade você enfrenta outro jogador, com dez minutos de relógio para cada um. Toque em “Jogar” no cartaz do Living Chess para entrar na fila.</p>
-                <div className="flex w-full flex-col gap-2">
-                  <Button variant="primary" block onClick={onQuit}>
-                    Voltar à mesa
-                  </Button>
-                  <Button variant="secondary" block onClick={replayDemo}>
-                    Rever
-                  </Button>
-                </div>
-              </div>
-            </div>
-          )}
-          {ending && (
-            <div className="absolute inset-0 z-40 grid place-items-center bg-dv-ink/70 p-6 backdrop-blur-[2px]" role="status">
-              <div className="flex w-full max-w-sm animate-dv-cut-in flex-col items-center text-center">
-                <p className="dv-label text-[10px] text-dv-gold">{ending.reason}</p>
-                <span aria-hidden="true" className="mt-3 h-px w-28 bg-gradient-to-r from-transparent via-dv-gold/70 to-transparent" />
-                <h2
-                  className={cn(
-                    'mt-3 font-impact text-[56px] font-semibold uppercase leading-none tracking-[0.06em]',
-                    ending.result === 'win' ? 'dv-brass-text' : ending.result === 'loss' && online ? 'text-dv-blood-text' : 'text-white',
-                  )}
-                >
-                  {ending.result === 'win' ? 'Vitória' : ending.result === 'loss' ? 'Derrota' : 'Empate'}
-                </h2>
-                <p className="dv-label mt-2 text-[10px] text-dv-text-2">
-                  {ending.result === 'draw' ? 'Ninguém cai hoje' : `${ending.result === 'win' ? 'Você' : start.opponent.name} venceu`}
-                </p>
-                <dl className="bg-[linear-gradient(180deg,#1c1c1f,#0e0e10)] mt-5 grid w-full grid-cols-4 gap-1 border border-dv-line-gold px-2 py-3">
-                  {(
-                    [
-                      ['Lances', history.length],
-                      ['Capturas', captures[myColor]],
-                      ['Tempo', `${Math.ceil(myLeft / 1000)}s`],
-                      ['Melhor', bestCapture.current ? `+${bestCapture.current}` : '—'],
-                    ] as const
-                  ).map(([k, v]) => (
-                    <div key={k} className="flex flex-col items-center gap-1">
-                      <dt className="dv-label text-[10px] tracking-[0.12em] text-dv-text-3">{k}</dt>
-                      <dd className="font-impact text-[22px] font-semibold leading-none text-white dv-tabular">{v}</dd>
-                    </div>
-                  ))}
-                </dl>
-                <p className="mt-4 font-impact text-[20px] font-semibold tracking-[0.08em] text-dv-gold-bright dv-tabular">+{ending.score} SCORE</p>
-              </div>
-            </div>
-          )}
-        </div>
-
-        <aside
-          className={cn(
-            'flex-col border-dv-line',
-            panel === 'chat' ? 'bg-[linear-gradient(180deg,#1c1c1f,#0e0e10)] absolute inset-x-3 bottom-3 top-16 z-30 flex border border-dv-line-gold p-3 md:static md:inset-auto md:z-auto' : 'hidden md:flex',
-            'md:w-64 md:shrink-0 md:border-0 md:border-l md:bg-dv-ink-2/90 md:p-4 lg:w-72 xl:w-80',
-          )}
-          aria-label="Chat da partida"
-        >
-          <p className="dv-label mb-3 text-[10px] text-dv-gold">Chat da mesa</p>
-          <ArcadeChat channel={chatChannel} className="flex-1" />
-        </aside>
-      </div>
-
-      <div className="relative z-10 flex shrink-0 items-center gap-1 border-t border-dv-line bg-dv-ink/80 px-2 pb-[max(env(safe-area-inset-bottom),8px)] pt-1.5">
-        <div className="flex">
-          {REACTIONS.map((e) => (
-            <button key={e} type="button" onClick={() => react(e)} className="dv-focus grid size-11 place-items-center text-[20px] opacity-75 grayscale-[0.35] transition hover:scale-110 hover:opacity-100 hover:grayscale-0 active:scale-95" aria-label={`Reagir ${e}`}>
-              {e}
-            </button>
-          ))}
-        </div>
-        {demo ? (
-          <Button variant="secondary" size="sm" className="ml-auto" onClick={onQuit}>
-            Sair
-          </Button>
-        ) : (
-          <Button
-            variant="danger"
-            size="sm"
-            className="ml-auto"
-            disabled={!running || spectator}
-            onClick={() => (online ? setAskResign(true) : resign())}
-          >
-            Desistir
-          </Button>
-        )}
-      </div>
-      {askResign && online && !finished.current && <QuitConfirm onCancel={() => setAskResign(false)} onConfirm={resign} />}
-
-      <PopLayer pops={pops} />
-      {!demo && !running && !finished.current && !gateOpen && <WaitingStart name={start.opponent.name} />}
-      {!demo && !running && !finished.current && gateOpen && (
-        <Countdown321
-          onDone={() => {
-            turnStart.current = Date.now()
-            setNow(Date.now())
-            setRunning(true)
-          }}
-        />
+          {!demo && !running && !finished.current && !gateOpen && <Sincronizando nome={start.opponent.name} />}
+          {askResign && online && !finished.current && <Desistir onCancel={() => setAskResign(false)} onConfirm={resign} />}
+        </>
       )}
-    </GameFrame>
+    </PartidaV2>
   )
 }

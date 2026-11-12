@@ -61,6 +61,9 @@ export function JogosApp() {
   const { curtain, run } = useCurtain()
   const raiz = useRef<HTMLDivElement>(null)
   useArcadeAmbience(!!running && !running.finish, raiz)
+  /** No v2 a partida abre dentro da janela da Sala (como no protótipo); fora dele, na tela inteira. */
+  const [jan, setJan] = useState<HTMLElement | null>(null)
+  useEffect(() => setJan((raiz.current?.closest('.jan') as HTMLElement | null) ?? null), [])
   const { data, error, mutate } = useSWR<Dashboard>(arcadeKey('dashboard'), arcadeFetcher, {
     refreshInterval: 30_000,
     onSuccess: (d) => applyTime(d),
@@ -295,6 +298,17 @@ export function JogosApp() {
         {curtain && createPortal(<Curtain state={curtain} />, document.body)}
 
         {running &&
+          !running.finish &&
+          !running.error &&
+          createPortal(
+            <div className={cn('v2-partida', !jan && 'solta')}>
+              <GameRunner run={running} settings={(data?.me.settings ?? {}) as Record<string, string>} onFinish={finish} onQuit={quit} />
+            </div>,
+            jan ?? document.body,
+          )}
+
+        {running &&
+          (running.finish || running.error) &&
           createPortal(
             <div className="fixed inset-0 z-[80] bg-dv-ink">
               {running.finish ? (
@@ -309,9 +323,7 @@ export function JogosApp() {
                     </Button>
                   </div>
                 </div>
-              ) : (
-                <GameRunner run={running} settings={(data?.me.settings ?? {}) as Record<string, string>} onFinish={finish} onQuit={quit} />
-              )}
+              ) : null}
             </div>,
             document.body,
           )}

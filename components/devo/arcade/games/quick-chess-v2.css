@@ -1,0 +1,140 @@
+/* Living Chess no v2: só o que o protótipo não tinha. O resto (.xz*) vem de components/v2/os.css como está.
+   - foto do jogador na plaqueta, escolha da peça na promoção, números no fim da partida;
+   - chat da mesa de verdade (ArcadeChat) no lugar do chat simulado do protótipo. */
+
+/* foto do jogador no lugar da inicial */
+.xz-pl-rosto img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* promoção do peão: caixa de bronze sobre o tabuleiro, acima das reações */
+.xz-promo {
+  position: absolute;
+  z-index: 3;
+  left: 50%;
+  bottom: 8px;
+  translate: -50% 0;
+  width: min(320px, calc(100% - 8px));
+  padding: 10px;
+  background: #141210;
+  border: 2px solid #7a6233;
+  box-shadow: 5px 5px 0 #000;
+  animation: mr-pop 0.14s steps(3);
+}
+.xz-promo .xz-op {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+}
+/* glifo de texto das peças (VT323 não tem os símbolos de xadrez) */
+.xz-promo .xz-op span {
+  font: 400 28px/1 'Segoe UI Symbol', 'Noto Sans Symbols 2', 'DejaVu Sans', serif;
+}
+
+/* som: a única opção a mais em relação ao painel do protótipo */
+.xz-som {
+  margin-top: 0;
+}
+
+/* fim da partida: os quatro números e o placar, no estilo das caixas de bronze */
+.xz-fim h2.vitoria {
+  color: #f2cf7a;
+}
+.xz-fim h2.derrota {
+  color: #ff6a5a;
+}
+.xz-fim-dados {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 4px;
+  width: min(340px, 100%);
+  margin: 0;
+  padding: 8px 4px;
+  background: #141210;
+  border: 2px solid #7a6233;
+  box-shadow: 5px 5px 0 #000;
+}
+.xz-fim-dados div {
+  display: grid;
+  justify-items: center;
+  gap: 4px;
+}
+.xz-fim-dados dt {
+  font-size: 16px;
+  color: #a89a80;
+}
+.xz-fim-dados dd {
+  margin: 0;
+  font: 400 30px/1 var(--relogio);
+  color: #efe6d8;
+}
+.xz-fim-placar {
+  margin-top: 6px;
+  font: 400 30px/1 var(--relogio);
+  color: #f2cf7a;
+}
+
+/* chat da mesa (ArcadeChat): campo e botão vestidos como no protótipo */
+.xz-conversa {
+  min-height: 0;
+}
+.xz-conversa input {
+  min-height: 44px;
+  padding: 0 8px;
+  background: #0b0a08;
+  border: 2px solid #3a2f1c;
+  border-radius: 0;
+  color: #efe6d8;
+  font: inherit;
+}
+.xz-conversa input:focus {
+  border-color: #d9b25c;
+  outline: none;
+}
+.xz-conversa form button {
+  border-radius: 0;
+}
+
+/* no painel do celular o chat ocupa a altura toda e rola por dentro */
+.xz-painel.conversa {
+  display: flex;
+  flex-direction: column;
+  height: calc(100% - 64px);
+}
+.xz-painel.conversa .xz-conversa {
+  flex: 1;
+}
+
+/* na coluna do computador: lances em cima (rolam se crescerem), chat embaixo ocupando o resto */
+@container (min-width: 760px) {
+  .xz-pc > .xz-lado {
+    display: flex;
+    flex-direction: column;
+  }
+}
+@media (min-width: 900px) {
+  .xz-pc > .xz-lado {
+    display: flex;
+    flex-direction: column;
+  }
+}
+.xz-lado > .xz-lances {
+  flex: none;
+  max-height: 45%;
+  overflow: auto;
+}
+.xz-lado > .xz-conversa {
+  flex: 1;
+  min-height: 180px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .xz-promo {
+    animation: none;
+  }
+}

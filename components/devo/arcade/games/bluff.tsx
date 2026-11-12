@@ -1,7 +1,8 @@
 'use client'
 
-import './bluff.css'
-import { type CSSProperties, memo, useCallback, useEffect, useId, useLayoutEffect, useMemo, useRef, useState } from 'react'
+import './bluff-v2.css'
+import { type CSSProperties, type ReactNode, memo, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
+import { useMuted } from '@/components/devo/hooks'
 import type { GameProps } from '@/lib/devo/arcade/client'
 import {
   BLUFF_BULLETS,
@@ -22,41 +23,30 @@ import {
   bluffView,
 } from '@/lib/devo/arcade/bluff'
 import { rng, type Side } from '@/lib/devo/arcade/games'
-import { playSfx } from '@/lib/devo/audio'
-import { cn } from '@/lib/utils'
-import { Countdown321, GameFrame, WaitingStart, vibrate } from '../game-hud'
+import { playSfx, setMuted, unlockAudio } from '@/lib/devo/audio'
+import { type PopTone, usePops, vibrate } from '../game-hud'
 import { roomOutcome, useOnlineGate, useRoom } from '../use-room'
+import { PartidaV2, Sincronizando } from '../v2-partida'
 
-/** Paleta do mármore: aço champanhe no metal, ametista no que é seu/ativo, rubi só no alerta. */
-const ACCENT = '#bab09f'
-const OPP_COLOR = '#bab09f'
-const RUBY = '#ff6670'
-const SUIT_NAMES = ['espadas', 'copas', 'ouros', 'paus']
+/*
+ * Blefe no visual do v2 (protótipo aprovado: docs/redesign/v2/kit3/os-blefe.js, estilo em components/v2/os.css).
+ * A partida acontece na mesa do Javali, que reage com as próprias expressões; o tambor de três balas é o centro
+ * da revelação; o histórico fica escondido num botão. Regras, bot, servidor e pontuação são os do jogo
+ * (lib/devo/arcade/bluff.ts). Leve: cada carta é um botão só (folha única de imagens, sem SVG), a mão é memoizada
+ * e o relógio do turno só redesenha quando o segundo muda.
+ */
 
-const SUIT_PATHS = [
-  'M50 6C50 6 10 38 10 62c0 14 10 22 22 22 8 0 14-4 16-8-1 10-4 16-10 18h24c-6-2-9-8-10-18 2 4 8 8 16 8 12 0 22-8 22-22C90 38 50 6 50 6z',
-  'M50 90C20 64 8 48 8 31 8 17 19 8 31 8c9 0 16 5 19 12 3-7 10-12 19-12 12 0 23 9 23 23 0 17-12 33-42 59z',
-  'M50 4 88 50 50 96 12 50z',
-  'M50 8c-10 0-17 7-17 16 0 6 3 11 7 14-4-2-7-3-11-3-10 0-18 7-18 17s8 17 18 17c8 0 14-4 18-9-1 12-4 22-11 30h28c-7-8-10-18-11-30 4 5 10 9 18 9 10 0 18-7 18-17s-8-17-18-17c-4 0-7 1-11 3 4-3 7-8 7-14 0-9-7-16-17-16z',
-]
+const ARTE = '/v2/art/os/blefe'
+const MESA = '/v2/art/os/jogos'
+const NAIPES = ['espadas', 'copas', 'ouros', 'paus']
+/** Folha cartas.png: cada carta tem 39×64 px na arte original. */
+const CW = 39
+const CH = 64
+/** tons dos avisos do HUD → classes do protótipo */
+const TOM: Record<PopTone, string> = { gold: '', amethyst: 'violeta', red: 'perigo', white: 'neutro' }
 
-const PIPS: Record<number, [number, number][]> = {
-  0: [[0.5, 0.5]],
-  1: [[0.5, 0.2], [0.5, 0.8]],
-  2: [[0.5, 0.2], [0.5, 0.5], [0.5, 0.8]],
-  3: [[0.32, 0.2], [0.68, 0.2], [0.32, 0.8], [0.68, 0.8]],
-  4: [[0.32, 0.2], [0.68, 0.2], [0.5, 0.5], [0.32, 0.8], [0.68, 0.8]],
-  5: [[0.32, 0.2], [0.68, 0.2], [0.32, 0.5], [0.68, 0.5], [0.32, 0.8], [0.68, 0.8]],
-  6: [[0.32, 0.2], [0.68, 0.2], [0.5, 0.35], [0.32, 0.5], [0.68, 0.5], [0.32, 0.8], [0.68, 0.8]],
-  7: [[0.32, 0.2], [0.68, 0.2], [0.5, 0.35], [0.32, 0.5], [0.68, 0.5], [0.5, 0.65], [0.32, 0.8], [0.68, 0.8]],
-  8: [[0.32, 0.18], [0.68, 0.18], [0.32, 0.39], [0.68, 0.39], [0.5, 0.5], [0.32, 0.61], [0.68, 0.61], [0.32, 0.82], [0.68, 0.82]],
-  9: [[0.32, 0.18], [0.68, 0.18], [0.5, 0.29], [0.32, 0.39], [0.68, 0.39], [0.32, 0.61], [0.68, 0.61], [0.5, 0.71], [0.32, 0.82], [0.68, 0.82]],
-}
-
-/** Verso da carta DEVO (mesma linguagem do verso de Cartas): mármore negro, treliça de losangos em aço, medalhão com a estrela. */
-const BACK_SVG =
-  '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 88"><defs><linearGradient id="m" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f4efe6"/><stop offset=".22" stop-color="#9a9184"/><stop offset=".42" stop-color="#ece5d8"/><stop offset=".64" stop-color="#5d564c"/><stop offset=".84" stop-color="#d8d0c2"/><stop offset="1" stop-color="#f4efe6"/></linearGradient><radialGradient id="g" cx="50%" cy="45%" r="62%"><stop offset="0" stop-color="#2c2c31"/><stop offset="1" stop-color="#0e0e10"/></radialGradient><pattern id="p" width="9" height="15.6" patternUnits="userSpaceOnUse"><path d="M4.5 0 9 7.8 4.5 15.6 0 7.8z" fill="none" stroke="#a59d90" stroke-width=".35"/></pattern><radialGradient id="k" cx="50%" cy="50%" r="55%"><stop offset=".35" stop-color="#fff"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient><mask id="q"><rect width="60" height="88" fill="url(#k)"/></mask></defs><rect width="60" height="88" rx="4" fill="url(#m)"/><rect x="1.4" y="1.4" width="57.2" height="85.2" rx="3" fill="url(#g)"/><path d="M8 30c8-3 14 6 22 2s14-9 24-4M6 62c10 2 16-6 26-2s14 6 22 3" fill="none" stroke="#8f8e8b" stroke-width=".35" opacity=".5"/><rect x="5" y="5" width="50" height="78" fill="url(#p)" opacity=".55" mask="url(#q)"/><rect x="4" y="4" width="52" height="80" rx="2" fill="none" stroke="#d6cdbd" stroke-width=".4" opacity=".55"/><circle cx="30" cy="44" r="13.5" fill="url(#m)"/><circle cx="30" cy="44" r="12.4" fill="#111113"/><path d="M30 35.5c.7 5 2.7 7.6 8.5 8.5-5.8.9-7.8 3.5-8.5 8.5-.7-5-2.7-7.6-8.5-8.5 5.8-.9 7.8-3.5 8.5-8.5z" fill="#ece5d8"/><circle cx="30" cy="44" r="1.3" fill="#8a7cc8"/><path d="M30 9.5l1.1 2.4 2.4 1.1-2.4 1.1-1.1 2.4-1.1-2.4-2.4-1.1 2.4-1.1zM30 71.5l1.1 2.4 2.4 1.1-2.4 1.1-1.1 2.4-1.1-2.4-2.4-1.1 2.4-1.1z" fill="#d6cdbd"/></svg>'
-const BACK_URL = `url("data:image/svg+xml,${encodeURIComponent(BACK_SVG)}")`
+type Pose = 'convite' | 'neutro' | 'pensativo' | 'trama' | 'sombrio' | 'desdem' | 'riso'
+const POSES: Pose[] = ['convite', 'neutro', 'pensativo', 'trama', 'sombrio', 'desdem', 'riso']
 
 type CallEvent = Extract<BluffEvent, { t: 'call' }>
 
@@ -65,33 +55,41 @@ export default function Bluff({ start, onFinish, onQuit }: GameProps) {
   const gateOpen = useOnlineGate(start)
   const me: Side = online ? (start.side ?? 'a') : 'a'
   const opp: Side = me === 'a' ? 'b' : 'a'
-  const oppName = start.opponent.name
+  /** Como no protótipo: o primeiro nome do oponente no cabeçalho e nas falas. */
+  const nomeOp = start.opponent.name.split(' ')[0] || start.opponent.name
 
   const [running, setRunning] = useState(false)
   const [local, setLocal] = useState<BluffState | null>(null)
   const localRef = useRef(local)
   localRef.current = local
   const botRand = useMemo(() => rng(start.seed ^ 0x7b1ef), [start.seed])
-  const [now, setNow] = useState(() => Date.now())
   const [sel, setSel] = useState<number[]>([])
   const [reveal, setReveal] = useState<CallEvent | null>(null)
+  /** A revelação já chegou ao veredito (o Javali troca a cara). */
+  const [veredito, setVeredito] = useState(false)
   const [feed, setFeed] = useState<string[]>(['Cartas distribuídas.'])
+  const [verFeed, setVerFeed] = useState(false)
+  const { pops, push } = usePops()
+  const muted = useMuted()
   const seenSeq = useRef(0)
   const finished = useRef(false)
 
-  // No treino a visão era recriada a cada tique do relógio (5x/s), e com ela a mão inteira.
+  // No treino a visão só é recriada quando o estado muda (antes, a cada tique do relógio, e com ela a mão inteira).
   const localView = useMemo(() => (local ? bluffView(local, 'a') : null), [local])
   const view: BluffView | null = online ? ((room?.state as unknown as BluffView | undefined) ?? null) : localView
   /** Relógio do servidor online; relógio local no treino. */
   const toClock = useCallback((ms: number) => (online ? toLocal(ms) : ms), [online, toLocal])
-  const nameOf = useCallback((s: Side) => (s === me ? 'Você' : oppName), [me, oppName])
+  const nome = useCallback((s: Side) => (s === me ? 'Você' : nomeOp), [me, nomeOp])
 
+  // As caras do Javali já carregadas: a troca de expressão não pisca.
   useEffect(() => {
-    const id = window.setInterval(() => setNow(Date.now()), 200)
-    return () => window.clearInterval(id)
+    POSES.forEach((p) => {
+      const img = new Image()
+      img.src = `${ARTE}/javali-${p}.png`
+    })
   }, [])
 
-  const log = useCallback((line: string) => setFeed((f) => [line, ...f].slice(0, 3)), [])
+  const log = useCallback((line: string) => setFeed((f) => [line, ...f].slice(0, 6)), [])
 
   // Reage a cada evento novo (jogada, chamada ou passe), venha de quem vier.
   // Online, cada consulta (600 ms) traz um `ev` novo com o mesmo conteúdo: o efeito depende só do
@@ -100,6 +98,9 @@ export default function Bluff({ start, onFinish, onQuit }: GameProps) {
   const ev = view?.ev ?? null
   const evRef = useRef(ev)
   evRef.current = ev
+  const winner = view?.winner ?? null
+  const winnerRef = useRef(winner)
+  winnerRef.current = winner
   const revealTimers = useRef<number[]>([])
   useEffect(() => () => revealTimers.current.forEach((id) => window.clearTimeout(id)), [])
   const evSeq = ev?.seq ?? 0
@@ -109,26 +110,29 @@ export default function Bluff({ start, onFinish, onQuit }: GameProps) {
     seenSeq.current = ev.seq
     if (ev.t === 'play') {
       playSfx('card')
-      log(`${nameOf(ev.side)}${ev.auto ? ' (tempo esgotado)' : ''} jogou ${ev.n} × ${BLUFF_RANKS[ev.rank]}.`)
+      log(`${nome(ev.side)}${ev.auto ? ' (tempo esgotado)' : ''} jogou ${ev.n} × ${BLUFF_RANKS[ev.rank]}.`)
+      if (ev.side !== me && ev.n >= 3) push(`${ev.n} × ${BLUFF_RANKS[ev.rank]}?`, 'white', 900)
     } else if (ev.t === 'call') {
       revealTimers.current.forEach((id) => window.clearTimeout(id))
+      setVeredito(false)
       setReveal(ev)
       playSfx('bluff-shot')
       vibrate(40)
-      log(`${nameOf(ev.caller)} chamou blefe: ${ev.truth ? 'era verdade' : 'era mentira'}. ${nameOf(ev.loser)} recolheu ${ev.taken}.`)
+      log(`${nome(ev.caller)} chamou blefe: ${ev.truth ? 'era verdade' : 'era mentira'}. ${nome(ev.loser)} recolheu ${ev.taken}.`)
       const verdictAt = (ev.cards.length * 0.6 + 0.95) * 1000
       const t1 = window.setTimeout(() => {
+        setVeredito(true)
         playSfx(ev.truth ? 'bluff-true' : 'bluff-lie')
         vibrate(ev.loser === me ? [60, 40, 60] : 30)
       }, verdictAt)
       const t2 = window.setTimeout(() => setReveal(null), bluffRevealMs(ev.cards.length))
       revealTimers.current = [t1, t2]
     } else {
-      log(`${nameOf(ev.side)} deixou passar.`)
+      log(`${nome(ev.side)} deixou passar.`)
     }
-  }, [evSeq, me, nameOf, log])
+  }, [evSeq, me, nome, log, push])
 
-  const myHand = view?.me ?? []
+  const myHand = useMemo(() => view?.me ?? [], [view?.me])
   const handKey = myHand.map((c) => c.id).join(',')
   useEffect(() => setSel((s) => s.filter((id) => myHand.some((c) => c.id === id))), [handKey]) // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -164,7 +168,6 @@ export default function Bluff({ start, onFinish, onQuit }: GameProps) {
   roomRef.current = room
   const finishTimer = useRef(0)
   useEffect(() => () => window.clearTimeout(finishTimer.current), [])
-  const winner = view?.winner ?? null
   const roomDone = online && room?.status === 'finished'
   useEffect(() => {
     if (finished.current) return
@@ -201,25 +204,46 @@ export default function Bluff({ start, onFinish, onQuit }: GameProps) {
     onFinishRef.current(roomOutcome(r))
   }, [cancelled])
 
+  // Relógio do turno: só os segundos e o fim da trava da revelação viram estado (o React ignora o valor repetido),
+  // então a tela redesenha uma vez por segundo, como no protótipo.
   const holdLocal = view ? toClock(view.holdUntil) : 0
   const deadline = view ? toClock(Math.max(view.turnAt, view.holdUntil)) + BLUFF_TURN_MS : 0
-  const left = Math.max(0, deadline - now)
+  const [seg, setSeg] = useState(Math.ceil(BLUFF_TURN_MS / 1000))
+  const [solto, setSolto] = useState(true)
   const live = !!view && running && view.winner === null
-  const myTurn = live && view.turn === me && now >= holdLocal && !reveal
+  useEffect(() => {
+    if (!live) return
+    const upd = () => {
+      const t = Date.now()
+      setSeg(Math.ceil(Math.max(0, deadline - t) / 1000))
+      setSolto(t >= holdLocal)
+    }
+    upd()
+    const id = window.setInterval(upd, 200)
+    return () => window.clearInterval(id)
+  }, [live, deadline, holdLocal])
+
+  const myTurn = live && view.turn === me && solto && !reveal
   const oppTurn = live && view.turn === opp
   const myBul = view?.bul[me] ?? BLUFF_BULLETS
-  const pending = !!view?.last && view.last.side === opp && view.oppN === 0
-  const canCall = myTurn && !!view?.last && view.last.side === opp && myBul > 0
+  const oppBul = view?.bul[opp] ?? BLUFF_BULLETS
+  const oppN = view?.oppN ?? 26
+  const pileN = view?.pileN ?? 0
+  const last = view?.last ?? null
+  const pending = !!last && last.side === opp && view?.oppN === 0
+  const pode = myTurn && !pending
+  /** O oponente acabou de jogar: dá para chamar blefe (ou mostrar que faltam balas). */
+  const duvida = myTurn && !!last && last.side === opp
+  const canCall = duvida && myBul > 0
 
   const lastTick = useRef(0)
   useEffect(() => {
     if (!myTurn) return
-    const s = Math.ceil(left / 1000)
-    if (s <= 5 && s > 0 && s !== lastTick.current) {
-      lastTick.current = s
+    if (seg <= 5 && seg > 0 && seg !== lastTick.current) {
+      lastTick.current = seg
       playSfx('chess-tick')
     }
-  }, [myTurn, left])
+  }, [myTurn, seg])
 
   const play = () => {
     if (!myTurn || pending || !sel.length || !view) return
@@ -244,7 +268,7 @@ export default function Bluff({ start, onFinish, onQuit }: GameProps) {
     playSfx('card-select')
     setSel((s) => (s.includes(id) ? s.filter((x) => x !== id) : s.length >= 4 ? s : [...s, id]))
   }
-  // O relógio do turno redesenha a tela 5x por segundo; a mão (até 26 cartas em SVG) recebe uma função estável e só redesenha quando muda.
+  // A mão recebe uma função estável e só redesenha quando as cartas, a seleção ou a vez mudam.
   const toggleRef = useRef(toggle)
   toggleRef.current = toggle
   const onToggle = useCallback((id: number) => toggleRef.current(id), [])
@@ -259,427 +283,407 @@ export default function Bluff({ start, onFinish, onQuit }: GameProps) {
     if (!online) setLocal(bluffNew(start.seed, Date.now()))
   }
 
-  const rank = BLUFF_RANKS[view?.rk ?? 0]
-  const last = view?.last ?? null
+  const rkN = view?.rk ?? 0
+  const rank = BLUFF_RANKS[rkN]
 
-  let msg = '…'
-  let mine = false
-  if (view?.winner != null) msg = 'Fim de jogo.'
-  else if (view && myTurn && last && last.side === opp) {
-    mine = true
-    msg = pending
-      ? `${oppName} jogou a última carta. ${myBul > 0 ? 'Chame blefe agora, ou ele vence.' : 'Sem balas, você só pode deixá-lo vencer.'}`
-      : `${oppName} diz que jogou ${last.n} × ${BLUFF_RANKS[last.rank]}. ${myBul > 0 ? `Acredite e jogue ${rank}, ou chame blefe.` : `Você está sem balas. Jogue ${rank}.`}`
-  } else if (view && myTurn) {
-    mine = true
-    msg = `Sua vez. Jogue cartas como ${rank} (mentir vale).`
-  } else if (oppTurn) msg = `${oppName} está pensando…`
+  // A fala da vez, com os valores em destaque (textos do protótipo).
+  let diz: ReactNode = ''
+  if (view && running) {
+    if (view.winner !== null) diz = 'Fim de jogo.'
+    else if (myTurn && last && last.side === opp)
+      diz = pending ? (
+        `${nomeOp} jogou a última carta. ${myBul > 0 ? 'Chame blefe agora, ou ele vence.' : 'Sem balas, você só pode deixá-lo vencer.'}`
+      ) : (
+        <>
+          {nomeOp} diz{' '}
+          <b>
+            {last.n} × {BLUFF_RANKS[last.rank]}
+          </b>
+          . {myBul > 0 ? `Acredite e jogue ${rank}, ou chame blefe.` : `Você está sem balas. Jogue ${rank}.`}
+        </>
+      )
+    else if (myTurn)
+      diz = (
+        <>
+          Sua vez. Jogue cartas como <b>{rank}</b> (mentir vale).
+        </>
+      )
+    else if (view.turn === opp && !reveal)
+      diz =
+        last && last.side === me ? (
+          <>
+            Você disse{' '}
+            <b>
+              {last.n} × {BLUFF_RANKS[last.rank]}
+            </b>
+            . {nomeOp} está pensando…
+          </>
+        ) : (
+          `${nomeOp} está pensando…`
+        )
+  }
+
+  // O Javali reage: convida antes da partida, pensa na sua vez, trama quando o oponente está quase lá,
+  // fica sombrio na revelação e ri ou desdenha no veredito e no fim.
+  let pose: Pose = 'convite'
+  if (running && view) {
+    if (reveal) pose = veredito ? (reveal.truth ? 'desdem' : 'riso') : 'sombrio'
+    else if (view.winner !== null) pose = ev?.t === 'call' ? (ev.truth ? 'desdem' : 'riso') : view.winner === me ? 'desdem' : 'riso'
+    else pose = view.turn === me ? 'pensativo' : oppN <= 3 ? 'trama' : 'neutro'
+  }
+
+  const perigo = myTurn && seg <= 6
+  const relTxt = running && view ? (reveal ? '' : `${myTurn ? 'Sua vez' : nomeOp} · ${seg}s`) : ''
+  const relBar = running ? Math.min(1, (seg * 1000) / BLUFF_TURN_MS) : 1
 
   return (
-    <GameFrame
-      title="Blefe"
-      accent={ACCENT}
-      onQuit={onQuit}
-      confirmQuit={online && !roomDone && !cancelled}
-      connLost={lost}
-      className="bf"
-      top={<span className="bf-cap hidden sm:inline">Duvide ou acredite</span>}
-    >
-      <div className="bf relative z-10 flex min-h-0 flex-1 flex-col" style={{ '--bk': BACK_URL, background: 'transparent' } as CSSProperties}>
-        <Stage view={view} me={me} oppName={oppName} oppTurn={oppTurn} rank={rank} />
-
-        <div className="mx-auto flex w-full max-w-3xl flex-col gap-2 px-3">
-          <p className={cn('bf-msg', mine && 'me')} aria-live="polite">
-            {msg}
-          </p>
-          <ul className="bf-feed" aria-label="Últimas jogadas">
-            {feed.map((f, i) => (
-              <li key={`${f}-${i}`}>{f}</li>
-            ))}
-          </ul>
-        </div>
-
-        <div className="bf-player mx-auto mt-1 w-full max-w-3xl">
-          <div className="bf-pl-top">
-            <div className="l">
-              <Cylinder n={myBul} size={52} />
-              <div className="t">
-                <span className="bf-cap">Suas balas</span>
+    <PartidaV2 className="bl" label="Blefe" onQuit={onQuit} confirmQuit={online && !roomDone && !cancelled} connLost={lost}>
+      {({ sair, chat }) => (
+        <>
+          <header className={chat ? 'mr-topo bl-topo com-chat' : 'mr-topo bl-topo'}>
+            <button type="button" className="chanfro mr-sair" aria-label="Desistir e sair" onClick={sair}>
+              ×
+            </button>
+            <div className={oppTurn ? 'mr-pl op bl-op lid' : 'mr-pl op bl-op'}>
+              <i className="bl-mono" aria-hidden="true">
+                {nomeOp.charAt(0).toUpperCase()}
+              </i>
+              <div>
+                <small>{nomeOp}</small>
                 <b>
-                  {myBul} / {BLUFF_BULLETS}
+                  {oppN} <u>cartas</u>
                 </b>
               </div>
+              <Tambor tam={40} n={oppBul} />
             </div>
-            <div className="flex items-center gap-3">
-              <span className={cn('font-mono text-[11px] tabular-nums tracking-[0.15em]', myTurn && left < 6000 ? 'text-dv-blood-text' : 'text-dv-text-3')}>
-                {live ? `${myTurn ? 'Sua vez' : `Vez de ${oppName}`} · ${Math.ceil(left / 1000)}s` : ''}
-              </span>
-              <button type="button" className="bf-mini" onClick={pickRank} disabled={!myTurn || pending}>
-                Marcar os {rank}
-              </button>
-            </div>
-          </div>
-          <div className="bf-timer" aria-hidden="true">
-            <i
-              style={{
-                transform: `scaleX(${live ? Math.min(1, left / BLUFF_TURN_MS) : 0})`,
-                background: left < 6000 ? RUBY : myTurn ? 'var(--dv-amethyst)' : 'var(--dv-gold-deep)',
+            {chat}
+            <button
+              type="button"
+              className="chanfro mr-sair"
+              aria-label="Últimas jogadas"
+              aria-pressed={verFeed}
+              onClick={() => setVerFeed((v) => !v)}
+            >
+              ≡
+            </button>
+            <button
+              type="button"
+              id="bl-som"
+              className={muted ? 'chanfro mr-sair off' : 'chanfro mr-sair'}
+              aria-label="Som"
+              aria-pressed={!muted}
+              onClick={() => {
+                unlockAudio()
+                setMuted(!muted)
               }}
-            />
+            >
+              ♪
+            </button>
+          </header>
+
+          <div className="bl-cena">
+            <div className="bl-mesa">
+              <img className="f" src={`${MESA}/mesa.png`} alt="" />
+              <img className="j" src={`${ARTE}/javali-${pose}.png`} alt="" />
+              <img className="f t" src={`${MESA}/mesa-frente.png`} alt="" />
+              <Pilha n={pileN} />
+              <div className="bl-ficha" aria-label={`Valor da vez: ${rank}`}>
+                <img src={`${ARTE}/ficha.png`} alt="" />
+                <b>{rank}</b>
+              </div>
+              <span className="bl-ficha-l">valor da vez</span>
+              <span className="bl-pn">{pileN ? `${pileN} ${pileN === 1 ? 'carta' : 'cartas'}` : ''}</span>
+            </div>
+            <ul className="bl-feed fundo" hidden={!verFeed} aria-label="Últimas jogadas">
+              {feed.map((f, i) => (
+                <li key={`${feed.length - i}-${f}`}>{f}</li>
+              ))}
+            </ul>
+            <div className="mr-pops bl-pops" aria-live="polite">
+              {pops.map((p) => (
+                <p key={p.id} className={TOM[p.tone] ? `mr-pop ${TOM[p.tone]}` : 'mr-pop'}>
+                  {p.text}
+                </p>
+              ))}
+            </div>
           </div>
 
-          <Hand cards={myHand} sel={sel} active={myTurn && !pending} rank={view?.rk ?? 0} onToggle={onToggle} />
+          <p className={myTurn ? 'bl-diz me' : 'bl-diz'} aria-live="polite">
+            <span>{diz}</span>
+          </p>
 
-          <div className="bf-acts">
+          <div className="bl-eu">
+            <Tambor tam={56} n={myBul} />
+            <div className="bl-bl">
+              <small>Suas balas</small>
+              <b>
+                {myBul} / {BLUFF_BULLETS}
+              </b>
+            </div>
+            <div className="bl-rel">
+              <b role="timer" aria-label="Tempo do turno" className={perigo ? 'perigo' : undefined}>
+                {relTxt}
+              </b>
+              <u>
+                <s className={perigo ? 'perigo' : myTurn ? 'meu' : undefined} style={{ transform: `scaleX(${relBar.toFixed(3)})` }} />
+              </u>
+            </div>
+            <button type="button" className="chanfro bl-marca" disabled={!pode} onClick={pickRank}>
+              Marcar os {rank}
+            </button>
+          </div>
+
+          <Mao cards={myHand} sel={sel} pode={pode} rk={rkN} onToggle={onToggle} />
+
+          <div className="bl-acoes">
             {pending && myTurn ? (
-              <button type="button" className="bf-btn ghost" onClick={pass}>
+              <button type="button" className="chanfro bl-bt fan" onClick={pass}>
                 Deixar vencer
               </button>
             ) : (
-              <button type="button" className="bf-btn" onClick={play} disabled={!myTurn || !sel.length}>
+              <button type="button" className="chanfro bl-bt" disabled={!pode || !sel.length} onClick={play}>
                 {sel.length ? `Jogar ${sel.length} como ${rank}` : 'Escolha 1 a 4 cartas'}
               </button>
             )}
-            {canCall ? (
-              <button type="button" className="bf-btn bad" onClick={call}>
-                É blefe! <small>({myBul})</small>
-              </button>
-            ) : myTurn && last?.side === opp && myBul === 0 ? (
-              <button type="button" className="bf-btn bad" disabled>
-                Sem balas
-              </button>
-            ) : null}
+            <button type="button" className="chanfro bl-bt bad" hidden={!duvida} disabled={myBul < 1} onClick={call}>
+              <img src={`${ARTE}/bala.png`} alt="" />
+              {myBul < 1 ? ' Sem balas' : ' É blefe!'}
+            </button>
           </div>
-        </div>
-      </div>
 
-      {reveal && <Reveal ev={reveal} nameOf={nameOf} />}
+          {reveal && <Revelacao key={reveal.seq} ev={reveal} nome={nome} />}
 
-      {!running && !finished.current && !gateOpen && <WaitingStart name={oppName} />}
-      {!running && !finished.current && gateOpen && <Countdown321 onDone={beginLocal} />}
-    </GameFrame>
-  )
-}
-
-const Stage = memo(function Stage({ view, me, oppName, oppTurn, rank }: { view: BluffView | null; me: Side; oppName: string; oppTurn: boolean; rank: string }) {
-  const stageRef = useRef<HTMLDivElement>(null)
-  const markRef = useRef<HTMLDivElement>(null)
-  const [pos, setPos] = useState({ x: 0, y: 0, w: 0 })
-  const pileN = view?.pileN ?? 0
-  const show = Math.min(12, pileN)
-  const oppN = view?.oppN ?? 26
-  const last = view?.last ?? null
-
-  useLayoutEffect(() => {
-    const st = stageRef.current
-    if (!st) return
-    const measure = () => {
-      const m = markRef.current
-      if (!m) return
-      const s = st.getBoundingClientRect()
-      const r = m.getBoundingClientRect()
-      setPos({ x: r.left + r.width / 2 - s.left, y: r.top + r.height / 2 - s.top, w: s.width })
-    }
-    measure()
-    const ro = new ResizeObserver(measure)
-    ro.observe(st)
-    return () => ro.disconnect()
-  }, [])
-
-  const narrow = pos.w < 520
-  const off = narrow ? Math.min(120, pos.w * 0.32) : 170
-
-  return (
-    <div ref={stageRef} className="bf-stage">
-      <div className="bf-scene" aria-hidden="true">
-        <div className="bf-tbl">
-          <div className="bf-tshadow" />
-          <div className="bf-felt" />
-          <div className="bf-inlay" />
-          <div className="bf-pilewrap">
-            {show > 0 ? <div className="bf-pshadow" /> : <div className="bf-empty" />}
-            {Array.from({ length: show }, (_, i) => {
-              const r = ((i * 53 + 11) % 37) - 18
-              const dx = ((i * 29 + 5) % 13) - 6
-              const dy = ((i * 17 + 3) % 11) - 5
-              return (
-                <div key={i} className={cn('bf-pc', i === show - 1 && 'new')} style={{ transform: `translate3d(${dx}px, ${dy}px, ${i * 1.6 + 1}px) rotate(${r}deg)` }}>
-                  <div key={i === show - 1 ? pileN : undefined} className="bf-cback" />
-                </div>
-              )
-            })}
-            <div ref={markRef} className="bf-pmark" />
-          </div>
-        </div>
-      </div>
-      <div className="bf-spot" aria-hidden="true" />
-
-      <div className="bf-seats">
-        <div className={cn('bf-seat', oppTurn && 'turn')}>
-          <div className="bf-av" style={{ '--c': OPP_COLOR } as CSSProperties} aria-hidden="true">
-            {oppName.charAt(0).toUpperCase()}
-          </div>
-          <div className="bf-inf">
-            <span className="bf-nm">{oppName}</span>
-            <div className="bf-ro">
-              <Cylinder n={view?.bul[me === 'a' ? 'b' : 'a'] ?? BLUFF_BULLETS} size={30} />
-              <span className="bf-ct">
-                <b>{oppN}</b> cartas
-              </span>
-              <span className="bf-fan hidden sm:flex" aria-hidden="true">
-                {Array.from({ length: Math.min(oppN, 8) }, (_, i) => (
-                  <i key={i} />
-                ))}
-              </span>
-            </div>
-            <span className="bf-tag">
-              {oppTurn ? (
-                <>
-                  pensando<span className="bf-dots" />
-                </>
-              ) : oppN <= 3 ? (
-                'quase lá'
-              ) : (
-                ''
-              )}
-            </span>
-          </div>
-        </div>
-      </div>
-
-      {pos.w > 0 && (
-        <>
-          <div className="bf-coin" style={{ left: pos.x - off, top: pos.y - 6 }} aria-label={`Valor da vez: ${rank}`}>
-            <b key={rank}>{rank}</b>
-          </div>
-          <div className="bf-coin-l" style={{ left: pos.x - off, top: pos.y - 6 }} aria-hidden="true">
-            valor da vez
-          </div>
-          {pileN > 0 && (
-            <div className="bf-pcnt" style={{ left: pos.x + (narrow ? 34 : 44), top: pos.y - 8 }}>
-              {pileN} {pileN === 1 ? 'carta' : 'cartas'}
-            </div>
-          )}
-          <div className="bf-say" style={{ left: pos.x, top: pos.y + (narrow ? 42 : 50) }}>
-            <span className="bf-cap">{last ? 'Última jogada' : 'Pilha vazia'}</span>
-            <span className="big">
-              {last ? (
-                <>
-                  {last.side === me ? 'Você' : oppName} jogou{' '}
-                  <em>
-                    {last.n} × {BLUFF_RANKS[last.rank]}
-                  </em>
-                </>
-              ) : (
-                'Ninguém a desafiar'
-              )}
-            </span>
-          </div>
+          {!running && !finished.current && !gateOpen && <Sincronizando nome={start.opponent.name} />}
+          {!running && !finished.current && gateOpen && <Contagem onDone={beginLocal} />}
         </>
       )}
-    </div>
-  )
-})
-
-function SuitIcon({ s, className, style }: { s: number; className?: string; style?: CSSProperties }) {
-  return (
-    <svg className={className} style={style} viewBox="0 0 100 100" aria-hidden="true">
-      <path d={SUIT_PATHS[s]} />
-    </svg>
+    </PartidaV2>
   )
 }
 
-/** O id da carta define valor e naipe: pula o redesenho mesmo quando o servidor manda um objeto novo. */
-const CardFace = memo(function CardFace({ c }: { c: BluffCard }) {
-  const red = c.s === 1 || c.s === 2
-  const R = BLUFF_RANKS[c.r]
-  const ixStyle = { fontSize: R === '10' ? '.82em' : '1em' }
+/** Tambor do revólver com até três balas. `gasta`: a bala que acabou de sair; `volta`: a que foi devolvida. */
+const Tambor = memo(function Tambor({ tam, n, gasta, volta, gira }: { tam: number; n: number; gasta?: number; volta?: number; gira?: boolean }) {
   return (
-    <div className={cn('bf-cf', red && 'red')}>
-      <div className="ix tl" style={ixStyle}>
-        <b>{R}</b>
-        <SuitIcon s={c.s} />
-      </div>
-      <div className="ix br" style={ixStyle}>
-        <b>{R}</b>
-        <SuitIcon s={c.s} />
-      </div>
-      {c.r >= 10 ? (
-        <div className="fcd">
-          <i>{R}</i>
-          <SuitIcon s={c.s} className="a" />
-          <SuitIcon s={c.s} className="b" />
-        </div>
-      ) : (
-        PIPS[c.r].map(([x, y], i) => <SuitIcon key={i} s={c.s} className={cn('pip', c.r === 0 && 'big', y > 0.5 && 'f')} style={{ left: `${x * 100}%`, top: `${y * 100}%` }} />)
-      )}
-      <div className="shine" />
-    </div>
-  )
-}, (a, b) => a.c.id === b.c.id && a.c.r === b.c.r && a.c.s === b.c.s)
-
-const Cylinder = memo(function Cylinder({ n, size, mark }: { n: number; size: number; mark?: { idx: number; name: 'spent' | 'ret' } }) {
-  const uid = useId().replace(/:/g, '')
-  const chambers = Array.from({ length: 6 }, (_, i) => {
-    const a = ((i * 60 - 90) * Math.PI) / 180
-    return { x: Math.cos(a) * 29, y: Math.sin(a) * 29, slot: i % 2 === 0, j: i / 2 }
-  })
-  const round = (x: number, y: number, cls?: string) => (
-    <g className={cls}>
-      <circle cx={x} cy={y} r="10" fill={`url(#b${uid})`} stroke="#6b6357" strokeWidth="1" />
-      <circle cx={x} cy={y} r="5.6" fill={`url(#c${uid})`} />
-    </g>
-  )
-  return (
-    <svg className="bf-cyl" width={size} height={size} viewBox="-52 -52 104 104" role="img" aria-label={`${n} de ${BLUFF_BULLETS} balas`}>
-      <defs>
-        <radialGradient id={`b${uid}`} cx="35%" cy="30%" r="80%">
-          <stop offset="0" stopColor="#fbf8f2" />
-          <stop offset=".55" stopColor="#d8d0c2" />
-          <stop offset="1" stopColor="#6b6357" />
-        </radialGradient>
-        <radialGradient id={`c${uid}`} cx="35%" cy="30%" r="80%">
-          <stop offset="0" stopColor="#ece5d8" />
-          <stop offset=".6" stopColor="#bab09f" />
-          <stop offset="1" stopColor="#5f584d" />
-        </radialGradient>
-        <radialGradient id={`g${uid}`} cx="40%" cy="30%" r="85%">
-          <stop offset="0" stopColor="#4a4a50" />
-          <stop offset=".6" stopColor="#232326" />
-          <stop offset="1" stopColor="#0e0e10" />
-        </radialGradient>
-      </defs>
-      <g className="cg">
-        <circle r="50" fill={`url(#g${uid})`} stroke="#bab09f" strokeWidth="2.5" />
-        <circle r="42" fill="none" stroke="#3a3a40" strokeWidth="1.5" />
-        {chambers.map(({ x, y, slot, j }, i) => (
-          <g key={i}>
-            <circle cx={x} cy={y} r="12.5" fill="#060607" stroke="#4a4a50" strokeWidth="1.5" />
-            {slot &&
-              (j < n ? (
-                round(x, y, mark?.idx === j ? mark.name : undefined)
-              ) : mark?.idx === j && mark.name === 'spent' ? (
-                <>
-                  {round(x, y, 'spent')}
-                  <circle className="puff" cx={x} cy={y} r="12" fill="#a7a6a3" />
-                </>
-              ) : (
-                <circle cx={x} cy={y} r="8" fill="none" stroke="#3a3a40" strokeWidth="1" strokeDasharray="2 3" />
-              ))}
-          </g>
-        ))}
-        <circle r="9" fill="#2c2c31" stroke="#bab09f" strokeWidth="1.5" />
-        <circle r="3" fill="#8a7cc8" />
-      </g>
-    </svg>
+    <span className={gira ? 'bl-tb gira' : 'bl-tb'} style={{ '--t': `${tam}px` } as CSSProperties} role="img" aria-label={`${n} de ${BLUFF_BULLETS} balas`}>
+      <img className="t" src={`${ARTE}/tambor.png`} alt="" />
+      {[0, 1, 2].map((i) => (
+        <img
+          key={i}
+          className={volta === i ? 'b volta' : 'b'}
+          hidden={i >= n && volta !== i}
+          style={{ '--a': `${i * 120}deg` } as CSSProperties}
+          src={gasta === i ? `${ARTE}/gasta.png` : `${ARTE}/bala.png`}
+          alt=""
+        />
+      ))}
+    </span>
   )
 })
 
-const Hand = memo(function Hand({ cards, sel, active, rank, onToggle }: { cards: BluffCard[]; sel: number[]; active: boolean; rank: number; onToggle: (id: number) => void }) {
-  const ref = useRef<HTMLDivElement>(null)
-  const [W, setW] = useState(340)
-  const [deal, setDeal] = useState(true)
+/** A pilha na mesa: até 12 versos, cada um caindo uma vez ao entrar. */
+const Pilha = memo(function Pilha({ n }: { n: number }) {
+  const k = Math.min(12, n)
+  return (
+    <div className="bl-pilha" aria-hidden="true">
+      {Array.from({ length: k }, (_, i) => (
+        <i
+          key={i}
+          className="nova"
+          style={{ '--r': `${((i * 53 + 11) % 37) - 18}deg`, '--dx': `${((i * 29 + 5) % 13) - 6}%`, '--dy': `${((i * 17 + 3) % 11) - 5 - i * 1.2}%` } as CSSProperties}
+        />
+      ))}
+    </div>
+  )
+})
 
-  useEffect(() => {
+/** A mão: uma folha de imagens, e cada carta só muda de lugar. Cartas novas (distribuídas ou recolhidas) caem na mão. */
+const Mao = memo(function Mao({ cards, sel, pode, rk, onToggle }: { cards: BluffCard[]; sel: number[]; pode: boolean; rk: number; onToggle: (id: number) => void }) {
+  const ref = useRef<HTMLDivElement>(null)
+  const [W, setW] = useState(0)
+  useLayoutEffect(() => {
     const el = ref.current
     if (!el) return
-    const ro = new ResizeObserver(([e]) => setW(e.contentRect.width))
+    const medir = () => setW(el.clientWidth)
+    medir()
+    const ro = new ResizeObserver(medir)
     ro.observe(el)
     return () => ro.disconnect()
   }, [])
 
-  const dealt = cards.length > 0
-  useEffect(() => {
-    if (!dealt) return
-    const id = window.setTimeout(() => setDeal(false), 1800)
-    return () => window.clearTimeout(id)
-  }, [dealt])
+  // Cartas que acabaram de chegar ganham a animação de entrada por 900 ms.
+  const vistas = useRef(new Set<number>())
+  const [novas, setNovas] = useState<Set<number>>(() => new Set())
+  const novasT = useRef(0)
+  useEffect(() => () => window.clearTimeout(novasT.current), [])
+  const chave = cards.map((c) => c.id).join(',')
+  useLayoutEffect(() => {
+    const chegaram = cards.filter((c) => !vistas.current.has(c.id)).map((c) => c.id)
+    vistas.current = new Set(cards.map((c) => c.id))
+    if (!chegaram.length) return
+    setNovas(new Set(chegaram))
+    window.clearTimeout(novasT.current)
+    novasT.current = window.setTimeout(() => setNovas(new Set()), 900)
+  }, [chave]) // eslint-disable-line react-hooks/exhaustive-deps
 
-  const cw = W < 400 ? 52 : W >= 660 ? 70 : 60
-  const ch = Math.round(cw * 1.46)
+  const w = W || 340
+  const esc = w >= 620 ? 2 : 1.5
+  const cw = CW * esc
+  const chh = CH * esc
   const n = cards.length
   const rows = Math.max(1, Math.ceil(n / 13))
   const per = Math.max(1, Math.ceil(n / rows))
-  const rowGap = Math.round(ch * 0.42)
+  const gap = Math.round(chh * 0.46)
 
   return (
     <div
       ref={ref}
-      className={cn('bf-hand', deal && 'deal')}
-      style={{ height: ch + (rows - 1) * rowGap + 12, '--cw': `${cw}px`, '--ch': `${ch}px` } as CSSProperties}
+      className="bl-mao"
       role="group"
       aria-label={`Sua mão: ${n} cartas`}
+      style={{ '--esc': esc, height: `${chh + (rows - 1) * gap + 10}px` } as CSSProperties}
     >
-      {Array.from({ length: rows }, (_, r) => {
-        const chunk = cards.slice(r * per, (r + 1) * per)
-        const k = chunk.length
-        const sp = k > 1 ? Math.min(cw * 0.72, (W - cw - 14) / (k - 1)) : 0
-        return chunk.map((c, i) => {
-          const t = k > 1 ? (i - (k - 1) / 2) / ((k - 1) / 2) : 0
-          const x = (i - (k - 1) / 2) * sp
-          const y = t * t * (k > 8 ? 14 : 9) - (rows - 1 - r) * rowGap
-          const rot = t * (k > 8 ? 7 : 5)
-          const picked = sel.includes(c.id)
-          return (
-            <button
-              key={c.id}
-              type="button"
-              onClick={() => onToggle(c.id)}
-              disabled={!active}
-              aria-pressed={picked}
-              aria-label={`${BLUFF_RANKS[c.r]} de ${SUIT_NAMES[c.s]}`}
-              className={cn('bf-pcard', picked && 'sel', c.r === rank && 'match')}
-              style={{ '--x': `${x.toFixed(1)}px`, '--y': `${y.toFixed(1)}px`, '--r': `${rot.toFixed(1)}deg`, '--z': r * 100 + i, '--i': r * per + i } as CSSProperties}
-            >
-              <CardFace c={c} />
-            </button>
-          )
-        })
+      {cards.map((c, idx) => {
+        const r = Math.floor(idx / per)
+        const i = idx - r * per
+        const k = Math.min(per, n - r * per)
+        const sp = k > 1 ? Math.min(cw * 0.62, (w - cw - 6) / (k - 1)) : 0
+        const x = w / 2 - cw / 2 + (i - (k - 1) / 2) * sp
+        const on = sel.includes(c.id)
+        const cls = ['bl-c', on && 'sel', pode && c.r === rk && 'ok', novas.has(c.id) && 'dar'].filter(Boolean).join(' ')
+        return (
+          <button
+            key={c.id}
+            type="button"
+            className={cls}
+            disabled={!pode}
+            aria-pressed={on}
+            aria-label={`${BLUFF_RANKS[c.r]} de ${NAIPES[c.s]}`}
+            onClick={() => onToggle(c.id)}
+            style={
+              {
+                '--fx': c.r,
+                '--fy': c.s,
+                '--x': `${Math.round(x)}px`,
+                '--y': `${r * gap}px`,
+                '--i': Math.min(idx, 20),
+                zIndex: r * 100 + i,
+              } as CSSProperties
+            }
+          />
+        )
       })}
     </div>
   )
 })
 
-function Reveal({ ev, nameOf }: { ev: CallEvent; nameOf: (s: Side) => string }) {
+/** A revelação: as cartas viram uma a uma, vem o veredito e o revólver decide a bala de quem duvidou. */
+function Revelacao({ ev, nome }: { ev: CallEvent; nome: (s: Side) => string }) {
   const n = ev.cards.length
-  const vd = `${n * 0.6 + 0.95}s`
-  const mark = ev.bullet === 'lost' ? ({ idx: ev.left, name: 'spent' } as const) : ({ idx: ev.left - 1, name: 'ret' } as const)
+  const [virando, setVirando] = useState(0)
+  const [abertas, setAbertas] = useState(0)
+  /** 1 veredito · 2 revólver · 3 tiro (ou bala de volta) · 4 cartas recolhidas */
+  const [passo, setPasso] = useState(0)
+  const [treme, setTreme] = useState(false)
+  const [clarao, setClarao] = useState(false)
+
+  useEffect(() => {
+    const ts: number[] = []
+    const at = (ms: number, f: () => void) => ts.push(window.setTimeout(f, ms))
+    const vd = (n * 0.6 + 0.95) * 1000
+    for (let i = 0; i < n; i++) {
+      at(i * 600 + 350, () => setVirando(i + 1))
+      at(i * 600 + 350 + 110, () => {
+        setAbertas(i + 1)
+        playSfx('card-select')
+      })
+    }
+    at(vd, () => {
+      setPasso(1)
+      if (!ev.truth) {
+        setTreme(true)
+        at(300, () => setTreme(false))
+      }
+    })
+    at(vd + 150, () => setPasso(2))
+    at(vd + 410, () => {
+      setPasso(3)
+      if (ev.bullet === 'lost') {
+        setClarao(true)
+        playSfx('bluff-shot')
+        at(140, () => setClarao(false))
+      }
+    })
+    at(vd + 700, () => setPasso(4))
+    return () => ts.forEach((id) => window.clearTimeout(id))
+  }, [ev, n])
+
+  const perdeu = ev.bullet === 'lost'
+  const antes = Math.max(perdeu ? ev.left + 1 : ev.left - 1, 0)
+  const atirou = passo >= 3
+
   return (
-    <div className={cn('bf bf-ov', !ev.truth && 'lie')} style={{ '--vd': vd, '--bk': BACK_URL } as CSSProperties} role="alert">
-      <div className="bf-box">
-        <span className="bf-cap">
-          {nameOf(ev.liar)} jogou {n} × {BLUFF_RANKS[ev.rank]} · {nameOf(ev.caller)} duvidou
-        </span>
-        <div className={cn('bf-rv', !ev.truth && 'sh')}>
-          {ev.cards.map((c, i) => (
-            <div key={c.id} className="bf-rc" style={{ '--i': i } as CSSProperties}>
-              <div className="fr">
-                <div className={c.r === ev.rank ? 'ok' : 'lie'} style={{ position: 'absolute', inset: 0 }}>
-                  <CardFace c={c} />
-                </div>
-              </div>
-              <div className="bk">
-                <div className="bf-cback" />
-              </div>
-            </div>
-          ))}
-        </div>
-        <div className={cn('bf-verdict', ev.truth ? 'true' : 'lie')}>{ev.truth ? 'Era verdade' : 'Blefe!'}</div>
-        <div className="bf-late bf-cylw" style={{ animationDelay: `calc(${vd} + .15s)` }}>
-          <Cylinder n={ev.left} size={84} mark={mark} />
-          {ev.bullet === 'back' ? (
-            <span className="bf-ev back">Bala devolvida a {nameOf(ev.caller)}</span>
-          ) : (
-            <span className="bf-ev lost">
-              Bala perdida · {nameOf(ev.caller)} fica com {ev.left}
-            </span>
-          )}
-        </div>
-        <div className="bf-late" style={{ animationDelay: `calc(${vd} + .45s)` }}>
-          {nameOf(ev.loser)} recolhe {ev.taken} {ev.taken === 1 ? 'carta' : 'cartas'}
-          {ev.burned > 0 && ` · ${ev.burned} queimadas`}
-        </div>
+    <div className={['bl-rev', !ev.truth && 'mentira', treme && 'treme'].filter(Boolean).join(' ')} role="alert">
+      <small>
+        {nome(ev.liar)} jogou {n} × {BLUFF_RANKS[ev.rank]} · {nome(ev.caller)} duvidou
+      </small>
+      <div className="bl-rc">
+        {ev.cards.map((c, i) => {
+          const aberta = i < abertas
+          const cls = ['bl-rv', i < virando && 'vira', aberta && 'aberta', aberta && (c.r === ev.rank ? 'certa' : 'falsa')].filter(Boolean).join(' ')
+          return (
+            <i
+              key={c.id}
+              className={cls}
+              style={{ '--fx': c.r, '--fy': c.s } as CSSProperties}
+              role="img"
+              aria-label={aberta ? `${BLUFF_RANKS[c.r]} de ${NAIPES[c.s]}` : 'Carta virada'}
+            />
+          )
+        })}
       </div>
+      <div className="bl-veredito" hidden={passo < 1}>
+        {ev.truth ? 'Era verdade' : 'Blefe!'}
+      </div>
+      <div className="bl-arma" hidden={passo < 2}>
+        <Tambor
+          tam={84}
+          n={antes}
+          gasta={atirou && perdeu ? ev.left : undefined}
+          volta={atirou && !perdeu ? ev.left - 1 : undefined}
+          gira={atirou && perdeu}
+        />
+        <img className="clarao" src={`${ARTE}/clarao.png`} alt="" hidden={!clarao} />
+        <img className="fumo" src={`${ARTE}/fumaca.png`} alt="" hidden={!(atirou && perdeu)} />
+      </div>
+      <p className="bl-ev" hidden={!atirou}>
+        {perdeu ? `Bala perdida · ${nome(ev.caller)} fica com ${ev.left}` : `Bala devolvida a ${nome(ev.caller)}`}
+      </p>
+      <p className="bl-rec" hidden={passo < 4}>
+        {nome(ev.loser)} recolhe {ev.taken} {ev.taken === 1 ? 'carta' : 'cartas'}
+        {ev.burned > 0 && (
+          <>
+            {' · '}
+            <img src={`${ARTE}/cinzas.png`} alt="" /> {ev.burned} queimadas
+          </>
+        )}
+      </p>
+    </div>
+  )
+}
+
+/** 3 · 2 · 1 · JÁ em dígitos grandes de bronze sobre a mesa (igual ao Memory Rush). */
+function Contagem({ onDone }: { onDone: () => void }) {
+  const [n, setN] = useState(3)
+  const done = useRef(onDone)
+  done.current = onDone
+  useEffect(() => {
+    const t = [1, 2, 3].map((i) => window.setTimeout(() => setN(3 - i), i * 650))
+    t.push(window.setTimeout(() => done.current(), 3 * 650 + 400))
+    return () => t.forEach(clearTimeout)
+  }, [])
+  return (
+    <div className="mr-conta" role="status" aria-label={n ? String(n) : 'Já'}>
+      <b key={n}>{n || 'JÁ'}</b>
     </div>
   )
 }

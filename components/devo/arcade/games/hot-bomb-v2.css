@@ -1,0 +1,29 @@
+/* Bomba Quente no v2: só o que o protótipo não tinha (o resto vem de components/v2/os.css, seção "Bomba Quente"). */
+
+/* chat ao vivo da partida online: ao lado do botão de som, no canto de baixo */
+.bq-chat {
+  position: absolute;
+  z-index: 3;
+  left: 60px;
+  bottom: 8px;
+  display: flex;
+}
+
+/* partida online: no lugar do Jogar, a espera pelo início combinado com o servidor */
+.bq-espera {
+  min-height: 44px;
+  display: grid;
+  place-items: center;
+  color: #d9b25c;
+  animation: bq-espera 1.2s steps(2) infinite;
+}
+@keyframes bq-espera {
+  50% {
+    opacity: 0.5;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .bq-espera {
+    animation: none;
+  }
+}

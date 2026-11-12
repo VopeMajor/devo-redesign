@@ -1,0 +1,6 @@
+/* Blefe no v2: o que o protótipo (kit3/os-blefe.js) não tinha. O resto vem de components/v2/os.css, seção "Blefe". */
+
+/* partida online: o botão do chat ao vivo entra no cabeçalho, entre o oponente e o histórico */
+.bl-topo.com-chat {
+  grid-template-columns: 44px minmax(0, 1fr) auto 44px 44px;
+}
