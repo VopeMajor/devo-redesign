@@ -111,6 +111,9 @@ type Votes = ReturnType<typeof useDeadlyVotes>
 
 function Ficha({ votes, role, onVotos }: { votes: Votes; role: PlayerRole | null; onVotos: () => void }) {
   const { state } = useDevo()
+  // Owner e Anfitrião veem a Sala de Jogos sem a marca no save: aqui ela também conta como liberada
+  const acessoJogos = !!useAcesso()?.salaJogos
+  const salaLiberada = state.arcadeUnlocked || acessoJogos
   const nav = useOsNav()
   const acesso = useAcesso()
   const now = useNow(1000)
@@ -126,7 +129,7 @@ function Ficha({ votes, role, onVotos }: { votes: Votes; role: PlayerRole | null
   const [ok, setOk] = useState<string | null>(null)
   const [ocupado, setOcupado] = useState(false)
   const arquivo = useRef<HTMLInputElement>(null)
-  const sinais = useManagerSignals(votes.entries, { onOpenVotes: onVotos, onOpenGames: state.arcadeUnlocked ? () => nav.open('jogos') : undefined })
+  const sinais = useManagerSignals(votes.entries, { onOpenVotes: onVotos, onOpenGames: salaLiberada ? () => nav.open('jogos') : undefined })
   const eu = useEu().data
   const arcano = eu?.arcano ? eu.arcano.titulo.replace(/^Arcano d[aoe]s? /, '') : null
   const status = resta === 0 ? playerText('Eliminad{o|a}', { gender: state.profile.gender }) : critico ? 'Crítico' : 'Estável'
@@ -530,6 +533,9 @@ function Identidade({ nome, onAbrir }: { nome: string; onAbrir: () => void }) {
 /** Resumo do baralho: cartas, o Card Shuffler (desperta com a Sala de Jogos) e o envio à Bandeja do Salão. */
 function Baralho() {
   const { state } = useDevo()
+  // Owner e Anfitrião veem a Sala de Jogos sem a marca no save: aqui ela também conta como liberada
+  const acessoJogos = !!useAcesso()?.salaJogos
+  const salaLiberada = state.arcadeUnlocked || acessoJogos
   const nav = useOsNav()
   const acesso = useAcesso()
   const salao = !!acesso?.sistemas.salao_mascaras
@@ -541,7 +547,7 @@ function Baralho() {
       <div className="rv-bar-tx">
         <img src={px('cartas')} alt="" />
         <span>
-          <small>Card Shuffler · {shufflerStatus(state.arcadeUnlocked)}</small>
+          <small>Card Shuffler · {shufflerStatus(salaLiberada)}</small>
           <strong>
             {n} {n === 1 ? 'carta' : 'cartas'}
           </strong>

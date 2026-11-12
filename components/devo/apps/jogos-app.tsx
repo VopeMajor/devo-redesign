@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { type RefObject, useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import useSWR from 'swr'
 import { type ArcadeView, useApplyTime } from '@/components/devo/arcade/arcade-shared'
@@ -35,8 +35,10 @@ import { liveChannelFor } from '@/lib/devo/arcade/reactions'
 import { playSfx, setArcadeAmbienceMuffled, startArcadeAmbience, stopArcadeAmbience } from '@/lib/devo/audio'
 import { cn } from '@/lib/utils'
 import { GAME_COMPONENTS } from '../arcade/game-loader'
+import { markStartReceived } from '../arcade/use-room'
 import { useNow } from '../hooks'
 import { useDevo } from '../state/devo-store'
+import { voltarJanela } from '@/components/v2/voltar'
 
 type Tab = ArcadeView
 const TABS: { value: Tab; label: string }[] = [
@@ -57,7 +59,8 @@ export function JogosApp() {
   const { state } = useDevo()
   const applyTime = useApplyTime()
   const { curtain, run } = useCurtain()
-  useArcadeAmbience(!!running && !running.finish)
+  const raiz = useRef<HTMLDivElement>(null)
+  useArcadeAmbience(!!running && !running.finish, raiz)
   const { data, error, mutate } = useSWR<Dashboard>(arcadeKey('dashboard'), arcadeFetcher, {
     refreshInterval: 30_000,
     onSuccess: (d) => applyTime(d),
@@ -76,6 +79,8 @@ export function JogosApp() {
 
   /** Entrar numa partida é troca de fase: cortina com rótulo; o jogo monta no meio dela. */
   const enter = (start: MatchStart) => {
+    // O relógio da partida conta a partir da chegada do início, não da montagem do jogo (após a cortina).
+    markStartReceived(start)
     const tutorial = start.mode === 'treino'
     const ok = run(tutorial ? 'Treinando' : 'Valendo Tempo', () => setRunning({ start }), { sfx: 'whoosh', tone: tutorial ? 'system' : 'gold' })
     if (!ok) setRunning({ start })
@@ -128,15 +133,21 @@ export function JogosApp() {
     setQueue(null)
   }
 
+  /** Partida em tela agora: um resultado atrasado de uma partida já fechada não pode reabri-la. */
+  const runningRef = useRef(running)
+  runningRef.current = running
+
   const quit = () => {
     const roomId = running?.start.roomId
     if (roomId && !running?.finish) leaveRoom(roomId).catch(() => {})
+    runningRef.current = null
     setRunning(null)
     mutate()
   }
 
-  const finish = async (outcome: GameOutcome) => {
-    if (!running) return
+  const finish = async (outcome: GameOutcome, matchId: string) => {
+    const running = runningRef.current
+    if (!running || running.start.matchId !== matchId || running.finish) return
     if (outcome.finish) {
       applyTime(outcome.finish)
       playSfx('reveal')
@@ -153,13 +164,51 @@ export function JogosApp() {
         stats: outcome.stats,
       })
       applyTime(res)
+      // O jogador pode ter saído enquanto o resultado era gravado: aí não reabre a tela.
+      if (runningRef.current?.start.matchId !== matchId) return void mutate()
       playSfx('reveal')
       setRunning({ start: running.start, finish: { ...res, outcome } })
     } catch (e) {
-      setRunning({ ...running, error: (e as Error).message })
+      if (runningRef.current?.start.matchId === matchId) setRunning({ ...running, error: (e as Error).message })
     }
     mutate()
   }
+
+  /* No v2 a Sala é uma janela: Esc e o voltar do aparelho fechariam a janela no meio da partida (derrota por
+     abandono sem ver o resultado). Na fila, o voltar cancela a busca; na partida, quem sai é o X do jogo, que pede
+     confirmação; no resultado, volta para a Sala. */
+  const voltar = useRef<() => boolean>(() => false)
+  voltar.current = () => {
+    const r = runningRef.current
+    if (r?.finish || r?.error) {
+      quit()
+      return true
+    }
+    if (r) return true
+    if (queue) {
+      cancelQueue()
+      return true
+    }
+    return false
+  }
+  useEffect(() => {
+    const f = () => voltar.current()
+    voltarJanela.jogos = f
+    return () => {
+      if (voltarJanela.jogos === f) delete voltarJanela.jogos
+    }
+  }, [])
+  // a janela fechou mesmo assim (fechar no X da janela): sai da sala no servidor em vez de deixar o abandono decidir
+  const sair = useRef({ running, queue })
+  sair.current = { running, queue }
+  useEffect(
+    () => () => {
+      const { running: r, queue: f } = sair.current
+      if (r?.start.roomId && !r.finish) leaveRoom(r.start.roomId).catch(() => {})
+      if (f) leaveRoom(f.roomId).catch(() => {})
+    },
+    [],
+  )
 
   const changeTab = (v: Tab) => {
     prevTab.current = tab
@@ -169,7 +218,7 @@ export function JogosApp() {
 
   return (
     <MiniProfileHost>
-      <div className="relative flex h-full min-h-0 flex-col overflow-hidden bg-dv-ink text-dv-text">
+      <div ref={raiz} className="relative flex h-full min-h-0 flex-col overflow-hidden bg-dv-ink text-dv-text">
         {/* na fila, o radar cobre a sala: a cena 3D dá lugar ao fundo em CSS (sem desfocar WebGL ao vivo) */}
         {/* com a apresentação do Javali por cima (opaca), a sala fica no fundo em CSS: o 3D ao vivo atrás dela
             ocupava o quadro no WebGL por software e a captura de tela não conseguia um quadro em 30 s */}
@@ -234,11 +283,14 @@ export function JogosApp() {
 
         {queue && !running && <Searching gameId={queue.gameId} duel={queue.duel} onCancel={cancelQueue} />}
 
-        {notice && (
-          <ToastStack>
-            <Toast tone="alert" source="Sala de Jogos" title="A casa recusou" body={notice} onClose={() => setNotice(null)} />
-          </ToastStack>
-        )}
+        {/* no body: dentro da janela do v2 (backdrop-filter) o aviso fixo cobria o título e os botões da janela */}
+        {notice &&
+          createPortal(
+            <ToastStack>
+              <Toast tone="alert" source="Sala de Jogos" title="A casa recusou" body={notice} onClose={() => setNotice(null)} />
+            </ToastStack>,
+            document.body,
+          )}
 
         {curtain && createPortal(<Curtain state={curtain} />, document.body)}
 
@@ -307,24 +359,46 @@ function QuietRoom({ alert }: { alert: boolean }) {
   )
 }
 
-function useArcadeAmbience(inGame: boolean) {
+function useArcadeAmbience(inGame: boolean, raiz: RefObject<HTMLDivElement | null>) {
   useEffect(() => {
     startArcadeAmbience()
-    const resume = () => startArcadeAmbience()
+    const resume = () => {
+      if (raiz.current?.offsetParent !== null) startArcadeAmbience()
+    }
     window.addEventListener('pointerdown', resume, { once: true })
+    // janela minimizada no v2 (hidden): a música do cassino para e volta quando a Sala reaparece
+    const el = raiz.current
+    const io =
+      el && typeof IntersectionObserver !== 'undefined'
+        ? new IntersectionObserver(([e]) => (e?.isIntersecting ? startArcadeAmbience() : stopArcadeAmbience()))
+        : null
+    if (el && io) io.observe(el)
     return () => {
       window.removeEventListener('pointerdown', resume)
+      io?.disconnect()
       stopArcadeAmbience()
     }
-  }, [])
+  }, [raiz])
   useEffect(() => setArcadeAmbienceMuffled(inGame), [inGame])
 }
 
-function GameRunner({ run, settings, onFinish, onQuit }: { run: Running; settings: Record<string, string>; onFinish: (o: GameOutcome) => void; onQuit: () => void }) {
+function GameRunner({
+  run,
+  settings,
+  onFinish,
+  onQuit,
+}: {
+  run: Running
+  settings: Record<string, string>
+  onFinish: (o: GameOutcome, matchId: string) => void
+  onQuit: () => void
+}) {
   const Game = GAME_COMPONENTS[run.start.gameId as GameId]
+  // Cada resultado leva o id da partida que o produziu (um temporizador antigo não fecha a partida atual).
+  const matchId = run.start.matchId
   return (
     <LiveMatchProvider channel={liveChannelFor(run.start)}>
-      <Game start={run.start} settings={settings} onFinish={onFinish} onQuit={onQuit} />
+      <Game start={run.start} settings={settings} onFinish={(o) => onFinish(o, matchId)} onQuit={onQuit} />
     </LiveMatchProvider>
   )
 }

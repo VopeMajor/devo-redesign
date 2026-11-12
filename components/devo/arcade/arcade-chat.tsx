@@ -135,16 +135,20 @@ export const ArcadeChat = memo(function ArcadeChat({
   }, [count])
 
   const say = usePlayerText()
+  const [falha, setFalha] = useState<string | null>(null)
   const send = async () => {
     const body = text.trim()
     if (!body) return
     setText('')
+    setFalha(null)
     try {
       await arcadePost({ action: 'chat', channel, body })
       playSfx('send')
       mutate()
     } catch (e) {
-      window.alert((e as Error).message)
+      // a mensagem volta para a caixa e o erro aparece na própria tela, sem alerta do navegador
+      setText((t) => t || body)
+      setFalha((e as Error).message)
     }
   }
 
@@ -161,6 +165,11 @@ export const ArcadeChat = memo(function ArcadeChat({
         ))}
       </ul>
       {toolbar}
+      {falha && (
+        <p role="alert" className="font-body text-[13px] text-dv-blood-text">
+          {falha}
+        </p>
+      )}
       {!readOnly && (
       <form
         className="flex gap-2"

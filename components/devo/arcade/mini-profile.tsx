@@ -11,6 +11,7 @@ import { type CosmeticoDef, RARIDADE_PADRAO } from '@/lib/devo/cosmeticos'
 import { BalaoChat, Emblema, FotoMoldurada, NomeVisual } from '../cosmeticos/cosmetic-art'
 import { AmostraNome, BordaPerfilFundo } from '../cosmeticos/estilo-nome'
 import { useAnimarCosmeticos, useCatalogo, useVisual } from '../cosmeticos/use-cosmeticos'
+import { useBackHandler } from '../use-back-handler'
 
 export const BORDER_META: Record<BorderTier, { label: string; color: string; glow: string }> = {
   padrao: { label: 'Borda Padrão', color: '#58585e', glow: 'transparent' },
@@ -48,10 +49,16 @@ function MiniProfileDialog({ pid, onClose }: { pid: string; onClose: () => void 
   const { data, error } = useSWR<MiniProfile>(arcadeKey('profile', `&pid=${pid}`), arcadeFetcher)
 
   useEffect(() => {
-    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && onClose()
-    window.addEventListener('keydown', onKey)
-    return () => window.removeEventListener('keydown', onKey)
+    // captura: o Esc fecha só o perfil, e a janela do v2 (que vê defaultPrevented) não fecha junto
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== 'Escape') return
+      e.preventDefault()
+      onClose()
+    }
+    window.addEventListener('keydown', onKey, true)
+    return () => window.removeEventListener('keydown', onKey, true)
   }, [onClose])
+  useBackHandler(true, onClose)
 
   const tier = BORDER_META[data?.border ?? 'padrao']
 

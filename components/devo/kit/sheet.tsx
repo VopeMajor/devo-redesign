@@ -75,6 +75,7 @@ export function Sheet({
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         e.stopPropagation()
+        e.preventDefault()
         onCloseRef.current()
       }
       if (e.key === 'Tab' && panelRef.current) {
@@ -91,11 +92,11 @@ export function Sheet({
         }
       }
     }
-    window.addEventListener('keydown', onKey)
+    window.addEventListener('keydown', onKey, true)
     return () => {
       document.body.style.overflow = prev
       window.clearTimeout(t)
-      window.removeEventListener('keydown', onKey)
+      window.removeEventListener('keydown', onKey, true)
       restore.current?.focus?.()
     }
   }, [phase])

@@ -61,7 +61,7 @@ const BACK_URL = `url("data:image/svg+xml,${encodeURIComponent(BACK_SVG)}")`
 type CallEvent = Extract<BluffEvent, { t: 'call' }>
 
 export default function Bluff({ start, onFinish, onQuit }: GameProps) {
-  const { online, room, act, toLocal } = useRoom(start, 600)
+  const { online, room, act, toLocal, lost } = useRoom(start, 600)
   const gateOpen = useOnlineGate(start)
   const me: Side = online ? (start.side ?? 'a') : 'a'
   const opp: Side = me === 'a' ? 'b' : 'a'
@@ -94,14 +94,24 @@ export default function Bluff({ start, onFinish, onQuit }: GameProps) {
   const log = useCallback((line: string) => setFeed((f) => [line, ...f].slice(0, 3)), [])
 
   // Reage a cada evento novo (jogada, chamada ou passe), venha de quem vier.
+  // Online, cada consulta (600 ms) traz um `ev` novo com o mesmo conteúdo: o efeito depende só do
+  // número do evento, e os temporizadores da revelação ficam numa ref limpa só ao desmontar (antes a
+  // limpeza cancelava o fim da revelação e o jogador ficava travado).
   const ev = view?.ev ?? null
+  const evRef = useRef(ev)
+  evRef.current = ev
+  const revealTimers = useRef<number[]>([])
+  useEffect(() => () => revealTimers.current.forEach((id) => window.clearTimeout(id)), [])
+  const evSeq = ev?.seq ?? 0
   useEffect(() => {
+    const ev = evRef.current
     if (!ev || ev.seq <= seenSeq.current) return
     seenSeq.current = ev.seq
     if (ev.t === 'play') {
       playSfx('card')
       log(`${nameOf(ev.side)}${ev.auto ? ' (tempo esgotado)' : ''} jogou ${ev.n} × ${BLUFF_RANKS[ev.rank]}.`)
     } else if (ev.t === 'call') {
+      revealTimers.current.forEach((id) => window.clearTimeout(id))
       setReveal(ev)
       playSfx('bluff-shot')
       vibrate(40)
@@ -112,14 +122,11 @@ export default function Bluff({ start, onFinish, onQuit }: GameProps) {
         vibrate(ev.loser === me ? [60, 40, 60] : 30)
       }, verdictAt)
       const t2 = window.setTimeout(() => setReveal(null), bluffRevealMs(ev.cards.length))
-      return () => {
-        window.clearTimeout(t1)
-        window.clearTimeout(t2)
-      }
+      revealTimers.current = [t1, t2]
     } else {
       log(`${nameOf(ev.side)} deixou passar.`)
     }
-  }, [ev, me, nameOf, log])
+  }, [evSeq, me, nameOf, log])
 
   const myHand = view?.me ?? []
   const handKey = myHand.map((c) => c.id).join(',')
@@ -149,23 +156,33 @@ export default function Bluff({ start, onFinish, onQuit }: GameProps) {
   }, [online, local, botRand, mutateLocal])
 
   // Fim da partida: espera a revelação terminar antes de mostrar o resultado.
+  // `onFinish` muda de identidade a cada render da Sala (~30 s) e `room` a cada consulta: pelas refs,
+  // o temporizador do resultado, uma vez marcado, só é cancelado se o jogo desmontar.
+  const onFinishRef = useRef(onFinish)
+  onFinishRef.current = onFinish
+  const roomRef = useRef(room)
+  roomRef.current = room
+  const finishTimer = useRef(0)
+  useEffect(() => () => window.clearTimeout(finishTimer.current), [])
   const winner = view?.winner ?? null
   const roomDone = online && room?.status === 'finished'
   useEffect(() => {
     if (finished.current) return
     if (online ? !roomDone : winner === null) return
     finished.current = true
-    const lastCall = ev?.t === 'call' ? ev : null
+    const last = evRef.current
+    const lastCall = last?.t === 'call' ? last : null
     const wait = lastCall ? bluffRevealMs(lastCall.cards.length) + 400 : 1800
-    const id = window.setTimeout(() => {
-      if (online && room) {
-        onFinish(roomOutcome(room, { bonusLabel: 'BLEFES PEGOS' }))
+    finishTimer.current = window.setTimeout(() => {
+      const r = roomRef.current
+      if (online && r) {
+        onFinishRef.current(roomOutcome(r, { bonusLabel: 'BLEFES PEGOS' }))
         return
       }
       const s = localRef.current!
       const mine = bluffScore(s, 'a')
       const theirs = bluffScore(s, 'b')
-      onFinish({
+      onFinishRef.current({
         result: s.winner === 'a' ? 'win' : 'loss',
         score: mine.score,
         oppScore: theirs.score,
@@ -174,15 +191,15 @@ export default function Bluff({ start, onFinish, onQuit }: GameProps) {
         stats: mine.stats,
       })
     }, wait)
-    return () => window.clearTimeout(id)
-  }, [online, roomDone, winner, ev, room, onFinish])
+  }, [online, roomDone, winner])
 
   const cancelled = online && room?.status === 'cancelled'
   useEffect(() => {
-    if (!cancelled || finished.current || !room) return
+    const r = roomRef.current
+    if (!cancelled || finished.current || !r) return
     finished.current = true
-    onFinish(roomOutcome(room))
-  }, [cancelled, room, onFinish])
+    onFinishRef.current(roomOutcome(r))
+  }, [cancelled])
 
   const holdLocal = view ? toClock(view.holdUntil) : 0
   const deadline = view ? toClock(Math.max(view.turnAt, view.holdUntil)) + BLUFF_TURN_MS : 0
@@ -263,6 +280,8 @@ export default function Bluff({ start, onFinish, onQuit }: GameProps) {
       title="Blefe"
       accent={ACCENT}
       onQuit={onQuit}
+      confirmQuit={online && !roomDone && !cancelled}
+      connLost={lost}
       className="bf"
       top={<span className="bf-cap hidden sm:inline">Duvide ou acredite</span>}
     >

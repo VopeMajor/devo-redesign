@@ -26,12 +26,19 @@ export type GameProps = {
   onQuit: () => void
 }
 
+/** Texto do erro para o jogador: o 503 de banco desatualizado traz instrução para a equipe, não para quem joga. */
+function arcadeErro(data: unknown) {
+  const d = data as { error?: string; code?: string }
+  if (d.code === 'banco_desatualizado') return 'A Sala de Jogos está em manutenção. Tente de novo daqui a pouco.'
+  return d.error ?? 'Falha na Sala de Jogos.'
+}
+
 export const arcadeKey = (view: string, extra = '') => `/api/arcade?view=${view}${extra}`
 
 export async function arcadeFetcher<T>(url: string): Promise<T> {
   const res = await fetch(url, { cache: 'no-store' })
   const data = await res.json().catch(() => ({}))
-  if (!res.ok) throw new Error((data as { error?: string }).error ?? 'Falha na Sala de Jogos.')
+  if (!res.ok) throw new Error(arcadeErro(data))
   return data as T
 }
 
@@ -42,7 +49,7 @@ export async function arcadePost<T = { ok: true }>(body: Record<string, unknown>
     body: JSON.stringify(body),
   })
   const data = await res.json().catch(() => ({}))
-  if (!res.ok) throw new Error((data as { error?: string }).error ?? 'Falha na Sala de Jogos.')
+  if (!res.ok) throw new Error(arcadeErro(data))
   return data as T
 }
 

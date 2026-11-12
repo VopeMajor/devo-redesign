@@ -7,12 +7,28 @@ import { type GameOutcome, type MatchStart, type RoomPoll, pollRoom } from '@/li
 type Act = Record<string, unknown>
 
 /**
+ * Hora local em que cada início de partida chegou do servidor. O jogo só monta depois da cortina e
+ * do download do componente; medir o relógio na montagem atrasava a contagem.
+ */
+const receivedAt = new WeakMap<MatchStart, number>()
+
+/** Marca a chegada do início da partida (chamar assim que a resposta do servidor chega). */
+export function markStartReceived(start: MatchStart) {
+  if (!receivedAt.has(start)) receivedAt.set(start, Date.now())
+}
+
+/** Diferença servidor − local medida na chegada do início (ou agora, se não foi marcada). */
+export function startOffset(start: MatchStart) {
+  return start.serverNow - (receivedAt.get(start) ?? Date.now())
+}
+
+/**
  * Sincroniza a sala online por polling. `heartbeat` permite anexar uma ação a cada consulta
  * (ex.: a posição do jogador no Hot Bomb), assim cada tick é uma única requisição.
  */
 export function useRoom(start: MatchStart, intervalMs: number, heartbeat?: () => Act | undefined) {
   const online = !!start.roomId
-  const offset = useRef(start.serverNow - Date.now())
+  const offset = useRef(startOffset(start))
   const beat = useRef(heartbeat)
   beat.current = heartbeat
   const [error, setError] = useState<string | null>(null)
@@ -52,6 +68,30 @@ export function useRoom(start: MatchStart, intervalMs: number, heartbeat?: () =>
     },
   )
 
+  // Ao voltar para a aba, consulta na hora (em segundo plano o navegador espaça os temporizadores).
+  useEffect(() => {
+    if (!online) return
+    const onVisible = () => {
+      if (document.visibilityState === 'visible') mutate()
+    }
+    document.addEventListener('visibilitychange', onVisible)
+    return () => document.removeEventListener('visibilitychange', onVisible)
+  }, [online, mutate])
+
+  // Aparelho sem rede: o aviso de conexão aparece mesmo antes de uma consulta falhar.
+  const [offline, setOffline] = useState(false)
+  useEffect(() => {
+    if (!online) return
+    const sync = () => setOffline(navigator.onLine === false)
+    sync()
+    window.addEventListener('online', sync)
+    window.addEventListener('offline', sync)
+    return () => {
+      window.removeEventListener('online', sync)
+      window.removeEventListener('offline', sync)
+    }
+  }, [online])
+
   const act = useCallback(
     async (a: Act) => {
       if (!online) return
@@ -69,12 +109,16 @@ export function useRoom(start: MatchStart, intervalMs: number, heartbeat?: () =>
   /** Converte um horário do servidor para o relógio local. */
   const toLocal = useCallback((serverMs: number) => serverMs - offset.current, [])
 
-  return { online, room: data ?? null, act, toLocal, error }
+  const over = data?.status === 'finished' || data?.status === 'cancelled'
+  /** Conexão com a sala perdida (consulta falhou ou aparelho sem rede) enquanto a partida corre. */
+  const lost = online && !over && (!!error || offline)
+
+  return { online, room: data ?? null, act, toLocal, error, lost }
 }
 
 /** Libera a contagem 3-2-1 só quando faltam ~3s para o início combinado no servidor. */
 export function useOnlineGate(start: MatchStart) {
-  const startLocal = useRef(start.startedAt - (start.serverNow - Date.now()))
+  const startLocal = useRef(start.startedAt - startOffset(start))
   const [open, setOpen] = useState(!start.roomId)
   useEffect(() => {
     if (open) return

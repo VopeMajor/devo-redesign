@@ -78,3 +78,9 @@
 .jan .corpo > .v2-legado > * {
   min-height: 100%;
 }
+
+/* as janelas sobem de camada a cada clique (z sem limite); isoladas no #os, nunca passam por cima das partidas,
+   folhas e perfis das telas antigas, que abrem em portal no body */
+#os {
+  isolation: isolate;
+}

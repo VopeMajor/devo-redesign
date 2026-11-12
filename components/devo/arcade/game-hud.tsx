@@ -1,8 +1,8 @@
 'use client'
 
 import { X } from 'lucide-react'
-import { useCallback, useEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react'
-import { SigilStar, Spinner, TimeDigits } from '@/components/devo/kit'
+import { useCallback, useEffect, useId, useRef, useState, type CSSProperties, type ReactNode } from 'react'
+import { Button, SigilStar, Spinner, TimeDigits } from '@/components/devo/kit'
 import { cn } from '@/lib/utils'
 import { LiveLayerTarget, LiveMatchLayer, useLiveChannel } from './live-match'
 
@@ -95,6 +95,8 @@ export function GameFrame({
   top,
   className,
   chat = true,
+  confirmQuit = false,
+  connLost = false,
 }: {
   title: string
   /** Linha pequena sob o título (fase, modo). */
@@ -106,9 +108,14 @@ export function GameFrame({
   top?: ReactNode
   className?: string
   chat?: boolean
+  /** Partida online valendo Tempo: o X pede confirmação antes de sair (treino sai num toque). */
+  confirmQuit?: boolean
+  /** Mostra o aviso de conexão perdida com a sala. */
+  connLost?: boolean
 }) {
   const liveChannel = useLiveChannel()
   const [layerEl, setLayerEl] = useState<HTMLDivElement | null>(null)
+  const [asking, setAsking] = useState(false)
   return (
     <LiveLayerTarget el={layerEl}>
       <div className={cn('bg-dv-ink-2 bg-[url(/images/os/marmore-negro.webp)] bg-[length:560px_560px] relative flex h-full w-full flex-col overflow-hidden text-dv-text', className)}>
@@ -122,7 +129,7 @@ export function GameFrame({
         <header className="bg-[linear-gradient(180deg,var(--dv-block),var(--dv-ink))] relative z-20 flex shrink-0 items-center gap-2 pl-1 pr-2 pt-[env(safe-area-inset-top)]">
           <button
             type="button"
-            onClick={onQuit}
+            onClick={() => (confirmQuit ? setAsking(true) : onQuit())}
             aria-label="Desistir e sair"
             className="dv-focus grid size-11 shrink-0 place-items-center text-dv-text-3 transition-[color,transform] hover:text-dv-text active:scale-95"
           >
@@ -140,9 +147,69 @@ export function GameFrame({
         </header>
         <div ref={setLayerEl} className="relative flex min-h-0 flex-1 flex-col">
           {children}
+          {connLost && <ConnectionNotice />}
         </div>
+        {asking && confirmQuit && (
+          <QuitConfirm
+            onCancel={() => setAsking(false)}
+            onConfirm={() => {
+              setAsking(false)
+              onQuit()
+            }}
+          />
+        )}
       </div>
     </LiveLayerTarget>
+  )
+}
+
+/** Confirmação de desistência numa partida online (sair conta como derrota e custa Tempo). */
+export function QuitConfirm({ onConfirm, onCancel, className }: { onConfirm: () => void; onCancel: () => void; className?: string }) {
+  const titleId = useId()
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onCancel()
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [onCancel])
+  return (
+    <div
+      className={cn('absolute inset-0 z-50 grid place-items-center bg-dv-ink/75 p-6 text-dv-text backdrop-blur-[2px]', className)}
+      role="alertdialog"
+      aria-modal="true"
+      aria-labelledby={titleId}
+      onPointerDown={(e) => e.stopPropagation()}
+    >
+      <div className="bg-[linear-gradient(180deg,#1c1c1f,#0e0e10)] flex w-full max-w-xs animate-dv-cut-in flex-col items-center gap-3 border border-dv-line-gold p-5 text-center shadow-[0_18px_40px_rgba(0,0,0,0.6)]">
+        <span className="dv-label text-[10px] text-dv-blood-text">Partida valendo Tempo</span>
+        <span aria-hidden="true" className="h-px w-24 bg-gradient-to-r from-transparent via-dv-gold/70 to-transparent" />
+        <p id={titleId} className="font-display text-[17px] font-semibold uppercase leading-snug tracking-[0.1em] text-white">
+          Desistir da partida?
+        </p>
+        <p className="font-body text-[15px] text-dv-text-2">Conta como derrota.</p>
+        <div className="mt-1 grid w-full grid-cols-2 gap-2">
+          <Button variant="secondary" size="sm" block autoFocus onClick={onCancel}>
+            Continuar
+          </Button>
+          <Button variant="danger" size="sm" block onClick={onConfirm}>
+            Desistir
+          </Button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+/** Aviso discreto de conexão perdida: o jogo segue tentando sozinho. */
+export function ConnectionNotice({ className }: { className?: string }) {
+  return (
+    <div className={cn('pointer-events-none absolute inset-x-0 top-2 z-[45] flex justify-center px-3', className)} role="status" aria-live="polite">
+      <span className="inline-flex items-center gap-2 border border-dv-blood/60 bg-dv-blood-deep/85 px-3 py-1.5 text-dv-blood-text shadow-[0_6px_14px_rgba(0,0,0,0.5)]">
+        <Spinner className="size-3.5" />
+        <span className="dv-label text-[10px] tracking-[0.16em]">Conexão perdida, tentando de novo…</span>
+      </span>
+    </div>
   )
 }
 
