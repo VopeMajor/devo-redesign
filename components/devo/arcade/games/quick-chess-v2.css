@@ -83,6 +83,10 @@
 .xz-conversa {
   min-height: 0;
 }
+.xz-conversa .font-body {
+  font-family: var(--font);
+  font-size: 16px;
+}
 .xz-conversa input {
   min-height: 44px;
   padding: 0 8px;
@@ -137,4 +141,15 @@
   .xz-promo {
     animation: none;
   }
+}
+
+/* o painel de opções e lances fica opaco sobre o tabuleiro (a regra geral .fundo do tema o deixava translúcido) */
+.xz .xz-painel.fundo {
+  background: #141210;
+}
+.xz .xz-painel .r-sub {
+  margin-top: 8px;
+  font-size: 16px;
+  line-height: 1.35;
+  color: #a89a80;
 }

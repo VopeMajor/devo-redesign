@@ -4243,6 +4243,9 @@ if (want('v2')) {
       await wait(3000)
       await shot(page, nome('0-sala'), 'Sala de Jogos aberta')
       const treino = async (jogo) => {
+        // a tela de resultado da partida anterior pode chegar atrasada (o xadrez 3D demora a desmontar no PC)
+        await tryClick(page.getByRole('button', { name: /voltar à mesa/i }).first(), 2500)
+        await wait(800)
         const card = page.locator(`${jan} [aria-label="Jogos da semana"] > *`).filter({ hasText: new RegExp(jogo, 'i') }).first()
         await card.getByRole('button', { name: /tutorial/i }).first().click({ timeout: 8000 })
       }

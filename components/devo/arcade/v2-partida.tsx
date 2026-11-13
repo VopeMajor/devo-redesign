@@ -37,8 +37,9 @@ export function PartidaV2({
   ) : null
   return (
     <LiveLayerTarget el={camada}>
-      <div ref={setCamada} className={className} role="dialog" aria-label={label}>
+      <div className={className} role="dialog" aria-label={label}>
         {children({ sair, chat })}
+        <div ref={setCamada} className="v2p-camada" />
         {connLost && <ConexaoPerdida />}
         {pergunta && confirmQuit && (
           <Desistir
