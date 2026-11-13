@@ -422,7 +422,12 @@ export default function Bluff({ start, onFinish, onQuit }: GameProps) {
             </div>
             <div className="bl-rel">
               <b role="timer" aria-label="Tempo do turno" className={perigo ? 'perigo' : undefined}>
-                {relTxt}
+                {relTxt && (
+                  <>
+                    <span>{myTurn ? 'Sua vez' : nomeOp}</span>
+                    <em>· {seg}s</em>
+                  </>
+                )}
               </b>
               <u>
                 <s className={perigo ? 'perigo' : myTurn ? 'meu' : undefined} style={{ transform: `scaleX(${relBar.toFixed(3)})` }} />

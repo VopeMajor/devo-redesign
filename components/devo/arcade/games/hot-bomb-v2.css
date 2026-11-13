@@ -27,3 +27,10 @@
     animation: none;
   }
 }
+
+/* a abertura cobre a arena inteira, opaca (a regra geral .fundo do tema a deixava translúcida, com o PULA aparecendo) */
+.bq .bq-entrada.fundo {
+  background: #0c0b0a;
+  border: 0;
+  border-radius: 0;
+}

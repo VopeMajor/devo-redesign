@@ -1207,7 +1207,8 @@ export function montaBomba(ctx: BombaCtx) {
     if (!r.width || !r.height) return
     const arenaW = (R + 0.8) * U * 2 + 16
     const alto = (R + 0.8) * U * K * 2 + 78
-    const px = Math.max(1, Math.round(Math.min(r.width / arenaW, r.height / alto) * 4) / 4)
+    // degraus de 1/8: na janela do v2 (um pouco mais estreita que a tela do protótipo) o degrau de 1/4 encolhia a arena
+    const px = Math.max(1, Math.round(Math.min(r.width / arenaW, r.height / alto) * 8) / 8)
     W = Math.ceil(r.width / px)
     H = Math.ceil(r.height / px)
     dom.cv.width = W

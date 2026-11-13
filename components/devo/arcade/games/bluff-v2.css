@@ -4,3 +4,24 @@
 .bl-topo.com-chat {
   grid-template-columns: 44px minmax(0, 1fr) auto 44px 44px;
 }
+
+/* "Últimas jogadas" opaca sobre a mesa, como no protótipo (a regra geral .fundo do tema a deixava translúcida) */
+.bl .bl-feed.fundo {
+  background: #141210f2;
+}
+
+/* relógio do turno: um nome comprido encolhe, os segundos ficam sempre à vista */
+.bl-rel b {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.25em;
+}
+.bl-rel b span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.bl-rel b em {
+  flex: none;
+  font-style: normal;
+}
