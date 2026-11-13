@@ -1,0 +1,11 @@
+ok   cadastro das contas de teste (save com a Sala de Jogos revelada)
+ok   inscrição em evento: duas ao mesmo tempo entram (sem 500); com a lista cheia a terceira é recusada
+ok   casual curta (desistência com 5 s de jogo): vencedor sem Tempo e com 0 ponto de ranking
+ok   casual longa terminada por desistência: vencedor ganha +3 min de Tempo (uma vez) e pontos
+ok   Blefe: a sala enviada a cada jogador tem seed 0 e não contém a mão adversária
+ok   Memory Rush: dois pares seguidos (< 220 ms) contam os dois; símbolo fora da fase é ignorado
+ok   apostas: confronto já decidido recusa; aposta cobrada uma vez (repetida e simultânea)
+ok   fechamento do evento: sala abandonada (> 45 s) termina, confronto e apostas acertados uma vez
+ok   melhor placar da semana no painel ignora o treino
+
+9 ok, 0 falha(s)
