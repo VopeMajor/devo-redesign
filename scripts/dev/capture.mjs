@@ -1202,8 +1202,8 @@ if (want('partidas')) {
       // sem isso a sala continua ativa e a próxima fila reconecta nela.
       for (const { page } of [A, B]) {
         await tryClick(page.getByRole('button', { name: /desistir e sair/i }).first(), 4000)
-        // partida online valendo Tempo: o X pede confirmação antes de desistir
-        await tryClick(page.getByRole('button', { name: 'Desistir', exact: true }).first(), 2500)
+        // partida online valendo Tempo: o X pede confirmação antes de desistir (o botão da caixa; o xadrez tem outro "Desistir" no rodapé)
+        await tryClick(page.getByRole('alertdialog').getByRole('button', { name: 'Desistir', exact: true }).first(), 2500)
         await wait(1500)
         await tryClick(page.getByRole('button', { name: /voltar à mesa/i }).first(), 4000)
       }
